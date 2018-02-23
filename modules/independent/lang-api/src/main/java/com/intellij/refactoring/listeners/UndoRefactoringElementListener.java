@@ -16,12 +16,12 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * {@linkplain com.intellij.refactoring.listeners.RefactoringElementListenerProvider} receives a notification on undo.
  * @author dsl
  */
 public interface UndoRefactoringElementListener {
-  void undoElementMovedOrRenamed(@NotNull PsiElement newElement, @NotNull String oldQualifiedName);
+  void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName);
 }

@@ -19,8 +19,8 @@ package com.intellij.codeInsight.hint;
 import com.intellij.openapi.util.MixinExtension;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +31,12 @@ public class DeclarationRangeUtil {
   private DeclarationRangeUtil() {
   }
 
-  public static void setDeclarationHandler(@NotNull Class clazz, DeclarationRangeHandler handler) {
+  public static void setDeclarationHandler(@Nonnull Class clazz, DeclarationRangeHandler handler) {
     ourDeclarationRangeRegistry.put(clazz, handler);
   }
 
-  public static @NotNull TextRange getDeclarationRange(PsiElement container) {
+  public static @Nonnull
+  TextRange getDeclarationRange(PsiElement container) {
     final TextRange textRange = getPossibleDeclarationAtRange(container);
     assert textRange != null :"Declaration range is invalid for "+container.getClass();
     return textRange;

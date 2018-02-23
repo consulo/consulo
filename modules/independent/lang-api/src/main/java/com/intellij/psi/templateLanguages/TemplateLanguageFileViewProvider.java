@@ -17,7 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,13 +29,13 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    * @return instanceof {@link com.intellij.psi.templateLanguages.TemplateLanguage}
    */
   @Override
-  @NotNull
+  @Nonnull
   Language getBaseLanguage();
 
   /**
    * e.g. HTML for JSP files
    * @return not instanceof {@link com.intellij.lang.DependentLanguage}
    */
-  @NotNull
+  @Nonnull
   Language getTemplateDataLanguage();
 }

@@ -28,7 +28,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.OptionsDialog;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,7 +111,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
         //noinspection unchecked
         myChangelist.setRenderer(new ColoredListCellRenderer<String>() {
           @Override
-          protected void customizeCellRenderer(@NotNull JList<? extends String> list, String value, int index, boolean selected, boolean hasFocus) {
+          protected void customizeCellRenderer(@Nonnull JList<? extends String> list, String value, int index, boolean selected, boolean hasFocus) {
             if (value == null) return;
             String trimmed = StringUtil.first(value, 50, true);
             if (value.equals(defaultChangelist)) {
@@ -198,7 +198,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
     return new Dimension(500, 400);
   }
 
-  @NotNull
+  @Nonnull
   public static String getTheseFilesMessage(Collection<VirtualFile> files) {
     boolean dirsOnly = true;
     for (VirtualFile each : files) {

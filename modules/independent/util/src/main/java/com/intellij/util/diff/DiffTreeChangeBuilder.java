@@ -16,13 +16,13 @@
 
 package com.intellij.util.diff;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface DiffTreeChangeBuilder<OT, NT> {
-  void nodeReplaced(@NotNull OT oldChild, @NotNull NT newChild);
-  void nodeDeleted(@NotNull OT oldParent, @NotNull OT oldNode);
-  void nodeInserted(@NotNull OT oldParent, @NotNull NT newNode, int pos);
+  void nodeReplaced(@Nonnull OT oldChild, @Nonnull NT newChild);
+  void nodeDeleted(@Nonnull OT oldParent, @Nonnull OT oldNode);
+  void nodeInserted(@Nonnull OT oldParent, @Nonnull NT newNode, int pos);
 }

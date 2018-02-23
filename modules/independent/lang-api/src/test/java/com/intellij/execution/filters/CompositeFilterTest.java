@@ -22,7 +22,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,22 +55,22 @@ public class CompositeFilterTest {
       }
 
       @Override
-      public void smartInvokeLater(@NotNull Runnable runnable) {
+      public void smartInvokeLater(@Nonnull Runnable runnable) {
 
       }
 
       @Override
-      public void smartInvokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+      public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
 
       }
 
       @Override
-      public void queueTask(@NotNull DumbModeTask task) {
+      public void queueTask(@Nonnull DumbModeTask task) {
 
       }
 
       @Override
-      public void cancelTask(@NotNull DumbModeTask task) {
+      public void cancelTask(@Nonnull DumbModeTask task) {
 
       }
 
@@ -80,7 +80,7 @@ public class CompositeFilterTest {
       }
 
       @Override
-      public JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable) {
+      public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
         return null;
       }
 

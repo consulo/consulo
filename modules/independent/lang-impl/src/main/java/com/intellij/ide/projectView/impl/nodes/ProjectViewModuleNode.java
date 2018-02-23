@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +46,7 @@ public class ProjectViewModuleNode extends AbstractModuleNode {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     Module module = getValue();
     if (module == null) {  // module has been disposed

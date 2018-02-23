@@ -21,7 +21,7 @@ import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.IgnoredFileProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class StoreIgnoredFileProvider implements IgnoredFileProvider {
   @Override
-  public boolean isIgnoredFile(@NotNull Project project, @NotNull FilePath filePath) {
+  public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
     IProjectStore stateStore = ((ProjectEx)project).getStateStore();
     return Comparing.equal(filePath.getVirtualFile(), stateStore.getWorkspaceFile());
   }

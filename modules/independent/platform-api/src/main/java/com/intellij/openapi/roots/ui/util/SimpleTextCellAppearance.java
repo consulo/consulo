@@ -19,8 +19,8 @@ import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -30,34 +30,34 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   private final SimpleTextAttributes myTextAttributes;
   private final String myText;
 
-  public static SimpleTextCellAppearance regular(@NotNull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance regular(@Nonnull final String text, @Nullable final Icon icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance invalid(@NotNull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance invalid(@Nonnull final String text, @Nullable final Icon icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  public static SimpleTextCellAppearance synthetic(@NotNull final String text, @Nullable final Icon icon) {
+  public static SimpleTextCellAppearance synthetic(@Nonnull final String text, @Nullable final Icon icon) {
     return new SimpleTextCellAppearance(text, icon, SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
   }
 
-  public SimpleTextCellAppearance(@NotNull final String text,
+  public SimpleTextCellAppearance(@Nonnull final String text,
                                   @Nullable final Icon icon,
-                                  @NotNull final SimpleTextAttributes textAttributes) {
+                                  @Nonnull final SimpleTextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
     myText = text;
   }
 
   @Override
-  public void customize(@NotNull final SimpleColoredComponent component) {
+  public void customize(@Nonnull final SimpleColoredComponent component) {
     component.setIcon(myIcon);
     component.append(myText, myTextAttributes);
   }
 
   @Override
-  public void customize(@NotNull final HtmlListCellRenderer renderer) {
+  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
     renderer.setIcon(myIcon);
     renderer.append(myText, myTextAttributes);
   }
@@ -69,12 +69,12 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   public SimpleTextAttributes getTextAttributes() {
     return myTextAttributes;
   }

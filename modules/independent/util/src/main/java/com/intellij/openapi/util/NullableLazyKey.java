@@ -18,7 +18,7 @@ package com.intellij.openapi.util;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author peter

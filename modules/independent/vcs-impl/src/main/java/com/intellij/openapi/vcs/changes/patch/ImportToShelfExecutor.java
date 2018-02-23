@@ -39,8 +39,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsCatchingRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,8 +62,8 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
   }
 
   @Override
-  public void apply(@NotNull List<FilePatch> remaining, @NotNull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
-                    @Nullable LocalChangeList localList,
+  public void apply(@Nonnull List<FilePatch> remaining, @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
+                    @javax.annotation.Nullable LocalChangeList localList,
                     @Nullable final String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     if (fileName == null) {
@@ -140,25 +140,25 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
       myMap = new HashMap<>();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return myName;
     }
 
     @Override
-    public CharSequence provideContent(@NotNull String path, CommitContext commitContext) {
+    public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
       return myMap.get(path);
     }
 
     @Override
-    public void consumeContent(@NotNull String path, @NotNull CharSequence content, CommitContext commitContext) {
+    public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void consumeContentBeforePatchApplied(@NotNull String path,
-                                                 @NotNull CharSequence content,
+    public void consumeContentBeforePatchApplied(@Nonnull String path,
+                                                 @Nonnull CharSequence content,
                                                  CommitContext commitContext) {
       throw new UnsupportedOperationException();
     }

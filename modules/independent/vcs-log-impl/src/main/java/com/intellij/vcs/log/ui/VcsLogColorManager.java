@@ -1,7 +1,7 @@
 package com.intellij.vcs.log.ui;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -15,8 +15,8 @@ public interface VcsLogColorManager {
   /**
    * Returns the color assigned to the given repository root.
    */
-  @NotNull
-  Color getRootColor(@NotNull VirtualFile root);
+  @Nonnull
+  Color getRootColor(@Nonnull VirtualFile root);
 
   /**
    * Tells if there are several repositories currently shown in the log.

@@ -20,10 +20,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PlatformUltraLiteTestFixture {
-  @NotNull
+  @Nonnull
   public static PlatformUltraLiteTestFixture getFixture() {
     return new PlatformUltraLiteTestFixture();
   }

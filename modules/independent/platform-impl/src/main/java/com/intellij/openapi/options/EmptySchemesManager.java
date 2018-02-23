@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -25,13 +25,13 @@ import java.util.List;
 
 public class EmptySchemesManager extends SchemesManager {
   @Override
-  @NotNull
+  @Nonnull
   public Collection loadSchemes() {
     return Collections.emptySet();
   }
 
   @Override
-  public void addNewScheme(@NotNull final Named scheme, final boolean replaceExisting) {
+  public void addNewScheme(@Nonnull final Named scheme, final boolean replaceExisting) {
   }
 
   @Override
@@ -39,13 +39,13 @@ public class EmptySchemesManager extends SchemesManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List getAllSchemes() {
     return Collections.emptyList();
   }
 
   @Override
-  public Named findSchemeByName(@NotNull String schemeName) {
+  public Named findSchemeByName(@Nonnull String schemeName) {
     return null;
   }
 
@@ -63,11 +63,11 @@ public class EmptySchemesManager extends SchemesManager {
   }
 
   @Override
-  public void removeScheme(@NotNull Named scheme) {
+  public void removeScheme(@Nonnull Named scheme) {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection getAllSchemeNames() {
     return Collections.emptySet();
   }

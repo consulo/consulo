@@ -20,8 +20,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -33,10 +33,10 @@ public interface Notifications {
 
   String SYSTEM_MESSAGES_GROUP_ID = "System Messages";
 
-  void notify(@NotNull Notification notification);
-  void register(@NotNull final String groupDisplayName, @NotNull final NotificationDisplayType defaultDisplayType);
-  void register(@NotNull final String groupDisplayName, @NotNull final NotificationDisplayType defaultDisplayType, boolean shouldLog);
-  void register(@NotNull final String groupDisplayName, @NotNull final NotificationDisplayType defaultDisplayType, boolean shouldLog, boolean shouldReadAloud);
+  void notify(@Nonnull Notification notification);
+  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType);
+  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog);
+  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog, boolean shouldReadAloud);
 
   @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
   class Bus {
@@ -44,7 +44,7 @@ public interface Notifications {
      * Registration is OPTIONAL: STICKY_BALLOON display type will be used by default.
      */
     @SuppressWarnings("JavaDoc")
-    public static void register(@NotNull final String group_id, @NotNull final NotificationDisplayType defaultDisplayType) {
+    public static void register(@Nonnull final String group_id, @Nonnull final NotificationDisplayType defaultDisplayType) {
       if (ApplicationManager.getApplication().isUnitTestMode()) return;
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
@@ -58,11 +58,11 @@ public interface Notifications {
       });
     }
 
-    public static void notify(@NotNull final Notification notification) {
+    public static void notify(@Nonnull final Notification notification) {
       notify(notification, null);
     }
 
-    public static void notify(@NotNull final Notification notification, @Nullable final Project project) {
+    public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         doNotify(notification, project);
       }

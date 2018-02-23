@@ -17,34 +17,34 @@ package com.intellij.openapi.diff.impl.incrementalMerge;
 
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a merge conflict, i.e. two {@link ConflictChange conflicting changes}, one from left, another from right.
  */
 class MergeConflict extends TwoSideChange<ConflictChange> {
-  MergeConflict(@NotNull TextRange baseRange,
-                @NotNull TextRange leftRange,
-                @NotNull TextRange rightRange,
-                @NotNull MergeList mergeList) {
+  MergeConflict(@Nonnull TextRange baseRange,
+                @Nonnull TextRange leftRange,
+                @Nonnull TextRange rightRange,
+                @Nonnull MergeList mergeList) {
     super(baseRange, mergeList, new ChangeHighlighterHolder());
     myLeftChange = new ConflictChange(this, FragmentSide.SIDE1, leftRange, mergeList.getLeftChangeList());
     myRightChange = new ConflictChange(this, FragmentSide.SIDE2, rightRange, mergeList.getRightChangeList());
   }
 
-  private MergeConflict(@NotNull TextRange baseRange,
+  private MergeConflict(@Nonnull TextRange baseRange,
                         @Nullable ConflictChange leftChange,
                         @Nullable ConflictChange rightChange,
-                        @NotNull MergeList mergeList,
-                        @NotNull ChangeHighlighterHolder highlighterHolder) {
+                        @Nonnull MergeList mergeList,
+                        @Nonnull ChangeHighlighterHolder highlighterHolder) {
     super(baseRange, mergeList, highlighterHolder);
     myLeftChange = leftChange;
     myRightChange = rightChange;
   }
 
-  @NotNull
-  public MergeConflict deriveSideForNotAppliedChange(@NotNull TextRange baseRange,
+  @Nonnull
+  public MergeConflict deriveSideForNotAppliedChange(@Nonnull TextRange baseRange,
                                                      @Nullable ConflictChange leftChange,
                                                      @Nullable ConflictChange rightChange) {
     ChangeHighlighterHolder highlighterHolder = new ChangeHighlighterHolder();

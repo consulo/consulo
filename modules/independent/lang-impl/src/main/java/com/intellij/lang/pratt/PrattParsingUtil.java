@@ -17,8 +17,8 @@ package com.intellij.lang.pratt;
 
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -27,7 +27,7 @@ public class PrattParsingUtil {
   private PrattParsingUtil() {
   }
 
-  public static void searchFor(PrattBuilder builder, @NotNull PrattTokenType... types) {
+  public static void searchFor(PrattBuilder builder, @Nonnull PrattTokenType... types) {
     searchFor(builder, true, types);
   }
 

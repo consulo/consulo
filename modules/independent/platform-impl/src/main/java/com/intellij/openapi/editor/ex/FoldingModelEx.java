@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.FoldingModel;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -48,19 +48,19 @@ public interface FoldingModelEx extends FoldingModel {
   FoldRegion[] fetchTopLevel();
 
   @Nullable
-  FoldRegion createFoldRegion(int startOffset, int endOffset, @NotNull String placeholder, @Nullable FoldingGroup group,
+  FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group,
                               boolean neverExpands);
 
-  void addListener(@NotNull FoldingListener listener, @NotNull Disposable parentDisposable);
+  void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable);
 
   void clearFoldRegions();
 
   void rebuild();
 
-  @NotNull
+  @Nonnull
   List<FoldRegion> getGroupedRegions(FoldingGroup group);
 
   void clearDocumentRangesModificationStatus();
 
-  boolean hasDocumentRegionChangedFor(@NotNull FoldRegion region);
+  boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region);
 }

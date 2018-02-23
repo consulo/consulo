@@ -21,8 +21,8 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public abstract class CommandProcessorBase implements Runnable {
    * commands with BlockFocusEventsCmd - UnblockFocusEventsCmd. It's required to
    * prevent focus handling of events which is caused by the commands to be executed.
    */
-  public final void execute(@NotNull List<FinalizableCommand> commandList, @NotNull Condition expired) {
+  public final void execute(@Nonnull List<FinalizableCommand> commandList, @Nonnull Condition expired) {
     synchronized (myLock) {
       final boolean isBusy = myCommandCount > 0 || !myFlushed;
 
@@ -105,8 +105,8 @@ public abstract class CommandProcessorBase implements Runnable {
     }
   }
 
-  @NotNull
-  protected abstract ActionCallback invokeLater(@NotNull Runnable command, @NotNull Condition<?> condition);
+  @Nonnull
+  protected abstract ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition);
 
   @Nullable
   private CommandGroup getNextCommandGroup() {
@@ -125,7 +125,7 @@ public abstract class CommandProcessorBase implements Runnable {
     private final List<FinalizableCommand> myList;
     private Condition myExpireCondition;
 
-    private CommandGroup(@NotNull List<FinalizableCommand> list, @NotNull Condition expireCondition) {
+    private CommandGroup(@Nonnull List<FinalizableCommand> list, @Nonnull Condition expireCondition) {
       myList = list;
       myExpireCondition = expireCondition;
     }

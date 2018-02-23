@@ -37,7 +37,7 @@ import com.intellij.ui.popup.util.DetailViewImpl;
 import com.intellij.ui.popup.util.ItemWrapper;
 import com.intellij.ui.popup.util.MasterDetailPopupBuilder;
 import com.intellij.ui.speedSearch.FilteringListModel;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

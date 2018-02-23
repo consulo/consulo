@@ -27,8 +27,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredWriteAction;
 
 /**
@@ -63,7 +63,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   }
 
   @Override
-  public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     if (editor.isViewer() || editor.isOneLineMode()) return false;
     final Project project = editor.getProject();
     if (project == null || project.isDisposed()) return false;
@@ -71,7 +71,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   }
 
   @Nullable
-  protected abstract MoverWrapper getSuitableMover(@NotNull Editor editor, @NotNull PsiFile file);
+  protected abstract MoverWrapper getSuitableMover(@Nonnull Editor editor, @Nonnull PsiFile file);
 
   @Nullable
   private static PsiFile getRoot(final PsiFile file, final Editor editor) {

@@ -30,8 +30,8 @@ import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class MockPsiManager extends PsiManagerEx {
   private MockFileManager myMockFileManager;
   private PsiModificationTrackerImpl myPsiModificationTracker;
 
-  public MockPsiManager(@NotNull Project project) {
+  public MockPsiManager(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -50,25 +50,25 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  public PsiFile findFile(@NotNull VirtualFile file) {
+  public PsiFile findFile(@Nonnull VirtualFile file) {
     return null;
   }
 
   @Override
   @Nullable
   public
-  FileViewProvider findViewProvider(@NotNull VirtualFile file) {
+  FileViewProvider findViewProvider(@Nonnull VirtualFile file) {
     return null;
   }
 
   @Override
-  public PsiDirectory findDirectory(@NotNull VirtualFile file) {
+  public PsiDirectory findDirectory(@Nonnull VirtualFile file) {
     return myDirectories.get(file);
   }
 
@@ -78,23 +78,23 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public void reloadFromDisk(@NotNull PsiFile file) {
+  public void reloadFromDisk(@Nonnull PsiFile file) {
   }
 
   @Override
-  public void addPsiTreeChangeListener(@NotNull PsiTreeChangeListener listener) {
+  public void addPsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener) {
   }
 
   @Override
-  public void addPsiTreeChangeListener(@NotNull PsiTreeChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removePsiTreeChangeListener(@NotNull PsiTreeChangeListener listener) {
+  public void removePsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener) {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiModificationTracker getModificationTracker() {
     if (myPsiModificationTracker == null) {
       myPsiModificationTracker = new PsiModificationTrackerImpl(myProject);
@@ -111,12 +111,12 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return null;
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
   }
 
   @Override
@@ -136,7 +136,7 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public boolean isInProject(@NotNull PsiElement element) {
+  public boolean isInProject(@Nonnull PsiElement element) {
     return false;
   }
 
@@ -146,7 +146,7 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public boolean isAssertOnFileLoading(@NotNull VirtualFile file) {
+  public boolean isAssertOnFileLoading(@Nonnull VirtualFile file) {
     return false;
   }
 
@@ -161,20 +161,20 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public void registerRunnableToRunOnChange(@NotNull Runnable runnable) {
+  public void registerRunnableToRunOnChange(@Nonnull Runnable runnable) {
   }
 
   @Override
-  public void registerRunnableToRunOnAnyChange(@NotNull Runnable runnable) {
+  public void registerRunnableToRunOnAnyChange(@Nonnull Runnable runnable) {
   }
 
   @Override
-  public void registerRunnableToRunAfterAnyChange(@NotNull Runnable runnable) {
+  public void registerRunnableToRunAfterAnyChange(@Nonnull Runnable runnable) {
     throw new UnsupportedOperationException("Method registerRunnableToRunAfterAnyChange is not yet implemented in " + getClass().getName());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileManager getFileManager() {
     if (myMockFileManager == null) {
       myMockFileManager = new MockFileManager(this);
@@ -183,19 +183,19 @@ public class MockPsiManager extends PsiManagerEx {
   }
 
   @Override
-  public void beforeChildRemoval(@NotNull final PsiTreeChangeEventImpl event) {
+  public void beforeChildRemoval(@Nonnull final PsiTreeChangeEventImpl event) {
   }
 
   @Override
-  public void beforeChildReplacement(@NotNull final PsiTreeChangeEventImpl event) {
+  public void beforeChildReplacement(@Nonnull final PsiTreeChangeEventImpl event) {
   }
 
   @Override
-  public void beforeChildAddition(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event) {
   }
 
   @Override
-  public void setAssertOnFileLoadingFilter(@NotNull VirtualFileFilter filter, @NotNull Disposable parentDisposable) {
+  public void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable) {
 
   }
 }

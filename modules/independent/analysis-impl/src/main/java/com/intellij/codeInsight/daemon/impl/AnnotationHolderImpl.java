@@ -30,8 +30,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.SmartList;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -42,11 +41,11 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
   private final boolean myBatchMode;
 
-  public AnnotationHolderImpl(@NotNull AnnotationSession session) {
+  public AnnotationHolderImpl(@Nonnull AnnotationSession session) {
     this(session, false);
   }
 
-  public AnnotationHolderImpl(@NotNull AnnotationSession session, boolean batchMode) {
+  public AnnotationHolderImpl(@Nonnull AnnotationSession session, boolean batchMode) {
     myAnnotationSession = session;
     myBatchMode = batchMode;
   }
@@ -57,64 +56,64 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
   }
 
   @Override
-  public Annotation createErrorAnnotation(@NotNull PsiElement elt, String message) {
+  public Annotation createErrorAnnotation(@Nonnull PsiElement elt, String message) {
     assertMyFile(elt);
     return createAnnotation(HighlightSeverity.ERROR, elt.getTextRange(), message);
   }
 
   @Override
-  public Annotation createErrorAnnotation(@NotNull ASTNode node, String message) {
+  public Annotation createErrorAnnotation(@Nonnull ASTNode node, String message) {
     assertMyFile(node.getPsi());
     return createAnnotation(HighlightSeverity.ERROR, node.getTextRange(), message);
   }
 
   @Override
-  public Annotation createErrorAnnotation(@NotNull TextRange range, String message) {
+  public Annotation createErrorAnnotation(@Nonnull TextRange range, String message) {
     return createAnnotation(HighlightSeverity.ERROR, range, message);
   }
 
   @Override
-  public Annotation createWarningAnnotation(@NotNull PsiElement elt, String message) {
+  public Annotation createWarningAnnotation(@Nonnull PsiElement elt, String message) {
     assertMyFile(elt);
     return createAnnotation(HighlightSeverity.WARNING, elt.getTextRange(), message);
   }
 
   @Override
-  public Annotation createWarningAnnotation(@NotNull ASTNode node, String message) {
+  public Annotation createWarningAnnotation(@Nonnull ASTNode node, String message) {
     assertMyFile(node.getPsi());
     return createAnnotation(HighlightSeverity.WARNING, node.getTextRange(), message);
   }
 
   @Override
-  public Annotation createWarningAnnotation(@NotNull TextRange range, String message) {
+  public Annotation createWarningAnnotation(@Nonnull TextRange range, String message) {
     return createAnnotation(HighlightSeverity.WARNING, range, message);
   }
 
   @Override
-  public Annotation createWeakWarningAnnotation(@NotNull PsiElement elt, @Nullable String message) {
+  public Annotation createWeakWarningAnnotation(@Nonnull PsiElement elt, @javax.annotation.Nullable String message) {
     assertMyFile(elt);
     return createAnnotation(HighlightSeverity.WEAK_WARNING, elt.getTextRange(), message);
   }
 
   @Override
-  public Annotation createWeakWarningAnnotation(@NotNull ASTNode node, @Nullable String message) {
+  public Annotation createWeakWarningAnnotation(@Nonnull ASTNode node, @javax.annotation.Nullable String message) {
     assertMyFile(node.getPsi());
     return createAnnotation(HighlightSeverity.WEAK_WARNING, node.getTextRange(), message);
   }
 
   @Override
-  public Annotation createWeakWarningAnnotation(@NotNull TextRange range, String message) {
+  public Annotation createWeakWarningAnnotation(@Nonnull TextRange range, String message) {
     return createAnnotation(HighlightSeverity.WEAK_WARNING, range, message);
   }
 
   @Override
-  public Annotation createInfoAnnotation(@NotNull PsiElement elt, String message) {
+  public Annotation createInfoAnnotation(@Nonnull PsiElement elt, String message) {
     assertMyFile(elt);
     return createAnnotation(HighlightSeverity.INFORMATION, elt.getTextRange(), message);
   }
 
   @Override
-  public Annotation createInfoAnnotation(@NotNull ASTNode node, String message) {
+  public Annotation createInfoAnnotation(@Nonnull ASTNode node, String message) {
     assertMyFile(node.getPsi());
     return createAnnotation(HighlightSeverity.INFORMATION, node.getTextRange(), message);
   }
@@ -134,12 +133,12 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
   }
 
   @Override
-  public Annotation createInfoAnnotation(@NotNull TextRange range, String message) {
+  public Annotation createInfoAnnotation(@Nonnull TextRange range, String message) {
     return createAnnotation(HighlightSeverity.INFORMATION, range, message);
   }
 
   @Override
-  public Annotation createAnnotation(@NotNull HighlightSeverity severity, @NotNull TextRange range, @Nullable String message) {
+  public Annotation createAnnotation(@Nonnull HighlightSeverity severity, @Nonnull TextRange range, @javax.annotation.Nullable String message) {
     //noinspection HardCodedStringLiteral
     //TODO: FIXME
     @NonNls
@@ -153,7 +152,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     return !isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnnotationSession getCurrentAnnotationSession() {
     return myAnnotationSession;

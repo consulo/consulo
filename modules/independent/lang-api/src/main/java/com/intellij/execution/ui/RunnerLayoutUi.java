@@ -27,62 +27,62 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public interface RunnerLayoutUi  {
 
-  @NotNull
+  @Nonnull
   LayoutStateDefaults getDefaults();
 
-  @NotNull
+  @Nonnull
   LayoutViewOptions getOptions();
 
-  @NotNull
+  @Nonnull
   ContentManager getContentManager();
 
-  @NotNull
-  Content addContent(@NotNull Content content);
+  @Nonnull
+  Content addContent(@Nonnull Content content);
 
-  @NotNull
-  Content addContent(@NotNull Content content, int defaultTabId, @NotNull PlaceInGrid defaultPlace, boolean defaultIsMinimized);
+  @Nonnull
+  Content addContent(@Nonnull Content content, int defaultTabId, @Nonnull PlaceInGrid defaultPlace, boolean defaultIsMinimized);
 
-  @NotNull
-  Content createContent(@NotNull String contentId, @NotNull JComponent component, @NotNull String displayName, @Nullable Icon icon, @Nullable JComponent toFocus);
+  @Nonnull
+  Content createContent(@Nonnull String contentId, @Nonnull JComponent component, @Nonnull String displayName, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable JComponent toFocus);
 
-  @NotNull
-  Content createContent(@NotNull String contentId, @NotNull ComponentWithActions contentWithActions, @NotNull String displayName, @Nullable Icon icon, @Nullable JComponent toFocus);
+  @Nonnull
+  Content createContent(@Nonnull String contentId, @Nonnull ComponentWithActions contentWithActions, @Nonnull String displayName, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable JComponent toFocus);
 
-  boolean removeContent(@Nullable Content content, boolean dispose);
+  boolean removeContent(@javax.annotation.Nullable Content content, boolean dispose);
 
-  @Nullable
-  Content findContent(@NotNull String contentId);
+  @javax.annotation.Nullable
+  Content findContent(@Nonnull String contentId);
 
-  @NotNull
+  @Nonnull
   ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced);
-  @NotNull
-  ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, final boolean forced, final boolean implicit);
+  @Nonnull
+  ActionCallback selectAndFocus(@javax.annotation.Nullable Content content, boolean requestFocus, final boolean forced, final boolean implicit);
 
-  @NotNull
-  RunnerLayoutUi addListener(@NotNull ContentManagerListener listener, @NotNull Disposable parent);
+  @Nonnull
+  RunnerLayoutUi addListener(@Nonnull ContentManagerListener listener, @Nonnull Disposable parent);
 
-  void removeListener(@NotNull final ContentManagerListener listener);
+  void removeListener(@Nonnull final ContentManagerListener listener);
 
-  void attractBy(@NotNull String condition);
-  void clearAttractionBy(@NotNull String condition);
+  void attractBy(@Nonnull String condition);
+  void clearAttractionBy(@Nonnull String condition);
 
-  void setBouncing(@NotNull Content content, final boolean activate);
+  void setBouncing(@Nonnull Content content, final boolean activate);
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
   boolean isDisposed();
 
   void updateActionsNow();
 
-  @NotNull
+  @Nonnull
   Content[] getContents();
 
   abstract class Factory {
@@ -93,8 +93,8 @@ public interface RunnerLayoutUi  {
       return ServiceManager.getService(project, Factory.class);
     }
 
-    @NotNull
-    public abstract RunnerLayoutUi create(@NotNull String runnerId, @NotNull String runnerTitle, @NotNull String sessionName, @NotNull Disposable parent);
+    @Nonnull
+    public abstract RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent);
   }
 
 }

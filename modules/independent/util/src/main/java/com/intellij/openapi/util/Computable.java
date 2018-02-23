@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  *  @author dsl
@@ -42,10 +42,10 @@ public interface Computable <T> {
   abstract class NotNullCachedComputable<T> implements Computable<T> {
     private T myValue;
 
-    @NotNull
+    @Nonnull
     protected abstract T internalCompute();
 
-    @NotNull
+    @Nonnull
     @Override
     public final T compute() {
       if (myValue == null) {

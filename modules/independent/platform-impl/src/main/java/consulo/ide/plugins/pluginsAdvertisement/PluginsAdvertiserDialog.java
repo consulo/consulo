@@ -25,9 +25,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.WholeWestDialogWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
   private boolean myUserAccepted;
   private final Map<PluginId, Boolean> myDownloadState;
 
-  public PluginsAdvertiserDialog(@Nullable Project project, @NotNull List<IdeaPluginDescriptor> toInstallPlugins) {
+  public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<IdeaPluginDescriptor> toInstallPlugins) {
     super(project);
     myDownloadState = new HashMap<>(toInstallPlugins.size());
 
@@ -61,7 +61,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     PluginAdvertiserPluginModel model = new PluginAdvertiserPluginModel(myDownloadState, myToInstallPlugins);

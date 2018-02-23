@@ -37,7 +37,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.IndexTreePathState;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -163,7 +163,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       return myRemoved;
     }
 
-    @NotNull
+    @Nonnull
     private NotificationSettings getOriginalSettings() {
       return NotificationsConfigurationImpl.getSettings(getGroupId());
     }
@@ -221,7 +221,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         }
 
         @Override
-        protected String getTextFor(@NotNull NotificationDisplayType value) {
+        protected String getTextFor(@Nonnull NotificationDisplayType value) {
           return value.getTitle();
         }
       });
@@ -250,7 +250,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         }
 
         @Override
-        protected String getTextFor(@NotNull NotificationDisplayType value) {
+        protected String getTextFor(@Nonnull NotificationDisplayType value) {
           return value.getTitle();
         }
       });
@@ -280,7 +280,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       return calcSize(super.getPreferredSize());
     }
 
-    private Dimension calcSize(@NotNull final Dimension s) {
+    private Dimension calcSize(@Nonnull final Dimension s) {
       final Container container = getParent();
       if (container != null) {
         final Dimension size = container.getSize();
@@ -307,7 +307,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
   private static class TreeColumnCellRenderer extends JLabel implements TreeCellRenderer {
     private final JTable myTable;
 
-    public TreeColumnCellRenderer(@NotNull JTable table) {
+    public TreeColumnCellRenderer(@Nonnull JTable table) {
       myTable = table;
       setHorizontalAlignment(SwingConstants.CENTER);
       setVerticalAlignment(SwingConstants.CENTER);
@@ -392,9 +392,9 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       setRoot(root);
     }
 
-    private static void addParentGroup(@NotNull NotificationParentGroupBean parent,
-                                       @NotNull DefaultMutableTreeNode node,
-                                       @NotNull Map<NotificationParentGroupBean, List<DefaultMutableTreeNode>> parentChildrenTable) {
+    private static void addParentGroup(@Nonnull NotificationParentGroupBean parent,
+                                       @Nonnull DefaultMutableTreeNode node,
+                                       @Nonnull Map<NotificationParentGroupBean, List<DefaultMutableTreeNode>> parentChildrenTable) {
       for (NotificationParentGroupBean child : NotificationParentGroup.getChildren(parent)) {
         DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
         addParentGroup(child, childNode, parentChildrenTable);

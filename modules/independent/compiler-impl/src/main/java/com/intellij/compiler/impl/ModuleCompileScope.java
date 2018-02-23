@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import java.util.HashMap;
@@ -85,7 +85,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Module[] getAffectedModules() {
     return myScopeModules.toArray(new Module[myScopeModules.size()]);
   }

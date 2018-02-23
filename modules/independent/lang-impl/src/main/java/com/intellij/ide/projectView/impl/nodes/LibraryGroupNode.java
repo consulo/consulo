@@ -37,7 +37,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +55,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     Module module = getValue().getModule();
     final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -115,7 +115,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
     if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
       return false;
@@ -141,8 +141,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
   }
 
-  @NotNull
-  static VirtualFile[] getLibraryRoots(@NotNull LibraryOrderEntry orderEntry) {
+  @Nonnull
+  static VirtualFile[] getLibraryRoots(@Nonnull LibraryOrderEntry orderEntry) {
     Library library = orderEntry.getLibrary();
     if (library == null) return VirtualFile.EMPTY_ARRAY;
     OrderRootType[] rootTypes = LibraryType.DEFAULT_EXTERNAL_ROOT_TYPES;

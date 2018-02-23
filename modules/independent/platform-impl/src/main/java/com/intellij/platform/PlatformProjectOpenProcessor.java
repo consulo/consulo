@@ -45,8 +45,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -64,19 +64,19 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  public boolean canOpenProject(@NotNull File file) {
+  public boolean canOpenProject(@Nonnull File file) {
     return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER).exists();
   }
 
   @RequiredDispatchThread
   @Override
   @Nullable
-  public Project doOpenProject(@NotNull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
+  public Project doOpenProject(@Nonnull final VirtualFile virtualFile, @Nullable final Project projectToClose, final boolean forceOpenInNewFrame) {
     return doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame, -1, null);
   }
 
   @Nullable
-  public static Project doOpenProject(@NotNull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
+  public static Project doOpenProject(@Nonnull final VirtualFile virtualFile, Project projectToClose, final boolean forceOpenInNewFrame, final int line, @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {
       baseDir = virtualFile.getParent();
@@ -196,12 +196,12 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return Application.get().getIcon();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFileSample() {
     return "<b>Consulo</b> project";
@@ -209,20 +209,20 @@ public class PlatformProjectOpenProcessor extends ProjectOpenProcessor {
 
   //region Async staff
   @Override
-  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult,
-                                 @NotNull VirtualFile virtualFile,
+  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
+                                 @Nonnull VirtualFile virtualFile,
                                  @Nullable Project projectToClose,
                                  boolean forceOpenInNewFrame,
-                                 @NotNull UIAccess uiAccess) {
+                                 @Nonnull UIAccess uiAccess) {
     doOpenProjectAsync(asyncResult, virtualFile, projectToClose, forceOpenInNewFrame, -1, uiAccess, null);
   }
 
-  public static void doOpenProjectAsync(@NotNull AsyncResult<Project> result,
-                                        @NotNull VirtualFile virtualFile,
+  public static void doOpenProjectAsync(@Nonnull AsyncResult<Project> result,
+                                        @Nonnull VirtualFile virtualFile,
                                         Project projectToClose,
                                         boolean forceOpenInNewFrame,
                                         int line,
-                                        @NotNull UIAccess uiAccess,
+                                        @Nonnull UIAccess uiAccess,
                                         @Nullable Consumer<Project> callback) {
     VirtualFile baseDir = virtualFile;
     if (!baseDir.isDirectory()) {

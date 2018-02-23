@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs;
 
 import com.intellij.notification.Notification;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TestVcsNotifier extends VcsNotifier {
 
@@ -25,7 +25,7 @@ public class TestVcsNotifier extends VcsNotifier {
 
   private Notification myLastNotification;
 
-  public TestVcsNotifier(@NotNull Project project) {
+  public TestVcsNotifier(@Nonnull Project project) {
     super(project);
   }
 
@@ -33,8 +33,8 @@ public class TestVcsNotifier extends VcsNotifier {
     return myLastNotification;
   }
 
-  @NotNull
-  public Notification notify(@NotNull Notification notification) {
+  @Nonnull
+  public Notification notify(@Nonnull Notification notification) {
     myLastNotification = notification;
     return myLastNotification;
   }

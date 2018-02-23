@@ -17,8 +17,8 @@ package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows SmartPointer that points to stubbed psi element to survive stub-to-AST switch
@@ -36,12 +36,12 @@ public interface SmartPointerAnchorProvider {
    * @return anchor to be used when restoring element
    */
   @Nullable
-  PsiElement getAnchor(@NotNull PsiElement element);
+  PsiElement getAnchor(@Nonnull PsiElement element);
 
   /**
    * @param anchor
    * @return restored original element using anchor
    */
   @Nullable
-  PsiElement restoreElement(@NotNull PsiElement anchor);
+  PsiElement restoreElement(@Nonnull PsiElement anchor);
 }

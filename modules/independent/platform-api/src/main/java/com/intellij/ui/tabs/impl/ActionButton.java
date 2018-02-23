@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Pass;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.util.ui.TimedDeadzone;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

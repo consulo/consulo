@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -25,13 +24,13 @@ import java.util.EventListener;
  * @since 12-Sep-17
  */
 public interface Tree<E> extends Component {
-  @NotNull
-  static <E> Tree<E> create(@NotNull TreeModel<E> model) {
+  @Nonnull
+  static <E> Tree<E> create(@Nonnull TreeModel<E> model) {
     return create(null, model);
   }
 
-  @NotNull
-  static <E> Tree<E> create(@Nullable E rootValue, @NotNull TreeModel<E> model) {
+  @Nonnull
+  static <E> Tree<E> create(@javax.annotation.Nullable E rootValue, @Nonnull TreeModel<E> model) {
     return UIInternal.get()._Components_tree(rootValue, model);
   }
 
@@ -40,13 +39,13 @@ public interface Tree<E> extends Component {
     void onSelected(TreeNode<K> node);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   TreeNode<E> getSelectedNode();
 
-  void expand(@NotNull TreeNode<E> node);
+  void expand(@Nonnull TreeNode<E> node);
 
-  @NotNull
-  default Runnable addSelectListener(@NotNull @RequiredUIAccess SelectListener<E> listener) {
+  @Nonnull
+  default Runnable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
     return addListener(SelectListener.class, listener);
   }
 }

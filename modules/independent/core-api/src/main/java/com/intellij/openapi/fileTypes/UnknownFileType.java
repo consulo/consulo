@@ -18,13 +18,13 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class UnknownFileType implements FileType {
   private static final NotNullLazyValue<Icon> ICON = new NotNullLazyValue<Icon>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Icon compute() {
       return AllIcons.FileTypes.Unknown;
@@ -35,19 +35,19 @@ public class UnknownFileType implements FileType {
   private UnknownFileType() {}
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "UNKNOWN";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "UNKNOWN";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "";
   }
@@ -68,7 +68,7 @@ public class UnknownFileType implements FileType {
   }
 
   @Override
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, final byte[] content) {
     return null;
   }
 }

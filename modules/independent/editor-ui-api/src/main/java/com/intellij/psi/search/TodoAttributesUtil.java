@@ -19,15 +19,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TodoAttributesUtil {
-  @NotNull
+  @Nonnull
   public static TodoAttributes createDefault() {
     return new TodoAttributes(AllIcons.General.TodoDefault, getDefaultColorSchemeTextAttributes());
   }
 
-  @NotNull
+  @Nonnull
   public static TextAttributes getDefaultColorSchemeTextAttributes() {
     return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES).clone();
   }

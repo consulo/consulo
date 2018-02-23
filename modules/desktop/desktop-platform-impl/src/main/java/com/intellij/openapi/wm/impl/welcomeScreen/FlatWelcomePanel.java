@@ -42,8 +42,7 @@ import consulo.application.ApplicationProperties;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.spash.AnimatedLogoLabel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -85,15 +84,15 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
   @RequiredDispatchThread
   public abstract JComponent createActionPanel();
 
-  @NotNull
+  @Nonnull
   @Override
-  protected JComponent createLeftComponent(@NotNull Disposable parentDisposable, Void param) {
+  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable, Void param) {
     return new NewRecentProjectPanel(parentDisposable);
   }
 
   @RequiredDispatchThread
   @Override
-  @NotNull
+  @Nonnull
   protected JComponent createRightComponent(Void param) {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
@@ -129,7 +128,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     final JComponent panel = createActionLink("Events", AllIcons.Ide.Notification.NoEvents, actionLinkRef, new AnAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         ((WelcomeDesktopBalloonLayoutImpl)myFlatWelcomeFrame.getBalloonLayout()).showPopup();
       }
     });
@@ -164,7 +163,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     AnAction action = new AnAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         ActionGroup configureGroup = (ActionGroup)ActionManager.getInstance().getAction(groupId);
         final PopupFactoryImpl.ActionGroupPopup popup = (PopupFactoryImpl.ActionGroupPopup)JBPopupFactory.getInstance()
                 .createActionGroupPopup(null, new IconsFreeActionGroup(configureGroup), e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false, ActionPlaces.WELCOME_SCREEN);
@@ -195,10 +194,10 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
    * Wraps an {@link com.intellij.ui.components.labels.ActionLink} component and delegates accessibility support to it.
    */
   public static class JActionLinkPanel extends JPanel {
-    @NotNull
+    @Nonnull
     private ActionLink myActionLink;
 
-    public JActionLinkPanel(@NotNull ActionLink actionLink) {
+    public JActionLinkPanel(@Nonnull ActionLink actionLink) {
       super(new BorderLayout());
       myActionLink = actionLink;
       add(myActionLink);
@@ -239,7 +238,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
     arrow.setVerticalAlignment(SwingConstants.BOTTOM);
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         final MouseEvent newEvent = MouseEventAdapter.convert(e, link, e.getX(), e.getY());
         link.doClick(newEvent);
         return true;
@@ -335,9 +334,9 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
       return myGroup.isPopup();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+    public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
       AnAction[] children = myGroup.getChildren(e);
       AnAction[] patched = new AnAction[children.length];
       for (int i = 0; i < children.length; i++) {
@@ -355,14 +354,14 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel<Void> {
       return new AnAction(presentation.getText(), presentation.getDescription(), null) {
         @RequiredDispatchThread
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           child.actionPerformed(e);
           UsageTrigger.trigger("welcome.screen." + e.getActionManager().getId(child));
         }
 
         @RequiredDispatchThread
         @Override
-        public void update(@NotNull AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
           child.update(e);
           e.getPresentation().setIcon(null);
         }

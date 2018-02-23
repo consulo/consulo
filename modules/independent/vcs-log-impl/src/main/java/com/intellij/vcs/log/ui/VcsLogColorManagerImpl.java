@@ -6,7 +6,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;
@@ -21,11 +21,13 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   private static Color[] ROOT_COLORS =
           {JBColor.RED, JBColor.GREEN, JBColor.BLUE, JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW, JBColor.MAGENTA, JBColor.PINK};
 
-  @NotNull private final List<VirtualFile> myRoots;
+  @Nonnull
+  private final List<VirtualFile> myRoots;
 
-  @NotNull private final Map<VirtualFile, Color> myRoots2Colors;
+  @Nonnull
+  private final Map<VirtualFile, Color> myRoots2Colors;
 
-  public VcsLogColorManagerImpl(@NotNull Collection<VirtualFile> roots) {
+  public VcsLogColorManagerImpl(@Nonnull Collection<VirtualFile> roots) {
     myRoots = new ArrayList<>(roots);
     Collections.sort(myRoots, Comparator.comparing(VirtualFile::getName));
     myRoots2Colors = ContainerUtil.newHashMap();
@@ -46,8 +48,8 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
     }
   }
 
-  @NotNull
-  public static JBColor getBackgroundColor(@NotNull final Color baseRootColor) {
+  @Nonnull
+  public static JBColor getBackgroundColor(@Nonnull final Color baseRootColor) {
     return new JBColor(() -> ColorUtil.mix(baseRootColor, UIUtil.getTableBackground(), 0.75));
   }
 
@@ -56,9 +58,9 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
     return myRoots.size() > 1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Color getRootColor(@NotNull VirtualFile root) {
+  public Color getRootColor(@Nonnull VirtualFile root) {
     Color color = myRoots2Colors.get(root);
     if (color == null) {
       LOG.error("No color record for root " + root + ". All roots: " + myRoots2Colors);

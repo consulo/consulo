@@ -22,7 +22,7 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettin
 import com.intellij.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * We need to avoid memory leaks on ide project rename. This class is responsible for that.
@@ -32,14 +32,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProjectRenameAware {
   
-  public static void beAware(@NotNull Project project) {
+  public static void beAware(@Nonnull Project project) {
     final ExternalSystemFacadeManager facadeManager = ServiceManager.getService(ExternalSystemFacadeManager.class);
     for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
       AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
       //noinspection unchecked
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override
-        public void onProjectRenamed(@NotNull String oldName, @NotNull String newName) {
+        public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
           facadeManager.onProjectRename(oldName, newName);
         }
       });

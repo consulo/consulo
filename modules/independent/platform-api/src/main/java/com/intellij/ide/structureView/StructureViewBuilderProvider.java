@@ -22,8 +22,8 @@ package com.intellij.ide.structureView;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface StructureViewBuilderProvider {
   /**
@@ -35,5 +35,5 @@ public interface StructureViewBuilderProvider {
    */
 
   @Nullable
-  StructureViewBuilder getStructureViewBuilder(@NotNull FileType fileType, @NotNull VirtualFile file, @NotNull Project project);  
+  StructureViewBuilder getStructureViewBuilder(@Nonnull FileType fileType, @Nonnull VirtualFile file, @Nonnull Project project);
 }

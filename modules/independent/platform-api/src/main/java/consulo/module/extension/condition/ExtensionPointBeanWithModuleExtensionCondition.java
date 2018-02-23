@@ -18,7 +18,7 @@ package consulo.module.extension.condition;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ public class ExtensionPointBeanWithModuleExtensionCondition extends AbstractExte
   public String requireModuleExtensions;
 
   private NotNullLazyValue<ModuleExtensionCondition> myModuleExtensionCondition = new NotNullLazyValue<ModuleExtensionCondition>() {
-    @NotNull
+    @Nonnull
     @Override
     protected ModuleExtensionCondition compute() {
       return ModuleExtensionConditionImpl.create(requireModuleExtensions);
@@ -37,7 +37,7 @@ public class ExtensionPointBeanWithModuleExtensionCondition extends AbstractExte
   };
 
 
-  @NotNull
+  @Nonnull
   public ModuleExtensionCondition getModuleExtensionCondition() {
     return myModuleExtensionCondition.getValue();
   }

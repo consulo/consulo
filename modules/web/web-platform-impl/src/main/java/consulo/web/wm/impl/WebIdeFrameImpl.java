@@ -27,8 +27,7 @@ import consulo.ui.Window;
 import consulo.ui.internal.WGwtRootPanelImpl;
 import consulo.ui.shared.Rectangle2D;
 import consulo.web.application.WebApplication;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -72,7 +71,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return (WGwtRootPanelImpl)myRootView.getComponent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public consulo.ui.Window getWindow() {
     return myWindow;
@@ -94,7 +93,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Project getProject() {
     return myProject;
@@ -115,7 +114,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
     return null;

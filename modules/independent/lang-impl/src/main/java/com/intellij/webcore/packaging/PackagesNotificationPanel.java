@@ -4,8 +4,8 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -40,7 +40,7 @@ public class PackagesNotificationPanel {
     });
   }
 
-  public static void showError(@NotNull String title, @NotNull PackageManagementService.ErrorDescription description) {
+  public static void showError(@Nonnull String title, @Nonnull PackageManagementService.ErrorDescription description) {
     final PackagingErrorDialog dialog = new PackagingErrorDialog(title, description);
     dialog.show();
   }
@@ -79,7 +79,7 @@ public class PackagesNotificationPanel {
     showContent(text, MessageType.INFO.getPopupBackground());
   }
 
-  private void showContent(@NotNull String text, @NotNull Color background) {
+  private void showContent(@Nonnull String text, @Nonnull Color background) {
     String htmlText = text.startsWith("<html>") ? text : UIUtil.toHtml(text);
     myHtmlViewer.setText(htmlText);
     myHtmlViewer.setBackground(background);

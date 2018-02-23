@@ -17,21 +17,21 @@ package com.intellij.vcs.log.graph.api.permanent;
 
 import com.intellij.vcs.log.graph.api.GraphLayout;
 import com.intellij.vcs.log.graph.api.LinearGraph;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public interface PermanentGraphInfo<CommitId> {
 
-  @NotNull
+  @Nonnull
   PermanentCommitsInfo<CommitId> getPermanentCommitsInfo();
 
-  @NotNull
+  @Nonnull
   LinearGraph getLinearGraph();
 
-  @NotNull
+  @Nonnull
   GraphLayout getPermanentGraphLayout();
 
-  @NotNull
+  @Nonnull
   Set<Integer> getBranchNodeIds();
 }

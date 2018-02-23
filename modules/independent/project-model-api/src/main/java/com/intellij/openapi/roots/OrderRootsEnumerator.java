@@ -18,7 +18,7 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Interface for processing roots of OrderEntry's from {@link OrderEnumerator}.
@@ -32,26 +32,26 @@ public interface OrderRootsEnumerator {
   /**
    * @return all roots processed by this enumerator
    */
-  @NotNull
+  @Nonnull
   VirtualFile[] getRoots();
 
   /**
    * @return urls of all roots processed by this enumerator
    */
-  @NotNull
+  @Nonnull
   String[] getUrls();
 
   /**
    * @return list of path to all roots processed by this enumerator
    */
-  @NotNull
+  @Nonnull
   PathsList getPathsList();
 
   /**
    * Add all source roots processed by this enumerator to <code>list</code>
    * @param list list
    */
-  void collectPaths(@NotNull PathsList list);
+  void collectPaths(@Nonnull PathsList list);
 
   /**
    * If roots for this enumerator are already evaluated the cached result will be used. Otherwise roots will be evaluated and cached for
@@ -60,7 +60,7 @@ public interface OrderRootsEnumerator {
    * option is used
    * @return this instance
    */
-  @NotNull
+  @Nonnull
   OrderRootsEnumerator usingCache();
 
   /**
@@ -70,7 +70,7 @@ public interface OrderRootsEnumerator {
    *
    * @return this instance
    */
-  @NotNull
+  @Nonnull
   OrderRootsEnumerator withoutSelfModuleOutput();
 
   /**
@@ -79,6 +79,6 @@ public interface OrderRootsEnumerator {
    * @param provider function to evaluate roots for an order entry
    * @return this instance
    */
-  @NotNull
-  OrderRootsEnumerator usingCustomRootProvider(@NotNull NotNullFunction<OrderEntry, VirtualFile[]> provider);
+  @Nonnull
+  OrderRootsEnumerator usingCustomRootProvider(@Nonnull NotNullFunction<OrderEntry, VirtualFile[]> provider);
 }

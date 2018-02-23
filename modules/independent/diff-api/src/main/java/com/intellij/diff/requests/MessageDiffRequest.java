@@ -15,19 +15,20 @@
  */
 package com.intellij.diff.requests;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public class MessageDiffRequest extends DiffRequest {
   @Nullable private String myTitle;
-  @NotNull private String myMessage;
+  @Nonnull
+  private String myMessage;
 
-  public MessageDiffRequest(@NotNull String message) {
+  public MessageDiffRequest(@Nonnull String message) {
     this(null, message);
   }
 
-  public MessageDiffRequest(@Nullable String title, @NotNull String message) {
+  public MessageDiffRequest(@Nullable String title, @Nonnull String message) {
     myTitle = title;
     myMessage = message;
   }
@@ -38,7 +39,7 @@ public class MessageDiffRequest extends DiffRequest {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   public String getMessage() {
     return myMessage;
   }
@@ -47,7 +48,7 @@ public class MessageDiffRequest extends DiffRequest {
     myTitle = title;
   }
 
-  public void setMessage(@NotNull String message) {
+  public void setMessage(@Nonnull String message) {
     myMessage = message;
   }
 

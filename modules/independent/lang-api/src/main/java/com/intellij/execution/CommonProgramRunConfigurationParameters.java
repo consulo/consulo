@@ -16,8 +16,8 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -34,9 +34,9 @@ public interface CommonProgramRunConfigurationParameters {
   @Nullable
   String getWorkingDirectory();
 
-  void setEnvs(@NotNull Map<String, String> envs);
+  void setEnvs(@Nonnull Map<String, String> envs);
 
-  @NotNull
+  @Nonnull
   Map<String, String> getEnvs();
 
   void setPassParentEnvs(boolean passParentEnvs);

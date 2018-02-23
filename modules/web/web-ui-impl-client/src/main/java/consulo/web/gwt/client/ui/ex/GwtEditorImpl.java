@@ -30,7 +30,6 @@ import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.client.util.GwtUtil;
 import consulo.web.gwt.client.util.ReportableCallable;
 import consulo.web.gwt.shared.transport.*;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -188,7 +187,7 @@ public class GwtEditorImpl extends SimplePanel {
 
   public static final int ourSelectFlag = 1 << 24;
 
-  @Nullable
+  @javax.annotation.Nullable
   private EditorSegmentBuilder myBuilder;
 
   private int myLineCount;

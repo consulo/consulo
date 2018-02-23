@@ -20,8 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartFMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -120,12 +119,12 @@ public final class Presentation implements Cloneable {
     myChangeSupport.removePropertyChangeListener(l);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getText() {
     return myText;
   }
 
-  public void setText(@Nullable String text, boolean mayContainMnemonic) {
+  public void setText(@javax.annotation.Nullable String text, boolean mayContainMnemonic) {
     int oldMnemonic = myMnemonic;
     int oldDisplayedMnemonicIndex = myDisplayedMnemonicIndex;
     String oldText = myText;
@@ -193,7 +192,7 @@ public final class Presentation implements Cloneable {
     setText(presentation.getTextWithMnemonic());
   }
 
-  public static String restoreTextWithMnemonic(@Nullable String text, final int mnemonic) {
+  public static String restoreTextWithMnemonic(@javax.annotation.Nullable String text, final int mnemonic) {
     if (text == null) {
       return null;
     }
@@ -219,7 +218,7 @@ public final class Presentation implements Cloneable {
     return myIcon;
   }
 
-  public void setIcon(@Nullable Icon icon) {
+  public void setIcon(@javax.annotation.Nullable Icon icon) {
     Icon oldIcon = myIcon;
     if (oldIcon == icon) return;
 
@@ -231,7 +230,7 @@ public final class Presentation implements Cloneable {
     return myDisabledIcon;
   }
 
-  public void setDisabledIcon(@Nullable Icon icon) {
+  public void setDisabledIcon(@javax.annotation.Nullable Icon icon) {
     Icon oldDisabledIcon = myDisabledIcon;
     myDisabledIcon = icon;
     myChangeSupport.firePropertyChange(PROP_DISABLED_ICON, oldDisabledIcon, myDisabledIcon);
@@ -241,7 +240,7 @@ public final class Presentation implements Cloneable {
     return myHoveredIcon;
   }
 
-  public void setHoveredIcon(@Nullable final Icon hoveredIcon) {
+  public void setHoveredIcon(@javax.annotation.Nullable final Icon hoveredIcon) {
     Icon old = myHoveredIcon;
     myHoveredIcon = hoveredIcon;
     myChangeSupport.firePropertyChange(PROP_HOVERED_ICON, old, myHoveredIcon);
@@ -325,12 +324,12 @@ public final class Presentation implements Cloneable {
     setEnabled(presentation.isEnabled());
   }
 
-  @Nullable
-  public Object getClientProperty(@NonNls @NotNull String key) {
+  @javax.annotation.Nullable
+  public Object getClientProperty(@NonNls @Nonnull String key) {
     return myUserMap.get(key);
   }
 
-  public void putClientProperty(@NonNls @NotNull String key, @Nullable Object value) {
+  public void putClientProperty(@NonNls @Nonnull String key, @javax.annotation.Nullable Object value) {
     Object oldValue = myUserMap.get(key);
     if (Comparing.equal(oldValue, value)) return;
     myUserMap = value == null ? myUserMap.minus(key) : myUserMap.plus(key, value);

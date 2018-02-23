@@ -19,8 +19,8 @@ import com.intellij.designer.model.PropertiesContainer;
 import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.PropertyRenderer;
 import com.intellij.designer.propertyTable.PropertyTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -29,7 +29,7 @@ import javax.swing.*;
  * @author Vladimir Kondratyev
  */
 public class BooleanRenderer extends JCheckBox implements PropertyRenderer {
-  @NotNull
+  @Nonnull
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  PropertyContext context,
                                  @Nullable Object value,

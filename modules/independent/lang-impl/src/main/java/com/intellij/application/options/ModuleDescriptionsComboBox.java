@@ -24,8 +24,8 @@ import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedComboBoxModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -60,13 +60,13 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     setRenderer(new ModuleDescriptionListCellRenderer());
   }
 
-  public void allowEmptySelection(@NotNull String emptySelectionText) {
+  public void allowEmptySelection(@Nonnull String emptySelectionText) {
     myAllowEmptySelection = true;
     myModel.add(null);
     setRenderer(new ModuleDescriptionListCellRenderer(emptySelectionText));
   }
 
-  public void setModules(@NotNull Collection<Module> modules) {
+  public void setModules(@Nonnull Collection<Module> modules) {
     myModel.clear();
     for (Module module : modules) {
       myModel.add(new LoadedModuleDescriptionImpl(module));
@@ -76,7 +76,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     }
   }
 
-  public void setAllModulesFromProject(@NotNull Project project) {
+  public void setAllModulesFromProject(@Nonnull Project project) {
     setModules(Arrays.asList(ModuleManager.getInstance(project).getModules()));
   }
 
@@ -84,7 +84,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     myModel.setSelectedItem(module != null ? new LoadedModuleDescriptionImpl(module) : null);
   }
 
-  public void setSelectedModule(@NotNull Project project, @NotNull String moduleName) {
+  public void setSelectedModule(@Nonnull Project project, @Nonnull String moduleName) {
     Module module = ModuleManager.getInstance(project).findModuleByName(moduleName);
     if (module != null) {
       setSelectedModule(module);
@@ -125,7 +125,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
       this("[none]");
     }
 
-    public ModuleDescriptionListCellRenderer(@NotNull String emptySelectionText) {
+    public ModuleDescriptionListCellRenderer(@Nonnull String emptySelectionText) {
       myEmptySelectionText = emptySelectionText;
     }
 

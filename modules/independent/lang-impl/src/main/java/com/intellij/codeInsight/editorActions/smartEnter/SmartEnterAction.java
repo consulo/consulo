@@ -33,7 +33,7 @@ import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class SmartEnterAction extends EditorAction {
     }
 
     @Override
-    public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       return getEnterHandler().isEnabled(editor, caret, dataContext);
     }
 

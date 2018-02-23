@@ -24,8 +24,8 @@ import com.intellij.util.Consumer;
 import consulo.ui.*;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,14 +39,14 @@ public class WebPathChooserDialog implements PathChooserDialog {
   @Nullable
   private Project myProject;
 
-  public WebPathChooserDialog(@Nullable Project project, @NotNull FileChooserDescriptor descriptor) {
+  public WebPathChooserDialog(@Nullable Project project, @Nonnull FileChooserDescriptor descriptor) {
     myDescriptor = descriptor;
     myProject = project;
   }
 
   @Override
   @RequiredUIAccess
-  public void choose(@Nullable VirtualFile toSelect, @NotNull Consumer<List<VirtualFile>> callback) {
+  public void choose(@javax.annotation.Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     Window fileTree = Window.createModal("Select file");
     fileTree.setSize(new Size(400, 400));
     fileTree.setContent(Label.create("TEst"));

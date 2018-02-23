@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> {
   private volatile boolean myComputed;
-  @Nullable private volatile T myValue;
+  @Nullable
+  private volatile T myValue;
 
   @Nullable
   protected abstract T compute();

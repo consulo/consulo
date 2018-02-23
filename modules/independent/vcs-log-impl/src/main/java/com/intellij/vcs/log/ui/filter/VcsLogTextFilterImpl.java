@@ -20,26 +20,27 @@ import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogDetailsFilter;
 import com.intellij.vcs.log.VcsLogTextFilter;
 import com.intellij.vcs.log.impl.VcsLogUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilter {
 
-  @NotNull private final String myText;
+  @Nonnull
+  private final String myText;
   private final boolean myMatchCase;
   @Nullable private final Pattern myPattern;
 
-  public VcsLogTextFilterImpl(@NotNull String text, boolean isRegexAllowed, boolean matchCase) {
+  public VcsLogTextFilterImpl(@Nonnull String text, boolean isRegexAllowed, boolean matchCase) {
     myText = text;
     myMatchCase = matchCase;
     myPattern = createPattern(myText, isRegexAllowed, myMatchCase);
   }
 
   @Nullable
-  private static Pattern createPattern(@NotNull String text, boolean isRegexAllowed, boolean matchCase) {
+  private static Pattern createPattern(@Nonnull String text, boolean isRegexAllowed, boolean matchCase) {
     if (isRegexAllowed && VcsLogUtil.maybeRegexp(text)) {
       try {
         return matchCase ? Pattern.compile(text) : Pattern.compile(text, Pattern.CASE_INSENSITIVE);
@@ -52,17 +53,17 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
 
   // used in upsource
   @SuppressWarnings("unused")
-  public VcsLogTextFilterImpl(@NotNull String text) {
+  public VcsLogTextFilterImpl(@Nonnull String text) {
     this(text, false, false);
   }
 
   @Override
-  public boolean matches(@NotNull VcsCommitMetadata details) {
+  public boolean matches(@Nonnull VcsCommitMetadata details) {
     return matches(this, details.getFullMessage());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
@@ -82,7 +83,7 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
     return (isRegex() ? "matching " : "containing ") + myText + " (case " + (myMatchCase ? "sensitive" : "insensitive") + ")";
   }
 
-  public static boolean matches(@NotNull VcsLogTextFilter filter, @NotNull String message) {
+  public static boolean matches(@Nonnull VcsLogTextFilter filter, @Nonnull String message) {
     Pattern pattern;
     if (filter instanceof VcsLogTextFilterImpl) {
       pattern = ((VcsLogTextFilterImpl)filter).myPattern;

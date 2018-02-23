@@ -33,7 +33,7 @@ import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -162,7 +162,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return DISPLAY_NAME;
   }
@@ -173,25 +173,25 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATT_DESCRIPTORS;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ColorDescriptor[] getColorDescriptors() {
     return COLOR_DESCRIPTORS;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getHighlighter() {
     return new PlainSyntaxHighlighter();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDemoText() {
     try {
       return FileUtil.loadTextAndClose(getClass().getResourceAsStream("/colorSettingPage/general.txt"), true) + getCustomSeveritiesDemoText();

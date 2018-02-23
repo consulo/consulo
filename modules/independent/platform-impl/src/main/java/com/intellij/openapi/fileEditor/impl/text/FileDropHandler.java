@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -54,7 +54,7 @@ public class FileDropHandler implements EditorDropHandler {
   }
 
   @Override
-  public void handleDrop(@NotNull final Transferable t, @Nullable final Project project, EditorWindow editorWindow) {
+  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, EditorWindow editorWindow) {
     if (project != null) {
       final List<File> fileList = FileCopyPasteUtil.getFileList(t);
       if (fileList != null) {

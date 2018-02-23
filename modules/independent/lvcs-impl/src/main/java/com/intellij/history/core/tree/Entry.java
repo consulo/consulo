@@ -22,7 +22,7 @@ import com.intellij.history.core.StreamUtil;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -194,7 +194,7 @@ public abstract class Entry {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public abstract Entry copy();
 
   public void setName(String newName) {

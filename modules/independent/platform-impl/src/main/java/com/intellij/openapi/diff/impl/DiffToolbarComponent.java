@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl;
 
 import com.intellij.openapi.diff.DiffRequest;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public class DiffToolbarComponent extends JPanel {
     myWholeComponent = wholeComponent;
   }
 
-  public void resetToolbar(@NotNull DiffRequest.ToolbarAddons toolBar) {
+  public void resetToolbar(@Nonnull DiffRequest.ToolbarAddons toolBar) {
     if (myToolbar != null) remove(myToolbar.getComponent());
     myToolbar = new DiffToolbarImpl();
     myToolbar.setTargetComponent(myWholeComponent);

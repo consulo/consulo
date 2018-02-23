@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Used for "goto code block start/end" and "highlight current scope".

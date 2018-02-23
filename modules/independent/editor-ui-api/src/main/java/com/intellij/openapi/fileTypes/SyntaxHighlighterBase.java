@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -78,9 +78,9 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for one of given keys.
    */
   protected static void safeMap(
-    @NotNull final Map<IElementType, TextAttributesKey> map,
-    @NotNull final TokenSet keys,
-    @NotNull final TextAttributesKey value)
+    @Nonnull final Map<IElementType, TextAttributesKey> map,
+    @Nonnull final TokenSet keys,
+    @Nonnull final TextAttributesKey value)
   {
     for (final IElementType type : keys.getTypes()) {
       safeMap(map, type, value);
@@ -92,9 +92,9 @@ public abstract class SyntaxHighlighterBase implements SyntaxHighlighter {
    * Throws error if the map already contains different mapping for given key.
    */
   protected static void safeMap(
-    @NotNull final Map<IElementType, TextAttributesKey> map,
-    @NotNull final IElementType type,
-    @NotNull final TextAttributesKey value)
+    @Nonnull final Map<IElementType, TextAttributesKey> map,
+    @Nonnull final IElementType type,
+    @Nonnull final TextAttributesKey value)
   {
     final TextAttributesKey oldVal = map.put(type, value);
     if (oldVal != null && !oldVal.equals(value)) {

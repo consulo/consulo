@@ -20,7 +20,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected final ProjectImpl myProject;
@@ -31,18 +31,18 @@ class ProjectStateStorageManager extends StateStorageManagerImpl {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getConfigurationMacro(boolean directorySpec) {
     return StoragePathMacros.PROJECT_CONFIG_DIR;
   }
 
   @Override
-  protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
+  protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
     return new StorageData(ROOT_TAG_NAME);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected StateStorage.Listener createStorageTopicListener() {
     return myProject.getMessageBus().syncPublisher(StateStorage.PROJECT_STORAGE_TOPIC);

@@ -16,10 +16,10 @@
 package com.intellij.lang;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LanguageDialect extends Language {
-  public LanguageDialect(@NonNls @NotNull String id, @NotNull Language baseLanguage) {
+  public LanguageDialect(@NonNls @Nonnull String id, @Nonnull Language baseLanguage) {
     super(baseLanguage, id, "");
   }
 }

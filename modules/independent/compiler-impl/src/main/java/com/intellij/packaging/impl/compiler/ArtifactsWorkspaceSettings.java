@@ -23,7 +23,7 @@ import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +45,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
     myProject = project;
   }
 
-  public static ArtifactsWorkspaceSettings getInstance(@NotNull Project project) {
+  public static ArtifactsWorkspaceSettings getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactsWorkspaceSettings.class);
   }
 
@@ -58,7 +58,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
     return result;
   }
 
-  public void setArtifactsToBuild(@NotNull Collection<? extends Artifact> artifacts) {
+  public void setArtifactsToBuild(@Nonnull Collection<? extends Artifact> artifacts) {
     myState.myArtifactsToBuild.clear();
     for (Artifact artifact : artifacts) {
       myState.myArtifactsToBuild.add(artifact.getName());

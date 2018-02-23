@@ -15,7 +15,7 @@
  */
 package consulo.module.extension;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,5 +24,5 @@ import java.util.EventListener;
  * @since 2:20/10.09.13
  */
 public interface ModuleExtensionChangeListener extends EventListener {
-  void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension);
+  void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension);
 }

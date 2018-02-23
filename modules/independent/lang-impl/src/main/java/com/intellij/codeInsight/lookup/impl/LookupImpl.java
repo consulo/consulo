@@ -61,8 +61,8 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -85,7 +85,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   private final Object myLock = new Object();
   private final JBList myList = new JBList(new CollectionListModel<LookupElement>()) {
     @Override
-    protected void processKeyEvent(@NotNull final KeyEvent e) {
+    protected void processKeyEvent(@Nonnull final KeyEvent e) {
       final char keyChar = e.getKeyChar();
       if (keyChar == KeyEvent.VK_ENTER || keyChar == KeyEvent.VK_TAB) {
         IdeFocusManager.getInstance(myProject).requestFocus(myEditor.getContentComponent(), true).doWhenDone(
@@ -96,7 +96,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       super.processKeyEvent(e);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
       return new CompletionExtender(this);
@@ -128,7 +128,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   boolean myUpdating;
   private LookupUi myUi;
 
-  public LookupImpl(Project project, Editor editor, @NotNull LookupArranger arranger) {
+  public LookupImpl(Project project, Editor editor, @Nonnull LookupArranger arranger) {
     super(new JPanel(new BorderLayout()));
     setForceShowAsPopup(true);
     setCancelOnClickOutside(false);
@@ -447,16 +447,16 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     return p;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String itemPattern(@NotNull LookupElement element) {
+  public String itemPattern(@Nonnull LookupElement element) {
     if (element instanceof EmptyLookupItem) return "";
     return myPresentableArranger.itemPattern(element);
   }
 
   @Override
-  @NotNull
-  public PrefixMatcher itemMatcher(@NotNull LookupElement item) {
+  @Nonnull
+  public PrefixMatcher itemMatcher(@Nonnull LookupElement item) {
     if (item instanceof EmptyLookupItem) {
       return new CamelHumpMatcher("");
     }
@@ -771,7 +771,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
       private LookupElement oldItem = null;
 
       @Override
-      public void valueChanged(@NotNull ListSelectionEvent e){
+      public void valueChanged(@Nonnull ListSelectionEvent e){
         if (!myUpdating) {
           final LookupElement item = getCurrentItem();
           fireCurrentItemChanged(oldItem, item);
@@ -783,7 +783,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         setFocusDegree(FocusDegree.FOCUSED);
         markSelectionTouched();
 
@@ -995,7 +995,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     DocumentWindow documentWindow = getInjectedDocument(myEditor.getCaretModel().getOffset());
     if (documentWindow != null) {
@@ -1006,12 +1006,12 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getTopLevelEditor() {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;
@@ -1120,7 +1120,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     requestResize();
   }
 
-  public void addAdvertisement(@NotNull final String text, final @Nullable Color bgColor) {
+  public void addAdvertisement(@Nonnull final String text, final @Nullable Color bgColor) {
     if (containsDummyIdentifier(text)) {
       return;
     }
@@ -1163,8 +1163,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable 
     return true;
   }
 
-  @NotNull
-  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@NotNull Iterable<LookupElement> items, boolean hideSingleValued) {
+  @Nonnull
+  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items, boolean hideSingleValued) {
     return withLock(() -> myPresentableArranger.getRelevanceObjects(items, hideSingleValued));
   }
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -29,9 +29,9 @@ public interface FileStatusProvider {
 
   ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcs.fileStatusProvider");
 
-  FileStatus getFileStatus(@NotNull VirtualFile virtualFile);
-  void refreshFileStatusFromDocument(@NotNull VirtualFile virtualFile, @NotNull Document doc);
+  FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
+  void refreshFileStatusFromDocument(@Nonnull VirtualFile virtualFile, @Nonnull Document doc);
 
-  @NotNull
-  ThreeState getNotChangedDirectoryParentingStatus(@NotNull VirtualFile virtualFile);
+  @Nonnull
+  ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile);
 }

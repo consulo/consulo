@@ -19,8 +19,8 @@ import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ import java.util.List;
  *         Time: 6:56:55 PM
  */
 public interface TemplateLanguageBlockFactory {
-  TemplateLanguageBlock createTemplateLanguageBlock(@NotNull ASTNode node,
+  TemplateLanguageBlock createTemplateLanguageBlock(@Nonnull ASTNode node,
                                                     @Nullable Wrap wrap,
                                                     @Nullable Alignment alignment,
                                                     @Nullable List<DataLanguageBlockWrapper> foreignChildren,
-                                                    @NotNull CodeStyleSettings codeStyleSettings); 
+                                                    @Nonnull CodeStyleSettings codeStyleSettings);
 }

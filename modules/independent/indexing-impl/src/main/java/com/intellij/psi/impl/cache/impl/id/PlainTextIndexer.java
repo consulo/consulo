@@ -18,15 +18,15 @@ package com.intellij.psi.impl.cache.impl.id;
 import com.intellij.psi.search.UsageSearchContext;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
 public class PlainTextIndexer implements IdIndexer {
   @Override
-  @NotNull
-  public Map<IdIndexEntry, Integer> map(@NotNull final FileContent inputData) {
+  @Nonnull
+  public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
     final IdDataConsumer consumer = new IdDataConsumer();
     final CharSequence chars = inputData.getContentAsText();
     IdTableBuilding.scanWords(new IdTableBuilding.ScanWordProcessor() {

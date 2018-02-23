@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,7 +28,7 @@ public abstract class FrameTitleBuilder {
     return ServiceManager.getService(FrameTitleBuilder.class);
   }
 
-  public abstract String getProjectTitle(@NotNull final Project project);
+  public abstract String getProjectTitle(@Nonnull final Project project);
 
-  public abstract String getFileTitle(@NotNull final Project project, @NotNull final VirtualFile file);
+  public abstract String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file);
 }

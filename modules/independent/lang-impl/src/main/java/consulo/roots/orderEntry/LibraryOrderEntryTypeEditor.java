@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<LibraryOrderEntryImpl> {
   @Override
-  public void navigate(@NotNull final LibraryOrderEntryImpl orderEntry) {
+  public void navigate(@Nonnull final LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
@@ -47,9 +47,9 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@NotNull LibraryOrderEntryImpl orderEntry) {
+  public CellAppearanceEx getCellAppearance(@Nonnull LibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) { //library can be removed
       return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
     }
@@ -59,9 +59,9 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
                                                                 !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@NotNull LibraryOrderEntryImpl orderEntry, @NotNull StructureConfigurableContext context) {
+  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@Nonnull LibraryOrderEntryImpl orderEntry, @Nonnull StructureConfigurableContext context) {
     return new LibraryClasspathTableItem<LibraryOrderEntryImpl>(orderEntry, context);
   }
 }

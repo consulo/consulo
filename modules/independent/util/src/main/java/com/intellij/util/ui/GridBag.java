@@ -18,8 +18,8 @@ package com.intellij.util.ui;
 import gnu.trove.TIntDoubleHashMap;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -57,36 +57,44 @@ import java.awt.*;
 @SuppressWarnings({"JavaDoc"})
 public class GridBag extends GridBagConstraints {
   private int myDefaultAnchor = anchor;
-  @NotNull private final TIntIntHashMap myDefaultColumnAnchors = new TIntIntHashMap();
+  @Nonnull
+  private final TIntIntHashMap myDefaultColumnAnchors = new TIntIntHashMap();
 
   private int myDefaultFill = fill;
-  @NotNull private final TIntIntHashMap myDefaultColumnFills = new TIntIntHashMap();
+  @Nonnull
+  private final TIntIntHashMap myDefaultColumnFills = new TIntIntHashMap();
 
   private double myDefaultWeightX = weightx;
-  @NotNull private final TIntDoubleHashMap myDefaultColumnWeightsX = new TIntDoubleHashMap();
+  @Nonnull
+  private final TIntDoubleHashMap myDefaultColumnWeightsX = new TIntDoubleHashMap();
   private double myDefaultWeightY = weighty;
-  @NotNull private final TIntDoubleHashMap myDefaultColumnWeightsY = new TIntDoubleHashMap();
+  @Nonnull
+  private final TIntDoubleHashMap myDefaultColumnWeightsY = new TIntDoubleHashMap();
 
   private int myDefaultPaddingX = ipadx;
-  @NotNull private final TIntIntHashMap myDefaultColumnPaddingsX = new TIntIntHashMap();
+  @Nonnull
+  private final TIntIntHashMap myDefaultColumnPaddingsX = new TIntIntHashMap();
   private int myDefaultPaddingY = ipady;
-  @NotNull private final TIntIntHashMap myDefaultColumnPaddingsY = new TIntIntHashMap();
+  @Nonnull
+  private final TIntIntHashMap myDefaultColumnPaddingsY = new TIntIntHashMap();
 
-  @Nullable private Insets myDefaultInsets = insets;
-  @NotNull private final TIntObjectHashMap<Insets> myDefaultColumnInsets = new TIntObjectHashMap<Insets>();
+  @Nullable
+  private Insets myDefaultInsets = insets;
+  @Nonnull
+  private final TIntObjectHashMap<Insets> myDefaultColumnInsets = new TIntObjectHashMap<Insets>();
 
   public GridBag() {
     gridx = gridy = -1;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag nextLine() {
     gridy++;
     gridx = -1;
     return reset();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag next() {
     gridx++;
     return reset();
@@ -96,7 +104,7 @@ public class GridBag extends GridBagConstraints {
     return gridy;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setLine(int line) {
     gridy = line;
     return this;
@@ -106,13 +114,13 @@ public class GridBag extends GridBagConstraints {
     return gridx;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setColumn(int cell) {
     gridx = cell;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag reset() {
     gridwidth = gridheight = 1;
 
@@ -128,25 +136,25 @@ public class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag anchor(int anchor) {
     this.anchor = anchor;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag fillCell() {
     fill = GridBagConstraints.BOTH;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag fillCellHorizontally() {
     fill = GridBagConstraints.HORIZONTAL;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag fillCellVertically() {
     fill = GridBagConstraints.VERTICAL;
     return this;
@@ -157,50 +165,50 @@ public class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag weightx(double weight) {
     weightx = weight;
     return this;
   }
 
 
-  @NotNull
+  @Nonnull
   public GridBag weighty(double weight) {
     weighty = weight;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag coverLine() {
     gridwidth = GridBagConstraints.REMAINDER;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag coverLine(int cells) {
     gridwidth = cells;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag coverColumn() {
     gridheight = GridBagConstraints.REMAINDER;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag coverColumn(int cells) {
     gridheight = cells;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag padx(int padding) {
     ipadx = padding;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag pady(int padding) {
     ipady = padding;
     return this;
@@ -210,7 +218,7 @@ public class GridBag extends GridBagConstraints {
   /**
    * @see #insets(java.awt.Insets)
    */
-  @NotNull
+  @Nonnull
   public GridBag insets(int top, int left, int bottom, int right) {
     return insets(new Insets(top, left, bottom, right));
   }
@@ -219,7 +227,7 @@ public class GridBag extends GridBagConstraints {
    * Pass -1 to use a default value for this column.
    * E.g, Insets(10, -1, -1, -1) means that 'top' will be changed to 10 and other sides will be set to defaults for this column.
    */
-  @NotNull
+  @Nonnull
   public GridBag insets(@Nullable Insets insets) {
     if (insets != null && (insets.top < 0 || insets.bottom < 0 || insets.left < 0 || insets.right < 0)) {
       Insets def = getDefaultInsets(gridx);
@@ -237,7 +245,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultAnchor;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultAnchor(int anchor) {
     myDefaultAnchor = anchor;
     return this;
@@ -247,7 +255,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnAnchors.containsKey(column) ? myDefaultColumnAnchors.get(column) : getDefaultAnchor();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultAnchor(int column, int anchor) {
     if (anchor == -1) {
       myDefaultColumnAnchors.remove(column);
@@ -262,7 +270,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultFill;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultFill(int fill) {
     myDefaultFill = fill;
     return this;
@@ -272,7 +280,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnFills.containsKey(column) ? myDefaultColumnFills.get(column) : getDefaultFill();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultFill(int column, int fill) {
     if (fill == -1) {
       myDefaultColumnFills.remove(column);
@@ -287,7 +295,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultWeightX;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultWeightX(double weight) {
     myDefaultWeightX = weight;
     return this;
@@ -297,7 +305,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnWeightsX.containsKey(column) ? myDefaultColumnWeightsX.get(column) : getDefaultWeightX();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultWeightX(int column, double weight) {
     if (weight == -1) {
       myDefaultColumnWeightsX.remove(column);
@@ -313,7 +321,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultWeightY;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultWeightY(double weight) {
     myDefaultWeightY = weight;
     return this;
@@ -323,7 +331,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnWeightsY.containsKey(column) ? myDefaultColumnWeightsY.get(column) : getDefaultWeightY();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultWeightY(int column, double weight) {
     if (weight == -1) {
       myDefaultColumnWeightsY.remove(column);
@@ -339,7 +347,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultPaddingX;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultPaddingX(int padding) {
     myDefaultPaddingX = padding;
     return this;
@@ -349,7 +357,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnPaddingsX.containsKey(column) ? myDefaultColumnPaddingsX.get(column) : getDefaultPaddingX();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultPaddingX(int column, int padding) {
     if (padding == -1) {
       myDefaultColumnPaddingsX.remove(column);
@@ -364,7 +372,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultPaddingY;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultPaddingY(int padding) {
     myDefaultPaddingY = padding;
     return this;
@@ -374,7 +382,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnPaddingsY.containsKey(column) ? myDefaultColumnPaddingsY.get(column) : getDefaultPaddingY();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultPaddingY(int column, int padding) {
     if (padding == -1) {
       myDefaultColumnPaddingsY.remove(column);
@@ -390,7 +398,7 @@ public class GridBag extends GridBagConstraints {
     return myDefaultInsets;
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultInsets(int top, int left, int bottom, int right) {
     return setDefaultInsets(new Insets(top, left, bottom, right));
   }
@@ -405,12 +413,12 @@ public class GridBag extends GridBagConstraints {
     return myDefaultColumnInsets.containsKey(column) ? myDefaultColumnInsets.get(column) : getDefaultInsets();
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultInsets(int column, int top, int left, int bottom, int right) {
     return setDefaultInsets(column, new Insets(top, left, bottom, right));
   }
 
-  @NotNull
+  @Nonnull
   public GridBag setDefaultInsets(int column, @Nullable Insets insets) {
     if (insets == null) {
       myDefaultColumnInsets.remove(column);

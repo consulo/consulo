@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -43,8 +43,8 @@ public class RollbackUtil {
    * @param vcses affected VCSs.
    * @return name for the "rollback" operation to be used in the UI.
    */
-  @NotNull
-  public static String getRollbackOperationName(@NotNull Collection<AbstractVcs> vcses) {
+  @Nonnull
+  public static String getRollbackOperationName(@Nonnull Collection<AbstractVcs> vcses) {
     String operationName = null;
     for (AbstractVcs vcs : vcses) {
       final RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
@@ -65,8 +65,8 @@ public class RollbackUtil {
    * Finds the appropriate name for the "rollback" operation, looking through all VCSs registered in the project.
    * @see #getRollbackOperationName(java.util.Collection)
    */
-  @NotNull
-  public static String getRollbackOperationName(@NotNull Project project) {
+  @Nonnull
+  public static String getRollbackOperationName(@Nonnull Project project) {
     return getRollbackOperationName(asList(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()));
   }
 

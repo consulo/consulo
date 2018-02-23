@@ -18,7 +18,7 @@ package com.intellij.openapi.externalSystem.service;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver;
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 
@@ -28,15 +28,15 @@ import java.rmi.RemoteException;
  */
 public class InProcessExternalSystemFacadeImpl<S extends ExternalSystemExecutionSettings> extends AbstractExternalSystemFacadeImpl<S> {
 
-  public InProcessExternalSystemFacadeImpl(@NotNull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                           @NotNull Class<ExternalSystemTaskManager<S>> buildManagerClass)
+  public InProcessExternalSystemFacadeImpl(@Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
+                                           @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass)
     throws IllegalAccessException, InstantiationException
   {
     super(projectResolverClass, buildManagerClass);
   }
 
   @Override
-  protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(@NotNull Class<I> interfaceClass, @NotNull C impl)
+  protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(@Nonnull Class<I> interfaceClass, @Nonnull C impl)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException
   {
     return impl;

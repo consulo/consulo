@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
@@ -39,7 +39,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -48,7 +48,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
     if (!GeneratedSourcesFilter.isGenerated(myProject, file)) return null;
 
     EditorNotificationPanel panel = new EditorNotificationPanel();

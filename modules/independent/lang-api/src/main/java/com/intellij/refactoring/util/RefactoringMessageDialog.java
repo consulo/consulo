@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ public class RefactoringMessageDialog extends DialogWrapper {
     init();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     List<Action> actions = new ArrayList<Action>();

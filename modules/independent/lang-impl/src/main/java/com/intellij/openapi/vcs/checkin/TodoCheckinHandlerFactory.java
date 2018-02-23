@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  *         Time: 7:05 PM
  */
 public class TodoCheckinHandlerFactory extends CheckinHandlerFactory {
-  @NotNull
+  @Nonnull
   @Override
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new TodoCheckinHandler(panel);

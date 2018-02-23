@@ -36,8 +36,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.RenameHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author lene
@@ -67,12 +67,12 @@ public class RenameProjectHandler implements RenameHandler, TitledHandler {
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     LOG.error("Project renaming should be never invoked from file");
   }
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     LOG.assertTrue(project instanceof ProjectEx);
 
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);

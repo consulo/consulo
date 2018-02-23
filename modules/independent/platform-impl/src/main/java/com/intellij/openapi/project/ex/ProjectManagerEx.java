@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -40,23 +40,23 @@ public abstract class ProjectManagerEx extends ProjectManager {
    * @param dirPath path to directory where .consulo directory is located
    */
   @Nullable
-  public abstract Project newProject(final String projectName, @NotNull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
+  public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
 
   @Nullable
-  public abstract Project loadProject(@NotNull String filePath) throws IOException, JDOMException, InvalidDataException;
+  public abstract Project loadProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   @RequiredDispatchThread
   public boolean openProject(Project project) {
     return openProject(project, UIAccess.get());
   }
 
-  public abstract boolean openProject(@NotNull Project project, @NotNull UIAccess uiAccess);
+  public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   public abstract boolean isProjectOpened(Project project);
 
   public abstract boolean canClose(Project project);
 
-  public abstract void saveChangedProjectFile(@NotNull VirtualFile file, @NotNull Project project);
+  public abstract void saveChangedProjectFile(@Nonnull VirtualFile file, @Nonnull Project project);
 
   public abstract void blockReloadingProjectOnExternalChanges();
 
@@ -64,16 +64,16 @@ public abstract class ProjectManagerEx extends ProjectManager {
 
   @TestOnly
   @RequiredDispatchThread
-  public abstract void openTestProject(@NotNull Project project);
+  public abstract void openTestProject(@Nonnull Project project);
 
   @TestOnly
   // returns remaining open test projects
   @RequiredDispatchThread
-  public abstract Collection<Project> closeTestProject(@NotNull Project project);
+  public abstract Collection<Project> closeTestProject(@Nonnull Project project);
 
   // returns true on success
   @RequiredDispatchThread
-  public abstract boolean closeAndDispose(@NotNull Project project);
+  public abstract boolean closeAndDispose(@Nonnull Project project);
 
   @Nullable
   @Override
@@ -84,5 +84,5 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @Nullable
   public abstract Project convertAndLoadProject(String filePath) throws IOException;
 
-  public abstract void convertAndLoadProjectAsync(@NotNull AsyncResult<Project> result, String filePath);
+  public abstract void convertAndLoadProjectAsync(@Nonnull AsyncResult<Project> result, String filePath);
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.branch;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DvcsSyncSettings {
 
@@ -25,9 +25,9 @@ public interface DvcsSyncSettings {
     NOT_DECIDED
   }
 
-  @NotNull
+  @Nonnull
   Value getSyncSetting();
 
-  void setSyncSetting(@NotNull Value syncSetting);
+  void setSyncSetting(@Nonnull Value syncSetting);
 
 }

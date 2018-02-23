@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ConcurrentHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -141,10 +141,10 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
 
   @Override
   public void addTracker(
-    @NotNull final String fileUrl,
-    @NotNull final VirtualFileListener listener,
+    @Nonnull final String fileUrl,
+    @Nonnull final VirtualFileListener listener,
     final boolean fromRefreshOnly,
-    @NotNull Disposable parentDisposable) {
+    @Nonnull Disposable parentDisposable) {
 
     getSet(fileUrl, myAllTrackers).add(listener);
 

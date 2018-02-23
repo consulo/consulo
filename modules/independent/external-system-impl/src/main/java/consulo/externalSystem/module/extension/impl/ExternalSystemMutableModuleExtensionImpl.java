@@ -17,8 +17,7 @@ package consulo.externalSystem.module.extension.impl;
 
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.roots.ModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,12 +25,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl
         implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
-  public ExternalSystemMutableModuleExtensionImpl(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+  public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 
   @Override
-  public void setOption(@NotNull String key, @Nullable String value) {
+  public void setOption(@Nonnull String key, @javax.annotation.Nullable String value) {
     if (value == null) {
       myOptions.remove(key);
     }
@@ -41,7 +40,7 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
   }
 
   @Override
-  public void removeOption(@NotNull String key) {
+  public void removeOption(@Nonnull String key) {
     myOptions.remove(key);
   }
 
@@ -56,7 +55,7 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
   }
 
   @Override
-  public boolean isModified(@NotNull ExternalSystemModuleExtensionImpl originalExtension) {
+  public boolean isModified(@Nonnull ExternalSystemModuleExtensionImpl originalExtension) {
     return myIsEnabled != originalExtension.isEnabled() || !myOptions.equals(originalExtension.myOptions);
   }
 }

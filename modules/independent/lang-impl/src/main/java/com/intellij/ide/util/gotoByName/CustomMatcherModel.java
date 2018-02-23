@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.gotoByName;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -30,5 +30,5 @@ public interface CustomMatcherModel {
    * @param userPattern Pattern defined by user in Choose by name popup
    * @return True if matches
    */
-  boolean matches(@NotNull final String popupItem, @NotNull final String userPattern);
+  boolean matches(@Nonnull final String popupItem, @Nonnull final String userPattern);
 }

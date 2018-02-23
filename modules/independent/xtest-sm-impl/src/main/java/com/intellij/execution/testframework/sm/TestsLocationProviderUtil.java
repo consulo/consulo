@@ -28,8 +28,7 @@ import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.text.StringTokenizer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +45,8 @@ public class TestsLocationProviderUtil {
   private TestsLocationProviderUtil() {
   }
 
-  @Nullable
-  public static String extractPath(@NotNull final String locationUrl) {
+  @javax.annotation.Nullable
+  public static String extractPath(@Nonnull final String locationUrl) {
     final int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
     if (index >= 0) {
       return locationUrl.substring(index + PROTOCOL_SEPARATOR.length());
@@ -95,7 +94,7 @@ public class TestsLocationProviderUtil {
    * @param minProximityThreshold
    * @return
    */
-  public static List<VirtualFile> findFilesClosestToTarget(@NotNull final List<String> targetParentFolders,
+  public static List<VirtualFile> findFilesClosestToTarget(@Nonnull final List<String> targetParentFolders,
                                                            final List<FileInfo> candidates,
                                                            final int minProximityThreshold) {
     // let's find all files with similar relative path
@@ -154,7 +153,7 @@ public class TestsLocationProviderUtil {
     return filesInfo;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static VirtualFile getByFullPath(String filePath) {
     final VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(filePath);
     if (fileByPath != null) {

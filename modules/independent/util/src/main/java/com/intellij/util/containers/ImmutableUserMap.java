@@ -16,14 +16,14 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class ImmutableUserMap {
   public static final ImmutableUserMap EMPTY = new ImmutableUserMap() {
-    public <T> T get(@NotNull final Key<T> key) {
+    public <T> T get(@Nonnull final Key<T> key) {
       return null;
     }
   };
@@ -31,9 +31,9 @@ public abstract class ImmutableUserMap {
   private ImmutableUserMap() {
   }
 
-  public abstract <T> T get(@NotNull Key<T> key);
+  public abstract <T> T get(@Nonnull Key<T> key);
 
-  public final <T> ImmutableUserMap put(@NotNull final Key<T> key, final T value) {
+  public final <T> ImmutableUserMap put(@Nonnull final Key<T> key, final T value) {
     return new ImmutableUserMapImpl<T>(key, value, this);
   }
 
@@ -48,7 +48,7 @@ public abstract class ImmutableUserMap {
       myValue = value;
     }
 
-    public <T> T get(@NotNull final Key<T> key) {
+    public <T> T get(@Nonnull final Key<T> key) {
       if (key.equals(myKey)) return (T)myValue;
       return myNext.get(key);
     }

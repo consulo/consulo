@@ -35,7 +35,7 @@ import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.source.tree.MarkersHolderFileViewProvider;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -55,17 +55,17 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
   };
   private boolean myPatchingLeaves;
 
-  InjectedFileViewProvider(@NotNull PsiManager psiManager,
-                           @NotNull VirtualFileWindow virtualFile,
-                           @NotNull DocumentWindowImpl documentWindow,
-                           @NotNull Language language) {
+  InjectedFileViewProvider(@Nonnull PsiManager psiManager,
+                           @Nonnull VirtualFileWindow virtualFile,
+                           @Nonnull DocumentWindowImpl documentWindow,
+                           @Nonnull Language language) {
     super(psiManager, (VirtualFile)virtualFile, true, language);
     myDocumentWindow = documentWindow;
     myProject = documentWindow.getShreds().getHostPointer().getProject();
   }
 
   @Override
-  public void rootChanged(@NotNull PsiFile psiFile) {
+  public void rootChanged(@Nonnull PsiFile psiFile) {
     super.rootChanged(psiFile);
     if (!isPhysical()) return; // injected PSI change happened inside reparse; ignore
     if (myPatchingLeaves) return;
@@ -104,7 +104,7 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
     final Ref<FileViewProvider> provider = new Ref<FileViewProvider>();
     PsiLanguageInjectionHost.InjectedPsiVisitor visitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
       @Override
-      public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
+      public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
         Document document = documentManager.getCachedDocument(injectedPsi);
         if (document instanceof DocumentWindowImpl && oldDocumentWindow.areRangesEqual((DocumentWindowImpl)document)) {
           provider.set(injectedPsi.getViewProvider());
@@ -126,7 +126,7 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
 
   static Key<Language> LANGUAGE_FOR_INJECTED_COPY_KEY = Key.create("LANGUAGE_FOR_INJECTED_COPY_KEY");
   // returns true if shreds were set, false if old ones were reused
-  boolean setShreds(@NotNull Place newShreds, @NotNull Project project) {
+  boolean setShreds(@Nonnull Place newShreds, @Nonnull Project project) {
     synchronized (myLock) {
       myProject = project;
       Place oldShreds = myDocumentWindow.getShreds();
@@ -167,7 +167,7 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentWindow getDocument() {
     return myDocumentWindow;
   }
@@ -206,7 +206,7 @@ public class InjectedFileViewProvider extends SingleRootFileViewProvider impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker[] getCachedMarkers() {
     List<RangeMarker> markers = new SmartList<RangeMarker>();
     for (PsiLanguageInjectionHost.Shred shred : myDocumentWindow.getShreds()) {

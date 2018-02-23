@@ -29,8 +29,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.impl.ProjectLifecycleListener;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -51,7 +51,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
     myConnection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override
-      public void projectComponentsInitialized(@NotNull final Project project) {
+      public void projectComponentsInitialized(@Nonnull final Project project) {
         long t = System.currentTimeMillis();
         loadModules(myModuleModel, true);
         t = System.currentTimeMillis() - t;
@@ -61,9 +61,9 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected ModuleEx createModule(@NotNull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
+  protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
     return new ModuleImpl(name, dirUrl, myProject);
   }
 

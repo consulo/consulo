@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -59,7 +59,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
     this(p, gw, f, true);
   }
 
-  protected DirectoryHistoryDialog(@NotNull Project p, IdeaGateway gw, VirtualFile f, boolean doInit) {
+  protected DirectoryHistoryDialog(@Nonnull Project p, IdeaGateway gw, VirtualFile f, boolean doInit) {
     super(p, gw, f, doInit);
   }
 

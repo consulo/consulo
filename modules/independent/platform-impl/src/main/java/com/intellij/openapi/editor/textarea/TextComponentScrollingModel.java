@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;
@@ -31,24 +31,24 @@ import java.awt.*;
 public class TextComponentScrollingModel implements ScrollingModel {
   private final JTextComponent myTextComponent;
 
-  public TextComponentScrollingModel(@NotNull JTextComponent textComponent) {
+  public TextComponentScrollingModel(@Nonnull JTextComponent textComponent) {
     myTextComponent = textComponent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Rectangle getVisibleArea() {
     throw new UnsupportedOperationException("Not implemented");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void scrollToCaret(@NotNull final ScrollType scrollType) {
+  public void scrollToCaret(@Nonnull final ScrollType scrollType) {
     final int position = myTextComponent.getCaretPosition();
     try {
       final Rectangle rectangle = myTextComponent.modelToView(position);
@@ -60,12 +60,12 @@ public class TextComponentScrollingModel implements ScrollingModel {
   }
 
   @Override
-  public void scrollTo(@NotNull final LogicalPosition pos, @NotNull final ScrollType scrollType) {
+  public void scrollTo(@Nonnull final LogicalPosition pos, @Nonnull final ScrollType scrollType) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void runActionOnScrollingFinished(@NotNull final Runnable action) {
+  public void runActionOnScrollingFinished(@Nonnull final Runnable action) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -103,12 +103,12 @@ public class TextComponentScrollingModel implements ScrollingModel {
   }
 
   @Override
-  public void addVisibleAreaListener(@NotNull final VisibleAreaListener listener) {
+  public void addVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeVisibleAreaListener(@NotNull final VisibleAreaListener listener) {
+  public void removeVisibleAreaListener(@Nonnull final VisibleAreaListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 }

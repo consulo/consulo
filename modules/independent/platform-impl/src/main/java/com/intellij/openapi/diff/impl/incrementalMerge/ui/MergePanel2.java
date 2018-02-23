@@ -62,9 +62,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.util.containers.Convertor;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class MergePanel2 implements DiffViewer {
   private final DialogBuilder myBuilder;
   private final MyDataProvider myProvider;
 
-  public MergePanel2(DialogBuilder builder, @NotNull Disposable parent) {
+  public MergePanel2(DialogBuilder builder, @Nonnull Disposable parent) {
     ArrayList<EditorPlace> editorPlaces = new ArrayList<EditorPlace>();
     EditorPlace.EditorListener placeListener = new EditorPlace.EditorListener() {
       @Override
@@ -141,7 +141,7 @@ public class MergePanel2 implements DiffViewer {
     }
   }
 
-  @NotNull
+  @Nonnull
   private DiffRequest.ToolbarAddons createToolbar() {
     return new DiffRequest.ToolbarAddons() {
       @Override
@@ -165,7 +165,7 @@ public class MergePanel2 implements DiffViewer {
     };
   }
 
-  @NotNull
+  @Nonnull
   private Collection<Editor> getEditors() {
     Collection<Editor> editors = new ArrayList<Editor>(3);
     for (EditorPlace place : getEditorPlaces()) {
@@ -174,7 +174,7 @@ public class MergePanel2 implements DiffViewer {
     return editors;
   }
 
-  @NotNull
+  @Nonnull
   private Collection<EditorPlace> getEditorPlaces() {
     Collection<EditorPlace> editorPlaces = new ArrayList<EditorPlace>(3);
     for (LabeledComponent editorsPanel : myEditorsPanels) {
@@ -258,22 +258,22 @@ public class MergePanel2 implements DiffViewer {
     }
   }
 
-  @NotNull
+  @Nonnull
   EditingSides getFirstEditingSide() {
     return getFirstEditingSide(false);
   }
 
-  @NotNull
+  @Nonnull
   EditingSides getFirstEditingSide(boolean appliedLineBlocks) {
     return new MyEditingSides(FragmentSide.SIDE1, appliedLineBlocks);
   }
 
-  @NotNull
+  @Nonnull
   EditingSides getSecondEditingSide() {
     return getSecondEditingSide(false);
   }
 
-  @NotNull
+  @Nonnull
   EditingSides getSecondEditingSide(boolean appliedLineBlocks) {
     return new MyEditingSides(FragmentSide.SIDE2, appliedLineBlocks);
   }
@@ -323,7 +323,7 @@ public class MergePanel2 implements DiffViewer {
     }
   }
 
-  private void setHighlighterSettings(@Nullable EditorColorsScheme settings, @NotNull EditorPlace place) {
+  private void setHighlighterSettings(@Nullable EditorColorsScheme settings, @Nonnull EditorPlace place) {
     if (settings == null) {
       settings = EditorColorsManager.getInstance().getGlobalScheme();
     }
@@ -335,7 +335,7 @@ public class MergePanel2 implements DiffViewer {
     }
   }
 
-  private static void initEditorSettings(@NotNull Editor editor) {
+  private static void initEditorSettings(@Nonnull Editor editor) {
     Project project = editor.getProject();
     DiffMergeSettings settings = project == null ? null : ServiceManager.getService(project, MergeToolSettings.class);
     for (DiffMergeEditorSetting property : DiffMergeEditorSetting.values()) {
@@ -568,7 +568,7 @@ public class MergePanel2 implements DiffViewer {
 
   private class MyDataProvider extends GenericDataProvider {
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (FocusDiffSide.DATA_KEY == dataId) {
         int index = getFocusedEditorIndex();
         if (index < 0) return null;
@@ -692,20 +692,20 @@ public class MergePanel2 implements DiffViewer {
       myPanel.setStatusBarText(text);
     }
 
-    @NotNull
+    @Nonnull
     private static String makeCountersText(int changes, int conflicts) {
       return makeCounterWord(changes, "change") + ". " + makeCounterWord(conflicts, "conflict");
     }
 
-    @NotNull
-    private static String makeCounterWord(int number, @NotNull String word) {
+    @Nonnull
+    private static String makeCounterWord(int number, @Nonnull String word) {
       if (number == 0) {
         return "No " + StringUtil.pluralize(word);
       }
       return number + " " + StringUtil.pluralize(word, number);
     }
 
-    public void dispose(@NotNull MergeList mergeList) {
+    public void dispose(@Nonnull MergeList mergeList) {
       ChangeCounter.getOrCreate(mergeList).removeListener(this);
     }
 
@@ -721,7 +721,7 @@ public class MergePanel2 implements DiffViewer {
   public static class AsComponent extends JPanel{
     private final MergePanel2 myMergePanel;
 
-    public AsComponent(@NotNull Disposable parent) {
+    public AsComponent(@Nonnull Disposable parent) {
       super(new BorderLayout());
       myMergePanel = new MergePanel2(null, parent);
       add(myMergePanel.getComponent(), BorderLayout.CENTER);

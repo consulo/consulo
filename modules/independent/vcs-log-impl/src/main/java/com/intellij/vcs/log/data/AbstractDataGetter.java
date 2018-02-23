@@ -23,8 +23,8 @@ import com.intellij.vcs.log.util.SequentialLimitedLifoExecutor;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,24 +48,30 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
 
   private static final int MAX_LOADING_TASKS = 10;
 
-  @NotNull protected final VcsLogStorage myHashMap;
-  @NotNull private final Map<VirtualFile, VcsLogProvider> myLogProviders;
-  @NotNull private final VcsCommitCache<Integer, T> myCache;
-  @NotNull private final SequentialLimitedLifoExecutor<TaskDescriptor> myLoader;
+  @Nonnull
+  protected final VcsLogStorage myHashMap;
+  @Nonnull
+  private final Map<VirtualFile, VcsLogProvider> myLogProviders;
+  @Nonnull
+  private final VcsCommitCache<Integer, T> myCache;
+  @Nonnull
+  private final SequentialLimitedLifoExecutor<TaskDescriptor> myLoader;
 
   /**
    * The sequence number of the current "loading" task.
    */
   private long myCurrentTaskIndex = 0;
 
-  @NotNull private final Collection<Runnable> myLoadingFinishedListeners = new ArrayList<>();
-  @NotNull private VcsLogIndex myIndex;
+  @Nonnull
+  private final Collection<Runnable> myLoadingFinishedListeners = new ArrayList<>();
+  @Nonnull
+  private VcsLogIndex myIndex;
 
-  AbstractDataGetter(@NotNull VcsLogStorage hashMap,
-                     @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                     @NotNull VcsCommitCache<Integer, T> cache,
-                     @NotNull VcsLogIndex index,
-                     @NotNull Disposable parentDisposable) {
+  AbstractDataGetter(@Nonnull VcsLogStorage hashMap,
+                     @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                     @Nonnull VcsCommitCache<Integer, T> cache,
+                     @Nonnull VcsLogIndex index,
+                     @Nonnull Disposable parentDisposable) {
     myHashMap = hashMap;
     myLogProviders = logProviders;
     myCache = cache;
@@ -91,8 +97,8 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   @Override
-  @NotNull
-  public T getCommitData(@NotNull Integer hash, @NotNull Iterable<Integer> neighbourHashes) {
+  @Nonnull
+  public T getCommitData(@Nonnull Integer hash, @Nonnull Iterable<Integer> neighbourHashes) {
     assert EventQueue.isDispatchThread();
     T details = getFromCache(hash);
     if (details != null) {
@@ -107,12 +113,12 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   @Override
-  public void loadCommitsData(@NotNull List<Integer> hashes, @NotNull Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
+  public void loadCommitsData(@Nonnull List<Integer> hashes, @Nonnull Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
     assert EventQueue.isDispatchThread();
     loadCommitsData(getCommitsMap(hashes), consumer, indicator);
   }
 
-  private void loadCommitsData(@NotNull final TIntIntHashMap commits, @NotNull final Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
+  private void loadCommitsData(@Nonnull final TIntIntHashMap commits, @Nonnull final Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
     final List<T> result = ContainerUtil.newArrayList();
     final TIntHashSet toLoad = new TIntHashSet();
 
@@ -136,7 +142,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     else {
       Task.Backgroundable task = new Task.Backgroundable(null, "Loading Selected Details", true, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
         @Override
-        public void run(@NotNull final ProgressIndicator indicator) {
+        public void run(@Nonnull final ProgressIndicator indicator) {
           indicator.checkCanceled();
           try {
             TIntObjectHashMap<T> map = preLoadCommitData(toLoad);
@@ -166,7 +172,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     }
   }
 
-  private void sortCommitsByRow(@NotNull List<T> result, @NotNull final TIntIntHashMap rowsForCommits) {
+  private void sortCommitsByRow(@Nonnull List<T> result, @Nonnull final TIntIntHashMap rowsForCommits) {
     ContainerUtil.sort(result, (details1, details2) -> {
       int row1 = rowsForCommits.get(myHashMap.getCommitIndex(details1.getId(), details1.getRoot()));
       int row2 = rowsForCommits.get(myHashMap.getCommitIndex(details2.getId(), details2.getRoot()));
@@ -181,7 +187,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   }
 
   @Nullable
-  private T getFromCache(@NotNull Integer commitId) {
+  private T getFromCache(@Nonnull Integer commitId) {
     T details = myCache.get(commitId);
     if (details != null) {
       if (details instanceof LoadingDetails) {
@@ -202,7 +208,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   @Nullable
   protected abstract T getFromAdditionalCache(int commitId);
 
-  private void runLoadCommitsData(@NotNull Iterable<Integer> hashes) {
+  private void runLoadCommitsData(@Nonnull Iterable<Integer> hashes) {
     long taskNumber = myCurrentTaskIndex++;
     TIntIntHashMap commits = getCommitsMap(hashes);
     TIntHashSet toLoad = new TIntHashSet();
@@ -223,8 +229,8 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     }
   }
 
-  @NotNull
-  private static TIntIntHashMap getCommitsMap(@NotNull Iterable<Integer> hashes) {
+  @Nonnull
+  private static TIntIntHashMap getCommitsMap(@Nonnull Iterable<Integer> hashes) {
     TIntIntHashMap commits = new TIntIntHashMap();
     int row = 0;
     for (Integer commitId : hashes) {
@@ -234,8 +240,8 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     return commits;
   }
 
-  @NotNull
-  public TIntObjectHashMap<T> preLoadCommitData(@NotNull TIntHashSet commits) throws VcsException {
+  @Nonnull
+  public TIntObjectHashMap<T> preLoadCommitData(@Nonnull TIntHashSet commits) throws VcsException {
     TIntObjectHashMap<T> result = new TIntObjectHashMap<>();
     final MultiMap<VirtualFile, String> rootsAndHashes = MultiMap.create();
     commits.forEach(commit -> {
@@ -264,33 +270,34 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
     return result;
   }
 
-  public void saveInCache(@NotNull TIntObjectHashMap<T> details) {
+  public void saveInCache(@Nonnull TIntObjectHashMap<T> details) {
     UIUtil.invokeAndWaitIfNeeded((Runnable)() -> details.forEachEntry((key, value) -> {
       myCache.put(key, value);
       return true;
     }));
   }
 
-  @NotNull
-  protected abstract List<? extends T> readDetails(@NotNull VcsLogProvider logProvider, @NotNull VirtualFile root, @NotNull List<String> hashes)
+  @Nonnull
+  protected abstract List<? extends T> readDetails(@Nonnull VcsLogProvider logProvider, @Nonnull VirtualFile root, @Nonnull List<String> hashes)
           throws VcsException;
 
   /**
    * This listener will be notified when any details loading process finishes.
    * The notification will happen in the EDT.
    */
-  public void addDetailsLoadedListener(@NotNull Runnable runnable) {
+  public void addDetailsLoadedListener(@Nonnull Runnable runnable) {
     myLoadingFinishedListeners.add(runnable);
   }
 
-  public void removeDetailsLoadedListener(@NotNull Runnable runnable) {
+  public void removeDetailsLoadedListener(@Nonnull Runnable runnable) {
     myLoadingFinishedListeners.remove(runnable);
   }
 
   private static class TaskDescriptor {
-    @NotNull private final TIntHashSet myCommits;
+    @Nonnull
+    private final TIntHashSet myCommits;
 
-    private TaskDescriptor(@NotNull TIntHashSet commits) {
+    private TaskDescriptor(@Nonnull TIntHashSet commits) {
       myCommits = commits;
     }
   }

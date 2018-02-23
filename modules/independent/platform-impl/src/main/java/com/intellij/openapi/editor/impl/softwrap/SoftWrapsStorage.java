@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.TextChange;
 import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +57,7 @@ public class SoftWrapsStorage implements Dumpable {
   /**
    * @return    view for registered soft wraps sorted by offset in ascending order if any; empty collection otherwise
    */
-  @NotNull
+  @Nonnull
   public List<SoftWrapImpl> getSoftWraps() {
     return myWrapsView;
   }
@@ -196,7 +196,7 @@ public class SoftWrapsStorage implements Dumpable {
    * @param listener    listener to register
    * @return            <code>true</code> if given listener was not registered before; <code>false</code> otherwise
    */
-  public boolean addSoftWrapChangeListener(@NotNull SoftWrapChangeListener listener) {
+  public boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener) {
     return myListeners.add(listener);
   }
 
@@ -206,7 +206,7 @@ public class SoftWrapsStorage implements Dumpable {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return myWraps.toString();

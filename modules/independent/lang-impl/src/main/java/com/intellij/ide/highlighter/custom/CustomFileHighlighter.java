@@ -23,7 +23,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class CustomFileHighlighter extends SyntaxHighlighterBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Lexer getHighlightingLexer() {
     Lexer customFileTypeLexer = new CustomFileTypeLexer(myTable, true);
     if (myTable.isHasStringEscapes()) {
@@ -69,7 +69,7 @@ public class CustomFileHighlighter extends SyntaxHighlighterBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return pack(ourKeys.get(tokenType));
   }

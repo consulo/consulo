@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ArrowPainter;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -47,7 +47,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     myHeightProvider.myHeight = lineHeight / 2;
 
     int start;
@@ -71,7 +71,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     switch (drawingType) {
       case BEFORE_SOFT_WRAP_LINE_FEED: return myEditor.getScrollingModel().getVisibleArea().width - x;
       case AFTER_SOFT_WRAP: return 0;
@@ -80,7 +80,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
     if (myMinWidth < 0) {
       // We need to reserve a minimal space required for representing arrow before soft wrap-introduced line feed.
       myMinWidth = EditorUtil.charWidth('a', Font.PLAIN, myEditor);

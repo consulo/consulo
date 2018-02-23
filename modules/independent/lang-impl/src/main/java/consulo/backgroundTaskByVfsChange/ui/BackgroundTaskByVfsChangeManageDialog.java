@@ -32,9 +32,9 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.backgroundTaskByVfsChange.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
   private BackgroundTaskByVfsChangeTask myPrevTask;
 
-  public BackgroundTaskByVfsChangeManageDialog(@NotNull final Project project, final VirtualFile virtualFile) {
+  public BackgroundTaskByVfsChangeManageDialog(@Nonnull final Project project, final VirtualFile virtualFile) {
     super(project);
     myProject = project;
     myVirtualFile = virtualFile;
@@ -98,7 +98,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
       if (providers.size() > 1) {
         ListPopupStep<BackgroundTaskByVfsChangeProvider> listPopupStep = new BaseListPopupStep<BackgroundTaskByVfsChangeProvider>("Add", providers) {
-          @NotNull
+          @Nonnull
           @Override
           public String getTextFor(BackgroundTaskByVfsChangeProvider value) {
             return value.getTemplateName();
@@ -134,7 +134,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     init();
   }
 
-  private void add(@NotNull BackgroundTaskByVfsChangeProvider provider) {
+  private void add(@Nonnull BackgroundTaskByVfsChangeProvider provider) {
     String name = Messages.showInputDialog(myProject, "Name", "Enter Name", UIUtil.getInformationIcon(), provider.getTemplateName(), null);
     if (name == null) {
       return;
@@ -147,7 +147,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     myBoxlist.setSelectedIndex(myBoxlist.getItemsCount() - 1);
   }
 
-  @NotNull
+  @Nonnull
   private List<BackgroundTaskByVfsChangeTask> getTasks() {
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (int i = 0; i < myBoxlist.getItemsCount(); i++) {

@@ -30,9 +30,9 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.Table;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -389,7 +389,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getHelpTopic() {
     return "preferences.toDoOptions";
   }
@@ -434,7 +434,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

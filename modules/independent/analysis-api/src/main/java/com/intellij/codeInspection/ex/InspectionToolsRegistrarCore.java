@@ -17,14 +17,14 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class InspectionToolsRegistrarCore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.InspectionToolsRegistrarCore");
-  static Object instantiateTool(@NotNull Class<?> toolClass) {
+  static Object instantiateTool(@Nonnull Class<?> toolClass) {
     try {
       Constructor<?> constructor = toolClass.getDeclaredConstructor(ArrayUtil.EMPTY_CLASS_ARRAY);
       constructor.setAccessible(true);

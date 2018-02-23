@@ -21,8 +21,8 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.lang.annotation.Annotation;
@@ -35,13 +35,13 @@ public class ColorUtil {
   private ColorUtil() {
   }
 
-  public static Color softer(@NotNull Color color) {
+  public static Color softer(@Nonnull Color color) {
     if (color.getBlue() > 220 && color.getRed() > 220 && color.getGreen() > 220) return color;
     final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     return Color.getHSBColor(hsb[0], 0.6f * hsb[1], hsb[2]);
   }
 
-  public static Color darker(@NotNull Color color, int tones) {
+  public static Color darker(@Nonnull Color color, int tones) {
     final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
@@ -51,7 +51,7 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], hsb[1], brightness);
   }
 
-  public static Color brighter(@NotNull Color color, int tones) {
+  public static Color brighter(@Nonnull Color color, int tones) {
     final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float brightness = hsb[2];
     for (int i = 0; i < tones; i++) {
@@ -61,8 +61,8 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], hsb[1], brightness);
   }
 
-  @NotNull
-  public static Color saturate(@NotNull Color color, int tones) {
+  @Nonnull
+  public static Color saturate(@Nonnull Color color, int tones) {
     final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
@@ -72,8 +72,8 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], saturation, hsb[2]);
   }
 
-  @NotNull
-  public static Color desaturate(@NotNull Color color, int tones) {
+  @Nonnull
+  public static Color desaturate(@Nonnull Color color, int tones) {
     final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     float saturation = hsb[1];
     for (int i = 0; i < tones; i++) {
@@ -83,7 +83,7 @@ public class ColorUtil {
     return Color.getHSBColor(hsb[0], saturation, hsb[2]);
   }
 
-  public static Color dimmer(@NotNull Color color) {
+  public static Color dimmer(@Nonnull Color color) {
     float[] rgb = color.getRGBColorComponents(null);
 
     float alpha = 0.80f;
@@ -113,7 +113,7 @@ public class ColorUtil {
     return shift(withAlpha(c, d), d);
   }
 
-  public static String toHex(@NotNull final Color c) {
+  public static String toHex(@Nonnull final Color c) {
     final String R = Integer.toHexString(c.getRed());
     final String G = Integer.toHexString(c.getGreen());
     final String B = Integer.toHexString(c.getBlue());
@@ -157,7 +157,7 @@ public class ColorUtil {
   }
 
   @Nullable
-  public static Color getColor(@NotNull Class<?> cls) {
+  public static Color getColor(@Nonnull Class<?> cls) {
     final Annotation annotation = cls.getAnnotation(Colored.class);
     if (annotation instanceof Colored) {
       final Colored colored = (Colored)annotation;
@@ -173,13 +173,13 @@ public class ColorUtil {
    * @param c color to check
    * @return dark or not
    */
-  public static boolean isDark(@NotNull final Color c) {
+  public static boolean isDark(@Nonnull final Color c) {
     // based on perceptional luminosity, see
     return (1 - (0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue()) / 255) >= 0.5;
   }
 
-  @NotNull
-  public static Color mix(@NotNull Color c1, @NotNull Color c2, double balance) {
+  @Nonnull
+  public static Color mix(@Nonnull Color c1, @Nonnull Color c2, double balance) {
     balance = Math.min(1, Math.max(0, balance));
     return new Color((int)((1 - balance) * c1.getRed() + c2.getRed() * balance + .5),
                      (int)((1 - balance) * c1.getGreen() + c2.getGreen() * balance + .5),

@@ -35,7 +35,7 @@ import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 
 import java.io.File;

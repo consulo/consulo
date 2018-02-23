@@ -18,8 +18,8 @@ package com.intellij.openapi.roots.libraries;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.DeprecationInfo;
 
 import java.util.List;
@@ -37,19 +37,19 @@ public abstract class LibraryTablesRegistrar {
     return ServiceManager.getService(LibraryTablesRegistrar.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract LibraryTable getLibraryTable();
 
-  @NotNull
-  public abstract LibraryTable getLibraryTable(@NotNull Project project);
+  @Nonnull
+  public abstract LibraryTable getLibraryTable(@Nonnull Project project);
 
-  @Nullable
-  public abstract LibraryTable getLibraryTableByLevel(@NonNls String level, @NotNull Project project);
+  @javax.annotation.Nullable
+  public abstract LibraryTable getLibraryTableByLevel(@NonNls String level, @Nonnull Project project);
 
-  public abstract void registerLibraryTable(@NotNull LibraryTable libraryTable);
+  public abstract void registerLibraryTable(@Nonnull LibraryTable libraryTable);
 
   @Deprecated
-  @NotNull
+  @Nonnull
   public abstract LibraryTable registerLibraryTable(@NonNls String customLevel);
 
   public abstract List<LibraryTable> getCustomLibraryTables();

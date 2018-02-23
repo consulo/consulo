@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author egor
@@ -43,7 +43,7 @@ public class AnnotationsPreloader {
 
     project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (!isEnabled()) return;
         VirtualFile file = event.getNewFile();
         if (file != null) {
@@ -58,7 +58,7 @@ public class AnnotationsPreloader {
     return Registry.is("vcs.annotations.preload") && !PowerSaveMode.isEnabled();
   }
 
-  private void schedulePreloading(@NotNull final VirtualFile file) {
+  private void schedulePreloading(@Nonnull final VirtualFile file) {
     if (myProject.isDisposed() || file.getFileType().isBinary()) return;
 
     myUpdateQueue.queue(new Update(file) {

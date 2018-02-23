@@ -16,18 +16,18 @@
 
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CharSequenceSubSequence implements CharSequence {
   private final CharSequence myChars;
   private final int myStart;
   private final int myEnd;
 
-  public CharSequenceSubSequence(@NotNull CharSequence chars) {
+  public CharSequenceSubSequence(@Nonnull CharSequence chars) {
     this(chars, 0, chars.length());
   }
 
-  public CharSequenceSubSequence(@NotNull CharSequence chars, int start, int end) {
+  public CharSequenceSubSequence(@Nonnull CharSequence chars, int start, int end) {
     if (start < 0 || end > chars.length() || start > end) {
       throw new IndexOutOfBoundsException("chars sequence.length:" + chars.length() +
                                           ", start:" + start +
@@ -54,7 +54,7 @@ public class CharSequenceSubSequence implements CharSequence {
     return new CharSequenceSubSequence(myChars, myStart + start, myStart + end);
   }
 
-  @NotNull
+  @Nonnull
   public String toString() {
     if (myChars instanceof String) return ((String)myChars).substring(myStart, myEnd);
     return StringFactory.createShared(CharArrayUtil.fromSequence(myChars, myStart, myEnd));

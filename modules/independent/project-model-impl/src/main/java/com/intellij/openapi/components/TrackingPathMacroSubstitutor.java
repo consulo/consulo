@@ -15,13 +15,11 @@
  */
 package com.intellij.openapi.components;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
 import java.util.Set;
 
 public interface TrackingPathMacroSubstitutor extends PathMacroSubstitutor {
-  Set<String> getUnknownMacros(@Nullable String componentName);
+  Set<String> getUnknownMacros(@javax.annotation.Nullable String componentName);
   Set<String> getComponents(final Collection<String> macros);
   void addUnknownMacros(String componentName, Collection<String> unknownMacros);
   void invalidateUnknownMacros(Set<String> macros);

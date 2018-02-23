@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree;
 
 import com.intellij.execution.Executor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -12,8 +12,8 @@ public interface ServerNode {
   boolean isStopActionEnabled();
   void stopServer();
 
-  boolean isStartActionEnabled(@NotNull Executor executor);
-  void startServer(@NotNull Executor executor);
+  boolean isStartActionEnabled(@Nonnull Executor executor);
+  void startServer(@Nonnull Executor executor);
 
   boolean isDeployAllEnabled();
   void deployAll();

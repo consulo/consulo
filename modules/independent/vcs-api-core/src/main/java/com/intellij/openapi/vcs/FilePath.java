@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -32,20 +32,20 @@ public interface FilePath {
   /**
    * @return a virtual file that corresponds to this path, or null if the virtual file is no more valid.
    */
-  @Nullable
+  @javax.annotation.Nullable
   VirtualFile getVirtualFile();
 
   /**
    * @return the virtual file that corresponds to the parent file path, or null if the virtual file is no more valid.
    */
-  @Nullable
+  @javax.annotation.Nullable
   VirtualFile getVirtualFileParent();
 
   /**
    * @return the {@link java.io.File} that corresponds to the path. The path might be non-existent or not local.
    * @see #isNonLocal()
    */
-  @NotNull
+  @Nonnull
   File getIOFile();
 
   /**

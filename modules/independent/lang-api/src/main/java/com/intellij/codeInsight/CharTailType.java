@@ -18,7 +18,7 @@ package com.intellij.codeInsight;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -37,7 +37,7 @@ public class CharTailType extends TailType {
   }
 
   @Override
-  public boolean isApplicable(@NotNull InsertionContext context) {
+  public boolean isApplicable(@Nonnull InsertionContext context) {
     return !context.shouldAddCompletionChar() || context.getCompletionChar() != myChar;
   }
 

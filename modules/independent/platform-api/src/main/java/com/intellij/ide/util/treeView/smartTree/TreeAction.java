@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A grouping, sorting or filtering action which can be applied to a generic tree.
@@ -32,12 +32,14 @@ public interface TreeAction {
    * @return the action presentation.
    * @see ActionPresentationData#ActionPresentationData(String, String, javax.swing.Icon)
    */
-  @NotNull ActionPresentation getPresentation();
+  @Nonnull
+  ActionPresentation getPresentation();
 
   /**
    * Returns a unique identifier for the action.
    *
    * @return the action identifier.
    */
-  @NotNull String getName();
+  @Nonnull
+  String getName();
 }

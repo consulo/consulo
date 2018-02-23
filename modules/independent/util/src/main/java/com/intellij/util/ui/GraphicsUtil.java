@@ -20,7 +20,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.MethodInvocator;
 import com.intellij.util.PairConsumer;
 import consulo.util.ui.PreJava9UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,11 +45,11 @@ public class GraphicsUtil {
     ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
   }
 
-  public static void setupAntialiasing(@NotNull Graphics g2) {
+  public static void setupAntialiasing(@Nonnull Graphics g2) {
     setupAntialiasing(g2, true, false);
   }
 
-  public static int stringWidth(@NotNull String text, Font font) {
+  public static int stringWidth(@Nonnull String text, Font font) {
     setupAntialiasing(ourGraphics, true, true);
     return ourGraphics.getFontMetrics(font).stringWidth(text);
   }
@@ -126,23 +126,23 @@ public class GraphicsUtil {
     return ourSafelyGetGraphicsMethod.isAvailable() ? (Graphics)ourSafelyGetGraphicsMethod.invoke(null, c) : c.getGraphics();
   }
 
-  public static Object getAntialiasingType(@NotNull JComponent list) {
+  public static Object getAntialiasingType(@Nonnull JComponent list) {
     return SystemInfo.IS_AT_LEAST_JAVA9 ? null : list.getClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY());
   }
 
-  public static void setAntialiasingType(@NotNull JComponent list, Object type) {
+  public static void setAntialiasingType(@Nonnull JComponent list, Object type) {
     if (!SystemInfo.IS_AT_LEAST_JAVA9) {
       list.putClientProperty(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
     }
   }
 
-  public static void generatePropertiesForAntialiasing(Object type, @NotNull PairConsumer<Object, Object> propertySetter) {
+  public static void generatePropertiesForAntialiasing(Object type, @Nonnull PairConsumer<Object, Object> propertySetter) {
     if (!SystemInfo.IS_AT_LEAST_JAVA9) {
       propertySetter.consume(PreJava9UIUtil.AA_TEXT_PROPERTY_KEY(), type);
     }
   }
 
-  public static Object createAATextInfo(@NotNull Object hint) {
+  public static Object createAATextInfo(@Nonnull Object hint) {
     return SystemInfo.IS_AT_LEAST_JAVA9 ? null : PreJava9UIUtil.newAATextInfo(hint, UIUtil.getLcdContrastValue());
   }
 }

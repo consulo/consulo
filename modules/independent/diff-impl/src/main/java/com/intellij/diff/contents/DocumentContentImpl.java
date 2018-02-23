@@ -26,8 +26,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -35,27 +35,31 @@ import java.nio.charset.Charset;
  * Allows to compare some text associated with document.
  */
 public class DocumentContentImpl extends DiffContentBase implements DocumentContent {
-  @Nullable private final Project myProject;
+  @javax.annotation.Nullable
+  private final Project myProject;
 
-  @NotNull private final Document myDocument;
+  @Nonnull
+  private final Document myDocument;
 
   @Nullable private final FileType myType;
   @Nullable private final VirtualFile myHighlightFile;
 
-  @Nullable private final LineSeparator mySeparator;
+  @javax.annotation.Nullable
+  private final LineSeparator mySeparator;
   @Nullable private final Charset myCharset;
-  @Nullable private final Boolean myBOM;
+  @javax.annotation.Nullable
+  private final Boolean myBOM;
 
-  public DocumentContentImpl(@NotNull Document document) {
+  public DocumentContentImpl(@Nonnull Document document) {
     this(null, document, null, null, null, null, null);
   }
 
   public DocumentContentImpl(@Nullable Project project,
-                             @NotNull Document document,
-                             @Nullable FileType type,
-                             @Nullable VirtualFile highlightFile,
-                             @Nullable LineSeparator separator,
-                             @Nullable Charset charset,
+                             @Nonnull Document document,
+                             @javax.annotation.Nullable FileType type,
+                             @javax.annotation.Nullable VirtualFile highlightFile,
+                             @javax.annotation.Nullable LineSeparator separator,
+                             @javax.annotation.Nullable Charset charset,
                              @Nullable Boolean bom) {
     myProject = project;
     myDocument = document;
@@ -71,7 +75,7 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     return myDocument;
@@ -85,12 +89,12 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@NotNull LineCol position) {
+  public Navigatable getNavigatable(@Nonnull LineCol position) {
     if (myProject == null || getHighlightFile() == null || !getHighlightFile().isValid()) return null;
     return new MyNavigatable(myProject, getHighlightFile(), getDocument(), position);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Navigatable getNavigatable() {
     return getNavigatable(new LineCol(0));
@@ -103,12 +107,12 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Boolean hasBom() {
     return myBOM;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public FileType getContentType() {
     return myType;
@@ -122,12 +126,16 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
 
 
   private static class MyNavigatable implements Navigatable {
-    @NotNull private final Project myProject;
-    @NotNull private final VirtualFile myTargetFile;
-    @NotNull private final Document myDocument;
-    @NotNull private final LineCol myPosition;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final VirtualFile myTargetFile;
+    @Nonnull
+    private final Document myDocument;
+    @Nonnull
+    private final LineCol myPosition;
 
-    public MyNavigatable(@NotNull Project project, @NotNull VirtualFile targetFile, @NotNull Document document, @NotNull LineCol position) {
+    public MyNavigatable(@Nonnull Project project, @Nonnull VirtualFile targetFile, @Nonnull Document document, @Nonnull LineCol position) {
       myProject = project;
       myTargetFile = targetFile;
       myDocument = document;
@@ -152,8 +160,8 @@ public class DocumentContentImpl extends DiffContentBase implements DocumentCont
       return false;
     }
 
-    @NotNull
-    private static LineCol translatePosition(@NotNull Document fromDocument, @Nullable Document toDocument, @NotNull LineCol position) {
+    @Nonnull
+    private static LineCol translatePosition(@Nonnull Document fromDocument, @javax.annotation.Nullable Document toDocument, @Nonnull LineCol position) {
       try {
         if (toDocument == null) return position;
         int targetLine = Diff.translateLine(fromDocument.getCharsSequence(), toDocument.getCharsSequence(), position.line, true);

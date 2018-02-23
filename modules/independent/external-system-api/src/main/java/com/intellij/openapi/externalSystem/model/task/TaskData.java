@@ -18,8 +18,8 @@ package com.intellij.openapi.externalSystem.model.task;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.project.AbstractExternalEntityData;
 import com.intellij.openapi.externalSystem.model.project.ExternalConfigPathAware;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Container for external system task information.
@@ -31,29 +31,31 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final String myName;
-  @NotNull private final String myLinkedExternalProjectPath;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private final String myLinkedExternalProjectPath;
 
   @Nullable private final String myDescription;
 
-  public TaskData(@NotNull ProjectSystemId owner, @NotNull String name, @NotNull String path, @Nullable String description) {
+  public TaskData(@Nonnull ProjectSystemId owner, @Nonnull String name, @Nonnull String path, @Nullable String description) {
     super(owner);
     myName = name;
     myLinkedExternalProjectPath = path;
     myDescription = description;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public String getLinkedExternalProjectPath() {
     return myLinkedExternalProjectPath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getDescription() {
     return myDescription;
   }
@@ -83,7 +85,7 @@ public class TaskData extends AbstractExternalEntityData implements ExternalConf
   }
 
   @Override
-  public int compareTo(@NotNull TaskData that) {
+  public int compareTo(@Nonnull TaskData that) {
     return myName.compareTo(that.getName());
   }
 

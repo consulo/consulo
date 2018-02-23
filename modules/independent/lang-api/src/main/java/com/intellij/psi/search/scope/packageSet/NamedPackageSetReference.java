@@ -16,7 +16,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NamedPackageSetReference extends PackageSetBase {
   private final String myName;
@@ -38,13 +38,13 @@ public class NamedPackageSetReference extends PackageSetBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PackageSet createCopy() {
     return new NamedPackageSetReference(myName);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return "$" + myName;
   }

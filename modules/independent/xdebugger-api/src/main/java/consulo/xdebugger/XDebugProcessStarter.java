@@ -18,7 +18,7 @@ package consulo.xdebugger;
 import com.intellij.execution.ExecutionException;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Factory class for {@link XDebugProcess} implementation. Used by {@link com.intellij.xdebugger.XDebuggerManager} to start a new debugging session
@@ -33,6 +33,6 @@ public interface XDebugProcessStarter {
    * @param session session to be passed to {@link XDebugProcess#XDebugProcess} constructor
    * @return new {@link XDebugProcess} instance
    */
-  @NotNull
-  public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException;
+  @Nonnull
+  public XDebugProcess start(@Nonnull XDebugSession session) throws ExecutionException;
 }

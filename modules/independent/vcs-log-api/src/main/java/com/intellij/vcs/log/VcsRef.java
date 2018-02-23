@@ -16,7 +16,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A special reference to a commit, such as a branch or a tag.
@@ -28,24 +28,24 @@ public interface VcsRef {
   /**
    * Returns the hash of the commit which this reference points to.
    */
-  @NotNull
+  @Nonnull
   Hash getCommitHash();
 
   /**
    * Returns the display name of the reference.
    */
-  @NotNull
+  @Nonnull
   String getName();
 
   /**
    * Returns the type of this reference. There can be different types across different VCS.
    */
-  @NotNull
+  @Nonnull
   VcsRefType getType();
 
   /**
    * Returns the VCS root this reference belongs to.
    */
-  @NotNull
+  @Nonnull
   VirtualFile getRoot();
 }

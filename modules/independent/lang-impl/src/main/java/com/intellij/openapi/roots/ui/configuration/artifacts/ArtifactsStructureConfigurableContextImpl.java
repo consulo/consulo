@@ -34,8 +34,8 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
     myProject = project;
     context.getDaemonAnalyzer().addListener(new ProjectStructureDaemonAnalyzerListener() {
       @Override
-      public void problemsChanged(@NotNull ProjectStructureElement element) {
+      public void problemsChanged(@Nonnull ProjectStructureElement element) {
         if (element instanceof ArtifactProjectStructureElement) {
           final Artifact originalArtifact = ((ArtifactProjectStructureElement)element).getOriginalArtifact();
           final ArtifactEditorImpl artifactEditor = myArtifactEditors.get(originalArtifact);
@@ -82,13 +82,13 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ArtifactModel getArtifactModel() {
     if (myModifiableModel != null) {
       return myModifiableModel;
@@ -97,8 +97,8 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @NotNull
-  public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
     if (myModifiableModel != null) {
       return myModifiableModel.getOriginalArtifact(artifact);
     }
@@ -116,7 +116,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  public CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact) {
+  public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
     artifact = getOriginalArtifact(artifact);
     if (myModifiableModel != null) {
       final Artifact modifiableArtifact = myModifiableModel.getModifiableCopy(artifact);
@@ -137,7 +137,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  public void editLayout(@NotNull final Artifact artifact, final Runnable action) {
+  public void editLayout(@Nonnull final Artifact artifact, final Runnable action) {
     final Artifact originalArtifact = getOriginalArtifact(artifact);
     new WriteAction() {
       @Override
@@ -175,7 +175,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
     if (myModifiableModel == null) {
       myModifiableModel = ArtifactManager.getInstance(myProject).createModifiableModel();
@@ -190,13 +190,13 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModulesProvider getModulesProvider() {
     return myContext.getModulesConfigurator();
   }
 
   @Override
-  public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
+  public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
     final Library library = DefaultPackagingElementResolvingContext.findLibrary(myProject, level, libraryName);
     return library != null ? myContext.getLibraryModel(library) : myContext.getLibrary(libraryName, level);
   }
@@ -231,8 +231,8 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @NotNull
-  public ArtifactProjectStructureElement getOrCreateArtifactElement(@NotNull Artifact artifact) {
+  @Nonnull
+  public ArtifactProjectStructureElement getOrCreateArtifactElement(@Nonnull Artifact artifact) {
     ArtifactProjectStructureElement element = myArtifactElements.get(getOriginalArtifact(artifact));
     if (element == null) {
       element = new ArtifactProjectStructureElement(myContext, this, artifact);

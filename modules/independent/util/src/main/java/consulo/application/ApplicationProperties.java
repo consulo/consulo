@@ -19,7 +19,7 @@ import com.intellij.openapi.util.NotNullFactory;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ public class ApplicationProperties {
   /**
    * @type boolean
    */
-  @NotNull
+  @Nonnull
   @NonNls
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
@@ -42,12 +42,12 @@ public class ApplicationProperties {
   /**
    * @type boolean
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public static final String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
 
   private static final NotNullLazyValue<Boolean> ourInSandboxValue = NotNullLazyValue.createValue(new NotNullFactory<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     public Boolean create() {
       return Boolean.getBoolean(CONSULO_IN_SANDBOX);
@@ -61,7 +61,7 @@ public class ApplicationProperties {
   /**
    * @type boolean
    */
-  @NotNull
+  @Nonnull
   @NonNls
   @Deprecated
   public static final String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
@@ -71,7 +71,7 @@ public class ApplicationProperties {
    *
    * @type boolean
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public static final String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
 
@@ -80,11 +80,11 @@ public class ApplicationProperties {
    *
    * @type String
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public static final String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
 
-  @NotNull
+  @Nonnull
   @NonNls
   @Deprecated
   @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
@@ -94,7 +94,7 @@ public class ApplicationProperties {
    * Path for plugin install directory. Not included in plugin path list
    * @type
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
 
@@ -102,7 +102,7 @@ public class ApplicationProperties {
    * List of plugin directories for loading. If size more that one - CONSULO_INSTALL_PLUGINS_PATH must be installed
    * @type String[]
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 

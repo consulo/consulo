@@ -16,7 +16,7 @@
 package com.intellij.execution.dashboard;
 
 import com.intellij.ui.content.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +36,7 @@ class PanelContentUI implements ContentUI {
   }
 
   @Override
-  public void setManager(@NotNull ContentManager manager) {
+  public void setManager(@Nonnull ContentManager manager) {
     manager.addContentManagerListener(new ContentManagerAdapter() {
       @Override
       public void selectionChanged(final ContentManagerEvent event) {
@@ -58,7 +58,7 @@ class PanelContentUI implements ContentUI {
     myPanel = new JPanel(new BorderLayout());
   }
 
-  private void showContent(@NotNull Content content) {
+  private void showContent(@Nonnull Content content) {
     if (myPanel.getComponentCount() != 1 ||
         myPanel.getComponent(0) != content.getComponent()) {
       myPanel.removeAll();
@@ -95,29 +95,29 @@ class PanelContentUI implements ContentUI {
   }
 
   @Override
-  public boolean canChangeSelectionTo(@NotNull Content content, boolean implicit) {
+  public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseActionName() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseAllButThisActionName() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPreviousContentActionName() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getNextContentActionName() {
     return "";

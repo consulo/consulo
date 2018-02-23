@@ -18,17 +18,16 @@ package consulo.module.extension;
 import com.intellij.openapi.module.Module;
 import consulo.util.pointers.Named;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 19:58/15.06.13
  */
 public interface ModuleInheritableNamedPointer<T extends Named> extends NamedPointer<T> {
-  @Nullable
+  @javax.annotation.Nullable
   Module getModule();
 
-  @Nullable
+  @javax.annotation.Nullable
   String getModuleName();
 
   boolean isNull();

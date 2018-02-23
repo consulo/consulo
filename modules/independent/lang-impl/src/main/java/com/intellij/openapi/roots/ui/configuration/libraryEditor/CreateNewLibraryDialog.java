@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -39,8 +39,8 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
   private final NewLibraryEditor myLibraryEditor;
   private final ComboBox myLibraryLevelCombobox;
 
-  public CreateNewLibraryDialog(@NotNull JComponent parent, @NotNull StructureConfigurableContext context, @NotNull NewLibraryEditor libraryEditor,
-                                 @NotNull List<LibraryTable> libraryTables, int selectedTable) {
+  public CreateNewLibraryDialog(@Nonnull JComponent parent, @Nonnull StructureConfigurableContext context, @Nonnull NewLibraryEditor libraryEditor,
+                                @Nonnull List<LibraryTable> libraryTables, int selectedTable) {
     super(parent, new LibraryRootsComponent(context.getProject(), libraryEditor));
     myContext = context;
     myLibraryEditor = libraryEditor;
@@ -61,13 +61,14 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
     init();
   }
 
-  @NotNull @Override
+  @Nonnull
+  @Override
   protected LibraryTable.ModifiableModel getTableModifiableModel() {
     final LibraryTable selectedTable = (LibraryTable)myLibraryLevelCombobox.getSelectedItem();
     return myContext.getModifiableLibraryTable(selectedTable);
   }
 
-  @NotNull
+  @Nonnull
   public Library createLibrary() {
     final LibraryTableBase.ModifiableModelEx modifiableModel = (LibraryTableBase.ModifiableModelEx)getTableModifiableModel();
     final LibraryType<?> type = myLibraryEditor.getType();

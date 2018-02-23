@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,7 +33,7 @@ import javax.swing.*;
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
   protected static final Icon ourCurrentAction = AllIcons.Diff.CurrentLine;
   protected static final Icon ourNotCurrentAction = new EmptyIcon(ourCurrentAction.getIconWidth(), ourCurrentAction.getIconHeight());
-  @NotNull
+  @Nonnull
   protected String myActionPlace = ActionPlaces.UNKNOWN;
 
   private final boolean myShowPopupWithNoActions;
@@ -54,7 +54,7 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
     showPopup(e, group);
   }
 
-  protected abstract void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext);
+  protected abstract void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext);
 
   private void showPopup(AnActionEvent e, DefaultActionGroup group) {
     if (!myShowPopupWithNoActions && group.getChildrenCount() == 0) return;

@@ -46,7 +46,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.util.ui.ToolwindowPaintUtil;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
@@ -78,7 +78,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
   private final DefaultActionGroup myActionGroup = new DefaultActionGroup();
   private List<AnAction> myVisibleActions = ContainerUtil.newArrayListWithCapacity(2);
 
-  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @NotNull WindowInfoImpl info, @NotNull final NotNullProducer<ActionGroup> gearProducer) {
+  public DesktopToolWindowHeader(final DesktopToolWindowImpl toolWindow, @Nonnull WindowInfoImpl info, @Nonnull final NotNullProducer<ActionGroup> gearProducer) {
     super(new BorderLayout());
 
     myToolWindow = toolWindow;
@@ -117,7 +117,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     myGearButton = new ActionButton(new AnAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         final InputEvent inputEvent = e.getInputEvent();
         final ActionPopupMenu popupMenu =
                 ((ActionManagerImpl)ActionManager.getInstance())
@@ -142,13 +142,13 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     myHideButton = new ActionButton(new HideAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         hideToolWindow();
       }
     }, new HideSideAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         sideHidden();
       }
     }, AllIcons.General.HideLeft, null, null) {
@@ -457,7 +457,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     private AnAction myCurrentAction;
 
-    public ActionButton(AnAction action, AnAction alternativeAction, @NotNull Icon activeIcon, Icon inactiveIcon,
+    public ActionButton(AnAction action, AnAction alternativeAction, @Nonnull Icon activeIcon, Icon inactiveIcon,
                         Icon alternativeIcon) {
       myAction = action;
       myAlternativeAction = alternativeAction;
@@ -539,7 +539,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       repaint();
     }
 
-    public ActionButton(AnAction action, @NotNull Icon activeIcon, Icon inactiveIcon) {
+    public ActionButton(AnAction action, @Nonnull Icon activeIcon, Icon inactiveIcon) {
       this(action, null, activeIcon, inactiveIcon, null);
     }
 
@@ -617,11 +617,11 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     @RequiredDispatchThread
     @Override
-    public abstract void actionPerformed(@NotNull final AnActionEvent e);
+    public abstract void actionPerformed(@Nonnull final AnActionEvent e);
 
     @RequiredDispatchThread
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
     }
@@ -637,7 +637,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     @RequiredDispatchThread
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
     }

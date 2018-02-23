@@ -16,7 +16,7 @@
 package consulo.ide.newProject;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -53,13 +53,13 @@ public class NewModuleContext {
       return myId;
     }
 
-    @NotNull
+    @Nonnull
     public Set<Item> getItems() {
       return myItems;
     }
 
     @Override
-    public int compareTo(@NotNull Group o) {
+    public int compareTo(@Nonnull Group o) {
       int weight = getWeight();
       int oWeight = o.getWeight();
       if(weight != oWeight) {
@@ -98,15 +98,15 @@ public class NewModuleContext {
     }
 
     @Override
-    public int compareTo(@NotNull Item o) {
+    public int compareTo(@Nonnull Item o) {
       return myName.compareTo(o.myName);
     }
   }
 
   private final Map<String, Group> myGroups = new HashMap<>();
 
-  @NotNull
-  public Group get(@NotNull String id) {
+  @Nonnull
+  public Group get(@Nonnull String id) {
     Group group = myGroups.get(id);
     if (group == null) {
       throw new IllegalArgumentException("Group with " + id + " is not registered");
@@ -114,12 +114,12 @@ public class NewModuleContext {
     return group;
   }
 
-  @NotNull
-  public Group createGroup(@NotNull String id, @NotNull String name) {
+  @Nonnull
+  public Group createGroup(@Nonnull String id, @Nonnull String name) {
     return myGroups.computeIfAbsent(id, (s) -> new Group(id, name));
   }
 
-  @NotNull
+  @Nonnull
   public Group[] getGroups() {
     Group[] groups = myGroups.values().toArray(new Group[myGroups.size()]);
     ContainerUtil.sort(groups);

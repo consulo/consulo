@@ -18,16 +18,18 @@ package com.intellij.diff.actions;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
 public class NavigationContextChecker {
-  @NotNull private final Iterator<Pair<Integer, CharSequence>> myChangedLinesIterator;
-  @NotNull private final DiffNavigationContext myContext;
+  @Nonnull
+  private final Iterator<Pair<Integer, CharSequence>> myChangedLinesIterator;
+  @Nonnull
+  private final DiffNavigationContext myContext;
 
-  public NavigationContextChecker(@NotNull Iterator<Pair<Integer, CharSequence>> changedLinesIterator,
-                                  @NotNull DiffNavigationContext context) {
+  public NavigationContextChecker(@Nonnull Iterator<Pair<Integer, CharSequence>> changedLinesIterator,
+                                  @Nonnull DiffNavigationContext context) {
     myChangedLinesIterator = changedLinesIterator;
     myContext = context;
   }

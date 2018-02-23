@@ -29,7 +29,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -60,7 +60,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   /**
    * @return 'before run' task for the configuration or null, if the task from this provider is not applicable to the specified configuration 
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract T createTask(final RunConfiguration runConfiguration);
 
   /**

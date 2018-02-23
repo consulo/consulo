@@ -32,9 +32,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -88,7 +88,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }
@@ -257,7 +257,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Pair<Point, Short> getBestPointPosition(LightweightHint hint,
                                                    final PsiElement list,
                                                    int offset,

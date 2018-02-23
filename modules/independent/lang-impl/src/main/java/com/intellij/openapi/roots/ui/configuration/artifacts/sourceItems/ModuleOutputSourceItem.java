@@ -26,7 +26,7 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   private final Module myModule;
   private final ModuleOutputElementTypeBase myModuleOutputType;
 
-  public ModuleOutputSourceItem(@NotNull Module module, ModuleOutputElementTypeBase moduleOutputType) {
+  public ModuleOutputSourceItem(@Nonnull Module module, ModuleOutputElementTypeBase moduleOutputType) {
     myModule = module;
     myModuleOutputType = moduleOutputType;
   }
@@ -60,7 +60,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
     return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, myModuleOutputType.getContentFolderType())) {
       @Override
@@ -71,14 +71,14 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  @NotNull
-  public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
 
     return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;

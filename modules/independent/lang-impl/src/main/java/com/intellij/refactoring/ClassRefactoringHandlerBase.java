@@ -11,7 +11,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.lang.ElementsHandler;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.PsiNavigateUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -27,7 +27,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
   }
   
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     int offset = editor.getCaretModel().getOffset();
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     final PsiElement position = file.findElementAt(offset);
@@ -52,7 +52,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
   }
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     final PsiFile file = dataContext.getData(LangDataKeys.PSI_FILE);
     final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     showDialog(project, elements[0], editor, file, dataContext);

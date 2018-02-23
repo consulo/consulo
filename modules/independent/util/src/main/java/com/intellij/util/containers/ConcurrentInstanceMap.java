@@ -16,14 +16,14 @@
 
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class ConcurrentInstanceMap<T> extends ConcurrentFactoryMap<Class<? extends T>,T>{
   @Override
-  @NotNull
+  @Nonnull
   protected T create(final Class<? extends T> key) {
     try {
       return key.newInstance();

@@ -17,7 +17,7 @@
 package com.intellij.ide.util.projectWizard;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -27,6 +27,6 @@ import java.util.EventListener;
 @Deprecated
 public interface ModuleBuilderListener extends EventListener {
 
-  void moduleCreated(@NotNull Module module);
+  void moduleCreated(@Nonnull Module module);
   
 }

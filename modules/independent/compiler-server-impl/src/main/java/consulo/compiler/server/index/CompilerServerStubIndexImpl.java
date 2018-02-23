@@ -22,7 +22,7 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.IdIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,39 +32,39 @@ import java.util.Collections;
  * @since 12:14/14.08.13
  */
 public class CompilerServerStubIndexImpl extends StubIndex {
-  @NotNull
+  @Nonnull
   @Override
-  public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey, @NotNull Key key, @NotNull Project project, GlobalSearchScope scope) {
+  public <Key, Psi extends PsiElement> Collection<Psi> get(@Nonnull StubIndexKey<Key, Psi> indexKey, @Nonnull Key key, @Nonnull Project project, GlobalSearchScope scope) {
     return Collections.emptyList();
   }
 
   @Override
-  public <Key, Psi extends PsiElement> boolean processElements(@NotNull StubIndexKey<Key, Psi> indexKey,
-                                            @NotNull Key key,
-                                            @NotNull Project project,
+  public <Key, Psi extends PsiElement> boolean processElements(@Nonnull StubIndexKey<Key, Psi> indexKey,
+                                            @Nonnull Key key,
+                                            @Nonnull Project project,
                                             GlobalSearchScope scope,
                                             Class<Psi> requiredClass,
-                                            @NotNull Processor<? super Psi> processor) {
+                                            @Nonnull Processor<? super Psi> processor) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Key> Collection<Key> getAllKeys(@NotNull StubIndexKey<Key, ?> indexKey, @NotNull Project project) {
+  public <Key> Collection<Key> getAllKeys(@Nonnull StubIndexKey<Key, ?> indexKey, @Nonnull Project project) {
     return Collections.emptyList();
   }
 
   @Override
-  public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project, Processor<K> processor) {
+  public <K> boolean processAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Project project, Processor<K> processor) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Key> IdIterator getContainingIds(@NotNull StubIndexKey<Key, ?> indexKey,
-                                           @NotNull Key dataKey,
-                                           @NotNull Project project,
-                                           @NotNull GlobalSearchScope scope) {
+  public <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey,
+                                           @Nonnull Key dataKey,
+                                           @Nonnull Project project,
+                                           @Nonnull GlobalSearchScope scope) {
     return new IdIterator() {
       @Override
       public boolean hasNext() {
@@ -84,7 +84,7 @@ public class CompilerServerStubIndexImpl extends StubIndex {
   }
 
   @Override
-  public void forceRebuild(@NotNull Throwable e) {
+  public void forceRebuild(@Nonnull Throwable e) {
 
   }
 }

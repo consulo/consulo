@@ -24,15 +24,14 @@ import com.intellij.diff.tools.util.side.OnesideDiffViewer;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolder> {
   public static final Logger LOG = Logger.getInstance(OnesideBinaryDiffViewer.class);
 
-  public OnesideBinaryDiffViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public OnesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
   }
 
@@ -41,14 +40,14 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
   //
 
   @Override
-  @NotNull
-  protected Runnable performRediff(@NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
     JComponent notification = getSide().select(DiffNotifications.createRemovedContent(), DiffNotifications.createInsertedContent());
     return applyNotification(notification);
   }
 
-  @NotNull
-  private Runnable applyNotification(@Nullable final JComponent notification) {
+  @Nonnull
+  private Runnable applyNotification(@javax.annotation.Nullable final JComponent notification) {
     return new Runnable() {
       @Override
       public void run() {
@@ -66,7 +65,7 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
   // Getters
   //
 
-  @NotNull
+  @Nonnull
   FileEditor getEditor() {
     return getEditorHolder().getEditor();
   }
@@ -75,7 +74,7 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
   // Misc
   //
 
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return OnesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
   }
 }

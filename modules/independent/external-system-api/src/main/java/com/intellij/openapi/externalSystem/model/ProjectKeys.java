@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.model;
 
 import com.intellij.openapi.externalSystem.model.project.*;
 import com.intellij.openapi.externalSystem.model.task.TaskData;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Holds common project entity {@link Key keys}.
@@ -27,14 +27,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProjectKeys {
 
-  @NotNull public static final Key<ProjectData>           PROJECT            = Key.create(ProjectData.class, 50);
-  @NotNull public static final Key<ModuleData>            MODULE             = Key.create(ModuleData.class, 70);
-  @NotNull public static final Key<LibraryData>           LIBRARY            = Key.create(LibraryData.class, 90);
-  @NotNull public static final Key<ContentRootData>       CONTENT_ROOT       = Key.create(ContentRootData.class, 110);
-  @NotNull public static final Key<ModuleDependencyData>  MODULE_DEPENDENCY  = Key.create(ModuleDependencyData.class, 130);
-  @NotNull public static final Key<LibraryDependencyData> LIBRARY_DEPENDENCY = Key.create(LibraryDependencyData.class, 150);
+  @Nonnull
+  public static final Key<ProjectData>           PROJECT            = Key.create(ProjectData.class, 50);
+  @Nonnull
+  public static final Key<ModuleData>            MODULE             = Key.create(ModuleData.class, 70);
+  @Nonnull
+  public static final Key<LibraryData>           LIBRARY            = Key.create(LibraryData.class, 90);
+  @Nonnull
+  public static final Key<ContentRootData>       CONTENT_ROOT       = Key.create(ContentRootData.class, 110);
+  @Nonnull
+  public static final Key<ModuleDependencyData>  MODULE_DEPENDENCY  = Key.create(ModuleDependencyData.class, 130);
+  @Nonnull
+  public static final Key<LibraryDependencyData> LIBRARY_DEPENDENCY = Key.create(LibraryDependencyData.class, 150);
 
-  @NotNull public static final Key<TaskData> TASK = Key.create(TaskData.class, 250);
+  @Nonnull
+  public static final Key<TaskData> TASK = Key.create(TaskData.class, 250);
 
   private ProjectKeys() {
   }

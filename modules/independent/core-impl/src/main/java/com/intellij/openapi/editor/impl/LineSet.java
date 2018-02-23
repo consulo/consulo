@@ -22,7 +22,7 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.MergingCharSequence;
 import gnu.trove.TByteArrayList;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Arrays;
@@ -51,8 +51,8 @@ public class LineSet{
     return createLineSet(text, false);
   }
 
-  @NotNull
-  private static LineSet createLineSet(@NotNull CharSequence text, boolean markModified) {
+  @Nonnull
+  private static LineSet createLineSet(@Nonnull CharSequence text, boolean markModified) {
     TIntArrayList starts = new TIntArrayList();
     TByteArrayList flags = new TByteArrayList();
 
@@ -65,8 +65,8 @@ public class LineSet{
     return new LineSet(starts.toNativeArray(), flags.toNativeArray(), text.length());
   }
 
-  @NotNull
-  LineSet update(@NotNull CharSequence prevText, int start, int end, @NotNull CharSequence replacement, boolean wholeTextReplaced) {
+  @Nonnull
+  LineSet update(@Nonnull CharSequence prevText, int start, int end, @Nonnull CharSequence replacement, boolean wholeTextReplaced) {
     if (myLength == 0) {
       return createLineSet(replacement, !wholeTextReplaced);
     }
@@ -84,14 +84,14 @@ public class LineSet{
     return wholeTextReplaced ? result.clearModificationFlags() : result;
   }
 
-  private boolean isSingleLineChange(int start, int end, @NotNull CharSequence replacement) {
+  private boolean isSingleLineChange(int start, int end, @Nonnull CharSequence replacement) {
     if (start == 0 && end == myLength && replacement.length() == 0) return false;
 
     int startLine = findLineIndex(start);
     return startLine == findLineIndex(end) && !CharArrayUtil.containLineBreaks(replacement) && !isLastEmptyLine(startLine);
   }
 
-  @NotNull
+  @Nonnull
   private LineSet updateInsideOneLine(int line, int lengthDelta) {
     int[] starts = myStarts.clone();
     for (int i = line + 1; i < starts.length; i++) {
@@ -127,7 +127,7 @@ public class LineSet{
     return applyPatch(startOffset, endOffset, startLine, endLine, patch);
   }
 
-  private void checkEquals(@NotNull LineSet fresh) {
+  private void checkEquals(@Nonnull LineSet fresh) {
     if (getLineCount() != fresh.getLineCount()) {
       throw new AssertionError();
     }
@@ -141,8 +141,8 @@ public class LineSet{
     }
   }
 
-  @NotNull
-  private LineSet applyPatch(int startOffset, int endOffset, int startLine, int endLine, @NotNull LineSet patch) {
+  @Nonnull
+  private LineSet applyPatch(int startOffset, int endOffset, int startLine, int endLine, @Nonnull LineSet patch) {
     int lineShift = patch.myStarts.length - (endLine - startLine);
     int lengthShift = patch.myLength - (endOffset - startOffset);
 
@@ -176,7 +176,7 @@ public class LineSet{
     return bsResult >= 0 ? bsResult : -bsResult - 2;
   }
 
-  @NotNull
+  @Nonnull
   public LineIterator createIterator() {
     return new LineIteratorImpl(this);
   }
@@ -206,7 +206,7 @@ public class LineSet{
     return !isLastEmptyLine(index) && BitUtil.isSet(myFlags[index], MODIFIED_MASK);
   }
 
-  @NotNull
+  @Nonnull
   final LineSet setModified(int index) {
     if (isLastEmptyLine(index) || isModified(index)) return this;
 
@@ -215,7 +215,7 @@ public class LineSet{
     return new LineSet(myStarts, flags, myLength);
   }
 
-  @NotNull
+  @Nonnull
   LineSet clearModificationFlags(int startLine, int endLine) {
     if (startLine > endLine) {
       throw new IllegalArgumentException("endLine < startLine: " + endLine + " < " + startLine + "; lineCount: " + getLineCount());
@@ -233,7 +233,7 @@ public class LineSet{
     return new LineSet(myStarts, flags, myLength);
   }
 
-  @NotNull
+  @Nonnull
   LineSet clearModificationFlags() {
     byte[] flags = myFlags.clone();
     for (int i = 0; i < flags.length; i++) {

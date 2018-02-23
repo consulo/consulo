@@ -18,8 +18,8 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +29,7 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
   private final String myPrompt;
   private final String myHelpId;
 
-  protected SimpleChooseByNameModel(@NotNull Project project, @NotNull String prompt, @Nullable String helpId) {
+  protected SimpleChooseByNameModel(@Nonnull Project project, @Nonnull String prompt, @Nullable String helpId) {
     myProject = project;
     myPrompt = prompt;
     myHelpId = helpId;
@@ -78,19 +78,19 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
   public void saveInitialCheckBoxState(boolean state) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getNames(boolean checkBoxState) {
     return getNames();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getElementsByName(String name, boolean checkBoxState, String pattern) {
     return getElementsByName(name, pattern);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getSeparators() {
     return ArrayUtil.EMPTY_STRING_ARRAY;

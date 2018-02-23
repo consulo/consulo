@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Reader;
 
@@ -26,7 +26,7 @@ public class CharSequenceReader extends Reader {
   private final CharSequence myText;
   private int myCurPos;
 
-  public CharSequenceReader(@NotNull CharSequence text) {
+  public CharSequenceReader(@Nonnull CharSequence text) {
     myText = text;
     myCurPos = 0;
   }

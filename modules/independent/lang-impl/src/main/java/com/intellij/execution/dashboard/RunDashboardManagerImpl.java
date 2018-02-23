@@ -42,8 +42,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentUI;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -57,16 +57,16 @@ import java.util.stream.Collectors;
  */
 @State(name = "RunDashboard", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
-  @NotNull
+  @Nonnull
   private final Project myProject;
-  @NotNull
+  @Nonnull
   private final ContentManager myContentManager;
-  @NotNull
+  @Nonnull
   private final List<DashboardGrouper> myGroupers;
 
   private RunDashboardContent myDashboardContent;
 
-  public RunDashboardManagerImpl(@NotNull final Project project) {
+  public RunDashboardManagerImpl(@Nonnull final Project project) {
     myProject = project;
 
     ContentFactory contentFactory = ContentFactory.getInstance();
@@ -88,29 +88,29 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   private void initToolWindowListeners() {
     myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
       @Override
-      public void runConfigurationAdded(@NotNull RunnerAndConfigurationSettings settings) {
+      public void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
         updateDashboardIfNeeded(settings);
       }
 
       @Override
-      public void runConfigurationRemoved(@NotNull RunnerAndConfigurationSettings settings) {
+      public void runConfigurationRemoved(@Nonnull RunnerAndConfigurationSettings settings) {
         updateDashboardIfNeeded(settings);
       }
 
       @Override
-      public void runConfigurationChanged(@NotNull RunnerAndConfigurationSettings settings) {
+      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
         updateDashboardIfNeeded(settings);
       }
     });
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
       @Override
-      public void processStarted(@NotNull String executorId, @NotNull ExecutionEnvironment env, final @NotNull ProcessHandler handler) {
+      public void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, final @Nonnull ProcessHandler handler) {
         updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
       }
 
       @Override
-      public void processTerminated(@NotNull String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler handler, int exitCode) {
+      public void processTerminated(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler, int exitCode) {
         updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
       }
     });
@@ -153,7 +153,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   }
 
   @Override
-  public void createToolWindowContent(@NotNull ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull ToolWindow toolWindow) {
     myDashboardContent = new RunDashboardContent(myProject, myContentManager, myGroupers);
     ContentManager contentManager = toolWindow.getContentManager();
     Content content = contentManager.getFactory().createContent(myDashboardContent, null, false);

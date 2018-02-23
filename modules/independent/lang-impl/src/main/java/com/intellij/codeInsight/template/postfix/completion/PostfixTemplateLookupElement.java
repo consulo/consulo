@@ -22,31 +22,31 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PostfixTemplateLookupElement extends CustomLiveTemplateLookupElement {
-  @NotNull
+  @Nonnull
   private final PostfixTemplate myTemplate;
-  @NotNull
+  @Nonnull
   private final PostfixTemplateProvider myProvider;
 
 
-  public PostfixTemplateLookupElement(@NotNull PostfixLiveTemplate liveTemplate,
-                                      @NotNull PostfixTemplate postfixTemplate,
-                                      @NotNull String templateKey,
-                                      @NotNull PostfixTemplateProvider provider,
+  public PostfixTemplateLookupElement(@Nonnull PostfixLiveTemplate liveTemplate,
+                                      @Nonnull PostfixTemplate postfixTemplate,
+                                      @Nonnull String templateKey,
+                                      @Nonnull PostfixTemplateProvider provider,
                                       boolean sudden) {
     super(liveTemplate, templateKey, StringUtil.trimStart(templateKey, "."), postfixTemplate.getDescription(), sudden, true);
     myTemplate = postfixTemplate;
     myProvider = provider;
   }
 
-  @NotNull
+  @Nonnull
   public PostfixTemplate getPostfixTemplate() {
     return myTemplate;
   }
 
-  @NotNull
+  @Nonnull
   public PostfixTemplateProvider getProvider() {
     return myProvider;
   }

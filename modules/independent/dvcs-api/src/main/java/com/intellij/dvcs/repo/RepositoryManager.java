@@ -18,8 +18,7 @@ package com.intellij.dvcs.repo;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public interface RepositoryManager<T extends Repository> {
 
-  @NotNull
+  @Nonnull
   AbstractVcs getVcs();
 
   /**
@@ -39,38 +38,38 @@ public interface RepositoryManager<T extends Repository> {
    * The method checks both project roots and external roots previously registered
    * via {@link #addExternalRepository(VirtualFile, Repository)}.
    */
-  @Nullable
-  T getRepositoryForRoot(@Nullable VirtualFile root);
+  @javax.annotation.Nullable
+  T getRepositoryForRoot(@javax.annotation.Nullable VirtualFile root);
 
-  boolean isExternal(@NotNull T repository);
+  boolean isExternal(@Nonnull T repository);
 
   /**
    * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git or Hg repository.
    */
-  @Nullable
-  T getRepositoryForFile(@NotNull VirtualFile file);
+  @javax.annotation.Nullable
+  T getRepositoryForFile(@Nonnull VirtualFile file);
 
   /**
    * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git ot Hg repository.
    */
-  @Nullable
-  T getRepositoryForFile(@NotNull FilePath file);
+  @javax.annotation.Nullable
+  T getRepositoryForFile(@Nonnull FilePath file);
 
   /**
    * @return all repositories tracked by the manager.
    */
-  @NotNull
+  @Nonnull
   List<T> getRepositories();
 
   /**
    * Registers a repository which doesn't belong to the project.
    */
-  void addExternalRepository(@NotNull VirtualFile root, @NotNull T repository);
+  void addExternalRepository(@Nonnull VirtualFile root, @Nonnull T repository);
 
   /**
    * Removes the repository not from the project, when it is not interesting anymore.
    */
-  void removeExternalRepository(@NotNull VirtualFile root);
+  void removeExternalRepository(@Nonnull VirtualFile root);
 
   boolean moreThanOneRoot();
 

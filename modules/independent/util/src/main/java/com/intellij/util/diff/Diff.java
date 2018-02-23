@@ -23,8 +23,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Enumerator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,14 +37,14 @@ public class Diff {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.diff.Diff");
 
   @Nullable
-  public static Change buildChanges(@NotNull CharSequence before, @NotNull CharSequence after) throws FilesTooBigForDiffException {
+  public static Change buildChanges(@Nonnull CharSequence before, @Nonnull CharSequence after) throws FilesTooBigForDiffException {
     final String[] strings1 = LineTokenizer.tokenize(before, false);
     final String[] strings2 = LineTokenizer.tokenize(after, false);
     return buildChanges(strings1, strings2);
   }
 
   @Nullable
-  public static <T> Change buildChanges(@NotNull T[] objects1, @NotNull T[] objects2) throws FilesTooBigForDiffException {
+  public static <T> Change buildChanges(@Nonnull T[] objects1, @Nonnull T[] objects2) throws FilesTooBigForDiffException {
 
     // Old variant of enumerator worked incorrectly with null values.
     // This check is to ensure that the corrected version does not introduce bugs.
@@ -65,7 +65,7 @@ public class Diff {
   }
 
   @Nullable
-  public static Change buildChanges(@NotNull int[] array1, @NotNull int[] array2) throws FilesTooBigForDiffException {
+  public static Change buildChanges(@Nonnull int[] array1, @Nonnull int[] array2) throws FilesTooBigForDiffException {
     final int startShift = getStartShift(array1, array2);
     final int endCut = getEndCut(array1, array2, startShift);
 
@@ -89,7 +89,7 @@ public class Diff {
     return new Ref<Change>(change);
   }
 
-  private static Change doBuildChanges(@NotNull int[] ints1, @NotNull int[] ints2, @NotNull ChangeBuilder builder)
+  private static Change doBuildChanges(@Nonnull int[] ints1, @Nonnull int[] ints2, @Nonnull ChangeBuilder builder)
           throws FilesTooBigForDiffException {
     Reindexer reindexer = new Reindexer(); // discard unique elements, that have no chance to be matched
     int[][] discarded = reindexer.discardUnique(ints1, ints2);
@@ -124,7 +124,7 @@ public class Diff {
     return builder.getFirstChange();
   }
 
-  private static <T> int getStartShift(@NotNull final T[] o1, @NotNull final T[] o2) {
+  private static <T> int getStartShift(@Nonnull final T[] o1, @Nonnull final T[] o2) {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
@@ -134,7 +134,7 @@ public class Diff {
     return idx;
   }
 
-  private static <T> int getEndCut(@NotNull final T[] o1, @NotNull final T[] o2, int startShift) {
+  private static <T> int getEndCut(@Nonnull final T[] o1, @Nonnull final T[] o2, int startShift) {
     final int size = Math.min(o1.length, o2.length) - startShift;
     int idx = 0;
 
@@ -145,7 +145,7 @@ public class Diff {
     return idx;
   }
 
-  private static int getStartShift(@NotNull final int[] o1, @NotNull final int[] o2) {
+  private static int getStartShift(@Nonnull final int[] o1, @Nonnull final int[] o2) {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
@@ -155,7 +155,7 @@ public class Diff {
     return idx;
   }
 
-  private static int getEndCut(@NotNull final int[] o1, @NotNull final int[] o2, final int startShift) {
+  private static int getEndCut(@Nonnull final int[] o1, @Nonnull final int[] o2, final int startShift) {
     final int size = Math.min(o1.length, o2.length) - startShift;
     int idx = 0;
 
@@ -174,11 +174,11 @@ public class Diff {
    * @param line      target line before change
    * @return          translated line if the processing is ok; negative value otherwise
    */
-  public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line) throws FilesTooBigForDiffException {
+  public static int translateLine(@Nonnull CharSequence before, @Nonnull CharSequence after, int line) throws FilesTooBigForDiffException {
     return translateLine(before, after, line, false);
   }
 
-  public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line, boolean approximate)
+  public static int translateLine(@Nonnull CharSequence before, @Nonnull CharSequence after, int line, boolean approximate)
           throws FilesTooBigForDiffException {
     String[] strings1 = LineTokenizer.tokenize(before, false);
     String[] strings2 = LineTokenizer.tokenize(after, false);
@@ -190,8 +190,8 @@ public class Diff {
     return translateLine(change, line, approximate);
   }
 
-  @NotNull
-  private static String[] trim(@NotNull String[] lines) {
+  @Nonnull
+  private static String[] trim(@Nonnull String[] lines) {
     return ContainerUtil.map2Array(lines, String.class, new Function<String, String>() {
       @Override
       public String fun(String s) {

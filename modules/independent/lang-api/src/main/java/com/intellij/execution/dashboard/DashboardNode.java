@@ -18,13 +18,13 @@ package com.intellij.execution.dashboard;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author konstantin.aleev
  */
 public interface DashboardNode {
-  @Nullable
+  @javax.annotation.Nullable
   default RunContentDescriptor getDescriptor() {
     return null;
   }

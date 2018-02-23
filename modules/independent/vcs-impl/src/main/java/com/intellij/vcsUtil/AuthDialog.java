@@ -19,8 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.AuthenticationPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +31,7 @@ public class AuthDialog extends DialogWrapper {
    * On the other hand, if password saving is disabled, the checkbox is not shown.
    * In other cases, {@code rememberByDefault} is used.
    */
-  public AuthDialog(@NotNull Project project, @NotNull String title, @Nullable String description, @Nullable String login, @Nullable String password, boolean rememberByDefault) {
+  public AuthDialog(@Nonnull Project project, @Nonnull String title, @javax.annotation.Nullable String description, @javax.annotation.Nullable String login, @javax.annotation.Nullable String password, boolean rememberByDefault) {
     super(project, false);
     setTitle(title);
     boolean rememberPassword = decideOnShowRememberPasswordOption(password, rememberByDefault);
@@ -40,7 +39,7 @@ public class AuthDialog extends DialogWrapper {
     init();
   }
 
-  private static boolean decideOnShowRememberPasswordOption(@Nullable String password, boolean rememberByDefault) {
+  private static boolean decideOnShowRememberPasswordOption(@javax.annotation.Nullable String password, boolean rememberByDefault) {
     final PasswordSafeImpl passwordSafe = (PasswordSafeImpl)PasswordSafe.getInstance();
     // if password saving is disabled, don't show the checkbox.
     if (passwordSafe.getSettings().getProviderType().equals(PasswordSafeSettings.ProviderType.DO_NOT_STORE)) {

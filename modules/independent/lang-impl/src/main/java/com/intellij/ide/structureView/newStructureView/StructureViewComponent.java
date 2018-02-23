@@ -55,8 +55,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -95,8 +95,8 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   private static int ourSettingsModificationCount;
 
   public StructureViewComponent(final FileEditor editor,
-                                @NotNull StructureViewModel structureViewModel,
-                                @NotNull Project project,
+                                @Nonnull StructureViewModel structureViewModel,
+                                @Nonnull Project project,
                                 final boolean showRootNode) {
     super(true, true);
 
@@ -162,7 +162,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, getTree()) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         return getSelectedPsiElements();
       }
@@ -216,7 +216,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     return filterPsiElements(getSelectedElements());
   }
 
-  @NotNull
+  @Nonnull
   private static PsiElement[] filterPsiElements(Object[] selectedElements) {
     if (selectedElements == null) {
       return PsiElement.EMPTY_ARRAY;
@@ -445,7 +445,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     return result;
   }
 
-  protected boolean addCustomActions(@NotNull DefaultActionGroup actionGroup) {
+  protected boolean addCustomActions(@Nonnull DefaultActionGroup actionGroup) {
     return false;
   }
 
@@ -655,7 +655,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     }
 
     @Override
-    protected void selectElementFromEditor(@NotNull FileEditor editor) {
+    protected void selectElementFromEditor(@Nonnull FileEditor editor) {
     }
 
     @Override
@@ -700,7 +700,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PSI_ELEMENT == dataId) {
       TreePath path = getSelectedUniquePath();
       if (path == null) return null;
@@ -765,7 +765,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewModel getTreeModel() {
     return myTreeModel;
   }
@@ -801,7 +801,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Object getKey() {
       StructureViewTreeElement element = (StructureViewTreeElement)getValue();
       if (element instanceof NodeDescriptorProvidingKey) return ((NodeDescriptorProvidingKey)element).getKey();
@@ -810,7 +810,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Collection<AbstractTreeNode> getChildren() {
       if (ourSettingsModificationCount != modificationCountForChildren) {
         resetChildren();
@@ -866,12 +866,12 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     }
 
     @Override
-    protected TreeElementWrapper createChildNode(@NotNull final TreeElement child) {
+    protected TreeElementWrapper createChildNode(@Nonnull final TreeElement child) {
       return new StructureViewTreeElementWrapper(myProject, child, myTreeModel);
     }
 
     @Override
-    protected GroupWrapper createGroupWrapper(final Project project, @NotNull Group group, final TreeModel treeModel) {
+    protected GroupWrapper createGroupWrapper(final Project project, @Nonnull Group group, final TreeModel treeModel) {
       return new StructureViewGroup(project, group, treeModel);
     }
 
@@ -909,13 +909,13 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       }
 
       @Override
-      protected TreeElementWrapper createChildNode(@NotNull TreeElement child) {
+      protected TreeElementWrapper createChildNode(@Nonnull TreeElement child) {
         return new StructureViewTreeElementWrapper(getProject(), child, myTreeModel);
       }
 
 
       @Override
-      protected GroupWrapper createGroupWrapper(Project project, @NotNull Group group, TreeModel treeModel) {
+      protected GroupWrapper createGroupWrapper(Project project, @Nonnull Group group, TreeModel treeModel) {
         return new StructureViewGroup(project, group, treeModel);
       }
 

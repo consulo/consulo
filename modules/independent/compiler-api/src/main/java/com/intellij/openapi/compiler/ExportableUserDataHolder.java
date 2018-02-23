@@ -17,7 +17,7 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public interface ExportableUserDataHolder extends UserDataHolder{
 
-  @NotNull
+  @Nonnull
   Map<Key, Object> exportUserData();
 
 }

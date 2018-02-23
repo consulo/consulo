@@ -20,17 +20,17 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class IgnoredViewDialog extends SpecificFilesViewDialog {
-  public IgnoredViewDialog(@NotNull Project project) {
+  public IgnoredViewDialog(@Nonnull Project project) {
     super(project, "Ignored Files", ChangesListView.IGNORED_FILES_DATA_KEY, ChangeListManagerImpl.getInstanceImpl(project).getIgnoredFiles());
   }
 
   @Override
-  protected void addCustomActions(@NotNull DefaultActionGroup group, @NotNull ActionToolbar actionToolbar) {
+  protected void addCustomActions(@Nonnull DefaultActionGroup group, @Nonnull ActionToolbar actionToolbar) {
     ActionManager actionManager = ActionManager.getInstance();
     AnAction deleteAction = EmptyAction.registerWithShortcutSet("ChangesView.DeleteUnversioned.From.Dialog", CommonShortcuts.getDelete(), myView);
     actionManager.addAnActionListener(new AnActionListener.Adapter() {
@@ -46,7 +46,7 @@ public class IgnoredViewDialog extends SpecificFilesViewDialog {
     myView.setMenuActions(new DefaultActionGroup(deleteAction));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<VirtualFile> getFiles() {
     return ChangeListManagerImpl.getInstanceImpl(myProject).getIgnoredFiles();

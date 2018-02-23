@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl.softwrap;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.VisualPosition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Every document that is exposed to end-user via IJ editor has a number of various dimensions ({@link LogicalPosition logical}
@@ -39,8 +39,8 @@ public interface SoftWrapDataMapper {
    * @return          logical position that corresponds to the given visual position
    * @throws IllegalStateException    if it's not possible to perform a mapping
    */
-  @NotNull
-  LogicalPosition visualToLogical(@NotNull VisualPosition visual) throws IllegalStateException;
+  @Nonnull
+  LogicalPosition visualToLogical(@Nonnull VisualPosition visual) throws IllegalStateException;
 
   /**
    * Maps given offset to corresponding logical position.
@@ -49,7 +49,7 @@ public interface SoftWrapDataMapper {
    * @return            logical position that corresponds to the given offset
    * @throws IllegalStateException    if it's not possible to perform a mapping
    */
-  @NotNull
+  @Nonnull
   LogicalPosition offsetToLogicalPosition(int offset) throws IllegalStateException;
 
   /**
@@ -60,6 +60,6 @@ public interface SoftWrapDataMapper {
    * @return                        visual position that corresponds to the given logical position
    * @throws IllegalStateException  if it's not possible to perform a mapping
    */
-  VisualPosition logicalToVisualPosition(@NotNull LogicalPosition logical, @NotNull VisualPosition softWrapUnawareVisual)
+  VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logical, @Nonnull VisualPosition softWrapUnawareVisual)
     throws IllegalStateException;
 }

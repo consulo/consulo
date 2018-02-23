@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -31,7 +31,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @param module the module for which the root manager is requested.
    * @return the root manager instance.
    */
-  public static ModuleRootManager getInstance(@NotNull Module module) {
+  public static ModuleRootManager getInstance(@Nonnull Module module) {
     return module.getComponent(ModuleRootManager.class);
   }
 
@@ -40,7 +40,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    *
    * @return the file index instance.
    */
-  @NotNull
+  @Nonnull
   public abstract ModuleFileIndex getFileIndex();
 
   /**
@@ -49,7 +49,7 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    *
    * @return the modifiable root model.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract ModifiableRootModel getModifiableModel();
 
@@ -59,7 +59,8 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    *
    * @return the list of module direct dependencies.
    */
-  @NotNull public abstract Module[] getDependencies();
+  @Nonnull
+  public abstract Module[] getDependencies();
 
   /**
    * Returns the list of modules on which the current module directly depends. The method does not traverse
@@ -68,7 +69,8 @@ public abstract class ModuleRootManager implements ModuleRootModel {
    * @param includeTests whether test-only dependencies should be included
    * @return the list of module direct dependencies.
    */
-  @NotNull public abstract Module[] getDependencies(boolean includeTests);
+  @Nonnull
+  public abstract Module[] getDependencies(boolean includeTests);
 
   /**
    * Checks if the current module directly depends on the specified module.

@@ -28,8 +28,8 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.LocalTimeCounter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,13 +41,13 @@ public class DummyHolderViewProvider extends UserDataHolderBase implements FileV
   private final long myModificationStamp;
   private final LightVirtualFile myLightVirtualFile = new LightVirtualFile("DummyHolder");
 
-  public DummyHolderViewProvider(@NotNull PsiManager manager) {
+  public DummyHolderViewProvider(@Nonnull PsiManager manager) {
     myManager = manager;
     myModificationStamp = LocalTimeCounter.currentTime();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiManager getManager() {
     return myManager;
   }
@@ -59,37 +59,37 @@ public class DummyHolderViewProvider extends UserDataHolderBase implements FileV
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence getContents() {
     return myHolder != null ? myHolder.getNode().getText() : "";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getVirtualFile() {
     return myLightVirtualFile;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getBaseLanguage() {
     return myHolder.getLanguage();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<Language> getLanguages() {
     return Collections.singleton(getBaseLanguage());
   }
 
   @Override
-  public PsiFile getPsi(@NotNull Language target) {
+  public PsiFile getPsi(@Nonnull Language target) {
     ((PsiManagerEx)myManager).getFileManager().setViewProvider(getVirtualFile(), this);
     return target == getBaseLanguage() ? myHolder : null;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<PsiFile> getAllFiles() {
     return Collections.singletonList(getPsi(getBaseLanguage()));
   }
@@ -116,15 +116,15 @@ public class DummyHolderViewProvider extends UserDataHolderBase implements FileV
   }
 
   @Override
-  public boolean supportsIncrementalReparse(@NotNull final Language rootLanguage) {
+  public boolean supportsIncrementalReparse(@Nonnull final Language rootLanguage) {
     return true;
   }
 
   @Override
-  public void rootChanged(@NotNull PsiFile psiFile) {
+  public void rootChanged(@Nonnull PsiFile psiFile) {
   }
 
-  public void setDummyHolder(@NotNull DummyHolder dummyHolder) {
+  public void setDummyHolder(@Nonnull DummyHolder dummyHolder) {
     myHolder = dummyHolder;
     myLightVirtualFile.setFileType(dummyHolder.getFileType());
   }
@@ -141,35 +141,35 @@ public class DummyHolderViewProvider extends UserDataHolderBase implements FileV
 
   @Override
   @Nullable
-  public PsiElement findElementAt(final int offset, @NotNull final Language language) {
+  public PsiElement findElementAt(final int offset, @Nonnull final Language language) {
     return language == getBaseLanguage() ? findElementAt(offset) : null;
   }
 
 
   @Override
-  public PsiElement findElementAt(int offset, @NotNull Class<? extends Language> lang) {
+  public PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang) {
     if (!lang.isAssignableFrom(getBaseLanguage().getClass())) return null;
     return findElementAt(offset);
   }
 
   @Override
-  public PsiReference findReferenceAt(final int offsetInElement, @NotNull final Language language) {
+  public PsiReference findReferenceAt(final int offsetInElement, @Nonnull final Language language) {
     return language == getBaseLanguage() ? findReferenceAt(offsetInElement) : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileViewProvider createCopy(@NotNull final VirtualFile copy) {
+  public FileViewProvider createCopy(@Nonnull final VirtualFile copy) {
     throw new RuntimeException("Clone is not supported for DummyHolderProviders. Use DummyHolder clone directly.");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiFile getStubBindingRoot() {
     return getPsi(getBaseLanguage());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     return myLightVirtualFile.getFileType();

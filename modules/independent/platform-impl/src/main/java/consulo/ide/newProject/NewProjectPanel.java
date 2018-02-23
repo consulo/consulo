@@ -35,8 +35,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,12 +59,12 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   private JBList<Object> myList;
 
   @RequiredDispatchThread
-  public NewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public NewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     super(parentDisposable, virtualFile);
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   public String getLocationText() {
     return myLocationField.getText();
   }
@@ -90,9 +90,9 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
 
   public abstract void setOKActionEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   @Override
-  protected JComponent createLeftComponent(@NotNull Disposable parentDisposable, VirtualFile param) {
+  protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable, VirtualFile param) {
     NewModuleContext context = new NewModuleContext();
 
     NewModuleBuilder.EP_NAME.composite().setupContext(context);
@@ -101,7 +101,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
     myList = new JBList<>(model);
     myList.setCellRenderer(new ColoredListCellRenderer<Object>() {
       @Override
-      protected void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));
 
         if (value instanceof NewModuleContext.Group) {
@@ -138,7 +138,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel<VirtualFile
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createRightComponent(VirtualFile param) {
     final JPanel panel = new JPanel(new VerticalFlowLayout());

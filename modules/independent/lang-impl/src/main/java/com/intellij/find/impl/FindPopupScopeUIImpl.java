@@ -33,8 +33,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,16 +48,20 @@ public class FindPopupScopeUIImpl implements FindPopupScopeUI {
   private final ScopeType DIRECTORY = new ScopeType("Directory", FindBundle.message("find.popup.scope.directory"), EmptyIcon.ICON_0);
   private final ScopeType SCOPE = new ScopeType("Scope", FindBundle.message("find.popup.scope.scope"), EmptyIcon.ICON_0);
 
-  @NotNull private final FindUIHelper myHelper;
-  @NotNull private final Project myProject;
-  @NotNull private final FindPopupPanel myFindPopupPanel;
-  @NotNull private final Pair[] myComponents;
+  @Nonnull
+  private final FindUIHelper myHelper;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final FindPopupPanel myFindPopupPanel;
+  @Nonnull
+  private final Pair[] myComponents;
 
   private ComboBox<String> myModuleComboBox;
   private FindPopupDirectoryChooser myDirectoryChooser;
   private ScopeChooserCombo myScopeCombo;
 
-  public FindPopupScopeUIImpl(@NotNull FindPopupPanel panel) {
+  public FindPopupScopeUIImpl(@Nonnull FindPopupPanel panel) {
     myHelper = panel.getHelper();
     myProject = panel.getProject();
     myFindPopupPanel = panel;
@@ -127,19 +131,19 @@ public class FindPopupScopeUIImpl implements FindPopupScopeUI {
     Disposer.register(myFindPopupPanel.getDisposable(), myScopeCombo);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Pair<ScopeType, JComponent>[] getComponents() {
     return myComponents;
   }
 
   @Override
-  public void applyTo(@NotNull FindSettings findSettings, @NotNull FindPopupScopeUI.ScopeType selectedScope) {
+  public void applyTo(@Nonnull FindSettings findSettings, @Nonnull FindPopupScopeUI.ScopeType selectedScope) {
     findSettings.setDefaultScopeName(myScopeCombo.getSelectedScopeName());
   }
 
   @Override
-  public void applyTo(@NotNull FindModel findModel, @NotNull FindPopupScopeUI.ScopeType selectedScope) {
+  public void applyTo(@Nonnull FindModel findModel, @Nonnull FindPopupScopeUI.ScopeType selectedScope) {
     if (selectedScope == PROJECT) {
       findModel.setProjectScope(true);
     }
@@ -161,7 +165,7 @@ public class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
   @Nullable
   @Override
-  public ValidationInfo validate(@NotNull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
+  public ValidationInfo validate(@Nonnull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
     if (selectedScope == DIRECTORY) {
       return myDirectoryChooser.validate(model);
     }
@@ -180,9 +184,9 @@ public class FindPopupScopeUIImpl implements FindPopupScopeUI {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ScopeType initByModel(@NotNull FindModel findModel) {
+  public ScopeType initByModel(@Nonnull FindModel findModel) {
     myDirectoryChooser.initByModel(findModel);
 
     final String dirName = findModel.getDirectoryName();

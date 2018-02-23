@@ -24,8 +24,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -41,24 +41,24 @@ public class LocalSearchScope extends SearchScope {
   public static final LocalSearchScope EMPTY = new LocalSearchScope(PsiElement.EMPTY_ARRAY);
   private String myDisplayName;
 
-  public LocalSearchScope(@NotNull PsiElement scope) {
+  public LocalSearchScope(@Nonnull PsiElement scope) {
     this(scope, null);
   }
 
-  public LocalSearchScope(@NotNull PsiElement scope, @Nullable String displayName) {
+  public LocalSearchScope(@Nonnull PsiElement scope, @Nullable String displayName) {
     this(new PsiElement[]{scope});
     myDisplayName = displayName;
   }
 
-  public LocalSearchScope(@NotNull PsiElement[] scope) {
+  public LocalSearchScope(@Nonnull PsiElement[] scope) {
     this(scope, null);
   }
 
-  public LocalSearchScope(@NotNull PsiElement[] scope, @Nullable String displayName) {
+  public LocalSearchScope(@Nonnull PsiElement[] scope, @Nullable String displayName) {
     this(scope, displayName, false);
   }
 
-  public LocalSearchScope(@NotNull PsiElement[] scope, @Nullable final String displayName, final boolean ignoreInjectedPsi) {
+  public LocalSearchScope(@Nonnull PsiElement[] scope, @Nullable final String displayName, final boolean ignoreInjectedPsi) {
     myIgnoreInjectedPsi = ignoreInjectedPsi;
     myDisplayName = displayName;
     Set<PsiElement> localScope = new LinkedHashSet<PsiElement>(scope.length);
@@ -118,7 +118,8 @@ public class LocalSearchScope extends SearchScope {
     return result;
   }
 
-  @NotNull public LocalSearchScope intersectWith(@NotNull LocalSearchScope scope2){
+  @Nonnull
+  public LocalSearchScope intersectWith(@Nonnull LocalSearchScope scope2){
     if (equals(scope2)) return this;
     return intersection(this, scope2);
   }
@@ -138,9 +139,9 @@ public class LocalSearchScope extends SearchScope {
     return new LocalSearchScope(PsiUtilCore.toPsiElementArray(result), null, scope1.myIgnoreInjectedPsi || scope2.myIgnoreInjectedPsi);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public SearchScope intersectWith(@NotNull SearchScope scope2) {
+  public SearchScope intersectWith(@Nonnull SearchScope scope2) {
     if (scope2 instanceof LocalSearchScope) {
       return intersectWith((LocalSearchScope)scope2);
     }
@@ -170,8 +171,8 @@ public class LocalSearchScope extends SearchScope {
   }
 
   @Override
-  @NotNull
-  public SearchScope union(@NotNull SearchScope scope) {
+  @Nonnull
+  public SearchScope union(@Nonnull SearchScope scope) {
     if (scope instanceof LocalSearchScope) return union((LocalSearchScope)scope);
     return ((GlobalSearchScope)scope).union(this);
   }
@@ -213,7 +214,7 @@ public class LocalSearchScope extends SearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return isInScope(file);
   }
 

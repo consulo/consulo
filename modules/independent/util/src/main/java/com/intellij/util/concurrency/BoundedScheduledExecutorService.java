@@ -16,7 +16,7 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * and execute them in parallel in the {@code backendExecutor} with not more than at {@code maxSimultaneousTasks} at a time.
  */
 class BoundedScheduledExecutorService extends SchedulingWrapper {
-  BoundedScheduledExecutorService(@NotNull String name, @NotNull ExecutorService backendExecutor, int maxSimultaneousTasks) {
+  BoundedScheduledExecutorService(@Nonnull String name, @Nonnull ExecutorService backendExecutor, int maxSimultaneousTasks) {
     super(new BoundedTaskExecutor(name, backendExecutor, maxSimultaneousTasks),
           ((AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService()).delayQueue);
     assert !(backendExecutor instanceof ScheduledExecutorService) : "backendExecutor is already ScheduledExecutorService: " + backendExecutor;
@@ -41,7 +41,7 @@ class BoundedScheduledExecutorService extends SchedulingWrapper {
     backendExecutorService.shutdown();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Runnable> shutdownNow() {
     return ContainerUtil.concat(super.shutdownNow(), backendExecutorService.shutdownNow());

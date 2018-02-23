@@ -39,7 +39,7 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -53,7 +53,7 @@ import java.util.List;
 public class LibraryProjectStructureElement extends ProjectStructureElement {
   private final Library myLibrary;
 
-  public LibraryProjectStructureElement(@NotNull StructureConfigurableContext context, @NotNull Library library) {
+  public LibraryProjectStructureElement(@Nonnull StructureConfigurableContext context, @Nonnull Library library) {
     super(context);
     myLibrary = library;
   }
@@ -104,7 +104,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     return XmlStringUtil.wrapInHtml(buffer);
   }
 
-  @NotNull
+  @Nonnull
   private PlaceInProjectStructure createPlace() {
     final Project project = myContext.getProject();
     return new PlaceInProjectStructureBase(project, ProjectStructureConfigurable.getInstance(project).createProjectOrGlobalLibraryPlace(myLibrary), this);
@@ -127,7 +127,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     return createPlace().navigate();
   }
 
-  @NotNull
+  @Nonnull
   private Library getSourceOrThis() {
     final InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
     final Library realLibrary = invocationHandler instanceof ModuleEditor.ProxyDelegateAccessor ?

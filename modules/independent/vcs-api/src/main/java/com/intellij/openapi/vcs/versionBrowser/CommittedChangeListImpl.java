@@ -24,7 +24,7 @@ package com.intellij.openapi.vcs.versionBrowser;
 
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.Change;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,7 +91,7 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     return myChanges;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }

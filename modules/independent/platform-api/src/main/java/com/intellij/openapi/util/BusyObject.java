@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BusyObject {
-  ActionCallback getReady(@NotNull Object requestor);
+  ActionCallback getReady(@Nonnull Object requestor);
 
   abstract class Impl implements BusyObject {
 
@@ -61,8 +61,8 @@ public interface BusyObject {
     }
 
     @Override
-    @NotNull
-    public final ActionCallback getReady(@NotNull Object requestor) {
+    @Nonnull
+    public final ActionCallback getReady(@Nonnull Object requestor) {
       if (isReady()) {
         return new ActionCallback.Done();
       }
@@ -71,7 +71,7 @@ public interface BusyObject {
       }
     }
 
-    @NotNull
+    @Nonnull
     private ActionCallback addReadyCallback(Object requestor) {
       synchronized (myReadyCallbacks) {
         ActionCallback cb = myReadyCallbacks.get(requestor);
@@ -116,8 +116,8 @@ public interface BusyObject {
         return myBusyCount.get() == 0;
       }
 
-      @NotNull
-      public ActionCallback execute(@NotNull ActiveRunnable runnable) {
+      @Nonnull
+      public ActionCallback execute(@Nonnull ActiveRunnable runnable) {
         myBusyCount.addAndGet(1);
         ActionCallback cb = runnable.run();
         cb.doWhenProcessed(() -> {

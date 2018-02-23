@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ChangeListOwner;
 import com.intellij.openapi.vcs.changes.IgnoredViewDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesNode {
 
@@ -31,7 +31,7 @@ public class ChangesBrowserIgnoredFilesNode extends ChangesBrowserSpecificFilesN
   }
 
   @Override
-  public void render(@NotNull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);
     if (myUpdatingMode) {
       appendUpdatingState(renderer);

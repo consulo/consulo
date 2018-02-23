@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Arrays;
@@ -31,8 +31,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TroveUtil {
-  @NotNull
-  public static <T> Stream<T> streamValues(@NotNull TIntObjectHashMap<T> map) {
+  @Nonnull
+  public static <T> Stream<T> streamValues(@Nonnull TIntObjectHashMap<T> map) {
     TIntObjectIterator<T> it = map.iterator();
     return Stream.generate(() -> {
       it.advance();
@@ -40,8 +40,8 @@ public class TroveUtil {
     }).limit(map.size());
   }
 
-  @NotNull
-  public static IntStream streamKeys(@NotNull TIntObjectHashMap<?> map) {
+  @Nonnull
+  public static IntStream streamKeys(@Nonnull TIntObjectHashMap<?> map) {
     TIntObjectIterator<?> it = map.iterator();
     return IntStream.generate(() -> {
       it.advance();
@@ -49,14 +49,14 @@ public class TroveUtil {
     }).limit(map.size());
   }
 
-  @NotNull
-  public static IntStream stream(@NotNull TIntArrayList list) {
+  @Nonnull
+  public static IntStream stream(@Nonnull TIntArrayList list) {
     if (list.isEmpty()) return IntStream.empty();
     return IntStream.range(0, list.size()).map(list::get);
   }
 
-  @NotNull
-  public static Set<Integer> intersect(@NotNull TIntHashSet... sets) {
+  @Nonnull
+  public static Set<Integer> intersect(@Nonnull TIntHashSet... sets) {
     TIntHashSet result = null;
 
     Arrays.sort(sets, (set1, set2) -> {
@@ -99,8 +99,8 @@ public class TroveUtil {
     return result;
   }
 
-  @NotNull
-  private static Set<Integer> createJavaSet(@NotNull TIntHashSet set) {
+  @Nonnull
+  private static Set<Integer> createJavaSet(@Nonnull TIntHashSet set) {
     Set<Integer> result = ContainerUtil.newHashSet(set.size());
     set.forEach(value -> {
       result.add(value);
@@ -109,25 +109,25 @@ public class TroveUtil {
     return result;
   }
 
-  public static void addAll(@NotNull TIntHashSet where, @NotNull TIntHashSet what) {
+  public static void addAll(@Nonnull TIntHashSet where, @Nonnull TIntHashSet what) {
     what.forEach(value -> {
       where.add(value);
       return true;
     });
   }
 
-  @NotNull
-  public static IntStream stream(@NotNull TIntHashSet set) {
+  @Nonnull
+  public static IntStream stream(@Nonnull TIntHashSet set) {
     TIntIterator it = set.iterator();
     return IntStream.generate(it::next).limit(set.size());
   }
 
-  @NotNull
-  public static <T> List<T> map(@NotNull TIntHashSet set, @NotNull IntFunction<T> function) {
+  @Nonnull
+  public static <T> List<T> map(@Nonnull TIntHashSet set, @Nonnull IntFunction<T> function) {
     return stream(set).mapToObj(function).collect(Collectors.toList());
   }
 
-  public static void processBatches(@NotNull IntStream stream, int batchSize, @NotNull Consumer<TIntHashSet> consumer) {
+  public static void processBatches(@Nonnull IntStream stream, int batchSize, @Nonnull Consumer<TIntHashSet> consumer) {
     Ref<TIntHashSet> batch = new Ref<>(new TIntHashSet());
     stream.forEach(commit -> {
       batch.get().add(commit);

@@ -17,7 +17,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,7 +33,7 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   private final Icon myIcon;
   private ConfigurationFactory[] myFactories;
 
-  protected ConfigurationTypeBase(@NotNull String id, String displayName, String description, Icon icon) {
+  protected ConfigurationTypeBase(@Nonnull String id, String displayName, String description, Icon icon) {
     myId = id;
     myDisplayName = displayName;
     myDescription = description;
@@ -61,7 +61,7 @@ public abstract class ConfigurationTypeBase implements ConfigurationType {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }

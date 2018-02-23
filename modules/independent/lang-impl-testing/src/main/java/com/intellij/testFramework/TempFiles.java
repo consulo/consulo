@@ -19,8 +19,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 
 import java.io.File;
@@ -30,25 +30,25 @@ import java.util.Collection;
 public class TempFiles {
   private final Collection<File> myFilesToDelete;
 
-  public TempFiles(@NotNull Collection<File> filesToDelete) {
+  public TempFiles(@Nonnull Collection<File> filesToDelete) {
     myFilesToDelete = filesToDelete;
   }
 
   @Nullable
-  public VirtualFile createVFile(@NotNull String prefix) {
+  public VirtualFile createVFile(@Nonnull String prefix) {
     return getVFileByFile(createTempFile(prefix));
   }
 
   @Nullable
-  public VirtualFile createVFile(@NotNull String prefix, String postfix) {
+  public VirtualFile createVFile(@Nonnull String prefix, String postfix) {
     return getVFileByFile(createTempFile(prefix, postfix));
   }
 
-  public File createTempFile(@NotNull String prefix) {
+  public File createTempFile(@Nonnull String prefix) {
     return createTempFile(prefix, "_Temp_File_");
   }
 
-  public File createTempFile(@NotNull String prefix, String postfix) {
+  public File createTempFile(@Nonnull String prefix, String postfix) {
     try {
       File tempFile = FileUtil.createTempFile(prefix, postfix);
       tempFileCreated(tempFile);
@@ -60,12 +60,12 @@ public class TempFiles {
     }
   }
 
-  private void tempFileCreated(@NotNull File tempFile) {
+  private void tempFileCreated(@Nonnull File tempFile) {
     myFilesToDelete.add(tempFile);
   }
 
-  @Nullable
-  public static VirtualFile getVFileByFile(@NotNull File tempFile) {
+  @javax.annotation.Nullable
+  public static VirtualFile getVFileByFile(@Nonnull File tempFile) {
     return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(tempFile);
   }
 
@@ -73,7 +73,7 @@ public class TempFiles {
     return createTempDir("dir");
   }
 
-  private File createTempDir(@NotNull String prefix) {
+  private File createTempDir(@Nonnull String prefix) {
     try {
       File dir = FileUtil.createTempDirectory(prefix, "test",false);
       tempFileCreated(dir);
@@ -85,13 +85,13 @@ public class TempFiles {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile createTempVDir() {
     return createTempVDir("dir");
   }
 
   @Nullable
-  public VirtualFile createTempVDir(@NotNull String prefix) {
+  public VirtualFile createTempVDir(@Nonnull String prefix) {
     return getVFileByFile(createTempDir(prefix));
   }
 

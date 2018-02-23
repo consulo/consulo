@@ -22,13 +22,15 @@ package com.intellij.injected.editor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface DocumentWindow extends Document {
-  @NotNull Document getDelegate();
+  @Nonnull
+  Document getDelegate();
   int injectedToHost(int injectedOffset);
-  @NotNull TextRange injectedToHost(@NotNull TextRange injectedOffset);
+  @Nonnull
+  TextRange injectedToHost(@Nonnull TextRange injectedOffset);
   int hostToInjected(int hostOffset);
 
   /**
@@ -37,17 +39,17 @@ public interface DocumentWindow extends Document {
    */
   @Deprecated
   @Nullable
-  TextRange intersectWithEditable(@NotNull TextRange range);
+  TextRange intersectWithEditable(@Nonnull TextRange range);
 
   @Nullable
   TextRange getHostRange(int hostOffset);
 
   int injectedToHostLine(int line);
 
-  @NotNull
+  @Nonnull
   Segment[] getHostRanges();
 
-  boolean areRangesEqual(@NotNull DocumentWindow documentWindow);
+  boolean areRangesEqual(@Nonnull DocumentWindow documentWindow);
 
   boolean isValid();
 

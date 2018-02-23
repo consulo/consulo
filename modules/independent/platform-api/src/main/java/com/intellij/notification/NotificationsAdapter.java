@@ -15,26 +15,26 @@
  */
 package com.intellij.notification;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NotificationsAdapter implements Notifications {
   @Override
-  public void notify(@NotNull Notification notification) {
+  public void notify(@Nonnull Notification notification) {
   }
 
   @Override
-  public void register(@NotNull String groupDisplayName, @NotNull NotificationDisplayType defaultDisplayType) {
+  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType defaultDisplayType) {
   }
 
   @Override
-  public void register(@NotNull String groupDisplayName,
-                       @NotNull NotificationDisplayType defaultDisplayType,
+  public void register(@Nonnull String groupDisplayName,
+                       @Nonnull NotificationDisplayType defaultDisplayType,
                        boolean shouldLog) {
   }
 
   @Override
-  public void register(@NotNull String groupDisplayName,
-                       @NotNull NotificationDisplayType defaultDisplayType,
+  public void register(@Nonnull String groupDisplayName,
+                       @Nonnull NotificationDisplayType defaultDisplayType,
                        boolean shouldLog,
                        boolean shouldReadAloud) {
   }

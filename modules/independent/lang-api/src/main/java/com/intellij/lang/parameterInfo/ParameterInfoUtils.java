@@ -24,8 +24,8 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -40,8 +40,8 @@ public class ParameterInfoUtils {
     return findParentOfTypeWithStopElements(file, offset, parentClass);
   }
 
-  @Nullable
-  public static <T extends PsiElement> T findParentOfTypeWithStopElements (PsiFile file, int offset, Class<T> parentClass, @NotNull Class<? extends PsiElement>... stopAt) {
+  @javax.annotation.Nullable
+  public static <T extends PsiElement> T findParentOfTypeWithStopElements (PsiFile file, int offset, Class<T> parentClass, @Nonnull Class<? extends PsiElement>... stopAt) {
     PsiElement element = file.findElementAt(offset);
     if (element == null) return null;
 
@@ -71,7 +71,7 @@ public class ParameterInfoUtils {
 
   @Nullable
   public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset,
-                                                          @NotNull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper){
+                                                          @Nonnull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper){
     if (file == null) return null;
 
     CharSequence chars = file.getViewProvider().getContents();

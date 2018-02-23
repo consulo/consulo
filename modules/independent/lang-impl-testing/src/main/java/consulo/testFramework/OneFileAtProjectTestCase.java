@@ -38,7 +38,7 @@ import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.FileComparisonFailure;
 import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.io.File;
@@ -58,7 +58,7 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
   protected PsiFileFactoryImpl myFileFactory;
   protected ProjectEx myProject;
 
-  public OneFileAtProjectTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+  public OneFileAtProjectTestCase(@NonNls @Nonnull String dataPath, @Nonnull String ext) {
     myFullDataPath = TestPathUtil.getTestDataPath(getTestDataPath() + "/" + dataPath);
     myExtension = ext;
   }
@@ -116,16 +116,16 @@ public class OneFileAtProjectTestCase extends UsefulTestCase {
     return createFile(fileName, fileTypeByFileName, text);
   }
 
-  @NotNull
-  protected LanguageVersion resolveLanguageVersion(@NotNull FileType fileType) {
+  @Nonnull
+  protected LanguageVersion resolveLanguageVersion(@Nonnull FileType fileType) {
     if(fileType instanceof LanguageFileType) {
       return LanguageVersionUtil.findDefaultVersion(((LanguageFileType)fileType).getLanguage());
     }
     throw new IllegalArgumentException(fileType.getName() + " is not extends 'LanguageFileType'");
   }
 
-  @NotNull
-  protected PsiFile createFile(@NonNls String name, @NotNull FileType fileType, String text) {
+  @Nonnull
+  protected PsiFile createFile(@NonNls String name, @Nonnull FileType fileType, String text) {
     LanguageVersion languageVersion = resolveLanguageVersion(fileType);
 
     return myFileFactory.createFileFromText(name, languageVersion.getLanguage(), languageVersion, text);

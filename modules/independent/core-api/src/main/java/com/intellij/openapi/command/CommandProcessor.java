@@ -20,11 +20,11 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CommandProcessor {
-  @NotNull
+  @Nonnull
   public static CommandProcessor getInstance() {
     return ServiceManager.getService(CommandProcessor.class);
   }
@@ -32,32 +32,32 @@ public abstract class CommandProcessor {
   /**
    * @deprecated use {@link #executeCommand(com.intellij.openapi.project.Project, java.lang.Runnable, java.lang.String, java.lang.Object)}
    */
-  public abstract void executeCommand(@NotNull Runnable runnable,
+  public abstract void executeCommand(@Nonnull Runnable runnable,
                                       @Nullable String name,
                                       @Nullable Object groupId);
 
   public abstract void executeCommand(@Nullable Project project,
-                                      @NotNull Runnable runnable,
+                                      @Nonnull Runnable runnable,
                                       @Nullable String name,
                                       @Nullable Object groupId);
 
   public abstract void executeCommand(@Nullable Project project,
-                                      @NotNull Runnable runnable,
+                                      @Nonnull Runnable runnable,
                                       @Nullable String name,
                                       @Nullable Object groupId,
                                       @Nullable Document document);
 
   public abstract void executeCommand(@Nullable Project project,
-                                      @NotNull Runnable runnable,
+                                      @Nonnull Runnable runnable,
                                       @Nullable String name,
                                       @Nullable Object groupId,
-                                      @NotNull UndoConfirmationPolicy confirmationPolicy);
+                                      @Nonnull UndoConfirmationPolicy confirmationPolicy);
 
   public abstract void executeCommand(@Nullable Project project,
-                                      @NotNull Runnable command,
+                                      @Nonnull Runnable command,
                                       @Nullable String name,
                                       @Nullable Object groupId,
-                                      @NotNull UndoConfirmationPolicy confirmationPolicy,
+                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                       @Nullable Document document);
 
   /**
@@ -66,10 +66,10 @@ public abstract class CommandProcessor {
    *                                             Default is true.
    */
   public abstract void executeCommand(@Nullable Project project,
-                                      @NotNull Runnable command,
+                                      @Nonnull Runnable command,
                                       @Nullable String name,
                                       @Nullable Object groupId,
-                                      @NotNull UndoConfirmationPolicy confirmationPolicy,
+                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                       boolean shouldRecordCommandForActiveDocument);
 
   public abstract void setCurrentCommandName(@Nullable String name);
@@ -88,19 +88,19 @@ public abstract class CommandProcessor {
   @Nullable
   public abstract Project getCurrentCommandProject();
 
-  public abstract void runUndoTransparentAction(@NotNull Runnable action);
+  public abstract void runUndoTransparentAction(@Nonnull Runnable action);
 
   public abstract boolean isUndoTransparentActionInProgress();
 
   public abstract void markCurrentCommandAsGlobal(@Nullable Project project);
 
-  public abstract void addAffectedDocuments(@Nullable Project project, @NotNull Document... docs);
+  public abstract void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
 
-  public abstract void addAffectedFiles(@Nullable Project project, @NotNull VirtualFile... files);
+  public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
 
-  public abstract void addCommandListener(@NotNull CommandListener listener);
+  public abstract void addCommandListener(@Nonnull CommandListener listener);
 
-  public abstract void addCommandListener(@NotNull CommandListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeCommandListener(@NotNull CommandListener listener);
+  public abstract void removeCommandListener(@Nonnull CommandListener listener);
 }

@@ -28,8 +28,8 @@ import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.SoftReference;
 
@@ -83,17 +83,17 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     }
   }
 
-  private PsiInvalidElementAccessException(@NotNull ASTNode node, @Nullable String message) {
+  private PsiInvalidElementAccessException(@Nonnull ASTNode node, @Nullable String message) {
     myElementReference = new SoftReference<PsiElement>(null);
     myMessage = "Element " + node.getClass() + " of type " + node.getElementType() + (message == null ? "" : "; " + message);
     myDiagnostic = createAttachments(findInvalidationTrace(node));
   }
 
-  public static PsiInvalidElementAccessException createByNode(@NotNull ASTNode node, @Nullable String message) {
+  public static PsiInvalidElementAccessException createByNode(@Nonnull ASTNode node, @Nullable String message) {
     return new PsiInvalidElementAccessException(node, message);
   }
 
-  @NotNull
+  @Nonnull
   private static Attachment[] createAttachments(@Nullable Object trace) {
     return trace == null
            ? Attachment.EMPTY_ARRAY
@@ -102,12 +102,12 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   @Nullable
-  private static Object getPsiInvalidationTrace(@NotNull PsiElement element) {
+  private static Object getPsiInvalidationTrace(@Nonnull PsiElement element) {
     Object trace = getInvalidationTrace(element);
     return trace != null || element instanceof PsiFile ? trace : findInvalidationTrace(element.getNode());
   }
 
-  private static String getMessageWithReason(@NotNull PsiElement element,
+  private static String getMessageWithReason(@Nonnull PsiElement element,
                                              @Nullable String message,
                                              boolean recursiveInvocation,
                                              @Nullable Object trace) {
@@ -131,7 +131,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return myMessage;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Attachment[] getAttachments() {
     return myDiagnostic;
@@ -157,8 +157,8 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   @NonNls
-  @NotNull
-  private static String reason(@NotNull PsiElement root) {
+  @Nonnull
+  private static String reason(@Nonnull PsiElement root) {
     if (root == PsiUtilCore.NULL_PSI_ELEMENT) return "NULL_PSI_ELEMENT";
 
     PsiElement element = root instanceof PsiFile ? root : root.getParent();
@@ -209,11 +209,11 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return Integer.toHexString(System.identityHashCode(provider));
   }
 
-  public static void setInvalidationTrace(@NotNull UserDataHolder element, Object trace) {
+  public static void setInvalidationTrace(@Nonnull UserDataHolder element, Object trace) {
     element.putUserData(INVALIDATION_TRACE, trace);
   }
 
-  public static Object getInvalidationTrace(@NotNull UserDataHolder element) {
+  public static Object getInvalidationTrace(@Nonnull UserDataHolder element) {
     return element.getUserData(INVALIDATION_TRACE);
   }
 

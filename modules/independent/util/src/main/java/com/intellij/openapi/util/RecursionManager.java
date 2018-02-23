@@ -22,8 +22,8 @@ import com.intellij.util.containers.SoftHashMap;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -64,7 +64,7 @@ public class RecursionManager {
    */
   @SuppressWarnings("JavaDoc")
   @Nullable
-  public static <T> T doPreventingRecursion(@NotNull Object key, boolean memoize, Computable<T> computation) {
+  public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Computable<T> computation) {
     return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
   }
 
@@ -75,7 +75,7 @@ public class RecursionManager {
   public static RecursionGuard createGuard(@NonNls final String id) {
     return new RecursionGuard() {
       @Override
-      public <T> T doPreventingRecursion(@NotNull Object key, boolean memoize, @NotNull Computable<T> computation) {
+      public <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, @Nonnull Computable<T> computation) {
         MyKey realKey = new MyKey(id, key);
         final CalculationStack stack = ourStack.get();
 
@@ -128,7 +128,7 @@ public class RecursionManager {
         }
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public StackStamp markStack() {
         final int stamp = ourStack.get().reentrancyCount;
@@ -140,7 +140,7 @@ public class RecursionManager {
         };
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public List<Object> currentStack() {
         ArrayList<Object> result = new ArrayList<Object>();
@@ -242,7 +242,7 @@ public class RecursionManager {
       }
     }
 
-    final void maybeMemoize(MyKey realKey, @NotNull Object result, int startStamp) {
+    final void maybeMemoize(MyKey realKey, @Nonnull Object result, int startStamp) {
       if (memoizationStamp == startStamp && toMemoize.contains(realKey)) {
         SoftHashMap<MyKey, SoftReference> map = intermediateCache.get(realKey);
         if (map == null) {
@@ -348,7 +348,7 @@ public class RecursionManager {
   }
 
   @TestOnly
-  public static void assertOnRecursionPrevention(@NotNull Disposable parentDisposable) {
+  public static void assertOnRecursionPrevention(@Nonnull Disposable parentDisposable) {
     ourAssertOnPrevention = true;
     Disposer.register(parentDisposable, new Disposable() {
       @Override

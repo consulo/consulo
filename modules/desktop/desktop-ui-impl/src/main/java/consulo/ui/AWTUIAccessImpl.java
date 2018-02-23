@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -36,12 +36,12 @@ class AWTUIAccessImpl implements UIAccess {
   }
 
   @Override
-  public void give(@RequiredUIAccess @NotNull Runnable runnable) {
+  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
     SwingUtilities.invokeLater(runnable);
   }
 
   @Override
-  public void giveAndWait(@NotNull Runnable runnable) {
+  public void giveAndWait(@Nonnull Runnable runnable) {
     try {
       SwingUtilities.invokeAndWait(runnable);
     }

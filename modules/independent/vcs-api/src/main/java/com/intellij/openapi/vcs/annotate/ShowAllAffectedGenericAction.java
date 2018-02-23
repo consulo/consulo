@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
@@ -85,7 +85,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
     final VcsException[] exc = new VcsException[1];
     Task.Backgroundable task = new Task.Backgroundable(project, title, true, BackgroundFromStartOption.getInstance()) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
           if (!isNonLocal) {

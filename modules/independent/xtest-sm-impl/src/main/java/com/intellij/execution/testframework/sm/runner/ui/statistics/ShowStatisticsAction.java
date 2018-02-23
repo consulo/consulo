@@ -21,7 +21,7 @@ import com.intellij.execution.testframework.sm.runner.ui.TestResultsViewer;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik

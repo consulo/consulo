@@ -18,8 +18,8 @@ package com.intellij.psi.search;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public interface PsiElementProcessor<T extends PsiElement> {
    * @param element currently processed element.
    * @return false to stop processing.
    */
-  boolean execute(@NotNull T element);
+  boolean execute(@Nonnull T element);
 
   class CollectElements<T extends PsiElement> implements PsiElementProcessor<T> {
     private final Collection<T> myCollection;
@@ -45,27 +45,27 @@ public interface PsiElementProcessor<T extends PsiElement> {
       this(new ArrayList<T>());
     }
 
-    public CollectElements(@NotNull Collection<T> collection) {
+    public CollectElements(@Nonnull Collection<T> collection) {
       myCollection = Collections.synchronizedCollection(collection);
     }
 
-    @NotNull
+    @Nonnull
     public PsiElement[] toArray() {
       return PsiUtilCore.toPsiElementArray(myCollection);
     }
 
-    @NotNull
+    @Nonnull
     public Collection<T> getCollection() {
       return myCollection;
     }
 
-    @NotNull
+    @Nonnull
     public T[] toArray(T[] array) {
       return myCollection.toArray(array);
     }
 
     @Override
-    public boolean execute(@NotNull T element) {
+    public boolean execute(@Nonnull T element) {
       myCollection.add(element);
       return true;
     }
@@ -74,17 +74,17 @@ public interface PsiElementProcessor<T extends PsiElement> {
   class CollectFilteredElements<T extends PsiElement> extends CollectElements<T> {
     private final PsiElementFilter myFilter;
 
-    public CollectFilteredElements(@NotNull PsiElementFilter filter, @NotNull Collection<T> collection) {
+    public CollectFilteredElements(@Nonnull PsiElementFilter filter, @Nonnull Collection<T> collection) {
       super(collection);
       myFilter = filter;
     }
 
-    public CollectFilteredElements(@NotNull PsiElementFilter filter) {
+    public CollectFilteredElements(@Nonnull PsiElementFilter filter) {
       myFilter = filter;
     }
 
     @Override
-    public boolean execute(@NotNull T element) {
+    public boolean execute(@Nonnull T element) {
       return !myFilter.isAccepted(element) || super.execute(element);
     }
   }
@@ -98,13 +98,13 @@ public interface PsiElementProcessor<T extends PsiElement> {
       myLimit = limit;
     }
 
-    public CollectElementsWithLimit(int limit, @NotNull Collection<T> collection) {
+    public CollectElementsWithLimit(int limit, @Nonnull Collection<T> collection) {
       super(collection);
       myLimit = limit;
     }
 
     @Override
-    public boolean execute(@NotNull T element) {
+    public boolean execute(@Nonnull T element) {
       if (myCount.get() == myLimit){
         myOverflow = true;
         return false;
@@ -136,7 +136,7 @@ public interface PsiElementProcessor<T extends PsiElement> {
     }
 
     @Override
-    public boolean execute(@NotNull T element) {
+    public boolean execute(@Nonnull T element) {
       return setFound(element);
     }
   }
@@ -144,12 +144,12 @@ public interface PsiElementProcessor<T extends PsiElement> {
   class FindFilteredElement<T extends PsiElement> extends FindElement<T> {
     private final PsiElementFilter myFilter;
 
-    public FindFilteredElement(@NotNull PsiElementFilter filter) {
+    public FindFilteredElement(@Nonnull PsiElementFilter filter) {
       myFilter = filter;
     }
 
     @Override
-    public boolean execute(@NotNull T element) {
+    public boolean execute(@Nonnull T element) {
       return !myFilter.isAccepted(element) || super.execute(element);
     }
   }

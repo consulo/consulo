@@ -30,8 +30,7 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.util.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -46,9 +45,9 @@ public class ImportedTestRunnableState implements RunProfileState {
     myFile = file;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+  public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
     final MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
     final SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
     RunProfile configuration;
@@ -101,7 +100,7 @@ public class ImportedTestRunnableState implements RunProfileState {
       return false;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public OutputStream getProcessInput() {
       return null;

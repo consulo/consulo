@@ -12,9 +12,9 @@ import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import com.intellij.vcs.log.ui.render.GraphCommitCell;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.table.AbstractTableModel;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,14 +32,17 @@ public class GraphTableModel extends AbstractTableModel {
   private static final int UP_PRELOAD_COUNT = 20;
   private static final int DOWN_PRELOAD_COUNT = 40;
 
-  @NotNull private final VcsLogData myLogData;
-  @NotNull protected final VcsLogUiImpl myUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  protected final VcsLogUiImpl myUi;
 
-  @NotNull protected VisiblePack myDataPack;
+  @Nonnull
+  protected VisiblePack myDataPack;
 
   private boolean myMoreRequested;
 
-  public GraphTableModel(@NotNull VisiblePack dataPack, @NotNull VcsLogData logData, @NotNull VcsLogUiImpl ui) {
+  public GraphTableModel(@Nonnull VisiblePack dataPack, @Nonnull VcsLogData logData, @Nonnull VcsLogUiImpl ui) {
     myLogData = logData;
     myUi = ui;
     myDataPack = dataPack;
@@ -50,12 +53,12 @@ public class GraphTableModel extends AbstractTableModel {
     return myDataPack.getVisibleGraph().getVisibleCommitCount();
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getRoot(int rowIndex) {
     return myDataPack.getRoot(rowIndex);
   }
 
-  @NotNull
+  @Nonnull
   public Integer getIdAtRow(int row) {
     return myDataPack.getVisibleGraph().getRowInfo(row).getCommit();
   }
@@ -65,12 +68,12 @@ public class GraphTableModel extends AbstractTableModel {
     return myLogData.getCommitId(getIdAtRow(row));
   }
 
-  public int getRowOfCommit(@NotNull final Hash hash, @NotNull VirtualFile root) {
+  public int getRowOfCommit(@Nonnull final Hash hash, @Nonnull VirtualFile root) {
     final int commitIndex = myLogData.getCommitIndex(hash, root);
     return ContainerUtil.indexOf(VcsLogUtil.getVisibleCommits(myDataPack.getVisibleGraph()), (Condition<Integer>)i -> i == commitIndex);
   }
 
-  public int getRowOfCommitByPartOfHash(@NotNull String partialHash) {
+  public int getRowOfCommitByPartOfHash(@Nonnull String partialHash) {
     final CommitIdByStringCondition hashByString = new CommitIdByStringCondition(partialHash);
     CommitId commitId = myLogData.getHashMap().findCommitId(
             commitId1 -> hashByString.value(commitId1) && getRowOfCommit(commitId1.getHash(), commitId1.getRoot()) != -1);
@@ -87,13 +90,13 @@ public class GraphTableModel extends AbstractTableModel {
    *
    * @param onLoaded will be called upon task completion on the EDT.
    */
-  public void requestToLoadMore(@NotNull Runnable onLoaded) {
+  public void requestToLoadMore(@Nonnull Runnable onLoaded) {
     myMoreRequested = true;
     myUi.getFilterer().moreCommitsNeeded(onLoaded);
     myUi.getTable().setPaintBusy(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final Object getValueAt(int rowIndex, int columnIndex) {
     if (rowIndex >= getRowCount() - 1 && canRequestMore()) {
@@ -150,44 +153,44 @@ public class GraphTableModel extends AbstractTableModel {
     return COLUMN_NAMES[column];
   }
 
-  public void setVisiblePack(@NotNull VisiblePack visiblePack) {
+  public void setVisiblePack(@Nonnull VisiblePack visiblePack) {
     myDataPack = visiblePack;
     myMoreRequested = false;
     fireTableDataChanged();
   }
 
-  @NotNull
+  @Nonnull
   public VisiblePack getVisiblePack() {
     return myDataPack;
   }
 
-  @NotNull
+  @Nonnull
   public VcsFullCommitDetails getFullDetails(int row) {
     return getDetails(row, myLogData.getCommitDetailsGetter());
   }
 
-  @NotNull
+  @Nonnull
   public VcsShortCommitDetails getShortDetails(int row) {
     return getDetails(row, myLogData.getMiniDetailsGetter());
   }
 
-  @NotNull
-  private <T extends VcsShortCommitDetails> T getDetails(int row, @NotNull DataGetter<T> dataGetter) {
+  @Nonnull
+  private <T extends VcsShortCommitDetails> T getDetails(int row, @Nonnull DataGetter<T> dataGetter) {
     Iterable<Integer> iterable = createRowsIterable(row, UP_PRELOAD_COUNT, DOWN_PRELOAD_COUNT, getRowCount());
     return dataGetter.getCommitData(getIdAtRow(row), iterable);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VcsRef> getRefsAtRow(int row) {
     return ((RefsModel)myDataPack.getRefs()).refsToCommit(getIdAtRow(row));
   }
 
-  @NotNull
+  @Nonnull
   public List<VcsRef> getBranchesAtRow(int row) {
     return getRefsAtRow(row).stream().filter(ref -> ref.getType().isBranch()).collect(Collectors.toList());
   }
 
-  @NotNull
+  @Nonnull
   private Iterable<Integer> createRowsIterable(final int row, final int above, final int below, final int maxRows) {
     return () -> new Iterator<Integer>() {
       private int myRowIndex = Math.max(0, row - above);
@@ -211,8 +214,8 @@ public class GraphTableModel extends AbstractTableModel {
     };
   }
 
-  @NotNull
-  public List<Integer> convertToCommitIds(@NotNull List<Integer> rows) {
+  @Nonnull
+  public List<Integer> convertToCommitIds(@Nonnull List<Integer> rows) {
     return ContainerUtil.map(rows, (NotNullFunction<Integer, Integer>)this::getIdAtRow);
   }
 }

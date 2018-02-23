@@ -17,7 +17,7 @@ package consulo.ui.style;
 
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public enum StandardColors implements ColorKey {
     myStaticValue = staticValue;
   }
 
-  @NotNull
+  @Nonnull
   public ColorValue getStaticValue() {
     return myStaticValue;
   }

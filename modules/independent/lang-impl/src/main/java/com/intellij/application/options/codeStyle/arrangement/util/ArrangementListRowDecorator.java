@@ -31,8 +31,8 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,20 +45,26 @@ import java.util.Set;
  */
 public class ArrangementListRowDecorator extends JPanel implements ArrangementUiComponent {
 
-  @NotNull private final JLabel mySortLabel = new JLabel(AllIcons.ObjectBrowser.Sorted);
+  @Nonnull
+  private final JLabel mySortLabel = new JLabel(AllIcons.ObjectBrowser.Sorted);
 
-  @NotNull private final ArrangementRuleIndexControl     myRowIndexControl;
-  @NotNull private final ArrangementUiComponent          myDelegate;
-  @NotNull private final ArrangementMatchingRulesControl myControl;
-  @NotNull private final ActionButton                  myEditButton;
+  @Nonnull
+  private final ArrangementRuleIndexControl     myRowIndexControl;
+  @Nonnull
+  private final ArrangementUiComponent          myDelegate;
+  @Nonnull
+  private final ArrangementMatchingRulesControl myControl;
+  @Nonnull
+  private final ActionButton                  myEditButton;
 
-  @Nullable private Rectangle myScreenBounds;
+  @Nullable
+  private Rectangle myScreenBounds;
 
   private boolean myBeingEdited;
   private boolean myUnderMouse;
 
-  public ArrangementListRowDecorator(@NotNull ArrangementUiComponent delegate,
-                                     @NotNull ArrangementMatchingRulesControl control)
+  public ArrangementListRowDecorator(@Nonnull ArrangementUiComponent delegate,
+                                     @Nonnull ArrangementMatchingRulesControl control)
   {
     myDelegate = delegate;
     myControl = control;
@@ -145,13 +151,13 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     myBeingEdited = beingEdited;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return myDelegate.getMatchCondition();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getUiComponent() {
     return this;
@@ -169,7 +175,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   }
 
   @Override
-  public void setData(@NotNull Object data) {
+  public void setData(@Nonnull Object data) {
     myDelegate.setData(data);
   }
 
@@ -178,7 +184,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   }
 
   @Override
-  public Rectangle onMouseEntered(@NotNull MouseEvent e) {
+  public Rectangle onMouseEntered(@Nonnull MouseEvent e) {
     setBackground(UIUtil.getDecoratedRowColor());
     myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
     return myDelegate.onMouseEntered(e);
@@ -186,7 +192,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
   @Nullable
   @Override
-  public Rectangle onMouseMove(@NotNull MouseEvent event) {
+  public Rectangle onMouseMove(@Nonnull MouseEvent event) {
     myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
     Rectangle bounds = getButtonScreenBounds();
     if (!myBeingEdited && bounds != null) {
@@ -202,7 +208,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   }
 
   @Override
-  public void onMouseRelease(@NotNull MouseEvent event) {
+  public void onMouseRelease(@Nonnull MouseEvent event) {
     myEditButton.setVisible(myControl.getSelectedModelRows().size() <= 1);
     Rectangle bounds = getButtonScreenBounds();
     if (bounds != null && bounds.contains(event.getLocationOnScreen())) {
@@ -249,14 +255,14 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
     return myDelegate.getToken();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<ArrangementSettingsToken> getAvailableTokens() {
     return myDelegate.getAvailableTokens();
   }
 
   @Override
-  public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
     myDelegate.chooseToken(data);
   }
 
@@ -276,7 +282,7 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
   }
 
   @Override
-  public void setListener(@NotNull Listener listener) {
+  public void setListener(@Nonnull Listener listener) {
     myDelegate.setListener(listener);
   }
 

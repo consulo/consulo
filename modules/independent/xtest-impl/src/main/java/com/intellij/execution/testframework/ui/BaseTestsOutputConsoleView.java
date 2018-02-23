@@ -26,8 +26,7 @@ import com.intellij.ide.HelpIdProvider;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -136,7 +135,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     myConsole = null;
   }
 
-  public void addChangeListener(@NotNull final ChangeListener listener, @NotNull final Disposable parent) {
+  public void addChangeListener(@Nonnull final ChangeListener listener, @Nonnull final Disposable parent) {
     if (myConsole instanceof ObservableConsoleView) {
       ((ObservableConsoleView)myConsole).addChangeListener(listener, parent);
     } else {
@@ -144,12 +143,12 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     }
   }
 
-  @NotNull
+  @Nonnull
   public AnAction[] createConsoleActions() {
     return AnAction.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   public ConsoleView getConsole() {
     return myConsole;
   }
@@ -168,7 +167,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     return myProperties;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getHelpId() {
     return "reference.runToolWindow.testResultsTab";

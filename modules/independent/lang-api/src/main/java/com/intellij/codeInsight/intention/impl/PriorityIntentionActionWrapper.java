@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Danila Ponomarenko
@@ -30,29 +30,29 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PriorityIntentionActionWrapper implements IntentionAction {
   private final IntentionAction action;
 
-  private PriorityIntentionActionWrapper(@NotNull IntentionAction action) {
+  private PriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
     this.action = action;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return action.getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return action.getFamilyName();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return action.isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     action.invoke(project, editor, file);
   }
 
@@ -62,35 +62,35 @@ public abstract class PriorityIntentionActionWrapper implements IntentionAction 
   }
 
   private static class HighPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper implements HighPriorityAction {
-    protected HighPriorityIntentionActionWrapper(@NotNull IntentionAction action) {
+    protected HighPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
       super(action);
     }
   }
 
   private static class NormalPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper {
-    protected NormalPriorityIntentionActionWrapper(@NotNull IntentionAction action) {
+    protected NormalPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
       super(action);
     }
   }
 
   private static class LowPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper implements LowPriorityAction {
-    protected LowPriorityIntentionActionWrapper(@NotNull IntentionAction action) {
+    protected LowPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
       super(action);
     }
   }
 
-  @NotNull
-  public static IntentionAction highPriority(@NotNull IntentionAction action) {
+  @Nonnull
+  public static IntentionAction highPriority(@Nonnull IntentionAction action) {
     return new HighPriorityIntentionActionWrapper(action);
   }
 
-  @NotNull
-  public static IntentionAction normalPriority(@NotNull IntentionAction action) {
+  @Nonnull
+  public static IntentionAction normalPriority(@Nonnull IntentionAction action) {
     return new NormalPriorityIntentionActionWrapper(action);
   }
 
-  @NotNull
-  public static IntentionAction lowPriority(@NotNull IntentionAction action) {
+  @Nonnull
+  public static IntentionAction lowPriority(@Nonnull IntentionAction action) {
     return new LowPriorityIntentionActionWrapper(action);
   }
 }

@@ -32,8 +32,8 @@ import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManage
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -80,7 +80,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   private final SoftWrapApplianceManager           myApplianceManager;
   private       EditorTextRepresentationHelper     myEditorTextRepresentationHelper;
 
-  @NotNull
+  @Nonnull
   private final EditorImpl myEditor;
 
   private boolean myUseSoftWraps;
@@ -113,7 +113,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
 
   private boolean myForceAdditionalColumns;
 
-  public SoftWrapModelImpl(@NotNull EditorImpl editor) {
+  public SoftWrapModelImpl(@Nonnull EditorImpl editor) {
     myEditor = editor;
     myStorage = new SoftWrapsStorage();
     myPainter = new CompositeSoftWrapPainter(editor);
@@ -204,7 +204,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     return myStorage.getSoftWrapIndex(offset);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
     if (!isSoftWrappingEnabled() || end < start) {
@@ -232,7 +232,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
     if (!isSoftWrappingEnabled() || documentLine < 0) {
       return Collections.emptyList();
@@ -282,7 +282,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   }
 
   @Override
-  public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     if (!isSoftWrappingEnabled()) {
       return 0;
     }
@@ -296,12 +296,12 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     return doPaint(g, drawingType, x, y, lineHeight);
   }
 
-  public int doPaint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int doPaint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return myPainter.paint(g, drawingType, x, y, lineHeight);
   }
 
   @Override
-  public int getMinDrawingWidthInPixels(@NotNull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidthInPixels(@Nonnull SoftWrapDrawingType drawingType) {
     return myPainter.getMinDrawingWidth(drawingType);
   }
 
@@ -335,7 +335,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
    *                  <code>false</code> otherwise
    */
   @Override
-  public boolean isInsideSoftWrap(@NotNull VisualPosition visual) {
+  public boolean isInsideSoftWrap(@Nonnull VisualPosition visual) {
     return isInsideSoftWrap(visual, false);
   }
 
@@ -347,11 +347,11 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
    *                  <code>false</code> otherwise
    */
   @Override
-  public boolean isInsideOrBeforeSoftWrap(@NotNull VisualPosition visual) {
+  public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
     return isInsideSoftWrap(visual, true);
   }
 
-  private boolean isInsideSoftWrap(@NotNull VisualPosition visual, boolean countBeforeSoftWrap) {
+  private boolean isInsideSoftWrap(@Nonnull VisualPosition visual, boolean countBeforeSoftWrap) {
     if (!isSoftWrappingEnabled()) {
       return false;
     }
@@ -401,7 +401,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   }
 
   @Override
-  public boolean addSoftWrapChangeListener(@NotNull SoftWrapChangeListener listener) {
+  public boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener) {
     mySoftWrapListeners.add(listener);
     return myStorage.addSoftWrapChangeListener(listener);
   }
@@ -462,7 +462,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   }
 
   @Override
-  public void onFoldRegionStateChange(@NotNull FoldRegion region) {
+  public void onFoldRegionStateChange(@Nonnull FoldRegion region) {
     myUpdateInProgress = true;
     if (!isSoftWrappingEnabled() || !region.isValid()) {
       myDirty = true;
@@ -491,7 +491,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
   }
 
   @Override
-  public void onUpdated(@NotNull Inlay inlay) {
+  public void onUpdated(@Nonnull Inlay inlay) {
     if (myEditor.getDocument().isInEventsHandling() || myEditor.getDocument().isInBulkUpdate()) return;
     if (!isSoftWrappingEnabled()) {
       myDirty = true;
@@ -539,7 +539,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     myApplianceManager.setSoftWrapPainter(painter);
   }
 
-  public static EditorTextRepresentationHelper getEditorTextRepresentationHelper(@NotNull Editor editor) {
+  public static EditorTextRepresentationHelper getEditorTextRepresentationHelper(@Nonnull Editor editor) {
     return ((SoftWrapModelEx)editor.getSoftWrapModel()).getEditorTextRepresentationHelper();
   }
 
@@ -553,7 +553,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter
     myApplianceManager.reset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return String.format("\nuse soft wraps: %b, tab width: %d, additional columns: %b, " +

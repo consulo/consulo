@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +67,7 @@ public class DiffPanelOuterComponent extends JPanel implements DataProvider {
     myPrefferedWidth = 600;
   }
 
-  public void setToolbarActions(@NotNull DiffRequest.ToolbarAddons toolbarAddons) {
+  public void setToolbarActions(@Nonnull DiffRequest.ToolbarAddons toolbarAddons) {
     myDefaultActions = toolbarAddons;
   }
 
@@ -137,7 +137,7 @@ public class DiffPanelOuterComponent extends JPanel implements DataProvider {
     }
   }
 
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.SOURCE_NAVIGATION_LOCKED == dataId) {
       return Boolean.TRUE;
     }

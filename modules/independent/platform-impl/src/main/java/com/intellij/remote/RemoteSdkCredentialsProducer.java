@@ -18,7 +18,7 @@ package com.intellij.remote;
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author traff

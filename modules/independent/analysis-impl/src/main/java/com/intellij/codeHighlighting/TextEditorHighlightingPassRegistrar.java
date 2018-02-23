@@ -18,8 +18,8 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
@@ -92,9 +92,9 @@ public abstract class TextEditorHighlightingPassRegistrar {
     return registerTextEditorHighlightingPass(factory, ids, null, needAdditionalIntentionsPass, -1);
   }
 
-  public abstract int registerTextEditorHighlightingPass(@NotNull TextEditorHighlightingPassFactory factory,
+  public abstract int registerTextEditorHighlightingPass(@Nonnull TextEditorHighlightingPassFactory factory,
                                                          @Nullable final int[] runAfterCompletionOf,
-                                                         @Nullable int[] runAfterStartingOf,
+                                                         @javax.annotation.Nullable int[] runAfterStartingOf,
                                                          boolean runIntentionsPassAfter,
                                                          int forcedPassId);
 }

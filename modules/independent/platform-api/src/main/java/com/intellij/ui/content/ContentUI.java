@@ -18,10 +18,10 @@ package com.intellij.ui.content;
 import com.intellij.openapi.Disposable;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ContentUI extends Disposable {
-  void setManager(@NotNull ContentManager manager);
+  void setManager(@Nonnull ContentManager manager);
 
   boolean isSingleSelection();
 
@@ -31,21 +31,21 @@ public interface ContentUI extends Disposable {
 
   void beforeDispose();
 
-  boolean canChangeSelectionTo(@NotNull Content content, boolean implicit);
+  boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit);
 
-  @NotNull
+  @Nonnull
   String getCloseActionName();
 
-  @NotNull
+  @Nonnull
   String getCloseAllButThisActionName();
 
-  @NotNull
+  @Nonnull
   String getPreviousContentActionName();
 
-  @NotNull
+  @Nonnull
   String getNextContentActionName();
 
-  @NotNull
+  @Nonnull
   default Component getUIComponent() {
     throw new AbstractMethodError();
   }

@@ -17,8 +17,7 @@ package com.intellij.openapi.externalSystem.service.task.ui;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,10 +27,12 @@ import javax.swing.*;
  */
 public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T> {
 
-  @NotNull private final T myElement;
-  @NotNull private final String myDescription;
+  @Nonnull
+  private final T myElement;
+  @Nonnull
+  private final String myDescription;
 
-  public ExternalSystemNodeDescriptor(@NotNull T element, @NotNull String name, @NotNull String description, @Nullable Icon icon) {
+  public ExternalSystemNodeDescriptor(@Nonnull T element, @Nonnull String name, @Nonnull String description, @javax.annotation.Nullable Icon icon) {
     super(null, null);
     myElement = element;
     myName = name;
@@ -40,7 +41,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
     getPresentation().setTooltip(description);
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
   
@@ -51,7 +52,7 @@ public class ExternalSystemNodeDescriptor<T> extends PresentableNodeDescriptor<T
     presentation.setTooltip(myDescription);
   }
   
-  @NotNull
+  @Nonnull
   @Override
   public T getElement() {
     return myElement;

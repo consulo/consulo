@@ -16,8 +16,8 @@
 package com.intellij.lang;
 
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -27,21 +27,21 @@ import java.util.List;
 public abstract class LighterAST {
   private final CharTable myCharTable;
 
-  public LighterAST(@NotNull CharTable charTable) {
+  public LighterAST(@Nonnull CharTable charTable) {
     myCharTable = charTable;
   }
 
-  @NotNull
+  @Nonnull
   public CharTable getCharTable() {
     return myCharTable;
   }
 
-  @NotNull
+  @Nonnull
   public abstract LighterASTNode getRoot();
 
   @Nullable
-  public abstract LighterASTNode getParent(@NotNull final LighterASTNode node);
+  public abstract LighterASTNode getParent(@Nonnull final LighterASTNode node);
 
-  @NotNull
-  public abstract List<LighterASTNode> getChildren(@NotNull final LighterASTNode parent);
+  @Nonnull
+  public abstract List<LighterASTNode> getChildren(@Nonnull final LighterASTNode parent);
 }

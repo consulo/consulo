@@ -17,8 +17,8 @@ package com.intellij.ide.ui.search;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ignatov
@@ -27,5 +27,5 @@ public abstract class ActionFromOptionDescriptorProvider {
   public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = new ExtensionPointName<ActionFromOptionDescriptorProvider>("com.intellij.actionFromOptionDescriptorProvider");
 
   @Nullable
-  public abstract AnAction provide(@NotNull OptionDescription description);
+  public abstract AnAction provide(@Nonnull OptionDescription description);
 }

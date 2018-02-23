@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.ButtonModel;
 import javax.swing.JCheckBox;
@@ -27,8 +27,8 @@ import java.lang.reflect.Field;
 
 public class CheckBox extends JCheckBox {
 
-    public CheckBox(@NotNull String label,
-                    @NotNull InspectionProfileEntry owner,
+    public CheckBox(@Nonnull String label,
+                    @Nonnull InspectionProfileEntry owner,
                     @NonNls String property) {
         super(label, getPropertyValue(owner, property));
         final ButtonModel model = getModel();

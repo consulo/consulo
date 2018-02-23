@@ -17,15 +17,15 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface AsyncFileEditorProvider extends FileEditorProvider {
   /**
    * This method is intended to be called from background thread. It should perform all time-consuming tasks required to build an editor,
    * and return a builder instance that will be called in EDT to create UI for the editor.
    */
-  @NotNull
-  Builder createEditorAsync(@NotNull Project project, @NotNull VirtualFile file);
+  @Nonnull
+  Builder createEditorAsync(@Nonnull Project project, @Nonnull VirtualFile file);
 
   abstract class Builder {
     public abstract FileEditor build();

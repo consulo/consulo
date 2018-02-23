@@ -16,11 +16,11 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.lang.Language;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BreadcrumbsUtil {
 
-  public static BreadcrumbsProvider getInfoProvider(@NotNull Language language) {
+  public static BreadcrumbsProvider getInfoProvider(@Nonnull Language language) {
     BreadcrumbsProvider[] providers = BreadcrumbsProvider.EP_NAME.getExtensions();
     while (language != null) {
       for (BreadcrumbsProvider provider : providers) {

@@ -18,17 +18,19 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.history.ShortVcsRevisionNumber;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TextRevisionNumber implements ShortVcsRevisionNumber {
-  @NotNull private final String myFullRevisionNumber;
-  @NotNull private final String myShortRevisionNumber;
+  @Nonnull
+  private final String myFullRevisionNumber;
+  @Nonnull
+  private final String myShortRevisionNumber;
 
-  public TextRevisionNumber(@NotNull String fullRevisionNumber) {
+  public TextRevisionNumber(@Nonnull String fullRevisionNumber) {
     this(fullRevisionNumber, fullRevisionNumber.substring(0, Math.min(7, fullRevisionNumber.length())));
   }
 
-  public TextRevisionNumber(@NotNull String fullRevisionNumber, @NotNull String shortRevisionNumber) {
+  public TextRevisionNumber(@Nonnull String fullRevisionNumber, @Nonnull String shortRevisionNumber) {
     myFullRevisionNumber = fullRevisionNumber;
     myShortRevisionNumber = shortRevisionNumber;
   }
@@ -39,7 +41,7 @@ public class TextRevisionNumber implements ShortVcsRevisionNumber {
   }
 
   @Override
-  public int compareTo(@NotNull final VcsRevisionNumber o) {
+  public int compareTo(@Nonnull final VcsRevisionNumber o) {
     return Comparing.compare(myFullRevisionNumber, ((TextRevisionNumber) o).myFullRevisionNumber);
   }
 

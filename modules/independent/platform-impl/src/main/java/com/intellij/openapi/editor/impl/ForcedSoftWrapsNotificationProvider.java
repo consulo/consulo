@@ -26,8 +26,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
@@ -36,7 +37,7 @@ public class ForcedSoftWrapsNotificationProvider implements EditorNotificationPr
   private static final Key<EditorNotificationPanel> KEY = Key.create("forced.soft.wraps.notification.panel");
   private static final String DISABLED_NOTIFICATION_KEY = "disable.forced.soft.wraps.notification";
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -46,7 +47,7 @@ public class ForcedSoftWrapsNotificationProvider implements EditorNotificationPr
   @RequiredDispatchThread
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull final FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull final FileEditor fileEditor) {
     if (!(fileEditor instanceof TextEditor)) return null;
     final Editor editor = ((TextEditor)fileEditor).getEditor();
     final Project project = editor.getProject();

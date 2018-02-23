@@ -19,8 +19,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -37,8 +37,8 @@ public interface FormattingModelBuilderEx extends FormattingModelBuilder {
    * @param mode     formatting mode
    * @return the formatting model for the file.
    */
-  @NotNull
-  FormattingModel createModel(@NotNull final PsiElement element, @NotNull final CodeStyleSettings settings, @NotNull FormattingMode mode);
+  @Nonnull
+  FormattingModel createModel(@Nonnull final PsiElement element, @Nonnull final CodeStyleSettings settings, @Nonnull FormattingMode mode);
 
   /**
    * Allows to adjust indent options to used during performing formatting operation on the given ranges of the given file.
@@ -52,7 +52,7 @@ public interface FormattingModelBuilderEx extends FormattingModelBuilder {
    *                  <code>null</code> to trigger default algorithm usage
    */
   @Nullable
-  CommonCodeStyleSettings.IndentOptions getIndentOptionsToUse(@NotNull PsiFile file,
-                                                              @NotNull FormatTextRanges ranges,
-                                                              @NotNull CodeStyleSettings settings);
+  CommonCodeStyleSettings.IndentOptions getIndentOptionsToUse(@Nonnull PsiFile file,
+                                                              @Nonnull FormatTextRanges ranges,
+                                                              @Nonnull CodeStyleSettings settings);
 }

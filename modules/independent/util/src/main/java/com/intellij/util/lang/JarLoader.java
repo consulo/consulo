@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.reference.SoftReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,7 +97,7 @@ class JarLoader extends Loader {
     return map;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ClasspathCache.LoaderData buildData() throws IOException {
     ZipFile zipFile = getZipFile();
@@ -151,7 +151,7 @@ class JarLoader extends Loader {
 
   private static final Object ourLock = new Object();
 
-  @NotNull
+  @Nonnull
   private ZipFile getZipFile() throws IOException {
     // This code is executed at least 100K times (O(number of classes needed to load)) and it takes considerable time to open ZipFile's
     // such number of times so we store reference to ZipFile if we allowed to lock the file (assume it isn't changed)

@@ -27,8 +27,8 @@ import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -49,12 +49,12 @@ public class DirectoryStorageData extends StorageDataBase {
     this(new THashMap<>());
   }
 
-  private DirectoryStorageData(@NotNull Map<String, StateMap> states) {
+  private DirectoryStorageData(@Nonnull Map<String, StateMap> states) {
     myStates = states;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<String> getComponentNames() {
     return myStates.keySet();
   }
@@ -63,7 +63,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return myStates.isEmpty();
   }
 
-  public static boolean isStorageFile(@NotNull VirtualFile file) {
+  public static boolean isStorageFile(@Nonnull VirtualFile file) {
     // ignore system files like .DS_Store on Mac
     return StringUtilRt.endsWithIgnoreCase(file.getNameSequence(), DEFAULT_EXT);
   }
@@ -111,10 +111,10 @@ public class DirectoryStorageData extends StorageDataBase {
   }
 
   @Nullable
-  public static DirectoryStorageData setStateAndCloneIfNeed(@NotNull String componentName,
+  public static DirectoryStorageData setStateAndCloneIfNeed(@Nonnull String componentName,
                                                             @Nullable String fileName,
                                                             @Nullable Element newState,
-                                                            @NotNull DirectoryStorageData storageData) {
+                                                            @Nonnull DirectoryStorageData storageData) {
     StateMap fileToState = storageData.myStates.get(componentName);
     Object oldState = fileToState == null || fileName == null ? null : fileToState.get(fileName);
     if (fileName == null || newState == null || JDOMUtil.isEmpty(newState)) {
@@ -165,7 +165,7 @@ public class DirectoryStorageData extends StorageDataBase {
   }
 
   @Nullable
-  public Object setState(@NotNull String componentName, @Nullable String fileName, @Nullable Element newState) {
+  public Object setState(@Nonnull String componentName, @Nullable String fileName, @Nullable Element newState) {
     StateMap fileToState = myStates.get(componentName);
     if (fileName == null || newState == null || JDOMUtil.isEmpty(newState)) {
       if (fileToState == null) {
@@ -209,7 +209,7 @@ public class DirectoryStorageData extends StorageDataBase {
     return newState;
   }
 
-  private void put(@NotNull String componentName, @NotNull String fileName, @NotNull Object state) {
+  private void put(@Nonnull String componentName, @Nonnull String fileName, @Nonnull Object state) {
     StateMap fileToState = myStates.get(componentName);
     if (fileToState == null) {
       fileToState = new StateMap();
@@ -218,7 +218,7 @@ public class DirectoryStorageData extends StorageDataBase {
     fileToState.put(fileName, state);
   }
 
-  void processComponent(@NotNull String componentName, @NotNull TObjectObjectProcedure<String, Object> consumer) {
+  void processComponent(@Nonnull String componentName, @Nonnull TObjectObjectProcedure<String, Object> consumer) {
     StateMap map = myStates.get(componentName);
     if (map != null) {
       map.forEachEntry(consumer);
@@ -235,13 +235,13 @@ public class DirectoryStorageData extends StorageDataBase {
   }
 
   @Override
-  public boolean hasState(@NotNull String componentName) {
+  public boolean hasState(@Nonnull String componentName) {
     StateMap fileToState = myStates.get(componentName);
     return fileToState != null && fileToState.hasStates();
   }
 
   @Nullable
-  public Element getCompositeStateAndArchive(@NotNull String componentName, @NotNull StateSplitterEx splitter) {
+  public Element getCompositeStateAndArchive(@Nonnull String componentName, @Nonnull StateSplitterEx splitter) {
     StateMap fileToState = myStates.get(componentName);
     Element state = new Element(StorageData.COMPONENT);
     if (fileToState == null || fileToState.isEmpty()) {
@@ -258,13 +258,13 @@ public class DirectoryStorageData extends StorageDataBase {
     return state;
   }
 
-  @NotNull
-  public Element stateToElement(@NotNull String key, @Nullable Object state) {
+  @Nonnull
+  public Element stateToElement(@Nonnull String key, @Nullable Object state) {
     return StateMap.stateToElement(key, state, Collections.<String, Element>emptyMap());
   }
 
-  @NotNull
-  public Set<String> getFileNames(@NotNull String componentName) {
+  @Nonnull
+  public Set<String> getFileNames(@Nonnull String componentName) {
     StateMap fileToState = myStates.get(componentName);
     return fileToState == null || fileToState.isEmpty() ? Collections.<String>emptySet() : fileToState.keys();
   }

@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +78,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }
@@ -92,7 +92,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   public abstract List<TreeStructureProvider> getProviders();
 
   @Nullable
-  public Object getDataFromProviders(@NotNull List<AbstractTreeNode> selectedNodes, final Key dataId) {
+  public Object getDataFromProviders(@Nonnull List<AbstractTreeNode> selectedNodes, final Key dataId) {
     final List<TreeStructureProvider> providers = getProvidersDumbAware();
     if (!providers.isEmpty()) {
       for (TreeStructureProvider treeStructureProvider : providers) {
@@ -105,7 +105,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private List<TreeStructureProvider> getProvidersDumbAware() {
     if (myProject == null) {
       return Collections.emptyList();

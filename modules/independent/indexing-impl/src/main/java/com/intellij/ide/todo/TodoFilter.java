@@ -22,7 +22,7 @@ import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoPattern;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -69,7 +69,7 @@ public class TodoFilter implements Cloneable{
     return myName;
   }
 
-  public void setName(@NotNull String name){
+  public void setName(@Nonnull String name){
     myName=name;
   }
 

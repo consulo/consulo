@@ -28,7 +28,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiFileRange;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FindResultUsageInfo extends UsageInfo {
   private final FindManager myFindManager;
@@ -102,7 +102,7 @@ public class FindResultUsageInfo extends UsageInfo {
     return (PsiFile)getElement();
   }
 
-  public FindResultUsageInfo(@NotNull FindManager finder, @NotNull PsiFile file, int offset, @NotNull FindModel findModel, @NotNull FindResult result) {
+  public FindResultUsageInfo(@Nonnull FindManager finder, @Nonnull PsiFile file, int offset, @Nonnull FindModel findModel, @Nonnull FindResult result) {
     super(file, result.getStartOffset(), result.getEndOffset());
 
     myFindManager = finder;

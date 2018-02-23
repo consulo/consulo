@@ -27,15 +27,15 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.util.ObjectUtils.notNull;
 import static com.intellij.util.containers.UtilKt.getIfSingle;
 
 public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation p = e.getPresentation();
 
     if (e.getProject() == null) {
@@ -52,27 +52,27 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(e.getRequiredData(CommonDataKeys.PROJECT), notNull(getGateway()), e);
   }
 
-  protected String getText(@NotNull AnActionEvent e) {
+  protected String getText(@Nonnull AnActionEvent e) {
     return e.getPresentation().getTextWithMnemonic();
   }
 
-  protected boolean isEnabled(@NotNull LocalHistoryFacade vcs, @NotNull IdeaGateway gw, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @Nonnull AnActionEvent e) {
     return isEnabled(vcs, gw, getFile(e), e);
   }
 
-  protected void actionPerformed(@NotNull Project p, @NotNull IdeaGateway gw, @NotNull AnActionEvent e) {
+  protected void actionPerformed(@Nonnull Project p, @Nonnull IdeaGateway gw, @Nonnull AnActionEvent e) {
     actionPerformed(p, gw, notNull(getFile(e)), e);
   }
 
-  protected boolean isEnabled(@NotNull LocalHistoryFacade vcs, @NotNull IdeaGateway gw, @Nullable VirtualFile f, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @javax.annotation.Nullable VirtualFile f, @Nonnull AnActionEvent e) {
     return true;
   }
 
-  protected void actionPerformed(@NotNull Project p, @NotNull IdeaGateway gw, @NotNull VirtualFile f, @NotNull AnActionEvent e) {
+  protected void actionPerformed(@Nonnull Project p, @Nonnull IdeaGateway gw, @Nonnull VirtualFile f, @Nonnull AnActionEvent e) {
   }
 
   @Nullable
@@ -86,7 +86,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  protected VirtualFile getFile(@NotNull AnActionEvent e) {
+  protected VirtualFile getFile(@Nonnull AnActionEvent e) {
     return getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
   }
 }

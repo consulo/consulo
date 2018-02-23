@@ -20,8 +20,8 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.CompositePathMacroFilter;
 import com.intellij.openapi.components.ServiceManager;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -31,17 +31,17 @@ import java.util.regex.Pattern;
  * @since 06-Jun-16
  */
 public abstract class PathMacrosService {
-  @NotNull
+  @Nonnull
   public static PathMacrosService getInstance() {
     return ServiceManager.getService(PathMacrosService.class);
   }
 
   public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
-  @NotNull
-  public Set<String> getMacroNames(@NotNull final Element e) {
+  @Nonnull
+  public Set<String> getMacroNames(@Nonnull final Element e) {
     return getMacroNames(e, new CompositePathMacroFilter(PathMacroFilter.EP_NAME.getExtensions()), PathMacros.getInstance());
   }
 
-  public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @NotNull final PathMacros pathMacros);
+  public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros);
 }

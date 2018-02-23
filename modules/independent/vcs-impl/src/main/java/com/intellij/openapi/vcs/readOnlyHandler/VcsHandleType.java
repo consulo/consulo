@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +61,7 @@ public class VcsHandleType extends HandleType {
     };
   }
 
-  public void processFiles(final Collection<VirtualFile> files, @Nullable final String changelist) {
+  public void processFiles(final Collection<VirtualFile> files, @javax.annotation.Nullable final String changelist) {
     try {
       EditFileProvider provider = myVcs.getEditFileProvider();
       assert provider != null;

@@ -24,7 +24,7 @@ import consulo.roots.ui.configuration.ProjectStructureDialog;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.bundle.SdkUtil;
 
 /**
@@ -33,7 +33,7 @@ import consulo.bundle.SdkUtil;
  */
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @Override
-  public void navigate(@NotNull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public void navigate(@Nonnull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     final Sdk sdk = orderEntry.getSdk();
     if (sdk == null) {
       return;
@@ -48,9 +48,9 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@NotNull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public CellAppearanceEx getCellAppearance(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     Sdk sdk = orderEntry.getSdk();
     return new SimpleTextCellAppearance(orderEntry.getPresentableName(), SdkUtil.getIcon(sdk),
                                         sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);

@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.Disposable;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -31,26 +31,26 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   private static final Map<String, LibraryTable> myLibraryTables = new HashMap<String, LibraryTable>();
 
   @Override
-  @NotNull
+  @Nonnull
   public LibraryTable getLibraryTable() {
     return ApplicationLibraryTable.getApplicationTable();
   }
 
   @Override
-  @NotNull
-  public LibraryTable getLibraryTable(@NotNull Project project) {
+  @Nonnull
+  public LibraryTable getLibraryTable(@Nonnull Project project) {
     return ProjectLibraryTable.getInstance(project);
   }
 
   @Override
-  public LibraryTable getLibraryTableByLevel(String level, @NotNull Project project) {
+  public LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project) {
     if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) return getLibraryTable(project);
     if (LibraryTablesRegistrar.APPLICATION_LEVEL.equals(level)) return getLibraryTable();
     return myLibraryTables.get(level);
   }
 
   @Override
-  public void registerLibraryTable(@NotNull LibraryTable libraryTable) {
+  public void registerLibraryTable(@Nonnull LibraryTable libraryTable) {
     String tableLevel = libraryTable.getTableLevel();
     final LibraryTable oldTable = myLibraryTables.put(tableLevel, libraryTable);
     if (oldTable != null) {
@@ -59,7 +59,7 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LibraryTable registerLibraryTable(final String customLevel) {
     LibraryTable table = new LibraryTableBase() {
       @Override

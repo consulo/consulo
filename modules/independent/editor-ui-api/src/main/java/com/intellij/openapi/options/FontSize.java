@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
@@ -51,7 +51,7 @@ public enum FontSize {
   /**
    * @return    {@link FontSize} that is one unit large than the current one; current object if it already stands for a maximum size
    */
-  @NotNull
+  @Nonnull
   public FontSize larger() {
     int i = ordinal();
     return i >= values().length - 1 ? this : values()[i + 1];
@@ -60,7 +60,7 @@ public enum FontSize {
   /**
    * @return    {@link FontSize} that is one unit smaller than the current one; current object if it already stands for a minimum size
    */
-  @NotNull
+  @Nonnull
   public FontSize smaller() {
     int i = ordinal();
     return i > 0 ? values()[i - 1] : this;

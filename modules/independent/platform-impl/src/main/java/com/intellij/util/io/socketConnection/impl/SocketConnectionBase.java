@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.socketConnection.*;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,18 +49,18 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   private final TIntObjectHashMap<TimeoutInfo> myTimeouts = new TIntObjectHashMap<TimeoutInfo>();
   private final ResponseProcessor<Response> myResponseProcessor;
 
-  public SocketConnectionBase(@NotNull RequestResponseExternalizerFactory<Request, Response> factory) {
+  public SocketConnectionBase(@Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
     myResponseProcessor = new ResponseProcessor<Response>(this);
     myExternalizerFactory = factory;
   }
 
   @Override
-  public void sendRequest(@NotNull Request request) {
+  public void sendRequest(@Nonnull Request request) {
     sendRequest(request, null);
   }
 
   @Override
-  public void sendRequest(@NotNull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler) {
+  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler) {
     if (handler != null) {
       myResponseProcessor.registerHandler(request.getId(), handler);
     }
@@ -73,14 +73,14 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   }
 
   @Override
-  public void sendRequest(@NotNull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
-                          int timeout, @NotNull Runnable onTimeout) {
+  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
+                          int timeout, @Nonnull Runnable onTimeout) {
     myTimeouts.put(request.getId(), new TimeoutInfo(timeout, onTimeout));
     sendRequest(request, handler);
   }
 
   @Override
-  public <R extends Response> void registerHandler(@NotNull Class<R> responseClass, @NotNull AbstractResponseHandler<R> handler) {
+  public <R extends Response> void registerHandler(@Nonnull Class<R> responseClass, @Nonnull AbstractResponseHandler<R> handler) {
     myResponseProcessor.registerHandler(responseClass, handler);
   }
 
@@ -130,21 +130,21 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     return myPort;
   }
 
-  protected void setStatus(@NotNull ConnectionStatus status, @Nullable String message) {
+  protected void setStatus(@Nonnull ConnectionStatus status, @Nullable String message) {
     synchronized (myLock) {
       myState.set(new ConnectionState(status, message, null));
     }
     myDispatcher.getMulticaster().statusChanged(status);
   }
 
-  @NotNull
+  @Nonnull
   public ConnectionState getState() {
     synchronized (myLock) {
       return myState.get();
     }
   }
 
-  public void addListener(@NotNull SocketConnectionListener listener, @Nullable Disposable parentDisposable) {
+  public void addListener(@Nonnull SocketConnectionListener listener, @Nullable Disposable parentDisposable) {
     if (parentDisposable != null) {
       myDispatcher.addListener(listener, parentDisposable);
     }

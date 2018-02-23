@@ -27,8 +27,8 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class NextPrevParameterAction extends CodeInsightAction {
@@ -38,14 +38,14 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
     myNext = next;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CodeInsightActionHandler getHandler() {
     return new Handler();
   }
 
   @Override
-  protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return hasSutablePolicy(editor, file);
   }
 
@@ -53,7 +53,7 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
     return findSuitableTraversalPolicy(editor, file) != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static TemplateParameterTraversalPolicy findSuitableTraversalPolicy(Editor editor, PsiFile file) {
     for (TemplateParameterTraversalPolicy policy : Extensions.getExtensions(TemplateParameterTraversalPolicy.EP_NAME)) {
       if (policy.isValidForFile(editor, file)) {
@@ -66,7 +66,7 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
   private class Handler implements CodeInsightActionHandler {
     @RequiredDispatchThread
     @Override
-    public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
       TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);
       if (policy != null) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();

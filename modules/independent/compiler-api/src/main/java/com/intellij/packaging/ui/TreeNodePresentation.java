@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ui.SimpleTextAttributes;
 
@@ -30,10 +30,10 @@ public abstract class TreeNodePresentation {
     return getPresentableName();
   }
 
-  public abstract void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+  public abstract void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                               SimpleTextAttributes commentAttributes);
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getTooltipText() {
     return null;
   }
@@ -48,7 +48,7 @@ public abstract class TreeNodePresentation {
   /**
    * @deprecated this method is not used and will be removed in the future
    */
-  @Nullable
+  @javax.annotation.Nullable
   public Object getSourceObject() {
     return null;
   }

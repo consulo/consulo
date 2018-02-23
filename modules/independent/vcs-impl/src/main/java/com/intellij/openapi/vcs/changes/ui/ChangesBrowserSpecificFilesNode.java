@@ -16,15 +16,16 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
   protected final boolean myIsMany;
-  @NotNull protected final Runnable myDialogShower;
+  @Nonnull
+  protected final Runnable myDialogShower;
   private final int myManyFileCount;
   private final int myManyDirectoryCount;
 
-  protected ChangesBrowserSpecificFilesNode(Object userObject, int filesSize, int dirsSize, boolean many, @NotNull Runnable shower) {
+  protected ChangesBrowserSpecificFilesNode(Object userObject, int filesSize, int dirsSize, boolean many, @Nonnull Runnable shower) {
     super(userObject);
     // if files presented in the same view recalculate number of dirs and files -> provide -1; otherwise use from model
     myManyFileCount = filesSize;
@@ -35,7 +36,7 @@ public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
 
 
   @Override
-  public void render(@NotNull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     super.render(renderer, selected, expanded, hasFocus);
     if (isManyFiles()) {
       renderer.append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);

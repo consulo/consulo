@@ -15,18 +15,18 @@
  */
 package com.intellij.packaging.artifacts;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ArtifactAdapter implements ArtifactListener {
-  public void artifactAdded(@NotNull Artifact artifact) {
+  public void artifactAdded(@Nonnull Artifact artifact) {
   }
 
-  public void artifactRemoved(@NotNull Artifact artifact) {
+  public void artifactRemoved(@Nonnull Artifact artifact) {
   }
 
-  public void artifactChanged(@NotNull Artifact artifact, @NotNull String oldName) {
+  public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
   }
 }

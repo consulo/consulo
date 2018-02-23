@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -43,15 +43,18 @@ import static java.util.stream.Collectors.toList;
 
 public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
 
-  @NotNull private final Project myProject;
-  @NotNull private final ChangeListManagerImpl myChangeListManager;
-  @NotNull private final Tree myTree;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ChangeListManagerImpl myChangeListManager;
+  @Nonnull
+  private final Tree myTree;
 
-  public static void install(@NotNull Project project, @NotNull Tree tree) {
+  public static void install(@Nonnull Project project, @Nonnull Tree tree) {
     new ChangesDnDSupport(project, tree).install();
   }
 
-  private ChangesDnDSupport(@NotNull Project project, @NotNull Tree tree) {
+  private ChangesDnDSupport(@Nonnull Project project, @Nonnull Tree tree) {
     myProject = project;
     myChangeListManager = ChangeListManagerImpl.getInstanceImpl(project);
     myTree = tree;
@@ -67,8 +70,8 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
             .install();
   }
 
-  @NotNull
-  private DnDImage createDraggedImage(@NotNull DnDActionInfo info) {
+  @Nonnull
+  private DnDImage createDraggedImage(@Nonnull DnDActionInfo info) {
     String imageText = VcsBundle.message("changes.view.dnd.label", getSelectionCount());
     Image image = DnDAwareTree.getDragImage(myTree, imageText, null).getFirst();
 
@@ -76,7 +79,7 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
   }
 
   @Nullable
-  private DnDDragStartBean createDragStartBean(@NotNull DnDActionInfo info) {
+  private DnDDragStartBean createDragStartBean(@Nonnull DnDActionInfo info) {
     DnDDragStartBean result = null;
 
     if (info.isMove()) {

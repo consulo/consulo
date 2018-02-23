@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -27,18 +27,18 @@ import java.util.List;
  * @author yole
  */
 public interface ChangeListFilteringStrategy {
-  @Nullable
+  @javax.annotation.Nullable
   JComponent getFilterUI();
   void setFilterBase(List<CommittedChangeList> changeLists);
   void addChangeListener(ChangeListener listener);
   void removeChangeListener(ChangeListener listener);
   CommittedChangesFilterKey getKey();
 
-  @Nullable
+  @javax.annotation.Nullable
   void resetFilterBase();
   void appendFilterBase(List<CommittedChangeList> changeLists);
 
-  @NotNull
+  @Nonnull
   List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists);
 
   ChangeListFilteringStrategy NONE = new ChangeListFilteringStrategy() {
@@ -48,7 +48,7 @@ public interface ChangeListFilteringStrategy {
       return "None";
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public JComponent getFilterUI() {
       return null;
     }
@@ -69,7 +69,7 @@ public interface ChangeListFilteringStrategy {
     public void appendFilterBase(List<CommittedChangeList> changeLists) {
     }
 
-    @NotNull
+    @Nonnull
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
       return changeLists;
     }

@@ -20,13 +20,13 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface DocumentCommitProcessor {
-  void commitSynchronously(@NotNull Document document, @NotNull Project project, @NotNull PsiFile psiFile);
-  void commitAsynchronously(@NotNull final Project project,
-                            @NotNull final Document document,
-                            @NonNls @NotNull Object reason,
+  void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
+  void commitAsynchronously(@Nonnull final Project project,
+                            @Nonnull final Document document,
+                            @NonNls @Nonnull Object reason,
                             @Nullable TransactionId context);
 }

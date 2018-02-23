@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface FocusDiffSide {
   Key<FocusDiffSide> DATA_KEY = Key.create("focusedDiffSide");

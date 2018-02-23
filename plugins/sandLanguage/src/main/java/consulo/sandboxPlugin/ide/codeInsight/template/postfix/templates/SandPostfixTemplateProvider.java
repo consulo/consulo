@@ -20,7 +20,7 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvid
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -29,7 +29,7 @@ import java.util.Set;
  * @since 16.08.14
  */
 public class SandPostfixTemplateProvider implements PostfixTemplateProvider {
-  @NotNull
+  @Nonnull
   @Override
   public Set<PostfixTemplate> getTemplates() {
     return new HashSet<PostfixTemplate>() {
@@ -46,18 +46,18 @@ public class SandPostfixTemplateProvider implements PostfixTemplateProvider {
   }
 
   @Override
-  public void preExpand(@NotNull PsiFile file, @NotNull Editor editor) {
+  public void preExpand(@Nonnull PsiFile file, @Nonnull Editor editor) {
 
   }
 
   @Override
-  public void afterExpand(@NotNull PsiFile file, @NotNull Editor editor) {
+  public void afterExpand(@Nonnull PsiFile file, @Nonnull Editor editor) {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PsiFile preCheck(@NotNull PsiFile copyFile, @NotNull Editor realEditor, int currentOffset) {
+  public PsiFile preCheck(@Nonnull PsiFile copyFile, @Nonnull Editor realEditor, int currentOffset) {
     return copyFile;
   }
 

@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,8 +41,8 @@ public class MappingsToRoots {
     myProject = project;
   }
 
-  @NotNull
-  public VirtualFile[] getRootsUnderVcs(@NotNull AbstractVcs vcs) {
+  @Nonnull
+  public VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs) {
     List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
 
     final AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();

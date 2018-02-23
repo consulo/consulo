@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -31,7 +31,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
 
   private EditorColorsScheme myDelegate;
 
-  public DelegateColorScheme(@NotNull final EditorColorsScheme delegate) {
+  public DelegateColorScheme(@Nonnull final EditorColorsScheme delegate) {
     myDelegate = delegate;
   }
 
@@ -39,7 +39,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     return myDelegate;
   }
 
-  public void setDelegate(@NotNull EditorColorsScheme delegate) {
+  public void setDelegate(@Nonnull EditorColorsScheme delegate) {
     myDelegate = delegate;
   }
 
@@ -58,13 +58,13 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     myDelegate.setAttributes(key, attributes);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getDefaultBackground() {
     return myDelegate.getDefaultBackground();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getDefaultForeground() {
     return myDelegate.getDefaultForeground();
@@ -81,14 +81,14 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     myDelegate.setColor(key, color);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FontPreferences getFontPreferences() {
     return myDelegate.getFontPreferences();
   }
 
   @Override
-  public void setFontPreferences(@NotNull FontPreferences preferences) {
+  public void setFontPreferences(@Nonnull FontPreferences preferences) {
     myDelegate.setFontPreferences(preferences);
   }
 
@@ -113,7 +113,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   }
 
   @Override
-  public void setQuickDocFontSize(@NotNull FontSize fontSize) {
+  public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
     myDelegate.setQuickDocFontSize(fontSize);
   }
 
@@ -151,7 +151,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   public void readExternal(Element element) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myDelegate.getName();
@@ -162,14 +162,14 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
     return myDelegate.clone();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FontPreferences getConsoleFontPreferences() {
     return myDelegate.getConsoleFontPreferences();
   }
 
   @Override
-  public void setConsoleFontPreferences(@NotNull FontPreferences preferences) {
+  public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
     myDelegate.setConsoleFontPreferences(preferences);
   }
 

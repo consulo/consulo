@@ -25,7 +25,7 @@ import com.intellij.xdebugger.impl.XDebuggerSupport;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import com.intellij.xdebugger.impl.breakpoints.XDependentBreakpointManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ public class XMasterBreakpointPanel extends XBreakpointPropertiesSubPanel {
   }
 
   @Override
-  public void init(Project project, XBreakpointManager breakpointManager, @NotNull XBreakpointBase breakpoint) {
+  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
     super.init(project, breakpointManager, breakpoint);
     myDependentBreakpointManager = ((XBreakpointManagerImpl)breakpointManager).getDependentBreakpointManager();
     myMasterBreakpointChooser = new BreakpointChooser(project, new BreakpointChooser.Delegate() {

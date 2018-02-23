@@ -28,8 +28,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.FilteredQuery;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class PlatformPackageUtil {
   private static final Logger LOG = Logger.getInstance(PlatformPackageUtil.class);
 
   @Nullable
-  private static PsiDirectory getWritableModuleDirectory(@NotNull Query<VirtualFile> vFiles,
+  private static PsiDirectory getWritableModuleDirectory(@Nonnull Query<VirtualFile> vFiles,
                                                          GlobalSearchScope scope,
                                                          PsiManager manager) {
     for (VirtualFile vFile : vFiles) {

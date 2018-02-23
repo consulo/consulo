@@ -43,8 +43,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.compiler.CompilerConfiguration;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -212,7 +212,7 @@ public class NewProjectUtil extends NewProjectUtilPlatform {
     }
   }
 
-  public static void disposeContext(@NotNull AddModuleWizard wizard) {
+  public static void disposeContext(@Nonnull AddModuleWizard wizard) {
     Disposer.dispose(wizard.getWizardContext());
   }
 }

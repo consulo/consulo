@@ -47,8 +47,8 @@ import com.intellij.util.Function;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -120,14 +120,14 @@ public class SrcFileAnnotator implements Disposable {
   }
 
   private static
-  @NotNull
-  String[] getCoveredLines(@NotNull byte[] oldContent, VirtualFile vFile) {
+  @Nonnull
+  String[] getCoveredLines(@Nonnull byte[] oldContent, VirtualFile vFile) {
     final String text = LoadTextUtil.getTextByBinaryPresentation(oldContent, vFile, false, false).toString();
     return LineTokenizer.tokenize(text, false);
   }
 
   private
-  @NotNull
+  @Nonnull
   String[] getUpToDateLines() {
     final Ref<String[]> linesRef = new Ref<String[]>();
     final Runnable runnable = new Runnable() {
@@ -178,7 +178,7 @@ public class SrcFileAnnotator implements Disposable {
     return myOldToNewLines.get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private TIntIntHashMap getNewToOldLineMapping(final long date) {
     if (myNewToOldLines == null) {
       myNewToOldLines = doGetLineMapping(date, false);
@@ -187,7 +187,7 @@ public class SrcFileAnnotator implements Disposable {
     return myNewToOldLines.get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private SoftReference<TIntIntHashMap> doGetLineMapping(final long date, boolean oldToNew) {
     final VirtualFile f = getVirtualFile();
     final byte[] oldContent;
@@ -440,7 +440,7 @@ public class SrcFileAnnotator implements Disposable {
                                                   final TreeMap<Integer, LineData> executableLines, @Nullable final String className,
                                                   final int line,
                                                   final int lineNumberInCurrent,
-                                                  @NotNull final CoverageSuitesBundle coverageSuite, Object[] lines) {
+                                                  @Nonnull final CoverageSuitesBundle coverageSuite, Object[] lines) {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     final TextAttributes attributes = scheme.getAttributes(CoverageLineMarkerRenderer.getAttributesKey(line, executableLines));
     TextAttributes textAttributes = null;

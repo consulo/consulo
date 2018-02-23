@@ -28,7 +28,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.ui.plaf.beg.IdeaMenuUI;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
@@ -51,7 +51,7 @@ public final class ActionMenu extends JMenu {
   private final boolean myTopLevel;
 
   public ActionMenu(final DataContext context,
-                    @NotNull final String place,
+                    @Nonnull final String place,
                     final ActionGroup group,
                     final PresentationFactory presentationFactory,
                     final boolean enableMnemonics,

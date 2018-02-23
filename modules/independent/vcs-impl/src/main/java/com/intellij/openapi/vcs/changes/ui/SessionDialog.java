@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +75,7 @@ public class SessionDialog extends DialogWrapper {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent createCenterPanel() {
     myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
     return myCenterPanel;
@@ -86,7 +86,7 @@ public class SessionDialog extends DialogWrapper {
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected ValidationInfo doValidate() {
     updateButtons();

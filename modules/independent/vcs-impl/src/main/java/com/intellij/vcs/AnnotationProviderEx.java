@@ -20,9 +20,9 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface AnnotationProviderEx extends AnnotationProvider {
-  @NotNull
-  FileAnnotation annotate(@NotNull FilePath path, @NotNull VcsRevisionNumber revision) throws VcsException;
+  @Nonnull
+  FileAnnotation annotate(@Nonnull FilePath path, @Nonnull VcsRevisionNumber revision) throws VcsException;
 }

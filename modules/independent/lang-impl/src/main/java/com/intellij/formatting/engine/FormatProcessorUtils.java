@@ -18,21 +18,21 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.*;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FormatProcessorUtils {
 
 
-  private static int calcShift(@NotNull final IndentInside oldIndent,
-                               @NotNull final IndentInside newIndent,
-                               @NotNull final CommonCodeStyleSettings.IndentOptions options)
+  private static int calcShift(@Nonnull final IndentInside oldIndent,
+                               @Nonnull final IndentInside newIndent,
+                               @Nonnull final CommonCodeStyleSettings.IndentOptions options)
   {
     if (oldIndent.equals(newIndent)) return 0;
     return newIndent.getSpacesCount(options) - oldIndent.getSpacesCount(options);
   }
 
   public static int replaceWhiteSpace(final FormattingModel model,
-                                      @NotNull final LeafBlockWrapper block,
+                                      @Nonnull final LeafBlockWrapper block,
                                       int shift,
                                       final CharSequence _newWhiteSpace,
                                       final CommonCodeStyleSettings.IndentOptions options

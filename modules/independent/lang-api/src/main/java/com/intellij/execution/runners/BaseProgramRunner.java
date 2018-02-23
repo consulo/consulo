@@ -23,12 +23,12 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.options.SettingsEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Settings createConfigurationData(ConfigurationInfoProvider settingsProvider) {
     return null;
   }
@@ -42,18 +42,18 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration) {
     return null;
   }
 
   @Override
-  public void execute(@NotNull ExecutionEnvironment environment) throws ExecutionException {
+  public void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException {
     execute(environment, null);
   }
 
   @Override
-  public void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException {
+  public void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback) throws ExecutionException {
     RunProfileState state = environment.getState();
     if (state == null) {
       return;
@@ -63,11 +63,11 @@ abstract class BaseProgramRunner<Settings extends RunnerSettings> implements Pro
     execute(environment, callback, state);
   }
 
-  protected abstract void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback, @NotNull RunProfileState state)
+  protected abstract void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback, @Nonnull RunProfileState state)
           throws ExecutionException;
 
   @Nullable
-  static RunContentDescriptor postProcess(@NotNull ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor, @Nullable Callback callback) {
+  static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable RunContentDescriptor descriptor, @Nullable Callback callback) {
     if (descriptor != null) {
       descriptor.setExecutionId(environment.getExecutionId());
     }

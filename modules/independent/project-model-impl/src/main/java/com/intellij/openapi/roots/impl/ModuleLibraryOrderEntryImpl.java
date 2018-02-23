@@ -29,7 +29,7 @@ import com.intellij.util.PathUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleLibraryOrderEntryType;
 import consulo.roots.types.BinariesOrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Library entry for module ("in-place") libraries
@@ -85,7 +85,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     return LibraryTableImplUtil.MODULE_LEVEL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     final String name = myLibrary.getName();
@@ -139,13 +139,13 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DependencyScope getScope() {
     return myScope;
   }
 
   @Override
-  public void setScope(@NotNull DependencyScope scope) {
+  public void setScope(@Nonnull DependencyScope scope) {
     myScope = scope;
   }
 }

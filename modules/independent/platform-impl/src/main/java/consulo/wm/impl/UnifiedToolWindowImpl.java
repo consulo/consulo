@@ -21,8 +21,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
   }
 
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     return ActionCallback.DONE;
   }
 
@@ -56,7 +56,7 @@ public class UnifiedToolWindowImpl extends ToolWindowBase {
     myComponent = contentManager.getUIComponent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Component getUIComponent() {
     return myComponent;

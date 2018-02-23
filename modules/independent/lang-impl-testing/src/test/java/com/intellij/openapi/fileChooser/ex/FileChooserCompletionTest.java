@@ -3,8 +3,7 @@ package com.intellij.openapi.fileChooser.ex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.FlyIdeaTestCase;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -110,7 +109,7 @@ public class FileChooserCompletionTest extends FlyIdeaTestCase {
   private void assertComplete(String typed, String[] expected, String preselected) {
     myFinder = new LocalFsFinder() {
       @Override
-      public LookupFile find(@NotNull final String path) {
+      public LookupFile find(@Nonnull final String path) {
         final File ioFile = new File(path);
         return ioFile.isAbsolute() ? new IoFile(ioFile) : null;
       }
@@ -128,7 +127,7 @@ public class FileChooserCompletionTest extends FlyIdeaTestCase {
       }
     }, myMacros, getRootDisposable()) {
       @Override
-      @Nullable
+      @javax.annotation.Nullable
       public VirtualFile getSelectedFile() {
         return null;
       }

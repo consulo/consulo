@@ -30,7 +30,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.lang.reflect.Constructor;
@@ -54,7 +54,7 @@ public class ApplicationStarter {
   private boolean myPerformProjectLoad = true;
   private ApplicationPostStarter myPostStarter;
 
-  public ApplicationStarter(@NotNull Class<? extends ApplicationPostStarter> postStarterClass, @NotNull CommandLineArgs args) {
+  public ApplicationStarter(@Nonnull Class<? extends ApplicationPostStarter> postStarterClass, @Nonnull CommandLineArgs args) {
     myPostStarterClass = postStarterClass;
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
@@ -95,7 +95,7 @@ public class ApplicationStarter {
     new JFrame().pack(); // this peer will prevent shutting down our application
   }
 
-  @NotNull
+  @Nonnull
   private ApplicationPostStarter createPostStarter() {
     try {
       Constructor<? extends ApplicationPostStarter> constructor = myPostStarterClass.getConstructor(ApplicationStarter.class);

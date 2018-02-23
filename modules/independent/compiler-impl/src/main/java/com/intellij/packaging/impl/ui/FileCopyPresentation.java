@@ -25,7 +25,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -61,7 +61,7 @@ public class FileCopyPresentation extends PackagingElementPresentation {
     return myOutputFileName;
   }
 
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     if (myFile != null && !myFile.isDirectory()) {
       presentationData.setIcon(VirtualFilePresentation.getIcon(myFile));
       presentationData.addText(myOutputFileName, mainAttributes);

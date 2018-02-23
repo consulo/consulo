@@ -15,13 +15,13 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class Converter<T> {
   @Nullable
-  public abstract T fromString(@NotNull String value);
+  public abstract T fromString(@Nonnull String value);
 
-  @NotNull
-  public abstract String toString(@NotNull T t);
+  @Nonnull
+  public abstract String toString(@Nonnull T t);
 }

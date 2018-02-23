@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public abstract class DependenciesBuilder {
   protected int myFileCount = 0;
   protected int myTransitive = 0;
 
-  protected DependenciesBuilder(@NotNull final Project project, @NotNull final AnalysisScope scope) {
+  protected DependenciesBuilder(@Nonnull final Project project, @Nonnull final AnalysisScope scope) {
     this(project, scope, null);
   }
 

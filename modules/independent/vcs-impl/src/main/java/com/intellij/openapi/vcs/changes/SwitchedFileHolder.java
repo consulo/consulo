@@ -21,7 +21,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +85,7 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getBranchForFile(final VirtualFile file) {
     final VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return null;

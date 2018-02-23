@@ -28,8 +28,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -76,7 +76,7 @@ public class PopupUtil {
 
   }
 
-  public static void setPopupType(@NotNull final PopupFactory factory, final int type) {
+  public static void setPopupType(@Nonnull final PopupFactory factory, final int type) {
     try {
       final Method method = PopupFactory.class.getDeclaredMethod("setPopupType", int.class);
       method.setAccessible(true);
@@ -87,7 +87,7 @@ public class PopupUtil {
     }
   }
 
-  public static int getPopupType(@NotNull final PopupFactory factory) {
+  public static int getPopupType(@Nonnull final PopupFactory factory) {
     try {
       final Method method = PopupFactory.class.getDeclaredMethod("getPopupType");
       method.setAccessible(true);
@@ -114,7 +114,7 @@ public class PopupUtil {
     return JOptionPane.getRootFrame();
   }
 
-  public static void showBalloonForActiveFrame(@NotNull final String message, final MessageType type) {
+  public static void showBalloonForActiveFrame(@Nonnull final String message, final MessageType type) {
     final Runnable runnable = new Runnable() {
       public void run() {
         final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
@@ -135,7 +135,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForActiveComponent(@NotNull final String message, final MessageType type) {
+  public static void showBalloonForActiveComponent(@Nonnull final String message, final MessageType type) {
     Runnable runnable = new Runnable() {
       public void run() {
         Window[] windows = Window.getWindows();
@@ -173,7 +173,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForComponent(@NotNull Component component, @NotNull final String message, final MessageType type,
+  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull final String message, final MessageType type,
                                              final boolean atTop, @Nullable final Disposable disposable) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     if (popupFactory == null) return;
@@ -196,7 +196,7 @@ public class PopupUtil {
     balloon.show(new RelativePoint(component, new Point(x, y)), position);
   }
 
-  public static boolean isComboPopupKeyEvent(@NotNull ComponentEvent event, @NotNull JComboBox comboBox) {
+  public static boolean isComboPopupKeyEvent(@Nonnull ComponentEvent event, @Nonnull JComboBox comboBox) {
     final Component component = event.getComponent();
     if(!comboBox.isPopupVisible() || component == null) return false;
     ComboPopup popup = ReflectionUtil.getField(comboBox.getUI().getClass(), comboBox.getUI(), ComboPopup.class, "popup");

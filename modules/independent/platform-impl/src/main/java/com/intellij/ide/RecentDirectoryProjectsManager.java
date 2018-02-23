@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @State(
   name = "RecentProjectsManager",
@@ -40,7 +40,7 @@ public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
 
   @Override
   @Nullable
-  protected String getProjectPath(@NotNull Project project) {
+  protected String getProjectPath(@Nonnull Project project) {
     final VirtualFile baseDirVFile = project.getBaseDir();
     return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
   }

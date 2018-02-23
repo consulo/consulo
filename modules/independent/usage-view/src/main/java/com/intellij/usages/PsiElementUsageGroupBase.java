@@ -27,7 +27,7 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.usageView.UsageInfo;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   private final String myName;
   private final Icon myIcon;
 
-  public PsiElementUsageGroupBase(@NotNull T element, Icon icon) {
+  public PsiElementUsageGroupBase(@Nonnull T element, Icon icon) {
     String myName = element.getName();
     if (myName == null) myName = "<anonymous>";
     this.myName = myName;
@@ -48,7 +48,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     myIcon = icon;
   }
 
-  public PsiElementUsageGroupBase(@NotNull T element) {
+  public PsiElementUsageGroupBase(@Nonnull T element) {
     this(element, IconDescriptorUpdaters.getIcon(element, 0));
   }
 
@@ -62,7 +62,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText(UsageView view) {
     return myName;
   }
@@ -100,7 +100,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   @Override
-  public int compareTo(@NotNull final UsageGroup o) {
+  public int compareTo(@Nonnull final UsageGroup o) {
     String name;
     if (o instanceof NamedPresentably) {
       name = ((NamedPresentably)o).getPresentableName();
@@ -137,7 +137,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     return myName;
   }

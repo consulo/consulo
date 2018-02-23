@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.elements;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,7 +26,7 @@ public abstract class ArtifactRootElement<S> extends CompositePackagingElement<S
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return false;
   }
 }

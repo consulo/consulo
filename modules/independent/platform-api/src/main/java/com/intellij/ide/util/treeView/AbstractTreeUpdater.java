@@ -29,7 +29,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -47,13 +47,13 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   private long myUpdateCount;
   private boolean myReleaseRequested;
 
-  public AbstractTreeUpdater(@NotNull AbstractTreeBuilder treeBuilder) {
+  public AbstractTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
     myTreeBuilder = treeBuilder;
     final JTree tree = myTreeBuilder.getTree();
     final JComponent component = tree instanceof TreeTableTree ? ((TreeTableTree)tree).getTreeTable() : tree;
     myUpdateQueue = new MergingUpdateQueue("UpdateQueue", 100, component.isShowing(), component) {
       @Override
-      protected Alarm createAlarm(@NotNull Alarm.ThreadToUse thread, Disposable parent) {
+      protected Alarm createAlarm(@Nonnull Alarm.ThreadToUse thread, Disposable parent) {
         return new Alarm(thread, parent) {
           @Override
           protected boolean isEdt() {
@@ -99,21 +99,21 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
   /**
    * @deprecated use {@link com.intellij.ide.util.treeView.AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
-  public synchronized void addSubtreeToUpdate(@NotNull DefaultMutableTreeNode rootNode) {
+  public synchronized void addSubtreeToUpdate(@Nonnull DefaultMutableTreeNode rootNode) {
     addSubtreeToUpdate(new TreeUpdatePass(rootNode).setUpdateStamp(-1));
   }
 
   /**
    * @deprecated use {@link com.intellij.ide.util.treeView.AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
-  public synchronized void requeue(@NotNull TreeUpdatePass toAdd) {
+  public synchronized void requeue(@Nonnull TreeUpdatePass toAdd) {
     addSubtreeToUpdate(toAdd.setUpdateStamp(-1));
   }
 
   /**
    * @deprecated use {@link com.intellij.ide.util.treeView.AbstractTreeBuilder#queueUpdateFrom(Object, boolean)}
    */
-  public synchronized void addSubtreeToUpdate(@NotNull TreeUpdatePass toAdd) {
+  public synchronized void addSubtreeToUpdate(@Nonnull TreeUpdatePass toAdd) {
     if (myReleaseRequested) return;
 
     assert !toAdd.isExpired();
@@ -226,7 +226,7 @@ public class AbstractTreeUpdater implements Disposable, Activatable {
     });
   }
 
-  private void queue(@NotNull Update update) {
+  private void queue(@Nonnull Update update) {
     if (isReleased()) return;
 
     myUpdateQueue.queue(update);

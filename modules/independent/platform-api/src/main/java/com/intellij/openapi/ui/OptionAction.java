@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -23,6 +23,6 @@ import javax.swing.*;
 * @author Konstantin Bulenkov
 */
 public interface OptionAction extends Action {
-  @NotNull
+  @Nonnull
   Action[] getOptions();
 }

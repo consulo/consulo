@@ -60,8 +60,8 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XEvaluationCallbackBase;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodePresentationConfigurator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,9 +83,9 @@ public class XValueHint extends AbstractValueHint {
 
   private static final Key<XValueHint> HINT_KEY = Key.create("allows only one value hint per editor");
 
-  public XValueHint(@NotNull Project project, @NotNull Editor editor, @NotNull Point point, @NotNull ValueHintType type,
-                    @NotNull ExpressionInfo expressionInfo, @NotNull XDebuggerEvaluator evaluator,
-                    @NotNull XDebugSession session) {
+  public XValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type,
+                    @Nonnull ExpressionInfo expressionInfo, @Nonnull XDebuggerEvaluator evaluator,
+                    @Nonnull XDebugSession session) {
     super(project, editor, point, type, expressionInfo.getTextRange());
 
     myEvaluator = evaluator;
@@ -120,7 +120,7 @@ public class XValueHint extends AbstractValueHint {
       ShortcutSet shortcut = ActionManager.getInstance().getAction("ShowErrorDescription").getShortcutSet();
       new DumbAwareAction() {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           hideHint();
           final Point point = new Point(myPoint.x, myPoint.y + getEditor().getLineHeight());
           new XValueHint(getProject(), getEditor(), point, ValueHintType.MOUSE_CLICK_HINT, myExpressionInfo, myEvaluator, myDebugSession).invokeHint();
@@ -162,14 +162,14 @@ public class XValueHint extends AbstractValueHint {
   protected void evaluateAndShowHint() {
     myEvaluator.evaluate(myExpression, new XEvaluationCallbackBase() {
       @Override
-      public void evaluated(@NotNull final XValue result) {
+      public void evaluated(@Nonnull final XValue result) {
         result.computePresentation(new XValueNodePresentationConfigurator.ConfigurableXValueNodeImpl() {
           private XFullValueEvaluator myFullValueEvaluator;
           private boolean myShown = false;
 
           @Override
           public void applyPresentation(@Nullable Icon icon,
-                                        @NotNull XValuePresentation valuePresenter,
+                                        @Nonnull XValuePresentation valuePresenter,
                                         boolean hasChildren) {
             if (isHintHidden()) {
               return;
@@ -212,7 +212,7 @@ public class XValueHint extends AbstractValueHint {
           }
 
           @Override
-          public void setFullValueEvaluator(@NotNull XFullValueEvaluator fullValueEvaluator) {
+          public void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator) {
             myFullValueEvaluator = fullValueEvaluator;
           }
 
@@ -224,7 +224,7 @@ public class XValueHint extends AbstractValueHint {
       }
 
       @Override
-      public void errorOccurred(@NotNull final String errorMessage) {
+      public void errorOccurred(@Nonnull final String errorMessage) {
         if (getType() == ValueHintType.MOUSE_CLICK_HINT) {
           ApplicationManager.getApplication().invokeLater(() -> showHint(HintUtil.createErrorLabel(errorMessage)));
         }
@@ -233,7 +233,7 @@ public class XValueHint extends AbstractValueHint {
     }, myExpressionPosition);
   }
 
-  private void showTree(@NotNull XValue value) {
+  private void showTree(@Nonnull XValue value) {
     XValueMarkers<?,?> valueMarkers = ((XDebugSessionImpl)myDebugSession).getValueMarkers();
     XDebuggerTreeCreator creator = new XDebuggerTreeCreator(myDebugSession.getProject(), myDebugSession.getDebugProcess().getEditorsProvider(),
                                                             myDebugSession.getCurrentPosition(), valueMarkers);

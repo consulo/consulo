@@ -26,16 +26,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
  */
 public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
   
-  @NotNull
+  @Nonnull
   @Override
-  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
+  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override
       public void visitFile(PsiFile file) {
@@ -68,21 +68,22 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
     };
   }
 
-  @NotNull private static final LocalQuickFix SET_PROJECT_LINE_SEPARATORS = new LocalQuickFix() {
-    @NotNull
+  @Nonnull
+  private static final LocalQuickFix SET_PROJECT_LINE_SEPARATORS = new LocalQuickFix() {
+    @Nonnull
     @Override
     public String getName() {
       return getFamilyName();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return "Convert to project line separators";
     }
 
     @Override
-    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
       final PsiElement psiElement = descriptor.getPsiElement();
       if (!(psiElement instanceof PsiFile)) {
         return;

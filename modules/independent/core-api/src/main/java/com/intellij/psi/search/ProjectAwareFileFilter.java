@@ -17,7 +17,8 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileFilter;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author peter

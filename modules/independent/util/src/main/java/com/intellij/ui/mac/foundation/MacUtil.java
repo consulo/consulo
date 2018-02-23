@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 
 import javax.swing.*;
@@ -130,7 +130,7 @@ public class MacUtil {
     return result.get();
   }
 
-  public static void adjustFocusTraversal(@NotNull Disposable disposable) {
+  public static void adjustFocusTraversal(@Nonnull Disposable disposable) {
     if (!SystemInfo.isMacOSSnowLeopard) return;
     final AWTEventListener listener = new AWTEventListener() {
       @Override
@@ -217,7 +217,7 @@ public class MacUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Color colorFromNative(ID color) {
     final ID colorSpace = invoke("NSColorSpace", "genericRGBColorSpace");
     final ID colorInSpace = invoke(color, "colorUsingColorSpace:", colorSpace);

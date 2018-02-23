@@ -26,9 +26,9 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -49,24 +49,24 @@ public abstract class HintUpdateSupply {
   private JBPopup myHint;
 
   @Nullable
-  public static HintUpdateSupply getSupply(@NotNull JComponent component) {
+  public static HintUpdateSupply getSupply(@Nonnull JComponent component) {
     return (HintUpdateSupply)component.getClientProperty(HINT_UPDATE_MARKER);
   }
 
-  public static void hideHint(@NotNull JComponent component) {
+  public static void hideHint(@Nonnull JComponent component) {
     HintUpdateSupply supply = getSupply(component);
     if (supply != null) supply.hideHint();
   }
 
-  public static void installSimpleHintUpdateSupply(@NotNull JComponent component) {
+  public static void installSimpleHintUpdateSupply(@Nonnull JComponent component) {
     installHintUpdateSupply(component, o -> o instanceof PsiElement ? (PsiElement)o : null);
   }
 
-  public static void installDataContextHintUpdateSupply(@NotNull JComponent component) {
+  public static void installDataContextHintUpdateSupply(@Nonnull JComponent component) {
     installHintUpdateSupply(component, o -> o instanceof PsiElement ? (PsiElement)o : DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.PSI_ELEMENT));
   }
 
-  public static void installHintUpdateSupply(@NotNull final JComponent component, final Function<Object, PsiElement> provider) {
+  public static void installHintUpdateSupply(@Nonnull final JComponent component, final Function<Object, PsiElement> provider) {
     HintUpdateSupply supply = new HintUpdateSupply(component) {
       @Nullable
       @Override
@@ -79,26 +79,26 @@ public abstract class HintUpdateSupply {
     if (component instanceof JTable) supply.installTableListener((JTable)component);
   }
 
-  protected HintUpdateSupply(@NotNull JComponent component) {
+  protected HintUpdateSupply(@Nonnull JComponent component) {
     installSupply(component);
   }
 
-  public HintUpdateSupply(@NotNull JBTable table) {
+  public HintUpdateSupply(@Nonnull JBTable table) {
     installSupply(table);
     installTableListener(table);
   }
 
-  public HintUpdateSupply(@NotNull Tree tree) {
+  public HintUpdateSupply(@Nonnull Tree tree) {
     installSupply(tree);
     installTreeListener(tree);
   }
 
-  public HintUpdateSupply(@NotNull JBList list) {
+  public HintUpdateSupply(@Nonnull JBList list) {
     installSupply(list);
     installListListener(list);
   }
 
-  protected void installTableListener(@NotNull final JTable table) {
+  protected void installTableListener(@Nonnull final JTable table) {
     ListSelectionListener listener = new ListSelectionListener() {
       @Override
       public void valueChanged(final ListSelectionEvent e) {
@@ -118,7 +118,7 @@ public abstract class HintUpdateSupply {
     table.getColumnModel().getSelectionModel().addListSelectionListener(listener);
   }
 
-  protected void installTreeListener(@NotNull final JTree tree) {
+  protected void installTreeListener(@Nonnull final JTree tree) {
     tree.addTreeSelectionListener(new TreeSelectionListener() {
       @Override
       public void valueChanged(final TreeSelectionEvent e) {
@@ -135,7 +135,7 @@ public abstract class HintUpdateSupply {
     });
   }
 
-  protected void installListListener(@NotNull final JList list) {
+  protected void installListListener(@Nonnull final JList list) {
     list.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(final ListSelectionEvent e) {
@@ -155,7 +155,7 @@ public abstract class HintUpdateSupply {
   @Nullable
   protected abstract PsiElement getPsiElementForHint(@Nullable Object selectedValue);
 
-  private void installSupply(@NotNull JComponent component) {
+  private void installSupply(@Nonnull JComponent component) {
     component.putClientProperty(HINT_UPDATE_MARKER, this);
   }
 
@@ -186,7 +186,7 @@ public abstract class HintUpdateSupply {
     return hint != null && hint.isVisible();
   }
 
-  private static boolean isSelectedByMouse(@NotNull JComponent c) {
+  private static boolean isSelectedByMouse(@Nonnull JComponent c) {
     return Boolean.TRUE.equals(c.getClientProperty(ListUtil.SELECTED_BY_MOUSE_EVENT));
   }
 }

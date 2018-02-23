@@ -19,8 +19,8 @@ package com.intellij.codeInsight.navigation.actions;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -31,7 +31,7 @@ public abstract class TypeDeclarationProvider {
 
   @Nullable
   @RequiredReadAction
-  public PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol, @Nullable Editor editor, int offset) {
+  public PsiElement[] getSymbolTypeDeclarations(@Nonnull PsiElement symbol, @Nullable Editor editor, int offset) {
     return null;
   }
 }

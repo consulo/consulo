@@ -19,7 +19,7 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Exposes {@link LineWrapPositionStrategy} implementations to their clients.
@@ -42,8 +42,8 @@ public class LanguageLineWrapPositionStrategy extends LanguageExtension<LineWrap
    * @param editor    editor that manages document which text should be processed by wrap position strategy
    * @return          line wrap position strategy to use for the lines from the document managed by the given editor
    */
-  @NotNull
-  public LineWrapPositionStrategy forEditor(@NotNull Editor editor) {
+  @Nonnull
+  public LineWrapPositionStrategy forEditor(@Nonnull Editor editor) {
     LineWrapPositionStrategy result = getDefaultImplementation();
     Project project = editor.getProject();
     if (project != null && !project.isDisposed()) {
@@ -55,7 +55,7 @@ public class LanguageLineWrapPositionStrategy extends LanguageExtension<LineWrap
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineWrapPositionStrategy getDefaultImplementation() {
     return super.getDefaultImplementation();

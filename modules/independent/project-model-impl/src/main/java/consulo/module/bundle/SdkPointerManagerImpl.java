@@ -21,8 +21,8 @@ import com.intellij.openapi.projectRoots.Sdk;
 import consulo.bundle.SdkTableListener;
 import consulo.bundle.SdkPointerManager;
 import consulo.util.pointers.NamedPointerManagerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -32,17 +32,17 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
   public SdkPointerManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {
       @Override
-      public void sdkAdded(@NotNull Sdk sdk) {
+      public void sdkAdded(@Nonnull Sdk sdk) {
         updatePointers(sdk);
       }
 
       @Override
-      public void sdkRemoved(@NotNull Sdk sdk) {
+      public void sdkRemoved(@Nonnull Sdk sdk) {
         unregisterPointer(sdk);
       }
 
       @Override
-      public void sdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+      public void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
         updatePointers(sdk, previousName);
       }
     });
@@ -50,7 +50,7 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
 
   @Nullable
   @Override
-  public Sdk findByName(@NotNull String name) {
+  public Sdk findByName(@Nonnull String name) {
     return SdkTable.getInstance().findSdk(name);
   }
 }

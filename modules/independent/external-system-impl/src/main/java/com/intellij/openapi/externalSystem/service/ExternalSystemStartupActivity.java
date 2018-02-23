@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.startup.StartupManager;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExternalSystemStartupActivity implements StartupActivity {
 
   @Override
-  public void runActivity(@NotNull UIAccess uiAccess, @NotNull final Project project) {
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return;
     }

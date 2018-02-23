@@ -12,8 +12,8 @@ import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectori
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Function;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -123,7 +123,7 @@ public abstract class MoveDirectoryWithClassesHelper {
     private static class MyUsageInfo extends UsageInfo {
       private final PsiFileSystemItem myFile;
 
-      public MyUsageInfo(@NotNull PsiReference reference, PsiFileSystemItem file) {
+      public MyUsageInfo(@Nonnull PsiReference reference, PsiFileSystemItem file) {
         super(reference);
         myFile = file;
       }

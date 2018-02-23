@@ -25,7 +25,7 @@ import consulo.ui.internal.icon.DesktopImageImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.net.URL;
@@ -70,13 +70,13 @@ public class DesktopUIInternalImpl extends UIInternal {
     return new DesktopMenuBarImpl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
     return new DesktopStyleManagerImpl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Window _Windows_modalWindow(String title) {
     throw new UnsupportedOperationException();
@@ -88,7 +88,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
+  public CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
     return new DesktopCheckBoxImpl(text, selected);
   }
 
@@ -185,7 +185,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   UIAccess _UIAccess_get() {
     return AWTUIAccessImpl.ourInstance;

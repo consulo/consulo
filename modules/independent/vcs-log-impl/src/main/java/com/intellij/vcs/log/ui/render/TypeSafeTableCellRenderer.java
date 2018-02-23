@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.render;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -30,15 +30,15 @@ public abstract class TypeSafeTableCellRenderer<T> implements TableCellRenderer 
     return getTableCellRendererComponentImpl(table, getValue(notNull(value)), isSelected, hasFocus, row, column);
   }
 
-  @NotNull
-  protected T getValue(@NotNull Object value) {
+  @Nonnull
+  protected T getValue(@Nonnull Object value) {
     //noinspection unchecked
     return (T)value;
   }
 
 
-  protected abstract Component getTableCellRendererComponentImpl(@NotNull JTable table,
-                                                                 @NotNull T value,
+  protected abstract Component getTableCellRendererComponentImpl(@Nonnull JTable table,
+                                                                 @Nonnull T value,
                                                                  boolean isSelected,
                                                                  boolean hasFocus,
                                                                  int row,

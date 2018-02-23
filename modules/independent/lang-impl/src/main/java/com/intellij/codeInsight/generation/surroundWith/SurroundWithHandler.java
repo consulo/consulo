@@ -55,8 +55,8 @@ import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
   public static final TextRange CARET_IS_OK = new TextRange(0, 0);
 
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     invoke(project, editor, file, null);
   }
 
@@ -75,7 +75,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     return true;
   }
 
-  public static void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file, Surrounder surrounder) {
+  public static void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, Surrounder surrounder) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     if (file instanceof PsiCompiledElement) {
       HintManager.getInstance().showErrorHint(editor, "Can't modify decompiled code");
@@ -295,7 +295,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     public void actionPerformed(AnActionEvent e) {
       new WriteCommandAction(myProject) {
         @Override
-        protected void run(@NotNull Result result) throws Exception {
+        protected void run(@Nonnull Result result) throws Exception {
           doSurround(myProject, myEditor, mySurrounder, myElements);
         }
       }.execute();

@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangesViewRefresher;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -54,7 +54,7 @@ public class RefreshAction extends AnAction implements DumbAware {
     });
   }
 
-  private static void invokeCustomRefreshes(@NotNull Project project) {
+  private static void invokeCustomRefreshes(@Nonnull Project project) {
     ChangesViewRefresher[] extensions = ChangesViewRefresher.EP_NAME.getExtensions();
     for (ChangesViewRefresher refresher : extensions) {
       refresher.refresh(project);

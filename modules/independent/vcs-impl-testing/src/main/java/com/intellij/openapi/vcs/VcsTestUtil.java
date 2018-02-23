@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,11 +38,11 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
 public class VcsTestUtil {
-  public static VirtualFile createFile(@NotNull Project project, @NotNull final VirtualFile parent, @NotNull final String name,
-                                       @Nullable final String content) {
+  public static VirtualFile createFile(@Nonnull Project project, @Nonnull final VirtualFile parent, @Nonnull final String name,
+                                       @javax.annotation.Nullable final String content) {
     return new WriteCommandAction<VirtualFile>(project) {
       @Override
-      protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
         VirtualFile file = parent.createChildData(this, name);
         if (content != null) {
           file.setBinaryContent(CharsetToolkit.getUtf8Bytes(content));
@@ -60,10 +60,10 @@ public class VcsTestUtil {
    * @param name   Name of the directory.
    * @return reference to the created or already existing directory.
    */
-  public static VirtualFile findOrCreateDir(@NotNull final Project project, @NotNull final VirtualFile parent, @NotNull final String name) {
+  public static VirtualFile findOrCreateDir(@Nonnull final Project project, @Nonnull final VirtualFile parent, @Nonnull final String name) {
     return new WriteCommandAction<VirtualFile>(project) {
       @Override
-      protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
         VirtualFile dir = parent.findChild(name);
         if (dir == null) {
           dir = parent.createChildDirectory(this, name);
@@ -73,7 +73,7 @@ public class VcsTestUtil {
     }.execute().throwException().getResultObject();
   }
 
-  public static void renameFileInCommand(@NotNull Project project, @NotNull final VirtualFile file, @NotNull final String newName) {
+  public static void renameFileInCommand(@Nonnull Project project, @Nonnull final VirtualFile file, @Nonnull final String newName) {
     new WriteCommandAction.Simple(project) {
       @Override
       protected void run() throws Throwable {
@@ -87,7 +87,7 @@ public class VcsTestUtil {
     }.execute().throwException();
   }
 
-  public static void deleteFileInCommand(@NotNull Project project, @NotNull final VirtualFile file) {
+  public static void deleteFileInCommand(@Nonnull Project project, @Nonnull final VirtualFile file) {
     new WriteCommandAction.Simple(project) {
       @Override
       protected void run() throws Throwable {
@@ -101,7 +101,7 @@ public class VcsTestUtil {
     }.execute();
   }
 
-  public static void editFileInCommand(@NotNull Project project, @NotNull final VirtualFile file, @NotNull final String newContent) {
+  public static void editFileInCommand(@Nonnull Project project, @Nonnull final VirtualFile file, @Nonnull final String newContent) {
     assertTrue(file.isValid());
     file.getTimeStamp();
     new WriteCommandAction.Simple(project) {
@@ -122,12 +122,12 @@ public class VcsTestUtil {
     }.execute();
   }
 
-  @NotNull
-  public static VirtualFile copyFileInCommand(@NotNull Project project, @NotNull final VirtualFile file,
-                                              @NotNull final VirtualFile newParent, @NotNull final String newName) {
+  @Nonnull
+  public static VirtualFile copyFileInCommand(@Nonnull Project project, @Nonnull final VirtualFile file,
+                                              @Nonnull final VirtualFile newParent, @Nonnull final String newName) {
     return new WriteCommandAction<VirtualFile>(project) {
       @Override
-      protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
         try {
           result.setResult(file.copy(this, newParent, newName));
         }
@@ -138,7 +138,7 @@ public class VcsTestUtil {
     }.execute().getResultObject();
   }
 
-  public static void moveFileInCommand(@NotNull  Project project, @NotNull final VirtualFile file, @NotNull final VirtualFile newParent) {
+  public static void moveFileInCommand(@Nonnull Project project, @Nonnull final VirtualFile file, @Nonnull final VirtualFile newParent) {
     new WriteCommandAction.Simple(project) {
       @Override
       protected void run() throws Throwable {
@@ -152,7 +152,7 @@ public class VcsTestUtil {
     }.execute();
   }
 
-  public static <T> void assertEqualCollections(@NotNull String message, @NotNull Collection<T> actual, @NotNull Collection<T> expected) {
+  public static <T> void assertEqualCollections(@Nonnull String message, @Nonnull Collection<T> actual, @Nonnull Collection<T> expected) {
     if (!StringUtil.isEmptyOrSpaces(message) && !message.endsWith(":") && !message.endsWith(": ")) {
       message += ": ";
     }
@@ -172,16 +172,16 @@ public class VcsTestUtil {
     }
   }
 
-  public static <T> void assertEqualCollections(@NotNull Collection<T> actual, @NotNull Collection<T> expected) {
+  public static <T> void assertEqualCollections(@Nonnull Collection<T> actual, @Nonnull Collection<T> expected) {
     assertEqualCollections("", actual, expected);
   }
 
   /**
    * Testng compares by iterating over 2 collections, but it won't work for sets which may have different order.
    */
-  public static <T, E> void assertEqualCollections(@NotNull Collection<? extends T> actual,
-                                                   @NotNull Collection<? extends E> expected,
-                                                   @NotNull EqualityChecker<T, E> equalityChecker) {
+  public static <T, E> void assertEqualCollections(@Nonnull Collection<? extends T> actual,
+                                                   @Nonnull Collection<? extends E> expected,
+                                                   @Nonnull EqualityChecker<T, E> equalityChecker) {
     if (actual.size() != expected.size()) {
       fail("Collections don't have the same size. " + stringifyActualExpected(actual, expected));
     }
@@ -198,9 +198,9 @@ public class VcsTestUtil {
     }
   }
 
-  private static <T, E> boolean contains(@NotNull Collection<? extends T> collection,
-                                         @NotNull E object,
-                                         @NotNull EqualityChecker<T, E> equalityChecker) {
+  private static <T, E> boolean contains(@Nonnull Collection<? extends T> collection,
+                                         @Nonnull E object,
+                                         @Nonnull EqualityChecker<T, E> equalityChecker) {
     for (T t : collection) {
       if (equalityChecker.areEqual(t, object)) {
         return true;
@@ -209,9 +209,9 @@ public class VcsTestUtil {
     return false;
   }
 
-  private static <T, E> boolean contains2(@NotNull Collection<? extends E> collection,
-                                          @NotNull T object,
-                                          @NotNull EqualityChecker<T, E> equalityChecker) {
+  private static <T, E> boolean contains2(@Nonnull Collection<? extends E> collection,
+                                          @Nonnull T object,
+                                          @Nonnull EqualityChecker<T, E> equalityChecker) {
     for (E e : collection) {
       if (equalityChecker.areEqual(object, e)) {
         return true;
@@ -224,19 +224,19 @@ public class VcsTestUtil {
     boolean areEqual(T actual, E expected);
   }
 
-  @NotNull
-  public static String stringifyActualExpected(@NotNull Object actual, @NotNull Object expected) {
+  @Nonnull
+  public static String stringifyActualExpected(@Nonnull Object actual, @Nonnull Object expected) {
     return "\nExpected:\n" + expected + "\nActual:\n" + actual;
   }
 
-  @NotNull
-  public static String toAbsolute(@NotNull String relPath, @NotNull Project project) {
+  @Nonnull
+  public static String toAbsolute(@Nonnull String relPath, @Nonnull Project project) {
     new File(toAbsolute(Collections.singletonList(relPath), project).get(0)).mkdir();
     return toAbsolute(Collections.singletonList(relPath), project).get(0);
   }
 
-  @NotNull
-  public static List<String> toAbsolute(@NotNull Collection<String> relPaths, @NotNull final Project project) {
+  @Nonnull
+  public static List<String> toAbsolute(@Nonnull Collection<String> relPaths, @Nonnull final Project project) {
     return ContainerUtil.map2List(relPaths, s -> {
       try {
         return FileUtil.toSystemIndependentName((new File(project.getBasePath() + "/" + s).getCanonicalPath()));
@@ -248,7 +248,7 @@ public class VcsTestUtil {
     });
   }
 
-  public static void assertNotificationShown(@NotNull Project project, @Nullable Notification expected) {
+  public static void assertNotificationShown(@Nonnull Project project, @Nullable Notification expected) {
     if (expected != null) {
       Notification actualNotification =
               ((TestVcsNotifier)VcsNotifier.getInstance(project)).getLastNotification();
@@ -261,7 +261,7 @@ public class VcsTestUtil {
 
   // we allow more spaces and line breaks in tests to make them more readable.
   // After all, notifications display html, so all line breaks and extra spaces are ignored.
-  private static String adjustTestContent(@NotNull String s) {
+  private static String adjustTestContent(@Nonnull String s) {
     StringBuilder res = new StringBuilder();
     String[] splits = s.split("\n");
     for (String split : splits) {

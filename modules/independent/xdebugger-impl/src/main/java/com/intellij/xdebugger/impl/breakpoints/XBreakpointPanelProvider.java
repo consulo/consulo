@@ -35,8 +35,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointCustomGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointGroupingByTypeRule;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -88,7 +88,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
   @Override
   @Nullable
-  public XBreakpoint<?> findBreakpoint(@NotNull final Project project, @NotNull final Document document, final int offset) {
+  public XBreakpoint<?> findBreakpoint(@Nonnull final Project project, @Nonnull final Document document, final int offset) {
     XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     int line = document.getLineNumber(offset);
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -143,17 +143,17 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     }
 
     @Override
-    public void breakpointAdded(@NotNull XBreakpoint<?> breakpoint) {
+    public void breakpointAdded(@Nonnull XBreakpoint<?> breakpoint) {
       myListener.breakpointsChanged();
     }
 
     @Override
-    public void breakpointRemoved(@NotNull XBreakpoint<?> breakpoint) {
+    public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
       myListener.breakpointsChanged();
     }
 
     @Override
-    public void breakpointChanged(@NotNull XBreakpoint<?> breakpoint) {
+    public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
       myListener.breakpointsChanged();
     }
   }

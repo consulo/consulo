@@ -20,28 +20,29 @@ import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ComparisonMergeUtil {
-  @NotNull
-  public static List<MergeRange> buildFair(@NotNull FairDiffIterable fragments1,
-                                           @NotNull FairDiffIterable fragments2,
-                                           @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<MergeRange> buildFair(@Nonnull FairDiffIterable fragments1,
+                                           @Nonnull FairDiffIterable fragments2,
+                                           @Nonnull ProgressIndicator indicator) {
     assert fragments1.getLength1() == fragments2.getLength1();
     return new FairMergeBuilder().execute(fragments1, fragments2);
   }
 
   private static class FairMergeBuilder {
-    @NotNull private final ChangeBuilder myChangesBuilder = new ChangeBuilder();
+    @Nonnull
+    private final ChangeBuilder myChangesBuilder = new ChangeBuilder();
 
-    @NotNull
-    public List<MergeRange> execute(@NotNull FairDiffIterable fragments1,
-                                    @NotNull FairDiffIterable fragments2) {
+    @Nonnull
+    public List<MergeRange> execute(@Nonnull FairDiffIterable fragments1,
+                                    @Nonnull FairDiffIterable fragments2) {
       PeekIterator<Range> unchanged1 = new PeekIterator<>(fragments1.unchanged());
       PeekIterator<Range> unchanged2 = new PeekIterator<>(fragments2.unchanged());
 
@@ -52,8 +53,8 @@ public class ComparisonMergeUtil {
       return finish(fragments1, fragments2);
     }
 
-    @NotNull
-    private Side add(@NotNull Range range1, @NotNull Range range2) {
+    @Nonnull
+    private Side add(@Nonnull Range range1, @Nonnull Range range2) {
       int start1 = range1.start1;
       int end1 = range1.end1;
 
@@ -81,8 +82,8 @@ public class ComparisonMergeUtil {
       return Side.fromLeft(end1 <= end2);
     }
 
-    @NotNull
-    private List<MergeRange> finish(@NotNull FairDiffIterable fragments1, @NotNull FairDiffIterable fragments2) {
+    @Nonnull
+    private List<MergeRange> finish(@Nonnull FairDiffIterable fragments1, @Nonnull FairDiffIterable fragments2) {
       int length1 = fragments1.getLength2();
       int length2 = fragments1.getLength1();
       int length3 = fragments2.getLength2();
@@ -92,7 +93,8 @@ public class ComparisonMergeUtil {
   }
 
   private static class ChangeBuilder {
-    @NotNull private final List<MergeRange> myChanges = new ArrayList<>();
+    @Nonnull
+    private final List<MergeRange> myChanges = new ArrayList<>();
 
     private int myIndex1 = 0;
     private int myIndex2 = 0;
@@ -118,7 +120,7 @@ public class ComparisonMergeUtil {
       myIndex3 = end3;
     }
 
-    @NotNull
+    @Nonnull
     public List<MergeRange> finish(int length1, int length2, int length3) {
       assert myIndex1 <= length1;
       assert myIndex2 <= length2;
@@ -131,10 +133,11 @@ public class ComparisonMergeUtil {
   }
 
   private static class PeekIterator<T> {
-    @NotNull private final Iterator<T> myIterator;
+    @Nonnull
+    private final Iterator<T> myIterator;
     private T myValue = null;
 
-    public PeekIterator(@NotNull Iterator<T> iterator) {
+    public PeekIterator(@Nonnull Iterator<T> iterator) {
       myIterator = iterator;
       advance();
     }
@@ -157,9 +160,9 @@ public class ComparisonMergeUtil {
   }
 
   @Nullable
-  public static CharSequence tryResolveConflict(@NotNull CharSequence leftText,
-                                                @NotNull CharSequence baseText,
-                                                @NotNull CharSequence rightText) {
+  public static CharSequence tryResolveConflict(@Nonnull CharSequence leftText,
+                                                @Nonnull CharSequence baseText,
+                                                @Nonnull CharSequence rightText) {
     return MergeResolveUtil.tryResolveConflict(leftText, baseText, rightText);
   }
 }

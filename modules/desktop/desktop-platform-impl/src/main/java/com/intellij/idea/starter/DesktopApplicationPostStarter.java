@@ -35,8 +35,8 @@ import consulo.annotations.Internal;
 import consulo.application.ApplicationProperties;
 import consulo.ide.customize.FirstStartCustomizeUtil;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +75,7 @@ public class DesktopApplicationPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     SystemDock.updateMenu();
 
     // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +29,7 @@ public class RuntimeExceptionWithAttachments extends RuntimeException implements
     myAttachments = attachments;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Attachment[] getAttachments() {
     return myAttachments;

@@ -45,8 +45,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 
 import java.awt.*;
@@ -70,7 +70,8 @@ public class ExpectedHighlightingData {
   @NonNls private static final String END_LINE_WARNING_MARKER = "EOLWarning";
   @NonNls private static final String LINE_MARKER = "lineMarker";
 
-  @NotNull private final Document myDocument;
+  @Nonnull
+  private final Document myDocument;
   private final PsiFile myFile;
   @NonNls private static final String ANY_TEXT = "*";
   private final String myText;
@@ -81,7 +82,7 @@ public class ExpectedHighlightingData {
     private final boolean enabled;
     private final Set<HighlightInfo> infos;
 
-    public ExpectedHighlightingSet(@NotNull HighlightSeverity severity, boolean endOfLine, boolean enabled) {
+    public ExpectedHighlightingSet(@Nonnull HighlightSeverity severity, boolean endOfLine, boolean enabled) {
       this.severity = severity;
       this.endOfLine = endOfLine;
       this.enabled = enabled;
@@ -95,7 +96,7 @@ public class ExpectedHighlightingData {
   public void init() {
     new WriteCommandAction(null){
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         extractExpectedLineMarkerSet(myDocument);
         extractExpectedHighlightsSet(myDocument);
         refreshLineMarkers();
@@ -103,18 +104,18 @@ public class ExpectedHighlightingData {
     }.execute();
   }
 
-  public ExpectedHighlightingData(@NotNull Document document,boolean checkWarnings, boolean checkInfos) {
+  public ExpectedHighlightingData(@Nonnull Document document, boolean checkWarnings, boolean checkInfos) {
     this(document, checkWarnings, false, checkInfos);
   }
 
-  public ExpectedHighlightingData(@NotNull Document document,
+  public ExpectedHighlightingData(@Nonnull Document document,
                                   boolean checkWarnings,
                                   boolean checkWeakWarnings,
                                   boolean checkInfos) {
     this(document, checkWarnings, checkWeakWarnings, checkInfos, null);
   }
 
-  public ExpectedHighlightingData(@NotNull final Document document, PsiFile file) {
+  public ExpectedHighlightingData(@Nonnull final Document document, PsiFile file) {
     myDocument = document;
     myFile = file;
     myText = document.getText();
@@ -144,11 +145,11 @@ public class ExpectedHighlightingData {
     }.execute().throwException();
   }
 
-  public ExpectedHighlightingData(@NotNull final Document document,
+  public ExpectedHighlightingData(@Nonnull final Document document,
                                   final boolean checkWarnings,
                                   final boolean checkWeakWarnings,
                                   final boolean checkInfos,
-                                  @Nullable final PsiFile file) {
+                                  @javax.annotation.Nullable final PsiFile file) {
     this(document, file);
     if (checkWarnings) checkWarnings();
     if (checkWeakWarnings) checkWeakWarnings();
@@ -480,7 +481,7 @@ public class ExpectedHighlightingData {
     return ContainerUtil.reverse(infos instanceof List ? (List<T>)infos : new ArrayList<T>(infos));
   }
 
-  private void compareTexts(Collection<HighlightInfo> infos, String text, String failMessage, @Nullable String filePath) {
+  private void compareTexts(Collection<HighlightInfo> infos, String text, String failMessage, @javax.annotation.Nullable String filePath) {
     String actual = composeText(highlightingTypes,  infos, text);
     if (filePath != null && !myText.equals(actual)) {
       // uncomment to overwrite, don't forget to revert on commit!

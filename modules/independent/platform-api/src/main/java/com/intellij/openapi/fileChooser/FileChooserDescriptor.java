@@ -27,8 +27,8 @@ import com.intellij.ui.UIBundle;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.fileTypes.impl.VfsIconUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     myChooseMultiple = chooseMultiple;
   }
 
-  public FileChooserDescriptor(@NotNull FileChooserDescriptor d) {
+  public FileChooserDescriptor(@Nonnull FileChooserDescriptor d) {
     this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
     withTitle(d.getTitle());
     withDescription(d.getDescription());
@@ -168,11 +168,11 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return Collections.unmodifiableList(myRoots);
   }
 
-  public void setRoots(@NotNull VirtualFile... roots) {
+  public void setRoots(@Nonnull VirtualFile... roots) {
     withRoots(roots);
   }
 
-  public void setRoots(@NotNull List<VirtualFile> roots) {
+  public void setRoots(@Nonnull List<VirtualFile> roots) {
     withRoots(roots);
   }
 
@@ -180,7 +180,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return withRoots(Arrays.asList(roots));
   }
 
-  public FileChooserDescriptor withRoots(@NotNull List<VirtualFile> roots) {
+  public FileChooserDescriptor withRoots(@Nonnull List<VirtualFile> roots) {
     myRoots.clear();
     myRoots.addAll(roots);
     return this;

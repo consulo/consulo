@@ -41,8 +41,7 @@ import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -61,15 +60,18 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
 
   private static final Logger LOG = Logger.getInstance("#" + AbstractExternalProjectImportBuilder.class.getName());
 
-  @NotNull private final ProjectDataManager            myProjectDataManager;
-  @NotNull private final C                             myControl;
-  @NotNull private final ProjectSystemId               myExternalSystemId;
+  @Nonnull
+  private final ProjectDataManager            myProjectDataManager;
+  @Nonnull
+  private final C                             myControl;
+  @Nonnull
+  private final ProjectSystemId               myExternalSystemId;
 
   private DataNode<ProjectData> myExternalProjectNode;
 
-  public AbstractExternalProjectImportBuilder(@NotNull ProjectDataManager projectDataManager,
-                                              @NotNull C control,
-                                              @NotNull ProjectSystemId externalSystemId)
+  public AbstractExternalProjectImportBuilder(@Nonnull ProjectDataManager projectDataManager,
+                                              @Nonnull C control,
+                                              @Nonnull ProjectSystemId externalSystemId)
   {
     myProjectDataManager = projectDataManager;
     myControl = control;
@@ -94,20 +96,20 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
   public void setOpenProjectSettingsAfter(boolean on) {
   }
 
-  @NotNull
-  public C getControl(@Nullable Project currentProject) {
+  @Nonnull
+  public C getControl(@javax.annotation.Nullable Project currentProject) {
     myControl.setCurrentProject(currentProject);
     return myControl;
   }
 
-  public void prepare(@NotNull WizardContext context) {
+  public void prepare(@Nonnull WizardContext context) {
     myControl.reset();
     String pathToUse = context.getProjectFileDirectory();
     myControl.setLinkedProjectPath(pathToUse);
     doPrepare(context);
   }
 
-  protected abstract void doPrepare(@NotNull WizardContext context);
+  protected abstract void doPrepare(@Nonnull WizardContext context);
 
   @Override
   public List<Module> commit(final Project project,
@@ -157,7 +159,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
               ProgressManager.getInstance().run(
                 new Task.Backgroundable(project, progressText, false) {
                   @Override
-                  public void run(@NotNull final ProgressIndicator indicator) {
+                  public void run(@Nonnull final ProgressIndicator indicator) {
                     if(project.isDisposed()) return;
                     ExternalSystemResolveProjectTask task
                       = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
@@ -179,7 +181,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   private ExternalProjectSettings getCurrentExternalProjectSettings() {
     ExternalProjectSettings result = myControl.getProjectSettings().clone();
     File externalProjectConfigFile = getExternalProjectConfigToUse(new File(result.getExternalProjectPath()));
@@ -189,7 +191,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
     return result;
   }
 
-  protected abstract void beforeCommit(@NotNull DataNode<ProjectData> dataNode, @NotNull Project project);
+  protected abstract void beforeCommit(@Nonnull DataNode<ProjectData> dataNode, @Nonnull Project project);
 
   /**
    * The whole import sequence looks like below:
@@ -211,7 +213,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * @param project                       current intellij project which should be configured by libraries and module library
    *                                      dependencies information available at the given gradle project
    */
-  private void setupLibraries(@NotNull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
+  private void setupLibraries(@Nonnull final DataNode<ProjectData> projectWithResolvedLibraries, final Project project) {
     ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
       @RequiredDispatchThread
       @Override
@@ -248,7 +250,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private File getProjectFile() {
     String path = myControl.getProjectSettings().getExternalProjectPath();
     return path == null ? null : new File(path);
@@ -261,7 +263,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * @throws ConfigurationException   if gradle project is not defined and can't be constructed
    */
   @SuppressWarnings("unchecked")
-  public void ensureProjectIsDefined(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public void ensureProjectIsDefined(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     final String externalSystemName = myExternalSystemId.getReadableName();
     File projectFile = getProjectFile();
     if (projectFile == null) {
@@ -271,12 +273,12 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
     final Ref<ConfigurationException> error = new Ref<ConfigurationException>();
     final ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
       @Override
-      public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
+      public void onSuccess(@javax.annotation.Nullable DataNode<ProjectData> externalProject) {
         myExternalProjectNode = externalProject;
       }
 
       @Override
-      public void onFailure(@NotNull String errorMessage, @Nullable String errorDetails) {
+      public void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails) {
         if (!StringUtil.isEmpty(errorDetails)) {
           LOG.warn(errorDetails);
         }
@@ -324,7 +326,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
   }
 
   @SuppressWarnings("unchecked")
-  private void executeAndRestoreDefaultProjectSettings(@NotNull Project project, @NotNull Runnable task) {
+  private void executeAndRestoreDefaultProjectSettings(@Nonnull Project project, @Nonnull Runnable task) {
     if (!project.isDefault()) {
       task.run();
       return;
@@ -360,10 +362,10 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * @param file  base external project config file
    * @return      external project config file to use
    */
-  @NotNull
-  protected abstract File getExternalProjectConfigToUse(@NotNull File file);
+  @Nonnull
+  protected abstract File getExternalProjectConfigToUse(@Nonnull File file);
 
-  @Nullable
+  @javax.annotation.Nullable
   public DataNode<ProjectData> getExternalProjectNode() {
     return myExternalProjectNode;
   }
@@ -373,7 +375,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * 
    * @param context  storage for the project/module settings.
    */
-  public void applyProjectSettings(@NotNull WizardContext context) {
+  public void applyProjectSettings(@Nonnull WizardContext context) {
     if (myExternalProjectNode == null) {
       assert false;
       return;
@@ -383,7 +385,7 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
     applyExtraSettings(context);
   }
 
-  protected abstract void applyExtraSettings(@NotNull WizardContext context);
+  protected abstract void applyExtraSettings(@Nonnull WizardContext context);
 
   /**
    * Allows to get {@link Project} instance to use. Basically, there are two alternatives -
@@ -393,8 +395,8 @@ public abstract class AbstractExternalProjectImportBuilder<C extends AbstractImp
    * @param wizardContext   current wizard context
    * @return                {@link Project} instance to use
    */
-  @NotNull
-  public Project getProject(@NotNull WizardContext wizardContext) {
+  @Nonnull
+  public Project getProject(@Nonnull WizardContext wizardContext) {
     Project result = wizardContext.getProject();
     if (result == null) {
       result = ProjectManager.getInstance().getDefaultProject();

@@ -27,8 +27,8 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
 
@@ -39,13 +39,13 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     }
 
     @Override
-    public boolean prefixMatches(@NotNull String name) {
+    public boolean prefixMatches(@Nonnull String name) {
       return name.equalsIgnoreCase(myPrefix);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public PrefixMatcher cloneWithPrefix(@NotNull String prefix) {
+    public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
       return new MyPrefixMatcher(prefix);
     }
   }
@@ -54,7 +54,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result) {
         Editor editor = parameters.getEditor();
         if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() ||
             editor.getCaretModel().getCaretCount() != 1) {
@@ -79,7 +79,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
     });
   }
 
-  private static boolean isCompletionEnabled(@NotNull CompletionParameters parameters) {
+  private static boolean isCompletionEnabled(@Nonnull CompletionParameters parameters) {
     if (!parameters.isAutoPopup()) {
       return false;
     }
@@ -89,7 +89,7 @@ public class PostfixTemplateCompletionContributor extends CompletionContributor 
   }
 
   @Nullable
-  public static PostfixLiveTemplate getPostfixLiveTemplate(@NotNull PsiFile file, @NotNull Editor editor) {
+  public static PostfixLiveTemplate getPostfixLiveTemplate(@Nonnull PsiFile file, @Nonnull Editor editor) {
     PostfixLiveTemplate postfixLiveTemplate = CustomLiveTemplate.EP_NAME.findExtension(PostfixLiveTemplate.class);
     return postfixLiveTemplate != null && TemplateManagerImpl.isApplicable(postfixLiveTemplate, editor, file) ? postfixLiveTemplate : null;
   }

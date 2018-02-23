@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -40,7 +40,7 @@ public final class Grayer extends Graphics2DDelegate {
     super.setColor(color);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Graphics create() {
     return new Grayer((Graphics2D)super.create(), myBackground);

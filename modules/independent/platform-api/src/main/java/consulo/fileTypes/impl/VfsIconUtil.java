@@ -32,9 +32,9 @@ import com.intellij.util.NullableFunction;
 import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -85,7 +85,7 @@ public class VfsIconUtil {
 
   private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
 
-  private static boolean wasEverInitialized(@NotNull Project project) {
+  private static boolean wasEverInitialized(@Nonnull Project project) {
     Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
     if (was == null) {
       if (project.isInitialized()) {
@@ -101,7 +101,7 @@ public class VfsIconUtil {
   }
 
   @Nullable
-  public static Icon getIcon(@NotNull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
+  public static Icon getIcon(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
     Icon icon = Iconable.LastComputedIcon.get(file, flags);
     if (icon == null) {
       icon = VirtualFilePresentation.getIcon(file);

@@ -53,8 +53,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -140,7 +140,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
   }
 
   @Override
-  public String getDimensionKeyForFocus(@NotNull String key) {
+  public String getDimensionKeyForFocus(@Nonnull String key) {
     Component owner = IdeFocusManager.getInstance(myProject).getFocusOwner();
     if (owner == null) return key;
 
@@ -172,7 +172,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
   }
 
   @Override
-  public DragSession createDragSession(MouseEvent mouseEvent, @NotNull DockableContent content) {
+  public DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content) {
     stopCurrentDragSession();
 
     for (DockContainer each : myContainers) {
@@ -217,13 +217,13 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     private Image myDragImage;
     private final Image myDefaultDragImage;
 
-    @NotNull
+    @Nonnull
     private final DockableContent myContent;
 
     private DockContainer myCurrentOverContainer;
     private final JLabel myImageContainer;
 
-    private MyDragSession(MouseEvent me, @NotNull DockableContent content) {
+    private MyDragSession(MouseEvent me, @Nonnull DockableContent content) {
       myWindow = new JWindow();
       myContent = content;
 
@@ -271,7 +271,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
       myWindow.setBounds(new Rectangle(showPoint, new Dimension(myDragImage.getWidth(null), myDragImage.getHeight(null))));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public DockContainer.ContentResponse getResponse(MouseEvent e) {
       RelativePoint point = new RelativePoint(e);
@@ -348,7 +348,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
   }
 
   @Nullable
-  private DockContainer findContainerFor(RelativePoint point, @NotNull DockableContent content) {
+  private DockContainer findContainerFor(RelativePoint point, @Nonnull DockableContent content) {
     for (DockContainer each : myContainers) {
       RelativeRectangle rec = each.getAcceptArea();
       if (rec.contains(point) && each.getContentResponse(content, point).canAccept()) {
@@ -399,8 +399,8 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
   }
 
-  @NotNull
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@NotNull VirtualFile file, @NotNull FileEditorManagerImpl fileEditorManager) {
+  @Nonnull
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
     DockContainer container = getFactory(DockableEditorContainerFactory.TYPE).createContainer(null);
     register(container);
 

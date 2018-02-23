@@ -24,41 +24,43 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ApplyPatchMergeTool implements MergeTool {
-  @NotNull
+  @Nonnull
   @Override
-  public MergeViewer createComponent(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return new MyApplyPatchViewer(context, (ApplyPatchMergeRequest)request);
   }
 
   @Override
-  public boolean canShow(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return request instanceof ApplyPatchMergeRequest;
   }
 
   private static class MyApplyPatchViewer extends ApplyPatchViewer implements MergeViewer {
-    @NotNull private final MergeContext myMergeContext;
-    @NotNull private final ApplyPatchMergeRequest myMergeRequest;
+    @Nonnull
+    private final MergeContext myMergeContext;
+    @Nonnull
+    private final ApplyPatchMergeRequest myMergeRequest;
 
-    public MyApplyPatchViewer(@NotNull MergeContext context, @NotNull ApplyPatchMergeRequest request) {
+    public MyApplyPatchViewer(@Nonnull MergeContext context, @Nonnull ApplyPatchMergeRequest request) {
       super(createWrapperDiffContext(context), request);
       myMergeContext = context;
       myMergeRequest = request;
     }
 
-    @NotNull
-    private static DiffContext createWrapperDiffContext(@NotNull MergeContext mergeContext) {
+    @Nonnull
+    private static DiffContext createWrapperDiffContext(@Nonnull MergeContext mergeContext) {
       return new MergeUtil.ProxyDiffContext(mergeContext);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ToolbarComponents init() {
       initPatchViewer();
@@ -73,7 +75,7 @@ public class ApplyPatchMergeTool implements MergeTool {
 
     @Nullable
     @Override
-    public Action getResolveAction(@NotNull final MergeResult result) {
+    public Action getResolveAction(@Nonnull final MergeResult result) {
       if (result == MergeResult.LEFT || result == MergeResult.RIGHT) return null;
 
       String caption = MergeUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);

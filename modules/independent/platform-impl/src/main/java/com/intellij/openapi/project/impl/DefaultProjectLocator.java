@@ -24,12 +24,11 @@ import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 public class DefaultProjectLocator extends ProjectLocator {
   @Nullable
@@ -46,7 +45,7 @@ public class DefaultProjectLocator extends ProjectLocator {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Project> getProjectsForFile(VirtualFile file) {
     final ProjectManager projectManager = ProjectManager.getInstance();

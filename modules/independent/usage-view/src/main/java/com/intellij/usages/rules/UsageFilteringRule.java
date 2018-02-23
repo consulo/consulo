@@ -17,19 +17,19 @@ package com.intellij.usages.rules;
 
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface UsageFilteringRule {
   UsageFilteringRule[] EMPTY_ARRAY = new UsageFilteringRule[0];
 
-  default boolean isVisible(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  default boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     return isVisible(usage);
   }
 
   /**
    * @deprecated implement {@link #isVisible(Usage, UsageTarget[])} instead
    */
-  default boolean isVisible(@NotNull Usage usage) {
+  default boolean isVisible(@Nonnull Usage usage) {
     throw new UnsupportedOperationException();
   }
 }

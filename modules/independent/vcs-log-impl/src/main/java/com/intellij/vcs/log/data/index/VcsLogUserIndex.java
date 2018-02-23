@@ -28,7 +28,7 @@ import com.intellij.vcs.log.data.VcsUserRegistryImpl;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import gnu.trove.THashMap;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -39,19 +39,20 @@ import static com.intellij.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
 public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
   private static final Logger LOG = Logger.getInstance(VcsLogUserIndex.class);
   public static final String USERS = "users";
-  @NotNull private final VcsUserRegistryImpl myUserRegistry;
+  @Nonnull
+  private final VcsUserRegistryImpl myUserRegistry;
 
-  public VcsLogUserIndex(@NotNull String logId,
-                         @NotNull VcsUserRegistryImpl userRegistry,
-                         @NotNull FatalErrorHandler consumer,
-                         @NotNull Disposable disposableParent) throws IOException {
+  public VcsLogUserIndex(@Nonnull String logId,
+                         @Nonnull VcsUserRegistryImpl userRegistry,
+                         @Nonnull FatalErrorHandler consumer,
+                         @Nonnull Disposable disposableParent) throws IOException {
     super(logId, USERS, getVersion(), new UserIndexer(userRegistry), VoidDataExternalizer.INSTANCE,
           consumer, disposableParent);
     myUserRegistry = userRegistry;
     ((UserIndexer)myIndexer).setFatalErrorConsumer(e -> consumer.consume(this, e));
   }
 
-  public TIntHashSet getCommitsForUsers(@NotNull Set<VcsUser> users) throws IOException, StorageException {
+  public TIntHashSet getCommitsForUsers(@Nonnull Set<VcsUser> users) throws IOException, StorageException {
     Set<Integer> ids = ContainerUtil.newHashSet();
     for (VcsUser user : users) {
       ids.add(myUserRegistry.getUserId(user));
@@ -60,16 +61,18 @@ public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
   }
 
   private static class UserIndexer implements DataIndexer<Integer, Void, VcsFullCommitDetails> {
-    @NotNull private final VcsUserRegistryImpl myRegistry;
-    @NotNull private Consumer<Exception> myFatalErrorConsumer = LOG::error;
+    @Nonnull
+    private final VcsUserRegistryImpl myRegistry;
+    @Nonnull
+    private Consumer<Exception> myFatalErrorConsumer = LOG::error;
 
-    public UserIndexer(@NotNull VcsUserRegistryImpl registry) {
+    public UserIndexer(@Nonnull VcsUserRegistryImpl registry) {
       myRegistry = registry;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Map<Integer, Void> map(@NotNull VcsFullCommitDetails inputData) {
+    public Map<Integer, Void> map(@Nonnull VcsFullCommitDetails inputData) {
       Map<Integer, Void> result = new THashMap<>();
 
       try {
@@ -82,7 +85,7 @@ public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
       return result;
     }
 
-    public void setFatalErrorConsumer(@NotNull Consumer<Exception> fatalErrorConsumer) {
+    public void setFatalErrorConsumer(@Nonnull Consumer<Exception> fatalErrorConsumer) {
       myFatalErrorConsumer = fatalErrorConsumer;
     }
   }

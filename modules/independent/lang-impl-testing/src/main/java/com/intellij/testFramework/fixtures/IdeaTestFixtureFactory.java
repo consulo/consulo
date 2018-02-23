@@ -18,8 +18,7 @@ package com.intellij.testFramework.fixtures;
 
 import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * This is to be provided by IDEA and not by plugin authors.
@@ -46,9 +45,9 @@ public abstract class IdeaTestFixtureFactory {
    * @param implClass implementation class. Should have accessible constructor, which
    * may take {@link com.intellij.testFramework.fixtures.TestFixtureBuilder} as argument.
    */
-  public abstract <T extends ModuleFixtureBuilder> void registerFixtureBuilder(@NotNull Class<T> aClass, @NotNull Class<? extends T> implClass);
+  public abstract <T extends ModuleFixtureBuilder> void registerFixtureBuilder(@Nonnull Class<T> aClass, @Nonnull Class<? extends T> implClass);
 
-  public abstract void registerFixtureBuilder(@NotNull Class<? extends ModuleFixtureBuilder> aClass, @NotNull String implClassName);
+  public abstract void registerFixtureBuilder(@Nonnull Class<? extends ModuleFixtureBuilder> aClass, @Nonnull String implClassName);
 
   /**
     * @deprecated use {@link IdeaTestFixtureFactory#createFixtureBuilder(String)}
@@ -57,15 +56,15 @@ public abstract class IdeaTestFixtureFactory {
     return createFixtureBuilder("");
   }
 
-  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createFixtureBuilder(@NotNull String name);
+  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createFixtureBuilder(@Nonnull String name);
 
   public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder();
 
-  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@Nullable TestModuleDescriptor projectDescriptor);
+  public abstract TestFixtureBuilder<IdeaProjectTestFixture> createLightFixtureBuilder(@javax.annotation.Nullable TestModuleDescriptor projectDescriptor);
 
-  public abstract CodeInsightTestFixture createCodeInsightFixture(@NotNull IdeaProjectTestFixture projectFixture);
+  public abstract CodeInsightTestFixture createCodeInsightFixture(@Nonnull IdeaProjectTestFixture projectFixture);
 
-  public abstract CodeInsightTestFixture createCodeInsightFixture(@NotNull IdeaProjectTestFixture projectFixture, @NotNull TempDirTestFixture tempDirFixture);
+  public abstract CodeInsightTestFixture createCodeInsightFixture(@Nonnull IdeaProjectTestFixture projectFixture, @Nonnull TempDirTestFixture tempDirFixture);
 
   public abstract TempDirTestFixture createTempDirTestFixture();
 }

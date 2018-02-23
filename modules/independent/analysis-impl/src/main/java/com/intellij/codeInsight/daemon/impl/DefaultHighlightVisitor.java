@@ -32,7 +32,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -52,15 +52,15 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private final CachedAnnotators myCachedAnnotators;
 
   @SuppressWarnings("UnusedDeclaration")
-  DefaultHighlightVisitor(@NotNull Project project, @NotNull CachedAnnotators cachedAnnotators) {
+  DefaultHighlightVisitor(@Nonnull Project project, @Nonnull CachedAnnotators cachedAnnotators) {
     this(project, true, true, false, cachedAnnotators);
   }
 
-  DefaultHighlightVisitor(@NotNull Project project,
+  DefaultHighlightVisitor(@Nonnull Project project,
                           boolean highlightErrorElements,
                           boolean runAnnotators,
                           boolean batchMode,
-                          @NotNull CachedAnnotators cachedAnnotators) {
+                          @Nonnull CachedAnnotators cachedAnnotators) {
     myProject = project;
     myHighlightErrorElements = highlightErrorElements;
     myRunAnnotators = runAnnotators;
@@ -71,15 +71,15 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   }
 
   @Override
-  public boolean suitableForFile(@NotNull final PsiFile file) {
+  public boolean suitableForFile(@Nonnull final PsiFile file) {
     return true;
   }
 
   @Override
-  public boolean analyze(@NotNull final PsiFile file,
+  public boolean analyze(@Nonnull final PsiFile file,
                          final boolean updateWholeFile,
-                         @NotNull final HighlightInfoHolder holder,
-                         @NotNull final Runnable action) {
+                         @Nonnull final HighlightInfoHolder holder,
+                         @Nonnull final Runnable action) {
     myHolder = holder;
     myAnnotationHolder = new AnnotationHolderImpl(holder.getAnnotationSession(), myBatchMode);
     try {
@@ -94,7 +94,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   }
 
   @Override
-  public void visit(@NotNull PsiElement element) {
+  public void visit(@Nonnull PsiElement element) {
     if (element instanceof PsiErrorElement) {
       if (myHighlightErrorElements) visitErrorElement((PsiErrorElement)element);
     }
@@ -112,7 +112,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
 
   @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
-  @NotNull
+  @Nonnull
   public HighlightVisitor clone() {
     return new DefaultHighlightVisitor(myProject, myHighlightErrorElements, myRunAnnotators, myBatchMode, myCachedAnnotators);
   }
@@ -150,7 +150,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     myHolder.add(info);
   }
 
-  private static HighlightInfo createErrorElementInfo(@NotNull PsiErrorElement element) {
+  private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
     String errorDescription = element.getErrorDescription();
     if (!range.isEmpty()) {

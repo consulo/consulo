@@ -28,8 +28,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutput;
@@ -143,7 +143,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InvertedIndexValueIterator<Value> getValueIterator() {
     if (myInputIdMapping != null) {
@@ -151,13 +151,13 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
         return new InvertedIndexValueIterator<Value>() {
           private Value value = (Value)myInputIdMapping;
 
-          @NotNull
+          @Nonnull
           @Override
           public ValueContainer.IntIterator getInputIdsIterator() {
             return getIntIteratorOutOfFileSetObject(getFileSetObject());
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public IntPredicate getValueAssociationPredicate() {
             return getPredicateOutOfFileSetObject(getFileSetObject());
@@ -212,13 +212,13 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
             throw new UnsupportedOperationException();
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public ValueContainer.IntIterator getInputIdsIterator() {
             return getIntIteratorOutOfFileSetObject(getFileSetObject());
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public IntPredicate getValueAssociationPredicate() {
             return getPredicateOutOfFileSetObject(getFileSetObject());
@@ -238,13 +238,13 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
   static class EmptyValueIterator<Value> extends EmptyIterator<Value> implements InvertedIndexValueIterator<Value> {
 
-    @NotNull
+    @Nonnull
     @Override
     public ValueContainer.IntIterator getInputIdsIterator() {
       throw new IllegalStateException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public IntPredicate getValueAssociationPredicate() {
       throw new IllegalStateException();
@@ -258,7 +258,8 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
   private static final EmptyValueIterator emptyIterator = new EmptyValueIterator();
 
-  private static @NotNull IntPredicate getPredicateOutOfFileSetObject(@Nullable Object input) {
+  private static @Nonnull
+  IntPredicate getPredicateOutOfFileSetObject(@Nullable Object input) {
     if (input == null) return EMPTY_PREDICATE;
 
     if (input instanceof Integer) {
@@ -274,7 +275,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     return ((ChangeBufferingList)input).intPredicate();
   }
 
-  private static @NotNull
+  private static @Nonnull
   ValueContainer.IntIterator getIntIteratorOutOfFileSetObject(@Nullable Object input) {
     if (input == null) return EMPTY_ITERATOR;
     if (input instanceof Integer){
@@ -342,7 +343,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     }
   };
 
-  @NotNull
+  @Nonnull
   public ValueContainerImpl<Value> copy() {
     ValueContainerImpl<Value> container = new ValueContainerImpl<Value>();
 
@@ -371,7 +372,8 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     return container;
   }
 
-  private @Nullable ChangeBufferingList ensureFileSetCapacityForValue(Value value, int count) {
+  private @Nullable
+  ChangeBufferingList ensureFileSetCapacityForValue(Value value, int count) {
     if (count <= 1) return null;
     Object fileSetObject = getFileSetObject(value);
 

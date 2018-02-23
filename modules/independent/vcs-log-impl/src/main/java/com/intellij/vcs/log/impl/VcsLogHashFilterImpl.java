@@ -16,19 +16,20 @@
 package com.intellij.vcs.log.impl;
 
 import com.intellij.vcs.log.VcsLogHashFilter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class VcsLogHashFilterImpl implements VcsLogHashFilter {
 
-  @NotNull private final Collection<String> myHashes;
+  @Nonnull
+  private final Collection<String> myHashes;
 
-  public VcsLogHashFilterImpl(@NotNull Collection<String> hashes) {
+  public VcsLogHashFilterImpl(@Nonnull Collection<String> hashes) {
     myHashes = hashes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<String> getHashes() {
     return myHashes;

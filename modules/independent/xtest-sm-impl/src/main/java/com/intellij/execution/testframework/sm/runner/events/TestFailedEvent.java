@@ -18,8 +18,8 @@ package com.intellij.execution.testframework.sm.runner.events;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestFailed;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,16 +38,16 @@ public class TestFailedEvent extends TreeNodeEvent {
   private boolean myExpectedFileTemp;
   private boolean myActualFileTemp;
 
-  public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError) {
+  public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError) {
     this(testFailed, testError, null);
   }
-  public TestFailedEvent(@NotNull TestFailed testFailed, boolean testError, @Nullable String expectedFilePath) {
+  public TestFailedEvent(@Nonnull TestFailed testFailed, boolean testError, @javax.annotation.Nullable String expectedFilePath) {
     this(testFailed, testError, expectedFilePath, null);
   }
-  public TestFailedEvent(@NotNull TestFailed testFailed,
+  public TestFailedEvent(@Nonnull TestFailed testFailed,
                          boolean testError,
                          @Nullable String expectedFilePath,
-                         @Nullable String actualFilePath) {
+                         @javax.annotation.Nullable String actualFilePath) {
     super(testFailed.getTestName(), TreeNodeEvent.getNodeId(testFailed));
     if (testFailed.getFailureMessage() == null) throw new NullPointerException();
     myLocalizedFailureMessage = testFailed.getFailureMessage();
@@ -88,7 +88,7 @@ public class TestFailedEvent extends TreeNodeEvent {
     return myActualFileTemp;
   }
 
-  private static long parseDuration(@Nullable String durationStr) {
+  private static long parseDuration(@javax.annotation.Nullable String durationStr) {
     if (!StringUtil.isEmpty(durationStr)) {
       try {
         return Long.parseLong(durationStr);
@@ -99,11 +99,11 @@ public class TestFailedEvent extends TreeNodeEvent {
     return -1;
   }
 
-  public TestFailedEvent(@NotNull String testName,
-                         @NotNull String localizedFailureMessage,
-                         @Nullable String stackTrace,
+  public TestFailedEvent(@Nonnull String testName,
+                         @Nonnull String localizedFailureMessage,
+                         @javax.annotation.Nullable String stackTrace,
                          boolean testError,
-                         @Nullable String comparisonFailureActualText,
+                         @javax.annotation.Nullable String comparisonFailureActualText,
                          @Nullable String comparisonFailureExpectedText) {
     this(testName,
          null,
@@ -119,15 +119,15 @@ public class TestFailedEvent extends TreeNodeEvent {
          -1);
   }
 
-  public TestFailedEvent(@Nullable String testName,
-                         @Nullable String id,
-                         @NotNull String localizedFailureMessage,
+  public TestFailedEvent(@javax.annotation.Nullable String testName,
+                         @javax.annotation.Nullable String id,
+                         @Nonnull String localizedFailureMessage,
                          @Nullable String stackTrace,
                          boolean testError,
                          @Nullable String comparisonFailureActualText,
                          @Nullable String comparisonFailureExpectedText,
-                         @Nullable String expectedFilePath,
-                         @Nullable String actualFilePath,
+                         @javax.annotation.Nullable String expectedFilePath,
+                         @javax.annotation.Nullable String actualFilePath,
                          boolean expectedFileTemp,
                          boolean actualFileTemp,
                          long durationMillis) {
@@ -151,12 +151,12 @@ public class TestFailedEvent extends TreeNodeEvent {
     myActualFileTemp = actualFileTemp;
   }
 
-  @NotNull
+  @Nonnull
   public String getLocalizedFailureMessage() {
     return myLocalizedFailureMessage;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getStacktrace() {
     return myStacktrace;
   }
@@ -170,13 +170,13 @@ public class TestFailedEvent extends TreeNodeEvent {
     return myComparisonFailureActualText;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getComparisonFailureExpectedText() {
     return myComparisonFailureExpectedText;
   }
 
   @Override
-  protected void appendToStringInfo(@NotNull StringBuilder buf) {
+  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
     append(buf, "localizedFailureMessage", myLocalizedFailureMessage);
     append(buf, "stacktrace", myStacktrace);
     append(buf, "isTestError", myTestError);
@@ -191,12 +191,12 @@ public class TestFailedEvent extends TreeNodeEvent {
     return myExpectedFilePath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getExpectedFilePath() {
     return myExpectedFilePath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getActualFilePath() {
     return myActualFilePath;
   }

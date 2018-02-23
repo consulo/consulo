@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author cdr
@@ -149,12 +149,12 @@ public class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@NotNull final LogicalPosition blockStart, @NotNull final LogicalPosition blockEnd) {
+  public void setBlockSelection(@Nonnull final LogicalPosition blockStart, @Nonnull final LogicalPosition blockEnd) {
     myHostModel.setBlockSelection(myInjectedEditor.injectedToHost(blockStart), myInjectedEditor.injectedToHost(blockEnd));
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionStarts() {
     int[] result = myHostModel.getBlockSelectionStarts();
     for (int i = 0; i < result.length; i++) {
@@ -164,7 +164,7 @@ public class SelectionModelWindow implements SelectionModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionEnds() {
     int[] result = myHostModel.getBlockSelectionEnds();
     for (int i = 0; i < result.length; i++) {

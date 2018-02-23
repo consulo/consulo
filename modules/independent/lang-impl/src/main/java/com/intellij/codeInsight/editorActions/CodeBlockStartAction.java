@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class CodeBlockStartAction extends EditorAction {
   public CodeBlockStartAction() {

@@ -19,8 +19,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getName() {
     return myName;
@@ -73,19 +73,19 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  public VirtualFile createChildData(final Object requestor, @NotNull @NonNls final String name) {
+  public VirtualFile createChildData(final Object requestor, @Nonnull @NonNls final String name) {
     final MockVirtualFile file = new MockVirtualFile(name);
     addChild(file);
     return file;
   }
 
-  public void addChild(@NotNull final MockVirtualFile child) {
+  public void addChild(@Nonnull final MockVirtualFile child) {
     child.setParent(this);
     myChildren.add(child);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getFileSystem() {
     return ourFileSystem;
   }
@@ -116,7 +116,7 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getParent() {
     return myParent;
   }
@@ -127,7 +127,7 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return new ByteArrayOutputStream() {
       @Override
@@ -148,7 +148,7 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     return myText.getBytes();
   }

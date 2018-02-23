@@ -38,8 +38,8 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.actions.BaseRefactoringAction;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   private static final String REFACTORING_NAME = RefactoringBundle.message("inline.title");
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     LOG.assertTrue(elements.length == 1);
     if (dataContext == null) {
       dataContext = DataManager.getInstance().getDataContext();
@@ -65,7 +65,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   }
 
   @Override
-  public void invoke(@NotNull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
     PsiElement element = dataContext.getData(LangDataKeys.PSI_ELEMENT);

@@ -27,9 +27,9 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -170,7 +170,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     getConfigurable().disposeUIResources();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myEp.id == null ? myEp.instanceClass : myEp.id;
@@ -223,7 +223,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
       myKids = kids;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Configurable[] getConfigurables() {
       return myKids;

@@ -20,8 +20,8 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -30,13 +30,13 @@ import java.util.List;
 
 public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain>
         extends GoToChangePopupBuilder.BaseGoToChangePopupAction<Chain>{
-  public ChangeGoToChangePopupAction(@NotNull Chain chain, @NotNull Consumer<Integer> onSelected) {
+  public ChangeGoToChangePopupAction(@Nonnull Chain chain, @Nonnull Consumer<Integer> onSelected) {
     super(chain, onSelected);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected JBPopup createPopup(@NotNull AnActionEvent e) {
+  protected JBPopup createPopup(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
 
@@ -64,12 +64,12 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   // Abstract
   //
 
-  protected abstract int findSelectedStep(@Nullable Change change);
+  protected abstract int findSelectedStep(@javax.annotation.Nullable Change change);
 
-  @NotNull
+  @Nonnull
   protected abstract List<Change> getChanges();
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract Change getCurrentSelection();
 
   //
@@ -77,12 +77,13 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   //
 
   private class MyChangesBrowser extends ChangesBrowser implements Runnable {
-    @NotNull private final Ref<JBPopup> myPopup;
+    @Nonnull
+    private final Ref<JBPopup> myPopup;
 
-    public MyChangesBrowser(@NotNull Project project,
-                            @NotNull List<Change> changes,
+    public MyChangesBrowser(@Nonnull Project project,
+                            @Nonnull List<Change> changes,
                             @Nullable final Change currentChange,
-                            @NotNull Ref<JBPopup> popup) {
+                            @Nonnull Ref<JBPopup> popup) {
       super(project, null, changes, null, false, false, null, MyUseCase.LOCAL_CHANGES, null);
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       setChangesToDisplay(changes);
@@ -102,7 +103,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       // remove diff action
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Runnable getDoubleClickHandler() {
       return this;
@@ -124,11 +125,12 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   }
 
   public abstract static class Fake<Chain extends DiffRequestChain> extends ChangeGoToChangePopupAction<Chain> {
-    @NotNull private final List<Change> myChanges;
+    @Nonnull
+    private final List<Change> myChanges;
     private final int mySelection;
 
     @SuppressWarnings("AbstractMethodCallInConstructor")
-    public Fake(@NotNull Chain chain, int selection, @NotNull Consumer<Integer> onSelected) {
+    public Fake(@Nonnull Chain chain, int selection, @Nonnull Consumer<Integer> onSelected) {
       super(chain, onSelected);
 
       mySelection = selection;
@@ -145,24 +147,24 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       }
     }
 
-    @NotNull
+    @Nonnull
     protected abstract FilePath getFilePath(int index);
 
-    @NotNull
+    @Nonnull
     protected abstract FileStatus getFileStatus(int index);
 
     @Override
-    protected int findSelectedStep(@Nullable Change change) {
+    protected int findSelectedStep(@javax.annotation.Nullable Change change) {
       return myChanges.indexOf(change);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<Change> getChanges() {
       return myChanges;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected Change getCurrentSelection() {
       if (mySelection < 0 || mySelection >= myChanges.size()) return null;
@@ -170,9 +172,10 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     }
 
     private static class FakeContentRevision implements ContentRevision {
-      @NotNull private final FilePath myFilePath;
+      @Nonnull
+      private final FilePath myFilePath;
 
-      public FakeContentRevision(@NotNull FilePath filePath) {
+      public FakeContentRevision(@Nonnull FilePath filePath) {
         myFilePath = filePath;
       }
 
@@ -182,13 +185,13 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
         return null;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public FilePath getFile() {
         return myFilePath;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public VcsRevisionNumber getRevisionNumber() {
         return VcsRevisionNumber.NULL;

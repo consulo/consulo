@@ -20,7 +20,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,8 +80,8 @@ public class JBSwingUtilities {
     };
   }
 
-  @NotNull
-  public static Graphics2D runGlobalCGTransform(@NotNull JComponent c, @NotNull Graphics g) {
+  @Nonnull
+  public static Graphics2D runGlobalCGTransform(@Nonnull JComponent c, @Nonnull Graphics g) {
     Graphics2D gg = (Graphics2D)g;
     for (PairFunction<JComponent, Graphics2D, Graphics2D> transform : ourGlobalTransform) {
       gg = ObjectUtils.notNull(transform.fun(c, gg));

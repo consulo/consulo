@@ -17,7 +17,7 @@ package consulo.ide.welcomeScreen;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -27,6 +27,6 @@ import java.util.function.Consumer;
  * @since 14-Sep-16
  */
 public abstract class WelcomeScreenSlideAction extends AnAction {
-  @NotNull
-  public abstract JComponent createSlide(@NotNull Disposable parentDisposable, @NotNull Consumer<String> titleChanger);
+  @Nonnull
+  public abstract JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull Consumer<String> titleChanger);
 }

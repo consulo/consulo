@@ -21,8 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.SplitLayout;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,7 +48,7 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
 
   @RequiredUIAccess
   @Override
-  public SplitLayout setFirstComponent(@NotNull Component component) {
+  public SplitLayout setFirstComponent(@Nonnull Component component) {
     Component old = myFirstComponent;
     if (old != null) {
       removeComponent((com.vaadin.ui.Component)old);
@@ -62,7 +61,7 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
 
   @RequiredUIAccess
   @Override
-  public SplitLayout setSecondComponent(@NotNull Component component) {
+  public SplitLayout setSecondComponent(@Nonnull Component component) {
     Component old = mySecondComponent;
     if (old != null) {
       removeComponent((com.vaadin.ui.Component)old);
@@ -102,7 +101,7 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
     return list.iterator();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
@@ -110,7 +109,7 @@ public class WGwtSplitLayoutImpl extends AbstractComponentContainer implements S
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

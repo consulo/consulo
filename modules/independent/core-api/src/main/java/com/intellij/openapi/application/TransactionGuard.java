@@ -18,8 +18,8 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A service managing model transactions.<p/>
@@ -117,7 +117,7 @@ public abstract class TransactionGuard {
    *                         and so it won't be run after it has been disposed
    * @param transaction code to execute inside a transaction.
    */
-  public static void submitTransaction(@NotNull Disposable parentDisposable, @NotNull Runnable transaction) {
+  public static void submitTransaction(@Nonnull Disposable parentDisposable, @Nonnull Runnable transaction) {
     TransactionGuard guard = getInstance();
     guard.submitTransaction(parentDisposable, guard.getContextTransaction(), transaction);
   }
@@ -127,13 +127,13 @@ public abstract class TransactionGuard {
    * {@link Application#invokeLater(Runnable, ModalityState)} and similar calls will be guaranteed to also run in a write-safe context.
    * {@link ModalityState#NON_MODAL} is always write-safe, {@link ModalityState#any()} is always write-unsafe.
    */
-  public abstract void assertWriteSafeContext(@NotNull ModalityState modality);
+  public abstract void assertWriteSafeContext(@Nonnull ModalityState modality);
 
   /**
    * Schedules a given runnable to be executed inside a transaction later on Swing thread.
    * Same as {@link #submitTransaction(Disposable, Runnable)}, but the runnable is never executed immediately.
    */
-  public abstract void submitTransactionLater(@NotNull Disposable parentDisposable, @NotNull Runnable transaction);
+  public abstract void submitTransactionLater(@Nonnull Disposable parentDisposable, @Nonnull Runnable transaction);
 
   /**
    * Schedules a transaction and waits for it to be completed. Logs an error if invoked on UI thread inside an incompatible transaction,
@@ -141,7 +141,7 @@ public abstract class TransactionGuard {
    * @see #submitTransaction(Disposable, TransactionId, Runnable)
    * @throws ProcessCanceledException if current thread is interrupted
    */
-  public abstract void submitTransactionAndWait(@NotNull Runnable transaction) throws ProcessCanceledException;
+  public abstract void submitTransactionAndWait(@Nonnull Runnable transaction) throws ProcessCanceledException;
 
   /**
    * Executes the given runnable inside a transaction as soon as possible on the UI thread. The runnable is executed either when there's
@@ -154,7 +154,7 @@ public abstract class TransactionGuard {
    * @param transaction code to execute inside a transaction.
    * @see #getContextTransaction()
    */
-  public abstract void submitTransaction(@NotNull Disposable parentDisposable, @Nullable TransactionId expectedContext, @NotNull Runnable transaction);
+  public abstract void submitTransaction(@Nonnull Disposable parentDisposable, @Nullable TransactionId expectedContext, @Nonnull Runnable transaction);
 
   /**
    * @return the id of the currently running transaction for using in {@link #submitTransaction(Disposable, TransactionId, Runnable)},

@@ -22,8 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Interface that should be implemented by the language in order to provide inline functionality and possibly
@@ -60,19 +59,21 @@ public interface InlineHandler {
    * @return <code>Settings</code> object in case refactoring should be performed or null otherwise
 
    */
-  @Nullable Settings prepareInlineElement(@NotNull PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
+  @javax.annotation.Nullable
+  Settings prepareInlineElement(@Nonnull PsiElement element, @javax.annotation.Nullable Editor editor, boolean invokedOnReference);
 
   /**
    * @param element inlined element
    */
-  void removeDefinition(@NotNull PsiElement element, @NotNull Settings settings);
+  void removeDefinition(@Nonnull PsiElement element, @Nonnull Settings settings);
 
   /**
    * @param element inlined element
    * @param settings
    * @return Inliner instance to be used for inlining references in this language
    */
-  @Nullable Inliner createInliner(@NotNull PsiElement element, @NotNull Settings settings);
+  @javax.annotation.Nullable
+  Inliner createInliner(@Nonnull PsiElement element, @Nonnull Settings settings);
 
   interface Inliner {
     /**
@@ -81,14 +82,14 @@ public interface InlineHandler {
      * @return set of conflicts inline of this element to the place denoted by reference would incur
      * or null if no conflicts detected.
      */
-    @Nullable
-    MultiMap<PsiElement, String> getConflicts(@NotNull PsiReference reference, @NotNull PsiElement referenced);
+    @javax.annotation.Nullable
+    MultiMap<PsiElement, String> getConflicts(@Nonnull PsiReference reference, @Nonnull PsiElement referenced);
 
     /**
      * Perform actual inline of element to the point where it is referenced
      * @param usage usage of inlined element
      * @param referenced inlined element
      */
-    void inlineUsage(@NotNull UsageInfo usage, @NotNull PsiElement referenced);
+    void inlineUsage(@Nonnull UsageInfo usage, @Nonnull PsiElement referenced);
   }
 }

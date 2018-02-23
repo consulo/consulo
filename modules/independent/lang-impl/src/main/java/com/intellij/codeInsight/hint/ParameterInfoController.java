@@ -40,8 +40,8 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -51,14 +51,16 @@ import java.util.List;
 
 public class ParameterInfoController implements Disposable {
   private final Project myProject;
-  @NotNull private final Editor myEditor;
+  @Nonnull
+  private final Editor myEditor;
 
   private final RangeMarker myLbraceMarker;
   private final LightweightHint myHint;
   private final ParameterInfoComponent myComponent;
 
   private final CaretListener myEditorCaretListener;
-  @NotNull private final ParameterInfoHandler<Object, Object> myHandler;
+  @Nonnull
+  private final ParameterInfoHandler<Object, Object> myHandler;
   private final ShowParameterInfoHandler.BestLocationPointProvider myProvider;
 
   private final Alarm myAlarm = new Alarm();
@@ -104,7 +106,7 @@ public class ParameterInfoController implements Disposable {
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public Editor getEditor() {
         return myEditor;
       }
@@ -145,7 +147,7 @@ public class ParameterInfoController implements Disposable {
     }
   }
 
-  private static List<ParameterInfoController> getAllControllers(@NotNull Editor editor) {
+  private static List<ParameterInfoController> getAllControllers(@Nonnull Editor editor) {
     List<ParameterInfoController> array = editor.getUserData(ALL_CONTROLLERS_KEY);
     if (array == null){
       array = new ArrayList<ParameterInfoController>();
@@ -158,12 +160,12 @@ public class ParameterInfoController implements Disposable {
     return findControllerAtOffset(editor, lbraceOffset) != null;
   }
 
-  public ParameterInfoController(@NotNull Project project,
-                                 @NotNull Editor editor,
+  public ParameterInfoController(@Nonnull Project project,
+                                 @Nonnull Editor editor,
                                  int lbraceOffset,
-                                 @NotNull LightweightHint hint,
-                                 @NotNull ParameterInfoHandler handler,
-                                 @NotNull ShowParameterInfoHandler.BestLocationPointProvider provider) {
+                                 @Nonnull LightweightHint hint,
+                                 @Nonnull ParameterInfoHandler handler,
+                                 @Nonnull ShowParameterInfoHandler.BestLocationPointProvider provider) {
     myProject = project;
     myEditor = editor;
     myHandler = handler;
@@ -221,7 +223,7 @@ public class ParameterInfoController implements Disposable {
     myEditor.getCaretModel().removeCaretListener(myEditorCaretListener);
   }
 
-  private void adjustPositionForLookup(@NotNull Lookup lookup) {
+  private void adjustPositionForLookup(@Nonnull Lookup lookup) {
     if (!myHint.isVisible() || myEditor.isDisposed()) {
       Disposer.dispose(this);
       return;
@@ -376,7 +378,7 @@ public class ParameterInfoController implements Disposable {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Editor getEditor() {
       return myEditor;
     }

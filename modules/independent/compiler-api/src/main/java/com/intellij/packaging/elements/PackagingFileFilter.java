@@ -16,7 +16,7 @@
 
 package com.intellij.packaging.elements;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.compiler.CompileContext;
 
@@ -25,6 +25,6 @@ import com.intellij.openapi.compiler.CompileContext;
  */
 public abstract class PackagingFileFilter {
 
-  public abstract boolean accept(@NotNull VirtualFile virtualFile, @NotNull CompileContext context);
+  public abstract boolean accept(@Nonnull VirtualFile virtualFile, @Nonnull CompileContext context);
 
 }

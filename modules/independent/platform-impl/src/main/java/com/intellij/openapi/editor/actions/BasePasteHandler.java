@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
@@ -33,7 +33,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
   protected Transferable myTransferable;
 
   @Override
-  public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     return !editor.isViewer();
   }
 

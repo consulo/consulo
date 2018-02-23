@@ -19,15 +19,15 @@ package com.intellij.codeHighlighting;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Should be implemented to include corresponding pass in code smells check
  */
 public interface MainHighlightingPassFactory extends TextEditorHighlightingPassFactory {
   @Nullable
-  TextEditorHighlightingPass createMainHighlightingPass(@NotNull PsiFile file,
-                                                        @NotNull final Document document,
-                                                        @NotNull HighlightInfoProcessor highlightInfoProcessor);
+  TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
+                                                        @Nonnull final Document document,
+                                                        @Nonnull HighlightInfoProcessor highlightInfoProcessor);
 }

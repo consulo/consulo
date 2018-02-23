@@ -15,15 +15,17 @@
  */
 package com.intellij.vcs.log.graph.utils;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.BitSet;
 
 public class UnsignedBitSet implements Cloneable {
-  @NotNull private final BitSet myPositiveSet;
-  @NotNull private final BitSet myNegativeSet;
+  @Nonnull
+  private final BitSet myPositiveSet;
+  @Nonnull
+  private final BitSet myNegativeSet;
 
-  public UnsignedBitSet(@NotNull BitSet positiveSet, @NotNull BitSet negativeSet) {
+  public UnsignedBitSet(@Nonnull BitSet positiveSet, @Nonnull BitSet negativeSet) {
     myPositiveSet = positiveSet;
     myNegativeSet = negativeSet;
   }

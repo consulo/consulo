@@ -30,8 +30,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -59,7 +59,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   private ModuleRootsProcessor myRootsProcessor;
   private ModuleRootManager myModuleRootManager;
 
-  public ModuleWithDependenciesScope(@NotNull Module module, @ScopeConstant int options) {
+  public ModuleWithDependenciesScope(@Nonnull Module module, @ScopeConstant int options) {
     super(module.getProject());
     myModule = module;
     myOptions = options;
@@ -109,7 +109,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     }
     else {
       Collections.addAll(roots, en.roots(new NotNullFunction<OrderEntry, OrderRootType>() {
-        @NotNull
+        @Nonnull
         @Override
         public OrderRootType fun(OrderEntry entry) {
           if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) {
@@ -126,7 +126,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Module getModule() {
     return myModule;
   }
@@ -135,7 +135,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     return (myOptions & option) != 0;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     return hasOption(COMPILE) ? PsiBundle.message("search.scope.module", myModule.getName())
@@ -143,12 +143,12 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return myModules.contains(aModule);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule, boolean testSources) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
     return isSearchInModuleContent(aModule) && (hasOption(TESTS) || !testSources);
   }
 
@@ -158,7 +158,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     if (hasOption(CONTENT)) {
       return myRoots.contains(myProjectFileIndex.getContentRootForFile(file));
     }
@@ -176,7 +176,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     VirtualFile r1 = getFileRoot(file1);
     VirtualFile r2 = getFileRoot(file2);
     if (Comparing.equal(r1, r2)) return 0;
@@ -192,7 +192,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   }
 
   @Nullable
-  private VirtualFile getFileRoot(@NotNull VirtualFile file) {
+  private VirtualFile getFileRoot(@Nonnull VirtualFile file) {
     if (myProjectFileIndex.isInContent(file)) {
       return myProjectFileIndex.getSourceRootForFile(file);
     }

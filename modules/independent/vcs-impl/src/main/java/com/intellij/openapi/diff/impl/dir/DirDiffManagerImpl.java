@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -40,8 +40,8 @@ public class DirDiffManagerImpl extends DirDiffManager {
   }
 
   @Override
-  public void showDiff(@NotNull final DiffElement dir1,
-                       @NotNull final DiffElement dir2,
+  public void showDiff(@Nonnull final DiffElement dir1,
+                       @Nonnull final DiffElement dir2,
                        final DirDiffSettings settings,
                        @Nullable final Runnable onWindowClose) {
     final DirDiffTableModel model = new DirDiffTableModel(myProject, dir1, dir2, settings);
@@ -82,17 +82,17 @@ public class DirDiffManagerImpl extends DirDiffManager {
   }
 
   @Override
-  public void showDiff(@NotNull DiffElement dir1, @NotNull DiffElement dir2, DirDiffSettings settings) {
+  public void showDiff(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2, DirDiffSettings settings) {
     showDiff(dir1, dir2, settings, null);
   }
 
   @Override
-  public void showDiff(@NotNull DiffElement dir1, @NotNull DiffElement dir2) {
+  public void showDiff(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2) {
     showDiff(dir1, dir2, new DirDiffSettings());
   }
 
   @Override
-  public boolean canShow(@NotNull DiffElement dir1, @NotNull DiffElement dir2) {
+  public boolean canShow(@Nonnull DiffElement dir1, @Nonnull DiffElement dir2) {
     return dir1.isContainer() && dir2.isContainer();
   }
 

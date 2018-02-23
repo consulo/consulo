@@ -26,8 +26,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.NetUtils;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.*;
@@ -136,21 +136,21 @@ public class CommonProxy extends ProxySelector {
     Authenticator.setDefault(myAuthenticator);
   }
 
-  public void noProxy(@NotNull final String protocol, @NotNull final String host, final int port) {
+  public void noProxy(@Nonnull final String protocol, @Nonnull final String host, final int port) {
     synchronized (myLock) {
       LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
       myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
     }
   }
 
-  public void removeNoProxy(@NotNull final String protocol, @NotNull final String host, final int port) {
+  public void removeNoProxy(@Nonnull final String protocol, @Nonnull final String host, final int port) {
     synchronized (myLock) {
       LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
       myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
     }
   }
 
-  public void noAuthentication(@NotNull final String protocol, @NotNull final String host, final int port) {
+  public void noAuthentication(@Nonnull final String protocol, @Nonnull final String host, final int port) {
     synchronized (myLock) {
       LOG.debug("no proxy added: " + protocol + "://" + host + ":" + port);
       myNoProxy.add(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
@@ -158,42 +158,42 @@ public class CommonProxy extends ProxySelector {
   }
 
   @SuppressWarnings("unused")
-  public void removeNoAuthentication(@NotNull final String protocol, @NotNull final String host, final int port) {
+  public void removeNoAuthentication(@Nonnull final String protocol, @Nonnull final String host, final int port) {
     synchronized (myLock) {
       LOG.debug("no proxy removed: " + protocol + "://" + host + ":" + port);
       myNoProxy.remove(Pair.create(new HostInfo(protocol, host, port), Thread.currentThread()));
     }
   }
 
-  public void setCustom(@NotNull final String key, @NotNull final ProxySelector proxySelector) {
+  public void setCustom(@Nonnull final String key, @Nonnull final ProxySelector proxySelector) {
     synchronized (myLock) {
       LOG.debug("custom set: " + key + ", " + proxySelector.toString());
       myCustom.put(key, proxySelector);
     }
   }
 
-  public void setCustomAuth(@NotNull final String key, final NonStaticAuthenticator authenticator) {
+  public void setCustomAuth(@Nonnull final String key, final NonStaticAuthenticator authenticator) {
     synchronized (myLock) {
       LOG.debug("custom auth set: " + key + ", " + authenticator.toString());
       myCustomAuth.put(key, authenticator);
     }
   }
 
-  public void removeCustomAuth(@NotNull final String key) {
+  public void removeCustomAuth(@Nonnull final String key) {
     synchronized (myLock) {
       LOG.debug("custom auth removed: " + key);
       myCustomAuth.remove(key);
     }
   }
 
-  public void removeCustom(@NotNull final String key) {
+  public void removeCustom(@Nonnull final String key) {
     synchronized (myLock) {
       LOG.debug("custom set: " + key);
       myCustom.remove(key);
     }
   }
 
-  public List<Proxy> select(@NotNull URL url) {
+  public List<Proxy> select(@Nonnull URL url) {
     return select(createUri(url));
   }
 
@@ -238,7 +238,7 @@ public class CommonProxy extends ProxySelector {
     }
   }
 
-  private static int correctPortByProtocol(@NotNull URI uri) {
+  private static int correctPortByProtocol(@Nonnull URI uri) {
     if (uri.getPort() == -1) {
       if ("http".equals(uri.getScheme())) {
         return ProtocolDefaultPorts.HTTP;
@@ -347,7 +347,7 @@ public class CommonProxy extends ProxySelector {
     public final String myHost;
     public final int myPort;
 
-    public HostInfo(@Nullable String protocol, @NotNull String host, int port) {
+    public HostInfo(@Nullable String protocol, @Nonnull String host, int port) {
       myPort = port;
       myHost = host;
       myProtocol = protocol;

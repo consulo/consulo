@@ -57,8 +57,8 @@ import com.intellij.util.ui.*;
 import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -297,7 +297,7 @@ public abstract class DialogWrapper {
    * @param canBeParent can be parent
    * @throws IllegalStateException if the dialog is invoked not on the event dispatch thread
    */
-  protected DialogWrapper(@NotNull Component parent, boolean canBeParent) {
+  protected DialogWrapper(@Nonnull Component parent, boolean canBeParent) {
     ensureEventDispatchThread();
     myPeer = createPeer(parent, canBeParent);
     createDefaultActions();
@@ -306,7 +306,7 @@ public abstract class DialogWrapper {
   //validation
   private final Alarm myValidationAlarm = new Alarm(getValidationThreadToUse(), myDisposable);
 
-  @NotNull
+  @Nonnull
   protected Alarm.ThreadToUse getValidationThreadToUse() {
     return Alarm.ThreadToUse.SWING_THREAD;
   }
@@ -349,7 +349,7 @@ public abstract class DialogWrapper {
    * @return <code>List&lt;ValidationInfo&gt;</code> of invalid fields. List
    * is empty if no errors found.
    */
-  @NotNull
+  @Nonnull
   protected List<ValidationInfo> doValidateAll() {
     ValidationInfo vi = doValidate();
     return vi != null ? Collections.singletonList(vi) : Collections.EMPTY_LIST;
@@ -365,7 +365,7 @@ public abstract class DialogWrapper {
     UIUtil.invokeLaterIfNeeded(() -> IdeGlassPaneUtil.installPainter(getContentPanel(), myErrorPainter, myDisposable));
   }
 
-  protected void updateErrorInfo(@NotNull List<ValidationInfo> info) {
+  protected void updateErrorInfo(@Nonnull List<ValidationInfo> info) {
     boolean updateNeeded = Registry.is("ide.inplace.errors.balloon") ? !myInfo.equals(info) : !myErrorText.isTextSet(info);
 
     if (updateNeeded) {
@@ -388,15 +388,15 @@ public abstract class DialogWrapper {
     myPeer.setUndecorated(undecorated);
   }
 
-  public final void addMouseListener(@NotNull MouseListener listener) {
+  public final void addMouseListener(@Nonnull MouseListener listener) {
     myPeer.addMouseListener(listener);
   }
 
-  public final void addMouseListener(@NotNull MouseMotionListener listener) {
+  public final void addMouseListener(@Nonnull MouseMotionListener listener) {
     myPeer.addMouseListener(listener);
   }
 
-  public final void addKeyListener(@NotNull KeyListener listener) {
+  public final void addKeyListener(@Nonnull KeyListener listener) {
     myPeer.addKeyListener(listener);
   }
 
@@ -569,8 +569,8 @@ public abstract class DialogWrapper {
     return panel;
   }
 
-  @NotNull
-  private Action[] filter(@NotNull Action[] actions) {
+  @Nonnull
+  private Action[] filter(@Nonnull Action[] actions) {
     ArrayList<Action> answer = new ArrayList<Action>();
     for (Action action : actions) {
       if (action != null && (ApplicationInfo.contextHelpAvailable() || action != getHelpAction())) {
@@ -592,8 +592,8 @@ public abstract class DialogWrapper {
     return false;
   }
 
-  @NotNull
-  public static JPanel addDoNotShowCheckBox(JComponent southPanel, @NotNull JComponent checkBox) {
+  @Nonnull
+  public static JPanel addDoNotShowCheckBox(JComponent southPanel, @Nonnull JComponent checkBox) {
     final JPanel panel = new JPanel(new BorderLayout());
 
     JPanel wrapper = new JPanel(new GridBagLayout());
@@ -606,7 +606,7 @@ public abstract class DialogWrapper {
     return panel;
   }
 
-  private boolean hasFocusedAction(@NotNull Action[] actions) {
+  private boolean hasFocusedAction(@Nonnull Action[] actions) {
     for (Action action : actions) {
       if (action.getValue(FOCUSED_ACTION) != null && (Boolean)action.getValue(FOCUSED_ACTION)) {
         return true;
@@ -616,8 +616,8 @@ public abstract class DialogWrapper {
     return false;
   }
 
-  @NotNull
-  private JPanel createButtons(@NotNull Action[] actions, @NotNull Map<Action, JButton> buttons) {
+  @Nonnull
+  private JPanel createButtons(@Nonnull Action[] actions, @Nonnull Map<Action, JButton> buttons) {
     if (!UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
       final List<Action> actionList = new ArrayList<Action>();
       for (Action action : actions) {
@@ -664,7 +664,7 @@ public abstract class DialogWrapper {
    * @return button for specified action or null if it's not found
    */
   @Nullable
-  protected JButton getButton(@NotNull Action action) {
+  protected JButton getButton(@Nonnull Action action) {
     return myButtonMap.get(action);
   }
 
@@ -767,7 +767,7 @@ public abstract class DialogWrapper {
     }
   }
 
-  protected DialogWrapperPeer createPeer(@NotNull Component parent, final boolean canBeParent) {
+  protected DialogWrapperPeer createPeer(@Nonnull Component parent, final boolean canBeParent) {
     return DialogWrapperPeerFactory.getInstance().createPeer(this, parent, canBeParent);
   }
 
@@ -1030,7 +1030,7 @@ public abstract class DialogWrapper {
    * @see #createSouthPanel
    * @see #createJButtonForAction
    */
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     if (getHelpId() == null) {
       if (SystemInfo.isMac) {
@@ -1047,7 +1047,7 @@ public abstract class DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createLeftSideActions() {
     return new Action[0];
   }
@@ -1057,7 +1057,7 @@ public abstract class DialogWrapper {
    * <code>doOKAction()</code> method.
    * @see #doOKAction
    */
-  @NotNull
+  @Nonnull
   protected Action getOKAction() {
     return myOKAction;
   }
@@ -1067,7 +1067,7 @@ public abstract class DialogWrapper {
    * <code>doCancelAction()</code> method.
    * @see #doCancelAction
    */
-  @NotNull
+  @Nonnull
   protected Action getCancelAction() {
     return myCancelAction;
   }
@@ -1077,7 +1077,7 @@ public abstract class DialogWrapper {
    * <code>doHelpAction()</code> method.
    * @see #doHelpAction
    */
-  @NotNull
+  @Nonnull
   protected Action getHelpAction() {
     return myHelpAction;
   }
@@ -1269,7 +1269,7 @@ public abstract class DialogWrapper {
     }
   }
 
-  protected void initRootPanel(@NotNull JPanel root) {
+  protected void initRootPanel(@Nonnull JPanel root) {
     final JPanel northSection = new JPanel(new BorderLayout());
     root.add(northSection, BorderLayout.NORTH);
 
@@ -1622,7 +1622,7 @@ public abstract class DialogWrapper {
    *
    * @return result callback
    */
-  @NotNull
+  @Nonnull
   public AsyncResult<Boolean> showAndGetOk() {
     final AsyncResult<Boolean> result = new AsyncResult<Boolean>();
 
@@ -1709,7 +1709,7 @@ public abstract class DialogWrapper {
     }
   }
 
-  private void registerForEveryKeyboardShortcut(ActionListener action, @NotNull ShortcutSet shortcuts) {
+  private void registerForEveryKeyboardShortcut(ActionListener action, @Nonnull ShortcutSet shortcuts) {
     for (Shortcut shortcut : shortcuts.getShortcuts()) {
       if (shortcut instanceof KeyboardShortcut) {
         KeyboardShortcut ks = (KeyboardShortcut)shortcut;
@@ -1911,7 +1911,7 @@ public abstract class DialogWrapper {
     setErrorInfoAll((text == null) ? Collections.EMPTY_LIST : Collections.singletonList(new ValidationInfo(text, component)));
   }
 
-  protected void setErrorInfoAll(@NotNull List<ValidationInfo> info) {
+  protected void setErrorInfoAll(@Nonnull List<ValidationInfo> info) {
     if (myInfo.equals(info)) return;
 
     myErrorTextAlarm.cancelAllRequests();
@@ -2046,7 +2046,7 @@ public abstract class DialogWrapper {
     return null;
   }
 
-  private void resizeWithAnimation(@NotNull final Dimension size) {
+  private void resizeWithAnimation(@Nonnull final Dimension size) {
     //todo[kb]: fix this PITA
     myResizeInProgress = true;
     if (!Registry.is("enable.animation.on.dialogs")) {
@@ -2118,7 +2118,7 @@ public abstract class DialogWrapper {
       return !errors.isEmpty();
     }
 
-    private boolean isTextSet(@NotNull List<ValidationInfo> info) {
+    private boolean isTextSet(@Nonnull List<ValidationInfo> info) {
       if (info.isEmpty()) {
         return errors.isEmpty();
       }
@@ -2273,7 +2273,7 @@ public abstract class DialogWrapper {
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDoNotShowMessage() {
         return CommonBundle.message("dialog.options.do.not.ask");
@@ -2388,7 +2388,7 @@ public abstract class DialogWrapper {
       return true;
     }
 
-    private void setValidationInfo(@NotNull List<ValidationInfo> info) {
+    private void setValidationInfo(@Nonnull List<ValidationInfo> info) {
       this.info = info;
     }
   }

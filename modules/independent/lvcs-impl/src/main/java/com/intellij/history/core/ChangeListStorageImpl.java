@@ -31,8 +31,8 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.storage.AbstractStorage;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
@@ -134,8 +134,8 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                                               NotificationType.ERROR,
                                               new NotificationListener() {
                                                 @Override
-                                                public void hyperlinkUpdate(@NotNull Notification notification,
-                                                                            @NotNull HyperlinkEvent event) {
+                                                public void hyperlinkUpdate(@Nonnull Notification notification,
+                                                                            @Nonnull HyperlinkEvent event) {
                                                   if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                                                     if ("url".equals(event.getDescription())) {
                                                       BrowserUtil.launchBrowser("http://youtrack.jetbrains.net/issue/IDEA-71270");
@@ -193,7 +193,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
   }
 
-  @NotNull
+  @Nonnull
   private ChangeSetHolder doReadBlock(int id) throws IOException {
     DataInputStream in = myStorage.readStream(id);
     try {

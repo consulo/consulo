@@ -16,8 +16,8 @@
 package com.intellij.ide.util;
 
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Shows dialog with two tabs: Project View-like tree and Goto symbol-like list with quick search capability
@@ -35,7 +35,7 @@ public interface TreeFileChooser {
   /**
    * @param file to be selected in tree view tab of this dialog
    */
-  void selectFile(@NotNull PsiFile file);
+  void selectFile(@Nonnull PsiFile file);
 
   void showDialog();
 

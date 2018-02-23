@@ -33,8 +33,8 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +109,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     settings.setShowForParamsWithSameType(myShowWhenMultipleParamsWithSameType.isSelected());
   }
 
-  private static void storeBlackListDiff(@NotNull Language language, @NotNull String text) {
+  private static void storeBlackListDiff(@Nonnull Language language, @Nonnull String text) {
     Set<String> updatedBlackList = StringUtil
             .split(text, "\n")
             .stream()
@@ -185,8 +185,8 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     });
   }
 
-  @NotNull
-  private static String getLanguageBlackList(@NotNull Language language) {
+  @Nonnull
+  private static String getLanguageBlackList(@Nonnull Language language) {
     InlayParameterHintsProvider hintsProvider = InlayParameterHintsProvider.EP.forLanguage(language);
     if (hintsProvider == null) {
       return "";
@@ -196,7 +196,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     return StringUtil.join(blackList, "\n");
   }
 
-  @NotNull
+  @Nonnull
   private static List<Language> getBaseLanguagesWithProviders() {
     return Language.getRegisteredLanguages()
             .stream()
@@ -206,7 +206,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
             .collect(Collectors.toList());
   }
 
-  private static EditorTextField createEditor(@NotNull String text, @Nullable String newPreselectedItem) {
+  private static EditorTextField createEditor(@Nonnull String text, @Nullable String newPreselectedItem) {
     final TextRange range;
     if (newPreselectedItem != null) {
       text += "\n";
@@ -222,8 +222,8 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     return createEditorField(text, range);
   }
 
-  @NotNull
-  private static EditorTextField createEditorField(@NotNull String text, @Nullable TextRange rangeToSelect) {
+  @Nonnull
+  private static EditorTextField createEditorField(@Nonnull String text, @Nullable TextRange rangeToSelect) {
     Document document = EditorFactory.getInstance().createDocument(text);
     EditorTextField field = new EditorTextField(document, null, PlainTextFileType.INSTANCE, false, false);
     field.setPreferredSize(new Dimension(200, 350));

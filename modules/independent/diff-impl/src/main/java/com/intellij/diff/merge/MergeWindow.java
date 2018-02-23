@@ -23,8 +23,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,12 @@ import java.util.List;
 
 public class MergeWindow {
   @Nullable private final Project myProject;
-  @NotNull private final MergeRequest myMergeRequest;
+  @Nonnull
+  private final MergeRequest myMergeRequest;
 
   private MyDialog myWrapper;
 
-  public MergeWindow(@Nullable Project project, @NotNull MergeRequest mergeRequest) {
+  public MergeWindow(@Nullable Project project, @Nonnull MergeRequest mergeRequest) {
     myProject = project;
     myMergeRequest = mergeRequest;
   }
@@ -51,7 +52,7 @@ public class MergeWindow {
       }
 
       @Override
-      protected void setWindowTitle(@NotNull String title) {
+      protected void setWindowTitle(@Nonnull String title) {
         myWrapper.setTitle(title);
       }
 
@@ -72,10 +73,12 @@ public class MergeWindow {
 
   // TODO: use WindowWrapper
   private static class MyDialog extends DialogWrapper {
-    @NotNull private final MergeRequestProcessor myProcessor;
-    @NotNull private final Wrapper mySouthPanel = new Wrapper();
+    @Nonnull
+    private final MergeRequestProcessor myProcessor;
+    @Nonnull
+    private final Wrapper mySouthPanel = new Wrapper();
 
-    public MyDialog(@NotNull MergeRequestProcessor processor) {
+    public MyDialog(@Nonnull MergeRequestProcessor processor) {
       super(processor.getProject(), true);
       myProcessor = processor;
     }
@@ -111,13 +114,13 @@ public class MergeWindow {
       return myProcessor.getPreferredFocusedComponent();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected String getDimensionServiceKey() {
       return StringUtil.notNullize(myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY), "MergeDialog");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -128,7 +131,7 @@ public class MergeWindow {
       return actions.toArray(new Action[actions.size()]);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createLeftSideActions() {
       MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -136,7 +139,7 @@ public class MergeWindow {
       return actions.toArray(new Action[actions.size()]);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action getOKAction() {
       MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -144,7 +147,7 @@ public class MergeWindow {
       return super.getOKAction();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action getCancelAction() {
       MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -152,7 +155,7 @@ public class MergeWindow {
       return super.getCancelAction();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected String getHelpId() {
       return myProcessor.getHelpId();
@@ -170,7 +173,7 @@ public class MergeWindow {
   }
 
   private static class MyPanel extends JPanel {
-    public MyPanel(@NotNull JComponent content) {
+    public MyPanel(@Nonnull JComponent content) {
       super(new BorderLayout());
       add(content, BorderLayout.CENTER);
     }

@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -46,14 +46,14 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    *                 If true, one should perform no reference resolving and avoid complex checks if possible.
    * @return the array of folding descriptors.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public abstract FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick);
+  public abstract FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick);
 
   @Override
   @RequiredReadAction
-  @NotNull
-  public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+  @Nonnull
+  public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
     return buildFoldRegions(Objects.requireNonNull(node.getPsi()), document, false);
   }
 
@@ -68,7 +68,7 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    */
   @Nullable
   @RequiredReadAction
-  public String getPlaceholderText(@NotNull ASTNode node, @NotNull TextRange range){
+  public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range){
     return getPlaceholderText(node);
   }
 
@@ -80,5 +80,5 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    */
   @Override
   @RequiredReadAction
-  public abstract boolean isCollapsedByDefault(@NotNull ASTNode node);
+  public abstract boolean isCollapsedByDefault(@Nonnull ASTNode node);
 }

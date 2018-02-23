@@ -16,7 +16,7 @@
 package com.intellij.ide.navigationToolbar.ui;
 
 import com.intellij.ui.Gray;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 

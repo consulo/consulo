@@ -37,9 +37,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -85,7 +85,7 @@ public class DiffPreviewPanel implements PreviewPanel {
 
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-  public DiffPreviewPanel(@NotNull Disposable parent) {
+  public DiffPreviewPanel(@Nonnull Disposable parent) {
     myMergePanelComponent = new MergePanel2.AsComponent(parent);
     myPanel.add(myMergePanelComponent, BorderLayout.CENTER);
     myMergePanelComponent.setToolbarEnabled(false);
@@ -165,7 +165,7 @@ public class DiffPreviewPanel implements PreviewPanel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public DiffContent[] getContents() {
       return new DiffContent[]{
               new SimpleContent(LEFT_TEXT, PlainTextFileType.INSTANCE),
@@ -186,7 +186,7 @@ public class DiffPreviewPanel implements PreviewPanel {
   }
 
   @Override
-  public void addListener(@NotNull final ColorAndFontSettingsListener listener) {
+  public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 

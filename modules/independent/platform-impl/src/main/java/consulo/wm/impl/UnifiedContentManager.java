@@ -24,8 +24,8 @@ import com.intellij.ui.content.ContentUI;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 /**
@@ -35,11 +35,11 @@ import org.jetbrains.annotations.Nullable;
 public class UnifiedContentManager extends ContentManagerBase {
   private Component myComponent;
 
-  public UnifiedContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public UnifiedContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
     super(contentUI, canCloseContents, project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ActionCallback requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
@@ -50,14 +50,14 @@ public class UnifiedContentManager extends ContentManagerBase {
     return false; //TODO [VISTALL]
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback requestFocus(@Nullable Content content, boolean forced) {
     return ActionCallback.DONE;  //TODO [VISTALL]
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public Component getUIComponent() {
     if (myComponent == null) {

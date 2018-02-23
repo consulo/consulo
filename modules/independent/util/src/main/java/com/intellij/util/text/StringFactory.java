@@ -16,7 +16,7 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 
@@ -44,8 +44,8 @@ public class StringFactory {
    *
    * CAUTION! EXTREMELY DANGEROUS!! DO NOT USE THIS METHOD UNLESS YOU ARE REALLY DESPERATE!!!
    */
-  @NotNull
-  public static String createShared(@NotNull char[] chars) {
+  @Nonnull
+  public static String createShared(@Nonnull char[] chars) {
     if (ourConstructor != null) {
       try {
         return ourConstructor.newInstance(chars, Boolean.TRUE);

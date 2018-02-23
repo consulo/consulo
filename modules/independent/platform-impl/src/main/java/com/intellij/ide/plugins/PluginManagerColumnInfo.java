@@ -24,7 +24,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.InstalledPluginsState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -114,7 +114,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<IdeaPluginDescriptor, St
   }
 
 
-  public static boolean isDownloaded(@NotNull IdeaPluginDescriptor node) {
+  public static boolean isDownloaded(@Nonnull IdeaPluginDescriptor node) {
     if (node instanceof PluginNode && ((PluginNode)node).getStatus() == PluginNode.STATUS_DOWNLOADED) return true;
     final PluginId pluginId = node.getPluginId();
     if (PluginManager.isPluginInstalled(pluginId)) {

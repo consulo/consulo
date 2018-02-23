@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,29 +38,29 @@ public class MockFileIndexFacade extends FileIndexFacade {
     myModule = null;  // TODO
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModificationTracker getRootModificationTracker() {
     return ModificationTracker.NEVER_CHANGED;
   }
 
   @Override
-  public boolean isInContent(@NotNull VirtualFile file) {
+  public boolean isInContent(@Nonnull VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInSource(@NotNull VirtualFile file) {
+  public boolean isInSource(@Nonnull VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInSourceContent(@NotNull VirtualFile file) {
+  public boolean isInSourceContent(@Nonnull VirtualFile file) {
     return true;
   }
 
   @Override
-  public boolean isInLibraryClasses(@NotNull VirtualFile file) {
+  public boolean isInLibraryClasses(@Nonnull VirtualFile file) {
     for (VirtualFile libraryRoot : myLibraryRoots) {
       if (VfsUtilCore.isAncestor(libraryRoot, file, false)) {
         return true;
@@ -70,27 +70,27 @@ public class MockFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isInLibrarySource(@NotNull VirtualFile file) {
+  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isExcludedFile(@NotNull VirtualFile file) {
+  public boolean isExcludedFile(@Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isUnderIgnored(@NotNull VirtualFile file) {
+  public boolean isUnderIgnored(@Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public Module getModuleForFile(@NotNull VirtualFile file) {
+  public Module getModuleForFile(@Nonnull VirtualFile file) {
     return myModule;
   }
 
   @Override
-  public boolean isValidAncestor(@NotNull VirtualFile baseDir, @NotNull VirtualFile child) {
+  public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child) {
     return VfsUtilCore.isAncestor(baseDir, child, false);
   }
 

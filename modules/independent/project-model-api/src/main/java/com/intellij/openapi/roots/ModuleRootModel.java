@@ -16,8 +16,7 @@
 package com.intellij.openapi.roots;
 
 import consulo.roots.ModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -28,15 +27,15 @@ import java.util.Map;
  * @author dsl
  */
 public interface ModuleRootModel extends ModuleRootLayer {
-  @NotNull
+  @Nonnull
   Map<String, ModuleRootLayer> getLayers();
 
-  @NotNull
+  @Nonnull
   String getCurrentLayerName();
 
-  @NotNull
+  @Nonnull
   ModuleRootLayer getCurrentLayer();
 
-  @Nullable
-  ModuleRootLayer findLayerByName(@NotNull String name);
+  @javax.annotation.Nullable
+  ModuleRootLayer findLayerByName(@Nonnull String name);
 }

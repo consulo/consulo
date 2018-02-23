@@ -40,8 +40,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -56,10 +56,11 @@ import java.util.*;
 
 public class InspectionTree extends Tree {
   private final HashSet<Object> myExpandedUserObjects;
-  @NotNull private final GlobalInspectionContextImpl myContext;
+  @Nonnull
+  private final GlobalInspectionContextImpl myContext;
   private SelectionPath mySelectionPath;
 
-  public InspectionTree(@NotNull Project project, @NotNull GlobalInspectionContextImpl context) {
+  public InspectionTree(@Nonnull Project project, @Nonnull GlobalInspectionContextImpl context) {
     super(new InspectionRootNode(project));
     myContext = context;
 
@@ -124,7 +125,7 @@ public class InspectionTree extends Tree {
     return toolWrapper;
   }
 
-  @NotNull
+  @Nonnull
   public RefEntity[] getSelectedElements() {
     TreePath[] selectionPaths = getSelectionPaths();
     if (selectionPaths != null) {
@@ -378,7 +379,7 @@ public class InspectionTree extends Tree {
     }
   }
 
-  @NotNull
+  @Nonnull
   public GlobalInspectionContextImpl getContext() {
     return myContext;
   }

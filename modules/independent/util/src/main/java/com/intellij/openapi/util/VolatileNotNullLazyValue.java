@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,7 +25,7 @@ public abstract class VolatileNotNullLazyValue<T> extends NotNullLazyValue<T> {
 
   private volatile T myValue;
 
-  @NotNull
+  @Nonnull
   public final T getValue() {
     T value = myValue;
     if (value != null) {

@@ -8,8 +8,8 @@ import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,7 @@ public class SimpleClasspathElementFactory {
   }
 
 
-  public static List<SimpleClasspathElement> createElements(@Nullable Project project, @NotNull Element element) {
+  public static List<SimpleClasspathElement> createElements(@Nullable Project project, @Nonnull Element element) {
     final String name = element.getAttributeValue(GlobalLibraryReferenceElement.NAME_ATTRIBUTE);
     final String level = element.getAttributeValue(GlobalLibraryReferenceElement.LEVEL_ATTRIBUTE);
     final String url = element.getChildText(SingleRootClasspathElement.URL_ELEMENT);
@@ -49,7 +49,7 @@ public class SimpleClasspathElementFactory {
     return Collections.emptyList();
   }
 
-  public static List<SimpleClasspathElement> createElements(@NotNull Library library) {
+  public static List<SimpleClasspathElement> createElements(@Nonnull Library library) {
     final LibraryTable table = library.getTable();
     if (table != null && LibraryTablesRegistrar.APPLICATION_LEVEL.equals(table.getTableLevel())) {
       return Collections.<SimpleClasspathElement>singletonList(new GlobalLibraryReferenceElement(library.getName()));

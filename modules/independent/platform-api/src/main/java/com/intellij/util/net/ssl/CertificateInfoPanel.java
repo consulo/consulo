@@ -3,7 +3,7 @@ package com.intellij.util.net.ssl;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class CertificateInfoPanel extends JPanel {
 
   private final CertificateWrapper myCertificateWrapper;
 
-  public CertificateInfoPanel(@NotNull X509Certificate certificate) {
+  public CertificateInfoPanel(@Nonnull X509Certificate certificate) {
     myCertificateWrapper = new CertificateWrapper(certificate);
     setLayout(new BorderLayout());
 
@@ -47,8 +47,8 @@ public class CertificateInfoPanel extends JPanel {
     add(builder.getPanel(), BorderLayout.NORTH);
   }
 
-  @NotNull
-  private static String formatHex(@NotNull String hex) {
+  @Nonnull
+  private static String formatHex(@Nonnull String hex) {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < hex.length(); i += 2) {
       // split at 16th byte

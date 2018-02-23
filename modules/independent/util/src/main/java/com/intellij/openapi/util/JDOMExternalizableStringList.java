@@ -18,7 +18,7 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class JDOMExternalizableStringList extends ArrayList<String> implements J
   public JDOMExternalizableStringList() {
   }
 
-  public JDOMExternalizableStringList(@NotNull Collection<? extends String> c) {
+  public JDOMExternalizableStringList(@Nonnull Collection<? extends String> c) {
     super(c);
   }
 

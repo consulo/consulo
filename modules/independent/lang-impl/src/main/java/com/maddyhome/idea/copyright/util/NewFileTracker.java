@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,7 +31,7 @@ public class NewFileTracker {
     return instance;
   }
 
-  public boolean poll(@NotNull VirtualFile file) {
+  public boolean poll(@Nonnull VirtualFile file) {
     return newFiles.remove(file);
   }
 
@@ -39,7 +39,7 @@ public class NewFileTracker {
     final VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     virtualFileManager.addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         if (event.isFromRefresh()) return;
         newFiles.add(event.getFile());
       }

@@ -17,7 +17,7 @@ package consulo.compiler.server.fileSystem;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -37,11 +37,11 @@ public class CompilerServerRefreshSessionImpl extends RefreshSession {
   }
 
   @Override
-  public void addFile(@NotNull VirtualFile file) {
+  public void addFile(@Nonnull VirtualFile file) {
   }
 
   @Override
-  public void addAllFiles(@NotNull Collection<? extends VirtualFile> files) {
+  public void addAllFiles(@Nonnull Collection<? extends VirtualFile> files) {
 
   }
 

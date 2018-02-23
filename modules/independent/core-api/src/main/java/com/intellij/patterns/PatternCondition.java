@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -71,7 +71,7 @@ public abstract class PatternCondition<T> {
     builder.append("]");
   }
 
-  public abstract boolean accepts(@NotNull T t, final ProcessingContext context);
+  public abstract boolean accepts(@Nonnull T t, final ProcessingContext context);
 
   @NonNls
   public String toString() {

@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -50,43 +50,43 @@ public abstract class PsiFileFactory {
    *          if the file type with specified extension is binary.
    */
   @Deprecated
-  @NotNull
-  public abstract PsiFile createFileFromText(@NotNull @NonNls String name, @NotNull @NonNls String text);
+  @Nonnull
+  public abstract PsiFile createFileFromText(@Nonnull @NonNls String name, @Nonnull @NonNls String text);
 
-  @NotNull
-  public abstract PsiFile createFileFromText(@NonNls @NotNull String fileName, @NotNull FileType fileType, @NotNull CharSequence text);
+  @Nonnull
+  public abstract PsiFile createFileFromText(@NonNls @Nonnull String fileName, @Nonnull FileType fileType, @Nonnull CharSequence text);
 
-  @NotNull
-  public abstract PsiFile createFileFromText(@NonNls @NotNull String name,
-                                             @NotNull FileType fileType,
-                                             @NotNull CharSequence text,
+  @Nonnull
+  public abstract PsiFile createFileFromText(@NonNls @Nonnull String name,
+                                             @Nonnull FileType fileType,
+                                             @Nonnull CharSequence text,
                                              long modificationStamp,
                                              boolean physical);
 
-  @NotNull
-  public abstract PsiFile createFileFromText(@NonNls @NotNull String name,
-                                             @NotNull FileType fileType,
-                                             @NotNull CharSequence text,
+  @Nonnull
+  public abstract PsiFile createFileFromText(@NonNls @Nonnull String name,
+                                             @Nonnull FileType fileType,
+                                             @Nonnull CharSequence text,
                                              long modificationStamp,
                                              boolean physical,
                                              boolean markAsCopy);
 
-  public abstract PsiFile createFileFromText(@NotNull String name, @NotNull Language language, @NotNull CharSequence text);
+  public abstract PsiFile createFileFromText(@Nonnull String name, @Nonnull Language language, @Nonnull CharSequence text);
 
-  public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull Language language,
-                                             @NotNull LanguageVersion languageVersion,
-                                             @NotNull CharSequence text);
+  public abstract PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull Language language,
+                                             @Nonnull LanguageVersion languageVersion,
+                                             @Nonnull CharSequence text);
 
-  public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull Language language,
-                                             @NotNull CharSequence text,
+  public abstract PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull Language language,
+                                             @Nonnull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy);
 
-  public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull Language language,
-                                             @NotNull CharSequence text,
+  public abstract PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull Language language,
+                                             @Nonnull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
                                              boolean noSizeLimit);
@@ -94,18 +94,18 @@ public abstract class PsiFileFactory {
   @Deprecated
   @DeprecationInfo("Use #createFileFromText() without Language parameter")
   @Nullable
-  public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull Language language,
-                                             @NotNull LanguageVersion languageVersion,
-                                             @NotNull CharSequence text,
+  public abstract PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull Language language,
+                                             @Nonnull LanguageVersion languageVersion,
+                                             @Nonnull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
                                              boolean noSizeLimit);
 
   @Nullable
-  public PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull LanguageVersion languageVersion,
-                                             @NotNull CharSequence text,
+  public PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull LanguageVersion languageVersion,
+                                             @Nonnull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
                                              boolean noSizeLimit) {
@@ -113,9 +113,9 @@ public abstract class PsiFileFactory {
   }
 
   @Nullable
-  public abstract PsiFile createFileFromText(@NotNull String name,
-                                             @NotNull LanguageVersion languageVersion,
-                                             @NotNull CharSequence text,
+  public abstract PsiFile createFileFromText(@Nonnull String name,
+                                             @Nonnull LanguageVersion languageVersion,
+                                             @Nonnull CharSequence text,
                                              boolean physical,
                                              boolean markAsCopy,
                                              boolean noSizeLimit,
@@ -124,5 +124,5 @@ public abstract class PsiFileFactory {
   public abstract PsiFile createFileFromText(FileType fileType, String fileName, CharSequence chars, int startOffset, int endOffset);
 
   @Nullable
-  public abstract PsiFile createFileFromText(@NotNull CharSequence chars, @NotNull PsiFile original);
+  public abstract PsiFile createFileFromText(@Nonnull CharSequence chars, @Nonnull PsiFile original);
 }

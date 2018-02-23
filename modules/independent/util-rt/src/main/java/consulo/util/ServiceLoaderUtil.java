@@ -15,7 +15,7 @@
  */
 package consulo.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -25,8 +25,8 @@ import java.util.ServiceLoader;
  * @since 19-Oct-17
  */
 public class ServiceLoaderUtil {
-  @NotNull
-  public static <T> T loadSingleOrError(@NotNull Class<T> clazz) {
+  @Nonnull
+  public static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
     ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
     Iterator<T> iterator = serviceLoader.iterator();
     if (iterator.hasNext()) {

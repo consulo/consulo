@@ -26,20 +26,21 @@ import com.intellij.openapi.ui.WindowWrapper;
 import com.intellij.openapi.ui.WindowWrapperBuilder;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ImageLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class DiffWindowBase {
   @Nullable protected final Project myProject;
-  @NotNull protected final DiffDialogHints myHints;
+  @Nonnull
+  protected final DiffDialogHints myHints;
 
   private DiffRequestProcessor myProcessor;
   private WindowWrapper myWrapper;
 
-  public DiffWindowBase(@Nullable Project project, @NotNull DiffDialogHints hints) {
+  public DiffWindowBase(@Nullable Project project, @Nonnull DiffDialogHints hints) {
     myProject = project;
     myHints = hints;
   }
@@ -79,14 +80,14 @@ public abstract class DiffWindowBase {
     myWrapper.show();
   }
 
-  @NotNull
+  @Nonnull
   protected abstract DiffRequestProcessor createProcessor();
 
   //
   // Delegate
   //
 
-  protected void setWindowTitle(@NotNull String title) {
+  protected void setWindowTitle(@Nonnull String title) {
     myWrapper.setTitle(title);
   }
 
@@ -107,7 +108,7 @@ public abstract class DiffWindowBase {
   }
 
   private static class MyPanel extends JPanel {
-    public MyPanel(@NotNull JComponent content) {
+    public MyPanel(@Nonnull JComponent content) {
       super(new BorderLayout());
       add(content, BorderLayout.CENTER);
     }

@@ -27,7 +27,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.Internal;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.runner.JUnitCore;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class UnitTestPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     IdeaPluginDescriptorImpl plugin = (IdeaPluginDescriptorImpl)PluginManager.getPlugin(PluginManagerCore.UNIT_TEST_PLUGIN);
     assert plugin != null;
     PluginClassLoader pluginClassLoader = (PluginClassLoader)plugin.getPluginClassLoader();

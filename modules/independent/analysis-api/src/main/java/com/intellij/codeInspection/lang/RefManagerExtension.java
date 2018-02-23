@@ -27,7 +27,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface RefManagerExtension<T> {
   Key<T> getID();
@@ -43,17 +43,17 @@ public interface RefManagerExtension<T> {
   @Nullable
   RefElement createRefElement(PsiElement psiElement);
 
-  @Nullable
+  @javax.annotation.Nullable
   RefEntity getReference(final String type, final String fqName);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getType(RefEntity entity);
 
   RefEntity getRefinedElement(final RefEntity ref);
 
   void visitElement(final PsiElement element);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getGroupName(final RefEntity entity);
 
   boolean belongsToScope(final PsiElement psiElement);

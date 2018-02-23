@@ -17,14 +17,14 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class TemplateBuilderFactoryImpl extends TemplateBuilderFactory {
   @Override
-  public TemplateBuilder createTemplateBuilder(@NotNull PsiElement element) {
+  public TemplateBuilder createTemplateBuilder(@Nonnull PsiElement element) {
     return new TemplateBuilderImpl(element);
   }
 }

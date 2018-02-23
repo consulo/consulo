@@ -22,7 +22,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import com.intellij.psi.impl.DebugUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ class RangesAssert {
     LogMessageEx.error(LOG, messageBuffer.toString(), currentThrowable, buffer.toString());
   }
 
-  private static Throwable makeLanguageStackTrace(@NotNull Throwable currentThrowable, @NotNull PsiFile file) {
+  private static Throwable makeLanguageStackTrace(@Nonnull Throwable currentThrowable, @Nonnull PsiFile file) {
     Throwable langThrowable = new Throwable();
     FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
     if (builder == null) return currentThrowable;

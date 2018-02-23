@@ -7,7 +7,7 @@ import com.intellij.execution.ui.layout.PlaceInGrid;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.content.Content;
 import com.intellij.xdebugger.XDebuggerBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to customize xdebug layout for 'Debug' tool window.
@@ -24,8 +24,8 @@ public class XDebugTabLayouter {
    * @param ui {@code RunnerLayoutUi} instance
    * @return registered {@code Content} instance
    */
-  @NotNull
-  public Content registerConsoleContent(@NotNull RunnerLayoutUi ui, @NotNull ExecutionConsole console) {
+  @Nonnull
+  public Content registerConsoleContent(@Nonnull RunnerLayoutUi ui, @Nonnull ExecutionConsole console) {
     Content content = ui.createContent(DebuggerContentInfo.CONSOLE_CONTENT, console.getComponent(),
                                        XDebuggerBundle.message("debugger.session.tab.console.content.name"),
                                        AllIcons.Debugger.Console,
@@ -39,7 +39,7 @@ public class XDebugTabLayouter {
    * Registers additional tabs for 'Debug' tool window.
    * @param ui {@code RunnerLayoutUi} instance
    */
-  public void registerAdditionalContent(@NotNull RunnerLayoutUi ui) {
+  public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui) {
   }
 
 }

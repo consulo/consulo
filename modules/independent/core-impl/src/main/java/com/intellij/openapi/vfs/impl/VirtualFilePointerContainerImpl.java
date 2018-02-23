@@ -32,8 +32,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,17 +44,20 @@ import java.util.List;
  */
 public class VirtualFilePointerContainerImpl extends TraceableDisposable implements VirtualFilePointerContainer, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer");
-  @NotNull private final List<VirtualFilePointer> myList = ContainerUtil.createLockFreeCopyOnWriteList();
-  @NotNull private final VirtualFilePointerManager myVirtualFilePointerManager;
-  @NotNull private final Disposable myParent;
+  @Nonnull
+  private final List<VirtualFilePointer> myList = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final VirtualFilePointerManager myVirtualFilePointerManager;
+  @Nonnull
+  private final Disposable myParent;
   private final VirtualFilePointerListener myListener;
   private volatile Trinity<String[], VirtualFile[], VirtualFile[]> myCachedThings;
   private volatile long myTimeStampOfCachedThings = -1;
   @NonNls public static final String URL_ATTR = "url";
   private boolean myDisposed;
   private static final boolean TRACE_CREATION = LOG.isDebugEnabled() || ApplicationManager.getApplication().isUnitTestMode();
-  public VirtualFilePointerContainerImpl(@NotNull VirtualFilePointerManager manager,
-                                         @NotNull Disposable parentDisposable,
+  public VirtualFilePointerContainerImpl(@Nonnull VirtualFilePointerManager manager,
+                                         @Nonnull Disposable parentDisposable,
                                          @Nullable VirtualFilePointerListener listener) {
     //noinspection HardCodedStringLiteral
     super(TRACE_CREATION && !ApplicationInfoImpl.isInPerformanceTest());
@@ -64,7 +67,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void readExternal(@NotNull final Element rootChild, @NotNull final String childElements) throws InvalidDataException {
+  public void readExternal(@Nonnull final Element rootChild, @Nonnull final String childElements) throws InvalidDataException {
     final List<Element> urls = rootChild.getChildren(childElements);
     for (Element url : urls) {
       final String urlAttribute = url.getAttributeValue(URL_ATTR);
@@ -74,7 +77,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void writeExternal(@NotNull final Element element, @NotNull final String childElementName) {
+  public void writeExternal(@Nonnull final Element element, @Nonnull final String childElementName) {
     for (VirtualFilePointer pointer : myList) {
       String url = pointer.getUrl();
       final Element rootPathElement = new Element(childElementName);
@@ -84,7 +87,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void moveUp(@NotNull String url) {
+  public void moveUp(@Nonnull String url) {
     int index = indexOf(url);
     if (index <= 0) return;
     dropCaches();
@@ -92,14 +95,14 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void moveDown(@NotNull String url) {
+  public void moveDown(@Nonnull String url) {
     int index = indexOf(url);
     if (index < 0 || index + 1 >= myList.size()) return;
     dropCaches();
     ContainerUtil.swapElements(myList, index, index + 1);
   }
 
-  private int indexOf(@NotNull final String url) {
+  private int indexOf(@Nonnull final String url) {
     for (int i = 0; i < myList.size(); i++) {
       final VirtualFilePointer pointer = myList.get(i);
       if (url.equals(pointer.getUrl())) {
@@ -116,7 +119,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void add(@NotNull VirtualFile file) {
+  public void add(@Nonnull VirtualFile file) {
     assert !myDisposed;
     dropCaches();
     final VirtualFilePointer pointer = create(file);
@@ -124,7 +127,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void add(@NotNull String url) {
+  public void add(@Nonnull String url) {
     assert !myDisposed;
     dropCaches();
     final VirtualFilePointer pointer = create(url);
@@ -132,7 +135,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  public void remove(@NotNull VirtualFilePointer pointer) {
+  public void remove(@Nonnull VirtualFilePointer pointer) {
     assert !myDisposed;
     dropCaches();
     final boolean result = myList.remove(pointer);
@@ -140,14 +143,14 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<VirtualFilePointer> getList() {
     assert !myDisposed;
     return Collections.unmodifiableList(myList);
   }
 
   @Override
-  public void addAll(@NotNull VirtualFilePointerContainer that) {
+  public void addAll(@Nonnull VirtualFilePointerContainer that) {
     assert !myDisposed;
     dropCaches();
 
@@ -162,12 +165,12 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getUrls() {
     return getOrCache().first;
   }
 
-  @NotNull
+  @Nonnull
   private Trinity<String[], VirtualFile[], VirtualFile[]> getOrCache() {
     assert !myDisposed;
     long timeStamp = myTimeStampOfCachedThings;
@@ -178,7 +181,7 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   private static final Trinity<String[], VirtualFile[], VirtualFile[]> EMPTY =
           Trinity.create(ArrayUtil.EMPTY_STRING_ARRAY, VirtualFile.EMPTY_ARRAY, VirtualFile.EMPTY_ARRAY);
 
-  @NotNull
+  @Nonnull
   private Trinity<String[], VirtualFile[], VirtualFile[]> cacheThings() {
     Trinity<String[], VirtualFile[], VirtualFile[]> result;
     if (myList.isEmpty()) {
@@ -214,20 +217,20 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles() {
     return getOrCache().second;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getDirectories() {
     return getOrCache().third;
   }
 
   @Override
   @Nullable
-  public VirtualFilePointer findByUrl(@NotNull String url) {
+  public VirtualFilePointer findByUrl(@Nonnull String url) {
     assert !myDisposed;
     for (VirtualFilePointer pointer : myList) {
       if (url.equals(pointer.getUrl())) return pointer;
@@ -259,19 +262,19 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
     return myList.hashCode();
   }
 
-  protected VirtualFilePointer create(@NotNull VirtualFile file) {
+  protected VirtualFilePointer create(@Nonnull VirtualFile file) {
     return myVirtualFilePointerManager.create(file, myParent, myListener);
   }
 
-  protected VirtualFilePointer create(@NotNull String url) {
+  protected VirtualFilePointer create(@Nonnull String url) {
     return myVirtualFilePointerManager.create(url, myParent, myListener);
   }
 
-  protected VirtualFilePointer duplicate(@NotNull VirtualFilePointer virtualFilePointer) {
+  protected VirtualFilePointer duplicate(@Nonnull VirtualFilePointer virtualFilePointer) {
     return myVirtualFilePointerManager.duplicate(virtualFilePointer, myParent, myListener);
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   @Override
   public String toString() {
@@ -279,14 +282,14 @@ public class VirtualFilePointerContainerImpl extends TraceableDisposable impleme
   }
 
   @Override
-  @NotNull
-  public VirtualFilePointerContainer clone(@NotNull Disposable parent) {
+  @Nonnull
+  public VirtualFilePointerContainer clone(@Nonnull Disposable parent) {
     return clone(parent, null);
   }
 
   @Override
-  @NotNull
-  public VirtualFilePointerContainer clone(@NotNull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  @Nonnull
+  public VirtualFilePointerContainer clone(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
     assert !myDisposed;
     VirtualFilePointerContainer clone = myVirtualFilePointerManager.createContainer(parent, listener);
     for (VirtualFilePointer pointer : myList) {

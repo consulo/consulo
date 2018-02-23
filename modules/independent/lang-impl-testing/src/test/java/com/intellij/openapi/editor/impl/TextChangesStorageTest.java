@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -316,15 +316,15 @@ public class TextChangesStorageTest {
     }
   }
   
-  private static TextChangeImpl c(@NotNull String text, int startOffset) {
+  private static TextChangeImpl c(@Nonnull String text, int startOffset) {
     return c(text, startOffset, startOffset);
   }
   
-  private static TextChangeImpl c(@NotNull String text, int startOffset, int endOffset) {
+  private static TextChangeImpl c(@Nonnull String text, int startOffset, int endOffset) {
     return new TextChangeImpl(text, startOffset, endOffset);
   }
   
-  private void insert(@NotNull String text, int offset) {
+  private void insert(@Nonnull String text, int offset) {
     myStorage.store(c(text, offset));
   }
   
@@ -332,7 +332,7 @@ public class TextChangesStorageTest {
     myStorage.store(c("", start, end));
   }
 
-  private void replace(@NotNull String text, int start, int end) {
+  private void replace(@Nonnull String text, int start, int end) {
     myStorage.store(c(text, start, end));
   }
 }

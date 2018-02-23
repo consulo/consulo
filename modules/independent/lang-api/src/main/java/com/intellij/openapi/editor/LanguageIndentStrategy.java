@@ -19,8 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
@@ -35,7 +34,8 @@ public class LanguageIndentStrategy extends LanguageExtension<IndentStrategy> {
     super(EP_NAME, DEFAULT_INDENT_STRATEGY);
   }
 
-  public static @NotNull IndentStrategy getIndentStrategy(@Nullable PsiFile file) {
+  public static @Nonnull
+  IndentStrategy getIndentStrategy(@javax.annotation.Nullable PsiFile file) {
     if (file != null) {
       Language language = file.getLanguage();
       IndentStrategy strategy = INSTANCE.forLanguage(language);

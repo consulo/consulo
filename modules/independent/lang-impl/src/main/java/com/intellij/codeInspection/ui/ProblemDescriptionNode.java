@@ -24,9 +24,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 import static com.intellij.codeInspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
@@ -39,27 +39,27 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
   protected RefEntity myElement;
   private final CommonProblemDescriptor myDescriptor;
   protected final InspectionToolWrapper myToolWrapper;
-  @NotNull
+  @Nonnull
   protected final InspectionToolPresentation myPresentation;
 
-  public ProblemDescriptionNode(@NotNull Object userObject,
-                                @NotNull InspectionToolWrapper toolWrapper,
-                                @NotNull InspectionToolPresentation presentation) {
+  public ProblemDescriptionNode(@Nonnull Object userObject,
+                                @Nonnull InspectionToolWrapper toolWrapper,
+                                @Nonnull InspectionToolPresentation presentation) {
     this(userObject, null, null, toolWrapper, presentation);
   }
 
-  public ProblemDescriptionNode(@NotNull RefEntity element,
-                                @NotNull CommonProblemDescriptor descriptor,
-                                @NotNull InspectionToolWrapper toolWrapper,
-                                @NotNull InspectionToolPresentation presentation) {
+  public ProblemDescriptionNode(@Nonnull RefEntity element,
+                                @Nonnull CommonProblemDescriptor descriptor,
+                                @Nonnull InspectionToolWrapper toolWrapper,
+                                @Nonnull InspectionToolPresentation presentation) {
     this(descriptor, element, descriptor, toolWrapper, presentation);
   }
 
-  private ProblemDescriptionNode(@NotNull Object userObject,
+  private ProblemDescriptionNode(@Nonnull Object userObject,
                                  RefEntity element,
                                  CommonProblemDescriptor descriptor,
-                                 @NotNull InspectionToolWrapper toolWrapper,
-                                 @NotNull InspectionToolPresentation presentation) {
+                                 @Nonnull InspectionToolWrapper toolWrapper,
+                                 @Nonnull InspectionToolPresentation presentation) {
     super(userObject);
     myElement = element;
     myDescriptor = descriptor;
@@ -121,7 +121,7 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
     presentation.amnesty(getElement());
   }
 
-  @NotNull
+  @Nonnull
   private InspectionToolPresentation getPresentation() {
     return myPresentation;
   }

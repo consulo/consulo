@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public abstract class StorageDataBase {
-  @NotNull
+  @Nonnull
   public abstract Set<String> getComponentNames();
 
-  public abstract boolean hasState(@NotNull String componentName);
+  public abstract boolean hasState(@Nonnull String componentName);
 }

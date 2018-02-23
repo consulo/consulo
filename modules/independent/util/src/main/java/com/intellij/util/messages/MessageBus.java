@@ -17,8 +17,8 @@
 package com.intellij.util.messages;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Core of IntelliJ IDEA messaging infrastructure. Basic functions:
@@ -52,7 +52,7 @@ public interface MessageBus {
    *
    * @return newly created connection
    */
-  @NotNull
+  @Nonnull
   MessageBusConnection connect();
 
   /**
@@ -62,8 +62,8 @@ public interface MessageBus {
    * @param parentDisposable target parent disposable to which life cycle newly created connection shall be bound
    * @return newly created connection which life cycle is bound to the given disposable parent
    */
-  @NotNull
-  MessageBusConnection connect(@NotNull Disposable parentDisposable);
+  @Nonnull
+  MessageBusConnection connect(@Nonnull Disposable parentDisposable);
 
   /**
    * Allows to retrieve an interface for publishing messages to the target topic.
@@ -125,15 +125,15 @@ public interface MessageBus {
    * @param <L>   {@link Topic#getListenerClass() business interface} of the target topic
    * @return publisher for target topic
    */
-  @NotNull
-  <L> L syncPublisher(@NotNull Topic<L> topic);
+  @Nonnull
+  <L> L syncPublisher(@Nonnull Topic<L> topic);
 
   /**
    * @deprecated use {@link #syncPublisher(Topic)} instead
    */
-  @NotNull
+  @Nonnull
   @Deprecated
-  <L> L asyncPublisher(@NotNull Topic<L> topic);
+  <L> L asyncPublisher(@Nonnull Topic<L> topic);
 
   /**
    * Disposes current bus, i.e. drops all queued but not delivered messages (if any) and disallows further
@@ -145,5 +145,5 @@ public interface MessageBus {
    * @return true when events in the given topic are being dispatched in the current thread,
    * and not all listeners have received the events yet.
    */
-  boolean hasUndeliveredEvents(@NotNull Topic<?> topic);
+  boolean hasUndeliveredEvents(@Nonnull Topic<?> topic);
 }

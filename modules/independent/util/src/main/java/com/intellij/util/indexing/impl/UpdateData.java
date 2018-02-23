@@ -19,8 +19,8 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.indexing.StorageException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -31,9 +31,9 @@ public class UpdateData<Key, Value> {
   private final ID<Key, Value> myIndexId;
   private final ThrowableRunnable<IOException> myForwardIndexUpdate;
 
-  public UpdateData(@NotNull Map<Key, Value> newData,
-                    @NotNull ThrowableComputable<InputDataDiffBuilder<Key, Value>, IOException> currentDataEvaluator,
-                    @NotNull ID<Key, Value> indexId,
+  public UpdateData(@Nonnull Map<Key, Value> newData,
+                    @Nonnull ThrowableComputable<InputDataDiffBuilder<Key, Value>, IOException> currentDataEvaluator,
+                    @Nonnull ID<Key, Value> indexId,
                     @Nullable ThrowableRunnable<IOException> forwardIndexUpdate) {
     myNewData = newData;
     myCurrentDataEvaluator = currentDataEvaluator;

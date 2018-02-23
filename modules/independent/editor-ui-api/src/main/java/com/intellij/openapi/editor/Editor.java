@@ -23,8 +23,7 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,7 +45,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the document instance.
    */
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   /**
@@ -64,7 +63,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the component instance.
    */
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
   /**
@@ -74,10 +73,10 @@ public interface Editor extends UserDataHolder {
    *
    * @return the component instance.
    */
-  @NotNull
+  @Nonnull
   JComponent getContentComponent();
 
-  void setBorder(@Nullable Border border);
+  void setBorder(@javax.annotation.Nullable Border border);
 
   Insets getInsets();
 
@@ -91,7 +90,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the selection model instance.
    */
-  @NotNull
+  @Nonnull
   SelectionModel getSelectionModel();
 
   /**
@@ -104,7 +103,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the markup model instance.
    */
-  @NotNull
+  @Nonnull
   MarkupModel getMarkupModel();
 
   /**
@@ -113,7 +112,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the folding model instance.
    */
-  @NotNull
+  @Nonnull
   FoldingModel getFoldingModel();
 
   /**
@@ -122,7 +121,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the scrolling model instance.
    */
-  @NotNull
+  @Nonnull
   ScrollingModel getScrollingModel();
 
   /**
@@ -131,7 +130,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the caret model instance.
    */
-  @NotNull
+  @Nonnull
   CaretModel getCaretModel();
 
   /**
@@ -140,7 +139,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the soft wrap model instance
    */
-  @NotNull
+  @Nonnull
   SoftWrapModel getSoftWrapModel();
 
   /**
@@ -149,7 +148,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the settings instance.
    */
-  @NotNull
+  @Nonnull
   EditorSettings getSettings();
 
   /**
@@ -158,7 +157,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the color scheme instance.
    */
-  @NotNull
+  @Nonnull
   EditorColorsScheme getColorsScheme();
 
   /**
@@ -174,8 +173,8 @@ public interface Editor extends UserDataHolder {
    * @param pos the logical position.
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
-  @NotNull
-  Point logicalPositionToXY(@NotNull LogicalPosition pos);
+  @Nonnull
+  Point logicalPositionToXY(@Nonnull LogicalPosition pos);
 
   /**
    * Maps a logical position in the editor to the offset in the document.
@@ -183,7 +182,7 @@ public interface Editor extends UserDataHolder {
    * @param pos the logical position.
    * @return the corresponding offset in the document.
    */
-  int logicalPositionToOffset(@NotNull LogicalPosition pos);
+  int logicalPositionToOffset(@Nonnull LogicalPosition pos);
 
   /**
    * Maps a logical position in the editor (the line and column ignoring folding) to
@@ -192,8 +191,8 @@ public interface Editor extends UserDataHolder {
    * @param logicalPos the logical position.
    * @return the corresponding visual position.
    */
-  @NotNull
-  VisualPosition logicalToVisualPosition(@NotNull LogicalPosition logicalPos);
+  @Nonnull
+  VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos);
 
   /**
    * Maps a visual position in the editor to pixel coordinates.
@@ -201,14 +200,14 @@ public interface Editor extends UserDataHolder {
    * @param visible the visual position.
    * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    */
-  @NotNull
-  Point visualPositionToXY(@NotNull VisualPosition visible);
+  @Nonnull
+  Point visualPositionToXY(@Nonnull VisualPosition visible);
 
   /**
    * Same as {@link #visualPositionToXY(VisualPosition)}, but returns potentially more precise result.
    */
-  @NotNull
-  Point2D visualPositionToPoint2D(@NotNull VisualPosition pos);
+  @Nonnull
+  Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos);
 
   /**
    * Maps a visual position in the editor (with folded lines and columns not included in the line and column count) to
@@ -217,8 +216,8 @@ public interface Editor extends UserDataHolder {
    * @param visiblePos the visual position.
    * @return the corresponding logical position.
    */
-  @NotNull
-  LogicalPosition visualToLogicalPosition(@NotNull VisualPosition visiblePos);
+  @Nonnull
+  LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos);
 
   /**
    * Maps an offset in the document to a logical position.
@@ -229,7 +228,7 @@ public interface Editor extends UserDataHolder {
    * @param offset the offset in the document.
    * @return the corresponding logical position.
    */
-  @NotNull
+  @Nonnull
   LogicalPosition offsetToLogicalPosition(int offset);
 
   /**
@@ -243,7 +242,7 @@ public interface Editor extends UserDataHolder {
    * @param offset the offset in the document.
    * @return the corresponding visual position.
    */
-  @NotNull
+  @Nonnull
   VisualPosition offsetToVisualPosition(int offset);
 
   /**
@@ -257,7 +256,7 @@ public interface Editor extends UserDataHolder {
    *                       at line following the wrap.
    * @return the corresponding visual position.
    */
-  @NotNull
+  @Nonnull
   VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap);
 
   /**
@@ -266,8 +265,8 @@ public interface Editor extends UserDataHolder {
    * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    * @return the corresponding logical position.
    */
-  @NotNull
-  LogicalPosition xyToLogicalPosition(@NotNull Point p);
+  @Nonnull
+  LogicalPosition xyToLogicalPosition(@Nonnull Point p);
 
   /**
    * Maps the pixel coordinates in the editor to a visual position.
@@ -275,14 +274,14 @@ public interface Editor extends UserDataHolder {
    * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
    * @return the corresponding visual position.
    */
-  @NotNull
-  VisualPosition xyToVisualPosition(@NotNull Point p);
+  @Nonnull
+  VisualPosition xyToVisualPosition(@Nonnull Point p);
 
   /**
    * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.
    */
-  @NotNull
-  VisualPosition xyToVisualPosition(@NotNull Point2D p);
+  @Nonnull
+  VisualPosition xyToVisualPosition(@Nonnull Point2D p);
 
   /**
    * Adds a listener for receiving notifications about mouse clicks in the editor and
@@ -290,7 +289,7 @@ public interface Editor extends UserDataHolder {
    *
    * @param listener the listener instance.
    */
-  void addEditorMouseListener(@NotNull EditorMouseListener listener);
+  void addEditorMouseListener(@Nonnull EditorMouseListener listener);
 
   /**
    * Removes a listener for receiving notifications about mouse clicks in the editor and
@@ -298,21 +297,21 @@ public interface Editor extends UserDataHolder {
    *
    * @param listener the listener instance.
    */
-  void removeEditorMouseListener(@NotNull EditorMouseListener listener);
+  void removeEditorMouseListener(@Nonnull EditorMouseListener listener);
 
   /**
    * Adds a listener for receiving notifications about mouse movement in the editor.
    *
    * @param listener the listener instance.
    */
-  void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener);
+  void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
 
   /**
    * Removes a listener for receiving notifications about mouse movement in the editor.
    *
    * @param listener the listener instance.
    */
-  void removeEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener);
+  void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
 
   /**
    * Checks if this editor instance has been disposed.
@@ -326,7 +325,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the project instance, or null if the editor is not related to any project.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Project getProject();
 
   /**
@@ -356,7 +355,7 @@ public interface Editor extends UserDataHolder {
    *
    * @return the gutter instance.
    */
-  @NotNull
+  @Nonnull
   EditorGutter getGutter();
 
   /**
@@ -366,8 +365,8 @@ public interface Editor extends UserDataHolder {
    * @param e the mouse event for which the area is requested.
    * @return the editor area, or null if the event occurred over an unknown area.
    */
-  @Nullable
-  EditorMouseEventArea getMouseEventArea(@NotNull MouseEvent e);
+  @javax.annotation.Nullable
+  EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e);
 
   /**
    * Set up a header component for this text editor. Please note this is used for textual find feature so your component will most
@@ -375,7 +374,7 @@ public interface Editor extends UserDataHolder {
    *
    * @param header a component to setup as header for this text editor or <code>null</code> to remove one.
    */
-  void setHeaderComponent(@Nullable JComponent header);
+  void setHeaderComponent(@javax.annotation.Nullable JComponent header);
 
   /**
    * @return <code>true</code> if this editor has active header component set up by {@link #setHeaderComponent(JComponent)}
@@ -385,12 +384,12 @@ public interface Editor extends UserDataHolder {
   /**
    * @return a component set by {@link #setHeaderComponent(JComponent)} or <code>null</code> if no header currently installed.
    */
-  @Nullable
+  @javax.annotation.Nullable
   JComponent getHeaderComponent();
 
-  @NotNull
+  @Nonnull
   IndentsModel getIndentsModel();
 
-  @NotNull
+  @Nonnull
   InlayModel getInlayModel();
 }

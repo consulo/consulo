@@ -18,19 +18,20 @@ package com.intellij.execution.testframework.ui;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author Roman.Chernyatchik
  */
 public class BaseTestProxyNodeDescriptor<T extends AbstractTestProxy> extends NodeDescriptor<T> {
-  @NotNull private final T myTestProxy;
+  @Nonnull
+  private final T myTestProxy;
 
   public BaseTestProxyNodeDescriptor(@Nullable final Project project,
-                                     @NotNull final T testProxy,
-                                     @Nullable final NodeDescriptor parentDescriptor) {
+                                     @Nonnull final T testProxy,
+                                     @javax.annotation.Nullable final NodeDescriptor parentDescriptor) {
     super(project, parentDescriptor);
     myTestProxy = testProxy;
     myName = testProxy.getName();

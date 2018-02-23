@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.match.ArrangementM
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -112,5 +112,5 @@ public abstract class AbstractMoveArrangementRuleAction extends AbstractArrangem
 
   }
 
-  protected abstract void fillMappings(@NotNull ArrangementMatchingRulesControl control, @NotNull List<int[]> mappings);
+  protected abstract void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings);
 }

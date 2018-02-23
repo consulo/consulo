@@ -25,8 +25,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -34,121 +34,121 @@ import java.io.IOException;
  * Use ProgressManager.executeProcessUnderProgress() to pass modality state if needed
  */
 public abstract class DiffContentFactory {
-  @NotNull
+  @Nonnull
   public static DiffContentFactory getInstance() {
     return ServiceManager.getService(DiffContentFactory.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract EmptyContent createEmpty();
 
 
-  @NotNull
-  public abstract DocumentContent create(@NotNull String text);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull String text);
 
-  @NotNull
-  public abstract DocumentContent create(@NotNull String text, @Nullable FileType type);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull String text, @Nullable FileType type);
 
-  @NotNull
-  public abstract DocumentContent create(@NotNull String text, @Nullable FileType type, boolean respectLineSeparators);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull String text, @Nullable FileType type, boolean respectLineSeparators);
 
-  @NotNull
-  public abstract DocumentContent create(@NotNull String text, @Nullable VirtualFile highlightFile);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull String text, @javax.annotation.Nullable VirtualFile highlightFile);
 
-  @NotNull
-  public abstract DocumentContent create(@NotNull String text, @Nullable DocumentContent referent);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull String text, @javax.annotation.Nullable DocumentContent referent);
 
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text);
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull String text);
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text, @Nullable FileType type);
+  @Nonnull
+  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @javax.annotation.Nullable FileType type);
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text, @Nullable FileType type,
+  @Nonnull
+  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @javax.annotation.Nullable FileType type,
                                          boolean respectLineSeparators);
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text, @Nullable VirtualFile highlightFile);
+  @Nonnull
+  public abstract DocumentContent create(@Nullable Project project, @Nonnull String text, @javax.annotation.Nullable VirtualFile highlightFile);
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text, @Nullable DocumentContent referent);
-
-
-  @NotNull
-  public abstract DocumentContent create(@NotNull Document document, @Nullable DocumentContent referent);
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull String text, @Nullable DocumentContent referent);
 
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull Document document);
-
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull Document document, @Nullable FileType fileType);
-
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull Document document, @Nullable VirtualFile file);
-
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull Document document, @Nullable DocumentContent referent);
+  @Nonnull
+  public abstract DocumentContent create(@Nonnull Document document, @javax.annotation.Nullable DocumentContent referent);
 
 
-  @NotNull
-  public abstract DiffContent create(@Nullable Project project, @NotNull VirtualFile file);
+  @Nonnull
+  public abstract DocumentContent create(@Nullable Project project, @Nonnull Document document);
+
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull Document document, @javax.annotation.Nullable FileType fileType);
+
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull Document document, @javax.annotation.Nullable VirtualFile file);
+
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull Document document, @Nullable DocumentContent referent);
+
+
+  @Nonnull
+  public abstract DiffContent create(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file);
+
+  @javax.annotation.Nullable
+  public abstract DocumentContent createDocument(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file);
 
   @Nullable
-  public abstract DocumentContent createDocument(@Nullable Project project, @NotNull VirtualFile file);
-
-  @Nullable
-  public abstract FileContent createFile(@Nullable Project project, @NotNull VirtualFile file);
+  public abstract FileContent createFile(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file);
 
 
-  @NotNull
-  public abstract DocumentContent createFragment(@Nullable Project project, @NotNull Document document, @NotNull TextRange range);
+  @Nonnull
+  public abstract DocumentContent createFragment(@javax.annotation.Nullable Project project, @Nonnull Document document, @Nonnull TextRange range);
 
-  @NotNull
-  public abstract DocumentContent createFragment(@Nullable Project project, @NotNull DocumentContent content, @NotNull TextRange range);
+  @Nonnull
+  public abstract DocumentContent createFragment(@javax.annotation.Nullable Project project, @Nonnull DocumentContent content, @Nonnull TextRange range);
 
 
-  @NotNull
+  @Nonnull
   public abstract DiffContent createClipboardContent();
 
-  @NotNull
-  public abstract DocumentContent createClipboardContent(@Nullable DocumentContent referent);
+  @Nonnull
+  public abstract DocumentContent createClipboardContent(@javax.annotation.Nullable DocumentContent referent);
 
-  @NotNull
+  @Nonnull
   public abstract DiffContent createClipboardContent(@Nullable Project project);
 
-  @NotNull
-  public abstract DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent);
+  @Nonnull
+  public abstract DocumentContent createClipboardContent(@Nullable Project project, @javax.annotation.Nullable DocumentContent referent);
 
 
-  @NotNull
-  public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @NotNull byte[] content,
-                                              @NotNull VirtualFile highlightFile) throws IOException;
+  @Nonnull
+  public abstract DiffContent createFromBytes(@javax.annotation.Nullable Project project,
+                                              @Nonnull byte[] content,
+                                              @Nonnull VirtualFile highlightFile) throws IOException;
 
-  @NotNull
-  public abstract DiffContent createBinary(@Nullable Project project,
-                                           @NotNull byte[] content,
-                                           @NotNull FileType type,
-                                           @NotNull String fileName) throws IOException;
+  @Nonnull
+  public abstract DiffContent createBinary(@javax.annotation.Nullable Project project,
+                                           @Nonnull byte[] content,
+                                           @Nonnull FileType type,
+                                           @Nonnull String fileName) throws IOException;
 
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public DiffContent createFromBytes(@Nullable Project project,
-                                     @NotNull VirtualFile highlightFile,
-                                     @NotNull byte[] content) throws IOException {
+  public DiffContent createFromBytes(@javax.annotation.Nullable Project project,
+                                     @Nonnull VirtualFile highlightFile,
+                                     @Nonnull byte[] content) throws IOException {
     return createFromBytes(project, content, highlightFile);
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public DiffContent createBinary(@Nullable Project project,
-                                  @NotNull String fileName,
-                                  @NotNull FileType type,
-                                  @NotNull byte[] content) throws IOException {
+  public DiffContent createBinary(@javax.annotation.Nullable Project project,
+                                  @Nonnull String fileName,
+                                  @Nonnull FileType type,
+                                  @Nonnull byte[] content) throws IOException {
     return createBinary(project, content, type, fileName);
   }
 }

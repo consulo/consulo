@@ -33,8 +33,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -68,7 +67,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     return VcsBundle.message("filter.structure.name");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public JComponent getFilterUI() {
     if (myUI == null) {
       myUI = new MyUI();
@@ -101,7 +100,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     myUI.append(changeLists);
   }
 
-  @NotNull
+  @Nonnull
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     if (mySelection.size() == 0) {
       return changeLists;
@@ -160,8 +159,8 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
       myScrollPane = ScrollPaneFactory.createScrollPane(myStructureTree);
     }
 
-    @NotNull
-    private List<FilePath> getFilePathsUnder(@NotNull ChangesBrowserNode<?> node) {
+    @Nonnull
+    private List<FilePath> getFilePathsUnder(@Nonnull ChangesBrowserNode<?> node) {
       List<FilePath> result = Collections.emptyList();
       Object userObject = node.getUserObject();
 

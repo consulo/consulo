@@ -23,8 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -42,7 +41,7 @@ public abstract class SdkType implements SdkTypeId {
   /**
    * @return paths for select in file chooser. Selected path will exists on file system
    */
-  @NotNull
+  @Nonnull
   public Collection<String> suggestHomePaths() {
     return Collections.emptyList();
   }
@@ -67,12 +66,12 @@ public abstract class SdkType implements SdkTypeId {
 
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getVersionString(Sdk sdk) {
     return getVersionString(sdk.getHomePath());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getVersionString(String sdkHome);
 
   public abstract String suggestSdkName(String currentSdkName, String sdkHome);
@@ -83,7 +82,7 @@ public abstract class SdkType implements SdkTypeId {
   /**
    * @return Configurable object for the sdk's additional data or null if not applicable
    */
-  @Nullable
+  @javax.annotation.Nullable
   public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator) {
     return null;
   }
@@ -94,7 +93,7 @@ public abstract class SdkType implements SdkTypeId {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional) {
     return null;
   }
@@ -104,18 +103,18 @@ public abstract class SdkType implements SdkTypeId {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getPresentableName();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Icon getIcon();
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getGroupIcon() {
     return getIcon();
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getHelpTopic() {
     return "preferences.bundles";
@@ -164,8 +163,8 @@ public abstract class SdkType implements SdkTypeId {
     return descriptor;
   }
 
-  @Nullable
-  public String getDefaultDocumentationUrl(final @NotNull Sdk sdk) {
+  @javax.annotation.Nullable
+  public String getDefaultDocumentationUrl(final @Nonnull Sdk sdk) {
     return null;
   }
 
@@ -213,7 +212,7 @@ public abstract class SdkType implements SdkTypeId {
    * @return true if the home path is valid, false otherwise.
    * @since 12.1
    */
-  public boolean sdkHasValidPath(@NotNull Sdk sdk) {
+  public boolean sdkHasValidPath(@Nonnull Sdk sdk) {
     VirtualFile homeDir = sdk.getHomeDirectory();
     return homeDir != null && homeDir.isValid();
   }

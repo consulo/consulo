@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDirectory;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
@@ -47,7 +47,7 @@ public abstract class ContentFolderTypeProvider {
     myId = id;
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
@@ -89,14 +89,14 @@ public abstract class ContentFolderTypeProvider {
     return AllIcons.Nodes.TreeOpen;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getChildPackageIcon() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
-  public Icon getIcon(@NotNull Map<Key, Object> map) {
+  public Icon getIcon(@Nonnull Map<Key, Object> map) {
     if(map.isEmpty()) {
       return getIcon();
     }
@@ -117,13 +117,13 @@ public abstract class ContentFolderTypeProvider {
     return iconDescriptor.toIcon();
   }
   
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
-  @NotNull
+  @Nonnull
   public abstract Color getGroupColor();
 
   @Override
@@ -143,8 +143,8 @@ public abstract class ContentFolderTypeProvider {
     return myId.hashCode();
   }
 
-  @NotNull
-  public static List<ContentFolderTypeProvider> filter(@NotNull Predicate<ContentFolderTypeProvider> predicate){
+  @Nonnull
+  public static List<ContentFolderTypeProvider> filter(@Nonnull Predicate<ContentFolderTypeProvider> predicate){
     List<ContentFolderTypeProvider> providers = new ArrayList<ContentFolderTypeProvider>();
     for (ContentFolderTypeProvider contentFolderTypeProvider : EP_NAME.getExtensions()) {
       if(predicate.apply(contentFolderTypeProvider)) {

@@ -17,13 +17,13 @@ package com.intellij.openapi.roots.ui;
 
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface CellAppearanceEx {
-  @NotNull
+  @Nonnull
   String getText();
 
-  void customize(@NotNull HtmlListCellRenderer renderer);
+  void customize(@Nonnull HtmlListCellRenderer renderer);
 
-  void customize(@NotNull SimpleColoredComponent component);
+  void customize(@Nonnull SimpleColoredComponent component);
 }

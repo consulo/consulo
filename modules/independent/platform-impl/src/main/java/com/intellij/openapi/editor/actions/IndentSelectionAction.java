@@ -30,8 +30,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotations.RequiredWriteAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ public class IndentSelectionAction extends EditorAction {
     editor.getCaretModel().moveToOffset(caretOffset[0]);
   }
 
-  static boolean canIndent(Document document, PsiFile file, int line, @NotNull IndentStrategy indentStrategy) {
+  static boolean canIndent(Document document, PsiFile file, int line, @Nonnull IndentStrategy indentStrategy) {
     int offset = document.getLineStartOffset(line);
     if (file != null) {
       PsiElement element = file.findElementAt(offset);

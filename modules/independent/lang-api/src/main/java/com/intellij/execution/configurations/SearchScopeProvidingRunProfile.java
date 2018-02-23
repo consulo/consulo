@@ -17,7 +17,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Base interface for run configurations that can specify which part of the project should be used to search sources. This information
@@ -29,6 +29,6 @@ public interface SearchScopeProvidingRunProfile extends RunProfile {
   /**
    * @return modules where to search sources for this configuration
    */
-  @NotNull
+  @Nonnull
   Module[] getModules();
 }

@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -11,16 +11,16 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myExternalName;
-  @NotNull
+  @Nonnull
   private String myInternalName;
 
-  public AbstractNamedData(@NotNull ProjectSystemId owner, @NotNull String externalName) {
+  public AbstractNamedData(@Nonnull ProjectSystemId owner, @Nonnull String externalName) {
     this(owner, externalName, externalName);
   }
 
-  public AbstractNamedData(@NotNull ProjectSystemId owner, @NotNull String externalName, @NotNull String internalName) {
+  public AbstractNamedData(@Nonnull ProjectSystemId owner, @Nonnull String externalName, @Nonnull String internalName) {
     super(owner);
     myExternalName = externalName;
     myInternalName = internalName;
@@ -29,7 +29,7 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   @Override
   public String getName() {
@@ -41,29 +41,29 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
    */
   @Deprecated
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     setExternalName(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExternalName() {
     return myExternalName;
   }
 
   @Override
-  public void setExternalName(@NotNull String name) {
+  public void setExternalName(@Nonnull String name) {
     myExternalName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getInternalName() {
     return myInternalName;
   }
 
   @Override
-  public void setInternalName(@NotNull String name) {
+  public void setInternalName(@Nonnull String name) {
     myInternalName = name;
   }
 

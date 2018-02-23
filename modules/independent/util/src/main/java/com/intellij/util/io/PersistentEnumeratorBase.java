@@ -23,8 +23,9 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.ShareableKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.Closeable;
@@ -84,7 +85,7 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
 
   public abstract static class RecordBufferHandler<T extends PersistentEnumeratorBase> {
     abstract int recordWriteOffset(T enumerator, byte[] buf);
-    @NotNull
+    @Nonnull
     abstract byte[] getRecordBuffer(T enumerator);
     abstract void setupRecord(T enumerator, int hashCode, final int dataOffset, final byte[] buf);
   }
@@ -157,12 +158,12 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
     }
   }
 
-  public PersistentEnumeratorBase(@NotNull File file,
-                                  @NotNull ResizeableMappedFile storage,
-                                  @NotNull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumeratorBase(@Nonnull File file,
+                                  @Nonnull ResizeableMappedFile storage,
+                                  @Nonnull KeyDescriptor<Data> dataDescriptor,
                                   int initialSize,
-                                  @NotNull Version version,
-                                  @NotNull RecordBufferHandler<? extends PersistentEnumeratorBase> recordBufferHandler,
+                                  @Nonnull Version version,
+                                  @Nonnull RecordBufferHandler<? extends PersistentEnumeratorBase> recordBufferHandler,
                                   boolean doCaching) throws IOException {
     myDataDescriptor = dataDescriptor;
     myFile = file;
@@ -257,12 +258,12 @@ public abstract class PersistentEnumeratorBase<Data> implements Forceable, Close
 
   protected abstract void setupEmptyFile() throws IOException;
 
-  @NotNull
+  @Nonnull
   public final RecordBufferHandler<PersistentEnumeratorBase> getRecordHandler() {
     return myRecordHandler;
   }
 
-  public void setRecordHandler(@NotNull RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
+  public void setRecordHandler(@Nonnull RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
     myRecordHandler = recordHandler;
   }
 

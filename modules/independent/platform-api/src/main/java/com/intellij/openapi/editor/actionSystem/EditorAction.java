@@ -23,8 +23,8 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.event.KeyEvent;
 
@@ -42,7 +42,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
-  public final EditorActionHandler setupHandler(@NotNull EditorActionHandler newHandler) {
+  public final EditorActionHandler setupHandler(@Nonnull EditorActionHandler newHandler) {
     ensureHandlersLoaded();
     EditorActionHandler tmp = myHandler;
     myHandler = newHandler;
@@ -70,18 +70,18 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull AnActionEvent e) {
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext);
     actionPerformed(editor, dataContext);
   }
 
   @Nullable
-  protected Editor getEditor(@NotNull DataContext dataContext) {
+  protected Editor getEditor(@Nonnull DataContext dataContext) {
     return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
-  public final void actionPerformed(final Editor editor, @NotNull final DataContext dataContext) {
+  public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
     if (editor == null) return;
 
     final EditorActionHandler handler = getHandler();
@@ -133,7 +133,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
   }
 
-  private static DataContext getProjectAwareDataContext(final Editor editor, @NotNull final DataContext original) {
+  private static DataContext getProjectAwareDataContext(final Editor editor, @Nonnull final DataContext original) {
     if (original.getData(CommonDataKeys.PROJECT) == editor.getProject()) {
       return original;
     }

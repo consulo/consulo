@@ -21,10 +21,10 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ImplementationTextSelectioner {
-  int getTextStartOffset(@NotNull PsiElement element);
+  int getTextStartOffset(@Nonnull PsiElement element);
 
-  int getTextEndOffset(@NotNull PsiElement element);
+  int getTextEndOffset(@Nonnull PsiElement element);
 }

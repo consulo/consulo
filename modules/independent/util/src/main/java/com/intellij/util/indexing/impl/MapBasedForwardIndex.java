@@ -18,7 +18,7 @@ package com.intellij.util.indexing.impl;
 import com.intellij.util.indexing.IndexExtension;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public abstract class MapBasedForwardIndex<Key, Value> extends AbstractForwardIndex<Key,Value> {
-  @NotNull
+  @Nonnull
   private volatile PersistentHashMap<Integer, Collection<Key>> myInputsIndex;
 
   protected MapBasedForwardIndex(IndexExtension<Key, Value, ?> indexExtension) throws IOException {
@@ -34,22 +34,22 @@ public abstract class MapBasedForwardIndex<Key, Value> extends AbstractForwardIn
     myInputsIndex = createMap();
   }
 
-  @NotNull
+  @Nonnull
   public abstract PersistentHashMap<Integer, Collection<Key>> createMap() throws IOException;
 
-  @NotNull
+  @Nonnull
   @Override
   public InputDataDiffBuilder<Key, Value> getDiffBuilder(final int inputId) throws IOException {
     return new CollectionInputDataDiffBuilder<Key, Value>(inputId, myInputsIndex.get(inputId));
   }
 
-  @NotNull
+  @Nonnull
   public PersistentHashMap<Integer, Collection<Key>> getInputsIndex() {
     return myInputsIndex;
   }
 
   @Override
-  public void putInputData(int inputId, @NotNull Map<Key, Value> data) throws IOException {
+  public void putInputData(int inputId, @Nonnull Map<Key, Value> data) throws IOException {
     putData(inputId, data.keySet());
   }
 

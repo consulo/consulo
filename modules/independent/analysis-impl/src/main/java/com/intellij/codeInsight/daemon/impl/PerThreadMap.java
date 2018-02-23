@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.UserDataHolder;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
@@ -33,8 +33,8 @@ import java.util.Map;
  */
 public abstract class PerThreadMap<T, KeyT extends UserDataHolder> {
   private volatile int version;
-  @NotNull
-  public abstract Collection<T> initialValue(@NotNull KeyT key);
+  @Nonnull
+  public abstract Collection<T> initialValue(@Nonnull KeyT key);
 
   // pair(version, map)
   private final ThreadLocal<Pair<Integer, Map<KeyT,List<T>>>> CACHE = new ThreadLocal<Pair<Integer, Map<KeyT,List<T>>>>(){
@@ -45,8 +45,8 @@ public abstract class PerThreadMap<T, KeyT extends UserDataHolder> {
   };
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  private List<T> cloneTemplates(@NotNull Collection<T> templates) {
+  @Nonnull
+  private List<T> cloneTemplates(@Nonnull Collection<T> templates) {
     List<T> result = new ArrayList<T>(templates.size());
     PicoContainer container = ApplicationManager.getApplication().getPicoContainer();
     for (T template : templates) {
@@ -57,8 +57,8 @@ public abstract class PerThreadMap<T, KeyT extends UserDataHolder> {
     return result;
   }
 
-  @NotNull
-  public List<T> get(@NotNull KeyT key) {
+  @Nonnull
+  public List<T> get(@Nonnull KeyT key) {
     Pair<Integer, Map<KeyT, List<T>>> pair = CACHE.get();
     Integer mapVersion = pair.getFirst();
     if (version != mapVersion) {

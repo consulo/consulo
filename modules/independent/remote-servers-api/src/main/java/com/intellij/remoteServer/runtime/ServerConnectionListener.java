@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.runtime;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -26,9 +26,9 @@ import java.util.EventListener;
 public interface ServerConnectionListener extends EventListener {
   Topic<ServerConnectionListener> TOPIC = Topic.create("server connections", ServerConnectionListener.class);
 
-  void onConnectionCreated(@NotNull ServerConnection<?> connection);
+  void onConnectionCreated(@Nonnull ServerConnection<?> connection);
 
-  void onConnectionStatusChanged(@NotNull ServerConnection<?> connection);
+  void onConnectionStatusChanged(@Nonnull ServerConnection<?> connection);
 
-  void onDeploymentsChanged(@NotNull ServerConnection<?> connection);
+  void onDeploymentsChanged(@Nonnull ServerConnection<?> connection);
 }

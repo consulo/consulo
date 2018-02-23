@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Iterator;
@@ -50,7 +50,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
    * If <code>quickEvaluationListener</code> is provided, quick approximate iteration mode becomes enabled, listener will be invoked
    * if approximation will in fact be used during width calculation.
    */
-  static Iterable<Fragment> create(final EditorView view, @NotNull final VisualLinesIterator visualLinesIterator,
+  static Iterable<Fragment> create(final EditorView view, @Nonnull final VisualLinesIterator visualLinesIterator,
                                    @Nullable final Runnable quickEvaluationListener) {
     return new Iterable<Fragment>() {
       @Override
@@ -110,7 +110,7 @@ class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterato
          quickEvaluationListener);
   }
 
-  public VisualLineFragmentsIterator(@NotNull EditorView view, @NotNull VisualLinesIterator visualLinesIterator,
+  public VisualLineFragmentsIterator(@Nonnull EditorView view, @Nonnull VisualLinesIterator visualLinesIterator,
                                      @Nullable Runnable quickEvaluationListener) {
     assert !visualLinesIterator.atEnd();
     init(view,

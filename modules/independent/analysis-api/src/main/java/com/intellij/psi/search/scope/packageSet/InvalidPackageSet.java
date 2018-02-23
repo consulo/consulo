@@ -16,14 +16,14 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
  */
 public class InvalidPackageSet extends AbstractPackageSet {
 
-  public InvalidPackageSet(@NotNull String text) {
+  public InvalidPackageSet(@Nonnull String text) {
     super(text);
   }
 

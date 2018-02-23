@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -32,13 +32,13 @@ public class NonBundledPluginsUsagesCollector extends UsagesCollector {
   private static final String GROUP_ID = "non-bundled-plugins";
 
   @Override
-  @NotNull
+  @Nonnull
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     final IdeaPluginDescriptor[] plugins = PluginManagerCore.getPlugins();
     final List<IdeaPluginDescriptor> nonBundledEnabledPlugins = ContainerUtil.filter(plugins, new Condition<IdeaPluginDescriptor>() {

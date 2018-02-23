@@ -75,7 +75,7 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.psi.tree.impl.DefaultASTCompositeFactory;
 import consulo.psi.tree.impl.DefaultASTLazyFactory;
 import consulo.psi.tree.impl.DefaultASTLeafFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Modifier;
@@ -91,9 +91,10 @@ public class CoreApplicationEnvironment {
   protected final MockApplication myApplication;
   private final CoreLocalFileSystem myLocalFileSystem;
   protected final VirtualFileSystem myJarFileSystem;
-  @NotNull private final Disposable myParentDisposable;
+  @Nonnull
+  private final Disposable myParentDisposable;
 
-  public CoreApplicationEnvironment(@NotNull Disposable parentDisposable) {
+  public CoreApplicationEnvironment(@Nonnull Disposable parentDisposable) {
     myParentDisposable = parentDisposable;
 
     myFileTypeRegistry = new CoreFileTypeRegistry();
@@ -138,29 +139,29 @@ public class CoreApplicationEnvironment {
     myApplication.registerService(ApplicationInfo.class, ApplicationInfoImpl.class);
   }
 
-  public <T> void registerApplicationService(@NotNull Class<T> serviceInterface, @NotNull T serviceImplementation) {
+  public <T> void registerApplicationService(@Nonnull Class<T> serviceInterface, @Nonnull T serviceImplementation) {
     myApplication.registerService(serviceInterface, serviceImplementation);
   }
 
-  @NotNull
+  @Nonnull
   protected VirtualFilePointerManager createVirtualFilePointerManager() {
     return new CoreVirtualFilePointerManager();
   }
 
-  @NotNull
-  protected MockApplication createApplication(@NotNull Disposable parentDisposable) {
+  @Nonnull
+  protected MockApplication createApplication(@Nonnull Disposable parentDisposable) {
     return new MockApplicationEx(parentDisposable);
   }
 
-  @NotNull
+  @Nonnull
   protected JobLauncher createJobLauncher() {
     return new JobLauncher() {
       @Override
-      public <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<T> things,
+      public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<T> things,
                                                          ProgressIndicator progress,
                                                          boolean runInReadAction,
                                                          boolean failFastOnAcquireReadAction,
-                                                         @NotNull Processor<? super T> thingProcessor) {
+                                                         @Nonnull Processor<? super T> thingProcessor) {
         for (T thing : things) {
           if (!thingProcessor.process(thing))
             return false;
@@ -168,18 +169,18 @@ public class CoreApplicationEnvironment {
         return true;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<T> things,
+      public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
                                                                            ProgressIndicator progress,
                                                                            boolean failFastOnAcquireReadAction,
-                                                                           @NotNull Processor<? super T> thingProcessor) {
+                                                                           @Nonnull Processor<? super T> thingProcessor) {
         return AsyncUtil.wrapBoolean(invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor));
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public Job<Void> submitToJobThread(@NotNull Runnable action, Consumer<Future> onDoneCallback) {
+      public Job<Void> submitToJobThread(@Nonnull Runnable action, Consumer<Future> onDoneCallback) {
         action.run();
         if (onDoneCallback != null)
           onDoneCallback.consume(new Future() {
@@ -204,7 +205,7 @@ public class CoreApplicationEnvironment {
             }
 
             @Override
-            public Object get(long timeout, @NotNull TimeUnit unit) {
+            public Object get(long timeout, @Nonnull TimeUnit unit) {
               return null;
             }
           });
@@ -213,61 +214,61 @@ public class CoreApplicationEnvironment {
     };
   }
 
-  @NotNull
+  @Nonnull
   protected ProgressManager createProgressIndicatorProvider() {
     return new CoreProgressManager();
   }
 
-  @NotNull
+  @Nonnull
   protected VirtualFileSystem createJarFileSystem() {
     return new CoreJarFileSystem();
   }
 
-  @NotNull
+  @Nonnull
   protected CoreLocalFileSystem createLocalFileSystem() {
     return new CoreLocalFileSystem();
   }
 
-  @NotNull
+  @Nonnull
   public MockApplication getApplication() {
     return myApplication;
   }
 
-  @NotNull
+  @Nonnull
   public Disposable getParentDisposable() {
     return myParentDisposable;
   }
 
-  public <T> void registerApplicationComponent(@NotNull Class<T> interfaceClass, @NotNull T implementation) {
+  public <T> void registerApplicationComponent(@Nonnull Class<T> interfaceClass, @Nonnull T implementation) {
     registerComponentInstance(myApplication.getPicoContainer(), interfaceClass, implementation);
   }
 
-  public void registerFileType(@NotNull FileType fileType, @NotNull String extension) {
+  public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
     myFileTypeRegistry.registerFileType(fileType, extension);
   }
 
-  public void registerParserDefinition(@NotNull ParserDefinition definition) {
+  public void registerParserDefinition(@Nonnull ParserDefinition definition) {
     addExplicitExtension(LanguageParserDefinitions.INSTANCE, definition.getFileNodeType().getLanguage(), definition);
   }
 
-  public static <T> void registerComponentInstance(@NotNull MutablePicoContainer container, @NotNull Class<T> key, @NotNull T implementation) {
+  public static <T> void registerComponentInstance(@Nonnull MutablePicoContainer container, @Nonnull Class<T> key, @Nonnull T implementation) {
     container.unregisterComponent(key);
     container.registerComponentInstance(key, implementation);
   }
 
-  public <T> void addExplicitExtension(@NotNull LanguageExtension<T> instance, @NotNull Language language, @NotNull T object) {
+  public <T> void addExplicitExtension(@Nonnull LanguageExtension<T> instance, @Nonnull Language language, @Nonnull T object) {
     doAddExplicitExtension(instance, language, object);
   }
 
-  public void registerParserDefinition(@NotNull Language language, @NotNull ParserDefinition parserDefinition) {
+  public void registerParserDefinition(@Nonnull Language language, @Nonnull ParserDefinition parserDefinition) {
     addExplicitExtension(LanguageParserDefinitions.INSTANCE, language, parserDefinition);
   }
 
-  public <T> void addExplicitExtension(@NotNull final FileTypeExtension<T> instance, @NotNull final FileType fileType, @NotNull final T object) {
+  public <T> void addExplicitExtension(@Nonnull final FileTypeExtension<T> instance, @Nonnull final FileType fileType, @Nonnull final T object) {
     doAddExplicitExtension(instance, fileType, object);
   }
 
-  private <T,U> void doAddExplicitExtension(@NotNull final KeyedExtensionCollector<T,U> instance, @NotNull final U key, @NotNull final T object) {
+  private <T,U> void doAddExplicitExtension(@Nonnull final KeyedExtensionCollector<T,U> instance, @Nonnull final U key, @Nonnull final T object) {
     instance.addExplicitExtension(key, object);
     Disposer.register(myParentDisposable, new Disposable() {
       @Override
@@ -277,11 +278,11 @@ public class CoreApplicationEnvironment {
     });
   }
 
-  public <T> void addExplicitExtension(@NotNull final ClassExtension<T> instance, @NotNull final Class aClass, @NotNull final T object) {
+  public <T> void addExplicitExtension(@Nonnull final ClassExtension<T> instance, @Nonnull final Class aClass, @Nonnull final T object) {
     doAddExplicitExtension(instance, aClass, object);
   }
 
-  public <T> void addExtension(@NotNull ExtensionPointName<T> name, @NotNull final T extension) {
+  public <T> void addExtension(@Nonnull ExtensionPointName<T> name, @Nonnull final T extension) {
     final ExtensionPoint<T> extensionPoint = Extensions.getRootArea().getExtensionPoint(name);
     extensionPoint.registerExtension(extension);
     Disposer.register(myParentDisposable, new Disposable() {
@@ -293,30 +294,30 @@ public class CoreApplicationEnvironment {
   }
 
 
-  public static <T> void registerExtensionPoint(@NotNull ExtensionsArea area,
-                                                @NotNull ExtensionPointName<T> extensionPointName,
-                                                @NotNull Class<? extends T> aClass) {
+  public static <T> void registerExtensionPoint(@Nonnull ExtensionsArea area,
+                                                @Nonnull ExtensionPointName<T> extensionPointName,
+                                                @Nonnull Class<? extends T> aClass) {
     final String name = extensionPointName.getName();
     registerExtensionPoint(area, name, aClass);
   }
 
-  public static <T> void registerExtensionPoint(@NotNull ExtensionsArea area, @NotNull String name, @NotNull Class<? extends T> aClass) {
+  public static <T> void registerExtensionPoint(@Nonnull ExtensionsArea area, @Nonnull String name, @Nonnull Class<? extends T> aClass) {
     if (!area.hasExtensionPoint(name)) {
       ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
       area.registerExtensionPoint(name, aClass.getName(), kind);
     }
   }
 
-  public static <T> void registerApplicationExtensionPoint(@NotNull ExtensionPointName<T> extensionPointName, @NotNull Class<? extends T> aClass) {
+  public static <T> void registerApplicationExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<? extends T> aClass) {
     registerExtensionPoint(Extensions.getRootArea(), extensionPointName, aClass);
   }
 
-  @NotNull
+  @Nonnull
   public CoreLocalFileSystem getLocalFileSystem() {
     return myLocalFileSystem;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getJarFileSystem() {
     return myJarFileSystem;
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -23,15 +23,15 @@ import java.util.Collection;
  */
 public interface RowInfo<Id> {
 
-  @NotNull
+  @Nonnull
   Id getCommit();
 
-  @NotNull
+  @Nonnull
   Id getOneOfHeads();
 
-  @NotNull
+  @Nonnull
   Collection<? extends PrintElement> getPrintElements();
 
-  @NotNull
+  @Nonnull
   RowType getRowType();
 }

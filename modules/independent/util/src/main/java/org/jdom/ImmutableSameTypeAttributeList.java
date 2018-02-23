@@ -15,7 +15,7 @@ package org.jdom;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.EmptyIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   private final int myType;
   private final Namespace myNs;
 
-  ImmutableSameTypeAttributeList(@NotNull String[] nameValues, int type, @NotNull Namespace ns) {
+  ImmutableSameTypeAttributeList(@Nonnull String[] nameValues, int type, @Nonnull Namespace ns) {
     myNameValues = nameValues.length == 0 ? EMPTY_STRING_ARRAY : nameValues;
     myType = type;
     myNs = ns;
@@ -84,7 +84,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     return -1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<Attribute> iterator() {
     if (isEmpty()) return EmptyIterator.getInstance();
@@ -107,7 +107,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Attribute> subList(int fromIndex, int toIndex) {
     return toList().subList(fromIndex, toIndex);
@@ -175,20 +175,20 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     return indexOf(o) != -1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] toArray() {
     return toList().toArray(new Attribute[0]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] toArray(@NotNull T[] a) {
+  public <T> T[] toArray(@Nonnull T[] a) {
     return (T[])toArray();
   }
 
   @Override
-  public boolean containsAll(@NotNull Collection<?> c) {
+  public boolean containsAll(@Nonnull Collection<?> c) {
     for (Object o : c) {
       if (!contains(o)) return false;
     }
@@ -207,12 +207,12 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   }
 
   @Override
-  public boolean addAll(@NotNull Collection<? extends Attribute> collection) {
+  public boolean addAll(@Nonnull Collection<? extends Attribute> collection) {
     throw ImmutableElement.immutableError(this);
   }
 
   @Override
-  public boolean addAll(int index, @NotNull Collection<? extends Attribute> collection) {
+  public boolean addAll(int index, @Nonnull Collection<? extends Attribute> collection) {
     throw ImmutableElement.immutableError(this);
   }
 
@@ -231,13 +231,13 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
     throw ImmutableElement.immutableError(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ListIterator<Attribute> listIterator() {
     throw ImmutableElement.immutableError(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ListIterator<Attribute> listIterator(int index) {
     throw ImmutableElement.immutableError(this);
@@ -249,12 +249,12 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   }
 
   @Override
-  public boolean removeAll(@NotNull Collection<?> c) {
+  public boolean removeAll(@Nonnull Collection<?> c) {
     throw ImmutableElement.immutableError(this);
   }
 
   @Override
-  public boolean retainAll(@NotNull Collection<?> c) {
+  public boolean retainAll(@Nonnull Collection<?> c) {
     throw ImmutableElement.immutableError(this);
   }
 

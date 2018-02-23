@@ -24,8 +24,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -47,12 +47,15 @@ import java.util.Map;
  */
 public class EditableNotificationMessageElement extends NotificationMessageElement implements EditableMessageElement {
 
-  @NotNull private final TreeCellEditor myRightTreeCellEditor;
-  @NotNull private final Notification myNotification;
-  @NotNull private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
+  @Nonnull
+  private final TreeCellEditor myRightTreeCellEditor;
+  @Nonnull
+  private final Notification myNotification;
+  @Nonnull
+  private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
 
-  public EditableNotificationMessageElement(@NotNull Notification notification,
-                                            @NotNull ErrorTreeElementKind kind,
+  public EditableNotificationMessageElement(@Nonnull Notification notification,
+                                            @Nonnull ErrorTreeElementKind kind,
                                             @Nullable GroupingElement parent,
                                             String[] message,
                                             Navigatable navigatable,
@@ -64,11 +67,11 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
 
-  public void addDisabledLink(@NotNull String url, @Nullable String text) {
+  public void addDisabledLink(@Nonnull String url, @javax.annotation.Nullable String text) {
     disabledLinks.put(url, text);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TreeCellEditor getRightSelfEditor() {
     return myRightTreeCellEditor;
@@ -79,11 +82,11 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     return true;
   }
 
-  public static void disableLink(@NotNull HyperlinkEvent event) {
+  public static void disableLink(@Nonnull HyperlinkEvent event) {
     disableLink(event, null);
   }
 
-  private static void disableLink(@NotNull final HyperlinkEvent event, @Nullable final String linkText) {
+  private static void disableLink(@Nonnull final HyperlinkEvent event, @Nullable final String linkText) {
     if (event.getSource() instanceof MyJEditorPane) {
       UIUtil.invokeLaterIfNeeded(new Runnable() {
         @Override
@@ -96,7 +99,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     }
   }
 
-  protected void updateStyle(@NotNull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  protected void updateStyle(@Nonnull JEditorPane editorPane, @javax.annotation.Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     super.updateStyle(editorPane, tree, value, selected, hasFocus);
 
     final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
@@ -130,10 +133,10 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
   private static class MyJEditorPane extends JEditorPane {
-    @NotNull
+    @Nonnull
     private final EditableNotificationMessageElement myElement;
 
-    public MyJEditorPane(@NotNull EditableNotificationMessageElement element) {
+    public MyJEditorPane(@Nonnull EditableNotificationMessageElement element) {
       myElement = element;
     }
   }

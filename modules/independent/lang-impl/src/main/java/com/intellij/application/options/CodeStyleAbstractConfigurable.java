@@ -20,7 +20,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Set;
@@ -32,7 +32,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
   private final String myDisplayName;
   private CodeStyleSchemesModel myModel;
 
-  public CodeStyleAbstractConfigurable(@NotNull CodeStyleSettings settings, CodeStyleSettings cloneSettings,
+  public CodeStyleAbstractConfigurable(@Nonnull CodeStyleSettings settings, CodeStyleSettings cloneSettings,
                                        final String displayName) {
     mySettings = settings;
     myCloneSettings = cloneSettings;

@@ -15,14 +15,12 @@
  */
 package com.intellij.xdebugger;
 
-import org.jetbrains.annotations.Nullable;
-
 import javax.swing.tree.TreeNode;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface XNamedTreeNode extends TreeNode {
-  @Nullable
+  @javax.annotation.Nullable
   String getName();
 }

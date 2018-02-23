@@ -20,8 +20,8 @@ import com.intellij.openapi.extensions.PluginId;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class PluginNode implements IdeaPluginDescriptor {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<SimpleExtension> getSimpleExtensions() {
     return mySimpleExtensions;
   }
@@ -309,13 +309,13 @@ public class PluginNode implements IdeaPluginDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PluginId[] getDependentPluginIds() {
     return myDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myDependencies.toArray(new PluginId[myDependencies.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myOptionalDependencies.toArray(new PluginId[myOptionalDependencies.size()]);
   }
@@ -332,25 +332,25 @@ public class PluginNode implements IdeaPluginDescriptor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ComponentConfig[] getAppComponents() {
     return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ComponentConfig[] getProjectComponents() {
     return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ComponentConfig[] getModuleComponents() {
     return ComponentConfig.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HelpSetPath[] getHelpSets() {
     return HelpSetPath.EMPTY;

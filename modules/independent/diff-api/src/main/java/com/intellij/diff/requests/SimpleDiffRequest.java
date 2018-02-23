@@ -17,37 +17,39 @@ package com.intellij.diff.requests;
 
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class SimpleDiffRequest extends ContentDiffRequest {
-  @Nullable private final String myTitle;
-  @NotNull private final List<DiffContent> myContents;
-  @NotNull private final List<String> myContentTitles;
+  @javax.annotation.Nullable
+  private final String myTitle;
+  @Nonnull
+  private final List<DiffContent> myContents;
+  @Nonnull
+  private final List<String> myContentTitles;
 
-  public SimpleDiffRequest(@Nullable String title,
-                           @NotNull DiffContent content1,
-                           @NotNull DiffContent content2,
-                           @Nullable String title1,
-                           @Nullable String title2) {
+  public SimpleDiffRequest(@javax.annotation.Nullable String title,
+                           @Nonnull DiffContent content1,
+                           @Nonnull DiffContent content2,
+                           @javax.annotation.Nullable String title1,
+                           @javax.annotation.Nullable String title2) {
     this(title, ContainerUtil.list(content1, content2), ContainerUtil.list(title1, title2));
   }
 
-  public SimpleDiffRequest(@Nullable String title,
-                           @NotNull DiffContent content1,
-                           @NotNull DiffContent content2,
-                           @NotNull DiffContent content3,
-                           @Nullable String title1,
-                           @Nullable String title2,
-                           @Nullable String title3) {
+  public SimpleDiffRequest(@javax.annotation.Nullable String title,
+                           @Nonnull DiffContent content1,
+                           @Nonnull DiffContent content2,
+                           @Nonnull DiffContent content3,
+                           @javax.annotation.Nullable String title1,
+                           @javax.annotation.Nullable String title2,
+                           @javax.annotation.Nullable String title3) {
     this(title, ContainerUtil.list(content1, content2, content3), ContainerUtil.list(title1, title2, title3));
   }
 
-  public SimpleDiffRequest(@Nullable String title,
-                           @NotNull List<DiffContent> contents,
-                           @NotNull List<String> titles) {
+  public SimpleDiffRequest(@javax.annotation.Nullable String title,
+                           @Nonnull List<DiffContent> contents,
+                           @Nonnull List<String> titles) {
     assert contents.size() == titles.size();
 
     myTitle = title;
@@ -55,19 +57,19 @@ public class SimpleDiffRequest extends ContentDiffRequest {
     myContentTitles = titles;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DiffContent> getContents() {
     return myContents;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getContentTitles() {
     return myContentTitles;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTitle() {
     return myTitle;

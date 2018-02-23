@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -80,7 +80,7 @@ class ApproximationFragment implements LineFragment {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineFragment subFragment(int startOffset, int endOffset) {
     throw new UnsupportedOperationException();

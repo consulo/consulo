@@ -22,18 +22,18 @@ import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.AsyncProcessIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ProgressStripe extends JBPanel {
-  @NotNull
+  @Nonnull
   private final JBPanel myPanel;
   private final NotNullComputable<MyLoadingDecorator> myCreateLoadingDecorator;
   protected MyLoadingDecorator myDecorator;
 
-  public ProgressStripe(@NotNull JComponent targetComponent, @NotNull Disposable parent, int startDelayMs) {
+  public ProgressStripe(@Nonnull JComponent targetComponent, @Nonnull Disposable parent, int startDelayMs) {
     super(new BorderLayout());
     myPanel = new JBPanel(new BorderLayout());
     myPanel.setOpaque(false);
@@ -78,12 +78,12 @@ public class ProgressStripe extends JBPanel {
   }
 
   private static class MyLoadingDecorator extends LoadingDecorator {
-    @NotNull
+    @Nonnull
     private final Disposable myDisposable;
 
-    public MyLoadingDecorator(@NotNull JComponent component,
-                              @NotNull JPanel contentPanel,
-                              @NotNull Disposable disposable,
+    public MyLoadingDecorator(@Nonnull JComponent component,
+                              @Nonnull JPanel contentPanel,
+                              @Nonnull Disposable disposable,
                               int startDelayMs) {
       super(contentPanel, disposable, startDelayMs, false, ProgressStripeIcon.generateIcon(component));
       myDisposable = disposable;

@@ -19,8 +19,8 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -30,13 +30,14 @@ import java.util.List;
  */
 public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBuilder {
   
-  @NotNull private final CodeStyleSettings mySettings;
+  @Nonnull
+  private final CodeStyleSettings mySettings;
 
-  public DefaultInjectedLanguageBlockBuilder(@NotNull CodeStyleSettings settings) {
+  public DefaultInjectedLanguageBlockBuilder(@Nonnull CodeStyleSettings settings) {
     mySettings = settings;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CodeStyleSettings getSettings() {
     return mySettings;
@@ -59,21 +60,23 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
 
   private static class GlueBlock extends AbstractBlock {
 
-    @NotNull private final Indent    myIndent;
-    @NotNull private final TextRange myRange;
+    @Nonnull
+    private final Indent    myIndent;
+    @Nonnull
+    private final TextRange myRange;
 
-    private GlueBlock(@NotNull ASTNode node,
+    private GlueBlock(@Nonnull ASTNode node,
                       @Nullable Wrap wrap,
                       @Nullable Alignment alignment,
-                      @NotNull Indent indent,
-                      @NotNull TextRange range)
+                      @Nonnull Indent indent,
+                      @Nonnull TextRange range)
     {
       super(node, wrap, alignment);
       myIndent = indent;
       myRange = range;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public TextRange getTextRange() {
       return myRange;
@@ -84,7 +87,7 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
       return AbstractBlock.EMPTY;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Indent getIndent() {
       return myIndent;
@@ -92,7 +95,7 @@ public class DefaultInjectedLanguageBlockBuilder extends InjectedLanguageBlockBu
 
     @Nullable
     @Override
-    public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+    public Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
       return null;
     }
 

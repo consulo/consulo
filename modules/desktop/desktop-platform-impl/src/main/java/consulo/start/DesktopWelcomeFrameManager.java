@@ -18,7 +18,7 @@ package consulo.start;
 import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DesktopWelcomeFrameManager implements WelcomeFrameManager {
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public Window openFrame() {
     FlatWelcomeFrame flatWelcomeFrame = new FlatWelcomeFrame();

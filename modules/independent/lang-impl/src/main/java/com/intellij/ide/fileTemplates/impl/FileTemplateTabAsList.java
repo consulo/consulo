@@ -21,7 +21,7 @@ import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -132,7 +132,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getTemplates() {
     final int size = myModel.getSize();
     List<FileTemplate> templates = new ArrayList<>(size);

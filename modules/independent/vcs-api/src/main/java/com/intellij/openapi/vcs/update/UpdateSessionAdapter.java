@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class UpdateSessionAdapter implements UpdateSession{
     myIsCanceled = isCanceled;
   }
 
-  @NotNull
+  @Nonnull
   public List<VcsException> getExceptions() {
     return myExceptions;
   }

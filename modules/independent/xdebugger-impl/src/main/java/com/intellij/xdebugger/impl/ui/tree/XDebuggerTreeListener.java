@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui.tree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * @author nik
  */
 public interface XDebuggerTreeListener {
-  void nodeLoaded(@NotNull RestorableStateNode node, final String name);
+  void nodeLoaded(@Nonnull RestorableStateNode node, final String name);
 
-  void childrenLoaded(@NotNull XDebuggerTreeNode node, @NotNull List<XValueContainerNode<?>> children, final boolean last);
+  void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, final boolean last);
 }

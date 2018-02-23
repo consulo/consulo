@@ -40,8 +40,8 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -86,7 +86,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   public MemberChooser(T[] elements,
                        boolean allowEmptySelection,
                        boolean allowMultiSelection,
-                       @NotNull Project project,
+                       @Nonnull Project project,
                        @Nullable JComponent headerPanel,
                        JComponent[] optionControls) {
     this(allowEmptySelection, allowMultiSelection, project, false, headerPanel, optionControls);
@@ -94,14 +94,14 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     init();
   }
 
-  public MemberChooser(T[] elements, boolean allowEmptySelection, boolean allowMultiSelection, @NotNull Project project) {
+  public MemberChooser(T[] elements, boolean allowEmptySelection, boolean allowMultiSelection, @Nonnull Project project) {
     this(elements, allowEmptySelection, allowMultiSelection, project, false);
   }
 
   public MemberChooser(T[] elements,
                        boolean allowEmptySelection,
                        boolean allowMultiSelection,
-                       @NotNull Project project,
+                       @Nonnull Project project,
                        boolean isInsertOverrideVisible) {
     this(elements, allowEmptySelection, allowMultiSelection, project, isInsertOverrideVisible, null);
   }
@@ -109,7 +109,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   public MemberChooser(T[] elements,
                        boolean allowEmptySelection,
                        boolean allowMultiSelection,
-                       @NotNull Project project,
+                       @Nonnull Project project,
                        boolean isInsertOverrideVisible,
                        @Nullable JComponent headerPanel
   ) {
@@ -120,7 +120,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
   protected MemberChooser(boolean allowEmptySelection,
                           boolean allowMultiSelection,
-                          @NotNull Project project,
+                          @Nonnull Project project,
                           boolean isInsertOverrideVisible,
                           @Nullable JComponent headerPanel,
                           @Nullable JComponent[] optionControls) {
@@ -262,7 +262,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     final List<Action> actions = new ArrayList<Action>();
     actions.add(getOKAction());
@@ -411,8 +411,8 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     };
   }
 
-  @NotNull
-  protected String convertElementText(@NotNull String originalElementText) {
+  @Nonnull
+  protected String convertElementText(@Nonnull String originalElementText) {
     String res = originalElementText;
 
     int i = res.indexOf(':');

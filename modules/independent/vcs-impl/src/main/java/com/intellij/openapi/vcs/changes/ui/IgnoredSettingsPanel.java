@@ -34,7 +34,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -174,7 +174,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

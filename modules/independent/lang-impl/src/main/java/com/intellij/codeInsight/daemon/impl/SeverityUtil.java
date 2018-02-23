@@ -18,13 +18,13 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class SeverityUtil {
-  @NotNull
-  public static Collection<SeverityRegistrar.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@NotNull SeverityRegistrar registrar) {
+  @Nonnull
+  public static Collection<SeverityRegistrar.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@Nonnull SeverityRegistrar registrar) {
     Collection<SeverityRegistrar.SeverityBasedTextAttributes> collection = registrar.allRegisteredAttributes();
     for (HighlightInfoType type : registrar.standardSeverities()) {
       collection.add(getSeverityBasedTextAttributes(registrar, type));
@@ -32,7 +32,7 @@ public class SeverityUtil {
     return collection;
   }
 
-  private static SeverityRegistrar.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@NotNull SeverityRegistrar registrar, @NotNull HighlightInfoType type) {
+  private static SeverityRegistrar.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrar registrar, @Nonnull HighlightInfoType type) {
     final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     final TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {

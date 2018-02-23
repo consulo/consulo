@@ -17,8 +17,8 @@ package com.intellij.openapi.externalSystem.settings;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,9 +34,10 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
 
   private String  myExternalProjectPath;
   @AbstractCollection(surroundWithTag = true)
-  @Nullable private Set<String> myModules = new HashSet<String>();
+  @javax.annotation.Nullable
+  private Set<String> myModules = new HashSet<String>();
 
-  @NotNull
+  @Nonnull
   public Set<String> getModules() {
     return myModules == null ? Collections.<String>emptySet() : myModules;
   }
@@ -52,7 +53,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
     return myExternalProjectPath;
   }
 
-  public void setExternalProjectPath(@NotNull String externalProjectPath) {
+  public void setExternalProjectPath(@Nonnull String externalProjectPath) {
     myExternalProjectPath = externalProjectPath;
   }
 
@@ -73,7 +74,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
   }
 
   @Override
-  public int compareTo(@NotNull ExternalProjectSettings that) {
+  public int compareTo(@Nonnull ExternalProjectSettings that) {
     return Comparing.compare(myExternalProjectPath, that.myExternalProjectPath);
   }
 
@@ -97,10 +98,10 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
     return myExternalProjectPath;
   }
 
-  @NotNull
+  @Nonnull
   public abstract ExternalProjectSettings clone();
 
-  protected void copyTo(@NotNull ExternalProjectSettings receiver) {
+  protected void copyTo(@Nonnull ExternalProjectSettings receiver) {
     receiver.myExternalProjectPath = myExternalProjectPath;
     receiver.myModules = new HashSet<String>(myModules);
     receiver.myUseAutoImport = myUseAutoImport;

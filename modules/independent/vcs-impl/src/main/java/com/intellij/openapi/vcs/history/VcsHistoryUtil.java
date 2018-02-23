@@ -40,8 +40,8 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -88,9 +88,9 @@ public class VcsHistoryUtil {
    * @throws VcsException
    * @throws IOException
    */
-  public static void showDiff(@NotNull final Project project, @NotNull FilePath path,
-                              @NotNull VcsFileRevision revision1, @NotNull VcsFileRevision revision2,
-                              @NotNull String title1, @NotNull String title2) throws VcsException, IOException {
+  public static void showDiff(@Nonnull final Project project, @Nonnull FilePath path,
+                              @Nonnull VcsFileRevision revision1, @Nonnull VcsFileRevision revision2,
+                              @Nonnull String title1, @Nonnull String title2) throws VcsException, IOException {
     final byte[] content1 = loadRevisionContent(revision1);
     final byte[] content2 = loadRevisionContent(revision2);
 
@@ -120,24 +120,24 @@ public class VcsHistoryUtil {
     }, null, project);
   }
 
-  @Nullable
-  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@NotNull VcsFileRevision revision) {
+  @javax.annotation.Nullable
+  private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
     }
     return null;
   }
 
-  @Nullable
-  private static FilePath getRevisionPath(@NotNull VcsFileRevision revision) {
+  @javax.annotation.Nullable
+  private static FilePath getRevisionPath(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return ((VcsFileRevisionEx)revision).getPath();
     }
     return null;
   }
 
-  @NotNull
-  public static byte[] loadRevisionContent(@NotNull VcsFileRevision revision) throws VcsException, IOException {
+  @Nonnull
+  public static byte[] loadRevisionContent(@Nonnull VcsFileRevision revision) throws VcsException, IOException {
     byte[] content = revision.getContent();
     if (content == null) {
       revision.loadContent();
@@ -147,8 +147,8 @@ public class VcsHistoryUtil {
     return content;
   }
 
-  public static String loadRevisionContentGuessEncoding(@NotNull final VcsFileRevision revision, @Nullable final VirtualFile file,
-                                                        @Nullable final Project project) throws VcsException, IOException {
+  public static String loadRevisionContentGuessEncoding(@Nonnull final VcsFileRevision revision, @Nullable final VirtualFile file,
+                                                        @javax.annotation.Nullable final Project project) throws VcsException, IOException {
     final byte[] bytes = loadRevisionContent(revision);
     if (file != null) {
       return new String(bytes, file.getCharset());
@@ -161,9 +161,9 @@ public class VcsHistoryUtil {
     return CharsetToolkit.bytesToString(bytes, e.getDefaultCharset());
   }
 
-  @NotNull
-  private static DiffContent createContent(@NotNull Project project, @NotNull byte[] content, @NotNull VcsFileRevision revision,
-                                           @NotNull FilePath filePath) throws IOException {
+  @Nonnull
+  private static DiffContent createContent(@Nonnull Project project, @Nonnull byte[] content, @Nonnull VcsFileRevision revision,
+                                           @Nonnull FilePath filePath) throws IOException {
     DiffContentFactoryEx contentFactory = DiffContentFactoryEx.getInstanceEx();
     if (isCurrent(revision)) {
       VirtualFile file = filePath.getVirtualFile();
@@ -189,13 +189,13 @@ public class VcsHistoryUtil {
    *
    * @see #showDiff(Project, FilePath, VcsFileRevision, VcsFileRevision, String, String)
    */
-  public static void showDifferencesInBackground(@NotNull final Project project,
-                                                 @NotNull final FilePath filePath,
-                                                 @NotNull final VcsFileRevision older,
-                                                 @NotNull final VcsFileRevision newer) {
+  public static void showDifferencesInBackground(@Nonnull final Project project,
+                                                 @Nonnull final FilePath filePath,
+                                                 @Nonnull final VcsFileRevision older,
+                                                 @Nonnull final VcsFileRevision newer) {
     new Task.Backgroundable(project, "Comparing Revisions...") {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           showDiff(project, filePath, older, newer, makeTitle(older), makeTitle(newer));
         }
@@ -213,15 +213,15 @@ public class VcsHistoryUtil {
         }
       }
 
-      @NotNull
-      private String makeTitle(@NotNull VcsFileRevision revision) {
+      @Nonnull
+      private String makeTitle(@Nonnull VcsFileRevision revision) {
         return revision.getRevisionNumber().asString() +
                (revision instanceof CurrentRevision ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
       }
     }.queue();
   }
 
-  @NotNull
+  @Nonnull
   public static Font getCommitDetailsFont() {
     return JBUI.scale(EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN));
   }

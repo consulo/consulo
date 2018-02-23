@@ -16,8 +16,8 @@
 package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.TestFinished;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TestFinishedEvent extends TreeNodeEvent {
 
@@ -25,31 +25,31 @@ public class TestFinishedEvent extends TreeNodeEvent {
   private final Long myDuration;
   private final String myOutputFile;
 
-  public TestFinishedEvent(@NotNull TestFinished testFinished, @Nullable Long duration) {
+  public TestFinishedEvent(@Nonnull TestFinished testFinished, @javax.annotation.Nullable Long duration) {
     this(testFinished, duration, null);
   }
 
-  public TestFinishedEvent(@NotNull TestFinished testFinished, @Nullable Long  duration, String outputFile) {
+  public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long  duration, String outputFile) {
     this(testFinished.getTestName(), TreeNodeEvent.getNodeId(testFinished), duration, outputFile);
   }
 
-  public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration) {
+  public TestFinishedEvent(@javax.annotation.Nullable String name, @Nullable String id, @javax.annotation.Nullable Long duration) {
     this(name, id, duration, null);
   }
 
-  public TestFinishedEvent(@Nullable String name, @Nullable String id, @Nullable Long duration, String outputFile) {
+  public TestFinishedEvent(@Nullable String name, @javax.annotation.Nullable String id, @javax.annotation.Nullable Long duration, String outputFile) {
     super(name, id);
     myDuration = duration;
     myOutputFile = outputFile;
   }
 
-  public TestFinishedEvent(@NotNull String name, @Nullable Long duration) {
+  public TestFinishedEvent(@Nonnull String name, @javax.annotation.Nullable Long duration) {
     this(name, null, duration);
   }
 
   /** @deprecated use {@link #TestFinishedEvent(String, long)} (to be removed in IDEA 16) */
   @SuppressWarnings("unused")
-  public TestFinishedEvent(@NotNull String name, int duration) {
+  public TestFinishedEvent(@Nonnull String name, int duration) {
     this(name, null, Long.valueOf(duration));
   }
 
@@ -62,7 +62,7 @@ public class TestFinishedEvent extends TreeNodeEvent {
   }
 
   @Override
-  protected void appendToStringInfo(@NotNull StringBuilder buf) {
+  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
     append(buf, "duration", myDuration);
   }
 

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ import java.util.List;
  */
 abstract class ThreadLocalAnnotatorMap<K, V> {
   private volatile int version;
-  @NotNull
-  public abstract Collection<V> initialValue(@NotNull K key);
+  @Nonnull
+  public abstract Collection<V> initialValue(@Nonnull K key);
 
   private static class VersionedMap<K, V> extends THashMap<K, List<V>> {
     private final int version;
@@ -49,8 +49,8 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
   };
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  private List<V> cloneTemplates(@NotNull Collection<V> templates) {
+  @Nonnull
+  private List<V> cloneTemplates(@Nonnull Collection<V> templates) {
     List<V> result = new ArrayList<>(templates.size());
     PicoContainer container = ApplicationManager.getApplication().getPicoContainer();
     for (V template : templates) {
@@ -61,8 +61,8 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
     return result;
   }
 
-  @NotNull
-  public List<V> get(@NotNull K key) {
+  @Nonnull
+  public List<V> get(@Nonnull K key) {
     VersionedMap<K, V> map = CACHE.get();
     if (version != map.version) {
       CACHE.remove();

@@ -44,33 +44,33 @@ import com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class PatchDiffRequestFactory {
-  @NotNull
-  public static DiffRequest createDiffRequest(@Nullable Project project,
-                                              @NotNull Change change,
-                                              @NotNull String name,
-                                              @NotNull UserDataHolder context,
-                                              @NotNull ProgressIndicator indicator)
+  @Nonnull
+  public static DiffRequest createDiffRequest(@javax.annotation.Nullable Project project,
+                                              @Nonnull Change change,
+                                              @Nonnull String name,
+                                              @Nonnull UserDataHolder context,
+                                              @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException {
     ChangeDiffRequestProducer proxyProducer = ChangeDiffRequestProducer.create(project, change);
     if (proxyProducer == null) throw new DiffRequestProducerException("Can't show diff for '" + name + "'");
     return proxyProducer.process(context, indicator);
   }
 
-  @NotNull
+  @Nonnull
   public static DiffRequest createConflictDiffRequest(@Nullable Project project,
-                                                      @Nullable VirtualFile file,
-                                                      @NotNull TextFilePatch patch,
-                                                      @NotNull String afterTitle,
-                                                      @NotNull final Getter<ApplyPatchForBaseRevisionTexts> textsGetter,
-                                                      @NotNull String name,
-                                                      @NotNull UserDataHolder context,
-                                                      @NotNull ProgressIndicator indicator)
+                                                      @javax.annotation.Nullable VirtualFile file,
+                                                      @Nonnull TextFilePatch patch,
+                                                      @Nonnull String afterTitle,
+                                                      @Nonnull final Getter<ApplyPatchForBaseRevisionTexts> textsGetter,
+                                                      @Nonnull String name,
+                                                      @Nonnull UserDataHolder context,
+                                                      @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException {
     if (file == null) throw new DiffRequestProducerException("Can't show diff for '" + name + "'");
     if (file.getFileType().isBinary()) throw new DiffRequestProducerException("Can't show diff for binary file '" + name + "'");
@@ -105,12 +105,12 @@ public class PatchDiffRequestFactory {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static DiffRequest createDiffRequest(@Nullable Project project,
                                               @Nullable VirtualFile file,
-                                              @NotNull List<String> contents,
+                                              @Nonnull List<String> contents,
                                               @Nullable String windowTitle,
-                                              @NotNull List<String> titles) {
+                                              @Nonnull List<String> titles) {
     assert contents.size() == 3;
     assert titles.size() == 3;
 
@@ -132,14 +132,14 @@ public class PatchDiffRequestFactory {
                                  localTitle, baseTitle, patchedTitle);
   }
 
-  @NotNull
+  @Nonnull
   public static DiffRequest createBadDiffRequest(@Nullable Project project,
-                                                 @NotNull VirtualFile file,
-                                                 @NotNull String localContent,
-                                                 @NotNull AppliedTextPatch textPatch,
+                                                 @Nonnull VirtualFile file,
+                                                 @Nonnull String localContent,
+                                                 @Nonnull AppliedTextPatch textPatch,
                                                  @Nullable String windowTitle,
                                                  @Nullable String localTitle,
-                                                 @Nullable String resultTitle,
+                                                 @javax.annotation.Nullable String resultTitle,
                                                  @Nullable String patchTitle) {
     if (windowTitle == null) windowTitle = getBadPatchTitle(file);
     if (localTitle == null) localTitle = VcsBundle.message("patch.apply.conflict.local.version");
@@ -151,13 +151,13 @@ public class PatchDiffRequestFactory {
     return new ApplyPatchDiffRequest(resultContent, textPatch, localContent, windowTitle, localTitle, resultTitle, patchTitle);
   }
 
-  @NotNull
+  @Nonnull
   public static MergeRequest createMergeRequest(@Nullable Project project,
-                                                @NotNull Document document,
-                                                @NotNull VirtualFile file,
-                                                @NotNull String baseContent,
-                                                @NotNull String localContent,
-                                                @NotNull String patchedContent,
+                                                @Nonnull Document document,
+                                                @Nonnull VirtualFile file,
+                                                @Nonnull String baseContent,
+                                                @Nonnull String localContent,
+                                                @Nonnull String patchedContent,
                                                 @Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     List<String> titles = ContainerUtil.list(null, null, null);
@@ -166,24 +166,24 @@ public class PatchDiffRequestFactory {
     return createMergeRequest(project, document, file, contents, null, titles, callback);
   }
 
-  @NotNull
-  public static MergeRequest createBadMergeRequest(@Nullable Project project,
-                                                   @NotNull Document document,
-                                                   @NotNull VirtualFile file,
-                                                   @NotNull String localContent,
-                                                   @NotNull AppliedTextPatch textPatch,
-                                                   @Nullable Consumer<MergeResult> callback)
+  @Nonnull
+  public static MergeRequest createBadMergeRequest(@javax.annotation.Nullable Project project,
+                                                   @Nonnull Document document,
+                                                   @Nonnull VirtualFile file,
+                                                   @Nonnull String localContent,
+                                                   @Nonnull AppliedTextPatch textPatch,
+                                                   @javax.annotation.Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     return createBadMergeRequest(project, document, file, localContent, textPatch, null, null, null, null, callback);
   }
 
-  @NotNull
+  @Nonnull
   public static MergeRequest createMergeRequest(@Nullable Project project,
-                                                @NotNull Document document,
+                                                @Nonnull Document document,
                                                 @Nullable VirtualFile file,
-                                                @NotNull List<String> contents,
+                                                @Nonnull List<String> contents,
                                                 @Nullable String windowTitle,
-                                                @NotNull List<String> titles,
+                                                @Nonnull List<String> titles,
                                                 @Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     assert contents.size() == 3;
@@ -201,16 +201,16 @@ public class PatchDiffRequestFactory {
     return DiffRequestFactory.getInstance().createMergeRequest(project, fileType, document, contents, windowTitle, actualTitles, callback);
   }
 
-  @NotNull
-  public static MergeRequest createBadMergeRequest(@Nullable Project project,
-                                                   @NotNull Document document,
+  @Nonnull
+  public static MergeRequest createBadMergeRequest(@javax.annotation.Nullable Project project,
+                                                   @Nonnull Document document,
                                                    @Nullable VirtualFile file,
-                                                   @NotNull String localContent,
-                                                   @NotNull AppliedTextPatch textPatch,
-                                                   @Nullable String windowTitle,
+                                                   @Nonnull String localContent,
+                                                   @Nonnull AppliedTextPatch textPatch,
+                                                   @javax.annotation.Nullable String windowTitle,
                                                    @Nullable String localTitle,
                                                    @Nullable String resultTitle,
-                                                   @Nullable String patchTitle,
+                                                   @javax.annotation.Nullable String patchTitle,
                                                    @Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     if (!DiffUtil.canMakeWritable(document)) {
@@ -227,7 +227,7 @@ public class PatchDiffRequestFactory {
                                       windowTitle, localTitle, resultTitle, patchTitle, callback);
   }
 
-  @NotNull
+  @Nonnull
   private static String getPatchTitle(@Nullable VirtualFile file) {
     if (file != null) {
       return VcsBundle.message("patch.apply.conflict.title", getPresentablePath(file));
@@ -238,8 +238,8 @@ public class PatchDiffRequestFactory {
   }
 
 
-  @NotNull
-  private static String getBadPatchTitle(@Nullable VirtualFile file) {
+  @Nonnull
+  private static String getBadPatchTitle(@javax.annotation.Nullable VirtualFile file) {
     if (file != null) {
       return "Result of Patch Apply to " + getPresentablePath(file);
     }
@@ -248,8 +248,8 @@ public class PatchDiffRequestFactory {
     }
   }
 
-  @NotNull
-  private static String getPresentablePath(@NotNull VirtualFile file) {
+  @Nonnull
+  private static String getPresentablePath(@Nonnull VirtualFile file) {
     String fullPath = file.getParent() == null ? file.getPath() : file.getParent().getPath();
     return file.getName() + " (" + fullPath + ")";
   }

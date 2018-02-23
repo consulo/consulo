@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,8 @@ import java.util.ArrayList;
 public class SyncScrollSupport implements Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.util.SyncScrollSupport");
   private boolean myDuringVerticalScroll = false;
-  @NotNull private final ArrayList<ScrollListener> myScrollers = new ArrayList<ScrollListener>();
+  @Nonnull
+  private final ArrayList<ScrollListener> myScrollers = new ArrayList<ScrollListener>();
   private boolean myEnabled = true;
 
   public void install(EditingSides[] sideContainers) {
@@ -67,12 +68,12 @@ public class SyncScrollSupport implements Disposable {
     return myEnabled;
   }
 
-  private void install2(@NotNull Editor[] editors, @NotNull EditingSides[] sideContainers) {
+  private void install2(@Nonnull Editor[] editors, @Nonnull EditingSides[] sideContainers) {
     addSlavesScroller(editors[0], new ScrollingContext(FragmentSide.SIDE1, sideContainers[0], FragmentSide.SIDE1));
     addSlavesScroller(editors[1], new ScrollingContext(FragmentSide.SIDE2, sideContainers[0], FragmentSide.SIDE2));
   }
 
-  private void install3(@NotNull Editor[] editors, @NotNull EditingSides[] sideContainers) {
+  private void install3(@Nonnull Editor[] editors, @Nonnull EditingSides[] sideContainers) {
     addSlavesScroller(editors[0],
                       new ScrollingContext(FragmentSide.SIDE1, sideContainers[0], FragmentSide.SIDE2),
                       new ScrollingContext(FragmentSide.SIDE1, sideContainers[1], FragmentSide.SIDE1));
@@ -84,7 +85,7 @@ public class SyncScrollSupport implements Disposable {
                       new ScrollingContext(FragmentSide.SIDE2, sideContainers[0], FragmentSide.SIDE1));
   }
 
-  private void addSlavesScroller(@NotNull Editor editor, @NotNull ScrollingContext... contexts) {
+  private void addSlavesScroller(@Nonnull Editor editor, @Nonnull ScrollingContext... contexts) {
     ScrollListener scroller = new ScrollListener(contexts, editor);
     scroller.install();
     myScrollers.add(scroller);
@@ -92,9 +93,10 @@ public class SyncScrollSupport implements Disposable {
 
   private class ScrollListener implements VisibleAreaListener, Disposable {
     private ScrollingContext[] myScrollContexts;
-    @NotNull private final Editor myEditor;
+    @Nonnull
+    private final Editor myEditor;
 
-    public ScrollListener(@NotNull ScrollingContext[] scrollContexts, @NotNull Editor editor) {
+    public ScrollListener(@Nonnull ScrollingContext[] scrollContexts, @Nonnull Editor editor) {
       myScrollContexts = scrollContexts;
       myEditor = editor;
     }
@@ -126,9 +128,9 @@ public class SyncScrollSupport implements Disposable {
     }
   }
 
-  private static void syncHorizontalScroll(@NotNull ScrollingContext context,
-                                           @NotNull Rectangle newRectangle,
-                                           @NotNull Rectangle oldRectangle) {
+  private static void syncHorizontalScroll(@Nonnull ScrollingContext context,
+                                           @Nonnull Rectangle newRectangle,
+                                           @Nonnull Rectangle oldRectangle) {
     int newScrollOffset = newRectangle.x;
     if (newScrollOffset == oldRectangle.x) return;
     EditingSides sidesContainer = context.getSidesContainer();
@@ -139,9 +141,9 @@ public class SyncScrollSupport implements Disposable {
     doScrollHorizontally(slaveEditor.getScrollingModel(), newScrollOffset);
   }
 
-  private static void syncVerticalScroll(@NotNull ScrollingContext context,
-                                         @NotNull Rectangle newRectangle,
-                                         @NotNull Rectangle oldRectangle) {
+  private static void syncVerticalScroll(@Nonnull ScrollingContext context,
+                                         @Nonnull Rectangle newRectangle,
+                                         @Nonnull Rectangle oldRectangle) {
     if (newRectangle.y == oldRectangle.y) return;
     EditingSides sidesContainer = context.getSidesContainer();
     FragmentSide masterSide = context.getMasterSide();
@@ -178,12 +180,12 @@ public class SyncScrollSupport implements Disposable {
     doScrollVertically(slave.getScrollingModel(), offset + deltaHeaderOffset);
   }
 
-  private static int getHeaderOffset(@NotNull final Editor editor) {
+  private static int getHeaderOffset(@Nonnull final Editor editor) {
     final JComponent header = editor.getHeaderComponent();
     return header == null ? 0 : header.getHeight();
   }
 
-  private static void doScrollVertically(@NotNull ScrollingModel model, int offset) {
+  private static void doScrollVertically(@Nonnull ScrollingModel model, int offset) {
     model.disableAnimation();
     try {
       model.scrollVertically(offset);
@@ -193,7 +195,7 @@ public class SyncScrollSupport implements Disposable {
     }
   }
 
-  private static void doScrollHorizontally(@NotNull ScrollingModel model, int offset) {
+  private static void doScrollHorizontally(@Nonnull ScrollingModel model, int offset) {
     model.disableAnimation();
     try {
       model.scrollHorizontally(offset);
@@ -203,7 +205,7 @@ public class SyncScrollSupport implements Disposable {
     }
   }
 
-  public static void scrollEditor(@NotNull Editor editor, int logicalLine) {
+  public static void scrollEditor(@Nonnull Editor editor, int logicalLine) {
     editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(logicalLine, 0));
     ScrollingModel scrollingModel = editor.getScrollingModel();
     scrollingModel.disableAnimation();
@@ -212,27 +214,30 @@ public class SyncScrollSupport implements Disposable {
   }
 
   private static class ScrollingContext {
-    @NotNull private final EditingSides mySidesContainer;
-    @NotNull private final FragmentSide myMasterSide;
-    @NotNull private final FragmentSide myMasterDiffSide;
+    @Nonnull
+    private final EditingSides mySidesContainer;
+    @Nonnull
+    private final FragmentSide myMasterSide;
+    @Nonnull
+    private final FragmentSide myMasterDiffSide;
 
-    public ScrollingContext(@NotNull FragmentSide masterSide, @NotNull EditingSides sidesContainer, @NotNull FragmentSide masterDiffSide) {
+    public ScrollingContext(@Nonnull FragmentSide masterSide, @Nonnull EditingSides sidesContainer, @Nonnull FragmentSide masterDiffSide) {
       mySidesContainer = sidesContainer;
       myMasterSide = masterSide;
       myMasterDiffSide = masterDiffSide;
     }
 
-    @NotNull
+    @Nonnull
     public EditingSides getSidesContainer() {
       return mySidesContainer;
     }
 
-    @NotNull
+    @Nonnull
     public FragmentSide getMasterSide() {
       return myMasterSide;
     }
 
-    @NotNull
+    @Nonnull
     public FragmentSide getMasterDiffSide() {
       return myMasterDiffSide;
     }

@@ -50,8 +50,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,14 +61,15 @@ public class Bookmark implements Navigatable {
   public static final Icon DEFAULT_ICON = new MyDefaultIcon();
 
   private final VirtualFile myFile;
-  @NotNull private final OpenFileDescriptor myTarget;
+  @Nonnull
+  private final OpenFileDescriptor myTarget;
   private final Project myProject;
 
   private String myDescription;
   private char myMnemonic = 0;
   public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
-  public Bookmark(@NotNull Project project, @NotNull VirtualFile file, int line, @NotNull String description) {
+  public Bookmark(@Nonnull Project project, @Nonnull VirtualFile file, int line, @Nonnull String description) {
     myFile = file;
     myProject = project;
     myDescription = description;
@@ -90,7 +91,7 @@ public class Bookmark implements Navigatable {
     }
   }
 
-  public RangeHighlighter createHighlighter(@NotNull MarkupModelEx markup) {
+  public RangeHighlighter createHighlighter(@Nonnull MarkupModelEx markup) {
     final RangeHighlighterEx myHighlighter;
     int line = getLine();
     if (line >= 0) {
@@ -172,7 +173,7 @@ public class Bookmark implements Navigatable {
     myMnemonic = Character.toUpperCase(mnemonic);
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -273,7 +274,7 @@ public class Bookmark implements Navigatable {
     private static final MnemonicIcon[] cache = new MnemonicIcon[36];//0..9  + A..Z
     private final char myMnemonic;
 
-    @NotNull
+    @Nonnull
     static MnemonicIcon getIcon(char mnemonic) {
       int index = mnemonic - 48;
       if (index > 9)
@@ -361,12 +362,12 @@ public class Bookmark implements Navigatable {
   private static class MyGutterIconRenderer extends GutterIconRenderer {
     private final Bookmark myBookmark;
 
-    public MyGutterIconRenderer(@NotNull Bookmark bookmark) {
+    public MyGutterIconRenderer(@Nonnull Bookmark bookmark) {
       myBookmark = bookmark;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return myBookmark.getIcon();
     }

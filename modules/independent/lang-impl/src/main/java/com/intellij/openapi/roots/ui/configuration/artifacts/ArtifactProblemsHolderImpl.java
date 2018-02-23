@@ -25,8 +25,8 @@ import com.intellij.packaging.impl.ui.ArtifactProblemsHolderBase;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.packaging.ui.ArtifactProblemQuickFix;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -48,22 +48,22 @@ public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
   }
 
   @Override
-  public void registerError(@NotNull String message,
-                            @NotNull String problemTypeId,
+  public void registerError(@Nonnull String message,
+                            @Nonnull String problemTypeId,
                             @Nullable List<PackagingElement<?>> pathToPlace,
-                            @NotNull ArtifactProblemQuickFix... quickFixes) {
+                            @Nonnull ArtifactProblemQuickFix... quickFixes) {
     registerProblem(message, pathToPlace, ProjectStructureProblemType.error(problemTypeId), quickFixes);
   }
 
   @Override
-  public void registerWarning(@NotNull String message,
-                              @NotNull String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
-                              @NotNull ArtifactProblemQuickFix... quickFixes) {
+  public void registerWarning(@Nonnull String message,
+                              @Nonnull String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
+                              @Nonnull ArtifactProblemQuickFix... quickFixes) {
     registerProblem(message, pathToPlace, ProjectStructureProblemType.warning(problemTypeId), quickFixes);
   }
 
-  private void registerProblem(@NotNull String message, @Nullable List<PackagingElement<?>> pathToPlace,
-                               final ProjectStructureProblemType problemType, @NotNull ArtifactProblemQuickFix... quickFixes) {
+  private void registerProblem(@Nonnull String message, @Nullable List<PackagingElement<?>> pathToPlace,
+                               final ProjectStructureProblemType problemType, @Nonnull ArtifactProblemQuickFix... quickFixes) {
     String parentPath;
     PackagingElement<?> element;
     if (pathToPlace != null && !pathToPlace.isEmpty()) {

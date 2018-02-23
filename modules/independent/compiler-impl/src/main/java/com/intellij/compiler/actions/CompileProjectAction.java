@@ -22,7 +22,7 @@ import com.intellij.openapi.compiler.CompileStatusNotification;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class CompileProjectAction extends CompileActionBase {
@@ -44,7 +44,7 @@ public class CompileProjectAction extends CompileActionBase {
 
   @Override
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

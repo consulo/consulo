@@ -21,7 +21,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -30,7 +30,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
   private final CodeStyleSettings myContainer;
   private final String myTagName;
 
-  protected CustomCodeStyleSettings(@NonNls @NotNull String tagName, CodeStyleSettings container) {
+  protected CustomCodeStyleSettings(@NonNls @Nonnull String tagName, CodeStyleSettings container) {
     myTagName = tagName;
     myContainer = container;
   }
@@ -39,7 +39,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     return myContainer;
   }
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public final String getTagName() {
     return myTagName;
   }
@@ -48,7 +48,7 @@ public abstract class CustomCodeStyleSettings implements Cloneable {
     DefaultJDOMExternalizer.readExternal(this, parentElement.getChild(myTagName));
   }
 
-  public void writeExternal(Element parentElement, @NotNull final CustomCodeStyleSettings parentSettings) throws WriteExternalException {
+  public void writeExternal(Element parentElement, @Nonnull final CustomCodeStyleSettings parentSettings) throws WriteExternalException {
     final Element childElement = new Element(myTagName);
     DefaultJDOMExternalizer.writeExternal(this, childElement, new DifferenceFilter<CustomCodeStyleSettings>(this, parentSettings));
     if (!childElement.getContent().isEmpty()) {

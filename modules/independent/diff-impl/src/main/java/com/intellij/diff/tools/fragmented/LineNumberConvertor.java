@@ -18,7 +18,7 @@ package com.intellij.diff.tools.fragmented;
 import com.intellij.diff.util.Side;
 import com.intellij.util.SmartList;
 import gnu.trove.TIntFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -26,19 +26,24 @@ import java.util.TreeMap;
 
 public class LineNumberConvertor {
   // Oneside -> Twoside
-  @NotNull private final TreeMap<Integer, Integer> myFragments1;
-  @NotNull private final TreeMap<Integer, Integer> myFragments2;
+  @Nonnull
+  private final TreeMap<Integer, Integer> myFragments1;
+  @Nonnull
+  private final TreeMap<Integer, Integer> myFragments2;
 
   // Twoside -> Oneside
-  @NotNull private final TreeMap<Integer, Integer> myInvertedFragments1;
-  @NotNull private final TreeMap<Integer, Integer> myInvertedFragments2;
+  @Nonnull
+  private final TreeMap<Integer, Integer> myInvertedFragments1;
+  @Nonnull
+  private final TreeMap<Integer, Integer> myInvertedFragments2;
 
-  @NotNull private final Corrector myCorrector = new Corrector();
+  @Nonnull
+  private final Corrector myCorrector = new Corrector();
 
-  public LineNumberConvertor(@NotNull TreeMap<Integer, Integer> fragments1,
-                             @NotNull TreeMap<Integer, Integer> fragments2,
-                             @NotNull TreeMap<Integer, Integer> invertedFragments1,
-                             @NotNull TreeMap<Integer, Integer> invertedFragments2) {
+  public LineNumberConvertor(@Nonnull TreeMap<Integer, Integer> fragments1,
+                             @Nonnull TreeMap<Integer, Integer> fragments2,
+                             @Nonnull TreeMap<Integer, Integer> invertedFragments1,
+                             @Nonnull TreeMap<Integer, Integer> invertedFragments2) {
     myFragments1 = fragments1;
     myFragments2 = fragments2;
     myInvertedFragments1 = invertedFragments1;
@@ -81,36 +86,36 @@ public class LineNumberConvertor {
   // Impl
   //
 
-  @NotNull
+  @Nonnull
   public TIntFunction createConvertor1() {
     return this::convert1;
   }
 
-  @NotNull
+  @Nonnull
   public TIntFunction createConvertor2() {
     return this::convert2;
   }
 
-  private int convert(int value, @NotNull Side side, boolean fromOneside, boolean approximate) {
+  private int convert(int value, @Nonnull Side side, boolean fromOneside, boolean approximate) {
     return myCorrector.convertCorrected(value, side, fromOneside, approximate);
   }
 
   /*
    * Both oneside and one of the sides were changed in a same way. We should update converters, because of changed shift.
    */
-  public void handleOnesideChange(int startLine, int endLine, int shift, @NotNull Side masterSide) {
+  public void handleOnesideChange(int startLine, int endLine, int shift, @Nonnull Side masterSide) {
     myCorrector.handleOnesideChange(startLine, endLine, shift, masterSide);
   }
 
 
-  private static int convert(@NotNull final TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
+  private static int convert(@Nonnull final TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
     return approximate ? convertApproximate(fragments, value) : convert(fragments, value);
   }
 
   /*
    * This convertor returns exact matching between lines, and -1 if it's impossible
    */
-  private static int convert(@NotNull final TreeMap<Integer, Integer> fragments, int value) {
+  private static int convert(@Nonnull final TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null || floor.getValue() == -1) return -1;
     return floor.getValue() - floor.getKey() + value;
@@ -119,7 +124,7 @@ public class LineNumberConvertor {
   /*
    * This convertor returns 'good enough' position, even if exact matching is impossible
    */
-  private static int convertApproximate(@NotNull final TreeMap<Integer, Integer> fragments, int value) {
+  private static int convertApproximate(@Nonnull final TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null) return 0;
     if (floor.getValue() != -1) return floor.getValue() - floor.getKey() + value;
@@ -130,18 +135,22 @@ public class LineNumberConvertor {
     return floorHead.getValue() - floorHead.getKey() + floor.getKey();
   }
 
-  @NotNull
-  private TreeMap<Integer, Integer> getFragments(@NotNull Side side, boolean fromOneside) {
+  @Nonnull
+  private TreeMap<Integer, Integer> getFragments(@Nonnull Side side, boolean fromOneside) {
     return fromOneside ? side.select(myFragments1, myFragments2)
                        : side.select(myInvertedFragments1, myInvertedFragments2);
   }
 
   public static class Builder {
-    @NotNull private final TreeMap<Integer, Integer> myFragments1 = new TreeMap<>();
-    @NotNull private final TreeMap<Integer, Integer> myFragments2 = new TreeMap<>();
+    @Nonnull
+    private final TreeMap<Integer, Integer> myFragments1 = new TreeMap<>();
+    @Nonnull
+    private final TreeMap<Integer, Integer> myFragments2 = new TreeMap<>();
 
-    @NotNull private final TreeMap<Integer, Integer> myInvertedFragments1 = new TreeMap<>();
-    @NotNull private final TreeMap<Integer, Integer> myInvertedFragments2 = new TreeMap<>();
+    @Nonnull
+    private final TreeMap<Integer, Integer> myInvertedFragments1 = new TreeMap<>();
+    @Nonnull
+    private final TreeMap<Integer, Integer> myInvertedFragments2 = new TreeMap<>();
 
     public void put1(int start, int newStart, int length) {
       myFragments1.put(start, newStart);
@@ -159,7 +168,7 @@ public class LineNumberConvertor {
       myInvertedFragments2.put(newStart + length, -1);
     }
 
-    @NotNull
+    @Nonnull
     public LineNumberConvertor build() {
       return new LineNumberConvertor(myFragments1, myFragments2, myInvertedFragments1, myInvertedFragments2);
     }
@@ -212,7 +221,7 @@ public class LineNumberConvertor {
     private final List<CorrectedChange> myChanges = new SmartList<>();
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public void handleOnesideChange(int startLine, int endLine, int shift, @NotNull Side masterSide) {
+    public void handleOnesideChange(int startLine, int endLine, int shift, @Nonnull Side masterSide) {
       int oldOnesideStart = startLine;
       int oldTwosideStart = convert(startLine, masterSide, true, false);
       assert oldTwosideStart != -1;
@@ -223,7 +232,7 @@ public class LineNumberConvertor {
       myChanges.add(new CorrectedChange(oldOnesideStart, oldTwosideStart, oldLength, newLength, masterSide));
     }
 
-    public int convertCorrected(int value, @NotNull Side side, boolean fromOneside, boolean approximate) {
+    public int convertCorrected(int value, @Nonnull Side side, boolean fromOneside, boolean approximate) {
       if (fromOneside) {
         return convertFromOneside(value, side, approximate, myChanges.size() - 1);
       }
@@ -232,7 +241,7 @@ public class LineNumberConvertor {
       }
     }
 
-    private int convertFromTwoside(int value, @NotNull Side side, boolean approximate, int index) {
+    private int convertFromTwoside(int value, @Nonnull Side side, boolean approximate, int index) {
       if (index < 0) {
         return convert(getFragments(side, false), value, approximate);
       }
@@ -278,7 +287,7 @@ public class LineNumberConvertor {
       }
     }
 
-    private int convertFromOneside(int value, @NotNull Side side, boolean approximate, int index) {
+    private int convertFromOneside(int value, @Nonnull Side side, boolean approximate, int index) {
       if (index < 0) {
         return convert(getFragments(side, true), value, approximate);
       }
@@ -322,9 +331,10 @@ public class LineNumberConvertor {
     public final int startTwoside;
     public final int oldLength;
     public final int newLength;
-    @NotNull public final Side side;
+    @Nonnull
+    public final Side side;
 
-    public CorrectedChange(int startOneside, int startTwoside, int oldLength, int newLength, @NotNull Side side) {
+    public CorrectedChange(int startOneside, int startTwoside, int oldLength, int newLength, @Nonnull Side side) {
       this.startOneside = startOneside;
       this.startTwoside = startTwoside;
       this.oldLength = oldLength;

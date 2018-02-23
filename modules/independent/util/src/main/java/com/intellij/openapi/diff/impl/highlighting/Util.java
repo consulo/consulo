@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.diff.Diff;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +43,8 @@ public class Util {
     }
   }
 
-  @NotNull
-  static String[] splitByWord(@NotNull String string) {
+  @Nonnull
+  static String[] splitByWord(@Nonnull String string) {
     BufferedStringList stringList = new BufferedStringList();
     StringTokenizer tokenizer = new StringTokenizer(string, DELIMITERS, true);
     while (tokenizer.hasMoreTokens()) {
@@ -66,7 +66,7 @@ public class Util {
     return stringList.toArray();
   }
 
-  static boolean isSpaceOnly(@NotNull DiffFragment fragment) {
+  static boolean isSpaceOnly(@Nonnull DiffFragment fragment) {
     return isSpaceOnly(fragment.getText1()) && isSpaceOnly(fragment.getText2());
   }
 
@@ -75,8 +75,8 @@ public class Util {
     return string.isEmptyOrSpaces();
   }
 
-  @NotNull
-  static DiffFragment[] splitByLines(@NotNull DiffFragment fragment) {
+  @Nonnull
+  static DiffFragment[] splitByLines(@Nonnull DiffFragment fragment) {
     DiffString[] lines1 = splitByLines(fragment.getText1());
     DiffString[] lines2 = splitByLines(fragment.getText2());
     if (lines1 != null && lines2 != null && lines1.length != lines2.length) {
@@ -98,8 +98,8 @@ public class Util {
     return string.tokenize();
   }
 
-  @NotNull
-  public static DiffFragment[][] splitByUnchangedLines(@NotNull DiffFragment[] fragments) {
+  @Nonnull
+  public static DiffFragment[][] splitByUnchangedLines(@Nonnull DiffFragment[] fragments) {
     List2D result = new List2D();
     for (int i = 0; i < fragments.length; i++) {
       DiffFragment fragment = fragments[i];
@@ -139,7 +139,7 @@ public class Util {
     return result.toArray();
   }
 
-  public static Diff.Change concatEquals(Diff.Change change, @NotNull Object[] left, @NotNull Object[] right) {
+  public static Diff.Change concatEquals(Diff.Change change, @Nonnull Object[] left, @Nonnull Object[] right) {
     MyChange startChange = new MyChange(0, 0, 0, 0);
     MyChange lastChange = startChange;
     while (change != null) {
@@ -187,7 +187,7 @@ public class Util {
     return startChange.link;
   }
 
-  static int calcShift(@NotNull Object[] list, int limit, int start, int length) {
+  static int calcShift(@Nonnull Object[] list, int limit, int start, int length) {
     int shift = start - limit;
     for (int i = 0; i < shift; i++) {
       if (!list[limit + i].equals(list[start + length - shift + i])) return 0;
@@ -195,8 +195,8 @@ public class Util {
     return -shift;
   }
 
-  @NotNull
-  public static DiffFragment unite(@NotNull DiffFragment fragment1, @NotNull DiffFragment fragment2) {
+  @Nonnull
+  public static DiffFragment unite(@Nonnull DiffFragment fragment1, @Nonnull DiffFragment fragment2) {
     LOG.assertTrue(isSameType(fragment1, fragment2));
     if (!fragment1.isOneSide()) {
       DiffString unitedText1 = DiffString.concatenateNullable(fragment1.getText1(), fragment2.getText1());
@@ -210,7 +210,7 @@ public class Util {
             .createFragment(DiffString.concatenateNullable(side.getText(fragment1), side.getText(fragment2)), null, fragment1.isModified());
   }
 
-  public static boolean isSameType(@NotNull DiffFragment fragment1, @NotNull DiffFragment fragment2) {
+  public static boolean isSameType(@Nonnull DiffFragment fragment1, @Nonnull DiffFragment fragment2) {
     if (fragment1.isEqual()) return fragment2.isEqual();
     if (fragment1.isChange()) return fragment2.isChange();
     if (fragment1.getText1() == null) return fragment2.getText1() == null;
@@ -219,8 +219,8 @@ public class Util {
     return false;
   }
 
-  @NotNull
-  public static DiffString getText(@NotNull DiffFragment[] fragments, @NotNull FragmentSide side) {
+  @Nonnull
+  public static DiffString getText(@Nonnull DiffFragment[] fragments, @Nonnull FragmentSide side) {
     DiffString[] data = new DiffString[fragments.length];
     for (int i = 0; i < fragments.length; i++) {
       DiffFragment fragment = fragments[i];
@@ -229,13 +229,13 @@ public class Util {
     return DiffString.concatenate(data);
   }
 
-  @NotNull
-  public static DiffFragment concatenate(@NotNull DiffFragment[] line) {
+  @Nonnull
+  public static DiffFragment concatenate(@Nonnull DiffFragment[] line) {
     return concatenate(line, 0, line.length);
   }
 
-  @NotNull
-  public static DiffFragment concatenate(@NotNull DiffFragment[] line, int from, int to) {
+  @Nonnull
+  public static DiffFragment concatenate(@Nonnull DiffFragment[] line, int from, int to) {
     DiffString[] data1 = new DiffString[to - from];
     DiffString[] data2 = new DiffString[to - from];
 
@@ -253,12 +253,12 @@ public class Util {
   }
 
   @Nullable
-  private static DiffString notEmptyContent(@NotNull DiffString string) {
+  private static DiffString notEmptyContent(@Nonnull DiffString string) {
     return string.length() > 0 ? string : null;
   }
 
-  @NotNull
-  public static DiffFragment[][] uniteFormattingOnly(@NotNull DiffFragment[][] lines) {
+  @Nonnull
+  public static DiffFragment[][] uniteFormattingOnly(@Nonnull DiffFragment[][] lines) {
     List2D result = new List2D();
     for (int i = 0; i < lines.length; i++) {
       DiffFragment[] line = lines[i];
@@ -272,7 +272,7 @@ public class Util {
     return result.toArray();
   }
 
-  private static boolean areEqualOrFormatting(@NotNull DiffFragment[] fragments) {
+  private static boolean areEqualOrFormatting(@Nonnull DiffFragment[] fragments) {
     for (int i = 0; i < fragments.length; i++) {
       DiffFragment fragment = fragments[i];
       if (fragment.isEqual()) continue;
@@ -285,7 +285,7 @@ public class Util {
     return true;
   }
 
-  private static boolean areEqual(@NotNull DiffFragment[] fragments) {
+  private static boolean areEqual(@Nonnull DiffFragment[] fragments) {
     for (int i = 0; i < fragments.length; i++) {
       DiffFragment fragment = fragments[i];
       if (!fragment.isEqual()) return false;
@@ -293,8 +293,8 @@ public class Util {
     return true;
   }
 
-  @NotNull
-  public static DiffFragment[] cutFirst(@NotNull DiffFragment[] fragments) {
+  @Nonnull
+  public static DiffFragment[] cutFirst(@Nonnull DiffFragment[] fragments) {
     fragments = transformHeadInsert(fragments, FragmentSide.SIDE1);
     fragments = transformHeadInsert(fragments, FragmentSide.SIDE2);
 
@@ -327,8 +327,8 @@ public class Util {
     return result;
   }
 
-  @NotNull
-  private static DiffFragment[] transformHeadInsert(@NotNull DiffFragment[] fragments, @NotNull FragmentSide side) {
+  @Nonnull
+  private static DiffFragment[] transformHeadInsert(@Nonnull DiffFragment[] fragments, @Nonnull FragmentSide side) {
     // transforms {abc}abcd into a{bca}bcd
     if (fragments.length >= 2) {
       DiffFragment first = fragments[0];
@@ -361,11 +361,11 @@ public class Util {
       super(line0, line1, deleted, inserted, null);
     }
 
-    public MyChange copyNext(@NotNull Diff.Change change) {
+    public MyChange copyNext(@Nonnull Diff.Change change) {
       return copyNext(change, 0);
     }
 
-    public MyChange copyNext(@NotNull Diff.Change change, int shift) {
+    public MyChange copyNext(@Nonnull Diff.Change change, int shift) {
       MyChange result = new MyChange(change.line0 + shift, change.line1 + shift, change.deleted, change.inserted);
       setNext(result);
       return result;

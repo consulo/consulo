@@ -26,7 +26,7 @@ import com.intellij.usages.rules.ImportFilteringRule;
 import com.intellij.usages.rules.UsageFilteringRule;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -39,8 +39,8 @@ import java.util.List;
  */
 public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvider {
   @Override
-  @NotNull
-  public UsageFilteringRule[] getActiveRules(@NotNull final Project project) {
+  @Nonnull
+  public UsageFilteringRule[] getActiveRules(@Nonnull final Project project) {
     final List<UsageFilteringRule> rules = new ArrayList<UsageFilteringRule>();
     if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
       ContainerUtil.addAll(rules, Extensions.getExtensions(ImportFilteringRule.EP_NAME));
@@ -49,8 +49,8 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
   }
 
   @Override
-  @NotNull
-  public AnAction[] createFilteringActions(@NotNull final UsageView view) {
+  @Nonnull
+  public AnAction[] createFilteringActions(@Nonnull final UsageView view) {
     final UsageViewImpl impl = (UsageViewImpl)view;
     if (view.getPresentation().isCodeUsages()) {
       final JComponent component = view.getComponent();

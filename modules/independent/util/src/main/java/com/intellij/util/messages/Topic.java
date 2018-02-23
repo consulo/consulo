@@ -23,7 +23,7 @@
 package com.intellij.util.messages;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines messaging endpoint within particular {@link MessageBus bus}.
@@ -35,11 +35,11 @@ public class Topic<L> {
   private final Class<L> myListenerClass;
   private final BroadcastDirection myBroadcastDirection;
 
-  public Topic(@NonNls @NotNull String displayName, @NotNull Class<L> listenerClass) {
+  public Topic(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass) {
     this(displayName, listenerClass, BroadcastDirection.TO_CHILDREN);
   }
 
-  public Topic(@NonNls @NotNull String displayName, @NotNull Class<L> listenerClass, final BroadcastDirection broadcastDirection) {
+  public Topic(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass, final BroadcastDirection broadcastDirection) {
     myDisplayName = displayName;
     myListenerClass = listenerClass;
     myBroadcastDirection = broadcastDirection;
@@ -48,7 +48,7 @@ public class Topic<L> {
   /**
    * @return    human-readable name of the current topic. Is intended to be used in informational/logging purposes only
    */
-  @NotNull
+  @Nonnull
   @NonNls
   public String getDisplayName() {
     return myDisplayName;
@@ -69,7 +69,7 @@ public class Topic<L> {
    *
    * @return    class of the interface that defines contract for working with the current topic
    */
-  @NotNull
+  @Nonnull
   public Class<L> getListenerClass() {
     return myListenerClass;
   }
@@ -78,11 +78,11 @@ public class Topic<L> {
     return myDisplayName;
   }
 
-  public static <L> Topic<L> create(@NonNls @NotNull String displayName, @NotNull Class<L> listenerClass) {
+  public static <L> Topic<L> create(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass) {
     return new Topic<L>(displayName, listenerClass);
   }
 
-  public static <L> Topic<L> create(@NonNls @NotNull String displayName, @NotNull Class<L> listenerClass, BroadcastDirection direction) {
+  public static <L> Topic<L> create(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass, BroadcastDirection direction) {
     return new Topic<L>(displayName, listenerClass, direction);
   }
 

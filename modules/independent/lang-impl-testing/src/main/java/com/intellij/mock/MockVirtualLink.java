@@ -16,24 +16,23 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class MockVirtualLink extends MockVirtualFile {
   private final VirtualFile myTarget;
 
-  public MockVirtualLink(@NotNull String name, @Nullable VirtualFile target) {
+  public MockVirtualLink(@Nonnull String name, @javax.annotation.Nullable VirtualFile target) {
     super(target != null && target.isDirectory(), name);
     myTarget = target;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VirtualFile getCanonicalFile() {
     return myTarget;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getCanonicalPath() {
     return myTarget != null ? myTarget.getPath() : null;
@@ -46,7 +45,7 @@ public class MockVirtualLink extends MockVirtualFile {
   }
 
   @Override
-  public void addChild(@NotNull MockVirtualFile child) {
+  public void addChild(@Nonnull MockVirtualFile child) {
     throw new UnsupportedOperationException();
   }
 }

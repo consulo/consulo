@@ -23,8 +23,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -57,14 +56,14 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
     }
   }
 
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     final Artifact artifact = findArtifact();
     Icon icon = artifact != null ? artifact.getArtifactType().getIcon() : AllIcons.Nodes.Artifact;
     presentationData.setIcon(icon);
     presentationData.addText(getPresentableName(), artifact != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Artifact findArtifact() {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(myContext.getArtifactModel()) : null;
   }

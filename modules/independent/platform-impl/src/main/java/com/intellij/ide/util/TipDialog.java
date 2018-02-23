@@ -20,7 +20,7 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -43,7 +43,7 @@ public class TipDialog extends DialogWrapper{
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions(){
     return new Action[]{new PreviousTipAction(),new NextTipAction(),getCancelAction()};
   }

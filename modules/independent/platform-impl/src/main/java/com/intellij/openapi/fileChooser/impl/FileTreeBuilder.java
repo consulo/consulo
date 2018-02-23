@@ -25,7 +25,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -50,22 +50,22 @@ public class FileTreeBuilder extends AbstractTreeBuilder {
 
     VirtualFileAdapter listener = new VirtualFileAdapter() {
       @Override
-      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
         doUpdate();
       }
 
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         doUpdate();
       }
 
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent event) {
+      public void fileDeleted(@Nonnull VirtualFileEvent event) {
         doUpdate();
       }
 
       @Override
-      public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+      public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
         doUpdate();
       }
 

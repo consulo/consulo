@@ -3,8 +3,8 @@ package com.intellij.platform.templates.github;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ObjectUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Sergey Simonchik
@@ -16,17 +16,17 @@ public class GithubTagInfo {
   private Version myVersion;
   private boolean myRecentTag = false;
 
-  public GithubTagInfo(@NotNull String name, @NotNull String zipballUrl) {
+  public GithubTagInfo(@Nonnull String name, @Nonnull String zipballUrl) {
     myName = name;
     myZipballUrl = zipballUrl;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public String getZipballUrl() {
     return myZipballUrl;
   }
@@ -39,7 +39,7 @@ public class GithubTagInfo {
     return myRecentTag;
   }
 
-  @NotNull
+  @Nonnull
   public Version getVersion() {
     if (myVersion == null) {
       myVersion = createVersionComponents();
@@ -47,7 +47,7 @@ public class GithubTagInfo {
     return myVersion;
   }
 
-  @NotNull
+  @Nonnull
   private Version createVersionComponents() {
     String tagName = myName;
     if (tagName.startsWith("v.")) {
@@ -122,8 +122,8 @@ public class GithubTagInfo {
     private final String myLabel;
     private final int myLabelVersion;
 
-    public Version(@NotNull TIntArrayList intComponents,
-                   @NotNull String label,
+    public Version(@Nonnull TIntArrayList intComponents,
+                   @Nonnull String label,
                    int labelVersion) {
       myIntComponents.add(intComponents.toNativeArray());
       myLabel = label;

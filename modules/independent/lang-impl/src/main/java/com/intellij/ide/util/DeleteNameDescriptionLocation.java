@@ -20,7 +20,7 @@ import com.intellij.psi.ElementDescriptionLocation;
 import com.intellij.psi.ElementDescriptionProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -39,7 +39,7 @@ public class DeleteNameDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
+    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
       if (location instanceof DeleteNameDescriptionLocation) {
         if (element instanceof PsiNamedElement) {
           return ((PsiNamedElement)element).getName();

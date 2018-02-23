@@ -17,13 +17,13 @@
 package com.intellij.find.findUsages;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FindUsagesUtil {
   private FindUsagesUtil() {
   }
 
-  public static boolean isSearchForTextOccurrencesAvailable(@NotNull PsiElement element, boolean isSingleFile, FindUsagesHandler handler) {
+  public static boolean isSearchForTextOccurrencesAvailable(@Nonnull PsiElement element, boolean isSingleFile, FindUsagesHandler handler) {
     return !isSingleFile && handler != null && handler.isSearchForTextOccurrencesAvailable(element, isSingleFile);
   }
 }

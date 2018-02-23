@@ -20,7 +20,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,10 +36,11 @@ import java.util.List;
  */
 public class ArrangementComboBoxUiComponent extends AbstractArrangementUiComponent {
 
-  @NotNull private final JComboBox myComboBox;
+  @Nonnull
+  private final JComboBox myComboBox;
 
   @SuppressWarnings("unchecked")
-  public ArrangementComboBoxUiComponent(@NotNull List<ArrangementSettingsToken> tokens) {
+  public ArrangementComboBoxUiComponent(@Nonnull List<ArrangementSettingsToken> tokens) {
     super(tokens);
     ArrangementSettingsToken[] tokensArray = tokens.toArray(new ArrangementSettingsToken[tokens.size()]);
     Arrays.sort(tokensArray, new Comparator<ArrangementSettingsToken>() {
@@ -73,18 +74,18 @@ public class ArrangementComboBoxUiComponent extends AbstractArrangementUiCompone
     myComboBox.setPreferredSize(new Dimension(minWidth * 5 / 3, myComboBox.getPreferredSize().height));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementSettingsToken getToken() {
     return (ArrangementSettingsToken)myComboBox.getSelectedItem();
   }
 
   @Override
-  public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException {
+  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException {
     myComboBox.setSelectedItem(data);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     ArrangementSettingsToken token = getToken();

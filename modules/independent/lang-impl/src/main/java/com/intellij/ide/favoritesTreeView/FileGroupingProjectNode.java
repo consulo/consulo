@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -45,7 +45,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return file.equals(myVirtualFile);
   }
 

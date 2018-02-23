@@ -16,8 +16,8 @@
 package com.intellij.util.xmlb;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
@@ -36,7 +36,7 @@ class PropertyAccessor implements MutableAccessor {
     this(descriptor.getName(), descriptor.getPropertyType(), descriptor.getReadMethod(), descriptor.getWriteMethod());
   }
 
-  public PropertyAccessor(String name, Class<?> type, @NotNull Method readMethod, @NotNull Method writeMethod) {
+  public PropertyAccessor(String name, Class<?> type, @Nonnull Method readMethod, @Nonnull Method writeMethod) {
     myName = name;
     myType = type;
     myReadMethod = readMethod;
@@ -51,7 +51,7 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public Object read(@NotNull Object o) {
+  public Object read(@Nonnull Object o) {
     try {
       return myReadMethod.invoke(o);
     }
@@ -67,7 +67,7 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public void set(@NotNull Object host, @Nullable Object value) {
+  public void set(@Nonnull Object host, @Nullable Object value) {
     try {
       myWriteMethod.invoke(host, value);
     }
@@ -80,37 +80,37 @@ class PropertyAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setBoolean(@NotNull Object host, boolean value) {
+  public void setBoolean(@Nonnull Object host, boolean value) {
     set(host, value);
   }
 
   @Override
-  public void setInt(@NotNull Object host, int value) {
+  public void setInt(@Nonnull Object host, int value) {
     set(host, value);
   }
 
   @Override
-  public void setShort(@NotNull Object host, short value) {
+  public void setShort(@Nonnull Object host, short value) {
     set(host, value);
   }
 
   @Override
-  public void setLong(@NotNull Object host, long value) {
+  public void setLong(@Nonnull Object host, long value) {
     set(host, value);
   }
 
   @Override
-  public void setDouble(@NotNull Object host, double value) {
+  public void setDouble(@Nonnull Object host, double value) {
     set(host, value);
   }
 
   @Override
-  public void setFloat(@NotNull Object host, float value) {
+  public void setFloat(@Nonnull Object host, float value) {
     set(host, value);
   }
 
   @Override
-  public <T extends Annotation> T getAnnotation(@NotNull Class<T> annotationClass) {
+  public <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass) {
     T annotation = myReadMethod.getAnnotation(annotationClass);
     if (annotation == null) annotation = myWriteMethod.getAnnotation(annotationClass);
     return annotation;

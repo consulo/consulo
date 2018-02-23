@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

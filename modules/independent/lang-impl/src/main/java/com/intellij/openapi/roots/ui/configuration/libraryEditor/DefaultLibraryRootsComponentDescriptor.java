@@ -27,9 +27,9 @@ import com.intellij.openapi.roots.libraries.ui.RootDetector;
 import consulo.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -41,17 +41,17 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
   public static final ExtensionPointName<RootDetector> EP_NAME = ExtensionPointName.create("com.intellij.defaultLibraryRootDetector");
 
   @Override
-  public OrderRootTypePresentation getRootTypePresentation(@NotNull OrderRootType type) {
+  public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {
     return getDefaultPresentation(type);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends AttachRootButtonDescriptor> createAttachButtons() {
     return Arrays.asList(new AttachUrlJavadocDescriptor());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends RootDetector> getRootDetectors() {
     return Arrays.asList(EP_NAME.getExtensions());
@@ -67,10 +67,10 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
     }
 
     @Override
-    public VirtualFile[] selectFiles(@NotNull JComponent parent,
+    public VirtualFile[] selectFiles(@Nonnull JComponent parent,
                                      @Nullable VirtualFile initialSelection,
                                      @Nullable Module contextModule,
-                                     @NotNull LibraryEditor libraryEditor) {
+                                     @Nonnull LibraryEditor libraryEditor) {
       final VirtualFile vFile = Util.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {
         return new VirtualFile[]{vFile};

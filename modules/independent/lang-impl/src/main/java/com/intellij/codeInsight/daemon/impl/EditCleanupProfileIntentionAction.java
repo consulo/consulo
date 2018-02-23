@@ -26,7 +26,7 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by anna on 5/13/2014.
@@ -36,24 +36,24 @@ class EditCleanupProfileIntentionAction implements IntentionAction {
   private EditCleanupProfileIntentionAction() {}
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getFamilyName();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return "Edit cleanup profile settings";
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
     final ProjectInspectionToolsConfigurable configurable =
             new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {

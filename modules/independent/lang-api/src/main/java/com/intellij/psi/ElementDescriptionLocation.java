@@ -16,13 +16,11 @@
 
 package com.intellij.psi;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author yole
  */
 public class ElementDescriptionLocation {
-  @Nullable
+  @javax.annotation.Nullable
   public ElementDescriptionProvider getDefaultProvider() {
     return null;
   }

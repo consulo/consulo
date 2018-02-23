@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class AntivirusDetector {
   private static final int THRESHOULD = 500;
@@ -33,7 +33,7 @@ public class AntivirusDetector {
 
   private AntivirusDetector() {}
 
-  public void enable(@NotNull Runnable callback) {
+  public void enable(@Nonnull Runnable callback) {
     myCallback = callback;
     myEnabled = true;
   }

@@ -28,40 +28,40 @@ import com.intellij.openapi.vcs.changes.LocalChangeListImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
 public class VcsContextFactoryImpl implements VcsContextFactory {
   @Override
-  @NotNull
-  public VcsContext createCachedContextOn(@NotNull AnActionEvent event) {
+  @Nonnull
+  public VcsContext createCachedContextOn(@Nonnull AnActionEvent event) {
     return VcsContextWrapper.createCachedInstanceOn(event);
   }
 
   @Override
-  @NotNull
-  public VcsContext createContextOn(@NotNull AnActionEvent event) {
+  @Nonnull
+  public VcsContext createContextOn(@Nonnull AnActionEvent event) {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOn(@NotNull VirtualFile virtualFile) {
+  @Nonnull
+  public FilePath createFilePathOn(@Nonnull VirtualFile virtualFile) {
     return createFilePath(virtualFile.getPath(), virtualFile.isDirectory());
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOn(@NotNull File file) {
+  @Nonnull
+  public FilePath createFilePathOn(@Nonnull File file) {
     String path = file.getPath();
     VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(path);
     return createFilePath(path, vf != null ? vf.isDirectory() : file.isDirectory());
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOn(@NotNull final File file, @NotNull final NotNullFunction<File, Boolean> detector) {
+  @Nonnull
+  public FilePath createFilePathOn(@Nonnull final File file, @Nonnull final NotNullFunction<File, Boolean> detector) {
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (virtualFile != null) {
       return createFilePathOn(virtualFile);
@@ -70,44 +70,44 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOn(@NotNull final File file, final boolean isDirectory) {
+  @Nonnull
+  public FilePath createFilePathOn(@Nonnull final File file, final boolean isDirectory) {
     return createFilePath(file.getPath(), isDirectory);
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOnNonLocal(@NotNull final String path, final boolean isDirectory) {
+  @Nonnull
+  public FilePath createFilePathOnNonLocal(@Nonnull final String path, final boolean isDirectory) {
     return new RemoteFilePath(path, isDirectory);
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOnDeleted(@NotNull final File file, final boolean isDirectory) {
+  @Nonnull
+  public FilePath createFilePathOnDeleted(@Nonnull final File file, final boolean isDirectory) {
     return createFilePathOn(file, isDirectory);
   }
 
   @Override
-  @NotNull
-  public FilePath createFilePathOn(@NotNull final VirtualFile parent, @NotNull final String name) {
+  @Nonnull
+  public FilePath createFilePathOn(@Nonnull final VirtualFile parent, @Nonnull final String name) {
     return createFilePath(parent, name, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FilePath createFilePath(@NotNull VirtualFile parent, @NotNull String fileName, boolean isDirectory) {
+  public FilePath createFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
     return createFilePath(parent.getPath() + "/" + fileName, isDirectory);
   }
 
   @Override
-  @NotNull
-  public LocalChangeList createLocalChangeList(@NotNull Project project, @NotNull final String name) {
+  @Nonnull
+  public LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull final String name) {
     return LocalChangeListImpl.createEmptyChangeListImpl(project, name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FilePath createFilePath(@NotNull String path, boolean isDirectory) {
+  public FilePath createFilePath(@Nonnull String path, boolean isDirectory) {
     return new LocalFilePath(path, isDirectory);
   }
 }

@@ -23,21 +23,21 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.copyright.config.CopyrightFileConfig;
 
 public class FileTypeUtil {
 
-  @NotNull
-  public static String buildComment(@NotNull FileType type, @NotNull String template, @NotNull CopyrightFileConfig options) {
+  @Nonnull
+  public static String buildComment(@Nonnull FileType type, @Nonnull String template, @Nonnull CopyrightFileConfig options) {
     Commenter commenter = getCommenter(type);
     UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(type);
     return buildComment(commenter, updateCopyrightsProvider.isAllowSeparator(), template, options);
   }
 
-  @NotNull
-  public static String buildComment(@Nullable Commenter commenter, boolean allowSeparator, @NotNull String template, @NotNull CopyrightFileConfig options) {
+  @Nonnull
+  public static String buildComment(@Nullable Commenter commenter, boolean allowSeparator, @Nonnull String template, @Nonnull CopyrightFileConfig options) {
     if (commenter == null) {
       return "<No comments>";
     }

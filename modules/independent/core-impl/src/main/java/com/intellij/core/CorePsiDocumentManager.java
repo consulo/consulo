@@ -21,16 +21,16 @@ import com.intellij.psi.impl.DocumentCommitProcessor;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 class CorePsiDocumentManager extends PsiDocumentManagerBase {
-  CorePsiDocumentManager(@NotNull Project project,
-                         @NotNull PsiManager psiManager,
-                         @NotNull MessageBus bus,
-                         @NonNls @NotNull DocumentCommitProcessor documentCommitProcessor) {
+  CorePsiDocumentManager(@Nonnull Project project,
+                         @Nonnull PsiManager psiManager,
+                         @Nonnull MessageBus bus,
+                         @NonNls @Nonnull DocumentCommitProcessor documentCommitProcessor) {
     super(project, psiManager, bus, documentCommitProcessor);
   }
 }

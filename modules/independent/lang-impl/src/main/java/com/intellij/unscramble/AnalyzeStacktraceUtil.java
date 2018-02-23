@@ -43,8 +43,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -123,7 +123,7 @@ public class AnalyzeStacktraceUtil {
     }
   }
 
-  public static StacktraceEditorPanel createEditorPanel(Project project, @NotNull Disposable parentDisposable) {
+  public static StacktraceEditorPanel createEditorPanel(Project project, @Nonnull Disposable parentDisposable) {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document document = editorFactory.createDocument("");
     Editor editor = editorFactory.createEditor(document, project);
@@ -152,7 +152,7 @@ public class AnalyzeStacktraceUtil {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (CommonDataKeys.EDITOR == dataId) {
         return myEditor;
       }
@@ -163,7 +163,7 @@ public class AnalyzeStacktraceUtil {
       return myEditor;
     }
 
-    public final void setText(@NotNull final String text) {
+    public final void setText(@Nonnull final String text) {
       Runnable runnable = new Runnable() {
         @Override
         public void run() {

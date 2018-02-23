@@ -54,7 +54,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -73,15 +73,18 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   implements TextAccessor
 {
 
-  @NotNull private static final String PROJECT_FILE_TO_START_WITH_KEY = "external.system.task.project.file.to.start";
+  @Nonnull
+  private static final String PROJECT_FILE_TO_START_WITH_KEY = "external.system.task.project.file.to.start";
 
-  @NotNull private final Project         myProject;
-  @NotNull private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final Project         myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
 
-  public ExternalProjectPathField(@NotNull Project project,
-                                  @NotNull ProjectSystemId externalSystemId,
-                                  @NotNull FileChooserDescriptor descriptor,
-                                  @NotNull String fileChooserTitle)
+  public ExternalProjectPathField(@Nonnull Project project,
+                                  @Nonnull ProjectSystemId externalSystemId,
+                                  @Nonnull FileChooserDescriptor descriptor,
+                                  @Nonnull String fileChooserTitle)
   {
     super(createPanel(project, externalSystemId), new MyBrowseListener(descriptor, fileChooserTitle, project));
     ActionListener[] listeners = getButton().getActionListeners();
@@ -95,8 +98,8 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     myExternalSystemId = externalSystemId;
   }
 
-  @NotNull
-  private static MyPathAndProjectButtonPanel createPanel(@NotNull final Project project, @NotNull final ProjectSystemId externalSystemId) {
+  @Nonnull
+  private static MyPathAndProjectButtonPanel createPanel(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId) {
     final EditorTextField textField = createTextField(project, externalSystemId);
     
     final FixedSizeButton selectRegisteredProjectButton = new FixedSizeButton();
@@ -145,8 +148,8 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     return new MyPathAndProjectButtonPanel(textField, selectRegisteredProjectButton);
   }
 
-  @NotNull
-  private static Tree buildRegisteredProjectsTree(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  @Nonnull
+  private static Tree buildRegisteredProjectsTree(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     ExternalSystemTasksTreeModel model = new ExternalSystemTasksTreeModel(externalSystemId);
     ExternalSystemTasksTree result = new ExternalSystemTasksTree(model, ContainerUtilRt.<String, Boolean>newHashMap(), project, externalSystemId);
     
@@ -162,15 +165,15 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     return result;
   }
   
-  @NotNull
-  private static EditorTextField createTextField(@NotNull final Project project, @NotNull final ProjectSystemId externalSystemId) {
+  @Nonnull
+  private static EditorTextField createTextField(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId) {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
     final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
     TextFieldCompletionProvider provider = new TextFieldCompletionProviderDumbAware() {
       @Override
-      protected void addCompletionVariants(@NotNull String text, int offset, @NotNull String prefix, @NotNull CompletionResultSet result) {
+      protected void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
         for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : settings.getAvailableProjects().entrySet()) {
           String rootProjectPath = entry.getKey().getPath();
           String rootProjectName = uiAware.getProjectRepresentationName(rootProjectPath, null);
@@ -213,9 +216,9 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     }
   }
 
-  private static void collapseIfPossible(@NotNull final Editor editor,
-                                         @NotNull ProjectSystemId externalSystemId,
-                                         @NotNull Project project)
+  private static void collapseIfPossible(@Nonnull final Editor editor,
+                                         @Nonnull ProjectSystemId externalSystemId,
+                                         @Nonnull Project project)
   {
     ExternalSystemManager<?,?,?,?,?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
@@ -237,7 +240,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     }
   }
 
-  private static void collapse(@NotNull final Editor editor, @NotNull final String placeholder) {
+  private static void collapse(@Nonnull final Editor editor, @Nonnull final String placeholder) {
     final FoldingModel foldingModel = editor.getFoldingModel();
     foldingModel.runBatchFoldingOperation(new Runnable() {
       @Override
@@ -260,20 +263,22 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   
   private static class MyBrowseListener implements ActionListener {
     
-    @NotNull private final FileChooserDescriptor myDescriptor;
-    @NotNull private final Project myProject;
+    @Nonnull
+    private final FileChooserDescriptor myDescriptor;
+    @Nonnull
+    private final Project myProject;
     private EditorTextField myPathField;
     
-    MyBrowseListener(@NotNull final FileChooserDescriptor descriptor,
-                     @NotNull final String fileChooserTitle,
-                     @NotNull final Project project)
+    MyBrowseListener(@Nonnull final FileChooserDescriptor descriptor,
+                     @Nonnull final String fileChooserTitle,
+                     @Nonnull final Project project)
     {
       descriptor.setTitle(fileChooserTitle);
       myDescriptor = descriptor;
       myProject = project;
     }
 
-    private void setPathField(@NotNull EditorTextField pathField) {
+    private void setPathField(@Nonnull EditorTextField pathField) {
       myPathField = pathField;
     }
 
@@ -303,11 +308,13 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   
   public static class MyPathAndProjectButtonPanel extends JPanel {
 
-    @NotNull private final EditorTextField myTextField;
-    @NotNull private final FixedSizeButton myRegisteredProjectsButton;
+    @Nonnull
+    private final EditorTextField myTextField;
+    @Nonnull
+    private final FixedSizeButton myRegisteredProjectsButton;
 
-    public MyPathAndProjectButtonPanel(@NotNull EditorTextField textField,
-                                       @NotNull FixedSizeButton registeredProjectsButton)
+    public MyPathAndProjectButtonPanel(@Nonnull EditorTextField textField,
+                                       @Nonnull FixedSizeButton registeredProjectsButton)
     {
       super(new GridBagLayout());
       myTextField = textField;
@@ -316,7 +323,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
       add(myRegisteredProjectsButton, new GridBag().insets(0, 3, 0, 0));
     }
 
-    @NotNull
+    @Nonnull
     public EditorTextField getTextField() {
       return myTextField;
     }

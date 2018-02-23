@@ -21,20 +21,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.DocumentCommitProcessor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 class MockDocumentCommitProcessor implements DocumentCommitProcessor {
   @Override
-  public void commitSynchronously(@NotNull Document document, @NotNull Project project, @NotNull PsiFile psiFile) {
+  public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
   }
 
   @Override
-  public void commitAsynchronously(@NotNull Project project,
-                                   @NotNull Document document,
-                                   @NonNls @NotNull Object reason,
-                                   @NotNull TransactionId context) {
+  public void commitAsynchronously(@Nonnull Project project,
+                                   @Nonnull Document document,
+                                   @NonNls @Nonnull Object reason,
+                                   @Nonnull TransactionId context) {
   }
 }

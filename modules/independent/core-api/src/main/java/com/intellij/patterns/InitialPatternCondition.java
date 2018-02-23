@@ -17,8 +17,8 @@ package com.intellij.patterns;
 
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -26,11 +26,11 @@ import org.jetbrains.annotations.Nullable;
 public abstract class InitialPatternCondition<T> {
   private final Class<T> myAcceptedClass;
 
-  protected InitialPatternCondition(@NotNull Class<T> aAcceptedClass) {
+  protected InitialPatternCondition(@Nonnull Class<T> aAcceptedClass) {
     myAcceptedClass = aAcceptedClass;
   }
 
-  @NotNull
+  @Nonnull
   public Class<T> getAcceptedClass() {
     return myAcceptedClass;
   }
@@ -46,7 +46,7 @@ public abstract class InitialPatternCondition<T> {
     return builder.toString();
   }
 
-  public void append(@NonNls @NotNull StringBuilder builder, final String indent) {
+  public void append(@NonNls @Nonnull StringBuilder builder, final String indent) {
     builder.append("instanceOf(").append(myAcceptedClass.getSimpleName()).append(")");
   }
 }

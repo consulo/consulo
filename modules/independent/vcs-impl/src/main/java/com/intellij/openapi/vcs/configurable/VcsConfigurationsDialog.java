@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.impl.projectlevelman.AllVcses;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

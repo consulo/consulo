@@ -23,8 +23,8 @@ import com.intellij.formatting.CustomFormattingModelBuilder;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LanguageFormatting extends LanguageExtension<FormattingModelBuilder> {
   public static final LanguageFormatting INSTANCE = new LanguageFormatting();
@@ -34,12 +34,12 @@ public class LanguageFormatting extends LanguageExtension<FormattingModelBuilder
   }
 
   @Nullable
-  public FormattingModelBuilder forContext(@NotNull PsiElement context) {
+  public FormattingModelBuilder forContext(@Nonnull PsiElement context) {
     return forContext(context.getLanguage(), context);
   }
 
   @Nullable
-  public FormattingModelBuilder forContext(@NotNull Language language, @NotNull PsiElement context) {
+  public FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
     for (LanguageFormattingRestriction each : Extensions.getExtensions(LanguageFormattingRestriction.EXTENSION)) {
       if (!each.isFormatterAllowed(context)) return null;
     }

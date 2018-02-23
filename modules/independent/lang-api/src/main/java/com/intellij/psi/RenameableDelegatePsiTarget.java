@@ -17,13 +17,13 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.PomRenameableTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class RenameableDelegatePsiTarget extends DelegatePsiTarget implements PomRenameableTarget<RenameableDelegatePsiTarget>{
-  public RenameableDelegatePsiTarget(@NotNull PsiNamedElement element) {
+  public RenameableDelegatePsiTarget(@Nonnull PsiNamedElement element) {
     super(element);
   }
 
@@ -33,13 +33,13 @@ public class RenameableDelegatePsiTarget extends DelegatePsiTarget implements Po
   }
 
   @Override
-  public RenameableDelegatePsiTarget setName(@NotNull String newName) {
+  public RenameableDelegatePsiTarget setName(@Nonnull String newName) {
     ((PsiNamedElement)getNavigationElement()).setName(newName);
     return this;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return StringUtil.notNullize(((PsiNamedElement)getNavigationElement()).getName());
   }

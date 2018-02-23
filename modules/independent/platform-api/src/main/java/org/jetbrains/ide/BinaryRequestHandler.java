@@ -18,7 +18,7 @@ package org.jetbrains.ide;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.UUID;
 
@@ -28,9 +28,9 @@ public abstract class BinaryRequestHandler {
   /**
    * uuidgen on Mac OS X could be used to generate UUID
    */
-  @NotNull
+  @Nonnull
   public abstract UUID getId();
 
-  @NotNull
-  public abstract ChannelHandler getInboundHandler(@NotNull ChannelHandlerContext context);
+  @Nonnull
+  public abstract ChannelHandler getInboundHandler(@Nonnull ChannelHandlerContext context);
 }

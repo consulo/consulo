@@ -19,8 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -29,11 +28,11 @@ import java.util.Collection;
  * @author nik
  */
 public abstract class CompilerEncodingService {
-  public static CompilerEncodingService getInstance(@NotNull Project project) {
+  public static CompilerEncodingService getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CompilerEncodingService.class);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static Charset getPreferredModuleEncoding(Chunk<Module> chunk) {
     CompilerEncodingService service = null;
     for (Module module : chunk.getNodes()) {
@@ -48,9 +47,9 @@ public abstract class CompilerEncodingService {
     return null;
   }
 
-  @Nullable
-  public abstract Charset getPreferredModuleEncoding(@NotNull Module module);
+  @javax.annotation.Nullable
+  public abstract Charset getPreferredModuleEncoding(@Nonnull Module module);
 
-  @NotNull
-  public abstract Collection<Charset> getAllModuleEncodings(@NotNull Module module);
+  @Nonnull
+  public abstract Collection<Charset> getAllModuleEncodings(@Nonnull Module module);
 }

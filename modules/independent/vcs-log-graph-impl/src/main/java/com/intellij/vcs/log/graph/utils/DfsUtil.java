@@ -17,7 +17,7 @@
 package com.intellij.vcs.log.graph.utils;
 
 import com.intellij.util.containers.IntStack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DfsUtil {
   public DfsUtil() {
@@ -29,7 +29,7 @@ public class DfsUtil {
     int fun(int currentNode);
   }
 
-  public void nodeDfsIterator(int startRowIndex, @NotNull NextNode nextNodeFun) {
+  public void nodeDfsIterator(int startRowIndex, @Nonnull NextNode nextNodeFun) {
     IntStack myStack = new IntStack();
     myStack.push(startRowIndex);
 

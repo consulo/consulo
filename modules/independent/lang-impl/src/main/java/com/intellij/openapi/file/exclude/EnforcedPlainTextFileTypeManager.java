@@ -32,7 +32,7 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +72,7 @@ public class EnforcedPlainTextFileTypeManager extends PersistentFileSetManager i
     return success;
   }
 
-  public static boolean isApplicableFor(@NotNull VirtualFile file) {
+  public static boolean isApplicableFor(@Nonnull VirtualFile file) {
     if (file.isDirectory()) return false;
     FileType originalType = FileTypeManager.getInstance().getFileTypeByFileName(file.getName());
     return !originalType.isBinary() && originalType != PlainTextFileType.INSTANCE && originalType != InternalStdFileTypes.JAVA;

@@ -17,15 +17,17 @@ package com.intellij.diff.tools.simple;
 
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class MergeInnerDifferences {
   @Nullable private final List<TextRange> myLeft;
-  @Nullable private final List<TextRange> myBase;
-  @Nullable private final List<TextRange> myRight;
+  @javax.annotation.Nullable
+  private final List<TextRange> myBase;
+  @javax.annotation.Nullable
+  private final List<TextRange> myRight;
 
   public MergeInnerDifferences(@Nullable List<TextRange> left, @Nullable List<TextRange> base, @Nullable List<TextRange> right) {
     myLeft = left;
@@ -33,23 +35,23 @@ public class MergeInnerDifferences {
     myRight = right;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<TextRange> getLeft() {
     return myLeft;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<TextRange> getBase() {
     return myBase;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<TextRange> getRight() {
     return myRight;
   }
 
-  @Nullable
-  public List<TextRange> get(@NotNull ThreeSide side) {
+  @javax.annotation.Nullable
+  public List<TextRange> get(@Nonnull ThreeSide side) {
     return side.select(myLeft, myBase, myRight);
   }
 }

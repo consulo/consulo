@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -41,7 +41,7 @@ public class FilteringIterator<Dom, E extends Dom> implements PeekableIterator<E
     }
   };
 
-  public FilteringIterator(@NotNull Iterator<Dom> delegate, @NotNull Condition<? super Dom> condition) {
+  public FilteringIterator(@Nonnull Iterator<Dom> delegate, @Nonnull Condition<? super Dom> condition) {
     myDelegate = delegate;
     myCondition = condition;
   }

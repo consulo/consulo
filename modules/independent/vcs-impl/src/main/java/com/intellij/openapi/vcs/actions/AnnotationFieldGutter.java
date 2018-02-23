@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -36,13 +36,16 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
-  @NotNull protected final FileAnnotation myAnnotation;
-  @NotNull private final TextAnnotationPresentation myPresentation;
-  @Nullable private Couple<Map<VcsRevisionNumber, Color>> myColorScheme;
+  @Nonnull
+  protected final FileAnnotation myAnnotation;
+  @Nonnull
+  private final TextAnnotationPresentation myPresentation;
+  @javax.annotation.Nullable
+  private Couple<Map<VcsRevisionNumber, Color>> myColorScheme;
 
-  AnnotationFieldGutter(@NotNull FileAnnotation annotation,
-                        @NotNull TextAnnotationPresentation presentation,
-                        @Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+  AnnotationFieldGutter(@Nonnull FileAnnotation annotation,
+                        @Nonnull TextAnnotationPresentation presentation,
+                        @javax.annotation.Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
     myAnnotation = annotation;
     myPresentation = presentation;
     myColorScheme = colorScheme;
@@ -52,7 +55,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getToolTip(final int line, final Editor editor) {
     return null;
@@ -72,7 +75,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return myPresentation.getFontType(line);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public ColorKey getColor(final int line, final Editor editor) {
     return myPresentation.getColor(line);

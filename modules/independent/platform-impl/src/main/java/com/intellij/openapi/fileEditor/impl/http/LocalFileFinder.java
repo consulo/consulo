@@ -18,8 +18,8 @@ package com.intellij.openapi.fileEditor.impl.http;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.Nullable;
 public abstract class LocalFileFinder {
   public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create("com.intellij.http.localFileFinder");
 
-  @Nullable 
-  public abstract VirtualFile findLocalFile(@NotNull String url, @NotNull Project project);
+  @Nullable
+  public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);
 }

@@ -10,8 +10,8 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.Producer;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.Outcome;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +37,9 @@ public class ZipUtil {
 
   public static void unzipWithProgressSynchronously(
     @Nullable Project project,
-    @NotNull String progressTitle,
-    @NotNull final File zipArchive,
-    @NotNull final File extractToDir) throws GeneratorException
+    @Nonnull String progressTitle,
+    @Nonnull final File zipArchive,
+    @Nonnull final File extractToDir) throws GeneratorException
   {
     Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(
       project, progressTitle, "Unpacking ...",
@@ -89,8 +89,8 @@ public class ZipUtil {
   }
 
   private static void unzipEntryToDir(@Nullable ProgressIndicator progress,
-                                      @NotNull final ZipEntry zipEntry,
-                                      @NotNull final File extractToDir,
+                                      @Nonnull final ZipEntry zipEntry,
+                                      @Nonnull final File extractToDir,
                                       ZipInputStream stream,
                                       @Nullable NullableFunction<String, String> pathConvertor,
                                       @Nullable ContentProcessor contentProcessor) throws IOException {

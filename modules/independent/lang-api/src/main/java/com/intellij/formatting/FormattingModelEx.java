@@ -17,7 +17,6 @@ package com.intellij.formatting;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -34,5 +33,5 @@ public interface FormattingModelEx extends FormattingModel {
    * @param whiteSpace the whitespace to replace with.
    * @return new white space text range
    */
-  TextRange replaceWhiteSpace(TextRange textRange, @Nullable ASTNode nodeAfter, String whiteSpace);
+  TextRange replaceWhiteSpace(TextRange textRange, @javax.annotation.Nullable ASTNode nodeAfter, String whiteSpace);
 }

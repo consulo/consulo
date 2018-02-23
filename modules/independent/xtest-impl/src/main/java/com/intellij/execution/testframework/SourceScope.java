@@ -22,8 +22,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.graph.Graph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -174,18 +174,18 @@ public abstract class SourceScope {
       }
     }
 
-    public boolean contains(@NotNull final VirtualFile file) {
+    public boolean contains(@Nonnull final VirtualFile file) {
       return findScopeFor(file) != null;
     }
 
-    public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
+    public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
       final GlobalSearchScope scope = findScopeFor(file1);
       assert scope != null;
       if (scope.contains(file2)) return scope.compare(file1, file2);
       return 0;
     }
 
-    public boolean isSearchInModuleContent(@NotNull final Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
       return myMainScope.isSearchInModuleContent(aModule);
     }
 

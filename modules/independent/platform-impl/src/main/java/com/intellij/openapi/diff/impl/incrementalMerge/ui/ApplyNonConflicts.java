@@ -26,14 +26,15 @@ import com.intellij.openapi.diff.impl.util.DiffPanelOuterComponent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ApplyNonConflicts extends AnAction implements DumbAware {
-  @Nullable private final DiffPanelOuterComponent myDiffPanel;
+  @Nullable
+  private final DiffPanelOuterComponent myDiffPanel;
 
   public ApplyNonConflicts(@Nullable DiffPanelOuterComponent diffPanel) {
     super(DiffBundle.message("merge.dialog.apply.all.non.conflicting.changes.action.name"), null, AllIcons.Diff.ApplyNotConflicts);

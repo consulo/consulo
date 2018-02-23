@@ -18,8 +18,8 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -36,28 +36,28 @@ public interface BreadcrumbsProvider {
   /**
    * @return an array of languages supported by this provider
    */
-  @NotNull
+  @Nonnull
   Language getLanguage();
 
   /**
    * @param element that represents a single crumb
    * @return {@code true} if the specified element is supported by this provider
    */
-  boolean acceptElement(@NotNull PsiElement element);
+  boolean acceptElement(@Nonnull PsiElement element);
 
   /**
    * @param element that represents a single crumb
    * @return a text for the specified element
    */
-  @NotNull
-  String getElementInfo(@NotNull PsiElement element);
+  @Nonnull
+  String getElementInfo(@Nonnull PsiElement element);
 
   /**
    * @param element that represents a single crumb
    * @return an icon for the specified element
    */
   @Nullable
-  default Icon getElementIcon(@NotNull PsiElement element) {
+  default Icon getElementIcon(@Nonnull PsiElement element) {
     return null;
   }
 
@@ -66,7 +66,7 @@ public interface BreadcrumbsProvider {
    * @return a description for the specified element
    */
   @Nullable
-  default String getElementTooltip(@NotNull PsiElement element) {
+  default String getElementTooltip(@Nonnull PsiElement element) {
     return null;
   }
 
@@ -75,7 +75,7 @@ public interface BreadcrumbsProvider {
    * @return an element that represents a parent crumb, or {@code null}
    */
   @Nullable
-  default PsiElement getParent(@NotNull PsiElement element) {
+  default PsiElement getParent(@Nonnull PsiElement element) {
     return element.getParent();
   }
 
@@ -83,8 +83,8 @@ public interface BreadcrumbsProvider {
    * @param element that represents a single crumb
    * @return a list of elements to navigate
    */
-  @NotNull
-  default List<PsiElement> getChildren(@NotNull PsiElement element) {
+  @Nonnull
+  default List<PsiElement> getChildren(@Nonnull PsiElement element) {
     return emptyList();
   }
 }

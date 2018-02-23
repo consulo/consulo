@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -109,7 +109,7 @@ public class JBColor extends Color {
   public Color brighter() {
     if (func != null) {
       return new JBColor(new NotNullProducer<Color>() {
-        @NotNull
+        @Nonnull
         @Override
         public Color produce() {
           return func.produce().brighter();
@@ -123,7 +123,7 @@ public class JBColor extends Color {
   public Color darker() {
     if (func != null) {
       return new JBColor(new NotNullProducer<Color>() {
-        @NotNull
+        @Nonnull
         @Override
         public Color produce() {
           return func.produce().darker();
@@ -256,7 +256,7 @@ public class JBColor extends Color {
 
   public static Color foreground() {
     return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return UIUtil.getLabelForeground();
@@ -266,7 +266,7 @@ public class JBColor extends Color {
 
   public static Color background() {
     return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return UIUtil.getListBackground();
@@ -276,7 +276,7 @@ public class JBColor extends Color {
 
   public static Color border() {
     return new JBColor(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return UIUtil.getBorderColor();

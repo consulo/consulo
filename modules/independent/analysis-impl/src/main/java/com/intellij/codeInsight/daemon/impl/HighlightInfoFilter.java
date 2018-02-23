@@ -18,8 +18,8 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface HighlightInfoFilter {
   HighlightInfoFilter[] EMPTY_ARRAY = new HighlightInfoFilter[0];
@@ -28,6 +28,6 @@ public interface HighlightInfoFilter {
   /**
    * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of highlighting in ANY file
    */
-  boolean accept(@NotNull HighlightInfo highlightInfo, @Nullable PsiFile file);
+  boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file);
 }
 

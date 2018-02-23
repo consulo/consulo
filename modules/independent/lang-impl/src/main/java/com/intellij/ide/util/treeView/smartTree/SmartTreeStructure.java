@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SmartTreeStructure extends AbstractTreeStructure {
 
@@ -29,7 +29,7 @@ public class SmartTreeStructure extends AbstractTreeStructure {
   protected final Project myProject;
   private TreeElementWrapper myRootElementWrapper;
 
-  public SmartTreeStructure(@NotNull Project project, @NotNull TreeModel model) {
+  public SmartTreeStructure(@Nonnull Project project, @Nonnull TreeModel model) {
     myModel = model;
     myProject = project;
   }
@@ -39,7 +39,7 @@ public class SmartTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return (AbstractTreeNode)element;
   }

@@ -18,7 +18,8 @@ package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public interface CreateFromTemplateActionReplacer {
   ExtensionPointName<CreateFromTemplateActionReplacer> CREATE_FROM_TEMPLATE_REPLACER =

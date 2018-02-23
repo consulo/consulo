@@ -20,21 +20,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.copyright.config.CopyrightFileConfig;
 
 /**
  * @author yole
  */
 public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
-  @NotNull
-  public abstract UpdatePsiFileCopyright<T> createInstance(@NotNull PsiFile file, @NotNull CopyrightProfile copyrightProfile);
+  @Nonnull
+  public abstract UpdatePsiFileCopyright<T> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile);
 
-  @NotNull
+  @Nonnull
   public abstract T createDefaultOptions();
 
-  @NotNull
-  public abstract TemplateCommentPanel createConfigurable(@NotNull Project project, @NotNull TemplateCommentPanel parentPane, @NotNull FileType fileType);
+  @Nonnull
+  public abstract TemplateCommentPanel createConfigurable(@Nonnull Project project, @Nonnull TemplateCommentPanel parentPane, @Nonnull FileType fileType);
 
   public boolean isAllowSeparator() {
     return true;

@@ -6,8 +6,7 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguratio
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,17 +27,17 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     myExecutionEnvironment = environment;
   }
 
-  @NotNull
+  @Nonnull
   public DeploymentSource getSource() {
     return mySource;
   }
 
-  @NotNull
+  @Nonnull
   public D getConfiguration() {
     return myConfiguration;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -48,12 +47,12 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     return myDebugConnector != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public DebugConnector<?, ?> getDebugConnector() {
     return myDebugConnector;
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionEnvironment getExecutionEnvironment() {
     return myExecutionEnvironment;
   }

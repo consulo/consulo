@@ -22,8 +22,8 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -52,7 +52,7 @@ public class LogFileOptions implements JDOMExternalizable {
   private boolean myEnabled;
   private boolean mySkipContent;
   private boolean myShowAll;
-  @NotNull
+  @Nonnull
   private Charset myCharset;
 
   //read external
@@ -63,7 +63,7 @@ public class LogFileOptions implements JDOMExternalizable {
     this(name, path, null, enabled, skipContent, showAll);
   }
 
-  public LogFileOptions(String name, String path, @Nullable final Charset charset, boolean enabled, boolean skipContent, final boolean showAll) {
+  public LogFileOptions(String name, String path, @javax.annotation.Nullable final Charset charset, boolean enabled, boolean skipContent, final boolean showAll) {
     myName = name;
     myPathPattern = path;
     myEnabled = enabled;

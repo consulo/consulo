@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
@@ -60,7 +60,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     myActionParameter = actionParameter;
   }
 
-  public static <T> void createAndRunSilent(final Project project, @Nullable final VcsBackgroundableActions actionKey,
+  public static <T> void createAndRunSilent(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
                                  @Nullable final Object actionParameter, final String title,
                                  final ThrowableComputable<T, VcsException> backgroundable,
                                  @Nullable final Consumer<T> awtSuccessContinuation) {
@@ -75,7 +75,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
   }
 
-  public static <T> void createAndRun(final Project project, @Nullable final VcsBackgroundableActions actionKey,
+  public static <T> void createAndRun(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
                                  @Nullable final Object actionParameter,
                                  final String title,
                                  final String errorTitle,
@@ -85,12 +85,12 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation, false);
   }
 
-  private static <T> void createAndRun(final Project project, @Nullable final VcsBackgroundableActions actionKey,
-                                 @Nullable final Object actionParameter,
+  private static <T> void createAndRun(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
+                                 @javax.annotation.Nullable final Object actionParameter,
                                  final String title,
                                  final String errorTitle,
                                  final ThrowableComputable<T, VcsException> backgroundable,
-                                 @Nullable final Consumer<T> awtSuccessContinuation,
+                                 @javax.annotation.Nullable final Consumer<T> awtSuccessContinuation,
                                  @Nullable final Runnable awtErrorContinuation, final boolean silent) {
     final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
     final BackgroundableActionEnabledHandler handler;
@@ -112,7 +112,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     ProgressManager.getInstance().run(backgroundableComputable);
   }
 
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     try {
       myResult = myBackgroundable.compute();
     }

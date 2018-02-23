@@ -16,7 +16,7 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ import java.util.List;
  * @author nik
  */
 public interface UnloadedModuleDescription extends ModuleDescription {
-  @NotNull
+  @Nonnull
   List<VirtualFilePointer> getContentRoots();
 
-  @NotNull
+  @Nonnull
   List<String> getGroupPath();
 }

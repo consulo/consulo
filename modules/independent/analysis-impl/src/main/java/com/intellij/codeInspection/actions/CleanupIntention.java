@@ -29,27 +29,26 @@ import com.intellij.openapi.project.Project;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public abstract class CleanupIntention implements IntentionAction, LowPriorityAction {
 
   protected CleanupIntention() {}
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getFamilyName();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return InspectionsBundle.message("cleanup.in.scope");
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
     if (!FileModificationService.getInstance().preparePsiElementForWrite(file)) return;
     final InspectionManager managerEx = InspectionManager.getInstance(project);
     final GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase)managerEx.createNewGlobalContext(false);
@@ -60,11 +59,11 @@ public abstract class CleanupIntention implements IntentionAction, LowPriorityAc
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract AnalysisScope getScope(Project project, PsiFile file);
 
   @Override
-  public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file) {
+  public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
     return true;
   }
 

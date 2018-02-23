@@ -20,17 +20,17 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PasteTargetRule implements GetDataRule<PsiElement> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiElement> getKey() {
     return LangDataKeys.PASTE_TARGET_PSI_ELEMENT;
   }
 
   @Override
-  public PsiElement getData(@NotNull DataProvider dataProvider) {
+  public PsiElement getData(@Nonnull DataProvider dataProvider) {
     return dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
   }
 }

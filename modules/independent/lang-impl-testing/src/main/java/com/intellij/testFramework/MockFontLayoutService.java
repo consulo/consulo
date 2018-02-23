@@ -16,7 +16,7 @@
 package com.intellij.testFramework;
 
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -35,11 +35,11 @@ public class MockFontLayoutService extends FontLayoutService {
     myDescent = descent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlyphVector layoutGlyphVector(@NotNull Font font,
-                                       @NotNull FontRenderContext fontRenderContext,
-                                       @NotNull char[] chars,
+  public GlyphVector layoutGlyphVector(@Nonnull Font font,
+                                       @Nonnull FontRenderContext fontRenderContext,
+                                       @Nonnull char[] chars,
                                        int start,
                                        int end,
                                        boolean isRtl) {
@@ -47,27 +47,27 @@ public class MockFontLayoutService extends FontLayoutService {
   }
 
   @Override
-  public int charWidth(@NotNull FontMetrics fontMetrics, char c) {
+  public int charWidth(@Nonnull FontMetrics fontMetrics, char c) {
     return myCharWidth;
   }
 
   @Override
-  public int charWidth(@NotNull FontMetrics fontMetrics, int codePoint) {
+  public int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint) {
     return myCharWidth;
   }
 
   @Override
-  public float charWidth2D(@NotNull FontMetrics fontMetrics, int codePoint) {
+  public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
     return myCharWidth;
   }
 
   @Override
-  public int getHeight(@NotNull FontMetrics fontMetrics) {
+  public int getHeight(@Nonnull FontMetrics fontMetrics) {
     return myLineHeight;
   }
 
   @Override
-  public int getDescent(@NotNull FontMetrics fontMetrics) {
+  public int getDescent(@Nonnull FontMetrics fontMetrics) {
     return myDescent;
   }
 

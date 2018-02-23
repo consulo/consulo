@@ -17,8 +17,8 @@ package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -31,6 +31,6 @@ public interface TestProxyTreeSelectionListener {
    * @param model
    */
   void onSelected(@Nullable SMTestProxy selectedTestProxy,
-                  @NotNull TestResultsViewer viewer,
-                  @NotNull TestFrameworkRunningModel model);
+                  @Nonnull TestResultsViewer viewer,
+                  @Nonnull TestFrameworkRunningModel model);
 }

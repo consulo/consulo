@@ -28,8 +28,8 @@ import com.intellij.util.containers.SLRUMap;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.util.SequentialLimitedLifoExecutor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -42,16 +42,21 @@ public class ContainingBranchesGetter {
 
   private static final Logger LOG = Logger.getInstance(ContainingBranchesGetter.class);
 
-  @NotNull private final SequentialLimitedLifoExecutor<Task> myTaskExecutor;
-  @NotNull private final VcsLogData myLogData;
+  @Nonnull
+  private final SequentialLimitedLifoExecutor<Task> myTaskExecutor;
+  @Nonnull
+  private final VcsLogData myLogData;
 
   // other fields accessed only from EDT
-  @NotNull private final List<Runnable> myLoadingFinishedListeners = ContainerUtil.newArrayList();
-  @NotNull private SLRUMap<CommitId, List<String>> myCache = createCache();
-  @NotNull private Map<VirtualFile, ContainedInBranchCondition> myConditions = ContainerUtil.newHashMap();
+  @Nonnull
+  private final List<Runnable> myLoadingFinishedListeners = ContainerUtil.newArrayList();
+  @Nonnull
+  private SLRUMap<CommitId, List<String>> myCache = createCache();
+  @Nonnull
+  private Map<VirtualFile, ContainedInBranchCondition> myConditions = ContainerUtil.newHashMap();
   private int myCurrentBranchesChecksum;
 
-  ContainingBranchesGetter(@NotNull VcsLogData logData, @NotNull Disposable parentDisposable) {
+  ContainingBranchesGetter(@Nonnull VcsLogData logData, @Nonnull Disposable parentDisposable) {
     myLogData = logData;
     myTaskExecutor = new SequentialLimitedLifoExecutor<>(parentDisposable, 10, task -> {
       final List<String> branches = task.getContainingBranches(myLogData);
@@ -87,12 +92,12 @@ public class ContainingBranchesGetter {
   /**
    * This task will be executed each time the calculating process completes.
    */
-  public void addTaskCompletedListener(@NotNull Runnable runnable) {
+  public void addTaskCompletedListener(@Nonnull Runnable runnable) {
     LOG.assertTrue(EventQueue.isDispatchThread());
     myLoadingFinishedListeners.add(runnable);
   }
 
-  public void removeTaskCompletedListener(@NotNull Runnable runnable) {
+  public void removeTaskCompletedListener(@Nonnull Runnable runnable) {
     LOG.assertTrue(EventQueue.isDispatchThread());
     myLoadingFinishedListeners.remove(runnable);
   }
@@ -109,7 +114,7 @@ public class ContainingBranchesGetter {
    * if it is not available, starts calculating in the background and returns null.
    */
   @Nullable
-  public List<String> requestContainingBranches(@NotNull VirtualFile root, @NotNull Hash hash) {
+  public List<String> requestContainingBranches(@Nonnull VirtualFile root, @Nonnull Hash hash) {
     LOG.assertTrue(EventQueue.isDispatchThread());
     List<String> refs = myCache.get(new CommitId(hash, root));
     if (refs == null) {
@@ -120,13 +125,13 @@ public class ContainingBranchesGetter {
   }
 
   @Nullable
-  public List<String> getContainingBranchesFromCache(@NotNull VirtualFile root, @NotNull Hash hash) {
+  public List<String> getContainingBranchesFromCache(@Nonnull VirtualFile root, @Nonnull Hash hash) {
     LOG.assertTrue(EventQueue.isDispatchThread());
     return myCache.get(new CommitId(hash, root));
   }
 
-  @NotNull
-  public Condition<CommitId> getContainedInBranchCondition(@NotNull final String branchName, @NotNull final VirtualFile root) {
+  @Nonnull
+  public Condition<CommitId> getContainedInBranchCondition(@Nonnull final String branchName, @Nonnull final VirtualFile root) {
     LOG.assertTrue(EventQueue.isDispatchThread());
 
     DataPack dataPack = myLogData.getDataPack();
@@ -147,19 +152,19 @@ public class ContainingBranchesGetter {
     return condition;
   }
 
-  @NotNull
+  @Nonnull
   private static SLRUMap<CommitId, List<String>> createCache() {
     return new SLRUMap<>(1000, 1000);
   }
 
   @CalledInAny
-  @NotNull
-  public List<String> getContainingBranchesSynchronously(@NotNull VirtualFile root, @NotNull Hash hash) {
+  @Nonnull
+  public List<String> getContainingBranchesSynchronously(@Nonnull VirtualFile root, @Nonnull Hash hash) {
     return doGetContainingBranches(myLogData.getDataPack(), root, hash);
   }
 
-  @NotNull
-  private List<String> doGetContainingBranches(@NotNull DataPack dataPack, @NotNull VirtualFile root, @NotNull Hash hash) {
+  @Nonnull
+  private List<String> doGetContainingBranches(@Nonnull DataPack dataPack, @Nonnull VirtualFile root, @Nonnull Hash hash) {
     return new Task(root, hash, myCache, dataPack.getPermanentGraph(), dataPack.getRefsModel()).getContainingBranches(myLogData);
   }
 
@@ -167,7 +172,8 @@ public class ContainingBranchesGetter {
     private final VirtualFile root;
     private final Hash hash;
     private final SLRUMap<CommitId, List<String>> cache;
-    @Nullable private final RefsModel refs;
+    @Nullable
+    private final RefsModel refs;
     @Nullable private final PermanentGraph<Integer> graph;
 
     public Task(VirtualFile root,
@@ -182,8 +188,8 @@ public class ContainingBranchesGetter {
       this.refs = refs;
     }
 
-    @NotNull
-    public List<String> getContainingBranches(@NotNull VcsLogData logData) {
+    @Nonnull
+    public List<String> getContainingBranches(@Nonnull VcsLogData logData) {
       try {
         VcsLogProvider provider = logData.getLogProvider(root);
         if (graph != null && refs != null && VcsLogProperties.get(provider, VcsLogProperties.LIGHTWEIGHT_BRANCHES)) {
@@ -215,16 +221,18 @@ public class ContainingBranchesGetter {
   }
 
   private class ContainedInBranchCondition implements Condition<CommitId> {
-    @NotNull private final Condition<Integer> myCondition;
-    @NotNull private final String myBranch;
+    @Nonnull
+    private final Condition<Integer> myCondition;
+    @Nonnull
+    private final String myBranch;
     private volatile boolean isDisposed = false;
 
-    public ContainedInBranchCondition(@NotNull Condition<Integer> condition, @NotNull String branch) {
+    public ContainedInBranchCondition(@Nonnull Condition<Integer> condition, @Nonnull String branch) {
       myCondition = condition;
       myBranch = branch;
     }
 
-    @NotNull
+    @Nonnull
     public String getBranch() {
       return myBranch;
     }

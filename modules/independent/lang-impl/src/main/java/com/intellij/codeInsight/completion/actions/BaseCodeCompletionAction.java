@@ -27,7 +27,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 
@@ -50,8 +50,8 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
     createHandler(type, true, false, true).invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0, false);
   }
 
-  @NotNull
-  public CodeCompletionHandlerBase createHandler(@NotNull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+  @Nonnull
+  public CodeCompletionHandlerBase createHandler(@Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
     return new CodeCompletionHandlerBase(completionType, invokedExplicitly, autopopup, synchronous);
   }
 

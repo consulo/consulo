@@ -30,8 +30,8 @@ import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class UnifiedDiffWriter {
   }
 
   public static void write(@Nullable Project project, Collection<FilePatch> patches, Writer writer, final String lineSeparator,
-                           @Nullable final CommitContext commitContext) throws IOException {
+                           @javax.annotation.Nullable final CommitContext commitContext) throws IOException {
     final PatchEP[] extensions = project == null ? new PatchEP[0] : Extensions.getExtensions(PatchEP.EP_NAME, project);
     write(project, patches, writer, lineSeparator, extensions, commitContext);
   }
@@ -68,7 +68,7 @@ public class UnifiedDiffWriter {
                            Collection<FilePatch> patches,
                            Writer writer,
                            final String lineSeparator,
-                           @NotNull final PatchEP[] extensions,
+                           @Nonnull final PatchEP[] extensions,
                            final CommitContext commitContext) throws IOException {
     for(FilePatch filePatch: patches) {
       if (!(filePatch instanceof TextFilePatch)) continue;
@@ -114,8 +114,8 @@ public class UnifiedDiffWriter {
     }
   }
 
-  @NotNull
-  private static String getPathRelatedToDir(@NotNull String newBaseDir, @Nullable String basePath, @NotNull String path) {
+  @Nonnull
+  private static String getPathRelatedToDir(@Nonnull String newBaseDir, @Nullable String basePath, @Nonnull String path) {
     if (basePath == null) return path;
     String result = FileUtil.getRelativePath(new File(newBaseDir), new File(basePath, path));
     return result == null ? path : result;

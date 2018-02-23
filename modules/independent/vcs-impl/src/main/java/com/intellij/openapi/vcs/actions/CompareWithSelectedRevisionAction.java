@@ -40,7 +40,6 @@ import com.intellij.util.TreeItem;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -168,7 +167,8 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
   }
 
 
-  @Nullable private static VcsFileRevision getRevisionAt(final TreeTableView treeTable, final int index) {
+  @javax.annotation.Nullable
+  private static VcsFileRevision getRevisionAt(final TreeTableView treeTable, final int index) {
     final List items = treeTable.getItems();
     if (items.size() <= index) {
       return null;

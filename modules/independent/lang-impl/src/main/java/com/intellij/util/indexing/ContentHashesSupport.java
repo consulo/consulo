@@ -20,8 +20,8 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import com.intellij.util.io.IOUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ class ContentHashesSupport {
     if (ourHashesWithFileType != null && ourHashesWithFileType.isDirty()) ourHashesWithFileType.force();
   }
 
-  static byte[] calcContentHash(@NotNull byte[] bytes, @NotNull FileType fileType) {
+  static byte[] calcContentHash(@Nonnull byte[] bytes, @Nonnull FileType fileType) {
     MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
     Charset defaultCharset = Charset.defaultCharset();
@@ -69,19 +69,19 @@ class ContentHashesSupport {
     return messageDigest.digest();
   }
 
-  static int calcContentHashIdWithFileType(@NotNull byte[] bytes, @Nullable Charset charset, @NotNull FileType fileType) throws IOException {
+  static int calcContentHashIdWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) throws IOException {
     return enumerateHash(calcContentHashWithFileType(bytes, charset, fileType));
   }
 
-  static int calcContentHashId(@NotNull byte[] bytes, @NotNull FileType fileType) throws IOException {
+  static int calcContentHashId(@Nonnull byte[] bytes, @Nonnull FileType fileType) throws IOException {
     return enumerateHash(calcContentHash(bytes, fileType));
   }
 
-  static int enumerateHash(@NotNull byte[] digest) throws IOException {
+  static int enumerateHash(@Nonnull byte[] digest) throws IOException {
     return ourHashesWithFileType.enumerate(digest);
   }
 
-  static byte[] calcContentHashWithFileType(@NotNull byte[] bytes, @Nullable Charset charset, @NotNull FileType fileType) {
+  static byte[] calcContentHashWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) {
     MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
     Charset defaultCharset = Charset.defaultCharset();

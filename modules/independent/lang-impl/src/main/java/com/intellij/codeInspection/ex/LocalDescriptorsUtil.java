@@ -22,8 +22,8 @@ import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.TripleFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,12 +44,12 @@ public class LocalDescriptorsUtil {
     }
   };
 
-  static void addProblemDescriptors(@NotNull List<ProblemDescriptor> descriptors,
+  static void addProblemDescriptors(@Nonnull List<ProblemDescriptor> descriptors,
                                     boolean filterSuppressed,
-                                    @NotNull GlobalInspectionContext context,
+                                    @Nonnull GlobalInspectionContext context,
                                     @Nullable LocalInspectionTool tool,
-                                    @NotNull TripleFunction<LocalInspectionTool, PsiElement, GlobalInspectionContext, RefElement> getProblemElementFunction,
-                                    @NotNull InspectionToolPresentation dpi) {
+                                    @Nonnull TripleFunction<LocalInspectionTool, PsiElement, GlobalInspectionContext, RefElement> getProblemElementFunction,
+                                    @Nonnull InspectionToolPresentation dpi) {
     if (descriptors.isEmpty()) return;
 
     Map<RefElement, List<ProblemDescriptor>> problems = new HashMap<RefElement, List<ProblemDescriptor>>();
@@ -89,11 +89,11 @@ public class LocalDescriptorsUtil {
     }
   }
 
-  public static void addProblemDescriptors(@NotNull List<ProblemDescriptor> descriptors,
-                                           @NotNull InspectionToolPresentation dpi,
+  public static void addProblemDescriptors(@Nonnull List<ProblemDescriptor> descriptors,
+                                           @Nonnull InspectionToolPresentation dpi,
                                            boolean filterSuppressed,
-                                           @NotNull GlobalInspectionContext inspectionContext,
-                                           @NotNull LocalInspectionTool tool) {
+                                           @Nonnull GlobalInspectionContext inspectionContext,
+                                           @Nonnull LocalInspectionTool tool) {
     addProblemDescriptors(descriptors, filterSuppressed, inspectionContext, tool, CONVERT, dpi);
   }
 }

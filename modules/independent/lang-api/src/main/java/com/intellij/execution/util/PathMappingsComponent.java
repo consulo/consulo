@@ -6,8 +6,8 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.UserActivityProviderComponent;
 import com.intellij.util.PathMappingSettings;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -24,7 +24,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
 
   private final List<ChangeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  @NotNull
+  @Nonnull
   private PathMappingSettings myMappingSettings = new PathMappingSettings();
 
   public PathMappingsComponent() {
@@ -45,7 +45,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
     new MyPathMappingsDialog(this).show();
   }
 
-  @NotNull
+  @Nonnull
   public PathMappingSettings getMappingSettings() {
     return myMappingSettings;
   }
@@ -63,7 +63,7 @@ public final class PathMappingsComponent extends LabeledComponent<TextFieldWithB
     fireStateChanged();
   }
 
-  private void setTextRepresentation(@NotNull PathMappingSettings mappingSettings) {
+  private void setTextRepresentation(@Nonnull PathMappingSettings mappingSettings) {
     final StringBuilder sb = new StringBuilder();
     for (PathMappingSettings.PathMapping mapping : mappingSettings.getPathMappings()) {
       sb.append(mapping.getLocalRoot()).append("=").append(mapping.getRemoteRoot()).append(";");

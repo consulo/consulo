@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.LowMemoryWatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -45,7 +45,7 @@ public class RecentStringInterner {
     myStripeLocks = new Lock[myInterns.length];
     for(int i = 0; i < myInterns.length; ++i) {
       myInterns[i] = new SLRUCache<String, String>(capacity / stripes, capacity / stripes) {
-        @NotNull
+        @Nonnull
         @Override
         public String createValue(String key) {
           return key;

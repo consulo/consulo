@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util;
 
 import com.intellij.diff.util.Side;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {
@@ -28,10 +28,10 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
    *
    * handler will return false if precessing should be aborted
    */
-  protected abstract void processHelper(@NotNull ScrollHelper helper);
+  protected abstract void processHelper(@Nonnull ScrollHelper helper);
 
   @RequiredDispatchThread
-  public int transfer(@NotNull Side baseSide, int line) {
+  public int transfer(@Nonnull Side baseSide, int line) {
     ScrollHelper helper = new ScrollHelper(baseSide, line);
     processHelper(helper);
 
@@ -51,10 +51,11 @@ public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScroll
   }
 
   protected static class ScrollHelper {
-    @NotNull private final Side mySide;
+    @Nonnull
+    private final Side mySide;
     private final int myLine;
 
-    public ScrollHelper(@NotNull Side side, int line) {
+    public ScrollHelper(@Nonnull Side side, int line) {
       mySide = side;
       myLine = line;
     }

@@ -38,8 +38,8 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,13 +83,13 @@ public class DebugUtil {
   }
   public static final boolean CHECK_INSIDE_ATOMIC_ACTION_ENABLED = DO_EXPENSIVE_CHECKS;
 
-  public static String psiTreeToString(@NotNull final PsiElement element, final boolean skipWhitespaces) {
+  public static String psiTreeToString(@Nonnull final PsiElement element, final boolean skipWhitespaces) {
     final ASTNode node = SourceTreeToPsiMap.psiElementToTree(element);
     assert node != null : element;
     return treeToString(node, skipWhitespaces);
   }
 
-  public static String treeToString(@NotNull final ASTNode root, final boolean skipWhitespaces) {
+  public static String treeToString(@Nonnull final ASTNode root, final boolean skipWhitespaces) {
     final LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, false, false, true);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -97,7 +97,7 @@ public class DebugUtil {
     return buffer.toString();
   }
 
-  public static String nodeTreeToString(@NotNull final ASTNode root, final boolean skipWhitespaces) {
+  public static String nodeTreeToString(@Nonnull final ASTNode root, final boolean skipWhitespaces) {
     final LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, false, false, false);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -105,7 +105,7 @@ public class DebugUtil {
     return buffer.toString();
   }
 
-  public static String treeToString(@NotNull ASTNode root, boolean skipWhitespaces, boolean showRanges) {
+  public static String treeToString(@Nonnull ASTNode root, boolean skipWhitespaces, boolean showRanges) {
     final LengthBuilder ruler = new LengthBuilder();
     treeToBuffer(ruler, root, 0, skipWhitespaces, showRanges, false, true);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -129,8 +129,8 @@ public class DebugUtil {
     return buffer.toString();
   }
 
-  public static void treeToBuffer(@NotNull final Appendable buffer,
-                                  @NotNull final ASTNode root,
+  public static void treeToBuffer(@Nonnull final Appendable buffer,
+                                  @Nonnull final ASTNode root,
                                   final int indent,
                                   final boolean skipWhiteSpaces,
                                   final boolean showRanges,
@@ -139,8 +139,8 @@ public class DebugUtil {
     treeToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, usePsi, null);
   }
 
-  public static void treeToBuffer(@NotNull final Appendable buffer,
-                                  @NotNull final ASTNode root,
+  public static void treeToBuffer(@Nonnull final Appendable buffer,
+                                  @Nonnull final ASTNode root,
                                   final int indent,
                                   final boolean skipWhiteSpaces,
                                   final boolean showRanges,
@@ -200,7 +200,7 @@ public class DebugUtil {
     }
   }
 
-  public static String lightTreeToString(@NotNull final FlyweightCapableTreeStructure<LighterASTNode> tree,
+  public static String lightTreeToString(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree,
                                          final boolean skipWhitespaces) {
     final LengthBuilder ruler = new LengthBuilder();
     lightTreeToBuffer(tree, tree.getRoot(), ruler, 0, skipWhitespaces);
@@ -209,9 +209,9 @@ public class DebugUtil {
     return buffer.toString();
   }
 
-  public static void lightTreeToBuffer(@NotNull final FlyweightCapableTreeStructure<LighterASTNode> tree,
-                                       @NotNull final LighterASTNode node,
-                                       @NotNull final Appendable buffer,
+  public static void lightTreeToBuffer(@Nonnull final FlyweightCapableTreeStructure<LighterASTNode> tree,
+                                       @Nonnull final LighterASTNode node,
+                                       @Nonnull final Appendable buffer,
                                        final int indent,
                                        final boolean skipWhiteSpaces) {
     final IElementType tokenType = node.getTokenType();
@@ -396,7 +396,7 @@ public class DebugUtil {
     }
   }
 
-  public static void checkParentChildConsistent(@NotNull ASTNode element) {
+  public static void checkParentChildConsistent(@Nonnull ASTNode element) {
     ASTNode treeParent = element.getTreeParent();
     if (treeParent == null) return;
     ASTNode[] elements = treeParent.getChildren(null);
@@ -406,21 +406,21 @@ public class DebugUtil {
     //LOG.debug("checked consistence: "+System.identityHashCode(element));
   }
 
-  public static void checkSameCharTabs(@NotNull ASTNode element1, @NotNull ASTNode element2) {
+  public static void checkSameCharTabs(@Nonnull ASTNode element1, @Nonnull ASTNode element2) {
     final CharTable fromCharTab = SharedImplUtil.findCharTableByTree(element1);
     final CharTable toCharTab = SharedImplUtil.findCharTableByTree(element2);
     LOG.assertTrue(fromCharTab == toCharTab);
   }
 
-  public static String psiToString(@NotNull PsiElement element, final boolean skipWhitespaces) {
+  public static String psiToString(@Nonnull PsiElement element, final boolean skipWhitespaces) {
     return psiToString(element, skipWhitespaces, false);
   }
 
-  public static String psiToString(@NotNull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges) {
+  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges) {
     return psiToString(root, skipWhiteSpaces, showRanges, null);
   }
 
-  public static String psiToString(@NotNull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, PairConsumer<PsiElement, Consumer<PsiElement>> extra) {
+  public static String psiToString(@Nonnull final PsiElement root, final boolean skipWhiteSpaces, final boolean showRanges, PairConsumer<PsiElement, Consumer<PsiElement>> extra) {
     final LengthBuilder ruler = new LengthBuilder();
     psiToBuffer(ruler, root, skipWhiteSpaces, showRanges, extra);
     final StringBuilder buffer = new StringBuilder(ruler.getLength());
@@ -442,8 +442,8 @@ public class DebugUtil {
     }
   }
 
-  public static void psiToBuffer(@NotNull final Appendable buffer,
-                                 @NotNull final PsiElement root,
+  public static void psiToBuffer(@Nonnull final Appendable buffer,
+                                 @Nonnull final PsiElement root,
                                  int indent,
                                  boolean skipWhiteSpaces,
                                  boolean showRanges,
@@ -451,8 +451,8 @@ public class DebugUtil {
     psiToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, null);
   }
 
-  public static void psiToBuffer(@NotNull final Appendable buffer,
-                                 @NotNull final PsiElement root,
+  public static void psiToBuffer(@Nonnull final Appendable buffer,
+                                 @Nonnull final PsiElement root,
                                  final int indent,
                                  final boolean skipWhiteSpaces,
                                  boolean showRanges,
@@ -560,21 +560,21 @@ public class DebugUtil {
     }
   }
 
-  public static void onInvalidated(@NotNull ASTNode treeElement) {
+  public static void onInvalidated(@Nonnull ASTNode treeElement) {
     Object trace = calcInvalidationTrace(treeElement);
     if (trace != null) {
       PsiInvalidElementAccessException.setInvalidationTrace(treeElement, trace);
     }
   }
 
-  public static void onInvalidated(@NotNull PsiElement o) {
+  public static void onInvalidated(@Nonnull PsiElement o) {
     Object trace = PsiInvalidElementAccessException.getInvalidationTrace(o);
     if (trace != null) return;
 
     PsiInvalidElementAccessException.setInvalidationTrace(o, currentInvalidationTrace());
   }
 
-  public static void onInvalidated(@NotNull FileViewProvider provider) {
+  public static void onInvalidated(@Nonnull FileViewProvider provider) {
     Object trace = calcInvalidationTrace(null);
     if (trace != null) {
       PsiInvalidElementAccessException.setInvalidationTrace(provider, trace);
@@ -593,7 +593,7 @@ public class DebugUtil {
     return currentInvalidationTrace();
   }
 
-  @NotNull
+  @Nonnull
   private static Object currentInvalidationTrace() {
     Object trace = ourPsiModificationTrace.get();
     if (trace == null) {
@@ -605,7 +605,7 @@ public class DebugUtil {
     return trace;
   }
 
-  public static void revalidateNode(@NotNull ASTNode element) {
+  public static void revalidateNode(@Nonnull ASTNode element) {
     PsiInvalidElementAccessException.setInvalidationTrace(element, null);
   }
 
@@ -618,8 +618,8 @@ public class DebugUtil {
     }
   }
 
-  @NotNull
-  public static String diagnosePsiDocumentInconsistency(@NotNull PsiElement element, @NotNull Document document) {
+  @Nonnull
+  public static String diagnosePsiDocumentInconsistency(@Nonnull PsiElement element, @Nonnull Document document) {
     PsiUtilCore.ensureValid(element);
 
     PsiFile file = element.getContainingFile();

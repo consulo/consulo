@@ -34,7 +34,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -72,8 +72,8 @@ public class ErrorReportSender {
     });
   }
 
-  @NotNull
-  public static String sendAndHandleResult(@NotNull ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
+  @Nonnull
+  public static String sendAndHandleResult(@Nonnull ErrorBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
     String reply = doPost(WebServiceApi.ERROR_REPORTER_API.buildUrl("create"), error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {

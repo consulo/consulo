@@ -19,8 +19,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -67,7 +67,7 @@ public class XmlCharsetDetector {
   }
 
   @Nullable
-  public static String extractXmlEncodingFromProlog(@NotNull CharSequence text) {
+  public static String extractXmlEncodingFromProlog(@Nonnull CharSequence text) {
     int index = 0;
 
     index = skipWhiteSpace(index, text);
@@ -99,7 +99,7 @@ public class XmlCharsetDetector {
     return null;
   }
 
-  private static int skipWhiteSpace(int start, @NotNull byte[] bytes) {
+  private static int skipWhiteSpace(int start, @Nonnull byte[] bytes) {
     while (start < bytes.length) {
       char c = (char)bytes[start];
       if (!Character.isWhitespace(c)) break;
@@ -108,7 +108,7 @@ public class XmlCharsetDetector {
     return start;
   }
 
-  private static int skipWhiteSpace(int start, @NotNull CharSequence text) {
+  private static int skipWhiteSpace(int start, @Nonnull CharSequence text) {
     while (start < text.length()) {
       char c = text.charAt(start);
       if (!Character.isWhitespace(c)) break;

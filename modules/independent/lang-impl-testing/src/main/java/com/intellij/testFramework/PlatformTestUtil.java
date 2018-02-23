@@ -47,8 +47,8 @@ import com.intellij.util.ui.UIUtil;
 import junit.framework.AssertionFailedError;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.junit.Assert;
 
@@ -77,8 +77,8 @@ import static org.junit.Assert.assertNotNull;
 public class PlatformTestUtil {
   public static final boolean COVERAGE_ENABLED_BUILD = "true".equals(System.getProperty("idea.coverage.enabled.build"));
 
-  @NotNull
-  public static String lowercaseFirstLetter(@NotNull String name, boolean lowercaseFirstLetter) {
+  @Nonnull
+  public static String lowercaseFirstLetter(@Nonnull String name, boolean lowercaseFirstLetter) {
     if (lowercaseFirstLetter && !UsefulTestCase.isAllUppercaseName(name)) {
       name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
@@ -86,7 +86,7 @@ public class PlatformTestUtil {
   }
 
   @Nullable
-  protected static String toString(@Nullable Object node, @Nullable Queryable.PrintInfo printInfo) {
+  protected static String toString(@javax.annotation.Nullable Object node, @javax.annotation.Nullable Queryable.PrintInfo printInfo) {
     if (node instanceof AbstractTreeNode) {
       if (printInfo != null) {
         return ((AbstractTreeNode)node).toTestString(printInfo);
@@ -107,7 +107,7 @@ public class PlatformTestUtil {
     return print(tree, withSelection, null);
   }
 
-  public static String print(JTree tree, boolean withSelection, @Nullable Condition<String> nodePrintCondition) {
+  public static String print(JTree tree, boolean withSelection, @javax.annotation.Nullable Condition<String> nodePrintCondition) {
     StringBuilder buffer = new StringBuilder();
     final Collection<String> strings = printAsList(tree, withSelection, nodePrintCondition);
     for (String string : strings) {
@@ -116,7 +116,7 @@ public class PlatformTestUtil {
     return buffer.toString();
   }
 
-  public static Collection<String> printAsList(JTree tree, boolean withSelection, @Nullable Condition<String> nodePrintCondition) {
+  public static Collection<String> printAsList(JTree tree, boolean withSelection, @javax.annotation.Nullable Condition<String> nodePrintCondition) {
     Collection<String> strings = new ArrayList<String>();
     Object root = tree.getModel().getRoot();
     printImpl(tree, root, strings, 0, withSelection, nodePrintCondition);
@@ -128,7 +128,7 @@ public class PlatformTestUtil {
                                 Collection<String> strings,
                                 int level,
                                 boolean withSelection,
-                                @Nullable Condition<String> nodePrintCondition) {
+                                @javax.annotation.Nullable Condition<String> nodePrintCondition) {
     DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)root;
 
     final Object userObject = defaultMutableTreeNode.getUserObject();
@@ -267,7 +267,7 @@ public class PlatformTestUtil {
                                     @Nullable Comparator comparator,
                                     int maxRowCount,
                                     char paddingChar,
-                                    @Nullable Queryable.PrintInfo printInfo) {
+                                    @javax.annotation.Nullable Queryable.PrintInfo printInfo) {
     StringBuilder buffer = new StringBuilder();
     doPrint(buffer, currentLevel, node, structure, comparator, maxRowCount, 0, paddingChar, printInfo);
     return buffer;
@@ -277,11 +277,11 @@ public class PlatformTestUtil {
                              int currentLevel,
                              Object node,
                              AbstractTreeStructure structure,
-                             @Nullable Comparator comparator,
+                             @javax.annotation.Nullable Comparator comparator,
                              int maxRowCount,
                              int currentLine,
                              char paddingChar,
-                             @Nullable Queryable.PrintInfo printInfo) {
+                             @javax.annotation.Nullable Queryable.PrintInfo printInfo) {
     if (currentLine >= maxRowCount && maxRowCount != -1) return currentLine;
 
     StringUtil.repeatSymbol(buffer, paddingChar, currentLevel);
@@ -383,12 +383,12 @@ public class PlatformTestUtil {
   /**
    * example usage: startPerformanceTest("calculating pi",100, testRunnable).cpuBound().assertTiming();
    */
-  public static TestInfo startPerformanceTest(@NonNls @NotNull String message, int expectedMs, @NotNull ThrowableRunnable test) {
+  public static TestInfo startPerformanceTest(@NonNls @Nonnull String message, int expectedMs, @Nonnull ThrowableRunnable test) {
     return new TestInfo(test, expectedMs,message);
   }
 
   // calculates average of the median values in the selected part of the array. E.g. for part=3 returns average in the middle third.
-  public static long averageAmongMedians(@NotNull long[] time, int part) {
+  public static long averageAmongMedians(@Nonnull long[] time, int part) {
     assert part >= 1;
     int n = time.length;
     Arrays.sort(time);
@@ -399,7 +399,7 @@ public class PlatformTestUtil {
     return total/(n / part);
   }
 
-  public static boolean canRunTest(@NotNull Class testCaseClass) {
+  public static boolean canRunTest(@Nonnull Class testCaseClass) {
     if (GraphicsEnvironment.isHeadless()) {
       for (Class<?> clazz = testCaseClass; clazz != null; clazz = clazz.getSuperclass()) {
         if (clazz.getAnnotation(SkipInHeadlessEnvironment.class) != null) {
@@ -411,7 +411,7 @@ public class PlatformTestUtil {
     return true;
   }
 
-  public static void assertPathsEqual(@Nullable String expected, @Nullable String actual) {
+  public static void assertPathsEqual(@javax.annotation.Nullable String expected, @javax.annotation.Nullable String actual) {
     if (expected != null) expected = FileUtil.toSystemIndependentName(expected);
     if (actual != null) actual = FileUtil.toSystemIndependentName(actual);
     assertEquals(expected, actual);
@@ -427,14 +427,14 @@ public class PlatformTestUtil {
     private boolean adjustForIO = true;   // true if test uses IO, timings need to be re-calibrated according to this agent disk performance
     private boolean adjustForCPU = true;  // true if test uses CPU, timings need to be re-calibrated according to this agent CPU speed
 
-    private TestInfo(@NotNull ThrowableRunnable test, int expectedMs, String message) {
+    private TestInfo(@Nonnull ThrowableRunnable test, int expectedMs, String message) {
       this.test = test;
       this.expectedMs = expectedMs;
       assert expectedMs > 0 : "Expected must be > 0. Was: "+ expectedMs;
       this.message = message;
     }
 
-    public TestInfo setup(@NotNull ThrowableRunnable setup) { assert this.setup==null; this.setup = setup; return this; }
+    public TestInfo setup(@Nonnull ThrowableRunnable setup) { assert this.setup == null;this.setup = setup; return this; }
     public TestInfo usesAllCPUCores() { assert adjustForCPU : "This test configured to be io-bound, it cannot use all cores"; usesAllCPUCores = true; return this; }
     public TestInfo cpuBound() { adjustForIO = false; adjustForCPU = true; return this; }
     public TestInfo ioBound() { adjustForIO = true; adjustForCPU = false; return this; }
@@ -543,18 +543,18 @@ public class PlatformTestUtil {
   }
 
 
-  public static void assertTiming(String message, long expected, @NotNull Runnable actionToMeasure) {
+  public static void assertTiming(String message, long expected, @Nonnull Runnable actionToMeasure) {
     assertTiming(message, expected, 4, actionToMeasure);
   }
 
-  public static long measure(@NotNull Runnable actionToMeasure) {
+  public static long measure(@Nonnull Runnable actionToMeasure) {
     long start = System.currentTimeMillis();
     actionToMeasure.run();
     long finish = System.currentTimeMillis();
     return finish - start;
   }
 
-  public static void assertTiming(String message, long expected, int attempts, @NotNull Runnable actionToMeasure) {
+  public static void assertTiming(String message, long expected, int attempts, @Nonnull Runnable actionToMeasure) {
     while (true) {
       attempts--;
       long duration = measure(actionToMeasure);
@@ -574,7 +574,7 @@ public class PlatformTestUtil {
     }
   }
 
-  private static HashMap<String, VirtualFile> buildNameToFileMap(VirtualFile[] files, @Nullable VirtualFileFilter filter) {
+  private static HashMap<String, VirtualFile> buildNameToFileMap(VirtualFile[] files, @javax.annotation.Nullable VirtualFileFilter filter) {
     HashMap<String, VirtualFile> map = new HashMap<String, VirtualFile>();
     for (VirtualFile file : files) {
       if (filter != null && !filter.accept(file)) continue;
@@ -622,7 +622,7 @@ public class PlatformTestUtil {
     }
   }
 
-  private static void shallowCompare(VirtualFile[] vfs, @Nullable File[] io) {
+  private static void shallowCompare(VirtualFile[] vfs, @javax.annotation.Nullable File[] io) {
     List<String> vfsPaths = new ArrayList<String>();
     for (VirtualFile file : vfs) {
       vfsPaths.add(file.getPath());
@@ -743,14 +743,14 @@ public class PlatformTestUtil {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <T> T notNull(@Nullable T t) {
     assertNotNull(t);
     return t;
   }
 
-  @NotNull
-  public static String loadFileText(@NotNull String fileName) throws IOException {
+  @Nonnull
+  public static String loadFileText(@Nonnull String fileName) throws IOException {
     return StringUtil.convertLineSeparators(FileUtil.loadFile(new File(fileName)));
   }
 }

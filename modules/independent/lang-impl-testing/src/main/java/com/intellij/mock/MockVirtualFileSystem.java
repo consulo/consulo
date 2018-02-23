@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class MockVirtualFileSystem extends DeprecatedVirtualFileSystem {
   public static final String PROTOCOL = "mock";
 
   @Override
-  public VirtualFile findFileByPath(@NotNull String path) {
+  public VirtualFile findFileByPath(@Nonnull String path) {
     path = path.replace(File.separatorChar, '/');
     path = path.replace('/', ':');
     if (StringUtil.startsWithChar(path, ':')) path = path.substring(1);
@@ -45,7 +45,7 @@ public class MockVirtualFileSystem extends DeprecatedVirtualFileSystem {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getProtocol() {
     return PROTOCOL;
   }
@@ -55,35 +55,35 @@ public class MockVirtualFileSystem extends DeprecatedVirtualFileSystem {
   }
 
   @Override
-  public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+  public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
   }
 
   @Override
-  public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
+  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     return null;
   }
 
   @Override
-  public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+  public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
     return null;
   }
 
   @Override
-  @NotNull
-  public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+  @Nonnull
+  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
     throw new IOException();
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return findFileByPath(path);
   }
 
@@ -97,7 +97,7 @@ public class MockVirtualFileSystem extends DeprecatedVirtualFileSystem {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public VirtualFileSystem getFileSystem() {
       return MockVirtualFileSystem.this;
     }

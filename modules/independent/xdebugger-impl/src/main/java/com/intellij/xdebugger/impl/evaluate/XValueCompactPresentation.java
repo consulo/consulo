@@ -17,12 +17,12 @@ package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface XValueCompactPresentation {
-  void renderValue(@NotNull XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNodeImpl node);
+  void renderValue(@Nonnull XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNodeImpl node);
 }

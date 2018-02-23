@@ -20,7 +20,7 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,12 +60,12 @@ public class ArtifactChooser extends ElementsChooser<ArtifactPointer> {
   }
 
   @Override
-  protected String getItemText(@NotNull ArtifactPointer value) {
+  protected String getItemText(@Nonnull ArtifactPointer value) {
     return value.getName();
   }
 
   @Override
-  protected Icon getItemIcon(@NotNull ArtifactPointer value) {
+  protected Icon getItemIcon(@Nonnull ArtifactPointer value) {
     final Artifact artifact = value.get();
     return artifact != null ? artifact.getArtifactType().getIcon() : null;
   }

@@ -57,8 +57,8 @@ import com.intellij.util.ui.update.Update;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.impl.VfsIconUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -96,18 +96,18 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   public static Key<PathField> PATH_FIELD = Key.create("PathField");
 
-  public FileChooserDialogImpl(@NotNull final FileChooserDescriptor descriptor, @Nullable Project project) {
+  public FileChooserDialogImpl(@Nonnull final FileChooserDescriptor descriptor, @Nullable Project project) {
     super(project, true);
     myChooserDescriptor = descriptor;
     myProject = project;
     setTitle(getChooserTitle(descriptor));
   }
 
-  public FileChooserDialogImpl(@NotNull final FileChooserDescriptor descriptor, @NotNull Component parent) {
+  public FileChooserDialogImpl(@Nonnull final FileChooserDescriptor descriptor, @Nonnull Component parent) {
     this(descriptor, parent, null);
   }
 
-  public FileChooserDialogImpl(@NotNull final FileChooserDescriptor descriptor, @NotNull Component parent, @Nullable Project project) {
+  public FileChooserDialogImpl(@Nonnull final FileChooserDescriptor descriptor, @Nonnull Component parent, @Nullable Project project) {
     super(parent, true);
     myChooserDescriptor = descriptor;
     myProject = project;
@@ -120,8 +120,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] choose(@Nullable final Project project, @NotNull final VirtualFile... toSelect) {
+  @Nonnull
+  public VirtualFile[] choose(@javax.annotation.Nullable final Project project, @Nonnull final VirtualFile... toSelect) {
     init();
     if ((myProject == null) && (project != null)) {
       myProject = project;
@@ -142,9 +142,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable final VirtualFile toSelect, @Nullable final Project project) {
+  public VirtualFile[] choose(@javax.annotation.Nullable final VirtualFile toSelect, @Nullable final Project project) {
     if (toSelect == null) {
       return choose(project);
     }
@@ -152,7 +152,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @NotNull Consumer<List<VirtualFile>> callback) {
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     init();
     restoreSelection(toSelect);
     show();
@@ -202,7 +202,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     PropertiesComponent.getInstance().setValues(RECENT_FILES_KEY, ArrayUtil.toStringArray(files));
   }
 
-  @NotNull
+  @Nonnull
   private String[] getRecentFiles() {
     final String[] recent = PropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
     if (recent != null) {
@@ -222,7 +222,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     label.setToolTipText("Recent files");
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         showRecentFilesPopup();
         return true;
       }
@@ -286,7 +286,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     syncAction.registerCustomShortcutSet(original.getShortcutSet(), tree, myDisposable);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected final JComponent createTitlePane() {
     final String description = myChooserDescriptor.getDescription();
     if (StringUtil.isEmptyOrSpaces(description)) return null;
@@ -484,7 +484,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     return tree;
   }
 
-  @NotNull
+  @Nonnull
   protected Tree createInternalTree() {
     return new Tree();
   }
@@ -572,7 +572,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       super(new BorderLayout(0, 0));
     }
 
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
         return myFileSystemTree.getSelectedFiles();
       }

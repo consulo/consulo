@@ -6,8 +6,7 @@ import com.intellij.remoteServer.runtime.deployment.DeploymentLogManager;
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
 import com.intellij.util.ParameterizedRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -15,34 +14,34 @@ import java.util.Collection;
  * @author nik
  */
 public interface ServerConnection<D extends DeploymentConfiguration> {
-  @NotNull
+  @Nonnull
   RemoteServer<?> getServer();
 
-  @NotNull
+  @Nonnull
   ConnectionStatus getStatus();
 
-  @NotNull
+  @Nonnull
   String getStatusText();
 
 
-  void connect(@NotNull Runnable onFinished);
+  void connect(@Nonnull Runnable onFinished);
 
 
   void disconnect();
 
-  void deploy(@NotNull DeploymentTask<D> task, @NotNull ParameterizedRunnable<String> onDeploymentStarted);
+  void deploy(@Nonnull DeploymentTask<D> task, @Nonnull ParameterizedRunnable<String> onDeploymentStarted);
 
-  void computeDeployments(@NotNull Runnable onFinished);
+  void computeDeployments(@Nonnull Runnable onFinished);
 
-  void undeploy(@NotNull Deployment deployment, @NotNull DeploymentRuntime runtime);
+  void undeploy(@Nonnull Deployment deployment, @Nonnull DeploymentRuntime runtime);
 
-  @NotNull
+  @Nonnull
   Collection<Deployment> getDeployments();
 
-  @Nullable
-  DeploymentLogManager getLogManager(@NotNull String deployment);
+  @javax.annotation.Nullable
+  DeploymentLogManager getLogManager(@Nonnull String deployment);
 
-  DeploymentLogManager getLogManager(@NotNull Deployment deployment);
+  DeploymentLogManager getLogManager(@Nonnull Deployment deployment);
 
   void connectIfNeeded(ServerConnector.ConnectionCallback<D> callback);
 }

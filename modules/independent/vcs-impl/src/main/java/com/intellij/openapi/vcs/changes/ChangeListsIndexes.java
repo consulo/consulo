@@ -26,8 +26,8 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BeforeAfter;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -65,7 +65,7 @@ public class ChangeListsIndexes {
     return myFileToStatus.get(VcsUtil.getFilePath(file));
   }
 
-  public FileStatus getStatus(@NotNull FilePath file) {
+  public FileStatus getStatus(@Nonnull FilePath file) {
     return myFileToStatus.get(file);
   }
 
@@ -86,14 +86,14 @@ public class ChangeListsIndexes {
   }
 
   @Nullable
-  public VcsKey getVcsFor(@NotNull Change change) {
+  public VcsKey getVcsFor(@Nonnull Change change) {
     VcsKey key = getVcsForRevision(change.getAfterRevision());
     if (key != null) return key;
     return getVcsForRevision(change.getBeforeRevision());
   }
 
   @Nullable
-  private VcsKey getVcsForRevision(@Nullable ContentRevision revision) {
+  private VcsKey getVcsForRevision(@javax.annotation.Nullable ContentRevision revision) {
     if (revision != null) {
       Pair<VcsKey, VcsRevisionNumber> pair = myFileToVcs.get(revision.getFile());
       return pair == null ? null : pair.getFirst();
@@ -170,7 +170,7 @@ public class ChangeListsIndexes {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public NavigableSet<FilePath> getAffectedPaths() {
     return Sets.unmodifiableNavigableSet(myFileToStatus.navigableKeySet());
   }

@@ -21,13 +21,13 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   protected final Project myProject;
 
-  protected SelectInTargetPsiWrapper(@NotNull final Project project) {
+  protected SelectInTargetPsiWrapper(@Nonnull final Project project) {
     myProject = project;
   }
 
@@ -36,13 +36,13 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   protected abstract boolean canSelect(PsiFileSystemItem file);
 
   @Override
-  public final boolean canSelect(@NotNull SelectInContext context) {
+  public final boolean canSelect(@Nonnull SelectInContext context) {
     if (!isContextValid(context)) return false;
 
     return canWorkWithCustomObjects() || canSelectInner(context);
   }
 
-  protected boolean canSelectInner(@NotNull SelectInContext context) {
+  protected boolean canSelectInner(@Nonnull SelectInContext context) {
     PsiFileSystemItem psiFile = getContextPsiFile(context);
     return psiFile != null && canSelect(psiFile);
   }
@@ -55,7 +55,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   }
 
   @Nullable
-  protected PsiFileSystemItem getContextPsiFile(@NotNull SelectInContext context) {
+  protected PsiFileSystemItem getContextPsiFile(@Nonnull SelectInContext context) {
     VirtualFile virtualFile = context.getVirtualFile();
     PsiFileSystemItem psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
     if (psiFile != null) {
@@ -72,7 +72,7 @@ public abstract class SelectInTargetPsiWrapper implements SelectInTarget {
   }
 
   @Override
-  public final void selectIn(@NotNull SelectInContext context, boolean requestFocus) {
+  public final void selectIn(@Nonnull SelectInContext context, boolean requestFocus) {
     VirtualFile file = context.getVirtualFile();
     Object selector = context.getSelectorInFile();
     if (selector == null) {

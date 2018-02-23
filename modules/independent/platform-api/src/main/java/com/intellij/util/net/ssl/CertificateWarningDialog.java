@@ -7,8 +7,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,18 +20,18 @@ import java.security.cert.X509Certificate;
 public class CertificateWarningDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(CertificateWarningDialog.class);
 
-  public static CertificateWarningDialog createUntrustedCertificateWarning(@NotNull X509Certificate certificate) {
+  public static CertificateWarningDialog createUntrustedCertificateWarning(@Nonnull X509Certificate certificate) {
     return new CertificateWarningDialog(certificate,
                                         "Untrusted Server's Certificate",
                                         "Server's certificate is not trusted");
   }
 
-  public static CertificateWarningDialog createExpiredCertificateWarning(@NotNull X509Certificate certificate) {
+  public static CertificateWarningDialog createExpiredCertificateWarning(@Nonnull X509Certificate certificate) {
     throw new UnsupportedOperationException("Not supported");
   }
 
-  public static CertificateWarningDialog createHostnameMismatchWarning(@NotNull X509Certificate certificate,
-                                                                       @NotNull String hostname) {
+  public static CertificateWarningDialog createHostnameMismatchWarning(@Nonnull X509Certificate certificate,
+                                                                       @Nonnull String hostname) {
     String message = String.format("Server's certificate common name doesn't match hostname in URL: '%s' != '%s'",
                                    new CertificateWrapper(certificate).getSubjectField(CertificateWrapper.CommonField.COMMON_NAME),
                                    hostname);
@@ -45,7 +45,7 @@ public class CertificateWarningDialog extends DialogWrapper {
   private JTextPane myMessagePane;
   private final X509Certificate myCertificate;
 
-  public CertificateWarningDialog(@NotNull X509Certificate certificate, @NotNull String title, @NotNull String message) {
+  public CertificateWarningDialog(@Nonnull X509Certificate certificate, @Nonnull String title, @Nonnull String message) {
     super((Project)null, false);
 
     myCertificate = certificate;

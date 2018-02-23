@@ -23,8 +23,8 @@ import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,18 +33,18 @@ import org.jetbrains.annotations.Nullable;
  * This should moved to desktop module, after split desktop and platform code
  */
 public class TargetAWT {
-  @NotNull
-  public static java.awt.Dimension to(@NotNull Size size) {
+  @Nonnull
+  public static java.awt.Dimension to(@Nonnull Size size) {
     return JBUI.size(size.getWidth(), size.getHeight());
   }
 
-  @NotNull
-  public static java.awt.Color to(@NotNull RGBColor color) {
+  @Nonnull
+  public static java.awt.Color to(@Nonnull RGBColor color) {
     return new java.awt.Color(color.getRed(), color.getGreed(), color.getBlue());
   }
 
-  @NotNull
-  public static java.awt.Color to(@NotNull ColorValue colorValue) {
+  @Nonnull
+  public static java.awt.Color to(@Nonnull ColorValue colorValue) {
     return to(colorValue.toRGB());
   }
 
@@ -56,8 +56,8 @@ public class TargetAWT {
     return new java.awt.Rectangle(rectangle2D.getCoordinate().getX(), rectangle2D.getCoordinate().getY(), rectangle2D.getSize().getWidth(), rectangle2D.getSize().getHeight());
   }
 
-  @NotNull
-  public static java.awt.Component to(@NotNull Component component) {
+  @Nonnull
+  public static java.awt.Component to(@Nonnull Component component) {
     if (component instanceof ToSwingWrapper) {
       return ((ToSwingWrapper)component).toAWT();
     }

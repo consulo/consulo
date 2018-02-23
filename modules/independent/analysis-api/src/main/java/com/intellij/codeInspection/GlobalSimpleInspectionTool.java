@@ -18,30 +18,30 @@ package com.intellij.codeInspection;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Global inspection tool which doesn't need the graph and, therefore, can be run on per-file basis concurrently.
  * Basically it is a local inspection tool which cannot be selected in the inspection profile to be run on-the-fly.
  */
 public abstract class GlobalSimpleInspectionTool extends GlobalInspectionTool {
-  public void inspectionStarted(@NotNull InspectionManager manager,
-                                @NotNull GlobalInspectionContext globalContext,
-                                @NotNull ProblemDescriptionsProcessor problemDescriptionsProcessor) {}
-  public void inspectionFinished(@NotNull InspectionManager manager,
-                                 @NotNull GlobalInspectionContext globalContext,
-                                 @NotNull ProblemDescriptionsProcessor problemDescriptionsProcessor) {}
-  public abstract void checkFile(@NotNull PsiFile file,
-                                 @NotNull InspectionManager manager,
-                                 @NotNull ProblemsHolder problemsHolder,
-                                 @NotNull GlobalInspectionContext globalContext,
-                                 @NotNull ProblemDescriptionsProcessor problemDescriptionsProcessor);
+  public void inspectionStarted(@Nonnull InspectionManager manager,
+                                @Nonnull GlobalInspectionContext globalContext,
+                                @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {}
+  public void inspectionFinished(@Nonnull InspectionManager manager,
+                                 @Nonnull GlobalInspectionContext globalContext,
+                                 @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {}
+  public abstract void checkFile(@Nonnull PsiFile file,
+                                 @Nonnull InspectionManager manager,
+                                 @Nonnull ProblemsHolder problemsHolder,
+                                 @Nonnull GlobalInspectionContext globalContext,
+                                 @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor);
 
   @Override
-  public final void runInspection(@NotNull AnalysisScope scope,
-                                  @NotNull InspectionManager manager,
-                                  @NotNull GlobalInspectionContext globalContext,
-                                  @NotNull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+  public final void runInspection(@Nonnull AnalysisScope scope,
+                                  @Nonnull InspectionManager manager,
+                                  @Nonnull GlobalInspectionContext globalContext,
+                                  @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
     throw new IncorrectOperationException("You must override checkFile() instead");
   }
 

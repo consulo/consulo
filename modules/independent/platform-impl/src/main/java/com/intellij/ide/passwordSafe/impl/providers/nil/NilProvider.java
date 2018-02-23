@@ -18,7 +18,7 @@ package com.intellij.ide.passwordSafe.impl.providers.nil;
 import com.intellij.ide.passwordSafe.PasswordSafeException;
 import com.intellij.ide.passwordSafe.impl.PasswordSafeProvider;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * The most secure provider that does not store anything, so it cannot be cracked

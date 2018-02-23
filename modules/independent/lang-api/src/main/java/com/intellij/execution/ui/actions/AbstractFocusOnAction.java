@@ -20,13 +20,13 @@ import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class AbstractFocusOnAction extends BaseViewAction implements Toggleable {
-  @NotNull
+  @Nonnull
   private final String myCondition;
 
-  public AbstractFocusOnAction(@NotNull String condition) {
+  public AbstractFocusOnAction(@Nonnull String condition) {
     myCondition = condition;
   }
 

@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -44,34 +44,34 @@ public abstract class PropertiesComponent {
   /**
    * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
    */
-  public abstract void setValue(@NotNull String name, @Nullable String value);
+  public abstract void setValue(@Nonnull String name, @Nullable String value);
 
   /**
    * Set value or unset if equals to default value
    */
-  public abstract void setValue(@NotNull String name, @Nullable String value, @Nullable String defaultValue);
+  public abstract void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue);
 
   /**
    * Set value or unset if equals to default value
    */
-  public abstract void setValue(@NotNull String name, float value, float defaultValue);
+  public abstract void setValue(@Nonnull String name, float value, float defaultValue);
 
   /**
    * Set value or unset if equals to default value
    */
-  public abstract void setValue(@NotNull String name, int value, int defaultValue);
+  public abstract void setValue(@Nonnull String name, int value, int defaultValue);
 
   /**
    * Set value or unset if equals to false
    */
-  public final void setValue(@NotNull String name, boolean value) {
+  public final void setValue(@Nonnull String name, boolean value) {
     setValue(name, value, false);
   }
 
   /**
    * Set value or unset if equals to default
    */
-  public abstract void setValue(@NotNull String name, boolean value, boolean defaultValue);
+  public abstract void setValue(@Nonnull String name, boolean value, boolean defaultValue);
 
   @Nullable
   public abstract String[] getValues(@NonNls String name);
@@ -90,16 +90,16 @@ public abstract class PropertiesComponent {
     return Boolean.valueOf(getValue(name)).booleanValue();
   }
 
-  public final boolean getBoolean(@NotNull String name, boolean defaultValue) {
+  public final boolean getBoolean(@Nonnull String name, boolean defaultValue) {
     return isValueSet(name) ? isTrueValue(name) : defaultValue;
   }
 
-  public final boolean getBoolean(@NotNull String name) {
+  public final boolean getBoolean(@Nonnull String name) {
     return getBoolean(name, false);
   }
 
-  @NotNull
-  public String getValue(@NonNls String name, @NotNull String defaultValue) {
+  @Nonnull
+  public String getValue(@NonNls String name, @Nonnull String defaultValue) {
     if (!isValueSet(name)) {
       return defaultValue;
     }
@@ -112,11 +112,11 @@ public abstract class PropertiesComponent {
    * @deprecated Use {@link #getInt(String, int)}
    * Init was never performed and in any case is not recommended.
    */
-  public final int getOrInitInt(@NotNull String name, int defaultValue) {
+  public final int getOrInitInt(@Nonnull String name, int defaultValue) {
     return getInt(name, defaultValue);
   }
 
-  public int getInt(@NotNull String name, int defaultValue) {
+  public int getInt(@Nonnull String name, int defaultValue) {
     return StringUtilRt.parseInt(getValue(name), defaultValue);
   }
 
@@ -142,7 +142,7 @@ public abstract class PropertiesComponent {
     return getValue(name);
   }
 
-  public final boolean saveFields(@NotNull Object object) {
+  public final boolean saveFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);
@@ -159,7 +159,7 @@ public abstract class PropertiesComponent {
     }
   }
 
-  public final boolean loadFields(@NotNull Object object) {
+  public final boolean loadFields(@Nonnull Object object) {
     try {
       for (Field field : object.getClass().getDeclaredFields()) {
         field.setAccessible(true);

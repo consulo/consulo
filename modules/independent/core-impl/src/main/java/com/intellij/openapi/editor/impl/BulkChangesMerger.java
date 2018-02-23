@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.TextChange;
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +46,7 @@ public class BulkChangesMerger {
    *                      are sorted by offsets in ascending order
    * @return              merge result
    */
-  public CharSequence mergeToCharSequence(@NotNull char[] text, int textLength, @NotNull List<? extends TextChange> changes) {
+  public CharSequence mergeToCharSequence(@Nonnull char[] text, int textLength, @Nonnull List<? extends TextChange> changes) {
     return StringFactory.createShared(mergeToCharArray(text, textLength, changes));
   }
 
@@ -59,7 +59,7 @@ public class BulkChangesMerger {
    *                      are sorted by offsets in ascending order
    * @return              merge result
    */
-  public char[] mergeToCharArray(@NotNull char[] text, int textLength, @NotNull List<? extends TextChange> changes) {
+  public char[] mergeToCharArray(@Nonnull char[] text, int textLength, @Nonnull List<? extends TextChange> changes) {
     int newLength = textLength;
     for (TextChange change : changes) {
       newLength += change.getText().length() - (change.getEnd() - change.getStart());
@@ -104,7 +104,7 @@ public class BulkChangesMerger {
    * @param changes   change to apply to the target text
    * @throws IllegalArgumentException     if given array is not big enough to contain the resulting text
    */
-  public void mergeInPlace(@NotNull char[] data, int length, @NotNull List<? extends TextChangeImpl> changes)
+  public void mergeInPlace(@Nonnull char[] data, int length, @Nonnull List<? extends TextChangeImpl> changes)
           throws IllegalArgumentException
   {
     // Consider two corner cases:
@@ -168,7 +168,7 @@ public class BulkChangesMerger {
     }
   }
 
-  private static void copy(@NotNull char[] data, int offset, @NotNull CharSequence text) {
+  private static void copy(@Nonnull char[] data, int offset, @Nonnull CharSequence text) {
     for (int i = 0; i < text.length(); i++) {
       data[i + offset] = text.charAt(i);
     }
@@ -178,7 +178,7 @@ public class BulkChangesMerger {
    * Given an offset of some location in the document, returns offset of this location after application of given changes. List of changes
    * is supposed to satisfy the same constraints as required by {@link #mergeToCharSequence(char[], int, List)} method.
    */
-  public int updateOffset(int originalOffset, @NotNull List<? extends TextChange> changes) {
+  public int updateOffset(int originalOffset, @Nonnull List<? extends TextChange> changes) {
     int offset = originalOffset;
     for (TextChange change : changes) {
       if (originalOffset > change.getStart()) {
@@ -202,7 +202,7 @@ public class BulkChangesMerger {
     private       int                            myFirstChangeShift;
     private       int                            myLastChangeShift;
 
-    Context(@NotNull List<? extends TextChangeImpl> changes, @NotNull char[] data, int inputLength, int outputLength) {
+    Context(@Nonnull List<? extends TextChangeImpl> changes, @Nonnull char[] data, int inputLength, int outputLength) {
       myChanges = changes;
       myData = data;
       myInputLength = inputLength;

@@ -51,17 +51,17 @@ import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
 public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProvider {
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<SearchScope> getPredefinedScopes(@NotNull final Project project,
+  public List<SearchScope> getPredefinedScopes(@Nonnull final Project project,
                                                @Nullable final DataContext dataContext,
                                                boolean suggestSearchInLibs,
                                                boolean prevSearchFiles,
@@ -164,14 +164,14 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
             GlobalSearchScope prev = new GlobalSearchScope(project) {
               private Set<VirtualFile> myFiles;
 
-              @NotNull
+              @Nonnull
               @Override
               public String getDisplayName() {
                 return IdeBundle.message("scope.files.in.previous.search.result");
               }
 
               @Override
-              public synchronized boolean contains(@NotNull VirtualFile file) {
+              public synchronized boolean contains(@Nonnull VirtualFile file) {
                 if (myFiles == null) {
                   myFiles = collectFiles(usages, false);
                 }
@@ -179,12 +179,12 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
               }
 
               @Override
-              public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+              public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
                 return 0;
               }
 
               @Override
-              public boolean isSearchInModuleContent(@NotNull Module aModule) {
+              public boolean isSearchInModuleContent(@Nonnull Module aModule) {
                 return true;
               }
 
@@ -220,24 +220,24 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
         final Collection<TreeItem<Pair<AbstractUrl, String>>> rootUrls = favoritesManager.getFavoritesListRootUrls(favorite);
         if (rootUrls.isEmpty()) continue;  // ignore unused root
         result.add(new GlobalSearchScope(project) {
-          @NotNull
+          @Nonnull
           @Override
           public String getDisplayName() {
             return "Favorite \'" + favorite + "\'";
           }
 
           @Override
-          public boolean contains(@NotNull final VirtualFile file) {
+          public boolean contains(@Nonnull final VirtualFile file) {
             return ReadAction.compute(() -> favoritesManager.contains(favorite, file));
           }
 
           @Override
-          public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
+          public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
             return 0;
           }
 
           @Override
-          public boolean isSearchInModuleContent(@NotNull final Module aModule) {
+          public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
             return true;
           }
 
@@ -254,7 +254,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
     return ContainerUtil.newArrayList(result);
   }
 
-  private static void addHierarchyScope(@NotNull Project project, Collection<SearchScope> result) {
+  private static void addHierarchyScope(@Nonnull Project project, Collection<SearchScope> result) {
     final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
     if (toolWindow == null) {
       return;

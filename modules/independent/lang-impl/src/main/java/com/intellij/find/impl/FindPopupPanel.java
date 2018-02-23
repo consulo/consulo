@@ -75,8 +75,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -102,10 +102,14 @@ public class FindPopupPanel extends JBPanel implements FindUI {
 
   private static final String SERVICE_KEY = "find.popup";
   private static final String SPLITTER_SERVICE_KEY = "find.popup.splitter";
-  @NotNull private final FindUIHelper myHelper;
-  @NotNull private final Project myProject;
-  @NotNull private final Disposable myDisposable;
-  @NotNull private final FindPopupScopeUI myScopeUI;
+  @Nonnull
+  private final FindUIHelper myHelper;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final Disposable myDisposable;
+  @Nonnull
+  private final FindPopupScopeUI myScopeUI;
   private JComponent myCodePreviewComponent;
   private SearchTextArea mySearchTextArea;
   private SearchTextArea myReplaceTextArea;
@@ -142,7 +146,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
   private int myLoadingHash;
   private JPanel myTitlePanel;
 
-  FindPopupPanel(@NotNull FindUIHelper helper) {
+  FindPopupPanel(@Nonnull FindUIHelper helper) {
     myHelper = helper;
     myProject = myHelper.getProject();
     myDisposable = Disposer.newDisposable();
@@ -242,28 +246,28 @@ public class FindPopupPanel extends JBPanel implements FindUI {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Disposable getDisposable() {
     return myDisposable;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public FindUIHelper getHelper() {
     return myHelper;
   }
 
-  @NotNull
+  @Nonnull
   public JBPopup getBalloon() {
     return myBalloon;
   }
 
-  @NotNull
+  @Nonnull
   public AtomicBoolean getCanClose() {
     return myCanClose;
   }
@@ -376,7 +380,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
       }
 
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(!myHelper.isReplaceState());
       }
@@ -393,7 +397,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
       }
 
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(myHelper.getModel().isOpenInNewTabEnabled());
         e.getPresentation().setVisible(myHelper.getModel().isOpenInNewTabVisible());
@@ -652,7 +656,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
     });
   }
 
-  @NotNull
+  @Nonnull
   private static StateRestoringCheckBox createCheckBox(String message) {
     StateRestoringCheckBox checkBox = new StateRestoringCheckBox(FindBundle.message(message));
     checkBox.setFocusable(false);
@@ -873,7 +877,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
 
     ProgressIndicatorUtils.scheduleWithWriteActionPriority(myResultsPreviewSearchProgress, new ReadTask() {
       @Override
-      public Continuation performInReadAction(@NotNull ProgressIndicator indicator) {
+      public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) {
         final UsageViewPresentation presentation =
                 FindInProjectUtil.setupViewPresentation(findSettings.isShowResultsInSeparateView(), /*findModel*/myHelper.getModel().clone());
         final boolean showPanelIfOnlyOneUsage = !findSettings.isSkipResultsWithOneUsage();
@@ -963,7 +967,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
       }
 
       @Override
-      public void onCanceled(@NotNull ProgressIndicator indicator) {
+      public void onCanceled(@Nonnull ProgressIndicator indicator) {
         if (isShowing() && progressIndicatorWhenSearchStarted == myResultsPreviewSearchProgress) {
           scheduleResultsUpdate();
         }
@@ -995,7 +999,7 @@ public class FindPopupPanel extends JBPanel implements FindUI {
   }
 
   @Nullable("null means OK")
-  private ValidationInfo getValidationInfo(@NotNull FindModel model) {
+  private ValidationInfo getValidationInfo(@Nonnull FindModel model) {
     ValidationInfo scopeValidationInfo = myScopeUI.validate(model, mySelectedScope);
     if (scopeValidationInfo != null) {
       return scopeValidationInfo;
@@ -1045,17 +1049,17 @@ public class FindPopupPanel extends JBPanel implements FindUI {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getStringToFind() {
     return mySearchComponent.getText();
   }
 
-  @NotNull
+  @Nonnull
   private String getStringToReplace() {
     return myReplaceComponent.getText();
   }
 
-  private void applyTo(@NotNull FindModel model, boolean findAll) {
+  private void applyTo(@Nonnull FindModel model, boolean findAll) {
     model.setCaseSensitive(myCbCaseSensitive.isSelected());
 
     if (model.isReplaceState()) {

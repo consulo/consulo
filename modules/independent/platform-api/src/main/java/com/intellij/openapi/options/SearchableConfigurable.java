@@ -18,8 +18,8 @@ package com.intellij.openapi.options;
 
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ import javax.swing.*;
  * {@link #com.intellij.ide.ui.search.TraverseUIStarter}
  */
 public interface SearchableConfigurable extends Configurable {
-  @NotNull
+  @Nonnull
   @NonNls String getId();
 
   @Nullable
@@ -88,7 +88,7 @@ public interface SearchableConfigurable extends Configurable {
         return true;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public final Configurable[] getConfigurables() {
         if (myKids != null) return myKids;

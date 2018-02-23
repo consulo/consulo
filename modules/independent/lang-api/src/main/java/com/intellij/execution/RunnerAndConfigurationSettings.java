@@ -18,8 +18,8 @@ package com.intellij.execution;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.util.Factory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Describes a complete persisted run configuration (as displayed in the Run/Debug Configurations dialog), together with runner-specific
@@ -100,8 +100,8 @@ public interface RunnerAndConfigurationSettings {
    * @param runner the runner for which the settings are requested.
    * @return the settings, or null if the runner doesn't provide any settings or the settings aren't configured for this configuration.
    */
-  @Nullable
-  RunnerSettings getRunnerSettings(@NotNull ProgramRunner runner);
+  @javax.annotation.Nullable
+  RunnerSettings getRunnerSettings(@Nonnull ProgramRunner runner);
 
   /**
    * Returns the configuration-managed settings for the specified runner.
@@ -111,7 +111,7 @@ public interface RunnerAndConfigurationSettings {
    * configured for this configuration.
    */
   @Nullable
-  ConfigurationPerRunnerSettings getConfigurationSettings(@NotNull ProgramRunner runner);
+  ConfigurationPerRunnerSettings getConfigurationSettings(@Nonnull ProgramRunner runner);
 
   /**
    * Checks whether the run configuration settings are valid.
@@ -134,7 +134,7 @@ public interface RunnerAndConfigurationSettings {
    */
   void checkSettings(@Nullable Executor executor) throws RuntimeConfigurationException;
 
-  boolean canRunOn(@NotNull ExecutionTarget target);
+  boolean canRunOn(@Nonnull ExecutionTarget target);
 
   /**
    * Returns a factory object which can be used to create a copy of this configuration.
@@ -176,7 +176,7 @@ public interface RunnerAndConfigurationSettings {
    *
    * @param folderName the folder name, or null if the configuration is displayed on the top level.
    */
-  void setFolderName(@Nullable String folderName);
+  void setFolderName(@javax.annotation.Nullable String folderName);
 
   /**
    * Returns the name of the folder under which the configuration is displayed in the "Run/Debug Configurations" dialog.

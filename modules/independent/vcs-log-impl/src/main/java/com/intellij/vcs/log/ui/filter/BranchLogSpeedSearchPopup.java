@@ -17,28 +17,28 @@ package com.intellij.vcs.log.ui.filter;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BranchLogSpeedSearchPopup extends FlatSpeedSearchPopup {
-  public BranchLogSpeedSearchPopup(@NotNull ActionGroup actionGroup, @NotNull DataContext dataContext) {
+  public BranchLogSpeedSearchPopup(@Nonnull ActionGroup actionGroup, @Nonnull DataContext dataContext) {
     super(null, new DefaultActionGroup(actionGroup, createSpeedSearchActionGroup(actionGroup)), dataContext, null, false);
   }
 
   @Override
-  protected boolean shouldBeShowing(@NotNull AnAction action) {
+  protected boolean shouldBeShowing(@Nonnull AnAction action) {
     if (!super.shouldBeShowing(action)) return false;
     return !getSpeedSearch().isHoldingFilter() || !(action instanceof ActionGroup);
   }
 
-  @NotNull
-  public static ActionGroup createSpeedSearchActionGroup(@NotNull ActionGroup actionGroup) {
+  @Nonnull
+  public static ActionGroup createSpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
     DefaultActionGroup speedSearchActions = new DefaultActionGroup();
     createSpeedSearchActions(actionGroup, speedSearchActions, true);
     return speedSearchActions;
   }
 
-  private static void createSpeedSearchActions(@NotNull ActionGroup actionGroup,
-                                               @NotNull DefaultActionGroup speedSearchActions,
+  private static void createSpeedSearchActions(@Nonnull ActionGroup actionGroup,
+                                               @Nonnull DefaultActionGroup speedSearchActions,
                                                boolean isFirstLevel) {
     if (!isFirstLevel) speedSearchActions.addSeparator(actionGroup.getTemplatePresentation().getText());
 

@@ -16,22 +16,22 @@
 package com.intellij.diff.tools.util;
 
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class PrevNextDifferenceIterableBase<T> implements PrevNextDifferenceIterable {
-  @NotNull
+  @Nonnull
   protected abstract List<? extends T> getChanges();
 
-  @NotNull
+  @Nonnull
   protected abstract EditorEx getEditor();
 
-  protected abstract int getStartLine(@NotNull T change);
+  protected abstract int getStartLine(@Nonnull T change);
 
-  protected abstract int getEndLine(@NotNull T change);
+  protected abstract int getEndLine(@Nonnull T change);
 
-  protected abstract void scrollToChange(@NotNull T change);
+  protected abstract void scrollToChange(@Nonnull T change);
 
   @Override
   public boolean canGoNext() {

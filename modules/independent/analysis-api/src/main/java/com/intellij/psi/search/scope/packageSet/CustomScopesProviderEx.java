@@ -18,8 +18,7 @@ package com.intellij.psi.search.scope.packageSet;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,13 +28,13 @@ import java.util.List;
  * Date: 3/14/12
  */
 public abstract class CustomScopesProviderEx implements CustomScopesProvider {
-  @Nullable
+  @javax.annotation.Nullable
   public NamedScope getCustomScope(String name) {
     final List<NamedScope> predefinedScopes = getCustomScopes();
     return findPredefinedScope(name, predefinedScopes);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static NamedScope findPredefinedScope(String name, List<NamedScope> predefinedScopes) {
     for (NamedScope scope : predefinedScopes) {
       if (name.equals(scope.getName())) return scope;
@@ -65,9 +64,9 @@ public abstract class CustomScopesProviderEx implements CustomScopesProvider {
 
   @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
   private static class AllScopeHolder {
-    @NotNull
+    @Nonnull
     private static final String TEXT = FilePatternPackageSet.SCOPE_FILE + ":*//*";
-    @NotNull
+    @Nonnull
     private static final NamedScope ALL = new NamedScope("All", new AbstractPackageSet(TEXT, 0) {
       @Override
       public boolean contains(final VirtualFile file, NamedScopesHolder scopesHolder) {
@@ -76,7 +75,7 @@ public abstract class CustomScopesProviderEx implements CustomScopesProvider {
     });
   }
 
-  @NotNull
+  @Nonnull
   public static NamedScope getAllScope() {
     return AllScopeHolder.ALL;
   }

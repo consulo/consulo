@@ -31,8 +31,8 @@ import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,11 +44,11 @@ public class XDebuggerTreePanel implements DnDSource {
   private final XDebuggerTree myTree;
   private final JPanel myMainPanel;
 
-  public XDebuggerTreePanel(final @NotNull Project project,
-                            final @NotNull XDebuggerEditorsProvider editorsProvider,
-                            @NotNull Disposable parentDisposable,
+  public XDebuggerTreePanel(final @Nonnull Project project,
+                            final @Nonnull XDebuggerEditorsProvider editorsProvider,
+                            @Nonnull Disposable parentDisposable,
                             final @Nullable XSourcePosition sourcePosition,
-                            @NotNull @NonNls final String popupActionGroupId,
+                            @Nonnull @NonNls final String popupActionGroupId,
                             @Nullable XValueMarkers<?, ?> markers) {
     myTree = new XDebuggerTree(project, editorsProvider, sourcePosition, popupActionGroupId, markers);
     myMainPanel = new JPanel(new BorderLayout());

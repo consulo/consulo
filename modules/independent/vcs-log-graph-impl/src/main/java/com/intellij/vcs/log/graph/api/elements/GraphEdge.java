@@ -16,16 +16,15 @@
 
 package com.intellij.vcs.log.graph.api.elements;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public final class GraphEdge implements GraphElement {
-  public static GraphEdge createNormalEdge(int nodeIndex1, int nodeIndex2, @NotNull GraphEdgeType type) {
+  public static GraphEdge createNormalEdge(int nodeIndex1, int nodeIndex2, @Nonnull GraphEdgeType type) {
     assert type.isNormalEdge() : "Unexpected edge type: " + type;
     return new GraphEdge(Math.min(nodeIndex1, nodeIndex2), Math.max(nodeIndex1, nodeIndex2), null, type);
   }
 
-  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @Nullable Integer targetId, @NotNull GraphEdgeType type) {
+  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @javax.annotation.Nullable Integer targetId, @Nonnull GraphEdgeType type) {
     switch (type) {
       case DOTTED_ARROW_UP:
         return new GraphEdge(null, nodeIndex, targetId, type);
@@ -38,37 +37,41 @@ public final class GraphEdge implements GraphElement {
     }
   }
 
-  @Nullable private final Integer myUpNodeIndex;
-  @Nullable private final Integer myDownNodeIndex;
-  @Nullable private final Integer myTargetId;
-  @NotNull private final GraphEdgeType myType;
+  @javax.annotation.Nullable
+  private final Integer myUpNodeIndex;
+  @javax.annotation.Nullable
+  private final Integer myDownNodeIndex;
+  @javax.annotation.Nullable
+  private final Integer myTargetId;
+  @Nonnull
+  private final GraphEdgeType myType;
 
-  public GraphEdge(@Nullable Integer upNodeIndex,
-                   @Nullable Integer downNodeIndex,
-                   @Nullable Integer targetId,
-                   @NotNull GraphEdgeType type) {
+  public GraphEdge(@javax.annotation.Nullable Integer upNodeIndex,
+                   @javax.annotation.Nullable Integer downNodeIndex,
+                   @javax.annotation.Nullable Integer targetId,
+                   @Nonnull GraphEdgeType type) {
     myUpNodeIndex = upNodeIndex;
     myDownNodeIndex = downNodeIndex;
     myTargetId = targetId;
     myType = type;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Integer getUpNodeIndex() {
     return myUpNodeIndex;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Integer getDownNodeIndex() {
     return myDownNodeIndex;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Integer getTargetId() {
     return myTargetId;
   }
 
-  @NotNull
+  @Nonnull
   public GraphEdgeType getType() {
     return myType;
   }

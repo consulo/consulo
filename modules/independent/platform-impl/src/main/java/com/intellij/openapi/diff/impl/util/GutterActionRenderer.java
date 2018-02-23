@@ -17,18 +17,18 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class GutterActionRenderer extends GutterIconRenderer {
   private final AnAction myAction;
 
-  public GutterActionRenderer(@NotNull AnAction action) {
+  public GutterActionRenderer(@Nonnull AnAction action) {
     myAction = action;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getIcon() { return myAction.getTemplatePresentation().getIcon(); }
   public AnAction getClickAction() { return myAction; }
   public String getTooltipText() { return myAction.getTemplatePresentation().getText(); }

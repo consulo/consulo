@@ -23,7 +23,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,13 +44,13 @@ public abstract class WolfTheProblemSolver extends AbstractProjectComponent {
 
   public abstract boolean isProblemFile(VirtualFile virtualFile);
 
-  public abstract void weHaveGotProblems(@NotNull VirtualFile virtualFile, @NotNull List<Problem> problems);
-  public abstract void weHaveGotNonIgnorableProblems(@NotNull VirtualFile virtualFile, @NotNull List<Problem> problems);
-  public abstract void clearProblems(@NotNull VirtualFile virtualFile);
+  public abstract void weHaveGotProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems);
+  public abstract void weHaveGotNonIgnorableProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems);
+  public abstract void clearProblems(@Nonnull VirtualFile virtualFile);
 
-  public abstract boolean hasProblemFilesBeneath(@NotNull Condition<VirtualFile> condition);
+  public abstract boolean hasProblemFilesBeneath(@Nonnull Condition<VirtualFile> condition);
 
-  public abstract boolean hasProblemFilesBeneath(@NotNull Module scope);
+  public abstract boolean hasProblemFilesBeneath(@Nonnull Module scope);
 
   public abstract Problem convertToProblem(VirtualFile virtualFile, int line, int column, String[] message);
 
@@ -59,18 +59,18 @@ public abstract class WolfTheProblemSolver extends AbstractProjectComponent {
   public abstract boolean hasSyntaxErrors(final VirtualFile file);
 
   public abstract static class ProblemListener {
-    public void problemsAppeared(@NotNull VirtualFile file) {}
-    public void problemsChanged(@NotNull VirtualFile file) {}
-    public void problemsDisappeared(@NotNull VirtualFile file) {}
+    public void problemsAppeared(@Nonnull VirtualFile file) {}
+    public void problemsChanged(@Nonnull VirtualFile file) {}
+    public void problemsDisappeared(@Nonnull VirtualFile file) {}
   }
 
-  public abstract void addProblemListener(@NotNull ProblemListener listener);
-  public abstract void addProblemListener(@NotNull ProblemListener listener, @NotNull Disposable parentDisposable);
-  public abstract void removeProblemListener(@NotNull ProblemListener listener);
+  public abstract void addProblemListener(@Nonnull ProblemListener listener);
+  public abstract void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void removeProblemListener(@Nonnull ProblemListener listener);
 
   /**
    * @deprecated register extensions to {@link #FILTER_EP_NAME} instead
    */
-  public abstract void registerFileHighlightFilter(@NotNull Condition<VirtualFile> filter, @NotNull Disposable parentDisposable);
+  public abstract void registerFileHighlightFilter(@Nonnull Condition<VirtualFile> filter, @Nonnull Disposable parentDisposable);
   public abstract void queue(VirtualFile suspiciousFile);
 }

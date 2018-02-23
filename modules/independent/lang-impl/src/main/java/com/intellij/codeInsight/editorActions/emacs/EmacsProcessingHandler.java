@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions.emacs;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This interface is assumed to define general contract for Emacs-like functionality.
@@ -57,6 +57,6 @@ public interface EmacsProcessingHandler {
    * @param file        current file
    * @return            processing result
    */
-  @NotNull
-  Result changeIndent(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file);
+  @Nonnull
+  Result changeIndent(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file);
 }

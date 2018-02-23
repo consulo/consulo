@@ -18,8 +18,8 @@ package com.intellij.openapi.components;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.TypeVariable;
 
@@ -33,7 +33,7 @@ public class ComponentSerializationUtil {
     return (Class<T>)ReflectionUtil.getRawType(ReflectionUtil.resolveVariableInHierarchy(variable, aClass));
   }
 
-  public static <S> void loadComponentState(@NotNull PersistentStateComponent<S> configuration, @Nullable Element element) {
+  public static <S> void loadComponentState(@Nonnull PersistentStateComponent<S> configuration, @Nullable Element element) {
     if (element != null) {
       Class<S> stateClass = getStateClass(configuration.getClass());
       configuration.loadState(XmlSerializer.deserialize(element, stateClass));

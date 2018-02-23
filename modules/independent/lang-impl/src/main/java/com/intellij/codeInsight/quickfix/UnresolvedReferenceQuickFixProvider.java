@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
 
@@ -45,6 +45,6 @@ public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference
 
   public abstract void registerFixes(T ref, QuickFixActionRegistrar registrar);
 
-  @NotNull
+  @Nonnull
   public abstract Class<T> getReferenceClass();
 }

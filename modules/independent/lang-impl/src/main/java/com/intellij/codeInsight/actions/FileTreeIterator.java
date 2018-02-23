@@ -24,7 +24,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,22 +32,22 @@ public class FileTreeIterator {
   private Queue<PsiFile> myCurrentFiles = new LinkedList<PsiFile>();
   private Queue<PsiDirectory> myCurrentDirectories = new LinkedList<PsiDirectory>();
 
-  public FileTreeIterator(@NotNull List<PsiFile> files) {
+  public FileTreeIterator(@Nonnull List<PsiFile> files) {
     myCurrentFiles.addAll(files);
   }
 
-  public FileTreeIterator(@NotNull Module module) {
+  public FileTreeIterator(@Nonnull Module module) {
     myCurrentDirectories.addAll(collectModuleDirectories(module));
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  public FileTreeIterator(@NotNull Project project) {
+  public FileTreeIterator(@Nonnull Project project) {
     myCurrentDirectories.addAll(collectProjectDirectories(project));
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  @NotNull
-  public static List<PsiDirectory> collectProjectDirectories(@NotNull Project project) {
+  @Nonnull
+  public static List<PsiDirectory> collectProjectDirectories(@Nonnull Project project) {
     List<PsiDirectory> directories = ContainerUtil.newArrayList();
 
     Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -58,17 +58,17 @@ public class FileTreeIterator {
     return directories;
   }
 
-  public FileTreeIterator(@NotNull PsiDirectory directory) {
+  public FileTreeIterator(@Nonnull PsiDirectory directory) {
     myCurrentDirectories.add(directory);
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  public FileTreeIterator(@NotNull FileTreeIterator fileTreeIterator) {
+  public FileTreeIterator(@Nonnull FileTreeIterator fileTreeIterator) {
     myCurrentFiles = new LinkedList<PsiFile>(fileTreeIterator.myCurrentFiles);
     myCurrentDirectories = new LinkedList<PsiDirectory>(fileTreeIterator.myCurrentDirectories);
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile next() {
     if (myCurrentFiles.isEmpty()) {
       throw new NoSuchElementException();
@@ -89,12 +89,12 @@ public class FileTreeIterator {
     }
   }
 
-  private void expandDirectory(@NotNull PsiDirectory dir) {
+  private void expandDirectory(@Nonnull PsiDirectory dir) {
     Collections.addAll(myCurrentFiles, dir.getFiles());
     Collections.addAll(myCurrentDirectories, dir.getSubdirectories());
   }
 
-  @NotNull
+  @Nonnull
   public static List<PsiDirectory> collectModuleDirectories(Module module) {
     List<PsiDirectory> dirs = ContainerUtil.newArrayList();
 

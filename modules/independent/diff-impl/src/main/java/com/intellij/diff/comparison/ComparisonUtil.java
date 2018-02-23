@@ -17,11 +17,11 @@ package com.intellij.diff.comparison;
 
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ComparisonUtil {
   @Contract(pure = true)
-  public static boolean isEquals(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull ComparisonPolicy policy) {
+  public static boolean isEquals(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull ComparisonPolicy policy) {
     switch (policy) {
       case DEFAULT:
         return StringUtil.equals(text1, text2);
@@ -35,7 +35,7 @@ public class ComparisonUtil {
   }
 
   @Contract(pure = true)
-  public static boolean equalsTrimWhitespaces(@NotNull CharSequence s1, @NotNull CharSequence s2) {
+  public static boolean equalsTrimWhitespaces(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
     int index1 = 0;
     int index2 = 0;
 

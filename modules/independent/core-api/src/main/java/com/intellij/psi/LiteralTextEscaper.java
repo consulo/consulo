@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -25,11 +25,11 @@ import org.jetbrains.annotations.NotNull;
 public abstract class LiteralTextEscaper<T extends PsiLanguageInjectionHost> {
   protected final T myHost;
 
-  protected LiteralTextEscaper(@NotNull T host) {
+  protected LiteralTextEscaper(@Nonnull T host) {
     myHost = host;
   }
 
-  public abstract boolean decode(@NotNull TextRange rangeInsideHost, @NotNull StringBuilder outChars);
+  public abstract boolean decode(@Nonnull TextRange rangeInsideHost, @Nonnull StringBuilder outChars);
 
   /**
    * @param offsetInDecoded offset in the parsed injected file
@@ -51,9 +51,9 @@ public abstract class LiteralTextEscaper<T extends PsiLanguageInjectionHost> {
    *     getOffsetInHost(2)==2
    *     getOffsetInHost(3)==-1  (out of range)
    */
-  public abstract int getOffsetInHost(int offsetInDecoded, @NotNull TextRange rangeInsideHost);
+  public abstract int getOffsetInHost(int offsetInDecoded, @Nonnull TextRange rangeInsideHost);
 
-  @NotNull
+  @Nonnull
   public TextRange getRelevantTextRange() {
     return TextRange.from(0, myHost.getTextLength());
   }
@@ -63,13 +63,13 @@ public abstract class LiteralTextEscaper<T extends PsiLanguageInjectionHost> {
   public static <T extends PsiLanguageInjectionHost> LiteralTextEscaper<T> createSimple(T element) {
     return new LiteralTextEscaper<T>(element) {
       @Override
-      public boolean decode(@NotNull TextRange rangeInsideHost, @NotNull StringBuilder outChars) {
+      public boolean decode(@Nonnull TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
         outChars.append(rangeInsideHost.substring(myHost.getText()));
         return true;
       }
 
       @Override
-      public int getOffsetInHost(int offsetInDecoded, @NotNull TextRange rangeInsideHost) {
+      public int getOffsetInHost(int offsetInDecoded, @Nonnull TextRange rangeInsideHost) {
         return rangeInsideHost.getStartOffset() + offsetInDecoded;
       }
 

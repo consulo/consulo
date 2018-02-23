@@ -29,7 +29,7 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -157,8 +157,8 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
       if (artifact != null) {
         ArtifactUtil.processPackagingElements(artifact, ArtifactElementType.getInstance(), new PackagingElementProcessor<ArtifactPackagingElement>() {
           @Override
-          public boolean process(@NotNull ArtifactPackagingElement element,
-                                 @NotNull PackagingElementPath path) {
+          public boolean process(@Nonnull ArtifactPackagingElement element,
+                                 @Nonnull PackagingElementPath path) {
             final String artifactName = element.getArtifactName();
             if (myArtifactNames.contains(artifactName)) {
               included.add(artifactName);

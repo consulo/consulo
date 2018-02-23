@@ -22,8 +22,8 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPropertiesPanel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -36,7 +36,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
   private final String myId;
   private final String myPresentableName;
 
-  protected PackagingElementType(@NotNull @NonNls String id, @NotNull String presentableName) {
+  protected PackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
     myId = id;
     myPresentableName = presentableName;
   }
@@ -49,19 +49,19 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
     return myPresentableName;
   }
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
-  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
     return true;
   }
 
-  @NotNull 
-  public abstract List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                      @NotNull CompositePackagingElement<?> parent);
+  @Nonnull
+  public abstract List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                                      @Nonnull CompositePackagingElement<?> parent);
 
-  @NotNull
-  public abstract E createEmpty(@NotNull Project project);
+  @Nonnull
+  public abstract E createEmpty(@Nonnull Project project);
 
   protected static <T extends PackagingElementType<?>> T getInstance(final Class<T> aClass) {
     for (PackagingElementType type : Extensions.getExtensions(EP_NAME)) {
@@ -73,7 +73,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
   }
 
   @Nullable
-  public PackagingElementPropertiesPanel createElementPropertiesPanel(@NotNull E element, @NotNull ArtifactEditorContext context) {
+  public PackagingElementPropertiesPanel createElementPropertiesPanel(@Nonnull E element, @Nonnull ArtifactEditorContext context) {
     return null;
   }
 }

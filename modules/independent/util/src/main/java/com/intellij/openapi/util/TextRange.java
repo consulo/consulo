@@ -17,8 +17,8 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -26,7 +26,7 @@ public class TextRange implements Segment, Serializable {
   public static final TextRange[] EMPTY_ARRAY = new TextRange[0];
 
   public static ArrayFactory<TextRange> ARRAY_FACTORY = new ArrayFactory<TextRange>() {
-    @NotNull
+    @Nonnull
     @Override
     public TextRange[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new TextRange[count];
@@ -81,10 +81,10 @@ public class TextRange implements Segment, Serializable {
     return myStartOffset + myEndOffset;
   }
 
-  public boolean contains(@NotNull TextRange range) {
+  public boolean contains(@Nonnull TextRange range) {
     return contains((Segment)range);
   }
-  public boolean contains(@NotNull Segment range) {
+  public boolean contains(@Nonnull Segment range) {
     return containsRange(range.getStartOffset(), range.getEndOffset());
   }
 
@@ -92,7 +92,7 @@ public class TextRange implements Segment, Serializable {
     return getStartOffset() <= startOffset && getEndOffset() >= endOffset;
   }
 
-  public static boolean containsRange(@NotNull Segment outer, @NotNull Segment inner) {
+  public static boolean containsRange(@Nonnull Segment outer, @Nonnull Segment inner) {
     return outer.getStartOffset() <= inner.getStartOffset() && inner.getEndOffset() <= outer.getEndOffset();
   }
 
@@ -109,8 +109,8 @@ public class TextRange implements Segment, Serializable {
     return myStartOffset <= offset && offset < myEndOffset;
   }
 
-  @NotNull
-  public String substring(@NotNull String str) {
+  @Nonnull
+  public String substring(@Nonnull String str) {
     try {
       return str.substring(myStartOffset, myEndOffset);
     }
@@ -119,8 +119,8 @@ public class TextRange implements Segment, Serializable {
     }
   }
 
-  @NotNull
-  public CharSequence subSequence(@NotNull CharSequence str) {
+  @Nonnull
+  public CharSequence subSequence(@Nonnull CharSequence str) {
     try {
       return str.subSequence(myStartOffset, myEndOffset);
     }
@@ -129,45 +129,45 @@ public class TextRange implements Segment, Serializable {
     }
   }
 
-  @NotNull
-  public TextRange cutOut(@NotNull TextRange subRange) {
+  @Nonnull
+  public TextRange cutOut(@Nonnull TextRange subRange) {
     assert subRange.getStartOffset() <= getLength() : subRange + "; this="+this;
     assert subRange.getEndOffset() <= getLength() : subRange + "; this="+this;
     return new TextRange(myStartOffset + subRange.getStartOffset(), Math.min(myEndOffset, myStartOffset + subRange.getEndOffset()));
   }
 
-  @NotNull
+  @Nonnull
   public TextRange shiftRight(int delta) {
     if (delta == 0) return this;
     return new TextRange(myStartOffset + delta, myEndOffset + delta);
   }
 
-  @NotNull
+  @Nonnull
   public TextRange grown(int lengthDelta) {
     return from(myStartOffset, getLength() + lengthDelta);
   }
 
-  @NotNull
+  @Nonnull
   public static TextRange from(int offset, int length) {
     return create(offset, offset + length);
   }
 
-  @NotNull
+  @Nonnull
   public static TextRange create(int startOffset, int endOffset) {
     return new TextRange(startOffset, endOffset);
   }
-  @NotNull
-  public static TextRange create(@NotNull Segment segment) {
+  @Nonnull
+  public static TextRange create(@Nonnull Segment segment) {
     return create(segment.getStartOffset(), segment.getEndOffset());
   }
 
-  public static boolean areSegmentsEqual(@NotNull Segment segment1, @NotNull Segment segment2) {
+  public static boolean areSegmentsEqual(@Nonnull Segment segment1, @Nonnull Segment segment2) {
     return segment1.getStartOffset() == segment2.getStartOffset()
            && segment1.getEndOffset() == segment2.getEndOffset();
   }
 
-  @NotNull
-  public String replace(@NotNull String original, @NotNull String replacement) {
+  @Nonnull
+  public String replace(@Nonnull String original, @Nonnull String replacement) {
     try {
       String beginning = original.substring(0, getStartOffset());
       String ending = original.substring(getEndOffset(), original.length());
@@ -178,16 +178,16 @@ public class TextRange implements Segment, Serializable {
     }
   }
 
-  public boolean intersects(@NotNull TextRange textRange) {
+  public boolean intersects(@Nonnull TextRange textRange) {
     return intersects((Segment)textRange);
   }
-  public boolean intersects(@NotNull Segment textRange) {
+  public boolean intersects(@Nonnull Segment textRange) {
     return intersects(textRange.getStartOffset(), textRange.getEndOffset());
   }
   public boolean intersects(int startOffset, int endOffset) {
     return Math.max(myStartOffset, startOffset) <= Math.min(myEndOffset, endOffset);
   }
-  public boolean intersectsStrict(@NotNull TextRange textRange) {
+  public boolean intersectsStrict(@Nonnull TextRange textRange) {
     return intersectsStrict(textRange.getStartOffset(), textRange.getEndOffset());
   }
   public boolean intersectsStrict(int startOffset, int endOffset) {
@@ -195,7 +195,7 @@ public class TextRange implements Segment, Serializable {
   }
 
   @Nullable
-  public TextRange intersection(@NotNull TextRange range) {
+  public TextRange intersection(@Nonnull TextRange range) {
     if (!intersects(range)) return null;
     return new TextRange(Math.max(myStartOffset, range.getStartOffset()), Math.min(myEndOffset, range.getEndOffset()));
   }
@@ -204,8 +204,8 @@ public class TextRange implements Segment, Serializable {
     return myStartOffset >= myEndOffset;
   }
 
-  @NotNull
-  public TextRange union(@NotNull TextRange textRange) {
+  @Nonnull
+  public TextRange union(@Nonnull TextRange textRange) {
     return new TextRange(Math.min(myStartOffset, textRange.getStartOffset()), Math.max(myEndOffset, textRange.getEndOffset()));
   }
 
@@ -217,11 +217,11 @@ public class TextRange implements Segment, Serializable {
     return new TextRange(0, s.length());
   }
 
-  public static void assertProperRange(@NotNull Segment range) throws AssertionError {
+  public static void assertProperRange(@Nonnull Segment range) throws AssertionError {
     assertProperRange(range, "");
   }
 
-  public static void assertProperRange(@NotNull Segment range, Object message) throws AssertionError {
+  public static void assertProperRange(@Nonnull Segment range, Object message) throws AssertionError {
     assertProperRange(range.getStartOffset(), range.getEndOffset(), message);
   }
 

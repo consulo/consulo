@@ -29,7 +29,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SystemProperties;
 import org.hamcrest.Description;
-import org.jetbrains.annotations.Nullable;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.api.Action;
@@ -83,7 +82,7 @@ public class PathMacroManagerTest {
           }
 
           @Override
-          @Nullable
+          @javax.annotation.Nullable
           public Object invoke(final Invocation invocation) throws Throwable {
             ((Runnable)invocation.getParameter(0)).run();
             return null;

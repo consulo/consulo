@@ -19,7 +19,7 @@ import com.intellij.diff.impl.DiffSettingsHolder.DiffSettings;
 import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
 import com.intellij.diff.tools.util.base.TextDiffSettingsHolder.TextDiffSettings;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Dictionary;
@@ -30,10 +30,12 @@ public class DiffSettingsPanel {
   private ContextRangePanel myContextRangeComponent;
   private JCheckBox myGoToNextFileOnNextDifferenceCheckbox;
 
-  @NotNull private TextDiffSettings myTextSettings = TextDiffSettings.getSettings();
-  @NotNull private DiffSettings myDiffSettings = DiffSettings.getSettings();
+  @Nonnull
+  private TextDiffSettings myTextSettings = TextDiffSettings.getSettings();
+  @Nonnull
+  private DiffSettings myDiffSettings = DiffSettings.getSettings();
 
-  @NotNull
+  @Nonnull
   public JComponent getPanel() {
     return myPane;
   }

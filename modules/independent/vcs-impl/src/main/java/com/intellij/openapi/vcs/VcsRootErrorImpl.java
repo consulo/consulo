@@ -15,35 +15,38 @@
  */
 package com.intellij.openapi.vcs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Nadya Zabrodina
  */
 public class VcsRootErrorImpl implements VcsRootError {
 
-  private final @NotNull Type myType;
-  private final @NotNull String myMapping;
-  private final @NotNull VcsKey myVcsKey;
+  private final @Nonnull
+  Type myType;
+  private final @Nonnull
+  String myMapping;
+  private final @Nonnull
+  VcsKey myVcsKey;
 
 
-  public VcsRootErrorImpl(@NotNull Type type, @NotNull String mapping, @NotNull String key) {
+  public VcsRootErrorImpl(@Nonnull Type type, @Nonnull String mapping, @Nonnull String key) {
     myType = type;
     myMapping = mapping;
     myVcsKey = new VcsKey(key);
   }
 
-  @NotNull
+  @Nonnull
   public Type getType() {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   public String getMapping() {
     return myMapping;
   }
 
-  @NotNull
+  @Nonnull
   public VcsKey getVcsKey() {
     return myVcsKey;
   }

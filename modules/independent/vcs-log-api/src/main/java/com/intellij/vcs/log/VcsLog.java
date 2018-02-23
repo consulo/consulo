@@ -18,8 +18,8 @@ package com.intellij.vcs.log;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,7 @@ public interface VcsLog {
   /**
    * Returns commits currently selected in the log.
    */
-  @NotNull
+  @Nonnull
   List<CommitId> getSelectedCommits();
 
   /**
@@ -44,14 +44,14 @@ public interface VcsLog {
    * which means that the short details are already loaded. <br/>
    * This makes this method preferable to {@link #getSelectedDetails()}.
    */
-  @NotNull
+  @Nonnull
   List<VcsShortCommitDetails> getSelectedShortDetails();
 
   /**
    * Returns details of the selected commits.
    * For commits that are not loaded an instance of LoadingDetails is returned.
    */
-  @NotNull
+  @Nonnull
   List<VcsFullCommitDetails> getSelectedDetails();
 
   /**
@@ -62,25 +62,25 @@ public interface VcsLog {
    * @param consumer  called in EDT after all details are loaded.
    * @param indicator progress indicator to use in loading process, can be null.
    */
-  void requestSelectedDetails(@NotNull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator);
+  void requestSelectedDetails(@Nonnull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator);
 
   /**
    * Returns names of branches which contain the given commit, or null if this information is unavailable.
    */
-  @Nullable
-  Collection<String> getContainingBranches(@NotNull Hash commitHash, @NotNull VirtualFile root);
+  @javax.annotation.Nullable
+  Collection<String> getContainingBranches(@Nonnull Hash commitHash, @Nonnull VirtualFile root);
 
   /**
    * Asynchronously selects the commit node defined by the given reference (commit hash, branch or tag).
    * Returns a {@link Future future} that allows to check if the commit was selected, wait for the selection while log is being loaded,
    * or cancel commit selection.
    */
-  @NotNull
+  @Nonnull
   Future<Boolean> jumpToReference(String reference);
 
   /**
    * Returns {@link VcsLogProvider VcsLogProviders} which are active in this log, i.e. which VCS roots are shown in the log.
    */
-  @NotNull
+  @Nonnull
   Map<VirtualFile, VcsLogProvider> getLogProviders();
 }

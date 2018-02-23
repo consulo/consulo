@@ -33,8 +33,8 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -197,7 +197,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  protected boolean hasPsiInManyProjects(@NotNull final VirtualFile virtualFile) {
+  protected boolean hasPsiInManyProjects(@Nonnull final VirtualFile virtualFile) {
     int count = 0;
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       if (PsiManagerEx.getInstanceEx(project).getFileManager().findCachedViewProvider(virtualFile) != null) {
@@ -208,7 +208,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  protected IndexingStampInfo getIndexingStampInfo(@NotNull VirtualFile file) {
+  protected IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
     return StubUpdatingIndex.getIndexingStampInfo(file);
   }
 }

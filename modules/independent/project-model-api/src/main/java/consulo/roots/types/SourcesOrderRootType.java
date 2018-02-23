@@ -16,14 +16,14 @@
 package consulo.roots.types;
 
 import com.intellij.openapi.roots.OrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17.08.14
  */
 public class SourcesOrderRootType extends OrderRootType {
-  @NotNull
+  @Nonnull
   public static SourcesOrderRootType getInstance() {
     return getOrderRootType(SourcesOrderRootType.class);
   }

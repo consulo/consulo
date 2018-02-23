@@ -32,8 +32,8 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.Collections;
@@ -41,19 +41,21 @@ import java.util.Collections;
 public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor {
   private static final Logger LOG = Logger.getInstance(CacheDiffRequestProcessor.class);
 
-  @NotNull private final SoftHardCacheMap<T, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
+  @Nonnull
+  private final SoftHardCacheMap<T, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
-  @NotNull private final DiffTaskQueue myQueue = new DiffTaskQueue();
+  @Nonnull
+  private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
   public CacheDiffRequestProcessor(@Nullable Project project) {
     super(project);
   }
 
-  public CacheDiffRequestProcessor(@Nullable Project project, @NotNull String place) {
+  public CacheDiffRequestProcessor(@Nullable Project project, @Nonnull String place) {
     super(project, place);
   }
 
-  public CacheDiffRequestProcessor(@Nullable Project project, @NotNull UserDataHolder context) {
+  public CacheDiffRequestProcessor(@javax.annotation.Nullable Project project, @Nonnull UserDataHolder context) {
     super(project, context);
   }
 
@@ -61,13 +63,13 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   // Abstract
   //
 
-  @Nullable
-  protected abstract String getRequestName(@NotNull T provider);
+  @javax.annotation.Nullable
+  protected abstract String getRequestName(@Nonnull T provider);
 
   protected abstract T getCurrentRequestProvider();
 
-  @NotNull
-  protected abstract DiffRequest loadRequest(@NotNull T provider, @NotNull ProgressIndicator indicator)
+  @Nonnull
+  protected abstract DiffRequest loadRequest(@Nonnull T provider, @Nonnull ProgressIndicator indicator)
           throws ProcessCanceledException, DiffRequestProducerException;
 
   //
@@ -113,13 +115,13 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
     }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
-  @Nullable
-  protected DiffRequest loadRequestFast(@NotNull T provider) {
+  @javax.annotation.Nullable
+  protected DiffRequest loadRequestFast(@Nonnull T provider) {
     return myRequestCache.get(provider);
   }
 
-  @NotNull
-  private DiffRequest doLoadRequest(@NotNull T provider, @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private DiffRequest doLoadRequest(@Nonnull T provider, @Nonnull ProgressIndicator indicator) {
     String name = getRequestName(provider);
     try {
       return loadRequest(provider, indicator);
@@ -151,9 +153,10 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   //
 
   protected class ReloadRequestAction extends DumbAwareAction {
-    @NotNull private final T myProducer;
+    @Nonnull
+    private final T myProducer;
 
-    public ReloadRequestAction(@NotNull T provider) {
+    public ReloadRequestAction(@Nonnull T provider) {
       super("Reload", null, AllIcons.Actions.Refresh);
       myProducer = provider;
     }

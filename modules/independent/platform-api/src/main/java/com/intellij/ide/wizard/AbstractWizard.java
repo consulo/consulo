@@ -31,9 +31,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -299,7 +299,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return mySteps.get(myCurrentStep);
   }
 
-  public void addStep(@NotNull final T step) {
+  public void addStep(@Nonnull final T step) {
     mySteps.add(step);
 
     if (step instanceof StepAdapter) {

@@ -25,8 +25,8 @@ import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -38,7 +38,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   private final ContentFolderTypeProvider myContentFolderType;
 
   public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer,
-                                   @NotNull ArtifactEditorContext context,
+                                   @Nonnull ArtifactEditorContext context,
                                    final ContentFolderTypeProvider contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
@@ -69,7 +69,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData,
+  public void render(@Nonnull PresentationData presentationData,
                      SimpleTextAttributes mainAttributes,
                      SimpleTextAttributes commentAttributes) {
     final Module module = findModule();

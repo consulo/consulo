@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -44,8 +44,8 @@ public class PatternUtil {
     }
   }
 
-  @NotNull
-  public static String convertToRegex(@NotNull String mask) {
+  @Nonnull
+  public static String convertToRegex(@Nonnull String mask) {
     List<String> strings = StringUtil.split(mask, "\\");
     StringBuilder pattern = new StringBuilder();
     String separator = "";
@@ -62,8 +62,8 @@ public class PatternUtil {
     return pattern.toString();
   }
 
-  @NotNull
-  public static Pattern fromMask(@NotNull String mask) {
+  @Nonnull
+  public static Pattern fromMask(@Nonnull String mask) {
     try {
       return Pattern.compile(convertToRegex(mask));
     }

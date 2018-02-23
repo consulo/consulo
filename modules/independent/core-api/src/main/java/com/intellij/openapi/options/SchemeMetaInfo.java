@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.options;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Properties;
 
 public interface SchemeMetaInfo {
-  @NotNull
+  @Nonnull
   Properties getMetaProperties();
 }

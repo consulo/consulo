@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -73,7 +73,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
           editorTabs("Tabs: " + messageApp("radio.close.non.modified.files.first"), "CLOSE_NON_MODIFIED_FILES_FIRST")
   );
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
     return ourOptions;
@@ -113,7 +113,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
             editorApp("Appearance: " + messageApp("checkbox.show.line.numbers"), "ARE_LINE_NUMBERS_SHOWN")
     );
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
       return ourOptions;

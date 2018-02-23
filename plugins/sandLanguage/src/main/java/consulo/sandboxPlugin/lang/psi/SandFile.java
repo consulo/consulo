@@ -19,7 +19,7 @@ import com.intellij.extapi.psi.PsiFileBase;
 import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
@@ -29,11 +29,11 @@ import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
  * @since 19.03.14
  */
 public class SandFile extends PsiFileBase {
-  public SandFile(@NotNull FileViewProvider viewProvider) {
+  public SandFile(@Nonnull FileViewProvider viewProvider) {
     super(viewProvider, SandLanguage.INSTANCE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     LanguageVersion languageVersion = getLanguageVersion();

@@ -43,8 +43,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.bundle.SdkUtil;
 
 import javax.swing.*;
@@ -94,7 +94,7 @@ public class NavBarPresentation {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @NotNull
+  @Nonnull
   protected String getPresentableText(final Object object) {
     if (!NavBarModel.isValid(object)) {
       return IdeBundle.message("node.structureview.invalid");

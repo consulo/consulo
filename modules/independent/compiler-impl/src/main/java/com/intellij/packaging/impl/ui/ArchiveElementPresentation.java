@@ -21,7 +21,7 @@ import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -39,7 +39,7 @@ public class ArchiveElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.PpJar);
     presentationData.addText(myElement.getArchiveFileName(), mainAttributes);
   }

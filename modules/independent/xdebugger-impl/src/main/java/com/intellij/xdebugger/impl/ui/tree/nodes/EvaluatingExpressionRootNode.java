@@ -23,7 +23,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueContainer;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -47,17 +47,17 @@ public class EvaluatingExpressionRootNode extends XValueContainerNode<Evaluating
     }
 
     @Override
-    public void computeChildren(@NotNull final XCompositeNode node) {
+    public void computeChildren(@Nonnull final XCompositeNode node) {
       myDialog.startEvaluation(new XEvaluationCallbackBase() {
         @Override
-        public void evaluated(@NotNull final XValue result) {
+        public void evaluated(@Nonnull final XValue result) {
           String name = UIUtil.removeMnemonic(XDebuggerBundle.message("xdebugger.evaluate.result"));
           node.addChildren(XValueChildrenList.singleton(name, result), true);
           myDialog.evaluationDone();
         }
 
         @Override
-        public void errorOccurred(@NotNull final String errorMessage) {
+        public void errorOccurred(@Nonnull final String errorMessage) {
           node.setErrorMessage(errorMessage);
           myDialog.evaluationDone();
         }

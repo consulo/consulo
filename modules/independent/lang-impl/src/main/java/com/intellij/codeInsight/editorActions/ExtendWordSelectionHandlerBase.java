@@ -23,8 +23,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public abstract class ExtendWordSelectionHandlerBase implements ExtendWordSelect
    * @param cursorOffset current caret offset in editor
    * @return minimal selection length for given element
    */
-  public int getMinimalTextRangeLength(@NotNull PsiElement element, @NotNull CharSequence text, int cursorOffset) {
+  public int getMinimalTextRangeLength(@Nonnull PsiElement element, @Nonnull CharSequence text, int cursorOffset) {
     return 0;
   }
 

@@ -8,7 +8,6 @@ import com.intellij.remoteServer.agent.annotation.ImmediateCall;
 import com.intellij.remoteServer.agent.impl.util.FinalTask;
 import com.intellij.remoteServer.agent.impl.util.SequentialTaskExecutor;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +35,7 @@ public class ThreadInvocationHandler implements InvocationHandler {
   }
 
   public ThreadInvocationHandler(SequentialTaskExecutor taskExecutor, ClassLoader callerClassLoader, Object target,
-                                 @Nullable ChildWrapperCreator preWrapperCreator) {
+                                 @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myTaskExecutor = taskExecutor;
     myCallerClassLoader = callerClassLoader;
     myTarget = target;

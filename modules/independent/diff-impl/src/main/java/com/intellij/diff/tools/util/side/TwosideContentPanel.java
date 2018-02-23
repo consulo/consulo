@@ -19,8 +19,8 @@ import com.intellij.diff.tools.holders.EditorHolder;
 import com.intellij.diff.tools.util.DiffSplitter;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -28,9 +28,10 @@ import java.awt.*;
 import java.util.List;
 
 public class TwosideContentPanel extends JPanel {
-  @NotNull private final DiffSplitter mySplitter;
+  @Nonnull
+  private final DiffSplitter mySplitter;
 
-  public TwosideContentPanel(@NotNull List<? extends EditorHolder> holders, @NotNull List<JComponent> titleComponents) {
+  public TwosideContentPanel(@Nonnull List<? extends EditorHolder> holders, @Nonnull List<JComponent> titleComponents) {
     super(new BorderLayout());
     assert holders.size() == 2;
     assert titleComponents.size() == 2;
@@ -42,16 +43,16 @@ public class TwosideContentPanel extends JPanel {
     add(mySplitter, BorderLayout.CENTER);
   }
 
-  public void setBottomAction(@Nullable AnAction value) {
+  public void setBottomAction(@javax.annotation.Nullable AnAction value) {
     mySplitter.setBottomAction(value);
   }
 
-  public void setTopAction(@Nullable AnAction value) {
+  public void setTopAction(@javax.annotation.Nullable AnAction value) {
     mySplitter.setTopAction(value);
   }
 
   @RequiredDispatchThread
-  public void setPainter(@Nullable DiffSplitter.Painter painter) {
+  public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter) {
     mySplitter.setPainter(painter);
   }
 
@@ -59,7 +60,7 @@ public class TwosideContentPanel extends JPanel {
     mySplitter.repaintDivider();
   }
 
-  @NotNull
+  @Nonnull
   public DiffSplitter getSplitter() {
     return mySplitter;
   }

@@ -38,8 +38,8 @@ import com.intellij.util.ResourceUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.util.URLDictionatyLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -63,8 +63,8 @@ public class TipUIUtil {
   private TipUIUtil() {
   }
 
-  @NotNull
-  public static String getPoweredByText(@NotNull TipAndTrickBean tip) {
+  @Nonnull
+  public static String getPoweredByText(@Nonnull TipAndTrickBean tip) {
     PluginDescriptor descriptor = tip.getPluginDescriptor();
     return descriptor instanceof IdeaPluginDescriptor && !PluginManagerCore.CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString())
            ? ((IdeaPluginDescriptor)descriptor).getName()
@@ -234,7 +234,7 @@ public class TipUIUtil {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static JEditorPane createTipBrowser() {
     JEditorPane browser = new JEditorPane() {
       @Override

@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -29,12 +29,12 @@ public interface VcsLogRefresher {
    * Synchronously loads some recent commits from the VCS, builds the DataPack and queues to refresh everything. <br/>
    * This is called on log initialization and on the full refresh.
    */
-  @NotNull
+  @Nonnull
   DataPack readFirstBlock();
 
   /**
    * Refreshes the log and builds the actual data pack.
    * Triggered by some event from the VCS which indicates that the log could change (e.g. new commits arrived).
    */
-  void refresh(@NotNull Collection<VirtualFile> rootsToRefresh);
+  void refresh(@Nonnull Collection<VirtualFile> rootsToRefresh);
 }

@@ -19,8 +19,8 @@ package com.intellij.psi;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Storage for places where PSI language being injected to.
@@ -39,5 +39,5 @@ public interface InjectedLanguagePlaces {
    * @param suffix Optional footer to be passed on to the language parser after the host element text.
    *        Might be useful e.g. for making the text parsable or providing some context.
    */
-  void addPlace(@NotNull Language language, @NotNull TextRange rangeInsideHost, @NonNls @Nullable String prefix, @NonNls @Nullable String suffix);
+  void addPlace(@Nonnull Language language, @Nonnull TextRange rangeInsideHost, @NonNls @Nullable String prefix, @NonNls @javax.annotation.Nullable String suffix);
 }

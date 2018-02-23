@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.CompressionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EditorChangeAction extends BasicUndoableAction {
   private final int myOffset;
@@ -42,10 +42,10 @@ public class EditorChangeAction extends BasicUndoableAction {
     this((DocumentEx)e.getDocument(), e.getOffset(), e.getOldFragment(), e.getNewFragment(), e.getOldTimeStamp());
   }
 
-  public EditorChangeAction(@NotNull DocumentEx document,
+  public EditorChangeAction(@Nonnull DocumentEx document,
                             int offset,
-                            @NotNull CharSequence oldString,
-                            @NotNull CharSequence newString,
+                            @Nonnull CharSequence oldString,
+                            @Nonnull CharSequence newString,
                             long oldTimeStamp) {
     super(document);
     myOffset = offset;
@@ -94,7 +94,7 @@ public class EditorChangeAction extends BasicUndoableAction {
     refreshFileStatus();
   }
 
-  private void exchangeStrings(@NotNull CharSequence newString, @NotNull CharSequence oldString) {
+  private void exchangeStrings(@Nonnull CharSequence newString, @Nonnull CharSequence oldString) {
     DocumentEx d = getDocument();
 
     if (newString.length() > 0 && oldString.length() == 0) {

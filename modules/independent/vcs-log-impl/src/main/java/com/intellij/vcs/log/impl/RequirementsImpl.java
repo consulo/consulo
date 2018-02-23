@@ -17,18 +17,18 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.vcs.log.VcsLogProviderRequirementsEx;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class RequirementsImpl implements VcsLogProviderRequirementsEx {
 
   private final int myCommitCount;
   private final boolean myRefresh;
-  @NotNull private final Collection<VcsRef> myPreviousRefs;
+  @Nonnull
+  private final Collection<VcsRef> myPreviousRefs;
 
-  public RequirementsImpl(int count, boolean refresh, @NotNull Collection<VcsRef> previousRefs) {
+  public RequirementsImpl(int count, boolean refresh, @Nonnull Collection<VcsRef> previousRefs) {
     myCommitCount = count;
     myRefresh = refresh;
     myPreviousRefs = previousRefs;
@@ -44,7 +44,7 @@ public class RequirementsImpl implements VcsLogProviderRequirementsEx {
     return myRefresh;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VcsRef> getPreviousRefs() {
     return myPreviousRefs;

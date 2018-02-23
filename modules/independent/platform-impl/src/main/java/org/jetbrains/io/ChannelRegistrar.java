@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.ContainerUtil;
 import io.netty.channel.*;
 import io.netty.util.concurrent.GenericFutureListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -40,7 +40,7 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
     return serverChannel.get() == null && clientChannels.isEmpty();
   }
 
-  public void setServerChannel(@NotNull Channel channel, boolean isOwnEventLoopGroup) {
+  public void setServerChannel(@Nonnull Channel channel, boolean isOwnEventLoopGroup) {
     boolean isSet = serverChannel.compareAndSet(null, (ServerChannel)channel);
     LOG.assertTrue(isSet);
 
@@ -48,14 +48,14 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
   }
 
   @Override
-  public void channelActive(@NotNull ChannelHandlerContext context) throws Exception {
+  public void channelActive(@Nonnull ChannelHandlerContext context) throws Exception {
     clientChannels.add(context.channel());
 
     super.channelActive(context);
   }
 
   @Override
-  public void channelInactive(@NotNull ChannelHandlerContext context) throws Exception {
+  public void channelInactive(@Nonnull ChannelHandlerContext context) throws Exception {
     clientChannels.remove(context.channel());
 
     super.channelInactive(context);
@@ -84,7 +84,7 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
       final CountDownLatch countDown = new CountDownLatch(clientChannels.length + 1);
       GenericFutureListener<ChannelFuture> listener = new GenericFutureListener<ChannelFuture>() {
         @Override
-        public void operationComplete(@NotNull ChannelFuture future) throws Exception {
+        public void operationComplete(@Nonnull ChannelFuture future) throws Exception {
           try {
             Throwable cause = future.cause();
             if (cause != null) {

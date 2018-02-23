@@ -39,12 +39,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
   @Override
-  public Result preprocessEnter(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull Ref<Integer> caretOffsetRef,
-                                @NotNull final Ref<Integer> caretAdvanceRef, @NotNull final DataContext dataContext,
+  public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull Ref<Integer> caretOffsetRef,
+                                @Nonnull final Ref<Integer> caretAdvanceRef, @Nonnull final DataContext dataContext,
                                 final EditorActionHandler originalHandler) {
     int caretOffset = caretOffsetRef.get().intValue();
     int caretAdvance = caretAdvanceRef.get().intValue();
@@ -106,7 +106,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
            (JavaLikeQuoteHandler) fileTypeQuoteHandler:null;
   }
 
-  private static boolean isInStringLiteral(@NotNull Editor editor, @NotNull DataContext dataContext, int offset) {
+  private static boolean isInStringLiteral(@Nonnull Editor editor, @Nonnull DataContext dataContext, int offset) {
     Language language = EnterHandler.getLanguage(dataContext);
     if (offset > 0 && language != null) {
       QuoteHandler quoteHandler = TypedHandler.getLanguageQuoteHandler(language);

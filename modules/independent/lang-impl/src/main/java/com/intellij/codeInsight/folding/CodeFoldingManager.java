@@ -24,37 +24,37 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CodeFoldingManager {
   public static CodeFoldingManager getInstance(Project project){
     return project.getComponent(CodeFoldingManager.class);
   }
 
-  public abstract void updateFoldRegions(@NotNull Editor editor);
+  public abstract void updateFoldRegions(@Nonnull Editor editor);
 
-  public abstract void forceDefaultState(@NotNull Editor editor);
-
-  @Nullable
-  public abstract Runnable updateFoldRegionsAsync(@NotNull Editor editor, boolean firstTime);
+  public abstract void forceDefaultState(@Nonnull Editor editor);
 
   @Nullable
-  public abstract FoldRegion findFoldRegion(@NotNull Editor editor, int startOffset, int endOffset);
-  public abstract FoldRegion[] getFoldRegionsAtOffset(@NotNull Editor editor, int offset);
+  public abstract Runnable updateFoldRegionsAsync(@Nonnull Editor editor, boolean firstTime);
 
-  @RequiredDispatchThread
-  public abstract CodeFoldingState saveFoldingState(@NotNull Editor editor);
-  @RequiredDispatchThread
-  public abstract void restoreFoldingState(@NotNull Editor editor, @NotNull CodeFoldingState state);
-
-  public abstract void writeFoldingState(@NotNull CodeFoldingState state, @NotNull Element element) throws WriteExternalException;
-  public abstract CodeFoldingState readFoldingState(@NotNull Element element, @NotNull Document document);
-
-  @RequiredDispatchThread
-  public abstract void releaseFoldings(@NotNull Editor editor);
-  @RequiredDispatchThread
-  public abstract void buildInitialFoldings(@NotNull Editor editor);
   @Nullable
-  public abstract CodeFoldingState buildInitialFoldings(@NotNull Document document);
+  public abstract FoldRegion findFoldRegion(@Nonnull Editor editor, int startOffset, int endOffset);
+  public abstract FoldRegion[] getFoldRegionsAtOffset(@Nonnull Editor editor, int offset);
+
+  @RequiredDispatchThread
+  public abstract CodeFoldingState saveFoldingState(@Nonnull Editor editor);
+  @RequiredDispatchThread
+  public abstract void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state);
+
+  public abstract void writeFoldingState(@Nonnull CodeFoldingState state, @Nonnull Element element) throws WriteExternalException;
+  public abstract CodeFoldingState readFoldingState(@Nonnull Element element, @Nonnull Document document);
+
+  @RequiredDispatchThread
+  public abstract void releaseFoldings(@Nonnull Editor editor);
+  @RequiredDispatchThread
+  public abstract void buildInitialFoldings(@Nonnull Editor editor);
+  @Nullable
+  public abstract CodeFoldingState buildInitialFoldings(@Nonnull Document document);
 }

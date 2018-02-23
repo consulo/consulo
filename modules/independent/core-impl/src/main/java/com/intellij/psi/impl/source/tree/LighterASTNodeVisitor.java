@@ -18,16 +18,16 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.LighterLazyParseableNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LighterASTNodeVisitor {
-  public abstract void visitNode(@NotNull LighterASTNode node);
+  public abstract void visitNode(@Nonnull LighterASTNode node);
 
-  public void visitTokenNode(@NotNull LighterASTTokenNode node) {
+  public void visitTokenNode(@Nonnull LighterASTTokenNode node) {
     visitNode(node);
   }
 
-  public void visitLazyParseableNode(@NotNull LighterLazyParseableNode node) {
+  public void visitLazyParseableNode(@Nonnull LighterLazyParseableNode node) {
     visitNode(node);
   }
 }

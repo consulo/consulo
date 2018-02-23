@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.rename.ResolveSnapshotProvider;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,20 +32,20 @@ public interface ChangeSignatureUsageProcessor {
   ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME =
     new ExtensionPointName<ChangeSignatureUsageProcessor>("com.intellij.refactoring.changeSignatureUsageProcessor");
 
-  @NotNull
-  UsageInfo[] findUsages(@NotNull ChangeInfo info);
+  @Nonnull
+  UsageInfo[] findUsages(@Nonnull ChangeInfo info);
 
-  @NotNull
-  MultiMap<PsiElement, String> findConflicts(@NotNull ChangeInfo info, Ref<UsageInfo[]> refUsages);
+  @Nonnull
+  MultiMap<PsiElement, String> findConflicts(@Nonnull ChangeInfo info, Ref<UsageInfo[]> refUsages);
 
-  boolean processUsage(@NotNull ChangeInfo changeInfo, @NotNull UsageInfo usageInfo, boolean beforeMethodChange, @NotNull UsageInfo[] usages);
+  boolean processUsage(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo usageInfo, boolean beforeMethodChange, @Nonnull UsageInfo[] usages);
 
-  boolean processPrimaryMethod(@NotNull ChangeInfo changeInfo);
+  boolean processPrimaryMethod(@Nonnull ChangeInfo changeInfo);
 
-  boolean shouldPreviewUsages(@NotNull ChangeInfo changeInfo, @NotNull UsageInfo[] usages);
+  boolean shouldPreviewUsages(@Nonnull ChangeInfo changeInfo, @Nonnull UsageInfo[] usages);
 
-  void registerConflictResolvers(@NotNull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
-                                 @NotNull ResolveSnapshotProvider resolveSnapshotProvider,
-                                 @NotNull UsageInfo[] usages,
-                                 @NotNull ChangeInfo changeInfo);
+  void registerConflictResolvers(@Nonnull List<ResolveSnapshotProvider.ResolveSnapshot> snapshots,
+                                 @Nonnull ResolveSnapshotProvider resolveSnapshotProvider,
+                                 @Nonnull UsageInfo[] usages,
+                                 @Nonnull ChangeInfo changeInfo);
 }

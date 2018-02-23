@@ -31,8 +31,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -50,27 +50,27 @@ public class ModuleImportBasedProjectOpenProcessor<C extends ModuleImportContext
     myProvider = provider;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFileSample() {
     return myProvider.getFileSample();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return myProvider.getIcon();
   }
 
   @Override
-  public boolean canOpenProject(@NotNull File file) {
+  public boolean canOpenProject(@Nonnull File file) {
     return myProvider.canImport(file);
   }
 
   @RequiredDispatchThread
   @Nullable
   @Override
-  public Project doOpenProject(@NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
+  public Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame) {
     String pathToBeImported = myProvider.getPathToBeImported(virtualFile);
 
     final String dotIdeaFilePath = pathToBeImported + File.separator + Project.DIRECTORY_STORE_FOLDER;

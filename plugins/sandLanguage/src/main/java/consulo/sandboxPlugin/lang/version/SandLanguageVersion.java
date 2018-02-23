@@ -27,8 +27,8 @@ import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.lexer.SandLexer;
 import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,37 +54,37 @@ public class SandLanguageVersion extends BaseSandLanguageVersion {
     return SandFileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Lexer createLexer() {
     return new SandLexer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getWhitespaceTokens() {
     return TokenSet.create(SandTokens.WHITE_SPACE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getCommentTokens() {
     return TokenSet.create(SandTokens.LINE_COMMENT);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getStringLiteralElements() {
     return TokenSet.EMPTY;
   }
 
   @Override
-  public boolean isMyElement(@Nullable PsiElement element) {
+  public boolean isMyElement(@javax.annotation.Nullable PsiElement element) {
     return true;
   }
 
   @Override
-  public boolean isMyFile(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public boolean isMyFile(@javax.annotation.Nullable Project project, @Nullable VirtualFile virtualFile) {
     return true;
   }
 }

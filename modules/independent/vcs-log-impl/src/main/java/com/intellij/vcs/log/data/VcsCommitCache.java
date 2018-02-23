@@ -17,8 +17,8 @@ package com.intellij.vcs.log.data;
 
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.vcs.log.VcsShortCommitDetails;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -33,23 +33,23 @@ class VcsCommitCache<CommitId, T extends VcsShortCommitDetails> {
 
   private final SLRUMap<CommitId, T> myCache = new SLRUMap<>(5000, 5000);
 
-  public void put(@NotNull CommitId hash, @NotNull T commit) {
+  public void put(@Nonnull CommitId hash, @Nonnull T commit) {
     assert EventQueue.isDispatchThread();
     myCache.put(hash, commit);
   }
 
-  public boolean isKeyCached(@NotNull CommitId hash) {
+  public boolean isKeyCached(@Nonnull CommitId hash) {
     assert EventQueue.isDispatchThread();
     return myCache.get(hash) != null;
   }
 
   @Nullable
-  public T get(@NotNull CommitId hash) {
+  public T get(@Nonnull CommitId hash) {
     assert EventQueue.isDispatchThread();
     return myCache.get(hash);
   }
 
-  public void remove(@NotNull CommitId hash) {
+  public void remove(@Nonnull CommitId hash) {
     assert EventQueue.isDispatchThread();
     myCache.remove(hash);
   }

@@ -34,7 +34,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -125,7 +125,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     return "#com.intellij.featureStatistics.actions.ShowFeatureUsageStatisticsDialog";
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[] {getCancelAction(), getHelpAction()};
   }
@@ -146,7 +146,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     final TableView table = new TableView<FeatureDescriptor>(new ListTableModel<FeatureDescriptor>(COLUMNS, features, 0));
     new TableViewSpeedSearch<FeatureDescriptor>(table) {
       @Override
-      protected String getItemText(@NotNull FeatureDescriptor element) {
+      protected String getItemText(@Nonnull FeatureDescriptor element) {
         return element.getDisplayName();
       }
     };

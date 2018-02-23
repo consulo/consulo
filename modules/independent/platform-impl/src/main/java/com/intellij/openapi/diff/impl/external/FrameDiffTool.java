@@ -31,8 +31,8 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -134,7 +134,7 @@ public class FrameDiffTool implements DiffTool {
   }*/
 
   @Nullable
-  private DiffPanelImpl createDiffPanelIfShouldShow(DiffRequest request, Window window, @NotNull Disposable parentDisposable,
+  private DiffPanelImpl createDiffPanelIfShouldShow(DiffRequest request, Window window, @Nonnull Disposable parentDisposable,
                                                            final boolean showMessage) {
     DiffPanelImpl diffPanel = createDiffPanelImpl(request, window, parentDisposable);
     if (checkNoDifferenceAndNotify(diffPanel, request, window, showMessage)) {
@@ -144,7 +144,7 @@ public class FrameDiffTool implements DiffTool {
     return diffPanel;
   }
 
-  protected DiffPanelImpl createDiffPanelImpl(@NotNull DiffRequest request, @Nullable Window window, @NotNull Disposable parentDisposable) {
+  protected DiffPanelImpl createDiffPanelImpl(@Nonnull DiffRequest request, @Nullable Window window, @Nonnull Disposable parentDisposable) {
     return (DiffPanelImpl) DiffManagerImpl.createDiffPanel(request, window, parentDisposable, this);
   }
 
@@ -219,7 +219,7 @@ public class FrameDiffTool implements DiffTool {
   }
 
   @Override
-  public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+  public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
     return createDiffPanelIfShouldShow(request, window, parentDisposable, false);
   }
 }

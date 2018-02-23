@@ -26,7 +26,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHa
   }
 
   @Override
-  public boolean isEnabled(@NotNull Project project, AnActionEvent event) {
+  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return false;

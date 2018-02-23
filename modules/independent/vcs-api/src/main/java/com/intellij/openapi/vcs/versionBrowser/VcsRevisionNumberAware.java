@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.versionBrowser;
 
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * For classes that are capable to return {@link VcsRevisionNumber}.
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface VcsRevisionNumberAware {
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsRevisionNumber getRevisionNumber();
 
 }

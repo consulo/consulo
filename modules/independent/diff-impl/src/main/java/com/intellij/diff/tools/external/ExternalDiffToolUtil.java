@@ -46,8 +46,8 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.execution.ParametersListUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class ExternalDiffToolUtil {
-  public static boolean canCreateFile(@NotNull DiffContent content) {
+  public static boolean canCreateFile(@Nonnull DiffContent content) {
     if (content instanceof EmptyContent) return true;
     if (content instanceof DocumentContent) return true;
     if (content instanceof FileContent) {
@@ -71,8 +71,8 @@ public class ExternalDiffToolUtil {
     return false;
   }
 
-  @NotNull
-  private static InputFile createFile(@NotNull DiffContent content, @NotNull FileNameInfo fileName)
+  @Nonnull
+  private static InputFile createFile(@Nonnull DiffContent content, @Nonnull FileNameInfo fileName)
           throws IOException {
 
     if (content instanceof EmptyContent) {
@@ -107,8 +107,8 @@ public class ExternalDiffToolUtil {
     throw new IllegalArgumentException(content.toString());
   }
 
-  @NotNull
-  private static File createTempFile(@NotNull final DocumentContent content, @NotNull FileNameInfo fileName) throws IOException {
+  @Nonnull
+  private static File createTempFile(@Nonnull final DocumentContent content, @Nonnull FileNameInfo fileName) throws IOException {
     FileDocumentManager.getInstance().saveDocument(content.getDocument());
 
     LineSeparator separator = content.getLineSeparator();
@@ -137,14 +137,14 @@ public class ExternalDiffToolUtil {
     return createFile(bytes, fileName);
   }
 
-  @NotNull
-  private static File createTempFile(@NotNull VirtualFile file, @NotNull FileNameInfo fileName) throws IOException {
+  @Nonnull
+  private static File createTempFile(@Nonnull VirtualFile file, @Nonnull FileNameInfo fileName) throws IOException {
     byte[] bytes = file.contentsToByteArray();
     return createFile(bytes, fileName);
   }
 
-  @NotNull
-  private static OutputFile createOutputFile(@NotNull DiffContent content, @NotNull FileNameInfo fileName) throws IOException {
+  @Nonnull
+  private static OutputFile createOutputFile(@Nonnull DiffContent content, @Nonnull FileNameInfo fileName) throws IOException {
     if (content instanceof FileContent) {
       VirtualFile file = ((FileContent)content).getFile();
 
@@ -167,16 +167,16 @@ public class ExternalDiffToolUtil {
     throw new IllegalArgumentException(content.toString());
   }
 
-  @NotNull
-  private static File createFile(@NotNull byte[] bytes, @NotNull FileNameInfo fileName) throws IOException {
+  @Nonnull
+  private static File createFile(@Nonnull byte[] bytes, @Nonnull FileNameInfo fileName) throws IOException {
     File tempFile = FileUtil.createTempFile(fileName.prefix + "_", "_" + fileName.name, true);
     FileUtil.writeToFile(tempFile, bytes);
     return tempFile;
   }
 
-  public static void execute(@NotNull ExternalDiffSettings settings,
-                             @NotNull List<? extends DiffContent> contents,
-                             @NotNull List<String> titles,
+  public static void execute(@Nonnull ExternalDiffSettings settings,
+                             @Nonnull List<? extends DiffContent> contents,
+                             @Nonnull List<String> titles,
                              @Nullable String windowTitle)
           throws IOException, ExecutionException {
     assert contents.size() == 2 || contents.size() == 3;
@@ -206,8 +206,8 @@ public class ExternalDiffToolUtil {
   }
 
   public static void executeMerge(@Nullable Project project,
-                                  @NotNull ExternalDiffSettings settings,
-                                  @NotNull ThreesideMergeRequest request)
+                                  @Nonnull ExternalDiffSettings settings,
+                                  @Nonnull ThreesideMergeRequest request)
           throws IOException, ExecutionException {
     boolean success = false;
     OutputFile outputFile = null;
@@ -242,7 +242,7 @@ public class ExternalDiffToolUtil {
 
         ProgressManager.getInstance().run(new Task.Modal(project, "Waiting for External Tool", true) {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             final Semaphore semaphore = new Semaphore(0);
 
             final Thread waiter = new Thread("external process waiter") {
@@ -279,7 +279,7 @@ public class ExternalDiffToolUtil {
       else {
         ProgressManager.getInstance().run(new Task.Modal(project, "Launching External Tool", false) {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             indicator.setIndeterminate(true);
             TimeoutUtil.sleep(1000);
           }
@@ -302,8 +302,8 @@ public class ExternalDiffToolUtil {
     }
   }
 
-  @NotNull
-  private static Process execute(@NotNull String exePath, @NotNull String parametersTemplate, @NotNull Map<String, String> patterns)
+  @Nonnull
+  private static Process execute(@Nonnull String exePath, @Nonnull String parametersTemplate, @Nonnull Map<String, String> patterns)
           throws ExecutionException {
     List<String> parameters = ParametersListUtil.parse(parametersTemplate, true);
 
@@ -332,7 +332,7 @@ public class ExternalDiffToolUtil {
 
 
   private interface InputFile {
-    @NotNull
+    @Nonnull
     String getPath();
 
     void cleanup();
@@ -343,7 +343,7 @@ public class ExternalDiffToolUtil {
   }
 
   private static class LocalOutputFile extends LocalInputFile implements OutputFile {
-    public LocalOutputFile(@NotNull VirtualFile file) {
+    public LocalOutputFile(@Nonnull VirtualFile file) {
       super(file);
     }
 
@@ -354,9 +354,10 @@ public class ExternalDiffToolUtil {
   }
 
   private static class NonLocalOutputFile extends TempInputFile implements OutputFile {
-    @NotNull private final VirtualFile myFile;
+    @Nonnull
+    private final VirtualFile myFile;
 
-    public NonLocalOutputFile(@NotNull VirtualFile file, @NotNull File localFile) {
+    public NonLocalOutputFile(@Nonnull VirtualFile file, @Nonnull File localFile) {
       super(localFile);
       myFile = file;
     }
@@ -368,10 +369,12 @@ public class ExternalDiffToolUtil {
   }
 
   private static class DocumentOutputFile extends TempInputFile implements OutputFile {
-    @NotNull private final Document myDocument;
-    @NotNull private final Charset myCharset;
+    @Nonnull
+    private final Document myDocument;
+    @Nonnull
+    private final Charset myCharset;
 
-    public DocumentOutputFile(@NotNull Document document, @Nullable Charset charset, @NotNull File localFile) {
+    public DocumentOutputFile(@Nonnull Document document, @Nullable Charset charset, @Nonnull File localFile) {
       super(localFile);
       myDocument = document;
       // TODO: potentially dangerous operation - we're using default charset
@@ -388,13 +391,14 @@ public class ExternalDiffToolUtil {
   }
 
   private static class LocalInputFile implements InputFile {
-    @NotNull protected final VirtualFile myFile;
+    @Nonnull
+    protected final VirtualFile myFile;
 
-    public LocalInputFile(@NotNull VirtualFile file) {
+    public LocalInputFile(@Nonnull VirtualFile file) {
       myFile = file;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getPath() {
       return myFile.getPath();
@@ -406,13 +410,14 @@ public class ExternalDiffToolUtil {
   }
 
   private static class TempInputFile implements InputFile {
-    @NotNull protected final File myLocalFile;
+    @Nonnull
+    protected final File myLocalFile;
 
-    public TempInputFile(@NotNull File localFile) {
+    public TempInputFile(@Nonnull File localFile) {
       myLocalFile = localFile;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getPath() {
       return myLocalFile.getPath();
@@ -425,17 +430,19 @@ public class ExternalDiffToolUtil {
   }
 
   private static class FileNameInfo {
-    @NotNull public final String prefix;
-    @NotNull public final String name;
+    @Nonnull
+    public final String prefix;
+    @Nonnull
+    public final String name;
 
-    public FileNameInfo(@NotNull String prefix, @NotNull String name) {
+    public FileNameInfo(@Nonnull String prefix, @Nonnull String name) {
       this.prefix = prefix;
       this.name = name;
     }
 
-    @NotNull
-    public static FileNameInfo create(@NotNull List<? extends DiffContent> contents,
-                                      @NotNull List<String> titles,
+    @Nonnull
+    public static FileNameInfo create(@Nonnull List<? extends DiffContent> contents,
+                                      @Nonnull List<String> titles,
                                       @Nullable String windowTitle,
                                       int index) {
       if (contents.size() == 2) {
@@ -461,16 +468,16 @@ public class ExternalDiffToolUtil {
       }
     }
 
-    @NotNull
-    public static FileNameInfo createMergeResult(@NotNull DiffContent content, @Nullable String windowTitle) {
+    @Nonnull
+    public static FileNameInfo createMergeResult(@Nonnull DiffContent content, @javax.annotation.Nullable String windowTitle) {
       String name = getFileName(content, null, windowTitle);
       return new FileNameInfo("merge_result", name);
     }
 
-    @NotNull
-    private static String getFileName(@NotNull DiffContent content,
-                                      @Nullable String title,
-                                      @Nullable String windowTitle) {
+    @Nonnull
+    private static String getFileName(@Nonnull DiffContent content,
+                                      @javax.annotation.Nullable String title,
+                                      @javax.annotation.Nullable String windowTitle) {
       if (content instanceof EmptyContent) {
         return "no_content.tmp";
       }

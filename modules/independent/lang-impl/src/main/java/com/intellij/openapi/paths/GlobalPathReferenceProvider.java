@@ -20,8 +20,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
   }
 
   @Override
-  public boolean createReferences(@NotNull PsiElement psiElement, final @NotNull List<PsiReference> references, final boolean soft) {
+  public boolean createReferences(@Nonnull PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft) {
     final ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(psiElement);
     if (manipulator == null) {
       return false;
@@ -51,7 +51,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
                               references);
   }
 
-  public boolean createUrlReference(@NotNull PsiElement psiElement, String url, TextRange rangeInElement, @NotNull List<PsiReference> references) {
+  public boolean createUrlReference(@Nonnull PsiElement psiElement, String url, TextRange rangeInElement, @Nonnull List<PsiReference> references) {
     if (isWebReferenceUrl(url)) {
       references.add(new WebReference(psiElement, rangeInElement, url));
       return true;
@@ -69,7 +69,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@NotNull String path, @NotNull final PsiElement element) {
+  public PathReference getPathReference(@Nonnull String path, @Nonnull final PsiElement element) {
     return URLUtil.containsScheme(path) ? new PathReference(path, PathReference.NULL_ICON) : null;
   }
 }

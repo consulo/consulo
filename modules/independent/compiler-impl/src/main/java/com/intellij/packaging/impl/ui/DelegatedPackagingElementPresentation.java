@@ -19,8 +19,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,12 +42,12 @@ public class DelegatedPackagingElementPresentation extends PackagingElementPrese
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     myDelegate.render(presentationData, mainAttributes, commentAttributes);
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getTooltipText() {
     return myDelegate.getTooltipText();
   }

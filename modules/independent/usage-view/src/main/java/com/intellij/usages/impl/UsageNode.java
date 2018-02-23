@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -29,11 +29,11 @@ import java.util.Arrays;
 public class UsageNode extends Node implements Comparable<UsageNode>, Navigatable {
   @Deprecated
   // todo remove in 2018.1
-  public UsageNode(@NotNull Usage usage, UsageViewTreeModelBuilder model) {
+  public UsageNode(@Nonnull Usage usage, UsageViewTreeModelBuilder model) {
     this(null, usage);
   }
 
-  public UsageNode(Node parent, @NotNull Usage usage) {
+  public UsageNode(Node parent, @Nonnull Usage usage) {
     setUserObject(usage);
     setParent(parent);
   }
@@ -51,11 +51,11 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
   }
 
   @Override
-  public int compareTo(@NotNull UsageNode usageNode) {
+  public int compareTo(@Nonnull UsageNode usageNode) {
     return UsageViewImpl.USAGE_COMPARATOR.compare(getUsage(), usageNode.getUsage());
   }
 
-  @NotNull
+  @Nonnull
   public Usage getUsage() {
     return (Usage)getUserObject();
   }
@@ -91,7 +91,7 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
   }
 
   @Override
-  protected String getText(@NotNull final UsageView view) {
+  protected String getText(@Nonnull final UsageView view) {
     try {
       return getUsage().getPresentation().getPlainText();
     }

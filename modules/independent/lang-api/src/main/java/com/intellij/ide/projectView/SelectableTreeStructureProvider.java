@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 
 /**

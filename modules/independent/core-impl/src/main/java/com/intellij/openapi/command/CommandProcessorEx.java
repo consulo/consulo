@@ -17,8 +17,8 @@ package com.intellij.openapi.command;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -28,7 +28,7 @@ public abstract class CommandProcessorEx extends CommandProcessor {
   public abstract void leaveModal();
 
   @Nullable
-  public abstract Object startCommand(@NotNull Project project, @Nls String name, Object groupId, @NotNull UndoConfirmationPolicy undoConfirmationPolicy);
+  public abstract Object startCommand(@Nonnull Project project, @Nls String name, Object groupId, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
 
   public abstract void finishCommand(Project project, final Object command, Throwable throwable);
 }

@@ -44,7 +44,6 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.config.DumbAwareToggleBooleanProperty;
 import com.intellij.util.config.DumbAwareToggleInvertedBooleanProperty;
 import com.intellij.util.config.ToggleBooleanProperty;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +53,8 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
   protected final TestTreeExpander myTreeExpander = new TestTreeExpander();
   protected final FailedTestsNavigator myOccurenceNavigator;
   protected final ScrollToTestSourceAction myScrollToSource;
-  private @Nullable ExportTestResultsAction myExportAction;
+  private @javax.annotation.Nullable
+  ExportTestResultsAction myExportAction;
 
   private final ArrayList<ToggleModelAction> myActions = new ArrayList<ToggleModelAction>();
 

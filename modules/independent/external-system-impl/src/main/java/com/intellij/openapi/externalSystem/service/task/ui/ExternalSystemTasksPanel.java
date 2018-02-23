@@ -45,8 +45,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,18 +60,25 @@ import static com.intellij.openapi.externalSystem.util.ExternalSystemConstants.*
  */
 public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements DataProvider {
 
-  @NotNull private final ExternalSystemRecentTasksList myRecentTasksList;
-  @NotNull private final ExternalSystemTasksTreeModel  myAllTasksModel;
-  @NotNull private final ExternalSystemTasksTree       myAllTasksTree;
-  @NotNull private final ProjectSystemId               myExternalSystemId;
-  @NotNull private final NotificationGroup             myNotificationGroup;
-  @NotNull private final Project                       myProject;
+  @Nonnull
+  private final ExternalSystemRecentTasksList myRecentTasksList;
+  @Nonnull
+  private final ExternalSystemTasksTreeModel  myAllTasksModel;
+  @Nonnull
+  private final ExternalSystemTasksTree       myAllTasksTree;
+  @Nonnull
+  private final ProjectSystemId               myExternalSystemId;
+  @Nonnull
+  private final NotificationGroup             myNotificationGroup;
+  @Nonnull
+  private final Project                       myProject;
 
-  @Nullable private Producer<ExternalTaskExecutionInfo> mySelectedTaskProvider;
+  @javax.annotation.Nullable
+  private Producer<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
-  public ExternalSystemTasksPanel(@NotNull Project project,
-                                  @NotNull ProjectSystemId externalSystemId,
-                                  @NotNull NotificationGroup notificationGroup)
+  public ExternalSystemTasksPanel(@Nonnull Project project,
+                                  @Nonnull ProjectSystemId externalSystemId,
+                                  @Nonnull NotificationGroup notificationGroup)
   {
     super(true);
     myExternalSystemId = externalSystemId;
@@ -137,7 +143,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     setContent(content);
   }
 
-  private static JComponent wrap(@NotNull JComponent content, @NotNull String title) {
+  private static JComponent wrap(@Nonnull JComponent content, @Nonnull String title) {
     JPanel result = new JPanel(new BorderLayout());
     result.setOpaque(false);
     result.setBorder(IdeBorderFactory.createTitledBorder(title, false));
@@ -145,9 +151,9 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
       return myRecentTasksList;
     }
@@ -182,7 +188,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Location buildLocation() {
     if (mySelectedTaskProvider == null) {
       return null;

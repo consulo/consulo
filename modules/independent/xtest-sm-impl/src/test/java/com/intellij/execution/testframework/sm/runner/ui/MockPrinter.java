@@ -19,7 +19,7 @@ import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.testframework.Printable;
 import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockPrinter implements Printer {
   private boolean myShouldReset = false;
@@ -90,7 +90,7 @@ public class MockPrinter implements Printer {
   }
 
   @Override
-  public void onNewAvailable(@NotNull Printable printable) {
+  public void onNewAvailable(@Nonnull Printable printable) {
     printable.printOn(this);
   }
 

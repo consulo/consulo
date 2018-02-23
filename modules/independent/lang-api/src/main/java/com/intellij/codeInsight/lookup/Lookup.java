@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -69,16 +69,16 @@ public interface Lookup {
    * Consider using {@link #getTopLevelEditor()} if you don't need injected editor.
    * @return editor, possibly injected, where this lookup is shown
    */
-  @NotNull
+  @Nonnull
   Editor getEditor();
 
   /**
    * @return the non-injected editor where this lookup is shown
    */
-  @NotNull
+  @Nonnull
   Editor getTopLevelEditor();
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
   /**
@@ -94,11 +94,11 @@ public interface Lookup {
 
   boolean isFocused();
 
-  @NotNull
-  String itemPattern(@NotNull LookupElement element);
+  @Nonnull
+  String itemPattern(@Nonnull LookupElement element);
 
-  @NotNull
-  PrefixMatcher itemMatcher(@NotNull LookupElement item);
+  @Nonnull
+  PrefixMatcher itemMatcher(@Nonnull LookupElement item);
 
   boolean isSelectionTouched();
 

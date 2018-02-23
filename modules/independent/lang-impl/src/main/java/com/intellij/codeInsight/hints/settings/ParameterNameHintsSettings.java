@@ -22,8 +22,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -41,7 +41,7 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
   private static final String DO_NOT_SHOW_IF_PARAM_NAME_CONTAINED_IN_METHOD_NAME = "showIfParamNameContained";
   private static final String SHOW_WHEN_MULTIPLE_PARAMS_WITH_SAME_TYPE = "showWhenMultipleParamsWithSameType";
 
-  @NotNull
+  @Nonnull
   public static ParameterNameHintsSettings getInstance() {
     return ServiceManager.getService(ParameterNameHintsSettings.class);
   }
@@ -134,7 +134,7 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     myIsShowForParamsWithSameType = getBooleanValue(state, SHOW_WHEN_MULTIPLE_PARAMS_WITH_SAME_TYPE, false);
   }
 
-  @NotNull
+  @Nonnull
   private Set<String> extractPatterns(Element element, String tag) {
     List<Element> children = element.getChildren(tag);
     return new LinkedHashSet<>(ContainerUtil.mapNotNull(children, it -> attributeValue(it, PATTERN)));
@@ -183,14 +183,14 @@ public class ParameterNameHintsSettings implements PersistentStateComponent<Elem
     return Boolean.parseBoolean(value);
   }
 
-  @NotNull
+  @Nonnull
   private Set<String> getAddedPatterns(Language language) {
     String key = language.getID();
     Set<String> set = myAddedPatterns.get(key);
     return set == null ? Collections.<String>emptySet() : set;
   }
 
-  @NotNull
+  @Nonnull
   private Set<String> getRemovedPatterns(Language language) {
     String key = language.getID();
     Set<String> set = myRemovedPatterns.get(key);

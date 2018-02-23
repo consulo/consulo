@@ -16,8 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public abstract class ActionGroup extends AnAction {
   private boolean myPopup;
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   public static final ActionGroup EMPTY_GROUP = new ActionGroup() {
-    @NotNull
+    @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
       return EMPTY_ARRAY;
@@ -81,12 +81,12 @@ public abstract class ActionGroup extends AnAction {
    */
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e){
+  public void actionPerformed(@Nonnull AnActionEvent e){
   }
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
   }
 
@@ -134,7 +134,7 @@ public abstract class ActionGroup extends AnAction {
    *
    * @return An array representing children of this group. All returned children must be not <code>null</code>.
    */
-  @NotNull
+  @Nonnull
   public abstract AnAction[] getChildren(@Nullable AnActionEvent e);
 
   final void setAsPrimary(AnAction action, boolean isPrimary) {

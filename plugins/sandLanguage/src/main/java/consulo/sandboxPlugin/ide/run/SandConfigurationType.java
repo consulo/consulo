@@ -20,7 +20,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
@@ -41,7 +41,7 @@ public class SandConfigurationType implements ConfigurationType {
       }
 
       @Override
-      public boolean isApplicable(@NotNull Project project) {
+      public boolean isApplicable(@Nonnull Project project) {
         return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
       }
     };
@@ -62,7 +62,7 @@ public class SandConfigurationType implements ConfigurationType {
     return AllIcons.Nodes.Static;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "#SandConfigurationType";

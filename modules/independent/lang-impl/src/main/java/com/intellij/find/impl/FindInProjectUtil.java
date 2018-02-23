@@ -68,8 +68,8 @@ import com.intellij.util.PatternUtil;
 import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -83,7 +83,7 @@ public class FindInProjectUtil {
   private FindInProjectUtil() {
   }
 
-  public static void setDirectoryName(@NotNull FindModel model, @NotNull DataContext dataContext) {
+  public static void setDirectoryName(@Nonnull FindModel model, @Nonnull DataContext dataContext) {
     PsiElement psiElement = null;
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
@@ -138,13 +138,13 @@ public class FindInProjectUtil {
    * @deprecated to remove in IDEA 16
    */
   @Nullable
-  public static PsiDirectory getPsiDirectory(@NotNull final FindModel findModel, @NotNull Project project) {
+  public static PsiDirectory getPsiDirectory(@Nonnull final FindModel findModel, @Nonnull Project project) {
     VirtualFile directory = getDirectory(findModel);
     return directory == null ? null : PsiManager.getInstance(project).findDirectory(directory);
   }
 
   @Nullable
-  public static VirtualFile getDirectory(@NotNull final FindModel findModel) {
+  public static VirtualFile getDirectory(@Nonnull final FindModel findModel) {
     String directoryName = findModel.getDirectoryName();
     if (findModel.isProjectScope() || StringUtil.isEmpty(directoryName)) {
       return null;
@@ -172,7 +172,7 @@ public class FindInProjectUtil {
   }
 
   /* filter can have form "*.js, !*_min.js", latter means except matched by *_min.js */
-  @NotNull
+  @Nonnull
   public static Condition<CharSequence> createFileMaskCondition(@Nullable String filter) throws PatternSyntaxException {
     if (filter == null) {
       return Conditions.alwaysTrue();
@@ -229,31 +229,31 @@ public class FindInProjectUtil {
   /**
    * @deprecated to remove in IDEA 16
    */
-  public static void findUsages(@NotNull FindModel findModel,
+  public static void findUsages(@Nonnull FindModel findModel,
                                 @Nullable final PsiDirectory psiDirectory,
-                                @NotNull final Project project,
-                                @NotNull final Processor<UsageInfo> consumer,
-                                @NotNull FindUsagesProcessPresentation processPresentation) {
+                                @Nonnull final Project project,
+                                @Nonnull final Processor<UsageInfo> consumer,
+                                @Nonnull FindUsagesProcessPresentation processPresentation) {
     findUsages(findModel, project, consumer, processPresentation);
   }
 
-  public static void findUsages(@NotNull FindModel findModel,
-                                @NotNull final Project project,
-                                @NotNull final Processor<UsageInfo> consumer,
-                                @NotNull FindUsagesProcessPresentation processPresentation) {
+  public static void findUsages(@Nonnull FindModel findModel,
+                                @Nonnull final Project project,
+                                @Nonnull final Processor<UsageInfo> consumer,
+                                @Nonnull FindUsagesProcessPresentation processPresentation) {
     findUsages(findModel, project, consumer, processPresentation, Collections.emptySet());
   }
 
-  public static void findUsages(@NotNull FindModel findModel,
-                                @NotNull final Project project,
-                                @NotNull final Processor<UsageInfo> consumer,
-                                @NotNull FindUsagesProcessPresentation processPresentation,
-                                @NotNull Set<VirtualFile> filesToStart) {
+  public static void findUsages(@Nonnull FindModel findModel,
+                                @Nonnull final Project project,
+                                @Nonnull final Processor<UsageInfo> consumer,
+                                @Nonnull FindUsagesProcessPresentation processPresentation,
+                                @Nonnull Set<VirtualFile> filesToStart) {
     new FindInProjectTask(findModel, project, filesToStart).findUsages(consumer, processPresentation);
   }
 
   // returns number of hits
-  static int processUsagesInFile(@NotNull final PsiFile psiFile, @NotNull final VirtualFile virtualFile, @NotNull final FindModel findModel, @NotNull final Processor<UsageInfo> consumer) {
+  static int processUsagesInFile(@Nonnull final PsiFile psiFile, @Nonnull final VirtualFile virtualFile, @Nonnull final FindModel findModel, @Nonnull final Processor<UsageInfo> consumer) {
     if (findModel.getStringToFind().isEmpty()) {
       if (!ReadAction.compute(() -> consumer.process(new UsageInfo(psiFile)))) {
         throw new ProcessCanceledException();
@@ -280,11 +280,11 @@ public class FindInProjectUtil {
     return count;
   }
 
-  private static int addToUsages(@NotNull Document document,
-                                 @NotNull Processor<UsageInfo> consumer,
-                                 @NotNull FindModel findModel,
-                                 @NotNull final PsiFile psiFile,
-                                 @NotNull int[] offsetRef,
+  private static int addToUsages(@Nonnull Document document,
+                                 @Nonnull Processor<UsageInfo> consumer,
+                                 @Nonnull FindModel findModel,
+                                 @Nonnull final PsiFile psiFile,
+                                 @Nonnull int[] offsetRef,
                                  int maxUsages) {
     int count = 0;
     CharSequence text = document.getCharsSequence();
@@ -324,8 +324,8 @@ public class FindInProjectUtil {
     return count;
   }
 
-  @NotNull
-  private static String getTitleForScope(@NotNull final FindModel findModel) {
+  @Nonnull
+  private static String getTitleForScope(@Nonnull final FindModel findModel) {
     String scopeName;
     if (findModel.isProjectScope()) {
       scopeName = FindBundle.message("find.scope.project.title");
@@ -348,8 +348,8 @@ public class FindInProjectUtil {
     return result;
   }
 
-  @NotNull
-  public static UsageViewPresentation setupViewPresentation(final boolean toOpenInNewTab, @NotNull FindModel findModel) {
+  @Nonnull
+  public static UsageViewPresentation setupViewPresentation(final boolean toOpenInNewTab, @Nonnull FindModel findModel) {
     final UsageViewPresentation presentation = new UsageViewPresentation();
 
     final String scope = getTitleForScope(findModel);
@@ -380,8 +380,8 @@ public class FindInProjectUtil {
     return presentation;
   }
 
-  @NotNull
-  public static FindUsagesProcessPresentation setupProcessPresentation(@NotNull final Project project, final boolean showPanelIfOnlyOneUsage, @NotNull final UsageViewPresentation presentation) {
+  @Nonnull
+  public static FindUsagesProcessPresentation setupProcessPresentation(@Nonnull final Project project, final boolean showPanelIfOnlyOneUsage, @Nonnull final UsageViewPresentation presentation) {
     FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(true);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
@@ -414,8 +414,8 @@ public class FindInProjectUtil {
     return result != null ? result : Collections.emptyList();
   }
 
-  @NotNull
-  static String buildStringToFindForIndicesFromRegExp(@NotNull String stringToFind, @NotNull Project project) {
+  @Nonnull
+  static String buildStringToFindForIndicesFromRegExp(@Nonnull String stringToFind, @Nonnull Project project) {
     if (!Registry.is("idea.regexp.search.uses.indices")) return "";
 
     return ReadAction.compute(() -> {
@@ -438,7 +438,7 @@ public class FindInProjectUtil {
     });
   }
 
-  public static void initStringToFindFromDataContext(FindModel findModel, @NotNull DataContext dataContext) {
+  public static void initStringToFindFromDataContext(FindModel findModel, @Nonnull DataContext dataContext) {
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     FindUtil.initStringToFindWithSelection(findModel, editor);
     if (editor == null || !editor.getSelectionModel().hasSelection()) {
@@ -447,24 +447,24 @@ public class FindInProjectUtil {
   }
 
   public static class StringUsageTarget implements ConfigurableUsageTarget, ItemPresentation, TypeSafeDataProvider {
-    @NotNull
+    @Nonnull
     protected final Project myProject;
-    @NotNull
+    @Nonnull
     protected final FindModel myFindModel;
 
-    public StringUsageTarget(@NotNull Project project, @NotNull FindModel findModel) {
+    public StringUsageTarget(@Nonnull Project project, @Nonnull FindModel findModel) {
       myProject = project;
       myFindModel = findModel;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getPresentableText() {
       UsageViewPresentation presentation = setupViewPresentation(false, myFindModel);
       return presentation.getToolwindowTitle();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getLongDescriptiveName() {
       return getPresentableText();
@@ -486,11 +486,11 @@ public class FindInProjectUtil {
     }
 
     @Override
-    public void findUsagesInEditor(@NotNull FileEditor editor) {
+    public void findUsagesInEditor(@Nonnull FileEditor editor) {
     }
 
     @Override
-    public void highlightUsages(@NotNull PsiFile file, @NotNull Editor editor, boolean clearHighlights) {
+    public void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights) {
     }
 
     @Override
@@ -560,7 +560,7 @@ public class FindInProjectUtil {
     }
   }
 
-  private static void addSourceDirectoriesFromLibraries(@NotNull Project project, @NotNull VirtualFile directory, @NotNull Collection<VirtualFile> outSourceRoots) {
+  private static void addSourceDirectoriesFromLibraries(@Nonnull Project project, @Nonnull VirtualFile directory, @Nonnull Collection<VirtualFile> outSourceRoots) {
     ProjectFileIndex index = ProjectFileIndex.getInstance(project);
     // if we already are in the sources, search just in this directory only
     if (!index.isInLibraryClasses(directory)) return;
@@ -600,8 +600,8 @@ public class FindInProjectUtil {
     outSourceRoots.addAll(otherSourceRoots);
   }
 
-  @NotNull
-  static SearchScope getScopeFromModel(@NotNull Project project, @NotNull FindModel findModel) {
+  @Nonnull
+  static SearchScope getScopeFromModel(@Nonnull Project project, @Nonnull FindModel findModel) {
     SearchScope customScope = findModel.getCustomScope();
     VirtualFile directory = getDirectory(findModel);
     Module module = findModel.getModuleName() == null ? null : ModuleManager.getInstance(project).findModuleByName(findModel.getModuleName());
@@ -613,8 +613,8 @@ public class FindInProjectUtil {
            : module != null ? module.getModuleContentScope() : findModel.isProjectScope() ? ProjectScope.getContentScope(project) : GlobalSearchScope.allScope(project);
   }
 
-  @NotNull
-  private static GlobalSearchScope forDirectory(@NotNull Project project, boolean withSubdirectories, @NotNull VirtualFile directory) {
+  @Nonnull
+  private static GlobalSearchScope forDirectory(@Nonnull Project project, boolean withSubdirectories, @Nonnull VirtualFile directory) {
     Set<VirtualFile> result = new LinkedHashSet<>();
     result.add(directory);
     addSourceDirectoriesFromLibraries(project, directory, result);

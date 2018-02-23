@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.util.WalkingState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisitor {
   private final boolean myDoTransform;
@@ -33,22 +33,22 @@ public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisi
 
   private static class ASTTreeGuide implements WalkingState.TreeGuide<ASTNode> {
     @Override
-    public ASTNode getNextSibling(@NotNull ASTNode element) {
+    public ASTNode getNextSibling(@Nonnull ASTNode element) {
       return element.getTreeNext();
     }
 
     @Override
-    public ASTNode getPrevSibling(@NotNull ASTNode element) {
+    public ASTNode getPrevSibling(@Nonnull ASTNode element) {
       return element.getTreePrev();
     }
 
     @Override
-    public ASTNode getFirstChild(@NotNull ASTNode element) {
+    public ASTNode getFirstChild(@Nonnull ASTNode element) {
       return element.getFirstChildNode();
     }
 
     @Override
-    public ASTNode getParent(@NotNull ASTNode element) {
+    public ASTNode getParent(@Nonnull ASTNode element) {
       return element.getTreeParent();
     }
 
@@ -57,11 +57,11 @@ public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisi
 
   private final WalkingState<ASTNode> myWalkingState = new WalkingState<ASTNode>(ASTTreeGuide.instance) {
     @Override
-    public void elementFinished(@NotNull ASTNode element) {
+    public void elementFinished(@Nonnull ASTNode element) {
     }
 
     @Override
-    public void visit(@NotNull ASTNode element) {
+    public void visit(@Nonnull ASTNode element) {
       ((TreeElement)element).acceptTree(RecursiveTreeElementWalkingVisitor.this);
     }
   };

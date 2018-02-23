@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -97,7 +97,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
     return isToBeShown(featureId, project, HOUR);
   }
 
-  @NotNull
+  @Nonnull
   public CompletionStatistics getCompletionStatistics() {
     return myCompletionStats;
   }

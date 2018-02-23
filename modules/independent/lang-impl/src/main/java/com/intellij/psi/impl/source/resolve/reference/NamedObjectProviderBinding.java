@@ -26,8 +26,8 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +40,10 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   private final ConcurrentMap<String, List<ProviderInfo<Provider, ElementPattern>>> myNamesToProvidersMap = new ConcurrentHashMap<String, List<ProviderInfo<Provider,ElementPattern>>>(5);
   private final ConcurrentMap<String, List<ProviderInfo<Provider, ElementPattern>>> myNamesToProvidersMapInsensitive = new ConcurrentHashMap<String, List<ProviderInfo<Provider, ElementPattern>>>(5);
 
-  public void registerProvider(@NonNls @NotNull String[] names,
-                               @NotNull ElementPattern filter,
+  public void registerProvider(@NonNls @Nonnull String[] names,
+                               @Nonnull ElementPattern filter,
                                boolean caseSensitive,
-                               @NotNull Provider provider,
+                               @Nonnull Provider provider,
                                final double priority) {
     final ConcurrentMap<String, List<ProviderInfo<Provider, ElementPattern>>> map = caseSensitive ? myNamesToProvidersMap : myNamesToProvidersMapInsensitive;
 
@@ -60,9 +60,9 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   }
 
   @Override
-  public void addAcceptableReferenceProviders(@NotNull PsiElement position,
-                                              @NotNull List<ProviderInfo<Provider, ProcessingContext>> list,
-                                              @NotNull PsiReferenceService.Hints hints) {
+  public void addAcceptableReferenceProviders(@Nonnull PsiElement position,
+                                              @Nonnull List<ProviderInfo<Provider, ProcessingContext>> list,
+                                              @Nonnull PsiReferenceService.Hints hints) {
     String name = getName(position);
     if (name != null) {
       addMatchingProviders(position, myNamesToProvidersMap.get(name), list, hints);
@@ -71,7 +71,7 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
   }
 
   @Override
-  public void unregisterProvider(@NotNull final Provider provider) {
+  public void unregisterProvider(@Nonnull final Provider provider) {
     for (final List<ProviderInfo<Provider, ElementPattern>> list : myNamesToProvidersMap.values()) {
       for (final ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<ProviderInfo<Provider,ElementPattern>>(list)) {
         if (trinity.provider.equals(provider)) {
@@ -93,7 +93,7 @@ public abstract class NamedObjectProviderBinding<Provider> implements ProviderBi
 
   private void addMatchingProviders(final PsiElement position,
                                     @Nullable final List<ProviderInfo<Provider, ElementPattern>> providerList,
-                                    @NotNull List<ProviderInfo<Provider, ProcessingContext>> ret,
+                                    @Nonnull List<ProviderInfo<Provider, ProcessingContext>> ret,
                                     PsiReferenceService.Hints hints) {
     if (providerList == null) return;
 

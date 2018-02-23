@@ -18,7 +18,7 @@ package com.intellij.vcs.log.ui.render;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +29,14 @@ import java.awt.image.BufferedImage;
 
 public class LabelIcon implements Icon {
   private final int mySize;
-  @NotNull private final Color[] myColors;
-  @NotNull private final Color myBgColor;
-  @NotNull private final BufferedImage myImage;
+  @Nonnull
+  private final Color[] myColors;
+  @Nonnull
+  private final Color myBgColor;
+  @Nonnull
+  private final BufferedImage myImage;
 
-  public LabelIcon(int size, @NotNull Color bgColor, @NotNull Color... colors) {
+  public LabelIcon(int size, @Nonnull Color bgColor, @Nonnull Color... colors) {
     mySize = size;
     myBgColor = bgColor;
     myColors = colors;
@@ -47,7 +50,7 @@ public class LabelIcon implements Icon {
     UIUtil.drawImage(g, myImage, x, y, null);
   }
 
-  private void paintIcon(@NotNull Graphics2D g2) {
+  private void paintIcon(@Nonnull Graphics2D g2) {
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
 
     float scale = mySize / 8.0f;

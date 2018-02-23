@@ -25,7 +25,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringTokenizer;
 import consulo.startup.StartupActionLogger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class BootstrapClassLoaderUtil extends ClassUtilCore {
     return Logger.getInstance(BootstrapClassLoaderUtil.class);
   }
 
-  @NotNull
+  @Nonnull
   public static ClassLoader initClassLoader(boolean updatePlugins) throws MalformedURLException {
     PathManager.loadProperties();
 

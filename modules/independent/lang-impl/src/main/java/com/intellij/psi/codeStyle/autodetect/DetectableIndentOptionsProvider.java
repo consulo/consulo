@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -51,13 +51,13 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
 
   @Nullable
   @Override
-  public CommonCodeStyleSettings.IndentOptions getIndentOptions(@NotNull CodeStyleSettings settings, @NotNull PsiFile file) {
+  public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
     return isDocumentCommitted(file) && isEnabled(settings, file)
            ? new IndentOptionsDetectorImpl(file).getIndentOptions()
            : null;
   }
 
-  private static boolean isDocumentCommitted(@NotNull PsiFile file) {
+  private static boolean isDocumentCommitted(@Nonnull PsiFile file) {
     PsiDocumentManager manager = PsiDocumentManager.getInstance(file.getProject());
     Document document = manager.getDocument(file);
     return document != null && manager.isCommitted(document);
@@ -73,7 +73,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
     myIsEnabledInTest = isEnabledInTest;
   }
 
-  private boolean isEnabled(@NotNull CodeStyleSettings settings, @NotNull PsiFile file) {
+  private boolean isEnabled(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file) {
     if (file instanceof PsiCompiledFile) return false;
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myIsEnabledInTest;
@@ -91,11 +91,11 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
 
   @Nullable
   @Override
-  public EditorNotificationInfo getNotificationInfo(@NotNull final Project project,
-                                                    @NotNull final VirtualFile file,
-                                                    @NotNull final FileEditor fileEditor,
-                                                    @NotNull CommonCodeStyleSettings.IndentOptions userOptions,
-                                                    @NotNull CommonCodeStyleSettings.IndentOptions detectedOptions)
+  public EditorNotificationInfo getNotificationInfo(@Nonnull final Project project,
+                                                    @Nonnull final VirtualFile file,
+                                                    @Nonnull final FileEditor fileEditor,
+                                                    @Nonnull CommonCodeStyleSettings.IndentOptions userOptions,
+                                                    @Nonnull CommonCodeStyleSettings.IndentOptions detectedOptions)
   {
     final NotificationLabels labels = getNotificationLabels(userOptions, detectedOptions);
     final Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null;
@@ -136,13 +136,13 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
 
     final List<ActionLabelData> actions = ContainerUtil.newArrayList(okAction, disableForSingleFile, showSettings);
     return new EditorNotificationInfo() {
-      @NotNull
+      @Nonnull
       @Override
       public List<ActionLabelData> getLabelAndActions() {
         return actions;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getTitle() {
         return labels.title;
@@ -151,8 +151,8 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
   }
 
   @Nullable
-  private static NotificationLabels getNotificationLabels(@NotNull CommonCodeStyleSettings.IndentOptions userOptions,
-                                                          @NotNull CommonCodeStyleSettings.IndentOptions detectedOptions) {
+  private static NotificationLabels getNotificationLabels(@Nonnull CommonCodeStyleSettings.IndentOptions userOptions,
+                                                          @Nonnull CommonCodeStyleSettings.IndentOptions detectedOptions) {
     if (userOptions.USE_TAB_CHARACTER) {
       if (!detectedOptions.USE_TAB_CHARACTER) {
         return new NotificationLabels(ApplicationBundle.message("code.style.space.indent.detected", detectedOptions.INDENT_SIZE),
@@ -173,17 +173,17 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
     return null;
   }
 
-  private void disableForFile(@NotNull VirtualFile file) {
+  private void disableForFile(@Nonnull VirtualFile file) {
     myDisabledFiles.add(file);
   }
 
   @Override
-  public void setAccepted(@NotNull VirtualFile file) {
+  public void setAccepted(@Nonnull VirtualFile file) {
     myAcceptedFiles.add(file);
   }
 
   @Override
-  public boolean isAcceptedWithoutWarning(@Nullable Project project, @NotNull VirtualFile file) {
+  public boolean isAcceptedWithoutWarning(@Nullable Project project, @Nonnull VirtualFile file) {
     return !FileIndentOptionsProvider.isShowNotification() || myAcceptedFiles.contains(file);
   }
 
@@ -191,7 +191,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider i
     public final String title;
     public final String revertToOldSettingsLabel;
 
-    public NotificationLabels(@NotNull String title, @NotNull String revertToOldSettingsLabel) {
+    public NotificationLabels(@Nonnull String title, @Nonnull String revertToOldSettingsLabel) {
       this.title = title;
       this.revertToOldSettingsLabel = revertToOldSettingsLabel;
     }

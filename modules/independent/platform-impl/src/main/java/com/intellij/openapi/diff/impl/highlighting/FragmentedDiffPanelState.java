@@ -31,9 +31,9 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.Consumer;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -56,7 +56,7 @@ public class FragmentedDiffPanelState extends DiffPanelState {
                                   Project project,
                                   int diffDividerPolygonsOffset,
                                   boolean drawNumber,
-                                  @NotNull Disposable parentDisposable) {
+                                  @Nonnull Disposable parentDisposable) {
     super(changeListener, project, diffDividerPolygonsOffset, parentDisposable);
     myFragmentHighlighter = new NumberedFragmentHighlighter(myAppender1, myAppender2, drawNumber);
     mySeparatorsPositionConsumer = new FragmentSeparatorsPositionConsumer();

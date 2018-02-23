@@ -26,7 +26,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.MessageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,20 +60,20 @@ public class MessageViewImpl implements MessageView {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ToolWindow getToolWindow() {
     return myToolWindow;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ContentManager getContentManager() {
     return myToolWindow.getContentManager();
   }
 
   @Override
-  public void runWhenInitialized(@NotNull Runnable runnable) {
+  public void runWhenInitialized(@Nonnull Runnable runnable) {
     if (myToolWindow != null) {
       runnable.run();
     }

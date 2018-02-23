@@ -17,8 +17,8 @@ package com.intellij.execution.process;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -50,37 +50,37 @@ public class ProcessOutput {
     myStderrBuilder.append(text);
   }
 
-  @NotNull
+  @Nonnull
   public String getStdout() {
     return myStdoutBuilder.toString();
   }
 
-  @NotNull
+  @Nonnull
   public String getStderr() {
     return myStderrBuilder.toString();
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getStdoutLines() {
     return getStdoutLines(true);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getStdoutLines(boolean excludeEmptyLines) {
     return splitLines(getStdout(), excludeEmptyLines);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getStderrLines() {
     return getStderrLines(true);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getStderrLines(boolean excludeEmptyLines) {
     return splitLines(getStderr(), excludeEmptyLines);
   }
 
-  @NotNull
+  @Nonnull
   private static List<String> splitLines(String s, boolean excludeEmptyLines) {
     String converted = StringUtil.convertLineSeparators(s);
     return StringUtil.split(converted, "\n", true, excludeEmptyLines);
@@ -93,7 +93,7 @@ public class ProcessOutput {
    * @param logger where to put error information
    * @return true iff exit code is zero
    */
-  public boolean checkSuccess(@NotNull final Logger logger) {
+  public boolean checkSuccess(@Nonnull final Logger logger) {
     if (getExitCode() != 0 || isTimeout()) {
       logger.info(getStderr() + (isTimeout()? "\nTimed out" : "\nExit code " + getExitCode()));
       return false;

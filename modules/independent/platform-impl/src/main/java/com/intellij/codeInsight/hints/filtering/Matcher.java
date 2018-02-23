@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hints.filtering;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class Matcher implements MethodMatcher {
   }
 
   @Override
-  public boolean isMatching(@NotNull String fullyQualifiedMethodName, @NotNull List<String> paramNames) {
+  public boolean isMatching(@Nonnull String fullyQualifiedMethodName, @Nonnull List<String> paramNames) {
     return myMethodNameMatcher.isMatching(fullyQualifiedMethodName) && myParamMatcher.isMatching(paramNames);
   }
 }

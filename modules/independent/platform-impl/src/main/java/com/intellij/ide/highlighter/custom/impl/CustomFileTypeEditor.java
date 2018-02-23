@@ -27,7 +27,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -119,7 +119,7 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
     type.setSyntaxTable(getSyntaxTable());
   }
 
-  @NotNull
+  @Nonnull
   public JComponent createEditor() {
     JComponent panel = createCenterPanel();
     for (int i = 0; i < myKeywordsLists.length; i++) {

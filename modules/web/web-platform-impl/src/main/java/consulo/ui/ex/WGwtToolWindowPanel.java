@@ -28,8 +28,8 @@ import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final WGwtToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack) {
+    public AddToolStripeButtonCmd(final WGwtToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;
@@ -82,7 +82,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
   private final class UpdateButtonPositionCmd extends FinalizableCommand {
     private final String myId;
 
-    private UpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+    private UpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myId = id;
     }
@@ -125,7 +125,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddDockedComponentCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myDecorator = decorator;
       myInfo = info;
@@ -149,7 +149,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveDockedComponentCmd(@NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -196,7 +196,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     myChildren.add(component);
   }
 
-  private void setComponent(@Nullable ToolWindowInternalDecorator d, @NotNull ToolWindowAnchor anchor, final float weight) {
+  private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, final float weight) {
     WebToolWindowInternalDecorator decorator = (WebToolWindowInternalDecorator)d;
 
     consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
@@ -222,7 +222,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private WGwtToolWindowStripeButton getButtonById(final String id) {
     return myId2Button.get(id);
   }
@@ -244,20 +244,20 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FinalizableCommand createAddButtonCmd(ToolWindowStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack) {
+  public FinalizableCommand createAddButtonCmd(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
     myId2Button.put(copiedInfo.getId(), (WGwtToolWindowStripeButton)button);
     return new AddToolStripeButtonCmd((WGwtToolWindowStripeButton)button, copiedInfo, comparator, finishCallBack);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+  public FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
     return new FinalizableCommand(finishCallBack) {
       @Override
       public void run() {
@@ -266,9 +266,9 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+  public FinalizableCommand createRemoveDecoratorCmd(@Nonnull String id, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
     final ToolWindowInternalDecorator decorator = getDecoratorById(id);
     final WindowInfoImpl info = getDecoratorInfoById(id);
 
@@ -313,9 +313,9 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     return myId2Decorator.get(id);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+  public FinalizableCommand createAddDecoratorCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
     final String id = copiedInfo.getId();
 
@@ -351,7 +351,7 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     }
   }
 
-  private WindowInfoImpl getDockedInfoAt(@NotNull ToolWindowAnchor anchor, boolean side) {
+  private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
     for (WindowInfoImpl info : myDecorator2Info.values()) {
       if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
         return info;
@@ -361,9 +361,9 @@ public class WGwtToolWindowPanel extends AbstractComponentContainer implements c
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
+  public FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback) {
     return new UpdateButtonPositionCmd(id, finishCallback);
   }
 }

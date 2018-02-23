@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -46,7 +46,7 @@ public interface SoftWrapPainter {
    * @param lineHeight    line height used at editor
    * @return              horizontal offset introduced to the given 'x' coordinate after target drawing painting
    */
-  int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask about horizontal offset to be applied to the given <code>'x'</code> coordinate if drawing of the given
@@ -63,7 +63,7 @@ public interface SoftWrapPainter {
    * @param lineHeight    line height used at editor
    * @return              horizontal offset that would be introduced if the drawing is performed
    */
-  int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask for the minimal width in pixels required for painting of the given type.
@@ -71,7 +71,7 @@ public interface SoftWrapPainter {
    * @param drawingType   target drawing type
    * @return              width in pixels required for the painting of the given type
    */
-  int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType);
+  int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType);
 
   /**
    * Allows to answer if it's possible to use current painter implementation at local environment (e.g. there is a possible

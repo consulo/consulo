@@ -27,8 +27,8 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,24 +38,25 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   private static final int MAX_FILTER_VALUE_LENGTH = 30;
 
-  @NotNull protected final MainVcsLogUiProperties myUiProperties;
+  @Nonnull
+  protected final MainVcsLogUiProperties myUiProperties;
 
-  MultipleValueFilterPopupComponent(@NotNull String filterName,
-                                    @NotNull MainVcsLogUiProperties uiProperties,
-                                    @NotNull FilterModel<Filter> filterModel) {
+  MultipleValueFilterPopupComponent(@Nonnull String filterName,
+                                    @Nonnull MainVcsLogUiProperties uiProperties,
+                                    @Nonnull FilterModel<Filter> filterModel) {
     super(filterName, filterModel);
     myUiProperties = uiProperties;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract List<List<String>> getRecentValuesFromSettings();
 
-  protected abstract void rememberValuesInSettings(@NotNull Collection<String> values);
+  protected abstract void rememberValuesInSettings(@Nonnull Collection<String> values);
 
-  @NotNull
+  @Nonnull
   protected abstract List<String> getAllValues();
 
-  @NotNull
+  @Nonnull
   protected ActionGroup createRecentItemsActionGroup() {
     DefaultActionGroup group = new DefaultActionGroup();
     List<List<String>> recentlyFiltered = getRecentValuesFromSettings();
@@ -71,20 +72,20 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     return group;
   }
 
-  @NotNull
-  static String displayableText(@NotNull Collection<String> values) {
+  @Nonnull
+  static String displayableText(@Nonnull Collection<String> values) {
     if (values.size() == 1) {
       return values.iterator().next();
     }
     return StringUtil.shortenTextWithEllipsis(StringUtil.join(values, "|"), MAX_FILTER_VALUE_LENGTH, 0, true);
   }
 
-  @NotNull
-  static String tooltip(@NotNull Collection<String> values) {
+  @Nonnull
+  static String tooltip(@Nonnull Collection<String> values) {
     return StringUtil.join(values, ", ");
   }
 
-  @NotNull
+  @Nonnull
   protected AnAction createSelectMultipleValuesAction() {
     return new SelectMultipleValuesAction();
   }
@@ -98,20 +99,21 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   protected class PredefinedValueAction extends DumbAwareAction {
 
-    @NotNull protected final List<String> myValues;
+    @Nonnull
+    protected final List<String> myValues;
 
-    public PredefinedValueAction(@NotNull String value) {
+    public PredefinedValueAction(@Nonnull String value) {
       this(Collections.singletonList(value));
     }
 
-    public PredefinedValueAction(@NotNull List<String> values) {
+    public PredefinedValueAction(@Nonnull List<String> values) {
       super(null, tooltip(values), null);
       getTemplatePresentation().setText(displayableText(values), false);
       myValues = values;
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myFilterModel.setFilter(myFilterModel.createFilter(myValues));
       rememberValuesInSettings(myValues);
     }
@@ -119,7 +121,8 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   private class SelectMultipleValuesAction extends DumbAwareAction {
 
-    @NotNull private final Collection<String> myVariants;
+    @Nonnull
+    private final Collection<String> myVariants;
 
     SelectMultipleValuesAction() {
       super("Select...");
@@ -127,7 +130,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       Project project = e.getProject();
       if (project == null) {
         return;
@@ -159,7 +162,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
       popup.showUnderneathOf(MultipleValueFilterPopupComponent.this);
     }
 
-    @NotNull
+    @Nonnull
     private String getPopupText(@Nullable Collection<String> selectedValues) {
       return selectedValues == null || selectedValues.isEmpty() ? "" : StringUtil.join(selectedValues, "\n");
     }

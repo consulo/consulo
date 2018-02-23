@@ -15,8 +15,8 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SerializationFilter {
-  boolean accepts(@NotNull Accessor accessor, @NotNull Object bean);
+  boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean);
 }

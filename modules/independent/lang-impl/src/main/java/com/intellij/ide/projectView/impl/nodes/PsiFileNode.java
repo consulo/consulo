@@ -39,8 +39,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.vfs.util.ArchiveVfsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -202,7 +202,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return super.contains(file) || isArchive() && Comparing.equal(PathUtil.getLocalFile(file), getVirtualFile());
   }
 }

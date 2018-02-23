@@ -20,14 +20,14 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ArchiveFileDiffElement extends VirtualFileDiffElement {
   @SuppressWarnings({"ConstantConditions"})
-  public ArchiveFileDiffElement(@NotNull VirtualFile file) {
+  public ArchiveFileDiffElement(@Nonnull VirtualFile file) {
     super(file.getFileSystem() instanceof ArchiveFileSystem ? file : ArchiveVfsUtil.getArchiveRootForLocalFile(file));
   }
 

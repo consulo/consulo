@@ -19,8 +19,8 @@ import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -43,7 +43,7 @@ public class DelegatedSourceItemPresentation extends SourceItemPresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     myPresentation.render(presentationData, mainAttributes, commentAttributes);
   }
 

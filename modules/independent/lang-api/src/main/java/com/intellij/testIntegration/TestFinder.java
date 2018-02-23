@@ -18,21 +18,20 @@ package com.intellij.testIntegration;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface TestFinder {
   ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create("com.intellij.testFinder");
 
-  @Nullable
-  PsiElement findSourceElement(@NotNull PsiElement from);
+  @javax.annotation.Nullable
+  PsiElement findSourceElement(@Nonnull PsiElement from);
 
-  @NotNull
-  Collection<PsiElement> findTestsForClass(@NotNull PsiElement element);
-  @NotNull
-  Collection<PsiElement> findClassesForTest(@NotNull PsiElement element);
+  @Nonnull
+  Collection<PsiElement> findTestsForClass(@Nonnull PsiElement element);
+  @Nonnull
+  Collection<PsiElement> findClassesForTest(@Nonnull PsiElement element);
 
-  boolean isTest(@NotNull PsiElement element);
+  boolean isTest(@Nonnull PsiElement element);
 }

@@ -20,25 +20,25 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class EncodingReferenceInjector extends ReferenceInjector {
-  @NotNull
+  @Nonnull
   @Override
-  public PsiReference[] getReferences(@NotNull PsiElement element, @NotNull ProcessingContext context, @NotNull TextRange range) {
+  public PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull ProcessingContext context, @Nonnull TextRange range) {
     return new PsiReference[]{new EncodingReference(element, range.substring(element.getText()), range)};
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "encoding-reference";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Encoding Name";

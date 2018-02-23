@@ -19,7 +19,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.util.NullableComputable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.proximity.PsiProximityComparator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class LookupElementProximityWeigher extends CompletionWeigher {
 
   @Override
-  public Comparable weigh(@NotNull final LookupElement item, @NotNull final CompletionLocation location) {
+  public Comparable weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
     if (item.getObject() instanceof PsiElement) {
       return PsiProximityComparator.getProximity((NullableComputable<PsiElement>)() -> item.getPsiElement(), location.getCompletionParameters().getPosition(), location.getProcessingContext());
     }

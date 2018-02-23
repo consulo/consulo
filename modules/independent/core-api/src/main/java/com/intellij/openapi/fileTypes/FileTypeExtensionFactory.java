@@ -24,15 +24,15 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FileTypeExtensionFactory<T> extends KeyedExtensionFactory<T, FileType> {
-  public FileTypeExtensionFactory(@NotNull final Class<T> interfaceClass, @NonNls @NotNull final ExtensionPointName<KeyedFactoryEPBean> epName) {
+  public FileTypeExtensionFactory(@Nonnull final Class<T> interfaceClass, @NonNls @Nonnull final ExtensionPointName<KeyedFactoryEPBean> epName) {
     super(interfaceClass, epName, ApplicationManager.getApplication().getPicoContainer());
   }
 
   @Override
-  public String getKey(@NotNull final FileType key) {
+  public String getKey(@Nonnull final FileType key) {
     return key.getId();
   }
 }

@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -52,7 +52,7 @@ public class MockRuntimeConfiguration extends RuntimeConfiguration {
   }
 
   @Override
-  public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     return null;
   }
 
@@ -85,7 +85,7 @@ public class MockRuntimeConfiguration extends RuntimeConfiguration {
     }
 
     @Override
-    @NotNull
+    @Nonnull
       public String getId() {
       return "MockRuntimeConfiguration";
     }

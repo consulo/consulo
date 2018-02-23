@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -37,7 +37,7 @@ public class ReopenClosedTabAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);
     if (window != null) {
       window.restoreClosedTab();
@@ -58,7 +58,7 @@ public class ReopenClosedTabAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final EditorWindow window = getEditorWindow(e);
     e.getPresentation().setEnabled(window != null && window.hasClosedTabs());
   }

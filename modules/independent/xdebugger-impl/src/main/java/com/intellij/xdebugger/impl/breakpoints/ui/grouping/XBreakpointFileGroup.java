@@ -18,9 +18,9 @@ package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -29,7 +29,7 @@ import javax.swing.*;
 public class XBreakpointFileGroup extends XBreakpointGroup {
   private final VirtualFile myFile;
 
-  public XBreakpointFileGroup(@NotNull VirtualFile file) {
+  public XBreakpointFileGroup(@Nonnull VirtualFile file) {
     myFile = file;
   }
 
@@ -38,7 +38,7 @@ public class XBreakpointFileGroup extends XBreakpointGroup {
     return VirtualFilePresentation.getIcon(myFile);
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myFile.getPresentableUrl();
   }

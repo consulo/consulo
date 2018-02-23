@@ -38,8 +38,8 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.VcsSynchronousProgressWrapper;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,7 +54,7 @@ import java.util.function.Function;
 public abstract class AbstractVcs<ComList extends CommittedChangeList> extends StartedActivated {
   @NonNls protected static final String ourIntegerPattern = "\\d+";
 
-  @NotNull
+  @Nonnull
   protected final Project myProject;
   private final String myName;
   private final VcsKey myKey;
@@ -65,7 +65,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   private UpdateEnvironment myUpdateEnvironment;
   private RollbackEnvironment myRollbackEnvironment;
 
-  public AbstractVcs(@NotNull Project project, final String name) {
+  public AbstractVcs(@Nonnull Project project, final String name) {
     super(project);
 
     myProject = project;
@@ -251,8 +251,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
    * (in particular, the VCS can show a confirmation to the user by itself)
    */
   @CalledInAwt
-  @NotNull
-  public ThreeState mayRemoveChangeList(@NotNull LocalChangeList list, boolean explicitly) {
+  @Nonnull
+  public ThreeState mayRemoveChangeList(@Nonnull LocalChangeList list, boolean explicitly) {
     return ThreeState.UNSURE;
   }
 
@@ -260,13 +260,13 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return false;
   }
 
-  public static boolean fileInVcsByFileStatus(@NotNull Project project, @NotNull FilePath path) {
+  public static boolean fileInVcsByFileStatus(@Nonnull Project project, @Nonnull FilePath path) {
     VirtualFile file = path.getVirtualFile();
 
     return file == null || fileInVcsByFileStatus(project, file);
   }
 
-  public static boolean fileInVcsByFileStatus(@NotNull Project project, @NotNull VirtualFile file) {
+  public static boolean fileInVcsByFileStatus(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileStatus status = FileStatusManager.getInstance(project).getStatus(file);
 
     return status != FileStatus.UNKNOWN && status != FileStatus.ADDED && status != FileStatus.IGNORED;
@@ -421,8 +421,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
   public interface RootsConvertor {
 
-    @NotNull
-    List<VirtualFile> convertRoots(@NotNull List<VirtualFile> result);
+    @Nonnull
+    List<VirtualFile> convertRoots(@Nonnull List<VirtualFile> result);
   }
 
   /**
@@ -431,7 +431,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
    *
    * @return the merge provider implementation, or null if the VCS doesn't support merge operations.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public MergeProvider getMergeProvider() {
     return null;
   }
@@ -440,14 +440,14 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return false;
   }
 
-  @NotNull
-  public <S> List<S> filterUniqueRoots(@NotNull List<S> in, @NotNull Function<S, VirtualFile> convertor) {
+  @Nonnull
+  public <S> List<S> filterUniqueRoots(@Nonnull List<S> in, @Nonnull Function<S, VirtualFile> convertor) {
     new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
     return in;
   }
 
-  @NotNull
-  public static <S> List<S> filterUniqueRootsDefault(@NotNull List<S> in, @NotNull Function<S, VirtualFile> convertor) {
+  @Nonnull
+  public static <S> List<S> filterUniqueRootsDefault(@Nonnull List<S> in, @Nonnull Function<S, VirtualFile> convertor) {
     new FilterDescendantVirtualFileConvertible<>(convertor, FilePathComparator.getInstance()).doFilter(in);
     return in;
   }
@@ -457,7 +457,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -515,7 +515,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return true;
   }
 
-  public boolean allowsRemoteCalls(@NotNull final VirtualFile file) {
+  public boolean allowsRemoteCalls(@Nonnull final VirtualFile file) {
     return true;
   }
 

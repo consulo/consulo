@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,10 +78,10 @@ public class Utils {
 
   @Deprecated
   // Use #expandActionGroup with isModalContext instead
-  public static void expandActionGroup(@NotNull ActionGroup group,
+  public static void expandActionGroup(@Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
-                                       @NotNull DataContext context,
+                                       @Nonnull DataContext context,
                                        String place,
                                        ActionManager actionManager) {
     expandActionGroup(false, group, list, presentationFactory, context, place, actionManager, false, group instanceof CompactActionGroup);
@@ -92,10 +92,10 @@ public class Utils {
    * @param actionManager manager
    */
   public static void expandActionGroup(boolean isInModalContext,
-                                       @NotNull ActionGroup group,
+                                       @Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
-                                       @NotNull DataContext context,
+                                       @Nonnull DataContext context,
                                        String place,
                                        ActionManager actionManager) {
     expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, actionManager, false, group instanceof CompactActionGroup);
@@ -103,22 +103,22 @@ public class Utils {
 
   @Deprecated
   // Use #expandActionGroup with isModalContext instead
-  public static void expandActionGroup(@NotNull ActionGroup group,
+  public static void expandActionGroup(@Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
                                        DataContext context,
-                                       @NotNull String place,
+                                       @Nonnull String place,
                                        ActionManager actionManager,
                                        boolean transparentOnly) {
     expandActionGroup(false, group, list, presentationFactory, context, place, actionManager, transparentOnly, false);
   }
 
   public static void expandActionGroup(boolean isInModalContext,
-                                       @NotNull ActionGroup group,
+                                       @Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
                                        DataContext context,
-                                       @NotNull String place,
+                                       @Nonnull String place,
                                        ActionManager actionManager,
                                        boolean transparentOnly) {
     expandActionGroup(isInModalContext, group, list, presentationFactory, context, place, actionManager, transparentOnly, false);
@@ -126,11 +126,11 @@ public class Utils {
 
   @Deprecated
   // Use #expandActionGroup with isModalContext instead
-  public static void expandActionGroup(@NotNull ActionGroup group,
+  public static void expandActionGroup(@Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
                                        DataContext context,
-                                       @NotNull String place,
+                                       @Nonnull String place,
                                        ActionManager actionManager,
                                        boolean transparentOnly,
                                        boolean hideDisabled) {
@@ -143,11 +143,11 @@ public class Utils {
    * @param actionManager manager
    */
   public static void expandActionGroup(boolean isInModalContext,
-                                       @NotNull ActionGroup group,
+                                       @Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
                                        DataContext context,
-                                       @NotNull String place,
+                                       @Nonnull String place,
                                        ActionManager actionManager,
                                        boolean transparentOnly,
                                        boolean hideDisabled) {
@@ -159,11 +159,11 @@ public class Utils {
    * @param actionManager manager
    */
   public static void expandActionGroup(boolean isInModalContext,
-                                       @NotNull ActionGroup group,
+                                       @Nonnull ActionGroup group,
                                        List<AnAction> list,
                                        PresentationFactory presentationFactory,
                                        DataContext context,
-                                       @NotNull String place,
+                                       @Nonnull String place,
                                        ActionManager actionManager,
                                        boolean transparentOnly,
                                        boolean hideDisabled,
@@ -328,22 +328,22 @@ public class Utils {
 
   @Deprecated
   // Use #expandActionGroup with isModalContext instead
-  public static void fillMenu(@NotNull final ActionGroup group,
+  public static void fillMenu(@Nonnull final ActionGroup group,
                               final JComponent component,
                               final boolean enableMnemonics,
                               final PresentationFactory presentationFactory,
-                              @NotNull DataContext context,
+                              @Nonnull DataContext context,
                               final String place,
                               final boolean isWindowMenu,
                               final boolean mayDataContextBeInvalid) {
     fillMenu(group, component, enableMnemonics, presentationFactory, context, place, isWindowMenu, mayDataContextBeInvalid, false);
   }
 
-  public static void fillMenu(@NotNull final ActionGroup group,
+  public static void fillMenu(@Nonnull final ActionGroup group,
                               final JComponent component,
                               final boolean enableMnemonics,
                               final PresentationFactory presentationFactory,
-                              @NotNull DataContext context,
+                              @Nonnull DataContext context,
                               final String place,
                               final boolean isWindowMenu,
                               final boolean mayDataContextBeInvalid,

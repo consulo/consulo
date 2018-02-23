@@ -32,8 +32,8 @@ import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -62,7 +62,7 @@ public class VfsUtilCore {
    *                 and <code>file</code> are equal
    * @return <code>true</code> if <code>ancestor</code> is parent of <code>file</code>; <code>false</code> otherwise
    */
-  public static boolean isAncestor(@NotNull VirtualFile ancestor, @NotNull VirtualFile file, boolean strict) {
+  public static boolean isAncestor(@Nonnull VirtualFile ancestor, @Nonnull VirtualFile file, boolean strict) {
     if (!file.getFileSystem().equals(ancestor.getFileSystem())) return false;
     VirtualFile parent = strict ? file.getParent() : file;
     while (true) {
@@ -75,7 +75,7 @@ public class VfsUtilCore {
   /**
    * @return {@code true} if {@code file} is located under one of {@code roots} or equal to one of them
    */
-  public static boolean isUnder(@NotNull VirtualFile file, @Nullable Set<VirtualFile> roots) {
+  public static boolean isUnder(@Nonnull VirtualFile file, @Nullable Set<VirtualFile> roots) {
     if (roots == null || roots.isEmpty()) return false;
 
     VirtualFile parent = file;
@@ -91,7 +91,7 @@ public class VfsUtilCore {
   /**
    * @return {@code true} if {@code url} is located under one of {@code rootUrls} or equal to one of them
    */
-  public static boolean isUnder(@NotNull String url, @Nullable Collection<String> rootUrls) {
+  public static boolean isUnder(@Nonnull String url, @Nullable Collection<String> rootUrls) {
     if (rootUrls == null || rootUrls.isEmpty()) return false;
 
     for (String excludesUrl : rootUrls) {
@@ -102,7 +102,7 @@ public class VfsUtilCore {
     return false;
   }
 
-  public static boolean isEqualOrAncestor(@NotNull String ancestorUrl, @NotNull String fileUrl) {
+  public static boolean isEqualOrAncestor(@Nonnull String ancestorUrl, @Nonnull String fileUrl) {
     if (ancestorUrl.equals(fileUrl)) return true;
     if (StringUtil.endsWithChar(ancestorUrl, '/')) {
       return fileUrl.startsWith(ancestorUrl);
@@ -112,7 +112,7 @@ public class VfsUtilCore {
     }
   }
 
-  public static boolean isAncestor(@NotNull File ancestor, @NotNull File file, boolean strict) {
+  public static boolean isAncestor(@Nonnull File ancestor, @Nonnull File file, boolean strict) {
     return FileUtil.isAncestor(ancestor, file, strict);
   }
 
@@ -125,14 +125,14 @@ public class VfsUtilCore {
    * @return relative path of {@code file} or full path if {@code root} is not actual ancestor of {@code file}
    */
   @Nullable
-  public static String getRelativeLocation(@Nullable VirtualFile file, @NotNull VirtualFile root) {
+  public static String getRelativeLocation(@Nullable VirtualFile file, @Nonnull VirtualFile root) {
     if (file == null) return null;
     String path = getRelativePath(file, root);
     return path != null ? path : file.getPresentableUrl();
   }
 
   @Nullable
-  public static String getRelativePath(@NotNull VirtualFile file, @NotNull VirtualFile ancestor) {
+  public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor) {
     return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);
   }
 
@@ -146,7 +146,7 @@ public class VfsUtilCore {
    * @return the relative path or {@code null} if {@code ancestor} is not ancestor for {@code file}
    */
   @Nullable
-  public static String getRelativePath(@NotNull VirtualFile file, @NotNull VirtualFile ancestor, char separator) {
+  public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor, char separator) {
     if (!file.getFileSystem().equals(ancestor.getFileSystem())) {
       return null;
     }
@@ -202,8 +202,8 @@ public class VfsUtilCore {
    * @return a copy of the file
    * @throws IOException if file failed to be copied
    */
-  @NotNull
-  public static VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile toDir) throws IOException {
+  @Nonnull
+  public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir) throws IOException {
     return copyFile(requestor, file, toDir, file.getName());
   }
 
@@ -219,27 +219,27 @@ public class VfsUtilCore {
    * @return a copy of the file
    * @throws IOException if file failed to be copied
    */
-  @NotNull
-  public static VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile toDir, @NotNull String newName) throws IOException {
+  @Nonnull
+  public static VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String newName) throws IOException {
     final VirtualFile newChild = toDir.createChildData(requestor, newName);
     newChild.setBinaryContent(file.contentsToByteArray());
     return newChild;
   }
 
-  @NotNull
-  public static InputStream byteStreamSkippingBOM(@NotNull byte[] buf, @NotNull VirtualFile file) throws IOException {
+  @Nonnull
+  public static InputStream byteStreamSkippingBOM(@Nonnull byte[] buf, @Nonnull VirtualFile file) throws IOException {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") BufferExposingByteArrayInputStream stream = new BufferExposingByteArrayInputStream(buf);
     return inputStreamSkippingBOM(stream, file);
   }
 
-  @NotNull
-  public static InputStream inputStreamSkippingBOM(@NotNull InputStream stream, @SuppressWarnings("UnusedParameters") @NotNull VirtualFile file)
+  @Nonnull
+  public static InputStream inputStreamSkippingBOM(@Nonnull InputStream stream, @SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file)
           throws IOException {
     return CharsetToolkit.inputStreamSkippingBOM(stream);
   }
 
-  @NotNull
-  public static OutputStream outputStreamAddingBOM(@NotNull OutputStream stream, @NotNull VirtualFile file) throws IOException {
+  @Nonnull
+  public static OutputStream outputStreamAddingBOM(@Nonnull OutputStream stream, @Nonnull VirtualFile file) throws IOException {
     byte[] bom = file.getBOM();
     if (bom != null) {
       stream.write(bom);
@@ -247,13 +247,13 @@ public class VfsUtilCore {
     return stream;
   }
 
-  public static boolean iterateChildrenRecursively(@NotNull final VirtualFile root,
+  public static boolean iterateChildrenRecursively(@Nonnull final VirtualFile root,
                                                    @Nullable final VirtualFileFilter filter,
-                                                   @NotNull final ContentIterator iterator) {
+                                                   @Nonnull final ContentIterator iterator) {
     final VirtualFileVisitor.Result result = visitChildrenRecursively(root, new VirtualFileVisitor() {
-      @NotNull
+      @Nonnull
       @Override
-      public Result visitFileEx(@NotNull VirtualFile file) {
+      public Result visitFileEx(@Nonnull VirtualFile file) {
         if (filter != null && !filter.accept(file)) return SKIP_CHILDREN;
         if (!iterator.processFile(file)) return skipTo(root);
         return CONTINUE;
@@ -263,8 +263,8 @@ public class VfsUtilCore {
   }
 
   @SuppressWarnings({"UnsafeVfsRecursion", "Duplicates"})
-  @NotNull
-  public static VirtualFileVisitor.Result visitChildrenRecursively(@NotNull VirtualFile file, @NotNull VirtualFileVisitor<?> visitor) throws VisitorException {
+  @Nonnull
+  public static VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file, @Nonnull VirtualFileVisitor<?> visitor) throws VisitorException {
     boolean pushed = false;
     try {
       final boolean visited = visitor.allowVisitFile(file);
@@ -317,9 +317,9 @@ public class VfsUtilCore {
     }
   }
 
-  public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@NotNull VirtualFile file,
-                                                                                         @NotNull VirtualFileVisitor visitor,
-                                                                                         @NotNull Class<E> eClass) throws E {
+  public static <E extends Exception> VirtualFileVisitor.Result visitChildrenRecursively(@Nonnull VirtualFile file,
+                                                                                         @Nonnull VirtualFileVisitor visitor,
+                                                                                         @Nonnull Class<E> eClass) throws E {
     try {
       return visitChildrenRecursively(file, visitor);
     }
@@ -335,25 +335,25 @@ public class VfsUtilCore {
   /**
    * Returns {@code true} if given virtual file represents broken symbolic link (which points to non-existent file).
    */
-  public static boolean isBrokenLink(@NotNull VirtualFile file) {
+  public static boolean isBrokenLink(@Nonnull VirtualFile file) {
     return file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null;
   }
 
   /**
    * Returns {@code true} if given virtual file represents broken or recursive symbolic link.
    */
-  public static boolean isInvalidLink(@NotNull VirtualFile link) {
+  public static boolean isInvalidLink(@Nonnull VirtualFile link) {
     final VirtualFile target = link.getCanonicalFile();
     return target == null || target.equals(link) || isAncestor(target, link, true);
   }
 
-  @NotNull
-  public static String loadText(@NotNull VirtualFile file) throws IOException {
+  @Nonnull
+  public static String loadText(@Nonnull VirtualFile file) throws IOException {
     return loadText(file, (int)file.getLength());
   }
 
-  @NotNull
-  public static String loadText(@NotNull VirtualFile file, int length) throws IOException {
+  @Nonnull
+  public static String loadText(@Nonnull VirtualFile file, int length) throws IOException {
     InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset());
     try {
       return StringFactory.createShared(FileUtil.loadText(reader, length));
@@ -363,31 +363,31 @@ public class VfsUtilCore {
     }
   }
 
-  @NotNull
-  public static VirtualFile[] toVirtualFileArray(@NotNull Collection<? extends VirtualFile> files) {
+  @Nonnull
+  public static VirtualFile[] toVirtualFileArray(@Nonnull Collection<? extends VirtualFile> files) {
     int size = files.size();
     if (size == 0) return VirtualFile.EMPTY_ARRAY;
     //noinspection SSBasedInspection
     return files.toArray(new VirtualFile[size]);
   }
 
-  @NotNull
+  @Nonnull
   public static String urlToPath(@Nullable String url) {
     if (url == null) return "";
     return VirtualFileManager.extractPath(url);
   }
 
-  @NotNull
-  public static File virtualToIoFile(@NotNull VirtualFile file) {
+  @Nonnull
+  public static File virtualToIoFile(@Nonnull VirtualFile file) {
     return new File(PathUtil.toPresentableUrl(file.getUrl()));
   }
 
-  @NotNull
-  public static String pathToUrl(@NotNull String path) {
+  @Nonnull
+  public static String pathToUrl(@Nonnull String path) {
     return VirtualFileManager.constructUrl(URLUtil.FILE_PROTOCOL, path);
   }
 
-  public static List<File> virtualToIoFiles(@NotNull Collection<VirtualFile> scope) {
+  public static List<File> virtualToIoFiles(@Nonnull Collection<VirtualFile> scope) {
     return ContainerUtil.map2List(scope, new Function<VirtualFile, File>() {
       @Override
       public File fun(VirtualFile file) {
@@ -396,13 +396,13 @@ public class VfsUtilCore {
     });
   }
 
-  @NotNull
-  public static String toIdeaUrl(@NotNull String url) {
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url) {
     return toIdeaUrl(url, true);
   }
 
-  @NotNull
-  public static String toIdeaUrl(@NotNull String url, boolean removeLocalhostPrefix) {
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
     int index = url.indexOf(":/");
     if (index < 0 || (index + 2) >= url.length()) {
       return url;
@@ -440,14 +440,14 @@ public class VfsUtilCore {
     return url;
   }
 
-  @NotNull
-  public static String fixURLforIDEA(@NotNull String url) {
+  @Nonnull
+  public static String fixURLforIDEA(@Nonnull String url) {
     // removeLocalhostPrefix - false due to backward compatibility reasons
     return toIdeaUrl(url, false);
   }
 
-  @NotNull
-  public static String convertFromUrl(@NotNull URL url) {
+  @Nonnull
+  public static String convertFromUrl(@Nonnull URL url) {
     String protocol = url.getProtocol();
     String path = url.getPath();
     if (protocol.equals(URLUtil.JAR_PROTOCOL)) {
@@ -481,7 +481,7 @@ public class VfsUtilCore {
    * @return converted URL or null if error has occurred.
    */
   @Nullable
-  public static URL convertToURL(@NotNull String vfsUrl) {
+  public static URL convertToURL(@Nonnull String vfsUrl) {
     if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
       try {
         // jar:// and zip:// have the same lenght
@@ -525,8 +525,8 @@ public class VfsUtilCore {
     }
   }
 
-  @NotNull
-  public static String fixIDEAUrl(@NotNull String ideaUrl) {
+  @Nonnull
+  public static String fixIDEAUrl(@Nonnull String ideaUrl) {
     final String ideaProtocolMarker = "://";
     int idx = ideaUrl.indexOf(ideaProtocolMarker);
     if (idx >= 0) {
@@ -543,7 +543,7 @@ public class VfsUtilCore {
   }
 
   @Nullable
-  public static VirtualFile findRelativeFile(@NotNull String uri, @Nullable VirtualFile base) {
+  public static VirtualFile findRelativeFile(@Nonnull String uri, @Nullable VirtualFile base) {
     if (base != null) {
       if (!base.isValid()){
         LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
@@ -592,7 +592,7 @@ public class VfsUtilCore {
     return file;
   }
 
-  public static boolean processFilesRecursively(@NotNull VirtualFile root, @NotNull Processor<VirtualFile> processor) {
+  public static boolean processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor) {
     if (!processor.process(root)) return false;
 
     if (root.isDirectory()) {
@@ -625,7 +625,7 @@ public class VfsUtilCore {
    * the files do not have common ancestor
    */
   @Nullable
-  public static VirtualFile getCommonAncestor(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public static VirtualFile getCommonAncestor(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     if (!file1.getFileSystem().equals(file2.getFileSystem())) {
       return null;
     }
@@ -651,8 +651,8 @@ public class VfsUtilCore {
    * @param file the file
    * @return virtual files which represents paths from root to the passed file
    */
-  @NotNull
-  static VirtualFile[] getPathComponents(@NotNull VirtualFile file) {
+  @Nonnull
+  static VirtualFile[] getPathComponents(@Nonnull VirtualFile file) {
     ArrayList<VirtualFile> componentsList = new ArrayList<VirtualFile>();
     while (file != null) {
       componentsList.add(file);
@@ -666,7 +666,7 @@ public class VfsUtilCore {
     return components;
   }
 
-  public static boolean hasInvalidFiles(@NotNull Iterable<VirtualFile> files) {
+  public static boolean hasInvalidFiles(@Nonnull Iterable<VirtualFile> files) {
     for (VirtualFile file : files) {
       if (!file.isValid()) {
         return true;
@@ -691,14 +691,14 @@ public class VfsUtilCore {
     }
 
     @Override
-    protected boolean isAncestor(@NotNull VirtualFile ancestor, @NotNull VirtualFile virtualFile) {
+    protected boolean isAncestor(@Nonnull VirtualFile ancestor, @Nonnull VirtualFile virtualFile) {
       return VfsUtilCore.isAncestor(ancestor, virtualFile, false);
     }
   }
 
-  public static void processFilesRecursively(@NotNull VirtualFile root,
-                                             @NotNull Processor<VirtualFile> processor,
-                                             @NotNull Convertor<VirtualFile, Boolean> directoryFilter) {
+  public static void processFilesRecursively(@Nonnull VirtualFile root,
+                                             @Nonnull Processor<VirtualFile> processor,
+                                             @Nonnull Convertor<VirtualFile, Boolean> directoryFilter) {
     if (!processor.process(root)) return;
 
     if (root.isDirectory() && directoryFilter.convert(root)) {

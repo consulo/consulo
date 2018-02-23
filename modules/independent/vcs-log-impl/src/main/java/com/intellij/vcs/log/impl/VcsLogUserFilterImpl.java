@@ -24,7 +24,7 @@ import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogUserFilter;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -33,16 +33,21 @@ import java.util.Set;
 public class VcsLogUserFilterImpl implements VcsLogUserFilter {
   private static final Logger LOG = Logger.getInstance(VcsLogUserFilterImpl.class);
 
-  @NotNull public static final String ME = "me";
+  @Nonnull
+  public static final String ME = "me";
 
-  @NotNull private final Collection<String> myUsers;
-  @NotNull private final Map<VirtualFile, VcsUser> myData;
-  @NotNull private final MultiMap<String, VcsUser> myAllUsersByNames = MultiMap.create();
-  @NotNull private final MultiMap<String, VcsUser> myAllUsersByEmails = MultiMap.create();
+  @Nonnull
+  private final Collection<String> myUsers;
+  @Nonnull
+  private final Map<VirtualFile, VcsUser> myData;
+  @Nonnull
+  private final MultiMap<String, VcsUser> myAllUsersByNames = MultiMap.create();
+  @Nonnull
+  private final MultiMap<String, VcsUser> myAllUsersByEmails = MultiMap.create();
 
-  public VcsLogUserFilterImpl(@NotNull Collection<String> users,
-                              @NotNull Map<VirtualFile, VcsUser> meData,
-                              @NotNull Set<VcsUser> allUsers) {
+  public VcsLogUserFilterImpl(@Nonnull Collection<String> users,
+                              @Nonnull Map<VirtualFile, VcsUser> meData,
+                              @Nonnull Set<VcsUser> allUsers) {
     myUsers = users;
     myData = meData;
 
@@ -59,8 +64,8 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
     }
   }
 
-  @NotNull
-  public Collection<VcsUser> getUsers(@NotNull VirtualFile root) {
+  @Nonnull
+  public Collection<VcsUser> getUsers(@Nonnull VirtualFile root) {
     Set<VcsUser> result = ContainerUtil.newHashSet();
     for (String user : myUsers) {
       result.addAll(getUsers(root, user));
@@ -68,8 +73,8 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
     return result;
   }
 
-  @NotNull
-  private Set<VcsUser> getUsers(@NotNull VirtualFile root, @NotNull String name) {
+  @Nonnull
+  private Set<VcsUser> getUsers(@Nonnull VirtualFile root, @Nonnull String name) {
     Set<VcsUser> users = ContainerUtil.newHashSet();
     if (ME.equals(name)) {
       VcsUser vcsUser = myData.get(root);
@@ -87,13 +92,13 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
     return users;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<String> getUserNamesForPresentation() {
     return myUsers;
   }
 
   @Override
-  public boolean matches(@NotNull final VcsCommitMetadata commit) {
+  public boolean matches(@Nonnull final VcsCommitMetadata commit) {
     return ContainerUtil.exists(myUsers, name -> {
       Set<VcsUser> users = getUsers(commit.getRoot(), name);
       if (!users.isEmpty()) {
@@ -112,7 +117,7 @@ public class VcsLogUserFilterImpl implements VcsLogUserFilter {
     });
   }
 
-  private Set<VcsUser> getUsers(@NotNull String name) {
+  private Set<VcsUser> getUsers(@Nonnull String name) {
     Set<VcsUser> result = ContainerUtil.newHashSet();
 
     result.addAll(myAllUsersByNames.get(VcsUserUtil.getNameInStandardForm(name)));

@@ -18,8 +18,8 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.DataInputOutputUtilRt;
 import com.intellij.util.ThrowableConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -34,25 +34,25 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
 
   private DataInputOutputUtil() { }
 
-  public static int readINT(@NotNull DataInput record) throws IOException {
+  public static int readINT(@Nonnull DataInput record) throws IOException {
     return DataInputOutputUtilRt.readINT(record);
   }
 
-  public static void writeINT(@NotNull DataOutput record, int val) throws IOException {
+  public static void writeINT(@Nonnull DataOutput record, int val) throws IOException {
     DataInputOutputUtilRt.writeINT(record, val);
   }
 
   @Nullable
-  public static StringRef readNAME(@NotNull DataInput record, @NotNull AbstractStringEnumerator nameStore) throws IOException {
+  public static StringRef readNAME(@Nonnull DataInput record, @Nonnull AbstractStringEnumerator nameStore) throws IOException {
     return StringRef.fromStream(record, nameStore);
   }
 
-  public static void writeNAME(@NotNull DataOutput record, @Nullable String name, @NotNull AbstractStringEnumerator nameStore) throws IOException {
+  public static void writeNAME(@Nonnull DataOutput record, @Nullable String name, @Nonnull AbstractStringEnumerator nameStore) throws IOException {
     final int nameId = name != null ? nameStore.enumerate(name) : 0;
     writeINT(record, nameId);
   }
 
-  public static long readLONG(@NotNull DataInput record) throws IOException {
+  public static long readLONG(@Nonnull DataInput record) throws IOException {
     final int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
@@ -68,7 +68,7 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
     }
   }
 
-  public static void writeLONG(@NotNull DataOutput record, long val) throws IOException {
+  public static void writeLONG(@Nonnull DataOutput record, long val) throws IOException {
     if (0 <= val && val < 192) {
       record.writeByte((int)val);
     }
@@ -83,15 +83,15 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
     }
   }
 
-  public static int readSINT(@NotNull DataInput record) throws IOException {
+  public static int readSINT(@Nonnull DataInput record) throws IOException {
     return readINT(record) - 64;
   }
 
-  public static void writeSINT(@NotNull DataOutput record, int val) throws IOException {
+  public static void writeSINT(@Nonnull DataOutput record, int val) throws IOException {
     writeINT(record, val + 64);
   }
 
-  public static void writeTIME(@NotNull DataOutput record, long timestamp) throws IOException {
+  public static void writeTIME(@Nonnull DataOutput record, long timestamp) throws IOException {
     long relStamp = timestamp - timeBase;
     if (relStamp < 0 || relStamp >= 0xFF00000000L) {
       record.writeByte(255);
@@ -106,7 +106,7 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
     }
   }
 
-  public static long readTIME(@NotNull DataInput record) throws IOException {
+  public static long readTIME(@Nonnull DataInput record) throws IOException {
     final int first = record.readUnsignedByte();
     if (first == 255) {
       return record.readLong();
@@ -125,7 +125,7 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
    * Writes the given (possibly null) element to the output using the given procedure to write the element if it's not null.
    * Should be coupled with {@link #readNullable}
    */
-  public static <T> void writeNullable(@NotNull DataOutput out, @Nullable T value, @NotNull ThrowableConsumer<T, IOException> writeValue)
+  public static <T> void writeNullable(@Nonnull DataOutput out, @Nullable T value, @Nonnull ThrowableConsumer<T, IOException> writeValue)
           throws IOException {
     out.writeBoolean(value != null);
     if (value != null) writeValue.consume(value);
@@ -136,7 +136,7 @@ public class DataInputOutputUtil extends DataInputOutputUtilRt {
    * Should be coupled with {@link #writeNullable}
    */
   @Nullable
-  public static <T> T readNullable(@NotNull DataInput in, @NotNull ThrowableComputable<T, IOException> readValue) throws IOException {
+  public static <T> T readNullable(@Nonnull DataInput in, @Nonnull ThrowableComputable<T, IOException> readValue) throws IOException {
     return in.readBoolean() ? readValue.compute() : null;
   }
 }

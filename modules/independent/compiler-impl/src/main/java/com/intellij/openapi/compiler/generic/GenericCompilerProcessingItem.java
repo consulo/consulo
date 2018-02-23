@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,23 +25,23 @@ public class GenericCompilerProcessingItem<Item extends CompileItem<?, SourceSta
   private final SourceState myCachedSourceState;
   private final OutputState myCachedOutputState;
 
-  public GenericCompilerProcessingItem(@NotNull Item item, @Nullable SourceState cachedSourceState, @Nullable OutputState cachedOutputState) {
+  public GenericCompilerProcessingItem(@Nonnull Item item, @javax.annotation.Nullable SourceState cachedSourceState, @javax.annotation.Nullable OutputState cachedOutputState) {
     myItem = item;
     myCachedSourceState = cachedSourceState;
     myCachedOutputState = cachedOutputState;
   }
 
-  @NotNull
+  @Nonnull
   public Item getItem() {
     return myItem;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public SourceState getCachedSourceState() {
     return myCachedSourceState;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public OutputState getCachedOutputState() {
     return myCachedOutputState;
   }

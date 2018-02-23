@@ -20,11 +20,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.ui.PopupHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public interface EditorMarkupModel extends MarkupModel {
-  @NotNull
+  @Nonnull
   Editor getEditor();
 
   void setErrorStripeVisible(boolean val);
@@ -34,14 +34,14 @@ public interface EditorMarkupModel extends MarkupModel {
 
   ErrorStripeRenderer getErrorStripeRenderer();
 
-  void addErrorMarkerListener(@NotNull ErrorStripeListener listener, @NotNull Disposable parent);
+  void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
 
   @RequiredDispatchThread
-  void setErrorPanelPopupHandler(@NotNull PopupHandler handler);
+  void setErrorPanelPopupHandler(@Nonnull PopupHandler handler);
 
-  void setErrorStripTooltipRendererProvider(@NotNull ErrorStripTooltipRendererProvider provider);
+  void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider);
 
-  @NotNull
+  @Nonnull
   ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider();
 
   void setMinMarkHeight(int minMarkHeight);

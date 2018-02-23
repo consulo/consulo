@@ -24,7 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +61,7 @@ public class ArtifactErrorPanel {
           }
           else {
             JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myCurrentQuickFixes) {
-              @NotNull
+              @Nonnull
               @Override
               public String getTextFor(ConfigurationErrorQuickFix value) {
                 return value.getActionName();
@@ -85,7 +85,7 @@ public class ArtifactErrorPanel {
     artifactEditor.queueValidation();
   }
 
-  public void showError(@NotNull String message, @NotNull List<? extends ConfigurationErrorQuickFix> quickFixes) {
+  public void showError(@Nonnull String message, @Nonnull List<? extends ConfigurationErrorQuickFix> quickFixes) {
     myErrorLabel.setVisible(true);
     final String errorText = XmlStringUtil.wrapInHtml(message);
     if (myErrorLabel.isShowing()) {

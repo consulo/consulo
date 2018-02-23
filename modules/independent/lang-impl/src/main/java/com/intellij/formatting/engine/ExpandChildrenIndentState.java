@@ -18,7 +18,7 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -153,7 +153,7 @@ public class ExpandChildrenIndentState extends State {
     return false;
   }
 
-  private static int finMinNewLineIndent(@NotNull Collection<AbstractBlockWrapper> wrappers) {
+  private static int finMinNewLineIndent(@Nonnull Collection<AbstractBlockWrapper> wrappers) {
     int totalMinimum = Integer.MAX_VALUE;
     for (AbstractBlockWrapper wrapper : wrappers) {
       int minNewLineIndent = findMinNewLineIndent(wrapper);
@@ -164,7 +164,7 @@ public class ExpandChildrenIndentState extends State {
     return totalMinimum;
   }
 
-  private static int findMinNewLineIndent(@NotNull AbstractBlockWrapper block) {
+  private static int findMinNewLineIndent(@Nonnull AbstractBlockWrapper block) {
     if (block instanceof LeafBlockWrapper && block.getWhiteSpace().containsLineFeeds()) {
       return block.getNumberOfSymbolsBeforeBlock().getTotalSpaces();
     }
@@ -191,7 +191,7 @@ public class ExpandChildrenIndentState extends State {
     return null;
   }
 
-  private void reindentNewLineChildren(final @NotNull AbstractBlockWrapper block) {
+  private void reindentNewLineChildren(final @Nonnull AbstractBlockWrapper block) {
     if (block instanceof LeafBlockWrapper) {
       WhiteSpace space = block.getWhiteSpace();
 

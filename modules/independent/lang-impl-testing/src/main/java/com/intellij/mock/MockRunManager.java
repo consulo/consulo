@@ -6,7 +6,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -18,59 +18,59 @@ import java.util.Map;
  * @author gregsh
  */
 public class MockRunManager extends RunManagerEx {
-  @NotNull
+  @Nonnull
   @Override
   public ConfigurationType[] getConfigurationFactories() {
     return new ConfigurationType[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RunConfiguration[] getConfigurations(@NotNull ConfigurationType type) {
+  public RunConfiguration[] getConfigurations(@Nonnull ConfigurationType type) {
     return new RunConfiguration[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<RunConfiguration> getConfigurationsList(@NotNull ConfigurationType type) {
+  public List<RunConfiguration> getConfigurationsList(@Nonnull ConfigurationType type) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunConfiguration[] getAllConfigurations() {
     return new RunConfiguration[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<RunConfiguration> getAllConfigurationsList() {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunConfiguration[] getTempConfigurations() {
     return new RunConfiguration[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<RunnerAndConfigurationSettings> getTempConfigurationsList() {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean isTemporary(@NotNull RunConfiguration configuration) {
+  public boolean isTemporary(@Nonnull RunConfiguration configuration) {
     return false;
   }
 
   @Override
-  public void makeStable(@NotNull RunConfiguration configuration) {
+  public void makeStable(@Nonnull RunConfiguration configuration) {
   }
 
   @Override
-  public void makeStable(@NotNull RunnerAndConfigurationSettings settings) {
+  public void makeStable(@Nonnull RunnerAndConfigurationSettings settings) {
   }
 
   @Override
@@ -78,43 +78,43 @@ public class MockRunManager extends RunManagerEx {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RunnerAndConfigurationSettings createRunConfiguration(@NotNull String name, @NotNull ConfigurationFactory type) {
+  public RunnerAndConfigurationSettings createRunConfiguration(@Nonnull String name, @Nonnull ConfigurationFactory type) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RunnerAndConfigurationSettings createConfiguration(@NotNull RunConfiguration runConfiguration, @NotNull ConfigurationFactory factory) {
+  public RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration runConfiguration, @Nonnull ConfigurationFactory factory) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunnerAndConfigurationSettings getConfigurationTemplate(ConfigurationFactory factory) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  @NotNull
-  public RunnerAndConfigurationSettings[] getConfigurationSettings(@NotNull ConfigurationType type) {
+  @Nonnull
+  public RunnerAndConfigurationSettings[] getConfigurationSettings(@Nonnull ConfigurationType type) {
     return new RunnerAndConfigurationSettings[0];
   }
 
   @Override
-  @NotNull
-  public List<RunnerAndConfigurationSettings> getConfigurationSettingsList(@NotNull ConfigurationType type) {
+  @Nonnull
+  public List<RunnerAndConfigurationSettings> getConfigurationSettingsList(@Nonnull ConfigurationType type) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Map<String, List<RunnerAndConfigurationSettings>> getStructure(@NotNull ConfigurationType type) {
+  public Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type) {
     return Collections.emptyMap();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<RunnerAndConfigurationSettings> getAllSettings() {
     return Collections.emptyList();
@@ -133,7 +133,7 @@ public class MockRunManager extends RunManagerEx {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory type) {
     return null;
@@ -155,19 +155,19 @@ public class MockRunManager extends RunManagerEx {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID) {
     return Collections.emptyList();
@@ -178,17 +178,17 @@ public class MockRunManager extends RunManagerEx {
   }
 
   @Override
-  public RunnerAndConfigurationSettings findConfigurationByName(@NotNull String name) {
+  public RunnerAndConfigurationSettings findConfigurationByName(@Nonnull String name) {
     return null;
   }
 
   @Override
-  public Icon getConfigurationIcon(@NotNull RunnerAndConfigurationSettings settings) {
+  public Icon getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings) {
     return null;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<RunnerAndConfigurationSettings> getSortedConfigurations() {
     return Collections.emptyList();
   }

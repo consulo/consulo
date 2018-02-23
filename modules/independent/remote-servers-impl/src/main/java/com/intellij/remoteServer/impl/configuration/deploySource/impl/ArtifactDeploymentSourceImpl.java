@@ -8,7 +8,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -19,11 +19,11 @@ import java.io.File;
 public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
   private final ArtifactPointer myPointer;
 
-  public ArtifactDeploymentSourceImpl(@NotNull ArtifactPointer pointer) {
+  public ArtifactDeploymentSourceImpl(@Nonnull ArtifactPointer pointer) {
     myPointer = pointer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArtifactPointer getArtifactPointer() {
     return myPointer;
@@ -56,7 +56,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return myPointer.getName();
@@ -93,7 +93,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
     return myPointer.hashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DeploymentSourceType<?> getType() {
     return DeploymentSourceType.EP_NAME.findExtension(ArtifactDeploymentSourceType.class);

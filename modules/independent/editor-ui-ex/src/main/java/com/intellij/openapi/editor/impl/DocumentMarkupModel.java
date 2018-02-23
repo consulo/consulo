@@ -26,8 +26,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -54,7 +54,7 @@ public class DocumentMarkupModel {
    * @return the markup model instance.
    * @see com.intellij.openapi.editor.Editor#getMarkupModel()
    */
-  public static MarkupModel forDocument(@NotNull Document document, @Nullable Project project, boolean create) {
+  public static MarkupModel forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
     if (document instanceof DocumentWindow) {
       final Document delegate = ((DocumentWindow)document).getDelegate();
       final MarkupModelEx baseMarkupModel = (MarkupModelEx)forDocument(delegate, project, true);
@@ -94,7 +94,7 @@ public class DocumentMarkupModel {
     return model;
   }
 
-  private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@NotNull Document document) {
+  private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@Nonnull Document document) {
     ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
     if (markupModelMap == null) {
       ConcurrentMap<Project, MarkupModelImpl> newMap = ContainerUtil.newConcurrentMap();
@@ -103,7 +103,7 @@ public class DocumentMarkupModel {
     return markupModelMap;
   }
 
-  static void removeMarkupModel(@NotNull Document document, @NotNull Project project) {
+  static void removeMarkupModel(@Nonnull Document document, @Nonnull Project project) {
     MarkupModelImpl removed = getMarkupModelMap(document).remove(project);
     if (removed != null) {
       removed.dispose();

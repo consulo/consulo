@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +30,7 @@ import java.util.List;
 public class CollectionsMultiplier<T> {
   private List<List<T>> myInner;
 
-  public void add(@Nullable final List<T> list) {
+  public void add(@javax.annotation.Nullable final List<T> list) {
     if (list == null || list.isEmpty()) return;
     if (myInner == null) {
       myInner = Collections.singletonList(list);

@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Represent a breakpoint which is set on some line in a file. This interface isn't supposed to be implemented by a plugin. In order to
@@ -34,7 +34,7 @@ public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreak
   String getPresentableFilePath();
 
   @Override
-  @NotNull
+  @Nonnull
   XLineBreakpointType<P> getType();
 
   String getShortFilePath();

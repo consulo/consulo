@@ -24,8 +24,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -181,13 +181,13 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
   }
 
   @Nullable
-  protected PsiElement findExistingLeftParenthesis(@NotNull InsertionContext context) {
+  protected PsiElement findExistingLeftParenthesis(@Nonnull InsertionContext context) {
     PsiElement element = findNextToken(context);
     return isToken(element, String.valueOf(myLeftParenthesis)) ? element : null;
   }
 
   @Nullable
-  protected PsiElement findNextToken(@NotNull InsertionContext context) {
+  protected PsiElement findNextToken(@Nonnull InsertionContext context) {
     final PsiFile file = context.getFile();
     PsiElement element = file.findElementAt(context.getTailOffset());
     if (element instanceof PsiWhiteSpace) {

@@ -19,7 +19,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -34,13 +34,13 @@ public class VcsFileSystem extends DeprecatedVirtualFileSystem {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getProtocol() {
     return PROTOCOL;
   }
 
   @Override
-  public VirtualFile findFileByPath(@NotNull String path) {
+  public VirtualFile findFileByPath(@Nonnull String path) {
     return null;
   }
 
@@ -49,58 +49,58 @@ public class VcsFileSystem extends DeprecatedVirtualFileSystem {
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return null;
   }
 
   @Override
-  public void fireContentsChanged(Object requestor, @NotNull VirtualFile file, long oldModificationStamp) {
+  public void fireContentsChanged(Object requestor, @Nonnull VirtualFile file, long oldModificationStamp) {
     super.fireContentsChanged(requestor, file, oldModificationStamp);
   }
 
   @Override
-  protected void fireBeforeFileDeletion(Object requestor, @NotNull VirtualFile file) {
+  protected void fireBeforeFileDeletion(Object requestor, @Nonnull VirtualFile file) {
     super.fireBeforeFileDeletion(requestor, file);
   }
 
   @Override
-  protected void fireFileDeleted(Object requestor, @NotNull VirtualFile file, @NotNull String fileName, VirtualFile parent) {
+  protected void fireFileDeleted(Object requestor, @Nonnull VirtualFile file, @Nonnull String fileName, VirtualFile parent) {
     super.fireFileDeleted(requestor, file, fileName, parent);
   }
 
   @Override
-  protected void fireBeforeContentsChange(Object requestor, @NotNull VirtualFile file) {
+  protected void fireBeforeContentsChange(Object requestor, @Nonnull VirtualFile file) {
     super.fireBeforeContentsChange(requestor, file);
   }
 
   @Override
-  public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+  public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
   @Override
-  public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
+  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
   @Override
-  public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+  public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
   @Override
-  @NotNull
-  public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+  @Nonnull
+  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
     throw new RuntimeException(COULD_NOT_IMPLEMENT_MESSAGE);
   }
 }

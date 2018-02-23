@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * 
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface NotNullFunction<Param, Result> extends NullableFunction<Param, Result> {
   @Override
-  @NotNull
+  @Nonnull
   Result fun(final Param dom);
 }

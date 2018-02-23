@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.diff.impl.string;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
 public class DiffStringBuilder implements CharSequence {
-  @NotNull private char[] myData;
+  @Nonnull
+  private char[] myData;
   private int myLength;
 
   public DiffStringBuilder() {
@@ -46,19 +47,19 @@ public class DiffStringBuilder implements CharSequence {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence subSequence(int start, int end) {
     DiffString.checkBounds(start, end, myLength);
     return DiffString.create(myData, start, end - start);
   }
 
-  @NotNull
+  @Nonnull
   public DiffString toDiffString() {
     return DiffString.create(myData, 0, myLength);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     return toDiffString().toString();
   }
@@ -72,7 +73,7 @@ public class DiffStringBuilder implements CharSequence {
     }
   }
 
-  public void append(@NotNull DiffString s) {
+  public void append(@Nonnull DiffString s) {
     if (s.isEmpty()) return;
     ensureCapacityInternal(myLength + s.length());
     s.copyData(myData, myLength);

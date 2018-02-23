@@ -18,10 +18,10 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface INativeFileType extends FileType {
-  boolean openFileInAssociatedApplication(Project project, @NotNull VirtualFile file);
+  boolean openFileInAssociatedApplication(Project project, @Nonnull VirtualFile file);
 
   @Deprecated
   @DeprecationInfo("Unused")

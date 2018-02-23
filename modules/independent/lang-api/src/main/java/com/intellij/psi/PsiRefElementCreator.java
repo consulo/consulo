@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -23,7 +23,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 public interface PsiRefElementCreator<Parent, Child> {
 
-  @NotNull
-  Child createChild(@NotNull Parent parent) throws IncorrectOperationException;
+  @Nonnull
+  Child createChild(@Nonnull Parent parent) throws IncorrectOperationException;
 
 }

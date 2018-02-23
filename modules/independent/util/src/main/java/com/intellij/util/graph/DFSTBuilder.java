@@ -22,7 +22,7 @@ import com.intellij.util.containers.IntStack;
 import com.intellij.util.containers.Stack;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -42,12 +42,12 @@ public class DFSTBuilder<Node> {
   private final Node[] myInvT; // number in (enumerate all nodes scc by scc) order -> node
   private final Node[] myAllNodes;
 
-  public DFSTBuilder(@NotNull Graph<Node> graph) {
+  public DFSTBuilder(@Nonnull Graph<Node> graph) {
     this((OutboundSemiGraph<Node>)graph);
   }
 
   @SuppressWarnings("unchecked")
-  public DFSTBuilder(@NotNull OutboundSemiGraph<Node> graph) {
+  public DFSTBuilder(@Nonnull OutboundSemiGraph<Node> graph) {
     myAllNodes = (Node[])graph.getNodes().toArray();
     myGraph = graph;
     int size = graph.getNodes().size();
@@ -152,7 +152,7 @@ public class DFSTBuilder<Node> {
       mySCCs.reverse(); // have to place SCCs in topological order too
     }
 
-    private void strongConnect(@NotNull List<List<Node>> sccs) {
+    private void strongConnect(@Nonnull List<List<Node>> sccs) {
       int successor = -1;
       nextNode:
       while (!frames.isEmpty()) {
@@ -208,13 +208,13 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Comparator<Node> comparator() {
     if (myComparator == null) {
       final TObjectIntHashMap<Node> map = isAcyclic() ? myNodeToNNumber : myNodeToTNumber;
       myComparator = new Comparator<Node>() {
         @Override
-        public int compare(@NotNull Node t, @NotNull Node t1) {
+        public int compare(@Nonnull Node t, @Nonnull Node t1) {
           return map.get(t) - map.get(t1);
         }
       };
@@ -230,12 +230,12 @@ public class DFSTBuilder<Node> {
     return getCircularDependency() == null;
   }
 
-  @NotNull
+  @Nonnull
   public Node getNodeByNNumber(final int n) {
     return myInvN[n];
   }
 
-  @NotNull
+  @Nonnull
   public Node getNodeByTNumber(final int n) {
     return myInvT[n];
   }
@@ -244,18 +244,18 @@ public class DFSTBuilder<Node> {
    * @return the list containing the number of nodes in strongly connected components.
    * Respective nodes could be obtained via {@link #getNodeByTNumber(int)}.
    */
-  @NotNull
+  @Nonnull
   public TIntArrayList getSCCs() {
     return mySCCs;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Collection<Node>> getComponents() {
     final TIntArrayList componentSizes = getSCCs();
     if (componentSizes.isEmpty()) return Collections.emptyList();
 
     return new MyCollection<Collection<Node>>(componentSizes.size()) {
-      @NotNull
+      @Nonnull
       @Override
       public Iterator<Collection<Node>> iterator() {
         return new MyIterator<Collection<Node>>(componentSizes.size()) {
@@ -268,7 +268,7 @@ public class DFSTBuilder<Node> {
             if (cSize == 0) return Collections.emptyList();
             offset += cSize;
             return new MyCollection<Node>(cSize) {
-              @NotNull
+              @Nonnull
               @Override
               public Iterator<Node> iterator() {
                 return new MyIterator<Node>(cSize) {
@@ -325,7 +325,7 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<Node> getSortedNodes() {
     List<Node> result = new ArrayList<Node>(myGraph.getNodes());
     Collections.sort(result, comparator());

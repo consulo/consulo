@@ -48,9 +48,9 @@ import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashMap;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -158,7 +158,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected abstract TodoTreeStructure createTreeStructure();
 
   @Override
@@ -218,7 +218,8 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
       }
 
       @Override
-      @Nullable public PsiFile next() {
+      @Nullable
+      public PsiFile next() {
         VirtualFile vFile = iterator.next();
         if (vFile == null || !vFile.isValid()) {
           return null;
@@ -344,7 +345,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
    * "dirty" file. This method should be invoked when any modifications inside the file
    * have happened.
    */
-  private void markFileAsDirty(@NotNull PsiFile psiFile) {
+  private void markFileAsDirty(@Nonnull PsiFile psiFile) {
     VirtualFile vFile = psiFile.getVirtualFile();
     if (vFile != null) { // If PSI file isn't valid then its VirtualFile can be null
       myDirtyFileSet.add(vFile);
@@ -677,12 +678,12 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     TreeBuilderUtil.restorePaths(this, pathsToExpand, pathsToSelect, true);
   }
 
-  public boolean isDirectoryEmpty(@NotNull PsiDirectory psiDirectory){
+  public boolean isDirectoryEmpty(@Nonnull PsiDirectory psiDirectory){
     return myFileTree.isDirectoryEmpty(psiDirectory.getVirtualFile());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected ProgressIndicator createProgressIndicator() {
     return new StatusBarProgress();
   }
@@ -705,7 +706,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
 
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
-    public void childAdded(@NotNull PsiTreeChangeEvent e) {
+    public void childAdded(@Nonnull PsiTreeChangeEvent e) {
       // If local modification
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
@@ -723,7 +724,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void beforeChildRemoval(@NotNull PsiTreeChangeEvent e) {
+    public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent e) {
       // local modification
       final PsiFile file = e.getFile();
       if (file != null) {
@@ -759,7 +760,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childMoved(@NotNull PsiTreeChangeEvent e) {
+    public void childMoved(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) { // local change
         markFileAsDirty(e.getFile());
         updateTree(true);
@@ -793,7 +794,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childReplaced(@NotNull PsiTreeChangeEvent e) {
+    public void childReplaced(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
         updateTree(true);
@@ -801,7 +802,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childrenChanged(@NotNull PsiTreeChangeEvent e) {
+    public void childrenChanged(@Nonnull PsiTreeChangeEvent e) {
       if (e.getFile() != null) {
         markFileAsDirty(e.getFile());
         updateTree(true);
@@ -809,7 +810,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void propertyChanged(@NotNull PsiTreeChangeEvent e) {
+    public void propertyChanged(@Nonnull PsiTreeChangeEvent e) {
       String propertyName = e.getPropertyName();
       if (propertyName.equals(PsiTreeChangeEvent.PROP_ROOTS)) { // rebuild all tree when source roots were changed
         getUpdater().runBeforeUpdate(
@@ -841,7 +842,7 @@ public abstract class TodoTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (psiFile != null && canContainTodoItems(psiFile)) {
         updateTree(true);

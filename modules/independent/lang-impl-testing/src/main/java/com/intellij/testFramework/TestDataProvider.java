@@ -25,7 +25,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,12 +35,12 @@ import javax.swing.*;
 public class TestDataProvider implements DataProvider {
   private final Project myProject;
 
-  public TestDataProvider(@NotNull Project project) {
+  public TestDataProvider(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (myProject.isDisposed()) {
       throw new RuntimeException("TestDataProvider is already disposed for " + myProject + "\n" +
                                  "If you closed a project in test, please reset IdeaTestApplication.setDataProvider.");

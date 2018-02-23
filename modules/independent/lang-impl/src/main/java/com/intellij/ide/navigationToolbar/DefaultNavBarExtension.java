@@ -29,8 +29,8 @@ import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author anna
@@ -165,7 +165,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
           }
 
           @Override
-          public boolean execute(@NotNull PsiFileSystemItem element) {
+          public boolean execute(@Nonnull PsiFileSystemItem element) {
             return processor.process(element);
           }
         });

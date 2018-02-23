@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.fragments;
 
 import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -70,7 +70,7 @@ public class LineBlock {
     return myType;
   }
 
-  protected void setType(@NotNull TextDiffTypeEnum type) {
+  protected void setType(@Nonnull TextDiffTypeEnum type) {
     myType = type;
   }
 

@@ -27,7 +27,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.MergingCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,11 @@ import static com.intellij.diff.comparison.iterables.DiffIterableUtil.trim;
 import static com.intellij.openapi.util.text.StringUtil.isWhiteSpace;
 
 public class ByWord {
-  @NotNull
-  public static List<DiffFragment> compare(@NotNull CharSequence text1,
-                                           @NotNull CharSequence text2,
-                                           @NotNull ComparisonPolicy policy,
-                                           @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<DiffFragment> compare(@Nonnull CharSequence text1,
+                                           @Nonnull CharSequence text2,
+                                           @Nonnull ComparisonPolicy policy,
+                                           @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     List<InlineChunk> words1 = getInlineChunks(text1);
@@ -54,11 +54,11 @@ public class ByWord {
     return compare(text1, words1, text2, words2, policy, indicator);
   }
 
-  @NotNull
-  public static List<DiffFragment> compare(@NotNull CharSequence text1, @NotNull List<InlineChunk> words1,
-                                           @NotNull CharSequence text2, @NotNull List<InlineChunk> words2,
-                                           @NotNull ComparisonPolicy policy,
-                                           @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<DiffFragment> compare(@Nonnull CharSequence text1, @Nonnull List<InlineChunk> words1,
+                                           @Nonnull CharSequence text2, @Nonnull List<InlineChunk> words2,
+                                           @Nonnull ComparisonPolicy policy,
+                                           @Nonnull ProgressIndicator indicator) {
     FairDiffIterable wordChanges = diff(words1, words2, indicator);
     wordChanges = optimizeWordChunks(text1, text2, words1, words2, wordChanges, indicator);
 
@@ -68,12 +68,12 @@ public class ByWord {
     return convertIntoDiffFragments(iterable);
   }
 
-  @NotNull
-  public static List<MergeWordFragment> compare(@NotNull CharSequence text1,
-                                                @NotNull CharSequence text2,
-                                                @NotNull CharSequence text3,
-                                                @NotNull ComparisonPolicy policy,
-                                                @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<MergeWordFragment> compare(@Nonnull CharSequence text1,
+                                                @Nonnull CharSequence text2,
+                                                @Nonnull CharSequence text3,
+                                                @Nonnull ComparisonPolicy policy,
+                                                @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     List<InlineChunk> words1 = getInlineChunks(text1);
@@ -94,11 +94,11 @@ public class ByWord {
     return convertIntoMergeWordFragments(result);
   }
 
-  @NotNull
-  public static List<LineBlock> compareAndSplit(@NotNull CharSequence text1,
-                                                @NotNull CharSequence text2,
-                                                @NotNull ComparisonPolicy policy,
-                                                @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<LineBlock> compareAndSplit(@Nonnull CharSequence text1,
+                                                @Nonnull CharSequence text2,
+                                                @Nonnull ComparisonPolicy policy,
+                                                @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     // TODO: figure out, what do we exactly want from 'Split' logic
@@ -158,44 +158,44 @@ public class ByWord {
   // Impl
   //
 
-  @NotNull
-  private static FairDiffIterable optimizeWordChunks(@NotNull CharSequence text1,
-                                                     @NotNull CharSequence text2,
-                                                     @NotNull List<InlineChunk> words1,
-                                                     @NotNull List<InlineChunk> words2,
-                                                     @NotNull FairDiffIterable iterable,
-                                                     @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable optimizeWordChunks(@Nonnull CharSequence text1,
+                                                     @Nonnull CharSequence text2,
+                                                     @Nonnull List<InlineChunk> words1,
+                                                     @Nonnull List<InlineChunk> words2,
+                                                     @Nonnull FairDiffIterable iterable,
+                                                     @Nonnull ProgressIndicator indicator) {
     return new ChunkOptimizer.WordChunkOptimizer(words1, words2, text1, text2, iterable, indicator).build();
   }
 
-  @NotNull
-  private static FairDiffIterable matchAdjustmentDelimiters(@NotNull CharSequence text1,
-                                                            @NotNull CharSequence text2,
-                                                            @NotNull List<InlineChunk> words1,
-                                                            @NotNull List<InlineChunk> words2,
-                                                            @NotNull FairDiffIterable changes,
-                                                            @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable matchAdjustmentDelimiters(@Nonnull CharSequence text1,
+                                                            @Nonnull CharSequence text2,
+                                                            @Nonnull List<InlineChunk> words1,
+                                                            @Nonnull List<InlineChunk> words2,
+                                                            @Nonnull FairDiffIterable changes,
+                                                            @Nonnull ProgressIndicator indicator) {
     return matchAdjustmentDelimiters(text1, text2, words1, words2, changes, 0, 0, indicator);
   }
 
-  @NotNull
-  private static FairDiffIterable matchAdjustmentDelimiters(@NotNull CharSequence text1,
-                                                            @NotNull CharSequence text2,
-                                                            @NotNull List<InlineChunk> words1,
-                                                            @NotNull List<InlineChunk> words2,
-                                                            @NotNull FairDiffIterable changes,
+  @Nonnull
+  private static FairDiffIterable matchAdjustmentDelimiters(@Nonnull CharSequence text1,
+                                                            @Nonnull CharSequence text2,
+                                                            @Nonnull List<InlineChunk> words1,
+                                                            @Nonnull List<InlineChunk> words2,
+                                                            @Nonnull FairDiffIterable changes,
                                                             int startShift1,
                                                             int startShift2,
-                                                            @NotNull ProgressIndicator indicator) {
+                                                            @Nonnull ProgressIndicator indicator) {
     return new AdjustmentPunctuationMatcher(text1, text2, words1, words2, startShift1, startShift2, changes, indicator).build();
   }
 
-  @NotNull
-  private static DiffIterable matchAdjustmentWhitespaces(@NotNull CharSequence text1,
-                                                         @NotNull CharSequence text2,
-                                                         @NotNull FairDiffIterable iterable,
-                                                         @NotNull ComparisonPolicy policy,
-                                                         @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static DiffIterable matchAdjustmentWhitespaces(@Nonnull CharSequence text1,
+                                                         @Nonnull CharSequence text2,
+                                                         @Nonnull FairDiffIterable iterable,
+                                                         @Nonnull ComparisonPolicy policy,
+                                                         @Nonnull ProgressIndicator indicator) {
     switch (policy) {
       case DEFAULT:
         return new DefaultCorrector(iterable, text1, text2, indicator).build();
@@ -209,13 +209,13 @@ public class ByWord {
     }
   }
 
-  @NotNull
-  private static List<MergeRange> matchAdjustmentWhitespaces(@NotNull CharSequence text1,
-                                                             @NotNull CharSequence text2,
-                                                             @NotNull CharSequence text3,
-                                                             @NotNull List<MergeRange> conflicts,
-                                                             @NotNull ComparisonPolicy policy,
-                                                             @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static List<MergeRange> matchAdjustmentWhitespaces(@Nonnull CharSequence text1,
+                                                             @Nonnull CharSequence text2,
+                                                             @Nonnull CharSequence text3,
+                                                             @Nonnull List<MergeRange> conflicts,
+                                                             @Nonnull ComparisonPolicy policy,
+                                                             @Nonnull ProgressIndicator indicator) {
     switch (policy) {
       case DEFAULT:
         return new MergeDefaultCorrector(conflicts, text1, text2, text3, indicator).build();
@@ -240,12 +240,18 @@ public class ByWord {
    *      "]"  vs ")"
    */
   private static class AdjustmentPunctuationMatcher {
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final List<InlineChunk> myWords1;
-    @NotNull private final List<InlineChunk> myWords2;
-    @NotNull private final FairDiffIterable myChanges;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final List<InlineChunk> myWords1;
+    @Nonnull
+    private final List<InlineChunk> myWords2;
+    @Nonnull
+    private final FairDiffIterable myChanges;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
     private final int myStartShift1;
     private final int myStartShift2;
@@ -255,14 +261,14 @@ public class ByWord {
 
     private final ChangeBuilder myBuilder;
 
-    public AdjustmentPunctuationMatcher(@NotNull CharSequence text1,
-                                        @NotNull CharSequence text2,
-                                        @NotNull List<InlineChunk> words1,
-                                        @NotNull List<InlineChunk> words2,
+    public AdjustmentPunctuationMatcher(@Nonnull CharSequence text1,
+                                        @Nonnull CharSequence text2,
+                                        @Nonnull List<InlineChunk> words1,
+                                        @Nonnull List<InlineChunk> words2,
                                         int startShift1,
                                         int startShift2,
-                                        @NotNull FairDiffIterable changes,
-                                        @NotNull ProgressIndicator indicator) {
+                                        @Nonnull FairDiffIterable changes,
+                                        @Nonnull ProgressIndicator indicator) {
       myText1 = text1;
       myText2 = text2;
       myWords1 = words1;
@@ -279,7 +285,7 @@ public class ByWord {
       myBuilder = new ChangeBuilder(myLen1, myLen2);
     }
 
-    @NotNull
+    @Nonnull
     public FairDiffIterable build() {
       execute();
       return fair(myBuilder.finish());
@@ -451,11 +457,11 @@ public class ByWord {
    *
    * Return two DiffIterable: (0, len1) - (0, len21) and (0, len1) - (0, len22)
    */
-  @NotNull
-  private static Couple<FairDiffIterable> comparePunctuation2Side(@NotNull CharSequence text1,
-                                                                  @NotNull CharSequence text21,
-                                                                  @NotNull CharSequence text22,
-                                                                  @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static Couple<FairDiffIterable> comparePunctuation2Side(@Nonnull CharSequence text1,
+                                                                  @Nonnull CharSequence text21,
+                                                                  @Nonnull CharSequence text22,
+                                                                  @Nonnull ProgressIndicator indicator) {
     CharSequence text2 = new MergingCharSequence(text21, text22);
     FairDiffIterable changes = ByChar.comparePunctuation(text1, text2, indicator);
 
@@ -466,8 +472,8 @@ public class ByWord {
     return Couple.of(iterable1, iterable2);
   }
 
-  @NotNull
-  private static Couple<List<Range>> splitIterable2Side(@NotNull FairDiffIterable changes, int offset) {
+  @Nonnull
+  private static Couple<List<Range>> splitIterable2Side(@Nonnull FairDiffIterable changes, int offset) {
     final List<Range> ranges1 = new ArrayList<>();
     final List<Range> ranges2 = new ArrayList<>();
     for (Range ch : changes.iterateUnchanged()) {
@@ -491,17 +497,22 @@ public class ByWord {
   //
 
   private static class DefaultCorrector {
-    @NotNull private final DiffIterable myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final DiffIterable myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<Range> myChanges;
+    @Nonnull
+    private final List<Range> myChanges;
 
-    public DefaultCorrector(@NotNull DiffIterable iterable,
-                            @NotNull CharSequence text1,
-                            @NotNull CharSequence text2,
-                            @NotNull ProgressIndicator indicator) {
+    public DefaultCorrector(@Nonnull DiffIterable iterable,
+                            @Nonnull CharSequence text1,
+                            @Nonnull CharSequence text2,
+                            @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -510,7 +521,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
         int endCut = expandBackwardW(myText1, myText2, range.start1, range.start2, range.end1, range.end2);
@@ -528,19 +539,25 @@ public class ByWord {
   }
 
   private static class MergeDefaultCorrector {
-    @NotNull private final List<MergeRange> myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final CharSequence myText3;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final List<MergeRange> myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final CharSequence myText3;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<MergeRange> myChanges;
+    @Nonnull
+    private final List<MergeRange> myChanges;
 
-    public MergeDefaultCorrector(@NotNull List<MergeRange> iterable,
-                                 @NotNull CharSequence text1,
-                                 @NotNull CharSequence text2,
-                                 @NotNull CharSequence text3,
-                                 @NotNull ProgressIndicator indicator) {
+    public MergeDefaultCorrector(@Nonnull List<MergeRange> iterable,
+                                 @Nonnull CharSequence text1,
+                                 @Nonnull CharSequence text2,
+                                 @Nonnull CharSequence text3,
+                                 @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -550,7 +567,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
         int endCut = expandBackwardW(myText1, myText2, myText3,
@@ -574,17 +591,22 @@ public class ByWord {
   }
 
   private static class IgnoreSpacesCorrector {
-    @NotNull private final DiffIterable myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final DiffIterable myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<Range> myChanges;
+    @Nonnull
+    private final List<Range> myChanges;
 
-    public IgnoreSpacesCorrector(@NotNull DiffIterable iterable,
-                                 @NotNull CharSequence text1,
-                                 @NotNull CharSequence text2,
-                                 @NotNull ProgressIndicator indicator) {
+    public IgnoreSpacesCorrector(@Nonnull DiffIterable iterable,
+                                 @Nonnull CharSequence text1,
+                                 @Nonnull CharSequence text2,
+                                 @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -593,7 +615,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
         // match spaces if we can, ignore them if we can't
@@ -610,19 +632,25 @@ public class ByWord {
   }
 
   private static class MergeIgnoreSpacesCorrector {
-    @NotNull private final List<MergeRange> myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final CharSequence myText3;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final List<MergeRange> myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final CharSequence myText3;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<MergeRange> myChanges;
+    @Nonnull
+    private final List<MergeRange> myChanges;
 
-    public MergeIgnoreSpacesCorrector(@NotNull List<MergeRange> iterable,
-                                      @NotNull CharSequence text1,
-                                      @NotNull CharSequence text2,
-                                      @NotNull CharSequence text3,
-                                      @NotNull ProgressIndicator indicator) {
+    public MergeIgnoreSpacesCorrector(@Nonnull List<MergeRange> iterable,
+                                      @Nonnull CharSequence text1,
+                                      @Nonnull CharSequence text2,
+                                      @Nonnull CharSequence text3,
+                                      @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -632,7 +660,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
         MergeRange expanded = expandW(myText1, myText2, myText3, range);
@@ -648,17 +676,22 @@ public class ByWord {
   }
 
   private static class TrimSpacesCorrector {
-    @NotNull private final DiffIterable myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final DiffIterable myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<Range> myChanges;
+    @Nonnull
+    private final List<Range> myChanges;
 
-    public TrimSpacesCorrector(@NotNull DiffIterable iterable,
-                               @NotNull CharSequence text1,
-                               @NotNull CharSequence text2,
-                               @NotNull ProgressIndicator indicator) {
+    public TrimSpacesCorrector(@Nonnull DiffIterable iterable,
+                               @Nonnull CharSequence text1,
+                               @Nonnull CharSequence text2,
+                               @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -667,7 +700,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public DiffIterable build() {
       for (Range range : myIterable.iterateChanges()) {
         int start1 = range.start1;
@@ -700,19 +733,25 @@ public class ByWord {
   }
 
   private static class MergeTrimSpacesCorrector {
-    @NotNull private final List<MergeRange> myIterable;
-    @NotNull private final CharSequence myText1;
-    @NotNull private final CharSequence myText2;
-    @NotNull private final CharSequence myText3;
-    @NotNull private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final List<MergeRange> myIterable;
+    @Nonnull
+    private final CharSequence myText1;
+    @Nonnull
+    private final CharSequence myText2;
+    @Nonnull
+    private final CharSequence myText3;
+    @Nonnull
+    private final ProgressIndicator myIndicator;
 
-    @NotNull private final List<MergeRange> myChanges;
+    @Nonnull
+    private final List<MergeRange> myChanges;
 
-    public MergeTrimSpacesCorrector(@NotNull List<MergeRange> iterable,
-                                    @NotNull CharSequence text1,
-                                    @NotNull CharSequence text2,
-                                    @NotNull CharSequence text3,
-                                    @NotNull ProgressIndicator indicator) {
+    public MergeTrimSpacesCorrector(@Nonnull List<MergeRange> iterable,
+                                    @Nonnull CharSequence text1,
+                                    @Nonnull CharSequence text2,
+                                    @Nonnull CharSequence text3,
+                                    @Nonnull ProgressIndicator indicator) {
       myIterable = iterable;
       myText1 = text1;
       myText2 = text2;
@@ -722,7 +761,7 @@ public class ByWord {
       myChanges = new ArrayList<>();
     }
 
-    @NotNull
+    @Nonnull
     public List<MergeRange> build() {
       for (MergeRange range : myIterable) {
         int start1 = range.start1;
@@ -762,11 +801,11 @@ public class ByWord {
     }
   }
 
-  private static boolean isLeadingTrailingSpace(@NotNull CharSequence text, int start) {
+  private static boolean isLeadingTrailingSpace(@Nonnull CharSequence text, int start) {
     return isLeadingSpace(text, start) || isTrailingSpace(text, start);
   }
 
-  private static boolean isLeadingSpace(@NotNull CharSequence text, int start) {
+  private static boolean isLeadingSpace(@Nonnull CharSequence text, int start) {
     if (start < 0) return false;
     if (start == text.length()) return false;
     if (!isWhiteSpace(text.charAt(start))) return false;
@@ -781,7 +820,7 @@ public class ByWord {
     return true;
   }
 
-  private static boolean isTrailingSpace(@NotNull CharSequence text, int end) {
+  private static boolean isTrailingSpace(@Nonnull CharSequence text, int end) {
     if (end < 0) return false;
     if (end == text.length()) return false;
     if (!isWhiteSpace(text.charAt(end))) return false;
@@ -799,7 +838,7 @@ public class ByWord {
   // Misc
   //
 
-  private static int countNewlines(@NotNull List<InlineChunk> words) {
+  private static int countNewlines(@Nonnull List<InlineChunk> words) {
     int count = 0;
     for (InlineChunk word : words) {
       if (word instanceof NewlineChunk) count++;
@@ -807,8 +846,8 @@ public class ByWord {
     return count;
   }
 
-  @NotNull
-  public static List<InlineChunk> getInlineChunks(@NotNull final CharSequence text) {
+  @Nonnull
+  public static List<InlineChunk> getInlineChunks(@Nonnull final CharSequence text) {
     final List<InlineChunk> chunks = new ArrayList<>();
 
     final int len = text.length();
@@ -853,19 +892,20 @@ public class ByWord {
   }
 
   static class WordChunk implements InlineChunk {
-    @NotNull private final CharSequence myText;
+    @Nonnull
+    private final CharSequence myText;
     private final int myOffset1;
     private final int myOffset2;
     private final int myHash;
 
-    public WordChunk(@NotNull CharSequence text, int offset1, int offset2, int hash) {
+    public WordChunk(@Nonnull CharSequence text, int offset1, int offset2, int hash) {
       myText = text;
       myOffset1 = offset1;
       myOffset2 = offset2;
       myHash = hash;
     }
 
-    @NotNull
+    @Nonnull
     public CharSequence getContent() {
       return myText.subSequence(myOffset1, myOffset2);
     }
@@ -928,14 +968,16 @@ public class ByWord {
   }
 
   public static class LineBlock {
-    @NotNull public final List<DiffFragment> fragments;
+    @Nonnull
+    public final List<DiffFragment> fragments;
 
-    @NotNull public final Range offsets;
+    @Nonnull
+    public final Range offsets;
 
     public final int newlines1;
     public final int newlines2;
 
-    public LineBlock(@NotNull List<DiffFragment> fragments, @NotNull Range offsets, int newlines1, int newlines2) {
+    public LineBlock(@Nonnull List<DiffFragment> fragments, @Nonnull Range offsets, int newlines1, int newlines2) {
       this.fragments = fragments;
       this.offsets = offsets;
       this.newlines1 = newlines1;

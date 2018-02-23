@@ -17,21 +17,21 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFolderActionListener<JTextField> {
-  public TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor) {
+  public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor) {
     this(fileChooserDescriptor, null);
   }
 
-  public TextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project) {
+  public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor, @Nullable Project project) {
     super(null, null, null, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
   }
 
-  void setOwnerComponent(@NotNull TextFieldWithBrowseButton component) {
+  void setOwnerComponent(@Nonnull TextFieldWithBrowseButton component) {
     myTextComponent = component;
   }
 

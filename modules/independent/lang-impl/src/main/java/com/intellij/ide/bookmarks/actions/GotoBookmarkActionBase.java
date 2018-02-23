@@ -26,8 +26,8 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 abstract class GotoBookmarkActionBase extends EditorAction {
   protected GotoBookmarkActionBase(final boolean next) {
@@ -42,7 +42,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
         return getBookmarkToGo(dataContext, editor) != null;
       }
 
-      private void navigateToBookmark(DataContext dataContext, @NotNull final Editor editor) {
+      private void navigateToBookmark(DataContext dataContext, @Nonnull final Editor editor) {
         final Bookmark bookmark = getBookmarkToGo(dataContext, editor);
         if (bookmark == null) return;
 

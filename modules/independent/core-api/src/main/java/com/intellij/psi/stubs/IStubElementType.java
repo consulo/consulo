@@ -24,19 +24,20 @@ import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 public abstract class IStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IElementType implements StubSerializer<StubT> {
-  public IStubElementType(@NotNull @NonNls final String debugName, @Nullable final Language language) {
+  public IStubElementType(@Nonnull @NonNls final String debugName, @Nullable final Language language) {
     super(debugName, language);
   }
 
-  public abstract PsiT createPsi(@NotNull StubT stub);
+  public abstract PsiT createPsi(@Nonnull StubT stub);
 
   @RequiredReadAction
-  public abstract StubT createStub(@NotNull PsiT psi, final StubElement parentStub);
+  public abstract StubT createStub(@Nonnull PsiT psi, final StubElement parentStub);
 
   public boolean shouldCreateStub(ASTNode node) {
     return true;

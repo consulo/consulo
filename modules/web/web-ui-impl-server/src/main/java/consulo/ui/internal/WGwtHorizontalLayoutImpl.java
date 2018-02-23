@@ -22,8 +22,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,10 +47,10 @@ public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer impleme
     return (BaseLayoutState)super.getState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredUIAccess
-  public HorizontalLayout add(@NotNull Component component) {
+  public HorizontalLayout add(@Nonnull Component component) {
     addComponent((com.vaadin.ui.Component)component);
     myChildren.add((com.vaadin.ui.Component)component);
     markAsDirtyRecursive();
@@ -81,7 +80,7 @@ public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer impleme
     return myChildren.iterator();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
@@ -89,7 +88,7 @@ public class WGwtHorizontalLayoutImpl extends AbstractComponentContainer impleme
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

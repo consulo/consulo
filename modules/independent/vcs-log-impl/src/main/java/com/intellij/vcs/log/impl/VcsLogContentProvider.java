@@ -33,9 +33,9 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.ui.VcsLogPanel;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -49,11 +49,14 @@ import java.util.List;
 public class VcsLogContentProvider implements ChangesViewContentProvider {
   public static final String TAB_NAME = "Log";
 
-  @NotNull private final Project myProject;
-  @NotNull private final VcsProjectLog myProjectLog;
-  @NotNull private final JPanel myContainer = new JBPanel(new BorderLayout());
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VcsProjectLog myProjectLog;
+  @Nonnull
+  private final JPanel myContainer = new JBPanel(new BorderLayout());
 
-  public VcsLogContentProvider(@NotNull Project project, @NotNull VcsProjectLog projectLog) {
+  public VcsLogContentProvider(@Nonnull Project project, @Nonnull VcsProjectLog projectLog) {
     myProject = project;
     myProjectLog = projectLog;
 
@@ -93,14 +96,14 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     closeLogTabs();
   }
 
-  public static void openAnotherLogTab(@NotNull VcsLogManager logManager, @NotNull Project project) {
+  public static void openAnotherLogTab(@Nonnull VcsLogManager logManager, @Nonnull Project project) {
     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
     openLogTab(logManager, project, generateShortName(toolWindow), null);
   }
 
-  public static VcsLogUiImpl openLogTab(@NotNull VcsLogManager logManager,
-                                        @NotNull Project project,
-                                        @NotNull String shortName,
+  public static VcsLogUiImpl openLogTab(@Nonnull VcsLogManager logManager,
+                                        @Nonnull Project project,
+                                        @Nonnull String shortName,
                                         @Nullable VcsLogFilter filter) {
     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
 
@@ -116,8 +119,8 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     return logUi;
   }
 
-  @NotNull
-  private static String generateShortName(@NotNull ToolWindow toolWindow) {
+  @Nonnull
+  private static String generateShortName(@Nonnull ToolWindow toolWindow) {
     TabbedContent tabbedContent = ContentUtilEx.findTabbedContent(toolWindow.getContentManager(), TAB_NAME);
     if (tabbedContent != null) {
       return String.valueOf(tabbedContent.getTabs().size() + 1);
@@ -142,7 +145,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
   }
 
   public static class VcsLogVisibilityPredicate implements NotNullFunction<Project, Boolean> {
-    @NotNull
+    @Nonnull
     @Override
     public Boolean fun(Project project) {
       return !VcsLogManager.findLogProviders(Arrays.asList(ProjectLevelVcsManager.getInstance(project).getAllVcsRoots()), project)

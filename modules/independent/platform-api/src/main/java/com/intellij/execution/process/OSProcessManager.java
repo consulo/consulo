@@ -16,8 +16,8 @@
 package com.intellij.execution.process;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public abstract class OSProcessManager {
     return ServiceManager.getService(OSProcessManager.class);
   }
 
-  public abstract boolean killProcessTree(@NotNull Process process);
+  public abstract boolean killProcessTree(@Nonnull Process process);
 
   @Nullable
   public abstract List<String> getCommandLinesOfRunningProcesses();

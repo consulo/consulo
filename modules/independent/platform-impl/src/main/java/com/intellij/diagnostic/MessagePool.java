@@ -21,8 +21,8 @@ import com.intellij.util.containers.ContainerUtil;
 import org.apache.log4j.Category;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +166,7 @@ public class MessagePool {
       myAccumulatedTime = 0;
     }
 
-    public boolean addToGroup(@NotNull AbstractMessage message) {
+    public boolean addToGroup(@Nonnull AbstractMessage message) {
       myAccumulatedTime = 0;
       boolean result = myMessages.isEmpty();
       synchronized(myMessages) {

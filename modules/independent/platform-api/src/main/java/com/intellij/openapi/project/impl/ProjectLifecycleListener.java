@@ -17,7 +17,7 @@ package com.intellij.openapi.project.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Reports some project lifecycle events. Note that these events are published on application-level {@link com.intellij.util.messages.MessageBus}.
@@ -29,13 +29,13 @@ import org.jetbrains.annotations.NotNull;
 public interface ProjectLifecycleListener {
   Topic<ProjectLifecycleListener> TOPIC = Topic.create("Various stages of project lifecycle notifications", ProjectLifecycleListener.class);
 
-  default void projectComponentsInitialized(@NotNull Project project) {
+  default void projectComponentsInitialized(@Nonnull Project project) {
   }
 
-  default void beforeProjectLoaded(@NotNull Project project) {
+  default void beforeProjectLoaded(@Nonnull Project project) {
   }
 
-  default void afterProjectClosed(@NotNull Project project) {
+  default void afterProjectClosed(@Nonnull Project project) {
   }
 
   /**

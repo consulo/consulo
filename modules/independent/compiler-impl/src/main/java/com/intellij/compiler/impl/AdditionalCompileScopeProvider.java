@@ -20,8 +20,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,8 +29,8 @@ public abstract class AdditionalCompileScopeProvider {
   public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME =
           ExtensionPointName.create("com.intellij.compiler.additionalCompileScopeProvider");
 
-  @Nullable
-  public abstract CompileScope getAdditionalScope(@NotNull CompileScope baseScope,
-                                                  @NotNull Condition<com.intellij.openapi.compiler.Compiler> filter,
-                                                  @NotNull Project project);
+  @javax.annotation.Nullable
+  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope,
+                                                  @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter,
+                                                  @Nonnull Project project);
 }

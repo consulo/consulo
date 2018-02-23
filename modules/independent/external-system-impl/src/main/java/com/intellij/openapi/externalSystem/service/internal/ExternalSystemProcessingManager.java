@@ -10,8 +10,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -42,15 +42,20 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
    */
   private static final long TOO_LONG_EXECUTION_MS = TimeUnit.SECONDS.toMillis(10);
 
-  @NotNull private final ConcurrentMap<ExternalSystemTaskId, Long> myTasksInProgress = ContainerUtil.newConcurrentMap();
-  @NotNull private final ConcurrentMap<ExternalSystemTaskId, ExternalSystemTask> myTasksDetails = ContainerUtil.newConcurrentMap();
-  @NotNull private final Alarm                                     myAlarm           = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+  @Nonnull
+  private final ConcurrentMap<ExternalSystemTaskId, Long> myTasksInProgress = ContainerUtil.newConcurrentMap();
+  @Nonnull
+  private final ConcurrentMap<ExternalSystemTaskId, ExternalSystemTask> myTasksDetails = ContainerUtil.newConcurrentMap();
+  @Nonnull
+  private final Alarm                                     myAlarm           = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
-  @NotNull private final ExternalSystemFacadeManager               myFacadeManager;
-  @NotNull private final ExternalSystemProgressNotificationManager myProgressNotificationManager;
+  @Nonnull
+  private final ExternalSystemFacadeManager               myFacadeManager;
+  @Nonnull
+  private final ExternalSystemProgressNotificationManager myProgressNotificationManager;
 
-  public ExternalSystemProcessingManager(@NotNull ExternalSystemFacadeManager facadeManager,
-                                         @NotNull ExternalSystemProgressNotificationManager notificationManager)
+  public ExternalSystemProcessingManager(@Nonnull ExternalSystemFacadeManager facadeManager,
+                                         @Nonnull ExternalSystemProgressNotificationManager notificationManager)
   {
     myFacadeManager = facadeManager;
     myProgressNotificationManager = notificationManager;
@@ -74,7 +79,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
    * @return      <code>true</code> if any task of the given type is being executed at the moment;
    *              <code>false</code> otherwise
    */
-  public boolean hasTaskOfTypeInProgress(@NotNull ExternalSystemTaskType type, @NotNull Project project) {
+  public boolean hasTaskOfTypeInProgress(@Nonnull ExternalSystemTaskType type, @Nonnull Project project) {
     String projectId = ExternalSystemTaskId.getProjectId(project);
     for (ExternalSystemTaskId id : myTasksInProgress.keySet()) {
       if (type.equals(id.getType()) && projectId.equals(id.getIdeProjectId())) {
@@ -85,9 +90,9 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   }
 
   @Nullable
-  public ExternalSystemTask findTask(@NotNull ExternalSystemTaskType type,
-                                     @NotNull ProjectSystemId projectSystemId,
-                                     @NotNull final String externalProjectPath) {
+  public ExternalSystemTask findTask(@Nonnull ExternalSystemTaskType type,
+                                     @Nonnull ProjectSystemId projectSystemId,
+                                     @Nonnull final String externalProjectPath) {
     for(ExternalSystemTask task : myTasksDetails.values()) {
       if(task instanceof AbstractExternalSystemTask) {
         AbstractExternalSystemTask externalSystemTask = (AbstractExternalSystemTask)task;
@@ -102,16 +107,16 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
     return null;
   }
 
-  public void add(@NotNull ExternalSystemTask task) {
+  public void add(@Nonnull ExternalSystemTask task) {
     myTasksDetails.put(task.getId(), task);
   }
 
-  public void release(@NotNull ExternalSystemTaskId id) {
+  public void release(@Nonnull ExternalSystemTaskId id) {
     myTasksDetails.remove(id);
   }
 
   @Override
-  public void onQueued(@NotNull ExternalSystemTaskId id) {
+  public void onQueued(@Nonnull ExternalSystemTaskId id) {
     myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
     if (myAlarm.getActiveRequestCount() <= 0) {
       myAlarm.addRequest(new Runnable() {
@@ -124,22 +129,22 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   }
 
   @Override
-  public void onStart(@NotNull ExternalSystemTaskId id) {
+  public void onStart(@Nonnull ExternalSystemTaskId id) {
     myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
   }
 
   @Override
-  public void onStatusChange(@NotNull ExternalSystemTaskNotificationEvent event) {
+  public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
     myTasksInProgress.put(event.getId(), System.currentTimeMillis() + TOO_LONG_EXECUTION_MS); 
   }
 
   @Override
-  public void onTaskOutput(@NotNull ExternalSystemTaskId id, @NotNull String text, boolean stdOut) {
+  public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
     myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
   }
 
   @Override
-  public void onEnd(@NotNull ExternalSystemTaskId id) {
+  public void onEnd(@Nonnull ExternalSystemTaskId id) {
     myTasksInProgress.remove(id);
     if (myTasksInProgress.isEmpty()) {
       myAlarm.cancelAllRequests();
@@ -147,11 +152,11 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   }
 
   @Override
-  public void onSuccess(@NotNull ExternalSystemTaskId id) {
+  public void onSuccess(@Nonnull ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onFailure(@NotNull ExternalSystemTaskId id, @NotNull Exception e) {
+  public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
   }
 
   public void update() {

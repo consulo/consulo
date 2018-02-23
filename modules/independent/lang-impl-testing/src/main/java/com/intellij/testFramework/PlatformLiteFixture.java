@@ -25,7 +25,7 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingManagerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Modifier;
@@ -67,11 +67,11 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     myProject = null;
   }
 
-  protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @NotNull final T t) {
+  protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @Nonnull final T t) {
     registerExtension(Extensions.getRootArea(), extensionPointName, t);
   }
 
-  protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @NotNull final T t, @NotNull LoadingOrder loadingOrder) {
+  protected <T> void registerExtension(final ExtensionPointName<T> extensionPointName, @Nonnull final T t, @Nonnull LoadingOrder loadingOrder) {
     registerExtension(Extensions.getRootArea(), extensionPointName, t, loadingOrder);
   }
 
@@ -82,7 +82,7 @@ public abstract class PlatformLiteFixture extends UsefulTestCase {
     PsiTestExtensionUtil.registerExtension(area, name, t, myTestRootDisposable);
   }
 
-  public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, @NotNull LoadingOrder loadingOrder) {
+  public <T> void registerExtension(final ExtensionsArea area, final ExtensionPointName<T> name, final T t, @Nonnull LoadingOrder loadingOrder) {
     registerExtensionPoint(area, name, (Class<T>)t.getClass());
 
 

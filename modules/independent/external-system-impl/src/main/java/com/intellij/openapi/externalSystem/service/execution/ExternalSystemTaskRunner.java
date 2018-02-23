@@ -25,8 +25,8 @@ import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.runners.RunContentBuilder;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -34,20 +34,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ExternalSystemTaskRunner extends GenericProgramRunner {
 
-  @NotNull
+  @Nonnull
   @Override
   public String getRunnerId() {
     return ExternalSystemConstants.RUNNER_ID;
   }
 
   @Override
-  public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
+  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
     return profile instanceof ExternalSystemRunConfiguration && DefaultRunExecutor.EXECUTOR_ID.equals(executorId);
   }
 
   @Nullable
   @Override
-  protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     return executionResult == null ? null : new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
   }

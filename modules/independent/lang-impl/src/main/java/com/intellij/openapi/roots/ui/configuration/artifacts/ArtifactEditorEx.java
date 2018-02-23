@@ -23,7 +23,7 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,13 +33,13 @@ import javax.swing.*;
 public interface ArtifactEditorEx extends ArtifactEditor, Disposable {
   Key<ArtifactEditorEx> ARTIFACTS_EDITOR_KEY = Key.create("artifactsEditor");
 
-  void addNewPackagingElement(@NotNull PackagingElementType<?> type);
+  void addNewPackagingElement(@Nonnull PackagingElementType<?> type);
 
   void removeSelectedElements();
 
-  void removePackagingElement(@NotNull String pathToParent, @NotNull PackagingElement<?> element);
+  void removePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element);
 
-  void replacePackagingElement(@NotNull String pathToParent, @NotNull PackagingElement<?> element, @NotNull PackagingElement<?> replacement);
+  void replacePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element, @Nonnull PackagingElement<?> replacement);
 
   LayoutTreeComponent getLayoutTreeComponent();
 

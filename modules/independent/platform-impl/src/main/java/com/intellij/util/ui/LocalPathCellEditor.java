@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
     this(null, null);
   }
 
-  public LocalPathCellEditor fileChooserDescriptor(@NotNull FileChooserDescriptor value) {
+  public LocalPathCellEditor fileChooserDescriptor(@Nonnull FileChooserDescriptor value) {
     myFileChooserDescriptor = value;
     return this;
   }

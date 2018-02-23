@@ -21,18 +21,18 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface HighlightingSession {
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   PsiFile getPsiFile();
 
   Editor getEditor();
 
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   ProgressIndicator getProgressIndicator();

@@ -46,9 +46,9 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -71,7 +71,7 @@ public class HectorComponent extends JPanel {
   private final Map<Language, JSlider> mySliders;
   private final PsiFile myFile;
 
-  public HectorComponent(@NotNull PsiFile file) {
+  public HectorComponent(@Nonnull PsiFile file) {
     super(new GridBagLayout());
     setBorder(JBUI.Borders.empty(0, 0, 7, 0));
     myFile = file;

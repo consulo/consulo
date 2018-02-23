@@ -18,8 +18,8 @@ package com.intellij.ide.structureView;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**

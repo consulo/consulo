@@ -29,8 +29,8 @@ import consulo.moduleImport.LegacyModuleImportProvider;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -63,8 +63,8 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     myProject = project;
   }
 
-  @NotNull
-  public ModuleImportContext initModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
+  @Nonnull
+  public ModuleImportContext initModuleImportContext(@Nonnull ModuleImportProvider<?> provider) {
     ModuleImportContext context = provider.createContext();
 
     Disposer.register(this, context);
@@ -75,8 +75,8 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     return context;
   }
 
-  @NotNull
-  public ModuleImportContext getModuleImportContext(@NotNull ModuleImportProvider<?> provider) {
+  @Nonnull
+  public ModuleImportContext getModuleImportContext(@Nonnull ModuleImportProvider<?> provider) {
     return Objects.requireNonNull(myModuleImportContexts.get(provider));
   }
 
@@ -85,7 +85,7 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public String getProjectFileDirectory() {
     if (myProjectFileDirectory != null) {
       return myProjectFileDirectory;
@@ -152,7 +152,7 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     myListeners.remove(listener);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   public ProjectBuilder getProjectBuilder() {
     if (myImportProvider == null) {
@@ -169,7 +169,7 @@ public class WizardContext extends UserDataHolderBase implements Disposable {
     return myImportProvider;
   }
 
-  public void setImportProvider(@Nullable final ModuleImportProvider<?> projectBuilder) {
+  public void setImportProvider(@javax.annotation.Nullable final ModuleImportProvider<?> projectBuilder) {
     myImportProvider = projectBuilder;
   }
 

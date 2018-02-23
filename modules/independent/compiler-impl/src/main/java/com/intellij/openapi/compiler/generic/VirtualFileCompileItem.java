@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler.generic;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -24,27 +24,27 @@ import org.jetbrains.annotations.NotNull;
 public abstract class VirtualFileCompileItem<OutputState> extends CompileItem<String, VirtualFilePersistentState, OutputState> {
   protected final VirtualFile myFile;
 
-  public VirtualFileCompileItem(@NotNull VirtualFile file) {
+  public VirtualFileCompileItem(@Nonnull VirtualFile file) {
     myFile = file;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFilePersistentState computeSourceState() {
     return new VirtualFilePersistentState(myFile.getTimeStamp());
   }
 
   @Override
-  public boolean isSourceUpToDate(@NotNull VirtualFilePersistentState state) {
+  public boolean isSourceUpToDate(@Nonnull VirtualFilePersistentState state) {
     return myFile.getTimeStamp() == state.getSourceTimestamp();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getKey() {
     return myFile.getUrl();

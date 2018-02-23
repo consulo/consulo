@@ -30,8 +30,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -44,23 +43,23 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
-  public MergeableLineMarkerInfo(@NotNull T element,
-                                 @NotNull TextRange textRange,
+  public MergeableLineMarkerInfo(@Nonnull T element,
+                                 @Nonnull TextRange textRange,
                                  Icon icon,
                                  int updatePass,
-                                 @Nullable Function<? super T, String> tooltipProvider,
-                                 @Nullable GutterIconNavigationHandler<T> navHandler,
-                                 @NotNull GutterIconRenderer.Alignment alignment) {
+                                 @javax.annotation.Nullable Function<? super T, String> tooltipProvider,
+                                 @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                                 @Nonnull GutterIconRenderer.Alignment alignment) {
     super(element, textRange, icon, updatePass, tooltipProvider, navHandler, alignment);
   }
 
-  public abstract boolean canMergeWith(@NotNull MergeableLineMarkerInfo<?> info);
+  public abstract boolean canMergeWith(@Nonnull MergeableLineMarkerInfo<?> info);
 
-  public abstract Icon getCommonIcon(@NotNull List<MergeableLineMarkerInfo> infos);
-  @NotNull
-  public abstract Function<? super PsiElement, String> getCommonTooltip(@NotNull List<MergeableLineMarkerInfo> infos);
+  public abstract Icon getCommonIcon(@Nonnull List<MergeableLineMarkerInfo> infos);
+  @Nonnull
+  public abstract Function<? super PsiElement, String> getCommonTooltip(@Nonnull List<MergeableLineMarkerInfo> infos);
 
-  public GutterIconRenderer.Alignment getCommonIconAlignment(@NotNull List<MergeableLineMarkerInfo> infos) {
+  public GutterIconRenderer.Alignment getCommonIconAlignment(@Nonnull List<MergeableLineMarkerInfo> infos) {
     return GutterIconRenderer.Alignment.LEFT;
   }
 
@@ -68,18 +67,18 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
     return element.getText();
   }
 
-  public int getCommonUpdatePass(@NotNull List<MergeableLineMarkerInfo> infos) {
+  public int getCommonUpdatePass(@Nonnull List<MergeableLineMarkerInfo> infos) {
     return updatePass;
   }
 
-  public boolean configurePopupAndRenderer(@NotNull PopupChooserBuilder builder,
-                                           @NotNull JBList list,
-                                           @NotNull List<MergeableLineMarkerInfo> markers) {
+  public boolean configurePopupAndRenderer(@Nonnull PopupChooserBuilder builder,
+                                           @Nonnull JBList list,
+                                           @Nonnull List<MergeableLineMarkerInfo> markers) {
     return false;
   }
 
-  @NotNull
-  public static List<LineMarkerInfo> merge(@NotNull List<MergeableLineMarkerInfo> markers) {
+  @Nonnull
+  public static List<LineMarkerInfo> merge(@Nonnull List<MergeableLineMarkerInfo> markers) {
     List<LineMarkerInfo> result = new SmartList<LineMarkerInfo>();
     for (int i = 0; i < markers.size(); i++) {
       MergeableLineMarkerInfo marker = markers.get(i);
@@ -103,11 +102,11 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
   }
 
   private static class MyLineMarkerInfo extends LineMarkerInfo<PsiElement> {
-    private MyLineMarkerInfo(@NotNull List<MergeableLineMarkerInfo> markers) {
+    private MyLineMarkerInfo(@Nonnull List<MergeableLineMarkerInfo> markers) {
       this(markers, markers.get(0));
     }
 
-    private MyLineMarkerInfo(@NotNull List<MergeableLineMarkerInfo> markers, @NotNull MergeableLineMarkerInfo template) {
+    private MyLineMarkerInfo(@Nonnull List<MergeableLineMarkerInfo> markers, @Nonnull MergeableLineMarkerInfo template) {
       //noinspection ConstantConditions
       super(template.getElement(),
             getCommonTextRange(markers),
@@ -128,7 +127,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
       return TextRange.create(startOffset, endOffset);
     }
 
-    private static GutterIconNavigationHandler<PsiElement> getCommonNavigationHandler(@NotNull final List<MergeableLineMarkerInfo> markers) {
+    private static GutterIconNavigationHandler<PsiElement> getCommonNavigationHandler(@Nonnull final List<MergeableLineMarkerInfo> markers) {
       return new GutterIconNavigationHandler<PsiElement>() {
         @RequiredDispatchThread
         @Override
@@ -145,7 +144,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
           PopupChooserBuilder builder  = JBPopupFactory.getInstance().createListPopupBuilder(list);
           if (!markers.get(0).configurePopupAndRenderer(builder, list, infos)) {
             list.installCellRenderer(new NotNullFunction<Object, JComponent>() {
-              @NotNull
+              @Nonnull
               @Override
               public JComponent fun(Object dom) {
                 if (dom instanceof LineMarkerInfo) {

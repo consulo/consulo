@@ -21,7 +21,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder;
 import com.intellij.util.text.SyncDateFormat;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,8 +51,8 @@ public class PackageFileAction extends AnAction {
     e.getPresentation().setVisible(visible);
   }
 
-  @NotNull
-  private static List<VirtualFile> getFilesToPackage(@NotNull AnActionEvent e, @NotNull Project project) {
+  @Nonnull
+  private static List<VirtualFile> getFilesToPackage(@Nonnull AnActionEvent e, @Nonnull Project project) {
     final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (files == null) return Collections.emptyList();
 

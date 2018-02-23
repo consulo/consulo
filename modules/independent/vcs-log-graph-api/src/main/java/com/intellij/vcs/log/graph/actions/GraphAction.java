@@ -16,8 +16,8 @@
 package com.intellij.vcs.log.graph.actions;
 
 import com.intellij.vcs.log.graph.PrintElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  */
@@ -26,7 +26,7 @@ public interface GraphAction {
   @Nullable
   PrintElement getAffectedElement();
 
-  @NotNull
+  @Nonnull
   Type getType();
 
   enum Type {
@@ -38,9 +38,10 @@ public interface GraphAction {
 
   class GraphActionImpl implements GraphAction {
     @Nullable private final PrintElement myPrintElement;
-    @NotNull private final Type myActionType;
+    @Nonnull
+    private final Type myActionType;
 
-    public GraphActionImpl(@Nullable PrintElement printElement, @NotNull Type actionType) {
+    public GraphActionImpl(@Nullable PrintElement printElement, @Nonnull Type actionType) {
       myPrintElement = printElement;
       myActionType = actionType;
     }
@@ -51,7 +52,7 @@ public interface GraphAction {
       return myPrintElement;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Type getType() {
       return myActionType;

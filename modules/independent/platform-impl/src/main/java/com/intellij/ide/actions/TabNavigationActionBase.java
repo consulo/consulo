@@ -25,7 +25,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ArrayUtil;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.actions.TabNavigationActionBase");
@@ -57,7 +57,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
     presentation.setEnabled(false);

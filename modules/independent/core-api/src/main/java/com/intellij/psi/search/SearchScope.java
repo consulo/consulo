@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class SearchScope {
   private static int hashCodeCounter = 0;
@@ -38,8 +38,10 @@ public abstract class SearchScope {
     return PsiBundle.message("search.scope.unknown");
   }
 
-  @NotNull public abstract SearchScope intersectWith(@NotNull SearchScope scope2);
-  @NotNull public abstract SearchScope union(@NotNull SearchScope scope);
+  @Nonnull
+  public abstract SearchScope intersectWith(@Nonnull SearchScope scope2);
+  @Nonnull
+  public abstract SearchScope union(@Nonnull SearchScope scope);
 
-  public abstract boolean contains(@NotNull VirtualFile file);
+  public abstract boolean contains(@Nonnull VirtualFile file);
 }

@@ -20,23 +20,23 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface TestModuleDescriptor {
-  void configureSdk(@NotNull Consumer<Sdk> consumer);
+  void configureSdk(@Nonnull Consumer<Sdk> consumer);
 
-  void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry);
+  void configureModule(@Nonnull Module module, @Nonnull ModifiableRootModel model, @Nonnull ContentEntry contentEntry);
 
   TestModuleDescriptor EMPTY = new TestModuleDescriptor() {
     @Override
-    public void configureSdk(@NotNull Consumer<Sdk> consumer) {
+    public void configureSdk(@Nonnull Consumer<Sdk> consumer) {
     }
 
     @Override
-    public void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+    public void configureModule(@Nonnull Module module, @Nonnull ModifiableRootModel model, @Nonnull ContentEntry contentEntry) {
     }
   };
 }

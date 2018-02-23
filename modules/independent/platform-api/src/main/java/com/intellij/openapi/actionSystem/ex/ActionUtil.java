@@ -33,9 +33,9 @@ import com.intellij.util.PausesStat;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ActionUtil {
   private ActionUtil() {
   }
 
-  public static void showDumbModeWarning(@NotNull AnActionEvent... events) {
+  public static void showDumbModeWarning(@Nonnull AnActionEvent... events) {
     Project project = null;
     List<String> actionNames = new ArrayList<>();
     for (final AnActionEvent event : events) {
@@ -72,8 +72,8 @@ public class ActionUtil {
     DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
   }
 
-  @NotNull
-  private static String getActionUnavailableMessage(@NotNull List<String> actionNames) {
+  @Nonnull
+  private static String getActionUnavailableMessage(@Nonnull List<String> actionNames) {
     String message;
     final String beAvailableUntil = " available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
     if (actionNames.isEmpty()) {
@@ -88,8 +88,8 @@ public class ActionUtil {
     return message;
   }
 
-  @NotNull
-  public static String getUnavailableMessage(@NotNull String action, boolean plural) {
+  @Nonnull
+  public static String getUnavailableMessage(@Nonnull String action, boolean plural) {
     return action + (plural ? " are" : " is") + " not available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
   }
 
@@ -97,7 +97,7 @@ public class ActionUtil {
 
   @Deprecated
   // Use #performDumbAwareUpdate with isModalContext instead
-  public static boolean performDumbAwareUpdate(@NotNull AnAction action, @NotNull AnActionEvent e, boolean beforeActionPerformed) {
+  public static boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
     return performDumbAwareUpdate(false, action, e, beforeActionPerformed);
   }
 
@@ -110,7 +110,7 @@ public class ActionUtil {
    *                              {@link AnAction#update(AnActionEvent)}
    * @return true if update tried to access indices in dumb mode
    */
-  public static boolean performDumbAwareUpdate(boolean isInModalContext, @NotNull AnAction action, @NotNull AnActionEvent e, boolean beforeActionPerformed) {
+  public static boolean performDumbAwareUpdate(boolean isInModalContext, @Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
     final Presentation presentation = e.getPresentation();
     final Boolean wasEnabledBefore = (Boolean)presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
     final boolean dumbMode = isDumbMode(e.getProject());
@@ -215,7 +215,7 @@ public class ActionUtil {
 
   }
 
-  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @NotNull String[] array) {
+  private static boolean checkModuleForModuleExtensions(@Nullable Module module, @Nonnull String[] array) {
     if (module == null) {
       return false;
     }
@@ -296,22 +296,22 @@ public class ActionUtil {
     }
   }
 
-  @NotNull
-  public static List<AnAction> getActions(@NotNull JComponent component) {
+  @Nonnull
+  public static List<AnAction> getActions(@Nonnull JComponent component) {
     return ObjectUtils.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
   }
 
-  public static void clearActions(@NotNull JComponent component) {
+  public static void clearActions(@Nonnull JComponent component) {
     UIUtil.putClientProperty(component, AnAction.ACTIONS_KEY, null);
   }
 
-  public static void copyRegisteredShortcuts(@NotNull JComponent to, @NotNull JComponent from) {
+  public static void copyRegisteredShortcuts(@Nonnull JComponent to, @Nonnull JComponent from) {
     for (AnAction anAction : getActions(from)) {
       anAction.registerCustomShortcutSet(anAction.getShortcutSet(), to);
     }
   }
 
-  public static void registerForEveryKeyboardShortcut(@NotNull JComponent component, @NotNull ActionListener action, @NotNull ShortcutSet shortcuts) {
+  public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
     for (Shortcut shortcut : shortcuts.getShortcuts()) {
       if (shortcut instanceof KeyboardShortcut) {
         KeyboardShortcut ks = (KeyboardShortcut)shortcut;
@@ -329,7 +329,7 @@ public class ActionUtil {
    *
    * @param actionId action id
    */
-  public static AnAction copyFrom(@NotNull AnAction action, @NotNull String actionId) {
+  public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
     action.copyFrom(ActionManager.getInstance().getAction(actionId));
     return action;
   }
@@ -340,7 +340,7 @@ public class ActionUtil {
    * @param action   action to merge to
    * @param actionId action id to merge from
    */
-  public static AnAction mergeFrom(@NotNull AnAction action, @NotNull String actionId) {
+  public static AnAction mergeFrom(@Nonnull AnAction action, @Nonnull String actionId) {
     //noinspection UnnecessaryLocalVariable
     AnAction a1 = action;
     AnAction a2 = ActionManager.getInstance().getAction(actionId);

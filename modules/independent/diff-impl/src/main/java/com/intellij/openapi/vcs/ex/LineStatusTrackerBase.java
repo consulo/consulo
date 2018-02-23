@@ -34,8 +34,8 @@ import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.annotations.RequiredWriteAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -51,14 +51,20 @@ public abstract class LineStatusTrackerBase {
   // read access allowed from EDT or while holding LOCK
   private final Object LOCK = new Object();
 
-  @Nullable protected final Project myProject;
-  @NotNull protected final Document myDocument;
-  @NotNull protected final Document myVcsDocument;
+  @javax.annotation.Nullable
+  protected final Project myProject;
+  @Nonnull
+  protected final Document myDocument;
+  @Nonnull
+  protected final Document myVcsDocument;
 
-  @NotNull protected final Application myApplication;
+  @Nonnull
+  protected final Application myApplication;
 
-  @NotNull protected final MyDocumentListener myDocumentListener;
-  @NotNull protected final ApplicationAdapter myApplicationListener;
+  @Nonnull
+  protected final MyDocumentListener myDocumentListener;
+  @Nonnull
+  protected final ApplicationAdapter myApplicationListener;
 
   private boolean myInitialized;
   private boolean myDuringRollback;
@@ -66,16 +72,20 @@ public abstract class LineStatusTrackerBase {
   private boolean myAnathemaThrown;
   private boolean myReleased;
 
-  @NotNull private List<Range> myRanges = Collections.emptyList();
+  @Nonnull
+  private List<Range> myRanges = Collections.emptyList();
 
   // operation delayed till the end of write action
-  @NotNull private final Set<Range> myToBeDestroyedRanges = ContainerUtil.newIdentityTroveSet();
-  @NotNull private final Set<Range> myToBeInstalledRanges = ContainerUtil.newIdentityTroveSet();
+  @Nonnull
+  private final Set<Range> myToBeDestroyedRanges = ContainerUtil.newIdentityTroveSet();
+  @Nonnull
+  private final Set<Range> myToBeInstalledRanges = ContainerUtil.newIdentityTroveSet();
 
-  @Nullable private DirtyRange myDirtyRange;
+  @javax.annotation.Nullable
+  private DirtyRange myDirtyRange;
 
-  public LineStatusTrackerBase(@Nullable final Project project,
-                               @NotNull final Document document) {
+  public LineStatusTrackerBase(@javax.annotation.Nullable final Project project,
+                               @Nonnull final Document document) {
     myDocument = document;
     myProject = project;
 
@@ -96,7 +106,7 @@ public abstract class LineStatusTrackerBase {
   //
 
   @CalledInAwt
-  protected abstract void createHighlighter(@NotNull Range range);
+  protected abstract void createHighlighter(@Nonnull Range range);
 
   @CalledInAwt
   protected boolean isDetectWhitespaceChangedLines() {
@@ -104,7 +114,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   @CalledInAwt
-  protected void installNotification(@NotNull String text) {
+  protected void installNotification(@Nonnull String text) {
   }
 
   @CalledInAwt
@@ -120,7 +130,7 @@ public abstract class LineStatusTrackerBase {
   //
 
   @CalledInAwt
-  public void setBaseRevision(@NotNull final CharSequence vcsContent) {
+  public void setBaseRevision(@Nonnull final CharSequence vcsContent) {
     myApplication.assertIsDispatchThread();
     if (myReleased) return;
 
@@ -190,7 +200,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   @CalledInAwt
-  private void disposeHighlighter(@NotNull Range range) {
+  private void disposeHighlighter(@Nonnull Range range) {
     try {
       RangeHighlighter highlighter = range.getHighlighter();
       if (highlighter != null) {
@@ -246,17 +256,17 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocument;
   }
 
-  @NotNull
+  @Nonnull
   public Document getVcsDocument() {
     return myVcsDocument;
   }
@@ -264,7 +274,7 @@ public abstract class LineStatusTrackerBase {
   /**
    * Ranges can be modified without taking the write lock, so calling this method twice not from EDT can produce different results.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public List<Range> getRanges() {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -278,7 +288,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
   public List<Range> getRangesInner() {
     return myRanges;
@@ -339,7 +349,7 @@ public abstract class LineStatusTrackerBase {
 
   private class MyApplicationListener extends ApplicationAdapter {
     @Override
-    public void afterWriteActionFinished(@NotNull Object action) {
+    public void afterWriteActionFinished(@Nonnull Object action) {
       updateRanges();
       updateRangeHighlighters();
     }
@@ -422,8 +432,8 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @NotNull
-  private int[] fixRanges(@NotNull DocumentEvent e, int line1, int line2) {
+  @Nonnull
+  private int[] fixRanges(@Nonnull DocumentEvent e, int line1, int line2) {
     CharSequence document = myDocument.getCharsSequence();
     int offset = e.getOffset();
 
@@ -447,7 +457,7 @@ public abstract class LineStatusTrackerBase {
     return new int[]{line1, line2};
   }
 
-  private static boolean isNewline(int offset, @NotNull CharSequence sequence) {
+  private static boolean isNewline(int offset, @Nonnull CharSequence sequence) {
     if (offset < 0) return false;
     if (offset >= sequence.length()) return false;
     return sequence.charAt(offset) == '\n';
@@ -483,9 +493,9 @@ public abstract class LineStatusTrackerBase {
                               int beforeChangedLine2,
                               int linesShift, // before -> after
                               int beforeTotalLines,
-                              @NotNull List<Range> rangesBefore,
-                              @NotNull List<Range> changedRanges,
-                              @NotNull List<Range> rangesAfter) {
+                              @Nonnull List<Range> rangesBefore,
+                              @Nonnull List<Range> changedRanges,
+                              @Nonnull List<Range> rangesAfter) {
     try {
       int vcsTotalLines = getLineCount(myVcsDocument);
 
@@ -529,7 +539,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  private static int getVcsLine1(@Nullable Range range, int line) {
+  private static int getVcsLine1(@javax.annotation.Nullable Range range, int line) {
     return range == null ? line : line + range.getVcsLine2() - range.getLine2();
   }
 
@@ -556,7 +566,7 @@ public abstract class LineStatusTrackerBase {
     return RangesBuilder.createRanges(lines, vcsLines, changedLine1, vcsLine1, isDetectWhitespaceChangedLines());
   }
 
-  private static void shiftRanges(@NotNull List<Range> rangesAfterChange, int shift) {
+  private static void shiftRanges(@Nonnull List<Range> rangesAfterChange, int shift) {
     for (final Range range : rangesAfterChange) {
       range.shift(shift);
     }
@@ -565,9 +575,9 @@ public abstract class LineStatusTrackerBase {
   private void sortRanges(int beforeChangedLine1,
                           int beforeChangedLine2,
                           int linesShift,
-                          @NotNull List<Range> rangesBeforeChange,
-                          @NotNull List<Range> changedRanges,
-                          @NotNull List<Range> rangesAfterChange) {
+                          @Nonnull List<Range> rangesBeforeChange,
+                          @Nonnull List<Range> changedRanges,
+                          @Nonnull List<Range> rangesAfterChange) {
     int lastBefore = -1;
     int firstAfter = myRanges.size();
     for (int i = 0; i < myRanges.size(); i++) {
@@ -626,7 +636,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  private static boolean isLineRangeEmpty(@NotNull Document document, int line1, int line2) {
+  private static boolean isLineRangeEmpty(@Nonnull Document document, int line1, int line2) {
     int lineCount = getLineCount(document);
     int startOffset = line1 == lineCount ? document.getTextLength() : document.getLineStartOffset(line1);
     int endOffset = line2 == lineCount ? document.getTextLength() : document.getLineStartOffset(line2);
@@ -635,7 +645,7 @@ public abstract class LineStatusTrackerBase {
     return StringUtil.isEmptyOrSpaces(interval);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Range getNextRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -645,7 +655,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Range getPrevRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -655,7 +665,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Range getNextRange(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -668,7 +678,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Range getPrevRange(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -682,7 +692,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Range getRangeForLine(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -693,17 +703,17 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  protected void doRollbackRange(@NotNull Range range) {
+  protected void doRollbackRange(@Nonnull Range range) {
     DiffUtil.applyModification(myDocument, range.getLine1(), range.getLine2(), myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
   }
 
   @RequiredWriteAction
-  public void rollbackChanges(@NotNull Range range) {
+  public void rollbackChanges(@Nonnull Range range) {
     rollbackChanges(Collections.singletonList(range));
   }
 
   @RequiredWriteAction
-  public void rollbackChanges(@NotNull final BitSet lines) {
+  public void rollbackChanges(@Nonnull final BitSet lines) {
     List<Range> toRollback = new ArrayList<>();
     for (Range range : myRanges) {
       boolean check = DiffUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2());
@@ -719,7 +729,7 @@ public abstract class LineStatusTrackerBase {
    * @param ranges - sorted list of ranges to rollback
    */
   @RequiredWriteAction
-  private void rollbackChanges(@NotNull final List<Range> ranges) {
+  private void rollbackChanges(@Nonnull final List<Range> ranges) {
     runBulkRollback(() -> {
       Range first = null;
       Range last = null;
@@ -757,7 +767,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   @RequiredWriteAction
-  private void runBulkRollback(@NotNull Runnable task) {
+  private void runBulkRollback(@Nonnull Runnable task) {
     myApplication.assertWriteAccessAllowed();
     if (!tryValidate()) return;
 
@@ -777,24 +787,24 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @NotNull
-  public CharSequence getCurrentContent(@NotNull Range range) {
+  @Nonnull
+  public CharSequence getCurrentContent(@Nonnull Range range) {
     TextRange textRange = getCurrentTextRange(range);
     final int startOffset = textRange.getStartOffset();
     final int endOffset = textRange.getEndOffset();
     return myDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
   }
 
-  @NotNull
-  public CharSequence getVcsContent(@NotNull Range range) {
+  @Nonnull
+  public CharSequence getVcsContent(@Nonnull Range range) {
     TextRange textRange = getVcsTextRange(range);
     final int startOffset = textRange.getStartOffset();
     final int endOffset = textRange.getEndOffset();
     return myVcsDocument.getImmutableCharSequence().subSequence(startOffset, endOffset);
   }
 
-  @NotNull
-  public TextRange getCurrentTextRange(@NotNull Range range) {
+  @Nonnull
+  public TextRange getCurrentTextRange(@Nonnull Range range) {
     synchronized (LOCK) {
       assert isValid();
       if (!range.isValid()) {
@@ -804,8 +814,8 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @NotNull
-  public TextRange getVcsTextRange(@NotNull Range range) {
+  @Nonnull
+  public TextRange getVcsTextRange(@Nonnull Range range) {
     synchronized (LOCK) {
       assert isValid();
       if (!range.isValid()) {

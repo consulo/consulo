@@ -22,8 +22,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,11 +42,11 @@ public class TestVirtualFile extends VirtualFile {
   private VirtualFile myParent;
   private final List<TestVirtualFile> myChildren = new ArrayList<TestVirtualFile>();
 
-  public TestVirtualFile(@NotNull String name, String content, long timestamp) {
+  public TestVirtualFile(@Nonnull String name, String content, long timestamp) {
     this(name, content,  timestamp, false);
   }
 
-  public TestVirtualFile(@NotNull String name, String content, long timestamp, boolean isReadOnly) {
+  public TestVirtualFile(@Nonnull String name, String content, long timestamp, boolean isReadOnly) {
     assert !name.contains("/");
     myName = name;
     myContent = content;
@@ -61,13 +61,13 @@ public class TestVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
   @Override
-  protected boolean nameEquals(@NotNull String name) {
+  protected boolean nameEquals(@Nonnull String name) {
     return Paths.isCaseSensitive() ? myName.equals(name) : myName.equalsIgnoreCase(name);
   }
 
@@ -103,13 +103,13 @@ public class TestVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     return myContent == null ? ArrayUtil.EMPTY_BYTE_ARRAY : myContent.getBytes();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getFileSystem() {
     return new MockLocalFileSystem() {
       @Override
@@ -136,7 +136,7 @@ public class TestVirtualFile extends VirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException();
   }

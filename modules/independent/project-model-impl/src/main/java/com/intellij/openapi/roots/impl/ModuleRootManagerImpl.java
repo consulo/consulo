@@ -38,8 +38,8 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -61,26 +61,26 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     myOrderRootsCache = new OrderRootsCache(module);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myModule.getProject();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module getModule() {
     return myModule;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModuleFileIndex getFileIndex() {
     return ModuleServiceManager.getService(myModule, ModuleFileIndex.class);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "NewModuleRootManager";
   }
@@ -109,13 +109,13 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public ModifiableRootModel getModifiableModel() {
     return getModifiableModel(new RootConfigurationAccessor());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public ModifiableRootModel getModifiableModel(final RootConfigurationAccessor accessor) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -138,7 +138,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return model;
   }
 
-  void makeRootsChange(@NotNull Runnable runnable) {
+  void makeRootsChange(@Nonnull Runnable runnable) {
     ProjectRootManagerEx projectRootManagerEx = (ProjectRootManagerEx)ProjectRootManager.getInstance(myModule.getProject());
     // IMPORTANT: should be the first listener!
     projectRootManagerEx.makeRootsChange(runnable, false, isModuleAdded);
@@ -154,12 +154,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  public boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor) {
+  public boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor) {
     return myRootModel.iterateContentEntries(processor);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OrderEntry[] getOrderEntries() {
     return myRootModel.getOrderEntries();
   }
@@ -175,24 +175,24 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getDependencies() {
     return myRootModel.getModuleDependencies();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module[] getDependencies(boolean includeTests) {
     return myRootModel.getModuleDependencies(includeTests);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module[] getModuleDependencies() {
     return myRootModel.getModuleDependencies();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module[] getModuleDependencies(boolean includeTests) {
     return myRootModel.getModuleDependencies(includeTests);
@@ -204,7 +204,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getDependencyModuleNames() {
     return myRootModel.getDependencyModuleNames();
   }
@@ -216,11 +216,11 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
+  public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
     return myRootModel.getExtension(key);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
     return myRootModel.getExtensionWithoutCheck(clazz);
@@ -228,11 +228,11 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
 
   @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
     return myRootModel.getExtensionWithoutCheck(key);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModuleExtension[] getExtensions() {
     return myRootModel.getExtensions();
@@ -244,7 +244,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return myRootModel.processOrder(policy, initialValue);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderEnumerator orderEntries() {
     return new ModuleOrderEnumerator(myRootModel, myOrderRootsCache);
@@ -254,7 +254,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
     return getEnumeratorForType(type, module).usingCache();
   }
 
-  @NotNull
+  @Nonnull
   private static OrderRootsEnumerator getEnumeratorForType(OrderRootType type, Module module) {
     OrderEnumerator base = OrderEnumerator.orderEntries(module);
     if (type == BinariesOrderRootType.getInstance()) {
@@ -267,61 +267,61 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getContentRoots() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentRoots();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getContentRootUrls() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentRootUrls();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderUrls(predicate);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderFiles(predicate);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolders(predicate);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getExcludeRootUrls() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRootUrls();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getExcludeRoots() {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRoots();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSourceRootUrls() {
     return getSourceRootUrls(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getSourceRootUrls(boolean includingTests) {
     LOGGER.assertTrue(!myIsDisposed);
@@ -329,38 +329,38 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSourceRoots() {
     return getSourceRoots(true);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRoots(includingTests);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModuleRootLayer getCurrentLayer() {
     return myRootModel.getCurrentLayer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCurrentLayerName() {
     return myRootModel.getCurrentLayerName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public ModuleRootLayer findLayerByName(@NotNull String name) {
+  public ModuleRootLayer findLayerByName(@Nonnull String name) {
     LOGGER.assertTrue(!myIsDisposed);
     return myRootModel.findLayerByName(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ModuleRootLayer> getLayers() {
     LOGGER.assertTrue(!myIsDisposed);
@@ -389,12 +389,12 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements ModuleCo
   }
 
   @RequiredReadAction
-  public void loadState(Element parent, @Nullable ProgressIndicator indicator) {
+  public void loadState(Element parent, @javax.annotation.Nullable ProgressIndicator indicator) {
     loadState(parent, indicator, myRootModel != null);
   }
 
   @RequiredReadAction
-  protected void loadState(Element element, @Nullable ProgressIndicator indicator, boolean throwEvent) {
+  protected void loadState(Element element, @javax.annotation.Nullable ProgressIndicator indicator, boolean throwEvent) {
     try {
       final RootModelImpl newModel = new RootModelImpl(element, indicator, this, throwEvent);
 

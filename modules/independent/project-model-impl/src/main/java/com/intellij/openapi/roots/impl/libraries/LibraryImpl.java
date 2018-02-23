@@ -41,8 +41,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -64,7 +64,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   private String myName;
   private final LibraryTable myLibraryTable;
   private final Map<OrderRootType, VirtualFilePointerContainer> myRoots;
-  private @Nullable VirtualFilePointerContainer myExcludedRoots;
+  private @javax.annotation.Nullable
+  VirtualFilePointerContainer myExcludedRoots;
   private final JarDirectories myJarDirectories = new JarDirectories();
   private final LibraryImpl mySource;
   private PersistentLibraryKind<?> myKind;
@@ -85,14 +86,14 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     myRootsWatcher.updateWatchedRoots();
   }
 
-  LibraryImpl(String name, @Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
+  LibraryImpl(String name, @javax.annotation.Nullable final PersistentLibraryKind<?> kind, LibraryTable table, ModuleRootLayerImpl rootModel) {
     this(table, rootModel, null, name, kind);
     if (kind != null) {
       myProperties = kind.createDefaultProperties();
     }
   }
 
-  private LibraryImpl(@NotNull LibraryImpl from, LibraryImpl newSource, ModuleRootLayerImpl rootModel) {
+  private LibraryImpl(@Nonnull LibraryImpl from, LibraryImpl newSource, ModuleRootLayerImpl rootModel) {
     this(from.myLibraryTable, rootModel, newSource, from.myName, from.myKind);
     from.checkDisposed();
 
@@ -154,8 +155,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  @NotNull
-  public String[] getUrls(@NotNull OrderRootType rootType) {
+  @Nonnull
+  public String[] getUrls(@Nonnull OrderRootType rootType) {
     checkDisposed();
 
     final VirtualFilePointerContainer result = myRoots.get(rootType);
@@ -163,8 +164,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] getFiles(@NotNull OrderRootType rootType) {
+  @Nonnull
+  public VirtualFile[] getFiles(@Nonnull OrderRootType rootType) {
     checkDisposed();
 
     final List<VirtualFile> expanded = new ArrayList<VirtualFile>();
@@ -183,7 +184,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   public static void collectJarFiles(final VirtualFile dir, final List<VirtualFile> container, final boolean recursively) {
     VfsUtilCore.visitChildrenRecursively(dir, new VirtualFileVisitor(SKIP_ROOT, (recursively ? null : ONE_LEVEL_DEEP)) {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         final VirtualFile jarRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
         if (jarRoot != null) {
           container.add(jarRoot);
@@ -202,13 +203,13 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
   /* you have to commit modifiable model or dispose it by yourself! */
   @Override
-  @NotNull
+  @Nonnull
   public ModifiableModelEx getModifiableModel() {
     checkDisposed();
     return new LibraryImpl(this, this, myModuleRootLayer);
   }
 
-  @NotNull
+  @Nonnull
   public Library cloneLibrary(ModuleRootLayerImpl moduleRootLayer) {
     LOG.assertTrue(myLibraryTable == null);
     final LibraryImpl clone = new LibraryImpl(this, null, moduleRootLayer);
@@ -240,7 +241,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RootProvider getRootProvider() {
     return myRootProvider;
   }
@@ -346,14 +347,14 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return mySource != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public PersistentLibraryKind<?> getKind() {
     return myKind;
   }
 
   @Override
-  public void addExcludedRoot(@NotNull String url) {
+  public void addExcludedRoot(@Nonnull String url) {
     VirtualFilePointerContainer roots = getOrCreateExcludedRoots();
     if (roots.findByUrl(url) == null) {
       roots.add(url);
@@ -361,7 +362,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public boolean removeExcludedRoot(@NotNull String url) {
+  public boolean removeExcludedRoot(@Nonnull String url) {
     if (myExcludedRoots != null) {
       VirtualFilePointer pointer = myExcludedRoots.findByUrl(url);
       if (pointer != null) {
@@ -372,13 +373,13 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getExcludedRootUrls() {
     return myExcludedRoots != null ? myExcludedRoots.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getExcludedRoots() {
     return myExcludedRoots != null ? myExcludedRoots.getFiles() : VirtualFile.EMPTY_ARRAY;
@@ -397,7 +398,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void addRoot(@NotNull String url, @NotNull OrderRootType rootType) {
+  public void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -406,7 +407,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void addRoot(@NotNull VirtualFile file, @NotNull OrderRootType rootType) {
+  public void addRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -415,17 +416,17 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void addJarDirectory(@NotNull final String url, final boolean recursive) {
+  public void addJarDirectory(@Nonnull final String url, final boolean recursive) {
     addJarDirectory(url, recursive, JarDirectories.DEFAULT_JAR_DIRECTORY_TYPE);
   }
 
   @Override
-  public void addJarDirectory(@NotNull final VirtualFile file, final boolean recursive) {
+  public void addJarDirectory(@Nonnull final VirtualFile file, final boolean recursive) {
     addJarDirectory(file, recursive, JarDirectories.DEFAULT_JAR_DIRECTORY_TYPE);
   }
 
   @Override
-  public void addJarDirectory(@NotNull final String url, final boolean recursive, @NotNull OrderRootType rootType) {
+  public void addJarDirectory(@Nonnull final String url, final boolean recursive, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -435,7 +436,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void addJarDirectory(@NotNull final VirtualFile file, final boolean recursive, @NotNull OrderRootType rootType) {
+  public void addJarDirectory(@Nonnull final VirtualFile file, final boolean recursive, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -445,24 +446,24 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public boolean isJarDirectory(@NotNull final String url) {
+  public boolean isJarDirectory(@Nonnull final String url) {
     return isJarDirectory(url, JarDirectories.DEFAULT_JAR_DIRECTORY_TYPE);
   }
 
   @Override
-  public boolean isJarDirectory(@NotNull final String url, @NotNull final OrderRootType rootType) {
+  public boolean isJarDirectory(@Nonnull final String url, @Nonnull final OrderRootType rootType) {
     return myJarDirectories.contains(rootType, url);
   }
 
   @Override
-  public boolean isValid(@NotNull final String url, @NotNull final OrderRootType rootType) {
+  public boolean isValid(@Nonnull final String url, @Nonnull final OrderRootType rootType) {
     final VirtualFilePointerContainer container = myRoots.get(rootType);
     final VirtualFilePointer fp = container.findByUrl(url);
     return fp != null && fp.isValid();
   }
 
   @Override
-  public boolean removeRoot(@NotNull String url, @NotNull OrderRootType rootType) {
+  public boolean removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -486,7 +487,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     return false;
   }
 
-  private boolean isUnderRoots(@NotNull String url) {
+  private boolean isUnderRoots(@Nonnull String url) {
     for (VirtualFilePointerContainer container : myRoots.values()) {
       for (String rootUrl : container.getUrls()) {
         if (VfsUtilCore.isEqualOrAncestor(rootUrl, url)) {
@@ -498,7 +499,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void moveRootUp(@NotNull String url, @NotNull OrderRootType rootType) {
+  public void moveRootUp(@Nonnull String url, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -507,7 +508,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
   }
 
   @Override
-  public void moveRootDown(@NotNull String url, @NotNull OrderRootType rootType) {
+  public void moveRootDown(@Nonnull String url, @Nonnull OrderRootType rootType) {
     checkDisposed();
     LOG.assertTrue(isWritable());
 
@@ -557,7 +558,7 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     Disposer.dispose(this);
   }
 
-  private void commit(@NotNull LibraryImpl fromModel) {
+  private void commit(@Nonnull LibraryImpl fromModel) {
     if (myLibraryTable != null) {
       ApplicationManager.getApplication().assertWriteAccessAllowed();
     }
@@ -603,8 +604,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
 
   private class MyRootProviderImpl extends RootProviderBaseImpl {
     @Override
-    @NotNull
-    public String[] getUrls(@NotNull OrderRootType rootType) {
+    @Nonnull
+    public String[] getUrls(@Nonnull OrderRootType rootType) {
       Set<String> originalUrls = new LinkedHashSet<String>(Arrays.asList(LibraryImpl.this.getUrls(rootType)));
       for (VirtualFile file : getFiles(rootType)) { // Add those expanded with jar directories.
         originalUrls.add(file.getUrl());
@@ -613,8 +614,8 @@ public class LibraryImpl extends TraceableDisposable implements LibraryEx.Modifi
     }
 
     @Override
-    @NotNull
-    public VirtualFile[] getFiles(@NotNull final OrderRootType rootType) {
+    @Nonnull
+    public VirtualFile[] getFiles(@Nonnull final OrderRootType rootType) {
       return LibraryImpl.this.getFiles(rootType);
     }
   }

@@ -35,8 +35,9 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -65,7 +66,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getRootPath() {
       return FileUtil.toSystemIndependentName(myFSRootPath);
     }
@@ -86,7 +87,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     private final Map<String, TreeNode> nodes = new THashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
   }
 
-  public LocalFileSystemImpl(@NotNull Application app, @NotNull ManagingFS managingFS) {
+  public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myWatcher = new FileWatcher(myManagingFS);
     if (myWatcher.isOperational()) {
@@ -96,7 +97,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     }
   }
 
-  @NotNull
+  @Nonnull
   public FileWatcher getFileWatcher() {
     return myWatcher;
   }
@@ -110,7 +111,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "LocalFileSystem";
   }
@@ -178,8 +179,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     return result;
   }
 
-  @NotNull
-  private static List<String> splitPath(@NotNull String path) {
+  @Nonnull
+  private static List<String> splitPath(@Nonnull String path) {
     if (path.isEmpty()) {
       return Collections.emptyList();
     }
@@ -269,7 +270,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     }
   }
 
-  public void markSuspiciousFilesDirty(@NotNull List<VirtualFile> files) {
+  public void markSuspiciousFilesDirty(@Nonnull List<VirtualFile> files) {
     storeRefreshStatusToFiles();
 
     if (myWatcher.isOperational()) {
@@ -289,9 +290,9 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests,
+  public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests,
                                                @Nullable Collection<String> recursiveRoots,
                                                @Nullable Collection<String> flatRoots) {
     recursiveRoots = ObjectUtil.notNull(recursiveRoots, Collections.emptyList());
@@ -353,7 +354,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Ap
     return new WatchRequestImpl(rootFile.getAbsolutePath(), recursively);
   }
 
-  private boolean doRemoveWatchedRoots(@NotNull Collection<WatchRequest> watchRequests) {
+  private boolean doRemoveWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests) {
     boolean update = false;
 
     for (WatchRequest watchRequest : watchRequests) {

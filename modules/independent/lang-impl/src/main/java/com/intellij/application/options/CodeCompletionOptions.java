@@ -19,9 +19,9 @@ package com.intellij.application.options;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class CodeCompletionOptions implements SearchableConfigurable, Configurable.NoScroll {
@@ -64,7 +64,7 @@ public class CodeCompletionOptions implements SearchableConfigurable, Configurab
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "editor.preferences.completion";
   }

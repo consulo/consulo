@@ -16,7 +16,7 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -27,9 +27,9 @@ import java.io.File;
 public interface ExportableComponent {
   ExtensionPointName<ServiceBean> EXTENSION_POINT = new ExtensionPointName<ServiceBean>("com.intellij.exportable");
 
-  @NotNull
+  @Nonnull
   File[] getExportFiles();
 
-  @NotNull
+  @Nonnull
   String getPresentableName();
 }

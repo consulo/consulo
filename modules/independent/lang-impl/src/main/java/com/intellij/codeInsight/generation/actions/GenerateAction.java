@@ -24,14 +24,14 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public class GenerateAction extends DumbAwareAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
@@ -48,7 +48,7 @@ public class GenerateAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -71,7 +71,7 @@ public class GenerateAction extends DumbAwareAction {
     return (DefaultActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_GENERATE);
   }
 
-  private static DefaultActionGroup wrapGroup(DefaultActionGroup actionGroup, DataContext dataContext, @NotNull Project project) {
+  private static DefaultActionGroup wrapGroup(DefaultActionGroup actionGroup, DataContext dataContext, @Nonnull Project project) {
     final DefaultActionGroup copy = new DefaultActionGroup();
     for (final AnAction action : actionGroup.getChildren(null)) {
       if (DumbService.isDumb(project) && !action.isDumbAware()) {
@@ -112,7 +112,7 @@ public class GenerateAction extends DumbAwareAction {
       return true;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
       return new AnAction[] {myEditTemplateAction};
@@ -120,7 +120,7 @@ public class GenerateAction extends DumbAwareAction {
 
     @Override
     @RequiredDispatchThread
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final Project project = getEventProject(e);
       assert project != null;
       final DumbService dumbService = DumbService.getInstance(project);

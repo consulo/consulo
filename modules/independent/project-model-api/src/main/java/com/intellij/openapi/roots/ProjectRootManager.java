@@ -19,7 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +43,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the file index instance.
    */
-  @NotNull
+  @Nonnull
   public abstract ProjectFileIndex getFileIndex();
 
   /**
@@ -51,7 +51,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * modules are processed so {@link OrderEnumerator#recursively()} option is ignored and {@link OrderEnumerator#withoutDepModules()} option is forced
    * @return new enumerator instance
    */
-  @NotNull
+  @Nonnull
   public abstract OrderEnumerator orderEntries();
 
   /**
@@ -59,8 +59,8 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @param modules modules to process
    * @return new enumerator instance
    */
-  @NotNull
-  public abstract OrderEnumerator orderEntries(@NotNull Collection<? extends Module> modules);
+  @Nonnull
+  public abstract OrderEnumerator orderEntries(@Nonnull Collection<? extends Module> modules);
 
   /**
    * Unlike getContentRoots(), this includes the project base dir. Is this really necessary?
@@ -74,7 +74,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    *
    * @return the list of content root URLs.
    */
-  @NotNull
+  @Nonnull
   public abstract List<String> getContentRootUrls();
 
     /**
@@ -82,7 +82,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
     *
     * @return the list of content roots.
     */
-  @NotNull
+  @Nonnull
   public abstract VirtualFile[] getContentRoots();
 
   /**

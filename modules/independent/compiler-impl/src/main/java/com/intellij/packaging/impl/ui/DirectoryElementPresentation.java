@@ -21,7 +21,7 @@ import com.intellij.packaging.impl.elements.DirectoryPackagingElement;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -39,7 +39,7 @@ public class DirectoryElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.TreeClosed);
     presentationData.addText(myElement.getDirectoryName(), mainAttributes);
   }

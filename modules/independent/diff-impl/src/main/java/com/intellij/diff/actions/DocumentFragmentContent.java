@@ -29,8 +29,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.LineSeparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -40,18 +40,21 @@ import java.nio.charset.Charset;
 public class DocumentFragmentContent extends DiffContentBase implements DocumentContent {
   // TODO: reuse DocumentWindow ?
 
-  @NotNull private final DocumentContent myOriginal;
-  @NotNull private final RangeMarker myRangeMarker;
+  @Nonnull
+  private final DocumentContent myOriginal;
+  @Nonnull
+  private final RangeMarker myRangeMarker;
 
-  @NotNull private final MyDocumentsSynchronizer mySynchronizer;
+  @Nonnull
+  private final MyDocumentsSynchronizer mySynchronizer;
 
   private int myAssignments = 0;
 
-  public DocumentFragmentContent(@Nullable Project project, @NotNull DocumentContent original, @NotNull TextRange range) {
+  public DocumentFragmentContent(@Nullable Project project, @Nonnull DocumentContent original, @Nonnull TextRange range) {
     this(project, original, createRangeMarker(original.getDocument(), range));
   }
 
-  public DocumentFragmentContent(@Nullable Project project, @NotNull DocumentContent original, @NotNull RangeMarker rangeMarker) {
+  public DocumentFragmentContent(@Nullable Project project, @Nonnull DocumentContent original, @Nonnull RangeMarker rangeMarker) {
     myOriginal = original;
     myRangeMarker = rangeMarker;
 
@@ -63,15 +66,15 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     mySynchronizer = new MyDocumentsSynchronizer(project, myRangeMarker, document1, document2);
   }
 
-  @NotNull
-  private static RangeMarker createRangeMarker(@NotNull Document document, @NotNull TextRange range) {
+  @Nonnull
+  private static RangeMarker createRangeMarker(@Nonnull Document document, @Nonnull TextRange range) {
     RangeMarker rangeMarker = document.createRangeMarker(range.getStartOffset(), range.getEndOffset(), true);
     rangeMarker.setGreedyToLeft(true);
     rangeMarker.setGreedyToRight(true);
     return rangeMarker;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     return mySynchronizer.getDocument2();
@@ -85,7 +88,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@NotNull LineCol position) {
+  public Navigatable getNavigatable(@Nonnull LineCol position) {
     if (!myRangeMarker.isValid()) return null;
     int offset = position.toOffset(getDocument());
     int originalOffset = offset + myRangeMarker.getStartOffset();
@@ -93,13 +96,13 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return myOriginal.getNavigatable(originalPosition);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public LineSeparator getLineSeparator() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Charset getCharset() {
     return null;
@@ -111,7 +114,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return myOriginal.getContentType();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Navigatable getNavigatable() {
     return getNavigatable(new LineCol(0));
@@ -131,18 +134,19 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
   }
 
   private static class MyDocumentsSynchronizer extends DocumentsSynchronizer {
-    @NotNull private final RangeMarker myRangeMarker;
+    @Nonnull
+    private final RangeMarker myRangeMarker;
 
-    public MyDocumentsSynchronizer(@Nullable Project project,
-                                   @NotNull RangeMarker range,
-                                   @NotNull Document document1,
-                                   @NotNull Document document2) {
+    public MyDocumentsSynchronizer(@javax.annotation.Nullable Project project,
+                                   @Nonnull RangeMarker range,
+                                   @Nonnull Document document1,
+                                   @Nonnull Document document2) {
       super(project, document1, document2);
       myRangeMarker = range;
     }
 
     @Override
-    protected void onDocumentChanged1(@NotNull DocumentEvent event) {
+    protected void onDocumentChanged1(@Nonnull DocumentEvent event) {
       if (!myRangeMarker.isValid()) {
         myDocument2.setReadOnly(false);
         replaceString(myDocument2, 0, myDocument2.getTextLength(), "Invalid selection range");
@@ -154,7 +158,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     }
 
     @Override
-    protected void onDocumentChanged2(@NotNull DocumentEvent event) {
+    protected void onDocumentChanged2(@Nonnull DocumentEvent event) {
       if (!myRangeMarker.isValid()) return;
       if (!myDocument1.isWritable()) return;
 

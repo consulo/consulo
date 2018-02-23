@@ -29,7 +29,7 @@ import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.indexing.IndexingDataKeys;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 

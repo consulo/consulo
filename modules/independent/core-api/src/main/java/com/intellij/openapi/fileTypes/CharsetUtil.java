@@ -17,8 +17,8 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -29,7 +29,7 @@ public class CharsetUtil {
   public static Charset extractCharsetFromFileContent(@Nullable Project project,
                                                       @Nullable VirtualFile virtualFile,
                                                       @Nullable FileType fileType,
-                                                      @NotNull CharSequence text) {
+                                                      @Nonnull CharSequence text) {
     if (fileType instanceof LanguageFileType) {
       return ((LanguageFileType)fileType).extractCharsetFromFileContent(project, virtualFile, text);
     }

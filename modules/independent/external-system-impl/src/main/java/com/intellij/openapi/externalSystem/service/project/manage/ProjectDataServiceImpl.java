@@ -24,7 +24,7 @@ import com.intellij.openapi.externalSystem.util.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -35,14 +35,14 @@ import java.util.Collection;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, Project> {
   
-  @NotNull
+  @Nonnull
   @Override
   public Key<ProjectData> getTargetDataKey() {
     return ProjectKeys.PROJECT;
   }
 
   @Override
-  public void importData(@NotNull Collection<DataNode<ProjectData>> toImport, @NotNull Project project, boolean synchronous) {
+  public void importData(@Nonnull Collection<DataNode<ProjectData>> toImport, @Nonnull Project project, boolean synchronous) {
     if (toImport.size() != 1) {
       throw new IllegalArgumentException(String.format("Expected to get a single project but got %d: %s", toImport.size(), toImport));
     }
@@ -59,13 +59,13 @@ public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, P
   }
 
   @Override
-  public void removeData(@NotNull Collection<? extends Project> toRemove, @NotNull Project project, boolean synchronous) {
+  public void removeData(@Nonnull Collection<? extends Project> toRemove, @Nonnull Project project, boolean synchronous) {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  public void renameProject(@NotNull final String newName,
-                            @NotNull final ProjectSystemId externalSystemId,
-                            @NotNull final Project project,
+  public void renameProject(@Nonnull final String newName,
+                            @Nonnull final ProjectSystemId externalSystemId,
+                            @Nonnull final Project project,
                             boolean synchronous)
   {
     if (!(project instanceof ProjectEx) || newName.equals(project.getName())) {

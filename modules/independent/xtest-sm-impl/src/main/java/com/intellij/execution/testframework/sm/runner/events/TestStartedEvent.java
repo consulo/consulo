@@ -16,21 +16,21 @@
 package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.TestStarted;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TestStartedEvent extends BaseStartedNodeEvent {
 
   private boolean myConfig;
 
-  public TestStartedEvent(@NotNull TestStarted testStarted,
+  public TestStartedEvent(@Nonnull TestStarted testStarted,
                           @Nullable String locationUrl) {
     this(testStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(testStarted));
   }
 
-  public TestStartedEvent(@NotNull TestStarted testStarted,
-                          @Nullable String locationUrl,
-                          @Nullable String metainfo) {
+  public TestStartedEvent(@Nonnull TestStarted testStarted,
+                          @javax.annotation.Nullable String locationUrl,
+                          @javax.annotation.Nullable String metainfo) {
     super(testStarted.getTestName(),
           TreeNodeEvent.getNodeId(testStarted),
           getParentNodeId(testStarted),
@@ -42,11 +42,11 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
   }
 
   public TestStartedEvent(@Nullable String name,
-                          @Nullable String id,
-                          @Nullable String parentId,
-                          @Nullable String locationUrl,
+                          @javax.annotation.Nullable String id,
+                          @javax.annotation.Nullable String parentId,
+                          @javax.annotation.Nullable String locationUrl,
                           @Nullable String metainfo,
-                          @Nullable String nodeType,
+                          @javax.annotation.Nullable String nodeType,
                           @Nullable String nodeArgs,
                           boolean running) {
     super(name,
@@ -59,14 +59,14 @@ public class TestStartedEvent extends BaseStartedNodeEvent {
           running);
   }
 
-  public TestStartedEvent(@NotNull String name,
-                          @Nullable String locationUrl) {
+  public TestStartedEvent(@Nonnull String name,
+                          @javax.annotation.Nullable String locationUrl) {
     this(name, locationUrl, null);
   }
 
-  public TestStartedEvent(@NotNull String name,
-                          @Nullable String locationUrl,
-                          @Nullable String metainfo) {
+  public TestStartedEvent(@Nonnull String name,
+                          @javax.annotation.Nullable String locationUrl,
+                          @javax.annotation.Nullable String metainfo) {
     super(name, null, null, locationUrl, metainfo,null, null, true);
   }
 

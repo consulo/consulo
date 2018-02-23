@@ -19,7 +19,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -159,7 +159,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * It guaranties readability of selected text in any LAF.
    */
   @Override
-  public void append(@NotNull @Nls String fragment, @NotNull SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(@Nonnull @Nls String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
     if (mySelected && isFocused()) {
       super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), UIUtil.getTreeSelectionForeground()), isMainText);
     }
@@ -176,7 +176,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * All component attributes are cleared when this method is being invoked.
    */
   @RequiredDispatchThread
-  public abstract void customizeCellRenderer(@NotNull JTree tree,
+  public abstract void customizeCellRenderer(@Nonnull JTree tree,
                                              Object value,
                                              boolean selected,
                                              boolean expanded,

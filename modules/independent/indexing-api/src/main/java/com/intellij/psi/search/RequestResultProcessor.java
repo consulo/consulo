@@ -19,7 +19,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -36,7 +36,7 @@ public abstract class RequestResultProcessor {
   /**
    * @param equality this processor's equals/hashCode will delegate to this object
    */
-  protected RequestResultProcessor(@NotNull Object... equality) {
+  protected RequestResultProcessor(@Nonnull Object... equality) {
     myEquality = Arrays.asList(equality);
   }
 
@@ -64,7 +64,7 @@ public abstract class RequestResultProcessor {
    *
    * @return whether the consumer has returned false for any of the references (and thus stopped searching), false otherwise.
    */
-  public abstract boolean processTextOccurrence(@NotNull PsiElement element, int offsetInElement, @NotNull Processor<PsiReference> consumer);
+  public abstract boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Processor<PsiReference> consumer);
 
   /**
    * A variant of {@link RequestResultProcessor} that processes all text occurrences at once, e.g. for performance purposes.
@@ -76,12 +76,12 @@ public abstract class RequestResultProcessor {
       super();
     }
 
-    public BulkResultProcessor(@NotNull Object... equality) {
+    public BulkResultProcessor(@Nonnull Object... equality) {
       super(equality);
     }
 
     @Override
-    public boolean processTextOccurrence(@NotNull PsiElement element, int offsetInElement, @NotNull Processor<PsiReference> consumer) {
+    public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Processor<PsiReference> consumer) {
       return processTextOccurrences(element, new int[]{offsetInElement}, consumer);
     }
 
@@ -92,6 +92,6 @@ public abstract class RequestResultProcessor {
      *
      * @return whether the consumer has returned false for any of the references (and thus stopped searching), false otherwise.
      */
-    public abstract boolean processTextOccurrences(@NotNull PsiElement scope, int[] offsetsInScope, @NotNull Processor<PsiReference> consumer);
+    public abstract boolean processTextOccurrences(@Nonnull PsiElement scope, int[] offsetsInScope, @Nonnull Processor<PsiReference> consumer);
   }
 }

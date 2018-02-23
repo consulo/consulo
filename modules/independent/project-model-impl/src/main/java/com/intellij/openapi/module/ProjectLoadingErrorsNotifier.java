@@ -18,7 +18,7 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ import java.util.Collection;
  */
 public abstract class ProjectLoadingErrorsNotifier {
 
-  public static ProjectLoadingErrorsNotifier getInstance(@NotNull Project project) {
+  public static ProjectLoadingErrorsNotifier getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ProjectLoadingErrorsNotifier.class);
   }
 

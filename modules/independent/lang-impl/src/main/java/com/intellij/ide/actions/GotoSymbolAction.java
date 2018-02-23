@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase {
 
@@ -39,7 +39,7 @@ public class GotoSymbolAction extends GotoActionBase {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     showNavigationPopup(e, model, new GotoActionCallback<Language>() {
       @Override
-      protected ChooseByNameFilter<Language> createFilter(@NotNull ChooseByNamePopup popup) {
+      protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
         return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
       }
 

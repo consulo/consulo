@@ -36,8 +36,8 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -93,12 +93,12 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
   private RecentlyChangedFilesState myRecentlyChangedFiles = new RecentlyChangedFilesState();
 
-  public IdeDocumentHistoryImpl(@NotNull Project project,
-                                @NotNull EditorFactory editorFactory,
-                                @NotNull FileEditorManager editorManager,
-                                @NotNull VirtualFileManager vfManager,
-                                @NotNull CommandProcessor cmdProcessor,
-                                @NotNull ToolWindowManager toolWindowManager) {
+  public IdeDocumentHistoryImpl(@Nonnull Project project,
+                                @Nonnull EditorFactory editorFactory,
+                                @Nonnull FileEditorManager editorManager,
+                                @Nonnull VirtualFileManager vfManager,
+                                @Nonnull CommandProcessor cmdProcessor,
+                                @Nonnull ToolWindowManager toolWindowManager) {
     myProject = project;
     myEditorFactory = editorFactory;
     myEditorManager = (FileEditorManagerEx)editorManager;
@@ -130,14 +130,14 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
     myProject.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent e) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         onSelectionChanged();
       }
     });
 
     VirtualFileListener fileListener = new VirtualFileAdapter() {
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent event) {
+      public void fileDeleted(@Nonnull VirtualFileEvent event) {
         onFileDeleted();
       }
     };
@@ -445,7 +445,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     return removed;
   }
 
-  private void gotoPlaceInfo(@NotNull PlaceInfo info) { // TODO: Msk
+  private void gotoPlaceInfo(@Nonnull PlaceInfo info) { // TODO: Msk
     final boolean wasActive = myToolWindowManager.isEditorComponentActive();
     EditorWindow wnd = info.getWindow();
     final Pair<FileEditor[],FileEditorProvider[]> editorsWithProviders;
@@ -475,7 +475,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     return file != null ? myEditorManager.getSelectedEditorWithProvider(file) : null;
   }
 
-  private PlaceInfo createPlaceInfo(@NotNull final FileEditor fileEditor, final FileEditorProvider fileProvider) {
+  private PlaceInfo createPlaceInfo(@Nonnull final FileEditor fileEditor, final FileEditorProvider fileProvider) {
     final VirtualFile file = myEditorManager.getFile(fileEditor);
     LOG.assertTrue(file != null);
 
@@ -490,7 +490,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
 
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getComponentName() {
     return "IdeDocumentHistory";
   }
@@ -523,7 +523,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
     private final String myEditorTypeId;
     private WeakReference<EditorWindow> myWindow;
 
-    public PlaceInfo(@NotNull VirtualFile file, FileEditorState navigationState, String editorTypeId, @Nullable EditorWindow window) {
+    public PlaceInfo(@Nonnull VirtualFile file, FileEditorState navigationState, String editorTypeId, @Nullable EditorWindow window) {
       myNavigationState = navigationState;
       myFile = file;
       myEditorTypeId = editorTypeId;
@@ -538,7 +538,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Projec
       return myNavigationState;
     }
 
-    @NotNull
+    @Nonnull
     public VirtualFile getFile() {
       return myFile;
     }

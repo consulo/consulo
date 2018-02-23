@@ -20,8 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -31,7 +31,7 @@ public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem
   public WGwtMenuSeparatorImpl() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     throw new UnsupportedOperationException();
@@ -45,7 +45,7 @@ public class WGwtMenuSeparatorImpl extends AbstractComponent implements MenuItem
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

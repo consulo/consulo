@@ -18,8 +18,8 @@ package com.intellij.diff.settings;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ import javax.swing.*;
 public class DiffSettingsConfigurable implements SearchableConfigurable {
   private DiffSettingsPanel mySettingsPane;
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return getHelpTopic();
@@ -45,7 +45,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
     return "Diff";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getHelpTopic() {
     return "diff.base";

@@ -19,7 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.LeafElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines common contract for strategy that determines if particular symbol or sequence of symbols may be treated as
@@ -44,7 +44,7 @@ public interface WhiteSpaceFormattingStrategy {
    *                  or equal to the given <code>'end'</code> parameter if all target sub-sequence symbols
    *                  can be treated as white spaces
    */
-  int check(@NotNull CharSequence text, int start, int end);
+  int check(@Nonnull CharSequence text, int start, int end);
 
   /**
    * Allows to answer if given node should be treated as white space node.
@@ -52,7 +52,7 @@ public interface WhiteSpaceFormattingStrategy {
    * @param node  node to check
    * @return      <code>true</code> if given node should be treated as white space; <code>false</code> otherwise
    */
-  boolean containsWhitespacesOnly(@NotNull ASTNode node);
+  boolean containsWhitespacesOnly(@Nonnull ASTNode node);
 
   /**
    * @return    <code>true</code> if default white space strategy used by formatter should be replaced by the current one;
@@ -80,8 +80,8 @@ public interface WhiteSpaceFormattingStrategy {
    * @param nodeAfter         the AST node following the whitespace, if known
    * @return                  symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
    */
-  @NotNull
-  CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText, @NotNull CharSequence text, int startOffset,
+  @Nonnull
+  CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, @Nonnull CharSequence text, int startOffset,
                                            int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter);
 
 
@@ -100,7 +100,7 @@ public interface WhiteSpaceFormattingStrategy {
    * @param codeStyleSettings the code style settings
    * @return                  symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
    */
-  CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText, @NotNull PsiElement startElement, int startOffset,
+  CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, @Nonnull PsiElement startElement, int startOffset,
                                            int endOffset, CodeStyleSettings codeStyleSettings);
 
   /**
@@ -113,5 +113,5 @@ public interface WhiteSpaceFormattingStrategy {
    *                           <code>false</code> as an indicator that given white space element has not been inserted during the
    *                           current method call
    */
-  boolean addWhitespace(@NotNull ASTNode treePrev, @NotNull LeafElement whiteSpaceElement);
+  boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement);
 }

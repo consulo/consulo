@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.preview;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,10 +26,10 @@ import java.awt.*;
  * @author spleaner
  */
 public class ColorPreviewComponent extends JComponent implements PreviewHintComponent {
-  @NotNull
+  @Nonnull
   private final Color myColor;
 
-  public ColorPreviewComponent(@NotNull final Color color) {
+  public ColorPreviewComponent(@Nonnull final Color color) {
     myColor = color;
     setOpaque(true);
   }

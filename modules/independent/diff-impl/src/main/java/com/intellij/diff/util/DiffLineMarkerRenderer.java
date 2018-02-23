@@ -20,13 +20,15 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
-  @NotNull private final RangeHighlighter myHighlighter;
-  @NotNull private final TextDiffType myDiffType;
+  @Nonnull
+  private final RangeHighlighter myHighlighter;
+  @Nonnull
+  private final TextDiffType myDiffType;
   private final boolean myIgnoredFoldingOutline;
   private final boolean myResolved;
   private final boolean myHideWithoutLineNumbers;
@@ -34,8 +36,8 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
   private final boolean myEmptyRange;
   private final boolean myLastLine;
 
-  public DiffLineMarkerRenderer(@NotNull RangeHighlighter highlighter,
-                                @NotNull TextDiffType diffType,
+  public DiffLineMarkerRenderer(@Nonnull RangeHighlighter highlighter,
+                                @Nonnull TextDiffType diffType,
                                 boolean ignoredFoldingOutline,
                                 boolean resolved,
                                 boolean hideWithoutLineNumbers,
@@ -113,7 +115,7 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Position getPosition() {
     return Position.CUSTOM;

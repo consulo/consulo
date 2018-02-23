@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.event.InputEvent;
@@ -35,12 +35,12 @@ import java.awt.event.MouseEvent;
 
 public class GoToChangePopupBuilder {
   public interface Chain extends DiffRequestChain {
-    @NotNull
-    AnAction createGoToChangeAction(@NotNull Consumer<Integer> onSelected);
+    @Nonnull
+    AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected);
   }
 
-  @NotNull
-  public static AnAction create(@NotNull DiffRequestChain chain, @NotNull Consumer<Integer> onSelected) {
+  @Nonnull
+  public static AnAction create(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
     if (chain instanceof Chain) {
       return ((Chain)chain).createGoToChangeAction(onSelected);
     }
@@ -48,17 +48,19 @@ public class GoToChangePopupBuilder {
   }
 
   public static abstract class BaseGoToChangePopupAction<Chain extends DiffRequestChain> extends GoToChangePopupAction {
-    @NotNull protected final Chain myChain;
-    @NotNull protected final Consumer<Integer> myOnSelected;
+    @Nonnull
+    protected final Chain myChain;
+    @Nonnull
+    protected final Consumer<Integer> myOnSelected;
 
-    public BaseGoToChangePopupAction(@NotNull Chain chain, @NotNull Consumer<Integer> onSelected) {
+    public BaseGoToChangePopupAction(@Nonnull Chain chain, @Nonnull Consumer<Integer> onSelected) {
       myChain = chain;
       myOnSelected = onSelected;
     }
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       if (myChain.getRequests().size() <= 1) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -69,7 +71,7 @@ public class GoToChangePopupBuilder {
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       JBPopup popup = createPopup(e);
 
       InputEvent event = e.getInputEvent();
@@ -81,32 +83,32 @@ public class GoToChangePopupBuilder {
       }
     }
 
-    @NotNull
-    protected abstract JBPopup createPopup(@NotNull AnActionEvent e);
+    @Nonnull
+    protected abstract JBPopup createPopup(@Nonnull AnActionEvent e);
   }
 
   private static class SimpleGoToChangePopupAction extends BaseGoToChangePopupAction {
 
-    public SimpleGoToChangePopupAction(@NotNull DiffRequestChain chain, @NotNull Consumer<Integer> onSelected) {
+    public SimpleGoToChangePopupAction(@Nonnull DiffRequestChain chain, @Nonnull Consumer<Integer> onSelected) {
       super(chain, onSelected);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected JBPopup createPopup(@NotNull AnActionEvent e) {
+    protected JBPopup createPopup(@Nonnull AnActionEvent e) {
       return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getProject()));
     }
 
     private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {
       private final Project myProject;
 
-      public MyListPopupStep(@Nullable Project project) {
+      public MyListPopupStep(@javax.annotation.Nullable Project project) {
         super("Go To Change", myChain.getRequests());
         setDefaultOptionIndex(myChain.getIndex());
         myProject = project;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(DiffRequestProducer value) {
         return value.getName();

@@ -25,7 +25,7 @@ import com.intellij.util.containers.HashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -78,7 +78,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "PathMacrosImpl";
   }
@@ -113,13 +113,13 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public void setIgnoredMacroNames(@NotNull final Collection<String> names) {
+  public void setIgnoredMacroNames(@Nonnull final Collection<String> names) {
     myIgnoredMacros.clear();
     myIgnoredMacros.addAll(names);
   }
 
   @Override
-  public void addIgnoredMacro(@NotNull String name) {
+  public void addIgnoredMacro(@Nonnull String name) {
     if (!myIgnoredMacros.contains(name)) myIgnoredMacros.add(name);
   }
 
@@ -134,7 +134,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public boolean isIgnoredMacroName(@NotNull String macro) {
+  public boolean isIgnoredMacroName(@Nonnull String macro) {
     return myIgnoredMacros.contains(macro);
   }
 
@@ -183,7 +183,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public void setMacro(@NotNull String name, @NotNull String value) {
+  public void setMacro(@Nonnull String name, @Nonnull String value) {
     if (value.trim().isEmpty()) return;
     try {
       myLock.writeLock().lock();
@@ -196,7 +196,7 @@ public class PathMacrosImpl extends PathMacros implements ApplicationComponent, 
   }
 
   @Override
-  public void addLegacyMacro(@NotNull String name, @NotNull String value) {
+  public void addLegacyMacro(@Nonnull String name, @Nonnull String value) {
     try {
       myLock.writeLock().lock();
       myLegacyMacros.put(name, value);

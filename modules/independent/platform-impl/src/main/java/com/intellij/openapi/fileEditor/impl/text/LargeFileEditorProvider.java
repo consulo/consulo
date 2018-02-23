@@ -24,8 +24,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.SingleRootFileViewProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -36,24 +36,24 @@ import java.beans.PropertyChangeListener;
 public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
 
   @Override
-  public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return TextEditorProvider.isTextFile(file) && SingleRootFileViewProvider.isTooLargeForContentLoading(file);
   }
 
   @Override
-  @NotNull
-  public FileEditor createEditor(@NotNull Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
     return new LargeFileEditor(file);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getEditorTypeId() {
     return "LargeFileEditor";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.NONE;
   }
@@ -65,7 +65,7 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
       myFile = file;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       JLabel label = new JLabel(
@@ -79,20 +79,20 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return "Large file editor";
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public FileEditorState getState(@NotNull FileEditorStateLevel level) {
+    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
       return new TextEditorState();
     }
 
     @Override
-    public void setState(@NotNull FileEditorState state) {
+    public void setState(@Nonnull FileEditorState state) {
     }
 
     @Override
@@ -114,11 +114,11 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
     }
 
     @Override
-    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     }
 
     @Override
-    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     }
 
     @Override

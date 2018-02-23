@@ -19,8 +19,8 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -28,22 +28,22 @@ import org.jetbrains.annotations.Nullable;
 public class ProblemDescriptorImpl extends ProblemDescriptorBase implements ProblemDescriptor {
   private final HintAction myHintAction;
 
-  public ProblemDescriptorImpl(@NotNull PsiElement startElement,
-                               @NotNull PsiElement endElement,
+  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
+                               @Nonnull PsiElement endElement,
                                String descriptionTemplate,
                                LocalQuickFix[] fixes,
-                               @NotNull ProblemHighlightType highlightType,
+                               @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
                                boolean onTheFly) {
     this(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, null, onTheFly);
   }
 
-  public ProblemDescriptorImpl(@NotNull PsiElement startElement,
-                               @NotNull PsiElement endElement,
+  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
+                               @Nonnull PsiElement endElement,
                                String descriptionTemplate,
                                LocalQuickFix[] fixes,
-                               @NotNull ProblemHighlightType highlightType,
+                               @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
                                @Nullable HintAction hintAction,
@@ -51,11 +51,11 @@ public class ProblemDescriptorImpl extends ProblemDescriptorBase implements Prob
     this(startElement, endElement, descriptionTemplate, fixes, highlightType, isAfterEndOfLine, rangeInElement, true, hintAction, onTheFly);
   }
 
-  public ProblemDescriptorImpl(@NotNull PsiElement startElement,
-                               @NotNull PsiElement endElement,
+  public ProblemDescriptorImpl(@Nonnull PsiElement startElement,
+                               @Nonnull PsiElement endElement,
                                String descriptionTemplate,
                                LocalQuickFix[] fixes,
-                               @NotNull ProblemHighlightType highlightType,
+                               @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
                                final boolean tooltip,

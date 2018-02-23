@@ -22,8 +22,8 @@ import com.intellij.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class SendToFavoritesGroup extends ActionGroup {
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) {
       return EMPTY_ARRAY;

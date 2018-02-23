@@ -44,8 +44,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.PositionTracker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.PrintStream;
@@ -92,7 +92,7 @@ public class LivePreview extends DocumentAdapter implements SearchResults.Search
 
   public interface Delegate {
     @Nullable
-    String getStringToReplace(@NotNull Editor editor, @Nullable FindResult findResult);
+    String getStringToReplace(@Nonnull Editor editor, @Nullable FindResult findResult);
   }
 
   private static TextAttributes strikeout() {
@@ -153,7 +153,7 @@ public class LivePreview extends DocumentAdapter implements SearchResults.Search
     ranges.add(new Pair<Integer, Character>(editor.getDocument().getTextLength()+1, '\n'));
     ContainerUtil.sort(ranges, new Comparator<Pair<Integer, Character>>() {
       @Override
-      public int compare(@NotNull Pair<Integer, Character> pair, @NotNull Pair<Integer, Character> pair2) {
+      public int compare(@Nonnull Pair<Integer, Character> pair, @Nonnull Pair<Integer, Character> pair2) {
         int res = pair.first - pair2.first;
         if (res == 0) {
 
@@ -420,7 +420,7 @@ public class LivePreview extends DocumentAdapter implements SearchResults.Search
     }
   }
 
-  @NotNull
+  @Nonnull
   private RangeHighlighter highlightRange(TextRange textRange, TextAttributes attributes, Set<RangeHighlighter> highlighters) {
     if (myInSmartUpdate) {
       for (RangeHighlighter highlighter : myHighlighters) {

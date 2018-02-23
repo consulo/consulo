@@ -38,9 +38,9 @@ import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -138,7 +138,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
 
   @Override
-  public Iterable<TextRange> matchingFragments(@NotNull String text) {
+  public Iterable<TextRange> matchingFragments(@Nonnull String text) {
     if (!isPopupActive()) return null;
     final SpeedSearchComparator comparator = getComparator();
     final String recentSearchText = comparator.getRecentSearchText();
@@ -176,11 +176,11 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     return new ViewIterator(this, startingIndex < 0 ? getElementCount() : startingIndex);
   }
 
-  public void addChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addChangeListener(@Nonnull PropertyChangeListener listener) {
     myChangeSupport.addPropertyChangeListener(listener);
   }
 
-  public void removeChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removeChangeListener(@Nonnull PropertyChangeListener listener) {
     myChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -195,7 +195,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     return str != null && compare(str, pattern);
   }
 
-  protected boolean compare(@NotNull String text, @Nullable String pattern) {
+  protected boolean compare(@Nonnull String text, @Nullable String pattern) {
     return pattern != null && myComparator.matchingFragments(pattern, text) != null;
   }
 
@@ -356,7 +356,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
   }
 
   @Override
-  public void findAndSelectElement(@NotNull String searchQuery) {
+  public void findAndSelectElement(@Nonnull String searchQuery) {
     selectElement(findElement(searchQuery), searchQuery);
   }
 
@@ -633,7 +633,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
     private int myCurrentIndex;
     private final Object[] myElements;
 
-    public ViewIterator(@NotNull final SpeedSearchBase speedSearch, final int startIndex) {
+    public ViewIterator(@Nonnull final SpeedSearchBase speedSearch, final int startIndex) {
       mySpeedSearch = speedSearch;
       myCurrentIndex = startIndex;
       myElements = speedSearch.getAllElements();

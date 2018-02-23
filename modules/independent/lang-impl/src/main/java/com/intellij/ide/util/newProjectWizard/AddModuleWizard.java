@@ -41,8 +41,8 @@ import consulo.moduleImport.LegacyModuleImportProvider;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -62,7 +62,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   /**
    * @param project if null, the wizard will start creating new project, otherwise will add a new module to the existing project.
    */
-  public AddModuleWizard(@Nullable final Project project, final @NotNull ModulesProvider modulesProvider, @Nullable String defaultPath) {
+  public AddModuleWizard(@Nullable final Project project, final @Nonnull ModulesProvider modulesProvider, @Nullable String defaultPath) {
     super(project == null ? IdeBundle.message("title.new.project") : IdeBundle.message("title.add.module"), project);
     myCurrentProject = project;
     initModuleWizard(project, defaultPath);
@@ -71,7 +71,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
   /**
    * @param project if null, the wizard will start creating new project, otherwise will add a new module to the existing proj.
    */
-  public AddModuleWizard(Component parent, final Project project, @NotNull ModulesProvider modulesProvider) {
+  public AddModuleWizard(Component parent, final Project project, @Nonnull ModulesProvider modulesProvider) {
     super(project == null ? IdeBundle.message("title.new.project") : IdeBundle.message("title.add.module"), parent);
     myCurrentProject = project;
     initModuleWizard(project, null);
@@ -339,17 +339,17 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
     return myWizardMode;
   }
 
-  @NotNull
+  @Nonnull
   public String getNewProjectFilePath() {
     return myWizardContext.getProjectFileDirectory();
   }
 
-  @NotNull
+  @Nonnull
   public WizardContext getWizardContext() {
     return myWizardContext;
   }
 
-  @NotNull
+  @Nonnull
   public String getNewCompileOutput() {
     final String projectFilePath = myWizardContext.getProjectFileDirectory();
     @NonNls String path = myWizardContext.getCompilerOutputDirectory();
@@ -391,7 +391,7 @@ public class AddModuleWizard extends AbstractWizard<ModuleWizardStep> {
    *               to return <code>true</code> for the step to go to
    * @return <code>true</code> if current wizard is navigated to the target step; <code>false</code> otherwise
    */
-  public boolean navigateToStep(@NotNull Function<Step, Boolean> filter) {
+  public boolean navigateToStep(@Nonnull Function<Step, Boolean> filter) {
     for (int i = 0, myStepsSize = mySteps.size(); i < myStepsSize; i++) {
       ModuleWizardStep step = mySteps.get(i);
       if (filter.fun(step) != Boolean.TRUE) {

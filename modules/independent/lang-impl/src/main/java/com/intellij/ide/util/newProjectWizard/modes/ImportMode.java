@@ -30,23 +30,23 @@ import com.intellij.projectImport.ImportChooserStep;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImportMode implements Disposable {
   private StepSequence myStepSequence;
   private final ModuleImportProvider<?>[] myProviders;
 
-  public ImportMode(@NotNull ModuleImportProvider<?>[] providers) {
+  public ImportMode(@Nonnull ModuleImportProvider<?>[] providers) {
     myProviders = providers;
   }
 
-  @NotNull
+  @Nonnull
   public String getDisplayName(final WizardContext context) {
     return ProjectBundle.message("project.new.wizard.import.title", context.getPresentationName());
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription(final WizardContext context) {
     final String productName = ApplicationNamesInfo.getInstance().getFullProductName();
     return ProjectBundle.message("project.new.wizard.import.description", productName, context.getPresentationName(),
@@ -64,7 +64,7 @@ public class ImportMode implements Disposable {
     myStepSequence = null;
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public StepSequence createSteps(final WizardContext context) {
     final StepSequence stepSequence = new StepSequence();

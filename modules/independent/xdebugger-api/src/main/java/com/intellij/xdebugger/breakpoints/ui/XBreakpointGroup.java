@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.breakpoints.ui;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,7 +29,7 @@ public abstract class XBreakpointGroup implements Comparable<XBreakpointGroup> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
   @Override

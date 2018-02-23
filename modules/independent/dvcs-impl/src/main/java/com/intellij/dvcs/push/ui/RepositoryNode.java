@@ -23,8 +23,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
@@ -33,13 +33,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode, Comparable<RepositoryNode> {
 
-  @NotNull protected final AtomicBoolean myLoading = new AtomicBoolean();
-  @NotNull private final CheckBoxModel myCheckBoxModel;
+  @Nonnull
+  protected final AtomicBoolean myLoading = new AtomicBoolean();
+  @Nonnull
+  private final CheckBoxModel myCheckBoxModel;
 
-  @NotNull private final RepositoryWithBranchPanel myRepositoryPanel;
+  @Nonnull
+  private final RepositoryWithBranchPanel myRepositoryPanel;
   @Nullable private Future<AtomicReference<OutgoingResult>> myFuture;
 
-  public RepositoryNode(@NotNull RepositoryWithBranchPanel repositoryPanel, @NotNull CheckBoxModel model, boolean enabled) {
+  public RepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model, boolean enabled) {
     super(repositoryPanel);
     myCheckBoxModel = model;
     setChecked(false);
@@ -61,16 +64,16 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
     return true;
   }
 
-  public void forceUpdateUiModelWithTypedText(@NotNull String forceText) {
+  public void forceUpdateUiModelWithTypedText(@Nonnull String forceText) {
     myRepositoryPanel.getTargetPanel().forceUpdateEditableUiModel(forceText);
   }
 
   @Override
-  public void render(@NotNull ColoredTreeCellRenderer renderer) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
     render(renderer, null);
   }
 
-  public void render(@NotNull ColoredTreeCellRenderer renderer, @Nullable String syncEditingText) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer, @javax.annotation.Nullable String syncEditingText) {
     int repoFixedWidth = 120;
     SimpleTextAttributes repositoryDetailsTextAttributes = PushLogTreeUtil
             .addTransparencyIfNeeded(SimpleTextAttributes.REGULAR_ATTRIBUTES, isChecked());
@@ -83,8 +86,8 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
     pushTargetPanel.render(renderer, renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)), isChecked(), syncEditingText);
   }
 
-  @NotNull
-  private String getRepoName(@NotNull ColoredTreeCellRenderer renderer, int maxWidth) {
+  @Nonnull
+  private String getRepoName(@Nonnull ColoredTreeCellRenderer renderer, int maxWidth) {
     String name = myRepositoryPanel.getRepositoryName();
     return GraphicsUtil.stringWidth(name, renderer.getFont()) > maxWidth - UIUtil.DEFAULT_HGAP ? name + "  " : name;
   }
@@ -117,7 +120,7 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
   }
 
   @Override
-  public void startLoading(@NotNull final JTree tree, @NotNull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
+  public void startLoading(@Nonnull final JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial) {
     myFuture = future;
     myLoading.set(true);
   }
@@ -127,7 +130,7 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
     return myRepositoryPanel.isEditable();
   }
 
-  public int compareTo(@NotNull RepositoryNode repositoryNode) {
+  public int compareTo(@Nonnull RepositoryNode repositoryNode) {
     String name = myRepositoryPanel.getRepositoryName();
     RepositoryWithBranchPanel panel = (RepositoryWithBranchPanel)repositoryNode.getUserObject();
     return name.compareTo(panel.getRepositoryName());

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

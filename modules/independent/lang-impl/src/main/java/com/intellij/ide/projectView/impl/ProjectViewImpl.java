@@ -97,8 +97,8 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -117,7 +117,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private final CopyPasteDelegator myCopyPasteDelegator;
   private boolean isInitialized;
   private boolean myExtensionsLoaded = false;
-  @NotNull
+  @Nonnull
   private final Project myProject;
 
   // + options
@@ -209,7 +209,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private final Map<String, SelectInTarget> mySelectInTargets = new LinkedHashMap<>();
   private ContentManager myContentManager;
 
-  public ProjectViewImpl(@NotNull Project project, final FileEditorManager fileEditorManager, final ToolWindowManagerEx toolWindowManager) {
+  public ProjectViewImpl(@Nonnull Project project, final FileEditorManager fileEditorManager, final ToolWindowManagerEx toolWindowManager) {
     myProject = project;
 
     constructUi();
@@ -230,7 +230,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myDataProvider.add(myPanel, BorderLayout.CENTER);
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, myPanel) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
         return viewPane == null ? PsiElement.EMPTY_ARRAY : viewPane.getSelectedPSIElements();
@@ -278,13 +278,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myPanel.setContent(myViewContentPanel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Project";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<AnAction> getActions(boolean originalProvider) {
     List<AnAction> result = new ArrayList<>();
@@ -333,32 +333,32 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   private class ChangeViewAction extends AnAction {
-    @NotNull
+    @Nonnull
     private final String myId;
     @Nullable
     private final String mySubId;
 
-    private ChangeViewAction(@NotNull String id, @Nullable String subId) {
+    private ChangeViewAction(@Nonnull String id, @Nullable String subId) {
       myId = id;
       mySubId = subId;
     }
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       AbstractProjectViewPane pane = getProjectViewPaneById(myId);
       e.getPresentation().setText(pane.getTitle() + (mySubId != null ? (" - " + pane.getPresentableSubIdName(mySubId)) : ""));
     }
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       changeView(myId, mySubId);
     }
   }
 
   @Override
-  public synchronized void addProjectPane(@NotNull final AbstractProjectViewPane pane) {
+  public synchronized void addProjectPane(@Nonnull final AbstractProjectViewPane pane) {
     myUninitializedPanes.add(pane);
     SelectInTarget selectInTarget = pane.createSelectInTarget();
     if (selectInTarget != null) {
@@ -370,7 +370,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public synchronized void removeProjectPane(@NotNull AbstractProjectViewPane pane) {
+  public synchronized void removeProjectPane(@Nonnull AbstractProjectViewPane pane) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myUninitializedPanes.remove(pane);
     //assume we are completely initialized here
@@ -433,7 +433,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myUninitializedPanes.clear();
   }
 
-  private void doAddPane(@NotNull final AbstractProjectViewPane newPane) {
+  private void doAddPane(@Nonnull final AbstractProjectViewPane newPane) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     int index;
     final ContentManager manager = getContentManager();
@@ -479,7 +479,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
   }
 
-  private void showPane(@NotNull AbstractProjectViewPane newPane) {
+  private void showPane(@Nonnull AbstractProjectViewPane newPane) {
     AbstractProjectViewPane currentPane = getCurrentProjectViewPane();
     PsiElement selectedPsiElement = null;
     if (currentPane != null) {
@@ -512,13 +512,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       ProjectViewSelectInTarget target = virtualFile == null ? null : getProjectViewSelectInTarget(newPane);
       if (target != null && target.isSubIdSelectable(newSubId, new SelectInContext() {
         @Override
-        @NotNull
+        @Nonnull
         public Project getProject() {
           return myProject;
         }
 
         @Override
-        @NotNull
+        @Nonnull
         public VirtualFile getVirtualFile() {
           return virtualFile;
         }
@@ -536,7 +536,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   @RequiredUIAccess
   @Override
-  public void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions) {
+  public void setupToolWindow(@Nonnull ToolWindow toolWindow, final boolean loadPaneExtensions) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myActionGroup = new DefaultActionGroup();
 
@@ -646,10 +646,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }).setAsSecondary(true);
 
     class FlattenPackagesDependableAction extends PaneOptionAction {
-      FlattenPackagesDependableAction(@NotNull Map<String, Boolean> optionsMap,
-                                      @NotNull String text,
-                                      @NotNull String description,
-                                      @NotNull Icon icon,
+      FlattenPackagesDependableAction(@Nonnull Map<String, Boolean> optionsMap,
+                                      @Nonnull String text,
+                                      @Nonnull String description,
+                                      @Nonnull Icon icon,
                                       boolean optionDefaultValue) {
         super(optionsMap, text, description, icon, optionDefaultValue);
       }
@@ -875,7 +875,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     final Map<String, Boolean> myOptionsMap;
     private final boolean myOptionDefaultValue;
 
-    PaneOptionAction(@NotNull Map<String, Boolean> optionsMap, @NotNull String text, @NotNull String description, Icon icon, boolean optionDefaultValue) {
+    PaneOptionAction(@Nonnull Map<String, Boolean> optionsMap, @Nonnull String text, @Nonnull String description, Icon icon, boolean optionDefaultValue) {
       super(text, description, icon);
       myOptionsMap = optionsMap;
       myOptionDefaultValue = optionDefaultValue;
@@ -925,18 +925,18 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void changeView(@NotNull String viewId) {
+  public void changeView(@Nonnull String viewId) {
     changeView(viewId, null);
   }
 
   @Override
-  public void changeView(@NotNull String viewId, @Nullable String subId) {
+  public void changeView(@Nonnull String viewId, @Nullable String subId) {
     changeViewCB(viewId, subId);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback changeViewCB(@NotNull String viewId, String subId) {
+  public ActionCallback changeViewCB(@Nonnull String viewId, String subId) {
     AbstractProjectViewPane pane = getProjectViewPaneById(viewId);
     LOG.assertTrue(pane != null, "Project view pane not found: " + viewId + "; subId:" + subId + "; project: " + myProject);
     if (!viewId.equals(getCurrentViewId()) || subId != null && !subId.equals(pane.getSubId())) {
@@ -951,13 +951,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private final class MyDeletePSIElementProvider implements DeleteProvider {
     @Override
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       final PsiElement[] elements = getElementsToDelete();
       return DeleteHandler.shouldEnableDeleteAction(elements);
     }
 
     @Override
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       List<PsiElement> allElements = Arrays.asList(getElementsToDelete());
       List<PsiElement> validElements = new ArrayList<>();
       for (PsiElement psiElement : allElements) {
@@ -974,7 +974,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
 
-    @NotNull
+    @Nonnull
     private PsiElement[] getElementsToDelete() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       PsiElement[] elements = viewPane.getSelectedPSIElements();
@@ -1044,7 +1044,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
       if (currentProjectViewPane != null) {
         final Object paneSpecificData = currentProjectViewPane.getData(dataId);
@@ -1096,12 +1096,12 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         if (orderEntry != null) {
           return new DeleteProvider() {
             @Override
-            public void deleteElement(@NotNull DataContext dataContext) {
+            public void deleteElement(@Nonnull DataContext dataContext) {
               detachLibrary(orderEntry, myProject);
             }
 
             @Override
-            public boolean canDeleteElement(@NotNull DataContext dataContext) {
+            public boolean canDeleteElement(@Nonnull DataContext dataContext) {
               return true;
             }
           };
@@ -1187,7 +1187,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       return null;
     }
 
-    private void detachLibrary(@NotNull final LibraryOrderEntry orderEntry, @NotNull Project project) {
+    private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
       String message = IdeBundle.message("detach.library.from.module", orderEntry.getPresentableName(), module.getName());
       String title = IdeBundle.message("detach.library");
@@ -1255,7 +1255,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
    * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
    */
   @Nullable
-  private Module moduleBySingleContentRoot(@NotNull VirtualFile file) {
+  private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
     if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
       Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
       if (module != null && !module.isDisposed() && ModuleRootManager.getInstance(module).getContentRoots().length == 1) {
@@ -1266,8 +1266,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     return null;
   }
 
-  @NotNull
-  private <T> List<T> getSelectedElements(@NotNull Class<T> klass) {
+  @Nonnull
+  private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
     List<T> result = new ArrayList<>();
     final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane == null) return result;
@@ -1302,7 +1302,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiDirectory[] getDirectories() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
@@ -1327,14 +1327,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
 
-  private static void readOption(Element node, @NotNull Map<String, Boolean> options) {
+  private static void readOption(Element node, @Nonnull Map<String, Boolean> options) {
     if (node == null) return;
     for (Attribute attribute : node.getAttributes()) {
       options.put(attribute.getName(), Boolean.TRUE.toString().equals(attribute.getValue()) ? Boolean.TRUE : Boolean.FALSE);
     }
   }
 
-  private static void writeOption(@NotNull Element parentNode, @NotNull Map<String, Boolean> optionsForPanes, @NotNull String optionName) {
+  private static void writeOption(@Nonnull Element parentNode, @Nonnull Map<String, Boolean> optionsForPanes, @Nonnull String optionName) {
     Element e = new Element(optionName);
     for (Map.Entry<String, Boolean> entry : optionsForPanes.entrySet()) {
       final String key = entry.getKey();
@@ -1383,7 +1383,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
   }
 
-  private void readPaneState(@NotNull Element panesElement) {
+  private void readPaneState(@Nonnull Element panesElement) {
     @SuppressWarnings({"unchecked"}) final List<Element> paneElements = panesElement.getChildren(ELEMENT_PANE);
 
     for (Element paneElement : paneElements) {
@@ -1445,7 +1445,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     return parentNode;
   }
 
-  private void writePaneState(@NotNull Element panesElement) {
+  private void writePaneState(@Nonnull Element panesElement) {
     for (AbstractProjectViewPane pane : myId2Pane.values()) {
       Element paneElement = new Element(ELEMENT_PANE);
       paneElement.setAttribute(ATTRIBUTE_ID, pane.getId());
@@ -1585,14 +1585,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setShowLibraryContents(boolean showLibraryContents, @NotNull String paneId) {
+  public void setShowLibraryContents(boolean showLibraryContents, @Nonnull String paneId) {
     if (isGlobalOptions()) {
       getGlobalOptions().setShowLibraryContents(showLibraryContents);
     }
     setPaneOption(myShowLibraryContents, showLibraryContents, paneId, true);
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback setShowLibraryContentsCB(boolean showLibraryContents, String paneId) {
     return setPaneOption(myShowLibraryContents, showLibraryContents, paneId, true);
   }
@@ -1607,7 +1607,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setShowModules(boolean showModules, @NotNull String paneId) {
+  public void setShowModules(boolean showModules, @Nonnull String paneId) {
     if (isGlobalOptions()) {
       getGlobalOptions().setShowModules(showModules);
     }
@@ -1615,7 +1615,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setHideEmptyPackages(boolean hideEmptyPackages, @NotNull String paneId) {
+  public void setHideEmptyPackages(boolean hideEmptyPackages, @Nonnull String paneId) {
     if (isGlobalOptions()) {
       getGlobalOptions().setHideEmptyPackages(hideEmptyPackages);
       for (String pane : myHideEmptyPackages.keySet()) {
@@ -1626,15 +1626,15 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setAbbreviatePackageNames(boolean abbreviatePackageNames, @NotNull String paneId) {
+  public void setAbbreviatePackageNames(boolean abbreviatePackageNames, @Nonnull String paneId) {
     if (isGlobalOptions()) {
       getGlobalOptions().setAbbreviatePackages(abbreviatePackageNames);
     }
     setPaneOption(myAbbreviatePackageNames, abbreviatePackageNames, paneId, true);
   }
 
-  @NotNull
-  private ActionCallback setPaneOption(@NotNull Map<String, Boolean> optionsMap, boolean value, String paneId, final boolean updatePane) {
+  @Nonnull
+  private ActionCallback setPaneOption(@Nonnull Map<String, Boolean> optionsMap, boolean value, String paneId, final boolean updatePane) {
     if (paneId != null) {
       optionsMap.put(paneId, value);
       if (updatePane) {
@@ -1647,7 +1647,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     return ActionCallback.DONE;
   }
 
-  private static boolean getPaneOptionValue(@NotNull Map<String, Boolean> optionsMap, String paneId, boolean defaultValue) {
+  private static boolean getPaneOptionValue(@Nonnull Map<String, Boolean> optionsMap, String paneId, boolean defaultValue) {
     final Boolean value = optionsMap.get(paneId);
     return value == null ? defaultValue : value.booleanValue();
   }
@@ -1701,7 +1701,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private static class SelectionInfo {
     private final Object[] myElements;
 
-    private SelectionInfo(@NotNull Object[] elements) {
+    private SelectionInfo(@Nonnull Object[] elements) {
       myElements = elements;
     }
 
@@ -1728,7 +1728,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
 
-    @NotNull
+    @Nonnull
     public static SelectionInfo create(final AbstractProjectViewPane viewPane) {
       List<Object> selectedElements = Collections.emptyList();
       if (viewPane != null) {
@@ -1754,7 +1754,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     @Override
-    protected void selectElementFromEditor(@NotNull FileEditor fileEditor) {
+    protected void selectElementFromEditor(@Nonnull FileEditor fileEditor) {
       if (myProject.isDisposed() || !myViewContentPanel.isShowing()) return;
       if (isAutoscrollFromSource(getCurrentViewId())) {
         if (fileEditor instanceof TextEditor) {
@@ -1809,21 +1809,21 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
 
-    private void selectElementAtCaretNotLosingFocus(@NotNull Editor editor) {
+    private void selectElementAtCaretNotLosingFocus(@Nonnull Editor editor) {
       AbstractProjectViewPane pane = getCurrentProjectViewPane();
       if (pane != null && !IJSwingUtilities.hasFocus(pane.getComponentToFocus())) {
         selectElementAtCaret(editor);
       }
     }
 
-    private void selectElementAtCaret(@NotNull Editor editor) {
+    private void selectElementAtCaret(@Nonnull Editor editor) {
       final PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
       if (file == null) return;
 
       scrollFromFile(file, editor);
     }
 
-    private void scrollFromFile(@NotNull PsiFile file, @Nullable Editor editor) {
+    private void scrollFromFile(@Nonnull PsiFile file, @Nullable Editor editor) {
       SmartPsiElementPointer<PsiFile> pointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(file);
       PsiDocumentManager.getInstance(myProject).performLaterWhenAllCommitted(() -> {
         SelectInTarget target = getCurrentSelectInTarget();
@@ -1858,34 +1858,34 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     private class MySelectInContext implements SelectInContext {
-      @NotNull
+      @Nonnull
       private final PsiFile myPsiFile;
       @Nullable
       private final Editor myEditor;
 
-      private MySelectInContext(@NotNull PsiFile psiFile, @Nullable Editor editor) {
+      private MySelectInContext(@Nonnull PsiFile psiFile, @Nullable Editor editor) {
         myPsiFile = psiFile;
         myEditor = editor;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public Project getProject() {
         return myProject;
       }
 
-      @NotNull
+      @Nonnull
       private PsiFile getPsiFile() {
         return myPsiFile;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public Supplier<FileEditor> getFileEditorProvider() {
         return () -> myFileEditorManager.openFile(myPsiFile.getContainingFile().getVirtualFile(), false)[0];
       }
 
-      @NotNull
+      @Nonnull
       private PsiElement getPsiElement() {
         PsiElement e = null;
         if (myEditor != null) {
@@ -1902,7 +1902,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public VirtualFile getVirtualFile() {
         return getPsiFile().getVirtualFile();
       }
@@ -1920,7 +1920,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setManualOrder(@NotNull String paneId, final boolean enabled) {
+  public void setManualOrder(@Nonnull String paneId, final boolean enabled) {
     setPaneOption(myManualOrder, enabled, paneId, false);
     final AbstractProjectViewPane pane = getProjectViewPaneById(paneId);
     pane.installComparator();
@@ -1932,7 +1932,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public void setSortByType(@NotNull String paneId, final boolean sortByType) {
+  public void setSortByType(@Nonnull String paneId, final boolean sortByType) {
     setPaneOption(mySortByType, sortByType, paneId, false);
     final AbstractProjectViewPane pane = getProjectViewPaneById(paneId);
     pane.installComparator();
@@ -2021,27 +2021,27 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myAutoScrollFromSourceHandler.scrollFromSource();
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<String> getPaneIds() {
     return Collections.unmodifiableCollection(myId2Pane.keySet());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<SelectInTarget> getSelectInTargets() {
     ensurePanesLoaded();
     return mySelectInTargets.values();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     AbstractProjectViewPane pane = myId2Pane.get(myCurrentViewSubId);
     if (pane == null) {
       pane = myId2Pane.get(myCurrentViewId);

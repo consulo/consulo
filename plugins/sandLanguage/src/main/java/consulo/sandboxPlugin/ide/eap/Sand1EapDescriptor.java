@@ -16,14 +16,14 @@
 package consulo.sandboxPlugin.ide.eap;
 
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.08.14
  */
 public class Sand1EapDescriptor extends EarlyAccessProgramDescriptor {
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "A";
@@ -39,7 +39,7 @@ public class Sand1EapDescriptor extends EarlyAccessProgramDescriptor {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "test";

@@ -57,9 +57,9 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
@@ -100,7 +100,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     myEntryTable.setDefaultEditor(DependencyScope.class, new DefaultCellEditor(scopeEditor));
     myEntryTable.setDefaultRenderer(DependencyScope.class, new ComboBoxTableRenderer<DependencyScope>(DependencyScope.values()) {
       @Override
-      protected String getTextFor(@NotNull final DependencyScope value) {
+      protected String getTextFor(@Nonnull final DependencyScope value) {
         return value.getDisplayName();
       }
     });
@@ -376,8 +376,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   }
 
   @Override
-  @NotNull
-  public LibraryTableModifiableModelProvider getModifiableModelProvider(@NotNull String tableLevel) {
+  @Nonnull
+  public LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel) {
     if (LibraryTableImplUtil.MODULE_LEVEL.equals(tableLevel)) {
       final LibraryTable moduleLibraryTable = getRootModel().getModuleLibraryTable();
       return new LibraryTableModifiableModelProvider() {
@@ -468,7 +468,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     myEntryTable.repaint();
   }
 
-  public void selectOrderEntry(@NotNull OrderEntry entry) {
+  public void selectOrderEntry(@Nonnull OrderEntry entry) {
     for (int row = 0; row < myModel.getRowCount(); row++) {
       final OrderEntry orderEntry = myModel.getItemAt(row).getEntry();
       if (entry.getPresentableName().equals(orderEntry.getPresentableName())) {

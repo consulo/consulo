@@ -45,8 +45,8 @@ import com.maddyhome.idea.copyright.options.ExternalOptionHelper;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -228,7 +228,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
                   });
                 }
 
-                @NotNull
+                @Nonnull
                 @Override
                 public String getTextFor(CopyrightProfile value) {
                   return value.getName();
@@ -314,7 +314,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     });
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

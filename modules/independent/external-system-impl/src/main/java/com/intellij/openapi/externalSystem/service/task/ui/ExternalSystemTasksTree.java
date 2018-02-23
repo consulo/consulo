@@ -27,8 +27,8 @@ import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.tree.TreeModelAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -48,26 +48,30 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
 
   private static final int COLLAPSE_STATE_PROCESSING_DELAY_MILLIS = 200;
 
-  @NotNull private static final Comparator<TreePath> PATH_COMPARATOR = new Comparator<TreePath>() {
+  @Nonnull
+  private static final Comparator<TreePath> PATH_COMPARATOR = new Comparator<TreePath>() {
     @Override
     public int compare(TreePath o1, TreePath o2) {
       return o2.getPathCount() - o1.getPathCount();
     }
   };
 
-  @NotNull private final Alarm myCollapseStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+  @Nonnull
+  private final Alarm myCollapseStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
   /** Holds list of paths which 'expand/collapse' state should be restored. */
-  @NotNull private final Set<TreePath> myPathsToProcessCollapseState = ContainerUtilRt.newHashSet();
+  @Nonnull
+  private final Set<TreePath> myPathsToProcessCollapseState = ContainerUtilRt.newHashSet();
 
-  @NotNull private final Map<String/*tree path*/, Boolean/*expanded*/> myExpandedStateHolder;
+  @Nonnull
+  private final Map<String/*tree path*/, Boolean/*expanded*/> myExpandedStateHolder;
 
   private boolean mySuppressCollapseTracking;
 
-  public ExternalSystemTasksTree(@NotNull ExternalSystemTasksTreeModel model,
-                                 @NotNull Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder,
-                                 @NotNull final Project project,
-                                 @NotNull final ProjectSystemId externalSystemId)
+  public ExternalSystemTasksTree(@Nonnull ExternalSystemTasksTreeModel model,
+                                 @Nonnull Map<String/*tree path*/, Boolean/*expanded*/> expandedStateHolder,
+                                 @Nonnull final Project project,
+                                 @Nonnull final ProjectSystemId externalSystemId)
   {
     super(model);
     myExpandedStateHolder = expandedStateHolder;
@@ -122,7 +126,7 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
    *
    * @param path  target path
    */
-  private void scheduleCollapseStateAppliance(@NotNull TreePath path) {
+  private void scheduleCollapseStateAppliance(@Nonnull TreePath path) {
     myPathsToProcessCollapseState.add(path);
     myCollapseStateAlarm.cancelAllRequests();
     myCollapseStateAlarm.addRequest(new Runnable() {
@@ -151,7 +155,7 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
    *
    * @param path  target path
    */
-  private void applyCollapseState(@NotNull TreePath path) {
+  private void applyCollapseState(@Nonnull TreePath path) {
     final String key = getPath(path);
     final Boolean expanded = myExpandedStateHolder.get(key);
     if (expanded == null) {
@@ -172,8 +176,8 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
     }
   }
 
-  @NotNull
-  private static String getPath(@NotNull TreePath path) {
+  @Nonnull
+  private static String getPath(@Nonnull TreePath path) {
     StringBuilder buffer = new StringBuilder();
     for (TreePath current = path; current != null; current = current.getParentPath()) {
       buffer.append(current.getLastPathComponent().toString()).append('/');

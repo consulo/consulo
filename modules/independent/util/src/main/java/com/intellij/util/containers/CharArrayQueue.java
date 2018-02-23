@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A single threaded, resizable, circular char queue backed by an array.
@@ -48,7 +48,7 @@ public class CharArrayQueue {
     }
   }
 
-  public void add(@NotNull String str) {
+  public void add(@Nonnull String str) {
     resizeIfNeeded(mySize + str.length());
     for (int i = 0; i < str.length(); i++) {
       doAdd(str.charAt(i));

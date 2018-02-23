@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ import java.util.Iterator;
 public abstract class DistinctRootsCollection<T> implements Collection<T> {
   private final Collection<T> myCollection = new ArrayList<T>();
 
-  protected abstract boolean isAncestor(@NotNull T ancestor, @NotNull T t);
+  protected abstract boolean isAncestor(@Nonnull T ancestor, @Nonnull T t);
 
   public DistinctRootsCollection() {
   }

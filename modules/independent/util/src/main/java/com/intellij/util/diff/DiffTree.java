@@ -18,7 +18,7 @@ package com.intellij.util.diff;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ThreeState;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,10 @@ public class DiffTree<OT, NT> {
   private final int myOldTreeStart;
   private final int myNewTreeStart;
 
-  private DiffTree(@NotNull FlyweightCapableTreeStructure<OT> oldTree,
-                   @NotNull FlyweightCapableTreeStructure<NT> newTree,
-                   @NotNull ShallowNodeComparator<OT, NT> comparator,
-                   @NotNull CharSequence oldText) {
+  private DiffTree(@Nonnull FlyweightCapableTreeStructure<OT> oldTree,
+                   @Nonnull FlyweightCapableTreeStructure<NT> newTree,
+                   @Nonnull ShallowNodeComparator<OT, NT> comparator,
+                   @Nonnull CharSequence oldText) {
     myOldTree = oldTree;
     myNewTree = newTree;
     myComparator = comparator;
@@ -52,11 +52,11 @@ public class DiffTree<OT, NT> {
     myNewTreeStart = newTree.getStartOffset(newTree.getRoot());
   }
 
-  public static <OT, NT> void diff(@NotNull FlyweightCapableTreeStructure<OT> oldTree,
-                                   @NotNull FlyweightCapableTreeStructure<NT> newTree,
-                                   @NotNull ShallowNodeComparator<OT, NT> comparator,
-                                   @NotNull DiffTreeChangeBuilder<OT, NT> consumer,
-                                   @NotNull CharSequence oldText) {
+  public static <OT, NT> void diff(@Nonnull FlyweightCapableTreeStructure<OT> oldTree,
+                                   @Nonnull FlyweightCapableTreeStructure<NT> newTree,
+                                   @Nonnull ShallowNodeComparator<OT, NT> comparator,
+                                   @Nonnull DiffTreeChangeBuilder<OT, NT> consumer,
+                                   @Nonnull CharSequence oldText) {
     final DiffTree<OT, NT> tree = new DiffTree<OT, NT>(oldTree, newTree, comparator, oldText);
     tree.build(oldTree.getRoot(), newTree.getRoot(), 0, consumer);
   }
@@ -68,30 +68,30 @@ public class DiffTree<OT, NT> {
     NOT_EQUAL, // 100% different
   }
 
-  @NotNull
+  @Nonnull
   private static <OT, NT> DiffTreeChangeBuilder<OT, NT> emptyConsumer() {
     //noinspection unchecked
     return EMPTY_CONSUMER;
   }
   private static final DiffTreeChangeBuilder EMPTY_CONSUMER = new DiffTreeChangeBuilder() {
     @Override
-    public void nodeReplaced(@NotNull Object oldChild, @NotNull Object newChild) {
+    public void nodeReplaced(@Nonnull Object oldChild, @Nonnull Object newChild) {
 
     }
 
     @Override
-    public void nodeDeleted(@NotNull Object oldParent, @NotNull Object oldNode) {
+    public void nodeDeleted(@Nonnull Object oldParent, @Nonnull Object oldNode) {
 
     }
 
     @Override
-    public void nodeInserted(@NotNull Object oldParent, @NotNull Object newNode, int pos) {
+    public void nodeInserted(@Nonnull Object oldParent, @Nonnull Object newNode, int pos) {
 
     }
   };
 
-  @NotNull
-  private CompareResult build(@NotNull OT oldN, @NotNull NT newN, int level, @NotNull DiffTreeChangeBuilder<OT, NT> consumer) {
+  @Nonnull
+  private CompareResult build(@Nonnull OT oldN, @Nonnull NT newN, int level, @Nonnull DiffTreeChangeBuilder<OT, NT> consumer) {
     OT oldNode = myOldTree.prepareForGetChildren(oldN);
     NT newNode = myNewTree.prepareForGetChildren(newN);
 
@@ -292,8 +292,8 @@ public class DiffTree<OT, NT> {
     return CharArrayUtil.regionMatches(myOldText, oldStart, oldEnd, myNewText, newStart, newEnd);
   }
 
-  @NotNull
-  private CompareResult looksEqual(@NotNull ShallowNodeComparator<OT, NT> comparator, OT oldChild1, NT newChild1) {
+  @Nonnull
+  private CompareResult looksEqual(@Nonnull ShallowNodeComparator<OT, NT> comparator, OT oldChild1, NT newChild1) {
     if (oldChild1 == null || newChild1 == null) {
       return oldChild1 == newChild1 ? CompareResult.EQUAL : CompareResult.NOT_EQUAL;
     }

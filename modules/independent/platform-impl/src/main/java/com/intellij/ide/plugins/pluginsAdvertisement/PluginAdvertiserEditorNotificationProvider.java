@@ -36,8 +36,8 @@ import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -60,7 +60,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     myNotifications = notifications;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -69,7 +69,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
     if (file.getFileType() != PlainTextFileType.INSTANCE && !(file.getFileType() instanceof AbstractFileType)) return null;
 
     final String extension = file.getExtension();
@@ -91,7 +91,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private EditorNotificationPanel createPanel(VirtualFile virtualFile, final Set<IdeaPluginDescriptor> plugins, List<IdeaPluginDescriptor> allPlugins) {
     String extension = virtualFile.getExtension();
 
@@ -135,7 +135,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static UnknownExtension createFileFeatureForIgnoring(VirtualFile virtualFile) {
     return new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), "*." + virtualFile.getExtension());
   }

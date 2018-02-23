@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.ex;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param lineHeight    line height used at editor
    * @return              painted drawing width
    */
-  int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
+  int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight);
 
   /**
    * Allows to ask for the minimal width in pixels required for painting of the given type.
@@ -67,7 +67,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param drawingType   target drawing type
    * @return              width in pixels required for the painting of the given type
    */
-  int getMinDrawingWidthInPixels(@NotNull SoftWrapDrawingType drawingType);
+  int getMinDrawingWidthInPixels(@Nonnull SoftWrapDrawingType drawingType);
 
   /**
    * Registers given listener within the current model
@@ -75,7 +75,7 @@ public interface SoftWrapModelEx extends SoftWrapModel {
    * @param listener    listener to register
    * @return            <code>true</code> if given listener was not registered before; <code>false</code> otherwise
    */
-  boolean addSoftWrapChangeListener(@NotNull SoftWrapChangeListener listener);
+  boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener);
 
   /**
    * IJ editor defines a notion of {@link EditorSettings#getAdditionalColumnsCount() additional columns}. They define additional

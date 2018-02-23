@@ -47,8 +47,8 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,12 +68,12 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   private final Alarm update;
   private volatile Reference<Editor> myEditor = new WeakReference<Editor>(null); // store editor here to avoid expensive and EDT-only getSelectedEditor() retrievals
 
-  public EncodingPanel(@NotNull final Project project) {
+  public EncodingPanel(@Nonnull final Project project) {
     super(project);
     update = new Alarm(this);
     myComponent = new TextPanel.ExtraSize() {
       @Override
-      protected void paintComponent(@NotNull final Graphics g) {
+      protected void paintComponent(@Nonnull final Graphics g) {
         super.paintComponent(g);
         if (actionEnabled && getText() != null) {
           final Rectangle r = getBounds();
@@ -87,7 +87,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         update();
         showPopup(e);
         return true;
@@ -106,7 +106,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     VirtualFile newFile = event.getNewFile();
     fileChanged(newFile);
@@ -120,7 +120,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     fileChanged(file);
   }
 
@@ -130,18 +130,18 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return "Encoding";
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
     // should update to reflect encoding-from-content
     EncodingManager.getInstance().addPropertyChangeListener(new PropertyChangeListener() {
@@ -155,7 +155,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }, this);
     ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
       @Override
-      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
         if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
           updateForFile(event.getFile());
         }
@@ -186,7 +186,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }
   }
 
-  private void showPopup(@NotNull MouseEvent e) {
+  private void showPopup(@Nonnull MouseEvent e) {
     if (!actionEnabled) {
       return;
     }
@@ -201,7 +201,7 @@ public class EncodingPanel extends EditorBasedWidget implements StatusBarWidget.
     }
   }
 
-  @NotNull
+  @Nonnull
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);

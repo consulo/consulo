@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
   }
 
   // For testing only
-  UnsafeWeakList(@NotNull WeakReferenceArray<T> array) {
+  UnsafeWeakList(@Nonnull WeakReferenceArray<T> array) {
     myArray = array;
   }
 
@@ -85,7 +85,7 @@ public class UnsafeWeakList<T> extends AbstractList<T> {
     tryReduceCapacity(-1);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<T> iterator() {
     return new MyIterator();

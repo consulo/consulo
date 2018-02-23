@@ -18,9 +18,9 @@ package com.intellij.ui;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public abstract class ExpandableItemsHandlerFactory {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<Object> getExpandedItems() {
       return Collections.emptyList();

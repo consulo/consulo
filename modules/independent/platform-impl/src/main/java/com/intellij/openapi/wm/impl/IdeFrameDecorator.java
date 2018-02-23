@@ -21,8 +21,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.mac.MacMainFrameDecorator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -45,7 +45,7 @@ public abstract class IdeFrameDecorator implements Disposable {
   }
 
   @Nullable
-  public static IdeFrameDecorator decorate(@NotNull IdeFrameImpl frame) {
+  public static IdeFrameDecorator decorate(@Nonnull IdeFrameImpl frame) {
     if (SystemInfo.isMac) {
       return new MacMainFrameDecorator(frame, false);
     }
@@ -70,7 +70,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   // AWT-based decorator
   private static class WinMainFrameDecorator extends IdeFrameDecorator {
-    private WinMainFrameDecorator(@NotNull IdeFrameImpl frame) {
+    private WinMainFrameDecorator(@Nonnull IdeFrameImpl frame) {
       super(frame);
     }
 

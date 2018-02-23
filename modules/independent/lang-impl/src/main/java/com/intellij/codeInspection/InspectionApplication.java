@@ -44,7 +44,7 @@ import com.intellij.psi.PsiManager;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;

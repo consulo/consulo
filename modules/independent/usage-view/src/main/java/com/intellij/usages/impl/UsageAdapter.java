@@ -18,11 +18,11 @@ package com.intellij.usages.impl;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UsageAdapter implements Usage {
   @Override
-  @NotNull
+  @Nonnull
   public UsagePresentation getPresentation() {
     throw new IllegalAccessError();
   }

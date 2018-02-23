@@ -25,7 +25,7 @@ import com.intellij.openapi.util.SystemInfo;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class DefaultKeymap {
     return myKeymaps.toArray(new Keymap[myKeymaps.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public String getDefaultKeymapName() {
     if (SystemInfo.isMac) {
       return KeymapManager.MAC_OS_X_KEYMAP;

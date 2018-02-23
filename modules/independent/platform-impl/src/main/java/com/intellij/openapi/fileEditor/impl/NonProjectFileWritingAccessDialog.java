@@ -23,9 +23,9 @@ import com.intellij.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -39,13 +39,13 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
   private JRadioButton myUnlockDirButton;
   private JRadioButton myUnlockAllButton;
 
-  public NonProjectFileWritingAccessDialog(@NotNull Project project, @NotNull List<VirtualFile> nonProjectFiles) {
+  public NonProjectFileWritingAccessDialog(@Nonnull Project project, @Nonnull List<VirtualFile> nonProjectFiles) {
     this(project, nonProjectFiles, "Non-Project Files");
   }
 
-  public NonProjectFileWritingAccessDialog(@NotNull Project project,
-                                           @NotNull List<VirtualFile> nonProjectFiles,
-                                           @NotNull String filesType) {
+  public NonProjectFileWritingAccessDialog(@Nonnull Project project,
+                                           @Nonnull List<VirtualFile> nonProjectFiles,
+                                           @Nonnull String filesType) {
     super(project);
     setTitle(filesType + " Protection");
 
@@ -105,7 +105,7 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
     return myPanel;
   }
 
-  @NotNull
+  @Nonnull
   public NonProjectFileWritingAccessProvider.UnlockOption getUnlockOption() {
     if (myUnlockAllButton.isSelected()) return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_ALL;
     if (myUnlockDirButton.isSelected()) return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_DIR;

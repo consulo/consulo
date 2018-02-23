@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.psi.util.PsiUtilBase.getLanguageInEditor;
 
@@ -61,11 +61,11 @@ public class FormatConstants {
   private FormatConstants() {
   }
 
-  public static int getReservedLineWrapWidthInColumns(@NotNull Editor editor) {
+  public static int getReservedLineWrapWidthInColumns(@Nonnull Editor editor) {
     return isPlainTextFile(editor) ? 0 : RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS;
   }
 
-  private static boolean isPlainTextFile(@NotNull Editor editor) {
+  private static boolean isPlainTextFile(@Nonnull Editor editor) {
     return editor.getProject() != null && PlainTextLanguage.INSTANCE.is(getLanguageInEditor(editor, editor.getProject()));
   }
 }

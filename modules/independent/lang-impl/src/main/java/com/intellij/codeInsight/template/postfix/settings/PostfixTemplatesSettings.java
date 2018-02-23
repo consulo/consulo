@@ -26,8 +26,8 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -41,17 +41,17 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
   private boolean templatesCompletionEnabled = true;
   private int myShortcut = TemplateSettings.TAB_CHAR;
 
-  public boolean isTemplateEnabled(@NotNull PostfixTemplate template, @NotNull PostfixTemplateProvider provider) {
+  public boolean isTemplateEnabled(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     return isTemplateEnabled(template, langForProvider);
   }
 
-  public boolean isTemplateEnabled(PostfixTemplate template, @NotNull String strictLangForProvider) {
+  public boolean isTemplateEnabled(PostfixTemplate template, @Nonnull String strictLangForProvider) {
     Set<String> result = myLangToDisabledTemplates.get(strictLangForProvider);
     return result == null || !result.contains(template.getKey());
   }
 
-  public void disableTemplate(@NotNull PostfixTemplate template, @NotNull PostfixTemplateProvider provider) {
+  public void disableTemplate(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     disableTemplate(template, langForProvider);
   }
@@ -61,7 +61,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     state.add(template.getKey());
   }
 
-  public void enableTemplate(@NotNull PostfixTemplate template, @NotNull PostfixTemplateProvider provider) {
+  public void enableTemplate(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     enableTemplate(template, langForProvider);
   }
@@ -87,13 +87,13 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     this.templatesCompletionEnabled = templatesCompletionEnabled;
   }
 
-  @NotNull
+  @Nonnull
   @MapAnnotation(entryTagName = "disabled-postfix-templates", keyAttributeName = "lang", surroundWithTag = false)
   public Map<String, Set<String>> getLangDisabledTemplates() {
     return myLangToDisabledTemplates;
   }
 
-  public void setLangDisabledTemplates(@NotNull Map<String, Set<String>> templatesState) {
+  public void setLangDisabledTemplates(@Nonnull Map<String, Set<String>> templatesState) {
     myLangToDisabledTemplates = templatesState;
   }
 
@@ -105,7 +105,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     myShortcut = shortcut;
   }
 
-  @NotNull
+  @Nonnull
   public static PostfixTemplatesSettings getInstance() {
     return ServiceManager.getService(PostfixTemplatesSettings.class);
   }

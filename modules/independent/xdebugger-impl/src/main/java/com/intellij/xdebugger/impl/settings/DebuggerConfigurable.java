@@ -28,8 +28,8 @@ import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return "reference.idesettings.debugger";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Configurable[] getConfigurables() {
     compute();
@@ -107,7 +107,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     }
   }
 
-  private static void computeMergedConfigurables(@NotNull List<Configurable> result) {
+  private static void computeMergedConfigurables(@Nonnull List<Configurable> result) {
     for (DebuggerSettingsCategory category : MERGED_CATEGORIES) {
       Collection<Configurable> configurables = XDebuggerConfigurableProvider.getConfigurables(category);
       if (!configurables.isEmpty()) {
@@ -191,7 +191,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "project.propDebugger";

@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -36,12 +36,12 @@ public class HighlightDisplayKey {
   private final String myName;
   private final String myID;
 
-  public static HighlightDisplayKey find(@NonNls @NotNull final String name) {
+  public static HighlightDisplayKey find(@NonNls @Nonnull final String name) {
     return ourNameToKeyMap.get(name);
   }
 
   @Nullable
-  public static HighlightDisplayKey findById(@NonNls @NotNull final String id) {
+  public static HighlightDisplayKey findById(@NonNls @Nonnull final String id) {
     HighlightDisplayKey key = ourIdToKeyMap.get(id);
     if (key != null) return key;
     key = ourNameToKeyMap.get(id);
@@ -50,7 +50,7 @@ public class HighlightDisplayKey {
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name) {
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name) {
     if (find(name) != null) {
       LOG.info("Key with name \'" + name + "\' already registered");
       return null;
@@ -62,12 +62,12 @@ public class HighlightDisplayKey {
    * @see #register(String, com.intellij.openapi.util.Computable)
    */
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name, @NotNull final String displayName) {
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name, @Nonnull final String displayName) {
     return register(name, displayName, name);
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name, @NotNull Computable<String> displayName) {
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name, @Nonnull Computable<String> displayName) {
     return register(name, displayName, name);
   }
 
@@ -76,16 +76,16 @@ public class HighlightDisplayKey {
    * @see #register(String, com.intellij.openapi.util.Computable, String)
    */
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name,
-                                             @NotNull final String displayName,
-                                             @NotNull @NonNls final String id) {
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name,
+                                             @Nonnull final String displayName,
+                                             @Nonnull @NonNls final String id) {
     return register(name, new Computable.PredefinedValueComputable<String>(displayName), id);
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name,
-                                             @NotNull final Computable<String> displayName,
-                                             @NotNull @NonNls final String id) {
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name,
+                                             @Nonnull final Computable<String> displayName,
+                                             @Nonnull @NonNls final String id) {
     if (find(name) != null) {
       LOG.info("Key with name \'" + name + "\' already registered");
       return null;
@@ -96,9 +96,9 @@ public class HighlightDisplayKey {
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@NonNls @NotNull final String name,
-                                             @NotNull final Computable<String> displayName,
-                                             @NonNls @NotNull final String id,
+  public static HighlightDisplayKey register(@NonNls @Nonnull final String name,
+                                             @Nonnull final Computable<String> displayName,
+                                             @NonNls @Nonnull final String id,
                                              @NonNls @Nullable final String alternativeID) {
     final HighlightDisplayKey key = register(name, displayName, id);
     if (alternativeID != null) {
@@ -107,15 +107,15 @@ public class HighlightDisplayKey {
     return key;
   }
 
-  @NotNull
-  public static HighlightDisplayKey findOrRegister(@NonNls @NotNull String name, @NotNull final String displayName) {
+  @Nonnull
+  public static HighlightDisplayKey findOrRegister(@NonNls @Nonnull String name, @Nonnull final String displayName) {
     return findOrRegister(name, displayName, null);
   }
 
-  @NotNull
-  public static HighlightDisplayKey findOrRegister(@NonNls @NotNull final String name,
-                                                   @NotNull final String displayName,
-                                                   @NonNls @Nullable final String id) {
+  @Nonnull
+  public static HighlightDisplayKey findOrRegister(@NonNls @Nonnull final String name,
+                                                   @Nonnull final String displayName,
+                                                   @NonNls @javax.annotation.Nullable final String id) {
     HighlightDisplayKey key = find(name);
     if (key == null) {
       key = register(name, displayName, id != null ? id : name);
@@ -135,16 +135,16 @@ public class HighlightDisplayKey {
     }
   }
 
-  public static String getAlternativeID(@NotNull HighlightDisplayKey key) {
+  public static String getAlternativeID(@Nonnull HighlightDisplayKey key) {
     return ourKeyToAlternativeIDMap.get(key);
   }
 
 
-  private HighlightDisplayKey(@NonNls @NotNull final String name) {
+  private HighlightDisplayKey(@NonNls @Nonnull final String name) {
     this(name, name);
   }
 
-  public HighlightDisplayKey(@NonNls @NotNull final String name, @NonNls @NotNull final String ID) {
+  public HighlightDisplayKey(@NonNls @Nonnull final String name, @NonNls @Nonnull final String ID) {
     myName = name;
     myID = ID;
     ourNameToKeyMap.put(myName, this);
@@ -157,7 +157,7 @@ public class HighlightDisplayKey {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public String getID(){
     return myID;
   }

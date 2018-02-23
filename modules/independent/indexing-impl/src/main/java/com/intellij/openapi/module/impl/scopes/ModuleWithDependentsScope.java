@@ -28,8 +28,8 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.Queue;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -43,7 +43,7 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   private final Set<Module> myModules;
   private final GlobalSearchScope myProjectScope;
 
-  ModuleWithDependentsScope(@NotNull Module module) {
+  ModuleWithDependentsScope(@Nonnull Module module) {
     super(module.getProject());
     myModule = module;
 
@@ -106,11 +106,11 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return contains(file, false);
   }
 
-  boolean contains(@NotNull VirtualFile file, boolean myOnlyTests) {
+  boolean contains(@Nonnull VirtualFile file, boolean myOnlyTests) {
     Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
     if (moduleOfFile == null || !myModules.contains(moduleOfFile)) return false;
     if (myOnlyTests && !myProjectFileIndex.isInTestSourceContent(file)) return false;
@@ -118,12 +118,12 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return myModules.contains(aModule);
   }
 

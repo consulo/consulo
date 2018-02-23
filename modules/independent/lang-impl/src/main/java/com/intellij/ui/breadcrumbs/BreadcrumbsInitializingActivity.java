@@ -37,11 +37,11 @@ import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAware {
   @Override
-  public void runActivity(@NotNull UIAccess uiAccess, @NotNull Project project) {
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     if (project.isDefault() || ApplicationManager.getApplication().isUnitTestMode() || project.isDisposed()) {
       return;
     }
@@ -50,7 +50,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyFileEditorManagerListener());
     connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
-      public void fileTypesChanged(@NotNull FileTypeEvent event) {
+      public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         reinitBreadcrumbsInAllEditors(project);
       }
     });
@@ -61,7 +61,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
 
   private static class MyFileEditorManagerListener implements FileEditorManagerListener {
     @Override
-    public void fileOpened(@NotNull final FileEditorManager source, @NotNull final VirtualFile file) {
+    public void fileOpened(@Nonnull final FileEditorManager source, @Nonnull final VirtualFile file) {
       reinitBreadcrumbsComponent(source, file);
     }
   }
@@ -69,12 +69,12 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
   private static class MyVirtualFileListener implements VirtualFileListener {
     private final Project myProject;
 
-    public MyVirtualFileListener(@NotNull Project project) {
+    public MyVirtualFileListener(@Nonnull Project project) {
       myProject = project;
     }
 
     @Override
-    public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+    public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
       if (VirtualFile.PROP_NAME.equals(event.getPropertyName()) && !myProject.isDisposed()) {
         FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
         VirtualFile file = event.getFile();
@@ -85,7 +85,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static void reinitBreadcrumbsInAllEditors(@NotNull Project project) {
+  private static void reinitBreadcrumbsInAllEditors(@Nonnull Project project) {
     if (project.isDisposed()) return;
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     for (VirtualFile virtualFile : fileEditorManager.getOpenFiles()) {
@@ -93,7 +93,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static void reinitBreadcrumbsComponent(@NotNull final FileEditorManager fileEditorManager, @NotNull VirtualFile file) {
+  private static void reinitBreadcrumbsComponent(@Nonnull final FileEditorManager fileEditorManager, @Nonnull VirtualFile file) {
     boolean above = EditorSettingsExternalizable.getInstance().isBreadcrumbsAbove();
     for (FileEditor fileEditor : fileEditorManager.getAllEditors(file)) {
       if (fileEditor instanceof TextEditor) {
@@ -120,7 +120,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static boolean isSuitable(@NotNull TextEditor editor, @NotNull VirtualFile file) {
+  private static boolean isSuitable(@Nonnull TextEditor editor, @Nonnull VirtualFile file) {
     if (file instanceof HttpVirtualFile) {
       return false;
     }
@@ -128,7 +128,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     return editor.isValid() && BreadcrumbsWrapper.findInfoProvider(editor.getEditor(), file) != null;
   }
 
-  private static void add(@NotNull FileEditorManager manager, @NotNull FileEditor editor, @NotNull BreadcrumbsWrapper wrapper) {
+  private static void add(@Nonnull FileEditorManager manager, @Nonnull FileEditor editor, @Nonnull BreadcrumbsWrapper wrapper) {
     if (wrapper.breadcrumbs.above) {
       manager.addTopComponent(editor, wrapper);
     }
@@ -137,7 +137,7 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static void remove(@NotNull FileEditorManager manager, @NotNull FileEditor editor, @NotNull BreadcrumbsWrapper wrapper) {
+  private static void remove(@Nonnull FileEditorManager manager, @Nonnull FileEditor editor, @Nonnull BreadcrumbsWrapper wrapper) {
     if (wrapper.breadcrumbs.above) {
       manager.removeTopComponent(editor, wrapper);
     }
@@ -146,16 +146,16 @@ public class BreadcrumbsInitializingActivity implements StartupActivity, DumbAwa
     }
   }
 
-  private static void registerWrapper(@NotNull FileEditorManager fileEditorManager,
-                                      @NotNull FileEditor fileEditor,
-                                      @NotNull BreadcrumbsWrapper wrapper) {
+  private static void registerWrapper(@Nonnull FileEditorManager fileEditorManager,
+                                      @Nonnull FileEditor fileEditor,
+                                      @Nonnull BreadcrumbsWrapper wrapper) {
     add(fileEditorManager, fileEditor, wrapper);
     Disposer.register(fileEditor, () -> disposeWrapper(fileEditorManager, fileEditor, wrapper));
   }
 
-  private static void disposeWrapper(@NotNull FileEditorManager fileEditorManager,
-                                     @NotNull FileEditor fileEditor,
-                                     @NotNull BreadcrumbsWrapper wrapper) {
+  private static void disposeWrapper(@Nonnull FileEditorManager fileEditorManager,
+                                     @Nonnull FileEditor fileEditor,
+                                     @Nonnull BreadcrumbsWrapper wrapper) {
     remove(fileEditorManager, fileEditor, wrapper);
     Disposer.dispose(wrapper);
   }

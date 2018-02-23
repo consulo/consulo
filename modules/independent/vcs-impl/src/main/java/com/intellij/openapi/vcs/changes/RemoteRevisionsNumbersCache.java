@@ -32,8 +32,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -61,7 +60,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "NOT_LOADED";
     }
 
-    public int compareTo(@NotNull VcsRevisionNumber o) {
+    public int compareTo(@Nonnull VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -70,7 +69,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "UNKNOWN";
     }
 
-    public int compareTo(@NotNull VcsRevisionNumber o) {
+    public int compareTo(@Nonnull VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -204,7 +203,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private VirtualFile getRootForPath(final String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }
@@ -225,7 +224,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   }
 
   // +-
-  @NotNull
+  @Nonnull
   private LazyRefreshingSelfQueue<String> getQueue(final VcsRoot vcsRoot) {
     synchronized (myLock) {
       LazyRefreshingSelfQueue<String> queue = myRefreshingQueues.get(vcsRoot);

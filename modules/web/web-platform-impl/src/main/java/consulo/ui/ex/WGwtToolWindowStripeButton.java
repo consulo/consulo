@@ -24,7 +24,7 @@ import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 import consulo.wm.impl.ToolWindowBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -76,14 +76,14 @@ public class WGwtToolWindowStripeButton extends AbstractComponent implements Too
     return (ToolWindowStripeButtonState)super.getState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public WindowInfo getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
 
   @Override
-  public void apply(@NotNull WindowInfo info) {
+  public void apply(@Nonnull WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
     updateState();
     markAsDirty();

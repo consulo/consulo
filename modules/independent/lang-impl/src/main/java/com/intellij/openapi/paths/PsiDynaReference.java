@@ -27,8 +27,8 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileRefe
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,7 +106,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T>
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getCanonicalText(){
     final PsiReference reference = chooseReference();
     return reference == null ? myReferences.get(0).getCanonicalText() : reference.getCanonicalText();
@@ -122,7 +122,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T>
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     for (PsiReference reference : myReferences) {
       if (reference instanceof FileReference) {
         return reference.bindToElement(element);
@@ -141,13 +141,13 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T>
 
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getVariants() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ResolveResult[] multiResolve(final boolean incompleteCode) {
     if (myCachedResult == null) {
       myCachedResult = innerResolve(incompleteCode);
@@ -197,7 +197,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T>
     return myChosenOne >= 0 ? myReferences.get(myChosenOne) : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @SuppressWarnings({"UnresolvedPropertyKey"})
   public String getUnresolvedMessagePattern() {

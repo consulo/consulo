@@ -26,8 +26,7 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -35,11 +34,11 @@ import org.jetbrains.annotations.Nullable;
 public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
   private String myModuleExtensionId;
 
-  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel) {
+  public ModuleExtensionWithSdkOrderEntryImpl(@Nonnull String moduleExtensionId, @Nonnull ModuleRootLayerImpl rootModel) {
     this(moduleExtensionId, rootModel, true);
   }
 
-  public ModuleExtensionWithSdkOrderEntryImpl(@NotNull String moduleExtensionId, @NotNull ModuleRootLayerImpl rootModel, boolean init) {
+  public ModuleExtensionWithSdkOrderEntryImpl(@Nonnull String moduleExtensionId, @Nonnull ModuleRootLayerImpl rootModel, boolean init) {
     super(ModuleExtensionWithSdkOrderEntryType.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myModuleExtensionId = moduleExtensionId;
     if (init) {
@@ -59,7 +58,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Sdk getSdk() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
@@ -70,7 +69,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getSdkName() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
@@ -85,7 +84,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     StringBuilder builder = new StringBuilder();
 
@@ -119,12 +118,12 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  public <R> R accept(@NotNull RootPolicy<R> policy, R initialValue) {
+  public <R> R accept(@Nonnull RootPolicy<R> policy, R initialValue) {
     return policy.visitModuleExtensionSdkOrderEntry(this, initialValue);
   }
 
   @Override
-  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
     if (other instanceof ModuleExtensionWithSdkOrderEntry) {
       String name1 = getSdkName();
       String name2 = ((ModuleExtensionWithSdkOrderEntry)other).getSdkName();
@@ -134,18 +133,18 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @NotNull
-  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
+  @Nonnull
+  public OrderEntry cloneEntry(@Nonnull ModuleRootLayerImpl rootModel) {
     return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel, true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getModuleExtensionId() {
     return myModuleExtensionId;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
     ModuleExtension<?> extensionWithoutCheck = myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);

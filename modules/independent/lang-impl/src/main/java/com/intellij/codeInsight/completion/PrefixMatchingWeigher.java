@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class PrefixMatchingWeigher extends CompletionWeigher {
 
   @Override
-  public Comparable weigh(@NotNull LookupElement element, @NotNull CompletionLocation location) {
+  public Comparable weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
     throw new UnsupportedOperationException("Not implemented");
   }
 }

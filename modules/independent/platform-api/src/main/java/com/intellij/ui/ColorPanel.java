@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;

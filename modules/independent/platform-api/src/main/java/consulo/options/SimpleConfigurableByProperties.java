@@ -22,7 +22,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
       myComponent = component;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Component compute() {
       return myComponent;
@@ -80,7 +80,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
   protected static class PropertyBuilder {
     private List<Property<?>> myProperties = new ArrayList<>();
 
-    public <T> void add(@NotNull ValueComponent<T> valueComponent, @NotNull Supplier<T> getter, @NotNull Consumer<T> setter) {
+    public <T> void add(@Nonnull ValueComponent<T> valueComponent, @Nonnull Supplier<T> getter, @Nonnull Consumer<T> setter) {
       myProperties.add(new Property<T>(valueComponent::getValue, valueComponent::setValue, getter, setter));
     }
   }
@@ -88,11 +88,11 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
   private List<Property<?>> myProperties = Collections.emptyList();
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   protected abstract Component createLayout(PropertyBuilder propertyBuilder);
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   protected final SimpleConfigurableByProperties.LayoutWrapper createPanel() {
     PropertyBuilder builder;
@@ -103,7 +103,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected boolean isModified(@NotNull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected boolean isModified(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
     for (Property<?> property : myProperties) {
       if (property.isModified()) {
         return true;
@@ -114,7 +114,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected void apply(@NotNull SimpleConfigurableByProperties.LayoutWrapper component) throws ConfigurationException {
+  protected void apply(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) throws ConfigurationException {
     for (Property<?> property : myProperties) {
       property.apply();
     }
@@ -122,7 +122,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected void reset(@NotNull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected void reset(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
     for (Property<?> property : myProperties) {
       property.reset();
     }
@@ -130,7 +130,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredDispatchThread
   @Override
-  protected void disposeUIResources(@NotNull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected void disposeUIResources(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
     super.disposeUIResources(component);
     myProperties = Collections.emptyList();
   }

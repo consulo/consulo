@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -34,12 +34,12 @@ import java.util.Map;
  */
 @State(name = "EarlyAccessProgramManager", storages = @Storage("eap.xml"))
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
-  @NotNull
+  @Nonnull
   public static EarlyAccessProgramManager getInstance() {
     return ServiceManager.getService(EarlyAccessProgramManager.class);
   }
 
-  public static boolean is(@NotNull Class<? extends EarlyAccessProgramDescriptor> key) {
+  public static boolean is(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
     return getInstance().getState(key);
   }
 
@@ -52,7 +52,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     }
   }
 
-  public boolean getState(@NotNull Class<? extends EarlyAccessProgramDescriptor> key) {
+  public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
     Boolean value = myStates.get(key);
     if (value == null) {
       LOGGER.error("Descriptor is not registered: " + key.getName());

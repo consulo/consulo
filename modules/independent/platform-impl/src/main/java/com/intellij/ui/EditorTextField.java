@@ -54,8 +54,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,11 +103,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     this("");
   }
 
-  public EditorTextField(@NotNull String text) {
+  public EditorTextField(@Nonnull String text) {
     this(EditorFactory.getInstance().createDocument(text), null, PlainTextFileType.INSTANCE);
   }
 
-  public EditorTextField(@NotNull String text, Project project, FileType fileType) {
+  public EditorTextField(@Nonnull String text, Project project, FileType fileType) {
     this(EditorFactory.getInstance().createDocument(text), project, fileType, false, true);
   }
 
@@ -281,7 +281,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
   }
 
-  private static void doSelectAll(@NotNull Editor editor) {
+  private static void doSelectAll(@Nonnull Editor editor) {
     editor.getCaretModel().removeSecondaryCarets();
     editor.getCaretModel().getPrimaryCaret().setSelection(0, editor.getDocument().getTextLength(), false);
   }
@@ -526,7 +526,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     return editor;
   }
 
-  protected void updateBorder(@NotNull final EditorEx editor) {
+  protected void updateBorder(@Nonnull final EditorEx editor) {
     if (editor.isOneLineMode()
         && !Boolean.TRUE.equals(getClientProperty("JComboBox.isTableCellEditor"))
         && (SwingUtilities.getAncestorOfClass(JTable.class, this) == null || Boolean.TRUE.equals(getClientProperty("JBListTable.isTableCellEditor")))) {
@@ -537,7 +537,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
   }
 
-  protected void setupBorder(@NotNull EditorEx editor) {
+  protected void setupBorder(@Nonnull EditorEx editor) {
     if (UIUtil.isUnderAquaLookAndFeel() || UIUtil.isUnderBuildInLaF()) {
       editor.setBorder(UIUtil.isUnderBuildInLaF() ? new DarculaEditorTextFieldBorder() : new MacUIUtil.EditorTextFieldBorder(this));
       editor.addFocusListener(new FocusChangeListener() {
@@ -771,7 +771,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (myEditor != null && myEditor.isRendererMode()) {
       if (PlatformDataKeys.COPY_PROVIDER == dataId) {
         return myEditor.getCopyProvider();
@@ -790,7 +790,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     setNewDocumentAndFileType(fileType, getDocument());
   }
 
-  public void setNewDocumentAndFileType(@NotNull FileType fileType, Document document) {
+  public void setNewDocumentAndFileType(@Nonnull FileType fileType, Document document) {
     myFileType = fileType;
     setDocument(document);
   }
@@ -805,11 +805,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     myRendererFg = foregroundColor;
   }
 
-  public void addSettingsProvider(@NotNull EditorSettingsProvider provider) {
+  public void addSettingsProvider(@Nonnull EditorSettingsProvider provider) {
     mySettingsProviders.add(provider);
   }
 
-  public boolean removeSettingsProvider(@NotNull EditorSettingsProvider provider) {
+  public boolean removeSettingsProvider(@Nonnull EditorSettingsProvider provider) {
     return mySettingsProviders.remove(provider);
   }
 

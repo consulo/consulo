@@ -21,7 +21,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceService;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,13 +32,13 @@ public final class SingleTargetRequestResultProcessor extends RequestResultProce
   private static final PsiReferenceService ourReferenceService = PsiReferenceService.getService();
   private final PsiElement myTarget;
 
-  public SingleTargetRequestResultProcessor(@NotNull PsiElement target) {
+  public SingleTargetRequestResultProcessor(@Nonnull PsiElement target) {
     super(target);
     myTarget = target;
   }
 
   @Override
-  public boolean processTextOccurrence(@NotNull PsiElement element, int offsetInElement, @NotNull final Processor<PsiReference> consumer) {
+  public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull final Processor<PsiReference> consumer) {
     if (!myTarget.isValid()) {
       return false;
     }

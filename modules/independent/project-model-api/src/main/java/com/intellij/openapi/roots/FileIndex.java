@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides information about files contained in a project or module.
@@ -31,7 +31,7 @@ public interface FileIndex {
    * @param iterator the iterator receiving the files.
    * @return false if files processing was stopped ({@link ContentIterator#processFile(VirtualFile)} returned false)
    */
-  boolean iterateContent(@NotNull ContentIterator iterator);
+  boolean iterateContent(@Nonnull ContentIterator iterator);
 
   /**
    * Iterates all files and directories in the content under directory <code>dir</code> (including the directory itself).
@@ -41,7 +41,7 @@ public interface FileIndex {
    * @param iterator the iterator receiving the files.
    * @return false if files processing was stopped ({@link ContentIterator#processFile(VirtualFile)} returned false)
    */
-  boolean iterateContentUnderDirectory(@NotNull VirtualFile dir, @NotNull ContentIterator iterator);
+  boolean iterateContentUnderDirectory(@Nonnull VirtualFile dir, @Nonnull ContentIterator iterator);
 
   /**
    * Returns true if <code>fileOrDir</code> is a file or directory under a content root of this
@@ -50,7 +50,7 @@ public interface FileIndex {
    * @param fileOrDir the file or directory to check.
    * @return true if the file or directory belongs to a content root, false otherwise.
    */
-  boolean isInContent(@NotNull VirtualFile fileOrDir);
+  boolean isInContent(@Nonnull VirtualFile fileOrDir);
 
   /**
    * Returns true if <code>file</code> is a source file which belongs to sources of the content.
@@ -60,7 +60,7 @@ public interface FileIndex {
    * @param file the file to check.
    * @return true if the file is a source file in the content sources, false otherwise.
    */
-  boolean isContentSourceFile(@NotNull VirtualFile file);
+  boolean isContentSourceFile(@Nonnull VirtualFile file);
 
   /**
    * Returns true if <code>fileOrDir</code> is a file or directory from the content source.
@@ -69,7 +69,7 @@ public interface FileIndex {
    * @param fileOrDir the file or directory to check.
    * @return true if the file or directory belongs to a source or test source root, false otherwise.
    */
-  boolean isInSourceContent(@NotNull VirtualFile fileOrDir);
+  boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
 
   /**
    * Returns true if <code>fileOrDir</code> is a file or directory from the test content source
@@ -77,5 +77,5 @@ public interface FileIndex {
    * @param fileOrDir the file or directory to check.
    * @return true if the file or directory belongs to a test source root, false otherwise.
    */
-  boolean isInTestSourceContent(@NotNull VirtualFile fileOrDir);
+  boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
 }

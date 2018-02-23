@@ -1,20 +1,20 @@
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 // We don't use Java URI due to problem — http://cns-etuat-2.localnet.englishtown.com/school/e12/#school/45383/201/221/382?c=countrycode=cc|culturecode=en-us|partnercode=mkge
 // it is illegal URI (fragment before query), but we must support such URI
 // Semicolon as parameters separator is supported (WEB-6671)
 public interface Url {
-  @NotNull
+  @Nonnull
   String getPath();
 
   boolean isInLocalFileSystem();
 
   String toDecodedForm();
 
-  @NotNull
+  @Nonnull
   String toExternalForm();
 
   @Nullable
@@ -30,7 +30,7 @@ public interface Url {
 
   boolean equalsIgnoreCase(@Nullable Url url);
 
-  @NotNull
+  @Nonnull
   Url trimParameters();
 
   int hashCodeCaseInsensitive();

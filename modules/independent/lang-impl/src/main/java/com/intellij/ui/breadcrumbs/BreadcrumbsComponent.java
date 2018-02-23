@@ -28,8 +28,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,11 +81,11 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     }
   }
 
-  public void addBreadcrumbsItemListener(@NotNull final BreadcrumbsItemListener<T> listener) {
+  public void addBreadcrumbsItemListener(@Nonnull final BreadcrumbsItemListener<T> listener) {
     myListeners.add(listener);
   }
 
-  public void removeBreadcrumbsItemListener(@NotNull final BreadcrumbsItemListener<T> listener) {
+  public void removeBreadcrumbsItemListener(@Nonnull final BreadcrumbsItemListener<T> listener) {
     myListeners.remove(listener);
   }
 
@@ -101,7 +101,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
   }
 
   @Nullable
-  public Crumb getCrumb(@NotNull final Point p) {
+  public Crumb getCrumb(@Nonnull final Point p) {
     if (myCrumbs != null) {
       final Rectangle r = getBounds();
       p.translate(r.x, r.y);
@@ -199,7 +199,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     }
   }
 
-  private void setSelectedCrumb(@NotNull final Crumb<T> c, final int modifiers) {
+  private void setSelectedCrumb(@Nonnull final Crumb<T> c, final int modifiers) {
     final T selectedElement = c.getItem();
 
     final Set<BreadcrumbsItem> items = new HashSet<>();
@@ -240,7 +240,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
   }
 
   @Nullable
-  private List<Crumb> createCrumbList(@NotNull final FontMetrics fm, @NotNull final List<T> elements, final int width) {
+  private List<Crumb> createCrumbList(@Nonnull final FontMetrics fm, @Nonnull final List<T> elements, final int width) {
     if (elements.size() == 0) {
       return null;
     }
@@ -326,7 +326,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     return result;
   }
 
-  private static int getTotalWidth(@NotNull final List<Crumb> crumbList) {
+  private static int getTotalWidth(@Nonnull final List<Crumb> crumbList) {
     int totalWidth = 0;
     for (final Crumb each : crumbList) {
       totalWidth += each.getWidth();
@@ -395,7 +395,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
       return myPage;
     }
 
-    private void repaint(@NotNull final Graphics2D g2, @NotNull final List<Crumb> crumbList, @NotNull final Painter painter, final int height) {
+    private void repaint(@Nonnull final Graphics2D g2, @Nonnull final List<Crumb> crumbList, @Nonnull final Painter painter, final int height) {
       UISettings.setupAntialiasing(g2);
 
       //final int height = myImage.getHeight();
@@ -412,7 +412,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
       return myPage * myPageWidth;
     }
 
-    public void paintPage(@NotNull final Graphics2D g2, @NotNull final List<Crumb> list, @NotNull final Painter p, final int height) {
+    public void paintPage(@Nonnull final Graphics2D g2, @Nonnull final List<Crumb> list, @Nonnull final Painter p, final int height) {
       repaint(g2, list, p, height);
     }
 
@@ -425,7 +425,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     private final BreadcrumbsComponent myBreadcrumbs;
     private Crumb myHoveredCrumb;
 
-    public CrumbLineMouseListener(@NotNull final BreadcrumbsComponent line) {
+    public CrumbLineMouseListener(@Nonnull final BreadcrumbsComponent line) {
       myBreadcrumbs = line;
     }
 
@@ -525,7 +525,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
       return myLight;
     }
 
-    public void paint(@NotNull final Graphics2D g2, @NotNull final Painter painter, final int height, final int pageOffset) {
+    public void paint(@Nonnull final Graphics2D g2, @Nonnull final Painter painter, final int height, final int pageOffset) {
       painter.paint(this, g2, height, pageOffset);
     }
 
@@ -560,7 +560,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     private final boolean myForward;
     private final BreadcrumbsComponent myLine;
 
-    public NavigationCrumb(@NotNull final BreadcrumbsComponent line, @NotNull final FontMetrics fm, final boolean forward, @NotNull final Painter p) {
+    public NavigationCrumb(@Nonnull final BreadcrumbsComponent line, @Nonnull final FontMetrics fm, final boolean forward, @Nonnull final Painter p) {
       super(forward ? FORWARD : BACKWARD, p.getSize(forward ? FORWARD : BACKWARD, fm, Integer.MAX_VALUE).width + EXTRA_WIDTH);
       myForward = forward;
       myLine = line;
@@ -583,7 +583,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     }
 
     @Override
-    public void paint(@NotNull final Graphics2D g2, @NotNull final Painter painter, final int height, final int pageOffset) {
+    public void paint(@Nonnull final Graphics2D g2, @Nonnull final Painter painter, final int height, final int pageOffset) {
       // does nothing
     }
 
@@ -600,33 +600,33 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
 
   abstract static class PainterSettings {
     @Nullable
-    Color getBackgroundColor(@NotNull final Crumb c) {
+    Color getBackgroundColor(@Nonnull final Crumb c) {
       return getAttributes(c).getBackgroundColor();
     }
 
     @Nullable
-    Color getForegroundColor(@NotNull final Crumb c) {
+    Color getForegroundColor(@Nonnull final Crumb c) {
       return getAttributes(c).getForegroundColor();
     }
 
     @Nullable
-    Color getBorderColor(@NotNull final Crumb c) {
+    Color getBorderColor(@Nonnull final Crumb c) {
       return getAttributes(c).getEffectColor();
     }
 
     @Nullable
-    Font getFont(@NotNull final Graphics g2, @NotNull final Crumb c) {
+    Font getFont(@Nonnull final Graphics g2, @Nonnull final Crumb c) {
       return null;
     }
 
-    @NotNull
+    @Nonnull
     static TextAttributesKey getKey(Crumb c) {
       return c.isHovered()
              ? EditorColors.BREADCRUMBS_HOVERED
              : c.isSelected() ? EditorColors.BREADCRUMBS_CURRENT : c.isLight() && !(c instanceof NavigationCrumb) ? EditorColors.BREADCRUMBS_INACTIVE : EditorColors.BREADCRUMBS_DEFAULT;
     }
 
-    @NotNull
+    @Nonnull
     static TextAttributes getAttributes(Crumb c) {
       return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(getKey(c));
     }
@@ -644,7 +644,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
 
     @Override
     @Nullable
-    Color getBackgroundColor(@NotNull final Crumb c) {
+    Color getBackgroundColor(@Nonnull final Crumb c) {
       final BreadcrumbsItem item = c.getItem();
       if (item != null) {
         final CrumbPresentation presentation = item.getPresentation();
@@ -661,7 +661,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
 
     private final PainterSettings mySettings;
 
-    public Painter(@NotNull final PainterSettings s) {
+    public Painter(@Nonnull final PainterSettings s) {
       mySettings = s;
     }
 
@@ -669,10 +669,10 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
       return mySettings;
     }
 
-    abstract void paint(@NotNull final Crumb c, @NotNull final Graphics2D g2, final int height, final int pageOffset);
+    abstract void paint(@Nonnull final Crumb c, @Nonnull final Graphics2D g2, final int height, final int pageOffset);
 
-    @NotNull
-    Dimension getSize(@NotNull @NonNls final String s, @NotNull final FontMetrics fm, final int maxWidth) {
+    @Nonnull
+    Dimension getSize(@Nonnull @NonNls final String s, @Nonnull final FontMetrics fm, final int maxWidth) {
       final int w = fm.stringWidth(s);
       return new Dimension(w > maxWidth ? maxWidth : w, fm.getHeight());
     }
@@ -680,12 +680,12 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
   }
 
   private static class DefaultPainter extends Painter {
-    public DefaultPainter(@NotNull final PainterSettings s) {
+    public DefaultPainter(@Nonnull final PainterSettings s) {
       super(s);
     }
 
     @Override
-    public void paint(@NotNull final Crumb c, @NotNull final Graphics2D g2, final int height, final int pageOffset) {
+    public void paint(@Nonnull final Crumb c, @Nonnull final Graphics2D g2, final int height, final int pageOffset) {
       final PainterSettings s = getSettings();
       final Font oldFont = g2.getFont();
       final int offset = c.getOffset() - pageOffset;
@@ -729,8 +729,8 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
     }
 
     @Override
-    @NotNull
-    Dimension getSize(@NotNull @NonNls final String s, @NotNull final FontMetrics fm, final int maxWidth) {
+    @Nonnull
+    Dimension getSize(@Nonnull @NonNls final String s, @Nonnull final FontMetrics fm, final int maxWidth) {
       final int width = fm.stringWidth(s) + ROUND_VALUE * 2;
       return new Dimension(width > maxWidth ? maxWidth : width, fm.getHeight() + 4);
     }

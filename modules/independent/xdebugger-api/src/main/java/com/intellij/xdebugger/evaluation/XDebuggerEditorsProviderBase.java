@@ -25,16 +25,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvider {
-  @NotNull
+  @Nonnull
   @Override
-  public final Document createDocument(@NotNull Project project, @NotNull String text, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode) {
+  public final Document createDocument(@Nonnull Project project, @Nonnull String text, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {
       context = getContextElement(sourcePosition.getFile(), sourcePosition.getOffset(), project);
@@ -46,12 +46,12 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
     return document;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Document createDocument(@NotNull Project project,
-                                 @NotNull XExpression expression,
-                                 @Nullable XSourcePosition sourcePosition,
-                                 @NotNull EvaluationMode mode) {
+  public Document createDocument(@Nonnull Project project,
+                                 @Nonnull XExpression expression,
+                                 @javax.annotation.Nullable XSourcePosition sourcePosition,
+                                 @Nonnull EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {
       context = getContextElement(sourcePosition.getFile(), sourcePosition.getOffset(), project);
@@ -59,24 +59,24 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
     return createDocument(project, expression, context, mode);
   }
 
-  @NotNull
-  public Document createDocument(@NotNull Project project,
-                                 @NotNull XExpression expression,
+  @Nonnull
+  public Document createDocument(@Nonnull Project project,
+                                 @Nonnull XExpression expression,
                                  @Nullable PsiElement context,
-                                 @NotNull EvaluationMode mode) {
+                                 @Nonnull EvaluationMode mode) {
     PsiFile codeFragment = createExpressionCodeFragment(project, expression, context, true);
     Document document = PsiDocumentManager.getInstance(project).getDocument(codeFragment);
     assert document != null;
     return document;
   }
 
-  protected abstract PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical);
+  protected abstract PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement context, boolean isPhysical);
 
-  protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull XExpression expression, @Nullable PsiElement context, boolean isPhysical) {
+  protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull XExpression expression, @Nullable PsiElement context, boolean isPhysical) {
     return createExpressionCodeFragment(project, expression.getExpression(), context, isPhysical);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Language> getSupportedLanguages(@Nullable PsiElement context) {
     if (context != null) {
       return getSupportedLanguages(context.getProject(), null);
@@ -85,7 +85,7 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
   }
 
   @Nullable
-  protected PsiElement getContextElement(@NotNull VirtualFile virtualFile, int offset, @NotNull Project project) {
+  protected PsiElement getContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project) {
     return XDebuggerUtil.getInstance().findContextElement(virtualFile, offset, project, false);
   }
 }

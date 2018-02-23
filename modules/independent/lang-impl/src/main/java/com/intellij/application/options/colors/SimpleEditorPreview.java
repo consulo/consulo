@@ -41,9 +41,9 @@ import com.intellij.util.Alarm;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -110,7 +110,7 @@ public class SimpleEditorPreview implements PreviewPanel {
     myEditor.getDocument().setText(myHighlightsExtractor.extractHighlights(text, myHighlightData));
   }
 
-  private void navigate(boolean select, @NotNull final LogicalPosition pos) {
+  private void navigate(boolean select, @Nonnull final LogicalPosition pos) {
     int offset = myEditor.logicalPositionToOffset(pos);
     final SyntaxHighlighter highlighter = myPage.getHighlighter();
 
@@ -311,7 +311,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
 
   @Override
-  public void addListener(@NotNull final ColorAndFontSettingsListener listener) {
+  public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 
@@ -328,7 +328,7 @@ public class SimpleEditorPreview implements PreviewPanel {
     myEditor.getContentComponent().setCursor(cursor);
   }
 
-  public void setupRainbow(@NotNull EditorColorsScheme colorsScheme, @NotNull RainbowColorSettingsPage page) {
+  public void setupRainbow(@Nonnull EditorColorsScheme colorsScheme, @Nonnull RainbowColorSettingsPage page) {
     final List<HighlightData> initialMarkup = new ArrayList<>();
     myHighlightsExtractor.extractHighlights(page.getDemoText(), initialMarkup);
 
@@ -342,10 +342,10 @@ public class SimpleEditorPreview implements PreviewPanel {
     myHighlightData.addAll(rainbowMarkup);
   }
 
-  @NotNull
-  private List<HighlightData> setupRainbowHighlighting(@NotNull final RainbowColorSettingsPage page,
-                                                       @NotNull final List<HighlightData> initialMarkup,
-                                                       @NotNull final TextAttributesKey[] rainbowTempKeys,
+  @Nonnull
+  private List<HighlightData> setupRainbowHighlighting(@Nonnull final RainbowColorSettingsPage page,
+                                                       @Nonnull final List<HighlightData> initialMarkup,
+                                                       @Nonnull final TextAttributesKey[] rainbowTempKeys,
                                                        boolean isRainbowOn) {
     int colorCount = rainbowTempKeys.length;
     if (colorCount == 0) {
@@ -407,8 +407,8 @@ public class SimpleEditorPreview implements PreviewPanel {
     return rainbowMarkup;
   }
 
-  @NotNull
-  private HighlightData getRainbowTemp(@NotNull TextAttributesKey[] rainbowTempKeys,
+  @Nonnull
+  private HighlightData getRainbowTemp(@Nonnull TextAttributesKey[] rainbowTempKeys,
                                        int startOffset, int endOffset) {
     String id = myEditor.getDocument().getText(TextRange.create(startOffset, endOffset));
     int index = UsedColors.getOrAddColorIndex((EditorImpl)myEditor, id, rainbowTempKeys.length);

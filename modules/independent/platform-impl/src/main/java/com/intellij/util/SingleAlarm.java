@@ -17,23 +17,23 @@ package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ModalityState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SingleAlarm extends Alarm {
   private final Runnable task;
   private final int delay;
 
-  public SingleAlarm(@NotNull Runnable task, int delay) {
+  public SingleAlarm(@Nonnull Runnable task, int delay) {
     this.task = task;
     this.delay = delay;
   }
 
-  public SingleAlarm(@NotNull Runnable task, int delay, @NotNull Disposable parentDisposable) {
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, parentDisposable);
   }
 
-  public SingleAlarm(@NotNull Runnable task, int delay, @NotNull ThreadToUse threadToUse, @Nullable Disposable parentDisposable) {
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, @Nullable Disposable parentDisposable) {
     super(threadToUse, parentDisposable);
 
     this.task = task;

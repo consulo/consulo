@@ -19,17 +19,17 @@ import com.intellij.openapi.vcs.changes.ChangeListListener;
 import com.intellij.openapi.vcs.changes.ChangeListWorker;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EditName implements ChangeListCommand {
-  @NotNull
+  @Nonnull
   private final String myFromName;
-  @NotNull
+  @Nonnull
   private final String myToName;
   private boolean myResult;
   private LocalChangeList myListCopy;
 
-  public EditName(@NotNull final String fromName, @NotNull final String toName) {
+  public EditName(@Nonnull final String fromName, @Nonnull final String toName) {
     myFromName = fromName;
     myToName = toName;
   }

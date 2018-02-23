@@ -20,7 +20,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.LimitedPool;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.BitSet;

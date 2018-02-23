@@ -25,8 +25,8 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme, ExternalizableScheme {
   private static final Logger LOG = Logger.getInstance(CodeStyleSchemeImpl.class);
@@ -41,20 +41,20 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
   private volatile CodeStyleSettings myCodeStyleSettings;
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public CodeStyleSchemeImpl(@NotNull String name, String parentSchemeName, Element rootElement) {
+  public CodeStyleSchemeImpl(@Nonnull String name, String parentSchemeName, Element rootElement) {
     myName = name;
     myRootElement = rootElement;
     myIsDefault = false;
     myParentSchemeName = parentSchemeName;
   }
 
-  public CodeStyleSchemeImpl(@NotNull String name, boolean isDefault, CodeStyleScheme parentScheme){
+  public CodeStyleSchemeImpl(@Nonnull String name, boolean isDefault, CodeStyleScheme parentScheme){
     myName = name;
     myIsDefault = isDefault;
     init(parentScheme, null);
   }
 
-  public void init(@NotNull CodeStyleSchemes schemesManager) {
+  public void init(@Nonnull CodeStyleSchemes schemesManager) {
     LOG.assertTrue(myCodeStyleSettings == null, "Already initialized");
     init(myParentSchemeName == null ? null : schemesManager.findSchemeByName(myParentSchemeName), myRootElement);
     myParentSchemeName = null;
@@ -88,12 +88,12 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
     return myCodeStyleSettings;
   }
 
-  public void setCodeStyleSettings(@NotNull CodeStyleSettings codeStyleSettings){
+  public void setCodeStyleSettings(@Nonnull CodeStyleSettings codeStyleSettings){
     myCodeStyleSettings = codeStyleSettings;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName(){
     return myName;
   }
@@ -117,8 +117,8 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
     myCodeStyleSettings.readExternal(element);
   }
 
-  @NotNull
-  public static CodeStyleSchemeImpl readScheme(@NotNull Element element) {
+  @Nonnull
+  public static CodeStyleSchemeImpl readScheme(@Nonnull Element element) {
     return new CodeStyleSchemeImpl(element.getAttributeValue(NAME), element.getAttributeValue(PARENT), element);
   }
 
@@ -130,12 +130,12 @@ public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme,
   }
 
   @Override
-  public void setName(@NotNull final String name) {
+  public void setName(@Nonnull final String name) {
     myName = name;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

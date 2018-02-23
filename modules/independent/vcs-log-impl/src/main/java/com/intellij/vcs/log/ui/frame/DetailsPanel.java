@@ -38,7 +38,7 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,21 +51,29 @@ import java.util.List;
 class DetailsPanel extends JPanel implements EditorColorsListener {
   private static final int MAX_ROWS = 50;
 
-  @NotNull private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogData myLogData;
 
-  @NotNull private final JScrollPane myScrollPane;
-  @NotNull private final JPanel myMainContentPanel;
-  @NotNull private final StatusText myEmptyText;
+  @Nonnull
+  private final JScrollPane myScrollPane;
+  @Nonnull
+  private final JPanel myMainContentPanel;
+  @Nonnull
+  private final StatusText myEmptyText;
 
-  @NotNull private final JBLoadingPanel myLoadingPanel;
-  @NotNull private final VcsLogColorManager myColorManager;
+  @Nonnull
+  private final JBLoadingPanel myLoadingPanel;
+  @Nonnull
+  private final VcsLogColorManager myColorManager;
 
-  @NotNull private List<Integer> mySelection = ContainerUtil.emptyList();
-  @NotNull private Set<VcsFullCommitDetails> myCommitDetails = Collections.emptySet();
+  @Nonnull
+  private List<Integer> mySelection = ContainerUtil.emptyList();
+  @Nonnull
+  private Set<VcsFullCommitDetails> myCommitDetails = Collections.emptySet();
 
-  DetailsPanel(@NotNull VcsLogData logData,
-               @NotNull VcsLogColorManager colorManager,
-               @NotNull Disposable parent) {
+  DetailsPanel(@Nonnull VcsLogData logData,
+               @Nonnull VcsLogColorManager colorManager,
+               @Nonnull Disposable parent) {
     myLogData = logData;
     myColorManager = colorManager;
 
@@ -151,7 +159,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     return CommitPanel.getCommitDetailsBackground();
   }
 
-  public void installCommitSelectionListener(@NotNull VcsLogGraphTable graphTable) {
+  public void installCommitSelectionListener(@Nonnull VcsLogGraphTable graphTable) {
     graphTable.getSelectionModel().addListSelectionListener(new CommitSelectionListenerForDetails(graphTable));
   }
 
@@ -195,7 +203,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     repaint();
   }
 
-  @NotNull
+  @Nonnull
   private CommitPanel getCommitPanel(int index) {
     return (CommitPanel)myMainContentPanel.getComponent(2 * index);
   }
@@ -206,7 +214,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     }
 
     @Override
-    protected void onDetailsLoaded(@NotNull List<VcsFullCommitDetails> detailsList) {
+    protected void onDetailsLoaded(@Nonnull List<VcsFullCommitDetails> detailsList) {
       Set<VcsFullCommitDetails> newCommitDetails = ContainerUtil.newHashSet(detailsList);
       for (int i = 0; i < mySelection.size(); i++) {
         CommitPanel commitPanel = getCommitPanel(i);
@@ -220,7 +228,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     }
 
     @Override
-    protected void onSelection(@NotNull int[] selection) {
+    protected void onSelection(@Nonnull int[] selection) {
       rebuildCommitPanels(selection);
       final List<Integer> currentSelection = mySelection;
       ApplicationManager.getApplication().executeOnPooledThread(() -> {
@@ -247,7 +255,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
       myCommitDetails = Collections.emptySet();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<Integer> getSelectionToLoad() {
       return mySelection;

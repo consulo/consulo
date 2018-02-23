@@ -30,8 +30,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     }
   }
 
-  public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
+  public static boolean openDiff(DataContext context, @javax.annotation.Nullable DiffHyperlink currentHyperlink) {
     final AbstractTestProxy testProxy = context.getData(AbstractTestProxy.DATA_KEY);
     final Project project = context.getData(CommonDataKeys.PROJECT);
     if (testProxy != null) {
@@ -111,33 +111,34 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   }
 
   private static class MyDiffWindow extends DiffWindowBase {
-    @NotNull private final List<DiffHyperlink> myRequests;
+    @Nonnull
+    private final List<DiffHyperlink> myRequests;
     private final int myIndex;
 
-    public MyDiffWindow(@Nullable Project project, @NotNull DiffHyperlink request) {
+    public MyDiffWindow(@Nullable Project project, @Nonnull DiffHyperlink request) {
       this(project, Collections.singletonList(request), 0);
     }
 
-    public MyDiffWindow(@Nullable Project project, @NotNull List<DiffHyperlink> requests, int index) {
+    public MyDiffWindow(@javax.annotation.Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
       super(project, DiffDialogHints.DEFAULT);
       myRequests = requests;
       myIndex = index;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DiffRequestProcessor createProcessor() {
       return new MyTestDiffRequestProcessor(myProject, myRequests, myIndex);
     }
 
     private class MyTestDiffRequestProcessor extends TestDiffRequestProcessor {
-      public MyTestDiffRequestProcessor(@Nullable Project project, @NotNull List<DiffHyperlink> requests, int index) {
+      public MyTestDiffRequestProcessor(@javax.annotation.Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
         super(project, requests, index);
         putContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY, "#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog");
       }
 
       @Override
-      protected void setWindowTitle(@NotNull String title) {
+      protected void setWindowTitle(@Nonnull String title) {
         getWrapper().setTitle(title);
       }
 

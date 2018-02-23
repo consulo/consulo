@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
   public static final ExtensionPointName<FileBasedIndexExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.fileBasedIndex");
   public static final int DEFAULT_CACHE_SIZE = 1024;
 
-  @NotNull
+  @Nonnull
   public abstract FileBasedIndex.InputFilter getInputFilter();
 
   public abstract boolean dependsOnFileContent();
@@ -57,7 +57,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    * Use carefully, because indexing large files may influence index update speed dramatically.
    * @see com.intellij.openapi.vfs.PersistentFSConstants#getMaxIntellisenseFileSize()
    */
-  @NotNull
+  @Nonnull
   public Collection<FileType> getFileTypesWithSizeLimitNotApplicable() {
     return Collections.emptyList();
   }

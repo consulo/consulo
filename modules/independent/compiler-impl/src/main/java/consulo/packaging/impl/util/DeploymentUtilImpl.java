@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -38,9 +38,9 @@ import java.util.Set;
 public class DeploymentUtilImpl extends DeploymentUtil {
   private static final Logger LOGGER = Logger.getInstance(DeploymentUtilImpl.class);
 
-  public static void copyFile(@NotNull final File fromFile,
-                       @NotNull final File toFile,
-                       @NotNull CompileContext context,
+  public static void copyFile(@Nonnull final File fromFile,
+                       @Nonnull final File toFile,
+                       @Nonnull CompileContext context,
                        @Nullable Set<String> writtenPaths,
                        @Nullable FileFilter fileFilter) throws IOException {
     if (fileFilter != null && !fileFilter.accept(fromFile)) {

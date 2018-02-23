@@ -16,7 +16,7 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public enum Platform {
   WINDOWS('\\', ';'), UNIX('/', ':');
@@ -29,7 +29,7 @@ public enum Platform {
     this.pathSeparator = pathSeparator;
   }
 
-  @NotNull
+  @Nonnull
   public static Platform current() {
     return SystemInfo.isWindows ? WINDOWS : UNIX;
   }

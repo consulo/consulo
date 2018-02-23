@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.IconUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -61,12 +61,12 @@ public class AddArrangementRuleAction extends AbstractArrangementRuleAction impl
     scrollRowToVisible(control, rowToEdit);
   }
 
-  @NotNull
-  protected Object createNewRule(@NotNull ArrangementMatchingRulesControl control) {
+  @Nonnull
+  protected Object createNewRule(@Nonnull ArrangementMatchingRulesControl control) {
     return new EmptyArrangementRuleComponent(control.getEmptyRowHeight());
   }
 
-  protected void showEditor(@NotNull ArrangementMatchingRulesControl control, int rowToEdit) {
+  protected void showEditor(@Nonnull ArrangementMatchingRulesControl control, int rowToEdit) {
     control.showEditor(rowToEdit);
   }
 }

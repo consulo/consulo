@@ -19,7 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Text;
 import com.intellij.xdebugger.XExpression;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author egor
@@ -43,7 +43,7 @@ public class XExpressionState {
   public XExpressionState() {
   }
 
-  public XExpressionState(boolean disabled, @NotNull String expression, String language, String customInfo) {
+  public XExpressionState(boolean disabled, @Nonnull String expression, String language, String customInfo) {
     myDisabled = disabled;
     myExpression = expression;
     myLanguage = language;

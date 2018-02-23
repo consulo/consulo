@@ -46,7 +46,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

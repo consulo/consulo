@@ -43,8 +43,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 
@@ -55,7 +55,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
   }
 
   @Override
-  public void execute(@NotNull Editor originalEditor, char charTyped, @NotNull DataContext dataContext) {
+  public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 

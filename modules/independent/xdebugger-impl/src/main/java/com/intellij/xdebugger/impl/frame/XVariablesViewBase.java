@@ -48,8 +48,8 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XStackFrameNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +65,7 @@ public abstract class XVariablesViewBase extends XDebugView {
   private Object myFrameEqualityObject;
   private MySelectionListener mySelectionListener;
 
-  protected XVariablesViewBase(@NotNull Project project, @NotNull XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
+  protected XVariablesViewBase(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
     myTreePanel = new XDebuggerTreePanel(project, editorsProvider, this, null,
                                          this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP,
                                          markers);
@@ -73,7 +73,7 @@ public abstract class XVariablesViewBase extends XDebugView {
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
 
-  protected void buildTreeAndRestoreState(@NotNull final XStackFrame stackFrame) {
+  protected void buildTreeAndRestoreState(@Nonnull final XStackFrame stackFrame) {
     XSourcePosition position = stackFrame.getSourcePosition();
     XDebuggerTree tree = getTree();
     tree.setSourcePosition(position);
@@ -149,7 +149,7 @@ public abstract class XVariablesViewBase extends XDebugView {
     }
   }
 
-  @NotNull
+  @Nonnull
   public final XDebuggerTree getTree() {
     return myTreePanel.getTree();
   }

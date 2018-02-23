@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class FileTypeFactory {
   public static final ExtensionPointName<FileTypeFactory> FILE_TYPE_FACTORY_EP = ExtensionPointName.create("com.intellij.fileTypeFactory");
 
-  public abstract void createFileTypes(@NotNull FileTypeConsumer consumer);
+  public abstract void createFileTypes(@Nonnull FileTypeConsumer consumer);
 
 }

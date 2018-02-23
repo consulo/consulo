@@ -17,14 +17,14 @@ package com.intellij.remoteServer.configuration.deployment;
 
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactDeploymentSource extends DeploymentSource {
-  @NotNull
+  @Nonnull
   ArtifactPointer getArtifactPointer();
 
   @Nullable

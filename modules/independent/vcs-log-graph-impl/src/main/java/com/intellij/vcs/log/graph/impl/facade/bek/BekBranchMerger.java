@@ -17,20 +17,24 @@ package com.intellij.vcs.log.graph.impl.facade.bek;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 class BekBranchMerger {
-  @NotNull private final List<BekBranch> myBekBranches;
-  @NotNull private final BekEdgeRestrictions myEdgeRestrictions;
-  @NotNull private final TimestampGetter myTimestampGetter;
+  @Nonnull
+  private final List<BekBranch> myBekBranches;
+  @Nonnull
+  private final BekEdgeRestrictions myEdgeRestrictions;
+  @Nonnull
+  private final TimestampGetter myTimestampGetter;
 
-  @NotNull private final List<Integer> myInverseResultList = ContainerUtil.newArrayList();
+  @Nonnull
+  private final List<Integer> myInverseResultList = ContainerUtil.newArrayList();
 
-  public BekBranchMerger(@NotNull List<BekBranch> bekBranches,
-                         @NotNull BekEdgeRestrictions edgeRestrictions,
-                         @NotNull TimestampGetter timestampGetter) {
+  public BekBranchMerger(@Nonnull List<BekBranch> bekBranches,
+                         @Nonnull BekEdgeRestrictions edgeRestrictions,
+                         @Nonnull TimestampGetter timestampGetter) {
     myBekBranches = bekBranches;
     myEdgeRestrictions = edgeRestrictions;
     myTimestampGetter = timestampGetter;
@@ -77,7 +81,7 @@ class BekBranchMerger {
     selectBranch.doneInsertPreparedPart();
   }
 
-  @NotNull
+  @Nonnull
   public List<Integer> getResult() {
     while (prepareLastPartsForBranches()) {
       step();

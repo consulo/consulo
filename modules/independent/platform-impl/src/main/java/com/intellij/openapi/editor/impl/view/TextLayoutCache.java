@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;
@@ -153,7 +153,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   LineLayout getLineLayout(int line) {
     checkDisposed();
     if (line >= myLines.size()) LOG.error("Unexpected cache state", new Attachment("editorState.txt", myView.getEditor().dumpState()));

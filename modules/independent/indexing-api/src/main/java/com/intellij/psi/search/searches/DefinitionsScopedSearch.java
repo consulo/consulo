@@ -24,7 +24,7 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The search is used in two IDE navigation functions namely Go To Implementation (Ctrl+Alt+B) and
@@ -58,7 +58,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
     private final SearchScope myScope;
     private final boolean myCheckDeep;
 
-    public SearchParameters(@NotNull final PsiElement element) {
+    public SearchParameters(@Nonnull final PsiElement element) {
       this(element, ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
         @Override
         public SearchScope compute() {
@@ -67,13 +67,13 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       }), true);
     }
 
-    public SearchParameters(@NotNull PsiElement element, @NotNull SearchScope scope, final boolean checkDeep) {
+    public SearchParameters(@Nonnull PsiElement element, @Nonnull SearchScope scope, final boolean checkDeep) {
       myElement = element;
       myScope = scope;
       myCheckDeep = checkDeep;
     }
 
-    @NotNull
+    @Nonnull
     public PsiElement getElement() {
       return myElement;
     }
@@ -82,7 +82,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
       return myCheckDeep;
     }
 
-    @NotNull
+    @Nonnull
     public SearchScope getScope() {
       return ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
         @Override

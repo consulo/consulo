@@ -18,7 +18,7 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -32,7 +32,7 @@ public class ScopeBasedTodosTreeBuilder extends TodoTreeBuilder{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected TodoTreeStructure createTreeStructure(){
     return new ScopeBasedTodosTreeStructure(myProject, myScopes);
   }

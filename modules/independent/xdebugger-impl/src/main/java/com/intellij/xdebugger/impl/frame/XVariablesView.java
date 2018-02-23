@@ -37,8 +37,8 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectLongHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -54,7 +54,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
   public static final Key<ObjectLongHashMap<VirtualFile>> DEBUG_VARIABLES_TIMESTAMPS = Key.create("debug.variables.timestamps");
   private final JPanel myComponent;
 
-  public XVariablesView(@NotNull XDebugSessionImpl session) {
+  public XVariablesView(@Nonnull XDebugSessionImpl session) {
     super(session.getProject(), session.getDebugProcess().getEditorsProvider(), session.getValueMarkers());
     myComponent = new BorderLayoutPanel();
     myComponent.add(super.getPanel());
@@ -67,7 +67,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
   }
 
   @Override
-  public void processSessionEvent(@NotNull SessionEvent event, @NotNull XDebugSession session) {
+  public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
     if (ApplicationManager.getApplication().isDispatchThread()) { // mark nodes obsolete asap
       getTree().markNodesObsolete();
     }
@@ -133,7 +133,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return getCurrentFile(getTree());
     }
@@ -145,7 +145,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
     private final TObjectLongHashMap<VirtualFile> myTimestamps = new ObjectLongHashMap<>();
 
     @Nullable
-    public synchronized List<XValueNodeImpl> get(@NotNull VirtualFile file, int line, long currentTimestamp) {
+    public synchronized List<XValueNodeImpl> get(@Nonnull VirtualFile file, int line, long currentTimestamp) {
       long timestamp = myTimestamps.get(file);
       if (timestamp == -1 || timestamp < currentTimestamp) {
         return null;
@@ -155,7 +155,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
       return ContainerUtil.map(entries, entry -> entry.myNode);
     }
 
-    public synchronized void put(@NotNull VirtualFile file, @NotNull XSourcePosition position, @NotNull XValueNodeImpl node, long timestamp) {
+    public synchronized void put(@Nonnull VirtualFile file, @Nonnull XSourcePosition position, @Nonnull XValueNodeImpl node, long timestamp) {
       myTimestamps.put(file, timestamp);
       Pair<VirtualFile, Integer> key = Pair.create(file, position.getLine());
       myData.computeIfAbsent(key, k -> new TreeSet<>()).add(new Entry(position.getOffset(), node));
@@ -165,7 +165,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
       private final long myOffset;
       private final XValueNodeImpl myNode;
 
-      public Entry(long offset, @NotNull XValueNodeImpl node) {
+      public Entry(long offset, @Nonnull XValueNodeImpl node) {
         myOffset = offset;
         myNode = node;
       }

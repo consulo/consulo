@@ -27,7 +27,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.*;
 import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -120,7 +120,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  public void closeContent(@NotNull Content content) {
+  public void closeContent(@Nonnull Content content) {
     myFindContentManager.removeContent(content, true);
     content.release();
   }

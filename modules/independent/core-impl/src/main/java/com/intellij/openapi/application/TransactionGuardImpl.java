@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.Queue;
@@ -55,7 +55,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     myWriteSafeModalities.put(ModalityState.NON_MODAL, true);
   }
 
-  @NotNull
+  @Nonnull
   private Queue<Transaction> getQueue(@Nullable TransactionIdImpl transaction) {
     while (transaction != null && transaction.myFinished) {
       transaction = transaction.myParent;
@@ -74,7 +74,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     });
   }
 
-  private void runSyncTransaction(@NotNull Transaction transaction) {
+  private void runSyncTransaction(@Nonnull Transaction transaction) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (Disposer.isDisposed(transaction.parentDisposable)) return;
 
@@ -99,7 +99,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   @Override
-  public void submitTransaction(@NotNull Disposable parentDisposable, @Nullable TransactionId expectedContext, @NotNull Runnable _transaction) {
+  public void submitTransaction(@Nonnull Disposable parentDisposable, @Nullable TransactionId expectedContext, @Nonnull Runnable _transaction) {
     final TransactionIdImpl expectedId = (TransactionIdImpl)expectedContext;
     final Transaction transaction = new Transaction(_transaction, expectedId, parentDisposable);
     final Application app = ApplicationManager.getApplication();
@@ -135,7 +135,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   @Override
-  public void submitTransactionAndWait(@NotNull final Runnable runnable) throws ProcessCanceledException {
+  public void submitTransactionAndWait(@Nonnull final Runnable runnable) throws ProcessCanceledException {
     Application app = ApplicationManager.getApplication();
     if (app.isDispatchThread()) {
       Transaction transaction = new Transaction(runnable, getContextTransaction(), app);
@@ -200,7 +200,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   /**
    * An absolutely guru method, only intended to be used from Swing event processing. Please consult Peter if you think you need to invoke this.
    */
-  @NotNull
+  @Nonnull
   public AccessToken startActivity(boolean userActivity) {
     myErrorReported = false;
     boolean allowWriting = userActivity && isWriteSafeModality(ModalityState.current());
@@ -232,7 +232,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     }
   }
 
-  private String reportWriteUnsafeContext(@NotNull ModalityState modality) {
+  private String reportWriteUnsafeContext(@Nonnull ModalityState modality) {
     return "Write-unsafe context! Model changes are allowed from write-safe contexts only. " +
            "Please ensure you're using invokeLater/invokeAndWait with a correct modality state (not \"any\"). " +
            "See TransactionGuard documentation for details." +
@@ -241,7 +241,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   @Override
-  public void assertWriteSafeContext(@NotNull ModalityState modality) {
+  public void assertWriteSafeContext(@Nonnull ModalityState modality) {
     if (!isWriteSafeModality(modality) && areAssertionsEnabled()) {
       // please assign exceptions here to Peter
       LOG.error(reportWriteUnsafeContext(modality));
@@ -260,7 +260,7 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   @Override
-  public void submitTransactionLater(@NotNull final Disposable parentDisposable, @NotNull final Runnable transaction) {
+  public void submitTransactionLater(@Nonnull final Disposable parentDisposable, @Nonnull final Runnable transaction) {
     final TransactionIdImpl id = getContextTransaction();
     final ModalityState startModality = ModalityState.defaultModalityState();
     invokeLater(() -> {
@@ -288,7 +288,7 @@ public class TransactionGuardImpl extends TransactionGuard {
     return myWritingAllowed ? myCurrentTransaction : null;
   }
 
-  public void enteredModality(@NotNull ModalityState modality) {
+  public void enteredModality(@Nonnull ModalityState modality) {
     TransactionIdImpl contextTransaction = getContextTransaction();
     if (contextTransaction != null) {
       myModality2Transaction.put(modality, contextTransaction);
@@ -297,12 +297,12 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   @Nullable
-  public TransactionIdImpl getModalityTransaction(@NotNull ModalityState modalityState) {
+  public TransactionIdImpl getModalityTransaction(@Nonnull ModalityState modalityState) {
     return myModality2Transaction.get(modalityState);
   }
 
-  @NotNull
-  public Runnable wrapLaterInvocation(@NotNull final Runnable runnable, @NotNull ModalityState modalityState) {
+  @Nonnull
+  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     if (isWriteSafeModality(modalityState)) {
       return new Runnable() {
         @Override
@@ -340,11 +340,13 @@ public class TransactionGuardImpl extends TransactionGuard {
   }
 
   private static class Transaction {
-    @NotNull  final Runnable runnable;
+    @Nonnull
+    final Runnable runnable;
     @Nullable final TransactionIdImpl expectedContext;
-    @NotNull  final Disposable parentDisposable;
+    @Nonnull
+    final Disposable parentDisposable;
 
-    Transaction(@NotNull Runnable runnable, @Nullable TransactionIdImpl expectedContext, @NotNull Disposable parentDisposable) {
+    Transaction(@Nonnull Runnable runnable, @Nullable TransactionIdImpl expectedContext, @Nonnull Disposable parentDisposable) {
       this.runnable = runnable;
       this.expectedContext = expectedContext;
       this.parentDisposable = parentDisposable;

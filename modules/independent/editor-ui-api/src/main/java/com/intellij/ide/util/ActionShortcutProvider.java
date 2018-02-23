@@ -15,10 +15,10 @@
  */
 package com.intellij.ide.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 // used in the implementation of FileStructureNodeProvider to avoid dependency on KeyMapManager in com.intellij.ide.util.FileStructureNodeProvider.getShortcut()
 public interface ActionShortcutProvider {
-  @NotNull
+  @Nonnull
   String getActionIdForShortcut();
 }

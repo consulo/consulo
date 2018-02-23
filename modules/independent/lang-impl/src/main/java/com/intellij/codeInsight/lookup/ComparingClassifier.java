@@ -21,8 +21,8 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FlatteningIterator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -40,9 +40,9 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
   @Nullable
   public abstract Comparable getWeight(T t, ProcessingContext context);
 
-  @NotNull
+  @Nonnull
   @Override
-  public Iterable<T> classify(@NotNull final Iterable<T> source, @NotNull final ProcessingContext context) {
+  public Iterable<T> classify(@Nonnull final Iterable<T> source, @Nonnull final ProcessingContext context) {
     List<T> nulls = null;
     TreeMap<Comparable, List<T>> map = new TreeMap<Comparable, List<T>>();
     for (T t : source) {
@@ -76,9 +76,9 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Pair<T, Object>> getSortingWeights(@NotNull Iterable<T> items, @NotNull final ProcessingContext context) {
+  public List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull final ProcessingContext context) {
     return ContainerUtil.map(items, new Function<T, Pair<T, Object>>() {
       @Override
       public Pair<T, Object> fun(T t) {

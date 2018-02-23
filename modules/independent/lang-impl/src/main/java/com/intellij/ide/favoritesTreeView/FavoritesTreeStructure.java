@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,7 +103,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
   private AbstractTreeNode<String> getEmptyScreen() {
     return new AbstractTreeNode<String>(myProject, IdeBundle.message("favorites.empty.screen")) {
       @Override
-      @NotNull
+      @Nonnull
       public Collection<AbstractTreeNode> getChildren() {
         return Collections.emptyList();
       }
@@ -131,7 +131,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return new FavoritesTreeNodeDescriptor(myProject, parentDescriptor, (AbstractTreeNode)element);
   }

@@ -17,30 +17,33 @@ package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class HighlightRange {
-  @NotNull private final TextRange myBase;
-  @NotNull private final TextRange myChanged;
-  @NotNull private final Side mySide;
+  @Nonnull
+  private final TextRange myBase;
+  @Nonnull
+  private final TextRange myChanged;
+  @Nonnull
+  private final Side mySide;
 
-  public HighlightRange(@NotNull Side side, @NotNull TextRange base, @NotNull TextRange changed) {
+  public HighlightRange(@Nonnull Side side, @Nonnull TextRange base, @Nonnull TextRange changed) {
     mySide = side;
     myBase = base;
     myChanged = changed;
   }
 
-  @NotNull
+  @Nonnull
   public Side getSide() {
     return mySide;
   }
 
-  @NotNull
+  @Nonnull
   public TextRange getBase() {
     return myBase;
   }
 
-  @NotNull
+  @Nonnull
   public TextRange getChanged() {
     return myChanged;
   }

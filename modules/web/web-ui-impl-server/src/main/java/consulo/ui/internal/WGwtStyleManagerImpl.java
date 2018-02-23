@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,26 +32,26 @@ public class WGwtStyleManagerImpl implements StyleManager {
 
   private Style myCurrentStyle = new WGwtStyleImpl("Default");
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Style> getStyles() {
     return Arrays.asList(myCurrentStyle);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Style getCurrentStyle() {
     return myCurrentStyle;
   }
 
   @Override
-  public void setCurrentStyle(@NotNull Style style) {
+  public void setCurrentStyle(@Nonnull Style style) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Runnable addChangeListener(@NotNull StyleChangeListener listener) {
+  public Runnable addChangeListener(@Nonnull StyleChangeListener listener) {
     return null;
   }
 }

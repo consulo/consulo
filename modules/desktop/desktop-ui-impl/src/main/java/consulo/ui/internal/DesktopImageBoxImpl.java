@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.ui.roots.ScalableIconComponent;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +32,7 @@ public class DesktopImageBoxImpl extends ScalableIconComponent implements ImageB
     myIcon = icon;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Image getImage() {
     return myIcon;

@@ -25,31 +25,34 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.localServer.LocalRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class LocalServerState<S extends ServerConfiguration, D extends DeploymentConfiguration> implements RunProfileState {
-  @NotNull private final LocalRunner<D> myLocalRunner;
-  @NotNull private final DeploymentSource mySource;
-  @NotNull private final D myConfiguration;
-  @NotNull private final ExecutionEnvironment myEnvironment;
+  @Nonnull
+  private final LocalRunner<D> myLocalRunner;
+  @Nonnull
+  private final DeploymentSource mySource;
+  @Nonnull
+  private final D myConfiguration;
+  @Nonnull
+  private final ExecutionEnvironment myEnvironment;
 
-  public LocalServerState(@NotNull LocalRunner<D> localRunner,
-                          @NotNull DeploymentSource deploymentSource,
-                          @NotNull D deploymentConfiguration,
-                          @NotNull ExecutionEnvironment environment) {
+  public LocalServerState(@Nonnull LocalRunner<D> localRunner,
+                          @Nonnull DeploymentSource deploymentSource,
+                          @Nonnull D deploymentConfiguration,
+                          @Nonnull ExecutionEnvironment environment) {
     myLocalRunner = localRunner;
     mySource = deploymentSource;
     myConfiguration = deploymentConfiguration;
     myEnvironment = environment;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+  public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
     return myLocalRunner.execute(mySource, myConfiguration, myEnvironment, executor, runner);
   }
 }

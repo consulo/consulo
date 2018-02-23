@@ -17,8 +17,8 @@ package com.intellij.remote;
 
 import com.intellij.execution.process.AnsiEscapeDecoder;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 public class ColoredRemoteProcessHandler<T extends RemoteProcess> extends BaseRemoteProcessHandler<T> implements AnsiEscapeDecoder.ColoredTextAcceptor {
   private final AnsiEscapeDecoder myAnsiEscapeDecoder = new AnsiEscapeDecoder();
 
-  public ColoredRemoteProcessHandler(@NotNull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public ColoredRemoteProcessHandler(@Nonnull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
   }
 

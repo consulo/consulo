@@ -22,7 +22,7 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettin
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -30,9 +30,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractExternalSystemToolWindowCondition implements Condition<Project> {
   
-  @NotNull private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
 
-  protected AbstractExternalSystemToolWindowCondition(@NotNull ProjectSystemId externalSystemId) {
+  protected AbstractExternalSystemToolWindowCondition(@Nonnull ProjectSystemId externalSystemId) {
     myExternalSystemId = externalSystemId;
   }
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Register implementation of this class as {@code projectConfigurable} or {@code applicationConfigurable} extension to provide items for

@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class SimpleChange extends Change implements DiffRangeMarker.RangeInvalidListener{
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.incrementalMerge.Change");
@@ -28,7 +28,7 @@ class SimpleChange extends Change implements DiffRangeMarker.RangeInvalidListene
   private final SimpleChangeSide[] mySides;
   private final ChangeList myChangeList;
 
-  public SimpleChange(ChangeType type, @NotNull TextRange range1, @NotNull TextRange range2, ChangeList changeList) {
+  public SimpleChange(ChangeType type, @Nonnull TextRange range1, @Nonnull TextRange range2, ChangeList changeList) {
     mySides = new SimpleChangeSide[]{createSide(changeList, range1, FragmentSide.SIDE1),
                          createSide(changeList, range2, FragmentSide.SIDE2)};
     myType = type;
@@ -100,7 +100,7 @@ class SimpleChange extends Change implements DiffRangeMarker.RangeInvalidListene
     myChangeList.remove(this);
   }
 
-  public static Change fromRanges(@NotNull TextRange baseRange, @NotNull TextRange versionRange, ChangeList changeList) {
+  public static Change fromRanges(@Nonnull TextRange baseRange, @Nonnull TextRange versionRange, ChangeList changeList) {
     ChangeType type = ChangeType.fromRanges(baseRange, versionRange);
     return new SimpleChange(type, baseRange, versionRange, changeList);
   }

@@ -20,7 +20,7 @@ import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,21 +31,21 @@ import java.util.Set;
  */
 public class FileTypeUsagesCollectorTest extends LightPlatformCodeInsightFixtureTestCase {
 
-  private void doTest(@NotNull Collection<FileType> fileTypes) throws CollectUsagesException {
+  private void doTest(@Nonnull Collection<FileType> fileTypes) throws CollectUsagesException {
     final Set<UsageDescriptor> usages = new FileTypeUsagesCollector().getProjectUsages(getProject());
     for (UsageDescriptor usage : usages) {
       assertEquals(1, usage.getValue());
     }
     assertEquals(
       ContainerUtil.map2Set(fileTypes, new NotNullFunction<FileType, String>() {
-        @NotNull
+        @Nonnull
         @Override
         public String fun(FileType fileType) {
           return fileType.getName();
         }
       }),
       ContainerUtil.map2Set(usages, new NotNullFunction<UsageDescriptor, String>() {
-        @NotNull
+        @Nonnull
         @Override
         public String fun(UsageDescriptor usageDescriptor) {
           return usageDescriptor.getKey();

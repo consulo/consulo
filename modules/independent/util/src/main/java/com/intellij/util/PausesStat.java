@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.UnsignedShortArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -24,7 +24,8 @@ public class PausesStat {
   private static final int N_MAX = 100000;
   // stores durations of the event: (timestamp of the event end) - (timestamp of the event start) in milliseconds.
   private final UnsignedShortArrayList durations = new UnsignedShortArrayList();
-  @NotNull private final String myName;
+  @Nonnull
+  private final String myName;
   private final Thread myEdtThread;
   private boolean started;
   private long startTimeStamp;
@@ -33,7 +34,7 @@ public class PausesStat {
   private int totalNumberRecorded;
   private int indexToOverwrite; // used when pauses.size() == N_MAX and we have to overflow cyclically
 
-  public PausesStat(@NotNull String name) {
+  public PausesStat(@Nonnull String name) {
     myName = name;
     assert EventQueue.isDispatchThread() : Thread.currentThread();
     myEdtThread = Thread.currentThread();
@@ -61,7 +62,7 @@ public class PausesStat {
     assert Thread.currentThread() == myEdtThread : Thread.currentThread();
   }
 
-  public void finished(@NotNull String description) {
+  public void finished(@Nonnull String description) {
     assertEdt();
     assert started;
     long finishStamp = System.currentTimeMillis();

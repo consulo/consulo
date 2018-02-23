@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Specifies the log filter by text.
@@ -25,7 +25,7 @@ public interface VcsLogTextFilter extends VcsLogDetailsFilter {
   /**
    * Only commits containing the returned text it their commit messages should match the filter.
    */
-  @NotNull
+  @Nonnull
   String getText();
 
   /**

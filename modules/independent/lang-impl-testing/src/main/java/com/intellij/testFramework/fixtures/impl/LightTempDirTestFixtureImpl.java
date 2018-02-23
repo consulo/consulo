@@ -25,7 +25,7 @@ import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.fixtures.TempDirTestFixture;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -66,7 +66,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   }
 
   @Override
-  public VirtualFile copyFile(@NotNull final VirtualFile file, final String targetPath) {
+  public VirtualFile copyFile(@Nonnull final VirtualFile file, final String targetPath) {
     final String path = PathUtil.getParentPath(targetPath);
     return ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
       @Override
@@ -90,7 +90,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile findOrCreateDir(final String path) {
     return ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
       @Override
@@ -111,7 +111,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   }
 
   @Override
-  public VirtualFile copyAll(final String dataDir, final String targetDir, @NotNull final VirtualFileFilter filter) {
+  public VirtualFile copyAll(final String dataDir, final String targetDir, @Nonnull final VirtualFileFilter filter) {
     return ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
       @Override
       public VirtualFile compute() {
@@ -181,7 +181,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile createFile(String targetPath) {
     final String path = PathUtil.getParentPath(targetPath);
     final String name = PathUtil.getFileName(targetPath);
@@ -200,7 +200,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile createFile(String targetPath, final String text) throws IOException {
     final VirtualFile file = createFile(targetPath);
     ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -239,7 +239,7 @@ public class LightTempDirTestFixtureImpl extends BaseFixture implements TempDirT
     });
   }
 
-  @NotNull
+  @Nonnull
   private VirtualFile getSourceRoot() {
     if (myUsePlatformSourceRoot) {
       return LightPlatformTestCase.getSourceRoot();

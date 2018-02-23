@@ -24,8 +24,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -66,15 +66,15 @@ public class BrowserUtil {
     return isAbsoluteURL(url) ? VfsUtil.convertToURL(url) : new URL("file", "", url);
   }
 
-  public static void browse(@NotNull VirtualFile file) {
+  public static void browse(@Nonnull VirtualFile file) {
     browse(VfsUtil.toUri(file));
   }
 
-  public static void browse(@NotNull File file) {
+  public static void browse(@Nonnull File file) {
     getBrowserLauncher().browse(file);
   }
 
-  public static void browse(@NotNull URL url) {
+  public static void browse(@Nonnull URL url) {
     browse(url.toExternalForm());
   }
 
@@ -83,11 +83,11 @@ public class BrowserUtil {
   /**
    * @deprecated Use {@link #browse(String)}
    */
-  public static void launchBrowser(@NotNull @NonNls String url) {
+  public static void launchBrowser(@Nonnull @NonNls String url) {
     browse(url);
   }
 
-  public static void browse(@NotNull @NonNls String url) {
+  public static void browse(@Nonnull @NonNls String url) {
     getBrowserLauncher().browse(url, null);
   }
 
@@ -96,26 +96,26 @@ public class BrowserUtil {
     return launcher == null ? BrowserLauncherAppless.INSTANCE : launcher;
   }
 
-  public static void open(@NotNull @NonNls String url) {
+  public static void open(@Nonnull @NonNls String url) {
     getBrowserLauncher().open(url);
   }
 
   /**
    * Main method: tries to launch a browser using every possible way
    */
-  public static void browse(@NotNull URI uri) {
+  public static void browse(@Nonnull URI uri) {
     getBrowserLauncher().browse(uri);
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  @NotNull
+  @Nonnull
   @Deprecated
-  public static List<String> getOpenBrowserCommand(@NonNls @NotNull String browserPathOrName) {
+  public static List<String> getOpenBrowserCommand(@NonNls @Nonnull String browserPathOrName) {
     return getOpenBrowserCommand(browserPathOrName, false);
   }
 
-  @NotNull
-  public static List<String> getOpenBrowserCommand(@NonNls @NotNull String browserPathOrName, boolean newWindowIfPossible) {
+  @Nonnull
+  public static List<String> getOpenBrowserCommand(@NonNls @Nonnull String browserPathOrName, boolean newWindowIfPossible) {
     if (new File(browserPathOrName).isFile()) {
       return Collections.singletonList(browserPathOrName);
     }
@@ -138,7 +138,7 @@ public class BrowserUtil {
     return SystemInfo.isMacOSSnowLeopard;
   }
 
-  @NotNull
+  @Nonnull
   public static String getDefaultAlternativeBrowserPath() {
     if (SystemInfo.isWindows) {
       return "C:\\Program Files\\Internet Explorer\\IExplore.exe";

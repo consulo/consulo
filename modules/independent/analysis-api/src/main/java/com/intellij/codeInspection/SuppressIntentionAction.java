@@ -30,8 +30,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -45,12 +45,12 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  protected void setText(@NotNull String text) {
+  protected void setText(@Nonnull String text) {
     myText = text;
   }
 
@@ -65,7 +65,7 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
   }
 
   @Override
-  public final void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!file.getManager().isInProject(file)) return;
     final PsiElement element = getElement(editor, file);
     if (element != null) {
@@ -82,10 +82,10 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
    * @throws com.intellij.util.IncorrectOperationException
    *
    */
-  public abstract void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException;
+  public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
 
   @Override
-  public final boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (file == null) return false;
     final PsiManager manager = file.getManager();
     if (manager == null) return false;
@@ -103,10 +103,10 @@ public abstract class SuppressIntentionAction implements Iconable, IntentionActi
    * @param element the element under caret.
    * @return true if the intention is available, false otherwise.
    */
-  public abstract boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element);
+  public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
 
   @Nullable
-  private static PsiElement getElement(@NotNull Editor editor, @NotNull PsiFile file) {
+  private static PsiElement getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
     CaretModel caretModel = editor.getCaretModel();
     int position = caretModel.getOffset();
     return file.findElementAt(position);

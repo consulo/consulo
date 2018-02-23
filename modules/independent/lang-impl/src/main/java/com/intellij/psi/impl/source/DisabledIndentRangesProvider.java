@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -37,5 +37,5 @@ public interface DisabledIndentRangesProvider {
    * @return A collection of ranges with indentation disabled or <i>null</i> if the check is not relevant for the element in question.
    */
   @Nullable
-  Collection<TextRange> getDisabledIndentRanges(@NotNull PsiElement element);
+  Collection<TextRange> getDisabledIndentRanges(@Nonnull PsiElement element);
 }

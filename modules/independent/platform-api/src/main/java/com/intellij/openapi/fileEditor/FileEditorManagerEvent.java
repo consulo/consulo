@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventObject;
 
@@ -30,7 +30,7 @@ public final class FileEditorManagerEvent extends EventObject {
   private final FileEditorProvider myOldProvider;
   private final FileEditorProvider myNewProvider;
 
-  public FileEditorManagerEvent(@NotNull FileEditorManager source,
+  public FileEditorManagerEvent(@Nonnull FileEditorManager source,
                                 @Nullable VirtualFile oldFile,
                                 @Nullable FileEditor oldEditor,
                                 @Nullable VirtualFile newFile,
@@ -39,7 +39,7 @@ public final class FileEditorManagerEvent extends EventObject {
     this(source, oldFile, oldEditor, null, newFile, newEditor, null);
   }
   
-  public FileEditorManagerEvent(@NotNull FileEditorManager source,
+  public FileEditorManagerEvent(@Nonnull FileEditorManager source,
                                 @Nullable VirtualFile oldFile,
                                 @Nullable FileEditor oldEditor,
                                 @Nullable FileEditorProvider oldProvider,
@@ -56,7 +56,7 @@ public final class FileEditorManagerEvent extends EventObject {
     myNewProvider = newProvider;
   }
 
-  @NotNull
+  @Nonnull
   public FileEditorManager getManager(){
     return (FileEditorManager)getSource();
   }

@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.TabbedPaneWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public abstract class TabbedConfigurable extends CompositeConfigurable<Configura
   protected TabbedPaneWrapper myTabbedPane;
   private final Disposable myParent;
 
-  protected TabbedConfigurable(@NotNull Disposable parent) {
+  protected TabbedConfigurable(@Nonnull Disposable parent) {
     myParent = parent;
   }
 

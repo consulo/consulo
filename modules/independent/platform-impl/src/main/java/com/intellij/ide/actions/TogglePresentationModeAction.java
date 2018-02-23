@@ -36,8 +36,8 @@ import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -54,13 +54,13 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   private static int ourSavedConsoleFontSize;
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean selected = UISettings.getInstance().PRESENTATION_MODE;
     e.getPresentation().setText(selected ? "Exit Presentation Mode" : "Enter Presentation Mode");
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e){
+  public void actionPerformed(@Nonnull AnActionEvent e){
     UISettings settings = UISettings.getInstance();
     Project project = e.getProject();
 

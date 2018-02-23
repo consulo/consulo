@@ -17,8 +17,8 @@
 package com.intellij.formatting;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class AlignmentImpl extends Alignment {
     this(false, Anchor.LEFT);
   }
 
-  AlignmentImpl(boolean allowBackwardShift, @NotNull Anchor anchor) {
+  AlignmentImpl(boolean allowBackwardShift, @Nonnull Anchor anchor) {
     myAllowBackwardShift = allowBackwardShift;
     myAnchor = anchor;
     myOffsetRespBlocksCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myOffsetRespBlocks);
@@ -47,7 +47,7 @@ public class AlignmentImpl extends Alignment {
     return myAllowBackwardShift;
   }
 
-  @NotNull
+  @Nonnull
   public Anchor getAnchor() {
     return myAnchor;
   }
@@ -140,8 +140,8 @@ public class AlignmentImpl extends Alignment {
     return ContainerUtil.newHashSet(myOffsetRespBlocks);
   }
 
-  @NotNull
-  private static AbstractBlockWrapper extendBlockFromStart(@NotNull AbstractBlockWrapper block) {
+  @Nonnull
+  private static AbstractBlockWrapper extendBlockFromStart(@Nonnull AbstractBlockWrapper block) {
     while (true) {
       AbstractBlockWrapper parent = block.getParent();
       if (parent != null && parent.getStartOffset() == block.getStartOffset()) {
@@ -153,8 +153,8 @@ public class AlignmentImpl extends Alignment {
     }
   }
 
-  @NotNull
-  private static AbstractBlockWrapper extendBlockFromEnd(@NotNull AbstractBlockWrapper block) {
+  @Nonnull
+  private static AbstractBlockWrapper extendBlockFromEnd(@Nonnull AbstractBlockWrapper block) {
     while (true) {
       AbstractBlockWrapper parent = block.getParent();
       if (parent != null && parent.getEndOffset() == block.getEndOffset()) {

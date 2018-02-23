@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.LineSeparator;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,12 +45,12 @@ public class FileBasedStorage extends XmlElementStorage {
   private volatile VirtualFile myCachedVirtualFile;
   private LineSeparator myLineSeparator;
 
-  public FileBasedStorage(@NotNull String filePath,
-                          @NotNull String fileSpec,
+  public FileBasedStorage(@Nonnull String filePath,
+                          @Nonnull String fileSpec,
                           @Nullable RoamingType roamingType,
                           @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                          @NotNull String rootElementName,
-                          @NotNull Disposable parentDisposable,
+                          @Nonnull String rootElementName,
+                          @Nonnull Disposable parentDisposable,
                           @Nullable final Listener listener,
                           @Nullable StreamProvider streamProvider) {
     super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider);
@@ -63,22 +63,22 @@ public class FileBasedStorage extends XmlElementStorage {
       if (virtualFileTracker != null) {
         virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myFile.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
           @Override
-          public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+          public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
             myCachedVirtualFile = null;
           }
 
           @Override
-          public void fileDeleted(@NotNull VirtualFileEvent event) {
+          public void fileDeleted(@Nonnull VirtualFileEvent event) {
             myCachedVirtualFile = null;
           }
 
           @Override
-          public void fileCreated(@NotNull VirtualFileEvent event) {
+          public void fileCreated(@Nonnull VirtualFileEvent event) {
             myCachedVirtualFile = event.getFile();
           }
 
           @Override
-          public void contentsChanged(@NotNull final VirtualFileEvent event) {
+          public void contentsChanged(@Nonnull final VirtualFileEvent event) {
             listener.storageFileChanged(event, FileBasedStorage.this);
           }
         }, false, parentDisposable);
@@ -95,7 +95,7 @@ public class FileBasedStorage extends XmlElementStorage {
   }
 
   @Override
-  protected XmlElementStorageSaveSession createSaveSession(@NotNull StorageData storageData) {
+  protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
     return new FileSaveSession(storageData);
   }
 
@@ -107,7 +107,7 @@ public class FileBasedStorage extends XmlElementStorage {
   }
 
   private class FileSaveSession extends XmlElementStorageSaveSession {
-    protected FileSaveSession(@NotNull StorageData storageData) {
+    protected FileSaveSession(@Nonnull StorageData storageData) {
       super(storageData);
     }
 
@@ -148,7 +148,7 @@ public class FileBasedStorage extends XmlElementStorage {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected StorageData createStorageData() {
     return new StorageData(myRootElementName);
   }
@@ -162,12 +162,12 @@ public class FileBasedStorage extends XmlElementStorage {
     return virtualFile;
   }
 
-  @NotNull
+  @Nonnull
   public File getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public String getFilePath() {
     return myFilePath;
   }
@@ -219,12 +219,12 @@ public class FileBasedStorage extends XmlElementStorage {
   }
 
   @Override
-  public void setDefaultState(@NotNull Element element) {
+  public void setDefaultState(@Nonnull Element element) {
     element.setName(myRootElementName);
     super.setDefaultState(element);
   }
 
-  public void updatedFromStreamProvider(@NotNull Set<String> changedComponentNames, boolean deleted) {
+  public void updatedFromStreamProvider(@Nonnull Set<String> changedComponentNames, boolean deleted) {
     if (myRoamingType == RoamingType.DISABLED) {
       // storage roaming was changed to DISABLED, but settings repository has old state
       return;

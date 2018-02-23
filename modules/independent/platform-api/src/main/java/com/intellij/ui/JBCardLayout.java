@@ -19,8 +19,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,11 +78,11 @@ public class JBCardLayout extends CardLayout {
     }
   }
 
-  public void swipe(@NotNull final Container parent, @NotNull final String name, @NotNull SwipeDirection direction) {
+  public void swipe(@Nonnull final Container parent, @Nonnull final String name, @Nonnull SwipeDirection direction) {
     swipe(parent, name, direction, null);
   }
 
-  public void swipe(@NotNull final Container parent, @NotNull final String name, @NotNull SwipeDirection direction, final @Nullable Runnable onDone) {
+  public void swipe(@Nonnull final Container parent, @Nonnull final String name, @Nonnull SwipeDirection direction, final @Nullable Runnable onDone) {
     stopSwipeIfNeed();
     mySwipeFrom = findVisible(parent);
     mySwipeTo = myMap.get(name);

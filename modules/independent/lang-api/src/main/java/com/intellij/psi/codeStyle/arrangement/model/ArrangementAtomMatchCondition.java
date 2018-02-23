@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.model;
 
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Encapsulates a single atom match condition, e.g. 'entry type is field' or 'entry has 'static' modifier' etc.
@@ -28,32 +28,34 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ArrangementAtomMatchCondition implements ArrangementMatchCondition {
 
-  @NotNull private final ArrangementSettingsToken myType;
-  @NotNull private final Object                   myValue;
+  @Nonnull
+  private final ArrangementSettingsToken myType;
+  @Nonnull
+  private final Object                   myValue;
 
   private boolean myInverted;
 
-  public ArrangementAtomMatchCondition(@NotNull ArrangementSettingsToken type) {
+  public ArrangementAtomMatchCondition(@Nonnull ArrangementSettingsToken type) {
     this(type, type);
   }
   
-  public ArrangementAtomMatchCondition(@NotNull ArrangementSettingsToken type, @NotNull Object value) {
+  public ArrangementAtomMatchCondition(@Nonnull ArrangementSettingsToken type, @Nonnull Object value) {
     myType = type;
     myValue = value;
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementSettingsToken getType() {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   public Object getValue() {
     return myValue;
   }
 
   @Override
-  public void invite(@NotNull ArrangementMatchConditionVisitor visitor) {
+  public void invite(@Nonnull ArrangementMatchConditionVisitor visitor) {
     visitor.visit(this);
   }
 
@@ -93,7 +95,7 @@ public class ArrangementAtomMatchCondition implements ArrangementMatchCondition 
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementAtomMatchCondition clone() {
     ArrangementAtomMatchCondition result = new ArrangementAtomMatchCondition(myType, myValue);

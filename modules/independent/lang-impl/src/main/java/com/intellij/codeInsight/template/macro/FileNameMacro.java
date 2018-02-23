@@ -20,8 +20,8 @@ import com.intellij.codeInsight.template.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Nikolay Matveev
@@ -39,7 +39,7 @@ public class FileNameMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@NotNull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
     final PsiFile file = PsiDocumentManager.getInstance(context.getProject()).getPsiFile(context.getEditor().getDocument());
     if (file != null) {
       final VirtualFile virtualFile = file.getVirtualFile();
@@ -51,7 +51,7 @@ public class FileNameMacro extends Macro {
   }
 
   @Nullable
-  protected TextResult calculateResult(@NotNull VirtualFile virtualFile) {
+  protected TextResult calculateResult(@Nonnull VirtualFile virtualFile) {
     return new TextResult(virtualFile.getName());
   }
 }

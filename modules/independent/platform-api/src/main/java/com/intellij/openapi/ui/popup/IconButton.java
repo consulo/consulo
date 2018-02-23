@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.ui.popup;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

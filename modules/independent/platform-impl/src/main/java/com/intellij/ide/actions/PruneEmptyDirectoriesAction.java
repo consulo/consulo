@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -56,7 +56,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
   private static void pruneEmptiesIn(VirtualFile file, final FileTypeManager ftManager) throws IOException {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (file.isDirectory()) {
           if (ftManager.isFileIgnored(file)) {
             return false;
@@ -72,7 +72,7 @@ public class PruneEmptyDirectoriesAction extends AnAction {
       }
 
       @Override
-      public void afterChildrenVisited(@NotNull VirtualFile file) {
+      public void afterChildrenVisited(@Nonnull VirtualFile file) {
         if (file.isDirectory() && file.getChildren().length == 0) {
           delete(file);
         }

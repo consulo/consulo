@@ -50,7 +50,7 @@ import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -61,10 +61,10 @@ import java.util.Collection;
  */
 public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, TypeSafeDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
   private final SmartPsiElementPointer myPointer;
-  @NotNull
+  @Nonnull
   protected final FindUsagesOptions myOptions;
 
-  public PsiElement2UsageTargetAdapter(@NotNull PsiElement element, @NotNull FindUsagesOptions options) {
+  public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element, @Nonnull FindUsagesOptions options) {
     myOptions = options;
     myPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
 
@@ -74,7 +74,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     update(element);
   }
 
-  public PsiElement2UsageTargetAdapter(@NotNull PsiElement element) {
+  public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element) {
     this(element, new FindUsagesOptions(element.getProject()));
   }
 
@@ -85,7 +85,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ItemPresentation getPresentation() {
     return this;
   }
@@ -133,13 +133,13 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   }
 
   @Override
-  public void findUsagesInEditor(@NotNull FileEditor editor) {
+  public void findUsagesInEditor(@Nonnull FileEditor editor) {
     PsiElement element = getElement();
     FindManager.getInstance(element.getProject()).findUsagesInEditor(element, editor);
   }
 
   @Override
-  public void highlightUsages(@NotNull PsiFile file, @NotNull Editor editor, boolean clearHighlights) {
+  public void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights) {
     PsiElement target = getElement();
 
     if (file instanceof PsiCompiledFile) file = ((PsiCompiledFile)file).getDecompiledPsiFile();
@@ -177,8 +177,8 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     return virtualFile == null ? null : new VirtualFile[]{virtualFile};
   }
 
-  @NotNull
-  public static PsiElement2UsageTargetAdapter[] convert(@NotNull PsiElement[] psiElements) {
+  @Nonnull
+  public static PsiElement2UsageTargetAdapter[] convert(@Nonnull PsiElement[] psiElements) {
     PsiElement2UsageTargetAdapter[] targets = new PsiElement2UsageTargetAdapter[psiElements.length];
     for (int i = 0; i < targets.length; i++) {
       targets[i] = new PsiElement2UsageTargetAdapter(psiElements[i]);
@@ -187,7 +187,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     return targets;
   }
 
-  @NotNull
+  @Nonnull
   public static PsiElement[] convertToPsiElements(PsiElement2UsageTargetAdapter[] adapters) {
     PsiElement[] targets = new PsiElement[adapters.length];
     for (int i = 0; i < targets.length; i++) {
@@ -215,7 +215,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     return UsageViewImpl.getShowUsagesWithSettingsShortcut();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLongDescriptiveName() {
     SearchScope searchScope = myOptions.searchScope;

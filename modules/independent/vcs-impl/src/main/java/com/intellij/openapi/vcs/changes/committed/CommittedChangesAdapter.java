@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class CommittedChangesAdapter implements CommittedChangesListener {
   public void changesLoaded(RepositoryLocation location, List<CommittedChangeList> changes) {
   }
 
-  public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
+  public void incomingChangesUpdated(@javax.annotation.Nullable final List<CommittedChangeList> receivedChanges) {
   }
 
   @Override
@@ -40,6 +39,6 @@ public class CommittedChangesAdapter implements CommittedChangesListener {
   public void presentationChanged() {
   }
 
-  public void refreshErrorStatusChanged(@Nullable VcsException lastError) {
+  public void refreshErrorStatusChanged(@javax.annotation.Nullable VcsException lastError) {
   }
 }

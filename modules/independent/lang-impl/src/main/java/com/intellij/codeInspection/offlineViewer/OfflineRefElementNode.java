@@ -24,11 +24,11 @@ import com.intellij.codeInspection.offline.OfflineProblemDescriptor;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.codeInspection.ui.RefElementNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class OfflineRefElementNode extends RefElementNode {
-  public OfflineRefElementNode(@NotNull OfflineProblemDescriptor descriptor, @NotNull InspectionToolPresentation presentation) {
+  public OfflineRefElementNode(@Nonnull OfflineProblemDescriptor descriptor, @Nonnull InspectionToolPresentation presentation) {
     super(descriptor, presentation);
   }
 

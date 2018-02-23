@@ -30,8 +30,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.HashSet;
@@ -44,7 +44,7 @@ import java.util.Set;
 public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     DefaultActionGroup group = createActionGroup(project, editor, file);
     if (group == null) return;

@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.IndexComparator;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -50,7 +50,7 @@ class LibraryTableTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected ProgressIndicator createProgressIndicator() {
     return new StatusBarProgress();
   }

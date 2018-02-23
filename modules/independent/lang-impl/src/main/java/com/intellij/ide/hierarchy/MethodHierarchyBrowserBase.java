@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,13 +41,13 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getPrevOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.method.prev.occurence.name");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getNextOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.method.next.occurence.name");
   }
@@ -81,19 +81,19 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
   }
 
   @Override
-  protected void prependActions(@NotNull DefaultActionGroup actionGroup) {
+  protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
     actionGroup.add(new AlphaSortAction());
     actionGroup.add(new ShowImplementationsOnlyAction());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Key getBrowserDataKey() {
     return DATA_KEY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getActionPlace() {
     return ActionPlaces.METHOD_HIERARCHY_VIEW_TOOLBAR;
   }
@@ -123,7 +123,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
 
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       super.update(event);
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(isValidBase());

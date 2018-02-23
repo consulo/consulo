@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.bidi;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@link BidiRegionsSeparator} allowing to define a number of token sets, tokens within each set will be processed 
@@ -31,7 +31,7 @@ public abstract class TokenSetBidiRegionsSeparator extends BidiRegionsSeparator 
   }
 
   @Override
-  public boolean createBorderBetweenTokens(@NotNull IElementType previousTokenType, @NotNull IElementType tokenType) {
+  public boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
     for (TokenSet set : myTokenSets) {
       if (set.contains(previousTokenType) && set.contains(tokenType)) {
         return false;

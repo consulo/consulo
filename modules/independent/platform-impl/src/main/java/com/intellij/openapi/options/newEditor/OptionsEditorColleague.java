@@ -17,7 +17,7 @@ package com.intellij.openapi.options.newEditor;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 interface OptionsEditorColleague {
   default ActionCallback onSelected(@Nullable Configurable configurable, final Configurable oldConfigurable) {

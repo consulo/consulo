@@ -25,7 +25,7 @@ import com.intellij.usages.impl.rules.ReadAccessFilteringRule;
 import com.intellij.usages.impl.rules.WriteAccessFilteringRule;
 import com.intellij.usages.rules.UsageFilteringRule;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -40,8 +40,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   private final ReadWriteState myReadWriteState = new ReadWriteState();
 
   @Override
-  @NotNull
-  public UsageFilteringRule[] getActiveRules(@NotNull Project project) {
+  @Nonnull
+  public UsageFilteringRule[] getActiveRules(@Nonnull Project project) {
     final List<UsageFilteringRule> rules = new ArrayList<UsageFilteringRule>();
 
     if (!myReadWriteState.isShowReadAccess()) {
@@ -54,8 +54,8 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   }
 
   @Override
-  @NotNull
-  public AnAction[] createFilteringActions(@NotNull UsageView view) {
+  @Nonnull
+  public AnAction[] createFilteringActions(@Nonnull UsageView view) {
     final UsageViewImpl impl = (UsageViewImpl)view;
     if (!view.getPresentation().isCodeUsages()) {
       return AnAction.EMPTY_ARRAY;

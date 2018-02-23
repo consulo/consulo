@@ -28,8 +28,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -666,7 +666,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
               .message("splitter.right.tooltip.text"));
       new ClickListener() {
         @Override
-        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           if (myInnerComponent != null) {
             final int income = myVerticalSplit ? myInnerComponent.getHeight() : myInnerComponent.getWidth();
             if (myIsFirst) {
@@ -692,7 +692,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
       splitCenterlabel.setToolTipText(UIBundle.message("splitter.center.tooltip.text"));
       new ClickListener() {
         @Override
-        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           center();
           return true;
         }
@@ -708,7 +708,7 @@ public class ThreeComponentsSplitter extends JPanel implements Disposable {
               .message("splitter.left.tooltip.text"));
       new ClickListener() {
         @Override
-        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           if (myInnerComponent != null) {
             final int income = myVerticalSplit ? myInnerComponent.getHeight() : myInnerComponent.getWidth();
             if (myIsFirst) {

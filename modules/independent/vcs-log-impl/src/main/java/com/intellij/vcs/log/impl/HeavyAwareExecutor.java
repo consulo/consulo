@@ -17,12 +17,12 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;
 
 class HeavyAwareExecutor {
-  static void executeOutOfHeavyProcessLater(@NotNull Runnable command, int delayMs) {
+  static void executeOutOfHeavyProcessLater(@Nonnull Runnable command, int delayMs) {
     HeavyProcessLatch.INSTANCE.executeOutOfHeavyProcess(() -> JobScheduler.getScheduler().schedule(() -> {
       if (HeavyProcessLatch.INSTANCE.isRunning()) {
         executeOutOfHeavyProcessLater(command, delayMs);

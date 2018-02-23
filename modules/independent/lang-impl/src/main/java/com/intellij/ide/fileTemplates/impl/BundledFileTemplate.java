@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -28,7 +28,7 @@ public final class BundledFileTemplate extends FileTemplateBase {
   private final boolean myLiveTemplateEnabledByDefault;
   private boolean myEnabled = true; // when user 'deletes' bundled plugin, it simply becomes disabled
 
-  public BundledFileTemplate(@NotNull DefaultTemplate defaultTemplate, boolean internal) {
+  public BundledFileTemplate(@Nonnull DefaultTemplate defaultTemplate, boolean internal) {
     myDefaultTemplate = defaultTemplate;
     myInternal = internal;
     myLiveTemplateEnabledByDefault = defaultTemplate.getText().contains("#[[$");
@@ -36,35 +36,35 @@ public final class BundledFileTemplate extends FileTemplateBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myDefaultTemplate.getName();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getExtension() {
     return myDefaultTemplate.getExtension();
   }
 
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     // empty, cannot change name for bundled template
   }
 
   @Override
-  public void setExtension(@NotNull String extension) {
+  public void setExtension(@Nonnull String extension) {
     // empty, cannot change extension for bundled template
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getDefaultText() {
     return myDefaultTemplate.getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getDescription() {
     return myDefaultTemplate.getDescriptionText();
   }

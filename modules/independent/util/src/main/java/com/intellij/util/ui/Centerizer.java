@@ -16,15 +16,15 @@
 package com.intellij.util.ui;
 
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Centerizer extends JPanel {
 
-  public Centerizer(@NotNull JComponent comp) {
+  public Centerizer(@Nonnull JComponent comp) {
     super(false);
     setOpaque(false);
     setBorder(null);

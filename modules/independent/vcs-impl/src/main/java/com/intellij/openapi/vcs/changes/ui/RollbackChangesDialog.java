@@ -30,8 +30,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.RollbackUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -131,7 +130,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     myBrowser =
             new ChangesBrowser(project, changeLists, changes, null, true, true, myListChangeListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES,
                                null) {
-              @NotNull
+              @Nonnull
               @Override
               protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
                 TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
@@ -164,13 +163,13 @@ public class RollbackChangesDialog extends DialogWrapper {
     myListChangeListener.run();
   }
 
-  @NotNull
-  public static String operationNameByChanges(@NotNull Project project, @NotNull Collection<Change> changes) {
+  @Nonnull
+  public static String operationNameByChanges(@Nonnull Project project, @Nonnull Collection<Change> changes) {
     return RollbackUtil.getRollbackOperationName(ChangesUtil.getAffectedVcses(changes, project));
   }
 
-  @NotNull
-  private static List<Change> getAllChanges(@NotNull List<? extends ChangeList> changeLists) {
+  @Nonnull
+  private static List<Change> getAllChanges(@Nonnull List<? extends ChangeList> changeLists) {
     List<Change> result = ContainerUtil.newArrayList();
 
     for (ChangeList list : changeLists) {
@@ -188,7 +187,7 @@ public class RollbackChangesDialog extends DialogWrapper {
                       myAfterVcsRefreshInAwt, null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     final GridBagConstraints gb =

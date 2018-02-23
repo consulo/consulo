@@ -23,7 +23,7 @@ import com.intellij.lang.ForeignLeafType;
 import com.intellij.lang.TokenWrapper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ForeignLeafPsiElement extends LeafPsiElement {
   private ForeignLeafType myForeignType;
@@ -46,17 +46,17 @@ public class ForeignLeafPsiElement extends LeafPsiElement {
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence seq) {
+  public boolean textMatches(@Nonnull CharSequence seq) {
     return false;
   }
 
   @Override
-  protected int textMatches(@NotNull CharSequence buffer, int start) {
+  protected int textMatches(@Nonnull CharSequence buffer, int start) {
     return start;
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return false;
   }
 

@@ -26,8 +26,8 @@ import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -37,14 +37,14 @@ import java.util.List;
 public class BinaryMergeTool implements MergeTool {
   public static final BinaryMergeTool INSTANCE = new BinaryMergeTool();
 
-  @NotNull
+  @Nonnull
   @Override
-  public MergeViewer createComponent(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return new BinaryMergeViewer(context, (ThreesideMergeRequest)request);
   }
 
   @Override
-  public boolean canShow(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     if (!(request instanceof ThreesideMergeRequest)) return false;
 
     MergeUtil.ProxyDiffContext diffContext = new MergeUtil.ProxyDiffContext(context);
@@ -56,15 +56,20 @@ public class BinaryMergeTool implements MergeTool {
   }
 
   public static class BinaryMergeViewer implements MergeViewer {
-    @NotNull private final MergeContext myMergeContext;
-    @NotNull private final ThreesideMergeRequest myMergeRequest;
+    @Nonnull
+    private final MergeContext myMergeContext;
+    @Nonnull
+    private final ThreesideMergeRequest myMergeRequest;
 
-    @NotNull private final DiffContext myDiffContext;
-    @NotNull private final ContentDiffRequest myDiffRequest;
+    @Nonnull
+    private final DiffContext myDiffContext;
+    @Nonnull
+    private final ContentDiffRequest myDiffRequest;
 
-    @NotNull private final MyThreesideViewer myViewer;
+    @Nonnull
+    private final MyThreesideViewer myViewer;
 
-    public BinaryMergeViewer(@NotNull MergeContext context, @NotNull ThreesideMergeRequest request) {
+    public BinaryMergeViewer(@Nonnull MergeContext context, @Nonnull ThreesideMergeRequest request) {
       myMergeContext = context;
       myMergeRequest = request;
 
@@ -76,13 +81,13 @@ public class BinaryMergeTool implements MergeTool {
       myViewer = new MyThreesideViewer(myDiffContext, myDiffRequest);
     }
 
-    @NotNull
-    private static List<DiffContent> getDiffContents(@NotNull ThreesideMergeRequest mergeRequest) {
+    @Nonnull
+    private static List<DiffContent> getDiffContents(@Nonnull ThreesideMergeRequest mergeRequest) {
       return ContainerUtil.newArrayList(mergeRequest.getContents());
     }
 
-    @NotNull
-    private static List<String> getDiffContentTitles(@NotNull ThreesideMergeRequest mergeRequest) {
+    @Nonnull
+    private static List<String> getDiffContentTitles(@Nonnull ThreesideMergeRequest mergeRequest) {
       return MergeUtil.notNullizeContentTitles(mergeRequest.getContentTitles());
     }
 
@@ -90,7 +95,7 @@ public class BinaryMergeTool implements MergeTool {
     // Impl
     //
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return myViewer.getComponent();
@@ -102,7 +107,7 @@ public class BinaryMergeTool implements MergeTool {
       return myViewer.getPreferredFocusedComponent();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ToolbarComponents init() {
       ToolbarComponents components = new ToolbarComponents();
@@ -123,7 +128,7 @@ public class BinaryMergeTool implements MergeTool {
 
     @Nullable
     @Override
-    public Action getResolveAction(@NotNull final MergeResult result) {
+    public Action getResolveAction(@Nonnull final MergeResult result) {
       if (result == MergeResult.RESOLVED) return null;
 
       String caption = MergeUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
@@ -148,7 +153,7 @@ public class BinaryMergeTool implements MergeTool {
     // Getters
     //
 
-    @NotNull
+    @Nonnull
     public MyThreesideViewer getViewer() {
       return myViewer;
     }
@@ -158,7 +163,7 @@ public class BinaryMergeTool implements MergeTool {
     //
 
     private static class MyThreesideViewer extends ThreesideBinaryDiffViewer {
-      public MyThreesideViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+      public MyThreesideViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
         super(context, request);
       }
 

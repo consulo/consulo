@@ -23,8 +23,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -54,7 +54,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   private static final int IDE_UI_TREE_INDENT = SystemProperties.getIntProperty("ide.ui.tree.indent", -1);
 
-  @NotNull
+  @Nonnull
   private final Condition<Integer> myWideSelectionCondition;
   private boolean myWideSelection;
   private boolean myOldRepaintAllRowValue;
@@ -72,7 +72,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
    * @param wideSelectionCondition  strategy that determine if wide selection should be used for a target row (it's zero-based index
    *                                is given to the condition as an argument)
    */
-  public WideSelectionTreeUI(final boolean wideSelection, @NotNull Condition<Integer> wideSelectionCondition) {
+  public WideSelectionTreeUI(final boolean wideSelection, @Nonnull Condition<Integer> wideSelectionCondition) {
     myWideSelection = wideSelection;
     myWideSelectionCondition = wideSelectionCondition;
   }
@@ -102,9 +102,9 @@ public class WideSelectionTreeUI extends BasicTreeUI {
         }
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      protected MouseEvent convert(@NotNull MouseEvent event) {
+      protected MouseEvent convert(@Nonnull MouseEvent event) {
         if (!event.isConsumed() && SwingUtilities.isLeftMouseButton(event)) {
           int x = event.getX();
           int y = event.getY();
@@ -303,7 +303,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
     return myWideSelection;
   }
 
-  public static boolean isWideSelection(@NotNull JTree tree) {
+  public static boolean isWideSelection(@Nonnull JTree tree) {
     TreeUI ui = tree.getUI();
     return ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection();
   }
@@ -446,7 +446,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
   }
 
   @Nullable
-  private static Color getSelectionBackground(@NotNull JTree tree, boolean checkProperty) {
+  private static Color getSelectionBackground(@Nonnull JTree tree, boolean checkProperty) {
     Object property = tree.getClientProperty(TREE_TABLE_TREE_KEY);
     if (property instanceof JTable) {
       return ((JTable)property).getSelectionBackground();

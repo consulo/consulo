@@ -42,7 +42,7 @@ import com.intellij.refactoring.rename.NameSuggestionProvider;
 import com.intellij.refactoring.rename.PreferrableNameSuggestionProvider;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.refactoring.rename.inplace.MyLookupExpression;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -23,11 +23,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.util.CharTable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CustomParsingType extends IElementType implements ICustomParsingType {
-  public CustomParsingType(@NotNull @NonNls String debugName, @Nullable Language language) {
+  public CustomParsingType(@Nonnull @NonNls String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 

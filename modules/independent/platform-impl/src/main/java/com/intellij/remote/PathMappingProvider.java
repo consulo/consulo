@@ -6,8 +6,8 @@ import com.google.common.collect.Lists;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.PathMappingSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,11 +28,11 @@ public abstract class PathMappingProvider {
       }));
   }
 
-  @NotNull
-  public abstract String getProviderPresentableName(@NotNull RemoteSdkAdditionalData data);
+  @Nonnull
+  public abstract String getProviderPresentableName(@Nonnull RemoteSdkAdditionalData data);
 
   public abstract boolean accepts(@Nullable RemoteSdkAdditionalData data);
 
-  @NotNull
-  public abstract PathMappingSettings getPathMappingSettings(@NotNull Project project, @NotNull RemoteSdkAdditionalData data);
+  @Nonnull
+  public abstract PathMappingSettings getPathMappingSettings(@Nonnull Project project, @Nonnull RemoteSdkAdditionalData data);
 }

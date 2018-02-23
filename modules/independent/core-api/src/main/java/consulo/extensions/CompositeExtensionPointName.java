@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,8 +48,8 @@ public abstract class CompositeExtensionPointName<T> {
     boolean breakValue();
   }
 
-  @NotNull
-  public static <E> CompositeExtensionPointName<E> modulePoint(@NotNull String epName, @NotNull Class<E> clazz) {
+  @Nonnull
+  public static <E> CompositeExtensionPointName<E> modulePoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
       protected boolean validateArea(@Nullable AreaInstance areaInstance) {
@@ -58,8 +58,8 @@ public abstract class CompositeExtensionPointName<T> {
     };
   }
 
-  @NotNull
-  public static <E> CompositeExtensionPointName<E> projectPoint(@NotNull String epName, @NotNull Class<E> clazz) {
+  @Nonnull
+  public static <E> CompositeExtensionPointName<E> projectPoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
       @Override
       protected boolean validateArea(@Nullable AreaInstance areaInstance) {
@@ -68,8 +68,8 @@ public abstract class CompositeExtensionPointName<T> {
     };
   }
 
-  @NotNull
-  public static <E> CompositeExtensionPointName<E> applicationPoint(@NotNull String epName, @NotNull Class<E> clazz) {
+  @Nonnull
+  public static <E> CompositeExtensionPointName<E> applicationPoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
     return new CompositeExtensionPointNameNoArea<E>(epName, clazz);
   }
 
@@ -113,7 +113,7 @@ public abstract class CompositeExtensionPointName<T> {
       }
     }
 
-    private Object invokeMethod(@NotNull Method method, Object[] args) {
+    private Object invokeMethod(@Nonnull Method method, Object[] args) {
       method.setAccessible(true);
 
       for (T listener : myExtensions) {
@@ -144,8 +144,8 @@ public abstract class CompositeExtensionPointName<T> {
       return null;
     }
 
-    @NotNull
-    private Boolean invokeBooleanMethod(@NotNull Method method, Object[] args) {
+    @Nonnull
+    private Boolean invokeBooleanMethod(@Nonnull Method method, Object[] args) {
       method.setAccessible(true);
 
       Boolean breakValue = Boolean.TRUE;
@@ -182,7 +182,7 @@ public abstract class CompositeExtensionPointName<T> {
       return !breakValue;
     }
 
-    private Object invokeVoidMethod(@NotNull Method method, Object[] args) {
+    private Object invokeVoidMethod(@Nonnull Method method, Object[] args) {
       method.setAccessible(true);
 
       for (T listener : myExtensions) {
@@ -214,7 +214,7 @@ public abstract class CompositeExtensionPointName<T> {
   private static class CompositeExtensionPointNameNoArea<E> extends CompositeExtensionPointName<E> {
     private volatile E myCompositeValue;
 
-    protected CompositeExtensionPointNameNoArea(@NotNull String name, Class<E> clazz) {
+    protected CompositeExtensionPointNameNoArea(@Nonnull String name, Class<E> clazz) {
       super(name, clazz);
     }
 
@@ -238,7 +238,7 @@ public abstract class CompositeExtensionPointName<T> {
   private static abstract class CompositeExtensionPointNameWithArea<E> extends CompositeExtensionPointName<E> {
     private Key<E> myCompositeValueKey;
 
-    private CompositeExtensionPointNameWithArea(@NotNull String name, Class<E> clazz) {
+    private CompositeExtensionPointNameWithArea(@Nonnull String name, Class<E> clazz) {
       super(name, clazz);
       myCompositeValueKey = Key.create("CompositeExtensionPoint#" + name);
     }
@@ -260,12 +260,12 @@ public abstract class CompositeExtensionPointName<T> {
   private final String myName;
   private final Class<T> myClazz;
 
-  protected CompositeExtensionPointName(@NotNull String name, @NotNull Class<T> clazz) {
+  protected CompositeExtensionPointName(@Nonnull String name, @Nonnull Class<T> clazz) {
     myName = name;
     myClazz = clazz;
   }
 
-  @NotNull
+  @Nonnull
   private T buildCompositeValue(@Nullable AreaInstance areaInstance) {
     final T[] extensions = Extensions.getExtensions(myName, areaInstance);
 
@@ -282,12 +282,12 @@ public abstract class CompositeExtensionPointName<T> {
 
   protected abstract boolean validateArea(@Nullable AreaInstance areaInstance);
 
-  @NotNull
+  @Nonnull
   public T composite() {
     return composite(null);
   }
 
-  @NotNull
+  @Nonnull
   public T composite(@Nullable AreaInstance areaInstance) {
     if (!validateArea(areaInstance)) {
       throw new IllegalArgumentException("Wrong area instance for '" + myName + "' extension point");

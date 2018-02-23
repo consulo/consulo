@@ -18,7 +18,7 @@ package com.intellij.openapi.extensions;
 
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
@@ -43,13 +43,13 @@ public class ExtensionPointName<T> {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public T[] getExtensions() {
     return Extensions.getExtensions(this);
   }
 
-  @NotNull
-  public T[] getExtensions(@NotNull AreaInstance areaInstance) {
+  @Nonnull
+  public T[] getExtensions(@Nonnull AreaInstance areaInstance) {
     return Extensions.getExtensions(this, areaInstance);
   }
 

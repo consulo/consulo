@@ -52,8 +52,7 @@ import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.FileComparisonFailure;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +115,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * @param filePath - relative path from %IDEA_INSTALLATION_HOME%/testData/
    * @throws Exception
    */
-  protected void configureByFile(@TestDataFile @NonNls @NotNull String filePath) {
+  protected void configureByFile(@TestDataFile @NonNls @Nonnull String filePath) {
     try {
       String fullPath = getTestDataPath() + filePath;
 
@@ -132,7 +131,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   protected String getTestDataPath() {
     return TestPathUtil.getTestDataPath();
   }
@@ -151,8 +150,8 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * @param fileText - data file text.
    * @throws java.io.IOException
    */
-  @NotNull
-  protected static Document configureFromFileText(@NonNls @NotNull final String fileName, @NonNls @NotNull final String fileText) throws IOException {
+  @Nonnull
+  protected static Document configureFromFileText(@NonNls @Nonnull final String fileName, @NonNls @Nonnull final String fileText) throws IOException {
     return ApplicationManager.getApplication().runWriteAction(new Computable<Document>() {
       @Override
       public Document compute() {
@@ -223,14 +222,14 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     }
   }
 
-  protected static Editor createEditor(@NotNull VirtualFile file) {
+  protected static Editor createEditor(@Nonnull VirtualFile file) {
     Editor editor = FileEditorManager.getInstance(getProject()).openTextEditor(new OpenFileDescriptor(getProject(), file, 0), false);
     ((EditorImpl)editor).setCaretActive();
     return editor;
   }
 
-  @NotNull
-  private static Document setupFileEditorAndDocument(@NotNull String fileName, @NotNull String fileText) throws IOException {
+  @Nonnull
+  private static Document setupFileEditorAndDocument(@Nonnull String fileName, @Nonnull String fileText) throws IOException {
     EncodingProjectManager.getInstance(getProject()).setEncoding(null, CharsetToolkit.UTF8_CHARSET);
     EncodingProjectManager.getInstance(ProjectManager.getInstance().getDefaultProject()).setEncoding(null, CharsetToolkit.UTF8_CHARSET);
     PostprocessReformattingAspect.getInstance(ourProject).doPostponedFormatting();
@@ -296,7 +295,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * @param filePath - relative path from %IDEA_INSTALLATION_HOME%/testData/
    * @throws Exception
    */
-  protected void checkResultByFile(@NonNls @NotNull String filePath) {
+  protected void checkResultByFile(@NonNls @Nonnull String filePath) {
     checkResultByFile(null, filePath, false);
   }
 
@@ -308,7 +307,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * @param ignoreTrailingSpaces - whether trailing spaces in editor in data file should be stripped prior to comparing.
    * @throws Exception
    */
-  protected void checkResultByFile(@Nullable String message, @NotNull String filePath, final boolean ignoreTrailingSpaces) {
+  protected void checkResultByFile(@javax.annotation.Nullable String message, @Nonnull String filePath, final boolean ignoreTrailingSpaces) {
     bringRealEditorBack();
 
     getProject().getComponent(PostprocessReformattingAspect.class).doPostponedFormatting();
@@ -338,7 +337,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * Same as checkResultByFile but text is provided directly.
    * @param fileText
    */
-  protected void checkResultByText(@NonNls @NotNull String fileText) {
+  protected void checkResultByText(@NonNls @Nonnull String fileText) {
     checkResultByText(null, fileText, false, null);
   }
 
@@ -348,7 +347,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
      * @param fileText
      * @param ignoreTrailingSpaces - whether trailing spaces in editor in data file should be stripped prior to comparing.
      */
-  protected void checkResultByText(final String message, @NotNull String fileText, final boolean ignoreTrailingSpaces) {
+  protected void checkResultByText(final String message, @Nonnull String fileText, final boolean ignoreTrailingSpaces) {
     checkResultByText(message, fileText, ignoreTrailingSpaces, null);  
   }
   
@@ -358,7 +357,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
    * @param fileText
    * @param ignoreTrailingSpaces - whether trailing spaces in editor in data file should be stripped prior to comparing.
    */
-  protected void checkResultByText(final String message, @NotNull final String fileText, final boolean ignoreTrailingSpaces, final String filePath) {
+  protected void checkResultByText(final String message, @Nonnull final String fileText, final boolean ignoreTrailingSpaces, final String filePath) {
     bringRealEditorBack();
     PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -468,7 +467,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.EDITOR == dataId) {
       return myEditor;
     }
@@ -605,7 +604,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     new CommentByLineCommentHandler().invoke(getProject(), getEditor(), getEditor().getCaretModel().getPrimaryCaret(), getFile());
   }
 
-  protected static void executeAction(@NonNls @NotNull final String actionId) {
+  protected static void executeAction(@NonNls @Nonnull final String actionId) {
     CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
       @Override
       public void run() {
@@ -620,7 +619,7 @@ public abstract class LightPlatformCodeInsightTestCase extends LightPlatformTest
     final DataContext defaultContext = DataManager.getInstance().getDataContext();
     return new DataContext() {
       @Override
-      @Nullable
+      @javax.annotation.Nullable
       public Object getData(@NonNls Key dataId) {
         if (PlatformDataKeys.EDITOR == dataId) {
           return getEditor();

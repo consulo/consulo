@@ -19,8 +19,8 @@ import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.ui.dualView.DualTreeElement;
 import com.intellij.util.TreeItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.IOException;
@@ -29,22 +29,23 @@ import java.util.List;
 
 // TODO this class should not implements VcsFileRevision (this is too confusing)
 class TreeNodeOnVcsRevision extends DefaultMutableTreeNode implements VcsFileRevision, DualTreeElement {
-  @NotNull private final VcsFileRevision myRevision;
+  @Nonnull
+  private final VcsFileRevision myRevision;
 
-  public TreeNodeOnVcsRevision(@Nullable VcsFileRevision revision, @NotNull List<TreeItem<VcsFileRevision>> roots) {
+  public TreeNodeOnVcsRevision(@Nullable VcsFileRevision revision, @Nonnull List<TreeItem<VcsFileRevision>> roots) {
     myRevision = revision == null ? VcsFileRevision.NULL : revision;
     for (TreeItem<VcsFileRevision> root : roots) {
       add(new TreeNodeOnVcsRevision(root.getData(), root.getChildren()));
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public RepositoryLocation getChangedRepositoryPath() {
     return myRevision.getChangedRepositoryPath();
   }
 
-  @NotNull
+  @Nonnull
   public VcsFileRevision getRevision() {
     return myRevision;
   }

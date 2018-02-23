@@ -16,8 +16,7 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,8 +34,8 @@ public interface ModuleFileIndex extends FileIndex {
    * @return the order entry to which the file or directory belongs, or null if
    * it does not belong to any order entry.
    */
-  @Nullable
-  OrderEntry getOrderEntryForFile(@NotNull VirtualFile fileOrDir);
+  @javax.annotation.Nullable
+  OrderEntry getOrderEntryForFile(@Nonnull VirtualFile fileOrDir);
 
   /**
    * Returns the list of all order entries to which the specified file or directory
@@ -45,5 +44,6 @@ public interface ModuleFileIndex extends FileIndex {
    * @param fileOrDir the file or directory to check.
    * @return the list of order entries to which the file or directory belongs.
    */
-  @NotNull List<OrderEntry> getOrderEntriesForFile(@NotNull VirtualFile fileOrDir);
+  @Nonnull
+  List<OrderEntry> getOrderEntriesForFile(@Nonnull VirtualFile fileOrDir);
 }

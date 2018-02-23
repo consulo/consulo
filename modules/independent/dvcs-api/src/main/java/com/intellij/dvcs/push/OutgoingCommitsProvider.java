@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push;
 
 import com.intellij.dvcs.repo.Repository;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provider for outgoing commits
@@ -34,7 +34,7 @@ public abstract class OutgoingCommitsProvider<Repo extends Repository, Source ex
    *                E.g. if authentication is needed to collect outgoing changes, then the method should silently show the corresponding
    *                request in the error field of the OutgoingResult.
    */
-  @NotNull
-  public abstract OutgoingResult getOutgoingCommits(@NotNull Repo repository, @NotNull PushSpec<Source, Target> pushSpec, boolean initial);
+  @Nonnull
+  public abstract OutgoingResult getOutgoingCommits(@Nonnull Repo repository, @Nonnull PushSpec<Source, Target> pushSpec, boolean initial);
 
 }

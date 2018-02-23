@@ -20,14 +20,14 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.SmartList;
 import com.intellij.util.text.UniqueNameGenerator;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.List;
 
 public abstract class MainConfigurationStateSplitter extends StateSplitterEx {
   @Override
-  public final List<Pair<Element, String>> splitState(@NotNull Element state) {
+  public final List<Pair<Element, String>> splitState(@Nonnull Element state) {
     UniqueNameGenerator generator = new UniqueNameGenerator();
     List<Pair<Element, String>> result = new SmartList<Pair<Element, String>>();
     for (Iterator<Element> iterator = state.getChildren(getSubStateTagName()).iterator(); iterator.hasNext(); ) {
@@ -42,16 +42,16 @@ public abstract class MainConfigurationStateSplitter extends StateSplitterEx {
   }
 
   @Override
-  public final void mergeStateInto(@NotNull Element target, @NotNull Element subState) {
+  public final void mergeStateInto(@Nonnull Element target, @Nonnull Element subState) {
     mergeStateInto(target, subState, getSubStateTagName());
   }
 
-  @NotNull
-  protected abstract String getSubStateFileName(@NotNull Element element);
+  @Nonnull
+  protected abstract String getSubStateFileName(@Nonnull Element element);
 
-  @NotNull
+  @Nonnull
   protected abstract String getComponentStateFileName();
 
-  @NotNull
+  @Nonnull
   protected abstract String getSubStateTagName();
 }

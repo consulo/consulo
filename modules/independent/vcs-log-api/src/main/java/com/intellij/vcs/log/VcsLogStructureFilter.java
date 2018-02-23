@@ -16,7 +16,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -31,6 +31,6 @@ public interface VcsLogStructureFilter extends VcsLogDetailsFilter {
    * <p>That is: the commit A (made in the given VCS root) modifying file f.txt matches this filter,
    * if this method returns a set which includes a folder containing f.txt, or the file f.txt itself.</p>
    */
-  @NotNull
+  @Nonnull
   Collection<FilePath> getFiles();
 }

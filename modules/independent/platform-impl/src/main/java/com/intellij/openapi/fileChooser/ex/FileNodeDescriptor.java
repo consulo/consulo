@@ -22,7 +22,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
   private final Icon myOriginalIcon;
   private final String myComment;
 
-  public FileNodeDescriptor(Project project, @NotNull FileElement element, NodeDescriptor parentDescriptor, Icon closedIcon, String name, String comment) {
+  public FileNodeDescriptor(Project project, @Nonnull FileElement element, NodeDescriptor parentDescriptor, Icon closedIcon, String name, String comment) {
     super(project, parentDescriptor);
     myOriginalIcon = closedIcon;
     myComment = comment;
@@ -67,7 +67,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
     return changed;
   }
 
-  @NotNull
+  @Nonnull
   public final FileElement getElement() {
     return myFileElement;
   }

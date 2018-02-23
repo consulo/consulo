@@ -31,8 +31,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -49,7 +49,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull AnActionEvent e) {
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     if (view == null) {
       return;
@@ -66,14 +66,14 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     final Ref<String> selectedTemplateName = Ref.create(null);
     final T createdElement = builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
       @Override
-      public T createFile(@NotNull String name, @NotNull String templateName) {
+      public T createFile(@Nonnull String name, @Nonnull String templateName) {
         selectedTemplateName.set(templateName);
         return CreateFromTemplateAction.this.createFile(name, templateName, dir);
       }
 
       @Override
-      @NotNull
-      public String getActionName(@NotNull String name, @NotNull String templateName) {
+      @Nonnull
+      public String getActionName(@Nonnull String name, @Nonnull String templateName) {
         return CreateFromTemplateAction.this.getActionName(dir, name, templateName);
       }
     });
@@ -94,7 +94,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   protected abstract void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder);
 
   @Nullable
-  protected String getDefaultTemplateName(@NotNull PsiDirectory dir) {
+  protected String getDefaultTemplateName(@Nonnull PsiDirectory dir) {
     String property = getDefaultTemplateProperty();
     return property == null ? null : PropertiesComponent.getInstance(dir.getProject()).getValue(property);
   }
@@ -111,7 +111,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!e.getPresentation().isVisible()) {
       return;
     }

@@ -25,7 +25,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBDimension;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,7 @@ public class TipPanel extends JPanel {
     showOnStartCheckBox.setSelected(settings.isShowTipsOnStartup());
     showOnStartCheckBox.addItemListener(new ItemListener() {
       @Override
-      public void itemStateChanged(@NotNull ItemEvent e) {
+      public void itemStateChanged(@Nonnull ItemEvent e) {
         settings.setShowTipsOnStartup(e.getStateChange() == ItemEvent.SELECTED);
       }
     });

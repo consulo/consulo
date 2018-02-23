@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class InstanceofQuery<T> implements Query<T> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<T> findAll() {
     ArrayList<T> result = new ArrayList<T>();
     Collection all = myDelegate.findAll();
@@ -54,19 +54,19 @@ public class InstanceofQuery<T> implements Query<T> {
   }
 
   @Override
-  public boolean forEach(@NotNull final Processor<T> consumer) {
+  public boolean forEach(@Nonnull final Processor<T> consumer) {
     return myDelegate.forEach(new MyProcessor(consumer));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull Processor<T> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<T> consumer) {
     return myDelegate.forEachAsync(new MyProcessor(consumer));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public T[] toArray(@NotNull T[] a) {
+  public T[] toArray(@Nonnull T[] a) {
     final Collection<T> all = findAll();
     return all.toArray(a);
   }

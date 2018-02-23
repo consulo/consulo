@@ -2,8 +2,8 @@ package com.intellij.util.concurrency;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.*;
 import java.util.concurrent.Semaphore;
 

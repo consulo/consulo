@@ -36,8 +36,9 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.picocontainer.MutablePicoContainer;
 
 /**
@@ -46,18 +47,18 @@ import org.picocontainer.MutablePicoContainer;
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
   public static final Logger LOGGER = Logger.getInstance(ModuleImpl.class);
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
   private boolean isModuleAdded;
-  @NotNull
+  @Nonnull
   @NonNls
   private String myName;
-  @NotNull
+  @Nonnull
   private final ModuleScopeProvider myModuleScopeProvider;
   @Nullable
   private final VirtualFilePointer myDirVirtualFilePointer;
 
-  public ModuleImpl(@NotNull String name, @Nullable String dirUrl, @NotNull Project project) {
+  public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
     super(project, "Module " + name);
 
     getPicoContainer().registerComponentInstance(Module.class, this);
@@ -69,7 +70,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
+  protected void bootstrapPicoContainer(@Nonnull String name) {
     Extensions.instantiateArea(ExtensionAreas.MODULE, this, (AreaInstance)getParentComponentManager());
     super.bootstrapPicoContainer(name);
 
@@ -143,13 +144,13 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
@@ -167,61 +168,61 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleScope() {
     return myModuleScopeProvider.getModuleScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleScope(includeTests);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithLibrariesScope() {
     return myModuleScopeProvider.getModuleWithLibrariesScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependenciesScope() {
     return myModuleScopeProvider.getModuleWithDependenciesScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleContentScope() {
     return myModuleScopeProvider.getModuleContentScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleContentWithDependenciesScope() {
     return myModuleScopeProvider.getModuleContentWithDependenciesScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependentsScope() {
     return myModuleScopeProvider.getModuleWithDependentsScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleTestsWithDependentsScope() {
     return myModuleScopeProvider.getModuleTestsWithDependentsScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleRuntimeScope(boolean includeTests) {
     return myModuleScopeProvider.getModuleRuntimeScope(includeTests);
@@ -237,13 +238,13 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     return "Module: '" + getName() + "'";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] getExtensions(@NotNull final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getArea(this).getExtensionPoint(extensionPointName).getExtensions();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getArea(this).getPicoContainer();

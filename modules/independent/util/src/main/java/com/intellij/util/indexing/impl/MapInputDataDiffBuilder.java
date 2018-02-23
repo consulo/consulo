@@ -21,8 +21,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.StorageException;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -39,10 +39,10 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
   }
 
   @Override
-  public void differentiate(@NotNull Map<Key, Value> newData,
-                            @NotNull KeyValueUpdateProcessor<Key, Value> addProcessor,
-                            @NotNull KeyValueUpdateProcessor<Key, Value> updateProcessor,
-                            @NotNull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
+  public void differentiate(@Nonnull Map<Key, Value> newData,
+                            @Nonnull KeyValueUpdateProcessor<Key, Value> addProcessor,
+                            @Nonnull KeyValueUpdateProcessor<Key, Value> updateProcessor,
+                            @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
     if (ourDiffUpdateEnabled) {
       if (myMap.isEmpty()) {
         EmptyInputDataDiffBuilder.processKeys(newData, addProcessor, myInputId);

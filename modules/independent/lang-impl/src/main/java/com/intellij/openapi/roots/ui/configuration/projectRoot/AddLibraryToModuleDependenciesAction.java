@@ -23,16 +23,18 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
-  @NotNull private final Project myProject;
-  @NotNull private final BaseLibrariesConfigurable myConfigurable;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final BaseLibrariesConfigurable myConfigurable;
 
-  public AddLibraryToModuleDependenciesAction(@NotNull Project project, @NotNull BaseLibrariesConfigurable configurable) {
+  public AddLibraryToModuleDependenciesAction(@Nonnull Project project, @Nonnull BaseLibrariesConfigurable configurable) {
     super("Add to Modules...", "Add the library to the dependencies list of chosen modules", null);
     myProject = project;
     myConfigurable = configurable;

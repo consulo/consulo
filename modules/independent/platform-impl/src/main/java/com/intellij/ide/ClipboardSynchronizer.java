@@ -26,8 +26,9 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.IntegerType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import sun.awt.datatransfer.DataTransferer;
 
 import java.awt.*;
@@ -86,13 +87,13 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     myClipboardHandler.dispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "ClipboardSynchronizer";
   }
 
-  public boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors) {
+  public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
     try {
       return myClipboardHandler.areDataFlavorsAvailable(flavors);
     }
@@ -113,7 +114,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
   }
 
-  public void setContent(@NotNull final Transferable content, @NotNull final ClipboardOwner owner) {
+  public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
     myClipboardHandler.setContent(content, owner);
   }
 
@@ -127,7 +128,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
 
     public void dispose() { }
 
-    public boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       for (DataFlavor flavor : flavors) {
         if (clipboard.isDataFlavorAvailable(flavor)) {
@@ -157,7 +158,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
       throw last;
     }
 
-    public void setContent(@NotNull final Transferable content, @NotNull final ClipboardOwner owner) {
+    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
       for (int i = 0; i < 3; i++) {
         try {
           Toolkit.getDefaultToolkit().getSystemClipboard().setContents(content, owner);
@@ -196,7 +197,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
 
     @Override
-    public boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
       Transferable contents = getContents();
       return contents != null && ClipboardSynchronizer.areDataFlavorsAvailable(contents, flavors);
     }
@@ -230,7 +231,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
 
     @Override
-    public void setContent(@NotNull final Transferable content, @NotNull final ClipboardOwner owner) {
+    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
       if (Registry.is("ide.mac.useNativeClipboard") && content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
         try {
           String stringData = (String) content.getTransferData(DataFlavor.stringFlavor);
@@ -327,7 +328,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
 
     @Override
-    public boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
       Transferable currentContent = myCurrentContent;
       if (currentContent != null) {
         return ClipboardSynchronizer.areDataFlavorsAvailable(currentContent, flavors);
@@ -377,7 +378,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
 
     @Override
-    public void setContent(@NotNull final Transferable content, @NotNull final ClipboardOwner owner) {
+    public void setContent(@Nonnull final Transferable content, @Nonnull final ClipboardOwner owner) {
       myCurrentContent = content;
       super.setContent(content, owner);
     }
@@ -440,7 +441,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     private volatile Transferable myContent = null;
 
     @Override
-    public boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors) {
+    public boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors) {
       Transferable content = myContent;
       return content != null && ClipboardSynchronizer.areDataFlavorsAvailable(content, flavors);
     }
@@ -451,7 +452,7 @@ public class ClipboardSynchronizer implements ApplicationComponent {
     }
 
     @Override
-    public void setContent(@NotNull Transferable content, @NotNull ClipboardOwner owner) {
+    public void setContent(@Nonnull Transferable content, @Nonnull ClipboardOwner owner) {
       myContent = content;
     }
 

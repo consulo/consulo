@@ -19,7 +19,7 @@ package com.intellij.history.core.tree;
 import com.intellij.history.core.Content;
 import com.intellij.history.core.StoredContent;
 import com.intellij.history.core.revisions.Difference;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -84,7 +84,7 @@ public class FileEntry extends Entry {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileEntry copy() {
     return new FileEntry(getNameId(), myContent, myTimestamp, isReadOnly);

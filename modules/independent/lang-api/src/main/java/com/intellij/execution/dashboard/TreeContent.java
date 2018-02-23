@@ -16,12 +16,12 @@
 package com.intellij.execution.dashboard;
 
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
  */
 public interface TreeContent {
-  @NotNull
+  @Nonnull
   AbstractTreeBuilder getBuilder();
 }

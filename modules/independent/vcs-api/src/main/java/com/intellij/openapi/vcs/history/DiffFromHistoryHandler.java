@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.history;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This handler is called when the user selects one or two revisions in the file history and invokes "Show Diff",
@@ -35,11 +35,11 @@ public interface DiffFromHistoryHandler {
    * @param previousRevision the previous revision in the list displayed file history panel, may be {@link com.intellij.openapi.vcs.history.VcsFileRevision#NULL}.
    * @param revision         the revision selected in the file history panel.
    */
-  void showDiffForOne(@NotNull AnActionEvent e,
-                      @NotNull Project project,
-                      @NotNull FilePath filePath,
-                      @NotNull VcsFileRevision previousRevision,
-                      @NotNull VcsFileRevision revision);
+  void showDiffForOne(@Nonnull AnActionEvent e,
+                      @Nonnull Project project,
+                      @Nonnull FilePath filePath,
+                      @Nonnull VcsFileRevision previousRevision,
+                      @Nonnull VcsFileRevision revision);
 
   /**
    * Show diff for 2 revisions selected from the file history panel,
@@ -50,9 +50,9 @@ public interface DiffFromHistoryHandler {
    * @param revision1 one of the selected revisions.
    * @param revision2 another selected revision.
    */
-  void showDiffForTwo(@NotNull Project project,
-                      @NotNull FilePath filePath,
-                      @NotNull VcsFileRevision revision1,
-                      @NotNull VcsFileRevision revision2);
+  void showDiffForTwo(@Nonnull Project project,
+                      @Nonnull FilePath filePath,
+                      @Nonnull VcsFileRevision revision1,
+                      @Nonnull VcsFileRevision revision2);
 
 }

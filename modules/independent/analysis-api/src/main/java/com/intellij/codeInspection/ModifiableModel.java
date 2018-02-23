@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.profile.Profile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -43,9 +43,9 @@ public interface ModifiableModel extends Profile {
 
   void enableTool(String inspectionTool, NamedScope namedScope, Project project);
 
-  void disableTool(String inspectionTool, NamedScope namedScope, @NotNull Project project);
+  void disableTool(String inspectionTool, NamedScope namedScope, @Nonnull Project project);
 
-  void setErrorLevel(HighlightDisplayKey key, @NotNull HighlightDisplayLevel level, Project project);
+  void setErrorLevel(HighlightDisplayKey key, @Nonnull HighlightDisplayLevel level, Project project);
 
   HighlightDisplayLevel getErrorLevel(HighlightDisplayKey inspectionToolKey, PsiElement element);
 
@@ -59,7 +59,7 @@ public interface ModifiableModel extends Profile {
 
   void setModified(final boolean toolsSettingsChanged);
 
-  boolean isProperSetting(@NotNull String toolId);
+  boolean isProperSetting(@Nonnull String toolId);
 
   void resetToBase(Project project);
 
@@ -71,7 +71,7 @@ public interface ModifiableModel extends Profile {
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 
-  InspectionProfileEntry getUnwrappedTool(@NotNull String shortName, @NotNull PsiElement element);
+  InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   InspectionToolWrapper[] getInspectionTools(PsiElement element);
 
@@ -85,7 +85,7 @@ public interface ModifiableModel extends Profile {
 
   void lockProfile(boolean isLocked);
 
-  void disableTool(@NotNull String toolId, @NotNull PsiElement element);
+  void disableTool(@Nonnull String toolId, @Nonnull PsiElement element);
 
   void disableTool(String inspectionTool, Project project);
 }

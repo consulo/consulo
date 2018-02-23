@@ -3,8 +3,8 @@ package com.intellij.psi.stubs;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.io.IOException;
@@ -13,13 +13,13 @@ import java.io.IOException;
  * @author peter
  */
 public abstract class EmptyStubElementType<T extends PsiElement> extends IStubElementType<EmptyStub, T> {
-  protected EmptyStubElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
+  protected EmptyStubElementType(@Nonnull @NonNls String debugName, @javax.annotation.Nullable Language language) {
     super(debugName, language);
   }
 
   @RequiredReadAction
   @Override
-  public final EmptyStub createStub(@NotNull T psi, StubElement parentStub) {
+  public final EmptyStub createStub(@Nonnull T psi, StubElement parentStub) {
     return createStub(parentStub);
   }
 
@@ -27,23 +27,23 @@ public abstract class EmptyStubElementType<T extends PsiElement> extends IStubEl
     return new EmptyStub(parentStub, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExternalId() {
     return getLanguage().getID() + toString();
   }
 
   @Override
-  public final void serialize(@NotNull EmptyStub stub, @NotNull StubOutputStream dataStream) throws IOException {
+  public final void serialize(@Nonnull EmptyStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public final EmptyStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException {
+  public final EmptyStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
     return createStub(parentStub);
   }
 
   @Override
-  public final void indexStub(@NotNull EmptyStub stub, @NotNull IndexSink sink) {
+  public final void indexStub(@Nonnull EmptyStub stub, @Nonnull IndexSink sink) {
   }
 }

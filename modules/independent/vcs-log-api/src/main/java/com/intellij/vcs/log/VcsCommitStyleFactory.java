@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -32,9 +32,9 @@ public class VcsCommitStyleFactory {
    * @param background background color or null if unspecified.
    * @return new instance of VcsCommitStyle with specified text and background color.
    */
-  public static VcsLogHighlighter.VcsCommitStyle createStyle(@Nullable Color foreground,
-                                                             @Nullable Color background,
-                                                             @Nullable VcsLogHighlighter.TextStyle textStyle) {
+  public static VcsLogHighlighter.VcsCommitStyle createStyle(@javax.annotation.Nullable Color foreground,
+                                                             @javax.annotation.Nullable Color background,
+                                                             @javax.annotation.Nullable VcsLogHighlighter.TextStyle textStyle) {
     return new VcsCommitStyleImpl(foreground, background, textStyle);
   }
 
@@ -43,8 +43,8 @@ public class VcsCommitStyleFactory {
    *
    * @param foreground text color or null if unspecified.
    */
-  @NotNull
-  public static VcsLogHighlighter.VcsCommitStyle foreground(@Nullable Color foreground) {
+  @Nonnull
+  public static VcsLogHighlighter.VcsCommitStyle foreground(@javax.annotation.Nullable Color foreground) {
     return createStyle(foreground, null, null);
   }
 
@@ -53,15 +53,15 @@ public class VcsCommitStyleFactory {
    *
    * @param background background color or null if unspecified.
    */
-  @NotNull
-  public static VcsLogHighlighter.VcsCommitStyle background(@Nullable Color background) {
+  @Nonnull
+  public static VcsLogHighlighter.VcsCommitStyle background(@javax.annotation.Nullable Color background) {
     return createStyle(null, background, null);
   }
 
   /**
    * Creates VcsCommitStyleImpl with bold text.
    */
-  @NotNull
+  @Nonnull
   public static VcsLogHighlighter.VcsCommitStyle bold() {
     return createStyle(null, null, VcsLogHighlighter.TextStyle.BOLD);
   }
@@ -75,8 +75,8 @@ public class VcsCommitStyleFactory {
    * @param styles list of styles to combine into one.
    * @return a combination of styles from the list.
    */
-  @NotNull
-  public static VcsLogHighlighter.VcsCommitStyle combine(@NotNull Collection<VcsLogHighlighter.VcsCommitStyle> styles) {
+  @Nonnull
+  public static VcsLogHighlighter.VcsCommitStyle combine(@Nonnull Collection<VcsLogHighlighter.VcsCommitStyle> styles) {
     Color foreground = null;
     Color background = null;
     VcsLogHighlighter.TextStyle textStyle = null;
@@ -101,9 +101,12 @@ public class VcsCommitStyleFactory {
    * Default implementation of VcsCommitStyle.
    */
   private static class VcsCommitStyleImpl implements VcsLogHighlighter.VcsCommitStyle {
-    @Nullable private final Color myForeground;
-    @Nullable private final Color myBackground;
-    @Nullable private final VcsLogHighlighter.TextStyle myTextStyle;
+    @javax.annotation.Nullable
+    private final Color myForeground;
+    @javax.annotation.Nullable
+    private final Color myBackground;
+    @javax.annotation.Nullable
+    private final VcsLogHighlighter.TextStyle myTextStyle;
 
     /**
      * Creates VcsCommitStyleImpl with specified text and background color, and text style.
@@ -112,26 +115,26 @@ public class VcsCommitStyleFactory {
      * @param background background color or null if unspecified.
      * @param textStyle  text style or null if unspecified
      */
-    public VcsCommitStyleImpl(@Nullable Color foreground, @Nullable Color background, @Nullable VcsLogHighlighter.TextStyle textStyle) {
+    public VcsCommitStyleImpl(@javax.annotation.Nullable Color foreground, @Nullable Color background, @javax.annotation.Nullable VcsLogHighlighter.TextStyle textStyle) {
       myForeground = foreground;
       myBackground = background;
       myTextStyle = textStyle;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Color getForeground() {
       return myForeground;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Color getBackground() {
       return myBackground;
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public VcsLogHighlighter.TextStyle getTextStyle() {
       return myTextStyle;
     }

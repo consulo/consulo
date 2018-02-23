@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.shared.Rectangle2D;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -46,7 +46,7 @@ public interface IdeFrame {
     throw new AbstractMethodError();
   }
 
-  @NotNull
+  @Nonnull
   default consulo.ui.Window getWindow() {
     throw new AbstractMethodError();
   }

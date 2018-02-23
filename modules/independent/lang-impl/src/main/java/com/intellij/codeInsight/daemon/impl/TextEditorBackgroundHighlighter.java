@@ -27,7 +27,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   private final Project myProject;
   private boolean myCompiled;
 
-  public TextEditorBackgroundHighlighter(@NotNull Project project, @NotNull Editor editor) {
+  public TextEditorBackgroundHighlighter(@Nonnull Project project, @Nonnull Editor editor) {
     myProject = project;
     myEditor = editor;
     myDocument = myEditor.getDocument();
@@ -72,8 +72,8 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
     }
   }
 
-  @NotNull
-  List<TextEditorHighlightingPass> getPasses(@NotNull int[] passesToIgnore) {
+  @Nonnull
+  List<TextEditorHighlightingPass> getPasses(@Nonnull int[] passesToIgnore) {
     if (myProject.isDisposed()) return Collections.emptyList();
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     renewFile();
@@ -91,13 +91,13 @@ public class TextEditorBackgroundHighlighter implements BackgroundEditorHighligh
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextEditorHighlightingPass[] createPassesForVisibleArea() {
     return createPassesForEditor();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextEditorHighlightingPass[] createPassesForEditor() {
     List<TextEditorHighlightingPass> passes = getPasses(ArrayUtil.EMPTY_INT_ARRAY);
     return passes.isEmpty() ? TextEditorHighlightingPass.EMPTY_ARRAY : passes.toArray(new TextEditorHighlightingPass[passes.size()]);

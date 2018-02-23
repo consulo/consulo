@@ -19,8 +19,8 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.RealLookupElementPresentation;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.event.KeyEvent;
 
@@ -33,20 +33,20 @@ abstract public class LiveTemplateLookupElement extends LookupElement {
   private final boolean myWorthShowingInAutoPopup;
   private final String myDescription;
 
-  public LiveTemplateLookupElement(@NotNull String lookupString, @Nullable String description, boolean sudden, boolean worthShowingInAutoPopup) {
+  public LiveTemplateLookupElement(@Nonnull String lookupString, @Nullable String description, boolean sudden, boolean worthShowingInAutoPopup) {
     myDescription = description;
     this.sudden = sudden;
     myLookupString = lookupString;
     myWorthShowingInAutoPopup = worthShowingInAutoPopup;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLookupString() {
     return myLookupString;
   }
 
-  @NotNull
+  @Nonnull
   protected String getItemText() {
     return myLookupString;
   }

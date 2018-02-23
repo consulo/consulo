@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private int myInsertionIndex = 0;
 
   @Override
-  public void customize(@NotNull SimpleColoredComponent component) {
+  public void customize(@Nonnull SimpleColoredComponent component) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
         final TextAttributes attributes = section.getTextAttributes();
@@ -50,7 +50,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void customize(@NotNull final HtmlListCellRenderer renderer) {
+  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
         final TextAttributes attributes = section.getTextAttributes();
@@ -75,7 +75,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     synchronized (mySections) {
       StringBuilder buffer = new StringBuilder();
@@ -105,7 +105,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     return getText().hashCode();
   }
 
-  protected void addSectionAt(int index, @NotNull TextSection section) {
+  protected void addSectionAt(int index, @Nonnull TextSection section) {
     synchronized (mySections) {
       mySections.add(index, section);
       for (Iterator<TextSection> iterator = mySections.iterator(); iterator.hasNext();) {

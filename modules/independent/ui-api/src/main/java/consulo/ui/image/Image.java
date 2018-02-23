@@ -16,7 +16,7 @@
 package consulo.ui.image;
 
 import consulo.ui.UIInternal;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 
@@ -25,8 +25,8 @@ import java.net.URL;
  * @since 13-Jun-16
  */
 public interface Image {
-  @NotNull
-  static Image create(@NotNull URL url) {
+  @Nonnull
+  static Image create(@Nonnull URL url) {
     return UIInternal.get()._Images_image(url);
   }
 

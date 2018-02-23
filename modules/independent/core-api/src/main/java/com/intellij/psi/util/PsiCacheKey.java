@@ -26,24 +26,24 @@ import com.intellij.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair<Long, T>>> {
   private final Function<H, T> myFunction;
   /**
    * One of {@link com.intellij.psi.util.PsiModificationTracker} constants that marks when to flush cache
    */
-  @NotNull
+  @Nonnull
   private final Key<?> myModifyCause;
 
-  private PsiCacheKey(@NonNls @NotNull String name, @NotNull Function<H, T> function, @NotNull Key<?> modifyCause) {
+  private PsiCacheKey(@NonNls @Nonnull String name, @Nonnull Function<H, T> function, @Nonnull Key<?> modifyCause) {
     super(name);
     myFunction = function;
     myModifyCause = modifyCause;
   }
 
-  public final T getValue(@NotNull H h) {
+  public final T getValue(@Nonnull H h) {
     T result = getCachedValueOrNull(h);
     if (result != null) {
       return result;
@@ -56,7 +56,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
   }
 
   @Nullable
-  public final T getCachedValueOrNull(@NotNull H h) {
+  public final T getCachedValueOrNull(@Nonnull H h) {
     SoftReference<Pair<Long, T>> ref = h.getUserData(this);
     Pair<Long, T> data = SoftReference.dereference(ref);
     if (data == null || data.getFirst() != getModificationCount(h)) {
@@ -74,7 +74,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
    * @return modification count
    * @throws AssertionError if {@link #myModifyCause} is junk
    */
-  private long getModificationCount(@NotNull PsiElement element) {
+  private long getModificationCount(@Nonnull PsiElement element) {
     PsiFile file = element.getContainingFile();
     long fileStamp = file == null || file.isPhysical() ? 0 : file.getModificationStamp();
     PsiModificationTracker tracker = file == null ? element.getManager().getModificationTracker() : file.getManager().getModificationTracker();
@@ -101,9 +101,9 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
    * @param <H>         key type
    * @return instance
    */
-  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@NonNls @NotNull String name,
-                                                                   @NotNull Function<H, T> function,
-                                                                   @NotNull Key<?> modifyCause) {
+  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@NonNls @Nonnull String name,
+                                                                   @Nonnull Function<H, T> function,
+                                                                   @Nonnull Key<?> modifyCause) {
     return new PsiCacheKey<T, H>(name, function, modifyCause);
   }
 
@@ -117,7 +117,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
    * @param <H>      key type
    * @return instance
    */
-  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@NonNls @NotNull String name, @NotNull Function<H, T> function) {
+  public static <T, H extends PsiElement> PsiCacheKey<T, H> create(@NonNls @Nonnull String name, @Nonnull Function<H, T> function) {
     return create(name, function, PsiModificationTracker.JAVA_STRUCTURE_MODIFICATION_COUNT);
   }
 }

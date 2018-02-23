@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * A request for a merge operation.

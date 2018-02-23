@@ -17,8 +17,8 @@
 package com.intellij.vcs.log.graph.utils;
 
 import com.intellij.util.BooleanFunction;
-import com.intellij.vcs.log.graph.utils.UpdatableIntToIntMap;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -88,7 +88,7 @@ public abstract class UpdatableIntToIntMapTest {
   }
 
 
-  protected abstract UpdatableIntToIntMap createUpdatableIntToIntMap(@NotNull BooleanFunction<Integer> thisIsVisible, int longSize);
+  protected abstract UpdatableIntToIntMap createUpdatableIntToIntMap(@Nonnull BooleanFunction<Integer> thisIsVisible, int longSize);
 
   public Tester getTest(int longSize, String initVisibility) {
     final Set<Integer> visibleNodes = parseSet(initVisibility);

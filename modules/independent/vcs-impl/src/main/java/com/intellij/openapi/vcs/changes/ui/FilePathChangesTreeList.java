@@ -17,17 +17,17 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
 
 public class FilePathChangesTreeList extends ChangesTreeList<FilePath> {
 
-  public FilePathChangesTreeList(@NotNull Project project, @NotNull List<FilePath> originalFiles,
+  public FilePathChangesTreeList(@Nonnull Project project, @Nonnull List<FilePath> originalFiles,
                                  boolean showCheckboxes, boolean highlightProblems,
-                                 @Nullable Runnable inclusionListener, @Nullable ChangeNodeDecorator nodeDecorator) {
+                                 @javax.annotation.Nullable Runnable inclusionListener, @javax.annotation.Nullable ChangeNodeDecorator nodeDecorator) {
     super(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, nodeDecorator);
   }
 

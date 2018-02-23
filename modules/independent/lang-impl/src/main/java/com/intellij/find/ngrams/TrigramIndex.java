@@ -32,8 +32,8 @@ import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -50,7 +50,7 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
 
   private static final FileBasedIndex.InputFilter INPUT_FILTER = new FileBasedIndex.InputFilter() {
     @Override
-    public boolean acceptInput(@Nullable Project project, @NotNull VirtualFile file) {
+    public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file) {
       return isIndexable(file.getFileType());
     }
   };
@@ -59,19 +59,19 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
     return ENABLED && !fileType.isBinary();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<Integer, Void> getName() {
     return INDEX_ID;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<Integer, Void, FileContent> getIndexer() {
     return new DataIndexer<Integer, Void, FileContent>() {
       @Override
-      @NotNull
-      public Map<Integer, Void> map(@NotNull FileContent inputData) {
+      @Nonnull
+      public Map<Integer, Void> map(@Nonnull FileContent inputData) {
         MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
         TrigramBuilder.processTrigrams(inputData.getContentAsText(), trigramProcessor);
 
@@ -80,13 +80,13 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return INPUT_FILTER;
@@ -108,12 +108,12 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
   }
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<Collection<Integer>> createExternalizer() {
     return new DataExternalizer<Collection<Integer>>() {
       @Override
-      public void save(@NotNull DataOutput out, @NotNull Collection<Integer> value) throws IOException {
+      public void save(@Nonnull DataOutput out, @Nonnull Collection<Integer> value) throws IOException {
         final int numberOfValues = value.size();
 
         int[] buffer = spareBufferLocal.getBuffer(numberOfValues);
@@ -131,9 +131,9 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
         }
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public Collection<Integer> read(@NotNull DataInput in) throws IOException {
+      public Collection<Integer> read(@Nonnull DataInput in) throws IOException {
         int size = DataInputOutputUtil.readINT(in);
         ArrayList<Integer> result = new ArrayList<Integer>(size);
         int prev = 0;

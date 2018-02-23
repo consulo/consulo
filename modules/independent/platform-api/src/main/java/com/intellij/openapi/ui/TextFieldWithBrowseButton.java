@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -65,7 +65,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
     installPathCompletion(fileChooserDescriptor);
   }
 
-  public void addBrowseFolderListener(@NotNull TextBrowseFolderListener listener) {
+  public void addBrowseFolderListener(@Nonnull TextBrowseFolderListener listener) {
     listener.setOwnerComponent(this);
     addBrowseFolderListener(null, listener, true);
     installPathCompletion(listener.getFileChooserDescriptor());

@@ -16,11 +16,11 @@
 package com.intellij.util.ui.update;
 
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 public class ComparableObjectCheck {
-  public static boolean equals(@NotNull ComparableObject me, Object him) {
+  public static boolean equals(@Nonnull ComparableObject me, Object him) {
     if (me == him) {
       return true;
     }

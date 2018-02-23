@@ -43,8 +43,7 @@ import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.MergingCharSequence;
 import com.intellij.util.text.SingleCharSequence;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -61,7 +60,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
   private final int myInitialState;
   protected CharSequence myText;
 
-  public LexerEditorHighlighter(@NotNull SyntaxHighlighter highlighter, @NotNull EditorColorsScheme scheme) {
+  public LexerEditorHighlighter(@Nonnull SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme scheme) {
     myScheme = scheme;
     myLexer = highlighter.getHighlightingLexer();
     myLexer.start(ArrayUtil.EMPTY_CHAR_SEQUENCE);
@@ -78,7 +77,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return myHighlighter instanceof PlainSyntaxHighlighter;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected final Document getDocument() {
     return myEditor != null ? myEditor.getDocument() : null;
   }
@@ -97,18 +96,18 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
   }
 
   @Override
-  public void setEditor(@NotNull HighlighterClient editor) {
+  public void setEditor(@Nonnull HighlighterClient editor) {
     LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
     myEditor = editor;
   }
 
   @Override
-  public void setColorScheme(@NotNull EditorColorsScheme scheme) {
+  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     myScheme = scheme;
     myAttributesMap.clear();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     synchronized (this) {
@@ -339,13 +338,13 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return myEditor;
   }
 
-  protected final synchronized void resetText(@NotNull CharSequence text) {
+  protected final synchronized void resetText(@Nonnull CharSequence text) {
     myText = null;
     doSetText(text);
   }
 
   @Override
-  public void setText(@NotNull CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
     synchronized (this) {
       doSetText(text);
     }
@@ -397,7 +396,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return myHighlighter;
   }
 
-  @NotNull
+  @Nonnull
   private TextAttributes getAttributes(IElementType tokenType) {
     TextAttributes attrs = myAttributesMap.get(tokenType);
     if (attrs == null) {
@@ -408,8 +407,8 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return attrs;
   }
 
-  @NotNull
-  public List<TextAttributes> getAttributesForPreviousAndTypedChars(@NotNull Document document, int offset, char c) {
+  @Nonnull
+  public List<TextAttributes> getAttributesForPreviousAndTypedChars(@Nonnull Document document, int offset, char c) {
     final CharSequence text = document.getImmutableCharSequence();
 
     final CharSequence newText =
@@ -421,7 +420,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
   }
 
   // TODO Unify with LexerEditorHighlighter.documentChanged
-  @NotNull
+  @Nonnull
   private List<IElementType> getTokenType(CharSequence text, int offset) {
     int startOffset = 0;
 
@@ -482,8 +481,8 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return Arrays.asList(tokenType1, tokenType2);
   }
 
-  @NotNull
-  TextAttributes convertAttributes(@NotNull TextAttributesKey[] keys) {
+  @Nonnull
+  TextAttributes convertAttributes(@Nonnull TextAttributesKey[] keys) {
     TextAttributes attrs = new TextAttributes();
     for (TextAttributesKey key : keys) {
       TextAttributes attrs2 = myScheme.getAttributes(key);
@@ -568,7 +567,7 @@ public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDoc
       myAttachments = new Attachment[]{new Attachment("content.txt", highlighter.myLexer.getBufferSequence().toString())};
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Attachment[] getAttachments() {
       return myAttachments;

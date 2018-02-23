@@ -28,8 +28,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -37,7 +37,7 @@ import javax.swing.*;
  * @author gregsh
  */
 public final class ScratchRootType extends RootType {
-  @NotNull
+  @Nonnull
   public static ScratchRootType getInstance() {
     return findByClass(ScratchRootType.class);
   }
@@ -47,13 +47,13 @@ public final class ScratchRootType extends RootType {
   }
 
   @Override
-  public Language substituteLanguage(@NotNull Project project, @NotNull VirtualFile file) {
+  public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
     return ScratchFileService.getInstance().getScratchesMapping().getMapping(file);
   }
 
   @Nullable
   @Override
-  public Icon substituteIcon(@NotNull Project project, @NotNull VirtualFile file) {
+  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     Icon icon = ObjectUtils.chooseNotNull(super.substituteIcon(project, file), ScratchFileType.INSTANCE.getIcon());
     return LayeredIcon.create(icon, AllIcons.Actions.Scratch);
   }
@@ -82,7 +82,7 @@ public final class ScratchRootType extends RootType {
               }
 
               @Override
-              protected void run(@NotNull Result<VirtualFile> result) throws Throwable {
+              protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
                 ScratchFileService fileService = ScratchFileService.getInstance();
                 VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
                 fileService.getScratchesMapping().setMapping(file, language);

@@ -30,8 +30,8 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -464,7 +464,7 @@ public class AppearanceConfigurable implements SearchableConfigurable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     //noinspection ConstantConditions
     return getHelpTopic();

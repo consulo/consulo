@@ -17,8 +17,9 @@ package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 import sun.font.FontDesignMetrics;
 
@@ -41,19 +42,19 @@ public abstract class FontLayoutService {
     return INSTANCE;
   }
 
-  @NotNull
-  public abstract GlyphVector layoutGlyphVector(@NotNull Font font, @NotNull FontRenderContext fontRenderContext,
-                                                @NotNull char[] chars, int start, int end, boolean isRtl);
+  @Nonnull
+  public abstract GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext,
+                                                @Nonnull char[] chars, int start, int end, boolean isRtl);
 
-  public abstract int charWidth(@NotNull FontMetrics fontMetrics, char c);
+  public abstract int charWidth(@Nonnull FontMetrics fontMetrics, char c);
 
-  public abstract int charWidth(@NotNull FontMetrics fontMetrics, int codePoint);
+  public abstract int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint);
 
-  public abstract float charWidth2D(@NotNull FontMetrics fontMetrics, int codePoint);
+  public abstract float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint);
 
-  public abstract int getHeight(@NotNull FontMetrics fontMetrics);
+  public abstract int getHeight(@Nonnull FontMetrics fontMetrics);
 
-  public abstract int getDescent(@NotNull FontMetrics fontMetrics);
+  public abstract int getDescent(@Nonnull FontMetrics fontMetrics);
 
   @TestOnly
   public static void setInstance(@Nullable FontLayoutService fontLayoutService) {
@@ -73,26 +74,26 @@ public abstract class FontLayoutService {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public GlyphVector layoutGlyphVector(@NotNull Font font, @NotNull FontRenderContext fontRenderContext,
-                                         @NotNull char[] chars, int start, int end, boolean isRtl) {
+    public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext,
+                                         @Nonnull char[] chars, int start, int end, boolean isRtl) {
       return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT) |
                                                                           LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT);
     }
 
     @Override
-    public int charWidth(@NotNull FontMetrics fontMetrics, char c) {
+    public int charWidth(@Nonnull FontMetrics fontMetrics, char c) {
       return fontMetrics.charWidth(c);
     }
 
     @Override
-    public int charWidth(@NotNull FontMetrics fontMetrics, int codePoint) {
+    public int charWidth(@Nonnull FontMetrics fontMetrics, int codePoint) {
       return fontMetrics.charWidth(codePoint);
     }
 
     @Override
-    public float charWidth2D(@NotNull FontMetrics fontMetrics, int codePoint) {
+    public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
       if (myHandleCharWidthMethod != null && fontMetrics instanceof FontDesignMetrics) {
         try {
           return (float)myHandleCharWidthMethod.invoke(fontMetrics, codePoint);
@@ -105,12 +106,12 @@ public abstract class FontLayoutService {
     }
 
     @Override
-    public int getHeight(@NotNull FontMetrics fontMetrics) {
+    public int getHeight(@Nonnull FontMetrics fontMetrics) {
       return fontMetrics.getHeight();
     }
 
     @Override
-    public int getDescent(@NotNull FontMetrics fontMetrics) {
+    public int getDescent(@Nonnull FontMetrics fontMetrics) {
       return fontMetrics.getDescent();
     }
   }

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.storage.AbstractRecordsTable;
 import com.intellij.util.io.storage.RecordIdIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -237,7 +237,7 @@ public class CompactRecordsTable extends AbstractRecordsTable {
     };
   }
 
-  @NotNull
+  @Nonnull
   private BitSet buildIdSetOfExtraRecords() throws IOException {
     final BitSet extraRecords = new BitSet();
 

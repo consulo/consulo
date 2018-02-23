@@ -21,8 +21,8 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -46,7 +46,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super();
   }
 
-  public JBLabel(@NotNull UIUtil.ComponentStyle componentStyle) {
+  public JBLabel(@Nonnull UIUtil.ComponentStyle componentStyle) {
     super();
     setComponentStyle(componentStyle);
   }
@@ -55,22 +55,22 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(image);
   }
 
-  public JBLabel(@NotNull String text) {
+  public JBLabel(@Nonnull String text) {
     super(text);
   }
 
-  public JBLabel(@NotNull String text, @NotNull UIUtil.ComponentStyle componentStyle) {
+  public JBLabel(@Nonnull String text, @Nonnull UIUtil.ComponentStyle componentStyle) {
     super(text);
     setComponentStyle(componentStyle);
   }
 
-  public JBLabel(@NotNull String text, @NotNull UIUtil.ComponentStyle componentStyle, @NotNull UIUtil.FontColor fontColor) {
+  public JBLabel(@Nonnull String text, @Nonnull UIUtil.ComponentStyle componentStyle, @Nonnull UIUtil.FontColor fontColor) {
     super(text);
     setComponentStyle(componentStyle);
     setFontColor(fontColor);
   }
 
-  public JBLabel(@NotNull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(@Nonnull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
@@ -78,11 +78,11 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(image, horizontalAlignment);
   }
 
-  public JBLabel(@NotNull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(@Nonnull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, icon, horizontalAlignment);
   }
 
-  public void setComponentStyle(@NotNull UIUtil.ComponentStyle componentStyle) {
+  public void setComponentStyle(@Nonnull UIUtil.ComponentStyle componentStyle) {
     myComponentStyle = componentStyle;
     UIUtil.applyStyle(componentStyle, this);
   }
@@ -95,7 +95,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return myFontColor;
   }
 
-  public void setFontColor(@NotNull UIUtil.FontColor fontColor) {
+  public void setFontColor(@Nonnull UIUtil.FontColor fontColor) {
     myFontColor = fontColor;
   }
 
@@ -281,7 +281,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return this;
   }
 
-  private void updateStyle(@NotNull  JEditorPane pane) {
+  private void updateStyle(@Nonnull JEditorPane pane) {
     EditorKit kit = pane.getEditorKit();
     if (kit instanceof HTMLEditorKit) {
       StyleSheet css = ((HTMLEditorKit)kit).getStyleSheet();

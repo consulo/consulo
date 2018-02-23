@@ -42,8 +42,8 @@ import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -221,7 +221,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
       @Nullable
       @Override
-      protected Point findPointRelativeToCheckBox(int x, int y, @NotNull JCheckBox checkBox, int index) {
+      protected Point findPointRelativeToCheckBox(int x, int y, @Nonnull JCheckBox checkBox, int index) {
         return super.findPointRelativeToCheckBoxWithAdjustedRendering(x, y, checkBox, index);
       }
     };
@@ -230,7 +230,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     new ListSpeedSearch(myList, (Convertor<Object, String>)o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return ID;

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Extension of {@link TypedActionHandler} that can supply an action plan before actually executing an action.
@@ -48,5 +48,5 @@ public interface TypedActionHandlerEx extends TypedActionHandler {
    * @param context the current data context.
    * @param plan    the current action plan draft.
    */
-  void beforeExecute(@NotNull Editor editor, char c, @NotNull DataContext context, @NotNull ActionPlan plan);
+  void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan);
 }

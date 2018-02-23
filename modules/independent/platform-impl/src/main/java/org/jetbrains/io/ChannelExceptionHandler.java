@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @ChannelHandler.Sharable
 public final class ChannelExceptionHandler extends ChannelHandlerAdapter {
@@ -30,7 +30,7 @@ public final class ChannelExceptionHandler extends ChannelHandlerAdapter {
   private ChannelExceptionHandler() {
   }
 
-  @NotNull
+  @Nonnull
   public static ChannelHandler getInstance() {
     return INSTANCE;
   }

@@ -32,8 +32,8 @@ import com.intellij.util.text.StringTokenizer;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -114,15 +114,15 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   @Override
-  public void readExternal(@NotNull Element typeElement) throws InvalidDataException {
+  public void readExternal(@Nonnull Element typeElement) throws InvalidDataException {
     Element element = typeElement.getChild(ELEMENT_HIGHLIGHTING);
     if (element != null) {
       setSyntaxTable(readSyntaxTable(element));
     }
   }
 
-  @NotNull
-  public static SyntaxTable readSyntaxTable(@NotNull Element root) {
+  @Nonnull
+  public static SyntaxTable readSyntaxTable(@Nonnull Element root) {
     SyntaxTable table = new SyntaxTable();
 
     for (Element element : root.getChildren()) {
@@ -208,11 +208,11 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   @Override
-  public void writeExternal(@NotNull Element element) {
+  public void writeExternal(@Nonnull Element element) {
     writeTable(element, getSyntaxTable());
   }
 
-  private static void writeTable(@NotNull Element element, @NotNull SyntaxTable table) {
+  private static void writeTable(@Nonnull Element element, @Nonnull SyntaxTable table) {
     Element highlightingElement = new Element(ELEMENT_HIGHLIGHTING);
 
     Element optionsElement = new Element(ELEMENT_OPTIONS);
@@ -327,8 +327,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   @NonNls private static final String ELEMENT_REMOVED_MAPPING = "removed_mapping";
   @NonNls private static final String ATTRIBUTE_TYPE = "type";
 
-  @NotNull
-  public static List<Pair<FileNameMatcher, String>> readAssociations(@NotNull Element element) {
+  @Nonnull
+  public static List<Pair<FileNameMatcher, String>> readAssociations(@Nonnull Element element) {
     List<Element> children = element.getChildren(ELEMENT_MAPPING);
     if (children.isEmpty()) {
       return Collections.emptyList();
@@ -345,8 +345,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     return result;
   }
 
-  @NotNull
-  public static List<Trinity<FileNameMatcher, String, Boolean>> readRemovedAssociations(@NotNull Element element) {
+  @Nonnull
+  public static List<Trinity<FileNameMatcher, String, Boolean>> readRemovedAssociations(@Nonnull Element element) {
     List<Trinity<FileNameMatcher, String, Boolean>> result = new SmartList<Trinity<FileNameMatcher, String, Boolean>>();
     List<Element> children = element.getChildren(ELEMENT_REMOVED_MAPPING);
     if (children.isEmpty()) {
@@ -362,7 +362,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   @Nullable
-  public static Element writeMapping(String typeName, @NotNull FileNameMatcher matcher, boolean specifyTypeName) {
+  public static Element writeMapping(String typeName, @Nonnull FileNameMatcher matcher, boolean specifyTypeName) {
     Element mapping = new Element(ELEMENT_MAPPING);
     if (matcher instanceof ExtensionFileNameMatcher) {
       mapping.setAttribute(ATTRIBUTE_EXT, ((ExtensionFileNameMatcher)matcher).getExtension());
@@ -418,7 +418,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

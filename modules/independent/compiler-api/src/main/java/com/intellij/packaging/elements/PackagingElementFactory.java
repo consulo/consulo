@@ -23,8 +23,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -37,91 +37,91 @@ public abstract class PackagingElementFactory {
     return ServiceManager.getService(PackagingElementFactory.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract ArtifactRootElement<?> createArtifactRootElement();
 
-  @NotNull
-  public abstract CompositePackagingElement<?> createDirectory(@NotNull @NonNls String directoryName);
+  @Nonnull
+  public abstract CompositePackagingElement<?> createDirectory(@Nonnull @NonNls String directoryName);
 
-  @NotNull
-  public abstract CompositePackagingElement<?> createZipArchive(@NotNull @NonNls String archiveFileName);
+  @Nonnull
+  public abstract CompositePackagingElement<?> createZipArchive(@Nonnull @NonNls String archiveFileName);
 
-  public abstract PackagingElement<?> createFileCopy(@NotNull String filePath, @Nullable String outputFileName);
+  public abstract PackagingElement<?> createFileCopy(@Nonnull String filePath, @javax.annotation.Nullable String outputFileName);
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public abstract PackagingElement<?> createModuleOutput(@NotNull String moduleName, @NotNull Project project);
+  public abstract PackagingElement<?> createModuleOutput(@Nonnull String moduleName, @Nonnull Project project);
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public abstract PackagingElement<?> createModuleOutput(@NotNull Module module);
+  public abstract PackagingElement<?> createModuleOutput(@Nonnull Module module);
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public abstract PackagingElement<?> createTestModuleOutput(@NotNull Module module);
+  public abstract PackagingElement<?> createTestModuleOutput(@Nonnull Module module);
 
-  @NotNull
-  public abstract List<? extends PackagingElement<?>> createLibraryElements(@NotNull Library library);
+  @Nonnull
+  public abstract List<? extends PackagingElement<?>> createLibraryElements(@Nonnull Library library);
 
-  @NotNull
-  public abstract PackagingElement<?> createArtifactElement(@NotNull ArtifactPointer artifactPointer, @NotNull Project project);
+  @Nonnull
+  public abstract PackagingElement<?> createArtifactElement(@Nonnull ArtifactPointer artifactPointer, @Nonnull Project project);
 
-  @NotNull
-  public abstract PackagingElement<?> createArtifactElement(@NotNull Artifact artifact, @NotNull Project project);
+  @Nonnull
+  public abstract PackagingElement<?> createArtifactElement(@Nonnull Artifact artifact, @Nonnull Project project);
 
-  @NotNull
-  public abstract PackagingElement<?> createLibraryFiles(@NotNull String libraryName, @NotNull String level, String moduleName);
+  @Nonnull
+  public abstract PackagingElement<?> createLibraryFiles(@Nonnull String libraryName, @Nonnull String level, String moduleName);
 
 
-  @NotNull
-  public abstract PackagingElement<?> createDirectoryCopyWithParentDirectories(@NotNull String filePath, @NotNull String relativeOutputPath);
+  @Nonnull
+  public abstract PackagingElement<?> createDirectoryCopyWithParentDirectories(@Nonnull String filePath, @Nonnull String relativeOutputPath);
 
-  @NotNull
-  public abstract PackagingElement<?> createExtractedDirectoryWithParentDirectories(@NotNull String jarPath, @NotNull String pathInJar,
-                                                                                    @NotNull String relativeOutputPath);
+  @Nonnull
+  public abstract PackagingElement<?> createExtractedDirectoryWithParentDirectories(@Nonnull String jarPath, @Nonnull String pathInJar,
+                                                                                    @Nonnull String relativeOutputPath);
 
-  @NotNull
-  public abstract PackagingElement<?> createExtractedDirectory(@NotNull VirtualFile jarEntry);
+  @Nonnull
+  public abstract PackagingElement<?> createExtractedDirectory(@Nonnull VirtualFile jarEntry);
 
-  @NotNull
-  public abstract PackagingElement<?> createFileCopyWithParentDirectories(@NotNull String filePath, @NotNull String relativeOutputPath,
+  @Nonnull
+  public abstract PackagingElement<?> createFileCopyWithParentDirectories(@Nonnull String filePath, @Nonnull String relativeOutputPath,
                                                                           @Nullable String outputFileName);
   
-  @NotNull
-  public abstract PackagingElement<?> createFileCopyWithParentDirectories(@NotNull String filePath, @NotNull String relativeOutputPath);
+  @Nonnull
+  public abstract PackagingElement<?> createFileCopyWithParentDirectories(@Nonnull String filePath, @Nonnull String relativeOutputPath);
   
 
-  @NotNull
-  public abstract CompositePackagingElement<?> getOrCreateDirectory(@NotNull CompositePackagingElement<?> parent, @NotNull String relativePath);
+  @Nonnull
+  public abstract CompositePackagingElement<?> getOrCreateDirectory(@Nonnull CompositePackagingElement<?> parent, @Nonnull String relativePath);
 
-  @NotNull
-  public abstract CompositePackagingElement<?> getOrCreateArchive(@NotNull CompositePackagingElement<?> parent, @NotNull String relativePath);
+  @Nonnull
+  public abstract CompositePackagingElement<?> getOrCreateArchive(@Nonnull CompositePackagingElement<?> parent, @Nonnull String relativePath);
 
-  public abstract void addFileCopy(@NotNull CompositePackagingElement<?> root, @NotNull String outputDirectoryPath, @NotNull String sourceFilePath,
+  public abstract void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath,
                                    final String outputFileName);
 
-  public abstract void addFileCopy(@NotNull CompositePackagingElement<?> root, @NotNull String outputDirectoryPath, @NotNull String sourceFilePath);
+  public abstract void addFileCopy(@Nonnull CompositePackagingElement<?> root, @Nonnull String outputDirectoryPath, @Nonnull String sourceFilePath);
 
-  @NotNull
-  public abstract PackagingElement<?> createParentDirectories(@NotNull String relativeOutputPath, @NotNull PackagingElement<?> element);
+  @Nonnull
+  public abstract PackagingElement<?> createParentDirectories(@Nonnull String relativeOutputPath, @Nonnull PackagingElement<?> element);
 
 
-  @NotNull
-  public abstract List<? extends PackagingElement<?>> createParentDirectories(@NotNull String relativeOutputPath, @NotNull List<? extends PackagingElement<?>> elements);
+  @Nonnull
+  public abstract List<? extends PackagingElement<?>> createParentDirectories(@Nonnull String relativeOutputPath, @Nonnull List<? extends PackagingElement<?>> elements);
 
-  @NotNull
+  @Nonnull
   
   public abstract CompositePackagingElementType<?>[] getCompositeElementTypes();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract PackagingElementType<?> findElementType(String id);
 
-  @NotNull
+  @Nonnull
   public abstract PackagingElementType<?>[] getNonCompositeElementTypes();
 
-  @NotNull
+  @Nonnull
   public abstract PackagingElementType[] getAllElementTypes();
 
-  @NotNull
+  @Nonnull
   public abstract ComplexPackagingElementType<?>[] getComplexElementTypes();
 }

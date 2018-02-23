@@ -10,7 +10,7 @@ import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.navigation.ItemPresentation;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,26 +27,26 @@ public class TestTreeModel implements StructureViewModel{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewTreeElement getRoot() {
     return myRoot;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Filter[] getFilters() {
     return myFilters.toArray(new Filter[myFilters.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Grouper[] getGroupers() {
     return new Grouper[]{new TestGrouper(new String[]{"a", "b", "c"}),
                          new TestGrouper(new String[]{"d", "e", "f"})};
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Sorter[] getSorters() {
     return mySorters.toArray(new Sorter[mySorters.size()]);
   }

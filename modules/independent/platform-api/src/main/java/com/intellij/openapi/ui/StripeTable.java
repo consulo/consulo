@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.ui.Gray;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -40,7 +40,7 @@ public class StripeTable extends JBTable {
     apply(this);
   }
 
-  public static void apply(@NotNull JBTable table) {
+  public static void apply(@Nonnull JBTable table) {
     table.setAutoResizeMode(AUTO_RESIZE_OFF);
     table.setTableHeader(createTableHeader(table.getColumnModel()));
     table.getTableHeader().setReorderingAllowed(false);
@@ -51,7 +51,7 @@ public class StripeTable extends JBTable {
     table.setStriped(true);
   }
 
-  private static JTableHeader createTableHeader(@NotNull TableColumnModel columnModel) {
+  private static JTableHeader createTableHeader(@Nonnull TableColumnModel columnModel) {
     return new JTableHeader(columnModel) {
       @Override
       protected void paintComponent(Graphics g) {

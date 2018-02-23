@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -81,9 +81,9 @@ public interface TranslatingCompiler extends Compiler {
    */
   void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink);
 
-  @NotNull
+  @Nonnull
   FileType[] getInputFileTypes();
 
-  @NotNull
+  @Nonnull
   FileType[] getOutputFileTypes();
 }

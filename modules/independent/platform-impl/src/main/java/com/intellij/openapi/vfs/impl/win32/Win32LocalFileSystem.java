@@ -19,8 +19,8 @@ import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -51,20 +51,20 @@ public class Win32LocalFileSystem extends LocalFileSystemBase {
 
   private Win32LocalFileSystem() { }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] list(@NotNull VirtualFile file) {
+  public String[] list(@Nonnull VirtualFile file) {
     return myFsCache.list(file);
   }
 
   @Override
-  public FileAttributes getAttributes(@NotNull VirtualFile file) {
+  public FileAttributes getAttributes(@Nonnull VirtualFile file) {
     return myFsCache.getAttributes(file);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests,
+  public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests,
                                                @Nullable Collection<String> recursiveRoots,
                                                @Nullable Collection<String> flatRoots) {
     throw new UnsupportedOperationException();

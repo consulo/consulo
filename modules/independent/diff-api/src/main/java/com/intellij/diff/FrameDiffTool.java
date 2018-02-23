@@ -18,8 +18,8 @@ package com.intellij.diff;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -30,20 +30,20 @@ public interface FrameDiffTool extends DiffTool {
    * Creates viewer for the given request. Clients should call {@link #canShow(DiffContext, DiffRequest)} first.
    */
   @RequiredDispatchThread
-  @NotNull
-  DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request);
+  @Nonnull
+  DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request);
 
   interface DiffViewer extends Disposable {
-    @NotNull
+    @Nonnull
     JComponent getComponent();
 
-    @Nullable
+    @javax.annotation.Nullable
     JComponent getPreferredFocusedComponent();
 
     /**
      * Should be called after adding {@link #getComponent()} to the components hierarchy.
      */
-    @NotNull
+    @Nonnull
     @RequiredDispatchThread
     ToolbarComponents init();
 
@@ -53,8 +53,11 @@ public interface FrameDiffTool extends DiffTool {
   }
 
   class ToolbarComponents {
-    @Nullable public List<AnAction> toolbarActions;
-    @Nullable public List<AnAction> popupActions;
-    @Nullable public JComponent statusPanel;
+    @javax.annotation.Nullable
+    public List<AnAction> toolbarActions;
+    @javax.annotation.Nullable
+    public List<AnAction> popupActions;
+    @javax.annotation.Nullable
+    public JComponent statusPanel;
   }
 }

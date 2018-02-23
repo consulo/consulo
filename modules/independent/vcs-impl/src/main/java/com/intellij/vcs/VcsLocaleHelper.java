@@ -17,7 +17,7 @@ package com.intellij.vcs;
 
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -27,8 +27,8 @@ public class VcsLocaleHelper {
   private static final String DEFAULT_EXECUTABLE_LOCALE_VALUE = "en_US.UTF-8";
   private static final String REGISTRY_KEY_SUFFIX = ".executable.locale";
 
-  @NotNull
-  public static String getDefaultLocaleFromRegistry(@NotNull String prefix) {
+  @Nonnull
+  public static String getDefaultLocaleFromRegistry(@Nonnull String prefix) {
     String registryKey = prefix + REGISTRY_KEY_SUFFIX;
     try {
       return Registry.stringValue(registryKey);
@@ -38,8 +38,8 @@ public class VcsLocaleHelper {
     }
   }
 
-  @NotNull
-  public static Map<String, String> getDefaultLocaleEnvironmentVars(@NotNull String prefix) {
+  @Nonnull
+  public static Map<String, String> getDefaultLocaleEnvironmentVars(@Nonnull String prefix) {
     Map<String, String> envMap = ContainerUtil.newLinkedHashMap();
     String defaultLocale = getDefaultLocaleFromRegistry(prefix);
     if (defaultLocale.isEmpty()) { // let skip locale definition if needed

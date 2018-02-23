@@ -15,14 +15,14 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 class CollectionBinding extends AbstractCollectionBinding  {
-  public CollectionBinding(@NotNull ParameterizedType type, @Nullable MutableAccessor accessor) {
+  public CollectionBinding(@Nonnull ParameterizedType type, @Nullable MutableAccessor accessor) {
     super(XmlSerializerImpl.typeToClass(type.getActualTypeArguments()[0]), accessor);
   }
 
@@ -42,9 +42,9 @@ class CollectionBinding extends AbstractCollectionBinding  {
     return target;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  Collection<Object> getIterable(@NotNull Object o) {
+  Collection<Object> getIterable(@Nonnull Object o) {
     //noinspection unchecked
     return o instanceof Set ? new TreeSet((Set)o) : (Collection<Object>)o;
   }
@@ -63,7 +63,7 @@ class CollectionBinding extends AbstractCollectionBinding  {
   }
 
   @Override
-  protected Collection createCollection(@NotNull String tagName) {
+  protected Collection createCollection(@Nonnull String tagName) {
     return tagName.equals(Constants.SET) ? new HashSet() : super.createCollection(tagName);
   }
 }

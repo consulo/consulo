@@ -39,8 +39,8 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageGroupingRuleProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -110,13 +110,13 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     ExtensionsArea area = Extensions.getRootArea();
     ExtensionPoint<UsageGroupingRuleProvider> point = area.getExtensionPoint(UsageGroupingRuleProvider.EP_NAME);
     UsageGroupingRuleProvider provider = new UsageGroupingRuleProvider() {
-      @NotNull
+      @Nonnull
       @Override
       public UsageGroupingRule[] getActiveRules(Project project) {
         return rules;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public AnAction[] createGroupingActions(UsageView view) {
         return AnAction.EMPTY_ARRAY;
@@ -141,7 +141,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
   private static class LogGroupingRule extends SingleParentUsageGroupingRule {
     @Nullable
     @Override
-    protected UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+    protected UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
       return new LogUsageGroup(usage.toString().length());
     }
   }
@@ -160,7 +160,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     @Override
     public Icon getIcon(boolean isOpen) { return null; }
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) { return String.valueOf(myPower); }
 
     @Override
@@ -178,7 +178,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     }
 
     @Override
-    public int compareTo(@NotNull UsageGroup o) {
+    public int compareTo(@Nonnull UsageGroup o) {
       if (!(o instanceof LogUsageGroup)) return 1;
       return myPower - ((LogUsageGroup)o).myPower;
     }
@@ -205,7 +205,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       @Override
       public Icon getIcon(boolean isOpen) { return null; }
       @Override
-      @NotNull
+      @Nonnull
       public String getText(UsageView view) { return "Even"; }
 
       @Override
@@ -233,7 +233,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       }
 
       @Override
-      public int compareTo(@NotNull UsageGroup o) { return o == ODD ? -1 : 0; }
+      public int compareTo(@Nonnull UsageGroup o) { return o == ODD ? -1 : 0; }
       public String toString() { return getText(null); }
     };
 
@@ -241,7 +241,7 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       @Override
       public Icon getIcon(boolean isOpen) { return null; }
       @Override
-      @NotNull
+      @Nonnull
       public String getText(UsageView view) { return "Odd"; }
 
       @Override
@@ -269,14 +269,14 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
       }
 
       @Override
-      public int compareTo(@NotNull UsageGroup o) { return o == EVEN ? 1 : 0; }
+      public int compareTo(@Nonnull UsageGroup o) { return o == EVEN ? 1 : 0; }
       @Override
       public String toString() { return getText(null); }
     };
 
     @Nullable
     @Override
-    protected UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+    protected UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
       MockUsage mockUsage = (MockUsage)usage;
 
       if (mockUsage.getId() > 1000) return null;
@@ -297,17 +297,17 @@ public class UsageNodeTreeBuilderTest extends LightPlatformTestCase {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public UsagePresentation getPresentation() {
       return new UsagePresentation() {
         @Override
-        @NotNull
+        @Nonnull
         public TextChunk[] getText() {
           return TextChunk.EMPTY_ARRAY;
         }
 
         @Override
-        @NotNull
+        @Nonnull
         public String getPlainText() {
           return "";
         }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,11 +31,11 @@ public abstract class RefreshSession {
 
   public abstract boolean isAsynchronous();
 
-  public abstract void addFile(@NotNull VirtualFile file);
+  public abstract void addFile(@Nonnull VirtualFile file);
 
-  public abstract void addAllFiles(@NotNull Collection<? extends VirtualFile> files);
+  public abstract void addAllFiles(@Nonnull Collection<? extends VirtualFile> files);
 
-  public void addAllFiles(@NotNull VirtualFile... files) {
+  public void addAllFiles(@Nonnull VirtualFile... files) {
     addAllFiles(Arrays.asList(files));
   }
 

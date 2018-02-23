@@ -18,7 +18,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,7 +47,7 @@ public class UnknownConfigurationType implements ConfigurationType {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return NAME;
   }

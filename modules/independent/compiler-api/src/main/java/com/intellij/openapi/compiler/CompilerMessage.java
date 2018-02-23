@@ -17,7 +17,7 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Describes a single compiler message that is shown in compiler message view.

@@ -20,8 +20,8 @@ import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class CompoundTestFailedState extends TestFailedState {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<DiffHyperlink> getHyperlinks() {
     return ContainerUtil.map(ContainerUtil.filter(myStates, state -> state instanceof TestComparisionFailedState), state -> ((TestComparisionFailedState)state).getHyperlink());
   }

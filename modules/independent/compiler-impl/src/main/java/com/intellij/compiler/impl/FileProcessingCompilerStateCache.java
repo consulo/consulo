@@ -24,7 +24,7 @@ package com.intellij.compiler.impl;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.compiler.ValidityStateFactory;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.Collection;

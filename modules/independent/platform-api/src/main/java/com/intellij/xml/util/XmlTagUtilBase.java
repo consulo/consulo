@@ -15,7 +15,7 @@
  */
 package com.intellij.xml.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class XmlTagUtilBase {
   public static String escapeString(@Nullable final String str, final boolean escapeWhiteSpace) {

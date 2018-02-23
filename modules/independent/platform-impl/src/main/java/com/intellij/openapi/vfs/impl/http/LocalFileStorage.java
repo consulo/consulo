@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl.http;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class LocalFileStorage {
     myStorageIODirectory.mkdirs();
   }
 
-  public File createLocalFile(@NotNull String url) throws IOException {
+  public File createLocalFile(@Nonnull String url) throws IOException {
     int ast = url.indexOf('?');
     if (ast != -1) {
       url = url.substring(0, ast);

@@ -17,7 +17,7 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Basic interface for requesting sending focus commands to <code>IdeFocusManager</code>
@@ -31,8 +31,8 @@ public interface FocusRequestor extends Disposable {
    * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
-  @NotNull
-  default ActionCallback requestFocus(@NotNull consulo.ui.Component c, boolean forced) {
+  @Nonnull
+  default ActionCallback requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
     return ActionCallback.DONE; //FIXME [VISTALL] stub
   }
 
@@ -42,8 +42,8 @@ public interface FocusRequestor extends Disposable {
    * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
-  @NotNull
-  ActionCallback requestFocus(@NotNull FocusCommand command, boolean forced);
+  @Nonnull
+  ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced);
 
   // TODO [VISTALL] AWT & Swing dependency
 
@@ -56,8 +56,8 @@ public interface FocusRequestor extends Disposable {
    * @param forced - if true - focus request is explicit, must be fulfilled, if false - can be dropped
    * @return action callback that either notifies when the focus was obtained or focus request was droppped
    */
-  @NotNull
-  ActionCallback requestFocus(@NotNull java.awt.Component c, boolean forced);
+  @Nonnull
+  ActionCallback requestFocus(@Nonnull java.awt.Component c, boolean forced);
 
   // endregion
 }

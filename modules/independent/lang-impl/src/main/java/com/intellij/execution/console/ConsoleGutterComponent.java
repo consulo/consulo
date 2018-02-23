@@ -28,7 +28,7 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ class ConsoleGutterComponent extends JComponent implements MouseMotionListener {
 
   private final boolean atLineStart;
 
-  public ConsoleGutterComponent(@NotNull Editor editor, @NotNull GutterContentProvider gutterContentProvider, boolean atLineStart) {
+  public ConsoleGutterComponent(@Nonnull Editor editor, @Nonnull GutterContentProvider gutterContentProvider, boolean atLineStart) {
     this.editor = (EditorImpl)editor;
     this.gutterContentProvider = gutterContentProvider;
     this.atLineStart = atLineStart;

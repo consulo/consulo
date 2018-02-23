@@ -15,40 +15,40 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface RadioButton extends ValueComponent<Boolean> {
-  @NotNull
-  static RadioButton create(@NotNull String text) {
+  @Nonnull
+  static RadioButton create(@Nonnull String text) {
     return create(text, false);
   }
 
-  @NotNull
-  static RadioButton create(@NotNull String text, boolean selected) {
+  @Nonnull
+  static RadioButton create(@Nonnull String text, boolean selected) {
     return UIInternal.get()._Components_radioButton(text, selected);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   Boolean getValue();
 
   @Override
   @RequiredUIAccess
-  default void setValue(@NotNull Boolean value) {
+  default void setValue(@Nonnull Boolean value) {
     setValue(value, true);
   }
 
   @Override
   @RequiredUIAccess
-  void setValue(@NotNull Boolean value, boolean fireEvents);
+  void setValue(@Nonnull Boolean value, boolean fireEvents);
 
-  @NotNull
+  @Nonnull
   String getText();
 
   @RequiredUIAccess
-  void setText(@NotNull String text);
+  void setText(@Nonnull String text);
 }

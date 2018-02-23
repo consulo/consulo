@@ -19,8 +19,8 @@ import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ui.ListTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
     setItems(getItemsForSuite(myCurrentSuite));
   }
 
-  @NotNull
+  @Nonnull
   private List<SMTestProxy> getItemsForSuite(@Nullable final SMTestProxy suite) {
     if (suite == null) {
       return Collections.emptyList();
@@ -108,8 +108,8 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
     LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
   }
 
-  @Nullable
-  private SMTestProxy getCurrentSuiteFor(@Nullable final SMTestProxy proxy) {
+  @javax.annotation.Nullable
+  private SMTestProxy getCurrentSuiteFor(@javax.annotation.Nullable final SMTestProxy proxy) {
     if (proxy == null) {
       return null;
     }

@@ -23,14 +23,14 @@ import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XValuePresentationUtil {
-  public static void renderValue(@NotNull String value, @NotNull ColoredTextContainer text, @NotNull SimpleTextAttributes attributes, int maxLength,
+  public static void renderValue(@Nonnull String value, @Nonnull ColoredTextContainer text, @Nonnull SimpleTextAttributes attributes, int maxLength,
                                  @Nullable String additionalCharsToEscape) {
     SimpleTextAttributes escapeAttributes = null;
     int lastOffset = 0;
@@ -79,14 +79,14 @@ public class XValuePresentationUtil {
     }
   }
 
-  public static void appendSeparator(@NotNull ColoredTextContainer text, @NotNull String separator) {
+  public static void appendSeparator(@Nonnull ColoredTextContainer text, @Nonnull String separator) {
     if (!separator.isEmpty()) {
       text.append(separator, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }
 
-  @NotNull
-  public static String computeValueText(@NotNull XValuePresentation presentation) {
+  @Nonnull
+  public static String computeValueText(@Nonnull XValuePresentation presentation) {
     XValuePresentationTextExtractor extractor = new XValuePresentationTextExtractor();
     presentation.renderValue(extractor);
     return extractor.getText();
@@ -100,34 +100,34 @@ public class XValuePresentationUtil {
     }
 
     @Override
-    public void renderValue(@NotNull String value) {
+    public void renderValue(@Nonnull String value) {
       myBuilder.append(value);
     }
 
     @Override
-    protected void renderRawValue(@NotNull String value, @NotNull TextAttributesKey key) {
+    protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
       myBuilder.append(value);
     }
 
     @Override
-    public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
       myBuilder.append(quoteChar);
       myBuilder.append(value);
       myBuilder.append(quoteChar);
     }
 
     @Override
-    public void renderComment(@NotNull String comment) {
+    public void renderComment(@Nonnull String comment) {
       myBuilder.append(comment);
     }
 
     @Override
-    public void renderError(@NotNull String error) {
+    public void renderError(@Nonnull String error) {
       myBuilder.append(error);
     }
 
     @Override
-    public void renderSpecialSymbol(@NotNull String symbol) {
+    public void renderSpecialSymbol(@Nonnull String symbol) {
       myBuilder.append(symbol);
     }
 

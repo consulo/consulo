@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.Disposable;
 import consulo.ui.Component;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

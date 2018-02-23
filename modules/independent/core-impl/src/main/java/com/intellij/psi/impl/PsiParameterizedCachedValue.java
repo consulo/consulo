@@ -20,12 +20,12 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class PsiParameterizedCachedValue<T,P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T,P> {
   private final ParameterizedCachedValueProvider<T,P> myProvider;
 
-  public PsiParameterizedCachedValue(@NotNull PsiManager manager, @NotNull ParameterizedCachedValueProvider<T, P> provider) {
+  public PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider) {
     super(manager);
     myProvider = provider;
   }

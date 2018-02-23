@@ -20,21 +20,20 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.stream.Stream;
 
 public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<Stream<VirtualFile>> getKey() {
     return VcsDataKeys.VIRTUAL_FILE_STREAM;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Stream<VirtualFile> getData(@NotNull DataProvider dataProvider) {
+  public Stream<VirtualFile> getData(@Nonnull DataProvider dataProvider) {
     VirtualFile[] files = dataProvider.getDataUnchecked(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (files != null) {
       return Stream.of(files);

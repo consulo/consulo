@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,17 +44,17 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public void weHaveGotProblems(@NotNull final VirtualFile virtualFile, @NotNull final List<Problem> problems) {
+  public void weHaveGotProblems(@Nonnull final VirtualFile virtualFile, @Nonnull final List<Problem> problems) {
     if (myDelegate != null) myDelegate.weHaveGotProblems(virtualFile, problems);
   }
 
   @Override
-  public void weHaveGotNonIgnorableProblems(@NotNull VirtualFile virtualFile, @NotNull List<Problem> problems) {
+  public void weHaveGotNonIgnorableProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems) {
     if (myDelegate != null) myDelegate.weHaveGotNonIgnorableProblems(virtualFile, problems);
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@NotNull final Condition<VirtualFile> condition) {
+  public boolean hasProblemFilesBeneath(@Nonnull final Condition<VirtualFile> condition) {
     return false;
   }
 
@@ -64,27 +64,27 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@NotNull Module scope) {
+  public boolean hasProblemFilesBeneath(@Nonnull Module scope) {
     return false;
   }
 
   @Override
-  public void addProblemListener(@NotNull ProblemListener listener) {
+  public void addProblemListener(@Nonnull ProblemListener listener) {
     if (myDelegate != null) myDelegate.addProblemListener(listener);
   }
 
   @Override
-  public void addProblemListener(@NotNull ProblemListener listener, @NotNull Disposable parentDisposable) {
+  public void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable) {
     if (myDelegate != null) myDelegate.addProblemListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeProblemListener(@NotNull ProblemListener listener) {
+  public void removeProblemListener(@Nonnull ProblemListener listener) {
     if (myDelegate != null) myDelegate.removeProblemListener(listener);
   }
 
   @Override
-  public void registerFileHighlightFilter(@NotNull Condition<VirtualFile> filter, @NotNull Disposable parentDisposable) {
+  public void registerFileHighlightFilter(@Nonnull Condition<VirtualFile> filter, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
@@ -93,7 +93,7 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public void clearProblems(@NotNull VirtualFile virtualFile) {
+  public void clearProblems(@Nonnull VirtualFile virtualFile) {
     if (myDelegate != null) myDelegate.clearProblems(virtualFile);
   }
 

@@ -65,8 +65,8 @@ import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -195,7 +195,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     return createProject(projectDir, getClass().getName() + "." + getName());
   }
 
-  @NotNull
+  @Nonnull
   public static Project createProject(File projectDir, String creationPlace) {
     try {
       Project project =
@@ -219,8 +219,8 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
   }
 
-  @NotNull
-  public static String getCreationPlace(@NotNull Project project) {
+  @Nonnull
+  public static String getCreationPlace(@Nonnull Project project) {
     String place = project.getUserData(CREATION_PLACE);
     Object base;
     try {
@@ -317,7 +317,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     return survivors;
   }
 
-  public static void addSurvivingFiles(@NotNull Collection<VirtualFile> files) {
+  public static void addSurvivingFiles(@Nonnull Collection<VirtualFile> files) {
     for (VirtualFile each : files) {
       registerSurvivor(eternallyLivingFiles(), each);
     }
@@ -429,7 +429,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     if (!result.isEmpty()) throw result;
   }
 
-  private void disposeProject(@NotNull CompositeException result) /* throws nothing */ {
+  private void disposeProject(@Nonnull CompositeException result) /* throws nothing */ {
     try {
       DocumentCommitThread.getInstance().clearQueue();
       UIUtil.dispatchAllInvocationEvents();
@@ -659,7 +659,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     return myProject == null ? null : new TestDataProvider(myProject).getData(dataId);
   }
 
@@ -715,7 +715,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }
   }
 
-  public static VirtualFile createTempFile(@NonNls String ext, @Nullable byte[] bom, @NonNls String content, Charset charset)
+  public static VirtualFile createTempFile(@NonNls String ext, @javax.annotation.Nullable byte[] bom, @NonNls String content, Charset charset)
     throws IOException {
     File temp = FileUtil.createTempFile("copy", "." + ext);
     setContentOnDisk(temp, bom, content, charset);
@@ -726,7 +726,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     return file;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected PsiFile getPsiFile(final Document document) {
     return PsiDocumentManager.getInstance(getProject()).getPsiFile(document);
   }
@@ -736,7 +736,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
   public @interface WrapInCommand {
   }
 
-  protected static VirtualFile createChildData(@NotNull final VirtualFile dir, @NotNull @NonNls final String name) {
+  protected static VirtualFile createChildData(@Nonnull final VirtualFile dir, @Nonnull @NonNls final String name) {
     return new WriteAction<VirtualFile>() {
       @Override
       protected void run(Result<VirtualFile> result) throws Throwable {
@@ -745,7 +745,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }.execute().throwException().getResultObject();
   }
 
-  protected static VirtualFile createChildDirectory(@NotNull final VirtualFile dir, @NotNull @NonNls final String name) {
+  protected static VirtualFile createChildDirectory(@Nonnull final VirtualFile dir, @Nonnull @NonNls final String name) {
     return new WriteAction<VirtualFile>() {
       @Override
       protected void run(Result<VirtualFile> result) throws Throwable {
@@ -754,7 +754,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     }.execute().throwException().getResultObject();
   }
 
-  protected static void delete(@NotNull final VirtualFile file) {
+  protected static void delete(@Nonnull final VirtualFile file) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
@@ -768,7 +768,7 @@ public abstract class PlatformTestCase extends UsefulTestCase implements DataPro
     });
   }
 
-  protected static void rename(@NotNull final VirtualFile vFile1, @NotNull final String newName) {
+  protected static void rename(@Nonnull final VirtualFile vFile1, @Nonnull final String newName) {
     new WriteCommandAction.Simple(null) {
       @Override
       protected void run() throws Throwable {

@@ -41,8 +41,8 @@ import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcsUtil.VcsImplUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -58,20 +58,24 @@ import java.util.stream.Stream;
 public class GoToHashOrRefPopup {
   private static final Logger LOG = Logger.getInstance(GoToHashOrRefPopup.class);
 
-  @NotNull private final TextFieldWithProgress myTextField;
-  @NotNull private final Function<String, Future> myOnSelectedHash;
-  @NotNull private final Function<VcsRef, Future> myOnSelectedRef;
-  @NotNull private final JBPopup myPopup;
+  @Nonnull
+  private final TextFieldWithProgress myTextField;
+  @Nonnull
+  private final Function<String, Future> myOnSelectedHash;
+  @Nonnull
+  private final Function<VcsRef, Future> myOnSelectedRef;
+  @Nonnull
+  private final JBPopup myPopup;
   @Nullable private Future myFuture;
   @Nullable private VcsRef mySelectedRef;
 
-  public GoToHashOrRefPopup(@NotNull final Project project,
-                            @NotNull VcsLogRefs variants,
+  public GoToHashOrRefPopup(@Nonnull final Project project,
+                            @Nonnull VcsLogRefs variants,
                             Collection<VirtualFile> roots,
-                            @NotNull Function<String, Future> onSelectedHash,
-                            @NotNull Function<VcsRef, Future> onSelectedRef,
-                            @NotNull VcsLogColorManager colorManager,
-                            @NotNull Comparator<VcsRef> comparator) {
+                            @Nonnull Function<String, Future> onSelectedHash,
+                            @Nonnull Function<VcsRef, Future> onSelectedRef,
+                            @Nonnull VcsLogColorManager colorManager,
+                            @Nonnull Comparator<VcsRef> comparator) {
     myOnSelectedHash = onSelectedHash;
     myOnSelectedRef = onSelectedRef;
     myTextField =
@@ -140,29 +144,31 @@ public class GoToHashOrRefPopup {
     ApplicationManager.getApplication().invokeLater(() -> myPopup.closeOk(null));
   }
 
-  public void show(@NotNull JComponent anchor) {
+  public void show(@Nonnull JComponent anchor) {
     myPopup.showInCenterOf(anchor);
   }
 
   private class VcsRefCompletionProvider extends ValuesCompletionProvider<VcsRef> {
     private static final int TIMEOUT = 100;
-    @NotNull private final VcsLogRefs myRefs;
-    @NotNull private final Collection<VirtualFile> myRoots;
+    @Nonnull
+    private final VcsLogRefs myRefs;
+    @Nonnull
+    private final Collection<VirtualFile> myRoots;
 
-    public VcsRefCompletionProvider(@NotNull Project project,
-                                    @NotNull VcsLogRefs refs,
-                                    @NotNull Collection<VirtualFile> roots,
-                                    @NotNull VcsLogColorManager colorManager,
-                                    @NotNull Comparator<VcsRef> comparator) {
+    public VcsRefCompletionProvider(@Nonnull Project project,
+                                    @Nonnull VcsLogRefs refs,
+                                    @Nonnull Collection<VirtualFile> roots,
+                                    @Nonnull VcsLogColorManager colorManager,
+                                    @Nonnull Comparator<VcsRef> comparator) {
       super(new VcsRefDescriptor(project, colorManager, comparator, roots), ContainerUtil.emptyList());
       myRefs = refs;
       myRoots = roots;
     }
 
     @Override
-    public void fillCompletionVariants(@NotNull CompletionParameters parameters,
-                                       @NotNull String prefix,
-                                       @NotNull CompletionResultSet result) {
+    public void fillCompletionVariants(@Nonnull CompletionParameters parameters,
+                                       @Nonnull String prefix,
+                                       @Nonnull CompletionResultSet result) {
       addValues(result, filterAndSort(result, myRefs.getBranches().stream()));
 
       Future<List<VcsRef>> future = ApplicationManager.getApplication()
@@ -189,14 +195,14 @@ public class GoToHashOrRefPopup {
       result.stopHere();
     }
 
-    public void addValues(@NotNull CompletionResultSet result, @NotNull Collection<? extends VcsRef> values) {
+    public void addValues(@Nonnull CompletionResultSet result, @Nonnull Collection<? extends VcsRef> values) {
       for (VcsRef completionVariant : values) {
         result.addElement(installInsertHandler(myDescriptor.createLookupBuilder(completionVariant)));
       }
     }
 
-    @NotNull
-    private List<VcsRef> filterAndSort(@NotNull CompletionResultSet result, @NotNull Stream<VcsRef> stream) {
+    @Nonnull
+    private List<VcsRef> filterAndSort(@Nonnull CompletionResultSet result, @Nonnull Stream<VcsRef> stream) {
       return ContainerUtil
         .sorted(stream.filter(ref -> myRoots.contains(ref.getRoot()) && result.getPrefixMatcher().prefixMatches(ref.getName()))
                   .collect(Collectors.toList()), myDescriptor);
@@ -204,15 +210,19 @@ public class GoToHashOrRefPopup {
   }
 
   private class VcsRefDescriptor extends DefaultTextCompletionValueDescriptor<VcsRef> {
-    @NotNull private final Project myProject;
-    @NotNull private final VcsLogColorManager myColorManager;
-    @NotNull private final Comparator<VcsRef> myReferenceComparator;
-    @NotNull private final Map<VirtualFile, String> myCachedRootNames = ContainerUtil.newHashMap();
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final VcsLogColorManager myColorManager;
+    @Nonnull
+    private final Comparator<VcsRef> myReferenceComparator;
+    @Nonnull
+    private final Map<VirtualFile, String> myCachedRootNames = ContainerUtil.newHashMap();
 
-    private VcsRefDescriptor(@NotNull Project project,
-                             @NotNull VcsLogColorManager manager,
-                             @NotNull Comparator<VcsRef> comparator,
-                             @NotNull Collection<VirtualFile> roots) {
+    private VcsRefDescriptor(@Nonnull Project project,
+                             @Nonnull VcsLogColorManager manager,
+                             @Nonnull Comparator<VcsRef> comparator,
+                             @Nonnull Collection<VirtualFile> roots) {
       myProject = project;
       myColorManager = manager;
       myReferenceComparator = comparator;
@@ -223,9 +233,9 @@ public class GoToHashOrRefPopup {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public LookupElementBuilder createLookupBuilder(@NotNull VcsRef item) {
+    public LookupElementBuilder createLookupBuilder(@Nonnull VcsRef item) {
       LookupElementBuilder lookupBuilder = super.createLookupBuilder(item);
       if (myColorManager.isMultipleRoots()) {
         lookupBuilder = lookupBuilder
@@ -236,22 +246,22 @@ public class GoToHashOrRefPopup {
       return lookupBuilder;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public String getLookupString(@NotNull VcsRef item) {
+    public String getLookupString(@Nonnull VcsRef item) {
       return item.getName();
     }
 
     @Nullable
     @Override
-    protected String getTailText(@NotNull VcsRef item) {
+    protected String getTailText(@Nonnull VcsRef item) {
       if (!myColorManager.isMultipleRoots()) return null;
       return "";
     }
 
     @Nullable
     @Override
-    protected String getTypeText(@NotNull VcsRef item) {
+    protected String getTypeText(@Nonnull VcsRef item) {
       if (!myColorManager.isMultipleRoots()) return null;
       String text = myCachedRootNames.get(item.getRoot());
       if (text == null) {
@@ -267,7 +277,7 @@ public class GoToHashOrRefPopup {
 
     @Nullable
     @Override
-    protected InsertHandler<LookupElement> createInsertHandler(@NotNull VcsRef item) {
+    protected InsertHandler<LookupElement> createInsertHandler(@Nonnull VcsRef item) {
       return (context, item1) -> {
         mySelectedRef = (VcsRef)item1.getObject();
         ApplicationManager.getApplication().invokeLater(() -> {

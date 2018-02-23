@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -63,7 +63,7 @@ public class FileContentQueue {
   private final ProgressIndicator myProgressIndicator;
   private static final Deque<FileContentQueue> ourContentLoadingQueues = new LinkedBlockingDeque<FileContentQueue>();
 
-  public FileContentQueue(@NotNull Collection<VirtualFile> files, @NotNull final ProgressIndicator indicator) {
+  public FileContentQueue(@Nonnull Collection<VirtualFile> files, @Nonnull final ProgressIndicator indicator) {
     int numberOfFiles = files.size();
     myContentsToLoad.set(numberOfFiles);
     // ABQ is more memory efficient for significant number of files (e.g. 500K)
@@ -114,7 +114,7 @@ public class FileContentQueue {
     return true;
   }
 
-  private FileContent loadContent(@NotNull VirtualFile file, @NotNull ProgressIndicator indicator) throws InterruptedException {
+  private FileContent loadContent(@Nonnull VirtualFile file, @Nonnull ProgressIndicator indicator) throws InterruptedException {
     FileContent content = new FileContent(file);
     if (!isValidFile(file) || !doLoadContent(content, indicator)) {
       content.setEmptyContent();
@@ -122,12 +122,12 @@ public class FileContentQueue {
     return content;
   }
 
-  private static boolean isValidFile(@NotNull VirtualFile file) {
+  private static boolean isValidFile(@Nonnull VirtualFile file) {
     return file.isValid() && !file.isDirectory() && !file.is(VFileProperty.SPECIAL) && !VfsUtilCore.isBrokenLink(file);
   }
 
   @SuppressWarnings("InstanceofCatchParameter")
-  private boolean doLoadContent(@NotNull FileContent content, @NotNull final ProgressIndicator indicator) throws InterruptedException {
+  private boolean doLoadContent(@Nonnull FileContent content, @Nonnull final ProgressIndicator indicator) throws InterruptedException {
     final long contentLength = content.getLength();
 
     boolean counterUpdated = false;
@@ -174,7 +174,7 @@ public class FileContentQueue {
   }
 
   @Nullable
-  public FileContent take(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+  public FileContent take(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
     final FileContent content = doTake(indicator);
     if (content == null) {
       return null;
@@ -244,14 +244,14 @@ public class FileContentQueue {
     return result;
   }
 
-  public void release(@NotNull FileContent content) {
+  public void release(@Nonnull FileContent content) {
     synchronized (myProceedWithProcessingLock) {
       myBytesBeingProcessed -= content.getLength();
       myProceedWithProcessingLock.notifyAll(); // ask all sleeping threads to proceed, there can be more than one of them
     }
   }
 
-  public void pushBack(@NotNull FileContent content) {
+  public void pushBack(@Nonnull FileContent content) {
     synchronized (myProceedWithLoadingLock) {
       myLoadedBytesInQueue += content.getLength();
     }

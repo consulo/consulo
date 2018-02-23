@@ -18,8 +18,7 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import com.intellij.ui.CheckboxTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -61,13 +60,13 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected Object getTagAt(@NotNull final MouseEvent e) {
+  protected Object getTagAt(@Nonnull final MouseEvent e) {
     return PushLogTreeUtil.getTagAtForRenderer(myRenderer, e);
   }
 
-  protected void handleTagClick(@Nullable final Object tag, @NotNull MouseEvent event) {
+  protected void handleTagClick(@javax.annotation.Nullable final Object tag, @Nonnull MouseEvent event) {
     if (tag instanceof VcsLinkedTextComponent) {
       VcsLinkedTextComponent textWithLink = (VcsLinkedTextComponent)tag;
       final TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());

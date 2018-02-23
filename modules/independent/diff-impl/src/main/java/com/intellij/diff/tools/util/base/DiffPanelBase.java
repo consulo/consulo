@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.components.panels.Wrapper;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,24 +31,33 @@ import java.util.List;
 
 public abstract class DiffPanelBase extends JPanel implements DataProvider {
   @Nullable protected final Project myProject;
-  @NotNull private final DataProvider myDataProvider;
-  @NotNull protected final DiffContext myContext;
+  @Nonnull
+  private final DataProvider myDataProvider;
+  @Nonnull
+  protected final DiffContext myContext;
 
-  @NotNull private final List<JComponent> myPersistentNotifications = new ArrayList<JComponent>();
+  @Nonnull
+  private final List<JComponent> myPersistentNotifications = new ArrayList<JComponent>();
 
-  @NotNull protected final JPanel myContentPanel;
-  @NotNull protected final JPanel myNotificationsPanel;
+  @Nonnull
+  protected final JPanel myContentPanel;
+  @Nonnull
+  protected final JPanel myNotificationsPanel;
 
-  @NotNull private final Wrapper myNorthPanel;
-  @NotNull private final Wrapper mySouthPanel;
+  @Nonnull
+  private final Wrapper myNorthPanel;
+  @Nonnull
+  private final Wrapper mySouthPanel;
 
-  @NotNull protected final CardLayout myCardLayout;
+  @Nonnull
+  protected final CardLayout myCardLayout;
 
-  @NotNull protected String myCurrentCard;
+  @Nonnull
+  protected String myCurrentCard;
 
   public DiffPanelBase(@Nullable Project project,
-                       @NotNull DataProvider provider,
-                       @NotNull DiffContext context) {
+                       @Nonnull DataProvider provider,
+                       @Nonnull DiffContext context) {
     super(new BorderLayout());
     myProject = project;
     myDataProvider = provider;
@@ -68,7 +77,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     add(mySouthPanel, BorderLayout.SOUTH);
   }
 
-  public void setTopPanel(@Nullable JComponent component) {
+  public void setTopPanel(@javax.annotation.Nullable JComponent component) {
     myNorthPanel.setContent(component);
   }
 
@@ -76,11 +85,11 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     mySouthPanel.setContent(component);
   }
 
-  protected void setCurrentCard(@NotNull String card) {
+  protected void setCurrentCard(@Nonnull String card) {
     setCurrentCard(card, true);
   }
 
-  protected void setCurrentCard(@NotNull String card, boolean keepFocus) {
+  protected void setCurrentCard(@Nonnull String card, boolean keepFocus) {
     boolean restoreFocus = keepFocus && myContext.isFocused();
 
     myCardLayout.show(myContentPanel, card);
@@ -92,7 +101,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     return myDataProvider.getData(dataId);
   }
 
@@ -100,7 +109,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
   // Notifications
   //
 
-  public void setPersistentNotifications(@NotNull List<JComponent> components) {
+  public void setPersistentNotifications(@Nonnull List<JComponent> components) {
     for (JComponent notification : myPersistentNotifications) {
       myNotificationsPanel.remove(notification);
     }
@@ -122,7 +131,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     myNotificationsPanel.revalidate();
   }
 
-  public void addNotification(@NotNull JComponent notification) {
+  public void addNotification(@Nonnull JComponent notification) {
     myNotificationsPanel.add(notification);
     myNotificationsPanel.revalidate();
   }

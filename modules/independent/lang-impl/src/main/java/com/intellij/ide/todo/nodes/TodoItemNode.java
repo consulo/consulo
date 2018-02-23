@@ -30,7 +30,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.ui.HighlightedRegion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     return Collections.emptyList();
   }

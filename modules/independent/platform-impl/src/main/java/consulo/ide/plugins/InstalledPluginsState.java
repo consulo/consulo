@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +38,7 @@ import java.util.TreeSet;
  * A service to hold a state of plugin changes in a current session (i.e. before the changes are applied on restart).
  */
 public class InstalledPluginsState {
-  @NotNull
+  @Nonnull
   public static InstalledPluginsState getInstance() {
     Application application = ApplicationManager.getApplication();
     if (application == null) {
@@ -55,7 +55,7 @@ public class InstalledPluginsState {
 
   private final Set<IdeaPluginDescriptor> myAllPlugins = new HashSet<>();
 
-  public void updateExistingPlugin(@NotNull IdeaPluginDescriptor descriptor, @NotNull IdeaPluginDescriptor installed) {
+  public void updateExistingPlugin(@Nonnull IdeaPluginDescriptor descriptor, @Nonnull IdeaPluginDescriptor installed) {
     updateExistingPluginInfo(descriptor, installed);
     myUpdatedPlugins.add(installed.getPluginId());
   }

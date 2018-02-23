@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -49,17 +49,17 @@ class FileFilterPanel {
     final Condition<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(text);
     return new GlobalSearchScope() {
       @Override
-      public boolean contains(@NotNull VirtualFile file) {
+      public boolean contains(@Nonnull VirtualFile file) {
         return patternCondition.value(file.getNameSequence());
       }
 
       @Override
-      public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+      public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
         return 0;
       }
 
       @Override
-      public boolean isSearchInModuleContent(@NotNull Module aModule) {
+      public boolean isSearchInModuleContent(@Nonnull Module aModule) {
         return true;
       }
 

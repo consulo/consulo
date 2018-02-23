@@ -20,7 +20,7 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,8 +29,8 @@ public abstract class PrattParser implements PsiParser {
   protected abstract PrattRegistry getRegistry();
 
   @Override
-  @NotNull
-  public final ASTNode parse(@NotNull final IElementType root, @NotNull final PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public final ASTNode parse(@Nonnull final IElementType root, @Nonnull final PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
     final PrattBuilder prattBuilder = PrattBuilderImpl.createBuilder(builder, getRegistry());
     final MutableMarker marker = prattBuilder.mark();
     parse(prattBuilder);

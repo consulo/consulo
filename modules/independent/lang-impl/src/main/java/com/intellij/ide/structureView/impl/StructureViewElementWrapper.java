@@ -24,8 +24,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class StructureViewElementWrapper<V extends PsiElement> implements Struct
   private final StructureViewTreeElement myTreeElement;
   private final PsiFile myMainFile;
 
-  public StructureViewElementWrapper(@NotNull StructureViewTreeElement treeElement, @NotNull PsiFile mainFile) {
+  public StructureViewElementWrapper(@Nonnull StructureViewTreeElement treeElement, @Nonnull PsiFile mainFile) {
     myTreeElement = treeElement;
     myMainFile = mainFile;
   }

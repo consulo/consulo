@@ -16,7 +16,7 @@
 package com.intellij.util.continuation;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface ContinuationContext extends ContinuationPause {
 
   void last(List<TaskDescriptor> next);
 
-  void after(@NotNull TaskDescriptor inQueue, TaskDescriptor... next);
+  void after(@Nonnull TaskDescriptor inQueue, TaskDescriptor... next);
 
 
   void cancelEverything();
@@ -42,6 +42,6 @@ public interface ContinuationContext extends ContinuationPause {
   void keepExisting(final Object disaster, final Object cure);
   void throwDisaster(final Object disaster, final Object cure);
 
-  void removeNewTasksPatcher(@NotNull final Consumer<TaskDescriptor> consumer);
-  void addNewTasksPatcher(@NotNull final Consumer<TaskDescriptor> consumer);
+  void removeNewTasksPatcher(@Nonnull final Consumer<TaskDescriptor> consumer);
+  void addNewTasksPatcher(@Nonnull final Consumer<TaskDescriptor> consumer);
 }

@@ -22,7 +22,7 @@ package com.intellij.lang;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import consulo.lang.util.LanguageVersionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LanguageWordCompletion extends LanguageExtension<WordCompletionElementFilter> {
   public static final LanguageWordCompletion INSTANCE = new LanguageWordCompletion();
@@ -31,7 +31,7 @@ public class LanguageWordCompletion extends LanguageExtension<WordCompletionElem
     super("com.intellij.codeInsight.wordCompletionFilter", new DefaultWordCompletionFilter());
   }
 
-  public boolean isEnabledIn(@NotNull ASTNode astNode) {
+  public boolean isEnabledIn(@Nonnull ASTNode astNode) {
     final PsiElement psi = astNode.getPsi();
     if (psi == null) {
       return false;

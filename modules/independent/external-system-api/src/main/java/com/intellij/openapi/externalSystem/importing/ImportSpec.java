@@ -18,43 +18,46 @@ package com.intellij.openapi.externalSystem.importing;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  * @since 5/29/2014
  */
 public class ImportSpec {
-  @NotNull private final Project myProject;
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private ProgressExecutionMode myProgressExecutionMode;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private ProgressExecutionMode myProgressExecutionMode;
   private boolean forceWhenUptodate;
   private boolean whenAutoImportEnabled;
   //private boolean isPreviewMode;
   //private boolean isReportRefreshError;
 
-  public ImportSpec(@NotNull Project project, @NotNull ProjectSystemId id) {
+  public ImportSpec(@Nonnull Project project, @Nonnull ProjectSystemId id) {
     myProject = project;
     myExternalSystemId = id;
     myProgressExecutionMode = ProgressExecutionMode.MODAL_SYNC;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @NotNull
+  @Nonnull
   public ProgressExecutionMode getProgressExecutionMode() {
     return myProgressExecutionMode;
   }
 
-  public void setProgressExecutionMode(@NotNull ProgressExecutionMode progressExecutionMode) {
+  public void setProgressExecutionMode(@Nonnull ProgressExecutionMode progressExecutionMode) {
     myProgressExecutionMode = progressExecutionMode;
   }
 

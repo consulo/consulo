@@ -22,8 +22,8 @@ import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.UIBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -493,7 +493,7 @@ public class Splitter extends JPanel implements Splittable {
     return 0.0f;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Component asComponent() {
     return this;
@@ -551,7 +551,7 @@ public class Splitter extends JPanel implements Splittable {
                 .message("splitter.right.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
             setProportion(1.0f - getMinProportion(false));
             return true;
           }
@@ -569,7 +569,7 @@ public class Splitter extends JPanel implements Splittable {
         splitCenterlabel.setToolTipText(UIBundle.message("splitter.center.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
             setProportion(.5f);
             return true;
           }
@@ -587,7 +587,7 @@ public class Splitter extends JPanel implements Splittable {
                 .message("splitter.left.tooltip.text"));
         new ClickListener() {
           @Override
-          public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+          public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
             setProportion(getMinProportion(true));
             return true;
           }

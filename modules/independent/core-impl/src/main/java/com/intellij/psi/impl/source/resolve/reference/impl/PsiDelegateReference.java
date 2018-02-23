@@ -4,8 +4,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Sergey Evdokimov
@@ -14,7 +14,7 @@ public class PsiDelegateReference implements PsiReference {
 
   private final PsiReference myDelegate;
 
-  public PsiDelegateReference(@NotNull PsiReference delegate) {
+  public PsiDelegateReference(@Nonnull PsiReference delegate) {
     myDelegate = delegate;
   }
 
@@ -34,7 +34,7 @@ public class PsiDelegateReference implements PsiReference {
     return myDelegate.resolve();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCanonicalText() {
     return myDelegate.getCanonicalText();
@@ -46,7 +46,7 @@ public class PsiDelegateReference implements PsiReference {
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return myDelegate.bindToElement(element);
   }
 
@@ -55,7 +55,7 @@ public class PsiDelegateReference implements PsiReference {
     return myDelegate.isReferenceTo(element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getVariants() {
     return myDelegate.getVariants();

@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.external;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.diff.DiffViewer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;
@@ -31,5 +31,5 @@ import java.util.Map;
  */
 public interface DiscloseMultiRequest {
   Map<String, DiffRequest> discloseRequest(DiffRequest request);
-  DiffViewer viewerForRequest(Window window, @NotNull Disposable parentDisposable, final String name, DiffRequest current);
+  DiffViewer viewerForRequest(Window window, @Nonnull Disposable parentDisposable, final String name, DiffRequest current);
 }

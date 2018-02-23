@@ -17,8 +17,8 @@
 package com.intellij.openapi.fileChooser;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public interface FileTextField {

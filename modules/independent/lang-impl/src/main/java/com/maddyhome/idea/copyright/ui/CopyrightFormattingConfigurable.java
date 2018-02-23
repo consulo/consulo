@@ -32,7 +32,7 @@ import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "template.copyright.formatting";
   }

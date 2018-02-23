@@ -17,7 +17,7 @@ package com.intellij.idea;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -96,8 +96,8 @@ public class LockSupportTest extends Assert{
     }
   }
 
-  @NotNull
-  private static SocketLock createLock(@NotNull List<SocketLock> toClose, @NotNull File dir, @NotNull String c, @NotNull String s) {
+  @Nonnull
+  private static SocketLock createLock(@Nonnull List<SocketLock> toClose, @Nonnull File dir, @Nonnull String c, @Nonnull String s) {
     SocketLock lock = new SocketLock(dir.getPath() + "/" + c, dir.getPath() + "/" + s);
     toClose.add(lock);
     return lock;

@@ -62,8 +62,8 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import gnu.trove.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -110,7 +110,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return value;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Outputs get(Integer key) {
       final Outputs value = super.get(key);
@@ -118,7 +118,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       return value;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Outputs createValue(Integer key) {
       try {
@@ -146,7 +146,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   };
   private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<Project, File>(8, 8) {
     @Override
-    @NotNull
+    @Nonnull
     public File createValue(final Project project) {
       Disposer.register(project, new Disposable() {
         @Override
@@ -170,7 +170,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             }
 
             @Override
-            @NotNull
+            @Nonnull
             public TIntObjectHashMap<Pair<Integer, Integer>> createValue(Integer key) {
               TIntObjectHashMap<Pair<Integer, Integer>> map = null;
               try {
@@ -243,7 +243,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getSourceFileByOutput(VirtualFile outputFile) {
     final OutputFileInfo outputFileInfo = loadOutputInfo(outputFile);
     if (outputFileInfo != null) {
@@ -418,7 +418,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   @Override
   public void update(final CompileContext context,
-                     @Nullable final String outputRoot,
+                     @javax.annotation.Nullable final String outputRoot,
                      final Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
                      final VirtualFile[] filesToRecompile) throws IOException {
     myForceCompiling = false;
@@ -535,7 +535,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "TranslatingCompilerFilesMonitor";
   }
@@ -709,7 +709,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static SourceFileInfo loadSourceInfo(final VirtualFile file) {
     try {
       final DataInputStream is = ourSourceFileAttribute.readAttribute(file);
@@ -756,7 +756,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static OutputFileInfo loadOutputInfo(final VirtualFile file) {
     try {
       final DataInputStream is = ourOutputFileAttribute.readAttribute(file);
@@ -824,7 +824,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     private final int myClassName;
 
-    OutputFileInfo(final String sourcePath, @Nullable String className) throws IOException {
+    OutputFileInfo(final String sourcePath, @javax.annotation.Nullable String className) throws IOException {
       final PersistentStringEnumerator symtable = FSRecords.getNames();
       mySourcePath = symtable.enumerate(sourcePath);
       myClassName = className != null ? symtable.enumerate(className) : -1;
@@ -869,7 +869,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     private SourceFileInfo() {
     }
 
-    private SourceFileInfo(@NotNull DataInput in) throws IOException {
+    private SourceFileInfo(@Nonnull DataInput in) throws IOException {
       final int projCount = DataInputOutputUtil.readINT(in);
       for (int idx = 0; idx < projCount; idx++) {
         final int projectId = DataInputOutputUtil.readINT(in);
@@ -884,7 +884,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       }
     }
 
-    public void save(@NotNull final DataOutput out) throws IOException {
+    public void save(@Nonnull final DataOutput out) throws IOException {
       final int[] projects = getProjectIds().toArray();
       DataInputOutputUtil.writeINT(out, projects.length);
       for (int projectId : projects) {
@@ -1081,9 +1081,9 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
-      @NotNull
+      @Nonnull
       @Override
-      public Result visitFileEx(@NotNull VirtualFile file) {
+      public Result visitFileEx(@Nonnull VirtualFile file) {
         if (fileTypeManager.isFileIgnored(file)) {
           return SKIP_CHILDREN;
         }
@@ -1096,7 +1096,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
       @Nullable
       @Override
-      public Iterable<VirtualFile> getChildrenIterable(@NotNull VirtualFile file) {
+      public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
         return file.isDirectory() && dbOnly ? ((NewVirtualFile)file).iterInDbChildren() : null;
       }
     });
@@ -1144,7 +1144,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         VfsUtilCore.visitChildrenRecursively(srcRoot, new VirtualFileVisitor() {
           @Override
-          public boolean visitFile(@NotNull VirtualFile file) {
+          public boolean visitFile(@Nonnull VirtualFile file) {
             if (fileTypeManager.isFileIgnored(file)) {
               return false;
             }
@@ -1222,7 +1222,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     // recursively mark all corresponding sources for recompilation
     VfsUtilCore.visitChildrenRecursively(outputRoot, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (!file.isDirectory()) {
           // todo: possible optimization - process only those outputs that are not marked for deletion yet
           final OutputFileInfo outputInfo = loadOutputInfo(file);
@@ -1251,7 +1251,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       public void run() {
         new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
           @Override
-          public void run(@NotNull final ProgressIndicator indicator) {
+          public void run(@Nonnull final ProgressIndicator indicator) {
             final ProjectRef projRef = new ProjectRef(project);
             if (LOG.isDebugEnabled()) {
               LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
@@ -1360,7 +1360,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
       conn.subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
         @Override
-        public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+        public void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension) {
           for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensions()) {
             if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
               myForceCompiling = true;
@@ -1424,7 +1424,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 startAsyncScan(projectId);
                 new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
                   @Override
-                  public void run(@NotNull final ProgressIndicator indicator) {
+                  public void run(@Nonnull final ProgressIndicator indicator) {
                     try {
                       if (newRoots.size() > 0) {
                         scanSourceContent(projRef, newRoots, newRoots.size(), true);
@@ -1468,7 +1468,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private class MyVfsListener extends VirtualFileAdapter {
     @Override
-    public void propertyChanged(@NotNull final VirtualFilePropertyEvent event) {
+    public void propertyChanged(@Nonnull final VirtualFilePropertyEvent event) {
       if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
         final VirtualFile eventFile = event.getFile();
         final VirtualFile parent = event.getParent();
@@ -1481,7 +1481,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
               private StringBuilder filePath = new StringBuilder(root);
 
               @Override
-              public boolean visitFile(@NotNull VirtualFile child) {
+              public boolean visitFile(@Nonnull VirtualFile child) {
                 if (child.isDirectory()) {
                   if (!Comparing.equal(child, eventFile)) {
                     filePath.append("/").append(child.getName());
@@ -1498,7 +1498,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
               }
 
               @Override
-              public void afterChildrenVisited(@NotNull VirtualFile file) {
+              public void afterChildrenVisited(@Nonnull VirtualFile file) {
                 if (file.isDirectory() && !Comparing.equal(file, eventFile)) {
                   filePath.delete(filePath.length() - file.getName().length() - 1, filePath.length());
                 }
@@ -1515,27 +1515,27 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public void contentsChanged(@NotNull final VirtualFileEvent event) {
+    public void contentsChanged(@Nonnull final VirtualFileEvent event) {
       markDirtyIfSource(event.getFile(), false);
     }
 
     @Override
-    public void fileCreated(@NotNull final VirtualFileEvent event) {
+    public void fileCreated(@Nonnull final VirtualFileEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void fileCopied(@NotNull final VirtualFileCopyEvent event) {
+    public void fileCopied(@Nonnull final VirtualFileCopyEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+    public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
       processNewFile(event.getFile(), true);
     }
 
     @Override
-    public void beforeFileDeletion(@NotNull final VirtualFileEvent event) {
+    public void beforeFileDeletion(@Nonnull final VirtualFileEvent event) {
       final VirtualFile eventFile = event.getFile();
       if ((LOG.isDebugEnabled() && eventFile.isDirectory()) || ourDebugMode) {
         final String message = "Processing file deletion: " + eventFile.getPresentableUrl();
@@ -1635,7 +1635,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @Override
-    public void beforeFileMovement(@NotNull final VirtualFileMoveEvent event) {
+    public void beforeFileMovement(@Nonnull final VirtualFileMoveEvent event) {
       markDirtyIfSource(event.getFile(), true);
     }
 
@@ -1795,7 +1795,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     addSourceForRecompilation(projectId, srcFile, loadSourceInfo(srcFile));
   }
 
-  private void addSourceForRecompilation(final int projectId, final VirtualFile srcFile, @Nullable final SourceFileInfo srcInfo) {
+  private void addSourceForRecompilation(final int projectId, final VirtualFile srcFile, @javax.annotation.Nullable final SourceFileInfo srcInfo) {
     final boolean alreadyMarked;
     synchronized (myDataLock) {
       TIntHashSet set = mySourcesToRecompile.get(projectId);
@@ -1877,7 +1877,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
       myFileSystem = LocalFileSystem.getInstance();
     }
 
-    public void setRootBeingDeleted(@Nullable VirtualFile rootBeingDeleted) {
+    public void setRootBeingDeleted(@javax.annotation.Nullable VirtualFile rootBeingDeleted) {
       myRootBeingDeleted = rootBeingDeleted;
     }
 
@@ -1959,12 +1959,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private static class Outputs {
     private boolean myIsDirty = false;
-    @Nullable
+    @javax.annotation.Nullable
     private final File myStoreFile;
     private final Map<String, SourceUrlClassNamePair> myMap;
     private final AtomicInteger myRefCount = new AtomicInteger(1);
 
-    Outputs(@Nullable File storeFile, Map<String, SourceUrlClassNamePair> map) {
+    Outputs(@javax.annotation.Nullable File storeFile, Map<String, SourceUrlClassNamePair> map) {
       myStoreFile = storeFile;
       myMap = map;
     }

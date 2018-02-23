@@ -26,8 +26,8 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private final TypeSafeDataProvider myProvider;
@@ -40,7 +40,7 @@ public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
 
   @Override
   @Nullable
-  public synchronized Object getData(@NotNull Key<?> dataId) {
+  public synchronized Object getData(@Nonnull Key<?> dataId) {
     myValue = null;
     myLastKey = dataId;
     myProvider.calcData(myLastKey, this);

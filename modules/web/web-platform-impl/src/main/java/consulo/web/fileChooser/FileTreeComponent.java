@@ -23,7 +23,7 @@ import consulo.fileChooser.impl.UnifiedFileComparator;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.web.ui.TreeStructureWrappenModel;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 

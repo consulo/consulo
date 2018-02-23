@@ -16,7 +16,7 @@
 package com.intellij.util.net;
 
 import com.intellij.openapi.options.ConfigurableBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class HttpProxyConfigurable extends ConfigurableBase<HttpProxySettingsUi, HttpConfigurable> {
   private final HttpConfigurable settings;
@@ -25,13 +25,13 @@ public class HttpProxyConfigurable extends ConfigurableBase<HttpProxySettingsUi,
     this(HttpConfigurable.getInstance());
   }
 
-  public HttpProxyConfigurable(@NotNull HttpConfigurable settings) {
+  public HttpProxyConfigurable(@Nonnull HttpConfigurable settings) {
     super("http.proxy", "HTTP Proxy", "http.proxy");
 
     this.settings = settings;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected HttpConfigurable getSettings() {
     return settings;

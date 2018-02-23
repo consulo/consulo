@@ -62,8 +62,8 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,16 +79,16 @@ public final class NavigationUtil {
   private NavigationUtil() {
   }
 
-  @NotNull
-  public static JBPopup getPsiElementPopup(@NotNull PsiElement[] elements, String title) {
+  @Nonnull
+  public static JBPopup getPsiElementPopup(@Nonnull PsiElement[] elements, String title) {
     return getPsiElementPopup(elements, new DefaultPsiElementCellRenderer(), title);
   }
 
-  @NotNull
-  public static JBPopup getPsiElementPopup(@NotNull PsiElement[] elements, @NotNull final PsiElementListCellRenderer<PsiElement> renderer, final String title) {
+  @Nonnull
+  public static JBPopup getPsiElementPopup(@Nonnull PsiElement[] elements, @Nonnull final PsiElementListCellRenderer<PsiElement> renderer, final String title) {
     return getPsiElementPopup(elements, renderer, title, new PsiElementProcessor<PsiElement>() {
       @Override
-      public boolean execute(@NotNull final PsiElement element) {
+      public boolean execute(@Nonnull final PsiElement element) {
         Navigatable descriptor = EditSourceUtil.getDescriptor(element);
         if (descriptor != null && descriptor.canNavigate()) {
           descriptor.navigate(true);
@@ -98,19 +98,19 @@ public final class NavigationUtil {
     });
   }
 
-  @NotNull
-  public static <T extends PsiElement> JBPopup getPsiElementPopup(@NotNull T[] elements,
-                                                                  @NotNull final PsiElementListCellRenderer<T> renderer,
+  @Nonnull
+  public static <T extends PsiElement> JBPopup getPsiElementPopup(@Nonnull T[] elements,
+                                                                  @Nonnull final PsiElementListCellRenderer<T> renderer,
                                                                   final String title,
-                                                                  @NotNull final PsiElementProcessor<T> processor) {
+                                                                  @Nonnull final PsiElementProcessor<T> processor) {
     return getPsiElementPopup(elements, renderer, title, processor, null);
   }
 
-  @NotNull
-  public static <T extends PsiElement> JBPopup getPsiElementPopup(@NotNull T[] elements,
-                                                                  @NotNull final PsiElementListCellRenderer<T> renderer,
+  @Nonnull
+  public static <T extends PsiElement> JBPopup getPsiElementPopup(@Nonnull T[] elements,
+                                                                  @Nonnull final PsiElementListCellRenderer<T> renderer,
                                                                   @Nullable final String title,
-                                                                  @NotNull final PsiElementProcessor<T> processor,
+                                                                  @Nonnull final PsiElementProcessor<T> processor,
                                                                   @Nullable final T selection) {
     final JList list = new JBList(elements);
     HintUpdateSupply.installSimpleHintUpdateSupply(list);
@@ -148,7 +148,7 @@ public final class NavigationUtil {
     return popup;
   }
 
-  public static void hidePopupIfDumbModeStarts(@NotNull JBPopup popup, @NotNull Project project) {
+  public static void hidePopupIfDumbModeStarts(@Nonnull JBPopup popup, @Nonnull Project project) {
     if (!DumbService.isDumb(project)) {
       project.getMessageBus().connect(popup).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
         @Override
@@ -159,11 +159,11 @@ public final class NavigationUtil {
     }
   }
 
-  public static boolean activateFileWithPsiElement(@NotNull PsiElement elt) {
+  public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
     return activateFileWithPsiElement(elt, true);
   }
 
-  public static boolean activateFileWithPsiElement(@NotNull PsiElement elt, boolean searchForOpen) {
+  public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
     return openFileWithPsiElement(elt, searchForOpen, true);
   }
 
@@ -194,7 +194,7 @@ public final class NavigationUtil {
     return false;
   }
 
-  private static boolean activatePsiElementIfOpen(@NotNull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
+  private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
     if (!elt.isValid()) return false;
     elt = elt.getNavigationElement();
     final PsiFile file = elt.getContainingFile();
@@ -234,7 +234,7 @@ public final class NavigationUtil {
    * Patches attributes to be visible under debugger active line
    */
   @SuppressWarnings("UseJBColor")
-  public static TextAttributes patchAttributesColor(TextAttributes attributes, @NotNull TextRange range, @NotNull Editor editor) {
+  public static TextAttributes patchAttributesColor(TextAttributes attributes, @Nonnull TextRange range, @Nonnull Editor editor) {
     if (attributes.getForegroundColor() == null && attributes.getEffectColor() == null) return attributes;
     MarkupModel model = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
     if (model != null) {
@@ -257,7 +257,7 @@ public final class NavigationUtil {
     return attributes;
   }
 
-  @NotNull
+  @Nonnull
   public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title) {
     return getRelatedItemsPopup(items, title, false);
   }
@@ -272,7 +272,7 @@ public final class NavigationUtil {
    *                              {@code false} by default
    * @return
    */
-  @NotNull
+  @Nonnull
   public static JBPopup getRelatedItemsPopup(final List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
     Object[] elements = new Object[items.size()];
     //todo[nik] move presentation logic to GotoRelatedItem class
@@ -476,8 +476,8 @@ public final class NavigationUtil {
     return (item instanceof GotoRelatedItem ? (GotoRelatedItem)item : itemsMap.get((PsiElement)item)).getMnemonic();
   }
 
-  @NotNull
-  public static List<GotoRelatedItem> collectRelatedItems(@NotNull PsiElement contextElement, @Nullable DataContext dataContext) {
+  @Nonnull
+  public static List<GotoRelatedItem> collectRelatedItems(@Nonnull PsiElement contextElement, @Nullable DataContext dataContext) {
     Set<GotoRelatedItem> items = ContainerUtil.newLinkedHashSet();
     for (GotoRelatedProvider provider : Extensions.getExtensions(GotoRelatedProvider.EP_NAME)) {
       items.addAll(provider.getItems(contextElement));

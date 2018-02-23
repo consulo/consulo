@@ -18,8 +18,8 @@ package com.intellij.openapi.paths;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ import java.util.List;
  */
 public interface PathReferenceProvider {
 
-  boolean createReferences(@NotNull PsiElement psiElement, final @NotNull List<PsiReference> references, final boolean soft);
+  boolean createReferences(@Nonnull PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft);
 
   @Nullable
-  PathReference getPathReference(@NotNull String path, @NotNull final PsiElement element);
+  PathReference getPathReference(@Nonnull String path, @Nonnull final PsiElement element);
 }

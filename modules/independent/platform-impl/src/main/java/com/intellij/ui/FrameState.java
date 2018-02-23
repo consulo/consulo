@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.awt.AWTAccessor;
 
 import java.awt.*;
@@ -80,7 +80,7 @@ public class FrameState {
     return (state & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
   }
 
-  private static FrameState findFrameState(@NotNull Component component) {
+  private static FrameState findFrameState(@Nonnull Component component) {
     for (ComponentListener listener : component.getComponentListeners()) {
       if (listener instanceof FrameState) {
         return (FrameState)listener;
@@ -89,7 +89,7 @@ public class FrameState {
     return null;
   }
 
-  public static FrameState getFrameState(@NotNull Component component) {
+  public static FrameState getFrameState(@Nonnull Component component) {
     FrameState state = findFrameState(component);
     if (state == null) {
       state = new FrameState();
@@ -100,7 +100,7 @@ public class FrameState {
     return state;
   }
 
-  public static void setFrameStateListener(@NotNull Component component) {
+  public static void setFrameStateListener(@Nonnull Component component) {
     if (component instanceof Frame) {
       // it makes sense for a frame only
       FrameState state = findFrameState(component);

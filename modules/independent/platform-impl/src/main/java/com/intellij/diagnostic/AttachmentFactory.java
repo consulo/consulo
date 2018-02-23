@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -21,7 +21,7 @@ public class AttachmentFactory {
     return new Attachment(file != null ? file.getPath() : "unknown.txt", document.getText());
   }
 
-  public static Attachment createAttachment(@NotNull VirtualFile file) {
+  public static Attachment createAttachment(@Nonnull VirtualFile file) {
     return new Attachment(file.getPresentableUrl(), getBytes(file),
                           file.getFileType().isBinary() ? "File is binary" : LoadTextUtil.loadText(file).toString());
   }

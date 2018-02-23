@@ -16,20 +16,21 @@
 package com.intellij.execution.dashboard.tree;
 
 import com.intellij.execution.dashboard.DashboardGroupingRule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
  */
 public class DashboardGrouper {
-  @NotNull private final DashboardGroupingRule myRule;
+  @Nonnull
+  private final DashboardGroupingRule myRule;
   private boolean myEnabled = true;
 
-  public DashboardGrouper(@NotNull DashboardGroupingRule rule) {
+  public DashboardGrouper(@Nonnull DashboardGroupingRule rule) {
     myRule = rule;
   }
 
-  @NotNull
+  @Nonnull
   public DashboardGroupingRule getRule() {
     return myRule;
   }

@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.actions;
 import com.intellij.execution.ui.layout.impl.RunnerContentUi;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ToggleToolbarLayoutAction extends ToggleAction {
 

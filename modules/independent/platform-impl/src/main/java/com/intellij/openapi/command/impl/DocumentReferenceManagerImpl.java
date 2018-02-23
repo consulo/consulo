@@ -31,7 +31,7 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.WeakKeyWeakValueHashMap;
 import com.intellij.util.containers.WeakValueHashMap;
 import com.intellij.util.io.fs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.Reference;
@@ -53,7 +53,7 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
   public void initComponent() {
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         DocumentReference ref = myDeletedFilePathToRef.remove(new FilePath(f.getUrl()));
         if (ref != null) {
@@ -63,13 +63,13 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
       }
 
       @Override
-      public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
+      public void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         f.putUserData(DELETED_FILES, collectDeletedFiles(f, new ArrayList<>()));
       }
 
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent event) {
+      public void fileDeleted(@Nonnull VirtualFileEvent event) {
         VirtualFile f = event.getFile();
         List<VirtualFile> files = f.getUserData(DELETED_FILES);
         f.putUserData(DELETED_FILES, null);
@@ -100,17 +100,17 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
     return files;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DocumentReference create(@NotNull Document document) {
+  public DocumentReference create(@Nonnull Document document) {
     assertInDispatchThread();
 
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     return file == null ? createFromDocument(document) : create(file);
   }
 
-  @NotNull
-  private DocumentReference createFromDocument(@NotNull final Document document) {
+  @Nonnull
+  private DocumentReference createFromDocument(@Nonnull final Document document) {
     DocumentReference result = myDocToRef.get(document);
     if (result == null) {
       result = new DocumentReferenceByDocument(document);
@@ -119,9 +119,9 @@ public class DocumentReferenceManagerImpl extends DocumentReferenceManager imple
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DocumentReference create(@NotNull VirtualFile file) {
+  public DocumentReference create(@Nonnull VirtualFile file) {
     assertInDispatchThread();
 
     if (!file.isInLocalFileSystem()) { // we treat local files differently from non local because we can undo their deletion

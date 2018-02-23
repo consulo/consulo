@@ -16,21 +16,21 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public abstract class RefactoringElementAdapter implements RefactoringElementListener, UndoRefactoringElementListener {
   @Override
-  public final void elementMoved(@NotNull PsiElement newElement) {
+  public final void elementMoved(@Nonnull PsiElement newElement) {
     elementRenamedOrMoved(newElement);
   }
 
-  protected abstract void elementRenamedOrMoved(@NotNull PsiElement newElement);
+  protected abstract void elementRenamedOrMoved(@Nonnull PsiElement newElement);
 
   @Override
-  public final void elementRenamed(@NotNull PsiElement newElement) {
+  public final void elementRenamed(@Nonnull PsiElement newElement) {
     elementRenamedOrMoved(newElement);
   }
 }

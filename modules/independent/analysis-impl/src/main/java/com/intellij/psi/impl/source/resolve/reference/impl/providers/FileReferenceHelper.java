@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,18 +36,18 @@ public abstract class FileReferenceHelper {
 
   public static final ExtensionPointName<FileReferenceHelper> EP_NAME = new ExtensionPointName<FileReferenceHelper>("com.intellij.psi.fileReferenceHelper");
 
-  @NotNull
-  public String trimUrl(@NotNull String url) {
+  @Nonnull
+  public String trimUrl(@Nonnull String url) {
     return url;
   }
 
-  @NotNull
+  @Nonnull
   public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
     return Collections.emptyList();
   }
 
   @Nullable
-  public PsiFileSystemItem getPsiFileSystemItem(final Project project, @NotNull final VirtualFile file) {
+  public PsiFileSystemItem getPsiFileSystemItem(final Project project, @Nonnull final VirtualFile file) {
     final PsiManager psiManager = PsiManager.getInstance(project);
     return getPsiFileSystemItem(psiManager, file);
   }
@@ -56,20 +56,20 @@ public abstract class FileReferenceHelper {
     return file.isDirectory() ? psiManager.findDirectory(file) : psiManager.findFile(file);
   }
 
-  @Nullable
-  public PsiFileSystemItem findRoot(final Project project, @NotNull final VirtualFile file) {
+  @javax.annotation.Nullable
+  public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
     return null;
   }
 
-  @NotNull
-  public Collection<PsiFileSystemItem> getRoots(@NotNull Module module) {
+  @Nonnull
+  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
     return Collections.emptyList();
   }
 
-  @NotNull
-  public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @NotNull final VirtualFile file);
+  @Nonnull
+  public abstract Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file);
 
-  public abstract boolean isMine(final Project project, @NotNull final VirtualFile file);
+  public abstract boolean isMine(final Project project, @Nonnull final VirtualFile file);
 
   public boolean isFallback() {
     return false;

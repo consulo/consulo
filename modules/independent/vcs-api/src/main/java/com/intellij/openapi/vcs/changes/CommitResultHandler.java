@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.AbstractVcsHelper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public interface CommitResultHandler {
 
-  void onSuccess(@NotNull String commitMessage);
+  void onSuccess(@Nonnull String commitMessage);
 
   void onFailure();
 

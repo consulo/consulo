@@ -39,8 +39,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -83,7 +83,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
     myWorksWithFormatter = worksWithFormatter;
   }
 
-  protected Result shouldSkipWithResult(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull final DataContext dataContext) {
+  protected Result shouldSkipWithResult(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return Result.Continue;
@@ -116,11 +116,11 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
 
   @Override
   public Result preprocessEnter(
-          @NotNull final PsiFile file,
-          @NotNull final Editor editor,
-          @NotNull final Ref<Integer> caretOffset,
-          @NotNull final Ref<Integer> caretAdvance,
-          @NotNull final DataContext dataContext,
+          @Nonnull final PsiFile file,
+          @Nonnull final Editor editor,
+          @Nonnull final Ref<Integer> caretOffset,
+          @Nonnull final Ref<Integer> caretAdvance,
+          @Nonnull final DataContext dataContext,
           final EditorActionHandler originalHandler)
   {
     Result res = shouldSkipWithResult(file, editor, dataContext);
@@ -174,9 +174,9 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
   }
 
   protected String getNewIndent(
-          @NotNull final PsiFile file,
-          @NotNull final Document document,
-          @NotNull final CharSequence oldIndent)
+          @Nonnull final PsiFile file,
+          @Nonnull final Document document,
+          @Nonnull final CharSequence oldIndent)
   {
     CharSequence nonEmptyIndent = oldIndent;
     final CharSequence editorCharSequence = document.getCharsSequence();

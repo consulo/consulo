@@ -22,17 +22,16 @@ import com.intellij.openapi.extensions.ExtensionPointListener;
 import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class CachedAnnotators {
   private final ThreadLocalAnnotatorMap<String, Annotator> cachedAnnotators = new ThreadLocalAnnotatorMap<String, Annotator>() {
-    @NotNull
+    @Nonnull
     @Override
-    public Collection<Annotator> initialValue(@NotNull String languageId) {
+    public Collection<Annotator> initialValue(@Nonnull String languageId) {
       Language language = Language.findLanguageByID(languageId);
       return language == null ? ContainerUtil.<Annotator>emptyList() : LanguageAnnotators.INSTANCE.allForLanguage(language);
     }
@@ -41,20 +40,20 @@ public class CachedAnnotators {
   public CachedAnnotators(Project project) {
     ExtensionPointListener<Annotator> listener = new ExtensionPointListener<Annotator>() {
       @Override
-      public void extensionAdded(@NotNull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull Annotator extension, @javax.annotation.Nullable PluginDescriptor pluginDescriptor) {
         cachedAnnotators.clear();
       }
 
       @Override
-      public void extensionRemoved(@NotNull Annotator extension, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull Annotator extension, @javax.annotation.Nullable PluginDescriptor pluginDescriptor) {
         cachedAnnotators.clear();
       }
     };
     LanguageAnnotators.INSTANCE.addListener(listener, project);
   }
 
-  @NotNull
-  List<Annotator> get(@NotNull String languageId) {
+  @Nonnull
+  List<Annotator> get(@Nonnull String languageId) {
     return cachedAnnotators.get(languageId);
   }
 }

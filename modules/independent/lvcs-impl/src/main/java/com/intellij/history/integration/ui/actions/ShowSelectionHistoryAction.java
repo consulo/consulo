@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.actions.VcsContextWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsSelection;
 import com.intellij.vcsUtil.VcsSelectionUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
   @Override

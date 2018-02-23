@@ -27,8 +27,8 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -42,7 +42,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   ExtensionPointName<ModuleImportProvider<?>> EP_NAME = ExtensionPointName.create("com.intellij.moduleImportProvider");
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   default C createContext() {
     return (C)new ModuleImportContext();
   }
@@ -54,51 +54,51 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   abstract String getName();
 
   @Nullable
   abstract Icon getIcon();
 
-  boolean canImport(@NotNull File fileOrDirectory) ;
+  boolean canImport(@Nonnull File fileOrDirectory) ;
 
-  default List<Module> commit(@NotNull C context, @NotNull Project project) {
+  default List<Module> commit(@Nonnull C context, @Nonnull Project project) {
     return commit(context, project, null, DefaultModulesProvider.createForProject(project), null);
   }
 
-  @NotNull
-  List<Module> commit(@NotNull C context,
-                      @NotNull Project project,
-                      @Nullable ModifiableModuleModel model,
-                      @NotNull ModulesProvider modulesProvider,
+  @Nonnull
+  List<Module> commit(@Nonnull C context,
+                      @Nonnull Project project,
+                      @javax.annotation.Nullable ModifiableModuleModel model,
+                      @Nonnull ModulesProvider modulesProvider,
                       @Nullable ModifiableArtifactModel artifactModel);
 
-  default String getPathToBeImported(@NotNull VirtualFile file) {
+  default String getPathToBeImported(@Nonnull VirtualFile file) {
     return getDefaultPath(file);
   }
 
-  static String getDefaultPath(@NotNull VirtualFile file) {
+  static String getDefaultPath(@Nonnull VirtualFile file) {
     return file.isDirectory() ? file.getPath() : file.getParent().getPath();
   }
 
-  default void addSteps(StepSequence sequence, WizardContext context, @NotNull C moduleImportContext, String id) {
+  default void addSteps(StepSequence sequence, WizardContext context, @Nonnull C moduleImportContext, String id) {
     ModuleWizardStep[] steps = createSteps(context, moduleImportContext);
     for (ModuleWizardStep step : steps) {
       sequence.addSpecificStep(id, step);
     }
   }
 
-  default ModuleWizardStep[] createSteps(@NotNull WizardContext context, @NotNull C moduleImportContext) {
+  default ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull C moduleImportContext) {
     return ModuleWizardStep.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Language("HTML")
   default String getFileSample() {
     return getName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   default Icon getIconForFile(VirtualFile file) {
     return null;

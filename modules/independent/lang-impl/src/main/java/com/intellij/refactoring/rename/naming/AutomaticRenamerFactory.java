@@ -20,9 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.usageView.UsageInfo;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole

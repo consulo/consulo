@@ -19,7 +19,7 @@ package com.intellij.util.containers;
 import com.intellij.openapi.util.Comparing;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -150,7 +150,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
    *                              <tt>null</tt>.
    */
   @Override
-  public V put(int key, @NotNull V value) {
+  public V put(int key, @Nonnull V value) {
     return put(key, value, false);
   }
 
@@ -173,7 +173,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
    * @throws NullPointerException if the specified key or value is
    *                              <tt>null</tt>.
    */
-  public V putIfAbsent(int key, @NotNull V value) {
+  public V putIfAbsent(int key, @Nonnull V value) {
     return put(key, value, true);
   }
 
@@ -196,13 +196,13 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
   }
 
   @Override
-  public boolean remove(int key, @NotNull V value) {
+  public boolean remove(int key, @Nonnull V value) {
     return doRemove(key, value) != null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public V cacheOrGet(int key, @NotNull V value) {
+  public V cacheOrGet(int key, @Nonnull V value) {
     V prev = putIfAbsent(key, value);
     return prev == null ? value : prev;
   }
@@ -213,12 +213,12 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
    * @return an enumeration of the values in this table.
    */
   @Override
-  @NotNull
+  @Nonnull
   public Enumeration<V> elements() {
     return new ValueIterator();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     Set<V> result = new THashSet<V>();
@@ -287,7 +287,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterable<IntEntry<V>> entries() {
     return new Iterable<IntEntry<V>>() {
       @Override
@@ -323,7 +323,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
     private final int key;
     private final V value;
 
-    private SimpleEntry(int key, @NotNull V value) {
+    private SimpleEntry(int key, @Nonnull V value) {
       this.key = key;
       this.value = value;
     }
@@ -334,7 +334,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public V getValue() {
       return value;
     }
@@ -487,7 +487,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
   }
 
   @Override
-  public boolean containsValue(@NotNull V value) {
+  public boolean containsValue(@Nonnull V value) {
     if (count != 0) { // read-volatile
       ValueIterator valueIterator = new ValueIterator();
       while (valueIterator.hasNext()) {
@@ -499,7 +499,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
   }
 
   @Override
-  public boolean replace(int key, @NotNull V oldValue, @NotNull V newValue) {
+  public boolean replace(int key, @Nonnull V oldValue, @Nonnull V newValue) {
     lock();
     try {
       IntHashEntry<V> e = getFirst(key);
@@ -519,7 +519,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
     }
   }
 
-  protected V put(int key, @NotNull V value, boolean onlyIfAbsent) {
+  protected V put(int key, @Nonnull V value, boolean onlyIfAbsent) {
     lock();
     try {
       int c = count;
@@ -674,7 +674,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
     }
   }
 
-  public void putAll(@NotNull StripedLockIntObjectConcurrentHashMap<? extends V> t) {
+  public void putAll(@Nonnull StripedLockIntObjectConcurrentHashMap<? extends V> t) {
     for (IntEntry<? extends V> e : t.entries()) {
       V value = e.getValue();
       put(e.getKey(), value);
@@ -682,7 +682,7 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] keys() {
     TIntArrayList keys = new TIntArrayList(size());
     for (IntHashEntry entry : table) {
@@ -708,10 +708,11 @@ public class StripedLockIntObjectConcurrentHashMap<V> implements ConcurrentIntOb
    */
   private static final class IntHashEntry<V> {
     final int key;
-    @NotNull volatile V value;
+    @Nonnull
+    volatile V value;
     final IntHashEntry<V> next;
 
-    IntHashEntry(int key, IntHashEntry<V> next, @NotNull V value) {
+    IntHashEntry(int key, IntHashEntry<V> next, @Nonnull V value) {
       this.key = key;
       this.next = next;
       this.value = value;

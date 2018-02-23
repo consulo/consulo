@@ -16,7 +16,7 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -29,15 +29,15 @@ public interface DiffIterable {
 
   int getLength2();
 
-  @NotNull
+  @Nonnull
   Iterator<Range> changes();
 
-  @NotNull
+  @Nonnull
   Iterator<Range> unchanged();
 
-  @NotNull
+  @Nonnull
   Iterable<Range> iterateChanges();
 
-  @NotNull
+  @Nonnull
   Iterable<Range> iterateUnchanged();
 }

@@ -16,7 +16,7 @@
  */
 package com.intellij.codeInsight.hints;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -27,12 +27,12 @@ public class InlayInfo {
   private String myText;
   private int myOffset;
 
-  public InlayInfo(@NotNull String text, int offset) {
+  public InlayInfo(@Nonnull String text, int offset) {
     myText = text;
     myOffset = offset;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }

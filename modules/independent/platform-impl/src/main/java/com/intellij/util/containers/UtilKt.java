@@ -15,8 +15,8 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -43,7 +43,7 @@ public class UtilKt {
   }
 
   @SafeVarargs
-  @NotNull
+  @Nonnull
   public static <T> Stream<T> stream(T... args) {
     return args == null ? Stream.<T>empty() : Arrays.stream(args);
   }

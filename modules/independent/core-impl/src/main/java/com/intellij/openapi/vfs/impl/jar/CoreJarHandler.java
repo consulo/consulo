@@ -20,8 +20,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.ZipHandler;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.zip.ZipArchiveFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class CoreJarHandler extends ZipHandler {
   private final CoreJarFileSystem myFileSystem;
   private final VirtualFile myRoot;
 
-  public CoreJarHandler(@NotNull CoreJarFileSystem fileSystem, @NotNull String path) {
+  public CoreJarHandler(@Nonnull CoreJarFileSystem fileSystem, @Nonnull String path) {
     super(path);
     myFileSystem = fileSystem;
 
@@ -49,8 +49,8 @@ public class CoreJarHandler extends ZipHandler {
     myRoot = rootInfo != null ? getOrCreateFile(rootInfo, entries) : null;
   }
 
-  @NotNull
-  private CoreJarVirtualFile getOrCreateFile(@NotNull EntryInfo info, @NotNull Map<EntryInfo, CoreJarVirtualFile> entries) {
+  @Nonnull
+  private CoreJarVirtualFile getOrCreateFile(@Nonnull EntryInfo info, @Nonnull Map<EntryInfo, CoreJarVirtualFile> entries) {
     CoreJarVirtualFile file = entries.get(info);
     if (file == null) {
       FileAttributes attributes = new FileAttributes(info.isDirectory, false, false, false, info.length, info.timestamp, false);
@@ -62,17 +62,17 @@ public class CoreJarHandler extends ZipHandler {
   }
 
   @Nullable
-  public VirtualFile findFileByPath(@NotNull String pathInJar) {
+  public VirtualFile findFileByPath(@Nonnull String pathInJar) {
     return myRoot != null ? myRoot.findFileByRelativePath(pathInJar) : null;
   }
 
-  @NotNull
+  @Nonnull
   public CoreJarFileSystem getFileSystem() {
     return myFileSystem;
   }
 
   @Override
-  public ArchiveFile createArchiveFile(@NotNull String path) throws IOException {
+  public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException {
     return new ZipArchiveFile(path);
   }
 }

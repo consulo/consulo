@@ -31,8 +31,8 @@ import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.AsynchConsumer;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +54,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     Collections.addAll(myBaseVcss, baseVcss);
   }
 
-  @NotNull
+  @Nonnull
   public CompositeCommittedChangesProvider.CompositeChangeBrowserSettings createDefaultSettings() {
     Map<AbstractVcs, ChangeBrowserSettings> map = new HashMap<AbstractVcs, ChangeBrowserSettings>();
     for(AbstractVcs vcs: myBaseVcss) {
@@ -85,7 +85,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     return getLocationFor(root);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VcsCommittedListsZipper getZipper() {
     throw new UnsupportedOperationException();
   }
@@ -118,7 +118,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     return columns.toArray(new ChangeListColumn[columns.size()]);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VcsCommittedViewAuxiliary createActions(final DecoratorManager manager, final RepositoryLocation location) {
     JTabbedPane tabbedPane = null;
     List<AnAction> actions = null;

@@ -22,9 +22,9 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -37,11 +37,11 @@ public class JBLoadingPanel extends JPanel {
   final LoadingDecorator myDecorator;
   private final Collection<JBLoadingPanelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public JBLoadingPanel(@Nullable LayoutManager manager, @NotNull Disposable parent) {
+  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent) {
     this(manager, parent, -1);
   }
 
-  public JBLoadingPanel(@Nullable LayoutManager manager, @NotNull Disposable parent, int startDelayMs) {
+  public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent, int startDelayMs) {
     super(new BorderLayout());
     myPanel = manager == null ? new JPanel() : new JPanel(manager);
     myPanel.setOpaque(false);
@@ -84,11 +84,11 @@ public class JBLoadingPanel extends JPanel {
     }
   }
 
-  public void addListener(@NotNull JBLoadingPanelListener listener) {
+  public void addListener(@Nonnull JBLoadingPanelListener listener) {
     myListeners.add(listener);
   }
 
-  public boolean removeListener(@NotNull JBLoadingPanelListener listener) {
+  public boolean removeListener(@Nonnull JBLoadingPanelListener listener) {
     return myListeners.remove(listener);
   }
 

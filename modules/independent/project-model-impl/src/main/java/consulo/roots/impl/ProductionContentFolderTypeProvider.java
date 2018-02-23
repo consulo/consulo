@@ -20,7 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ import java.awt.*;
 public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color SOURCES_COLOR = new JBColor(new Color(0x0A50A1), DarculaColors.BLUE);
 
-  @NotNull
+  @Nonnull
   public static ProductionContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ProductionContentFolderTypeProvider.class);
   }
@@ -46,7 +46,7 @@ public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvid
     return 50;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.SourceRoot;
@@ -57,13 +57,13 @@ public class ProductionContentFolderTypeProvider extends ContentFolderTypeProvid
     return AllIcons.Nodes.Package;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.sources.action");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return SOURCES_COLOR;

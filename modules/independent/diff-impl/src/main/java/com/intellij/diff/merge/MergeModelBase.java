@@ -30,8 +30,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
@@ -42,21 +42,27 @@ import java.util.List;
 public abstract class MergeModelBase<S extends MergeModelBase.State> implements Disposable {
   public static final Logger LOG = Logger.getInstance(MergeModelBase.class);
 
-  @Nullable private final Project myProject;
-  @NotNull private final Document myDocument;
-  @Nullable private final UndoManager myUndoManager;
+  @javax.annotation.Nullable
+  private final Project myProject;
+  @Nonnull
+  private final Document myDocument;
+  @javax.annotation.Nullable
+  private final UndoManager myUndoManager;
 
-  @NotNull private TIntArrayList myStartLines = new TIntArrayList();
-  @NotNull private TIntArrayList myEndLines = new TIntArrayList();
+  @Nonnull
+  private TIntArrayList myStartLines = new TIntArrayList();
+  @Nonnull
+  private TIntArrayList myEndLines = new TIntArrayList();
 
-  @NotNull private final TIntHashSet myChangesToUpdate = new TIntHashSet();
+  @Nonnull
+  private final TIntHashSet myChangesToUpdate = new TIntHashSet();
   private int myBulkChangeUpdateDepth;
 
   private boolean myInsideCommand;
 
   private boolean myDisposed;
 
-  public MergeModelBase(@Nullable Project project, @NotNull Document document) {
+  public MergeModelBase(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     myProject = project;
     myDocument = document;
     myUndoManager = myProject != null ? UndoManager.getInstance(myProject) : UndoManager.getGlobalInstance();
@@ -92,7 +98,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     return myEndLines.get(index);
   }
 
-  public void setChanges(@NotNull List<LineRange> changes) {
+  public void setChanges(@Nonnull List<LineRange> changes) {
     myStartLines.clear(changes.size());
     myEndLines.clear(changes.size());
 
@@ -155,17 +161,17 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   // Undo
   //
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   protected abstract S storeChangeState(int index);
 
   @RequiredDispatchThread
-  protected void restoreChangeState(@NotNull S state) {
+  protected void restoreChangeState(@Nonnull S state) {
     setLineStart(state.myIndex, state.myStartLine);
     setLineEnd(state.myIndex, state.myEndLine);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredDispatchThread
   protected S processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
     int line1 = getLineStart(index);
@@ -218,12 +224,12 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
   }
 
-  public void executeMergeCommand(@Nullable String commandName,
-                                  @Nullable String commandGroupId,
-                                  @NotNull UndoConfirmationPolicy confirmationPolicy,
+  public void executeMergeCommand(@javax.annotation.Nullable String commandName,
+                                  @javax.annotation.Nullable String commandGroupId,
+                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                   boolean underBulkUpdate,
-                                  @Nullable TIntArrayList affectedChanges,
-                                  @NotNull Runnable task) {
+                                  @javax.annotation.Nullable TIntArrayList affectedChanges,
+                                  @Nonnull Runnable task) {
     TIntArrayList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
     DiffUtil.executeWriteCommand(myProject, myDocument, commandName, commandGroupId, confirmationPolicy, underBulkUpdate, () -> {
       LOG.assertTrue(!myInsideCommand);
@@ -246,7 +252,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     });
   }
 
-  private void registerUndoRedo(boolean undo, @Nullable TIntArrayList affectedChanges) {
+  private void registerUndoRedo(boolean undo, @javax.annotation.Nullable TIntArrayList affectedChanges) {
     if (myUndoManager == null) return;
 
     List<S> states;
@@ -267,11 +273,13 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   }
 
   private static class MyUndoableAction extends BasicUndoableAction {
-    @NotNull private final WeakReference<MergeModelBase> myModelRef;
-    @NotNull private final List<? extends State> myStates;
+    @Nonnull
+    private final WeakReference<MergeModelBase> myModelRef;
+    @Nonnull
+    private final List<? extends State> myStates;
     private final boolean myUndo;
 
-    public MyUndoableAction(@NotNull MergeModelBase model, @NotNull List<? extends State> states, boolean undo) {
+    public MyUndoableAction(@Nonnull MergeModelBase model, @Nonnull List<? extends State> states, boolean undo) {
       super(model.myDocument);
       myModelRef = new WeakReference<>(model);
 
@@ -291,7 +299,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
       if (model != null && !myUndo) restoreStates(model);
     }
 
-    private void restoreStates(@NotNull MergeModelBase model) {
+    private void restoreStates(@Nonnull MergeModelBase model) {
       if (model.isDisposed()) return;
       if (model.getChangesCount() == 0) return;
 
@@ -314,7 +322,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   //
 
   @RequiredWriteAction
-  public void replaceChange(int index, @NotNull List<? extends CharSequence> newContent) {
+  public void replaceChange(int index, @Nonnull List<? extends CharSequence> newContent) {
     LOG.assertTrue(isInsideCommand());
     int outputStartLine = getLineStart(index);
     int outputEndLine = getLineEnd(index);
@@ -328,7 +336,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   }
 
   @RequiredWriteAction
-  public void appendChange(int index, @NotNull List<? extends CharSequence> newContent) {
+  public void appendChange(int index, @Nonnull List<? extends CharSequence> newContent) {
     LOG.assertTrue(isInsideCommand());
     int outputStartLine = getLineStart(index);
     int outputEndLine = getLineEnd(index);
@@ -383,9 +391,9 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
    *
    * null means all changes could be affected
    */
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
-  private TIntArrayList collectAffectedChanges(@NotNull TIntArrayList directChanges) {
+  private TIntArrayList collectAffectedChanges(@Nonnull TIntArrayList directChanges) {
     TIntArrayList result = new TIntArrayList(directChanges.size());
 
     int directArrayIndex = 0;

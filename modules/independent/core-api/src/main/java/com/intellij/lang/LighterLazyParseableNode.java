@@ -18,8 +18,8 @@ package com.intellij.lang;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface LighterLazyParseableNode extends LighterASTNode {
   @Nullable
@@ -33,5 +33,5 @@ public interface LighterLazyParseableNode extends LighterASTNode {
     boolean visit(IElementType type);
   }
 
-  boolean accept(@NotNull Visitor visitor);
+  boolean accept(@Nonnull Visitor visitor);
 }

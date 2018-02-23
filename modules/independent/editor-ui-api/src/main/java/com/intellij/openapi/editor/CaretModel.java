@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -65,14 +65,14 @@ public interface CaretModel {
    *
    * @param pos the position to move to.
    */
-  void moveToLogicalPosition(@NotNull LogicalPosition pos);
+  void moveToLogicalPosition(@Nonnull LogicalPosition pos);
 
   /**
    * Moves the caret to the specified visual position.
    *
    * @param pos the position to move to.
    */
-  void moveToVisualPosition(@NotNull VisualPosition pos);
+  void moveToVisualPosition(@Nonnull VisualPosition pos);
 
   /**
    * Short hand for calling {@link #moveToOffset(int, boolean)} with <code>'false'</code> as a second argument.
@@ -109,7 +109,7 @@ public interface CaretModel {
    *
    * @return the caret position.
    */
-  @NotNull
+  @Nonnull
   LogicalPosition getLogicalPosition();
 
   /**
@@ -117,7 +117,7 @@ public interface CaretModel {
    *
    * @return the caret position.
    */
-  @NotNull
+  @Nonnull
   VisualPosition getVisualPosition();
 
   /**
@@ -132,14 +132,14 @@ public interface CaretModel {
    *
    * @param listener the listener instance.
    */
-  void addCaretListener(@NotNull CaretListener listener);
+  void addCaretListener(@Nonnull CaretListener listener);
 
   /**
    * Removes a listener for receiving notifications about caret movement and caret addition/removal
    *
    * @param listener the listener instance.
    */
-  void removeCaretListener(@NotNull CaretListener listener);
+  void removeCaretListener(@Nonnull CaretListener listener);
 
   /**
    * @return    document offset for the start of the logical line where caret is located
@@ -171,13 +171,13 @@ public interface CaretModel {
    * {@link CaretAction#perform(Caret)} method instead of this method, as the definition of current caret (as
    * well as caret instance operated on by model methods) can potentially change.
    */
-  @NotNull
+  @Nonnull
   Caret getCurrentCaret();
 
   /**
    * Returns the 'primary' caret.
    */
-  @NotNull
+  @Nonnull
   Caret getPrimaryCaret();
 
   /**
@@ -188,20 +188,20 @@ public interface CaretModel {
   /**
    * Returns all carets currently existing in the document, ordered by their position in the document.
    */
-  @NotNull
+  @Nonnull
   List<Caret> getAllCarets();
 
   /**
    * Returns a caret at the given position in the document, or <code>null</code>, if there's no caret there.
    */
-  @Nullable
-  Caret getCaretAt(@NotNull VisualPosition pos);
+  @javax.annotation.Nullable
+  Caret getCaretAt(@Nonnull VisualPosition pos);
 
   /**
    * Same as {@link #addCaret(VisualPosition, boolean)} with <code>true</code> as a <code>makePrimary</code> boolean parameter value.
    */
   @Nullable
-  Caret addCaret(@NotNull VisualPosition pos);
+  Caret addCaret(@Nonnull VisualPosition pos);
 
   /**
    * Adds a new caret at the given position, and returns corresponding {@link Caret} instance. Locations outside of possible values
@@ -210,14 +210,14 @@ public interface CaretModel {
    * Does nothing if multiple carets are not supported, a caret already exists at specified location or selection of existing caret
    * includes the specified location, <code>null</code> is returned in this case.
    */
-  @Nullable
-  Caret addCaret(@NotNull VisualPosition pos, boolean makePrimary);
+  @javax.annotation.Nullable
+  Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary);
 
   /**
    * Removes a given caret if it's recognized by the model and is not the only existing caret in the document, returning <code>true</code>.
    * <code>false</code> is returned if any of the above condition doesn't hold, and the removal cannot happen.
    */
-  boolean removeCaret(@NotNull Caret caret);
+  boolean removeCaret(@Nonnull Caret caret);
 
   /**
    * Removes all carets except the 'primary' one from the document.
@@ -235,7 +235,7 @@ public interface CaretModel {
    * @see #supportsMultipleCarets()
    * @see #getCaretsAndSelections()
    */
-  void setCaretsAndSelections(@NotNull List<CaretState> caretStates);
+  void setCaretsAndSelections(@Nonnull List<CaretState> caretStates);
 
   /**
    * Sets the number of carets, their positions and selection ranges according to the provided data. Null values for caret position or
@@ -249,7 +249,7 @@ public interface CaretModel {
    * @see #supportsMultipleCarets()
    * @see #getCaretsAndSelections()
    */
-  void setCaretsAndSelections(@NotNull List<CaretState> caretStates, boolean updateSystemSelection);
+  void setCaretsAndSelections(@Nonnull List<CaretState> caretStates, boolean updateSystemSelection);
 
   /**
    * Returns the current positions of all carets and their selections. The order of entries in the returned list does not necessarily
@@ -263,13 +263,13 @@ public interface CaretModel {
    * @see #supportsMultipleCarets()
    * @see #setCaretsAndSelections(List)
    */
-  @NotNull
+  @Nonnull
   List<CaretState> getCaretsAndSelections();
 
   /**
    * Same as {@link #runForEachCaret(CaretAction, boolean)} with <code>reverseOrder</code> set to <code>false</code>
    */
-  void runForEachCaret(@NotNull CaretAction action);
+  void runForEachCaret(@Nonnull CaretAction action);
 
   /**
    * Executes the given task for each existing caret. Set of carets to iterate over is
@@ -280,10 +280,10 @@ public interface CaretModel {
    * Carets are iterated in position order (top-to-bottom) if <code>reverseOrder</code> is <code>false</code>, and in reverse order
    * if it's <code>true</code>.
    */
-  void runForEachCaret(@NotNull CaretAction action, boolean reverseOrder);
+  void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder);
 
   /**
    * Executes the given task, performing caret merging afterwards. Caret merging will not happen until the operation is finished.
    */
-  void runBatchCaretOperation(@NotNull Runnable runnable);
+  void runBatchCaretOperation(@Nonnull Runnable runnable);
 }

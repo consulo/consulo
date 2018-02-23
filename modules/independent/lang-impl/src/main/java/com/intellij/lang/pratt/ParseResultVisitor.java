@@ -16,7 +16,7 @@
 package com.intellij.lang.pratt;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,5 +24,5 @@ import org.jetbrains.annotations.NotNull;
 public interface ParseResultVisitor<T> {
   T append();
   T error();
-  T done(@NotNull IElementType type);
+  T done(@Nonnull IElementType type);
 }

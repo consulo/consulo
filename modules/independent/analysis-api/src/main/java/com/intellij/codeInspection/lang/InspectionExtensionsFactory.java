@@ -25,8 +25,8 @@ import com.intellij.codeInspection.reference.RefManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class InspectionExtensionsFactory {
 
@@ -35,7 +35,7 @@ public abstract class InspectionExtensionsFactory {
   public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
   @Nullable
   public abstract RefManagerExtension createRefManagerExtension(RefManager refManager);
-  @Nullable
+  @javax.annotation.Nullable
   public abstract HTMLComposerExtension createHTMLComposerExtension(final HTMLComposer composer);
 
   public abstract boolean isToCheckMember(PsiElement element, String id);
@@ -43,6 +43,6 @@ public abstract class InspectionExtensionsFactory {
   @Nullable
   public abstract String getSuppressedInspectionIdsIn(PsiElement element);
 
-  public abstract boolean isProjectConfiguredToRunInspections(@NotNull Project project, boolean online);
+  public abstract boolean isProjectConfiguredToRunInspections(@Nonnull Project project, boolean online);
 
 }

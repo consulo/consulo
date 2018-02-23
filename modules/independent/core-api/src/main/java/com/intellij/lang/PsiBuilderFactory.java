@@ -20,8 +20,8 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -31,31 +31,31 @@ public abstract class PsiBuilderFactory {
     return ServiceManager.getService(PsiBuilderFactory.class);
   }
 
-  @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull ASTNode chameleon, @NotNull LanguageVersion languageVersion);
+  @Nonnull
+  public abstract PsiBuilder createBuilder(@Nonnull Project project, @Nonnull ASTNode chameleon, @Nonnull LanguageVersion languageVersion);
 
-  @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project, @NotNull LighterLazyParseableNode chameleon, @NotNull LanguageVersion languageVersion);
+  @Nonnull
+  public abstract PsiBuilder createBuilder(@Nonnull Project project, @Nonnull LighterLazyParseableNode chameleon, @Nonnull LanguageVersion languageVersion);
 
-  @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project,
-                                           @NotNull ASTNode chameleon,
+  @Nonnull
+  public abstract PsiBuilder createBuilder(@Nonnull Project project,
+                                           @Nonnull ASTNode chameleon,
                                            @Nullable Lexer lexer,
-                                           @NotNull Language lang,
-                                           @NotNull LanguageVersion languageVersion,
-                                           @NotNull CharSequence seq);
+                                           @Nonnull Language lang,
+                                           @Nonnull LanguageVersion languageVersion,
+                                           @Nonnull CharSequence seq);
 
-  @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull Project project,
-                                           @NotNull LighterLazyParseableNode chameleon,
+  @Nonnull
+  public abstract PsiBuilder createBuilder(@Nonnull Project project,
+                                           @Nonnull LighterLazyParseableNode chameleon,
                                            @Nullable Lexer lexer,
-                                           @NotNull Language lang,
-                                           @NotNull LanguageVersion languageVersion,
-                                           @NotNull CharSequence seq);
+                                           @Nonnull Language lang,
+                                           @Nonnull LanguageVersion languageVersion,
+                                           @Nonnull CharSequence seq);
 
-  @NotNull
-  public abstract PsiBuilder createBuilder(@NotNull ParserDefinition parserDefinition,
-                                           @NotNull Lexer lexer,
-                                           @NotNull LanguageVersion languageVersion,
-                                           @NotNull CharSequence seq);
+  @Nonnull
+  public abstract PsiBuilder createBuilder(@Nonnull ParserDefinition parserDefinition,
+                                           @Nonnull Lexer lexer,
+                                           @Nonnull LanguageVersion languageVersion,
+                                           @Nonnull CharSequence seq);
 }

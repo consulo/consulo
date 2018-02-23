@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
 import org.jdom.Element;
 import org.jdom.Verifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -39,15 +39,15 @@ public class DefaultJDOMExternalizer {
   }
 
   public interface JDOMFilter{
-    boolean isAccept(@NotNull Field field);
+    boolean isAccept(@Nonnull Field field);
   }
 
-  public static void writeExternal(@NotNull Object data, @NotNull Element parentNode) throws WriteExternalException {
+  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode) throws WriteExternalException {
     writeExternal(data, parentNode, null);
   }
 
-  public static void writeExternal(@NotNull Object data,
-                                   @NotNull Element parentNode,
+  public static void writeExternal(@Nonnull Object data,
+                                   @Nonnull Element parentNode,
                                    @Nullable("null means all elements accepted") JDOMFilter filter) throws WriteExternalException {
     Field[] fields = data.getClass().getFields();
 
@@ -154,7 +154,7 @@ public class DefaultJDOMExternalizer {
     return value;
   }
 
-  public static void readExternal(@NotNull Object data, Element parentNode) throws InvalidDataException{
+  public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException{
     if (parentNode == null) return;
 
     for (final Element e : parentNode.getChildren("option")) {
@@ -288,7 +288,7 @@ public class DefaultJDOMExternalizer {
     }
   }
 
-  public static int toInt(@NotNull String value) throws InvalidDataException {
+  public static int toInt(@Nonnull String value) throws InvalidDataException {
     int i;
     try {
       i = Integer.parseInt(value);

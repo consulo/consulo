@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class RootFileElement extends FileElement {
   private VirtualFile[] myFiles;
   private Object[] myChildren;
 
-  public RootFileElement(@NotNull VirtualFile[] files, String name, boolean showFileSystemRoots) {
+  public RootFileElement(@Nonnull VirtualFile[] files, String name, boolean showFileSystemRoots) {
     super(files.length == 1 ? files[0] : null, name);
     myFiles = files.length == 0 && showFileSystemRoots ? null : files;
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Tokens that can be used in conditions in inverted state,
@@ -28,6 +28,6 @@ public interface InvertibleArrangementSettingsToken {
   /**
    * Inverted representation value that will be used in UI
    */
-  @NotNull
+  @Nonnull
   String getInvertedRepresentationValue();
 }

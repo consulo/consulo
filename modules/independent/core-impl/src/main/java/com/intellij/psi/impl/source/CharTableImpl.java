@@ -21,8 +21,8 @@ import com.intellij.util.CharTable;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -36,9 +36,9 @@ public class CharTableImpl implements CharTable {
   private static final StringHashToCharSequencesMap STATIC_ENTRIES = newStaticSet();
   private final StringHashToCharSequencesMap entries = new StringHashToCharSequencesMap(10, 0.9f);
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence intern(@NotNull final CharSequence text) {
+  public CharSequence intern(@Nonnull final CharSequence text) {
     CharSequence result;
     if (text.length() > INTERN_THRESHOLD) result = createSequence(text);
     else result = doIntern(text);
@@ -46,8 +46,8 @@ public class CharTableImpl implements CharTable {
     return result;
   }
 
-  @NotNull
-  private CharSequence doIntern(@NotNull CharSequence text, int startOffset, int endOffset) {
+  @Nonnull
+  private CharSequence doIntern(@Nonnull CharSequence text, int startOffset, int endOffset) {
     int hashCode = subSequenceHashCode(text, startOffset, endOffset);
     CharSequence interned = STATIC_ENTRIES.getSubSequenceWithHashCode(hashCode, text, startOffset, endOffset);
     if (interned != null) {
@@ -60,14 +60,14 @@ public class CharTableImpl implements CharTable {
     }
   }
 
-  @NotNull
-  public CharSequence doIntern(@NotNull CharSequence text) {
+  @Nonnull
+  public CharSequence doIntern(@Nonnull CharSequence text) {
     return doIntern(text, 0, text.length());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence intern(@NotNull final CharSequence baseText, final int startOffset, final int endOffset) {
+  public CharSequence intern(@Nonnull final CharSequence baseText, final int startOffset, final int endOffset) {
     CharSequence result;
     if (endOffset - startOffset == baseText.length()) result = intern(baseText);
     else if (endOffset - startOffset > INTERN_THRESHOLD) result = createSequence(baseText, startOffset, endOffset);
@@ -76,13 +76,13 @@ public class CharTableImpl implements CharTable {
     return result;
   }
 
-  @NotNull
-  private static String createSequence(@NotNull CharSequence text) {
+  @Nonnull
+  private static String createSequence(@Nonnull CharSequence text) {
     return createSequence(text, 0, text.length());
   }
 
-  @NotNull
-  private static String createSequence(@NotNull CharSequence text, int startOffset, int endOffset) {
+  @Nonnull
+  private static String createSequence(@Nonnull CharSequence text, int startOffset, int endOffset) {
     if (text instanceof String) {
       return ((String)text).substring(startOffset, endOffset);
     }
@@ -92,11 +92,11 @@ public class CharTableImpl implements CharTable {
   }
 
   @Nullable
-  public static CharSequence getStaticInterned(@NotNull CharSequence text) {
+  public static CharSequence getStaticInterned(@Nonnull CharSequence text) {
     return STATIC_ENTRIES.get(text);
   }
 
-  public static void staticIntern(@NotNull String text) {
+  public static void staticIntern(@Nonnull String text) {
     synchronized(STATIC_ENTRIES) {
       STATIC_ENTRIES.add(text);
     }
@@ -202,7 +202,7 @@ public class CharTableImpl implements CharTable {
     return r;
   }
 
-  public static void addStringsFromClassToStatics(@NotNull Class aClass) {
+  public static void addStringsFromClassToStatics(@Nonnull Class aClass) {
     for (Field field : aClass.getDeclaredFields()) {
       if ((field.getModifiers() & Modifier.STATIC) == 0) continue;
       if ((field.getModifiers() & Modifier.PUBLIC) == 0) continue;

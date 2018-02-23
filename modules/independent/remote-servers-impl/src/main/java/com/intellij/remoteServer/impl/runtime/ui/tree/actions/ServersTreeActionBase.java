@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public abstract class ServersTreeActionBase extends AnAction {
     doActionPerformed(content);
   }
 
-  protected abstract boolean isEnabled(@NotNull ServersToolWindowContent content, AnActionEvent e);
+  protected abstract boolean isEnabled(@Nonnull ServersToolWindowContent content, AnActionEvent e);
 
-  protected abstract void doActionPerformed(@NotNull ServersToolWindowContent content);
+  protected abstract void doActionPerformed(@Nonnull ServersToolWindowContent content);
 }

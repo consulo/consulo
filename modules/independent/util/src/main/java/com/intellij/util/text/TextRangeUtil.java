@@ -16,7 +16,7 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class TextRangeUtil {
    * @param excludedRanges The list of ranges to exclude.
    * @return A list of ranges after excluded ranges have been applied.
    */
-  public static Iterable<TextRange> excludeRanges(@NotNull TextRange original, @NotNull List<TextRange> excludedRanges) {
+  public static Iterable<TextRange> excludeRanges(@Nonnull TextRange original, @Nonnull List<TextRange> excludedRanges) {
     if (!excludedRanges.isEmpty()) {
       List<TextRange> enabledRanges = new ArrayList<TextRange>();
       if (excludedRanges.size() > 1) {

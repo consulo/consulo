@@ -27,7 +27,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -81,7 +81,7 @@ public class MessageBusImpl implements MessageBus {
   private boolean myDisposed;
   private final Disposable myConnectionDisposable;
 
-  public MessageBusImpl(@NotNull Object owner, @NotNull MessageBus parentBus) {
+  public MessageBusImpl(@Nonnull Object owner, @Nonnull MessageBus parentBus) {
     myOwner = owner + " of " + owner.getClass();
     myConnectionDisposable = Disposer.newDisposable(myOwner);
     myParentBus = (MessageBusImpl)parentBus;
@@ -101,7 +101,7 @@ public class MessageBusImpl implements MessageBus {
     return myParentBus;
   }
 
-  @NotNull
+  @Nonnull
   private RootBus getRootBus() {
     return myParentBus != null ? myParentBus.getRootBus() : asRoot();
   }
@@ -204,14 +204,14 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MessageBusConnection connect() {
     return connect(myConnectionDisposable);
   }
 
   @Override
-  @NotNull
-  public MessageBusConnection connect(@NotNull Disposable parentDisposable) {
+  @Nonnull
+  public MessageBusConnection connect(@Nonnull Disposable parentDisposable) {
     checkNotDisposed();
     final MessageBusConnection connection = new MessageBusConnectionImpl(this);
     Disposer.register(parentDisposable, connection);
@@ -219,9 +219,9 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
-  public <L> L syncPublisher(@NotNull final Topic<L> topic) {
+  public <L> L syncPublisher(@Nonnull final Topic<L> topic) {
     checkNotDisposed();
     L publisher = (L)mySyncPublishers.get(topic);
     if (publisher == null) {
@@ -240,9 +240,9 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
-  public <L> L asyncPublisher(@NotNull final Topic<L> topic) {
+  public <L> L asyncPublisher(@Nonnull final Topic<L> topic) {
     checkNotDisposed();
     L publisher = (L)myAsyncPublishers.get(topic);
     if (publisher == null) {
@@ -280,7 +280,7 @@ public class MessageBusImpl implements MessageBus {
   }
 
   @Override
-  public boolean hasUndeliveredEvents(@NotNull Topic<?> topic) {
+  public boolean hasUndeliveredEvents(@Nonnull Topic<?> topic) {
     if (!isDispatchingAnything()) return false;
 
     for (MessageBusConnectionImpl connection : getTopicSubscribers(topic)) {
@@ -332,7 +332,7 @@ public class MessageBusImpl implements MessageBus {
     }
   }
 
-  @NotNull
+  @Nonnull
   private List<MessageBusConnectionImpl> getTopicSubscribers(Topic topic) {
     List<MessageBusConnectionImpl> topicSubscribers = mySubscriberCache.get(topic);
     if (topicSubscribers == null) {
@@ -444,7 +444,7 @@ public class MessageBusImpl implements MessageBus {
     return exceptions == null ? Collections.<Throwable>emptyList() : exceptions;
   }
 
-  void notifyOnSubscription(@NotNull MessageBusConnectionImpl connection, @NotNull Topic<?> topic) {
+  void notifyOnSubscription(@Nonnull MessageBusConnectionImpl connection, @Nonnull Topic<?> topic) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
     if (topicSubscribers == null) {
@@ -488,7 +488,7 @@ public class MessageBusImpl implements MessageBus {
     job.connection.deliverMessage(job.message);
   }
 
-  @NotNull
+  @Nonnull
   static <T> ThreadLocal<Queue<T>> createThreadLocalQueue() {
     return new ThreadLocal<Queue<T>>() {
       @Override
@@ -508,7 +508,7 @@ public class MessageBusImpl implements MessageBus {
      */
     private final ThreadLocal<SortedMap<MessageBusImpl, Integer>> myWaitingBuses = new ThreadLocal<SortedMap<MessageBusImpl, Integer>>();
 
-    public RootBus(@NotNull Object owner) {
+    public RootBus(@Nonnull Object owner) {
       super(owner);
     }
   }

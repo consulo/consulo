@@ -1,7 +1,7 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class VersionComparatorUtil {
       myPriority = priority;
     }
 
-    @NotNull
+    @Nonnull
     public static VersionTokenType lookup(String str) {
       if (str == null) {
         return _WS;

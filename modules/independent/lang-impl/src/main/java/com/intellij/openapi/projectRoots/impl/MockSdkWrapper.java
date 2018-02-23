@@ -29,8 +29,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -41,7 +41,7 @@ public final class MockSdkWrapper implements Sdk {
   private final String myHomePath;
   private final Sdk myDelegate;
 
-  public MockSdkWrapper(String homePath, @NotNull Sdk delegate) {
+  public MockSdkWrapper(String homePath, @Nonnull Sdk delegate) {
     myHomePath = homePath;
     myDelegate = delegate;
   }
@@ -58,7 +58,7 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SdkTypeId getSdkType() {
     return myDelegate.getSdkType();
   }
@@ -69,7 +69,7 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myDelegate.getName();
   }
@@ -80,23 +80,23 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RootProvider getRootProvider() {
     return myDelegate.getRootProvider();
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myDelegate.putUserData(key, value);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object clone() throws CloneNotSupportedException {
     throw new CloneNotSupportedException();
   }
@@ -107,7 +107,7 @@ public final class MockSdkWrapper implements Sdk {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SdkModificator getSdkModificator() {
     return null;
   }

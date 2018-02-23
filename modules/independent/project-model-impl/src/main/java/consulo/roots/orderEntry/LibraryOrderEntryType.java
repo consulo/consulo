@@ -23,14 +23,14 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
-  @NotNull
+  @Nonnull
   public static LibraryOrderEntryType getInstance() {
     return EP_NAME.findExtension(LibraryOrderEntryType.class);
   }
@@ -42,15 +42,15 @@ public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryIm
   @NonNls
   private static final String EXPORTED_ATTR = "exploded";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "library";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LibraryOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public LibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     String name = element.getAttributeValue(NAME_ATTR);
     if (name == null) {
       throw new InvalidDataException();
@@ -63,7 +63,7 @@ public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryIm
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull LibraryOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull LibraryOrderEntryImpl orderEntry) {
     final String libraryLevel = orderEntry.getLibraryLevel();
     if (orderEntry.isExported()) {
       element.setAttribute(EXPORTED_ATTR, "");

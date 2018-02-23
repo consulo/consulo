@@ -29,8 +29,8 @@ import com.intellij.openapi.diff.DiffPanel;
 import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.processing.HighlightMode;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface DiffPanelEx extends DiffPanel, Disposable {
   @Nullable
@@ -48,8 +48,8 @@ public interface DiffPanelEx extends DiffPanel, Disposable {
 
   boolean isAutoScrollEnabled();
 
-  void setHighlightMode(@NotNull HighlightMode highlightMode);
+  void setHighlightMode(@Nonnull HighlightMode highlightMode);
 
-  @NotNull
+  @Nonnull
   HighlightMode getHighlightMode();
 }

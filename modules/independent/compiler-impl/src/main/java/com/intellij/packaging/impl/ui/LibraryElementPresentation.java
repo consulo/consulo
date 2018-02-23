@@ -30,8 +30,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +42,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
   private final String myLibraryName;
   private final ArtifactEditorContext myContext;
 
-  public LibraryElementPresentation(String libraryName, String level, @Nullable String moduleName, Library library, ArtifactEditorContext context) {
+  public LibraryElementPresentation(String libraryName, String level, @javax.annotation.Nullable String moduleName, Library library, ArtifactEditorContext context) {
     myLevel = level;
     myModuleName = moduleName;
     myLibrary = library;
@@ -67,7 +66,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     if (myLibrary != null) {
       presentationData.setIcon(AllIcons.Nodes.PpLib);
       presentationData.addText(myLibraryName, mainAttributes);
@@ -104,7 +103,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
     return " (" + displayName + ")";
   }
 
-  public static String getLibraryItemText(final @NotNull Library library, final boolean includeTableName) {
+  public static String getLibraryItemText(final @Nonnull Library library, final boolean includeTableName) {
     String name = library.getName();
     VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
     if (name != null) {

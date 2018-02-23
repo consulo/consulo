@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -37,11 +37,11 @@ class RerunFailedTestsAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     getAction(e, true);
   }
 
-  private static boolean getAction(@NotNull AnActionEvent e, boolean execute) {
+  private static boolean getAction(@Nonnull AnActionEvent e, boolean execute) {
     Project project = e.getProject();
     if (project == null) {
       return false;

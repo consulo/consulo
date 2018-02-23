@@ -27,7 +27,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -183,7 +183,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     return description.substring(0, description.length()-1);
   }
 
-  @NotNull
+  @Nonnull
   public Dimension getPreferredSize() {
     return new Dimension(2000, super.getPreferredSize().height);
   }

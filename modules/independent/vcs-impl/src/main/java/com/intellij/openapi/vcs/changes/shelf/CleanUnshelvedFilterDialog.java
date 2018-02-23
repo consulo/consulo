@@ -20,8 +20,8 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EnumComboBoxModel;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,17 +38,17 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
   private enum TimePeriod {
     Week {
       @Override
-      protected void updateCalendar(@NotNull Calendar cal) {
+      protected void updateCalendar(@Nonnull Calendar cal) {
         cal.add(Calendar.DAY_OF_MONTH, -7);
       }
     }, Month {
       @Override
-      protected void updateCalendar(@NotNull Calendar cal) {
+      protected void updateCalendar(@Nonnull Calendar cal) {
         cal.add(Calendar.MONTH, -1);
       }
     }, Year {
       @Override
-      protected void updateCalendar(@NotNull Calendar cal) {
+      protected void updateCalendar(@Nonnull Calendar cal) {
         cal.add(Calendar.YEAR, -1);
       }
     };
@@ -59,7 +59,7 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
       return cal.getTimeInMillis();
     }
 
-    protected abstract void updateCalendar(@NotNull Calendar cal);
+    protected abstract void updateCalendar(@Nonnull Calendar cal);
   }
 
   public CleanUnshelvedFilterDialog(@Nullable Project project) {

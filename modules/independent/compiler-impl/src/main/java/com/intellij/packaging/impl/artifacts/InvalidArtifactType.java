@@ -21,7 +21,7 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,20 +38,20 @@ public class InvalidArtifactType extends ArtifactType {
     super("invalid", "Invalid");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.FileTypes.Unknown;
   }
 
   @Override
-  public String getDefaultPathFor(@NotNull PackagingElementOutputKind kind) {
+  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CompositePackagingElement<?> createRootElement(@NotNull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
     return PackagingElementFactory.getInstance().createArtifactRootElement();
   }
 }

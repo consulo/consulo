@@ -23,32 +23,32 @@ import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProvider {
-  @NotNull
+  @Nonnull
   public abstract FileType getFileType();
 
-  @NotNull
-  public abstract Document createDocument(@NotNull Project project,
-                                          @NotNull String text,
-                                          @Nullable XSourcePosition sourcePosition,
-                                          @NotNull EvaluationMode mode);
+  @Nonnull
+  public abstract Document createDocument(@Nonnull Project project,
+                                          @Nonnull String text,
+                                          @javax.annotation.Nullable XSourcePosition sourcePosition,
+                                          @Nonnull EvaluationMode mode);
 
-  @NotNull
-  public Document createDocument(@NotNull Project project,
-                                 @NotNull XExpression expression,
+  @Nonnull
+  public Document createDocument(@Nonnull Project project,
+                                 @Nonnull XExpression expression,
                                  @Nullable XSourcePosition sourcePosition,
-                                 @NotNull EvaluationMode mode) {
+                                 @Nonnull EvaluationMode mode) {
     return createDocument(project, expression.getExpression(), sourcePosition, mode);
   }
 
-  @NotNull
-  public Collection<Language> getSupportedLanguages(@NotNull Project project, @Nullable XSourcePosition sourcePosition) {
+  @Nonnull
+  public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition) {
     FileType type = getFileType();
     if (type instanceof LanguageFileType) {
       return Collections.singleton(((LanguageFileType)type).getLanguage());
@@ -56,12 +56,12 @@ public abstract class XDebuggerEditorsProvider {
     return Collections.emptyList();
   }
 
-  @NotNull
-  public XExpression createExpression(@NotNull Project project, @NotNull Document document, @Nullable Language language, @NotNull EvaluationMode mode) {
+  @Nonnull
+  public XExpression createExpression(@Nonnull Project project, @Nonnull Document document, @javax.annotation.Nullable Language language, @Nonnull EvaluationMode mode) {
     return XDebuggerUtil.getInstance().createExpression(document.getText(), language, null, mode);
   }
 
-  @NotNull
+  @Nonnull
   public InlineDebuggerHelper getInlineDebuggerHelper() {
     return InlineDebuggerHelper.DEFAULT;
   }

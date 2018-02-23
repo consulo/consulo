@@ -18,7 +18,7 @@ package com.intellij.openapi.util.registry;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -42,18 +42,18 @@ public class RegistryValue {
   private Double myDoubleCachedValue;
   private Boolean myBooleanCachedValue;
 
-  RegistryValue(@NotNull Registry registry, @NotNull String key) {
+  RegistryValue(@Nonnull Registry registry, @Nonnull String key) {
     myRegistry = registry;
     myKey = key;
   }
 
-  @NotNull
+  @Nonnull
   public String getKey() {
     return myKey;
   }
 
 
-  @NotNull
+  @Nonnull
   public String asString() {
     final String value = get(myKey, null, true);
     assert value != null : myKey;
@@ -99,7 +99,7 @@ public class RegistryValue {
     return defaultValue;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return get(myKey + ".description", "", false);
   }
@@ -112,7 +112,7 @@ public class RegistryValue {
     return !asString().equals(getBundleValue(myKey, false));
   }
 
-  private String get(@NotNull String key, String defaultValue, boolean isValue) throws MissingResourceException {
+  private String get(@Nonnull String key, String defaultValue, boolean isValue) throws MissingResourceException {
     if (isValue) {
       if (myStringCachedValue == null) {
         myStringCachedValue = _get(key, defaultValue, isValue);
@@ -125,7 +125,7 @@ public class RegistryValue {
     return _get(key, defaultValue, isValue);
   }
 
-  private String _get(@NotNull String key, String defaultValue, boolean mustExistInBundle) throws MissingResourceException {
+  private String _get(@Nonnull String key, String defaultValue, boolean mustExistInBundle) throws MissingResourceException {
     final String userValue = myRegistry.getUserProperties().get(key);
     if (userValue != null) {
       return userValue;
@@ -141,7 +141,7 @@ public class RegistryValue {
     return defaultValue;
   }
 
-  private static String getBundleValue(@NotNull String key, boolean mustExist) throws MissingResourceException {
+  private static String getBundleValue(@Nonnull String key, boolean mustExist) throws MissingResourceException {
     try {
       return Registry.getBundle().getString(key);
     }
@@ -190,7 +190,7 @@ public class RegistryValue {
     setValue(getBundleValue(myKey, true));
   }
 
-  public void addListener(@NotNull final RegistryValueListener listener, @NotNull Disposable parent) {
+  public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull Disposable parent) {
     myListeners.add(listener);
     Disposer.register(parent, new Disposable() {
       @Override

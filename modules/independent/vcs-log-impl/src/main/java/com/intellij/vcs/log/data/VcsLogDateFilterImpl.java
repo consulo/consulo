@@ -18,15 +18,17 @@ package com.intellij.vcs.log.data;
 import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogDateFilter;
 import com.intellij.vcs.log.VcsLogDetailsFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Date;
 
 public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilter {
 
-  @Nullable private final Date myAfter;
-  @Nullable private final Date myBefore;
+  @Nullable
+  private final Date myAfter;
+  @Nullable
+  private final Date myBefore;
 
   public VcsLogDateFilterImpl(@Nullable Date after, @Nullable Date before) {
     myAfter = after;
@@ -34,7 +36,7 @@ public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilt
   }
 
   @Override
-  public boolean matches(@NotNull VcsCommitMetadata details) {
+  public boolean matches(@Nonnull VcsCommitMetadata details) {
     Date date = new Date(details.getCommitTime());  // Git itself also filters by commit time, not author time
     boolean matches = true;
     if (myAfter != null) {

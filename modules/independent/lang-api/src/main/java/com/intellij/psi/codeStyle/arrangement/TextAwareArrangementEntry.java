@@ -15,8 +15,6 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Stands for the {@link ArrangementEntry} which provides information about its text.
  * E.g. this entry can be used for section start/end element to match section comments by whole text.
@@ -27,6 +25,6 @@ import org.jetbrains.annotations.Nullable;
  * @since 25/04/14 08:17 PM
  */
 public interface TextAwareArrangementEntry extends ArrangementEntry {
-  @Nullable
+  @javax.annotation.Nullable
   String getText();
 }

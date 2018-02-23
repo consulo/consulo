@@ -33,7 +33,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.*;
@@ -66,9 +66,9 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     }
   }
 
-  public ExternalToolPass(@NotNull ExternalToolPassFactory externalToolPassFactory,
-                          @NotNull PsiFile file,
-                          @NotNull Editor editor,
+  public ExternalToolPass(@Nonnull ExternalToolPassFactory externalToolPassFactory,
+                          @Nonnull PsiFile file,
+                          @Nonnull Editor editor,
                           int startOffset,
                           int endOffset) {
     super(file.getProject(), editor.getDocument(), false);
@@ -84,7 +84,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     myDocumentChanged = false;
 
     final FileViewProvider viewProvider = myFile.getViewProvider();

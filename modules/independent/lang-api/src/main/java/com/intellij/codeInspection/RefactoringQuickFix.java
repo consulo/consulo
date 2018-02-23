@@ -23,7 +23,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Bas Leijdekkers
@@ -39,7 +39,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
    * Usually a call to com.intellij.refactoring.RefactoringActionHandlerFactory or a language specific factory like
    * com.intellij.refactoring.JavaRefactoringActionHandlerFactory.
    */
-  @NotNull
+  @Nonnull
   RefactoringActionHandler getHandler();
 
   default PsiElement getElementToRefactor(PsiElement element) {
@@ -47,7 +47,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
     return (parent instanceof PsiNamedElement) ? parent : element;
   }
 
-  default void doFix(@NotNull PsiElement element) {
+  default void doFix(@Nonnull PsiElement element) {
     final PsiElement elementToRefactor = getElementToRefactor(element);
     if (elementToRefactor == null) {
       return;
@@ -61,14 +61,14 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   }
 
   @Override
-  default void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+  default void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
     doFix(descriptor.getPsiElement());
   }
 
   /**
    * @see com.intellij.openapi.actionSystem.impl.SimpleDataContext
    */
-  @NotNull
+  @Nonnull
   default DataContext enhanceDataContext(@NonNls DataContext context) {
     return context;
   }

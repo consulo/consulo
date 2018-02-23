@@ -17,7 +17,7 @@ package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.InspectionProfileEntry;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -27,8 +27,8 @@ import java.lang.reflect.Field;
 
 public class SingleCheckboxOptionsPanel extends JPanel {
 
-    public SingleCheckboxOptionsPanel(@NotNull String label,
-                                      @NotNull InspectionProfileEntry owner,
+    public SingleCheckboxOptionsPanel(@Nonnull String label,
+                                      @Nonnull InspectionProfileEntry owner,
                                       @NonNls String property) {
         super(new GridBagLayout());
         final boolean selected = getPropertyValue(owner, property);

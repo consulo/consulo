@@ -19,7 +19,7 @@ import com.intellij.codeInspection.InspectionProfileEntry;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -66,8 +66,8 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
         add(valueField, constraints);
     }
 
-    public static JFormattedTextField createIntegerFieldTrackingValue(@NotNull InspectionProfileEntry owner,
-                                                                      @NotNull String property,
+    public static JFormattedTextField createIntegerFieldTrackingValue(@Nonnull InspectionProfileEntry owner,
+                                                                      @Nonnull String property,
                                                                       int integerFieldColumns) {
         JFormattedTextField valueField = new JFormattedTextField();
         valueField.setColumns(integerFieldColumns);

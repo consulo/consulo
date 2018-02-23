@@ -27,8 +27,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -46,7 +45,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   private static final AtomicInteger myUniqueName = new AtomicInteger(1);
   private boolean myDoNotStore;
 
-  public UnknownRunConfiguration(@NotNull final ConfigurationFactory factory, @NotNull final Project project) {
+  public UnknownRunConfiguration(@Nonnull final ConfigurationFactory factory, @Nonnull final Project project) {
     myFactory = factory;
     myProject = project;
   }
@@ -56,7 +55,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return null;
   }
@@ -75,7 +74,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new UnknownSettingsEditor();
@@ -87,7 +86,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ConfigurationType getType() {
     return UnknownConfigurationType.INSTANCE;
   }
@@ -119,7 +118,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) throws ExecutionException {
     String factoryName = "";
     if (myStoredElement != null) {
       factoryName = myStoredElement.getAttributeValue("type");
@@ -182,7 +181,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected JComponent createEditor() {
       return myPanel;
     }

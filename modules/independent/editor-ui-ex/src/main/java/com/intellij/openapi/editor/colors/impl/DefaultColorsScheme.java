@@ -22,15 +22,15 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
 public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnlyColorsScheme {
   private String myName;
 
-  public DefaultColorsScheme(@NotNull EditorColorsManager editorColorsManager) {
+  public DefaultColorsScheme(@Nonnull EditorColorsManager editorColorsManager) {
     super(null, editorColorsManager);
   }
 
@@ -75,7 +75,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
     myName = parentNode.getAttributeValue(NAME_ATTR);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;

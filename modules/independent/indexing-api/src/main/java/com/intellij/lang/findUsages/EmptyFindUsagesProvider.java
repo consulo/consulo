@@ -18,8 +18,7 @@ package com.intellij.lang.findUsages;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * The default empty implementation of the {@link FindUsagesProvider} interface.
@@ -27,32 +26,32 @@ import org.jetbrains.annotations.Nullable;
  */
 public class EmptyFindUsagesProvider implements FindUsagesProvider {
 
-  @Nullable
+  @javax.annotation.Nullable
   public WordsScanner getWordsScanner() {
     return null;
   }
 
-  public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
+  public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
     return false;
   }
 
-  @Nullable
-  public String getHelpId(@NotNull PsiElement psiElement) {
+  @javax.annotation.Nullable
+  public String getHelpId(@Nonnull PsiElement psiElement) {
     return null;
   }
 
-  @NotNull
-  public String getType(@NotNull PsiElement element) {
+  @Nonnull
+  public String getType(@Nonnull PsiElement element) {
     return "";
   }
 
-  @NotNull
-  public String getDescriptiveName(@NotNull PsiElement element) {
+  @Nonnull
+  public String getDescriptiveName(@Nonnull PsiElement element) {
     return getNodeText(element, true);
   }
 
-  @NotNull
-  public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+  @Nonnull
+  public String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
     if (element instanceof PsiNamedElement) {
       final String name = ((PsiNamedElement)element).getName();
       if (name != null) {

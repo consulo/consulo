@@ -16,18 +16,21 @@
 
 package com.intellij.execution.ui.layout;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public interface LayoutStateDefaults {
-  @NotNull //this
-  LayoutStateDefaults initTabDefaults(int tabId, @Nullable String defaultTabText, @Nullable Icon defaultTabIcon);
+  @Nonnull
+    //this
+  LayoutStateDefaults initTabDefaults(int tabId, @javax.annotation.Nullable String defaultTabText, @Nullable Icon defaultTabIcon);
 
-  @NotNull // this
-  LayoutStateDefaults initFocusContent(@NotNull String id, @NotNull String condition);
+  @Nonnull
+    // this
+  LayoutStateDefaults initFocusContent(@Nonnull String id, @Nonnull String condition);
 
-  @NotNull  //this
-  LayoutStateDefaults initFocusContent(@NotNull String id, @NotNull String condition, @NotNull final LayoutAttractionPolicy policy);
+  @Nonnull
+    //this
+  LayoutStateDefaults initFocusContent(@Nonnull String id, @Nonnull String condition, @Nonnull final LayoutAttractionPolicy policy);
 }

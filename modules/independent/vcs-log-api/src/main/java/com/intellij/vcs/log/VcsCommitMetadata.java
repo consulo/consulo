@@ -1,7 +1,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ import java.util.List;
  * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface VcsCommitMetadata extends VcsShortCommitDetails {
-  @NotNull
+  @Nonnull
   String getFullMessage();
 }

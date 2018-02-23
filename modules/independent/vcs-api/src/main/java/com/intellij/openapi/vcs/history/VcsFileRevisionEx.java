@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: spLeaner
@@ -36,6 +36,6 @@ public abstract class VcsFileRevisionEx implements VcsFileRevision {
   /**
    * Returns the path of the file as it were in this revision
    */
-  @NotNull
+  @Nonnull
   public abstract FilePath getPath();
 }

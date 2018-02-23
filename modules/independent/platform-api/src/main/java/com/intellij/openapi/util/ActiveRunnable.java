@@ -16,21 +16,21 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.ui.update.ComparableObject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ActiveRunnable extends ComparableObject.Impl {
 
   protected ActiveRunnable() {
   }
 
-  protected ActiveRunnable(@NotNull Object object) {
+  protected ActiveRunnable(@Nonnull Object object) {
     super(object);
   }
 
-  protected ActiveRunnable(@NotNull Object[] objects) {
+  protected ActiveRunnable(@Nonnull Object[] objects) {
     super(objects);
   }
 
-  @NotNull
+  @Nonnull
   public abstract ActionCallback run();
 }

@@ -24,8 +24,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +37,8 @@ class UndoApplyPatchDialog extends DialogWrapper {
   private final Project myProject;
   private final boolean myShouldInformAboutBinaries;
 
-  UndoApplyPatchDialog(@NotNull Project project,
-                       @NotNull List<FilePath> filePaths,
+  UndoApplyPatchDialog(@Nonnull Project project,
+                       @Nonnull List<FilePath> filePaths,
                        boolean shouldInformAboutBinaries) {
     super(project, true);
     myProject = project;
@@ -50,7 +49,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());

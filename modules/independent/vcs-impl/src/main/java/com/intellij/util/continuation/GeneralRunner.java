@@ -18,8 +18,8 @@ package com.intellij.util.continuation;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
@@ -165,7 +165,7 @@ abstract class GeneralRunner implements ContinuationContext {
   }
 
   @Override
-  public void throwDisaster(@NotNull Object disaster, @NotNull final Object cure) {
+  public void throwDisaster(@Nonnull Object disaster, @Nonnull final Object cure) {
     synchronized (myQueueLock) {
       final Iterator<TaskDescriptor> iterator = myQueue.iterator();
       while (iterator.hasNext()) {
@@ -181,7 +181,7 @@ abstract class GeneralRunner implements ContinuationContext {
   }
 
   @Override
-  public void after(@NotNull TaskDescriptor inQueue, TaskDescriptor... next) {
+  public void after(@Nonnull TaskDescriptor inQueue, TaskDescriptor... next) {
     synchronized (myQueueLock) {
       int idx = -1;
       int i = 0;
@@ -251,14 +251,14 @@ abstract class GeneralRunner implements ContinuationContext {
   public abstract void ping();
 
   @Override
-  public void addNewTasksPatcher(@NotNull Consumer<TaskDescriptor> consumer) {
+  public void addNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer) {
     synchronized (myQueueLock) {
       myTasksPatchers.add(consumer);
     }
   }
 
   @Override
-  public void removeNewTasksPatcher(@NotNull Consumer<TaskDescriptor> consumer) {
+  public void removeNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer) {
     synchronized (myQueueLock) {
       myTasksPatchers.remove(consumer);
     }

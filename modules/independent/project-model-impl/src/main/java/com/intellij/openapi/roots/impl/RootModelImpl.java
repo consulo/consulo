@@ -38,8 +38,8 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -60,7 +60,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   private final SortedMap<String, ModuleRootLayerImpl> myLayers = new TreeMap<>();
 
   @RequiredReadAction
-  RootModelImpl(@NotNull ModuleRootManagerImpl moduleRootManager) {
+  RootModelImpl(@Nonnull ModuleRootManagerImpl moduleRootManager) {
     myModuleRootManager = moduleRootManager;
     myWritable = false;
     myConfigurationAccessor = new RootConfigurationAccessor();
@@ -69,7 +69,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @RequiredReadAction
-  RootModelImpl(@NotNull Element element, @Nullable ProgressIndicator progressIndicator, @NotNull ModuleRootManagerImpl moduleRootManager, boolean writable) {
+  RootModelImpl(@Nonnull Element element, @javax.annotation.Nullable ProgressIndicator progressIndicator, @Nonnull ModuleRootManagerImpl moduleRootManager, boolean writable) {
     myModuleRootManager = moduleRootManager;
 
     myConfigurationAccessor = new RootConfigurationAccessor();
@@ -81,7 +81,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   //creates modifiable model
   @RequiredReadAction
-  RootModelImpl(@NotNull RootModelImpl rootModel, @NotNull ModuleRootManagerImpl moduleRootManager, @NotNull RootConfigurationAccessor rootConfigurationAccessor) {
+  RootModelImpl(@Nonnull RootModelImpl rootModel, @Nonnull ModuleRootManagerImpl moduleRootManager, @Nonnull RootConfigurationAccessor rootConfigurationAccessor) {
     myModuleRootManager = moduleRootManager;
     myWritable = true;
     myConfigurationAccessor = rootConfigurationAccessor;
@@ -150,77 +150,77 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myWritable;
   }
 
-  @NotNull
+  @Nonnull
   public RootConfigurationAccessor getConfigurationAccessor() {
     return myConfigurationAccessor;
   }
 
   @Override
-  public void removeContentEntry(@NotNull ContentEntry entry) {
+  public void removeContentEntry(@Nonnull ContentEntry entry) {
     assertWritable();
     getCurrentLayer().removeContentEntry(entry);
   }
 
   @Override
-  public void addOrderEntry(@NotNull OrderEntry entry) {
+  public void addOrderEntry(@Nonnull OrderEntry entry) {
     assertWritable();
     getCurrentLayer().addOrderEntry(entry);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LibraryOrderEntry addLibraryEntry(@NotNull Library library) {
+  public LibraryOrderEntry addLibraryEntry(@Nonnull Library library) {
     assertWritable();
     return getCurrentLayer().addLibraryEntry(library);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension) {
+  public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension) {
     assertWritable();
     return getCurrentLayer().addModuleExtensionSdkEntry(moduleExtension);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LibraryOrderEntry addInvalidLibrary(@NotNull String name, @NotNull String level) {
+  public LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level) {
     assertWritable();
     return getCurrentLayer().addInvalidLibrary(name, level);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleOrderEntry addModuleOrderEntry(@NotNull Module module) {
+  public ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module) {
     assertWritable();
     return getCurrentLayer().addModuleOrderEntry(module);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleOrderEntry addInvalidModuleEntry(@NotNull String name) {
+  public ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name) {
     assertWritable();
     return getCurrentLayer().addInvalidModuleEntry(name);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public LibraryOrderEntry findLibraryOrderEntry(@NotNull Library library) {
+  public LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library) {
     return getCurrentLayer().findLibraryOrderEntry(library);
   }
 
   @Override
-  public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@NotNull ModuleExtension extension) {
+  public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension) {
     return getCurrentLayer().findModuleExtensionSdkEntry(extension);
   }
 
   @Override
-  public void removeOrderEntry(@NotNull OrderEntry entry) {
+  public void removeOrderEntry(@Nonnull OrderEntry entry) {
     assertWritable();
     getCurrentLayer().removeOrderEntry(entry);
   }
 
   @Override
-  public void rearrangeOrderEntries(@NotNull OrderEntry[] newEntries) {
+  public void rearrangeOrderEntries(@Nonnull OrderEntry[] newEntries) {
     assertWritable();
     getCurrentLayer().rearrangeOrderEntries(newEntries);
   }
@@ -315,26 +315,26 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LibraryTable getModuleLibraryTable() {
     return getCurrentLayer().getModuleLibraryTable();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myModuleRootManager.getModule().getProject();
   }
 
   @Override
-  @NotNull
-  public ContentEntry addContentEntry(@NotNull VirtualFile file) {
+  @Nonnull
+  public ContentEntry addContentEntry(@Nonnull VirtualFile file) {
     return getCurrentLayer().addContentEntry(file);
   }
 
   @Override
-  @NotNull
-  public ContentEntry addContentEntry(@NotNull String url) {
+  @Nonnull
+  public ContentEntry addContentEntry(@Nonnull String url) {
     return getCurrentLayer().addContentEntry(url);
   }
 
@@ -344,7 +344,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
-  public <T extends OrderEntry> void replaceEntryOfType(@NotNull Class<T> entryClass, @Nullable final T entry) {
+  public <T extends OrderEntry> void replaceEntryOfType(@Nonnull Class<T> entryClass, @Nullable final T entry) {
     assertWritable();
     getCurrentLayer().replaceEntryOfType(entryClass, entry);
   }
@@ -366,7 +366,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module getModule() {
     return myModuleRootManager.getModule();
   }
@@ -403,7 +403,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return false;
   }
 
-  void makeExternalChange(@NotNull Runnable runnable) {
+  void makeExternalChange(@Nonnull Runnable runnable) {
     if (myWritable || myDisposed) return;
     myModuleRootManager.makeRootsChange(runnable);
   }
@@ -421,7 +421,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myModuleRootManager.getRootModel();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModuleRootLayerImpl getCurrentLayer() {
     if (myCachedCurrentLayer != null) {
@@ -432,9 +432,9 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     return myCachedCurrentLayer = moduleRootLayer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate) {
+  public ModifiableModuleRootLayer addLayer(@Nonnull String name, @Nullable String nameForCopy, boolean activate) {
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
     if (moduleRootLayer != null) {
       return moduleRootLayer;
@@ -462,7 +462,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
   @Nullable
   @Override
-  public ModifiableModuleRootLayer setCurrentLayer(@NotNull String name) {
+  public ModifiableModuleRootLayer setCurrentLayer(@Nonnull String name) {
     assertWritable();
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(name);
     if (moduleRootLayer == null) {
@@ -474,7 +474,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
-  public boolean removeLayer(@NotNull String name, boolean initDefault) {
+  public boolean removeLayer(@Nonnull String name, boolean initDefault) {
     assertWritable();
     ModuleRootLayerImpl removedLayer = myLayers.remove(name);
     if (removedLayer != null) {
@@ -508,22 +508,22 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCurrentLayerName() {
     LOGGER.assertTrue(myCurrentLayerName != null);
     return myCurrentLayerName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ModuleRootLayer> getLayers() {
     return Collections.<String, ModuleRootLayer>unmodifiableSortedMap(myLayers);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public ModuleRootLayer findLayerByName(@NotNull String name) {
+  public ModuleRootLayer findLayerByName(@Nonnull String name) {
     return myLayers.get(name);
   }
 }

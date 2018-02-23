@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.util.ui.tree.AbstractFileTreeTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
-  public EncodingFileTreeTable(@NotNull Project project) {
+  public EncodingFileTreeTable(@Nonnull Project project) {
     super(project, Charset.class, "Default Encoding", VirtualFileFilter.ALL, false);
     reset(EncodingProjectManager.getInstance(project).getAllMappings());
     getValueColumn().setCellRenderer(new DefaultTableCellRenderer(){
@@ -106,16 +106,16 @@ class EncodingFileTreeTable extends AbstractFileTreeTable<Charset> {
           @Override
           protected boolean chosen(Document document,
                                    Editor editor,
-                                   @NotNull VirtualFile virtualFile,
+                                   @Nonnull VirtualFile virtualFile,
                                    byte[] bytes,
-                                   @NotNull Charset charset) {
+                                   @Nonnull Charset charset) {
             getValueColumn().getCellEditor().stopCellEditing();
             getTableModel().setValueAt(charset, new DefaultMutableTreeNode(virtualFile), 1);
             return true;
           }
         };
         ComboBoxAction changeAction = new ComboBoxAction() {
-          @NotNull
+          @Nonnull
           @Override
           protected DefaultActionGroup createPopupActionGroup(JComponent button) {
             return cfa.createActionGroup(myVirtualFile, null, document, bytes, "<Clear>");

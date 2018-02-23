@@ -27,8 +27,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class CodeStyleSettingsManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CodeStyleSettingsManager.class.getName());
@@ -39,7 +38,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
 
-  public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
+  public static CodeStyleSettingsManager getInstance(@javax.annotation.Nullable Project project) {
     if (project == null || project.isDefault()) {
       return getInstance();
     }
@@ -57,12 +56,12 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   public CodeStyleSettingsManager() {
   }
 
-  @NotNull
-  public static CodeStyleSettings getSettings(@Nullable final Project project) {
+  @Nonnull
+  public static CodeStyleSettings getSettings(@javax.annotation.Nullable final Project project) {
     return getInstance(project).getCurrentSettings();
   }
 
-  @NotNull
+  @Nonnull
   public CodeStyleSettings getCurrentSettings() {
     CodeStyleSettings temporarySettings = myTemporarySettings;
     if (temporarySettings != null) return temporarySettings;
@@ -106,7 +105,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     return myTemporarySettings;
   }
 
-  public void setTemporarySettings(@NotNull CodeStyleSettings settings) {
+  public void setTemporarySettings(@Nonnull CodeStyleSettings settings) {
     myTemporarySettings = settings;
   }
 
@@ -126,7 +125,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
    * @param project  The project of the document.
    * @param document The document to update indent options for.
    */
-  public static void updateDocumentIndentOptions(@NotNull Project project, @NotNull Document document) {
+  public static void updateDocumentIndentOptions(@Nonnull Project project, @Nonnull Document document) {
     if (!project.isDisposed()) {
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
       if (documentManager != null) {

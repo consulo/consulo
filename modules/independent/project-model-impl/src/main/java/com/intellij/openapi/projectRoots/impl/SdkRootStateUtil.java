@@ -19,7 +19,7 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.projectRoots.ex.SdkRoot;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
@@ -37,7 +37,7 @@ public class SdkRootStateUtil {
   private SdkRootStateUtil() {
   }
 
-  @NotNull
+  @Nonnull
   static SdkRoot readRoot(Element element) {
     final String type = element.getAttributeValue(ATTRIBUTE_TYPE);
 
@@ -54,7 +54,7 @@ public class SdkRootStateUtil {
     throw new IllegalArgumentException("Wrong type: " + type);
   }
 
-  @NotNull
+  @Nonnull
   static Element writeRoot(SdkRoot sdkRoot) {
     Element element = new Element(ELEMENT_ROOT);
     if (sdkRoot instanceof SimpleSdkRoot) {

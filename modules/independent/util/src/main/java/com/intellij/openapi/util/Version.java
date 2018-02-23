@@ -16,8 +16,8 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Version {
   public final int major;
@@ -31,7 +31,7 @@ public class Version {
   }
 
   @Nullable
-  public static Version parseVersion(@NotNull String versionString) {
+  public static Version parseVersion(@Nonnull String versionString) {
     String[] versions = versionString.split("\\.");
     String version = versions[0];
     int major = parseNumber(version, -1);
@@ -92,7 +92,7 @@ public class Version {
     return compareTo(major, minor, bugfix) < 0;
   }
 
-  public int compareTo(@NotNull Version version) {
+  public int compareTo(@Nonnull Version version) {
     return compareTo(version.major, version.minor, version.bugfix);
   }
 

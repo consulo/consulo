@@ -16,8 +16,7 @@
 package com.intellij.dvcs.push;
 
 import com.intellij.dvcs.repo.Repository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -34,8 +33,8 @@ public abstract class Pusher<Repo extends Repository, Source extends PushSource,
    *                         {@link PushSupport#createOptionsPanel() the additional panel} if the plugin has one.
    * @param force            if true then force push should be performed.
    */
-  public abstract void push(@NotNull Map<Repo, PushSpec<Source, Target>> pushSpecs,
-                            @Nullable VcsPushOptionValue additionalOption,
+  public abstract void push(@Nonnull Map<Repo, PushSpec<Source, Target>> pushSpecs,
+                            @javax.annotation.Nullable VcsPushOptionValue additionalOption,
                             boolean force);
 
 }

@@ -25,7 +25,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.ui.plaf.ScrollBarUIConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,11 +51,11 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
     }
   };
 
-  protected Updater(@NotNull Painter painter, JScrollPane pane) {
+  protected Updater(@Nonnull Painter painter, JScrollPane pane) {
     this(painter, pane.getVerticalScrollBar());
   }
 
-  protected Updater(@NotNull Painter painter, JScrollBar bar) {
+  protected Updater(@Nonnull Painter painter, JScrollBar bar) {
     myPainter = painter;
     myScrollBar = bar;
     myScrollBar.addMouseListener(myMouseAdapter);

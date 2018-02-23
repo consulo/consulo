@@ -19,7 +19,7 @@ import com.intellij.usages.ReadWriteAccessUsage;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.rules.UsageFilteringRule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WriteAccessFilteringRule implements UsageFilteringRule{
   @Override
-  public boolean isVisible(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  public boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     if (usage instanceof ReadWriteAccessUsage) {
       final ReadWriteAccessUsage readWriteAccessUsage = (ReadWriteAccessUsage)usage;
       final boolean isForWritingOnly = readWriteAccessUsage.isAccessedForWriting() && !readWriteAccessUsage.isAccessedForReading();

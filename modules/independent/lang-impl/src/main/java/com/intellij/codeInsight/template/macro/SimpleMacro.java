@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.template.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -42,19 +42,19 @@ public abstract class SimpleMacro extends Macro {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getDefaultValue() {
     return "11.11.1111";
   }
 
   @Override
-  public Result calculateResult(@NotNull final Expression[] params, final ExpressionContext context) {
+  public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context) {
     return new TextResult(evaluateSimpleMacro(params, context));
   }
 
   @Override
-  public Result calculateQuickResult(@NotNull final Expression[] params, final ExpressionContext context) {
+  public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context) {
     return calculateResult(params, context);
   }
 

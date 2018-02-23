@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -29,7 +29,7 @@ public interface Query<Result> extends Iterable<Result> {
    * Get all of the results in the {@link java.util.Collection}
    * @return results in a collection or empty collection if no results found.
    */
-  @NotNull
+  @Nonnull
   Collection<Result> findAll();
 
   /**
@@ -45,11 +45,11 @@ public interface Query<Result> extends Iterable<Result> {
    * @return <code>true</code> if the search was completed normally,
    *         <code>false</code> if the occurrence processing was cancelled by the processor.
    */
-  boolean forEach(@NotNull Processor<Result> consumer);
+  boolean forEach(@Nonnull Processor<Result> consumer);
 
-  @NotNull
-  AsyncFuture<Boolean> forEachAsync(@NotNull Processor<Result> consumer);
+  @Nonnull
+  AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<Result> consumer);
 
-  @NotNull
-  Result[] toArray(@NotNull Result[] a);
+  @Nonnull
+  Result[] toArray(@Nonnull Result[] a);
 }

@@ -41,8 +41,8 @@ import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -98,7 +98,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file, final DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file, final DataContext dataContext) {
     PsiElement element = adjustForRename(dataContext, PsiElementRenameHandler.getElement(dataContext));
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     final PsiElement nameSuggestionContext = file.findElementAt(editor.getCaretModel().getOffset());
@@ -106,7 +106,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
   }
 
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final PsiElement[] elements, final DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, @Nonnull final PsiElement[] elements, final DataContext dataContext) {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = PsiElementRenameHandler.getElement(dataContext);
     final PsiElement nameSuggestionContext = element;

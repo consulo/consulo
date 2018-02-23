@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,29 +26,29 @@ public class ProjectStructureProblemType {
   private final String myId;
   private final Severity mySeverity;
 
-  public ProjectStructureProblemType(@NotNull String id, @NotNull Severity severity) {
+  public ProjectStructureProblemType(@Nonnull String id, @Nonnull Severity severity) {
     myId = id;
     mySeverity = severity;
   }
 
-  public static ProjectStructureProblemType error(@NotNull String id) {
+  public static ProjectStructureProblemType error(@Nonnull String id) {
     return new ProjectStructureProblemType(id, Severity.ERROR);
   }
 
-  public static ProjectStructureProblemType warning(@NotNull String id) {
+  public static ProjectStructureProblemType warning(@Nonnull String id) {
     return new ProjectStructureProblemType(id, Severity.WARNING);
   }
 
-  public static ProjectStructureProblemType unused(@NotNull String id) {
+  public static ProjectStructureProblemType unused(@Nonnull String id) {
     return new ProjectStructureProblemType(id, Severity.UNUSED);
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public Severity getSeverity() {
     return mySeverity;
   }

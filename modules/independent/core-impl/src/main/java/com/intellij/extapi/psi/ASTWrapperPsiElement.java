@@ -19,7 +19,7 @@ package com.intellij.extapi.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
   private final ASTNode myNode;
 
-  public ASTWrapperPsiElement(@NotNull final ASTNode node) {
+  public ASTWrapperPsiElement(@Nonnull final ASTNode node) {
     myNode = node;
   }
 
@@ -37,7 +37,7 @@ public class ASTWrapperPsiElement extends ASTDelegatePsiElement {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ASTNode getNode() {
     return myNode;
   }

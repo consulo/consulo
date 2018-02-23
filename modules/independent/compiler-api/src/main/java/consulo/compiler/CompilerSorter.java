@@ -19,7 +19,7 @@ import com.intellij.openapi.compiler.Compiler;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,5 +28,5 @@ import org.jetbrains.annotations.NotNull;
 public interface CompilerSorter {
   public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("com.intellij.compiler.sorter");
 
-  void sort(Chunk<Module> moduleChunk, @NotNull Compiler[] compilers, Class<? extends Compiler> clazz);
+  void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

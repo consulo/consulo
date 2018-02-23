@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -36,9 +36,9 @@ public interface HintedReferenceHost extends PsiElement {
    * @param hints the hints about the desired references
    * @return the array of references, or an empty array if the element has no associated references.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  PsiReference[] getReferences(@NotNull PsiReferenceService.Hints hints);
+  PsiReference[] getReferences(@Nonnull PsiReferenceService.Hints hints);
 
   /**
    * Normally in {@link PsiElement#findReferenceAt(int)}, all tree hierarchy is traversed bottom-up and each element is asked for references.
@@ -48,6 +48,6 @@ public interface HintedReferenceHost extends PsiElement {
    * @param hints the hints about the desired references
    * @return false if there's no use in asking this element's ancestors for references with specified hints, true otherwise.
    */
-  boolean shouldAskParentForReferences(@NotNull PsiReferenceService.Hints hints);
+  boolean shouldAskParentForReferences(@Nonnull PsiReferenceService.Hints hints);
 
 }

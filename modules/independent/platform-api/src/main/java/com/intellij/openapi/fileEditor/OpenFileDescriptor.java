@@ -31,8 +31,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -53,23 +53,23 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
   private boolean myUseCurrentWindow = false;
   private ScrollType myScrollType = ScrollType.CENTER;
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int offset) {
+  public OpenFileDescriptor(@Nonnull Project project, @Nonnull VirtualFile file, int offset) {
     this(project, file, -1, -1, offset, false);
   }
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn) {
+  public OpenFileDescriptor(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn) {
     this(project, file, logicalLine, logicalColumn, -1, false);
   }
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn, boolean persistent) {
+  public OpenFileDescriptor(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn, boolean persistent) {
     this(project, file, logicalLine, logicalColumn, -1, persistent);
   }
 
-  public OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file) {
+  public OpenFileDescriptor(@Nonnull Project project, @Nonnull VirtualFile file) {
     this(project, file, -1, -1, -1, false);
   }
 
-  private OpenFileDescriptor(@NotNull Project project, @NotNull VirtualFile file, int logicalLine, int logicalColumn, int offset, boolean persistent) {
+  private OpenFileDescriptor(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn, int offset, boolean persistent) {
     myProject = project;
     myFile = file;
     myLogicalLine = logicalLine;
@@ -86,7 +86,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     }
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -119,7 +119,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     navigateInProjectView(requestFocus);
   }
 
-  private boolean navigateInEditorOrNativeApp(@NotNull Project project, boolean requestFocus) {
+  private boolean navigateInEditorOrNativeApp(@Nonnull Project project, boolean requestFocus) {
     FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(myFile,project);
     if (type == null || !myFile.isValid()) return false;
 
@@ -130,7 +130,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return navigateInEditor(project, requestFocus);
   }
 
-  public boolean navigateInEditor(@NotNull Project project, boolean requestFocus) {
+  public boolean navigateInEditor(@Nonnull Project project, boolean requestFocus) {
     return navigateInRequestedEditor() || navigateInAnyFileEditor(project, requestFocus);
   }
 
@@ -161,13 +161,13 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
   private void navigateInProjectView(boolean requestFocus) {
     SelectInContext context = new SelectInContext() {
       @Override
-      @NotNull
+      @Nonnull
       public Project getProject() {
         return myProject;
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public VirtualFile getVirtualFile() {
         return myFile;
       }
@@ -187,7 +187,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     }
   }
 
-  public void navigateIn(@NotNull Editor e) {
+  public void navigateIn(@Nonnull Editor e) {
     final int offset = getOffset();
     CaretModel caretModel = e.getCaretModel();
     boolean caretMoved = false;
@@ -212,7 +212,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     }
   }
 
-  private static void unfoldCurrentLine(@NotNull final Editor editor) {
+  private static void unfoldCurrentLine(@Nonnull final Editor editor) {
     final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
     final TextRange range = getRangeToUnfoldOnNavigation(editor);
     editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
@@ -227,8 +227,8 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     });
   }
 
-  @NotNull
-  public static TextRange getRangeToUnfoldOnNavigation(@NotNull Editor editor) {
+  @Nonnull
+  public static TextRange getRangeToUnfoldOnNavigation(@Nonnull Editor editor) {
     final int offset = editor.getCaretModel().getOffset();
     int line = editor.getDocument().getLineNumber(offset);
     int start = editor.getDocument().getLineStartOffset(line);
@@ -236,7 +236,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return new TextRange(start, end);
   }
 
-  private void scrollToCaret(@NotNull Editor e) {
+  private void scrollToCaret(@Nonnull Editor e) {
     e.getScrollingModel().scrollToCaret(myScrollType);
   }
 
@@ -250,7 +250,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return canNavigate();
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -264,7 +264,7 @@ public class OpenFileDescriptor implements Navigatable, Comparable<OpenFileDescr
     return myUseCurrentWindow;
   }
 
-  public void setScrollType(@NotNull ScrollType scrollType) {
+  public void setScrollType(@Nonnull ScrollType scrollType) {
     myScrollType = scrollType;
   }
 

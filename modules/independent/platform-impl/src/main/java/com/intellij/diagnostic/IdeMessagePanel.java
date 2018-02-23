@@ -33,8 +33,8 @@ import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.BalloonLayoutData;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
   private final MessagePool myMessagePool;
   private boolean myNotificationPopupAlreadyShown = false;
 
-  public IdeMessagePanel(@NotNull IdeFrame frame, @NotNull MessagePool messagePool) {
+  public IdeMessagePanel(@Nonnull IdeFrame frame, @Nonnull MessagePool messagePool) {
     super(new BorderLayout());
     myIdeFatal = new IdeFatalErrorsIcon(new ActionListener() {
       @Override
@@ -77,13 +77,13 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return FATAL_ERROR;
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
@@ -93,7 +93,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
   }
 
   @Override
@@ -252,7 +252,7 @@ public class IdeMessagePanel extends JPanel implements MessagePoolListener, Icon
     if (notificationText == null) {
       notification.addAction(new NotificationAction(ERROR_LINK) {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
           notification.expire();
           _openFatals(null);
         }

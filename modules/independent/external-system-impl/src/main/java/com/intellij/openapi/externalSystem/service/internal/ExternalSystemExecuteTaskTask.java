@@ -29,8 +29,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.execution.ParametersListUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,24 +41,28 @@ import java.util.List;
  */
 public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
-  @NotNull private static final Function<ExternalTaskPojo, String> MAPPER = new Function<ExternalTaskPojo, String>() {
+  @Nonnull
+  private static final Function<ExternalTaskPojo, String> MAPPER = new Function<ExternalTaskPojo, String>() {
     @Override
     public String fun(ExternalTaskPojo task) {
       return task.getName();
     }
   };
 
-  @NotNull private final List<ExternalTaskPojo> myTasksToExecute;
-  @Nullable private final String myVmOptions;
-  @Nullable private String myScriptParameters;
+  @Nonnull
+  private final List<ExternalTaskPojo> myTasksToExecute;
+  @javax.annotation.Nullable
+  private final String myVmOptions;
+  @javax.annotation.Nullable
+  private String myScriptParameters;
   @Nullable private final String myDebuggerSetup;
 
-  public ExternalSystemExecuteTaskTask(@NotNull ProjectSystemId externalSystemId,
-                                       @NotNull Project project,
-                                       @NotNull List<ExternalTaskPojo> tasksToExecute,
+  public ExternalSystemExecuteTaskTask(@Nonnull ProjectSystemId externalSystemId,
+                                       @Nonnull Project project,
+                                       @Nonnull List<ExternalTaskPojo> tasksToExecute,
                                        @Nullable String vmOptions,
-                                       @Nullable String scriptParameters,
-                                       @Nullable String debuggerSetup) throws IllegalArgumentException {
+                                       @javax.annotation.Nullable String scriptParameters,
+                                       @javax.annotation.Nullable String debuggerSetup) throws IllegalArgumentException {
     super(externalSystemId, ExternalSystemTaskType.EXECUTE_TASK, project, getLinkedExternalProjectPath(tasksToExecute));
     myTasksToExecute = tasksToExecute;
     myVmOptions = vmOptions;
@@ -66,8 +70,8 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
     myDebuggerSetup = debuggerSetup;
   }
 
-  @NotNull
-  private static String getLinkedExternalProjectPath(@NotNull Collection<ExternalTaskPojo> tasks) throws IllegalArgumentException {
+  @Nonnull
+  private static String getLinkedExternalProjectPath(@Nonnull Collection<ExternalTaskPojo> tasks) throws IllegalArgumentException {
     if (tasks.isEmpty()) {
       throw new IllegalArgumentException("Can't execute external tasks. Reason: given tasks list is empty");
     }

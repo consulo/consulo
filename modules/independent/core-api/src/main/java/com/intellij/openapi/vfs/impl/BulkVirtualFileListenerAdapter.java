@@ -22,8 +22,8 @@ package com.intellij.openapi.vfs.impl;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,17 +31,17 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   private final VirtualFileListener myAdapted;
   private final VirtualFileSystem myFileSystem;
 
-  public BulkVirtualFileListenerAdapter(@NotNull VirtualFileListener adapted) {
+  public BulkVirtualFileListenerAdapter(@Nonnull VirtualFileListener adapted) {
     this(adapted, null);
   }
 
-  public BulkVirtualFileListenerAdapter(@NotNull VirtualFileListener adapted, @Nullable VirtualFileSystem fileSystem) {
+  public BulkVirtualFileListenerAdapter(@Nonnull VirtualFileListener adapted, @Nullable VirtualFileSystem fileSystem) {
     myAdapted = adapted;
     myFileSystem = fileSystem;
   }
 
   @Override
-  public void before(@NotNull final List<? extends VFileEvent> events) {
+  public void before(@Nonnull final List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (myFileSystem == null || myFileSystem == event.getFileSystem()) {
         fireBefore(myAdapted, event);
@@ -50,7 +50,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
   }
 
   @Override
-  public void after(@NotNull final List<? extends VFileEvent> events) {
+  public void after(@Nonnull final List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (myFileSystem == null || myFileSystem == event.getFileSystem()) {
         fireAfter(myAdapted, event);
@@ -58,7 +58,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
     }
   }
 
-  public static void fireAfter(@NotNull VirtualFileListener adapted, @NotNull VFileEvent event) {
+  public static void fireAfter(@Nonnull VirtualFileListener adapted, @Nonnull VFileEvent event) {
     if (event instanceof VFileContentChangeEvent) {
       final VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
       final VirtualFile file = ce.getFile();
@@ -93,7 +93,7 @@ public class BulkVirtualFileListenerAdapter implements BulkFileListener {
     }
   }
 
-  public static void fireBefore(@NotNull VirtualFileListener adapted, @NotNull VFileEvent event) {
+  public static void fireBefore(@Nonnull VirtualFileListener adapted, @Nonnull VFileEvent event) {
     if (event instanceof VFileContentChangeEvent) {
       final VFileContentChangeEvent ce = (VFileContentChangeEvent)event;
       final VirtualFile file = ce.getFile();

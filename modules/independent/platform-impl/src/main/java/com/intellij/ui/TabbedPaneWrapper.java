@@ -25,9 +25,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.IJSwingUtilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class TabbedPaneWrapper  {
     }
   }
 
-  public TabbedPaneWrapper(@NotNull Disposable parentDisposable) {
+  public TabbedPaneWrapper(@Nonnull Disposable parentDisposable) {
     this(SwingConstants.TOP, TabbedPaneImpl.DEFAULT_PREV_NEXT_SHORTCUTS, parentDisposable);
   }
 
@@ -60,7 +60,7 @@ public class TabbedPaneWrapper  {
    * <code>SwingConstants.LEFT</code>, <code>SwingConstants.BOTTOM</code> or
    * <code>SwingConstants.RIGHT</code>.
    */
-  public TabbedPaneWrapper(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @NotNull Disposable parentDisposable) {
+  public TabbedPaneWrapper(int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @Nonnull Disposable parentDisposable) {
     final TabFactory factory;
     if (SwingConstants.BOTTOM == tabPlacement || SwingConstants.TOP == tabPlacement) {
       factory = new JBTabsFactory(this, null, parentDisposable);
@@ -341,7 +341,7 @@ public class TabbedPaneWrapper  {
 
     boolean myCustomFocus = true;
 
-    public TabWrapper(@NotNull final JComponent component) {
+    public TabWrapper(@Nonnull final JComponent component) {
       super(new BorderLayout());
       myComponent = component;
       add(component, BorderLayout.CENTER);
@@ -351,7 +351,7 @@ public class TabbedPaneWrapper  {
      * Make possible to search down for DataProviders
      */
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if(myComponent instanceof DataProvider){
         return ((DataProvider)myComponent).getData(dataId);
       } else {
@@ -496,7 +496,7 @@ public class TabbedPaneWrapper  {
     private final Disposable myParent;
     private final TabbedPaneWrapper myWrapper;
 
-    private JBTabsFactory(TabbedPaneWrapper wrapper, Project project, @NotNull Disposable parent) {
+    private JBTabsFactory(TabbedPaneWrapper wrapper, Project project, @Nonnull Disposable parent) {
       myWrapper = wrapper;
       myProject = project;
       myParent = parent;
@@ -535,7 +535,7 @@ public class TabbedPaneWrapper  {
   }
 
   public static class AsJBTabs extends TabbedPaneWrapper {
-    public AsJBTabs(@Nullable Project project, int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @NotNull Disposable parent) {
+    public AsJBTabs(@Nullable Project project, int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @Nonnull Disposable parent) {
       super(false);
       init(tabPlacement, installKeyboardNavigation, new JBTabsFactory(this, project, parent));
     }

@@ -36,7 +36,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
@@ -76,7 +76,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     }
     Pass<PsiElement> callback = new Pass<PsiElement>() {
       @Override
-      public void pass(@NotNull PsiElement expression) {
+      public void pass(@Nonnull PsiElement expression) {
         //noinspection unchecked
         ExpressionTypeProvider<PsiElement> provider = ObjectUtil.assertNotNull(map.get(expression));
         final String informationHint = provider.getInformationHint(expression);
@@ -107,7 +107,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
               editor, ContainerUtil.newArrayList(map.keySet()), callback,
               new Function<PsiElement, String>() {
                 @Override
-                public String fun(@NotNull PsiElement expression) {
+                public String fun(@Nonnull PsiElement expression) {
                   return expression.getText();
                 }
               }
@@ -115,7 +115,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Set<ExpressionTypeProvider> getHandlers(final Project project, Language... languages) {
     return JBIterable.of(languages).flatten(new Function<Language, Iterable<ExpressionTypeProvider>>() {
       @Override

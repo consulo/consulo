@@ -36,7 +36,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -83,13 +83,13 @@ public class ToolRunProfile implements ModuleRunProfile{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     return Module.EMPTY_ARRAY;
   }
 
   @Override
-  public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) {
+  public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) {
     final Project project = env.getProject();
     if (myCommandLine == null) {
       // can return null if creation of cmd line has been cancelled
@@ -102,7 +102,7 @@ public class ToolRunProfile implements ModuleRunProfile{
       }
 
       @Override
-      @NotNull
+      @Nonnull
       protected OSProcessHandler startProcess() throws ExecutionException {
         final GeneralCommandLine commandLine = createCommandLine();
         final OSProcessHandler processHandler = new ColoredProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
@@ -111,8 +111,8 @@ public class ToolRunProfile implements ModuleRunProfile{
       }
 
       @Override
-      @NotNull
-      public ExecutionResult execute(@NotNull final Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+      @Nonnull
+      public ExecutionResult execute(@Nonnull final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
         final ExecutionResult result = super.execute(executor, runner);
         final ProcessHandler processHandler = result.getProcessHandler();
         if (processHandler != null) {

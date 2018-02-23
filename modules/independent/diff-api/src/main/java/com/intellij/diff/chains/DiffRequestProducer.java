@@ -19,13 +19,13 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DiffRequestProducer {
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
-  DiffRequest process(@NotNull UserDataHolder context, @NotNull ProgressIndicator indicator)
+  @Nonnull
+  DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException;
 }

@@ -52,8 +52,8 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -137,7 +137,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       private final Collection[] myDevelopers = new Collection[]{Collections.emptyList()};
 
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
         }
@@ -205,7 +205,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   public void entryWasRead() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     if (SystemInfo.isMac) {
@@ -778,8 +778,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     return myMergedMessages.get(idx).get(0);
   }
 
-  @NotNull
-  public static Set<PluginId> findPluginIds(@NotNull Throwable t) {
+  @Nonnull
+  public static Set<PluginId> findPluginIds(@Nonnull Throwable t) {
     if (t instanceof PluginException) {
       PluginId pluginId = ((PluginException)t).getPluginId();
       return Collections.singleton(pluginId);

@@ -1,7 +1,7 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

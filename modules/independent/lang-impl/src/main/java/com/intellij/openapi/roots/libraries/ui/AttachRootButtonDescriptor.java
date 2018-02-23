@@ -16,9 +16,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -36,7 +36,7 @@ public abstract class AttachRootButtonDescriptor {
    * Creates a descriptor for 'attach' button shown in popup when user click on '+' button.
    * Consider using {@link #AttachRootButtonDescriptor(com.intellij.openapi.roots.OrderRootType, javax.swing.Icon, String)} instead.
    */
-  protected AttachRootButtonDescriptor(@NotNull OrderRootType orderRootType, @NotNull String buttonText) {
+  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull String buttonText) {
     myOrderRootType = orderRootType;
     myButtonText = buttonText;
     myToolbarIcon = null;
@@ -45,14 +45,14 @@ public abstract class AttachRootButtonDescriptor {
   /**
    * Creates a descriptor for 'attach' button shown in toolbar of a library editor
    */
-  protected AttachRootButtonDescriptor(@NotNull OrderRootType orderRootType, @NotNull Icon toolbarIcon, @NotNull String description) {
+  protected AttachRootButtonDescriptor(@Nonnull OrderRootType orderRootType, @Nonnull Icon toolbarIcon, @Nonnull String description) {
     myOrderRootType = orderRootType;
     myButtonText = description;
     myToolbarIcon = toolbarIcon;
   }
 
-  public abstract VirtualFile[] selectFiles(@NotNull JComponent parent, @Nullable VirtualFile initialSelection,
-                                            @Nullable Module contextModule, @NotNull LibraryEditor libraryEditor);
+  public abstract VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
+                                            @Nullable Module contextModule, @Nonnull LibraryEditor libraryEditor);
 
   public String getButtonText() {
     return myButtonText;
@@ -66,8 +66,8 @@ public abstract class AttachRootButtonDescriptor {
     return false;
   }
 
-  @NotNull
-  public VirtualFile[] scanForActualRoots(@NotNull VirtualFile[] rootCandidates, JComponent parent) {
+  @Nonnull
+  public VirtualFile[] scanForActualRoots(@Nonnull VirtualFile[] rootCandidates, JComponent parent) {
     return rootCandidates;
   }
 

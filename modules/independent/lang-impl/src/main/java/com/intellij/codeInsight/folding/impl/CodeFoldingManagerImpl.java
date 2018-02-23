@@ -42,8 +42,8 @@ import com.intellij.util.containers.WeakList;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +63,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "CodeFoldingManagerImpl";
   }
@@ -175,7 +175,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @RequiredDispatchThread
   @Override
-  public void releaseFoldings(@NotNull Editor editor) {
+  public void releaseFoldings(@Nonnull Editor editor) {
     ApplicationManagerEx.getApplicationEx().assertIsDispatchThread();
     final Project project = editor.getProject();
     if (project != null && (!project.equals(myProject) || !project.isOpen())) return;
@@ -193,7 +193,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @RequiredDispatchThread
   @Override
-  public void buildInitialFoldings(@NotNull final Editor editor) {
+  public void buildInitialFoldings(@Nonnull final Editor editor) {
     final Project project = editor.getProject();
     if (project == null || !project.equals(myProject) || editor.isDisposed()) return;
     if (!((FoldingModelEx)editor.getFoldingModel()).isFoldingEnabled()) return;
@@ -210,7 +210,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   @Nullable
   @Override
   @RequiredReadAction
-  public CodeFoldingState buildInitialFoldings(@NotNull final Document document) {
+  public CodeFoldingState buildInitialFoldings(@Nonnull final Document document) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -244,7 +244,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     };
   }
 
-  private void initFolding(@NotNull final Editor editor) {
+  private void initFolding(@Nonnull final Editor editor) {
     final Document document = editor.getDocument();
     editor.getFoldingModel().runBatchFoldingOperation(() -> {
       DocumentFoldingInfo documentFoldingInfo = getDocumentFoldingInfo(document);
@@ -267,17 +267,17 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @Override
   @Nullable
-  public FoldRegion findFoldRegion(@NotNull Editor editor, int startOffset, int endOffset) {
+  public FoldRegion findFoldRegion(@Nonnull Editor editor, int startOffset, int endOffset) {
     return FoldingUtil.findFoldRegion(editor, startOffset, endOffset);
   }
 
   @Override
-  public FoldRegion[] getFoldRegionsAtOffset(@NotNull Editor editor, int offset) {
+  public FoldRegion[] getFoldRegionsAtOffset(@Nonnull Editor editor, int offset) {
     return FoldingUtil.getFoldRegionsAtOffset(editor, offset);
   }
 
   @Override
-  public void updateFoldRegions(@NotNull Editor editor) {
+  public void updateFoldRegions(@Nonnull Editor editor) {
     updateFoldRegions(editor, false);
   }
 
@@ -291,7 +291,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public void forceDefaultState(@NotNull final Editor editor) {
+  public void forceDefaultState(@Nonnull final Editor editor) {
     PsiDocumentManager.getInstance(myProject).commitDocument(editor.getDocument());
     Runnable runnable = updateFoldRegions(editor, true, false);
     if (runnable != null) {
@@ -312,7 +312,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @Override
   @Nullable
-  public Runnable updateFoldRegionsAsync(@NotNull final Editor editor, final boolean firstTime) {
+  public Runnable updateFoldRegionsAsync(@Nonnull final Editor editor, final boolean firstTime) {
     if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
     final Runnable runnable = updateFoldRegions(editor, firstTime, false);
     return () -> {
@@ -327,14 +327,14 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @Nullable
   @RequiredReadAction
-  private Runnable updateFoldRegions(@NotNull Editor editor, boolean applyDefaultState, boolean quick) {
+  private Runnable updateFoldRegions(@Nonnull Editor editor, boolean applyDefaultState, boolean quick) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     return file == null ? null : FoldingUpdate.updateFoldRegions(editor, file, applyDefaultState, quick);
   }
 
   @RequiredDispatchThread
   @Override
-  public CodeFoldingState saveFoldingState(@NotNull Editor editor) {
+  public CodeFoldingState saveFoldingState(@Nonnull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     DocumentFoldingInfo info = getDocumentFoldingInfo(editor.getDocument());
     if (isFoldingsInitializedInEditor(editor)) {
@@ -345,7 +345,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
 
   @RequiredDispatchThread
   @Override
-  public void restoreFoldingState(@NotNull Editor editor, @NotNull CodeFoldingState state) {
+  public void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (isFoldingsInitializedInEditor(editor)) {
       state.setToEditor(editor);
@@ -353,7 +353,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public void writeFoldingState(@NotNull CodeFoldingState state, @NotNull Element element) throws WriteExternalException {
+  public void writeFoldingState(@Nonnull CodeFoldingState state, @Nonnull Element element) throws WriteExternalException {
     if (state instanceof DocumentFoldingInfo) {
       ((DocumentFoldingInfo)state).writeExternal(element);
     }
@@ -363,14 +363,14 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
   }
 
   @Override
-  public CodeFoldingState readFoldingState(@NotNull Element element, @NotNull Document document) {
+  public CodeFoldingState readFoldingState(@Nonnull Element element, @Nonnull Document document) {
     DocumentFoldingInfo info = getDocumentFoldingInfo(document);
     info.readExternal(element);
     return info;
   }
 
-  @NotNull
-  private DocumentFoldingInfo getDocumentFoldingInfo(@NotNull Document document) {
+  @Nonnull
+  private DocumentFoldingInfo getDocumentFoldingInfo(@Nonnull Document document) {
     DocumentFoldingInfo info = document.getUserData(myFoldingInfoInDocumentKey);
     if (info == null) {
       info = new DocumentFoldingInfo(myProject, document);
@@ -385,7 +385,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Projec
     return info;
   }
 
-  private static boolean isFoldingsInitializedInEditor(@NotNull Editor editor) {
+  private static boolean isFoldingsInitializedInEditor(@Nonnull Editor editor) {
     return Boolean.TRUE.equals(editor.getUserData(FOLDING_STATE_KEY));
   }
 }

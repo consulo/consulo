@@ -43,7 +43,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -97,7 +97,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
                                                                 "Loading revision " + revisionNumber.asString() + " contents", true,
                                                                 BackgroundFromStartOption.getInstance()) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           final CommittedChangesProvider provider = myVcs.getCommittedChangesProvider();
           try {
             final Pair<CommittedChangeList, FilePath> pair = provider.getOneList(myFile, revisionNumber);

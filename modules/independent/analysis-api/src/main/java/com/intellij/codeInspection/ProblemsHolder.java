@@ -31,8 +31,8 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,26 +47,26 @@ public class ProblemsHolder {
   private final boolean myOnTheFly;
   private final List<ProblemDescriptor> myProblems = new ArrayList<ProblemDescriptor>();
 
-  public ProblemsHolder(@NotNull InspectionManager manager, @NotNull PsiFile file, boolean onTheFly) {
+  public ProblemsHolder(@Nonnull InspectionManager manager, @Nonnull PsiFile file, boolean onTheFly) {
     myManager = manager;
     myFile = file;
     myOnTheFly = onTheFly;
   }
 
-  public void registerProblem(@NotNull PsiElement psiElement,
-                              @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
-                              @Nullable LocalQuickFix... fixes) {
+  public void registerProblem(@Nonnull PsiElement psiElement,
+                              @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
+                              @javax.annotation.Nullable LocalQuickFix... fixes) {
     registerProblem(psiElement, descriptionTemplate, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, fixes);
   }
 
-  public void registerProblem(@NotNull PsiElement psiElement,
-                              @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
-                              @NotNull ProblemHighlightType highlightType,
-                              @Nullable LocalQuickFix... fixes) {
+  public void registerProblem(@Nonnull PsiElement psiElement,
+                              @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
+                              @Nonnull ProblemHighlightType highlightType,
+                              @javax.annotation.Nullable LocalQuickFix... fixes) {
     registerProblem(myManager.createProblemDescriptor(psiElement, descriptionTemplate, myOnTheFly, fixes, highlightType));
   }
 
-  public void registerProblem(@NotNull ProblemDescriptor problemDescriptor) {
+  public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
     PsiElement element = problemDescriptor.getPsiElement();
     if (element != null && !isInPsiFile(element)) {
       ExternallyDefinedPsiElement external = PsiTreeUtil.getParentOfType(element, ExternallyDefinedPsiElement.class, false);
@@ -82,12 +82,12 @@ public class ProblemsHolder {
     myProblems.add(problemDescriptor);
   }
 
-  private boolean isInPsiFile(@NotNull PsiElement element) {
+  private boolean isInPsiFile(@Nonnull PsiElement element) {
     PsiFile file = element.getContainingFile();
     return myFile.getViewProvider() == file.getViewProvider();
   }
 
-  private void redirectProblem(@NotNull final ProblemDescriptor problem, @NotNull final PsiElement target) {
+  private void redirectProblem(@Nonnull final ProblemDescriptor problem, @Nonnull final PsiElement target) {
     final PsiElement original = problem.getPsiElement();
     final VirtualFile vFile = original.getContainingFile().getVirtualFile();
     assert vFile != null;
@@ -106,7 +106,7 @@ public class ProblemsHolder {
     registerProblem(newProblem);
   }
 
-  public void registerProblem(@NotNull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
+  public void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
     LocalQuickFix[] fixes = null;
     if (reference instanceof LocalQuickFixProvider) {
       fixes = ((LocalQuickFixProvider)reference).getQuickFixes();
@@ -114,21 +114,21 @@ public class ProblemsHolder {
     registerProblemForReference(reference, highlightType, descriptionTemplate, fixes);
   }
 
-  public void registerProblemForReference(@NotNull PsiReference reference,
-                                          @NotNull ProblemHighlightType highlightType,
-                                          @NotNull String descriptionTemplate,
+  public void registerProblemForReference(@Nonnull PsiReference reference,
+                                          @Nonnull ProblemHighlightType highlightType,
+                                          @Nonnull String descriptionTemplate,
                                           @Nullable LocalQuickFix... fixes) {
     ProblemDescriptor descriptor = myManager.createProblemDescriptor(reference.getElement(), reference.getRangeInElement(),
                                                                      descriptionTemplate, highlightType, myOnTheFly, fixes);
     registerProblem(descriptor);
   }
 
-  public void registerProblem(@NotNull PsiReference reference) {
+  public void registerProblem(@Nonnull PsiReference reference) {
     registerProblem(reference, unresolvedReferenceMessage(reference), ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
   }
 
-  @NotNull
-  public static String unresolvedReferenceMessage(@NotNull PsiReference reference) {
+  @Nonnull
+  public static String unresolvedReferenceMessage(@Nonnull PsiReference reference) {
     String message;
     if (reference instanceof EmptyResolveMessageProvider) {
       String pattern = ((EmptyResolveMessageProvider)reference).getUnresolvedMessagePattern();
@@ -156,36 +156,36 @@ public class ProblemsHolder {
    *                       If you want to highlight only part of the supplied psiElement. Pass null otherwise.
    * @param fixes (Optional) fixes to appear for this highlighter.
    */
-  public void registerProblem(@NotNull final PsiElement psiElement,
-                              @NotNull final String message,
-                              @NotNull ProblemHighlightType highlightType,
+  public void registerProblem(@Nonnull final PsiElement psiElement,
+                              @Nonnull final String message,
+                              @Nonnull ProblemHighlightType highlightType,
                               @Nullable TextRange rangeInElement,
-                              @Nullable LocalQuickFix... fixes) {
+                              @javax.annotation.Nullable LocalQuickFix... fixes) {
 
     final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, highlightType, myOnTheFly, fixes);
     registerProblem(descriptor);
   }
 
-  public void registerProblem(@NotNull final PsiElement psiElement,
+  public void registerProblem(@Nonnull final PsiElement psiElement,
                               @Nullable TextRange rangeInElement,
-                              @NotNull final String message,
+                              @Nonnull final String message,
                               @Nullable LocalQuickFix... fixes) {
     final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, myOnTheFly, fixes);
     registerProblem(descriptor);
   }
 
-  @NotNull
+  @Nonnull
   public List<ProblemDescriptor> getResults() {
     return myProblems;
   }
 
-  @NotNull
+  @Nonnull
   public ProblemDescriptor[] getResultsArray() {
     final List<ProblemDescriptor> problems = getResults();
     return problems.toArray(new ProblemDescriptor[problems.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public final InspectionManager getManager() {
     return myManager;
   }
@@ -202,12 +202,12 @@ public class ProblemsHolder {
     return myOnTheFly;
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public final Project getProject() {
     return myManager.getProject();
   }

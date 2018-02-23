@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class UITestUtil {
   public static class ListOfFragments extends ArrayList<Pair<String, SimpleTextAttributes>> {
-    public void add(@NotNull @Nls final String fragment, @NotNull final SimpleTextAttributes attributes) {
+    public void add(@Nonnull @Nls final String fragment, @Nonnull final SimpleTextAttributes attributes) {
       add(new Pair<String, SimpleTextAttributes>(fragment, attributes));
     }
   }
@@ -39,8 +39,8 @@ public class UITestUtil {
       myFragments = new ListOfFragments();
     }
 
-    public void append(@NotNull @Nls final String fragment,
-                       @NotNull final SimpleTextAttributes attributes) {
+    public void append(@Nonnull @Nls final String fragment,
+                       @Nonnull final SimpleTextAttributes attributes) {
       myFragments.add(fragment, attributes);
     }
 

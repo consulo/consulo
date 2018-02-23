@@ -23,7 +23,7 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.orderEntry.ModuleSourceOrderEntryType;
 
@@ -44,7 +44,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module getOwnerModule() {
     return myModuleRootLayer.getModule();
   }
@@ -55,18 +55,18 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
     return other instanceof ModuleSourceOrderEntry;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     return ProjectBundle.message("project.root.module.source");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(OrderRootType type) {
     if (type == SourcesOrderRootType.getInstance()) {
       return myModuleRootLayer.getContentFolderFiles(ContentFolderScopes.productionAndTest());
@@ -75,7 +75,7 @@ public class ModuleSourceOrderEntryImpl extends OrderEntryBaseImpl implements Mo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getUrls(OrderRootType type) {
     final ArrayList<String> result = new ArrayList<String>();
     if (type == SourcesOrderRootType.getInstance()) {

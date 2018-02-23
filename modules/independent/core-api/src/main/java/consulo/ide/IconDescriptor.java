@@ -19,9 +19,9 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class IconDescriptor {
     return this;
   }
 
-  public IconDescriptor addLayerIcon(@NotNull Icon icon) {
+  public IconDescriptor addLayerIcon(@Nonnull Icon icon) {
     if(myLayerIcons == null) {
       myLayerIcons = new SmartList<Icon>();
     }
@@ -56,7 +56,7 @@ public class IconDescriptor {
     return this;
   }
 
-  public IconDescriptor removeLayerIcon(@NotNull Icon icon) {
+  public IconDescriptor removeLayerIcon(@Nonnull Icon icon) {
     if(myLayerIcons != null) {
       myLayerIcons.remove(icon);
     }
@@ -79,7 +79,7 @@ public class IconDescriptor {
     myRightIcon = rightIcon;
   }
 
-  @NotNull
+  @Nonnull
   public Icon toIcon() {
     Icon mainIcon = null;
     if(myLayerIcons == null) {

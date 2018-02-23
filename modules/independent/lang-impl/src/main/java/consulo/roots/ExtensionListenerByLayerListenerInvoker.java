@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.util.messages.MessageBus;
 import consulo.module.extension.*;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +36,15 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class ExtensionListenerByLayerListenerInvoker extends AbstractProjectComponent {
-  public ExtensionListenerByLayerListenerInvoker(@NotNull Project project, @NotNull final MessageBus bus) {
+  public ExtensionListenerByLayerListenerInvoker(@Nonnull Project project, @Nonnull final MessageBus bus) {
     super(project);
     bus.connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter() {
       @Override
-      public void currentLayerChanged(@NotNull final Module module,
-                                      @NotNull final String oldName,
-                                      @NotNull final ModuleRootLayer oldLayer,
-                                      @NotNull final String newName,
-                                      @NotNull final ModuleRootLayer newLayer) {
+      public void currentLayerChanged(@Nonnull final Module module,
+                                      @Nonnull final String oldName,
+                                      @Nonnull final ModuleRootLayer oldLayer,
+                                      @Nonnull final String newName,
+                                      @Nonnull final ModuleRootLayer newLayer) {
 
         final List<Couple<ModuleExtension>> list = new ArrayList<Couple<ModuleExtension>>();
         for (ModuleExtensionProviderEP providerEP : ModuleExtensionProviders.getProviders()) {

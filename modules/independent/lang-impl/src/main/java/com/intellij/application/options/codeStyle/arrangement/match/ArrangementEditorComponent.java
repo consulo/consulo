@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEdit
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import com.intellij.application.options.codeStyle.arrangement.util.CalloutBorder;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,14 +33,18 @@ public class ArrangementEditorComponent implements ArrangementRepresentationAwar
                                                    ArrangementEditorAware
 {
 
-  @NotNull private final ArrangementMatchingRulesControl myList;
-  @NotNull private final JComponent                      myComponent;
-  @NotNull private final Insets                          myBorderInsets;
-  @NotNull private final ArrangementMatchingRuleEditor   myEditor;
+  @Nonnull
+  private final ArrangementMatchingRulesControl myList;
+  @Nonnull
+  private final JComponent                      myComponent;
+  @Nonnull
+  private final Insets                          myBorderInsets;
+  @Nonnull
+  private final ArrangementMatchingRuleEditor   myEditor;
 
   private final int myRow;
 
-  public ArrangementEditorComponent(@NotNull ArrangementMatchingRulesControl list, int row, @NotNull ArrangementMatchingRuleEditor editor) {
+  public ArrangementEditorComponent(@Nonnull ArrangementMatchingRulesControl list, int row, @Nonnull ArrangementMatchingRuleEditor editor) {
     myList = list;
     myRow = row;
     myEditor = editor;
@@ -60,7 +64,7 @@ public class ArrangementEditorComponent implements ArrangementRepresentationAwar
     //myComponent = new ArrangementAnimationPanel(borderPanel, true, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myComponent;

@@ -35,8 +35,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SdkTypeId getSdkType() {
     if (mySdkType == null) {
       mySdkType = SdkTable.getInstance().getDefaultSdkType();
@@ -99,13 +99,13 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
@@ -175,7 +175,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Element getState() {
     Element element = new Element("state");
@@ -222,7 +222,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object clone() {
     SdkImpl newSdk = new SdkImpl("", mySdkType);
     copyTo(newSdk);
@@ -230,7 +230,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RootProvider getRootProvider() {
     return myRootProvider;
   }
@@ -268,8 +268,8 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
 
   private class MyRootProvider extends RootProviderBaseImpl implements ProjectRootListener {
     @Override
-    @NotNull
-    public String[] getUrls(@NotNull OrderRootType rootType) {
+    @Nonnull
+    public String[] getUrls(@Nonnull OrderRootType rootType) {
       final SdkRoot[] rootFiles = myRootContainer.getRoots(rootType);
       final ArrayList<String> result = new ArrayList<String>();
       for (SdkRoot rootFile : rootFiles) {
@@ -279,22 +279,22 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     }
 
     @Override
-    @NotNull
-    public VirtualFile[] getFiles(@NotNull final OrderRootType rootType) {
+    @Nonnull
+    public VirtualFile[] getFiles(@Nonnull final OrderRootType rootType) {
       return myRootContainer.getRootFiles(rootType);
     }
 
     private final List<RootSetChangedListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
     @Override
-    public void addRootSetChangedListener(@NotNull RootSetChangedListener listener) {
+    public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
       assert !myListeners.contains(listener);
       myListeners.add(listener);
       super.addRootSetChangedListener(listener);
     }
 
     @Override
-    public void addRootSetChangedListener(@NotNull final RootSetChangedListener listener, @NotNull Disposable parentDisposable) {
+    public void addRootSetChangedListener(@Nonnull final RootSetChangedListener listener, @Nonnull Disposable parentDisposable) {
       super.addRootSetChangedListener(listener, parentDisposable);
       Disposer.register(parentDisposable, new Disposable() {
         @Override
@@ -305,7 +305,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
     }
 
     @Override
-    public void removeRootSetChangedListener(@NotNull RootSetChangedListener listener) {
+    public void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
       super.removeRootSetChangedListener(listener);
       myListeners.remove(listener);
     }
@@ -326,7 +326,7 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
 
   // SdkModificator implementation
   @Override
-  @NotNull
+  @Nonnull
   public SdkModificator getSdkModificator() {
     SdkImpl sdk = (SdkImpl)clone();
     sdk.myOrigin = this;
@@ -364,12 +364,12 @@ public class SdkImpl extends UserDataHolderBase implements PersistentStateCompon
   }
 
   @Override
-  public void addRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
+  public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
     myRootContainer.addRoot(root, rootType);
   }
 
   @Override
-  public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
+  public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
     myRootContainer.removeRoot(root, rootType);
   }
 

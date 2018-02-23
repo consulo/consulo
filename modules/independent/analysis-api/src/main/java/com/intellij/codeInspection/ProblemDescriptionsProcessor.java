@@ -16,8 +16,8 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.reference.RefEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Collects the results of a global inspection.
@@ -33,15 +33,15 @@ public interface ProblemDescriptionsProcessor {
    * @param refEntity the reference graph node.
    * @return the problems found for the specified node.
    */
-  @Nullable
-  CommonProblemDescriptor[] getDescriptions(@NotNull RefEntity refEntity);
+  @javax.annotation.Nullable
+  CommonProblemDescriptor[] getDescriptions(@Nonnull RefEntity refEntity);
 
   /**
    * Drops all problems which have been collected for the specified reference graph node.
    *
    * @param refEntity the reference graph node.
    */
-  void ignoreElement(@NotNull RefEntity refEntity);
+  void ignoreElement(@Nonnull RefEntity refEntity);
 
   /**
    * Registers a problem or several problems, with optional quickfixes, for the specified
@@ -50,7 +50,7 @@ public interface ProblemDescriptionsProcessor {
    * @param refEntity                the reference graph node.
    * @param commonProblemDescriptors the descriptors for the problems to register.
    */
-  void addProblemElement(@Nullable RefEntity refEntity, @NotNull CommonProblemDescriptor... commonProblemDescriptors);
+  void addProblemElement(@Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors);
 
-  RefEntity getElement(@NotNull CommonProblemDescriptor descriptor);
+  RefEntity getElement(@Nonnull CommonProblemDescriptor descriptor);
 }

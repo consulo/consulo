@@ -37,8 +37,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +71,8 @@ public class RemoteFilePanel implements PropertyChangeListener {
   private final MergingUpdateQueue myProgressUpdatesQueue;
   private final MyDownloadingListener myDownloadingListener;
   private final EventDispatcher<PropertyChangeListener> myDispatcher = EventDispatcher.create(PropertyChangeListener.class);
-  private @Nullable TextEditor myFileEditor;
+  private @Nullable
+  TextEditor myFileEditor;
 
   public RemoteFilePanel(final Project project, final HttpVirtualFile virtualFile) {
     myProject = project;
@@ -221,7 +222,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
       });
     }
 
-    public void errorOccurred(@NotNull final String errorMessage) {
+    public void errorOccurred(@Nonnull final String errorMessage) {
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         public void run() {
           myErrorLabel.setText(errorMessage);
@@ -230,7 +231,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
       });
     }
 
-    public void progressMessageChanged(final boolean indeterminate, @NotNull final String message) {
+    public void progressMessageChanged(final boolean indeterminate, @Nonnull final String message) {
       myProgressUpdatesQueue.queue(new Update("progress text") {
         public void run() {
           myProgressLabel.setText(message);

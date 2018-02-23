@@ -29,8 +29,8 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class StoreUtil {
   private static final Logger LOG = Logger.getInstance(StoreUtil.class);
@@ -38,7 +38,7 @@ public final class StoreUtil {
   private StoreUtil() {
   }
 
-  public static void save(@NotNull IComponentStore stateStore, @Nullable Project project) {
+  public static void save(@Nonnull IComponentStore stateStore, @Nullable Project project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
       stateStore.save(new SmartList<>());

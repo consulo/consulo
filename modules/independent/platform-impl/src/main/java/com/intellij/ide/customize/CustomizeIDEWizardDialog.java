@@ -25,7 +25,7 @@ import com.intellij.ui.JBCardLayout;
 import com.intellij.util.containers.MultiMap;
 import consulo.ide.customize.CustomizeDownloadAndStartStepPanel;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

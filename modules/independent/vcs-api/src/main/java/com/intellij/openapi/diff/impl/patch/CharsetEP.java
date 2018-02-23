@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.FilePathsHelper;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -44,26 +44,26 @@ public class CharsetEP implements PatchEP {
     myBaseDir = myProject.getBaseDir().getPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "com.intellij.openapi.diff.impl.patch.CharsetEP";
   }
 
   @Override
-  public CharSequence provideContent(@NotNull String path, CommitContext commitContext) {
+  public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
     final File file = new File(myBaseDir, path);
     final VirtualFile vf = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
     return vf == null ? null : vf.getCharset().name();
   }
 
   @Override
-  public void consumeContent(@NotNull String path, @NotNull CharSequence content, CommitContext commitContext) {
+  public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
   }
 
   @Override
-  public void consumeContentBeforePatchApplied(@NotNull String path,
-                                               @NotNull CharSequence content,
+  public void consumeContentBeforePatchApplied(@Nonnull String path,
+                                               @Nonnull CharSequence content,
                                                CommitContext commitContext) {
     if (commitContext == null) return;
     Map<String, String> map = commitContext.getUserData(ourName);

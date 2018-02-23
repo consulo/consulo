@@ -22,7 +22,7 @@ import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.compiler.ModuleCompilerPathsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -39,7 +39,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getExcludeRootsForProject() {
     VirtualFile outputPath = CompilerConfiguration.getInstance(myProject).getCompilerOutput();
@@ -49,9 +49,9 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointer[] getExcludeRootsForModule(@NotNull final ModuleRootLayer moduleRootLayer) {
+  public VirtualFilePointer[] getExcludeRootsForModule(@Nonnull final ModuleRootLayer moduleRootLayer) {
     ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(moduleRootLayer.getModule());
     List<VirtualFilePointer> result = new ArrayList<VirtualFilePointer>(3);
 

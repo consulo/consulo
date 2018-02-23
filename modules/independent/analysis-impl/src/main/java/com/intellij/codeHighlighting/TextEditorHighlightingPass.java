@@ -31,16 +31,18 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class TextEditorHighlightingPass implements HighlightingPass {
   public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
-  @Nullable protected final Document myDocument;
-  @NotNull protected final Project myProject;
+  @javax.annotation.Nullable
+  protected final Document myDocument;
+  @Nonnull
+  protected final Project myProject;
   private final boolean myRunIntentionPassAfter;
   private final long myInitialDocStamp;
   private final long myInitialPsiStamp;
@@ -50,20 +52,20 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   private volatile boolean myDumb;
   private EditorColorsScheme myColorsScheme;
 
-  protected TextEditorHighlightingPass(@NotNull final Project project, @Nullable final Document document, boolean runIntentionPassAfter) {
+  protected TextEditorHighlightingPass(@Nonnull final Project project, @Nullable final Document document, boolean runIntentionPassAfter) {
     myDocument = document;
     myProject = project;
     myRunIntentionPassAfter = runIntentionPassAfter;
     myInitialDocStamp = document == null ? 0 : document.getModificationStamp();
     myInitialPsiStamp = PsiModificationTracker.SERVICE.getInstance(myProject).getModificationCount();
   }
-  protected TextEditorHighlightingPass(@NotNull final Project project, @Nullable final Document document) {
+  protected TextEditorHighlightingPass(@Nonnull final Project project, @javax.annotation.Nullable final Document document) {
     this(project, document, true);
   }
 
   @RequiredReadAction
   @Override
-  public final void collectInformation(@NotNull ProgressIndicator progress) {
+  public final void collectInformation(@Nonnull ProgressIndicator progress) {
     if (!isValid()) return; //Document has changed.
     if (!(progress instanceof DaemonProgressIndicator)) {
       throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: "+progress);
@@ -118,7 +120,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   }
 
   @RequiredReadAction
-  public abstract void doCollectInformation(@NotNull ProgressIndicator progress);
+  public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
   public abstract void doApplyInformationToEditor();
 
   public final int getId() {
@@ -129,17 +131,17 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     myId = id;
   }
 
-  @NotNull
+  @Nonnull
   public List<HighlightInfo> getInfos() {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public final int[] getCompletionPredecessorIds() {
     return myCompletionPredecessorIds;
   }
 
-  public final void setCompletionPredecessorIds(@NotNull int[] completionPredecessorIds) {
+  public final void setCompletionPredecessorIds(@Nonnull int[] completionPredecessorIds) {
     myCompletionPredecessorIds = completionPredecessorIds;
   }
 
@@ -148,11 +150,12 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return myDocument;
   }
 
-  @NotNull public final int[] getStartingPredecessorIds() {
+  @Nonnull
+  public final int[] getStartingPredecessorIds() {
     return myStartingPredecessorIds;
   }
 
-  public final void setStartingPredecessorIds(@NotNull final int[] startingPredecessorIds) {
+  public final void setStartingPredecessorIds(@Nonnull final int[] startingPredecessorIds) {
     myStartingPredecessorIds = startingPredecessorIds;
   }
 

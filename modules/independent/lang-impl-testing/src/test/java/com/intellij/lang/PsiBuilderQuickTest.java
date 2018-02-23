@@ -39,7 +39,7 @@ import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -506,46 +506,46 @@ public class PsiBuilderQuickTest extends FlyIdeaTestCase {
   @SuppressWarnings("ConstantConditions")
   private static PsiBuilderImpl createBuilder(CharSequence text) {
     ParserDefinition parserDefinition = new ParserDefinition() {
-      @NotNull
+      @Nonnull
       @Override
-      public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
+      public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
         return new MyTestLexer();
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
+      public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
         return null;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public IFileElementType getFileNodeType() {
         return null;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
+      public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
         return WHITESPACE_SET;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public TokenSet getCommentTokens(LanguageVersion languageVersion) {
         return COMMENT_SET;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
         return null;
       }
 
       @RequiredReadAction
-      @NotNull
+      @Nonnull
       @Override
-      public PsiElement createElement(@NotNull ASTNode node) {
+      public PsiElement createElement(@Nonnull ASTNode node) {
         return null;
       }
 
@@ -605,17 +605,17 @@ public class PsiBuilderQuickTest extends FlyIdeaTestCase {
       }
     }, new DiffTreeChangeBuilder<ASTNode, LighterASTNode>() {
       @Override
-      public void nodeReplaced(@NotNull ASTNode oldChild, @NotNull LighterASTNode newChild) {
+      public void nodeReplaced(@Nonnull ASTNode oldChild, @Nonnull LighterASTNode newChild) {
         fail("replaced(" + oldChild + "," + newChild.getTokenType() + ")");
       }
 
       @Override
-      public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
+      public void nodeDeleted(@Nonnull ASTNode oldParent, @Nonnull ASTNode oldNode) {
         fail("deleted(" + oldParent + "," + oldNode + ")");
       }
 
       @Override
-      public void nodeInserted(@NotNull ASTNode oldParent, @NotNull LighterASTNode newNode, int pos) {
+      public void nodeInserted(@Nonnull ASTNode oldParent, @Nonnull LighterASTNode newNode, int pos) {
         fail("inserted(" + oldParent + "," + newNode.getTokenType() + ")");
       }
     }, root.getText());
@@ -628,46 +628,46 @@ public class PsiBuilderQuickTest extends FlyIdeaTestCase {
     try {
       try {
         ParserDefinition parserDefinition = new ParserDefinition() {
-          @NotNull
+          @Nonnull
           @Override
-          public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
+          public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
             return null;
           }
 
-          @NotNull
+          @Nonnull
           @Override
-          public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
+          public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
             return null;
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public IFileElementType getFileNodeType() {
             return null;
           }
 
-          @NotNull
+          @Nonnull
           @Override
-          public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
+          public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
             return TokenSet.EMPTY;
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public TokenSet getCommentTokens(LanguageVersion languageVersion) {
             return TokenSet.EMPTY;
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
             return null;
           }
 
           @RequiredReadAction
-          @NotNull
+          @Nonnull
           @Override
-          public PsiElement createElement(@NotNull ASTNode node) {
+          public PsiElement createElement(@Nonnull ASTNode node) {
             return null;
           }
 

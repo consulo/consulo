@@ -19,8 +19,8 @@ package com.intellij.internal.statistic.connect;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public interface StatisticsService {
 
   StatisticsResult send();
 
-  Notification createNotification(@NotNull String groupDisplayId, @Nullable NotificationListener listener);
+  Notification createNotification(@Nonnull String groupDisplayId, @Nullable NotificationListener listener);
 
   /**
    * Returns the custom text to be displayed in the statistics dialog. The keys in the map are control IDs ({@link #TITLE}, {@link #DETAILS}

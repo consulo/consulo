@@ -17,8 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,12 +38,12 @@ public class AlienLocalChangeList extends LocalChangeList {
     return myChanges;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull final String name) {
+  public void setName(@Nonnull final String name) {
     myName = name;
   }
 
@@ -68,7 +67,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Object getData() {
     throw new UnsupportedOperationException();

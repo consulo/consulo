@@ -14,7 +14,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * IntelliJ external systems integration is built using GoF Bridge pattern, i.e. 'external-system' module defines
@@ -41,25 +41,25 @@ public interface ExternalSystemManager<
   /**
    * @return    id of the external system represented by the current manager
    */
-  @NotNull
+  @Nonnull
   ProjectSystemId getSystemId();
 
   /**
    * @return    a strategy which can be queried for external system settings to use with the given project
    */
-  @NotNull
+  @Nonnull
   Function<Project, Settings> getSettingsProvider();
 
   /**
    * @return    a strategy which can be queried for external system local settings to use with the given project
    */
-  @NotNull
+  @Nonnull
   Function<Project, LocalSettings> getLocalSettingsProvider();
 
   /**
    * @return    a strategy which can be queried for external system execution settings to use with the given project
    */
-  @NotNull
+  @Nonnull
   Function<Pair<Project, String/*linked project path*/>, ExecutionSettings> getExecutionSettingsProvider();
 
   /**
@@ -72,7 +72,7 @@ public interface ExternalSystemManager<
    * 
    * @return  class of the project resolver to use for the target external system
    */
-  @NotNull
+  @Nonnull
   Class<? extends ExternalSystemProjectResolver<ExecutionSettings>> getProjectResolverClass();
 
   /**
@@ -84,6 +84,6 @@ public interface ExternalSystemManager<
   /**
    * @return    file chooser descriptor to use when adding new external project
    */
-  @NotNull
+  @Nonnull
   FileChooserDescriptor getExternalProjectDescriptor();
 }

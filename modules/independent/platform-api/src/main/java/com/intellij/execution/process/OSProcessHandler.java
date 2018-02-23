@@ -24,8 +24,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -42,7 +42,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private boolean myDestroyRecursively = true;
   private Set<File> myFilesToDelete = null;
 
-  public OSProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  public OSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();
     myFilesToDelete = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
@@ -51,14 +51,14 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public OSProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine) {
+  public OSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     this(process, commandLine, EncodingManager.getInstance().getDefaultCharset());
   }
 
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public OSProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public OSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
     setHasPty(isPtyProcess(process));
   }
@@ -99,9 +99,9 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected Future<?> executeOnPooledThread(@NotNull Runnable task) {
+  protected Future<?> executeOnPooledThread(@Nonnull Runnable task) {
     return super.executeOnPooledThread(task);  // to maintain binary compatibility?
   }
 
@@ -149,7 +149,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    *
    * @param process Process
    */
-  protected void killProcessTree(@NotNull final Process process) {
+  protected void killProcessTree(@Nonnull final Process process) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       killProcessTreeSync(process);
     }
@@ -158,7 +158,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     }
   }
 
-  private void killProcessTreeSync(@NotNull Process process) {
+  private void killProcessTreeSync(@Nonnull Process process) {
     LOG.debug("killing process tree");
     final boolean destroyed = OSProcessManager.getInstance().killProcessTree(process);
     if (!destroyed) {
@@ -182,7 +182,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     myHasPty = hasPty;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected BaseOutputReader.Options readerOptions() {
     return myHasPty ? BaseOutputReader.Options.BLOCKING : super.readerOptions();  // blocking read in case of PTY-based process
@@ -192,7 +192,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    * Registers a file to delete after the given command line finishes.
    * In order to have an effect, the command line has to be executed with {@link #OSProcessHandler(GeneralCommandLine)}.
    */
-  public static void deleteFileOnTermination(@NotNull GeneralCommandLine commandLine, @NotNull File fileToDelete) {
+  public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
     Set<File> set = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
     if (set == null) {
       commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new THashSet<>());

@@ -19,7 +19,7 @@ package com.intellij.util.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.LayeredIcon;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,8 +86,8 @@ public class AsyncProcessIcon extends AnimatedIcon {
     }
   }
 
-  @NotNull
-  protected Rectangle calculateBounds(@NotNull JComponent container) {
+  @Nonnull
+  protected Rectangle calculateBounds(@Nonnull JComponent container) {
     Rectangle rec = container.getVisibleRect();
     Dimension iconSize = getPreferredSize();
     return new Rectangle(rec.x + rec.width - iconSize.width, rec.y, iconSize.width, iconSize.height);

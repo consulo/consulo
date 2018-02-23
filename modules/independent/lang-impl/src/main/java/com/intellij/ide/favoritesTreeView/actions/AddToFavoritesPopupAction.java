@@ -22,7 +22,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class AddToFavoritesPopupAction extends QuickSwitchSchemeAction {
   @Override
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     group.removeAll();
 
     final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();

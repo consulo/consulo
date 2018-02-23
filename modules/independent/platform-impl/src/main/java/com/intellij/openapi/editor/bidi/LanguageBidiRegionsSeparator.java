@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.bidi;
 
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @see BidiRegionsSeparator
@@ -28,7 +28,7 @@ public class LanguageBidiRegionsSeparator extends LanguageExtension<BidiRegionsS
   private LanguageBidiRegionsSeparator() {
     super("com.intellij.bidiRegionsSeparator", new BidiRegionsSeparator() {
       @Override
-      public boolean createBorderBetweenTokens(@NotNull IElementType previousTokenType, @NotNull IElementType tokenType) {
+      public boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
         return true;
       }
     });

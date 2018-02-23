@@ -26,8 +26,8 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -40,8 +40,8 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 
   @Override
-  public NewLibraryConfiguration createLibraryFromFiles(@NotNull LibraryRootsComponentDescriptor descriptor,
-                                                        @NotNull JComponent parentComponent,
+  public NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
+                                                        @Nonnull JComponent parentComponent,
                                                         @Nullable VirtualFile contextDirectory,
                                                         LibraryType<?> type,
                                                         final Project project) {
@@ -61,20 +61,20 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static <P extends LibraryProperties<?>> NewLibraryConfiguration doCreate(final LibraryType<P> type, final String name, final List<OrderRoot> roots) {
     return new NewLibraryConfiguration(name, type, type != null ? type.getKind().createDefaultProperties() : null) {
       @Override
-      public void addRoots(@NotNull LibraryEditor editor) {
+      public void addRoots(@Nonnull LibraryEditor editor) {
         editor.addRoots(roots);
       }
     };
   }
 
-  public static String suggestLibraryName(@NotNull VirtualFile[] classesRoots) {
+  public static String suggestLibraryName(@Nonnull VirtualFile[] classesRoots) {
     if (classesRoots.length >= 1) {
       return FileUtil.getNameWithoutExtension(PathUtil.getFileName(classesRoots[0].getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }
 
-  public static String suggestLibraryName(@NotNull List<OrderRoot> roots) {
+  public static String suggestLibraryName(@Nonnull List<OrderRoot> roots) {
     if (roots.size() >= 1) {
       return FileUtil.getNameWithoutExtension(PathUtil.getFileName(roots.get(0).getFile().getPath()));
     }

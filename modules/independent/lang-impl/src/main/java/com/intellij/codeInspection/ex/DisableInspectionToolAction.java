@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -50,24 +50,24 @@ public class DisableInspectionToolAction implements IntentionAction, Iconable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return NAME;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return NAME;
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = profileManager.getInspectionProfile();
     ModifiableModel model = inspectionProfile.getModifiableModel();

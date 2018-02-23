@@ -33,29 +33,32 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
 import com.intellij.remoteServer.runtime.ui.RemoteServersView;
 import com.intellij.util.ParameterizedRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class DeployToServerState<S extends ServerConfiguration, D extends DeploymentConfiguration> implements RunProfileState {
-  @NotNull private final RemoteServer<S> myServer;
-  @NotNull private final DeploymentSource mySource;
-  @NotNull private final D myConfiguration;
-  @NotNull private final ExecutionEnvironment myEnvironment;
+  @Nonnull
+  private final RemoteServer<S> myServer;
+  @Nonnull
+  private final DeploymentSource mySource;
+  @Nonnull
+  private final D myConfiguration;
+  @Nonnull
+  private final ExecutionEnvironment myEnvironment;
 
-  public DeployToServerState(@NotNull RemoteServer<S> server, @NotNull DeploymentSource deploymentSource,
-                             @NotNull D deploymentConfiguration, @NotNull ExecutionEnvironment environment) {
+  public DeployToServerState(@Nonnull RemoteServer<S> server, @Nonnull DeploymentSource deploymentSource,
+                             @Nonnull D deploymentConfiguration, @Nonnull ExecutionEnvironment environment) {
     myServer = server;
     mySource = deploymentSource;
     myConfiguration = deploymentConfiguration;
     myEnvironment = environment;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+  public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
     final ServerConnection connection = ServerConnectionManager.getInstance().getOrCreateConnection(myServer);
     final Project project = myEnvironment.getProject();
     RemoteServersView.getInstance(project).showServerConnection(connection);

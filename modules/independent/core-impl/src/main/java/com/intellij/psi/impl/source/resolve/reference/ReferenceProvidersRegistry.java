@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,9 +32,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ReferenceProvidersRegistry {
   public final static PsiReferenceProvider NULL_REFERENCE_PROVIDER = new PsiReferenceProvider() {
-      @NotNull
+      @Nonnull
       @Override
-      public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+      public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
         return PsiReference.EMPTY_ARRAY;
       }
     };
@@ -49,7 +49,7 @@ public abstract class ReferenceProvidersRegistry {
    * @see #getReferencesFromProviders(com.intellij.psi.PsiElement)
    */
   @Deprecated
-  public static PsiReference[] getReferencesFromProviders(PsiElement context, @NotNull Class clazz) {
+  public static PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull Class clazz) {
     return getReferencesFromProviders(context, PsiReferenceService.Hints.NO_HINTS);
   }
 
@@ -57,7 +57,7 @@ public abstract class ReferenceProvidersRegistry {
     return getReferencesFromProviders(context, PsiReferenceService.Hints.NO_HINTS);
   }
 
-  public static PsiReference[] getReferencesFromProviders(PsiElement context, @NotNull PsiReferenceService.Hints hints) {
+  public static PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull PsiReferenceService.Hints hints) {
     ProgressIndicatorProvider.checkCanceled();
     assert context.isValid() : "Invalid context: " + context;
 

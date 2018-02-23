@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.NamedRunnable;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 
@@ -44,11 +44,11 @@ public class VcsBalloonProblemNotifier implements Runnable {
   private final boolean myShowOverChangesView;
   @Nullable private final NamedRunnable[] myNotificationListener;
 
-  public VcsBalloonProblemNotifier(@NotNull final Project project, @NotNull final String message, final MessageType messageType) {
+  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final MessageType messageType) {
     this(project, message, messageType, true, null);
   }
 
-  public VcsBalloonProblemNotifier(@NotNull final Project project, @NotNull final String message, final MessageType messageType, boolean showOverChangesView,
+  public VcsBalloonProblemNotifier(@Nonnull final Project project, @Nonnull final String message, final MessageType messageType, boolean showOverChangesView,
                                    @Nullable final NamedRunnable[] notificationListener) {
     myProject = project;
     myMessage = message;
@@ -57,12 +57,12 @@ public class VcsBalloonProblemNotifier implements Runnable {
     myNotificationListener = notificationListener;
   }
 
-  public static void showOverChangesView(@NotNull final Project project, @NotNull final String message, final MessageType type,
+  public static void showOverChangesView(@Nonnull final Project project, @Nonnull final String message, final MessageType type,
                                          final NamedRunnable... notificationListener) {
     show(project, message, type, true, notificationListener);
   }
 
-  public static void showOverVersionControlView(@NotNull final Project project, @NotNull final String message, final MessageType type) {
+  public static void showOverVersionControlView(@Nonnull final Project project, @Nonnull final String message, final MessageType type) {
     show(project, message, type, false, null);
   }
 
@@ -95,7 +95,7 @@ public class VcsBalloonProblemNotifier implements Runnable {
       notification = NOTIFICATION_GROUP.createNotification(type.name(), sb.toString(), myMessageType.toNotificationType(),
         new NotificationListener() {
         @Override
-        public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           if (HyperlinkEvent.EventType.ACTIVATED.equals(event.getEventType())) {
             if (myNotificationListener.length == 1) {
               myNotificationListener[0].run();

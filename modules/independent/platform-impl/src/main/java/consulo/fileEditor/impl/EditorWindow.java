@@ -20,8 +20,8 @@ import com.intellij.openapi.fileEditor.impl.EditorWithProviderComposite;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public interface EditorWindow {
   Key<EditorWindow> DATA_KEY = Key.create("editorWindow");
 
-  @NotNull
+  @Nonnull
   FileEditorManagerEx getManager();
 
   void closeAllExcept(VirtualFile selectedFile);
@@ -42,13 +42,13 @@ public interface EditorWindow {
 
   boolean isDisposed();
 
-  @NotNull
+  @Nonnull
   EditorWithProviderComposite[] getEditors();
 
-  @NotNull
+  @Nonnull
   EditorWindow[] findSiblings();
 
-  @NotNull
+  @Nonnull
   VirtualFile[] getFiles();
 
   @Nullable
@@ -69,7 +69,7 @@ public interface EditorWindow {
 
   void closeFile(final VirtualFile file, final boolean disposeIfNeeded);
 
-  void closeFile(@NotNull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus);
+  void closeFile(@Nonnull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus);
 
   void clear();
 

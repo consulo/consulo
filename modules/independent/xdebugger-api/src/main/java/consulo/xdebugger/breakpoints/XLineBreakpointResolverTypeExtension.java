@@ -19,8 +19,7 @@ import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,8 @@ public class XLineBreakpointResolverTypeExtension extends FileTypeExtension<XLin
     super("com.intellij.xdebugger.lineBreakpointTypeResolver");
   }
 
-  @Nullable
-  public XLineBreakpointType<?> resolveBreakpointType(@NotNull Project project, @NotNull VirtualFile virtualFile, int line) {
+  @javax.annotation.Nullable
+  public XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
     List<XLineBreakpointTypeResolver> resolvers = new ArrayList<XLineBreakpointTypeResolver>(allForFileType(virtualFile.getFileType()));
     for (XLineBreakpointTypeResolver resolver : resolvers) {
       XLineBreakpointType<?> breakpointType = resolver.resolveBreakpointType(project, virtualFile, line);

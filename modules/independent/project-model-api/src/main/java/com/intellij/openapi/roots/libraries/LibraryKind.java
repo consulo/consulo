@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class LibraryKind {
   /**
    * @param kindId must be unique among all {@link com.intellij.openapi.roots.libraries.LibraryType} and {@link com.intellij.openapi.roots.libraries.LibraryPresentationProvider} implementations
    */
-  public LibraryKind(@NotNull @NonNls String kindId) {
+  public LibraryKind(@Nonnull @NonNls String kindId) {
     myKindId = kindId;
     if (ourAllKinds.containsKey(kindId)) {
       throw new IllegalArgumentException("Kind " + kindId + " is not unique");
@@ -52,7 +52,7 @@ public class LibraryKind {
    * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
    * @return new {@link LibraryKind} instance
    */
-  public static LibraryKind create(@NotNull @NonNls String kindId) {
+  public static LibraryKind create(@Nonnull @NonNls String kindId) {
     return new LibraryKind(kindId);
   }
 

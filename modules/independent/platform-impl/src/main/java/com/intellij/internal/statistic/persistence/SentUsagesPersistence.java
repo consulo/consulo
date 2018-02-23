@@ -19,16 +19,16 @@ package com.intellij.internal.statistic.persistence;
 import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.PatchedUsage;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
 
 public abstract class SentUsagesPersistence {
 
-  public abstract void persistPatch(@NotNull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptors);
+  public abstract void persistPatch(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptors);
 
-  @NotNull
+  @Nonnull
   public abstract Map<GroupDescriptor, Set<UsageDescriptor>> getSentUsages();
 
   public abstract boolean isAllowed();

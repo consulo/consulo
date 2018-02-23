@@ -27,19 +27,22 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 class FindUIHelper implements Disposable {
-  @NotNull private final Project myProject;
-  @NotNull private  FindModel myModel;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private  FindModel myModel;
   FindModel myPreviousModel;
-  @NotNull private Runnable myOkHandler;
+  @Nonnull
+  private Runnable myOkHandler;
 
   FindUI myUI;
 
-  FindUIHelper(@NotNull Project project, @NotNull FindModel model, @NotNull Runnable okHandler) {
+  FindUIHelper(@Nonnull Project project, @Nonnull FindModel model, @Nonnull Runnable okHandler) {
     myProject = project;
     myModel = model;
     myOkHandler = okHandler;
@@ -71,7 +74,7 @@ class FindUIHelper implements Disposable {
     JRootPane findDialogRootComponent = ((JDialog)findDialog.getWindow()).getRootPane();
     new AnAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         myModel.setReplaceState(replace);
         findDialog.initByModel();
       }
@@ -102,22 +105,22 @@ class FindUIHelper implements Disposable {
   }
 
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public FindModel getModel() {
     return myModel;
   }
 
-  public void setModel(@NotNull FindModel model) {
+  public void setModel(@Nonnull FindModel model) {
     myModel = model;
     myUI.initByModel();
   }
 
-  public void setOkHandler(@NotNull Runnable okHandler) {
+  public void setOkHandler(@Nonnull Runnable okHandler) {
     myOkHandler = okHandler;
   }
 
@@ -206,7 +209,7 @@ class FindUIHelper implements Disposable {
     return myModel.isReplaceState();
   }
 
-  @NotNull
+  @Nonnull
   public Runnable getOkHandler() {
     return myOkHandler;
   }

@@ -36,8 +36,8 @@ import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,7 +51,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
   public static final String REFACTORING_NAME = RefactoringBundle.message("safe.delete.title");
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     if (element == null || !SafeDeleteProcessor.validElement(element)) {
@@ -63,7 +63,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
   }
 
   @Override
-  public void invoke(@NotNull final Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     invoke(project, elements, dataContext.getData(LangDataKeys.MODULE), true, null);
   }
 

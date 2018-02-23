@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.IconUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class NewLayerAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModel = myModuleEditor.getModifiableRootModelProxy();
     String copyName = myCopy ? modifiableRootModel.getCurrentLayerName() : null;
     String newName = Messages.showInputDialog(modifiableRootModel.getProject(), "Name", "Enter Name", Messages.getQuestionIcon(),
@@ -73,7 +73,7 @@ public class NewLayerAction extends AnAction {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String createUniqueSdkName(String suggestedName, final ModifiableRootModel modifiableRootModel) {
     if (suggestedName == null) {
       suggestedName = ModifiableRootModel.DEFAULT_LAYER_NAME;

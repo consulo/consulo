@@ -43,8 +43,8 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.actions.BaseRefactoringAction;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.usageView.UsageViewUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 
@@ -60,7 +60,7 @@ public class PsiElementRenameHandler implements RenameHandler {
   public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     PsiElement element = getElement(dataContext);
     if (element == null) {
       element = BaseRefactoringAction.getElementAtCaret(editor, file);
@@ -80,7 +80,7 @@ public class PsiElementRenameHandler implements RenameHandler {
   }
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = getElement(dataContext);
     LOG.assertTrue(element != null);

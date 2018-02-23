@@ -26,8 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ResourceUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,36 +41,36 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
   protected T myTool;
   protected final E myEP;
 
-  protected InspectionToolWrapper(@NotNull E ep) {
+  protected InspectionToolWrapper(@Nonnull E ep) {
     this(null, ep);
   }
 
-  protected InspectionToolWrapper(@NotNull T tool) {
+  protected InspectionToolWrapper(@Nonnull T tool) {
     this(tool, null);
   }
 
-  protected InspectionToolWrapper(@Nullable T tool, @Nullable E ep) {
+  protected InspectionToolWrapper(@javax.annotation.Nullable T tool, @javax.annotation.Nullable E ep) {
     assert tool != null || ep != null : "must not be both null";
     myEP = ep;
     myTool = tool;
   }
 
   /** Copy ctor */
-  protected InspectionToolWrapper(@NotNull InspectionToolWrapper<T, E> other) {
+  protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T, E> other) {
     myEP = other.myEP;
     // we need to create a copy for buffering
     //noinspection unchecked
     myTool = other.myTool == null ? null : (T)InspectionToolsRegistrarCore.instantiateTool(other.myTool.getClass());
   }
 
-  public void initialize(@NotNull GlobalInspectionContext context) {
+  public void initialize(@Nonnull GlobalInspectionContext context) {
     projectOpened(context.getProject());
   }
 
-  @NotNull
+  @Nonnull
   public abstract InspectionToolWrapper<T, E> createCopy();
 
-  @NotNull
+  @Nonnull
   public T getTool() {
     if (myTool == null) {
       //noinspection unchecked
@@ -90,12 +89,12 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
   /**
    * @see #isApplicable(com.intellij.lang.Language)
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getLanguage() {
     return myEP == null ? null : myEP.language;
   }
 
-  public boolean isApplicable(@NotNull Language language) {
+  public boolean isApplicable(@Nonnull Language language) {
     String langId = getLanguage();
     return langId == null || language.getID().equals(langId);
   }
@@ -104,12 +103,12 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     return myEP != null ? myEP.cleanupTool : getTool() instanceof CleanupLocalInspectionTool;
   }
 
-  @NotNull
+  @Nonnull
   public String getShortName() {
     return myEP != null ? myEP.getShortName() : getTool().getShortName();
   }
 
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     if (myEP == null) {
       return getTool().getDisplayName();
@@ -120,7 +119,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getGroupDisplayName() {
     if (myEP == null) {
       return getTool().getGroupDisplayName();
@@ -135,12 +134,12 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     return myEP == null ? getTool().isEnabledByDefault() : myEP.enabledByDefault;
   }
 
-  @NotNull
+  @Nonnull
   public HighlightDisplayLevel getDefaultLevel() {
     return myEP == null ? getTool().getDefaultLevel() : myEP.getDefaultLevel();
   }
 
-  @NotNull
+  @Nonnull
   public String[] getGroupPath() {
     if (myEP == null) {
       return getTool().getGroupPath();
@@ -151,13 +150,13 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     }
   }
 
-  public void projectOpened(@NotNull Project project) {
+  public void projectOpened(@Nonnull Project project) {
     if (myEP == null) {
       getTool().projectOpened(project);
     }
   }
 
-  public void projectClosed(@NotNull Project project) {
+  public void projectClosed(@Nonnull Project project) {
     if (myEP == null) {
       getTool().projectClosed(project);
     }
@@ -189,23 +188,23 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     return myEP.getLoaderForClass().getResource("/inspectionDescriptions/" + fileName);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected URL superGetDescriptionUrl() {
     final String fileName = getDescriptionFileName();
     return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
   }
 
-  @NotNull
+  @Nonnull
   public String getDescriptionFileName() {
     return getShortName() + ".html";
   }
 
-  @NotNull
+  @Nonnull
   public final String getFolderName() {
     return getShortName();
   }
 
-  @NotNull
+  @Nonnull
   public Class<? extends InspectionProfileEntry> getDescriptionContextClass() {
     return getTool().getClass();
   }
@@ -230,6 +229,6 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
     }
   }
 
-  @NotNull
-  public abstract JobDescriptor[] getJobDescriptors(@NotNull GlobalInspectionContext context);
+  @Nonnull
+  public abstract JobDescriptor[] getJobDescriptors(@Nonnull GlobalInspectionContext context);
 }

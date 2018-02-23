@@ -17,8 +17,8 @@ package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
 import com.intellij.psi.codeStyle.arrangement.NameAwareArrangementEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -26,13 +26,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ByNameArrangementEntryMatcher extends AbstractRegexpArrangementMatcher {
 
-  public ByNameArrangementEntryMatcher(@NotNull String pattern) {
+  public ByNameArrangementEntryMatcher(@Nonnull String pattern) {
     super(pattern);
   }
 
   @Nullable
   @Override
-  protected String getTextToMatch(@NotNull ArrangementEntry entry) {
+  protected String getTextToMatch(@Nonnull ArrangementEntry entry) {
     if (entry instanceof NameAwareArrangementEntry) {
       return  ((NameAwareArrangementEntry)entry).getName();
     }

@@ -27,21 +27,22 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 
 public class FileContent extends DiffContent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.FileContent");
-  @NotNull private final VirtualFile myFile;
+  @Nonnull
+  private final VirtualFile myFile;
   private Document myDocument;
   private final Project myProject;
   private final FileDocumentManager myDocumentManager;
   @Nullable  private FileType myType;
 
-  public FileContent(Project project, @NotNull VirtualFile file) {
+  public FileContent(Project project, @Nonnull VirtualFile file) {
     myProject = project;
     myFile = file;
     myDocumentManager = FileDocumentManager.getInstance();
@@ -57,7 +58,7 @@ public class FileContent extends DiffContent {
     return new OpenFileDescriptor(myProject, myFile, offset);
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -81,7 +82,7 @@ public class FileContent extends DiffContent {
     return myFile.getFileType().isBinary();
   }
 
-  public static FileContent createFromTempFile(Project project, String name, String ext, @NotNull byte[] content) throws IOException {
+  public static FileContent createFromTempFile(Project project, String name, String ext, @Nonnull byte[] content) throws IOException {
     File tempFile = FileUtil.createTempFile(name, "." + ext);
     if (content.length != 0) {
       FileUtil.writeToFile(tempFile, content);
@@ -101,7 +102,7 @@ public class FileContent extends DiffContent {
   }
 
   @Nullable  
-  private static FileType detectType(@NotNull VirtualFile file) {
+  private static FileType detectType(@Nonnull VirtualFile file) {
     FileType type = FileTypeManager.getInstance().getFileTypeByFile(file);
     if (isUnknown(type)) {
       type = FileTypeManager.getInstance().detectFileTypeFromContent(file);
@@ -111,11 +112,11 @@ public class FileContent extends DiffContent {
     return isUnknown(type) ? null : type;   
   }
 
-  private static boolean isUnknown(@NotNull FileType type) {
+  private static boolean isUnknown(@Nonnull FileType type) {
     return type.equals(UnknownFileType.INSTANCE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineSeparator getLineSeparator() {
     return LineSeparator.fromString(myDocumentManager.getLineSeparator(myFile, myProject));

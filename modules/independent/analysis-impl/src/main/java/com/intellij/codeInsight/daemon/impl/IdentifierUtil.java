@@ -19,14 +19,14 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 public class IdentifierUtil {
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
-  public static PsiElement getNameIdentifier(@NotNull PsiElement element) {
+  public static PsiElement getNameIdentifier(@Nonnull PsiElement element) {
     if (element instanceof PsiNameIdentifierOwner) {
       return ((PsiNameIdentifierOwner)element).getNameIdentifier();
     }

@@ -24,31 +24,31 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 public class EditFoldingOptionsAction implements IntentionAction {
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return ApplicationBundle.message("edit.code.folding.options");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return getText();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return editor.getFoldingModel().isOffsetCollapsed(editor.getCaretModel().getOffset());
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     ShowSettingsUtil.getInstance().editConfigurable(project, new CodeFoldingConfigurable());
   }
 

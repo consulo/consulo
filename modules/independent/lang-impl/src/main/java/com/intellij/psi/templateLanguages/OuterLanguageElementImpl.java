@@ -18,7 +18,7 @@ package com.intellij.psi.templateLanguages;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +29,7 @@ public class OuterLanguageElementImpl extends LeafPsiElement implements OuterLan
   }
 
   @Override
-  public void accept(@NotNull final PsiElementVisitor visitor) {
+  public void accept(@Nonnull final PsiElementVisitor visitor) {
     visitor.visitOuterLanguageElement(this);
   }
 }

@@ -45,7 +45,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   private final List<FileStatusListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private FileStatusProvider myFileStatusProvider;
   private final NotNullLazyValue<FileStatusProvider[]> myExtensions = new NotNullLazyValue<FileStatusProvider[]>() {
-    @NotNull
+    @Nonnull
     @Override
     protected FileStatusProvider[] compute() {
       return Extensions.getExtensions(FileStatusProvider.EP_NAME, myProject);
@@ -83,13 +83,13 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
       throw new AssertionError("Should not be called");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ColorKey getColorKey() {
       throw new AssertionError("Should not be called");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
       throw new AssertionError("Should not be called");
@@ -137,7 +137,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     myFileStatusProvider = fileStatusProvider;
   }
 
-  public FileStatus calcStatus(@NotNull final VirtualFile virtualFile) {
+  public FileStatus calcStatus(@Nonnull final VirtualFile virtualFile) {
     for (FileStatusProvider extension : myExtensions.getValue()) {
       final FileStatus status = extension.getFileStatus(virtualFile);
       if (status != null) {
@@ -152,8 +152,8 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     return getDefaultStatus(virtualFile);
   }
 
-  @NotNull
-  public static FileStatus getDefaultStatus(@NotNull final VirtualFile file) {
+  @Nonnull
+  public static FileStatus getDefaultStatus(@Nonnull final VirtualFile file) {
     return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
   }
 
@@ -171,7 +171,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "FileStatusManager";
   }
@@ -181,12 +181,12 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public void addFileStatusListener(@NotNull FileStatusListener listener) {
+  public void addFileStatusListener(@Nonnull FileStatusListener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void addFileStatusListener(@NotNull final FileStatusListener listener, @NotNull Disposable parentDisposable) {
+  public void addFileStatusListener(@Nonnull final FileStatusListener listener, @Nonnull Disposable parentDisposable) {
     addFileStatusListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -267,7 +267,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public FileStatus getStatus(@NotNull final VirtualFile file) {
+  public FileStatus getStatus(@Nonnull final VirtualFile file) {
     if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
       return FileStatus.SUPPRESSED;  // do not leak light files via cache
     }
@@ -286,12 +286,12 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public void removeFileStatusListener(@NotNull FileStatusListener listener) {
+  public void removeFileStatusListener(@Nonnull FileStatusListener listener) {
     myListeners.remove(listener);
   }
 
   @Override
-  public Color getNotChangedDirectoryColor(@NotNull VirtualFile vf) {
+  public Color getNotChangedDirectoryColor(@Nonnull VirtualFile vf) {
     final Color notChangedColor = FileStatus.NOT_CHANGED.getColor();
     if (!vf.isDirectory()) {
       return notChangedColor;

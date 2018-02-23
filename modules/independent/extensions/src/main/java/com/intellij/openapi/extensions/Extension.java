@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author kir
@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
  * An extension can implement this interface to get notifications when it is added/removed to {@link ExtensionPoint}
  */
 public interface Extension {
-  void extensionAdded(@NotNull ExtensionPoint extensionPoint);
-  void extensionRemoved(@NotNull ExtensionPoint extensionPoint);
+  void extensionAdded(@Nonnull ExtensionPoint extensionPoint);
+  void extensionRemoved(@Nonnull ExtensionPoint extensionPoint);
 }

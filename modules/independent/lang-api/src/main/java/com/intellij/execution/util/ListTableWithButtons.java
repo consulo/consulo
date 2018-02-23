@@ -22,8 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.ListTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -153,7 +152,7 @@ public abstract class ListTableWithButtons<T> extends Observable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public TableView<T> getTableView() {
     return myTableView;
   }
@@ -213,13 +212,13 @@ public abstract class ListTableWithButtons<T> extends Observable {
 
   protected abstract boolean isEmpty(T element);
 
-  @NotNull
+  @Nonnull
   protected AnActionButton[] createExtraActions() {
     return new AnActionButton[0];
   }
 
 
-  @NotNull
+  @Nonnull
   protected List<T> getSelection() {
     int[] selection = myTableView.getComponent().getSelectedRows();
     if (selection.length == 0) {
@@ -265,7 +264,7 @@ public abstract class ListTableWithButtons<T> extends Observable {
       return myRenderer;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     protected abstract String getDescription(T element);
   }
 }

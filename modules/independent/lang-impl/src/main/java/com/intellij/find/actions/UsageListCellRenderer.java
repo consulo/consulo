@@ -33,14 +33,14 @@ import com.intellij.usages.TextChunk;
 import com.intellij.usages.Usage;
 import com.intellij.usages.UsagePresentation;
 import com.intellij.usages.rules.UsageInFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class UsageListCellRenderer extends ColoredListCellRenderer {
   private final Project myProject;
 
-  public UsageListCellRenderer(@NotNull Project project) {
+  public UsageListCellRenderer(@Nonnull Project project) {
     myProject = project;
   }
 

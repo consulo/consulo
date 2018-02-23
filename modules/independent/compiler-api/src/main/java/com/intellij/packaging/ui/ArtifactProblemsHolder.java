@@ -17,8 +17,7 @@ package com.intellij.packaging.ui;
 
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,14 +25,14 @@ import java.util.List;
  * @author nik
  */
 public interface ArtifactProblemsHolder {
-  @NotNull
+  @Nonnull
   PackagingElementResolvingContext getContext();
 
-  void registerError(@NotNull String message, @NotNull String problemTypeId);
+  void registerError(@Nonnull String message, @Nonnull String problemTypeId);
 
-  void registerError(@NotNull String message, @NotNull String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
-                     @NotNull ArtifactProblemQuickFix... quickFixes);
+  void registerError(@Nonnull String message, @Nonnull String problemTypeId, @javax.annotation.Nullable List<PackagingElement<?>> pathToPlace,
+                     @Nonnull ArtifactProblemQuickFix... quickFixes);
 
-  void registerWarning(@NotNull String message, @NotNull String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
-                       @NotNull ArtifactProblemQuickFix... quickFixes);
+  void registerWarning(@Nonnull String message, @Nonnull String problemTypeId, @javax.annotation.Nullable List<PackagingElement<?>> pathToPlace,
+                       @Nonnull ArtifactProblemQuickFix... quickFixes);
 }

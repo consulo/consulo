@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -25,21 +25,22 @@ import org.jetbrains.annotations.Nullable;
 public class VcsRoot {
 
   @Nullable private final AbstractVcs myVcs;
-  @Nullable private final VirtualFile myPath;
+  @javax.annotation.Nullable
+  private final VirtualFile myPath;
 
   private int hashcode;
 
-  public VcsRoot(@Nullable AbstractVcs vcs, @Nullable  VirtualFile path) {
+  public VcsRoot(@Nullable AbstractVcs vcs, @javax.annotation.Nullable VirtualFile path) {
     myVcs = vcs;
     myPath = path;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public AbstractVcs getVcs() {
     return myVcs;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getPath() {
     return myPath;
   }

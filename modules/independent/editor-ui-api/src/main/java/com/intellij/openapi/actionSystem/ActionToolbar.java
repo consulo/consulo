@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.switcher.SwitchProvider;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +89,7 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
    * @throws IllegalArgumentException if <code>size</code>
    *                                  is <code>null</code>
    */
-  void setMinimumButtonSize(@NotNull Dimension size);
+  void setMinimumButtonSize(@Nonnull Dimension size);
 
   /**
    * Sets toolbar orientation
@@ -125,6 +125,6 @@ public interface ActionToolbar extends SwitchProvider, QuickActionProvider {
 
   DataContext getToolbarDataContext();
 
-  @NotNull
+  @Nonnull
   List<AnAction> getActions();
 }

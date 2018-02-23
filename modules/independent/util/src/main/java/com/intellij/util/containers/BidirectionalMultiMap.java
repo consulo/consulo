@@ -16,7 +16,7 @@
 
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -38,13 +38,13 @@ public class BidirectionalMultiMap<K, V> {
     myValue2Keys = value2Keys;
   }
 
-  @NotNull
+  @Nonnull
   public Set<V> getValues(K key) {
     Set<V> set = myKey2Values.get(key);
     return set != null ? set : Collections.<V>emptySet();
   }
 
-  @NotNull
+  @Nonnull
   public Set<K> getKeys(V value) {
     Set<K> set = myValue2Keys.get(value);
     return set != null ? set : Collections.<K>emptySet();

@@ -17,7 +17,7 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.io.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class StubInputStream extends DataInputStream {
   private final AbstractStringEnumerator myNameStorage;
   private final byte[] myStringIOBuffer = IOUtil.allocReadWriteUTFBuffer();
 
-  public StubInputStream(@NotNull InputStream in, @NotNull AbstractStringEnumerator nameStorage) {
+  public StubInputStream(@Nonnull InputStream in, @Nonnull AbstractStringEnumerator nameStorage) {
     super(in);
     myNameStorage = nameStorage;
   }

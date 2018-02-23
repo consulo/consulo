@@ -20,8 +20,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.DocumentEvent;
 import java.util.Map;
@@ -36,7 +36,7 @@ public abstract class SearchableOptionsRegistrar{
     return ServiceManager.getService(SearchableOptionsRegistrar.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract ConfigurableHit getConfigurables(final Configurable[] allConfigurables,
                                                      final DocumentEvent.EventType type,
                                                      final Set<Configurable> configurables,
@@ -50,15 +50,15 @@ public abstract class SearchableOptionsRegistrar{
 
   public abstract boolean isStopWord(String word);
 
-  public abstract Set<String> getSynonym(final String option, @NotNull final SearchableConfigurable configurable);
+  public abstract Set<String> getSynonym(final String option, @Nonnull final SearchableConfigurable configurable);
 
   public abstract Set<String> replaceSynonyms(Set<String> options, SearchableConfigurable configurable);
 
-  public abstract Map<String, Set<String>> findPossibleExtension(@NotNull String prefix, final Project project);
+  public abstract Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, final Project project);
 
 
-  public abstract Set<String> getProcessedWordsWithoutStemming(@NotNull String text);
+  public abstract Set<String> getProcessedWordsWithoutStemming(@Nonnull String text);
 
-  public abstract Set<String> getProcessedWords(@NotNull String text);
+  public abstract Set<String> getProcessedWords(@Nonnull String text);
 
 }

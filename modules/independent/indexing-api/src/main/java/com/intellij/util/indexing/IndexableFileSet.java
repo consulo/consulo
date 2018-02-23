@@ -21,9 +21,9 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IndexableFileSet {
-  boolean isInSet(@NotNull VirtualFile file);
-  void iterateIndexableFilesIn(@NotNull VirtualFile file, @NotNull ContentIterator iterator);
+  boolean isInSet(@Nonnull VirtualFile file);
+  void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator);
 }

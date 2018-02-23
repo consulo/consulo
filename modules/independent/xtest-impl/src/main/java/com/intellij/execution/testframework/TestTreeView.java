@@ -38,8 +38,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -59,13 +58,13 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
 
   protected abstract TreeCellRenderer getRenderer(TestConsoleProperties properties);
 
-  public abstract AbstractTestProxy getSelectedTest(@NotNull TreePath selectionPath);
+  public abstract AbstractTestProxy getSelectedTest(@Nonnull TreePath selectionPath);
 
   protected TestFrameworkRunningModel getTestFrameworkRunningModel() {
     return myModel;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public AbstractTestProxy getSelectedTest() {
     TreePath[] paths = getSelectionPaths();
     if (paths != null && paths.length > 1) return null;
@@ -96,7 +95,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     setLargeModel(true);
   }
 
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
@@ -149,7 +148,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     final PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     final String fqn;
     if (element != null) {
@@ -163,7 +162,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     AbstractTestProxy test = getSelectedTest();
     if (test instanceof TestProxyRoot) {
       return ((TestProxyRoot)test).getRootLocation() != null;
@@ -172,7 +171,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
   }
 
   @Override
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 

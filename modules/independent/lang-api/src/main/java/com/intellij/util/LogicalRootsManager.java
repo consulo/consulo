@@ -22,8 +22,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventListener;
 import java.util.List;
@@ -39,27 +39,27 @@ public abstract class LogicalRootsManager {
 
   public static final Topic<LogicalRootListener> LOGICAL_ROOTS = new Topic<LogicalRootListener>("logical root changes", LogicalRootListener.class);
 
-  public static LogicalRootsManager getLogicalRootsManager(@NotNull final Project project) {
+  public static LogicalRootsManager getLogicalRootsManager(@Nonnull final Project project) {
     return ServiceManager.getService(project, LogicalRootsManager.class);
   }
 
   @Nullable
-  public abstract LogicalRoot findLogicalRoot(@NotNull final VirtualFile file);
+  public abstract LogicalRoot findLogicalRoot(@Nonnull final VirtualFile file);
 
   public abstract List<LogicalRoot> getLogicalRoots();
 
-  public abstract List<LogicalRoot> getLogicalRoots(@NotNull final Module module);
+  public abstract List<LogicalRoot> getLogicalRoots(@Nonnull final Module module);
 
-  public abstract List<LogicalRoot> getLogicalRootsOfType(@NotNull final Module module, @NotNull final LogicalRootType... types);
+  public abstract List<LogicalRoot> getLogicalRootsOfType(@Nonnull final Module module, @Nonnull final LogicalRootType... types);
 
-  public abstract <T extends LogicalRoot> List<T> getLogicalRootsOfType(@NotNull final Module module, @NotNull final LogicalRootType<T> type);
+  public abstract <T extends LogicalRoot> List<T> getLogicalRootsOfType(@Nonnull final Module module, @Nonnull final LogicalRootType<T> type);
 
-  @NotNull
-  public abstract LogicalRootType[] getRootTypes(@NotNull final FileType type);
+  @Nonnull
+  public abstract LogicalRootType[] getRootTypes(@Nonnull final FileType type);
 
-  public abstract void registerRootType(@NotNull final FileType fileType, @NotNull final LogicalRootType... rootTypes);
+  public abstract void registerRootType(@Nonnull final FileType fileType, @Nonnull final LogicalRootType... rootTypes);
 
-  public abstract <T extends LogicalRoot> void registerLogicalRootProvider(@NotNull final LogicalRootType<T> rootType, @NotNull NotNullFunction<Module,List<T>> provider);
+  public abstract <T extends LogicalRoot> void registerLogicalRootProvider(@Nonnull final LogicalRootType<T> rootType, @Nonnull NotNullFunction<Module,List<T>> provider);
 
   public interface LogicalRootListener extends EventListener {
     void logicalRootsChanged();

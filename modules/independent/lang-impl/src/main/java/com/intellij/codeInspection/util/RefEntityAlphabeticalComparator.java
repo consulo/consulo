@@ -25,14 +25,14 @@
 package com.intellij.codeInspection.util;
 
 import com.intellij.codeInspection.reference.RefEntity;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
 public class RefEntityAlphabeticalComparator implements Comparator<RefEntity> {
 
   @Override
-  public int compare(@NotNull final RefEntity o1, @NotNull final RefEntity o2) {
+  public int compare(@Nonnull final RefEntity o1, @Nonnull final RefEntity o2) {
     if (o1 == o2) return 0;
     return o1.getQualifiedName().compareToIgnoreCase(o2.getQualifiedName());
   }

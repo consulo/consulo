@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * For virtual files containing meta information in the path. Like,
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.NotNull;
  * @see VirtualFile#getPath() 
  */
 public interface VirtualFilePathWrapper {
-  @NotNull
+  @Nonnull
   String getPresentablePath();
 }

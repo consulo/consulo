@@ -29,9 +29,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -71,7 +71,7 @@ public class KeymapUtil {
   private KeymapUtil() {
   }
 
-  public static String getShortcutText(@NotNull Shortcut shortcut) {
+  public static String getShortcutText(@Nonnull Shortcut shortcut) {
     String s = "";
 
     if (shortcut instanceof KeyboardShortcut) {
@@ -129,7 +129,7 @@ public class KeymapUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
     Application application = ApplicationManager.getApplication();
     KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
@@ -142,7 +142,7 @@ public class KeymapUtil {
   /**
    * Creates shortcut corresponding to a single-click event
    */
-  public static MouseShortcut createMouseShortcut(@NotNull MouseEvent e) {
+  public static MouseShortcut createMouseShortcut(@Nonnull MouseEvent e) {
     int button = MouseShortcut.getButton(e);
     int modifiers = e.getModifiersEx();
     if (button == MouseEvent.NOBUTTON && e.getID() == MouseEvent.MOUSE_DRAGGED) {
@@ -226,15 +226,15 @@ public class KeymapUtil {
     }
   }
 
-  @NotNull
-  public static String getFirstKeyboardShortcutText(@NotNull String actionId) {
+  @Nonnull
+  public static String getFirstKeyboardShortcutText(@Nonnull String actionId) {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(actionId);
     KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
     return shortcut == null ? "" : getShortcutText(shortcut);
   }
 
-  @NotNull
-  public static String getFirstKeyboardShortcutText(@NotNull AnAction action) {
+  @Nonnull
+  public static String getFirstKeyboardShortcutText(@Nonnull AnAction action) {
     Shortcut[] shortcuts = action.getShortcutSet().getShortcuts();
     KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
     return shortcut == null ? "" : getShortcutText(shortcut);
@@ -388,7 +388,7 @@ public class KeymapUtil {
   }
 
   @Nullable
-  public static KeyStroke getKeyStroke(@NotNull final ShortcutSet shortcutSet) {
+  public static KeyStroke getKeyStroke(@Nonnull final ShortcutSet shortcutSet) {
     final Shortcut[] shortcuts = shortcutSet.getShortcuts();
     if (shortcuts.length == 0 || !(shortcuts[0] instanceof KeyboardShortcut)) return null;
     final KeyboardShortcut shortcut = (KeyboardShortcut)shortcuts[0];
@@ -398,8 +398,8 @@ public class KeymapUtil {
     return shortcut.getFirstKeyStroke();
   }
 
-  @NotNull
-  public static String createTooltipText(@Nullable String name, @NotNull AnAction action) {
+  @Nonnull
+  public static String createTooltipText(@Nullable String name, @Nonnull AnAction action) {
     String toolTipText = name == null ? "" : name;
     while (StringUtil.endsWithChar(toolTipText, '.')) {
       toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
@@ -431,7 +431,7 @@ public class KeymapUtil {
    * Checks whether mouse event's button and modifiers match a shortcut configured in active keymap for given action id.
    * Only shortcuts having click count of 1 can be matched, mouse event's click count is ignored.
    */
-  public static boolean isMouseActionEvent(@NotNull MouseEvent e, @NotNull String actionId) {
+  public static boolean isMouseActionEvent(@Nonnull MouseEvent e, @Nonnull String actionId) {
     KeymapManager keymapManager = KeymapManager.getInstance();
     if (keymapManager == null) {
       return false;
@@ -476,7 +476,7 @@ public class KeymapUtil {
    *                     </ul>
    * @return <code>true</code> if the action is reassigned successfully
    */
-  public static boolean reassignAction(@NotNull JComponent component, @NotNull KeyStroke oldKeyStroke, @Nullable KeyStroke newKeyStroke, int condition) {
+  public static boolean reassignAction(@Nonnull JComponent component, @Nonnull KeyStroke oldKeyStroke, @Nullable KeyStroke newKeyStroke, int condition) {
     return reassignAction(component, oldKeyStroke, newKeyStroke, condition, true);
   }
 
@@ -494,8 +494,8 @@ public class KeymapUtil {
    * @param muteOldKeystroke if <code>true</code> old keystroke wouldn't work anymore
    * @return <code>true</code> if the action is reassigned successfully
    */
-  public static boolean reassignAction(@NotNull JComponent component,
-                                       @NotNull KeyStroke oldKeyStroke,
+  public static boolean reassignAction(@Nonnull JComponent component,
+                                       @Nonnull KeyStroke oldKeyStroke,
                                        @Nullable KeyStroke newKeyStroke,
                                        int condition,
                                        boolean muteOldKeystroke) {

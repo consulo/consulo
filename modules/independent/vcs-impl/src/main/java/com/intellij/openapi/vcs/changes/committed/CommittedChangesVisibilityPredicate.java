@@ -20,13 +20,13 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsType;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class CommittedChangesVisibilityPredicate implements NotNullFunction<Project, Boolean> {
-  @NotNull
+  @Nonnull
   public Boolean fun(final Project project) {
     final AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(project).getAllActiveVcss();
     for(AbstractVcs vcs: abstractVcses) {

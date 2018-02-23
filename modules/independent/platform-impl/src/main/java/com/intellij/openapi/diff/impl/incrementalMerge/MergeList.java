@@ -37,8 +37,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,33 +54,37 @@ public class MergeList implements UserDataHolder {
   public static final Key<MergeList> DATA_KEY = Key.create("mergeList");
   public static final Condition<Change> NOT_CONFLICTS = change -> !(change instanceof ConflictChange);
 
-  @NotNull private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
-  @NotNull private final ChangeList myBaseToLeftChangeList;
-  @NotNull private final ChangeList myBaseToRightChangeList;
-  @Nullable private final String myErrorMessage;
+  @Nonnull
+  private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
+  @Nonnull
+  private final ChangeList myBaseToLeftChangeList;
+  @Nonnull
+  private final ChangeList myBaseToRightChangeList;
+  @Nullable
+  private final String myErrorMessage;
 
   private MergeList(@Nullable Project project,
-                    @NotNull Document left,
-                    @NotNull Document base,
-                    @NotNull Document right,
+                    @Nonnull Document left,
+                    @Nonnull Document base,
+                    @Nonnull Document right,
                     @Nullable String errorMessage) {
     myBaseToLeftChangeList = new ChangeList(base, left, project);
     myBaseToRightChangeList = new ChangeList(base, right, project);
     myErrorMessage = errorMessage;
   }
 
-  @NotNull
+  @Nonnull
   public ChangeList getLeftChangeList() {
     return myBaseToLeftChangeList;
   }
 
-  @NotNull
+  @Nonnull
   public ChangeList getRightChangeList() {
     return myBaseToRightChangeList;
   }
 
-  @NotNull
-  public static MergeList create(@Nullable Project project, @NotNull Document left, @NotNull Document base, @NotNull Document right) {
+  @Nonnull
+  public static MergeList create(@Nullable Project project, @Nonnull Document left, @Nonnull Document base, @Nonnull Document right) {
     MergeList mergeList;
     String leftText = left.getText();
     String baseText = base.getText();
@@ -134,10 +138,10 @@ public class MergeList implements UserDataHolder {
     return mergeList;
   }
 
-  private static boolean compareSubstring(@NotNull String text1,
-                                          @NotNull TextRange range1,
-                                          @NotNull String text2,
-                                          @NotNull TextRange range2) {
+  private static boolean compareSubstring(@Nonnull String text1,
+                                          @Nonnull TextRange range1,
+                                          @Nonnull String text2,
+                                          @Nonnull TextRange range2) {
     if (range1.getLength() != range2.getLength()) return false;
 
     int index1 = range1.getStartOffset();
@@ -150,11 +154,11 @@ public class MergeList implements UserDataHolder {
     return true;
   }
 
-  @NotNull
-  private static List<MergeFragment> processText(@NotNull String leftText,
-                                                 @NotNull String baseText,
-                                                 @NotNull String rightText,
-                                                 @NotNull ContextLogger logger) throws FilesTooBigForDiffException {
+  @Nonnull
+  private static List<MergeFragment> processText(@Nonnull String leftText,
+                                                 @Nonnull String baseText,
+                                                 @Nonnull String rightText,
+                                                 @Nonnull ContextLogger logger) throws FilesTooBigForDiffException {
     DiffFragment[] leftFragments = DiffPolicy.DEFAULT_LINES.buildFragments(DiffString.create(baseText), DiffString.create(leftText));
     DiffFragment[] rightFragments = DiffPolicy.DEFAULT_LINES.buildFragments(DiffString.create(baseText), DiffString.create(rightText));
     int[] leftOffsets = {0, 0};
@@ -180,7 +184,7 @@ public class MergeList implements UserDataHolder {
     return builder.finish(leftText.length(), baseText.length(), rightText.length());
   }
 
-  private static void getEqualRanges(@NotNull DiffFragment fragment, @NotNull int[] leftOffsets, @NotNull TextRange[] equalRanges) {
+  private static void getEqualRanges(@Nonnull DiffFragment fragment, @Nonnull int[] leftOffsets, @Nonnull TextRange[] equalRanges) {
     int baseLength = getTextLength(fragment.getText1());
     int versionLength = getTextLength(fragment.getText2());
     if (fragment.isEqual()) {
@@ -198,7 +202,7 @@ public class MergeList implements UserDataHolder {
     return text1 != null ? text1.length() : 0;
   }
 
-  public static MergeList create(@NotNull DiffRequest data) {
+  public static MergeList create(@Nonnull DiffRequest data) {
     DiffContent[] contents = data.getContents();
     return create(data.getProject(), contents[0].getDocument(), contents[1].getDocument(), contents[2].getDocument());
   }
@@ -224,7 +228,7 @@ public class MergeList implements UserDataHolder {
     myBaseToRightChangeList.removeListener(listener);
   }
 
-  private void addActions(@NotNull final FragmentSide side) {
+  private void addActions(@Nonnull final FragmentSide side) {
     ChangeList changeList = getChanges(side);
     final FragmentSide originalSide = BRANCH_SIDE;
     for (int i = 0; i < changeList.getCount(); i++) {
@@ -250,8 +254,8 @@ public class MergeList implements UserDataHolder {
     Change.apply(change, BRANCH_SIDE);
   }
 
-  @NotNull
-  public ChangeList getChanges(@NotNull final FragmentSide changesSide) {
+  @Nonnull
+  public ChangeList getChanges(@Nonnull final FragmentSide changesSide) {
     if (changesSide == FragmentSide.SIDE1) {
       return myBaseToLeftChangeList;
     }
@@ -284,17 +288,17 @@ public class MergeList implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
     myDataHolder.putUserData(key, value);
   }
 
-  @NotNull
-  public FragmentSide getSideOf(@NotNull ChangeList source) {
+  @Nonnull
+  public FragmentSide getSideOf(@Nonnull ChangeList source) {
     if (myBaseToLeftChangeList == source) {
       return FragmentSide.SIDE1;
     }

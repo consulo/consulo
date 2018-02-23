@@ -38,15 +38,15 @@ import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
   @Override
-  protected void perform(@NotNull final XDebugSession session, final DataContext dataContext) {
+  protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
     final XDebuggerEditorsProvider editorsProvider = session.getDebugProcess().getEditorsProvider();
     final XStackFrame stackFrame = session.getCurrentStackFrame();
     final XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
@@ -94,12 +94,12 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
     showDialog(session, file, editorsProvider, stackFrame, evaluator, expression);
   }
 
-  private static void showDialog(@NotNull XDebugSession session,
+  private static void showDialog(@Nonnull XDebugSession session,
                                  VirtualFile file,
                                  XDebuggerEditorsProvider editorsProvider,
                                  XStackFrame stackFrame,
                                  XDebuggerEvaluator evaluator,
-                                 @NotNull XExpression expression) {
+                                 @Nonnull XExpression expression) {
     if (expression.getLanguage() == null) {
       Language language = null;
       if (stackFrame != null) {
@@ -117,7 +117,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
   }
 
   @Nullable
-  public static String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, @NotNull Editor editor) {
+  public static String getExpressionText(@Nullable XDebuggerEvaluator evaluator, @Nullable Project project, @Nonnull Editor editor) {
     if (project == null || evaluator == null) {
       return null;
     }
@@ -127,7 +127,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
   }
 
   @Nullable
-  public static String getExpressionText(@Nullable ExpressionInfo expressionInfo, @NotNull Document document) {
+  public static String getExpressionText(@Nullable ExpressionInfo expressionInfo, @Nonnull Document document) {
     if (expressionInfo == null) {
       return null;
     }
@@ -136,7 +136,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
   }
 
   @Nullable
-  public static String getDisplayText(@Nullable ExpressionInfo expressionInfo, @NotNull Document document) {
+  public static String getDisplayText(@Nullable ExpressionInfo expressionInfo, @Nonnull Document document) {
     if (expressionInfo == null) {
       return null;
     }
@@ -145,7 +145,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
   }
 
   @Override
-  protected boolean isEnabled(final @NotNull XDebugSession session, final DataContext dataContext) {
+  protected boolean isEnabled(final @Nonnull XDebugSession session, final DataContext dataContext) {
     return session.getDebugProcess().getEvaluator() != null;
   }
 }

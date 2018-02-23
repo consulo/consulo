@@ -22,8 +22,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Medvedev
@@ -31,15 +31,15 @@ import org.jetbrains.annotations.Nullable;
 public interface ChangeSignatureHandler extends RefactoringActionHandler {
   String REFACTORING_NAME = RefactoringBundle.message("changeSignature.refactoring.name");
 
-  @Nullable
+  @javax.annotation.Nullable
   PsiElement findTargetMember(PsiFile file, Editor editor);
 
   @Nullable
   PsiElement findTargetMember(PsiElement element);
 
   @Override
-  void invoke(@NotNull Project project, @NotNull PsiElement[] elements, @Nullable DataContext dataContext);
+  void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @javax.annotation.Nullable DataContext dataContext);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getTargetNotFoundMessage();
 }

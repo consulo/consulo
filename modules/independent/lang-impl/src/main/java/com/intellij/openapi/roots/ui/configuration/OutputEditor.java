@@ -25,9 +25,9 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -40,7 +40,7 @@ public class OutputEditor extends ModuleElementsEditor {
     myCompilerOutputEditor = new BuildElementsEditor(state);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createComponentImpl() {
     final JPanel panel = new JPanel(new BorderLayout());

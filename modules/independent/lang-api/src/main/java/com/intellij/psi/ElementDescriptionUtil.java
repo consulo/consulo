@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 public class ElementDescriptionUtil {
   private ElementDescriptionUtil() { }
 
-  @NotNull
-  public static String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+  @Nonnull
+  public static String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
     for(ElementDescriptionProvider provider: Extensions.getExtensions(ElementDescriptionProvider.EP_NAME)) {
       String result = provider.getElementDescription(element, location);
       if (result != null) {

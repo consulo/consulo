@@ -15,8 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +28,19 @@ import java.util.List;
  */
 public class DefaultArrangementEntry implements ArrangementEntry {
 
-  @NotNull private final List<ArrangementEntry> myChildren = new ArrayList<ArrangementEntry>();
+  @Nonnull
+  private final List<ArrangementEntry> myChildren = new ArrayList<ArrangementEntry>();
 
-  @Nullable private final ArrangementEntry       myParent;
-  @Nullable private       List<ArrangementEntry> myDependencies;
+  @javax.annotation.Nullable
+  private final ArrangementEntry       myParent;
+  @javax.annotation.Nullable
+  private       List<ArrangementEntry> myDependencies;
 
   private final int     myStartOffset;
   private final int     myEndOffset;
   private final boolean myCanBeMatched;
 
-  public DefaultArrangementEntry(@Nullable ArrangementEntry parent, int startOffset, int endOffset, boolean canBeMatched) {
+  public DefaultArrangementEntry(@javax.annotation.Nullable ArrangementEntry parent, int startOffset, int endOffset, boolean canBeMatched) {
     myCanBeMatched = canBeMatched;
     assert startOffset < endOffset;
     myParent = parent;
@@ -46,29 +48,29 @@ public class DefaultArrangementEntry implements ArrangementEntry {
     myEndOffset = endOffset;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public ArrangementEntry getParent() {
     return myParent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends ArrangementEntry> getChildren() {
     return myChildren;
   }
 
-  public void addChild(@NotNull ArrangementEntry entry) {
+  public void addChild(@Nonnull ArrangementEntry entry) {
     myChildren.add(entry);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public List<? extends ArrangementEntry> getDependencies() {
     return myDependencies;
   }
 
-  public void addDependency(@NotNull ArrangementEntry dependency) {
+  public void addDependency(@Nonnull ArrangementEntry dependency) {
     if (myDependencies == null) {
       myDependencies = new ArrayList<ArrangementEntry>();
     }

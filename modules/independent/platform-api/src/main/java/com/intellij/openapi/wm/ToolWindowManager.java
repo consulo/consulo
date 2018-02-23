@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 /**
@@ -30,36 +30,36 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class ToolWindowManager {
 
-  public abstract boolean canShowNotification(@NotNull String toolWindowId);
+  public abstract boolean canShowNotification(@Nonnull String toolWindowId);
 
-  public static ToolWindowManager getInstance(@NotNull Project project) {
+  public static ToolWindowManager getInstance(@Nonnull Project project) {
     return project.getComponent(ToolWindowManager.class);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor);
+  public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, boolean secondary);
+  public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor, boolean secondary);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract ToolWindow registerToolWindow(@NotNull String id, boolean canCloseContent, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode);
+  public abstract ToolWindow registerToolWindow(@Nonnull String id, boolean canCloseContent, @Nonnull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract ToolWindow registerToolWindow(@NotNull String id,
+  public abstract ToolWindow registerToolWindow(@Nonnull String id,
                                                 boolean canCloseContent,
-                                                @NotNull ToolWindowAnchor anchor,
+                                                @Nonnull ToolWindowAnchor anchor,
                                                 Disposable parentDisposable,
                                                 boolean canWorkInDumbMode,
                                                 boolean secondary);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public ToolWindow registerToolWindow(@NotNull final String id, final boolean canCloseContent, @NotNull final ToolWindowAnchor anchor, final Disposable parentDisposable) {
+  public ToolWindow registerToolWindow(@Nonnull final String id, final boolean canCloseContent, @Nonnull final ToolWindowAnchor anchor, final Disposable parentDisposable) {
     return registerToolWindow(id, canCloseContent, anchor, parentDisposable, false);
   }
 
@@ -67,7 +67,7 @@ public abstract class ToolWindowManager {
    * does nothing if tool window with specified isn't registered.
    */
   @RequiredUIAccess
-  public abstract void unregisterToolWindow(@NotNull String id);
+  public abstract void unregisterToolWindow(@Nonnull String id);
 
   /**
    */
@@ -81,7 +81,7 @@ public abstract class ToolWindowManager {
   /**
    * @return array of <code>id</code>s of all registered tool windows.
    */
-  @NotNull
+  @Nonnull
   public abstract String[] getToolWindowIds();
 
   /**
@@ -101,22 +101,22 @@ public abstract class ToolWindowManager {
   /**
    * Puts specified runnable to the tail of current command queue.
    */
-  public abstract void invokeLater(@NotNull Runnable runnable);
+  public abstract void invokeLater(@Nonnull Runnable runnable);
 
   /**
    * Utility method for quick access to the focus manager
    */
-  @NotNull
+  @Nonnull
   public abstract IdeFocusManager getFocusManager();
 
-  public abstract void notifyByBalloon(@NotNull final String toolWindowId, @NotNull final MessageType type, @NotNull final String htmlBody);
+  public abstract void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String htmlBody);
 
   @Nullable
   public abstract Balloon getToolWindowBalloon(String id);
 
-  public abstract boolean isMaximized(@NotNull ToolWindow wnd);
+  public abstract boolean isMaximized(@Nonnull ToolWindow wnd);
 
-  public abstract void setMaximized(@NotNull ToolWindow wnd, boolean maximized);
+  public abstract void setMaximized(@Nonnull ToolWindow wnd, boolean maximized);
 
   // region AWT & Swing dependency
 
@@ -136,16 +136,16 @@ public abstract class ToolWindowManager {
    * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
-  @NotNull
-  public abstract ToolWindow registerToolWindow(@NotNull String id, @NotNull javax.swing.JComponent component, @NotNull ToolWindowAnchor anchor);
+  @Nonnull
+  public abstract ToolWindow registerToolWindow(@Nonnull String id, @Nonnull javax.swing.JComponent component, @Nonnull ToolWindowAnchor anchor);
 
   /**
    * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public ToolWindow registerToolWindow(@NotNull String id, @NotNull javax.swing.JComponent component, @NotNull ToolWindowAnchor anchor, @NotNull Disposable parentDisposable) {
+  public ToolWindow registerToolWindow(@Nonnull String id, @Nonnull javax.swing.JComponent component, @Nonnull ToolWindowAnchor anchor, @Nonnull Disposable parentDisposable) {
     return registerToolWindow(id, component, anchor, parentDisposable, false, false);
   }
 
@@ -153,9 +153,9 @@ public abstract class ToolWindowManager {
    * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public ToolWindow registerToolWindow(@NotNull String id, @NotNull javax.swing.JComponent component, @NotNull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode) {
+  public ToolWindow registerToolWindow(@Nonnull String id, @Nonnull javax.swing.JComponent component, @Nonnull ToolWindowAnchor anchor, Disposable parentDisposable, boolean canWorkInDumbMode) {
     return registerToolWindow(id, component, anchor, parentDisposable, canWorkInDumbMode, false);
   }
 
@@ -163,19 +163,19 @@ public abstract class ToolWindowManager {
    * @deprecated {@link ToolWindowManager#registerToolWindow(String, boolean, ToolWindowAnchor)}
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract ToolWindow registerToolWindow(@NotNull String id,
-                                                @NotNull javax.swing.JComponent component,
-                                                @NotNull ToolWindowAnchor anchor,
+  public abstract ToolWindow registerToolWindow(@Nonnull String id,
+                                                @Nonnull javax.swing.JComponent component,
+                                                @Nonnull ToolWindowAnchor anchor,
                                                 Disposable parentDisposable,
                                                 boolean canWorkInDumbMode,
                                                 boolean canCloseContents);
 
   @Deprecated
-  public void notifyByBalloon(@NotNull final String toolWindowId,
-                              @NotNull final MessageType type,
-                              @NotNull final String htmlBody,
+  public void notifyByBalloon(@Nonnull final String toolWindowId,
+                              @Nonnull final MessageType type,
+                              @Nonnull final String htmlBody,
                               @Nullable final javax.swing.Icon icon,
                               @Nullable javax.swing.event.HyperlinkListener listener) {
     throw new AbstractMethodError("AWT & Swing dependency");

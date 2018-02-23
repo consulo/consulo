@@ -38,7 +38,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageInfoFactory;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -48,11 +48,11 @@ public class TextOccurrencesUtil {
   private TextOccurrencesUtil() {
   }
 
-  public static void addTextOccurences(@NotNull PsiElement element,
-                                       @NotNull String stringToSearch,
-                                       @NotNull GlobalSearchScope searchScope,
-                                       @NotNull final Collection<UsageInfo> results,
-                                       @NotNull final UsageInfoFactory factory) {
+  public static void addTextOccurences(@Nonnull PsiElement element,
+                                       @Nonnull String stringToSearch,
+                                       @Nonnull GlobalSearchScope searchScope,
+                                       @Nonnull final Collection<UsageInfo> results,
+                                       @Nonnull final UsageInfoFactory factory) {
     processTextOccurences(element, stringToSearch, searchScope, new Processor<UsageInfo>() {
       @Override
       public boolean process(UsageInfo t) {
@@ -62,11 +62,11 @@ public class TextOccurrencesUtil {
     }, factory);
   }
 
-  public static boolean processTextOccurences(@NotNull final PsiElement element,
-                                              @NotNull String stringToSearch,
-                                              @NotNull GlobalSearchScope searchScope,
-                                              @NotNull final Processor<UsageInfo> processor,
-                                              @NotNull final UsageInfoFactory factory) {
+  public static boolean processTextOccurences(@Nonnull final PsiElement element,
+                                              @Nonnull String stringToSearch,
+                                              @Nonnull GlobalSearchScope searchScope,
+                                              @Nonnull final Processor<UsageInfo> processor,
+                                              @Nonnull final UsageInfoFactory factory) {
     PsiSearchHelper helper = ApplicationManager.getApplication().runReadAction(new Computable<PsiSearchHelper>() {
       @Override
       public PsiSearchHelper compute() {
@@ -97,8 +97,8 @@ public class TextOccurrencesUtil {
     }, searchScope);
   }
 
-  private static boolean processStringLiteralsContainingIdentifier(@NotNull String identifier,
-                                                                   @NotNull SearchScope searchScope,
+  private static boolean processStringLiteralsContainingIdentifier(@Nonnull String identifier,
+                                                                   @Nonnull SearchScope searchScope,
                                                                    PsiSearchHelper helper,
                                                                    final Processor<PsiElement> processor) {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
@@ -118,10 +118,10 @@ public class TextOccurrencesUtil {
     return helper.processElementsWithWord(occurenceProcessor, searchScope, identifier, UsageSearchContext.IN_STRINGS, true);
   }
 
-  public static boolean processUsagesInStringsAndComments(@NotNull final PsiElement element,
-                                                          @NotNull final String stringToSearch,
+  public static boolean processUsagesInStringsAndComments(@Nonnull final PsiElement element,
+                                                          @Nonnull final String stringToSearch,
                                                           final boolean ignoreReferences,
-                                                          @NotNull final PairProcessor<PsiElement, TextRange> processor) {
+                                                          @Nonnull final PairProcessor<PsiElement, TextRange> processor) {
     PsiSearchHelper helper = PsiSearchHelper.SERVICE.getInstance(element.getProject());
     SearchScope scope = helper.getUseScope(element);
     scope = GlobalSearchScope.projectScope(element.getProject()).intersectWith(scope);
@@ -135,10 +135,10 @@ public class TextOccurrencesUtil {
            helper.processCommentsContainingIdentifier(stringToSearch, scope, commentOrLiteralProcessor);
   }
 
-  public static void addUsagesInStringsAndComments(@NotNull PsiElement element,
-                                                   @NotNull String stringToSearch,
-                                                   @NotNull final Collection<UsageInfo> results,
-                                                   @NotNull final UsageInfoFactory factory) {
+  public static void addUsagesInStringsAndComments(@Nonnull PsiElement element,
+                                                   @Nonnull String stringToSearch,
+                                                   @Nonnull final Collection<UsageInfo> results,
+                                                   @Nonnull final UsageInfoFactory factory) {
     final Object lock = new Object();
     processUsagesInStringsAndComments(element, stringToSearch, false, new PairProcessor<PsiElement, TextRange>() {
       @Override
@@ -194,7 +194,7 @@ public class TextOccurrencesUtil {
     return true;
   }
 
-  public static boolean isSearchTextOccurencesEnabled(@NotNull PsiElement element) {
+  public static boolean isSearchTextOccurencesEnabled(@Nonnull PsiElement element) {
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(element.getProject())).getFindUsagesManager();
     final FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, true);
     return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, false, handler);
@@ -223,7 +223,7 @@ public class TextOccurrencesUtil {
   private static UsageInfoFactory createUsageInfoFactory(final PsiElement element, final String newQName) {
     return new UsageInfoFactory() {
       @Override
-      public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
+      public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
         int start = usage.getTextRange().getStartOffset();
         return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, newQName);
       }

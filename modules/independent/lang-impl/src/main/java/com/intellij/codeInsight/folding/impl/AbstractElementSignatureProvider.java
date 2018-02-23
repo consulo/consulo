@@ -20,8 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.StringTokenizer;
 
@@ -36,7 +36,7 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
 
   @Override
   @Nullable
-  public PsiElement restoreBySignature(@NotNull PsiFile file, @NotNull String signature, @Nullable StringBuilder processingInfoStorage) {
+  public PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage) {
     int semicolonIndex = signature.indexOf(ELEMENTS_SEPARATOR);
     PsiElement parent;
 
@@ -70,10 +70,10 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
   }
 
   @Nullable
-  protected abstract PsiElement restoreBySignatureTokens(@NotNull PsiFile file,
-                                                         @NotNull PsiElement parent,
-                                                         @NotNull String type,
-                                                         @NotNull StringTokenizer tokenizer,
+  protected abstract PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
+                                                         @Nonnull PsiElement parent,
+                                                         @Nonnull String type,
+                                                         @Nonnull StringTokenizer tokenizer,
                                                          @Nullable StringBuilder processingInfoStorage);
 
   protected static <T extends PsiNamedElement> int getChildIndex(T element, PsiElement parent, String name, Class<T> hisClass) {
@@ -98,10 +98,10 @@ public abstract class AbstractElementSignatureProvider implements ElementSignatu
   }
 
   @Nullable
-  protected static <T extends PsiNamedElement> T restoreElementInternal(@NotNull PsiElement parent,
+  protected static <T extends PsiNamedElement> T restoreElementInternal(@Nonnull PsiElement parent,
                                                                         String name,
                                                                         int index,
-                                                                        @NotNull Class<T> hisClass)
+                                                                        @Nonnull Class<T> hisClass)
   {
     PsiElement[] children = parent.getChildren();
 

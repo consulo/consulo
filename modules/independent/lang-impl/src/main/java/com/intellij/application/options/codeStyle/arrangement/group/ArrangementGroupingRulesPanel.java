@@ -25,8 +25,8 @@ import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,10 +38,11 @@ import java.util.List;
  */
 public class ArrangementGroupingRulesPanel extends JPanel implements DataProvider {
 
-  @NotNull private final ArrangementGroupingRulesControl myControl;
+  @Nonnull
+  private final ArrangementGroupingRulesControl myControl;
 
-  public ArrangementGroupingRulesPanel(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                       @NotNull ArrangementColorsProvider colorsProvider)
+  public ArrangementGroupingRulesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                       @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new GridBagLayout());
 
@@ -62,14 +63,14 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
     myControl.setRules(rules);
   }
 
-  @NotNull
+  @Nonnull
   public List<ArrangementGroupingRule> getRules() {
     return myControl.getRules();
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (ArrangementGroupingRulesControl.KEY == dataId) {
       return myControl;
     }

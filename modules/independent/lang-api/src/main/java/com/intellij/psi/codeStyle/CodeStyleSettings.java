@@ -33,8 +33,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ClassMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -118,7 +118,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
   }
 
-  public <T extends CustomCodeStyleSettings> T getCustomSettings(@NotNull Class<T> aClass) {
+  public <T extends CustomCodeStyleSettings> T getCustomSettings(@Nonnull Class<T> aClass) {
     synchronized (myCustomSettings) {
       return (T)myCustomSettings.get(aClass);
     }
@@ -131,7 +131,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     return clone;
   }
 
-  private void copyCustomSettingsFrom(@NotNull CodeStyleSettings from) {
+  private void copyCustomSettingsFrom(@Nonnull CodeStyleSettings from) {
     synchronized (myCustomSettings) {
       myCustomSettings.clear();
 
@@ -351,7 +351,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   private volatile Pattern myFormatterOffPattern = null;
   private volatile Pattern myFormatterOnPattern = null;
 
-  @Nullable
+  @javax.annotation.Nullable
   public Pattern getFormatterOffPattern() {
     if (myFormatterOffPattern == null && FORMATTER_TAGS_ENABLED && FORMATTER_TAGS_ACCEPT_REGEXP) {
       myFormatterOffPattern = getPatternOrDisableRegexp(FORMATTER_OFF_TAG);
@@ -359,11 +359,11 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     return myFormatterOffPattern;
   }
 
-  public void setFormatterOffPattern(@Nullable Pattern formatterOffPattern) {
+  public void setFormatterOffPattern(@javax.annotation.Nullable Pattern formatterOffPattern) {
     myFormatterOffPattern = formatterOffPattern;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Pattern getFormatterOnPattern() {
     if (myFormatterOffPattern == null && FORMATTER_TAGS_ENABLED && FORMATTER_TAGS_ACCEPT_REGEXP) {
       myFormatterOnPattern = getPatternOrDisableRegexp(FORMATTER_ON_TAG);
@@ -371,12 +371,12 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     return myFormatterOnPattern;
   }
 
-  public void setFormatterOnPattern(@Nullable Pattern formatterOnPattern) {
+  public void setFormatterOnPattern(@javax.annotation.Nullable Pattern formatterOnPattern) {
     myFormatterOnPattern = formatterOnPattern;
   }
 
   @Nullable
-  private Pattern getPatternOrDisableRegexp(@NotNull String markerText) {
+  private Pattern getPatternOrDisableRegexp(@Nonnull String markerText) {
     try {
       return Pattern.compile(markerText);
     }
@@ -395,7 +395,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   private CodeStyleSettings myParentSettings;
   private boolean myLoadedAdditionalIndentOptions;
 
-  @NotNull
+  @Nonnull
   private Collection<CustomCodeStyleSettings> getCustomSettingsValues() {
     synchronized (myCustomSettings) {
       return Collections.unmodifiableCollection(myCustomSettings.values());
@@ -520,7 +520,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @see FileTypeIndentOptionsProvider
    * @see LanguageCodeStyleSettingsProvider
    */
-  public IndentOptions getIndentOptions(@Nullable FileType fileType) {
+  public IndentOptions getIndentOptions(@javax.annotation.Nullable FileType fileType) {
     IndentOptions indentOptions = getLanguageIndentOptions(fileType);
     if (indentOptions != null) return indentOptions;
 
@@ -546,8 +546,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @see FileTypeIndentOptionsProvider
    * @see LanguageCodeStyleSettingsProvider
    */
-  @NotNull
-  public IndentOptions getIndentOptionsByDocument(@Nullable Project project, @NotNull Document document) {
+  @Nonnull
+  public IndentOptions getIndentOptionsByDocument(@Nullable Project project, @Nonnull Document document) {
     PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(document) : null;
     if (file != null) return getIndentOptionsByFile(file);
 
@@ -556,13 +556,13 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     return getIndentOptions(fileType);
   }
 
-  @NotNull
+  @Nonnull
   public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file) {
     return getIndentOptionsByFile(file, null);
   }
 
-  @NotNull
-  public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file, @Nullable TextRange formatRange) {
+  @Nonnull
+  public IndentOptions getIndentOptionsByFile(@javax.annotation.Nullable PsiFile file, @javax.annotation.Nullable TextRange formatRange) {
     return getIndentOptionsByFile(file, formatRange, false, null);
   }
 
@@ -580,11 +580,11 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @return Indent options from the associated document or file indent options providers.
    * @see com.intellij.psi.codeStyle.FileIndentOptionsProvider
    */
-  @NotNull
+  @Nonnull
   public IndentOptions getIndentOptionsByFile(@Nullable PsiFile file,
-                                              @Nullable TextRange formatRange,
+                                              @javax.annotation.Nullable TextRange formatRange,
                                               boolean ignoreDocOptions,
-                                              @Nullable Processor<FileIndentOptionsProvider> providerProcessor) {
+                                              @javax.annotation.Nullable Processor<FileIndentOptionsProvider> providerProcessor) {
     if (file != null && file.isValid()) {
       boolean isFullReformat = isFileFullyCoveredByRange(file, formatRange);
       if (!ignoreDocOptions && !isFullReformat) {
@@ -625,7 +625,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
   }
 
-  private static void markOptionsInaccurateIfDocumentUncommitted(@NotNull IndentOptions options, @NotNull PsiFile file) {
+  private static void markOptionsInaccurateIfDocumentUncommitted(@Nonnull IndentOptions options, @Nonnull PsiFile file) {
     PsiDocumentManager manager = PsiDocumentManager.getInstance(file.getProject());
     Document document = manager.getDocument(file);
     if (document != null && !manager.isCommitted(document)) {
@@ -633,15 +633,15 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
   }
 
-  public static boolean isRecalculateForCommittedDocument(@NotNull IndentOptions options) {
+  public static boolean isRecalculateForCommittedDocument(@Nonnull IndentOptions options) {
     return options.isRecalculateForCommittedDocument();
   }
 
-  private static boolean isFileFullyCoveredByRange(@NotNull PsiFile file, @Nullable TextRange formatRange) {
+  private static boolean isFileFullyCoveredByRange(@Nonnull PsiFile file, @Nullable TextRange formatRange) {
     return formatRange != null && file.getTextRange().equals(formatRange);
   }
 
-  private static void logIndentOptions(@NotNull PsiFile file, @NotNull FileIndentOptionsProvider provider, @NotNull IndentOptions options) {
+  private static void logIndentOptions(@Nonnull PsiFile file, @Nonnull FileIndentOptionsProvider provider, @Nonnull IndentOptions options) {
     LOG.debug("Indent options returned by " + provider.getClass().getName() +
               " for " + file.getName() +
               ": indent size=" + options.INDENT_SIZE +
@@ -649,8 +649,8 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
               ", tab size=" + options.TAB_SIZE);
   }
 
-  @Nullable
-  private IndentOptions getLanguageIndentOptions(@Nullable FileType fileType) {
+  @javax.annotation.Nullable
+  private IndentOptions getLanguageIndentOptions(@javax.annotation.Nullable FileType fileType) {
     if (fileType == null || !(fileType instanceof LanguageFileType)) return null;
     Language lang = ((LanguageFileType)fileType).getLanguage();
     CommonCodeStyleSettings langSettings = getCommonSettings(lang);
@@ -825,24 +825,24 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
   private static class TempFileType implements FileType {
     private final String myExtension;
 
-    private TempFileType(@NotNull final String extension) {
+    private TempFileType(@Nonnull final String extension) {
       myExtension = extension;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getName() {
       return "TempFileType";
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getDescription() {
       return "TempFileType";
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getDefaultExtension() {
       return myExtension;
     }
@@ -863,7 +863,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
     }
 
     @Override
-    public String getCharset(@NotNull VirtualFile file, @NotNull byte[] content) {
+    public String getCharset(@Nonnull VirtualFile file, @Nonnull byte[] content) {
       return null;
     }
   }
@@ -889,7 +889,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @return The right margin for the language if it is defined (not null) and its settings contain non-negative margin. Root (default)
    * margin otherwise (CodeStyleSettings.RIGHT_MARGIN).
    */
-  public int getRightMargin(@Nullable Language language) {
+  public int getRightMargin(@javax.annotation.Nullable Language language) {
     if (language != null) {
       CommonCodeStyleSettings langSettings = getCommonSettings(language);
       if (langSettings != null) {
@@ -905,7 +905,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @param language    The language to assign the right margin to or null if root (default) right margin is to be changed.
    * @param rightMargin New right margin.
    */
-  public void setRightMargin(@Nullable Language language, int rightMargin) {
+  public void setRightMargin(@javax.annotation.Nullable Language language, int rightMargin) {
     if (language != null) {
       CommonCodeStyleSettings langSettings = getCommonSettings(language);
       if (langSettings != null) {
@@ -932,7 +932,7 @@ public class CodeStyleSettings extends CommonCodeStyleSettings implements Clonea
    * @param language The language to check the option for or null for a global option.
    * @return True if wrapping on right margin is enabled.
    */
-  public boolean isWrapOnTyping(@Nullable Language language) {
+  public boolean isWrapOnTyping(@javax.annotation.Nullable Language language) {
     if (language != null) {
       CommonCodeStyleSettings langSettings = getCommonSettings(language);
       if (langSettings != null) {

@@ -35,8 +35,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.newProject.NewProjectDialog;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredDispatchThread
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);
     if (project == null) {
       return;
@@ -127,7 +127,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(e.getProject() != null);
   }

@@ -23,7 +23,7 @@ import com.intellij.lang.LanguageCommenters;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.impl.source.tree.PsiCommentImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -34,14 +34,14 @@ public class CommentLiteralEscaper extends LiteralTextEscaper<PsiCommentImpl> {
   }
 
   @Override
-  public boolean decode(@NotNull final TextRange rangeInsideHost, @NotNull StringBuilder outChars) {
+  public boolean decode(@Nonnull final TextRange rangeInsideHost, @Nonnull StringBuilder outChars) {
     ProperTextRange.assertProperRange(rangeInsideHost);
     outChars.append(myHost.getText(), rangeInsideHost.getStartOffset(), rangeInsideHost.getEndOffset());
     return true;
   }
 
   @Override
-  public int getOffsetInHost(int offsetInDecoded, @NotNull final TextRange rangeInsideHost) {
+  public int getOffsetInHost(int offsetInDecoded, @Nonnull final TextRange rangeInsideHost) {
     int offset = offsetInDecoded + rangeInsideHost.getStartOffset();
     if (offset < rangeInsideHost.getStartOffset()) offset = rangeInsideHost.getStartOffset();
     if (offset > rangeInsideHost.getEndOffset()) offset = rangeInsideHost.getEndOffset();

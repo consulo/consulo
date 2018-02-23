@@ -18,8 +18,8 @@ package com.intellij.util.lang;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,10 +59,10 @@ class MemoryResource extends Resource {
     return myAttributes != null ? myAttributes.get(key) : null;
   }
 
-  @NotNull
+  @Nonnull
   public static MemoryResource load(URL baseUrl,
-                                    @NotNull ZipFile zipFile,
-                                    @NotNull ZipEntry entry,
+                                    @Nonnull ZipFile zipFile,
+                                    @Nonnull ZipEntry entry,
                                     @Nullable Map<Attribute, String> attributes) throws IOException {
     String name = entry.getName();
     URL url = new URL(baseUrl, name);

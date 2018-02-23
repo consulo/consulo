@@ -42,8 +42,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -140,13 +140,13 @@ public class TemplateEditorUtil {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Lexer getHighlightingLexer() {
       return myLexer;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
       if (tokenType == TemplateTokenType.VARIABLE) {
         return pack(myOriginalHighlighter.getTokenHighlights(tokenType), TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);

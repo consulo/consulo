@@ -22,18 +22,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * A {@link SimpleContent} which content is retrieved from a file which exists or existed in the project.
  */
 public class FileAwareSimpleContent extends SimpleContent {
 
-  @NotNull private final Project myProject;
-  @NotNull private final FilePath myFilePath;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final FilePath myFilePath;
 
-  public FileAwareSimpleContent(@NotNull Project project, @NotNull FilePath filePath, @NotNull String text, @Nullable FileType type) {
+  public FileAwareSimpleContent(@Nonnull Project project, @Nonnull FilePath filePath, @Nonnull String text, @javax.annotation.Nullable FileType type) {
     super(text, type);
     myProject = project;
     myFilePath = filePath;

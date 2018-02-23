@@ -19,8 +19,8 @@ import com.intellij.ui.dualView.DualView;
 import com.intellij.ui.dualView.DualViewColumnInfo;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.ColumnInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -31,9 +31,10 @@ import java.util.Comparator;
 import java.util.Enumeration;
 
 abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOnVcsRevision, Object> {
-  @NotNull private final ColumnInfo<VcsFileRevision, T> myBaseColumn;
+  @Nonnull
+  private final ColumnInfo<VcsFileRevision, T> myBaseColumn;
 
-  public FileHistoryColumnWrapper(@NotNull ColumnInfo<VcsFileRevision, T> additionalColumn) {
+  public FileHistoryColumnWrapper(@Nonnull ColumnInfo<VcsFileRevision, T> additionalColumn) {
     super(additionalColumn.getName());
     myBaseColumn = additionalColumn;
   }
@@ -88,7 +89,7 @@ abstract class FileHistoryColumnWrapper<T> extends DualViewColumnInfo<TreeNodeOn
   }
 
   @Nullable
-  private String getMaxValue(@NotNull String columnHeader) {
+  private String getMaxValue(@Nonnull String columnHeader) {
     TableView table = getDualView().getFlatView();
     if (table.getRowCount() == 0) return null;
     final Enumeration<TableColumn> columns = table.getColumnModel().getColumns();

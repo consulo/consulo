@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,5 +29,5 @@ public interface ModifiableFontPreferences extends FontPreferences {
   void setRealFontFamilies(List<String> fontFamilies);
   void setTemplateFontSize(int size);
   void resetFontSizes();
-  void setFontSize(@NotNull String fontFamily, int size);
+  void setFontSize(@Nonnull String fontFamily, int size);
 }

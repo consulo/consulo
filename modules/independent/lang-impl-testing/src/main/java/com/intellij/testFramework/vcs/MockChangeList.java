@@ -17,8 +17,8 @@ package com.intellij.testFramework.vcs;
 
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,14 +44,14 @@ public class MockChangeList extends LocalChangeList {
     return myChanges;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     throw new UnsupportedOperationException();
   }
 

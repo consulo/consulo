@@ -24,13 +24,13 @@ import consulo.ui.Component;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ToolWindow extends BusyObject {
   Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
 
-  @NotNull
+  @Nonnull
   String getId();
 
   /**
@@ -84,7 +84,7 @@ public interface ToolWindow extends BusyObject {
    * @throws IllegalStateException if tool window isn't installed.
    */
   @RequiredUIAccess
-  void setAnchor(@NotNull ToolWindowAnchor anchor, @Nullable Runnable runnable);
+  void setAnchor(@Nonnull ToolWindowAnchor anchor, @Nullable Runnable runnable);
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
@@ -113,14 +113,14 @@ public interface ToolWindow extends BusyObject {
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
-  @NotNull
+  @Nonnull
   ToolWindowType getType();
 
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */
   @RequiredUIAccess
-  void setType(@NotNull ToolWindowType type, @Nullable Runnable runnable);
+  void setType(@Nonnull ToolWindowType type, @Nullable Runnable runnable);
 
   /**
    * @return window title. Returns <code>null</code> if window has no title.
@@ -137,7 +137,7 @@ public interface ToolWindow extends BusyObject {
   /**
    * @return window stripe button text.
    */
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   String getStripeTitle();
 
@@ -145,7 +145,7 @@ public interface ToolWindow extends BusyObject {
    * Sets new window stripe button text.
    */
   @RequiredUIAccess
-  void setStripeTitle(@NotNull String title);
+  void setStripeTitle(@Nonnull String title);
 
   /**
    * @return whether the window is available or not.
@@ -162,15 +162,15 @@ public interface ToolWindow extends BusyObject {
   void setAvailable(boolean available, @Nullable Runnable runnable);
 
   @RequiredUIAccess
-  void setContentUiType(@NotNull ToolWindowContentUiType type, @Nullable Runnable runnable);
+  void setContentUiType(@Nonnull ToolWindowContentUiType type, @Nullable Runnable runnable);
 
-  void setDefaultContentUiType(@NotNull ToolWindowContentUiType type);
+  void setDefaultContentUiType(@Nonnull ToolWindowContentUiType type);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   ToolWindowContentUiType getContentUiType();
 
-  void installWatcher(@NotNull ContentManager contentManager);
+  void installWatcher(@Nonnull ContentManager contentManager);
 
   ContentManager getContentManager();
 
@@ -191,7 +191,7 @@ public interface ToolWindow extends BusyObject {
 
   ActionCallback getActivation();
 
-  @NotNull
+  @Nonnull
   default Component getUIComponent() {
     throw new AbstractMethodError();
   }

@@ -41,8 +41,8 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharSequenceSubSequence;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -62,12 +62,12 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
   private final FileType myFileType;
   private final boolean myInheritFontFromLaF;
 
-  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, @NotNull Disposable parent) {
+  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, @Nonnull Disposable parent) {
     this(project, fileType, true, parent);
   }
 
   protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType,
-                                        boolean inheritFontFromLaF, @NotNull Disposable parent) {
+                                        boolean inheritFontFromLaF, @Nonnull Disposable parent) {
     myProject = project;
     myFileType = fileType;
     myInheritFontFromLaF = inheritFontFromLaF;
@@ -81,12 +81,12 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected EditorColorsScheme getColorScheme(final JTable table) {
     return getEditorPanel(table).getEditor().getColorsScheme();
   }
 
-  protected void customizeEditor(@NotNull EditorEx editor, JTable table, Object value, boolean selected, int row, int column) {
+  protected void customizeEditor(@Nonnull EditorEx editor, JTable table, Object value, boolean selected, int row, int column) {
     String text = getText(table, value, row, column);
     getEditorPanel(table).setText(text, getTextAttributes(table, value, row, column), selected);
   }
@@ -108,7 +108,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   private RendererComponent getEditorPanel(final JTable table) {
     RendererComponent panel = UIUtil.getClientProperty(table, MY_PANEL_PROPERTY);
     if (panel != null) {
@@ -130,7 +130,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   protected RendererComponent createRendererComponent(@Nullable Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
     return new AbbreviatingRendererComponent(project, fileType, inheritFontFromLaF);
   }
@@ -156,7 +156,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
       return myEditor;
     }
 
-    @NotNull
+    @Nonnull
     private static Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
       EditorTextField field = new EditorTextField(new MyDocument(), project, fileType, false, false);
       field.setSupplementary(true);
@@ -362,7 +362,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     LineSet myLineSet = LineSet.createLineSet(myString);
 
     @Override
-    public void setText(@NotNull CharSequence text) {
+    public void setText(@Nonnull CharSequence text) {
       String s = StringUtil.convertLineSeparators(text.toString());
       myChars = new char[s.length()];
       s.getChars(0, s.length(), myChars, 0);
@@ -374,26 +374,26 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     public void setStripTrailingSpacesEnabled(boolean isEnabled) {
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public LineIterator createLineIterator() {
       return myLineSet.createIterator();
     }
 
     @Override public void setModificationStamp(long modificationStamp) { }
-    @Override public void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener) { }
-    @Override public void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener) { }
-    @Override public void replaceText(@NotNull CharSequence chars, long newModificationStamp) { }
+    @Override public void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) { }
+    @Override public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) { }
+    @Override public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) { }
     @Override public void moveText(int srcStart, int srcEnd, int dstOffset) { }
 
     @Override public void suppressGuardedExceptions() { }
     @Override public void unSuppressGuardedExceptions() { }
     @Override public boolean isInEventsHandling() { return false; }
     @Override public void clearLineModificationFlags() { }
-    @Override public boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker) { return myRangeMarkers.removeInterval(rangeMarker); }
+    @Override public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) { return myRangeMarkers.removeInterval(rangeMarker); }
 
     @Override
-    public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+    public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
                                     int start,
                                     int end,
                                     boolean greedyToLeft,
@@ -404,46 +404,57 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
 
     @Override public boolean isInBulkUpdate() { return false; }
     @Override public void setInBulkUpdate(boolean value) { }
-    @NotNull @Override public List<RangeMarker> getGuardedBlocks() { return Collections.emptyList(); }
-    @Override public boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor) { return myRangeMarkers.process(processor); }
-    @Override public boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<? super RangeMarker> processor) { return myRangeMarkers.processOverlappingWith(start, end, processor); }
-    @NotNull
+    @Nonnull
+    @Override public List<RangeMarker> getGuardedBlocks() { return Collections.emptyList(); }
+    @Override public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) { return myRangeMarkers.process(processor); }
+    @Override public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) { return myRangeMarkers.processOverlappingWith(start, end, processor); }
+    @Nonnull
     @Override public String getText() { return myString; }
-    @NotNull @Override public String getText(@NotNull TextRange range) { return range.substring(getText()); }
-    @NotNull @Override public CharSequence getCharsSequence() { return myString; }
-    @NotNull @Override public CharSequence getImmutableCharSequence() { return getText(); }
-    @NotNull @Override public char[] getChars() { return myChars; }
+    @Nonnull
+    @Override public String getText(@Nonnull TextRange range) { return range.substring(getText()); }
+    @Nonnull
+    @Override public CharSequence getCharsSequence() { return myString; }
+    @Nonnull
+    @Override public CharSequence getImmutableCharSequence() { return getText(); }
+    @Nonnull
+    @Override public char[] getChars() { return myChars; }
     @Override public int getTextLength() { return myChars.length; }
     @Override public int getLineCount() { return myLineSet.findLineIndex(myChars.length) + 1; }
     @Override public int getLineNumber(int offset) { return myLineSet.findLineIndex(offset); }
     @Override public int getLineStartOffset(int line) { return myChars.length == 0 ? 0 : myLineSet.getLineStart(line); }
     @Override public int getLineEndOffset(int line) { return myChars.length == 0? 0 : myLineSet.getLineEnd(line); }
-    @Override public void insertString(int offset, @NotNull CharSequence s) { }
+    @Override public void insertString(int offset, @Nonnull CharSequence s) { }
     @Override public void deleteString(int startOffset, int endOffset) { }
-    @Override public void replaceString(int startOffset, int endOffset, @NotNull CharSequence s) { }
+    @Override public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) { }
     @Override public boolean isWritable() { return false; }
     @Override public long getModificationStamp() { return 0; }
     @Override public void fireReadOnlyModificationAttempt() { }
-    @Override public void addDocumentListener(@NotNull DocumentListener listener) { }
-    @Override public void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable) { }
-    @Override public void removeDocumentListener(@NotNull DocumentListener listener) { }
-    @NotNull @Override public RangeMarker createRangeMarker(int startOffset, int endOffset) {
+    @Override public void addDocumentListener(@Nonnull DocumentListener listener) { }
+    @Override public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) { }
+    @Override public void removeDocumentListener(@Nonnull DocumentListener listener) { }
+    @Nonnull
+    @Override public RangeMarker createRangeMarker(int startOffset, int endOffset) {
       return new RangeMarkerImpl(this, startOffset, endOffset, true){
       };
     }
-    @NotNull @Override public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) { return null; }
-    @Override public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) { }
-    @Override public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) { }
+    @Nonnull
+    @Override public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) { return null; }
+    @Override public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
+    @Override public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
     @Override public void setReadOnly(boolean isReadOnly) { }
-    @NotNull @Override public RangeMarker createGuardedBlock(int startOffset, int endOffset) { return null; }
-    @Override public void removeGuardedBlock(@NotNull RangeMarker block) { }
-    @Nullable @Override public RangeMarker getOffsetGuard(int offset) { return null; }
-    @Nullable @Override public RangeMarker getRangeGuard(int start, int end) { return null; }
+    @Nonnull
+    @Override public RangeMarker createGuardedBlock(int startOffset, int endOffset) { return null; }
+    @Override public void removeGuardedBlock(@Nonnull RangeMarker block) { }
+    @Nullable
+    @Override public RangeMarker getOffsetGuard(int offset) { return null; }
+    @Nullable
+    @Override public RangeMarker getRangeGuard(int start, int end) { return null; }
     @Override public void startGuardedBlockChecking() { }
     @Override public void stopGuardedBlockChecking() { }
     @Override public void setCyclicBufferSize(int bufferSize) { }
 
-    @NotNull @Override public RangeMarker createRangeMarker(@NotNull TextRange textRange) { return null; }
+    @Nonnull
+    @Override public RangeMarker createRangeMarker(@Nonnull TextRange textRange) { return null; }
     @Override public int getLineSeparatorLength(int line) { return 0; }
     @Override
     public int getModificationSequence() { return 0; }

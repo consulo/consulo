@@ -90,8 +90,8 @@ import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.TargetElementUtil;
 import gnu.trove.TIntArrayList;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -160,7 +160,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
 
   private final FileEditorManagerListener myFileEditorManagerListener = new FileEditorManagerAdapter() {
     @Override
-    public void selectionChanged(@NotNull FileEditorManagerEvent e) {
+    public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
       disposeHighlighter();
       cancelPreviousTooltip();
     }
@@ -235,14 +235,15 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
-  @NotNull private final Alarm myDocAlarm;
+  @Nonnull
+  private final Alarm myDocAlarm;
 
   public CtrlMouseHandler(final Project project,
                           StartupManager startupManager,
                           EditorColorsManager colorsManager,
                           FileEditorManager fileEditorManager,
-                          @NotNull DocumentationManager documentationManager,
-                          @NotNull final EditorFactory editorFactory) {
+                          @Nonnull DocumentationManager documentationManager,
+                          @Nonnull final EditorFactory editorFactory) {
     super(project);
     myEditorColorsManager = colorsManager;
     startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
@@ -267,12 +268,12 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "CtrlMouseHandler";
   }
 
-  private boolean isMouseOverTooltip(@NotNull Point mouseLocationOnScreen) {
+  private boolean isMouseOverTooltip(@Nonnull Point mouseLocationOnScreen) {
     Rectangle bounds = getHintBounds();
     return bounds != null && bounds.contains(mouseLocationOnScreen);
   }
@@ -290,7 +291,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     return new Rectangle(hintComponent.getLocationOnScreen(), hintComponent.getSize());
   }
 
-  @NotNull
+  @Nonnull
   private static BrowseMode getBrowseMode(@JdkConstants.InputEventMask int modifiers) {
     if (modifiers != 0) {
       final Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
@@ -308,7 +309,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     return generateInfo(element, atPointer).text;
   }
 
-  @NotNull
+  @Nonnull
   private static DocInfo generateInfo(PsiElement element, PsiElement atPointer) {
     final DocumentationProvider documentationProvider = DocumentationManager.getProviderFromElement(element, atPointer);
     String result = doGenerateInfo(element, atPointer, documentationProvider);
@@ -316,9 +317,9 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   @Nullable
-  private static String doGenerateInfo(@NotNull PsiElement element,
-                                       @NotNull PsiElement atPointer,
-                                       @NotNull DocumentationProvider documentationProvider)
+  private static String doGenerateInfo(@Nonnull PsiElement element,
+                                       @Nonnull PsiElement atPointer,
+                                       @Nonnull DocumentationProvider documentationProvider)
   {
     String info = documentationProvider.getQuickNavigateInfo(element, atPointer);
     if (info != null) {
@@ -363,36 +364,38 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   public abstract static class Info {
-    @NotNull protected final PsiElement myElementAtPointer;
-    @NotNull private final List<TextRange> myRanges;
+    @Nonnull
+    protected final PsiElement myElementAtPointer;
+    @Nonnull
+    private final List<TextRange> myRanges;
 
-    public Info(@NotNull PsiElement elementAtPointer, @NotNull List<TextRange> ranges) {
+    public Info(@Nonnull PsiElement elementAtPointer, @Nonnull List<TextRange> ranges) {
       myElementAtPointer = elementAtPointer;
       myRanges = ranges;
     }
 
-    public Info(@NotNull PsiElement elementAtPointer) {
+    public Info(@Nonnull PsiElement elementAtPointer) {
       this(elementAtPointer, Collections.singletonList(new TextRange(elementAtPointer.getTextOffset(),
                                                                      elementAtPointer.getTextOffset() + elementAtPointer.getTextLength())));
     }
 
-    boolean isSimilarTo(@NotNull Info that) {
+    boolean isSimilarTo(@Nonnull Info that) {
       return Comparing.equal(myElementAtPointer, that.myElementAtPointer) && myRanges.equals(that.myRanges);
     }
 
-    @NotNull
+    @Nonnull
     public List<TextRange> getRanges() {
       return myRanges;
     }
 
-    @NotNull
+    @Nonnull
     public abstract DocInfo getInfo();
 
-    public abstract boolean isValid(@NotNull Document document);
+    public abstract boolean isValid(@Nonnull Document document);
 
-    public abstract void showDocInfo(@NotNull DocumentationManager docManager);
+    public abstract void showDocInfo(@Nonnull DocumentationManager docManager);
 
-    protected boolean rangesAreCorrect(@NotNull Document document) {
+    protected boolean rangesAreCorrect(@Nonnull Document document) {
       final TextRange docRange = new TextRange(0, document.getTextLength());
       for (TextRange range : getRanges()) {
         if (!docRange.contains(range)) return false;
@@ -402,25 +405,26 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
-  private static void showDumbModeNotification(@NotNull Project project) {
+  private static void showDumbModeNotification(@Nonnull Project project) {
     DumbService.getInstance(project).showDumbModeNotification("Element information is not available during index update");
   }
 
   private static class InfoSingle extends Info {
-    @NotNull private final PsiElement myTargetElement;
+    @Nonnull
+    private final PsiElement myTargetElement;
 
-    public InfoSingle(@NotNull PsiElement elementAtPointer, @NotNull PsiElement targetElement) {
+    public InfoSingle(@Nonnull PsiElement elementAtPointer, @Nonnull PsiElement targetElement) {
       super(elementAtPointer);
       myTargetElement = targetElement;
     }
 
-    public InfoSingle(@NotNull PsiReference ref, @NotNull final PsiElement targetElement) {
+    public InfoSingle(@Nonnull PsiReference ref, @Nonnull final PsiElement targetElement) {
       super(ref.getElement(), ReferenceRange.getAbsoluteRanges(ref));
       myTargetElement = targetElement;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public DocInfo getInfo() {
       return ApplicationManager.getApplication().runReadAction(new Computable<DocInfo>() {
         @Override
@@ -437,7 +441,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
 
     @Override
-    public boolean isValid(@NotNull Document document) {
+    public boolean isValid(@Nonnull Document document) {
       if (!myTargetElement.isValid()) return false;
       if (!myElementAtPointer.isValid()) return false;
       if (myTargetElement == myElementAtPointer) return false;
@@ -446,41 +450,41 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
 
     @Override
-    public void showDocInfo(@NotNull DocumentationManager docManager) {
+    public void showDocInfo(@Nonnull DocumentationManager docManager) {
       docManager.showJavaDocInfo(myTargetElement, myElementAtPointer, null);
       docManager.setAllowContentUpdateFromContext(false);
     }
   }
 
   private static class InfoMultiple extends Info {
-    public InfoMultiple(@NotNull final PsiElement elementAtPointer) {
+    public InfoMultiple(@Nonnull final PsiElement elementAtPointer) {
       super(elementAtPointer);
     }
 
-    public InfoMultiple(@NotNull final PsiElement elementAtPointer, @NotNull PsiReference ref) {
+    public InfoMultiple(@Nonnull final PsiElement elementAtPointer, @Nonnull PsiReference ref) {
       super(elementAtPointer, ReferenceRange.getAbsoluteRanges(ref));
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public DocInfo getInfo() {
       return new DocInfo(CodeInsightBundle.message("multiple.implementations.tooltip"), null, null);
     }
 
     @Override
-    public boolean isValid(@NotNull Document document) {
+    public boolean isValid(@Nonnull Document document) {
       return rangesAreCorrect(document);
     }
 
     @Override
-    public void showDocInfo(@NotNull DocumentationManager docManager) {
+    public void showDocInfo(@Nonnull DocumentationManager docManager) {
       // Do nothing
     }
   }
 
   @Nullable
   @RequiredReadAction
-  public static Info getInfoAt(@NotNull final Editor editor, @NotNull PsiFile file, int offset, @NotNull BrowseMode browseMode) {
+  public static Info getInfoAt(@Nonnull final Editor editor, @Nonnull PsiFile file, int offset, @Nonnull BrowseMode browseMode) {
     PsiElement targetElement = null;
 
     Project project = file.getProject();
@@ -525,7 +529,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       final PsiElement element = TargetElementUtil.findTargetElement(editor, ImplementationSearcher.getFlags(), offset);
       PsiElement[] targetElements = new ImplementationSearcher() {
         @Override
-        @NotNull
+        @Nonnull
         protected PsiElement[] searchDefinitions(final PsiElement element, Editor editor) {
           final List<PsiElement> found = new ArrayList<PsiElement>(2);
           DefinitionsScopedSearch.search(element, getSearchScope(element, editor)).forEach(new Processor<PsiElement>() {
@@ -567,10 +571,10 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       if(identifier != null && identifier.isValid()) {
         return new Info(identifier) {
           @Override
-          public void showDocInfo(@NotNull DocumentationManager docManager) {
+          public void showDocInfo(@Nonnull DocumentationManager docManager) {
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public DocInfo getInfo() {
             String name = UsageViewUtil.getType(element) + " '" + UsageViewUtil.getShortName(element) + "'";
@@ -578,7 +582,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
           }
 
           @Override
-          public boolean isValid(@NotNull Document document) {
+          public boolean isValid(@Nonnull Document document) {
             return element.isValid();
           }
         };
@@ -587,8 +591,8 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     return null;
   }
 
-  @NotNull
-  private static List<PsiElement> resolve(@NotNull PsiReference ref) {
+  @Nonnull
+  private static List<PsiElement> resolve(@Nonnull PsiReference ref) {
     // IDEA-56727 try resolve first as in GotoDeclarationAction
     PsiElement resolvedElement = ref.resolve();
 
@@ -613,12 +617,12 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
-  private void fulfillDocInfo(@NotNull final String header,
-                              @NotNull final DocumentationProvider provider,
-                              @NotNull final PsiElement originalElement,
-                              @NotNull final PsiElement anchorElement,
-                              @NotNull final Consumer<String> newTextConsumer,
-                              @NotNull final LightweightHint hint)
+  private void fulfillDocInfo(@Nonnull final String header,
+                              @Nonnull final DocumentationProvider provider,
+                              @Nonnull final PsiElement originalElement,
+                              @Nonnull final PsiElement anchorElement,
+                              @Nonnull final Consumer<String> newTextConsumer,
+                              @Nonnull final LightweightHint hint)
   {
     myDocAlarm.cancelAllRequests();
     myDocAlarm.addRequest(new Runnable() {
@@ -750,13 +754,15 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   private class TooltipProvider {
-    @NotNull private final Editor myEditor;
-    @NotNull private final LogicalPosition myPosition;
+    @Nonnull
+    private final Editor myEditor;
+    @Nonnull
+    private final LogicalPosition myPosition;
     private BrowseMode myBrowseMode;
     private boolean myDisposed;
     private final ProgressIndicator myProgress = new ProgressIndicatorBase();
 
-    TooltipProvider(@NotNull Editor editor, @NotNull LogicalPosition pos) {
+    TooltipProvider(@Nonnull Editor editor, @Nonnull LogicalPosition pos) {
       myEditor = editor;
       myPosition = pos;
     }
@@ -770,7 +776,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       return myBrowseMode;
     }
 
-    void execute(@NotNull BrowseMode browseMode) {
+    void execute(@Nonnull BrowseMode browseMode) {
       myBrowseMode = browseMode;
 
       Document document = myEditor.getDocument();
@@ -793,19 +799,19 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
         @RequiredReadAction
         @Nullable
         @Override
-        public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+        public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
           return doExecute(file, offset);
         }
 
         @Override
-        public void onCanceled(@NotNull ProgressIndicator indicator) {
+        public void onCanceled(@Nonnull ProgressIndicator indicator) {
         }
       });
     }
 
     @Nullable
     @RequiredReadAction
-    private ReadTask.Continuation doExecute(@NotNull PsiFile file, int offset) {
+    private ReadTask.Continuation doExecute(@Nonnull PsiFile file, int offset) {
       final Info info;
       final DocInfo docInfo;
       try {
@@ -828,7 +834,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       });
     }
 
-    private void showHint(@NotNull Info info, @NotNull DocInfo docInfo) {
+    private void showHint(@Nonnull Info info, @Nonnull DocInfo docInfo) {
       if (myDisposed || myEditor.isDisposed()) return;
       Component internalComponent = myEditor.getContentComponent();
       if (myHighlighter != null) {
@@ -906,7 +912,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       showHint(hint);
     }
 
-    public void showHint(@NotNull LightweightHint hint) {
+    public void showHint(@Nonnull LightweightHint hint) {
       final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
       Point p = HintManagerImpl.getHintPosition(hint, myEditor, myPosition, HintManager.ABOVE);
       hintManager.showEditorHint(hint, myEditor, p,
@@ -915,8 +921,8 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     }
   }
 
-  @NotNull
-  private HighlightersSet installHighlighterSet(@NotNull Info info, @NotNull Editor editor) {
+  @Nonnull
+  private HighlightersSet installHighlighterSet(@Nonnull Info info, @Nonnull Editor editor) {
     final JComponent internalComponent = editor.getContentComponent();
     internalComponent.addKeyListener(myEditorKeyListener);
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
@@ -940,15 +946,19 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
 
 
   private class HighlightersSet {
-    @NotNull private final List<RangeHighlighter> myHighlighters;
-    @NotNull private final Editor myHighlighterView;
-    @NotNull private final Cursor myStoredCursor;
-    @NotNull private final Info myStoredInfo;
+    @Nonnull
+    private final List<RangeHighlighter> myHighlighters;
+    @Nonnull
+    private final Editor myHighlighterView;
+    @Nonnull
+    private final Cursor myStoredCursor;
+    @Nonnull
+    private final Info myStoredInfo;
 
-    private HighlightersSet(@NotNull List<RangeHighlighter> highlighters,
-                            @NotNull Editor highlighterView,
-                            @NotNull Cursor storedCursor,
-                            @NotNull Info storedInfo) {
+    private HighlightersSet(@Nonnull List<RangeHighlighter> highlighters,
+                            @Nonnull Editor highlighterView,
+                            @Nonnull Cursor storedCursor,
+                            @Nonnull Info storedInfo) {
       myHighlighters = highlighters;
       myHighlighterView = highlighterView;
       myStoredCursor = storedCursor;
@@ -967,7 +977,7 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       myFileEditorManager.removeFileEditorManagerListener(myFileEditorManagerListener);
     }
 
-    @NotNull
+    @Nonnull
     public Info getStoredInfo() {
       return myStoredInfo;
     }
@@ -977,7 +987,8 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
     public static final DocInfo EMPTY = new DocInfo(null, null, null);
 
     @Nullable public final String text;
-    @Nullable public final DocumentationProvider docProvider;
+    @Nullable
+    public final DocumentationProvider docProvider;
     @Nullable public final PsiElement documentationAnchor;
 
     DocInfo(@Nullable String text, @Nullable DocumentationProvider provider, @Nullable PsiElement documentationAnchor) {
@@ -990,17 +1001,19 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   private class QuickDocInfoPane extends JBLayeredPane {
     private static final int BUTTON_HGAP = 5;
 
-    @NotNull private final List<JComponent> myButtons = new ArrayList<JComponent>();
+    @Nonnull
+    private final List<JComponent> myButtons = new ArrayList<JComponent>();
 
-    @NotNull private final JComponent myBaseDocControl;
+    @Nonnull
+    private final JComponent myBaseDocControl;
 
     private final int myMinWidth;
     private final int myMinHeight;
     private final int myButtonWidth;
 
-    QuickDocInfoPane(@NotNull PsiElement documentationAnchor,
-                     @NotNull PsiElement elementUnderMouse,
-                     @NotNull JComponent baseDocControl) {
+    QuickDocInfoPane(@Nonnull PsiElement documentationAnchor,
+                     @Nonnull PsiElement elementUnderMouse,
+                     @Nonnull JComponent baseDocControl) {
       myBaseDocControl = baseDocControl;
 
       PresentationFactory presentationFactory = new PresentationFactory();
@@ -1063,8 +1076,8 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       return expandIfNecessary(myBaseDocControl.getMaximumSize());
     }
 
-    @NotNull
-    private Dimension expandIfNecessary(@NotNull Dimension base) {
+    @Nonnull
+    private Dimension expandIfNecessary(@Nonnull Dimension base) {
       if (base.width >= myMinWidth && base.height >= myMinHeight) {
         return base;
       }
@@ -1085,15 +1098,15 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
       }
     }
 
-    public void mouseEntered(@NotNull MouseEvent e) {
+    public void mouseEntered(@Nonnull MouseEvent e) {
       processStateChangeIfNecessary(e.getLocationOnScreen(), true);
     }
 
-    public void mouseExited(@NotNull MouseEvent e) {
+    public void mouseExited(@Nonnull MouseEvent e) {
       processStateChangeIfNecessary(e.getLocationOnScreen(), false);
     }
 
-    private void processStateChangeIfNecessary(@NotNull Point mouseScreenLocation, boolean mouseEntered) {
+    private void processStateChangeIfNecessary(@Nonnull Point mouseScreenLocation, boolean mouseEntered) {
       // Don't show 'view quick doc' buttons if docked quick doc control is already active.
       if (myDocumentationManager.hasActiveDockedDocWindow()) {
         return;
@@ -1110,16 +1123,18 @@ public class CtrlMouseHandler extends AbstractProjectComponent {
   }
 
   private class QuickDocHyperlinkListener implements HyperlinkListener {
-    @NotNull private final DocumentationProvider myProvider;
-    @NotNull private final PsiElement myContext;
+    @Nonnull
+    private final DocumentationProvider myProvider;
+    @Nonnull
+    private final PsiElement myContext;
 
-    QuickDocHyperlinkListener(@NotNull DocumentationProvider provider, @NotNull PsiElement context) {
+    QuickDocHyperlinkListener(@Nonnull DocumentationProvider provider, @Nonnull PsiElement context) {
       myProvider = provider;
       myContext = context;
     }
 
     @Override
-    public void hyperlinkUpdate(@NotNull HyperlinkEvent e) {
+    public void hyperlinkUpdate(@Nonnull HyperlinkEvent e) {
       if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
         return;
       }

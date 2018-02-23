@@ -26,8 +26,8 @@ import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -103,27 +103,27 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;
   }
 
-  public static ToolbarDecorator createDecorator(@NotNull JTable table) {
+  public static ToolbarDecorator createDecorator(@Nonnull JTable table) {
     return new TableToolbarDecorator(table, null).initPosition();
   }
 
-  public static ToolbarDecorator createDecorator(@NotNull JTree tree) {
+  public static ToolbarDecorator createDecorator(@Nonnull JTree tree) {
     return createDecorator(tree, null);
   }
 
-  private static ToolbarDecorator createDecorator(@NotNull JTree tree, @Nullable ElementProducer<?> producer) {
+  private static ToolbarDecorator createDecorator(@Nonnull JTree tree, @Nullable ElementProducer<?> producer) {
     return new TreeToolbarDecorator(tree, producer).initPosition();
   }
 
-  public static ToolbarDecorator createDecorator(@NotNull JList list) {
+  public static ToolbarDecorator createDecorator(@Nonnull JList list) {
     return new ListToolbarDecorator(list, null).initPosition();
   }
 
-  public static ToolbarDecorator createDecorator(@NotNull JList list, EditableModel editableModel) {
+  public static ToolbarDecorator createDecorator(@Nonnull JList list, EditableModel editableModel) {
     return new ListToolbarDecorator(list, editableModel).initPosition();
   }
 
-  public static <T> ToolbarDecorator createDecorator(@NotNull TableView<T> table, @Nullable ElementProducer<T> producer) {
+  public static <T> ToolbarDecorator createDecorator(@Nonnull TableView<T> table, @Nullable ElementProducer<T> producer) {
     return new TableToolbarDecorator(table, producer).initPosition();
   }
 
@@ -153,7 +153,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;
   }
 
-  public ToolbarDecorator setToolbarBackgroundColor(@NotNull Color color) {
+  public ToolbarDecorator setToolbarBackgroundColor(@Nonnull Color color) {
     myToolbarBackgroundColor = color;
     return this;
   }
@@ -327,7 +327,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
 
   }
 
-  public ToolbarDecorator setActionGroup(@NotNull ActionGroup actionGroup) {
+  public ToolbarDecorator setActionGroup(@Nonnull ActionGroup actionGroup) {
     AnAction[] actions = actionGroup.getChildren(null);
     for (AnAction action : actions) {
       addExtraAction(action instanceof AnSeparator ? action : AnActionButton.fromAction(action));
@@ -494,23 +494,23 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     };
   }
 
-  public static AnActionButton findAddButton(@NotNull JComponent container) {
+  public static AnActionButton findAddButton(@Nonnull JComponent container) {
     return findButton(container, CommonActionsPanel.Buttons.ADD);
   }
 
-  public static AnActionButton findEditButton(@NotNull JComponent container) {
+  public static AnActionButton findEditButton(@Nonnull JComponent container) {
     return findButton(container, CommonActionsPanel.Buttons.EDIT);
   }
 
-  public static AnActionButton findRemoveButton(@NotNull JComponent container) {
+  public static AnActionButton findRemoveButton(@Nonnull JComponent container) {
     return findButton(container, CommonActionsPanel.Buttons.REMOVE);
   }
 
-  public static AnActionButton findUpButton(@NotNull JComponent container) {
+  public static AnActionButton findUpButton(@Nonnull JComponent container) {
     return findButton(container, CommonActionsPanel.Buttons.UP);
   }
 
-  public static AnActionButton findDownButton(@NotNull JComponent container) {
+  public static AnActionButton findDownButton(@Nonnull JComponent container) {
     return findButton(container, CommonActionsPanel.Buttons.DOWN);
   }
 

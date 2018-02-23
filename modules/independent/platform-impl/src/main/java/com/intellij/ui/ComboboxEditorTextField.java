@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.FixedComboBoxEditor;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -50,7 +50,7 @@ public class ComboboxEditorTextField extends EditorTextField {
     }
   };
 
-  public ComboboxEditorTextField(@NotNull String text, Project project, FileType fileType) {
+  public ComboboxEditorTextField(@Nonnull String text, Project project, FileType fileType) {
     super(text, project, fileType);
     setOneLineMode(true);
   }
@@ -79,7 +79,7 @@ public class ComboboxEditorTextField extends EditorTextField {
   }
 
   @Override
-  protected void updateBorder(@NotNull final EditorEx editor) {
+  protected void updateBorder(@Nonnull final EditorEx editor) {
     if (UIUtil.isUnderAquaLookAndFeel()) {
       editor.setBorder(isEnabled() ? EDITOR_TEXTFIELD_BORDER : EDITOR_TEXTFIELD_DISABLED_BORDER);
     }

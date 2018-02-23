@@ -20,8 +20,7 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,17 +34,17 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     myProject = project;
     project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
       @Override
-      public void artifactRemoved(@NotNull Artifact artifact) {
+      public void artifactRemoved(@Nonnull Artifact artifact) {
         unregisterPointer(artifact);
       }
 
       @Override
-      public void artifactAdded(@NotNull Artifact artifact) {
+      public void artifactAdded(@Nonnull Artifact artifact) {
         updatePointers(artifact);
       }
 
       @Override
-      public void artifactChanged(@NotNull Artifact artifact, @NotNull String oldName) {
+      public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
         updatePointers(artifact, oldName);
       }
     });
@@ -56,27 +55,27 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
     super.unregisterPointers(value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ArtifactPointer create(@NotNull Artifact value) {
+  public ArtifactPointer create(@Nonnull Artifact value) {
     return (ArtifactPointer)super.create(value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ArtifactPointer create(@NotNull String name) {
+  public ArtifactPointer create(@Nonnull String name) {
     return (ArtifactPointer)super.create(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel) {
+  public ArtifactPointer create(@Nonnull Artifact artifact, @Nonnull ArtifactModel artifactModel) {
     return create(artifactModel.getOriginalArtifact(artifact));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Artifact findByName(@NotNull String name) {
+  public Artifact findByName(@Nonnull String name) {
     return ArtifactManager.getInstance(myProject).findArtifact(name);
   }
 

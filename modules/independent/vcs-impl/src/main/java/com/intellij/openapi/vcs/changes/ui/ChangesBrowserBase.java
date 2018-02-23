@@ -41,8 +41,8 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -81,7 +81,8 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   public static Key<ChangesBrowserBase> DATA_KEY = Key.create("com.intellij.openapi.vcs.changes.ui.ChangesBrowser");
   private AnAction myDiffAction;
   private final VirtualFile myToSelect;
-  @NotNull private final DeleteProvider myDeleteProvider = new VirtualFileDeleteProvider();
+  @Nonnull
+  private final DeleteProvider myDeleteProvider = new VirtualFileDeleteProvider();
 
   public void setChangesToDisplay(final List<T> changes) {
     myChangesToDisplay = changes;
@@ -93,7 +94,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   protected ChangesBrowserBase(final Project project,
-                               @NotNull List<T> changes,
+                               @Nonnull List<T> changes,
                                final boolean capableOfExcludingChanges,
                                final boolean highlightProblems,
                                @Nullable final Runnable inclusionListener,
@@ -148,16 +149,16 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     myViewer.setDoubleClickHandler(getDoubleClickHandler());
   }
 
-  @NotNull
+  @Nonnull
   protected abstract DefaultTreeModel buildTreeModel(final List<T> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten);
 
-  @NotNull
-  protected abstract List<T> getSelectedObjects(@NotNull ChangesBrowserNode<T> node);
+  @Nonnull
+  protected abstract List<T> getSelectedObjects(@Nonnull ChangesBrowserNode<T> node);
 
   @Nullable
-  protected abstract T getLeadSelectedObject(@NotNull ChangesBrowserNode node);
+  protected abstract T getLeadSelectedObject(@Nonnull ChangesBrowserNode node);
 
-  @NotNull
+  @Nonnull
   protected Runnable getDoubleClickHandler() {
     return new Runnable() {
       public void run() {
@@ -167,7 +168,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   protected void setInitialSelection(final List<? extends ChangeList> changeLists,
-                                     @NotNull List<T> changes,
+                                     @Nonnull List<T> changes,
                                      final ChangeList initialListSelection) {
     mySelectedChangeList = initialListSelection;
   }
@@ -195,7 +196,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     return myViewer;
   }
 
-  @NotNull
+  @Nonnull
   public JScrollPane getViewerScrollPane() {
     return myViewerScrollPane;
   }
@@ -286,7 +287,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     ShowDiffAction.showDiffForChange(myProject, Arrays.asList(changesArray), indexInSelection, context);
   }
 
-  protected void updateDiffContext(@NotNull ShowDiffContext context) {
+  protected void updateDiffContext(@Nonnull ShowDiffContext context) {
   }
 
   private boolean canShowDiff() {
@@ -303,7 +304,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     afterDiffRefresh();
   }
 
-  @NotNull
+  @Nonnull
   protected ChangesSelection getChangesSelection() {
     final Change leadSelection = ObjectUtils.tryCast(myViewer.getLeadSelection(), Change.class);
     List<Change> changes = getSelectedChanges();
@@ -352,7 +353,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     myViewer.setAlwaysExpandList(value);
   }
 
-  @NotNull
+  @Nonnull
   protected JComponent createToolbar() {
     DefaultActionGroup toolbarGroups = new DefaultActionGroup();
     myToolBarGroup = new DefaultActionGroup();
@@ -386,23 +387,23 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     toolBarGroup.add(myDiffAction);
   }
 
-  @NotNull
+  @Nonnull
   public Set<AbstractVcs> getAffectedVcses() {
     return ChangesUtil.getAffectedVcses(getCurrentDisplayedChanges(), myProject);
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<Change> getCurrentIncludedChanges();
 
-  @NotNull
+  @Nonnull
   public List<Change> getCurrentDisplayedChanges() {
     return mySelectedChangeList != null ? ContainerUtil.newArrayList(mySelectedChangeList.getChanges()) : Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<T> getCurrentDisplayedObjects();
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getIncludedUnversionedFiles() {
     return Collections.emptyList();
   }
@@ -440,13 +441,13 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     return files.toArray(new File[files.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<Change> getSelectedChanges();
 
-  @NotNull
+  @Nonnull
   public abstract List<Change> getAllChanges();
 
-  @NotNull
+  @Nonnull
   protected Stream<VirtualFile> getSelectedFiles() {
     return Stream.concat(
             getAfterRevisionsFiles(getSelectedChanges().stream()),
@@ -471,12 +472,12 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   @Contract(pure = true)
-  @NotNull
-  protected static <T> List<Change> findChanges(@NotNull Collection<T> items) {
+  @Nonnull
+  protected static <T> List<Change> findChanges(@Nonnull Collection<T> items) {
     return ContainerUtil.findAll(items, Change.class);
   }
 
-  static boolean isUnderUnversioned(@NotNull ChangesBrowserNode node) {
+  static boolean isUnderUnversioned(@Nonnull ChangesBrowserNode node) {
     return isUnderTag(new TreePath(node.getPath()), UNVERSIONED_FILES_TAG);
   }
 }

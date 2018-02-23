@@ -19,8 +19,8 @@ import com.intellij.diff.fragments.DiffFragment;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.openapi.util.Couple;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,19 +34,19 @@ public enum Side {
     myIndex = index;
   }
 
-  @NotNull
+  @Nonnull
   public static Side fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return RIGHT;
     throw new IndexOutOfBoundsException("index: " + index);
   }
 
-  @NotNull
+  @Nonnull
   public static Side fromLeft(boolean isLeft) {
     return isLeft ? LEFT : RIGHT;
   }
 
-  @NotNull
+  @Nonnull
   public static Side fromRight(boolean isRight) {
     return isRight ? RIGHT : LEFT;
   }
@@ -59,12 +59,12 @@ public enum Side {
     return myIndex == 0;
   }
 
-  @NotNull
+  @Nonnull
   public Side other() {
     return isLeft() ? RIGHT : LEFT;
   }
 
-  @NotNull
+  @Nonnull
   public Side other(boolean other) {
     return other ? other() : this;
   }
@@ -77,60 +77,60 @@ public enum Side {
     return isLeft() ? left : right;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Contract("!null, !null -> !null; null, null -> null")
-  public <T> T select(@Nullable T left, @Nullable T right) {
+  public <T> T select(@javax.annotation.Nullable T left, @Nullable T right) {
     return isLeft() ? left : right;
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull T left, @NotNull T right) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull T left, @Nonnull T right) {
     return isLeft() ? left : right;
   }
 
-  public boolean select(@NotNull boolean[] array) {
+  public boolean select(@Nonnull boolean[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public int select(@NotNull int[] array) {
+  public int select(@Nonnull int[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public <T> T select(@NotNull T[] array) {
+  public <T> T select(@Nonnull T[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull T[] array) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull T[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public <T> T select(@NotNull List<T> list) {
+  public <T> T select(@Nonnull List<T> list) {
     assert list.size() == 2;
     return list.get(myIndex);
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull List<T> list) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull List<T> list) {
     assert list.size() == 2;
     return list.get(myIndex);
   }
 
-  public <T> T select(@NotNull Couple<T> region) {
+  public <T> T select(@Nonnull Couple<T> region) {
     return isLeft() ? region.first : region.second;
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull Couple<T> region) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull Couple<T> region) {
     return isLeft() ? region.first : region.second;
   }
 
   @Nullable
-  public static <T> Side fromValue(@NotNull List<? extends T> list, @Nullable T value) {
+  public static <T> Side fromValue(@Nonnull List<? extends T> list, @Nullable T value) {
     assert list.size() == 2;
     int index = list.indexOf(value);
     return index != -1 ? fromIndex(index) : null;
@@ -140,19 +140,19 @@ public enum Side {
   // Fragments
   //
 
-  public int getStartOffset(@NotNull DiffFragment fragment) {
+  public int getStartOffset(@Nonnull DiffFragment fragment) {
     return isLeft() ? fragment.getStartOffset1() : fragment.getStartOffset2();
   }
 
-  public int getEndOffset(@NotNull DiffFragment fragment) {
+  public int getEndOffset(@Nonnull DiffFragment fragment) {
     return isLeft() ? fragment.getEndOffset1() : fragment.getEndOffset2();
   }
 
-  public int getStartLine(@NotNull LineFragment fragment) {
+  public int getStartLine(@Nonnull LineFragment fragment) {
     return isLeft() ? fragment.getStartLine1() : fragment.getStartLine2();
   }
 
-  public int getEndLine(@NotNull LineFragment fragment) {
+  public int getEndLine(@Nonnull LineFragment fragment) {
     return isLeft() ? fragment.getEndLine1() : fragment.getEndLine2();
   }
 }

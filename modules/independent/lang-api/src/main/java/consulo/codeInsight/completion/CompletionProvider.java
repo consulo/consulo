@@ -18,7 +18,7 @@ package consulo.codeInsight.completion;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -27,5 +27,5 @@ import consulo.annotations.RequiredReadAction;
  */
 public interface CompletionProvider {
   @RequiredReadAction
-  void addCompletions(@NotNull CompletionParameters parameters, final ProcessingContext context, @NotNull CompletionResultSet result);
+  void addCompletions(@Nonnull CompletionParameters parameters, final ProcessingContext context, @Nonnull CompletionResultSet result);
 }

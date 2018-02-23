@@ -21,7 +21,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.moduleImport.ModuleImportBasedProjectOpenProcessor;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
     return processors.toArray(new ProjectOpenProcessor[processors.size()]);
   });
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectOpenProcessor[] getProcessors() {
     return myCacheValue.getValue();

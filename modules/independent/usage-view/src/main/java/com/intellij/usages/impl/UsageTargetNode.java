@@ -17,13 +17,13 @@ package com.intellij.usages.impl;
 
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 class UsageTargetNode extends Node {
-  UsageTargetNode(@NotNull UsageTarget target) {
+  UsageTargetNode(@Nonnull UsageTarget target) {
     setUserObject(target);
   }
 
@@ -48,11 +48,11 @@ class UsageTargetNode extends Node {
   }
 
   @Override
-  protected String getText(@NotNull final UsageView view) {
+  protected String getText(@Nonnull final UsageView view) {
     return getTarget().getPresentation().getPresentableText();
   }
 
-  @NotNull
+  @Nonnull
   public UsageTarget getTarget() {
     return (UsageTarget)getUserObject();
   }

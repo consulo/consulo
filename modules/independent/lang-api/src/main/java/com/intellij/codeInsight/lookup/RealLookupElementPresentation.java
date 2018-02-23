@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

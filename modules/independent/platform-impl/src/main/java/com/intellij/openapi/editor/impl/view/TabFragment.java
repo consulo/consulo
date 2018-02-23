@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -54,7 +54,7 @@ class TabFragment implements LineFragment {
   public void draw(Graphics2D g, float x, float y, int startColumn, int endColumn) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineFragment subFragment(int startOffset, int endOffset) {
     return this;

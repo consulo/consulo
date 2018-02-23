@@ -20,7 +20,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.pom.Navigatable;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.util.OpenSourceUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class BaseNavigateToSourceAction extends AnAction implements DumbAware {
   private final boolean myFocusEditor;

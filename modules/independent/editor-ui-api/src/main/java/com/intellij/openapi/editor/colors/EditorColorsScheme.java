@@ -20,8 +20,8 @@ import com.intellij.openapi.options.FontSize;
 import consulo.util.pointers.Named;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -32,9 +32,9 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
   void setAttributes(TextAttributesKey key, TextAttributes attributes);
 
-  @NotNull
+  @Nonnull
   Color getDefaultBackground();
-  @NotNull
+  @Nonnull
   Color getDefaultForeground();
 
   @Nullable
@@ -53,9 +53,9 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
    *
    * @return    font preferences to use
    */
-  @NotNull
+  @Nonnull
   FontPreferences getFontPreferences();
-  void setFontPreferences(@NotNull FontPreferences preferences);
+  void setFontPreferences(@Nonnull FontPreferences preferences);
 
   String getEditorFontName();
   void setEditorFontName(String fontName);
@@ -68,7 +68,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
   void setEditorFontSize(int fontSize);
 
   FontSize getQuickDocFontSize();
-  void setQuickDocFontSize(@NotNull FontSize fontSize);
+  void setQuickDocFontSize(@Nonnull FontSize fontSize);
 
   Font getFont(EditorFontType key);
   void setFont(EditorFontType key, Font font);
@@ -82,9 +82,9 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
    * @return    console font preferences to use
    * @see #getFontPreferences()
    */
-  @NotNull
+  @Nonnull
   FontPreferences getConsoleFontPreferences();
-  void setConsoleFontPreferences(@NotNull FontPreferences preferences);
+  void setConsoleFontPreferences(@Nonnull FontPreferences preferences);
 
   String getConsoleFontName();
   void setConsoleFontName(String fontName);

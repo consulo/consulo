@@ -32,9 +32,9 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
   private static final String CUSTOM_COLOR_NAME = "Custom";
   private final Map<String, NamedScope> myScopeNames = new HashMap<String, NamedScope>();
 
-  public FileColorConfigurationEditDialog(@NotNull final FileColorManager manager, @Nullable final FileColorConfiguration configuration) {
+  public FileColorConfigurationEditDialog(@Nonnull final FileColorManager manager, @Nullable final FileColorConfiguration configuration) {
     super(true);
 
     setTitle(configuration == null ? "Add color label" : "Edit color label");

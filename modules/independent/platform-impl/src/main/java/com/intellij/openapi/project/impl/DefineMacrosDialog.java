@@ -22,7 +22,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.Table;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -72,7 +72,7 @@ public class DefineMacrosDialog extends DialogWrapper{
     super.doOKAction();
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction()};
   }

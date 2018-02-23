@@ -16,9 +16,8 @@
 
 package com.intellij.vcs.log.graph.utils;
 
-import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.impl.BitSetFlags;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -29,7 +28,7 @@ public class BitSetFlagsTest {
     return bit ? '1' : '0';
   }
 
-  private static String toStr(@NotNull Flags flags) {
+  private static String toStr(@Nonnull Flags flags) {
     StringBuilder s = new StringBuilder();
     for(int i = 0; i < flags.size(); i++)
       s.append(bitToChar(flags.get(i)));

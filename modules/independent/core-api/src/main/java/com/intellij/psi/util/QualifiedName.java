@@ -19,8 +19,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +34,8 @@ import java.util.List;
 public class QualifiedName implements Comparable<QualifiedName> {
   public static final QualifiedName ROOT = new QualifiedName(0);
 
-  @NotNull private final List<String> myComponents;
+  @Nonnull
+  private final List<String> myComponents;
 
   private QualifiedName(int count) {
     myComponents = new ArrayList<String>(count);
@@ -49,7 +50,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return qName;
   }
 
-  @NotNull
+  @Nonnull
   public static QualifiedName fromComponents(String... components) {
     if(components.length == 0) {
       return ROOT;
@@ -73,12 +74,12 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public QualifiedName removeLastComponent() {
     return removeTail(1);
   }
 
-  @NotNull
+  @Nonnull
   public QualifiedName removeTail(int count) {
     int size = myComponents.size();
     QualifiedName result = new QualifiedName(size);
@@ -89,7 +90,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public QualifiedName removeHead(int count) {
     int size = myComponents.size();
     QualifiedName result = new QualifiedName(size);
@@ -100,7 +101,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getComponents() {
     return myComponents;
   }
@@ -134,7 +135,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return true;
   }
 
-  public boolean endsWith(@NotNull String suffix) {
+  public boolean endsWith(@Nonnull String suffix) {
     return suffix.equals(getLastComponent());
   }
 
@@ -200,8 +201,8 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return StringUtil.join(myComponents, separator);
   }
 
-  @NotNull
-  public static QualifiedName fromDottedString(@NotNull String refName) {
+  @Nonnull
+  public static QualifiedName fromDottedString(@Nonnull String refName) {
     if(StringUtil.isEmpty(refName)) {
       return ROOT;
     }
@@ -226,7 +227,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
   }
 
   @Override
-  public int compareTo(@NotNull QualifiedName other) {
+  public int compareTo(@Nonnull QualifiedName other) {
     return toString().compareTo(other.toString());
   }
 }

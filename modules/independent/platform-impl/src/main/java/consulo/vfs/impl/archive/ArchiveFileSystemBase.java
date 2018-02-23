@@ -29,8 +29,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,21 +46,21 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   private final Set<String> myNoCopyJarPaths;
   private final String myProtocol;
 
-  protected ArchiveFileSystemBase(@NotNull String protocol) {
+  protected ArchiveFileSystemBase(@Nonnull String protocol) {
     myProtocol = protocol;
     boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !SystemInfo.isWindows);
     myNoCopyJarPaths = noCopy ? null : ContainerUtil.newConcurrentSet(FileUtil.PATH_HASHING_STRATEGY);
   }
 
-  public boolean isMyFile(@NotNull VirtualFile local) {
+  public boolean isMyFile(@Nonnull VirtualFile local) {
     FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getName());
     return fileType instanceof ArchiveFileType && ((ArchiveFileType)fileType).getFileSystem() == this;
   }
 
-  @NotNull
-  public abstract ArchiveFile createArchiveFile(@NotNull String filePath) throws IOException;
+  @Nonnull
+  public abstract ArchiveFile createArchiveFile(@Nonnull String filePath) throws IOException;
 
-  @NotNull
+  @Nonnull
   @Override
   public final String getProtocol() {
     return myProtocol;
@@ -70,7 +70,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   public void initComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return getClass().getSimpleName();
@@ -81,7 +81,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   }
 
   @Override
-  public boolean isMakeCopyOfJar(@NotNull File originalJar) {
+  public boolean isMakeCopyOfJar(@Nonnull File originalJar) {
     return !(myNoCopyJarPaths == null || myNoCopyJarPaths.contains(originalJar.getPath()));
   }
 
@@ -94,14 +94,14 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
     myNoCopyJarPaths.add(path);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String extractPresentableUrl(@NotNull String path) {
+  public String extractPresentableUrl(@Nonnull String path) {
     return super.extractPresentableUrl(StringUtil.trimEnd(path, URLUtil.ARCHIVE_SEPARATOR));
   }
 
   @Override
-  protected String normalize(@NotNull String path) {
+  protected String normalize(@Nonnull String path) {
     final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     if (jarSeparatorIndex > 0) {
       final String root = path.substring(0, jarSeparatorIndex);
@@ -110,44 +110,44 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
     return super.normalize(path);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String extractRootPath(@NotNull String path) {
+  protected String extractRootPath(@Nonnull String path) {
     final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     assert jarSeparatorIndex >= 0 : "Path passed to ArchiveFileSystem must have archive separator '!/': " + path;
     return path.substring(0, jarSeparatorIndex + URLUtil.ARCHIVE_SEPARATOR.length());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String extractLocalPath(@NotNull String rootPath) {
+  protected String extractLocalPath(@Nonnull String rootPath) {
     return StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String composeRootPath(@NotNull String localPath) {
+  protected String composeRootPath(@Nonnull String localPath) {
     return localPath + URLUtil.ARCHIVE_SEPARATOR;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected JarHandler getHandler(@NotNull VirtualFile entryFile) {
+  protected JarHandler getHandler(@Nonnull VirtualFile entryFile) {
     return VfsImplUtil.getHandler(this, entryFile, JarHandler::new);
   }
 
   @Override
-  public VirtualFile findFileByPath(@NotNull String path) {
+  public VirtualFile findFileByPath(@Nonnull String path) {
     return VfsImplUtil.findFileByPath(this, path);
   }
 
   @Override
-  public VirtualFile findFileByPathIfCached(@NotNull String path) {
+  public VirtualFile findFileByPathIfCached(@Nonnull String path) {
     return VfsImplUtil.findFileByPathIfCached(this, path);
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return VfsImplUtil.refreshAndFindFileByPath(this, path);
   }
 
@@ -164,7 +164,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
 
   @Nullable
   @Override
-  public VirtualFile findLocalVirtualFileByPath(@NotNull String path) {
+  public VirtualFile findLocalVirtualFileByPath(@Nonnull String path) {
     if (!path.contains(URLUtil.ARCHIVE_SEPARATOR)) {
       path += URLUtil.ARCHIVE_SEPARATOR;
     }
@@ -177,7 +177,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   }
 
   @Nullable
-  public VirtualFile getJarRootForLocalFile(@NotNull VirtualFile file) {
+  public VirtualFile getJarRootForLocalFile(@Nonnull VirtualFile file) {
     return getRootByLocal(file);
   }
 }

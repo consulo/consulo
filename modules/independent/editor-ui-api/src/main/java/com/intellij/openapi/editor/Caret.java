@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.UserDataHolderEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a specific caret instance in the editor.
@@ -30,13 +30,13 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * Returns an instance of Editor, current caret belongs to.
    */
-  @NotNull
+  @Nonnull
   Editor getEditor();
 
   /**
    * Returns an instance of CaretModel, current caret is associated with.
    */
-  @NotNull
+  @Nonnull
   CaretModel getCaretModel();
 
   /**
@@ -67,14 +67,14 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @param pos the position to move to.
    */
-  void moveToLogicalPosition(@NotNull LogicalPosition pos);
+  void moveToLogicalPosition(@Nonnull LogicalPosition pos);
 
   /**
    * Moves the caret to the specified visual position.
    *
    * @param pos the position to move to.
    */
-  void moveToVisualPosition(@NotNull VisualPosition pos);
+  void moveToVisualPosition(@Nonnull VisualPosition pos);
 
   /**
    * Short hand for calling {@link #moveToOffset(int, boolean)} with <code>'false'</code> as a second argument.
@@ -111,7 +111,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  @NotNull
+  @Nonnull
   LogicalPosition getLogicalPosition();
 
   /**
@@ -119,7 +119,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  @NotNull
+  @Nonnull
   VisualPosition getVisualPosition();
 
   /**
@@ -152,7 +152,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text start if any
    */
-  @NotNull
+  @Nonnull
   VisualPosition getSelectionStartPosition();
 
   /**
@@ -166,7 +166,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text end if any;
    */
-  @NotNull
+  @Nonnull
   VisualPosition getSelectionEndPosition();
 
   /**
@@ -190,7 +190,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position from which the user started to extend the selection if any
    */
-  @NotNull
+  @Nonnull
   VisualPosition getLeadSelectionPosition();
 
   /**
@@ -251,7 +251,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param startOffset     start selection offset
    * @param endOffset       end selection offset
    */
-  void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset);
+  void setSelection(@javax.annotation.Nullable VisualPosition startPosition, int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset);
 
   /**
    * Selects target range based on its visual boundaries.
@@ -268,7 +268,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param endOffset       end selection offset
    * @param updateSystemSelection whether system selection should be updated (might not have any effect if current editor doesn't support such a feature)
    */
-  void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
+  void setSelection(@javax.annotation.Nullable VisualPosition startPosition, int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
 
   /**
    * Removes the selection in the editor.
@@ -321,7 +321,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #setVisualAttributes(CaretVisualAttributes)
    */
-  @NotNull
+  @Nonnull
   CaretVisualAttributes getVisualAttributes();
 
   /**
@@ -329,5 +329,5 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #getVisualAttributes()
    */
-  void setVisualAttributes(@NotNull CaretVisualAttributes attributes);
+  void setVisualAttributes(@Nonnull CaretVisualAttributes attributes);
 }

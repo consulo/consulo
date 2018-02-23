@@ -23,8 +23,8 @@
 package com.intellij.lang.injection;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConcatenationAwareInjector {
-  void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement... operands);
+  void getLanguagesToInject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
 }

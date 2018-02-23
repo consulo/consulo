@@ -35,21 +35,21 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.generation.actions.EmacsStyleIndentAction");
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new Handler();
   }
 
   @Override
-  protected boolean isValidForFile(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
+  protected boolean isValidForFile(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
     final PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
     return context != null && LanguageFormatting.INSTANCE.forContext(context) != null;
   }
@@ -59,7 +59,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
 
     @RequiredDispatchThread
     @Override
-    public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
+    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
       if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
       PsiDocumentManager.getInstance(project).commitAllDocuments();
 

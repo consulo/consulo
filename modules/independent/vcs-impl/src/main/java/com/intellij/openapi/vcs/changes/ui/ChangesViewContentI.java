@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -25,7 +24,7 @@ public interface ChangesViewContentI {
   void addContent(Content content);
   void removeContent(final Content content);
   void setSelectedContent(final Content content);
-  @Nullable
+  @javax.annotation.Nullable
   <T> T getActiveComponent(final Class<T> aClass);
   void selectContent(final String tabName);
 }

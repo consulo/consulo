@@ -19,8 +19,8 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
     return myFileList.getIncludedChanges();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ChangesTreeList getFileList() {
     return myFileList;

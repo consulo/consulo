@@ -19,30 +19,31 @@ import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DiffWindow extends DiffWindowBase {
-  @NotNull private final DiffRequestChain myRequestChain;
+  @Nonnull
+  private final DiffRequestChain myRequestChain;
 
-  public DiffWindow(@Nullable Project project, @NotNull DiffRequestChain requestChain, @NotNull DiffDialogHints hints) {
+  public DiffWindow(@Nullable Project project, @Nonnull DiffRequestChain requestChain, @Nonnull DiffDialogHints hints) {
     super(project, hints);
     myRequestChain = requestChain;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DiffRequestProcessor createProcessor() {
     return new MyCacheDiffRequestChainProcessor(myProject, myRequestChain);
   }
 
   private class MyCacheDiffRequestChainProcessor extends CacheDiffRequestChainProcessor {
-    public MyCacheDiffRequestChainProcessor(@Nullable Project project, @NotNull DiffRequestChain requestChain) {
+    public MyCacheDiffRequestChainProcessor(@Nullable Project project, @Nonnull DiffRequestChain requestChain) {
       super(project, requestChain);
     }
 
     @Override
-    protected void setWindowTitle(@NotNull String title) {
+    protected void setWindowTitle(@Nonnull String title) {
       getWrapper().setTitle(title);
     }
 

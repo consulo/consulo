@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -41,11 +41,11 @@ public class StepSequence {
     myCommonSteps.addAll(Arrays.asList(commonSteps));
   }
 
-  public void addCommonStep(@NotNull ModuleWizardStep step){
+  public void addCommonStep(@Nonnull ModuleWizardStep step){
     myCommonSteps.add(step);
   }
 
-  public void addCommonFinishingStep(@NotNull ModuleWizardStep step, @NotNull Set<String> suitableTypes) {
+  public void addCommonFinishingStep(@Nonnull ModuleWizardStep step, @Nonnull Set<String> suitableTypes) {
     myCommonFinishingSteps.add(Pair.create(step, suitableTypes));
   }
 
@@ -72,7 +72,7 @@ public class StepSequence {
     return mySelectedSteps;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public ModuleWizardStep getNextStep(ModuleWizardStep step) {
     final List<ModuleWizardStep> steps = getSelectedSteps();
     final int i = steps.indexOf(step);

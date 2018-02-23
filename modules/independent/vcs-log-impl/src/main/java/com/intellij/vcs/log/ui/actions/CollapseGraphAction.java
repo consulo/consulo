@@ -17,35 +17,36 @@ package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import icons.VcsLogIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class CollapseGraphAction extends CollapseOrExpandGraphAction {
-  @NotNull private static final String COLLAPSE = "Collapse";
+  @Nonnull
+  private static final String COLLAPSE = "Collapse";
 
   public CollapseGraphAction() {
     super(COLLAPSE);
   }
 
   @Override
-  protected void executeAction(@NotNull VcsLogUiImpl vcsLogUi) {
+  protected void executeAction(@Nonnull VcsLogUiImpl vcsLogUi) {
     vcsLogUi.collapseAll();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Icon getMergesIcon() {
     return VcsLogIcons.CollapseMerges;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Icon getBranchesIcon() {
     return VcsLogIcons.CollapseMerges;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getPrefix() {
     return COLLAPSE + " ";

@@ -19,8 +19,8 @@ import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -40,8 +40,8 @@ public class ExecutableHelper {
     return findExecutable("Git", "git", "git.exe", Arrays.asList(GIT_EXECUTABLE_ENV, TEAMCITY_GIT_EXECUTABLE_ENV));
   }
 
-  @NotNull
-  public static String findExecutable(@NotNull String programName, @NotNull String unixExec, @NotNull String winExec, @NotNull Collection<String> envs) {
+  @Nonnull
+  public static String findExecutable(@Nonnull String programName, @Nonnull String unixExec, @Nonnull String winExec, @Nonnull Collection<String> envs) {
     String exec = findEnvValue(programName, envs);
     if (exec != null) {
       return exec;
@@ -56,7 +56,7 @@ public class ExecutableHelper {
   }
 
   @Nullable
-  public static String findEnvValue(@NotNull String programNameForLog, @NotNull Collection<String> envs) {
+  public static String findEnvValue(@Nonnull String programNameForLog, @Nonnull Collection<String> envs) {
     for (String env : envs) {
       String val = System.getenv(env);
       if (val != null && new File(val).canExecute()) {
@@ -67,7 +67,7 @@ public class ExecutableHelper {
     return null;
   }
 
-  public static void debug(@NotNull String msg) {
+  public static void debug(@Nonnull String msg) {
     if (!StringUtil.isEmptyOrSpaces(msg)) {
       LOG.info(msg);
     }

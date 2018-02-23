@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class OpenInEditorWithMouseAction extends AnAction implements DumbAware {
-  @NotNull private List<? extends Editor> myEditors = Collections.emptyList();
+  @Nonnull
+  private List<? extends Editor> myEditors = Collections.emptyList();
 
   public OpenInEditorWithMouseAction() {
     AnAction navigateAction = ActionManager.getInstance().getAction(IdeActions.ACTION_GOTO_DECLARATION); // null in MPS
@@ -42,7 +43,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
                    new CustomShortcutSet(new MouseShortcut(MouseEvent.BUTTON1, InputEvent.CTRL_DOWN_MASK, 1)));
   }
 
-  public void install(@NotNull List<? extends Editor> editors) {
+  public void install(@Nonnull List<? extends Editor> editors) {
     myEditors = editors;
     for (Editor editor : editors) {
       registerCustomShortcutSet(getShortcutSet(), (EditorGutterComponentEx)editor.getGutter());
@@ -50,7 +51,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     if (!(inputEvent instanceof MouseEvent)) {
       e.getPresentation().setEnabledAndVisible(false);
@@ -97,7 +98,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     MouseEvent inputEvent = (MouseEvent)e.getInputEvent();
     OpenInEditorAction openInEditorAction = e.getRequiredData(OpenInEditorAction.KEY);
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
@@ -118,8 +119,8 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
     openInEditorAction.openEditor(project, navigatable);
   }
 
-  @Nullable
-  private Editor getEditor(@NotNull Component component) {
+  @javax.annotation.Nullable
+  private Editor getEditor(@Nonnull Component component) {
     for (Editor editor : myEditors) {
       if (editor != null && editor.getGutter() == component) {
         return editor;
@@ -129,5 +130,5 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Nullable
-  protected abstract Navigatable getNavigatable(@NotNull Editor editor, int line);
+  protected abstract Navigatable getNavigatable(@Nonnull Editor editor, int line);
 }

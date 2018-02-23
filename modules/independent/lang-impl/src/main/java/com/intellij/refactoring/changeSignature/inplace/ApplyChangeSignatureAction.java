@@ -23,8 +23,8 @@ import com.intellij.refactoring.BaseRefactoringIntentionAction;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
   public static final String CHANGE_SIGNATURE = "Apply signature change";
@@ -34,20 +34,20 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
     myMethodName = methodName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return RefactoringBundle.message("changing.signature.of.0", myMethodName);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return CHANGE_SIGNATURE;
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
     final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetectors.INSTANCE.forLanguage(element.getLanguage());
     if (detector != null) {
       InplaceChangeSignature changeSignature = InplaceChangeSignature.getCurrentRefactoring(editor);
@@ -60,7 +60,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
     InplaceChangeSignature signatureGestureDetector = InplaceChangeSignature.getCurrentRefactoring(editor);
     final String initialSignature = signatureGestureDetector.getInitialSignature();
     final ChangeInfo currentInfo = signatureGestureDetector.getCurrentInfo();
@@ -73,7 +73,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
 
   @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@NotNull PsiFile file) {
+  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
     return file;
   }
 

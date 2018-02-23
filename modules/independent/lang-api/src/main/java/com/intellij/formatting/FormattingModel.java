@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines the formatting model for a file. A formatting model defines how a file is broken
@@ -41,7 +41,7 @@ public interface FormattingModel {
    *
    * @return the root block of the model.
    */
-  @NotNull
+  @Nonnull
   Block getRootBlock();
 
   /**
@@ -50,7 +50,7 @@ public interface FormattingModel {
    *
    * @return the formatting document model.
    */
-  @NotNull
+  @Nonnull
   FormattingDocumentModel getDocumentModel();
 
   /**

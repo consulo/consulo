@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.util.objectTree;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ObjectTreeListener {
 
-  void objectRegistered(@NotNull Object node);
-  void objectExecuted(@NotNull Object node);
+  void objectRegistered(@Nonnull Object node);
+  void objectExecuted(@Nonnull Object node);
 
 }

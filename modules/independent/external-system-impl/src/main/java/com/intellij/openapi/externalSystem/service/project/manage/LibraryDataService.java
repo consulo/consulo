@@ -26,7 +26,7 @@ import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -42,35 +42,37 @@ import java.util.Set;
 public class LibraryDataService implements ProjectDataService<LibraryData, Library> {
 
   private static final Logger LOG = Logger.getInstance("#" + LibraryDataService.class.getName());
-  @NotNull public static final NotNullFunction<String, File> PATH_TO_FILE = new NotNullFunction<String, File>() {
-    @NotNull
+  @Nonnull
+  public static final NotNullFunction<String, File> PATH_TO_FILE = new NotNullFunction<String, File>() {
+    @Nonnull
     @Override
     public File fun(String path) {
       return new File(path);
     }
   };
 
-  @NotNull private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
+  @Nonnull
+  private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
 
-  public LibraryDataService(@NotNull ExternalLibraryPathTypeMapper mapper)
+  public LibraryDataService(@Nonnull ExternalLibraryPathTypeMapper mapper)
   {
     myLibraryPathTypeMapper = mapper;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<LibraryData> getTargetDataKey() {
     return ProjectKeys.LIBRARY;
   }
 
   @Override
-  public void importData(@NotNull Collection<DataNode<LibraryData>> toImport, @NotNull Project project, boolean synchronous) {
+  public void importData(@Nonnull Collection<DataNode<LibraryData>> toImport, @Nonnull Project project, boolean synchronous) {
     for (DataNode<LibraryData> dataNode : toImport) {
       importLibrary(dataNode.getData(), project, synchronous);
     }
   }
 
-  public void importLibrary(@NotNull final LibraryData toImport, @NotNull final Project project, boolean synchronous) {
+  public void importLibrary(@Nonnull final LibraryData toImport, @Nonnull final Project project, boolean synchronous) {
     Map<OrderRootType, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
 
     Library library = ProjectStructureHelper.findIdeLibrary(toImport, project);
@@ -81,8 +83,8 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     importLibrary(toImport.getInternalName(), libraryFiles, project, synchronous);
   }
 
-  @NotNull
-  public Map<OrderRootType, Collection<File>> prepareLibraryFiles(@NotNull LibraryData data) {
+  @Nonnull
+  public Map<OrderRootType, Collection<File>> prepareLibraryFiles(@Nonnull LibraryData data) {
     Map<OrderRootType, Collection<File>> result = ContainerUtilRt.newHashMap();
     for (LibraryPathType pathType : LibraryPathType.values()) {
       final Set<String> paths = data.getPaths(pathType);
@@ -94,9 +96,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     return result;
   }
 
-  public void importLibrary(@NotNull final String libraryName,
-                            @NotNull final Map<OrderRootType, Collection<File>> libraryFiles,
-                            @NotNull final Project project,
+  public void importLibrary(@Nonnull final String libraryName,
+                            @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+                            @Nonnull final Project project,
                             boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
@@ -125,9 +127,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  public void registerPaths(@NotNull final Map<OrderRootType, Collection<File>> libraryFiles,
-                            @NotNull Library.ModifiableModel model,
-                            @NotNull String libraryName)
+  public void registerPaths(@Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+                            @Nonnull Library.ModifiableModel model,
+                            @Nonnull String libraryName)
   {
     for (Map.Entry<OrderRootType, Collection<File>> entry : libraryFiles.entrySet()) {
       for (File file : entry.getValue()) {
@@ -160,7 +162,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
   }
 
   @Override
-  public void removeData(@NotNull final Collection<? extends Library> libraries, @NotNull final Project project, boolean synchronous) {
+  public void removeData(@Nonnull final Collection<? extends Library> libraries, @Nonnull final Project project, boolean synchronous) {
     if (libraries.isEmpty()) {
       return;
     }
@@ -188,7 +190,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     });
   }
 
-  public void syncPaths(@NotNull final LibraryData externalLibrary, @NotNull final Library ideLibrary, @NotNull final Project project, boolean synchronous) {
+  public void syncPaths(@Nonnull final LibraryData externalLibrary, @Nonnull final Library ideLibrary, @Nonnull final Project project, boolean synchronous) {
     if (externalLibrary.isUnresolved()) {
       return;
     }

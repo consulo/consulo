@@ -27,8 +27,8 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -43,16 +43,17 @@ public class SdkEditor extends BaseSdkEditor {
 
   @NonNls
   private static final String SDK_TAB = "sdkTab";
-  @NotNull private final History myHistory;
+  @Nonnull
+  private final History myHistory;
 
   private TabbedPaneWrapper myTabbedPane;
 
-  public SdkEditor(@NotNull SdkModel sdkModel, @NotNull History history, @NotNull SdkImpl sdk) {
+  public SdkEditor(@Nonnull SdkModel sdkModel, @Nonnull History history, @Nonnull SdkImpl sdk) {
     super(sdkModel, sdk);
     myHistory = history;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createCenterComponent() {
     myTabbedPane = new TabbedPaneWrapper(myDisposable);
@@ -86,7 +87,7 @@ public class SdkEditor extends BaseSdkEditor {
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     place.putPath(SDK_TAB, myTabbedPane.getSelectedTitle());
   }
 }

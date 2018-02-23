@@ -61,8 +61,8 @@ import com.intellij.ui.popup.PopupOwner;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -103,7 +103,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   private boolean myDisposed = false;
   private RelativePoint myLocationCache;
 
-  public NavBarPanel(@NotNull Project project, boolean docked) {
+  public NavBarPanel(@Nonnull Project project, boolean docked) {
     super(new FlowLayout(FlowLayout.LEFT, 0, 0));
     myProject = project;
     myModel = createModel();
@@ -118,7 +118,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, NavBarPanel.this) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         final PsiElement element = getSelectedElement(PsiElement.class);
         return element == null ? PsiElement.EMPTY_ARRAY : new PsiElement[]{element};
@@ -581,7 +581,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
 
   @Override
   @Nullable
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return !myProject.isDisposed() ? myProject : null;
     }
@@ -814,7 +814,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < myList.size(); i++) {
       NavBarItem each = myList.get(i);
@@ -852,7 +852,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @NotNull
+  @Nonnull
   public NavBarUI getNavBarUI() {
     return NavBarUIManager.getUI();
   }

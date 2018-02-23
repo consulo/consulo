@@ -21,7 +21,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.laf.MorphColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -33,7 +33,7 @@ import java.awt.*;
  * @since 19-Jun-17
  */
 public class TreeDecorationUtil {
-  public static void decorateTree(@NotNull JTree tree) {
+  public static void decorateTree(@Nonnull JTree tree) {
     TreeUI treeUI = tree.getUI();
     if (treeUI instanceof BasicTreeUI) {
       ((BasicTreeUI)treeUI).setLeftChildIndent(JBUI.scale(10));
@@ -43,12 +43,12 @@ public class TreeDecorationUtil {
     tree.setBackground(getTreeBackground());
   }
 
-  @NotNull
+  @Nonnull
   public static Color getTreeBackground() {
     return MorphColor.of(TreeDecorationUtil::calcColor);
   }
 
-  @NotNull
+  @Nonnull
   private static Color calcColor() {
     if (UIUtil.isUnderAquaLookAndFeel()) {
       Color color = IntelliJLaf.isGraphite() ? DarculaUIUtil.MAC_GRAPHITE_COLOR : DarculaUIUtil.MAC_REGULAR_COLOR;

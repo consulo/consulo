@@ -16,8 +16,8 @@
 package com.intellij.ide.dnd;
 
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**

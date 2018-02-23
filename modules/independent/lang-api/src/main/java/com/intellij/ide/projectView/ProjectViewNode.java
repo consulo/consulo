@@ -28,8 +28,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -66,7 +66,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * @param file the file to check for.
    * @return true if the file is found in the subtree, false otherwise.
    */
-  public abstract boolean contains(@NotNull VirtualFile file);
+  public abstract boolean contains(@Nonnull VirtualFile file);
 
   /**
    * Returns the virtual file represented by this node or one of its children.
@@ -210,7 +210,7 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getTitle() {
     return null;
   }
@@ -244,17 +244,17 @@ public abstract class ProjectViewNode <Value> extends AbstractTreeNode<Value> im
    * have not null comparable keys.
    * @return Comparable object.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public Comparable getSortKey() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Comparable getManualOrderKey() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getQualifiedNameSortKey() {
     return null;
   }

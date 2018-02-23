@@ -18,25 +18,25 @@ package com.intellij.openapi.vcs.changes.issueLinks;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 public abstract class LinkMouseListenerBase<T> extends ClickListener implements MouseMotionListener {
-  public static void installSingleTagOn(@NotNull SimpleColoredComponent component) {
+  public static void installSingleTagOn(@Nonnull SimpleColoredComponent component) {
     new LinkMouseListenerBase<Consumer<MouseEvent>>() {
       @Nullable
       @Override
-      protected Consumer<MouseEvent> getTagAt(@NotNull MouseEvent e) {
+      protected Consumer<MouseEvent> getTagAt(@Nonnull MouseEvent e) {
         //noinspection unchecked
         return (Consumer<MouseEvent>)((SimpleColoredComponent)e.getSource()).getFragmentTagAt(e.getX());
       }
 
       @Override
-      protected void handleTagClick(@Nullable Consumer<MouseEvent> tag, @NotNull MouseEvent event) {
+      protected void handleTagClick(@Nullable Consumer<MouseEvent> tag, @Nonnull MouseEvent event) {
         if (tag != null) {
           tag.consume(event);
         }
@@ -45,17 +45,17 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
   }
 
   @Nullable
-  protected abstract T getTagAt(@NotNull MouseEvent e);
+  protected abstract T getTagAt(@Nonnull MouseEvent e);
 
   @Override
-  public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+  public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
     if (e.getButton() == MouseEvent.BUTTON1) {
       handleTagClick(getTagAt(e), e);
     }
     return false;
   }
 
-  protected void handleTagClick(@Nullable T tag, @NotNull MouseEvent event) {
+  protected void handleTagClick(@Nullable T tag, @Nonnull MouseEvent event) {
     if (tag instanceof Runnable) {
       ((Runnable)tag).run();
     }
@@ -78,7 +78,7 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
   }
 
   @Override
-  public void installOn(@NotNull Component component) {
+  public void installOn(@Nonnull Component component) {
     super.installOn(component);
 
     component.addMouseMotionListener(this);

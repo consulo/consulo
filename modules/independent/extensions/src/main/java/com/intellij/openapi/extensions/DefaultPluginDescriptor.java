@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Alexander Kireyev
@@ -28,11 +28,11 @@ public class DefaultPluginDescriptor implements PluginDescriptor {
     myPluginId = PluginId.getId(pluginId);
   }
 
-  public DefaultPluginDescriptor(@NotNull PluginId pluginId) {
+  public DefaultPluginDescriptor(@Nonnull PluginId pluginId) {
     myPluginId = pluginId;
   }
 
-  public DefaultPluginDescriptor(@NotNull PluginId pluginId, final ClassLoader pluginClassLoader) {
+  public DefaultPluginDescriptor(@Nonnull PluginId pluginId, final ClassLoader pluginClassLoader) {
     myPluginId = pluginId;
     myPluginClassLoader = pluginClassLoader;
   }
@@ -47,7 +47,7 @@ public class DefaultPluginDescriptor implements PluginDescriptor {
     return myPluginClassLoader;
   }
 
-  public void setPluginId(@NotNull PluginId pluginId) {
+  public void setPluginId(@Nonnull PluginId pluginId) {
     myPluginId = pluginId;
   }
 

@@ -28,8 +28,8 @@ import com.intellij.ui.TreeUIHelper;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -119,7 +119,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   public boolean accept(AbstractTreeBuilder builder, final SimpleNodeVisitor visitor) {
     return builder.accept(SimpleNode.class, new TreeVisitor<SimpleNode>() {
-      public boolean visit(@NotNull SimpleNode node) {
+      public boolean visit(@Nonnull SimpleNode node) {
         return visitor.accept(node);
       }
     }) != null;
@@ -475,7 +475,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   public boolean select(AbstractTreeBuilder aBuilder, final SimpleNodeVisitor aVisitor, boolean shouldExpand) {
     return aBuilder.select(SimpleNode.class, new TreeVisitor<SimpleNode>() {
-      public boolean visit(@NotNull SimpleNode node) {
+      public boolean visit(@Nonnull SimpleNode node) {
         return aVisitor.accept(node);
       }
     }, null, false);

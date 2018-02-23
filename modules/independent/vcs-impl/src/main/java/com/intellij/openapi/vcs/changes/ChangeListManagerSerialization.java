@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ class ChangeListManagerSerialization {
     }
   }
 
-  public static void writeExternal(@NotNull Element element, @NotNull IgnoredFilesComponent ignoredFilesComponent, @NotNull ChangeListWorker worker) {
+  public static void writeExternal(@Nonnull Element element, @Nonnull IgnoredFilesComponent ignoredFilesComponent, @Nonnull ChangeListWorker worker) {
     for (LocalChangeList list : worker.getListsCopy()) {
       Element listNode = new Element(NODE_LIST);
       element.addContent(listNode);

@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiPlainText;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {
   protected PsiPlainTextImpl(CharSequence text) {
@@ -27,7 +27,7 @@ public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlai
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor){
     visitor.visitPlainText(this);
   }
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -43,7 +43,7 @@ public class AltStateManager implements AWTEventListener {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static AltStateManager getInstance() {
     return ourInstance;
   }

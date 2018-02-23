@@ -16,8 +16,8 @@
 package com.intellij.openapi.fileTypes;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -25,12 +25,12 @@ import org.jetbrains.annotations.Nullable;
 public interface FileTypeConsumer {
   String EXTENSION_DELIMITER = ";";
 
-  void consume(@NotNull FileType fileType);
+  void consume(@Nonnull FileType fileType);
 
-  void consume(@NotNull FileType fileType, @NonNls final String extensions);
+  void consume(@Nonnull FileType fileType, @NonNls final String extensions);
 
-  void consume(@NotNull FileType fileType, final FileNameMatcher... matchers);
+  void consume(@Nonnull FileType fileType, final FileNameMatcher... matchers);
 
   @Nullable
-  FileType getStandardFileTypeByName(@NonNls @NotNull String name);
+  FileType getStandardFileTypeByName(@NonNls @Nonnull String name);
 }

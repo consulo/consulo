@@ -16,7 +16,7 @@
 package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -112,7 +112,7 @@ public class ModernPasswordFieldUI extends BasicPasswordFieldUI implements Moder
     return myFocused;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MouseEnterHandler getMouseEnterHandler() {
     return myMouseEnterHandler;

@@ -23,8 +23,8 @@ import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ComputableIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.MutableTreeNode;
@@ -47,12 +47,12 @@ public class RefElementNode extends InspectionTreeNode {
     }
   });
 
-  public RefElementNode(@NotNull Object userObject, @NotNull InspectionToolPresentation presentation) {
+  public RefElementNode(@Nonnull Object userObject, @Nonnull InspectionToolPresentation presentation) {
     super(userObject);
     myToolPresentation = presentation;
   }
 
-  public RefElementNode(@NotNull RefElement element, @NotNull InspectionToolPresentation presentation) {
+  public RefElementNode(@Nonnull RefElement element, @Nonnull InspectionToolPresentation presentation) {
     this((Object)element, presentation);
   }
 
@@ -121,7 +121,7 @@ public class RefElementNode extends InspectionTreeNode {
     }
   }
 
-  public void setProblem(@NotNull CommonProblemDescriptor descriptor) {
+  public void setProblem(@Nonnull CommonProblemDescriptor descriptor) {
     mySingleDescriptor = descriptor;
   }
 

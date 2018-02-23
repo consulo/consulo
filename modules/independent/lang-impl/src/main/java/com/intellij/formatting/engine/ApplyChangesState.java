@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +67,8 @@ public class ApplyChangesState extends State {
    * @param model          current formatting model
    */
   @SuppressWarnings({"deprecation"})
-  private void applyChangesAtRewriteMode(@NotNull final List<LeafBlockWrapper> blocksToModify,
-                                         @NotNull final FormattingModel model) {
+  private void applyChangesAtRewriteMode(@Nonnull final List<LeafBlockWrapper> blocksToModify,
+                                         @Nonnull final FormattingModel model) {
     FormattingDocumentModel documentModel = model.getDocumentModel();
     Document document = documentModel.getDocument();
     CaretOffsetUpdater caretOffsetUpdater = new CaretOffsetUpdater(document);

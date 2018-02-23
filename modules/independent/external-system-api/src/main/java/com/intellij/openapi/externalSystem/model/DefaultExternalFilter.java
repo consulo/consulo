@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 public class DefaultExternalFilter implements ExternalFilter {
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myFilterType;
-  @NotNull
+  @Nonnull
   private String myPropertiesAsJsonMap;
 
   public DefaultExternalFilter() {
@@ -40,23 +40,23 @@ public class DefaultExternalFilter implements ExternalFilter {
     myFilterType = filter.getFilterType();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFilterType() {
     return myFilterType;
   }
 
-  public void setFilterType(@NotNull String filterType) {
+  public void setFilterType(@Nonnull String filterType) {
     myFilterType = filterType;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPropertiesAsJsonMap() {
     return myPropertiesAsJsonMap;
   }
 
-  public void setPropertiesAsJsonMap(@NotNull String propertiesAsJsonMap) {
+  public void setPropertiesAsJsonMap(@Nonnull String propertiesAsJsonMap) {
     myPropertiesAsJsonMap = propertiesAsJsonMap;
   }
 }

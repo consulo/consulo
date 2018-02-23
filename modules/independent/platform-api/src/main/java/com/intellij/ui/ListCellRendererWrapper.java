@@ -20,9 +20,9 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
@@ -142,7 +142,7 @@ public abstract class ListCellRendererWrapper<T> implements ListCellRenderer<T> 
     myFont = font;
   }
 
-  public final void setClientProperty(@NotNull final Object key, @Nullable final Object value) {
+  public final void setClientProperty(@Nonnull final Object key, @Nullable final Object value) {
     myProperties = myProperties.prepend(pair(key, value));
   }
 }

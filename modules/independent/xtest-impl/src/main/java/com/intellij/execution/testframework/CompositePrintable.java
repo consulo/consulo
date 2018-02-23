@@ -27,8 +27,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.IOUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     printOwnPrintablesOn(printer, true);
   }
 
-  public void printOwnPrintablesOn(@NotNull Printer printer, boolean skipFileContent) {
+  public void printOwnPrintablesOn(@Nonnull Printer printer, boolean skipFileContent) {
     List<Printable> printables;
     synchronized (myNestedPrintables) {
       printables = ContainerUtil.filter(myNestedPrintables, printable -> !(printable instanceof AbstractTestProxy));
@@ -94,7 +94,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     myWrapper.printOn(printer, printables, skipFileContent);
   }
 
-  public void addLast(@NotNull final Printable printable) {
+  public void addLast(@Nonnull final Printable printable) {
     synchronized (myNestedPrintables) {
       myNestedPrintables.add(printable);
       if (myNestedPrintables.size() > 500) {
@@ -103,7 +103,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     }
   }
 
-  public void insert(@NotNull final Printable printable, int i) {
+  public void insert(@Nonnull final Printable printable, int i) {
     synchronized (myNestedPrintables) {
       if (i >= myNestedPrintables.size()) {
         myNestedPrintables.add(printable);
@@ -317,7 +317,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       }
 
       @Override
-      public void onNewAvailable(@NotNull Printable printable) {
+      public void onNewAvailable(@Nonnull Printable printable) {
       }
 
       @Override
@@ -398,7 +398,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
               }
 
               @Override
-              public void onNewAvailable(@NotNull Printable printable) {
+              public void onNewAvailable(@Nonnull Printable printable) {
               }
 
               @Override

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -33,6 +33,6 @@ public interface LineMarkerRendererEx extends LineMarkerRenderer {
    *
    * Corresponding rectangle will be passed to renderer in {@link #paint(Editor, Graphics, Rectangle)} method.
    */
-  @NotNull
+  @Nonnull
   Position getPosition();
 }

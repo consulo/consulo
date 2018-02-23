@@ -2,7 +2,7 @@ package com.intellij.execution.configuration;
 
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface CompatibilityAwareRunProfile extends RunProfile {
   /**
@@ -14,5 +14,5 @@ public interface CompatibilityAwareRunProfile extends RunProfile {
    * @param configuration the run configuration to check a compatibility to run with the current configuration.
    * @return true if the configuration can still run along side with the configuration passed as parameter, false otherwise.
    */
-  boolean mustBeStoppedToRun(@NotNull RunConfiguration configuration);
+  boolean mustBeStoppedToRun(@Nonnull RunConfiguration configuration);
 }

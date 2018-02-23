@@ -27,7 +27,7 @@ import com.intellij.psi.formatter.common.NewLineBlocksIterator;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class FormatterBasedLineIndentInfoBuilder {
   private final CharSequence myText;
   private final Block myRootBlock;
 
-  public FormatterBasedLineIndentInfoBuilder(@NotNull Document document, @NotNull Block rootBlock) {
+  public FormatterBasedLineIndentInfoBuilder(@Nonnull Document document, @Nonnull Block rootBlock) {
     myDocument = document;
     myText = myDocument.getCharsSequence();
     myRootBlock = rootBlock;
@@ -123,7 +123,7 @@ public class FormatterBasedLineIndentInfoBuilder {
     return indentsOnStartOffset;
   }
 
-  @NotNull
+  @Nonnull
   private List<Block> getBlocksStartingNewLine() {
     NewLineBlocksIterator newLineBlocksIterator = new NewLineBlocksIterator(myRootBlock, myDocument);
 

@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class GotoTestRelatedProvider extends GotoRelatedProvider {
-  @NotNull
+  @Nonnull
   @Override
-  public List<? extends GotoRelatedItem> getItems(@NotNull DataContext context) {
+  public List<? extends GotoRelatedItem> getItems(@Nonnull DataContext context) {
     final PsiFile file = context.getData(LangDataKeys.PSI_FILE);
     List<PsiElement> result;
     final boolean isTest = TestFinderHelper.isTest(file);

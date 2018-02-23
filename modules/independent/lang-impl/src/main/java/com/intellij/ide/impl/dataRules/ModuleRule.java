@@ -28,21 +28,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
 public class ModuleRule implements GetDataRule<Module> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<Module> getKey() {
     return CommonDataKeys.MODULE;
   }
 
   @Override
-  public Module getData(@NotNull DataProvider dataProvider) {
+  public Module getData(@Nonnull DataProvider dataProvider) {
     Module moduleContext = dataProvider.getDataUnchecked(LangDataKeys.MODULE_CONTEXT);
     if (moduleContext != null) {
       return moduleContext;

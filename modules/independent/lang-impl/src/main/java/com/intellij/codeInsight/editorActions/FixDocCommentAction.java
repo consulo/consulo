@@ -36,7 +36,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Creates documentation comment for the current context if it's not created yet (e.g. the caret is inside a method which
@@ -50,7 +50,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FixDocCommentAction extends EditorAction {
 
-  @NotNull @NonNls public static final String ACTION_ID = "FixDocComment";
+  @Nonnull
+  @NonNls public static final String ACTION_ID = "FixDocComment";
 
   public FixDocCommentAction() {
     super(new MyHandler());
@@ -73,7 +74,7 @@ public class FixDocCommentAction extends EditorAction {
     }
   } 
   
-  private static void process(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull final Project project, int offset) {
+  private static void process(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Project project, int offset) {
     PsiElement elementAtOffset = file.findElementAt(offset);
     if (elementAtOffset == null) {
       return;
@@ -149,11 +150,11 @@ public class FixDocCommentAction extends EditorAction {
    * @param commenter   commenter to use
    * @param project     current project
    */
-  private static void generateComment(@NotNull PsiElement anchor,
-                                      @NotNull Editor editor,
-                                      @NotNull CodeDocumentationProvider documentationProvider,
-                                      @NotNull CodeDocumentationAwareCommenter commenter,
-                                      @NotNull Project project)
+  private static void generateComment(@Nonnull PsiElement anchor,
+                                      @Nonnull Editor editor,
+                                      @Nonnull CodeDocumentationProvider documentationProvider,
+                                      @Nonnull CodeDocumentationAwareCommenter commenter,
+                                      @Nonnull Project project)
   {
     Document document = editor.getDocument();
     int commentStartOffset = anchor.getTextRange().getStartOffset();
@@ -248,7 +249,7 @@ public class FixDocCommentAction extends EditorAction {
     }
   }
 
-  private static int calcStartReformatOffset(@NotNull PsiElement element) {
+  private static int calcStartReformatOffset(@Nonnull PsiElement element) {
     int result = element.getTextRange().getStartOffset();
     for (PsiElement e = element.getPrevSibling(); e != null; e = e.getPrevSibling()) {
       if (e instanceof PsiWhiteSpace) {

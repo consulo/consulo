@@ -17,7 +17,7 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.openapi.vcs.FileStatus;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

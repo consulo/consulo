@@ -16,13 +16,13 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.util.NamedRunnable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Sergey.Malenkov
  */
 abstract class TreeRunnable extends NamedRunnable {
-  TreeRunnable(@NotNull String name) {
+  TreeRunnable(@Nonnull String name) {
     super(name);
   }
 

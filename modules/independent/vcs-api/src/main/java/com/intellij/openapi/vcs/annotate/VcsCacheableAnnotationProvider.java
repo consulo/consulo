@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.vcs.history.VcsAbstractHistorySession;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface VcsCacheableAnnotationProvider {
   VcsAnnotation createCacheable(final FileAnnotation fileAnnotation);
-  @Nullable
+  @javax.annotation.Nullable
   FileAnnotation restore(final VcsAnnotation vcsAnnotation,
                          VcsAbstractHistorySession session,
                          String annotatedContent,

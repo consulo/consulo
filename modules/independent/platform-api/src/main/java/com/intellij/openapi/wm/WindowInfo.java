@@ -17,14 +17,14 @@
 package com.intellij.openapi.wm;
 
 import consulo.ui.shared.Rectangle2D;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface WindowInfo {
-  @NotNull
+  @Nonnull
   String getId();
 
-  @NotNull
+  @Nonnull
   ToolWindowAnchor getAnchor();
 
   @Nullable

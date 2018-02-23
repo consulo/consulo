@@ -16,12 +16,12 @@
 package com.intellij.psi;
 
 import com.intellij.pom.PomTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface PsiTarget extends PomTarget {
-  @NotNull
+  @Nonnull
   PsiElement getNavigationElement();
 }

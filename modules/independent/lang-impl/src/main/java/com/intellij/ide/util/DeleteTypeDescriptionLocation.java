@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.lang.findUsages.LanguageFindUsages;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -48,7 +48,7 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
 
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
-    public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
+    public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
       if (location instanceof DeleteTypeDescriptionLocation) {
         final boolean plural = ((DeleteTypeDescriptionLocation)location).isPlural();
         final int count = plural ? 2 : 1;

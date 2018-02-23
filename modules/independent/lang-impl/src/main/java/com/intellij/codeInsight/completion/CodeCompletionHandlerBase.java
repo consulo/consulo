@@ -61,9 +61,10 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ThreeState;
-import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -74,28 +75,29 @@ public class CodeCompletionHandlerBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CodeCompletionHandlerBase");
   private static final Key<Boolean> CARET_PROCESSED = Key.create("CodeCompletionHandlerBase.caretProcessed");
 
-  @NotNull private final CompletionType myCompletionType;
+  @Nonnull
+  private final CompletionType myCompletionType;
   final boolean invokedExplicitly;
   final boolean synchronous;
   final boolean autopopup;
   private static int ourAutoInsertItemTimeout = 2000;
 
-  public static CodeCompletionHandlerBase createHandler(@NotNull CompletionType completionType) {
+  public static CodeCompletionHandlerBase createHandler(@Nonnull CompletionType completionType) {
     return createHandler(completionType, true, false, true);
   }
 
-  public static CodeCompletionHandlerBase createHandler(@NotNull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+  public static CodeCompletionHandlerBase createHandler(@Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
     AnAction codeCompletionAction = ActionManager.getInstance().getAction("CodeCompletion");
     assert (codeCompletionAction instanceof BaseCodeCompletionAction);
     BaseCodeCompletionAction baseCodeCompletionAction = (BaseCodeCompletionAction) codeCompletionAction;
     return baseCodeCompletionAction.createHandler(completionType, invokedExplicitly, autopopup, synchronous);
   }
 
-  public CodeCompletionHandlerBase(@NotNull CompletionType completionType) {
+  public CodeCompletionHandlerBase(@Nonnull CompletionType completionType) {
     this(completionType, true, false, true);
   }
 
-  public CodeCompletionHandlerBase(@NotNull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+  public CodeCompletionHandlerBase(@Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
     myCompletionType = completionType;
     this.invokedExplicitly = invokedExplicitly;
     this.autopopup = autopopup;
@@ -118,16 +120,16 @@ public class CodeCompletionHandlerBase {
     }
   }
 
-  public final void invokeCompletion(@NotNull final Project project, @NotNull final Editor editor, int time) {
+  public final void invokeCompletion(@Nonnull final Project project, @Nonnull final Editor editor, int time) {
     invokeCompletion(project, editor, time, false, false);
   }
 
-  public final void invokeCompletion(@NotNull final Project project, @NotNull final Editor editor, int time, boolean hasModifiers, boolean restarted) {
+  public final void invokeCompletion(@Nonnull final Project project, @Nonnull final Editor editor, int time, boolean hasModifiers, boolean restarted) {
     clearCaretMarkers(editor);
     invokeCompletion(project, editor, time, hasModifiers, restarted, editor.getCaretModel().getPrimaryCaret());
   }
 
-  public final void invokeCompletion(@NotNull final Project project, @NotNull final Editor editor, int time, boolean hasModifiers, boolean restarted, @NotNull final Caret caret) {
+  public final void invokeCompletion(@Nonnull final Project project, @Nonnull final Editor editor, int time, boolean hasModifiers, boolean restarted, @Nonnull final Caret caret) {
     markCaretAsProcessed(caret);
 
     if (invokedExplicitly) {
@@ -203,13 +205,13 @@ public class CodeCompletionHandlerBase {
     insertDummyIdentifier(initializationContext[0], hasModifiers, invocationCount);
   }
 
-  private CompletionInitializationContext runContributorsBeforeCompletion(Editor editor, PsiFile psiFile, int invocationCount, @NotNull Caret caret) {
+  private CompletionInitializationContext runContributorsBeforeCompletion(Editor editor, PsiFile psiFile, int invocationCount, @Nonnull Caret caret) {
     final Ref<CompletionContributor> current = Ref.create(null);
     CompletionInitializationContext context = new CompletionInitializationContext(editor, caret, psiFile, myCompletionType, invocationCount) {
       CompletionContributor dummyIdentifierChanger;
 
       @Override
-      public void setDummyIdentifier(@NotNull String dummyIdentifier) {
+      public void setDummyIdentifier(@Nonnull String dummyIdentifier) {
         super.setDummyIdentifier(dummyIdentifier);
 
         if (dummyIdentifierChanger != null) {
@@ -260,7 +262,7 @@ public class CodeCompletionHandlerBase {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private LookupImpl obtainLookup(Editor editor, Project project) {
     CompletionAssertions.checkEditorValid(editor);
     LookupImpl existing = (LookupImpl)LookupManager.getActiveLookup(editor);
@@ -353,7 +355,7 @@ public class CodeCompletionHandlerBase {
     return new CompletionParameters(insertedElement, originalFile, myCompletionType, offset, invocationCount, editor);
   }
 
-  @NotNull
+  @Nonnull
   private static PsiElement findCompletionPositionLeaf(CompletionContext newContext, int offset, PsiFile fileCopy, PsiFile originalFile) {
     final PsiElement insertedElement = newContext.file.findElementAt(offset);
     CompletionAssertions.assertCompletionPositionPsiConsistent(newContext, offset, fileCopy, originalFile, insertedElement);
@@ -529,7 +531,7 @@ public class CodeCompletionHandlerBase {
     return context;
   }
 
-  protected void lookupItemSelected(final CompletionProgressIndicator indicator, @NotNull final LookupElement item, final char completionChar,
+  protected void lookupItemSelected(final CompletionProgressIndicator indicator, @Nonnull final LookupElement item, final char completionChar,
                                     final List<LookupElement> items) {
     if (indicator.isAutopopupCompletion()) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_BASIC);
@@ -693,7 +695,7 @@ public class CodeCompletionHandlerBase {
 
   private static final Key<SoftReference<Pair<PsiFile, Document>>> FILE_COPY_KEY = Key.create("CompletionFileCopy");
 
-  private static boolean isCopyUpToDate(Document document, @NotNull PsiFile copyFile, @NotNull PsiFile originalFile) {
+  private static boolean isCopyUpToDate(Document document, @Nonnull PsiFile copyFile, @Nonnull PsiFile originalFile) {
     if (!copyFile.getClass().equals(originalFile.getClass()) ||
         !copyFile.isValid() ||
         !copyFile.getName().equals(originalFile.getName())) {
@@ -768,17 +770,17 @@ public class CodeCompletionHandlerBase {
     };
   }
 
-  private static void clearCaretMarkers(@NotNull Editor editor) {
+  private static void clearCaretMarkers(@Nonnull Editor editor) {
     for (Caret caret : editor.getCaretModel().getAllCarets()) {
       caret.putUserData(CARET_PROCESSED, null);
     }
   }
 
-  private static void markCaretAsProcessed(@NotNull Caret caret) {
+  private static void markCaretAsProcessed(@Nonnull Caret caret) {
     caret.putUserData(CARET_PROCESSED, Boolean.TRUE);
   }
 
-  private static Caret getNextCaretToProcess(@NotNull Editor editor) {
+  private static Caret getNextCaretToProcess(@Nonnull Editor editor) {
     for (Caret caret : editor.getCaretModel().getAllCarets()) {
       if (caret.getUserData(CARET_PROCESSED) == null) {
         return caret;

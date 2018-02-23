@@ -16,7 +16,7 @@
 package com.intellij.ide.errorTreeView;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class HotfixData {
   private final String myId;
@@ -24,7 +24,7 @@ public class HotfixData {
   private final String myFixComment;
   private final Consumer<HotfixGate> myFix;
 
-  public HotfixData(@NotNull final String id, @NotNull final String errorText, @NotNull String fixComment, final Consumer<HotfixGate> fix) {
+  public HotfixData(@Nonnull final String id, @Nonnull final String errorText, @Nonnull String fixComment, final Consumer<HotfixGate> fix) {
     myErrorText = errorText;
     myFixComment = fixComment;
     myFix = fix;

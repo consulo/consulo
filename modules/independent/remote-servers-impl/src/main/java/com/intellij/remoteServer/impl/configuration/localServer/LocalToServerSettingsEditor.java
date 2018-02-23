@@ -29,8 +29,7 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedComboBoxModel;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +82,7 @@ public class LocalToServerSettingsEditor<S extends ServerConfiguration, D extend
   }
 
 
-  private void onDeploymentSourceChanged(@Nullable D configuration) {
+  private void onDeploymentSourceChanged(@javax.annotation.Nullable D configuration) {
     DeploymentSource selected = mySourceListModel.getSelectedItem();
     if (Comparing.equal(selected, myLastSelection)) {
       if (configuration != null && myDeploymentSettingsEditor != null) {
@@ -131,7 +130,7 @@ public class LocalToServerSettingsEditor<S extends ServerConfiguration, D extend
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createEditor() {
     return FormBuilder.createFormBuilder()

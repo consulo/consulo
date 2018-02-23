@@ -34,8 +34,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.PlaceHolder;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ViewStructureAction extends DumbAwareAction {
 
@@ -75,7 +75,7 @@ public class ViewStructureAction extends DumbAwareAction {
   }
 
   @Nullable
-  public static FileStructurePopup createPopup(@NotNull Project project, @NotNull FileEditor fileEditor) {
+  public static FileStructurePopup createPopup(@Nonnull Project project, @Nonnull FileEditor fileEditor) {
     StructureViewBuilder structureViewBuilder = fileEditor.getStructureViewBuilder();
     if (structureViewBuilder == null) return null;
     StructureView structureView = structureViewBuilder.createStructureView(fileEditor, project);

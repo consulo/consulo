@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DummyHolderFactory  {
   private static HolderFactory INSTANCE = new DefaultFactory();
@@ -35,67 +35,67 @@ public class DummyHolderFactory  {
     INSTANCE = factory;
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context) {
     return INSTANCE.createHolder(manager, contentElement, context);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, CharTable table, boolean validity) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, boolean validity) {
     return INSTANCE.createHolder(manager, table, validity);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context) {
     return INSTANCE.createHolder(manager, context);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, Language language, PsiElement context) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, Language language, PsiElement context) {
     return INSTANCE.createHolder(manager, language, context);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table) {
     return INSTANCE.createHolder(manager, contentElement, context, table);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context, CharTable table) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table) {
     return INSTANCE.createHolder(manager, context, table);
   }
 
-  public static DummyHolder createHolder(@NotNull PsiManager manager, final CharTable table, final Language language) {
+  public static DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
     return INSTANCE.createHolder(manager, table, language);
   }
 
   private static class DefaultFactory implements HolderFactory {
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context) {
       return new DummyHolder(manager, contentElement, context);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, CharTable table, boolean validity) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, boolean validity) {
       return new DummyHolder(manager, table, validity);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context) {
       return new DummyHolder(manager, context);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull final PsiManager manager, final Language language, final PsiElement context) {
+    public DummyHolder createHolder(@Nonnull final PsiManager manager, final Language language, final PsiElement context) {
       return new DummyHolder(manager, language, context);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table) {
       return new DummyHolder(manager, contentElement, context, table);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context, CharTable table) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table) {
       return new DummyHolder(manager, context, table);
     }
 
     @Override
-    public DummyHolder createHolder(@NotNull PsiManager manager, final CharTable table, final Language language) {
+    public DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
       return new DummyHolder(manager, table, language);
     }
   }

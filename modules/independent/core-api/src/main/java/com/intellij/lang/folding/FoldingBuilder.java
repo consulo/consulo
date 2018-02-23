@@ -19,8 +19,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows a custom language plugin to define rules for folding code in the language handled
@@ -41,8 +41,8 @@ public interface FoldingBuilder {
    * @return the array of folding descriptors.
    */
   @RequiredReadAction
-  @NotNull
-  FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document);
+  @Nonnull
+  FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document);
 
   /**
    * Returns the text which is displayed in the editor for the folding region related to the
@@ -53,7 +53,7 @@ public interface FoldingBuilder {
    */
   @Nullable
   @RequiredReadAction
-  String getPlaceholderText(@NotNull ASTNode node);
+  String getPlaceholderText(@Nonnull ASTNode node);
 
   /**
    * Returns the default collapsed state for the folding region related to the specified node.
@@ -62,5 +62,5 @@ public interface FoldingBuilder {
    * @return true if the region is collapsed by default, false otherwise.
    */
   @RequiredReadAction
-  boolean isCollapsedByDefault(@NotNull ASTNode node);
+  boolean isCollapsedByDefault(@Nonnull ASTNode node);
 }

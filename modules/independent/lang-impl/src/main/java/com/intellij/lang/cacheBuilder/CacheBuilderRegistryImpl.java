@@ -18,8 +18,8 @@ package com.intellij.lang.cacheBuilder;
 
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +31,13 @@ public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
   private final Map<FileType, WordsScanner> myMap = new HashMap<FileType, WordsScanner>();
 
   @Override
-  public void registerCacheBuilder(@NotNull FileType fileType, WordsScanner cacheBuilder) {
+  public void registerCacheBuilder(@Nonnull FileType fileType, WordsScanner cacheBuilder) {
     myMap.put(fileType, cacheBuilder);
   }
 
   @Override
   @Nullable
-  public WordsScanner getCacheBuilder(@NotNull FileType fileType) {
+  public WordsScanner getCacheBuilder(@Nonnull FileType fileType) {
     final WordsScanner scanner = myMap.get(fileType);
     if (scanner != null) {
       return scanner;

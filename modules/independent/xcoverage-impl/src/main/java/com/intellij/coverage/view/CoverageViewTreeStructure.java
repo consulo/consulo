@@ -6,7 +6,7 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +61,7 @@ public class CoverageViewTreeStructure extends AbstractTreeStructure {
     return myCoverageViewExtension.getParentElement(psiElement);
   }
 
-  @NotNull
+  @Nonnull
   public CoverageViewDescriptor createDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
     return new CoverageViewDescriptor(myProject, parentDescriptor, element);
   }

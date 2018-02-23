@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Date;
 
 /**
@@ -26,6 +24,6 @@ import java.util.Date;
  * Time: 5:57 PM
  */
 public interface VcsFileRevisionDvcsSpecific {
-  @Nullable
+  @javax.annotation.Nullable
   Date getDateForRevisionsOrdering();
 }

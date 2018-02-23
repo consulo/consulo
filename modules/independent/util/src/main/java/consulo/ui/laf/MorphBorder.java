@@ -16,7 +16,7 @@
 package consulo.ui.laf;
 
 import com.intellij.util.NotNullProducer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -28,7 +28,7 @@ import java.awt.*;
 public class MorphBorder implements Border {
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  public static MorphBorder of(@NotNull NotNullProducer<Border> func) {
+  public static MorphBorder of(@Nonnull NotNullProducer<Border> func) {
     return new MorphBorder(func);
   }
 
@@ -43,7 +43,7 @@ public class MorphBorder implements Border {
     myLastComputedBorder = borderProducer.produce();
   }
 
-  @NotNull
+  @Nonnull
   private Border getBorder() {
     long modificationCount = ourTracker.getModificationCount();
     if (myLastModificationCount == modificationCount) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Lazy value with ability to reset (and recompute) the value.
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ClearableLazyValue<T> {
   private T myValue;
 
-  @NotNull
+  @Nonnull
   protected abstract T compute();
 
-  @NotNull
+  @Nonnull
   public T getValue() {
     if (myValue == null) {
       myValue = compute();

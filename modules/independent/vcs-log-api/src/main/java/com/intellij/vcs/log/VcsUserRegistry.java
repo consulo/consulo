@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -24,9 +24,9 @@ import java.util.Set;
  */
 public interface VcsUserRegistry {
 
-  @NotNull
+  @Nonnull
   Set<VcsUser> getUsers();
 
-  @NotNull
-  VcsUser createUser(@NotNull String name, @NotNull String email);
+  @Nonnull
+  VcsUser createUser(@Nonnull String name, @Nonnull String email);
 }

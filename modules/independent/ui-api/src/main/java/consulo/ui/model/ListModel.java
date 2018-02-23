@@ -15,7 +15,7 @@
  */
 package consulo.ui.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 public interface ListModel<E> extends Iterable<E> {
   int getSize();
 
-  @NotNull
+  @Nonnull
   E get(int index);
 
-  int indexOf(@NotNull E value);
+  int indexOf(@Nonnull E value);
 }

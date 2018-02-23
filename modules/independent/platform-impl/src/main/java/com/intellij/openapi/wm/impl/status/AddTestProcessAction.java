@@ -30,7 +30,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -71,7 +71,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
 
     final Project project = e.getData(CommonDataKeys.PROJECT);
     new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           indicator.setText("welcome!");
 
@@ -122,7 +122,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
 
   private void createAnotherProgress(final Project project) {
     final Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           countTo(1000, new Count() {
             public void onCount(int each) {

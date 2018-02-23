@@ -36,7 +36,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.PsiTestUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.io.File;
@@ -87,12 +87,12 @@ public abstract class IntegrationTestCase extends PlatformTestCase {
     return createFile(name, null);
   }
 
-  @NotNull
+  @Nonnull
   protected VirtualFile createFile(String name, String content) throws IOException {
     return LocalFileSystem.getInstance().refreshAndFindFileByPath(createFileExternally(name, content));
   }
 
-  @NotNull
+  @Nonnull
   protected VirtualFile createDirectory(String name) throws IOException {
     return LocalFileSystem.getInstance().refreshAndFindFileByPath(createDirectoryExternally(name));
   }

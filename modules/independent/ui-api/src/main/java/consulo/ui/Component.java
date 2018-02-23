@@ -23,8 +23,7 @@ import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.function.Function;
@@ -36,17 +35,17 @@ import java.util.function.Supplier;
  */
 public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
-  default void addBorder(@NotNull BorderPosition borderPosition) {
+  default void addBorder(@Nonnull BorderPosition borderPosition) {
     addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }
 
   @RequiredUIAccess
-  default void addBorder(@NotNull BorderPosition borderPosition, @NotNull BorderStyle borderStyle) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle) {
     addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
   }
 
   @RequiredUIAccess
-  default void addBorder(@NotNull BorderPosition borderPosition, @NotNull BorderStyle borderStyle, ColorKey colorKey) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey) {
     addBorder(borderPosition, borderStyle, colorKey, 1);
   }
 
@@ -58,10 +57,10 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width);
+  void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width);
 
   @RequiredUIAccess
-  void removeBorder(@NotNull BorderPosition borderPosition);
+  void removeBorder(@Nonnull BorderPosition borderPosition);
 
   boolean isVisible();
 
@@ -73,26 +72,26 @@ public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
   void setEnabled(boolean value);
 
-  @Nullable
+  @javax.annotation.Nullable
   Component getParentComponent();
 
   @RequiredUIAccess
-  void setSize(@NotNull Size size);
+  void setSize(@Nonnull Size size);
 
-  @NotNull
-  <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier);
+  @Nonnull
+  <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier);
 
-  @NotNull
-  Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function);
+  @Nonnull
+  Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
 
   /**
    * @return runner for unregister listener
    */
-  @NotNull
-  <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @RequiredUIAccess @NotNull T listener);
+  @Nonnull
+  <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
 
-  @NotNull
-  <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass);
+  @Nonnull
+  <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);
 
   @Override
   default void dispose() {

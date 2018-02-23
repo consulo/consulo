@@ -33,8 +33,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsSimpleTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -116,7 +116,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
   private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, final List<AbstractTreeNode<Object>> destinationChildren) {
     final ArrayList<AbstractTreeNode<Object>> copyChildren = new ArrayList<AbstractTreeNode<Object>>();
     AbstractTreeNode<Object> copy = new AbstractTreeNode<Object>(myProject, source.getUserObject()) {
-      @NotNull
+      @Nonnull
       @Override
       public Collection<? extends AbstractTreeNode> getChildren() {
         return copyChildren;
@@ -155,7 +155,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
 
   @Nullable
   @Override
-  public String getCustomName(@NotNull CommonActionsPanel.Buttons type) {
+  public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
     switch (type) {
       case EDIT:
         return "Edit breakpoint";
@@ -167,13 +167,13 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
   }
 
   @Override
-  public boolean willHandle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects) {
+  public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
     return (selectedObjects.size() == 1 && (type == CommonActionsPanel.Buttons.EDIT || type == CommonActionsPanel.Buttons.REMOVE)) &&
            ((AbstractTreeNode)selectedObjects.iterator().next()).getValue() instanceof BreakpointItem;
   }
 
   @Override
-  public void handle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects, JComponent component) {
+  public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
     Rectangle bounds = component.getBounds();
     if (component instanceof JTree) {
       JTree tree = (JTree)component;
@@ -204,7 +204,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
   @Override
   public void customizeRenderer(ColoredTreeCellRenderer renderer,
                                 JTree tree,
-                                @NotNull Object value,
+                                @Nonnull Object value,
                                 boolean selected,
                                 boolean expanded,
                                 boolean leaf,

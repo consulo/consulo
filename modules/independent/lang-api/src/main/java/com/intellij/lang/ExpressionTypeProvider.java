@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,18 +30,18 @@ public abstract class ExpressionTypeProvider<T extends PsiElement> {
    * Returns HTML string for type info hint.
    * @see com.intellij.openapi.util.text.StringUtil#escapeXml(String)
    */
-  @NotNull
-  public abstract String getInformationHint(@NotNull T element);
+  @Nonnull
+  public abstract String getInformationHint(@Nonnull T element);
 
   /**
    * Returns HTML string if no target found at position.
    */
-  @NotNull
+  @Nonnull
   public abstract String getErrorHint();
 
   /**
    * Returns the list of all possible targets at specified position.
    */
-  @NotNull
-  public abstract List<T> getExpressionsAt(@NotNull PsiElement elementAt);
+  @Nonnull
+  public abstract List<T> getExpressionsAt(@Nonnull PsiElement elementAt);
 }

@@ -31,8 +31,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class IdTableBuilding {
   }
 
   public interface ScanWordProcessor {
-    void run(CharSequence chars, @Nullable char[] charsArray, int start, int end);
+    void run(CharSequence chars, @javax.annotation.Nullable char[] charsArray, int start, int end);
   }
 
   private static final HashMap<FileType, IdIndexer> ourIdIndexers = new HashMap<>();
@@ -56,7 +55,7 @@ public class IdTableBuilding {
     return ourIdIndexers.containsKey(fileType) || IdIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static IdIndexer getFileTypeIndexer(FileType fileType) {
     final IdIndexer idIndexer = ourIdIndexers.get(fileType);
 
@@ -103,12 +102,12 @@ public class IdTableBuilding {
   private static class WordsScannerFileTypeIdIndexerAdapter implements IdIndexer {
     private final WordsScanner myScanner;
 
-    public WordsScannerFileTypeIdIndexerAdapter(@NotNull final WordsScanner scanner) {
+    public WordsScannerFileTypeIdIndexerAdapter(@Nonnull final WordsScanner scanner) {
       myScanner = scanner;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Map<IdIndexEntry, Integer> map(final FileContent inputData) {
       final CharSequence chars = inputData.getContentAsText();
       final char[] charsArray = CharArrayUtil.fromSequenceWithoutCopying(chars);
@@ -144,7 +143,7 @@ public class IdTableBuilding {
 
   public static void scanWords(final ScanWordProcessor processor,
                                final CharSequence chars,
-                               @Nullable final char[] charArray,
+                               @javax.annotation.Nullable final char[] charArray,
                                final int startOffset,
                                final int endOffset,
                                final boolean mayHaveEscapes) {

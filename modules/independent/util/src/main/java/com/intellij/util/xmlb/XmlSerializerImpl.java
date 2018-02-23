@@ -21,8 +21,8 @@ import com.intellij.util.xmlb.annotations.CollectionBean;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -38,8 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 class XmlSerializerImpl {
   private static Reference<Map<Pair<Type, MutableAccessor>, Binding>> ourBindings;
 
-  @NotNull
-  static Element serialize(@NotNull Object object, @NotNull SerializationFilter filter) throws XmlSerializationException {
+  @Nonnull
+  static Element serialize(@Nonnull Object object, @Nonnull SerializationFilter filter) throws XmlSerializationException {
     try {
       Class<?> aClass = object.getClass();
       Binding binding = getClassBinding(aClass, aClass, null);
@@ -61,7 +61,7 @@ class XmlSerializerImpl {
   }
 
   @Nullable
-  static Element serializeIfNotDefault(@NotNull Object object, @NotNull SerializationFilter filter) {
+  static Element serializeIfNotDefault(@Nonnull Object object, @Nonnull SerializationFilter filter) {
     Class<?> aClass = object.getClass();
     Binding binding = getClassBinding(aClass, aClass, null);
     assert binding != null;
@@ -69,18 +69,18 @@ class XmlSerializerImpl {
   }
 
   @Nullable
-  static Binding getBinding(@NotNull Type type) {
+  static Binding getBinding(@Nonnull Type type) {
     return getClassBinding(typeToClass(type), type, null);
   }
 
   @Nullable
-  static Binding getBinding(@NotNull MutableAccessor accessor) {
+  static Binding getBinding(@Nonnull MutableAccessor accessor) {
     Type type = accessor.getGenericType();
     return getClassBinding(typeToClass(type), type, accessor);
   }
 
-  @NotNull
-  static Class<?> typeToClass(@NotNull Type type) {
+  @Nonnull
+  static Class<?> typeToClass(@Nonnull Type type) {
     if (type instanceof Class) {
       return (Class<?>)type;
     }
@@ -94,7 +94,7 @@ class XmlSerializerImpl {
   }
 
   @Nullable
-  static synchronized Binding getClassBinding(@NotNull Class<?> aClass, @NotNull Type originalType, @Nullable MutableAccessor accessor) {
+  static synchronized Binding getClassBinding(@Nonnull Class<?> aClass, @Nonnull Type originalType, @Nullable MutableAccessor accessor) {
     if (aClass.isPrimitive() ||
         aClass == String.class ||
         aClass == Integer.class ||
@@ -124,7 +124,7 @@ class XmlSerializerImpl {
     return binding;
   }
 
-  @NotNull
+  @Nonnull
   private static Map<Pair<Type, MutableAccessor>, Binding> getBindingCacheMap() {
     Map<Pair<Type, MutableAccessor>, Binding> map = com.intellij.reference.SoftReference.dereference(ourBindings);
     if (map == null) {
@@ -134,8 +134,8 @@ class XmlSerializerImpl {
     return map;
   }
 
-  @NotNull
-  private static Binding getNonCachedClassBinding(@NotNull Class<?> aClass, @Nullable MutableAccessor accessor, @NotNull Type originalType) {
+  @Nonnull
+  private static Binding getNonCachedClassBinding(@Nonnull Class<?> aClass, @Nullable MutableAccessor accessor, @Nonnull Type originalType) {
     if (aClass.isArray()) {
       if (Element.class.isAssignableFrom(aClass.getComponentType())) {
         assert accessor != null;
@@ -170,7 +170,7 @@ class XmlSerializerImpl {
   }
 
   @Nullable
-  static Object convert(@Nullable String value, @NotNull Class<?> valueClass) {
+  static Object convert(@Nullable String value, @Nonnull Class<?> valueClass) {
     if (value == null) {
       return null;
     }
@@ -213,7 +213,7 @@ class XmlSerializerImpl {
     }
   }
 
-  static void doSet(@NotNull Object host, @Nullable String value, @NotNull MutableAccessor accessor, @NotNull Class<?> valueClass) {
+  static void doSet(@Nonnull Object host, @Nullable String value, @Nonnull MutableAccessor accessor, @Nonnull Class<?> valueClass) {
     if (value == null) {
       accessor.set(host, null);
     }
@@ -279,8 +279,8 @@ class XmlSerializerImpl {
     }
   }
 
-  @NotNull
-  static String convertToString(@NotNull Object value) {
+  @Nonnull
+  static String convertToString(@Nonnull Object value) {
     if (value instanceof Date) {
       return Long.toString(((Date)value).getTime());
     }
@@ -289,8 +289,8 @@ class XmlSerializerImpl {
     }
   }
 
-  @NotNull
-  static String getTextValue(@NotNull Element element, @NotNull String defaultText) {
+  @Nonnull
+  static String getTextValue(@Nonnull Element element, @Nonnull String defaultText) {
     List<Content> content = element.getContent();
     String value = defaultText;
     if (!content.isEmpty()) {

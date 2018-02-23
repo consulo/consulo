@@ -19,7 +19,7 @@ package com.intellij.formatting;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class LeafBlockWrapper extends AbstractBlockWrapper {
   private static final int CONTAIN_LINE_FEEDS = 4;

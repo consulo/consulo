@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public class EditChangelistDialog extends DialogWrapper {
   private final Project myProject;
   private final LocalChangeList myList;
 
-  public EditChangelistDialog(Project project, @NotNull LocalChangeList list) {
+  public EditChangelistDialog(Project project, @Nonnull LocalChangeList list) {
     super(project, true);
     myProject = project;
     myList = list;

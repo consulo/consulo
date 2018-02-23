@@ -20,11 +20,11 @@ import com.intellij.codeInspection.SuppressionUtil;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DefaultChangeLocalityDetector implements ChangeLocalityDetector {
   @Override
-  public PsiElement getChangeHighlightingDirtyScopeFor(@NotNull PsiElement changedElement) {
+  public PsiElement getChangeHighlightingDirtyScopeFor(@Nonnull PsiElement changedElement) {
     if (changedElement instanceof PsiWhiteSpace ||
         changedElement instanceof PsiComment
         && !changedElement.getText().contains(SuppressionUtil.SUPPRESS_INSPECTIONS_TAG_NAME)) {

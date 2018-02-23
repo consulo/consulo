@@ -15,15 +15,15 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 
 class ArrayBinding extends AbstractCollectionBinding  {
-  public ArrayBinding(@NotNull Class<?> valueClass, @Nullable MutableAccessor accessor) {
+  public ArrayBinding(@Nonnull Class<?> valueClass, @Nullable MutableAccessor accessor) {
     super(valueClass.getComponentType(), accessor);
   }
 
@@ -38,9 +38,9 @@ class ArrayBinding extends AbstractCollectionBinding  {
     return result.toArray((Object[])Array.newInstance(itemType, result.size()));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  Collection<Object> getIterable(@NotNull Object o) {
+  Collection<Object> getIterable(@Nonnull Object o) {
     return Arrays.asList((Object[])o);
   }
 }

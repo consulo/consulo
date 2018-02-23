@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.Result;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ public class MacroCallNode extends Expression {
   private final Macro myMacro;
   private final ArrayList<Expression> myParameters = new ArrayList<Expression>();
 
-  public MacroCallNode(@NotNull Macro macro) {
+  public MacroCallNode(@Nonnull Macro macro) {
     myMacro = macro;
   }
 

@@ -21,9 +21,9 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.SortableColumnModel;
 import com.intellij.util.ui.TableViewModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.*;
@@ -200,7 +200,7 @@ public class TableView<Item> extends BaseTableView implements ItemsProvider, Sel
     return row >= 0 && row < list.size() ? list.get(convertRowIndexToModel(row)) : null;
   }
 
-  @NotNull
+  @Nonnull
   public List<Item> getSelectedObjects() {
     final int[] selectedRows = getSelectedRows();
     if (selectedRows == null || (selectedRows.length == 0)) return Collections.emptyList();

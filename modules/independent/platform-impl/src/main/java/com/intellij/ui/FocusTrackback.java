@@ -32,9 +32,9 @@ import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.containers.WeakKeyWeakValueHashMap;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -66,11 +66,11 @@ public class FocusTrackback {
   private boolean myWillBeScheduledForRestore;
   private boolean myForcedRestore;
 
-  public FocusTrackback(@NotNull Object requestor, Component parent, boolean mustBeShown) {
+  public FocusTrackback(@Nonnull Object requestor, Component parent, boolean mustBeShown) {
     this(requestor, parent == null ? null : UIUtil.getWindow(parent), mustBeShown);
   }
 
-  public FocusTrackback(@NotNull Object requestor, Window parent, boolean mustBeShown) {
+  public FocusTrackback(@Nonnull Object requestor, Window parent, boolean mustBeShown) {
     myRequestor = new WeakReference<>(requestor);
     myRequestorName = requestor.toString();
     myParentWindow = parent;
@@ -153,7 +153,7 @@ public class FocusTrackback {
     return false;
   }
 
-  public void registerFocusComponent(@NotNull final Component focusedComponent) {
+  public void registerFocusComponent(@Nonnull final Component focusedComponent) {
     registerFocusComponent(new ComponentQuery() {
       public Component getComponent() {
         return focusedComponent;
@@ -161,7 +161,7 @@ public class FocusTrackback {
     });
   }
 
-  public void registerFocusComponent(@NotNull ComponentQuery query) {
+  public void registerFocusComponent(@Nonnull ComponentQuery query) {
     myFocusedComponentQuery = query;
   }
 
@@ -176,7 +176,7 @@ public class FocusTrackback {
     return myRoot == null ? Collections.emptyList() : getCleanStackForRoot(myRoot);
   }
 
-  private static List<FocusTrackback> getCleanStackForRoot(@NotNull Window root) {
+  private static List<FocusTrackback> getCleanStackForRoot(@Nonnull Window root) {
     List<FocusTrackback> stack = getStackForRoot(root);
 
     final FocusTrackback[] stackArray = stack.toArray(new FocusTrackback[stack.size()]);
@@ -341,7 +341,7 @@ public class FocusTrackback {
     return stack;
   }
 
-  private static List<FocusTrackback> getStackForRoot(@NotNull Window root) {
+  private static List<FocusTrackback> getStackForRoot(@Nonnull Window root) {
     List<FocusTrackback> stack = ourRootWindowToParentsStack.get(root);
     if (stack == null) {
       stack = new ArrayList<>();
@@ -426,7 +426,7 @@ public class FocusTrackback {
     return myMustBeShown;
   }
 
-  public static void release(@NotNull final JFrame frame) {
+  public static void release(@Nonnull final JFrame frame) {
     final Window[] all = ourRootWindowToParentsStack.keySet().toArray(new Window[ourRootWindowToParentsStack.size()]);
     for (Window each : all) {
       if (each == null) continue;
@@ -491,8 +491,8 @@ public class FocusTrackback {
     Component getComponent();
   }
 
-  @NotNull
-  public static List<JBPopup> getChildPopups(@NotNull final Component component) {
+  @Nonnull
+  public static List<JBPopup> getChildPopups(@Nonnull final Component component) {
     List<JBPopup> result = new ArrayList<>();
 
     final Window window = UIUtil.getWindow(component);
@@ -542,7 +542,7 @@ public class FocusTrackback {
 
   private class MyFocusCommand extends FocusCommand {
 
-    @NotNull
+    @Nonnull
     public ActionCallback run() {
       return _restoreFocus();
     }

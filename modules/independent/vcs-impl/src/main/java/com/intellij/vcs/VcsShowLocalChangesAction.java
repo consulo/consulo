@@ -16,10 +16,10 @@
 package com.intellij.vcs;
 
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VcsShowLocalChangesAction extends VcsShowToolWindowTabAction {
-  @NotNull
+  @Nonnull
   @Override
   protected String getTabName() {
     return ChangesViewContentManager.LOCAL_CHANGES;

@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.patch.PatchWriter;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,7 +37,7 @@ public class PatchCreator {
   }
 
   public static void create(Project p,
-                            @NotNull String basePath,
+                            @Nonnull String basePath,
                             List<Change> changes,
                             String filePath,
                             boolean isReverse,

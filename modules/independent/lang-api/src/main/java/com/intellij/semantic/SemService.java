@@ -18,8 +18,7 @@ package com.intellij.semantic;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,21 +31,21 @@ public abstract class SemService {
     return ServiceManager.getService(p, SemService.class);
   }
 
-  @Nullable
-  public <T extends SemElement> T getSemElement(SemKey<T> key, @NotNull PsiElement psi) {
+  @javax.annotation.Nullable
+  public <T extends SemElement> T getSemElement(SemKey<T> key, @Nonnull PsiElement psi) {
     final List<T> list = getSemElements(key, psi);
     if (list.isEmpty()) return null;
     return list.get(0);
   }
 
-  public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, @NotNull PsiElement psi);
+  public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, @Nonnull PsiElement psi);
 
-  @Nullable
-  public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @NotNull PsiElement psi);
+  @javax.annotation.Nullable
+  public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @Nonnull PsiElement psi);
 
-  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, @NotNull PsiElement psi, @Nullable T semElement);
+  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @javax.annotation.Nullable T semElement);
 
-  public abstract void clearCachedSemElements(@NotNull PsiElement psi);
+  public abstract void clearCachedSemElements(@Nonnull PsiElement psi);
 
   public abstract void clearCache();
 
@@ -54,7 +53,7 @@ public abstract class SemService {
    * Caches won't be cleared on PSI changes inside this action
    * @param change the action
    */
-  public abstract void performAtomicChange(@NotNull Runnable change);
+  public abstract void performAtomicChange(@Nonnull Runnable change);
 
   public abstract boolean isInsideAtomicChange();
 }

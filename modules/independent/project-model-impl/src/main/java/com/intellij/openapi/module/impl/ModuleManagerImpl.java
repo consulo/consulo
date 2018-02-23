@@ -59,8 +59,8 @@ import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -76,7 +76,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     private final String[] myGroups;
     private final Element myElement;
 
-    public ModuleLoadItem(@NotNull String name, @Nullable String dirUrl, @NotNull Element element) {
+    public ModuleLoadItem(@Nonnull String name, @javax.annotation.Nullable String dirUrl, @Nonnull Element element) {
       myDirUrl = dirUrl;
       myElement = element;
 
@@ -92,7 +92,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public String[] getGroups() {
       return myGroups;
     }
@@ -102,12 +102,12 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return myDirUrl;
     }
 
-    @NotNull
+    @Nonnull
     public String getName() {
       return myName;
     }
 
-    @NotNull
+    @Nonnull
     public Element getElement() {
       return myElement;
     }
@@ -184,7 +184,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return COMPONENT_NAME;
   }
@@ -253,8 +253,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
   }
 
-  @Nullable
-  private ModuleLoadItem findModuleByUrl(@NotNull String name, @Nullable String url) {
+  @javax.annotation.Nullable
+  private ModuleLoadItem findModuleByUrl(@Nonnull String name, @javax.annotation.Nullable String url) {
     if (url == null) {
       for (ModuleLoadItem item : myModuleLoadItems) {
         if (item.getName().equals(name) && item.getDirUrl() == null) {
@@ -356,13 +356,13 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     ProjectLoadingErrorsNotifier.getInstance(myProject).registerErrors(errors);
   }
 
-  public void removeFailedModulePath(@NotNull ModuleManagerImpl.ModuleLoadItem modulePath) {
+  public void removeFailedModulePath(@Nonnull ModuleManagerImpl.ModuleLoadItem modulePath) {
     myFailedModulePaths.remove(modulePath);
   }
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public ModifiableModuleModel getModifiableModel() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return new ModuleModelImpl(myModuleModel);
@@ -419,9 +419,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredWriteAction
-  public Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath) {
+  public Module newModule(@Nonnull @NonNls String name, @Nonnull @NonNls String dirPath) {
     myModificationCount++;
     final ModifiableModuleModel modifiableModel = getModifiableModel();
     final Module module = modifiableModel.newModule(name, dirPath);
@@ -431,7 +431,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @Override
   @RequiredWriteAction
-  public void disposeModule(@NotNull final Module module) {
+  public void disposeModule(@Nonnull final Module module) {
     final ModifiableModuleModel modifiableModel = getModifiableModel();
     modifiableModel.disposeModule(module);
     modifiableModel.commit();
@@ -439,7 +439,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     if (myModuleModel.myIsWritable) {
       ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -451,7 +451,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getSortedModules() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     deliverPendingEvents();
@@ -463,7 +463,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  public Module findModuleByName(@NotNull String name) {
+  public Module findModuleByName(@Nonnull String name) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return myModuleModel.findModuleByName(name);
   }
@@ -472,7 +472,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Comparator<Module> moduleDependencyComparator() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     deliverPendingEvents();
@@ -487,13 +487,13 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Graph<Module> moduleGraph() {
     return moduleGraph(true);
   }
 
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   @Override
   public Graph<Module> moduleGraph(boolean includeTests) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -502,15 +502,15 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  @NotNull
-  public List<Module> getModuleDependentModules(@NotNull Module module) {
+  @Nonnull
+  public List<Module> getModuleDependentModules(@Nonnull Module module) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return myModuleModel.getModuleDependentModules(module);
   }
 
   @RequiredReadAction
   @Override
-  public boolean isModuleDependent(@NotNull Module module, @NotNull Module onModule) {
+  public boolean isModuleDependent(@Nonnull Module module, @Nonnull Module onModule) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return myModuleModel.isModuleDependent(module, onModule);
   }
@@ -546,11 +546,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     ((ModuleModelImpl)model).commitWithRunnable(runnable);
   }
 
-  @NotNull
-  protected abstract ModuleEx createModule(@NotNull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
+  @Nonnull
+  protected abstract ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
 
-  @NotNull
-  protected ModuleEx createAndLoadModule(@NotNull final ModuleLoadItem moduleLoadItem, @NotNull ModuleModelImpl moduleModel, @Nullable final ProgressIndicator progressIndicator) {
+  @Nonnull
+  protected ModuleEx createAndLoadModule(@Nonnull final ModuleLoadItem moduleLoadItem, @Nonnull ModuleModelImpl moduleModel, @javax.annotation.Nullable final ProgressIndicator progressIndicator) {
     final ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
     moduleModel.initModule(module);
 
@@ -576,7 +576,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       myIsWritable = false;
     }
 
-    ModuleModelImpl(@NotNull ModuleModelImpl that) {
+    ModuleModelImpl(@Nonnull ModuleModelImpl that) {
       myModules.addAll(that.myModules);
       final Map<Module, String[]> groupPath = that.myModuleGroupPath;
       if (groupPath != null) {
@@ -591,7 +591,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Module[] getModules() {
       if (myModulesCache == null) {
         myModulesCache = ContainerUtil.toArray(myModules, Module.ARRAY_FACTORY);
@@ -606,7 +606,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    public void renameModule(@NotNull Module module, @NotNull String newName) throws ModuleWithNameAlreadyExistsException {
+    public void renameModule(@Nonnull Module module, @Nonnull String newName) throws ModuleWithNameAlreadyExistsException {
       final Module oldModule = getModuleByNewName(newName);
       myNewNameToModule.remove(myModuleToNewName.get(module));
       if (module.getName().equals(newName)) { // if renaming to itself, forget it altogether
@@ -624,11 +624,11 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    public Module getModuleToBeRenamed(@NotNull String newName) {
+    public Module getModuleToBeRenamed(@Nonnull String newName) {
       return myNewNameToModule.get(newName);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Module getModuleByNewName(String newName) {
       final Module moduleToBeRenamed = getModuleToBeRenamed(newName);
       if (moduleToBeRenamed != null) {
@@ -644,13 +644,13 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    public String getNewName(@NotNull Module module) {
+    public String getNewName(@Nonnull Module module) {
       return myModuleToNewName.get(module);
     }
 
     @Override
-    @NotNull
-    public Module newModule(@NotNull @NonNls String name, @Nullable @NonNls String dirPath) {
+    @Nonnull
+    public Module newModule(@Nonnull @NonNls String name, @javax.annotation.Nullable @NonNls String dirPath) {
       assertWritable();
 
       final String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
@@ -667,8 +667,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return moduleEx;
     }
 
-    @Nullable
-    private ModuleEx getModuleByDirUrl(@NotNull String dirUrl) {
+    @javax.annotation.Nullable
+    private ModuleEx getModuleByDirUrl(@Nonnull String dirUrl) {
       for (Module module : myModules) {
         if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
           return (ModuleEx)module;
@@ -678,7 +678,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Nullable
-    private Module removeModuleByDirUrl(@NotNull String dirUrl) {
+    private Module removeModuleByDirUrl(@Nonnull String dirUrl) {
       Module toRemove = null;
       for (Module module : myModules) {
         if (FileUtil.pathsEqual(dirUrl, module.getModuleDirUrl())) {
@@ -689,8 +689,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       return toRemove;
     }
 
-    @NotNull
-    private Module loadModuleInternal(@NotNull ModuleLoadItem item, boolean firstLoad, @Nullable ProgressIndicator progressIndicator)
+    @Nonnull
+    private Module loadModuleInternal(@Nonnull ModuleLoadItem item, boolean firstLoad, @javax.annotation.Nullable ProgressIndicator progressIndicator)
             throws ModuleWithNameAlreadyExistsException, ModuleDirIsNotExistsException, StateStorageException {
 
       final String moduleName = item.getName();
@@ -742,7 +742,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    public void disposeModule(@NotNull Module module) {
+    public void disposeModule(@Nonnull Module module) {
       assertWritable();
       myModulesCache = null;
       if (myModules.contains(module)) {
@@ -755,7 +755,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    public Module findModuleByName(@NotNull String name) {
+    public Module findModuleByName(@Nonnull String name) {
       for (Module module : myModules) {
         if (!module.isDisposed() && module.getName().equals(name)) {
           return module;
@@ -784,8 +784,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
       }));
     }
 
-    @NotNull
-    private List<Module> getModuleDependentModules(@NotNull Module module) {
+    @Nonnull
+    private List<Module> getModuleDependentModules(@Nonnull Module module) {
       List<Module> result = new ArrayList<>();
       for (Module aModule : myModules) {
         if (isModuleDependent(aModule, module)) {
@@ -871,7 +871,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public String[] getModuleGroupPath(Module module) {
       return myModuleGroupPath == null ? null : myModuleGroupPath.get(module);
     }
@@ -960,7 +960,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Project
 
   @RequiredReadAction
   @Override
-  public String[] getModuleGroupPath(@NotNull Module module) {
+  public String[] getModuleGroupPath(@Nonnull Module module) {
     return myModuleModel.getModuleGroupPath(module);
   }
 

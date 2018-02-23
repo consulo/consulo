@@ -22,8 +22,8 @@ import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.StringTokenizer;
 
@@ -35,14 +35,14 @@ public final class TestProxyPrinterProvider {
   private final TestProxyFilterProvider myFilterProvider;
   private BaseTestsOutputConsoleView myTestOutputConsoleView;
 
-  public TestProxyPrinterProvider(@NotNull BaseTestsOutputConsoleView testsOutputConsoleView,
-                                  @NotNull TestProxyFilterProvider filterProvider) {
+  public TestProxyPrinterProvider(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
+                                  @Nonnull TestProxyFilterProvider filterProvider) {
     myTestOutputConsoleView = testsOutputConsoleView;
     myFilterProvider = filterProvider;
   }
 
   @Nullable
-  public Printer getPrinterByType(@NotNull String nodeType, @NotNull String nodeName, @Nullable String nodeArguments) {
+  public Printer getPrinterByType(@Nonnull String nodeType, @Nonnull String nodeName, @Nullable String nodeArguments) {
     Filter filter = myFilterProvider.getFilter(nodeType, nodeName, nodeArguments);
     if (filter != null) {
       return new HyperlinkPrinter(myTestOutputConsoleView, HyperlinkPrinter.ERROR_CONTENT_TYPE, filter);
@@ -63,9 +63,9 @@ public final class TestProxyPrinterProvider {
     private final Condition<ConsoleViewContentType> myContentTypeCondition;
     private final Filter myFilter;
 
-    public HyperlinkPrinter(@NotNull BaseTestsOutputConsoleView testsOutputConsoleView,
-                            @NotNull Condition<ConsoleViewContentType> contentTypeCondition,
-                            @NotNull Filter filter) {
+    public HyperlinkPrinter(@Nonnull BaseTestsOutputConsoleView testsOutputConsoleView,
+                            @Nonnull Condition<ConsoleViewContentType> contentTypeCondition,
+                            @Nonnull Filter filter) {
       super(testsOutputConsoleView, testsOutputConsoleView.getProperties(), null);
       myContentTypeCondition = contentTypeCondition;
       myFilter = filter;
@@ -94,7 +94,7 @@ public final class TestProxyPrinterProvider {
       super.print(text, contentType);
     }
 
-    private void printLine(@NotNull String line, @NotNull ConsoleViewContentType contentType) {
+    private void printLine(@Nonnull String line, @Nonnull ConsoleViewContentType contentType) {
       Filter.Result result = myFilter.applyFilter(line, line.length());
       if (result != null) {
         defaultPrint(line.substring(0, result.highlightStartOffset), contentType);

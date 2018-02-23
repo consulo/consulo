@@ -17,7 +17,7 @@ package consulo.web.boot.util.logger;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -48,8 +48,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -70,7 +70,7 @@ public class ShowFilePathAction extends AnAction {
 
   public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
     @Override
-    protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
+    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
       URL url = e.getURL();
       if (url != null) openFile(new File(url.getPath()));
       notification.expire();
@@ -78,7 +78,7 @@ public class ShowFilePathAction extends AnAction {
   };
 
   private static NotNullLazyValue<Boolean> canUseNautilus = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       if (!SystemInfo.isUnix || !SystemInfo.hasXdgMime() || !new File("/usr/bin/nautilus").canExecute()) {
@@ -97,7 +97,7 @@ public class ShowFilePathAction extends AnAction {
   };
 
   private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<String>() {
-    @NotNull
+    @Nonnull
     @Override
     protected String compute() {
       if (SystemInfo.isMac) return "Finder";
@@ -238,7 +238,7 @@ public class ShowFilePathAction extends AnAction {
 
   private static ListPopup createPopup(final ArrayList<VirtualFile> files, final ArrayList<Icon> icons) {
     final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(final VirtualFile value) {
         return value.getPresentableName();
@@ -268,7 +268,7 @@ public class ShowFilePathAction extends AnAction {
            SystemInfo.hasXdgOpen() || canUseNautilus.getValue();
   }
 
-  @NotNull
+  @Nonnull
   public static String getFileManagerName() {
     return fileManagerName.getValue();
   }
@@ -279,7 +279,7 @@ public class ShowFilePathAction extends AnAction {
    *
    * @param file a file or directory to show and highlight in a file manager.
    */
-  public static void openFile(@NotNull File file) {
+  public static void openFile(@Nonnull File file) {
     if (!file.exists()) return;
     file = file.getAbsoluteFile();
     File parent = file.getParentFile();
@@ -300,7 +300,7 @@ public class ShowFilePathAction extends AnAction {
    * @param directory a directory to show in a file manager.
    */
   @SuppressWarnings("UnusedDeclaration")
-  public static void openDirectory(@NotNull final File directory) {
+  public static void openDirectory(@Nonnull final File directory) {
     if (!directory.isDirectory()) return;
     try {
       doOpen(directory, null);
@@ -310,7 +310,7 @@ public class ShowFilePathAction extends AnAction {
     }
   }
 
-  private static void doOpen(@NotNull File dir, @Nullable File toSelect) throws IOException, ExecutionException {
+  private static void doOpen(@Nonnull File dir, @Nullable File toSelect) throws IOException, ExecutionException {
     dir = new File(FileUtil.toCanonicalPath(dir.getPath()));
     toSelect = toSelect == null ? null : new File(FileUtil.toCanonicalPath(toSelect.getPath()));
 
@@ -395,7 +395,7 @@ public class ShowFilePathAction extends AnAction {
         return true;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDoNotShowMessage() {
         return CommonBundle.message("dialog.options.do.not.ask");

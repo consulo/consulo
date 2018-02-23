@@ -21,21 +21,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
   @Override
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     final CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
     if (manager.PER_PROJECT_SETTINGS != null) {
       //noinspection HardCodedStringLiteral
       group.add(new AnAction("<project>", "",
                              manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction) {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           manager.USE_PER_PROJECT_SETTINGS = true;
         }
       });
@@ -55,7 +55,7 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     group.add(new AnAction(scheme.getName(), "",
                            scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         if (addScheme) {
           CodeStyleSchemes.getInstance().addScheme(scheme);
         }
@@ -73,7 +73,7 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(e.getDataContext().getData(CommonDataKeys.PROJECT) != null);
   }

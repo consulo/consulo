@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.util.NonCodeUsageInfo;
 import com.intellij.usageView.UsageInfoFactory;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   private final PsiElement myElement;
@@ -35,7 +35,7 @@ public class NonCodeUsageInfoFactory implements UsageInfoFactory {
 
   @Override
   @Nullable
-  public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
+  public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
     final PsiElement namedElement = TargetElementUtil.getNamedElement(usage, startOffset);
     if (namedElement != null) {
       return null;

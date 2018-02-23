@@ -17,7 +17,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ParamsGroup implements Cloneable {
   private String myGroupId;
   private ParametersList myGroupParams = new ParametersList();
 
-  public ParamsGroup(@NotNull final String groupId) {
+  public ParamsGroup(@Nonnull final String groupId) {
     myGroupId = groupId;
   }
 
@@ -45,11 +45,11 @@ public class ParamsGroup implements Cloneable {
     return myGroupId;
   }
 
-  public void addParameter(@NotNull @NonNls final String parameter) {
+  public void addParameter(@Nonnull @NonNls final String parameter) {
     myGroupParams.add(parameter);
   }
 
-  public void addParameterAt(int index, @NotNull @NonNls final String parameter) {
+  public void addParameterAt(int index, @Nonnull @NonNls final String parameter) {
     myGroupParams.addAt(index, parameter);
   }
 
@@ -59,13 +59,13 @@ public class ParamsGroup implements Cloneable {
     }
   }
 
-  public void addParameters(@NotNull final List<String> parameters) {
+  public void addParameters(@Nonnull final List<String> parameters) {
     for (final String parameter : parameters) {
       addParameter(parameter);
     }
   }
 
-  public void addParametersString(@NotNull @NonNls final String parametersString) {
+  public void addParametersString(@Nonnull @NonNls final String parametersString) {
     addParameters(ParametersList.parse(parametersString));
   }
 

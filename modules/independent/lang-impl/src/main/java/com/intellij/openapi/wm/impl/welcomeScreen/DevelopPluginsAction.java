@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -32,7 +32,7 @@ public class DevelopPluginsAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     BrowserUtil.browse(PLUGIN_WEBSITE);
 
   }

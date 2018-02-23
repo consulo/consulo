@@ -17,7 +17,7 @@ package com.intellij.psi.meta;
 
 import com.intellij.pom.PomRenameableTarget;
 import com.intellij.psi.DelegatePsiTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 public class PsiMetaDataTarget extends DelegatePsiTarget implements PomRenameableTarget<PsiMetaDataTarget> {
   private final PsiMetaData myMetaData;
 
-  public PsiMetaDataTarget(@NotNull PsiMetaData metaData) {
+  public PsiMetaDataTarget(@Nonnull PsiMetaData metaData) {
     super(metaData.getDeclaration());
     myMetaData = metaData;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myMetaData.getName();
   }
@@ -42,7 +42,7 @@ public class PsiMetaDataTarget extends DelegatePsiTarget implements PomRenameabl
   }
 
   @Override
-  public PsiMetaDataTarget setName(@NotNull String newName) {
+  public PsiMetaDataTarget setName(@Nonnull String newName) {
     ((PsiWritableMetaData) myMetaData).setName(newName);
     return this;
   }

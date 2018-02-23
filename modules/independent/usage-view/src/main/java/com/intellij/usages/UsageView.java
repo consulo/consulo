@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -44,11 +44,11 @@ public interface UsageView extends Disposable {
   Key<SearchScope> USAGE_SCOPE = Key.create("UsageScope");
   Key<List<UsageInfo>> USAGE_INFO_LIST_KEY = Key.create("UsageInfo.List");
 
-  void appendUsage(@NotNull Usage usage);
-  void removeUsage(@NotNull Usage usage);
-  void includeUsages(@NotNull Usage[] usages);
-  void excludeUsages(@NotNull Usage[] usages);
-  void selectUsages(@NotNull Usage[] usages);
+  void appendUsage(@Nonnull Usage usage);
+  void removeUsage(@Nonnull Usage usage);
+  void includeUsages(@Nonnull Usage[] usages);
+  void excludeUsages(@Nonnull Usage[] usages);
+  void selectUsages(@Nonnull Usage[] usages);
 
   void close();
   boolean isSearchInProgress();
@@ -56,30 +56,33 @@ public interface UsageView extends Disposable {
   /**
    * @deprecated please specify mnemonic by prefixing the mnenonic character with an ampersand (&& for Mac-specific ampersands)
    */
-  void addButtonToLowerPane(@NotNull Runnable runnable, @NotNull String text, char mnemonic);
-  void addButtonToLowerPane(@NotNull Runnable runnable, @NotNull String text);
+  void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text, char mnemonic);
+  void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text);
 
   void setAdditionalComponent(@Nullable JComponent component);
 
-  void addPerformOperationAction(@NotNull Runnable processRunnable, String commandName, String cannotMakeString, @NotNull String shortDescription);
+  void addPerformOperationAction(@Nonnull Runnable processRunnable, String commandName, String cannotMakeString, @Nonnull String shortDescription);
 
   /**
    * @param checkReadOnlyStatus if false, check is performed inside processRunnable
    */
-  void addPerformOperationAction(@NotNull Runnable processRunnable, String commandName, String cannotMakeString, @NotNull String shortDescription, boolean checkReadOnlyStatus);
+  void addPerformOperationAction(@Nonnull Runnable processRunnable, String commandName, String cannotMakeString, @Nonnull String shortDescription, boolean checkReadOnlyStatus);
 
-  @NotNull
+  @Nonnull
   UsageViewPresentation getPresentation();
 
-  @NotNull
+  @Nonnull
   Set<Usage> getExcludedUsages();
 
-  @Nullable
+  @javax.annotation.Nullable
   Set<Usage> getSelectedUsages();
-  @NotNull Set<Usage> getUsages();
-  @NotNull List<Usage> getSortedUsages();
+  @Nonnull
+  Set<Usage> getUsages();
+  @Nonnull
+  List<Usage> getSortedUsages();
 
-  @NotNull JComponent getComponent();
+  @Nonnull
+  JComponent getComponent();
 
   int getUsagesCount();
 
@@ -88,5 +91,5 @@ public interface UsageView extends Disposable {
    * Reloads the whole tree model once instead of firing individual remove event for each node.
    * Useful for processing huge number of usages faster, e.g. during "find in path/replace all".
    */
-  void removeUsagesBulk(@NotNull Collection<Usage> usages);
+  void removeUsagesBulk(@Nonnull Collection<Usage> usages);
 }

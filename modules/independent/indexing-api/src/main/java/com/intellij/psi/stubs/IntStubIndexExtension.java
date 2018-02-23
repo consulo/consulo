@@ -22,14 +22,14 @@ package com.intellij.psi.stubs;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class IntStubIndexExtension<Psi extends PsiElement> extends AbstractStubIndex<Integer, Psi> {
   public int getVersion() {
     return 1;
   }
 
-  @NotNull
+  @Nonnull
   public KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
   }

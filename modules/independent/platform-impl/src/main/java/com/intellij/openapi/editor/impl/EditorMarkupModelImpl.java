@@ -62,8 +62,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +95,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private ProperTextRange myDirtyYPositions;
   private static final ProperTextRange WHOLE_DOCUMENT = new ProperTextRange(0, 0);
 
-  @NotNull
+  @Nonnull
   private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
   private int myMinMarkHeight = JBUI.scale(3);
@@ -106,7 +106,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   private int myRowAdjuster = 0;
   private int myWheelAccumulator = 0;
 
-  EditorMarkupModelImpl(@NotNull EditorImpl editor) {
+  EditorMarkupModelImpl(@Nonnull EditorImpl editor) {
     super(editor.getDocument());
     myEditor = editor;
     myEditorFragmentRenderer = new EditorFragmentRenderer();
@@ -146,13 +146,13 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   private static class PositionedStripe {
-    @NotNull
+    @Nonnull
     private Color color;
     private int yEnd;
     private final boolean thin;
     private final int layer;
 
-    private PositionedStripe(@NotNull Color color, int yEnd, boolean thin, int layer) {
+    private PositionedStripe(@Nonnull Color color, int yEnd, boolean thin, int layer) {
       this.color = color;
       this.yEnd = yEnd;
       this.thin = thin;
@@ -345,7 +345,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   @RequiredDispatchThread
   @Override
-  public void setErrorPanelPopupHandler(@NotNull PopupHandler handler) {
+  public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     MyErrorPanel errorPanel = getErrorPanel();
     if (errorPanel != null) {
@@ -354,18 +354,18 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @Override
-  public void setErrorStripTooltipRendererProvider(@NotNull final ErrorStripTooltipRendererProvider provider) {
+  public void setErrorStripTooltipRendererProvider(@Nonnull final ErrorStripTooltipRendererProvider provider) {
     myTooltipRendererProvider = provider;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
     return myTooltipRendererProvider;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }
@@ -506,7 +506,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       return JBUI.scale(1);
     }
 
-    private void repaint(@NotNull final Graphics g, int gutterWidth, @NotNull ProperTextRange yrange) {
+    private void repaint(@Nonnull final Graphics g, int gutterWidth, @Nonnull ProperTextRange yrange) {
       final Rectangle clip = new Rectangle(0, yrange.getStartOffset(), gutterWidth, yrange.getLength() + myMinMarkHeight);
       paintBackground(g, clip);
 
@@ -522,7 +522,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       g.setClip(oldClip);
     }
 
-    private void drawMarkup(@NotNull final Graphics g, int startOffset, int endOffset, @NotNull MarkupModelEx markup1, @NotNull MarkupModelEx markup2) {
+    private void drawMarkup(@Nonnull final Graphics g, int startOffset, int endOffset, @Nonnull MarkupModelEx markup1, @Nonnull MarkupModelEx markup2) {
       final Queue<PositionedStripe> thinEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
       final Queue<PositionedStripe> wideEnds = new PriorityQueue<>(5, (o1, o2) -> o1.yEnd - o2.yEnd);
       // sorted by layer
@@ -537,7 +537,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       try {
         ContainerUtil.process(iterator, new Processor<RangeHighlighterEx>() {
           @Override
-          public boolean process(@NotNull RangeHighlighterEx highlighter) {
+          public boolean process(@Nonnull RangeHighlighterEx highlighter) {
             Color color = highlighter.getErrorStripeMarkColor();
             if (color == null) return true;
             boolean isThin = highlighter.isThinErrorStripeMark();
@@ -610,9 +610,9 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
 
     private int drawStripesEndingBefore(int ys,
-                                        @NotNull Queue<PositionedStripe> ends,
-                                        @NotNull List<PositionedStripe> stripes,
-                                        @NotNull Graphics g,
+                                        @Nonnull Queue<PositionedStripe> ends,
+                                        @Nonnull List<PositionedStripe> stripes,
+                                        @Nonnull Graphics g,
                                         int yStart) {
       while (!ends.isEmpty()) {
         PositionedStripe endingStripe = ends.peek();
@@ -631,7 +631,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       return yStart;
     }
 
-    private void drawSpot(@NotNull Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, @NotNull Color color) {
+    private void drawSpot(@Nonnull Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, @Nonnull Color color) {
       int paintWidth;
       int x;
       if (thinErrorStripeMark) {
@@ -785,7 +785,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
   }
 
-  private void showTooltip(MouseEvent e, final TooltipRenderer tooltipObject, @NotNull HintHint hintHint) {
+  private void showTooltip(MouseEvent e, final TooltipRenderer tooltipObject, @Nonnull HintHint hintHint) {
     TooltipController tooltipController = TooltipController.getInstance();
     tooltipController.showTooltipByMouseMove(myEditor, new RelativePoint(e), tooltipObject,
                                              myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_RIGHT, ERROR_STRIPE_TOOLTIP_GROUP,
@@ -802,11 +802,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
   }
 
   @Override
-  public void addErrorMarkerListener(@NotNull final ErrorStripeListener listener, @NotNull Disposable parent) {
+  public void addErrorMarkerListener(@Nonnull final ErrorStripeListener listener, @Nonnull Disposable parent) {
     ContainerUtil.add(listener, myErrorMarkerListeners, parent);
   }
 
-  public void markDirtied(@NotNull ProperTextRange yPositions) {
+  public void markDirtied(@Nonnull ProperTextRange yPositions) {
     if (myDirtyYPositions != WHOLE_DOCUMENT) {
       int start = Math.max(0, yPositions.getStartOffset() - myEditor.getLineHeight());
       int end = myEditorScrollbarTop + myEditorTargetHeight == 0
@@ -835,7 +835,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
 
   private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
     @Override
-    public TooltipRenderer calcTooltipRenderer(@NotNull final Collection<RangeHighlighter> highlighters) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<RangeHighlighter> highlighters) {
       LineTooltipRenderer bigRenderer = null;
       //do not show same tooltip twice
       Set<String> tooltips = null;
@@ -861,28 +861,28 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
       return bigRenderer;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public TooltipRenderer calcTooltipRenderer(@NotNull final String text) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull final String text) {
       return new LineTooltipRenderer(text, new Object[]{text});
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public TooltipRenderer calcTooltipRenderer(@NotNull final String text, final int width) {
+    public TooltipRenderer calcTooltipRenderer(@Nonnull final String text, final int width) {
       return new LineTooltipRenderer(text, width, new Object[]{text});
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public TrafficTooltipRenderer createTrafficTooltipRenderer(@NotNull final Runnable onHide, @NotNull Editor editor) {
+    public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull final Runnable onHide, @Nonnull Editor editor) {
       return new TrafficTooltipRenderer() {
         @Override
         public void repaintTooltipWindow() {
         }
 
         @Override
-        public LightweightHint show(@NotNull Editor editor, @NotNull Point p, boolean alignToRight, @NotNull TooltipGroup group, @NotNull HintHint hintHint) {
+        public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
           JLabel label = new JLabel("WTF");
           return new LightweightHint(label) {
             @Override
@@ -896,7 +896,7 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
   }
 
-  @NotNull
+  @Nonnull
   private ProperTextRange offsetsToYPositions(int start, int end) {
     if (!dimensionsAreValid) {
       recalcEditorDimensions();
@@ -1021,11 +1021,11 @@ public class EditorMarkupModelImpl extends MarkupModelImpl implements EditorMark
     }
 
     @Override
-    public LightweightHint show(@NotNull final Editor editor,
-                                @NotNull Point p,
+    public LightweightHint show(@Nonnull final Editor editor,
+                                @Nonnull Point p,
                                 boolean alignToRight,
-                                @NotNull TooltipGroup group,
-                                @NotNull final HintHint hintInfo) {
+                                @Nonnull TooltipGroup group,
+                                @Nonnull final HintHint hintInfo) {
       final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
       boolean needDelay = false;
       if (myEditorPreviewHint == null) {

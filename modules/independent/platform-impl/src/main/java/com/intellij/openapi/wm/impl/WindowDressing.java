@@ -18,14 +18,14 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Bas Leijdekkers
  */
 public class WindowDressing extends AbstractProjectComponent {
 
-  public WindowDressing(@NotNull Project project) {
+  public WindowDressing(@Nonnull Project project) {
     super(project);
   }
 

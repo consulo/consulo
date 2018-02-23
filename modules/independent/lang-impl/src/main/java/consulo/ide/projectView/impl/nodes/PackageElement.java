@@ -23,8 +23,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.psi.PsiPackage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -40,11 +40,11 @@ public class PackageElement implements Queryable, RootsProvider {
 
   @Nullable
   private final Module myModule;
-  @NotNull
+  @Nonnull
   private final PsiPackage myElement;
   private final boolean myIsLibraryElement;
 
-  public PackageElement(@Nullable Module module, @NotNull PsiPackage element, boolean isLibraryElement) {
+  public PackageElement(@Nullable Module module, @Nonnull PsiPackage element, boolean isLibraryElement) {
     myModule = module;
     myElement = element;
     myIsLibraryElement = isLibraryElement;
@@ -65,7 +65,7 @@ public class PackageElement implements Queryable, RootsProvider {
     return myModule;
   }
 
-  @NotNull
+  @Nonnull
   public PsiPackage getPackage() {
     return myElement;
   }
@@ -96,7 +96,7 @@ public class PackageElement implements Queryable, RootsProvider {
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     PsiPackage pkg = getPackage();
     if (pkg instanceof Queryable) {
       ((Queryable)pkg).putInfo(info);

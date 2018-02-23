@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui.tree.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -27,7 +27,7 @@ import java.awt.datatransfer.StringSelection;
  */
 public class XCopyNameAction extends XDebuggerTreeActionBase {
   @Override
-  protected void perform(XValueNodeImpl node, @NotNull String nodeName, AnActionEvent e) {
+  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
     CopyPasteManager.getInstance().setContents(new StringSelection(nodeName));
   }
 }

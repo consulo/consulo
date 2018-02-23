@@ -18,8 +18,8 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface FileChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_TO_SELECT = PathChooserDialog.PREFER_LAST_OVER_EXPLICIT;
@@ -29,7 +29,7 @@ public interface FileChooserDialog {
    * it supports several selections
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project);
 
   /**
@@ -39,6 +39,6 @@ public interface FileChooserDialog {
    * @param toSelect files to be selected automatically.
    * @return files chosen by user
    */
-  @NotNull
-  VirtualFile[] choose(@Nullable Project project, @NotNull VirtualFile... toSelect);
+  @Nonnull
+  VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect);
 }

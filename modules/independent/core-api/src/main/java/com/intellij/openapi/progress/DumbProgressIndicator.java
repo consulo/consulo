@@ -1,7 +1,7 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DumbProgressIndicator implements StandardProgressIndicator {
   public static final DumbProgressIndicator INSTANCE = new DumbProgressIndicator();
@@ -81,7 +81,7 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getModalityState() {
     return ModalityState.NON_MODAL;
   }

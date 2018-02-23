@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

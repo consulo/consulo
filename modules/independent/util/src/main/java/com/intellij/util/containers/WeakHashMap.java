@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -40,29 +40,30 @@ public final class WeakHashMap<K, V> extends RefHashMap<K, V> {
   public WeakHashMap() {
   }
 
-  public WeakHashMap(@NotNull Map<K, V> t) {
+  public WeakHashMap(@Nonnull Map<K, V> t) {
     super(t);
   }
 
-  public WeakHashMap(int initialCapacity, float loadFactor, @NotNull TObjectHashingStrategy<K> strategy) {
+  public WeakHashMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<K> strategy) {
     super(initialCapacity, loadFactor, strategy);
   }
 
-  public WeakHashMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public WeakHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(hashingStrategy);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected <T> Key<T> createKey(@NotNull T k, @NotNull TObjectHashingStrategy<T> strategy, @NotNull ReferenceQueue<? super T> q) {
+  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
     return new WeakKey<T>(k, strategy, q);
   }
 
   private static class WeakKey<T> extends WeakReference<T> implements Key<T> {
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
-    @NotNull private final TObjectHashingStrategy<T> myStrategy;
+    @Nonnull
+    private final TObjectHashingStrategy<T> myStrategy;
 
-    private WeakKey(@NotNull T k, @NotNull TObjectHashingStrategy<T> strategy, @NotNull ReferenceQueue<? super T> q) {
+    private WeakKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = strategy.computeHashCode(k);

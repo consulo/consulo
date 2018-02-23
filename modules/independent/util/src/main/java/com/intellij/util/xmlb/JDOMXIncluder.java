@@ -22,8 +22,8 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.io.URLUtil;
 import org.jdom.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,9 +35,9 @@ import java.util.regex.Pattern;
 public class JDOMXIncluder {
   private static final Logger LOG = Logger.getInstance(JDOMXIncluder.class);
   public static final PathResolver DEFAULT_PATH_RESOLVER = new PathResolver() {
-    @NotNull
+    @Nonnull
     @Override
-    public URL resolvePath(@NotNull String relativePath, @Nullable String base) {
+    public URL resolvePath(@Nonnull String relativePath, @Nullable String base) {
       try {
         if (base != null) {
           return new URL(new URL(base), relativePath);
@@ -84,7 +84,7 @@ public class JDOMXIncluder {
     return new JDOMXIncluder(ignoreMissing, pathResolver).doResolve(original, base);
   }
 
-  public static List<Content> resolve(@NotNull Element original, String base) throws XIncludeException {
+  public static List<Content> resolve(@Nonnull Element original, String base) throws XIncludeException {
     return new JDOMXIncluder(false, DEFAULT_PATH_RESOLVER).doResolve(original, base);
   }
 
@@ -170,7 +170,7 @@ public class JDOMXIncluder {
     return result;
   }
 
-  private List<Content> doResolve(@NotNull Element original, String base) throws XIncludeException {
+  private List<Content> doResolve(@Nonnull Element original, String base) throws XIncludeException {
     Stack<String> bases = new Stack<String>();
     if (base != null) bases.push(base);
 
@@ -314,7 +314,7 @@ public class JDOMXIncluder {
     }
   }
 
-  @NotNull
+  @Nonnull
   private List<Content> parseRemote(Stack<String> bases,
                                     URL remote,
                                     @Nullable Element fallbackElement) {
@@ -370,7 +370,7 @@ public class JDOMXIncluder {
   }
 
   public interface PathResolver {
-    @NotNull
-    URL resolvePath(@NotNull String relativePath, @Nullable String base);
+    @Nonnull
+    URL resolvePath(@Nonnull String relativePath, @Nullable String base);
   }
 }

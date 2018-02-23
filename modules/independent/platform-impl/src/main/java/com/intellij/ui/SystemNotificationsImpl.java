@@ -20,14 +20,14 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public class SystemNotificationsImpl extends SystemNotifications {
   interface Notifier {
-    void notify(@NotNull String name, @NotNull String title, @NotNull String description);
+    void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);
   }
 
   private final Notifier myNotifier = getPlatformNotifier();
@@ -38,7 +38,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
   }
 
   @Override
-  public void notify(@NotNull String notificationName, @NotNull String title, @NotNull String text) {
+  public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) {
     if (myNotifier != null &&
         NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS &&
         !ApplicationManager.getApplication().isActive()) {

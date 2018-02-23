@@ -37,8 +37,8 @@ import consulo.util.ui.BuildInLookAndFeel;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import sun.java2d.SunGraphicsEnvironment;
 
@@ -92,9 +92,9 @@ public class UIUtil {
 
   public static final Key<Iterable<? extends Component>> NOT_IN_HIERARCHY_COMPONENTS = Key.create("NOT_IN_HIERARCHY_COMPONENTS");
   private static final Function<Component, Iterable<Component>> COMPONENT_CHILDREN = new Function<Component, Iterable<Component>>() {
-    @NotNull
+    @Nonnull
     @Override
-    public JBIterable<Component> fun(@NotNull Component c) {
+    public JBIterable<Component> fun(@Nonnull Component c) {
       JBIterable<Component> result;
       if (c instanceof JMenu) {
         result = JBIterable.of(((JMenu)c).getMenuComponents());
@@ -158,7 +158,7 @@ public class UIUtil {
   };
 
   private static final AtomicNotNullLazyValue<Boolean> X_RENDER_ACTIVE = new AtomicNotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       if (!SystemInfo.isXWindow) {
@@ -208,7 +208,7 @@ public class UIUtil {
     }
   }
 
-  public static void applyStyle(@NotNull ComponentStyle componentStyle, @NotNull Component comp) {
+  public static void applyStyle(@Nonnull ComponentStyle componentStyle, @Nonnull Component comp) {
     if (!(comp instanceof JComponent)) return;
 
     JComponent c = (JComponent)comp;
@@ -240,7 +240,7 @@ public class UIUtil {
    * @param bottomY y-coordinate of the second line.
    * @param color   color of the lines.
    */
-  public static void drawFramingLines(@NotNull Graphics2D g, int startX, int endX, int topY, int bottomY, @NotNull Color color) {
+  public static void drawFramingLines(@Nonnull Graphics2D g, int startX, int endX, int topY, int bottomY, @Nonnull Color color) {
     drawLine(g, startX, topY, endX, topY, null, color);
     drawLine(g, startX, bottomY, endX, bottomY, null, color);
   }
@@ -256,24 +256,24 @@ public class UIUtil {
     return isRetina() && SystemInfo.isAppleJvm;
   }
 
-  @NotNull
+  @Nonnull
   public static JBIterable<Component> uiParents(@Nullable Component c, boolean strict) {
     return strict ? JBIterable.generate(c, COMPONENT_PARENT).skip(1) : JBIterable.generate(c, COMPONENT_PARENT);
   }
 
-  @NotNull
+  @Nonnull
   public static JBIterable<Component> uiChildren(@Nullable Component component) {
     if (!(component instanceof Container)) return JBIterable.empty();
     Container container = (Container)component;
     return JBIterable.of(container.getComponents());
   }
 
-  @NotNull
+  @Nonnull
   public static JBTreeTraverser<Component> uiTraverser() {
     return new JBTreeTraverser<Component>(COMPONENT_CHILDREN);
   }
 
-  @NotNull
+  @Nonnull
   public static JBTreeTraverser<Component> uiTraverser(@Nullable Component component) {
     return new JBTreeTraverser<Component>(COMPONENT_CHILDREN).withRoot(component);
   }
@@ -654,7 +654,7 @@ public class UIUtil {
    * @param key       the client property key
    * @return {@code true} if the property of the specified component is set to {@code true}
    */
-  public static boolean isClientPropertyTrue(Object component, @NotNull Object key) {
+  public static boolean isClientPropertyTrue(Object component, @Nonnull Object key) {
     return Boolean.TRUE.equals(getClientProperty(component, key));
   }
 
@@ -663,7 +663,7 @@ public class UIUtil {
    * @param key       the client property key that specifies a return type
    * @return the property value from the specified component or {@code null}
    */
-  public static Object getClientProperty(Object component, @NotNull Object key) {
+  public static Object getClientProperty(Object component, @Nonnull Object key) {
     return component instanceof JComponent ? ((JComponent)component).getClientProperty(key) : null;
   }
 
@@ -672,7 +672,7 @@ public class UIUtil {
    * @param type      the client property key that specifies a return type
    * @return the property value from the specified component or {@code null}
    */
-  public static <T> T getClientProperty(Object component, @NotNull Class<T> type) {
+  public static <T> T getClientProperty(Object component, @Nonnull Class<T> type) {
     return ObjectUtils.tryCast(getClientProperty(component, (Object)type), type);
   }
 
@@ -681,12 +681,12 @@ public class UIUtil {
    * @param key       the client property key that specifies a return type
    * @return the property value from the specified component or {@code null}
    */
-  public static <T> T getClientProperty(Object component, @NotNull Key<T> key) {
+  public static <T> T getClientProperty(Object component, @Nonnull Key<T> key) {
     //noinspection unchecked
     return (T)getClientProperty(component, (Object)key);
   }
 
-  public static <T> void putClientProperty(@NotNull JComponent component, @NotNull Key<T> key, T value) {
+  public static <T> void putClientProperty(@Nonnull JComponent component, @Nonnull Key<T> key, T value) {
     component.putClientProperty(key, value);
   }
 
@@ -745,7 +745,7 @@ public class UIUtil {
     return !e.isAltDown() && !e.isControlDown();
   }
 
-  public static int getStringY(@NotNull final String string, @NotNull final Rectangle bounds, @NotNull final Graphics2D g) {
+  public static int getStringY(@Nonnull final String string, @Nonnull final Rectangle bounds, @Nonnull final Graphics2D g) {
     final int centerY = bounds.height / 2;
     final Font font = g.getFont();
     final FontRenderContext frc = g.getFontRenderContext();
@@ -760,7 +760,7 @@ public class UIUtil {
    * @param graphics {@link Graphics} that should be used to render the string
    * @return height of the tallest glyph in a string. If string is empty, returns 0
    */
-  public static int getHighestGlyphHeight(@NotNull String string, @NotNull Font font, @NotNull Graphics graphics) {
+  public static int getHighestGlyphHeight(@Nonnull String string, @Nonnull Font font, @Nonnull Graphics graphics) {
     FontRenderContext frc = ((Graphics2D)graphics).getFontRenderContext();
     GlyphVector gv = font.createGlyphVector(frc, string);
     int maxHeight = 0;
@@ -831,7 +831,7 @@ public class UIUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String[] splitText(String text, FontMetrics fontMetrics, int widthLimit, char separator) {
     ArrayList<String> lines = new ArrayList<String>();
     String currentLine = "";
@@ -869,14 +869,14 @@ public class UIUtil {
     return ArrayUtil.toStringArray(lines);
   }
 
-  public static void setActionNameAndMnemonic(@NotNull String text, @NotNull Action action) {
+  public static void setActionNameAndMnemonic(@Nonnull String text, @Nonnull Action action) {
     assignMnemonic(text, action);
 
     text = text.replaceAll("&", "");
     action.putValue(Action.NAME, text);
   }
 
-  public static void assignMnemonic(@NotNull String text, @NotNull Action action) {
+  public static void assignMnemonic(@Nonnull String text, @Nonnull Action action) {
     int mnemoPos = text.indexOf('&');
     if (mnemoPos >= 0 && mnemoPos < text.length() - 2) {
       String mnemoChar = text.substring(mnemoPos + 1, mnemoPos + 2).trim();
@@ -886,12 +886,12 @@ public class UIUtil {
     }
   }
 
-  public static Font getLabelFont(@NotNull FontSize size) {
+  public static Font getLabelFont(@Nonnull FontSize size) {
     return getFont(size, null);
   }
 
-  @NotNull
-  public static Font getFont(@NotNull FontSize size, @Nullable Font base) {
+  @Nonnull
+  public static Font getFont(@Nonnull FontSize size, @Nullable Font base) {
     if (base == null) base = getLabelFont();
 
     return base.deriveFont(getFontSize(size));
@@ -941,8 +941,8 @@ public class UIUtil {
     return UIManager.getColor("Label.disabledText");
   }
 
-  @NotNull
-  public static String removeMnemonic(@NotNull String s) {
+  @Nonnull
+  public static String removeMnemonic(@Nonnull String s) {
     if (s.indexOf('&') != -1) {
       s = StringUtil.replace(s, "&", "");
     }
@@ -955,7 +955,7 @@ public class UIUtil {
     return s;
   }
 
-  public static int getDisplayMnemonicIndex(@NotNull String s) {
+  public static int getDisplayMnemonicIndex(@Nonnull String s) {
     int idx = s.indexOf('&');
     if (idx >= 0 && idx != s.length() - 1 && idx == s.lastIndexOf('&')) return idx;
 
@@ -975,7 +975,7 @@ public class UIUtil {
 
   public static Color getTreeTextForeground() {
     return MorphColor.of(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return UIManager.getColor("Tree.textForeground");
@@ -1262,7 +1262,7 @@ public class UIUtil {
 
   public static Color getSeparatorForeground() {
     return MorphColor.of(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return UIManager.getColor("Separator.foreground");
@@ -1593,7 +1593,7 @@ public class UIUtil {
     return STANDARD_FONT_SIZES;
   }
 
-  public static boolean isValidFont(@NotNull Font font) {
+  public static boolean isValidFont(@Nonnull Font font) {
     try {
       return font.canDisplay('a') && font.canDisplay('z') && font.canDisplay('A') && font.canDisplay('Z') && font.canDisplay('0') && font.canDisplay('1');
     }
@@ -1843,7 +1843,7 @@ public class UIUtil {
    * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in device scale
    */
-  @NotNull
+  @Nonnull
   public static BufferedImage createImage(int width, int height, int type) {
     if (isJreHiDPI()) {
       return RetinaImage.create(width, height, type);
@@ -1861,7 +1861,7 @@ public class UIUtil {
    * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the graphics scale
    */
-  @NotNull
+  @Nonnull
   public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
     if (isJreHiDPI(gc)) {
       return RetinaImage.create(gc, width, height, type);
@@ -1879,7 +1879,7 @@ public class UIUtil {
    * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the graphics scale
    */
-  @NotNull
+  @Nonnull
   public static BufferedImage createImage(Graphics g, int width, int height, int type) {
     if (g instanceof Graphics2D) {
       Graphics2D g2d = (Graphics2D)g;
@@ -1901,7 +1901,7 @@ public class UIUtil {
    * @param type   the type of the image
    * @return a HiDPI-aware BufferedImage in the component scale
    */
-  @NotNull
+  @Nonnull
   public static BufferedImage createImage(Component comp, int width, int height, int type) {
     return comp != null ? createImage(comp != null ? comp.getGraphicsConfiguration() : null, width, height, type) : createImage(width, height, type);
   }
@@ -1952,14 +1952,14 @@ public class UIUtil {
     }
   }
 
-  public static void paintWithXorOnRetina(@NotNull Dimension size, @NotNull Graphics g, Consumer<Graphics2D> paintRoutine) {
+  public static void paintWithXorOnRetina(@Nonnull Dimension size, @Nonnull Graphics g, Consumer<Graphics2D> paintRoutine) {
     paintWithXorOnRetina(size, g, true, paintRoutine);
   }
 
   /**
    * Direct painting into component's graphics with XORMode is broken on retina-mode so we need to paint into an intermediate buffer first.
    */
-  public static void paintWithXorOnRetina(@NotNull Dimension size, @NotNull Graphics g, boolean useRetinaCondition, Consumer<Graphics2D> paintRoutine) {
+  public static void paintWithXorOnRetina(@Nonnull Dimension size, @Nonnull Graphics g, boolean useRetinaCondition, Consumer<Graphics2D> paintRoutine) {
     if (!useRetinaCondition || !isRetina() || Registry.is("ide.mac.retina.disableDrawingFix", false)) {
       paintRoutine.consume((Graphics2D)g);
     }
@@ -1992,7 +1992,7 @@ public class UIUtil {
    *
    * @param g target graphics container
    */
-  public static void setupComposite(@NotNull Graphics2D g) {
+  public static void setupComposite(@Nonnull Graphics2D g) {
     g.setComposite(X_RENDER_ACTIVE.getValue() ? AlphaComposite.SrcOver : AlphaComposite.Src);
   }
 
@@ -2043,11 +2043,11 @@ public class UIUtil {
     });
   }
 
-  public static void addParentChangeListener(@NotNull Component component, @NotNull PropertyChangeListener listener) {
+  public static void addParentChangeListener(@Nonnull Component component, @Nonnull PropertyChangeListener listener) {
     component.addPropertyChangeListener("ancestor", listener);
   }
 
-  public static void removeParentChangeListener(@NotNull Component component, @NotNull PropertyChangeListener listener) {
+  public static void removeParentChangeListener(@Nonnull Component component, @Nonnull PropertyChangeListener listener) {
     component.removePropertyChangeListener("ancestor", listener);
   }
 
@@ -2128,7 +2128,7 @@ public class UIUtil {
     drawCenteredString(g, rect, str, true, true);
   }
 
-  public static boolean isFocusAncestor(@NotNull final JComponent component) {
+  public static boolean isFocusAncestor(@Nonnull final JComponent component) {
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (owner == null) return false;
     if (owner == component) return true;
@@ -2158,8 +2158,8 @@ public class UIUtil {
     return e.getButton() == MouseEvent.BUTTON1;
   }
 
-  @NotNull
-  public static Color getBgFillColor(@NotNull Component c) {
+  @Nonnull
+  public static Color getBgFillColor(@Nonnull Component c) {
     final Component parent = findNearestOpaque(c);
     return parent == null ? c.getBackground() : parent.getBackground();
   }
@@ -2176,7 +2176,7 @@ public class UIUtil {
   }
 
   @Nullable
-  public static Component findParentByCondition(@NotNull Component c, Condition<Component> condition) {
+  public static Component findParentByCondition(@Nonnull Component c, Condition<Component> condition) {
     Component eachParent = c;
     while (eachParent != null) {
       if (condition.value(eachParent)) return eachParent;
@@ -2235,7 +2235,7 @@ public class UIUtil {
   }
 
   @Deprecated
-  public static void requestFocus(@NotNull final JComponent c) {
+  public static void requestFocus(@Nonnull final JComponent c) {
     if (c.isShowing()) {
       c.requestFocus();
     }
@@ -2427,7 +2427,7 @@ public class UIUtil {
   }
 
 
-  public static FontUIResource getFontWithFallback(@NotNull String familyName, @JdkConstants.FontStyle int style, int size) {
+  public static FontUIResource getFontWithFallback(@Nonnull String familyName, @JdkConstants.FontStyle int style, int size) {
     Font fontWithFallback = new StyleContext().getFont(familyName, style, size);
     return fontWithFallback instanceof FontUIResource ? (FontUIResource)fontWithFallback : new FontUIResource(fontWithFallback);
   }
@@ -2530,7 +2530,7 @@ public class UIUtil {
     return result.toString();
   }
 
-  public static void invokeLaterIfNeeded(@NotNull Runnable runnable) {
+  public static void invokeLaterIfNeeded(@Nonnull Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
     }
@@ -2548,7 +2548,7 @@ public class UIUtil {
    * @param runnable a runnable to invoke
    * @see #invokeAndWaitIfNeeded(com.intellij.util.ThrowableRunnable)
    */
-  public static void invokeAndWaitIfNeeded(@NotNull Runnable runnable) {
+  public static void invokeAndWaitIfNeeded(@Nonnull Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
     }
@@ -2562,7 +2562,7 @@ public class UIUtil {
     }
   }
 
-  public static <T> T invokeAndWaitIfNeeded(@NotNull final Computable<T> computable) {
+  public static <T> T invokeAndWaitIfNeeded(@Nonnull final Computable<T> computable) {
     final Ref<T> result = Ref.create();
     invokeAndWaitIfNeeded(new Runnable() {
       @Override
@@ -2573,7 +2573,7 @@ public class UIUtil {
     return result.get();
   }
 
-  public static void invokeAndWaitIfNeeded(@NotNull final ThrowableRunnable runnable) throws Throwable {
+  public static void invokeAndWaitIfNeeded(@Nonnull final ThrowableRunnable runnable) throws Throwable {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
     }
@@ -2852,7 +2852,7 @@ public class UIUtil {
    * @return true if parent if a top parent of child, false otherwise
    * @see javax.swing.SwingUtilities#isDescendingFrom(java.awt.Component, java.awt.Component)
    */
-  public static boolean isDescendingFrom(@Nullable Component child, @NotNull Component parent) {
+  public static boolean isDescendingFrom(@Nullable Component child, @Nonnull Component parent) {
     while (child != null && child != parent) {
       child = child instanceof JPopupMenu ? ((JPopupMenu)child).getInvoker() : child.getParent();
     }
@@ -2874,7 +2874,7 @@ public class UIUtil {
     return null;
   }
 
-  public static void scrollListToVisibleIfNeeded(@NotNull final JList list) {
+  public static void scrollListToVisibleIfNeeded(@Nonnull final JList list) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -3021,7 +3021,7 @@ public class UIUtil {
     /**
      * _position(block width, block height) => (x, y) of the block
      */
-    public void draw(@NotNull final Graphics g, final PairFunction<Integer, Integer, Couple<Integer>> _position) {
+    public void draw(@Nonnull final Graphics g, final PairFunction<Integer, Integer, Couple<Integer>> _position) {
       final int[] maxWidth = {0};
       final int[] height = {0};
       final int[] maxBulletWidth = {0};
@@ -3176,8 +3176,8 @@ public class UIUtil {
     return c instanceof JFrame || c instanceof JDialog || c instanceof JWindow || c instanceof JRootPane || isFocusProxy(c);
   }
 
-  @NotNull
-  public static Timer createNamedTimer(@NonNls @NotNull final String name, int delay, @NotNull ActionListener listener) {
+  @Nonnull
+  public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay, @Nonnull ActionListener listener) {
     return new Timer(delay, listener) {
       @Override
       public String toString() {
@@ -3186,8 +3186,8 @@ public class UIUtil {
     };
   }
 
-  @NotNull
-  public static Timer createNamedTimer(@NonNls @NotNull final String name, int delay) {
+  @Nonnull
+  public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay) {
     return new Timer(delay, null) {
       @Override
       public String toString() {
@@ -3231,7 +3231,7 @@ public class UIUtil {
     return maxWidthAnchor;
   }
 
-  public static void setNotOpaqueRecursively(@NotNull Component component) {
+  public static void setNotOpaqueRecursively(@Nonnull Component component) {
     if (!isUnderAquaLookAndFeel()) return;
 
     if (component.getBackground().equals(getPanelBackground()) || component instanceof JScrollPane || component instanceof JViewport) {
@@ -3247,7 +3247,7 @@ public class UIUtil {
   }
 
 
-  public static void setBackgroundRecursively(@NotNull Component component, @NotNull Color bg) {
+  public static void setBackgroundRecursively(@Nonnull Component component, @Nonnull Color bg) {
     component.setBackground(bg);
     if (component instanceof Container) {
       for (Component c : ((Container)component).getComponents()) {
@@ -3266,11 +3266,11 @@ public class UIUtil {
    * @param bottom    the inset from the bottom
    * @param right     the inset from the right
    */
-  public static void addInsets(@NotNull JComponent component, int top, int left, int bottom, int right) {
+  public static void addInsets(@Nonnull JComponent component, int top, int left, int bottom, int right) {
     addBorder(component, BorderFactory.createEmptyBorder(top, left, bottom, right));
   }
 
-  public static void addInsets(@NotNull JComponent component, @NotNull Insets insets) {
+  public static void addInsets(@Nonnull JComponent component, @Nonnull Insets insets) {
     if (component.getBorder() != null) {
       component.setBorder(new CompoundBorder(new EmptyBorder(insets), component.getBorder()));
     }
@@ -3279,7 +3279,7 @@ public class UIUtil {
     }
   }
 
-  public static Dimension addInsets(@NotNull Dimension dimension, @NotNull Insets insets) {
+  public static Dimension addInsets(@Nonnull Dimension dimension, @Nonnull Insets insets) {
     Dimension ans = new Dimension(dimension);
     ans.width += insets.left;
     ans.width += insets.right;
@@ -3373,13 +3373,13 @@ public class UIUtil {
     return DECORATED_ROW_BG_COLOR;
   }
 
-  @NotNull
-  public static Paint getGradientPaint(float x1, float y1, @NotNull Color c1, float x2, float y2, @NotNull Color c2) {
+  @Nonnull
+  public static Paint getGradientPaint(float x1, float y1, @Nonnull Color c1, float x2, float y2, @Nonnull Color c2) {
     return (Registry.is("ui.no.bangs.and.whistles", false)) ? ColorUtil.mix(c1, c2, .5) : new GradientPaint(x1, y1, c1, x2, y2, c2);
   }
 
   @Nullable
-  public static Point getLocationOnScreen(@NotNull JComponent component) {
+  public static Point getLocationOnScreen(@Nonnull JComponent component) {
     int dx = 0;
     int dy = 0;
     for (Container c = component; c != null; c = c.getParent()) {
@@ -3397,7 +3397,7 @@ public class UIUtil {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static Window getActiveWindow() {
     Window[] windows = Window.getWindows();
     for (Window each : windows) {
@@ -3433,12 +3433,12 @@ public class UIUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String rightArrow() {
     return FontUtil.rightArrow(getLabelFont());
   }
 
-  public static EmptyBorder getTextAlignBorder(@NotNull JToggleButton alignSource) {
+  public static EmptyBorder getTextAlignBorder(@Nonnull JToggleButton alignSource) {
     ButtonUI ui = alignSource.getUI();
     int leftGap = alignSource.getIconTextGap();
     Border border = alignSource.getBorder();
@@ -3471,7 +3471,7 @@ public class UIUtil {
   /**
    * It is your responsibility to set correct horizontal align (left in case of UI Designer)
    */
-  public static void configureNumericFormattedTextField(@NotNull JFormattedTextField textField) {
+  public static void configureNumericFormattedTextField(@Nonnull JFormattedTextField textField) {
     NumberFormat format = NumberFormat.getIntegerInstance();
     format.setParseIntegerOnly(true);
     format.setGroupingUsed(false);
@@ -3496,7 +3496,7 @@ public class UIUtil {
     return component instanceof Window ? (Window)component : SwingUtilities.getWindowAncestor(component);
   }
 
-  public static boolean isAncestor(@NotNull Component ancestor, @Nullable Component descendant) {
+  public static boolean isAncestor(@Nonnull Component ancestor, @Nullable Component descendant) {
     while (descendant != null) {
       if (descendant == ancestor) {
         return true;
@@ -3506,7 +3506,7 @@ public class UIUtil {
     return false;
   }
 
-  public static void resetUndoRedoActions(@NotNull JTextComponent textComponent) {
+  public static void resetUndoRedoActions(@Nonnull JTextComponent textComponent) {
     UndoManager undoManager = getClientProperty(textComponent, UNDO_MANAGER);
     if (undoManager != null) {
       undoManager.discardAllEdits();
@@ -3538,11 +3538,11 @@ public class UIUtil {
     }
   }
 
-  public static int getLineHeight(@NotNull JTextComponent textComponent) {
+  public static int getLineHeight(@Nonnull JTextComponent textComponent) {
     return textComponent.getFontMetrics(textComponent.getFont()).getHeight();
   }
 
-  public static void addUndoRedoActions(@NotNull final JTextComponent textComponent) {
+  public static void addUndoRedoActions(@Nonnull final JTextComponent textComponent) {
     UndoManager undoManager = new UndoManager();
     textComponent.putClientProperty(UNDO_MANAGER, undoManager);
     textComponent.getDocument().addUndoableEditListener(undoManager);
@@ -3555,7 +3555,7 @@ public class UIUtil {
   /**
    * KeyEvents for specified keystrokes would be redispatched to target component
    */
-  public static void redirectKeystrokes(@NotNull Disposable disposable, @NotNull final JComponent source, @NotNull final JComponent target, @NotNull final KeyStroke... keyStrokes) {
+  public static void redirectKeystrokes(@Nonnull Disposable disposable, @Nonnull final JComponent source, @Nonnull final JComponent target, @Nonnull final KeyStroke... keyStrokes) {
     final KeyAdapter keyAdapter = new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

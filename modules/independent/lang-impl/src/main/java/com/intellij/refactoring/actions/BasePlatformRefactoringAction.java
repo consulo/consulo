@@ -30,8 +30,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.ElementsHandler;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -50,19 +50,19 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   public BasePlatformRefactoringAction() {
     LanguageRefactoringSupport.INSTANCE.addListener(new ExtensionPointListener<RefactoringSupportProvider>() {
       @Override
-      public void extensionAdded(@NotNull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
         myHidden = null;
       }
 
       @Override
-      public void extensionRemoved(@NotNull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull RefactoringSupportProvider extension, @Nullable PluginDescriptor pluginDescriptor) {
         myHidden = null;
       }
     });
   }
 
   @Override
-  protected final RefactoringActionHandler getHandler(@NotNull DataContext dataContext) {
+  protected final RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
     PsiElement element = null;
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
@@ -110,7 +110,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   }
 
   @Nullable
-  protected RefactoringActionHandler getHandler(@NotNull Language language, PsiElement element) {
+  protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
     List<RefactoringSupportProvider> providers = LanguageRefactoringSupport.INSTANCE.allForLanguage(language);
     if (providers.isEmpty()) return null;
     if (element == null) return getRefactoringHandler(providers.get(0));
@@ -123,7 +123,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   }
 
   @Override
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element, @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext context) {
     return getHandler(context) != null;
   }
 
@@ -134,7 +134,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   }
 
   @Override
-  protected boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     if (elements.length > 0) {
       Language language = elements[0].getLanguage();
       RefactoringActionHandler handler = getHandler(language, elements[0]);
@@ -144,10 +144,10 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   }
 
   @Nullable
-  protected abstract RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider);
+  protected abstract RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider);
 
   @Nullable
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider, PsiElement element) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
     return getRefactoringHandler(provider);
   }
 

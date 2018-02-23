@@ -29,8 +29,8 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +87,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
   }
 
   @Nullable
-  public synchronized Point getLocation(@NotNull String key, Project project) {
+  public synchronized Point getLocation(@Nonnull String key, Project project) {
     Point point = myKey2Location.get(realKey(key, project));
     if (point != null && !ScreenUtil.getScreenRectangle(point).contains(point)) {
       point = null;
@@ -107,7 +107,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
    * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
    */
   @Nullable
-  public synchronized Point getLocationNoRealKey(@NotNull String key) {
+  public synchronized Point getLocationNoRealKey(@Nonnull String key) {
     Point point = myKey2Location.get(key);
     if (point != null && !ScreenUtil.getScreenRectangle(point).contains(point)) {
       point = null;
@@ -127,7 +127,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
     setLocation(key, point, guessProject());
   }
 
-  public synchronized void setLocation(@NotNull String key, Point point, Project project) {
+  public synchronized void setLocation(@Nonnull String key, Point point, Project project) {
     key = realKey(key, project);
 
     if (point != null) {
@@ -149,7 +149,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
    * @param point location to save.
    * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
    */
-  public synchronized void setLocationNoRealKey(@NotNull String key, Point point) {
+  public synchronized void setLocationNoRealKey(@Nonnull String key, Point point) {
     if (point != null) {
       myKey2Location.put(key, (Point)point.clone());
     }
@@ -165,12 +165,12 @@ public class DimensionService implements PersistentStateComponent<Element> {
    * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
    */
   @Nullable
-  public synchronized Dimension getSize(@NotNull @NonNls String key) {
+  public synchronized Dimension getSize(@Nonnull @NonNls String key) {
     return getSize(key, guessProject());
   }
 
   @Nullable
-  public synchronized Dimension getSize(@NotNull @NonNls String key, Project project) {
+  public synchronized Dimension getSize(@Nonnull @NonNls String key, Project project) {
     Dimension size = myKey2Size.get(realKey(key, project));
     return size != null ? (Dimension)size.clone() : null;
   }
@@ -183,11 +183,11 @@ public class DimensionService implements PersistentStateComponent<Element> {
    * @param size a Size to save.
    * @throws java.lang.IllegalArgumentException if <code>key</code> is <code>null</code>.
    */
-  public synchronized void setSize(@NotNull @NonNls String key, Dimension size) {
+  public synchronized void setSize(@Nonnull @NonNls String key, Dimension size) {
     setSize(key, size, guessProject());
   }
 
-  public synchronized void setSize(@NotNull @NonNls String key, Dimension size, Project project) {
+  public synchronized void setSize(@Nonnull @NonNls String key, Dimension size, Project project) {
     key = realKey(key, project);
 
     if (size != null) {
@@ -290,7 +290,7 @@ public class DimensionService implements PersistentStateComponent<Element> {
     return openProjects.length == 1 ? openProjects[0] : null;
   }
 
-  @NotNull
+  @Nonnull
   private static String realKey(String key, @Nullable Project project) {
     GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     if (env.isHeadlessInstance()) {

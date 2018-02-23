@@ -22,7 +22,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -76,7 +76,7 @@ public class SelectFromListDialog extends DialogWrapper {
     return myMainPanel;
   }
   
-  public void addToDialog(JComponent userComponent, @NotNull String borderLayoutConstraints) {
+  public void addToDialog(JComponent userComponent, @Nonnull String borderLayoutConstraints) {
     LOG.assertTrue(!borderLayoutConstraints.equals(BorderLayout.CENTER), "Can't add any component to center");
     myMainPanel.add(userComponent, borderLayoutConstraints);
   }

@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.LineTokenizer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -40,7 +40,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 
   @Override
-  public void copySelectionToClipboard(@NotNull Editor editor) {
+  public void copySelectionToClipboard(@Nonnull Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     List<TextBlockTransferableData> extraData = new ArrayList<TextBlockTransferableData>();
     String s = editor.getCaretModel().supportsMultipleCarets() ? getSelectedTextForClipboard(editor, extraData)
@@ -52,7 +52,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
     CopyPasteManager.getInstance().setContents(contents);
   }
 
-  public static String getSelectedTextForClipboard(@NotNull Editor editor, @NotNull Collection<TextBlockTransferableData> extraDataCollector) {
+  public static String getSelectedTextForClipboard(@Nonnull Editor editor, @Nonnull Collection<TextBlockTransferableData> extraDataCollector) {
     final StringBuilder buf = new StringBuilder();
     String separator = "";
     List<Caret> carets = editor.getCaretModel().getAllCarets();
@@ -74,7 +74,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
   @Nullable
   @Override
-  public TextRange[] pasteFromClipboard(@NotNull Editor editor) {
+  public TextRange[] pasteFromClipboard(@Nonnull Editor editor) {
     CopyPasteManager manager = CopyPasteManager.getInstance();
     if (manager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
       Transferable clipboardContents = manager.getContents();
@@ -87,7 +87,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
 
   @Nullable
   @Override
-  public TextRange[] pasteTransferable(final @NotNull Editor editor, @NotNull Transferable content) {
+  public TextRange[] pasteTransferable(final @Nonnull Editor editor, @Nonnull Transferable content) {
     String text = getStringContent(content);
     if (text == null) return null;
 
@@ -135,7 +135,7 @@ public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   }
 
   @Nullable
-  private static String getStringContent(@NotNull Transferable content) {
+  private static String getStringContent(@Nonnull Transferable content) {
     RawText raw = RawText.fromTransferable(content);
     if (raw != null) return raw.rawText;
 

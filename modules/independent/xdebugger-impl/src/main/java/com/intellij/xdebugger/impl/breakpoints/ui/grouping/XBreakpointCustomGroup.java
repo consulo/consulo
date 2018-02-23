@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ import javax.swing.*;
 public class XBreakpointCustomGroup extends XBreakpointGroup {
   private final String myName;
 
-  public XBreakpointCustomGroup(@NotNull String name) {
+  public XBreakpointCustomGroup(@Nonnull String name) {
     myName = name;
   }
 
@@ -39,7 +39,7 @@ public class XBreakpointCustomGroup extends XBreakpointGroup {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }

@@ -28,8 +28,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ResourceBundle;
 
@@ -51,7 +51,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Attribute("shortName")
   public String shortName;
 
-  @NotNull
+  @Nonnull
   public String getShortName() {
     if (implementationClass == null) {
       throw new IllegalArgumentException(toString());
@@ -59,13 +59,13 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
     return shortName == null ? InspectionProfileEntry.getShortName(StringUtil.getShortName(implementationClass)) : shortName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Nls
   public String getDisplayName() {
     return displayName == null ? displayName = getLocalizedString(bundle, key) : displayName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Nls
   public String getGroupDisplayName() {
     return groupDisplayName == null ? groupDisplayName = getLocalizedString(groupBundle, groupKey) : groupDisplayName;
@@ -93,7 +93,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Attribute("groupPath")
   public String groupPath;
 
-  @Nullable
+  @javax.annotation.Nullable
   public String[] getGroupPath() {
     String name = getGroupDisplayName();
     if (name == null) return null;
@@ -115,7 +115,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
   @Attribute("level")
   public String level;
 
-  @NotNull
+  @Nonnull
   public HighlightDisplayLevel getDefaultLevel() {
     if (level == null) return HighlightDisplayLevel.WARNING;
     HighlightDisplayLevel displayLevel = HighlightDisplayLevel.find(level);
@@ -144,7 +144,7 @@ public class InspectionEP extends LanguageExtensionPoint implements InspectionPr
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.InspectionEP");
 
-  @NotNull
+  @Nonnull
   public InspectionProfileEntry instantiateTool() {
     try {
       final InspectionProfileEntry entry = instantiate(implementationClass, ApplicationManager.getApplication().getPicoContainer());

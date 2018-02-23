@@ -18,27 +18,33 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequest {
-  @NotNull private final DocumentContent myResultContent;
-  @NotNull private final AppliedTextPatch myAppliedPatch;
+  @Nonnull
+  private final DocumentContent myResultContent;
+  @Nonnull
+  private final AppliedTextPatch myAppliedPatch;
 
-  @NotNull private final String myLocalContent;
+  @Nonnull
+  private final String myLocalContent;
 
-  @Nullable private final String myWindowTitle;
-  @NotNull private final String myLocalTitle;
-  @NotNull private final String myResultTitle;
-  @NotNull private final String myPatchTitle;
+  @javax.annotation.Nullable
+  private final String myWindowTitle;
+  @Nonnull
+  private final String myLocalTitle;
+  @Nonnull
+  private final String myResultTitle;
+  @Nonnull
+  private final String myPatchTitle;
 
-  public ApplyPatchDiffRequest(@NotNull DocumentContent resultContent,
-                               @NotNull AppliedTextPatch appliedPatch,
-                               @NotNull String localContent,
-                               @Nullable String windowTitle,
-                               @NotNull String localTitle,
-                               @NotNull String resultTitle,
-                               @NotNull String patchTitle) {
+  public ApplyPatchDiffRequest(@Nonnull DocumentContent resultContent,
+                               @Nonnull AppliedTextPatch appliedPatch,
+                               @Nonnull String localContent,
+                               @javax.annotation.Nullable String windowTitle,
+                               @Nonnull String localTitle,
+                               @Nonnull String resultTitle,
+                               @Nonnull String patchTitle) {
     myResultContent = resultContent;
     myAppliedPatch = appliedPatch;
     myLocalContent = localContent;
@@ -49,43 +55,43 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentContent getResultContent() {
     return myResultContent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLocalContent() {
     return myLocalContent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AppliedTextPatch getPatch() {
     return myAppliedPatch;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTitle() {
     return myWindowTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLocalTitle() {
     return myLocalTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getResultTitle() {
     return myResultTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPatchTitle() {
     return myPatchTitle;
   }

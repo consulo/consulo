@@ -20,8 +20,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -50,9 +50,9 @@ public class ZipUtil {
     InputStream getContent(File file) throws IOException;
   }
 
-  public static boolean addFileToZip(@NotNull ZipOutputStream zos,
-                                     @NotNull File file,
-                                     @NotNull String relativeName,
+  public static boolean addFileToZip(@Nonnull ZipOutputStream zos,
+                                     @Nonnull File file,
+                                     @Nonnull String relativeName,
                                      @Nullable Set<String> writtenItemRelativePaths,
                                      @Nullable FileFilter fileFilter) throws IOException {
     return addFileToZip(zos, file, relativeName, writtenItemRelativePaths, fileFilter, FileContentProcessor.STANDARD);
@@ -61,12 +61,12 @@ public class ZipUtil {
   /*
    * Adds a new file entry to the ZIP output stream.
    */
-  public static boolean addFileToZip(@NotNull ZipOutputStream zos,
-                                     @NotNull File file,
-                                     @NotNull String relativeName,
+  public static boolean addFileToZip(@Nonnull ZipOutputStream zos,
+                                     @Nonnull File file,
+                                     @Nonnull String relativeName,
                                      @Nullable Set<String> writtenItemRelativePaths,
                                      @Nullable FileFilter fileFilter,
-                                     @NotNull FileContentProcessor contentProcessor) throws IOException {
+                                     @Nonnull FileContentProcessor contentProcessor) throws IOException {
     while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
       relativeName = relativeName.substring(1);
     }
@@ -105,10 +105,10 @@ public class ZipUtil {
     return true;
   }
 
-  public static boolean addFileOrDirRecursively(@NotNull ZipOutputStream jarOutputStream,
+  public static boolean addFileOrDirRecursively(@Nonnull ZipOutputStream jarOutputStream,
                                                 @Nullable File jarFile,
-                                                @NotNull File file,
-                                                @NotNull String relativePath,
+                                                @Nonnull File file,
+                                                @Nonnull String relativePath,
                                                 @Nullable FileFilter fileFilter,
                                                 @Nullable Set<String> writtenItemRelativePaths) throws IOException {
     if (file.isDirectory()) {
@@ -118,10 +118,10 @@ public class ZipUtil {
     return true;
   }
 
-  public static boolean addDirToZipRecursively(@NotNull ZipOutputStream outputStream,
+  public static boolean addDirToZipRecursively(@Nonnull ZipOutputStream outputStream,
                                                @Nullable File jarFile,
-                                               @NotNull File dir,
-                                               @NotNull String relativePath,
+                                               @Nonnull File dir,
+                                               @Nonnull String relativePath,
                                                @Nullable FileFilter fileFilter,
                                                @Nullable Set<String> writtenItemRelativePaths) throws IOException {
     if (jarFile != null && FileUtil.isAncestor(dir, jarFile, false)) {
@@ -140,11 +140,11 @@ public class ZipUtil {
     return true;
   }
 
-  public static void extract(@NotNull File file, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+  public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
     extract(file, outputDir, filenameFilter, true);
   }
 
-  public static void extract(@NotNull File file, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+  public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
     ZipFile zipFile = new ZipFile(file);
     try {
       extract(zipFile, outputDir, filenameFilter, overwrite);
@@ -154,11 +154,11 @@ public class ZipUtil {
     }
   }
 
-  public static void extract(final @NotNull ZipFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
     extract(zipFile, outputDir, filenameFilter, true);
   }
 
-  public static void extract(final @NotNull ZipFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite)
+  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite)
           throws IOException {
     final Enumeration entries = zipFile.entries();
     while (entries.hasMoreElements()) {
@@ -288,7 +288,7 @@ public class ZipUtil {
   }
 
   @Nullable
-  public static File compressFile(@NotNull File srcFile, @NotNull File zipFile) throws IOException {
+  public static File compressFile(@Nonnull File srcFile, @Nonnull File zipFile) throws IOException {
     InputStream is = new FileInputStream(srcFile);
     try {
       ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));

@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.group;
 
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Encapsulates information about grouping rules to use during arrangement.
@@ -29,24 +29,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ArrangementGroupingRule {
 
-  @NotNull private final ArrangementSettingsToken myGroupingType;
-  @NotNull private final ArrangementSettingsToken myOrderType;
+  @Nonnull
+  private final ArrangementSettingsToken myGroupingType;
+  @Nonnull
+  private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementGroupingRule(@NotNull ArrangementSettingsToken groupingType) {
+  public ArrangementGroupingRule(@Nonnull ArrangementSettingsToken groupingType) {
     this(groupingType, StdArrangementTokens.Order.KEEP);
   }
 
-  public ArrangementGroupingRule(@NotNull ArrangementSettingsToken groupingType, @NotNull ArrangementSettingsToken orderType) {
+  public ArrangementGroupingRule(@Nonnull ArrangementSettingsToken groupingType, @Nonnull ArrangementSettingsToken orderType) {
     myGroupingType = groupingType;
     myOrderType = orderType;
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementSettingsToken getGroupingType() {
     return myGroupingType;
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementSettingsToken getOrderType() {
     return myOrderType;
   }

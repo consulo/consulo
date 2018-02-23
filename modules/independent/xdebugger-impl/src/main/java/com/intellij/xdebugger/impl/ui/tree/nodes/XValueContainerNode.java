@@ -26,8 +26,8 @@ import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -51,7 +51,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   private volatile boolean myObsolete;
   private volatile boolean myAlreadySorted;
 
-  protected XValueContainerNode(XDebuggerTree tree, final XDebuggerTreeNode parent, @NotNull ValueContainer valueContainer) {
+  protected XValueContainerNode(XDebuggerTree tree, final XDebuggerTreeNode parent, @Nonnull ValueContainer valueContainer) {
     super(tree, parent, true);
     myValueContainer = valueContainer;
   }
@@ -77,7 +77,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void addChildren(@NotNull final XValueChildrenList children, final boolean last) {
+  public void addChildren(@Nonnull final XValueChildrenList children, final boolean last) {
     if (myObsolete) return;
     invokeNodeUpdate(() -> {
       if (myObsolete) return;
@@ -126,7 +126,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     });
   }
 
-  private static boolean isUseGetChildrenHack(@NotNull XDebuggerTree tree) {
+  private static boolean isUseGetChildrenHack(@Nonnull XDebuggerTree tree) {
     return !tree.isUnderRemoteDebug();
   }
 
@@ -168,25 +168,25 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void setErrorMessage(final @NotNull String errorMessage) {
+  public void setErrorMessage(final @Nonnull String errorMessage) {
     setErrorMessage(errorMessage, null);
   }
 
   @Override
-  public void setErrorMessage(@NotNull final String errorMessage, @Nullable final XDebuggerTreeNodeHyperlink link) {
+  public void setErrorMessage(@Nonnull final String errorMessage, @Nullable final XDebuggerTreeNodeHyperlink link) {
     setMessage(errorMessage, XDebuggerUIConstants.ERROR_MESSAGE_ICON, XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES, link);
     invokeNodeUpdate(() -> setMessageNodes(Collections.emptyList(), true)); // clear temporary nodes
   }
 
   @Override
-  public void setMessage(@NotNull final String message,
+  public void setMessage(@Nonnull final String message,
                          final Icon icon,
-                         @NotNull final SimpleTextAttributes attributes,
+                         @Nonnull final SimpleTextAttributes attributes,
                          @Nullable final XDebuggerTreeNodeHyperlink link) {
     invokeNodeUpdate(() -> setMessageNodes(MessageTreeNode.createMessages(myTree, this, message, link, icon, attributes), false));
   }
 
-  public void setInfoMessage(@NotNull String message, @Nullable HyperlinkListener hyperlinkListener) {
+  public void setInfoMessage(@Nonnull String message, @Nullable HyperlinkListener hyperlinkListener) {
     invokeNodeUpdate(() -> setMessageNodes(Collections.singletonList(MessageTreeNode.createInfoMessage(myTree, message, hyperlinkListener)), false));
   }
 
@@ -210,7 +210,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     fireNodesInserted(messages);
   }
 
-  @NotNull
+  @Nonnull
   public XDebuggerTreeNode addTemporaryEditorNode(@Nullable Icon icon, @Nullable String text) {
     if (isLeaf()) {
       setLeaf(false);
@@ -246,7 +246,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return index;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends TreeNode> getChildren() {
     loadChildren();
@@ -275,13 +275,13 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return myCachedAllChildren;
   }
 
-  @NotNull
+  @Nonnull
   public ValueContainer getValueContainer() {
     return myValueContainer;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
     return ContainerUtil.concat(ObjectUtils.notNull(myTopGroups, empty),

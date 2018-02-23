@@ -23,8 +23,7 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.externalSystem.service.RemoteExternalSystemService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -40,36 +39,36 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
   /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemProjectResolverImpl}. */
   RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> NULL_OBJECT
     = new RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings>() {
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    public DataNode<ProjectData> resolveProjectInfo(@NotNull ExternalSystemTaskId id,
-                                                    @NotNull String projectPath,
+    public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
+                                                    @Nonnull String projectPath,
                                                     boolean isPreviewMode,
-                                                    @Nullable ExternalSystemExecutionSettings settings)
+                                                    @javax.annotation.Nullable ExternalSystemExecutionSettings settings)
       throws ExternalSystemException, IllegalArgumentException, IllegalStateException
     {
       return null;
     }
 
     @Override
-    public void setSettings(@NotNull ExternalSystemExecutionSettings settings) throws RemoteException {
+    public void setSettings(@Nonnull ExternalSystemExecutionSettings settings) throws RemoteException {
     }
 
     @Override
-    public void setNotificationListener(@NotNull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+    public void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
     }
 
     @Override
-    public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+    public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
     @Override
-    public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException {
+    public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
       return Collections.emptyMap();
@@ -77,10 +76,10 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
   };
 
 
-  @Nullable
-  DataNode<ProjectData> resolveProjectInfo(@NotNull ExternalSystemTaskId id,
-                                           @NotNull String projectPath,
+  @javax.annotation.Nullable
+  DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
+                                           @Nonnull String projectPath,
                                            boolean isPreviewMode,
-                                           @Nullable S settings)
+                                           @javax.annotation.Nullable S settings)
     throws RemoteException, ExternalSystemException, IllegalArgumentException, IllegalStateException;
 }

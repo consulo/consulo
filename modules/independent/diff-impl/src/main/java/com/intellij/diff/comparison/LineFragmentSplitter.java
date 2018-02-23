@@ -22,7 +22,7 @@ import com.intellij.diff.util.Range;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +31,29 @@ import java.util.List;
  * Given matchings on words, split initial line block into 'logically different' line blocks
  */
 class LineFragmentSplitter {
-  @NotNull private final CharSequence myText1;
-  @NotNull private final CharSequence myText2;
+  @Nonnull
+  private final CharSequence myText1;
+  @Nonnull
+  private final CharSequence myText2;
 
-  @NotNull private final List<InlineChunk> myWords1;
-  @NotNull private final List<InlineChunk> myWords2;
-  @NotNull private final FairDiffIterable myIterable;
-  @NotNull private final ProgressIndicator myIndicator;
+  @Nonnull
+  private final List<InlineChunk> myWords1;
+  @Nonnull
+  private final List<InlineChunk> myWords2;
+  @Nonnull
+  private final FairDiffIterable myIterable;
+  @Nonnull
+  private final ProgressIndicator myIndicator;
 
-  @NotNull private final List<WordBlock> myResult = new ArrayList<WordBlock>();
+  @Nonnull
+  private final List<WordBlock> myResult = new ArrayList<WordBlock>();
 
-  public LineFragmentSplitter(@NotNull CharSequence text1,
-                              @NotNull CharSequence text2,
-                              @NotNull List<InlineChunk> words1,
-                              @NotNull List<InlineChunk> words2,
-                              @NotNull FairDiffIterable iterable,
-                              @NotNull ProgressIndicator indicator) {
+  public LineFragmentSplitter(@Nonnull CharSequence text1,
+                              @Nonnull CharSequence text2,
+                              @Nonnull List<InlineChunk> words1,
+                              @Nonnull List<InlineChunk> words2,
+                              @Nonnull FairDiffIterable iterable,
+                              @Nonnull ProgressIndicator indicator) {
     myText1 = text1;
     myText2 = text2;
     myWords1 = words1;
@@ -64,7 +71,7 @@ class LineFragmentSplitter {
   // indexes here are a bit tricky
   // -1 - the beginning of file, words.size() - end of file, everything in between - InlineChunks (words or newlines)
 
-  @NotNull
+  @Nonnull
   public List<WordBlock> run() {
     for (Range range : myIterable.iterateUnchanged()) {
       int count = range.end1 - range.start1;
@@ -112,7 +119,7 @@ class LineFragmentSplitter {
     last2 = end2;
   }
 
-  @NotNull
+  @Nonnull
   private WordBlock createBlock(int start1, int start2, int end1, int end2) {
     int startOffset1 = getOffset(myWords1, myText1, start1);
     int startOffset2 = getOffset(myWords2, myText2, start2);
@@ -127,27 +134,27 @@ class LineFragmentSplitter {
     return new WordBlock(new Range(start1, end1, start2, end2), new Range(startOffset1, endOffset1, startOffset2, endOffset2));
   }
 
-  private boolean shouldMergeBlocks(@NotNull WordBlock lastBlock, @NotNull WordBlock newBlock) {
+  private boolean shouldMergeBlocks(@Nonnull WordBlock lastBlock, @Nonnull WordBlock newBlock) {
     if (!lastHasEqualWords && !hasEqualWords) return true; // combine lines, that matched only by '\n'
     if (isEqualsIgnoreWhitespace(newBlock) && isEqualsIgnoreWhitespace(lastBlock)) return true; // combine whitespace-only changed lines
     if (noWordsInside(lastBlock) || noWordsInside(newBlock)) return true; // squash block without words in it
     return false;
   }
 
-  private boolean isEqualsIgnoreWhitespace(@NotNull WordBlock block) {
+  private boolean isEqualsIgnoreWhitespace(@Nonnull WordBlock block) {
     CharSequence sequence1 = myText1.subSequence(block.offsets.start1, block.offsets.end1);
     CharSequence sequence2 = myText2.subSequence(block.offsets.start2, block.offsets.end2);
 
     return StringUtil.equalsIgnoreWhitespaces(sequence1, sequence2);
   }
 
-  @NotNull
-  private static WordBlock mergeBlocks(@NotNull WordBlock start, @NotNull WordBlock end) {
+  @Nonnull
+  private static WordBlock mergeBlocks(@Nonnull WordBlock start, @Nonnull WordBlock end) {
     return new WordBlock(new Range(start.words.start1, end.words.end1, start.words.start2, end.words.end2),
                          new Range(start.offsets.start1, end.offsets.end1, start.offsets.start2, end.offsets.end2));
   }
 
-  private static int getOffset(@NotNull List<InlineChunk> words, @NotNull CharSequence text, int index) {
+  private static int getOffset(@Nonnull List<InlineChunk> words, @Nonnull CharSequence text, int index) {
     if (index == -1) return 0;
     if (index == words.size()) return text.length();
     InlineChunk chunk = words.get(index);
@@ -155,16 +162,16 @@ class LineFragmentSplitter {
     return chunk.getOffset2();
   }
 
-  private static boolean isNewline(@NotNull List<InlineChunk> words1, int index) {
+  private static boolean isNewline(@Nonnull List<InlineChunk> words1, int index) {
     return words1.get(index) instanceof NewlineChunk;
   }
 
-  private static boolean isFirstInLine(@NotNull List<InlineChunk> words1, int index) {
+  private static boolean isFirstInLine(@Nonnull List<InlineChunk> words1, int index) {
     if (index == 0) return true;
     return words1.get(index - 1) instanceof NewlineChunk;
   }
 
-  private boolean noWordsInside(@NotNull WordBlock block) {
+  private boolean noWordsInside(@Nonnull WordBlock block) {
     for (int i = block.words.start1; i < block.words.end1; i++) {
       if (!(myWords1.get(i) instanceof NewlineChunk)) return false;
     }
@@ -179,10 +186,12 @@ class LineFragmentSplitter {
   //
 
   public static class WordBlock {
-    @NotNull public final Range words;
-    @NotNull public final Range offsets;
+    @Nonnull
+    public final Range words;
+    @Nonnull
+    public final Range offsets;
 
-    public WordBlock(@NotNull Range words, @NotNull Range offsets) {
+    public WordBlock(@Nonnull Range words, @Nonnull Range offsets) {
       this.words = words;
       this.offsets = offsets;
     }

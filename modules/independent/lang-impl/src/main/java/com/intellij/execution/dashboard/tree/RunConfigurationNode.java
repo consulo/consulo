@@ -31,8 +31,8 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -43,12 +43,12 @@ import java.util.Collections;
  */
 class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>>
         implements DashboardRunConfigurationNode {
-  public RunConfigurationNode(Project project, @NotNull Pair<RunnerAndConfigurationSettings, RunContentDescriptor> value) {
+  public RunConfigurationNode(Project project, @Nonnull Pair<RunnerAndConfigurationSettings, RunContentDescriptor> value) {
     super(project, value);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     //noinspection ConstantConditions ???
     return getValue().getFirst();
@@ -88,7 +88,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return Collections.emptyList();

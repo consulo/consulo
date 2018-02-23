@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.richcopy.model;
 
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -28,11 +28,12 @@ import java.util.Arrays;
  */
 public abstract class AbstractRegistry<T> implements Serializable {
 
-  @NotNull private final TIntObjectHashMap<T> myDataById = new TIntObjectHashMap<T>();
+  @Nonnull
+  private final TIntObjectHashMap<T> myDataById = new TIntObjectHashMap<T>();
 
   private transient TObjectIntHashMap<T> myIdsByData = new TObjectIntHashMap<T>();
 
-  @NotNull
+  @Nonnull
   public T dataById(int id) throws IllegalArgumentException {
     T result = myDataById.get(id);
     if (result == null) {
@@ -41,7 +42,7 @@ public abstract class AbstractRegistry<T> implements Serializable {
     return result;
   }
   
-  public int getId(@NotNull T data) throws IllegalStateException {
+  public int getId(@Nonnull T data) throws IllegalStateException {
     if (myIdsByData == null) {
       throw new IllegalStateException(String.format(
         "Can't register data '%s'. Reason: the %s registry is already sealed", data, getClass().getName()

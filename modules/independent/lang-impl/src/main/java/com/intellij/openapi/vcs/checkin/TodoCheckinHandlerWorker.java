@@ -53,8 +53,8 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -149,7 +149,7 @@ public class TodoCheckinHandlerWorker {
   }
 
   @Nullable
-  private static VirtualFile getFileWithRefresh(@NotNull FilePath filePath) {
+  private static VirtualFile getFileWithRefresh(@Nonnull FilePath filePath) {
     VirtualFile file = filePath.getVirtualFile();
     if (file == null) {
       file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.getIOFile());

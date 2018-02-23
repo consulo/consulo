@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface XValueWithInlinePresentation {
   /**

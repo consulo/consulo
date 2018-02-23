@@ -19,7 +19,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
 
   private final List<AnsiEscapeDecoder.ColoredTextAcceptor> myColoredTextListeners = ContainerUtil.newArrayList();
 
-  public ColoredProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  public ColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -42,7 +42,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine) {
+  public ColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -50,7 +50,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @NotNull Charset charset) {
+  public ColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
     super(process, commandLine, charset);
     setShouldKillProcessSoftly(false);
   }
@@ -67,7 +67,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
    * override coloredChunksAvailable method.
    */
   @Override
-  public void coloredTextAvailable(@NotNull String text, @NotNull Key attributes) {
+  public void coloredTextAvailable(@Nonnull String text, @Nonnull Key attributes) {
     textAvailable(text, attributes);
     notifyColoredListeners(text, attributes);
   }

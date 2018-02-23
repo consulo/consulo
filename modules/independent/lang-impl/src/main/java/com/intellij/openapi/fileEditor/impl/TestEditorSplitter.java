@@ -4,8 +4,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class TestEditorSplitter {
     getActiveTabGroup().openTab(virtualFile, fileEditor, provider);
   }
 
-  public void setActiveTabGroup(@NotNull String tabGroup) {
+  public void setActiveTabGroup(@Nonnull String tabGroup) {
     TestEditorTabGroup result = myTabGroups.get(tabGroup);
     if (result == null) {
       result = new TestEditorTabGroup(tabGroup);
@@ -59,7 +59,7 @@ public class TestEditorSplitter {
     return getActiveTabGroup().getOpenedFile();
   }
 
-  public void closeFile(@NotNull VirtualFile file) {
+  public void closeFile(@Nonnull VirtualFile file) {
     TestEditorTabGroup testEditorTabGroup = getActiveTabGroup();
     String key = myActiveTabGroupName;
     if (!testEditorTabGroup.contains(file)) {

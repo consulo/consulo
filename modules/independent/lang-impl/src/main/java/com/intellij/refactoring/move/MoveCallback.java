@@ -20,8 +20,6 @@
  */
 package com.intellij.refactoring.move;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface MoveCallback {
   void refactoringCompleted();
 }

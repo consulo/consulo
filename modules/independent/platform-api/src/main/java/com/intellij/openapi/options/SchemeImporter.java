@@ -1,8 +1,8 @@
 package com.intellij.openapi.options;
 
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.InputStream;
 
@@ -26,8 +26,8 @@ public interface SchemeImporter <T extends Named> {
    * @return Either scheme name or null if the scheme doesn't have a name.
    * @throws SchemeImportException
    */
-  @NotNull
-  String[] readSchemeNames(@NotNull InputStream inputStream) throws SchemeImportException;
+  @Nonnull
+  String[] readSchemeNames(@Nonnull InputStream inputStream) throws SchemeImportException;
 
   /**
    * Import a scheme from the given stream and source scheme name.
@@ -36,5 +36,5 @@ public interface SchemeImporter <T extends Named> {
    * @param sourceScheme The source scheme name (one of returned by <code>readSchemeNames</code> method).
    * @param scheme       The target scheme receiving data.
    */
-  void importScheme(@NotNull InputStream inputStream, @Nullable String sourceScheme, T scheme) throws SchemeImportException;
+  void importScheme(@Nonnull InputStream inputStream, @Nullable String sourceScheme, T scheme) throws SchemeImportException;
 }

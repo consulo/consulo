@@ -26,8 +26,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.ui.content.impl.TabbedContentImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -38,18 +38,18 @@ import java.util.List;
  */
 public class ContentUtilEx extends ContentsUtil {
 
-  public static void addTabbedContent(@NotNull ContentManager manager,
-                                      @NotNull JComponent contentComponent,
-                                      @NotNull String groupPrefix,
-                                      @NotNull String tabName,
+  public static void addTabbedContent(@Nonnull ContentManager manager,
+                                      @Nonnull JComponent contentComponent,
+                                      @Nonnull String groupPrefix,
+                                      @Nonnull String tabName,
                                       boolean select) {
     addTabbedContent(manager, contentComponent, groupPrefix, tabName, select, null);
   }
 
-  public static void addTabbedContent(@NotNull ContentManager manager,
-                                      @NotNull JComponent contentComponent,
-                                      @NotNull String groupPrefix,
-                                      @NotNull String tabName,
+  public static void addTabbedContent(@Nonnull ContentManager manager,
+                                      @Nonnull JComponent contentComponent,
+                                      @Nonnull String groupPrefix,
+                                      @Nonnull String tabName,
                                       boolean select,
                                       @Nullable Disposable childDisposable) {
     if (PropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
@@ -95,9 +95,9 @@ public class ContentUtilEx extends ContentsUtil {
     registerDisposable(tabbedContent, childDisposable, contentComponent);
   }
 
-  private static void registerDisposable(@NotNull Content content,
+  private static void registerDisposable(@Nonnull Content content,
                                          @Nullable Disposable childDisposable,
-                                         @NotNull JComponent contentComponent) {
+                                         @Nonnull JComponent contentComponent) {
     if (childDisposable != null) {
       Disposer.register(content, childDisposable);
       assert contentComponent.getClientProperty(DISPOSABLE_KEY) == null;
@@ -113,7 +113,7 @@ public class ContentUtilEx extends ContentsUtil {
   }
 
   @Nullable
-  public static TabbedContent findTabbedContent(@NotNull ContentManager manager, @NotNull String groupPrefix) {
+  public static TabbedContent findTabbedContent(@Nonnull ContentManager manager, @Nonnull String groupPrefix) {
     TabbedContent tabbedContent = null;
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContent && content.getTabName().startsWith(getFullPrefix(groupPrefix))) {
@@ -124,18 +124,18 @@ public class ContentUtilEx extends ContentsUtil {
     return tabbedContent;
   }
 
-  public static boolean isContentTab(@NotNull Content content, @NotNull String groupPrefix) {
+  public static boolean isContentTab(@Nonnull Content content, @Nonnull String groupPrefix) {
     return (content instanceof TabbedContent && content.getTabName().startsWith(getFullPrefix(groupPrefix))) ||
            groupPrefix.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY));
   }
 
-  @NotNull
-  public static String getFullName(@NotNull String groupPrefix, @NotNull String tabName) {
+  @Nonnull
+  public static String getFullName(@Nonnull String groupPrefix, @Nonnull String tabName) {
     return getFullPrefix(groupPrefix) + tabName;
   }
 
-  @NotNull
-  private static String getFullPrefix(@NotNull String groupPrefix) {
+  @Nonnull
+  private static String getFullPrefix(@Nonnull String groupPrefix) {
     return groupPrefix + ": ";
   }
 
@@ -145,7 +145,7 @@ public class ContentUtilEx extends ContentsUtil {
    *
    * @return true if the necessary content was found (and thus selected) among content components of the given ContentManager.
    */
-  public static boolean selectContent(@NotNull ContentManager manager, @NotNull final JComponent contentComponent, boolean requestFocus) {
+  public static boolean selectContent(@Nonnull ContentManager manager, @Nonnull final JComponent contentComponent, boolean requestFocus) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContentImpl) {
         boolean found = ((TabbedContentImpl)content).findAndSelectContent(contentComponent);
@@ -167,7 +167,7 @@ public class ContentUtilEx extends ContentsUtil {
    * trying to find the first one which matches the given condition.
    */
   @Nullable
-  public static JComponent findContentComponent(@NotNull ContentManager manager, @NotNull Condition<JComponent> condition) {
+  public static JComponent findContentComponent(@Nonnull ContentManager manager, @Nonnull Condition<JComponent> condition) {
     for (Content content : manager.getContents()) {
       if (content instanceof TabbedContentImpl) {
         List<Pair<String, JComponent>> tabs = ((TabbedContentImpl)content).getTabs();
@@ -184,7 +184,7 @@ public class ContentUtilEx extends ContentsUtil {
     return null;
   }
 
-  public static int getSelectedTab(@NotNull TabbedContent content) {
+  public static int getSelectedTab(@Nonnull TabbedContent content) {
     final JComponent current = content.getComponent();
     int index = 0;
     for (Pair<String, JComponent> tab : content.getTabs()) {
@@ -197,7 +197,7 @@ public class ContentUtilEx extends ContentsUtil {
   }
 
   @Nullable
-  public static String getTabNameWithoutPrefix(@NotNull TabbedContent content, @NotNull String fullTabName) {
+  public static String getTabNameWithoutPrefix(@Nonnull TabbedContent content, @Nonnull String fullTabName) {
     int fullPrefixLength = getFullPrefix(content.getTitlePrefix()).length();
     if (fullTabName.startsWith(content.getTitlePrefix())) {
       return fullTabName.substring(fullPrefixLength);

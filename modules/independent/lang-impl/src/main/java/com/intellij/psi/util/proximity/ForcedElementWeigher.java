@@ -17,7 +17,7 @@ package com.intellij.psi.util.proximity;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
 * User: anna

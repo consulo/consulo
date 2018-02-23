@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Gregory.Shrago
@@ -27,6 +27,6 @@ public interface ContributedReferenceHost extends PsiElement {
    * @return {@link com.intellij.psi.PsiReferenceService#getContributedReferences(PsiElement)}
    */
   @Override
-  @NotNull
+  @Nonnull
   PsiReference[] getReferences();
 }

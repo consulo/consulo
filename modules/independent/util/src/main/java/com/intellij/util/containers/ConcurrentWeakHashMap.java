@@ -23,7 +23,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -38,17 +38,18 @@ import java.util.Map;
 public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
   private static class WeakKey<K, V> extends WeakReference<K> implements KeyReference<K, V> {
     private final int myHash; /* Hashcode of key, stored here since the key may be tossed by the GC */
-    @NotNull private final TObjectHashingStrategy<K> myStrategy;
+    @Nonnull
+    private final TObjectHashingStrategy<K> myStrategy;
     private final V value;
 
-    private WeakKey(@NotNull K k, final int hash, @NotNull TObjectHashingStrategy<K> strategy, V v, ReferenceQueue<K> q) {
+    private WeakKey(@Nonnull K k, final int hash, @Nonnull TObjectHashingStrategy<K> strategy, V v, ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       value = v;
       myHash = hash;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public V getValue() {
       return value;
@@ -70,7 +71,7 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
   }
 
   @Override
-  protected KeyReference<K, V> createKeyReference(@NotNull K key, @NotNull V value, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  protected KeyReference<K, V> createKeyReference(@Nonnull K key, @Nonnull V value, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     return new WeakKey<K, V>(key, hashingStrategy.computeHashCode(key), hashingStrategy, value, myReferenceQueue);
   }
 
@@ -88,7 +89,7 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
   public ConcurrentWeakHashMap(int initialCapacity,
                                float loadFactor,
                                int concurrencyLevel,
-                               @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+                               @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
@@ -96,7 +97,7 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
     super(t);
   }
 
-  public ConcurrentWeakHashMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public ConcurrentWeakHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(hashingStrategy);
   }
 }

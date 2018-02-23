@@ -18,7 +18,7 @@ package consulo.ide.projectView;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.wm.ToolWindow;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,5 +26,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ProjectViewEx extends ProjectView {
   @RequiredUIAccess
-  void setupToolWindow(@NotNull ToolWindow toolWindow, final boolean loadPaneExtensions);
+  void setupToolWindow(@Nonnull ToolWindow toolWindow, final boolean loadPaneExtensions);
 }

@@ -30,7 +30,7 @@ import com.intellij.vcs.log.data.DataPack;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsProjectLog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,9 +43,9 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
 
   public static final GroupDescriptor ID = GroupDescriptor.create("VCS Log 2");
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@NotNull Project project) throws CollectUsagesException {
+  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
     VcsLogData logData = projectLog.getDataManager();
     if (logData != null) {
@@ -67,8 +67,8 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
     return Collections.emptySet();
   }
 
-  @NotNull
-  private static MultiMap<VcsKey, VirtualFile> groupRootsByVcs(@NotNull Map<VirtualFile, VcsLogProvider> providers) {
+  @Nonnull
+  private static MultiMap<VcsKey, VirtualFile> groupRootsByVcs(@Nonnull Map<VirtualFile, VcsLogProvider> providers) {
     MultiMap<VcsKey, VirtualFile> result = MultiMap.create();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : providers.entrySet()) {
       VirtualFile root = entry.getKey();
@@ -78,7 +78,7 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GroupDescriptor getGroupId() {
     return ID;

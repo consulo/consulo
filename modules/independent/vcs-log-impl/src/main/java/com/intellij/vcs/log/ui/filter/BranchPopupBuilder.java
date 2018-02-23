@@ -23,17 +23,20 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.impl.SingletonRefGroup;
 import com.intellij.vcs.log.impl.VcsLogUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
 public abstract class BranchPopupBuilder {
-  @NotNull private final VcsLogDataPack myDataPack;
-  @Nullable private final Collection<VirtualFile> myVisibleRoots;
-  @Nullable private final List<List<String>> myRecentItems;
+  @Nonnull
+  private final VcsLogDataPack myDataPack;
+  @Nullable
+  private final Collection<VirtualFile> myVisibleRoots;
+  @Nullable
+  private final List<List<String>> myRecentItems;
 
-  protected BranchPopupBuilder(@NotNull VcsLogDataPack dataPack,
+  protected BranchPopupBuilder(@Nonnull VcsLogDataPack dataPack,
                                @Nullable Collection<VirtualFile> visibleRoots,
                                @Nullable List<List<String>> recentItems) {
     myDataPack = dataPack;
@@ -41,14 +44,14 @@ public abstract class BranchPopupBuilder {
     myRecentItems = recentItems;
   }
 
-  @NotNull
-  protected abstract AnAction createAction(@NotNull String name);
+  @Nonnull
+  protected abstract AnAction createAction(@Nonnull String name);
 
-  protected void createRecentAction(@NotNull DefaultActionGroup actionGroup, @NotNull List<String> recentItem) {
+  protected void createRecentAction(@Nonnull DefaultActionGroup actionGroup, @Nonnull List<String> recentItem) {
     assert myRecentItems == null;
   }
 
-  @NotNull
+  @Nonnull
   protected AnAction createCollapsedAction(String actionName) {
     return createAction(actionName);
   }
@@ -57,7 +60,7 @@ public abstract class BranchPopupBuilder {
     return createActions(prepareGroups(myDataPack, myVisibleRoots, myRecentItems));
   }
 
-  private static Groups prepareGroups(@NotNull VcsLogDataPack dataPack,
+  private static Groups prepareGroups(@Nonnull VcsLogDataPack dataPack,
                                       @Nullable Collection<VirtualFile> visibleRoots,
                                       @Nullable List<List<String>> recentItems) {
     Groups filteredGroups = new Groups();
@@ -89,7 +92,7 @@ public abstract class BranchPopupBuilder {
     return filteredGroups;
   }
 
-  private DefaultActionGroup createActions(@NotNull Groups groups) {
+  private DefaultActionGroup createActions(@Nonnull Groups groups) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (String actionName : groups.singletonGroups) {
       actionGroup.add(createAction(actionName));

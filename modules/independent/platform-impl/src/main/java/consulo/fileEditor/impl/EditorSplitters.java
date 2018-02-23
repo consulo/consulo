@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -71,14 +71,14 @@ public interface EditorSplitters {
 
   void closeFile(VirtualFile file, boolean moveFocus);
 
-  @NotNull
+  @Nonnull
   VirtualFile[] getSelectedFiles();
 
-  @NotNull
+  @Nonnull
   FileEditor[] getSelectedEditors();
 
-  @NotNull
-  List<EditorWithProviderComposite> findEditorComposites(@NotNull VirtualFile file);
+  @Nonnull
+  List<EditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file);
 
   EditorWithProviderComposite[] getEditorsComposites();
 
@@ -89,14 +89,14 @@ public interface EditorSplitters {
   @Nullable
   VirtualFile getCurrentFile();
 
-  @NotNull
+  @Nonnull
   default Component getUIComponent() {
     throw new AbstractMethodError();
   }
 
   @Deprecated
   @DeprecationInfo("See #getUIComponent()")
-  @NotNull
+  @Nonnull
   default javax.swing.JComponent getComponent() {
     throw new AbstractMethodError();
   }

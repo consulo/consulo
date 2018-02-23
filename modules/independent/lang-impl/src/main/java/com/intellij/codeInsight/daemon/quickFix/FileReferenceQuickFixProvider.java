@@ -34,8 +34,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -49,8 +49,8 @@ import java.util.List;
 public class FileReferenceQuickFixProvider {
   private FileReferenceQuickFixProvider() {}
 
-  @NotNull
-  public static List<? extends LocalQuickFix> registerQuickFix(@NotNull FileReference reference) {
+  @Nonnull
+  public static List<? extends LocalQuickFix> registerQuickFix(@Nonnull FileReference reference) {
     final FileReferenceSet fileReferenceSet = reference.getFileReferenceSet();
     int index = reference.getIndex();
 
@@ -150,7 +150,7 @@ public class FileReferenceQuickFixProvider {
 
 
   @Nullable
-  private static Module getModuleForContext(@NotNull PsiFileSystemItem context) {
+  private static Module getModuleForContext(@Nonnull PsiFileSystemItem context) {
     VirtualFile file = context.getVirtualFile();
     return file != null ? ModuleUtilCore.findModuleForFile(file, context.getProject()) : null;
   }
@@ -198,7 +198,7 @@ public class FileReferenceQuickFixProvider {
     }
 
     @Override
-    protected void openFile(@NotNull Project project, PsiDirectory directory, PsiFile newFile, String text) {
+    protected void openFile(@Nonnull Project project, PsiDirectory directory, PsiFile newFile, String text) {
       super.openFile(project, directory, newFile, text);
       if (!isDirectory && myNewFileTemplateName != null) {
         FileTemplateManager fileTemplateManager = FileTemplateManager.getInstance(project);

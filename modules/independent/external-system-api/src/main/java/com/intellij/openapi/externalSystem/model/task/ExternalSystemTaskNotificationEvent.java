@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.task;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -17,17 +17,17 @@ public class ExternalSystemTaskNotificationEvent implements Serializable {
   private final ExternalSystemTaskId myId;
   private final String               myDescription;
 
-  public ExternalSystemTaskNotificationEvent(@NotNull ExternalSystemTaskId id, @NotNull String description) {
+  public ExternalSystemTaskNotificationEvent(@Nonnull ExternalSystemTaskId id, @Nonnull String description) {
     myId = id;
     myDescription = description;
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemTaskId getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return myDescription;
   }

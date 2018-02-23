@@ -16,7 +16,7 @@
 package com.intellij.openapi.projectRoots;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author yole

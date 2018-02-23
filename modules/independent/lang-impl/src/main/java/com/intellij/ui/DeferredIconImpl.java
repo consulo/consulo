@@ -35,11 +35,10 @@ import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.image.*;
-import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -52,7 +51,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.DeferredIconImpl");
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
   private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
-  @NotNull
+  @Nonnull
   private final Icon myDelegateIcon;
   private volatile Icon myScaledDelegateIcon;
   private Function<T, Icon> myEvaluator;
@@ -70,7 +69,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
   private final IconListener<T> myEvalListener;
   private static final TransferToEDTQueue<Runnable> ourLaterInvocator = TransferToEDTQueue.createRunnableMerger("Deferred icon later invocator", 200);
 
-  private DeferredIconImpl(@NotNull DeferredIconImpl<T> icon) {
+  private DeferredIconImpl(@Nonnull DeferredIconImpl<T> icon) {
     super(icon);
     myDelegateIcon = icon.myDelegateIcon;
     myScaledDelegateIcon = icon.myDelegateIcon;
@@ -85,7 +84,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     myEvalListener = icon.myEvalListener;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DeferredIconImpl<T> copy() {
     return new DeferredIconImpl<>(this);
@@ -113,18 +112,18 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
   }
 
-  DeferredIconImpl(Icon baseIcon, T param, @NotNull Function<T, Icon> evaluator, @NotNull IconListener<T> listener, boolean autoUpdatable) {
+  DeferredIconImpl(Icon baseIcon, T param, @Nonnull Function<T, Icon> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
     this(baseIcon, param, true, evaluator, listener, autoUpdatable);
   }
 
-  public DeferredIconImpl(Icon baseIcon, T param, final boolean needReadAction, @NotNull Function<T, Icon> evaluator) {
+  public DeferredIconImpl(Icon baseIcon, T param, final boolean needReadAction, @Nonnull Function<T, Icon> evaluator) {
     this(baseIcon, param, needReadAction, evaluator, null, false);
   }
 
   private DeferredIconImpl(Icon baseIcon,
                            T param,
                            boolean needReadAction,
-                           @NotNull Function<T, Icon> evaluator,
+                           @Nonnull Function<T, Icon> evaluator,
                            @Nullable IconListener<T> listener,
                            boolean autoUpdatable) {
     myParam = param;
@@ -149,13 +148,13 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     }
   }
 
-  @NotNull
+  @Nonnull
   private static Icon nonNull(final Icon icon) {
     return icon == null ? EMPTY_ICON : icon;
   }
 
   @Override
-  public void paintIcon(final Component c, @NotNull final Graphics g, final int x, final int y) {
+  public void paintIcon(final Component c, @Nonnull final Graphics g, final int x, final int y) {
     if (!(myScaledDelegateIcon instanceof DeferredIconImpl && ((DeferredIconImpl)myScaledDelegateIcon).myScaledDelegateIcon instanceof DeferredIconImpl)) {
       myScaledDelegateIcon.paintIcon(c, g, x, y); //SOE protection
     }
@@ -265,7 +264,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     return target;
   }
 
-  void setDone(@NotNull Icon result) {
+  void setDone(@Nonnull Icon result) {
     if (myEvalListener != null) {
       myEvalListener.evalDone(this, myParam, result);
     }
@@ -283,7 +282,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     return isDone() ? myScaledDelegateIcon : evaluate();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon evaluate() {
     Icon result;
@@ -351,7 +350,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     private final Alarm myAlarm = new Alarm();
     private final Set<RepaintRequest> myQueue = new LinkedHashSet<>();
 
-    private void pushDirtyComponent(@NotNull Component c, final Rectangle rec) {
+    private void pushDirtyComponent(@Nonnull Component c, final Rectangle rec) {
       ApplicationManager.getApplication().assertIsDispatchThread(); // assert myQueue accessed from EDT only
       myAlarm.cancelAllRequests();
       myAlarm.addRequest(() -> {
@@ -375,12 +374,12 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
     private final Component myComponent;
     private final Rectangle myRectangle;
 
-    private RepaintRequest(@NotNull Component component, Rectangle rectangle) {
+    private RepaintRequest(@Nonnull Component component, Rectangle rectangle) {
       myComponent = component;
       myRectangle = rectangle;
     }
 
-    @NotNull
+    @Nonnull
     public Component getComponent() {
       return myComponent;
     }
@@ -392,7 +391,7 @@ public class DeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DeferredIcon
 
   @FunctionalInterface
   interface IconListener<T> {
-    void evalDone(DeferredIconImpl<T> source, T key, @NotNull Icon result);
+    void evalDone(DeferredIconImpl<T> source, T key, @Nonnull Icon result);
   }
 
   static boolean equalIcons(Icon icon1, Icon icon2) {

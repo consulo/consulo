@@ -22,20 +22,21 @@ import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
  * Date: 11/8/11
  */
 public class FinishMarkAction extends BasicUndoableAction {
-  private @NotNull final StartMarkAction myStartAction;
+  private @Nonnull
+  final StartMarkAction myStartAction;
   private boolean myGlobal = false;
   private String myCommandName;
   private DocumentReference myReference;
 
-  private FinishMarkAction(DocumentReference reference, @NotNull StartMarkAction action) {
+  private FinishMarkAction(DocumentReference reference, @Nonnull StartMarkAction action) {
     super(reference);
     myReference = reference;
     myStartAction = action;

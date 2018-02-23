@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hints.settings;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ import java.util.Set;
  * from kotlin
  */
 public class Diff {
-  @NotNull
+  @Nonnull
   public static Diff build(Set<String> base, Set<String> updated) {
     Set<String> removed = new LinkedHashSet<>(base);
     removed.removeAll(updated);
@@ -38,7 +38,7 @@ public class Diff {
   private final Set<String> myAdded;
   private final Set<String> myRemoved;
 
-  public Diff(@NotNull Set<String> added, @NotNull Set<String> removed) {
+  public Diff(@Nonnull Set<String> added, @Nonnull Set<String> removed) {
     this.myAdded = added;
     this.myRemoved = removed;
   }
@@ -51,8 +51,8 @@ public class Diff {
     return myRemoved;
   }
 
-  @NotNull
-  public Set<String> applyOn(@NotNull Set<String> base) {
+  @Nonnull
+  public Set<String> applyOn(@Nonnull Set<String> base) {
     Set<String> baseSet = new LinkedHashSet<>(base);
     baseSet.addAll(myAdded);
     baseSet.removeAll(myRemoved);

@@ -42,8 +42,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,17 +68,17 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
     point.addExtensionPointListener(new ExtensionPointListener<IntentionActionBean>() {
       @Override
-      public void extensionAdded(@NotNull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
         registerIntentionFromBean(extension);
       }
 
       @Override
-      public void extensionRemoved(@NotNull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull final IntentionActionBean extension, @Nullable final PluginDescriptor pluginDescriptor) {
       }
     });
   }
 
-  private void registerIntentionFromBean(@NotNull final IntentionActionBean extension) {
+  private void registerIntentionFromBean(@Nonnull final IntentionActionBean extension) {
     final Runnable runnable = new Runnable() {
       @Override
       public void run() {
@@ -111,16 +111,16 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     }
   }
 
-  private static IntentionAction createIntentionActionWrapper(@NotNull IntentionActionBean intentionActionBean, String[] categories) {
+  private static IntentionAction createIntentionActionWrapper(@Nonnull IntentionActionBean intentionActionBean, String[] categories) {
     return new IntentionActionWrapper(intentionActionBean, categories);
   }
 
   @Override
-  public void registerIntentionAndMetaData(@NotNull IntentionAction action, @NotNull String... category) {
+  public void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String... category) {
     registerIntentionAndMetaData(action, category, getDescriptionDirectoryName(action));
   }
 
-  @NotNull
+  @Nonnull
   private static String getDescriptionDirectoryName(final IntentionAction action) {
     if (action instanceof IntentionActionWrapper) {
       final IntentionActionWrapper wrapper = (IntentionActionWrapper)action;
@@ -136,20 +136,20 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  public void registerIntentionAndMetaData(@NotNull IntentionAction action,
-                                           @NotNull String[] category,
-                                           @NotNull @NonNls String descriptionDirectoryName) {
+  public void registerIntentionAndMetaData(@Nonnull IntentionAction action,
+                                           @Nonnull String[] category,
+                                           @Nonnull @NonNls String descriptionDirectoryName) {
     addAction(action);
     mySettings.registerIntentionMetaData(action, category, descriptionDirectoryName);
   }
 
   @Override
-  public void registerIntentionAndMetaData(@NotNull final IntentionAction action,
-                                           @NotNull final String[] category,
-                                           @NotNull final String description,
-                                           @NotNull final String exampleFileExtension,
-                                           @NotNull final String[] exampleTextBefore,
-                                           @NotNull final String[] exampleTextAfter) {
+  public void registerIntentionAndMetaData(@Nonnull final IntentionAction action,
+                                           @Nonnull final String[] category,
+                                           @Nonnull final String description,
+                                           @Nonnull final String exampleFileExtension,
+                                           @Nonnull final String[] exampleTextBefore,
+                                           @Nonnull final String[] exampleTextAfter) {
     addAction(action);
 
     IntentionActionMetaData metaData = new IntentionActionMetaData(action, category,
@@ -160,7 +160,7 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  public void unregisterIntention(@NotNull IntentionAction intentionAction) {
+  public void unregisterIntention(@Nonnull IntentionAction intentionAction) {
     myActions.remove(intentionAction);
     mySettings.unregisterMetaData(intentionAction);
   }
@@ -174,9 +174,9 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  @NotNull
-  public List<IntentionAction> getStandardIntentionOptions(@NotNull final HighlightDisplayKey displayKey,
-                                                           @NotNull final PsiElement context) {
+  @Nonnull
+  public List<IntentionAction> getStandardIntentionOptions(@Nonnull final HighlightDisplayKey displayKey,
+                                                           @Nonnull final PsiElement context) {
     List<IntentionAction> options = new ArrayList<IntentionAction>(9);
     options.add(new EditInspectionToolsSettingsAction(displayKey));
     options.add(new RunInspectionIntention(displayKey));
@@ -211,26 +211,26 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  @NotNull
-  public LocalQuickFix convertToFix(@NotNull final IntentionAction action) {
+  @Nonnull
+  public LocalQuickFix convertToFix(@Nonnull final IntentionAction action) {
     if (action instanceof LocalQuickFix) {
       return (LocalQuickFix)action;
     }
     return new LocalQuickFix() {
       @Override
-      @NotNull
+      @Nonnull
       public String getName() {
         return action.getText();
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getFamilyName() {
         return action.getFamilyName();
       }
 
       @Override
-      public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+      public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
         final PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
         try {
           action.invoke(project, new LazyEditor(psiFile), psiFile);
@@ -243,17 +243,17 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
   }
 
   @Override
-  public void addAction(@NotNull IntentionAction action) {
+  public void addAction(@Nonnull IntentionAction action) {
     myActions.add(action);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IntentionAction[] getIntentionActions() {
     return ArrayUtil.stripTrailingNulls(myActions.toArray(new IntentionAction[myActions.size()]));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IntentionAction[] getAvailableIntentionActions() {
     List<IntentionAction> list = new ArrayList<IntentionAction>(myActions.size());

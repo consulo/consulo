@@ -22,15 +22,15 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class FileDocumentSynchronizationVetoer {
   public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("com.intellij.fileDocumentSynchronizationVetoer");
 
-  public boolean maySaveDocument(@NotNull Document document, boolean isSaveExplicit) {
+  public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     return true;
   }
-  public boolean mayReloadFileContent(VirtualFile file, @NotNull Document document) {
+  public boolean mayReloadFileContent(VirtualFile file, @Nonnull Document document) {
     return true;
   }
 }

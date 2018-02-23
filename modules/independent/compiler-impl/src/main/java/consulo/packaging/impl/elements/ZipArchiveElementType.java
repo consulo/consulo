@@ -28,8 +28,7 @@ import com.intellij.packaging.impl.elements.FilePathValidator;
 import com.intellij.packaging.impl.elements.PackagingElementFactoryImpl;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -46,22 +45,22 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
     super("zip-archive", CompilerBundle.message("element.type.name.zip.archive"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.PpJar;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ZipArchivePackagingElement createEmpty(@NotNull Project project) {
+  public ZipArchivePackagingElement createEmpty(@Nonnull Project project) {
     return new ZipArchivePackagingElement();
   }
 
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
-                                                      @Nullable String baseName,
-                                                      @NotNull ArtifactEditorContext context) {
+                                                      @javax.annotation.Nullable String baseName,
+                                                      @Nonnull ArtifactEditorContext context) {
     final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
     String path =
       Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());

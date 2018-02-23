@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.remoteServer.ServerType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -39,7 +39,7 @@ public class DeployToServerConfigurationTypesRegistrar implements ApplicationCom
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "DeployToServerConfigurationTypesRegistrar";

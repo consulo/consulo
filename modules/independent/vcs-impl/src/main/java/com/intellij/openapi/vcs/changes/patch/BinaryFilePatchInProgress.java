@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -59,20 +59,20 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
     return myNewContentRevision;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, final PatchReader baseContents) {
     final ShelvedBinaryFile file = getPatch().getShelvedBinaryFile();
     return new DiffRequestProducer() {
-      @NotNull
+      @Nonnull
       @Override
-      public DiffRequest process(@NotNull UserDataHolder context, @NotNull ProgressIndicator indicator)
+      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
               throws DiffRequestProducerException, ProcessCanceledException {
         Change change = file.createChange(project);
         return PatchDiffRequestFactory.createDiffRequest(project, change, getName(), context, indicator);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         final File file1 = new File(VfsUtilCore.virtualToIoFile(getBase()),

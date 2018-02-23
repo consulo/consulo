@@ -15,12 +15,10 @@
  */
 package com.intellij.codeInsight.completion.originInfo;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author Max Medvedev
  */
 public interface OriginInfoAwareElement {
-  @Nullable
+  @javax.annotation.Nullable
   String getOriginInfo();
 }

@@ -23,11 +23,10 @@ import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.process.ProcessWaitFor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.BaseOutputReader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +45,7 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
   protected final Charset myCharset;
   protected T myProcess;
 
-  public BaseRemoteProcessHandler(@NotNull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public BaseRemoteProcessHandler(@Nonnull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myWaitFor = new ProcessWaitFor(process, this, CommandLineUtil.extractPresentableName(commandLine));
@@ -78,26 +77,26 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
         try {
           final RemoteOutputReader stdoutReader = new RemoteOutputReader(myProcess.getInputStream(), getCharset(), myProcess, myCommandLine) {
             @Override
-            protected void onTextAvailable(@NotNull String text) {
+            protected void onTextAvailable(@Nonnull String text) {
               notifyTextAvailable(text, ProcessOutputTypes.STDOUT);
             }
 
-            @NotNull
+            @Nonnull
             @Override
-            protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
+            protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
               return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
             }
           };
 
           final RemoteOutputReader stderrReader = new RemoteOutputReader(myProcess.getErrorStream(), getCharset(), myProcess, myCommandLine) {
             @Override
-            protected void onTextAvailable(@NotNull String text) {
+            protected void onTextAvailable(@Nonnull String text) {
               notifyTextAvailable(text, ProcessOutputTypes.STDERR);
             }
 
-            @NotNull
+            @Nonnull
             @Override
-            protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
+            protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
               return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
             }
           };
@@ -177,22 +176,23 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
     return myCharset;
   }
 
-  @NotNull
-  private static Future<?> executeOnPooledThread(@NotNull Runnable task) {
+  @Nonnull
+  private static Future<?> executeOnPooledThread(@Nonnull Runnable task) {
     return AppExecutorUtil.getAppExecutorService().submit(task);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Future<?> executeTask(@NotNull Runnable task) {
+  public Future<?> executeTask(@Nonnull Runnable task) {
     return executeOnPooledThread(task);
   }
 
   private abstract static class RemoteOutputReader extends BaseOutputReader {
-    @NotNull private final RemoteProcess myRemoteProcess;
+    @Nonnull
+    private final RemoteProcess myRemoteProcess;
     private boolean myClosed;
 
-    RemoteOutputReader(@NotNull InputStream inputStream, Charset charset, @NotNull RemoteProcess remoteProcess, @NotNull String commandLine) {
+    RemoteOutputReader(@Nonnull InputStream inputStream, Charset charset, @Nonnull RemoteProcess remoteProcess, @Nonnull String commandLine) {
       super(inputStream, charset);
 
       myRemoteProcess = remoteProcess;

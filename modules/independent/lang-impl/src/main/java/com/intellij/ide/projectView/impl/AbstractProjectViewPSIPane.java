@@ -51,7 +51,7 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -248,7 +248,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     return new ActionCallback.Done();
   }
 
-  @NotNull
+  @Nonnull
   public BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
     return new ProjectTreeBuilder(myProject, myTree, treeModel, null, (ProjectAbstractTreeStructureBase)myTreeStructure) {
       @Override

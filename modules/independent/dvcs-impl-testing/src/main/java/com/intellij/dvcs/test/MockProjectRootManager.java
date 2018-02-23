@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class MockProjectRootManager extends ProjectRootManager {
 
   List<VirtualFile> myContentRoots = new ArrayList<VirtualFile>();
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getContentRoots() {
     VirtualFile[] roots = new VirtualFile[myContentRoots.size()];
@@ -44,21 +44,21 @@ public class MockProjectRootManager extends ProjectRootManager {
     return roots;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectFileIndex getFileIndex() {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderEnumerator orderEntries() {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderEnumerator orderEntries(@NotNull Collection<? extends Module> modules) {
+  public OrderEnumerator orderEntries(@Nonnull Collection<? extends Module> modules) {
     throw new UnsupportedOperationException();
   }
 
@@ -67,7 +67,7 @@ public class MockProjectRootManager extends ProjectRootManager {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getContentRootUrls() {
     throw new UnsupportedOperationException();

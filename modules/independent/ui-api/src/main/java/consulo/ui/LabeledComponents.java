@@ -16,7 +16,7 @@
 package consulo.ui;
 
 import com.intellij.openapi.util.text.StringUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LabeledComponents {
   @RequiredUIAccess
-  public static Component left(@NotNull String text, @NotNull Component component) {
+  public static Component left(@Nonnull String text, @Nonnull Component component) {
     if (!StringUtilRt.endsWithChar(text, ':')) {
       text += ": ";
     }
@@ -36,7 +36,7 @@ public class LabeledComponents {
   }
 
   @RequiredUIAccess
-  public static Component leftFilled(@NotNull String text, @NotNull Component component) {
+  public static Component leftFilled(@Nonnull String text, @Nonnull Component component) {
     if (!StringUtilRt.endsWithChar(text, ':')) {
       text += ": ";
     }

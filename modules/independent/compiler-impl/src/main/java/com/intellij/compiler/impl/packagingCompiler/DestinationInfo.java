@@ -17,8 +17,8 @@ package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,13 +28,13 @@ public abstract class DestinationInfo {
   private final String myOutputPath;
   private final String myOutputFilePath;
 
-  protected DestinationInfo(@NotNull final String outputPath, @Nullable final VirtualFile outputFile, @NotNull String outputFilePath) {
+  protected DestinationInfo(@Nonnull final String outputPath, @Nullable final VirtualFile outputFile, @Nonnull String outputFilePath) {
     myOutputFilePath = outputFilePath;
     myOutputFile = outputFile;
     myOutputPath = outputPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getOutputPath() {
     return myOutputPath;
   }
@@ -44,7 +44,7 @@ public abstract class DestinationInfo {
     return myOutputFile;
   }
 
-  @NotNull
+  @Nonnull
   public String getOutputFilePath() {
     return myOutputFilePath;
   }

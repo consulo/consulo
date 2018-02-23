@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public abstract class ComparisonPolicy {
@@ -47,8 +47,8 @@ public abstract class ComparisonPolicy {
     return myName;
   }
 
-  @NotNull
-  public DiffFragment[] buildFragments(@NotNull DiffString[] strings1, @NotNull DiffString[] strings2) throws FilesTooBigForDiffException {
+  @Nonnull
+  public DiffFragment[] buildFragments(@Nonnull DiffString[] strings1, @Nonnull DiffString[] strings2) throws FilesTooBigForDiffException {
     DiffFragmentBuilder builder = new DiffFragmentBuilder(strings1, strings2);
     Object[] wrappers1 = getWrappers(strings1);
     Object[] wrappers2 = getWrappers(strings2);
@@ -56,8 +56,8 @@ public abstract class ComparisonPolicy {
     return builder.buildFragments(Util.concatEquals(change, wrappers1, wrappers2));
   }
 
-  @NotNull
-  public DiffFragment[] buildDiffFragmentsFromLines(@NotNull DiffString[] lines1, @NotNull DiffString[] lines2)
+  @Nonnull
+  public DiffFragment[] buildDiffFragmentsFromLines(@Nonnull DiffString[] lines1, @Nonnull DiffString[] lines2)
           throws FilesTooBigForDiffException {
     DiffFragmentBuilder builder = new DiffFragmentBuilder(lines1, lines2);
     Object[] wrappers1 = getLineWrappers(lines1);
@@ -66,7 +66,7 @@ public abstract class ComparisonPolicy {
     return builder.buildFragments(change);
   }
 
-  @NotNull
+  @Nonnull
   public DiffFragment createFragment(@Nullable DiffString text1, @Nullable DiffString text2) {
     text1 = toNull(text1);
     text2 = toNull(text2);
@@ -78,17 +78,17 @@ public abstract class ComparisonPolicy {
     return result;
   }
 
-  @NotNull
-  public abstract DiffFragment createFragment(@NotNull Word word1, @NotNull Word word2);
+  @Nonnull
+  public abstract DiffFragment createFragment(@Nonnull Word word1, @Nonnull Word word2);
 
-  @NotNull
-  protected abstract Object[] getWrappers(@NotNull DiffString[] strings);
+  @Nonnull
+  protected abstract Object[] getWrappers(@Nonnull DiffString[] strings);
 
-  @NotNull
-  protected abstract Object[] getLineWrappers(@NotNull DiffString[] lines);
+  @Nonnull
+  protected abstract Object[] getLineWrappers(@Nonnull DiffString[] lines);
 
-  @NotNull
-  private Object getWrapper(@NotNull DiffString text) {
+  @Nonnull
+  private Object getWrapper(@Nonnull DiffString text) {
     return getWrappers(new DiffString[]{text})[0];
   }
 
@@ -97,21 +97,21 @@ public abstract class ComparisonPolicy {
       super(CommonBundle.message("comparison.policy.default.name"));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getWrappers(@NotNull DiffString[] strings) {
+    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
       return strings;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getLineWrappers(@NotNull DiffString[] lines) {
+    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
       return lines;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public DiffFragment createFragment(@NotNull Word word1, @NotNull Word word2) {
+    public DiffFragment createFragment(@Nonnull Word word1, @Nonnull Word word2) {
       return createFragment(word1.getText(), word2.getText());
     }
 
@@ -126,15 +126,15 @@ public abstract class ComparisonPolicy {
       super(CommonBundle.message("comparison.policy.trim.space.name"));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getLineWrappers(@NotNull DiffString[] lines) {
+    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
       return trimStrings(lines);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public DiffFragment createFragment(@NotNull Word word1, @NotNull Word word2) {
+    public DiffFragment createFragment(@Nonnull Word word1, @Nonnull Word word2) {
       DiffString text1 = word1.getText();
       DiffString text2 = word2.getText();
       if (word1.isWhitespace() && word2.isWhitespace() &&
@@ -144,9 +144,9 @@ public abstract class ComparisonPolicy {
       return createFragment(text1, text2);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getWrappers(@NotNull DiffString[] strings) {
+    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
       Object[] result = new Object[strings.length];
       boolean atBeginning = true;
       for (int i = 0; i < strings.length; i++) {
@@ -176,9 +176,9 @@ public abstract class ComparisonPolicy {
       super(CommonBundle.message("comparison.policy.ignore.spaces.name"));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getLineWrappers(@NotNull DiffString[] lines) {
+    protected Object[] getLineWrappers(@Nonnull DiffString[] lines) {
       Object[] result = new Object[lines.length];
       for (int i = 0; i < lines.length; i++) {
         DiffString line = lines[i];
@@ -187,9 +187,9 @@ public abstract class ComparisonPolicy {
       return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public DiffFragment[] buildFragments(@NotNull DiffString[] strings1, @NotNull DiffString[] strings2)
+    public DiffFragment[] buildFragments(@Nonnull DiffString[] strings1, @Nonnull DiffString[] strings2)
             throws FilesTooBigForDiffException {
       DiffFragment[] fragments = super.buildFragments(strings1, strings2);
       DiffCorrection.FragmentsCollector collector = new DiffCorrection.FragmentsCollector();
@@ -197,20 +197,20 @@ public abstract class ComparisonPolicy {
       return collector.toArray();
     }
 
-    @NotNull
-    private static Object getWrapper(@NotNull DiffString line) {
+    @Nonnull
+    private static Object getWrapper(@Nonnull DiffString line) {
       return line.skipSpaces();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public DiffFragment createFragment(@NotNull Word word1, @NotNull Word word2) {
+    public DiffFragment createFragment(@Nonnull Word word1, @Nonnull Word word2) {
       DiffString text1 = word1.getText();
       DiffString text2 = word2.getText();
       return word1.isWhitespace() && word2.isWhitespace() ? DiffFragment.unchanged(text1, text2) : createFragment(text1, text2);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public DiffFragment createFragment(DiffString text1, DiffString text2) {
       DiffString toCompare1 = toNotNull(text1);
@@ -221,9 +221,9 @@ public abstract class ComparisonPolicy {
       return new DiffFragment(text1, text2);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Object[] getWrappers(@NotNull DiffString[] strings) {
+    protected Object[] getWrappers(@Nonnull DiffString[] strings) {
       return trimStrings(strings);
     }
 
@@ -233,7 +233,7 @@ public abstract class ComparisonPolicy {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull DiffCorrection.FragmentsCollector collector) {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull DiffCorrection.FragmentsCollector collector) {
       if (fragment.isEqual()) {
         collector.add(fragment);
         return;
@@ -256,13 +256,13 @@ public abstract class ComparisonPolicy {
     return text1 == null || text1.isEmpty() ? null : text1;
   }
 
-  @NotNull
+  @Nonnull
   private static DiffString toNotNull(@Nullable DiffString text) {
     return text == null ? DiffString.EMPTY : text;
   }
 
-  @NotNull
-  protected Object[] trimStrings(@NotNull DiffString[] strings) {
+  @Nonnull
+  protected Object[] trimStrings(@Nonnull DiffString[] strings) {
     Object[] result = new Object[strings.length];
     for (int i = 0; i < strings.length; i++) {
       DiffString string = strings[i];
@@ -271,14 +271,14 @@ public abstract class ComparisonPolicy {
     return result;
   }
 
-  public boolean isEqual(@NotNull DiffFragment fragment) {
+  public boolean isEqual(@Nonnull DiffFragment fragment) {
     if (fragment.isOneSide()) return false;
     Object[] wrappers = getLineWrappers(new DiffString[]{fragment.getText1(), fragment.getText2()});
     return Comparing.equal(wrappers[0], wrappers[1]);
   }
 
-  @NotNull
-  public Word createFormatting(@NotNull DiffString text, @NotNull TextRange textRange) {
+  @Nonnull
+  public Word createFormatting(@Nonnull DiffString text, @Nonnull TextRange textRange) {
     return new Formatting(text, textRange);
   }
 
@@ -286,9 +286,9 @@ public abstract class ComparisonPolicy {
     return COMPARISON_POLICIES;
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
-  protected Object[] getWrappers(@NotNull String[] lines) {
+  protected Object[] getWrappers(@Nonnull String[] lines) {
     DiffString[] unsafeStrings = new DiffString[lines.length];
     for (int i = 0; i < lines.length; i++) {
       unsafeStrings[i] = DiffString.createNullable(lines[i]);
@@ -296,9 +296,9 @@ public abstract class ComparisonPolicy {
     return getWrappers(unsafeStrings);
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
-  protected Object[] getLineWrappers(@NotNull String[] lines) {
+  protected Object[] getLineWrappers(@Nonnull String[] lines) {
     DiffString[] unsafeStrings = new DiffString[lines.length];
     for (int i = 0; i < lines.length; i++) {
       unsafeStrings[i] = DiffString.createNullable(lines[i]);

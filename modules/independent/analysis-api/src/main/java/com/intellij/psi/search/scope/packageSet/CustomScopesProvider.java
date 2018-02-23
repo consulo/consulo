@@ -21,13 +21,13 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface CustomScopesProvider {
   ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create("com.intellij.customScopesProvider");
 
-  @NotNull
+  @Nonnull
   List<NamedScope> getCustomScopes();
 }

@@ -30,8 +30,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,14 +43,14 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
   private final SmartPsiFileRange myInjectedFileRangeInHostFile;
   @Nullable private final AffixOffsets myAffixOffsets;
   private final Identikit myType;
-  @NotNull
+  @Nonnull
   private final SmartPsiElementPointer<PsiLanguageInjectionHost> myHostContext;
 
-  InjectedSelfElementInfo(@NotNull Project project,
-                          @NotNull PsiElement injectedElement,
-                          @NotNull TextRange injectedRange,
-                          @NotNull PsiFile containingFile,
-                          @NotNull SmartPsiElementPointer<PsiLanguageInjectionHost> hostContext) {
+  InjectedSelfElementInfo(@Nonnull Project project,
+                          @Nonnull PsiElement injectedElement,
+                          @Nonnull TextRange injectedRange,
+                          @Nonnull PsiFile containingFile,
+                          @Nonnull SmartPsiElementPointer<PsiLanguageInjectionHost> hostContext) {
     myHostContext = hostContext;
     assert containingFile.getViewProvider() instanceof FreeThreadedFileViewProvider : "element parameter must be an injected element: "+injectedElement+"; "+containingFile;
     assert containingFile.getTextRange().contains(injectedRange) : "Injected range outside the file: "+injectedRange +"; file: "+containingFile.getTextRange();
@@ -117,9 +117,9 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return myType.findPsiElement(injectedPsi, rangeInInjected.getStartOffset(), rangeInInjected.getEndOffset());
   }
 
-  private PsiFile getInjectedFileIn(@NotNull final PsiElement hostContext,
-                                    @NotNull final PsiFile hostFile,
-                                    @NotNull final TextRange rangeInHostFile) {
+  private PsiFile getInjectedFileIn(@Nonnull final PsiElement hostContext,
+                                    @Nonnull final PsiFile hostFile,
+                                    @Nonnull final TextRange rangeInHostFile) {
     final PsiDocumentManagerBase docManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(getProject());
     final PsiFile[] result = {null};
     final PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
@@ -157,7 +157,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other) {
     if (getClass() != other.getClass()) return false;
     if (!((InjectedSelfElementInfo)other).myHostContext.equals(myHostContext)) return false;
     SmartPointerElementInfo myElementInfo = ((SmartPsiElementPointerImpl)myInjectedFileRangeInHostFile).getElementInfo();
@@ -226,7 +226,7 @@ class InjectedSelfElementInfo extends SmartPointerElementInfo {
     return ((SmartPsiElementPointerImpl)myHostContext).getElementInfo().elementHashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myHostContext.getProject();

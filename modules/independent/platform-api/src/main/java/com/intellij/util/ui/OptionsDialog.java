@@ -17,8 +17,8 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -49,7 +49,7 @@ public abstract class OptionsDialog extends DialogWrapper  {
       return OptionsDialog.this.shouldSaveOptionsOnCancel();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getDoNotShowMessage() {
       return OptionsDialog.this.getDoNotShowMessage();

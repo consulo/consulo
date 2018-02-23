@@ -46,8 +46,8 @@ import com.intellij.util.BufferedListConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -74,7 +74,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   private Consumer<String> myIfNotCachedReloader;
 
   public CommittedChangesPanel(Project project, final CommittedChangesProvider provider, final ChangeBrowserSettings settings,
-                               @Nullable final RepositoryLocation location, @Nullable ActionGroup extraActions) {
+                               @Nullable final RepositoryLocation location, @javax.annotation.Nullable ActionGroup extraActions) {
     super(new BorderLayout());
     mySettings = settings;
     myProject = project;
@@ -151,7 +151,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading changes", true, BackgroundFromStartOption.getInstance()) {
       
       @Override
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           final AsynchConsumer<List<CommittedChangeList>> appender = new AsynchConsumer<List<CommittedChangeList>>() {
             @Override
@@ -255,11 +255,11 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
       }
     }
 
-    public boolean filter(@NotNull final CommittedChangeList cl) {
+    public boolean filter(@Nonnull final CommittedChangeList cl) {
       return changeListMatches(cl, myParts);
     }
 
-    private static boolean changeListMatches(@NotNull final CommittedChangeList changeList, final String[] filterWords) {
+    private static boolean changeListMatches(@Nonnull final CommittedChangeList changeList, final String[] filterWords) {
       for(String word: filterWords) {
         final String comment = changeList.getComment();
         final String committer = changeList.getCommitterName();
@@ -356,7 +356,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     public void appendFilterBase(List<CommittedChangeList> changeLists) {
     }
     @Override
-    @NotNull
+    @Nonnull
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
       final FilterHelper filterHelper = new FilterHelper(myFilterComponent.getFilter());
       final List<CommittedChangeList> result = new ArrayList<CommittedChangeList>();

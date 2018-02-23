@@ -31,8 +31,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.Reference;
@@ -50,27 +50,27 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
     POINTERS_KEY = Key.create("SMART_POINTERS for "+project);
   }
 
-  public void fastenBelts(@NotNull VirtualFile file) {
+  public void fastenBelts(@Nonnull VirtualFile file) {
     SmartPointerTracker pointers = getTracker(file);
     if (pointers != null) pointers.fastenBelts();
   }
 
   private static final Key<Reference<SmartPsiElementPointerImpl>> CACHED_SMART_POINTER_KEY = Key.create("CACHED_SMART_POINTER_KEY");
   @Override
-  @NotNull
-  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@NotNull E element) {
+  @Nonnull
+  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@Nonnull E element) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     PsiFile containingFile = element.getContainingFile();
     return createSmartPsiElementPointer(element, containingFile);
   }
   @Override
-  @NotNull
-  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@NotNull E element, PsiFile containingFile) {
+  @Nonnull
+  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@Nonnull E element, PsiFile containingFile) {
     return createSmartPsiElementPointer(element, containingFile, false);
   }
 
-  @NotNull
-  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@NotNull E element,
+  @Nonnull
+  public <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@Nonnull E element,
                                                                                        PsiFile containingFile,
                                                                                        boolean forInjected) {
     if (containingFile != null && !containingFile.isValid() || containingFile == null && !element.isValid()) {
@@ -91,7 +91,7 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
     return pointer;
   }
 
-  private static <E extends PsiElement> SmartPsiElementPointerImpl<E> getCachedPointer(@NotNull E element) {
+  private static <E extends PsiElement> SmartPsiElementPointerImpl<E> getCachedPointer(@Nonnull E element) {
     Reference<SmartPsiElementPointerImpl> data = element.getUserData(CACHED_SMART_POINTER_KEY);
     SmartPsiElementPointerImpl cachedPointer = SoftReference.dereference(data);
     if (cachedPointer != null) {
@@ -105,14 +105,14 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
   }
 
   @Override
-  @NotNull
-  public SmartPsiFileRange createSmartPsiFileRangePointer(@NotNull PsiFile file, @NotNull TextRange range) {
+  @Nonnull
+  public SmartPsiFileRange createSmartPsiFileRangePointer(@Nonnull PsiFile file, @Nonnull TextRange range) {
     return createSmartPsiFileRangePointer(file, range, false);
   }
 
-  @NotNull
-  public SmartPsiFileRange createSmartPsiFileRangePointer(@NotNull PsiFile file,
-                                                          @NotNull TextRange range,
+  @Nonnull
+  public SmartPsiFileRange createSmartPsiFileRangePointer(@Nonnull PsiFile file,
+                                                          @Nonnull TextRange range,
                                                           boolean forInjected) {
     PsiUtilCore.ensureValid(file);
     SmartPointerTracker.processQueue();
@@ -122,7 +122,7 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
     return pointer;
   }
 
-  private <E extends PsiElement> void trackPointer(@NotNull SmartPsiElementPointerImpl<E> pointer, @NotNull VirtualFile containingFile) {
+  private <E extends PsiElement> void trackPointer(@Nonnull SmartPsiElementPointerImpl<E> pointer, @Nonnull VirtualFile containingFile) {
     SmartPointerElementInfo info = pointer.getElementInfo();
     if (!(info instanceof SelfElementInfo)) return;
 
@@ -139,7 +139,7 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
   }
 
   @Override
-  public void removePointer(@NotNull SmartPsiElementPointer pointer) {
+  public void removePointer(@Nonnull SmartPsiElementPointer pointer) {
     if (!(pointer instanceof SmartPsiElementPointerImpl) || myProject.isDisposed()) {
       return;
     }
@@ -173,19 +173,19 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
   }
 
   @Nullable
-  SmartPointerTracker getTracker(@NotNull VirtualFile containingFile) {
+  SmartPointerTracker getTracker(@Nonnull VirtualFile containingFile) {
     return containingFile.getUserData(POINTERS_KEY);
   }
 
   @TestOnly
-  public int getPointersNumber(@NotNull PsiFile containingFile) {
+  public int getPointersNumber(@Nonnull PsiFile containingFile) {
     VirtualFile file = containingFile.getViewProvider().getVirtualFile();
     SmartPointerTracker pointers = getTracker(file);
     return pointers == null ? 0 : pointers.getSize();
   }
 
   @Override
-  public boolean pointToTheSameElement(@NotNull SmartPsiElementPointer pointer1, @NotNull SmartPsiElementPointer pointer2) {
+  public boolean pointToTheSameElement(@Nonnull SmartPsiElementPointer pointer1, @Nonnull SmartPsiElementPointer pointer2) {
     return SmartPsiElementPointerImpl.pointsToTheSameElementAs(pointer1, pointer2);
   }
 
@@ -195,7 +195,7 @@ public class SmartPointerManagerImpl extends SmartPointerManager {
     if (list != null) list.updateMarkers(frozen, events);
   }
 
-  public void updatePointerTargetsAfterReparse(@NotNull VirtualFile file) {
+  public void updatePointerTargetsAfterReparse(@Nonnull VirtualFile file) {
     SmartPointerTracker list = getTracker(file);
     if (list != null) list.updatePointerTargetsAfterReparse();
   }

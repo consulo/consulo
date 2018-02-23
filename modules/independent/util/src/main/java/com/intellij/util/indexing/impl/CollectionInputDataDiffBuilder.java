@@ -16,8 +16,8 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.util.indexing.StorageException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,10 +32,10 @@ public class CollectionInputDataDiffBuilder<Key, Value> extends InputDataDiffBui
   }
 
   @Override
-  public void differentiate(@NotNull Map<Key, Value> newData,
-                            @NotNull KeyValueUpdateProcessor<Key, Value> addProcessor,
-                            @NotNull KeyValueUpdateProcessor<Key, Value> updateProcessor,
-                            @NotNull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
+  public void differentiate(@Nonnull Map<Key, Value> newData,
+                            @Nonnull KeyValueUpdateProcessor<Key, Value> addProcessor,
+                            @Nonnull KeyValueUpdateProcessor<Key, Value> updateProcessor,
+                            @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
     differentiateWithKeySeq(mySeq, newData, myInputId, addProcessor, removeProcessor);
   }
 
@@ -43,11 +43,11 @@ public class CollectionInputDataDiffBuilder<Key, Value> extends InputDataDiffBui
     return mySeq;
   }
 
-  static <Key, Value> void differentiateWithKeySeq(@NotNull Collection<Key> currentData,
-                                                   @NotNull Map<Key, Value> newData,
+  static <Key, Value> void differentiateWithKeySeq(@Nonnull Collection<Key> currentData,
+                                                   @Nonnull Map<Key, Value> newData,
                                                    int inputId,
-                                                   @NotNull KeyValueUpdateProcessor<Key, Value> addProcessor,
-                                                   @NotNull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
+                                                   @Nonnull KeyValueUpdateProcessor<Key, Value> addProcessor,
+                                                   @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException {
     for (Key key : currentData) {
       removeProcessor.process(key, inputId);
     }

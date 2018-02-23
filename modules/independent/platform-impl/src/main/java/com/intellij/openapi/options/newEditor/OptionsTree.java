@@ -35,8 +35,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.util.ui.tree.TreeDecorationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -262,7 +262,7 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
   }
 
   @Nullable
-  public SearchableConfigurable findConfigurableById(@NotNull String configurableId) {
+  public SearchableConfigurable findConfigurableById(@Nonnull String configurableId) {
     for (Configurable configurable : myConfigurable2Node.keySet()) {
       if (configurable instanceof SearchableConfigurable) {
         SearchableConfigurable searchableConfigurable = (SearchableConfigurable)configurable;
@@ -319,7 +319,7 @@ class OptionsTree extends JPanel implements Disposable, OptionsEditorColleague {
       return ContainerUtil.toArray(map(myConfigurables), EMPTY_EN_ARRAY);
     }
 
-    @NotNull
+    @Nonnull
     private List<ConfigurableNode> map(final Configurable[] configurables) {
       List<ConfigurableNode> result = new ArrayList<>();
       for (Configurable eachKid : configurables) {

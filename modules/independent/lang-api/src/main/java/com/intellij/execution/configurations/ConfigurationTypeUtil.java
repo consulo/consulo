@@ -17,7 +17,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -28,8 +28,8 @@ public class ConfigurationTypeUtil {
   private ConfigurationTypeUtil() {
   }
 
-  @NotNull
-  public static <T extends ConfigurationType> T findConfigurationType(@NotNull Class<T> configurationTypeClass) {
+  @Nonnull
+  public static <T extends ConfigurationType> T findConfigurationType(@Nonnull Class<T> configurationTypeClass) {
     ConfigurationType[] types = Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP);
     for (ConfigurationType type : types) {
       if (configurationTypeClass.isInstance(type)) {
@@ -41,7 +41,7 @@ public class ConfigurationTypeUtil {
                              ", " + configurationTypeClass);
   }
 
-  public static boolean equals(@NotNull ConfigurationType type1, @NotNull ConfigurationType type2) {
+  public static boolean equals(@Nonnull ConfigurationType type1, @Nonnull ConfigurationType type2) {
     return type1.getId().equals(type2.getId());
   }
 

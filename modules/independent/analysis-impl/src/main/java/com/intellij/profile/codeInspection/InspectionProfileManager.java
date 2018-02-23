@@ -27,7 +27,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,20 +53,20 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
 
   protected abstract void initProfiles();
 
-  public abstract Profile loadProfile(@NotNull String path) throws IOException, JDOMException;
+  public abstract Profile loadProfile(@Nonnull String path) throws IOException, JDOMException;
 
   @Override
-  public void addProfileChangeListener(@NotNull final ProfileChangeAdapter listener) {
+  public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter listener) {
     myProfileChangeAdapters.add(listener);
   }
 
   @Override
-  public void addProfileChangeListener(@NotNull ProfileChangeAdapter listener, @NotNull Disposable parentDisposable) {
+  public void addProfileChangeListener(@Nonnull ProfileChangeAdapter listener, @Nonnull Disposable parentDisposable) {
     ContainerUtil.add(listener, myProfileChangeAdapters, parentDisposable);
   }
 
   @Override
-  public void removeProfileChangeListener(@NotNull final ProfileChangeAdapter listener) {
+  public void removeProfileChangeListener(@Nonnull final ProfileChangeAdapter listener) {
     myProfileChangeAdapters.remove(listener);
   }
 
@@ -88,7 +88,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   }
 
   @Override
-  public Profile getProfile(@NotNull final String name) {
+  public Profile getProfile(@Nonnull final String name) {
     return getProfile(name, true);
   }
 }

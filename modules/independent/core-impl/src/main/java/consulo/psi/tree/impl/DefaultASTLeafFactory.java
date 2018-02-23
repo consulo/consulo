@@ -26,8 +26,8 @@ import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl;
 import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILeafElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -39,9 +39,9 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
+  public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
     if(parserDefinition != null) {
       if(parserDefinition.getCommentTokens(languageVersion).contains(type)) {

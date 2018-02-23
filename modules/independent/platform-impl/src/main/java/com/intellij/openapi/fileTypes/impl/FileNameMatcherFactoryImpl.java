@@ -16,15 +16,15 @@
 package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class FileNameMatcherFactoryImpl extends FileNameMatcherFactory {
-  @NotNull
+  @Nonnull
   @Override
-  public FileNameMatcher createMatcher(@NotNull String pattern) {
+  public FileNameMatcher createMatcher(@Nonnull String pattern) {
     if (pattern.startsWith("*.") &&
         pattern.indexOf('*', 2) < 0 &&
         pattern.indexOf('.', 2) < 0 &&

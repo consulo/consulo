@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.libraries.ui;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -59,6 +59,6 @@ public abstract class RootDetector {
    * @param progressIndicator can be used to show information about the progress and to abort searching if process is cancelled
    * @return suitable roots
    */
-  @NotNull
-  public abstract Collection<VirtualFile> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator);
+  @Nonnull
+  public abstract Collection<VirtualFile> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator);
 }

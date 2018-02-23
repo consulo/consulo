@@ -23,7 +23,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,7 +35,7 @@ public class DefaultRunExecutor extends Executor {
   public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
   @Override
-  @NotNull
+  @Nonnull
   public String getStartActionText() {
     return ExecutionBundle.message("default.runner.start.action.text");
   }
@@ -51,7 +51,7 @@ public class DefaultRunExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return AllIcons.Actions.Execute;
   }
@@ -67,13 +67,13 @@ public class DefaultRunExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getActionName() {
     return UIBundle.message("tool.window.name.run");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return EXECUTOR_ID;
   }

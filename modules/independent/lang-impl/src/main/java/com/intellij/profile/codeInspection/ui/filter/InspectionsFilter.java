@@ -22,8 +22,8 @@ import com.intellij.codeInspection.ex.Tools;
 import com.intellij.lang.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -84,22 +84,22 @@ public abstract class InspectionsFilter {
     filterChanged();
   }
 
-  public void addLanguage(@NotNull Language language) {
+  public void addLanguage(@Nonnull Language language) {
     mySuitableLanguages.add(language);
     filterChanged();
   }
 
-  public void addLanguages(@NotNull Collection<Language> language) {
+  public void addLanguages(@Nonnull Collection<Language> language) {
     mySuitableLanguages.addAll(language);
     filterChanged();
   }
 
-  public void removeLanguage(@NotNull Language language) {
+  public void removeLanguage(@Nonnull Language language) {
     mySuitableLanguages.remove(language);
     filterChanged();
   }
 
-  @NotNull
+  @Nonnull
   public Set<Language> getSuitableLanguages() {
     return mySuitableLanguages;
   }

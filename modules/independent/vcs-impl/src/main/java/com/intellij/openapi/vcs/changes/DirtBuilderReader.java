@@ -18,15 +18,15 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DirtBuilderReader {
   boolean isEverythingDirty();
 
-  @NotNull
+  @Nonnull
   MultiMap<AbstractVcs, FilePath> getFilesForVcs();
 
-  @NotNull
+  @Nonnull
   MultiMap<AbstractVcs, FilePath> getDirsForVcs();
 
   boolean isEmpty();

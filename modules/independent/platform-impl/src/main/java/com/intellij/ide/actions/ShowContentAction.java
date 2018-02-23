@@ -23,9 +23,9 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -45,7 +45,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final ToolWindow window = getWindow(e);
     e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
     e.getPresentation().setText(window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
@@ -55,7 +55,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     getWindow(e).showContentPopup(e.getInputEvent());
   }
 

@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -41,8 +41,8 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
         implements FileBasedIndex.InputFilter, KeyDescriptor<FileType>, DataIndexer<FileType, Void, FileContent> {
   private static final EnumeratorStringDescriptor ENUMERATOR_STRING_DESCRIPTOR = new EnumeratorStringDescriptor();
 
-  @NotNull
-  public static Collection<VirtualFile> getFiles(@NotNull FileType fileType, @NotNull GlobalSearchScope scope) {
+  @Nonnull
+  public static Collection<VirtualFile> getFiles(@Nonnull FileType fileType, @Nonnull GlobalSearchScope scope) {
     return FileBasedIndex.getInstance().getContainingFiles(NAME, fileType, scope);
   }
 
@@ -54,25 +54,25 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
     myFileTypeManager = fileTypeRegistry;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<FileType, Void> getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<FileType, Void, FileContent> getIndexer() {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<FileType> getKeyDescriptor() {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return this;
@@ -99,17 +99,17 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
   }
 
   @Override
-  public boolean acceptInput(@Nullable Project project, @NotNull VirtualFile file) {
+  public boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file) {
     return !file.isDirectory();
   }
 
   @Override
-  public void save(@NotNull DataOutput out, FileType value) throws IOException {
+  public void save(@Nonnull DataOutput out, FileType value) throws IOException {
     ENUMERATOR_STRING_DESCRIPTOR.save(out, value.getName());
   }
 
   @Override
-  public FileType read(@NotNull DataInput in) throws IOException {
+  public FileType read(@Nonnull DataInput in) throws IOException {
     String read = ENUMERATOR_STRING_DESCRIPTOR.read(in);
     return myFileTypeManager.findFileTypeByName(read);
   }
@@ -124,13 +124,13 @@ public class FileTypeIndex extends ScalarIndexExtension<FileType>
     return Comparing.equal(val1, val2);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Map<FileType, Void> map(@NotNull FileContent inputData) {
+  public Map<FileType, Void> map(@Nonnull FileContent inputData) {
     return Collections.singletonMap(inputData.getFileType(), null);
   }
 
-  public static boolean containsFileOfType(@NotNull FileType type, @NotNull GlobalSearchScope scope) {
+  public static boolean containsFileOfType(@Nonnull FileType type, @Nonnull GlobalSearchScope scope) {
     return !FileBasedIndex.getInstance().processValues(NAME, type, null, new FileBasedIndex.ValueProcessor<Void>() {
       @Override
       public boolean process(VirtualFile file, Void value) {

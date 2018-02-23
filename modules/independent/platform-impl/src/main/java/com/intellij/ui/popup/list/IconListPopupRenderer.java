@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.popup.list;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface IconListPopupRenderer {
 
-  boolean isIconAt(@NotNull Point point);
+  boolean isIconAt(@Nonnull Point point);
 }

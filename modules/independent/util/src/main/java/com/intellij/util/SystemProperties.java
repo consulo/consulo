@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -112,7 +112,7 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as integer, or default value.
    */
-  public static int getIntProperty(@NonNls @NotNull final String key, final int defaultValue) {
+  public static int getIntProperty(@NonNls @Nonnull final String key, final int defaultValue) {
     final String value = System.getProperty(key);
     if (value != null) {
       try {
@@ -132,7 +132,7 @@ public class SystemProperties {
    * @param defaultValue default value
    * @return the property value as boolean, or default value.
    */
-  public static boolean getBooleanProperty(@NotNull final String key, final boolean defaultValue) {
+  public static boolean getBooleanProperty(@Nonnull final String key, final boolean defaultValue) {
     final String value = System.getProperty(key);
     if (value != null) {
       return Boolean.parseBoolean(value);

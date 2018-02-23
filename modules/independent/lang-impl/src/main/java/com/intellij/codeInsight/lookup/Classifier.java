@@ -17,8 +17,8 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,35 +34,35 @@ public abstract class Classifier<T> {
     myName = name;
   }
 
-  public void addElement(@NotNull T t, @NotNull ProcessingContext context) {
+  public void addElement(@Nonnull T t, @Nonnull ProcessingContext context) {
     if (myNext != null) {
       myNext.addElement(t, context);
     }
   }
 
-  @NotNull
-  public abstract Iterable<T> classify(@NotNull Iterable<T> source, @NotNull ProcessingContext context);
+  @Nonnull
+  public abstract Iterable<T> classify(@Nonnull Iterable<T> source, @Nonnull ProcessingContext context);
 
   /**
    * @return a mapping from the given items to objects (e.g. Comparable instances) used to sort the items in {@link #classify(Iterable, ProcessingContext)}.
    * May return an empty list if there are no suitable objects available.
    * Used for diagnostics and statistic collection.
    */
-  @NotNull
-  public abstract List<Pair<T, Object>> getSortingWeights(@NotNull Iterable<T> items, @NotNull ProcessingContext context);
+  @Nonnull
+  public abstract List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull ProcessingContext context);
 
   @Nullable
   public final Classifier<T> getNext() {
     return myNext;
   }
 
-  public void removeElement(@NotNull T element, @NotNull ProcessingContext context) {
+  public void removeElement(@Nonnull T element, @Nonnull ProcessingContext context) {
     if (myNext != null) {
       myNext.removeElement(element, context);
     }
   }
 
-  @NotNull
+  @Nonnull
   public final String getPresentableName() {
     return myName;
   }

@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -30,13 +30,13 @@ import consulo.annotations.RequiredDispatchThread;
  * @see DiffRequest
  */
 public interface DiffContent extends UserDataHolder {
-  @Nullable
+  @javax.annotation.Nullable
   FileType getContentType();
 
   /**
    * Provides a way to open related content in editor
    */
-  @Nullable
+  @javax.annotation.Nullable
   Navigatable getNavigatable();
 
   /**

@@ -18,8 +18,8 @@ package com.intellij.openapi.externalSystem.service.notification;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows to customize {@link ExternalSystemNotificationManager external system notifications} shown to end-user by the ide.
@@ -32,7 +32,7 @@ public interface ExternalSystemNotificationExtension {
   ExtensionPointName<ExternalSystemNotificationExtension> EP_NAME
           = ExtensionPointName.create("com.intellij.externalSystemNotificationExtension");
 
-  @NotNull
+  @Nonnull
   ProjectSystemId getTargetExternalSystemId();
 
   /**
@@ -42,7 +42,7 @@ public interface ExternalSystemNotificationExtension {
    * @param project target ide project
    * @param error   error occurred during external system processing
    */
-  void customize(@NotNull NotificationData notificationData,
-                 @NotNull Project project,
+  void customize(@Nonnull NotificationData notificationData,
+                 @Nonnull Project project,
                  @Nullable Throwable error);
 }

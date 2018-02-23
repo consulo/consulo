@@ -18,7 +18,7 @@ package com.intellij.execution;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collections;
@@ -28,25 +28,25 @@ public class CommandLineUtil {
   private static final char SPECIAL_QUOTE = '\uEFEF';
   private static final String WIN_SHELL_SPECIALS = "&<>()@^|";
 
-  @NotNull
-  public static String specialQuote(@NotNull String parameter) {
+  @Nonnull
+  public static String specialQuote(@Nonnull String parameter) {
     return quote(parameter, SPECIAL_QUOTE);
   }
 
-  @NotNull
-  public static List<String> toCommandLine(@NotNull List<String> command) {
+  @Nonnull
+  public static List<String> toCommandLine(@Nonnull List<String> command) {
     assert !command.isEmpty();
     return toCommandLine(command.get(0), command.subList(1, command.size()));
   }
 
-  @NotNull
-  public static List<String> toCommandLine(@NotNull String command, @NotNull List<String> parameters) {
+  @Nonnull
+  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters) {
     return toCommandLine(command, parameters, Platform.current());
   }
 
   // please keep an implementation in sync with [junit-rt] ProcessBuilder.createProcess()
-  @NotNull
-  public static List<String> toCommandLine(@NotNull String command, @NotNull List<String> parameters, @NotNull Platform platform) {
+  @Nonnull
+  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters, @Nonnull Platform platform) {
     List<String> commandLine = ContainerUtil.newArrayListWithCapacity(parameters.size() + 1);
 
     commandLine.add(FileUtilRt.toSystemDependentName(command, platform.fileSeparator));
@@ -78,12 +78,12 @@ public class CommandLineUtil {
     return commandLine;
   }
 
-  private static boolean isWinShell(@NotNull String command) {
+  private static boolean isWinShell(@Nonnull String command) {
     return endsWithIgnoreCase(command, ".cmd") || endsWithIgnoreCase(command, ".bat") ||
            "cmd".equalsIgnoreCase(command) || "cmd.exe".equalsIgnoreCase(command);
   }
 
-  private static boolean endsWithIgnoreCase(@NotNull String str, @NotNull String suffix) {
+  private static boolean endsWithIgnoreCase(@Nonnull String str, @Nonnull String suffix) {
     return str.regionMatches(true, str.length() - suffix.length(), suffix, 0, suffix.length());
   }
 
@@ -96,8 +96,8 @@ public class CommandLineUtil {
   }
 
   public static boolean VERBOSE_COMMAND_LINE_MODE;
-  @NotNull
-  public static String extractPresentableName(@NotNull String commandLine) {
+  @Nonnull
+  public static String extractPresentableName(@Nonnull String commandLine) {
     String executable = commandLine.trim();
 
     List<String> words = StringUtil.splitHonorQuotes(executable, ' ');

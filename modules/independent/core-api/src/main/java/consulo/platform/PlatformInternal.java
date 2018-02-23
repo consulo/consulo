@@ -17,7 +17,7 @@ package consulo.platform;
 
 import consulo.annotations.Internal;
 import consulo.util.ServiceLoaderUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,11 +28,11 @@ public abstract class PlatformInternal {
   private static final PlatformInternal ourPlatformInternal = ServiceLoaderUtil.loadSingleOrError(PlatformInternal.class);
   private static final Platform ourCurrentPlatform = ourPlatformInternal.build();
 
-  @NotNull
+  @Nonnull
   static Platform current() {
     return ourCurrentPlatform;
   }
 
-  @NotNull
+  @Nonnull
   abstract Platform build();
 }

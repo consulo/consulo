@@ -43,8 +43,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
@@ -56,7 +56,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
       return;
@@ -84,7 +84,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     showTemplatesLookup(project, editor, file, matchingTemplates, customTemplatesLookupElements);
   }
 
-  public static Map<TemplateImpl, String> filterTemplatesByPrefix(@NotNull Collection<TemplateImpl> templates, @NotNull Editor editor,
+  public static Map<TemplateImpl, String> filterTemplatesByPrefix(@Nonnull Collection<TemplateImpl> templates, @Nonnull Editor editor,
                                                                   int offset, boolean fullMatch, boolean searchInDescription) {
     if (offset > editor.getDocument().getTextLength()) {
       LOG.error("Cannot filter templates, index out of bounds. Offset: " + offset,
@@ -136,8 +136,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   private static void showTemplatesLookup(final Project project,
                                           final Editor editor,
                                           final PsiFile file,
-                                          @NotNull Map<TemplateImpl, String> matchingTemplates,
-                                          @NotNull MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements) {
+                                          @Nonnull Map<TemplateImpl, String> matchingTemplates,
+                                          @Nonnull MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements) {
 
     LookupImpl lookup = (LookupImpl)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new TemplatesArranger());
     for (Map.Entry<TemplateImpl, String> entry : matchingTemplates.entrySet()) {
@@ -154,8 +154,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     showLookup(lookup, file);
   }
 
-  public static MultiMap<String, CustomLiveTemplateLookupElement> getCustomTemplatesLookupItems(@NotNull Editor editor,
-                                                                                                @NotNull PsiFile file,
+  public static MultiMap<String, CustomLiveTemplateLookupElement> getCustomTemplatesLookupItems(@Nonnull Editor editor,
+                                                                                                @Nonnull PsiFile file,
                                                                                                 int offset) {
     final MultiMap<String, CustomLiveTemplateLookupElement> result = MultiMap.create();
     CustomTemplateCallback customTemplateCallback = new CustomTemplateCallback(editor, file);
@@ -213,7 +213,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     lookup.showLookup();
   }
 
-  private static void showLookup(LookupImpl lookup, @NotNull PsiFile file) {
+  private static void showLookup(LookupImpl lookup, @Nonnull PsiFile file) {
     Editor editor = lookup.getEditor();
     Project project = editor.getProject();
     lookup.addLookupListener(new MyLookupAdapter(project, editor, file));
@@ -267,7 +267,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         final String argument = myTemplate2Argument != null ? myTemplate2Argument.get(template) : null;
         new WriteCommandAction(myProject) {
           @Override
-          protected void run(@NotNull Result result) throws Throwable {
+          protected void run(@Nonnull Result result) throws Throwable {
             ((TemplateManagerImpl)TemplateManager.getInstance(myProject)).startTemplateWithPrefix(myEditor, template, null, argument);
           }
         }.execute();
@@ -276,7 +276,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         if (myFile != null) {
           new WriteCommandAction(myProject) {
             @Override
-            protected void run(@NotNull Result result) throws Throwable {
+            protected void run(@Nonnull Result result) throws Throwable {
               ((CustomLiveTemplateLookupElement)item).expandTemplate(myEditor, myFile);
             }
           }.execute();
@@ -288,7 +288,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   private static class TemplatesArranger extends LookupArranger {
 
     @Override
-    public Pair<List<LookupElement>, Integer> arrangeItems(@NotNull Lookup lookup, boolean onExplicitAction) {
+    public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
       LinkedHashSet<LookupElement> result = new LinkedHashSet<LookupElement>();
       List<LookupElement> items = getMatchingItems();
       for (LookupElement item : items) {

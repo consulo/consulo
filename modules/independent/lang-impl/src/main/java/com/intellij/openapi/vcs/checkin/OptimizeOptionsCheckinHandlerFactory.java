@@ -18,14 +18,14 @@ package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author oleg
  */
 public class OptimizeOptionsCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
-  @NotNull
+  @Nonnull
   public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
     return new OptimizeImportsBeforeCheckinHandler(panel.getProject(), panel);
   }

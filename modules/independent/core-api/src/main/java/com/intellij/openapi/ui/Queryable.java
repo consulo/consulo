@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface Queryable {
 
-  void putInfo(@NotNull Map<String, String> info);
+  void putInfo(@Nonnull Map<String, String> info);
 
   class PrintInfo {
     private final String[] myIdKeys;
@@ -45,7 +45,7 @@ public interface Queryable {
 
   class Util {
     @Nullable
-    public static String print(@NotNull Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
+    public static String print(@Nonnull Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
       PrintInfo print = printInfo != null ? printInfo : new PrintInfo();
 
       LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -86,13 +86,13 @@ public interface Queryable {
     }
 
     @Nullable
-    public static String print(@NotNull Queryable ui, @Nullable PrintInfo printInfo) {
+    public static String print(@Nonnull Queryable ui, @Nullable PrintInfo printInfo) {
       return print(ui, printInfo, null);
     }
   }
 
   interface Contributor {
-    void apply(@NotNull Map<String, String> info);
+    void apply(@Nonnull Map<String, String> info);
   }
 
 }

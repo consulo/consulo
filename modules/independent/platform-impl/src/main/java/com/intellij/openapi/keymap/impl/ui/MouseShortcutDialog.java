@@ -28,7 +28,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,10 +58,10 @@ class MouseShortcutDialog extends DialogWrapper{
   public MouseShortcutDialog(
           JComponent parentComponent,
           MouseShortcut shortcut,
-          @NotNull Keymap keymap,
-          @NotNull String actiondId,
-          @NotNull Group mainGroup,
-          @NotNull ShortcutRestrictions restrictions
+          @Nonnull Keymap keymap,
+          @Nonnull String actiondId,
+          @Nonnull Group mainGroup,
+          @Nonnull ShortcutRestrictions restrictions
   ){
     super(parentComponent,true);
     setTitle(KeyMapBundle.message("mouse.shortcut.dialog.title"));

@@ -31,8 +31,8 @@ import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

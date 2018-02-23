@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.progress;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -35,11 +35,11 @@ public abstract class ProgressIndicatorProvider {
     return getInstance().getProgressIndicator();
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated // use ProgressManager.executeNonCancelableSection() instead
   public abstract NonCancelableSection startNonCancelableSection();
 
-  @NotNull
+  @Nonnull
   @Deprecated // use ProgressManager.executeNonCancelableSection() instead
   public static NonCancelableSection startNonCancelableSectionIfSupported() {
     return getInstance().startNonCancelableSection();

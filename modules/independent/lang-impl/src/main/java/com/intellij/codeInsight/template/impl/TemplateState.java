@@ -66,8 +66,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.IntArrayList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -92,9 +92,12 @@ public class TemplateState implements Disposable {
   private boolean myDocumentChangesTerminateTemplate = true;
   private boolean myDocumentChanged = false;
 
-  @Nullable private CommandAdapter myCommandListener;
-  @Nullable private CaretListener myCaretListener;
-  @Nullable private LookupListener myLookupListener;
+  @Nullable
+  private CommandAdapter myCommandListener;
+  @Nullable
+  private CaretListener myCaretListener;
+  @Nullable
+  private LookupListener myLookupListener;
 
   private final List<TemplateEditingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private DocumentAdapter myEditorDocumentListener;
@@ -102,11 +105,12 @@ public class TemplateState implements Disposable {
   private boolean myTemplateIndented = false;
   private Document myDocument;
   private boolean myFinished;
-  @Nullable private PairProcessor<String, String> myProcessor;
+  @Nullable
+  private PairProcessor<String, String> myProcessor;
   private boolean mySelectionCalculated = false;
   private boolean myStarted;
 
-  TemplateState(@NotNull Project project, @NotNull final Editor editor) {
+  TemplateState(@Nonnull Project project, @Nonnull final Editor editor) {
     myProject = project;
     myEditor = editor;
     myDocument = myEditor.getDocument();
@@ -256,7 +260,7 @@ public class TemplateState implements Disposable {
   }
 
   @Nullable
-  public TextResult getVariableValue(@NotNull String variableName) {
+  public TextResult getVariableValue(@Nonnull String variableName) {
     if (variableName.equals(TemplateImpl.SELECTION)) {
       return new TextResult(StringUtil.notNullize(getSelectionBeforeTemplate()));
     }
@@ -340,7 +344,7 @@ public class TemplateState implements Disposable {
     }
   }
 
-  public void start(@NotNull TemplateImpl template,
+  public void start(@Nonnull TemplateImpl template,
                     @Nullable final PairProcessor<String, String> processor,
                     @Nullable Map<String, String> predefinedVarValues) {
     LOG.assertTrue(!myStarted, "Already started");
@@ -409,7 +413,7 @@ public class TemplateState implements Disposable {
     }
   }
 
-  private void processAllExpressions(@NotNull final TemplateImpl template) {
+  private void processAllExpressions(@Nonnull final TemplateImpl template) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       if (!template.isInline()) myDocument.insertString(myTemplateRange.getStartOffset(), template.getTemplateText());
       for (int i = 0; i < template.getSegmentsCount(); i++) {
@@ -620,7 +624,7 @@ public class TemplateState implements Disposable {
     first.handleTemplateInsert(lookupItems, Lookup.AUTO_INSERT_SELECT_CHAR);
   }
 
-  @NotNull
+  @Nonnull
   List<TemplateExpressionLookupElement> getCurrentExpressionLookupItems() {
     LookupElement[] elements = getCurrentExpression().calculateLookupItems(getCurrentExpressionContext());
     if (elements == null) return Collections.emptyList();
@@ -766,7 +770,7 @@ public class TemplateState implements Disposable {
     }
   }
 
-  private void executeChanges(@NotNull List<TemplateDocumentChange> changes) {
+  private void executeChanges(@Nonnull List<TemplateDocumentChange> changes) {
     if (isDisposed() || changes.isEmpty()) {
       return;
     }
@@ -807,7 +811,7 @@ public class TemplateState implements Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   private String getVariableValueText(String variableName) {
     TextResult value = getVariableValue(variableName);
     return value != null ? value.getText() : "";

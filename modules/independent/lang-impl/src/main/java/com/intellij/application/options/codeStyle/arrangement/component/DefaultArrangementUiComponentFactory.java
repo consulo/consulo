@@ -21,8 +21,8 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokenUiRole;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,10 +34,10 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
 
   @Nullable
   @Override
-  public ArrangementUiComponent build(@NotNull StdArrangementTokenUiRole role,
-                                      @NotNull List<ArrangementSettingsToken> tokens,
-                                      @NotNull ArrangementColorsProvider colorsProvider,
-                                      @NotNull ArrangementStandardSettingsManager settingsManager)
+  public ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
+                                      @Nonnull List<ArrangementSettingsToken> tokens,
+                                      @Nonnull ArrangementColorsProvider colorsProvider,
+                                      @Nonnull ArrangementStandardSettingsManager settingsManager)
   {
     switch (role) {
       case CHECKBOX:

@@ -24,7 +24,7 @@ import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This action works only in the variables view
@@ -33,12 +33,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
   @Override
-  protected boolean isEnabled(@NotNull final XValueNodeImpl node, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull final XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return super.isEnabled(node, e) && DebuggerUIUtil.hasEvaluationExpression(node.getValueContainer()) && getWatchesView(e) != null;
   }
 
   @Override
-  protected void perform(final XValueNodeImpl node, @NotNull final String nodeName, final AnActionEvent e) {
+  protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
     final XWatchesView watchesView = getWatchesView(e);
     if (watchesView != null) {
       node.getValueContainer().calculateEvaluationExpression().doWhenDone(expression -> {
@@ -49,7 +49,7 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
     }
   }
 
-  private static XWatchesView getWatchesView(@NotNull AnActionEvent e) {
+  private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
     XWatchesView view = e.getData(XWatchesView.DATA_KEY);
     Project project = e.getProject();
     if (view == null && project != null) {

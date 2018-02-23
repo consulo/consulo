@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines a contract for strategy that determines if an {@link ArrangementMatchRule arrangement rule} matches particular
@@ -31,10 +31,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ArrangementEntryMatcher {
 
-  @NotNull
+  @Nonnull
   ArrangementEntryMatcher EMPTY = new ArrangementEntryMatcher() {
     @Override
-    public boolean isMatched(@NotNull ArrangementEntry entry) {
+    public boolean isMatched(@Nonnull ArrangementEntry entry) {
       return false;
     }
   };
@@ -47,5 +47,5 @@ public interface ArrangementEntryMatcher {
    * @param entry  entry to check
    * @return       <code>true</code> if given entry is matched by the current rule; <code>false</code> otherwise
    */
-  boolean isMatched(@NotNull ArrangementEntry entry);
+  boolean isMatched(@Nonnull ArrangementEntry entry);
 }

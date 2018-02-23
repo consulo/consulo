@@ -18,23 +18,23 @@ package com.intellij.codeInsight.template.impl;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
   private final TemplateImpl myTemplate;
 
-  public LiveTemplateLookupElementImpl(@NotNull TemplateImpl template, boolean sudden) {
+  public LiveTemplateLookupElementImpl(@Nonnull TemplateImpl template, boolean sudden) {
     super(template.getKey(), StringUtil.notNullize(template.getDescription()), sudden, false);
     myTemplate = template;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLookupString() {
     return myTemplate.getKey();
   }
 
-  @NotNull
+  @Nonnull
   public TemplateImpl getTemplate() {
     return myTemplate;
   }

@@ -30,8 +30,8 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -72,7 +72,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     ourDefaultDarkColors.put("Yellow", new Color(0x494539));
   }
 
-  public FileColorManagerImpl(@NotNull final Project project) {
+  public FileColorManagerImpl(@Nonnull final Project project) {
     myProject = project;
     myModel = new FileColorsModel(project);
   }
@@ -148,7 +148,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   @Override
   @SuppressWarnings({"MethodMayBeStatic"})
   @Nullable
-  public Color getColor(@NotNull final String name) {
+  public Color getColor(@Nonnull final String name) {
     final Color color = UIUtil.isUnderDarcula() ? ourDefaultDarkColors.get(name) : ourDefaultColors.get(name);
     return color == null ? ColorUtil.fromHex(name, null) : color;
   }
@@ -196,7 +196,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   @Override
-  public boolean isColored(@NotNull final String scopeName, final boolean shared) {
+  public boolean isColored(@Nonnull final String scopeName, final boolean shared) {
     return myModel.isColored(scopeName, shared);
   }
 
@@ -225,7 +225,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
   @Override
   @Nullable
-  public Color getFileColor(@NotNull final PsiFile file) {
+  public Color getFileColor(@Nonnull final PsiFile file) {
     initProjectLevelConfigurations();
 
     final String colorName = myModel.getColor(file);
@@ -234,7 +234,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
   @Override
   @Nullable
-  public Color getFileColor(@NotNull final VirtualFile file) {
+  public Color getFileColor(@Nonnull final VirtualFile file) {
     initProjectLevelConfigurations();
     final PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
     if (psiFile != null) {
@@ -246,7 +246,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   @Nullable
-  public Color getScopeColor(@NotNull String scopeName) {
+  public Color getScopeColor(@Nonnull String scopeName) {
     initProjectLevelConfigurations();
 
     final String colorName = myModel.getScopeColor(scopeName, getProject());
@@ -254,7 +254,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   @Override
-  public boolean isShared(@NotNull final String scopeName) {
+  public boolean isShared(@Nonnull final String scopeName) {
     return myModel.isShared(scopeName);
   }
 

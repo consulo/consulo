@@ -48,7 +48,6 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -65,10 +64,11 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
@@ -136,24 +136,24 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
   private PopupMenuListener myOuterComboboxPopupListener;
 
-  @NotNull
-  public static IntentionHintComponent showIntentionHint(@NotNull Project project,
-                                                         @NotNull PsiFile file,
-                                                         @NotNull Editor editor,
-                                                         @NotNull ShowIntentionsPass.IntentionsInfo intentions,
+  @Nonnull
+  public static IntentionHintComponent showIntentionHint(@Nonnull Project project,
+                                                         @Nonnull PsiFile file,
+                                                         @Nonnull Editor editor,
+                                                         @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
                                                          boolean showExpanded) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final Point position = getHintPosition(editor);
     return showIntentionHint(project, file, editor, intentions, showExpanded, position);
   }
 
-  @NotNull
-  public static IntentionHintComponent showIntentionHint(@NotNull final Project project,
-                                                         @NotNull PsiFile file,
-                                                         @NotNull final Editor editor,
-                                                         @NotNull ShowIntentionsPass.IntentionsInfo intentions,
+  @Nonnull
+  public static IntentionHintComponent showIntentionHint(@Nonnull final Project project,
+                                                         @Nonnull PsiFile file,
+                                                         @Nonnull final Editor editor,
+                                                         @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
                                                          boolean showExpanded,
-                                                         @NotNull Point position) {
+                                                         @Nonnull Point position) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final IntentionHintComponent component = new IntentionHintComponent(project, file, editor, intentions);
 
@@ -200,7 +200,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     closePopup();
   }
 
-  public boolean isForEditor(@NotNull Editor editor) {
+  public boolean isForEditor(@Nonnull Editor editor) {
     return editor == myEditor;
   }
 
@@ -214,8 +214,8 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   //true if actions updated, there is nothing to do
   //false if has to recreate popup, no need to reshow
   //null if has to reshow
-  @NotNull
-  public PopupUpdateResult updateActions(@NotNull ShowIntentionsPass.IntentionsInfo intentions) {
+  @Nonnull
+  public PopupUpdateResult updateActions(@Nonnull ShowIntentionsPass.IntentionsInfo intentions) {
     if (myPopup.isDisposed() || !myFile.isValid()) {
       return PopupUpdateResult.HIDE_AND_RECREATE;
     }
@@ -249,7 +249,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     recreateMyPopup(step);
   }
 
-  private void showIntentionHintImpl(final boolean delay, @NotNull Point position) {
+  private void showIntentionHintImpl(final boolean delay, @Nonnull Point position) {
     final int offset = myEditor.getCaretModel().getOffset();
 
     myComponentHint.setShouldDelay(delay);
@@ -273,7 +273,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static Point getHintPosition(Editor editor) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return new Point();
     final int offset = editor.getCaretModel().getOffset();
@@ -334,10 +334,10 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     return point.x > AllIcons.Actions.RealIntentionBulb.getIconWidth() + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
   }
 
-  private IntentionHintComponent(@NotNull Project project,
-                                 @NotNull PsiFile file,
-                                 @NotNull final Editor editor,
-                                 @NotNull ShowIntentionsPass.IntentionsInfo intentions) {
+  private IntentionHintComponent(@Nonnull Project project,
+                                 @Nonnull PsiFile file,
+                                 @Nonnull final Editor editor,
+                                 @Nonnull ShowIntentionsPass.IntentionsInfo intentions) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myFile = file;
     myEditor = editor;
@@ -372,19 +372,19 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
     myIconLabel.addMouseListener(new MouseAdapter() {
       @Override
-      public void mousePressed(@NotNull MouseEvent e) {
+      public void mousePressed(@Nonnull MouseEvent e) {
         if (!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1) {
           showPopup(true);
         }
       }
 
       @Override
-      public void mouseEntered(@NotNull MouseEvent e) {
+      public void mouseEntered(@Nonnull MouseEvent e) {
         onMouseEnter(editor.isOneLineMode());
       }
 
       @Override
-      public void mouseExited(@NotNull MouseEvent e) {
+      public void mouseExited(@Nonnull MouseEvent e) {
         onMouseExit(editor.isOneLineMode());
       }
     });
@@ -395,7 +395,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     // dispose myself when editor closed
     EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
       @Override
-      public void editorReleased(@NotNull EditorFactoryEvent event) {
+      public void editorReleased(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor() == myEditor) {
           hide();
         }
@@ -453,7 +453,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     myPopupShown = true;
   }
 
-  private void recreateMyPopup(@NotNull ListPopupStep step) {
+  private void recreateMyPopup(@Nonnull ListPopupStep step) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myPopup != null) {
       Disposer.dispose(myPopup);
@@ -493,7 +493,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     });
     myPopup.addListSelectionListener(new ListSelectionListener() {
       @Override
-      public void valueChanged(@NotNull ListSelectionEvent e) {
+      public void valueChanged(@Nonnull ListSelectionEvent e) {
         final Object source = e.getSource();
         highlighter.dropHighlight();
         injectionHighlighter.dropHighlight();
@@ -548,7 +548,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     });
   }
 
-  void canceled(@NotNull ListPopupStep intentionListStep) {
+  void canceled(@Nonnull ListPopupStep intentionListStep) {
     if (myPopup.getListStep() != intentionListStep || myDisposed) {
       return;
     }
@@ -565,11 +565,11 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @Override
-    public void show(@NotNull final JComponent parentComponent,
+    public void show(@Nonnull final JComponent parentComponent,
                      final int x,
                      final int y,
                      final JComponent focusBackComponent,
-                     @NotNull HintHint hintHint) {
+                     @Nonnull HintHint hintHint) {
       myVisible = true;
       if (myShouldDelay) {
         myAlarm.cancelAllRequests();
@@ -620,7 +620,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText() {
       return mySettings.isEnabled(myAction) ?
              CodeInsightBundle.message("disable.intention.action", myFamilyName) :
@@ -628,7 +628,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
       mySettings.setEnabled(myAction, !mySettings.isEnabled(myAction));
     }
 
@@ -643,14 +643,14 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
       super(action);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getText() {
       return "Edit intention settings";
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
       final IntentionSettingsConfigurable configurable = new IntentionSettingsConfigurable();
       ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
         @Override
@@ -676,14 +676,14 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
                    Comparing.equal(action.getFamilyName(), ((IntentionActionWrapper)action).getFullFamilyName());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return getText();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return !myDisabled;
     }
 

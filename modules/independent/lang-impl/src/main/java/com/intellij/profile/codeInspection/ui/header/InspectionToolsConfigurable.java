@@ -67,9 +67,9 @@ import consulo.ui.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -99,7 +99,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   private JPanel myPanel;
   private JPanel myWholePanel;
 
-  public InspectionToolsConfigurable(@NotNull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
+  public InspectionToolsConfigurable(@Nonnull final InspectionProjectProfileManager projectProfileManager, InspectionProfileManager profileManager) {
 
     ((InspectionManagerEx)InspectionManager.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
     myProjectProfileManager = projectProfileManager;
@@ -111,7 +111,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   @Nullable
-  private InspectionProfileImpl copyToNewProfile(ModifiableModel selectedProfile, @NotNull Project project) {
+  private InspectionProfileImpl copyToNewProfile(ModifiableModel selectedProfile, @Nonnull Project project) {
     String profileDefaultName = selectedProfile.getName();
     do {
       profileDefaultName += " (copy)";
@@ -223,11 +223,11 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
         rename(getSelectedObject());
       }
 
-      private void rename(@NotNull final InspectionProfileImpl inspectionProfile) {
+      private void rename(@Nonnull final InspectionProfileImpl inspectionProfile) {
         final String initialName = getSelectedPanel().getCurrentProfileName();
         myProfiles.showEditCard(initialName, new SaveInputComponentValidator() {
           @Override
-          public void doSave(@NotNull String text) {
+          public void doSave(@Nonnull String text) {
             if (!text.equals(initialName)) {
               getProfilePanel(inspectionProfile).setCurrentProfileName(text);
             }
@@ -235,7 +235,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
           }
 
           @Override
-          public boolean checkValid(@NotNull String text) {
+          public boolean checkValid(@Nonnull String text) {
             final SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(inspectionProfile);
             if (singleInspectionProfilePanel == null) {
               return false;
@@ -393,7 +393,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
     myAuxiliaryRightPanel = new AuxiliaryRightPanel(new AuxiliaryRightPanel.DescriptionSaveListener() {
       @Override
-      public void saveDescription(@NotNull String description) {
+      public void saveDescription(@Nonnull String description) {
         final InspectionProfileImpl inspectionProfile = getSelectedObject();
         if (!Comparing.strEqual(description, inspectionProfile.getDescription())) {
           inspectionProfile.setDescription(description);
@@ -430,7 +430,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }
@@ -575,7 +575,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return (inspectionProfile.isProjectLevel() ? "s" : "a") + inspectionProfile.getName();
   }
 
-  @NotNull
+  @Nonnull
   private SingleInspectionProfilePanel createPanel(InspectionProfileImpl profile, String profileName) {
     SingleInspectionProfilePanel panel = new SingleInspectionProfilePanel(myProjectProfileManager, profileName, profile) {
       @Override
@@ -588,7 +588,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return panel;
   }
 
-  private boolean isDeleteEnabled(@NotNull InspectionProfileImpl inspectionProfile) {
+  private boolean isDeleteEnabled(@Nonnull InspectionProfileImpl inspectionProfile) {
     final ProfileManager profileManager = inspectionProfile.getProfileManager();
 
     boolean projectProfileFound = false;
@@ -634,7 +634,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   @Override
-  public void setFilterLanguages(@NotNull Collection<Language> languages) {
+  public void setFilterLanguages(@Nonnull Collection<Language> languages) {
     myFilterLanguages.clear();
     myFilterLanguages.addAll(languages);
   }
@@ -656,7 +656,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return "configured profiles: " + StringUtil.join(myPanels.keySet(), ", ");
   }
 
-  private boolean hasName(final @NotNull String name, boolean shared) {
+  private boolean hasName(final @Nonnull String name, boolean shared) {
     for (SingleInspectionProfilePanel p : myPanels.values()) {
       if (name.equals(p.getCurrentProfileName()) && shared == p.isProfileShared()) {
         return true;
@@ -665,7 +665,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InspectionProfileImpl getSelectedObject() {
     return myProfiles.getSelectedProfile();

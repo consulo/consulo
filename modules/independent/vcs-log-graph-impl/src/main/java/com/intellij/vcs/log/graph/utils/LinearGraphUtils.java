@@ -23,8 +23,8 @@ import com.intellij.vcs.log.graph.api.LiteLinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.impl.facade.LinearGraphController;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -35,19 +35,19 @@ public class LinearGraphUtils {
   public static final LinearGraphController.LinearGraphAnswer DEFAULT_GRAPH_ANSWER =
     new LinearGraphController.LinearGraphAnswer(Cursor.getDefaultCursor(), null);
 
-  public static boolean intEqual(@Nullable Integer value, int number) {
+  public static boolean intEqual(@javax.annotation.Nullable Integer value, int number) {
     return value != null && value == number;
   }
 
-  public static boolean isEdgeUp(@NotNull GraphEdge edge, int nodeIndex) {
+  public static boolean isEdgeUp(@Nonnull GraphEdge edge, int nodeIndex) {
     return intEqual(edge.getDownNodeIndex(), nodeIndex);
   }
 
-  public static boolean isEdgeDown(@NotNull GraphEdge edge, int nodeIndex) {
+  public static boolean isEdgeDown(@Nonnull GraphEdge edge, int nodeIndex) {
     return intEqual(edge.getUpNodeIndex(), nodeIndex);
   }
 
-  public static boolean isNormalEdge(@Nullable GraphEdge edge) {
+  public static boolean isNormalEdge(@javax.annotation.Nullable GraphEdge edge) {
     if (edge != null && edge.getType().isNormalEdge()) {
       assert edge.getUpNodeIndex() != null && edge.getDownNodeIndex() != null;
       return true;
@@ -64,16 +64,16 @@ public class LinearGraphUtils {
     return null;
   }
 
-  public static int getNotNullNodeIndex(@NotNull GraphEdge edge) {
+  public static int getNotNullNodeIndex(@Nonnull GraphEdge edge) {
     if (edge.getUpNodeIndex() != null) return edge.getUpNodeIndex();
     assert edge.getDownNodeIndex() != null;
     return edge.getDownNodeIndex();
   }
 
-  @NotNull
-  public static List<Integer> getUpNodes(@NotNull LinearGraph graph, final int nodeIndex) {
+  @Nonnull
+  public static List<Integer> getUpNodes(@Nonnull LinearGraph graph, final int nodeIndex) {
     return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_UP), new Function<GraphEdge, Integer>() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public Integer fun(GraphEdge graphEdge) {
         return graphEdge.getUpNodeIndex();
@@ -81,10 +81,10 @@ public class LinearGraphUtils {
     });
   }
 
-  @NotNull
-  public static List<Integer> getDownNodes(@NotNull LinearGraph graph, final int nodeIndex) {
+  @Nonnull
+  public static List<Integer> getDownNodes(@Nonnull LinearGraph graph, final int nodeIndex) {
     return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_DOWN), new Function<GraphEdge, Integer>() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public Integer fun(GraphEdge graphEdge) {
         return graphEdge.getDownNodeIndex();
@@ -92,10 +92,10 @@ public class LinearGraphUtils {
     });
   }
 
-  @NotNull
-  public static List<Integer> getDownNodesIncludeNotLoad(@NotNull final LinearGraph graph, final int nodeIndex) {
+  @Nonnull
+  public static List<Integer> getDownNodesIncludeNotLoad(@Nonnull final LinearGraph graph, final int nodeIndex) {
     return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.ALL), new Function<GraphEdge, Integer>() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public Integer fun(GraphEdge graphEdge) {
         if (isEdgeDown(graphEdge, nodeIndex)) {
@@ -107,17 +107,17 @@ public class LinearGraphUtils {
     });
   }
 
-  @NotNull
-  public static LiteLinearGraph asLiteLinearGraph(@NotNull final LinearGraph graph) {
+  @Nonnull
+  public static LiteLinearGraph asLiteLinearGraph(@Nonnull final LinearGraph graph) {
     return new LiteLinearGraph() {
       @Override
       public int nodesCount() {
         return graph.nodesCount();
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public List<Integer> getNodes(final int nodeIndex, @NotNull final NodeFilter filter) {
+      public List<Integer> getNodes(final int nodeIndex, @Nonnull final NodeFilter filter) {
         return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, filter.edgeFilter), new Function<GraphEdge, Integer>() {
           @Override
           public Integer fun(GraphEdge edge) {
@@ -131,7 +131,7 @@ public class LinearGraphUtils {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static Cursor getCursor(boolean hand) {
     if (hand) {
       return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
@@ -141,8 +141,8 @@ public class LinearGraphUtils {
     }
   }
 
-  public static LinearGraphController.LinearGraphAnswer createSelectedAnswer(@NotNull LinearGraph linearGraph,
-                                                                             @NotNull Collection<Integer> selectedNodeIndexes) {
+  public static LinearGraphController.LinearGraphAnswer createSelectedAnswer(@Nonnull LinearGraph linearGraph,
+                                                                             @Nonnull Collection<Integer> selectedNodeIndexes) {
     Set<Integer> selectedIds = ContainerUtil.newHashSet();
     for (Integer nodeIndex : selectedNodeIndexes) {
       if (nodeIndex == null) continue;
@@ -151,8 +151,8 @@ public class LinearGraphUtils {
     return new LinearGraphController.LinearGraphAnswer(getCursor(true), selectedIds);
   }
 
-  @Nullable
-  public static GraphEdge getEdge(@NotNull LinearGraph graph, int up, int down) {
+  @javax.annotation.Nullable
+  public static GraphEdge getEdge(@Nonnull LinearGraph graph, int up, int down) {
     List<GraphEdge> edges = graph.getAdjacentEdges(up, EdgeFilter.NORMAL_DOWN);
     for (GraphEdge edge : edges) {
       if (intEqual(edge.getDownNodeIndex(), down)) {
@@ -162,8 +162,8 @@ public class LinearGraphUtils {
     return null;
   }
 
-  @NotNull
-  public static Set<Integer> convertNodeIndexesToIds(@NotNull final LinearGraph graph, @NotNull Collection<Integer> nodeIndexes) {
+  @Nonnull
+  public static Set<Integer> convertNodeIndexesToIds(@Nonnull final LinearGraph graph, @Nonnull Collection<Integer> nodeIndexes) {
     return ContainerUtil.map2Set(nodeIndexes, new Function<Integer, Integer>() {
       @Override
       public Integer fun(Integer nodeIndex) {
@@ -172,8 +172,8 @@ public class LinearGraphUtils {
     });
   }
 
-  @NotNull
-  public static Set<Integer> convertIdsToNodeIndexes(@NotNull final LinearGraph graph, @NotNull Collection<Integer> ids) {
+  @Nonnull
+  public static Set<Integer> convertIdsToNodeIndexes(@Nonnull final LinearGraph graph, @Nonnull Collection<Integer> ids) {
     List<Integer> result = ContainerUtil.mapNotNull(ids, new Function<Integer, Integer>() {
       @Override
       public Integer fun(Integer id) {

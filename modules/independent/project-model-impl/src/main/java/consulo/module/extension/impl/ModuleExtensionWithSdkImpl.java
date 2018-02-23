@@ -21,8 +21,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.roots.ModuleRootLayer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-  public ModuleExtensionWithSdkImpl(@NotNull String id, @NotNull ModuleRootLayer rootLayer) {
+  public ModuleExtensionWithSdkImpl(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer) {
     super(id, rootLayer);
 
     mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id);
@@ -40,25 +39,25 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   @RequiredReadAction
   @Override
-  public void commit(@NotNull T mutableModuleExtension) {
+  public void commit(@Nonnull T mutableModuleExtension) {
     super.commit(mutableModuleExtension);
 
     mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
     return mySdkPointer;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Sdk getSdk() {
     return getInheritableSdk().get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getSdkName() {
     return getInheritableSdk().getName();
@@ -72,7 +71,7 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
   }
 
   @Override
-  protected void getStateImpl(@NotNull Element element) {
+  protected void getStateImpl(@Nonnull Element element) {
     super.getStateImpl(element);
 
     mySdkPointer.toXml(element);
@@ -80,7 +79,7 @@ public abstract class ModuleExtensionWithSdkImpl<T extends ModuleExtensionWithSd
 
   @Override
   @RequiredReadAction
-  protected void loadStateImpl(@NotNull Element element) {
+  protected void loadStateImpl(@Nonnull Element element) {
     super.loadStateImpl(element);
 
     mySdkPointer.fromXml(element);

@@ -22,7 +22,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
 import com.intellij.util.IJSwingUtilities;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -68,7 +68,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     return myTabbedPaneWrapper.getComponent();
   }
 
-  public void setManager(@NotNull ContentManager manager) {
+  public void setManager(@Nonnull ContentManager manager) {
     if (myManager != null) {
       throw new IllegalStateException();
     }
@@ -268,7 +268,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         super(wrapper);
       }
 
-      public Object getData(@NotNull Key<?> dataId) {
+      public Object getData(@Nonnull Key<?> dataId) {
         if (PlatformDataKeys.CONTENT_MANAGER == dataId) {
           return myManager;
         }
@@ -319,29 +319,29 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   public void beforeDispose() {
   }
 
-  public boolean canChangeSelectionTo(@NotNull Content content, boolean implicit) {
+  public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseActionName() {
     return UIBundle.message("tabbed.pane.close.tab.action.name");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseAllButThisActionName() {
     return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPreviousContentActionName() {
     return "Select Previous Tab";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getNextContentActionName() {
     return "Select Next Tab";

@@ -18,7 +18,7 @@ package com.intellij.openapi.ui.impl;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.FocusTrackback;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,9 +31,10 @@ import java.awt.event.MouseMotionListener;
  */
 @SuppressWarnings("ConstantConditions")
 class HeadlessDialog implements AbstractDialog {
-  @NotNull private final DialogWrapper myWrapper;
+  @Nonnull
+  private final DialogWrapper myWrapper;
 
-  HeadlessDialog(@NotNull DialogWrapper wrapper) {
+  HeadlessDialog(@Nonnull DialogWrapper wrapper) {
     myWrapper = wrapper;
   }
 
@@ -151,14 +152,14 @@ class HeadlessDialog implements AbstractDialog {
   public void setResizable(boolean resizable) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Point getLocation() {
     return new Point(0,0);
   }
 
   @Override
-  public void setLocation(@NotNull Point p) {
+  public void setLocation(@Nonnull Point p) {
   }
 
   @Override

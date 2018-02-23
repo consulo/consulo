@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -38,12 +38,12 @@ public class ProjectScopeBuilderImpl extends ProjectScopeBuilder {
   public GlobalSearchScope buildLibrariesScope() {
     return new ProjectAndLibrariesScope(myProject) {
       @Override
-      public boolean contains(@NotNull VirtualFile file) {
+      public boolean contains(@Nonnull VirtualFile file) {
         return myProjectFileIndex.isInLibrarySource(file) || myProjectFileIndex.isInLibraryClasses(file);
       }
 
       @Override
-      public boolean isSearchInModuleContent(@NotNull Module aModule) {
+      public boolean isSearchInModuleContent(@Nonnull Module aModule) {
         return false;
       }
     };

@@ -48,8 +48,8 @@ import com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider;
 import com.intellij.xdebugger.attach.XLocalAttachGroup;
 import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -67,7 +67,7 @@ public class AttachToLocalProcessAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
     Project project = getEventProject(e);
@@ -77,7 +77,7 @@ public class AttachToLocalProcessAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = getEventProject(e);
     if (project == null) return;
 
@@ -85,7 +85,7 @@ public class AttachToLocalProcessAction extends AnAction {
 
     new Task.Backgroundable(project, XDebuggerBundle.message("xdebugger.attach.toLocal.action.collectingProcesses"), true, PerformInBackgroundOption.DEAF) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         ProcessInfo[] processList = OSProcessUtil.getProcessList();
         List<AttachItem> items = collectAttachItems(project, processList, indicator, providers);
         ApplicationManager.getApplication().invokeLater(() -> {
@@ -124,11 +124,11 @@ public class AttachToLocalProcessAction extends AnAction {
     }.queue();
   }
 
-  @NotNull
-  public static List<AttachItem> collectAttachItems(@NotNull final Project project,
-                                                    @NotNull ProcessInfo[] processList,
-                                                    @NotNull ProgressIndicator indicator,
-                                                    @NotNull XLocalAttachDebuggerProvider... providers) {
+  @Nonnull
+  public static List<AttachItem> collectAttachItems(@Nonnull final Project project,
+                                                    @Nonnull ProcessInfo[] processList,
+                                                    @Nonnull ProgressIndicator indicator,
+                                                    @Nonnull XLocalAttachDebuggerProvider... providers) {
     MultiMap<XLocalAttachGroup, Pair<ProcessInfo, ArrayList<XLocalAttachDebugger>>> groupWithItems = new MultiMap<>();
 
     UserDataHolderBase dataHolder = new UserDataHolderBase();
@@ -198,7 +198,7 @@ public class AttachToLocalProcessAction extends AnAction {
     return currentHistoryItems;
   }
 
-  public static void addToHistory(@NotNull Project project, @NotNull AttachItem item) {
+  public static void addToHistory(@Nonnull Project project, @Nonnull AttachItem item) {
     LinkedHashMap<String, HistoryItem> history = project.getUserData(HISTORY_KEY);
     if (history == null) {
       project.putUserData(HISTORY_KEY, history = new LinkedHashMap<>());
@@ -212,37 +212,40 @@ public class AttachToLocalProcessAction extends AnAction {
     }
   }
 
-  @NotNull
-  public static List<HistoryItem> getHistory(@NotNull Project project) {
+  @Nonnull
+  public static List<HistoryItem> getHistory(@Nonnull Project project) {
     LinkedHashMap<String, HistoryItem> history = project.getUserData(HISTORY_KEY);
     return history == null ? Collections.emptyList()
                            : Collections.unmodifiableList(new ArrayList<>(history.values()));
   }
 
   public static class HistoryItem {
-    @NotNull private final ProcessInfo myProcessInfo;
-    @NotNull private final XLocalAttachGroup myGroup;
-    @NotNull private final String myDebuggerName;
+    @Nonnull
+    private final ProcessInfo myProcessInfo;
+    @Nonnull
+    private final XLocalAttachGroup myGroup;
+    @Nonnull
+    private final String myDebuggerName;
 
-    public HistoryItem(@NotNull ProcessInfo processInfo,
-                       @NotNull XLocalAttachGroup group,
-                       @NotNull String debuggerName) {
+    public HistoryItem(@Nonnull ProcessInfo processInfo,
+                       @Nonnull XLocalAttachGroup group,
+                       @Nonnull String debuggerName) {
       myProcessInfo = processInfo;
       myGroup = group;
       myDebuggerName = debuggerName;
     }
 
-    @NotNull
+    @Nonnull
     public ProcessInfo getProcessInfo() {
       return myProcessInfo;
     }
 
-    @NotNull
+    @Nonnull
     public XLocalAttachGroup getGroup() {
       return myGroup;
     }
 
-    @NotNull
+    @Nonnull
     public String getDebuggerName() {
       return myDebuggerName;
     }
@@ -271,30 +274,36 @@ public class AttachToLocalProcessAction extends AnAction {
   }
 
   public static class AttachItem {
-    @NotNull private final XLocalAttachGroup myGroup;
+    @Nonnull
+    private final XLocalAttachGroup myGroup;
     private final boolean myIsFirstInGroup;
-    @NotNull private final String myGroupName;
-    @NotNull private UserDataHolder myDataHolder;
-    @NotNull private final ProcessInfo myProcessInfo;
-    @NotNull private final List<XLocalAttachDebugger> myDebuggers;
+    @Nonnull
+    private final String myGroupName;
+    @Nonnull
+    private UserDataHolder myDataHolder;
+    @Nonnull
+    private final ProcessInfo myProcessInfo;
+    @Nonnull
+    private final List<XLocalAttachDebugger> myDebuggers;
     private final int mySelectedDebugger;
-    @NotNull private final List<AttachItem> mySubItems;
+    @Nonnull
+    private final List<AttachItem> mySubItems;
 
-    public AttachItem(@NotNull XLocalAttachGroup group,
+    public AttachItem(@Nonnull XLocalAttachGroup group,
                       boolean isFirstInGroup,
-                      @NotNull ProcessInfo info,
-                      @NotNull List<XLocalAttachDebugger> debuggers,
-                      @NotNull UserDataHolder dataHolder) {
+                      @Nonnull ProcessInfo info,
+                      @Nonnull List<XLocalAttachDebugger> debuggers,
+                      @Nonnull UserDataHolder dataHolder) {
       this(group, isFirstInGroup, group.getGroupName(), info, debuggers, 0, dataHolder);
     }
 
-    public AttachItem(@NotNull XLocalAttachGroup group,
+    public AttachItem(@Nonnull XLocalAttachGroup group,
                       boolean isFirstInGroup,
-                      @NotNull String groupName,
-                      @NotNull ProcessInfo info,
-                      @NotNull List<XLocalAttachDebugger> debuggers,
+                      @Nonnull String groupName,
+                      @Nonnull ProcessInfo info,
+                      @Nonnull List<XLocalAttachDebugger> debuggers,
                       int selectedDebugger,
-                      @NotNull UserDataHolder dataHolder) {
+                      @Nonnull UserDataHolder dataHolder) {
       myGroupName = groupName;
       myDataHolder = dataHolder;
       assert !debuggers.isEmpty() : "debugger list should not be empty";
@@ -314,12 +323,12 @@ public class AttachToLocalProcessAction extends AnAction {
       }
     }
 
-    @NotNull
+    @Nonnull
     public ProcessInfo getProcessInfo() {
       return myProcessInfo;
     }
 
-    @NotNull
+    @Nonnull
     public XLocalAttachGroup getGroup() {
       return myGroup;
     }
@@ -330,32 +339,32 @@ public class AttachToLocalProcessAction extends AnAction {
     }
 
     @Nullable
-    public Icon getIcon(@NotNull Project project) {
+    public Icon getIcon(@Nonnull Project project) {
       return myGroup.getProcessIcon(project, myProcessInfo, myDataHolder);
     }
 
-    @NotNull
-    public String getText(@NotNull Project project) {
+    @Nonnull
+    public String getText(@Nonnull Project project) {
       String shortenedText = StringUtil.shortenTextWithEllipsis(myGroup.getProcessDisplayText(project, myProcessInfo, myDataHolder), 200, 0);
       return myProcessInfo.getPid() + " " + shortenedText;
     }
 
-    @NotNull
+    @Nonnull
     public List<XLocalAttachDebugger> getDebuggers() {
       return myDebuggers;
     }
 
-    @NotNull
+    @Nonnull
     public XLocalAttachDebugger getSelectedDebugger() {
       return myDebuggers.get(mySelectedDebugger);
     }
 
-    @NotNull
+    @Nonnull
     public List<AttachItem> getSubItems() {
       return mySubItems;
     }
 
-    public void startDebugSession(@NotNull Project project) {
+    public void startDebugSession(@Nonnull Project project) {
       XLocalAttachDebugger debugger = getSelectedDebugger();
       UsageTrigger.trigger(ConvertUsagesUtil.ensureProperKey("debugger.attach.local"));
       UsageTrigger.trigger(ConvertUsagesUtil.ensureProperKey("debugger.attach.local." + debugger.getDebuggerDisplayName()));
@@ -370,9 +379,10 @@ public class AttachToLocalProcessAction extends AnAction {
   }
 
   private static class MyBasePopupStep extends BaseListPopupStep<AttachItem> {
-    @NotNull final Project myProject;
+    @Nonnull
+    final Project myProject;
 
-    public MyBasePopupStep(@NotNull Project project,
+    public MyBasePopupStep(@Nonnull Project project,
                            @Nullable String title,
                            List<? extends AttachItem> values) {
       super(title, values);
@@ -402,7 +412,7 @@ public class AttachToLocalProcessAction extends AnAction {
   }
 
   private static class ProcessListStep extends MyBasePopupStep implements ListPopupStepEx<AttachItem> {
-    public ProcessListStep(@NotNull List<AttachItem> items, @NotNull Project project) {
+    public ProcessListStep(@Nonnull List<AttachItem> items, @Nonnull Project project) {
       super(project, XDebuggerBundle.message("xdebugger.attach.toLocal.popup.title.default"), items);
     }
 
@@ -418,7 +428,7 @@ public class AttachToLocalProcessAction extends AnAction {
       return value.getIcon(myProject);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTextFor(AttachItem value) {
       return value.getText(myProject);
@@ -431,7 +441,7 @@ public class AttachToLocalProcessAction extends AnAction {
     }
 
     @Override
-    public void setEmptyText(@NotNull StatusText emptyText) {
+    public void setEmptyText(@Nonnull StatusText emptyText) {
       emptyText.setText(XDebuggerBundle.message("xdebugger.attach.toLocal.popup.emptyText"));
     }
 
@@ -457,7 +467,7 @@ public class AttachToLocalProcessAction extends AnAction {
         setDefaultOptionIndex(selectedItem);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(AttachItem value) {
         return value.getSelectedDebugger().getDebuggerDisplayName();

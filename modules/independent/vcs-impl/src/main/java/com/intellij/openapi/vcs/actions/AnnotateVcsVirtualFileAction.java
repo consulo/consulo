@@ -38,8 +38,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.AnnotationProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -99,7 +99,7 @@ public class AnnotateVcsVirtualFileAction {
     }
   }
 
-  private static void doAnnotate(@NotNull final Project project, @NotNull final Editor editor, @NotNull final VirtualFile file) {
+  private static void doAnnotate(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final VirtualFile file) {
     final AnnotationData data = extractData(project, file);
     assert data != null;
 
@@ -114,7 +114,7 @@ public class AnnotateVcsVirtualFileAction {
 
     final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsBundle.message("retrieving.annotations"), true) {
       @Override
-      public void run(final @NotNull ProgressIndicator indicator) {
+      public void run(final @Nonnull ProgressIndicator indicator) {
         try {
           fileAnnotationRef.set(provider.annotate(data.filePath, data.revisionNumber));
         }
@@ -152,7 +152,7 @@ public class AnnotateVcsVirtualFileAction {
   }
 
   @Nullable
-  private static AnnotationData extractData(@NotNull Project project, @NotNull VirtualFile file) {
+  private static AnnotationData extractData(@Nonnull Project project, @Nonnull VirtualFile file) {
     FilePath filePath = null;
     VcsRevisionNumber revisionNumber = null;
     if (file instanceof VcsVirtualFile) {
@@ -172,13 +172,16 @@ public class AnnotateVcsVirtualFileAction {
   }
 
   private static class AnnotationData {
-    @NotNull public final AbstractVcs vcs;
-    @NotNull public final FilePath filePath;
-    @NotNull public final VcsRevisionNumber revisionNumber;
+    @Nonnull
+    public final AbstractVcs vcs;
+    @Nonnull
+    public final FilePath filePath;
+    @Nonnull
+    public final VcsRevisionNumber revisionNumber;
 
-    public AnnotationData(@NotNull AbstractVcs vcs,
-                          @NotNull FilePath filePath,
-                          @NotNull VcsRevisionNumber revisionNumber) {
+    public AnnotationData(@Nonnull AbstractVcs vcs,
+                          @Nonnull FilePath filePath,
+                          @Nonnull VcsRevisionNumber revisionNumber) {
       this.vcs = vcs;
       this.filePath = filePath;
       this.revisionNumber = revisionNumber;

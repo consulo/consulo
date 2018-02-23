@@ -26,8 +26,8 @@ import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.roots.ui.configuration.ExtensionEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;
 import java.util.*;
@@ -49,12 +49,13 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   }
 
   private final ModuleExtensionProviderEP myProviderEP;
-  @NotNull private final ModuleConfigurationState myState;
+  @Nonnull
+  private final ModuleConfigurationState myState;
   private final ExtensionEditor myExtensionEditor;
   private MutableModuleExtension<?> myExtension;
 
   public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProviderEP providerEP,
-                                  @NotNull ModuleConfigurationState state,
+                                  @Nonnull ModuleConfigurationState state,
                                   ExtensionEditor extensionEditor) {
     super(null);
     myProviderEP = providerEP;
@@ -141,7 +142,7 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
     } return true;
   }
 
-  @NotNull
+  @Nonnull
   private static ModuleExtensionProviderEP findParentWithoutParent(String id) {
     for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
       if (ep.key.equals(id)) {

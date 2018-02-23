@@ -22,7 +22,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ abstract class RuleAction extends ToggleAction implements DumbAware {
   private final UsageViewImpl myView;
   private boolean myState;
 
-  RuleAction(@NotNull UsageView view, @NotNull String text, @NotNull Icon icon) {
+  RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Icon icon) {
     super(text, null, icon);
     myView = (UsageViewImpl)view;
     myState = getOptionValue();

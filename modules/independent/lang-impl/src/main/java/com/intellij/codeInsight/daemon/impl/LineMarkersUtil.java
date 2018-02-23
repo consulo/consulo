@@ -34,8 +34,8 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,11 +43,11 @@ import java.util.List;
 class LineMarkersUtil {
   private static final Logger LOG = Logger.getInstance(LineMarkersUtil.class);
 
-  static boolean processLineMarkers(@NotNull Project project,
-                                    @NotNull Document document,
-                                    @NotNull Segment bounds,
+  static boolean processLineMarkers(@Nonnull Project project,
+                                    @Nonnull Document document,
+                                    @Nonnull Segment bounds,
                                     int group, // -1 for all
-                                    @NotNull Processor<LineMarkerInfo> processor) {
+                                    @Nonnull Processor<LineMarkerInfo> processor) {
     MarkupModelEx markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     return markupModel.processRangeHighlightersOverlappingWith(bounds.getStartOffset(), bounds.getEndOffset(),
                                                                highlighter -> {
@@ -57,10 +57,10 @@ class LineMarkersUtil {
     );
   }
 
-  static void setLineMarkersToEditor(@NotNull Project project,
-                                     @NotNull Document document,
-                                     @NotNull Segment bounds,
-                                     @NotNull Collection<LineMarkerInfo> markers,
+  static void setLineMarkersToEditor(@Nonnull Project project,
+                                     @Nonnull Document document,
+                                     @Nonnull Segment bounds,
+                                     @Nonnull Collection<LineMarkerInfo> markers,
                                      int group) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -98,9 +98,9 @@ class LineMarkersUtil {
   }
 
   private static final Key<LineMarkerInfo> LINE_MARKER_INFO = Key.create("LINE_MARKER_INFO");
-  @NotNull
-  private static RangeHighlighter createOrReuseLineMarker(@NotNull LineMarkerInfo info,
-                                                          @NotNull MarkupModel markupModel,
+  @Nonnull
+  private static RangeHighlighter createOrReuseLineMarker(@Nonnull LineMarkerInfo info,
+                                                          @Nonnull MarkupModel markupModel,
                                                           @Nullable HighlightersRecycler toReuse) {
     RangeHighlighter highlighter = toReuse == null ? null : toReuse.pickupHighlighterFromGarbageBin(info.startOffset, info.endOffset, HighlighterLayer.ADDITIONAL_SYNTAX);
     if (highlighter == null) {
@@ -130,9 +130,9 @@ class LineMarkersUtil {
     return highlighter;
   }
 
-  static void addLineMarkerToEditorIncrementally(@NotNull Project project,
-                                                 @NotNull Document document,
-                                                 @NotNull LineMarkerInfo marker) {
+  static void addLineMarkerToEditorIncrementally(@Nonnull Project project,
+                                                 @Nonnull Document document,
+                                                 @Nonnull LineMarkerInfo marker) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     MarkupModelEx markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
@@ -147,7 +147,7 @@ class LineMarkersUtil {
     }
   }
 
-  private static LineMarkerInfo getLineMarkerInfo(@NotNull RangeHighlighter highlighter) {
+  private static LineMarkerInfo getLineMarkerInfo(@Nonnull RangeHighlighter highlighter) {
     return highlighter.getUserData(LINE_MARKER_INFO);
   }
 }

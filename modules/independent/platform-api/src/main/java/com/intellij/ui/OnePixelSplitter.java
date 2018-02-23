@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -38,7 +38,7 @@ public class OnePixelSplitter extends JBSplitter {
     init();
   }
 
-  public OnePixelSplitter(boolean vertical, @NotNull String proportionKey, float defaultProportion) {
+  public OnePixelSplitter(boolean vertical, @Nonnull String proportionKey, float defaultProportion) {
     super(vertical, proportionKey, defaultProportion);
     init();
   }
@@ -48,7 +48,7 @@ public class OnePixelSplitter extends JBSplitter {
     init();
   }
 
-  public OnePixelSplitter(@NotNull String proportionKey, float defaultProportion) {
+  public OnePixelSplitter(@Nonnull String proportionKey, float defaultProportion) {
     super(proportionKey, defaultProportion);
 
     init();

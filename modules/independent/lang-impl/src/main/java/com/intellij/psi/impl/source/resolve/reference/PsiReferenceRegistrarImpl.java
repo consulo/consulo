@@ -28,8 +28,8 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ConcurrentHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -65,16 +65,16 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
    * @deprecated {@see com.intellij.psi.PsiReferenceContributor
    */
   public void registerReferenceProvider(@Nullable ElementFilter elementFilter,
-                                        @NotNull Class scope,
-                                        @NotNull PsiReferenceProvider provider,
+                                        @Nonnull Class scope,
+                                        @Nonnull PsiReferenceProvider provider,
                                         double priority) {
     PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement(scope);
     registerReferenceProvider(capture.and(new FilterPattern(elementFilter)), provider, priority);
   }
 
   @Override
-  public <T extends PsiElement> void registerReferenceProvider(@NotNull ElementPattern<T> pattern,
-                                                               @NotNull PsiReferenceProvider provider,
+  public <T extends PsiElement> void registerReferenceProvider(@Nonnull ElementPattern<T> pattern,
+                                                               @Nonnull PsiReferenceProvider provider,
                                                                double priority) {
     myKnownSupers.clear(); // we should clear the cache
     final Class scope = pattern.getCondition().getInitialCondition().getAcceptedClass();
@@ -117,24 +117,24 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
    * @deprecated {@link com.intellij.psi.PsiReferenceContributor}
    */
   public void registerReferenceProvider(@Nullable ElementFilter elementFilter,
-                                        @NotNull Class scope,
-                                        @NotNull PsiReferenceProvider provider) {
+                                        @Nonnull Class scope,
+                                        @Nonnull PsiReferenceProvider provider) {
     registerReferenceProvider(elementFilter, scope, provider, DEFAULT_PRIORITY);
   }
 
-  public void unregisterReferenceProvider(@NotNull Class scope, @NotNull PsiReferenceProvider provider) {
+  public void unregisterReferenceProvider(@Nonnull Class scope, @Nonnull PsiReferenceProvider provider) {
     ProviderBinding<PsiReferenceProvider> providerBinding = myBindingsMap.get(scope);
     providerBinding.unregisterProvider(provider);
   }
 
 
-  private void registerNamedReferenceProvider(@NotNull String[] names,
+  private void registerNamedReferenceProvider(@Nonnull String[] names,
                                               final PsiNamePatternCondition<?> nameCondition,
-                                              @NotNull Class scopeClass,
+                                              @Nonnull Class scopeClass,
                                               final boolean caseSensitive,
-                                              @NotNull PsiReferenceProvider provider,
+                                              @Nonnull PsiReferenceProvider provider,
                                               final double priority,
-                                              @NotNull ElementPattern pattern) {
+                                              @Nonnull ElementPattern pattern) {
     NamedObjectProviderBinding<PsiReferenceProvider> providerBinding = myNamedBindingsMap.get(scopeClass);
 
     if (providerBinding == null) {
@@ -153,13 +153,13 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
    * @see com.intellij.psi.PsiReferenceContributor
    * @deprecated
    */
-  public void registerReferenceProvider(@NotNull Class scope, @NotNull PsiReferenceProvider provider) {
+  public void registerReferenceProvider(@Nonnull Class scope, @Nonnull PsiReferenceProvider provider) {
     registerReferenceProvider(null, scope, provider);
   }
 
-  @NotNull
-  List<ProviderBinding.ProviderInfo<PsiReferenceProvider,ProcessingContext>> getPairsByElement(@NotNull PsiElement element,
-                                                                                               @NotNull PsiReferenceService.Hints hints) {
+  @Nonnull
+  List<ProviderBinding.ProviderInfo<PsiReferenceProvider,ProcessingContext>> getPairsByElement(@Nonnull PsiElement element,
+                                                                                               @Nonnull PsiReferenceService.Hints hints) {
     final Class<? extends PsiElement> clazz = element.getClass();
     List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> ret = null;
 

@@ -32,8 +32,8 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -51,7 +51,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     setEnabledInModalContext(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return e != null ? getChildren(e.getDataContext()) : EMPTY_ARRAY;
@@ -86,7 +86,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     return EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   private List<ConfigurationFromContext> getConfigurationsFromContext(ConfigurationContext context) {
     final List<ConfigurationFromContext> fromContext = context.getConfigurationsFromContext();
     if (fromContext == null) {
@@ -131,7 +131,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         final ListPopup popup = JBPopupFactory.getInstance()
                 .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionBundle.message("configuration.action.chooser.title"), producers) {
                   @Override
-                  @NotNull
+                  @Nonnull
                   public String getTextFor(final ConfigurationFromContext producer) {
                     return producer.getConfigurationType().getDisplayName();
                   }
@@ -221,6 +221,6 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     return ProgramRunnerUtil.shortenName(configuration.getName(), 0);
   }
 
-  protected abstract void updatePresentation(Presentation presentation, @NotNull String actionText, ConfigurationContext context);
+  protected abstract void updatePresentation(Presentation presentation, @Nonnull String actionText, ConfigurationContext context);
 
 }

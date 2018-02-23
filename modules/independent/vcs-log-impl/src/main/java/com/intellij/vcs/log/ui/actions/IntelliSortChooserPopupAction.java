@@ -30,7 +30,7 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.wm.impl.ToolWindowContentUI;
 import icons.VcsLogIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -75,7 +75,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
     private final VcsLogUi myUI;
     private final VcsLogUiProperties myProperties;
 
-    public SelectIntelliSortTypeAction(@NotNull VcsLogUi ui, @NotNull VcsLogUiProperties properties, @NotNull PermanentGraph.SortType sortType) {
+    public SelectIntelliSortTypeAction(@Nonnull VcsLogUi ui, @Nonnull VcsLogUiProperties properties, @Nonnull PermanentGraph.SortType sortType) {
       super(sortType.getName(), sortType.getDescription() + ".", null);
       myUI = ui;
       myProperties = properties;
@@ -83,7 +83,7 @@ public class IntelliSortChooserPopupAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(myUI.areGraphActionsEnabled() && myProperties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE));
     }

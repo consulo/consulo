@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.refactoring.RefactoringBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class DirectoryChooserUtil {
   }
 
   @Nullable
-  public static PsiDirectory getOrChooseDirectory(@NotNull IdeView view) {
+  public static PsiDirectory getOrChooseDirectory(@Nonnull IdeView view) {
     PsiDirectory[] dirs = view.getDirectories();
     if (dirs.length == 0) return null;
     if (dirs.length == 1) {
@@ -79,7 +79,7 @@ public class DirectoryChooserUtil {
   public static
   PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories,
                                @Nullable PsiDirectory initialDirectory,
-                               @NotNull Project project,
+                               @Nonnull Project project,
                                Map<PsiDirectory, String> relativePathsToCreate) {
     final DirectoryChooser chooser = new DirectoryChooser(project, new DirectoryChooserModuleTreeView(project));
     chooser.setTitle(RefactoringBundle.message("choose.destination.directory"));

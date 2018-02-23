@@ -25,8 +25,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import java.util.List;
  * Use ProgressManager.executeProcessUnderProgress() to pass modality state if needed
  */
 public abstract class DiffRequestFactory {
-  @NotNull
+  @Nonnull
   public static DiffRequestFactory getInstance() {
     return ServiceManager.getService(DiffRequestFactory.class);
   }
@@ -43,87 +43,87 @@ public abstract class DiffRequestFactory {
   // Diff
   //
 
-  @NotNull
-  public abstract ContentDiffRequest createFromFiles(@Nullable Project project, @NotNull VirtualFile file1, @NotNull VirtualFile file2);
+  @Nonnull
+  public abstract ContentDiffRequest createFromFiles(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file1, @Nonnull VirtualFile file2);
 
-  @NotNull
-  public abstract ContentDiffRequest createFromFiles(@Nullable Project project,
-                                                     @NotNull VirtualFile leftFile,
-                                                     @NotNull VirtualFile baseFile,
-                                                     @NotNull VirtualFile rightFile);
+  @Nonnull
+  public abstract ContentDiffRequest createFromFiles(@javax.annotation.Nullable Project project,
+                                                     @Nonnull VirtualFile leftFile,
+                                                     @Nonnull VirtualFile baseFile,
+                                                     @Nonnull VirtualFile rightFile);
 
-  @NotNull
-  public abstract ContentDiffRequest createClipboardVsValue(@NotNull String value);
+  @Nonnull
+  public abstract ContentDiffRequest createClipboardVsValue(@Nonnull String value);
 
   //
   // Titles
   //
 
-  @NotNull
-  public abstract String getContentTitle(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract String getContentTitle(@Nonnull VirtualFile file);
 
-  @NotNull
-  public abstract String getTitle(@NotNull VirtualFile file1, @NotNull VirtualFile file2);
+  @Nonnull
+  public abstract String getTitle(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2);
 
-  @NotNull
-  public abstract String getTitle(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract String getTitle(@Nonnull VirtualFile file);
 
   //
   // Merge
   //
 
-  @NotNull
-  public abstract MergeRequest createMergeRequest(@Nullable Project project,
+  @Nonnull
+  public abstract MergeRequest createMergeRequest(@javax.annotation.Nullable Project project,
                                                   @Nullable FileType fileType,
-                                                  @NotNull Document output,
-                                                  @NotNull List<String> textContents,
-                                                  @Nullable String title,
-                                                  @NotNull List<String> titles,
-                                                  @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+                                                  @Nonnull Document output,
+                                                  @Nonnull List<String> textContents,
+                                                  @javax.annotation.Nullable String title,
+                                                  @Nonnull List<String> titles,
+                                                  @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract MergeRequest createMergeRequest(@Nullable Project project,
-                                                  @NotNull VirtualFile output,
-                                                  @NotNull List<byte[]> byteContents,
-                                                  @Nullable String title,
-                                                  @NotNull List<String> contentTitles,
-                                                  @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract MergeRequest createMergeRequest(@javax.annotation.Nullable Project project,
+                                                  @Nonnull VirtualFile output,
+                                                  @Nonnull List<byte[]> byteContents,
+                                                  @javax.annotation.Nullable String title,
+                                                  @Nonnull List<String> contentTitles,
+                                                  @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract TextMergeRequest createTextMergeRequest(@Nullable Project project,
-                                                          @NotNull VirtualFile output,
-                                                          @NotNull List<byte[]> byteContents,
-                                                          @Nullable String title,
-                                                          @NotNull List<String> contentTitles,
-                                                          @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract TextMergeRequest createTextMergeRequest(@javax.annotation.Nullable Project project,
+                                                          @Nonnull VirtualFile output,
+                                                          @Nonnull List<byte[]> byteContents,
+                                                          @javax.annotation.Nullable String title,
+                                                          @Nonnull List<String> contentTitles,
+                                                          @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract MergeRequest createBinaryMergeRequest(@Nullable Project project,
-                                                        @NotNull VirtualFile output,
-                                                        @NotNull List<byte[]> byteContents,
-                                                        @Nullable String title,
-                                                        @NotNull List<String> contentTitles,
-                                                        @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract MergeRequest createBinaryMergeRequest(@javax.annotation.Nullable Project project,
+                                                        @Nonnull VirtualFile output,
+                                                        @Nonnull List<byte[]> byteContents,
+                                                        @javax.annotation.Nullable String title,
+                                                        @Nonnull List<String> contentTitles,
+                                                        @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract MergeRequest createMergeRequestFromFiles(@Nullable Project project,
-                                                           @NotNull VirtualFile output,
-                                                           @NotNull List<VirtualFile> contents,
-                                                           @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract MergeRequest createMergeRequestFromFiles(@javax.annotation.Nullable Project project,
+                                                           @Nonnull VirtualFile output,
+                                                           @Nonnull List<VirtualFile> contents,
+                                                           @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract MergeRequest createMergeRequestFromFiles(@Nullable Project project,
-                                                           @NotNull VirtualFile output,
-                                                           @NotNull List<VirtualFile> contents,
-                                                           @Nullable String title,
-                                                           @NotNull List<String> contentTitles,
-                                                           @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract MergeRequest createMergeRequestFromFiles(@javax.annotation.Nullable Project project,
+                                                           @Nonnull VirtualFile output,
+                                                           @Nonnull List<VirtualFile> contents,
+                                                           @javax.annotation.Nullable String title,
+                                                           @Nonnull List<String> contentTitles,
+                                                           @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @NotNull
-  public abstract TextMergeRequest createTextMergeRequestFromFiles(@Nullable Project project,
-                                                                   @NotNull VirtualFile output,
-                                                                   @NotNull List<VirtualFile> contents,
-                                                                   @Nullable String title,
-                                                                   @NotNull List<String> contentTitles,
-                                                                   @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
+  @Nonnull
+  public abstract TextMergeRequest createTextMergeRequestFromFiles(@javax.annotation.Nullable Project project,
+                                                                   @Nonnull VirtualFile output,
+                                                                   @Nonnull List<VirtualFile> contents,
+                                                                   @javax.annotation.Nullable String title,
+                                                                   @Nonnull List<String> contentTitles,
+                                                                   @javax.annotation.Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 }

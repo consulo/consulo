@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.RoamingTypeDisabled;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class StateComponentInfo<T> {
   private static final String OPTION_WORKSPACE = "workspace";
 
   @Nullable
-  public static <K> StateComponentInfo<K> of(@NotNull Object o, @Nullable Project project) {
+  public static <K> StateComponentInfo<K> of(@Nonnull Object o, @Nullable Project project) {
     if (!(o instanceof PersistentStateComponent) && !(o instanceof JDOMExternalizable)) {
       return null;
     }
@@ -108,7 +108,7 @@ public class StateComponentInfo<T> {
   }
 
   @Nullable
-  private static State getStateSpec(@NotNull Class<?> aClass) {
+  private static State getStateSpec(@Nonnull Class<?> aClass) {
     do {
       State stateSpec = aClass.getAnnotation(State.class);
       if (stateSpec != null) {
@@ -127,17 +127,17 @@ public class StateComponentInfo<T> {
     myState = state;
   }
 
-  @NotNull
+  @Nonnull
   public PersistentStateComponent<T> getComponent() {
     return myComponent;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myState.name();
   }
 
-  @NotNull
+  @Nonnull
   public State getState() {
     return myState;
   }

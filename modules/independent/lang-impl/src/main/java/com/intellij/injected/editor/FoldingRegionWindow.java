@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: cdr
@@ -29,9 +29,9 @@ class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion {
 
   private final FoldRegion myHostRegion;
 
-  FoldingRegionWindow(@NotNull DocumentWindow documentWindow,
-                      @NotNull EditorWindow editorWindow,
-                      @NotNull FoldRegion hostRegion,
+  FoldingRegionWindow(@Nonnull DocumentWindow documentWindow,
+                      @Nonnull EditorWindow editorWindow,
+                      @Nonnull FoldRegion hostRegion,
                       int startShift,
                       int endShift)
   {
@@ -51,7 +51,7 @@ class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPlaceholderText() {
     return myHostRegion.getPlaceholderText();
   }

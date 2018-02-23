@@ -55,8 +55,8 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -82,12 +82,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     myConnection = project.getMessageBus().connect(project);
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
-      public void beforeFileTypesChanged(@NotNull FileTypeEvent event) {
+      public void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
         beforeRootsChange(true);
       }
 
       @Override
-      public void fileTypesChanged(@NotNull FileTypeEvent event) {
+      public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         rootsChanged(true);
       }
     });
@@ -126,7 +126,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "ProjectRootManager";
@@ -338,12 +338,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
   private class AppListener extends ApplicationAdapter {
     @Override
-    public void beforeWriteActionStart(@NotNull Object action) {
+    public void beforeWriteActionStart(@Nonnull Object action) {
       myInsideRefresh++;
     }
 
     @Override
-    public void writeActionFinished(@NotNull Object action) {
+    public void writeActionFinished(@Nonnull Object action) {
       if (--myInsideRefresh == 0) {
         if (myPointerChangesDetected) {
           myPointerChangesDetected = false;
@@ -359,7 +359,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
   private class MyVirtualFilePointerListener implements VirtualFilePointerListener {
     @Override
-    public void beforeValidityChanged(@NotNull VirtualFilePointer[] pointers) {
+    public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
       if (!myProject.isDisposed()) {
         if (myInsideRefresh == 0) {
           if (affectsRoots(pointers)) {
@@ -379,7 +379,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     @Override
-    public void validityChanged(@NotNull VirtualFilePointer[] pointers) {
+    public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
       if (!myProject.isDisposed()) {
         if (myInsideRefresh > 0) {
           clearScopesCaches();

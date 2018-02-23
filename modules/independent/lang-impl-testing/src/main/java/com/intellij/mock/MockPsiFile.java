@@ -21,8 +21,8 @@ import com.intellij.util.LocalTimeCounter;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class MockPsiFile extends MockPsiElement implements PsiFile {
   public static final LanguageVersion DUMMY_LANG_VERSION = new LanguageVersion("DUMMY_LANG_VERSION", "DUMMY_LANG_VERSION", Language.ANY);
@@ -34,13 +34,13 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   private final FileViewProvider myFileViewProvider;
   private final PsiManager myPsiManager;
 
-  public MockPsiFile(@NotNull PsiManager psiManager) {
+  public MockPsiFile(@Nonnull PsiManager psiManager) {
     super(psiManager.getProject());
     myPsiManager = psiManager;
     myFileViewProvider = new SingleRootFileViewProvider(getManager(), new LightVirtualFile("noname", getFileType(), ""));
   }
 
-  public MockPsiFile(@NotNull VirtualFile virtualFile, @NotNull PsiManager psiManager) {
+  public MockPsiFile(@Nonnull VirtualFile virtualFile, @Nonnull PsiManager psiManager) {
     super(psiManager.getProject());
     myPsiManager = psiManager;
     myVirtualFile = virtualFile;
@@ -59,20 +59,20 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "mock.file";
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public ItemPresentation getPresentation() {
     return null;
   }
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Not implemented");
   }
 
@@ -102,37 +102,37 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getOriginalFile() {
     return this;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return InternalStdFileTypes.JAVA;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return InternalStdFileTypes.JAVA.getLanguage();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
     return DUMMY_LANG_VERSION;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile[] getPsiRoots() {
     return new PsiFile[]{this};
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileViewProvider getViewProvider() {
     return myFileViewProvider;
   }
@@ -143,7 +143,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -164,7 +164,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public void acceptChildren(@NotNull PsiElementVisitor visitor) {
+  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
   }
 
   @Override
@@ -217,18 +217,18 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return ArrayUtil.EMPTY_CHAR_ARRAY;
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return false;
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return false;
   }
 
@@ -238,7 +238,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
   }
 
   @Override
@@ -247,22 +247,22 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     return null;
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return null;
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return null;
   }
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
   }
 
   @Override
@@ -271,7 +271,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
+  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
     throws IncorrectOperationException {
     return null;
   }
@@ -295,7 +295,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     return null;
   }
 
@@ -315,7 +315,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return PsiReference.EMPTY_ARRAY;
   }
@@ -330,7 +330,7 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     final PsiManager manager = getManager();
     if (manager == null) throw new PsiInvalidElementAccessException(this);
@@ -354,13 +354,13 @@ public class MockPsiFile extends MockPsiElement implements PsiFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getResolveScope() {
     return GlobalSearchScope.EMPTY_SCOPE;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SearchScope getUseScope() {
     return GlobalSearchScope.EMPTY_SCOPE;
   }

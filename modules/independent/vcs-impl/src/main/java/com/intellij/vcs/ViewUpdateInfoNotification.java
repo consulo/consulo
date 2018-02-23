@@ -27,14 +27,16 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ContentUtilEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
-  @NotNull private final Project myProject;
-  @NotNull private final UpdateInfoTree myTree;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final UpdateInfoTree myTree;
 
-  public ViewUpdateInfoNotification(@NotNull Project project, @NotNull UpdateInfoTree updateInfoTree, @NotNull String actionName,
-                                    @NotNull Notification notification) {
+  public ViewUpdateInfoNotification(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree, @Nonnull String actionName,
+                                    @Nonnull Notification notification) {
     super(actionName);
     myProject = project;
     myTree = updateInfoTree;
@@ -47,11 +49,11 @@ public class ViewUpdateInfoNotification extends NotificationAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+  public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
     focusUpdateInfoTree(myProject, myTree);
   }
 
-  public static void focusUpdateInfoTree(@NotNull Project project, @NotNull UpdateInfoTree updateInfoTree) {
+  public static void focusUpdateInfoTree(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree) {
     ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(() -> {
       ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();
       if (contentManager != null) ContentUtilEx.selectContent(contentManager, updateInfoTree, true);

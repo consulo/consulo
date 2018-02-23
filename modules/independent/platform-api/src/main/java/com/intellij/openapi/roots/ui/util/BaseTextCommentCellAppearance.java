@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
 
   protected abstract String getPrimaryText();
 
-  public void customize(@NotNull final SimpleColoredComponent component) {
+  public void customize(@Nonnull final SimpleColoredComponent component) {
     component.setIcon(getIcon());
     component.append(getPrimaryText(), myTextAttributes);
     final String secondaryText = getSecondaryText();
@@ -43,7 +43,7 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
     }
   }
 
-  public void customize(@NotNull final HtmlListCellRenderer renderer) {
+  public void customize(@Nonnull final HtmlListCellRenderer renderer) {
     renderer.setIcon(getIcon());
     renderer.append(getPrimaryText(), myTextAttributes);
     final String secondaryText = getSecondaryText();
@@ -52,7 +52,7 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     String secondaryText = getSecondaryText();
     if (secondaryText != null && secondaryText.length() > 0) {

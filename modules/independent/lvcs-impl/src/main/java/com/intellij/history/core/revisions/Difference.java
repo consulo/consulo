@@ -23,8 +23,8 @@ import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -69,12 +69,12 @@ public class Difference {
         return e.getContent().getString(e, gw);
       }
 
-      @NotNull
+      @Nonnull
       public FilePath getFile() {
         return new FilePathImpl(new File(e.getPath()), e.isDirectory());
       }
 
-      @NotNull
+      @Nonnull
       public VcsRevisionNumber getRevisionNumber() {
         return VcsRevisionNumber.NULL;
       }

@@ -30,8 +30,8 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.nio.charset.Charset;
@@ -51,12 +51,12 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
 
   @RequiredDispatchThread
   @Override
-  public abstract void update(@NotNull final AnActionEvent e);
+  public abstract void update(@Nonnull final AnActionEvent e);
 
-  private void fillCharsetActions(@NotNull DefaultActionGroup group,
+  private void fillCharsetActions(@Nonnull DefaultActionGroup group,
                                   @Nullable VirtualFile virtualFile,
-                                  @NotNull List<Charset> charsets,
-                                  @NotNull final Function<Charset, String> charsetFilter) {
+                                  @Nonnull List<Charset> charsets,
+                                  @Nonnull final Function<Charset, String> charsetFilter) {
     for (final Charset slave : charsets) {
       ChangeFileEncodingTo action = new ChangeFileEncodingTo(virtualFile, slave) {
         {
@@ -74,7 +74,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
         }
 
         @Override
-        protected void chosen(final VirtualFile file, @NotNull final Charset charset) {
+        protected void chosen(final VirtualFile file, @Nonnull final Charset charset) {
           ChooseFileEncodingAction.this.chosen(file, charset);
         }
       };
@@ -85,7 +85,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
   private class ClearThisFileEncodingAction extends AnAction {
     private final VirtualFile myFile;
 
-    private ClearThisFileEncodingAction(@Nullable VirtualFile file, @NotNull String clearItemText) {
+    private ClearThisFileEncodingAction(@Nullable VirtualFile file, @Nonnull String clearItemText) {
       super(clearItemText, "Clear " + (file == null ? "default" : "file '"+file.getName()+"'") + " encoding.", null);
       myFile = file;
     }
@@ -112,12 +112,12 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
       return null;
     }
   };
-  protected abstract void chosen(@Nullable VirtualFile virtualFile, @NotNull Charset charset);
+  protected abstract void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset);
 
-  @NotNull
+  @Nonnull
   protected DefaultActionGroup createCharsetsActionGroup(@Nullable("null means do not show 'clear' text") String clearItemText,
                                                       Charset alreadySelected,
-                                                      @NotNull Function<Charset, String> charsetFilter) {
+                                                      @Nonnull Function<Charset, String> charsetFilter) {
     DefaultActionGroup group = new DefaultActionGroup();
     List<Charset> favorites = new ArrayList<Charset>(EncodingManager.getInstance().getFavorites());
     Collections.sort(favorites);

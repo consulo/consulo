@@ -11,8 +11,8 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.OpenTHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -26,7 +26,8 @@ public class LocalChangeListImpl extends LocalChangeList {
   private Collection<Change> myChanges = new HashSet<Change>();
   private Collection<Change> myReadChangesCache = null;
   private String myId;
-  @NotNull private String myName;
+  @Nonnull
+  private String myName;
   private String myComment = "";
   @Nullable private Object myData;
 
@@ -61,18 +62,18 @@ public class LocalChangeListImpl extends LocalChangeList {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull final String name) {
+  public void setName(@Nonnull final String name) {
     if (! myName.equals(name)) {
       setNameImpl(name);
     }
@@ -89,7 +90,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     }
   }
 
-  void setNameImpl(@NotNull final String name) {
+  void setNameImpl(@Nonnull final String name) {
     if (StringUtil.isEmptyOrSpaces(name) && Registry.is("vcs.log.empty.change.list.creation")) {
       LOG.info("Creating a changelist with empty name");
     }
@@ -142,7 +143,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return null;
   }
 
-  Collection<Change> startProcessingChanges(final Project project, @Nullable final VcsDirtyScope scope) {
+  Collection<Change> startProcessingChanges(final Project project, @javax.annotation.Nullable final VcsDirtyScope scope) {
     createReadChangesCache();
     final Collection<Change> result = new ArrayList<Change>();
     myChangesBeforeUpdate = new OpenTHashSet<Change>(myChanges);
@@ -159,13 +160,13 @@ public class LocalChangeListImpl extends LocalChangeList {
     return result;
   }
 
-  private static boolean isIgnoredChange(@NotNull Change change, @NotNull Project project) {
+  private static boolean isIgnoredChange(@Nonnull Change change, @Nonnull Project project) {
     boolean beforeRevIgnored = change.getBeforeRevision() == null || isIgnoredRevision(change.getBeforeRevision(), project);
     boolean afterRevIgnored = change.getAfterRevision() == null || isIgnoredRevision(change.getAfterRevision(), project);
     return beforeRevIgnored && afterRevIgnored;
   }
 
-  private static boolean isIgnoredRevision(final @NotNull ContentRevision revision, final @NotNull Project project) {
+  private static boolean isIgnoredRevision(final @Nonnull ContentRevision revision, final @Nonnull Project project) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
@@ -218,7 +219,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return changesDetected;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Change findOldChange(final Change newChange) {
     Change oldChange = myChangesBeforeUpdate.get(newChange);
     if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&

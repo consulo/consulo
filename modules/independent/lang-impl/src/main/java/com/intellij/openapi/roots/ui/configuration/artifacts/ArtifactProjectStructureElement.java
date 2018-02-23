@@ -28,8 +28,8 @@ import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
     final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
     ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<PackagingElement<?>>() {
       @Override
-      public boolean process(@NotNull PackagingElement<?> packagingElement, @NotNull PackagingElementPath path) {
+      public boolean process(@Nonnull PackagingElement<?> packagingElement, @Nonnull PackagingElementPath path) {
         ProjectStructureElement element = getProjectStructureElementFor(packagingElement, ArtifactProjectStructureElement.this.myContext,
                                                                         ArtifactProjectStructureElement.this.myArtifactsStructureContext);
         if (element != null) {

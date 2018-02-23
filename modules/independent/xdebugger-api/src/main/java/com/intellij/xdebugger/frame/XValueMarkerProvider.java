@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides implementation of 'Mark Object' feature. <p>
@@ -36,7 +36,7 @@ public abstract class XValueMarkerProvider<V extends XValue, M> {
   /**
    * @return {@code true} if 'Mark Object' action should be enabled for {@code value}
    */
-  public abstract boolean canMark(@NotNull V value);
+  public abstract boolean canMark(@Nonnull V value);
 
   /**
    * This method is used to determine whether the {@code value} was marked or not. The returned object is compared using {@link Object#equals(Object)}
@@ -44,22 +44,22 @@ public abstract class XValueMarkerProvider<V extends XValue, M> {
    * This method may return {@code null} if the {@code value} wasn't marked by {@link #markValue(XValue)} method.
    * @return a marker for {@code value}
    */
-  public abstract M getMarker(@NotNull V value);
+  public abstract M getMarker(@Nonnull V value);
 
   /**
    * This method is called when 'Mark Object' action is invoked. Return an unique marker for {@code value} and store it in some registry
    * if necessary.
    * @return a marker for {@code value}
    */
-  @NotNull
-  public M markValue(@NotNull V value) {
+  @Nonnull
+  public M markValue(@Nonnull V value) {
     return getMarker(value);
   }
 
   /**
    * This method is called when 'Unmark Object' action is invoked.
    */
-  public void unmarkValue(@NotNull V value, @NotNull M marker) {
+  public void unmarkValue(@Nonnull V value, @Nonnull M marker) {
   }
 
   public final Class<V> getValueClass() {

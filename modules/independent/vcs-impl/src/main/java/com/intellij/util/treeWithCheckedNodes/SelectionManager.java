@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PairProcessor;
 import com.intellij.openapi.vcs.changes.ui.PlusMinus;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Collection;
@@ -182,7 +181,7 @@ public class SelectionManager {
     }
   }
 
-  public void setSelectionChangeListener(@Nullable PlusMinus<VirtualFile> selectionChangeListener) {
+  public void setSelectionChangeListener(@javax.annotation.Nullable PlusMinus<VirtualFile> selectionChangeListener) {
     mySelectionChangeListener = selectionChangeListener;
   }
 }

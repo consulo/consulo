@@ -17,8 +17,8 @@ package com.intellij.usages;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Used to provide appropriate psiElements from usages in Find Usages popup.
@@ -33,8 +33,8 @@ public abstract class UsageToPsiElementProvider {
   @Nullable
   public abstract PsiElement getAppropriateParentFrom(PsiElement element);
 
-  @Nullable
-  public static PsiElement findAppropriateParentFrom(@NotNull PsiElement element) {
+  @javax.annotation.Nullable
+  public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
     for (UsageToPsiElementProvider provider : EP_NAME.getExtensions()) {
       final PsiElement parent = provider.getAppropriateParentFrom(element);
       if (parent != null) {

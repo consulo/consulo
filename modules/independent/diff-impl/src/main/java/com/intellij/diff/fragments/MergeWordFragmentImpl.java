@@ -17,7 +17,7 @@ package com.intellij.diff.fragments;
 
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.ThreeSide;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MergeWordFragmentImpl implements MergeWordFragment {
   private final int myStartOffset1;
@@ -41,17 +41,17 @@ public class MergeWordFragmentImpl implements MergeWordFragment {
     myEndOffset3 = endOffset3;
   }
 
-  public MergeWordFragmentImpl(@NotNull MergeRange range) {
+  public MergeWordFragmentImpl(@Nonnull MergeRange range) {
     this(range.start1, range.end1, range.start2, range.end2, range.start3, range.end3);
   }
 
   @Override
-  public int getStartOffset(@NotNull ThreeSide side) {
+  public int getStartOffset(@Nonnull ThreeSide side) {
     return side.select(myStartOffset1, myStartOffset2, myStartOffset3);
   }
 
   @Override
-  public int getEndOffset(@NotNull ThreeSide side) {
+  public int getEndOffset(@Nonnull ThreeSide side) {
     return side.select(myEndOffset1, myEndOffset2, myEndOffset3);
   }
 }

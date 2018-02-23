@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 public interface PsiDirectoryMethodProxy {
   ExtensionPointName<PsiDirectoryMethodProxy> EP_NAME = ExtensionPointName.create("com.intellij.psi.directoryMethodProxy");
 
-  boolean checkAdd(@NotNull PsiDirectory directory, @NotNull PsiElement element) throws IncorrectOperationException;
+  boolean checkAdd(@Nonnull PsiDirectory directory, @Nonnull PsiElement element) throws IncorrectOperationException;
 
-  boolean checkCreateFile(@NotNull PsiDirectory directory, @NotNull String name) throws IncorrectOperationException;
+  boolean checkCreateFile(@Nonnull PsiDirectory directory, @Nonnull String name) throws IncorrectOperationException;
 
-  PsiElement add(@NotNull PsiDirectory directory, @NotNull final PsiElement element) throws IncorrectOperationException;
+  PsiElement add(@Nonnull PsiDirectory directory, @Nonnull final PsiElement element) throws IncorrectOperationException;
 }

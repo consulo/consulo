@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.requests;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class LoadingDiffRequest extends MessageDiffRequest {
   public LoadingDiffRequest(@Nullable String title) {

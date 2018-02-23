@@ -21,8 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -40,26 +39,26 @@ public abstract class RefResolveService extends AbstractProjectComponent {
     return project.getComponent(RefResolveService.class);
   }
 
-  @Nullable("null means the service has not resolved all files and is not ready yet")
-  public abstract int[] getBackwardIds(@NotNull VirtualFileWithId file);
+  @javax.annotation.Nullable("null means the service has not resolved all files and is not ready yet")
+  public abstract int[] getBackwardIds(@Nonnull VirtualFileWithId file);
 
   /**
    * @return subset of scope containing only files which reference the virtualFile
    */
-  @NotNull
-  public abstract GlobalSearchScope restrictByBackwardIds(@NotNull VirtualFile virtualFile, @NotNull GlobalSearchScope scope);
+  @Nonnull
+  public abstract GlobalSearchScope restrictByBackwardIds(@Nonnull VirtualFile virtualFile, @Nonnull GlobalSearchScope scope);
 
   /**
    * @return add files to the resolve queue. until all files from there are resolved, the service is in incomplete state and returns null from getBackwardIds()
    */
-  public abstract boolean queue(@NotNull Collection<VirtualFile> files, @NotNull Object reason);
+  public abstract boolean queue(@Nonnull Collection<VirtualFile> files, @Nonnull Object reason);
 
   public abstract boolean isUpToDate();
 
   public abstract int getQueueSize();
-  public abstract void addListener(@NotNull Disposable parent, @NotNull Listener listener);
+  public abstract void addListener(@Nonnull Disposable parent, @Nonnull Listener listener);
   public abstract static class Listener {
-    public void fileResolved(@NotNull VirtualFile virtualFile) {}
+    public void fileResolved(@Nonnull VirtualFile virtualFile) {}
     public void allFilesResolved() {}
   }
 }

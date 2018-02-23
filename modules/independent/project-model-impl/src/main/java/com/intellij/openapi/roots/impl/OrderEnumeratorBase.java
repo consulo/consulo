@@ -30,8 +30,8 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -55,7 +55,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   protected RootModelProvider myModulesProvider;
   private final OrderRootsCache myCache;
 
-  public OrderEnumeratorBase(@Nullable Module module, @NotNull Project project, @Nullable OrderRootsCache cache) {
+  public OrderEnumeratorBase(@Nullable Module module, @Nonnull Project project, @Nullable OrderRootsCache cache) {
     myCache = cache;
     List<OrderEnumerationHandler> customHandlers = null;
     for (OrderEnumerationHandler.Factory handlerFactory : OrderEnumerationHandler.EP_NAME.getExtensions()) {
@@ -135,7 +135,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public OrderEnumerator using(@NotNull RootModelProvider provider) {
+  public OrderEnumerator using(@Nonnull RootModelProvider provider) {
     myModulesProvider = provider;
     return this;
   }
@@ -151,12 +151,12 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public OrderRootsEnumerator roots(@NotNull OrderRootType rootType) {
+  public OrderRootsEnumerator roots(@Nonnull OrderRootType rootType) {
     return new OrderRootsEnumeratorImpl(this, rootType);
   }
 
   @Override
-  public OrderRootsEnumerator roots(@NotNull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
+  public OrderRootsEnumerator roots(@Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
     return new OrderRootsEnumeratorImpl(this, rootTypeProvider);
   }
 
@@ -280,7 +280,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public void forEachLibrary(@NotNull final Processor<Library> processor) {
+  public void forEachLibrary(@Nonnull final Processor<Library> processor) {
     forEach(new Processor<OrderEntry>() {
       @Override
       public boolean process(OrderEntry orderEntry) {
@@ -296,7 +296,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public void forEachModule(@NotNull final Processor<Module> processor) {
+  public void forEachModule(@Nonnull final Processor<Module> processor) {
     forEach(new Processor<OrderEntry>() {
       @Override
       public boolean process(OrderEntry orderEntry) {
@@ -316,7 +316,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
   }
 
   @Override
-  public <R> R process(@NotNull final RootPolicy<R> policy, final R initialValue) {
+  public <R> R process(@Nonnull final RootPolicy<R> policy, final R initialValue) {
     final OrderEntryProcessor<R> processor = new OrderEntryProcessor<>(policy, initialValue);
     forEach(processor);
     return processor.myValue;
@@ -374,7 +374,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
     return myProductionOnly;
   }
 
-  public boolean isRootModuleModel(@NotNull ModuleRootModel rootModel) {
+  public boolean isRootModuleModel(@Nonnull ModuleRootModel rootModel) {
     return false;
   }
 
@@ -383,7 +383,7 @@ abstract class OrderEnumeratorBase extends OrderEnumerator implements OrderEnume
    *
    * @param processor processor
    */
-  public abstract void processRootModules(@NotNull Processor<Module> processor);
+  public abstract void processRootModules(@Nonnull Processor<Module> processor);
 
   private class OrderEntryProcessor<R> implements Processor<OrderEntry> {
     private R myValue;

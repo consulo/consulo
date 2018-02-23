@@ -19,9 +19,9 @@ import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.*;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -79,7 +79,7 @@ public class SingleRowLayout extends TabLayout {
   }
 
   @Override
-  public boolean isDragOut(@NotNull TabLabel tabLabel, int deltaX, int deltaY) {
+  public boolean isDragOut(@Nonnull TabLabel tabLabel, int deltaX, int deltaY) {
     return getStrategy().isDragOut(tabLabel, deltaX, deltaY);
   }
 

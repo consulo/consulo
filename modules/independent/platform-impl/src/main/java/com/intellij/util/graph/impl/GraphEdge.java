@@ -15,7 +15,7 @@
  */
 package com.intellij.util.graph.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,7 +25,7 @@ class GraphEdge<Node> {
   private final Node myFinish;
   private final int myDelta;
 
-  GraphEdge(@NotNull Node start, @NotNull Node finish, int delta) {
+  GraphEdge(@Nonnull Node start, @Nonnull Node finish, int delta) {
     myStart = start;
     myFinish = finish;
     myDelta = delta;

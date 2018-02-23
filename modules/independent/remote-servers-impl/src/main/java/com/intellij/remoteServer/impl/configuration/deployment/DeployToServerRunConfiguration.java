@@ -40,8 +40,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -63,7 +62,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     myDeploymentConfigurator = deploymentConfigurator;
   }
 
-  @NotNull
+  @Nonnull
   public ServerType<S> getServerType() {
     return myServerType;
   }
@@ -72,20 +71,20 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     return myServerName;
   }
 
-  @NotNull
+  @Nonnull
   public DeploymentConfigurator<D> getDeploymentConfigurator() {
     return myDeploymentConfigurator;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
     return new DeployToServerSettingsEditor(myServerType, myDeploymentConfigurator, getProject());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     String serverName = getServerName();
     if (serverName == null) {
       throw new ExecutionException("Server is not specified");
@@ -151,8 +150,8 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
   }
 
-  @Nullable
-  private static DeploymentSourceType<?> findDeploymentSourceType(@Nullable String id) {
+  @javax.annotation.Nullable
+  private static DeploymentSourceType<?> findDeploymentSourceType(@javax.annotation.Nullable String id) {
     for (DeploymentSourceType<?> type : DeploymentSourceType.EP_NAME.getExtensions()) {
       if (type.getId().equals(id)) {
         return type;

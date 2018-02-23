@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author oleg
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAware {
   private final Editor myEditor;
 
-  public ScrollToTheEndToolbarAction(@NotNull final Editor editor) {
+  public ScrollToTheEndToolbarAction(@Nonnull final Editor editor) {
     super();
     myEditor = editor;
     final String message = ActionsBundle.message("action.EditorConsoleScrollToTheEnd.text");

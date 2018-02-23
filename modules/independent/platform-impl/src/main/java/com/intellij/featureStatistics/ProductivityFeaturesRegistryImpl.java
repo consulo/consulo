@@ -24,7 +24,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -157,31 +157,31 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     }
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> getFeatureIds() {
     lazyLoadFromPluginsFeaturesProviders();
     return myFeatures.keySet();
   }
 
-  public FeatureDescriptor getFeatureDescriptor(@NotNull String id) {
+  public FeatureDescriptor getFeatureDescriptor(@Nonnull String id) {
     lazyLoadFromPluginsFeaturesProviders();
     return getFeatureDescriptorEx(id);
   }
 
-  public FeatureDescriptor getFeatureDescriptorEx(@NotNull String id) {
+  public FeatureDescriptor getFeatureDescriptorEx(@Nonnull String id) {
     if (WELCOME.equals(id)) {
       return new FeatureDescriptor(WELCOME, "AdaptiveWelcome.html", FeatureStatisticsBundle.message("feature.statistics.welcome.tip.name"));
     }
     return myFeatures.get(id);
   }
 
-  public GroupDescriptor getGroupDescriptor(@NotNull String id) {
+  public GroupDescriptor getGroupDescriptor(@Nonnull String id) {
     lazyLoadFromPluginsFeaturesProviders();
     return myGroups.get(id);
   }
 
-  @NotNull
-  public ApplicabilityFilter[] getMatchingFilters(@NotNull String featureId) {
+  @Nonnull
+  public ApplicabilityFilter[] getMatchingFilters(@Nonnull String featureId) {
     lazyLoadFromPluginsFeaturesProviders();
     List<ApplicabilityFilter> filters = new ArrayList<ApplicabilityFilter>();
     for (Pair<String, ApplicabilityFilter> pair : myApplicabilityFilters) {

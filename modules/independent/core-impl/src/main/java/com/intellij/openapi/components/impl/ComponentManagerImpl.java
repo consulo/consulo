@@ -40,8 +40,8 @@ import com.intellij.util.pico.DefaultPicoContainer;
 import consulo.application.ApplicationProperties;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.picocontainer.*;
 
@@ -80,7 +80,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myParentComponentManager = parentComponentManager;
     bootstrapPicoContainer(toString());
   }
-  protected ComponentManagerImpl(ComponentManager parentComponentManager, @NotNull String name) {
+  protected ComponentManagerImpl(ComponentManager parentComponentManager, @Nonnull String name) {
     myParentComponentManager = parentComponentManager;
     bootstrapPicoContainer(name);
   }
@@ -90,7 +90,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     getComponents();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MessageBus getMessageBus() {
     if (myDisposeCompleted || myDisposed) {
@@ -123,7 +123,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
   }
 
-  protected synchronized Object createComponent(@NotNull Class componentInterface) {
+  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
     final Object component = getPicoContainer().getComponentInstance(componentInterface.getName());
     LOG.assertTrue(component != null, "Can't instantiate component for: " + componentInterface);
     return component;
@@ -152,7 +152,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @SuppressWarnings({"unchecked"})
   @Nullable
-  protected <T> T getComponentFromContainer(@NotNull Class<T> interfaceClass) {
+  protected <T> T getComponentFromContainer(@Nonnull Class<T> interfaceClass) {
     final T initializedComponent = (T)myInitializedComponents.get(interfaceClass);
     if (initializedComponent != null) return initializedComponent;
 
@@ -188,7 +188,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public <T> T getComponent(@NotNull Class<T> interfaceClass) {
+  public <T> T getComponent(@Nonnull Class<T> interfaceClass) {
     if (myDisposeCompleted) {
       ProgressManager.checkCanceled();
       throw new AssertionError("Already disposed: " + this);
@@ -197,7 +197,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public <T> T getComponent(@NotNull Class<T> interfaceClass, T defaultImplementation) {
+  public <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementation) {
     final T fromContainer = getComponentFromContainer(interfaceClass);
     if (fromContainer != null) return fromContainer;
     if (defaultImplementation != null) return defaultImplementation;
@@ -219,10 +219,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void initializeComponent(@NotNull Object component, boolean service) {
+  public void initializeComponent(@Nonnull Object component, boolean service) {
   }
 
-  protected void handleInitComponentError(@NotNull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
     LOG.error(ex);
   }
 
@@ -237,13 +237,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myComponentsRegistry.registerComponent(config);
   }
 
-  public synchronized void registerComponentImplementation(@NotNull Class componentKey, @NotNull Class componentImplementation) {
+  public synchronized void registerComponentImplementation(@Nonnull Class componentKey, @Nonnull Class componentImplementation) {
     getPicoContainer().registerComponentImplementation(componentKey.getName(), componentImplementation);
     myInitializedComponents.remove(componentKey);
   }
 
   @TestOnly
-  public synchronized <T> T registerComponentInstance(@NotNull Class<T> componentKey, @NotNull T componentImplementation) {
+  public synchronized <T> T registerComponentInstance(@Nonnull Class<T> componentKey, @Nonnull T componentImplementation) {
     getPicoContainer().unregisterComponent(componentKey.getName());
     getPicoContainer().registerComponentInstance(componentKey.getName(), componentImplementation);
     @SuppressWarnings("unchecked") T t = (T)myInitializedComponents.remove(componentKey);
@@ -251,11 +251,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public synchronized boolean hasComponent(@NotNull Class interfaceClass) {
+  public synchronized boolean hasComponent(@Nonnull Class interfaceClass) {
     return myComponentsRegistry != null && myComponentsRegistry.containsInterface(interfaceClass);
   }
 
-  @NotNull
+  @Nonnull
   protected synchronized Object[] getComponents() {
     Class[] componentClasses = myComponentsRegistry.getComponentInterfaces();
     List<Object> components = new ArrayList<>(componentClasses.length);
@@ -272,13 +272,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   @SuppressWarnings({"unchecked"})
-  @NotNull
-  public synchronized <T> T[] getComponents(@NotNull Class<T> baseClass) {
+  @Nonnull
+  public synchronized <T> T[] getComponents(@Nonnull Class<T> baseClass) {
     return myComponentsRegistry.getComponentsByType(baseClass);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MutablePicoContainer getPicoContainer() {
     MutablePicoContainer container = myPicoContainer;
     if (container == null || myDisposeCompleted) {
@@ -288,7 +288,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return container;
   }
 
-  @NotNull
+  @Nonnull
   protected MutablePicoContainer createPicoContainer() {
     MutablePicoContainer result;
 
@@ -303,7 +303,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public synchronized BaseComponent getComponent(@NotNull String name) {
+  public synchronized BaseComponent getComponent(@Nonnull String name) {
     return myComponentsRegistry.getComponentByName(name);
   }
 
@@ -311,7 +311,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return !isTrue(options, "internal") || ApplicationManager.getApplication().isInternal();
   }
 
-  private static boolean isTrue(Map<String, String> options, @NonNls @NotNull String option) {
+  private static boolean isTrue(Map<String, String> options, @NonNls @Nonnull String option) {
     return options != null && options.containsKey(option) && Boolean.valueOf(options.get(option)).booleanValue();
   }
 
@@ -341,11 +341,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     temporarilyDisposed = disposed;
   }
 
-  protected void loadComponentsConfiguration(@NotNull ComponentConfig[] components, @Nullable PluginDescriptor descriptor, boolean defaultProject) {
+  protected void loadComponentsConfiguration(@Nonnull ComponentConfig[] components, @Nullable PluginDescriptor descriptor, boolean defaultProject) {
     myConfigurator.loadComponentsConfiguration(components, descriptor, defaultProject);
   }
 
-  protected void bootstrapPicoContainer(@NotNull String name) {
+  protected void bootstrapPicoContainer(@Nonnull String name) {
     myPicoContainer = createPicoContainer();
 
     myMessageBus = MessageBusFactory.newMessageBus(name, myParentComponentManager == null ? null : myParentComponentManager.getMessageBus());
@@ -372,11 +372,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void registerComponent(@NotNull final ComponentConfig config) {
+  public void registerComponent(@Nonnull final ComponentConfig config) {
     registerComponent(config, null);
   }
 
-  @NotNull
+  @Nonnull
   public ComponentConfig[] getComponentConfigurations() {
     return myComponentsRegistry.getComponentConfigurations();
   }
@@ -391,13 +391,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Condition getDisposed() {
     return myDisposedCondition;
   }
 
-  @NotNull
-  public static String getComponentName(@NotNull final Object component) {
+  @Nonnull
+  public static String getComponentName(@Nonnull final Object component) {
     if (component instanceof NamedComponent) {
       return ((NamedComponent)component).getComponentName();
     }
@@ -430,7 +430,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       myClassesLoaded = true;
     }
 
-    private void loadClasses(@NotNull ComponentConfig config) {
+    private void loadClasses(@Nonnull ComponentConfig config) {
       ClassLoader loader = config.getClassLoader();
 
       try {
@@ -493,7 +493,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
       }
     }
 
-    @NotNull
+    @Nonnull
     public List<Object> getRegisteredImplementations() {
       return myImplementations;
     }

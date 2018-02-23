@@ -20,29 +20,29 @@ import com.intellij.diff.util.TextDiffType;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.HyperlinkLabel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DiffNotifications {
-  @NotNull
+  @Nonnull
   public static JPanel createInsertedContent() {
     return createNotification("Content added", TextDiffType.INSERTED.getColor(null));
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createRemovedContent() {
     return createNotification("Content removed", TextDiffType.DELETED.getColor(null));
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createEqualContents() {
     return createEqualContents(true, true);
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createEqualContents(boolean equalCharsets, boolean equalSeparators) {
     if (!equalCharsets && !equalSeparators) {
       return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.charset.and.line.separators.message.text"));
@@ -56,17 +56,17 @@ public class DiffNotifications {
     return createNotification(DiffBundle.message("diff.contents.are.identical.message.text"));
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createError() {
     return createNotification("Can not calculate diff");
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createOperationCanceled() {
     return createNotification("Can not calculate diff. Operation canceled.");
   }
 
-  @NotNull
+  @Nonnull
   public static JPanel createDiffTooBig() {
     return createNotification("Can not calculate diff. " + DiffTooBigException.MESSAGE);
   }
@@ -75,18 +75,18 @@ public class DiffNotifications {
   // Impl
   //
 
-  @NotNull
-  public static JPanel createNotification(@NotNull String text) {
+  @Nonnull
+  public static JPanel createNotification(@Nonnull String text) {
     return createNotification(text, null);
   }
 
-  @NotNull
-  public static JPanel createNotification(@NotNull String text, @Nullable final Color background) {
+  @Nonnull
+  public static JPanel createNotification(@Nonnull String text, @Nullable final Color background) {
     return createNotification(text, background, true);
   }
 
-  @NotNull
-  public static JPanel createNotification(@NotNull String text, @Nullable final Color background, boolean showHideAction) {
+  @Nonnull
+  public static JPanel createNotification(@Nonnull String text, @Nullable final Color background, boolean showHideAction) {
     final EditorNotificationPanel panel = new EditorNotificationPanel(background);
     panel.text(text);
     if (showHideAction) {

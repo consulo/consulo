@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.FileColorManager;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
   private final Project myProject;
   private FileColorsConfigurablePanel myPanel;
 
-  public FileColorsConfigurable(@NotNull final Project project) {
+  public FileColorsConfigurable(@Nonnull final Project project) {
     myProject = project;
   }
 
@@ -81,7 +81,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return getHelpTopic();

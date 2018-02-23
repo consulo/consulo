@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
 public abstract class TimedComputable<T>  extends Timed<T> {
@@ -55,6 +55,6 @@ public abstract class TimedComputable<T>  extends Timed<T> {
     return myAcquireCount != 0;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract T calc();
 }

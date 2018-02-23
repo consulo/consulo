@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +38,7 @@ import java.util.Set;
 public class ForwardDependenciesBuilder extends DependenciesBuilder {
   private final Map<PsiFile, Set<PsiFile>> myDirectDependencies = new HashMap<PsiFile, Set<PsiFile>>();
 
-  public ForwardDependenciesBuilder(@NotNull Project project, @NotNull AnalysisScope scope) {
+  public ForwardDependenciesBuilder(@Nonnull Project project, @Nonnull AnalysisScope scope) {
     super(project, scope);
   }
 

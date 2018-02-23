@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 import com.intellij.execution.Executor;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -17,14 +17,14 @@ public abstract class RunServerActionBase extends ServerActionBase {
     super(text, description, icon);
   }
 
-  protected void performAction(@NotNull ServerNode serverNode) {
+  protected void performAction(@Nonnull ServerNode serverNode) {
     if (serverNode.isStartActionEnabled(getExecutor())) {
       serverNode.startServer(getExecutor());
     }
   }
 
   @Override
-  protected boolean isEnabledForServer(@NotNull ServerNode serverNode) {
+  protected boolean isEnabledForServer(@Nonnull ServerNode serverNode) {
     return serverNode.isStartActionEnabled(getExecutor());
   }
 

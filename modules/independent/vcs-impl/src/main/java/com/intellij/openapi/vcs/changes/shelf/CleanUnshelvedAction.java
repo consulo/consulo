@@ -20,12 +20,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CleanUnshelvedAction extends DumbAwareAction {
 
   @Override
-  public void update(@NotNull final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
     final Project project = getEventProject(e);
     final Presentation presentation = e.getPresentation();

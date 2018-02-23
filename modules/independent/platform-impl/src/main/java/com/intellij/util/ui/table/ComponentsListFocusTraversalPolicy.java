@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -70,6 +70,6 @@ public abstract class ComponentsListFocusTraversalPolicy extends FocusTraversalP
     return components.isEmpty() ? null : components.get(0);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract List<Component> getOrderedComponents();
 }

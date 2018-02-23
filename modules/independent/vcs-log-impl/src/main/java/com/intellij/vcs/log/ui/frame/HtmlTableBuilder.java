@@ -15,11 +15,12 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class HtmlTableBuilder {
-  @NotNull private final StringBuilder myStringBuilder = new StringBuilder();
+  @Nonnull
+  private final StringBuilder myStringBuilder = new StringBuilder();
 
   public HtmlTableBuilder() {
     myStringBuilder.append("<table>");
@@ -35,11 +36,11 @@ public class HtmlTableBuilder {
     return this;
   }
 
-  public HtmlTableBuilder append(@NotNull String value) {
+  public HtmlTableBuilder append(@Nonnull String value) {
     return append(value, null);
   }
 
-  public HtmlTableBuilder append(@NotNull String value, @Nullable String align) {
+  public HtmlTableBuilder append(@Nonnull String value, @Nullable String align) {
     myStringBuilder.append("<td");
     if (align != null) {
       myStringBuilder.append(" align=\"").append(align).append("\"");

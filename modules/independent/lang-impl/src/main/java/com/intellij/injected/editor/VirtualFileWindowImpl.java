@@ -19,7 +19,7 @@ package com.intellij.injected.editor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -28,7 +28,7 @@ public class VirtualFileWindowImpl extends LightVirtualFile implements VirtualFi
   private final VirtualFile myDelegate;
   private final DocumentWindowImpl myDocumentWindow;
 
-  public VirtualFileWindowImpl(@NotNull String name, @NotNull VirtualFile delegate, @NotNull DocumentWindowImpl window, @NotNull Language language, @NotNull CharSequence text) {
+  public VirtualFileWindowImpl(@Nonnull String name, @Nonnull VirtualFile delegate, @Nonnull DocumentWindowImpl window, @Nonnull Language language, @Nonnull CharSequence text) {
     super(name, language, text);
     setCharset(delegate.getCharset());
     setFileType(language.getAssociatedFileType());

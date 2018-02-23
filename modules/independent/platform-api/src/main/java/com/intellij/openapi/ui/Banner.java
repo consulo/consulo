@@ -23,7 +23,7 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.PlatformColors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -128,7 +128,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener{
     }
   }
 
-  public void setText(@NotNull final String... text) {
+  public void setText(@Nonnull final String... text) {
     myText.removeAll();
     for (int i = 0; i < text.length; i++) {
       final JLabel eachLabel = new JLabel(text[i], SwingConstants.CENTER);

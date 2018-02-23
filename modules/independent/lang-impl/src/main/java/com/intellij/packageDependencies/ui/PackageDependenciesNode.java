@@ -30,8 +30,8 @@ import com.intellij.ui.Gray;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -52,7 +52,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   protected Project myProject;
   private boolean mySorted;
 
-  public PackageDependenciesNode(@NotNull Project project) {
+  public PackageDependenciesNode(@Nonnull Project project) {
     myProject = project;
   }
 

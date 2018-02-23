@@ -16,8 +16,8 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.util.ThrowableConsumer;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 

@@ -19,7 +19,7 @@ package com.intellij.xdebugger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Represents position in a source file. Use {@link XDebuggerUtil#createPosition} and {@link XDebuggerUtil#createPositionByOffset} to
@@ -37,9 +37,9 @@ public interface XSourcePosition {
    */
   int getOffset();
 
-  @NotNull
+  @Nonnull
   VirtualFile getFile();
 
-  @NotNull
-  Navigatable createNavigatable(@NotNull Project project);
+  @Nonnull
+  Navigatable createNavigatable(@Nonnull Project project);
 }

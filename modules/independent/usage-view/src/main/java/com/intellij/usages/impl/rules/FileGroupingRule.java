@@ -33,8 +33,8 @@ import com.intellij.usages.*;
 import com.intellij.usages.rules.SingleParentUsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
 import consulo.fileTypes.impl.VfsIconUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -50,7 +50,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
 
   @Nullable
   @Override
-  public UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  public UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     VirtualFile virtualFile;
     if (usage instanceof UsageInFile && (virtualFile = ((UsageInFile)usage).getFile()) != null) {
       return new FileUsageGroup(myProject, virtualFile);
@@ -64,7 +64,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     private String myPresentableName;
     private Icon myIcon;
 
-    public FileUsageGroup(@NotNull Project project, @NotNull VirtualFile file) {
+    public FileUsageGroup(@Nonnull Project project, @Nonnull VirtualFile file) {
       myProject = project;
       myFile = file instanceof VirtualFileWindow ? ((VirtualFileWindow)file).getDelegate() : file;
       myPresentableName = myFile.getName();
@@ -102,7 +102,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return myPresentableName;
     }
@@ -133,7 +133,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    public int compareTo(@NotNull UsageGroup otherGroup) {
+    public int compareTo(@Nonnull UsageGroup otherGroup) {
       int compareTexts = getText(null).compareToIgnoreCase(otherGroup.getText(null));
       if (compareTexts != 0) return compareTexts;
       if (otherGroup instanceof FileUsageGroup) {
@@ -159,7 +159,7 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getPresentableName() {
       return myPresentableName;
     }

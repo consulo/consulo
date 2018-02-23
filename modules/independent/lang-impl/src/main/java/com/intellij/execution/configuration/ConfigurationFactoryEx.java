@@ -18,19 +18,19 @@ package com.intellij.execution.configuration;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ConfigurationFactoryEx extends ConfigurationFactory {
-  protected ConfigurationFactoryEx(@NotNull ConfigurationType type) {
+  protected ConfigurationFactoryEx(@Nonnull ConfigurationType type) {
     super(type);
   }
 
-  public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
+  public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
   }
 
-  public void onConfigurationCopied(@NotNull RunConfiguration configuration) {
+  public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
   }
 }

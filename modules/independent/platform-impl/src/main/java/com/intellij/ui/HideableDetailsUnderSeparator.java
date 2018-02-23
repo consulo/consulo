@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,9 +27,9 @@ import java.awt.*;
  * Time: 2:54 PM
  */
 public abstract class HideableDetailsUnderSeparator extends AbstractTitledSeparatorWithIcon {
-  public HideableDetailsUnderSeparator(@NotNull Icon icon,
-                                       @NotNull Icon iconOpen,
-                                       @NotNull String text) {
+  public HideableDetailsUnderSeparator(@Nonnull Icon icon,
+                                       @Nonnull Icon iconOpen,
+                                       @Nonnull String text) {
     super(icon, iconOpen, text);
   }
 

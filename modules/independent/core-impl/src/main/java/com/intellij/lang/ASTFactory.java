@@ -29,7 +29,7 @@ import consulo.lang.util.LanguageVersionUtil;
 import consulo.psi.tree.ASTCompositeFactory;
 import consulo.psi.tree.ASTLazyFactory;
 import consulo.psi.tree.ASTLeafFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -38,27 +38,27 @@ public final class ASTFactory {
   private static final CharTable WHITESPACES = new CharTableImpl();
 
   // factory methods
-  @NotNull
-  public static LazyParseableElement lazy(@NotNull final ILazyParseableElementType type, final CharSequence text) {
+  @Nonnull
+  public static LazyParseableElement lazy(@Nonnull final ILazyParseableElementType type, final CharSequence text) {
     return ASTLazyFactory.EP.getValue(type).createLazy(type, text);
   }
 
-  @NotNull
-  public static CompositeElement composite(@NotNull final IElementType type) {
+  @Nonnull
+  public static CompositeElement composite(@Nonnull final IElementType type) {
     return ASTCompositeFactory.EP.getValue(type).createComposite(type);
   }
 
-  @NotNull
-  public static LeafElement leaf(@NotNull final IElementType type, final CharSequence text) {
+  @Nonnull
+  public static LeafElement leaf(@Nonnull final IElementType type, final CharSequence text) {
     return leaf(type, LanguageVersionUtil.findDefaultVersion(type.getLanguage()), text);
   }
 
-  @NotNull
-  public static LeafElement leaf(@NotNull final IElementType type, @NotNull LanguageVersion languageVersion, final CharSequence text) {
+  @Nonnull
+  public static LeafElement leaf(@Nonnull final IElementType type, @Nonnull LanguageVersion languageVersion, final CharSequence text) {
     return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 
-  @NotNull
+  @Nonnull
   public static LeafElement whitespace(final CharSequence text) {
     final PsiWhiteSpaceImpl w = new PsiWhiteSpaceImpl(WHITESPACES.intern(text));
     CodeEditUtil.setNodeGenerated(w, true);

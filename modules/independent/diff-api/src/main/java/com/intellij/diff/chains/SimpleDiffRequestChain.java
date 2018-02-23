@@ -23,20 +23,21 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRequestChain {
-  @NotNull private final List<DiffRequestProducerWrapper> myRequests;
+  @Nonnull
+  private final List<DiffRequestProducerWrapper> myRequests;
   private int myIndex = 0;
 
-  public SimpleDiffRequestChain(@NotNull DiffRequest request) {
+  public SimpleDiffRequestChain(@Nonnull DiffRequest request) {
     this(Collections.singletonList(request));
   }
 
-  public SimpleDiffRequestChain(@NotNull List<? extends DiffRequest> requests) {
+  public SimpleDiffRequestChain(@Nonnull List<? extends DiffRequest> requests) {
     myRequests = ContainerUtil.map(requests, new Function<DiffRequest, DiffRequestProducerWrapper>() {
       @Override
       public DiffRequestProducerWrapper fun(DiffRequest request) {
@@ -46,7 +47,7 @@ public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRe
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<DiffRequestProducerWrapper> getRequests() {
     return myRequests;
   }
@@ -63,26 +64,27 @@ public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRe
   }
 
   public static class DiffRequestProducerWrapper implements DiffRequestProducer {
-    @NotNull private final DiffRequest myRequest;
+    @Nonnull
+    private final DiffRequest myRequest;
 
-    public DiffRequestProducerWrapper(@NotNull DiffRequest request) {
+    public DiffRequestProducerWrapper(@Nonnull DiffRequest request) {
       myRequest = request;
     }
 
-    @NotNull
+    @Nonnull
     public DiffRequest getRequest() {
       return myRequest;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return StringUtil.notNullize(myRequest.getTitle(), "Change");
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public DiffRequest process(@NotNull UserDataHolder context, @NotNull ProgressIndicator indicator)
+    public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
             throws DiffRequestProducerException, ProcessCanceledException {
       return myRequest;
     }

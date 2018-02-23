@@ -20,7 +20,7 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.Language;
 import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement{
   private final String myErrorDescription;
@@ -36,7 +36,7 @@ public class PsiErrorElementImpl extends CompositePsiElement implements PsiError
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor){
     visitor.visitErrorElement(this);
   }
 
@@ -45,7 +45,7 @@ public class PsiErrorElementImpl extends CompositePsiElement implements PsiError
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     PsiElement master = this;
     while (true) {

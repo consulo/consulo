@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,5 +31,5 @@ public interface XStackFrameContainerEx extends XExecutionStack.XStackFrameConta
    * @param toSelect stack frame to select in the frames list automatically.
    * @param last <code>true</code> if all frames are added
    */
-  void addStackFrames(@NotNull List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last);
+  void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last);
 }

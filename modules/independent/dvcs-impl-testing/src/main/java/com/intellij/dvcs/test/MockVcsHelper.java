@@ -32,8 +32,8 @@ import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -52,17 +52,17 @@ public class MockVcsHelper extends AbstractVcsHelper {
   private CommitHandler myCommitHandler;
   private MergeHandler myMergeHandler;
 
-  public MockVcsHelper(@NotNull Project project) {
+  public MockVcsHelper(@Nonnull Project project) {
     super(project);
   }
 
   @Override
-  public void showErrors(List<VcsException> abstractVcsExceptions, @NotNull String tabDisplayName) {
+  public void showErrors(List<VcsException> abstractVcsExceptions, @Nonnull String tabDisplayName) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @NotNull String tabDisplayName) {
+  public void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @Nonnull String tabDisplayName) {
     throw new UnsupportedOperationException();
   }
 
@@ -105,17 +105,17 @@ public class MockVcsHelper extends AbstractVcsHelper {
   public void showChangesBrowser(CommittedChangesProvider provider,
                                  RepositoryLocation location,
                                  @Nls String title,
-                                 @Nullable Component parent) {
+                                 @javax.annotation.Nullable Component parent) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, @Nls String title) {
+  public void showWhatDiffersBrowser(@javax.annotation.Nullable Component parent, Collection<Change> changes, @Nls String title) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(@NotNull CommittedChangesProvider<T, U> provider,
+  public <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(@Nonnull CommittedChangesProvider<T, U> provider,
                                                                                                       RepositoryLocation location) {
     throw new UnsupportedOperationException();
   }
@@ -134,11 +134,11 @@ public class MockVcsHelper extends AbstractVcsHelper {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VirtualFile> showMergeDialog(List<VirtualFile> files,
                                            MergeProvider provider,
-                                           @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
+                                           @Nonnull MergeDialogCustomizer mergeDialogCustomizer) {
     myMergeDialogShown = true;
     if (myMergeHandler != null) {
       myMergeHandler.showMergeDialog();
@@ -172,7 +172,7 @@ public class MockVcsHelper extends AbstractVcsHelper {
   @Override
   public Collection<VirtualFile> selectFilesToProcess(List<VirtualFile> files,
                                                       String title,
-                                                      @Nullable String prompt,
+                                                      @javax.annotation.Nullable String prompt,
                                                       String singleFileTitle,
                                                       String singleFilePromptTemplate,
                                                       VcsShowConfirmationOption confirmationOption) {
@@ -190,8 +190,8 @@ public class MockVcsHelper extends AbstractVcsHelper {
   }
 
   @Override
-  public boolean commitChanges(@NotNull Collection<Change> changes, @NotNull LocalChangeList initialChangeList,
-                               @NotNull String commitMessage, @Nullable CommitResultHandler customResultHandler) {
+  public boolean commitChanges(@Nonnull Collection<Change> changes, @Nonnull LocalChangeList initialChangeList,
+                               @Nonnull String commitMessage, @Nullable CommitResultHandler customResultHandler) {
     myCommitDialogShown = true;
     if (myCommitHandler != null) {
       boolean success = myCommitHandler.commit(commitMessage);
@@ -212,10 +212,10 @@ public class MockVcsHelper extends AbstractVcsHelper {
   }
 
   @Override
-  public void loadAndShowCommittedChangesDetails(@NotNull Project project,
-                                                 @NotNull VcsRevisionNumber revision,
-                                                 @NotNull VirtualFile file,
-                                                 @NotNull VcsKey key,
+  public void loadAndShowCommittedChangesDetails(@Nonnull Project project,
+                                                 @Nonnull VcsRevisionNumber revision,
+                                                 @Nonnull VirtualFile file,
+                                                 @Nonnull VcsKey key,
                                                  @Nullable RepositoryLocation location,
                                                  boolean local) {
     throw new UnsupportedOperationException();

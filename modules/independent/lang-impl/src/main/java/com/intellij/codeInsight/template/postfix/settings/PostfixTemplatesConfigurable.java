@@ -30,8 +30,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -69,7 +69,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     myShortcutComboBox.addItem(ENTER);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "reference.settingsdialog.IDE.editor.postfix.templates";
@@ -88,7 +88,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   public JComponent createComponent() {
     JPanel panel = new JPanel(new BorderLayout());
@@ -155,7 +155,7 @@ public class PostfixTemplatesConfigurable extends SearchableConfigurable.Parent.
     myShortcutComboBox.setEnabled(pluginEnabled);
   }
 
-  private static char stringToShortcut(@NotNull String string) {
+  private static char stringToShortcut(@Nonnull String string) {
     if (SPACE.equals(string)) {
       return TemplateSettings.SPACE_CHAR;
     }

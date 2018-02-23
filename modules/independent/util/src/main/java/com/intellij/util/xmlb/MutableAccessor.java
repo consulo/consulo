@@ -15,21 +15,21 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface MutableAccessor extends Accessor {
-  void set(@NotNull Object host, @Nullable Object value);
+  void set(@Nonnull Object host, @Nullable Object value);
 
-  void setBoolean(@NotNull Object host, boolean value);
+  void setBoolean(@Nonnull Object host, boolean value);
 
-  void setInt(@NotNull Object host, int value);
+  void setInt(@Nonnull Object host, int value);
 
-  void setShort(@NotNull Object host, short value);
+  void setShort(@Nonnull Object host, short value);
 
-  void setLong(@NotNull Object host, long value);
+  void setLong(@Nonnull Object host, long value);
 
-  void setDouble(@NotNull Object host, double value);
+  void setDouble(@Nonnull Object host, double value);
 
-  void setFloat(@NotNull Object host, float value);
+  void setFloat(@Nonnull Object host, float value);
 }

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.newvfs.events;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,7 +28,7 @@ public class VFileCopyEvent extends VFileEvent {
   private final VirtualFile myNewParent;
   private final String myNewChildName;
 
-  public VFileCopyEvent(final Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent, @NotNull String newChildName) {
+  public VFileCopyEvent(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String newChildName) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
@@ -36,17 +36,17 @@ public class VFileCopyEvent extends VFileEvent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getNewParent() {
     return myNewParent;
   }
 
-  @NotNull
+  @Nonnull
   public String getNewChildName() {
     return myNewChildName;
   }
@@ -57,13 +57,13 @@ public class VFileCopyEvent extends VFileEvent {
     return "VfsEvent[copy " + myFile +" to " + myNewParent + " as " + myNewChildName +"]";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return myNewParent.getPath() + "/" + myNewChildName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

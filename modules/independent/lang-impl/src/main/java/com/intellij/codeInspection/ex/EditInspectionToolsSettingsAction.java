@@ -33,7 +33,7 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -44,33 +44,33 @@ import javax.swing.*;
 public class EditInspectionToolsSettingsAction implements IntentionAction, Iconable, HighPriorityAction {
   private final String myShortName;
 
-  public EditInspectionToolsSettingsAction(@NotNull LocalInspectionTool tool) {
+  public EditInspectionToolsSettingsAction(@Nonnull LocalInspectionTool tool) {
     myShortName = tool.getShortName();
   }
 
-  public EditInspectionToolsSettingsAction(@NotNull HighlightDisplayKey key) {
+  public EditInspectionToolsSettingsAction(@Nonnull HighlightDisplayKey key) {
     myShortName = key.toString();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("edit.options.of.reporter.inspection.text");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return InspectionsBundle.message("edit.options.of.reporter.inspection.family");
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = projectProfileManager.getInspectionProfile();
     editToolSettings(project,

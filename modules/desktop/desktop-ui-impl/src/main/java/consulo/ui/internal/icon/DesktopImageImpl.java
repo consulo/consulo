@@ -18,7 +18,7 @@ package consulo.ui.internal.icon;
 import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
 import consulo.ui.internal.SwingIconWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.net.URL;
@@ -44,7 +44,7 @@ public class DesktopImageImpl implements Image, SwingIconWrapper {
     return myIcon.getIconWidth();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon toSwingIcon() {
     return myIcon;

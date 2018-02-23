@@ -17,8 +17,7 @@ package com.intellij.xdebugger.breakpoints.ui;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -43,17 +42,17 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return false;
   }
 
-  protected XBreakpointGroupingRule(final @NotNull @NonNls String id, final @NonNls @Nls String presentableName) {
+  protected XBreakpointGroupingRule(final @Nonnull @NonNls String id, final @NonNls @Nls String presentableName) {
     myId = id;
     myPresentableName = presentableName;
   }
 
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     return myPresentableName;
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
@@ -62,10 +61,10 @@ public abstract class XBreakpointGroupingRule<B, G extends XBreakpointGroup> {
     return XBreakpointsGroupingPriorities.DEFAULT;
   }
 
-  @Nullable
-  public abstract G getGroup(@NotNull B breakpoint, @NotNull Collection<G> groups);
+  @javax.annotation.Nullable
+  public abstract G getGroup(@Nonnull B breakpoint, @Nonnull Collection<G> groups);
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return null;
   }

@@ -34,7 +34,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -928,7 +928,7 @@ public class ChangesCacheFile {
 
     private ProcessingResult processIncomingChange(final Change change,
                                                    final IncomingChangeListData changeListData,
-                                                   @Nullable final Collection<FilePath> incomingFiles) {
+                                                   @javax.annotation.Nullable final Collection<FilePath> incomingFiles) {
       final CommittedChangeList changeList = changeListData.changeList;
       final ContentRevision afterRevision = change.getAfterRevision();
       if (afterRevision != null) {

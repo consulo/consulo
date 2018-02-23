@@ -17,7 +17,7 @@ package com.intellij.execution.filters;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

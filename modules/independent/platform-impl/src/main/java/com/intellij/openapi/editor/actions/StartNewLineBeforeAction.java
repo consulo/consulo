@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 /**
@@ -43,7 +43,7 @@ public class StartNewLineBeforeAction extends EditorAction {
     }
 
     @Override
-    public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       return getHandler(IdeActions.ACTION_EDITOR_ENTER).isEnabled(editor, caret, dataContext);
     }
 
@@ -60,7 +60,7 @@ public class StartNewLineBeforeAction extends EditorAction {
       getHandler(IdeActions.ACTION_EDITOR_MOVE_LINE_END).execute(editor, caret, dataContext);
     }
 
-    private static EditorActionHandler getHandler(@NotNull String actionId) {
+    private static EditorActionHandler getHandler(@Nonnull String actionId) {
       return EditorActionManager.getInstance().getActionHandler(actionId);
     }
   }

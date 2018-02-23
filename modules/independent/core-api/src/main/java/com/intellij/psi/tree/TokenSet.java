@@ -4,8 +4,8 @@ package com.intellij.psi.tree;
 import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.psi.TokenType;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +57,7 @@ public class TokenSet {
    *
    * @return the contents of the set.
    */
-  @NotNull
+  @Nonnull
   public IElementType[] getTypes() {
     IElementType[] types = myTypes;
 
@@ -93,8 +93,8 @@ public class TokenSet {
    * @param types the element types contained in the set.
    * @return the new token set.
    */
-  @NotNull
-  public static TokenSet create(@NotNull IElementType... types) {
+  @Nonnull
+  public static TokenSet create(@Nonnull IElementType... types) {
     if (types.length == 0) return EMPTY;
     if (types.length == 1 && types[0] == TokenType.WHITE_SPACE) {
       return WHITE_SPACE;
@@ -102,8 +102,8 @@ public class TokenSet {
     return doCreate(types);
   }
 
-  @NotNull
-  private static TokenSet doCreate(@NotNull IElementType... types) {
+  @Nonnull
+  private static TokenSet doCreate(@Nonnull IElementType... types) {
     short min = Short.MAX_VALUE;
     short max = 0;
     for (IElementType type : types) {
@@ -133,8 +133,8 @@ public class TokenSet {
    * @param sets the token sets to unite.
    * @return the new token set.
    */
-  @NotNull
-  public static TokenSet orSet(@NotNull TokenSet... sets) {
+  @Nonnull
+  public static TokenSet orSet(@Nonnull TokenSet... sets) {
     if (sets.length == 0) return EMPTY;
 
     short shift = sets[0].myShift;
@@ -161,8 +161,8 @@ public class TokenSet {
    * @param b the second token set to intersect.
    * @return the new token set.
    */
-  @NotNull
-  public static TokenSet andSet(@NotNull TokenSet a, @NotNull TokenSet b) {
+  @Nonnull
+  public static TokenSet andSet(@Nonnull TokenSet a, @Nonnull TokenSet b) {
     final TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
       final int ai = newSet.myShift - a.myShift + i;
@@ -179,8 +179,8 @@ public class TokenSet {
    * @param b the token set to subtract.
    * @return the new token set.
    */
-  @NotNull
-  public static TokenSet andNot(@NotNull TokenSet a, @NotNull TokenSet b) {
+  @Nonnull
+  public static TokenSet andNot(@Nonnull TokenSet a, @Nonnull TokenSet b) {
     final TokenSet newSet = new TokenSet((short)Math.min(a.myShift, b.myShift), (short)Math.max(a.myMax, b.myMax));
     for (int i = 0; i < newSet.myWords.length; i++) {
       final int ai = newSet.myShift - a.myShift + i;

@@ -2,7 +2,7 @@ package com.intellij.openapi.externalSystem.model.settings;
 
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,10 +30,13 @@ public class ExternalSystemExecutionSettings implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final AtomicLong    myRemoteProcessIdleTtlInMs = new AtomicLong();
-  @NotNull private final AtomicBoolean myVerboseProcessing        = new AtomicBoolean();
+  @Nonnull
+  private final AtomicLong    myRemoteProcessIdleTtlInMs = new AtomicLong();
+  @Nonnull
+  private final AtomicBoolean myVerboseProcessing        = new AtomicBoolean();
 
-  @NotNull private final AtomicReference<ExternalSystemTaskNotificationListener> myNotificationListener =
+  @Nonnull
+  private final AtomicReference<ExternalSystemTaskNotificationListener> myNotificationListener =
     new AtomicReference<ExternalSystemTaskNotificationListener>();
 
   public ExternalSystemExecutionSettings() {

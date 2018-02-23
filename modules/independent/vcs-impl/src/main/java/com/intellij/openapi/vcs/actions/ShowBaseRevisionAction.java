@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -71,7 +71,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       myDescription = ObjectUtil.assertNotNull((DiffMixin)vcs.getDiffProvider()).getCurrentRevisionDescription(selectedFile);
     }
 

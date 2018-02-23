@@ -18,16 +18,16 @@ package com.intellij.vcs.log.graph.api.printer;
 
 import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
 public interface PrintElementManager {
 
-  boolean isSelected(@NotNull PrintElementWithGraphElement printElement);
+  boolean isSelected(@Nonnull PrintElementWithGraphElement printElement);
 
-  int getColorId(@NotNull GraphElement element);
+  int getColorId(@Nonnull GraphElement element);
 
-  @NotNull
+  @Nonnull
   Comparator<GraphElement> getGraphElementComparator();
 }

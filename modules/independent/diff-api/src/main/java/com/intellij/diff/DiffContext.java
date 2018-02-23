@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class DiffContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
@@ -36,12 +36,12 @@ public abstract class DiffContext implements UserDataHolder {
 
   @Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 }

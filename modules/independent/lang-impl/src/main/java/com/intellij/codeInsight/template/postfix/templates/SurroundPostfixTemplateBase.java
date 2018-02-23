@@ -20,20 +20,20 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class SurroundPostfixTemplateBase extends StatementWrapPostfixTemplate {
 
-  protected SurroundPostfixTemplateBase(@NotNull String name,
-                                        @NotNull String descr,
-                                        @NotNull PostfixTemplatePsiInfo psiInfo,
-                                        @NotNull Condition<PsiElement> typeChecker) {
+  protected SurroundPostfixTemplateBase(@Nonnull String name,
+                                        @Nonnull String descr,
+                                        @Nonnull PostfixTemplatePsiInfo psiInfo,
+                                        @Nonnull Condition<PsiElement> typeChecker) {
     super(name, descr, psiInfo, typeChecker);
   }
 
 
   @Override
-  public void expand(@NotNull PsiElement context, @NotNull final Editor editor) {
+  public void expand(@Nonnull PsiElement context, @Nonnull final Editor editor) {
     PsiElement topmostExpression = myPsiInfo.getTopmostExpression(context);
     PsiElement expression = getWrappedExpression(topmostExpression);
     assert topmostExpression != null;
@@ -49,7 +49,7 @@ public abstract class SurroundPostfixTemplateBase extends StatementWrapPostfixTe
     return false;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract Surrounder getSurrounder();
 }
 

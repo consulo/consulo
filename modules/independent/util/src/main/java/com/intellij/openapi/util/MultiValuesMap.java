@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -83,7 +83,7 @@ public class MultiValuesMap<K, V>{
     myBaseMap.clear();
   }
 
-  @Nullable 
+  @Nullable
   public Collection<V> removeAll(final K key) {
     return myBaseMap.remove(key);
   }

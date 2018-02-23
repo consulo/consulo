@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +50,7 @@ public abstract class RunManager {
    *
    * @return all registered configuration types.
    */
-  @NotNull
+  @Nonnull
   public abstract ConfigurationType[] getConfigurationFactories();
 
   /**
@@ -59,9 +59,9 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  @NotNull
+  @Nonnull
   @Deprecated
-  public abstract RunConfiguration[] getConfigurations(@NotNull ConfigurationType type);
+  public abstract RunConfiguration[] getConfigurations(@Nonnull ConfigurationType type);
 
   /**
    * Returns the list of all configurations of a specified type.
@@ -69,8 +69,8 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  @NotNull
-  public abstract List<RunConfiguration> getConfigurationsList(@NotNull ConfigurationType type);
+  @Nonnull
+  public abstract List<RunConfiguration> getConfigurationsList(@Nonnull ConfigurationType type);
 
   /**
    * Returns the list of {@link RunnerAndConfigurationSettings} for all configurations of a specified type.
@@ -78,9 +78,9 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return settings for all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  @NotNull
+  @Nonnull
   @Deprecated
-  public abstract RunnerAndConfigurationSettings[] getConfigurationSettings(@NotNull ConfigurationType type);
+  public abstract RunnerAndConfigurationSettings[] getConfigurationSettings(@Nonnull ConfigurationType type);
 
   /**
    * Returns the list of {@link RunnerAndConfigurationSettings} for all configurations of a specified type.
@@ -88,15 +88,15 @@ public abstract class RunManager {
    * @param type a run configuration type.
    * @return settings for all configurations of the type, or an empty array if no configurations of the type are defined.
    */
-  @NotNull
-  public abstract List<RunnerAndConfigurationSettings> getConfigurationSettingsList(@NotNull ConfigurationType type);
+  @Nonnull
+  public abstract List<RunnerAndConfigurationSettings> getConfigurationSettingsList(@Nonnull ConfigurationType type);
 
   /**
    * Returns the list of all run configurations.
    *
    * @return the list of all run configurations.
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   public abstract RunConfiguration[] getAllConfigurations();
 
@@ -105,7 +105,7 @@ public abstract class RunManager {
    *
    * @return the list of all run configurations.
    */
-  @NotNull
+  @Nonnull
   public abstract List<RunConfiguration> getAllConfigurationsList();
 
   /**
@@ -113,7 +113,7 @@ public abstract class RunManager {
    *
    * @return the list of all run configurations settings.
    */
-  @NotNull
+  @Nonnull
   public abstract List<RunnerAndConfigurationSettings> getAllSettings();
 
   /**
@@ -122,7 +122,7 @@ public abstract class RunManager {
    * @return the list of all temporary run configurations.
    * @see RunnerAndConfigurationSettings#isTemporary()
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   public abstract RunConfiguration[] getTempConfigurations();
 
@@ -132,7 +132,7 @@ public abstract class RunManager {
    * @return the list of all temporary run configurations settings.
    * @see RunnerAndConfigurationSettings#isTemporary()
    */
-  @NotNull
+  @Nonnull
   public abstract List<RunnerAndConfigurationSettings> getTempConfigurationsList();
 
   /**
@@ -142,7 +142,7 @@ public abstract class RunManager {
    * @see RunnerAndConfigurationSettings#isTemporary()
    */
   @Deprecated
-  public abstract boolean isTemporary(@NotNull RunConfiguration configuration);
+  public abstract boolean isTemporary(@Nonnull RunConfiguration configuration);
 
   /**
    * Saves the specified temporary run configuration and makes it a permanent one.
@@ -150,14 +150,14 @@ public abstract class RunManager {
    * @param configuration the temporary run configuration to save.
    */
   @Deprecated
-  public abstract void makeStable(@NotNull RunConfiguration configuration);
+  public abstract void makeStable(@Nonnull RunConfiguration configuration);
 
   /**
    * Saves the specified temporary run settings and makes it a permanent one.
    *
    * @param settings the temporary settings to save.
    */
-  public abstract void makeStable(@NotNull RunnerAndConfigurationSettings settings);
+  public abstract void makeStable(@Nonnull RunnerAndConfigurationSettings settings);
 
   /**
    * Returns the selected item in the run/debug configurations combobox.
@@ -172,7 +172,7 @@ public abstract class RunManager {
    *
    * @param configuration the configuration to select, or null if nothing should be selected.
    */
-  public abstract void setSelectedConfiguration(@Nullable RunnerAndConfigurationSettings configuration);
+  public abstract void setSelectedConfiguration(@javax.annotation.Nullable RunnerAndConfigurationSettings configuration);
 
   /**
    * Creates a configuration of the specified type with the specified name. Note that you need to call
@@ -183,8 +183,8 @@ public abstract class RunManager {
    * @return the configuration settings object.
    * @see RunManager#suggestUniqueName(String, Collection)
    */
-  @NotNull
-  public abstract RunnerAndConfigurationSettings createRunConfiguration(@NotNull String name, @NotNull ConfigurationFactory type);
+  @Nonnull
+  public abstract RunnerAndConfigurationSettings createRunConfiguration(@Nonnull String name, @Nonnull ConfigurationFactory type);
 
   /**
    * Creates a configuration settings object based on a specified {@link RunConfiguration}. Note that you need to call
@@ -194,8 +194,8 @@ public abstract class RunManager {
    * @param factory          the factory instance.
    * @return the configuration settings object.
    */
-  @NotNull
-  public abstract RunnerAndConfigurationSettings createConfiguration(@NotNull RunConfiguration runConfiguration, @NotNull ConfigurationFactory factory);
+  @Nonnull
+  public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration runConfiguration, @Nonnull ConfigurationFactory factory);
 
   /**
    * Returns the template settings for the specified configuration type.
@@ -203,7 +203,7 @@ public abstract class RunManager {
    * @param factory the configuration factory.
    * @return the template settings.
    */
-  @NotNull
+  @Nonnull
   public abstract RunnerAndConfigurationSettings getConfigurationTemplate(ConfigurationFactory factory);
 
   /**
@@ -224,8 +224,8 @@ public abstract class RunManager {
 
   public abstract boolean hasSettings(RunnerAndConfigurationSettings settings);
 
-  @NotNull
-  public static String suggestUniqueName(@NotNull String str, @NotNull Collection<String> currentNames) {
+  @Nonnull
+  public static String suggestUniqueName(@Nonnull String str, @Nonnull Collection<String> currentNames) {
     if (!currentNames.contains(str)) return str;
 
     final Matcher matcher = Pattern.compile("(.*?)\\s*\\(\\d+\\)").matcher(str);
@@ -238,7 +238,7 @@ public abstract class RunManager {
     }
   }
 
-  public String suggestUniqueName(@Nullable String name, @Nullable ConfigurationType type) {
+  public String suggestUniqueName(@javax.annotation.Nullable String name, @javax.annotation.Nullable ConfigurationType type) {
     List<RunnerAndConfigurationSettings> settingsList = type != null ? getConfigurationSettingsList(type) : getAllSettings();
     List<String> names = ContainerUtil.map(settingsList, settings -> settings.getName());
     return suggestUniqueName(StringUtil.notNullize(name, UNNAMED), names);
@@ -251,7 +251,7 @@ public abstract class RunManager {
    *
    * @return <code>true</code> if name was changed
    */
-  public boolean setUniqueNameIfNeed(@NotNull RunnerAndConfigurationSettings settings) {
+  public boolean setUniqueNameIfNeed(@Nonnull RunnerAndConfigurationSettings settings) {
     String oldName = settings.getName();
     settings.setName(suggestUniqueName(StringUtil.notNullize(oldName, UNNAMED), settings.getType()));
     return !Comparing.equal(oldName, settings.getName());
@@ -262,7 +262,7 @@ public abstract class RunManager {
    *
    * @return <code>true</code> if name was changed
    */
-  public boolean setUniqueNameIfNeed(@NotNull RunConfiguration configuration) {
+  public boolean setUniqueNameIfNeed(@Nonnull RunConfiguration configuration) {
     String oldName = configuration.getName();
     configuration.setName(suggestUniqueName(StringUtil.notNullize(oldName, UNNAMED), configuration.getType()));
     return !Comparing.equal(oldName, configuration.getName());

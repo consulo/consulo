@@ -6,20 +6,21 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ui.RemoteServersView;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class RemoteServersViewImpl extends RemoteServersView {
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
 
-  public RemoteServersViewImpl(@NotNull Project project) {
+  public RemoteServersViewImpl(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  public void showServerConnection(@NotNull final ServerConnection<?> connection) {
+  public void showServerConnection(@Nonnull final ServerConnection<?> connection) {
     final ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(ServersToolWindow.ID);
     if (toolWindow != null) {
       toolWindow.activate(new Runnable() {
@@ -40,7 +41,7 @@ public class RemoteServersViewImpl extends RemoteServersView {
   }
 
   @Override
-  public void showDeployment(@NotNull final ServerConnection<?> connection, @NotNull final String deploymentName) {
+  public void showDeployment(@Nonnull final ServerConnection<?> connection, @Nonnull final String deploymentName) {
     ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
     final ToolWindow toolWindow = toolWindowManager.getToolWindow(ServersToolWindow.ID);
     if (toolWindow != null) {

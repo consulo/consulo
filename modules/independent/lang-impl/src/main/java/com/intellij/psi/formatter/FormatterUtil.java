@@ -30,8 +30,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.CharTable;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class FormatterUtil {
     return type == TokenType.WHITE_SPACE || (type != TokenType.ERROR_ELEMENT && node.getTextLength() == 0);
   }
 
-  public static boolean isOneOf(@Nullable ASTNode node, @NotNull IElementType... types) {
+  public static boolean isOneOf(@Nullable ASTNode node, @Nonnull IElementType... types) {
     if (node == null) return false;
     IElementType elementType = node.getElementType();
     for (IElementType each : types) {
@@ -61,17 +61,17 @@ public class FormatterUtil {
   }
 
   @Nullable
-  public static ASTNode getPrevious(@Nullable ASTNode node, @NotNull IElementType... typesToIgnore) {
+  public static ASTNode getPrevious(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
     return getNextOrPrevious(node, false, typesToIgnore);
   }
 
   @Nullable
-  public static ASTNode getNext(@Nullable ASTNode node, @NotNull IElementType... typesToIgnore) {
+  public static ASTNode getNext(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
     return getNextOrPrevious(node, true, typesToIgnore);
   }
 
   @Nullable
-  private static ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, @NotNull IElementType... typesToIgnore) {
+  private static ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, @Nonnull IElementType... typesToIgnore) {
     if (node == null) return null;
 
     ASTNode each = isNext ? node.getTreeNext() : node.getTreePrev();
@@ -95,7 +95,7 @@ public class FormatterUtil {
   }
 
   @Nullable
-  public static ASTNode getPreviousLeaf(@Nullable ASTNode node, @NotNull IElementType... typesToIgnore) {
+  public static ASTNode getPreviousLeaf(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
     ASTNode prev = getPrevious(node, typesToIgnore);
     if (prev == null) {
       return null;
@@ -275,9 +275,9 @@ public class FormatterUtil {
    * @param holder             target range holder
    * @param whiteSpaceRange    target range which text should be replaced by the given one
    */
-  public static void replaceInnerWhiteSpace(@NotNull final String newWhiteSpaceText,
-                                            @NotNull final ASTNode holder,
-                                            @NotNull final TextRange whiteSpaceRange)
+  public static void replaceInnerWhiteSpace(@Nonnull final String newWhiteSpaceText,
+                                            @Nonnull final ASTNode holder,
+                                            @Nonnull final TextRange whiteSpaceRange)
   {
     final CharTable charTable = SharedImplUtil.findCharTableByTree(holder);
     StringBuilder newText = createNewLeafChars(holder, whiteSpaceRange, newWhiteSpaceText);

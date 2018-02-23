@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,14 +40,14 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return myProjectFileIndex.isInContent(file) ||
            myProjectFileIndex.isInLibraryClasses(file) ||
            myProjectFileIndex.isInLibrarySource(file);
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     List<OrderEntry> entries1 = myProjectFileIndex.getOrderEntriesForFile(file1);
     List<OrderEntry> entries2 = myProjectFileIndex.getOrderEntriesForFile(file2);
     if (entries1.size() != entries2.size()) return 0;
@@ -81,7 +81,7 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return true;
   }
 
@@ -91,14 +91,14 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return PsiBundle.message("psi.search.scope.project.and.libraries");
   }
 
   @Override
-  @NotNull
-  public GlobalSearchScope intersectWith(@NotNull final GlobalSearchScope scope) {
+  @Nonnull
+  public GlobalSearchScope intersectWith(@Nonnull final GlobalSearchScope scope) {
     if (scope.isSearchOutsideRootModel()) {
       return super.intersectWith(scope);
     }
@@ -108,8 +108,8 @@ public class ProjectAndLibrariesScope extends GlobalSearchScope {
   }
 
   @Override
-  @NotNull
-  public GlobalSearchScope uniteWith(@NotNull final GlobalSearchScope scope) {
+  @Nonnull
+  public GlobalSearchScope uniteWith(@Nonnull final GlobalSearchScope scope) {
     if (scope.isSearchOutsideRootModel()) {
       return super.uniteWith(scope);
     }

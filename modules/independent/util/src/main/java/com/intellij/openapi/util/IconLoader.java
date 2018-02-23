@@ -33,8 +33,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.UIInternal;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +79,7 @@ public final class IconLoader {
   }
 
   @Deprecated
-  public static Icon getIcon(@NotNull final Image image) {
+  public static Icon getIcon(@Nonnull final Image image) {
     return new JBImageIcon(image);
   }
 
@@ -105,8 +105,8 @@ public final class IconLoader {
   //  return new InvariantIcon(getIcon(path), getIcon(darkVariantPath));
   //}
 
-  @NotNull
-  public static SwingImageRef getIcon(@NonNls @NotNull final String path) {
+  @Nonnull
+  public static SwingImageRef getIcon(@NonNls @Nonnull final String path) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
 
     assert callerClass != null : path;
@@ -114,7 +114,7 @@ public final class IconLoader {
   }
 
   @Nullable
-  private static SwingImageRef getReflectiveIcon(@NotNull String path, ClassLoader classLoader) {
+  private static SwingImageRef getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
     try {
       @NonNls String pckg = path.startsWith("AllIcons.") ? "com.intellij.icons." : "icons.";
       Class cur = Class.forName(pckg + path.substring(0, path.lastIndexOf('.')).replace('.', '$'), true, classLoader);
@@ -132,14 +132,14 @@ public final class IconLoader {
    * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String)}
    */
   @Nullable
-  public static SwingImageRef findIcon(@NonNls @NotNull String path) {
+  public static SwingImageRef findIcon(@NonNls @Nonnull String path) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
     if (callerClass == null) return null;
     return findIcon(path, callerClass);
   }
 
-  @NotNull
-  public static SwingImageRef getIcon(@NotNull String path, @NotNull final Class aClass) {
+  @Nonnull
+  public static SwingImageRef getIcon(@Nonnull String path, @Nonnull final Class aClass) {
     final SwingImageRef icon = findIcon(path, aClass);
     if (icon == null) {
       LOG.error("Icon cannot be found in '" + path + "', aClass='" + aClass + "'");
@@ -160,17 +160,17 @@ public final class IconLoader {
    * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String, Class)}
    */
   @Nullable
-  public static SwingImageRef findIcon(@NotNull final String path, @NotNull final Class aClass) {
+  public static SwingImageRef findIcon(@Nonnull final String path, @Nonnull final Class aClass) {
     return findIcon(path, aClass, false);
   }
 
   @Nullable
-  public static SwingImageRef findIcon(@NotNull String path, @NotNull final Class aClass, boolean computeNow) {
+  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull final Class aClass, boolean computeNow) {
     return findIcon(path, aClass, computeNow, STRICT);
   }
 
   @Nullable
-  public static SwingImageRef findIcon(@NotNull String path, @NotNull Class aClass, boolean computeNow, boolean strict) {
+  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
     String originalPath = path;
     Pair<String, Class> patchedPath = patchPath(path);
     path = patchedPath.first;
@@ -192,8 +192,8 @@ public final class IconLoader {
     return icon;
   }
 
-  @NotNull
-  private static Pair<String, Class> patchPath(@NotNull String path) {
+  @Nonnull
+  private static Pair<String, Class> patchPath(@Nonnull String path) {
     for (IconPathPatcher patcher : ourPatchers) {
       String newPath = patcher.patchPath(path);
       if (newPath != null) {
@@ -203,7 +203,7 @@ public final class IconLoader {
     return Pair.create(path, null);
   }
 
-  private static boolean isReflectivePath(@NotNull String path) {
+  private static boolean isReflectivePath(@Nonnull String path) {
     List<String> paths = StringUtil.split(path, ".");
     return paths.size() > 1 && paths.get(0).endsWith("Icons");
   }
@@ -229,7 +229,7 @@ public final class IconLoader {
   }
 
   @Nullable
-  public static Icon findIcon(@NotNull String path, @NotNull ClassLoader classLoader) {
+  public static Icon findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
     String originalPath = path;
     Pair<String, Class> patchedPath = patchPath(path);
     path = patchedPath.first;
@@ -249,7 +249,7 @@ public final class IconLoader {
   }
 
   @Nullable
-  private static ImageIcon checkIcon(final Image image, @NotNull URL url) {
+  private static ImageIcon checkIcon(final Image image, @Nonnull URL url) {
     if (image == null || image.getHeight(null) < 1) { // image wasn't loaded or broken
       return null;
     }
@@ -263,7 +263,7 @@ public final class IconLoader {
     return (ImageIcon)icon;
   }
 
-  public static boolean isGoodSize(@NotNull final Icon icon) {
+  public static boolean isGoodSize(@Nonnull final Icon icon) {
     return icon.getIconWidth() > 0 && icon.getIconHeight() > 0;
   }
 
@@ -308,11 +308,11 @@ public final class IconLoader {
     return disabledIcon;
   }
 
-  public static Icon getTransparentIcon(@NotNull final Icon icon) {
+  public static Icon getTransparentIcon(@Nonnull final Icon icon) {
     return getTransparentIcon(icon, 0.5f);
   }
 
-  public static Icon getTransparentIcon(@NotNull final Icon icon, final float alpha) {
+  public static Icon getTransparentIcon(@Nonnull final Icon icon, final float alpha) {
     return new RetrievableIcon() {
       @Nullable
       @Override
@@ -348,8 +348,8 @@ public final class IconLoader {
    * @param icon the source icon
    * @return the icon snapshot
    */
-  @NotNull
-  public static Icon getIconSnapshot(@NotNull Icon icon) {
+  @Nonnull
+  public static Icon getIconSnapshot(@Nonnull Icon icon) {
     if (icon instanceof CachedImageIcon) {
       return ((CachedImageIcon)icon).getRealIcon();
     }
@@ -360,7 +360,7 @@ public final class IconLoader {
     private volatile Object myRealIcon;
     private String myOriginalPath;
     private ClassLoader myClassLoader;
-    @NotNull
+    @Nonnull
     private URL myUrl;
     private volatile boolean dark;
     private volatile int numberOfPatchers = ourPatchers.size();
@@ -368,7 +368,7 @@ public final class IconLoader {
     private ImageFilter[] myFilters;
     private final MyScaledIconsCache myScaledIconsCache = new MyScaledIconsCache();
 
-    private CachedImageIcon(@NotNull CachedImageIcon icon) {
+    private CachedImageIcon(@Nonnull CachedImageIcon icon) {
       myRealIcon = null; // to be computed
       myOriginalPath = icon.myOriginalPath;
       myClassLoader = icon.myClassLoader;
@@ -378,7 +378,7 @@ public final class IconLoader {
       myFilters = icon.myFilters;
     }
 
-    public CachedImageIcon(@NotNull URL url) {
+    public CachedImageIcon(@Nonnull URL url) {
       myUrl = url;
       dark = USE_DARK_ICONS;
       myFilters = new ImageFilter[] {IMAGE_FILTER};
@@ -392,12 +392,12 @@ public final class IconLoader {
       return myFilters[0];
     }
 
-    @NotNull
+    @Nonnull
     private synchronized ImageIcon getRealIcon() {
       return getRealIcon(null);
     }
 
-    @NotNull
+    @Nonnull
     private synchronized ImageIcon getRealIcon(@Nullable Graphics g) {
       if (!isValid() || needUpdateJBUIScale((Graphics2D)g)) {
         if (isLoaderDisabled()) return EMPTY_ICON;

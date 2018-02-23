@@ -1,7 +1,7 @@
 package com.intellij.util.ui.classpath;
 
 import consulo.roots.types.BinariesOrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jdom.Element;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
@@ -22,11 +22,11 @@ public class GlobalLibraryReferenceElement implements SimpleClasspathElement {
   @NonNls public static final String LEVEL_ATTRIBUTE = "level";
   private final String myLibraryName;
 
-  public GlobalLibraryReferenceElement(@NotNull String libraryName) {
+  public GlobalLibraryReferenceElement(@Nonnull String libraryName) {
     myLibraryName = libraryName;
   }
 
-  public GlobalLibraryReferenceElement(@NotNull Element element) {
+  public GlobalLibraryReferenceElement(@Nonnull Element element) {
     myLibraryName = element.getAttributeValue(NAME_ATTRIBUTE);
   }
 

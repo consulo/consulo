@@ -16,37 +16,37 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class OneElementFMap<V> implements KeyFMap {
   private final Key myKey;
   private final V myValue;
 
-  public OneElementFMap(@NotNull Key key, @NotNull V value) {
+  public OneElementFMap(@Nonnull Key key, @Nonnull V value) {
     myKey = key;
     myValue = value;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value) {
+  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     if (myKey == key) return new OneElementFMap<V>(key, value);
     return new PairElementsFMap(myKey, myValue, key, value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public KeyFMap minus(@NotNull Key<?> key) {
+  public KeyFMap minus(@Nonnull Key<?> key) {
     return key == myKey ? KeyFMap.EMPTY_MAP : this;
   }
 
   @Override
-  public <V> V get(@NotNull Key<V> key) {
+  public <V> V get(@Nonnull Key<V> key) {
     //noinspection unchecked
     return myKey == key ? (V)myValue : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key[] getKeys() {
     return new Key[] { myKey };

@@ -18,8 +18,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -27,5 +27,5 @@ import org.jetbrains.annotations.Nullable;
 public interface HectorComponentPanelsProvider {
   ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create("com.intellij.hectorComponentProvider");
 
-  @Nullable HectorComponentPanel createConfigurable(@NotNull PsiFile file);
+  @Nullable HectorComponentPanel createConfigurable(@Nonnull PsiFile file);
 }

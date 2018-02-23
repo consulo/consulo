@@ -18,8 +18,8 @@ package com.intellij.ui.docking;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -34,13 +34,13 @@ public abstract class DockManager {
     return ServiceManager.getService(project, DockManager.class);
   }
 
-  public abstract DragSession createDragSession(MouseEvent mouseEvent, @NotNull DockableContent content);
+  public abstract DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content);
 
   public abstract Set<DockContainer> getContainers();
 
   public abstract IdeFrame getIdeFrame(DockContainer container);
 
-  public abstract String getDimensionKeyForFocus(@NotNull String key);
+  public abstract String getDimensionKeyForFocus(@Nonnull String key);
 
   @Nullable
   public abstract DockContainer getContainerFor(Component c);

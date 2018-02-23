@@ -4,7 +4,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import com.intellij.openapi.options.ConfigurationException;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,11 +27,12 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
 
   private final JPanel myComponent = new JPanel(new BorderLayout());
 
-  @NotNull private AbstractImportFromExternalSystemControl myControl;
+  @Nonnull
+  private AbstractImportFromExternalSystemControl myControl;
 
   private boolean myGradleSettingsInitialised;
 
-  public SelectExternalProjectStep(@NotNull WizardContext context) {
+  public SelectExternalProjectStep(@Nonnull WizardContext context) {
     super(context);
   }
 
@@ -41,7 +42,7 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
   }
 
   @Override
-  public void updateStep(@NotNull WizardContext wizardContext) {
+  public void updateStep(@Nonnull WizardContext wizardContext) {
     if (!myGradleSettingsInitialised) {
       initExternalProjectSettingsControl();
     }
@@ -58,7 +59,7 @@ public class SelectExternalProjectStep extends AbstractImportFromExternalSystemW
   //}
 
   @Override
-  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     myControl.apply();
     AbstractExternalProjectImportBuilder builder = (AbstractExternalProjectImportBuilder)getBuilder();
     if (builder == null) {

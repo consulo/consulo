@@ -21,7 +21,7 @@ import com.intellij.usages.rules.UsageInFile;
 import com.intellij.usages.rules.UsageInFiles;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 

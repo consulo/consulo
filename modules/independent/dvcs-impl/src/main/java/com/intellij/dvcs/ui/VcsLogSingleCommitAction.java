@@ -27,15 +27,14 @@ import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsLog;
 import com.intellij.vcs.log.VcsLogDataKeys;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends DumbAwareAction {
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
 
@@ -48,7 +47,7 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
     if (project == null || log == null) {
@@ -75,19 +74,19 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
     e.getPresentation().setEnabled(commits.size() == 1 && isEnabled(repository, commit.getHash()));
   }
 
-  protected abstract void actionPerformed(@NotNull Repo repository, @NotNull Hash commit);
+  protected abstract void actionPerformed(@Nonnull Repo repository, @Nonnull Hash commit);
 
-  protected boolean isEnabled(@NotNull Repo repository, @NotNull Hash commit) {
+  protected boolean isEnabled(@Nonnull Repo repository, @Nonnull Hash commit) {
     return true;
   }
 
-  protected boolean isVisible(@NotNull final Project project, @NotNull Repo repository, @NotNull Hash hash) {
+  protected boolean isVisible(@Nonnull final Project project, @Nonnull Repo repository, @Nonnull Hash hash) {
     return !getRepositoryManager(project).isExternal(repository);
   }
 
-  @NotNull
-  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@NotNull Project project);
+  @Nonnull
+  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
 
-  @Nullable
-  protected abstract Repo getRepositoryForRoot(@NotNull Project project, @NotNull VirtualFile root);
+  @javax.annotation.Nullable
+  protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
 }

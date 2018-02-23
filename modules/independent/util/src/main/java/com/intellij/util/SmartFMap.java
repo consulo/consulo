@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return EMPTY;
   }
 
-  public SmartFMap<K, V> plus(@NotNull K key, V value) {
+  public SmartFMap<K, V> plus(@Nonnull K key, V value) {
     return new SmartFMap<K, V>(doPlus(myMap, key, value, false));
   }
 
@@ -78,7 +78,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return newArray;
   }
 
-  public SmartFMap<K, V> minus(@NotNull K key) {
+  public SmartFMap<K, V> minus(@Nonnull K key) {
     if (myMap instanceof Map) {
       THashMap<K, V> newMap = new THashMap<K, V>((Map<K, V>)myMap);
       newMap.remove(key);
@@ -119,7 +119,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
     return result;
   }
 
-  public SmartFMap<K, V> minusAll(@NotNull Collection<K> keys) {
+  public SmartFMap<K, V> minusAll(@Nonnull Collection<K> keys) {
     SmartFMap<K, V> result = this;
     for (K key : keys) {
       result = result.minus(key);

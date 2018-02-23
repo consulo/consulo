@@ -18,7 +18,7 @@ package com.intellij.execution;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -27,23 +27,23 @@ import java.util.EventListener;
  */
 public interface ExecutionListener extends EventListener {
 
-  default void processStartScheduled(@NotNull String executorId, @NotNull ExecutionEnvironment env) {
+  default void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
   }
 
-  default void processStarting(@NotNull String executorId, @NotNull ExecutionEnvironment env) {
+  default void processStarting(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
   }
 
-  default void processNotStarted(@NotNull String executorId, @NotNull ExecutionEnvironment env) {
+  default void processNotStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
   }
 
-  default void processStarted(@NotNull String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler handler) {
+  default void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler) {
   }
 
-  default void processTerminating(@NotNull String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler handler) {
+  default void processTerminating(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler) {
     processTerminating(env.getRunProfile(), handler);
   }
 
-  default void processTerminated(@NotNull String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler handler, int exitCode) {
+  default void processTerminated(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler, int exitCode) {
     processTerminated(env.getRunProfile(), handler);
   }
 
@@ -51,13 +51,13 @@ public interface ExecutionListener extends EventListener {
    * @deprecated use {@link #processTerminating(String, ExecutionEnvironment, ProcessHandler)}
    */
   @Deprecated
-  default void processTerminating(@NotNull RunProfile runProfile, @NotNull ProcessHandler handler) {
+  default void processTerminating(@Nonnull RunProfile runProfile, @Nonnull ProcessHandler handler) {
   }
 
   /**
    * @deprecated use {@link #processTerminated(String, ExecutionEnvironment, ProcessHandler, int)}
    */
   @Deprecated
-  default void processTerminated(@NotNull RunProfile runProfile, @NotNull ProcessHandler handler) {
+  default void processTerminated(@Nonnull RunProfile runProfile, @Nonnull ProcessHandler handler) {
   }
 }

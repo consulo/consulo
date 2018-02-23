@@ -26,8 +26,8 @@ import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.Stack;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -72,10 +72,10 @@ public class InitialInfoBuilder {
   private InitialInfoBuilder(final Block rootBlock,
                              final FormattingDocumentModel model,
                              @Nullable final FormatTextRanges affectedRanges,
-                             @NotNull CodeStyleSettings settings,
+                             @Nonnull CodeStyleSettings settings,
                              final CommonCodeStyleSettings.IndentOptions options,
                              final int positionOfInterest,
-                             @NotNull FormattingProgressCallback progressCallback)
+                             @Nonnull FormattingProgressCallback progressCallback)
   {
     myModel = model;
     myAffectedRanges = affectedRanges;
@@ -94,7 +94,7 @@ public class InitialInfoBuilder {
           FormatProcessor.FormatOptions formatOptions,
           CodeStyleSettings settings,
           CommonCodeStyleSettings.IndentOptions options,
-          @NotNull FormattingProgressCallback progressCallback)
+          @Nonnull FormattingProgressCallback progressCallback)
   {
     InitialInfoBuilder builder = new InitialInfoBuilder(root, model, formatOptions.myAffectedRanges, settings, options, formatOptions.myInterestingOffset, progressCallback);
     builder.setCollectAlignmentsInsideFormattingRange(formatOptions.myReformatContext);
@@ -102,7 +102,7 @@ public class InitialInfoBuilder {
     return builder;
   }
 
-  private int getStartOffset(@NotNull Block rootBlock) {
+  private int getStartOffset(@Nonnull Block rootBlock) {
     int minOffset = rootBlock.getTextRange().getStartOffset();
     if (myAffectedRanges != null) {
       for (FormatTextRange range : myAffectedRanges.getRanges()) {
@@ -192,7 +192,7 @@ public class InitialInfoBuilder {
     }
   }
 
-  private void checkRanges(@NotNull CompositeBlockWrapper parent, TextRange textRange) {
+  private void checkRanges(@Nonnull CompositeBlockWrapper parent, TextRange textRange) {
     if (textRange.getStartOffset() < parent.getStartOffset()) {
       ASSERT.assertInvalidRanges(
               textRange.getStartOffset(),
@@ -252,7 +252,7 @@ public class InitialInfoBuilder {
     return wrappedRootBlock;
   }
 
-  private void doIteration(@NotNull InitialInfoBuilderState state) {
+  private void doIteration(@Nonnull InitialInfoBuilderState state) {
     Block currentRoot = state.parentBlock;
 
     List<Block> subBlocks = currentRoot.getSubBlocks();
@@ -285,13 +285,13 @@ public class InitialInfoBuilder {
     }
   }
 
-  private void initCurrentWhiteSpace(@NotNull Block currentRoot, @Nullable Block previousBlock, @NotNull Block currentBlock) {
+  private void initCurrentWhiteSpace(@Nonnull Block currentRoot, @Nullable Block previousBlock, @Nonnull Block currentBlock) {
     if (previousBlock != null || (myCurrentWhiteSpace != null && myCurrentWhiteSpace.isIsFirstWhiteSpace())) {
       myCurrentSpaceProperty = (SpacingImpl)currentRoot.getSpacing(previousBlock, currentBlock);
     }
   }
 
-  private void registerExpandableIndents(@NotNull Block block, @NotNull AbstractBlockWrapper wrapper) {
+  private void registerExpandableIndents(@Nonnull Block block, @Nonnull AbstractBlockWrapper wrapper) {
     if (block.getIndent() instanceof ExpandableIndent) {
       ExpandableIndent indent = (ExpandableIndent)block.getIndent();
       myBlocksToForceChildrenIndent.putValue(indent, wrapper);

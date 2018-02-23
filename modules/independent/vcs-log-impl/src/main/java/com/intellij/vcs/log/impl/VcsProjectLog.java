@@ -33,8 +33,8 @@ import com.intellij.vcs.log.data.VcsLogTabsProperties;
 import com.intellij.vcs.log.ui.VcsLogPanel;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -43,15 +43,18 @@ import java.util.Collection;
 public class VcsProjectLog {
   public static final Topic<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
           Topic.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
-  @NotNull private final Project myProject;
-  @NotNull private final MessageBus myMessageBus;
-  @NotNull private final VcsLogTabsProperties myUiProperties;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final MessageBus myMessageBus;
+  @Nonnull
+  private final VcsLogTabsProperties myUiProperties;
 
-  @NotNull
+  @Nonnull
   private final LazyVcsLogManager myLogManager = new LazyVcsLogManager();
   private volatile VcsLogUiImpl myUi;
 
-  public VcsProjectLog(@NotNull Project project, @NotNull VcsLogTabsProperties uiProperties) {
+  public VcsProjectLog(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties) {
     myProject = project;
     myMessageBus = project.getMessageBus();
     myUiProperties = uiProperties;
@@ -64,13 +67,13 @@ public class VcsProjectLog {
     return cached.getDataManager();
   }
 
-  @NotNull
+  @Nonnull
   private Collection<VcsRoot> getVcsRoots() {
     return Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllVcsRoots());
   }
 
-  @NotNull
-  public JComponent initMainLog(@NotNull String contentTabName) {
+  @Nonnull
+  public JComponent initMainLog(@Nonnull String contentTabName) {
     myUi = myLogManager.getValue().createLogUi(VcsLogTabsProperties.MAIN_LOG_ID, contentTabName, null);
     return new VcsLogPanel(myLogManager.getValue(), myUi);
   }
@@ -124,14 +127,14 @@ public class VcsProjectLog {
     return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
   }
 
-  public static VcsProjectLog getInstance(@NotNull Project project) {
+  public static VcsProjectLog getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsProjectLog.class);
   }
 
   private class LazyVcsLogManager {
     @Nullable private VcsLogManager myValue;
 
-    @NotNull
+    @Nonnull
     @CalledInAwt
     public synchronized VcsLogManager getValue() {
       if (myValue == null) {
@@ -141,7 +144,7 @@ public class VcsProjectLog {
       return myValue;
     }
 
-    @NotNull
+    @Nonnull
     @CalledInAwt
     protected synchronized VcsLogManager compute() {
       return new VcsLogManager(myProject, myUiProperties, getVcsRoots(), false, VcsProjectLog.this::recreateLog);
@@ -164,7 +167,7 @@ public class VcsProjectLog {
 
   public static class InitLogStartupActivity implements StartupActivity {
     @Override
-    public void runActivity(@NotNull Project project) {
+    public void runActivity(@Nonnull Project project) {
       if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) return;
 
       VcsProjectLog projectLog = getInstance(project);

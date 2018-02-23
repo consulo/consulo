@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -32,12 +32,12 @@ public class ShiftedSimpleContent extends SimpleContent {
     myLineShift = lineShift;
   }
 
-  public ShiftedSimpleContent(@NotNull String text, FileType type, int lineShift) {
+  public ShiftedSimpleContent(@Nonnull String text, FileType type, int lineShift) {
     super(text, type);
     myLineShift = lineShift;
   }
 
-  public ShiftedSimpleContent(@NotNull String text, FileType type, EditorFactory f, int lineShift) {
+  public ShiftedSimpleContent(@Nonnull String text, FileType type, EditorFactory f, int lineShift) {
     super(text, type, f);
     myLineShift = lineShift;
   }

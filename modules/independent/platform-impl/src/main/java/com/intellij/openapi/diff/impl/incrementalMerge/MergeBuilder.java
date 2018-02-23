@@ -18,20 +18,24 @@ package com.intellij.openapi.diff.impl.incrementalMerge;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.util.ContextLogger;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class MergeBuilder {
-  @NotNull private final ContextLogger LOG;
+  @Nonnull
+  private final ContextLogger LOG;
 
-  @NotNull private final ArrayList<MergeFragment> myResult = new ArrayList<MergeFragment>();
+  @Nonnull
+  private final ArrayList<MergeFragment> myResult = new ArrayList<MergeFragment>();
 
-  @NotNull private final int[] myProcessed = new int[]{0, 0, 0}; // LEFT aka SIDE1, RIGHT aka SIDE2, BASE
-  @NotNull private final EqualPair[] myPairs = new EqualPair[2]; // LEFT, RIGHT
+  @Nonnull
+  private final int[] myProcessed = new int[]{0, 0, 0}; // LEFT aka SIDE1, RIGHT aka SIDE2, BASE
+  @Nonnull
+  private final EqualPair[] myPairs = new EqualPair[2]; // LEFT, RIGHT
 
-  public MergeBuilder(@NotNull ContextLogger log) {
+  public MergeBuilder(@Nonnull ContextLogger log) {
     LOG = log;
   }
 
@@ -40,7 +44,7 @@ class MergeBuilder {
    *   add(B1, V1 ...); | -> B2.getStartOffset() > B1.getEndOffset() || V2.getStartOffset() > V1.getEndOffset()
    *   add(B2, V2 ...); |
    */
-  public void add(@NotNull TextRange base, @NotNull TextRange version, @NotNull FragmentSide side) {
+  public void add(@Nonnull TextRange base, @Nonnull TextRange version, @Nonnull FragmentSide side) {
     int index = side.getIndex();
     int otherIndex = side.otherSide().getIndex();
     EqualPair pair = new EqualPair(base, version, side);
@@ -54,7 +58,7 @@ class MergeBuilder {
     process();
   }
 
-  @NotNull
+  @Nonnull
   public List<MergeFragment> finish(int leftLength, int baseLength, int rightLength) {
     if (!compare(new int[]{leftLength, rightLength, baseLength}, myProcessed)) {
       processConflict(leftLength, baseLength, rightLength);
@@ -107,11 +111,11 @@ class MergeBuilder {
     myProcessed[2] = nextBase;
   }
 
-  private void addConflict(@NotNull TextRange left, @NotNull TextRange base, @NotNull TextRange right) {
+  private void addConflict(@Nonnull TextRange left, @Nonnull TextRange base, @Nonnull TextRange right) {
     myResult.add(new MergeFragment(left, base, right));
   }
 
-  private static boolean compare(@NotNull int[] lengths, @NotNull int[] processed) {
+  private static boolean compare(@Nonnull int[] lengths, @Nonnull int[] processed) {
     for (int i = 0; i < lengths.length; i++) {
       if (lengths[i] != processed[i]) return false;
     }
@@ -124,7 +128,7 @@ class MergeBuilder {
     private int myLength;
     private final FragmentSide mySide;
 
-    public EqualPair(@NotNull TextRange base, @NotNull TextRange version, @NotNull FragmentSide side) {
+    public EqualPair(@Nonnull TextRange base, @Nonnull TextRange version, @Nonnull FragmentSide side) {
       LOG.assertTrue(base.getLength() == version.getLength());
       LOG.assertTrue(base.getLength() > 0);
       myBaseStart = base.getStartOffset();
@@ -149,7 +153,7 @@ class MergeBuilder {
       return myBaseStart + myLength;
     }
 
-    @NotNull
+    @Nonnull
     public FragmentSide getSide() {
       return mySide;
     }

@@ -19,46 +19,45 @@ package com.intellij.execution.ui.layout;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface LayoutViewOptions {
 
   String STARTUP = "startup";
 
-  @NotNull
-  LayoutViewOptions setTopToolbar(@NotNull ActionGroup actions, @NotNull String place);
+  @Nonnull
+  LayoutViewOptions setTopToolbar(@Nonnull ActionGroup actions, @Nonnull String place);
 
-  @NotNull
-  LayoutViewOptions setLeftToolbar(@NotNull ActionGroup leftToolbar, @NotNull String place);
+  @Nonnull
+  LayoutViewOptions setLeftToolbar(@Nonnull ActionGroup leftToolbar, @Nonnull String place);
 
-  @NotNull
+  @Nonnull
   LayoutViewOptions setMinimizeActionEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   LayoutViewOptions setMoveToGridActionEnabled(boolean enabled);
 
-  @NotNull
-  LayoutViewOptions setAttractionPolicy(@NotNull String contentId, LayoutAttractionPolicy policy);
+  @Nonnull
+  LayoutViewOptions setAttractionPolicy(@Nonnull String contentId, LayoutAttractionPolicy policy);
 
-  @NotNull
-  LayoutViewOptions setConditionAttractionPolicy(@NotNull String condition, LayoutAttractionPolicy policy);
+  @Nonnull
+  LayoutViewOptions setConditionAttractionPolicy(@Nonnull String condition, LayoutAttractionPolicy policy);
 
-  boolean isToFocus(@NotNull Content content, @NotNull String condition);
+  boolean isToFocus(@Nonnull Content content, @Nonnull String condition);
 
-  @NotNull
-  LayoutViewOptions setToFocus(@Nullable Content content, @NotNull String condition);
+  @Nonnull
+  LayoutViewOptions setToFocus(@javax.annotation.Nullable Content content, @Nonnull String condition);
 
   AnAction getLayoutActions();
-  @NotNull
+  @Nonnull
   AnAction[] getLayoutActionsList();
 
-  @NotNull
-  LayoutViewOptions setTabPopupActions(@NotNull ActionGroup group);
-  @NotNull
-  LayoutViewOptions setAdditionalFocusActions(@NotNull ActionGroup group);
+  @Nonnull
+  LayoutViewOptions setTabPopupActions(@Nonnull ActionGroup group);
+  @Nonnull
+  LayoutViewOptions setAdditionalFocusActions(@Nonnull ActionGroup group);
 
   AnAction getSettingsActions();
-  @NotNull
+  @Nonnull
   AnAction[] getSettingsActionsList();
 }

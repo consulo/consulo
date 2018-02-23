@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ui.ColumnInfo;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,10 +51,10 @@ public abstract class CoverageViewExtension {
     return myCoverageViewManager;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getSummaryForNode(AbstractTreeNode node);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getSummaryForRootNode(AbstractTreeNode childNode);
 
   @Nullable
@@ -64,7 +64,7 @@ public abstract class CoverageViewExtension {
 
   public abstract ColumnInfo[] createColumnInfos();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract PsiElement getParentElement(PsiElement element);
 
   public abstract AbstractTreeNode createRootNode();
@@ -73,13 +73,13 @@ public abstract class CoverageViewExtension {
     return object instanceof VirtualFile && PsiManager.getInstance(myProject).findFile((VirtualFile)object) != null;
   }
   
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getElementToSelect(Object object) {
     if (object instanceof PsiElement) return (PsiElement)object;
     return object instanceof VirtualFile ? PsiManager.getInstance(myProject).findFile((VirtualFile)object) : null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getVirtualFile(Object object) {
     if (object instanceof PsiElement) {
       if (object instanceof PsiDirectory) return ((PsiDirectory)object).getVirtualFile();

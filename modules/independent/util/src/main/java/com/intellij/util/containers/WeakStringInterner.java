@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -29,9 +29,9 @@ import java.util.Set;
 public class WeakStringInterner extends StringInterner {
   private final WeakInterner<String> myDelegate = new WeakInterner<String>();
 
-  @NotNull
+  @Nonnull
   @Override
-  public String intern(@NotNull String name) {
+  public String intern(@Nonnull String name) {
     return myDelegate.intern(name);
   }
 
@@ -40,7 +40,7 @@ public class WeakStringInterner extends StringInterner {
     myDelegate.clear();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<String> getValues() {
     return myDelegate.getValues();

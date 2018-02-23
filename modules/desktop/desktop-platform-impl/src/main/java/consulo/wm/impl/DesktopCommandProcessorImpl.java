@@ -22,16 +22,16 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13-Oct-17
  */
 public class DesktopCommandProcessorImpl extends CommandProcessorBase {
-  @NotNull
+  @Nonnull
   @Override
-  protected ActionCallback invokeLater(@NotNull Runnable command, @NotNull Condition<?> expire) {
+  protected ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> expire) {
     Application application = ApplicationManager.getApplication();
     ModalityState modalityState = ModalityPerProjectEAPDescriptor.is() ? ModalityState.current() : ModalityState.NON_MODAL;
     return application.getInvokator().invokeLater(command, modalityState, expire);

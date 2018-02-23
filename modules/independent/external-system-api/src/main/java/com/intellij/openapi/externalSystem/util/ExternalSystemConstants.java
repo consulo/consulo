@@ -16,7 +16,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -24,24 +24,37 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ExternalSystemConstants {
 
-  @NonNls @NotNull public static final String EXTERNAL_SYSTEM_ID_KEY  = "external.system.id";
-  @NonNls @NotNull public static final String LINKED_PROJECT_PATH_KEY = "external.linked.project.path";
-  @NonNls @NotNull public static final String ROOT_PROJECT_PATH_KEY = "external.root.project.path";
-  @NonNls @NotNull public static final String LINKED_PROJECT_ID_KEY = "external.linked.project.id";
+  @NonNls @Nonnull
+  public static final String EXTERNAL_SYSTEM_ID_KEY  = "external.system.id";
+  @NonNls @Nonnull
+  public static final String LINKED_PROJECT_PATH_KEY = "external.linked.project.path";
+  @NonNls @Nonnull
+  public static final String ROOT_PROJECT_PATH_KEY = "external.root.project.path";
+  @NonNls @Nonnull
+  public static final String LINKED_PROJECT_ID_KEY = "external.linked.project.id";
 
-  @NonNls @NotNull public static final String EXTERNAL_SYSTEM_MODULE_GROUP_KEY  = "external.system.module.group";
-  @NonNls @NotNull public static final String EXTERNAL_SYSTEM_MODULE_VERSION_KEY  = "external.system.module.version";
+  @NonNls @Nonnull
+  public static final String EXTERNAL_SYSTEM_MODULE_GROUP_KEY  = "external.system.module.group";
+  @NonNls @Nonnull
+  public static final String EXTERNAL_SYSTEM_MODULE_VERSION_KEY  = "external.system.module.version";
 
-  @NonNls @NotNull public static final String TOOL_WINDOW_TOOLBAR_ACTIONS_GROUP_ID = "ExternalSystem.ToolWindow.Toolbar";
-  @NonNls @NotNull public static final String TREE_ACTIONS_GROUP_ID                = "ExternalSystem.Tree.Context";
+  @NonNls @Nonnull
+  public static final String TOOL_WINDOW_TOOLBAR_ACTIONS_GROUP_ID = "ExternalSystem.ToolWindow.Toolbar";
+  @NonNls @Nonnull
+  public static final String TREE_ACTIONS_GROUP_ID                = "ExternalSystem.Tree.Context";
 
-  @NonNls @NotNull public static final String TOOL_WINDOW_PLACE       = "ExternalSystem.ToolWindow";
-  @NonNls @NotNull public static final String TREE_CONTEXT_MENU_PLACE = "ExternalSystem.Tree.Context.Menu";
+  @NonNls @Nonnull
+  public static final String TOOL_WINDOW_PLACE       = "ExternalSystem.ToolWindow";
+  @NonNls @Nonnull
+  public static final String TREE_CONTEXT_MENU_PLACE = "ExternalSystem.Tree.Context.Menu";
 
-  @NotNull @NonNls public static final String USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX = ".system.in.process";
+  @Nonnull
+  @NonNls public static final String USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX = ".system.in.process";
 
-  @NotNull public static final String DEBUG_RUNNER_ID = "ExternalSystemTaskDebugRunner";
-  @NotNull public static final String RUNNER_ID       = "ExternalSystemTaskRunner";
+  @Nonnull
+  public static final String DEBUG_RUNNER_ID = "ExternalSystemTaskDebugRunner";
+  @Nonnull
+  public static final String RUNNER_ID       = "ExternalSystemTaskRunner";
 
   public static final boolean VERBOSE_PROCESSING       = SystemProperties.getBooleanProperty("external.system.verbose.processing", false);
   public static final int     RECENT_TASKS_NUMBER      = SystemProperties.getIntProperty("external.system.recent.tasks.number", 7);

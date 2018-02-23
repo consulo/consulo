@@ -32,7 +32,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Base class for PSI-aware editor actions that need to support multiple carets.
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class MultiCaretCodeInsightAction extends AnAction {
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     if (project == null) {
       return;
@@ -74,7 +74,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
     Project project = e.getProject();
@@ -92,7 +92,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     final Ref<Boolean> enabled  = new Ref<Boolean>(Boolean.FALSE);
     iterateOverCarets(project, hostEditor, new MultiCaretCodeInsightActionHandler() {
       @Override
-      public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull PsiFile file) {
+      public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
         if (isValidFor(project, editor, caret, file)) {
           enabled.set(Boolean.TRUE);
         }
@@ -101,9 +101,9 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     presentation.setEnabled(enabled.get());
   }
 
-  private static void iterateOverCarets(@NotNull final Project project,
-                                        @NotNull final Editor hostEditor,
-                                        @NotNull final MultiCaretCodeInsightActionHandler handler) {
+  private static void iterateOverCarets(@Nonnull final Project project,
+                                        @Nonnull final Editor hostEditor,
+                                        @Nonnull final MultiCaretCodeInsightActionHandler handler) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     final PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
     documentManager.commitAllDocuments();
@@ -131,11 +131,11 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
    * During action status update this method is invoked for each caret in editor. If at least for a single caret it returns
    * <code>true</code>, action is considered enabled.
    */
-  protected boolean isValidFor(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull PsiFile file) {
+  protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract MultiCaretCodeInsightActionHandler getHandler();
 
   protected String getCommandName() {

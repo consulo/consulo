@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.HashMap;
@@ -30,33 +30,33 @@ public class DefaultExternalProject implements ExternalProject {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myName;
-  @NotNull
+  @Nonnull
   private String myQName;
   @Nullable
   private String myDescription;
-  @NotNull
+  @Nonnull
   private String myGroup;
-  @NotNull
+  @Nonnull
   private String myVersion;
-  @NotNull
+  @Nonnull
   private Map<String, ExternalProject> myChildProjects;
-  @NotNull
+  @Nonnull
   private File myProjectDir;
-  @NotNull
+  @Nonnull
   private File myBuildDir;
   @Nullable
   private File myBuildFile;
-  @NotNull
+  @Nonnull
   private Map<String, ExternalTask> myTasks;
-  @NotNull
+  @Nonnull
   private Map<String, ?> myProperties;
-  @NotNull
+  @Nonnull
   private Map<String, ExternalSourceSet> mySourceSets;
-  @NotNull
+  @Nonnull
   private String myExternalSystemId;
-  @NotNull
+  @Nonnull
   private Map<String, ExternalPlugin> myPlugins;
 
   public DefaultExternalProject() {
@@ -67,7 +67,7 @@ public class DefaultExternalProject implements ExternalProject {
     myPlugins = new HashMap<String, ExternalPlugin>();
   }
 
-  public DefaultExternalProject(@NotNull ExternalProject externalProject) {
+  public DefaultExternalProject(@Nonnull ExternalProject externalProject) {
     this();
     myName = externalProject.getName();
     myQName = externalProject.getQName();
@@ -95,33 +95,33 @@ public class DefaultExternalProject implements ExternalProject {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  public void setExternalSystemId(@NotNull String externalSystemId) {
+  public void setExternalSystemId(@Nonnull String externalSystemId) {
     myExternalSystemId = externalSystemId;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getQName() {
     return myQName;
   }
 
-  public void setQName(@NotNull String QName) {
+  public void setQName(@Nonnull String QName) {
     myQName = QName;
   }
 
@@ -135,53 +135,53 @@ public class DefaultExternalProject implements ExternalProject {
     myDescription = description;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getGroup() {
     return myGroup;
   }
 
-  public void setGroup(@NotNull String group) {
+  public void setGroup(@Nonnull String group) {
     myGroup = group;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getVersion() {
     return myVersion;
   }
 
-  public void setVersion(@NotNull String version) {
+  public void setVersion(@Nonnull String version) {
     myVersion = version;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ExternalProject> getChildProjects() {
     return myChildProjects;
   }
 
-  public void setChildProjects(@NotNull Map<String, ExternalProject> childProjects) {
+  public void setChildProjects(@Nonnull Map<String, ExternalProject> childProjects) {
     myChildProjects = childProjects;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public File getProjectDir() {
     return myProjectDir;
   }
 
-  public void setProjectDir(@NotNull File projectDir) {
+  public void setProjectDir(@Nonnull File projectDir) {
     myProjectDir = projectDir;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public File getBuildDir() {
     return myBuildDir;
   }
 
-  public void setBuildDir(@NotNull File buildDir) {
+  public void setBuildDir(@Nonnull File buildDir) {
     myBuildDir = buildDir;
   }
 
@@ -195,33 +195,33 @@ public class DefaultExternalProject implements ExternalProject {
     myBuildFile = buildFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ExternalTask> getTasks() {
     return myTasks;
   }
 
-  public void setTasks(@NotNull Map<String, ExternalTask> tasks) {
+  public void setTasks(@Nonnull Map<String, ExternalTask> tasks) {
     myTasks = tasks;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ExternalPlugin> getPlugins() {
     return myPlugins;
   }
 
-  public void setPlugins(@NotNull Map<String, ExternalPlugin> plugins) {
+  public void setPlugins(@Nonnull Map<String, ExternalPlugin> plugins) {
     myPlugins = plugins;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ?> getProperties() {
     return myProperties;
   }
 
-  public void setProperties(@NotNull Map<String, ?> properties) {
+  public void setProperties(@Nonnull Map<String, ?> properties) {
     myProperties = properties;
   }
 
@@ -231,13 +231,13 @@ public class DefaultExternalProject implements ExternalProject {
     return myProperties.get(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, ExternalSourceSet> getSourceSets() {
     return mySourceSets;
   }
 
-  public void setSourceSets(@NotNull Map<String, ExternalSourceSet> sourceSets) {
+  public void setSourceSets(@Nonnull Map<String, ExternalSourceSet> sourceSets) {
     mySourceSets = sourceSets;
   }
 }

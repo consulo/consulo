@@ -23,8 +23,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -43,8 +43,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@NotNull String path,
-                                        @NotNull PsiElement element,
+  public PathReference getPathReference(@Nonnull String path,
+                                        @Nonnull PsiElement element,
                                         PathReferenceProvider... additionalProviders) {
     PathReference pathReference;
     for (PathReferenceProvider provider : getProviders()) {
@@ -68,7 +68,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   @Override
   @Nullable
-  public PathReference getCustomPathReference(@NotNull String path, @NotNull Module module, @NotNull PsiElement element, PathReferenceProvider... providers) {
+  public PathReference getCustomPathReference(@Nonnull String path, @Nonnull Module module, @Nonnull PsiElement element, PathReferenceProvider... providers) {
     for (PathReferenceProvider provider : providers) {
       PathReference reference = provider.getPathReference(path, element);
       if (reference != null) {
@@ -79,13 +79,13 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PathReferenceProvider getGlobalWebPathReferenceProvider() {
     return myGlobalPathsProvider;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PathReferenceProvider createStaticPathReferenceProvider(final boolean relativePathsAllowed) {
     final StaticPathReferenceProvider provider = new StaticPathReferenceProvider(null);
     provider.setRelativePathsAllowed(relativePathsAllowed);
@@ -93,8 +93,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @NotNull
-  public PsiReference[] createReferences(@NotNull final PsiElement psiElement,
+  @Nonnull
+  public PsiReference[] createReferences(@Nonnull final PsiElement psiElement,
                                          final boolean soft,
                                          boolean endingSlashNotAllowed,
                                          final boolean relativePathsAllowed, PathReferenceProvider... additionalProviders) {
@@ -102,8 +102,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @NotNull
-  public PsiReference[] createReferences(@NotNull final PsiElement psiElement,
+  @Nonnull
+  public PsiReference[] createReferences(@Nonnull final PsiElement psiElement,
                                          final boolean soft,
                                          boolean endingSlashNotAllowed,
                                          final boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders) {
@@ -129,8 +129,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @NotNull
-  public PsiReference[] createCustomReferences(@NotNull PsiElement psiElement, boolean soft, PathReferenceProvider... providers) {
+  @Nonnull
+  public PsiReference[] createCustomReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... providers) {
     List<PsiReference> references = new ArrayList<PsiReference>();
     for (PathReferenceProvider provider : providers) {
       boolean processed = processProvider(psiElement, provider, references, soft);
@@ -142,8 +142,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   @Override
-  @NotNull
-  public PsiReference[] createReferences(@NotNull PsiElement psiElement, final boolean soft, PathReferenceProvider... additionalProviders) {
+  @Nonnull
+  public PsiReference[] createReferences(@Nonnull PsiElement psiElement, final boolean soft, PathReferenceProvider... additionalProviders) {
     return createReferences(psiElement, soft, false, true, null, additionalProviders);
   }
 

@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface ProjectStructureProblemsHolder {
-  void registerProblem(@NotNull String message, @Nullable String description, @NotNull ProjectStructureProblemType problemType,
-                       @NotNull PlaceInProjectStructure place, @Nullable ConfigurationErrorQuickFix fix);
+  void registerProblem(@Nonnull String message, @Nullable String description, @Nonnull ProjectStructureProblemType problemType,
+                       @Nonnull PlaceInProjectStructure place, @Nullable ConfigurationErrorQuickFix fix);
 
-  void registerProblem(@NotNull ProjectStructureProblemDescription description);
+  void registerProblem(@Nonnull ProjectStructureProblemDescription description);
 }

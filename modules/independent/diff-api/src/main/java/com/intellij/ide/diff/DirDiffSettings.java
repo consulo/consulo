@@ -18,8 +18,7 @@ package com.intellij.ide.diff;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PatternUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public class DirDiffSettings {
     }
   }
 
-  public <T extends AnAction> void addExtraAction(@NotNull T action) {
+  public <T extends AnAction> void addExtraAction(@Nonnull T action) {
     extraToolbarActions.add(action);
   }
 
@@ -95,12 +94,12 @@ public class DirDiffSettings {
   public interface CompareModeNameProvider {
     String COMPARE_MODE_NAME_PROVIDER = "Compare mode name provider"; //NON-NLS
 
-    @Nullable
+    @javax.annotation.Nullable
     String getName(CompareMode mode);
   }
 
   public interface CustomSourceChooser {
-    @Nullable
-    DiffElement chooseSource(@NotNull DiffElement first, @NotNull DiffElement second);
+    @javax.annotation.Nullable
+    DiffElement chooseSource(@Nonnull DiffElement first, @Nonnull DiffElement second);
   }
 }

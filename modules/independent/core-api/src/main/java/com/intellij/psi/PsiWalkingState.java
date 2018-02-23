@@ -18,7 +18,7 @@ package com.intellij.psi;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.WalkingState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -29,40 +29,40 @@ public abstract class PsiWalkingState extends WalkingState<PsiElement> {
 
   private static class PsiTreeGuide implements TreeGuide<PsiElement> {
     @Override
-    public PsiElement getNextSibling(@NotNull PsiElement element) {
+    public PsiElement getNextSibling(@Nonnull PsiElement element) {
       return element.getNextSibling();
     }
 
     @Override
-    public PsiElement getPrevSibling(@NotNull PsiElement element) {
+    public PsiElement getPrevSibling(@Nonnull PsiElement element) {
       return element.getPrevSibling();
     }
 
     @Override
-    public PsiElement getFirstChild(@NotNull PsiElement element) {
+    public PsiElement getFirstChild(@Nonnull PsiElement element) {
       return element.getFirstChild();
     }
 
     @Override
-    public PsiElement getParent(@NotNull PsiElement element) {
+    public PsiElement getParent(@Nonnull PsiElement element) {
       return element.getParent();
     }
 
     private static final PsiTreeGuide instance = new PsiTreeGuide();
   }
 
-  protected PsiWalkingState(@NotNull PsiElementVisitor delegate) {
+  protected PsiWalkingState(@Nonnull PsiElementVisitor delegate) {
     super(PsiTreeGuide.instance);
     myVisitor = delegate;
   }
 
   @Override
-  public void visit(@NotNull PsiElement element) {
+  public void visit(@Nonnull PsiElement element) {
     element.accept(myVisitor);
   }
 
   @Override
-  public void elementStarted(@NotNull PsiElement element) {
+  public void elementStarted(@Nonnull PsiElement element) {
     if (!startedWalking && element instanceof PsiCompiledElement) {
       LOG.error(element+"; Do not use walking visitor inside compiled PSI since getNextSibling() is too slow there");
     }

@@ -32,8 +32,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +58,7 @@ public class ContextMenuImpl extends JPanel implements Disposable {
   private final JLayeredPane myLayeredPane;
   private ActionToolbar myActionToolbar;
 
-  public ContextMenuImpl(JLayeredPane layeredPane, @NotNull final JScrollPane container, @NotNull final EditorImpl editor) {
+  public ContextMenuImpl(JLayeredPane layeredPane, @Nonnull final JScrollPane container, @Nonnull final EditorImpl editor) {
     setLayout(new BorderLayout(0, 0));
     myEditor = editor;
     myLayeredPane = layeredPane;

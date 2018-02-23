@@ -22,8 +22,8 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.enumeration.EmptyEnumeration;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -63,7 +63,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
   }
 
   @Override
-  public int getIndex(@NotNull TreeNode node) {
+  public int getIndex(@Nonnull TreeNode node) {
     if (isLeaf()) return -1;
     return getChildren().indexOf(node);
   }
@@ -86,7 +86,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
     return Collections.enumeration(getChildren());
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<? extends TreeNode> getChildren();
 
   protected void setIcon(final Icon icon) {
@@ -102,7 +102,7 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public SimpleColoredText getText() {
     return myText;
   }
@@ -175,12 +175,12 @@ public abstract class XDebuggerTreeNode implements TreeNode, TreeSpeedSearch.Pat
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<? extends XDebuggerTreeNode> getLoadedChildren();
 
   public abstract void clearChildren();
 
-  public void appendToComponent(@NotNull ColoredTextContainer component) {
+  public void appendToComponent(@Nonnull ColoredTextContainer component) {
     getText().appendToComponent(component);
 
     XDebuggerTreeNodeHyperlink link = getLink();

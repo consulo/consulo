@@ -21,29 +21,29 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Mar 28, 2008
  */
 public interface FileContent extends UserDataHolder {
-  @NotNull
+  @Nonnull
   FileType getFileType();
 
-  @NotNull
+  @Nonnull
   VirtualFile getFile();
 
-  @NotNull
+  @Nonnull
   String getFileName();
 
   byte[] getContent();
 
-  @NotNull
+  @Nonnull
   CharSequence getContentAsText();
 
   Project getProject();
 
-  @NotNull
+  @Nonnull
   PsiFile getPsiFile();
 }

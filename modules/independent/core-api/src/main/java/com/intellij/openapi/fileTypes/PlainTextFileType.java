@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,19 +28,19 @@ public class PlainTextFileType extends LanguageFileType {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "PLAIN_TEXT";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return FileTypesBundle.message("filetype.plaintext.description");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "txt";
   }

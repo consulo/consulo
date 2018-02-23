@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Comparing;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author dsl
@@ -44,7 +44,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
 
   private final MyOrderEntryLibraryTableListener myLibraryListener = new MyOrderEntryLibraryTableListener();
 
-  public LibraryOrderEntryImpl(@NotNull Library library, @NotNull ModuleRootLayerImpl rootLayer) {
+  public LibraryOrderEntryImpl(@Nonnull Library library, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     LOGGER.assertTrue(library.getTable() != null);
     myLibrary = library;
@@ -52,7 +52,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     init();
   }
 
-  private LibraryOrderEntryImpl(@NotNull LibraryOrderEntryImpl that, @NotNull ModuleRootLayerImpl rootLayer) {
+  private LibraryOrderEntryImpl(@Nonnull LibraryOrderEntryImpl that, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     if (that.myLibrary == null) {
       myLibraryName = that.myLibraryName;
@@ -67,13 +67,13 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     init();
   }
 
-  public LibraryOrderEntryImpl(@NotNull String name, @NotNull String level, @NotNull ModuleRootLayerImpl rootLayer) {
+  public LibraryOrderEntryImpl(@Nonnull String name, @Nonnull String level, @Nonnull ModuleRootLayerImpl rootLayer) {
     this(name, level, rootLayer, DependencyScope.COMPILE, false, true);
   }
 
-  public LibraryOrderEntryImpl(@NotNull String name,
-                               @NotNull String level,
-                               @NotNull ModuleRootLayerImpl rootLayer,
+  public LibraryOrderEntryImpl(@Nonnull String name,
+                               @Nonnull String level,
+                               @Nonnull ModuleRootLayerImpl rootLayer,
                                DependencyScope dependencyScope,
                                boolean exported,
                                boolean init) {
@@ -87,7 +87,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
   }
 
-  private void searchForLibrary(@NotNull String name, @NotNull String level) {
+  private void searchForLibrary(@Nonnull String name, @Nonnull String level) {
     if (myLibrary != null) return;
     final LibraryTable libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, getRootModel().getModule().getProject());
     final Library library = libraryTable != null ? libraryTable.getLibraryByName(name) : null;
@@ -114,13 +114,13 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DependencyScope getScope() {
     return myScope;
   }
 
   @Override
-  public void setScope(@NotNull DependencyScope scope) {
+  public void setScope(@Nonnull DependencyScope scope) {
     myScope = scope;
   }
 
@@ -144,7 +144,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return getLibraryName();
@@ -166,18 +166,18 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
   }
 
   @Override
-  public <R> R accept(@NotNull RootPolicy<R> policy, R initialValue) {
+  public <R> R accept(@Nonnull RootPolicy<R> policy, R initialValue) {
     return policy.visitLibraryOrderEntry(this, initialValue);
   }
 
   @Override
-  @NotNull
-  public OrderEntry cloneEntry(@NotNull ModuleRootLayerImpl moduleRootLayer) {
+  @Nonnull
+  public OrderEntry cloneEntry(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
     return new LibraryOrderEntryImpl(this, moduleRootLayer);
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getLibraryLevel() {
     if (myLibrary != null) {
       final LibraryTable table = myLibrary.getTable();
@@ -215,7 +215,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
   }
 
-  private void afterLibraryAdded(@NotNull Library newLibrary) {
+  private void afterLibraryAdded(@Nonnull Library newLibrary) {
     if (myLibrary == null) {
       if (Comparing.equal(myLibraryName, newLibrary.getName())) {
         myLibrary = newLibrary;
@@ -240,12 +240,12 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
     }
 
     @Override
-    public void afterLibraryAdded(@NotNull Library newLibrary) {
+    public void afterLibraryAdded(@Nonnull Library newLibrary) {
       LibraryOrderEntryImpl.this.afterLibraryAdded(newLibrary);
     }
 
     @Override
-    public void afterLibraryRenamed(@NotNull Library library) {
+    public void afterLibraryRenamed(@Nonnull Library library) {
       afterLibraryAdded(library);
     }
 

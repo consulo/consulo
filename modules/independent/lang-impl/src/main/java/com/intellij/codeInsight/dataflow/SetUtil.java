@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.dataflow;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class SetUtil {
   /**
    * Intersects two sets
    */
-  @NotNull
+  @Nonnull
   public static <T> Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
     if (set1 == null && set2 == null) {
       return Collections.emptySet();

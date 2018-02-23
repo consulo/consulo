@@ -22,7 +22,6 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
 import consulo.auth.ServiceAuthConfiguration;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -76,7 +75,7 @@ public class ServiceAuthDialog extends DialogWrapper {
     init();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected JComponent createCenterPanel() {
     return myRoot;

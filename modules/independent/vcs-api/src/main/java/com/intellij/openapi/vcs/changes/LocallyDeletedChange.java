@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -25,7 +25,7 @@ public class LocallyDeletedChange {
   private final String myPresentableUrl;
   private final FilePath myPath;
 
-  public LocallyDeletedChange(@NotNull final FilePath path) {
+  public LocallyDeletedChange(@Nonnull final FilePath path) {
     myPath = path;
     myPresentableUrl = myPath.getPresentableUrl();
   }
@@ -60,7 +60,7 @@ public class LocallyDeletedChange {
     return myPresentableUrl;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getDescription() {
     return null;
   }

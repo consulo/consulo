@@ -29,7 +29,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.testFramework.EditorTestUtil;
 import com.intellij.testFramework.TestFileType;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1047,7 +1047,7 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorT
     final IncrementalCacheUpdateEvent[] event = new IncrementalCacheUpdateEvent[1];
     ((SoftWrapModelImpl)myEditor.getSoftWrapModel()).getApplianceManager().addListener(new SoftWrapAwareDocumentParsingListenerAdapter() {
       @Override
-      public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent e) {
+      public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent e) {
         assertNull(event[0]);
         event[0] = e;
       }
@@ -1115,19 +1115,19 @@ public class SoftWrapApplianceOnDocumentModificationTest extends AbstractEditorT
     assertEquals(new LogicalPosition(2, 0), myEditor.visualToLogicalPosition(new VisualPosition(2, 1)));
   }
 
-  private void init(final int visibleWidthInColumns, @NotNull String fileText) throws IOException {
+  private void init(final int visibleWidthInColumns, @Nonnull String fileText) throws IOException {
     init(visibleWidthInColumns, 10, fileText);
   }
 
-  private void init(final int visibleWidthInColumns, final int symbolWidthInPixels, @NotNull String fileText) throws IOException {
+  private void init(final int visibleWidthInColumns, final int symbolWidthInPixels, @Nonnull String fileText) throws IOException {
     init(visibleWidthInColumns * symbolWidthInPixels, fileText, symbolWidthInPixels);
   }
 
-  private void init(final int visibleWidth, @NotNull String fileText, int symbolWidth) throws IOException {
+  private void init(final int visibleWidth, @Nonnull String fileText, int symbolWidth) throws IOException {
     init(visibleWidth, fileText, TestFileType.TEXT, symbolWidth);
   }
 
-  private void init(final int visibleWidth, @NotNull String fileText, @NotNull TestFileType fileType, final int symbolWidth) throws IOException {
+  private void init(final int visibleWidth, @Nonnull String fileText, @Nonnull TestFileType fileType, final int symbolWidth) throws IOException {
     init(fileText, fileType);
     EditorTestUtil.configureSoftWraps(myEditor, visibleWidth, symbolWidth);
   }

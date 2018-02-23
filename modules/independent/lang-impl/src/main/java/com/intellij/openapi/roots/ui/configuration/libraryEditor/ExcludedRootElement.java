@@ -19,15 +19,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ExcludedRootElement extends LibraryTableTreeContentElement<ExcludedRootElement> {
-  @NotNull private final String myUrl;
+  @Nonnull
+  private final String myUrl;
 
-  public ExcludedRootElement(@NotNull NodeDescriptor parentDescriptor, String rootUrl, @NotNull String excludedUrl) {
+  public ExcludedRootElement(@Nonnull NodeDescriptor parentDescriptor, String rootUrl, @Nonnull String excludedUrl) {
     super(parentDescriptor);
     myUrl = excludedUrl;
     if (excludedUrl.startsWith(rootUrl)) {
@@ -41,7 +42,7 @@ public class ExcludedRootElement extends LibraryTableTreeContentElement<Excluded
     setIcon(AllIcons.Modules.ExcludeRoot);
   }
 
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myUrl;
   }

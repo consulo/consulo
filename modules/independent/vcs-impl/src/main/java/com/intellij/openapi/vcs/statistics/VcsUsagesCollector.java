@@ -19,28 +19,25 @@ import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import javax.annotation.Nonnull;
+
 import java.util.Set;
 
 public class VcsUsagesCollector extends AbstractApplicationUsagesCollector {
     private static final String GROUP_ID = "vcs";
 
-    @NotNull
+    @Nonnull
     public GroupDescriptor getGroupId() {
         return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
     }
 
-    @NotNull
-    public Set<UsageDescriptor> getProjectUsages(@NotNull Project project) {
+    @Nonnull
+    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
         return ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), new Function<AbstractVcs, UsageDescriptor>() {
             @Override
             public UsageDescriptor fun(AbstractVcs vcs) {

@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,7 +38,7 @@ public class LastUnchangedContentTracker {
   private static final FileAttribute ACQUIRED_CONTENT_ATTR = new FileAttribute("ACQUIRED_CONTENT_ATTR", 1, true);
   private static final Key<Boolean> VCS_INVALID_FILE_STATUS = Key.create("VCS_INVALID_FILE_STATUS");
 
-  public static void updateLastUnchangedContent(@NotNull VirtualFile file) {
+  public static void updateLastUnchangedContent(@Nonnull VirtualFile file) {
     if (isTouched(file)) {
       return;
     }
@@ -74,7 +74,7 @@ public class LastUnchangedContentTracker {
   }
 
   @Nullable
-  public static byte[] getLastUnchangedContent(@NotNull VirtualFile file) {
+  public static byte[] getLastUnchangedContent(@Nonnull VirtualFile file) {
     final Integer id = getSavedContentId(file);
     try {
       return id == null ? null : getFS().contentsToByteArray(id);
@@ -132,7 +132,7 @@ public class LastUnchangedContentTracker {
     return getSavedContentId(file) != null;
   }
 
-  public static void forceSavedContent(VirtualFile file, @NotNull String content) {
+  public static void forceSavedContent(VirtualFile file, @Nonnull String content) {
     saveContentReference(file, getFS().storeUnlinkedContent(content.getBytes(file.getCharset())));
   }
 

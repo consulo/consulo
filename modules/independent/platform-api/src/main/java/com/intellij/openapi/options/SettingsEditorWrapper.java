@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -50,7 +50,7 @@ public class SettingsEditorWrapper <Src, Dst> extends SettingsEditor<Src> {
     myWrapped.applyTo(mySrcToDstConvertor.convert(src));
   }
 
-  @NotNull
+  @Nonnull
   public JComponent createEditor() {
     return myWrapped.createEditor();
   }

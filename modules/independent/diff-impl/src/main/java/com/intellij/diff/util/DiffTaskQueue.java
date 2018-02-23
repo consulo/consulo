@@ -18,12 +18,13 @@ package com.intellij.diff.util;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public class DiffTaskQueue {
-  @Nullable private ProgressIndicator myProgressIndicator;
+  @javax.annotation.Nullable
+  private ProgressIndicator myProgressIndicator;
 
   @RequiredDispatchThread
   public void abort() {
@@ -32,14 +33,14 @@ public class DiffTaskQueue {
   }
 
   @RequiredDispatchThread
-  public void executeAndTryWait(@NotNull final Function<ProgressIndicator, Runnable> backgroundTask,
+  public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable final Runnable onSlowAction,
                                 final int waitMillis) {
     executeAndTryWait(backgroundTask, onSlowAction, waitMillis, false);
   }
 
   @RequiredDispatchThread
-  public void executeAndTryWait(@NotNull final Function<ProgressIndicator, Runnable> backgroundTask,
+  public void executeAndTryWait(@Nonnull final Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable final Runnable onSlowAction,
                                 final int waitMillis,
                                 final boolean forceEDT) {

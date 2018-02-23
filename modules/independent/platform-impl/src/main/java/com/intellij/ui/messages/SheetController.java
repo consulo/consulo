@@ -26,7 +26,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jdesktop.swingx.graphics.GraphicsUtilities;
 import org.jdesktop.swingx.graphics.ShadowRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -198,7 +198,7 @@ public class SheetController {
 
     ActionListener actionListener = new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         if (e.getSource() instanceof JButton) {
           myResult = ((JButton)e.getSource()).getName();
         }
@@ -223,7 +223,7 @@ public class SheetController {
   private JPanel createSheetPanel(String title, String message, JButton[] buttons) {
     JPanel sheetPanel = new JPanel() {
       @Override
-      protected void paintComponent(@NotNull Graphics g2d) {
+      protected void paintComponent(@Nonnull Graphics g2d) {
         final Graphics2D g = (Graphics2D) g2d.create();
         super.paintComponent(g);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getSheetAlpha()));
@@ -249,7 +249,7 @@ public class SheetController {
 
     JPanel ico = new JPanel() {
       @Override
-      protected void paintComponent(@NotNull Graphics g) {
+      protected void paintComponent(@Nonnull Graphics g) {
         super.paintComponent(g);
         myIcon.paintIcon(this, g, 0, 0);
       }
@@ -438,7 +438,7 @@ public class SheetController {
     doNotAskCheckBox.setOpaque(false);
     doNotAskCheckBox.addItemListener(new ItemListener() {
       @Override
-      public void itemStateChanged(@NotNull ItemEvent e) {
+      public void itemStateChanged(@Nonnull ItemEvent e) {
         myDoNotAskResult = (e.getStateChange() == ItemEvent.SELECTED);
       }
     });

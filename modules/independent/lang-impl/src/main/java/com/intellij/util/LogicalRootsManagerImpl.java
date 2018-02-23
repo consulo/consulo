@@ -32,8 +32,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.roots.ContentFolderScopes;
 
 import java.util.*;
@@ -68,7 +69,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
     });
     registerLogicalRootProvider(LogicalRootType.SOURCE_ROOT, new NotNullFunction<Module, List<VirtualFileLogicalRoot>>() {
       @Override
-      @NotNull
+      @Nonnull
       public List<VirtualFileLogicalRoot> fun(final Module module) {
         return ContainerUtil.map2List(ModuleRootManager.getInstance(module).getContentFolderFiles(ContentFolderScopes.productionAndTest()), new Function<VirtualFile, VirtualFileLogicalRoot>() {
           @Override
@@ -106,7 +107,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
 
   @Override
   @Nullable
-  public LogicalRoot findLogicalRoot(@NotNull final VirtualFile file) {
+  public LogicalRoot findLogicalRoot(@Nonnull final VirtualFile file) {
     final Module module = ModuleUtil.findModuleForFile(file, myProject);
     if (module == null) return null;
 
@@ -134,7 +135,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   }
 
   @Override
-  public List<LogicalRoot> getLogicalRoots(@NotNull final Module module) {
+  public List<LogicalRoot> getLogicalRoots(@Nonnull final Module module) {
     final Map<Module, MultiValuesMap<LogicalRootType, LogicalRoot>> roots = getRoots(myModuleManager);
     final MultiValuesMap<LogicalRootType, LogicalRoot> valuesMap = roots.get(module);
     if (valuesMap == null) {
@@ -144,7 +145,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   }
 
   @Override
-  public List<LogicalRoot> getLogicalRootsOfType(@NotNull final Module module, @NotNull final LogicalRootType... types) {
+  public List<LogicalRoot> getLogicalRootsOfType(@Nonnull final Module module, @Nonnull final LogicalRootType... types) {
     return ContainerUtil.concat(types, new Function<LogicalRootType, Collection<? extends LogicalRoot>>() {
       @Override
       public Collection<? extends LogicalRoot> fun(final LogicalRootType s) {
@@ -154,7 +155,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   }
 
   @Override
-  public <T extends LogicalRoot> List<T> getLogicalRootsOfType(@NotNull final Module module, @NotNull final LogicalRootType<T> type) {
+  public <T extends LogicalRoot> List<T> getLogicalRootsOfType(@Nonnull final Module module, @Nonnull final LogicalRootType<T> type) {
     final Map<Module, MultiValuesMap<LogicalRootType, LogicalRoot>> roots = getRoots(myModuleManager);
     final MultiValuesMap<LogicalRootType, LogicalRoot> map = roots.get(module);
     if (map == null) {
@@ -167,8 +168,8 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   }
 
   @Override
-  @NotNull
-  public LogicalRootType[] getRootTypes(@NotNull final FileType type) {
+  @Nonnull
+  public LogicalRootType[] getRootTypes(@Nonnull final FileType type) {
     final Collection<LogicalRootType> rootTypes = myFileTypes2RootTypes.get(type);
     if (rootTypes == null) {
       return new LogicalRootType[0];
@@ -178,12 +179,12 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
   }
 
   @Override
-  public void registerRootType(@NotNull final FileType fileType, @NotNull final LogicalRootType... rootTypes) {
+  public void registerRootType(@Nonnull final FileType fileType, @Nonnull final LogicalRootType... rootTypes) {
     myFileTypes2RootTypes.putAll(fileType, rootTypes);
   }
 
   @Override
-  public <T extends LogicalRoot> void registerLogicalRootProvider(@NotNull final LogicalRootType<T> rootType, @NotNull NotNullFunction<Module, List<T>> provider) {
+  public <T extends LogicalRoot> void registerLogicalRootProvider(@Nonnull final LogicalRootType<T> rootType, @Nonnull NotNullFunction<Module, List<T>> provider) {
     myProviders.put(rootType, provider);
     clear();
   }

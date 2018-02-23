@@ -18,8 +18,8 @@ package com.intellij.util.ui;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -46,7 +46,7 @@ public class KeyboardLayoutUtil {
     return c == null ? null : lc == a ? c : Character.toUpperCase(c);
   }
 
-  public static void storeAsciiForChar(@NotNull KeyEvent e) {
+  public static void storeAsciiForChar(@Nonnull KeyEvent e) {
     int id = e.getID();
     if (id != KeyEvent.KEY_PRESSED) return;
     int mods = e.getModifiers();

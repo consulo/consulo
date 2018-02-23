@@ -19,7 +19,7 @@ package com.intellij.openapi.wm.impl.commands;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Apply <code>info</code> to the corresponded tool button and decarator.
@@ -30,7 +30,7 @@ public final class ApplyWindowInfoCmd extends FinalizableCommand {
   private final ToolWindowStripeButton myButton;
   private final ToolWindowInternalDecorator myDecorator;
 
-  public ApplyWindowInfoCmd(@NotNull final WindowInfoImpl info, @NotNull final ToolWindowStripeButton button, @NotNull final ToolWindowInternalDecorator decorator, @NotNull Runnable finishCallBack) {
+  public ApplyWindowInfoCmd(@Nonnull final WindowInfoImpl info, @Nonnull final ToolWindowStripeButton button, @Nonnull final ToolWindowInternalDecorator decorator, @Nonnull Runnable finishCallBack) {
     super(finishCallBack);
     myInfo = info.copy();
     myButton = button;

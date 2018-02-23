@@ -17,8 +17,8 @@ import com.intellij.util.UrlImpl;
 import com.intellij.util.net.NetUtils;
 import io.netty.channel.oio.OioEventLoopGroup;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.builtInWebServer.BuiltInServerOptions;
 import org.jetbrains.builtInWebServer.BuiltInWebServerKt;
 import org.jetbrains.io.BuiltInServer;
@@ -36,7 +36,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
   public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
-    @NotNull
+    @Nonnull
     @Override
     protected NotificationGroup compute() {
       return new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
@@ -117,7 +117,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Disposable getServerDisposable() {
     return server;
   }
@@ -128,7 +128,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
   }
 
   @Override
-  public Url addAuthToken(@NotNull Url url) {
+  public Url addAuthToken(@Nonnull Url url) {
     if (url.getParameters() != null) {
       // built-in server url contains query only if token specified
       return url;
@@ -137,11 +137,11 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
   }
 
   @Override
-  public void configureRequestToWebServer(@NotNull URLConnection connection) {
+  public void configureRequestToWebServer(@Nonnull URLConnection connection) {
     connection.setRequestProperty(BuiltInWebServerKt.TOKEN_HEADER_NAME, BuiltInWebServerKt.acquireToken());
   }
 
-  private static void bindCustomPorts(@NotNull BuiltInServer server) {
+  private static void bindCustomPorts(@Nonnull BuiltInServer server) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return;
     }
@@ -156,7 +156,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager implements Ap
     }
   }
 
-  public static boolean isOnBuiltInWebServerByAuthority(@NotNull String authority) {
+  public static boolean isOnBuiltInWebServerByAuthority(@Nonnull String authority) {
     int portIndex = authority.indexOf(':');
     if (portIndex < 0 || portIndex == authority.length() - 1) {
       return false;

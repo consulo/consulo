@@ -16,7 +16,7 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,12 +30,12 @@ public class StaticTextWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFo
 
   private final Set<CharSequence> myWhiteSpaces = new HashSet<CharSequence>();
 
-  public StaticTextWhiteSpaceDefinitionStrategy(@NotNull CharSequence ... whiteSpaces) {
+  public StaticTextWhiteSpaceDefinitionStrategy(@Nonnull CharSequence ... whiteSpaces) {
     myWhiteSpaces.addAll(Arrays.asList(whiteSpaces));
   }
 
   @Override
-  public int check(@NotNull CharSequence text, int start, int end) {
+  public int check(@Nonnull CharSequence text, int start, int end) {
     for (CharSequence whiteSpace : myWhiteSpaces) {
       if (CharArrayUtil.indexOf(text, whiteSpace, start, end) == start) {
         return start + whiteSpace.length();

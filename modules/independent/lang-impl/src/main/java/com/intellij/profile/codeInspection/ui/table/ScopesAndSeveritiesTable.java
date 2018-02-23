@@ -40,8 +40,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -160,12 +160,12 @@ public class ScopesAndSeveritiesTable extends JBTable {
 
     protected abstract void onScopeRemoved(final int scopesCount);
 
-    protected abstract void onScopeChosen(final @NotNull ScopeToolState scopeToolState);
+    protected abstract void onScopeChosen(final @Nonnull ScopeToolState scopeToolState);
 
     protected abstract void onSettingsChanged();
   }
 
-  @NotNull
+  @Nonnull
   public static HighlightSeverity getSeverity(final List<ScopeToolState> scopeToolStates) {
     HighlightSeverity previousValue = null;
     for (final ScopeToolState scopeToolState : scopeToolStates) {
@@ -277,7 +277,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
       return getScopeToolState(rowIndex).getExistedStates().get(0).getScopeName();
     }
 
-    @NotNull
+    @Nonnull
     private SeverityState getSeverityState(final int rowIndex) {
       boolean disabled = Boolean.FALSE.equals(isEnabled(rowIndex));
       final ExistedScopesStatesAndNonExistNames existedScopesStatesAndNonExistNames = getScopeToolState(rowIndex);

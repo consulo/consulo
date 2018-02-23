@@ -16,20 +16,21 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.fragments.DiffFragment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 class DiffFragmentsDiffIterable extends ChangeDiffIterableBase {
-  @NotNull private final List<? extends DiffFragment> myFragments;
+  @Nonnull
+  private final List<? extends DiffFragment> myFragments;
 
-  public DiffFragmentsDiffIterable(@NotNull List<? extends DiffFragment> ranges, int length1, int length2) {
+  public DiffFragmentsDiffIterable(@Nonnull List<? extends DiffFragment> ranges, int length1, int length2) {
     super(length1, length2);
     myFragments = ranges;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ChangeIterable createChangeIterable() {
     return new FragmentsChangeIterable();

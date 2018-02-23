@@ -22,14 +22,14 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl> {
-  @NotNull
+  @Nonnull
   public static ModuleOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleOrderEntryType.class);
   }
@@ -41,15 +41,15 @@ public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl
   @NonNls
   private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "module";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public ModuleOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     String moduleName = element.getAttributeValue(MODULE_NAME_ATTR);
     if (moduleName == null) {
       throw new InvalidDataException();
@@ -61,7 +61,7 @@ public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull ModuleOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleOrderEntryImpl orderEntry) {
     element.setAttribute(MODULE_NAME_ATTR, orderEntry.getModuleName());
     if (orderEntry.isExported()) {
       element.setAttribute(EXPORTED_ATTR, "");

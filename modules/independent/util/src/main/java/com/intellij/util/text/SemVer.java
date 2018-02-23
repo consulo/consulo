@@ -15,8 +15,8 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Pattern;
 
@@ -71,7 +71,7 @@ public class SemVer {
   }
 
   @Nullable
-  public static SemVer parseFromText(@NotNull String text) {
+  public static SemVer parseFromText(@Nonnull String text) {
     String[] comps = text.split(Pattern.quote("."), 3);
     if (comps.length != 3) {
       return null;
@@ -85,7 +85,7 @@ public class SemVer {
     return null;
   }
 
-  private static Integer toInteger(@NotNull String str) {
+  private static Integer toInteger(@Nonnull String str) {
     try {
       return Integer.parseInt(str);
     }

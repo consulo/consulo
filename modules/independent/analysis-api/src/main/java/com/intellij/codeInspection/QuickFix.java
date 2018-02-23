@@ -18,7 +18,7 @@ package com.intellij.codeInspection;
 import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Common base interface for quick fixes provided by local and global inspections.
@@ -36,7 +36,7 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
    * @return the name of the quick fix.
    */
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  @NotNull
+  @Nonnull
   default String getName() {
     return getFamilyName();
   }
@@ -47,7 +47,7 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
    * If the name of the quickfix does not depend on a specific element, simply return getName().
    */
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  @NotNull
+  @Nonnull
   String getFamilyName();
 
   /**
@@ -56,5 +56,5 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
    * @param project    {@link Project}
    * @param descriptor problem reported by the tool which provided this quick fix action
    */
-  void applyFix(@NotNull Project project, @NotNull D descriptor);
+  void applyFix(@Nonnull Project project, @Nonnull D descriptor);
 }

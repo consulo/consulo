@@ -18,14 +18,15 @@ package com.intellij.openapi.diff.ex;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.impl.string.DiffStringBuilder;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public class DiffFragment {
   public static DiffFragment[] EMPTY_ARRAY = new DiffFragment[0];
 
   @Nullable private CharSequence myText1;
-  @Nullable private CharSequence myText2;
+  @Nullable
+  private CharSequence myText2;
   private boolean myIsModified;
 
   @TestOnly

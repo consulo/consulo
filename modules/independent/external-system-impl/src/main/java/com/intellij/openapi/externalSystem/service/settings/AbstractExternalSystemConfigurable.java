@@ -31,8 +31,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -66,19 +66,24 @@ public abstract class AbstractExternalSystemConfigurable<
   > implements SearchableConfigurable, Configurable.NoScroll
 {
 
-  @NotNull private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = ContainerUtilRt.newArrayList();
+  @Nonnull
+  private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = ContainerUtilRt.newArrayList();
 
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final Project         myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final Project         myProject;
 
-  @Nullable private ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
-  @Nullable private ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
+  @javax.annotation.Nullable
+  private ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
+  @javax.annotation.Nullable
+  private ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
 
   private PaintAwarePanel  myComponent;
   private JBList           myProjectsList;
   private DefaultListModel myProjectsModel;
 
-  protected AbstractExternalSystemConfigurable(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  protected AbstractExternalSystemConfigurable(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     myProject = project;
     myExternalSystemId = externalSystemId;
   }
@@ -95,7 +100,7 @@ public abstract class AbstractExternalSystemConfigurable<
     return myExternalSystemId.getReadableName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent createComponent() {
     if (myComponent == null) {
@@ -109,7 +114,7 @@ public abstract class AbstractExternalSystemConfigurable<
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   private SystemSettings getSettings() {
     ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?> manager =
       (ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?>)ExternalSystemApiUtil.getManager(myExternalSystemId);
@@ -118,7 +123,7 @@ public abstract class AbstractExternalSystemConfigurable<
   }
 
   @SuppressWarnings("unchecked")
-  private void prepareProjectSettings(@NotNull SystemSettings s) {
+  private void prepareProjectSettings(@Nonnull SystemSettings s) {
     myProjectsModel = new DefaultListModel();
     myProjectsList = new JBList(myProjectsModel);
     myProjectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -171,7 +176,7 @@ public abstract class AbstractExternalSystemConfigurable<
     }
   }
   
-  private void addTitle(@NotNull String title) {
+  private void addTitle(@Nonnull String title) {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setBorder(IdeBorderFactory.createTitledBorder(title, false, new Insets(ExternalSystemUiUtil.INSETS, 0, 0, 0)));
     myComponent.add(panel, ExternalSystemUiUtil.getFillLineConstraints(0));
@@ -183,17 +188,17 @@ public abstract class AbstractExternalSystemConfigurable<
    * @param settings  target external project settings
    * @return          control for managing given project settings
    */
-  @NotNull
-  protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@NotNull ProjectSettings settings);
+  @Nonnull
+  protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@Nonnull ProjectSettings settings);
   
   @SuppressWarnings("MethodMayBeStatic")
-  @NotNull
-  protected String getProjectName(@NotNull String path) {
+  @Nonnull
+  protected String getProjectName(@Nonnull String path) {
     File file = new File(path);
     return file.isDirectory() || file.getParentFile() == null ? file.getName() : file.getParentFile().getName();
   }
 
-  private void prepareSystemSettings(@NotNull SystemSettings s) {
+  private void prepareSystemSettings(@Nonnull SystemSettings s) {
     mySystemSettingsControl = createSystemSettingsControl(s);
     if (mySystemSettingsControl != null) {
       mySystemSettingsControl.fillUi(myComponent, 1);
@@ -207,8 +212,8 @@ public abstract class AbstractExternalSystemConfigurable<
    * @return          a control for managing given system-level settings;
    *                  <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
-  @Nullable
-  protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@NotNull SystemSettings settings);
+  @javax.annotation.Nullable
+  protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
 
   @Override
   public boolean isModified() {
@@ -250,7 +255,7 @@ public abstract class AbstractExternalSystemConfigurable<
   /**
    * @return    new empty project-level settings object
    */
-  @NotNull
+  @Nonnull
   protected abstract ProjectSettings newProjectSettings();
 
   @Override

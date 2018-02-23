@@ -16,16 +16,16 @@
 package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Document;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventObject;
 
 public abstract class DocumentEvent extends EventObject {
-  protected DocumentEvent(@NotNull Document document) {
+  protected DocumentEvent(@Nonnull Document document) {
     super(document);
   }
 
-  @NotNull
+  @Nonnull
   public abstract Document getDocument();
 
   public abstract int getOffset();
@@ -34,10 +34,10 @@ public abstract class DocumentEvent extends EventObject {
 
   public abstract int getNewLength();
 
-  @NotNull
+  @Nonnull
   public abstract CharSequence getOldFragment();
 
-  @NotNull
+  @Nonnull
   public abstract CharSequence getNewFragment();
 
   public abstract long getOldTimeStamp();

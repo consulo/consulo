@@ -34,8 +34,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.EqualityPolicy;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -85,15 +85,15 @@ public class CompletionLookupArranger extends LookupArranger {
     return inputBySorter;
   }
 
-  @NotNull
+  @Nonnull
   private CompletionSorterImpl obtainSorter(LookupElement element) {
     //noinspection ConstantConditions
     return element.getUserData(mySorterKey);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@NotNull Iterable<LookupElement> items,
+  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items,
                                                                             boolean hideSingleValued) {
     Map<LookupElement, List<Pair<String, Object>>> map = ContainerUtil.newIdentityHashMap();
     MultiMap<CompletionSorterImpl, LookupElement> inputBySorter = groupItemsBySorter(items);
@@ -226,7 +226,7 @@ public class CompletionLookupArranger extends LookupArranger {
   }
 
   @Override
-  public Pair<List<LookupElement>, Integer> arrangeItems(@NotNull Lookup lookup, boolean onExplicitAction) {
+  public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
     List<LookupElement> items = getMatchingItems();
     Iterable<LookupElement> sortedByRelevance = sortByRelevance(groupItemsBySorter(items));
 
@@ -462,15 +462,15 @@ public class CompletionLookupArranger extends LookupArranger {
       super(null, "empty");
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<Pair<LookupElement, Object>> getSortingWeights(@NotNull Iterable<LookupElement> items, @NotNull ProcessingContext context) {
+    public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
       return Collections.emptyList();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Iterable<LookupElement> classify(@NotNull Iterable<LookupElement> source, @NotNull ProcessingContext context) {
+    public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
       return source;
     }
 

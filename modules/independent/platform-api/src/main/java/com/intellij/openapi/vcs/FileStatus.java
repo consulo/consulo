@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.ui.Gray;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -60,9 +60,9 @@ public interface FileStatus {
 
   Color getColor();
 
-  @NotNull
+  @Nonnull
   ColorKey getColorKey();
 
-  @NotNull
+  @Nonnull
   String getId();
 }

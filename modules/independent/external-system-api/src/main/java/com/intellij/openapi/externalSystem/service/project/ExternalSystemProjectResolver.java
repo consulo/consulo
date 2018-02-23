@@ -21,8 +21,8 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines common interface for resolving external system project..
@@ -51,11 +51,11 @@ public interface ExternalSystemProjectResolver<S extends ExternalSystemExecution
    * @throws IllegalStateException    if it's not possible to resolve target project info
    */
   @Nullable
-  DataNode<ProjectData> resolveProjectInfo(@NotNull ExternalSystemTaskId id,
-                                           @NotNull String projectPath,
+  DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
+                                           @Nonnull String projectPath,
                                            boolean isPreviewMode,
                                            @Nullable S settings,
-                                           @NotNull ExternalSystemTaskNotificationListener listener)
+                                           @Nonnull ExternalSystemTaskNotificationListener listener)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException;
 
   /**
@@ -63,6 +63,6 @@ public interface ExternalSystemProjectResolver<S extends ExternalSystemExecution
    * @param listener callback to be notified about the cancellation
    * @return true if the task execution was successfully stopped, false otherwise or if target external system does not support the task cancellation
    */
-  boolean cancelTask(@NotNull ExternalSystemTaskId taskId, @NotNull ExternalSystemTaskNotificationListener listener);
+  boolean cancelTask(@Nonnull ExternalSystemTaskId taskId, @Nonnull ExternalSystemTaskNotificationListener listener);
 }
 

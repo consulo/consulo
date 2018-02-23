@@ -34,7 +34,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -80,7 +80,7 @@ public class TextPainter implements Printable {
   public TextPainter(DocumentEx editorDocument,
                      EditorHighlighter highlighter,
                      String fileName,
-                     @NotNull final PsiFile psiFile,
+                     @Nonnull final PsiFile psiFile,
                      final FileType fileType, final Editor editor) {
     this(editorDocument, highlighter, fileName, psiFile.getProject(), fileType, FileSeparatorUtil.getFileSeparators(psiFile, editorDocument));
   }

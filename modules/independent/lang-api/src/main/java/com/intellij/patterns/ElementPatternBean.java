@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Text;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 @Tag("pattern")
 public class ElementPatternBean {

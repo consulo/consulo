@@ -23,8 +23,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -63,24 +63,24 @@ public class DiffPanelOptions {
   }
 
   public interface ShowSourcePolicy {
-    void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel);
+    void showSource(@Nonnull OpenFileDescriptor descriptor, @Nonnull DiffPanelImpl diffPanel);
 
     ShowSourcePolicy DONT_SHOW = new ShowSourcePolicy() {
       @Override
-      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
+      public void showSource(@Nonnull OpenFileDescriptor descriptor, @Nonnull DiffPanelImpl diffPanel) {
       }
     };
 
     ShowSourcePolicy OPEN_EDITOR = new ShowSourcePolicy() {
       @Override
-      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
+      public void showSource(@Nonnull OpenFileDescriptor descriptor, @Nonnull DiffPanelImpl diffPanel) {
         FileEditorManager.getInstance(diffPanel.getProject()).openTextEditor(descriptor, true);
       }
     };
 
     ShowSourcePolicy OPEN_EDITOR_AND_CLOSE_DIFF = new ShowSourcePolicy() {
       @Override
-      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
+      public void showSource(@Nonnull OpenFileDescriptor descriptor, @Nonnull DiffPanelImpl diffPanel) {
         OPEN_EDITOR.showSource(descriptor, diffPanel);
         if (diffPanel.getOwnerWindow() == null) return;
         Disposer.dispose(diffPanel);
@@ -104,7 +104,7 @@ public class DiffPanelOptions {
 
     ShowSourcePolicy DEFAULT = new ShowSourcePolicy() {
       @Override
-      public void showSource(@NotNull OpenFileDescriptor descriptor, @NotNull DiffPanelImpl diffPanel) {
+      public void showSource(@Nonnull OpenFileDescriptor descriptor, @Nonnull DiffPanelImpl diffPanel) {
         Window window = diffPanel.getOwnerWindow();
         if (window == null) {
           return;

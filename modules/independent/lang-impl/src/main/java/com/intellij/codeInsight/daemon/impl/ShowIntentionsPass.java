@@ -66,8 +66,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.Processors;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   private volatile boolean myShowBulb;
   private volatile boolean myHasToRecreate;
 
-  ShowIntentionsPass(@NotNull Project project, @NotNull Editor editor, int passId) {
+  ShowIntentionsPass(@Nonnull Project project, @Nonnull Editor editor, int passId) {
     super(project, editor.getDocument(), false);
     myPassIdToShowIntentionsFor = passId;
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -98,8 +98,8 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     assert myFile != null : FileDocumentManager.getInstance().getFile(myEditor.getDocument());
   }
 
-  @NotNull
-  public static List<HighlightInfo.IntentionActionDescriptor> getAvailableFixes(@NotNull final Editor editor, @NotNull final PsiFile file, final int passId) {
+  @Nonnull
+  public static List<HighlightInfo.IntentionActionDescriptor> getAvailableFixes(@Nonnull final Editor editor, @Nonnull final PsiFile file, final int passId) {
     final int offset = ((EditorEx)editor).getExpectedCaretOffset();
     final Project project = file.getProject();
 
@@ -111,7 +111,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     return result;
   }
 
-  public static boolean markActionInvoked(@NotNull Project project, @NotNull final Editor editor, @NotNull IntentionAction action) {
+  public static boolean markActionInvoked(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull IntentionAction action) {
     final int offset = ((EditorEx)editor).getExpectedCaretOffset();
 
     List<HighlightInfo> infos = new ArrayList<>();
@@ -132,10 +132,10 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     return removed;
   }
 
-  private static void addAvailableFixesForGroups(@NotNull HighlightInfo info,
-                                                 @NotNull Editor editor,
-                                                 @NotNull PsiFile file,
-                                                 @NotNull List<HighlightInfo.IntentionActionDescriptor> outList,
+  private static void addAvailableFixesForGroups(@Nonnull HighlightInfo info,
+                                                 @Nonnull Editor editor,
+                                                 @Nonnull PsiFile file,
+                                                 @Nonnull List<HighlightInfo.IntentionActionDescriptor> outList,
                                                  int group,
                                                  int offset) {
     if (info.quickFixActionMarkers == null) return;
@@ -178,7 +178,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
   }
 
-  private static boolean isEmpty(@NotNull Segment segment) {
+  private static boolean isEmpty(@Nonnull Segment segment) {
     return segment.getEndOffset() <= segment.getStartOffset();
   }
 
@@ -198,9 +198,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
       filter(notificationActionsToShow, psiFile, filters);
     }
 
-    private static void filter(@NotNull List<HighlightInfo.IntentionActionDescriptor> descriptors,
+    private static void filter(@Nonnull List<HighlightInfo.IntentionActionDescriptor> descriptors,
                                @Nullable PsiFile psiFile,
-                               @NotNull IntentionActionFilter[] filters) {
+                               @Nonnull IntentionActionFilter[] filters) {
       for (Iterator<HighlightInfo.IntentionActionDescriptor> it = descriptors.iterator(); it.hasNext(); ) {
         HighlightInfo.IntentionActionDescriptor actionDescriptor = it.next();
         for (IntentionActionFilter filter : filters) {
@@ -240,7 +240,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !myEditor.getContentComponent().hasFocus()) return;
     TemplateState state = TemplateManagerImpl.getTemplateState(myEditor);
     if (state != null && !state.isFinished()) return;
@@ -281,7 +281,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
                                       descriptor -> IntentionManagerSettings.getInstance().isShowLightBulb(descriptor.getAction()));
   }
 
-  private static boolean appendCleanupCode(@NotNull List<HighlightInfo.IntentionActionDescriptor> actionDescriptors, @NotNull PsiFile file) {
+  private static boolean appendCleanupCode(@Nonnull List<HighlightInfo.IntentionActionDescriptor> actionDescriptors, @Nonnull PsiFile file) {
     for (HighlightInfo.IntentionActionDescriptor descriptor : actionDescriptors) {
       if (descriptor.canCleanup(file)) {
         final ArrayList<IntentionAction> options = new ArrayList<>();
@@ -294,7 +294,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     return false;
   }
 
-  private void updateActions(@NotNull DaemonCodeAnalyzerImpl codeAnalyzer) {
+  private void updateActions(@Nonnull DaemonCodeAnalyzerImpl codeAnalyzer) {
     IntentionHintComponent hintComponent = codeAnalyzer.getLastIntentionHint();
     if (!myShowBulb || hintComponent == null || !hintComponent.isForEditor(myEditor)) {
       return;
@@ -308,9 +308,9 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
   }
 
-  public static void getActionsToShow(@NotNull final Editor hostEditor,
-                                      @NotNull final PsiFile hostFile,
-                                      @NotNull final IntentionsInfo intentions,
+  public static void getActionsToShow(@Nonnull final Editor hostEditor,
+                                      @Nonnull final PsiFile hostFile,
+                                      @Nonnull final IntentionsInfo intentions,
                                       int passIdToShowIntentionsFor) {
     final PsiElement psiElement = hostFile.findElementAt(hostEditor.getCaretModel().getOffset());
     LOG.assertTrue(psiElement == null || psiElement.isValid(), psiElement);
@@ -388,11 +388,11 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   /**
    * Can be invoked in EDT, each inspection should be fast
    */
-  private static void collectIntentionsFromDoNotShowLeveledInspections(@NotNull final Project project,
-                                                                       @NotNull final PsiFile hostFile,
+  private static void collectIntentionsFromDoNotShowLeveledInspections(@Nonnull final Project project,
+                                                                       @Nonnull final PsiFile hostFile,
                                                                        PsiElement psiElement,
                                                                        final int offset,
-                                                                       @NotNull final IntentionsInfo intentions) {
+                                                                       @Nonnull final IntentionsInfo intentions) {
     if (psiElement != null) {
       if (!psiElement.isPhysical()) {
         VirtualFile virtualFile = hostFile.getVirtualFile();
@@ -448,7 +448,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
           final String displayName = toolWrapper.getDisplayName();
           final ProblemsHolder holder = new ProblemsHolder(InspectionManager.getInstance(project), hostFile, true) {
             @Override
-            public void registerProblem(@NotNull ProblemDescriptor problemDescriptor) {
+            public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
               super.registerProblem(problemDescriptor);
               if (problemDescriptor instanceof ProblemDescriptorBase) {
                 final TextRange range = ((ProblemDescriptorBase)problemDescriptor).getTextRange();

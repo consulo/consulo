@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SingleCharSequence implements CharSequence {
   private final char myCh;
@@ -47,7 +47,7 @@ public class SingleCharSequence implements CharSequence {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     return String.valueOf(myCh);
   }

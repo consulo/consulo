@@ -18,7 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file
@@ -36,14 +36,14 @@ public class StoragePathMacros {
    * Points to the application-level settings root directory.
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String ROOT_CONFIG = "$ROOT_CONFIG$";
 
   /**
    * Points to {@link #ROOT_CONFIG}/options by default. Should be used to store single files and {@link #ROOT_CONFIG} to store subdirectories with many files.
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String APP_CONFIG = "$APP_CONFIG$";
 
   /**
@@ -52,14 +52,14 @@ public class StoragePathMacros {
   @Deprecated
   @DeprecationInfo(value = "Project file types is not supported anymore", until = "2.0")
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String PROJECT_FILE = "$PROJECT_FILE$";
 
   /**
    * <code>'.consulo'</code> directory path key.
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String PROJECT_CONFIG_DIR = "$PROJECT_CONFIG_DIR$";
 
   /**
@@ -69,18 +69,18 @@ public class StoragePathMacros {
    * team members.
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String WORKSPACE_FILE = "$WORKSPACE_FILE$";
 
   /**
    *  Default file for storage. For application it's 'other.xml', for project it's 'misc.xml'
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public static final String DEFAULT_FILE = "$DEFAULT_FILE$";
 
   @NonNls
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo(value = "Module file types is not supported anymore", until = "2.0")
   public static final String MODULE_FILE = "$MODULE_FILE$";
@@ -97,9 +97,9 @@ public class StoragePathMacros {
    * @return name of the given macro definition
    * @throws IllegalArgumentException if given macro definition has unexpected format
    */
-  @NotNull
+  @Nonnull
   @Deprecated
-  public static String getMacroName(@NotNull String macro) throws IllegalArgumentException {
+  public static String getMacroName(@Nonnull String macro) throws IllegalArgumentException {
     if (macro.length() < 3 || macro.charAt(0) != '$' || macro.charAt(macro.length() - 1) != '$') {
       throw new IllegalArgumentException("Malformed macro definition (" + macro + ")");
     }

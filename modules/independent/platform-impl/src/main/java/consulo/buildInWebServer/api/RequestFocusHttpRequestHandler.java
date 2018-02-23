@@ -18,8 +18,8 @@ package consulo.buildInWebServer.api;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.BitUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
     super("requestFocus");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JsonResponse handle() {
     final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();

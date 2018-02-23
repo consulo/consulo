@@ -22,7 +22,7 @@ import gnu.trove.THashMap;
 import gnu.trove.TObjectFunction;
 import gnu.trove.TObjectObjectProcedure;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.AbstractMap;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
   private V theValue;
 
   @Override
-  public boolean containsKey(@NotNull Object key) {
+  public boolean containsKey(@Nonnull Object key) {
     K theKey = this.theKey;
     if (theKey != null) {
       return eq(theKey, (K)key);
@@ -48,7 +48,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
   }
 
   @Override
-  public V put(@NotNull K key, V value) {
+  public V put(@Nonnull K key, V value) {
     K theKey = this.theKey;
     if (theKey != null) {
       if (eq(theKey, key)) return theValue;
@@ -69,7 +69,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
   }
 
   @Override
-  public boolean equals(@NotNull Object other) {
+  public boolean equals(@Nonnull Object other) {
     K theKey = this.theKey;
     if (theKey != null) {
       if (!(other instanceof Map) || ((Map)other).size() != 1 ) return false;
@@ -112,7 +112,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
   }
 
   @Override
-  public V remove(@NotNull Object obj) {
+  public V remove(@Nonnull Object obj) {
     K theKey = this.theKey;
     if (theKey != null) {
       if (eq(theKey, (K)obj)) {
@@ -126,7 +126,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
     return super.remove(obj);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     K theKey = this.theKey;
@@ -136,7 +136,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
     return super.keySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     K theKey = this.theKey;
@@ -146,7 +146,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
     return super.values();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     K theKey = this.theKey;

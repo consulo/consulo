@@ -18,8 +18,8 @@ import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.UniqueNameGenerator;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,17 +35,17 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
   @Nullable private final ServerType<?> myServerType;
   private RemoteServer<?> myLastSelectedServer;
 
-  public RemoteServerListConfigurable(@NotNull RemoteServersManager manager) {
+  public RemoteServerListConfigurable(@Nonnull RemoteServersManager manager) {
     this(manager, null);
   }
 
-  private RemoteServerListConfigurable(@NotNull RemoteServersManager manager, @Nullable ServerType<?> type) {
+  private RemoteServerListConfigurable(@Nonnull RemoteServersManager manager, @javax.annotation.Nullable ServerType<?> type) {
     myServersManager = manager;
     myServerType = type;
     initTree();
   }
 
-  public static RemoteServerListConfigurable createConfigurable(@NotNull ServerType<?> type) {
+  public static RemoteServerListConfigurable createConfigurable(@Nonnull ServerType<?> type) {
     return new RemoteServerListConfigurable(RemoteServersManager.getInstance(), type);
   }
 
@@ -81,7 +81,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     return node;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "RemoteServers";
@@ -175,9 +175,9 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent e) {
+    public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
       ServerType[] serverTypes = ServerType.EP_NAME.getExtensions();
       AnAction[] actions = new AnAction[serverTypes.length];
       for (int i = 0; i < serverTypes.length; i++) {

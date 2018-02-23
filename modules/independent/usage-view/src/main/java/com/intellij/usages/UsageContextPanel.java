@@ -18,8 +18,8 @@ package com.intellij.usages;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -32,21 +32,21 @@ public interface UsageContextPanel extends Disposable {
   // usage selection changes, panel should update its view for the newly select usages
   void updateLayout(@Nullable("null means there are no usages to show") List<UsageInfo> infos);
 
-  @NotNull
+  @Nonnull
   JComponent createComponent();
 
   interface Provider {
     ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("com.intellij.usageContextPanelProvider");
 
-    @NotNull
-    UsageContextPanel create(@NotNull UsageView usageView);
+    @Nonnull
+    UsageContextPanel create(@Nonnull UsageView usageView);
 
     /**
      * E.g. Call hierarchy is not available for variable usages
      */
-    boolean isAvailableFor(@NotNull UsageView usageView);
+    boolean isAvailableFor(@Nonnull UsageView usageView);
 
-    @NotNull
+    @Nonnull
     String getTabTitle();
   }
 }

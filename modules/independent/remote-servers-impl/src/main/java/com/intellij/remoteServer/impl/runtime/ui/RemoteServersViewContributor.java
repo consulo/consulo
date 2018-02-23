@@ -6,8 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,15 +19,15 @@ import java.util.List;
 public abstract class RemoteServersViewContributor {
   public static final ExtensionPointName<RemoteServersViewContributor> EP_NAME = ExtensionPointName.create("com.intellij.remoteServer.viewContributor");
 
-  public abstract boolean canContribute(@NotNull Project project);
+  public abstract boolean canContribute(@Nonnull Project project);
 
-  public abstract void setupAvailabilityListener(@NotNull Project project, @NotNull Runnable checkAvailability);
+  public abstract void setupAvailabilityListener(@Nonnull Project project, @Nonnull Runnable checkAvailability);
 
   public abstract void setupTree(Project project, Tree tree, TreeBuilderBase builder);
 
-  @NotNull
+  @Nonnull
   public abstract List<AbstractTreeNode<?>> createServerNodes(Project project);
 
-  @Nullable
-  public abstract Object getData(@NotNull Key<?> dataId, @NotNull ServersToolWindowContent content);
+  @javax.annotation.Nullable
+  public abstract Object getData(@Nonnull Key<?> dataId, @Nonnull ServersToolWindowContent content);
 }

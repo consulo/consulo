@@ -26,8 +26,8 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -44,24 +44,24 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   public CodeStyleSchemesImpl(SchemesManagerFactory schemesManagerFactory) {
     SchemeProcessor<CodeStyleSchemeImpl> processor = new BaseSchemeProcessor<CodeStyleSchemeImpl>() {
-      @NotNull
+      @Nonnull
       @Override
-      public CodeStyleSchemeImpl readScheme(@NotNull Element element) {
+      public CodeStyleSchemeImpl readScheme(@Nonnull Element element) {
         return CodeStyleSchemeImpl.readScheme(element);
       }
 
       @Override
-      public Element writeScheme(@NotNull final CodeStyleSchemeImpl scheme) throws WriteExternalException {
+      public Element writeScheme(@Nonnull final CodeStyleSchemeImpl scheme) throws WriteExternalException {
         return scheme.saveToDocument();
       }
 
       @Override
-      public boolean shouldBeSaved(@NotNull final CodeStyleSchemeImpl scheme) {
+      public boolean shouldBeSaved(@Nonnull final CodeStyleSchemeImpl scheme) {
         return !scheme.isDefault();
       }
 
       @Override
-      public void initScheme(@NotNull final CodeStyleSchemeImpl scheme) {
+      public void initScheme(@Nonnull final CodeStyleSchemeImpl scheme) {
         scheme.init(CodeStyleSchemesImpl.this);
       }
     };
@@ -141,7 +141,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   @Nullable
   @Override
-  public CodeStyleScheme findSchemeByName(@NotNull String name) {
+  public CodeStyleScheme findSchemeByName(@Nonnull String name) {
     return mySchemesManager.findSchemeByName(name);
   }
 

@@ -20,8 +20,8 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.*;
 import java.rmi.Remote;
@@ -177,8 +177,8 @@ public class RemoteUtil {
    * @param e  exception to process
    * @return   extracted 'real exception' if any; given exception otherwise
    */
-  @NotNull
-  public static Throwable unwrap(@NotNull Throwable e) {
+  @Nonnull
+  public static Throwable unwrap(@Nonnull Throwable e) {
     for (Throwable candidate = e; candidate != null; candidate = candidate.getCause()) {
       Class<? extends Throwable> clazz = candidate.getClass();
       if (clazz != InvocationTargetException.class && clazz != UndeclaredThrowableException.class) {

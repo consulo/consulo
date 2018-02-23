@@ -17,7 +17,7 @@ package com.intellij.find.actions;
 
 import com.intellij.openapi.util.Condition;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,10 +65,10 @@ class PingEDT {
     }
   };
 
-  public PingEDT(@NotNull @NonNls String name,
-                 @NotNull Condition<?> shutUpCondition,
+  public PingEDT(@Nonnull @NonNls String name,
+                 @Nonnull Condition<?> shutUpCondition,
                  int maxUnitOfWorkThresholdMs,
-                 @NotNull Runnable pingAction) {
+                 @Nonnull Runnable pingAction) {
     myName = name;
     myShutUpCondition = shutUpCondition;
     myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;

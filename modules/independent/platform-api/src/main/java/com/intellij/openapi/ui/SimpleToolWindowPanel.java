@@ -24,8 +24,8 @@ import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ui.AwtVisitor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +95,7 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
   }
 
   @Nullable
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
   }
 

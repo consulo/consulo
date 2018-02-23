@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.JBTreeTraverser;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -34,15 +34,15 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
   private final Class<T> myListenerClass;
   private final T myMulticaster;
 
-  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@NotNull Class<T> listenerClass) {
+  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nonnull Class<T> listenerClass) {
     return create(null, listenerClass);
   }
 
-  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nullable Component root, @NotNull Class<T> listenerClass) {
+  public static <T extends EventListener> ComponentTreeEventDispatcher<T> create(@Nullable Component root, @Nonnull Class<T> listenerClass) {
     return new ComponentTreeEventDispatcher<T>(root, listenerClass);
   }
 
-  private ComponentTreeEventDispatcher(@Nullable final Component root, @NotNull Class<T> listenerClass) {
+  private ComponentTreeEventDispatcher(@Nullable final Component root, @Nonnull Class<T> listenerClass) {
     myListenerClass = listenerClass;
     myMulticaster = EventDispatcher.createMulticaster(listenerClass, new Getter<Iterable<T>>() {
       @Nullable
@@ -55,7 +55,7 @@ public class ComponentTreeEventDispatcher<T extends EventListener> {
     });
   }
 
-  @NotNull
+  @Nonnull
   public T getMulticaster() {
     return myMulticaster;
   }

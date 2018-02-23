@@ -15,57 +15,57 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 01-Oct-17
  */
 public interface AlertBuilder {
-  @NotNull
+  @Nonnull
   static AlertBuilder createInfo() {
     return UIInternal.get()._Alerts_builder();
   }
 
-  @NotNull
+  @Nonnull
   static AlertBuilder createError() {
     return UIInternal.get()._Alerts_builder();
   }
 
-  @NotNull
+  @Nonnull
   static AlertBuilder createWarning() {
     return UIInternal.get()._Alerts_builder();
   }
 
-  @NotNull
+  @Nonnull
   default AlertBuilder ok() {
     return ok(() -> {
     });
   }
 
-  @NotNull
-  AlertBuilder ok(@NotNull Runnable runnable);
+  @Nonnull
+  AlertBuilder ok(@Nonnull Runnable runnable);
 
-  @NotNull
-  default AlertBuilder button(@NotNull String text) {
+  @Nonnull
+  default AlertBuilder button(@Nonnull String text) {
     return button(text, () -> {
     });
   }
 
-  @NotNull
-  AlertBuilder button(@NotNull String text, @NotNull Runnable runnable);
+  @Nonnull
+  AlertBuilder button(@Nonnull String text, @Nonnull Runnable runnable);
 
   /**
    * Mark last added button as default (enter will hit it)
    */
-  @NotNull
+  @Nonnull
   AlertBuilder markDefault();
 
-  @NotNull
-  AlertBuilder title(@NotNull String text);
+  @Nonnull
+  AlertBuilder title(@Nonnull String text);
 
-  @NotNull
-  AlertBuilder text(@NotNull String text);
+  @Nonnull
+  AlertBuilder text(@Nonnull String text);
 
   /**
    * Does not block UI thread

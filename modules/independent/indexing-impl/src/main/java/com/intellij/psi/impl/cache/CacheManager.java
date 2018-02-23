@@ -22,24 +22,24 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class CacheManager {
-  @NotNull
-  public static CacheManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static CacheManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CacheManager.class);
   }
 
-  @NotNull
-  public abstract PsiFile[] getFilesWithWord(@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);
+  @Nonnull
+  public abstract PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
 
-  @NotNull
-  public abstract VirtualFile[] getVirtualFilesWithWord(@NotNull String word, short occurenceMask, @NotNull GlobalSearchScope scope, final boolean caseSensitively);
+  @Nonnull
+  public abstract VirtualFile[] getVirtualFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
 
-  public abstract boolean processFilesWithWord(@NotNull Processor<PsiFile> processor,
-                                               @NotNull String word,
+  public abstract boolean processFilesWithWord(@Nonnull Processor<PsiFile> processor,
+                                               @Nonnull String word,
                                                short occurenceMask,
-                                               @NotNull GlobalSearchScope scope,
+                                               @Nonnull GlobalSearchScope scope,
                                                final boolean caseSensitively);
 }
 

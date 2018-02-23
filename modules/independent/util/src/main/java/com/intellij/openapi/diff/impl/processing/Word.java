@@ -18,21 +18,24 @@ package com.intellij.openapi.diff.impl.processing;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 public class Word {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.Word");
-  @NotNull private final DiffString myBaseText;
-  @NotNull private final TextRange myRange;
-  @NotNull private final DiffString myText;
+  @Nonnull
+  private final DiffString myBaseText;
+  @Nonnull
+  private final TextRange myRange;
+  @Nonnull
+  private final DiffString myText;
 
   @TestOnly
-  public Word(@NotNull String baseText, @NotNull TextRange range) {
+  public Word(@Nonnull String baseText, @Nonnull TextRange range) {
     this(DiffString.create(baseText), range);
   }
 
-  public Word(@NotNull DiffString baseText, @NotNull TextRange range) {
+  public Word(@Nonnull DiffString baseText, @Nonnull TextRange range) {
     myBaseText = baseText;
     myRange = range;
     myText = myBaseText.substring(myRange.getStartOffset(), myRange.getEndOffset());
@@ -50,12 +53,12 @@ public class Word {
     return getText().equals(other.getText());
   }
 
-  @NotNull
+  @Nonnull
   public DiffString getText() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   public DiffString getPrefix(int fromPosition) {
     LOG.assertTrue(fromPosition >= 0, fromPosition);
     int wordStart = myRange.getStartOffset();

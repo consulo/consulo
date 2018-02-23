@@ -31,8 +31,8 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +49,19 @@ final class HistoryEntry {
   @NonNls private static final String SELECTED_ATTR_VALUE = "selected";
   @NonNls private static final String STATE_ELEMENT = "state";
 
-  @NotNull private final VirtualFilePointer myFilePointer;
+  @Nonnull
+  private final VirtualFilePointer myFilePointer;
   /**
    * can be null when read from XML
    */
   @Nullable private FileEditorProvider mySelectedProvider;
-  @NotNull private final HashMap<FileEditorProvider, FileEditorState> myProvider2State;
+  @Nonnull
+  private final HashMap<FileEditorProvider, FileEditorState> myProvider2State;
 
-  @Nullable private final Disposable myDisposable;
+  @Nullable
+  private final Disposable myDisposable;
 
-  private HistoryEntry(@NotNull VirtualFilePointer filePointer,
+  private HistoryEntry(@Nonnull VirtualFilePointer filePointer,
                        @Nullable FileEditorProvider selectedProvider,
                        @Nullable Disposable disposable) {
     myFilePointer = filePointer;
@@ -67,11 +70,11 @@ final class HistoryEntry {
     myProvider2State = new HashMap<>();
   }
 
-  @NotNull
-  public static HistoryEntry createLight(@NotNull VirtualFile file,
-                                         @NotNull FileEditorProvider[] providers,
-                                         @NotNull FileEditorState[] states,
-                                         @NotNull FileEditorProvider selectedProvider) {
+  @Nonnull
+  public static HistoryEntry createLight(@Nonnull VirtualFile file,
+                                         @Nonnull FileEditorProvider[] providers,
+                                         @Nonnull FileEditorState[] states,
+                                         @Nonnull FileEditorProvider selectedProvider) {
     VirtualFilePointer pointer = new LightFilePointer(file);
     HistoryEntry entry = new HistoryEntry(pointer, selectedProvider, null);
     for (int i = 0; i < providers.length; i++) {
@@ -80,8 +83,8 @@ final class HistoryEntry {
     return entry;
   }
 
-  @NotNull
-  public static HistoryEntry createLight(@NotNull Project project, @NotNull Element e) throws InvalidDataException {
+  @Nonnull
+  public static HistoryEntry createLight(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
     EntryData entryData = parseEntry(project, e);
 
     VirtualFilePointer pointer = new LightFilePointer(entryData.url);
@@ -92,12 +95,12 @@ final class HistoryEntry {
     return entry;
   }
 
-  @NotNull
-  public static HistoryEntry createHeavy(@NotNull Project project,
-                                         @NotNull VirtualFile file,
-                                         @NotNull FileEditorProvider[] providers,
-                                         @NotNull FileEditorState[] states,
-                                         @NotNull FileEditorProvider selectedProvider) {
+  @Nonnull
+  public static HistoryEntry createHeavy(@Nonnull Project project,
+                                         @Nonnull VirtualFile file,
+                                         @Nonnull FileEditorProvider[] providers,
+                                         @Nonnull FileEditorState[] states,
+                                         @Nonnull FileEditorProvider selectedProvider) {
     if (project.isDisposed()) return createLight(file, providers, states, selectedProvider);
 
     Disposable disposable = Disposer.newDisposable();
@@ -114,8 +117,8 @@ final class HistoryEntry {
     return entry;
   }
 
-  @NotNull
-  public static HistoryEntry createHeavy(@NotNull Project project, @NotNull Element e) throws InvalidDataException {
+  @Nonnull
+  public static HistoryEntry createHeavy(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
     if (project.isDisposed()) return createLight(project, e);
 
     EntryData entryData = parseEntry(project, e);
@@ -131,7 +134,7 @@ final class HistoryEntry {
   }
 
 
-  @NotNull
+  @Nonnull
   public VirtualFilePointer getFilePointer() {
     return myFilePointer;
   }
@@ -141,11 +144,11 @@ final class HistoryEntry {
     return myFilePointer.getFile();
   }
 
-  public FileEditorState getState(@NotNull FileEditorProvider provider) {
+  public FileEditorState getState(@Nonnull FileEditorProvider provider) {
     return myProvider2State.get(provider);
   }
 
-  public void putState(@NotNull FileEditorProvider provider, @NotNull FileEditorState state) {
+  public void putState(@Nonnull FileEditorProvider provider, @Nonnull FileEditorState state) {
     myProvider2State.put(provider, state);
   }
 
@@ -189,8 +192,8 @@ final class HistoryEntry {
     return e;
   }
 
-  @NotNull
-  private static EntryData parseEntry(@NotNull Project project, @NotNull Element e) throws InvalidDataException {
+  @Nonnull
+  private static EntryData parseEntry(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
     if (!e.getName().equals(TAG)) {
       throw new IllegalArgumentException("unexpected tag: " + e);
     }
@@ -226,12 +229,14 @@ final class HistoryEntry {
   }
 
   private static class EntryData {
-    @NotNull public final String url;
-    @NotNull public final List<Pair<FileEditorProvider, FileEditorState>> providerStates;
+    @Nonnull
+    public final String url;
+    @Nonnull
+    public final List<Pair<FileEditorProvider, FileEditorState>> providerStates;
     @Nullable public final FileEditorProvider selectedProvider;
 
-    public EntryData(@NotNull String url,
-                     @NotNull List<Pair<FileEditorProvider, FileEditorState>> providerStates,
+    public EntryData(@Nonnull String url,
+                     @Nonnull List<Pair<FileEditorProvider, FileEditorState>> providerStates,
                      @Nullable FileEditorProvider selectedProvider) {
       this.url = url;
       this.providerStates = providerStates;

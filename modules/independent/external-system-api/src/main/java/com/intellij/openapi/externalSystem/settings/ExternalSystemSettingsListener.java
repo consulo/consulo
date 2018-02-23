@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.settings;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -37,13 +37,13 @@ public interface ExternalSystemSettingsListener<S extends ExternalProjectSetting
    * @param oldName  old project name
    * @param newName  new project name
    */
-  void onProjectRenamed(@NotNull String oldName, @NotNull String newName);
+  void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName);
   
-  void onProjectsLinked(@NotNull Collection<S> settings);
+  void onProjectsLinked(@Nonnull Collection<S> settings);
 
-  void onProjectsUnlinked(@NotNull Set<String> linkedProjectPaths);
+  void onProjectsUnlinked(@Nonnull Set<String> linkedProjectPaths);
   
-  void onUseAutoImportChange(boolean currentValue, @NotNull String linkedProjectPath);
+  void onUseAutoImportChange(boolean currentValue, @Nonnull String linkedProjectPath);
 
   /**
    * External system settings changes might affect project structure, e.g. switching from one external system version to another

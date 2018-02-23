@@ -26,8 +26,8 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.Disposable;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -65,13 +65,13 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public ItemPresentation getPresentation() {
         return file.getPresentation();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public TreeElement[] getChildren() {
         ArrayList<TreeElement> elements = new ArrayList<>();
@@ -83,7 +83,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     final Set<NodeProvider> providers = new HashSet<>();
@@ -96,7 +96,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
     return providers;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Filter[] getFilters() {
     final HashSet<Filter> filters = new HashSet<>();
@@ -129,7 +129,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         return file.canNavigateToSource();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public ItemPresentation getPresentation() {
         return new ItemPresentation() {
@@ -153,7 +153,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
         };
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public TreeElement[] getChildren() {
         return view.structureView.getTreeModel().getRoot().getChildren();

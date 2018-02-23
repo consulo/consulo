@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Condition;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -45,7 +45,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
     e.getPresentation().setText(myConfigurable.getCurrentScheme().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DefaultActionGroup createPopupActionGroup(JComponent button) {
     DefaultActionGroup group = new DefaultActionGroup(new ChangeSchemaAction(FileTemplatesScheme.DEFAULT));
@@ -65,7 +65,7 @@ public class ChangeSchemaCombo extends ComboBoxAction implements DumbAware {
 
     private final FileTemplatesScheme myScheme;
 
-    public ChangeSchemaAction(@NotNull FileTemplatesScheme scheme) {
+    public ChangeSchemaAction(@Nonnull FileTemplatesScheme scheme) {
       super(scheme.getName());
       myScheme = scheme;
     }

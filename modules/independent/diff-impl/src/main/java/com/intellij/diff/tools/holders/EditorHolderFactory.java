@@ -17,12 +17,12 @@ package com.intellij.diff.tools.holders;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.contents.DiffContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class EditorHolderFactory<T extends EditorHolder> {
-  public abstract boolean canShowContent(@NotNull DiffContent content, @NotNull DiffContext context);
+  public abstract boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context);
 
-  public abstract boolean wantShowContent(@NotNull DiffContent content, @NotNull DiffContext context);
+  public abstract boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context);
 
-  public abstract T create(@NotNull DiffContent content, @NotNull DiffContext context);
+  public abstract T create(@Nonnull DiffContent content, @Nonnull DiffContext context);
 }

@@ -29,7 +29,6 @@ import com.intellij.openapi.compiler.options.ExcludeEntryDescription;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 /**
 * @author Eugene Zhuravlev
@@ -56,7 +55,7 @@ class ExcludeFromCompileAction extends AnAction {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private VirtualFile getSelectedFile() {
     final ErrorTreeNodeDescriptor descriptor = myErrorTreeView.getSelectedNodeDescriptor();
     ErrorTreeElement element = descriptor != null? descriptor.getElement() : null;

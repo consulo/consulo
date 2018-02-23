@@ -19,14 +19,14 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.patch.PatchFileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class VcsFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@NotNull FileTypeConsumer consumer) {
+  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
     consumer.consume(PatchFileType.INSTANCE, VcsConfiguration.PATCH + ";" + VcsConfiguration.DIFF);
   }
 }

@@ -22,20 +22,20 @@ import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author konstantin.aleev
  */
 public class RunConfigurationDashboardGroupingRule implements DashboardGroupingRule {
-  @NotNull
+  @Nonnull
   @Override
   public ActionPresentation getPresentation() {
     return new ActionPresentationData("", "", null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "RunConfigurationDashboardGroupingRule";

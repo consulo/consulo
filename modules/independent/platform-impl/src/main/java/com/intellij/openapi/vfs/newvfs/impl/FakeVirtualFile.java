@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,13 +27,13 @@ public class FakeVirtualFile extends StubVirtualFile {
   private final VirtualFile myParent;
   private final String myName;
 
-  public FakeVirtualFile(@NotNull final VirtualFile parent, @NotNull final String name) {
+  public FakeVirtualFile(@Nonnull final VirtualFile parent, @Nonnull final String name) {
     myName = name;
     myParent = parent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getParent() {
     return myParent;
   }
@@ -43,7 +43,7 @@ public class FakeVirtualFile extends StubVirtualFile {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     final String basePath = myParent.getPath();
@@ -51,7 +51,7 @@ public class FakeVirtualFile extends StubVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getName() {
     return myName;

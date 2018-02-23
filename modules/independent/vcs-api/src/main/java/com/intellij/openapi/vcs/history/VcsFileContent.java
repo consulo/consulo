@@ -16,13 +16,12 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
 public interface VcsFileContent {
   byte[] loadContent() throws IOException, VcsException;
 
-  @Nullable
+  @javax.annotation.Nullable
   byte[] getContent() throws IOException, VcsException;
 }

@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.update.AbstractCommonUpdateAction;
 import com.intellij.openapi.vcs.update.ActionInfo;
 import com.intellij.openapi.vcs.update.ScopeInfo;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
   }
 
   @Override
-  protected void actionPerformed(@NotNull final VcsContext context) {
+  protected void actionPerformed(@Nonnull final VcsContext context) {
     Collection<FilePath> filePaths = getFilePaths(context);
     final List<ChangeList> selectedChangeLists = new ArrayList<>();
     final ChangeList[] selectionFromContext = context.getSelectedChangeLists();
@@ -76,7 +76,7 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
   }
 
   @Override
-  protected void update(@NotNull final VcsContext vcsContext, @NotNull final Presentation presentation) {
+  protected void update(@Nonnull final VcsContext vcsContext, @Nonnull final Presentation presentation) {
     super.update(vcsContext, presentation);
     final ChangeList[] changeLists = vcsContext.getSelectedChangeLists();
     presentation.setEnabled(presentation.isEnabled() &&

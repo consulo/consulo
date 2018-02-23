@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,19 +29,21 @@ import javax.swing.*;
  * @author traff
  */
 public class SubstitutedFileType extends LanguageFileType{
-  @NotNull private final FileType myOriginalFileType;
-  @NotNull private final FileType myFileType;
+  @Nonnull
+  private final FileType myOriginalFileType;
+  @Nonnull
+  private final FileType myFileType;
 
-  private SubstitutedFileType(@NotNull FileType originalFileType,
-                              @NotNull LanguageFileType substitutionFileType,
-                              @NotNull Language substitutedLanguage) {
+  private SubstitutedFileType(@Nonnull FileType originalFileType,
+                              @Nonnull LanguageFileType substitutionFileType,
+                              @Nonnull Language substitutedLanguage) {
     super(substitutedLanguage);
     myOriginalFileType = originalFileType;
     myFileType = substitutionFileType;
   }
 
-  @NotNull
-  public static FileType substituteFileType(VirtualFile file, @NotNull FileType fileType, Project project) {
+  @Nonnull
+  public static FileType substituteFileType(VirtualFile file, @Nonnull FileType fileType, Project project) {
     if (project == null) {
       return fileType;
     }
@@ -57,19 +59,19 @@ public class SubstitutedFileType extends LanguageFileType{
     return fileType;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myFileType.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return myFileType.getDescription();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDefaultExtension() {
     return myFileType.getDefaultExtension();
@@ -81,16 +83,16 @@ public class SubstitutedFileType extends LanguageFileType{
   }
 
   @Override
-  public String getCharset(@NotNull VirtualFile file, byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, byte[] content) {
     return myFileType.getCharset(file, content);
   }
 
-  @NotNull
+  @Nonnull
   public FileType getOriginalFileType() {
     return myOriginalFileType;
   }
 
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return myFileType;
   }

@@ -17,7 +17,8 @@
 package com.intellij.openapi.components;
 
 import com.intellij.util.xmlb.XmlSerializer;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * Every component which would like to persist its state across IDEA restarts

@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -81,7 +81,7 @@ public class StringLiteralLexer extends LexerBase {
   }
 
   @Override
-  public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+  public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
     myBuffer = buffer;
     myStart = startOffset;
     myState = myQuoteChar == NO_QUOTE_CHAR ? AFTER_FIRST_QUOTE : initialState;
@@ -248,7 +248,7 @@ public class StringLiteralLexer extends LexerBase {
     myEnd = locateToken(myStart);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getBufferSequence() {
     return myBuffer;

@@ -35,8 +35,8 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     }
   }
 
-  private static void _showSettingsDialog(@NotNull final Project project, @NotNull Configurable[] configurables, @Nullable Configurable toSelect) {
+  private static void _showSettingsDialog(@Nonnull final Project project, @Nonnull Configurable[] configurables, @Nullable Configurable toSelect) {
     if (ModalityPerProjectEAPDescriptor.is()) {
       new OptionsEditorDialog(project, configurables, toSelect, true).show();
     }
@@ -86,7 +86,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
     assert config != null : "Cannot find configurable: " + configurableClass.getName();
 
-    @NotNull Project nnProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
+    @Nonnull Project nnProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
     _showSettingsDialog(nnProject, configurables, config);
   }
 
@@ -101,7 +101,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   }
 
   @Override
-  public void showSettingsDialog(@Nullable final Project project, @NotNull final String nameToSelect) {
+  public void showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
     Configurable[] configurables = buildConfigurables(project);
 
     Project actualProject = project != null ? project : ProjectManager.getInstance().getDefaultProject();
@@ -142,7 +142,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     dialog.show();
   }
 
-  @NotNull
+  @Nonnull
   public static Configurable[] buildConfigurables(@Nullable Project project) {
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
@@ -184,7 +184,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
   }
 
   @Override
-  public void showSettingsDialog(@NotNull final Project project, final Configurable toSelect) {
+  public void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect) {
     _showSettingsDialog(project, buildConfigurables(project), toSelect);
   }
 
@@ -206,7 +206,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
 
   @RequiredDispatchThread
   @Override
-  public boolean editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @NotNull Configurable configurable) {
+  public boolean editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
     return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
@@ -254,7 +254,7 @@ public class ShowSettingsUtilImpl extends ShowSettingsUtil {
     return editor.isOK();
   }
 
-  public static String createDimensionKey(@NotNull Configurable configurable) {
+  public static String createDimensionKey(@Nonnull Configurable configurable) {
     String displayName = configurable.getDisplayName();
     if (displayName == null) {
       displayName = configurable.getClass().getName();

@@ -16,7 +16,7 @@
  */
 package com.intellij.codeInsight.hints;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,17 +28,17 @@ public class MethodInfo {
   private String myFullyQualifiedName;
   private List<String> myParamNames;
 
-  public MethodInfo(@NotNull String fullyQualifiedName, @NotNull List<String> paramNames) {
+  public MethodInfo(@Nonnull String fullyQualifiedName, @Nonnull List<String> paramNames) {
     myFullyQualifiedName = fullyQualifiedName;
     myParamNames = paramNames;
   }
 
-  @NotNull
+  @Nonnull
   public String getFullyQualifiedName() {
     return myFullyQualifiedName;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getParamNames() {
     return myParamNames;
   }

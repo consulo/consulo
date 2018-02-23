@@ -22,12 +22,13 @@ import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.LighterLazyParseableNode;
 import com.intellij.util.WalkingState;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNodeVisitor {
-  @NotNull private final LighterAST ast;
+  @Nonnull
+  private final LighterAST ast;
   private final Stack<IndexedLighterASTNode[]> childrenStack = new Stack<>();
   private final Stack<IndexedLighterASTNode> parentStack = new Stack<>();
 
@@ -38,7 +39,7 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
     private final IndexedLighterASTNode prev;
     private IndexedLighterASTNode next;
 
-    IndexedLighterASTNode(@NotNull LighterASTNode node, IndexedLighterASTNode prev) {
+    IndexedLighterASTNode(@Nonnull LighterASTNode node, IndexedLighterASTNode prev) {
       this.node = node;
       this.prev = prev;
     }
@@ -46,17 +47,17 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
 
   private class LighterASTGuide implements WalkingState.TreeGuide<IndexedLighterASTNode> {
     @Override
-    public IndexedLighterASTNode getNextSibling(@NotNull IndexedLighterASTNode element) {
+    public IndexedLighterASTNode getNextSibling(@Nonnull IndexedLighterASTNode element) {
       return element.next;
     }
 
     @Override
-    public IndexedLighterASTNode getPrevSibling(@NotNull IndexedLighterASTNode element) {
+    public IndexedLighterASTNode getPrevSibling(@Nonnull IndexedLighterASTNode element) {
       return element.prev;
     }
 
     @Override
-    public IndexedLighterASTNode getFirstChild(@NotNull IndexedLighterASTNode element) {
+    public IndexedLighterASTNode getFirstChild(@Nonnull IndexedLighterASTNode element) {
       List<LighterASTNode> children = ast.getChildren(element.node);
       IndexedLighterASTNode[] indexedChildren = children.isEmpty() ? IndexedLighterASTNode.EMPTY_ARRAY : new IndexedLighterASTNode[children.size()];
       for (int i = 0; i < children.size(); i++) {
@@ -73,17 +74,17 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
     }
 
     @Override
-    public IndexedLighterASTNode getParent(@NotNull IndexedLighterASTNode element) {
+    public IndexedLighterASTNode getParent(@Nonnull IndexedLighterASTNode element) {
       return parentStack.peek();
     }
   }
 
-  protected RecursiveLighterASTNodeWalkingVisitor(@NotNull final LighterAST ast) {
+  protected RecursiveLighterASTNodeWalkingVisitor(@Nonnull final LighterAST ast) {
     this.ast = ast;
 
     myWalkingState = new WalkingState<IndexedLighterASTNode>(new LighterASTGuide()) {
       @Override
-      public void elementFinished(@NotNull IndexedLighterASTNode element) {
+      public void elementFinished(@Nonnull IndexedLighterASTNode element) {
         RecursiveLighterASTNodeWalkingVisitor.this.elementFinished(element.node);
 
         if (parentStack.peek() == element) { // getFirstChild returned nothing. otherwise getFirstChild() was not called, i.e. super.visitNode() was not called i.e. just ignore
@@ -93,7 +94,7 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
       }
 
       @Override
-      public void visit(@NotNull IndexedLighterASTNode iNode) {
+      public void visit(@Nonnull IndexedLighterASTNode iNode) {
         LighterASTNode element = iNode.node;
         RecursiveLighterASTNodeWalkingVisitor visitor = RecursiveLighterASTNodeWalkingVisitor.this;
         if (element instanceof LighterLazyParseableNode) {
@@ -111,11 +112,11 @@ public abstract class RecursiveLighterASTNodeWalkingVisitor extends LighterASTNo
 
   private final WalkingState<IndexedLighterASTNode> myWalkingState;
 
-  protected void elementFinished(@NotNull LighterASTNode element) {
+  protected void elementFinished(@Nonnull LighterASTNode element) {
   }
 
   @Override
-  public void visitNode(@NotNull LighterASTNode element) {
+  public void visitNode(@Nonnull LighterASTNode element) {
     myWalkingState.elementStarted(new IndexedLighterASTNode(element, null));
   }
 

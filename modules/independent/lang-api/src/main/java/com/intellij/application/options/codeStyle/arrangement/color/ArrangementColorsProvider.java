@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.color;
 
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -27,9 +27,9 @@ import java.awt.*;
  */
 public interface ArrangementColorsProvider {
 
-  @NotNull
+  @Nonnull
   Color getBorderColor(boolean selected);
 
-  @NotNull
-  TextAttributes getTextAttributes(@NotNull ArrangementSettingsToken token, boolean selected);
+  @Nonnull
+  TextAttributes getTextAttributes(@Nonnull ArrangementSettingsToken token, boolean selected);
 }

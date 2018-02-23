@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.update;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +42,7 @@ public class UpdateRootNode extends GroupTreeNode {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private GroupTreeNode addFileGroup(FileGroup fileGroup, AbstractTreeNode parent, ActionInfo actionInfo) {
     if (fileGroup.isEmpty()) {
       return null;

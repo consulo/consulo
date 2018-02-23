@@ -24,7 +24,7 @@ import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.*;
@@ -38,12 +38,12 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     myMap = createMap();
   }
 
-  @NotNull
+  @Nonnull
   protected Map<K, Object> createMap() {
     return new THashMap<K, Object>();
   }
 
-  public void add(@NotNull K key, @NotNull V value) {
+  public void add(@Nonnull K key, @Nonnull V value) {
     Object current = myMap.get(key);
     if (current == null) {
       myMap.put(key, value);
@@ -61,7 +61,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     }
   }
 
-  public boolean remove(@NotNull K key, @NotNull V value) {
+  public boolean remove(@Nonnull K key, @Nonnull V value) {
     Object current = myMap.get(key);
     if (current == null) {
       return false;
@@ -79,11 +79,11 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     return false;
   }
 
-  public boolean removeAllValues(@NotNull K key) {
+  public boolean removeAllValues(@Nonnull K key) {
     return myMap.remove(key) != null;
   }
 
-  @NotNull
+  @Nonnull
   public Set<K> keySet() {
     return myMap.keySet();
   }
@@ -92,12 +92,12 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     return myMap.isEmpty();
   }
 
-  public boolean processForKey(@NotNull K key, @NotNull Processor<? super V> p) {
+  public boolean processForKey(@Nonnull K key, @Nonnull Processor<? super V> p) {
     return processValue(p, myMap.get(key));
   }
 
   @SuppressWarnings("unchecked")
-  private boolean processValue(@NotNull Processor<? super V> p, Object v) {
+  private boolean processValue(@Nonnull Processor<? super V> p, Object v) {
     if (v instanceof MostlySingularMultiMap.ValueList) {
       for (Object o : (ValueList)v) {
         if (!p.process((V)o)) return false;
@@ -110,7 +110,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     return true;
   }
 
-  public boolean processAllValues(@NotNull Processor<? super V> p) {
+  public boolean processAllValues(@Nonnull Processor<? super V> p) {
     for (Object v : myMap.values()) {
       if (!processValue(p, v)) return false;
     }
@@ -122,25 +122,25 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     return myMap.size();
   }
 
-  public boolean containsKey(@NotNull K key) {
+  public boolean containsKey(@Nonnull K key) {
     return myMap.containsKey(key);
   }
 
-  public int valuesForKey(@NotNull K key) {
+  public int valuesForKey(@Nonnull K key) {
     Object current = myMap.get(key);
     if (current == null) return 0;
     if (current instanceof MostlySingularMultiMap.ValueList) return ((ValueList)current).size();
     return 1;
   }
 
-  @NotNull
-  public Iterable<V> get(@NotNull K name) {
+  @Nonnull
+  public Iterable<V> get(@Nonnull K name) {
     final Object value = myMap.get(name);
     return rawValueToCollection(value);
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   protected List<V> rawValueToCollection(Object value) {
     if (value == null) return Collections.emptyList();
 
@@ -176,13 +176,13 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     myMap.clear();
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MostlySingularMultiMap<K, V> emptyMap() {
     //noinspection unchecked
     return EMPTY;
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MostlySingularMultiMap<K, V> newMap() {
     return new MostlySingularMultiMap<K, V>();
   }
@@ -242,24 +242,24 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
       super(initialCapacity);
     }
 
-    public ValueList(@NotNull Collection<? extends V> c) {
+    public ValueList(@Nonnull Collection<? extends V> c) {
       super(c);
     }
   }
 
   private static class EmptyMap extends MostlySingularMultiMap {
     @Override
-    public void add(@NotNull Object key, @NotNull Object value) {
+    public void add(@Nonnull Object key, @Nonnull Object value) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public boolean remove(@NotNull Object key, @NotNull Object value) {
+    public boolean remove(@Nonnull Object key, @Nonnull Object value) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public boolean removeAllValues(@NotNull Object key) {
+    public boolean removeAllValues(@Nonnull Object key) {
       throw new IncorrectOperationException();
     }
 
@@ -268,7 +268,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Set keySet() {
       return Collections.emptySet();
@@ -280,12 +280,12 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     }
 
     @Override
-    public boolean processForKey(@NotNull Object key, @NotNull Processor p) {
+    public boolean processForKey(@Nonnull Object key, @Nonnull Processor p) {
       return true;
     }
 
     @Override
-    public boolean processAllValues(@NotNull Processor p) {
+    public boolean processAllValues(@Nonnull Processor p) {
       return true;
     }
 
@@ -295,13 +295,13 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     }
 
     @Override
-    public int valuesForKey(@NotNull Object key) {
+    public int valuesForKey(@Nonnull Object key) {
       return 0;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Iterable get(@NotNull Object name) {
+    public Iterable get(@Nonnull Object name) {
       return ContainerUtil.emptyList();
     }
   }

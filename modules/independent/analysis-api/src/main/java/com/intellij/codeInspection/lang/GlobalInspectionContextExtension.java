@@ -24,18 +24,18 @@ import com.intellij.codeInspection.GlobalInspectionContext;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.Tools;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface GlobalInspectionContextExtension<T> {
-  @NotNull
+  @Nonnull
   Key<T> getID();
 
-  void performPreRunActivities(@NotNull List<Tools> globalTools,
-                               @NotNull List<Tools> localTools,
-                               @NotNull GlobalInspectionContext context);
-  void performPostRunActivities(@NotNull List<InspectionToolWrapper> inspections, @NotNull GlobalInspectionContext context);
+  void performPreRunActivities(@Nonnull List<Tools> globalTools,
+                               @Nonnull List<Tools> localTools,
+                               @Nonnull GlobalInspectionContext context);
+  void performPostRunActivities(@Nonnull List<InspectionToolWrapper> inspections, @Nonnull GlobalInspectionContext context);
 
   void cleanup();
 }

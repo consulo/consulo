@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +40,7 @@ public class LanguageFolding extends LanguageExtension<FoldingBuilder> {
   }
 
   @Override
-  public FoldingBuilder forLanguage(@NotNull Language l) {
+  public FoldingBuilder forLanguage(@Nonnull Language l) {
     FoldingBuilder cached = l.getUserData(getLanguageCache());
     if (cached != null) return cached;
 
@@ -64,9 +64,9 @@ public class LanguageFolding extends LanguageExtension<FoldingBuilder> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<FoldingBuilder> allForLanguage(@NotNull Language l) {
+  public List<FoldingBuilder> allForLanguage(@Nonnull Language l) {
     FoldingBuilder result = forLanguage(l);
     if (result == null) return Collections.emptyList();
     return result instanceof CompositeFoldingBuilder ? ((CompositeFoldingBuilder)result).getAllBuilders() : Collections.singletonList(result);

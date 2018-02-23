@@ -17,7 +17,7 @@ package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.extensions.*;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
 /**
@@ -56,14 +56,14 @@ public class ExtensionPointImplTest extends TestCase {
     final boolean[] flags = new boolean[2];
     Extension extension = new Extension() {
       @Override
-      public void extensionAdded(@NotNull ExtensionPoint extensionPoint1) {
+      public void extensionAdded(@Nonnull ExtensionPoint extensionPoint1) {
         assertSame(extensionPoint, extensionPoint1);
         assertSame(area, extensionPoint1.getArea());
         flags[0] = true;
       }
 
       @Override
-      public void extensionRemoved(@NotNull ExtensionPoint extensionPoint1) {
+      public void extensionRemoved(@Nonnull ExtensionPoint extensionPoint1) {
         assertSame(extensionPoint, extensionPoint1);
         assertSame(area, extensionPoint1.getArea());
         flags[1] = true;
@@ -102,12 +102,12 @@ public class ExtensionPointImplTest extends TestCase {
     final boolean removed[] = new boolean[1];
     extensionPoint.addExtensionPointListener(new ExtensionPointListener() {
       @Override
-      public void extensionAdded(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
         added[0] = true;
       }
 
       @Override
-      public void extensionRemoved(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
         removed[0] = true;
       }
     });
@@ -129,12 +129,12 @@ public class ExtensionPointImplTest extends TestCase {
     assertFalse(added[0]);
     extensionPoint.addExtensionPointListener(new ExtensionPointListener() {
       @Override
-      public void extensionAdded(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
         added[0] = true;
       }
 
       @Override
-      public void extensionRemoved(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
       }
     });
     assertTrue(added[0]);

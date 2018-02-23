@@ -19,8 +19,7 @@ package com.intellij.psi;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -67,7 +66,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * The range is obtained from {@link ElementManipulators}
    * @param element PSI element
    */
-  public PsiReferenceBase(@NotNull T element) {
+  public PsiReferenceBase(@Nonnull T element) {
     myElement = element;
     mySoft = false;
   }
@@ -76,7 +75,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     myRange = range;
   }
 
-  @NotNull
+  @Nonnull
   public String getValue() {
     String text = myElement.getText();
     final TextRange range = getRangeInElement();
@@ -108,7 +107,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getCanonicalText() {
     return getValue();
   }
@@ -119,7 +118,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException("Rebind cannot be performed for " + getClass());
   }
 
@@ -175,7 +174,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public PsiElement resolve() {
       ResolveResult[] resolveResults = multiResolve(false);
       return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
@@ -200,7 +199,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
       myResolveTo = resolveTo;
     }
 
-    public Immediate(@NotNull T element, PsiElement resolveTo) {
+    public Immediate(@Nonnull T element, PsiElement resolveTo) {
       super(element);
       myResolveTo = resolveTo;
     }
@@ -212,13 +211,13 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public PsiElement resolve() {
       return myResolveTo;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Object[] getVariants() {
       return EMPTY_ARRAY;
     }

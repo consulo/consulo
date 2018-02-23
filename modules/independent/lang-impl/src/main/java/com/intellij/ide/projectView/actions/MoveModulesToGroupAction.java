@@ -29,7 +29,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class MoveModulesToGroupAction extends AnAction {
   protected final ModuleGroup myModuleGroup;

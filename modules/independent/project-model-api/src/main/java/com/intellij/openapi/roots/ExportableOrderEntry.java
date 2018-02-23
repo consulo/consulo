@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -24,7 +24,7 @@ public interface ExportableOrderEntry extends OrderEntry {
   boolean isExported();
   void setExported(boolean value);
 
-  @NotNull
+  @Nonnull
   DependencyScope getScope();
-  void setScope(@NotNull DependencyScope scope);
+  void setScope(@Nonnull DependencyScope scope);
 }

@@ -20,7 +20,7 @@ import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.popup.HintUpdateSupply;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;

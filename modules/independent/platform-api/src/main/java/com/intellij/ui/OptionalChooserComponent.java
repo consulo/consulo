@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
   private List<Pair<T, Boolean>> myInitialList;
   private ArrayList<Pair<T, Boolean>> myWorkingList;
 
-  public OptionalChooserComponent(@NotNull final List<Pair<T, Boolean>> list) {
+  public OptionalChooserComponent(@Nonnull final List<Pair<T, Boolean>> list) {
     setInitialList(list);
     myWorkingList = new ArrayList<Pair<T, Boolean>>(myInitialList);
 
@@ -43,7 +43,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     reset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();
@@ -107,7 +107,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     return !myWorkingList.equals(myInitialList);
   }
 
-  public void setInitialList(@NotNull final List<Pair<T, Boolean>> list) {
+  public void setInitialList(@Nonnull final List<Pair<T, Boolean>> list) {
     myInitialList = list;
   }
 

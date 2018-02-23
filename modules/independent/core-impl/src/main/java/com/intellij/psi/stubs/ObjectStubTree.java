@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Key;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectObjectProcedure;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ObjectStubTree<T extends Stub> {
   private String myDebugInfo;
   protected final List<T> myPlainList = new ArrayList<>();
 
-  public ObjectStubTree(@NotNull final ObjectStubBase root, final boolean withBackReference) {
+  public ObjectStubTree(@Nonnull final ObjectStubBase root, final boolean withBackReference) {
     myRoot = root;
     enumerateStubs(root, (List<Stub>)myPlainList);
     if (withBackReference) {
@@ -45,22 +45,22 @@ public class ObjectStubTree<T extends Stub> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Stub getRoot() {
     return myRoot;
   }
 
-  @NotNull
+  @Nonnull
   public List<T> getPlainList() {
     return myPlainList;
   }
 
-  @NotNull
+  @Nonnull
   public List<T> getPlainListFromAllRoots() {
     return getPlainList();
   }
 
-  @NotNull
+  @Nonnull
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree() {
     StubIndexSink sink = new StubIndexSink();
     final List<T> plainList = getPlainListFromAllRoots();
@@ -73,7 +73,7 @@ public class ObjectStubTree<T extends Stub> {
     return sink.getResult();
   }
 
-  private static void enumerateStubs(@NotNull Stub root, @NotNull List<Stub> result) {
+  private static void enumerateStubs(@Nonnull Stub root, @Nonnull List<Stub> result) {
     ((ObjectStubBase)root).id = result.size();
     result.add(root);
     List<? extends Stub> childrenStubs = root.getChildrenStubs();
@@ -94,7 +94,7 @@ public class ObjectStubTree<T extends Stub> {
   }
 
   @Nullable
-  public static ObjectStubTree getStubTree(@NotNull ObjectStubBase root) {
+  public static ObjectStubTree getStubTree(@Nonnull ObjectStubBase root) {
     return root.getUserData(STUB_TO_TREE_REFERENCE);
   }
 
@@ -113,7 +113,7 @@ public class ObjectStubTree<T extends Stub> {
     private Map<Object, int[]> myProcessingMap;
 
     @Override
-    public void occurrence(@NotNull final StubIndexKey indexKey, @NotNull final Object value) {
+    public void occurrence(@Nonnull final StubIndexKey indexKey, @Nonnull final Object value) {
       Map<Object, int[]> map = myResult.get(indexKey);
       if (map == null) {
         map = new THashMap<>();

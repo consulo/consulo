@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import com.maddyhome.idea.copyright.ui.TemplateCommentPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.copyright.config.CopyrightFileConfig;
 
 /**
@@ -27,15 +27,15 @@ import consulo.copyright.config.CopyrightFileConfig;
  * @since 13.02.15
  */
 public abstract class BaseUpdateCopyrightsProvider extends UpdateCopyrightsProvider<CopyrightFileConfig> {
-  @NotNull
+  @Nonnull
   @Override
   public CopyrightFileConfig createDefaultOptions() {
     return new CopyrightFileConfig();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TemplateCommentPanel createConfigurable(@NotNull Project project, @NotNull TemplateCommentPanel parentPane, @NotNull FileType fileType) {
+  public TemplateCommentPanel createConfigurable(@Nonnull Project project, @Nonnull TemplateCommentPanel parentPane, @Nonnull FileType fileType) {
     return new TemplateCommentPanel(fileType, parentPane, project);
   }
 }

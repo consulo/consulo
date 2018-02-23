@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -27,16 +27,16 @@ import java.util.List;
  */
 public interface VcsLogFilterCollection {
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsLogBranchFilter getBranchFilter();
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsLogUserFilter getUserFilter();
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsLogDateFilter getDateFilter();
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsLogTextFilter getTextFilter();
 
   @Nullable
@@ -53,6 +53,6 @@ public interface VcsLogFilterCollection {
    */
   boolean isEmpty();
 
-  @NotNull
+  @Nonnull
   List<VcsLogDetailsFilter> getDetailsFilters();
 }

@@ -31,8 +31,7 @@ import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -44,8 +43,10 @@ import static com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil.nor
  */
 public class ExternalSystemTaskSettingsControl implements ExternalSystemSettingsControl<ExternalSystemTaskExecutionSettings> {
 
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final Project myProject;
 
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
   private JBLabel myProjectPathLabel;
@@ -60,19 +61,20 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   private JBLabel myScriptParametersLabel;
   private RawCommandLineEditor myScriptParametersEditor;
 
-  @Nullable private ExternalSystemTaskExecutionSettings myOriginalSettings;
+  @javax.annotation.Nullable
+  private ExternalSystemTaskExecutionSettings myOriginalSettings;
 
-  public ExternalSystemTaskSettingsControl(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  public ExternalSystemTaskSettingsControl(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     myProject = project;
     myExternalSystemId = externalSystemId;
   }
 
-  public void setOriginalSettings(@Nullable ExternalSystemTaskExecutionSettings originalSettings) {
+  public void setOriginalSettings(@javax.annotation.Nullable ExternalSystemTaskExecutionSettings originalSettings) {
     myOriginalSettings = originalSettings;
   }
 
   @Override
-  public void fillUi(@NotNull final PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(@Nonnull final PaintAwarePanel canvas, int indentLevel) {
     myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
       "run.configuration.settings.label.project", myExternalSystemId.getReadableName()
     ));
@@ -152,7 +154,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public void apply(@NotNull ExternalSystemTaskExecutionSettings settings) {
+  public void apply(@Nonnull ExternalSystemTaskExecutionSettings settings) {
     String projectPath = myProjectPathField.getText();
     settings.setExternalProjectPath(projectPath);
     settings.setTaskNames(StringUtil.split(myTasksTextField.getText(), " "));
@@ -161,7 +163,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public boolean validate(@NotNull ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
+  public boolean validate(@Nonnull ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
     String projectPath = myProjectPathField.getText();
     if (myOriginalSettings == null) {
       throw new ConfigurationException(String.format(

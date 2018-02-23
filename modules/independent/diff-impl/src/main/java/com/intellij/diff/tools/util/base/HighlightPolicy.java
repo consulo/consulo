@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util.base;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public enum HighlightPolicy {
   DO_NOT_HIGHLIGHT("Do not highlight"),
@@ -23,13 +23,14 @@ public enum HighlightPolicy {
   BY_WORD("Highlight words"),
   BY_WORD_SPLIT("Highlight split changes");
 
-  @NotNull private final String myText;
+  @Nonnull
+  private final String myText;
 
-  HighlightPolicy(@NotNull String text) {
+  HighlightPolicy(@Nonnull String text) {
     myText = text;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }

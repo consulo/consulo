@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.PatchedWeakReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -34,10 +34,12 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AbstractDocumentationTooltipAction extends AnAction {
 
-  @Nullable private WeakReference<PsiElement> myDocAnchor;
-  @Nullable private WeakReference<PsiElement> myOriginalElement;
+  @Nullable
+  private WeakReference<PsiElement> myDocAnchor;
+  @Nullable
+  private WeakReference<PsiElement> myOriginalElement;
 
-  public void setDocInfo(@NotNull PsiElement docAnchor, @NotNull PsiElement originalElement) {
+  public void setDocInfo(@Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
     myDocAnchor = new PatchedWeakReference<PsiElement>(docAnchor);
     myOriginalElement = new PatchedWeakReference<PsiElement>(originalElement);
   }
@@ -58,9 +60,9 @@ public abstract class AbstractDocumentationTooltipAction extends AnAction {
     myOriginalElement = null;
   }
   
-  protected abstract void doActionPerformed(@NotNull DataContext context,
-                                            @NotNull PsiElement docAnchor,
-                                            @NotNull PsiElement originalElement);
+  protected abstract void doActionPerformed(@Nonnull DataContext context,
+                                            @Nonnull PsiElement docAnchor,
+                                            @Nonnull PsiElement originalElement);
   
   @Nullable
   private Pair<PsiElement/* doc anchor */, PsiElement /* original element */> getDocInfo() {

@@ -18,7 +18,7 @@ package com.intellij.execution;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,6 +26,6 @@ public abstract class ExecutionTargetProvider {
   public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME =
     ExtensionPointName.create("com.intellij.executionTargetProvider");
 
-  @NotNull
-  public abstract List<ExecutionTarget> getTargets(@NotNull Project project, @NotNull RunnerAndConfigurationSettings configuration);
+  @Nonnull
+  public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration);
 }

@@ -34,8 +34,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -49,13 +49,13 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.hierarchy.actions.BrowseHierarchyActionBase");
   private final LanguageExtension<HierarchyProvider> myExtension;
 
-  protected BrowseHierarchyActionBase(@NotNull LanguageExtension<HierarchyProvider> extension) {
+  protected BrowseHierarchyActionBase(@Nonnull LanguageExtension<HierarchyProvider> extension) {
     myExtension = extension;
   }
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull final AnActionEvent e) {
+  public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = e.getProject();
     if (project == null) return;
@@ -69,7 +69,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
     createAndAddToPanel(project, provider, target);
   }
 
-  public static HierarchyBrowser createAndAddToPanel(@NotNull Project project, @NotNull final HierarchyProvider provider, @NotNull PsiElement target) {
+  public static HierarchyBrowser createAndAddToPanel(@Nonnull Project project, @Nonnull final HierarchyProvider provider, @Nonnull PsiElement target) {
     final HierarchyBrowser hierarchyBrowser = provider.createHierarchyBrowser(target);
 
     final Content content;
@@ -105,7 +105,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     if (!myExtension.hasAnyExtensions()) {
       e.getPresentation().setVisible(false);
     }
@@ -143,10 +143,10 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
 
   @Nullable
   @RequiredReadAction
-  public static HierarchyProvider findProvider(@NotNull LanguageExtension<HierarchyProvider> extension,
+  public static HierarchyProvider findProvider(@Nonnull LanguageExtension<HierarchyProvider> extension,
                                                @Nullable PsiElement psiElement,
                                                @Nullable PsiFile psiFile,
-                                               @NotNull DataContext dataContext) {
+                                               @Nonnull DataContext dataContext) {
     final HierarchyProvider provider = findBestHierarchyProvider(extension, psiElement, dataContext);
     if (provider == null) {
       return findBestHierarchyProvider(extension, psiFile, dataContext);

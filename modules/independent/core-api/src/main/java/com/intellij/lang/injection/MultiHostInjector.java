@@ -25,7 +25,7 @@ package com.intellij.lang.injection;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import consulo.lang.injection.MultiHostInjectorExtensionPoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @see com.intellij.psi.PsiLanguageInjectionHost
@@ -33,5 +33,5 @@ import org.jetbrains.annotations.NotNull;
 public interface MultiHostInjector {
   ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("com.intellij.multiHostInjector");
 
-  void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context);
+  void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context);
 }

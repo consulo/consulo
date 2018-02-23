@@ -23,7 +23,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -41,14 +41,14 @@ final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
     private final TObjectHashingStrategy<K> myStrategy;
     private final V value;
 
-    private SoftKey(@NotNull K k, final int hash, @NotNull TObjectHashingStrategy<K> strategy, V v, @NotNull ReferenceQueue<K> q) {
+    private SoftKey(@Nonnull K k, final int hash, @Nonnull TObjectHashingStrategy<K> strategy, V v, @Nonnull ReferenceQueue<K> q) {
       super(k, q);
       myStrategy = strategy;
       value = v;
       myHash = hash;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public V getValue() {
       return value;
@@ -70,7 +70,7 @@ final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
   }
 
   @Override
-  protected KeyReference<K, V> createKeyReference(@NotNull K key, @NotNull V value, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  protected KeyReference<K, V> createKeyReference(@Nonnull K key, @Nonnull V value, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     return new SoftKey<K, V>(key, hashingStrategy.computeHashCode(key), hashingStrategy, value, myReferenceQueue);
   }
 
@@ -88,7 +88,7 @@ final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
   public ConcurrentSoftHashMap(int initialCapacity,
                                float loadFactor,
                                int concurrencyLevel,
-                               @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+                               @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
@@ -96,7 +96,7 @@ final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
     super(t);
   }
 
-  public ConcurrentSoftHashMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public ConcurrentSoftHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(hashingStrategy);
   }
 }

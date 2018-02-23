@@ -13,10 +13,10 @@
 // limitations under the License.
 package org.jdom;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class ImmutableAttribute extends Attribute {
-  ImmutableAttribute(@NotNull String name, @NotNull String value, int type, @NotNull Namespace namespace) {
+  ImmutableAttribute(@Nonnull String name, @Nonnull String value, int type, @Nonnull Namespace namespace) {
     super.setName(name);
     super.setValue(value);
     super.setNamespace(namespace);
@@ -54,7 +54,7 @@ class ImmutableAttribute extends Attribute {
   }
 
   @Override
-  public Attribute setName(@NotNull String name) {
+  public Attribute setName(@Nonnull String name) {
     throw ImmutableElement.immutableError(this);
   }
 
@@ -64,7 +64,7 @@ class ImmutableAttribute extends Attribute {
   }
 
   @Override
-  public Attribute setValue(@NotNull String value) {
+  public Attribute setValue(@Nonnull String value) {
     throw ImmutableElement.immutableError(this);
   }
 

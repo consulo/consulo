@@ -37,8 +37,8 @@ import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -60,17 +60,21 @@ public class FontOptions extends JPanel implements OptionsPanel{
 
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
-  @NotNull private final ColorAndFontOptions myOptions;
+  @Nonnull
+  private final ColorAndFontOptions myOptions;
 
-  @NotNull private final JTextField myEditorFontSizeField = new JTextField(4);
-  @NotNull private final JTextField myLineSpacingField    = new JTextField(4);
+  @Nonnull
+  private final JTextField myEditorFontSizeField = new JTextField(4);
+  @Nonnull
+  private final JTextField myLineSpacingField    = new JTextField(4);
   private final FontComboBox myPrimaryCombo = new FontComboBox();
   private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationBundle.message("secondary.font"));
   private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationBundle.message("use.ligatures"));
   private final JLabel myLigaturesInfoLinkLabel;
   private final FontComboBox mySecondaryCombo = new FontComboBox();
 
-  @NotNull private final JBCheckBox myOnlyMonospacedCheckBox =
+  @Nonnull
+  private final JBCheckBox myOnlyMonospacedCheckBox =
           new JBCheckBox(ApplicationBundle.message("checkbox.show.only.monospaced.fonts"));
 
   private boolean myIsInSchemeChange;
@@ -80,7 +84,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     this(options, ApplicationBundle.message("group.editor.font"));
   }
 
-  protected FontOptions(@NotNull ColorAndFontOptions options, final String title) {
+  protected FontOptions(@Nonnull ColorAndFontOptions options, final String title) {
     super(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
     Insets borderInsets =
             JBUI.insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET, IdeBorderFactory.TITLED_BORDER_LEFT_INSET, 0, IdeBorderFactory.TITLED_BORDER_RIGHT_INSET);
@@ -315,7 +319,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     myIsInSchemeChange = false;
   }
 
-  @NotNull
+  @Nonnull
   protected ModifiableFontPreferences getFontPreferences() {
     return (ModifiableFontPreferences)getCurrentScheme().getFontPreferences();
   }

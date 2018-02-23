@@ -17,17 +17,17 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.concurrency.ResultConsumer;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface DebuggerTreeCreator<D> {
-  @NotNull
-  String getTitle(@NotNull D descriptor);
+  @Nonnull
+  String getTitle(@Nonnull D descriptor);
 
   void createDescriptorByNode(Object node, ResultConsumer<D> resultConsumer);
 
-  @NotNull
-  Tree createTree(@NotNull D descriptor);
+  @Nonnull
+  Tree createTree(@Nonnull D descriptor);
 }

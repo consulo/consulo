@@ -18,14 +18,14 @@ package com.intellij.diff.tools.binary;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.DiffRequest;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BinaryDiffTool implements FrameDiffTool {
   public static final BinaryDiffTool INSTANCE = new BinaryDiffTool();
 
-  @NotNull
+  @Nonnull
   @Override
-  public DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     if (OnesideBinaryDiffViewer.canShowRequest(context, request)) return new OnesideBinaryDiffViewer(context, request);
     if (TwosideBinaryDiffViewer.canShowRequest(context, request)) return new TwosideBinaryDiffViewer(context, request);
     if (ThreesideBinaryDiffViewer.canShowRequest(context, request)) return new ThreesideBinaryDiffViewer(context, request);
@@ -33,13 +33,13 @@ public class BinaryDiffTool implements FrameDiffTool {
   }
 
   @Override
-  public boolean canShow(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return OnesideBinaryDiffViewer.canShowRequest(context, request) ||
            TwosideBinaryDiffViewer.canShowRequest(context, request) ||
            ThreesideBinaryDiffViewer.canShowRequest(context, request);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Binary file viewer";

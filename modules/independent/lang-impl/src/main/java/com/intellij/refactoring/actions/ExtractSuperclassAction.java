@@ -18,7 +18,7 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.refactoring.RefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ExtractSuperclassAction extends ExtractSuperActionBase {
   
@@ -27,7 +27,7 @@ public class ExtractSuperclassAction extends ExtractSuperActionBase {
   }
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider supportProvider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
     return supportProvider.getExtractSuperClassHandler();
   }
 }

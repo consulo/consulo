@@ -92,8 +92,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -246,7 +246,7 @@ public class CompileDriver {
     return ExitStatus.UP_TO_DATE.equals(result.get());
   }
 
-  @NotNull
+  @Nonnull
   private CompositeDependencyCache createDependencyCache() {
     return new CompositeDependencyCache(myProject, myCachesDirectoryPath);
   }
@@ -496,7 +496,7 @@ public class CompileDriver {
   }
 
 
-  @Nullable
+  @javax.annotation.Nullable
   @TestOnly
   public static ExitStatus getExternalBuildExitStatus(CompileContext context) {
     return context.getUserData(COMPILE_SERVER_BUILD_STATUS);
@@ -809,7 +809,7 @@ public class CompileDriver {
 
         final CompileScope intermediateSources = attachIntermediateOutputDirectories(new CompositeScope(CompileScope.EMPTY_ARRAY) {
           @Override
-          @NotNull
+          @Nonnull
           public Module[] getAffectedModules() {
             return context.getCompileScope().getAffectedModules();
           }
@@ -939,7 +939,7 @@ public class CompileDriver {
   private static void walkChildren(VirtualFile from, final CompileContext context) {
     VfsUtilCore.visitChildrenRecursively(from, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (file.isDirectory()) {
           context.getProgressIndicator().checkCanceled();
           context.getProgressIndicator().setText2(file.getPresentableUrl());
@@ -967,7 +967,7 @@ public class CompileDriver {
   private static void writeIndex(final BufferedWriter writer, final VirtualFile root, final VirtualFile file) throws IOException {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         try {
           writer.write(VfsUtilCore.getRelativePath(file, root, '/'));
           writer.write('\n');

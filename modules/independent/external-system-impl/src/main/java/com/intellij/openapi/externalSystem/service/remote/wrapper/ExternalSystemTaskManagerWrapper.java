@@ -20,8 +20,8 @@ import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutio
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -35,23 +35,24 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
   implements RemoteExternalSystemTaskManager<S>
 {
 
-  @NotNull private final RemoteExternalSystemProgressNotificationManager myProgressManager;
+  @Nonnull
+  private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemTaskManagerWrapper(@NotNull RemoteExternalSystemTaskManager<S> delegate,
-                                          @NotNull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemTaskManagerWrapper(@Nonnull RemoteExternalSystemTaskManager<S> delegate,
+                                          @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
   {
     super(delegate);
     myProgressManager = progressManager;
   }
 
   @Override
-  public void executeTasks(@NotNull ExternalSystemTaskId id,
-                           @NotNull List<String> taskNames,
-                           @NotNull String projectPath,
+  public void executeTasks(@Nonnull ExternalSystemTaskId id,
+                           @Nonnull List<String> taskNames,
+                           @Nonnull String projectPath,
                            @Nullable S settings,
-                           @NotNull List<String> vmOptions,
-                           @NotNull List<String> scriptParameters,
-                           @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                           @Nonnull List<String> vmOptions,
+                           @Nonnull List<String> scriptParameters,
+                           @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {
@@ -71,7 +72,7 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
   }
 
   @Override
-  public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {

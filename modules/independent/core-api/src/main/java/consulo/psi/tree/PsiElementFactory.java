@@ -20,8 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -32,5 +32,5 @@ public interface PsiElementFactory extends Predicate<IElementType> {
 
   @Nullable
   @RequiredReadAction
-  PsiElement createElement(@NotNull ASTNode node);
+  PsiElement createElement(@Nonnull ASTNode node);
 }

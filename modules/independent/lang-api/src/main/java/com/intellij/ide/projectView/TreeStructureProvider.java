@@ -18,7 +18,6 @@ package com.intellij.ide.projectView;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -51,7 +50,7 @@ public interface TreeStructureProvider {
    * @return the data object, or null if no data object can be returned by this provider.
    * @see com.intellij.openapi.actionSystem.DataProvider
    */
-  @Nullable
+  @javax.annotation.Nullable
   default Object getData(Collection<AbstractTreeNode> selected, Key<?> dataKey) {
     return null;
   }

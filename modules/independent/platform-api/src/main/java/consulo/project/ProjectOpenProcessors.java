@@ -17,8 +17,8 @@ package consulo.project;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -28,16 +28,16 @@ import java.io.File;
  */
 public interface ProjectOpenProcessors {
 
-  @NotNull
+  @Nonnull
   public static ProjectOpenProcessors getInstance() {
     return ServiceManager.getService(ProjectOpenProcessors.class);
   }
 
-  @NotNull
+  @Nonnull
   public ProjectOpenProcessor[] getProcessors();
 
   @Nullable
-  default ProjectOpenProcessor findProcessor(@NotNull File file) {
+  default ProjectOpenProcessor findProcessor(@Nonnull File file) {
     for (ProjectOpenProcessor provider : getProcessors()) {
       if (provider.canOpenProject(file)) {
         return provider;

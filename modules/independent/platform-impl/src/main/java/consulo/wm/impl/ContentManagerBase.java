@@ -29,8 +29,8 @@ import com.intellij.util.SmartList;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.wm.ContentEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -66,7 +66,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
    * WARNING: as this class adds listener to the ProjectManager which is removed on projectClosed event, all instances of this class
    * must be created on already OPENED projects, otherwise there will be memory leak!
    */
-  public ContentManagerBase(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public ContentManagerBase(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
     myProject = project;
     myCanCloseContents = canCloseContents;
     myUI = contentUI;
@@ -81,9 +81,9 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     return myCanCloseContents;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     Content selected = getSelectedContent();
     if (selected == null) return new ActionCallback.Done();
     BusyObject busyObject = selected.getBusyObject();
@@ -91,22 +91,22 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void addContent(@NotNull Content content, final int order) {
+  public void addContent(@Nonnull Content content, final int order) {
     doAddContent(content, order);
   }
 
   @Override
-  public void addContent(@NotNull Content content) {
+  public void addContent(@Nonnull Content content) {
     doAddContent(content, -1);
   }
 
   @Override
-  public void addContent(@NotNull final Content content, final Object constraints) {
+  public void addContent(@Nonnull final Content content, final Object constraints) {
     doAddContent(content, -1);
   }
 
   @RequiredUIAccess
-  private void doAddContent(@NotNull final Content content, final int index) {
+  private void doAddContent(@Nonnull final Content content, final int index) {
     UIAccess.assertIsUIThread();
     if (myContents.contains(content)) {
       myContents.remove(content);
@@ -132,13 +132,13 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public boolean removeContent(@NotNull Content content, final boolean dispose) {
+  public boolean removeContent(@Nonnull Content content, final boolean dispose) {
     return removeContent(content, true, dispose).isDone();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback removeContent(@NotNull Content content, boolean dispose, final boolean trackFocus, final boolean forcedFocus) {
+  public ActionCallback removeContent(@Nonnull Content content, boolean dispose, final boolean trackFocus, final boolean forcedFocus) {
     final ActionCallback result = new ActionCallback();
     removeContent(content, true, dispose).doWhenDone(() -> {
       if (trackFocus) {
@@ -158,8 +158,8 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     return result;
   }
 
-  @NotNull
-  private ActionCallback removeContent(@NotNull Content content, boolean trackSelection, boolean dispose) {
+  @Nonnull
+  private ActionCallback removeContent(@Nonnull Content content, boolean trackSelection, boolean dispose) {
     UIAccess.assertIsUIThread();
     int indexToBeRemoved = getIndexOfContent(content);
     if (indexToBeRemoved == -1) return ActionCallback.REJECTED;
@@ -254,7 +254,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Content[] getContents() {
     return myContents.toArray(new Content[myContents.size()]);
   }
@@ -276,7 +276,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public Content getContent(@NotNull consulo.ui.Component component) {
+  public Content getContent(@Nonnull consulo.ui.Component component) {
     Content[] contents = getContents();
     for (Content content : contents) {
       if (Comparing.equal(component, content.getUIComponent())) {
@@ -292,32 +292,32 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     return myContents.indexOf(content);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseActionName() {
     return myUI.getCloseActionName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCloseAllButThisActionName() {
     return myUI.getCloseAllButThisActionName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPreviousContentActionName() {
     return myUI.getPreviousContentActionName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getNextContentActionName() {
     return myUI.getNextContentActionName();
   }
 
   @Override
-  public List<AnAction> getAdditionalPopupActions(@NotNull final Content content) {
+  public List<AnAction> getAdditionalPopupActions(@Nonnull final Content content) {
     return null;
   }
 
@@ -335,7 +335,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void addSelectedContent(@NotNull final Content content) {
+  public void addSelectedContent(@Nonnull final Content content) {
     if (!checkSelectionChangeShouldBeProcessed(content, false)) return;
 
     if (getIndexOfContent(content) == -1) {
@@ -359,19 +359,19 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void removeFromSelection(@NotNull Content content) {
+  public void removeFromSelection(@Nonnull Content content) {
     if (!isSelected(content)) return;
     mySelection.remove(content);
     fireSelectionChanged(content, ContentManagerEvent.ContentOperation.remove);
   }
 
   @Override
-  public boolean isSelected(@NotNull Content content) {
+  public boolean isSelected(@Nonnull Content content) {
     return mySelection.contains(content);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Content[] getSelectedContents() {
     return mySelection.toArray(new Content[mySelection.size()]);
   }
@@ -383,30 +383,30 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void setSelectedContent(@NotNull Content content, boolean requestFocus) {
+  public void setSelectedContent(@Nonnull Content content, boolean requestFocus) {
     setSelectedContentCB(content, requestFocus);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@NotNull final Content content, final boolean requestFocus) {
+  public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus) {
     return setSelectedContentCB(content, requestFocus, true);
   }
 
   @Override
-  public void setSelectedContent(@NotNull Content content, boolean requestFocus, boolean forcedFocus) {
+  public void setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus) {
     setSelectedContentCB(content, requestFocus, forcedFocus);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@NotNull final Content content, final boolean requestFocus, final boolean forcedFocus) {
+  public ActionCallback setSelectedContentCB(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus) {
     return setSelectedContent(content, requestFocus, forcedFocus, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback setSelectedContent(@NotNull final Content content, final boolean requestFocus, final boolean forcedFocus, boolean implicit) {
+  public ActionCallback setSelectedContent(@Nonnull final Content content, final boolean requestFocus, final boolean forcedFocus, boolean implicit) {
     mySelectionHistory.remove(content);
     mySelectionHistory.add(0, content);
     if (isSelected(content) && requestFocus) {
@@ -425,7 +425,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     final Content[] old = getSelectedContents();
 
     final ActiveRunnable selection = new ActiveRunnable() {
-      @NotNull
+      @Nonnull
       @Override
       public ActionCallback run() {
         if (myDisposed || getIndexOfContent(content) == -1) return ActionCallback.REJECTED;
@@ -456,19 +456,19 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
     }
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ActionCallback requestFocusForComponent();
 
   protected abstract boolean isSelectionHoldsFocus();
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback setSelectedContentCB(@NotNull Content content) {
+  public ActionCallback setSelectedContentCB(@Nonnull Content content) {
     return setSelectedContentCB(content, false);
   }
 
   @Override
-  public void setSelectedContent(@NotNull final Content content) {
+  public void setSelectedContent(@Nonnull final Content content) {
     setSelectedContentCB(content);
   }
 
@@ -501,31 +501,31 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void addContentManagerListener(@NotNull ContentManagerListener l) {
+  public void addContentManagerListener(@Nonnull ContentManagerListener l) {
     myDispatcher.getListeners().add(0, l);
   }
 
   @Override
-  public void removeContentManagerListener(@NotNull ContentManagerListener l) {
+  public void removeContentManagerListener(@Nonnull ContentManagerListener l) {
     myDispatcher.removeListener(l);
   }
 
-  private void fireContentAdded(@NotNull Content content, int newIndex) {
+  private void fireContentAdded(@Nonnull Content content, int newIndex) {
     ContentManagerEvent e = new ContentManagerEvent(this, content, newIndex, ContentManagerEvent.ContentOperation.add);
     myDispatcher.getMulticaster().contentAdded(e);
   }
 
-  private void fireContentRemoved(@NotNull Content content, int oldIndex) {
+  private void fireContentRemoved(@Nonnull Content content, int oldIndex) {
     ContentManagerEvent e = new ContentManagerEvent(this, content, oldIndex, ContentManagerEvent.ContentOperation.remove);
     myDispatcher.getMulticaster().contentRemoved(e);
   }
 
-  private void fireSelectionChanged(@NotNull Content content, ContentManagerEvent.ContentOperation operation) {
+  private void fireSelectionChanged(@Nonnull Content content, ContentManagerEvent.ContentOperation operation) {
     ContentManagerEvent e = new ContentManagerEvent(this, content, getIndexOfContent(content), operation);
     myDispatcher.getMulticaster().selectionChanged(e);
   }
 
-  private boolean fireContentRemoveQuery(@NotNull Content content, int oldIndex, ContentManagerEvent.ContentOperation operation) {
+  private boolean fireContentRemoveQuery(@Nonnull Content content, int oldIndex, ContentManagerEvent.ContentOperation operation) {
     ContentManagerEvent event = new ContentManagerEvent(this, content, oldIndex, operation);
     for (ContentManagerListener listener : myDispatcher.getListeners()) {
       listener.contentRemoveQuery(event);
@@ -541,12 +541,12 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   @Override
-  public void addDataProvider(@NotNull final DataProvider provider) {
+  public void addDataProvider(@Nonnull final DataProvider provider) {
     myDataProviders.add(provider);
   }
 
   @Override
-  public void propertyChange(@NotNull PropertyChangeEvent event) {
+  public void propertyChange(@Nonnull PropertyChangeEvent event) {
     if (Content.PROP_COMPONENT.equals(event.getPropertyName())) {
       myContentWithChangedComponent.add((Content)event.getSource());
     }

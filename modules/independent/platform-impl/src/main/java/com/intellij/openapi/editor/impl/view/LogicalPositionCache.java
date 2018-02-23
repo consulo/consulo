@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +71,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
   }
 
   // text for which offset<->logicalColumn conversion is trivial
-  private static boolean isSimpleText(@NotNull CharSequence text) {
+  private static boolean isSimpleText(@Nonnull CharSequence text) {
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
       if (c == '\t' || c >= Character.MIN_SURROGATE && c <= Character.MAX_SURROGATE) return false;
@@ -88,7 +88,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     }
   }
 
-  @NotNull
+  @Nonnull
   synchronized LogicalPosition offsetToLogicalPosition(int offset) {
     if (myUpdateInProgress) throw new IllegalStateException();
     int textLength = myDocument.getTextLength();
@@ -108,7 +108,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     return lineData.offsetToLogicalColumn(myDocument, line, myTabSize, myDocument.getLineStartOffset(line) + intraLineOffset);
   }
 
-  synchronized int logicalPositionToOffset(@NotNull LogicalPosition pos) {
+  synchronized int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     int line = pos.line;
     int column = pos.column;
     if (line >= myDocument.getLineCount()) return myDocument.getTextLength();
@@ -123,7 +123,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     return lineData.logicalColumnToOffset(myDocument, line, myTabSize, column);
   }
 
-  private static int calcOffset(@NotNull Document document, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
+  private static int calcOffset(@Nonnull Document document, int column, int startColumn, int startOffset, int endOffset, int tabSize) {
     int currentColumn = startColumn;
     CharSequence text = document.getImmutableCharSequence();
     for (int i = startOffset; i < endOffset; i++) {
@@ -141,7 +141,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     return endOffset;
   }
 
-  static int calcColumn(@NotNull CharSequence text, int startOffset, int startColumn, int offset, int tabSize) {
+  static int calcColumn(@Nonnull CharSequence text, int startOffset, int startColumn, int offset, int tabSize) {
     int column = startColumn;
     for (int i = startOffset; i < offset; i++) {
       char c = text.charAt(i);
@@ -183,7 +183,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     }
   }
 
-  @NotNull
+  @Nonnull
   private LineData getLineInfo(int line) {
     checkDisposed();
     LineData result = myLines.get(line);
@@ -217,7 +217,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     try {
@@ -239,7 +239,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       columnCache = columnData;
     }
 
-    private static LineData create(@NotNull Document document, int line, int tabSize) {
+    private static LineData create(@Nonnull Document document, int line, int tabSize) {
       int start = document.getLineStartOffset(line);
       int end = document.getLineEndOffset(line);
       int cacheSize = (end - start) / CACHE_FREQUENCY;
@@ -271,7 +271,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       return hasTabsOrSurrogates ? new LineData(cache) : TRIVIAL;
     }
 
-    private int offsetToLogicalColumn(@NotNull Document document, int line, int tabSize, int offset) {
+    private int offsetToLogicalColumn(@Nonnull Document document, int line, int tabSize, int offset) {
       offset = Math.min(offset, document.getLineEndOffset(line));
       int lineStartOffset = document.getLineStartOffset(line);
       int relOffset = offset - lineStartOffset;
@@ -282,7 +282,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
       return calcColumn(document.getImmutableCharSequence(), startOffset, startColumn, offset, tabSize);
     }
 
-    private int logicalColumnToOffset(@NotNull Document document, int line, int tabSize, int logicalColumn) {
+    private int logicalColumnToOffset(@Nonnull Document document, int line, int tabSize, int logicalColumn) {
       int lineStartOffset = document.getLineStartOffset(line);
       int lineEndOffset = document.getLineEndOffset(line);
       if (columnCache == null) {

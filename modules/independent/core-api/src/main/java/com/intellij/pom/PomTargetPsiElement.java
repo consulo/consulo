@@ -16,7 +16,7 @@
 package com.intellij.pom;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface PomTargetPsiElement extends PsiElement {
 
-  @NotNull PomTarget getTarget();
+  @Nonnull
+  PomTarget getTarget();
 
 }

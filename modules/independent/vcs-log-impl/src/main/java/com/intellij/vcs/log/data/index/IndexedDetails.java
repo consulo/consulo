@@ -17,14 +17,15 @@ package com.intellij.vcs.log.data.index;
 
 import com.intellij.vcs.log.data.LoadingDetails;
 import com.intellij.vcs.log.data.VcsLogStorage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IndexedDetails extends LoadingDetails {
-  @NotNull private final VcsLogIndex myIndex;
+  @Nonnull
+  private final VcsLogIndex myIndex;
   private final int myCommitIndex;
 
-  public IndexedDetails(@NotNull VcsLogIndex index,
-                        @NotNull VcsLogStorage storage,
+  public IndexedDetails(@Nonnull VcsLogIndex index,
+                        @Nonnull VcsLogStorage storage,
                         int commitIndex,
                         long loadingTaskIndex) {
     super(() -> storage.getCommitId(commitIndex), loadingTaskIndex);
@@ -32,7 +33,7 @@ public class IndexedDetails extends LoadingDetails {
     myCommitIndex = commitIndex;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFullMessage() {
     String message = myIndex.getFullMessage(myCommitIndex);
@@ -40,7 +41,7 @@ public class IndexedDetails extends LoadingDetails {
     return super.getFullMessage();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSubject() {
     String message = myIndex.getFullMessage(myCommitIndex);
@@ -50,8 +51,8 @@ public class IndexedDetails extends LoadingDetails {
     return super.getSubject();
   }
 
-  @NotNull
-  public static String getSubject(@NotNull String fullMessage) {
+  @Nonnull
+  public static String getSubject(@Nonnull String fullMessage) {
     int subjectEnd = fullMessage.indexOf("\n\n");
     if (subjectEnd > 0) return fullMessage.substring(0, subjectEnd).replace("\n", " ");
     return fullMessage.replace("\n", " ");

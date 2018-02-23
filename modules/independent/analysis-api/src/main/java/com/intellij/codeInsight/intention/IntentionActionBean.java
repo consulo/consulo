@@ -25,7 +25,7 @@ import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ResourceBundle;
 

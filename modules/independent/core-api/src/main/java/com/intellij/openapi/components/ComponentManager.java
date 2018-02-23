@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
 
 /**
@@ -40,7 +40,7 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    * @return component with given name or null if there is no such component
    * @see com.intellij.openapi.components.NamedComponent#getComponentName()
    */
-  BaseComponent getComponent(@NotNull String name);
+  BaseComponent getComponent(@Nonnull String name);
 
   /**
    * Gets the component by its interface class.
@@ -48,7 +48,7 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    * @param interfaceClass the interface class of the component
    * @return component that matches interface class or null if there is no such component
    */
-  <T> T getComponent(@NotNull Class<T> interfaceClass);
+  <T> T getComponent(@Nonnull Class<T> interfaceClass);
 
   /**
    * Gets the component by its interface class but returns a specified default implementation
@@ -58,7 +58,7 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    * @param defaultImplementationIfAbsent the default implementation
    * @return component that matches interface class or default if there is no such component
    */
-  <T> T getComponent(@NotNull Class<T> interfaceClass, T defaultImplementationIfAbsent);
+  <T> T getComponent(@Nonnull Class<T> interfaceClass, T defaultImplementationIfAbsent);
 
   /**
    * Checks whether there is a component with the specified interface class.
@@ -67,7 +67,7 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    * @return <code>true</code> if there is a component with the specified interface class;
    * <code>false</code> otherwise
    */
-  boolean hasComponent(@NotNull Class interfaceClass);
+  boolean hasComponent(@Nonnull Class interfaceClass);
 
   /**
    * Gets all components whose implementation class is derived from <code>baseClass</code>.
@@ -75,24 +75,24 @@ public interface ComponentManager extends UserDataHolder, Disposable {
    * @return array of components
    * @deprecated use extension points instead
    */
-  @NotNull
-  <T> T[] getComponents(@NotNull Class<T> baseClass);
+  @Nonnull
+  <T> T[] getComponents(@Nonnull Class<T> baseClass);
 
-  @NotNull
+  @Nonnull
   PicoContainer getPicoContainer();
 
-  @NotNull
+  @Nonnull
   MessageBus getMessageBus();
 
   boolean isDisposed();
 
-  @NotNull
-  <T> T[] getExtensions(@NotNull ExtensionPointName<T> extensionPointName);
+  @Nonnull
+  <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName);
 
   /**
    * @return condition for this component being disposed.
    * see {@link com.intellij.openapi.application.Application#invokeLater(Runnable, Condition)} for the usage example.
    */
-  @NotNull
+  @Nonnull
   Condition getDisposed();
 }

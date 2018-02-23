@@ -17,8 +17,8 @@ package com.intellij.reporting;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class FreezeLogger {
 
@@ -26,6 +26,6 @@ public abstract class FreezeLogger {
     return ServiceManager.getService(FreezeLogger.class);
   }
 
-  public abstract void runUnderPerformanceMonitor(@Nullable Project project, @NotNull Runnable action);
+  public abstract void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Runnable action);
 
 }

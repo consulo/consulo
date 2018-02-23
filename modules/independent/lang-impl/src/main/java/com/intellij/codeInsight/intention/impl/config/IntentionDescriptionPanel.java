@@ -36,7 +36,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.TitledSeparator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

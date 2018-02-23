@@ -23,12 +23,12 @@ import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileProvider;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ProjectUtilCore {
-  public static String displayUrlRelativeToProject(@NotNull VirtualFile file,
-                                                   @NotNull String url,
-                                                   @NotNull Project project,
+  public static String displayUrlRelativeToProject(@Nonnull VirtualFile file,
+                                                   @Nonnull String url,
+                                                   @Nonnull Project project,
                                                    boolean includeFilePath,
                                                    boolean keepModuleAlwaysOnTheLeft) {
     final VirtualFile baseDir = project.getBaseDir();

@@ -75,8 +75,8 @@ import org.jdom.Attribute;
 import org.jdom.DataConversionException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -234,7 +234,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener() {
     return myAnnotationLocalChangesListener;
@@ -258,7 +258,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ProjectLevelVcsManager";
   }
@@ -276,7 +276,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   @Nullable
-  public AbstractVcs getVcsFor(@NotNull VirtualFile file) {
+  public AbstractVcs getVcsFor(@Nonnull VirtualFile file) {
     final String vcsName = myMappings.getVcsFor(file);
     if (vcsName == null || vcsName.isEmpty()) {
       return null;
@@ -314,7 +314,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VcsRoot getVcsRootObjectFor(final VirtualFile file) {
     final VcsDirectoryMapping mapping = myMappings.getMappingFor(file);
     if (mapping == null) {
@@ -351,7 +351,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return null;
   }
 
-  public void unregisterVcs(@NotNull AbstractVcs vcs) {
+  public void unregisterVcs(@Nonnull AbstractVcs vcs) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && myMappings.haveActiveVcs(vcs.getName())) {
       // unlikely
       LOG.warn("Active vcs '" + vcs.getName() + "' is being unregistered. Remove from mappings first.");
@@ -402,7 +402,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public void addMessageToConsoleWindow(@Nullable final String message, @NotNull final ConsoleViewContentType contentType) {
+  public void addMessageToConsoleWindow(@Nullable final String message, @Nonnull final ConsoleViewContentType contentType) {
     if (!Registry.is("vcs.showConsole")) {
       return;
     }
@@ -451,7 +451,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return content;
   }
 
-  private void printToConsole(@NotNull String message, @NotNull ConsoleViewContentType contentType) {
+  private void printToConsole(@Nonnull String message, @Nonnull ConsoleViewContentType contentType) {
     myConsole.print(message + "\n", contentType);
   }
 
@@ -460,7 +460,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
     return myOptionsAndConfirmations.getOptions(option);
   }
@@ -471,16 +471,16 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
-  public VcsShowSettingOption getStandardOption(@NotNull VcsConfiguration.StandardOption option, @NotNull AbstractVcs vcs) {
+  @Nonnull
+  public VcsShowSettingOption getStandardOption(@Nonnull VcsConfiguration.StandardOption option, @Nonnull AbstractVcs vcs) {
     final VcsShowOptionsSettingImpl options = (VcsShowOptionsSettingImpl)getOptions(option);
     options.addApplicableVcs(vcs);
     return options;
   }
 
   @Override
-  @NotNull
-  public VcsShowSettingOption getOrCreateCustomOption(@NotNull String vcsActionName, @NotNull AbstractVcs vcs) {
+  @Nonnull
+  public VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs) {
     return myOptionsAndConfirmations.getOrCreateCustomOption(vcsActionName, vcs);
   }
 
@@ -597,8 +597,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
-  public VcsShowConfirmationOption getStandardConfirmation(@NotNull VcsConfiguration.StandardConfirmation option,
+  @Nonnull
+  public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option,
                                                            AbstractVcs vcs) {
     final VcsShowConfirmationOptionImpl result = getConfirmation(option);
     if (vcs != null) {
@@ -613,7 +613,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
     return myOptionsAndConfirmations.getConfirmation(option);
   }
@@ -659,8 +659,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] getRootsUnderVcs(@NotNull AbstractVcs vcs) {
+  @Nonnull
+  public VirtualFile[] getRootsUnderVcs(@Nonnull AbstractVcs vcs) {
     return myMappingsToRoots.getRootsUnderVcs(vcs);
   }
 
@@ -680,7 +680,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsRoot[] getAllVcsRoots() {
     List<VcsRoot> vcsRoots = new ArrayList<>();
     final AbstractVcs[] vcses = myMappings.getActiveVcses();
@@ -742,7 +742,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myMappings.setDirectoryMappings(mappingsList);
   }
 
-  void writeDirectoryMappings(@NotNull Element element) {
+  void writeDirectoryMappings(@Nonnull Element element) {
     if (myProject.isDefault()) {
       element.setAttribute(ATTRIBUTE_DEFAULT_PROJECT, Boolean.TRUE.toString());
     }
@@ -778,7 +778,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
    * Used to guess VCS for automatic mapping through a look into a working copy
    */
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public AbstractVcs findVersioningVcs(VirtualFile file) {
     final VcsDescriptor[] vcsDescriptors = getAllVcss();
     VcsDescriptor probableVcs = null;
@@ -820,19 +820,19 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @CalledInAwt
-  boolean isBackgroundTaskRunning(@NotNull Object... keys) {
+  boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return myBackgroundRunningTasks.contains(new ActionKey(keys));
   }
 
   @CalledInAwt
-  void startBackgroundTask(@NotNull Object... keys) {
+  void startBackgroundTask(@Nonnull Object... keys) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     LOG.assertTrue(myBackgroundRunningTasks.add(new ActionKey(keys)));
   }
 
   @CalledInAwt
-  void stopBackgroundTask(@NotNull Object... keys) {
+  void stopBackgroundTask(@Nonnull Object... keys) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     LOG.assertTrue(myBackgroundRunningTasks.remove(new ActionKey(keys)));
   }
@@ -891,7 +891,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   private static class ActionKey {
     private final Object[] myObjects;
 
-    ActionKey(@NotNull Object... objects) {
+    ActionKey(@Nonnull Object... objects) {
       myObjects = objects;
     }
 

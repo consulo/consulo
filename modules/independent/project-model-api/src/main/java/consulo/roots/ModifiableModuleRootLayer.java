@@ -23,8 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,8 +37,8 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param root root of a content
    * @return new content entry
    */
-  @NotNull
-  ContentEntry addContentEntry(@NotNull VirtualFile root);
+  @Nonnull
+  ContentEntry addContentEntry(@Nonnull VirtualFile root);
 
   /**
    * Adds the specified directory as a content root.
@@ -47,22 +46,22 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param url root of a content
    * @return new content entry
    */
-  @NotNull
-  ContentEntry addContentEntry(@NotNull String url);
+  @Nonnull
+  ContentEntry addContentEntry(@Nonnull String url);
 
   /**
    * Remove the specified content root.
    *
    * @param entry the content root to remove.
    */
-  void removeContentEntry(@NotNull ContentEntry entry);
+  void removeContentEntry(@Nonnull ContentEntry entry);
 
   /**
    * Appends an order entry to the classpath.
    *
    * @param orderEntry the order entry to add.
    */
-  void addOrderEntry(@NotNull OrderEntry orderEntry);
+  void addOrderEntry(@Nonnull OrderEntry orderEntry);
 
   /**
    * Creates an entry for a given library and adds it to order
@@ -70,11 +69,11 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param library the library for which the entry is created.
    * @return newly created order entry for the library
    */
-  @NotNull
-  LibraryOrderEntry addLibraryEntry(@NotNull Library library);
+  @Nonnull
+  LibraryOrderEntry addLibraryEntry(@Nonnull Library library);
 
-  @NotNull
-  ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@NotNull ModuleExtensionWithSdk<?> moduleExtension);
+  @Nonnull
+  ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension);
 
   /**
    * Adds an entry for invalid library.
@@ -83,32 +82,32 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @param level
    * @return
    */
-  @NotNull
-  LibraryOrderEntry addInvalidLibrary(@NotNull @NonNls String name, @NotNull String level);
+  @Nonnull
+  LibraryOrderEntry addInvalidLibrary(@Nonnull @NonNls String name, @Nonnull String level);
 
-  @NotNull
-  ModuleOrderEntry addModuleOrderEntry(@NotNull Module module);
+  @Nonnull
+  ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module);
 
-  @NotNull
-  ModuleOrderEntry addInvalidModuleEntry(@NotNull String name);
+  @Nonnull
+  ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name);
 
-  @Nullable
-  LibraryOrderEntry findLibraryOrderEntry(@NotNull Library library);
+  @javax.annotation.Nullable
+  LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library);
 
-  @Nullable
-  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@NotNull ModuleExtension extension);
+  @javax.annotation.Nullable
+  ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension);
 
   /**
    * Removes order entry from an order.
    *
    * @param orderEntry
    */
-  void removeOrderEntry(@NotNull OrderEntry orderEntry);
+  void removeOrderEntry(@Nonnull OrderEntry orderEntry);
 
   /**
    * @param newOrder
    */
-  void rearrangeOrderEntries(@NotNull OrderEntry[] newOrder);
+  void rearrangeOrderEntries(@Nonnull OrderEntry[] newOrder);
 
   <T extends OrderEntry> void replaceEntryOfType(Class<T> entryClass, T entry);
 
@@ -118,6 +117,6 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    *
    * @return library table to be modified
    */
-  @NotNull
+  @Nonnull
   LibraryTable getModuleLibraryTable();
 }

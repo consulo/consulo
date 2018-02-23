@@ -37,8 +37,8 @@ import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -59,7 +59,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
   protected final Project myProject;
 
-  protected HierarchyBrowserBase(@NotNull Project project) {
+  protected HierarchyBrowserBase(@Nonnull Project project) {
     super(true, true);
     myProject = project;
     myAutoScrollToSourceHandler = new AutoScrollToSourceHandler() {
@@ -97,7 +97,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     return actionToolbar;
   }
 
-  protected void appendActions(@NotNull DefaultActionGroup actionGroup, @Nullable String helpID) {
+  protected void appendActions(@Nonnull DefaultActionGroup actionGroup, @Nullable String helpID) {
     actionGroup.add(myAutoScrollToSourceHandler.createToggleAction());
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
     actionGroup.add(new PinToolwindowTabAction() {
@@ -119,7 +119,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   protected abstract HierarchyTreeBuilder getCurrentBuilder();
 
   @Nullable
-  protected abstract PsiElement getElementFromDescriptor(@NotNull HierarchyNodeDescriptor descriptor);
+  protected abstract PsiElement getElementFromDescriptor(@Nonnull HierarchyNodeDescriptor descriptor);
 
   @Nullable
   protected DefaultMutableTreeNode getSelectedNode() {
@@ -208,7 +208,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     return list.toArray(new HierarchyNodeDescriptor[list.size()]);
   }
 
-  @NotNull
+  @Nonnull
   protected PsiElement[] getSelectedElements() {
     HierarchyNodeDescriptor[] descriptors = getSelectedDescriptors();
     ArrayList<PsiElement> elements = new ArrayList<PsiElement>();
@@ -247,7 +247,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
 
   @Override
   @Nullable
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PsiElement anElement = getSelectedElement();
       return anElement != null && anElement.isValid() ? anElement : super.getData(dataId);
@@ -298,7 +298,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     }
   }
 
-  protected void configureTree(@NotNull Tree tree) {
+  protected void configureTree(@Nonnull Tree tree) {
     tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     tree.setToggleClickCount(-1);
     tree.setCellRenderer(new HierarchyNodeRenderer());

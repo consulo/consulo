@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DocumentEventImpl extends DocumentEvent {
   private final int myOffset;
@@ -36,18 +36,18 @@ public class DocumentEventImpl extends DocumentEvent {
   private final int myInitialStartOffset;
   private final int myInitialOldLength;
 
-  public DocumentEventImpl(@NotNull Document document,
+  public DocumentEventImpl(@Nonnull Document document,
                            int offset,
-                           @NotNull CharSequence oldString,
-                           @NotNull CharSequence newString,
+                           @Nonnull CharSequence oldString,
+                           @Nonnull CharSequence newString,
                            long oldTimeStamp,
                            boolean wholeTextReplaced) {
     this(document, offset, oldString, newString, oldTimeStamp, wholeTextReplaced, offset, oldString.length());
   }
-  public DocumentEventImpl(@NotNull Document document,
+  public DocumentEventImpl(@Nonnull Document document,
                            int offset,
-                           @NotNull CharSequence oldString,
-                           @NotNull CharSequence newString,
+                           @Nonnull CharSequence oldString,
+                           @Nonnull CharSequence newString,
                            long oldTimeStamp,
                            boolean wholeTextReplaced,
                            int initialStartOffset,
@@ -87,20 +87,20 @@ public class DocumentEventImpl extends DocumentEvent {
     return myNewLength;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getOldFragment() {
     return myOldString;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getNewFragment() {
     return myNewString;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return (Document)getSource();
   }

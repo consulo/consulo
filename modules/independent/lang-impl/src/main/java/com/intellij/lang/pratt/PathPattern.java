@@ -20,7 +20,7 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,11 +48,11 @@ public class PathPattern {
     return left(PlatformPatterns.elementType());
   }
 
-  public PathPattern left(@NotNull IElementType pattern) {
+  public PathPattern left(@Nonnull IElementType pattern) {
     return left(PlatformPatterns.elementType().equalTo(pattern));
   }
 
-  public PathPattern left(@NotNull ElementPattern pattern) {
+  public PathPattern left(@Nonnull ElementPattern pattern) {
     myPath.add(pattern);
     return this;
   }

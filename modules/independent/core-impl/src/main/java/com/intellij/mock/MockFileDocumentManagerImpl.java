@@ -10,8 +10,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.WeakFactoryMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -20,7 +21,8 @@ import java.lang.ref.Reference;
 public class MockFileDocumentManagerImpl extends FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<CharSequence, Document> myFactory;
-  @Nullable private final Key<Reference<Document>> myCachedDocumentKey;
+  @Nullable
+  private final Key<Reference<Document>> myCachedDocumentKey;
 
   public MockFileDocumentManagerImpl(Function<CharSequence, Document> factory, @Nullable Key<Reference<Document>> cachedDocumentKey) {
     myFactory = factory;
@@ -46,12 +48,12 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
 
   @RequiredReadAction
   @Override
-  public Document getDocument(@NotNull VirtualFile file) {
+  public Document getDocument(@Nonnull VirtualFile file) {
     return myDocuments.get(file);
   }
 
   @Override
-  public Document getCachedDocument(@NotNull VirtualFile file) {
+  public Document getCachedDocument(@Nonnull VirtualFile file) {
     if (myCachedDocumentKey != null) {
       Reference<Document> reference = file.getUserData(myCachedDocumentKey);
       return reference != null ? reference.get() : null;
@@ -60,7 +62,7 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
   }
 
   @Override
-  public VirtualFile getFile(@NotNull Document document) {
+  public VirtualFile getFile(@Nonnull Document document) {
     return document.getUserData(MOCK_VIRTUAL_FILE_KEY);
   }
 
@@ -71,33 +73,33 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
 
   @RequiredDispatchThread
   @Override
-  public void saveDocument(@NotNull Document document) {
+  public void saveDocument(@Nonnull Document document) {
   }
 
   @RequiredDispatchThread
   @Override
-  public void saveDocumentAsIs(@NotNull Document document) {
+  public void saveDocumentAsIs(@Nonnull Document document) {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document[] getUnsavedDocuments() {
     return new Document[0];
   }
 
   @Override
-  public boolean isDocumentUnsaved(@NotNull Document document) {
+  public boolean isDocumentUnsaved(@Nonnull Document document) {
     return false;
   }
 
   @Override
-  public boolean isFileModified(@NotNull VirtualFile file) {
+  public boolean isFileModified(@Nonnull VirtualFile file) {
     return false;
   }
 
   @RequiredDispatchThread
   @Override
-  public void reloadFromDisk(@NotNull Document document) {
+  public void reloadFromDisk(@Nonnull Document document) {
   }
 
   @RequiredDispatchThread
@@ -106,13 +108,13 @@ public class MockFileDocumentManagerImpl extends FileDocumentManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLineSeparator(VirtualFile file, Project project) {
     return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
-  public boolean requestWriting(@NotNull Document document, @Nullable Project project) {
+  public boolean requestWriting(@Nonnull Document document, @Nullable Project project) {
     return true;
   }
 }

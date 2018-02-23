@@ -18,7 +18,7 @@ package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.openapi.components.*;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ public class RunnerLayoutSettings implements PersistentStateComponent<Element> {
 
   private final Map<String, RunnerLayout> myRunnerId2Settings = new LinkedHashMap<String, RunnerLayout>();
 
-  public RunnerLayout getLayout(@NotNull String id) {
+  public RunnerLayout getLayout(@Nonnull String id) {
     RunnerLayout layout = myRunnerId2Settings.get(id);
     if (layout == null) {
       layout = new RunnerLayout(id);

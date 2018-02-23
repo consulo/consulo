@@ -22,13 +22,13 @@ package com.intellij.openapi.module;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ModuleUtil extends ModuleUtilCore {
   private ModuleUtil() {
   }
 
-  public static boolean hasModuleExtension(@NotNull ModulesProvider modulesProvider, @NotNull Class<? extends ModuleExtension> clazz) {
+  public static boolean hasModuleExtension(@Nonnull ModulesProvider modulesProvider, @Nonnull Class<? extends ModuleExtension> clazz) {
     for (Module module : modulesProvider.getModules()) {
       ModuleRootModel rootModel = modulesProvider.getRootModel(module);
       if (rootModel == null) {

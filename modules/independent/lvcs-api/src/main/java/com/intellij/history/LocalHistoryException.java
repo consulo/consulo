@@ -15,19 +15,18 @@
  */
 package com.intellij.history;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 
 /**
  * Wrapper for any exception occurred during local history actions and processes
  */
 public class LocalHistoryException extends Exception {
-  public LocalHistoryException(@NotNull String message) {
+  public LocalHistoryException(@Nonnull String message) {
     super(message);
   }
 
-  public LocalHistoryException(@NotNull String message, @Nullable Throwable cause) {
+  public LocalHistoryException(@Nonnull String message, @javax.annotation.Nullable Throwable cause) {
     super(message, cause);
   }
 }

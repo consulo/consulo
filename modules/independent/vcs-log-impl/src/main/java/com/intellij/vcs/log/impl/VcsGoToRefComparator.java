@@ -18,20 +18,21 @@ package com.intellij.vcs.log.impl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.Map;
 
 public class VcsGoToRefComparator implements Comparator<VcsRef> {
-  @NotNull private final Map<VirtualFile, VcsLogProvider> myProviders;
+  @Nonnull
+  private final Map<VirtualFile, VcsLogProvider> myProviders;
 
-  public VcsGoToRefComparator(@NotNull Map<VirtualFile, VcsLogProvider> providers) {
+  public VcsGoToRefComparator(@Nonnull Map<VirtualFile, VcsLogProvider> providers) {
     myProviders = providers;
   }
 
   @Override
-  public int compare(@NotNull VcsRef ref1, @NotNull VcsRef ref2) {
+  public int compare(@Nonnull VcsRef ref1, @Nonnull VcsRef ref2) {
     VcsLogProvider provider1 = myProviders.get(ref1.getRoot());
     VcsLogProvider provider2 = myProviders.get(ref2.getRoot());
 

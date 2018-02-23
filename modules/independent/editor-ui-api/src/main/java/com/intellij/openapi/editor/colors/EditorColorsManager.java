@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -35,20 +35,20 @@ public abstract class EditorColorsManager {
     return ServiceManager.getService(EditorColorsManager.class);
   }
 
-  public abstract void addColorsScheme(@NotNull EditorColorsScheme scheme);
+  public abstract void addColorsScheme(@Nonnull EditorColorsScheme scheme);
 
   public abstract void removeAllSchemes();
 
-  @NotNull
+  @Nonnull
   public abstract EditorColorsScheme[] getAllSchemes();
 
-  @NotNull
+  @Nonnull
   @Immutable
   public abstract Map<String, EditorColorsScheme> getBundledSchemes();
 
   public abstract void setGlobalScheme(EditorColorsScheme scheme);
 
-  @NotNull
+  @Nonnull
   public abstract EditorColorsScheme getGlobalScheme();
 
   public abstract EditorColorsScheme getScheme(@NonNls String schemeName);
@@ -60,7 +60,7 @@ public abstract class EditorColorsManager {
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Deprecated
-  public final void addEditorColorsListener(@NotNull EditorColorsListener listener) {
+  public final void addEditorColorsListener(@Nonnull EditorColorsListener listener) {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(TOPIC, listener);
   }
 
@@ -69,7 +69,7 @@ public abstract class EditorColorsManager {
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Deprecated
-  public final void addEditorColorsListener(@NotNull EditorColorsListener listener, @NotNull Disposable disposable) {
+  public final void addEditorColorsListener(@Nonnull EditorColorsListener listener, @Nonnull Disposable disposable) {
     ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(TOPIC, listener);
   }
 

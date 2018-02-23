@@ -16,7 +16,8 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * Interface for breaking a file into a sequence of tokens.

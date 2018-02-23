@@ -38,9 +38,9 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Comparator;
@@ -55,7 +55,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
   }
 
   @Override
-  public TooltipRenderer calcTooltipRenderer(@NotNull final Collection<RangeHighlighter> highlighters) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull final Collection<RangeHighlighter> highlighters) {
     LineTooltipRenderer bigRenderer = null;
     List<HighlightInfo> infos = new SmartList<HighlightInfo>();
     Collection<String> tooltips = new THashSet<String>(); //do not show same tooltip twice
@@ -103,21 +103,21 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
     return bigRenderer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TooltipRenderer calcTooltipRenderer(@NotNull final String text) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull final String text) {
     return new MyRenderer(text, new Object[] {text});
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TooltipRenderer calcTooltipRenderer(@NotNull final String text, final int width) {
+  public TooltipRenderer calcTooltipRenderer(@Nonnull final String text, final int width) {
     return new MyRenderer(text, width, new Object[] {text});
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TrafficTooltipRenderer createTrafficTooltipRenderer(@NotNull Runnable onHide, @NotNull Editor editor) {
+  public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor) {
     return new TrafficTooltipRendererImpl(onHide, editor);
   }
 
@@ -136,7 +136,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
     }
 
     @Override
-    protected boolean dressDescription(@NotNull final Editor editor) {
+    protected boolean dressDescription(@Nonnull final Editor editor) {
       final List<String> problems = StringUtil.split(UIUtil.getHtmlBody(new Html(myText).setKeepFont(true)), UIUtil.BORDER_LINE);
       String text = "";
       for (String problem : problems) {

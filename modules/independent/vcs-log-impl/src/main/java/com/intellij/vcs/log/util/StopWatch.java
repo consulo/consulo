@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -33,27 +33,29 @@ public class StopWatch {
   private static final String MSEC_FORMAT = "%03d";
 
   private final long myStartTime;
-  @NotNull private final String myOperation;
-  @NotNull private final Map<VirtualFile, Long> myDurationPerRoot;
+  @Nonnull
+  private final String myOperation;
+  @Nonnull
+  private final Map<VirtualFile, Long> myDurationPerRoot;
 
-  private StopWatch(@NotNull String operation) {
+  private StopWatch(@Nonnull String operation) {
     myOperation = operation;
     myStartTime = System.currentTimeMillis();
     myDurationPerRoot = ContainerUtil.newHashMap();
   }
 
-  @NotNull
-  public static StopWatch start(@NotNull String operation) {
+  @Nonnull
+  public static StopWatch start(@Nonnull String operation) {
     return new StopWatch(operation);
   }
 
-  public void rootCompleted(@NotNull VirtualFile root) {
+  public void rootCompleted(@Nonnull VirtualFile root) {
     long totalDuration = System.currentTimeMillis() - myStartTime;
     long duration = totalDuration - sum(myDurationPerRoot.values());
     myDurationPerRoot.put(root, duration);
   }
 
-  private static long sum(@NotNull Collection<Long> durations) {
+  private static long sum(@Nonnull Collection<Long> durations) {
     long sum = 0;
     for (Long duration : durations) {
       sum += duration;
@@ -73,7 +75,7 @@ public class StopWatch {
   /**
    * 1h 1m 1.001s
    */
-  @NotNull
+  @Nonnull
   public static String formatTime(long time) {
     if (time < 1000 * UNITS[0]) {
       return time + "ms";

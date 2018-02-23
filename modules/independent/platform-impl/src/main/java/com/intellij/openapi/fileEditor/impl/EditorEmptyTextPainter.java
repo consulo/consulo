@@ -34,16 +34,16 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class EditorEmptyTextPainter {
   public static EditorEmptyTextPainter ourInstance = new EditorEmptyTextPainter();
 
-  public void paintEmptyText(@NotNull final JComponent splitters, @NotNull Graphics g) {
+  public void paintEmptyText(@Nonnull final JComponent splitters, @Nonnull Graphics g) {
     UISettings.setupAntialiasing(g);
     g.setColor(new JBColor(Gray._80, Gray._160));
     g.setFont(JBUI.Fonts.label(16f));
@@ -61,7 +61,7 @@ public class EditorEmptyTextPainter {
     return 0.375; // fix vertical position @ golden ratio
   }
 
-  protected void advertiseActions(@NotNull JComponent splitters, @NotNull UIUtil.TextPainter painter) {
+  protected void advertiseActions(@Nonnull JComponent splitters, @Nonnull UIUtil.TextPainter painter) {
     appendSearchEverywhere(painter);
     appendToolWindow(painter, "Project View", ToolWindowId.PROJECT_VIEW, splitters);
     appendAction(painter, "Go to File", getActionShortcutText("GotoFile"));
@@ -70,38 +70,38 @@ public class EditorEmptyTextPainter {
     appendDnd(painter);
   }
 
-  protected void appendDnd(@NotNull UIUtil.TextPainter painter) {
+  protected void appendDnd(@Nonnull UIUtil.TextPainter painter) {
     appendLine(painter, "Drop files here to open");
   }
 
-  protected void appendSearchEverywhere(@NotNull UIUtil.TextPainter painter) {
+  protected void appendSearchEverywhere(@Nonnull UIUtil.TextPainter painter) {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
     appendAction(painter, "Search Everywhere",
                  shortcuts.length == 0 ? "Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift") : KeymapUtil.getShortcutsText(shortcuts));
   }
 
-  protected void appendToolWindow(@NotNull UIUtil.TextPainter painter, @NotNull String action, @NotNull String toolWindowId, @NotNull JComponent splitters) {
+  protected void appendToolWindow(@Nonnull UIUtil.TextPainter painter, @Nonnull String action, @Nonnull String toolWindowId, @Nonnull JComponent splitters) {
     if (!isToolwindowVisible(splitters, toolWindowId)) {
       String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindowId);
       appendAction(painter, action, getActionShortcutText(activateActionId));
     }
   }
 
-  protected void appendAction(@NotNull UIUtil.TextPainter painter, @NotNull String action, @Nullable String shortcut) {
+  protected void appendAction(@Nonnull UIUtil.TextPainter painter, @Nonnull String action, @Nullable String shortcut) {
     if (StringUtil.isEmpty(shortcut)) return;
     appendLine(painter, action + " " + "<shortcut>" + shortcut + "</shortcut>");
   }
 
-  protected void appendLine(@NotNull UIUtil.TextPainter painter, String line) {
+  protected void appendLine(@Nonnull UIUtil.TextPainter painter, String line) {
     painter.appendLine(line);
   }
 
-  @NotNull
-  protected String getActionShortcutText(@NotNull String actionId) {
+  @Nonnull
+  protected String getActionShortcutText(@Nonnull String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(actionId);
   }
 
-  protected static boolean isToolwindowVisible(@NotNull JComponent splitters, @NotNull String toolwindowId) {
+  protected static boolean isToolwindowVisible(@Nonnull JComponent splitters, @Nonnull String toolwindowId) {
     Window frame = SwingUtilities.getWindowAncestor(splitters);
     if (frame instanceof IdeFrameImpl) {
       Project project = ((IdeFrameImpl)frame).getProject();

@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util.base;
 
 import com.intellij.diff.comparison.ComparisonPolicy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public enum IgnorePolicy {
   DEFAULT("Do not ignore"),
@@ -24,18 +24,19 @@ public enum IgnorePolicy {
   IGNORE_WHITESPACES("Ignore whitespaces"),
   IGNORE_WHITESPACES_CHUNKS("Ignore whitespaces and empty lines");
 
-  @NotNull private final String myText;
+  @Nonnull
+  private final String myText;
 
-  IgnorePolicy(@NotNull String text) {
+  IgnorePolicy(@Nonnull String text) {
     myText = text;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   public ComparisonPolicy getComparisonPolicy() {
     switch (this) {
       case DEFAULT:

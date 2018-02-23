@@ -24,8 +24,8 @@ import com.intellij.openapi.progress.util.ProgressIndicatorListenerAdapter;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -39,7 +39,7 @@ public class ProgressSuspender {
   private volatile boolean mySuspended;
   private final CoreProgressManager.CheckCanceledHook myHook = this::freezeIfNeeded;
 
-  private ProgressSuspender(@NotNull ProgressIndicatorEx progress) {
+  private ProgressSuspender(@Nonnull ProgressIndicatorEx progress) {
     assert progress.isRunning();
     assert ProgressIndicatorProvider.getGlobalProgressIndicator() == progress;
     myThread = Thread.currentThread();
@@ -54,12 +54,12 @@ public class ProgressSuspender {
     }.installToProgress(progress);
   }
 
-  public static void markSuspendable(@NotNull ProgressIndicator indicator) {
+  public static void markSuspendable(@Nonnull ProgressIndicator indicator) {
     new ProgressSuspender((ProgressIndicatorEx)indicator);
   }
 
   @Nullable
-  public static ProgressSuspender getSuspender(@NotNull ProgressIndicator indicator) {
+  public static ProgressSuspender getSuspender(@Nonnull ProgressIndicator indicator) {
     return indicator instanceof UserDataHolder ? ((UserDataHolder)indicator).getUserData(PROGRESS_SUSPENDER) : null;
   }
 

@@ -32,7 +32,7 @@ import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
             if (psi instanceof PsiLanguageInjectionHost) {
               InjectedLanguageUtil.enumerate(psi, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
                 @Override
-                public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
+                public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
                   list.add(new Inject(psi, injectedPsi));
                 }
               });
@@ -158,7 +158,7 @@ public class ViewerTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     if (element == myRootElement) {
       return new NodeDescriptor(myProject, null) {

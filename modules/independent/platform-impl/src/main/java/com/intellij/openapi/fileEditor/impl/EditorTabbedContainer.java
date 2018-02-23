@@ -61,9 +61,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -151,7 +151,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       }
 
       @Override
-      public void toolWindowRegistered(@NotNull final String id) {
+      public void toolWindowRegistered(@Nonnull final String id) {
         updateTabBorder();
       }
     });
@@ -165,18 +165,18 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     return myTabs.getTabCount();
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback setSelectedIndex(final int indexToSelect) {
     return setSelectedIndex(indexToSelect, true);
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback setSelectedIndex(final int indexToSelect, boolean focusEditor) {
     if (indexToSelect >= myTabs.getTabCount()) return ActionCallback.REJECTED;
     return myTabs.select(myTabs.getTabAt(indexToSelect), focusEditor);
   }
 
-  @NotNull
+  @Nonnull
   public static DockableEditor createDockableEditor(Project project, Image image, VirtualFile file, Presentation presentation, EditorWindow window) {
     return new DockableEditor(project, image, file, presentation, ((DesktopEditorWindow)window).getSize(), window.isFilePinned(file));
   }
@@ -228,7 +228,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     myTabs.getPresentation().setPaintBorder(border.top, border.left, border.right, border.bottom).setTabSidePaintBorder(5);
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myTabs.getComponent();
   }
@@ -359,7 +359,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     }
 
     @Override
-    public void putInfo(@NotNull Map<String, String> info) {
+    public void putInfo(@Nonnull Map<String, String> info) {
       info.put("editorTab", myTab.getText());
     }
   }
@@ -386,7 +386,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
   }
 
   @Nullable
-  public static Color calcTabColor(@NotNull Project project, @NotNull VirtualFile file) {
+  public static Color calcTabColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     for (EditorTabColorProvider provider : Extensions.getExtensions(EditorTabColorProvider.EP_NAME)) {
       final Color result = provider.getEditorTabColor(project, file);
       if (result != null) {
@@ -454,7 +454,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   private class MyDataProvider implements DataProvider {
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }
@@ -640,7 +640,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       myPinned = isFilePinned;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public VirtualFile getKey() {
       return myFile;

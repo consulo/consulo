@@ -15,25 +15,25 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface HorizontalLayout extends Layout {
-  @NotNull
+  @Nonnull
   static HorizontalLayout create() {
     return UIInternal.get()._Layouts_horizontal();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default HorizontalLayout add(@NotNull PseudoComponent component) {
+  default HorizontalLayout add(@Nonnull PseudoComponent component) {
     return add(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  HorizontalLayout add(@NotNull Component component);
+  HorizontalLayout add(@Nonnull Component component);
 }

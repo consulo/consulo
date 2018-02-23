@@ -19,23 +19,23 @@ package com.intellij.openapi.editor.ex;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface DocumentEx extends Document {
   void setStripTrailingSpacesEnabled(boolean isEnabled);
 
-  @NotNull
+  @Nonnull
   LineIterator createLineIterator();
 
   void setModificationStamp(long modificationStamp);
 
-  void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener);
+  void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener);
 
-  void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener);
+  void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener);
 
-  void replaceText(@NotNull CharSequence chars, long newModificationStamp);
+  void replaceText(@Nonnull CharSequence chars, long newModificationStamp);
 
   /**
    * Moves text from the {@code [srcStart; srcEnd)} range to the {@code dstOffset} offset.
@@ -57,9 +57,9 @@ public interface DocumentEx extends Document {
 
   void clearLineModificationFlags();
 
-  boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker);
+  boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker);
 
-  void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+  void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
                            int start,
                            int end,
                            boolean greedyToLeft,
@@ -79,7 +79,7 @@ public interface DocumentEx extends Document {
    */
   void setInBulkUpdate(boolean value);
 
-  @NotNull
+  @Nonnull
   List<RangeMarker> getGuardedBlocks();
 
 
@@ -87,13 +87,13 @@ public interface DocumentEx extends Document {
    * Get all range markers
    * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
    */
-  boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor);
+  boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor);
 
   /**
    * Get range markers which {@link com.intellij.openapi.util.TextRange#intersects(int, int)} the specified range
    * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
    */
-  boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<? super RangeMarker> processor);
+  boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor);
 
   /**
    * @return modification stamp. Guaranteed to be strictly increasing on each change unlike the {@link #getModificationStamp()} which can change arbitrarily.

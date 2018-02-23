@@ -18,7 +18,7 @@ package com.intellij.openapi.externalSystem.importing;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -26,15 +26,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ImportSpecBuilder {
 
-  @NotNull private final Project myProject;
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private ProgressExecutionMode myProgressExecutionMode;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private ProgressExecutionMode myProgressExecutionMode;
   private boolean myForceWhenUptodate;
   private boolean myWhenAutoImportEnabled;
   //private boolean isPreviewMode;
   //private boolean isReportRefreshError;
 
-  public ImportSpecBuilder(@NotNull Project project, @NotNull ProjectSystemId id) {
+  public ImportSpecBuilder(@Nonnull Project project, @Nonnull ProjectSystemId id) {
     myProject = project;
     myExternalSystemId = id;
     myProgressExecutionMode = ProgressExecutionMode.IN_BACKGROUND_ASYNC;
@@ -45,7 +48,7 @@ public class ImportSpecBuilder {
     return this;
   }
 
-  public ImportSpecBuilder use(@NotNull ProgressExecutionMode executionMode) {
+  public ImportSpecBuilder use(@Nonnull ProgressExecutionMode executionMode) {
     myProgressExecutionMode = executionMode;
     return this;
   }

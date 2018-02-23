@@ -17,7 +17,7 @@ package com.intellij.openapi.options.colors;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface RainbowColorSettingsPage extends ColorSettingsPage {
   boolean isRainbowType(TextAttributesKey type);

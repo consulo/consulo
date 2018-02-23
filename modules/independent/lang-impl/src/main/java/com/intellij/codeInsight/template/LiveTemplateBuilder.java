@@ -22,7 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -54,7 +54,7 @@ public class LiveTemplateBuilder {
     return myText;
   }
 
-  public static boolean isEndVariable(@NotNull String name) {
+  public static boolean isEndVariable(@Nonnull String name) {
     return name.startsWith(END_PREFIX);
   }
 
@@ -77,7 +77,7 @@ public class LiveTemplateBuilder {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public TemplateImpl buildTemplate() {
     List<Variable> variables = getListWithLimit(myVariables);
     if (!findVarOccurence(TemplateImpl.END)) {

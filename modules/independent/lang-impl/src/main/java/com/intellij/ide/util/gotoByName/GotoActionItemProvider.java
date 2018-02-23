@@ -36,7 +36,7 @@ import com.intellij.util.CollectConsumer;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -54,18 +54,18 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     myModel = model;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<String> filterNames(@NotNull ChooseByNameBase base, @NotNull String[] names, @NotNull String pattern) {
+  public List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern) {
     return Collections.emptyList(); // no common prefix insertion in goto action
   }
 
   @Override
-  public boolean filterElements(@NotNull final ChooseByNameBase base,
-                                @NotNull final String pattern,
+  public boolean filterElements(@Nonnull final ChooseByNameBase base,
+                                @Nonnull final String pattern,
                                 boolean everywhere,
-                                @NotNull ProgressIndicator cancelled,
-                                @NotNull final Processor<Object> consumer) {
+                                @Nonnull ProgressIndicator cancelled,
+                                @Nonnull final Processor<Object> consumer) {
     return filterElements(pattern, everywhere, new Processor<MatchedValue>() {
       @Override
       public boolean process(MatchedValue value) {

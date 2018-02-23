@@ -45,8 +45,8 @@ import com.intellij.util.ui.EmptyIcon;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredDispatchThread;
@@ -71,37 +71,37 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @Nullable
   private final Condition<SdkTypeId> myCreationFilter;
 
-  public SdkComboBox(@NotNull final ProjectSdksModel sdksModel) {
+  public SdkComboBox(@Nonnull final ProjectSdksModel sdksModel) {
     this(sdksModel, null, false);
   }
 
-  public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      boolean withNoneItem) {
     this(sdksModel, filter, filter, withNoneItem);
   }
 
-  public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable String nullItemName) {
     this(sdksModel, filter, filter, nullItemName, null);
   }
 
-  public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      boolean withNoneItem) {
     this(sdksModel, filter, creationFilter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
   }
 
-  public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      @Nullable String nullItemName) {
     this(sdksModel, filter, creationFilter, nullItemName, null);
   }
 
-  public SdkComboBox(@NotNull ProjectSdksModel sdksModel,
+  public SdkComboBox(@Nonnull ProjectSdksModel sdksModel,
                      @Nullable Condition<SdkTypeId> filter,
                      @Nullable Condition<SdkTypeId> creationFilter,
                      @Nullable final String nullItemName,
@@ -202,9 +202,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     setSetupButton(setUpButton, project, sdksModel, firstItem, additionalSetup);
   }
 
-  public void setSetupButton(@NotNull final JButton setUpButton,
+  public void setSetupButton(@Nonnull final JButton setUpButton,
                              @Nullable final Project project,
-                             @NotNull final ProjectSdksModel sdksModel,
+                             @Nonnull final ProjectSdksModel sdksModel,
                              @Nullable final SdkComboBoxItem firstItem,
                              @Nullable final Condition<Sdk> additionalSetup) {
     setUpButton.addActionListener(new ActionListener() {
@@ -243,7 +243,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     });
   }
 
-  public void setEditButton(final JButton editButton, final Project project, @NotNull final Computable<Sdk> retrieveSdk) {
+  public void setEditButton(final JButton editButton, final Project project, @Nonnull final Computable<Sdk> retrieveSdk) {
     editButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -270,7 +270,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   @Exported
-  public void insertCustomSdkItem(@NotNull String key, @NotNull String presentableName, @NotNull Icon icon) {
+  public void insertCustomSdkItem(@Nonnull String key, @Nonnull String presentableName, @Nonnull Icon icon) {
     CustomSdkComboBoxItem sdkComboBoxItem = new CustomSdkComboBoxItem(key, presentableName, icon);
     int itemCount = getItemCount();
     if(itemCount > 0) {
@@ -292,8 +292,8 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
   @RequiredReadAction
   @SuppressWarnings("unchecked")
-  public <T extends MutableModuleExtension<?>> void insertModuleItems(@NotNull T moduleExtension,
-                                                                      @NotNull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
+  public <T extends MutableModuleExtension<?>> void insertModuleItems(@Nonnull T moduleExtension,
+                                                                      @Nonnull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
 
     for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
       // dont add self module
@@ -350,7 +350,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
   }
 
-  public void setSelectedModule(@NotNull String name) {
+  public void setSelectedModule(@Nonnull String name) {
     final int index = indexOfModuleItems(name);
     if (index >= 0) {
       setSelectedIndex(index);
@@ -476,7 +476,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   private static class SdkComboBoxModel extends DefaultComboBoxModel {
-    public SdkComboBoxModel(@NotNull SdkModel sdksModel,
+    public SdkComboBoxModel(@Nonnull SdkModel sdksModel,
                             @Nullable Condition<Sdk> sdkFilter,
                             @Nullable String noneItemName) {
       Sdk[] sdks = sdksModel.getSdks();
@@ -555,7 +555,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       return mySdkPointer.getName();
     }
 
-    @NotNull
+    @Nonnull
     public Module getModule() {
       return myModuleExtension.getModule();
     }
@@ -573,12 +573,12 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       myIcon = icon;
     }
 
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return myIcon;
     }
 
-    @NotNull
+    @Nonnull
     public String getPresentableName() {
       return myPresentableName;
     }
@@ -598,7 +598,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       myModuleName = moduleName;
     }
 
-    @NotNull
+    @Nonnull
     public String getModuleName() {
       return myModuleName;
     }

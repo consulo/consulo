@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A token type which represents a fragment of text (possibly in a different language)
@@ -36,15 +36,15 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
 
   public static final Key<Language> LANGUAGE_KEY = Key.create("LANGUAGE_KEY");
 
-  public ILazyParseableElementType(@NotNull @NonNls final String debugName) {
+  public ILazyParseableElementType(@Nonnull @NonNls final String debugName) {
     this(debugName, null);
   }
 
-  public ILazyParseableElementType(@NotNull @NonNls final String debugName, @Nullable final Language language) {
+  public ILazyParseableElementType(@Nonnull @NonNls final String debugName, @Nullable final Language language) {
     super(debugName, language);
   }
 
-  public ILazyParseableElementType(@NotNull @NonNls final String debugName, @Nullable final Language language, final boolean register) {
+  public ILazyParseableElementType(@Nonnull @NonNls final String debugName, @Nullable final Language language, final boolean register) {
     super(debugName, language, register);
   }
 
@@ -61,7 +61,7 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     return doParseContents(chameleon, parentElement);
   }
 
-  protected ASTNode doParseContents(@NotNull final ASTNode chameleon, @NotNull final PsiElement psi) {
+  protected ASTNode doParseContents(@Nonnull final ASTNode chameleon, @Nonnull final PsiElement psi) {
     final Project project = psi.getProject();
     final Language languageForParser = getLanguageForParser(psi);
     final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);

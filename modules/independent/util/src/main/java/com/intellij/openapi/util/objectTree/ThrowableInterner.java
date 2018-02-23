@@ -22,7 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.WeakInterner;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -104,15 +104,15 @@ public class ThrowableInterner {
     }
   }
 
-  private static Object[] getBacktrace(@NotNull Throwable throwable) {
+  private static Object[] getBacktrace(@Nonnull Throwable throwable) {
     // the JVM blocks access to Throwable.backtrace via reflection
     Object backtrace = BACKTRACE_FIELD_OFFSET == -1 ? null : AtomicFieldUpdater.getUnsafe().getObject(throwable, BACKTRACE_FIELD_OFFSET);
     // obsolete jdk
     return backtrace instanceof Object[] && ((Object[])backtrace).length == 5 ? (Object[])backtrace : null;
   }
 
-  @NotNull
-  public static Throwable intern(@NotNull Throwable throwable) {
+  @Nonnull
+  public static Throwable intern(@Nonnull Throwable throwable) {
     return getBacktrace(throwable) == null ? throwable : myTraceInterner.intern(throwable);
   }
 }

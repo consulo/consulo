@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.vcs.log.graph.GraphCommit;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.graph.VisibleGraph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,39 +32,39 @@ public class EmptyPermanentGraph implements PermanentGraph<Integer> {
 
   private static final PermanentGraph<Integer> INSTANCE = new EmptyPermanentGraph();
 
-  @NotNull
+  @Nonnull
   public static PermanentGraph<Integer> getInstance() {
     return INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VisibleGraph<Integer> createVisibleGraph(@NotNull SortType sortType, @Nullable Set<Integer> headsOfVisibleBranches,
+  public VisibleGraph<Integer> createVisibleGraph(@Nonnull SortType sortType, @Nullable Set<Integer> headsOfVisibleBranches,
                                                   @Nullable Set<Integer> filter) {
     return EmptyVisibleGraph.getInstance();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<GraphCommit<Integer>> getAllCommits() {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Integer> getChildren(@NotNull Integer commit) {
+  public List<Integer> getChildren(@Nonnull Integer commit) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<Integer> getContainingBranches(@NotNull Integer commit) {
+  public Set<Integer> getContainingBranches(@Nonnull Integer commit) {
     return Collections.emptySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Condition<Integer> getContainedInBranchCondition(@NotNull Collection<Integer> currentBranchHead) {
+  public Condition<Integer> getContainedInBranchCondition(@Nonnull Collection<Integer> currentBranchHead) {
     return Conditions.alwaysFalse();
   }
 }

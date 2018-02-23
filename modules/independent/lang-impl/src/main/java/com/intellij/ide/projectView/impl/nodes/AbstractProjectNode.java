@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -89,7 +89,7 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
     final VirtualFile baseDir = getProject().getBaseDir();
     return index.isInContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file) ||

@@ -25,8 +25,8 @@ import com.intellij.util.containers.HashMap;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -39,13 +39,14 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
   private volatile Map<Language, CommonCodeStyleSettings> myCommonSettingsMap;
   private volatile Map<String, Content> myUnknownSettingsMap;
 
-  @NotNull private final CodeStyleSettings myParentSettings;
+  @Nonnull
+  private final CodeStyleSettings myParentSettings;
 
   @NonNls private static final String COMMON_SETTINGS_TAG = "codeStyleSettings";
   private static final String LANGUAGE_ATTR = "language";
 
 
-  CommonCodeStyleSettingsManager(@NotNull CodeStyleSettings parentSettings) {
+  CommonCodeStyleSettingsManager(@Nonnull CodeStyleSettings parentSettings) {
     myParentSettings = parentSettings;
   }
 
@@ -71,7 +72,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
     return myParentSettings;
   }
 
-  @NotNull
+  @Nonnull
   private Map<Language, CommonCodeStyleSettings> getCommonSettingsMap() {
     Map<Language, CommonCodeStyleSettings> commonSettingsMap = myCommonSettingsMap;
     if (commonSettingsMap == null) {
@@ -94,8 +95,8 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
    * @param langName The display name of the language whose settings must be returned.
    * @return Common code style settings for the given language or parent (shared) settings if not found.
    */
-  @NotNull
-  public CommonCodeStyleSettings getCommonSettings(@NotNull String langName) {
+  @Nonnull
+  public CommonCodeStyleSettings getCommonSettings(@Nonnull String langName) {
     Map<Language, CommonCodeStyleSettings> map = getCommonSettingsMap();
     for (Map.Entry<Language, CommonCodeStyleSettings> entry : map.entrySet()) {
       if (langName.equals(entry.getKey().getDisplayName())) {
@@ -119,7 +120,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
     }
   }
 
-  private void init(@NotNull CommonCodeStyleSettings initialSettings, @NotNull Language target) {
+  private void init(@Nonnull CommonCodeStyleSettings initialSettings, @Nonnull Language target) {
     initialSettings.setRootSettings(myParentSettings);
     registerCommonSettings(target, initialSettings);
   }
@@ -131,7 +132,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
     return map;
   }
 
-  private void registerCommonSettings(@NotNull Language lang, @NotNull CommonCodeStyleSettings settings) {
+  private void registerCommonSettings(@Nonnull Language lang, @Nonnull CommonCodeStyleSettings settings) {
     synchronized (this) {
       if (!myCommonSettingsMap.containsKey(lang)) {
         myCommonSettingsMap.put(lang, settings);
@@ -140,8 +141,8 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
     }
   }
 
-  @NotNull
-  public CommonCodeStyleSettingsManager clone(@NotNull CodeStyleSettings parentSettings) {
+  @Nonnull
+  public CommonCodeStyleSettingsManager clone(@Nonnull CodeStyleSettings parentSettings) {
     synchronized (this) {
       CommonCodeStyleSettingsManager settingsManager = new CommonCodeStyleSettingsManager(parentSettings);
       if (myCommonSettingsMap != null && !myCommonSettingsMap.isEmpty()) {
@@ -156,7 +157,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
   }
 
   @Override
-  public void readExternal(@NotNull Element element) throws InvalidDataException {
+  public void readExternal(@Nonnull Element element) throws InvalidDataException {
     synchronized (this) {
       initCommonSettingsMap();
       final List list = element.getChildren(COMMON_SETTINGS_TAG);
@@ -189,7 +190,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
   }
 
   @Override
-  public void writeExternal(@NotNull Element element) throws WriteExternalException {
+  public void writeExternal(@Nonnull Element element) throws WriteExternalException {
     synchronized (this) {
       if (myCommonSettingsMap == null) return;
 
@@ -205,7 +206,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
       final String[] languages = ArrayUtil.toStringArray(langIdList);
       Arrays.sort(languages, new Comparator<String>() {
         @Override
-        public int compare(@NotNull final String o1, final String o2) {
+        public int compare(@Nonnull final String o1, final String o2) {
           return o1.compareTo(o2);
         }
       });
@@ -228,7 +229,7 @@ public class CommonCodeStyleSettingsManager implements JDOMExternalizable {
     }
   }
 
-  public static void copy(@NotNull CommonCodeStyleSettings source, @NotNull CommonCodeStyleSettings target) {
+  public static void copy(@Nonnull CommonCodeStyleSettings source, @Nonnull CommonCodeStyleSettings target) {
     CommonCodeStyleSettings.copyPublicFields(source, target);
     CommonCodeStyleSettings.IndentOptions targetIndentOptions = target.getIndentOptions();
     if (targetIndentOptions != null) {

@@ -26,8 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +38,7 @@ import java.util.LinkedHashSet;
  */
 public class FileContentUtil extends FileContentUtilCore {
 
-  public static void setFileText(@Nullable Project project, final VirtualFile virtualFile, final String text) throws IOException {
+  public static void setFileText(@javax.annotation.Nullable Project project, final VirtualFile virtualFile, final String text) throws IOException {
     if (project == null) {
       project = ProjectUtil.guessProjectForFile(virtualFile);
     }
@@ -58,7 +57,7 @@ public class FileContentUtil extends FileContentUtilCore {
     virtualFile.refresh(false, false);
   }
 
-  public static void reparseFiles(@NotNull final Project project, @NotNull final Collection<VirtualFile> files, final boolean includeOpenFiles) {
+  public static void reparseFiles(@Nonnull final Project project, @Nonnull final Collection<VirtualFile> files, final boolean includeOpenFiles) {
     LinkedHashSet<VirtualFile> fileSet = new LinkedHashSet<VirtualFile>(files);
     if (includeOpenFiles) {
       for (VirtualFile open : FileEditorManager.getInstance(project).getOpenFiles()) {

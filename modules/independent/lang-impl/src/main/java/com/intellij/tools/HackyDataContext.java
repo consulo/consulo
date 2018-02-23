@@ -17,7 +17,7 @@ package com.intellij.tools;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ class HackyDataContext implements DataContext {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(@NotNull Key<T> dataId) {
+  public <T> T getData(@Nonnull Key<T> dataId) {
     if (values.keySet().contains(dataId)) {
       return (T)values.get(dataId);
     }

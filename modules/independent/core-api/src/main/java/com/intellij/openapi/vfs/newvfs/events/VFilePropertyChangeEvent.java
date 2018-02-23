@@ -20,8 +20,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.FileContentUtilCore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -33,8 +33,8 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   private final Object myNewValue;
 
   public VFilePropertyChangeEvent(Object requestor,
-                                  @NotNull VirtualFile file,
-                                  @NotNull String propertyName,
+                                  @Nonnull VirtualFile file,
+                                  @Nonnull String propertyName,
                                   @Nullable Object oldValue,
                                   @Nullable Object newValue,
                                   boolean isFromRefresh) {
@@ -46,7 +46,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     checkPropertyValuesCorrect(requestor, propertyName, oldValue, newValue);
   }
 
-  public static void checkPropertyValuesCorrect(Object requestor, @NotNull String propertyName, Object oldValue, Object newValue) {
+  public static void checkPropertyValuesCorrect(Object requestor, @Nonnull String propertyName, Object oldValue, Object newValue) {
     if (Comparing.equal(oldValue, newValue) && FileContentUtilCore.FORCE_RELOAD_REQUESTOR != requestor) {
       throw new IllegalArgumentException("Values must be different, got the same: " + oldValue);
     }
@@ -71,7 +71,7 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
@@ -85,18 +85,18 @@ public class VFilePropertyChangeEvent extends VFileEvent {
     return myOldValue;
   }
 
-  @NotNull
+  @Nonnull
   public String getPropertyName() {
     return myPropertyName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return myFile.getPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();
@@ -132,14 +132,14 @@ public class VFilePropertyChangeEvent extends VFileEvent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String toString() {
     return "VfsEvent[property(" + myPropertyName + ") changed for '" + myFile + "':" +
            " oldValue = " + myOldValue + ", newValue = " + myNewValue + "]";
   }
 
-  @NotNull
+  @Nonnull
   public String getOldPath() {
     String path = getPath();
     if (VirtualFile.PROP_NAME.equals(myPropertyName) && myNewValue instanceof String && myOldValue instanceof String) {

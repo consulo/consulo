@@ -11,8 +11,8 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Thread-safe.
@@ -22,17 +22,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ProjectStructureHelper {
   @Nullable
-  public static Module findIdeModule(@NotNull ModuleData module, @NotNull Project ideProject) {
+  public static Module findIdeModule(@Nonnull ModuleData module, @Nonnull Project ideProject) {
     return findIdeModule(module.getInternalName(), ideProject);
   }
 
   @Nullable
-  public static Module findIdeModule(@NotNull String ideModuleName, @NotNull Project ideProject) {
+  public static Module findIdeModule(@Nonnull String ideModuleName, @Nonnull Project ideProject) {
     return ModuleManager.getInstance(ideProject).findModuleByName(ideModuleName);
   }
 
   @Nullable
-  public static Library findIdeLibrary(@NotNull final LibraryData libraryData, @NotNull Project ideProject) {
+  public static Library findIdeLibrary(@Nonnull final LibraryData libraryData, @Nonnull Project ideProject) {
     final LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
@@ -40,8 +40,8 @@ public class ProjectStructureHelper {
     return null;
   }
 
-  public static boolean isOrphanProjectLibrary(@NotNull final Library library,
-                                               @NotNull final Module[] ideModules) {
+  public static boolean isOrphanProjectLibrary(@Nonnull final Library library,
+                                               @Nonnull final Module[] ideModules) {
     RootPolicy<Boolean> visitor = new RootPolicy<Boolean>() {
       @Override
       public Boolean visitLibraryOrderEntry(LibraryOrderEntry ideDependency, Boolean value) {
@@ -57,7 +57,7 @@ public class ProjectStructureHelper {
   }
 
   @Nullable
-  public static ModuleOrderEntry findIdeModuleDependency(@NotNull ModuleDependencyData dependency, @NotNull ModifiableRootModel model) {
+  public static ModuleOrderEntry findIdeModuleDependency(@Nonnull ModuleDependencyData dependency, @Nonnull ModifiableRootModel model) {
     for (OrderEntry entry : model.getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
         ModuleOrderEntry candidate = (ModuleOrderEntry)entry;

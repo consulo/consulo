@@ -44,8 +44,8 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -120,7 +120,7 @@ public class VcsUtil {
    * File is considered to be a valid vcs file if it resides under the content
    * root controlled by the given vcs.
    */
-  public static boolean isFileForVcs(@NotNull VirtualFile file, Project project, AbstractVcs host) {
+  public static boolean isFileForVcs(@Nonnull VirtualFile file, Project project, AbstractVcs host) {
     return getVcsFor(project, file) == host;
   }
 
@@ -136,7 +136,7 @@ public class VcsUtil {
   }
 
   @Nullable
-  public static AbstractVcs getVcsFor(@NotNull final Project project, final FilePath file) {
+  public static AbstractVcs getVcsFor(@Nonnull final Project project, final FilePath file) {
     final AbstractVcs[] vcss = new AbstractVcs[1];
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       @Override
@@ -152,8 +152,8 @@ public class VcsUtil {
     return vcss[0];
   }
 
-  @Nullable
-  public static AbstractVcs getVcsFor(final Project project, @NotNull final VirtualFile file) {
+  @javax.annotation.Nullable
+  public static AbstractVcs getVcsFor(final Project project, @Nonnull final VirtualFile file) {
     final AbstractVcs[] vcss = new AbstractVcs[1];
 
     ApplicationManager.getApplication().runReadAction(new Runnable() {
@@ -171,7 +171,7 @@ public class VcsUtil {
     return vcss[0];
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getVcsRootFor(final Project project, final FilePath file) {
     final VirtualFile[] roots = new VirtualFile[1];
 
@@ -190,7 +190,7 @@ public class VcsUtil {
     return roots[0];
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getVcsRootFor(final Project project, final VirtualFile file) {
     final VirtualFile[] roots = new VirtualFile[1];
 
@@ -271,14 +271,14 @@ public class VcsUtil {
   public static VirtualFile getVirtualFile(final File file) {
     return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
       @Override
-      @Nullable
+      @javax.annotation.Nullable
       public VirtualFile compute() {
         return LocalFileSystem.getInstance().findFileByIoFile(file);
       }
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getVirtualFileWithRefresh(final File file) {
     if (file == null) return null;
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -300,8 +300,8 @@ public class VcsUtil {
     });
   }
 
-  @Nullable
-  public static byte[] getFileByteContent(@NotNull File file) {
+  @javax.annotation.Nullable
+  public static byte[] getFileByteContent(@Nonnull File file) {
     try {
       return FileUtil.loadFileBytes(file);
     }
@@ -315,15 +315,15 @@ public class VcsUtil {
     return getFilePath(new File(path));
   }
 
-  public static FilePath getFilePath(@NotNull VirtualFile file) {
+  public static FilePath getFilePath(@Nonnull VirtualFile file) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
   }
 
-  public static FilePath getFilePath(@NotNull File file) {
+  public static FilePath getFilePath(@Nonnull File file) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
   }
 
-  public static FilePath getFilePath(@NotNull String path, boolean isDirectory) {
+  public static FilePath getFilePath(@Nonnull String path, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePath(path, isDirectory);
   }
 
@@ -331,21 +331,21 @@ public class VcsUtil {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOnNonLocal(path, isDirectory);
   }
 
-  public static FilePath getFilePath(@NotNull File file, boolean isDirectory) {
+  public static FilePath getFilePath(@Nonnull File file, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file, isDirectory);
   }
 
-  public static FilePath getFilePathForDeletedFile(@NotNull String path, boolean isDirectory) {
+  public static FilePath getFilePathForDeletedFile(@Nonnull String path, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
   }
 
-  @NotNull
-  public static FilePath getFilePath(@NotNull VirtualFile parent, @NotNull String name) {
+  @Nonnull
+  public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String name) {
     return VcsContextFactory.SERVICE.getInstance().createFilePathOn(parent, name);
   }
 
-  @NotNull
-  public static FilePath getFilePath(@NotNull VirtualFile parent, @NotNull String fileName, boolean isDirectory) {
+  @Nonnull
+  public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
     return VcsContextFactory.SERVICE.getInstance().createFilePath(parent, fileName, isDirectory);
   }
 
@@ -433,7 +433,7 @@ public class VcsUtil {
   private static FilePath[] sortPaths(FilePath[] files, final int sign) {
     Arrays.sort(files, new Comparator<FilePath>() {
       @Override
-      public int compare(@NotNull FilePath o1, @NotNull FilePath o2) {
+      public int compare(@Nonnull FilePath o1, @Nonnull FilePath o2) {
         return sign * o1.getPath().compareTo(o2.getPath());
       }
     });
@@ -445,7 +445,7 @@ public class VcsUtil {
    * @return <code>VirtualFile</code> available in the current context.
    *         Returns not <code>null</code> if and only if exectly one file is available.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getOneVirtualFile(AnActionEvent e) {
     VirtualFile[] files = getVirtualFiles(e);
     return (files.length != 1) ? null : files[0];
@@ -477,7 +477,7 @@ public class VcsUtil {
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     VfsUtilCore.visitChildrenRecursively(dir, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (file.isDirectory()) {
           if (addDirectories) {
             files.add(file);
@@ -602,7 +602,7 @@ public class VcsUtil {
     return isAspectAvailableByDefault(id, true);
   }
 
-  public static boolean isAspectAvailableByDefault(@Nullable String id, boolean defaultValue) {
+  public static boolean isAspectAvailableByDefault(@javax.annotation.Nullable String id, boolean defaultValue) {
     if (id == null) return false;
     return PropertiesComponent.getInstance().getBoolean(ANNO_ASPECT + id, defaultValue);
   }
@@ -623,12 +623,12 @@ public class VcsUtil {
     return idx > 0;
   }
 
-  public static String getPathForProgressPresentation(@NotNull final File file) {
+  public static String getPathForProgressPresentation(@Nonnull final File file) {
     return file.getName() + " (" + file.getParent() + ")";
   }
 
-  @NotNull
-  public static Collection<VcsDirectoryMapping> findRoots(@NotNull VirtualFile rootDir, @NotNull Project project)
+  @Nonnull
+  public static Collection<VcsDirectoryMapping> findRoots(@Nonnull VirtualFile rootDir, @Nonnull Project project)
           throws IllegalArgumentException {
     if (!rootDir.isDirectory()) {
       throw new IllegalArgumentException(
@@ -648,10 +648,10 @@ public class VcsUtil {
     return result;
   }
 
-  @NotNull
-  public static List<VcsDirectoryMapping> addMapping(@NotNull List<VcsDirectoryMapping> existingMappings,
-                                                     @NotNull String path,
-                                                     @NotNull String vcs) {
+  @Nonnull
+  public static List<VcsDirectoryMapping> addMapping(@Nonnull List<VcsDirectoryMapping> existingMappings,
+                                                     @Nonnull String path,
+                                                     @Nonnull String vcs) {
     List<VcsDirectoryMapping> mappings = new ArrayList<>(existingMappings);
     for (Iterator<VcsDirectoryMapping> iterator = mappings.iterator(); iterator.hasNext(); ) {
       VcsDirectoryMapping mapping = iterator.next();
@@ -673,8 +673,8 @@ public class VcsUtil {
     return mappings;
   }
 
-  @Nullable
-  public static <T> T getIfSingle(@Nullable Stream<T> items) {
+  @javax.annotation.Nullable
+  public static <T> T getIfSingle(@javax.annotation.Nullable Stream<T> items) {
     return items == null ? null : items.limit(2).map(Optional::ofNullable)
             .reduce(Optional.empty(), (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty())
             .orElse(null);
@@ -684,13 +684,13 @@ public class VcsUtil {
     return items == null || !items.findAny().isPresent();
   }
 
-  @NotNull
+  @Nonnull
   public static <T> Stream<T> notNullize(@Nullable Stream<T> items) {
     return ObjectUtils.notNull(items, Stream.empty());
   }
 
-  @NotNull
-  public static <T> Stream<T> toStream(@Nullable T... items) {
+  @Nonnull
+  public static <T> Stream<T> toStream(@javax.annotation.Nullable T... items) {
     return items == null ? Stream.empty() : Stream.of(items);
   }
 
@@ -700,8 +700,8 @@ public class VcsUtil {
    * <p>
    * Also see {@link Stream#concat(Stream, Stream)} documentation for other possible issues of concatenating large number of streams.
    */
-  @NotNull
-  public static <T> Stream<T> concat(@NotNull Stream<T>... streams) {
+  @Nonnull
+  public static <T> Stream<T> concat(@Nonnull Stream<T>... streams) {
     return toStream(streams).reduce(Stream.empty(), Stream::concat);
   }
 }

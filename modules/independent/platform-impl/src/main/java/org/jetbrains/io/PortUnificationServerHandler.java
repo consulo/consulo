@@ -24,7 +24,7 @@ import io.netty.handler.codec.compression.ZlibWrapper;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.ide.BinaryRequestHandler;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -39,7 +39,7 @@ class PortUnificationServerHandler extends Decoder {
   // keytool -genkey -keyalg RSA -alias selfsigned -keystore cert.jks -storepass jetbrains -validity 10000 -keysize 2048
   @SuppressWarnings("SpellCheckingInspection")
   private static final AtomicNotNullLazyValue<SSLContext> SSL_SERVER_CONTEXT = new AtomicNotNullLazyValue<SSLContext>() {
-    @NotNull
+    @Nonnull
     @Override
     protected SSLContext compute() {
       String algorithm = Security.getProperty("ssl.KeyManagerFactory.algorithm");
@@ -73,21 +73,21 @@ class PortUnificationServerHandler extends Decoder {
     this(new DelegatingHttpRequestHandler(), true, true);
   }
 
-  private PortUnificationServerHandler(@NotNull DelegatingHttpRequestHandler delegatingHttpRequestHandler, boolean detectSsl, boolean detectGzip) {
+  private PortUnificationServerHandler(@Nonnull DelegatingHttpRequestHandler delegatingHttpRequestHandler, boolean detectSsl, boolean detectGzip) {
     this.delegatingHttpRequestHandler = delegatingHttpRequestHandler;
     this.detectSsl = detectSsl;
     this.detectGzip = detectGzip;
   }
 
   @Override
-  protected void messageReceived(@NotNull ChannelHandlerContext context, @NotNull ByteBuf input) throws Exception {
+  protected void messageReceived(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf input) throws Exception {
     ByteBuf buffer = getBufferIfSufficient(input, 5, context);
     if (buffer != null) {
       decode(context, buffer);
     }
   }
 
-  protected void decode(@NotNull ChannelHandlerContext context, @NotNull ByteBuf buffer) throws Exception {
+  protected void decode(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf buffer) throws Exception {
     ChannelPipeline pipeline = context.pipeline();
     if (detectSsl && SslHandler.isEncrypted(buffer)) {
       SSLEngine engine = SSL_SERVER_CONTEXT.getValue().createSSLEngine();
@@ -161,7 +161,7 @@ class PortUnificationServerHandler extends Decoder {
     private static final int UUID_LENGTH = 16;
 
     @Override
-    protected void messageReceived(@NotNull ChannelHandlerContext context, @NotNull ByteBuf input) throws Exception {
+    protected void messageReceived(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf input) throws Exception {
       ByteBuf buffer = getBufferIfSufficient(input, UUID_LENGTH, context);
       if (buffer == null) {
         return;

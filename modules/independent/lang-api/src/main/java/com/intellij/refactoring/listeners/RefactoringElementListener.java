@@ -16,7 +16,7 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * {@linkplain RefactoringElementListenerProvider} receives a notification of what happened
@@ -26,18 +26,18 @@ import org.jetbrains.annotations.NotNull;
 public interface RefactoringElementListener {
   RefactoringElementListener DEAF = new RefactoringElementListener() {
     @Override
-    public void elementMoved(@NotNull PsiElement newElement) {}
+    public void elementMoved(@Nonnull PsiElement newElement) {}
 
     @Override
-    public void elementRenamed(@NotNull PsiElement newElement) {}
+    public void elementRenamed(@Nonnull PsiElement newElement) {}
   };
   
   /**
    * Invoked in write action and command.
    */
-  void elementMoved(@NotNull PsiElement newElement);
+  void elementMoved(@Nonnull PsiElement newElement);
   /**
    * Invoked in write action and command.
    */
-  void elementRenamed(@NotNull PsiElement newElement);
+  void elementRenamed(@Nonnull PsiElement newElement);
 }

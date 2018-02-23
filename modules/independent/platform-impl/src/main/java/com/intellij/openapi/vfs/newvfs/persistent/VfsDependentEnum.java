@@ -22,8 +22,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class VfsDependentEnum<T> {
     return new File(FSRecords.basePath(), DEPENDENT_PERSISTENT_LIST_START_PREFIX);
   }
 
-  public int getId(@NotNull T s) throws IOException {
+  public int getId(@Nonnull T s) throws IOException {
     Integer integer = myInstanceToId.get(s);
     if (integer != null) return integer;
 
@@ -86,7 +86,7 @@ public class VfsDependentEnum<T> {
     }
   }
 
-  private void saveToFile(@NotNull T instance) throws IOException {
+  private void saveToFile(@Nonnull T instance) throws IOException {
     FileOutputStream fileOutputStream = new FileOutputStream(myFile, true);
     DataOutputStream output = new DataOutputStream(new BufferedOutputStream(fileOutputStream));
 
@@ -158,13 +158,14 @@ public class VfsDependentEnum<T> {
     FSRecords.requestVfsRebuild(e);
   }
 
-  private void register(@NotNull T instance, int id) {
+  private void register(@Nonnull T instance, int id) {
     myInstanceToId.put(instance, id);
     assert id == myInstances.size() + 1;
     myInstances.add(instance);
   }
 
-  public @NotNull T getById(int id) throws IOException {
+  public @Nonnull
+  T getById(int id) throws IOException {
     assert id > 0;
     --id;
     T instance;

@@ -27,8 +27,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -57,14 +56,14 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   private Future<?> myFuture = CompletableFuture.completedFuture(null);
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<ModuleData> getTargetDataKey() {
     return ProjectKeys.MODULE;
   }
 
   @Override
-  public void importData(@NotNull final Collection<DataNode<ModuleData>> toImport, @NotNull final Project project, final boolean synchronous) {
+  public void importData(@Nonnull final Collection<DataNode<ModuleData>> toImport, @Nonnull final Project project, final boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
@@ -92,7 +91,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @RequiredDispatchThread
-  private void createModules(@NotNull final Collection<DataNode<ModuleData>> toCreate, @NotNull final Project project) {
+  private void createModules(@Nonnull final Collection<DataNode<ModuleData>> toCreate, @Nonnull final Project project) {
     final Map<DataNode<ModuleData>, Module> moduleMappings = ContainerUtilRt.newHashMap();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -104,7 +103,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
       }
 
       @RequiredWriteAction
-      private void importModule(@NotNull ModuleManager moduleManager, @NotNull DataNode<ModuleData> module) {
+      private void importModule(@Nonnull ModuleManager moduleManager, @Nonnull DataNode<ModuleData> module) {
         ModuleData moduleData = module.getData();
         final Module created = moduleManager.newModule(moduleData.getExternalName(), moduleData.getModuleDirPath());
 
@@ -140,9 +139,9 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     });
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
-  private Collection<DataNode<ModuleData>> filterExistingModules(@NotNull Collection<DataNode<ModuleData>> modules, @NotNull Project project) {
+  private Collection<DataNode<ModuleData>> filterExistingModules(@Nonnull Collection<DataNode<ModuleData>> modules, @Nonnull Project project) {
     Collection<DataNode<ModuleData>> result = ContainerUtilRt.newArrayList();
     for (DataNode<ModuleData> node : modules) {
       ModuleData moduleData = node.getData();
@@ -157,7 +156,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     return result;
   }
 
-  private static void syncPaths(@NotNull Module module, @NotNull ModuleData data) {
+  private static void syncPaths(@Nonnull Module module, @Nonnull ModuleData data) {
     ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
     compilerPathsManager.setInheritedCompilerOutput(data.isInheritProjectCompileOutputPath());
     if (!data.isInheritProjectCompileOutputPath()) {
@@ -173,7 +172,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @Override
-  public void removeData(@NotNull final Collection<? extends Module> modules, @NotNull final Project project, boolean synchronous) {
+  public void removeData(@Nonnull final Collection<? extends Module> modules, @Nonnull final Project project, boolean synchronous) {
     if (modules.isEmpty()) {
       return;
     }
@@ -193,7 +192,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @RequiredDispatchThread
-  public static void unlinkModuleFromExternalSystem(@NotNull Module module) {
+  public static void unlinkModuleFromExternalSystem(@Nonnull Module module) {
     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
     ExternalSystemMutableModuleExtension<?> extension = modifiableModel.getExtension(ExternalSystemMutableModuleExtension.class);
@@ -211,7 +210,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
     private final Collection<DataNode<ModuleData>> myModules;
     private final boolean mySynchronous;
 
-    ImportModulesTask(@NotNull Project project, @NotNull Collection<DataNode<ModuleData>> modules, boolean synchronous) {
+    ImportModulesTask(@Nonnull Project project, @Nonnull Collection<DataNode<ModuleData>> modules, boolean synchronous) {
       myProject = project;
       myModules = modules;
       mySynchronous = synchronous;
@@ -231,9 +230,9 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
   }
 
   @RequiredDispatchThread
-  private static void setModuleOptions(@NotNull final Module module,
-                                       @Nullable final ModifiableRootModel originalModel,
-                                       @NotNull final DataNode<ModuleData> moduleDataNode) {
+  private static void setModuleOptions(@Nonnull final Module module,
+                                       @javax.annotation.Nullable final ModifiableRootModel originalModel,
+                                       @Nonnull final DataNode<ModuleData> moduleDataNode) {
 
     ModuleData moduleData = moduleDataNode.getData();
     module.putUserData(MODULE_DATA_KEY, moduleData);

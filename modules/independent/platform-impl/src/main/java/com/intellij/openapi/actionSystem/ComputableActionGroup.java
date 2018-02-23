@@ -20,8 +20,8 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.util.CachedValueImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ComputableActionGroup extends ActionGroup implements DumbAware {
   private CachedValue<AnAction[]> myChildren;
@@ -39,7 +39,7 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) {
       return EMPTY_ARRAY;
@@ -51,13 +51,13 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
     return myChildren.getValue();
   }
 
-  @NotNull
-  protected abstract CachedValueProvider<AnAction[]> createChildrenProvider(@NotNull ActionManager actionManager);
+  @Nonnull
+  protected abstract CachedValueProvider<AnAction[]> createChildrenProvider(@Nonnull ActionManager actionManager);
 
   public abstract static class Simple extends ComputableActionGroup {
-    @NotNull
+    @Nonnull
     @Override
-    protected final CachedValueProvider<AnAction[]> createChildrenProvider(@NotNull final ActionManager actionManager) {
+    protected final CachedValueProvider<AnAction[]> createChildrenProvider(@Nonnull final ActionManager actionManager) {
       return new CachedValueProvider<AnAction[]>() {
         @Nullable
         @Override
@@ -67,7 +67,7 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
       };
     }
 
-    @NotNull
-    protected abstract AnAction[] computeChildren(@NotNull ActionManager manager);
+    @Nonnull
+    protected abstract AnAction[] computeChildren(@Nonnull ActionManager manager);
   }
 }

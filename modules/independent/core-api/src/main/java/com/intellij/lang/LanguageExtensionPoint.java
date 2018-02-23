@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.CustomLoadingExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -36,7 +36,7 @@ public class LanguageExtensionPoint<T> extends CustomLoadingExtensionPointBean i
 
   private final NotNullLazyValue<T> myHandler = new NotNullLazyValue<T>() {
     @Override
-    @NotNull
+    @Nonnull
     protected T compute() {
       try {
         return (T)instantiateExtension(implementationClass, ApplicationManager.getApplication().getPicoContainer());

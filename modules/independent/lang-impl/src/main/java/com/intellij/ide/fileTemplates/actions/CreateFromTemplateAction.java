@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
 

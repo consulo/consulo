@@ -19,8 +19,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Supplier;
 
@@ -30,10 +30,10 @@ import java.util.function.Supplier;
 public interface SelectInContext {
   Key<SelectInContext> DATA_KEY = Key.create("SelectInContext");
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   VirtualFile getVirtualFile();
 
   @Nullable

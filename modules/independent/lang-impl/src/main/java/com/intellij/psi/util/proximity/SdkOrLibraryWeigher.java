@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.ProximityLocation;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,12 +33,12 @@ import java.util.List;
 public class SdkOrLibraryWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@NotNull final PsiElement element, @NotNull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
     Project project = location.getProject();
     return project == null ? null : isSdkElement(element, project);
   }
 
-  public static boolean isSdkElement(PsiElement element, @NotNull final Project project) {
+  public static boolean isSdkElement(PsiElement element, @Nonnull final Project project) {
     final VirtualFile file = PsiUtilCore.getVirtualFile(element);
     if (file != null) {
       List<OrderEntry> orderEntries = ProjectRootManager.getInstance(project).getFileIndex().getOrderEntriesForFile(file);

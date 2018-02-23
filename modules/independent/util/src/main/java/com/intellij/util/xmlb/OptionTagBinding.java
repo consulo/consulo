@@ -21,8 +21,8 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   private final String myNameAttribute;
   private final String myValueAttribute;
 
-  public OptionTagBinding(@NotNull MutableAccessor accessor, @Nullable OptionTag optionTag) {
+  public OptionTagBinding(@Nonnull MutableAccessor accessor, @Nullable OptionTag optionTag) {
     super(accessor, optionTag == null ? null : optionTag.value(), optionTag == null ? null : optionTag.converter());
 
     if (optionTag == null) {
@@ -53,7 +53,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
 
   @Override
   @Nullable
-  public Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
     Object value = myAccessor.read(o);
     Element targetElement = new Element(myTagName);
 
@@ -86,7 +86,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public Object deserialize(Object context, @NotNull Element element) {
+  public Object deserialize(Object context, @Nonnull Element element) {
     Attribute valueAttribute = element.getAttribute(myValueAttribute);
     if (valueAttribute == null) {
       if (myValueAttribute.isEmpty()) {
@@ -114,7 +114,7 @@ class OptionTagBinding extends BasePrimitiveBinding {
   }
 
   @Override
-  public boolean isBoundTo(@NotNull Element element) {
+  public boolean isBoundTo(@Nonnull Element element) {
     if (!element.getName().equals(myTagName)) {
       return false;
     }

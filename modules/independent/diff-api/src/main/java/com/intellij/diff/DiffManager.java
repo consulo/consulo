@@ -21,14 +21,14 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
 
 public abstract class DiffManager {
-  @NotNull
+  @Nonnull
   public static DiffManager getInstance() {
     return ServiceManager.getService(DiffManager.class);
   }
@@ -38,17 +38,17 @@ public abstract class DiffManager {
   //
 
   @RequiredDispatchThread
-  public abstract void showDiff(@Nullable Project project, @NotNull DiffRequest request);
+  public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
 
   @RequiredDispatchThread
-  public abstract void showDiff(@Nullable Project project, @NotNull DiffRequest request, @NotNull DiffDialogHints hints);
+  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
   @RequiredDispatchThread
-  public abstract void showDiff(@Nullable Project project, @NotNull DiffRequestChain requests, @NotNull DiffDialogHints hints);
+  public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
-  @NotNull
-  public abstract DiffRequestPanel createRequestPanel(@Nullable Project project, @NotNull Disposable parent, @Nullable Window window);
+  @Nonnull
+  public abstract DiffRequestPanel createRequestPanel(@javax.annotation.Nullable Project project, @Nonnull Disposable parent, @Nullable Window window);
 
   @RequiredDispatchThread
-  public abstract void showMerge(@Nullable Project project, @NotNull MergeRequest request);
+  public abstract void showMerge(@Nullable Project project, @Nonnull MergeRequest request);
 }

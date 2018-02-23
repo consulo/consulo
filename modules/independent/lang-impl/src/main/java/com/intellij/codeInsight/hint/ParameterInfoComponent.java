@@ -31,8 +31,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -46,7 +46,8 @@ public class ParameterInfoComponent extends JPanel {
 
   private PsiElement myParameterOwner;
   private Object myHighlighted;
-  @NotNull private final ParameterInfoHandler myHandler;
+  @Nonnull
+  private final ParameterInfoHandler myHandler;
 
   private final OneElementComponent[] myPanels;
 
@@ -78,23 +79,23 @@ public class ParameterInfoComponent extends JPanel {
   private boolean myRequestFocus;
 
   @TestOnly
-  public static ParameterInfoUIContextEx createContext(Object[] objects, Editor editor, @NotNull ParameterInfoHandler handler, int currentParameterIndex) {
+  public static ParameterInfoUIContextEx createContext(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler, int currentParameterIndex) {
     return createContext(objects, editor, handler, currentParameterIndex, null);
   }
 
   @TestOnly
-  public static ParameterInfoUIContextEx createContext(Object[] objects, Editor editor, @NotNull ParameterInfoHandler handler, int currentParameterIndex, @Nullable PsiElement parameterOwner) {
+  public static ParameterInfoUIContextEx createContext(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler, int currentParameterIndex, @Nullable PsiElement parameterOwner) {
     final ParameterInfoComponent infoComponent = new ParameterInfoComponent(objects, editor, handler);
     infoComponent.setCurrentParameterIndex(currentParameterIndex);
     infoComponent.setParameterOwner(parameterOwner);
     return infoComponent.new MyParameterContext();
   }
 
-  ParameterInfoComponent(Object[] objects, Editor editor, @NotNull ParameterInfoHandler handler) {
+  ParameterInfoComponent(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler) {
     this(objects, editor, handler, false);
   }
 
-  ParameterInfoComponent(Object[] objects, Editor editor, @NotNull ParameterInfoHandler handler, boolean requestFocus) {
+  ParameterInfoComponent(Object[] objects, Editor editor, @Nonnull ParameterInfoHandler handler, boolean requestFocus) {
     super(new BorderLayout());
     myRequestFocus = requestFocus;
 
@@ -410,7 +411,7 @@ public class ParameterInfoComponent extends JPanel {
       return setup(text, flagsMap, background);
     }
 
-    private String setup(@NotNull String text, @NotNull Map<TextRange, ParameterInfoUIContextEx.Flag> flagsMap, @NotNull Color background) {
+    private String setup(@Nonnull String text, @Nonnull Map<TextRange, ParameterInfoUIContextEx.Flag> flagsMap, @Nonnull Color background) {
       myLabel.setBackground(background);
       setBackground(background);
 
@@ -430,7 +431,7 @@ public class ParameterInfoComponent extends JPanel {
       }
       return myLabel.getText();
     }
-    private String buildLabelText(@NotNull final String text, @NotNull final Map<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
+    private String buildLabelText(@Nonnull final String text, @Nonnull final Map<TextRange, ParameterInfoUIContextEx.Flag> flagsMap) {
       final StringBuilder labelText = new StringBuilder(text);
       final String disabledTag = FLAG_TO_TAG.get(ParameterInfoUIContextEx.Flag.DISABLE);
 
@@ -477,11 +478,11 @@ public class ParameterInfoComponent extends JPanel {
       return XmlStringUtil.wrapInHtml(labelText);
     }
 
-    private String getTag(@NotNull final String tagValue) {
+    private String getTag(@Nonnull final String tagValue) {
       return "<" + tagValue + ">";
     }
 
-    private String getClosingTag(@NotNull final String tagValue) {
+    private String getClosingTag(@Nonnull final String tagValue) {
       return "</" + tagValue + ">";
     }
 

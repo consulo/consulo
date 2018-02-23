@@ -2,7 +2,7 @@ package com.intellij.remoteServer.agent.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.hash.HashSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.*;
 import java.net.URL;

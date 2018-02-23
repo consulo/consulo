@@ -16,16 +16,16 @@
 package com.intellij.codeInspection;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface InspectionSuppressor {
   /**
    * @see com.intellij.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(com.intellij.psi.PsiElement)
    */
-  boolean isSuppressedFor(@NotNull PsiElement element, String toolId);
+  boolean isSuppressedFor(@Nonnull PsiElement element, String toolId);
 
   /**
    * @see com.intellij.codeInspection.BatchSuppressableTool#getBatchSuppressActions(com.intellij.psi.PsiElement)
    */
-  SuppressQuickFix[] getSuppressActions(@NotNull PsiElement element, String toolShortName);
+  SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, String toolShortName);
 }

@@ -21,7 +21,7 @@ import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.highlighting.Util;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class UniteSameType implements DiffCorrection {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.UniteSameType");
@@ -31,8 +31,8 @@ class UniteSameType implements DiffCorrection {
     return unitSameTypes(covertSequentialOneSideToChange(unitSameTypes(fragments)));
   }
 
-  @NotNull
-  private static DiffFragment[] unitSameTypes(@NotNull DiffFragment[] fragments) {
+  @Nonnull
+  private static DiffFragment[] unitSameTypes(@Nonnull DiffFragment[] fragments) {
     if (fragments.length < 2) return fragments;
     DiffCorrection.FragmentsCollector collector = new DiffCorrection.FragmentsCollector();
     DiffFragment previous = fragments[0];
@@ -50,8 +50,8 @@ class UniteSameType implements DiffCorrection {
     return collector.toArray();
   }
 
-  @NotNull
-  private static DiffFragment[] covertSequentialOneSideToChange(@NotNull DiffFragment[] fragments) {
+  @Nonnull
+  private static DiffFragment[] covertSequentialOneSideToChange(@Nonnull DiffFragment[] fragments) {
     if (fragments.length < 2) return fragments;
     DiffCorrection.FragmentsCollector collector = new DiffCorrection.FragmentsCollector();
 //    DiffFragment previous = fragments[0];

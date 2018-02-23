@@ -25,8 +25,8 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -34,16 +34,16 @@ import javax.swing.*;
 public abstract class WizardMode implements Disposable {
   private StepSequence myStepSequence;
 
-  @NotNull
+  @Nonnull
   public abstract String getDisplayName(final WizardContext context);
 
-  @NotNull
+  @Nonnull
   public abstract String getDescription(final WizardContext context);
 
   public abstract boolean isAvailable(final WizardContext context);
 
   @Nullable
-  public StepSequence getSteps(final WizardContext context, @NotNull final ModulesProvider modulesProvider) {
+  public StepSequence getSteps(final WizardContext context, @Nonnull final ModulesProvider modulesProvider) {
     if (myStepSequence == null) {
       myStepSequence = createSteps(context, modulesProvider);
     }
@@ -51,7 +51,7 @@ public abstract class WizardMode implements Disposable {
   }
 
   @Nullable
-  protected abstract StepSequence createSteps(final WizardContext context, @NotNull final ModulesProvider modulesProvider);
+  protected abstract StepSequence createSteps(final WizardContext context, @Nonnull final ModulesProvider modulesProvider);
 
 
   @Nullable

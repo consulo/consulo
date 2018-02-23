@@ -25,8 +25,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredWriteAction;
 
 import javax.swing.*;
@@ -42,13 +42,13 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return Language.ANY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -112,7 +112,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return new char[0];
   }
@@ -147,7 +147,7 @@ public abstract class FakePsiElement extends PsiElementBase implements PsiNamedE
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
     return null;
   }
 }

@@ -20,7 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.SplitLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,14 +36,14 @@ public class DesktopSplitLayoutImpl extends Splitter implements SplitLayout, Swi
 
   @RequiredUIAccess
   @Override
-  public SplitLayout setFirstComponent(@NotNull Component component) {
+  public SplitLayout setFirstComponent(@Nonnull Component component) {
     setFirstComponent((JComponent)TargetAWT.to(component));
     return this;
   }
 
   @RequiredUIAccess
   @Override
-  public SplitLayout setSecondComponent(@NotNull Component component) {
+  public SplitLayout setSecondComponent(@Nonnull Component component) {
     setSecondComponent((JComponent)TargetAWT.to(component));
     return this;
   }

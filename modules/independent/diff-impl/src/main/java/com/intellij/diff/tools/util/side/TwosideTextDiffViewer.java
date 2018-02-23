@@ -47,8 +47,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -57,16 +57,21 @@ import java.util.List;
 public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> {
   public static final Logger LOG = Logger.getInstance(TwosideTextDiffViewer.class);
 
-  @NotNull private final List<? extends EditorEx> myEditableEditors;
-  @Nullable private List<? extends EditorEx> myEditors;
+  @Nonnull
+  private final List<? extends EditorEx> myEditableEditors;
+  @javax.annotation.Nullable
+  private List<? extends EditorEx> myEditors;
 
-  @NotNull protected final SetEditorSettingsAction myEditorSettingsAction;
+  @Nonnull
+  protected final SetEditorSettingsAction myEditorSettingsAction;
 
-  @NotNull private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
+  @Nonnull
+  private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
 
-  @Nullable private TwosideSyncScrollSupport mySyncScrollSupport;
+  @javax.annotation.Nullable
+  private TwosideSyncScrollSupport mySyncScrollSupport;
 
-  public TwosideTextDiffViewer(@NotNull DiffContext context, @NotNull ContentDiffRequest request) {
+  public TwosideTextDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
     super(context, request, TextEditorHolder.TextEditorHolderFactory.INSTANCE);
 
     new MyFocusOppositePaneAction(true).install(myPanel);
@@ -102,9 +107,9 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     super.onDispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected List<TextEditorHolder> createEditorHolders(@NotNull EditorHolderFactory<TextEditorHolder> factory) {
+  protected List<TextEditorHolder> createEditorHolders(@Nonnull EditorHolderFactory<TextEditorHolder> factory) {
     List<TextEditorHolder> holders = super.createEditorHolders(factory);
 
     boolean[] forceReadOnly = TextDiffViewerUtil.checkForceReadOnly(myContext, myRequest);
@@ -121,7 +126,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     return holders;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<JComponent> createTitles() {
     return DiffUtil.createSyncHeightComponents(DiffUtil.createTextTitles(myRequest, getEditors()));
@@ -131,18 +136,18 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   // Diff
   //
 
-  @NotNull
+  @Nonnull
   public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
     return TextDiffViewerUtil.getTextSettings(myContext);
   }
 
-  @NotNull
+  @Nonnull
   protected List<AnAction> createEditorPopupActions() {
     return TextDiffViewerUtil.createEditorPopupActions();
   }
 
   @Override
-  protected void onDocumentChange(@NotNull DocumentEvent event) {
+  protected void onDocumentChange(@Nonnull DocumentEvent event) {
     super.onDocumentChange(event);
     myContentPanel.repaintDivider();
   }
@@ -192,13 +197,13 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   //
 
 
-  @NotNull
+  @Nonnull
   protected List<? extends DocumentContent> getContents() {
     //noinspection unchecked
     return (List)myRequest.getContents();
   }
 
-  @NotNull
+  @Nonnull
   public List<? extends EditorEx> getEditors() {
     if (myEditors == null) {
       myEditors = ContainerUtil.map(getEditorHolders(), holder -> holder.getEditor());
@@ -206,53 +211,53 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     return myEditors;
   }
 
-  @NotNull
+  @Nonnull
   protected List<? extends EditorEx> getEditableEditors() {
     return myEditableEditors;
   }
 
-  @NotNull
+  @Nonnull
   public EditorEx getCurrentEditor() {
     return getEditor(getCurrentSide());
   }
 
-  @NotNull
+  @Nonnull
   public DocumentContent getCurrentContent() {
     return getContent(getCurrentSide());
   }
 
-  @NotNull
+  @Nonnull
   public EditorEx getEditor1() {
     return getEditor(Side.LEFT);
   }
 
-  @NotNull
+  @Nonnull
   public EditorEx getEditor2() {
     return getEditor(Side.RIGHT);
   }
 
 
-  @NotNull
-  public EditorEx getEditor(@NotNull Side side) {
+  @Nonnull
+  public EditorEx getEditor(@Nonnull Side side) {
     return side.select(getEditors());
   }
 
-  @NotNull
-  public DocumentContent getContent(@NotNull Side side) {
+  @Nonnull
+  public DocumentContent getContent(@Nonnull Side side) {
     return side.select(getContents());
   }
 
-  @NotNull
+  @Nonnull
   public DocumentContent getContent1() {
     return getContent(Side.LEFT);
   }
 
-  @NotNull
+  @Nonnull
   public DocumentContent getContent2() {
     return getContent(Side.RIGHT);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TwosideSyncScrollSupport getSyncScrollSupport() {
     return mySyncScrollSupport;
   }
@@ -262,27 +267,27 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   //
 
   @RequiredDispatchThread
-  @NotNull
-  protected LineCol transferPosition(@NotNull Side baseSide, @NotNull LineCol position) {
+  @Nonnull
+  protected LineCol transferPosition(@Nonnull Side baseSide, @Nonnull LineCol position) {
     if (mySyncScrollSupport == null) return position;
     int line = mySyncScrollSupport.getScrollable().transfer(baseSide, position.line);
     return new LineCol(line, position.column);
   }
 
   @RequiredDispatchThread
-  protected void scrollToLine(@NotNull Side side, int line) {
+  protected void scrollToLine(@Nonnull Side side, int line) {
     DiffUtil.scrollEditor(getEditor(side), line, false);
     setCurrentSide(side);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract SyncScrollSupport.SyncScrollable getSyncScrollable();
 
   //
   // Misc
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     Side side = getCurrentSide();
@@ -295,7 +300,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     return getContent(side.other()).getNavigatable(otherPosition);
   }
 
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return TwosideDiffViewer.canShowRequest(context, request, TextEditorHolder.TextEditorHolderFactory.INSTANCE);
   }
 
@@ -309,7 +314,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       Side currentSide = getCurrentSide();
       Side targetSide = currentSide.other();
 
@@ -330,7 +335,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
   private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
     @Override
-    protected Navigatable getNavigatable(@NotNull Editor editor, int line) {
+    protected Navigatable getNavigatable(@Nonnull Editor editor, int line) {
       Side side = Side.fromValue(getEditors(), editor);
       if (side == null) return null;
 
@@ -348,9 +353,9 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   // Helpers
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.CURRENT_EDITOR == dataId) {
       return getCurrentEditor();
     }
@@ -366,7 +371,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   }
 
   protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {
-    @NotNull
+    @Nonnull
     @Override
     protected List<? extends Editor> getEditors() {
       return TwosideTextDiffViewer.this.getEditors();

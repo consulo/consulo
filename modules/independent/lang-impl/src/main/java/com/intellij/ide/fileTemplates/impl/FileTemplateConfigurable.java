@@ -63,8 +63,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -197,13 +197,13 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
     myNameField.addFocusListener(new FocusAdapter() {
       @Override
-      public void focusLost(@NotNull FocusEvent e) {
+      public void focusLost(@Nonnull FocusEvent e) {
         onNameChanged();
       }
     });
     myExtensionField.addFocusListener(new FocusAdapter() {
       @Override
-      public void focusLost(@NotNull FocusEvent e) {
+      public void focusLost(@Nonnull FocusEvent e) {
         onNameChanged();
       }
     });
@@ -430,14 +430,14 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
       myLexer = createDefaultLexer();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Lexer getHighlightingLexer() {
       return myLexer;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
       if (tokenType == FileTemplateTokenType.MACRO || tokenType == FileTemplateTokenType.DIRECTIVE) {
         return pack(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
@@ -447,7 +447,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     }
   }
 
-  @NotNull
+  @Nonnull
   @VisibleForTesting
   static Lexer createDefaultLexer() {
     return new MergingLexerAdapter(new FileTemplateTextLexer(), TokenSet.create(FileTemplateTokenType.TEXT));

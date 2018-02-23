@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Handles tooltip links in format <code>#inspection/inspection_short_name</code>.
@@ -37,7 +37,7 @@ public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.InspectionDescriptionLinkHandler");
 
   @Override
-  public String getDescription(@NotNull final String refSuffix, @NotNull final Editor editor) {
+  public String getDescription(@Nonnull final String refSuffix, @Nonnull final Editor editor) {
     final Project project = editor.getProject();
     if (project == null) {
       LOG.error(editor);

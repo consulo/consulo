@@ -21,7 +21,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -159,7 +159,7 @@ public class MacUIUtil {
       }
     }
 
-    private static boolean hasFocus(@NotNull final Component toCheck) {
+    private static boolean hasFocus(@Nonnull final Component toCheck) {
       if (toCheck.hasFocus()) return true;
       if (toCheck instanceof JComponent) {
         final JComponent c = (JComponent)toCheck;
@@ -193,11 +193,11 @@ public class MacUIUtil {
     return new Color(64, 113, 167);
   }
 
-  public static void paintTextFieldFocusRing(@NotNull final Graphics2D g2d, @NotNull final Rectangle bounds) {
+  public static void paintTextFieldFocusRing(@Nonnull final Graphics2D g2d, @Nonnull final Rectangle bounds) {
     paintFocusRing(g2d, getFocusRingColor(), bounds);
   }
 
-  public static void paintComboboxFocusRing(@NotNull final Graphics2D g2d, @NotNull final Rectangle bounds) {
+  public static void paintComboboxFocusRing(@Nonnull final Graphics2D g2d, @Nonnull final Rectangle bounds) {
     final Color color = getFocusRingColor();
     final Color[] colors =
             new Color[]{ColorUtil.toAlpha(color, 180), ColorUtil.toAlpha(color, 130), ColorUtil.toAlpha(color, 80), ColorUtil.toAlpha(color, 80)};
@@ -257,7 +257,7 @@ public class MacUIUtil {
     g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, oldStrokeControlValue);
   }
 
-  public static void drawComboboxFocusRing(@NotNull final JComboBox combobox, @NotNull final Graphics g) {
+  public static void drawComboboxFocusRing(@Nonnull final JComboBox combobox, @Nonnull final Graphics g) {
     if (SystemInfo.isMac && combobox.isEnabled() && combobox.isEditable() && UIUtil.isUnderAquaLookAndFeel()) {
       final Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       if (focusOwner != null) {
@@ -269,7 +269,7 @@ public class MacUIUtil {
     }
   }
 
-  public static void doNotFillBackground(@NotNull final JTree tree, @NotNull final DefaultTreeCellRenderer renderer) {
+  public static void doNotFillBackground(@Nonnull final JTree tree, @Nonnull final DefaultTreeCellRenderer renderer) {
     TreeUI ui = tree.getUI();
     if (ui instanceof WideSelectionTreeUI) {
       if (((WideSelectionTreeUI)ui).isWideSelection()) {

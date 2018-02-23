@@ -21,7 +21,7 @@ import com.intellij.util.indexing.FileContent;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.xml.NanoXmlUtil;
 import com.intellij.util.xml.XmlFileHeader;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -39,10 +39,10 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
     return new FileContentPattern();
   }
 
-  public FileContentPattern withName(@NotNull final String name) {
+  public FileContentPattern withName(@Nonnull final String name) {
     return with(new PatternCondition<FileContent>("withName") {
       @Override
-      public boolean accepts(@NotNull FileContent fileContent, ProcessingContext context) {
+      public boolean accepts(@Nonnull FileContent fileContent, ProcessingContext context) {
         return name.equals(fileContent.getFileName());
       }
     });
@@ -51,25 +51,25 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
   public FileContentPattern withName(final StringPattern namePattern) {
     return with(new PatternCondition<FileContent>("withName") {
       @Override
-      public boolean accepts(@NotNull FileContent fileContent, ProcessingContext context) {
+      public boolean accepts(@Nonnull FileContent fileContent, ProcessingContext context) {
         return namePattern.accepts(fileContent.getFileName());
       }
     });
   }
 
-  public FileContentPattern inDirectory(final @NotNull String name) {
+  public FileContentPattern inDirectory(final @Nonnull String name) {
     return with(new PatternCondition<FileContent>("inDirectory") {
       @Override
-      public boolean accepts(@NotNull FileContent fileContent, ProcessingContext context) {
+      public boolean accepts(@Nonnull FileContent fileContent, ProcessingContext context) {
         return name.equals(fileContent.getFile().getParent().getName());
       }
     });
   }
 
-  public FileContentPattern xmlWithRootTag(@NotNull final String rootTag) {
+  public FileContentPattern xmlWithRootTag(@Nonnull final String rootTag) {
     return with(new PatternCondition<FileContent>("withRootTag") {
       @Override
-      public boolean accepts(@NotNull FileContent fileContent, ProcessingContext context) {
+      public boolean accepts(@Nonnull FileContent fileContent, ProcessingContext context) {
         try {
           return rootTag.equals(parseHeaderWithException(fileContent).getRootTagLocalName());
         }
@@ -87,7 +87,7 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
   public FileContentPattern xmlWithRootTagNamespace(final ElementPattern<String> namespacePattern) {
     return with(new PatternCondition<FileContent>("xmlWithRootTagNamespace") {
       @Override
-      public boolean accepts(@NotNull final FileContent fileContent, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final FileContent fileContent, final ProcessingContext context) {
         try {
           String rootTagNamespace = parseHeaderWithException(fileContent).getRootTagNamespace();
           return rootTagNamespace != null && namespacePattern.accepts(rootTagNamespace, context);
@@ -99,7 +99,7 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
     });
   }
 
-  @NotNull
+  @Nonnull
   private static XmlFileHeader parseHeaderWithException(FileContent fileContent) throws IOException {
     //noinspection IOResourceOpenedButNotSafelyClosed
     return NanoXmlUtil.parseHeaderWithException(CharArrayUtil.readerFromCharSequence(fileContent.getContentAsText()));

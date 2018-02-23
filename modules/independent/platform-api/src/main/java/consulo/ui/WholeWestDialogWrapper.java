@@ -24,8 +24,8 @@ import com.intellij.openapi.util.DimensionService;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -61,7 +61,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     super(project, canBeParent, applicationModalIfPossible);
   }
 
-  public WholeWestDialogWrapper(@NotNull Component parent, boolean canBeParent) {
+  public WholeWestDialogWrapper(@Nonnull Component parent, boolean canBeParent) {
     super(parent, canBeParent);
   }
 
@@ -70,7 +70,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     return new BorderLayout();
   }
 
-  @NotNull
+  @Nonnull
   public String getSplitterKey() {
     return getClass().getName();
   }
@@ -83,7 +83,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     return new Dimension(500, 500);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   public abstract Couple<JComponent> createSplitterComponents(JPanel rootPanel);
 
@@ -94,7 +94,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
   @Override
   @RequiredDispatchThread
-  protected void initRootPanel(@NotNull JPanel rootPanel) {
+  protected void initRootPanel(@Nonnull JPanel rootPanel) {
     JBSplitter splitter = new OnePixelSplitter();
     splitter.setProportion(getSplitterDefaultValue());
     splitter.setSplitterProportionKey(getSplitterKey());

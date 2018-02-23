@@ -18,8 +18,8 @@ package com.intellij.openapi.editor;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -27,13 +27,14 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class LineExtensionInfo {
-  @NotNull private final String myText;
+  @Nonnull
+  private final String myText;
   @Nullable private final Color myColor;
   @Nullable private final EffectType myEffectType;
   @Nullable private final Color myEffectColor;
   @JdkConstants.FontStyle private final int myFontType;
 
-  public LineExtensionInfo(@NotNull String text,
+  public LineExtensionInfo(@Nonnull String text,
                            @Nullable Color color,
                            @Nullable EffectType effectType,
                            @Nullable Color effectColor,
@@ -45,7 +46,7 @@ public class LineExtensionInfo {
     myFontType = fontType;
   }
 
-  public LineExtensionInfo(@NotNull String text, @NotNull TextAttributes attr) {
+  public LineExtensionInfo(@Nonnull String text, @Nonnull TextAttributes attr) {
     myText = text;
     myColor = attr.getForegroundColor();
     myEffectType = attr.getEffectType();
@@ -53,7 +54,7 @@ public class LineExtensionInfo {
     myFontType = attr.getFontType();
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }

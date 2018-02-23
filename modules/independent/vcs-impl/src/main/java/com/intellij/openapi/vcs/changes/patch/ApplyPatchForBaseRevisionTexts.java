@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class ApplyPatchForBaseRevisionTexts {
   private List<String> myWarnings;
   private boolean myBaseRevisionLoaded;
 
-  @NotNull
+  @Nonnull
   public static ApplyPatchForBaseRevisionTexts create(final Project project, final VirtualFile file, final FilePath pathBeforeRename,
                                                        final TextFilePatch patch, final Getter<CharSequence> baseContents) {
     assert ! patch.isNewFile();

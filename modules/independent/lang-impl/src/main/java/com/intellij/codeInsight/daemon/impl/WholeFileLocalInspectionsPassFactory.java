@@ -38,8 +38,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "WholeFileLocalInspectionsPassFactory";
   }
@@ -87,7 +87,7 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull final PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
     final long psiModificationCount = PsiManager.getInstance(myProject).getModificationTracker().getModificationCount();
     if (psiModificationCount == myPsiModificationCount) {
       return null; //optimization
@@ -99,9 +99,9 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
     return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), visibleRange, true,
                                     new DefaultHighlightInfoProcessor()) {
-      @NotNull
+      @Nonnull
       @Override
-      List<LocalInspectionToolWrapper> getInspectionTools(@NotNull InspectionProfileWrapper profile) {
+      List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
         List<LocalInspectionToolWrapper> tools = super.getInspectionTools(profile);
         List<LocalInspectionToolWrapper> result = tools.stream().filter(LocalInspectionToolWrapper::runForWholeFile).collect(Collectors.toList());
         myFileToolsCache.put(file, !result.isEmpty());
@@ -114,12 +114,12 @@ public class WholeFileLocalInspectionsPassFactory extends AbstractProjectCompone
       }
 
       @Override
-      void inspectInjectedPsi(@NotNull List<PsiElement> elements,
+      void inspectInjectedPsi(@Nonnull List<PsiElement> elements,
                               boolean onTheFly,
-                              @NotNull ProgressIndicator indicator,
-                              @NotNull InspectionManager iManager,
+                              @Nonnull ProgressIndicator indicator,
+                              @Nonnull InspectionManager iManager,
                               boolean inVisibleRange,
-                              @NotNull List<LocalInspectionToolWrapper> wrappers) {
+                              @Nonnull List<LocalInspectionToolWrapper> wrappers) {
         // already inspected in LIP
       }
 

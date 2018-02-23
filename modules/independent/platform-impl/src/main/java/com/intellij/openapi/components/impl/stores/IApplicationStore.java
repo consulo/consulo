@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.components.impl.stores;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IApplicationStore extends IComponentStore.Reloadable {
-  void setOptionsPath(@NotNull String path);
+  void setOptionsPath(@Nonnull String path);
 
-  @NotNull
+  @Nonnull
   String getConfigPath();
 
-  void setConfigPath(@NotNull String configPath);
+  void setConfigPath(@Nonnull String configPath);
 }

@@ -21,7 +21,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

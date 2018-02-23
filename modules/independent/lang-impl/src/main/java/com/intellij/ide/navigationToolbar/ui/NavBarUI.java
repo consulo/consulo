@@ -17,8 +17,8 @@ package com.intellij.ide.navigationToolbar.ui;
 
 import com.intellij.ide.navigationToolbar.NavBarItem;
 import com.intellij.ide.navigationToolbar.NavBarPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -48,7 +48,7 @@ public interface NavBarUI {
    * @param item nav bar item
    * @return offset for NavBarPopup
    */
-  int getPopupOffset(@NotNull NavBarItem item);
+  int getPopupOffset(@Nonnull NavBarItem item);
 
   Insets getElementIpad(boolean isPopupElement);
   Insets getElementPadding();

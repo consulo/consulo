@@ -16,23 +16,25 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CommitId {
-  @NotNull private final Hash myHash;
-  @NotNull private final VirtualFile myRoot;
+  @Nonnull
+  private final Hash myHash;
+  @Nonnull
+  private final VirtualFile myRoot;
 
-  public CommitId(@NotNull Hash hash, @NotNull VirtualFile root) {
+  public CommitId(@Nonnull Hash hash, @Nonnull VirtualFile root) {
     myHash = hash;
     myRoot = root;
   }
 
-  @NotNull
+  @Nonnull
   public Hash getHash() {
     return myHash;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getRoot() {
     return myRoot;
   }

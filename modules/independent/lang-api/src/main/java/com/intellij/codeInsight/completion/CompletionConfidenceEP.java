@@ -18,7 +18,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.lang.LanguageExtensionPoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public class CompletionConfidenceEP extends LanguageExtensionPoint<CompletionContributor> {
   private static final LanguageExtension<CompletionConfidence> INSTANCE = new LanguageExtension<CompletionConfidence>("com.intellij.completion.confidence");
 
-  public static List<CompletionConfidence> forLanguage(@NotNull Language language) {
+  public static List<CompletionConfidence> forLanguage(@Nonnull Language language) {
     return INSTANCE.forKey(language);
   }
 }

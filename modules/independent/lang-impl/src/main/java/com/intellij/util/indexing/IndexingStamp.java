@@ -30,8 +30,8 @@ import com.intellij.util.io.DataInputOutputUtil;
 import gnu.trove.TObjectLongHashMap;
 import gnu.trove.TObjectLongProcedure;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class IndexingStamp {
 
   private IndexingStamp() {}
 
-  public static synchronized void rewriteVersion(@NotNull final File file, final int version) throws IOException {
+  public static synchronized void rewriteVersion(@Nonnull final File file, final int version) throws IOException {
     SharedIndicesData.beforeSomeIndexVersionInvalidation();
     final long prevLastModifiedValue = file.lastModified();
     if (file.exists()) {
@@ -118,7 +118,7 @@ public class IndexingStamp {
 
   private static final int OUR_INDICES_TIMESTAMP_INCREMENT = SystemProperties.getIntProperty("idea.indices.timestamp.resolution", 1);
 
-  public static boolean versionDiffers(@NotNull File versionFile, final int currentIndexVersion) {
+  public static boolean versionDiffers(@Nonnull File versionFile, final int currentIndexVersion) {
     try {
       ourLastStamp = Math.max(ourLastStamp, versionFile.lastModified());
       final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(versionFile)));
@@ -141,7 +141,7 @@ public class IndexingStamp {
     }
   }
 
-  public static long getIndexCreationStamp(@NotNull ID<?, ?> indexName) {
+  public static long getIndexCreationStamp(@Nonnull ID<?, ?> indexName) {
     Long version = ourIndexIdToCreationStamp.get(indexName);
     if (version != null) return version.longValue();
 
@@ -337,7 +337,7 @@ public class IndexingStamp {
     return timestamps;
   }
 
-  public static void update(int fileId, @NotNull ID<?, ?> indexName, final long indexCreationStamp) {
+  public static void update(int fileId, @Nonnull ID<?, ?> indexName, final long indexCreationStamp) {
     if (fileId < 0 || fileId == INVALID_FILE_ID) return;
     Lock writeLock = getStripedLock(fileId).writeLock();
     writeLock.lock();
@@ -349,7 +349,7 @@ public class IndexingStamp {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static List<ID<?,?>> getNontrivialFileIndexedStates(int fileId) {
     if (fileId != INVALID_FILE_ID) {
       Lock readLock = getStripedLock(fileId).readLock();

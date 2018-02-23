@@ -22,8 +22,8 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class TestFailedState extends AbstractState implements Disposable {
     myPresentationText = ContainerUtil.createLockFreeCopyOnWriteList(Collections.singleton(buildErrorPresentationText(localizedMessage, stackTrace)));
   }
 
-  public void addError(@Nullable String localizedMessage, @Nullable String stackTrace, Printer printer) {
+  public void addError(@Nullable String localizedMessage, @javax.annotation.Nullable String stackTrace, Printer printer) {
     final String msg = buildErrorPresentationText(localizedMessage, stackTrace);
     if (msg != null) {
       myPresentationText.add(msg);
@@ -53,18 +53,18 @@ public class TestFailedState extends AbstractState implements Disposable {
   public void dispose() {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String buildErrorPresentationText(@Nullable final String localizedMessage, @Nullable final String stackTrace) {
     final String text = (StringUtil.isEmptyOrSpaces(localizedMessage) ? "" : localizedMessage + CompositePrintable.NEW_LINE) +
                         (StringUtil.isEmptyOrSpaces(stackTrace) ? "" : stackTrace + CompositePrintable.NEW_LINE);
     return StringUtil.isEmptyOrSpaces(text) ? null : text;
   }
 
-  public static void printError(@NotNull final Printer printer, @NotNull final List<String> errorPresentationText) {
+  public static void printError(@Nonnull final Printer printer, @Nonnull final List<String> errorPresentationText) {
     printError(printer, errorPresentationText, true);
   }
 
-  private static void printError(@NotNull final Printer printer, @NotNull final List<String> errorPresentationText, final boolean setMark) {
+  private static void printError(@Nonnull final Printer printer, @Nonnull final List<String> errorPresentationText, final boolean setMark) {
     boolean addMark = setMark;
     for (final String errorText : errorPresentationText) {
       if (errorText != null) {

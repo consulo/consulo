@@ -25,8 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentHashMap;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -40,18 +39,18 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
 
   private volatile RootIndex myRootIndex = null;
 
-  public CompilerServerDirectoryIndex(@NotNull Project project) {
+  public CompilerServerDirectoryIndex(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  @NotNull
-  public Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources) {
+  @Nonnull
+  public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
     RootIndex rootIndex = getRootIndex();
     return rootIndex.getDirectoriesByPackageName(packageName, includeLibrarySources);
   }
 
-  @NotNull
+  @Nonnull
   private RootIndex getRootIndex() {
     RootIndex rootIndex = myRootIndex;
     if (rootIndex == null) {
@@ -65,32 +64,32 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
       // Upsource can't use int-mapping because different files may have the same id there
       private final Map<VirtualFile, DirectoryInfo> myInfoCache = new ConcurrentHashMap<VirtualFile, DirectoryInfo>();
       @Override
-      public void cacheInfo(@NotNull VirtualFile dir, @NotNull DirectoryInfo info) {
+      public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {
         myInfoCache.put(dir, info);
       }
 
       @Override
-      public DirectoryInfo getCachedInfo(@NotNull VirtualFile dir) {
+      public DirectoryInfo getCachedInfo(@Nonnull VirtualFile dir) {
         return myInfoCache.get(dir);
       }
     };
   }
 
   @Override
-  public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir) {
+  public DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir) {
     DirectoryInfo info = getInfoForFile(dir);
     return info.isInProject() ? info : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DirectoryInfo getInfoForFile(@NotNull VirtualFile file) {
+  public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
     return getRootIndex().getInfoForFile(file);
   }
 
   @Override
-  @Nullable
-  public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
+  @javax.annotation.Nullable
+  public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info) {
     if (info.isInModuleSource()) {
       RootIndex rootIndex = getRootIndex();
       return rootIndex.getContentFolderType(info);
@@ -99,14 +98,14 @@ public class CompilerServerDirectoryIndex extends DirectoryIndex {
   }
 
   @Override
-  public String getPackageName(@NotNull VirtualFile dir) {
+  public String getPackageName(@Nonnull VirtualFile dir) {
     RootIndex rootIndex = getRootIndex();
     return rootIndex.getPackageName(dir);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderEntry[] getOrderEntries(@NotNull DirectoryInfo info) {
+  public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
     return getRootIndex().getOrderEntries(info);
   }
 }

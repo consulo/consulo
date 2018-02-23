@@ -19,12 +19,13 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class UserFileType <T extends UserFileType> implements FileType, Named, Cloneable {
-  @NotNull private String myName = "";
+  @Nonnull
+  private String myName = "";
   private String myDescription = "";
   private Icon myIcon = AllIcons.FileTypes.Custom;
 
@@ -40,25 +41,25 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return myDescription;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
@@ -67,7 +68,7 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "";
   }
@@ -83,7 +84,7 @@ public abstract class UserFileType <T extends UserFileType> implements FileType,
   }
 
   @Override
-  public String getCharset(@NotNull VirtualFile file, final byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, final byte[] content) {
     return null;
   }
 

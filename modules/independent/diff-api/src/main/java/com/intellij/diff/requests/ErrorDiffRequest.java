@@ -16,52 +16,54 @@
 package com.intellij.diff.requests;
 
 import com.intellij.diff.chains.DiffRequestProducer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ErrorDiffRequest extends MessageDiffRequest {
-  @Nullable private final DiffRequestProducer myProducer;
-  @Nullable private final Throwable myException;
+  @javax.annotation.Nullable
+  private final DiffRequestProducer myProducer;
+  @javax.annotation.Nullable
+  private final Throwable myException;
 
-  public ErrorDiffRequest(@NotNull String message) {
+  public ErrorDiffRequest(@Nonnull String message) {
     this(null, message, null, null);
   }
 
-  public ErrorDiffRequest(@Nullable String title, @NotNull String message) {
+  public ErrorDiffRequest(@Nullable String title, @Nonnull String message) {
     this(title, message, null, null);
   }
 
-  public ErrorDiffRequest(@Nullable String title, @NotNull Throwable e) {
+  public ErrorDiffRequest(@javax.annotation.Nullable String title, @Nonnull Throwable e) {
     this(title, e.getMessage(), null, e);
   }
 
-  public ErrorDiffRequest(@NotNull Throwable e) {
+  public ErrorDiffRequest(@Nonnull Throwable e) {
     this(null, e.getMessage(), null, e);
   }
 
-  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, @NotNull Throwable e) {
+  public ErrorDiffRequest(@javax.annotation.Nullable DiffRequestProducer producer, @Nonnull Throwable e) {
     this(producer != null ? producer.getName() : null, e.getMessage(), producer, e);
   }
 
-  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, @NotNull String message) {
+  public ErrorDiffRequest(@javax.annotation.Nullable DiffRequestProducer producer, @Nonnull String message) {
     this(producer != null ? producer.getName() : null, message, producer, null);
   }
 
-  public ErrorDiffRequest(@Nullable String title,
-                          @NotNull String message,
+  public ErrorDiffRequest(@javax.annotation.Nullable String title,
+                          @Nonnull String message,
                           @Nullable DiffRequestProducer producer,
-                          @Nullable Throwable e) {
+                          @javax.annotation.Nullable Throwable e) {
     super(title, message);
     myProducer = producer;
     myException = e;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public DiffRequestProducer getProducer() {
     return myProducer;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Throwable getException() {
     return myException;
   }

@@ -26,8 +26,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.picocontainer.PicoContainer;
 
 /**
@@ -37,7 +38,7 @@ public class MockProject extends MockComponentManager implements Project {
   private static final Logger LOG = Logger.getInstance("#com.intellij.mock.MockProject");
   private VirtualFile myBaseDir;
 
-  public MockProject(PicoContainer parent, @NotNull Disposable parentDisposable) {
+  public MockProject(PicoContainer parent, @Nonnull Disposable parentDisposable) {
     super(parent, parentDisposable);
     Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
     Disposer.register(parentDisposable, new Disposable() {
@@ -53,7 +54,7 @@ public class MockProject extends MockComponentManager implements Project {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Condition getDisposed() {
     return new Condition() {
@@ -80,7 +81,7 @@ public class MockProject extends MockComponentManager implements Project {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "";
   }
@@ -93,14 +94,14 @@ public class MockProject extends MockComponentManager implements Project {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getLocationHash() {
     return "mock";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getProjectFilePath() {
     return "";
   }

@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -25,7 +25,7 @@ public class ModuleServiceManager {
   private ModuleServiceManager() {
   }
 
-  public static <T> T getService(@NotNull Module module, @NotNull Class<T> serviceClass) {
+  public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
     return (T)module.getPicoContainer().getComponentInstance(serviceClass.getName());
   }
 }

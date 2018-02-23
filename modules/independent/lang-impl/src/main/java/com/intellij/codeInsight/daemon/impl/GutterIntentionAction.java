@@ -32,9 +32,9 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +58,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final RelativePoint relativePoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
     myAction.actionPerformed(
             new AnActionEvent(relativePoint.toMouseEvent(), ((EditorEx)editor).getDataContext(), myText, new Presentation(),
@@ -66,18 +66,18 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (myText != null) return StringUtil.isNotEmpty(myText);
 
     return isAvailable(createActionEvent((EditorEx)editor));
   }
 
-  @NotNull
+  @Nonnull
   private static AnActionEvent createActionEvent(EditorEx editor) {
     return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, editor.getDataContext());
   }
 
-  private boolean isAvailable(@NotNull AnActionEvent event) {
+  private boolean isAvailable(@Nonnull AnActionEvent event) {
     if (myText == null) {
       myAction.update(event);
       String text = event.getPresentation().getText();
@@ -87,23 +87,23 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return StringUtil.notNullize(myText);
   }
 
-  static void addActions(@NotNull Editor hostEditor,
-                         @NotNull ShowIntentionsPass.IntentionsInfo intentions, Project project, List<RangeHighlighterEx> result) {
+  static void addActions(@Nonnull Editor hostEditor,
+                         @Nonnull ShowIntentionsPass.IntentionsInfo intentions, Project project, List<RangeHighlighterEx> result) {
     AnActionEvent event = createActionEvent((EditorEx)hostEditor);
     for (RangeHighlighterEx highlighter : result) {
       addActions(project, highlighter, intentions.guttersToShow, event);
     }
   }
 
-  private static void addActions(@NotNull Project project,
-                                 @NotNull RangeHighlighterEx info,
-                                 @NotNull List<HighlightInfo.IntentionActionDescriptor> descriptors,
-                                 @NotNull AnActionEvent event) {
+  private static void addActions(@Nonnull Project project,
+                                 @Nonnull RangeHighlighterEx info,
+                                 @Nonnull List<HighlightInfo.IntentionActionDescriptor> descriptors,
+                                 @Nonnull AnActionEvent event) {
     final GutterIconRenderer r = info.getGutterIconRenderer();
     if (r == null || DumbService.isDumb(project) && !DumbService.isDumbAware(r)) {
       return;
@@ -126,11 +126,11 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
     }
   }
 
-  private static void addActions(@NotNull AnAction action,
-                                 @NotNull List<HighlightInfo.IntentionActionDescriptor> descriptors,
-                                 @NotNull GutterIconRenderer renderer,
+  private static void addActions(@Nonnull AnAction action,
+                                 @Nonnull List<HighlightInfo.IntentionActionDescriptor> descriptors,
+                                 @Nonnull GutterIconRenderer renderer,
                                  int order,
-                                 @NotNull AnActionEvent event) {
+                                 @Nonnull AnActionEvent event) {
     if (action instanceof ActionGroup) {
       AnAction[] children = ((ActionGroup)action).getChildren(null);
       for (int i = 0; i < children.length; i++) {
@@ -153,7 +153,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
 
   @SuppressWarnings("unchecked")
   @Override
-  public int compareTo(@NotNull IntentionAction o) {
+  public int compareTo(@Nonnull IntentionAction o) {
     if (o instanceof GutterIntentionAction) {
       return myOrder - ((GutterIntentionAction)o).myOrder;
     }

@@ -25,8 +25,8 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.ui.TextAccessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -58,9 +58,9 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
         return module == null ? null : module.getProject();
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      protected String expandPath(@NotNull String path) {
+      protected String expandPath(@Nonnull String path) {
         Project project = getProject();
         if (project != null) path = PathMacroManager.getInstance(project).expandPath(path);
 
@@ -117,7 +117,7 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
     }
 
     @Override
-    public void setText(ComboBox<String> component, @NotNull String text) {
+    public void setText(ComboBox<String> component, @Nonnull String text) {
       if (component != null) component.setSelectedItem(text);
     }
   };

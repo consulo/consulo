@@ -32,9 +32,9 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.proxy.CommonProxy;
 import com.intellij.util.proxy.JavaProxyProperty;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -74,7 +74,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
   private volatile boolean myConnectionCheckInProgress;
 
   @Override
-  public boolean isModified(@NotNull HttpConfigurable settings) {
+  public boolean isModified(@Nonnull HttpConfigurable settings) {
     if (!isValid()) {
       return false;
     }
@@ -93,7 +93,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
            !Comparing.strEqual(settings.PROXY_HOST, myProxyHostTextField.getText());
   }
 
-  public HttpProxySettingsUi(@NotNull final HttpConfigurable settings) {
+  public HttpProxySettingsUi(@Nonnull final HttpConfigurable settings) {
     ButtonGroup group = new ButtonGroup();
     group.add(myUseHTTPProxyRb);
     group.add(myAutoDetectProxyRb);
@@ -114,20 +114,20 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
 
     myProxyAuthCheckBox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         enableProxyAuthentication(myProxyAuthCheckBox.isSelected());
       }
     });
     myPacUrlCheckBox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         myPacUrlTextField.setEnabled(myPacUrlCheckBox.isSelected());
       }
     });
 
     ActionListener listener = new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         enableProxy(myUseHTTPProxyRb.isSelected());
       }
     };
@@ -137,7 +137,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
 
     myClearPasswordsButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         settings.clearGenericPasswords();
         //noinspection DialogTitleCapitalization
         Messages.showMessageDialog(myMainPanel, "Proxy passwords were cleared.", "Auto-detected Proxy", Messages.getInformationIcon());
@@ -155,7 +155,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
 
     myCheckButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         final String title = "Check Proxy Settings";
         final String answer = Messages.showInputDialog(myMainPanel, "Warning: your settings will be saved.\n\nEnter any URL to check connection to:",
                                                        title, Messages.getQuestionIcon(), "http://", null);
@@ -221,7 +221,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
   }
 
   @Override
-  public void reset(@NotNull HttpConfigurable settings) {
+  public void reset(@Nonnull HttpConfigurable settings) {
     myNoProxyRb.setSelected(true);  // default
     myAutoDetectProxyRb.setSelected(settings.USE_PROXY_PAC);
     myPacUrlCheckBox.setSelected(settings.USE_PAC_URL);
@@ -254,8 +254,8 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
     }
   }
 
-  @NotNull
-  private static String errorText(@NotNull String s) {
+  @Nonnull
+  private static String errorText(@Nonnull String s) {
     return "Problem with connection: " + s;
   }
 
@@ -295,7 +295,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
   }
 
   @Override
-  public void apply(@NotNull HttpConfigurable settings) {
+  public void apply(@Nonnull HttpConfigurable settings) {
     if (!isValid()) {
       return;
     }
@@ -321,7 +321,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
   }
 
   @Nullable
-  private static String getText(@NotNull JTextField field) {
+  private static String getText(@Nonnull JTextField field) {
     return StringUtil.nullize(field.getText(), true);
   }
 
@@ -357,7 +357,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myMainPanel;
   }

@@ -24,8 +24,8 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.
@@ -34,7 +34,7 @@ public abstract class ExecutionManager {
   public static final Topic<ExecutionListener> EXECUTION_TOPIC =
           Topic.create("configuration executed", ExecutionListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-  public static ExecutionManager getInstance(@NotNull Project project) {
+  public static ExecutionManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ExecutionManager.class);
   }
 
@@ -43,7 +43,7 @@ public abstract class ExecutionManager {
    *
    * @return the run content manager instance.
    */
-  @NotNull
+  @Nonnull
   public abstract RunContentManager getContentManager();
 
   /**
@@ -54,8 +54,8 @@ public abstract class ExecutionManager {
    * @param state            the ready-to-start process
    * @param onCancelRunnable the callback to call if one of the before launch tasks cancels the process execution.
    */
-  public abstract void compileAndRun(@NotNull Runnable startRunnable,
-                                     @NotNull ExecutionEnvironment environment,
+  public abstract void compileAndRun(@Nonnull Runnable startRunnable,
+                                     @Nonnull ExecutionEnvironment environment,
                                      @Nullable RunProfileState state,
                                      @Nullable Runnable onCancelRunnable);
 
@@ -64,7 +64,7 @@ public abstract class ExecutionManager {
    *
    * @return the list of processes.
    */
-  @NotNull
+  @Nonnull
   public abstract ProcessHandler[] getRunningProcesses();
 
   /**
@@ -74,13 +74,13 @@ public abstract class ExecutionManager {
    * @param state   the ready-to-start process
    * @param environment     the execution environment describing the process to be started.
    */
-  public abstract void startRunProfile(@NotNull RunProfileStarter starter,
-                                       @NotNull RunProfileState state,
-                                       @NotNull ExecutionEnvironment environment);
+  public abstract void startRunProfile(@Nonnull RunProfileStarter starter,
+                                       @Nonnull RunProfileState state,
+                                       @Nonnull ExecutionEnvironment environment);
 
-  public abstract void restartRunProfile(@NotNull Project project,
-                                         @NotNull Executor executor,
-                                         @NotNull ExecutionTarget target,
+  public abstract void restartRunProfile(@Nonnull Project project,
+                                         @Nonnull Executor executor,
+                                         @Nonnull ExecutionTarget target,
                                          @Nullable RunnerAndConfigurationSettings configuration,
                                          @Nullable ProcessHandler processHandler);
 
@@ -89,9 +89,9 @@ public abstract class ExecutionManager {
    * @deprecated use {@link #restartRunProfile(com.intellij.execution.runners.ExecutionEnvironment)}
    * to remove in IDEA 15
    */
-  public abstract void restartRunProfile(@NotNull Project project,
-                                         @NotNull Executor executor,
-                                         @NotNull ExecutionTarget target,
+  public abstract void restartRunProfile(@Nonnull Project project,
+                                         @Nonnull Executor executor,
+                                         @Nonnull ExecutionTarget target,
                                          @Nullable RunnerAndConfigurationSettings configuration,
                                          @Nullable RunContentDescriptor currentDescriptor);
 
@@ -101,8 +101,8 @@ public abstract class ExecutionManager {
    * to remove in IDEA 15
    */
   public abstract void restartRunProfile(@Nullable ProgramRunner runner,
-                                         @NotNull ExecutionEnvironment environment,
+                                         @Nonnull ExecutionEnvironment environment,
                                          @Nullable RunContentDescriptor currentDescriptor);
 
-  public abstract void restartRunProfile(@NotNull ExecutionEnvironment environment);
+  public abstract void restartRunProfile(@Nonnull ExecutionEnvironment environment);
 }

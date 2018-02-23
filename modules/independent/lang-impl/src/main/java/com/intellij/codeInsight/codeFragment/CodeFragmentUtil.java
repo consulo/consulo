@@ -16,13 +16,13 @@
 package com.intellij.codeInsight.codeFragment;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author oleg
  */
 public class CodeFragmentUtil {
-  public static Position getPosition(@NotNull final PsiElement element, final int startOffset, final int endOffset) {
+  public static Position getPosition(@Nonnull final PsiElement element, final int startOffset, final int endOffset) {
     final int offset = element.getTextOffset();
     if (offset < startOffset) {
       return Position.BEFORE;

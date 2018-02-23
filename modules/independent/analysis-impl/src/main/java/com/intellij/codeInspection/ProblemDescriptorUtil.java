@@ -25,7 +25,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ProblemDescriptorUtil {
 
   public static Couple<String> XML_CODE_MARKER = Couple.of("<xml-code>", "</xml-code>");
 
-  public static String extractHighlightedText(@NotNull CommonProblemDescriptor descriptor, PsiElement psiElement) {
+  public static String extractHighlightedText(@Nonnull CommonProblemDescriptor descriptor, PsiElement psiElement) {
     if (psiElement == null || !psiElement.isValid()) return "";
     String ref = psiElement.getText();
     if (descriptor instanceof ProblemDescriptorBase) {
@@ -60,12 +60,12 @@ public class ProblemDescriptorUtil {
     return ref;
   }
 
-  @NotNull
-  public static String renderDescriptionMessage(@NotNull CommonProblemDescriptor descriptor, PsiElement element, boolean appendLineNumber) {
+  @Nonnull
+  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, boolean appendLineNumber) {
     return renderDescriptionMessage(descriptor, element, appendLineNumber ? APPEND_LINE_NUMBER : NONE);
   }
 
-  public static String renderDescriptionMessage(@NotNull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags) {
+  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element, @FlagConstant int flags) {
     String message = descriptor.getDescriptionTemplate();
 
     // no message. Should not be the case if inspection correctly implemented.
@@ -130,15 +130,15 @@ public class ProblemDescriptorUtil {
     return builder.toString();
   }
 
-  @NotNull
-  public static String renderDescriptionMessage(@NotNull CommonProblemDescriptor descriptor, PsiElement element) {
+  @Nonnull
+  public static String renderDescriptionMessage(@Nonnull CommonProblemDescriptor descriptor, PsiElement element) {
     return renderDescriptionMessage(descriptor, element, false);
   }
 
-  @NotNull
-  public static HighlightInfoType highlightTypeFromDescriptor(@NotNull ProblemDescriptor problemDescriptor,
-                                                              @NotNull HighlightSeverity severity,
-                                                              @NotNull SeverityRegistrar severityRegistrar) {
+  @Nonnull
+  public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor,
+                                                              @Nonnull HighlightSeverity severity,
+                                                              @Nonnull SeverityRegistrar severityRegistrar) {
     final ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
     switch (highlightType) {
       case GENERIC_ERROR_OR_WARNING:

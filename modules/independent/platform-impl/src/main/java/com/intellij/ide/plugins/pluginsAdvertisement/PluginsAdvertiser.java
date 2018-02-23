@@ -33,7 +33,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ide.plugins.SimpleExtension;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -42,7 +42,7 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
-  public void runActivity(@NotNull final Project project) {
+  public void runActivity(@Nonnull final Project project) {
     consulo.ide.updateSettings.UpdateSettings updateSettings = consulo.ide.updateSettings.UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;
@@ -102,7 +102,7 @@ public class PluginsAdvertiser implements StartupActivity, DumbAware {
     });
   }
 
-  @NotNull
+  @Nonnull
   public static Set<IdeaPluginDescriptor> findByFeature(List<IdeaPluginDescriptor> descriptors, UnknownExtension feature) {
     Set<IdeaPluginDescriptor> filter = new LinkedHashSet<>();
     for (IdeaPluginDescriptor descriptor : descriptors) {

@@ -40,9 +40,9 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.concurrency.Semaphore;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -132,7 +132,7 @@ public class RunConfigurationBeforeRunProvider
     }
   }
 
-  @NotNull
+  @Nonnull
   private List<RunnerAndConfigurationSettings> getAvailableConfigurations(RunConfiguration runConfiguration) {
     Project project = runConfiguration.getProject();
     if (project == null || !project.isInitialized())
@@ -316,10 +316,11 @@ public class RunConfigurationBeforeRunProvider
 
   private class SelectionDialog extends DialogWrapper {
     private RunnerAndConfigurationSettings mySelectedSettings;
-    @NotNull private final List<RunnerAndConfigurationSettings> mySettings;
+    @Nonnull
+    private final List<RunnerAndConfigurationSettings> mySettings;
     private JBList myJBList;
 
-    private SelectionDialog(RunnerAndConfigurationSettings selectedSettings, @NotNull List<RunnerAndConfigurationSettings> settings) {
+    private SelectionDialog(RunnerAndConfigurationSettings selectedSettings, @Nonnull List<RunnerAndConfigurationSettings> settings) {
       super(myProject);
       setTitle(ExecutionBundle.message("before.launch.run.another.configuration.choose"));
       mySelectedSettings = selectedSettings;

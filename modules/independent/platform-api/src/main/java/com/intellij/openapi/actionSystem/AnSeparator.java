@@ -16,7 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a separator.

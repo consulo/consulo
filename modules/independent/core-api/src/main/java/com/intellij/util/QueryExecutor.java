@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Consider extending {@link com.intellij.openapi.application.QueryExecutorBase} instead unless you know what you're doing.
@@ -23,5 +23,5 @@ import org.jetbrains.annotations.NotNull;
  * @author max
  */
 public interface QueryExecutor<Result, Param> {
-  boolean execute(@NotNull Param queryParameters, @NotNull Processor<Result> consumer);
+  boolean execute(@Nonnull Param queryParameters, @Nonnull Processor<Result> consumer);
 }

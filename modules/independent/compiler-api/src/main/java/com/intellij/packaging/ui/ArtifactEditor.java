@@ -16,7 +16,7 @@
 package com.intellij.packaging.ui;
 
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public interface ArtifactEditor {
   void updateLayoutTree();
 
-  void putLibraryIntoDefaultLocation(@NotNull Library library);
+  void putLibraryIntoDefaultLocation(@Nonnull Library library);
 
   boolean isDisposed();
 }

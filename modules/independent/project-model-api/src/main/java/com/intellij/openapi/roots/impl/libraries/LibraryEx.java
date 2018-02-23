@@ -21,8 +21,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,19 +33,19 @@ public interface LibraryEx extends Library {
 
   boolean isDisposed();
 
-  @NotNull
+  @Nonnull
   @Override
   ModifiableModelEx getModifiableModel();
 
-  @Nullable
+  @javax.annotation.Nullable
   PersistentLibraryKind<?> getKind();
 
   LibraryProperties getProperties();
 
-  @NotNull
+  @Nonnull
   String[] getExcludedRootUrls();
 
-  @NotNull
+  @Nonnull
   VirtualFile[] getExcludedRoots();
 
   interface ModifiableModelEx extends ModifiableModel {
@@ -58,11 +57,11 @@ public interface LibraryEx extends Library {
 
     PersistentLibraryKind<?> getKind();
 
-    void addExcludedRoot(@NotNull String url);
+    void addExcludedRoot(@Nonnull String url);
 
-    boolean removeExcludedRoot(@NotNull String url);
+    boolean removeExcludedRoot(@Nonnull String url);
 
-    @NotNull
+    @Nonnull
     String[] getExcludedRootUrls();
   }
 }

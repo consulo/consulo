@@ -20,8 +20,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -35,7 +35,7 @@ public class TextAttributes implements Cloneable {
 
   private boolean myEnforceEmpty;
 
-  @NotNull
+  @Nonnull
   private AttributesFlyweight myAttrs;
 
   /**
@@ -70,12 +70,12 @@ public class TextAttributes implements Cloneable {
     this(null, null, null, EffectType.BOXED, Font.PLAIN);
   }
 
-  private TextAttributes(@NotNull AttributesFlyweight attributesFlyweight, boolean enforced) {
+  private TextAttributes(@Nonnull AttributesFlyweight attributesFlyweight, boolean enforced) {
     myAttrs = attributesFlyweight;
     myEnforceEmpty = enforced;
   }
 
-  public TextAttributes(@NotNull Element element) {
+  public TextAttributes(@Nonnull Element element) {
     readExternal(element);
   }
 
@@ -107,13 +107,13 @@ public class TextAttributes implements Cloneable {
     setFontType(Font.PLAIN);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight getFlyweight() {
     return myAttrs;
   }
 
-  @NotNull
-  public static TextAttributes fromFlyweight(@NotNull AttributesFlyweight flyweight) {
+  @Nonnull
+  public static TextAttributes fromFlyweight(@Nonnull AttributesFlyweight flyweight) {
     TextAttributes f = new TextAttributes();
     f.myAttrs = flyweight;
     return f;

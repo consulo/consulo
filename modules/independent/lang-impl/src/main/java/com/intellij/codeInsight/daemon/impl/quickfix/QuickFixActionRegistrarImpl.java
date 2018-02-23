@@ -22,8 +22,8 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   private final HighlightInfo myInfo;
@@ -33,17 +33,17 @@ public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   }
 
   @Override
-  public void register(@NotNull IntentionAction action) {
+  public void register(@Nonnull IntentionAction action) {
     QuickFixAction.registerQuickFixAction(myInfo, action);
   }
 
   @Override
-  public void register(@NotNull TextRange fixRange, @NotNull IntentionAction action, HighlightDisplayKey key) {
+  public void register(@Nonnull TextRange fixRange, @Nonnull IntentionAction action, HighlightDisplayKey key) {
     QuickFixAction.registerQuickFixAction(myInfo, fixRange, action, key);
   }
 
   @Override
-  public void unregister(@NotNull Condition<IntentionAction> condition) {
+  public void unregister(@Nonnull Condition<IntentionAction> condition) {
     if (myInfo != null) {
       myInfo.unregisterQuickFix(condition);
     }

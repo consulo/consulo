@@ -19,13 +19,13 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.RootModelProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ModulesProvider extends RootModelProvider {
   ModulesProvider EMPTY_MODULES_PROVIDER = new ModulesProvider() {
     @Override
-    @NotNull
+    @Nonnull
     public Module[] getModules() {
       return Module.EMPTY_ARRAY;
     }
@@ -35,7 +35,7 @@ public interface ModulesProvider extends RootModelProvider {
     }
 
     @Override
-    public ModuleRootModel getRootModel(@NotNull Module module) {
+    public ModuleRootModel getRootModel(@Nonnull Module module) {
       return ModuleRootManager.getInstance(module);
     }
   };

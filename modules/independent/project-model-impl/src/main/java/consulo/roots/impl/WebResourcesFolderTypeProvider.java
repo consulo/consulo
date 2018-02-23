@@ -19,7 +19,7 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ import java.awt.*;
  * @since 07.11.13.
  */
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
-  @NotNull
+  @Nonnull
   public static ContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
   }
@@ -43,7 +43,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
     return 250;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.WebRoot;
@@ -54,13 +54,13 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
     return AllIcons.Nodes.WebFolder;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.web.resources.action");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();

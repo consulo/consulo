@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.textarea;
 
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -27,20 +27,20 @@ import org.jetbrains.annotations.Nullable;
 public class TextComponentFoldingModel implements FoldingModel {
 
   @Override
-  public FoldRegion addFoldRegion(int startOffset, int endOffset, @NotNull String placeholderText) {
+  public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
     return null;
   }
 
   @Override
-  public boolean addFoldRegion(@NotNull FoldRegion region) {
+  public boolean addFoldRegion(@Nonnull FoldRegion region) {
     return false;
   }
 
   @Override
-  public void removeFoldRegion(@NotNull FoldRegion region) {
+  public void removeFoldRegion(@Nonnull FoldRegion region) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FoldRegion[] getAllFoldRegions() {
     return FoldRegion.EMPTY_ARRAY;
@@ -63,14 +63,14 @@ public class TextComponentFoldingModel implements FoldingModel {
   }
 
   @Override
-  public void runBatchFoldingOperation(@NotNull Runnable operation) {
+  public void runBatchFoldingOperation(@Nonnull Runnable operation) {
   }
 
   @Override
-  public void runBatchFoldingOperation(@NotNull Runnable operation, boolean moveCaretFromCollapsedRegion) {
+  public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion) {
   }
 
   @Override
-  public void runBatchFoldingOperationDoNotCollapseCaret(@NotNull Runnable operation) {
+  public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
   }
 }

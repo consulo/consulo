@@ -19,8 +19,8 @@ package com.intellij.tools;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
 
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

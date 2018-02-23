@@ -27,8 +27,8 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.projectImport.ProjectImportProvider;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -52,29 +52,29 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
     return myProvider;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myProvider.getName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Icon getIcon() {
     return myProvider.getIcon();
   }
 
   @Override
-  public boolean canImport(@NotNull File fileOrDirectory) {
+  public boolean canImport(@Nonnull File fileOrDirectory) {
     return myProvider.canImport(LocalFileSystem.getInstance().findFileByIoFile(fileOrDirectory), null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Module> commit(@NotNull ModuleImportContext context,
-                             @NotNull Project project,
+  public List<Module> commit(@Nonnull ModuleImportContext context,
+                             @Nonnull Project project,
                              ModifiableModuleModel model,
-                             @NotNull ModulesProvider modulesProvider,
+                             @Nonnull ModulesProvider modulesProvider,
                              ModifiableArtifactModel artifactModel) {
     ProjectImportBuilder<?> builder = myProvider.getBuilder();
     List<Module> list = builder.commit(project, model, modulesProvider);
@@ -82,11 +82,11 @@ public class LegacyModuleImportProvider implements ModuleImportProvider<ModuleIm
   }
 
   @Override
-  public ModuleWizardStep[] createSteps(@NotNull WizardContext context, @NotNull ModuleImportContext moduleImportContext) {
+  public ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull ModuleImportContext moduleImportContext) {
     return myProvider.createSteps(context);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFileSample() {
     return myProvider.getFileSample();

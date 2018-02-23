@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class ShowMoreOptions extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final ActionButton secondaryActions = myToolbarComponent.getSecondaryActionsButton();
     if (secondaryActions != null) {
       secondaryActions.click();

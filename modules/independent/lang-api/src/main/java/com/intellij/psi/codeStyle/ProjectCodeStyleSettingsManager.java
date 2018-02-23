@@ -18,15 +18,15 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 @State(
         name = "ProjectCodeStyleSettingsManager",
         storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/codeStyleSettings.xml")})
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
-  @NotNull
-  public static ProjectCodeStyleSettingsManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ProjectCodeStyleSettingsManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ProjectCodeStyleSettingsManager.class);
   }
 }

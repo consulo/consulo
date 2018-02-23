@@ -2,8 +2,8 @@ package com.intellij.coverage;
 
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -16,8 +16,8 @@ public interface CoverageAnnotator {
    * @return human-readable coverage information
    */
   @Nullable
-  String getDirCoverageInformationString(@NotNull PsiDirectory directory, @NotNull CoverageSuitesBundle currentSuite,
-                                         @NotNull CoverageDataManager manager);
+  String getDirCoverageInformationString(@Nonnull PsiDirectory directory, @Nonnull CoverageSuitesBundle currentSuite,
+                                         @Nonnull CoverageDataManager manager);
 
   /**
    *
@@ -26,10 +26,10 @@ public interface CoverageAnnotator {
    * @return human-readable coverage information
    */
   @Nullable
-  String getFileCoverageInformationString(@NotNull PsiFile file, @NotNull CoverageSuitesBundle currentSuite,
-                                          @NotNull CoverageDataManager manager);
+  String getFileCoverageInformationString(@Nonnull PsiFile file, @Nonnull CoverageSuitesBundle currentSuite,
+                                          @Nonnull CoverageDataManager manager);
 
-  void onSuiteChosen(@Nullable CoverageSuitesBundle newSuite);
+  void onSuiteChosen(@javax.annotation.Nullable CoverageSuitesBundle newSuite);
 
-  void renewCoverageData(@NotNull CoverageSuitesBundle suite, @NotNull CoverageDataManager dataManager);
+  void renewCoverageData(@Nonnull CoverageSuitesBundle suite, @Nonnull CoverageDataManager dataManager);
 }

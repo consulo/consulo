@@ -21,8 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -30,9 +29,9 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FileLookupInfoProvider {
   public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create("com.intellij.fileLookupInfoProvider");
 
-  @NotNull
+  @Nonnull
   public abstract FileType[] getFileTypes();
 
-  @Nullable
-  public abstract Pair<String, String> getLookupInfo(@NotNull final VirtualFile file, Project project);
+  @javax.annotation.Nullable
+  public abstract Pair<String, String> getLookupInfo(@Nonnull final VirtualFile file, Project project);
 }

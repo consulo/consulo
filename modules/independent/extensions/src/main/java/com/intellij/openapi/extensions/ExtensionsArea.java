@@ -17,44 +17,44 @@ package com.intellij.openapi.extensions;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
 
 /**
  * @author AKireyev
  */
 public interface ExtensionsArea  {
-  void registerExtensionPoint(@NonNls @NotNull String extensionPointName, @NotNull String extensionPointBeanClass);
-  void registerExtensionPoint(@NonNls @NotNull String extensionPointName, @NotNull String extensionPointBeanClass, @NotNull ExtensionPoint.Kind kind);
-  void registerExtensionPoint(@NotNull String extensionPointName, @NotNull String extensionPointBeanClass, @NotNull PluginDescriptor descriptor);
-  void unregisterExtensionPoint(@NonNls @NotNull String extensionPointName);
+  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass);
+  void registerExtensionPoint(@NonNls @Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull ExtensionPoint.Kind kind);
+  void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor);
+  void unregisterExtensionPoint(@NonNls @Nonnull String extensionPointName);
 
-  boolean hasExtensionPoint(@NonNls @NotNull String extensionPointName);
-  @NotNull
-  <T> ExtensionPoint<T> getExtensionPoint(@NonNls @NotNull String extensionPointName);
+  boolean hasExtensionPoint(@NonNls @Nonnull String extensionPointName);
+  @Nonnull
+  <T> ExtensionPoint<T> getExtensionPoint(@NonNls @Nonnull String extensionPointName);
 
-  @NotNull
-  <T> ExtensionPoint<T> getExtensionPoint(@NotNull ExtensionPointName<T> extensionPointName);
+  @Nonnull
+  <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName);
 
-  @NotNull
+  @Nonnull
   ExtensionPoint[] getExtensionPoints();
   void suspendInteractions();
   void resumeInteractions();
 
   void killPendingInteractions();
 
-  void addAvailabilityListener(@NotNull String extensionPointName, @NotNull ExtensionPointAvailabilityListener listener);
+  void addAvailabilityListener(@Nonnull String extensionPointName, @Nonnull ExtensionPointAvailabilityListener listener);
 
-  @NotNull
+  @Nonnull
   AreaPicoContainer getPicoContainer();
-  void registerExtensionPoint(@NotNull String pluginName, @NotNull Element extensionPointElement);
-  void registerExtensionPoint(@NotNull PluginDescriptor pluginDescriptor, @NotNull Element extensionPointElement);
-  void registerExtension(@NotNull String pluginName, @NotNull Element extensionElement);
+  void registerExtensionPoint(@Nonnull String pluginName, @Nonnull Element extensionPointElement);
+  void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionPointElement);
+  void registerExtension(@Nonnull String pluginName, @Nonnull Element extensionElement);
 
-  void registerExtension(@NotNull PluginDescriptor pluginDescriptor, @NotNull Element extensionElement);
+  void registerExtension(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Element extensionElement);
 
-  @NotNull
-  PicoContainer getPluginContainer(@NotNull String pluginName);
+  @Nonnull
+  PicoContainer getPluginContainer(@Nonnull String pluginName);
 
   String getAreaClass();
 }

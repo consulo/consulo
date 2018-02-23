@@ -19,7 +19,6 @@ import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.BeforeAfter;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,6 +29,6 @@ import java.util.List;
  */
 public interface DiffRequestFromChange<T extends DiffContent> {
   boolean canCreateRequest(final Change change);
-  @Nullable
+  @javax.annotation.Nullable
   List<BeforeAfter<T>> createRequestForChange(final Change change, int extraLines) throws VcsException;
 }

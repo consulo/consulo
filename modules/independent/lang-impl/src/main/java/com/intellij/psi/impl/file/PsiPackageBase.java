@@ -38,8 +38,8 @@ import com.intellij.util.containers.HashMap;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -91,21 +91,21 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return myQualifiedName.hashCode();
   }
 
-  @NotNull
+  @Nonnull
   public String getQualifiedName() {
     return myQualifiedName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiDirectory[] getDirectories() {
     final Collection<PsiDirectory> collection = getAllDirectories(false);
     return ContainerUtil.toArray(collection, new PsiDirectory[collection.size()]);
   }
 
   @Override
-  @NotNull
-  public PsiDirectory[] getDirectories(@NotNull GlobalSearchScope scope) {
+  @Nonnull
+  public PsiDirectory[] getDirectories(@Nonnull GlobalSearchScope scope) {
     List<PsiDirectory> result = null;
     final boolean includeLibrarySources = scope.isForceSearchingInLibrarySources();
     final Collection<PsiDirectory> directories = getAllDirectories(includeLibrarySources);
@@ -135,14 +135,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public void handleQualifiedNameChange(@NotNull String newQualifiedName) {
+  public void handleQualifiedNameChange(@Nonnull String newQualifiedName) {
 
   }
 
   @RequiredWriteAction
   @Override
   @Nullable
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
     checkSetName(name);
     PsiDirectory[] dirs = getDirectories();
     for (PsiDirectory dir : dirs) {
@@ -152,7 +152,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     return myPackageManager.findPackage(nameAfterRename, myExtensionClass);
   }
 
-  public void checkSetName(@NotNull String name) throws IncorrectOperationException {
+  public void checkSetName(@Nonnull String name) throws IncorrectOperationException {
     PsiDirectory[] dirs = getDirectories();
     for (PsiDirectory dir : dirs) {
       dir.checkSetName(name);
@@ -171,22 +171,22 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiPackage[] getSubPackages() {
     return getSubPackages(GlobalSearchScope.allScope(getProject()));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope) {
+  public PsiPackage[] getSubPackages(@Nonnull GlobalSearchScope scope) {
     return getSubPackages(this, scope);
   }
 
   protected abstract ArrayFactory<? extends PsiPackage> getPackageArrayFactory();
 
-  @NotNull
-  public PsiPackage[] getSubPackages(@NotNull PsiPackage psiPackage, @NotNull GlobalSearchScope scope) {
+  @Nonnull
+  public PsiPackage[] getSubPackages(@Nonnull PsiPackage psiPackage, @Nonnull GlobalSearchScope scope) {
     final Map<String, PsiPackage> packagesMap = new HashMap<String, PsiPackage>();
     final String qualifiedName = psiPackage.getQualifiedName();
     for (PsiDirectory dir : psiPackage.getDirectories(scope)) {
@@ -212,7 +212,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     LOG.error("method not implemented");
     return PsiElement.EMPTY_ARRAY;
@@ -263,18 +263,18 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO throw new InsupportedOperationException()
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return false;
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return false;
   }
 
@@ -285,22 +285,22 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
@@ -321,7 +321,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
@@ -335,7 +335,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitElement(this);
   }
 
@@ -382,7 +382,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     info.put("packageName", getName());
     info.put("packageQualifiedName", getQualifiedName());
   }

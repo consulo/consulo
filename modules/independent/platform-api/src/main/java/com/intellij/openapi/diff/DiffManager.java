@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.markup.MarkupEditorFilter;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -71,7 +71,7 @@ public abstract class DiffManager {
    *                   You must call Disposer.dispose() when done.
    * @param parentTool @deprecated use {@link #createDiffPanel(Window, Project, Disposable)} instead
    */
-  public abstract DiffPanel createDiffPanel(Window window, @NotNull Project project, DiffTool parentTool);
+  public abstract DiffPanel createDiffPanel(Window window, @Nonnull Project project, DiffTool parentTool);
 
-  public abstract DiffPanel createDiffPanel(Window window, @NotNull Project project, @NotNull Disposable parentDisposable, DiffTool parentTool);
+  public abstract DiffPanel createDiffPanel(Window window, @Nonnull Project project, @Nonnull Disposable parentDisposable, DiffTool parentTool);
 }

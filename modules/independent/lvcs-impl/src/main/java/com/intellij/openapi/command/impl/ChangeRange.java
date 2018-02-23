@@ -21,8 +21,8 @@ import com.intellij.history.core.changes.Change;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.revertion.UndoChangeRevertingVisitor;
 import com.intellij.openapi.util.Ref;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -32,11 +32,11 @@ public class ChangeRange {
   private final Long myFromChangeId;
   @Nullable private final Long myToChangeId;
 
-  public ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @NotNull Long changeId) {
+  public ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @Nonnull Long changeId) {
     this(gw, vcs, changeId, changeId);
   }
 
-  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @Nullable Long fromChangeId, @Nullable Long toChangeId) {
+  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @javax.annotation.Nullable Long fromChangeId, @javax.annotation.Nullable Long toChangeId) {
     myGateway = gw;
     myVcs = vcs;
     myFromChangeId = fromChangeId;

@@ -17,7 +17,7 @@ package consulo.ide.newProject;
 
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,9 +26,9 @@ import javax.swing.*;
  * @since 05.06.14
  */
 public interface NewModuleBuilderProcessor<T extends JComponent> {
-  @NotNull
+  @Nonnull
   T createConfigurationPanel();
 
-  default void setupModule(@NotNull T panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
+  default void setupModule(@Nonnull T panel, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
   }
 }

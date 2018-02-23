@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -66,7 +66,7 @@ public class Graphics2DDelegate extends Graphics2D{
     myDelegate.copyArea(x, y, width, height, dx, dy);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Graphics create() {
     return new Graphics2DDelegate((Graphics2D)myDelegate.create());

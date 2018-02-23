@@ -25,8 +25,7 @@ import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -166,20 +165,20 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
     public BaseTreeBuilder(JTree tree,
                            DefaultTreeModel treeModel,
                            AbstractTreeStructure treeStructure,
-                           @Nullable Comparator<NodeDescriptor> comparator) {
+                           @javax.annotation.Nullable Comparator<NodeDescriptor> comparator) {
       super(tree, treeModel, treeStructure, comparator);
     }
 
     public BaseTreeBuilder(JTree tree,
                            DefaultTreeModel treeModel,
                            AbstractTreeStructure treeStructure,
-                           @Nullable Comparator<NodeDescriptor> comparator,
+                           @javax.annotation.Nullable Comparator<NodeDescriptor> comparator,
                            boolean updateIfInactive) {
       super(tree, treeModel, treeStructure, comparator, updateIfInactive);
     }
 
     @Override
-    protected final boolean updateNodeDescriptor(@NotNull NodeDescriptor descriptor) {
+    protected final boolean updateNodeDescriptor(@Nonnull NodeDescriptor descriptor) {
       checkThread(descriptor.getElement());
 
       int delay = getNodeDescriptorUpdateDelay();
@@ -217,12 +216,12 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
     }
 
     @Override
-    protected void updateAfterLoadedInBackground(@NotNull Runnable runnable) {
+    protected void updateAfterLoadedInBackground(@Nonnull Runnable runnable) {
       _updateAfterLoadedInBackground(runnable);
     }
 
     @Override
-    protected void runBackgroundLoading(@NotNull Runnable runnable) {
+    protected void runBackgroundLoading(@Nonnull Runnable runnable) {
       _runBackgroundLoading(runnable);
     }
 
@@ -238,7 +237,7 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
     protected AbstractTreeUi createUi() {
       return _createUi();
@@ -306,13 +305,13 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public final NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
       return doCreateDescriptor(element, parentDescriptor);
     }
 
-    @NotNull
+    @Nonnull
     public abstract NodeDescriptor doCreateDescriptor(Object element, NodeDescriptor parentDescriptor);
 
     @Override
@@ -458,7 +457,7 @@ abstract class BaseTreeTestCase<StructureElement> extends FlyIdeaTestCase {
     return 0;
   }
 
-  private void checkThread(@Nullable Object element) {
+  private void checkThread(@javax.annotation.Nullable Object element) {
     String message = "Wrong thread used for query structure, thread=" + Thread.currentThread() + " element=" + element;
 
     if (!myPassThroughMode) {

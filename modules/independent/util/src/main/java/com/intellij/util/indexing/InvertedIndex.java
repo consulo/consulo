@@ -17,21 +17,21 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Dec 24, 2007
  */
 public interface InvertedIndex<Key, Value, Input> {
-  @NotNull
-  ValueContainer<Value> getData(@NotNull Key key) throws StorageException;
+  @Nonnull
+  ValueContainer<Value> getData(@Nonnull Key key) throws StorageException;
 
   /**
    * @param inputId *positive* id of content.
    */
-  @NotNull
+  @Nonnull
   Computable<Boolean> update(int inputId, @Nullable Input content);
 
   void flush() throws StorageException;

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.progress;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface Progressive {
 
-  void run(@NotNull ProgressIndicator indicator);
+  void run(@Nonnull ProgressIndicator indicator);
 
 }

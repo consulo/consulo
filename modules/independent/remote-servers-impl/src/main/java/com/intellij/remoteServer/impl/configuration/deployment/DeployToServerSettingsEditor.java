@@ -33,8 +33,8 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable;
 import com.intellij.ui.*;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,7 +120,7 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     myServerComboBox.getComboBox().setSelectedItem(newSelection != null ? newSelection.getName() : oldSelection);
   }
 
-  private void onDeploymentSourceChanged(@Nullable D configuration) {
+  private void onDeploymentSourceChanged(@javax.annotation.Nullable D configuration) {
     DeploymentSource selected = mySourceListModel.getSelectedItem();
     if (Comparing.equal(selected, myLastSelection)) {
       if (configuration != null && myDeploymentSettingsEditor != null) {
@@ -143,7 +143,7 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     myLastSelection = selected;
   }
 
-  private void updateBeforeRunOptions(@Nullable DeploymentSource source, boolean selected) {
+  private void updateBeforeRunOptions(@javax.annotation.Nullable DeploymentSource source, boolean selected) {
     if (source != null) {
       DeploymentSourceType type = source.getType();
       type.updateBuildBeforeRunOption(myServerComboBox, myProject, source, selected);
@@ -182,7 +182,7 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createEditor() {
     return FormBuilder.createFormBuilder()

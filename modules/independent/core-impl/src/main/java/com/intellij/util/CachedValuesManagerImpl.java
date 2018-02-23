@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.util.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ven
@@ -37,20 +37,20 @@ public class CachedValuesManagerImpl extends CachedValuesManager {
   }
 
   @Override
-  public <T> CachedValue<T> createCachedValue(@NotNull CachedValueProvider<T> provider, boolean trackValue) {
+  public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
     return myFactory.createCachedValue(provider, trackValue);
   }
 
   @Override
-  public <T,P> ParameterizedCachedValue<T,P> createParameterizedCachedValue(@NotNull ParameterizedCachedValueProvider<T,P> provider, boolean trackValue) {
+  public <T,P> ParameterizedCachedValue<T,P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T,P> provider, boolean trackValue) {
     return myFactory.createParameterizedCachedValue(provider, trackValue);
   }
 
   @Override
   @Nullable
-  public <T, D extends UserDataHolder> T getCachedValue(@NotNull D dataHolder,
-                                                        @NotNull Key<CachedValue<T>> key,
-                                                        @NotNull CachedValueProvider<T> provider,
+  public <T, D extends UserDataHolder> T getCachedValue(@Nonnull D dataHolder,
+                                                        @Nonnull Key<CachedValue<T>> key,
+                                                        @Nonnull CachedValueProvider<T> provider,
                                                         boolean trackValue) {
     CachedValue<T> value;
     if (dataHolder instanceof UserDataHolderEx) {

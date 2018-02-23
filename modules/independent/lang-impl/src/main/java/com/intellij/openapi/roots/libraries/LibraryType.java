@@ -23,8 +23,8 @@ import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -44,11 +44,11 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
   // TODO [VISTALL] currently we cant replace it by BinariesOrderRootType.getInstance() due it recursive call it throw NPE
   public final static OrderRootType[] DEFAULT_EXTERNAL_ROOT_TYPES = {OrderRootType.CLASSES};
 
-  protected LibraryType(@NotNull PersistentLibraryKind<P> libraryKind) {
+  protected LibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
     super(libraryKind);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PersistentLibraryKind<P> getKind() {
     return (PersistentLibraryKind<P>) super.getKind();
@@ -64,13 +64,13 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
    * Called when a new library of this type is created in Project Structure dialog
    */
   @Nullable
-  public abstract NewLibraryConfiguration createNewLibrary(@NotNull JComponent parentComponent, @Nullable VirtualFile contextDirectory,
-                                                           @NotNull Project project);
+  public abstract NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory,
+                                                           @Nonnull Project project);
 
   /**
    * @return {@code true} if library of this type can be added as a dependency to {@code module}
    */
-  public boolean isAvailable(@NotNull ModuleRootModel moduleRootModel) {
+  public boolean isAvailable(@Nonnull ModuleRootModel moduleRootModel) {
     return true;
   }
 
@@ -84,10 +84,10 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
   }
 
   @Nullable
-  public abstract LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<P> editorComponent);
+  public abstract LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<P> editorComponent);
 
   @Override
-  public P detect(@NotNull List<VirtualFile> classesRoots) {
+  public P detect(@Nonnull List<VirtualFile> classesRoots) {
     return null;
   }
 

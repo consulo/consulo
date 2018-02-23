@@ -16,7 +16,7 @@
 package com.intellij.ide.passwordSafe;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * The interface defines basic password management operations

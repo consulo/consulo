@@ -17,22 +17,25 @@ package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.LineRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class ChangedBlock {
   private final int myLine1;
   private final int myLine2;
 
-  @NotNull private final LineRange myRange1;
-  @NotNull private final LineRange myRange2;
+  @Nonnull
+  private final LineRange myRange1;
+  @Nonnull
+  private final LineRange myRange2;
 
-  @NotNull private final LineFragment myLineFragment;
+  @Nonnull
+  private final LineFragment myLineFragment;
 
   public ChangedBlock(int line1,
                       int line2,
-                      @NotNull LineRange range1,
-                      @NotNull LineRange range2,
-                      @NotNull LineFragment lineFragment) {
+                      @Nonnull LineRange range1,
+                      @Nonnull LineRange range2,
+                      @Nonnull LineFragment lineFragment) {
     myLine1 = line1;
     myLine2 = line2;
     myRange1 = range1;
@@ -40,12 +43,12 @@ class ChangedBlock {
     myLineFragment = lineFragment;
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getRange1() {
     return myRange1;
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getRange2() {
     return myRange2;
   }
@@ -58,7 +61,7 @@ class ChangedBlock {
     return myLine2;
   }
 
-  @NotNull
+  @Nonnull
   public LineFragment getLineFragment() {
     return myLineFragment;
   }

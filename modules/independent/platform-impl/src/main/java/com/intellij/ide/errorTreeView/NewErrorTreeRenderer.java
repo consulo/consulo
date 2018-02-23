@@ -24,8 +24,8 @@ import com.intellij.ui.MultilineTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -144,7 +144,7 @@ public class NewErrorTreeRenderer extends MultilineTreeCellRenderer {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String calcPrefix(@Nullable ErrorTreeElement element) {
     if(element instanceof SimpleMessageElement || element instanceof NavigatableMessageElement) {
       String prefix = element.getKind().getPresentableText();

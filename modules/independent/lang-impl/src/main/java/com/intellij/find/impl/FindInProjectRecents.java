@@ -20,7 +20,7 @@ import com.intellij.find.FindSettings;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ final class FindInProjectRecents extends FindInProjectSettingsBase implements Fi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<String> getRecentDirectories() {
     ArrayList<String> strings = new ArrayList<>(FindSettings.getInstance().getRecentDirectories());
     strings.addAll(super.getRecentDirectories());
@@ -42,13 +42,13 @@ final class FindInProjectRecents extends FindInProjectSettingsBase implements Fi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getRecentFindStrings() {
     return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentFindStrings(), super.getRecentFindStrings());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getRecentReplaceStrings() {
     return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentReplaceStrings(), super.getRecentReplaceStrings());
   }

@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.SmartList;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,15 +41,15 @@ public class XTestContainer<T> {
   }
 
 
-  public void setMessage(@NotNull String message,
-                         final Icon icon, @NotNull final SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link) {
+  public void setMessage(@Nonnull String message,
+                         final Icon icon, @Nonnull final SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link) {
   }
 
-  public void setErrorMessage(@NotNull String message, @Nullable XDebuggerTreeNodeHyperlink link) {
+  public void setErrorMessage(@Nonnull String message, @Nullable XDebuggerTreeNodeHyperlink link) {
     setErrorMessage(message);
   }
 
-  public void setErrorMessage(@NotNull String errorMessage) {
+  public void setErrorMessage(@Nonnull String errorMessage) {
     myErrorMessage = errorMessage;
     myFinished.release();
   }

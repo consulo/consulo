@@ -38,8 +38,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +102,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     return super.getFileExt();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected FileType getFileType() {
     if (getDefaultLanguage() != null) {
@@ -200,11 +200,12 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   }
 
   protected abstract static class OrderedOption {
-    @NotNull private final String optionName;
+    @Nonnull
+    private final String optionName;
     @Nullable private final OptionAnchor anchor;
     @Nullable private final String anchorOptionName;
 
-    protected OrderedOption(@NotNull String optionName,
+    protected OrderedOption(@Nonnull String optionName,
                             OptionAnchor anchor,
                             String anchorOptionName) {
       this.optionName = optionName;
@@ -212,7 +213,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
       this.anchorOptionName = anchorOptionName;
     }
 
-    @NotNull
+    @Nonnull
     public String getOptionName() {
       return optionName;
     }

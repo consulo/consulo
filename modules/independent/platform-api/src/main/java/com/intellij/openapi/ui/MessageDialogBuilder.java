@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -35,23 +35,23 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   protected Icon myIcon;
   protected DialogWrapper.DoNotAskOption myDoNotAskOption;
 
-  private MessageDialogBuilder(@NotNull String title, @NotNull String message) {
+  private MessageDialogBuilder(@Nonnull String title, @Nonnull String message) {
     myTitle = title;
     myMessage = message;
   }
 
-  @NotNull
-  public static YesNo yesNo(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public static YesNo yesNo(@Nonnull String title, @Nonnull String message) {
     return new YesNo(title, message).icon(Messages.getQuestionIcon());
   }
 
-  public static YesNoCancel yesNoCancel(@NotNull String title, @NotNull String message) {
+  public static YesNoCancel yesNoCancel(@Nonnull String title, @Nonnull String message) {
     return new YesNoCancel(title, message).icon(Messages.getQuestionIcon());
   }
 
   protected abstract T getThis();
 
-  @NotNull
+  @Nonnull
   public T project(@Nullable Project project) {
     myProject = project;
     return getThis();
@@ -68,24 +68,24 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
     return getThis();
   }
 
-  @NotNull
-  public T doNotAsk(@NotNull DialogWrapper.DoNotAskOption doNotAskOption) {
+  @Nonnull
+  public T doNotAsk(@Nonnull DialogWrapper.DoNotAskOption doNotAskOption) {
     myDoNotAskOption = doNotAskOption;
     return getThis();
   }
 
-  public T yesText(@NotNull String yesText) {
+  public T yesText(@Nonnull String yesText) {
     myYesText = yesText;
     return getThis();
   }
 
-  public T noText(@NotNull String noText) {
+  public T noText(@Nonnull String noText) {
     myNoText = noText;
     return getThis();
   }
 
   public static final class YesNo extends MessageDialogBuilder<YesNo> {
-    private YesNo(@NotNull String title, @NotNull String message) {
+    private YesNo(@Nonnull String title, @Nonnull String message) {
       super(title, message);
     }
 
@@ -116,11 +116,11 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   public static final class YesNoCancel extends MessageDialogBuilder<YesNoCancel> {
     private String myCancelText;
 
-    private YesNoCancel(@NotNull String title, @NotNull String message) {
+    private YesNoCancel(@Nonnull String title, @Nonnull String message) {
       super(title, message);
     }
 
-    public YesNoCancel cancelText(@NotNull String cancelText) {
+    public YesNoCancel cancelText(@Nonnull String cancelText) {
       myCancelText = cancelText;
       return getThis();
     }

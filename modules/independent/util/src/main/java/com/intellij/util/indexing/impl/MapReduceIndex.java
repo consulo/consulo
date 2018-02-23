@@ -27,8 +27,8 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -40,8 +40,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<Key, Value, Input> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.indexing.impl.MapReduceIndex");
-  @NotNull protected final ID<Key, Value> myIndexId;
-  @NotNull protected final IndexStorage<Key, Value> myStorage;
+  @Nonnull
+  protected final ID<Key, Value> myIndexId;
+  @Nonnull
+  protected final IndexStorage<Key, Value> myStorage;
 
   protected final DataExternalizer<Value> myValueExternalizer;
   protected final IndexExtension<Key, Value, Input> myExtension;
@@ -73,8 +75,8 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     }
   });
 
-  protected MapReduceIndex(@NotNull IndexExtension<Key, Value, Input> extension,
-                           @NotNull IndexStorage<Key, Value> storage,
+  protected MapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
+                           @Nonnull IndexStorage<Key, Value> storage,
                            ForwardIndex<Key, Value> forwardIndex) throws IOException {
     myIndexId = extension.getName();
     myExtension = extension;
@@ -84,7 +86,7 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     myForwardIndex = forwardIndex;
   }
 
-  @NotNull
+  @Nonnull
   public IndexStorage<Key, Value> getStorage() {
     return myStorage;
   }
@@ -158,19 +160,19 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     }
   }
 
-  @NotNull
+  @Nonnull
   public final Lock getReadLock() {
     return myLock.readLock();
   }
 
-  @NotNull
+  @Nonnull
   public final Lock getWriteLock() {
     return myLock.writeLock();
   }
 
   @Override
-  @NotNull
-  public ValueContainer<Value> getData(@NotNull final Key key) throws StorageException {
+  @Nonnull
+  public ValueContainer<Value> getData(@Nonnull final Key key) throws StorageException {
     final Lock lock = getReadLock();
     try {
       lock.lock();
@@ -186,7 +188,7 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final Computable<Boolean> update(final int inputId, @Nullable final Input content) {
     final UpdateData<Key, Value> updateData = calculateUpdateData(inputId, content);
@@ -213,7 +215,7 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     };
   }
 
-  @NotNull
+  @Nonnull
   protected UpdateData<Key, Value> calculateUpdateData(final int inputId, @Nullable Input content) {
     final Map<Key, Value> data = mapInput(content);
     return createUpdateData(data, new ThrowableComputable<InputDataDiffBuilder<Key, Value>, IOException>() {
@@ -229,12 +231,12 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     });
   }
 
-  @NotNull
+  @Nonnull
   protected InputDataDiffBuilder<Key, Value> getKeysDiffBuilder(int inputId) throws IOException {
     return myForwardIndex.getDiffBuilder(inputId);
   }
 
-  @NotNull
+  @Nonnull
   protected UpdateData<Key, Value> createUpdateData(Map<Key, Value> data,
                                                     ThrowableComputable<InputDataDiffBuilder<Key, Value>, IOException> keys,
                                                     ThrowableRunnable<IOException> forwardIndexUpdate) {
@@ -288,7 +290,7 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
   };
 
   protected void updateWithMap(final int inputId,
-                               @NotNull UpdateData<Key, Value> updateData) throws StorageException {
+                               @Nonnull UpdateData<Key, Value> updateData) throws StorageException {
     getWriteLock().lock();
     try {
       try {
@@ -311,9 +313,9 @@ public abstract class MapReduceIndex<Key,Value, Input> implements InvertedIndex<
     }
   }
 
-  public static <Key, Value> void checkValuesHaveProperEqualsAndHashCode(@NotNull Map<Key, Value> data,
-                                                                         @NotNull ID<Key, Value> indexId,
-                                                                         @NotNull DataExternalizer<Value> valueExternalizer) {
+  public static <Key, Value> void checkValuesHaveProperEqualsAndHashCode(@Nonnull Map<Key, Value> data,
+                                                                         @Nonnull ID<Key, Value> indexId,
+                                                                         @Nonnull DataExternalizer<Value> valueExternalizer) {
     if (DebugAssertions.DEBUG) {
       for (Map.Entry<Key, Value> e : data.entrySet()) {
         final Value value = e.getValue();

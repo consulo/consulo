@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -58,18 +58,18 @@ public class VcsEventWatcher extends AbstractProjectComponent {
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "VcsEventWatcher";
   }
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     @Override
-    public void problemsAppeared(@NotNull final VirtualFile file) {
+    public void problemsAppeared(@Nonnull final VirtualFile file) {
       ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
 
     @Override
-    public void problemsDisappeared(@NotNull VirtualFile file) {
+    public void problemsDisappeared(@Nonnull VirtualFile file) {
       ChangesViewManager.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
   }

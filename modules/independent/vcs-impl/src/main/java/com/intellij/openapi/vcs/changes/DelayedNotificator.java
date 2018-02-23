@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vcs.changes.local.ChangeListCommand;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -28,8 +28,8 @@ public class DelayedNotificator implements ChangeListListener {
   private final EventDispatcher<ChangeListListener> myDispatcher;
   private final ChangeListManagerImpl.Scheduler myScheduler;
 
-  public DelayedNotificator(@NotNull EventDispatcher<ChangeListListener> dispatcher,
-                            @NotNull ChangeListManagerImpl.Scheduler scheduler) {
+  public DelayedNotificator(@Nonnull EventDispatcher<ChangeListListener> dispatcher,
+                            @Nonnull ChangeListManagerImpl.Scheduler scheduler) {
     myDispatcher = dispatcher;
     myScheduler = scheduler;
   }

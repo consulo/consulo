@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.ShareableKey;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, ShareableKey {
   private OwnerType owner;
@@ -51,7 +51,7 @@ class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, Sh
   }
 
   @Override
-  public int compareTo(@NotNull final FileChunkKey<OwnerType> o) {
+  public int compareTo(@Nonnull final FileChunkKey<OwnerType> o) {
     if (owner != o.owner) {
       return owner.hashCode() - o.owner.hashCode();
     }

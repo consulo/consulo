@@ -17,7 +17,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -52,19 +52,19 @@ public class ConcurrentHashSet<K> implements Set<K> {
     return map.containsKey(o);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<K> iterator() {
     return map.keySet().iterator();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] toArray() {
     return map.keySet().toArray();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <T> T[] toArray(T[] a) {
     return map.keySet().toArray(a);

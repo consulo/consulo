@@ -24,8 +24,8 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -68,7 +68,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     myEllipsis = false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends TreeNode> getChildren() {
     return Collections.emptyList();
@@ -84,7 +84,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return myLink;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends XDebuggerTreeNode> getLoadedChildren() {
     return Collections.emptyList();
@@ -114,7 +114,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
                                XDebuggerUIConstants.EVALUATING_EXPRESSION_HIGHLIGHT_ATTRIBUTES, null);
   }
 
-  public static List<MessageTreeNode> createMessages(XDebuggerTree tree, final XDebuggerTreeNode parent, @NotNull String errorMessage,
+  public static List<MessageTreeNode> createMessages(XDebuggerTree tree, final XDebuggerTreeNode parent, @Nonnull String errorMessage,
                                                      XDebuggerTreeNodeHyperlink link,
                                                      final Icon icon, final SimpleTextAttributes attributes) {
     List<MessageTreeNode> messages = new SmartList<MessageTreeNode>();
@@ -126,11 +126,11 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return messages;
   }
 
-  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @NotNull String message) {
+  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @Nonnull String message) {
     return createInfoMessage(tree, message, null);
   }
 
-  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @NotNull String message, @Nullable HyperlinkListener hyperlinkListener) {
+  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @Nonnull String message, @Nullable HyperlinkListener hyperlinkListener) {
     Matcher matcher = MessageTreeNodeWithLinks.HREF_PATTERN.matcher(message);
     if (hyperlinkListener == null || !matcher.find()) {
       return new MessageTreeNode(tree, null, message, SimpleTextAttributes.REGULAR_ATTRIBUTES,
@@ -165,7 +165,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     }
 
     @Override
-    public void appendToComponent(@NotNull ColoredTextContainer component) {
+    public void appendToComponent(@Nonnull ColoredTextContainer component) {
       for (Object object : objects) {
         if (object instanceof String) {
           component.append((String)object, SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -182,7 +182,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     private final HyperlinkListener hyperlinkListener;
     private final String href;
 
-    public HyperlinkListenerDelegator(@NotNull String linkText, @Nullable String href, @NotNull HyperlinkListener hyperlinkListener) {
+    public HyperlinkListenerDelegator(@Nonnull String linkText, @Nullable String href, @Nonnull HyperlinkListener hyperlinkListener) {
       super(linkText);
 
       this.hyperlinkListener = hyperlinkListener;

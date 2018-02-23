@@ -30,7 +30,7 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DataOutputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -541,7 +541,7 @@ public class VcsSqliteLayer {
     }
   }
 
-  @NotNull
+  @Nonnull
   public RevisionId getFirstRevision(final AbstractVcs vcs, final String root) {
     final String systemIndependent = FileUtil.toSystemIndependentName(root);
     if (! myKnownRepositoryLocations.exists(vcs.getName(), systemIndependent)) {
@@ -551,7 +551,7 @@ public class VcsSqliteLayer {
     return myKnownRepositoryLocations.getFirstRevision(locationId);
   }
 
-  @NotNull
+  @Nonnull
   public RevisionId getLastRevision(final AbstractVcs vcs, final String root) {
     final String systemIndependent = FileUtil.toSystemIndependentName(root);
     if (! myKnownRepositoryLocations.exists(vcs.getName(), systemIndependent)) {

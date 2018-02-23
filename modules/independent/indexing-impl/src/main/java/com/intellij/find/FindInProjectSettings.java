@@ -18,7 +18,7 @@ package com.intellij.find;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,18 +28,18 @@ public interface FindInProjectSettings {
     return ServiceManager.getService(project, FindInProjectSettings.class);
   }
 
-  void addStringToFind(@NotNull String s);
+  void addStringToFind(@Nonnull String s);
 
-  void addStringToReplace(@NotNull String s);
+  void addStringToReplace(@Nonnull String s);
 
-  void addDirectory(@NotNull String s);
+  void addDirectory(@Nonnull String s);
 
-  @NotNull
+  @Nonnull
   String[] getRecentFindStrings();
 
-  @NotNull
+  @Nonnull
   String[] getRecentReplaceStrings();
 
-  @NotNull
+  @Nonnull
   List<String> getRecentDirectories();
 }

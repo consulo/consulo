@@ -10,7 +10,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class MockInspectionProfile extends InspectionProfileImpl {
     super("a");
   }
 
-  public void setEnabled(@NotNull InspectionToolWrapper tool, boolean enabled) {
+  public void setEnabled(@Nonnull InspectionToolWrapper tool, boolean enabled) {
     if (enabled) {
       myDisabledTools.remove(tool);
     }
@@ -51,7 +51,7 @@ public class MockInspectionProfile extends InspectionProfileImpl {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public InspectionToolWrapper[] getInspectionTools(PsiElement element) {
     return myInspectionTools;
   }

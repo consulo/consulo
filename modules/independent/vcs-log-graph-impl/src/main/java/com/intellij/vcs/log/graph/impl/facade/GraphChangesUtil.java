@@ -19,7 +19,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.impl.facade.GraphChanges.EdgeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,20 +27,20 @@ import java.util.Set;
 
 public class GraphChangesUtil {
   public static final GraphChanges<Integer> SOME_CHANGES = new GraphChanges<Integer>() {
-    @NotNull
+    @Nonnull
     @Override
     public Collection<Node<Integer>> getChangedNodes() {
       return Collections.emptyList();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<Edge<Integer>> getChangedEdges() {
       return Collections.emptyList();
     }
   };
 
-  public static EdgeImpl<Integer> edgeChanged(@NotNull GraphEdge edge, @NotNull LinearGraph graph, boolean removed) {
+  public static EdgeImpl<Integer> edgeChanged(@Nonnull GraphEdge edge, @Nonnull LinearGraph graph, boolean removed) {
     Integer up = null;
     Integer down = null;
     if (edge.getUpNodeIndex() != null) {

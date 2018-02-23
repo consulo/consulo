@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.std;
 
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,30 +33,30 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
    */
   private List<StdArrangementMatchRule> myDefinitionRules;
 
-  public StdArrangementRuleAliasToken(@NotNull String name) {
+  public StdArrangementRuleAliasToken(@Nonnull String name) {
     this(name, ContainerUtil.<StdArrangementMatchRule>emptyList());
   }
 
-  public StdArrangementRuleAliasToken(@NotNull String name,
-                                      @NotNull List<StdArrangementMatchRule> definitionRules) {
+  public StdArrangementRuleAliasToken(@Nonnull String name,
+                                      @Nonnull List<StdArrangementMatchRule> definitionRules) {
     this(createIdByName(name), name, definitionRules);
     myDefinitionRules = definitionRules;
   }
 
 
-  public StdArrangementRuleAliasToken(@NotNull String id, @NotNull String name,
-                                      @NotNull List<StdArrangementMatchRule> definitionRules) {
+  public StdArrangementRuleAliasToken(@Nonnull String id, @Nonnull String name,
+                                      @Nonnull List<StdArrangementMatchRule> definitionRules) {
     super(id, createRepresentationValue(name), StdArrangementTokenType.ALIAS);
     myName = name;
     myDefinitionRules = definitionRules;
   }
 
-  @NotNull
-  private static String createRepresentationValue(@NotNull String name) {
+  @Nonnull
+  private static String createRepresentationValue(@Nonnull String name) {
     return "by " + name;
   }
 
-  private static String createIdByName(@NotNull String name) {
+  private static String createIdByName(@Nonnull String name) {
     return name.replaceAll("\\s+", "_");
   }
 
@@ -73,7 +73,7 @@ public class StdArrangementRuleAliasToken extends StdArrangementSettingsToken im
     myDefinitionRules = definitionRules;
   }
 
-  public void setTokenName(@NotNull String name) {
+  public void setTokenName(@Nonnull String name) {
     myId = name.replaceAll("\\s+", "_");
     myRepresentationName = createRepresentationValue(name);
     myName = name;

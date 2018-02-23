@@ -17,12 +17,11 @@ package com.intellij.codeInsight.generation.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup
  */
 public interface GenerateActionPopupTemplateInjector {
-  @Nullable
+  @javax.annotation.Nullable
   AnAction createEditTemplateAction(DataContext dataContext);
 }

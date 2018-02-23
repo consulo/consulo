@@ -25,7 +25,7 @@ import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +36,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull final ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull final ArtifactEditorContext context) {
     return new PackagingElementPresentation() {
       @Override
       public String getPresentableName() {
@@ -44,7 +44,7 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
       }
 
       @Override
-      public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+      public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                          SimpleTextAttributes commentAttributes) {
         presentationData.setIcon(context.getArtifactType().getIcon());
         presentationData.addText(getPresentableName(), mainAttributes);
@@ -72,13 +72,13 @@ public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   }
 
   @Override
-  public void rename(@NotNull String newName) {
+  public void rename(@Nonnull String newName) {
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
     computeChildrenInstructions(creator, resolvingContext, compilerContext, artifactType);
   }
 

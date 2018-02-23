@@ -30,8 +30,8 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
@@ -85,7 +85,7 @@ public class PerformanceWatcher implements ApplicationComponent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "PerformanceWatcher";
   }
@@ -166,7 +166,7 @@ public class PerformanceWatcher implements ApplicationComponent {
     if (allLogsDir.isDirectory()) {
       final String[] dirs = allLogsDir.list(new FilenameFilter() {
         @Override
-        public boolean accept(@NotNull final File dir, @NotNull final String name) {
+        public boolean accept(@Nonnull final File dir, @Nonnull final String name) {
           return name.startsWith("threadDumps-");
         }
       });
@@ -256,7 +256,7 @@ public class PerformanceWatcher implements ApplicationComponent {
   }
 
   @Nullable
-  public File dumpThreads(@NotNull String pathPrefix, boolean millis) {
+  public File dumpThreads(@Nonnull String pathPrefix, boolean millis) {
     if (!shouldWatch()) return null;
 
     String suffix = millis ? "-" + System.currentTimeMillis() : "";
@@ -341,7 +341,7 @@ public class PerformanceWatcher implements ApplicationComponent {
 
     private Snapshot() {
     }
-    public void logResponsivenessSinceCreation(@NotNull String activityName) {
+    public void logResponsivenessSinceCreation(@Nonnull String activityName) {
       LOG.info(activityName + " took " + (System.currentTimeMillis() - myStartMillis) + "ms" +
                "; general responsiveness: " + myGeneralApdex.summarizePerformanceSince(myStartGeneralSnapshot) +
                "; EDT responsiveness: " + mySwingApdex.summarizePerformanceSince(myStartSwingSnapshot));
@@ -349,7 +349,7 @@ public class PerformanceWatcher implements ApplicationComponent {
 
   }
 
-  @NotNull
+  @Nonnull
   public static Snapshot takeSnapshot() {
     return getInstance().new Snapshot();
   }

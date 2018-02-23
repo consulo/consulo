@@ -51,8 +51,8 @@ import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -79,7 +79,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }
@@ -106,7 +106,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       final PackageElement selectedPackageElement = getSelectedPackageElement();
       if (selectedPackageElement != null) {
@@ -223,7 +223,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     };
   }
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "PackagesPane";
   }
@@ -311,7 +311,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   private final class MyDeletePSIElementProvider implements DeleteProvider {
     @Override
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       for (PsiDirectory directory : getSelectedDirectories()) {
         if (!directory.getManager().isInProject(directory)) return false;
       }
@@ -319,7 +319,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       List<PsiDirectory> allElements = Arrays.asList(getSelectedDirectories());
       List<PsiElement> validElements = new ArrayList<PsiElement>();
       for (PsiElement psiElement : allElements) {

@@ -20,40 +20,40 @@ import com.intellij.diff.contents.DocumentContent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
 public abstract class DiffContentFactoryEx extends DiffContentFactory {
-  @NotNull
+  @Nonnull
   public static DiffContentFactoryEx getInstanceEx() {
     return (DiffContentFactoryEx)DiffContentFactory.getInstance();
   }
 
 
-  @NotNull
-  public abstract DocumentContent create(@Nullable Project project, @NotNull String text, @NotNull FilePath filePath);
+  @Nonnull
+  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull String text, @Nonnull FilePath filePath);
 
 
-  @NotNull
+  @Nonnull
   public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @NotNull byte[] content,
-                                              @NotNull FilePath filePath) throws IOException;
+                                              @Nonnull byte[] content,
+                                              @Nonnull FilePath filePath) throws IOException;
 
-  @NotNull
-  public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              @NotNull byte[] content,
-                                              @NotNull VirtualFile highlightFile) throws IOException;
+  @Nonnull
+  public abstract DiffContent createFromBytes(@javax.annotation.Nullable Project project,
+                                              @Nonnull byte[] content,
+                                              @Nonnull VirtualFile highlightFile) throws IOException;
 
 
-  @NotNull
+  @Nonnull
   public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          @NotNull byte[] content,
-                                                          @NotNull FilePath filePath);
+                                                          @Nonnull byte[] content,
+                                                          @Nonnull FilePath filePath);
 
-  @NotNull
+  @Nonnull
   public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          @NotNull byte[] content,
-                                                          @NotNull VirtualFile highlightFile);
+                                                          @Nonnull byte[] content,
+                                                          @Nonnull VirtualFile highlightFile);
 }

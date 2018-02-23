@@ -15,7 +15,7 @@
  */
 package com.intellij.pom;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -28,6 +28,6 @@ public interface PomRenameableTarget<T> extends PomNamedTarget{
    * @param newName new name
    * @return will be ignored unless you use it yourself
    */
-  T setName(@NotNull String newName);
+  T setName(@Nonnull String newName);
   
 }

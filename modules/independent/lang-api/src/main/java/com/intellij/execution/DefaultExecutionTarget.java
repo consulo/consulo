@@ -16,7 +16,7 @@
 package com.intellij.execution;
 
 import com.intellij.ide.IdeBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -24,13 +24,13 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   public static final ExecutionTarget INSTANCE = new DefaultExecutionTarget();
 
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "default_target";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     return IdeBundle.message("node.default");
@@ -42,7 +42,7 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   }
 
   @Override
-  public boolean canRun(@NotNull RunnerAndConfigurationSettings configuration) {
+  public boolean canRun(@Nonnull RunnerAndConfigurationSettings configuration) {
     return true;
   }
 }

@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -53,7 +53,7 @@ public class ContentEntryFileListener implements ApplicationComponent, Disposabl
 
     @Override
     @RequiredReadAction
-    public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
+    public void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
       VirtualFile fileToDelete = event.getFile();
 
       Module moduleForFile = ModuleUtilCore.findModuleForFile(fileToDelete, myProject);
@@ -107,7 +107,7 @@ public class ContentEntryFileListener implements ApplicationComponent, Disposabl
   public ContentEntryFileListener(Application application, ProjectManager projectManager) {
     application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
-      public void before(@NotNull List<? extends VFileEvent> events) {
+      public void before(@Nonnull List<? extends VFileEvent> events) {
         for (Project project : projectManager.getOpenProjects()) {
           new BulkVirtualFileListenerAdapter(new Listener(project), LocalFileSystem.getInstance()).before(events);
         }

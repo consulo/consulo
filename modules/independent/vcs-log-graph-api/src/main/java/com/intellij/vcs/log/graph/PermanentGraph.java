@@ -16,8 +16,7 @@
 package com.intellij.vcs.log.graph;
 
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,42 +31,44 @@ import java.util.Set;
  */
 public interface PermanentGraph<Id> {
 
-  @NotNull
-  VisibleGraph<Id> createVisibleGraph(@NotNull SortType sortType,
-                                      @Nullable Set<Id> headsOfVisibleBranches,
-                                      @Nullable Set<Id> matchedCommits);
+  @Nonnull
+  VisibleGraph<Id> createVisibleGraph(@Nonnull SortType sortType,
+                                      @javax.annotation.Nullable Set<Id> headsOfVisibleBranches,
+                                      @javax.annotation.Nullable Set<Id> matchedCommits);
 
-  @NotNull
+  @Nonnull
   List<GraphCommit<Id>> getAllCommits();
 
-  @NotNull
-  List<Id> getChildren(@NotNull Id commit);
+  @Nonnull
+  List<Id> getChildren(@Nonnull Id commit);
 
-  @NotNull
-  Set<Id> getContainingBranches(@NotNull Id commit);
+  @Nonnull
+  Set<Id> getContainingBranches(@Nonnull Id commit);
 
-  @NotNull
-  Condition<Id> getContainedInBranchCondition(@NotNull Collection<Id> currentBranchHead);
+  @Nonnull
+  Condition<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
 
   enum SortType {
     Normal("Off", "Sort commits topologically and by date"),
     Bek("Standard", "In case of merge show incoming commits first (directly below merge commit)"),
     LinearBek("Linear", "In case of merge show incoming commits on top of main branch commits as if they were rebased");
 
-    @NotNull private final String myPresentation;
-    @NotNull private final String myDescription;
+    @Nonnull
+    private final String myPresentation;
+    @Nonnull
+    private final String myDescription;
 
-    SortType(@NotNull String presentation, @NotNull String description) {
+    SortType(@Nonnull String presentation, @Nonnull String description) {
       myPresentation = presentation;
       myDescription = description;
     }
 
-    @NotNull
+    @Nonnull
     public String getName() {
       return myPresentation;
     }
 
-    @NotNull
+    @Nonnull
     public String getDescription() {
       return myDescription;
     }

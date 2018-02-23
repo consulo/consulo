@@ -38,8 +38,8 @@ import com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,18 +47,20 @@ import java.util.List;
 public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   private static final Logger LOG = Logger.getInstance(CacheChangeProcessor.class);
 
-  @NotNull private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache =
+  @Nonnull
+  private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache =
           new SoftHardCacheMap<Change, Pair<Change, DiffRequest>>(5, 5);
 
   @Nullable private Change myCurrentChange;
 
-  @NotNull private final DiffTaskQueue myQueue = new DiffTaskQueue();
+  @Nonnull
+  private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
-  public CacheChangeProcessor(@NotNull Project project) {
+  public CacheChangeProcessor(@Nonnull Project project) {
     super(project);
   }
 
-  public CacheChangeProcessor(@NotNull Project project, @NotNull String place) {
+  public CacheChangeProcessor(@Nonnull Project project, @Nonnull String place) {
     super(project, place);
   }
 
@@ -66,13 +68,13 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   // Abstract
   //
 
-  @NotNull
+  @Nonnull
   protected abstract List<Change> getSelectedChanges();
 
-  @NotNull
+  @Nonnull
   protected abstract List<Change> getAllChanges();
 
-  protected abstract void selectChange(@NotNull Change change);
+  protected abstract void selectChange(@Nonnull Change change);
 
   //
   // Update
@@ -89,7 +91,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   }
 
   @CalledInAwt
-  public void updateRequest(final boolean force, boolean useCache, @Nullable final ScrollToPolicy scrollToChangePolicy) {
+  public void updateRequest(final boolean force, boolean useCache, @javax.annotation.Nullable final ScrollToPolicy scrollToChangePolicy) {
     if (isDisposed()) return;
     final Change change = myCurrentChange;
 
@@ -148,9 +150,9 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @CalledInBackground
-  private DiffRequest loadRequest(@NotNull Change change, @NotNull ProgressIndicator indicator) {
+  private DiffRequest loadRequest(@Nonnull Change change, @Nonnull ProgressIndicator indicator) {
     ChangeDiffRequestProducer presentable = ChangeDiffRequestProducer.create(getProject(), change);
     if (presentable == null) return new ErrorDiffRequest("Can't show diff");
     try {
@@ -182,7 +184,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
     myRequestCache.clear();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return super.getProject();
@@ -313,9 +315,10 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   //
 
   protected class ReloadRequestAction extends DumbAwareAction {
-    @NotNull private final Change myChange;
+    @Nonnull
+    private final Change myChange;
 
-    public ReloadRequestAction(@NotNull Change change) {
+    public ReloadRequestAction(@Nonnull Change change) {
       super("Reload", null, AllIcons.Actions.Refresh);
       myChange = change;
     }

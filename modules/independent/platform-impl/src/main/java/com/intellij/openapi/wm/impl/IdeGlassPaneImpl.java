@@ -36,8 +36,8 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
@@ -104,7 +104,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     super.addNotify();
   }
 
-  public boolean dispatch(@NotNull final AWTEvent e) {
+  public boolean dispatch(@Nonnull final AWTEvent e) {
     JRootPane eventRootPane = myRootPane;
 
     if (e instanceof MouseEvent) {
@@ -398,11 +398,11 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     }
   }
 
-  public static boolean hasPreProcessedCursor(@NotNull JComponent component) {
+  public static boolean hasPreProcessedCursor(@Nonnull JComponent component) {
     return component.getClientProperty(PREPROCESSED_CURSOR_KEY) != null;
   }
 
-  public void setCursor(Cursor cursor, @NotNull Object requestor) {
+  public void setCursor(Cursor cursor, @Nonnull Object requestor) {
     if (cursor == null) {
       myListener2Cursor.remove(requestor);
     }
@@ -520,12 +520,12 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
     }
   }
 
-  @NotNull
-  PaintersHelper getNamedPainters(@NotNull String name) {
+  @Nonnull
+  PaintersHelper getNamedPainters(@Nonnull String name) {
     return myNamedPainters.get(name);
   }
 
-  @NotNull
+  @Nonnull
   private PaintersHelper getPainters() {
     return getNamedPainters("glass");
   }

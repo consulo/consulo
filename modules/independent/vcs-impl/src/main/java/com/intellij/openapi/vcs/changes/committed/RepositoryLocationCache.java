@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class RepositoryLocationCache {
     private final FilePath myFilePath;
     private RepositoryLocation myLocation;
 
-    private MyLoader(@NotNull final AbstractVcs vcs, @NotNull FilePath filePath) {
+    private MyLoader(@Nonnull final AbstractVcs vcs, @Nonnull FilePath filePath) {
       myVcs = vcs;
       myFilePath = filePath;
     }

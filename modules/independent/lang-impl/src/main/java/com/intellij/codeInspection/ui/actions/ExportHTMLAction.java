@@ -57,7 +57,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -83,7 +83,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(
       new BaseListPopupStep<String>(InspectionsBundle.message("inspection.action.export.popup.title"), new String[]{HTML, XML}) {
         @Override
@@ -212,8 +212,8 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     }
   }
 
-  @NotNull
-  private Set<InspectionToolWrapper> getWorkedTools(@NotNull InspectionNode node) {
+  @Nonnull
+  private Set<InspectionToolWrapper> getWorkedTools(@Nonnull InspectionNode node) {
     final Set<InspectionToolWrapper> result = new HashSet<InspectionToolWrapper>();
     final InspectionToolWrapper wrapper = node.getToolWrapper();
     if (myView.getCurrentProfileName() != null){
@@ -252,7 +252,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   @RequiredReadAction
-  private void exportHTML(@NotNull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
+  private void exportHTML(@Nonnull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
     StringBuffer packageIndex = new StringBuffer();
     packageIndex.append("<html><body>");
 

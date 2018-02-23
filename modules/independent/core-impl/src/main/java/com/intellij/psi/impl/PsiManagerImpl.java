@@ -39,8 +39,9 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -115,7 +116,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public boolean isInProject(@NotNull PsiElement element) {
+  public boolean isInProject(@Nonnull PsiElement element) {
     if (element instanceof PsiDirectoryContainer) {
       PsiDirectory[] dirs = ((PsiDirectoryContainer)element).getDirectories();
       for (PsiDirectory dir : dirs) {
@@ -139,7 +140,7 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @Override
   @TestOnly
-  public void setAssertOnFileLoadingFilter(@NotNull VirtualFileFilter filter, @NotNull Disposable parentDisposable) {
+  public void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable) {
     // Find something to ensure there's no changed files waiting to be processed in repository indices.
     myAssertOnFileLoadingFilter = filter;
     Disposer.register(parentDisposable, new Disposable() {
@@ -151,18 +152,18 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public boolean isAssertOnFileLoading(@NotNull VirtualFile file) {
+  public boolean isAssertOnFileLoading(@Nonnull VirtualFile file) {
     return myAssertOnFileLoadingFilter.accept(file);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileManager getFileManager() {
     return myFileManager;
   }
@@ -181,37 +182,37 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @RequiredReadAction
   @Override
-  public PsiFile findFile(@NotNull VirtualFile file) {
+  public PsiFile findFile(@Nonnull VirtualFile file) {
     ProgressIndicatorProvider.checkCanceled();
     return myFileManager.findFile(file);
   }
 
   @Override
   @Nullable
-  public FileViewProvider findViewProvider(@NotNull VirtualFile file) {
+  public FileViewProvider findViewProvider(@Nonnull VirtualFile file) {
     ProgressIndicatorProvider.checkCanceled();
     return myFileManager.findViewProvider(file);
   }
 
   @RequiredReadAction
   @Override
-  public PsiDirectory findDirectory(@NotNull VirtualFile file) {
+  public PsiDirectory findDirectory(@Nonnull VirtualFile file) {
     ProgressIndicatorProvider.checkCanceled();
     return myFileManager.findDirectory(file);
   }
 
   @Override
-  public void reloadFromDisk(@NotNull PsiFile file) {
+  public void reloadFromDisk(@Nonnull PsiFile file) {
     myFileManager.reloadFromDisk(file);
   }
 
   @Override
-  public void addPsiTreeChangeListener(@NotNull PsiTreeChangeListener listener) {
+  public void addPsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener) {
     myTreeChangeListeners.add(listener);
   }
 
   @Override
-  public void addPsiTreeChangeListener(@NotNull final PsiTreeChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPsiTreeChangeListener(@Nonnull final PsiTreeChangeListener listener, @Nonnull Disposable parentDisposable) {
     addPsiTreeChangeListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -222,12 +223,12 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void removePsiTreeChangeListener(@NotNull PsiTreeChangeListener listener) {
+  public void removePsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener) {
     myTreeChangeListeners.remove(listener);
   }
 
   @Override
-  public void beforeChildAddition(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_CHILD_ADDITION);
     if (LOG.isDebugEnabled()) {
@@ -237,7 +238,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void beforeChildRemoval(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildRemoval(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_CHILD_REMOVAL);
     if (LOG.isDebugEnabled()) {
@@ -247,7 +248,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void beforeChildReplacement(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildReplacement(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_CHILD_REPLACEMENT);
     if (LOG.isDebugEnabled()) {
@@ -256,7 +257,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     fireEvent(event);
   }
 
-  public void beforeChildrenChange(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildrenChange(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_CHILDREN_CHANGE);
     if (LOG.isDebugEnabled()) {
@@ -265,7 +266,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     fireEvent(event);
   }
 
-  public void beforeChildMovement(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforeChildMovement(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_CHILD_MOVEMENT);
     if (LOG.isDebugEnabled()) {
@@ -274,7 +275,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     fireEvent(event);
   }
 
-  public void beforePropertyChange(@NotNull PsiTreeChangeEventImpl event) {
+  public void beforePropertyChange(@Nonnull PsiTreeChangeEventImpl event) {
     beforeChange(true);
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.BEFORE_PROPERTY_CHANGE);
     if (LOG.isDebugEnabled()) {
@@ -283,7 +284,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     fireEvent(event);
   }
 
-  public void childAdded(@NotNull PsiTreeChangeEventImpl event) {
+  public void childAdded(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.CHILD_ADDED);
     if (LOG.isDebugEnabled()) {
       LOG.debug("childAdded: child = " + event.getChild() + ", parent = " + event.getParent());
@@ -292,7 +293,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void childRemoved(@NotNull PsiTreeChangeEventImpl event) {
+  public void childRemoved(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.CHILD_REMOVED);
     if (LOG.isDebugEnabled()) {
       LOG.debug("childRemoved: child = " + event.getChild() + ", parent = " + event.getParent());
@@ -301,7 +302,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void childReplaced(@NotNull PsiTreeChangeEventImpl event) {
+  public void childReplaced(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.CHILD_REPLACED);
     if (LOG.isDebugEnabled()) {
       LOG.debug("childReplaced: oldChild = " + event.getOldChild() + ", newChild = " + event.getNewChild() + ", parent = " + event.getParent());
@@ -310,7 +311,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void childMoved(@NotNull PsiTreeChangeEventImpl event) {
+  public void childMoved(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.CHILD_MOVED);
     if (LOG.isDebugEnabled()) {
       LOG.debug("childMoved: child = " + event.getChild() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent());
@@ -319,7 +320,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void childrenChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public void childrenChanged(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.CHILDREN_CHANGED);
     if (LOG.isDebugEnabled()) {
       LOG.debug("childrenChanged: parent = " + event.getParent());
@@ -328,7 +329,7 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void propertyChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public void propertyChanged(@Nonnull PsiTreeChangeEventImpl event) {
     event.setCode(PsiTreeChangeEventImpl.PsiEventType.PROPERTY_CHANGED);
     if (LOG.isDebugEnabled()) {
       LOG.debug(
@@ -342,15 +343,15 @@ public class PsiManagerImpl extends PsiManagerEx {
     afterChange(true);
   }
 
-  public void addTreeChangePreprocessor(@NotNull PsiTreeChangePreprocessor preprocessor) {
+  public void addTreeChangePreprocessor(@Nonnull PsiTreeChangePreprocessor preprocessor) {
     myTreeChangePreprocessors.add(preprocessor);
   }
 
-  public void removeTreeChangePreprocessor(@NotNull PsiTreeChangePreprocessor preprocessor) {
+  public void removeTreeChangePreprocessor(@Nonnull PsiTreeChangePreprocessor preprocessor) {
     myTreeChangePreprocessors.remove(preprocessor);
   }
 
-  private void fireEvent(@NotNull PsiTreeChangeEventImpl event) {
+  private void fireEvent(@Nonnull PsiTreeChangeEventImpl event) {
     boolean isRealTreeChange = event.getCode() != PsiTreeChangeEventImpl.PsiEventType.PROPERTY_CHANGED
                                && event.getCode() != PsiTreeChangeEventImpl.PsiEventType.BEFORE_PROPERTY_CHANGE;
 
@@ -436,7 +437,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void registerRunnableToRunOnChange(@NotNull final Runnable runnable) {
+  public void registerRunnableToRunOnChange(@Nonnull final Runnable runnable) {
     myMessageBus.connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
@@ -446,7 +447,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void registerRunnableToRunOnAnyChange(@NotNull final Runnable runnable) { // includes non-physical changes
+  public void registerRunnableToRunOnAnyChange(@Nonnull final Runnable runnable) { // includes non-physical changes
     myMessageBus.connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
@@ -456,7 +457,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  public void registerRunnableToRunAfterAnyChange(@NotNull final Runnable runnable) { // includes non-physical changes
+  public void registerRunnableToRunAfterAnyChange(@Nonnull final Runnable runnable) { // includes non-physical changes
     myMessageBus.connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter() {
       @Override
       public void afterPsiChanged(boolean isPhysical) {
@@ -476,7 +477,7 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiModificationTracker getModificationTracker() {
     return myModificationTracker;
   }

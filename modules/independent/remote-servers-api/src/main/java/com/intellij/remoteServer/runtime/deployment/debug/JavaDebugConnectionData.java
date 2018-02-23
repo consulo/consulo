@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.runtime.deployment.debug;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -9,12 +9,12 @@ public class JavaDebugConnectionData implements DebugConnectionData {
   private final String myHost;
   private final int myPort;
 
-  public JavaDebugConnectionData(@NotNull String host, int port) {
+  public JavaDebugConnectionData(@Nonnull String host, int port) {
     myHost = host;
     myPort = port;
   }
 
-  @NotNull
+  @Nonnull
   public String getHost() {
     return myHost;
   }

@@ -19,7 +19,7 @@ import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface XLocalAttachDebuggerProvider {
    *         Return XLocalAttachGroup.DEFAULT for a common group.
    *
    */
-  @NotNull
+  @Nonnull
   default XLocalAttachGroup getAttachGroup() {
     return XLocalAttachGroup.DEFAULT;
   }
@@ -45,8 +45,8 @@ public interface XLocalAttachDebuggerProvider {
    * @param contextHolder use this data holder if you need to store temporary data during debuggers collection.
    *                      Lifetime of the data is restricted by a single Attach to Local Process action invocation.
    */
-  @NotNull
-  List<XLocalAttachDebugger> getAvailableDebuggers(@NotNull Project project,
-                                                   @NotNull ProcessInfo processInfo,
-                                                   @NotNull UserDataHolder contextHolder);
+  @Nonnull
+  List<XLocalAttachDebugger> getAvailableDebuggers(@Nonnull Project project,
+                                                   @Nonnull ProcessInfo processInfo,
+                                                   @Nonnull UserDataHolder contextHolder);
 }

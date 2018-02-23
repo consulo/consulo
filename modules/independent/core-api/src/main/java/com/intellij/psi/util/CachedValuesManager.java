@@ -26,7 +26,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class CachedValuesManager {
   private static final NotNullLazyKey<CachedValuesManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(CachedValuesManager.class);
 
-  public static CachedValuesManager getManager(@NotNull Project project) {
+  public static CachedValuesManager getManager(@Nonnull Project project) {
     return INSTANCE_KEY.getValue(project);
   }
 
@@ -55,11 +55,11 @@ public abstract class CachedValuesManager {
    * @param trackValue if value tracking required. T should be trackable in this case.
    * @return new CachedValue instance.
    */
-  @NotNull
-  public abstract <T> CachedValue<T> createCachedValue(@NotNull CachedValueProvider<T> provider, boolean trackValue);
+  @Nonnull
+  public abstract <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
 
-  @NotNull
-  public abstract <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@NotNull ParameterizedCachedValueProvider<T, P> provider,
+  @Nonnull
+  public abstract <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
                                                                                        boolean trackValue);
 
   /**
@@ -67,14 +67,14 @@ public abstract class CachedValuesManager {
    *
    * @return a CachedValue like in {@link #createCachedValue(CachedValueProvider, boolean)}, with trackable return value.
    */
-  @NotNull
-  public <T> CachedValue<T> createCachedValue(@NotNull CachedValueProvider<T> provider) {
+  @Nonnull
+  public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider) {
     return createCachedValue(provider, true);
   }
 
-  public <T, D extends UserDataHolder, P> T getParameterizedCachedValue(@NotNull D dataHolder,
-                                                                        @NotNull Key<ParameterizedCachedValue<T, P>> key,
-                                                                        @NotNull ParameterizedCachedValueProvider<T, P> provider,
+  public <T, D extends UserDataHolder, P> T getParameterizedCachedValue(@Nonnull D dataHolder,
+                                                                        @Nonnull Key<ParameterizedCachedValue<T, P>> key,
+                                                                        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
                                                                         boolean trackValue,
                                                                         P parameter) {
     ParameterizedCachedValue<T, P> value;
@@ -108,9 +108,9 @@ public abstract class CachedValuesManager {
    * @param trackValue if value tracking required. T should be trackable in this case.
    * @return up-to-date value.
    */
-  public abstract <T, D extends UserDataHolder> T getCachedValue(@NotNull D dataHolder,
-                                                                 @NotNull Key<CachedValue<T>> key,
-                                                                 @NotNull CachedValueProvider<T> provider,
+  public abstract <T, D extends UserDataHolder> T getCachedValue(@Nonnull D dataHolder,
+                                                                 @Nonnull Key<CachedValue<T>> key,
+                                                                 @Nonnull CachedValueProvider<T> provider,
                                                                  boolean trackValue);
 
   /**
@@ -118,7 +118,7 @@ public abstract class CachedValuesManager {
    *
    * @return The cached value
    */
-  public <T, D extends UserDataHolder> T getCachedValue(@NotNull D dataHolder, @NotNull CachedValueProvider<T> provider) {
+  public <T, D extends UserDataHolder> T getCachedValue(@Nonnull D dataHolder, @Nonnull CachedValueProvider<T> provider) {
     return getCachedValue(dataHolder, this.getKeyForClass(provider.getClass()), provider, false);
   }
 
@@ -127,7 +127,7 @@ public abstract class CachedValuesManager {
    *
    * @return The cached value
    */
-  public static <T> T getCachedValue(@NotNull final PsiElement psi, @NotNull final CachedValueProvider<T> provider) {
+  public static <T> T getCachedValue(@Nonnull final PsiElement psi, @Nonnull final CachedValueProvider<T> provider) {
     return getCachedValue(psi, CachedValuesManager.getKeyForClass(provider.getClass(), globalKeyForProvider), provider);
   }
 
@@ -136,7 +136,7 @@ public abstract class CachedValuesManager {
    *
    * @return The cached value
    */
-  public static <T> T getCachedValue(@NotNull final PsiElement psi, @NotNull Key<CachedValue<T>> key, @NotNull final CachedValueProvider<T> provider) {
+  public static <T> T getCachedValue(@Nonnull final PsiElement psi, @Nonnull Key<CachedValue<T>> key, @Nonnull final CachedValueProvider<T> provider) {
     CachedValue<T> value = psi.getUserData(key);
     if (value != null) {
       return value.getValue();
@@ -157,13 +157,13 @@ public abstract class CachedValuesManager {
   private final ConcurrentMap<String, Key<CachedValue>> keyForProvider = ContainerUtil.newConcurrentMap();
   private static final ConcurrentMap<String, Key<CachedValue>> globalKeyForProvider = ContainerUtil.newConcurrentMap();
 
-  @NotNull
-  public <T> Key<CachedValue<T>> getKeyForClass(@NotNull Class<?> providerClass) {
+  @Nonnull
+  public <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass) {
     return getKeyForClass(providerClass, keyForProvider);
   }
 
-  @NotNull
-  private static <T> Key<CachedValue<T>> getKeyForClass(@NotNull Class<?> providerClass, ConcurrentMap<String, Key<CachedValue>> keyForProvider) {
+  @Nonnull
+  private static <T> Key<CachedValue<T>> getKeyForClass(@Nonnull Class<?> providerClass, ConcurrentMap<String, Key<CachedValue>> keyForProvider) {
     String name = providerClass.getName();
     assert name != null : providerClass + " doesn't have a name; can't be used for cache value provider";
     Key<CachedValue> key = keyForProvider.get(name);

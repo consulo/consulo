@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
 
   private final ProcessHandler myProcessHandler;
 
-  public StopProcessAction(@NotNull String text, @Nullable String description, @NotNull ProcessHandler processHandler) {
+  public StopProcessAction(@Nonnull String text, @Nullable String description, @Nonnull ProcessHandler processHandler) {
     super(text, description, AllIcons.Actions.Suspend);
     myProcessHandler = processHandler;
   }
@@ -44,8 +44,8 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
     update(e.getPresentation(), getTemplatePresentation(), myProcessHandler);
   }
 
-  public static void update(@NotNull Presentation presentation,
-                            @NotNull Presentation templatePresentation,
+  public static void update(@Nonnull Presentation presentation,
+                            @Nonnull Presentation templatePresentation,
                             @Nullable ProcessHandler processHandler) {
     boolean enable = false;
     Icon icon = templatePresentation.getIcon();
@@ -72,7 +72,7 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
     stopProcess(myProcessHandler);
   }
 
-  public static void stopProcess(@NotNull ProcessHandler processHandler) {
+  public static void stopProcess(@Nonnull ProcessHandler processHandler) {
     if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
       // process termination was requested, but it's still alive
       // in this case 'force quit' will be performed

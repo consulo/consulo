@@ -21,14 +21,14 @@ import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
  */
 public abstract class DefaultProgramRunner extends GenericProgramRunner {
   @Override
-  protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     FileDocumentManager.getInstance().saveAllDocuments();
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     if (executionResult == null) {

@@ -20,7 +20,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
 import com.intellij.psi.ReferenceProviderType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CommentsReferenceContributor extends PsiReferenceContributor {
   /**
@@ -33,7 +33,7 @@ public class CommentsReferenceContributor extends PsiReferenceContributor {
   public static final ReferenceProviderType COMMENTS_REFERENCE_PROVIDER_TYPE = new ReferenceProviderType("commentsReferenceProvider");
 
   @Override
-  public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
+  public void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), COMMENTS_REFERENCE_PROVIDER_TYPE.getProvider());
   }
 }

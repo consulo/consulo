@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import org.imgscalr.Scalr;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,7 +30,8 @@ import java.awt.image.ImageObserver;
  * @author tav
  */
 public class JBHiDPIScaledImage extends BufferedImage {
-  private final @Nullable Image myImage;
+  private final @Nullable
+  Image myImage;
   private final int myUserWidth;
   private final int myUserHeight;
   private final float myScale;
@@ -87,7 +88,7 @@ public class JBHiDPIScaledImage extends BufferedImage {
    * @param height the height in user coordinate space
    * @param type the type
    */
-  public JBHiDPIScaledImage(@NotNull Image image, int width, int height, int type) {
+  public JBHiDPIScaledImage(@Nonnull Image image, int width, int height, int type) {
     super(1, 1, type); // a dummy wrapper
     myImage = image;
     myUserWidth = width;

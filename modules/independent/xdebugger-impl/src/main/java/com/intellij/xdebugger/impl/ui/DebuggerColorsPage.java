@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Weighted;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   @Override
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return XDebuggerBundle.message("xdebugger.colors.page.name");
   }
@@ -50,7 +50,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return new AttributesDescriptor[] {
             new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.breakpoint.line"), DebuggerColors.BREAKPOINT_ATTRIBUTES),
@@ -63,7 +63,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[] {
             new ColorDescriptor(OptionsBundle.message("options.java.attribute.descriptor.recursive.call"), DebuggerColors.RECURSIVE_CALL_ATTRIBUTES, ColorDescriptor.Kind.BACKGROUND)
@@ -71,14 +71,14 @@ public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getHighlighter() {
     return new PlainSyntaxHighlighter();
   }
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getDemoText() {
     return " ";
   }

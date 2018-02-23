@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author AG
@@ -147,9 +147,9 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
   }
 
   public static abstract class DequotingFilter {
-    public abstract boolean skipReplacementQuotesOrBraces(@NotNull PsiFile file,
-                                                          @NotNull Editor editor,
-                                                          @NotNull String selectedText,
+    public abstract boolean skipReplacementQuotesOrBraces(@Nonnull PsiFile file,
+                                                          @Nonnull Editor editor,
+                                                          @Nonnull String selectedText,
                                                           char c);
   }
 }

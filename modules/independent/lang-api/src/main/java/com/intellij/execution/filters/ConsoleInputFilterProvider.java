@@ -18,12 +18,12 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConsoleInputFilterProvider {
   ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS =
     ExtensionPointName.create("com.intellij.consoleInputFilterProvider");
 
-  @NotNull
-  InputFilter[] getDefaultFilters(@NotNull Project project);
+  @Nonnull
+  InputFilter[] getDefaultFilters(@Nonnull Project project);
 }

@@ -26,8 +26,8 @@ import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,7 +117,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   private SimpleTextAttributes getDefaultAttributes() {
     SimpleTextAttributes attributes = myDefaultAttributes;
     if (attributes == null) {
@@ -383,7 +383,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     if (myQueryable != null) {
       myQueryable.putInfo(info);
     }

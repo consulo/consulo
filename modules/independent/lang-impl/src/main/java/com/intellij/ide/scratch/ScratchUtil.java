@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -46,7 +46,7 @@ public class ScratchUtil {
     return file != null && file.getFileType() == ScratchFileType.INSTANCE;
   }
 
-  public static void updateFileExtension(@NotNull Project project, @Nullable VirtualFile file) throws IOException {
+  public static void updateFileExtension(@Nonnull Project project, @Nullable VirtualFile file) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (CommandProcessor.getInstance().getCurrentCommand() == null) {
       throw new AssertionError("command required");
@@ -66,7 +66,7 @@ public class ScratchUtil {
     file.rename(ScratchUtil.class, newName);
   }
 
-  public static boolean hasMatchingExtension(@NotNull Project project, @NotNull VirtualFile file) {
+  public static boolean hasMatchingExtension(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileType expected = getFileTypeFromName(file);
     Language language = LanguageUtil.getLanguageForPsi(project, file);
     FileType actual = language == null ? null : language.getAssociatedFileType();
@@ -74,7 +74,7 @@ public class ScratchUtil {
   }
 
   @Nullable
-  public static FileType getFileTypeFromName(@NotNull VirtualFile file) {
+  public static FileType getFileTypeFromName(@Nonnull VirtualFile file) {
     String extension = file.getExtension();
     return extension == null ? null : FileTypeManager.getInstance().getFileTypeByExtension(extension);
   }

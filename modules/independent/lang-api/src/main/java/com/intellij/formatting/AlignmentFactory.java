@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Internal interface for creating alignment object instances.
@@ -31,7 +31,7 @@ interface AlignmentFactory {
    * @param anchor                alignment anchor
    * @return                      alignment object with the given settings
    */
-  Alignment createAlignment(boolean allowBackwardShift, @NotNull Alignment.Anchor anchor);
+  Alignment createAlignment(boolean allowBackwardShift, @Nonnull Alignment.Anchor anchor);
 
   /**
    * Provides 

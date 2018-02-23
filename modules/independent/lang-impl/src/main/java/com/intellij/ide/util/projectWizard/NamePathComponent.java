@@ -27,7 +27,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -191,7 +191,7 @@ public class NamePathComponent extends JPanel{
     return myTfName;
   }
   
-  @NotNull
+  @Nonnull
   public JLabel getPathLabel() {
     return myPathLabel;
   }
@@ -200,7 +200,7 @@ public class NamePathComponent extends JPanel{
     return myTfPath;
   }
   
-  @NotNull
+  @Nonnull
   public FieldPanel getPathPanel() {
     return myPathPanel;
   }

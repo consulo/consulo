@@ -19,7 +19,7 @@ import com.intellij.util.ArrayUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -30,13 +30,13 @@ import java.util.Map;
 public class ModuleExtensionIndexCache {
   private static final Map<Class<?>, int[]> ourClassCache = new THashMap<>();
 
-  @NotNull
-  public static int[] get(@NotNull Class<?> clazz) {
+  @Nonnull
+  public static int[] get(@Nonnull Class<?> clazz) {
     int[] ints = ourClassCache.get(clazz);
     return ints == null ? ArrayUtil.EMPTY_INT_ARRAY : ints;
   }
 
-  public static void put(@NotNull Class<?> clazz, int index) {
+  public static void put(@Nonnull Class<?> clazz, int index) {
     put0(clazz, index);
   }
 

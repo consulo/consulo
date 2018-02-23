@@ -40,8 +40,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -56,7 +56,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   private final CopyPasteUtil.DefaultCopyPasteListener myCopyPasteListener;
   private final FavoritesListener myFavoritesListener;
 
-  public FavoritesViewTreeBuilder(@NotNull Project project,
+  public FavoritesViewTreeBuilder(@Nonnull Project project,
                                   JTree tree,
                                   DefaultTreeModel treeModel,
                                   ProjectAbstractTreeStructureBase treeStructure) {
@@ -124,7 +124,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     FavoritesManager.getInstance(myProject).addFavoritesListener(myFavoritesListener);
   }
 
-  @NotNull
+  @Nonnull
   public FavoritesTreeStructure getStructure() {
     final AbstractTreeStructure structure = getTreeStructure();
     assert structure instanceof FavoritesTreeStructure;
@@ -143,7 +143,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ActionCallback updateFromRootCB() {
     getStructure().rootsChanged();
     if (isDisposed()) return new ActionCallback.Done();
@@ -151,7 +151,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     return super.updateFromRootCB();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback select(Object element, VirtualFile file, boolean requestFocus) {
     final DefaultMutableTreeNode node = findSmartFirstLevelNodeByElement(element);
@@ -235,7 +235,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile vFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile vFile) {
       PsiElement element;
       PsiManager psiManager = PsiManager.getInstance(myProject);
       if (vFile.isDirectory()) {

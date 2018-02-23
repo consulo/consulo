@@ -23,16 +23,15 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentSynchronizationVetoer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class LookupDocumentSavingVetoer extends FileDocumentSynchronizationVetoer {
   @Override
-  public boolean maySaveDocument(@NotNull Document document, boolean isSaveExplicit) {
+  public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     if (ApplicationManager.getApplication().isDisposed() || isSaveExplicit) {
       return true;
     }

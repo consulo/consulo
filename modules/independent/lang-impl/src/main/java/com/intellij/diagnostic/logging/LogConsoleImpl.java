@@ -19,8 +19,8 @@ package com.intellij.diagnostic.logging;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -31,9 +31,9 @@ import java.nio.charset.Charset;
  */
 public abstract class LogConsoleImpl extends LogConsoleBase {
   private final String myPath;
-  @NotNull
+  @Nonnull
   private final File myFile;
-  @NotNull
+  @Nonnull
   private final Charset myCharset;
   private long myOldLength = 0;
 
@@ -41,8 +41,8 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
    * @deprecated use {@link #LogConsoleImpl(com.intellij.openapi.project.Project, java.io.File, java.nio.charset.Charset, long, String, boolean, com.intellij.psi.search.GlobalSearchScope)}
    */
   public LogConsoleImpl(Project project,
-                        @NotNull File file,
-                        @NotNull Charset charset,
+                        @Nonnull File file,
+                        @Nonnull Charset charset,
                         long skippedContents,
                         String title,
                         final boolean buildInActions) {
@@ -50,8 +50,8 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   }
 
   public LogConsoleImpl(Project project,
-                        @NotNull File file,
-                        @NotNull Charset charset,
+                        @Nonnull File file,
+                        @Nonnull Charset charset,
                         long skippedContents,
                         String title,
                         final boolean buildInActions,
@@ -64,7 +64,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   }
 
   @Nullable
-  private static Reader getReader(@NotNull final File file, @NotNull final Charset charset, final long skippedContents) {
+  private static Reader getReader(@Nonnull final File file, @Nonnull final Charset charset, final long skippedContents) {
     Reader reader = null;
     try {
       try {

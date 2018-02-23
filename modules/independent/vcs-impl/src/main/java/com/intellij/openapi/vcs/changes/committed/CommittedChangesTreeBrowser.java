@@ -33,8 +33,7 @@ import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -217,7 +216,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myDetailsView.dispose();
   }
 
-  public void setItems(@NotNull List<CommittedChangeList> items, final CommittedChangesBrowserUseCase useCase) {
+  public void setItems(@Nonnull List<CommittedChangeList> items, final CommittedChangesBrowserUseCase useCase) {
     myDetailsView.setUseCase(useCase);
     myChangeLists = items;
     myFilteringStrategy.setFilterBase(items);
@@ -276,8 +275,8 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
    * Zips changes by removing duplicates (changes in the same file) and compounding the diff.
    * <b>NB:</b> changes must be given in the time-ascending order, i.e the first change in the list should be the oldest one.
    */
-  @NotNull
-  public static List<Change> zipChanges(@NotNull List<Change> changes) {
+  @Nonnull
+  public static List<Change> zipChanges(@Nonnull List<Change> changes) {
     final List<Change> result = new ArrayList<Change>();
     for (Change change : changes) {
       addOrReplaceChange(result, change);
@@ -347,7 +346,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   public ActionToolbar createGroupFilterToolbar(final Project project,
                                                 final ActionGroup leadGroup,
-                                                @Nullable final ActionGroup tailGroup,
+                                                @javax.annotation.Nullable final ActionGroup tailGroup,
                                                 final List<AnAction> extra) {
     DefaultActionGroup toolbarGroup = new DefaultActionGroup();
     toolbarGroup.add(leadGroup);

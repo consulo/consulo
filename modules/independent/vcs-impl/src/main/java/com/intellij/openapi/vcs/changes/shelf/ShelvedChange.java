@@ -36,8 +36,8 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +98,7 @@ public class ShelvedChange {
     return myAfterPath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getAfterFileName() {
     if (myAfterPath == null) return null;
     int pos = myAfterPath.lastIndexOf('/');
@@ -133,7 +133,7 @@ public class ShelvedChange {
       if (myFileStatus != FileStatus.ADDED) {
         beforeRevision = new CurrentContentRevision(beforePath) {
           @Override
-          @NotNull
+          @Nonnull
           public VcsRevisionNumber getRevisionNumber() {
             return new TextRevisionNumber(VcsBundle.message("local.version.title"));
           }
@@ -161,7 +161,7 @@ public class ShelvedChange {
     return file;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TextFilePatch loadFilePatch(final Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
     List<TextFilePatch> filePatches = ShelveChangesManager.loadPatches(project, myPatchPath, commitContext);
     for(TextFilePatch patch: filePatches) {
@@ -209,7 +209,7 @@ public class ShelvedChange {
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public String getContent() throws VcsException {
       if (myContent == null) {
         try {
@@ -223,7 +223,7 @@ public class ShelvedChange {
       return myContent;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private String loadContent() throws IOException, PatchSyntaxException, ApplyPatchException {
       TextFilePatch patch = loadFilePatch(myProject, null);
       if (patch != null) {
@@ -253,13 +253,13 @@ public class ShelvedChange {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public FilePath getFile() {
       return myAfterFilePath;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public VcsRevisionNumber getRevisionNumber() {
       return new TextRevisionNumber(VcsBundle.message("shelved.version.name"));
     }

@@ -18,8 +18,8 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.PermanentGraph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -35,43 +35,44 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
   VcsLogUiProperty<Boolean> TEXT_FILTER_MATCH_CASE = new VcsLogUiProperty<>("TextFilter.MatchCase");
   VcsLogUiProperty<Boolean> TEXT_FILTER_REGEX = new VcsLogUiProperty<>("TextFilter.Regex");
 
-  void addRecentlyFilteredUserGroup(@NotNull List<String> usersInGroup);
+  void addRecentlyFilteredUserGroup(@Nonnull List<String> usersInGroup);
 
-  void addRecentlyFilteredBranchGroup(@NotNull List<String> valuesInGroup);
+  void addRecentlyFilteredBranchGroup(@Nonnull List<String> valuesInGroup);
 
-  @NotNull
+  @Nonnull
   List<List<String>> getRecentlyFilteredUserGroups();
 
-  @NotNull
+  @Nonnull
   List<List<String>> getRecentlyFilteredBranchGroups();
 
-  void saveFilterValues(@NotNull String filterName, @Nullable List<String> values);
+  void saveFilterValues(@Nonnull String filterName, @Nullable List<String> values);
 
   @Nullable
-  List<String> getFilterValues(@NotNull String filterName);
+  List<String> getFilterValues(@Nonnull String filterName);
 
   @CalledInAwt
-  void addChangeListener(@NotNull VcsLogUiPropertiesListener listener);
+  void addChangeListener(@Nonnull VcsLogUiPropertiesListener listener);
 
   @CalledInAwt
-  void removeChangeListener(@NotNull VcsLogUiPropertiesListener listener);
+  void removeChangeListener(@Nonnull VcsLogUiPropertiesListener listener);
 
   class VcsLogHighlighterProperty extends VcsLogUiProperty<Boolean> {
     private static final Map<String, VcsLogHighlighterProperty> ourProperties = ContainerUtil.newHashMap();
-    @NotNull private final String myId;
+    @Nonnull
+    private final String myId;
 
-    public VcsLogHighlighterProperty(@NotNull String name) {
+    public VcsLogHighlighterProperty(@Nonnull String name) {
       super("Highlighter." + name);
       myId = name;
     }
 
-    @NotNull
+    @Nonnull
     public String getId() {
       return myId;
     }
 
-    @NotNull
-    public static VcsLogHighlighterProperty get(@NotNull String id) {
+    @Nonnull
+    public static VcsLogHighlighterProperty get(@Nonnull String id) {
       VcsLogHighlighterProperty property = ourProperties.get(id);
       if (property == null) {
         property = new VcsLogHighlighterProperty(id);
@@ -82,6 +83,6 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
   }
 
   interface VcsLogUiPropertiesListener {
-    <T> void onPropertyChanged(@NotNull VcsLogUiProperty<T> property);
+    <T> void onPropertyChanged(@Nonnull VcsLogUiProperty<T> property);
   }
 }

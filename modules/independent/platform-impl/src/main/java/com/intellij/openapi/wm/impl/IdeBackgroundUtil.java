@@ -48,8 +48,8 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,14 +74,14 @@ public class IdeBackgroundUtil {
     JBSwingUtilities.addGlobalCGTransform(new MyTransform());
   }
 
-  @NotNull
-  public static Graphics2D withEditorBackground(@NotNull Graphics g, @NotNull JComponent component) {
+  @Nonnull
+  public static Graphics2D withEditorBackground(@Nonnull Graphics g, @Nonnull JComponent component) {
     if (suppressBackground(component)) return (Graphics2D)g;
     return withNamedPainters(g, EDITOR_PROP, component);
   }
 
-  @NotNull
-  public static Graphics2D withFrameBackground(@NotNull Graphics g, @NotNull JComponent component) {
+  @Nonnull
+  public static Graphics2D withFrameBackground(@Nonnull Graphics g, @Nonnull JComponent component) {
     if (suppressBackground(component)) return (Graphics2D)g;
     return withNamedPainters(g, FRAME_PROP, component);
   }
@@ -110,13 +110,13 @@ public class IdeBackgroundUtil {
            null;
   }
 
-  @NotNull
-  public static Graphics2D getOriginalGraphics(@NotNull Graphics g) {
+  @Nonnull
+  public static Graphics2D getOriginalGraphics(@Nonnull Graphics g) {
     return g instanceof MyGraphics? ((MyGraphics)g).getDelegate() : (Graphics2D)g;
   }
 
-  @NotNull
-  public static Graphics2D withNamedPainters(@NotNull Graphics g, @NotNull String paintersName, @NotNull final JComponent component) {
+  @Nonnull
+  public static Graphics2D withNamedPainters(@Nonnull Graphics g, @Nonnull String paintersName, @Nonnull final JComponent component) {
     JRootPane rootPane = component.getRootPane();
     Component glassPane = rootPane == null ? null : rootPane.getGlassPane();
     PaintersHelper helper = glassPane instanceof IdeGlassPaneImpl? ((IdeGlassPaneImpl)glassPane).getNamedPainters(paintersName) : null;
@@ -124,11 +124,11 @@ public class IdeBackgroundUtil {
     return MyGraphics.wrap(g, helper, component);
   }
 
-  public static void initEditorPainters(@NotNull IdeGlassPaneImpl glassPane) {
+  public static void initEditorPainters(@Nonnull IdeGlassPaneImpl glassPane) {
     PaintersHelper.initWallpaperPainter(EDITOR_PROP, glassPane.getNamedPainters(EDITOR_PROP));
   }
 
-  public static void initFramePainters(@NotNull IdeGlassPaneImpl glassPane) {
+  public static void initFramePainters(@Nonnull IdeGlassPaneImpl glassPane) {
     PaintersHelper painters = glassPane.getNamedPainters(FRAME_PROP);
     PaintersHelper.initWallpaperPainter(FRAME_PROP, painters);
 
@@ -171,8 +171,8 @@ public class IdeBackgroundUtil {
     }));
   }
 
-  @NotNull
-  public static String getBackgroundSpec(@Nullable Project project, @NotNull String propertyName) {
+  @Nonnull
+  public static String getBackgroundSpec(@Nullable Project project, @Nonnull String propertyName) {
     String spec = project == null || project.isDisposed() ? null : PropertiesComponent.getInstance(project).getValue(propertyName);
     if (spec == null) spec = PropertiesComponent.getInstance().getValue(propertyName);
     return StringUtil.notNullize(spec, System.getProperty(propertyName, ""));
@@ -213,7 +213,7 @@ public class IdeBackgroundUtil {
       this.preserved = preserved;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Graphics create() {
       return new MyGraphics(getDelegate().create(), helper, offsets, preserved);

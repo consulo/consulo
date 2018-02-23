@@ -20,18 +20,18 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePreprocessor {
 
   protected final PsiManager myPsiManager;
 
-  public PsiTreeChangePreprocessorBase(@NotNull PsiManager psiManager) {
+  public PsiTreeChangePreprocessorBase(@Nonnull PsiManager psiManager) {
     myPsiManager = psiManager;
   }
 
-  protected abstract boolean acceptsEvent(@NotNull PsiTreeChangeEventImpl event);
+  protected abstract boolean acceptsEvent(@Nonnull PsiTreeChangeEventImpl event);
 
   /**
    * Shall return true <em>if and only if</em> the element is considered to be "out of code block"
@@ -39,9 +39,9 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
    *
    * @see PsiModificationTrackerImpl#getOutOfCodeBlockModificationCount()
    */
-  protected abstract boolean isOutOfCodeBlock(@NotNull PsiElement element);
+  protected abstract boolean isOutOfCodeBlock(@Nonnull PsiElement element);
 
-  protected boolean isOutOfCodeBlock(@NotNull PsiFileSystemItem file) {
+  protected boolean isOutOfCodeBlock(@Nonnull PsiFileSystemItem file) {
     return true;
   }
 
@@ -53,7 +53,7 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
   }
 
   @Override
-  public final void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public final void treeChanged(@Nonnull PsiTreeChangeEventImpl event) {
     if (!PsiModificationTrackerImpl.canAffectPsi(event)) {
       return;
     }
@@ -63,7 +63,7 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
     onTreeChanged(event);
   }
 
-  protected void onTreeChanged(@NotNull PsiTreeChangeEventImpl event) {
+  protected void onTreeChanged(@Nonnull PsiTreeChangeEventImpl event) {
     boolean outOfCodeBlock;
 
     switch (event.getCode()) {
@@ -112,7 +112,7 @@ public abstract class PsiTreeChangePreprocessorBase implements PsiTreeChangePrep
     }
   }
 
-  protected void onOutOfCodeBlockModification(@NotNull PsiTreeChangeEventImpl event) {
+  protected void onOutOfCodeBlockModification(@Nonnull PsiTreeChangeEventImpl event) {
   }
 
   protected void doIncOutOfCodeBlockCounter() {

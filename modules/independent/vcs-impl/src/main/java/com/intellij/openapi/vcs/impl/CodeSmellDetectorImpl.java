@@ -45,7 +45,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ui.MessageCategory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -61,7 +61,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
   }
 
   @Override
-  public void showCodeSmellErrors(@NotNull final List<CodeSmellInfo> smellList) {
+  public void showCodeSmellErrors(@Nonnull final List<CodeSmellInfo> smellList) {
     Collections.sort(smellList, new Comparator<CodeSmellInfo>() {
       @Override
       public int compare(final CodeSmellInfo o1, final CodeSmellInfo o2) {
@@ -105,9 +105,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<CodeSmellInfo> findCodeSmells(@NotNull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
+  public List<CodeSmellInfo> findCodeSmells(@Nonnull final List<VirtualFile> filesToCheck) throws ProcessCanceledException {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final List<CodeSmellInfo> result = new ArrayList<>();
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
@@ -116,7 +116,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     final Ref<Exception> exception = Ref.create();
     ProgressManager.getInstance().run(new Task.Modal(myProject, VcsBundle.message("checking.code.smells.progress.title"), true) {
       @Override
-      public void run(@NotNull ProgressIndicator progress) {
+      public void run(@Nonnull ProgressIndicator progress) {
         try {
           for (int i = 0; i < filesToCheck.size(); i++) {
             if (progress.isCanceled()) throw new ProcessCanceledException();
@@ -145,8 +145,8 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     return result;
   }
 
-  @NotNull
-  private List<CodeSmellInfo> findCodeSmells(@NotNull final VirtualFile file, @NotNull final ProgressIndicator progress) {
+  @Nonnull
+  private List<CodeSmellInfo> findCodeSmells(@Nonnull final VirtualFile file, @Nonnull final ProgressIndicator progress) {
     final List<CodeSmellInfo> result = Collections.synchronizedList(new ArrayList<CodeSmellInfo>());
 
     final DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
@@ -179,9 +179,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     return result;
   }
 
-  private void convertErrorsAndWarnings(@NotNull Collection<HighlightInfo> highlights,
-                                        @NotNull List<CodeSmellInfo> result,
-                                        @NotNull Document document) {
+  private void convertErrorsAndWarnings(@Nonnull Collection<HighlightInfo> highlights,
+                                        @Nonnull List<CodeSmellInfo> result,
+                                        @Nonnull Document document) {
     for (HighlightInfo highlightInfo : highlights) {
       final HighlightSeverity severity = highlightInfo.getSeverity();
       if (SeverityRegistrar.getSeverityRegistrar(myProject).compare(severity, HighlightSeverity.WARNING) >= 0) {
@@ -191,7 +191,7 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
     }
   }
 
-  private static String getDescription(@NotNull HighlightInfo highlightInfo) {
+  private static String getDescription(@Nonnull HighlightInfo highlightInfo) {
     final String description = highlightInfo.getDescription();
     final HighlightInfoType type = highlightInfo.type;
     if (type instanceof HighlightInfoType.HighlightInfoTypeSeverityByKey) {

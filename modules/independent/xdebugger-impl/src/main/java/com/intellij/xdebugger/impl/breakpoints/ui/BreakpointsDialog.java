@@ -46,8 +46,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.WholeWestDialogWrapper;
 import consulo.util.ui.tree.TreeDecorationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,7 @@ import java.util.*;
 import java.util.List;
 
 public class BreakpointsDialog extends WholeWestDialogWrapper {
-  @NotNull
+  @Nonnull
   private Project myProject;
 
   private Object myInitialBreakpoint;
@@ -93,7 +93,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     return (XBreakpointManagerImpl)XDebuggerManager.getInstance(myProject).getBreakpointManager();
   }
 
-  protected BreakpointsDialog(@NotNull Project project, Object breakpoint, @NotNull List<BreakpointPanelProvider> providers) {
+  protected BreakpointsDialog(@Nonnull Project project, Object breakpoint, @Nonnull List<BreakpointPanelProvider> providers) {
     super(project);
     myProject = project;
     myBreakpointsPanelProviders = providers;
@@ -109,14 +109,14 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     setOKButtonText("Done");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSplitterKey() {
     return getDimensionServiceKey() + ".splitter";
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     return Couple.of(createMasterView(), createDetailView());
@@ -157,7 +157,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     return new Dimension(910, 400);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getHelpAction()};
@@ -222,11 +222,11 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     };
 
     PopupHandler.installPopupHandler(tree, new ActionGroup() {
-      @NotNull
+      @Nonnull
       @Override
       public AnAction[] getChildren(@Nullable AnActionEvent e) {
         ActionGroup group = new ActionGroup("Move to group", true) {
-          @NotNull
+          @Nonnull
           @Override
           public AnAction[] getChildren(@Nullable AnActionEvent e) {
             Set<String> groups = getBreakpointManager().getAllGroups();
@@ -248,7 +248,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     new AnAction("BreakpointDialog.GoToSource") {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         navigate(true);
         close(OK_EXIT_CODE);
       }
@@ -257,7 +257,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     new AnAction("BreakpointDialog.ShowSource") {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         navigate(true);
         close(OK_EXIT_CODE);
       }
@@ -400,7 +400,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       saveCurrentItem();
       XBreakpoint<?> breakpoint = myType.addBreakpoint(myProject, null);
       if (breakpoint != null) {
@@ -437,7 +437,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       String groupName = myGroup;
       if (myNewGroup) {
         groupName = Messages.showInputDialog("New group name", "New Group", AllIcons.Nodes.NewFolder);

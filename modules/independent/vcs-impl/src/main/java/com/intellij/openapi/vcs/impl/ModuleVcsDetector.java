@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -123,7 +123,7 @@ public class ModuleVcsDetector implements ProjectComponent {
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ModuleVcsDetector";
   }

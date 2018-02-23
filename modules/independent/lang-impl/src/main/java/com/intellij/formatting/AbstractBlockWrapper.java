@@ -20,8 +20,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,7 +73,7 @@ public abstract class AbstractBlockWrapper {
   }
 
   @Nullable
-  private static Language deriveLanguage(@NotNull Block block) {
+  private static Language deriveLanguage(@Nonnull Block block) {
     if (block instanceof BlockEx) {
       return ((BlockEx)block).getLanguage();
     }
@@ -295,7 +295,7 @@ public abstract class AbstractBlockWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   private AbstractBlockWrapper getAnchorBlock(AbstractBlockWrapper child, int targetBlockStartOffset, AlignmentImpl alignment) {
     // Generally, we want to handle situation like the one below:
     //   test("text", new Runnable() {

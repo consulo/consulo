@@ -38,8 +38,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.containers.hash.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected UsageInfo[] findUsages() {
     List<UsageInfo> infos = new ArrayList<UsageInfo>();
 
@@ -107,7 +107,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
 
   @Override
-  protected boolean isPreviewUsages(@NotNull UsageInfo[] usages) {
+  protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
     for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensions()) {
       if (processor.shouldPreviewUsages(myChangeInfo, usages)) return true;
     }
@@ -130,14 +130,14 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
   @Nullable
   @Override
-  protected RefactoringEventData getAfterData(@NotNull UsageInfo[] usages) {
+  protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
     RefactoringEventData data = new RefactoringEventData();
     data.addElement(getChangeInfo().getMethod());
     return data;
   }
 
   @Override
-  protected void performRefactoring(@NotNull UsageInfo[] usages) {
+  protected void performRefactoring(@Nonnull UsageInfo[] usages) {
     RefactoringTransaction transaction = getTransaction();
     final RefactoringElementListener elementListener = transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
     final String fqn = CopyReferenceAction.elementToFqn(myChangeInfo.getMethod());

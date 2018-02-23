@@ -22,7 +22,7 @@ package com.intellij.psi.templateLanguages;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerPosition;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class TemplateBlackAndWhiteLexer extends Lexer {
   private final Lexer myBaseLexer;

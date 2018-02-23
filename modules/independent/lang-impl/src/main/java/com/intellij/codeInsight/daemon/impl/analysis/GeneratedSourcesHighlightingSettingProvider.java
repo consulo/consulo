@@ -18,8 +18,8 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class GeneratedSourcesHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
   @Nullable
   @Override
-  public FileHighlightingSetting getDefaultSetting(@NotNull Project project, @NotNull VirtualFile file) {
+  public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file) {
     if (GeneratedSourcesFilter.isGenerated(project, file)) {
       return FileHighlightingSetting.SKIP_INSPECTION;
     }

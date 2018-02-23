@@ -26,7 +26,7 @@ import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.impl.BitSetFlags;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -56,9 +56,9 @@ public class PermanentLinearGraphImpl implements LinearGraph {
     return mySimpleNodes.size();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter) {
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
     List<GraphEdge> result = new SmartList<>();
 
     boolean hasUpSimpleEdge = nodeIndex != 0 && mySimpleNodes.get(nodeIndex - 1);
@@ -81,7 +81,7 @@ public class PermanentLinearGraphImpl implements LinearGraph {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GraphNode getGraphNode(int nodeIndex) {
     return new GraphNode(nodeIndex);

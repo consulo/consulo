@@ -29,8 +29,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -67,7 +67,7 @@ public class InspectionProfileConvertor {
     renameOldDefaultsProfile();
   }
 
-  private boolean retrieveOldSettings(@NotNull Element element) {
+  private boolean retrieveOldSettings(@Nonnull Element element) {
     boolean hasOldSettings = false;
     for (final Object obj : element.getChildren(OPTION_TAG)) {
       Element option = (Element)obj;
@@ -96,7 +96,7 @@ public class InspectionProfileConvertor {
     return false;
   }
 
-  public void storeEditorHighlightingProfile(@NotNull Element element, @NotNull InspectionProfile editorProfile) {
+  public void storeEditorHighlightingProfile(@Nonnull Element element, @Nonnull InspectionProfile editorProfile) {
     if (retrieveOldSettings(element)) {
 
       final ModifiableModel editorProfileModel = editorProfile.getModifiableModel();
@@ -137,7 +137,7 @@ public class InspectionProfileConvertor {
 
     File[] files = profileDirectory.listFiles(new FileFilter() {
       @Override
-      public boolean accept(@NotNull File pathname) {
+      public boolean accept(@Nonnull File pathname) {
         return pathname.getPath().endsWith(File.separator + DEFAULT_XML);
       }
     });

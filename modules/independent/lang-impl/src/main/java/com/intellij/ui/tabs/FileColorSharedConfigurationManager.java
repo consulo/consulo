@@ -20,7 +20,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.FileColorManager;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 public class FileColorSharedConfigurationManager implements PersistentStateComponent<Element> {
   private final Project myProject;
 
-  public FileColorSharedConfigurationManager(@NotNull final Project project) {
+  public FileColorSharedConfigurationManager(@Nonnull final Project project) {
     myProject = project;
   }
 

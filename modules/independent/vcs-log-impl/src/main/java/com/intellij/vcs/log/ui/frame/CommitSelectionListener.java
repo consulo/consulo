@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.data.VcsLogData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -33,14 +33,18 @@ import java.util.List;
 
 public abstract class CommitSelectionListener implements ListSelectionListener {
   private final static Logger LOG = Logger.getInstance(CommitSelectionListener.class);
-  @NotNull private final VcsLogData myLogData;
-  @NotNull protected final VcsLogGraphTable myGraphTable;
-  @NotNull private final JBLoadingPanel myLoadingPanel;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  protected final VcsLogGraphTable myGraphTable;
+  @Nonnull
+  private final JBLoadingPanel myLoadingPanel;
 
   @Nullable private ListSelectionEvent myLastEvent;
-  @Nullable private ProgressIndicator myLastRequest;
+  @Nullable
+  private ProgressIndicator myLastRequest;
 
-  protected CommitSelectionListener(@NotNull VcsLogData data, @NotNull VcsLogGraphTable table, @NotNull JBLoadingPanel panel) {
+  protected CommitSelectionListener(@Nonnull VcsLogData data, @Nonnull VcsLogGraphTable table, @Nonnull JBLoadingPanel panel) {
     myLogData = data;
     myGraphTable = table;
     myLoadingPanel = panel;
@@ -84,16 +88,16 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected List<Integer> getSelectionToLoad() {
     return Ints.asList(myGraphTable.getSelectedRows());
   }
 
   @CalledInAwt
-  protected abstract void onDetailsLoaded(@NotNull List<VcsFullCommitDetails> detailsList);
+  protected abstract void onDetailsLoaded(@Nonnull List<VcsFullCommitDetails> detailsList);
 
   @CalledInAwt
-  protected abstract void onSelection(@NotNull int[] selection);
+  protected abstract void onSelection(@Nonnull int[] selection);
 
   @CalledInAwt
   protected abstract void onEmptySelection();

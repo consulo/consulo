@@ -21,7 +21,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public abstract class ModuleWizardStep extends StepAdapter {
     return null;
   }
 
-  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     return validate();
   }
 
@@ -48,7 +48,7 @@ public abstract class ModuleWizardStep extends StepAdapter {
     return true;
   }
 
-  public void onStepLeaving(@NotNull WizardContext wizardContext) {
+  public void onStepLeaving(@Nonnull WizardContext wizardContext) {
     onStepLeaving();
   }
 
@@ -56,7 +56,7 @@ public abstract class ModuleWizardStep extends StepAdapter {
   public void onStepLeaving() {
   }
 
-  public void updateStep(@NotNull WizardContext wizardContext) {
+  public void updateStep(@Nonnull WizardContext wizardContext) {
     updateStep();
   }
 

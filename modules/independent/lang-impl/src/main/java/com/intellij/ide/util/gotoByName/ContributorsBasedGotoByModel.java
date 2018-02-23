@@ -40,7 +40,7 @@ import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 import javax.swing.*;
@@ -60,7 +60,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   protected final Project myProject;
   private final ChooseByNameContributor[] myContributors;
 
-  protected ContributorsBasedGotoByModel(@NotNull Project project, @NotNull ChooseByNameContributor[] contributors) {
+  protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
     myProject = project;
     myContributors = contributors;
     assert !Arrays.asList(contributors).contains(null);
@@ -98,7 +98,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     Processor<ChooseByNameContributor> processor = new ReadActionProcessor<ChooseByNameContributor>() {
       @RequiredReadAction
       @Override
-      public boolean processInReadAction(@NotNull ChooseByNameContributor contributor) {
+      public boolean processInReadAction(@Nonnull ChooseByNameContributor contributor) {
         try {
           if (!myProject.isDisposed()) {
             long contributorStarted = System.currentTimeMillis();
@@ -163,7 +163,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return idFilter;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getNames(final boolean checkBoxState) {
     final THashSet<String> allNames = ContainerUtil.newTroveSet();
@@ -187,16 +187,16 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return answer;
   }
 
-  @NotNull
-  public Object[] getElementsByName(@NotNull final String name,
-                                    @NotNull final FindSymbolParameters parameters,
-                                    @NotNull final ProgressIndicator canceled) {
+  @Nonnull
+  public Object[] getElementsByName(@Nonnull final String name,
+                                    @Nonnull final FindSymbolParameters parameters,
+                                    @Nonnull final ProgressIndicator canceled) {
     long elementByNameStarted = System.currentTimeMillis();
     final List<NavigationItem> items = Collections.synchronizedList(new ArrayList<NavigationItem>());
 
     Processor<ChooseByNameContributor> processor = new Processor<ChooseByNameContributor>() {
       @Override
-      public boolean process(@NotNull ChooseByNameContributor contributor) {
+      public boolean process(@Nonnull ChooseByNameContributor contributor) {
         if (myProject.isDisposed()) {
           return true;
         }
@@ -273,7 +273,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
    *  which {@link #acceptItem(NavigationItem) returns true.
    *
    */
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getElementsByName(final String name, final boolean checkBoxState, final String pattern) {
     return getElementsByName(name, FindSymbolParameters.wrap(pattern, myProject, checkBoxState), new ProgressIndicatorBase());
@@ -309,7 +309,8 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return true;
   }
 
-  public @NotNull String removeModelSpecificMarkup(@NotNull String pattern) {
+  public @Nonnull
+  String removeModelSpecificMarkup(@Nonnull String pattern) {
     return pattern;
   }
 }

@@ -15,13 +15,13 @@
  */
 package consulo.util.pointers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17:24/15.06.13
  */
 public interface Named {
-  @NotNull
+  @Nonnull
   String getName();
 }

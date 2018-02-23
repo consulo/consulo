@@ -20,13 +20,13 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.vfs.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VirtualFileFilteringListener implements VirtualFileListener {
   private final VirtualFileListener myDelegate;
   private final VirtualFileSystem myFilter;
 
-  public VirtualFileFilteringListener(@NotNull VirtualFileListener delegate, @NotNull VirtualFileSystem filter) {
+  public VirtualFileFilteringListener(@Nonnull VirtualFileListener delegate, @Nonnull VirtualFileSystem filter) {
     myDelegate = delegate;
     myFilter = filter;
   }
@@ -36,70 +36,70 @@ public class VirtualFileFilteringListener implements VirtualFileListener {
   }
 
   @Override
-  public void beforeContentsChange(@NotNull final VirtualFileEvent event) {
+  public void beforeContentsChange(@Nonnull final VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.beforeContentsChange(event);
     }
   }
 
   @Override
-  public void beforeFileDeletion(@NotNull final VirtualFileEvent event) {
+  public void beforeFileDeletion(@Nonnull final VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.beforeFileDeletion(event);
     }
   }
 
   @Override
-  public void beforeFileMovement(@NotNull final VirtualFileMoveEvent event) {
+  public void beforeFileMovement(@Nonnull final VirtualFileMoveEvent event) {
     if (isGood(event)) {
       myDelegate.beforeFileMovement(event);
     }
   }
 
   @Override
-  public void beforePropertyChange(@NotNull final VirtualFilePropertyEvent event) {
+  public void beforePropertyChange(@Nonnull final VirtualFilePropertyEvent event) {
     if (isGood(event)) {
       myDelegate.beforePropertyChange(event);
     }
   }
 
   @Override
-  public void contentsChanged(@NotNull final VirtualFileEvent event) {
+  public void contentsChanged(@Nonnull final VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.contentsChanged(event);
     }
   }
 
   @Override
-  public void fileCopied(@NotNull final VirtualFileCopyEvent event) {
+  public void fileCopied(@Nonnull final VirtualFileCopyEvent event) {
     if (isGood(event)) {
       myDelegate.fileCopied(event);
     }
   }
 
   @Override
-  public void fileCreated(@NotNull final VirtualFileEvent event) {
+  public void fileCreated(@Nonnull final VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.fileCreated(event);
     }
   }
 
   @Override
-  public void fileDeleted(@NotNull final VirtualFileEvent event) {
+  public void fileDeleted(@Nonnull final VirtualFileEvent event) {
     if (isGood(event)) {
       myDelegate.fileDeleted(event);
     }
   }
 
   @Override
-  public void fileMoved(@NotNull final VirtualFileMoveEvent event) {
+  public void fileMoved(@Nonnull final VirtualFileMoveEvent event) {
     if (isGood(event)) {
       myDelegate.fileMoved(event);
     }
   }
 
   @Override
-  public void propertyChanged(@NotNull final VirtualFilePropertyEvent event) {
+  public void propertyChanged(@Nonnull final VirtualFilePropertyEvent event) {
     if (isGood(event)) {
       myDelegate.propertyChanged(event);
     }

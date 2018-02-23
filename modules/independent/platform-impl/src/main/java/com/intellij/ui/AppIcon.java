@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.UIUtil;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.common.BinaryOutputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -50,7 +50,7 @@ public abstract class AppIcon {
 
   private static AppIcon ourIcon;
 
-  @NotNull
+  @Nonnull
   public static AppIcon getInstance() {
     if (ourIcon == null) {
       if (SystemInfo.isMac) {

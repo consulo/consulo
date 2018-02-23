@@ -16,7 +16,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * User: anna

@@ -21,8 +21,8 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Default implementation of the {@link StructureViewBuilder} interface which uses the
@@ -41,12 +41,12 @@ public abstract class TreeBasedStructureViewBuilder implements StructureViewBuil
    * @return the structure view model instance.
    * @see TextEditorBasedStructureViewModel
    */
-  @NotNull
+  @Nonnull
   public abstract StructureViewModel createStructureViewModel(@Nullable Editor editor);
 
   @Override
-  @NotNull
-  public StructureView createStructureView(FileEditor fileEditor, @NotNull Project project) {
+  @Nonnull
+  public StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project) {
     final StructureViewModel model = createStructureViewModel(fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
     StructureView view = StructureViewFactory.getInstance(project).createStructureView(fileEditor, model, project, isRootNodeShown());
     Disposer.register(view, new Disposable() {

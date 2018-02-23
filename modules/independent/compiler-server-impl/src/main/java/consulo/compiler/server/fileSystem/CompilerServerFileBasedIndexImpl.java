@@ -25,8 +25,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.indexing.IndexableFileSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,15 +38,15 @@ import java.util.Set;
  */
 public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   @Override
-  public void iterateIndexableFiles(@NotNull ContentIterator processor, @NotNull Project project, ProgressIndicator indicator) {
+  public void iterateIndexableFiles(@Nonnull ContentIterator processor, @Nonnull Project project, ProgressIndicator indicator) {
   }
 
   @Override
-  public void registerIndexableSet(@NotNull IndexableFileSet set, @Nullable Project project) {
+  public void registerIndexableSet(@Nonnull IndexableFileSet set, @javax.annotation.Nullable Project project) {
   }
 
   @Override
-  public void removeIndexableSet(@NotNull IndexableFileSet set) {
+  public void removeIndexableSet(@Nonnull IndexableFileSet set) {
   }
 
   @Override
@@ -55,46 +54,46 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <K, V> List<V> getValues(@NotNull ID<K, V> indexId, @NotNull K dataKey, @NotNull GlobalSearchScope filter) {
+  public <K, V> List<V> getValues(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull GlobalSearchScope filter) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <K, V> Collection<VirtualFile> getContainingFiles(@NotNull ID<K, V> indexId,
-                                                           @NotNull K dataKey,
-                                                           @NotNull GlobalSearchScope filter) {
+  public <K, V> Collection<VirtualFile> getContainingFiles(@Nonnull ID<K, V> indexId,
+                                                           @Nonnull K dataKey,
+                                                           @Nonnull GlobalSearchScope filter) {
     return Collections.emptyList();
   }
 
   @Override
-  public <K, V> boolean processValues(@NotNull ID<K, V> indexId,
-                                      @NotNull K dataKey,
-                                      @Nullable VirtualFile inFile,
-                                      @NotNull ValueProcessor<V> processor,
-                                      @NotNull GlobalSearchScope filter) {
+  public <K, V> boolean processValues(@Nonnull ID<K, V> indexId,
+                                      @Nonnull K dataKey,
+                                      @javax.annotation.Nullable VirtualFile inFile,
+                                      @Nonnull ValueProcessor<V> processor,
+                                      @Nonnull GlobalSearchScope filter) {
     return false;
   }
 
   @Override
-  public <K, V> boolean processFilesContainingAllKeys(@NotNull ID<K, V> indexId,
-                                                      @NotNull Collection<K> dataKeys,
-                                                      @NotNull GlobalSearchScope filter,
-                                                      @Nullable Condition<V> valueChecker,
-                                                      @NotNull Processor<VirtualFile> processor) {
+  public <K, V> boolean processFilesContainingAllKeys(@Nonnull ID<K, V> indexId,
+                                                      @Nonnull Collection<K> dataKeys,
+                                                      @Nonnull GlobalSearchScope filter,
+                                                      @javax.annotation.Nullable Condition<V> valueChecker,
+                                                      @Nonnull Processor<VirtualFile> processor) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <K> Collection<K> getAllKeys(@NotNull ID<K, ?> indexId, @NotNull Project project) {
+  public <K> Collection<K> getAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Project project) {
     return null;
   }
 
   @Override
-  public <K> void ensureUpToDate(@NotNull ID<K, ?> indexId, @Nullable Project project, @Nullable GlobalSearchScope filter) {
+  public <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @javax.annotation.Nullable Project project, @javax.annotation.Nullable GlobalSearchScope filter) {
   }
 
   @Override
@@ -102,23 +101,23 @@ public class CompilerServerFileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Override
-  public <K> void scheduleRebuild(@NotNull ID<K, ?> indexId, @NotNull Throwable e) {
+  public <K> void scheduleRebuild(@Nonnull ID<K, ?> indexId, @Nonnull Throwable e) {
   }
 
   @Override
-  public void requestReindex(@NotNull VirtualFile file) {
+  public void requestReindex(@Nonnull VirtualFile file) {
   }
 
   @Override
-  public <K, V> boolean getFilesWithKey(@NotNull ID<K, V> indexId,
-                                        @NotNull Set<K> dataKeys,
-                                        @NotNull Processor<VirtualFile> processor,
-                                        @NotNull GlobalSearchScope filter) {
+  public <K, V> boolean getFilesWithKey(@Nonnull ID<K, V> indexId,
+                                        @Nonnull Set<K> dataKeys,
+                                        @Nonnull Processor<VirtualFile> processor,
+                                        @Nonnull GlobalSearchScope filter) {
     return false;
   }
 
   @Override
-  public <K> boolean processAllKeys(@NotNull ID<K, ?> indexId, @NotNull Processor<K> processor, @Nullable Project project) {
+  public <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<K> processor, @javax.annotation.Nullable Project project) {
     return false;
   }
 

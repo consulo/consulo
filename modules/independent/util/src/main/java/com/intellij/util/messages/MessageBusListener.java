@@ -1,11 +1,13 @@
 package com.intellij.util.messages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface MessageBusListener<L> {
-  @NotNull Topic<L> getTopic();
-  @NotNull L getListener();
+  @Nonnull
+  Topic<L> getTopic();
+  @Nonnull
+  L getListener();
 }

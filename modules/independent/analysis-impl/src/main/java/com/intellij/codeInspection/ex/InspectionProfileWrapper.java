@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -48,18 +48,18 @@ public class InspectionProfileWrapper {
           = Key.create("Inspection Profile Wrapper Customization");
   protected final InspectionProfile myProfile;
 
-  public InspectionProfileWrapper(@NotNull InspectionProfile profile) {
+  public InspectionProfileWrapper(@Nonnull InspectionProfile profile) {
     myProfile = profile;
   }
 
-  @NotNull
+  @Nonnull
   public InspectionToolWrapper[] getInspectionTools(PsiElement element){
     return myProfile.getInspectionTools(element);
   }
 
   // check whether some inspection got registered twice by accident. 've bit once.
   private static boolean alreadyChecked;
-  public static void checkInspectionsDuplicates(@NotNull InspectionToolWrapper[] toolWrappers) {
+  public static void checkInspectionsDuplicates(@Nonnull InspectionToolWrapper[] toolWrappers) {
     if (alreadyChecked) return;
     alreadyChecked = true;
     Set<InspectionProfileEntry> uniqTools = new THashSet<InspectionProfileEntry>(toolWrappers.length);
@@ -83,7 +83,7 @@ public class InspectionProfileWrapper {
     return myProfile.getInspectionTool(shortName, element);
   }
 
-  public void init(@NotNull Project project) {
+  public void init(@Nonnull Project project) {
     final List<Tools> profileEntries = myProfile.getAllEnabledInspectionTools(project);
     for (Tools profileEntry : profileEntries) {
       for (ScopeToolState toolState : profileEntry.getTools()) {
@@ -92,11 +92,11 @@ public class InspectionProfileWrapper {
     }
   }
 
-  public void cleanup(@NotNull Project project){
+  public void cleanup(@Nonnull Project project){
     myProfile.cleanup(project);
   }
 
-  @NotNull
+  @Nonnull
   public InspectionProfile getInspectionProfile() {
     return myProfile;
   }

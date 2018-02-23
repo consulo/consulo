@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -32,25 +32,25 @@ public class ModulesScope extends GlobalSearchScope {
   private final ProjectFileIndex myProjectFileIndex;
   private final Set<Module> myModules;
 
-  public ModulesScope(@NotNull Set<Module> modules, Project project) {
+  public ModulesScope(@Nonnull Set<Module> modules, Project project) {
     super(project);
     myProjectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     myModules = modules;
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
     return moduleOfFile != null && myModules.contains(moduleOfFile);
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return myModules.contains(aModule);
   }
 

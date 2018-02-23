@@ -28,8 +28,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.HashMap;
@@ -41,16 +41,21 @@ import static com.intellij.openapi.actionSystem.LangDataKeys.*;
 public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
   private static final AtomicLong myIdHolder = new AtomicLong(1L);
 
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
 
-  @NotNull private RunProfile myRunProfile;
-  @NotNull private final Executor myExecutor;
-  @NotNull private ExecutionTarget myTarget;
+  @Nonnull
+  private RunProfile myRunProfile;
+  @Nonnull
+  private final Executor myExecutor;
+  @Nonnull
+  private ExecutionTarget myTarget;
 
   @Nullable private RunnerSettings myRunnerSettings;
   @Nullable private ConfigurationPerRunnerSettings myConfigurationSettings;
   @Nullable private final RunnerAndConfigurationSettings myRunnerAndConfigurationSettings;
-  @Nullable private RunContentDescriptor myContentToReuse;
+  @javax.annotation.Nullable
+  private RunContentDescriptor myContentToReuse;
   private final ProgramRunner<?> myRunner;
   private long myExecutionId = 0;
   @Nullable private DataContext myDataContext;
@@ -64,10 +69,10 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     myRunner = null;
   }
 
-  public ExecutionEnvironment(@NotNull Executor executor,
-                              @NotNull ProgramRunner runner,
-                              @NotNull RunnerAndConfigurationSettings configuration,
-                              @NotNull Project project) {
+  public ExecutionEnvironment(@Nonnull Executor executor,
+                              @Nonnull ProgramRunner runner,
+                              @Nonnull RunnerAndConfigurationSettings configuration,
+                              @Nonnull Project project) {
     this(configuration.getConfiguration(),
          executor,
          DefaultExecutionTarget.INSTANCE,
@@ -84,11 +89,11 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
    * to remove in IDEA 14
    */
   @TestOnly
-  public ExecutionEnvironment(@NotNull Executor executor,
-                              @NotNull final ProgramRunner runner,
-                              @NotNull final ExecutionTarget target,
-                              @NotNull final RunnerAndConfigurationSettings configuration,
-                              @NotNull Project project) {
+  public ExecutionEnvironment(@Nonnull Executor executor,
+                              @Nonnull final ProgramRunner runner,
+                              @Nonnull final ExecutionTarget target,
+                              @Nonnull final RunnerAndConfigurationSettings configuration,
+                              @Nonnull Project project) {
     this(configuration.getConfiguration(),
          executor,
          target,
@@ -104,23 +109,23 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
    * @deprecated, use {@link com.intellij.execution.runners.ExecutionEnvironmentBuilder} instead
    * to remove in IDEA 15
    */
-  public ExecutionEnvironment(@NotNull RunProfile runProfile,
-                              @NotNull Executor executor,
-                              @NotNull Project project,
+  public ExecutionEnvironment(@Nonnull RunProfile runProfile,
+                              @Nonnull Executor executor,
+                              @Nonnull Project project,
                               @Nullable RunnerSettings runnerSettings) {
     //noinspection ConstantConditions
     this(runProfile, executor, DefaultExecutionTarget.INSTANCE, project, runnerSettings, null, null, null, RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile));
   }
 
-  ExecutionEnvironment(@NotNull RunProfile runProfile,
-                       @NotNull Executor executor,
-                       @NotNull ExecutionTarget target,
-                       @NotNull Project project,
+  ExecutionEnvironment(@Nonnull RunProfile runProfile,
+                       @Nonnull Executor executor,
+                       @Nonnull ExecutionTarget target,
+                       @Nonnull Project project,
                        @Nullable RunnerSettings runnerSettings,
                        @Nullable ConfigurationPerRunnerSettings configurationSettings,
-                       @Nullable RunContentDescriptor contentToReuse,
+                       @javax.annotation.Nullable RunContentDescriptor contentToReuse,
                        @Nullable RunnerAndConfigurationSettings settings,
-                       @NotNull ProgramRunner<?> runner) {
+                       @Nonnull ProgramRunner<?> runner) {
     myExecutor = executor;
     myTarget = target;
     myRunProfile = runProfile;
@@ -138,27 +143,27 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     myContentToReuse = null;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionTarget getExecutionTarget() {
     return myTarget;
   }
 
-  @NotNull
+  @Nonnull
   public RunProfile getRunProfile() {
     return myRunProfile;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public RunnerAndConfigurationSettings getRunnerAndConfigurationSettings() {
     return myRunnerAndConfigurationSettings;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public RunContentDescriptor getContentToReuse() {
     return myContentToReuse;
   }
@@ -171,7 +176,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   /**
    * Use {@link #getRunner()} instead
@@ -181,7 +186,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return myRunner.getRunnerId();
   }
 
-  @NotNull
+  @Nonnull
   public ProgramRunner<?> getRunner() {
     return myRunner;
   }
@@ -191,7 +196,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return myRunnerSettings;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public ConfigurationPerRunnerSettings getConfigurationSettings() {
     return myConfigurationSettings;
   }
@@ -214,7 +219,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return myExecutionId;
   }
 
-  @NotNull
+  @Nonnull
   public Executor getExecutor() {
     return myExecutor;
   }
@@ -233,7 +238,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     return super.toString();
   }
 
-  void setDataContext(@NotNull DataContext dataContext) {
+  void setDataContext(@Nonnull DataContext dataContext) {
     myDataContext = CachingDataContext.cacheIfNeed(dataContext);
   }
 
@@ -246,8 +251,8 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
     private static final Key[] keys = {PROJECT, PROJECT_FILE_DIRECTORY, EDITOR, VIRTUAL_FILE, MODULE, PSI_FILE};
     private final Map<Key, Object> values = new HashMap<>();
 
-    @NotNull
-    static CachingDataContext cacheIfNeed(@NotNull DataContext context) {
+    @Nonnull
+    static CachingDataContext cacheIfNeed(@Nonnull DataContext context) {
       if (context instanceof CachingDataContext)
         return (CachingDataContext)context;
       return new CachingDataContext(context);

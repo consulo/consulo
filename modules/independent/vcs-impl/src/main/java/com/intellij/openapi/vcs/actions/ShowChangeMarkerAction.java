@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.ex.LineStatusTracker;
 import com.intellij.openapi.vcs.ex.LineStatusTrackerDrawing;
 import com.intellij.openapi.vcs.ex.Range;
 import com.intellij.openapi.vcs.impl.LineStatusTrackerManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * author: lesya
@@ -101,7 +101,7 @@ public abstract class ShowChangeMarkerAction extends AbstractVcsAction {
 
 
   @Override
-  protected void actionPerformed(@NotNull VcsContext context) {
+  protected void actionPerformed(@Nonnull VcsContext context) {
     Editor editor = myChangeMarkerContext.getEditor(context);
     LineStatusTracker lineStatusTracker = myChangeMarkerContext.getLineStatusTracker(context);
     Range range = myChangeMarkerContext.getRange(context);

@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.match;
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -61,7 +61,7 @@ public class ArrangementMatchingRulesModel extends DefaultTableModel {
     super.setValueAt(aValue, row, column);
   }
   
-  public void add(@NotNull Object data) {
+  public void add(@Nonnull Object data) {
     addRow(new Object[] { data });
   }
   

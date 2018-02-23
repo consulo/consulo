@@ -44,9 +44,9 @@ import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -72,7 +72,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     super(state);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent createComponentImpl() {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
@@ -221,7 +221,7 @@ public class BuildElementsEditor extends ModuleElementsEditor {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Module getModule() {
     return getModel().getModule();
   }

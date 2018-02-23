@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -51,7 +51,7 @@ public class MockFoldRegion extends UserDataHolderBase implements FoldRegion {
   public void setExpanded(boolean expanded) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPlaceholderText() {
     return "...";
@@ -72,7 +72,7 @@ public class MockFoldRegion extends UserDataHolderBase implements FoldRegion {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     throw new UnsupportedOperationException("FoldRegion.getDocument() is not implemented yet at " + getClass());

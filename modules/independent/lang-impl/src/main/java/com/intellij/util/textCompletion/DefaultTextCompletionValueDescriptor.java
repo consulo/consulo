@@ -19,32 +19,32 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCompletionValueDescriptor<T> {
-  @NotNull
-  protected abstract String getLookupString(@NotNull T item);
+  @Nonnull
+  protected abstract String getLookupString(@Nonnull T item);
 
   @Nullable
-  protected Icon getIcon(@NotNull T item) {
+  protected Icon getIcon(@Nonnull T item) {
     return null;
   }
 
   @Nullable
-  protected String getTailText(@NotNull T item) {
+  protected String getTailText(@Nonnull T item) {
     return null;
   }
 
   @Nullable
-  protected String getTypeText(@NotNull T item) {
+  protected String getTypeText(@Nonnull T item) {
     return null;
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@NotNull final T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull final T item) {
     return null;
   }
 
@@ -53,9 +53,9 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
     return StringUtil.compare(getLookupString(item1), getLookupString(item2), false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LookupElementBuilder createLookupBuilder(@NotNull T item) {
+  public LookupElementBuilder createLookupBuilder(@Nonnull T item) {
     LookupElementBuilder builder = LookupElementBuilder.create(item, getLookupString(item))
             .withIcon(getIcon(item));
 
@@ -77,9 +77,9 @@ public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCom
   }
 
   public static class StringValueDescriptor extends DefaultTextCompletionValueDescriptor<String> {
-    @NotNull
+    @Nonnull
     @Override
-    public String getLookupString(@NotNull String item) {
+    public String getLookupString(@Nonnull String item) {
       return item;
     }
   }

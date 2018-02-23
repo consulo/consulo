@@ -28,9 +28,9 @@ import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -188,13 +188,13 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
     return PlainTextFileType.INSTANCE.getIcon();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SyntaxHighlighter getHighlighter() {
     return new PlainSyntaxHighlighter();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDemoText() {
     return
@@ -244,19 +244,19 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
     return TAG_HIGHLIGHTING_MAP;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ArrayUtil.append(ATTRIBUTES_DESCRIPTORS, INLINE_PARAMETER_HINT_DESCRIPTOR);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     return OptionsBundle.message("options.language.defaults.display.name");

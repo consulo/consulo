@@ -21,7 +21,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -32,7 +32,7 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
+  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
     final Editor editor = parameters.getEditor();
     final TemplateState state = TemplateManagerImpl.getTemplateState(editor);
     if (state != null) {

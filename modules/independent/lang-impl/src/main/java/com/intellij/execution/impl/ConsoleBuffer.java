@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -203,7 +203,7 @@ public class ConsoleBuffer {
    *
    * @param types content types that should not be stripped during the buffer's cycling
    */
-  public void setContentTypesToNotStripOnCycling(@NotNull Collection<ConsoleViewContentType> types) {
+  public void setContentTypesToNotStripOnCycling(@Nonnull Collection<ConsoleViewContentType> types) {
     myContentTypesToNotStripOnCycling.clear();
     myContentTypesToNotStripOnCycling.addAll(types);
   }
@@ -270,8 +270,8 @@ public class ConsoleBuffer {
    *         is considered to have lower priority than the stored one, hence, it's better to drop given text completely
    *         or partially) and number of existed symbols removed during storing the given data
    */
-  @NotNull
-  public Pair<String, Integer> print(@NotNull String s, @NotNull ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
+  @Nonnull
+  public Pair<String, Integer> print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
     int numberOfSymbolsToProceed = s.length();
     int trimmedSymbolsNumber = myDeferredOutputLength;
     if (contentType != ConsoleViewContentType.USER_INPUT) {
@@ -473,7 +473,7 @@ public class ConsoleBuffer {
     return numberOfNewSymbols;
   }
 
-  private static void skip(@NotNull Context context, int symbolsToSkipNumber) {
+  private static void skip(@Nonnull Context context, int symbolsToSkipNumber) {
     int remainingNumberOfBufferSymbols = context.currentBuffer.length() - context.bufferOffset;
     if (remainingNumberOfBufferSymbols < symbolsToSkipNumber) {
       symbolsToSkipNumber -= remainingNumberOfBufferSymbols;
@@ -505,7 +505,7 @@ public class ConsoleBuffer {
     }
   }
 
-  private int remove(@NotNull Context context, int tokenLength) {
+  private int remove(@Nonnull Context context, int tokenLength) {
     int removedSymbolsNumber = 0;
     int remainingTotalNumberOfSymbolsToRemove = context.numberOfSymbolsToRemove - context.removedSymbolsNumber;
     int numberOfTokenSymbolsToRemove = Math.min(remainingTotalNumberOfSymbolsToRemove, tokenLength);

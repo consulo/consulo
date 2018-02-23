@@ -15,8 +15,8 @@
  */
 package com.intellij.util.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,7 +43,8 @@ abstract class Loader {
   @Nullable
   abstract Resource getResource(String name, boolean flag);
 
-  @NotNull abstract ClasspathCache.LoaderData buildData() throws IOException;
+  @Nonnull
+  abstract ClasspathCache.LoaderData buildData() throws IOException;
 
   int getIndex() {
     return myIndex;

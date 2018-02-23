@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -50,7 +50,7 @@ public class FixLineSeparatorsAction extends AnAction {
   private static void fixSeparators(VirtualFile vFile) {
     VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (!file.isDirectory() && !file.getFileType().isBinary()) {
           final Document document = FileDocumentManager.getInstance().getDocument(file);
           if (areSeparatorsBroken(document)) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +28,12 @@ import java.nio.charset.Charset;
 public class BaseInputStreamReader extends InputStreamReader {
   private final InputStream myInputStream;
 
-  public BaseInputStreamReader(@NotNull InputStream in) {
+  public BaseInputStreamReader(@Nonnull InputStream in) {
     super(in);
     myInputStream = in;
   }
 
-  public BaseInputStreamReader(@NotNull InputStream in, @NotNull Charset cs) {
+  public BaseInputStreamReader(@Nonnull InputStream in, @Nonnull Charset cs) {
     super(in, cs);
     myInputStream = in;
   }

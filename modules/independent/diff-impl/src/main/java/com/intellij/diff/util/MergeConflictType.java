@@ -15,33 +15,34 @@
  */
 package com.intellij.diff.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MergeConflictType {
-  @NotNull private final TextDiffType myType;
+  @Nonnull
+  private final TextDiffType myType;
   private final boolean myLeftChange;
   private final boolean myRightChange;
 
-  public MergeConflictType(@NotNull TextDiffType type) {
+  public MergeConflictType(@Nonnull TextDiffType type) {
     this(type, true, true);
   }
 
-  public MergeConflictType(@NotNull TextDiffType type, boolean leftChange, boolean rightChange) {
+  public MergeConflictType(@Nonnull TextDiffType type, boolean leftChange, boolean rightChange) {
     myType = type;
     myLeftChange = leftChange;
     myRightChange = rightChange;
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffType getDiffType() {
     return myType;
   }
 
-  public boolean isChange(@NotNull Side side) {
+  public boolean isChange(@Nonnull Side side) {
     return side.isLeft() ? myLeftChange : myRightChange;
   }
 
-  public boolean isChange(@NotNull ThreeSide side) {
+  public boolean isChange(@Nonnull ThreeSide side) {
     switch (side) {
       case LEFT:
         return myLeftChange;

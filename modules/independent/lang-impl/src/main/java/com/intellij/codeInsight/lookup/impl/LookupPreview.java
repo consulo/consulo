@@ -28,8 +28,8 @@ import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -98,22 +98,22 @@ class LookupPreview {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static EditorCustomElementRenderer createGrayRenderer(final String suffix) {
     return new EditorCustomElementRenderer() {
       @Override
-      public int calcWidthInPixels(@NotNull Editor editor) {
+      public int calcWidthInPixels(@Nonnull Editor editor) {
         return editor.getContentComponent().getFontMetrics(getFont(editor)).stringWidth(suffix);
       }
 
       @Override
-      public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {
+      public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
         g.setColor(JBColor.GRAY);
         g.setFont(getFont(editor));
         g.drawString(suffix, r.x, r.y + ((EditorImpl)editor).getAscent());
       }
 
-      private Font getFont(@NotNull Editor editor) {
+      private Font getFont(@Nonnull Editor editor) {
         return editor.getColorsScheme().getFont(EditorFontType.PLAIN);
       }
     };

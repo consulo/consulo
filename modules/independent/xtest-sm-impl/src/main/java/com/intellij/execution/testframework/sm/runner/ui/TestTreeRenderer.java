@@ -23,7 +23,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -96,7 +96,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     append(text != null ? text : SPACE_STRING, SimpleTextAttributes.GRAYED_ATTRIBUTES);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getPreferredSize() {
     final Dimension preferredSize = super.getPreferredSize();
@@ -109,7 +109,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     return myConsoleProperties;
   }
 
-  public void setAdditionalRootFormatter(@NotNull SMRootTestProxyFormatter formatter) {
+  public void setAdditionalRootFormatter(@Nonnull SMRootTestProxyFormatter formatter) {
     myAdditionalRootFormatter = formatter;
   }
 

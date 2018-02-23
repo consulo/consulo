@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.FileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -40,7 +40,7 @@ class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware {
   private static final Key<Boolean> FORCED_BREADCRUMBS = new Key<>("FORCED_BREADCRUMBS");
 
   @Override
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     event.getPresentation().setEnabledAndVisible(isEnabled(findEditor(event)));
   }
@@ -82,7 +82,7 @@ class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware {
     return !Objects.equals(old, selected);
   }
 
-  static Boolean getForcedShown(@NotNull Editor editor) {
+  static Boolean getForcedShown(@Nonnull Editor editor) {
     return editor.getUserData(FORCED_BREADCRUMBS);
   }
 

@@ -59,8 +59,8 @@ import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
 import javax.swing.*;
@@ -224,12 +224,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     myTimer.removeTimerListener(listener, transparent);
   }
 
-  public ActionPopupMenu createActionPopupMenu(String place, @NotNull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
+  public ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
     return new ActionPopupMenuImpl(place, group, this, presentationFactory);
   }
 
   @Override
-  public ActionPopupMenu createActionPopupMenu(String place, @NotNull ActionGroup group) {
+  public ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group) {
     return new ActionPopupMenuImpl(place, group, this, null);
   }
 
@@ -258,7 +258,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public AnAction getAction(@NotNull String id) {
+  public AnAction getAction(@Nonnull String id) {
     return getActionImpl(id, false);
   }
 
@@ -339,8 +339,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return anAction;
   }
 
-  @NotNull
-  private AnAction replaceStub(@NotNull ActionStub stub, AnAction anAction) {
+  @Nonnull
+  private AnAction replaceStub(@Nonnull ActionStub stub, AnAction anAction) {
     LOG.assertTrue(myAction2Id.containsKey(stub));
     myAction2Id.remove(stub);
 
@@ -361,7 +361,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public String getId(@NotNull AnAction action) {
+  public String getId(@Nonnull AnAction action) {
     LOG.assertTrue(!(action instanceof ActionStub));
     synchronized (myLock) {
       return myAction2Id.get(action);
@@ -369,7 +369,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public String[] getActionIds(@NotNull String idPrefix) {
+  public String[] getActionIds(@Nonnull String idPrefix) {
     synchronized (myLock) {
       ArrayList<String> idList = new ArrayList<>();
       for (String id : myId2Action.keySet()) {
@@ -382,7 +382,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public boolean isGroup(@NotNull String actionId) {
+  public boolean isGroup(@Nonnull String actionId) {
     return getActionImpl(actionId, true) instanceof ActionGroup;
   }
 
@@ -515,9 +515,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     }
   }
 
-  private static void setIconFromClass(@NotNull final Class actionClass,
-                                       @NotNull final ClassLoader classLoader,
-                                       @NotNull final String iconPath,
+  private static void setIconFromClass(@Nonnull final Class actionClass,
+                                       @Nonnull final ClassLoader classLoader,
+                                       @Nonnull final String iconPath,
                                        final String className,
                                        final Presentation presentation,
                                        final PluginId pluginId) {
@@ -558,8 +558,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
     return getDefaultInInternalOrNull(key, text);
   }
 
-  @NotNull
-  private static String getDefaultInInternalOrNull(@NotNull String key, @NotNull String text) {
+  @Nonnull
+  private static String getDefaultInInternalOrNull(@Nonnull String key, @Nonnull String text) {
     if (!StringUtil.isEmpty(text)) {
       return text;
     }
@@ -762,8 +762,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   public static boolean checkRelativeToAction(final String relativeToActionId,
-                                              @NotNull final Anchor anchor,
-                                              @NotNull final String actionName,
+                                              @Nonnull final Anchor anchor,
+                                              @Nonnull final String actionName,
                                               @Nullable final PluginId pluginId) {
     if ((Anchor.BEFORE == anchor || Anchor.AFTER == anchor) && relativeToActionId == null) {
       reportActionError(pluginId, actionName + ": \"relative-to-action\" cannot be null if anchor is \"after\" or \"before\"");
@@ -984,7 +984,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public void registerAction(@NotNull String actionId, @NotNull AnAction action, @Nullable PluginId pluginId) {
+  public void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId) {
     synchronized (myLock) {
       if (myId2Action.containsKey(actionId)) {
         reportActionError(pluginId, "action with the ID \"" +
@@ -1040,12 +1040,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public void registerAction(@NotNull String actionId, @NotNull AnAction action) {
+  public void registerAction(@Nonnull String actionId, @Nonnull AnAction action) {
     registerAction(actionId, action, null);
   }
 
   @Override
-  public void unregisterAction(@NotNull String actionId) {
+  public void unregisterAction(@Nonnull String actionId) {
     synchronized (myLock) {
       if (!myId2Action.containsKey(actionId)) {
         if (LOG.isDebugEnabled()) {
@@ -1066,7 +1066,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ActionManager";
   }
@@ -1184,7 +1184,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public KeyboardShortcut getKeyboardShortcut(@NotNull String actionId) {
+  public KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId) {
     AnAction action = ActionManager.getInstance().getAction(actionId);
     final ShortcutSet shortcutSet = action.getShortcutSet();
     final Shortcut[] shortcuts = shortcutSet.getShortcuts();
@@ -1349,8 +1349,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Applicat
   }
 
   @Override
-  public ActionCallback tryToExecute(@NotNull final AnAction action,
-                                     @NotNull final InputEvent inputEvent,
+  public ActionCallback tryToExecute(@Nonnull final AnAction action,
+                                     @Nonnull final InputEvent inputEvent,
                                      @Nullable final Component contextComponent,
                                      @Nullable final String place,
                                      boolean now) {

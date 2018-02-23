@@ -22,20 +22,21 @@ package com.intellij.openapi.vfs.newvfs.events;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class VFileDeleteEvent extends VFileEvent {
-  @NotNull private final VirtualFile myFile;
+  @Nonnull
+  private final VirtualFile myFile;
   private int myDepth = -1;
 
-  public VFileDeleteEvent(@Nullable Object requestor, @NotNull VirtualFile file, boolean isFromRefresh) {
+  public VFileDeleteEvent(@Nullable Object requestor, @Nonnull VirtualFile file, boolean isFromRefresh) {
     super(requestor, isFromRefresh);
     myFile = file;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -50,7 +51,7 @@ public class VFileDeleteEvent extends VFileEvent {
     return myFile.getPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

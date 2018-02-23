@@ -31,8 +31,8 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public abstract class ElementCreator {
 
   protected abstract String getActionName(String newName);
 
-  public PsiElement[] tryCreate(@NotNull final String inputString) {
+  public PsiElement[] tryCreate(@Nonnull final String inputString) {
     if (inputString.length() == 0) {
       Messages.showMessageDialog(myProject, IdeBundle.message("error.name.should.be.specified"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
       return PsiElement.EMPTY_ARRAY;

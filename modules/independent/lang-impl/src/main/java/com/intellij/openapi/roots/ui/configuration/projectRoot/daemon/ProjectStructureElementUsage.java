@@ -1,7 +1,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

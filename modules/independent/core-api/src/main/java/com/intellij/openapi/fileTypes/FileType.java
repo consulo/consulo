@@ -20,8 +20,8 @@ import com.intellij.util.ArrayFactory;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public interface FileType extends Named {
    *
    * @return The file type id.
    */
-  @NotNull
+  @Nonnull
   @NonNls
   default String getId() {
     return getName();
@@ -46,7 +46,7 @@ public interface FileType extends Named {
    * @return The file type name.
    */
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   @Deprecated
   @DeprecationInfo(value = "Use #getId(), and implement #getId()")
@@ -60,7 +60,7 @@ public interface FileType extends Named {
    * @return The file type description.
    */
 
-  @NotNull
+  @Nonnull
   String getDescription();
 
   /**
@@ -69,7 +69,7 @@ public interface FileType extends Named {
    * @return The extension, not including the leading '.'.
    */
 
-  @NotNull
+  @Nonnull
   @NonNls
   String getDefaultExtension();
 
@@ -108,7 +108,7 @@ public interface FileType extends Named {
    */
   @Nullable
   @NonNls
-  default String getCharset(@NotNull VirtualFile file, final byte[] content) {
+  default String getCharset(@Nonnull VirtualFile file, final byte[] content) {
     return null;
   }
 }

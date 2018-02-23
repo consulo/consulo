@@ -17,7 +17,7 @@ package com.intellij.ui.components;
 
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.ColorUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

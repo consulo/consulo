@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Pair;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class ProjectLibraryTable extends LibraryTableBase {
 
   public final static class LibraryStateSplitter extends StateSplitterEx {
     @Override
-    public List<Pair<Element, String>> splitState(@NotNull Element state) {
+    public List<Pair<Element, String>> splitState(@Nonnull Element state) {
       return splitState(state, LibraryImpl.LIBRARY_NAME_ATTR);
     }
   }

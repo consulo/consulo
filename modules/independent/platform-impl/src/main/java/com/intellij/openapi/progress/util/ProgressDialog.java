@@ -36,9 +36,9 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -78,8 +78,8 @@ class ProgressDialog implements Disposable {
     }
   };
 
-  @NotNull
-  private static String fitTextToLabel(@Nullable String fullText, @NotNull JLabel label) {
+  @Nonnull
+  private static String fitTextToLabel(@Nullable String fullText, @Nonnull JLabel label) {
     if (fullText == null || fullText.isEmpty()) return " ";
     while (label.getFontMetrics(label.getFont()).stringWidth(fullText) > label.getWidth()) {
       int sep = fullText.indexOf(File.separatorChar, 4);
@@ -130,14 +130,14 @@ class ProgressDialog implements Disposable {
 
     myCancelButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         doCancelAction();
       }
     });
 
     myCancelButton.registerKeyboardAction(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         if (myCancelButton.isEnabled()) {
           doCancelAction();
         }
@@ -214,7 +214,7 @@ class ProgressDialog implements Disposable {
     myBackgroundButton.addActionListener(
             new ActionListener() {
               @Override
-              public void actionPerformed(@NotNull ActionEvent e) {
+              public void actionPerformed(@Nonnull ActionEvent e) {
                 if (myShouldShowBackground) {
                   myProgressWindow.background();
                 }
@@ -339,9 +339,9 @@ class ProgressDialog implements Disposable {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected DialogWrapperPeer createPeer(@NotNull final Component parent, final boolean canBeParent) {
+    protected DialogWrapperPeer createPeer(@Nonnull final Component parent, final boolean canBeParent) {
       if (useLightPopup()) {
         try {
           return new GlassPaneDialogWrapperPeer(this, parent, canBeParent);
@@ -355,13 +355,13 @@ class ProgressDialog implements Disposable {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DialogWrapperPeer createPeer(final boolean canBeParent, final boolean applicationModalIfPossible) {
       return createPeer(null, canBeParent, applicationModalIfPossible);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DialogWrapperPeer createPeer(final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
       if (useLightPopup()) {
@@ -381,7 +381,7 @@ class ProgressDialog implements Disposable {
       return System.getProperty("vintage.progress") == null && !isWriteActionProgress();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DialogWrapperPeer createPeer(final Project project, final boolean canBeParent) {
       if (System.getProperty("vintage.progress") == null) {

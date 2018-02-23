@@ -25,7 +25,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * A base interface for PSI files that may contain not only text-based syntactic trees as their content,

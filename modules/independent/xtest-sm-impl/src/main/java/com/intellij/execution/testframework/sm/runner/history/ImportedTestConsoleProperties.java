@@ -31,8 +31,8 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -55,8 +55,8 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
   }
 
   @Override
-  public OutputToGeneralTestEventsConverter createTestEventsConverter(@NotNull String testFrameworkName,
-                                                                      @NotNull TestConsoleProperties consoleProperties) {
+  public OutputToGeneralTestEventsConverter createTestEventsConverter(@Nonnull String testFrameworkName,
+                                                                      @Nonnull TestConsoleProperties consoleProperties) {
     return new ImportedToGeneralTestEventsConverter(testFrameworkName, consoleProperties, myFile, myHandler);
   }
 
@@ -70,17 +70,17 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Navigatable getErrorNavigatable(@NotNull Location<?> location,
-                                         @NotNull String stacktrace) {
+  public Navigatable getErrorNavigatable(@Nonnull Location<?> location,
+                                         @Nonnull String stacktrace) {
     return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
   }
 
   @Nullable
   @Override
-  public Navigatable getErrorNavigatable(@NotNull Project project,
-                                         @NotNull String stacktrace) {
+  public Navigatable getErrorNavigatable(@Nonnull Project project,
+                                         @Nonnull String stacktrace) {
     return myProperties == null ? null : myProperties.getErrorNavigatable(project, stacktrace);
   }
 
@@ -103,7 +103,7 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public TestProxyFilterProvider getFilterProvider() {
     return myProperties == null ? null : myProperties.getFilterProvider();
   }

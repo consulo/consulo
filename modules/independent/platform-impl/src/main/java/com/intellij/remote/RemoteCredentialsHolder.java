@@ -19,7 +19,7 @@ import com.intellij.openapi.util.PasswordUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author michael.golubev
@@ -51,7 +51,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
   private boolean myStorePassword;
   private boolean myStorePassphrase;
 
-  public static String getCredentialsString(@NotNull RemoteCredentials cred) {
+  public static String getCredentialsString(@Nonnull RemoteCredentials cred) {
     return SSH_PREFIX + cred.getUserName() + "@" + cred.getHost() + ":" + cred.getLiteralPort();
   }
 
@@ -176,7 +176,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
     myUseKeyPair = useKeyPair;
   }
 
-  @NotNull
+  @Nonnull
   public String getSerializedUserName() {
     if (myAnonymous || myUserName == null) return "";
     return myUserName;
@@ -191,7 +191,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getSerializedPassword() {
     if (myAnonymous) return "";
 
@@ -213,7 +213,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getSerializedPassphrase() {
     if (myStorePassphrase) {
       return PasswordUtil.encodePassword(myPassphrase);
@@ -234,7 +234,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
     }
   }
 
-  public void copyRemoteCredentialsTo(@NotNull MutableRemoteCredentials to) {
+  public void copyRemoteCredentialsTo(@Nonnull MutableRemoteCredentials to) {
     copyRemoteCredentials(this, to);
   }
 
@@ -242,7 +242,7 @@ public class RemoteCredentialsHolder implements MutableRemoteCredentials {
     copyRemoteCredentials(from, this);
   }
 
-  public static void copyRemoteCredentials(@NotNull RemoteCredentials from, @NotNull MutableRemoteCredentials to) {
+  public static void copyRemoteCredentials(@Nonnull RemoteCredentials from, @Nonnull MutableRemoteCredentials to) {
     to.setHost(from.getHost());
     to.setLiteralPort(from.getLiteralPort());//then port is copied
     to.setAnonymous(from.isAnonymous());

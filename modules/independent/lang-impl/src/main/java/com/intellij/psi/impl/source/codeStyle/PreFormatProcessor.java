@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.codeStyle;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -49,6 +49,6 @@ public interface PreFormatProcessor {
    * @param range    target range within the given element
    * @return         range recommended to use for further processing
    */
-  @NotNull
-  TextRange process(@NotNull ASTNode element, @NotNull TextRange range);
+  @Nonnull
+  TextRange process(@Nonnull ASTNode element, @Nonnull TextRange range);
 }

@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
 import com.intellij.util.containers.ContainerUtilRt;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -38,14 +38,18 @@ import java.util.List;
  */
 public class FontPreferencesImpl implements ModifiableFontPreferences {
 
-  @NotNull private final TObjectIntHashMap<String> myFontSizes    = new TObjectIntHashMap<>();
-  @NotNull private final List<String> myEffectiveFontFamilies = ContainerUtilRt.newArrayList();
-  @NotNull private final List<String> myRealFontFamilies = ContainerUtilRt.newArrayList();
+  @Nonnull
+  private final TObjectIntHashMap<String> myFontSizes    = new TObjectIntHashMap<>();
+  @Nonnull
+  private final List<String> myEffectiveFontFamilies = ContainerUtilRt.newArrayList();
+  @Nonnull
+  private final List<String> myRealFontFamilies = ContainerUtilRt.newArrayList();
 
   private boolean myUseLigatures;
   private float myLineSpacing = DEFAULT_LINE_SPACING;
 
-  @Nullable private Runnable myChangeListener;
+  @javax.annotation.Nullable
+  private Runnable myChangeListener;
 
   /**
    * Font size to use by default. Default value is {@link #DEFAULT_FONT_SIZE}.
@@ -56,7 +60,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     myChangeListener = changeListener;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Runnable getChangeListener() {
     return myChangeListener;
   }
@@ -81,7 +85,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public boolean hasSize(@NotNull String fontName) {
+  public boolean hasSize(@Nonnull String fontName) {
     return myFontSizes.containsKey(fontName);
   }
 
@@ -95,7 +99,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     myLineSpacing = EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
   }
 
-  public int getSize(@NotNull String fontFamily) {
+  public int getSize(@Nonnull String fontFamily) {
     int result = myFontSizes.get(fontFamily);
     if (result <= 0) {
       result = myTemplateFontSize;
@@ -103,7 +107,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     return result > 0 ? result : DEFAULT_FONT_SIZE;
   }
 
-  public void setSize(@NotNull String fontFamily, int size) {
+  public void setSize(@Nonnull String fontFamily, int size) {
     myFontSizes.put(fontFamily, size);
     myTemplateFontSize = size;
     if (myChangeListener != null) {
@@ -122,7 +126,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * @return    effective font families to use
    */
   @Override
-  @NotNull
+  @Nonnull
   public List<String> getEffectiveFontFamilies() {
     return myEffectiveFontFamilies;
   }
@@ -132,13 +136,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * @see #getEffectiveFontFamilies()
    */
   @Override
-  @NotNull
+  @Nonnull
   public List<String> getRealFontFamilies() {
     return myRealFontFamilies;
   }
 
   @Override
-  public void register(@NotNull String fontFamily, int size) {
+  public void register(@Nonnull String fontFamily, int size) {
     String fallbackFontFamily = FontPreferences.getFallbackName(fontFamily, size, null);
     if (!myRealFontFamilies.contains(fontFamily)) {
       myRealFontFamilies.add(fontFamily);
@@ -155,13 +159,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    *         {@link #DEFAULT_FONT_NAME} otherwise
    */
   @Override
-  @NotNull
+  @Nonnull
   public String getFontFamily() {
     return myEffectiveFontFamilies.isEmpty() ? DEFAULT_FONT_NAME : myEffectiveFontFamilies.get(0);
   }
 
   @Override
-  public void addFontFamily(@NotNull String fontFamily) {
+  public void addFontFamily(@Nonnull String fontFamily) {
     String fallbackFontFamily = FontPreferences.getFallbackName(fontFamily, DEFAULT_FONT_SIZE, null);
     if (!myRealFontFamilies.contains(fontFamily)) {
       myRealFontFamilies.add(fontFamily);
@@ -176,7 +180,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void copyTo(@NotNull final FontPreferences preferences) {
+  public void copyTo(@Nonnull final FontPreferences preferences) {
     if (preferences instanceof ModifiableFontPreferences) {
       ModifiableFontPreferences modifiablePreferences = (ModifiableFontPreferences)preferences;
       modifiablePreferences.setEffectiveFontFamilies(myEffectiveFontFamilies);
@@ -199,7 +203,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void setFontSize(@NotNull String fontFamily, int size) {
+  public void setFontSize(@Nonnull String fontFamily, int size) {
     myFontSizes.put(fontFamily, size);
   }
 
@@ -209,13 +213,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void setEffectiveFontFamilies(@NotNull List<String> fontFamilies) {
+  public void setEffectiveFontFamilies(@Nonnull List<String> fontFamilies) {
     myEffectiveFontFamilies.clear();
     myEffectiveFontFamilies.addAll(fontFamilies);
   }
 
   @Override
-  public void setRealFontFamilies(@NotNull List<String> fontFamilies) {
+  public void setRealFontFamilies(@Nonnull List<String> fontFamilies) {
     myRealFontFamilies.clear();
     myRealFontFamilies.addAll(fontFamilies);
   }

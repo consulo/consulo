@@ -22,8 +22,8 @@ import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,12 +36,12 @@ public class PatchWriter {
   private PatchWriter() {
   }
 
-  public static void writePatches(@NotNull final Project project,
+  public static void writePatches(@Nonnull final Project project,
                                   String fileName,
                                   @Nullable String basePath,
                                   List<FilePatch> patches,
                                   CommitContext commitContext,
-                                  @NotNull Charset charset) throws IOException {
+                                  @Nonnull Charset charset) throws IOException {
     Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), charset);
     try {
       final String lineSeparator = CodeStyleFacade.getInstance(project).getLineSeparator();

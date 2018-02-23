@@ -22,8 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -37,21 +36,21 @@ public abstract class Executor {
 
   public abstract Icon getToolWindowIcon();
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
   public abstract Icon getDisabledIcon();
 
   public abstract String getDescription();
 
-  @NotNull
+  @Nonnull
   public abstract String getActionName();
 
-  @NotNull
+  @Nonnull
   @NonNls
   public abstract String getId();
 
-  @NotNull
+  @Nonnull
   public abstract String getStartActionText();
 
   @NonNls
@@ -63,12 +62,12 @@ public abstract class Executor {
   /**
    * Override this method and return {@code false} to hide executor from panel
    */
-  public boolean isApplicable(@NotNull Project project) {
+  public boolean isApplicable(@Nonnull Project project) {
     return true;
   }
 
-  @NotNull
-  public String getActionText(@Nullable String configurationName) {
+  @Nonnull
+  public String getActionText(@javax.annotation.Nullable String configurationName) {
     return BundleBase.format(getStartActionText(StringUtil.isEmpty(configurationName)), escapeMnemonicsInConfigurationName(configurationName));
   }
 
@@ -76,14 +75,14 @@ public abstract class Executor {
     return configurationName.replace("_", "__");
   }
 
-  @NotNull
+  @Nonnull
   public String getStartActionText(boolean emptyName) {
     return getStartActionText() + (emptyName ? "" : " ''{0}''");
   }
 
   @Deprecated
   @DeprecationInfo("Use #getStartActionText(emptyName)")
-  @NotNull
+  @Nonnull
   public String getStartActionText(String configurationName) {
     return getStartActionText(StringUtil.isEmpty(configurationName));
   }

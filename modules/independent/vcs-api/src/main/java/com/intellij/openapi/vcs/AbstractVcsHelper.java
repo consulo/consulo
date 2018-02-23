@@ -32,8 +32,8 @@ import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -47,18 +47,18 @@ public abstract class AbstractVcsHelper {
 
   protected final Project myProject;
 
-  protected AbstractVcsHelper(@NotNull Project project) {
+  protected AbstractVcsHelper(@Nonnull Project project) {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   public static AbstractVcsHelper getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, AbstractVcsHelper.class);
   }
 
-  public abstract void showErrors(List<VcsException> abstractVcsExceptions, @NotNull String tabDisplayName);
+  public abstract void showErrors(List<VcsException> abstractVcsExceptions, @Nonnull String tabDisplayName);
 
-  public abstract void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @NotNull String tabDisplayName);
+  public abstract void showErrors(Map<HotfixData, List<VcsException>> exceptionGroups, @Nonnull String tabDisplayName);
 
   /**
    * Runs the runnable inside the vcs transaction (if needed), collects all exceptions, commits/rollbacks transaction
@@ -94,7 +94,7 @@ public abstract class AbstractVcsHelper {
   public abstract void showWhatDiffersBrowser(@Nullable Component parent, Collection<Change> changes, @Nls String title);
 
   @Nullable
-  public abstract <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(@NotNull CommittedChangesProvider<T, U> provider,
+  public abstract <T extends CommittedChangeList, U extends ChangeBrowserSettings> T chooseCommittedChangeList(@Nonnull CommittedChangesProvider<T, U> provider,
                                                                                                                RepositoryLocation location);
 
   public abstract void openCommittedChangesTab(AbstractVcs vcs,
@@ -118,12 +118,13 @@ public abstract class AbstractVcsHelper {
    * @param mergeDialogCustomizer custom container of titles, descriptions and messages for the merge dialog.
    * @return changed files for which the merge was actually performed.
    */
-  public abstract @NotNull List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider, @NotNull MergeDialogCustomizer mergeDialogCustomizer);
+  public abstract @Nonnull
+  List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider, @Nonnull MergeDialogCustomizer mergeDialogCustomizer);
 
   /**
    * {@link #showMergeDialog(java.util.List, com.intellij.openapi.vcs.merge.MergeProvider)} without description.
    */
-  @NotNull
+  @Nonnull
   public final List<VirtualFile> showMergeDialog(List<VirtualFile> files, MergeProvider provider) {
     return showMergeDialog(files, provider, new MergeDialogCustomizer());
   }
@@ -132,7 +133,7 @@ public abstract class AbstractVcsHelper {
    * {@link #showMergeDialog(java.util.List, com.intellij.openapi.vcs.merge.MergeProvider)} without description and with default merge provider
    * for the current VCS.
    */
-  @NotNull
+  @Nonnull
   public final List<VirtualFile> showMergeDialog(List<VirtualFile> files) {
     if (files.isEmpty()) return Collections.emptyList();
     MergeProvider provider = null;
@@ -147,16 +148,16 @@ public abstract class AbstractVcsHelper {
     return showMergeDialog(files, provider);
   }
 
-  public abstract void showFileHistory(@NotNull VcsHistoryProvider historyProvider,
-                                       @NotNull FilePath path,
-                                       @NotNull AbstractVcs vcs,
-                                       @Nullable String repositoryPath);
+  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider,
+                                       @Nonnull FilePath path,
+                                       @Nonnull AbstractVcs vcs,
+                                       @javax.annotation.Nullable String repositoryPath);
 
-  public abstract void showFileHistory(@NotNull VcsHistoryProvider historyProvider,
+  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider,
                                        @Nullable AnnotationProvider annotationProvider,
-                                       @NotNull FilePath path,
+                                       @Nonnull FilePath path,
                                        @Nullable String repositoryPath,
-                                       @NotNull final AbstractVcs vcs);
+                                       @Nonnull final AbstractVcs vcs);
 
   /**
    * Shows the "Rollback Changes" dialog with the specified list of changes.
@@ -173,10 +174,10 @@ public abstract class AbstractVcsHelper {
                                                                final String singleFilePromptTemplate,
                                                                final VcsShowConfirmationOption confirmationOption);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                                 final String title,
-                                                                @Nullable final String prompt,
+                                                                @javax.annotation.Nullable final String prompt,
                                                                 final String singleFileTitle,
                                                                 final String singleFilePromptTemplate,
                                                                 final VcsShowConfirmationOption confirmationOption);
@@ -184,7 +185,7 @@ public abstract class AbstractVcsHelper {
   @Nullable
   public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                        final String title,
-                                                       @Nullable final String prompt,
+                                                       @javax.annotation.Nullable final String prompt,
                                                        final String singleFileTitle,
                                                        final String singleFilePromptTemplate,
                                                        final VcsShowConfirmationOption confirmationOption,
@@ -200,13 +201,13 @@ public abstract class AbstractVcsHelper {
    *    have been called. It doesn't wait for commit itself to succeed or fail - for this use the {@code customResultHandler}.</p>
    * @return true if user decides to commit the changes, false if user presses Cancel.
    */
-  public abstract boolean commitChanges(@NotNull Collection<Change> changes, @NotNull LocalChangeList initialChangeList,
-                                        @NotNull String commitMessage, @Nullable CommitResultHandler customResultHandler);
+  public abstract boolean commitChanges(@Nonnull Collection<Change> changes, @Nonnull LocalChangeList initialChangeList,
+                                        @Nonnull String commitMessage, @javax.annotation.Nullable CommitResultHandler customResultHandler);
 
-  public abstract void loadAndShowCommittedChangesDetails(@NotNull Project project,
-                                                          @NotNull VcsRevisionNumber revision,
-                                                          @NotNull VirtualFile file,
-                                                          @NotNull VcsKey key,
+  public abstract void loadAndShowCommittedChangesDetails(@Nonnull Project project,
+                                                          @Nonnull VcsRevisionNumber revision,
+                                                          @Nonnull VirtualFile file,
+                                                          @Nonnull VcsKey key,
                                                           @Nullable RepositoryLocation location,
                                                           boolean local);
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.util.IconUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -37,7 +37,7 @@ public class DeleteLayerAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
 
     String currentLayerName = modifiableRootModelProxy.getCurrentLayerName();
@@ -47,7 +47,7 @@ public class DeleteLayerAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ModifiableRootModel modifiableRootModelProxy = myModuleEditor.getModifiableRootModelProxy();
     e.getPresentation().setEnabled(modifiableRootModelProxy != null && modifiableRootModelProxy.getLayers().size() > 1);
   }

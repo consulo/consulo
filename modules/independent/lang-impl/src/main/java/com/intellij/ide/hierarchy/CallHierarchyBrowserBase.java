@@ -23,8 +23,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -36,7 +36,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   private static final Key<Object> CALL_HIERARCHY_BROWSER_DATA_KEY = Key.create("com.intellij.ide.hierarchy.CallHierarchyBrowserBase");
 
-  public CallHierarchyBrowserBase(@NotNull Project project, @NotNull PsiElement method) {
+  public CallHierarchyBrowserBase(@Nonnull Project project, @Nonnull PsiElement method) {
     super(project, method);
   }
 
@@ -47,13 +47,13 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Key<Object> getBrowserDataKey() {
     return CALL_HIERARCHY_BROWSER_DATA_KEY;
   }
 
   @Override
-  protected void prependActions(@NotNull DefaultActionGroup actionGroup) {
+  protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
     actionGroup.add(new ChangeViewTypeActionBase(IdeBundle.message("action.caller.methods.hierarchy"),
                                                  IdeBundle.message("action.caller.methods.hierarchy"),
                                                  AllIcons.Hierarchy.Caller, CALLER_TYPE));
@@ -65,19 +65,19 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getActionPlace() {
     return ActionPlaces.CALL_HIERARCHY_VIEW_TOOLBAR;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getPrevOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.call.prev.occurence.name");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getNextOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.call.next.occurence.name");
   }
@@ -110,7 +110,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       super.update(event);
       setEnabled(isValidBase());
     }

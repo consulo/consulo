@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class ContentEntryTreeCellRenderer extends NodeRenderer {
   protected final ContentEntryTreeEditor myTreeEditor;
 
-  public ContentEntryTreeCellRenderer(@NotNull final ContentEntryTreeEditor treeEditor) {
+  public ContentEntryTreeCellRenderer(@Nonnull final ContentEntryTreeEditor treeEditor) {
     myTreeEditor = treeEditor;
   }
 

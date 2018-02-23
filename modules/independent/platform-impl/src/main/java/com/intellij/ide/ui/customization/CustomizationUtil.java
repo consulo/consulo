@@ -26,9 +26,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -275,7 +275,7 @@ public class CustomizationUtil {
     return result.toArray(new ActionUrl[result.size()]);
   }
 
-  public static MouseListener installPopupHandler(JComponent component, @NotNull final String groupId, final String place) {
+  public static MouseListener installPopupHandler(JComponent component, @Nonnull final String groupId, final String place) {
     if (ApplicationManager.getApplication() == null) return new MouseAdapter(){};
     PopupHandler popupHandler = new PopupHandler() {
       public void invokePopup(Component comp, int x, int y) {

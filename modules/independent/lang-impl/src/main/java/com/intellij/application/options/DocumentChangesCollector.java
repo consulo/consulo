@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,7 +237,7 @@ public class DocumentChangesCollector implements DocumentListener {
    *
    * @return    aggregated and merged document changes sorted by their start offsets in ascending order
    */
-  @NotNull
+  @Nonnull
   public List<? extends TextChange> getChanges() {
     return myChanges;
   }

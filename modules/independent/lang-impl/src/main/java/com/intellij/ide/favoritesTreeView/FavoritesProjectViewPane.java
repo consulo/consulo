@@ -32,7 +32,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -93,7 +93,7 @@ public class FavoritesProjectViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }
@@ -121,14 +121,14 @@ public class FavoritesProjectViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSubIds() {
     return ArrayUtil.toStringArray(myFavoritesManager.getAvailableFavoritesListNames());
   }
 
   @Override
-  @NotNull
-  public String getPresentableSubIdName(@NotNull final String subId) {
+  @Nonnull
+  public String getPresentableSubIdName(@Nonnull final String subId) {
     return subId;
   }
 

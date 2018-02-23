@@ -21,7 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class MouseGestureManager implements ApplicationComponent {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "MouseGestureListener";

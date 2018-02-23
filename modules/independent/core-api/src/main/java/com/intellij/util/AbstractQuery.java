@@ -19,8 +19,8 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncFutureFactory;
 import com.intellij.concurrency.AsyncFutureResult;
 import com.intellij.concurrency.FinallyFuture;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,7 +32,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
   private boolean myIsProcessing = false;
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Result> findAll() {
     assertNotProcessing();
     final CommonProcessors.CollectProcessor<Result> processor = new CommonProcessors.CollectProcessor<Result>();
@@ -59,9 +59,9 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     assert !myIsProcessing : "Operation is not allowed while query is being processed";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Result[] toArray(@NotNull Result[] a) {
+  public Result[] toArray(@Nonnull Result[] a) {
     assertNotProcessing();
 
     final Collection<Result> all = findAll();
@@ -69,7 +69,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
   }
 
   @Override
-  public boolean forEach(@NotNull Processor<Result> consumer) {
+  public boolean forEach(@Nonnull Processor<Result> consumer) {
     assertNotProcessing();
 
     myIsProcessing = true;
@@ -81,9 +81,9 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull Processor<Result> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<Result> consumer) {
     assertNotProcessing();
     myIsProcessing = true;
     return new FinallyFuture<Boolean>(processResultsAsync(consumer), new Runnable() {
@@ -94,9 +94,9 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     });
   }
 
-  protected abstract boolean processResults(@NotNull Processor<Result> consumer);
+  protected abstract boolean processResults(@Nonnull Processor<Result> consumer);
 
-  protected AsyncFuture<Boolean> processResultsAsync(@NotNull Processor<Result> consumer) {
+  protected AsyncFuture<Boolean> processResultsAsync(@Nonnull Processor<Result> consumer) {
     final AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
     try {
       result.set(processResults(consumer));

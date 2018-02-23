@@ -39,8 +39,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -60,11 +60,11 @@ public abstract class AbstractImportTestsAction extends AnAction {
   public static final String TEST_HISTORY_SIZE = "test_history_size";
   private SMTRunnerConsoleProperties myProperties;
 
-  public AbstractImportTestsAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public AbstractImportTestsAction(@javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
     super(text, description, icon);
   }
 
-  public AbstractImportTestsAction(SMTRunnerConsoleProperties properties, @Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public AbstractImportTestsAction(SMTRunnerConsoleProperties properties, @javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
     this(text, description, icon);
     myProperties = properties;
   }
@@ -85,8 +85,8 @@ public abstract class AbstractImportTestsAction extends AnAction {
     e.getPresentation().setEnabledAndVisible(e.getProject() != null);
   }
 
-  @Nullable
-  public abstract VirtualFile getFile(@NotNull Project project);
+  @javax.annotation.Nullable
+  public abstract VirtualFile getFile(@Nonnull Project project);
 
   @Override
   public void actionPerformed(AnActionEvent e) {
@@ -205,7 +205,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
     @Nullable
     @Override
-    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
       if (!myImported) {
         myImported = true;
         return new ImportedTestRunnableState(this, VfsUtilCore.virtualToIoFile(myFile));
@@ -231,7 +231,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
       return myImported && myConfiguration != null ? myConfiguration.getName() : myFile.getNameWithoutExtension();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Icon getIcon() {
       return myProperties != null ? myProperties.getConfiguration().getIcon() : null;

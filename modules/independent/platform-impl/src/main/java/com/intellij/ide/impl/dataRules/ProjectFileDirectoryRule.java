@@ -21,21 +21,21 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
 public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<VirtualFile> getKey() {
     return PlatformDataKeys.PROJECT_FILE_DIRECTORY;
   }
 
   @Override
-  public VirtualFile getData(@NotNull DataProvider dataProvider) {
+  public VirtualFile getData(@Nonnull DataProvider dataProvider) {
     VirtualFile dir = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
       final Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);

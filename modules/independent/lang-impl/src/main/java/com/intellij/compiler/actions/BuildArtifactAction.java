@@ -48,8 +48,8 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -117,7 +117,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     popup.showCenteredInCurrentWindow(project);
   }
 
-  private static void doBuild(@NotNull Project project, final @NotNull List<ArtifactPopupItem> items, boolean rebuild) {
+  private static void doBuild(@Nonnull Project project, final @Nonnull List<ArtifactPopupItem> items, boolean rebuild) {
     final Set<Artifact> artifacts = getArtifacts(items, project);
     final CompileScope scope = ArtifactCompileScope.createArtifactsScope(project, artifacts, rebuild);
 
@@ -151,7 +151,7 @@ public class BuildArtifactAction extends DumbAwareAction {
   }
 
   private static class CleanArtifactItem extends ArtifactActionItem {
-    private CleanArtifactItem(@NotNull List<ArtifactPopupItem> item, @NotNull Project project) {
+    private CleanArtifactItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project) {
       super(item, project, "Clean");
     }
 
@@ -204,7 +204,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
       new Task.Backgroundable(myProject, "Cleaning artifacts...", true) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           List<File> deleted = new ArrayList<File>();
           for (Pair<File, Artifact> pair : toClean) {
             indicator.checkCanceled();
@@ -252,7 +252,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     protected final Project myProject;
     private String myActionName;
 
-    protected ArtifactActionItem(@NotNull List<ArtifactPopupItem> item, @NotNull Project project, @NotNull String name) {
+    protected ArtifactActionItem(@Nonnull List<ArtifactPopupItem> item, @Nonnull Project project, @Nonnull String name) {
       myArtifactPopupItems = item;
       myProject = project;
       myActionName = name;
@@ -317,7 +317,7 @@ public class BuildArtifactAction extends DumbAwareAction {
       return aValue.getIcon();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTextFor(ArtifactPopupItem value) {
       return value.getText();
@@ -351,7 +351,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         actions.add(new EditArtifactItem(selectedValues, myProject, mySettingsService));
       }
       return new BaseListPopupStep<ArtifactActionItem>(selectedValues.size() == 1 ? "Action" : "Action for " + selectedValues.size() + " artifacts", actions) {
-        @NotNull
+        @Nonnull
         @Override
         public String getTextFor(ArtifactActionItem value) {
           return value.getActionName();

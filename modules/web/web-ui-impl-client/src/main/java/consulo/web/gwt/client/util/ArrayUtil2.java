@@ -15,8 +15,6 @@
  */
 package consulo.web.gwt.client.util;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 /**
@@ -24,8 +22,8 @@ import java.util.List;
  * @since 12-Sep-17
  */
 public class ArrayUtil2 {
-  @Nullable
-  public static <T> T safeGet(@Nullable List<? extends T> array, int index) {
+  @javax.annotation.Nullable
+  public static <T> T safeGet(@javax.annotation.Nullable List<? extends T> array, int index) {
     if (array == null) return null;
     if (index < 0 || array.size() <= index) return null;
     return array.get(index);

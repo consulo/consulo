@@ -61,8 +61,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -81,7 +81,7 @@ import java.util.Map;
 public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
   public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPane");
 
-  @NotNull
+  @Nonnull
   protected final Project myProject;
   private Runnable myTreeChangeListener;
   protected DnDAwareTree myTree;
@@ -107,21 +107,21 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  protected AbstractProjectViewPane(@NotNull Project project) {
+  protected AbstractProjectViewPane(@Nonnull Project project) {
     myProject = project;
     WolfTheProblemSolver.ProblemListener problemListener = new WolfTheProblemSolver.ProblemListener() {
       @Override
-      public void problemsAppeared(@NotNull VirtualFile file) {
+      public void problemsAppeared(@Nonnull VirtualFile file) {
         queueUpdateByProblem();
       }
 
       @Override
-      public void problemsChanged(@NotNull VirtualFile file) {
+      public void problemsChanged(@Nonnull VirtualFile file) {
         queueUpdateByProblem();
       }
 
       @Override
-      public void problemsDisappeared(@NotNull VirtualFile file) {
+      public void problemsDisappeared(@Nonnull VirtualFile file) {
         queueUpdateByProblem();
       }
     };
@@ -133,7 +133,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     if (myTreeChangeListener != null) myTreeChangeListener.run();
   }
 
-  public final void setTreeChangeListener(@NotNull Runnable listener) {
+  public final void setTreeChangeListener(@Nonnull Runnable listener) {
     myTreeChangeListener = listener;
   }
 
@@ -145,7 +145,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public abstract Icon getIcon();
 
-  @NotNull
+  @Nonnull
   public abstract String getId();
 
   @Nullable
@@ -171,13 +171,13 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
    * @return all supported sub views IDs.
    * should return empty array if there is no subViews as in Project/Packages view.
    */
-  @NotNull
+  @Nonnull
   public String[] getSubIds() {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @NotNull
-  public String getPresentableSubIdName(@NotNull final String subId) {
+  @Nonnull
+  public String getPresentableSubIdName(@Nonnull final String subId) {
     throw new IllegalStateException("should not call");
   }
 
@@ -223,7 +223,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     myTreeStructure = null;
   }
 
-  @NotNull
+  @Nonnull
   public abstract ActionCallback updateFromRoot(boolean restoreExpandedPaths);
 
   public abstract void select(Object element, VirtualFile file, boolean requestFocus);
@@ -268,7 +268,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     }
   }
 
-  @NotNull
+  @Nonnull
   protected <T extends NodeDescriptor> List<T> getSelectedNodes(final Class<T> nodeClass) {
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return Collections.emptyList();
@@ -287,7 +287,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
@@ -347,7 +347,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return elements.length == 1 ? elements[0] : null;
   }
 
-  @NotNull
+  @Nonnull
   public final PsiElement[] getSelectedPSIElements() {
     List<PsiElement> psiElements = new ArrayList<>();
     for (Object element : getSelectedElements()) {
@@ -379,7 +379,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public final Object[] getSelectedElements() {
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return PsiElement.EMPTY_ARRAY;
@@ -493,7 +493,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     T value = super.getUserData(key);
     if (value == null && key instanceof KeyWithDefaultValue) {
       return (T)((KeyWithDefaultValue)key).getDefaultValue();
@@ -530,7 +530,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return myTree;
   }
 
-  @NotNull
+  @Nonnull
   public PsiDirectory[] getSelectedDirectories() {
     List<PsiDirectory> directories = ContainerUtil.newArrayList();
     for (PsiDirectoryNode node : getSelectedNodes(PsiDirectoryNode.class)) {
@@ -590,8 +590,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return PsiDirectory.EMPTY_ARRAY;
   }
 
-  @NotNull
-  protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(@NotNull final DefaultMutableTreeNode node) {
+  @Nonnull
+  protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(@Nonnull final DefaultMutableTreeNode node) {
     final Object userObject = node.getUserObject();
     if (userObject instanceof AbstractModuleNode) {
       final Module module = ((AbstractModuleNode)userObject).getValue();
@@ -771,14 +771,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     return dragAction == DnDConstants.ACTION_MOVE && MoveHandler.canMove(dataContext);
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     if (myTreeBuilder == null || myTreeBuilder.isDisposed()) return ActionCallback.REJECTED;
     return myTreeBuilder.getUi().getReady(requestor);
   }

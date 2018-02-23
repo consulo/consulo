@@ -34,7 +34,7 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -50,7 +50,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
   private final DebuggerSupport[] mySupports;
   private boolean myListening;
 
-  public ValueLookupManager(@NotNull Project project) {
+  public ValueLookupManager(@Nonnull Project project) {
     myProject = project;
     mySupports = DebuggerSupport.getDebuggerSupports();
     myAlarm = new Alarm(project);
@@ -108,7 +108,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
     }
   }
 
-  private void requestHint(final QuickEvaluateHandler handler, final Editor editor, final Point point, @NotNull final ValueHintType type) {
+  private void requestHint(final QuickEvaluateHandler handler, final Editor editor, final Point point, @Nonnull final ValueHintType type) {
     final Rectangle area = editor.getScrollingModel().getVisibleArea();
     myAlarm.cancelAllRequests();
     if (type == ValueHintType.MOUSE_OVER_HINT) {
@@ -140,7 +140,7 @@ public class ValueLookupManager extends EditorMouseAdapter implements EditorMous
     }
   }
 
-  public void showHint(@NotNull QuickEvaluateHandler handler, @NotNull Editor editor, @NotNull Point point, @NotNull ValueHintType type) {
+  public void showHint(@Nonnull QuickEvaluateHandler handler, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type) {
     myAlarm.cancelAllRequests();
     if (editor.isDisposed() || !handler.canShowHint(myProject)) {
       return;

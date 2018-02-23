@@ -19,8 +19,8 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -30,7 +30,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
   private final ClearableLazyValue<Boolean> myProperSetting = new ClearableLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       ToolDescriptors descriptors = getDescriptors();
@@ -48,7 +48,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
     }
   };
 
-  public InspectionConfigTreeNode(@NotNull Object userObject) {
+  public InspectionConfigTreeNode(@Nonnull Object userObject) {
     super(userObject);
   }
 

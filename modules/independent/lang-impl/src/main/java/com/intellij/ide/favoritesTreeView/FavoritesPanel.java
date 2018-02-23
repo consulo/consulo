@@ -28,8 +28,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;

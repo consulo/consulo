@@ -17,8 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -107,7 +107,7 @@ public class CaptionPanel extends JPanel {
     repaint();
   }
 
-  public void setButtonComponent(@NotNull ActiveComponent component, @Nullable Border border) {
+  public void setButtonComponent(@Nonnull ActiveComponent component, @Nullable Border border) {
     if (myButtonComponent != null) {
       remove(myButtonComponent.getComponent());
     }

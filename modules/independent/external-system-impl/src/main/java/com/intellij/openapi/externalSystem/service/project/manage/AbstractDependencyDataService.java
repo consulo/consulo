@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -40,7 +40,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
   implements ProjectDataService<E, I>
 {
 
-  public void setScope(@NotNull final DependencyScope scope, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
+  public void setScope(@Nonnull final DependencyScope scope, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @RequiredDispatchThread
       @Override
@@ -55,7 +55,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     });
   }
 
-  public void setExported(final boolean exported, @NotNull final ExportableOrderEntry dependency, boolean synchronous) {
+  public void setExported(final boolean exported, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @RequiredDispatchThread
       @Override
@@ -70,7 +70,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     });
   }
   
-  private static void doForDependency(@NotNull ExportableOrderEntry entry, @NotNull Consumer<ExportableOrderEntry> consumer) {
+  private static void doForDependency(@Nonnull ExportableOrderEntry entry, @Nonnull Consumer<ExportableOrderEntry> consumer) {
     // We need to get an up-to-date modifiable model to work with.
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(entry.getOwnerModule());
     final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
@@ -91,7 +91,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
   }
 
   @Override
-  public void removeData(@NotNull Collection<? extends I> toRemove, @NotNull Project project, boolean synchronous) {
+  public void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous) {
     if (toRemove.isEmpty()) {
       return;
     }
@@ -102,8 +102,8 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     }
   }
 
-  @NotNull
-  private static Map<Module, Collection<ExportableOrderEntry>> groupByModule(@NotNull Collection<? extends ExportableOrderEntry> data) {
+  @Nonnull
+  private static Map<Module, Collection<ExportableOrderEntry>> groupByModule(@Nonnull Collection<? extends ExportableOrderEntry> data) {
     Map<Module, Collection<ExportableOrderEntry>> result = ContainerUtilRt.newHashMap();
     for (ExportableOrderEntry entry : data) {
       Collection<ExportableOrderEntry> entries = result.get(entry.getOwnerModule());
@@ -115,7 +115,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     return result;
   }
   
-  public void removeData(@NotNull Collection<? extends ExportableOrderEntry> toRemove, @NotNull final Module module, boolean synchronous) {
+  public void removeData(@Nonnull Collection<? extends ExportableOrderEntry> toRemove, @Nonnull final Module module, boolean synchronous) {
     if (toRemove.isEmpty()) {
       return;
     }

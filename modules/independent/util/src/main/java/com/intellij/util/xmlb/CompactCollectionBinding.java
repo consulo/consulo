@@ -17,8 +17,8 @@ package com.intellij.util.xmlb;
 
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
 class CompactCollectionBinding extends Binding {
   private final String name;
 
-  protected CompactCollectionBinding(@NotNull MutableAccessor accessor) {
+  protected CompactCollectionBinding(@Nonnull MutableAccessor accessor) {
     super(accessor);
 
     name = myAccessor.getName();
@@ -36,7 +36,7 @@ class CompactCollectionBinding extends Binding {
 
   @Nullable
   @Override
-  public Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
     Element result = new Element(name);
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>)o;
@@ -52,7 +52,7 @@ class CompactCollectionBinding extends Binding {
 
   @Nullable
   @Override
-  public Object deserialize(Object context, @NotNull Element element) {
+  public Object deserialize(Object context, @Nonnull Element element) {
     @SuppressWarnings("unchecked")
     List<String> list = (List<String>)context;
     list.clear();
@@ -78,7 +78,7 @@ class CompactCollectionBinding extends Binding {
   }
 
   @Override
-  public boolean isBoundTo(@NotNull Element element) {
+  public boolean isBoundTo(@Nonnull Element element) {
     String elementName = element.getName();
     if (isNameEqual(elementName)) {
       return true;

@@ -17,14 +17,14 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class HyperlinkInfoBase implements HyperlinkInfo {
-  public abstract void navigate(@NotNull Project project, @Nullable RelativePoint hyperlinkLocationPoint);
+  public abstract void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint);
 
   @Override
   public void navigate(Project project) {

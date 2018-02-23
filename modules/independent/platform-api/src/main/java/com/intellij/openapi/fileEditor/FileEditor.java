@@ -23,8 +23,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 
@@ -65,21 +65,21 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * can be a name of other editor. The method should never return <code>null</code>.
    */
   @NonNls
-  @NotNull
+  @Nonnull
   String getName();
 
   /**
    * @return editor's internal state. Method should never return <code>null</code>.
    */
-  @NotNull
-  FileEditorState getState(@NotNull FileEditorStateLevel level);
+  @Nonnull
+  FileEditorState getState(@Nonnull FileEditorStateLevel level);
 
   /**
    * Applies given state to the editor.
    *
    * @param state cannot be null
    */
-  void setState(@NotNull FileEditorState state);
+  void setState(@Nonnull FileEditorState state);
 
   /**
    * @return whether the editor's content is modified in comparison with its file.
@@ -109,14 +109,14 @@ public interface FileEditor extends UserDataHolder, Disposable {
    *
    * @param listener to be added
    */
-  void addPropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * Adds specified listener
    *
    * @param listener to be removed
    */
-  void removePropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * @return highlighter object to perform background analysis and highlighting activities.
@@ -153,7 +153,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * @return component which represents editor in the UI.
    * The method should never return <code>null</code>.
    */
-  @NotNull
+  @Nonnull
   default javax.swing.JComponent getComponent() {
     Component uiComponent = getUIComponent();
     if(uiComponent != null) {

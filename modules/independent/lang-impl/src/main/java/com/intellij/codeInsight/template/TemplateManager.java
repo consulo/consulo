@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.PairProcessor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -31,35 +31,35 @@ public abstract class TemplateManager {
     return ServiceManager.getService(project, TemplateManager.class);
   }
 
-  public abstract void startTemplate(@NotNull Editor editor, @NotNull Template template);
+  public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template);
 
-  public abstract void startTemplate(@NotNull Editor editor, String selectionString, @NotNull Template template);
+  public abstract void startTemplate(@Nonnull Editor editor, String selectionString, @Nonnull Template template);
 
-  public abstract void startTemplate(@NotNull Editor editor, @NotNull Template template, TemplateEditingListener listener);
+  public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener);
 
-  public abstract void startTemplate(@NotNull final Editor editor,
-                                     @NotNull final Template template,
+  public abstract void startTemplate(@Nonnull final Editor editor,
+                                     @Nonnull final Template template,
                                      boolean inSeparateCommand,
                                      Map<String, String> predefinedVarValues,
                                      @Nullable TemplateEditingListener listener);
 
-  public abstract void startTemplate(@NotNull Editor editor,
-                                     @NotNull Template template,
+  public abstract void startTemplate(@Nonnull Editor editor,
+                                     @Nonnull Template template,
                                      TemplateEditingListener listener,
                                      final PairProcessor<String, String> callback);
 
-  public abstract boolean startTemplate(@NotNull Editor editor, char shortcutChar);
+  public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
 
-  public abstract Template createTemplate(@NotNull String key, String group);
+  public abstract Template createTemplate(@Nonnull String key, String group);
 
-  public abstract Template createTemplate(@NotNull String key, String group, @NonNls String text);
+  public abstract Template createTemplate(@Nonnull String key, String group, @NonNls String text);
 
   @Nullable
-  public abstract Template getActiveTemplate(@NotNull Editor editor);
+  public abstract Template getActiveTemplate(@Nonnull Editor editor);
 
   /**
    * Finished a live template in the given editor, if it's present
    * @return whether a live template was present
    */
-  public abstract boolean finishTemplate(@NotNull Editor editor);
+  public abstract boolean finishTemplate(@Nonnull Editor editor);
 }

@@ -24,7 +24,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.SystemProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class ErrorBean {
     }
 
     @Override
-    public int compareTo(@NotNull AffectedPlugin o) {
+    public int compareTo(@Nonnull AffectedPlugin o) {
       return pluginId.compareToIgnoreCase(o.pluginId);
     }
   }
@@ -97,7 +97,7 @@ public class ErrorBean {
     this.lastAction = lastAction;
   }
 
-  public void addAffectedPlugin(@NotNull PluginId pluginId, @NotNull String version) {
+  public void addAffectedPlugin(@Nonnull PluginId pluginId, @Nonnull String version) {
     affectedPlugins.add(new AffectedPlugin(pluginId.toString(), version));
   }
 

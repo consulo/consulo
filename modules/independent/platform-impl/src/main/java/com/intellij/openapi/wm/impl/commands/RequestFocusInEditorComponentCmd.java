@@ -30,8 +30,8 @@ import com.intellij.openapi.wm.impl.IdeFrameImpl;
 import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,7 @@ public final class RequestFocusInEditorComponentCmd extends FinalizableCommand{
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.wm.impl.commands.RequestFocusInEditorComponentCmd");
 
-  public RequestFocusInEditorComponentCmd(@NotNull final EditorSplitters splitters, IdeFocusManager
+  public RequestFocusInEditorComponentCmd(@Nonnull final EditorSplitters splitters, IdeFocusManager
           focusManager, final Runnable finishCallBack, boolean forced){
     super(finishCallBack);
 

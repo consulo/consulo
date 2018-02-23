@@ -37,9 +37,9 @@ import com.intellij.vcs.log.ui.filter.VcsLogClassicFilterUi;
 import com.intellij.vcs.log.util.BekUtil;
 import com.intellij.vcs.log.util.VcsUserUtil;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -51,30 +51,45 @@ import static com.intellij.util.containers.ContainerUtil.getFirstItem;
 public class MainFrame extends JPanel implements DataProvider, Disposable {
   private static final String HELP_ID = "reference.changesToolWindow.log";
 
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final VcsLogUiImpl myUi;
-  @NotNull private final VcsLog myLog;
-  @NotNull private final VcsLogClassicFilterUi myFilterUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogUiImpl myUi;
+  @Nonnull
+  private final VcsLog myLog;
+  @Nonnull
+  private final VcsLogClassicFilterUi myFilterUi;
 
-  @NotNull private final JBLoadingPanel myChangesLoadingPane;
-  @NotNull private final VcsLogGraphTable myGraphTable;
-  @NotNull private final DetailsPanel myDetailsPanel;
-  @NotNull private final Splitter myDetailsSplitter;
-  @NotNull private final JComponent myToolbar;
-  @NotNull private final RepositoryChangesBrowser myChangesBrowser;
-  @NotNull private final Splitter myChangesBrowserSplitter;
-  @NotNull private final SearchTextField myTextFilter;
-  @NotNull private final MainVcsLogUiProperties myUiProperties;
+  @Nonnull
+  private final JBLoadingPanel myChangesLoadingPane;
+  @Nonnull
+  private final VcsLogGraphTable myGraphTable;
+  @Nonnull
+  private final DetailsPanel myDetailsPanel;
+  @Nonnull
+  private final Splitter myDetailsSplitter;
+  @Nonnull
+  private final JComponent myToolbar;
+  @Nonnull
+  private final RepositoryChangesBrowser myChangesBrowser;
+  @Nonnull
+  private final Splitter myChangesBrowserSplitter;
+  @Nonnull
+  private final SearchTextField myTextFilter;
+  @Nonnull
+  private final MainVcsLogUiProperties myUiProperties;
 
-  @NotNull private Runnable myContainingBranchesListener;
-  @NotNull private Runnable myMiniDetailsLoadedListener;
+  @Nonnull
+  private Runnable myContainingBranchesListener;
+  @Nonnull
+  private Runnable myMiniDetailsLoadedListener;
 
-  public MainFrame(@NotNull VcsLogData logData,
-                   @NotNull VcsLogUiImpl ui,
-                   @NotNull Project project,
-                   @NotNull MainVcsLogUiProperties uiProperties,
-                   @NotNull VcsLog log,
-                   @NotNull VisiblePack initialDataPack) {
+  public MainFrame(@Nonnull VcsLogData logData,
+                   @Nonnull VcsLogUiImpl ui,
+                   @Nonnull Project project,
+                   @Nonnull MainVcsLogUiProperties uiProperties,
+                   @Nonnull VcsLog log,
+                   @Nonnull VisiblePack initialDataPack) {
     // collect info
     myLogData = logData;
     myUi = ui;
@@ -159,7 +174,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
    * @param dataPack         new data pack.
    * @param permGraphChanged true if permanent graph itself was changed.
    */
-  public void updateDataPack(@NotNull VisiblePack dataPack, boolean permGraphChanged) {
+  public void updateDataPack(@Nonnull VisiblePack dataPack, boolean permGraphChanged) {
     myFilterUi.updateDataPack(dataPack);
     myGraphTable.updateDataPack(dataPack, permGraphChanged);
   }
@@ -181,19 +196,19 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     myDetailsSplitter.setSecondComponent(state ? myDetailsPanel : null);
   }
 
-  @NotNull
+  @Nonnull
   private JScrollPane setupScrolledGraph() {
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myGraphTable, SideBorder.TOP);
     myGraphTable.viewportSet(scrollPane.getViewport());
     return scrollPane;
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogGraphTable getGraphTable() {
     return myGraphTable;
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogFilterUi getFilterUi() {
     return myFilterUi;
   }
@@ -236,21 +251,21 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     return panel;
   }
 
-  @NotNull
-  private ActionToolbar createActionsToolbar(@NotNull DefaultActionGroup mainGroup) {
+  @Nonnull
+  private ActionToolbar createActionsToolbar(@Nonnull DefaultActionGroup mainGroup) {
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, mainGroup, true);
     toolbar.setTargetComponent(this);
     return toolbar;
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getMainComponent() {
     return this;
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (VcsLogDataKeys.VCS_LOG == dataId) {
       return myLog;
     }
@@ -301,12 +316,12 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getToolbar() {
     return myToolbar;
   }
 
-  @NotNull
+  @Nonnull
   public SearchTextField getTextFilter() {
     return myTextFilter;
   }
@@ -315,8 +330,8 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     return myGraphTable.getRowCount() > 0;
   }
 
-  @NotNull
-  private static TextRevisionNumber convertToRevisionNumber(@NotNull Hash hash) {
+  @Nonnull
+  private static TextRevisionNumber convertToRevisionNumber(@Nonnull Hash hash) {
     return new TextRevisionNumber(hash.asString(), hash.toShortString());
   }
 
@@ -339,7 +354,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     }
 
     @Override
-    protected void onDetailsLoaded(@NotNull List<VcsFullCommitDetails> detailsList) {
+    protected void onDetailsLoaded(@Nonnull List<VcsFullCommitDetails> detailsList) {
       List<Change> changes = ContainerUtil.newArrayList();
       List<VcsFullCommitDetails> detailsListReversed = ContainerUtil.reverse(detailsList);
       for (VcsFullCommitDetails details : detailsListReversed) {
@@ -350,7 +365,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     }
 
     @Override
-    protected void onSelection(@NotNull int[] selection) {
+    protected void onSelection(@Nonnull int[] selection) {
       // just reset and wait for details to be loaded
       myChangesBrowser.setChangesToDisplay(Collections.emptyList());
       myChangesBrowser.getViewer().setEmptyText("");
@@ -364,7 +379,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
   }
 
   private class MyFocusPolicy extends ComponentsListFocusTraversalPolicy {
-    @NotNull
+    @Nonnull
     @Override
     protected List<Component> getOrderedComponents() {
       return Arrays.asList(myGraphTable, myChangesBrowser.getPreferredFocusedComponent(), myTextFilter.getTextEditor());

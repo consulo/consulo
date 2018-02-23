@@ -28,8 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -38,8 +37,8 @@ import java.util.Collection;
  * and invoke various types of compilations (make, compile, rebuild)
  */
 public abstract class CompilerManager {
-  @NotNull
-  public static CompilerManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static CompilerManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CompilerManager.class);
   }
 
@@ -49,15 +48,15 @@ public abstract class CompilerManager {
 
   public abstract boolean isCompilationActive();
   
-  @NotNull
+  @Nonnull
   @Immutable
-  public abstract Collection<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler);
+  public abstract Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler);
   
-  @NotNull
+  @Nonnull
   @Immutable
-  public abstract Collection<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler);
+  public abstract Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler);
   
-  @NotNull
+  @Nonnull
   public abstract Compiler[] getAllCompilers();
 
   /**
@@ -66,8 +65,8 @@ public abstract class CompilerManager {
    * @param compilerClass the class for which the compilers should be returned.
    * @return all registered compilers of the specified class.
    */
-  @NotNull
-  public abstract <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass);
+  @Nonnull
+  public abstract <T  extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass);
 
   /**
    * Returns all registered compilers of the specified class that the filter accepts
@@ -76,8 +75,8 @@ public abstract class CompilerManager {
    * @param filter additional filter to restrict compiler instances
    * @return all registered compilers of the specified class.
    */
-  @NotNull
-  public abstract <T  extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter);
+  @Nonnull
+  public abstract <T  extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Condition<Compiler> filter);
 
   /**
    * Checks if files of the specified type can be compiled by one of registered compilers.
@@ -88,14 +87,14 @@ public abstract class CompilerManager {
    * @return true if the file type is compilable, false otherwise.
    * @see Compiler#registerCompilableFileTypes(java.util.function.Consumer)
    */
-  public abstract boolean isCompilableFileType(@NotNull FileType type);
+  public abstract boolean isCompilableFileType(@Nonnull FileType type);
 
   /**
    * Returns the list of all tasks to be executed before compilation.
    *
    * @return all tasks to be executed before compilation.
    */
-  @NotNull
+  @Nonnull
   public abstract CompileTask[] getBeforeTasks();
 
   /**
@@ -103,7 +102,7 @@ public abstract class CompilerManager {
    *
    * @return all tasks to be executed after compilation.
    */
-  @NotNull
+  @Nonnull
   public abstract CompileTask[] getAfterTasks();
 
   /**
@@ -113,7 +112,7 @@ public abstract class CompilerManager {
    *                          Compiler excludes are not honored.
    * @param callback          a notification callback, or null if no notifications needed.
    */
-  public abstract void compile(@NotNull VirtualFile[] files, @Nullable CompileStatusNotification callback);
+  public abstract void compile(@Nonnull VirtualFile[] files, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all sources (including test sources) from the module. Compiler excludes are not honored.
@@ -121,7 +120,7 @@ public abstract class CompilerManager {
    * @param module            a module which sources are to be compiled
    * @param callback          a notification callback, or null if no notifications needed
    */
-  public abstract void compile(@NotNull Module module, @Nullable CompileStatusNotification callback);
+  public abstract void compile(@Nonnull Module module, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all files from the scope given.  Compiler excludes are not honored.
@@ -129,7 +128,7 @@ public abstract class CompilerManager {
    * @param scope             a scope to be compiled
    * @param callback          a notification callback, or null if no notifications needed
    */
-  public abstract void compile(@NotNull CompileScope scope, @Nullable CompileStatusNotification callback);
+  public abstract void compile(@Nonnull CompileScope scope, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all modified files and all files that depend on them all over the project.
@@ -137,7 +136,7 @@ public abstract class CompilerManager {
    *
    * @param callback a notification callback, or null if no notifications needed
    */
-  public abstract void make(@Nullable CompileStatusNotification callback);
+  public abstract void make(@javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all modified files and all files that depend on them from the given module and all modules this module depends on recursively.
@@ -146,7 +145,7 @@ public abstract class CompilerManager {
    * @param module   a module which sources are to be compiled.
    * @param callback a notification callback, or null if no notifications needed.
    */
-  public abstract void make(@NotNull Module module, @Nullable CompileStatusNotification callback);
+  public abstract void make(@Nonnull Module module, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all modified files and all files that depend on them from the modules and all modules these modules depend on recursively.
@@ -156,7 +155,7 @@ public abstract class CompilerManager {
    * @param modules  modules to compile
    * @param callback a notification callback, or null if no notifications needed.
    */
-  public abstract void make(@NotNull Project project, @NotNull Module[] modules, @Nullable CompileStatusNotification callback);
+  public abstract void make(@Nonnull Project project, @Nonnull Module[] modules, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all modified files and all files that depend on them from the scope given.
@@ -165,7 +164,7 @@ public abstract class CompilerManager {
    * @param scope    a scope to be compiled
    * @param callback a notification callback, or null if no notifications needed
    */
-  public abstract void make(@NotNull CompileScope scope, @Nullable CompileStatusNotification callback);
+  public abstract void make(@Nonnull CompileScope scope, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Compile all modified files and all files that depend on them from the scope given.
@@ -175,21 +174,21 @@ public abstract class CompilerManager {
    * @param filter filter allowing choose what compilers should be executed
    * @param callback a notification callback, or null if no notifications needed
    */
-  public abstract void make(@NotNull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback);
+  public abstract void make(@Nonnull CompileScope scope, Condition<Compiler> filter, @javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Checks if compile scope given is up-to-date
    * @param scope    a scope to check
    * @return true if make on the scope specified wouldn't do anything or false if something is to be compiled or deleted 
    */
-  public abstract boolean isUpToDate(@NotNull CompileScope scope);
+  public abstract boolean isUpToDate(@Nonnull CompileScope scope);
   /**
    * Rebuild the whole project from scratch. Compiler excludes are honored.
    *
    * @param callback a notification callback, or null if no notifications needed
    */
   @RequiredReadAction
-  public abstract void rebuild(@Nullable CompileStatusNotification callback);
+  public abstract void rebuild(@javax.annotation.Nullable CompileStatusNotification callback);
 
   /**
    * Execute a custom compile task.
@@ -199,8 +198,8 @@ public abstract class CompilerManager {
    * @param contentName    the name of a tab in message view where the execution results will be displayed.
    * @param onTaskFinished a runnable to be executed when the task finishes, null if nothing should be executed.
    */
-  public abstract void executeTask(@NotNull CompileTask task, @NotNull CompileScope scope, String contentName,
-                                   @Nullable Runnable onTaskFinished);
+  public abstract void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName,
+                                   @javax.annotation.Nullable Runnable onTaskFinished);
 
   /**
    * Register a listener to track compilation events.
@@ -209,11 +208,11 @@ public abstract class CompilerManager {
    */
   @Deprecated
   @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
-  public abstract void addCompilationStatusListener(@NotNull CompilationStatusListener listener);
+  public abstract void addCompilationStatusListener(@Nonnull CompilationStatusListener listener);
 
   @Deprecated
   @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
-  public abstract void addCompilationStatusListener(@NotNull CompilationStatusListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addCompilationStatusListener(@Nonnull CompilationStatusListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Unregister a compilation listener.
@@ -222,7 +221,7 @@ public abstract class CompilerManager {
    */
   @Deprecated
   @DeprecationInfo("See CompilerTopics.COMPILATION_STATUS")
-  public abstract void removeCompilationStatusListener(@NotNull CompilationStatusListener listener);
+  public abstract void removeCompilationStatusListener(@Nonnull CompilationStatusListener listener);
 
   /**
    * Checks if the specified file is excluded from compilation.
@@ -230,24 +229,24 @@ public abstract class CompilerManager {
    * @param file the file to check.
    * @return true if the file is excluded from compilation, false otherwise
    */
-  public abstract boolean isExcludedFromCompilation(@NotNull VirtualFile file);
+  public abstract boolean isExcludedFromCompilation(@Nonnull VirtualFile file);
 
   public abstract ExcludedEntriesConfiguration getExcludedEntriesConfiguration();
   /*
    * Convetience methods for creating frequently-used compile scopes
    */
-  @NotNull
-  public abstract CompileScope createFilesCompileScope(@NotNull VirtualFile[] files);
+  @Nonnull
+  public abstract CompileScope createFilesCompileScope(@Nonnull VirtualFile[] files);
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract CompileScope createProjectCompileScope();
-  @NotNull
-  public abstract CompileScope createModuleCompileScope(@NotNull Module module, final boolean includeDependentModules);
-  @NotNull
-  public abstract CompileScope createModulesCompileScope(@NotNull Module[] modules, final boolean includeDependentModules);
-  @NotNull
-  public abstract CompileScope createModuleGroupCompileScope(@NotNull Project project, @NotNull Module[] modules, final boolean includeDependentModules);
+  @Nonnull
+  public abstract CompileScope createModuleCompileScope(@Nonnull Module module, final boolean includeDependentModules);
+  @Nonnull
+  public abstract CompileScope createModulesCompileScope(@Nonnull Module[] modules, final boolean includeDependentModules);
+  @Nonnull
+  public abstract CompileScope createModuleGroupCompileScope(@Nonnull Project project, @Nonnull Module[] modules, final boolean includeDependentModules);
 
   public abstract boolean isValidationEnabled(Module moduleType);
 }

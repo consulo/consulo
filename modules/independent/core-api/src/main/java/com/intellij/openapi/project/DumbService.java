@@ -24,9 +24,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public abstract class DumbService {
    */
   public abstract boolean isDumb();
 
-  public static boolean isDumb(@NotNull Project project) {
+  public static boolean isDumb(@Nonnull Project project) {
     return getInstance(project).isDumb();
   }
 
@@ -72,7 +72,7 @@ public abstract class DumbService {
    * Note that it's not guaranteed that the dumb mode won't start again during this runnable execution, it should manage that situation explicitly.
    * @param runnable runnable to run
    */
-  public abstract void runWhenSmart(@NotNull Runnable runnable);
+  public abstract void runWhenSmart(@Nonnull Runnable runnable);
 
   /**
    * Pause the current thread until dumb mode ends and then continue execution.
@@ -85,14 +85,14 @@ public abstract class DumbService {
    * Pause the current thread until dumb mode ends, and then run the read action. Index is guaranteed to be available inside that read action,
    * unless this method is already called with read access allowed.
    */
-  public <T> T runReadActionInSmartMode(@NotNull final Computable<T> r) {
+  public <T> T runReadActionInSmartMode(@Nonnull final Computable<T> r) {
     final Ref<T> result = new Ref<>();
     runReadActionInSmartMode(() -> result.set(r.compute()));
     return result.get();
   }
 
   @Nullable
-  public <T> T tryRunReadActionInSmartMode(@NotNull Computable<T> task, @Nullable String notification) {
+  public <T> T tryRunReadActionInSmartMode(@Nonnull Computable<T> task, @Nullable String notification) {
     if (ApplicationManager.getApplication().isReadAccessAllowed()) {
       try {
         return task.compute();
@@ -113,7 +113,7 @@ public abstract class DumbService {
    * Pause the current thread until dumb mode ends, and then run the read action. Index is guaranteed to be available inside that read action,
    * unless this method is already called with read access allowed.
    */
-  public void runReadActionInSmartMode(@NotNull final Runnable r) {
+  public void runReadActionInSmartMode(@Nonnull final Runnable r) {
     if (ApplicationManager.getApplication().isReadAccessAllowed()) {
       r.run();
       return;
@@ -140,7 +140,7 @@ public abstract class DumbService {
    *
    * @see #runReadActionInSmartMode(Runnable)
    */
-  public void repeatUntilPassesInSmartMode(@NotNull final Runnable r) {
+  public void repeatUntilPassesInSmartMode(@Nonnull final Runnable r) {
     while (true) {
       waitForSmartMode();
       try {
@@ -157,13 +157,13 @@ public abstract class DumbService {
    * Invoke the runnable later on EventDispatchThread AND when IDEA isn't in dumb mode
    * @param runnable runnable
    */
-  public abstract void smartInvokeLater(@NotNull Runnable runnable);
+  public abstract void smartInvokeLater(@Nonnull Runnable runnable);
 
-  public abstract void smartInvokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState);
+  public abstract void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
 
   private static final NotNullLazyKey<DumbService, Project> INSTANCE_KEY = ServiceManager.createLazyKey(DumbService.class);
 
-  public static DumbService getInstance(@NotNull Project project) {
+  public static DumbService getInstance(@Nonnull Project project) {
     return INSTANCE_KEY.getValue(project);
   }
 
@@ -171,8 +171,8 @@ public abstract class DumbService {
    * @return all the elements of the given array if there's no dumb mode currently, or the dumb-aware ones if {@link #isDumb()} is true.
    * @see #isDumbAware(Object)
    */
-  @NotNull
-  public <T> List<T> filterByDumbAwareness(@NotNull T[] array) {
+  @Nonnull
+  public <T> List<T> filterByDumbAwareness(@Nonnull T[] array) {
     return filterByDumbAwareness(Arrays.asList(array));
   }
 
@@ -180,8 +180,8 @@ public abstract class DumbService {
    * @return all the elements of the given collection if there's no dumb mode currently, or the dumb-aware ones if {@link #isDumb()} is true.
    * @see #isDumbAware(Object)
    */
-  @NotNull
-  public <T> List<T> filterByDumbAwareness(@NotNull Collection<T> collection) {
+  @Nonnull
+  public <T> List<T> filterByDumbAwareness(@Nonnull Collection<T> collection) {
     if (isDumb()) {
       final ArrayList<T> result = new ArrayList<>(collection.size());
       for (T element : collection) {
@@ -205,13 +205,13 @@ public abstract class DumbService {
    *
    * Tasks can specify custom "equality" policy via their constructor. Calling this method has no effect if an "equal" task is already enqueued (but not yet running).
    */
-  public abstract void queueTask(@NotNull DumbModeTask task);
+  public abstract void queueTask(@Nonnull DumbModeTask task);
 
   /**
    * Cancels the given task. If it's in the queue, it won't be executed. If it's already running, its {@link com.intellij.openapi.progress.ProgressIndicator} is canceled, so the next {@link ProgressManager#checkCanceled()} call
    * will throw {@link com.intellij.openapi.progress.ProcessCanceledException}.
    */
-  public abstract void cancelTask(@NotNull DumbModeTask task);
+  public abstract void cancelTask(@Nonnull DumbModeTask task);
 
   /**
    * Runs the "just submitted" tasks under a modal dialog. "Just submitted" means that tasks were queued for execution
@@ -222,9 +222,9 @@ public abstract class DumbService {
    */
   public abstract void completeJustSubmittedTasks();
 
-  public abstract JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable);
+  public abstract JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable);
 
-  public void makeDumbAware(@NotNull final JComponent component, @NotNull Disposable disposable) {
+  public void makeDumbAware(@Nonnull final JComponent component, @Nonnull Disposable disposable) {
     component.setEnabled(!isDumb());
     getProject().getMessageBus().connect(disposable).subscribe(DUMB_MODE, new DumbModeListener() {
       @Override
@@ -239,7 +239,7 @@ public abstract class DumbService {
     });
   }
 
-  public abstract void showDumbModeNotification(@NotNull String message);
+  public abstract void showDumbModeNotification(@Nonnull String message);
 
   public abstract Project getProject();
 
@@ -271,7 +271,7 @@ public abstract class DumbService {
    * Invokes the given runnable with alternative resolve set to true.
    * @see #setAlternativeResolveEnabled(boolean)
    */
-  public void withAlternativeResolveEnabled(@NotNull Runnable runnable) {
+  public void withAlternativeResolveEnabled(@Nonnull Runnable runnable) {
     setAlternativeResolveEnabled(true);
     try {
       runnable.run();
@@ -285,7 +285,7 @@ public abstract class DumbService {
    * Invokes the given computable with alternative resolve set to true.
    * @see #setAlternativeResolveEnabled(boolean)
    */
-  public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(@NotNull ThrowableComputable<T, E> runnable) throws E {
+  public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(@Nonnull ThrowableComputable<T, E> runnable) throws E {
     setAlternativeResolveEnabled(true);
     try {
       return runnable.compute();
@@ -299,7 +299,7 @@ public abstract class DumbService {
    * Invokes the given runnable with alternative resolve set to true.
    * @see #setAlternativeResolveEnabled(boolean)
    */
-  public <E extends Throwable> void runWithAlternativeResolveEnabled(@NotNull ThrowableRunnable<E> runnable) throws E {
+  public <E extends Throwable> void runWithAlternativeResolveEnabled(@Nonnull ThrowableRunnable<E> runnable) throws E {
     setAlternativeResolveEnabled(true);
     try {
       runnable.run();
@@ -322,7 +322,7 @@ public abstract class DumbService {
    */
   @SuppressWarnings({"deprecation", "unused"})
   @Deprecated
-  public static void allowStartingDumbModeInside(@NotNull DumbModePermission permission, @NotNull Runnable runnable) {
+  public static void allowStartingDumbModeInside(@Nonnull DumbModePermission permission, @Nonnull Runnable runnable) {
     runnable.run();
   }
 

@@ -16,10 +16,10 @@
 package com.intellij.codeInsight.actions;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LayoutDirectoryDialog extends LayoutProjectCodeDialog implements DirectoryFormattingOptions {
-  public LayoutDirectoryDialog(@NotNull Project project,
+  public LayoutDirectoryDialog(@Nonnull Project project,
                                String title,
                                String text,
                                boolean enableOnlyVCSChangedTextCb)

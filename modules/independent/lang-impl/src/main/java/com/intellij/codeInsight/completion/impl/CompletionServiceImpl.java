@@ -30,8 +30,8 @@ import com.intellij.psi.WeighingService;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -80,7 +80,7 @@ public final class CompletionServiceImpl extends CompletionService {
 
   @Override
   public CompletionResultSet createResultSet(final CompletionParameters parameters, final Consumer<CompletionResult> consumer,
-                                             @NotNull final CompletionContributor contributor) {
+                                             @Nonnull final CompletionContributor contributor) {
     final PsiElement position = parameters.getPosition();
     final int offset = parameters.getOffset();
     assert position.getTextRange().containsOffset(offset) : position;
@@ -112,7 +112,7 @@ public final class CompletionServiceImpl extends CompletionService {
                                    final PrefixMatcher prefixMatcher,
                                    CompletionContributor contributor,
                                    CompletionParameters parameters,
-                                   @NotNull CompletionSorterImpl sorter,
+                                   @Nonnull CompletionSorterImpl sorter,
                                    @Nullable CompletionResultSetImpl original) {
       super(prefixMatcher, consumer, contributor);
       myLengthOfTextBeforePosition = lengthOfTextBeforePosition;
@@ -122,12 +122,12 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @Override
-    public void addAllElements(@NotNull Iterable<? extends LookupElement> elements) {
+    public void addAllElements(@Nonnull Iterable<? extends LookupElement> elements) {
       CompletionThreadingBase.withBatchUpdate(() -> super.addAllElements(elements));
     }
 
     @Override
-    public void addElement(@NotNull final LookupElement element) {
+    public void addElement(@Nonnull final LookupElement element) {
       if (!element.isValid()) {
         LOG.error("Invalid lookup element: " + element + " of " + element.getClass() +
                   " in " + myParameters.getOriginalFile() + " of " + myParameters.getOriginalFile().getClass());
@@ -141,8 +141,8 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @Override
-    @NotNull
-    public CompletionResultSet withPrefixMatcher(@NotNull final PrefixMatcher matcher) {
+    @Nonnull
+    public CompletionResultSet withPrefixMatcher(@Nonnull final PrefixMatcher matcher) {
       if (matcher.equals(getPrefixMatcher())) {
         return this;
       }
@@ -162,24 +162,24 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @Override
-    @NotNull
-    public CompletionResultSet withPrefixMatcher(@NotNull final String prefix) {
+    @Nonnull
+    public CompletionResultSet withPrefixMatcher(@Nonnull final String prefix) {
       return withPrefixMatcher(getPrefixMatcher().cloneWithPrefix(prefix));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public CompletionResultSet withRelevanceSorter(@NotNull CompletionSorter sorter) {
+    public CompletionResultSet withRelevanceSorter(@Nonnull CompletionSorter sorter) {
       return new CompletionResultSetImpl(getConsumer(), myLengthOfTextBeforePosition, getPrefixMatcher(), myContributor, myParameters, (CompletionSorterImpl) sorter,
                                          this);
     }
 
     @Override
-    public void addLookupAdvertisement(@NotNull String text) {
+    public void addLookupAdvertisement(@Nonnull String text) {
       getCompletionService().setAdvertisementText(text);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CompletionResultSet caseInsensitive() {
       return withPrefixMatcher(new CamelHumpMatcher(getPrefixMatcher().getPrefix(), false));
@@ -203,7 +203,7 @@ public final class CompletionServiceImpl extends CompletionService {
   }
 
   @SafeVarargs
-  public static boolean assertPhase(@NotNull Class<? extends CompletionPhase>... possibilities) {
+  public static boolean assertPhase(@Nonnull Class<? extends CompletionPhase>... possibilities) {
     if (!isPhase(possibilities)) {
       LOG.error(ourPhase + "; set at " + ourPhaseTrace);
       return false;
@@ -212,7 +212,7 @@ public final class CompletionServiceImpl extends CompletionService {
   }
 
   @SafeVarargs
-  public static boolean isPhase(@NotNull Class<? extends CompletionPhase>... possibilities) {
+  public static boolean isPhase(@Nonnull Class<? extends CompletionPhase>... possibilities) {
     CompletionPhase phase = getCompletionPhase();
     for (Class<? extends CompletionPhase> possibility : possibilities) {
       if (possibility.isInstance(phase)) {
@@ -222,7 +222,7 @@ public final class CompletionServiceImpl extends CompletionService {
     return false;
   }
 
-  public static void setCompletionPhase(@NotNull CompletionPhase phase) {
+  public static void setCompletionPhase(@Nonnull CompletionPhase phase) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     CompletionPhase oldPhase = getCompletionPhase();
     CompletionProgressIndicator oldIndicator = oldPhase.indicator;
@@ -261,7 +261,7 @@ public final class CompletionServiceImpl extends CompletionService {
       } else {
         sorter = sorter.weigh(new LookupElementWeigher(id, true, false) {
           @Override
-          public Comparable weigh(@NotNull LookupElement element) {
+          public Comparable weigh(@Nonnull LookupElement element) {
             //noinspection unchecked
             return weigher.weigh(element, location);
           }

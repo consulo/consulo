@@ -52,8 +52,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
 import com.intellij.vcs.ProgressManagerQueue;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -203,7 +203,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     updateRefreshTimer();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public CommittedChangesProvider getProviderForProject() {
     final AbstractVcs[] vcss = myVcsManager.getAllActiveVcss();
     List<AbstractVcs> vcsWithProviders = new ArrayList<AbstractVcs>();
@@ -325,7 +325,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   @Nullable
-  public List<CommittedChangeList> getChanges(ChangeBrowserSettings settings, final VirtualFile file, @NotNull final AbstractVcs vcs,
+  public List<CommittedChangeList> getChanges(ChangeBrowserSettings settings, final VirtualFile file, @Nonnull final AbstractVcs vcs,
                                               final int maxCount, final boolean cacheOnly, final CommittedChangesProvider provider,
                                               final RepositoryLocation location) throws VcsException {
     if (settings instanceof CompositeCommittedChangesProvider.CompositeChangeBrowserSettings) {
@@ -420,7 +420,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     final Ref<Boolean> resultRef = new Ref<Boolean>(Boolean.FALSE);
     myCachesHolder.iterateAllCaches(new NotNullFunction<ChangesCacheFile, Boolean>() {
       @Override
-      @NotNull
+      @Nonnull
       public Boolean fun(final ChangesCacheFile changesCacheFile) {
         try {
           if (changesCacheFile.isEmpty() == emptiness) {
@@ -810,7 +810,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     myTaskQueue.run(task);
   }
 
-  private void pendingUpdateProcessed(@Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+  private void pendingUpdateProcessed(@javax.annotation.Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     myPendingUpdateCount--;
     if (myPendingUpdateCount == 0) {
       notifyIncomingChangesUpdated(myNewIncomingChanges);
@@ -823,7 +823,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
 
   private void processUpdatedFilesAfterRefresh(final ChangesCacheFile cache,
                                                final UpdatedFiles updatedFiles,
-                                               @Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+                                               @javax.annotation.Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     refreshCacheAsync(cache, false, new RefreshResultConsumer() {
       @Override
       public void receivedChanges(final List<CommittedChangeList> committedChangeLists) {
@@ -1015,7 +1015,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   private void refreshCacheAsync(final ChangesCacheFile cache, final boolean initIfEmpty,
-                                 @Nullable final RefreshResultConsumer consumer) {
+                                 @javax.annotation.Nullable final RefreshResultConsumer consumer) {
     refreshCacheAsync(cache, initIfEmpty, consumer, true);
   }
 

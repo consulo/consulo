@@ -21,7 +21,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -40,7 +40,7 @@ public class IOUtil {
   private IOUtil() {
   }
 
-  public static String readString(@NotNull DataInput stream) throws IOException {
+  public static String readString(@Nonnull DataInput stream) throws IOException {
     int length = stream.readInt();
     if (length == -1) return null;
     if (length == 0) return "";
@@ -50,7 +50,7 @@ public class IOUtil {
     return new String(bytes, 0, length * 2, CharsetToolkit.UTF_16BE_CHARSET);
   }
 
-  public static void writeString(String s, @NotNull DataOutput stream) throws IOException {
+  public static void writeString(String s, @Nonnull DataOutput stream) throws IOException {
     if (s == null) {
       stream.writeInt(-1);
       return;
@@ -72,7 +72,7 @@ public class IOUtil {
     stream.write(bytes);
   }
 
-  public static void writeUTFTruncated(@NotNull DataOutput stream, @NotNull String text) throws IOException {
+  public static void writeUTFTruncated(@Nonnull DataOutput stream, @Nonnull String text) throws IOException {
     // we should not compare number of symbols to 65635 -> it is number of bytes what should be compared
     // ? 4 bytes per symbol - rough estimation
     if (text.length() > 16383) {
@@ -90,20 +90,20 @@ public class IOUtil {
     }
   };
 
-  public static void writeUTF(@NotNull DataOutput storage, @NotNull final String value) throws IOException {
+  public static void writeUTF(@Nonnull DataOutput storage, @Nonnull final String value) throws IOException {
     writeUTFFast(ourReadWriteBuffersCache.getValue(), storage, value);
   }
 
-  public static String readUTF(@NotNull DataInput storage) throws IOException {
+  public static String readUTF(@Nonnull DataInput storage) throws IOException {
     return readUTFFast(ourReadWriteBuffersCache.getValue(), storage);
   }
 
-  @NotNull
+  @Nonnull
   public static byte[] allocReadWriteUTFBuffer() {
     return new byte[STRING_LENGTH_THRESHOLD + STRING_HEADER_SIZE];
   }
 
-  public static void writeUTFFast(@NotNull byte[] buffer, @NotNull DataOutput storage, @NotNull final String value) throws IOException {
+  public static void writeUTFFast(@Nonnull byte[] buffer, @Nonnull DataOutput storage, @Nonnull final String value) throws IOException {
     int len = value.length();
     if (len < STRING_LENGTH_THRESHOLD) {
       buffer[0] = (byte)len;
@@ -140,7 +140,7 @@ public class IOUtil {
     }
   };
 
-  public static String readUTFFast(@NotNull byte[] buffer, @NotNull DataInput storage) throws IOException {
+  public static String readUTFFast(@Nonnull byte[] buffer, @Nonnull DataInput storage) throws IOException {
     int len = 0xFF & (int)storage.readByte();
     if (len == 0xFF) {
       String result = storage.readUTF();
@@ -159,11 +159,11 @@ public class IOUtil {
     return new String(chars, 0, len);
   }
 
-  public static boolean isAscii(@NotNull String str) {
+  public static boolean isAscii(@Nonnull String str) {
     return isAscii((CharSequence)str);
   }
 
-  public static boolean isAscii(@NotNull CharSequence str) {
+  public static boolean isAscii(@Nonnull CharSequence str) {
     for (int i = 0, length = str.length(); i < length; ++i) {
       if (str.charAt(i) >= 128) return false;
     }
@@ -174,7 +174,7 @@ public class IOUtil {
     return c < 128;
   }
 
-  public static boolean deleteAllFilesStartingWith(@NotNull File file) {
+  public static boolean deleteAllFilesStartingWith(@Nonnull File file) {
     final String baseName = file.getName();
     File parentFile = file.getParentFile();
     final File[] files = parentFile != null ? parentFile.listFiles(new FileFilter() {
@@ -221,7 +221,7 @@ public class IOUtil {
     }
   }
 
-  public static <T> T openCleanOrResetBroken(@NotNull ThrowableComputable<T, IOException> factoryComputable, final File file) throws IOException {
+  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableComputable<T, IOException> factoryComputable, final File file) throws IOException {
     return openCleanOrResetBroken(factoryComputable, new Runnable() {
       @Override
       public void run() {
@@ -230,7 +230,7 @@ public class IOUtil {
     });
   }
 
-  public static <T> T openCleanOrResetBroken(@NotNull ThrowableComputable<T, IOException> factoryComputable, Runnable cleanupCallback) throws IOException {
+  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableComputable<T, IOException> factoryComputable, Runnable cleanupCallback) throws IOException {
     for (int i = 0; i < 2; ++i) {
       try {
         return factoryComputable.compute();

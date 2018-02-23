@@ -33,9 +33,9 @@ import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.ui.ScreenUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -57,8 +57,8 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   private String myAdText;
 
   protected ChooseByNamePopup(@Nullable final Project project,
-                              @NotNull ChooseByNameModel model,
-                              @NotNull ChooseByNameItemProvider provider,
+                              @Nonnull ChooseByNameModel model,
+                              @Nonnull ChooseByNameItemProvider provider,
                               @Nullable ChooseByNamePopup oldPopup,
                               @Nullable final String predefinedText,
                               boolean mayRequestOpenInCurrentWindow,
@@ -303,21 +303,21 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   public static ChooseByNamePopup createPopup(final Project project,
-                                              @NotNull ChooseByNameModel model,
-                                              @NotNull ChooseByNameItemProvider provider) {
+                                              @Nonnull ChooseByNameModel model,
+                                              @Nonnull ChooseByNameItemProvider provider) {
     return createPopup(project, model, provider, null);
   }
 
   public static ChooseByNamePopup createPopup(final Project project,
-                                              @NotNull ChooseByNameModel model,
-                                              @NotNull ChooseByNameItemProvider provider,
+                                              @Nonnull ChooseByNameModel model,
+                                              @Nonnull ChooseByNameItemProvider provider,
                                               @Nullable final String predefinedText) {
     return createPopup(project, model, provider, predefinedText, false, 0);
   }
 
   public static ChooseByNamePopup createPopup(final Project project,
-                                              @NotNull final ChooseByNameModel model,
-                                              @NotNull ChooseByNameItemProvider provider,
+                                              @Nonnull final ChooseByNameModel model,
+                                              @Nonnull ChooseByNameItemProvider provider,
                                               @Nullable final String predefinedText,
                                               boolean mayRequestOpenInCurrentWindow,
                                               final int initialIndex) {
@@ -326,9 +326,9 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       oldPopup.close(false);
     }
     ChooseByNamePopup newPopup = new ChooseByNamePopup(project, model, provider, oldPopup, predefinedText, mayRequestOpenInCurrentWindow, initialIndex) {
-      @NotNull
+      @Nonnull
       @Override
-      protected Set<Object> filter(@NotNull Set<Object> elements) {
+      protected Set<Object> filter(@Nonnull Set<Object> elements) {
         return model instanceof EdtSortingModel ? super.filter(((EdtSortingModel)model).sort(elements)) : super.filter(elements);
       }
     };

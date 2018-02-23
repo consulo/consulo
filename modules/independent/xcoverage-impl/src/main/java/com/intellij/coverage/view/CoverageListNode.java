@@ -16,8 +16,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class CoverageListNode extends AbstractTreeNode {
     myFileStatusManager = FileStatusManager.getInstance(myProject);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     final Object[] children = CoverageViewTreeStructure.getChildren(this, myBundle, myStateBean);

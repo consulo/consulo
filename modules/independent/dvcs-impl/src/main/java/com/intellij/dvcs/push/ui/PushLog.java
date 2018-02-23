@@ -43,8 +43,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.ui.VcsLogActionPlaces;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -70,7 +69,8 @@ public class PushLog extends JPanel implements DataProvider {
   private final VcsCommitInfoBalloon myBalloon;
   private boolean myShouldRepaint = false;
   private boolean mySyncStrategy;
-  @Nullable private String mySyncRenderedText;
+  @javax.annotation.Nullable
+  private String mySyncRenderedText;
   private final boolean myAllowSyncStrategy;
 
   public PushLog(Project project, final CheckedTreeNode root, final boolean allowSyncStrategy) {
@@ -276,7 +276,7 @@ public class PushLog extends JPanel implements DataProvider {
     }
   }
 
-  private void restoreSelection(@Nullable DefaultMutableTreeNode node) {
+  private void restoreSelection(@javax.annotation.Nullable DefaultMutableTreeNode node) {
     if (node != null) {
       TreeUtil.selectNode(myTree, node);
     }
@@ -316,13 +316,13 @@ public class PushLog extends JPanel implements DataProvider {
     }
   }
 
-  @NotNull
-  private static List<Change> collectAllChanges(@NotNull List<CommitNode> commitNodes) {
+  @Nonnull
+  private static List<Change> collectAllChanges(@Nonnull List<CommitNode> commitNodes) {
     return CommittedChangesTreeBrowser.zipChanges(collectChanges(commitNodes));
   }
 
-  @NotNull
-  private static List<CommitNode> collectSelectedCommitNodes(@NotNull List<DefaultMutableTreeNode> selectedNodes) {
+  @Nonnull
+  private static List<CommitNode> collectSelectedCommitNodes(@Nonnull List<DefaultMutableTreeNode> selectedNodes) {
     List<CommitNode> nodes = ContainerUtil.newArrayList();
     for (DefaultMutableTreeNode node : selectedNodes) {
       if (node instanceof RepositoryNode) {
@@ -335,8 +335,8 @@ public class PushLog extends JPanel implements DataProvider {
     return nodes;
   }
 
-  @NotNull
-  private static List<Change> collectChanges(@NotNull List<CommitNode> commitNodes) {
+  @Nonnull
+  private static List<Change> collectChanges(@Nonnull List<CommitNode> commitNodes) {
     List<Change> changes = ContainerUtil.newArrayList();
     for (CommitNode node : commitNodes) {
       changes.addAll(node.getUserObject().getChanges());
@@ -344,8 +344,8 @@ public class PushLog extends JPanel implements DataProvider {
     return changes;
   }
 
-  @NotNull
-  private static <T> List<T> getChildNodesByType(@NotNull DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
+  @Nonnull
+  private static <T> List<T> getChildNodesByType(@Nonnull DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
     List<T> nodes = ContainerUtil.newArrayList();
     if (node.getChildCount() < 1) {
       return nodes;
@@ -367,8 +367,8 @@ public class PushLog extends JPanel implements DataProvider {
     return nodes;
   }
 
-  @NotNull
-  private static List<Integer> getSortedRows(@NotNull int[] rows) {
+  @Nonnull
+  private static List<Integer> getSortedRows(@Nonnull int[] rows) {
     List<Integer> sorted = ContainerUtil.newArrayList();
     for (int row : rows) {
       sorted.add(row);
@@ -393,9 +393,9 @@ public class PushLog extends JPanel implements DataProvider {
   }
 
   // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       List<CommitNode> commitNodes = getSelectedCommitNodes();
       return ArrayUtil.toObjectArray(collectAllChanges(commitNodes), Change.class);
@@ -410,7 +410,7 @@ public class PushLog extends JPanel implements DataProvider {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private List<CommitNode> getSelectedCommitNodes() {
     int[] rows = myTree.getSelectionRows();
     if (rows != null && rows.length != 0) {
@@ -420,8 +420,8 @@ public class PushLog extends JPanel implements DataProvider {
     return ContainerUtil.emptyList();
   }
 
-  @NotNull
-  private List<DefaultMutableTreeNode> getNodesForRows(@NotNull List<Integer> rows) {
+  @Nonnull
+  private List<DefaultMutableTreeNode> getNodesForRows(@Nonnull List<Integer> rows) {
     List<DefaultMutableTreeNode> nodes = ContainerUtil.newArrayList();
     for (Integer row : rows) {
       TreePath path = myTree.getPathForRow(row);
@@ -454,7 +454,7 @@ public class PushLog extends JPanel implements DataProvider {
     return super.processKeyBinding(ks, e, condition, pressed);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private DefaultMutableTreeNode getFirstNodeToEdit() {
     // start edit last selected component if editable
     if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode) {
@@ -479,19 +479,19 @@ public class PushLog extends JPanel implements DataProvider {
     return myTree;
   }
 
-  @NotNull
+  @Nonnull
   public CheckboxTree getTree() {
     return myTree;
   }
 
-  public void selectIfNothingSelected(@NotNull TreeNode node) {
+  public void selectIfNothingSelected(@Nonnull TreeNode node) {
     if (myTree.isSelectionEmpty()) {
       myTree.setSelectionPath(TreeUtil.getPathFromRoot(node));
     }
   }
 
-  public void setChildren(@NotNull DefaultMutableTreeNode parentNode,
-                          @NotNull Collection<? extends DefaultMutableTreeNode> childrenNodes) {
+  public void setChildren(@Nonnull DefaultMutableTreeNode parentNode,
+                          @Nonnull Collection<? extends DefaultMutableTreeNode> childrenNodes) {
     parentNode.removeAllChildren();
     for (DefaultMutableTreeNode child : childrenNodes) {
       parentNode.add(child);
@@ -508,7 +508,7 @@ public class PushLog extends JPanel implements DataProvider {
     }
   }
 
-  private void refreshNode(@NotNull DefaultMutableTreeNode parentNode) {
+  private void refreshNode(@Nonnull DefaultMutableTreeNode parentNode) {
     //todo should be optimized in case of start loading just edited node
     final DefaultTreeModel model = ((DefaultTreeModel)myTree.getModel());
     model.nodeStructureChanged(parentNode);
@@ -516,7 +516,7 @@ public class PushLog extends JPanel implements DataProvider {
     myShouldRepaint = false;
   }
 
-  private void expandSelected(@NotNull DefaultMutableTreeNode node) {
+  private void expandSelected(@Nonnull DefaultMutableTreeNode node) {
     if (node.getChildCount() <= 0) return;
     if (node instanceof RepositoryNode) {
       TreePath path = TreeUtil.getPathFromRoot(node);
@@ -538,7 +538,7 @@ public class PushLog extends JPanel implements DataProvider {
     mySyncRenderedText = value;
   }
 
-  public void fireEditorUpdated(@NotNull String currentText) {
+  public void fireEditorUpdated(@Nonnull String currentText) {
     if (mySyncStrategy) {
       //update ui model
       List<RepositoryNode> repositoryNodes =
@@ -692,7 +692,7 @@ public class PushLog extends JPanel implements DataProvider {
 
     final int myHeightToReduce;
 
-    public MyTreeViewPort(@Nullable Component view, int heightToReduce) {
+    public MyTreeViewPort(@javax.annotation.Nullable Component view, int heightToReduce) {
       super();
       setView(view);
       myHeightToReduce = heightToReduce;

@@ -22,16 +22,16 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorCustomization;
 import com.intellij.ui.LanguageTextField;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TextFieldWithCompletion extends LanguageTextField {
   private final boolean myForceAutoPopup;
   private final boolean myShowHint;
 
-  public TextFieldWithCompletion(@NotNull Project project,
-                                 @NotNull TextCompletionProvider provider,
-                                 @NotNull String value,
+  public TextFieldWithCompletion(@Nonnull Project project,
+                                 @Nonnull TextCompletionProvider provider,
+                                 @Nonnull String value,
                                  boolean oneLineMode,
                                  boolean forceAutoPopup,
                                  boolean showHint) {
@@ -39,8 +39,8 @@ public class TextFieldWithCompletion extends LanguageTextField {
   }
 
   public TextFieldWithCompletion(@Nullable Project project,
-                                 @NotNull TextCompletionProvider provider,
-                                 @NotNull String value,
+                                 @Nonnull TextCompletionProvider provider,
+                                 @Nonnull String value,
                                  boolean oneLineMode,
                                  boolean autoPopup,
                                  boolean forceAutoPopup,

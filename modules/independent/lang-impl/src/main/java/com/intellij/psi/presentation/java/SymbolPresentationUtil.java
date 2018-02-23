@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -33,7 +33,7 @@ public class SymbolPresentationUtil {
   private SymbolPresentationUtil() {
   }
 
-  public static String getSymbolPresentableText(@NotNull PsiElement element) {
+  public static String getSymbolPresentableText(@Nonnull PsiElement element) {
     if (element instanceof NavigationItem) {
       final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
       if (presentation != null){

@@ -17,7 +17,7 @@ package com.intellij.find.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -56,14 +56,15 @@ public class RegExReplacementBuilder {
     }
   }
 
-  @NotNull private final Matcher myMatcher;
+  @Nonnull
+  private final Matcher myMatcher;
 
   private String myTemplate;
   private int myCursor;
   private StringBuilder myReplacement;
   private List<CaseConversionRegion> myConversionRegions;
 
-  public RegExReplacementBuilder(@NotNull Matcher matcher) {
+  public RegExReplacementBuilder(@Nonnull Matcher matcher) {
     myMatcher = matcher;
   }
 

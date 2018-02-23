@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.AbstractLayoutManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -28,7 +28,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
   /**
    * @deprecated use {@link #wrap(Component)}} instead to create an instance
    */
-  public ExpandedItemRendererComponentWrapper(@NotNull final Component rendererComponent) {
+  public ExpandedItemRendererComponentWrapper(@Nonnull final Component rendererComponent) {
     add(rendererComponent);
     setOpaque(false);
     setLayout(new AbstractLayoutManager() {
@@ -48,7 +48,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
   }
   private ExpandedItemRendererComponentWrapper() {}
 
-  public static ExpandedItemRendererComponentWrapper wrap(@NotNull Component rendererComponent) {
+  public static ExpandedItemRendererComponentWrapper wrap(@Nonnull Component rendererComponent) {
     if (rendererComponent instanceof Accessible) {
       return new MyAccessibleComponent(rendererComponent, (Accessible)rendererComponent);
     }
@@ -57,7 +57,7 @@ public class ExpandedItemRendererComponentWrapper extends JComponent {
 
   private static class MyAccessibleComponent extends ExpandedItemRendererComponentWrapper implements Accessible {
     private Accessible myAccessible;
-    MyAccessibleComponent(@NotNull Component comp, @NotNull Accessible accessible) {
+    MyAccessibleComponent(@Nonnull Component comp, @Nonnull Accessible accessible) {
       super(comp);
       myAccessible = accessible;
     }

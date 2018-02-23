@@ -26,7 +26,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     final ViewUsagesAction viewUsagesAction = new ViewUsagesAction();
 

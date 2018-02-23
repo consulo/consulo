@@ -23,8 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class RefreshVFsSynchronously {
   private RefreshVFsSynchronously() {
   }
 
-  public static void updateAllChanged(@NotNull final UpdatedFiles updatedFiles) {
+  public static void updateAllChanged(@Nonnull final UpdatedFiles updatedFiles) {
     FilesToRefreshCollector callback = new FilesToRefreshCollector();
     UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(updatedFiles, callback);
 
@@ -42,8 +41,8 @@ public class RefreshVFsSynchronously {
     refreshFiles(callback.getToRefresh());
   }
 
-  @NotNull
-  public static Collection<VirtualFile> refreshFiles(@NotNull Collection<File> files) {
+  @Nonnull
+  public static Collection<VirtualFile> refreshFiles(@Nonnull Collection<File> files) {
     Collection<VirtualFile> filesToRefresh = ContainerUtil.newHashSet();
     for (File file : files) {
       VirtualFile vf = findFirstValidVirtualParent(file);
@@ -55,7 +54,7 @@ public class RefreshVFsSynchronously {
     return filesToRefresh;
   }
 
-  private static void refreshDeletedOrReplaced(@NotNull Collection<File> deletedOrReplaced) {
+  private static void refreshDeletedOrReplaced(@Nonnull Collection<File> deletedOrReplaced) {
     Collection<VirtualFile> filesToRefresh = ContainerUtil.newHashSet();
     for (File file : deletedOrReplaced) {
       File parent = file.getParentFile();
@@ -67,8 +66,8 @@ public class RefreshVFsSynchronously {
     VfsUtil.markDirtyAndRefresh(false, true, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
   }
 
-  @Nullable
-  private static VirtualFile findFirstValidVirtualParent(@Nullable File file) {
+  @javax.annotation.Nullable
+  private static VirtualFile findFirstValidVirtualParent(@javax.annotation.Nullable File file) {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     VirtualFile vf = null;
     while (file != null && (vf == null || !vf.isValid())) {
@@ -149,13 +148,13 @@ public class RefreshVFsSynchronously {
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public File getBeforeFile(Change change) {
       return beforeNull(change) ? null : change.getBeforeRevision().getFile().getIOFile();
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public File getAfterFile(Change change) {
       return afterNull(change) ? null : change.getAfterRevision().getFile().getIOFile();
     }
@@ -169,9 +168,9 @@ public class RefreshVFsSynchronously {
   private interface ChangeWrapper {
     boolean beforeNull(final Change change);
     boolean afterNull(final Change change);
-    @Nullable
+    @javax.annotation.Nullable
     File getBeforeFile(final Change change);
-    @Nullable
+    @javax.annotation.Nullable
     File getAfterFile(final Change change);
     boolean movedOrRenamedOrReplaced(final Change change);
   }
@@ -191,12 +190,12 @@ public class RefreshVFsSynchronously {
       }
     }
 
-    @NotNull
+    @Nonnull
     public Collection<File> getToRefresh() {
       return myToRefresh;
     }
 
-    @NotNull
+    @Nonnull
     public Collection<File> getToRefreshDeletedOrReplaced() {
       return myToRefreshDeletedOrReplaced;
     }

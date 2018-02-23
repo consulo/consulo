@@ -17,8 +17,8 @@ package consulo.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -30,21 +30,21 @@ public abstract class ContentFolderPropertyProvider<T> {
   public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME =
     ExtensionPointName.create("com.intellij.contentFolderPropertyProvider");
 
-  @NotNull
+  @Nonnull
   public abstract Key<T> getKey();
 
   @Nullable
-  public abstract Icon getLayerIcon(@NotNull T value);
+  public abstract Icon getLayerIcon(@Nonnull T value);
 
-  public abstract T fromString(@NotNull String value);
+  public abstract T fromString(@Nonnull String value);
 
-  public abstract String toString(@NotNull T value);
+  public abstract String toString(@Nonnull T value);
 
-  @NotNull
+  @Nonnull
   public abstract T[] getValues();
 
-  @Nullable
-  public static ContentFolderPropertyProvider<?> findProvider(@NotNull String key) {
+  @javax.annotation.Nullable
+  public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
     for (ContentFolderPropertyProvider provider : EP_NAME.getExtensions()) {
       if(key.equals(provider.getKey().toString())) {
         return provider;

@@ -16,8 +16,8 @@
 package com.intellij.refactoring.listeners;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Listener to get high level notifications about performed refactorings in the selected project.
@@ -34,21 +34,21 @@ public interface RefactoringEventListener {
   /**
    * Is fired when refactoring enters its write phase (find usages, conflict detection phases are passed already)
    */
-  void refactoringStarted(@NotNull String refactoringId, @Nullable RefactoringEventData beforeData);
+  void refactoringStarted(@Nonnull String refactoringId, @javax.annotation.Nullable RefactoringEventData beforeData);
 
   /**
    * Is fired when refactoring is completed, probably with conflicts.
    */
-  void refactoringDone(@NotNull String refactoringId, @Nullable RefactoringEventData afterData);
+  void refactoringDone(@Nonnull String refactoringId, @Nullable RefactoringEventData afterData);
 
   /**
    * Is fired when conflicts are detected. If the next event comes from the same refactoring then conflicts were ignored.
    * @param conflictsData should contain string representation of the conflicts
    */
-  void conflictsDetected(@NotNull String refactoringId, @NotNull RefactoringEventData conflictsData);
+  void conflictsDetected(@Nonnull String refactoringId, @Nonnull RefactoringEventData conflictsData);
 
   /**
    * Is fired when undoable action created on refactoring execution is undone.
    */
-  void undoRefactoring(@NotNull String refactoringId);
+  void undoRefactoring(@Nonnull String refactoringId);
 }

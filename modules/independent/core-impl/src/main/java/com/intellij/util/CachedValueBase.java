@@ -23,8 +23,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.reference.SoftReference;
 import gnu.trove.TLongArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public abstract class CachedValueBase<T> {
     return SoftReference.dereference(myData);
   }
 
-  protected boolean isUpToDate(@NotNull Data data) {
+  protected boolean isUpToDate(@Nonnull Data data) {
     if (data.myTimeStamps == null) return true;
 
     for (int i = 0; i < data.myDependencies.length; i++) {

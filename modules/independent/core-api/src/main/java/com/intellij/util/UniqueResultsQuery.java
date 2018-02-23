@@ -20,7 +20,7 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,15 +32,15 @@ public class UniqueResultsQuery<T, M> implements Query<T> {
   private final TObjectHashingStrategy<M> myHashingStrategy;
   private final Function<T, M> myMapper;
 
-  public UniqueResultsQuery(@NotNull Query<T> original) {
+  public UniqueResultsQuery(@Nonnull Query<T> original) {
     this(original, ContainerUtil.<M>canonicalStrategy(), (Function<T, M>)FunctionUtil.<M>id());
   }
 
-  public UniqueResultsQuery(@NotNull Query<T> original, @NotNull TObjectHashingStrategy<M> hashingStrategy) {
+  public UniqueResultsQuery(@Nonnull Query<T> original, @Nonnull TObjectHashingStrategy<M> hashingStrategy) {
     this(original, hashingStrategy, (Function<T, M>)FunctionUtil.<M>id());
   }
 
-  public UniqueResultsQuery(@NotNull Query<T> original, @NotNull TObjectHashingStrategy<M> hashingStrategy, @NotNull Function<T, M> mapper) {
+  public UniqueResultsQuery(@Nonnull Query<T> original, @Nonnull TObjectHashingStrategy<M> hashingStrategy, @Nonnull Function<T, M> mapper) {
     myOriginal = original;
     myHashingStrategy = hashingStrategy;
     myMapper = mapper;
@@ -52,13 +52,13 @@ public class UniqueResultsQuery<T, M> implements Query<T> {
   }
 
   @Override
-  public boolean forEach(@NotNull final Processor<T> consumer) {
+  public boolean forEach(@Nonnull final Processor<T> consumer) {
     return process(consumer, Collections.synchronizedSet(new THashSet<M>(myHashingStrategy)));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull Processor<T> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<T> consumer) {
     return processAsync(consumer, Collections.synchronizedSet(new THashSet<M>(myHashingStrategy)));
   }
 
@@ -72,7 +72,7 @@ public class UniqueResultsQuery<T, M> implements Query<T> {
 
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<T> findAll() {
     if (myMapper == Function.ID) {
       Set<M> set = new THashSet<M>(myHashingStrategy);
@@ -87,9 +87,9 @@ public class UniqueResultsQuery<T, M> implements Query<T> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public T[] toArray(@NotNull final T[] a) {
+  public T[] toArray(@Nonnull final T[] a) {
     return findAll().toArray(a);
   }
 

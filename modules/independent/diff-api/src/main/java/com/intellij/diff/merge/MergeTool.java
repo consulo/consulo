@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.BooleanGetter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -33,10 +33,10 @@ public interface MergeTool {
    * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
    */
   @RequiredDispatchThread
-  @NotNull
-  MergeViewer createComponent(@NotNull MergeContext context, @NotNull MergeRequest request);
+  @Nonnull
+  MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
-  boolean canShow(@NotNull MergeContext context, @NotNull MergeRequest request);
+  boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
   /**
    * Merge viewer should call {@link MergeContext#finishMerge(MergeResult)} when processing is over.
@@ -44,10 +44,10 @@ public interface MergeTool {
    * {@link MergeRequest#applyResult(MergeResult)} will be performed by the caller, so it shouldn't be called by MergeViewer directly.
    */
   interface MergeViewer extends Disposable {
-    @NotNull
+    @Nonnull
     JComponent getComponent();
 
-    @Nullable
+    @javax.annotation.Nullable
     JComponent getPreferredFocusedComponent();
 
     /**
@@ -58,12 +58,12 @@ public interface MergeTool {
      * return null if action is not available
      */
     @Nullable
-    Action getResolveAction(@NotNull MergeResult result);
+    Action getResolveAction(@Nonnull MergeResult result);
 
     /**
      * Should be called after adding {@link #getComponent()} to the components hierarchy.
      */
-    @NotNull
+    @Nonnull
     @RequiredDispatchThread
     ToolbarComponents init();
 
@@ -74,7 +74,8 @@ public interface MergeTool {
 
   class ToolbarComponents {
     @Nullable public List<AnAction> toolbarActions;
-    @Nullable public JComponent statusPanel;
+    @javax.annotation.Nullable
+    public JComponent statusPanel;
 
     /**
      * return false if merge window should be prevented from closing and canceling resolve.

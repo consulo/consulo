@@ -2,7 +2,7 @@ package com.intellij.remoteServer.configuration.deployment;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author nik

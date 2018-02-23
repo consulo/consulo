@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides access to the <code>Application</code>.
@@ -36,12 +36,12 @@ public class ApplicationManager {
     return ourApplication;
   }
 
-  private static void setApplication(@NotNull Application instance) {
+  private static void setApplication(@Nonnull Application instance) {
     ourApplication = instance;
     CachedSingletonsRegistry.cleanupCachedFields();
   }
 
-  public static void setApplication(@NotNull Application instance, @NotNull Disposable parent) {
+  public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
     final Application old = ourApplication;
     Disposer.register(parent, new Disposable() {
       @Override
@@ -54,9 +54,9 @@ public class ApplicationManager {
     setApplication(instance);
   }
 
-  public static void setApplication(@NotNull Application instance,
-                                    @NotNull Getter<FileTypeRegistry> fileTypeRegistryGetter,
-                                    @NotNull Disposable parent) {
+  public static void setApplication(@Nonnull Application instance,
+                                    @Nonnull Getter<FileTypeRegistry> fileTypeRegistryGetter,
+                                    @Nonnull Disposable parent) {
     final Application old = ourApplication;
     final Getter<FileTypeRegistry> oldFileTypeRegistry = FileTypeRegistry.ourInstanceGetter;
     Disposer.register(parent, () -> {

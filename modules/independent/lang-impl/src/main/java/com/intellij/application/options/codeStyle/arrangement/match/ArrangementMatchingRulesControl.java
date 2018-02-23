@@ -32,7 +32,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -50,15 +50,22 @@ import java.awt.event.MouseEvent;
  * @since 10/31/12 1:23 PM
  */
 public class ArrangementMatchingRulesControl extends JBTable {
-  @NotNull private static final JLabel EMPTY_RENDERER = new JLabel(ApplicationBundle.message("arrangement.text.empty.rule"));
+  @Nonnull
+  private static final JLabel EMPTY_RENDERER = new JLabel(ApplicationBundle.message("arrangement.text.empty.rule"));
 
-  @NotNull protected final IntObjectMap<ArrangementListRowDecorator> myComponents   = new IntObjectMap<ArrangementListRowDecorator>();
-  @NotNull private final TIntArrayList mySelectedRows = new TIntArrayList();
+  @Nonnull
+  protected final IntObjectMap<ArrangementListRowDecorator> myComponents   = new IntObjectMap<ArrangementListRowDecorator>();
+  @Nonnull
+  private final TIntArrayList mySelectedRows = new TIntArrayList();
 
-  @NotNull private final ArrangementMatchNodeComponentFactory myFactory;
-  @NotNull protected ArrangementMatchingRuleEditor        myEditor;
-  @NotNull private final RepresentationCallback           myRepresentationCallback;
-  @NotNull private final MatchingRulesRendererBase        myRenderer;
+  @Nonnull
+  private final ArrangementMatchNodeComponentFactory myFactory;
+  @Nonnull
+  protected ArrangementMatchingRuleEditor        myEditor;
+  @Nonnull
+  private final RepresentationCallback           myRepresentationCallback;
+  @Nonnull
+  private final MatchingRulesRendererBase        myRenderer;
 
   private ArrangementMatchingRulesValidator myValidator;
 
@@ -67,9 +74,9 @@ public class ArrangementMatchingRulesControl extends JBTable {
   private int myEditorRow     = -1;
   private boolean mySkipSelectionChange;
 
-  public ArrangementMatchingRulesControl(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                         @NotNull ArrangementColorsProvider colorsProvider,
-                                         @NotNull RepresentationCallback callback)
+  public ArrangementMatchingRulesControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                         @Nonnull ArrangementColorsProvider colorsProvider,
+                                         @Nonnull RepresentationCallback callback)
   {
     super(new ArrangementMatchingRulesModel());
     myRepresentationCallback = callback;
@@ -112,7 +119,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     return new MatchingRulesRendererBase();
   }
 
-  @NotNull
+  @Nonnull
   protected ArrangementMatchingRulesValidator createValidator() {
     return new ArrangementMatchingRulesValidator(getModel());
   }
@@ -124,7 +131,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     return myValidator;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchingRulesModel getModel() {
     return (ArrangementMatchingRulesModel)super.getModel();
@@ -144,7 +151,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     }
   }
 
-  private void onMouseClicked(@NotNull MouseEvent e) {
+  private void onMouseClicked(@Nonnull MouseEvent e) {
     final int count = e.getClickCount();
     if (count != 2) {
       return;
@@ -160,7 +167,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     scrollRowToVisible(row);
   }
 
-  private void onMouseMoved(@NotNull MouseEvent e) {
+  private void onMouseMoved(@Nonnull MouseEvent e) {
     int i = rowAtPoint(e.getPoint());
     if (i != myRowUnderMouse) {
       onMouseExited();
@@ -185,7 +192,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     }
   }
 
-  private void repaintScreenBounds(@NotNull Rectangle bounds) {
+  private void repaintScreenBounds(@Nonnull Rectangle bounds) {
     Point location = bounds.getLocation();
     SwingUtilities.convertPointFromScreen(location, this);
     int x = location.x;
@@ -194,7 +201,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
 
-  private void onMouseReleased(@NotNull MouseEvent e) {
+  private void onMouseReleased(@Nonnull MouseEvent e) {
     int i = rowAtPoint(e.getPoint());
     if (i < 0) {
       return;
@@ -223,7 +230,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     myRowUnderMouse = -1;
   }
 
-  private void onMouseEntered(@NotNull MouseEvent e) {
+  private void onMouseEntered(@Nonnull MouseEvent e) {
     myRowUnderMouse = rowAtPoint(e.getPoint());
     ArrangementListRowDecorator decorator = myComponents.get(myRowUnderMouse);
     if (decorator != null) {
@@ -232,7 +239,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     }
   }
 
-  public void runOperationIgnoreSelectionChange(@NotNull Runnable task) {
+  public void runOperationIgnoreSelectionChange(@Nonnull Runnable task) {
     mySkipSelectionChange = true;
     try {
       if (isEditing()) {
@@ -246,7 +253,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     }
   }
 
-  private void onSelectionChange(@NotNull ListSelectionEvent e) {
+  private void onSelectionChange(@Nonnull ListSelectionEvent e) {
     if (mySkipSelectionChange || e.getValueIsAdjusting()) {
       return;
     }
@@ -319,7 +326,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     myEditorRow = -1;
   }
 
-  private void onTableChange(@NotNull TableModelEvent e) {
+  private void onTableChange(@Nonnull TableModelEvent e) {
     final int signum;
     switch (e.getType()) {
       case TableModelEvent.INSERT:
@@ -363,7 +370,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     }
   }
 
-  public void showEditor(@NotNull ArrangementMatchingRuleEditor editor, int rowToEdit) {
+  public void showEditor(@Nonnull ArrangementMatchingRuleEditor editor, int rowToEdit) {
     if (myEditorRow == rowToEdit + 1) {
       return;
     }
@@ -424,7 +431,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
   /**
    * @return    selected model rows sorted in descending order
    */
-  @NotNull
+  @Nonnull
   public TIntArrayList getSelectedModelRows() {
     mySelectedRows.clear();
     int min = selectionModel.getMinSelectionIndex();
@@ -443,7 +450,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     return mySelectedRows;
   }
 
-  public int getRowByRenderer(@NotNull ArrangementListRowDecorator renderer) {
+  public int getRowByRenderer(@Nonnull ArrangementListRowDecorator renderer) {
     for (int i = 0, max = getModel().getSize(); i < max; i++) {
       if (myComponents.get(i) == renderer) {
         return i;
@@ -456,8 +463,8 @@ public class ArrangementMatchingRulesControl extends JBTable {
     return myMinRowHeight;
   }
 
-  @NotNull
-  private JComponent adjustHeight(@NotNull JComponent component, int row) {
+  @Nonnull
+  private JComponent adjustHeight(@Nonnull JComponent component, int row) {
     int height = component.getPreferredSize().height;
     if (height < myMinRowHeight) {
       height = myMinRowHeight;
@@ -530,6 +537,6 @@ public class ArrangementMatchingRulesControl extends JBTable {
   }
 
   public interface RepresentationCallback {
-    void ensureVisible(@NotNull Rectangle r);
+    void ensureVisible(@Nonnull Rectangle r);
   }
 }

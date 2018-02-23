@@ -28,8 +28,8 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotations.DeprecationInfo;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.Constructor;
@@ -75,7 +75,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   private NotNullLazyValue<Icon> myIconValue = new NotNullLazyValue<Icon>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Icon compute() {
       if (StringUtil.isEmpty(icon)) {
@@ -108,7 +108,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
   }
 
   @Nullable
-  public ModuleExtension<?> createImmutable(@NotNull ModuleRootLayer modifiableRootModel) {
+  public ModuleExtension<?> createImmutable(@Nonnull ModuleRootLayer modifiableRootModel) {
     try {
       Pair<Class<ModuleExtension>, Constructor<ModuleExtension>> value = myImmutableValue.getValue();
       if (value != null) {
@@ -121,14 +121,14 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Class<ModuleExtension> getImmutableClass() {
     Pair<Class<ModuleExtension>, Constructor<ModuleExtension>> value = myImmutableValue.getValue();
     return value == null ? null : value.getFirst();
   }
 
-  @Nullable
-  public MutableModuleExtension<?> createMutable(@NotNull ModuleRootLayer modifiableRootModel) {
+  @javax.annotation.Nullable
+  public MutableModuleExtension<?> createMutable(@Nonnull ModuleRootLayer modifiableRootModel) {
     try {
       Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();
       if (value != null) {
@@ -141,18 +141,18 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Class<MutableModuleExtension> getMutableClass() {
     Pair<Class<MutableModuleExtension>, Constructor<MutableModuleExtension>> value = myMutableValue.getValue();
     return value == null ? null : value.getFirst();
   }
 
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return myIconValue.getValue();
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     if (StringUtil.isEmpty(name)) {
       ModuleExtensionProviderEP.LOGGER.error("Name is empty for extension '" + key + "'. Capitalized 'key' used as name. Please define 'name' attribute for ep");
@@ -161,15 +161,15 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     return name;
   }
 
-  @NotNull
+  @Nonnull
   public String getKey() {
     return key;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   @DeprecationInfo(value = "Use ModuleExtensionProviders#findProvider(String)", until = "2.0")
-  public static ModuleExtensionProviderEP findProviderEP(@NotNull String id) {
+  public static ModuleExtensionProviderEP findProviderEP(@Nonnull String id) {
     return ModuleExtensionProviders.findProvider(id);
   }
 }

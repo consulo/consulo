@@ -22,8 +22,8 @@ import com.intellij.vcs.log.graph.VisibleGraph;
 import com.intellij.vcs.log.graph.actions.ActionController;
 import com.intellij.vcs.log.graph.actions.GraphAction;
 import com.intellij.vcs.log.graph.actions.GraphAnswer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -33,7 +33,7 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
   private static final VisibleGraph<Integer> INSTANCE = new EmptyVisibleGraph();
 
-  @NotNull
+  @Nonnull
   public static VisibleGraph<Integer> getInstance() {
     return INSTANCE;
   }
@@ -43,7 +43,7 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
     return 0;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RowInfo<Integer> getRowInfo(int visibleRow) {
     return EmptyRowInfo.INSTANCE;
@@ -51,11 +51,11 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
   @Override
   @Nullable
-  public Integer getVisibleRowIndex(@NotNull Integer integer) {
+  public Integer getVisibleRowIndex(@Nonnull Integer integer) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionController<Integer> getActionController() {
     return DumbActionController.INSTANCE;
@@ -70,9 +70,9 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
     private static ActionController<Integer> INSTANCE = new DumbActionController();
 
-    @NotNull
+    @Nonnull
     @Override
-    public GraphAnswer<Integer> performAction(@NotNull GraphAction graphAction) {
+    public GraphAnswer<Integer> performAction(@Nonnull GraphAction graphAction) {
       return EmptyGraphAnswer.INSTANCE;
     }
 
@@ -117,25 +117,25 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
     private static final RowInfo<Integer> INSTANCE = new EmptyRowInfo();
 
-    @NotNull
+    @Nonnull
     @Override
     public Integer getCommit() {
       return 0;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Integer getOneOfHeads() {
       return 0;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<PrintElement> getPrintElements() {
       return Collections.emptyList();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RowType getRowType() {
       return RowType.NORMAL;

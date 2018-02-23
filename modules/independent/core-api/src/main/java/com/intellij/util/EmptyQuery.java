@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncFutureFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public class EmptyQuery<R> implements Query<R> {
   private static final EmptyQuery EMPTY_QUERY_INSTANCE = new EmptyQuery();
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<R> findAll() {
     return Collections.emptyList();
   }
@@ -41,19 +41,19 @@ public class EmptyQuery<R> implements Query<R> {
   }
 
   @Override
-  public boolean forEach(@NotNull Processor<R> consumer) {
+  public boolean forEach(@Nonnull Processor<R> consumer) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull Processor<R> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<R> consumer) {
     return AsyncFutureFactory.wrap(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public R[] toArray(@NotNull R[] a) {
+  public R[] toArray(@Nonnull R[] a) {
     return findAll().toArray(a);
   }
 

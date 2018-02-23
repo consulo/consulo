@@ -23,8 +23,8 @@ import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Map;
@@ -34,13 +34,14 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
-  @NotNull protected final LineAnnotationAspect myAspect;
+  @Nonnull
+  protected final LineAnnotationAspect myAspect;
   private final boolean myIsGutterAction;
 
-  public AspectAnnotationFieldGutter(@NotNull FileAnnotation annotation,
-                                     @NotNull LineAnnotationAspect aspect,
-                                     @NotNull TextAnnotationPresentation presentation,
-                                     @Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+  public AspectAnnotationFieldGutter(@Nonnull FileAnnotation annotation,
+                                     @Nonnull LineAnnotationAspect aspect,
+                                     @Nonnull TextAnnotationPresentation presentation,
+                                     @javax.annotation.Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
     super(annotation, presentation, colorScheme);
     myAspect = aspect;
     myIsGutterAction = myAspect instanceof EditorGutterAction;

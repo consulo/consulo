@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Application-level component's implementation class may implement the <code>ApplicationComponent</code> interface.<br>
@@ -33,7 +33,7 @@ public interface ApplicationComponent extends BaseComponent {
     public void disposeComponent() {
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getComponentName() {
       return getClass().getSimpleName();

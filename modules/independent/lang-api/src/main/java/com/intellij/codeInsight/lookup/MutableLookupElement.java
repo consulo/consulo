@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertHandler;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,30 +27,30 @@ import javax.swing.*;
  */
 public abstract class MutableLookupElement<T> extends LookupElement{
   @Override
-  @NotNull
+  @Nonnull
   public abstract T getObject();
 
   public abstract MutableLookupElement<T> setBold();
 
   public abstract MutableLookupElement<T> setAutoCompletionPolicy(AutoCompletionPolicy policy);
 
-  @NotNull
+  @Nonnull
   public abstract MutableLookupElement<T> setIcon(Icon icon);
 
-  @NotNull
+  @Nonnull
   public abstract MutableLookupElement<T> setPriority(double priority);
 
-  @NotNull
-  public abstract MutableLookupElement<T> setPresentableText(@NotNull String displayText);
+  @Nonnull
+  public abstract MutableLookupElement<T> setPresentableText(@Nonnull String displayText);
 
-  @NotNull
+  @Nonnull
   public abstract MutableLookupElement<T> setTypeText(final String text);
 
-  @NotNull
+  @Nonnull
   public abstract MutableLookupElement<T> setTailText(final String text, final boolean grayed);
 
-  @NotNull
-  public abstract MutableLookupElement<T> setTailType(@NotNull TailType type);
+  @Nonnull
+  public abstract MutableLookupElement<T> setTailType(@Nonnull TailType type);
 
   /**
    * Use {@link com.intellij.codeInsight.completion.CompletionResultSet#caseInsensitive()} instead
@@ -58,7 +58,7 @@ public abstract class MutableLookupElement<T> extends LookupElement{
    * @return
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   public abstract MutableLookupElement<T> setCaseSensitive(boolean caseSensitive);
 
   public abstract MutableLookupElement<T> addLookupStrings(@NonNls String... additionalLookupStrings);

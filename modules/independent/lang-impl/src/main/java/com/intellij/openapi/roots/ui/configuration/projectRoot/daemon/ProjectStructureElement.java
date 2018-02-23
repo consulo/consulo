@@ -1,8 +1,8 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class ProjectStructureElement {
   protected final StructureConfigurableContext myContext;
 
-  protected ProjectStructureElement(@NotNull StructureConfigurableContext context) {
+  protected ProjectStructureElement(@Nonnull StructureConfigurableContext context) {
     myContext = context;
   }
 

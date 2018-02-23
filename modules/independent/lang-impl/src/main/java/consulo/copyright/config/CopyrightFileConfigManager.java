@@ -25,7 +25,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -74,7 +74,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
   public class ValidLoadedOption extends LoadedOption {
     private CopyrightFileConfig myCopyrightFileConfig;
 
-    protected ValidLoadedOption(@NotNull CopyrightFileConfig options) {
+    protected ValidLoadedOption(@Nonnull CopyrightFileConfig options) {
       myCopyrightFileConfig = options;
     }
 
@@ -117,8 +117,8 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
 
   private Map<String, LoadedOption> myConfigs = new TreeMap<String, LoadedOption>();
 
-  @NotNull
-  public CopyrightFileConfig getOptions(@NotNull FileType type) {
+  @Nonnull
+  public CopyrightFileConfig getOptions(@Nonnull FileType type) {
     LoadedOption copyrightFileConfig = myConfigs.get(type.getName());
     if (copyrightFileConfig == null) {
       UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(type);
@@ -130,7 +130,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
     return copyrightFileConfig.getConfig();
   }
 
-  @NotNull
+  @Nonnull
   public CopyrightFileConfig getTemplateOptions() {
     LoadedOption copyrightFileConfig = myConfigs.get(LANG_TEMPLATE);
     if (copyrightFileConfig == null) {
@@ -139,16 +139,16 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
     return copyrightFileConfig.getConfig();
   }
 
-  public void setTemplateOptions(@NotNull CopyrightFileConfig options) {
+  public void setTemplateOptions(@Nonnull CopyrightFileConfig options) {
     myConfigs.put(LANG_TEMPLATE, new TemplateLoadedOption(options));
   }
 
-  public void setOptions(@NotNull FileType fileType, @NotNull CopyrightFileConfig options) {
+  public void setOptions(@Nonnull FileType fileType, @Nonnull CopyrightFileConfig options) {
     myConfigs.put(fileType.getName(), new ValidLoadedOption(options));
   }
 
-  @NotNull
-  public CopyrightFileConfig getMergedOptions(@NotNull FileType fileType) {
+  @Nonnull
+  public CopyrightFileConfig getMergedOptions(@Nonnull FileType fileType) {
     try {
       CopyrightFileConfig lang = getOptions(fileType).clone();
       CopyrightFileConfig temp = getTemplateOptions().clone();

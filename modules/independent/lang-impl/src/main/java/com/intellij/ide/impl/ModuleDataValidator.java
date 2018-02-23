@@ -19,14 +19,14 @@ package com.intellij.ide.impl;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public class ModuleDataValidator implements DataValidator<Module> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<Module> getKey() {
     return CommonDataKeys.MODULE;

@@ -32,8 +32,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -41,14 +41,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TwosideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @NotNull protected final SimpleDiffPanel myPanel;
-  @NotNull protected final TwosideContentPanel myContentPanel;
+  @Nonnull
+  protected final SimpleDiffPanel myPanel;
+  @Nonnull
+  protected final TwosideContentPanel myContentPanel;
 
-  @NotNull private final List<T> myHolders;
+  @Nonnull
+  private final List<T> myHolders;
 
-  @NotNull private final FocusTrackerSupport<Side> myFocusTrackerSupport;
+  @Nonnull
+  private final FocusTrackerSupport<Side> myFocusTrackerSupport;
 
-  public TwosideDiffViewer(@NotNull DiffContext context, @NotNull ContentDiffRequest request, @NotNull EditorHolderFactory<T> factory) {
+  public TwosideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
     super(context, request);
 
     myHolders = createEditorHolders(factory);
@@ -91,8 +95,8 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   // Editors
   //
 
-  @NotNull
-  protected List<T> createEditorHolders(@NotNull EditorHolderFactory<T> factory) {
+  @Nonnull
+  protected List<T> createEditorHolders(@Nonnull EditorHolderFactory<T> factory) {
     List<DiffContent> contents = myRequest.getContents();
 
     List<T> holders = new ArrayList<>(2);
@@ -109,7 +113,7 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     }
   }
 
-  @NotNull
+  @Nonnull
   protected List<JComponent> createTitles() {
     return DiffUtil.createSyncHeightComponents(DiffUtil.createSimpleTitles(myRequest));
   }
@@ -118,7 +122,7 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   // Getters
   //
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -131,28 +135,28 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
 
-  @NotNull
+  @Nonnull
   public Side getCurrentSide() {
     return myFocusTrackerSupport.getCurrentSide();
   }
 
-  protected void setCurrentSide(@NotNull Side side) {
+  protected void setCurrentSide(@Nonnull Side side) {
     myFocusTrackerSupport.setCurrentSide(side);
   }
 
-  @NotNull
+  @Nonnull
   protected List<T> getEditorHolders() {
     return myHolders;
   }
 
-  @NotNull
+  @Nonnull
   protected T getCurrentEditorHolder() {
     return getCurrentSide().select(getEditorHolders());
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, getCurrentSide());
     }
@@ -174,9 +178,9 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     return getCurrentSide().other().select(getRequest().getContents()).getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@NotNull DiffContext context,
-                                                                @NotNull DiffRequest request,
-                                                                @NotNull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
+                                                                @Nonnull DiffRequest request,
+                                                                @Nonnull EditorHolderFactory<T> factory) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();

@@ -15,8 +15,8 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -26,19 +26,19 @@ import java.util.function.Function;
  * @since 12-Sep-17
  */
 public interface TreeModel<N> {
-  void fetchChildren(@NotNull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
+  void fetchChildren(@Nonnull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 
   /**
    * If return true - children will be build for current node, and node will be marked as leaf (if not children)
    */
-  default boolean isNeedBuildChildrenBeforeOpen(@NotNull TreeNode<N> node) {
+  default boolean isNeedBuildChildrenBeforeOpen(@Nonnull TreeNode<N> node) {
     return false;
   }
 
   /**
    * @return expand on double click
    */
-  default boolean onDoubleClick(@NotNull Tree<N> tree, @NotNull TreeNode<N> node) {
+  default boolean onDoubleClick(@Nonnull Tree<N> tree, @Nonnull TreeNode<N> node) {
     return true;
   }
 

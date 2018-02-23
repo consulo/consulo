@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.IntStack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -110,8 +110,8 @@ public class ControlFlowUtil {
    * Iterates over write instructions in CFG with reversed order
    */
   public static void iteratePrev(final int startInstruction,
-                                 @NotNull final Instruction[] instructions,
-                                 @NotNull final Function<Instruction, Operation> closure) {
+                                 @Nonnull final Instruction[] instructions,
+                                 @Nonnull final Function<Instruction, Operation> closure) {
     final IntStack stack = new IntStack(instructions.length);
     final boolean[] visited = new boolean[instructions.length];
 

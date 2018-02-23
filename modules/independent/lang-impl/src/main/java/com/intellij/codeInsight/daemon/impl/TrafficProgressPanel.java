@@ -30,9 +30,9 @@ import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.AwtVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,15 +50,17 @@ class TrafficProgressPanel extends JPanel {
 
   private final JLabel statusLabel = new JLabel();
   private final JLabel statusExtraLineLabel = new JLabel();
-  @NotNull private final TrafficLightRenderer myTrafficLightRenderer;
+  @Nonnull
+  private final TrafficLightRenderer myTrafficLightRenderer;
 
   private final JPanel myPassStatuses = new JPanel();
   private final JPanel myEmptyPassStatuses = new NonOpaquePanel();
   private final Wrapper myPassStatusesContainer = new Wrapper();
 
-  @NotNull private final HintHint myHintHint;
+  @Nonnull
+  private final HintHint myHintHint;
 
-  TrafficProgressPanel(@NotNull TrafficLightRenderer trafficLightRenderer, @NotNull Editor editor, @NotNull HintHint hintHint) {
+  TrafficProgressPanel(@Nonnull TrafficLightRenderer trafficLightRenderer, @Nonnull Editor editor, @Nonnull HintHint hintHint) {
     myHintHint = hintHint;
     myTrafficLightRenderer = trafficLightRenderer;
 
@@ -82,7 +84,7 @@ class TrafficProgressPanel extends JPanel {
               .add(new ProgressableTextEditorHighlightingPass(project, null, DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false,
                                                               HighlightInfoProcessor.getEmpty()) {
                 @Override
-                protected void collectInformationWithProgress(@NotNull ProgressIndicator progress) {
+                protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
                 }
 
                 @Override
@@ -103,7 +105,7 @@ class TrafficProgressPanel extends JPanel {
     return Math.max(Math.max(Math.max(getLabelMinWidth(statistics), getLabelMinWidth(statusExtraLineLabel)), getLabelMinWidth(statusLabel)), getLabelMinWidth(new JLabel("<html><b>Slow inspections progress report long line</b></html>")));
   }
 
-  private int getLabelMinWidth(@NotNull JLabel label) {
+  private int getLabelMinWidth(@Nonnull JLabel label) {
     String text = label.getText();
     Icon icon = label.isEnabled() ? label.getIcon() : label.getDisabledIcon();
 
@@ -134,7 +136,7 @@ class TrafficProgressPanel extends JPanel {
 
   private class Separator extends NonOpaquePanel {
     @Override
-    protected void paintComponent(@NotNull Graphics g) {
+    protected void paintComponent(@Nonnull Graphics g) {
       Insets insets = getInsets();
       if (insets == null) {
         insets = new Insets(0, 0, 0, 0);
@@ -143,20 +145,20 @@ class TrafficProgressPanel extends JPanel {
       g.drawLine(insets.left, insets.top, getWidth() - insets.left - insets.right, insets.top);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Dimension getPreferredSize() {
       return new Dimension(1, 1);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Dimension getMinimumSize() {
       return new Dimension(1, 1);
     }
   }
 
-  void updatePanel(@NotNull TrafficLightRenderer.DaemonCodeAnalyzerStatus status, boolean isFake) {
+  void updatePanel(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status, boolean isFake) {
     try {
       boolean needRebuild = myTrafficLightRenderer.updatePanel(status, myTrafficLightRenderer.getProject());
       statusLabel.setText(myTrafficLightRenderer.statusLabel);
@@ -223,7 +225,7 @@ class TrafficProgressPanel extends JPanel {
     };
   }
 
-  private void rebuildPassesProgress(@NotNull TrafficLightRenderer.DaemonCodeAnalyzerStatus status) {
+  private void rebuildPassesProgress(@Nonnull TrafficLightRenderer.DaemonCodeAnalyzerStatus status) {
     myPassStatuses.removeAll();
     myPassStatuses.setLayout(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();

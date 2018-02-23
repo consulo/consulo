@@ -17,20 +17,21 @@ package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Svetlana.Zemlyanskaya
  */
 public class ByTextArrangementEntryMatcher implements ArrangementEntryMatcher {
-  @NotNull private final String myText;
+  @Nonnull
+  private final String myText;
 
-  public ByTextArrangementEntryMatcher(@NotNull String text) {
+  public ByTextArrangementEntryMatcher(@Nonnull String text) {
     myText = text;
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     if (entry instanceof TextAwareArrangementEntry) {
       return StringUtil.equals(((TextAwareArrangementEntry)entry).getText(), myText);
     }

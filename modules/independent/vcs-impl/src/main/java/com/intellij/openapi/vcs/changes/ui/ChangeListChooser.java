@@ -22,8 +22,7 @@ import com.intellij.openapi.vcs.changes.ChangeListEditHandler;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.LocalChangeListImpl;
 import com.intellij.util.NullableConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -36,11 +35,11 @@ public class ChangeListChooser extends DialogWrapper {
   private LocalChangeList mySelectedList;
   private final ChangeListChooserPanel myPanel;
 
-  public ChangeListChooser(@NotNull Project project,
-                           @NotNull Collection<? extends ChangeList> changelists,
-                           @Nullable ChangeList defaultSelection,
+  public ChangeListChooser(@Nonnull Project project,
+                           @Nonnull Collection<? extends ChangeList> changelists,
+                           @javax.annotation.Nullable ChangeList defaultSelection,
                            final String title,
-                           @Nullable final String suggestedName) {
+                           @javax.annotation.Nullable final String suggestedName) {
     super(project, false);
     myProject = project;
 
@@ -53,7 +52,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
 
     myPanel = new ChangeListChooserPanel(myProject, new NullableConsumer<String>() {
-      public void consume(final @Nullable String errorMessage) {
+      public void consume(final @javax.annotation.Nullable String errorMessage) {
         setOKActionEnabled(errorMessage == null);
         setErrorText(errorMessage);
       }
@@ -86,7 +85,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LocalChangeList getSelectedList() {
     return mySelectedList;
   }

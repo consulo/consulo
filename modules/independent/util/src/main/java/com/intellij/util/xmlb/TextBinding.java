@@ -16,13 +16,13 @@
 package com.intellij.util.xmlb;
 
 import org.jdom.Text;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class TextBinding extends Binding {
   private final Class<?> valueClass;
 
-  public TextBinding(@NotNull MutableAccessor accessor) {
+  public TextBinding(@Nonnull MutableAccessor accessor) {
     super(accessor);
 
     valueClass = XmlSerializerImpl.typeToClass(accessor.getGenericType());
@@ -30,12 +30,12 @@ class TextBinding extends Binding {
 
   @Nullable
   @Override
-  public Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
     Object value = myAccessor.read(o);
     return value == null ? null : new Text(XmlSerializerImpl.convertToString(value));
   }
 
-  void set(@NotNull Object context, @NotNull String value) {
+  void set(@Nonnull Object context, @Nonnull String value) {
     XmlSerializerImpl.doSet(context, value, myAccessor, valueClass);
   }
 }

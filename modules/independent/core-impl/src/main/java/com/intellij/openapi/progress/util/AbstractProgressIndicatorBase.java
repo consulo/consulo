@@ -31,7 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.DoubleArrayList;
 import com.intellij.util.containers.Stack;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -204,7 +204,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getModalityState() {
     return myModalityState;
   }
@@ -248,7 +248,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public synchronized void initStateFrom(@NotNull final ProgressIndicator indicator) {
+  public synchronized void initStateFrom(@Nonnull final ProgressIndicator indicator) {
     myRunning = indicator.isRunning();
     myCanceled = indicator.isCanceled();
     myFraction = indicator.getFraction();
@@ -274,21 +274,21 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public synchronized Stack<String> getTextStack() {
     if (myTextStack == null) myTextStack = new Stack<String>(2);
     return myTextStack;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public synchronized DoubleArrayList getFractionStack() {
     if (myFractionStack == null) myFractionStack = new DoubleArrayList(2);
     return myFractionStack;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public synchronized Stack<String> getText2Stack() {
     if (myText2Stack == null) myText2Stack = new Stack<String>(2);
     return myText2Stack;

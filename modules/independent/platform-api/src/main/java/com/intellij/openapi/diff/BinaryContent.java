@@ -28,8 +28,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +40,9 @@ import java.nio.charset.IllegalCharsetNameException;
  * A {@link DiffContent} represented as a byte array. It still contain a text though.
  */
 public class BinaryContent extends DiffContent {
-  @NotNull private final Project myProject;
-  @NotNull
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
   private final FileType myFileType;
   private final byte[] myBytes;
   private final Charset myCharset;
@@ -52,7 +53,7 @@ public class BinaryContent extends DiffContent {
    * @param charset use to convert bytes to String. null means bytes can't be converted to text. Has no sense if fileType.isBinary()
    * @param fileType type of content
    */
-  public BinaryContent(@NotNull Project project, byte[] bytes, @Nullable Charset charset, @NotNull FileType fileType,
+  public BinaryContent(@Nonnull Project project, byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType,
                        @Nullable String filePath) {
     myProject = project;
     myFileType = fileType;
@@ -69,14 +70,14 @@ public class BinaryContent extends DiffContent {
   /**
    * @deprecated to remove in IDEA 14. Use {@link #BinaryContent(Project, byte[], Charset, FileType, String)}.
    */
-  public BinaryContent(byte[] bytes, Charset charset, @NotNull FileType fileType) {
+  public BinaryContent(byte[] bytes, Charset charset, @Nonnull FileType fileType) {
     this(bytes, charset, fileType, null);
   }
 
   /**
    * @deprecated to remove in IDEA 14. Use {@link #BinaryContent(Project, byte[], Charset, FileType, String)}.
    */
-  public BinaryContent(byte[] bytes, Charset charset, @NotNull FileType fileType, String filePath) {
+  public BinaryContent(byte[] bytes, Charset charset, @Nonnull FileType fileType, String filePath) {
     this(ProjectManager.getInstance().getDefaultProject(), bytes, charset, fileType, filePath);
   }
 
@@ -133,7 +134,7 @@ public class BinaryContent extends DiffContent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getContentType() {
     return myFileType;
   }

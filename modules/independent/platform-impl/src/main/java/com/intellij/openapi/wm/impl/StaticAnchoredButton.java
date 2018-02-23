@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.wm.ToolWindowAnchor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -29,56 +29,56 @@ import java.awt.event.MouseEvent;
  * Time: 3:52 PM
  */
 public class StaticAnchoredButton extends AnchoredButton {
-  @NotNull
+  @Nonnull
   private ToolWindowAnchor myToolWindowAnchor;
   private int myMnemonic2;
 
   public StaticAnchoredButton(String text,
                               Icon icon,
                               boolean selected,
-                              @NotNull ToolWindowAnchor toolWindowAnchor) {
+                              @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(text, icon, selected);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(String text, Icon icon, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(String text, Icon icon, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(text, icon);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(Action a, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(Action a, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(a);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(String text, boolean selected, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(String text, boolean selected, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(text, selected);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(String text, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(String text, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(text);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(Icon icon, boolean selected, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(Icon icon, boolean selected, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(icon, selected);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(Icon icon, @NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(Icon icon, @Nonnull ToolWindowAnchor toolWindowAnchor) {
     super(icon);
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
 
-  public StaticAnchoredButton(@NotNull ToolWindowAnchor toolWindowAnchor) {
+  public StaticAnchoredButton(@Nonnull ToolWindowAnchor toolWindowAnchor) {
     myToolWindowAnchor = toolWindowAnchor;
     init();
   }
@@ -103,7 +103,7 @@ public class StaticAnchoredButton extends AnchoredButton {
     return myToolWindowAnchor;
   }
 
-  public void setToolWindowAnchor(@NotNull ToolWindowAnchor toolWindowAnchor) {
+  public void setToolWindowAnchor(@Nonnull ToolWindowAnchor toolWindowAnchor) {
     myToolWindowAnchor = toolWindowAnchor;
   }
 

@@ -38,7 +38,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.Consumer;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -80,7 +80,7 @@ public class ToolEditorDialog extends DialogWrapper {
   private final Project myProject;
 
   @Override
-  @NotNull
+  @Nonnull
   protected JPanel createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     GridBagConstraints constr;
@@ -170,7 +170,7 @@ public class ToolEditorDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

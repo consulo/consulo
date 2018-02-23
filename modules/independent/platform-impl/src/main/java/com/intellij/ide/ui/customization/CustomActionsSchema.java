@@ -36,7 +36,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.ImageLoader;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -91,7 +91,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
 
     CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar = new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
       @Override
-      public void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle) {
+      public void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull String groupTitle) {
         myIdToNameList.add(new Pair(groupId, groupTitle));
       }
     };

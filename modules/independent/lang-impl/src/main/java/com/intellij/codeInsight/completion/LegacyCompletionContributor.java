@@ -27,7 +27,7 @@ import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.util.PairConsumer;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -41,7 +41,7 @@ public class LegacyCompletionContributor extends CompletionContributor {
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet _result) {
+  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet _result) {
     if (parameters.getCompletionType() != CompletionType.BASIC) {
       return;
     }

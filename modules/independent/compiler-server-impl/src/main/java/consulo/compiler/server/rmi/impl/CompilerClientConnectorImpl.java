@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import consulo.compiler.server.rmi.CompilerClientConnector;
 import consulo.compiler.server.rmi.CompilerClientInterface;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 
@@ -37,7 +37,7 @@ public class CompilerClientConnectorImpl extends CompilerClientConnector impleme
   }
 
   @Override
-  public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
+  public void addMessage(@Nonnull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
     if(myClientInterface != null) {
       try {
         myClientInterface.addMessage(category, message, url, lineNum, columnNum);

@@ -16,9 +16,9 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -28,7 +28,7 @@ import javax.swing.*;
  * @see DialogWrapper#doValidate()
  */
 public final class ValidationInfo {
-  @NotNull
+  @Nonnull
   public final String message;
   public final JComponent component;
 
@@ -39,7 +39,7 @@ public final class ValidationInfo {
    * @param message   the error message to display.
    * @param component the component containing the invalid data.
    */
-  public ValidationInfo(@NotNull String message, @Nullable JComponent component) {
+  public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
     this.message = message;
     this.component = component;
   }
@@ -49,7 +49,7 @@ public final class ValidationInfo {
    *
    * @param message the error message to display.
    */
-  public ValidationInfo(@NotNull String message) {
+  public ValidationInfo(@Nonnull String message) {
     this(message, null);
   }
 

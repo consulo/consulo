@@ -22,7 +22,6 @@ import com.intellij.execution.ui.layout.ViewContext;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseViewAction extends DumbAwareAction {
 
@@ -65,17 +64,17 @@ public abstract class BaseViewAction extends DumbAwareAction {
   protected abstract void actionPerformed(AnActionEvent e, ViewContext context, Content[] content);
 
 
-  @Nullable
+  @javax.annotation.Nullable
   private ViewContext getViewFacade(final AnActionEvent e) {
     return e.getData(ViewContext.CONTEXT_KEY);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Content[] getContent(final AnActionEvent e) {
     return e.getData(ViewContext.CONTENT_KEY);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected static Tab getTabFor(final ViewContext context, final Content[] content) {
     Grid grid = context.findGridFor(content[0]);
     return context.getTabFor(grid);

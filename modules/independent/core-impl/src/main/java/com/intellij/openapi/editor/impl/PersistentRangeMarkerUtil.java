@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.event.DocumentEvent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -33,7 +33,7 @@ class PersistentRangeMarkerUtil {
    * @return              {@code true} if target document range referenced by the given range marker should be translated via
    *                      diff algorithm; {@code false} otherwise
    */
-  static boolean shouldTranslateViaDiff(@NotNull DocumentEvent e, int rangeStart, int rangeEnd) {
+  static boolean shouldTranslateViaDiff(@Nonnull DocumentEvent e, int rangeStart, int rangeEnd) {
     if (e.isWholeTextReplaced()) {
       // Perform translation if the whole text is replaced.
       return true;

@@ -18,9 +18,9 @@ package com.intellij.execution;
 import com.intellij.execution.process.ProcessListener;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -99,11 +99,11 @@ public class ExecutionMode {
     }
   }
 
-  public void addProcessListener(@NotNull final ProcessListener listener) {
+  public void addProcessListener(@Nonnull final ProcessListener listener) {
     myListeners.add(listener);
   }
 
-  @NotNull
+  @Nonnull
   public List<ProcessListener> getProcessListeners() {
     return myListeners;
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.parser;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.List;
  *
  */
 public class SimpleCommit<CommitId> implements com.intellij.vcs.log.graph.GraphCommit<CommitId> {
-  @NotNull
-  public static SimpleCommit<Integer> asIntegerCommit(@NotNull String commitHash, @NotNull String[] parentsHashes) {
+  @Nonnull
+  public static SimpleCommit<Integer> asIntegerCommit(@Nonnull String commitHash, @Nonnull String[] parentsHashes) {
     int intCommitHash = CommitParser.createHash(commitHash);
     List<Integer> parents = new ArrayList<Integer>();
     for (String parentsHash : parentsHashes) {
@@ -36,8 +36,8 @@ public class SimpleCommit<CommitId> implements com.intellij.vcs.log.graph.GraphC
     return new SimpleCommit<Integer>(intCommitHash, parents, intCommitHash);
   }
 
-  @NotNull
-  public static SimpleCommit<String> asStringCommit(@NotNull String commitHash, @NotNull String[] parentsHashes) {
+  @Nonnull
+  public static SimpleCommit<String> asStringCommit(@Nonnull String commitHash, @Nonnull String[] parentsHashes) {
     int timestamp = CommitParser.createHash(commitHash);
     List<String> parents = new ArrayList<String>();
     for (String parentsHash : parentsHashes) {
@@ -48,25 +48,25 @@ public class SimpleCommit<CommitId> implements com.intellij.vcs.log.graph.GraphC
     return new SimpleCommit<String>(commitHash, parents, timestamp);
   }
 
-  @NotNull
+  @Nonnull
   private final CommitId myId;
-  @NotNull
+  @Nonnull
   private final List<CommitId> myParents;
   private final long myTimestamp;
 
-  public SimpleCommit(@NotNull CommitId id, @NotNull List<CommitId> parents, long timestamp) {
+  public SimpleCommit(@Nonnull CommitId id, @Nonnull List<CommitId> parents, long timestamp) {
     myId = id;
     myParents = parents;
     myTimestamp = timestamp;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CommitId getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<CommitId> getParents() {
     return myParents;

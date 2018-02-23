@@ -22,8 +22,8 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.ActionCallback;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public abstract class ActionManager implements ApplicationComponent {
   /**
    * Fetches the instance of ActionManager implementation.
    */
-  @NotNull
+  @Nonnull
   public static ActionManager getInstance(){
     return ApplicationManager.getApplication().getComponent(ActionManager.class);
   }
@@ -57,7 +57,7 @@ public abstract class ActionManager implements ApplicationComponent {
    *
    * @return An instance of <code>ActionPopupMenu</code>
    */
-  public abstract ActionPopupMenu createActionPopupMenu(@NonNls String place, @NotNull ActionGroup group);
+  public abstract ActionPopupMenu createActionPopupMenu(@NonNls String place, @Nonnull ActionGroup group);
 
   /**
    * Factory method that creates an <code>ActionToolbar</code> from the
@@ -87,7 +87,7 @@ public abstract class ActionManager implements ApplicationComponent {
    *
    * @see com.intellij.openapi.actionSystem.IdeActions
    */
-  public abstract AnAction getAction(@NonNls @NotNull String actionId);
+  public abstract AnAction getAction(@NonNls @Nonnull String actionId);
 
   /**
    * Returns actionId associated with the specified action.
@@ -97,7 +97,7 @@ public abstract class ActionManager implements ApplicationComponent {
    *
    * @exception java.lang.IllegalArgumentException if <code>action</code> is <code>null</code>
    */
-  public abstract String getId(@NotNull AnAction action);
+  public abstract String getId(@Nonnull AnAction action);
 
   /**
    * Registers the specified action with the specified id. Note that IDEA's keymaps
@@ -106,7 +106,7 @@ public abstract class ActionManager implements ApplicationComponent {
    * @param actionId Id to associate with the action
    * @param action Action to register
    */
-  public abstract void registerAction(@NonNls @NotNull String actionId, @NotNull AnAction action);
+  public abstract void registerAction(@NonNls @Nonnull String actionId, @Nonnull AnAction action);
 
   /**
    * Registers the specified action with the specified id.
@@ -116,14 +116,14 @@ public abstract class ActionManager implements ApplicationComponent {
    * @param pluginId Identifier of the plugin owning the action. Used to show the actions in the
    *                 correct place under the "Plugins" node in the "Keymap" settings pane and similar dialogs.
    */
-  public abstract void registerAction(@NotNull String actionId, @NotNull AnAction action, @Nullable PluginId pluginId);
+  public abstract void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId);
 
   /**
    * Unregisters the action with the specified actionId.
    *
    * @param actionId Id of the action to be unregistered
    */
-  public abstract void unregisterAction(@NotNull String actionId);
+  public abstract void unregisterAction(@Nonnull String actionId);
 
   /**
    * Returns the list of all registered action IDs with the specified prefix.
@@ -131,7 +131,7 @@ public abstract class ActionManager implements ApplicationComponent {
    * @return all action <code>id</code>s which have the specified prefix.
    * @since 5.1
    */
-  public abstract String[] getActionIds(@NotNull String idPrefix);
+  public abstract String[] getActionIds(@Nonnull String idPrefix);
 
   /**
    * Checks if the specified action ID represents an action group and not an individual action.
@@ -142,7 +142,7 @@ public abstract class ActionManager implements ApplicationComponent {
    * @return true if the ID represents an action group, false otherwise.
    * @since 5.1
    */
-  public abstract boolean isGroup(@NotNull String actionId);
+  public abstract boolean isGroup(@Nonnull String actionId);
 
   /**
    * Creates a panel with buttons which invoke actions from the specified action group.
@@ -164,7 +164,7 @@ public abstract class ActionManager implements ApplicationComponent {
 
   public abstract void removeTransparentTimerListener(TimerListener listener);
 
-  public abstract ActionCallback tryToExecute(@NotNull AnAction action, @NotNull InputEvent inputEvent, @Nullable Component contextComponent,
+  public abstract ActionCallback tryToExecute(@Nonnull AnAction action, @Nonnull InputEvent inputEvent, @Nullable Component contextComponent,
                                               @Nullable String place, boolean now);
 
   public abstract void addAnActionListener(AnActionListener listener);
@@ -173,5 +173,5 @@ public abstract class ActionManager implements ApplicationComponent {
   public abstract void removeAnActionListener(AnActionListener listener);
 
   @Nullable
-  public abstract KeyboardShortcut getKeyboardShortcut(@NotNull String actionId);
+  public abstract KeyboardShortcut getKeyboardShortcut(@Nonnull String actionId);
 }

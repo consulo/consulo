@@ -18,7 +18,7 @@ package com.intellij.psi.codeStyle.arrangement;
 import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,17 +32,17 @@ import java.util.List;
  */
 public interface ArrangementSettings extends Cloneable {
 
-  @NotNull
+  @Nonnull
   List<ArrangementGroupingRule> getGroupings();
 
-  @NotNull
+  @Nonnull
   List<ArrangementSectionRule> getSections();
 
   /**
    * @deprecated collect match rules from {@link #getSections()}
    * @return
    */
-  @NotNull
+  @Nonnull
   List<? extends ArrangementMatchRule> getRules();
 
   /**
@@ -51,9 +51,9 @@ public interface ArrangementSettings extends Cloneable {
    * Example: 'public static' rule would have higher priority then 'public'
    * @return list of rules sorted in order of matching
    */
-  @NotNull
+  @Nonnull
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 
-  @NotNull
+  @Nonnull
   ArrangementSettings clone();
 }

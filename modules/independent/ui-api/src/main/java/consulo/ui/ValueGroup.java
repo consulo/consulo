@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +25,6 @@ public interface ValueGroup<V> {
   @RequiredUIAccess
   void clearValues();
 
-  @NotNull
+  @Nonnull
   ValueGroup<V> add(ValueComponent<V> component);
 }

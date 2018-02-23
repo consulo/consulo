@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -18,6 +18,6 @@ import java.io.Serializable;
  */
 public interface ExternalEntityData extends Serializable {
 
-  @NotNull
+  @Nonnull
   ProjectSystemId getOwner();
 }

@@ -23,8 +23,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 public class PluginsAdvertiserHolder {
   private static List<IdeaPluginDescriptor> ourLoadedPluginDescriptors;
 
-  @NotNull
+  @Nonnull
   public static List<IdeaPluginDescriptor> getLoadedPluginDescriptors() {
     return ourLoadedPluginDescriptors == null ? Collections.emptyList() : ourLoadedPluginDescriptors;
   }
@@ -63,7 +63,7 @@ public class PluginsAdvertiserHolder {
     }
   }
 
-  public static void initialize(@NotNull Consumer<List<IdeaPluginDescriptor>> consumer) {
+  public static void initialize(@Nonnull Consumer<List<IdeaPluginDescriptor>> consumer) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;

@@ -23,8 +23,8 @@ import com.intellij.util.CompressionUtil;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -76,7 +76,7 @@ public class SerializedStubTree {
   }
 
   // willIndexStub is one time optimization hint, once can safely pass false
-  @NotNull
+  @Nonnull
   public Stub getStub(boolean willIndexStub) throws SerializerNotFoundException {
     Stub stubElement = myStubElement;
     if (stubElement != null) {

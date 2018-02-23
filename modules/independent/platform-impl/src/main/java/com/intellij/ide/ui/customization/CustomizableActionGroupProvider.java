@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.customization;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This extension allows to add an action group to the list of customizable actions in Settings | Menus and Toolbars.
@@ -30,6 +30,6 @@ public abstract class CustomizableActionGroupProvider {
   public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 
   public interface CustomizableActionGroupRegistrar {
-    void addCustomizableActionGroup(@NotNull String groupId, @NotNull String groupTitle);
+    void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull String groupTitle);
   }
 }

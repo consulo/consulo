@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.changes.issueLinks;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.dualView.DualView;
 import com.intellij.ui.dualView.TreeTableView;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -29,7 +28,7 @@ import java.awt.event.MouseEvent;
  * @author yole
  */
 public class TableLinkMouseListener extends AbstractBaseTagMouseListener {
-  @Nullable
+  @javax.annotation.Nullable
   public Object getTagAt(final MouseEvent e) {
     // TODO[yole]: don't update renderer on every event, like it's done in TreeLinkMouseListener
     Object tag = null;

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteAction.ConsoleExecuteActionHandler {
   public BaseConsoleExecuteActionHandler(boolean preserveMarkup) {
@@ -23,11 +23,11 @@ public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteActi
   }
 
   @Override
-  final void doExecute(@NotNull String text, @NotNull LanguageConsoleView consoleView) {
+  final void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView) {
     execute(text, consoleView);
   }
 
-  protected void execute(@NotNull String text, @NotNull LanguageConsoleView console) {
+  protected void execute(@Nonnull String text, @Nonnull LanguageConsoleView console) {
   }
 
   public String getEmptyExecuteAction() {

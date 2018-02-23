@@ -24,8 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +37,19 @@ import java.util.List;
 public class GlobalInspectionUtil {
   private static final String LOC_MARKER = " #loc";
 
-  @NotNull
-  public static String createInspectionMessage(@NotNull String message) {
+  @Nonnull
+  public static String createInspectionMessage(@Nonnull String message) {
     //TODO: FIXME!
     return message + LOC_MARKER;
   }
 
-  public static void createProblem(@NotNull PsiElement elt,
-                                   @NotNull HighlightInfo info,
+  public static void createProblem(@Nonnull PsiElement elt,
+                                   @Nonnull HighlightInfo info,
                                    TextRange range,
-                                   @Nullable ProblemGroup problemGroup,
-                                   @NotNull InspectionManager manager,
-                                   @NotNull ProblemDescriptionsProcessor problemDescriptionsProcessor,
-                                   @NotNull GlobalInspectionContext globalContext) {
+                                   @javax.annotation.Nullable ProblemGroup problemGroup,
+                                   @Nonnull InspectionManager manager,
+                                   @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                   @Nonnull GlobalInspectionContext globalContext) {
     List<LocalQuickFix> fixes = new ArrayList<LocalQuickFix>();
     if (info.quickFixActionRanges != null) {
       for (Pair<HighlightInfo.IntentionActionDescriptor, TextRange> actionRange : info.quickFixActionRanges) {

@@ -29,9 +29,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -59,7 +59,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions(){
     return new Action[]{getOKAction(),getCancelAction(),new ApplyAction(),getHelpAction()};
   }
@@ -112,7 +112,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
     return editConfiguration(project, configuration, title, null);
   }
 
-  public static boolean editConfiguration(@NotNull ExecutionEnvironment environment, @NotNull String title) {
+  public static boolean editConfiguration(@Nonnull ExecutionEnvironment environment, @Nonnull String title) {
     return editConfiguration(environment.getProject(), environment.getRunnerAndConfigurationSettings(), title, environment.getExecutor());
   }
 

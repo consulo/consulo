@@ -2,7 +2,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -150,7 +150,7 @@ public abstract class AbstractTreeBuilderCrashTest extends BaseTreeTestCase  {
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public NodeDescriptor doCreateDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
         return (NodeDescriptor)element;
       }

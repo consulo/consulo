@@ -16,7 +16,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ComplementPackageSet extends PackageSetBase {
   private final PackageSet myComplementarySet;
@@ -32,13 +32,13 @@ public class ComplementPackageSet extends PackageSetBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PackageSet createCopy() {
     return new ComplementPackageSet(myComplementarySet.createCopy());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     StringBuffer buf = new StringBuffer();
     boolean needParen = myComplementarySet.getNodePriority() > getNodePriority();

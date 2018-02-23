@@ -24,7 +24,7 @@ import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -58,9 +58,9 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
 
             PsiReferenceProvider myProvider;
 
-            @NotNull
+            @Nonnull
             @Override
-            public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+            public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
               if (myProvider == null) {
 
                 myProvider = providerBean.instantiate();

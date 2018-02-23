@@ -37,7 +37,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -56,10 +56,10 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   private final NamedScopeManager myLocalScopesHolder;
   private NamedScopesHolder.ScopeListener myScopeListener;
 
-  public InspectionProjectProfileManagerImpl(@NotNull Project project,
-                                             @NotNull InspectionProfileManager inspectionProfileManager,
-                                             @NotNull DependencyValidationManager holder,
-                                             @NotNull NamedScopeManager localScopesHolder) {
+  public InspectionProjectProfileManagerImpl(@Nonnull Project project,
+                                             @Nonnull InspectionProfileManager inspectionProfileManager,
+                                             @Nonnull DependencyValidationManager holder,
+                                             @Nonnull NamedScopeManager localScopesHolder) {
     super(project, inspectionProfileManager, holder);
     myLocalScopesHolder = localScopesHolder;
     mySeverityRegistrar = new SeverityRegistrar(project.getMessageBus());
@@ -74,7 +74,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
     return myName2Profile.containsKey(getInspectionProfile().getName());
   }
 
-  @NotNull
+  @Nonnull
   public synchronized InspectionProfileWrapper getProfileWrapper() {
     final InspectionProfile profile = getInspectionProfile();
     final String profileName = profile.getName();
@@ -89,13 +89,13 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   }
 
   @Override
-  public void updateProfile(@NotNull Profile profile) {
+  public void updateProfile(@Nonnull Profile profile) {
     super.updateProfile(profile);
     initProfileWrapper(profile);
   }
 
   @Override
-  public void deleteProfile(@NotNull String name) {
+  public void deleteProfile(@Nonnull String name) {
     super.deleteProfile(name);
     final InspectionProfileWrapper profileWrapper = myName2Profile.remove(name);
     if (profileWrapper != null) {
@@ -155,7 +155,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   }
 
   @Override
-  public void initProfileWrapper(@NotNull Profile profile) {
+  public void initProfileWrapper(@Nonnull Profile profile) {
     final InspectionProfileWrapper wrapper = new InspectionProfileWrapper((InspectionProfile)profile);
     wrapper.init(myProject);
     myName2Profile.put(profile.getName(), wrapper);
@@ -181,13 +181,13 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SeverityRegistrar getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SeverityRegistrar getOwnSeverityRegistrar() {
     return mySeverityRegistrar;
@@ -217,7 +217,7 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   }
 
   @Override
-  public Profile getProfile(@NotNull final String name) {
+  public Profile getProfile(@Nonnull final String name) {
     return getProfile(name, true);
   }
 

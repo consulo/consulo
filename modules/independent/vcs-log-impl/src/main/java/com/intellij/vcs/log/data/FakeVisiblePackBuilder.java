@@ -27,20 +27,21 @@ import com.intellij.vcs.log.graph.collapsing.CollapsedController;
 import com.intellij.vcs.log.graph.impl.facade.BaseController;
 import com.intellij.vcs.log.graph.impl.facade.VisibleGraphImpl;
 import com.intellij.vcs.log.impl.VcsLogUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
 
 public class FakeVisiblePackBuilder {
-  @NotNull private final VcsLogStorage myHashMap;
+  @Nonnull
+  private final VcsLogStorage myHashMap;
 
-  public FakeVisiblePackBuilder(@NotNull VcsLogStorage hashMap) {
+  public FakeVisiblePackBuilder(@Nonnull VcsLogStorage hashMap) {
     myHashMap = hashMap;
   }
 
-  @NotNull
-  public VisiblePack build(@NotNull VisiblePack visiblePack) {
+  @Nonnull
+  public VisiblePack build(@Nonnull VisiblePack visiblePack) {
     if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl && visiblePack.getVisibleGraph().getVisibleCommitCount() > 0) {
       return build(visiblePack.getDataPack(), ((VisibleGraphImpl<Integer>)visiblePack.getVisibleGraph()), visiblePack.getFilters());
     }
@@ -51,10 +52,10 @@ public class FakeVisiblePackBuilder {
     }
   }
 
-  @NotNull
-  private VisiblePack build(@NotNull DataPackBase oldPack,
-                            @NotNull VisibleGraphImpl<Integer> oldGraph,
-                            @NotNull VcsLogFilterCollection filters) {
+  @Nonnull
+  private VisiblePack build(@Nonnull DataPackBase oldPack,
+                            @Nonnull VisibleGraphImpl<Integer> oldGraph,
+                            @Nonnull VcsLogFilterCollection filters) {
     final PermanentGraphInfo<Integer> info = oldGraph.buildSimpleGraphInfo();
     Set<Integer> heads = ContainerUtil.map2Set(info.getPermanentGraphLayout().getHeadNodeIndex(),
                                                integer -> info.getPermanentCommitsInfo().getCommitId(integer));
@@ -71,15 +72,15 @@ public class FakeVisiblePackBuilder {
     return new VisiblePack(newPack, newGraph, true, filters);
   }
 
-  @NotNull
+  @Nonnull
   private RefsModel createEmptyRefsModel() {
     return new RefsModel(ContainerUtil.newHashMap(), ContainerUtil.newHashSet(), myHashMap, ContainerUtil.newHashMap());
   }
 
-  private RefsModel createRefsModel(@NotNull RefsModel refsModel,
-                                    @NotNull Set<Integer> heads,
-                                    @NotNull VisibleGraph<Integer> visibleGraph,
-                                    @NotNull Map<VirtualFile, VcsLogProvider> providers) {
+  private RefsModel createRefsModel(@Nonnull RefsModel refsModel,
+                                    @Nonnull Set<Integer> heads,
+                                    @Nonnull VisibleGraph<Integer> visibleGraph,
+                                    @Nonnull Map<VirtualFile, VcsLogProvider> providers) {
     Set<VcsRef> branchesAndHeads = ContainerUtil.newHashSet();
     refsModel.getBranches().stream().filter(ref -> {
       int index = myHashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());

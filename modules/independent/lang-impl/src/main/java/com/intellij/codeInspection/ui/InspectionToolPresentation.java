@@ -27,19 +27,19 @@ import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefModule;
 import com.intellij.openapi.vcs.FileStatus;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 public interface InspectionToolPresentation extends ProblemDescriptionsProcessor {
-  @NotNull
-  InspectionNode createToolNode(@NotNull GlobalInspectionContextImpl globalInspectionContext,
-                                @NotNull InspectionNode node,
-                                @NotNull InspectionRVContentProvider provider,
-                                @NotNull InspectionTreeNode parentNode,
+  @Nonnull
+  InspectionNode createToolNode(@Nonnull GlobalInspectionContextImpl globalInspectionContext,
+                                @Nonnull InspectionNode node,
+                                @Nonnull InspectionRVContentProvider provider,
+                                @Nonnull InspectionTreeNode parentNode,
                                 final boolean showStructure);
   void updateContent();
 
@@ -54,36 +54,36 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
   void finalCleanup();
   boolean isGraphNeeded();
   boolean isElementIgnored(final RefEntity element);
-  @NotNull
+  @Nonnull
   FileStatus getElementStatus(final RefEntity element);
-  @NotNull
+  @Nonnull
   Collection<RefEntity> getIgnoredRefElements();
   @Nullable
-  IntentionAction findQuickFixes(@NotNull CommonProblemDescriptor descriptor, final String hint);
-  @NotNull
+  IntentionAction findQuickFixes(@Nonnull CommonProblemDescriptor descriptor, final String hint);
+  @Nonnull
   HTMLComposerImpl getComposer();
-  void exportResults(@NotNull final Element parentNode, @NotNull RefEntity refEntity);
+  void exportResults(@Nonnull final Element parentNode, @Nonnull RefEntity refEntity);
   Set<RefModule> getModuleProblems();
   @Nullable
-  QuickFixAction[] getQuickFixes(@NotNull final RefEntity[] refElements);
-  @NotNull
+  QuickFixAction[] getQuickFixes(@Nonnull final RefEntity[] refElements);
+  @Nonnull
   Map<RefEntity, CommonProblemDescriptor[]> getProblemElements();
-  @NotNull
+  @Nonnull
   Collection<CommonProblemDescriptor> getProblemDescriptors();
-  @NotNull
-  FileStatus getProblemStatus(@NotNull CommonProblemDescriptor descriptor);
+  @Nonnull
+  FileStatus getProblemStatus(@Nonnull CommonProblemDescriptor descriptor);
   boolean isOldProblemsIncluded();
   @Nullable
   Map<RefEntity, CommonProblemDescriptor[]> getOldProblemElements();
   boolean isProblemResolved(RefEntity refEntity, CommonProblemDescriptor descriptor);
   void ignoreCurrentElementProblem(RefEntity refEntity, CommonProblemDescriptor descriptor);
-  void addProblemElement(RefEntity refElement, boolean filterSuppressed, @NotNull CommonProblemDescriptor... descriptions);
-  void ignoreProblem(@NotNull CommonProblemDescriptor descriptor, @NotNull QuickFix fix);
+  void addProblemElement(RefEntity refElement, boolean filterSuppressed, @Nonnull CommonProblemDescriptor... descriptions);
+  void ignoreProblem(@Nonnull CommonProblemDescriptor descriptor, @Nonnull QuickFix fix);
 
-  @NotNull
+  @Nonnull
   GlobalInspectionContextImpl getContext();
   void ignoreProblem(RefEntity refEntity, CommonProblemDescriptor problem, int idx);
   @Nullable
-  QuickFixAction[] extractActiveFixes(@NotNull RefEntity[] refElements, @NotNull Map<RefEntity, Set<QuickFix>> actions);
-  void exportResults(@NotNull final Element parentNode);
+  QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions);
+  void exportResults(@Nonnull final Element parentNode);
 }

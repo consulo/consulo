@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -37,7 +37,7 @@ public abstract class PathMacros {
    * @param name
    * @param value
    */
-  public abstract void addLegacyMacro(@NotNull String name, @NotNull String value);
+  public abstract void addLegacyMacro(@Nonnull String name, @Nonnull String value);
 
   public abstract void removeMacro(String name);
 
@@ -47,11 +47,11 @@ public abstract class PathMacros {
 
   public abstract Collection<String> getIgnoredMacroNames();
 
-  public abstract void setIgnoredMacroNames(@NotNull final Collection<String> names);
+  public abstract void setIgnoredMacroNames(@Nonnull final Collection<String> names);
 
-  public abstract void addIgnoredMacro(@NotNull final String name);
+  public abstract void addIgnoredMacro(@Nonnull final String name);
 
-  public abstract boolean isIgnoredMacroName(@NotNull final String macro);
+  public abstract boolean isIgnoredMacroName(@Nonnull final String macro);
 
   public abstract void removeAllMacros();
 

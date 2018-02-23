@@ -31,7 +31,7 @@ import com.intellij.ui.ScrollingUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -96,15 +96,15 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
                                @Override
                                public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
                                  return new CompositeSettingsBuilder<RunnerAndConfigurationSettings>() {
-                                   @NotNull
+                                   @Nonnull
                                    @Override
                                    public Collection<SettingsEditor<RunnerAndConfigurationSettings>> getEditors() {
                                      return myRunnerEditors;
                                    }
 
-                                   @NotNull
+                                   @Nonnull
                                    @Override
-                                   public JComponent createCompoundEditor(@NotNull Disposable disposable) {
+                                   public JComponent createCompoundEditor(@Nonnull Disposable disposable) {
                                      return myRunnersComponent.getComponent();
                                    }
                                  };
@@ -255,7 +255,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public JComponent createEditor() {
       return myConfigEditor.getComponent();
     }

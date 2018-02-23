@@ -18,17 +18,17 @@ package com.intellij.ide.fileTemplates.impl;
 import com.intellij.openapi.util.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class DeletedTemplatesManager implements JDOMExternalizable {
   public JDOMExternalizableStringList DELETED_DEFAULT_TEMPLATES = new JDOMExternalizableStringList();
 
-  public void addName(@NotNull @NonNls String nameWithExtension) {
+  public void addName(@Nonnull @NonNls String nameWithExtension) {
     DELETED_DEFAULT_TEMPLATES.remove(nameWithExtension);
     DELETED_DEFAULT_TEMPLATES.add(nameWithExtension);
   }
 
-  public boolean contains(@NotNull @NonNls String nameWithExtension) {
+  public boolean contains(@Nonnull @NonNls String nameWithExtension) {
     return DELETED_DEFAULT_TEMPLATES.contains(nameWithExtension);
   }
 

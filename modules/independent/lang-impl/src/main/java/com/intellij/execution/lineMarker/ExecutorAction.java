@@ -31,8 +31,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.List;
 public class ExecutorAction extends AnAction {
   private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
-  @NotNull
+  @Nonnull
   public static AnAction[] getActions(final int order) {
     return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
                                    (Function<Executor, AnAction>)executor -> new ExecutorAction(ActionManager.getInstance().getAction(executor.getContextActionId()), executor, order));
@@ -53,8 +53,8 @@ public class ExecutorAction extends AnAction {
   private final Executor myExecutor;
   private final int myOrder;
 
-  private ExecutorAction(@NotNull AnAction origin,
-                         @NotNull Executor executor,
+  private ExecutorAction(@Nonnull AnAction origin,
+                         @Nonnull Executor executor,
                          int order) {
     myOrigin = origin;
     myExecutor = executor;
@@ -64,7 +64,7 @@ public class ExecutorAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     String name = getActionName(e.getDataContext(), myExecutor);
     e.getPresentation().setVisible(name != null);
     e.getPresentation().setText(name);
@@ -72,11 +72,11 @@ public class ExecutorAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(e);
   }
 
-  @NotNull
+  @Nonnull
   private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
     List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
     if (result == null) {
@@ -85,7 +85,7 @@ public class ExecutorAction extends AnAction {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
     if (context.getLocation() == null) return Collections.emptyList();
@@ -93,7 +93,7 @@ public class ExecutorAction extends AnAction {
     return ContainerUtil.mapNotNull(producers, producer -> createConfiguration(producer, context));
   }
 
-  private String getActionName(DataContext dataContext, @NotNull Executor executor) {
+  private String getActionName(DataContext dataContext, @Nonnull Executor executor) {
     List<ConfigurationFromContext> list = getConfigurations(dataContext);
     if (list.isEmpty()) return null;
     ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);

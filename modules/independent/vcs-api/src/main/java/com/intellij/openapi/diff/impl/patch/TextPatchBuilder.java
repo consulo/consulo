@@ -28,8 +28,7 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -47,12 +46,12 @@ public class TextPatchBuilder {
   private final String myBasePath;
   private final boolean myIsReversePath;
   private final boolean myIsCaseSensitive;
-  @Nullable
+  @javax.annotation.Nullable
   private final Runnable myCancelChecker;
   private final boolean myIncludeBaseText;
 
   private TextPatchBuilder(final String basePath, final boolean isReversePath, final boolean isCaseSensitive,
-                           @Nullable final Runnable cancelChecker, boolean includeBaseText) {
+                           @javax.annotation.Nullable final Runnable cancelChecker, boolean includeBaseText) {
     myBasePath = basePath;
     myIsReversePath = isReversePath;
     myIsCaseSensitive = isCaseSensitive;
@@ -69,7 +68,7 @@ public class TextPatchBuilder {
   public static List<FilePatch> buildPatch(final Collection<BeforeAfter<AirContentRevision>> changes, final String basePath,
                                            final boolean reversePatch,
                                            final boolean isCaseSensitive,
-                                           @Nullable final Runnable cancelChecker,
+                                           @javax.annotation.Nullable final Runnable cancelChecker,
                                            final boolean includeBaseText) throws VcsException {
     final TextPatchBuilder builder = new TextPatchBuilder(basePath, reversePatch, isCaseSensitive, cancelChecker, includeBaseText);
     return builder.build(changes);
@@ -205,8 +204,8 @@ public class TextPatchBuilder {
     }
   }
 
-  @NotNull
-  private static DiffString[] tokenize(@NotNull DiffString text) {
+  @Nonnull
+  private static DiffString[] tokenize(@Nonnull DiffString text) {
     return text.length() == 0 ? new DiffString[]{text} : text.tokenize();
   }
 
@@ -222,7 +221,7 @@ public class TextPatchBuilder {
     return patch;
   }
 
-  private static void addLineToHunk(@NotNull final PatchHunk hunk, @NotNull final DiffString line, final PatchLine.Type type) {
+  private static void addLineToHunk(@Nonnull final PatchHunk hunk, @Nonnull final DiffString line, final PatchLine.Type type) {
     final PatchLine patchLine;
     if (!line.endsWith('\n')) {
       patchLine = new PatchLine(type, line.toString());
@@ -320,8 +319,8 @@ public class TextPatchBuilder {
   }
 
   private void setPatchHeading(final FilePatch result, final String basePath,
-                               @NotNull final AirContentRevision beforeRevision,
-                               @NotNull final AirContentRevision afterRevision) {
+                               @Nonnull final AirContentRevision beforeRevision,
+                               @Nonnull final AirContentRevision afterRevision) {
     result.setBeforeName(getRelativePath(basePath, beforeRevision.getPath().getPath()));
     result.setBeforeVersionId(getRevisionName(beforeRevision));
 

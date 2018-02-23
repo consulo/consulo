@@ -17,7 +17,7 @@ package com.intellij.openapi.extensions.impl;
 
 import com.intellij.openapi.extensions.*;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -57,11 +57,11 @@ public class ExtensionsImplTest extends TestCase {
     removed[0] = false;
     extensionsArea.getExtensionPoint(EXTENSION_POINT_NAME_1).addExtensionPointListener(new ExtensionPointListener() {
       @Override
-      public void extensionAdded(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
       }
 
       @Override
-      public void extensionRemoved(@NotNull Object extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull Object extension, final PluginDescriptor pluginDescriptor) {
         removed[0] = true;
       }
     });

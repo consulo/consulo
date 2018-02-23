@@ -21,8 +21,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -36,8 +36,8 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param project the project for which the PSI manager is requested.
    * @return the PSI manager instance.
    */
-  @NotNull
-  public static PsiManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static PsiManager getInstance(@Nonnull Project project) {
     return project.getComponent(PsiManager.class);
   }
 
@@ -46,7 +46,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the project instance.
    */
-  @NotNull
+  @Nonnull
   public abstract Project getProject();
 
   /**
@@ -58,10 +58,10 @@ public abstract class PsiManager extends UserDataHolderBase {
    */
   @Nullable
   @RequiredReadAction
-  public abstract PsiFile findFile(@NotNull VirtualFile file);
+  public abstract PsiFile findFile(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract FileViewProvider findViewProvider(@NotNull VirtualFile file);
+  public abstract FileViewProvider findViewProvider(@Nonnull VirtualFile file);
 
   /**
    * Returns the PSI directory corresponding to the specified virtual file system directory.
@@ -71,7 +71,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    */
   @Nullable
   @RequiredReadAction
-  public abstract PsiDirectory findDirectory(@NotNull VirtualFile file);
+  public abstract PsiDirectory findDirectory(@Nonnull VirtualFile file);
 
   /**
    * Checks if the specified two PSI elements (possibly invalid) represent the same source element
@@ -89,14 +89,14 @@ public abstract class PsiManager extends UserDataHolderBase {
    * Reloads the contents of the specified PSI file and its associated document (if any) from the disk.
    * @param file the PSI file to reload.
    */
-  public abstract void reloadFromDisk(@NotNull PsiFile file);   //todo: move to FileDocumentManager
+  public abstract void reloadFromDisk(@Nonnull PsiFile file);   //todo: move to FileDocumentManager
 
   /**
    * Adds a listener for receiving notifications about all changes in the PSI tree of the project.
    *
    * @param listener the listener instance.
    */
-  public abstract void addPsiTreeChangeListener(@NotNull PsiTreeChangeListener listener);
+  public abstract void addPsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener);
 
   /**
    * Adds a listener for receiving notifications about all changes in the PSI tree of the project.
@@ -104,14 +104,14 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param listener the listener instance.
    * @param parentDisposable object, after whose disposing the listener should be removed
    */
-  public abstract void addPsiTreeChangeListener(@NotNull PsiTreeChangeListener listener, Disposable parentDisposable);
+  public abstract void addPsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener, Disposable parentDisposable);
 
   /**
    * Removes a listener for receiving notifications about all changes in the PSI tree of the project.
    *
    * @param listener the listener instance.
    */
-  public abstract void removePsiTreeChangeListener(@NotNull PsiTreeChangeListener listener);
+  public abstract void removePsiTreeChangeListener(@Nonnull PsiTreeChangeListener listener);
 
   /**
    * Returns the modification tracker for the project, which can be used to get the PSI
@@ -119,7 +119,7 @@ public abstract class PsiManager extends UserDataHolderBase {
    *
    * @return the modification tracker instance.
    */
-  @NotNull
+  @Nonnull
   public abstract PsiModificationTracker getModificationTracker();
 
   /**
@@ -163,5 +163,5 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @param element the element to check.
    * @return true if the element belongs to the sources of the project, false otherwise.
    */
-  public abstract boolean isInProject(@NotNull PsiElement element);
+  public abstract boolean isInProject(@Nonnull PsiElement element);
 }

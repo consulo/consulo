@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.indexing.FileContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -30,13 +30,13 @@ public abstract class FileIncludeProvider {
 
   public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create("com.intellij.include.provider");
 
-  @NotNull
+  @Nonnull
   public abstract String getId();
 
   public abstract boolean acceptFile(VirtualFile file);
 
-  public abstract void registerFileTypesUsedForIndexing(@NotNull Consumer<FileType> fileTypeSink);
+  public abstract void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink);
 
-  @NotNull
+  @Nonnull
   public abstract FileIncludeInfo[] getIncludeInfos(FileContent content);
 }

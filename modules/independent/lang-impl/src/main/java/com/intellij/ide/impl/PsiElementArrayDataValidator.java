@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import consulo.ide.impl.DataValidators;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +30,7 @@ public class PsiElementArrayDataValidator extends DataValidators.ArrayValidator<
     super(new PsiElementDataValidator());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiElement[]> getKey() {
     return LangDataKeys.PSI_ELEMENT_ARRAY;

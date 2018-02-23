@@ -19,7 +19,7 @@ package com.intellij.ui;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.EditableModel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -30,11 +30,11 @@ import java.util.*;
 public class CollectionListModel<T> extends AbstractListModel<T> implements EditableModel {
   private final List<T> myItems;
 
-  public CollectionListModel(@NotNull final Collection<? extends T> items) {
+  public CollectionListModel(@Nonnull final Collection<? extends T> items) {
     myItems = new ArrayList<T>(items);
   }
 
-  public CollectionListModel(@NotNull final List<? extends T> items) {
+  public CollectionListModel(@Nonnull final List<? extends T> items) {
     this((Collection<? extends T>)items);
   }
 
@@ -58,20 +58,20 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     fireIntervalAdded(this, i, i);
   }
 
-  public void add(@NotNull final List<? extends T> elements) {
+  public void add(@Nonnull final List<? extends T> elements) {
     if (elements.isEmpty()) return;
     int i = myItems.size();
     myItems.addAll(elements);
     fireIntervalAdded(this, i, i + elements.size() - 1);
   }
 
-  public void remove(@NotNull final T element) {
+  public void remove(@Nonnull final T element) {
     int i = myItems.indexOf(element);
     myItems.remove(element);
     fireIntervalRemoved(this, i, i);
   }
 
-  public void setElementAt(@NotNull final T element, final int index) {
+  public void setElementAt(@Nonnull final T element, final int index) {
     myItems.set(index, element);
     fireContentsChanged(this, index, index);
   }
@@ -89,7 +89,7 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     }
   }
 
-  public void contentsChanged(@NotNull final T element) {
+  public void contentsChanged(@Nonnull final T element) {
     int i = myItems.indexOf(element);
     fireContentsChanged(this, i, i);
   }
@@ -102,7 +102,7 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     return Collections.unmodifiableList(myItems);
   }
 
-  public void replaceAll(@NotNull final List<? extends T> elements) {
+  public void replaceAll(@Nonnull final List<? extends T> elements) {
     removeAll();
     add(elements);
   }

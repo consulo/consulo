@@ -25,7 +25,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -55,7 +55,7 @@ public class DirectoryCopyPresentation extends PackagingElementPresentation {
     return mySourceFileName;
   }
 
-  public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     presentationData.setIcon(AllIcons.Nodes.CopyOfFolder);
     if (myFile == null || !myFile.isDirectory()) {
       mainAttributes = SimpleTextAttributes.ERROR_ATTRIBUTES;

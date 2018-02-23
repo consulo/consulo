@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,16 +25,16 @@ public abstract class LanguagePerFileMappings<T> extends PerFileMappingsBase<T> 
 
   private final Project myProject;
 
-  public LanguagePerFileMappings(@NotNull Project project) {
+  public LanguagePerFileMappings(@Nonnull Project project) {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   protected Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   protected String getValueAttribute() {
     return "dialect";
   }

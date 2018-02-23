@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,9 +38,9 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
 
   @NonNls private static final String GROUP_ID = "libraries";
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@NotNull Project project) {
+  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
     final Set<LibraryKind> usedKinds = new HashSet<LibraryKind>();
     final Processor<Library> processor = new Processor<Library>() {
       @Override
@@ -60,7 +60,7 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
     return usageDescriptors;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID);  }

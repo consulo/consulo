@@ -28,8 +28,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  @NotNull
-  public static <T> List<T> foreachChunk(@NotNull List<String> arguments,
-                                         @NotNull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
+  @Nonnull
+  public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
+                                         @Nonnull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
     return foreachChunk(arguments, 1, processor);
   }
@@ -72,10 +72,10 @@ public class VcsFileUtil {
    * @return list of result values
    * @throws VcsException
    */
-  @NotNull
-  public static <T> List<T> foreachChunk(@NotNull List<String> arguments,
+  @Nonnull
+  public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
                                          int groupSize,
-                                         @NotNull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
+                                         @Nonnull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
     List<T> result = ContainerUtil.newArrayList();
 
@@ -94,9 +94,9 @@ public class VcsFileUtil {
    * @param consumer  consumer to feed each chunk
    * @throws VcsException
    */
-  public static void foreachChunk(@NotNull List<String> arguments,
+  public static void foreachChunk(@Nonnull List<String> arguments,
                                   int groupSize,
-                                  @NotNull ThrowableConsumer<List<String>, VcsException> consumer)
+                                  @Nonnull ThrowableConsumer<List<String>, VcsException> consumer)
           throws VcsException {
     List<List<String>> chunks = chunkArguments(arguments, groupSize);
 
@@ -114,8 +114,8 @@ public class VcsFileUtil {
    * @param arguments the arguments to chunk
    * @return a list of lists of arguments
    */
-  @NotNull
-  public static List<List<String>> chunkArguments(@NotNull List<String> arguments) {
+  @Nonnull
+  public static List<List<String>> chunkArguments(@Nonnull List<String> arguments) {
     return chunkArguments(arguments, 1);
   }
 
@@ -126,8 +126,8 @@ public class VcsFileUtil {
    * @param groupSize size of argument groups that should be put in the same chunk
    * @return a list of lists of arguments
    */
-  @NotNull
-  public static List<List<String>> chunkArguments(@NotNull List<String> arguments, int groupSize) {
+  @Nonnull
+  public static List<List<String>> chunkArguments(@Nonnull List<String> arguments, int groupSize) {
     assert arguments.size() % groupSize == 0 : "Arguments size should be divisible by group size";
 
     ArrayList<List<String>> rc = new ArrayList<>();
@@ -179,15 +179,15 @@ public class VcsFileUtil {
    * @param files the file list
    * @return chunked relative paths
    */
-  public static List<List<String>> chunkFiles(@NotNull VirtualFile root, @NotNull Collection<VirtualFile> files) {
+  public static List<List<String>> chunkFiles(@Nonnull VirtualFile root, @Nonnull Collection<VirtualFile> files) {
     return chunkArguments(toRelativeFiles(root, files));
   }
 
-  public static String getRelativeFilePath(VirtualFile file, @NotNull final VirtualFile baseDir) {
+  public static String getRelativeFilePath(VirtualFile file, @Nonnull final VirtualFile baseDir) {
     return getRelativeFilePath(file.getPath(), baseDir);
   }
 
-  public static String getRelativeFilePath(String file, @NotNull final VirtualFile baseDir) {
+  public static String getRelativeFilePath(String file, @Nonnull final VirtualFile baseDir) {
     if (SystemInfo.isWindows) {
       file = file.replace('\\', '/');
     }
@@ -296,7 +296,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativePaths(@NotNull VirtualFile root, @NotNull final Collection<FilePath> filePaths) {
+  public static List<String> toRelativePaths(@Nonnull VirtualFile root, @Nonnull final Collection<FilePath> filePaths) {
     ArrayList<String> rc = new ArrayList<>(filePaths.size());
     for (FilePath path : filePaths) {
       rc.add(relativePath(root, path));
@@ -312,7 +312,7 @@ public class VcsFileUtil {
    * @return a list of relative paths
    * @throws IllegalArgumentException if some path is not under root.
    */
-  public static List<String> toRelativeFiles(@NotNull VirtualFile root, @NotNull final Collection<VirtualFile> files) {
+  public static List<String> toRelativeFiles(@Nonnull VirtualFile root, @Nonnull final Collection<VirtualFile> files) {
     ArrayList<String> rc = new ArrayList<>(files.size());
     for (VirtualFile file : files) {
       rc.add(relativePath(root, file));
@@ -320,7 +320,7 @@ public class VcsFileUtil {
     return rc;
   }
 
-  public static void markFilesDirty(@NotNull Project project, @NotNull Collection<VirtualFile> affectedFiles) {
+  public static void markFilesDirty(@Nonnull Project project, @Nonnull Collection<VirtualFile> affectedFiles) {
     final VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (VirtualFile file : affectedFiles) {
       if (file.isDirectory()) {
@@ -332,7 +332,7 @@ public class VcsFileUtil {
     }
   }
 
-  public static void markFilesDirty(@NotNull Project project, @NotNull List<FilePath> affectedFiles) {
+  public static void markFilesDirty(@Nonnull Project project, @Nonnull List<FilePath> affectedFiles) {
     final VcsDirtyScopeManager dirty = VcsDirtyScopeManager.getInstance(project);
     for (FilePath file : affectedFiles) {
       if (file.isDirectory()) {

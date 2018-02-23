@@ -22,7 +22,7 @@ import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,13 +35,13 @@ public abstract class VcsCherryPicker {
   /**
    * @return - return vcs for current cherryPicker
    */
-  @NotNull
+  @Nonnull
   public abstract VcsKey getSupportedVcs();
 
   /**
    * @return CherryPick Action name for supported vcs
    */
-  @NotNull
+  @Nonnull
   public abstract String getActionTitle();
 
   /**
@@ -49,12 +49,12 @@ public abstract class VcsCherryPicker {
    *
    * @param commits to cherry-pick
    */
-  public abstract void cherryPick(@NotNull final List<VcsFullCommitDetails> commits);
+  public abstract void cherryPick(@Nonnull final List<VcsFullCommitDetails> commits);
 
   /**
    * Return true if cherry picker can manage all commits from roots
    */
-  public abstract boolean canHandleForRoots(@NotNull Collection<VirtualFile> roots);
+  public abstract boolean canHandleForRoots(@Nonnull Collection<VirtualFile> roots);
 
   /**
    * Return null if all selected commits can be cherry-picked without problems by this cherry-picker or error description otherwise.
@@ -63,7 +63,7 @@ public abstract class VcsCherryPicker {
    * @param commits commits to cherry-pick, grouped by version control root
    * @return
    */
-  public String getInfo(@NotNull VcsLog log, @NotNull Map<VirtualFile, List<Hash>> commits) {
+  public String getInfo(@Nonnull VcsLog log, @Nonnull Map<VirtualFile, List<Hash>> commits) {
     return null;
   }
 }

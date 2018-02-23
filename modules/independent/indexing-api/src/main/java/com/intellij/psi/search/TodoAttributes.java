@@ -21,7 +21,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,7 +41,7 @@ public class TodoAttributes implements Cloneable {
   @NonNls private static final String ELEMENT_OPTION = "option";
   @NonNls private static final String USE_CUSTOM_COLORS_ATT = "useCustomColors";
 
-  public TodoAttributes(@NotNull Element element, @NotNull TextAttributes defaultTodoAttributes) throws InvalidDataException {
+  public TodoAttributes(@Nonnull Element element, @Nonnull TextAttributes defaultTodoAttributes) throws InvalidDataException {
     String icon = element.getAttributeValue(ATTRIBUTE_ICON,ICON_DEFAULT);
 
     if (ICON_DEFAULT.equals(icon)){
@@ -66,7 +66,7 @@ public class TodoAttributes implements Cloneable {
     myShouldUseCustomColors = useCustomColors != null && Boolean.valueOf(useCustomColors).booleanValue();
   }
 
-  TodoAttributes(@NotNull Icon icon, @NotNull TextAttributes textAttributes){
+  TodoAttributes(@Nonnull Icon icon, @Nonnull TextAttributes textAttributes){
     myIcon = icon;
     myTextAttributes = textAttributes;
   }
@@ -75,12 +75,12 @@ public class TodoAttributes implements Cloneable {
     return myIcon;
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributes getTextAttributes() {
     return getCustomizedTextAttributes();
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributes getCustomizedTextAttributes() {
     return myTextAttributes;
   }
@@ -133,7 +133,7 @@ public class TodoAttributes implements Cloneable {
     return myShouldUseCustomColors;
   }
 
-  public void setUseCustomTodoColor(boolean useCustomColors, @NotNull TextAttributes defaultTodoAttributes) {
+  public void setUseCustomTodoColor(boolean useCustomColors, @Nonnull TextAttributes defaultTodoAttributes) {
     myShouldUseCustomColors = useCustomColors;
     if (!useCustomColors) {
       myTextAttributes = defaultTodoAttributes;

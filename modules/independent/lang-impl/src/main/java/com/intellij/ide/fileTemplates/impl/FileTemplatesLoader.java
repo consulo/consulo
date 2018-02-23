@@ -28,8 +28,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.UriUtil;
 import com.intellij.util.lang.UrlClassLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class FileTemplatesLoader {
   private URL myDefaultTemplateDescription;
   private URL myDefaultIncludeDescription;
 
-  protected FileTemplatesLoader(@NotNull FileTypeManagerEx typeManager, @Nullable Project project) {
+  protected FileTemplatesLoader(@Nonnull FileTypeManagerEx typeManager, @Nullable Project project) {
     myTypeManager = typeManager;
     File configDir = project == null || project.isDefault()
                      ? new File(PathManager.getConfigPath(), TEMPLATES_DIR)
@@ -93,17 +93,17 @@ public class FileTemplatesLoader {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected FTManager[] getAllManagers() {
     return myAllManagers;
   }
 
-  @NotNull
+  @Nonnull
   FTManager getDefaultTemplatesManager() {
     return new FTManager(myDefaultTemplatesManager);
   }
 
-  @NotNull
+  @Nonnull
   FTManager getInternalTemplatesManager() {
     return new FTManager(myInternalTemplatesManager);
   }

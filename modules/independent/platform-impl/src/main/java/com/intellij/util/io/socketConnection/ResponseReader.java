@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io.socketConnection;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 

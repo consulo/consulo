@@ -21,7 +21,7 @@ import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -64,7 +64,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   private final PsiElement myElement;
   private boolean mySorted;
 
-  public PsiMultiReference(@NotNull PsiReference[] references, PsiElement element){
+  public PsiMultiReference(@Nonnull PsiReference[] references, PsiElement element){
     assert references.length > 0;
     myReferences = references;
     myElement = element;
@@ -115,7 +115,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getCanonicalText(){
     return chooseReference().getCanonicalText();
   }
@@ -126,7 +126,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException{
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException{
     return chooseReference().bindToElement(element);
   }
 
@@ -139,7 +139,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getVariants() {
     Set<Object> variants = new HashSet<Object>();
     for(PsiReference ref: myReferences) {
@@ -160,7 +160,7 @@ public class PsiMultiReference implements PsiPolyVariantReference {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ResolveResult[] multiResolve(final boolean incompleteCode) {
     final PsiReference[] refs = getReferences();
     Collection<ResolveResult> result = new LinkedHashSet<ResolveResult>(refs.length);

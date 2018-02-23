@@ -18,8 +18,8 @@ package com.intellij.openapi.components.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
   private boolean myHandlingInitComponentError;
@@ -28,12 +28,12 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
     super(parent);
   }
 
-  protected PlatformComponentManagerImpl(ComponentManager parent, @NotNull String name) {
+  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name) {
     super(parent, name);
   }
 
   @Override
-  protected void handleInitComponentError(@NotNull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable String componentClassName, @Nullable ComponentConfig config) {
     if (!myHandlingInitComponentError) {
       myHandlingInitComponentError = true;
       try {

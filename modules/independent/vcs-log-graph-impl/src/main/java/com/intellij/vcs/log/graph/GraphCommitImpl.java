@@ -17,17 +17,19 @@ package com.intellij.vcs.log.graph;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ImmutableList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class GraphCommitImpl<CommitId> extends ImmutableList<CommitId> implements GraphCommit<CommitId> {
 
-  @NotNull private final CommitId myId;
-  @NotNull private final Object myParents;
+  @Nonnull
+  private final CommitId myId;
+  @Nonnull
+  private final Object myParents;
   private final long myTimestamp;
 
-  public GraphCommitImpl(@NotNull CommitId id, @NotNull List<CommitId> parents, long timestamp) {
+  public GraphCommitImpl(@Nonnull CommitId id, @Nonnull List<CommitId> parents, long timestamp) {
     myId = id;
     myTimestamp = timestamp;
     if (parents.isEmpty()) {
@@ -42,13 +44,13 @@ public class GraphCommitImpl<CommitId> extends ImmutableList<CommitId> implement
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CommitId getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<CommitId> getParents() {
     return this;

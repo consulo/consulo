@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.util.containers.Stack;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -65,7 +65,7 @@ public abstract class VirtualFileVisitor<T> {
   public static final Result CONTINUE = new Result(false, null);
   public static final Result SKIP_CHILDREN = new Result(true, null);
 
-  public static Result skipTo(@NotNull VirtualFile parentToSkipTo) {
+  public static Result skipTo(@Nonnull VirtualFile parentToSkipTo) {
     return new Result(true, parentToSkipTo);
   }
 
@@ -85,7 +85,7 @@ public abstract class VirtualFileVisitor<T> {
   private Stack<T> myValueStack = null;
   private T myValue = null;
 
-  protected VirtualFileVisitor(@NotNull Option... options) {
+  protected VirtualFileVisitor(@Nonnull Option... options) {
     for (Option option : options) {
       if (option == NO_FOLLOW_SYMLINKS) {
         myFollowSymLinks = false;
@@ -107,7 +107,7 @@ public abstract class VirtualFileVisitor<T> {
    * @param file a file to visit.
    * @return {@code true} to proceed to file's children, {@code false} to skip to file's next sibling.
    */
-  public boolean visitFile(@NotNull VirtualFile file) {
+  public boolean visitFile(@Nonnull VirtualFile file) {
     return true;
   }
 
@@ -119,8 +119,8 @@ public abstract class VirtualFileVisitor<T> {
    *         {@linkplain #SKIP_CHILDREN} to skip to file's next sibling,<br/>
    *         result of {@linkplain #skipTo(VirtualFile)} to skip to given file's next sibling.
    */
-  @NotNull
-  public Result visitFileEx(@NotNull VirtualFile file) {
+  @Nonnull
+  public Result visitFileEx(@Nonnull VirtualFile file) {
     return visitFile(file) ? CONTINUE : SKIP_CHILDREN;
   }
 
@@ -130,7 +130,7 @@ public abstract class VirtualFileVisitor<T> {
    *
    * @param file a file whose children were successfully visited.
    */
-  public void afterChildrenVisited(@NotNull VirtualFile file) { }
+  public void afterChildrenVisited(@Nonnull VirtualFile file) { }
 
   /**
    * By default, visitor uses ({@linkplain com.intellij.openapi.vfs.VirtualFile#getChildren()}) to iterate over file's children.
@@ -140,7 +140,7 @@ public abstract class VirtualFileVisitor<T> {
    * @return children iterable, or null to use {@linkplain com.intellij.openapi.vfs.VirtualFile#getChildren()}.
    */
   @Nullable
-  public Iterable<VirtualFile> getChildrenIterable(@NotNull VirtualFile file) {
+  public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
     return null;
   }
 
@@ -163,11 +163,11 @@ public abstract class VirtualFileVisitor<T> {
   }
 
 
-  final boolean allowVisitFile(@SuppressWarnings("UnusedParameters") @NotNull VirtualFile file) {
+  final boolean allowVisitFile(@SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) {
     return myLevel > 0 || !mySkipRoot;
   }
 
-  final boolean allowVisitChildren(@NotNull VirtualFile file) {
+  final boolean allowVisitChildren(@Nonnull VirtualFile file) {
     return !file.is(VFileProperty.SYMLINK) || myFollowSymLinks && !VfsUtilCore.isInvalidLink(file);
   }
 

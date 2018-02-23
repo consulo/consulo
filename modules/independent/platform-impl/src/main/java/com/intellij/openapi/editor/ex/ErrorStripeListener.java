@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
 public interface ErrorStripeListener extends EventListener {
   ErrorStripeListener[] EMPTY_ARRAY = new ErrorStripeListener[0];
-  void errorMarkerClicked(@NotNull ErrorStripeEvent e);
+  void errorMarkerClicked(@Nonnull ErrorStripeEvent e);
 }

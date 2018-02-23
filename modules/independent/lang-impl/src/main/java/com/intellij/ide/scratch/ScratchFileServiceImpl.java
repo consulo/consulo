@@ -63,8 +63,8 @@ import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -91,9 +91,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     initFileOpenedListener(application.getMessageBus());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getRootPath(@NotNull RootType rootId) {
+  public String getRootPath(@Nonnull RootType rootId) {
     return getRootPath() + "/" + rootId.getId();
   }
 
@@ -109,7 +109,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   private void initFileOpenedListener(MessageBus messageBus) {
     final FileEditorManagerAdapter editorListener = new FileEditorManagerAdapter() {
       @Override
-      public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (!isEditable(file)) return;
         RootType rootType = getRootType(file);
         if (rootType == null) return;
@@ -117,7 +117,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       }
 
       @Override
-      public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (Boolean.TRUE.equals(file.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
         if (!isEditable(file)) return;
 
@@ -126,7 +126,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         rootType.fileClosed(file, source);
       }
 
-      boolean isEditable(@NotNull VirtualFile file) {
+      boolean isEditable(@Nonnull VirtualFile file) {
         return FileDocumentManager.getInstance().getDocument(file) != null;
       }
     };
@@ -146,12 +146,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     messageBus.connect().subscribe(ProjectManager.TOPIC, projectListener);
   }
 
-  @NotNull
+  @Nonnull
   protected String getRootPath() {
     return FileUtil.toSystemIndependentName(PathManager.getScratchPath());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PerFileMappings<Language> getScratchesMapping() {
     return myScratchMapping;
@@ -190,7 +190,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   public static class TypeFactory extends FileTypeFactory {
 
     @Override
-    public void createFileTypes(@NotNull FileTypeConsumer consumer) {
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
       consumer.consume(ScratchFileType.INSTANCE);
     }
   }
@@ -198,12 +198,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   public static class Substitutor extends LanguageSubstitutor {
     @Nullable
     @Override
-    public Language getLanguage(@NotNull VirtualFile file, @NotNull Project project) {
+    public Language getLanguage(@Nonnull VirtualFile file, @Nonnull Project project) {
       return substituteLanguage(project, file);
     }
 
     @Nullable
-    public static Language substituteLanguage(@NotNull Project project, @NotNull VirtualFile file) {
+    public static Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
       RootType rootType = ScratchFileService.getInstance().getRootType(file);
       if (rootType == null) return null;
       Language language = rootType.substituteLanguage(project, file);
@@ -217,7 +217,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   public static class Highlighter implements SyntaxHighlighterProvider {
     @Override
     @Nullable
-    public SyntaxHighlighter create(@NotNull FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
+    public SyntaxHighlighter create(@Nonnull FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
       if (project == null || file == null || !(fileType instanceof ScratchFileType)) return null;
 
       Language language = LanguageUtil.getLanguageForPsi(project, file);
@@ -229,7 +229,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
     @RequiredReadAction
     @Override
-    public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
       if (element instanceof PsiFile) {
         VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
         if (virtualFile == null) {
@@ -244,7 +244,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
     @Nullable
     @Override
-    public String getEditorTabTitle(@NotNull Project project, @NotNull VirtualFile file) {
+    public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
       RootType rootType = ScratchFileService.getInstance().getRootType(file);
       if (rootType == null) return null;
       return rootType.substituteName(project, file);
@@ -254,7 +254,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   public static class AccessExtension implements NonProjectFileWritingAccessExtension {
 
     @Override
-    public boolean isWritable(@NotNull VirtualFile file) {
+    public boolean isWritable(@Nonnull VirtualFile file) {
       return file.getFileType() == ScratchFileType.INSTANCE;
     }
   }
@@ -276,7 +276,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       return rootType.substituteName(project, virtualFile);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<VirtualFile> additionalRoots(Project project) {
       Set<VirtualFile> result = ContainerUtil.newLinkedHashSet();
@@ -290,7 +290,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   @Override
-  public VirtualFile findFile(@NotNull RootType rootType, @NotNull String pathName, @NotNull Option option) throws IOException {
+  public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     String fullPath = getRootPath(rootType) + "/" + pathName;
@@ -322,18 +322,18 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
   }
 
-  @NotNull
+  @Nonnull
   public static GlobalSearchScope buildScratchesSearchScope() {
     final ScratchFileService service = ScratchFileService.getInstance();
     return new GlobalSearchScope() {
-      @NotNull
+      @Nonnull
       @Override
       public String getDisplayName() {
         return "Scratches and Consoles";
       }
 
       @Override
-      public boolean contains(@NotNull VirtualFile file) {
+      public boolean contains(@Nonnull VirtualFile file) {
         RootType rootType = file.getFileType() == ScratchFileType.INSTANCE ? service.getRootType(file) : null;
         return rootType != null && !rootType.isHidden();
       }
@@ -344,12 +344,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       }
 
       @Override
-      public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+      public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
         return 0;
       }
 
       @Override
-      public boolean isSearchInModuleContent(@NotNull Module aModule) {
+      public boolean isSearchInModuleContent(@Nonnull Module aModule) {
         return false;
       }
 
@@ -358,9 +358,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public GlobalSearchScope intersectWith(@NotNull GlobalSearchScope scope) {
+      public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
         if (scope instanceof ProjectAndLibrariesScope) return this;
         return super.intersectWith(scope);
       }
@@ -375,7 +375,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   public static class UseScopeExtension extends UseScopeEnlarger {
     @Nullable
     @Override
-    public SearchScope getAdditionalUseScope(@NotNull PsiElement element) {
+    public SearchScope getAdditionalUseScope(@Nonnull PsiElement element) {
       SearchScope useScope = element.getUseScope();
       if (useScope instanceof LocalSearchScope) return null;
       return buildScratchesSearchScope();
@@ -402,7 +402,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
   public static class IndexSetContributor extends IndexableSetContributor {
 
-    @NotNull
+    @Nonnull
     @Override
     public Set<VirtualFile> getAdditionalRootsToIndex() {
       ScratchFileService instance = ScratchFileService.getInstance();
@@ -415,9 +415,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Set<VirtualFile> getAdditionalProjectRootsToIndex(@NotNull Project project) {
+    public Set<VirtualFile> getAdditionalProjectRootsToIndex(@Nonnull Project project) {
       return Collections.emptySet();
     }
   }

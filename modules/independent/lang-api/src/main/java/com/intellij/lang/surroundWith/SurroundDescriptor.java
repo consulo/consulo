@@ -17,7 +17,7 @@ package com.intellij.lang.surroundWith;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines a code fragment type on which the Surround With action can be used for files
@@ -40,7 +40,7 @@ public interface SurroundDescriptor {
    * @param endOffset   the selection end offset, with whitespaces skipped
    * @return the elements to be surrounded, or an empty array if cannot surround
    */
-  @NotNull
+  @Nonnull
   PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset);
 
   /**
@@ -49,7 +49,7 @@ public interface SurroundDescriptor {
    *
    * @return the list of surrounders.
    */
-  @NotNull
+  @Nonnull
   Surrounder[] getSurrounders();
 
   boolean isExclusive();

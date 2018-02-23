@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -96,7 +96,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
                             @Nullable JComponent modalityStateComponent,
                             @Nullable Disposable parent,
                             @Nullable JComponent activationComponent,
-                            @NotNull Alarm.ThreadToUse thread) {
+                            @Nonnull Alarm.ThreadToUse thread) {
     myMergingTimeSpan = mergingTimeSpan;
     myModalityStateComponent = modalityStateComponent;
     myName = name;
@@ -117,7 +117,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  protected Alarm createAlarm(@NotNull Alarm.ThreadToUse thread, Disposable parent) {
+  protected Alarm createAlarm(@Nonnull Alarm.ThreadToUse thread, Disposable parent) {
     return new Alarm(thread, parent);
   }
 
@@ -287,11 +287,11 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return mySuspended;
   }
 
-  private static boolean isExpired(@NotNull Update each) {
+  private static boolean isExpired(@Nonnull Update each) {
     return each.isDisposed() || each.isExpired();
   }
 
-  protected void execute(@NotNull Update[] update) {
+  protected void execute(@Nonnull Update[] update) {
     for (final Update each : update) {
       if (isExpired(each)) {
         each.setRejected();
@@ -312,7 +312,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  private void execute(@NotNull Update each) {
+  private void execute(@Nonnull Update each) {
     if (myDisposed) {
       each.setRejected();
     }
@@ -321,7 +321,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  public void queue(@NotNull final Update update) {
+  public void queue(@Nonnull final Update update) {
     if (myDisposed) return;
 
     if (myTrackUiActivity) {
@@ -358,7 +358,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     }
   }
 
-  private boolean eatThisOrOthers(@NotNull Update update) {
+  private boolean eatThisOrOthers(@Nonnull Update update) {
     if (myScheduledUpdates.containsKey(update)) {
       return false;
     }
@@ -376,11 +376,11 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return false;
   }
 
-  public final void run(@NotNull Update update) {
+  public final void run(@Nonnull Update update) {
     execute(new Update[]{update});
   }
 
-  private void put(@NotNull Update update) {
+  private void put(@Nonnull Update update) {
     final Update existing = myScheduledUpdates.remove(update);
     if (existing != null && existing != update) {
       existing.setProcessed();
@@ -417,7 +417,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return myModalityStateComponent == ANY_COMPONENT ? null : getModalityState();
   }
 
-  @NotNull
+  @Nonnull
   public ModalityState getModalityState() {
     if (myModalityStateComponent == null) {
       return ModalityState.NON_MODAL;
@@ -425,7 +425,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     return ModalityState.stateForComponent(myModalityStateComponent);
   }
 
-  public void setActivationComponent(@NotNull JComponent c) {
+  public void setActivationComponent(@Nonnull JComponent c) {
     if (myUiNotifyConnector != null) {
       Disposer.dispose(myUiNotifyConnector);
     }
@@ -474,7 +474,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     UiActivityMonitor.getInstance().removeActivity(getActivityId());    
   }
 
-  @NotNull
+  @Nonnull
   protected UiActivity getActivityId() {
     if (myUiActivity == null) {
       myUiActivity = new UiActivity.AsyncBgOperation("UpdateQueue:" + myName + hashCode());

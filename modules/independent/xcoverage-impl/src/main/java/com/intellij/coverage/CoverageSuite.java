@@ -3,8 +3,8 @@ package com.intellij.coverage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.rt.coverage.data.ProjectData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -12,14 +12,14 @@ import org.jetbrains.annotations.Nullable;
 public interface CoverageSuite extends JDOMExternalizable {
   boolean isValid();
 
-  @NotNull
+  @Nonnull
   String getCoverageDataFileName();
 
   String getPresentableName();
 
   long getLastCoverageTimeStamp();
 
-  @NotNull
+  @Nonnull
   CoverageFileProvider getCoverageDataFileProvider();
 
   boolean isCoverageByTestApplicable();
@@ -39,7 +39,7 @@ public interface CoverageSuite extends JDOMExternalizable {
 
   CoverageRunner getRunner();
 
-  @NotNull
+  @Nonnull
   CoverageEngine getCoverageEngine();
 
   Project getProject();

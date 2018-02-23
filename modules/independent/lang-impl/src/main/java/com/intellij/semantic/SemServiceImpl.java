@@ -33,8 +33,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -109,7 +109,7 @@ public class SemServiceImpl extends SemService{
   }
 
   @Override
-  public void performAtomicChange(@NotNull Runnable change) {
+  public void performAtomicChange(@Nonnull Runnable change) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     final boolean oldValue = myBulkChange;
@@ -132,7 +132,7 @@ public class SemServiceImpl extends SemService{
 
   @Override
   @Nullable
-  public <T extends SemElement> List<T> getSemElements(final SemKey<T> key, @NotNull final PsiElement psi) {
+  public <T extends SemElement> List<T> getSemElements(final SemKey<T> key, @Nonnull final PsiElement psi) {
     List<T> cached = _getCachedSemElements(key, true, psi);
     if (cached != null) {
       return cached;
@@ -166,7 +166,7 @@ public class SemServiceImpl extends SemService{
     }
   }
 
-  @NotNull
+  @Nonnull
   private List<SemElement> createSemElements(SemKey key, PsiElement psi) {
     List<SemElement> result = null;
     final Collection<NullableFunction<PsiElement, ? extends SemElement>> producers = myProducers.get(key);
@@ -190,7 +190,7 @@ public class SemServiceImpl extends SemService{
 
   @Override
   @Nullable
-  public <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @NotNull PsiElement psi) {
+  public <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @Nonnull PsiElement psi) {
     return _getCachedSemElements(key, false, psi);
   }
 
@@ -241,12 +241,12 @@ public class SemServiceImpl extends SemService{
   }
 
   @Override
-  public <T extends SemElement> void setCachedSemElement(SemKey<T> key, @NotNull PsiElement psi, @Nullable T semElement) {
+  public <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @Nullable T semElement) {
     getOrCreateChunk(psi).putSemElements(key, ContainerUtil.createMaybeSingletonList(semElement));
   }
 
   @Override
-  public void clearCachedSemElements(@NotNull PsiElement psi) {
+  public void clearCachedSemElements(@Nonnull PsiElement psi) {
     myCache.remove(psi);
   }
 

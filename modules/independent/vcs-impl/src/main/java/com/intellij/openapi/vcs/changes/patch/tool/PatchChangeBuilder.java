@@ -24,23 +24,26 @@ import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.AppliedSplitPatch
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 class PatchChangeBuilder {
-  @NotNull private final StringBuilder myBuilder = new StringBuilder();
-  @NotNull private final List<Hunk> myHunks = new ArrayList<>();
-  @NotNull private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
-  @NotNull private final TIntArrayList myChangedLines = new TIntArrayList();
+  @Nonnull
+  private final StringBuilder myBuilder = new StringBuilder();
+  @Nonnull
+  private final List<Hunk> myHunks = new ArrayList<>();
+  @Nonnull
+  private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
+  @Nonnull
+  private final TIntArrayList myChangedLines = new TIntArrayList();
 
   private int totalLines = 0;
 
-  @NotNull
-  public static CharSequence getPatchedContent(@NotNull AppliedTextPatch patch, @NotNull String localContent) {
+  @Nonnull
+  public static CharSequence getPatchedContent(@Nonnull AppliedTextPatch patch, @Nonnull String localContent) {
     PatchChangeBuilder builder = new PatchChangeBuilder();
     builder.exec(patch.getHunks());
 
@@ -59,7 +62,7 @@ class PatchChangeBuilder {
     return document.getText();
   }
 
-  public void exec(@NotNull List<AppliedSplitPatchHunk> splitHunks) {
+  public void exec(@Nonnull List<AppliedSplitPatchHunk> splitHunks) {
     int lastBeforeLine = -1;
     for (AppliedSplitPatchHunk hunk : splitHunks) {
       List<String> contextBefore = hunk.getContextBefore();
@@ -103,13 +106,13 @@ class PatchChangeBuilder {
     }
   }
 
-  private void addContext(@NotNull List<String> context, int beforeLineNumber, int afterLineNumber) {
+  private void addContext(@Nonnull List<String> context, int beforeLineNumber, int afterLineNumber) {
     myConvertor.put1(totalLines, beforeLineNumber, context.size());
     myConvertor.put2(totalLines, afterLineNumber, context.size());
     appendLines(context);
   }
 
-  private void appendLines(@NotNull List<String> lines) {
+  private void appendLines(@Nonnull List<String> lines) {
     for (String line : lines) {
       myBuilder.append(line).append("\n");
     }
@@ -126,40 +129,45 @@ class PatchChangeBuilder {
   // Result
   //
 
-  @NotNull
+  @Nonnull
   public CharSequence getPatchContent() {
     return myBuilder;
   }
 
-  @NotNull
+  @Nonnull
   public List<Hunk> getHunks() {
     return myHunks;
   }
 
-  @NotNull
+  @Nonnull
   public LineNumberConvertor getLineConvertor() {
     return myConvertor.build();
   }
 
-  @NotNull
+  @Nonnull
   public TIntArrayList getSeparatorLines() {
     return myChangedLines;
   }
 
 
   static class Hunk {
-    @NotNull private final List<String> myInsertedLines;
-    @NotNull private final LineRange myPatchDeletionRange;
-    @NotNull private final LineRange myPatchInsertionRange;
+    @Nonnull
+    private final List<String> myInsertedLines;
+    @Nonnull
+    private final LineRange myPatchDeletionRange;
+    @Nonnull
+    private final LineRange myPatchInsertionRange;
 
-    @Nullable private final LineRange myAppliedToLines;
-    @NotNull private final HunkStatus myStatus;
+    @javax.annotation.Nullable
+    private final LineRange myAppliedToLines;
+    @Nonnull
+    private final HunkStatus myStatus;
 
-    public Hunk(@NotNull List<String> insertedLines,
-                @NotNull LineRange patchDeletionRange,
-                @NotNull LineRange patchInsertionRange,
-                @Nullable LineRange appliedToLines,
-                @NotNull HunkStatus status) {
+    public Hunk(@Nonnull List<String> insertedLines,
+                @Nonnull LineRange patchDeletionRange,
+                @Nonnull LineRange patchInsertionRange,
+                @javax.annotation.Nullable LineRange appliedToLines,
+                @Nonnull HunkStatus status) {
       myInsertedLines = insertedLines;
       myPatchDeletionRange = patchDeletionRange;
       myPatchInsertionRange = patchInsertionRange;
@@ -167,17 +175,17 @@ class PatchChangeBuilder {
       myStatus = status;
     }
 
-    @NotNull
+    @Nonnull
     public LineRange getPatchDeletionRange() {
       return myPatchDeletionRange;
     }
 
-    @NotNull
+    @Nonnull
     public LineRange getPatchInsertionRange() {
       return myPatchInsertionRange;
     }
 
-    @NotNull
+    @Nonnull
     public HunkStatus getStatus() {
       return myStatus;
     }
@@ -186,7 +194,7 @@ class PatchChangeBuilder {
       return myAppliedToLines;
     }
 
-    @NotNull
+    @Nonnull
     private List<String> getInsertedLines() {
       return myInsertedLines;
     }

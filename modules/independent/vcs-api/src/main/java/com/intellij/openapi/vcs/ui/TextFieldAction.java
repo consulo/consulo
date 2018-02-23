@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.IdeBorderFactory;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

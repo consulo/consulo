@@ -17,12 +17,12 @@ package com.intellij.ide.browsers;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class UrlOpener {
   public static final ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create("com.intellij.urlOpener");
 
-  public abstract boolean openUrl(@NotNull WebBrowser browser, @NotNull String url, @Nullable Project project);
+  public abstract boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
 }
 

@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.util.io.URLUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ResourceUtil {
   private ResourceUtil() {
   }
 
-  public static URL getResource(@NotNull ClassLoader classLoader, @NonNls @NotNull String basePath, @NonNls @NotNull String fileName) {
+  public static URL getResource(@Nonnull ClassLoader classLoader, @NonNls @Nonnull String basePath, @NonNls @Nonnull String fileName) {
     if (basePath.endsWith("/")) basePath = basePath.substring(0, basePath.length() - 1);
 
     final List<String> bundles = calculateBundleNames(basePath, Locale.getDefault());
@@ -58,7 +58,7 @@ public class ResourceUtil {
     return classLoader.getResource(basePath + "/" + fileName);
   }
 
-  public static URL getResource(@NotNull Class loaderClass, @NonNls @NotNull String basePath, @NonNls @NotNull String fileName) {
+  public static URL getResource(@Nonnull Class loaderClass, @NonNls @Nonnull String basePath, @NonNls @Nonnull String fileName) {
     return getResource(loaderClass.getClassLoader(), basePath, fileName);
   }
 
@@ -108,8 +108,8 @@ public class ResourceUtil {
     return result;
   }
 
-  @NotNull
-  public static String loadText(@NotNull URL url) throws IOException {
+  @Nonnull
+  public static String loadText(@Nonnull URL url) throws IOException {
     InputStream inputStream = new BufferedInputStream(URLUtil.openStream(url));
 
     InputStreamReader reader = new InputStreamReader(inputStream, ENCODING_UTF_8);

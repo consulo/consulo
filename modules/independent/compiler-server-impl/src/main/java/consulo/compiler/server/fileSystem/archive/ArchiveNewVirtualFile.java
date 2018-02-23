@@ -25,8 +25,8 @@ import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,7 +133,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myParent.getName();
@@ -144,7 +144,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public NewVirtualFileSystem getFileSystem() {
     return (NewVirtualFileSystem)myFileSystem;
@@ -183,7 +183,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
 
   @Nullable
   @Override
-  public NewVirtualFile findChild(@NotNull @NonNls String name) {
+  public NewVirtualFile findChild(@Nonnull @NonNls String name) {
     NewVirtualFile[] children = getChildren();
     if (children == null) return null;
     for (NewVirtualFile child : children) {
@@ -194,7 +194,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     return null;
@@ -217,13 +217,13 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
 
   @Nullable
   @Override
-  public NewVirtualFile refreshAndFindChild(@NotNull String name) {
+  public NewVirtualFile refreshAndFindChild(@Nonnull String name) {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public NewVirtualFile findChildIfCached(@NotNull String name) {
+  public NewVirtualFile findChildIfCached(@Nonnull String name) {
     return null;
   }
 
@@ -231,7 +231,7 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
   public void setTimeStamp(long time) throws IOException {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getNameSequence() {
     return getName();
@@ -263,13 +263,13 @@ public class ArchiveNewVirtualFile extends NewVirtualFile {
   public void markClean() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getCachedChildren() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<VirtualFile> iterInDbChildren() {
     return null;

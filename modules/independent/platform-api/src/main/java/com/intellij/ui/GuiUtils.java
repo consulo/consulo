@@ -35,7 +35,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -359,11 +359,11 @@ public class GuiUtils {
     return s;
   }
 
-  public static void runOrInvokeAndWait(@NotNull Runnable runnable) throws InvocationTargetException, InterruptedException {
+  public static void runOrInvokeAndWait(@Nonnull Runnable runnable) throws InvocationTargetException, InterruptedException {
     ApplicationManager.getApplication().invokeAndWait(runnable);
   }
 
-  public static void invokeLaterIfNeeded(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  public static void invokeLaterIfNeeded(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       runnable.run();
     } else {
@@ -371,7 +371,7 @@ public class GuiUtils {
     }
   }
 
-  public static void invokeLaterIfNeeded(@NotNull Runnable runnable, @NotNull ModalityState modalityState, @NotNull Condition expired) {
+  public static void invokeLaterIfNeeded(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition expired) {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       runnable.run();
     } else {
@@ -389,8 +389,8 @@ public class GuiUtils {
    * @param comp component
    * @return dimension with width enough to insert provided number of chars into component
    */
-  @NotNull
-  public static Dimension getSizeByChars(int charCount, @NotNull JComponent comp) {
+  @Nonnull
+  public static Dimension getSizeByChars(int charCount, @Nonnull JComponent comp) {
     Dimension size = comp.getPreferredSize();
     FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());
     size.width = fontMetrics.charWidth('a') * charCount;

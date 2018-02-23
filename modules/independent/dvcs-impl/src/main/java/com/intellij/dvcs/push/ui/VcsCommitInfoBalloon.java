@@ -26,8 +26,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,13 +38,18 @@ import java.awt.*;
 public class VcsCommitInfoBalloon {
   private static final String EMPTY_COMMIT_INFO = "<i style='color:gray;'>No commit information found</i>";
 
-  @NotNull private final JTree myTree;
-  @NotNull private final Wrapper myWrapper;
-  @Nullable private JBPopup myBalloon;
-  @NotNull private final JEditorPane myEditorPane;
-  @NotNull private final ComponentPopupBuilder myPopupBuilder;
+  @Nonnull
+  private final JTree myTree;
+  @Nonnull
+  private final Wrapper myWrapper;
+  @javax.annotation.Nullable
+  private JBPopup myBalloon;
+  @Nonnull
+  private final JEditorPane myEditorPane;
+  @Nonnull
+  private final ComponentPopupBuilder myPopupBuilder;
 
-  public VcsCommitInfoBalloon(@NotNull JTree tree) {
+  public VcsCommitInfoBalloon(@Nonnull JTree tree) {
     myTree = tree;
     myEditorPane = new JEditorPane(UIUtil.HTML_MIME, "");
     myEditorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -90,7 +94,7 @@ public class VcsCommitInfoBalloon {
     }
   }
 
-  @NotNull
+  @Nonnull
   private Point calculateBestPopupLocation() {
     Point defaultLocation = myTree.getLocationOnScreen();
     TreePath selectionPath = myTree.getSelectionPath();

@@ -21,13 +21,14 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
-  @NotNull private final ManagingFS myManagingFS;
+  @Nonnull
+  private final ManagingFS myManagingFS;
 
-  public PlatformVirtualFileManager(@NotNull VirtualFileSystem[] fileSystems, @NotNull MessageBus bus, @NotNull ManagingFS managingFS) {
+  public PlatformVirtualFileManager(@Nonnull VirtualFileSystem[] fileSystems, @Nonnull MessageBus bus, @Nonnull ManagingFS managingFS) {
     super(fileSystems, bus);
     myManagingFS = managingFS;
   }

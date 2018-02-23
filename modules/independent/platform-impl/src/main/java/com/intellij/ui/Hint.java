@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public interface Hint {
    * @param focusBackComponent component which should get focus when the hint will
    * @param hintInfo
    */
-  void show(@NotNull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @NotNull HintHint hintInfo);
+  void show(@Nonnull JComponent parentComponent, int x, int y, JComponent focusBackComponent, @Nonnull HintHint hintInfo);
 
   /**
    * @return whether the hint is showing or not
@@ -48,11 +48,11 @@ public interface Hint {
    */
   void hide();
 
-  void addHintListener(@NotNull HintListener listener);
+  void addHintListener(@Nonnull HintListener listener);
 
-  void removeHintListener(@NotNull HintListener listener);
+  void removeHintListener(@Nonnull HintListener listener);
 
   void pack();
 
-  void setLocation(@NotNull RelativePoint point);
+  void setLocation(@Nonnull RelativePoint point);
 }

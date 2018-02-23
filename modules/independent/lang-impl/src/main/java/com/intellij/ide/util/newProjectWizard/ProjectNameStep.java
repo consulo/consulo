@@ -22,8 +22,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.moduleImport.ModuleImportProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,7 +119,7 @@ public class ProjectNameStep extends ModuleWizardStep {
   }
 
   @Override
-  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     return myNamePathComponent.validateNameAndPath(myWizardContext);
   }
 }

@@ -31,7 +31,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -206,7 +206,7 @@ public final class DesktopFloatingDecorator extends JDialog implements ToolWindo
     return Math.min(1.0f, Math.max(.0f, ratio));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Rectangle2D getDecoratorBounds() {
     return TargetAWT.from(getBounds());

@@ -26,7 +26,7 @@ import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -75,14 +75,17 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
     }
   };
 
-  @NotNull private Set<String> myUsedTokenIds;
-  @NotNull private ArrangementStandardSettingsManager mySettingsManager;
-  @NotNull private ArrangementColorsProvider myColorsProvider;
+  @Nonnull
+  private Set<String> myUsedTokenIds;
+  @Nonnull
+  private ArrangementStandardSettingsManager mySettingsManager;
+  @Nonnull
+  private ArrangementColorsProvider myColorsProvider;
 
-  protected ArrangementRuleAliasesListEditor(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                             @NotNull ArrangementColorsProvider colorsProvider,
-                                             @NotNull List<StdArrangementRuleAliasToken> items,
-                                             @NotNull Set<String> usedTokenIds) {
+  protected ArrangementRuleAliasesListEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                             @Nonnull ArrangementColorsProvider colorsProvider,
+                                             @Nonnull List<StdArrangementRuleAliasToken> items,
+                                             @Nonnull Set<String> usedTokenIds) {
     super(NAMER, FACTORY, CLONER, COMPARER, items, false);
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;

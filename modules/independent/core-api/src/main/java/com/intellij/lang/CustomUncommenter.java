@@ -17,8 +17,8 @@ package com.intellij.lang;
 
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -36,7 +36,7 @@ public interface CustomUncommenter {
    * @return commented block (including comment prefix and suffix!) or null if text does not contain any  commented blocks.
    */
   @Nullable
-  TextRange findMaximumCommentedRange(@NotNull CharSequence text);
+  TextRange findMaximumCommentedRange(@Nonnull CharSequence text);
 
 
   /**
@@ -47,6 +47,6 @@ public interface CustomUncommenter {
    * @param text text with comments
    * @return list of couples: [commentPrefix-start,commentPrefix-end], [commentSuffix-start,commentSuffix-end]
    */
-  @NotNull
-  Collection<? extends Couple<TextRange>> getCommentRangesToDelete(@NotNull CharSequence text);
+  @Nonnull
+  Collection<? extends Couple<TextRange>> getCommentRangesToDelete(@Nonnull CharSequence text);
 }

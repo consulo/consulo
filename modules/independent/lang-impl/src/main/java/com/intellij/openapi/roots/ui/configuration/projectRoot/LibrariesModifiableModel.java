@@ -28,10 +28,9 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -72,7 +71,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   }
 
   @Override
-  public void removeLibrary(@NotNull Library library) {
+  public void removeLibrary(@Nonnull Library library) {
     if (getLibrariesModifiableModel().getLibraryByName(library.getName()) == null) return;
 
     removeLibraryEditor(library);
@@ -92,18 +91,18 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<Library> getLibraryIterator() {
     return getLibrariesModifiableModel().getLibraryIterator();
   }
 
   @Override
-  public Library getLibraryByName(@NotNull String name) {
+  public Library getLibraryByName(@Nonnull String name) {
     return getLibrariesModifiableModel().getLibraryByName(name);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Library[] getLibraries() {
     return getLibrariesModifiableModel().getLibraries();
   }

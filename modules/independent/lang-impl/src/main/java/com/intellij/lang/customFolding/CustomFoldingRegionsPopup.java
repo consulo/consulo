@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -36,13 +36,16 @@ import java.util.*;
  * @author Rustam Vishnyakov
  */
 public class CustomFoldingRegionsPopup {
-  private final @NotNull JBList myRegionsList;
-  private final @NotNull JBPopup myPopup;
-  private final @NotNull Editor myEditor;
+  private final @Nonnull
+  JBList myRegionsList;
+  private final @Nonnull
+  JBPopup myPopup;
+  private final @Nonnull
+  Editor myEditor;
 
-  CustomFoldingRegionsPopup(@NotNull Collection<FoldingDescriptor> descriptors,
-                            @NotNull final Editor editor,
-                            @NotNull final Project project) {
+  CustomFoldingRegionsPopup(@Nonnull Collection<FoldingDescriptor> descriptors,
+                            @Nonnull final Editor editor,
+                            @Nonnull final Project project) {
     myEditor = editor;
     myRegionsList = new JBList();
     //noinspection unchecked
@@ -80,13 +83,14 @@ public class CustomFoldingRegionsPopup {
   }
 
   private static class MyFoldingDescriptorWrapper {
-    private final @NotNull FoldingDescriptor myDescriptor;
+    private final @Nonnull
+    FoldingDescriptor myDescriptor;
 
-    private MyFoldingDescriptorWrapper(@NotNull FoldingDescriptor descriptor) {
+    private MyFoldingDescriptorWrapper(@Nonnull FoldingDescriptor descriptor) {
       myDescriptor = descriptor;
     }
 
-    @NotNull
+    @Nonnull
     public FoldingDescriptor getDescriptor() {
       return myDescriptor;
     }
@@ -121,7 +125,7 @@ public class CustomFoldingRegionsPopup {
     return sorted;
   }
 
-  private static void navigateTo(@NotNull Editor editor, @NotNull PsiElement element) {
+  private static void navigateTo(@Nonnull Editor editor, @Nonnull PsiElement element) {
     int offset = element.getTextRange().getStartOffset();
     if (offset >= 0 && offset < editor.getDocument().getTextLength()) {
       editor.getCaretModel().removeSecondaryCarets();

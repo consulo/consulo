@@ -23,8 +23,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.packaging.elements.PackagingElement;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -33,10 +33,10 @@ public abstract class WritingAccessProvider {
    * @param files files to be checked
    * @return set of files that cannot be accessed
    */
-  @NotNull
+  @Nonnull
   public abstract Collection<VirtualFile> requestWriting(VirtualFile... files);
 
-  public abstract boolean isPotentiallyWritable(@NotNull VirtualFile file);
+  public abstract boolean isPotentiallyWritable(@Nonnull VirtualFile file);
 
   public static WritingAccessProvider[] getProvidersForProject(Project project) {
     return project == null || project.isDefault() ? new WritingAccessProvider[0] : Extensions.getExtensions(EP_NAME, project);

@@ -32,7 +32,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.actionSystem.DataContext;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 public class DeleteToWordStartAction extends TextComponentEditorAction {
@@ -71,7 +71,8 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
 
   static class Handler extends EditorWriteActionHandler {
 
-    @NotNull private final TIntIntHashMap myQuotesNumber = new TIntIntHashMap();
+    @Nonnull
+    private final TIntIntHashMap myQuotesNumber = new TIntIntHashMap();
     private final boolean myNegateCamelMode;
 
     Handler(boolean negateCamelMode) {
@@ -139,7 +140,7 @@ public class DeleteToWordStartAction extends TextComponentEditorAction {
     }
   }
 
-  private static void countQuotes(@NotNull TIntIntHashMap holder, @NotNull CharSequence text, int start, int end) {
+  private static void countQuotes(@Nonnull TIntIntHashMap holder, @Nonnull CharSequence text, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       char c = text.charAt(i);
       if (holder.containsKey(c)) {

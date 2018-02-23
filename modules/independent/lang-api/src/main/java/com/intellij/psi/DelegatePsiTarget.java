@@ -21,7 +21,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public class DelegatePsiTarget implements PsiTarget {
   private final PsiElement myElement;
 
-  public DelegatePsiTarget(@NotNull PsiElement element) {
+  public DelegatePsiTarget(@Nonnull PsiElement element) {
     myElement = element.getNavigationElement();
   }
 
@@ -64,7 +64,7 @@ public class DelegatePsiTarget implements PsiTarget {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final PsiElement getNavigationElement() {
     return myElement;
   }

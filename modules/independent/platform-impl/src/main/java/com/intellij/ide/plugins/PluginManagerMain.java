@@ -48,8 +48,8 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.updateSettings.UpdateSettings;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -154,7 +154,7 @@ public abstract class PluginManagerMain implements Disposable {
     myToolbarPanel.add(myFilter, BorderLayout.WEST);
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         JBPopupFactory.getInstance().createActionGroupPopup("Sort by:", createSortersGroup(), DataManager.getInstance().getDataContext(myPluginTable),
                                                             JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true).showUnderneathOf(mySortLabel);
         return true;
@@ -331,8 +331,8 @@ public abstract class PluginManagerMain implements Disposable {
 
   public static void pluginInfoUpdate(IdeaPluginDescriptor plugin,
                                       @Nullable String filter,
-                                      @NotNull JEditorPane descriptionTextArea,
-                                      @NotNull PluginHeaderPanel header,
+                                      @Nonnull JEditorPane descriptionTextArea,
+                                      @Nonnull PluginHeaderPanel header,
                                       PluginManagerMain manager) {
 
     if (plugin == null) {
@@ -520,7 +520,7 @@ public abstract class PluginManagerMain implements Disposable {
     return false;
   }
 
-  private static boolean isAccepted(final Set<String> search, @NotNull final String filter, @NotNull final String description) {
+  private static boolean isAccepted(final Set<String> search, @Nonnull final String filter, @Nonnull final String description) {
     if (StringUtil.containsIgnoreCase(description, filter)) return true;
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
     final HashSet<String> descriptionSet = new HashSet<>(search);
@@ -532,7 +532,7 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
 
-  public static void notifyPluginsWereInstalled(@NotNull Collection<? extends IdeaPluginDescriptor> installed, Project project) {
+  public static void notifyPluginsWereInstalled(@Nonnull Collection<? extends IdeaPluginDescriptor> installed, Project project) {
     String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
     notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed", project);
   }
@@ -549,7 +549,7 @@ public abstract class PluginManagerMain implements Disposable {
     new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true)
             .createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
               @Override
-              public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+              public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
                 notification.expire();
                 if (restartCapable) {
                   app.restart(true);

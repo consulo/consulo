@@ -24,7 +24,6 @@ import com.intellij.history.core.tree.FileEntry;
 import com.intellij.history.core.tree.RootEntry;
 import com.intellij.history.integration.TestVirtualFile;
 import com.intellij.openapi.util.Clock;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -128,7 +127,7 @@ public abstract class LocalHistoryTestCase extends Assert {
     return (ChangeSet)facade.getChangeListInTests().getChangesInTests().get(0);
   }
 
-  public static List<Revision> collectRevisions(LocalHistoryFacade facade, RootEntry root, String path, String projectId, @Nullable String pattern) {
+  public static List<Revision> collectRevisions(LocalHistoryFacade facade, RootEntry root, String path, String projectId, @javax.annotation.Nullable String pattern) {
     return new RevisionsCollector(facade, root, path, projectId, pattern).getResult();
   }
 

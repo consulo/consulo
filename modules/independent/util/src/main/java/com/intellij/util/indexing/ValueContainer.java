@@ -16,8 +16,8 @@
 
 package com.intellij.util.indexing;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 
@@ -38,11 +38,11 @@ public abstract class ValueContainer<Value> {
     boolean contains(int id);
   }
 
-  @NotNull
+  @Nonnull
   public abstract ValueIterator<Value> getValueIterator();
 
   public interface ValueIterator<Value> extends Iterator<Value> {
-    @NotNull
+    @Nonnull
     IntIterator getInputIdsIterator();
 
     @Nullable
@@ -55,7 +55,7 @@ public abstract class ValueContainer<Value> {
     boolean perform(int id, T value);
   }
 
-  public final boolean forEach(@NotNull ContainerAction<Value> action) {
+  public final boolean forEach(@Nonnull ContainerAction<Value> action) {
     for (final ValueIterator<Value> valueIterator = getValueIterator(); valueIterator.hasNext();) {
       final Value value = valueIterator.next();
       for (final IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext();) {

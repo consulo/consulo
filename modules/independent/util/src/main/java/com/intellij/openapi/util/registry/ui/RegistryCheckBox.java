@@ -17,8 +17,8 @@ package com.intellij.openapi.util.registry.ui;
 
 import com.intellij.openapi.ui.CheckBoxWithDescription;
 import com.intellij.openapi.util.registry.RegistryValue;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class RegistryCheckBox extends CheckBoxWithDescription {

@@ -32,7 +32,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.util.ui.components.VerticalLayoutPanel;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

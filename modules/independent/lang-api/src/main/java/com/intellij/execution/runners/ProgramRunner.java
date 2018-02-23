@@ -23,8 +23,8 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.SettingsEditor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A ProgramRunner is responsible for the execution workflow of certain types of run configurations with a certain executor. For example,
@@ -52,7 +52,8 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
    *
    * @return the program runner ID.
    */
-  @NotNull @NonNls
+  @Nonnull
+  @NonNls
   String getRunnerId();
 
   /**
@@ -62,7 +63,7 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
    * @param profile the configuration being run.
    * @return true if the runner can handle it, false otherwise.
    */
-  boolean canRun(@NotNull final String executorId, @NotNull final RunProfile profile);
+  boolean canRun(@Nonnull final String executorId, @Nonnull final RunProfile profile);
 
   /**
    * Creates a block of per-configuration settings used by this program runner.
@@ -81,6 +82,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
   @Nullable
   SettingsEditor<Settings> getSettingsEditor(Executor executor, RunConfiguration configuration);
 
-  void execute(@NotNull ExecutionEnvironment environment) throws ExecutionException;
-  void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback) throws ExecutionException;
+  void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException;
+  void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback) throws ExecutionException;
 }

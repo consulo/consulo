@@ -22,8 +22,8 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,12 +66,12 @@ public class SelectFilesToAddTextsToPatchPanel {
     return exclude;
   }
 
-  private static boolean isBig(@NotNull VirtualFile virtualFile) {
+  private static boolean isBig(@Nonnull VirtualFile virtualFile) {
     return virtualFile.getLength() > VcsConfiguration.ourMaximumFileForBaseRevisionSize;
   }
 
   @Nullable
-  private static VirtualFile getVfFromChange(@NotNull Change change) {
+  private static VirtualFile getVfFromChange(@Nonnull Change change) {
     ContentRevision after = change.getAfterRevision();
     return after != null ? after.getFile().getVirtualFile() : null;
   }

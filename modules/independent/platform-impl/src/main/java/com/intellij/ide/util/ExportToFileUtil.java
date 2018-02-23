@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -245,7 +245,7 @@ public class ExportToFileUtil {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected Action[] createActions() {
       return new Action[]{getOKAction(), new CopyToClipboardAction(), getCancelAction()};
     }

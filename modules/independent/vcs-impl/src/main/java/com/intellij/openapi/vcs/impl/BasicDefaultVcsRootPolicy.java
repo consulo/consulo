@@ -20,8 +20,8 @@ import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,8 +39,8 @@ public class BasicDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     myBaseDir = project.getBaseDir();
   }
 
-  @NotNull
-  public Collection<VirtualFile> getDefaultVcsRoots(@NotNull NewMappings mappingList, @NotNull String vcsName) {
+  @Nonnull
+  public Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName) {
     List<VirtualFile> result = ContainerUtil.newArrayList();
     final VirtualFile baseDir = myBaseDir;
     if (baseDir != null && vcsName.equals(mappingList.getVcsFor(baseDir))) {
@@ -49,21 +49,21 @@ public class BasicDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     return result;
   }
 
-  public boolean matchesDefaultMapping(@NotNull final VirtualFile file, final Object matchContext) {
+  public boolean matchesDefaultMapping(@Nonnull final VirtualFile file, final Object matchContext) {
     return VfsUtil.isAncestor(myBaseDir, file, false);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Object getMatchContext(final VirtualFile file) {
     return null;
   }
 
   @Nullable
-  public VirtualFile getVcsRootFor(@NotNull final VirtualFile file) {
+  public VirtualFile getVcsRootFor(@Nonnull final VirtualFile file) {
     return myBaseDir;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getDirtyRoots() {
     return Collections.singletonList(myBaseDir);
   }

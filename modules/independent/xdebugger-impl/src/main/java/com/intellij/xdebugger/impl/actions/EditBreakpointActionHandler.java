@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
   protected abstract void doShowPopup(Project project, JComponent component, Point whereToShow, Object breakpoint);
 
   @Override
-  public void perform(@NotNull Project project, AnActionEvent event) {
+  public void perform(@Nonnull Project project, AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null) return;
@@ -51,7 +51,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     editBreakpoint(project, editor, breakpoint, breakpointGutterRenderer);
   }
 
-  public void editBreakpoint(@NotNull Project project, @NotNull Editor editor, @NotNull Object breakpoint, @NotNull GutterIconRenderer breakpointGutterRenderer) {
+  public void editBreakpoint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Object breakpoint, @Nonnull GutterIconRenderer breakpointGutterRenderer) {
     if (BreakpointsDialogFactory.getInstance(project).isBreakpointPopupShowing()) return;
     EditorGutterComponentEx gutterComponent = ((EditorEx)editor).getGutterComponentEx();
     Point point = gutterComponent.getCenterPoint(breakpointGutterRenderer);
@@ -60,7 +60,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     }
   }
 
-  public void editBreakpoint(@NotNull Project project, @NotNull JComponent parent, @NotNull Point whereToShow, @NotNull BreakpointItem breakpoint) {
+  public void editBreakpoint(@Nonnull Project project, @Nonnull JComponent parent, @Nonnull Point whereToShow, @Nonnull BreakpointItem breakpoint) {
     doShowPopup(project, parent, whereToShow, breakpoint.getBreakpoint());
   }
 }

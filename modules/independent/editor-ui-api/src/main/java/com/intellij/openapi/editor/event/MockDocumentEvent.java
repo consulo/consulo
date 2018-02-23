@@ -16,19 +16,19 @@
 package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Document;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockDocumentEvent extends DocumentEvent {
   private final int myOffset;
   private final long myTimestamp;
 
-  public MockDocumentEvent(@NotNull Document document, int offset) {
+  public MockDocumentEvent(@Nonnull Document document, int offset) {
     super(document);
     myOffset = offset;
     myTimestamp = document.getModificationStamp();
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return (Document)getSource();
   }
@@ -45,12 +45,12 @@ public class MockDocumentEvent extends DocumentEvent {
     return 0;
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getOldFragment() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getNewFragment() {
     return "";
   }

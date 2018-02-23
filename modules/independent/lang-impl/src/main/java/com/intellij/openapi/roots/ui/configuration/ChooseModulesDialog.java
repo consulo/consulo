@@ -26,7 +26,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

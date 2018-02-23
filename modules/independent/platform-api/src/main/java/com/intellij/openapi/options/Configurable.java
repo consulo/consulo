@@ -21,8 +21,8 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -92,7 +92,7 @@ public interface Configurable extends UnnamedConfigurable {
   }
 
   interface Composite {
-    @NotNull
+    @Nonnull
     Configurable[] getConfigurables();
   }
 

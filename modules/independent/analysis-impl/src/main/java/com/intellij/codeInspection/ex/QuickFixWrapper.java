@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -40,8 +40,8 @@ public class QuickFixWrapper implements IntentionAction {
   private final int myFixNumber;
 
 
-  @NotNull
-  public static IntentionAction wrap(@NotNull ProblemDescriptor descriptor, int fixNumber) {
+  @Nonnull
+  public static IntentionAction wrap(@Nonnull ProblemDescriptor descriptor, int fixNumber) {
     LOG.assertTrue(fixNumber >= 0, fixNumber);
     QuickFix[] fixes = descriptor.getFixes();
     LOG.assertTrue(fixes != null && fixes.length > fixNumber);
@@ -50,25 +50,25 @@ public class QuickFixWrapper implements IntentionAction {
     return fix instanceof IntentionAction ? (IntentionAction)fix : new QuickFixWrapper(descriptor, fixNumber);
   }
 
-  private QuickFixWrapper(@NotNull ProblemDescriptor descriptor, int fixNumber) {
+  private QuickFixWrapper(@Nonnull ProblemDescriptor descriptor, int fixNumber) {
     myDescriptor = descriptor;
     myFixNumber = fixNumber;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getFamilyName();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return myDescriptor.getFixes()[myFixNumber].getName();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     PsiElement psiElement = myDescriptor.getPsiElement();
     if (psiElement == null || !psiElement.isValid()) return false;
     final LocalQuickFix fix = getFix();
@@ -76,7 +76,7 @@ public class QuickFixWrapper implements IntentionAction {
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     //if (!CodeInsightUtil.prepareFileForWrite(file)) return;
     // consider all local quick fixes do it themselves
 

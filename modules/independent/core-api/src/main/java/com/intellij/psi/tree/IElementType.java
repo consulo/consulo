@@ -22,8 +22,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -60,8 +60,8 @@ public class IElementType {
     push(init);
   }
 
-  @NotNull
-  static IElementType[] push(@NotNull IElementType[] types) {
+  @Nonnull
+  static IElementType[] push(@Nonnull IElementType[] types) {
     synchronized (lock) {
       IElementType[] oldRegistry = ourRegistry;
       ourRegistry = types;
@@ -71,9 +71,9 @@ public class IElementType {
   }
 
   private final short myIndex;
-  @NotNull
+  @Nonnull
   private final String myDebugName;
-  @NotNull
+  @Nonnull
   private final Language myLanguage;
 
   /**
@@ -82,11 +82,11 @@ public class IElementType {
    * @param debugName the name of the element type, used for debugging purposes.
    * @param language  the language with which the element type is associated.
    */
-  public IElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
+  public IElementType(@Nonnull @NonNls String debugName, @Nullable Language language) {
     this(debugName, language, true);
   }
 
-  protected IElementType(@NotNull @NonNls String debugName, @Nullable Language language, boolean register) {
+  protected IElementType(@Nonnull @NonNls String debugName, @Nullable Language language, boolean register) {
     myDebugName = debugName;
     myLanguage = language == null ? Language.ANY : language;
     if (register) {
@@ -108,7 +108,7 @@ public class IElementType {
    *
    * @return the associated language.
    */
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myLanguage;
   }
@@ -183,8 +183,8 @@ public class IElementType {
    * @param p the predicate which should be matched by the element types.
    * @return the array of matching element types.
    */
-  @NotNull
-  public static IElementType[] enumerate(@NotNull Processor<IElementType> p) {
+  @Nonnull
+  public static IElementType[] enumerate(@Nonnull Processor<IElementType> p) {
     List<IElementType> matches = new ArrayList<>();
     for (IElementType value : ourRegistry) {
       if (value != null && p.process(value)) {

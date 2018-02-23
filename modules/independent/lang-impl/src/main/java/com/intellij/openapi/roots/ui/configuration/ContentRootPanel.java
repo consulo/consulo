@@ -35,7 +35,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
@@ -80,7 +80,7 @@ public abstract class ContentRootPanel extends JPanel {
     myCallback = callback;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ContentEntry getContentEntry();
 
   public void initUI() {
@@ -160,7 +160,7 @@ public abstract class ContentRootPanel extends JPanel {
   protected JComponent createFolderGroupComponent(String title,
                                                   ContentFolder[] folders,
                                                   Color foregroundColor,
-                                                  @NotNull ContentFolderTypeProvider editor) {
+                                                  @Nonnull ContentFolderTypeProvider editor) {
     final JPanel panel = new JPanel(new GridLayoutManager(folders.length, 3, new Insets(1, 17, 0, 2), 0, 1));
     panel.setOpaque(false);
 
@@ -227,7 +227,7 @@ public abstract class ContentRootPanel extends JPanel {
     }
   }
 
-  private JComponent createFolderChangeOptionsComponent(final ContentFolder folder, @NotNull ContentFolderTypeProvider editor) {
+  private JComponent createFolderChangeOptionsComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
     return new IconActionComponent(AllIcons.Modules.ContentFolderOptions, AllIcons.Modules.ContentFolderOptions, ProjectBundle.message("module.paths.properties.tooltip"),
                                    new Runnable() {
                                      @Override
@@ -237,7 +237,7 @@ public abstract class ContentRootPanel extends JPanel {
                                    });
   }
 
-  private JComponent createFolderDeleteComponent(final ContentFolder folder, @NotNull ContentFolderTypeProvider editor) {
+  private JComponent createFolderDeleteComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
     final String tooltipText;
     if (folder.getFile() != null && getContentEntry().getFile() != null) {
       tooltipText = ProjectBundle.message("module.paths.unmark.0.tooltip", editor.getName());

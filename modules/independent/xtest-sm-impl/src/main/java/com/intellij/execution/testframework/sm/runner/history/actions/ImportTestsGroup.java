@@ -26,8 +26,8 @@ import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -48,7 +48,7 @@ public class
     myProperties = properties;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;

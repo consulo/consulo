@@ -21,17 +21,19 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.RefGroup;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public class SimpleRefGroup implements RefGroup {
-  @NotNull private final String myName;
-  @NotNull private final List<VcsRef> myRefs;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private final List<VcsRef> myRefs;
 
-  public SimpleRefGroup(@NotNull String name, @NotNull List<VcsRef> refs) {
+  public SimpleRefGroup(@Nonnull String name, @Nonnull List<VcsRef> refs) {
     myName = name;
     myRefs = refs;
   }
@@ -41,26 +43,26 @@ public class SimpleRefGroup implements RefGroup {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsRef> getRefs() {
     return myRefs;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Color> getColors() {
     return getColors(myRefs);
   }
 
-  @NotNull
-  public static List<Color> getColors(@NotNull Collection<VcsRef> refs) {
+  @Nonnull
+  public static List<Color> getColors(@Nonnull Collection<VcsRef> refs) {
     MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
     if (referencesByType.size() == 1) {
       Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
@@ -81,10 +83,10 @@ public class SimpleRefGroup implements RefGroup {
     }
   }
 
-  public static void buildGroups(@NotNull MultiMap<VcsRefType, VcsRef> groupedRefs,
+  public static void buildGroups(@Nonnull MultiMap<VcsRefType, VcsRef> groupedRefs,
                                  boolean compact,
                                  boolean showTagNames,
-                                 @NotNull List<RefGroup> result) {
+                                 @Nonnull List<RefGroup> result) {
     if (groupedRefs.isEmpty()) return;
 
     if (compact) {

@@ -22,13 +22,13 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
-  public RunContextAction(@NotNull final Executor executor) {
+  public RunContextAction(@Nonnull final Executor executor) {
     super(ExecutionBundle.message("perform.action.with.context.configuration.action.name", executor.getStartActionText()), null,
           executor.getIcon());
     myExecutor = executor;
@@ -61,7 +61,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   }
 
   @Override
-  protected void updatePresentation(final Presentation presentation, @NotNull final String actionText, final ConfigurationContext context) {
+  protected void updatePresentation(final Presentation presentation, @Nonnull final String actionText, final ConfigurationContext context) {
     presentation.setText(myExecutor.getActionText(actionText));
 
     Pair<Boolean, Boolean> b = isEnabledAndVisible(context);

@@ -30,12 +30,12 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CompareFileWithEditorAction extends BaseShowDiffAction {
   @Override
-  protected boolean isAvailable(@NotNull AnActionEvent e) {
+  protected boolean isAvailable(@Nonnull AnActionEvent e) {
     VirtualFile selectedFile = getSelectedFile(e);
     if (selectedFile == null) {
       return false;
@@ -54,7 +54,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
   }
 
   @Nullable
-  private static VirtualFile getSelectedFile(@NotNull AnActionEvent e) {
+  private static VirtualFile getSelectedFile(@Nonnull AnActionEvent e) {
     VirtualFile[] array = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (array == null || array.length != 1 || array[0].isDirectory()) {
       return null;
@@ -64,20 +64,20 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
   }
 
   @Nullable
-  private static VirtualFile getEditingFile(@NotNull AnActionEvent e) {
+  private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project == null) return null;
 
     return FileEditorManagerEx.getInstanceEx(project).getCurrentFile();
   }
 
-  private static boolean canCompare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  private static boolean canCompare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return !file1.equals(file2) && hasContent(file1) && hasContent(file2);
   }
 
   @Nullable
   @Override
-  protected DiffRequest getDiffRequest(@NotNull AnActionEvent e) {
+  protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
 
     VirtualFile selectedFile = getSelectedFile(e);

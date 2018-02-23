@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,7 +27,7 @@ public final class StripedReentrantLocks extends StripedLockHolder<ReentrantLock
     super(ReentrantLock.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ReentrantLock create() {
     return new ReentrantLock();

@@ -16,13 +16,13 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UnionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
   private final PackageSet mySecondSet;
 
-  public UnionPackageSet(@NotNull PackageSet set1, @NotNull PackageSet set2) {
+  public UnionPackageSet(@Nonnull PackageSet set1, @Nonnull PackageSet set2) {
     myFirstSet = set1;
     mySecondSet = set2;
   }
@@ -34,7 +34,7 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PackageSet createCopy() {
     return new UnionPackageSet(myFirstSet.createCopy(), mySecondSet.createCopy());
   }
@@ -45,7 +45,7 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myFirstSet.getText() + "||" + mySecondSet.getText();
   }

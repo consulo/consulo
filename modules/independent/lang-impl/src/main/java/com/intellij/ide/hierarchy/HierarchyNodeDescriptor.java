@@ -25,15 +25,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
   protected CompositeAppearance myHighlightedText;
   private Object[] myCachedChildren = null;
   protected final boolean myIsBase;
 
-  protected HierarchyNodeDescriptor(@NotNull Project project, final NodeDescriptor parentDescriptor, @NotNull PsiElement element, final boolean isBase) {
+  protected HierarchyNodeDescriptor(@Nonnull Project project, final NodeDescriptor parentDescriptor, @Nonnull PsiElement element, final boolean isBase) {
     super(project, parentDescriptor, element);
     myHighlightedText = new CompositeAppearance();
     myName = "";

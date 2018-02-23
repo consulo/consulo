@@ -19,7 +19,7 @@ import com.intellij.find.EditorSearchSession;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class AddOccurrenceAction extends OccurrenceAction {
@@ -29,7 +29,7 @@ public class AddOccurrenceAction extends OccurrenceAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();
   }
 }

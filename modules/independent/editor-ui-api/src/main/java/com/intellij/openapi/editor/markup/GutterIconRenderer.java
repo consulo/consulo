@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -47,7 +47,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
    * @return the gutter icon.
    */
   @Override
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
   /**
@@ -67,7 +67,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
    * @return the tooltip text, or null if no tooltip is required.
    */
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getTooltipText() {
     return null;
   }
@@ -113,7 +113,7 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
    *
    * @return the priority value.
    */
-  @NotNull
+  @Nonnull
   public Alignment getAlignment() {
     return Alignment.CENTER;
   }

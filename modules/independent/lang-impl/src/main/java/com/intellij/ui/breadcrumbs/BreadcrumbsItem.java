@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.breadcrumbs;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner

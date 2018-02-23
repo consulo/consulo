@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.lineIndent;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Line indent provider extension point

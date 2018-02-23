@@ -22,8 +22,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -58,7 +58,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @return the node text.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   CharSequence getChars();
 
@@ -91,7 +91,7 @@ public interface ASTNode extends UserDataHolder {
    * @return the text range.
    */
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   TextRange getTextRange();
 
   /**
@@ -144,7 +144,7 @@ public interface ASTNode extends UserDataHolder {
    *
    * @param child the child node to add.
    */
-  void addChild(@NotNull ASTNode child);
+  void addChild(@Nonnull ASTNode child);
 
   /**
    * Adds the specified child node at the specified position in the child list.
@@ -152,7 +152,7 @@ public interface ASTNode extends UserDataHolder {
    * @param child        the child node to add.
    * @param anchorBefore the node before which the child node is inserted (<code>null</code> to add a child as a last node).
    */
-  void addChild(@NotNull ASTNode child, @Nullable ASTNode anchorBefore);
+  void addChild(@Nonnull ASTNode child, @Nullable ASTNode anchorBefore);
 
   /**
    * Add leaf element with specified type and text in the child list.
@@ -161,14 +161,14 @@ public interface ASTNode extends UserDataHolder {
    * @param anchorBefore the node before which the child node is inserted.
    * @since 7.0
    */
-  void addLeaf(@NotNull IElementType leafType, CharSequence leafText, @Nullable ASTNode anchorBefore);
+  void addLeaf(@Nonnull IElementType leafType, CharSequence leafText, @Nullable ASTNode anchorBefore);
 
   /**
    * Removes the specified node from the list of children of this node.
    *
    * @param child the child node to remove.
    */
-  void removeChild(@NotNull ASTNode child);
+  void removeChild(@Nonnull ASTNode child);
 
   /**
    * Removes a range of nodes from the list of children, starting with <code>firstNodeToRemove</code>,
@@ -177,7 +177,7 @@ public interface ASTNode extends UserDataHolder {
    * @param firstNodeToRemove the first child node to remove from the tree.
    * @param firstNodeToKeep   the first child node to keep in the tree.
    */
-  void removeRange(@NotNull ASTNode firstNodeToRemove, ASTNode firstNodeToKeep);
+  void removeRange(@Nonnull ASTNode firstNodeToRemove, ASTNode firstNodeToKeep);
 
   /**
    * Replaces the specified child node with another node.
@@ -185,7 +185,7 @@ public interface ASTNode extends UserDataHolder {
    * @param oldChild the child node to replace.
    * @param newChild the node to replace with.
    */
-  void replaceChild(@NotNull ASTNode oldChild, @NotNull ASTNode newChild);
+  void replaceChild(@Nonnull ASTNode oldChild, @Nonnull ASTNode newChild);
 
   /**
    * Replaces all child nodes with the children of the specified node.
@@ -274,7 +274,7 @@ public interface ASTNode extends UserDataHolder {
    * @return the found node, or null if none was found.
    */
   @Nullable
-  ASTNode findChildByType(@NotNull TokenSet typesSet);
+  ASTNode findChildByType(@Nonnull TokenSet typesSet);
 
   /**
    * Returns the first child after anchor of the specified node which has type from specified set.
@@ -284,7 +284,7 @@ public interface ASTNode extends UserDataHolder {
    * @return the found node, or null if none was found.
    */
   @Nullable
-  ASTNode findChildByType(@NotNull TokenSet typesSet, @Nullable ASTNode anchor);
+  ASTNode findChildByType(@Nonnull TokenSet typesSet, @Nullable ASTNode anchor);
 
   /**
    * Returns the PSI element for this node.

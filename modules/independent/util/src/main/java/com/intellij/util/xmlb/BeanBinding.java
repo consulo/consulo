@@ -29,8 +29,8 @@ import gnu.trove.TObjectFloatHashMap;
 import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.beans.Introspector;
@@ -52,7 +52,7 @@ class BeanBinding extends Binding implements MainBinding {
 
   ThreeState hasEqualMethod = ThreeState.UNSURE;
 
-  public BeanBinding(@NotNull Class<?> beanClass, @Nullable MutableAccessor accessor) {
+  public BeanBinding(@Nonnull Class<?> beanClass, @Nullable MutableAccessor accessor) {
     super(accessor);
 
     assert !beanClass.isArray() : "Bean is an array: " + beanClass;
@@ -63,7 +63,7 @@ class BeanBinding extends Binding implements MainBinding {
   }
 
   @Override
-  public synchronized void init(@NotNull Type originalType) {
+  public synchronized void init(@Nonnull Type originalType) {
     assert myBindings == null;
 
     List<MutableAccessor> accessors = getAccessors(myBeanClass);
@@ -75,16 +75,16 @@ class BeanBinding extends Binding implements MainBinding {
 
   @Override
   @Nullable
-  public Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
     return serializeInto(o, context == null ? null : new Element(myTagName), filter);
   }
 
-  public Element serialize(@NotNull Object object, boolean createElementIfEmpty, @NotNull SerializationFilter filter) {
+  public Element serialize(@Nonnull Object object, boolean createElementIfEmpty, @Nonnull SerializationFilter filter) {
     return serializeInto(object, createElementIfEmpty ? new Element(myTagName) : null, filter);
   }
 
   @Nullable
-  public Element serializeInto(@NotNull Object o, @Nullable Element element, @NotNull SerializationFilter filter) {
+  public Element serializeInto(@Nonnull Object o, @Nullable Element element, @Nonnull SerializationFilter filter) {
     for (Binding binding : myBindings) {
       Accessor accessor = binding.getAccessor();
 
@@ -122,13 +122,13 @@ class BeanBinding extends Binding implements MainBinding {
   }
 
   @Override
-  public Object deserialize(Object context, @NotNull Element element) {
+  public Object deserialize(Object context, @Nonnull Element element) {
     Object instance = ReflectionUtil.newInstance(myBeanClass);
     deserializeInto(instance, element, null);
     return instance;
   }
 
-  boolean equalByFields(@NotNull Object currentValue, @NotNull Object defaultValue, @NotNull SkipDefaultsSerializationFilter filter) {
+  boolean equalByFields(@Nonnull Object currentValue, @Nonnull Object defaultValue, @Nonnull SkipDefaultsSerializationFilter filter) {
     for (Binding binding : myBindings) {
       Accessor accessor = binding.getAccessor();
       if (!filter.equal(binding, accessor.read(currentValue), accessor.read(defaultValue))) {
@@ -138,8 +138,8 @@ class BeanBinding extends Binding implements MainBinding {
     return true;
   }
 
-  @NotNull
-  public TObjectFloatHashMap<String> computeBindingWeights(@NotNull LinkedHashSet<String> accessorNameTracker) {
+  @Nonnull
+  public TObjectFloatHashMap<String> computeBindingWeights(@Nonnull LinkedHashSet<String> accessorNameTracker) {
     TObjectFloatHashMap<String> weights = new TObjectFloatHashMap<String>(accessorNameTracker.size());
     float weight = 0;
     float step = (float)myBindings.length / (float)accessorNameTracker.size();
@@ -160,10 +160,10 @@ class BeanBinding extends Binding implements MainBinding {
     return weights;
   }
 
-  public void sortBindings(@NotNull final TObjectFloatHashMap<String> weights) {
+  public void sortBindings(@Nonnull final TObjectFloatHashMap<String> weights) {
     Arrays.sort(myBindings, new Comparator<Binding>() {
       @Override
-      public int compare(@NotNull Binding o1, @NotNull Binding o2) {
+      public int compare(@Nonnull Binding o1, @Nonnull Binding o2) {
         String n1 = o1.getAccessor().getName();
         String n2 = o2.getAccessor().getName();
         float w1 = weights.get(n1);
@@ -173,7 +173,7 @@ class BeanBinding extends Binding implements MainBinding {
     });
   }
 
-  public void deserializeInto(@NotNull Object result, @NotNull Element element, @Nullable Set<String> accessorNameTracker) {
+  public void deserializeInto(@Nonnull Object result, @Nonnull Element element, @Nullable Set<String> accessorNameTracker) {
     nextAttribute:
     for (org.jdom.Attribute attribute : element.getAttributes()) {
       if (StringUtil.isEmpty(attribute.getNamespaceURI())) {
@@ -234,7 +234,7 @@ class BeanBinding extends Binding implements MainBinding {
   }
 
   @Override
-  public boolean isBoundTo(@NotNull Element element) {
+  public boolean isBoundTo(@Nonnull Element element) {
     return element.getName().equals(myTagName);
   }
 
@@ -254,8 +254,8 @@ class BeanBinding extends Binding implements MainBinding {
     return tag != null && !tag.value().isEmpty() ? tag.value() : null;
   }
 
-  @NotNull
-  static List<MutableAccessor> getAccessors(@NotNull Class<?> aClass) {
+  @Nonnull
+  static List<MutableAccessor> getAccessors(@Nonnull Class<?> aClass) {
     List<MutableAccessor> accessors = ourAccessorCache.get(aClass);
     if (accessors != null) {
       return accessors;
@@ -273,7 +273,7 @@ class BeanBinding extends Binding implements MainBinding {
     return accessors;
   }
 
-  private static void collectPropertyAccessors(@NotNull Class<?> aClass, @NotNull List<MutableAccessor> accessors) {
+  private static void collectPropertyAccessors(@Nonnull Class<?> aClass, @Nonnull List<MutableAccessor> accessors) {
     final Map<String, Couple<Method>> candidates = ContainerUtilRt.newTreeMap(); // (name,(getter,setter))
     for (Method method : aClass.getMethods()) {
       if (!Modifier.isPublic(method.getModifiers())) {
@@ -307,7 +307,7 @@ class BeanBinding extends Binding implements MainBinding {
     }
   }
 
-  private static void collectFieldAccessors(@NotNull Class<?> aClass, @NotNull List<MutableAccessor> accessors) {
+  private static void collectFieldAccessors(@Nonnull Class<?> aClass, @Nonnull List<MutableAccessor> accessors) {
     Class<?> currentClass = aClass;
     do {
       for (Field field : currentClass.getDeclaredFields()) {
@@ -333,7 +333,7 @@ class BeanBinding extends Binding implements MainBinding {
   }
 
   @Nullable
-  private static Pair<String, Boolean> getPropertyData(@NotNull String methodName) {
+  private static Pair<String, Boolean> getPropertyData(@Nonnull String methodName) {
     String part = "";
     boolean isSetter = false;
     if (methodName.startsWith("get")) {
@@ -353,8 +353,8 @@ class BeanBinding extends Binding implements MainBinding {
     return "BeanBinding[" + myBeanClass.getName() + ", tagName=" + myTagName + "]";
   }
 
-  @NotNull
-  private static Binding createBinding(@NotNull MutableAccessor accessor) {
+  @Nonnull
+  private static Binding createBinding(@Nonnull MutableAccessor accessor) {
     Binding binding = XmlSerializerImpl.getBinding(accessor);
     if (binding instanceof JDOMElementBinding) {
       return binding;

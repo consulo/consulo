@@ -76,8 +76,8 @@ import consulo.application.ex.ApplicationEx2;
 import consulo.start.CommandLineArgs;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 import org.picocontainer.MutablePicoContainer;
@@ -115,7 +115,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   private int myInEditorPaintCounter; // EDT only
   private final long myStartTime;
-  @NotNull
+  @Nonnull
   protected final Ref<? extends StartupProgress> mySplashRef;
   private boolean myDoNotSave;
   private volatile boolean myDisposeInProgress;
@@ -144,7 +144,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   private static final ModalityState ANY = new ModalityState() {
     @Override
-    public boolean dominates(@NotNull ModalityState anotherState) {
+    public boolean dominates(@Nonnull ModalityState anotherState) {
       return false;
     }
 
@@ -156,20 +156,20 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   };
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
+  protected void bootstrapPicoContainer(@Nonnull String name) {
     super.bootstrapPicoContainer(name);
     getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
     getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IApplicationStore getStateStore() {
     return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
   }
 
   @Override
-  public void initializeComponent(@NotNull Object component, boolean service) {
+  public void initializeComponent(@Nonnull Object component, boolean service) {
     getStateStore().initComponent(component);
   }
 
@@ -177,7 +177,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
   }
 
-  public ApplicationImpl(boolean isHeadless, @NotNull Ref<? extends StartupProgress> splashRef) {
+  public ApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splashRef) {
     super(null);
 
     ApplicationManager.setApplication(this, myLastDisposable); // reset back to null only when all components already disposed
@@ -256,7 +256,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
    * would fail (i.e. throw {@link ApplicationUtil.CannotRunReadActionException})
    * if there is a pending write action.
    */
-  public void executeByImpatientReader(@NotNull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
     if (isDispatchThread()) {
       runnable.run();
     }
@@ -333,7 +333,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  protected synchronized Object createComponent(@NotNull Class componentInterface) {
+  protected synchronized Object createComponent(@Nonnull Class componentInterface) {
     Object component = super.createComponent(componentInterface);
     StartupProgress progress = mySplashRef.get();
     if (progress != null) {
@@ -342,7 +342,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return component;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getRootArea().getPicoContainer();
@@ -373,9 +373,9 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myCommandLineMode;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Future<?> executeOnPooledThread(@NotNull final Runnable action) {
+  public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
     ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
     return ourThreadExecutorsService.submit(new Runnable() {
       @Override
@@ -401,9 +401,9 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> Future<T> executeOnPooledThread(@NotNull final Callable<T> action) {
+  public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
     ReadMostlyRWLock.SuspensionId suspensionId = myLock.currentReadPrivilege();
     return ourThreadExecutorsService.submit(new Callable<T>() {
       @Override
@@ -441,33 +441,33 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public void runInWriteThreadAndWait(@NotNull Runnable runnable) {
+  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
     invokeAndWait(runnable, ModalityState.any());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityInvokator getInvokator() {
     return myInvokator;
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable) {
+  public void invokeLater(@Nonnull final Runnable runnable) {
     invokeLater(runnable, getDisposed());
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable, @NotNull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final Condition expired) {
     invokeLater(runnable, ModalityState.defaultModalityState(), expired);
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable, @NotNull final ModalityState state) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state) {
     invokeLater(runnable, state, getDisposed());
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable, @NotNull final ModalityState state, @NotNull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
     myInvokator.invokeLater(myTransactionGuard.wrapLaterInvocation(runnable, state), state, expired);
   }
 
@@ -476,7 +476,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     load(PathManager.getConfigPath(), optionsPath == null ? PathManager.getOptionsPath() : optionsPath);
   }
 
-  public void load(@NotNull String configPath, @NotNull String optionsPath) throws IOException {
+  public void load(@Nonnull String configPath, @Nonnull String optionsPath) throws IOException {
     IApplicationStore store = getStateStore();
     store.setOptionsPath(optionsPath);
     store.setConfigPath(configPath);
@@ -521,7 +521,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  protected <T> T getComponentFromContainer(@NotNull final Class<T> interfaceClass) {
+  protected <T> T getComponentFromContainer(@Nonnull final Class<T> interfaceClass) {
     if (myIsFiringLoadingEvent) {
       return null;
     }
@@ -556,14 +556,14 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process, @NotNull String progressTitle, boolean canBeCanceled, Project project) {
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
     return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
   }
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
-                                                     @NotNull final String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
+                                                     @Nonnull final String progressTitle,
                                                      final boolean canBeCanceled,
                                                      @Nullable final Project project,
                                                      final JComponent parentComponent) {
@@ -572,8 +572,8 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process,
-                                                     @NotNull final String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
+                                                     @Nonnull final String progressTitle,
                                                      final boolean canBeCanceled,
                                                      @Nullable final Project project,
                                                      final JComponent parentComponent,
@@ -631,7 +631,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     if (isDispatchThread()) {
       runnable.run();
       return;
@@ -645,28 +645,28 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getCurrentModalityState() {
     Object[] entities = LaterInvocator.getCurrentModalEntities();
     return entities.length > 0 ? new ModalityStateEx(entities) : getNoneModalityState();
   }
 
   @Override
-  @NotNull
-  public ModalityState getModalityStateForComponent(@NotNull Component c) {
+  @Nonnull
+  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
     Window window = UIUtil.getWindow(c);
     if (window == null) return getNoneModalityState(); //?
     return LaterInvocator.modalityStateForWindow(window);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getAnyModalityState() {
     return ANY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getDefaultModalityState() {
     if (isDispatchThread()) {
       return getCurrentModalityState();
@@ -676,7 +676,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getNoneModalityState() {
     return ModalityState.NON_MODAL;
   }
@@ -816,7 +816,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDoNotShowMessage() {
         return "Do not ask me again";
@@ -853,7 +853,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public void runReadAction(@NotNull final Runnable action) {
+  public void runReadAction(@Nonnull final Runnable action) {
     if (isReadAccessAllowed()) {
       action.run();
     }
@@ -869,7 +869,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public <T> T runReadAction(@NotNull final Computable<T> computation) {
+  public <T> T runReadAction(@Nonnull final Computable<T> computation) {
     if (isReadAccessAllowed()) {
       return computation.compute();
     }
@@ -883,7 +883,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     if (isReadAccessAllowed()) {
       return computation.compute();
     }
@@ -904,11 +904,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myLock.readUnlock();
   }
 
-  public boolean runWriteActionWithProgressInDispatchThread(@NotNull String title,
+  public boolean runWriteActionWithProgressInDispatchThread(@Nonnull String title,
                                                             @Nullable Project project,
                                                             @Nullable JComponent parentComponent,
                                                             @Nullable String cancelText,
-                                                            @NotNull Consumer<ProgressIndicator> action) {
+                                                            @Nonnull Consumer<ProgressIndicator> action) {
     Class<?> clazz = action.getClass();
     startWrite(clazz);
     try {
@@ -921,11 +921,11 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     }
   }
 
-  public boolean runWriteActionWithProgressInBackgroundThread(@NotNull String title,
+  public boolean runWriteActionWithProgressInBackgroundThread(@Nonnull String title,
                                                               @Nullable Project project,
                                                               @Nullable JComponent parentComponent,
                                                               @Nullable String cancelText,
-                                                              @NotNull Consumer<ProgressIndicator> action) {
+                                                              @Nonnull Consumer<ProgressIndicator> action) {
     Class<?> clazz = action.getClass();
     startWrite(clazz);
     try {
@@ -949,7 +949,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public void runWriteAction(@NotNull final Runnable action) {
+  public void runWriteAction(@Nonnull final Runnable action) {
     Class<? extends Runnable> clazz = action.getClass();
     startWrite(clazz);
     try {
@@ -962,7 +962,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public <T> T runWriteAction(@NotNull final Computable<T> computation) {
+  public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
     Class<? extends Computable> clazz = computation.getClass();
     startWrite(clazz);
     try {
@@ -975,7 +975,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     Class<? extends ThrowableComputable> clazz = computation.getClass();
     startWrite(clazz);
     try {
@@ -988,7 +988,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
 
   @RequiredDispatchThread
   @Override
-  public boolean hasWriteAction(@NotNull Class<?> actionClass) {
+  public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     assertReadAccessAllowed();
 
     for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
@@ -1035,7 +1035,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     assertIsDispatchThread("Access is allowed from event dispatch thread only.");
   }
 
-  private void assertIsDispatchThread(@NotNull String message) {
+  private void assertIsDispatchThread(@Nonnull String message) {
     if (isDispatchThread()) return;
     final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
     throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
@@ -1078,7 +1078,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public boolean tryRunReadAction(@NotNull Runnable action) {
+  public boolean tryRunReadAction(@Nonnull Runnable action) {
     //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
     if (isReadAccessAllowed()) {
       action.run();
@@ -1108,7 +1108,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return ApplicationActivationStateManager.getState().isActive();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AccessToken acquireReadActionLock() {
     // if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
@@ -1122,7 +1122,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myWriteActionPending;
   }
 
-  private void startWrite(@NotNull Class clazz) {
+  private void startWrite(@Nonnull Class clazz) {
     if (!isWriteAccessAllowed()) {
       assertIsDispatchThread("Write access is allowed from event dispatch thread only");
     }
@@ -1178,17 +1178,17 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
-  public AccessToken acquireWriteActionLock(@NotNull Class clazz) {
+  public AccessToken acquireWriteActionLock(@Nonnull Class clazz) {
     return new WriteAccessToken(clazz);
   }
 
   private class WriteAccessToken extends AccessToken {
-    @NotNull
+    @Nonnull
     private final Class clazz;
 
-    public WriteAccessToken(@NotNull Class clazz) {
+    public WriteAccessToken(@Nonnull Class clazz) {
       this.clazz = clazz;
       startWrite(clazz);
       markThreadNameInStackTrace();
@@ -1273,7 +1273,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myLock.isWriteLocked();
   }
 
-  public void executeSuspendingWriteAction(@Nullable Project project, @NotNull String title, @NotNull Runnable runnable) {
+  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     assertIsDispatchThread();
     if (!myLock.isWriteLocked()) {
       runModalProgress(project, title, runnable);
@@ -1296,10 +1296,10 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     });
   }
 
-  private static void runModalProgress(@Nullable Project project, @NotNull String title, @NotNull Runnable runnable) {
+  private static void runModalProgress(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     ProgressManager.getInstance().run(new Task.Modal(project, title, false) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         runnable.run();
       }
     });
@@ -1315,17 +1315,17 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener l) {
+  public void addApplicationListener(@Nonnull ApplicationListener l) {
     myDispatcher.addListener(l);
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener l, @NotNull Disposable parent) {
+  public void addApplicationListener(@Nonnull ApplicationListener l, @Nonnull Disposable parent) {
     myDispatcher.addListener(l, parent);
   }
 
   @Override
-  public void removeApplicationListener(@NotNull ApplicationListener l) {
+  public void removeApplicationListener(@Nonnull ApplicationListener l) {
     myDispatcher.removeListener(l);
   }
 
@@ -1333,19 +1333,19 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myDispatcher.getMulticaster().applicationExiting();
   }
 
-  private void fireBeforeWriteActionStart(@NotNull Class action) {
+  private void fireBeforeWriteActionStart(@Nonnull Class action) {
     myDispatcher.getMulticaster().beforeWriteActionStart(action);
   }
 
-  private void fireWriteActionStarted(@NotNull Class action) {
+  private void fireWriteActionStarted(@Nonnull Class action) {
     myDispatcher.getMulticaster().writeActionStarted(action);
   }
 
-  private void fireWriteActionFinished(@NotNull Class action) {
+  private void fireWriteActionFinished(@Nonnull Class action) {
     myDispatcher.getMulticaster().writeActionFinished(action);
   }
 
-  private void fireAfterWriteActionFinished(@NotNull Class action) {
+  private void fireAfterWriteActionFinished(@Nonnull Class action) {
     myDispatcher.getMulticaster().afterWriteActionFinished(action);
   }
 
@@ -1406,9 +1406,9 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     return myDoNotSave;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] getExtensions(@NotNull final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
@@ -1427,7 +1427,7 @@ public class ApplicationImpl extends PlatformComponentManagerImpl implements App
     myDisposeInProgress = disposeInProgress;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SwingImageRef getIcon() {
     return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;

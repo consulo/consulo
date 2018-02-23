@@ -20,9 +20,9 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -37,23 +37,23 @@ public class ScratchFileType extends LanguageFileType implements FileTypeIdentif
   }
 
   @Override
-  public boolean isMyFileType(@NotNull VirtualFile file) {
+  public boolean isMyFileType(@Nonnull VirtualFile file) {
     return ScratchFileService.getInstance().getRootType(file) != null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Scratch";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "Scratch";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDefaultExtension() {
     return "";
@@ -72,7 +72,7 @@ public class ScratchFileType extends LanguageFileType implements FileTypeIdentif
 
   @Nullable
   @Override
-  public String getCharset(@NotNull VirtualFile file, @NotNull byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, @Nonnull byte[] content) {
     return null;
   }
 }

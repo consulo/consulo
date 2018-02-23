@@ -16,8 +16,8 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.io.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,7 +34,7 @@ public class StubOutputStream extends DataOutputStream {
     myNameStorage = nameStorage;
   }
 
-  public void writeUTFFast(@NotNull final String arg) throws IOException {
+  public void writeUTFFast(@Nonnull final String arg) throws IOException {
     IOUtil.writeUTFFast(myStringIOBuffer, this, arg);
   }
 

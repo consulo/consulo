@@ -25,7 +25,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -49,7 +49,7 @@ public abstract class JBListTable extends JPanel {
   private MouseEvent myMouseEvent;
   private MyCellEditor myCellEditor;
 
-  public JBListTable(@NotNull final JTable t) {
+  public JBListTable(@Nonnull final JTable t) {
     super(new BorderLayout());
     myInternalTable = t;
     final JBListTableModel model = new JBListTableModel(t.getModel()) {
@@ -304,7 +304,7 @@ public abstract class JBListTable extends JPanel {
     private int step = 5;
     private int currentHeight;
 
-    private RowResizeAnimator(JTable table, int row, int height, JBTableRowEditor editor, @NotNull Ref<Integer> index) {
+    private RowResizeAnimator(JTable table, int row, int height, JBTableRowEditor editor, @Nonnull Ref<Integer> index) {
       super("Row Animator");
       myTable = table;
       myRow = row;

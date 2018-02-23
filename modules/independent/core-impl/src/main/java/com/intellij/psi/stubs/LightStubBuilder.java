@@ -30,7 +30,7 @@ import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
 import consulo.annotations.RequiredReadAction;
 import gnu.trove.TIntStack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class LightStubBuilder implements StubBuilder {
 
   @RequiredReadAction
   @Override
-  public StubElement buildStubTree(@NotNull PsiFile file) {
+  public StubElement buildStubTree(@Nonnull PsiFile file) {
     LighterAST tree = FORCED_AST.get();
     if (tree == null) {
       FileType fileType = file.getFileType();
@@ -69,13 +69,13 @@ public class LightStubBuilder implements StubBuilder {
     return rootStub;
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
-  protected StubElement createStubForFile(@NotNull PsiFile file, @NotNull LighterAST tree) {
+  protected StubElement createStubForFile(@Nonnull PsiFile file, @Nonnull LighterAST tree) {
     return new PsiFileStubImpl(file);
   }
 
-  protected void buildStubTree(@NotNull LighterAST tree, @NotNull LighterASTNode root, @NotNull StubElement rootStub) {
+  protected void buildStubTree(@Nonnull LighterAST tree, @Nonnull LighterASTNode root, @Nonnull StubElement rootStub) {
     final Stack<LighterASTNode> parents = new Stack<>();
     final TIntStack childNumbers = new TIntStack();
     final BooleanStack parentsStubbed = new BooleanStack();
@@ -138,7 +138,7 @@ public class LightStubBuilder implements StubBuilder {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static StubElement createStub(final LighterAST tree, final LighterASTNode element, final StubElement parentStub) {
     final IElementType elementType = element.getTokenType();
     if (elementType instanceof IStubElementType) {
@@ -156,7 +156,7 @@ public class LightStubBuilder implements StubBuilder {
     return parentStub;
   }
 
-  private boolean skipNode(@NotNull LighterAST tree, @NotNull LighterASTNode parent, @NotNull LighterASTNode node) {
+  private boolean skipNode(@Nonnull LighterAST tree, @Nonnull LighterASTNode parent, @Nonnull LighterASTNode node) {
     if (tree instanceof TreeBackedLighterAST) {
       return skipChildProcessingWhenBuildingStubs(((TreeBackedLighterAST)tree).unwrap(parent), ((TreeBackedLighterAST)tree).unwrap(node));
     }
@@ -169,14 +169,14 @@ public class LightStubBuilder implements StubBuilder {
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(LighterAST, LighterASTNode, LighterASTNode)}.
    */
   @Override
-  public boolean skipChildProcessingWhenBuildingStubs(@NotNull ASTNode parent, @NotNull ASTNode node) {
+  public boolean skipChildProcessingWhenBuildingStubs(@Nonnull ASTNode parent, @Nonnull ASTNode node) {
     return false;
   }
 
   /**
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)}.
    */
-  protected boolean skipChildProcessingWhenBuildingStubs(@NotNull LighterAST tree, @NotNull LighterASTNode parent, @NotNull LighterASTNode node) {
+  protected boolean skipChildProcessingWhenBuildingStubs(@Nonnull LighterAST tree, @Nonnull LighterASTNode parent, @Nonnull LighterASTNode node) {
     return false;
   }
 }

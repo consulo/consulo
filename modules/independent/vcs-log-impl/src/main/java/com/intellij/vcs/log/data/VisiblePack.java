@@ -22,36 +22,39 @@ import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsLogRefs;
 import com.intellij.vcs.log.graph.VisibleGraph;
 import com.intellij.vcs.log.impl.VcsLogFilterCollectionImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
 public class VisiblePack implements VcsLogDataPack {
-  @NotNull
+  @Nonnull
   public static final VisiblePack EMPTY =
     new VisiblePack(DataPack.EMPTY, EmptyVisibleGraph.getInstance(), false, VcsLogFilterCollectionImpl.EMPTY);
 
-  @NotNull private final DataPackBase myDataPack;
-  @NotNull private final VisibleGraph<Integer> myVisibleGraph;
+  @Nonnull
+  private final DataPackBase myDataPack;
+  @Nonnull
+  private final VisibleGraph<Integer> myVisibleGraph;
   private final boolean myCanRequestMore;
-  @NotNull private final VcsLogFilterCollection myFilters;
+  @Nonnull
+  private final VcsLogFilterCollection myFilters;
 
-  VisiblePack(@NotNull DataPackBase dataPack,
-              @NotNull VisibleGraph<Integer> graph,
+  VisiblePack(@Nonnull DataPackBase dataPack,
+              @Nonnull VisibleGraph<Integer> graph,
               boolean canRequestMore,
-              @NotNull VcsLogFilterCollection filters) {
+              @Nonnull VcsLogFilterCollection filters) {
     myDataPack = dataPack;
     myVisibleGraph = graph;
     myCanRequestMore = canRequestMore;
     myFilters = filters;
   }
 
-  @NotNull
+  @Nonnull
   public VisibleGraph<Integer> getVisibleGraph() {
     return myVisibleGraph;
   }
 
-  @NotNull
+  @Nonnull
   public DataPackBase getDataPack() {
     return myDataPack;
   }
@@ -60,13 +63,13 @@ public class VisiblePack implements VcsLogDataPack {
     return myCanRequestMore;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myDataPack.getLogProviders();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsLogRefs getRefs() {
     return myDataPack.getRefsModel();
@@ -77,7 +80,7 @@ public class VisiblePack implements VcsLogDataPack {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsLogFilterCollection getFilters() {
     return myFilters;
   }

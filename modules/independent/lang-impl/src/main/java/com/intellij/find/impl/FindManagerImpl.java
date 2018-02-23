@@ -70,8 +70,8 @@ import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
 import consulo.lang.LanguageVersion;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,12 +132,12 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public int showPromptDialog(@NotNull final FindModel model, String title) {
+  public int showPromptDialog(@Nonnull final FindModel model, String title) {
     return showPromptDialogImpl(model, title, null);
   }
 
   @PromptResultValue
-  public int showPromptDialogImpl(@NotNull final FindModel model, String title, @Nullable final MalformedReplacementStringException exception) {
+  public int showPromptDialogImpl(@Nonnull final FindModel model, String title, @Nullable final MalformedReplacementStringException exception) {
     ReplacePromptDialog replacePromptDialog = new ReplacePromptDialog(model.isMultipleFiles(), title, myProject, exception) {
       @Override
       @Nullable
@@ -184,7 +184,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public void showFindDialog(@NotNull FindModel model, @NotNull Runnable okHandler) {
+  public void showFindDialog(@Nonnull FindModel model, @Nonnull Runnable okHandler) {
     if (myHelper == null || Disposer.isDisposed(myHelper)) {
       myHelper = new FindUIHelper(myProject, model, okHandler);
       Disposer.register(myHelper, new Disposable() {
@@ -202,13 +202,13 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FindModel getFindInFileModel() {
     return myFindInFileModel;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FindModel getFindInProjectModel() {
     myFindInProjectModel.setFromCursor(false);
     myFindInProjectModel.setForward(true);
@@ -244,7 +244,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public FindModel getFindNextModel(@NotNull final Editor editor) {
+  public FindModel getFindNextModel(@Nonnull final Editor editor) {
     if (myFindNextModel == null) return null;
 
     EditorSearchSession search = EditorSearchSession.get(editor);
@@ -268,14 +268,14 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  @NotNull
-  public FindResult findString(@NotNull CharSequence text, int offset, @NotNull FindModel model) {
+  @Nonnull
+  public FindResult findString(@Nonnull CharSequence text, int offset, @Nonnull FindModel model) {
     return findString(text, offset, model, null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FindResult findString(@NotNull CharSequence text, int offset, @NotNull FindModel model, @Nullable VirtualFile file) {
+  public FindResult findString(@Nonnull CharSequence text, int offset, @Nonnull FindModel model, @Nullable VirtualFile file) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("offset=" + offset);
       LOG.debug("textlength=" + text.length());
@@ -364,7 +364,7 @@ public class FindManagerImpl extends FindManager {
 
   private static Key<FindExceptCommentsOrLiteralsData> ourExceptCommentsOrLiteralsDataKey = Key.create("except.comments.literals.search.data");
 
-  private Predicate<FindResult> getFindContextPredicate(@NotNull FindModel model, VirtualFile file, CharSequence text) {
+  private Predicate<FindResult> getFindContextPredicate(@Nonnull FindModel model, VirtualFile file, CharSequence text) {
     if (file == null) return null;
     FindModel.SearchContext context = model.getSearchContext();
     if (context == FindModel.SearchContext.ANY || context == FindModel.SearchContext.IN_COMMENTS || context == FindModel.SearchContext.IN_STRING_LITERALS) {
@@ -382,7 +382,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public int showMalformedReplacementPrompt(@NotNull FindModel model, String title, MalformedReplacementStringException exception) {
+  public int showMalformedReplacementPrompt(@Nonnull FindModel model, String title, MalformedReplacementStringException exception) {
     return showPromptDialogImpl(model, title, exception);
   }
 
@@ -427,8 +427,8 @@ public class FindManagerImpl extends FindManager {
     return isWordStart && isWordEnd;
   }
 
-  @NotNull
-  private static FindModel normalizeIfMultilined(@NotNull FindModel findmodel) {
+  @Nonnull
+  private static FindModel normalizeIfMultilined(@Nonnull FindModel findmodel) {
     if (findmodel.isMultiline()) {
       final FindModel model = new FindModel();
       model.copyFrom(findmodel);
@@ -449,11 +449,11 @@ public class FindManagerImpl extends FindManager {
     return findmodel;
   }
 
-  @NotNull
-  private FindResult doFindString(@NotNull CharSequence text,
+  @Nonnull
+  private FindResult doFindString(@Nonnull CharSequence text,
                                   @Nullable char[] textArray,
                                   int offset,
-                                  @NotNull FindModel findmodel,
+                                  @Nonnull FindModel findmodel,
                                   @Nullable VirtualFile file) {
     FindModel model = normalizeIfMultilined(findmodel);
     String toFind = model.getStringToFind();
@@ -486,8 +486,8 @@ public class FindManagerImpl extends FindManager {
     return new FindResultImpl(index, index + toFind.length());
   }
 
-  @NotNull
-  private static StringSearcher createStringSearcher(@NotNull FindModel model) {
+  @Nonnull
+  private static StringSearcher createStringSearcher(@Nonnull FindModel model) {
     return new StringSearcher(model.getStringToFind(), model.isCaseSensitive(), model.isForward());
   }
 
@@ -528,12 +528,12 @@ public class FindManagerImpl extends FindManager {
 
   private static final Key<CommentsLiteralsSearchData> ourCommentsLiteralsSearchDataKey = Key.create("comments.literals.search.data");
 
-  @NotNull
-  private FindResult findInCommentsAndLiterals(@NotNull CharSequence text,
+  @Nonnull
+  private FindResult findInCommentsAndLiterals(@Nonnull CharSequence text,
                                                char[] textArray,
                                                int offset,
-                                               @NotNull FindModel model,
-                                               @NotNull final VirtualFile file) {
+                                               @Nonnull FindModel model,
+                                               @Nonnull final VirtualFile file) {
     synchronized (model) {
       FileType ftype = file.getFileType();
       Language lang = null;
@@ -773,7 +773,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public String getStringToReplace(@NotNull String foundString, @NotNull FindModel model, int startOffset, @NotNull CharSequence documentText)
+  public String getStringToReplace(@Nonnull String foundString, @Nonnull FindModel model, int startOffset, @Nonnull CharSequence documentText)
           throws MalformedReplacementStringException {
     String toReplace = model.getStringToReplace();
     if (model.isRegularExpressions()) {
@@ -785,13 +785,13 @@ public class FindManagerImpl extends FindManager {
     return toReplace;
   }
 
-  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, @NotNull CharSequence text, int startOffset)
+  private static String getStringToReplaceByRegexp(@Nonnull final FindModel model, @Nonnull CharSequence text, int startOffset)
           throws MalformedReplacementStringException {
     Matcher matcher = compileRegexAndFindFirst(model, text, startOffset);
     return getStringToReplaceByRegexp(model, matcher);
   }
 
-  private static String getStringToReplaceByRegexp(@NotNull final FindModel model, Matcher matcher) throws MalformedReplacementStringException {
+  private static String getStringToReplaceByRegexp(@Nonnull final FindModel model, Matcher matcher) throws MalformedReplacementStringException {
     if (matcher == null) return null;
     try {
       String toReplace = model.getStringToReplace();
@@ -881,27 +881,27 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public boolean canFindUsages(@NotNull PsiElement element) {
+  public boolean canFindUsages(@Nonnull PsiElement element) {
     return element.isValid() && myFindUsagesManager.canFindUsages(element);
   }
 
   @Override
-  public void findUsages(@NotNull PsiElement element) {
+  public void findUsages(@Nonnull PsiElement element) {
     findUsages(element, false);
   }
 
   @Override
-  public void findUsagesInScope(@NotNull PsiElement element, @NotNull SearchScope searchScope) {
+  public void findUsagesInScope(@Nonnull PsiElement element, @Nonnull SearchScope searchScope) {
     myFindUsagesManager.findUsages(element, null, null, false, searchScope);
   }
 
   @Override
-  public void findUsages(@NotNull PsiElement element, boolean showDialog) {
+  public void findUsages(@Nonnull PsiElement element, boolean showDialog) {
     myFindUsagesManager.findUsages(element, null, null, showDialog, null);
   }
 
   @Override
-  public void showSettingsAndFindUsages(@NotNull NavigationItem[] targets) {
+  public void showSettingsAndFindUsages(@Nonnull NavigationItem[] targets) {
     FindUsagesManager.showSettingsAndFindUsages(targets);
   }
 
@@ -911,7 +911,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public void findUsagesInEditor(@NotNull PsiElement element, @NotNull FileEditor fileEditor) {
+  public void findUsagesInEditor(@Nonnull PsiElement element, @Nonnull FileEditor fileEditor) {
     if (fileEditor instanceof TextEditor) {
       TextEditor textEditor = (TextEditor)fileEditor;
       Editor editor = textEditor.getEditor();
@@ -937,11 +937,11 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public boolean findNextUsageInEditor(@NotNull FileEditor fileEditor) {
+  public boolean findNextUsageInEditor(@Nonnull FileEditor fileEditor) {
     return findNextUsageInFile(fileEditor, SearchResults.Direction.DOWN);
   }
 
-  private boolean findNextUsageInFile(@NotNull FileEditor fileEditor, @NotNull SearchResults.Direction direction) {
+  private boolean findNextUsageInFile(@Nonnull FileEditor fileEditor, @Nonnull SearchResults.Direction direction) {
     if (fileEditor instanceof TextEditor) {
       TextEditor textEditor = (TextEditor)fileEditor;
       Editor editor = textEditor.getEditor();
@@ -963,7 +963,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
-  public boolean findPreviousUsageInEditor(@NotNull FileEditor fileEditor) {
+  public boolean findPreviousUsageInEditor(@Nonnull FileEditor fileEditor) {
     return findNextUsageInFile(fileEditor, SearchResults.Direction.UP);
   }
 
@@ -1036,7 +1036,7 @@ public class FindManagerImpl extends FindManager {
     return false;
   }
 
-  private static void expandFoldRegionsIfNecessary(@NotNull Editor editor, final int startOffset, int endOffset) {
+  private static void expandFoldRegionsIfNecessary(@Nonnull Editor editor, final int startOffset, int endOffset) {
     final FoldingModel foldingModel = editor.getFoldingModel();
     final FoldRegion[] regions;
     if (foldingModel instanceof FoldingModelEx) {
@@ -1086,7 +1086,7 @@ public class FindManagerImpl extends FindManager {
     });
   }
 
-  @NotNull
+  @Nonnull
   public FindUsagesManager getFindUsagesManager() {
     return myFindUsagesManager;
   }

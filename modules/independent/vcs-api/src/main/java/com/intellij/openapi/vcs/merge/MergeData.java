@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.merge;
 
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * MergeData contains information about revisions
@@ -33,15 +33,21 @@ import org.jetbrains.annotations.Nullable;
  * @author lesya
  */
 public class MergeData {
-  @NotNull public byte[] ORIGINAL;
-  @NotNull public byte[] LAST;
-  @NotNull public byte[] CURRENT;
+  @Nonnull
+  public byte[] ORIGINAL;
+  @Nonnull
+  public byte[] LAST;
+  @Nonnull
+  public byte[] CURRENT;
 
   @Nullable public VcsRevisionNumber ORIGINAL_REVISION_NUMBER;
   @Nullable public VcsRevisionNumber LAST_REVISION_NUMBER;
-  @Nullable public VcsRevisionNumber CURRENT_REVISION_NUMBER;
+  @javax.annotation.Nullable
+  public VcsRevisionNumber CURRENT_REVISION_NUMBER;
 
-  @Nullable public FilePath ORIGINAL_FILE_PATH;
+  @javax.annotation.Nullable
+  public FilePath ORIGINAL_FILE_PATH;
   @Nullable public FilePath LAST_FILE_PATH;
-  @Nullable public FilePath CURRENT_FILE_PATH;
+  @javax.annotation.Nullable
+  public FilePath CURRENT_FILE_PATH;
 }

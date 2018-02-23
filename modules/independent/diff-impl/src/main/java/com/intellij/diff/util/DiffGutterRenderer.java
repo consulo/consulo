@@ -19,27 +19,28 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.DumbAwareAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
-  @NotNull private final Icon myIcon;
-  @Nullable private final String myTooltip;
+  @Nonnull
+  private final Icon myIcon;
+  @javax.annotation.Nullable
+  private final String myTooltip;
 
-  public DiffGutterRenderer(@NotNull Icon icon, @Nullable String tooltip) {
+  public DiffGutterRenderer(@Nonnull Icon icon, @javax.annotation.Nullable String tooltip) {
     myIcon = icon;
     myTooltip = tooltip;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return myIcon;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTooltipText() {
     return myTooltip;
@@ -54,13 +55,13 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Alignment getAlignment() {
     return Alignment.LEFT;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public AnAction getClickAction() {
     return new DumbAwareAction() {

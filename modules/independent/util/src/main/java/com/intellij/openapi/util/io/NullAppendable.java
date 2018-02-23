@@ -15,25 +15,25 @@
  */
 package com.intellij.openapi.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
 class NullAppendable implements Appendable {
   static Appendable INSTANCE = new NullAppendable();
-  @NotNull
+  @Nonnull
   @Override
   public Appendable append(CharSequence csq) throws IOException {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Appendable append(CharSequence csq, int start, int end) throws IOException {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Appendable append(char c) throws IOException {
     return this;

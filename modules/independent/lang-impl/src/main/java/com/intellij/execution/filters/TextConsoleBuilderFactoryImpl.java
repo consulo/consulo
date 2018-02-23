@@ -24,19 +24,19 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dyoma
  */
 public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   @Override
-  public TextConsoleBuilder createBuilder(@NotNull final Project project) {
+  public TextConsoleBuilder createBuilder(@Nonnull final Project project) {
     return new TextConsoleBuilderImpl(project);
   }
 
   @Override
-  public TextConsoleBuilder createBuilder(@NotNull Project project, @NotNull GlobalSearchScope scope) {
+  public TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull GlobalSearchScope scope) {
     return new TextConsoleBuilderImpl(project, scope);
   }
 }

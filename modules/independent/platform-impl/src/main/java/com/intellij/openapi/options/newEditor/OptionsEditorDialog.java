@@ -36,8 +36,8 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -74,7 +74,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
    *  @deprecated
    */
   public OptionsEditorDialog(Project project, Configurable[] configurables,
-                             @NotNull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
+                             @Nonnull String preselectedConfigurableDisplayName, boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
     init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
@@ -84,7 +84,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
   }
 
-  public OptionsEditorDialog(Project project, Configurable[] configurables, @NotNull String preselectedConfigurableDisplayName) {
+  public OptionsEditorDialog(Project project, Configurable[] configurables, @Nonnull String preselectedConfigurableDisplayName) {
     super(project, true);
     init(project, configurables, getPreselectedByDisplayName(configurables, preselectedConfigurableDisplayName, project));
   }
@@ -112,7 +112,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSplitterKey() {
     return OptionsEditor.MAIN_SPLITTER_PROPORTION;
@@ -143,7 +143,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     myEditor = new OptionsEditor(myProject, myConfigurables, myPreselected, rootPanel);
@@ -296,7 +296,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
     super.doCancelAction();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     myApplyAction = new ApplyAction();
@@ -318,7 +318,7 @@ public class OptionsEditorDialog extends WholeWestDialogWrapper implements DataP
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (OptionsEditor.KEY == dataId) {
       return myEditor;
     }

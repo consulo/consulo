@@ -20,7 +20,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CantRunException extends ExecutionException {
   public CantRunException(final String message) {
@@ -39,26 +39,26 @@ public class CantRunException extends ExecutionException {
   }
 
   @Deprecated
-  public static CantRunException noJdkForModule(@NotNull final Module module) {
+  public static CantRunException noJdkForModule(@Nonnull final Module module) {
     return new CantRunException(ExecutionBundle.message("no.jdk.for.module.error.message", module.getName()));
   }
 
-  public static CantRunException noModuleExtension(@NotNull Module module, @NotNull final Class<? extends ModuleExtension> extensionName) {
+  public static CantRunException noModuleExtension(@Nonnull Module module, @Nonnull final Class<? extends ModuleExtension> extensionName) {
 
     return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", extensionName.getName(), module.getName()));
   }
 
-  public static CantRunException noSdkForModuleExtension(@NotNull final ModuleExtension e) {
+  public static CantRunException noSdkForModuleExtension(@Nonnull final ModuleExtension e) {
     final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(e.getId());
     assert provider != null;
     return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", provider.getName(), e.getModule().getName()));
   }
 
-  public static CantRunException jdkMisconfigured(@NotNull final Sdk jdk, @NotNull final Module module) {
+  public static CantRunException jdkMisconfigured(@Nonnull final Sdk jdk, @Nonnull final Module module) {
     return new CantRunException(ExecutionBundle.message("jdk.is.bad.configured.error.message", jdk.getName()));
   }
 
-  public static CantRunException classNotFound(@NotNull final String className, @NotNull final Module module) {
+  public static CantRunException classNotFound(@Nonnull final String className, @Nonnull final Module module) {
     return new CantRunException(ExecutionBundle.message("class.not.found.in.module.error.message", className, module.getName()));
   }
 

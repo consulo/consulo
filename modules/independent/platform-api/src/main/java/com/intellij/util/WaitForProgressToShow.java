@@ -22,8 +22,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class WaitForProgressToShow {
   private WaitForProgressToShow() {
@@ -49,7 +49,7 @@ public class WaitForProgressToShow {
     }
   }
 
-  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final ModalityState modalityState, @NotNull final Project project) {
+  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final ModalityState modalityState, @Nonnull final Project project) {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       command.run();

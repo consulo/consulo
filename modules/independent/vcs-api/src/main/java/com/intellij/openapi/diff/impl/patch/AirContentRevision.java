@@ -16,8 +16,8 @@
 package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -25,13 +25,13 @@ public interface AirContentRevision {
   boolean isBinary();
   @Nullable
   String getContentAsString() throws VcsException;
-  @Nullable
+  @javax.annotation.Nullable
   byte[] getContentAsBytes() throws VcsException;
   
-  @Nullable
+  @javax.annotation.Nullable
   String getRevisionNumber();
 
-  @NotNull
+  @Nonnull
   PathDescription getPath();
 
   Charset getCharset();

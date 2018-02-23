@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.impl.FontInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -25,12 +25,12 @@ import java.util.Arrays;
  * Fragment of text for which complex layout is not required. Rendering is the same as if each character would be rendered on its own.
  */
 class SimpleTextFragment extends TextFragment {
-  @NotNull
+  @Nonnull
   private final char[] myText;
-  @NotNull
+  @Nonnull
   private final Font myFont;
 
-  SimpleTextFragment(@NotNull char[] lineChars, int start, int end, @NotNull FontInfo fontInfo) {
+  SimpleTextFragment(@Nonnull char[] lineChars, int start, int end, @Nonnull FontInfo fontInfo) {
     super(end - start);
     myText = Arrays.copyOfRange(lineChars, start, end);
     myFont = fontInfo.getFont();

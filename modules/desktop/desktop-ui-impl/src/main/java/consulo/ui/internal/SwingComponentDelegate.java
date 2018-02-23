@@ -22,8 +22,8 @@ import consulo.ui.shared.Size;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.migration.ToSwingWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ import javax.swing.*;
 public class SwingComponentDelegate<T extends JComponent> implements Component, ToSwingWrapper, SomeUIWrapper {
   protected T myComponent;
 
-  @NotNull
+  @Nonnull
   @Override
   public java.awt.Component toAWT() {
     return myComponent;
@@ -70,11 +70,11 @@ public class SwingComponentDelegate<T extends JComponent> implements Component, 
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
     myComponent.setPreferredSize(TargetAWT.to(size));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public UIDataObject dataObject() {
     javax.swing.JComponent component = (javax.swing.JComponent)toAWT();

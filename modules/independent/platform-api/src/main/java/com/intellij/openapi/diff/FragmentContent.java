@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -42,11 +42,11 @@ public class FragmentContent extends DiffContent {
   private final MyDocumentsSynchronizer mySynchonizer;
   public static final Key<Document> ORIGINAL_DOCUMENT = new Key<Document>("ORIGINAL_DOCUMENT");
 
-  public FragmentContent(@NotNull DiffContent original, @NotNull TextRange range, Project project, VirtualFile file) {
+  public FragmentContent(@Nonnull DiffContent original, @Nonnull TextRange range, Project project, VirtualFile file) {
     this(original, range, project, file != null ? DiffContentUtil.getContentType(file) : null);
   }
 
-  public FragmentContent(@NotNull DiffContent original, @NotNull TextRange range, Project project, FileType fileType) {
+  public FragmentContent(@Nonnull DiffContent original, @Nonnull TextRange range, Project project, FileType fileType) {
     RangeMarker rangeMarker = original.getDocument().createRangeMarker(range.getStartOffset(), range.getEndOffset(), true);
     mySynchonizer = new MyDocumentsSynchronizer(project, rangeMarker);
     myOriginal = original;
@@ -105,7 +105,7 @@ public class FragmentContent extends DiffContent {
   private class MyDocumentsSynchronizer extends DocumentsSynchronizer {
     private final RangeMarker myRangeMarker;
 
-    public MyDocumentsSynchronizer(Project project, @NotNull RangeMarker originalRange) {
+    public MyDocumentsSynchronizer(Project project, @Nonnull RangeMarker originalRange) {
       super(project);
       myRangeMarker = originalRange;
     }
@@ -115,7 +115,7 @@ public class FragmentContent extends DiffContent {
     }
 
     @Override
-    protected void onOriginalChanged(@NotNull DocumentEvent event, @NotNull Document copy) {
+    protected void onOriginalChanged(@Nonnull DocumentEvent event, @Nonnull Document copy) {
       if (!myRangeMarker.isValid()) {
         fireContentInvalid();
         return;
@@ -124,7 +124,7 @@ public class FragmentContent extends DiffContent {
     }
 
     @Override
-    protected void beforeListenersAttached(@NotNull Document original, @NotNull Document copy) {
+    protected void beforeListenersAttached(@Nonnull Document original, @Nonnull Document copy) {
       boolean writable = copy.isWritable();
       if (!writable) {
         copy.setReadOnly(false);
@@ -154,7 +154,7 @@ public class FragmentContent extends DiffContent {
     }
 
     @Override
-    protected void onCopyChanged(@NotNull DocumentEvent event, @NotNull Document original) {
+    protected void onCopyChanged(@Nonnull DocumentEvent event, @Nonnull Document original) {
       final int originalOffset = event.getOffset() + myRangeMarker.getStartOffset();
       LOG.assertTrue(originalOffset >= 0);
       if (!original.isWritable()) return;

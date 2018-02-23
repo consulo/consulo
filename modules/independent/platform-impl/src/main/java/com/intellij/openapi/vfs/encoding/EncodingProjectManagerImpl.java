@@ -47,8 +47,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -178,7 +178,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return getDefaultCharset();
   }
 
-  @NotNull
+  @Nonnull
   public ModificationTracker getModificationTracker() {
     return myModificationTracker;
   }
@@ -209,12 +209,12 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     }
   }
 
-  private static void clearAndReload(@NotNull VirtualFile virtualFileOrDir) {
+  private static void clearAndReload(@Nonnull VirtualFile virtualFileOrDir) {
     virtualFileOrDir.setCharset(null);
     reload(virtualFileOrDir);
   }
 
-  private static void reload(@NotNull final VirtualFile virtualFile) {
+  private static void reload(@Nonnull final VirtualFile virtualFile) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       FileDocumentManager documentManager = FileDocumentManager.getInstance();
       ((VirtualFileListener)documentManager).contentsChanged(new VirtualFileEvent(null, virtualFile, virtualFile.getName(), virtualFile.getParent()));
@@ -222,7 +222,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Charset> getFavorites() {
     Set<Charset> result = widelyKnownCharsets();
     result.addAll(myMapping.values());
@@ -230,7 +230,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return result;
   }
 
-  @NotNull
+  @Nonnull
   static Set<Charset> widelyKnownCharsets() {
     Set<Charset> result = new HashSet<>();
     result.add(CharsetToolkit.UTF8_CHARSET);
@@ -244,12 +244,12 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, Charset> getAllMappings() {
     return myMapping;
   }
 
-  public void setMapping(@NotNull final Map<VirtualFile, Charset> mapping) {
+  public void setMapping(@Nonnull final Map<VirtualFile, Charset> mapping) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
     final Map<VirtualFile, Charset> newMap = new THashMap<>(mapping.size());
@@ -340,7 +340,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     };
   }
 
-  private boolean processSubFiles(@Nullable("null means all in the project") VirtualFile file, @NotNull final Processor<VirtualFile> processor) {
+  private boolean processSubFiles(@Nullable("null means all in the project") VirtualFile file, @Nonnull final Processor<VirtualFile> processor) {
     if (file == null) {
       for (VirtualFile virtualFile : ProjectRootManager.getInstance(myProject).getContentRoots()) {
         if (!processSubFiles(virtualFile, processor)) return false;
@@ -350,7 +350,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
 
     return VirtualFileVisitor.CONTINUE == VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull final VirtualFile file) {
+      public boolean visitFile(@Nonnull final VirtualFile file) {
         return processor.process(file);
       }
     });
@@ -358,7 +358,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
 
   //retrieves encoding for the Project node
   @Override
-  @NotNull
+  @Nonnull
   public Charset getDefaultCharset() {
     Charset charset = myProjectCharset;
     // if the project charset was not specified, use the IDE encoding, save this back
@@ -372,7 +372,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
 
   private static final ThreadLocal<Boolean> SUPPRESS_RELOAD = new ThreadLocal<>();
 
-  static void suppressReloadDuring(@NotNull Runnable action) {
+  static void suppressReloadDuring(@Nonnull Runnable action) {
     Boolean old = SUPPRESS_RELOAD.get();
     try {
       SUPPRESS_RELOAD.set(Boolean.TRUE);
@@ -383,7 +383,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     }
   }
 
-  private boolean tryStartReloadWithProgress(@NotNull final Runnable reloadAction) {
+  private boolean tryStartReloadWithProgress(@Nonnull final Runnable reloadAction) {
     Boolean suppress = SUPPRESS_RELOAD.get();
     if (suppress == Boolean.TRUE) return false;
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
@@ -407,7 +407,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   }
 
   @Override
-  public boolean isNative2Ascii(@NotNull final VirtualFile virtualFile) {
+  public boolean isNative2Ascii(@Nonnull final VirtualFile virtualFile) {
     return virtualFile.getFileType() == InternalStdFileTypes.PROPERTIES && myNative2AsciiForPropertiesFiles;
   }
 
@@ -424,7 +424,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
     }
   }
 
-  @NotNull // empty means system default
+  @Nonnull // empty means system default
   @Override
   public String getDefaultCharsetName() {
     Charset charset = getEncoding(null, false);
@@ -432,7 +432,7 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   }
 
   @Override
-  public void setDefaultCharsetName(@NotNull String name) {
+  public void setDefaultCharsetName(@Nonnull String name) {
     setEncoding(null, name.isEmpty() ? null : CharsetToolkit.forName(name));
   }
 
@@ -452,13 +452,13 @@ public class EncodingProjectManagerImpl extends EncodingProjectManager implement
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
     myIdeEncodingManager.addPropertyChangeListener(listener, parentDisposable);
   }
 
   @Override
   @Nullable
-  public Charset getCachedCharsetFromContent(@NotNull Document document) {
+  public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return myIdeEncodingManager.getCachedCharsetFromContent(document);
   }
 }

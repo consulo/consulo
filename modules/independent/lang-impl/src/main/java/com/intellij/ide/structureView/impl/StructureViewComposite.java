@@ -20,7 +20,7 @@ import com.intellij.ide.structureView.StructureView;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,21 +28,23 @@ import javax.swing.*;
  * @author cdr
  */
 public class StructureViewComposite implements StructureView {
-  @NotNull private final StructureViewDescriptor[] myStructureViews;
-  @NotNull private StructureViewDescriptor mySelectedViewDescriptor;
+  @Nonnull
+  private final StructureViewDescriptor[] myStructureViews;
+  @Nonnull
+  private StructureViewDescriptor mySelectedViewDescriptor;
   public static class StructureViewDescriptor {
     public final String title;
     public final StructureView structureView;
     public final Icon icon;
 
-    public StructureViewDescriptor(final String title, @NotNull StructureView structureView, Icon icon) {
+    public StructureViewDescriptor(final String title, @Nonnull StructureView structureView, Icon icon) {
       this.title = title;
       this.structureView = structureView;
       this.icon = icon;
     }
   }
 
-  public StructureViewComposite(@NotNull StructureViewDescriptor... views) {
+  public StructureViewComposite(@Nonnull StructureViewDescriptor... views) {
     myStructureViews = views;
     for (StructureViewDescriptor descriptor : views) {
       Disposer.register(this, descriptor.structureView);
@@ -97,13 +99,13 @@ public class StructureViewComposite implements StructureView {
     }
   }
 
-  @NotNull
+  @Nonnull
   public StructureViewDescriptor[] getStructureViews() {
     return myStructureViews;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewModel getTreeModel() {
     return getSelectedStructureView().getTreeModel();
   }

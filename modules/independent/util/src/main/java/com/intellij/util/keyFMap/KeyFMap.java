@@ -16,8 +16,8 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An immutable map optimized for storing few {@link Key} entries with relatively rare updates
@@ -28,15 +28,15 @@ import org.jetbrains.annotations.Nullable;
 public interface KeyFMap {
   KeyFMap EMPTY_MAP = new EmptyFMap();
 
-  @NotNull
-  <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value);
-  @NotNull
-  KeyFMap minus(@NotNull Key<?> key);
+  @Nonnull
+  <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value);
+  @Nonnull
+  KeyFMap minus(@Nonnull Key<?> key);
 
   @Nullable
-  <V> V get(@NotNull Key<V> key);
+  <V> V get(@Nonnull Key<V> key);
 
-  @NotNull
+  @Nonnull
   Key[] getKeys();
 
   String toString();

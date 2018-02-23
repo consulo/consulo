@@ -28,8 +28,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
 
   private static final Comparator<Element> RUNNER_COMPARATOR = new Comparator<Element>() {
     @Override
-    public int compare(@NotNull Element o1, @NotNull Element o2) {
+    public int compare(@Nonnull Element o1, @Nonnull Element o2) {
       String attributeValue1 = o1.getAttributeValue(RUNNER_ID);
       if (attributeValue1 == null) {
         return 1;
@@ -105,7 +105,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     myManager = manager;
   }
 
-  public RunnerAndConfigurationSettingsImpl(RunManagerImpl manager, @NotNull RunConfiguration configuration, boolean isTemplate) {
+  public RunnerAndConfigurationSettingsImpl(RunManagerImpl manager, @Nonnull RunConfiguration configuration, boolean isTemplate) {
     myManager = manager;
     myConfiguration = configuration;
     myIsTemplate = isTemplate;
@@ -345,7 +345,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     }
   }
 
-  private void writeRunnerSettings(@NotNull Comparator<Element> runnerComparator, @NotNull Element element) throws WriteExternalException {
+  private void writeRunnerSettings(@Nonnull Comparator<Element> runnerComparator, @Nonnull Element element) throws WriteExternalException {
     List<Element> runnerSettings = new SmartList<Element>();
     for (ProgramRunner runner : myRunnerSettings.keySet()) {
       RunnerSettings settings = myRunnerSettings.get(runner);
@@ -399,7 +399,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
   }
 
   @Override
-  public boolean canRunOn(@NotNull ExecutionTarget target) {
+  public boolean canRunOn(@Nonnull ExecutionTarget target) {
     if (myConfiguration instanceof TargetAwareRunProfile) {
       return ((TargetAwareRunProfile)myConfiguration).canRunOn(target);
     }
@@ -407,7 +407,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
   }
 
   @Override
-  public RunnerSettings getRunnerSettings(@NotNull ProgramRunner runner) {
+  public RunnerSettings getRunnerSettings(@Nonnull ProgramRunner runner) {
     if (!myRunnerSettings.containsKey(runner)) {
       try {
         RunnerSettings runnerSettings = createRunnerSettings(runner);
@@ -423,7 +423,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
 
   @Override
   @Nullable
-  public ConfigurationPerRunnerSettings getConfigurationSettings(@NotNull ProgramRunner runner) {
+  public ConfigurationPerRunnerSettings getConfigurationSettings(@Nonnull ProgramRunner runner) {
     if (!myConfigurationPerRunnerSettings.containsKey(runner)) {
       ConfigurationPerRunnerSettings settings = myConfiguration.createRunnerSettings(new InfoProvider(runner));
       myConfigurationPerRunnerSettings.put(runner, settings);
@@ -488,7 +488,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
   }
 
   @Override
-  public int compareTo(@NotNull final Object o) {
+  public int compareTo(@Nonnull final Object o) {
     if (o instanceof RunnerAndConfigurationSettings) {
       return getName().compareTo(((RunnerAndConfigurationSettings) o).getName());
     }

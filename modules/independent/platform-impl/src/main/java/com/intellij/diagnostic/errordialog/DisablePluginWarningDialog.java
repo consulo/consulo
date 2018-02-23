@@ -4,7 +4,7 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
     return myContentPane;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     if (SystemInfo.isMac) {

@@ -4,7 +4,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 
@@ -19,13 +19,13 @@ public class TemplateDataHighlighterWrapper implements SyntaxHighlighter {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Lexer getHighlightingLexer() {
     return myHighlighter.getHighlightingLexer();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextAttributesKey[] getTokenHighlights(final IElementType tokenType) {
     if (tokenType == BAD_CHARACTER) {
       return new TextAttributesKey[0];

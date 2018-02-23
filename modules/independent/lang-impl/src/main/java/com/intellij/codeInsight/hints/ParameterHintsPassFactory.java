@@ -42,8 +42,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.annotations.RequiredReadAction;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public class ParameterHintsPassFactory extends AbstractProjectComponent implemen
 
   @Nullable
   @Override
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     if (editor.isOneLineMode()) return null;
     return new ParameterHintsPass(file, editor);
   }
@@ -66,13 +66,13 @@ public class ParameterHintsPassFactory extends AbstractProjectComponent implemen
   private static class ParameterHintsPass extends EditorBoundHighlightingPass {
     private final Map<Integer, String> myAnnotations = new HashMap<>();
 
-    private ParameterHintsPass(@NotNull PsiFile file, @NotNull Editor editor) {
+    private ParameterHintsPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
       super(editor, file, true);
     }
 
     @RequiredReadAction
     @Override
-    public void doCollectInformation(@NotNull ProgressIndicator progress) {
+    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
       assert myDocument != null;
       myAnnotations.clear();
       if (!isEnabled()) return;

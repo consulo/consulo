@@ -20,7 +20,7 @@ import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class CustomizeSelectTemplateStepPanel extends AbstractCustomizeWizardSte
     add(ScrollPaneFactory.createScrollPane(myCheckBoxList, true), BorderLayout.CENTER);
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> getEnablePluginSet() {
     Set<String> set = new THashSet<>();
     for (int i = 0; i < myCheckBoxList.getItemsCount(); i++) {

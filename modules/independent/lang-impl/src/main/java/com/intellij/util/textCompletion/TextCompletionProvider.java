@@ -18,8 +18,8 @@ package com.intellij.util.textCompletion;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.CharFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Base interface for text completion.
@@ -35,13 +35,13 @@ public interface TextCompletionProvider {
   String getAdvertisement();
 
   @Nullable
-  String getPrefix(@NotNull String text, int offset);
+  String getPrefix(@Nonnull String text, int offset);
 
-  @NotNull
-  CompletionResultSet applyPrefixMatcher(@NotNull CompletionResultSet result, @NotNull String prefix);
+  @Nonnull
+  CompletionResultSet applyPrefixMatcher(@Nonnull CompletionResultSet result, @Nonnull String prefix);
 
   @Nullable
   CharFilter.Result acceptChar(char c);
 
-  void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull String prefix, @NotNull CompletionResultSet result);
+  void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull String prefix, @Nonnull CompletionResultSet result);
 }

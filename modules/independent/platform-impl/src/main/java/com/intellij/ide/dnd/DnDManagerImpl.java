@@ -27,8 +27,8 @@ import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ui.GeometryUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +86,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   public void dispose() {
   }
 
-  public void registerSource(@NotNull final AdvancedDnDSource source) {
+  public void registerSource(@Nonnull final AdvancedDnDSource source) {
     if (!getApplication().isHeadlessEnvironment()) {
       final JComponent c = source.getComponent();
       registerSource(source, c);

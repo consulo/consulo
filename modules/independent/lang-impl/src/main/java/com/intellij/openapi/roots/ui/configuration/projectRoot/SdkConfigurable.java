@@ -30,10 +30,11 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.bundle.SdkUtil;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -45,10 +46,10 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   private final BaseSdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(@NotNull final SdkImpl sdk,
+  public SdkConfigurable(@Nonnull final SdkImpl sdk,
                          final ProjectSdksModel sdksModel,
                          final Runnable updateTree,
-                         @NotNull History history,
+                         @Nonnull History history,
                          Project project) {
     super(!sdk.isPredefined(), updateTree);
     mySdk = sdk;
@@ -133,7 +134,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     mySdkEditor.queryPlace(place);
   }
 

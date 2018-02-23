@@ -39,9 +39,9 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.*;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -235,7 +235,7 @@ public class ProjectSettingsPanel {
       return myProfile;
     }
 
-    public void setProfile(@NotNull CopyrightProfile profile) {
+    public void setProfile(@Nonnull CopyrightProfile profile) {
       myProfile = profile;
       myProfileName = profile.getName();
     }

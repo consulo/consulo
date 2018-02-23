@@ -23,15 +23,15 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler {
   @Override
-  protected boolean isEnabled(@NotNull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return getTextToEvaluate(dataContext, session) != null;
   }
 
@@ -54,7 +54,7 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
   }
 
   @Override
-  protected void perform(@NotNull XDebugSession session, DataContext dataContext) {
+  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
     final String text = getTextToEvaluate(dataContext, session);
     if (text == null) return;
 

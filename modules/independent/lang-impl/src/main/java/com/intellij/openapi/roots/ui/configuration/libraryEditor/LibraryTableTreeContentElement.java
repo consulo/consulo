@@ -18,9 +18,9 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E> {

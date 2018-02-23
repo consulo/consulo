@@ -24,20 +24,19 @@ import com.intellij.diff.chains.DiffRequestProducerException;
 import com.intellij.diff.impl.DiffViewerWrapper;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface ChangeDiffViewerWrapperProvider {
   ExtensionPointName<ChangeDiffViewerWrapperProvider> EP_NAME =
           ExtensionPointName.create("com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider");
 
-  @NotNull
-  ThreeState isEquals(@NotNull Change change1, @NotNull Change change2);
+  @Nonnull
+  ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);
 
-  boolean canCreate(@Nullable Project project, @NotNull Change change);
+  boolean canCreate(@javax.annotation.Nullable Project project, @Nonnull Change change);
 
-  @NotNull
-  DiffViewerWrapper process(@NotNull ChangeDiffRequestProducer presentable,
-                            @NotNull UserDataHolder context,
-                            @NotNull ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException;
+  @Nonnull
+  DiffViewerWrapper process(@Nonnull ChangeDiffRequestProducer presentable,
+                            @Nonnull UserDataHolder context,
+                            @Nonnull ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException;
 }

@@ -17,13 +17,13 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.roots.libraries.Library;
 import consulo.roots.OrderEntryWithTracking;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  *  @author dsl
  */
 public interface LibraryOrderEntry extends ExportableOrderEntry, OrderEntryWithTracking {
-  @Nullable
+  @javax.annotation.Nullable
   Library getLibrary();
   
   boolean isModuleLevel();

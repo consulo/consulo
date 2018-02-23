@@ -28,7 +28,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -124,7 +123,7 @@ public class LocalHistoryActionsTest extends LocalHistoryUITestCase {
   private AnActionEvent createEventFor(AnAction a, final VirtualFile[] files, final Project p) {
     DataContext dc = new DataContext() {
       @Override
-      @Nullable
+      @javax.annotation.Nullable
       public Object getData(Key id) {
         if (PlatformDataKeys.VIRTUAL_FILE_ARRAY == id) return files;
         if (PlatformDataKeys.EDITOR == id) return editor;

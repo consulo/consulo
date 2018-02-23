@@ -21,8 +21,7 @@ import com.intellij.openapi.externalSystem.service.notification.ExternalSystemPr
 import com.intellij.openapi.externalSystem.service.remote.ExternalSystemProgressNotificationManagerImpl;
 import com.intellij.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -30,16 +29,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class InProcessExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
 
-  @NotNull private final ExternalSystemProgressNotificationManagerImpl myProgressManager;
+  @Nonnull
+  private final ExternalSystemProgressNotificationManagerImpl myProgressManager;
 
-  public InProcessExternalSystemCommunicationManager(@NotNull ExternalSystemProgressNotificationManager notificationManager) {
+  public InProcessExternalSystemCommunicationManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager) {
     myProgressManager = (ExternalSystemProgressNotificationManagerImpl)notificationManager;
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public RemoteExternalSystemFacade acquire(@NotNull String id, @NotNull ProjectSystemId externalSystemId) throws Exception {
+  public RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     InProcessExternalSystemFacadeImpl result = new InProcessExternalSystemFacadeImpl(manager.getProjectResolverClass(),
@@ -49,11 +49,11 @@ public class InProcessExternalSystemCommunicationManager implements ExternalSyst
   }
 
   @Override
-  public void release(@NotNull String id, @NotNull ProjectSystemId externalSystemId) throws Exception {
+  public void release(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
   }
 
   @Override
-  public boolean isAlive(@NotNull RemoteExternalSystemFacade facade) {
+  public boolean isAlive(@Nonnull RemoteExternalSystemFacade facade) {
     RemoteExternalSystemFacade toCheck = facade;
     if (facade instanceof ExternalSystemFacadeWrapper) {
       toCheck = ((ExternalSystemFacadeWrapper)facade).getDelegate();

@@ -32,8 +32,8 @@ import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.PersistentHashMap;
 import consulo.application.ApplicationProperties;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -60,8 +60,8 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   private final TIntObjectHashMap<Collection<Key>> myInMemoryKeys = new TIntObjectHashMap<Collection<Key>>();
   private final SnapshotInputMappings<Key, Value, Input> mySnapshotInputMappings;
 
-  public VfsAwareMapReduceIndex(@NotNull IndexExtension<Key, Value, Input> extension,
-                                @NotNull IndexStorage<Key, Value> storage) throws IOException {
+  public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
+                                @Nonnull IndexStorage<Key, Value> storage) throws IOException {
     super(extension, storage, getForwardIndex(extension));
     if (!(myIndexId instanceof ID<?, ?>)) {
       throw new IllegalArgumentException("myIndexId should be instance of com.intellij.util.indexing.ID");
@@ -74,9 +74,9 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @TestOnly
-  public VfsAwareMapReduceIndex(@NotNull IndexExtension<Key, Value, Input> extension,
-                                @NotNull IndexStorage<Key, Value> storage,
-                                @NotNull ForwardIndex<Key, Value> forwardIndex) throws IOException {
+  public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
+                                @Nonnull IndexStorage<Key, Value> storage,
+                                @Nonnull ForwardIndex<Key, Value> forwardIndex) throws IOException {
     super(extension, storage, forwardIndex);
     SharedIndicesData.registerIndex((ID<Key, Value>)myIndexId, extension);
     mySnapshotInputMappings = myForwardIndex == null ?
@@ -85,7 +85,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     installMemoryModeListener();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected UpdateData<Key, Value> calculateUpdateData(int inputId, @Nullable Input content) {
     Map<Key, Value> data;
@@ -135,7 +135,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public void setIndexedStateForFile(int fileId, @NotNull VirtualFile file) {
+  public void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
     IndexingStamp.setFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
   }
 
@@ -145,12 +145,12 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public boolean isIndexedStateForFile(int fileId, @NotNull VirtualFile file) {
+  public boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
     return IndexingStamp.isFileIndexedStateCurrent(fileId, (ID<?, ?>)myIndexId);
   }
 
   @Override
-  public boolean processAllKeys(@NotNull Processor<Key> processor, @NotNull GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Processor<Key> processor, @Nonnull GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
     final Lock lock = getReadLock();
     try {
       lock.lock();
@@ -167,7 +167,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  protected void requestRebuild(@NotNull Exception ex) {
+  protected void requestRebuild(@Nonnull Exception ex) {
     Runnable action = () -> FileBasedIndex.getInstance().requestRebuild((ID<?, ?>)myIndexId, ex);
     Application application = ApplicationManager.getApplication();
     if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
@@ -207,7 +207,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Nullable
-  private static <Key, Value> ForwardIndex<Key, Value> getForwardIndex(@NotNull IndexExtension<Key, Value, ?> indexExtension)
+  private static <Key, Value> ForwardIndex<Key, Value> getForwardIndex(@Nonnull IndexExtension<Key, Value, ?> indexExtension)
           throws IOException {
     final boolean hasSnapshotMapping = indexExtension instanceof FileBasedIndexExtension &&
                                        ((FileBasedIndexExtension<Key, Value>)indexExtension).hasSnapshotMapping() &&
@@ -224,14 +224,14 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
       super(indexExtension);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PersistentHashMap<Integer, Collection<Key>> createMap() throws IOException {
       return createIdToDataKeysIndex(myIndexExtension);
     }
 
-    @NotNull
-    private static <K> PersistentHashMap<Integer, Collection<K>> createIdToDataKeysIndex(@NotNull IndexExtension<K, ?, ?> extension) throws IOException {
+    @Nonnull
+    private static <K> PersistentHashMap<Integer, Collection<K>> createIdToDataKeysIndex(@Nonnull IndexExtension<K, ?, ?> extension) throws IOException {
       final File indexStorageFile = IndexInfrastructure.getInputIndexStorageFile((ID<?, ?>)extension.getName());
       return new PersistentHashMap<>(indexStorageFile, EnumeratorIntegerDescriptor.INSTANCE, createInputsIndexExternalizer(extension));
     }

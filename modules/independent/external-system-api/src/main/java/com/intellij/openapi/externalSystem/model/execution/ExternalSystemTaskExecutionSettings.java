@@ -20,8 +20,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,7 +35,8 @@ import java.util.List;
 @Tag("ExternalSystemSettings")
 public class ExternalSystemTaskExecutionSettings implements Cloneable {
 
-  @NotNull @NonNls public static final String TAG_NAME = "ExternalSystemSettings";
+  @Nonnull
+  @NonNls public static final String TAG_NAME = "ExternalSystemSettings";
 
   private List<String> myTaskNames = ContainerUtilRt.newArrayList();
   private List<String> myTaskDescriptions = ContainerUtilRt.newArrayList();

@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.runtime.deployment.debug;
 
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implement this class if a server supports deployment in debug mode. When an user starts a deployment run configuration using 'Debug' button
@@ -37,9 +37,9 @@ public abstract class DebugConnector<D extends DebugConnectionData, R extends De
   /**
    * @see com.intellij.remoteServer.runtime.deployment.debug.JavaDebuggerLauncher#getInstance()
    */
-  @NotNull
+  @Nonnull
   public abstract DebuggerLauncher<D> getLauncher();
 
-  @NotNull
-  public abstract D getConnectionData(@NotNull R runtime) throws DebugConnectionDataNotAvailableException;
+  @Nonnull
+  public abstract D getConnectionData(@Nonnull R runtime) throws DebugConnectionDataNotAvailableException;
 }

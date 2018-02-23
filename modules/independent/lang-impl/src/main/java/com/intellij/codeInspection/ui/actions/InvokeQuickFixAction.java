@@ -26,8 +26,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class InvokeQuickFixAction extends AnAction {
     }
 
     //noinspection ConstantConditions
-    @NotNull InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
+    @Nonnull InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
     final InspectionRVContentProvider provider = myView.getProvider();
     if (provider.isContentLoaded()) {
       final QuickFixAction[] quickFixes = provider.getQuickFixes(toolWrapper, myView.getTree());
@@ -70,7 +70,7 @@ public class InvokeQuickFixAction extends AnAction {
   private static ActionGroup getFixes(final QuickFixAction[] quickFixes) {
     return new ActionGroup() {
       @Override
-      @NotNull
+      @Nonnull
       public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<QuickFixAction> children = new ArrayList<QuickFixAction>();
         for (QuickFixAction fix : quickFixes) {

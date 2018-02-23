@@ -22,7 +22,7 @@ package com.intellij.testFramework;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class TeamCityLogger {
   public static void error(String message) {
     error(message, new Throwable());
   }
-  public static void error(String message, @Nullable Throwable throwable) {
+  public static void error(String message, @javax.annotation.Nullable Throwable throwable) {
     if (isUnderTC) {
       tcLog(message, "ERROR");
     } else {

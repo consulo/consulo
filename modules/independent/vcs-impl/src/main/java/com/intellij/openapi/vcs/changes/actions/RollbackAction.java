@@ -49,8 +49,7 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.RollbackUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -80,7 +79,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     }
   }
 
-  private static boolean hasReversibleFiles(@NotNull AnActionEvent e) {
+  private static boolean hasReversibleFiles(@Nonnull AnActionEvent e) {
     ChangeListManager manager = ChangeListManager.getInstance(e.getRequiredData(CommonDataKeys.PROJECT));
     Set<VirtualFile> modifiedWithoutEditing = ContainerUtil.newHashSet(manager.getModifiedWithoutEditing());
 
@@ -138,7 +137,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<Change> getChanges(final Project project, final AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     if (changes == null) {
@@ -160,7 +159,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     return Collections.emptyList();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static LinkedHashSet<VirtualFile> getModifiedWithoutEditing(final AnActionEvent e, Project project) {
     final List<VirtualFile> modifiedWithoutEditing = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
     if (modifiedWithoutEditing != null && modifiedWithoutEditing.size() > 0) {

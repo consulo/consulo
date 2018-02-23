@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
@@ -79,7 +79,7 @@ public class MarkRootAction extends DumbAwareAction {
   }
 
   @Nullable
-  public static ContentEntry findContentEntry(@NotNull ModuleRootModel model, @NotNull VirtualFile vFile) {
+  public static ContentEntry findContentEntry(@Nonnull ModuleRootModel model, @Nonnull VirtualFile vFile) {
     final ContentEntry[] contentEntries = model.getContentEntries();
     for (ContentEntry contentEntry : contentEntries) {
       final VirtualFile contentEntryFile = contentEntry.getFile();

@@ -15,11 +15,10 @@
  */
 package com.intellij.codeInsight.intention;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * An entity having an associated intention action
  */
 public interface IntentionActionProvider {
-  @Nullable IntentionActionWithOptions getIntentionAction();
+  @javax.annotation.Nullable
+  IntentionActionWithOptions getIntentionAction();
 }

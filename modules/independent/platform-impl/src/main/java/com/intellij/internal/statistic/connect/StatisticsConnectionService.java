@@ -16,7 +16,7 @@
 package com.intellij.internal.statistic.connect;
 
 import com.intellij.internal.statistic.SettingsConnectionService;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -27,7 +27,7 @@ public class StatisticsConnectionService extends SettingsConnectionService {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> getDisabledGroups() {
     return Collections.emptySet();
   }

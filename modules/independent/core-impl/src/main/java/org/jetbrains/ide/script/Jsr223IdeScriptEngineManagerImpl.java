@@ -25,8 +25,8 @@ import com.intellij.openapi.util.text.StringHash;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.script.ScriptEngine;
@@ -59,7 +59,7 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     }
   });
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getLanguages() {
     return ContainerUtil.map(getScriptEngineManager().getEngineFactories(), new Function<ScriptEngineFactory, String>() {
@@ -70,7 +70,7 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getFileExtensions(@Nullable String language) {
     List<String> extensions = ContainerUtil.newArrayList();
@@ -85,7 +85,7 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
   @Nullable
   @Override
-  public IdeScriptEngine getEngineForLanguage(@NotNull final String language, @Nullable ClassLoader loader) {
+  public IdeScriptEngine getEngineForLanguage(@Nonnull final String language, @Nullable ClassLoader loader) {
     ClassLoader l = ObjectUtils.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(l, new Computable<IdeScriptEngine>() {
       @Override
@@ -97,7 +97,7 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
   @Nullable
   @Override
-  public IdeScriptEngine getEngineForFileExtension(@NotNull final String extension, @Nullable ClassLoader loader) {
+  public IdeScriptEngine getEngineForFileExtension(@Nonnull final String extension, @Nullable ClassLoader loader) {
     ClassLoader l = ObjectUtils.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(l, new Computable<IdeScriptEngine>() {
       @Override
@@ -112,7 +112,7 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     return myManagerFuture.isDone();
   }
 
-  @NotNull
+  @Nonnull
   private ScriptEngineManager getScriptEngineManager() {
     ScriptEngineManager manager = null;
     try {
@@ -155,62 +155,62 @@ class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     }
 
     @Override
-    public Object getBinding(@NotNull String name) {
+    public Object getBinding(@Nonnull String name) {
       return myEngine.get(name);
     }
 
     @Override
-    public void setBinding(@NotNull String name, Object value) {
+    public void setBinding(@Nonnull String name, Object value) {
       myEngine.put(name, value);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Writer getStdOut() {
       return myEngine.getContext().getWriter();
     }
 
     @Override
-    public void setStdOut(@NotNull Writer writer) {
+    public void setStdOut(@Nonnull Writer writer) {
       myEngine.getContext().setWriter(writer);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Writer getStdErr() {
       return myEngine.getContext().getErrorWriter();
     }
 
     @Override
-    public void setStdErr(@NotNull Writer writer) {
+    public void setStdErr(@Nonnull Writer writer) {
       myEngine.getContext().setErrorWriter(writer);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Reader getStdIn() {
       return myEngine.getContext().getReader();
     }
 
     @Override
-    public void setStdIn(@NotNull Reader reader) {
+    public void setStdIn(@Nonnull Reader reader) {
       myEngine.getContext().setReader(reader);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getLanguage() {
       return myEngine.getFactory().getLanguageName();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<String> getFileExtensions() {
       return myEngine.getFactory().getExtensions();
     }
 
     @Override
-    public Object eval(@NotNull final String script) throws IdeScriptException {
+    public Object eval(@Nonnull final String script) throws IdeScriptException {
       return ClassLoaderUtil.runWithClassLoader(myLoader, new ThrowableComputable<Object, IdeScriptException>() {
         @Override
         public Object compute() throws IdeScriptException {

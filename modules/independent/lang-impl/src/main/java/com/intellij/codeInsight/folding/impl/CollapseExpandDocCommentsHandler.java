@@ -24,7 +24,7 @@ import com.intellij.psi.PsiDocCommentBase;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 public class CollapseExpandDocCommentsHandler extends CodeInsightActionHandler.WriteActionAdapter {
@@ -36,7 +36,7 @@ public class CollapseExpandDocCommentsHandler extends CodeInsightActionHandler.W
 
   @RequiredWriteAction
   @Override
-  public void invokeInWriteAction(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file){
+  public void invokeInWriteAction(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file){
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);

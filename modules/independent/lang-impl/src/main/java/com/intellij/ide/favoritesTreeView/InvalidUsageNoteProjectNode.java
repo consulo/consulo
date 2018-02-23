@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.usages.TextChunk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class InvalidUsageNoteProjectNode extends ProjectViewNodeWithChildrenList
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return false;
   }
 

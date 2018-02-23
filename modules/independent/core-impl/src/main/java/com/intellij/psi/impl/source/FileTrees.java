@@ -20,8 +20,8 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.stubs.StubTree;
 import com.intellij.reference.SoftReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.util.Set;
@@ -56,7 +56,7 @@ final class FileTrees {
     return new FileTrees(myStub, myTreeElementPointer, astLoaded, true);
   }
 
-  FileTrees clearStub(@NotNull String reason) {
+  FileTrees clearStub(@Nonnull String reason) {
     StubTree stubHolder = derefStub();
     if (stubHolder != null) {
       ((PsiFileStubImpl<?>)stubHolder.getRoot()).clearPsi(reason);
@@ -64,25 +64,25 @@ final class FileTrees {
     return new FileTrees(null, myTreeElementPointer, astLoaded, useStrongRefs);
   }
 
-  FileTrees withAst(@NotNull Getter<FileElement> ast) {
+  FileTrees withAst(@Nonnull Getter<FileElement> ast) {
     return new FileTrees(myStub, ast, true, useStrongRefs);
   }
 
-  FileTrees withExclusiveStub(@NotNull StubTree stub, Set<PsiFileImpl> allRoots) {
+  FileTrees withExclusiveStub(@Nonnull StubTree stub, Set<PsiFileImpl> allRoots) {
     if (derefTreeElement() != null || useStrongRefs) {
       throw new RuntimeException(toString() + "; roots=" + allRoots);
     }
     return new FileTrees(new SoftReference<>(stub), null, false, false);
   }
 
-  FileTrees withGreenStub(@NotNull StubTree stub, @NotNull PsiFileImpl file) {
+  FileTrees withGreenStub(@Nonnull StubTree stub, @Nonnull PsiFileImpl file) {
     if (derefTreeElement() == null || !astLoaded) {
       throw new RuntimeException("No AST in file " + file + " of " + file.getClass() + "; " + this);
     }
     return new FileTrees(new SoftReference<>(stub), myTreeElementPointer, true, useStrongRefs);
   }
 
-  static FileTrees noStub(@Nullable FileElement ast, @NotNull PsiFileImpl file) {
+  static FileTrees noStub(@Nullable FileElement ast, @Nonnull PsiFileImpl file) {
     return new FileTrees(null, ast, ast != null, file instanceof DummyHolder);
   }
 

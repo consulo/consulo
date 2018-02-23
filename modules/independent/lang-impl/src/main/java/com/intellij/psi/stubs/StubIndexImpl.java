@@ -57,8 +57,8 @@ import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashMap;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -115,7 +115,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return state;
   }
 
-  private static <K> boolean registerIndexer(@NotNull final StubIndexExtension<K, ?> extension, final boolean forceClean, AsyncState state) throws IOException {
+  private static <K> boolean registerIndexer(@Nonnull final StubIndexExtension<K, ?> extension, final boolean forceClean, AsyncState state) throws IOException {
     final StubIndexKey<K, ?> indexKey = extension.getKey();
     final int version = extension.getVersion();
     synchronized (state) {
@@ -150,25 +150,25 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
 
         final MemoryIndexStorage<K, StubIdList> memStorage = new MemoryIndexStorage<>(storage, indexKey);
         MyIndex<K> index = new MyIndex<>(new IndexExtension<K, StubIdList, Void>() {
-          @NotNull
+          @Nonnull
           @Override
           public ID<K, StubIdList> getName() {
             return (ID<K, StubIdList>)indexKey;
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public DataIndexer<K, StubIdList, Void> getIndexer() {
             return inputData -> Collections.emptyMap();
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public KeyDescriptor<K> getKeyDescriptor() {
             return extension.getKeyDescriptor();
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public DataExternalizer<StubIdList> getValueExternalizer() {
             return StubIdExternalizer.INSTANCE;
@@ -203,7 +203,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     IndexingStamp.rewriteVersion(versionFile, version); // todo snapshots indices
   }
 
-  public long getIndexModificationStamp(StubIndexKey<?, ?> indexId, @NotNull Project project) {
+  public long getIndexModificationStamp(StubIndexKey<?, ?> indexId, @Nonnull Project project) {
     MyIndex<?> index = getAsyncState().myIndices.get(indexId);
     if (index != null) {
       FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, GlobalSearchScope.allScope(project));
@@ -227,7 +227,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     private static final StubIdExternalizer INSTANCE = new StubIdExternalizer();
 
     @Override
-    public void save(@NotNull final DataOutput out, @NotNull final StubIdList value) throws IOException {
+    public void save(@Nonnull final DataOutput out, @Nonnull final StubIdList value) throws IOException {
       int size = value.size();
       if (size == 0) {
         DataInputOutputUtil.writeINT(out, Integer.MAX_VALUE);
@@ -243,9 +243,9 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public StubIdList read(@NotNull final DataInput in) throws IOException {
+    public StubIdList read(@Nonnull final DataInput in) throws IOException {
       int size = DataInputOutputUtil.readINT(in);
       if (size == Integer.MAX_VALUE) {
         return new StubIdList();
@@ -289,19 +289,19 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull final StubIndexKey<Key, Psi> indexKey,
-                                                           @NotNull final Key key,
-                                                           @NotNull final Project project,
+  public <Key, Psi extends PsiElement> Collection<Psi> get(@Nonnull final StubIndexKey<Key, Psi> indexKey,
+                                                           @Nonnull final Key key,
+                                                           @Nonnull final Project project,
                                                            @Nullable final GlobalSearchScope scope) {
     return get(indexKey, key, project, scope, null);
   }
 
   @Override
-  public <Key, Psi extends PsiElement> Collection<Psi> get(@NotNull StubIndexKey<Key, Psi> indexKey,
-                                                           @NotNull Key key,
-                                                           @NotNull Project project,
+  public <Key, Psi extends PsiElement> Collection<Psi> get(@Nonnull StubIndexKey<Key, Psi> indexKey,
+                                                           @Nonnull Key key,
+                                                           @Nonnull Project project,
                                                            @Nullable GlobalSearchScope scope,
                                                            IdFilter filter) {
     final List<Psi> result = new SmartList<>();
@@ -310,23 +310,23 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   }
 
   @Override
-  public <Key, Psi extends PsiElement> boolean processElements(@NotNull StubIndexKey<Key, Psi> indexKey,
-                                                               @NotNull Key key,
-                                                               @NotNull Project project,
+  public <Key, Psi extends PsiElement> boolean processElements(@Nonnull StubIndexKey<Key, Psi> indexKey,
+                                                               @Nonnull Key key,
+                                                               @Nonnull Project project,
                                                                @Nullable GlobalSearchScope scope,
                                                                Class<Psi> requiredClass,
-                                                               @NotNull Processor<? super Psi> processor) {
+                                                               @Nonnull Processor<? super Psi> processor) {
     return processElements(indexKey, key, project, scope, null, requiredClass, processor);
   }
 
   @Override
-  public <Key, Psi extends PsiElement> boolean processElements(@NotNull final StubIndexKey<Key, Psi> indexKey,
-                                                               @NotNull final Key key,
-                                                               @NotNull final Project project,
+  public <Key, Psi extends PsiElement> boolean processElements(@Nonnull final StubIndexKey<Key, Psi> indexKey,
+                                                               @Nonnull final Key key,
+                                                               @Nonnull final Project project,
                                                                @Nullable final GlobalSearchScope scope,
                                                                @Nullable IdFilter idFilter,
-                                                               @NotNull final Class<Psi> requiredClass,
-                                                               @NotNull final Processor<? super Psi> processor) {
+                                                               @Nonnull final Class<Psi> requiredClass,
+                                                               @Nonnull final Processor<? super Psi> processor) {
     return doProcessStubs(indexKey, key, project, scope, new StubIdListContainerAction(idFilter, project) {
       final PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
       @Override
@@ -340,11 +340,11 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     });
   }
 
-  private <Key> boolean doProcessStubs(@NotNull final StubIndexKey<Key, ?> indexKey,
-                                       @NotNull final Key key,
-                                       @NotNull final Project project,
+  private <Key> boolean doProcessStubs(@Nonnull final StubIndexKey<Key, ?> indexKey,
+                                       @Nonnull final Key key,
+                                       @Nonnull final Project project,
                                        @Nullable final GlobalSearchScope scope,
-                                       @NotNull StubIdListContainerAction action) {
+                                       @Nonnull StubIdListContainerAction action) {
     final FileBasedIndexImpl fileBasedIndex = (FileBasedIndexImpl)FileBasedIndex.getInstance();
     fileBasedIndex.ensureUpToDate(StubUpdatingIndex.INDEX_ID, project, scope);
 
@@ -386,7 +386,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   }
 
   @Override
-  public void forceRebuild(@NotNull Throwable e) {
+  public void forceRebuild(@Nonnull Throwable e) {
     LOG.info(e);
     FileBasedIndex.getInstance().scheduleRebuild(StubUpdatingIndex.INDEX_ID, e);
   }
@@ -396,20 +396,20 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   }
 
   @Override
-  @NotNull
-  public <K> Collection<K> getAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project) {
+  @Nonnull
+  public <K> Collection<K> getAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Project project) {
     Set<K> allKeys = ContainerUtil.newTroveSet();
     processAllKeys(indexKey, project, Processors.cancelableCollectProcessor(allKeys));
     return allKeys;
   }
 
   @Override
-  public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Project project, Processor<K> processor) {
+  public <K> boolean processAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Project project, Processor<K> processor) {
     return processAllKeys(indexKey, processor, GlobalSearchScope.allScope(project), null);
   }
 
   @Override
-  public <K> boolean processAllKeys(@NotNull StubIndexKey<K, ?> indexKey, @NotNull Processor<K> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
+  public <K> boolean processAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Processor<K> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
     FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, scope.getProject(), scope);
 
     final MyIndex<K> index = (MyIndex<K>)getAsyncState().myIndices.get(indexKey);
@@ -433,12 +433,12 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Key> IdIterator getContainingIds(@NotNull StubIndexKey<Key, ?> indexKey,
-                                           @NotNull Key dataKey,
-                                           @NotNull final Project project,
-                                           @NotNull final GlobalSearchScope scope) {
+  public <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey,
+                                           @Nonnull Key dataKey,
+                                           @Nonnull final Project project,
+                                           @Nonnull final GlobalSearchScope scope) {
     final TIntArrayList result = new TIntArrayList();
     doProcessStubs(indexKey, dataKey, project, scope, new StubIdListContainerAction(null, project) {
       @Override
@@ -467,7 +467,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "Stub.IndexManager";
   }
@@ -576,10 +576,10 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
     return Collections.unmodifiableCollection(getAsyncState().myIndices.keySet());
   }
 
-  public <K> void updateIndex(@NotNull StubIndexKey key,
+  public <K> void updateIndex(@Nonnull StubIndexKey key,
                               int fileId,
-                              @NotNull final Map<K, StubIdList> oldValues,
-                              @NotNull final Map<K, StubIdList> newValues) {
+                              @Nonnull final Map<K, StubIdList> oldValues,
+                              @Nonnull final Map<K, StubIdList> newValues) {
     try {
       final MyIndex<K> index = (MyIndex<K>)getAsyncState().myIndices.get(key);
       final ThrowableComputable<InputDataDiffBuilder<K, StubIdList>, IOException>
@@ -600,7 +600,7 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
 
     @Override
     public void updateWithMap(final int inputId,
-                              @NotNull UpdateData<K, StubIdList> updateData) throws StorageException {
+                              @Nonnull UpdateData<K, StubIdList> updateData) throws StorageException {
       super.updateWithMap(inputId, updateData);
     }
 
@@ -663,12 +663,12 @@ public class StubIndexImpl extends StubIndex implements ApplicationComponent, Pe
   private abstract static class StubIdListContainerAction implements ValueContainer.ContainerAction<StubIdList> {
     private final IdFilter myIdFilter;
 
-    StubIdListContainerAction(@Nullable IdFilter idFilter, @NotNull Project project) {
+    StubIdListContainerAction(@Nullable IdFilter idFilter, @Nonnull Project project) {
       myIdFilter = idFilter != null ? idFilter : ((FileBasedIndexImpl)FileBasedIndex.getInstance()).projectIndexableFiles(project);
     }
 
     @Override
-    public boolean perform(final int id, @NotNull final StubIdList value) {
+    public boolean perform(final int id, @Nonnull final StubIdList value) {
       ProgressManager.checkCanceled();
       if (myIdFilter != null && !myIdFilter.containsFileId(id)) return true;
 

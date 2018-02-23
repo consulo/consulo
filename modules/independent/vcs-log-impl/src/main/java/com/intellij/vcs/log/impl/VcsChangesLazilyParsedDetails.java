@@ -25,7 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsUser;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,17 +40,18 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
 
   private static final Logger LOG = Logger.getInstance(VcsChangesLazilyParsedDetails.class);
 
-  @NotNull protected final ThrowableComputable<Collection<Change>, ? extends Exception> myChangesGetter;
+  @Nonnull
+  protected final ThrowableComputable<Collection<Change>, ? extends Exception> myChangesGetter;
 
-  public VcsChangesLazilyParsedDetails(@NotNull Hash hash, @NotNull List<Hash> parents, long commitTime, @NotNull VirtualFile root,
-                                       @NotNull String subject, @NotNull VcsUser author, @NotNull String message,
-                                       @NotNull VcsUser committer, long authorTime,
-                                       @NotNull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
+  public VcsChangesLazilyParsedDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
+                                       @Nonnull String subject, @Nonnull VcsUser author, @Nonnull String message,
+                                       @Nonnull VcsUser committer, long authorTime,
+                                       @Nonnull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
     super(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
     myChangesGetter = changesGetter;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Change> getChanges() {
     try {
@@ -62,7 +63,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
     }
   }
 
-  @NotNull
+  @Nonnull
   public Collection<String> getModifiedPaths() {
     Set<String> changedPaths = ContainerUtil.newHashSet();
     for (Change change : getChanges()) {
@@ -72,7 +73,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
     return changedPaths;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Couple<String>> getRenamedPaths() {
     Set<Couple<String>> renames = ContainerUtil.newHashSet();
     for (Change change : getChanges()) {

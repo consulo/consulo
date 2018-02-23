@@ -22,7 +22,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class FormatterTagHandler {
     return FormatterTag.NONE;
   }
 
-  private FormatterTag getFormatterTag(@NotNull PsiComment comment) {
+  private FormatterTag getFormatterTag(@Nonnull PsiComment comment) {
     CharSequence nodeChars = comment.getNode().getChars();
     if (mySettings.FORMATTER_TAGS_ACCEPT_REGEXP) {
       Pattern onPattern = mySettings.getFormatterOnPattern();
@@ -76,7 +76,7 @@ public class FormatterTagHandler {
     return FormatterTag.NONE;
   }
 
-  private static boolean isFormatterTagAt(@NotNull CharSequence s, int pos, @NotNull String tagName) {
+  private static boolean isFormatterTagAt(@Nonnull CharSequence s, int pos, @Nonnull String tagName) {
     if (!tagName.isEmpty() && tagName.charAt(0) == s.charAt(pos)) {
       int end = pos + tagName.length();
       if (end <= s.length()) {

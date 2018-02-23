@@ -33,8 +33,8 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     // support external changes to sdk libraries (Endorsed Standards Override)
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         updateSdks(event.getFile());
       }
 
@@ -93,7 +93,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Sdk[] getAllSdks() {
     return mySdks.toArray(new Sdk[mySdks.size()]);
@@ -113,7 +113,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   @Nullable
-  public Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType) {
+  public Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType) {
     for (Sdk sdk : mySdks) {
       if (sdk.isPredefined() && sdk.getSdkType() == sdkType) {
         return sdk;
@@ -124,7 +124,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   @RequiredWriteAction
-  public void addSdk(@NotNull Sdk sdk) {
+  public void addSdk(@Nonnull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
     mySdks.add(sdk);
@@ -133,7 +133,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   @RequiredWriteAction
-  public void removeSdk(@NotNull Sdk sdk) {
+  public void removeSdk(@Nonnull Sdk sdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     myMessageBus.syncPublisher(SDK_TABLE_TOPIC).beforeSdkRemoved(sdk);
     mySdks.remove(sdk);
@@ -142,7 +142,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Override
   @RequiredWriteAction
-  public void updateSdk(@NotNull Sdk originalSdk, @NotNull Sdk modifiedSdk) {
+  public void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     final String previousName = originalSdk.getName();
     final String newName = modifiedSdk.getName();
@@ -179,7 +179,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     return UnknownSdkType.getInstance(sdkTypeName);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Sdk createSdk(final String name, final SdkTypeId sdkType) {
     return new SdkImpl(name, sdkType);

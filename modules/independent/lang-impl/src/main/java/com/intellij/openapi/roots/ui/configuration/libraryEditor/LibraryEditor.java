@@ -20,8 +20,8 @@ import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -47,11 +47,11 @@ public interface LibraryEditor {
 
   void addJarDirectory(String url, boolean recursive, OrderRootType rootType);
 
-  void addExcludedRoot(@NotNull String url);
+  void addExcludedRoot(@Nonnull String url);
 
   void removeRoot(String url, OrderRootType rootType);
 
-  void removeExcludedRoot(@NotNull String url);
+  void removeExcludedRoot(@Nonnull String url);
 
   void removeAllRoots();
 

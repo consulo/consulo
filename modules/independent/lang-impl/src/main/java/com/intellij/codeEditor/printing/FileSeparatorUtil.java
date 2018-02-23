@@ -25,7 +25,7 @@ import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class FileSeparatorUtil {
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document) {
     final List<LineMarkerInfo> result = new ArrayList<LineMarkerInfo>();
@@ -53,7 +53,7 @@ public class FileSeparatorUtil {
     return result;
   }
 
-  public static int getDisplayLine(@NotNull LineMarkerInfo lineMarkerInfo, @NotNull Document document) {
+  public static int getDisplayLine(@Nonnull LineMarkerInfo lineMarkerInfo, @Nonnull Document document) {
     int offset = lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? lineMarkerInfo.startOffset : lineMarkerInfo.endOffset;
     return document.getLineNumber(Math.min(document.getTextLength(), Math.max(0, offset))) +
            (lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? 0 : 1);

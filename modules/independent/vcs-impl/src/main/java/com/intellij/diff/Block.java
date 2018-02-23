@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.DumbProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,32 +37,33 @@ import java.util.List;
 public class Block {
   private static final Logger LOG = Logger.getInstance(Block.class);
 
-  @NotNull private final String[] mySource;
+  @Nonnull
+  private final String[] mySource;
   private final int myStart;
   private final int myEnd;
 
-  public Block(@NotNull String source, int start, int end) {
+  public Block(@Nonnull String source, int start, int end) {
     this(tokenize(source), start, end);
   }
 
-  public Block(@NotNull String[] source, int start, int end) {
+  public Block(@Nonnull String[] source, int start, int end) {
     mySource = source;
     myStart = Math.min(Math.max(0, start), source.length);
     myEnd = Math.min(Math.max(myStart, end), source.length);
   }
 
-  @NotNull
-  public static String[] tokenize(@NotNull String text) {
+  @Nonnull
+  public static String[] tokenize(@Nonnull String text) {
     return LineTokenizer.tokenize(text, false, false);
   }
 
-  @NotNull
-  public Block createPreviousBlock(@NotNull String prevContent) {
+  @Nonnull
+  public Block createPreviousBlock(@Nonnull String prevContent) {
     return createPreviousBlock(tokenize(prevContent));
   }
 
-  @NotNull
-  public Block createPreviousBlock(@NotNull String[] prevContent) {
+  @Nonnull
+  public Block createPreviousBlock(@Nonnull String[] prevContent) {
     int start = -1;
     int end = -1;
     int shift = 0;
@@ -113,12 +114,12 @@ public class Block {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getBlockContent() {
     return StringUtil.join(getLines(), "\n");
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getLines() {
     return Arrays.asList(mySource).subList(myStart, myEnd);
   }
@@ -159,7 +160,7 @@ public class Block {
     return result.toString();
   }
 
-  private void appendLines(@NotNull StringBuilder result, int from, int to) {
+  private void appendLines(@Nonnull StringBuilder result, int from, int to) {
     for (int i = from; i < to; i++) {
       result.append(mySource[i]);
       result.append("\n");

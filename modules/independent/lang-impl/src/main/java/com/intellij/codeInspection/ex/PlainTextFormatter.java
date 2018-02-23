@@ -9,8 +9,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -44,10 +44,10 @@ public class PlainTextFormatter implements InspectionsReportConverter {
   }
 
   @Override
-  public void convert(@NotNull final String rawDataDirectoryPath,
+  public void convert(@Nonnull final String rawDataDirectoryPath,
                       @Nullable final String outputPath,
-                      @NotNull final Map<String, Tools> tools,
-                      @NotNull final List<File> inspectionsResults) throws ConversionException {
+                      @Nonnull final Map<String, Tools> tools,
+                      @Nonnull final List<File> inspectionsResults) throws ConversionException {
 
     final SAXTransformerFactory transformerFactory = (SAXTransformerFactory)TransformerFactory.newInstance();
 
@@ -163,9 +163,9 @@ public class PlainTextFormatter implements InspectionsReportConverter {
     }
   }
 
-  private int getMaxFileColonLineNumLength(@NotNull final File inspectionResultData,
-                                           @NotNull final InspectionToolWrapper toolWrapper,
-                                           @NotNull final List problems) {
+  private int getMaxFileColonLineNumLength(@Nonnull final File inspectionResultData,
+                                           @Nonnull final InspectionToolWrapper toolWrapper,
+                                           @Nonnull final List problems) {
     int maxFileColonLineLength = 0;
     for (Object problem : problems) {
       final Element fileElement = ((Element)problem).getChild(FILE_ELEMENT);
@@ -186,20 +186,20 @@ public class PlainTextFormatter implements InspectionsReportConverter {
     System.err.println(msg);
   }
 
-  private boolean resultsIgnored(@NotNull final File file,
-                                 @NotNull final InspectionToolWrapper toolWrapper) {
+  private boolean resultsIgnored(@Nonnull final File file,
+                                 @Nonnull final InspectionToolWrapper toolWrapper) {
     // TODO: check according to config
     return false;
   }
 
-  @NotNull
-  protected String getPath(@NotNull final Element fileElement) {
+  @Nonnull
+  protected String getPath(@Nonnull final Element fileElement) {
     return fileElement.getText().replace("file://$PROJECT_DIR$", ".");
   }
 
-  protected void writeInspectionDescription(@NotNull final Writer w,
-                                            @NotNull final InspectionToolWrapper toolWrapper,
-                                            @NotNull final Transformer transformer)
+  protected void writeInspectionDescription(@Nonnull final Writer w,
+                                            @Nonnull final InspectionToolWrapper toolWrapper,
+                                            @Nonnull final Transformer transformer)
     throws IOException, ConversionException {
 
     final StringWriter descrWriter = new StringWriter();
@@ -229,8 +229,8 @@ public class PlainTextFormatter implements InspectionsReportConverter {
     }
   }
 
-  @NotNull
-  protected String getToolPresentableName(@NotNull final InspectionToolWrapper toolWrapper) throws IOException {
+  @Nonnull
+  protected String getToolPresentableName(@Nonnull final InspectionToolWrapper toolWrapper) throws IOException {
     final StringBuilder buff = new StringBuilder();
 
     // inspection name

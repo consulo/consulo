@@ -22,20 +22,23 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ChangesBrowserNodeRenderer extends ColoredTreeCellRenderer {
 
-  @NotNull private final BooleanGetter myShowFlatten;
-  @NotNull private final Project myProject;
-  @NotNull private final IssueLinkRenderer myIssueLinkRenderer;
+  @Nonnull
+  private final BooleanGetter myShowFlatten;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final IssueLinkRenderer myIssueLinkRenderer;
   private final boolean myHighlightProblems;
 
-  public ChangesBrowserNodeRenderer(@NotNull Project project, @NotNull BooleanGetter showFlattenGetter, boolean highlightProblems) {
+  public ChangesBrowserNodeRenderer(@Nonnull Project project, @Nonnull BooleanGetter showFlattenGetter, boolean highlightProblems) {
     myShowFlatten = showFlattenGetter;
     myProject = project;
     myHighlightProblems = highlightProblems;
@@ -46,7 +49,7 @@ public class ChangesBrowserNodeRenderer extends ColoredTreeCellRenderer {
     return myShowFlatten.get();
   }
 
-  public void customizeCellRenderer(@NotNull JTree tree,
+  public void customizeCellRenderer(@Nonnull JTree tree,
                                     Object value,
                                     boolean selected,
                                     boolean expanded,
@@ -58,7 +61,7 @@ public class ChangesBrowserNodeRenderer extends ColoredTreeCellRenderer {
     SpeedSearchUtil.applySpeedSearchHighlighting(tree, this, true, selected);
   }
 
-  protected void appendFileName(@Nullable VirtualFile vFile, @NotNull String fileName, Color color) {
+  protected void appendFileName(@Nullable VirtualFile vFile, @Nonnull String fileName, Color color) {
     ChangesFileNameDecorator decorator = !myProject.isDefault() ? ChangesFileNameDecorator.getInstance(myProject) : null;
 
     if (decorator != null) {
@@ -69,7 +72,7 @@ public class ChangesBrowserNodeRenderer extends ColoredTreeCellRenderer {
     }
   }
 
-  public void appendTextWithIssueLinks(@NotNull String text, @NotNull SimpleTextAttributes baseStyle) {
+  public void appendTextWithIssueLinks(@Nonnull String text, @Nonnull SimpleTextAttributes baseStyle) {
     myIssueLinkRenderer.appendTextWithLinks(text, baseStyle);
   }
 }

@@ -27,8 +27,8 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -211,7 +211,7 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
   }
 
   private class MyTableModel extends ListTableModel<AbstractVariableData> implements EditableModel {
-    public MyTableModel(@NotNull ColumnInfo... columnInfos) {
+    public MyTableModel(@Nonnull ColumnInfo... columnInfos) {
       super(columnInfos);
     }
 

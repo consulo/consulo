@@ -22,8 +22,8 @@ import com.intellij.openapi.components.impl.stores.DefaultStateSerializer;
 import com.intellij.openapi.components.impl.stores.StorageDataBase;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class StateStorageBase<T extends StorageDataBase> implements StateStorage {
   protected static final Logger LOG = Logger.getInstance(StateStorageBase.class);
@@ -37,19 +37,19 @@ public abstract class StateStorageBase<T extends StorageDataBase> implements Sta
 
   @Override
   @Nullable
-  public final <S> S getState(Object component, @NotNull String componentName, @NotNull Class<S> stateClass, @Nullable S mergeInto) throws StateStorageException {
+  public final <S> S getState(Object component, @Nonnull String componentName, @Nonnull Class<S> stateClass, @Nullable S mergeInto) throws StateStorageException {
     return DefaultStateSerializer.deserializeState(getStateAndArchive(getStorageData(), componentName), stateClass, mergeInto);
   }
 
   @Nullable
-  protected abstract Element getStateAndArchive(@NotNull T storageData, @NotNull String componentName);
+  protected abstract Element getStateAndArchive(@Nonnull T storageData, @Nonnull String componentName);
 
   @Override
-  public final boolean hasState(@Nullable Object component, @NotNull String componentName, Class<?> aClass, boolean reloadData) {
+  public final boolean hasState(@Nullable Object component, @Nonnull String componentName, Class<?> aClass, boolean reloadData) {
     return getStorageData(reloadData).hasState(componentName);
   }
 
-  @NotNull
+  @Nonnull
   public final T getStorageData() {
     return getStorageData(false);
   }

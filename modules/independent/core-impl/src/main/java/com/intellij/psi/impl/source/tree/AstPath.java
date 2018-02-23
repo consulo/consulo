@@ -27,8 +27,8 @@ import com.intellij.psi.stubs.Stub;
 import com.intellij.psi.stubs.StubTree;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -45,10 +45,10 @@ public abstract class AstPath extends SubstrateRef {
   private static final Key<CompositeElement[]> PATH_CHILDREN = Key.create("PATH_CHILDREN");
   private static final Key<AstPath> NODE_PATH = Key.create("NODE_PATH");
 
-  @NotNull
+  @Nonnull
   public abstract PsiFileImpl getContainingFile();
 
-  @NotNull
+  @Nonnull
   public abstract CompositeElement getNode();
 
   @Override
@@ -80,7 +80,7 @@ public abstract class AstPath extends SubstrateRef {
   }
 
   @Nullable
-  public static AstPath getNodePath(@NotNull CompositeElement node) {
+  public static AstPath getNodePath(@Nonnull CompositeElement node) {
     if (node instanceof FileElement) {
       PsiElement psi = node.getCachedPsi();
       if (!(psi instanceof PsiFileImpl)) return null;
@@ -95,7 +95,7 @@ public abstract class AstPath extends SubstrateRef {
     return node.getUserData(NODE_PATH);
   }
 
-  static void cacheNodePaths(@NotNull final LazyParseableElement parent) {
+  static void cacheNodePaths(@Nonnull final LazyParseableElement parent) {
     final AstPath parentPath = getNodePath(parent);
     if (parentPath == null) {
       return;
@@ -119,7 +119,7 @@ public abstract class AstPath extends SubstrateRef {
     parent.putUserData(PATH_CHILDREN, children.toArray(new CompositeElement[0]));
   }
 
-  public static void invalidatePaths(@NotNull LazyParseableElement scope) {
+  public static void invalidatePaths(@Nonnull LazyParseableElement scope) {
     CompositeElement[] children = scope.getUserData(PATH_CHILDREN);
     if (children == null) return;
 
@@ -146,18 +146,18 @@ public abstract class AstPath extends SubstrateRef {
     private final AstPath myParent;
     private final int myIndex;
 
-    ChildPath(@NotNull AstPath parent, int index) {
+    ChildPath(@Nonnull AstPath parent, int index) {
       myParent = parent;
       myIndex = index;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiFileImpl getContainingFile() {
       return myParent.getContainingFile();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CompositeElement getNode() {
       CompositeElement parentNode = myParent.getNode();
@@ -219,13 +219,13 @@ public abstract class AstPath extends SubstrateRef {
     private final PsiFileImpl myFile;
     private volatile WeakReference<CompositeElement> myNode;
 
-    MilestoneChildPath(@NotNull AstPath parent, int index, int depth) {
+    MilestoneChildPath(@Nonnull AstPath parent, int index, int depth) {
       super(parent, index);
       myDepth = depth;
       myFile = parent.getContainingFile();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CompositeElement getNode() {
       CompositeElement node = SoftReference.dereference(myNode);
@@ -243,7 +243,7 @@ public abstract class AstPath extends SubstrateRef {
       return SoftReference.dereference(myNode) == null ? myFile.getStubTree() : null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiFileImpl getContainingFile() {
       return myFile;
@@ -258,7 +258,7 @@ public abstract class AstPath extends SubstrateRef {
   private static class RootPath extends AstPath {
     private final PsiFileImpl myFile;
 
-    RootPath(@NotNull PsiFileImpl file) {
+    RootPath(@Nonnull PsiFileImpl file) {
       myFile = file;
     }
 
@@ -272,13 +272,13 @@ public abstract class AstPath extends SubstrateRef {
       return myFile.hashCode();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiFileImpl getContainingFile() {
       return myFile;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CompositeElement getNode() {
       return myFile.calcTreeElement();

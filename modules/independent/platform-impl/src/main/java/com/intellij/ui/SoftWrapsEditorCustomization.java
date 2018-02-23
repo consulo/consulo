@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Editor customization that can make target editor soft wraps-aware.
@@ -36,7 +36,7 @@ public class SoftWrapsEditorCustomization extends SimpleEditorCustomization {
   }
 
   @Override
-  public void customize(@NotNull EditorEx editor) {
+  public void customize(@Nonnull EditorEx editor) {
     editor.getSettings().setUseSoftWraps(isEnabled());
   }
 }

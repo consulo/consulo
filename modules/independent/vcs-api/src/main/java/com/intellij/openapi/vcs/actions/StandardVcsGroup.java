@@ -21,7 +21,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
   public abstract AbstractVcs getVcs(Project project);
@@ -41,7 +40,7 @@ public abstract class StandardVcsGroup extends DefaultActionGroup implements Dum
     presentation.setEnabled(presentation.isVisible());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   public String getVcsName(Project project) {
     final AbstractVcs vcs = getVcs(project);

@@ -19,26 +19,25 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public interface DiffRequestPanel extends Disposable {
-  void setRequest(@Nullable DiffRequest request);
+  void setRequest(@javax.annotation.Nullable DiffRequest request);
 
   /*
    * Sets request to show.
    * Will not override current request, if their keys are not null and equal.
    */
-  void setRequest(@Nullable DiffRequest request, @Nullable Object identity);
+  void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity);
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
-  @Nullable
+  @javax.annotation.Nullable
   JComponent getPreferredFocusedComponent();
 
   @RequiredDispatchThread
-  <T> void putContextHints(@NotNull Key<T> key, @Nullable T value);
+  <T> void putContextHints(@Nonnull Key<T> key, @javax.annotation.Nullable T value);
 }

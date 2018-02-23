@@ -26,7 +26,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.CharArrayCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockEditorFactory extends EditorFactory {
   public Document createDocument(String text) {
@@ -34,84 +34,84 @@ public class MockEditorFactory extends EditorFactory {
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document) {
+  public Editor createEditor(@Nonnull Document document) {
     return null;
   }
 
   @Override
-  public Editor createViewer(@NotNull Document document) {
+  public Editor createViewer(@Nonnull Document document) {
     return null;
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document, Project project) {
+  public Editor createEditor(@Nonnull Document document, Project project) {
     return null;
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document, Project project, @NotNull VirtualFile file, boolean isViewer) {
+  public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer) {
     return null;
   }
 
   @Override
-  public Editor createEditor(@NotNull final Document document, final Project project, @NotNull final FileType fileType, final boolean isViewer) {
+  public Editor createEditor(@Nonnull final Document document, final Project project, @Nonnull final FileType fileType, final boolean isViewer) {
     return null;
   }
 
   @Override
-  public Editor createViewer(@NotNull Document document, Project project) {
+  public Editor createViewer(@Nonnull Document document, Project project) {
     return null;
   }
 
   @Override
-  public void releaseEditor(@NotNull Editor editor) {
+  public void releaseEditor(@Nonnull Editor editor) {
   }
 
   @Override
-  @NotNull
-  public Editor[] getEditors(@NotNull Document document, Project project) {
+  @Nonnull
+  public Editor[] getEditors(@Nonnull Document document, Project project) {
     return Editor.EMPTY_ARRAY;
   }
 
   @Override
-  @NotNull
-  public Editor[] getEditors(@NotNull Document document) {
+  @Nonnull
+  public Editor[] getEditors(@Nonnull Document document) {
     return getEditors(document, null);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor[] getAllEditors() {
     return Editor.EMPTY_ARRAY;
   }
 
   @Override
-  public void addEditorFactoryListener(@NotNull EditorFactoryListener listener) {
+  public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
   }
 
   @Override
-  public void addEditorFactoryListener(@NotNull EditorFactoryListener listener, @NotNull Disposable parentDisposable) {
+  public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeEditorFactoryListener(@NotNull EditorFactoryListener listener) {
+  public void removeEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorEventMulticaster getEventMulticaster() {
     return new MockEditorEventMulticaster();
   }
 
   @Override
-  @NotNull
-  public Document createDocument(@NotNull CharSequence text) {
+  @Nonnull
+  public Document createDocument(@Nonnull CharSequence text) {
     return new DocumentImpl(text);
   }
 
   @Override
-  @NotNull
-  public Document createDocument(@NotNull char[] text) {
+  @Nonnull
+  public Document createDocument(@Nonnull char[] text) {
     return createDocument(new CharArrayCharSequence(text));
   }
 
@@ -120,7 +120,7 @@ public class MockEditorFactory extends EditorFactory {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "mockeditorfactory";
   }

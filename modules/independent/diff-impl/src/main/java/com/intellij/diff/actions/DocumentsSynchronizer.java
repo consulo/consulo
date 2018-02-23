@@ -21,17 +21,20 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 abstract class DocumentsSynchronizer {
-  @NotNull protected final Document myDocument1;
-  @NotNull protected final Document myDocument2;
-  @Nullable private final Project myProject;
+  @Nonnull
+  protected final Document myDocument1;
+  @Nonnull
+  protected final Document myDocument2;
+  @javax.annotation.Nullable
+  private final Project myProject;
 
   private volatile boolean myDuringModification = false;
 
@@ -58,31 +61,31 @@ abstract class DocumentsSynchronizer {
     }
   };
 
-  protected DocumentsSynchronizer(@Nullable Project project, @NotNull Document document1, @NotNull Document document2) {
+  protected DocumentsSynchronizer(@javax.annotation.Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
     myProject = project;
     myDocument1 = document1;
     myDocument2 = document2;
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument1() {
     return myDocument1;
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument2() {
     return myDocument2;
   }
 
-  protected abstract void onDocumentChanged1(@NotNull DocumentEvent event);
+  protected abstract void onDocumentChanged1(@Nonnull DocumentEvent event);
 
-  protected abstract void onDocumentChanged2(@NotNull DocumentEvent event);
+  protected abstract void onDocumentChanged2(@Nonnull DocumentEvent event);
 
   @RequiredDispatchThread
-  protected void replaceString(@NotNull final Document document,
+  protected void replaceString(@Nonnull final Document document,
                                final int startOffset,
                                final int endOffset,
-                               @NotNull final CharSequence newText) {
+                               @Nonnull final CharSequence newText) {
     try {
       myDuringModification = true;
       CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {

@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.reference.SoftReference;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 
@@ -25,7 +25,7 @@ public final class SoftValueHashMap<K,V> extends RefValueHashMap<K,V>{
   private static class MySoftReference<K, T> extends SoftReference<T> implements MyReference<K, T> {
     private final K key;
 
-    public MySoftReference(@NotNull K key, T referent, @NotNull ReferenceQueue<? super T> q) {
+    public MySoftReference(@Nonnull K key, T referent, @Nonnull ReferenceQueue<? super T> q) {
       super(referent, q);
       this.key = key;
     }
@@ -39,12 +39,12 @@ public final class SoftValueHashMap<K,V> extends RefValueHashMap<K,V>{
   public SoftValueHashMap() {
   }
 
-  public SoftValueHashMap(@NotNull TObjectHashingStrategy<K> strategy) {
+  public SoftValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
   @Override
-  protected MyReference<K, V> createReference(@NotNull K key, V value, @NotNull ReferenceQueue<V> queue) {
+  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<V> queue) {
     return new MySoftReference<K, V>(key, value, queue);
   }
 }

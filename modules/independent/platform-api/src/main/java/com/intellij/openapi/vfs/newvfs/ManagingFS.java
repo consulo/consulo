@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,12 +36,12 @@ public abstract class ManagingFS implements FileSystemInterface {
   }
 
   @Nullable
-  public abstract DataInputStream readAttribute(@NotNull VirtualFile file, @NotNull FileAttribute att);
+  public abstract DataInputStream readAttribute(@Nonnull VirtualFile file, @Nonnull FileAttribute att);
 
-  @NotNull
-  public abstract DataOutputStream writeAttribute(@NotNull VirtualFile file, @NotNull FileAttribute att);
+  @Nonnull
+  public abstract DataOutputStream writeAttribute(@Nonnull VirtualFile file, @Nonnull FileAttribute att);
 
-  public abstract int getModificationCount(@NotNull VirtualFile fileOrDirectory);
+  public abstract int getModificationCount(@Nonnull VirtualFile fileOrDirectory);
 
   /**
    * @deprecated to be removed in IDEA 16
@@ -75,20 +75,20 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   public abstract long getCreationTimestamp();
 
-  public abstract boolean areChildrenLoaded(@NotNull VirtualFile dir);
+  public abstract boolean areChildrenLoaded(@Nonnull VirtualFile dir);
 
-  public abstract boolean wereChildrenAccessed(@NotNull VirtualFile dir);
+  public abstract boolean wereChildrenAccessed(@Nonnull VirtualFile dir);
 
   @Nullable
-  public abstract NewVirtualFile findRoot(@NotNull String basePath, @NotNull NewVirtualFileSystem fs);
+  public abstract NewVirtualFile findRoot(@Nonnull String basePath, @Nonnull NewVirtualFileSystem fs);
 
-  @NotNull
+  @Nonnull
   public abstract VirtualFile[] getRoots();
 
-  @NotNull
-  public abstract VirtualFile[] getRoots(@NotNull NewVirtualFileSystem fs);
+  @Nonnull
+  public abstract VirtualFile[] getRoots(@Nonnull NewVirtualFileSystem fs);
 
-  @NotNull
+  @Nonnull
   public abstract VirtualFile[] getLocalRoots();
 
   @Nullable

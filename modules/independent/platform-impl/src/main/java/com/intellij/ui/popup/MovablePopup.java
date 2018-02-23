@@ -16,7 +16,7 @@
 package com.intellij.ui.popup;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class MovablePopup {
    * @param owner   a component to which this popup belongs
    * @param content a component to show within this popup
    */
-  public MovablePopup(@NotNull Component owner, @NotNull Component content) {
+  public MovablePopup(@Nonnull Component owner, @Nonnull Component content) {
     myOwner = owner;
     myContent = content;
     myViewBounds = new Rectangle(content.getPreferredSize());
@@ -93,7 +93,7 @@ public class MovablePopup {
     }
   }
 
-  public void setBounds(@NotNull Rectangle bounds) {
+  public void setBounds(@Nonnull Rectangle bounds) {
     setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
@@ -106,7 +106,7 @@ public class MovablePopup {
     }
   }
 
-  public void setLocation(@NotNull Point location) {
+  public void setLocation(@Nonnull Point location) {
     setLocation(location.x, location.y);
   }
 
@@ -119,7 +119,7 @@ public class MovablePopup {
     }
   }
 
-  public void setSize(@NotNull Dimension size) {
+  public void setSize(@Nonnull Dimension size) {
     setSize(size.width, size.height);
   }
 

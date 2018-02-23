@@ -23,7 +23,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class MockProject implements Project {
     myProjectDir = projectDir;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     throw new UnsupportedOperationException();
@@ -58,7 +58,7 @@ public class MockProject implements Project {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProjectFilePath() {
     throw new UnsupportedOperationException();
@@ -74,7 +74,7 @@ public class MockProject implements Project {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLocationHash() {
     throw new UnsupportedOperationException();
@@ -116,17 +116,17 @@ public class MockProject implements Project {
   }
 
   @Override
-  public boolean hasComponent(@NotNull Class interfaceClass) {
+  public boolean hasComponent(@Nonnull Class interfaceClass) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <T> T[] getComponents(Class<T> baseClass) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PicoContainer getPicoContainer() {
     throw new UnsupportedOperationException();
@@ -147,7 +147,7 @@ public class MockProject implements Project {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Condition getDisposed() {
     return Condition.FALSE;
@@ -158,12 +158,12 @@ public class MockProject implements Project {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
     throw new UnsupportedOperationException();
   }
 }

@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides services for selecting text in the IDEA text editor and retrieving information about the selection.
@@ -43,7 +43,7 @@ public interface SelectionModel {
   /**
    * @return    object that encapsulates information about visual position of selected text start if any
    */
-  @Nullable
+  @javax.annotation.Nullable
   VisualPosition getSelectionStartPosition();
 
   /**
@@ -57,7 +57,7 @@ public interface SelectionModel {
   /**
    * @return    object that encapsulates information about visual position of selected text end if any;
    */
-  @Nullable
+  @javax.annotation.Nullable
   VisualPosition getSelectionEndPosition();
 
   /**
@@ -72,7 +72,7 @@ public interface SelectionModel {
    * If <code>allCarets</code> is <code>true</code>, returns the concatenation of selections for all carets, or <code>null</code> if there
    * are no selections. If <code>allCarets</code> is <code>false</code>, works just like {@link #getSelectedText}.
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getSelectedText(boolean allCarets);
 
   /**
@@ -124,7 +124,7 @@ public interface SelectionModel {
    *                        no specific visual position should be used)
    * @param endOffset       end selection offset
    */
-  void setSelection(int startOffset, @Nullable VisualPosition endPosition, int endOffset);
+  void setSelection(int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset);
 
   /**
    * Selects target range based on its visual boundaries.
@@ -194,7 +194,7 @@ public interface SelectionModel {
    * @param blockEnd   the end of the rectangle to select.
    * @see #setSelection(int, int)
    */
-  void setBlockSelection(@NotNull LogicalPosition blockStart, @NotNull LogicalPosition blockEnd);
+  void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd);
 
   /**
    * Returns an array of start offsets in the document for ranges selected in the document currently. Works both for a single-caret and
@@ -202,7 +202,7 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  @NotNull
+  @Nonnull
   int[] getBlockSelectionStarts();
 
   /**
@@ -211,7 +211,7 @@ public interface SelectionModel {
    *
    * @return an array of start offsets, array size is equal to the number of carets existing in the editor currently.
    */
-  @NotNull
+  @Nonnull
   int[] getBlockSelectionEnds();
 
   /**

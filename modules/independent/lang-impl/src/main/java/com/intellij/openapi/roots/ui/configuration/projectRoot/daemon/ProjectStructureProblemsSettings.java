@@ -17,13 +17,13 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ProjectStructureProblemsSettings {
-  public static ProjectStructureProblemsSettings getProjectInstance(@NotNull Project project) {
+  public static ProjectStructureProblemsSettings getProjectInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ProjectStructureProblemsSettings.class);
   }
 
@@ -31,6 +31,6 @@ public abstract class ProjectStructureProblemsSettings {
     return ServiceManager.getService(ProjectStructureProblemsSettings.class);
   }
 
-  public abstract boolean isIgnored(@NotNull ProjectStructureProblemDescription description);
-  public abstract void setIgnored(@NotNull ProjectStructureProblemDescription description, boolean ignored);
+  public abstract boolean isIgnored(@Nonnull ProjectStructureProblemDescription description);
+  public abstract void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored);
 }

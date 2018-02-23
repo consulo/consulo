@@ -36,9 +36,9 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,13 +52,13 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
   private CompoundRunConfiguration mySnapshot;
 
 
-  public CompoundRunConfigurationSettingsEditor(@NotNull Project project) {
+  public CompoundRunConfigurationSettingsEditor(@Nonnull Project project) {
     myRunManager = RunManagerImpl.getInstanceImpl(project);
     myModel = new SortedListModel<>(CompoundRunConfiguration.COMPARATOR);
     myList = new JBList(myModel);
     myList.setCellRenderer(new ColoredListCellRenderer() {
       @Override
-      protected void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
         RunConfiguration configuration = myModel.get(index);
         setIcon(configuration.getType().getIcon());
         append(configuration.getType().getDisplayName() + " '" + configuration.getName() + "'");
@@ -68,7 +68,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
   }
 
 
-  private boolean canBeAdded(@NotNull RunConfiguration candidate, @NotNull final CompoundRunConfiguration root) {
+  private boolean canBeAdded(@Nonnull RunConfiguration candidate, @Nonnull final CompoundRunConfiguration root) {
     if (candidate.getType() == root.getType() && candidate.getName().equals(root.getName())) return false;
     List<BeforeRunTask> tasks = myRunManager.getBeforeRunTasks(candidate);
     for (BeforeRunTask task : tasks) {
@@ -112,7 +112,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
     toRun.addAll(checked);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createEditor() {
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList);
@@ -151,7 +151,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
             return true;
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public String getTextFor(RunConfiguration value) {
             return value.getName();

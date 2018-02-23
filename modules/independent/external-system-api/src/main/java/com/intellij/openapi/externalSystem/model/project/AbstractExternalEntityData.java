@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -11,14 +11,15 @@ public abstract class AbstractExternalEntityData implements ExternalEntityData {
 
   private static final long serialVersionUID = 1L;
   
-  @NotNull private ProjectSystemId myOwner;
+  @Nonnull
+  private ProjectSystemId myOwner;
   
-  public AbstractExternalEntityData(@NotNull ProjectSystemId owner) {
+  public AbstractExternalEntityData(@Nonnull ProjectSystemId owner) {
     myOwner = owner;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ProjectSystemId getOwner() {
     return myOwner;
   }

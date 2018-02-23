@@ -31,8 +31,7 @@ import com.intellij.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
 import com.intellij.openapi.vcs.update.RefreshVFsSynchronously;
 import com.intellij.util.WaitForProgressToShow;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,8 +57,8 @@ public class RollbackWorker {
 
   public void doRollback(final Collection<Change> changes,
                          final boolean deleteLocallyAddedFiles,
-                         @Nullable final Runnable afterVcsRefreshInAwt,
-                         @Nullable final String localHistoryActionName) {
+                         @javax.annotation.Nullable final Runnable afterVcsRefreshInAwt,
+                         @javax.annotation.Nullable final String localHistoryActionName) {
     final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     final Runnable notifier = changeListManager.prepareForChangeDeletion(changes);
     final Runnable afterRefresh = new Runnable() {
@@ -88,7 +87,7 @@ public class RollbackWorker {
           VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND = true;
         }
       }) {
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           rollbackAction.run();
         }
       });
@@ -96,7 +95,7 @@ public class RollbackWorker {
     else if (myInvokedFromModalContext) {
       ProgressManager.getInstance().run(new Task.Modal(myProject, myOperationName, true) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           rollbackAction.run();
         }
       });
@@ -209,7 +208,7 @@ public class RollbackWorker {
       WaitForProgressToShow.runOrInvokeLaterAboveProgress(forAwtThread, null, project);
     }
 
-    private void markDirty(@NotNull VcsDirtyScopeManager manager, @NotNull VcsGuess vcsGuess, @Nullable ContentRevision revision) {
+    private void markDirty(@Nonnull VcsDirtyScopeManager manager, @Nonnull VcsGuess vcsGuess, @javax.annotation.Nullable ContentRevision revision) {
       if (revision != null) {
         FilePath parent = revision.getFile().getParentPath();
         if (parent != null && couldBeMarkedDirty(vcsGuess, parent)) {
@@ -221,7 +220,7 @@ public class RollbackWorker {
       }
     }
 
-    private boolean couldBeMarkedDirty(@NotNull VcsGuess vcsGuess, @NotNull FilePath path) {
+    private boolean couldBeMarkedDirty(@Nonnull VcsGuess vcsGuess, @Nonnull FilePath path) {
       return vcsGuess.getVcsForDirty(path) != null;
     }
 

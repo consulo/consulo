@@ -27,8 +27,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.ui.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ public class VariantsCompletionAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
     if (editor == null) return;
     final String prefix = myTextField.getText().substring(0, myTextField.getCaretPosition());

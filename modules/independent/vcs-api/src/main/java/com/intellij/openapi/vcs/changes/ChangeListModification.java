@@ -15,12 +15,11 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface ChangeListModification {
-  LocalChangeList addChangeList(@NotNull String name, @Nullable final String comment);
-  void setDefaultChangeList(@NotNull LocalChangeList list);
+  LocalChangeList addChangeList(@Nonnull String name, @javax.annotation.Nullable final String comment);
+  void setDefaultChangeList(@Nonnull LocalChangeList list);
 
   void removeChangeList(final String name);
   void removeChangeList(final LocalChangeList list);
@@ -30,7 +29,7 @@ public interface ChangeListModification {
   // added - since ChangeListManager wouldn't pass internal lists, only copies
   boolean setReadOnly(final String name, final boolean value);
 
-  boolean editName(@NotNull String fromName, @NotNull String toName);
-  @Nullable
-  String editComment(@NotNull String fromName, final String newComment);
+  boolean editName(@Nonnull String fromName, @Nonnull String toName);
+  @javax.annotation.Nullable
+  String editComment(@Nonnull String fromName, final String newComment);
 }

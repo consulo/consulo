@@ -32,8 +32,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -46,9 +46,9 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
   private final MultiValuesMap<PackagingElement<?>, PackagingNodeSource> myNodeSources = new MultiValuesMap<PackagingElement<?>, PackagingNodeSource>();
   private final CompositePackagingElementNode myParentNode;
 
-  public PackagingElementNode(@NotNull E packagingElement, ArtifactEditorContext context, @Nullable CompositePackagingElementNode parentNode,
+  public PackagingElementNode(@Nonnull E packagingElement, ArtifactEditorContext context, @Nullable CompositePackagingElementNode parentNode,
                               @Nullable CompositePackagingElement<?> parentElement,
-                              @NotNull Collection<PackagingNodeSource> nodeSources) {
+                              @Nonnull Collection<PackagingNodeSource> nodeSources) {
     super(context, parentNode, packagingElement.createPresentation(context));
     myParentNode = parentNode;
     myParentElements.put(packagingElement, parentElement);
@@ -80,7 +80,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
     return myPackagingElements.size() == 1 ? myPackagingElements.get(0) : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getEqualityObjects() {
     return ArrayUtil.toObjectArray(myPackagingElements);
@@ -134,13 +134,13 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
     myNodeSources.putAll(element, nodeSource);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<PackagingNodeSource> getNodeSources() {
     return myNodeSources.values();
   }
 
-  @NotNull
-  public Collection<PackagingNodeSource> getNodeSource(@NotNull PackagingElement<?> element) {
+  @Nonnull
+  public Collection<PackagingNodeSource> getNodeSource(@Nonnull PackagingElement<?> element) {
     final Collection<PackagingNodeSource> nodeSources = myNodeSources.get(element);
     return nodeSources != null ? nodeSources : Collections.<PackagingNodeSource>emptyList();
   }
@@ -150,7 +150,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
   }
 
   @Nullable
-  public CompositePackagingElementNode findCompositeChild(@NotNull String name) {
+  public CompositePackagingElementNode findCompositeChild(@Nonnull String name) {
     final SimpleNode[] children = getChildren();
     for (SimpleNode child : children) {
       if (child instanceof CompositePackagingElementNode) {

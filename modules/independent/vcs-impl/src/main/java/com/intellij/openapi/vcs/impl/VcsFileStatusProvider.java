@@ -27,8 +27,7 @@ import com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -95,8 +94,8 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   }
 
   @Override
-  @NotNull
-  public FileStatus getFileStatus(@NotNull final VirtualFile virtualFile) {
+  @Nonnull
+  public FileStatus getFileStatus(@Nonnull final VirtualFile virtualFile) {
     final AbstractVcs vcs = myVcsManager.getVcsFor(virtualFile);
     if (vcs == null) {
       if (ScratchUtil.isScratch(virtualFile)) {
@@ -121,7 +120,7 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   }
 
   @Override
-  public void refreshFileStatusFromDocument(@NotNull final VirtualFile virtualFile, @NotNull final Document doc) {
+  public void refreshFileStatusFromDocument(@Nonnull final VirtualFile virtualFile, @Nonnull final Document doc) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("refreshFileStatusFromDocument: file.getModificationStamp()=" + virtualFile.getModificationStamp() + ", document.getModificationStamp()=" + doc.getModificationStamp());
     }
@@ -145,15 +144,15 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ThreeState getNotChangedDirectoryParentingStatus(@NotNull VirtualFile virtualFile) {
+  public ThreeState getNotChangedDirectoryParentingStatus(@Nonnull VirtualFile virtualFile) {
     return myConfiguration.SHOW_DIRTY_RECURSIVELY ? myChangeListManager.haveChangesUnder(virtualFile) : ThreeState.NO;
   }
 
   @Override
-  @Nullable
-  public BaseContent getBaseRevision(@NotNull final VirtualFile file) {
+  @javax.annotation.Nullable
+  public BaseContent getBaseRevision(@Nonnull final VirtualFile file) {
     if (!isHandledByVcs(file)) {
       VcsBaseContentProvider provider = findProviderFor(file);
       return provider == null ? null : provider.getBaseRevision(file);
@@ -166,8 +165,8 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
     return new BaseContentImpl(beforeRevision);
   }
 
-  @Nullable
-  private VcsBaseContentProvider findProviderFor(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private VcsBaseContentProvider findProviderFor(@Nonnull VirtualFile file) {
     for (VcsBaseContentProvider support : myAdditionalProviders) {
       if (support.isSupported(file)) return support;
     }
@@ -175,28 +174,29 @@ public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContent
   }
 
   @Override
-  public boolean isSupported(@NotNull VirtualFile file) {
+  public boolean isSupported(@Nonnull VirtualFile file) {
     return isHandledByVcs(file) || findProviderFor(file) != null;
   }
 
-  private boolean isHandledByVcs(@NotNull VirtualFile file) {
+  private boolean isHandledByVcs(@Nonnull VirtualFile file) {
     return file.isInLocalFileSystem() && myVcsManager.getVcsFor(file) != null;
   }
 
   private class BaseContentImpl implements BaseContent {
-    @NotNull private final ContentRevision myContentRevision;
+    @Nonnull
+    private final ContentRevision myContentRevision;
 
-    public BaseContentImpl(@NotNull ContentRevision contentRevision) {
+    public BaseContentImpl(@Nonnull ContentRevision contentRevision) {
       myContentRevision = contentRevision;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public VcsRevisionNumber getRevisionNumber() {
       return myContentRevision.getRevisionNumber();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public String loadContent() {
       String content;

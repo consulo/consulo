@@ -41,8 +41,8 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -69,7 +69,7 @@ public class EventLog {
   public EventLog() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new NotificationsAdapter() {
       @Override
-      public void notify(@NotNull Notification notification) {
+      public void notify(@Nonnull Notification notification) {
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         if (openProjects.length == 0) {
           myModel.addNotification(notification);
@@ -81,14 +81,14 @@ public class EventLog {
     });
   }
 
-  public static void expireNotification(@NotNull Notification notification) {
+  public static void expireNotification(@Nonnull Notification notification) {
     getApplicationComponent().myModel.removeNotification(notification);
     for (Project p : ProjectManager.getInstance().getOpenProjects()) {
       getProjectComponent(p).myProjectModel.removeNotification(notification);
     }
   }
 
-  public static void showNotification(@NotNull Project project, @NotNull String groupId, @NotNull List<String> ids) {
+  public static void showNotification(@Nonnull Project project, @Nonnull String groupId, @Nonnull List<String> ids) {
     getProjectComponent(project).showNotification(groupId, ids);
   }
 
@@ -96,7 +96,7 @@ public class EventLog {
     return ApplicationManager.getApplication().getComponent(EventLog.class);
   }
 
-  @NotNull
+  @Nonnull
   public static LogModel getLogModel(@Nullable Project project) {
     return project != null ? getProjectComponent(project).myProjectModel : getApplicationComponent().myModel;
   }
@@ -115,7 +115,7 @@ public class EventLog {
     }
   }
 
-  public static void clearNMore(@NotNull Project project, @NotNull Collection<String> groups) {
+  public static void clearNMore(@Nonnull Project project, @Nonnull Collection<String> groups) {
     getProjectComponent(project).clearNMore(groups);
   }
 
@@ -124,7 +124,7 @@ public class EventLog {
     return getLogModel(project).getStatusMessage();
   }
 
-  public static LogEntry formatForLog(@NotNull final Notification notification, final String indent) {
+  public static LogEntry formatForLog(@Nonnull final Notification notification, final String indent) {
     DocumentImpl logDoc = new DocumentImpl("", true);
     AtomicBoolean showMore = new AtomicBoolean(false);
     Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<RangeMarker, HyperlinkInfo>();
@@ -162,7 +162,7 @@ public class EventLog {
       }, isLongLine(actions) ? "<br>" : "&nbsp;") + "</p>";
       Notification n = new Notification("", "", ".", NotificationType.INFORMATION, new NotificationListener() {
         @Override
-        public void hyperlinkUpdate(@NotNull Notification n, @NotNull HyperlinkEvent event) {
+        public void hyperlinkUpdate(@Nonnull Notification n, @Nonnull HyperlinkEvent event) {
           Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())));
         }
       });
@@ -197,12 +197,12 @@ public class EventLog {
     return new LogEntry(logDoc.getText(), status, list, titleLength);
   }
 
-  @NotNull
-  private static String addIndents(@NotNull String text, @NotNull String indent) {
+  @Nonnull
+  private static String addIndents(@Nonnull String text, @Nonnull String indent) {
     return StringUtil.replace(text, "\n", "\n" + indent);
   }
 
-  private static boolean isLongLine(@NotNull List<AnAction> actions) {
+  private static boolean isLongLine(@Nonnull List<AnAction> actions) {
     int size = actions.size();
     if (size > 3) {
       return true;
@@ -217,7 +217,7 @@ public class EventLog {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private static String truncateLongString(AtomicBoolean showMore, String title) {
     if (title.length() > 1000) {
       showMore.set(true);
@@ -341,7 +341,7 @@ public class EventLog {
 
   private static final String[] SKIP_TAGS = {"html", "body", "b", "i", "font"};
 
-  private static boolean isTag(@NotNull String[] tags, @NotNull String tag) {
+  private static boolean isTag(@Nonnull String[] tags, @Nonnull String tag) {
     tag = tag.substring(1, tag.length() - 1); // skip <>
     tag = StringUtil.trimEnd(StringUtil.trimStart(tag, "/"), "/"); // skip /
     int index = tag.indexOf(' ');
@@ -413,7 +413,7 @@ public class EventLog {
     public final List<Pair<TextRange, HyperlinkInfo>> links;
     public final int titleLength;
 
-    public LogEntry(@NotNull String message, @NotNull String status, @NotNull List<Pair<TextRange, HyperlinkInfo>> links, int titleLength) {
+    public LogEntry(@Nonnull String message, @Nonnull String status, @Nonnull List<Pair<TextRange, HyperlinkInfo>> links, int titleLength) {
       this.message = message;
       this.status = status;
       this.links = links;
@@ -438,7 +438,7 @@ public class EventLog {
     }
   }
 
-  private static void activate(@NotNull final ToolWindow eventLog, @Nullable final String groupId, @Nullable final Runnable r) {
+  private static void activate(@Nonnull final ToolWindow eventLog, @Nullable final String groupId, @Nullable final Runnable r) {
     eventLog.activate(new Runnable() {
       @Override
       public void run() {
@@ -460,7 +460,7 @@ public class EventLog {
     private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();
     private final LogModel myProjectModel;
 
-    public ProjectTracker(@NotNull final Project project) {
+    public ProjectTracker(@Nonnull final Project project) {
       super(project);
 
       myProjectModel = new LogModel(project, project);
@@ -471,7 +471,7 @@ public class EventLog {
 
       project.getMessageBus().connect(project).subscribe(Notifications.TOPIC, new NotificationsAdapter() {
         @Override
-        public void notify(@NotNull Notification notification) {
+        public void notify(@Nonnull Notification notification) {
           printNotification(notification);
         }
       });
@@ -511,7 +511,7 @@ public class EventLog {
       }
     }
 
-    private void doPrintNotification(@NotNull final Notification notification, @NotNull final EventLogConsole console) {
+    private void doPrintNotification(@Nonnull final Notification notification, @Nonnull final EventLogConsole console) {
       StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
         @Override
         public void run() {
@@ -527,7 +527,7 @@ public class EventLog {
       });
     }
 
-    private void showNotification(@NotNull final String groupId, @NotNull final List<String> ids) {
+    private void showNotification(@Nonnull final String groupId, @Nonnull final List<String> ids) {
       ToolWindow eventLog = getEventLog(myProject);
       if (eventLog != null) {
         activate(eventLog, groupId, new Runnable() {
@@ -542,7 +542,7 @@ public class EventLog {
       }
     }
 
-    private void clearNMore(@NotNull Collection<String> groups) {
+    private void clearNMore(@Nonnull Collection<String> groups) {
       for (String group : groups) {
         EventLogConsole console = myCategoryMap.get(getContentName(group));
         if (console != null) {
@@ -552,12 +552,12 @@ public class EventLog {
     }
 
     @Nullable
-    private EventLogConsole getConsole(@NotNull Notification notification) {
+    private EventLogConsole getConsole(@Nonnull Notification notification) {
       return getConsole(notification.getGroupId());
     }
 
     @Nullable
-    private EventLogConsole getConsole(@NotNull String groupId) {
+    private EventLogConsole getConsole(@Nonnull String groupId) {
       if (myCategoryMap.get(DEFAULT_CATEGORY) == null) return null; // still not initialized
 
       String name = getContentName(groupId);
@@ -565,7 +565,7 @@ public class EventLog {
       return console != null ? console : createNewContent(name);
     }
 
-    @NotNull
+    @Nonnull
     private EventLogConsole createNewContent(String name) {
       ApplicationManager.getApplication().assertIsDispatchThread();
       EventLogConsole newConsole = new EventLogConsole(myProjectModel);
@@ -577,7 +577,7 @@ public class EventLog {
 
   }
 
-  @NotNull
+  @Nonnull
   private static String getContentName(String groupId) {
     for (EventLogCategory category : EventLogCategory.EP_NAME.getExtensions()) {
       if (category.acceptsNotification(groupId)) {

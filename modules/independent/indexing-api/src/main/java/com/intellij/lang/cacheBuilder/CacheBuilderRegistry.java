@@ -18,8 +18,7 @@ package com.intellij.lang.cacheBuilder;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * The cache builder registry allows to register custom cache builders for file types which
@@ -40,7 +39,7 @@ public abstract class CacheBuilderRegistry {
    * @param cacheBuilder the cache builder to use for the specified file type.
    */
   @Deprecated
-  public abstract void registerCacheBuilder(@NotNull FileType fileType, WordsScanner cacheBuilder);
+  public abstract void registerCacheBuilder(@Nonnull FileType fileType, WordsScanner cacheBuilder);
 
   /**
    * Returns the cache builder registered for the specified file type.
@@ -48,6 +47,6 @@ public abstract class CacheBuilderRegistry {
    * @param fileType the file type for which the cache builder is registered.
    * @return the cache builder, or null if none was registered.
    */
-  @Nullable
-  public abstract WordsScanner getCacheBuilder(@NotNull FileType fileType);
+  @javax.annotation.Nullable
+  public abstract WordsScanner getCacheBuilder(@Nonnull FileType fileType);
 }

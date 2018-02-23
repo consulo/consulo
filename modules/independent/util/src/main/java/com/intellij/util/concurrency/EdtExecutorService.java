@@ -16,7 +16,7 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.util.ui.EdtInvocationManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -28,18 +28,18 @@ import java.util.concurrent.TimeUnit;
  * ExecutorService implementation which delegates tasks for execution to the SwingUtilities.invokeLater(task)
  */
 public class EdtExecutorService extends AbstractExecutorService {
-  @NotNull
+  @Nonnull
   public static ExecutorService getInstance() {
     return INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   public static ScheduledExecutorService getScheduledExecutorInstance() {
     return SCHEDULED_INSTANCE;
   }
 
   @Override
-  public void execute(@NotNull Runnable command) {
+  public void execute(@Nonnull Runnable command) {
     EdtInvocationManager.getInstance().invokeLater(command);
   }
 
@@ -48,7 +48,7 @@ public class EdtExecutorService extends AbstractExecutorService {
     AppScheduledExecutorService.error();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Runnable> shutdownNow() {
     return AppScheduledExecutorService.error();
@@ -65,14 +65,14 @@ public class EdtExecutorService extends AbstractExecutorService {
   }
 
   @Override
-  public boolean awaitTermination(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+  public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
     AppScheduledExecutorService.error();
     return false;
   }
 
   private static final ExecutorService INSTANCE = new EdtExecutorService();
   private static final ScheduledExecutorService SCHEDULED_INSTANCE = new SchedulingWrapper(INSTANCE, ((AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService()).delayQueue){
-    @NotNull
+    @Nonnull
     @Override
     public List<Runnable> shutdownNow() {
       return AppScheduledExecutorService.error();
@@ -84,7 +84,7 @@ public class EdtExecutorService extends AbstractExecutorService {
     }
 
     @Override
-    public boolean awaitTermination(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+    public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
       AppScheduledExecutorService.error();
       return false;
     }

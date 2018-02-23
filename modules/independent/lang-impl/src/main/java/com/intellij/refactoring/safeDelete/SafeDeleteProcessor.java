@@ -51,8 +51,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -78,8 +78,8 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  @NotNull
-  protected UsageViewDescriptor createUsageViewDescriptor(@NotNull UsageInfo[] usages) {
+  @Nonnull
+  protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
     return new SafeDeleteUsageViewDescriptor(myElements);
   }
 
@@ -131,7 +131,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected UsageInfo[] findUsages() {
     List<UsageInfo> usages = Collections.synchronizedList(new ArrayList<UsageInfo>());
     for (PsiElement element : myElements) {
@@ -180,7 +180,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected boolean preprocessUsages(@NotNull Ref<UsageInfo[]> refUsages) {
+  protected boolean preprocessUsages(@Nonnull Ref<UsageInfo[]> refUsages) {
     UsageInfo[] usages = refUsages.get();
     ArrayList<String> conflicts = new ArrayList<String>();
 
@@ -330,7 +330,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
    * @param usages
    * @return Map from elements to UsageHolders
    */
-  private static HashMap<PsiElement, UsageHolder> sortUsages(@NotNull UsageInfo[] usages) {
+  private static HashMap<PsiElement, UsageHolder> sortUsages(@Nonnull UsageInfo[] usages) {
     HashMap<PsiElement, UsageHolder> result = new HashMap<PsiElement, UsageHolder>();
 
     for (final UsageInfo usage : usages) {
@@ -346,13 +346,13 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
 
   @Override
-  protected void refreshElements(@NotNull PsiElement[] elements) {
+  protected void refreshElements(@Nonnull PsiElement[] elements) {
     LOG.assertTrue(elements.length == myElements.length);
     System.arraycopy(elements, 0, myElements, 0, elements.length);
   }
 
   @Override
-  protected boolean isPreviewUsages(@NotNull UsageInfo[] usages) {
+  protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
     if (myPreviewNonCodeUsages && UsageViewUtil.reportNonRegularUsages(usages, myProject)) {
       return true;
     }
@@ -385,7 +385,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected void performRefactoring(@NotNull UsageInfo[] usages) {
+  protected void performRefactoring(@Nonnull UsageInfo[] usages) {
     try {
       for (UsageInfo usage : usages) {
         if (usage instanceof SafeDeleteCustomUsageInfo) {
@@ -430,7 +430,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
                                       boolean searchInCommentsAndStrings) {
     UsageInfoFactory nonCodeUsageFactory = new UsageInfoFactory() {
       @Override
-      public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
+      public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
         if (insideElements != null && insideElements.value(usage)) {
           return null;
         }
@@ -448,14 +448,14 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected boolean isToBeChanged(@NotNull UsageInfo usageInfo) {
+  protected boolean isToBeChanged(@Nonnull UsageInfo usageInfo) {
     if (usageInfo instanceof SafeDeleteReferenceUsageInfo) {
       return ((SafeDeleteReferenceUsageInfo)usageInfo).isSafeDelete() && super.isToBeChanged(usageInfo);
     }
     return super.isToBeChanged(usageInfo);
   }
 
-  public static boolean validElement(@NotNull PsiElement element) {
+  public static boolean validElement(@Nonnull PsiElement element) {
     if (element instanceof PsiFile) return true;
     if (!element.isPhysical()) return false;
     final RefactoringSupportProvider provider = LanguageRefactoringSupport.INSTANCE.forLanguage(element.getLanguage());

@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -46,14 +46,14 @@ public interface ChooseByNameModel {
    * @return the names to show. All items in the returned array must be non-null.
    *
    */
-  @NotNull
+  @Nonnull
   String[] getNames(boolean checkBoxState);
-  @NotNull
+  @Nonnull
   Object[] getElementsByName(String name, boolean checkBoxState, final String pattern);
   @Nullable
   String getElementName(Object element);
 
-  @NotNull
+  @Nonnull
   String[] getSeparators();
 
   @Nullable

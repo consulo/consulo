@@ -25,8 +25,8 @@ import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.util.containers.WeakHashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -190,7 +190,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   }
 
 
-  public final Component getFocusedComponent(@NotNull final Window window) {
+  public final Component getFocusedComponent(@Nonnull final Window window) {
     synchronized (myLock) {
       final WindowInfo info = myWindow2Info.get(window);
       if (info == null) { // it means that we don't manage this window, so just return standard focus owner
@@ -217,7 +217,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public FocusWatcher getFocusWatcherFor(Component c) {
     final Window window = SwingUtilities.getWindowAncestor(c);
     final WindowInfo info = myWindow2Info.get(window);
@@ -290,7 +290,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
    * @return active window for specified <code>project</code>. There is only one window
    * for project can be at any point of time.
    */
-  @Nullable
+  @javax.annotation.Nullable
   private Window getFocusedWindowForProject(@Nullable final Project project) {
     //todo[anton,vova]: it is possible that returned wnd is not contained in myFocusedWindows; investigate
     outer:

@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -29,12 +29,12 @@ public interface PopupBorder extends Border {
   class Factory {
     private Factory() { }
 
-    @NotNull
+    @Nonnull
     public static PopupBorder createEmpty() {
       return new BaseBorder();
     }
 
-    @NotNull
+    @Nonnull
     public static PopupBorder create(boolean active, boolean windowWithShadow) {
       PopupBorder border = SystemInfo.isMac && windowWithShadow ?
                            createEmpty() : new BaseBorder(true, CaptionPanel.getBorderColor(true), CaptionPanel.getBorderColor(false));

@@ -23,8 +23,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RecentProjectsGroup extends ActionGroup implements DumbAware {
   public RecentProjectsGroup() {
@@ -39,7 +39,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     }
   }
 
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return RecentProjectsManagerBase.getInstance().getRecentProjectsActions(true);
   }

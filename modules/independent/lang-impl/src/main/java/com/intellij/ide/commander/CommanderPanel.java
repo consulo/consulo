@@ -54,8 +54,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -107,7 +107,7 @@ public class CommanderPanel extends JPanel {
     if (enablePopupMenu) {
       myCopyPasteDelegator = new CopyPasteDelegator(myProject, myList) {
         @Override
-        @NotNull
+        @Nonnull
         protected PsiElement[] getSelectedElements() {
           return CommanderPanel.this.getSelectedElements();
         }
@@ -189,7 +189,7 @@ public class CommanderPanel extends JPanel {
     return myEnableSearchHighlighting;
   }
 
-  public void addHistoryListener(@NotNull CommanderHistoryListener listener) {
+  public void addHistoryListener(@Nonnull CommanderHistoryListener listener) {
     myHistoryListeners.add(listener);
   }
 
@@ -337,7 +337,7 @@ public class CommanderPanel extends JPanel {
     return elementAtIndex instanceof AbstractTreeNode ? (AbstractTreeNode)elementAtIndex : null;
   }
 
-  @NotNull
+  @Nonnull
   private List<AbstractTreeNode> getSelectedNodes() {
     if (myBuilder == null) return Collections.emptyList();
     final int[] indices = myList.getSelectedIndices();
@@ -553,7 +553,7 @@ public class CommanderPanel extends JPanel {
 
   private final class MyDeleteElementProvider implements DeleteProvider {
     @Override
-    public void deleteElement(@NotNull final DataContext dataContext) {
+    public void deleteElement(@Nonnull final DataContext dataContext) {
       LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
       try {
         final PsiElement[] elements = getSelectedElements();
@@ -565,7 +565,7 @@ public class CommanderPanel extends JPanel {
     }
 
     @Override
-    public boolean canDeleteElement(@NotNull final DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull final DataContext dataContext) {
       final PsiElement[] elements = getSelectedElements();
       return DeleteHandler.shouldEnableDeleteAction(elements);
     }

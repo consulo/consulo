@@ -37,8 +37,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -114,11 +114,11 @@ public class EditorTestUtil {
     return tokens;
   }
 
-  public static int getCaretPosition(@NotNull final String content) {
+  public static int getCaretPosition(@Nonnull final String content) {
     return getCaretAndSelectionPosition(content)[0];
   }
 
-  public static int[] getCaretAndSelectionPosition(@NotNull final String content) {
+  public static int[] getCaretAndSelectionPosition(@Nonnull final String content) {
     int caretPosInSourceFile = content.indexOf(CARET_TAG_PREFIX);
     int caretEndInSourceFile = content.indexOf(">", caretPosInSourceFile);
     int caretLength = caretEndInSourceFile - caretPosInSourceFile;
@@ -173,17 +173,17 @@ public class EditorTestUtil {
     SoftWrapModelImpl model = (SoftWrapModelImpl)editor.getSoftWrapModel();
     model.setSoftWrapPainter(new SoftWrapPainter() {
       @Override
-      public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+      public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
         return charWidthInPixels;
       }
 
       @Override
-      public int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+      public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
         return charWidthInPixels;
       }
 
       @Override
-      public int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType) {
+      public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
         return charWidthInPixels;
       }
 
@@ -226,13 +226,13 @@ public class EditorTestUtil {
     ((EditorEx)editor).getScrollPane().getViewport().setExtentSize(size);
   }
 
-  public static Inlay addInlay(@NotNull Editor editor, int offset) {
+  public static Inlay addInlay(@Nonnull Editor editor, int offset) {
     return editor.getInlayModel().addInlineElement(offset, new EditorCustomElementRenderer() {
       @Override
-      public int calcWidthInPixels(@NotNull Editor editor) { return 1; }
+      public int calcWidthInPixels(@Nonnull Editor editor) { return 1; }
 
       @Override
-      public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {}
+      public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {}
     });
   }
 
@@ -254,7 +254,7 @@ public class EditorTestUtil {
   public static CaretAndSelectionState extractCaretAndSelectionMarkers(final Document document, final boolean processBlockSelection) {
     return new WriteCommandAction<CaretAndSelectionState>(null) {
       @Override
-      public void run(@NotNull Result<CaretAndSelectionState> actionResult) {
+      public void run(@Nonnull Result<CaretAndSelectionState> actionResult) {
         final CaretAndSelectionState result = new CaretAndSelectionState();
         String fileText = document.getText();
 
@@ -438,7 +438,7 @@ public class EditorTestUtil {
 
   public static class CaretAndSelectionState {
     public final List<CaretInfo> carets = new ArrayList<CaretInfo>();
-    @Nullable
+    @javax.annotation.Nullable
     public TextRange blockSelection;
   }
 
@@ -450,7 +450,7 @@ public class EditorTestUtil {
     @Nullable
     public final TextRange selection;
 
-    public CaretInfo(@Nullable LogicalPosition position, @Nullable TextRange selection) {
+    public CaretInfo(@Nullable LogicalPosition position, @javax.annotation.Nullable TextRange selection) {
       this.position = position;
       this.selection = selection;
     }

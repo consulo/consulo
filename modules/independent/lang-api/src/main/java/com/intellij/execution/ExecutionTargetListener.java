@@ -15,8 +15,8 @@
  */
 package com.intellij.execution;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ExecutionTargetListener {
-  void activeTargetChanged(@NotNull ExecutionTarget newTarget);
+  void activeTargetChanged(@Nonnull ExecutionTarget newTarget);
 }

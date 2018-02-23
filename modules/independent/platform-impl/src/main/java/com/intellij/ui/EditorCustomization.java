@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines contract for functionality that is able to customize editors.
@@ -37,6 +37,6 @@ public interface EditorCustomization {
    *
    * @param editor The editor to customize
    */
-  void customize(@NotNull EditorEx editor);
+  void customize(@Nonnull EditorEx editor);
 
 }

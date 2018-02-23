@@ -1,8 +1,8 @@
 package com.intellij.remote;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author traff
@@ -11,10 +11,10 @@ public interface RemoteConnector {
   @Nullable
   String getId();
 
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   RemoteConnectionType getType();
 
   void produceRemoteCredentials(Consumer<RemoteCredentials> remoteCredentialsConsumer);
@@ -23,6 +23,6 @@ public interface RemoteConnector {
    * Used to select different credentials. This method should be fast.
    * @return
    */
-  @NotNull
+  @Nonnull
   Object getConnectorKey();
 }

@@ -18,7 +18,7 @@ package com.intellij.patterns;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -28,14 +28,14 @@ public class IElementTypePattern extends ObjectPattern<IElementType, IElementTyp
     super(IElementType.class);
   }
 
-  public IElementTypePattern or(@NotNull final IElementType... types){
+  public IElementTypePattern or(@Nonnull final IElementType... types){
     return tokenSet(TokenSet.create(types));
   }
 
-  public IElementTypePattern tokenSet(@NotNull final TokenSet tokenSet){
+  public IElementTypePattern tokenSet(@Nonnull final TokenSet tokenSet){
     return with(new PatternCondition<IElementType>("tokenSet") {
       @Override
-      public boolean accepts(@NotNull final IElementType type, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final IElementType type, final ProcessingContext context) {
         return tokenSet.contains(type);
       }
     });

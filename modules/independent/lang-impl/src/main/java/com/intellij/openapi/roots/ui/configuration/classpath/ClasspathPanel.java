@@ -20,9 +20,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -45,6 +45,6 @@ public interface ClasspathPanel {
   @Nullable
   OrderEntry getSelectedEntry();
 
-  @NotNull
-  LibraryTableModifiableModelProvider getModifiableModelProvider(@NotNull String tableLevel);
+  @Nonnull
+  LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel);
 }

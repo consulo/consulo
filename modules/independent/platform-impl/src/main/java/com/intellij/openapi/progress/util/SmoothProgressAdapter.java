@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
@@ -63,7 +63,7 @@ public class SmoothProgressAdapter extends AbstractProgressIndicatorExBase imple
     }
   };
 
-  public SmoothProgressAdapter(@NotNull ProgressIndicator original, @NotNull Project project){
+  public SmoothProgressAdapter(@Nonnull ProgressIndicator original, @Nonnull Project project){
     myOriginal = original;
     myProject = project;
     if (myOriginal.isModal()) {
@@ -72,7 +72,7 @@ public class SmoothProgressAdapter extends AbstractProgressIndicatorExBase imple
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProgressIndicator getOriginalProgressIndicator() {
     return myOriginal;

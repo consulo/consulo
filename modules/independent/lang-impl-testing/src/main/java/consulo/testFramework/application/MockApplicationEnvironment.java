@@ -25,14 +25,14 @@ import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import consulo.application.options.PathMacrosService;
 import consulo.application.options.PathMacrosServiceImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10-Sep-17
  */
 public class MockApplicationEnvironment extends CoreApplicationEnvironment {
-  public MockApplicationEnvironment(@NotNull Disposable parentDisposable) {
+  public MockApplicationEnvironment(@Nonnull Disposable parentDisposable) {
     super(parentDisposable);
 
     registerApplicationService(PathMacrosService.class, new PathMacrosServiceImpl());

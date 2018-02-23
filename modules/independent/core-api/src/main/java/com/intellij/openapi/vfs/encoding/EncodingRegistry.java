@@ -18,8 +18,8 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -27,13 +27,13 @@ import java.nio.charset.Charset;
  * @author yole
  */
 public abstract class EncodingRegistry {
-  public abstract boolean isNative2Ascii(@NotNull VirtualFile virtualFile);
+  public abstract boolean isNative2Ascii(@Nonnull VirtualFile virtualFile);
   public abstract boolean isNative2AsciiForPropertiesFiles();
 
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
-  @NotNull
+  @Nonnull
   public abstract Charset getDefaultCharset();
 
   /**
@@ -61,8 +61,8 @@ public abstract class EncodingRegistry {
   }
 
 
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@NotNull VirtualFile fileBefore,
-                                                                             @NotNull ThrowableComputable<VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore,
+                                                                             @Nonnull ThrowableComputable<VirtualFile, E> action) throws E {
     EncodingRegistry registry = getInstance();
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;

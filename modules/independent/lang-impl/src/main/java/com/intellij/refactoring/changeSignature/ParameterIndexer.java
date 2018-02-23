@@ -16,13 +16,13 @@
 package com.intellij.refactoring.changeSignature;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface ParameterIndexer {
-  void setIndex(@NotNull PsiElement element, int index);
+  void setIndex(@Nonnull PsiElement element, int index);
 
-  int getIndex(@NotNull PsiElement element);
+  int getIndex(@Nonnull PsiElement element);
 }

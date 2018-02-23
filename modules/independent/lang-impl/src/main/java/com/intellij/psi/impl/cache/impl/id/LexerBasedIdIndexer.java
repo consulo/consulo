@@ -19,7 +19,7 @@ package com.intellij.psi.impl.cache.impl.id;
 import com.intellij.psi.impl.cache.impl.BaseFilterLexerUtil;
 import com.intellij.psi.impl.cache.impl.IdAndToDoScannerBasedOnFilterLexer;
 import com.intellij.util.indexing.FileContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -30,7 +30,7 @@ import java.util.Map;
 public abstract class LexerBasedIdIndexer implements IdIndexer, IdAndToDoScannerBasedOnFilterLexer {
   
   @Override
-  @NotNull
+  @Nonnull
   public final Map<IdIndexEntry,Integer> map(final FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).idMap;
   }

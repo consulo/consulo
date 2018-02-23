@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.vcs.changes.FilePathsHelper;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 public class StaticFilePath {
   private final String myKey;
@@ -56,7 +55,7 @@ public class StaticFilePath {
     return myVf;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public StaticFilePath getParent() {
     final int idx = myKey.lastIndexOf('/');
     return (idx == -1) || (idx == 0) ? null :

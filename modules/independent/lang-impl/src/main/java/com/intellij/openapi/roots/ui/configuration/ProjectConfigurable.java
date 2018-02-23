@@ -46,8 +46,8 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
 import consulo.roots.ui.configuration.WholeWestConfigurable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -266,7 +266,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return VfsUtil.pathToUrl(myProjectCompilerOutput.getText().trim());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents() {
     return Couple.of(new JPanel(), createComponent());

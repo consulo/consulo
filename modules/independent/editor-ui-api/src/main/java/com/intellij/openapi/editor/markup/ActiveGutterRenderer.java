@@ -16,7 +16,6 @@
 package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 
@@ -32,7 +31,7 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer {
    *
    * @return the tooltip text, or null if no tooltip is required.
    */
-  @Nullable
+  @javax.annotation.Nullable
   default String getTooltipText() {
     return null;
   }

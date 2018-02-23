@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class StructureViewModuleNode extends AbstractModuleNode {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final Module module = getValue();
     if (module == null) {
@@ -64,7 +64,7 @@ public class StructureViewModuleNode extends AbstractModuleNode {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return false;
   }
 

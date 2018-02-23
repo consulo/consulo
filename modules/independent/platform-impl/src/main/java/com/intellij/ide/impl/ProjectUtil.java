@@ -34,7 +34,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -43,9 +42,9 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.application.DefaultPaths;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class ProjectUtil {
   private ProjectUtil() {
   }
 
-  public static boolean isSameProject(@Nullable String projectFilePath, @NotNull Project project) {
+  public static boolean isSameProject(@Nullable String projectFilePath, @Nonnull Project project) {
     if (projectFilePath == null) return false;
 
     IProjectStore projectStore = ((ProjectEx)project).getStateStore();
@@ -110,7 +109,7 @@ public class ProjectUtil {
    * @param project cannot be null
    */
   @RequiredDispatchThread
-  public static boolean closeAndDispose(@NotNull final Project project) {
+  public static boolean closeAndDispose(@Nonnull final Project project) {
     return ProjectManagerEx.getInstanceEx().closeAndDispose(project);
   }
 
@@ -118,7 +117,7 @@ public class ProjectUtil {
   @DeprecationInfo("ProjectUtil#open()")
   @RequiredDispatchThread
   @SuppressWarnings({"unused", "deprecation"})
-  public static Project openOrImport(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
+  public static Project openOrImport(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
     return open(path, projectToClose, forceOpenInNewFrame);
   }
 
@@ -133,7 +132,7 @@ public class ProjectUtil {
   @Nullable
   @Deprecated
   @DeprecationInfo("Sync variant of #openAsync()")
-  public static Project open(@NotNull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
+  public static Project open(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return null;
@@ -183,7 +182,7 @@ public class ProjectUtil {
 
   public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {
     FocusCommand cmd = new FocusCommand() {
-      @NotNull
+      @Nonnull
       @Override
       public ActionCallback run() {
         JFrame f = WindowManager.getInstance().getFrame(p);
@@ -204,7 +203,7 @@ public class ProjectUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String getBaseDir() {
     final String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
     if (lastProjectLocation != null) {
@@ -214,8 +213,8 @@ public class ProjectUtil {
   }
 
   //region Async staff
-  @NotNull
-  public static AsyncResult<Project> openAsync(@NotNull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @NotNull UIAccess uiAccess) {
+  @Nonnull
+  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable Project projectToClose, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");

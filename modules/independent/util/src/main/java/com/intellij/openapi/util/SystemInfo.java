@@ -19,8 +19,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isIbmJvm = isIbmJvm();
   public static final boolean IS_AT_LEAST_JAVA9 = isJavaVersionAtLeast("9");
 
-  public static boolean isOsVersionAtLeast(@NotNull String version) {
+  public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
   }
 
@@ -69,7 +69,7 @@ public class SystemInfo extends SystemInfoRt {
 
   // http://www.freedesktop.org/software/systemd/man/os-release.html
   private static NotNullLazyValue<Map<String, String>> ourOsReleaseInfo = new AtomicNotNullLazyValue<Map<String, String>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Map<String, String> compute() {
       if (isUnix && !isMac) {
@@ -117,7 +117,7 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isMacIntel64 = isMac && "x86_64".equals(OS_ARCH);
 
   private static final NotNullLazyValue<Boolean> ourHasXdgOpen = new AtomicNotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return isUnix && new File("/usr/bin/xdg-open").canExecute();
@@ -129,7 +129,7 @@ public class SystemInfo extends SystemInfoRt {
   }
 
   private static final NotNullLazyValue<Boolean> ourHasXdgMime = new AtomicNotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return isUnix && new File("/usr/bin/xdg-mime").canExecute();
@@ -149,7 +149,7 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean isMacOSYosemite = isMac && isOsVersionAtLeast("10.10");
   public static final boolean isMacOSElCapitan = isMac && isOsVersionAtLeast("10.11");
 
-  @NotNull
+  @Nonnull
   public static String getMacOSMajorVersion() {
     return getMacOSMajorVersion(OS_VERSION);
   }
@@ -159,40 +159,40 @@ public class SystemInfo extends SystemInfoRt {
     return String.format("%d.%d", parts[0], parts[1]);
   }
 
-  @NotNull
+  @Nonnull
   public static String getMacOSVersionCode() {
     return getMacOSVersionCode(OS_VERSION);
   }
 
-  @NotNull
+  @Nonnull
   public static String getMacOSMajorVersionCode() {
     return getMacOSMajorVersionCode(OS_VERSION);
   }
 
-  @NotNull
+  @Nonnull
   public static String getMacOSMinorVersionCode() {
     return getMacOSMinorVersionCode(OS_VERSION);
   }
 
-  @NotNull
-  public static String getMacOSVersionCode(@NotNull String version) {
+  @Nonnull
+  public static String getMacOSVersionCode(@Nonnull String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%d%d", parts[0], normalize(parts[1]), normalize(parts[2]));
   }
 
-  @NotNull
-  public static String getMacOSMajorVersionCode(@NotNull String version) {
+  @Nonnull
+  public static String getMacOSMajorVersionCode(@Nonnull String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%d%d", parts[0], normalize(parts[1]), 0);
   }
 
-  @NotNull
-  public static String getMacOSMinorVersionCode(@NotNull String version) {
+  @Nonnull
+  public static String getMacOSMinorVersionCode(@Nonnull String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%02d", parts[1], parts[2]);
   }
 
-  private static int[] getMacOSVersionParts(@NotNull String version) {
+  private static int[] getMacOSVersionParts(@Nonnull String version) {
     List<String> parts = StringUtil.split(version, ".");
     while (parts.size() < 3) {
       parts.add("0");

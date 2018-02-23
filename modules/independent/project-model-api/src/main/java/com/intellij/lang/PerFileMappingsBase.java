@@ -30,8 +30,8 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -42,7 +42,7 @@ import java.util.*;
 public abstract class PerFileMappingsBase<T> implements PersistentStateComponent<Element>, PerFileMappings<T> {
   private final Map<VirtualFile, T> myMappings = ContainerUtil.newHashMap();
 
-  @Nullable
+  @javax.annotation.Nullable
   protected FilePropertyPusher<T> getFilePropertyPusher() {
     return null;
   }
@@ -50,7 +50,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
   @Nullable
   protected Project getProject() { return null; }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<VirtualFile, T> getMappings() {
     synchronized (myMappings) {
@@ -70,14 +70,14 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
 
   @Override
   @Nullable
-  public T getMapping(@Nullable VirtualFile file) {
+  public T getMapping(@javax.annotation.Nullable VirtualFile file) {
     FilePropertyPusher<T> pusher = getFilePropertyPusher();
     T t = getMappingInner(file, myMappings, pusher == null? null : pusher.getFileDataKey());
     return t == null? getDefaultMapping(file) : t;
   }
 
   @Nullable
-  protected static <T> T getMappingInner(@Nullable VirtualFile file, @Nullable Map<VirtualFile, T> mappings, @Nullable Key<T> pusherKey) {
+  protected static <T> T getMappingInner(@Nullable VirtualFile file, @Nullable Map<VirtualFile, T> mappings, @javax.annotation.Nullable Key<T> pusherKey) {
     if (file instanceof VirtualFileWindow) {
       final VirtualFileWindow window = (VirtualFileWindow)file;
       file = window.getDelegate();
@@ -103,7 +103,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
   }
 
-  private static <T> T getMappingForHierarchy(@Nullable VirtualFile file, @NotNull Map<VirtualFile, T> mappings) {
+  private static <T> T getMappingForHierarchy(@javax.annotation.Nullable VirtualFile file, @Nonnull Map<VirtualFile, T> mappings) {
     for (VirtualFile cur = file; cur != null; cur = cur.getParent()) {
       T t = mappings.get(cur);
       if (t != null) return t;
@@ -127,7 +127,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public T getImmediateMapping(@Nullable VirtualFile file) {
     synchronized (myMappings) {
       return myMappings.get(file);
@@ -135,7 +135,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
   }
 
   @Override
-  public void setMappings(@NotNull final Map<VirtualFile, T> mappings) {
+  public void setMappings(@Nonnull final Map<VirtualFile, T> mappings) {
     Collection<VirtualFile> oldFiles;
     synchronized (myMappings) {
       oldFiles = ContainerUtil.newArrayList(myMappings.keySet());
@@ -147,7 +147,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     handleMappingChange(mappings.keySet(), oldFiles, project != null && !project.isDefault());
   }
 
-  public void setMapping(@Nullable final VirtualFile file, @Nullable T dialect) {
+  public void setMapping(@javax.annotation.Nullable final VirtualFile file, @Nullable T dialect) {
     synchronized (myMappings) {
       if (dialect == null) {
         myMappings.remove(file);
@@ -187,7 +187,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
 
   protected abstract List<T> getAvailableValues();
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract String serialize(T t);
 
   @Override
@@ -214,12 +214,12 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected T handleUnknownMapping(VirtualFile file, String value) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected String getValueAttribute() {
     return "value";
   }

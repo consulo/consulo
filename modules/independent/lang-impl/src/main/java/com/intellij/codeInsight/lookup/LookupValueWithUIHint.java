@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.lookup;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 

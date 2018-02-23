@@ -26,8 +26,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getComponentName() {
     return "FrameStateManager";
@@ -112,12 +112,12 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   }
 
   @Override
-  public void addListener(@NotNull FrameStateListener listener) {
+  public void addListener(@Nonnull FrameStateListener listener) {
     addListener(listener, null);
   }
 
   @Override
-  public void addListener(@NotNull final FrameStateListener listener, @Nullable Disposable disposable) {
+  public void addListener(@Nonnull final FrameStateListener listener, @Nullable Disposable disposable) {
     myListeners.add(listener);
     if (disposable != null) {
       Disposer.register(disposable, new Disposable() {
@@ -130,7 +130,7 @@ public class FrameStateManagerImpl extends FrameStateManager implements Applicat
   }
 
   @Override
-  public void removeListener(@NotNull FrameStateListener listener) {
+  public void removeListener(@Nonnull FrameStateListener listener) {
     myListeners.remove(listener);
   }
 }

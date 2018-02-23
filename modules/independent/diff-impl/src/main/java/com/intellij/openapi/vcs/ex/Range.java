@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs.ex;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -38,12 +38,14 @@ public class Range {
   private final int myVcsLine1;
   private final int myVcsLine2;
 
-  @Nullable private final List<InnerRange> myInnerRanges;
+  @javax.annotation.Nullable
+  private final List<InnerRange> myInnerRanges;
 
-  @Nullable private RangeHighlighter myRangeHighlighter;
+  @javax.annotation.Nullable
+  private RangeHighlighter myRangeHighlighter;
   private boolean myValid = true;
 
-  public Range(@NotNull Range range) {
+  public Range(@Nonnull Range range) {
     this(range.getLine1(), range.getLine2(), range.getVcsLine1(), range.getVcsLine2());
   }
 
@@ -51,7 +53,7 @@ public class Range {
     this(line1, line2, vcsLine1, vcsLine2, null);
   }
 
-  public Range(int line1, int line2, int vcsLine1, int vcsLine2, @Nullable List<InnerRange> innerRanges) {
+  public Range(int line1, int line2, int vcsLine1, int vcsLine2, @javax.annotation.Nullable List<InnerRange> innerRanges) {
     assert line1 != line2 || vcsLine1 != vcsLine2;
 
     myLine1 = line1;
@@ -133,11 +135,11 @@ public class Range {
     return myRangeHighlighter != null;
   }
 
-  public void setHighlighter(@Nullable RangeHighlighter highlighter) {
+  public void setHighlighter(@javax.annotation.Nullable RangeHighlighter highlighter) {
     myRangeHighlighter = highlighter;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public RangeHighlighter getHighlighter() {
     return myRangeHighlighter;
   }
@@ -212,7 +214,7 @@ public class Range {
     return DiffUtil.isSelectedByLine(line, myLine1, myLine2);
   }
 
-  @NotNull
+  @Nonnull
   private static String getTypeName(byte type) {
     switch (type) {
       case MODIFIED:

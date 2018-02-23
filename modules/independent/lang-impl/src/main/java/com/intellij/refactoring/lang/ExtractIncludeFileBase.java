@@ -50,8 +50,8 @@ import com.intellij.ui.ReplacePromptDialog;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PairConsumer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
   protected abstract void doReplaceRange(final String includePath, final T first, final T last);
 
-  @NotNull
+  @Nonnull
   protected String doExtract(final PsiDirectory targetDirectory,
                              final String targetfileName,
                              final T first,
@@ -164,10 +164,10 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
   }
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
   }
 
-  @NotNull
+  @Nonnull
   protected Language getLanguageForExtract(PsiElement firstExtracted) {
     return firstExtracted.getLanguage();
   }
@@ -183,7 +183,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file, DataContext dataContext) {
     myIncludingFile = file;
     if (!editor.getSelectionModel().hasSelection()) {
       String message = RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("no.selection"));

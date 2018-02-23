@@ -18,7 +18,7 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,12 +26,12 @@ import java.util.List;
  * @author nik
  */
 public abstract class HyperlinkInfoFactory {
-  @NotNull
+  @Nonnull
   public static HyperlinkInfoFactory getInstance() {
     return ServiceManager.getService(HyperlinkInfoFactory.class);
   }
 
-  @NotNull
-  public abstract HyperlinkInfo createMultipleFilesHyperlinkInfo(@NotNull List<VirtualFile> files,
-                                                                 int line, @NotNull Project project);
+  @Nonnull
+  public abstract HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<VirtualFile> files,
+                                                                 int line, @Nonnull Project project);
 }

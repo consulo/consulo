@@ -20,12 +20,12 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class WriteAction<T> extends BaseActionRunnable<T> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.application.WriteAction");
 
-  @NotNull
+  @Nonnull
   @Override
   public RunResult<T> execute() {
     final RunResult<T> result = new RunResult<>(this);
@@ -61,19 +61,19 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public static AccessToken start() {
     // get useful information about the write action
     Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
     return start(aClass);
   }
 
-  @NotNull
-  public static AccessToken start(@NotNull Class clazz) {
+  @Nonnull
+  public static AccessToken start(@Nonnull Class clazz) {
     return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
   }
 
-  public static <E extends Throwable> void run(@NotNull ThrowableRunnable<E> action) throws E {
+  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
     AccessToken token = start();
     try {
       action.run();
@@ -83,7 +83,7 @@ public abstract class WriteAction<T> extends BaseActionRunnable<T> {
     }
   }
 
-  public static <T, E extends Throwable> T compute(@NotNull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
     AccessToken token = start();
     try {
       return action.compute();

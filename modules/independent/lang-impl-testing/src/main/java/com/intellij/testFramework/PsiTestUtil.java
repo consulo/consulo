@@ -43,8 +43,8 @@ import com.intellij.util.containers.ContainerUtil;
 import junit.framework.Assert;
 import consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
@@ -140,11 +140,11 @@ public class PsiTestUtil {
     }.execute().throwException();
   }
 
-  public static void addSourceContentToRoots(Module module, @NotNull VirtualFile vDir) {
+  public static void addSourceContentToRoots(Module module, @Nonnull VirtualFile vDir) {
     addSourceContentToRoots(module, vDir, false);
   }
 
-  public static void addSourceContentToRoots(final Module module, @NotNull final VirtualFile vDir, final boolean testSource) {
+  public static void addSourceContentToRoots(final Module module, @Nonnull final VirtualFile vDir, final boolean testSource) {
     new WriteCommandAction.Simple(module.getProject()) {
       @Override
       protected void run() throws Throwable {
@@ -175,7 +175,7 @@ public class PsiTestUtil {
     }.execute().throwException();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static ContentEntry findContentEntry(ModuleRootModel rootModel, final VirtualFile file) {
     return ContainerUtil.find(rootModel.getContentEntries(), new Condition<ContentEntry>() {
       @Override
@@ -211,7 +211,7 @@ public class PsiTestUtil {
     commitModel(model);
   }
 
-  @NotNull
+  @Nonnull
   private static ContentEntry findContentEntryWithAssertion(ModifiableRootModel model, VirtualFile dir) {
     ContentEntry entry = findContentEntry(model, dir);
     if (entry == null) {

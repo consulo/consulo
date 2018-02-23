@@ -19,13 +19,13 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class QuickChangeSchemesAction extends QuickSwitchSchemeAction implements DumbAware {
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     final AnAction[] actions = getGroup().getChildren(null);
     for (AnAction action : actions) {
       group.add(action);

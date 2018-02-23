@@ -19,34 +19,34 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.util.CharTable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.AbstractList;
 import java.util.List;
 
 public class FCTSBackedLighterAST extends LighterAST {
-  @NotNull
+  @Nonnull
   private final FlyweightCapableTreeStructure<LighterASTNode> myTreeStructure;
 
-  public FCTSBackedLighterAST(@NotNull CharTable charTable, @NotNull FlyweightCapableTreeStructure<LighterASTNode> treeStructure) {
+  public FCTSBackedLighterAST(@Nonnull CharTable charTable, @Nonnull FlyweightCapableTreeStructure<LighterASTNode> treeStructure) {
     super(charTable);
     myTreeStructure = treeStructure;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LighterASTNode getRoot() {
     return myTreeStructure.getRoot();
   }
 
   @Override
-  public LighterASTNode getParent(@NotNull final LighterASTNode node) {
+  public LighterASTNode getParent(@Nonnull final LighterASTNode node) {
     return myTreeStructure.getParent(node);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LighterASTNode> getChildren(@NotNull final LighterASTNode parent) {
+  public List<LighterASTNode> getChildren(@Nonnull final LighterASTNode parent) {
     final Ref<LighterASTNode[]> into = new Ref<>();
     final int numKids = myTreeStructure.getChildren(myTreeStructure.prepareForGetChildren(parent), into);
     if (numKids == 0) {

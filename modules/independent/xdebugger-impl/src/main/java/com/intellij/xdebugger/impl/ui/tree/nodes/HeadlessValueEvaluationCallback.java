@@ -24,8 +24,8 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -36,30 +36,30 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   private volatile boolean myCanceled;
   private final Semaphore mySemaphore;
 
-  public HeadlessValueEvaluationCallback(@NotNull XValueNodeImpl node) {
+  public HeadlessValueEvaluationCallback(@Nonnull XValueNodeImpl node) {
     myNode = node;
     mySemaphore = new Semaphore();
     mySemaphore.down();
   }
 
-  public void startFetchingValue(@NotNull XFullValueEvaluator fullValueEvaluator) {
+  public void startFetchingValue(@Nonnull XFullValueEvaluator fullValueEvaluator) {
     fullValueEvaluator.startEvaluation(this);
 
     new Alarm().addRequest(this::showProgress, 500);
   }
 
   @Override
-  public void evaluated(@NotNull String fullValue) {
+  public void evaluated(@Nonnull String fullValue) {
     evaluationComplete(fullValue);
   }
 
   @Override
-  public void evaluated(@NotNull String fullValue, @Nullable Font font) {
+  public void evaluated(@Nonnull String fullValue, @Nullable Font font) {
     evaluated(fullValue);
   }
 
   @Override
-  public void errorOccurred(@NotNull String errorMessage) {
+  public void errorOccurred(@Nonnull String errorMessage) {
     try {
       String message = XDebuggerBundle.message("load.value.task.error", errorMessage);
       XDebugSessionImpl.NOTIFICATION_GROUP.createNotification(message, NotificationType.ERROR).notify(myNode.getTree().getProject());
@@ -69,7 +69,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
     }
   }
 
-  private void evaluationComplete(@NotNull String value) {
+  private void evaluationComplete(@Nonnull String value) {
     try {
       myEvaluated = true;
       mySemaphore.up();
@@ -83,7 +83,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
     return myNode;
   }
 
-  protected void evaluationComplete(@NotNull String value, @NotNull Project project) {
+  protected void evaluationComplete(@Nonnull String value, @Nonnull Project project) {
 
   }
 
@@ -99,7 +99,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
 
     new Task.Backgroundable(myNode.getTree().getProject(), XDebuggerBundle.message("load.value.task.text")) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         int i = 0;
         while (!myCanceled && !myEvaluated) {

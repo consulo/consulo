@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.PropertyName;
 import com.intellij.openapi.util.KeyWithDefaultValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -107,9 +107,9 @@ public class FavoritesViewSettings implements ViewSettings {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+  public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
     return option.getDefaultValue();
   }
 

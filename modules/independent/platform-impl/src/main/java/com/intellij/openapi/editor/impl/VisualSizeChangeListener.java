@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines callback that receives information about visual size change of component that represents data in lines-based mode.
@@ -38,5 +38,5 @@ public interface VisualSizeChangeListener {
    * @param newEndLine    logical line that contains end offset of the changed region
    * @param lineWidths    container of {@code 'logical line number -> line width in pixels} mappings
    */
-  void onLineWidthsChange(int startLine, int oldEndLine, int newEndLine, @NotNull TIntIntHashMap lineWidths);
+  void onLineWidthsChange(int startLine, int oldEndLine, int newEndLine, @Nonnull TIntIntHashMap lineWidths);
 }

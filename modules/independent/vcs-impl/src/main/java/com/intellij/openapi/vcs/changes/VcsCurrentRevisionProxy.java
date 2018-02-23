@@ -24,19 +24,23 @@ import com.intellij.openapi.vcs.impl.ContentRevisionCache;
 import com.intellij.openapi.vcs.impl.CurrentRevisionProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
 public class VcsCurrentRevisionProxy implements ContentRevision {
-  @NotNull private final DiffProvider myDiffProvider;
-  @NotNull private final VirtualFile myFile;
-  @NotNull private final Project myProject;
-  @NotNull private final VcsKey myVcsKey;
+  @Nonnull
+  private final DiffProvider myDiffProvider;
+  @Nonnull
+  private final VirtualFile myFile;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VcsKey myVcsKey;
 
   @Nullable
-  public static VcsCurrentRevisionProxy create(@NotNull VirtualFile file, @NotNull Project project) {
+  public static VcsCurrentRevisionProxy create(@Nonnull VirtualFile file, @Nonnull Project project) {
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
     if (vcs != null) {
       DiffProvider diffProvider = vcs.getDiffProvider();
@@ -47,27 +51,27 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     return null;
   }
 
-  private VcsCurrentRevisionProxy(@NotNull DiffProvider diffProvider,
-                                  @NotNull VirtualFile file,
-                                  @NotNull Project project,
-                                  @NotNull VcsKey vcsKey) {
+  private VcsCurrentRevisionProxy(@Nonnull DiffProvider diffProvider,
+                                  @Nonnull VirtualFile file,
+                                  @Nonnull Project project,
+                                  @Nonnull VcsKey vcsKey) {
     myDiffProvider = diffProvider;
     myFile = file;
     myProject = project;
     myVcsKey = vcsKey;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getContent() throws VcsException {
     return getVcsRevision().getContent();
   }
 
-  @NotNull
+  @Nonnull
   public FilePath getFile() {
     return VcsUtil.getFilePath(myFile);
   }
 
-  @NotNull
+  @Nonnull
   public VcsRevisionNumber getRevisionNumber() {
     try {
       return getVcsRevision().getRevisionNumber();
@@ -77,7 +81,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     }
   }
 
-  @NotNull
+  @Nonnull
   private ContentRevision getVcsRevision() throws VcsException {
     final FilePath file = getFile();
     final Pair<VcsRevisionNumber, byte[]> pair;
@@ -105,19 +109,19 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
         return ContentRevisionCache.getAsString(getContentAsBytes(), file, null);
       }
 
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public byte[] getContentAsBytes() throws VcsException {
         return pair.getSecond();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public FilePath getFile() {
         return file;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public VcsRevisionNumber getRevisionNumber() {
         return pair.getFirst();
@@ -125,7 +129,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     };
   }
 
-  @NotNull
+  @Nonnull
   private VcsRevisionNumber getCurrentRevisionNumber() throws VcsException {
     VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(myFile);
 
@@ -136,7 +140,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     return currentRevision;
   }
 
-  @NotNull
+  @Nonnull
   private Pair<VcsRevisionNumber, byte[]> loadContent() throws VcsException {
     VcsRevisionNumber currentRevision = getCurrentRevisionNumber();
     ContentRevision contentRevision = myDiffProvider.createFileContent(currentRevision, myFile);

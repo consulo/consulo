@@ -16,20 +16,20 @@
 package consulo.auth;
 
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 16-Apr-17
  */
 public class ServiceAuthEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "hub.consulo.io authorization & external storage support";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "Enabled support for hub.consulo.io. Provide support for storing settings at hub.consulo.io";

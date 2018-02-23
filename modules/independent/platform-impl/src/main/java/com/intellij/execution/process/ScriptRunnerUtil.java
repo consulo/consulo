@@ -27,8 +27,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -61,19 +61,19 @@ public final class ScriptRunnerUtil {
   private ScriptRunnerUtil() {
   }
 
-  public static String getProcessOutput(@NotNull GeneralCommandLine commandLine)
+  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine)
     throws ExecutionException {
     return getProcessOutput(commandLine, STDOUT_OUTPUT_KEY_FILTER, DEFAULT_TIMEOUT);
   }
 
-  public static String getProcessOutput(@NotNull GeneralCommandLine commandLine, @NotNull Condition<Key> outputTypeFilter, long timeout)
+  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull Condition<Key> outputTypeFilter, long timeout)
     throws ExecutionException {
     return getProcessOutput(new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString()), outputTypeFilter,
                             timeout);
   }
 
-  public static String getProcessOutput(@NotNull final ProcessHandler processHandler,
-                                        @NotNull final Condition<Key> outputTypeFilter,
+  public static String getProcessOutput(@Nonnull final ProcessHandler processHandler,
+                                        @Nonnull final Condition<Key> outputTypeFilter,
                                         final long timeout)
     throws ExecutionException {
     LOG.assertTrue(!processHandler.isStartNotified());
@@ -109,8 +109,8 @@ public final class ScriptRunnerUtil {
     return null;
   }
 
-  @NotNull
-  public static OSProcessHandler execute(@NotNull String exePath,
+  @Nonnull
+  public static OSProcessHandler execute(@Nonnull String exePath,
                                          @Nullable String workingDirectory,
                                          @Nullable VirtualFile scriptFile,
                                          String[] parameters) throws ExecutionException {
@@ -213,7 +213,7 @@ public final class ScriptRunnerUtil {
    * @param millisTimeout timeout in milliseconds between 'soft kill' and 'force quite'
    * @param commandLine command line
    */
-  public static void terminateProcessHandler(@NotNull ProcessHandler processHandler,
+  public static void terminateProcessHandler(@Nonnull ProcessHandler processHandler,
                                              long millisTimeout,
                                              @Nullable String commandLine) {
     if (processHandler.isProcessTerminated()) {

@@ -68,8 +68,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.codeInsight.TargetElementUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -133,7 +133,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     return "Auto-update from Source";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected AnAction createRestorePopupAction() {
     myRestorePopupAction = super.createRestorePopupAction();
@@ -240,14 +240,14 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     }
   }
 
-  public void showJavaDocInfoAtToolWindow(@NotNull PsiElement element, @NotNull PsiElement original) {
+  public void showJavaDocInfoAtToolWindow(@Nonnull PsiElement element, @Nonnull PsiElement original) {
     final Content content = recreateToolWindow(element, original);
     if (content == null) return;
 
     fetchDocInfo(getDefaultCollector(element, original), (DocumentationComponent)content.getComponent(), true);
   }
 
-  public void showJavaDocInfo(@NotNull final PsiElement element, final PsiElement original) {
+  public void showJavaDocInfo(@Nonnull final PsiElement element, final PsiElement original) {
     showJavaDocInfo(element, original, null);
   }
 
@@ -265,9 +265,9 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
    *                       on explicit action call (Ctrl+Q). We want to close the doc on, say, editor viewport position change
    *                       at the first situation but don't want to do that at the second
    */
-  public void showJavaDocInfo(@NotNull Editor editor,
-                              @NotNull final PsiElement element,
-                              @NotNull final PsiElement original,
+  public void showJavaDocInfo(@Nonnull Editor editor,
+                              @Nonnull final PsiElement element,
+                              @Nonnull final PsiElement original,
                               @Nullable Runnable closeCallback,
                               boolean closeOnSneeze)
   {
@@ -276,13 +276,13 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     showJavaDocInfo(element, original, closeCallback);
   }
 
-  public void showJavaDocInfo(@NotNull final PsiElement element,
+  public void showJavaDocInfo(@Nonnull final PsiElement element,
                               final PsiElement original,
                               @Nullable Runnable closeCallback) {
     showJavaDocInfo(element, original, false, closeCallback);
   }
 
-  public void showJavaDocInfo(@NotNull final PsiElement element,
+  public void showJavaDocInfo(@Nonnull final PsiElement element,
                               final PsiElement original,
                               final boolean requestFocus,
                               @Nullable Runnable closeCallback) {
@@ -393,7 +393,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     return file != null ? file.findElementAt(editor.getCaretModel().getOffset()) : null;
   }
 
-  private void doShowJavaDocInfo(@NotNull final PsiElement element,
+  private void doShowJavaDocInfo(@Nonnull final PsiElement element,
                                  boolean requestFocus,
                                  PopupUpdateProcessor updateProcessor,
                                  final PsiElement originalElement,
@@ -442,7 +442,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     }
   }
 
-  private void showInPopup(@NotNull final PsiElement element,
+  private void showInPopup(@Nonnull final PsiElement element,
                            boolean requestFocus,
                            PopupUpdateProcessor updateProcessor,
                            final PsiElement originalElement,
@@ -537,7 +537,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     }
   }
 
-  static String getTitle(@NotNull final PsiElement element, final boolean _short) {
+  static String getTitle(@Nonnull final PsiElement element, final boolean _short) {
     final String title = SymbolPresentationUtil.getSymbolPresentableText(element);
     return _short ? title != null ? title : element.getText() : CodeInsightBundle.message("javadoc.info.title", title != null ? title : element.getText());
   }
@@ -555,7 +555,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
   }
 
   @Nullable
-  public PsiElement findTargetElement(@NotNull final Editor editor, @Nullable final PsiFile file, PsiElement contextElement) {
+  public PsiElement findTargetElement(@Nonnull final Editor editor, @Nullable final PsiFile file, PsiElement contextElement) {
     return findTargetElement(editor, editor.getCaretModel().getOffset(), file, contextElement);
   }
 
@@ -643,11 +643,11 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     return myPreviouslyFocused != null && myPreviouslyFocused.getParent() instanceof ChooseByNameBase.JPanelProvider;
   }
 
-  private DocumentationCollector getDefaultCollector(@NotNull final PsiElement element, @Nullable final PsiElement originalElement) {
+  private DocumentationCollector getDefaultCollector(@Nonnull final PsiElement element, @Nullable final PsiElement originalElement) {
     return new DefaultDocumentationCollector(element, originalElement);
   }
 
-  private DocumentationCollector getDefaultCollector(@NotNull final PsiElement element, @Nullable final PsiElement originalElement, String ref) {
+  private DocumentationCollector getDefaultCollector(@Nonnull final PsiElement element, @Nullable final PsiElement originalElement, String ref) {
     return new DefaultDocumentationCollector(element, originalElement, ref);
   }
 
@@ -773,12 +773,12 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
     return callback;
   }
 
-  @NotNull
+  @Nonnull
   public static DocumentationProvider getProviderFromElement(final PsiElement element) {
     return getProviderFromElement(element, null);
   }
 
-  @NotNull
+  @Nonnull
   public static DocumentationProvider getProviderFromElement(@Nullable PsiElement element, @Nullable PsiElement originalElement) {
     if (element != null && !element.isValid()) {
       element = null;
@@ -1030,7 +1030,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
   }
 
   @Override
-  protected void doUpdateComponent(@NotNull PsiElement element) {
+  protected void doUpdateComponent(@Nonnull PsiElement element) {
     showJavaDocInfo(element, element, null);
   }
 
@@ -1040,7 +1040,7 @@ public class DocumentationManager extends DockablePopupManager<DocumentationComp
   }
 
   @Nullable
-  public Image getElementImage(@NotNull PsiElement element, @NotNull String imageSpec) {
+  public Image getElementImage(@Nonnull PsiElement element, @Nonnull String imageSpec) {
     DocumentationProvider provider = getProviderFromElement(element);
     if (provider instanceof CompositeDocumentationProvider) {
       for (DocumentationProvider p : ((CompositeDocumentationProvider)provider).getAllProviders()) {

@@ -27,7 +27,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,15 +39,15 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
 
   private static final String GROUP_ID = "file-type";
 
-  @NotNull
+  @Nonnull
   @Override
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@NotNull final Project project) throws CollectUsagesException {
+  public Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) throws CollectUsagesException {
     final Set<FileType> usedFileTypes = new HashSet<FileType>();
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     if (fileTypeManager == null) {
@@ -77,7 +77,7 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
     }
     usedFileTypes.add(UnknownFileType.INSTANCE);
     return ContainerUtil.map2Set(usedFileTypes, new NotNullFunction<FileType, UsageDescriptor>() {
-      @NotNull
+      @Nonnull
       @Override
       public UsageDescriptor fun(FileType fileType) {
         return new UsageDescriptor(fileType.getName(), 1);

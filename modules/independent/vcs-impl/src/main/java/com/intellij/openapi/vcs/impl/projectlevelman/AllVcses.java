@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.impl.VcsEP;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -70,14 +70,14 @@ public class AllVcses implements AllVcsesI, Disposable {
     vcs.getProvidedStatuses();
   }
 
-  public void registerManually(@NotNull final AbstractVcs vcs) {
+  public void registerManually(@Nonnull final AbstractVcs vcs) {
     synchronized (myLock) {
       if (myVcses.containsKey(vcs.getName())) return;
       addVcs(vcs);
     }
   }
 
-  public void unregisterManually(@NotNull final AbstractVcs vcs) {
+  public void unregisterManually(@Nonnull final AbstractVcs vcs) {
     synchronized (myLock) {
       if (! myVcses.containsKey(vcs.getName())) return;
       unregisterVcs(vcs);

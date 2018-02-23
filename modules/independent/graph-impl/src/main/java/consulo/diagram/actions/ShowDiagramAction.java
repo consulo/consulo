@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
 import consulo.diagram.provider.GraphProvider;
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
 import consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ShowDiagramAction extends AnAction {
   public static class DiagramSupport extends EarlyAccessProgramDescriptor {
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return "Diagram Support";
@@ -41,7 +41,7 @@ public class ShowDiagramAction extends AnAction {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getDescription() {
       return "";

@@ -2,7 +2,7 @@ package com.intellij.openapi.externalSystem.model.settings;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
@@ -28,15 +28,17 @@ public enum LocationSettingType {
 
   EXPLICIT_CORRECT("setting.type.location.explicit.correct");
   
-  @NotNull private final String myDescriptionKey;
-  @NotNull private final Color myColor;
+  @Nonnull
+  private final String myDescriptionKey;
+  @Nonnull
+  private final Color myColor;
 
-  LocationSettingType(@NotNull String descriptionKey) {
+  LocationSettingType(@Nonnull String descriptionKey) {
     this(descriptionKey, "TextField.foreground");
   }
 
-  LocationSettingType(@NotNull @PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
-                      @NotNull String ... colorKeys)
+  LocationSettingType(@Nonnull @PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
+                      @Nonnull String ... colorKeys)
   {
     myDescriptionKey = descriptionKey;
     Color c = null;
@@ -54,11 +56,11 @@ public enum LocationSettingType {
   /**
    * @return human-readable description of the current setting type
    */
-  public String getDescription(@NotNull ProjectSystemId externalSystemId) {
+  public String getDescription(@Nonnull ProjectSystemId externalSystemId) {
     return ExternalSystemBundle.message(myDescriptionKey, externalSystemId.getReadableName());
   }
 
-  @NotNull
+  @Nonnull
   public Color getColor() {
     return myColor;
   }

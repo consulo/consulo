@@ -17,8 +17,8 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -27,17 +27,17 @@ public interface CustomLiveTemplate {
   ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create("com.intellij.customLiveTemplate");
 
   @Nullable
-  String computeTemplateKey(@NotNull CustomTemplateCallback callback);
+  String computeTemplateKey(@Nonnull CustomTemplateCallback callback);
 
   boolean isApplicable(PsiFile file, int offset, boolean wrapping);
 
   boolean supportsWrapping();
 
-  void expand(@NotNull String key, @NotNull CustomTemplateCallback callback);
+  void expand(@Nonnull String key, @Nonnull CustomTemplateCallback callback);
 
-  void wrap(@NotNull String selection, @NotNull CustomTemplateCallback callback);
+  void wrap(@Nonnull String selection, @Nonnull CustomTemplateCallback callback);
 
-  @NotNull
+  @Nonnull
   String getTitle();
 
   char getShortcut();

@@ -18,7 +18,7 @@ package com.intellij.ui;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

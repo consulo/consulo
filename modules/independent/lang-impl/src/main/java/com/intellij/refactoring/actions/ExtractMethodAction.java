@@ -16,12 +16,10 @@
 
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ExtractMethodAction extends BasePlatformRefactoringAction {
   public ExtractMethodAction() {
@@ -34,12 +32,12 @@ public class ExtractMethodAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  public boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     return false;
   }
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return provider.getExtractMethodHandler();
   }
 }

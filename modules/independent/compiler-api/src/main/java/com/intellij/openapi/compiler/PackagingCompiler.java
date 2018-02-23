@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 

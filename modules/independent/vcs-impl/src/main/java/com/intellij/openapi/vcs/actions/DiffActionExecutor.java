@@ -47,8 +47,8 @@ import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -106,7 +106,7 @@ public abstract class DiffActionExecutor {
                                                                                mySelectedFile.getPresentableUrl()),
                                                              true) {
 
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         final VcsRevisionNumber revisionNumber = getRevisionNumber();
         try {
           if (revisionNumber == null) {

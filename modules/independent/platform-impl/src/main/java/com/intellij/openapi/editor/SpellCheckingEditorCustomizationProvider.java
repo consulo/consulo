@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.vcs.ui.SpellCheckerCustomization;
 import com.intellij.ui.EditorCustomization;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class SpellCheckingEditorCustomizationProvider {
   private static final SpellCheckingEditorCustomizationProvider ourInstance = new SpellCheckingEditorCustomizationProvider();
 
-  @NotNull
+  @Nonnull
   public static SpellCheckingEditorCustomizationProvider getInstance() {
     return ourInstance;
   }

@@ -29,15 +29,15 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
 import com.intellij.vcs.log.VcsLogDataKeys;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAction {
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
     List<VcsFullCommitDetails> details = log.getSelectedDetails();
@@ -47,7 +47,7 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
     if (project == null || log == null) {
@@ -66,11 +66,11 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
     }
   }
 
-  protected abstract void actionPerformed(@NotNull Project project, @NotNull MultiMap<Repo, VcsFullCommitDetails> grouped);
+  protected abstract void actionPerformed(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped);
 
-  protected abstract boolean isEnabled(@NotNull MultiMap<Repo, VcsFullCommitDetails> grouped);
+  protected abstract boolean isEnabled(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped);
 
-  protected boolean isVisible(@NotNull final Project project, @NotNull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected boolean isVisible(@Nonnull final Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return ContainerUtil.and(grouped.keySet(), new Condition<Repo>() {
       @Override
       public boolean value(Repo repo) {
@@ -80,14 +80,14 @@ public abstract class VcsLogAction<Repo extends Repository> extends DumbAwareAct
     });
   }
 
-  @NotNull
-  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@NotNull Project project);
+  @Nonnull
+  protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
 
   @Nullable
-  protected abstract Repo getRepositoryForRoot(@NotNull Project project, @NotNull VirtualFile root);
+  protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
 
-  @Nullable
-  private MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(@NotNull Project project, @NotNull List<VcsFullCommitDetails> commits) {
+  @javax.annotation.Nullable
+  private MultiMap<Repo, VcsFullCommitDetails> groupByRootWithCheck(@Nonnull Project project, @Nonnull List<VcsFullCommitDetails> commits) {
     MultiMap<Repo, VcsFullCommitDetails> map = MultiMap.create();
     for (VcsFullCommitDetails commit : commits) {
       Repo root = getRepositoryForRoot(project, commit.getRoot());

@@ -2,8 +2,8 @@ package com.intellij.codeInsight.generation;
 
 import com.intellij.codeInsight.template.Template;
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -19,10 +19,10 @@ public abstract class PatternDescriptor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getParentId();
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
   @Nullable

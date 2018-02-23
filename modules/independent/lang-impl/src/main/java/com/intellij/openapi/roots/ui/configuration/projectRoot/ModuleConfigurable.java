@@ -44,8 +44,8 @@ import com.intellij.ui.navigation.Place;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -97,8 +97,8 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     return createLayerConfigurationPanel(getModuleEditor());
   }
 
-  @NotNull
-  private static JPanel createLayerConfigurationPanel(@NotNull final ModuleEditor moduleEditor) {
+  @Nonnull
+  private static JPanel createLayerConfigurationPanel(@Nonnull final ModuleEditor moduleEditor) {
     BorderLayoutPanel panel = JBUI.Panels.simplePanel();
 
     ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
@@ -215,7 +215,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     final ModuleEditor editor = getModuleEditor();
     if (editor != null) {
       editor.queryPlace(place);

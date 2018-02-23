@@ -20,7 +20,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -85,7 +85,7 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return "copyright";
   }

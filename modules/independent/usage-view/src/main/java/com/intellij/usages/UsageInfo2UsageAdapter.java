@@ -39,8 +39,7 @@ import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.rules.*;
 import com.intellij.util.*;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +57,7 @@ public class UsageInfo2UsageAdapter
   private static final Comparator<UsageInfo> BY_NAVIGATION_OFFSET = Comparator.comparingInt(UsageInfo::getNavigationOffset);
 
   private final UsageInfo myUsageInfo;
-  @NotNull
+  @Nonnull
   private Object myMergedUsageInfos; // contains all merged infos, including myUsageInfo. Either UsageInfo or UsageInfo[]
   private final int myLineNumber;
   private final int myOffset;
@@ -66,7 +65,7 @@ public class UsageInfo2UsageAdapter
   private volatile Reference<TextChunk[]> myTextChunks; // allow to be gced and recreated on-demand because it requires a lot of memory
   private volatile UsageType myUsageType;
 
-  public UsageInfo2UsageAdapter(@NotNull final UsageInfo usageInfo) {
+  public UsageInfo2UsageAdapter(@Nonnull final UsageInfo usageInfo) {
     myUsageInfo = usageInfo;
     myMergedUsageInfos = usageInfo;
 
@@ -100,13 +99,13 @@ public class UsageInfo2UsageAdapter
     myModificationStamp = getCurrentModificationStamp();
   }
 
-  private static int getLineNumber(@NotNull Document document, final int startOffset) {
+  private static int getLineNumber(@Nonnull Document document, final int startOffset) {
     if (document.getTextLength() == 0) return 0;
     if (startOffset >= document.getTextLength()) return document.getLineCount();
     return document.getLineNumber(startOffset);
   }
 
-  @NotNull
+  @Nonnull
   private TextChunk[] initChunks() {
     PsiFile psiFile = getPsiFile();
     Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
@@ -130,7 +129,7 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public UsagePresentation getPresentation() {
     return this;
   }
@@ -154,7 +153,7 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public FileEditorLocation getLocation() {
     VirtualFile virtualFile = getFile();
     if (virtualFile == null) return null;
@@ -191,7 +190,7 @@ public class UsageInfo2UsageAdapter
   }
 
   // must iterate in start offset order
-  public boolean processRangeMarkers(@NotNull Processor<Segment> processor) {
+  public boolean processRangeMarkers(@Nonnull Processor<Segment> processor) {
     for (UsageInfo usageInfo : getMergedInfos()) {
       Segment segment = usageInfo.getSegment();
       if (segment != null && !processor.process(segment)) {
@@ -269,7 +268,7 @@ public class UsageInfo2UsageAdapter
     return range;
   }
 
-  @NotNull
+  @Nonnull
   private Project getProject() {
     return getUsageInfo().getProject();
   }
@@ -334,7 +333,7 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  public boolean merge(@NotNull MergeableUsage other) {
+  public boolean merge(@Nonnull MergeableUsage other) {
     if (!(other instanceof UsageInfo2UsageAdapter)) return false;
     UsageInfo2UsageAdapter u2 = (UsageInfo2UsageAdapter)other;
     assert u2 != this;
@@ -367,14 +366,14 @@ public class UsageInfo2UsageAdapter
     return getUsageInfo().isNonCodeUsage;
   }
 
-  @NotNull
+  @Nonnull
   public UsageInfo getUsageInfo() {
     return myUsageInfo;
   }
 
   // by start offset
   @Override
-  public int compareTo(@NotNull final UsageInfo2UsageAdapter o) {
+  public int compareTo(@Nonnull final UsageInfo2UsageAdapter o) {
     return getUsageInfo().compareToByStartOffset(o.getUsageInfo());
   }
 
@@ -385,8 +384,8 @@ public class UsageInfo2UsageAdapter
     reference.handleElementRename(newName);
   }
 
-  @NotNull
-  public static UsageInfo2UsageAdapter[] convert(@NotNull UsageInfo[] usageInfos) {
+  @Nonnull
+  public static UsageInfo2UsageAdapter[] convert(@Nonnull UsageInfo[] usageInfos) {
     UsageInfo2UsageAdapter[] result = new UsageInfo2UsageAdapter[usageInfos.length];
     for (int i = 0; i < result.length; i++) {
       result[i] = new UsageInfo2UsageAdapter(usageInfos[i]);
@@ -406,7 +405,7 @@ public class UsageInfo2UsageAdapter
     }
   }
 
-  @NotNull
+  @Nonnull
   public UsageInfo[] getMergedInfos() {
     Object infos = myMergedUsageInfos;
     return infos instanceof UsageInfo ? new UsageInfo[]{(UsageInfo)infos} : (UsageInfo[])infos;
@@ -420,7 +419,7 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextChunk[] getText() {
     TextChunk[] chunks = SoftReference.dereference(myTextChunks);
     final long currentModificationStamp = getCurrentModificationStamp();
@@ -434,7 +433,7 @@ public class UsageInfo2UsageAdapter
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPlainText() {
     int startOffset = getNavigationOffset();
     final PsiElement element = getElement();
@@ -478,7 +477,7 @@ public class UsageInfo2UsageAdapter
     return myUsageInfo.getTooltipText();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public UsageType getUsageType() {
     UsageType usageType = myUsageType;
 

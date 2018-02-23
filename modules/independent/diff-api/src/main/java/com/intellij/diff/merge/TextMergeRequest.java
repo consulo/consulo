@@ -16,16 +16,16 @@
 package com.intellij.diff.merge;
 
 import com.intellij.diff.contents.DocumentContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class TextMergeRequest extends ThreesideMergeRequest {
   @Override
-  @NotNull
+  @Nonnull
   public abstract List<DocumentContent> getContents();
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract DocumentContent getOutputContent();
 }

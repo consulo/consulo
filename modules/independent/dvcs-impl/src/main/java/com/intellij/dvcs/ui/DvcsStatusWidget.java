@@ -32,8 +32,8 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.event.MouseEvent;
@@ -44,30 +44,33 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   protected static final Logger LOG = Logger.getInstance(DvcsStatusWidget.class);
   private static final String MAX_STRING = "VCS: Rebasing feature-12345";
 
-  @NotNull private final String myPrefix;
+  @Nonnull
+  private final String myPrefix;
 
-  @Nullable private String myText;
-  @Nullable private String myTooltip;
+  @javax.annotation.Nullable
+  private String myText;
+  @javax.annotation.Nullable
+  private String myTooltip;
 
-  protected DvcsStatusWidget(@NotNull Project project, @NotNull String prefix) {
+  protected DvcsStatusWidget(@Nonnull Project project, @Nonnull String prefix) {
     super(project);
     myPrefix = prefix;
   }
 
-  @Nullable
-  protected abstract T guessCurrentRepository(@NotNull Project project);
+  @javax.annotation.Nullable
+  protected abstract T guessCurrentRepository(@Nonnull Project project);
 
-  @NotNull
-  protected abstract String getFullBranchName(@NotNull T repository);
+  @Nonnull
+  protected abstract String getFullBranchName(@Nonnull T repository);
 
-  protected abstract boolean isMultiRoot(@NotNull Project project);
+  protected abstract boolean isMultiRoot(@Nonnull Project project);
 
-  @NotNull
-  protected abstract ListPopup getPopup(@NotNull Project project, @NotNull T repository);
+  @Nonnull
+  protected abstract ListPopup getPopup(@Nonnull Project project, @Nonnull T repository);
 
-  protected abstract void subscribeToRepoChangeEvents(@NotNull Project project);
+  protected abstract void subscribeToRepoChangeEvents(@Nonnull Project project);
 
-  protected abstract void rememberRecentRoot(@NotNull String path);
+  protected abstract void rememberRecentRoot(@Nonnull String path);
 
   public void activate() {
     Project project = getProject();
@@ -89,56 +92,56 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     super.dispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String ID() {
     return getClass().getName();
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return this;
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     LOG.debug("selection changed");
     update();
   }
 
   @Override
-  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     LOG.debug("file opened");
     update();
   }
 
   @Override
-  public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     LOG.debug("file closed");
     update();
   }
 
   @RequiredDispatchThread
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getSelectedValue() {
     return StringUtil.isEmpty(myText) ? "" : myPrefix + ": " + myText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @Deprecated
   public String getMaxValue() {
     return "";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTooltipText() {
     return myTooltip;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public ListPopup getPopupStep() {
     Project project = getProject();
@@ -149,7 +152,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     return getPopup(project, repository);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Consumer<MouseEvent> getClickConsumer() {
     // has no effect since the click opens a list popup, and the consumer is not called for the MultipleTextValuesPresentation
@@ -185,8 +188,8 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     rememberRecentRoot(repository.getRoot().getPath());
   }
 
-  @Nullable
-  private String getToolTip(@NotNull Project project) {
+  @javax.annotation.Nullable
+  private String getToolTip(@Nonnull Project project) {
     T currentRepository = guessCurrentRepository(project);
     if (currentRepository == null) return null;
     String branchName = getFullBranchName(currentRepository);
@@ -196,7 +199,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     return branchName;
   }
 
-  private void installWidgetToStatusBar(@NotNull final Project project, @NotNull final StatusBarWidget widget) {
+  private void installWidgetToStatusBar(@Nonnull final Project project, @Nonnull final StatusBarWidget widget) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -211,7 +214,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     });
   }
 
-  private void removeWidgetFromStatusBar(@NotNull final Project project, @NotNull final StatusBarWidget widget) {
+  private void removeWidgetFromStatusBar(@Nonnull final Project project, @Nonnull final StatusBarWidget widget) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {

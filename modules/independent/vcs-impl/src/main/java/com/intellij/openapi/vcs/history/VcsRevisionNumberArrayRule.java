@@ -26,8 +26,8 @@ import com.intellij.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,22 +37,22 @@ import java.util.List;
  */
 public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber[]> {
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<VcsRevisionNumber[]> getKey() {
     return VcsDataKeys.VCS_REVISION_NUMBERS;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public VcsRevisionNumber[] getData(@NotNull DataProvider dataProvider) {
+  public VcsRevisionNumber[] getData(@Nonnull DataProvider dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;
   }
 
   @Nullable
-  public List<VcsRevisionNumber> getRevisionNumbers(@NotNull DataProvider dataProvider) {
+  public List<VcsRevisionNumber> getRevisionNumbers(@Nonnull DataProvider dataProvider) {
     VcsRevisionNumber revisionNumber = dataProvider.getDataUnchecked(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revisionNumber != null) {
       return Collections.singletonList(revisionNumber);

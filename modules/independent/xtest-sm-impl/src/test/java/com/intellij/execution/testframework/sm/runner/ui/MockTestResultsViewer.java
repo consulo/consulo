@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.ui.tabs.JBTabs;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -49,7 +49,7 @@ public class MockTestResultsViewer implements TestResultsViewer {
   }
 
   @Override
-  public void selectAndNotify(@Nullable final AbstractTestProxy proxy) {}
+  public void selectAndNotify(@javax.annotation.Nullable final AbstractTestProxy proxy) {}
 
   @Override
   public void addEventsListener(final EventsListener listener) {}

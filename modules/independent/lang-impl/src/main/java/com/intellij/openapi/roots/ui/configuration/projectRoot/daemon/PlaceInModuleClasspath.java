@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.impl.OrderEntryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -40,7 +40,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     myOrderEntry = orderEntry;
   }
 
-  public PlaceInModuleClasspath(@NotNull StructureConfigurableContext context, @NotNull Module module, ProjectStructureElement element, @NotNull ProjectStructureElement elementInClasspath) {
+  public PlaceInModuleClasspath(@Nonnull StructureConfigurableContext context, @Nonnull Module module, ProjectStructureElement element, @Nonnull ProjectStructureElement elementInClasspath) {
     myContext = context;
     myModule = module;
     myElement = element;
@@ -59,7 +59,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectStructureElement getContainingElement() {
     return myElement;
@@ -70,7 +70,7 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
     return myOrderEntry != null ? myOrderEntry.getPresentableName() : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback navigate() {
     return ProjectStructureConfigurable.getInstance(myContext.getProject()).selectOrderEntry(myModule, myOrderEntry);

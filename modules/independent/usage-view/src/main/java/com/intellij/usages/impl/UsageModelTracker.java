@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,42 +35,42 @@ class UsageModelTracker implements Disposable {
 
   private final List<UsageModelTrackerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  UsageModelTracker(@NotNull Project project) {
+  UsageModelTracker(@Nonnull Project project) {
     final PsiTreeChangeListener myPsiListener = new PsiTreeChangeAdapter() {
       @Override
-      public void childAdded(@NotNull PsiTreeChangeEvent event) {
+      public void childAdded(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);
       }
 
       @Override
-      public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+      public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);
       }
 
       @Override
-      public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+      public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);
       }
 
       @Override
-      public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+      public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);
       }
 
       @Override
-      public void childMoved(@NotNull PsiTreeChangeEvent event) {
+      public void childMoved(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, false);
       }
 
       @Override
-      public void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+      public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
         doFire(event, true);
       }
     };
     PsiManager.getInstance(project).addPsiTreeChangeListener(myPsiListener, this);
   }
 
-  private void doFire(@NotNull PsiTreeChangeEvent event, boolean propertyChange) {
+  private void doFire(@Nonnull PsiTreeChangeEvent event, boolean propertyChange) {
     if (!(event.getFile() instanceof PsiCodeFragment)) {
       for (UsageModelTrackerListener listener : myListeners) {
         listener.modelChanged(propertyChange);
@@ -82,7 +82,7 @@ class UsageModelTracker implements Disposable {
   public void dispose() {
   }
 
-  void addListener(@NotNull UsageModelTrackerListener listener, @NotNull Disposable parent) {
+  void addListener(@Nonnull UsageModelTrackerListener listener, @Nonnull Disposable parent) {
     myListeners.add(listener);
     Disposer.register(parent, () -> myListeners.remove(listener));
   }

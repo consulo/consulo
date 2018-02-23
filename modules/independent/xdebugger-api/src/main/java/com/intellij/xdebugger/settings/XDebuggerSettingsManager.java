@@ -16,10 +16,10 @@
 package com.intellij.xdebugger.settings;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class XDebuggerSettingsManager {
-  @NotNull
+  @Nonnull
   public static XDebuggerSettingsManager getInstance() {
     return ServiceManager.getService(XDebuggerSettingsManager.class);
   }
@@ -40,6 +40,6 @@ public abstract class XDebuggerSettingsManager {
     boolean isValueTooltipAutoShowOnSelection();
   }
 
-  @NotNull
+  @Nonnull
   public abstract DataViewSettings getDataViewSettings();
 }

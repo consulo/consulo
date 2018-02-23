@@ -21,15 +21,15 @@ import com.intellij.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class BekSorter {
-  @NotNull
-  public static BekIntMap createBekMap(@NotNull LinearGraph permanentGraph,
-                                       @NotNull GraphLayoutImpl graphLayout,
-                                       @NotNull TimestampGetter timestampGetter) {
+  @Nonnull
+  public static BekIntMap createBekMap(@Nonnull LinearGraph permanentGraph,
+                                       @Nonnull GraphLayoutImpl graphLayout,
+                                       @Nonnull TimestampGetter timestampGetter) {
     BekSorter bekSorter = new BekSorter(permanentGraph, graphLayout, timestampGetter);
 
     List<Integer> result = bekSorter.getResult();
@@ -75,13 +75,16 @@ public class BekSorter {
     };
   }
 
-  @NotNull private final LinearGraph myPermanentGraph;
+  @Nonnull
+  private final LinearGraph myPermanentGraph;
 
-  @NotNull private final GraphLayoutImpl myGraphLayout;
+  @Nonnull
+  private final GraphLayoutImpl myGraphLayout;
 
-  @NotNull private final TimestampGetter myTimestampGetter;
+  @Nonnull
+  private final TimestampGetter myTimestampGetter;
 
-  private BekSorter(@NotNull LinearGraph permanentGraph, @NotNull GraphLayoutImpl graphLayout, @NotNull TimestampGetter timestampGetter) {
+  private BekSorter(@Nonnull LinearGraph permanentGraph, @Nonnull GraphLayoutImpl graphLayout, @Nonnull TimestampGetter timestampGetter) {
     myPermanentGraph = permanentGraph;
     myGraphLayout = graphLayout;
     myTimestampGetter = timestampGetter;

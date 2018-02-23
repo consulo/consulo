@@ -28,8 +28,8 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -85,7 +85,7 @@ public class ScrollingUtil {
     selectItem(list, selectedIndex);
   }
 
-  public static boolean selectItem(JList list, @NotNull Object item) {
+  public static boolean selectItem(JList list, @Nonnull Object item) {
     ListModel model = list.getModel();
     for (int i = 0; i < model.getSize(); i++) {
       Object anItem = model.getElementAt(i);
@@ -373,7 +373,7 @@ public class ScrollingUtil {
     }
   }
 
-  public static void ensureSelectionExists(@NotNull JTable table) {
+  public static void ensureSelectionExists(@Nonnull JTable table) {
     int size = table.getModel().getRowCount();
     if (size == 0) {
       table.clearSelection();
@@ -391,7 +391,7 @@ public class ScrollingUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static Rectangle getCellBounds(JTable table, int top, int bottom) {
     return table.getCellRect(top, 0, true).union(table.getCellRect(bottom,0,true));
   }

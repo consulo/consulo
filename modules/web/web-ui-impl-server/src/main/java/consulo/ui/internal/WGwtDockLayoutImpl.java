@@ -21,7 +21,7 @@ import consulo.ui.*;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   }
 
   @Override
-  public void remove(@NotNull Component component) {
+  public void remove(@Nonnull Component component) {
     removeComponent((com.vaadin.ui.Component)component);
   }
 
@@ -54,7 +54,7 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
     return (DockLayoutState)super.getState();
   }
 
-  private void placeAt(@NotNull com.vaadin.ui.Component component, DockLayoutState.Constraint constraint) {
+  private void placeAt(@Nonnull com.vaadin.ui.Component component, DockLayoutState.Constraint constraint) {
     HasComponents parent = component.getParent();
     // remove from old parent
     if (parent instanceof Layout) {
@@ -97,41 +97,41 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout top(@NotNull Component component) {
+  public DockLayout top(@Nonnull Component component) {
     placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.TOP);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout bottom(@NotNull Component component) {
+  public DockLayout bottom(@Nonnull Component component) {
     placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.BOTTOM);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout center(@NotNull Component component) {
+  public DockLayout center(@Nonnull Component component) {
     placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.CENTER);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout left(@NotNull Component component) {
+  public DockLayout left(@Nonnull Component component) {
     placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.LEFT);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout right(@NotNull Component component) {
+  public DockLayout right(@Nonnull Component component) {
     placeAt((com.vaadin.ui.Component)component, DockLayoutState.Constraint.RIGHT);
     return this;
   }
@@ -153,6 +153,6 @@ public class WGwtDockLayoutImpl extends AbstractComponentContainer implements Do
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

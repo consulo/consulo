@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
 import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -31,9 +31,9 @@ public class PackagingNodeSource {
   private final CompositePackagingElement<?> mySourceParentElement;
   private final Collection<PackagingNodeSource> myParentSources;
 
-  public PackagingNodeSource(@NotNull ComplexPackagingElement<?> sourceElement,
-                             @NotNull PackagingElementNode<?> sourceParentNode,
-                             @NotNull CompositePackagingElement<?> sourceParentElement,
+  public PackagingNodeSource(@Nonnull ComplexPackagingElement<?> sourceElement,
+                             @Nonnull PackagingElementNode<?> sourceParentNode,
+                             @Nonnull CompositePackagingElement<?> sourceParentElement,
                              @Nullable Collection<PackagingNodeSource> parentSources) {
     mySourceElement = sourceElement;
     mySourceParentNode = sourceParentNode;
@@ -41,17 +41,17 @@ public class PackagingNodeSource {
     myParentSources = parentSources;
   }
 
-  @NotNull
+  @Nonnull
   public ComplexPackagingElement<?> getSourceElement() {
     return mySourceElement;
   }
 
-  @NotNull
+  @Nonnull
   public PackagingElementNode<?> getSourceParentNode() {
     return mySourceParentNode;
   }
 
-  @NotNull
+  @Nonnull
   public CompositePackagingElement<?> getSourceParentElement() {
     return mySourceParentElement;
   }

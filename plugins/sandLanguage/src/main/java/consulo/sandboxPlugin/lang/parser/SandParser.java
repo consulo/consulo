@@ -19,7 +19,7 @@ import com.intellij.lang.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.tree.IElementType;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 
 import java.util.List;
@@ -35,9 +35,9 @@ public class SandParser implements PsiParser {
     myPairs = list;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
+  public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
     PsiBuilder.Marker mark = builder.mark();
     while (!builder.eof()) {
       boolean find = false;

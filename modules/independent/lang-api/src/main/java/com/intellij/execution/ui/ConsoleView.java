@@ -19,10 +19,10 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConsoleView extends ExecutionConsole {
-  void print(@NotNull String s, @NotNull ConsoleViewContentType contentType);
+  void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType);
 
   void clear();
 
@@ -48,7 +48,7 @@ public interface ConsoleView extends ExecutionConsole {
 
   boolean canPause();
 
-  @NotNull
+  @Nonnull
   AnAction[] createConsoleActions();
 
   void allowHeavyFilters();

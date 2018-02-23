@@ -41,8 +41,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   protected abstract void updateImpl(final PresentationData data);
 
   @Override
-  @NotNull
+  @Nonnull
   public final Collection<AbstractTreeNode> getChildren() {
     final PsiElement psiElement = extractPsiFromValue();
     if (psiElement == null) {
@@ -184,7 +184,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   }
 
   @Override
-  public boolean contains(@NotNull final VirtualFile file) {
+  public boolean contains(@Nonnull final VirtualFile file) {
     final PsiElement psiElement = extractPsiFromValue();
     if (psiElement == null || !psiElement.isValid()) {
       return false;

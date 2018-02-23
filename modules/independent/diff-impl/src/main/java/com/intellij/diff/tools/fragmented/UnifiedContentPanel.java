@@ -16,14 +16,14 @@
 package com.intellij.diff.tools.fragmented;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 class UnifiedContentPanel extends JPanel {
-  public UnifiedContentPanel(@NotNull List<JComponent> titles, @NotNull Editor editor) {
+  public UnifiedContentPanel(@Nonnull List<JComponent> titles, @Nonnull Editor editor) {
     super(new BorderLayout());
 
     add(editor.getComponent(), BorderLayout.CENTER);

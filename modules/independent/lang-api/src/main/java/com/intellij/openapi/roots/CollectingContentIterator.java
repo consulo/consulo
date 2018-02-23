@@ -20,11 +20,11 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface CollectingContentIterator extends ContentIterator {
-  @NotNull
+  @Nonnull
   List<VirtualFile> getFiles();
 }

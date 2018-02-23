@@ -30,8 +30,8 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PsiBasedFormattingModel implements FormattingModelEx {
 
@@ -40,11 +40,12 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
   private final Project myProject;
   private final ASTNode myASTNode;
   private final FormattingDocumentModelImpl myDocumentModel;
-  @NotNull private final Block myRootBlock;
+  @Nonnull
+  private final Block myRootBlock;
   protected boolean myCanModifyAllWhiteSpaces = false;
 
   public PsiBasedFormattingModel(final PsiFile file,
-                                 @NotNull final Block rootBlock,
+                                 @Nonnull final Block rootBlock,
                                  final FormattingDocumentModelImpl documentModel) {
     myASTNode = SourceTreeToPsiMap.psiElementToTree(file);
     myDocumentModel = documentModel;
@@ -138,13 +139,13 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FormattingDocumentModel getDocumentModel() {
     return myDocumentModel;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Block getRootBlock() {
     return myRootBlock;
   }

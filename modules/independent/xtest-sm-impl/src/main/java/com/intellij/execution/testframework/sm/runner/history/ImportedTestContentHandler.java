@@ -22,7 +22,7 @@ import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -95,7 +95,7 @@ public class ImportedTestContentHandler extends DefaultHandler {
       }
       else if (TestResultsXmlFormatter.STATUS_IGNORED.equals(myStatus) || TestResultsXmlFormatter.STATUS_SKIPPED.equals(myStatus)) {
         myProcessor.onTestIgnored(new TestIgnoredEvent(myCurrentTest, "", currentText) {
-          @NotNull
+          @Nonnull
           @Override
           public String getIgnoreComment() {
             return "";

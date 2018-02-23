@@ -18,7 +18,6 @@ package com.intellij.ide.dnd;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -46,7 +45,7 @@ public class DnDDemo implements DnDEvent.DropTargetHighlightingType {
       }
 
 
-      @Nullable
+      @javax.annotation.Nullable
       public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
         return null;
       }

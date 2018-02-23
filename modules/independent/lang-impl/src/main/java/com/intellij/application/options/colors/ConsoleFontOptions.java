@@ -16,7 +16,7 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -26,7 +26,7 @@ public class ConsoleFontOptions extends FontOptions {
     super(options, "Console Font");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ModifiableFontPreferences getFontPreferences() {
     return (ModifiableFontPreferences)getCurrentScheme().getConsoleFontPreferences();

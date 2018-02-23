@@ -15,11 +15,11 @@
  */
 package com.intellij.execution.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Alexander Podkhalyuzin
  */
 public interface ConsoleInputListener {
-  void textEntered(@NotNull String userText);
+  void textEntered(@Nonnull String userText);
 }

@@ -22,8 +22,8 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.UsageContextPanel;
 import com.intellij.usages.UsageViewPresentation;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,17 +34,18 @@ import java.util.List;
  */
 public abstract class UsageContextPanelBase extends JPanel implements UsageContextPanel {
   protected final Project myProject;
-  @NotNull protected final UsageViewPresentation myPresentation;
+  @Nonnull
+  protected final UsageViewPresentation myPresentation;
   protected volatile boolean isDisposed;
 
-  public UsageContextPanelBase(@NotNull Project project, @NotNull UsageViewPresentation presentation) {
+  public UsageContextPanelBase(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
     myProject = project;
     myPresentation = presentation;
     setLayout(new BorderLayout());
     setBorder(IdeBorderFactory.createBorder());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final JComponent createComponent() {
     isDisposed = false;

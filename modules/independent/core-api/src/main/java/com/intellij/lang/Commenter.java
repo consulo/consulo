@@ -16,7 +16,7 @@
 
 package com.intellij.lang;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Defines the support for "Comment with Line Comment" and "Comment with Block Comment"

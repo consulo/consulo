@@ -17,7 +17,7 @@ package com.intellij.patterns;
 
 import com.intellij.util.SmartList;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -30,7 +30,7 @@ import java.util.Collection;
  */
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
   @Override
-  public void createBundles(@NotNull Consumer<SdkImpl> consumer) {
+  public void createBundles(@Nonnull Consumer<SdkImpl> consumer) {
     for (SdkType sdkType : SdkType.EP_NAME.getExtensions()) {
       if(sdkType.canCreatePredefinedSdks()) {
         Collection<String> paths = sdkType.suggestHomePaths();

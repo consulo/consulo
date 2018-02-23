@@ -28,7 +28,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -84,9 +84,9 @@ public class IconDescriptorUpdaters {
     }
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static Icon getIcon(@NotNull final PsiElement element, @Iconable.IconFlags final int flags) {
+  public static Icon getIcon(@Nonnull final PsiElement element, @Iconable.IconFlags final int flags) {
     if (!element.isValid()) return AllIcons.Nodes.NodePlaceholder;
 
     Icon baseIcon = Iconable.LastComputedIcon.get(element, flags);
@@ -96,8 +96,8 @@ public class IconDescriptorUpdaters {
     return IconDeferrer.getInstance().defer(baseIcon, new ElementIconRequest(element, flags), ourIconCompute);
   }
 
-  @NotNull
-  private static Icon computeBaseIcon(@NotNull PsiElement element, int flags) {
+  @Nonnull
+  private static Icon computeBaseIcon(@Nonnull PsiElement element, int flags) {
     Icon icon = computeBaseIcon(element);
     if ((flags & Iconable.ICON_FLAG_VISIBILITY) > 0) {
       return new RowIcon(icon, ourVisibilityIconPlaceholder.getValue());
@@ -105,8 +105,8 @@ public class IconDescriptorUpdaters {
     return icon;
   }
 
-  @NotNull
-  private static Icon computeBaseIcon(@NotNull PsiElement element) {
+  @Nonnull
+  private static Icon computeBaseIcon(@Nonnull PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
     if (containingFile != null) {
       VirtualFile virtualFile = containingFile.getVirtualFile();
@@ -120,16 +120,16 @@ public class IconDescriptorUpdaters {
     return AllIcons.Nodes.NodePlaceholder;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static Icon getIconWithoutCache(@NotNull PsiElement element, int flags) {
+  public static Icon getIconWithoutCache(@Nonnull PsiElement element, int flags) {
     IconDescriptor iconDescriptor = new IconDescriptor(null);
     IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
     return iconDescriptor.toIcon();
   }
 
   @RequiredReadAction
-  public static void processExistingDescriptor(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+  public static void processExistingDescriptor(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     IconDescriptorUpdater.EP_NAME.composite().updateIcon(iconDescriptor, element, flags);
   }
 }

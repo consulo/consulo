@@ -20,8 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.extensions.CompositeExtensionPointName;
 
 import java.util.Collection;
@@ -37,28 +37,28 @@ public interface TargetElementUtilEx {
 
   class Adapter implements TargetElementUtilEx {
     @Override
-    public void collectAllAccepted(@NotNull Set<String> set) {
+    public void collectAllAccepted(@Nonnull Set<String> set) {
 
     }
 
     @Override
-    public void collectDefinitionSearchFlags(@NotNull Set<String> set) {
+    public void collectDefinitionSearchFlags(@Nonnull Set<String> set) {
 
     }
 
     @Override
-    public void collectReferenceSearchFlags(@NotNull Set<String> set) {
+    public void collectReferenceSearchFlags(@Nonnull Set<String> set) {
 
     }
 
     @Override
-    public boolean isIdentifierPart(@NotNull PsiFile file, @NotNull CharSequence text, int offset) {
+    public boolean isIdentifierPart(@Nonnull PsiFile file, @Nonnull CharSequence text, int offset) {
       return false;
     }
 
     @Override
     @CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
-    public boolean isAcceptableReferencedElement(PsiElement element, @NotNull PsiElement referenceOrReferencedElement) {
+    public boolean isAcceptableReferencedElement(PsiElement element, @Nonnull PsiElement referenceOrReferencedElement) {
       return true;
     }
 
@@ -70,29 +70,29 @@ public interface TargetElementUtilEx {
 
     @Nullable
     @Override
-    public PsiElement adjustReference(@NotNull PsiReference ref) {
+    public PsiElement adjustReference(@Nonnull PsiReference ref) {
       return null;
     }
 
     @Nullable
     @Override
-    public PsiElement getReferenceOrReferencedElement(@NotNull PsiReference reference, @NotNull Set<String> flags) {
+    public PsiElement getReferenceOrReferencedElement(@Nonnull PsiReference reference, @Nonnull Set<String> flags) {
       return null;
     }
 
     @Nullable
     @Override
     public PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement,
-                                                         @NotNull PsiFile file,
-                                                         @NotNull Editor editor,
-                                                         @NotNull Set<String> flags,
+                                                         @Nonnull PsiFile file,
+                                                         @Nonnull Editor editor,
+                                                         @Nonnull Set<String> flags,
                                                          int offset) {
       return null;
     }
 
     @Override
     @CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
-    public boolean includeSelfInGotoImplementation(@NotNull PsiElement element) {
+    public boolean includeSelfInGotoImplementation(@Nonnull PsiElement element) {
       return true;
     }
 
@@ -110,19 +110,19 @@ public interface TargetElementUtilEx {
 
     @Nullable
     @Override
-    public Collection<PsiElement> getTargetCandidates(@NotNull PsiReference reference) {
+    public Collection<PsiElement> getTargetCandidates(@Nonnull PsiReference reference) {
       return null;
     }
 
     @Nullable
     @Override
-    public PsiElement getNamedElement(@NotNull PsiElement element) {
+    public PsiElement getNamedElement(@Nonnull PsiElement element) {
       return null;
     }
 
     @Nullable
     @Override
-    public PsiElement modifyTargetElement(@NotNull PsiElement element, @NotNull Set<String> flags) {
+    public PsiElement modifyTargetElement(@Nonnull PsiElement element, @Nonnull Set<String> flags) {
       return null;
     }
   }
@@ -131,35 +131,35 @@ public interface TargetElementUtilEx {
   @NonNls String ELEMENT_NAME_ACCEPTED = "element name accepted";
   @NonNls String LOOKUP_ITEM_ACCEPTED = "lookup item accepted";
 
-  void collectAllAccepted(@NotNull Set<String> set);
+  void collectAllAccepted(@Nonnull Set<String> set);
 
-  void collectDefinitionSearchFlags(@NotNull Set<String> set);
+  void collectDefinitionSearchFlags(@Nonnull Set<String> set);
 
-  void collectReferenceSearchFlags(@NotNull Set<String> set);
+  void collectReferenceSearchFlags(@Nonnull Set<String> set);
 
-  boolean isIdentifierPart(@NotNull PsiFile file, @NotNull CharSequence text, int offset);
+  boolean isIdentifierPart(@Nonnull PsiFile file, @Nonnull CharSequence text, int offset);
 
   @CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
-  boolean isAcceptableReferencedElement(final PsiElement element, @NotNull final PsiElement referenceOrReferencedElement);
+  boolean isAcceptableReferencedElement(final PsiElement element, @Nonnull final PsiElement referenceOrReferencedElement);
 
   @Nullable
   PsiElement adjustElement(final Editor editor, final Set<String> flags, final PsiElement element, final PsiElement contextElement);
 
   @Nullable
-  PsiElement adjustReference(@NotNull PsiReference ref);
+  PsiElement adjustReference(@Nonnull PsiReference ref);
 
   @Nullable
-  PsiElement getReferenceOrReferencedElement(@NotNull PsiReference reference, @NotNull Set<String> flags);
+  PsiElement getReferenceOrReferencedElement(@Nonnull PsiReference reference, @Nonnull Set<String> flags);
 
   @Nullable
   PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement,
-                                                @NotNull PsiFile file,
-                                                @NotNull Editor editor,
-                                                @NotNull Set<String> flags,
+                                                @Nonnull PsiFile file,
+                                                @Nonnull Editor editor,
+                                                @Nonnull Set<String> flags,
                                                 int offset);
 
   @CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
-  boolean includeSelfInGotoImplementation(@NotNull PsiElement element);
+  boolean includeSelfInGotoImplementation(@Nonnull PsiElement element);
 
   @CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
   boolean acceptImplementationForReference(PsiReference reference, PsiElement element);
@@ -168,11 +168,11 @@ public interface TargetElementUtilEx {
   PsiElement getGotoDeclarationTarget(final PsiElement element, final PsiElement navElement);
 
   @Nullable
-  Collection<PsiElement> getTargetCandidates(@NotNull PsiReference reference);
+  Collection<PsiElement> getTargetCandidates(@Nonnull PsiReference reference);
 
   @Nullable
-  PsiElement getNamedElement(@NotNull final PsiElement element);
+  PsiElement getNamedElement(@Nonnull final PsiElement element);
 
   @Nullable
-  PsiElement modifyTargetElement(@NotNull PsiElement element, @NotNull Set<String> flags);
+  PsiElement modifyTargetElement(@Nonnull PsiElement element, @Nonnull Set<String> flags);
 }

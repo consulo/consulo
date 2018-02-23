@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 
 import java.util.ArrayList;
@@ -54,15 +54,15 @@ public class CommonProcessors {
       return true;
     }
 
-    @NotNull
+    @Nonnull
     @Deprecated
     @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
-    public T[] toArray(@NotNull T[] a) {
+    public T[] toArray(@Nonnull T[] a) {
       return myCollection.toArray(a);
     }
 
-    @NotNull
-    public T[] toArray(@NotNull ArrayFactory<T> factory) {
+    @Nonnull
+    public T[] toArray(@Nonnull ArrayFactory<T> factory) {
       return ContainerUtil.toArray(myCollection, factory);
     }
 
@@ -72,11 +72,11 @@ public class CommonProcessors {
 
   }
 
-  @NotNull
-  public static <T> Processor<T> notNullProcessor(@NotNull final Processor<T> processor) {
+  @Nonnull
+  public static <T> Processor<T> notNullProcessor(@Nonnull final Processor<T> processor) {
     return new Processor<T>() {
       @Override
-      public boolean process(@NotNull T t) {
+      public boolean process(@Nonnull T t) {
         return processor.process(t);
       }
     };
@@ -96,15 +96,15 @@ public class CommonProcessors {
       return true;
     }
 
-    @NotNull
+    @Nonnull
     @Deprecated
     @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)", until = "2.0")
-    public T[] toArray(@NotNull T[] a) {
+    public T[] toArray(@Nonnull T[] a) {
       return myCollection.toArray(a);
     }
 
-    @NotNull
-    public T[] toArray(@NotNull ArrayFactory<T> factory) {
+    @Nonnull
+    public T[] toArray(@Nonnull ArrayFactory<T> factory) {
       return ContainerUtil.toArray(myCollection, factory);
     }
 

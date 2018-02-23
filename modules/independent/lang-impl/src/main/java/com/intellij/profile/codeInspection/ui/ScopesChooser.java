@@ -28,7 +28,7 @@ import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
     getTemplatePresentation().setText("In All Scopes");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DefaultActionGroup createPopupActionGroup(final JComponent component) {
     final DefaultActionGroup group = new DefaultActionGroup();

@@ -16,7 +16,7 @@
 package com.intellij.notification;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author gregsh
@@ -26,14 +26,14 @@ public abstract class EventLogCategory {
 
   private final String myDisplayName;
 
-  protected EventLogCategory(@NotNull String displayName) {
+  protected EventLogCategory(@Nonnull String displayName) {
     myDisplayName = displayName;
   }
 
-  @NotNull
+  @Nonnull
   public final String getDisplayName() {
     return myDisplayName;
   }
 
-  public abstract boolean acceptsNotification(@NotNull String groupId);
+  public abstract boolean acceptsNotification(@Nonnull String groupId);
 }

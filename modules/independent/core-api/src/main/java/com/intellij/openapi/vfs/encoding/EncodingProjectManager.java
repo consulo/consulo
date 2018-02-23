@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -30,22 +30,22 @@ public abstract class EncodingProjectManager extends EncodingManager {
     return project.getComponent(EncodingProjectManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract Map<VirtualFile, Charset> getAllMappings();
 
-  public abstract void setMapping(@NotNull Map<VirtualFile, Charset> result);
+  public abstract void setMapping(@Nonnull Map<VirtualFile, Charset> result);
 
   /**
    * @return Project encoding name (configured in Settings|File Encodings|Project Encoding) or empty string if it's configured to "System Default"
    */
-  @NotNull
+  @Nonnull
   @Override
   public abstract String getDefaultCharsetName();
 
   /**
    * @return Project encoding (configured in Settings|File Encodings|Project Encoding)
    */
-  @NotNull
+  @Nonnull
   @Override
   public abstract Charset getDefaultCharset();
 
@@ -53,5 +53,5 @@ public abstract class EncodingProjectManager extends EncodingManager {
    * Sets Project encoding (configured in Settings|File Encodings|Project Encoding). Use empty string to specify "System Default"
    */
   @Override
-  public abstract void setDefaultCharsetName(@NotNull String name);
+  public abstract void setDefaultCharsetName(@Nonnull String name);
 }

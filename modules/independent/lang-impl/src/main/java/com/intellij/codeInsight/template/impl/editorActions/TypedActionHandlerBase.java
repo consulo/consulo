@@ -21,18 +21,19 @@ import com.intellij.openapi.editor.actionSystem.ActionPlan;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandlerEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class TypedActionHandlerBase implements TypedActionHandlerEx {
-  @Nullable protected final TypedActionHandler myOriginalHandler;
+  @Nullable
+  protected final TypedActionHandler myOriginalHandler;
 
   public TypedActionHandlerBase(@Nullable TypedActionHandler originalHandler) {
     myOriginalHandler = originalHandler;
   }
 
   @Override
-  public void beforeExecute(@NotNull Editor editor, char c, @NotNull DataContext context, @NotNull ActionPlan plan) {
+  public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
     if (myOriginalHandler instanceof TypedActionHandlerEx) {
       ((TypedActionHandlerEx)myOriginalHandler).beforeExecute(editor, c, context, plan);
     }

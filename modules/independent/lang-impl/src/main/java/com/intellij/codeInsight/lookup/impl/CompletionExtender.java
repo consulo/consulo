@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.ui.ListExpandableItemsHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -26,7 +26,7 @@ import java.awt.event.*;
  */
 public class CompletionExtender extends ListExpandableItemsHandler {
 
-  public CompletionExtender(@NotNull final JList list) {
+  public CompletionExtender(@Nonnull final JList list) {
     super(list);
     list.addComponentListener(new ComponentAdapter() {
       @Override

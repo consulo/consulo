@@ -44,9 +44,9 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -82,7 +82,7 @@ public abstract class AbstractValueHint {
   private TextRange myCurrentRange;
   private Runnable myHideRunnable;
 
-  public AbstractValueHint(@NotNull Project project, @NotNull Editor editor, @NotNull Point point, @NotNull ValueHintType type,
+  public AbstractValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type,
                            final TextRange textRange) {
     myPoint = point;
     myProject = project;
@@ -120,7 +120,7 @@ public abstract class AbstractValueHint {
     return myCurrentRange != null && myCurrentRange.contains(calculateOffset(editor, point));
   }
 
-  public static int calculateOffset(@NotNull Editor editor, @NotNull Point point) {
+  public static int calculateOffset(@Nonnull Editor editor, @Nonnull Point point) {
     return editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
   }
 
@@ -187,7 +187,7 @@ public abstract class AbstractValueHint {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   protected Editor getEditor() {
     return myEditor;
   }
@@ -256,7 +256,7 @@ public abstract class AbstractValueHint {
     final JComponent component = HintUtil.createInformationLabel(text, IconUtil.getAddIcon());
     addClickListenerToHierarchy(component, new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         if (myCurrentHint != null) {
           myCurrentHint.hide();
         }
@@ -304,7 +304,7 @@ public abstract class AbstractValueHint {
     return myCurrentHint != null && myCurrentHint.isInsideHint(new RelativePoint(editor.getContentComponent(), point));
   }
 
-  protected <D> void showTreePopup(@NotNull DebuggerTreeCreator<D> creator, @NotNull D descriptor) {
+  protected <D> void showTreePopup(@Nonnull DebuggerTreeCreator<D> creator, @Nonnull D descriptor) {
     DebuggerTreeWithHistoryPopup.showTreePopup(creator, descriptor, getEditor(), myPoint, getProject(), myHideRunnable);
   }
 

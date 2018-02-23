@@ -7,7 +7,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -16,8 +16,8 @@ public class CoverageHelper {
   private CoverageHelper() {
   }
 
-  public static void attachToProcess(@NotNull RunConfigurationBase configuration,
-                                     @NotNull ProcessHandler handler,
+  public static void attachToProcess(@Nonnull RunConfigurationBase configuration,
+                                     @Nonnull ProcessHandler handler,
                                      RunnerSettings runnerSettings) {
     resetCoverageSuit(configuration);
 

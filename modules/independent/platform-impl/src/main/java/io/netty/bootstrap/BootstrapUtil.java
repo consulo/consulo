@@ -2,10 +2,10 @@ package io.netty.bootstrap;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class BootstrapUtil {
-  public static ChannelFuture initAndRegister(@NotNull Channel channel, @NotNull Bootstrap bootstrap) throws Throwable {
+  public static ChannelFuture initAndRegister(@Nonnull Channel channel, @Nonnull Bootstrap bootstrap) throws Throwable {
     try {
       bootstrap.init(channel);
     }

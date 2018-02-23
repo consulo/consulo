@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.components;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface NamedComponent {
   /**
@@ -26,7 +26,7 @@ public interface NamedComponent {
    * @return the name of this component
    */
   @NonNls
-  @NotNull
+  @Nonnull
   default String getComponentName() {
     return getClass().getName();
   }

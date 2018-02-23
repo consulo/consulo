@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.test;
 
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TestExternalProjectSettings extends ExternalProjectSettings {
 
-  @NotNull
+  @Nonnull
   @Override
   public ExternalProjectSettings clone() {
     throw new UnsupportedOperationException();

@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.model;
 
 import com.intellij.openapi.externalSystem.model.project.IExternalSystemSourceType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @since 7/14/2014
  */
 public interface ExternalSourceSet extends Serializable {
-  @NotNull
+  @Nonnull
   String getName();
   //@NotNull
   //ClasspathContainer getCompileClasspath();
@@ -34,6 +34,6 @@ public interface ExternalSourceSet extends Serializable {
   //@NotNull
   //ClasspathContainer getRuntimeClasspath();
 
-  @NotNull
+  @Nonnull
   Map<IExternalSystemSourceType, ExternalSourceDirectorySet> getSources();
 }

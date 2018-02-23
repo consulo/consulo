@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Incorrect VCS root definition: either an unregistered, or an incorrectly registered VCS root.
@@ -33,18 +33,18 @@ public interface VcsRootError {
   /**
    * @return type of mapping error
    */
-  @NotNull
+  @Nonnull
   Type getType();
 
   /**
    * @return affected directory mapping string
    */
-  @NotNull
+  @Nonnull
   String getMapping();
 
   /**
    * @return vcsKey for affected mapping
    */
-  @NotNull
+  @Nonnull
   VcsKey getVcsKey();
 }

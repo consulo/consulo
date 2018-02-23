@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * This can be implemented by a {@link com.intellij.psi.PsiReference} to provide quick fixes for unresolved references.

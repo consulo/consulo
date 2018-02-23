@@ -17,12 +17,11 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.Exported;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
   @Exported
-  @Nullable
+  @javax.annotation.Nullable
   Object[] getItemsToShow();
 
   @Exported
@@ -34,7 +33,7 @@ public interface CreateParameterInfoContext extends ParameterInfoContext {
   @Exported
   int getParameterListStart();
 
-  @Nullable
+  @javax.annotation.Nullable
   Object getHighlightedElement();
 
   @Exported

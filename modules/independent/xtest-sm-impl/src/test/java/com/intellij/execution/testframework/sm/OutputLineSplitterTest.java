@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.util.concurrency.FutureResult;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -51,7 +51,7 @@ public class OutputLineSplitterTest extends UsefulTestCase {
 
     mySplitter = new OutputLineSplitter(false) {
       @Override
-      protected void onLineAvailable(@NotNull String text, @NotNull Key outputType, boolean tcLikeFakeOutput) {
+      protected void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput) {
         if (ProcessOutputTypes.STDERR != outputType && ProcessOutputTypes.SYSTEM != outputType) outputType = ProcessOutputTypes.STDOUT;
         synchronized (myOutput) {
           List<String> list = myOutput.get(outputType);

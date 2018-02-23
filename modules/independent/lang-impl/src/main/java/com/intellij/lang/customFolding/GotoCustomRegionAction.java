@@ -35,8 +35,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.HashSet;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -47,7 +47,7 @@ import java.util.Set;
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getProject();
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
@@ -74,7 +74,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setText(IdeBundle.message("goto.custom.region.menu.item"));
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
@@ -84,9 +84,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     presentation.setVisible(isAvailable);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@NotNull Editor editor, @NotNull Project project) {
+  private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@Nonnull Editor editor, @Nonnull Project project) {
     Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
     final Document document = editor.getDocument();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -119,7 +119,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
     return null;
   }
 
-  private static void notifyCustomRegionsUnavailable(@NotNull Editor editor, @NotNull Project project) {
+  private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     Balloon balloon =
             popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), MessageType.INFO, null).setFadeoutTime(2000)

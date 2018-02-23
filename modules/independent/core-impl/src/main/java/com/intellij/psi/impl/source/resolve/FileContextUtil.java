@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -32,13 +32,13 @@ public class FileContextUtil {
   private FileContextUtil() { }
 
   @Nullable
-  public static PsiElement getFileContext(@NotNull PsiFile file) {
+  public static PsiElement getFileContext(@Nonnull PsiFile file) {
     SmartPsiElementPointer pointer = file.getUserData(INJECTED_IN_ELEMENT);
     return pointer == null ? null : pointer.getElement();
   }
 
   @Nullable
-  public static PsiFile getContextFile(@NotNull PsiElement element) {
+  public static PsiFile getContextFile(@Nonnull PsiElement element) {
     if (!element.isValid()) return null;
     PsiFile file = element.getContainingFile();
     if (file == null) return null;

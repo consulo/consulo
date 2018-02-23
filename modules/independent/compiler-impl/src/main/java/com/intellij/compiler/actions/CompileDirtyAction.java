@@ -18,7 +18,7 @@ package com.intellij.compiler.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class CompileDirtyAction extends CompileActionBase {
@@ -29,7 +29,7 @@ public class CompileDirtyAction extends CompileActionBase {
   }
 
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

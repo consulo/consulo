@@ -28,7 +28,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.OpaquePanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -67,7 +67,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
 
   private boolean myForceHideShadow = false;
 
-  public LightweightHint(@NotNull final JComponent component) {
+  public LightweightHint(@Nonnull final JComponent component) {
     myComponent = component;
   }
 
@@ -118,11 +118,11 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
    * appears on 250 layer.
    */
   @Override
-  public void show(@NotNull final JComponent parentComponent,
+  public void show(@Nonnull final JComponent parentComponent,
                    final int x,
                    final int y,
                    final JComponent focusBackComponent,
-                   @NotNull final HintHint hintHint) {
+                   @Nonnull final HintHint hintHint) {
     myParentComponent = parentComponent;
     myHintHint = hintHint;
 
@@ -405,12 +405,12 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   @Override
-  public final void addHintListener(@NotNull final HintListener listener) {
+  public final void addHintListener(@Nonnull final HintListener listener) {
     myListenerList.add(HintListener.class, listener);
   }
 
   @Override
-  public final void removeHintListener(@NotNull final HintListener listener) {
+  public final void removeHintListener(@Nonnull final HintListener listener) {
     myListenerList.remove(HintListener.class, listener);
   }
 
@@ -435,7 +435,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
   }
 
   @Override
-  public void setLocation(@NotNull RelativePoint point) {
+  public void setLocation(@Nonnull RelativePoint point) {
     if (isRealPopup()) {
       myPopup.setLocation(point.getScreenPoint());
     }

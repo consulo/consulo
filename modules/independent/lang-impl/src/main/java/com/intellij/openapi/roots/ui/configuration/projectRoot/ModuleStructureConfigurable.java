@@ -57,8 +57,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.moduleImport.ModuleImportProviders;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -131,7 +131,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
     final ArrayList<AnAction> result = super.createActions(fromPopup);
     result.add(AnSeparator.getInstance());
@@ -140,7 +140,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
     return Collections.emptyList();//singletonList(new MyCopyAction());
   }
@@ -154,7 +154,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     myUiDisposed = false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<ProjectStructureElement>();
@@ -342,7 +342,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return new MyDataProviderWrapper(super.createComponent());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents() {
     Couple<JComponent> couple = super.createSplitterComponents();
@@ -375,7 +375,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return "reference.settingsdialog.project.structure.module";
   }
 
-  public ActionCallback selectOrderEntry(@NotNull final Module module, @Nullable final OrderEntry orderEntry) {
+  public ActionCallback selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
     Place p = new Place();
     p.putPath(ProjectStructureConfigurable.CATEGORY, this);
     Runnable r = null;
@@ -516,7 +516,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "project.structure";
@@ -554,7 +554,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
     @Override
     @Nullable
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (LangDataKeys.MODULE_CONTEXT_ARRAY == dataId){
         final TreePath[] paths = myTree.getSelectionPaths();
         if (paths != null) {
@@ -648,7 +648,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   protected AbstractAddGroup createAddAction() {
     return new AbstractAddGroup(ProjectBundle.message("add.new.header.text")) {
       @Override
-      @NotNull
+      @Nonnull
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
 
         ArrayList<AnAction> result = new ArrayList<AnAction>();

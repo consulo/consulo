@@ -35,8 +35,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.PathUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   }
 
   @Override
-  public List<? extends PackagingElement<?>> getSubstitution(@NotNull PackagingElementResolvingContext context, @NotNull ArtifactType artifactType) {
+  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType) {
     final Library library = findLibrary(context);
     if (library != null) {
       final VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
@@ -78,7 +77,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     final Library library = findLibrary(context);
@@ -86,12 +85,12 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new LibraryElementPresentation(myLibraryName, myLevel, myModuleName, findLibrary(context), context);
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     if (!(element instanceof LibraryPackagingElement)) {
       return false;
     }
@@ -146,8 +145,8 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
     return "lib:" + myLibraryName + "(" + (myModuleName != null ? "module " + myModuleName: myLevel ) + ")";
   }
 
-  @Nullable
-  public Library findLibrary(@NotNull PackagingElementResolvingContext context) {
+  @javax.annotation.Nullable
+  public Library findLibrary(@Nonnull PackagingElementResolvingContext context) {
     if (myModuleName == null) {
       return context.findLibrary(myLevel, myLibraryName);
     }

@@ -28,8 +28,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,7 +36,7 @@ import java.util.List;
 
 public class RemoveChangeListAction extends AnAction implements DumbAware {
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
     boolean visible = canRemoveChangeLists(e.getProject(), changeLists);
 
@@ -51,18 +50,18 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     presentation.setDescription(ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES)) ? presentation.getText() : getDescription(changeLists));
   }
 
-  @NotNull
-  private static String getDescription(@Nullable ChangeList[] changeLists) {
+  @Nonnull
+  private static String getDescription(@javax.annotation.Nullable ChangeList[] changeLists) {
     return ActionsBundle.message("action.ChangesView.RemoveChangeList.description",
                                  containsActiveChangelist(changeLists) ? "another changelist" : "active one");
   }
 
-  private static boolean containsActiveChangelist(@Nullable ChangeList[] changeLists) {
+  private static boolean containsActiveChangelist(@javax.annotation.Nullable ChangeList[] changeLists) {
     if (changeLists == null) return false;
     return ContainerUtil.exists(changeLists, l -> l instanceof LocalChangeList && ((LocalChangeList)l).isDefault());
   }
 
-  private static boolean canRemoveChangeLists(@Nullable Project project, @Nullable ChangeList[] lists) {
+  private static boolean canRemoveChangeLists(@javax.annotation.Nullable Project project, @javax.annotation.Nullable ChangeList[] lists) {
     if (project == null || lists == null || lists.length == 0) return false;
 
     int allChangeListsCount = ChangeListManager.getInstance(project).getChangeListsNumber();
@@ -76,20 +75,20 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     final ChangeList[] selectedLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
 
     //noinspection unchecked
     ChangeListRemoveConfirmation.processLists(project, true, (Collection)Arrays.asList(selectedLists), new ChangeListRemoveConfirmation() {
       @Override
-      public boolean askIfShouldRemoveChangeLists(@NotNull List<? extends LocalChangeList> lists) {
+      public boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> lists) {
         return RemoveChangeListAction.askIfShouldRemoveChangeLists(lists, project);
       }
     });
   }
 
-  private static boolean askIfShouldRemoveChangeLists(@NotNull List<? extends LocalChangeList> lists, Project project) {
+  private static boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> lists, Project project) {
     boolean activeChangelistSelected = lists.stream().anyMatch(LocalChangeList::isDefault);
     boolean haveNoChanges = lists.stream().allMatch(l -> l.getChanges().isEmpty());
 
@@ -107,7 +106,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
                    .showYesNoDialog(project, message, VcsBundle.message("changes.removechangelist.warning.title"), Messages.getQuestionIcon());
   }
 
-  static boolean confirmActiveChangeListRemoval(@NotNull Project project, @NotNull List<? extends LocalChangeList> lists, boolean empty) {
+  static boolean confirmActiveChangeListRemoval(@Nonnull Project project, @Nonnull List<? extends LocalChangeList> lists, boolean empty) {
     List<LocalChangeList> remainingLists = ChangeListManager.getInstance(project).getChangeListsCopy();
     remainingLists.removeAll(lists);
 

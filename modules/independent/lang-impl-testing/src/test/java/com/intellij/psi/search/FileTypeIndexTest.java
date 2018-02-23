@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.ex.FakeFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -35,13 +35,13 @@ public class FileTypeIndexTest extends LightPlatformCodeInsightFixtureTestCase {
         return true;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         return "foo";
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDescription() {
         return "";

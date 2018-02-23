@@ -21,15 +21,15 @@ import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
 
 public abstract class DiffManagerEx extends DiffManager {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  @NotNull
+  @Nonnull
   public static DiffManagerEx getInstance() {
     return (DiffManagerEx)ServiceManager.getService(DiffManager.class);
   }
@@ -39,20 +39,20 @@ public abstract class DiffManagerEx extends DiffManager {
   //
 
   @RequiredDispatchThread
-  public abstract void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequest request);
+  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
 
   @RequiredDispatchThread
-  public abstract void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequest request, @NotNull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
   @RequiredDispatchThread
-  public abstract void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequestChain requests, @NotNull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
   @RequiredDispatchThread
-  public abstract void showMergeBuiltin(@Nullable Project project, @NotNull MergeRequest request);
+  public abstract void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request);
 
-  @NotNull
+  @Nonnull
   public abstract List<DiffTool> getDiffTools();
 
-  @NotNull
+  @Nonnull
   public abstract List<MergeTool> getMergeTools();
 }

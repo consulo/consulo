@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.extensions;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ExtensionPointListener<T> {
-  void extensionAdded(@NotNull T extension, @Nullable final PluginDescriptor pluginDescriptor);
-  void extensionRemoved(@NotNull T extension, @Nullable final PluginDescriptor pluginDescriptor);
+  void extensionAdded(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);
+  void extensionRemoved(@Nonnull T extension, @Nullable final PluginDescriptor pluginDescriptor);
 }

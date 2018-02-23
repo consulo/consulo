@@ -20,7 +20,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -39,19 +39,19 @@ class IndexPatternOccurrenceImpl implements IndexPatternOccurrence {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myFile;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return new TextRange(myStartOffset, myEndOffset);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IndexPattern getPattern() {
     return myPattern;
   }

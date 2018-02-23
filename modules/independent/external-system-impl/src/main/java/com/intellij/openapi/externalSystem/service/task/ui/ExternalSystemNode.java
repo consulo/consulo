@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -26,11 +26,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @SuppressWarnings("unchecked")
 public class ExternalSystemNode<T> extends DefaultMutableTreeNode {
 
-  public ExternalSystemNode(@NotNull ExternalSystemNodeDescriptor<T> descriptor) {
+  public ExternalSystemNode(@Nonnull ExternalSystemNodeDescriptor<T> descriptor) {
     super(descriptor);
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemNodeDescriptor<T> getDescriptor() {
     return (ExternalSystemNodeDescriptor<T>)getUserObject();
   }

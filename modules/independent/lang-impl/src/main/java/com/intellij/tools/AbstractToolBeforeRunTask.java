@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

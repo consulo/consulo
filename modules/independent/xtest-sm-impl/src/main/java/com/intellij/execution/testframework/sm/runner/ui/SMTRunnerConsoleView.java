@@ -26,8 +26,8 @@ import com.intellij.execution.testframework.ui.TestResultsPanel;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
    * @param splitterProperty               Key to store(project level) latest value of testTree/consoleTab splitter. E.g. "RSpec.Splitter.Proportion"
    */
   public SMTRunnerConsoleView(final TestConsoleProperties consoleProperties,
-                              @Nullable final String splitterProperty) {
+                              @javax.annotation.Nullable final String splitterProperty) {
     super(consoleProperties, null);
     mySplitterProperty = splitterProperty;
   }
@@ -89,8 +89,8 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
     myResultsViewer.addEventsListener(new TestResultsViewer.SMEventsAdapter() {
       @Override
       public void onSelected(@Nullable final SMTestProxy selectedTestProxy,
-                             @NotNull final TestResultsViewer viewer,
-                             @NotNull final TestFrameworkRunningModel model) {
+                             @Nonnull final TestResultsViewer viewer,
+                             @Nonnull final TestFrameworkRunningModel model) {
         if (selectedTestProxy == null) {
           return;
         }
@@ -117,7 +117,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
    * @param contentType  given type
    */
   @Override
-  public void print(@NotNull final String s, @NotNull final ConsoleViewContentType contentType) {
+  public void print(@Nonnull final String s, @Nonnull final ConsoleViewContentType contentType) {
     myResultsViewer.getRoot().addLast(new Printable() {
       @Override
       public void printOn(final Printer printer) {
@@ -145,11 +145,11 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
     }
   }
 
-  public void addAttachToProcessListener(@NotNull AttachToProcessListener listener) {
+  public void addAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
     myAttachToProcessListeners.add(listener);
   }
 
-  public void remoteAttachToProcessListener(@NotNull AttachToProcessListener listener) {
+  public void remoteAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
     myAttachToProcessListeners.remove(listener);
   }
 

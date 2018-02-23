@@ -22,7 +22,7 @@ import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -65,7 +65,7 @@ public class MacIntelliJTextFieldUI extends TextFieldWithPopupHandlerUI {
     return super.getToolTipText(t, pt);
   }
 
-  public SearchAction getActionUnder(@NotNull Point p) {
+  public SearchAction getActionUnder(@Nonnull Point p) {
     int off = JBUI.scale(8);
     Point point = new Point(p.x - off, p.y - off);
     if (point.distance(getSearchIconCoord()) <= off) {
@@ -134,7 +134,7 @@ public class MacIntelliJTextFieldUI extends TextFieldWithPopupHandlerUI {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getPreferredSize(JComponent c) {
     Dimension size = super.getPreferredSize(c);

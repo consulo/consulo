@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -60,7 +60,7 @@ public class WeakValueIntObjectHashMap<V> {
     return ref.get();
   }
 
-  public final V put(int key, @NotNull V value) {
+  public final V put(int key, @Nonnull V value) {
     processQueue();
     MyReference<V> ref = new MyReference<V>(key, value, myQueue);
     ref.name = value.toString();
@@ -91,7 +91,7 @@ public class WeakValueIntObjectHashMap<V> {
     return get(key) != null;
   }
 
-  @NotNull
+  @Nonnull
   public final Collection<V> values() {
     List<V> result = new ArrayList<V>();
     Object[] refs = myMap.getValues();

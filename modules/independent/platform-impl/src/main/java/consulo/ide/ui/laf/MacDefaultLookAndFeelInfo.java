@@ -15,8 +15,7 @@
  */
 package consulo.ide.ui.laf;
 
-import consulo.ide.ui.laf.LafWithColorScheme;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,7 +28,7 @@ public class MacDefaultLookAndFeelInfo extends UIManager.LookAndFeelInfo impleme
     super(name, className);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getColorSchemeName() {
     return getName();

@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;

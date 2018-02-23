@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -37,7 +37,7 @@ public class CurrentContentRevision implements ContentRevision {
     myFile = file;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getContent() {
     VirtualFile vFile = getVirtualFile();
     if (vFile == null) {
@@ -61,12 +61,12 @@ public class CurrentContentRevision implements ContentRevision {
     return vFile;
   }
 
-  @NotNull
+  @Nonnull
   public FilePath getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public VcsRevisionNumber getRevisionNumber() {
     return VcsRevisionNumber.NULL;
   }

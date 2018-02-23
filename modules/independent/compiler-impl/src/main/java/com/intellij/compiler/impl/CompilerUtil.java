@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import java.io.File;
@@ -106,13 +106,13 @@ public class CompilerUtil {
    * must not be called inside ReadAction
    * @param files
    */
-  public static void refreshIOFiles(@NotNull final Collection<File> files) {
+  public static void refreshIOFiles(@Nonnull final Collection<File> files) {
     if (!files.isEmpty()) {
       LocalFileSystem.getInstance().refreshIoFiles(files);
     }
   }
 
-  public static void refreshIODirectories(@NotNull final Collection<File> files) {
+  public static void refreshIODirectories(@Nonnull final Collection<File> files) {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     final List<VirtualFile> filesToRefresh = new ArrayList<VirtualFile>();
     for (File file : files) {

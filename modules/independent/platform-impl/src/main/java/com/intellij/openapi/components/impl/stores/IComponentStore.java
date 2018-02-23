@@ -19,8 +19,8 @@ import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -28,18 +28,18 @@ import java.util.List;
 import java.util.Set;
 
 public interface IComponentStore {
-  void initComponent(@NotNull Object component);
+  void initComponent(@Nonnull Object component);
 
-  void reinitComponents(@NotNull Set<String> componentNames, boolean reloadData);
+  void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData);
 
-  @NotNull
-  Collection<String> getNotReloadableComponents(@NotNull Collection<String> componentNames);
+  @Nonnull
+  Collection<String> getNotReloadableComponents(@Nonnull Collection<String> componentNames);
 
-  boolean isReloadPossible(@NotNull Set<String> componentNames);
+  boolean isReloadPossible(@Nonnull Set<String> componentNames);
 
   void load() throws IOException, StateStorageException;
 
-  @NotNull
+  @Nonnull
   StateStorageManager getStateStorageManager();
 
   class SaveCancelledException extends RuntimeException {
@@ -51,7 +51,7 @@ public interface IComponentStore {
     }
   }
 
-  void save(@NotNull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
+  void save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
 
   interface Reloadable extends IComponentStore {
     /**
@@ -60,6 +60,6 @@ public interface IComponentStore {
      * list of not reloadable components (reload is not performed)
      */
     @Nullable
-    Collection<String> reload(@NotNull Collection<? extends StateStorage> changedStorages);
+    Collection<String> reload(@Nonnull Collection<? extends StateStorage> changedStorages);
   }
 }

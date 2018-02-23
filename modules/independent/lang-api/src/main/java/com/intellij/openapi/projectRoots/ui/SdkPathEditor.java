@@ -20,7 +20,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class SdkPathEditor extends PathEditor {
   private final String myDisplayName;

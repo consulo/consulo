@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,24 +27,24 @@ import java.util.List;
 public class QueryFactory<Result, Parameters> {
   private final List<QueryExecutor<Result, Parameters>> myExecutors = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public void registerExecutor(@NotNull QueryExecutor<Result, Parameters> executor) {
+  public void registerExecutor(@Nonnull QueryExecutor<Result, Parameters> executor) {
     myExecutors.add(executor);
   }
 
-  public void unregisterExecutor(@NotNull QueryExecutor<Result, Parameters> executor) {
+  public void unregisterExecutor(@Nonnull QueryExecutor<Result, Parameters> executor) {
     myExecutors.remove(executor);
   }
 
   /**
    * @return query to perform the search. @param parameters of the search
    */
-  @NotNull
-  public final Query<Result> createQuery(@NotNull Parameters parameters) {
+  @Nonnull
+  public final Query<Result> createQuery(@Nonnull Parameters parameters) {
     return new ExecutorsQuery<Result, Parameters>(parameters, getExecutors());
   }
 
 
-  @NotNull
+  @Nonnull
   protected List<QueryExecutor<Result, Parameters>> getExecutors() {
     return myExecutors;
   }
@@ -57,7 +57,7 @@ public class QueryFactory<Result, Parameters> {
    * @param parameters of the search
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
-  public final Query<Result> createUniqueResultsQuery(@NotNull Parameters parameters) {
+  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters) {
     return new UniqueResultsQuery<Result, Result>(createQuery(parameters));
   }
 
@@ -66,8 +66,8 @@ public class QueryFactory<Result, Parameters> {
    * @param hashingStrategy strategy to factor results
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
-  public final Query<Result> createUniqueResultsQuery(@NotNull Parameters parameters,
-                                                      @NotNull TObjectHashingStrategy<Result> hashingStrategy) {
+  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
+                                                      @Nonnull TObjectHashingStrategy<Result> hashingStrategy) {
     return new UniqueResultsQuery<Result, Result>(createQuery(parameters), hashingStrategy);
   }
 
@@ -78,9 +78,9 @@ public class QueryFactory<Result, Parameters> {
    * @return query to perform the search. Obtained results are mapped to whatever objects that are automatically filtered wrt. equals()
    *         relation. Storing mapped objects instead of original elements may be wise wrt to memory consumption.
    */
-  public final <T> Query<Result> createUniqueResultsQuery(@NotNull Parameters parameters,
-                                                          @NotNull TObjectHashingStrategy<T> hashingStrategy,
-                                                          @NotNull Function<Result, T> mapper) {
+  public final <T> Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
+                                                          @Nonnull TObjectHashingStrategy<T> hashingStrategy,
+                                                          @Nonnull Function<Result, T> mapper) {
     return new UniqueResultsQuery<Result, T>(createQuery(parameters), hashingStrategy, mapper);
   }
 }

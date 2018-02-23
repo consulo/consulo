@@ -34,8 +34,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -107,7 +107,8 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Override
-  @NotNull @NonNls
+  @Nonnull
+  @NonNls
   public String getComponentName() {
     return "VcsDirtyScopeManager";
   }
@@ -123,7 +124,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }
   }
 
-  @NotNull
+  @Nonnull
   private MultiMap<AbstractVcs, FilePath> groupByVcs(@Nullable final Collection<FilePath> from) {
     if (from == null) return MultiMap.empty();
     MultiMap<AbstractVcs, FilePath> map = MultiMap.createSet();
@@ -163,8 +164,8 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }
   }
 
-  private static void markDirty(@NotNull DirtBuilder dirtBuilder,
-                                @NotNull MultiMap<AbstractVcs, FilePath> filesOrDirs,
+  private static void markDirty(@Nonnull DirtBuilder dirtBuilder,
+                                @Nonnull MultiMap<AbstractVcs, FilePath> filesOrDirs,
                                 boolean recursively) {
     for (AbstractVcs vcs : filesOrDirs.keySet()) {
       for (FilePath path : filesOrDirs.get(vcs)) {
@@ -182,8 +183,8 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     filePathsDirty(toFilePaths(filesDirty), toFilePaths(dirsRecursivelyDirty));
   }
 
-  @NotNull
-  private static Collection<FilePath> toFilePaths(@Nullable Collection<VirtualFile> files) {
+  @Nonnull
+  private static Collection<FilePath> toFilePaths(@javax.annotation.Nullable Collection<VirtualFile> files) {
     if (files == null) return Collections.emptyList();
     return ContainerUtil.map(files, new Function<VirtualFile, FilePath>() {
       @Override
@@ -194,12 +195,12 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Override
-  public void fileDirty(@NotNull final VirtualFile file) {
+  public void fileDirty(@Nonnull final VirtualFile file) {
     fileDirty(VcsUtil.getFilePath(file));
   }
 
   @Override
-  public void fileDirty(@NotNull final FilePath file) {
+  public void fileDirty(@Nonnull final FilePath file) {
     filePathsDirty(Collections.singleton(file), null);
   }
 
@@ -219,7 +220,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VcsInvalidated retrieveScopes() {
     DirtBuilder dirtBuilder;
     synchronized (LOCK) {
@@ -231,8 +232,8 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     return calculateInvalidated(dirtBuilder);
   }
 
-  @NotNull
-  private VcsInvalidated calculateInvalidated(@NotNull DirtBuilder dirt) {
+  @Nonnull
+  private VcsInvalidated calculateInvalidated(@Nonnull DirtBuilder dirt) {
     MultiMap<AbstractVcs, FilePath> files = dirt.getFilesForVcs();
     MultiMap<AbstractVcs, FilePath> dirs = dirt.getDirsForVcs();
     if (dirt.isEverythingDirty()) {
@@ -250,7 +251,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     return new VcsInvalidated(new ArrayList<>(scopes.values()), dirt.isEverythingDirty());
   }
 
-  @NotNull
+  @Nonnull
   private MultiMap<AbstractVcs, FilePath> getEverythingDirtyRoots() {
     MultiMap<AbstractVcs, FilePath> dirtyRoots = MultiMap.createSet();
     dirtyRoots.putAllValues(groupByVcs(toFilePaths(DefaultVcsRootPolicy.getInstance(myProject).getDirtyRoots())));
@@ -274,9 +275,9 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<FilePath> whatFilesDirty(@NotNull final Collection<FilePath> files) {
+  public Collection<FilePath> whatFilesDirty(@Nonnull final Collection<FilePath> files) {
     DirtBuilder dirtBuilder;
     DirtBuilder dirtBuilderInProgress;
     synchronized (LOCK) {
@@ -296,14 +297,14 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     return result;
   }
 
-  @NotNull
-  private static String toString(@NotNull final MultiMap<AbstractVcs, FilePath> filesByVcs) {
+  @Nonnull
+  private static String toString(@Nonnull final MultiMap<AbstractVcs, FilePath> filesByVcs) {
     return StringUtil.join(filesByVcs.keySet(), new Function<AbstractVcs, String>() {
       @Override
-      public String fun(@NotNull AbstractVcs vcs) {
+      public String fun(@Nonnull AbstractVcs vcs) {
         return vcs.getName() + ": " + StringUtil.join(filesByVcs.get(vcs), new Function<FilePath, String>() {
           @Override
-          public String fun(@NotNull FilePath path) {
+          public String fun(@Nonnull FilePath path) {
             return path.getPath();
           }
         }, "\n");
@@ -311,7 +312,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }, "\n");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Class findFirstInterestingCallerClass() {
     for (int i = 1; i <= 5; i++) {
       Class clazz = ReflectionUtil.findCallerClass(i);

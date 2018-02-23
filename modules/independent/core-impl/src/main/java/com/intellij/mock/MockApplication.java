@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.ui.migration.SwingImageRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -38,7 +38,7 @@ public class MockApplication extends MockComponentManager implements Application
 
   public static int INSTANCES_CREATED = 0;
 
-  public MockApplication(@NotNull Disposable parentDisposable) {
+  public MockApplication(@Nonnull Disposable parentDisposable) {
     super(null, parentDisposable);
     INSTANCES_CREATED++;
   }
@@ -59,7 +59,7 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void runInWriteThreadAndWait(@NotNull Runnable runnable) {
+  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
     runnable.run();
   }
 
@@ -68,7 +68,7 @@ public class MockApplication extends MockComponentManager implements Application
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SwingImageRef getIcon() {
     throw new IllegalArgumentException();
@@ -114,15 +114,15 @@ public class MockApplication extends MockComponentManager implements Application
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Future<?> executeOnPooledThread(@NotNull Runnable action) {
+  public Future<?> executeOnPooledThread(@Nonnull Runnable action) {
     return PooledThreadExecutor.INSTANCE.submit(action);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> Future<T> executeOnPooledThread(@NotNull Callable<T> action) {
+  public <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action) {
     return PooledThreadExecutor.INSTANCE.submit(action);
   }
 
@@ -141,48 +141,48 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void runReadAction(@NotNull Runnable action) {
+  public void runReadAction(@Nonnull Runnable action) {
     action.run();
   }
 
   @Override
-  public <T> T runReadAction(@NotNull Computable<T> computation) {
+  public <T> T runReadAction(@Nonnull Computable<T> computation) {
     return computation.compute();
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
   }
 
   @RequiredDispatchThread
   @Override
-  public void runWriteAction(@NotNull Runnable action) {
+  public void runWriteAction(@Nonnull Runnable action) {
     action.run();
   }
 
   @RequiredDispatchThread
   @Override
-  public <T> T runWriteAction(@NotNull Computable<T> computation) {
+  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
     return computation.compute();
   }
 
   @RequiredDispatchThread
   @Override
-  public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AccessToken acquireReadActionLock() {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
-  public AccessToken acquireWriteActionLock(@NotNull Class marker) {
+  public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
@@ -193,15 +193,15 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener listener) {
+  public void addApplicationListener(@Nonnull ApplicationListener listener) {
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener listener, @NotNull Disposable parent) {
+  public void addApplicationListener(@Nonnull ApplicationListener listener, @Nonnull Disposable parent) {
   }
 
   @Override
-  public void removeApplicationListener(@NotNull ApplicationListener listener) {
+  public void removeApplicationListener(@Nonnull ApplicationListener listener) {
   }
 
   @Override
@@ -215,13 +215,13 @@ public class MockApplication extends MockComponentManager implements Application
     return 0;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getNoneModalityState() {
     if (MODALITY_STATE_NONE == null) {
       MODALITY_STATE_NONE = new ModalityStateEx() {
         @Override
-        public boolean dominates(@NotNull ModalityState anotherState) {
+        public boolean dominates(@Nonnull ModalityState anotherState) {
           return false;
         }
 
@@ -235,50 +235,50 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable, @NotNull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final Condition expired) {
   }
 
   @Override
-  public void invokeLater(@NotNull final Runnable runnable, @NotNull final ModalityState state, @NotNull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable) {
+  public void invokeLater(@Nonnull Runnable runnable) {
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityInvokator getInvokator() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getCurrentModalityState() {
     return getNoneModalityState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getAnyModalityState() {
     return getNoneModalityState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@NotNull Component c) {
+  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
     return getNoneModalityState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getDefaultModalityState() {
     return getNoneModalityState();

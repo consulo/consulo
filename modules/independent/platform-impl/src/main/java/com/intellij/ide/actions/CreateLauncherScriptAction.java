@@ -33,7 +33,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -56,7 +56,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean canCreateScript = isAvailable();
     Presentation presentation = e.getPresentation();
     presentation.setVisible(canCreateScript);
@@ -64,7 +64,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!isAvailable()) return;
 
     Project project = e.getProject();

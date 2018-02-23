@@ -17,8 +17,8 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.comparison.ComparisonPolicy;
 import com.intellij.diff.fragments.LineFragment;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +28,10 @@ public class LineFragmentCache {
   private final long myModificationStamp1;
   private final long myModificationStamp2;
 
-  @NotNull private final Map<ComparisonPolicy, PolicyData> myFragments;
+  @Nonnull
+  private final Map<ComparisonPolicy, PolicyData> myFragments;
 
-  public LineFragmentCache(@NotNull LineFragmentCache cache) {
+  public LineFragmentCache(@Nonnull LineFragmentCache cache) {
     myModificationStamp1 = cache.myModificationStamp1;
     myModificationStamp2 = cache.myModificationStamp2;
 
@@ -52,24 +53,25 @@ public class LineFragmentCache {
   }
 
   @Nullable
-  public PolicyData getData(@NotNull ComparisonPolicy policy) {
+  public PolicyData getData(@Nonnull ComparisonPolicy policy) {
     return myFragments.get(policy);
   }
 
-  public void putData(@NotNull ComparisonPolicy policy, @NotNull List<LineFragment> fragments, boolean isInnerFragments) {
+  public void putData(@Nonnull ComparisonPolicy policy, @Nonnull List<LineFragment> fragments, boolean isInnerFragments) {
     myFragments.put(policy, new PolicyData(fragments, isInnerFragments));
   }
 
   public static class PolicyData {
-    @NotNull private final List<LineFragment> myFragments;
+    @Nonnull
+    private final List<LineFragment> myFragments;
     private final boolean myInnerFragments;
 
-    public PolicyData(@NotNull List<LineFragment> fragments, boolean innerFragments) {
+    public PolicyData(@Nonnull List<LineFragment> fragments, boolean innerFragments) {
       myFragments = fragments;
       myInnerFragments = innerFragments;
     }
 
-    @NotNull
+    @Nonnull
     public List<LineFragment> getFragments() {
       return myFragments;
     }

@@ -33,8 +33,8 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -356,7 +356,7 @@ public class GeneralToSMTRunnerEventsConvertorTest extends BaseSMTRunnerTestCase
     final Marker finishedMarker = new Marker();
     myEventsProcessor.addEventsListener(new SMTRunnerEventsAdapter(){
       @Override
-      public void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot) {
+      public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
         finishedMarker.set();
       }
     });
@@ -464,7 +464,7 @@ public class GeneralToSMTRunnerEventsConvertorTest extends BaseSMTRunnerTestCase
     onTestSuiteStarted(suiteName, null);
   }
 
-  private void onTestSuiteStarted(final String suiteName, @Nullable final String locationUrl) {
+  private void onTestSuiteStarted(final String suiteName, @javax.annotation.Nullable final String locationUrl) {
     myEventsProcessor.onSuiteStarted(new TestSuiteStartedEvent(suiteName, locationUrl));
     myResultsViewer.performUpdate();
   }

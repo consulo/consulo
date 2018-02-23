@@ -25,8 +25,7 @@ import com.vaadin.shared.Connector;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.client.ui.WidgetWithUpdateUI;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.List;
  * @since 20-May-16
  */
 public class GwtUIUtil {
-  @Nullable
+  @javax.annotation.Nullable
   @SuppressWarnings("unchecked")
   public static <T extends Widget> T getParentOf(Widget widget, Class<T> type) {
     Widget target = widget;
@@ -66,7 +65,7 @@ public class GwtUIUtil {
   }
 
   @Contract("null -> null")
-  public static Widget connector2Widget(@Nullable Connector connector) {
+  public static Widget connector2Widget(@javax.annotation.Nullable Connector connector) {
     if (connector == null) {
       return null;
     }
@@ -74,7 +73,7 @@ public class GwtUIUtil {
     return componentConnector.getWidget();
   }
 
-  @NotNull
+  @Nonnull
   public static List<Widget> remapWidgets(AbstractComponentContainerConnector abstractLayout) {
     List<Widget> widgets = new ArrayList<>();
     for (ComponentConnector connector : abstractLayout.getChildComponents()) {

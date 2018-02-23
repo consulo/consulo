@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +32,7 @@ import java.util.Set;
 public abstract class AbstractApplicationUsagesCollector extends UsagesCollector {
     private static final Logger LOG = Logger.getInstance("#com.intellij.internal.statistic.AbstractApplicationUsagesCollector");
 
-    public void persistProjectUsages(@NotNull Project project) {
+    public void persistProjectUsages(@Nonnull Project project) {
       try {
         final Set<UsageDescriptor> projectUsages = getProjectUsages(project);
         persistProjectUsages(project, projectUsages);
@@ -42,23 +42,23 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
       }
     }
 
-    public void persistProjectUsages(@NotNull Project project, @NotNull Set<UsageDescriptor> usages) {
+    public void persistProjectUsages(@Nonnull Project project, @Nonnull Set<UsageDescriptor> usages) {
         persistProjectUsages(project, usages, ApplicationStatisticsPersistenceComponent.getInstance());
     }
 
-    public void persistProjectUsages(@NotNull Project project,
-                                     @NotNull Set<UsageDescriptor> usages,
-                                     @NotNull ApplicationStatisticsPersistence persistence) {
+    public void persistProjectUsages(@Nonnull Project project,
+                                     @Nonnull Set<UsageDescriptor> usages,
+                                     @Nonnull ApplicationStatisticsPersistence persistence) {
         persistence.persistUsages(getGroupId(), project, usages);
     }
 
-    @NotNull
+    @Nonnull
     public Set<UsageDescriptor> getApplicationUsages() {
         return getApplicationUsages(ApplicationStatisticsPersistenceComponent.getInstance());
     }
 
-    @NotNull
-    public Set<UsageDescriptor> getApplicationUsages(@NotNull final ApplicationStatisticsPersistence persistence) {
+    @Nonnull
+    public Set<UsageDescriptor> getApplicationUsages(@Nonnull final ApplicationStatisticsPersistence persistence) {
         final Map<String, Integer> result = new HashMap<String, Integer>();
 
         for (Set<UsageDescriptor> usageDescriptors : persistence.getApplicationData(getGroupId()).values()) {
@@ -78,7 +78,7 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
         if (project != null) {
           final Set<UsageDescriptor> projectUsages = getProjectUsages(project);
@@ -88,6 +88,6 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
         return getApplicationUsages();
     }
 
-    @NotNull
-    public abstract Set<UsageDescriptor> getProjectUsages(@NotNull Project project) throws CollectUsagesException;
+    @Nonnull
+    public abstract Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException;
 }

@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.util;
 
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +29,10 @@ import java.awt.*;
  */
 public class InsetsPanel extends JPanel {
 
-  @NotNull private final JComponent myContent;
+  @Nonnull
+  private final JComponent myContent;
 
-  public InsetsPanel(@NotNull JComponent content) {
+  public InsetsPanel(@Nonnull JComponent content) {
     super(new GridBagLayout());
     setOpaque(false);
     myContent = content;

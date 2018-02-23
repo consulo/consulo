@@ -35,8 +35,8 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class ContentRevisionCache {
     myCounter = 0;
   }
 
-  private void put(FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey, @NotNull UniqueType type, @Nullable final byte[] bytes) {
+  private void put(FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey, @Nonnull UniqueType type, @javax.annotation.Nullable final byte[] bytes) {
     if (bytes == null) return;
     synchronized (myLock) {
       myCache.put(new Key(path, number, vcsKey, type), new SoftReference<>(bytes));
@@ -74,7 +74,7 @@ public class ContentRevisionCache {
   }
 
   @Nullable
-  public String get(FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey, @NotNull UniqueType type) {
+  public String get(FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey, @Nonnull UniqueType type) {
     synchronized (myLock) {
       final byte[] bytes = getBytes(path, number, vcsKey, type);
       if (bytes == null) return null;
@@ -88,7 +88,7 @@ public class ContentRevisionCache {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Object getCustom(FilePath path, VcsRevisionNumber number) {
     synchronized (myLock) {
       return myCustom.get(Pair.create(path, number));
@@ -152,9 +152,9 @@ public class ContentRevisionCache {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Contract("!null, _, _ -> !null")
-  public static String getAsString(@Nullable byte[] bytes, @NotNull FilePath file, @Nullable Charset charset) {
+  public static String getAsString(@javax.annotation.Nullable byte[] bytes, @Nonnull FilePath file, @Nullable Charset charset) {
     if (bytes == null) return null;
     if (charset == null) {
       return bytesToString(file, bytes);
@@ -164,13 +164,13 @@ public class ContentRevisionCache {
     }
   }
 
-  @Nullable
-  public static String getOrLoadAsString(@NotNull Project project,
-                                         @NotNull FilePath file,
+  @javax.annotation.Nullable
+  public static String getOrLoadAsString(@Nonnull Project project,
+                                         @Nonnull FilePath file,
                                          VcsRevisionNumber number,
-                                         @NotNull VcsKey key,
-                                         @NotNull UniqueType type,
-                                         @NotNull Throwable2Computable<byte[], VcsException, IOException> loader,
+                                         @Nonnull VcsKey key,
+                                         @Nonnull UniqueType type,
+                                         @Nonnull Throwable2Computable<byte[], VcsException, IOException> loader,
                                          @Nullable Charset charset)
           throws VcsException, IOException {
     final byte[] bytes = getOrLoadAsBytes(project, file, number, key, type, loader);
@@ -179,14 +179,14 @@ public class ContentRevisionCache {
   }
 
 
-  @Nullable
-  public static String getOrLoadAsString(final Project project, FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey,
-                                         @NotNull UniqueType type, final Throwable2Computable<byte[], VcsException, IOException> loader)
+  @javax.annotation.Nullable
+  public static String getOrLoadAsString(final Project project, FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey,
+                                         @Nonnull UniqueType type, final Throwable2Computable<byte[], VcsException, IOException> loader)
           throws VcsException, IOException {
     return getOrLoadAsString(project, path, number, vcsKey, type, loader, null);
   }
 
-  private static String bytesToString(FilePath path, @NotNull byte[] bytes) {
+  private static String bytesToString(FilePath path, @Nonnull byte[] bytes) {
     Charset charset = null;
     if (path.getVirtualFile() != null) {
       charset = path.getVirtualFile().getCharset();
@@ -201,15 +201,15 @@ public class ContentRevisionCache {
     return CharsetToolkit.bytesToString(bytes, EncodingRegistry.getInstance().getDefaultCharset());
   }
 
-  @Nullable
-  public byte[] getBytes(FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey, @NotNull UniqueType type) {
+  @javax.annotation.Nullable
+  public byte[] getBytes(FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey, @Nonnull UniqueType type) {
     synchronized (myLock) {
       final SoftReference<byte[]> reference = myCache.get(new Key(path, number, vcsKey, type));
       return SoftReference.dereference(reference);
     }
   }
 
-  private boolean putCurrent(FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey, final long counter) {
+  private boolean putCurrent(FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey, final long counter) {
     synchronized (myLock) {
       if (myCounter != counter) return false;
       ++ myCounter;
@@ -224,8 +224,8 @@ public class ContentRevisionCache {
     }
   }
 
-  public static byte[] getOrLoadAsBytes(final Project project, FilePath path, VcsRevisionNumber number, @NotNull VcsKey vcsKey,
-                                        @NotNull UniqueType type, final Throwable2Computable<byte[], VcsException, IOException> loader)
+  public static byte[] getOrLoadAsBytes(final Project project, FilePath path, VcsRevisionNumber number, @Nonnull VcsKey vcsKey,
+                                        @Nonnull UniqueType type, final Throwable2Computable<byte[], VcsException, IOException> loader)
           throws VcsException, IOException {
     ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(project).getContentRevisionCache();
     byte[] bytes = cache.getBytes(path, number, vcsKey, type);
@@ -255,7 +255,7 @@ public class ContentRevisionCache {
 
   private static VcsRevisionNumber putIntoCurrentCache(final ContentRevisionCache cache,
                                                        FilePath path,
-                                                       @NotNull VcsKey vcsKey,
+                                                       @Nonnull VcsKey vcsKey,
                                                        final CurrentRevisionProvider loader) throws VcsException, IOException {
     VcsRevisionNumber loadedRevisionNumber;
     Pair<VcsRevisionNumber, Long> currentRevision;
@@ -271,7 +271,7 @@ public class ContentRevisionCache {
     }
   }
 
-  public static Pair<VcsRevisionNumber, byte[]> getOrLoadCurrentAsBytes(final Project project, FilePath path, @NotNull VcsKey vcsKey,
+  public static Pair<VcsRevisionNumber, byte[]> getOrLoadCurrentAsBytes(final Project project, FilePath path, @Nonnull VcsKey vcsKey,
                                                                         final CurrentRevisionProvider loader) throws VcsException, IOException {
     ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(project).getContentRevisionCache();
 
@@ -292,7 +292,7 @@ public class ContentRevisionCache {
     return loaded;
   }
 
-  public static Pair<VcsRevisionNumber, String> getOrLoadCurrentAsString(final Project project, FilePath path, @NotNull VcsKey vcsKey,
+  public static Pair<VcsRevisionNumber, String> getOrLoadCurrentAsString(final Project project, FilePath path, @Nonnull VcsKey vcsKey,
                                                                          final CurrentRevisionProvider loader) throws VcsException, IOException {
     Pair<VcsRevisionNumber, byte[]> pair = getOrLoadCurrentAsBytes(project, path, vcsKey, loader);
     return Pair.create(pair.getFirst(), bytesToString(path, pair.getSecond()));

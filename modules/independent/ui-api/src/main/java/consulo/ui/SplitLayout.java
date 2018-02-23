@@ -15,19 +15,19 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13-Jun-16
  */
 public interface SplitLayout extends Layout {
-  @NotNull
+  @Nonnull
   static SplitLayout createHorizontal() {
     return UIInternal.get()._Layouts_horizontalSplit();
   }
 
-  @NotNull
+  @Nonnull
   static SplitLayout createVertical() {
     return UIInternal.get()._Layouts_verticalSplit();
   }
@@ -38,18 +38,18 @@ public interface SplitLayout extends Layout {
   void setProportion(int percent);
 
   @RequiredUIAccess
-  default SplitLayout setFirstComponent(@NotNull PseudoComponent component) {
+  default SplitLayout setFirstComponent(@Nonnull PseudoComponent component) {
     return setFirstComponent(component.getComponent());
   }
 
   @RequiredUIAccess
-  SplitLayout setFirstComponent(@NotNull Component component);
+  SplitLayout setFirstComponent(@Nonnull Component component);
 
   @RequiredUIAccess
-  default SplitLayout setSecondComponent(@NotNull PseudoComponent component) {
+  default SplitLayout setSecondComponent(@Nonnull PseudoComponent component) {
     return setSecondComponent(component.getComponent());
   }
 
   @RequiredUIAccess
-  SplitLayout setSecondComponent(@NotNull Component component);
+  SplitLayout setSecondComponent(@Nonnull Component component);
 }

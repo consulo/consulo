@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hints.filtering;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -23,5 +23,5 @@ import java.util.List;
  * from kotlin
  */
 public interface MethodMatcher {
-  boolean isMatching(@NotNull String fullyQualifiedMethodName, @NotNull List<String> paramNames);
+  boolean isMatching(@Nonnull String fullyQualifiedMethodName, @Nonnull List<String> paramNames);
 }

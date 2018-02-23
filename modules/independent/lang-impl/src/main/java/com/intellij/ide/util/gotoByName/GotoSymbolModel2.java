@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ import java.util.HashSet;
 public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
-  public GotoSymbolModel2(@NotNull Project project) {
+  public GotoSymbolModel2(@Nonnull Project project) {
     super(project, ChooseByNameRegistry.getInstance().getSymbolModelContributors());
   }
 
@@ -111,7 +111,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSeparators() {
     if (mySeparators == null) {
       mySeparators = GotoClassModel2.getSeparatorsFromContributors(getContributors());

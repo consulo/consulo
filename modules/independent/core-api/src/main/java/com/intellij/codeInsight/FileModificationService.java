@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public abstract class FileModificationService {
     return ServiceManager.getService(FileModificationService.class);
   }
 
-  public abstract boolean preparePsiElementsForWrite(@NotNull Collection<? extends PsiElement> elements);
+  public abstract boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements);
   public abstract boolean prepareFileForWrite(@Nullable final PsiFile psiFile);
 
   public boolean preparePsiElementForWrite(@Nullable PsiElement element) {
@@ -39,9 +39,9 @@ public abstract class FileModificationService {
     return prepareFileForWrite(file);
   }
 
-  public boolean preparePsiElementsForWrite(@NotNull PsiElement... elements) {
+  public boolean preparePsiElementsForWrite(@Nonnull PsiElement... elements) {
     return preparePsiElementsForWrite(Arrays.asList(elements));
   }
 
-  public abstract boolean prepareVirtualFilesForWrite(@NotNull Project project, @NotNull Collection<VirtualFile> files);
+  public abstract boolean prepareVirtualFilesForWrite(@Nonnull Project project, @Nonnull Collection<VirtualFile> files);
 }

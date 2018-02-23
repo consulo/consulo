@@ -31,14 +31,14 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.DialogUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class ImportPopupHectorComponentProvider implements HectorComponentPanelsProvider {
 
   @Override
-  public HectorComponentPanel createConfigurable(@NotNull final PsiFile file) {
+  public HectorComponentPanel createConfigurable(@Nonnull final PsiFile file) {
     final Project project = file.getProject();
     final DaemonCodeAnalyzer analyzer = DaemonCodeAnalyzer.getInstance(project);
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();

@@ -37,10 +37,11 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -58,15 +59,19 @@ public class LaterInvocator {
   private LaterInvocator() { }
 
   private static class RunnableInfo {
-    @NotNull private final Runnable runnable;
-    @NotNull private final ModalityState modalityState;
-    @NotNull private final Condition<?> expired;
-    @NotNull private final ActionCallback callback;
+    @Nonnull
+    private final Runnable runnable;
+    @Nonnull
+    private final ModalityState modalityState;
+    @Nonnull
+    private final Condition<?> expired;
+    @Nonnull
+    private final ActionCallback callback;
 
-    RunnableInfo(@NotNull Runnable runnable,
-                 @NotNull ModalityState modalityState,
-                 @NotNull Condition<?> expired,
-                 @NotNull ActionCallback callback) {
+    RunnableInfo(@Nonnull Runnable runnable,
+                 @Nonnull ModalityState modalityState,
+                 @Nonnull Condition<?> expired,
+                 @Nonnull ActionCallback callback) {
       this.runnable = runnable;
       this.modalityState = modalityState;
       this.expired = expired;
@@ -94,18 +99,18 @@ public class LaterInvocator {
 
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
 
-  public static void addModalityStateListener(@NotNull ModalityStateListener listener, @NotNull Disposable parentDisposable) {
+  public static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     if (!ourModalityStateMulticaster.getListeners().contains(listener)) {
       ourModalityStateMulticaster.addListener(listener, parentDisposable);
     }
   }
 
-  public static void removeModalityStateListener(@NotNull ModalityStateListener listener) {
+  public static void removeModalityStateListener(@Nonnull ModalityStateListener listener) {
     ourModalityStateMulticaster.removeListener(listener);
   }
 
-  @NotNull
-  static ModalityStateEx modalityStateForWindow(@NotNull Window window) {
+  @Nonnull
+  static ModalityStateEx modalityStateForWindow(@Nonnull Window window) {
     int index = ourModalEntities.indexOf(window);
     if (index < 0) {
       Window owner = window.getOwner();
@@ -129,19 +134,19 @@ public class LaterInvocator {
     return new ModalityStateEx(result.toArray());
   }
 
-  @NotNull
-  static ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull Condition<?> expired) {
+  @Nonnull
+  static ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
     ModalityState modalityState = ModalityState.defaultModalityState();
     return invokeLater(runnable, modalityState, expired);
   }
 
-  @NotNull
-  static ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  @Nonnull
+  static ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     return invokeLater(runnable, modalityState, Conditions.FALSE);
   }
 
-  @NotNull
-  static ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull ModalityState modalityState, @NotNull Condition<?> expired) {
+  @Nonnull
+  static ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
     if (expired.value(null)) return ActionCallback.REJECTED;
     final ActionCallback callback = new ActionCallback();
     RunnableInfo runnableInfo = new RunnableInfo(runnable, modalityState, expired, callback);
@@ -152,7 +157,7 @@ public class LaterInvocator {
     return callback;
   }
 
-  static void invokeAndWait(@NotNull final Runnable runnable, @NotNull ModalityState modalityState) {
+  static void invokeAndWait(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     LOG.assertTrue(!isDispatchThread());
 
     final Semaphore semaphore = new Semaphore();
@@ -193,7 +198,7 @@ public class LaterInvocator {
     }
   }
 
-  public static void enterModal(@NotNull Object modalEntity) {
+  public static void enterModal(@Nonnull Object modalEntity) {
     LOG.assertTrue(isDispatchThread(), "enterModal() should be invoked in event-dispatch thread");
 
     if (LOG.isDebugEnabled()) {
@@ -268,7 +273,7 @@ public class LaterInvocator {
     requestFlush();
   }
 
-  public static void leaveModal(@NotNull Object modalEntity) {
+  public static void leaveModal(@Nonnull Object modalEntity) {
     LOG.assertTrue(isDispatchThread(), "leaveModal() should be invoked in event-dispatch thread");
 
     if (LOG.isDebugEnabled()) {
@@ -307,12 +312,12 @@ public class LaterInvocator {
     return ArrayUtil.toObjectArray(projectToModalEntities.get(project));
   }
 
-  @NotNull
+  @Nonnull
   public static Object[] getCurrentModalEntities() {
     return getCurrentModalEntitiesForProject(null);
   }
 
-  @NotNull
+  @Nonnull
   public static ModalityState getCurrentModalityState() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return ourModalityStack.peek();

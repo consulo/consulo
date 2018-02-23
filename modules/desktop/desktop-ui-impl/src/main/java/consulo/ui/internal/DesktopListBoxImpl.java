@@ -26,8 +26,8 @@ import consulo.ui.shared.Size;
 import consulo.ui.ValueComponent;
 import consulo.ui.migration.ToSwingWrapper;
 import consulo.ui.model.ListModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
     myList = new JBList<>(myModel);
     myList.setCellRenderer(new ColoredListCellRenderer<E>() {
       @Override
-      protected void customizeCellRenderer(@NotNull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<>(this);
         myRender.render(render, index, value);
       }
@@ -57,14 +57,14 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
     myRootPanel = ScrollPaneFactory.createScrollPane(myList);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ListModel<E> getListModel() {
     return myModel;
   }
 
   @Override
-  public void setRender(@NotNull ListItemRender<E> render) {
+  public void setRender(@Nonnull ListItemRender<E> render) {
     myRender = render;
   }
 
@@ -80,17 +80,17 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+  public void addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     myList.addListSelectionListener(new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener));
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     myList.removeListSelectionListener(new DesktopValueListenerAsListSelectionListener<>(this, myList, valueListener));
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   @Override
   public E getValue() {
     return myList.getSelectedValue();
@@ -126,11 +126,11 @@ public class DesktopListBoxImpl<E> implements ListBox<E>, ToSwingWrapper, SwingW
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Component toAWT() {
     return myRootPanel;

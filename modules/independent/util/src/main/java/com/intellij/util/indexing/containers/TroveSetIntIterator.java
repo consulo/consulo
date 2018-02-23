@@ -18,16 +18,19 @@ package com.intellij.util.indexing.containers;
 import com.intellij.util.containers.EmptyIntHashSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TroveSetIntIterator implements IntIdsIterator {
-  @NotNull public static final TroveSetIntIterator EMPTY = new TroveSetIntIterator(EmptyIntHashSet.INSTANCE);
+  @Nonnull
+  public static final TroveSetIntIterator EMPTY = new TroveSetIntIterator(EmptyIntHashSet.INSTANCE);
 
-  @NotNull private final TIntHashSet mySet;
-  @NotNull private final TIntIterator mySetIterator;
+  @Nonnull
+  private final TIntHashSet mySet;
+  @Nonnull
+  private final TIntIterator mySetIterator;
   private final int mySize;
 
-  public TroveSetIntIterator(@NotNull TIntHashSet set) {
+  public TroveSetIntIterator(@Nonnull TIntHashSet set) {
     mySet = set;
     mySetIterator = set.iterator();
     mySize = set.size();

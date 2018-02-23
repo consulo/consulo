@@ -16,7 +16,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ColorGenerator {
-  @NotNull
-  public static List<Color> generateLinearColorSequence(@NotNull List<Color> anchorColors, int colorsBetweenAnchors) {
+  @Nonnull
+  public static List<Color> generateLinearColorSequence(@Nonnull List<Color> anchorColors, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
     if (anchorColors.isEmpty()) return Collections.singletonList(JBColor.GRAY);
     if (anchorColors.size() == 1) return Collections.singletonList(anchorColors.get(0));
@@ -46,8 +46,8 @@ public class ColorGenerator {
     return result;
   }
 
-  @NotNull
-  public static List<Color> generateLinearColorSequence(@NotNull Color color1, @NotNull Color color2, int colorsBetweenAnchors) {
+  @Nonnull
+  public static List<Color> generateLinearColorSequence(@Nonnull Color color1, @Nonnull Color color2, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
 
     List<Color> result = new ArrayList<>(colorsBetweenAnchors + 2);

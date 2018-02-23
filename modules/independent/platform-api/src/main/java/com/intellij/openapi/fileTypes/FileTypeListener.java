@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.fileTypes;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
 public interface FileTypeListener extends EventListener {
-  default void beforeFileTypesChanged(@NotNull FileTypeEvent event) {
+  default void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
   }
 
-  default void fileTypesChanged(@NotNull FileTypeEvent event) {
+  default void fileTypesChanged(@Nonnull FileTypeEvent event) {
   }
 
   /**

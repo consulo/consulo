@@ -24,7 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.UrlConnectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -39,12 +39,12 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
   private static final int READ_TIMEOUT = 60 * 1000;
 
   @Override
-  public boolean canProvideContent(@NotNull final String url) {
+  public boolean canProvideContent(@Nonnull final String url) {
     return true;
   }
 
   @Override
-  public void saveContent(final String url, @NotNull final File file, @NotNull final DownloadingCallback callback) {
+  public void saveContent(final String url, @Nonnull final File file, @Nonnull final DownloadingCallback callback) {
     ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
       @Override
       public void run() {
@@ -122,7 +122,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
   }
 
   @Override
-  public boolean isUpToDate(@NotNull final String url, @NotNull final VirtualFile local) {
+  public boolean isUpToDate(@Nonnull final String url, @Nonnull final VirtualFile local) {
     return false;
   }
 }

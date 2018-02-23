@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -23,7 +23,8 @@ import java.awt.*;
  * Represents the stack of active modal dialogs.
  */
 public abstract class ModalityState {
-  @NotNull public static final ModalityState NON_MODAL;
+  @Nonnull
+  public static final ModalityState NON_MODAL;
 
   static {
     try {
@@ -42,25 +43,25 @@ public abstract class ModalityState {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static ModalityState current() {
     return ApplicationManager.getApplication().getCurrentModalityState();
   }
 
-  @NotNull
+  @Nonnull
   public static ModalityState any() {
     return ApplicationManager.getApplication().getAnyModalityState();
   }
 
-  @NotNull
+  @Nonnull
   public static ModalityState stateForComponent(Component component){
     return ApplicationManager.getApplication().getModalityStateForComponent(component);
   }
 
-  @NotNull
+  @Nonnull
   public static ModalityState defaultModalityState() {
     return ApplicationManager.getApplication().getDefaultModalityState();
   }
 
-  public abstract boolean dominates(@NotNull ModalityState anotherState);
+  public abstract boolean dominates(@Nonnull ModalityState anotherState);
 }

@@ -21,8 +21,8 @@ import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.psi.CustomHighlighterTokenType.*;
 
@@ -43,7 +43,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
   }
 
   @Override
-  public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType contextType) {
+  public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType contextType) {
     return contextType == PUNCTUATION ||
            contextType == WHITESPACE ||
            isRBraceToken(contextType);
@@ -61,7 +61,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public static PairedBraceMatcherAdapter createBraceMatcher() {
     return new PairedBraceMatcherAdapter(new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
       @Override

@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import java.util.List;
  * @author max
  */
 public abstract class ChangeListManager implements ChangeListModification {
-  @NotNull
+  @Nonnull
   public static ChangeListManager getInstance(Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangeListManager.class);
   }
@@ -61,12 +61,12 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract List<LocalChangeList> getChangeListsCopy();
 
-  @NotNull
+  @Nonnull
   public abstract List<LocalChangeList> getChangeLists();
 
   public abstract List<File> getAffectedPaths();
 
-  @NotNull
+  @Nonnull
   public abstract List<VirtualFile> getAffectedFiles();
 
   public abstract boolean isFileAffected(final VirtualFile file);
@@ -74,13 +74,13 @@ public abstract class ChangeListManager implements ChangeListModification {
   /**
    * @return all changes in all changelists.
    */
-  @NotNull
+  @Nonnull
   public abstract Collection<Change> getAllChanges();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract LocalChangeList findChangeList(final String name);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract LocalChangeList getChangeList(String id);
 //  public abstract LocalChangeList addChangeList(@NotNull String name, final String comment);
 //  public abstract void setDefaultChangeList(@NotNull LocalChangeList list);
@@ -95,36 +95,36 @@ public abstract class ChangeListManager implements ChangeListModification {
   public abstract boolean isDefaultChangeList(ChangeList list);
 
   @Nullable
-  public abstract LocalChangeList getChangeList(@NotNull Change change);
+  public abstract LocalChangeList getChangeList(@Nonnull Change change);
 
   @Nullable
   public abstract String getChangeListNameIfOnlyOne(Change[] changes);
 
-  @NotNull
+  @Nonnull
   public abstract Runnable prepareForChangeDeletion(final Collection<Change> changes);
 
-  @Nullable
-  public abstract Change getChange(@NotNull VirtualFile file);
+  @javax.annotation.Nullable
+  public abstract Change getChange(@Nonnull VirtualFile file);
 
-  @Nullable
-  public abstract LocalChangeList getChangeList(@NotNull VirtualFile file);
+  @javax.annotation.Nullable
+  public abstract LocalChangeList getChangeList(@Nonnull VirtualFile file);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Change getChange(FilePath file);
 
   public abstract boolean isUnversioned(VirtualFile file);
 
-  @NotNull
+  @Nonnull
   public abstract FileStatus getStatus(VirtualFile file);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<Change> getChangesIn(VirtualFile dir);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<Change> getChangesIn(FilePath path);
 
-  @Nullable
-  public abstract AbstractVcs getVcsFor(@NotNull Change change);
+  @javax.annotation.Nullable
+  public abstract AbstractVcs getVcsFor(@Nonnull Change change);
 
 //  public abstract void removeChangeList(final LocalChangeList list);
 
@@ -151,15 +151,15 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract void addFilesToIgnore(final IgnoredFileBean... ignoredFiles);
 
-  public abstract void addDirectoryToIgnoreImplicitly(@NotNull String path);
+  public abstract void addDirectoryToIgnoreImplicitly(@Nonnull String path);
 
   public abstract void setFilesToIgnore(final IgnoredFileBean... ignoredFiles);
 
   public abstract IgnoredFileBean[] getFilesToIgnore();
 
-  public abstract boolean isIgnoredFile(@NotNull VirtualFile file);
+  public abstract boolean isIgnoredFile(@Nonnull VirtualFile file);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getSwitchedBranch(VirtualFile file);
 
   public abstract String getDefaultListName();
@@ -169,11 +169,11 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract String isFreezed();
 
-  public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
+  public abstract boolean isFreezedWithNotification(@javax.annotation.Nullable String modalTitle);
 
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();
 
-  @NotNull
-  public abstract ThreeState haveChangesUnder(@NotNull VirtualFile vf);
+  @Nonnull
+  public abstract ThreeState haveChangesUnder(@Nonnull VirtualFile vf);
 }

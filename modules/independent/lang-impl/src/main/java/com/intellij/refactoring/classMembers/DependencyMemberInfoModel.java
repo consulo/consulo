@@ -25,7 +25,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -59,7 +59,7 @@ public abstract class DependencyMemberInfoModel<T extends PsiElement, M extends 
   }
 
   @Override
-  public int checkForProblems(@NotNull M memberInfo) {
+  public int checkForProblems(@Nonnull M memberInfo) {
     if (memberInfo.isChecked()) return OK;
     final T member = memberInfo.getMember();
 

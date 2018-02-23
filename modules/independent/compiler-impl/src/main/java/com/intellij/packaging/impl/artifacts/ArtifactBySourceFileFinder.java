@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -27,9 +27,9 @@ import java.util.Collection;
  * @author nik
  */
 public abstract class ArtifactBySourceFileFinder {
-  public static ArtifactBySourceFileFinder getInstance(@NotNull Project project) {
+  public static ArtifactBySourceFileFinder getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactBySourceFileFinder.class);
   }
 
-  public abstract Collection<? extends Artifact> findArtifacts(@NotNull VirtualFile sourceFile);
+  public abstract Collection<? extends Artifact> findArtifacts(@Nonnull VirtualFile sourceFile);
 }

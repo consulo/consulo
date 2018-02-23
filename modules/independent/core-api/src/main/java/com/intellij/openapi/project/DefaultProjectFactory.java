@@ -16,13 +16,13 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public abstract class DefaultProjectFactory {
-  @NotNull
+  @Nonnull
   public static DefaultProjectFactory getInstance() {
     return ServiceManager.getService(DefaultProjectFactory.class);
   }

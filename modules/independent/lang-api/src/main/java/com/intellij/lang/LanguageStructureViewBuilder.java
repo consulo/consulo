@@ -21,7 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class LanguageStructureViewBuilder extends LanguageExtension<PsiStructureViewFactory>{
   public static final LanguageStructureViewBuilder INSTANCE = new LanguageStructureViewBuilder();

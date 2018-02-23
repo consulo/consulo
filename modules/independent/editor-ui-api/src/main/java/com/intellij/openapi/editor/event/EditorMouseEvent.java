@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
@@ -25,14 +25,14 @@ public class EditorMouseEvent extends EventObject {
   private final MouseEvent myMouseEvent;
   private final EditorMouseEventArea myEditorArea;
 
-  public EditorMouseEvent(@NotNull Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
+  public EditorMouseEvent(@Nonnull Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
     super(editor);
 
     myMouseEvent = mouseEvent;
     myEditorArea = area;
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return (Editor) getSource();
   }

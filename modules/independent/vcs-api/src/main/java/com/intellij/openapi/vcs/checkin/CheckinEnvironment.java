@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -39,13 +39,13 @@ import java.util.Set;
  * @see com.intellij.openapi.vcs.AbstractVcs#getCheckinEnvironment()
  */
 public interface CheckinEnvironment extends VcsProviderMarker {
-  @Nullable
+  @javax.annotation.Nullable
   RefreshableOnComponent createAdditionalOptionsPanel(CheckinProjectPanel panel, PairConsumer<Object, Object> additionalDataConsumer);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getDefaultMessageFor(FilePath[] filesToCheckin);
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   String getHelpId();
 
@@ -54,13 +54,13 @@ public interface CheckinEnvironment extends VcsProviderMarker {
   @Nullable
   List<VcsException> commit(List<Change> changes, String preparedComment);
 
-  @Nullable
+  @javax.annotation.Nullable
   List<VcsException> commit(List<Change> changes,
                             String preparedComment,
-                            @NotNull NullableFunction<Object, Object> parametersHolder,
+                            @Nonnull NullableFunction<Object, Object> parametersHolder,
                             Set<String> feedback);
 
-  @Nullable
+  @javax.annotation.Nullable
   List<VcsException> scheduleMissingFileForDeletion(List<FilePath> files);
 
   @Nullable

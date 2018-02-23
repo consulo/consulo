@@ -48,8 +48,8 @@ import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.shared.Rectangle2D;
 import consulo.ui.shared.Size;
 import consulo.ui.style.ColorKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -202,7 +202,7 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
   // region Migration staff
   @RequiredUIAccess
   @Override
-  public void setContent(@NotNull Component content) {
+  public void setContent(@Nonnull Component content) {
     throw new UnsupportedOperationException();
   }
 
@@ -225,13 +225,13 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
     throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess
   @Override
-  public void removeBorder(@NotNull BorderPosition borderPosition) {
+  public void removeBorder(@Nonnull BorderPosition borderPosition) {
     throw new UnsupportedOperationException();
   }
 
@@ -243,42 +243,42 @@ public class FlatWelcomeFrame extends JFrame implements IdeFrameEx, Disposable, 
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+  public <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
+  public Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
+  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+  public <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     throw new UnsupportedOperationException();
   }
 
   @Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     throw new UnsupportedOperationException();
   }
   // endregion

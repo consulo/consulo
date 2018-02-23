@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.UIBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -41,7 +41,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
   protected final JComboBox myExtensions = new JComboBox();
   protected final FileSaverDescriptor myDescriptor;
 
-  public FileSaverDialogImpl(@NotNull FileSaverDescriptor descriptor, @NotNull Component parent) {
+  public FileSaverDialogImpl(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
     super(descriptor, parent);
     myDescriptor = descriptor;
     for (String ext : descriptor.getFileExtensions()) {
@@ -50,7 +50,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     setTitle(getChooserTitle(descriptor));
   }
 
-  public FileSaverDialogImpl(@NotNull FileSaverDescriptor descriptor, @Nullable Project project) {
+  public FileSaverDialogImpl(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project) {
     super(descriptor, project);
     myDescriptor = descriptor;
     for (String ext : descriptor.getFileExtensions()) {
@@ -64,7 +64,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable final String filename) {
     init();
     restoreSelection(baseDir);

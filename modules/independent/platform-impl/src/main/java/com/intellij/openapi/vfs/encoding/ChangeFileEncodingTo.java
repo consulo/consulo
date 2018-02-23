@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -31,7 +31,7 @@ abstract class ChangeFileEncodingTo extends AnAction implements DumbAware {
   private final VirtualFile myFile;
   private final Charset myCharset;
 
-  ChangeFileEncodingTo(@Nullable VirtualFile file, @NotNull Charset charset) {
+  ChangeFileEncodingTo(@Nullable VirtualFile file, @Nonnull Charset charset) {
     super(charset.displayName());
     myFile = file;
     myCharset = charset;
@@ -42,5 +42,5 @@ abstract class ChangeFileEncodingTo extends AnAction implements DumbAware {
     chosen(myFile, myCharset);
   }
 
-  protected abstract void chosen(@Nullable VirtualFile file, @NotNull Charset charset);
+  protected abstract void chosen(@Nullable VirtualFile file, @Nonnull Charset charset);
 }

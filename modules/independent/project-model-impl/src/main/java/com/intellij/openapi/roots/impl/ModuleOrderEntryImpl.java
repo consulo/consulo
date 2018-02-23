@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.orderEntry.ModuleOrderEntryType;
 
 /**
@@ -34,21 +34,21 @@ import consulo.roots.orderEntry.ModuleOrderEntryType;
 public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOrderEntry, ClonableOrderEntry {
   private final NamedPointer<Module> myModulePointer;
   private boolean myExported;
-  @NotNull
+  @Nonnull
   private DependencyScope myScope = DependencyScope.COMPILE;
   private boolean myProductionOnTestDependency;
 
-  public ModuleOrderEntryImpl(@NotNull Module module, @NotNull ModuleRootLayerImpl rootLayer) {
+  public ModuleOrderEntryImpl(@Nonnull Module module, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(module);
   }
 
-  public ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer) {
+  public ModuleOrderEntryImpl(@Nonnull String moduleName, @Nonnull ModuleRootLayerImpl rootLayer) {
     this(moduleName, rootLayer, DependencyScope.COMPILE, false, false);
   }
 
-  public ModuleOrderEntryImpl(@NotNull String moduleName, @NotNull ModuleRootLayerImpl rootLayer, @NotNull DependencyScope dependencyScope, boolean exported,
-                       boolean productionOnTestDependency) {
+  public ModuleOrderEntryImpl(@Nonnull String moduleName, @Nonnull ModuleRootLayerImpl rootLayer, @Nonnull DependencyScope dependencyScope, boolean exported,
+                              boolean productionOnTestDependency) {
     super(ModuleOrderEntryType.getInstance(), rootLayer);
     myModulePointer = ModuleUtilCore.createPointer(rootLayer.getProject(), moduleName);
     myScope = dependencyScope;
@@ -66,7 +66,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module getOwnerModule() {
     return getRootModel().getModule();
   }
@@ -80,7 +80,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(OrderRootType type) {
     final OrderRootsEnumerator enumerator = getEnumerator(type);
     return enumerator != null ? enumerator.getRoots() : VirtualFile.EMPTY_ARRAY;
@@ -95,7 +95,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getUrls(OrderRootType rootType) {
     final OrderRootsEnumerator enumerator = getEnumerator(rootType);
     return enumerator != null ? enumerator.getUrls() : ArrayUtil.EMPTY_STRING_ARRAY;
@@ -112,12 +112,12 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
     return other instanceof ModuleOrderEntry && Comparing.equal(getModuleName(), ((ModuleOrderEntry)other).getModuleName());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     return getModuleName();
   }
@@ -128,7 +128,7 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Module getModule() {
     return getRootModel().getConfigurationAccessor().getModule(myModulePointer.get(), myModulePointer.getName());
   }
@@ -155,13 +155,13 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DependencyScope getScope() {
     return myScope;
   }
 
   @Override
-  public void setScope(@NotNull DependencyScope scope) {
+  public void setScope(@Nonnull DependencyScope scope) {
     getRootModel().assertWritable();
     myScope = scope;
   }

@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public abstract class RefManager {
    * @return the node for the element, or null if the element is not valid or does not have
    * a corresponding reference graph node type (is not a field, method, class or file).
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract RefElement getReference(PsiElement elem);
 
   /**
@@ -104,7 +104,7 @@ public abstract class RefManager {
 
   public abstract Element export(RefEntity entity, Element element, final int actualLine);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getGroupName(final RefElement entity);
 
   public abstract boolean belongsToScope(PsiElement psiElement);

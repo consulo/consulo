@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.ui;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface PopupElementWithAdditionalInfo {
   @Nullable

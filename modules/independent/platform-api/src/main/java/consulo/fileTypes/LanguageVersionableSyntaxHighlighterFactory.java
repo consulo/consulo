@@ -22,8 +22,8 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.lang.util.LanguageVersionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,10 +43,10 @@ public abstract class LanguageVersionableSyntaxHighlighterFactory extends Syntax
     myLanguage = language;
   }
 
-  @NotNull
-  public abstract SyntaxHighlighter getSyntaxHighlighter(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  public abstract SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion);
 
-  @NotNull
+  @Nonnull
   @Override
   public final SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     final LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(myLanguage, project, virtualFile);

@@ -18,23 +18,25 @@ package com.intellij.vcs.log.graph.collapsing;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.UnsignedBitSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class GraphNodesVisibility {
-  @NotNull private final LinearGraph myLinearGraph;
-  @NotNull private UnsignedBitSet myNodeVisibilityById;
+  @Nonnull
+  private final LinearGraph myLinearGraph;
+  @Nonnull
+  private UnsignedBitSet myNodeVisibilityById;
 
-  GraphNodesVisibility(@NotNull LinearGraph linearGraph, @NotNull UnsignedBitSet nodeVisibilityById) {
+  GraphNodesVisibility(@Nonnull LinearGraph linearGraph, @Nonnull UnsignedBitSet nodeVisibilityById) {
     myLinearGraph = linearGraph;
     myNodeVisibilityById = nodeVisibilityById;
   }
 
-  @NotNull
+  @Nonnull
   UnsignedBitSet getNodeVisibilityById() {
     return myNodeVisibilityById;
   }
 
-  void setNodeVisibilityById(@NotNull UnsignedBitSet nodeVisibilityById) {
+  void setNodeVisibilityById(@Nonnull UnsignedBitSet nodeVisibilityById) {
     myNodeVisibilityById = nodeVisibilityById;
   }
 

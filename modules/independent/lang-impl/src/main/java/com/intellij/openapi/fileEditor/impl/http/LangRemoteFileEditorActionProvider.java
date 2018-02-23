@@ -18,15 +18,15 @@ package com.intellij.openapi.fileEditor.impl.http;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class LangRemoteFileEditorActionProvider extends RemoteFileEditorActionProvider {
-  @NotNull
+  @Nonnull
   @Override
-  public AnAction[] createToolbarActions(@NotNull Project project, @NotNull HttpVirtualFile file) {
+  public AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file) {
     return new AnAction[] {new JumpFromRemoteFileToLocalAction(file, project)};
   }
 }

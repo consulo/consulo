@@ -18,7 +18,7 @@ package com.intellij.ide.customize;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
 
   protected abstract String getHTMLFooter();
 
-  @NotNull
+  @Nonnull
   protected static Color getSelectionBackground() {
     return ColorUtil.mix(UIUtil.getListSelectionBackground(), UIUtil.getLabelBackground(), UIUtil.isUnderDarcula() ? .5 : .75);
   }
@@ -50,7 +50,7 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
     panel.setOpaque(anchorButton.isSelected());
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         anchorButton.setSelected(true);
         return true;
       }

@@ -18,8 +18,8 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.injection.*;
 
 import java.util.List;
@@ -40,21 +40,21 @@ import java.util.List;
 public interface PsiLanguageInjectionHost extends PsiElement {
   boolean isValidHost();
 
-  PsiLanguageInjectionHost updateText(@NotNull String text);
+  PsiLanguageInjectionHost updateText(@Nonnull String text);
 
-  @NotNull
+  @Nonnull
   LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper();
 
 
   interface InjectedPsiVisitor {
-    void visit(@NotNull PsiFile injectedPsi, @NotNull List<Shred> places);
+    void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<Shred> places);
   }
 
   interface Shred {
     @Nullable("returns null when the host document marker is invalid")
     Segment getHostRangeMarker();
 
-    @NotNull
+    @Nonnull
     TextRange getRangeInsideHost();
 
     boolean isValid();
@@ -64,13 +64,13 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     @Nullable
     PsiLanguageInjectionHost getHost();
 
-    @NotNull
+    @Nonnull
     TextRange getRange();
 
-    @NotNull
+    @Nonnull
     String getPrefix();
 
-    @NotNull
+    @Nonnull
     String getSuffix();
   }
 }

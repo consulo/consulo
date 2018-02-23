@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -38,12 +38,12 @@ public class EnumeratorStringDescriptor implements KeyDescriptor<String> {
   }
 
   @Override
-  public void save(@NotNull final DataOutput storage, @NotNull final String value) throws IOException {
+  public void save(@Nonnull final DataOutput storage, @Nonnull final String value) throws IOException {
     IOUtil.writeUTF(storage, value);
   }
 
   @Override
-  public String read(@NotNull final DataInput storage) throws IOException {
+  public String read(@Nonnull final DataInput storage) throws IOException {
     return IOUtil.readUTF(storage);
   }
 }

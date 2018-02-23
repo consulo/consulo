@@ -16,7 +16,7 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.openapi.project.ProjectManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class DefaultProject extends ProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
-  protected DefaultProject(@NotNull ProjectManager manager, @NotNull String filePath, boolean optimiseTestLoadSpeed) {
+  protected DefaultProject(@Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
     super(manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME);
   }
 

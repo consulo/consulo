@@ -32,7 +32,7 @@ import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +96,7 @@ public class FlatWelcomeScreen extends JPanel {
         action = new AnAction() {
           @RequiredDispatchThread
           @Override
-          public void actionPerformed(@NotNull AnActionEvent e) {
+          public void actionPerformed(@Nonnull AnActionEvent e) {
             JComponent panel = oldAction.createSlide(myWelcomeFrame, myWelcomeFrame::setTitle);
             JBCardLayout layout = (JBCardLayout)FlatWelcomeScreen.this.getLayout();
             String id = oldAction.getClass().getName();

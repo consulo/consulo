@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,14 +30,14 @@ class ProjectConfigurationProblem extends ConfigurationError {
   private final ProjectStructureProblemDescription myDescription;
   private final Project myProject;
 
-  public ProjectConfigurationProblem(@NotNull ProjectStructureProblemDescription description, @NotNull Project project) {
+  public ProjectConfigurationProblem(@Nonnull ProjectStructureProblemDescription description, @Nonnull Project project) {
     super(StringUtil.unescapeXml(description.getMessage(true)), computeDescription(description),
           getSettings(project, description.getProblemLevel()).isIgnored(description));
     myDescription = description;
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   private static ProjectStructureProblemsSettings getSettings(Project project,
                                                               ProjectStructureProblemDescription.ProblemLevel problemLevel) {
     if (problemLevel == ProjectStructureProblemDescription.ProblemLevel.PROJECT) {
@@ -48,7 +48,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String computeDescription(ProjectStructureProblemDescription description) {
     final String descriptionString = description.getDescription();
     return descriptionString != null ? descriptionString : description.getMessage(true);
@@ -73,7 +73,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
   @Override
   public void fix(final JComponent contextComponent, RelativePoint relativePoint) {
     JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myDescription.getFixes()) {
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(ConfigurationErrorQuickFix value) {
         return value.getActionName();

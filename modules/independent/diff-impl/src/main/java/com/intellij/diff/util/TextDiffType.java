@@ -18,30 +18,33 @@ package com.intellij.diff.util;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffColors;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface TextDiffType {
-  @NotNull TextDiffType INSERTED = TextDiffTypeFactory.getInstance()
+  @Nonnull
+  TextDiffType INSERTED = TextDiffTypeFactory.getInstance()
           .createTextDiffType(DiffColors.DIFF_INSERTED, DiffBundle.message("diff.type.inserted.name"));
-  @NotNull TextDiffType DELETED = TextDiffTypeFactory.getInstance()
+  @Nonnull
+  TextDiffType DELETED = TextDiffTypeFactory.getInstance()
           .createTextDiffType(DiffColors.DIFF_DELETED, DiffBundle.message("diff.type.deleted.name"));
-  @NotNull TextDiffType MODIFIED = TextDiffTypeFactory.getInstance()
+  @Nonnull
+  TextDiffType MODIFIED = TextDiffTypeFactory.getInstance()
           .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffBundle.message("diff.type.changed.name"));
-  @NotNull TextDiffType CONFLICT = TextDiffTypeFactory.getInstance()
+  @Nonnull
+  TextDiffType CONFLICT = TextDiffTypeFactory.getInstance()
           .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffBundle.message("diff.type.conflict.name"));
 
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
-  Color getColor(@Nullable Editor editor);
+  @Nonnull
+  Color getColor(@javax.annotation.Nullable Editor editor);
 
-  @NotNull
-  Color getIgnoredColor(@Nullable Editor editor);
+  @Nonnull
+  Color getIgnoredColor(@javax.annotation.Nullable Editor editor);
 
-  @Nullable
-  Color getMarkerColor(@Nullable Editor editor);
+  @javax.annotation.Nullable
+  Color getMarkerColor(@javax.annotation.Nullable Editor editor);
 }

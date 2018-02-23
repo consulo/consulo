@@ -4,7 +4,7 @@ import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,22 +15,22 @@ public abstract class ApplicationStatisticsPersistence {
   public ApplicationStatisticsPersistence() {
   }
 
-  public void persistUsages(@NotNull GroupDescriptor groupDescriptor, @NotNull Project project, @NotNull Set<UsageDescriptor> usageDescriptors) {
+  public void persistUsages(@Nonnull GroupDescriptor groupDescriptor, @Nonnull Project project, @Nonnull Set<UsageDescriptor> usageDescriptors) {
       if (!myApplicationData.containsKey(groupDescriptor)) {
           myApplicationData.put(groupDescriptor, new HashMap<String, Set<UsageDescriptor>>());
       }
       myApplicationData.get(groupDescriptor).put(project.getName(), usageDescriptors);
   }
 
-  @NotNull
-  public Map<String, Set<UsageDescriptor>> getApplicationData(@NotNull GroupDescriptor groupDescriptor) {
+  @Nonnull
+  public Map<String, Set<UsageDescriptor>> getApplicationData(@Nonnull GroupDescriptor groupDescriptor) {
       if (!myApplicationData.containsKey(groupDescriptor)) {
           myApplicationData.put(groupDescriptor, new HashMap<String, Set<UsageDescriptor>>());
       }
       return myApplicationData.get(groupDescriptor);
   }
 
-  @NotNull
+  @Nonnull
   public Map<GroupDescriptor, Map<String, Set<UsageDescriptor>>> getApplicationData() {
       return myApplicationData;
   }

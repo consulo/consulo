@@ -18,7 +18,7 @@ package com.intellij.codeInsight;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The information about a single problem found during pre-checkin code analysis.
@@ -28,19 +28,21 @@ import org.jetbrains.annotations.NotNull;
  * @see com.intellij.openapi.vcs.CodeSmellDetector#showCodeSmellErrors(java.util.List)
  */
 public final class CodeSmellInfo {
-  @NotNull private final Document myDocument;
+  @Nonnull
+  private final Document myDocument;
   private final String myDescription;
   private final TextRange myTextRange;
   private final HighlightSeverity mySeverity;
 
-  public CodeSmellInfo(@NotNull final Document document, final String description, final TextRange textRange, final HighlightSeverity severity) {
+  public CodeSmellInfo(@Nonnull final Document document, final String description, final TextRange textRange, final HighlightSeverity severity) {
     myDocument = document;
     myDescription = description;
     myTextRange = textRange;
     mySeverity = severity;
   }
 
-  @NotNull public Document getDocument() {
+  @Nonnull
+  public Document getDocument() {
     return myDocument;
   }
 

@@ -52,8 +52,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -336,7 +336,7 @@ class RunConfigurable extends BaseConfigurable {
     ((DefaultTreeModel)myTree.getModel()).reload();
   }
 
-  private boolean selectConfiguration(@NotNull RunConfiguration configuration) {
+  private boolean selectConfiguration(@Nonnull RunConfiguration configuration) {
     final Enumeration enumeration = myRoot.breadthFirstEnumeration();
     while (enumeration.hasMoreElements()) {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
@@ -598,10 +598,10 @@ class RunConfigurable extends BaseConfigurable {
     DataManager.registerDataProvider(myWholePanel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         return RunConfigurationSelector.KEY == dataId ? new RunConfigurationSelector() {
           @Override
-          public void select(@NotNull RunConfiguration configuration) {
+          public void select(@Nonnull RunConfiguration configuration) {
             selectConfiguration(configuration);
           }
         } : null;
@@ -706,7 +706,7 @@ class RunConfigurable extends BaseConfigurable {
     }
   }
 
-  private void applyByType(@NotNull ConfigurationType type) throws ConfigurationException {
+  private void applyByType(@Nonnull ConfigurationType type) throws ConfigurationException {
     RunnerAndConfigurationSettings selectedSettings = getSelectedSettings();
     int indexToMove = -1;
 
@@ -807,7 +807,7 @@ class RunConfigurable extends BaseConfigurable {
   }
 
   @Nullable
-  private DefaultMutableTreeNode getConfigurationTypeNode(@NotNull final ConfigurationType type) {
+  private DefaultMutableTreeNode getConfigurationTypeNode(@Nonnull final ConfigurationType type) {
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
       if (node.getUserObject() == type) return node;
@@ -949,7 +949,7 @@ class RunConfigurable extends BaseConfigurable {
     return null;
   }
 
-  private static boolean canRunConfiguration(@Nullable SingleConfigurationConfigurable<RunConfiguration> configuration, final @NotNull Executor executor) {
+  private static boolean canRunConfiguration(@Nullable SingleConfigurationConfigurable<RunConfiguration> configuration, final @Nonnull Executor executor) {
     try {
       return configuration != null && RunManagerImpl.canRunConfiguration(configuration.getSnapshot(), executor);
     }
@@ -989,7 +989,7 @@ class RunConfigurable extends BaseConfigurable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private DefaultMutableTreeNode getNode(int row) {
     return (DefaultMutableTreeNode)myTree.getPathForRow(row).getLastPathComponent();
   }
@@ -1048,7 +1048,7 @@ class RunConfigurable extends BaseConfigurable {
   }
 
 
-  @NotNull
+  @Nonnull
   private static String createUniqueName(DefaultMutableTreeNode typeNode, @Nullable String baseName, NodeKind...kinds) {
     String str = (baseName == null) ? ExecutionBundle.message("run.configuration.unnamed.name.prefix") : baseName;
     List<DefaultMutableTreeNode> configurationNodes = new ArrayList<DefaultMutableTreeNode>();
@@ -1143,7 +1143,7 @@ class RunConfigurable extends BaseConfigurable {
               ExecutionBundle.message("add.new.run.configuration.acrtion.name"), configurationTypes) {
 
         @Override
-        @NotNull
+        @Nonnull
         public String getTextFor(final ConfigurationType type) {
           return type != null ? type.getDisplayName() :  hiddenCount + " items more (irrelevant)...";
         }
@@ -1202,7 +1202,7 @@ class RunConfigurable extends BaseConfigurable {
                   ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
 
             @Override
-            @NotNull
+            @Nonnull
             public String getTextFor(final ConfigurationFactory value) {
               return value.getName();
             }
@@ -1672,7 +1672,7 @@ class RunConfigurable extends BaseConfigurable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private DefaultMutableTreeNode[] getSelectedNodes() {
     return myTree.getSelectedNodes(DefaultMutableTreeNode.class, null);
   }
@@ -1773,7 +1773,7 @@ class RunConfigurable extends BaseConfigurable {
     }
   }
 
-  @NotNull
+  @Nonnull
   static NodeKind getKind(@Nullable DefaultMutableTreeNode node) {
     if (node == null)
       return UNKNOWN;
@@ -1818,7 +1818,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     @Override
-    public boolean canDrop(int oldIndex, int newIndex, @NotNull Position position) {
+    public boolean canDrop(int oldIndex, int newIndex, @Nonnull Position position) {
       if (myTree.getRowCount() <= oldIndex || myTree.getRowCount() <= newIndex || oldIndex < 0 || newIndex < 0) {
         return false;
       }
@@ -1907,7 +1907,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     @Override
-    public void drop(int oldIndex, int newIndex, @NotNull Position position) {
+    public void drop(int oldIndex, int newIndex, @Nonnull Position position) {
       DefaultMutableTreeNode oldNode = (DefaultMutableTreeNode)myTree.getPathForRow(oldIndex).getLastPathComponent();
       DefaultMutableTreeNode newNode = (DefaultMutableTreeNode)myTree.getPathForRow(newIndex).getLastPathComponent();
       DefaultMutableTreeNode newParent = (DefaultMutableTreeNode)newNode.getParent();
@@ -1994,7 +1994,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     @Nullable
-    private RunnerAndConfigurationSettings getSettings(@NotNull DefaultMutableTreeNode treeNode) {
+    private RunnerAndConfigurationSettings getSettings(@Nonnull DefaultMutableTreeNode treeNode) {
       Object userObject = treeNode.getUserObject();
       if (userObject instanceof SingleConfigurationConfigurable) {
         SingleConfigurationConfigurable configurable = (SingleConfigurationConfigurable)userObject;

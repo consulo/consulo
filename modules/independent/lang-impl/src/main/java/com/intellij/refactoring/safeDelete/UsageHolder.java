@@ -26,7 +26,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import com.intellij.refactoring.util.RefactoringUIUtil;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -67,7 +67,7 @@ class UsageHolder {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     final PsiElement element = myElementPointer.getElement();
     String message = RefactoringBundle.message("0.has.1.usages.that.are.not.safe.to.delete", RefactoringUIUtil.getDescription(element, true), myUnsafeUsages);

@@ -20,7 +20,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

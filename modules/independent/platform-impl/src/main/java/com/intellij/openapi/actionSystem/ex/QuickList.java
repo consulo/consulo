@@ -21,7 +21,7 @@ import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -229,7 +229,7 @@ public class QuickList implements ExternalizableScheme {
 
 
 
-  @NotNull
+  @Nonnull
 
   public ExternalInfo getExternalInfo() {
 

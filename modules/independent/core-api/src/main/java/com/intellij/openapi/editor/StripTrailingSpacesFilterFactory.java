@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An extension point to create filters which may put restrictions on how trailing spaces will be handled in a document.
@@ -40,6 +40,6 @@ public abstract class StripTrailingSpacesFilterFactory {
    *         <li>{@link StripTrailingSpacesFilter#ALL_LINES}</li> Allow stripping with no restrictions. Return this value by default.
    *         </ul>
    */
-  @NotNull
-  public abstract StripTrailingSpacesFilter createFilter(@Nullable Project project, @NotNull Document document);
+  @Nonnull
+  public abstract StripTrailingSpacesFilter createFilter(@Nullable Project project, @Nonnull Document document);
 }

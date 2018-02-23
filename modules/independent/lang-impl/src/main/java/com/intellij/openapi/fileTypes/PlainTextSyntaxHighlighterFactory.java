@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -38,16 +38,16 @@ import java.util.ArrayList;
  */
 public class PlainTextSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
     return new SyntaxHighlighterBase() {
-      @NotNull
+      @Nonnull
       @Override
       public Lexer getHighlightingLexer() {
         return createPlainTextLexer();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         return EMPTY;

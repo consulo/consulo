@@ -30,7 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,7 +217,7 @@ public class ActionMacro implements JDOMExternalizable {
     private final List<Integer> myKeyCodes = new ArrayList<Integer>();
     private final List<Integer> myModifiers = new ArrayList<Integer>();
 
-    public TypedDescriptor(@NotNull String text, List<Integer> keyCodes, List<Integer> modifiers) {
+    public TypedDescriptor(@Nonnull String text, List<Integer> keyCodes, List<Integer> modifiers) {
       myText = text;
       myKeyCodes.addAll(keyCodes);
       myModifiers.addAll(modifiers);

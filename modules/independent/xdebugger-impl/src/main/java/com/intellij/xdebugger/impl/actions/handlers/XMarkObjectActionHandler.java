@@ -27,15 +27,15 @@ import com.intellij.xdebugger.impl.ui.tree.ValueMarkerPresentationDialog;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   @Override
-  public void perform(@NotNull Project project, AnActionEvent event) {
+  public void perform(@Nonnull Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session == null) return;
 
@@ -60,7 +60,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isEnabled(@NotNull Project project, AnActionEvent event) {
+  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     XValueMarkers<?, ?> markers = getValueMarkers(project);
     if (markers == null) return false;
 
@@ -69,7 +69,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isMarked(@NotNull Project project, @NotNull AnActionEvent event) {
+  public boolean isMarked(@Nonnull Project project, @Nonnull AnActionEvent event) {
     XValueMarkers<?, ?> markers = getValueMarkers(project);
     if (markers == null) return false;
 
@@ -78,12 +78,12 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isHidden(@NotNull Project project, AnActionEvent event) {
+  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
     return getValueMarkers(project) == null;
   }
 
   @Nullable
-  private static XValueMarkers<?, ?> getValueMarkers(@NotNull Project project) {
+  private static XValueMarkers<?, ?> getValueMarkers(@Nonnull Project project) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null ? ((XDebugSessionImpl)session).getValueMarkers() : null;
   }

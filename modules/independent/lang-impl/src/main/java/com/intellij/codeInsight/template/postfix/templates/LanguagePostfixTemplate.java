@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -32,9 +32,9 @@ public class LanguagePostfixTemplate extends LanguageExtension<PostfixTemplatePr
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
-  protected List<PostfixTemplateProvider> buildExtensions(@NotNull String stringKey, @NotNull Language key) {
+  protected List<PostfixTemplateProvider> buildExtensions(@Nonnull String stringKey, @Nonnull Language key) {
     List<PostfixTemplateProvider> providers = super.buildExtensions(stringKey, key);
     validateTemplatesForLanguage(key, providers);
     return providers;

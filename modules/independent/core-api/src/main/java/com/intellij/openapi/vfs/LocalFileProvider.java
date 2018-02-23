@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * To be used for those non-LocalFileSystems which can provide corresponding
@@ -28,5 +28,5 @@ public interface LocalFileProvider{
   VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);
 
   @Nullable
-  VirtualFile findLocalVirtualFileByPath(@NotNull String path);
+  VirtualFile findLocalVirtualFileByPath(@Nonnull String path);
 }

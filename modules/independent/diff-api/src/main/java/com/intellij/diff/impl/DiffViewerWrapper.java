@@ -19,10 +19,10 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DiffViewerWrapper {
   Key<DiffViewerWrapper> KEY = Key.create("Diff.DiffViewerWrapper");
 
-  DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request, @NotNull DiffViewer wrappedViewer);
+  DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request, @Nonnull DiffViewer wrappedViewer);
 }

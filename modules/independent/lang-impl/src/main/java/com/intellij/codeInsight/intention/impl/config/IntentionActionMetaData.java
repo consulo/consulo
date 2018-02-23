@@ -29,8 +29,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +47,12 @@ import java.util.List;
 
 public final class IntentionActionMetaData {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionActionMetaData");
-  @NotNull private final IntentionAction myAction;
+  @Nonnull
+  private final IntentionAction myAction;
   private final ClassLoader myIntentionLoader;
   private final String myDescriptionDirectoryName;
-  @NotNull public final String[] myCategory;
+  @Nonnull
+  public final String[] myCategory;
 
   private TextDescriptor[] myExampleUsagesBefore = null;
   private TextDescriptor[] myExampleUsagesAfter = null;
@@ -63,18 +65,18 @@ public final class IntentionActionMetaData {
   @NonNls private static final String DESCRIPTION_FILE_NAME = "description.html";
   @NonNls private static final String INTENTION_DESCRIPTION_FOLDER = "intentionDescriptions";
 
-  public IntentionActionMetaData(@NotNull IntentionAction action,
+  public IntentionActionMetaData(@Nonnull IntentionAction action,
                                  @Nullable ClassLoader loader,
-                                 @NotNull String[] category,
-                                 @NotNull String descriptionDirectoryName) {
+                                 @Nonnull String[] category,
+                                 @Nonnull String descriptionDirectoryName) {
     myAction = action;
     myIntentionLoader = loader;
     myCategory = category;
     myDescriptionDirectoryName = descriptionDirectoryName;
   }
 
-  public IntentionActionMetaData(@NotNull final IntentionAction action,
-                                 @NotNull final String[] category,
+  public IntentionActionMetaData(@Nonnull final IntentionAction action,
+                                 @Nonnull final String[] category,
                                  final TextDescriptor description,
                                  final TextDescriptor[] exampleUsagesBefore,
                                  final TextDescriptor[] exampleUsagesAfter) {
@@ -91,7 +93,7 @@ public final class IntentionActionMetaData {
     return getFamily();
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor[] getExampleUsagesBefore() {
     if(myExampleUsagesBefore == null){
       try {
@@ -104,7 +106,7 @@ public final class IntentionActionMetaData {
     return myExampleUsagesBefore;
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor[] getExampleUsagesAfter() {
       if(myExampleUsagesAfter == null){
       try {
@@ -117,7 +119,7 @@ public final class IntentionActionMetaData {
     return myExampleUsagesAfter;
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor getDescription() {
     if(myDescription == null){
       try {
@@ -132,8 +134,8 @@ public final class IntentionActionMetaData {
     return myDescription;
   }
 
-  @NotNull
-  private static TextDescriptor[] retrieveURLs(@NotNull URL descriptionDirectory, @NotNull String prefix, @NotNull String suffix) throws MalformedURLException {
+  @Nonnull
+  private static TextDescriptor[] retrieveURLs(@Nonnull URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix) throws MalformedURLException {
     List<TextDescriptor> urls = new ArrayList<TextDescriptor>();
     final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
     for (FileType fileType : fileTypes) {
@@ -214,12 +216,12 @@ public final class IntentionActionMetaData {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public String getFamily() {
     return myAction.getFamilyName();
   }
 
-  @NotNull
+  @Nonnull
   public IntentionAction getAction() {
     return myAction;
   }

@@ -20,7 +20,7 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.ConfigurationFromContext;
 import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Wraps a {@link com.intellij.execution.junit.RuntimeConfigurationProducer} in a {@link com.intellij.execution.actions.ConfigurationFromContext}.
@@ -39,7 +39,7 @@ public class ConfigurationFromContextWrapper extends ConfigurationFromContext {
     myProducer.perform(context, startRunnable);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     return myProducer.getConfiguration();
@@ -50,7 +50,7 @@ public class ConfigurationFromContextWrapper extends ConfigurationFromContext {
     myProducer.setConfiguration(configurationSettings);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement getSourceElement() {
     return myProducer.getSourceElement();

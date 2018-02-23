@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.graph;
 
 import com.intellij.vcs.log.graph.impl.facade.PermanentGraphImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +40,9 @@ public class PermanentGraphBuilderImpl<CommitId> implements PermanentGraphBuilde
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
-  public PermanentGraph<CommitId> build(@NotNull List<GraphCommit<CommitId>> commits) {
+  public PermanentGraph<CommitId> build(@Nonnull List<GraphCommit<CommitId>> commits) {
     return PermanentGraphImpl.newInstance(commits, STUB_COLOR_MANAGER, Collections.<CommitId>emptySet());
   }
 }

@@ -18,8 +18,8 @@ package com.intellij.codeInsight.hints.filtering;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +67,7 @@ public class MatcherConstructor {
   }
 
   @Nullable
-  public static Matcher createMatcher(@NotNull String matcher) {
+  public static Matcher createMatcher(@Nonnull String matcher) {
     Couple<String> pair = extract(matcher);
     if (pair == null) {
       return null;

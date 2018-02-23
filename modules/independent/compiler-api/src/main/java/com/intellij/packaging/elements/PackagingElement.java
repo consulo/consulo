@@ -19,7 +19,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,19 +31,19 @@ public abstract class PackagingElement<S> implements PersistentStateComponent<S>
     myType = type;
   }
 
-  public abstract PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context);
+  public abstract PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context);
 
   public final PackagingElementType getType() {
     return myType;
   }
 
-  public abstract void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator, @NotNull PackagingElementResolvingContext resolvingContext,
-                                                              @NotNull ArtifactIncrementalCompilerContext compilerContext,
-                                                              @NotNull ArtifactType artifactType);
+  public abstract void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator, @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                              @Nonnull ArtifactIncrementalCompilerContext compilerContext,
+                                                              @Nonnull ArtifactType artifactType);
 
-  public abstract boolean isEqualTo(@NotNull PackagingElement<?> element);
+  public abstract boolean isEqualTo(@Nonnull PackagingElement<?> element);
 
-  @NotNull
+  @Nonnull
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.OTHER;
   }

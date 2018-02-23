@@ -19,8 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,7 +37,7 @@ public class SandBundleType extends SdkType {
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getVersionString(String sdkHome) {
     return "1";
@@ -54,13 +53,13 @@ public class SandBundleType extends SdkType {
     return sdkHome;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return "Sand Bundle";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Static;

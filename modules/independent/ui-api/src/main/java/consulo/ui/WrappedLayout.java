@@ -15,32 +15,31 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25-Oct-17
  */
 public interface WrappedLayout extends Layout {
-  @NotNull
+  @Nonnull
   static WrappedLayout create() {
     return UIInternal.get()._Layouts_wrapped();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  static WrappedLayout create(@NotNull Component component) {
+  static WrappedLayout create(@Nonnull Component component) {
     return UIInternal.get()._Layouts_wrapped().set(component);
   }
 
   @RequiredUIAccess
-  @NotNull
-  WrappedLayout set(@Nullable Component component);
+  @Nonnull
+  WrappedLayout set(@javax.annotation.Nullable Component component);
 
   @RequiredUIAccess
-  @NotNull
-  default WrappedLayout set(@NotNull PseudoComponent component) {
+  @Nonnull
+  default WrappedLayout set(@Nonnull PseudoComponent component) {
     return set(component.getComponent());
   }
 }

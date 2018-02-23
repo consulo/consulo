@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithBrowseButton;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<EditorComboBox> implements TextAccessor {
   public EditorComboWithBrowseButton(final ActionListener browseActionListener,
                                      final String text,
-                                     @NotNull final Project project,
+                                     @Nonnull final Project project,
                                      final String recentsKey) {
     super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);
     final List<String> recentEntries = RecentsManager.getInstance(project).getRecentEntries(recentsKey);

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -28,7 +28,7 @@ class MouseSuppressor implements MouseListener, MouseWheelListener, MouseMotionL
     e.consume();
   }
 
-  public static void install(@NotNull JComponent component) {
+  public static void install(@Nonnull JComponent component) {
     component.addMouseListener(new MouseSuppressor());
   }
 

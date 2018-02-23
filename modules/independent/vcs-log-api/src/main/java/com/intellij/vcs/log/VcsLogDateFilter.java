@@ -15,8 +15,6 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Date;
 
 /**
@@ -28,12 +26,12 @@ public interface VcsLogDateFilter extends VcsLogDetailsFilter {
   /**
    * If not null, only commits made after the returned date (inclusively) should be accepted.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Date getAfter();
 
   /**
    * If not null, only commits made before the returned date (inclusively) should be accepted.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Date getBefore();
 }

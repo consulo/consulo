@@ -16,7 +16,7 @@
 
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -75,7 +75,7 @@ public class EmptyIcon extends JBUI.CachingScalableJBIcon<EmptyIcon> {
   /**
    * Creates an icon of the size of the provided icon base.
    */
-  public static EmptyIcon create(@NotNull Icon base) {
+  public static EmptyIcon create(@Nonnull Icon base) {
     return create(base.getIconWidth(), base.getIconHeight());
   }
 

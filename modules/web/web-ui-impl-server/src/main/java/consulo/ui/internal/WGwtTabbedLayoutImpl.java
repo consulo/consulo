@@ -26,8 +26,8 @@ import consulo.ui.TabbedLayout;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -78,16 +78,16 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Tab createTab() {
     return new WGwtTabImpl();
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public Tab addTab(@NotNull Tab tab, @NotNull Component component) {
+  public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
     addComponent((com.vaadin.ui.Component)component);
     myTabs.put((WGwtTabImpl)tab, (com.vaadin.ui.Component)component);
     markAsDirtyRecursive();
@@ -95,9 +95,9 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public Tab addTab(@NotNull String tabName, @NotNull Component component) {
+  public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
     WGwtTabImpl presentation = new WGwtTabImpl();
     presentation.append(tabName);
     return addTab(presentation, component);
@@ -126,6 +126,6 @@ public class WGwtTabbedLayoutImpl extends AbstractComponentContainer implements 
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

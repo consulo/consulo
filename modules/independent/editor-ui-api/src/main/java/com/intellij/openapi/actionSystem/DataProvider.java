@@ -16,9 +16,9 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows a component hosting actions to provide context information to the actions. When a specific
@@ -39,11 +39,11 @@ public interface DataProvider {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  Object getData(@NotNull Key<?> dataId);
+  Object getData(@Nonnull Key<?> dataId);
 
-  @Nullable
+  @javax.annotation.Nullable
   @SuppressWarnings("unchecked")
-  default <T> T getDataUnchecked(@NotNull Key<T> key) {
+  default <T> T getDataUnchecked(@Nonnull Key<T> key) {
     return (T)getData(key);
   }
 }

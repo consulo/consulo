@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
   public ProjectLibrariesConfigurable(final Project project) {
@@ -42,7 +42,7 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "project.libraries";

@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.TabbedLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,23 +29,23 @@ import javax.swing.*;
  * @since 14-Jun-16
  */
 public class DesktopTabbedLayoutImpl extends JTabbedPane implements TabbedLayout, SwingWrapper {
-  @NotNull
+  @Nonnull
   @Override
   public Tab createTab() {
     throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public Tab addTab(@NotNull Tab tab, @NotNull Component component) {
+  public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
     throw new UnsupportedOperationException();
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public Tab addTab(@NotNull String tabName, @NotNull Component component) {
+  public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
     addTab(tabName, TargetAWT.to(component));
     return new DesktopTabImpl();
   }

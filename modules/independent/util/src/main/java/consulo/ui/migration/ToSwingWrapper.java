@@ -15,7 +15,7 @@
  */
 package consulo.ui.migration;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -24,6 +24,6 @@ import java.awt.*;
  * @since 12-Sep-17
  */
 public interface ToSwingWrapper extends consulo.ui.Component {
-  @NotNull
+  @Nonnull
   Component toAWT();
 }

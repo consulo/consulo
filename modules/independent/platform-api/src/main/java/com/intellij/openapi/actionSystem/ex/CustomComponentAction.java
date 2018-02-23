@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem.ex;
 
 import com.intellij.openapi.actionSystem.Presentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,6 +34,6 @@ public interface CustomComponentAction {
    * be shown on several toolbars simultaneously. CustomComponentAction.CUSTOM_COMPONENT_PROPERTY
    * can be used to retrieve current component from a Presentation in AnAction#update() method.
    */
-  @NotNull
+  @Nonnull
   JComponent createCustomComponent(Presentation presentation);
 }

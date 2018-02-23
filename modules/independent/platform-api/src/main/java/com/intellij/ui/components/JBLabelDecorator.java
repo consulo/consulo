@@ -17,8 +17,8 @@ package com.intellij.ui.components;
 
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,11 +35,11 @@ public class JBLabelDecorator extends JBLabel {
     super(image);
   }
 
-  private JBLabelDecorator(@NotNull String text) {
+  private JBLabelDecorator(@Nonnull String text) {
     super(text);
   }
 
-  private JBLabelDecorator(@NotNull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(@Nonnull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
@@ -47,7 +47,7 @@ public class JBLabelDecorator extends JBLabel {
     super(image, horizontalAlignment);
   }
 
-  private JBLabelDecorator(@NotNull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(@Nonnull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, icon, horizontalAlignment);
   }
 
@@ -68,12 +68,12 @@ public class JBLabelDecorator extends JBLabel {
     return this;
   }
 
-  public JBLabelDecorator setComponentStyleDecorative(@NotNull UIUtil.ComponentStyle componentStyle) {
+  public JBLabelDecorator setComponentStyleDecorative(@Nonnull UIUtil.ComponentStyle componentStyle) {
     super.setComponentStyle(componentStyle);
     return this;
   }
 
-  public JBLabelDecorator setFontColorDecorative(@NotNull UIUtil.FontColor fontColor) {
+  public JBLabelDecorator setFontColorDecorative(@Nonnull UIUtil.FontColor fontColor) {
     super.setFontColor(fontColor);
     return this;
   }

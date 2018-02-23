@@ -19,8 +19,8 @@ package com.intellij.tools;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class SimpleActionGroup extends ActionGroup {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myChildren.toArray(new AnAction[myChildren.size()]);
   }

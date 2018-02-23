@@ -19,7 +19,7 @@ import com.intellij.vcs.log.VcsCommitMetadata;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsUser;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,42 +31,45 @@ public class LogDataImpl implements VcsLogProvider.DetailedLogData, VcsLogProvid
                                                            Collections.<VcsUser>emptySet(),
                                                            Collections.<VcsCommitMetadata>emptyList());
 
-  @NotNull private final List<VcsCommitMetadata> myCommits;
-  @NotNull private final Set<VcsRef> myRefs;
-  @NotNull private final Set<VcsUser> myUsers;
+  @Nonnull
+  private final List<VcsCommitMetadata> myCommits;
+  @Nonnull
+  private final Set<VcsRef> myRefs;
+  @Nonnull
+  private final Set<VcsUser> myUsers;
 
-  @NotNull
+  @Nonnull
   public static LogDataImpl empty() {
     return EMPTY;
   }
 
-  public LogDataImpl(@NotNull Set<VcsRef> refs, @NotNull Set<VcsUser> users) {
+  public LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull Set<VcsUser> users) {
     this(refs, users, Collections.<VcsCommitMetadata>emptyList());
   }
 
-  public LogDataImpl(@NotNull Set<VcsRef> refs, @NotNull List<VcsCommitMetadata> metadatas) {
+  public LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull List<VcsCommitMetadata> metadatas) {
     this(refs, Collections.<VcsUser>emptySet(), metadatas);
   }
 
-  private LogDataImpl(@NotNull Set<VcsRef> refs, @NotNull Set<VcsUser> users, @NotNull List<VcsCommitMetadata> commits) {
+  private LogDataImpl(@Nonnull Set<VcsRef> refs, @Nonnull Set<VcsUser> users, @Nonnull List<VcsCommitMetadata> commits) {
     myRefs = refs;
     myUsers = users;
     myCommits = commits;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsCommitMetadata> getCommits() {
     return myCommits;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<VcsRef> getRefs() {
     return myRefs;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<VcsUser> getUsers() {
     return myUsers;

@@ -24,7 +24,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -136,7 +136,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   private class MyFilterCategoryAction extends ComboBoxAction implements DumbAware {
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       String category = ((AvailablePluginsTableModel)myPluginsModel).getCategory();
       if (category == null) {
@@ -145,7 +145,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
       e.getPresentation().setText("Category: " + category);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableCategories();

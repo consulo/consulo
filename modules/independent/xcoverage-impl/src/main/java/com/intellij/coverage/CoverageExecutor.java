@@ -3,7 +3,7 @@ package com.intellij.coverage;
 import com.intellij.execution.Executor;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.wm.ToolWindowId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -12,12 +12,12 @@ public class CoverageExecutor extends Executor {
   public static final String EXECUTOR_ID = "Coverage";
 
   @Override
-  @NotNull
+  @Nonnull
   public String getStartActionText() {
     return "Run with Co_verage";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getStartActionText(boolean emptyName) {
     return "Run" + (emptyName ? "" :  " ''{0}''") + " with Co_verage";
@@ -34,7 +34,7 @@ public class CoverageExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return AllIcons.General.RunWithCoverage;
   }
@@ -50,13 +50,13 @@ public class CoverageExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getActionName() {
     return "Cover";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return EXECUTOR_ID;
   }

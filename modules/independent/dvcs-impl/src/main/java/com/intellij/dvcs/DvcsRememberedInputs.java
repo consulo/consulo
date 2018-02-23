@@ -15,8 +15,8 @@
  */
 package com.intellij.dvcs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class DvcsRememberedInputs {
     public String userName;
   }
 
-  @NotNull
+  @Nonnull
   public State getState() {
     return myState;
   }
@@ -47,11 +47,11 @@ public class DvcsRememberedInputs {
     myState = state;
   }
 
-  public void addUrl(@NotNull String url) {
+  public void addUrl(@Nonnull String url) {
     addUrl(url, "");
   }
 
-  public void addUrl(@NotNull String url, @NotNull String userName) {
+  public void addUrl(@Nonnull String url, @Nonnull String userName) {
     for (UrlAndUserName visitedUrl : myState.visitedUrls) {
       if (visitedUrl.url.equalsIgnoreCase(url)) {  // don't add multiple entries for a single url
         if (!userName.isEmpty()) {                 // rewrite username, unless no username is specified
@@ -68,7 +68,7 @@ public class DvcsRememberedInputs {
   }
 
   @Nullable
-  public String getUserNameForUrl(@NotNull String url) {
+  public String getUserNameForUrl(@Nonnull String url) {
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
       if (urlAndUserName.url.equalsIgnoreCase(url)) {
         return urlAndUserName.userName;
@@ -77,7 +77,7 @@ public class DvcsRememberedInputs {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getVisitedUrls() {
     List<String> urls = new ArrayList<String>(myState.visitedUrls.size());
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {

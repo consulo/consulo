@@ -16,7 +16,7 @@
 package consulo.fileTypes;
 
 import com.intellij.ide.IdeBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,19 +26,19 @@ public final class ZipArchiveFileType extends ArchiveFileType {
   public static final String PROTOCOL = "zip";
   public static final ArchiveFileType INSTANCE = new ZipArchiveFileType();
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProtocol() {
     return PROTOCOL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return IdeBundle.message("filetype.description.zip.files");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "ZIP_ARCHIVE";

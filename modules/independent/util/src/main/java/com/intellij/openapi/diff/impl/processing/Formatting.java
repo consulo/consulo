@@ -17,16 +17,16 @@ package com.intellij.openapi.diff.impl.processing;
 
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 public class Formatting extends Word {
   @TestOnly
-  public Formatting(@NotNull String baseText, @NotNull TextRange range) {
+  public Formatting(@Nonnull String baseText, @Nonnull TextRange range) {
     this(DiffString.create(baseText), range);
   }
 
-  public Formatting(@NotNull DiffString text, @NotNull TextRange range) {
+  public Formatting(@Nonnull DiffString text, @Nonnull TextRange range) {
     super(text, range);
   }
 

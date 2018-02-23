@@ -19,7 +19,7 @@ import com.intellij.execution.PsiLocation;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -27,14 +27,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ExternalSystemTaskLocation extends PsiLocation<PsiFile> {
 
-  @NotNull private final ExternalTaskExecutionInfo myTaskInfo;
+  @Nonnull
+  private final ExternalTaskExecutionInfo myTaskInfo;
 
-  public ExternalSystemTaskLocation(@NotNull Project project, @NotNull PsiFile psiElement, @NotNull ExternalTaskExecutionInfo taskInfo) {
+  public ExternalSystemTaskLocation(@Nonnull Project project, @Nonnull PsiFile psiElement, @Nonnull ExternalTaskExecutionInfo taskInfo) {
     super(project, psiElement);
     myTaskInfo = taskInfo;
   }
 
-  @NotNull
+  @Nonnull
   public ExternalTaskExecutionInfo getTaskInfo() {
     return myTaskInfo;
   }

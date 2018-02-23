@@ -22,9 +22,9 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -36,8 +36,8 @@ import java.awt.image.BufferedImage;
  */
 public class IconUtil {
 
-  @NotNull
-  public static Icon cropIcon(@NotNull Icon icon, int maxWidth, int maxHeight) {
+  @Nonnull
+  public static Icon cropIcon(@Nonnull Icon icon, int maxWidth, int maxHeight) {
     if (icon.getIconHeight() <= maxHeight && icon.getIconWidth() <= maxWidth) {
       return icon;
     }
@@ -63,8 +63,8 @@ public class IconUtil {
     return new ImageIcon(img);
   }
 
-  @NotNull
-  public static Icon flip(@NotNull Icon icon, boolean horizontal) {
+  @Nonnull
+  public static Icon flip(@Nonnull Icon icon, boolean horizontal) {
     int w = icon.getIconWidth();
     int h = icon.getIconHeight();
     BufferedImage first = UIUtil.createImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -84,7 +84,7 @@ public class IconUtil {
     return new ImageIcon(second);
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getEmptyIcon(boolean showVisibility) {
     RowIcon baseIcon = new RowIcon(2);
     baseIcon.setIcon(EmptyIcon.create(getDefaultNodeIconSize()), 0);
@@ -98,7 +98,7 @@ public class IconUtil {
     return JBUI.scale(16);
   }
 
-  public static Image toImage(@NotNull Icon icon) {
+  public static Image toImage(@Nonnull Icon icon) {
     if (icon instanceof ImageIcon) {
       return ((ImageIcon)icon).getImage();
     }
@@ -169,7 +169,7 @@ public class IconUtil {
     return getToolbarDecoratorIcon("analyze.png");
   }
 
-  public static void paintInCenterOf(@NotNull Component c, Graphics g, Icon icon) {
+  public static void paintInCenterOf(@Nonnull Component c, Graphics g, Icon icon) {
     final int x = (c.getWidth() - icon.getIconWidth()) / 2;
     final int y = (c.getHeight() - icon.getIconHeight()) / 2;
     icon.paintIcon(c, g, x, y);
@@ -186,8 +186,8 @@ public class IconUtil {
   /**
    * Result icons look like original but have equal (maximum) size
    */
-  @NotNull
-  public static Icon[] getEqualSizedIcons(@NotNull Icon... icons) {
+  @Nonnull
+  public static Icon[] getEqualSizedIcons(@Nonnull Icon... icons) {
     Icon[] result = new Icon[icons.length];
     int width = 0;
     int height = 0;
@@ -201,7 +201,7 @@ public class IconUtil {
     return result;
   }
 
-  public static Icon toSize(@NotNull Icon icon, int width, int height) {
+  public static Icon toSize(@Nonnull Icon icon, int width, int height) {
     return new IconSizeWrapper(icon, JBUI.scale(width), JBUI.scale(height));
   }
 
@@ -239,7 +239,7 @@ public class IconUtil {
     }
   }
 
-  public static Icon scale(@NotNull final Icon source, double _scale) {
+  public static Icon scale(@Nonnull final Icon source, double _scale) {
     final double scale = Math.min(32, Math.max(.1, _scale));
     return new Icon() {
       @Override
@@ -281,8 +281,8 @@ public class IconUtil {
    * @param fontSize the reference font size
    * @return the scaled icon
    */
-  @NotNull
-  public static Icon scaleByFont(@NotNull Icon icon, @Nullable Component ancestor, float fontSize) {
+  @Nonnull
+  public static Icon scaleByFont(@Nonnull Icon icon, @Nullable Component ancestor, float fontSize) {
     float scale = JBUI.getFontScale(fontSize);
     /*if (icon instanceof ScalableIcon) {
       if (icon instanceof ScaleContextAware) {
@@ -297,13 +297,13 @@ public class IconUtil {
     return scale(icon, scale);
   }
 
-  @NotNull
-  public static Icon colorize(@NotNull final Icon source, @NotNull Color color) {
+  @Nonnull
+  public static Icon colorize(@Nonnull final Icon source, @Nonnull Color color) {
     return colorize(source, color, false);
   }
 
-  @NotNull
-  public static Icon colorize(@NotNull final Icon source, @NotNull Color color, boolean keepGray) {
+  @Nonnull
+  public static Icon colorize(@Nonnull final Icon source, @Nonnull Color color, boolean keepGray) {
     float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
     final BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
@@ -328,8 +328,8 @@ public class IconUtil {
     return createImageIcon(img);
   }
 
-  @NotNull
-  public static JBImageIcon createImageIcon(@NotNull final BufferedImage img) {
+  @Nonnull
+  public static JBImageIcon createImageIcon(@Nonnull final BufferedImage img) {
     return new JBImageIcon(img) {
       @Override
       public int getIconWidth() {
@@ -343,7 +343,7 @@ public class IconUtil {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static Icon textToIcon(final String text, final Component component, final float fontSize) {
     final Font font = JBFont.create(JBUI.Fonts.label().deriveFont(fontSize));
     FontMetrics metrics = component.getFontMetrics(font);
@@ -376,7 +376,7 @@ public class IconUtil {
     };
   }
 
-  public static Icon addText(@NotNull Icon base, @NotNull String text) {
+  public static Icon addText(@Nonnull Icon base, @Nonnull String text) {
     LayeredIcon icon = new LayeredIcon(2);
     icon.setIcon(base, 0);
     icon.setIcon(textToIcon(text, new JLabel(), JBUI.scale(6f)), 1, SwingConstants.SOUTH_EAST);

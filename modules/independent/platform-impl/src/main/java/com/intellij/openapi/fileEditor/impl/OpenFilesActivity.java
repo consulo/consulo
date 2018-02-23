@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class OpenFilesActivity implements StartupActivity, DumbAware {
 
   @Override
-  public void runActivity(@NotNull Project project) {
+  public void runActivity(@Nonnull Project project) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     if (fileEditorManager instanceof FileEditorManagerImpl) {
       final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;

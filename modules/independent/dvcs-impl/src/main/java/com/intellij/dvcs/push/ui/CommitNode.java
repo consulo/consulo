@@ -22,16 +22,17 @@ import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.vcs.log.VcsFullCommitDetails;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class CommitNode extends DefaultMutableTreeNode implements CustomRenderedTreeNode, TooltipNode {
 
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
 
-  public CommitNode(@NotNull Project project, @NotNull VcsFullCommitDetails commit) {
+  public CommitNode(@Nonnull Project project, @Nonnull VcsFullCommitDetails commit) {
     super(commit, false);
     myProject = project;
   }
@@ -42,7 +43,7 @@ public class CommitNode extends DefaultMutableTreeNode implements CustomRendered
   }
 
   @Override
-  public void render(@NotNull ColoredTreeCellRenderer renderer) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
     renderer.append("   ");
     TreeNode parent = getParent();
     new IssueLinkRenderer(myProject, renderer).appendTextWithLinks(getUserObject().getSubject(), PushLogTreeUtil

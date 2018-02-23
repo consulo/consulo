@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm;
 
 import jetbrains.buildServer.messages.serviceMessages.MapSerializerUtil;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessageTypes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author gregsh
@@ -43,35 +43,35 @@ public class ServiceMessageBuilder {
     return MapSerializerUtil.escapeStr(text, MapSerializerUtil.STD_ESCAPER);
   }
 
-  public static ServiceMessageBuilder testSuiteStarted(@NotNull String name) {
+  public static ServiceMessageBuilder testSuiteStarted(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_STARTED).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testSuiteFinished(@NotNull String name) {
+  public static ServiceMessageBuilder testSuiteFinished(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_SUITE_FINISHED).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testStarted(@NotNull String name) {
+  public static ServiceMessageBuilder testStarted(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STARTED).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testFinished(@NotNull String name) {
+  public static ServiceMessageBuilder testFinished(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FINISHED).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testStdOut(@NotNull String name) {
+  public static ServiceMessageBuilder testStdOut(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_OUT).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testStdErr(@NotNull String name) {
+  public static ServiceMessageBuilder testStdErr(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_STD_ERR).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testFailed(@NotNull String name) {
+  public static ServiceMessageBuilder testFailed(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_FAILED).addAttribute("name", name);
   }
 
-  public static ServiceMessageBuilder testIgnored(@NotNull String name) {
+  public static ServiceMessageBuilder testIgnored(@Nonnull String name) {
     return new ServiceMessageBuilder(ServiceMessageTypes.TEST_IGNORED).addAttribute("name", name);
   }
 }

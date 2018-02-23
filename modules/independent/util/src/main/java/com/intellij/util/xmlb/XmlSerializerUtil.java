@@ -16,7 +16,7 @@
 package com.intellij.util.xmlb;
 
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class XmlSerializerUtil {
   private XmlSerializerUtil() {
   }
 
-  public static <T> void copyBean(@NotNull T from, @NotNull T to) {
+  public static <T> void copyBean(@Nonnull T from, @Nonnull T to) {
     assert from.getClass().isAssignableFrom(to.getClass()) : "Beans of different classes specified: Cannot assign " +
                                                              from.getClass() + " to " + to.getClass();
     for (MutableAccessor accessor : BeanBinding.getAccessors(from.getClass())) {
@@ -32,7 +32,7 @@ public class XmlSerializerUtil {
     }
   }
 
-  public static <T> T createCopy(@NotNull T from) {
+  public static <T> T createCopy(@Nonnull T from) {
     try {
       @SuppressWarnings("unchecked")
       T to = (T)ReflectionUtil.newInstance(from.getClass());
@@ -44,8 +44,8 @@ public class XmlSerializerUtil {
     }
   }
 
-  @NotNull
-  public static List<MutableAccessor> getAccessors(@NotNull Class<?> aClass) {
+  @Nonnull
+  public static List<MutableAccessor> getAccessors(@Nonnull Class<?> aClass) {
     return BeanBinding.getAccessors(aClass);
   }
 }

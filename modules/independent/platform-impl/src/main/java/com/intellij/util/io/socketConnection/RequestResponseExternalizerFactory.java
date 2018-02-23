@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io.socketConnection;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +25,9 @@ import java.io.OutputStream;
  * @author nik
  */
 public abstract class RequestResponseExternalizerFactory<Request extends AbstractRequest, Response extends AbstractResponse> {
-  @NotNull
-  public abstract RequestWriter<Request> createRequestWriter(@NotNull OutputStream output) throws IOException;
+  @Nonnull
+  public abstract RequestWriter<Request> createRequestWriter(@Nonnull OutputStream output) throws IOException;
 
-  @NotNull
-  public abstract ResponseReader<Response> createResponseReader(@NotNull InputStream input) throws IOException;
+  @Nonnull
+  public abstract ResponseReader<Response> createResponseReader(@Nonnull InputStream input) throws IOException;
 }

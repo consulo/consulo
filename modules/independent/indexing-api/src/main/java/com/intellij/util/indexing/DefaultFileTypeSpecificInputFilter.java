@@ -19,22 +19,22 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTypeSpecificInputFilter {
   private FileType[] myFileTypes;
 
-  public DefaultFileTypeSpecificInputFilter(@NotNull FileType... fileTypes) {
+  public DefaultFileTypeSpecificInputFilter(@Nonnull FileType... fileTypes) {
     myFileTypes = fileTypes;
   }
 
   @Override
-  public void registerFileTypesUsedForIndexing(@NotNull Consumer<FileType> fileTypeSink) {
+  public void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink) {
     for (FileType ft : myFileTypes) fileTypeSink.consume(ft);
   }
 
   @Override
-  public boolean acceptInput(Project project, @NotNull VirtualFile file) {
+  public boolean acceptInput(Project project, @Nonnull VirtualFile file) {
     return true;
   }
 }

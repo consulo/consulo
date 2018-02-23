@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -61,23 +61,29 @@ public interface BlockAlignmentProcessor {
    * @param context     target parameters holder
    * @return            processing result
    */
-  Result applyAlignment(@NotNull Context context);
+  Result applyAlignment(@Nonnull Context context);
 
   class Context {
 
-    @NotNull public final Document                                             document;
-    @NotNull public final AlignmentImpl                                        alignment;
-    @NotNull public final LeafBlockWrapper                                     targetBlock;
-    @NotNull public final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings;
-    @NotNull public final Map<LeafBlockWrapper, Set<LeafBlockWrapper>>         backwardShiftedAlignedBlocks;
-    @NotNull public final CommonCodeStyleSettings.IndentOptions                indentOptions;
+    @Nonnull
+    public final Document                                             document;
+    @Nonnull
+    public final AlignmentImpl                                        alignment;
+    @Nonnull
+    public final LeafBlockWrapper                                     targetBlock;
+    @Nonnull
+    public final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings;
+    @Nonnull
+    public final Map<LeafBlockWrapper, Set<LeafBlockWrapper>>         backwardShiftedAlignedBlocks;
+    @Nonnull
+    public final CommonCodeStyleSettings.IndentOptions                indentOptions;
 
-    public Context(@NotNull Document document,
-                   @NotNull AlignmentImpl alignment,
-                   @NotNull LeafBlockWrapper targetBlock,
-                   @NotNull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings,
-                   @NotNull Map<LeafBlockWrapper, Set<LeafBlockWrapper>> backwardShiftedAlignedBlocks,
-                   @NotNull CommonCodeStyleSettings.IndentOptions indentOptions)
+    public Context(@Nonnull Document document,
+                   @Nonnull AlignmentImpl alignment,
+                   @Nonnull LeafBlockWrapper targetBlock,
+                   @Nonnull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings,
+                   @Nonnull Map<LeafBlockWrapper, Set<LeafBlockWrapper>> backwardShiftedAlignedBlocks,
+                   @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions)
     {
       this.document = document;
       this.alignment = alignment;

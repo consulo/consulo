@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -39,11 +39,11 @@ public class EventDispatcher<T extends EventListener> {
 
   private final List<T> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public static <T extends EventListener> EventDispatcher<T> create(@NotNull Class<T> listenerClass) {
+  public static <T extends EventListener> EventDispatcher<T> create(@Nonnull Class<T> listenerClass) {
     return new EventDispatcher<T>(listenerClass);
   }
 
-  private EventDispatcher(@NotNull Class<T> listenerClass) {
+  private EventDispatcher(@Nonnull Class<T> listenerClass) {
     myMulticaster = createMulticaster(listenerClass, new Getter<Iterable<T>>() {
       @Override
       public Iterable<T> get() {
@@ -52,8 +52,8 @@ public class EventDispatcher<T extends EventListener> {
     });
   }
 
-  @NotNull
-  static <T> T createMulticaster(@NotNull Class<T> listenerClass, final Getter<Iterable<T>> listeners) {
+  @Nonnull
+  static <T> T createMulticaster(@Nonnull Class<T> listenerClass, final Getter<Iterable<T>> listeners) {
     LOG.assertTrue(listenerClass.isInterface(), "listenerClass must be an interface");
     InvocationHandler handler = new InvocationHandler() {
       @Override
@@ -86,12 +86,12 @@ public class EventDispatcher<T extends EventListener> {
     return (T)Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, handler);
   }
 
-  @NotNull
+  @Nonnull
   public T getMulticaster() {
     return myMulticaster;
   }
 
-  private static <T> void dispatch(Iterable<T> listeners, @NotNull Method method, Object[] args) {
+  private static <T> void dispatch(Iterable<T> listeners, @Nonnull Method method, Object[] args) {
     method.setAccessible(true);
 
     for (T listener : listeners) {
@@ -118,7 +118,7 @@ public class EventDispatcher<T extends EventListener> {
     }
   }
 
-  public void addListener(@NotNull T listener) {
+  public void addListener(@Nonnull T listener) {
     myListeners.add(listener);
   }
 
@@ -126,7 +126,7 @@ public class EventDispatcher<T extends EventListener> {
    * CAUTION: do not use in pair with {@link #removeListener(EventListener)}: a memory leak can occur.
    * In case a listener is removed, it's disposable stays in disposable hierarchy, preventing the listener from being gc'ed.
    */
-  public void addListener(@NotNull final T listener, @NotNull Disposable parentDisposable) {
+  public void addListener(@Nonnull final T listener, @Nonnull Disposable parentDisposable) {
     addListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -136,7 +136,7 @@ public class EventDispatcher<T extends EventListener> {
     });
   }
 
-  public void removeListener(@NotNull T listener) {
+  public void removeListener(@Nonnull T listener) {
     myListeners.remove(listener);
   }
 
@@ -144,7 +144,7 @@ public class EventDispatcher<T extends EventListener> {
     return !myListeners.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   public List<T> getListeners() {
     return myListeners;
   }

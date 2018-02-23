@@ -16,8 +16,8 @@
 package com.intellij.util.lang;
 
 import com.intellij.openapi.util.io.FileUtilRt;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;

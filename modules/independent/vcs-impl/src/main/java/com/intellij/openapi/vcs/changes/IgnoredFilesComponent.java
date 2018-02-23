@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -42,7 +42,7 @@ public class IgnoredFilesComponent {
   private final Lock myWriteLock = myLock.writeLock();
   private final Project myProject;
 
-  public IgnoredFilesComponent(@NotNull Project project, final boolean registerListener) {
+  public IgnoredFilesComponent(@Nonnull Project project, final boolean registerListener) {
     myProject = project;
     myFilesToIgnore = new LinkedHashSet<>();
     myFilesMap = new THashMap<>();
@@ -50,7 +50,7 @@ public class IgnoredFilesComponent {
     if (registerListener) {
       project.getMessageBus().connect(project).subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
         @Override
-        public void after(@NotNull List<? extends VFileEvent> events) {
+        public void after(@Nonnull List<? extends VFileEvent> events) {
           if (hasSignificantChanges(events)) {
             resetCaches();
           }
@@ -64,7 +64,7 @@ public class IgnoredFilesComponent {
     myDirectoriesManuallyRemovedFromIgnored = new THashSet<>();
   }
 
-  public IgnoredFilesComponent(@NotNull IgnoredFilesComponent other) {
+  public IgnoredFilesComponent(@Nonnull IgnoredFilesComponent other) {
     myProject = other.myProject;
     myFilesToIgnore = new LinkedHashSet<>(other.myFilesToIgnore);
     myFilesMap = new HashMap<>(other.myFilesMap);
@@ -91,7 +91,7 @@ public class IgnoredFilesComponent {
     myDirectoriesManuallyRemovedFromIgnored.addAll(directories);
   }
 
-  public void addIgnoredDirectoryImplicitly(@NotNull String path, @NotNull Project project) {
+  public void addIgnoredDirectoryImplicitly(@Nonnull String path, @Nonnull Project project) {
     myWriteLock.lock();
     try {
       if (myDirectoriesManuallyRemovedFromIgnored.contains(path) || myDirectoriesManuallyRemovedFromIgnored.contains(path + "/")) {
@@ -117,7 +117,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  private void addIgnoredFiles(@NotNull IgnoredFileBean[] filesToIgnore) {
+  private void addIgnoredFiles(@Nonnull IgnoredFileBean[] filesToIgnore) {
     for (IgnoredFileBean bean : filesToIgnore) {
       if (IgnoreSettingsType.FILE.equals(bean.getType())) {
         final Project project = bean.getProject();
@@ -164,7 +164,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  @NotNull
+  @Nonnull
   public IgnoredFileBean[] getFilesToIgnore() {
     myReadLock.lock();
     try {
@@ -187,7 +187,7 @@ public class IgnoredFilesComponent {
     }
   }
 
-  boolean isIgnoredFile(@NotNull FilePath filePath) {
+  boolean isIgnoredFile(@Nonnull FilePath filePath) {
     myReadLock.lock();
     try {
       if (myFilesToIgnore.isEmpty()) return false;

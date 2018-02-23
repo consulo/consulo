@@ -18,15 +18,15 @@ package com.intellij.ide.impl.dataRules;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface GetDataRule<T> {
   ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create("com.intellij.getDataRule");
 
-  @NotNull
+  @Nonnull
   Key<T> getKey();
 
   @Nullable
-  T getData(@NotNull DataProvider dataProvider);
+  T getData(@Nonnull DataProvider dataProvider);
 }

@@ -28,7 +28,7 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -47,7 +47,7 @@ public class DialogAppender extends AppenderSkeleton {
   private final AtomicInteger myPendingAppendCounts = new AtomicInteger();
 
   @Override
-  protected synchronized void append(@NotNull final LoggingEvent event) {
+  protected synchronized void append(@Nonnull final LoggingEvent event) {
     if (!event.level.isGreaterOrEqual(Level.ERROR) ||
         Main.isCommandLine() ||
         !ApplicationStarter.isLoaded()) {
@@ -86,7 +86,7 @@ public class DialogAppender extends AppenderSkeleton {
     }
   }
 
-  void appendToLoggers(@NotNull LoggingEvent event, @NotNull ErrorLogger[] errorLoggers) {
+  void appendToLoggers(@Nonnull LoggingEvent event, @Nonnull ErrorLogger[] errorLoggers) {
     if (myDialogRunnable != null) {
       return;
     }

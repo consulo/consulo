@@ -59,8 +59,8 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -86,7 +86,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     @Override
-    public int compareTo(@NotNull VcsRevisionNumber vcsRevisionNumber) {
+    public int compareTo(@Nonnull VcsRevisionNumber vcsRevisionNumber) {
       return 0;
     }
 
@@ -103,9 +103,12 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private static final Block EMPTY_BLOCK = new Block("", 0, 0);
 
-  @NotNull private final Project myProject;
-  @NotNull private final VirtualFile myFile;
-  @NotNull private final AbstractVcs myActiveVcs;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VirtualFile myFile;
+  @Nonnull
+  private final AbstractVcs myActiveVcs;
   @NonNls private final String myHelpId;
 
   private final List<VcsFileRevision> myRevisions = new ArrayList<>();
@@ -121,21 +124,23 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   private final AnimatedIcon myStatusSpinner = new AsyncProcessIcon("VcsSelectionHistoryDialog");
   private final JEditorPane myComments;
 
-  @NotNull private final MergingUpdateQueue myUpdateQueue;
-  @NotNull private final BlockLoader myBlockLoader;
+  @Nonnull
+  private final MergingUpdateQueue myUpdateQueue;
+  @Nonnull
+  private final BlockLoader myBlockLoader;
 
   private boolean myIsDuringUpdate = false;
   private boolean myIsDisposed = false;
 
-  public VcsSelectionHistoryDialog(@NotNull Project project,
-                                   @NotNull VirtualFile file,
-                                   @NotNull Document document,
-                                   @NotNull VcsHistoryProvider vcsHistoryProvider,
-                                   @NotNull VcsHistorySession session,
-                                   @NotNull AbstractVcs vcs,
+  public VcsSelectionHistoryDialog(@Nonnull Project project,
+                                   @Nonnull VirtualFile file,
+                                   @Nonnull Document document,
+                                   @Nonnull VcsHistoryProvider vcsHistoryProvider,
+                                   @Nonnull VcsHistorySession session,
+                                   @Nonnull AbstractVcs vcs,
                                    int selectionStart,
                                    int selectionEnd,
-                                   @NotNull String title) {
+                                   @Nonnull String title) {
     super(project);
     myProject = project;
     myFile = file;
@@ -227,7 +232,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
     myBlockLoader = new BlockLoader(myRevisions, myFile, document, selectionStart, selectionEnd) {
       @Override
-      protected void notifyError(@NotNull VcsException e) {
+      protected void notifyError(@Nonnull VcsException e) {
         SwingUtilities.invokeLater(() -> {
           VcsSelectionHistoryDialog dialog = VcsSelectionHistoryDialog.this;
           if (dialog.isDisposed() || !dialog.getFrame().isShowing()) return;
@@ -252,7 +257,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     myList.getSelectionModel().setSelectionInterval(0, 0);
   }
 
-  @NotNull
+  @Nonnull
   private static String canNoLoadMessage(@Nullable VcsException e) {
     return "Can not load revision contents" + (e != null ? ": " + e.getMessage() : "");
   }
@@ -310,7 +315,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
   }
 
-  @NotNull
+  @Nonnull
   private IntPair getSelectedRevisionsRange() {
     List<VcsFileRevision> selection = myList.getSelectedObjects();
     if (selection.isEmpty()) return new IntPair(0, 0);
@@ -400,7 +405,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   }
 
   @Nullable
-  private DiffContent createDiffContent(int index, @NotNull BlockData data) {
+  private DiffContent createDiffContent(int index, @Nonnull BlockData data) {
     if (index >= myRevisions.size()) return DiffContentFactory.getInstance().createEmpty();
     Block block = data.getBlock(index);
     if (block == null) return null;
@@ -449,7 +454,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
@@ -523,7 +528,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
   }
 
-  @NotNull
+  @Nonnull
   private DiffFromHistoryHandler getDiffHandler() {
     VcsHistoryProvider historyProvider = myActiveVcs.getVcsHistoryProvider();
     DiffFromHistoryHandler handler = historyProvider != null ? historyProvider.getHistoryDiffHandler() : null;
@@ -531,19 +536,23 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   }
 
   private abstract static class BlockLoader {
-    @NotNull private final Object LOCK = new Object();
+    @Nonnull
+    private final Object LOCK = new Object();
 
-    @NotNull private final List<VcsFileRevision> myRevisions;
-    @NotNull private final Charset myCharset;
+    @Nonnull
+    private final List<VcsFileRevision> myRevisions;
+    @Nonnull
+    private final Charset myCharset;
 
-    @NotNull private final List<Block> myBlocks = new ArrayList<>();
+    @Nonnull
+    private final List<Block> myBlocks = new ArrayList<>();
     @Nullable private VcsException myException;
     private boolean myIsLoading = true;
     private VcsFileRevision myCurrentLoadingRevision;
 
-    public BlockLoader(@NotNull List<VcsFileRevision> revisions,
-                       @NotNull VirtualFile file,
-                       @NotNull Document document,
+    public BlockLoader(@Nonnull List<VcsFileRevision> revisions,
+                       @Nonnull VirtualFile file,
+                       @Nonnull Document document,
                        int selectionStart,
                        int selectionEnd) {
       myRevisions = revisions;
@@ -553,14 +562,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
       myBlocks.add(new Block(lastContent, selectionStart, selectionEnd + 1));
     }
 
-    @NotNull
+    @Nonnull
     public BlockData getLoadedData() {
       synchronized (LOCK) {
         return new BlockData(myIsLoading, new ArrayList<>(myBlocks), myException, myCurrentLoadingRevision);
       }
     }
 
-    public void start(@NotNull Disposable disposable) {
+    public void start(@Nonnull Disposable disposable) {
       BackgroundTaskUtil.executeOnPooledThread(disposable, () -> {
         try {
           // first block is loaded in constructor
@@ -600,13 +609,13 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     }
 
     @CalledInBackground
-    protected abstract void notifyError(@NotNull VcsException e);
+    protected abstract void notifyError(@Nonnull VcsException e);
 
     @CalledInBackground
     protected abstract void notifyUpdate();
 
-    @NotNull
-    private Block createBlock(@NotNull Block block, @NotNull VcsFileRevision revision) throws VcsException {
+    @Nonnull
+    private Block createBlock(@Nonnull Block block, @Nonnull VcsFileRevision revision) throws VcsException {
       if (block == EMPTY_BLOCK) return EMPTY_BLOCK;
 
       String revisionContent = loadContents(revision);
@@ -615,8 +624,8 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
       return newBlock.getStart() != newBlock.getEnd() ? newBlock : EMPTY_BLOCK;
     }
 
-    @NotNull
-    private String loadContents(@NotNull VcsFileRevision revision) throws VcsException {
+    @Nonnull
+    private String loadContents(@Nonnull VcsFileRevision revision) throws VcsException {
       try {
         byte[] bytes = revision.loadContent();
         return new String(bytes, myCharset);
@@ -629,12 +638,14 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private static class BlockData {
     private final boolean myIsLoading;
-    @NotNull private final List<Block> myBlocks;
+    @Nonnull
+    private final List<Block> myBlocks;
     @Nullable private final VcsException myException;
-    @Nullable private final VcsFileRevision myCurrentLoadingRevision;
+    @javax.annotation.Nullable
+    private final VcsFileRevision myCurrentLoadingRevision;
 
     public BlockData(boolean isLoading,
-                     @NotNull List<Block> blocks,
+                     @Nonnull List<Block> blocks,
                      @Nullable VcsException exception,
                      @Nullable VcsFileRevision currentLoadingRevision) {
       myIsLoading = isLoading;

@@ -18,8 +18,8 @@ package com.intellij.diff.requests;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class DiffRequest implements UserDataHolder {
@@ -41,14 +41,14 @@ public abstract class DiffRequest implements UserDataHolder {
   public void onAssigned(boolean isAssigned) {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 }

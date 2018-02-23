@@ -36,8 +36,7 @@ import com.intellij.util.ArrayUtil;
 import org.apache.oro.text.regex.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +51,8 @@ import java.util.StringTokenizer;
   storages = {
     @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/compiler.xml")})
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
-  @NotNull
-  public static ResourceCompilerConfiguration getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ResourceCompilerConfiguration getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ResourceCompilerConfiguration.class);
   }
 
@@ -65,9 +64,12 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   public static final String NAME = "name";
 
   private static class CompiledPattern {
-    @NotNull final Pattern fileName;
-    @Nullable final Pattern dir;
-    @Nullable final Pattern srcRoot;
+    @Nonnull
+    final Pattern fileName;
+    @javax.annotation.Nullable
+    final Pattern dir;
+    @javax.annotation.Nullable
+    final Pattern srcRoot;
 
     private CompiledPattern(Pattern fileName, Pattern dir, Pattern srcRoot) {
       this.fileName = fileName;
@@ -102,7 +104,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     removeWildcardPatterns();
   }
 
-  private boolean isResourceFile(String name, @Nullable VirtualFile parent) {
+  private boolean isResourceFile(String name, @javax.annotation.Nullable VirtualFile parent) {
     final Ref<String> parentRef = Ref.create(null);
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < myCompiledPatterns.size(); i++) {
@@ -371,7 +373,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return extensionsString.toString();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Element getState() {
     String[] patterns = getRegexpPatterns();

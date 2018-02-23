@@ -22,8 +22,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
     return getMergedData().size();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ValueContainer.ValueIterator<Value> getValueIterator() {
     return getMergedData().getValueIterator();
@@ -159,7 +159,8 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
            needsCompacting();
   }
 
-  public @Nullable UpdatableValueContainer<Value> getAddedDelta() {
+  public @Nullable
+  UpdatableValueContainer<Value> getAddedDelta() {
     return myAdded;
   }
 

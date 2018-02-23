@@ -16,7 +16,7 @@
 package consulo.util.pointers;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +26,7 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
   public static final Logger LOGGER = Logger.getInstance(NamedPointerImpl.class);
 
   private T myValue;
-  @NotNull
+  @Nonnull
   private String myName;
 
   public NamedPointerImpl(T value) {
@@ -34,25 +34,25 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
     myName = value.getName();
   }
 
-  public NamedPointerImpl(@NotNull String name) {
+  public NamedPointerImpl(@Nonnull String name) {
     myValue = null;
     myName = name;
   }
 
-  public void setValue(@NotNull T value) {
+  public void setValue(@Nonnull T value) {
     LOGGER.assertTrue(myValue == null);
     LOGGER.assertTrue(myName.equals(value.getName()));
     myName = value.getName();
     myValue = value;
   }
 
-  public void dropValue(@NotNull T value) {
+  public void dropValue(@Nonnull T value) {
     LOGGER.assertTrue(myValue == value);
     myName = myValue.getName();
     myValue = null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     if (myValue != null) {

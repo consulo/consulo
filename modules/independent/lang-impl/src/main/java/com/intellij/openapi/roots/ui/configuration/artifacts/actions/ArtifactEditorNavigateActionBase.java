@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.packaging.ui.TreeNodePresentation;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

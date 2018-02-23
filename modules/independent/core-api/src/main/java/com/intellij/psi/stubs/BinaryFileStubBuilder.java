@@ -21,7 +21,8 @@ package com.intellij.psi.stubs;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.FileContent;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public interface BinaryFileStubBuilder {
   boolean acceptsFile(VirtualFile file);

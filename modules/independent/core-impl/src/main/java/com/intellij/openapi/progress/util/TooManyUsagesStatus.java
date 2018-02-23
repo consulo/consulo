@@ -18,8 +18,8 @@ package com.intellij.openapi.progress.util;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +29,7 @@ public class TooManyUsagesStatus {
   private static final Key<TooManyUsagesStatus> KEY = Key.create("TooManyUsagesStatus");
   private static final Null NULL = new Null();
 
-  @NotNull
+  @Nonnull
   public static TooManyUsagesStatus getFrom(@Nullable ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
@@ -38,7 +38,7 @@ public class TooManyUsagesStatus {
     if (data == null) data = NULL;
     return data;
   }
-  public static TooManyUsagesStatus createFor(@NotNull ProgressIndicator indicator) {
+  public static TooManyUsagesStatus createFor(@Nonnull ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
       data = new TooManyUsagesStatus();

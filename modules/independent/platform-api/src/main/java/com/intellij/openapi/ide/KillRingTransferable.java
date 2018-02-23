@@ -16,8 +16,8 @@
 package com.intellij.openapi.ide;
 
 import com.intellij.openapi.editor.Document;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -61,8 +61,8 @@ public class KillRingTransferable implements Transferable {
    * @param endOffset       end offset of the given text during current object construction
    * @param cut                 flag that identifies whether target text was cut or copied from the document
    */
-  public KillRingTransferable(@NotNull String data,
-                              @NotNull Document document,
+  public KillRingTransferable(@Nonnull String data,
+                              @Nonnull Document document,
                               int startOffset,
                               int endOffset,
                               boolean cut)

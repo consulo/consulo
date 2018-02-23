@@ -18,12 +18,13 @@ package com.intellij.util.containers;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BiDirectionalEnumerator<T> extends Enumerator<T> {
-  @NotNull private final TIntObjectHashMap<T> myIntToObjectMap;
+  @Nonnull
+  private final TIntObjectHashMap<T> myIntToObjectMap;
 
-  public BiDirectionalEnumerator(int expectNumber, @NotNull TObjectHashingStrategy<T> strategy) {
+  public BiDirectionalEnumerator(int expectNumber, @Nonnull TObjectHashingStrategy<T> strategy) {
     super(expectNumber, strategy);
 
     myIntToObjectMap = new TIntObjectHashMap<T>(expectNumber);
@@ -42,7 +43,7 @@ public class BiDirectionalEnumerator<T> extends Enumerator<T> {
     myIntToObjectMap.clear();
   }
 
-  @NotNull
+  @Nonnull
   public T getValue(int index) {
     T hash = myIntToObjectMap.get(index);
     if (hash == null) {
@@ -51,7 +52,7 @@ public class BiDirectionalEnumerator<T> extends Enumerator<T> {
     return hash;
   }
 
-  public void forEachValue(@NotNull TObjectProcedure<T> procedure) {
+  public void forEachValue(@Nonnull TObjectProcedure<T> procedure) {
     myIntToObjectMap.forEachValue(procedure);
   }
 }

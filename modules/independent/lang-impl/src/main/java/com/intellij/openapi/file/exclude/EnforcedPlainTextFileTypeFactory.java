@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -55,19 +55,19 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         return "Enforced Plain Text";
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDescription() {
         return "Enforced Plain Text";
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDefaultExtension() {
         return "fakeTxt";
@@ -89,14 +89,14 @@ public class EnforcedPlainTextFileTypeFactory extends FileTypeFactory {
       }
 
       @Override
-      public String getCharset(@NotNull VirtualFile file, byte[] content) {
+      public String getCharset(@Nonnull VirtualFile file, byte[] content) {
         return null;
       }
     };
   }
 
   @Override
-  public void createFileTypes(final @NotNull FileTypeConsumer consumer) {
+  public void createFileTypes(final @Nonnull FileTypeConsumer consumer) {
     consumer.consume(myFileType, "");
   }
   

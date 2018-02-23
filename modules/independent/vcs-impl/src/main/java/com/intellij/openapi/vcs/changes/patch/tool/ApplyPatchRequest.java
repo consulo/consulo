@@ -17,28 +17,28 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 interface ApplyPatchRequest {
-  @NotNull
+  @Nonnull
   DocumentContent getResultContent();
 
-  @NotNull
+  @Nonnull
   String getLocalContent();
 
-  @NotNull
+  @Nonnull
   AppliedTextPatch getPatch();
 
   @Nullable
   String getTitle();
 
-  @NotNull
+  @Nonnull
   String getLocalTitle();
 
-  @NotNull
+  @Nonnull
   String getResultTitle();
 
-  @NotNull
+  @Nonnull
   String getPatchTitle();
 }

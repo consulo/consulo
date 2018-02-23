@@ -28,8 +28,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +44,7 @@ import java.util.List;
  * @author yole
  */
 public class AppUIUtil {
-  public static void updateWindowIcon(@NotNull Window window) {
+  public static void updateWindowIcon(@Nonnull Window window) {
     window.setIconImages(getAppIconImages());
   }
 
@@ -59,7 +59,7 @@ public class AppUIUtil {
     return images;
   }
 
-  public static void invokeLaterIfProjectAlive(@NotNull final Project project, @NotNull final Runnable runnable) {
+  public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       runnable.run();
@@ -145,7 +145,7 @@ public class AppUIUtil {
     }
   }
 
-  public static void hideToolWindowBalloon(@NotNull final String id, @NotNull final Project project) {
+  public static void hideToolWindowBalloon(@Nonnull final String id, @Nonnull final Project project) {
     invokeLaterIfProjectAlive(project, new Runnable() {
       @Override
       public void run() {

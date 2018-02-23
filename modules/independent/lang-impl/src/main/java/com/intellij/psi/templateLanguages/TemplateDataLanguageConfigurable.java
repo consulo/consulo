@@ -25,14 +25,14 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.tree.LanguagePerFileConfigurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public class TemplateDataLanguageConfigurable extends LanguagePerFileConfigurable<Language> {
-  public TemplateDataLanguageConfigurable(@NotNull Project project) {
+  public TemplateDataLanguageConfigurable(@Nonnull Project project) {
     super(project, Language.class, TemplateDataLanguageMappings.getInstance(project),
           LangBundle.message("dialog.template.data.language.caption", ApplicationNamesInfo.getInstance().getFullProductName()),
           LangBundle.message("template.data.language.configurable.tree.table.title"),
@@ -64,7 +64,7 @@ public class TemplateDataLanguageConfigurable extends LanguagePerFileConfigurabl
   }
 
   @Override
-  protected String visualize(@NotNull final Language language) {
+  protected String visualize(@Nonnull final Language language) {
     return language.getDisplayName();
   }
 

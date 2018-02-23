@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.impl.FocusRequestInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -93,7 +93,7 @@ public class FocusTracesDialog extends DialogWrapper {
     return myRequestsTable;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[] {getOKAction(), getCopyStackTraceAction()};

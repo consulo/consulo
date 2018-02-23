@@ -25,8 +25,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
 public class HighlightInfoComposite extends HighlightInfo {
   @NonNls private static final String LINE_BREAK = "<hr size=1 noshade>";
 
-  public HighlightInfoComposite(@NotNull List<HighlightInfo> infos) {
+  public HighlightInfoComposite(@Nonnull List<HighlightInfo> infos) {
     super(null, null, infos.get(0).type, infos.get(0).startOffset, infos.get(0).endOffset, createCompositeDescription(infos),
           createCompositeTooltip(infos), infos.get(0).type.getSeverity(null), false, null, false, 0, infos.get(0).getProblemGroup(), infos.get(0).getGutterIconRenderer());
     highlighter = infos.get(0).highlighter;

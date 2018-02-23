@@ -26,8 +26,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +34,10 @@ import java.util.List;
 class UnifiedEditorRangeHighlighter {
   public static final Logger LOG = UnifiedDiffViewer.LOG;
 
-  @NotNull private final List<Element> myPieces = new ArrayList<Element>();
+  @Nonnull
+  private final List<Element> myPieces = new ArrayList<Element>();
 
-  public UnifiedEditorRangeHighlighter(@Nullable Project project, @NotNull Document document) {
+  public UnifiedEditorRangeHighlighter(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, false);
@@ -56,10 +56,10 @@ class UnifiedEditorRangeHighlighter {
     });
   }
 
-  public UnifiedEditorRangeHighlighter(@Nullable Project project,
-                                       @NotNull Document document1,
-                                       @NotNull Document document2,
-                                       @NotNull List<HighlightRange> ranges) {
+  public UnifiedEditorRangeHighlighter(@javax.annotation.Nullable Project project,
+                                       @Nonnull Document document1,
+                                       @Nonnull Document document2,
+                                       @Nonnull List<HighlightRange> ranges) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     MarkupModelEx model1 = (MarkupModelEx)DocumentMarkupModel.forDocument(document1, project, false);
@@ -67,9 +67,9 @@ class UnifiedEditorRangeHighlighter {
     init(model1, model2, ranges);
   }
 
-  private void init(@Nullable MarkupModelEx model1,
-                    @Nullable MarkupModelEx model2,
-                    @NotNull List<HighlightRange> ranges) {
+  private void init(@javax.annotation.Nullable MarkupModelEx model1,
+                    @javax.annotation.Nullable MarkupModelEx model2,
+                    @Nonnull List<HighlightRange> ranges) {
     for (HighlightRange range : ranges) {
       if (range.getSide().isLeft()) {
         if (model1 != null) processRange(model1, range);
@@ -80,7 +80,7 @@ class UnifiedEditorRangeHighlighter {
     }
   }
 
-  private void processRange(@NotNull MarkupModelEx model, @NotNull HighlightRange range) {
+  private void processRange(@Nonnull MarkupModelEx model, @Nonnull HighlightRange range) {
     final TextRange base = range.getBase();
     final TextRange changed = range.getChanged();
     final int changedLength = changed.getEndOffset() - changed.getStartOffset();
@@ -103,12 +103,12 @@ class UnifiedEditorRangeHighlighter {
     });
   }
 
-  public static void erase(@Nullable Project project, @NotNull Document document) {
+  public static void erase(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     MarkupModel model = DocumentMarkupModel.forDocument(document, project, true);
     model.removeAllHighlighters();
   }
 
-  public void apply(@Nullable Project project, @NotNull Document document) {
+  public void apply(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     MarkupModel model = DocumentMarkupModel.forDocument(document, project, true);
 
     for (Element piece : myPieces) {
@@ -131,18 +131,19 @@ class UnifiedEditorRangeHighlighter {
   }
 
   private static class Element {
-    @NotNull private final RangeHighlighterEx myDelegate;
+    @Nonnull
+    private final RangeHighlighterEx myDelegate;
 
     private final int myStart;
     private final int myEnd;
 
-    public Element(@NotNull RangeHighlighterEx delegate, int start, int end) {
+    public Element(@Nonnull RangeHighlighterEx delegate, int start, int end) {
       myDelegate = delegate;
       myStart = start;
       myEnd = end;
     }
 
-    @NotNull
+    @Nonnull
     public RangeHighlighterEx getDelegate() {
       return myDelegate;
     }

@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.StringBuilderSpinAllocator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.ByteArrayInputStream;
@@ -39,14 +39,15 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
   private static final Logger LOG = Logger.getInstance("#" + AbstractSyntaxAwareInputStreamTransferableData.class.getName());
 
   protected String myRawText;
-  @NotNull
+  @Nonnull
   protected final SyntaxInfo mySyntaxInfo;
-  @NotNull
+  @Nonnull
   private final DataFlavor myDataFlavor;
 
-  @Nullable private transient InputStream myDelegate;
+  @Nullable
+  private transient InputStream myDelegate;
 
-  public AbstractSyntaxAwareInputStreamTransferableData(@NotNull SyntaxInfo syntaxInfo, @NotNull DataFlavor flavor) {
+  public AbstractSyntaxAwareInputStreamTransferableData(@Nonnull SyntaxInfo syntaxInfo, @Nonnull DataFlavor flavor) {
     mySyntaxInfo = syntaxInfo;
     myDataFlavor = flavor;
   }
@@ -77,7 +78,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
   }
 
   @Override
-  public int read(@NotNull byte[] b, int off, int len) throws IOException {
+  public int read(@Nonnull byte[] b, int off, int len) throws IOException {
     return getDelegate().read(b, off, len);
   }
 
@@ -91,7 +92,7 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
     myRawText = rawText;
   }
 
-  @NotNull
+  @Nonnull
   private InputStream getDelegate() {
     if (myDelegate != null) {
       return myDelegate;
@@ -123,8 +124,8 @@ public abstract class AbstractSyntaxAwareInputStreamTransferableData extends Inp
     }
   }
 
-  protected abstract void build(@NotNull StringBuilder holder, int maxLength);
+  protected abstract void build(@Nonnull StringBuilder holder, int maxLength);
 
-  @NotNull
+  @Nonnull
   protected abstract String getCharset();
 }

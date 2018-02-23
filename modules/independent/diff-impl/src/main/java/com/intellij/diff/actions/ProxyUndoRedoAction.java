@@ -24,23 +24,25 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public class ProxyUndoRedoAction extends DumbAwareAction {
-  @NotNull private final UndoManager myUndoManager;
-  @NotNull private final TextEditor myEditor;
+  @Nonnull
+  private final UndoManager myUndoManager;
+  @Nonnull
+  private final TextEditor myEditor;
   private final boolean myUndo;
 
-  private ProxyUndoRedoAction(@NotNull UndoManager manager, @NotNull TextEditor editor, boolean undo) {
+  private ProxyUndoRedoAction(@Nonnull UndoManager manager, @Nonnull TextEditor editor, boolean undo) {
     myUndoManager = manager;
     myEditor = editor;
     myUndo = undo;
   }
 
-  public static void register(@Nullable Project project, @NotNull Editor editor, @NotNull JComponent component) {
+  public static void register(@Nullable Project project, @Nonnull Editor editor, @Nonnull JComponent component) {
     UndoManager undoManager = project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance();
     TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
     if (undoManager != null) {

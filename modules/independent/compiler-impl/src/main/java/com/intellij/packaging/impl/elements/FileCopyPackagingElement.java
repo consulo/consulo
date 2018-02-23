@@ -28,8 +28,8 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.PathUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -55,7 +55,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new FileCopyPresentation(myFilePath, getOutputFileName());
   }
 
@@ -64,9 +64,9 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
     final VirtualFile file = findFile();
     if (file != null && file.isValid() && !file.isDirectory()) {
       creator.addFileCopyInstruction(file, getOutputFileName());
@@ -84,7 +84,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
 
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element instanceof FileCopyPackagingElement && super.isEqualTo(element)
            && Comparing.equal(myRenamedOutputFileName, ((FileCopyPackagingElement)element).getRenamedOutputFileName());
   }
@@ -100,7 +100,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     setRenamedOutputFileName(state.getRenamedOutputFileName());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Attribute(OUTPUT_FILE_NAME_ATTRIBUTE)
   public String getRenamedOutputFileName() {
     return myRenamedOutputFileName;
@@ -121,7 +121,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public void rename(@NotNull String newName) {
+  public void rename(@Nonnull String newName) {
     myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
   }
 

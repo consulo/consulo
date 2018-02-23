@@ -54,8 +54,8 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ErrorTreeView;
 import com.intellij.util.ui.MessageCategory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -75,17 +75,17 @@ public class ExecutionHelper {
   private ExecutionHelper() {
   }
 
-  public static void showErrors(@NotNull final Project myProject,
-                                @NotNull final List<? extends Exception> errors,
-                                @NotNull final String tabDisplayName,
+  public static void showErrors(@Nonnull final Project myProject,
+                                @Nonnull final List<? extends Exception> errors,
+                                @Nonnull final String tabDisplayName,
                                 @Nullable final VirtualFile file) {
     showExceptions(myProject, errors, Collections.<Exception>emptyList(), tabDisplayName, file);
   }
 
-  public static void showExceptions(@NotNull final Project myProject,
-                                    @NotNull final List<? extends Exception> errors,
-                                    @NotNull final List<? extends Exception> warnings,
-                                    @NotNull final String tabDisplayName,
+  public static void showExceptions(@Nonnull final Project myProject,
+                                    @Nonnull final List<? extends Exception> errors,
+                                    @Nonnull final List<? extends Exception> warnings,
+                                    @Nonnull final String tabDisplayName,
                                     @Nullable final VirtualFile file) {
     if (ApplicationManager.getApplication().isUnitTestMode() && !errors.isEmpty()) {
       throw new RuntimeException(errors.get(0));
@@ -128,10 +128,10 @@ public class ExecutionHelper {
   }
 
   private static void addMessages(final int messageCategory,
-                                  @NotNull final List<? extends Exception> exceptions,
-                                  @NotNull ErrorViewPanel errorTreeView,
+                                  @Nonnull final List<? extends Exception> exceptions,
+                                  @Nonnull ErrorViewPanel errorTreeView,
                                   @Nullable final VirtualFile file,
-                                  @NotNull final String defaultMessage) {
+                                  @Nonnull final String defaultMessage) {
     for (final Exception exception : exceptions) {
       String[] messages = StringUtil.splitByLines(exception.getMessage());
       if (messages.length == 0) {
@@ -141,9 +141,9 @@ public class ExecutionHelper {
     }
   }
 
-  public static void showOutput(@NotNull final Project myProject,
-                                @NotNull final ProcessOutput output,
-                                @NotNull final String tabDisplayName,
+  public static void showOutput(@Nonnull final Project myProject,
+                                @Nonnull final ProcessOutput output,
+                                @Nonnull final String tabDisplayName,
                                 @Nullable final VirtualFile file,
                                 final boolean activateWindow) {
     final String stdout = output.getStdout();
@@ -213,7 +213,7 @@ public class ExecutionHelper {
     });
   }
 
-  private static void openMessagesView(@NotNull final ErrorViewPanel errorTreeView, @NotNull final Project myProject, @NotNull final String tabDisplayName) {
+  private static void openMessagesView(@Nonnull final ErrorViewPanel errorTreeView, @Nonnull final Project myProject, @Nonnull final String tabDisplayName) {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(myProject, new Runnable() {
       @Override
@@ -228,7 +228,7 @@ public class ExecutionHelper {
     }, "Open message view", null);
   }
 
-  private static void removeContents(@Nullable final Content notToRemove, @NotNull final Project myProject, @NotNull final String tabDisplayName) {
+  private static void removeContents(@Nullable final Content notToRemove, @Nonnull final Project myProject, @Nonnull final String tabDisplayName) {
     MessageView messageView = ServiceManager.getService(myProject, MessageView.class);
     Content[] contents = messageView.getContentManager().getContents();
     for (Content content : contents) {
@@ -246,9 +246,9 @@ public class ExecutionHelper {
   }
 
   public static Collection<RunContentDescriptor> findRunningConsoleByTitle(final Project project,
-                                                                           @NotNull final NotNullFunction<String, Boolean> titleMatcher) {
+                                                                           @Nonnull final NotNullFunction<String, Boolean> titleMatcher) {
     return findRunningConsole(project, new NotNullFunction<RunContentDescriptor, Boolean>() {
-      @NotNull
+      @Nonnull
       @Override
       public Boolean fun(RunContentDescriptor selectedContent) {
         return titleMatcher.fun(selectedContent.getDisplayName());
@@ -257,7 +257,7 @@ public class ExecutionHelper {
   }
 
   public static Collection<RunContentDescriptor> findRunningConsole(final Project project,
-                                                                    @NotNull final NotNullFunction<RunContentDescriptor, Boolean> descriptorMatcher) {
+                                                                    @Nonnull final NotNullFunction<RunContentDescriptor, Boolean> descriptorMatcher) {
     final ExecutionManager executionManager = ExecutionManager.getInstance(project);
 
     final RunContentDescriptor selectedContent = executionManager.getContentManager().getSelectedContent();
@@ -279,7 +279,7 @@ public class ExecutionHelper {
     return result;
   }
 
-  public static List<RunContentDescriptor> collectConsolesByDisplayName(final Project project, @NotNull NotNullFunction<String, Boolean> titleMatcher) {
+  public static List<RunContentDescriptor> collectConsolesByDisplayName(final Project project, @Nonnull NotNullFunction<String, Boolean> titleMatcher) {
     List<RunContentDescriptor> result = ContainerUtil.newArrayList();
     final ExecutionManager executionManager = ExecutionManager.getInstance(project);
     for (RunContentDescriptor runContentDescriptor : executionManager.getContentManager().getAllDescriptors()) {
@@ -290,9 +290,9 @@ public class ExecutionHelper {
     return result;
   }
 
-  public static void selectContentDescriptor(final @NotNull DataContext dataContext,
-                                             final @NotNull Project project,
-                                             @NotNull Collection<RunContentDescriptor> consoles,
+  public static void selectContentDescriptor(final @Nonnull DataContext dataContext,
+                                             final @Nonnull Project project,
+                                             @Nonnull Collection<RunContentDescriptor> consoles,
                                              String selectDialogTitle,
                                              final Consumer<RunContentDescriptor> descriptorConsumer) {
     if (consoles.size() == 1) {
@@ -352,16 +352,16 @@ public class ExecutionHelper {
 
 
   public static void executeExternalProcess(@Nullable final Project myProject,
-                                            @NotNull final ProcessHandler processHandler,
-                                            @NotNull final ExecutionMode mode,
-                                            @NotNull final GeneralCommandLine cmdline) {
+                                            @Nonnull final ProcessHandler processHandler,
+                                            @Nonnull final ExecutionMode mode,
+                                            @Nonnull final GeneralCommandLine cmdline) {
     executeExternalProcess(myProject, processHandler, mode, cmdline.getCommandLineString());
   }
 
   public static void executeExternalProcess(@Nullable final Project myProject,
-                                            @NotNull final ProcessHandler processHandler,
-                                            @NotNull final ExecutionMode mode,
-                                            @NotNull final String presentableCmdline) {
+                                            @Nonnull final ProcessHandler processHandler,
+                                            @Nonnull final ExecutionMode mode,
+                                            @Nonnull final String presentableCmdline) {
     final String title = mode.getTitle() != null ? mode.getTitle() : "Please wait...";
     assert title != null;
 
@@ -388,7 +388,7 @@ public class ExecutionHelper {
     else if (mode.inBackGround()) {
       final Task task = new Task.Backgroundable(myProject, title, mode.cancelable()) {
         @Override
-        public void run(@NotNull final ProgressIndicator indicator) {
+        public void run(@Nonnull final ProgressIndicator indicator) {
           process.run();
         }
       };
@@ -468,7 +468,7 @@ public class ExecutionHelper {
     };
   }
 
-  private static Runnable createTimelimitedExecutionProcess(final ProcessHandler processHandler, final int timeout, @NotNull final String presentableCmdline) {
+  private static Runnable createTimelimitedExecutionProcess(final ProcessHandler processHandler, final int timeout, @Nonnull final String presentableCmdline) {
     return new Runnable() {
       private final Semaphore mySemaphore = new Semaphore();
 

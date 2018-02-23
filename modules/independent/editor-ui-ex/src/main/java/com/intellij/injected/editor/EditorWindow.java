@@ -19,24 +19,24 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface EditorWindow extends UserDataHolderEx, Editor {
   boolean isValid();
 
-  @NotNull
+  @Nonnull
   PsiFile getInjectedFile();
 
-  @NotNull
-  LogicalPosition hostToInjected(@NotNull LogicalPosition hPos);
+  @Nonnull
+  LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos);
 
-  @NotNull
-  LogicalPosition injectedToHost(@NotNull LogicalPosition pos);
+  @Nonnull
+  LogicalPosition injectedToHost(@Nonnull LogicalPosition pos);
 
-  @NotNull
+  @Nonnull
   Editor getDelegate();
 
-  @NotNull
+  @Nonnull
   @Override
   DocumentWindow getDocument();
 }

@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +36,7 @@ public interface VcsCacheableHistorySessionFactory<Cacheable extends Serializabl
   @Nullable
   Cacheable getAddinionallyCachedData(final T session);
   T createFromCachedData(@Nullable final Cacheable cacheable,
-                         @NotNull final List<VcsFileRevision> revisions,
-                         @NotNull final FilePath filePath,
+                         @Nonnull final List<VcsFileRevision> revisions,
+                         @Nonnull final FilePath filePath,
                          @Nullable final VcsRevisionNumber currentRevision);
 }

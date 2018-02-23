@@ -26,19 +26,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class PerformFixesModalTask implements SequentialTask {
-  @NotNull
+  @Nonnull
   protected final Project myProject;
   private final CommonProblemDescriptor[] myDescriptors;
   private final SequentialModalProgressTask myTask;
   private final PsiDocumentManager myDocumentManager;
   private int myCount = 0;
 
-  public PerformFixesModalTask(@NotNull Project project,
-                               @NotNull CommonProblemDescriptor[] descriptors,
-                               @NotNull SequentialModalProgressTask task) {
+  public PerformFixesModalTask(@Nonnull Project project,
+                               @Nonnull CommonProblemDescriptor[] descriptors,
+                               @Nonnull SequentialModalProgressTask task) {
     myProject = project;
     myDescriptors = descriptors;
     myTask = task;

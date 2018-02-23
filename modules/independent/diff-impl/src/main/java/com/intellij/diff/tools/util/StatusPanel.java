@@ -20,7 +20,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +57,7 @@ public class StatusPanel extends JPanel {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected String getMessage() {
     int count = getChangesCount();
     if (count == -1) return null;

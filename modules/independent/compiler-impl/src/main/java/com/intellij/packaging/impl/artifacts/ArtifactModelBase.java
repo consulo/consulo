@@ -20,7 +20,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
 
   protected abstract List<? extends Artifact> getArtifactsList();
 
-  @NotNull
+  @Nonnull
   public Artifact[] getArtifacts() {
     if (myArtifactsArray == null) {
       final List<? extends Artifact> validArtifacts = ContainerUtil.findAll(getArtifactsList(), VALID_ARTIFACT_CONDITION);
@@ -53,7 +53,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
     return Collections.unmodifiableList(getArtifactsList());
   }
 
-  public Artifact findArtifact(@NotNull String name) {
+  public Artifact findArtifact(@Nonnull String name) {
     if (myArtifactsMap == null) {
       myArtifactsMap = new HashMap<String, Artifact>();
       for (Artifact artifact : getArtifactsList()) {
@@ -63,18 +63,18 @@ public abstract class ArtifactModelBase implements ArtifactModel {
     return myArtifactsMap.get(name);
   }
 
-  @NotNull
-  public Artifact getArtifactByOriginal(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getArtifactByOriginal(@Nonnull Artifact artifact) {
     return artifact;
   }
 
-  @NotNull
-  public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
     return artifact;
   }
 
-  @NotNull
-  public Collection<? extends Artifact> getArtifactsByType(@NotNull ArtifactType type) {
+  @Nonnull
+  public Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type) {
     final List<Artifact> result = new ArrayList<Artifact>();
     for (Artifact artifact : getArtifacts()) {
       if (artifact.getArtifactType().equals(type)) {

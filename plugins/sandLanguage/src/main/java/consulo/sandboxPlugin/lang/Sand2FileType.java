@@ -17,8 +17,7 @@ package consulo.sandboxPlugin.lang;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,25 +32,25 @@ public class Sand2FileType extends LanguageFileType {
     super(SandLanguage.INSTANCE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "SAND2";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "Sand2 files";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDefaultExtension() {
     return "sand2";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.ClassInitializer;

@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,24 +32,24 @@ import java.util.Collections;
 public class JarFileReferenceHelper extends FileReferenceHelper {
 
   @Override
-  public PsiFileSystemItem getPsiFileSystemItem(Project project, @NotNull VirtualFile file) {
+  public PsiFileSystemItem getPsiFileSystemItem(Project project, @Nonnull VirtualFile file) {
     return null;
   }
 
   @Override
-  @NotNull
-  public Collection<PsiFileSystemItem> getRoots(@NotNull Module module) {
+  @Nonnull
+  public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
     return PsiFileReferenceHelper.getContextsForModule(module, "", null);
   }
 
   @Override
-  @NotNull
-  public Collection<PsiFileSystemItem> getContexts(Project project, @NotNull VirtualFile file) {
+  @Nonnull
+  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean isMine(Project project, @NotNull VirtualFile file) {
+  public boolean isMine(Project project, @Nonnull VirtualFile file) {
     return ProjectRootManager.getInstance(project).getFileIndex().isInLibraryClasses(file);
   }
 }

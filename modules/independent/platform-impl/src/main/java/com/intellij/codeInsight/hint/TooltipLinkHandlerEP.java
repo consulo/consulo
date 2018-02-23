@@ -22,8 +22,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -44,7 +44,7 @@ public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
     }
   };
 
-  public static boolean handleLink(@NotNull final String ref, @NotNull final Editor editor) {
+  public static boolean handleLink(@Nonnull final String ref, @Nonnull final Editor editor) {
     for (final TooltipLinkHandlerEP handlerEP : Extensions.getExtensions(EP_NAME)) {
       if (ref.startsWith(handlerEP.prefix)) {
         final String refSuffix = ref.substring(handlerEP.prefix.length());
@@ -55,7 +55,7 @@ public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
   }
 
   @Nullable
-  public static String getDescription(@NotNull final String ref, @NotNull final Editor editor) {
+  public static String getDescription(@Nonnull final String ref, @Nonnull final Editor editor) {
     for (final TooltipLinkHandlerEP handlerEP : Extensions.getExtensions(EP_NAME)) {
       if (ref.startsWith(handlerEP.prefix)) {
         final String refSuffix = ref.substring(handlerEP.prefix.length());

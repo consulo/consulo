@@ -28,8 +28,8 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final XValueNodeImpl myValueNode;
   private final int myNameOffset;
 
-  private SetValueInplaceEditor(final XValueNodeImpl node, @NotNull final String nodeName) {
+  private SetValueInplaceEditor(final XValueNodeImpl node, @Nonnull final String nodeName) {
     super(node, "setValue");
     myValueNode = node;
     myModifier = myValueNode.getValueContainer().getModifier();
@@ -73,7 +73,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
     return bounds;
   }
 
-  public static void show(final XValueNodeImpl node, @NotNull final String nodeName) {
+  public static void show(final XValueNodeImpl node, @Nonnull final String nodeName) {
     final SetValueInplaceEditor editor = new SetValueInplaceEditor(node, nodeName);
 
     if (editor.myModifier != null) {

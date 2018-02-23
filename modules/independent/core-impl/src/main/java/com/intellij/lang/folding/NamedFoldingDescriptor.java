@@ -19,30 +19,30 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class NamedFoldingDescriptor extends FoldingDescriptor {
   private final String myPlaceholderText;
 
-  public NamedFoldingDescriptor(@NotNull PsiElement e, int start, int end, @Nullable FoldingGroup group, @NotNull String placeholderText) {
+  public NamedFoldingDescriptor(@Nonnull PsiElement e, int start, int end, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
     this(e.getNode(), new TextRange(start, end), group, placeholderText);
   }
 
-  public NamedFoldingDescriptor(@NotNull ASTNode node, int start, int end, @Nullable FoldingGroup group, @NotNull String placeholderText) {
+  public NamedFoldingDescriptor(@Nonnull ASTNode node, int start, int end, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
     this(node, new TextRange(start, end), group, placeholderText);
   }
 
-  public NamedFoldingDescriptor(@NotNull ASTNode node,
-                                @NotNull final TextRange range,
+  public NamedFoldingDescriptor(@Nonnull ASTNode node,
+                                @Nonnull final TextRange range,
                                 @Nullable FoldingGroup group,
-                                @NotNull String placeholderText) {
+                                @Nonnull String placeholderText) {
     super(node, range, group);
     myPlaceholderText = placeholderText;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPlaceholderText() {
     return myPlaceholderText;
   }

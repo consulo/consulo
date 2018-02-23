@@ -32,21 +32,25 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.util.List;
 
 public abstract class OnesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @NotNull protected final SimpleDiffPanel myPanel;
-  @NotNull protected final OnesideContentPanel myContentPanel;
+  @Nonnull
+  protected final SimpleDiffPanel myPanel;
+  @Nonnull
+  protected final OnesideContentPanel myContentPanel;
 
-  @NotNull private final Side mySide;
-  @NotNull private final T myHolder;
+  @Nonnull
+  private final Side mySide;
+  @Nonnull
+  private final T myHolder;
 
-  public OnesideDiffViewer(@NotNull DiffContext context, @NotNull ContentDiffRequest request, @NotNull EditorHolderFactory<T> factory) {
+  public OnesideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
     super(context, request);
 
     mySide = Side.fromRight(myRequest.getContents().get(0) instanceof EmptyContent);
@@ -75,8 +79,8 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Editors
   //
 
-  @NotNull
-  protected T createEditorHolder(@NotNull EditorHolderFactory<T> factory) {
+  @Nonnull
+  protected T createEditorHolder(@Nonnull EditorHolderFactory<T> factory) {
     DiffContent content = mySide.select(myRequest.getContents());
     return factory.create(content, myContext);
   }
@@ -95,37 +99,37 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Getters
   //
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
     return getEditorHolder().getPreferredFocusedComponent();
   }
 
-  @NotNull
+  @Nonnull
   public Side getSide() {
     return mySide;
   }
 
-  @NotNull
+  @Nonnull
   protected DiffContent getContent() {
     return mySide.select(myRequest.getContents());
   }
 
-  @NotNull
+  @Nonnull
   protected T getEditorHolder() {
     return myHolder;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, mySide);
     }
@@ -139,15 +143,15 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Misc
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getContent().getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@NotNull DiffContext context,
-                                                                @NotNull DiffRequest request,
-                                                                @NotNull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
+                                                                @Nonnull DiffRequest request,
+                                                                @Nonnull EditorHolderFactory<T> factory) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();

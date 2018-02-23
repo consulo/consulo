@@ -18,8 +18,8 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,5 +31,5 @@ public interface FileEditorAssociateFinder {
   ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create("com.intellij.editorFileAssociateFinder");
 
   @Nullable
-  VirtualFile getAssociatedFileToOpen(@NotNull Project project, @NotNull VirtualFile original);
+  VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);
 }

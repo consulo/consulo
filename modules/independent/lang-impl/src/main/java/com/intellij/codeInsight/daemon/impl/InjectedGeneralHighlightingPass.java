@@ -47,23 +47,23 @@ import com.intellij.util.Processor;
 import com.intellij.util.Processors;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
 public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass implements DumbAware {
   private static final String PRESENTABLE_NAME = "Injected fragments";
 
-  InjectedGeneralHighlightingPass(@NotNull Project project,
-                                  @NotNull PsiFile file,
-                                  @NotNull Document document,
+  InjectedGeneralHighlightingPass(@Nonnull Project project,
+                                  @Nonnull PsiFile file,
+                                  @Nonnull Document document,
                                   int startOffset,
                                   int endOffset,
                                   boolean updateAll,
-                                  @NotNull ProperTextRange priorityRange,
+                                  @Nonnull ProperTextRange priorityRange,
                                   @Nullable Editor editor,
-                                  @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+                                  @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     super(project, file, document, startOffset, endOffset, updateAll, priorityRange, editor, highlightInfoProcessor);
   }
 
@@ -73,7 +73,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
   }
 
   @Override
-  protected void collectInformationWithProgress(@NotNull final ProgressIndicator progress) {
+  protected void collectInformationWithProgress(@Nonnull final ProgressIndicator progress) {
     if (!Registry.is("editor.injected.highlighting.enabled")) return;
 
     final Set<HighlightInfo> gotHighlights = new THashSet<>(100);
@@ -143,10 +143,10 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     }
   }
 
-  @NotNull
-  private Set<PsiFile> getInjectedPsiFiles(@NotNull final List<PsiElement> elements1,
-                                           @NotNull final List<PsiElement> elements2,
-                                           @NotNull final ProgressIndicator progress) {
+  @Nonnull
+  private Set<PsiFile> getInjectedPsiFiles(@Nonnull final List<PsiElement> elements1,
+                                           @Nonnull final List<PsiElement> elements2,
+                                           @Nonnull final ProgressIndicator progress) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     List<DocumentWindow> injected = InjectedLanguageUtil.getCachedInjectedDocuments(myFile);
@@ -175,7 +175,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     final Set<PsiFile> outInjected = new THashSet<>();
     final PsiLanguageInjectionHost.InjectedPsiVisitor visitor = new PsiLanguageInjectionHost.InjectedPsiVisitor() {
       @Override
-      public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
+      public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
         synchronized (outInjected) {
           outInjected.add(injectedPsi);
         }
@@ -196,9 +196,9 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
   }
 
   // returns false if canceled
-  private boolean addInjectedPsiHighlights(@NotNull final Set<PsiFile> injectedFiles,
-                                           @NotNull final ProgressIndicator progress,
-                                           @NotNull final Collection<HighlightInfo> outInfos) {
+  private boolean addInjectedPsiHighlights(@Nonnull final Set<PsiFile> injectedFiles,
+                                           @Nonnull final ProgressIndicator progress,
+                                           @Nonnull final Collection<HighlightInfo> outInfos) {
     if (injectedFiles.isEmpty()) return true;
     final InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(myProject);
     final TextAttributes injectedAttributes = myGlobalScheme.getAttributes(EditorColors.INJECTED_LANGUAGE_FRAGMENT);
@@ -208,11 +208,11 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
                                              injectedPsi -> addInjectedPsiHighlights(injectedPsi, injectedAttributes, outInfos, progress, injectedLanguageManager));
   }
 
-  private boolean addInjectedPsiHighlights(@NotNull PsiFile injectedPsi,
+  private boolean addInjectedPsiHighlights(@Nonnull PsiFile injectedPsi,
                                            TextAttributes injectedAttributes,
-                                           @NotNull Collection<HighlightInfo> outInfos,
-                                           @NotNull ProgressIndicator progress,
-                                           @NotNull InjectedLanguageManager injectedLanguageManager) {
+                                           @Nonnull Collection<HighlightInfo> outInfos,
+                                           @Nonnull ProgressIndicator progress,
+                                           @Nonnull InjectedLanguageManager injectedLanguageManager) {
     DocumentWindow documentWindow = (DocumentWindow)PsiDocumentManager.getInstance(myProject).getCachedDocument(injectedPsi);
     if (documentWindow == null) return true;
     Place places = InjectedLanguageUtil.getShreds(injectedPsi);
@@ -277,7 +277,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
   }
 
   @Nullable("null means invalid")
-  private static TextRange getFixedTextRange(@NotNull DocumentWindow documentWindow, int startOffset) {
+  private static TextRange getFixedTextRange(@Nonnull DocumentWindow documentWindow, int startOffset) {
     final TextRange fixedTextRange;
     TextRange textRange = documentWindow.getHostRange(startOffset);
     if (textRange == null) {
@@ -294,12 +294,12 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     return fixedTextRange;
   }
 
-  private static void addPatchedInfos(@NotNull HighlightInfo info,
-                                      @NotNull PsiFile injectedPsi,
-                                      @NotNull DocumentWindow documentWindow,
-                                      @NotNull InjectedLanguageManager injectedLanguageManager,
+  private static void addPatchedInfos(@Nonnull HighlightInfo info,
+                                      @Nonnull PsiFile injectedPsi,
+                                      @Nonnull DocumentWindow documentWindow,
+                                      @Nonnull InjectedLanguageManager injectedLanguageManager,
                                       @Nullable TextRange fixedTextRange,
-                                      @NotNull Collection<HighlightInfo> out) {
+                                      @Nonnull Collection<HighlightInfo> out) {
     ProperTextRange textRange = new ProperTextRange(info.startOffset, info.endOffset);
     List<TextRange> editables = injectedLanguageManager.intersectWithAllEditableFragments(injectedPsi, textRange);
     for (TextRange editable : editables) {
@@ -353,9 +353,9 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     return textRange;
   }
 
-  private void runHighlightVisitorsForInjected(@NotNull PsiFile injectedPsi,
-                                               @NotNull final HighlightInfoHolder holder,
-                                               @NotNull final ProgressIndicator progress) {
+  private void runHighlightVisitorsForInjected(@Nonnull PsiFile injectedPsi,
+                                               @Nonnull final HighlightInfoHolder holder,
+                                               @Nonnull final ProgressIndicator progress) {
     HighlightVisitor[] filtered = getHighlightVisitors(injectedPsi);
     try {
       final List<PsiElement> elements = CollectHighlightsUtil.getElementsInRange(injectedPsi, 0, injectedPsi.getTextLength());
@@ -373,7 +373,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass imp
     }
   }
 
-  private void highlightInjectedSyntax(@NotNull PsiFile injectedPsi, @NotNull HighlightInfoHolder holder) {
+  private void highlightInjectedSyntax(@Nonnull PsiFile injectedPsi, @Nonnull HighlightInfoHolder holder) {
     List<Trinity<IElementType, SmartPsiElementPointer<PsiLanguageInjectionHost>, TextRange>> tokens = InjectedLanguageUtil
             .getHighlightTokens(injectedPsi);
     if (tokens == null) return;

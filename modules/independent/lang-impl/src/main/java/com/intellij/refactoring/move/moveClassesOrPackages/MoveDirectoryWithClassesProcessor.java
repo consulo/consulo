@@ -47,8 +47,8 @@ import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -90,7 +90,7 @@ public class MoveDirectoryWithClassesProcessor extends BaseRefactoringProcessor 
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected UsageViewDescriptor createUsageViewDescriptor(UsageInfo[] usages) {
     PsiElement[] elements = new PsiElement[myFilesToMove.size()];
@@ -103,7 +103,7 @@ public class MoveDirectoryWithClassesProcessor extends BaseRefactoringProcessor 
     return RefactoringUIUtil.getDescription(getTargetDirectory(null).getTargetDirectory(), false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public UsageInfo[] findUsages() {
     final List<UsageInfo> usages = new ArrayList<UsageInfo>();
@@ -217,7 +217,7 @@ public class MoveDirectoryWithClassesProcessor extends BaseRefactoringProcessor 
   private static void collectFiles2Move(Map<PsiFile, TargetDirectoryWrapper> files2Move,
                                      PsiDirectory directory,
                                      PsiDirectory rootDirectory,
-                                     @NotNull TargetDirectoryWrapper targetDirectory) {
+                                     @Nonnull TargetDirectoryWrapper targetDirectory) {
     final PsiElement[] children = directory.getChildren();
     final String relativePath = VfsUtilCore.getRelativePath(directory.getVirtualFile(), rootDirectory.getVirtualFile(), '/');
 

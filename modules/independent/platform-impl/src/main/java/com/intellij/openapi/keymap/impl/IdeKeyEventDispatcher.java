@@ -63,8 +63,8 @@ import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -249,7 +249,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
    * modal context.
    * @throws IllegalArgumentException if <code>component</code> is <code>null</code>.
    */
-  public static boolean isModalContext(@NotNull Component component) {
+  public static boolean isModalContext(@Nonnull Component component) {
     Window window = UIUtil.getWindow(component);
 
     if (window instanceof IdeFrameImpl) {
@@ -564,24 +564,24 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   private final ActionProcessor myActionProcessor = new ActionProcessor() {
-    @NotNull
+    @Nonnull
     @Override
     public AnActionEvent createEvent(final InputEvent inputEvent,
-                                     @NotNull final DataContext context,
-                                     @NotNull final String place,
-                                     @NotNull final Presentation presentation,
+                                     @Nonnull final DataContext context,
+                                     @Nonnull final String place,
+                                     @Nonnull final Presentation presentation,
                                      final ActionManager manager) {
       return new AnActionEvent(inputEvent, context, place, presentation, manager, 0);
     }
 
     @Override
-    public void onUpdatePassed(final InputEvent inputEvent, @NotNull final AnAction action, @NotNull final AnActionEvent actionEvent) {
+    public void onUpdatePassed(final InputEvent inputEvent, @Nonnull final AnAction action, @Nonnull final AnActionEvent actionEvent) {
       setState(KeyState.STATE_PROCESSED);
       setPressedWasProcessed(inputEvent.getID() == KeyEvent.KEY_PRESSED);
     }
 
     @Override
-    public void performAction(@NotNull InputEvent e, @NotNull AnAction action, @NotNull AnActionEvent actionEvent) {
+    public void performAction(@Nonnull InputEvent e, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
       e.consume();
 
       DataContext ctx = actionEvent.getDataContext();
@@ -599,7 +599,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
   };
 
-  public boolean processAction(final InputEvent e, @NotNull ActionProcessor processor) {
+  public boolean processAction(final InputEvent e, @Nonnull ActionProcessor processor) {
     ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
     final Project project = myContext.getDataContext().getData(CommonDataKeys.PROJECT);
     final boolean dumb = project != null && DumbService.getInstance(project).isDumb();
@@ -823,12 +823,12 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   private static class SecondaryKeystrokePopup extends ListPopupImpl {
-    private SecondaryKeystrokePopup(@NotNull final KeyStroke firstKeystroke, @NotNull final List<Pair<AnAction, KeyStroke>> actions, final DataContext context) {
+    private SecondaryKeystrokePopup(@Nonnull final KeyStroke firstKeystroke, @Nonnull final List<Pair<AnAction, KeyStroke>> actions, final DataContext context) {
       super(buildStep(actions, context));
       registerActions(firstKeystroke, actions, context);
     }
 
-    private void registerActions(@NotNull final KeyStroke firstKeyStroke, @NotNull final List<Pair<AnAction, KeyStroke>> actions, final DataContext ctx) {
+    private void registerActions(@Nonnull final KeyStroke firstKeyStroke, @Nonnull final List<Pair<AnAction, KeyStroke>> actions, final DataContext ctx) {
       ContainerUtil.process(actions, pair -> {
         final String actionText = pair.getFirst().getTemplatePresentation().getText();
         final AbstractAction a = new AbstractAction() {
@@ -857,7 +857,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       });
     }
 
-    private static void invokeAction(@NotNull final AnAction action, final DataContext ctx) {
+    private static void invokeAction(@Nonnull final AnAction action, final DataContext ctx) {
       TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
         final AnActionEvent event = new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(), ActionManager.getInstance(), 0);
         if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
@@ -871,7 +871,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       return new ActionListCellRenderer();
     }
 
-    private static ListPopupStep buildStep(@NotNull final List<Pair<AnAction, KeyStroke>> actions, final DataContext ctx) {
+    private static ListPopupStep buildStep(@Nonnull final List<Pair<AnAction, KeyStroke>> actions, final DataContext ctx) {
       return new BaseListPopupStep<Pair<AnAction, KeyStroke>>("Choose an action", ContainerUtil.findAll(actions, pair -> {
         final AnAction action = pair.getFirst();
         final Presentation presentation = action.getTemplatePresentation().clone();
@@ -890,7 +890,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     private static class ActionListCellRenderer extends ColoredListCellRenderer {
       @Override
-      protected void customizeCellRenderer(@NotNull final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
         if (value instanceof Pair) {
           //noinspection unchecked
           final Pair<AnAction, KeyStroke> pair = (Pair<AnAction, KeyStroke>)value;

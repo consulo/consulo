@@ -33,8 +33,8 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   private static final String VERSION = "1.0";
 
-  @NotNull
+  @Nonnull
   protected final Project myProject;
 
   protected String myProjectProfile;
@@ -69,33 +69,33 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
   private final List<ProfileChangeAdapter> myProfilesListener = ContainerUtil.createLockFreeCopyOnWriteList();
   @NonNls private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
-  public DefaultProjectProfileManager(@NotNull final Project project,
-                                      @NotNull ApplicationProfileManager applicationProfileManager,
-                                      @NotNull DependencyValidationManager holder) {
+  public DefaultProjectProfileManager(@Nonnull final Project project,
+                                      @Nonnull ApplicationProfileManager applicationProfileManager,
+                                      @Nonnull DependencyValidationManager holder) {
     myProject = project;
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  public synchronized Profile getProfile(@NotNull String name, boolean returnRootProfileIfNamedIsAbsent) {
+  public synchronized Profile getProfile(@Nonnull String name, boolean returnRootProfileIfNamedIsAbsent) {
     return myProfiles.containsKey(name) ? myProfiles.get(name) : myApplicationProfileManager.getProfile(name, returnRootProfileIfNamedIsAbsent);
   }
 
   @Override
-  public synchronized void updateProfile(@NotNull Profile profile) {
+  public synchronized void updateProfile(@Nonnull Profile profile) {
     myProfiles.put(profile.getName(), profile);
     for (ProfileChangeAdapter profileChangeAdapter : myProfilesListener) {
       profileChangeAdapter.profileChanged(profile);
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public synchronized Element getState() {
     Element state = new Element("settings");
@@ -173,27 +173,27 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     return myProjectProfile != null && !Comparing.strEqual(myProjectProfile, PROJECT_DEFAULT_PROFILE_NAME);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public NamedScopesHolder getScopesManager() {
     return myHolder;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public synchronized Collection<Profile> getProfiles() {
     getProjectProfileImpl();
     return myProfiles.values();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public synchronized String[] getAvailableProfileNames() {
     return ArrayUtil.toStringArray(myProfiles.keySet());
   }
 
   @Override
-  public synchronized void deleteProfile(@NotNull String name) {
+  public synchronized void deleteProfile(@Nonnull String name) {
     myProfiles.remove(name);
   }
 
@@ -219,7 +219,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     }
   }
 
-  @NotNull
+  @Nonnull
   public synchronized Profile getProjectProfileImpl(){
     if (!USE_PROJECT_PROFILE) {
       return myApplicationProfileManager.getRootProfile();
@@ -240,7 +240,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     return profile;
   }
 
-  public void addProfileChangeListener(@NotNull final ProfileChangeAdapter profilesListener, @NotNull Disposable parent) {
+  public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter profilesListener, @Nonnull Disposable parent) {
     myProfilesListener.add(profilesListener);
     Disposer.register(parent, new Disposable() {
       @Override
@@ -250,14 +250,14 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
     });
   }
 
-  public void removeProfileChangeListener(@NotNull ProfileChangeAdapter profilesListener) {
+  public void removeProfileChangeListener(@Nonnull ProfileChangeAdapter profilesListener) {
     myProfilesListener.remove(profilesListener);
   }
 
   public static class ProfileStateSplitter extends MainConfigurationStateSplitter {
-    @NotNull
+    @Nonnull
     @Override
-    protected String getSubStateFileName(@NotNull Element element) {
+    protected String getSubStateFileName(@Nonnull Element element) {
       for (Element option : element.getChildren("option")) {
         if (option.getAttributeValue("name").equals("myName")) {
           return option.getAttributeValue("value");
@@ -266,13 +266,13 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
       throw new IllegalStateException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getComponentStateFileName() {
       return "profiles_settings";
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getSubStateTagName() {
       return PROFILE;

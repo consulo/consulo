@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -25,7 +25,7 @@ public class DefaultCompactActionGroup extends DefaultActionGroup implements Com
     super();
   }
 
-  public DefaultCompactActionGroup(@NotNull AnAction... actions) {
+  public DefaultCompactActionGroup(@Nonnull AnAction... actions) {
     super(actions);
   }
 

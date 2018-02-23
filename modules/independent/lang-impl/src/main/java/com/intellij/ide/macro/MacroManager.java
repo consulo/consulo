@@ -34,8 +34,8 @@ import consulo.ide.macro.ModuleProductionOutputDirPathMacro;
 import consulo.ide.macro.ModuleProfileNameMacro;
 import consulo.ide.macro.ModuleTestOutputDirPathMacro;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;

@@ -18,7 +18,7 @@ package consulo.fileTypes;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 
@@ -27,6 +27,6 @@ import java.nio.charset.Charset;
  * @since 29.04.14
  */
 public interface FileTypeWithPredefinedCharset extends FileType {
-  @NotNull
-  Pair<Charset, String> getPredefinedCharset(@NotNull VirtualFile virtualFile);
+  @Nonnull
+  Pair<Charset, String> getPredefinedCharset(@Nonnull VirtualFile virtualFile);
 }

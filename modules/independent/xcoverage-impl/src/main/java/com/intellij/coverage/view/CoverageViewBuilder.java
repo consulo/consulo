@@ -14,7 +14,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
     myTable = table;
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Building coverage report...") {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         buildRoot();
       }
 
@@ -56,7 +56,7 @@ public class CoverageViewBuilder extends AbstractListBuilder {
       }
 
       @Override
-      public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+      public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
         table.repaint();
       }
     };

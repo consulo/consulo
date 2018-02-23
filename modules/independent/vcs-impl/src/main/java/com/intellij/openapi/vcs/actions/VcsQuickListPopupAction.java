@@ -9,8 +9,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,9 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     myActionPlace = ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION;
   }
 
-  protected void fillActions(@Nullable final Project project,
-                             @NotNull final DefaultActionGroup group,
-                             @NotNull final DataContext dataContext) {
+  protected void fillActions(@javax.annotation.Nullable final Project project,
+                             @Nonnull final DefaultActionGroup group,
+                             @Nonnull final DataContext dataContext) {
 
     if (project == null) {
       return;
@@ -54,10 +53,10 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     return true;
   }
 
-  private void fillVcsPopup(@NotNull final Project project,
-                                    @NotNull final DefaultActionGroup group,
-                                    @Nullable final DataContext dataContext,
-                                    @Nullable final AbstractVcs vcs) {
+  private void fillVcsPopup(@Nonnull final Project project,
+                                    @Nonnull final DefaultActionGroup group,
+                                    @javax.annotation.Nullable final DataContext dataContext,
+                                    @javax.annotation.Nullable final AbstractVcs vcs) {
 
     if (vcs != null) {
       // replace general vcs actions if necessary
@@ -80,10 +79,10 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     fillGeneralVcsPopup(project, group, dataContext, vcs);
   }
 
-  private void fillGeneralVcsPopup(@NotNull final Project project,
-                                   @NotNull final DefaultActionGroup group,
-                                   @Nullable final DataContext dataContext,
-                                   @Nullable final AbstractVcs vcs) {
+  private void fillGeneralVcsPopup(@Nonnull final Project project,
+                                   @Nonnull final DefaultActionGroup group,
+                                   @javax.annotation.Nullable final DataContext dataContext,
+                                   @javax.annotation.Nullable final AbstractVcs vcs) {
 
     // include all custom actions in general popup
     final List<AnAction> actions = new ArrayList<AnAction>();
@@ -119,9 +118,9 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addLocalHistoryActions(group);
   }
 
-  private void fillNonInVcsActions(@NotNull final Project project,
-                                   @NotNull final DefaultActionGroup group,
-                                   @Nullable final DataContext dataContext) {
+  private void fillNonInVcsActions(@Nonnull final Project project,
+                                   @Nonnull final DefaultActionGroup group,
+                                   @javax.annotation.Nullable final DataContext dataContext) {
     // add custom vcs actions
     for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensions()) {
       final List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
@@ -144,14 +143,14 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addAction("LocalHistory.PutLabel", group);
   }
 
-  private void addActions(@NotNull final List<AnAction> actions,
-                             @NotNull final DefaultActionGroup toGroup) {
+  private void addActions(@Nonnull final List<AnAction> actions,
+                             @Nonnull final DefaultActionGroup toGroup) {
     for (AnAction action : actions) {
       toGroup.addAction(action);
     }
   }
 
-  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@NotNull final Project project, @Nullable final DataContext dataContext) {
+  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @javax.annotation.Nullable final DataContext dataContext) {
     final AbstractVcs[] activeVcss = getActiveVCSs(project);
     if (activeVcss.length == 0) {
       // no vcs
@@ -191,7 +190,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addSeparator(toGroup, null);
   }
 
-  private void addSeparator(final DefaultActionGroup toGroup, @Nullable final String title) {
+  private void addSeparator(final DefaultActionGroup toGroup, @javax.annotation.Nullable final String title) {
     final AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
     toGroup.add(separator);
   }

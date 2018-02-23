@@ -22,14 +22,14 @@
  */
 package com.intellij.openapi.fileTypes.ex;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "fakeExtension";
   }

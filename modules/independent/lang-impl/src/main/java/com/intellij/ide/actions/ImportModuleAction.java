@@ -42,8 +42,8 @@ import consulo.annotations.RequiredReadAction;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class ImportModuleAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     doImport(canCreateNewProject() ? null : e.getProject());
   }
 
@@ -80,10 +80,10 @@ public class ImportModuleAction extends AnAction {
     return createFromWizard(project, wizard);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   @SuppressWarnings("unchecked")
-  public static List<Module> createFromWizard(Project project, @NotNull AddModuleWizard wizard) {
+  public static List<Module> createFromWizard(Project project, @Nonnull AddModuleWizard wizard) {
     if (project == null && wizard.getStepCount() > 0) {
       Project newProject = NewProjectUtil.createFromWizard(wizard, null);
       return newProject == null ? Collections.emptyList() : Arrays.asList(ModuleManager.getInstance(newProject).getModules());
@@ -136,8 +136,8 @@ public class ImportModuleAction extends AnAction {
   @Nullable
   public static AddModuleWizard selectFileAndCreateWizard(final Project project,
                                                           @Nullable Component dialogParent,
-                                                          @NotNull FileChooserDescriptor descriptor,
-                                                          @NotNull List<ModuleImportProvider> providers) {
+                                                          @Nonnull FileChooserDescriptor descriptor,
+                                                          @Nonnull List<ModuleImportProvider> providers) {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, dialogParent);
     VirtualFile toSelect = null;
     String lastLocation = PropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
@@ -187,7 +187,7 @@ public class ImportModuleAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
     if (!canCreateNewProject() && e.getProject() == null) {

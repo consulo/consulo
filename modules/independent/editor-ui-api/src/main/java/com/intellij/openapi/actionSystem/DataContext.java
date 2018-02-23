@@ -16,9 +16,9 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows an action to retrieve information about the context in which it was invoked.
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public interface DataContext {
   DataContext EMPTY_CONTEXT = new DataContext() {
     @Override
-    public <T> T getData(@NotNull Key<T> key) {
+    public <T> T getData(@Nonnull Key<T> key) {
       return null;
     }
   };
@@ -45,5 +45,5 @@ public interface DataContext {
    * @return the value, or null if no value is available in the current context for this identifier.
    */
   @Nullable
-  <T> T getData(@NotNull Key<T> key);
+  <T> T getData(@Nonnull Key<T> key);
 }

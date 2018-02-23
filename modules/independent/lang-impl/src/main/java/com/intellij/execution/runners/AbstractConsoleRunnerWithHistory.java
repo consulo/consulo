@@ -32,8 +32,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SideBorder;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,12 +53,12 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
 
   private T myConsoleView;
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
 
   private ProcessBackedConsoleExecuteActionHandler myConsoleExecuteActionHandler;
 
-  public AbstractConsoleRunnerWithHistory(@NotNull Project project, @NotNull String consoleTitle, @Nullable String workingDir) {
+  public AbstractConsoleRunnerWithHistory(@Nonnull Project project, @Nonnull String consoleTitle, @Nullable String workingDir) {
     myProject = project;
     myConsoleTitle = consoleTitle;
     myWorkingDir = workingDir;
@@ -138,7 +138,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return null;
   }
 
-  protected String constructConsoleTitle(final @NotNull String consoleTitle) {
+  protected String constructConsoleTitle(final @Nonnull String consoleTitle) {
     return new ConsoleTitleGen(myProject, consoleTitle, shouldAddNumberToTitle()).makeTitle();
   }
 
@@ -150,7 +150,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return false;
   }
 
-  protected void showConsole(Executor defaultExecutor, @NotNull RunContentDescriptor contentDescriptor) {
+  protected void showConsole(Executor defaultExecutor, @Nonnull RunContentDescriptor contentDescriptor) {
     // Show in run toolwindow
     ExecutionManager.getInstance(myProject).getContentManager().showRunContent(defaultExecutor, contentDescriptor);
   }
@@ -205,19 +205,19 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return ActionManager.getInstance().getAction(IdeActions.ACTION_STOP_PROGRAM);
   }
 
-  protected AnAction createConsoleExecAction(@NotNull ProcessBackedConsoleExecuteActionHandler consoleExecuteActionHandler) {
+  protected AnAction createConsoleExecAction(@Nonnull ProcessBackedConsoleExecuteActionHandler consoleExecuteActionHandler) {
     String emptyAction = consoleExecuteActionHandler.getEmptyExecuteAction();
     return new ConsoleExecuteAction(myConsoleView, consoleExecuteActionHandler, emptyAction, consoleExecuteActionHandler);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ProcessBackedConsoleExecuteActionHandler createExecuteActionHandler();
 
   public T getConsoleView() {
     return myConsoleView;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }

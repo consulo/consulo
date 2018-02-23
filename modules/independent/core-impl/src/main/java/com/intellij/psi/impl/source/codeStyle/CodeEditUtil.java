@@ -31,8 +31,8 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.codeInsight.CommentUtilCore;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CodeEditUtil {
   private static final Key<Boolean> GENERATED_FLAG = new Key<>("GENERATED_FLAG");
@@ -52,11 +52,11 @@ public class CodeEditUtil {
     addChildren(parent, child, child, anchorBefore);
   }
 
-  public static void removeChild(ASTNode parent, @NotNull ASTNode child) {
+  public static void removeChild(ASTNode parent, @Nonnull ASTNode child) {
     removeChildren(parent, child, child);
   }
 
-  public static ASTNode addChildren(ASTNode parent, @NotNull ASTNode first, @NotNull ASTNode last, ASTNode anchorBefore) {
+  public static ASTNode addChildren(ASTNode parent, @Nonnull ASTNode first, @Nonnull ASTNode last, ASTNode anchorBefore) {
     ASTNode lastChild = last.getTreeNext();
     ASTNode current = first;
     while (current != lastChild) {
@@ -143,7 +143,7 @@ public class CodeEditUtil {
     return stored != null ? stored : -1;
   }
 
-  public static void removeChildren(ASTNode parent, @NotNull ASTNode first, @NotNull ASTNode last) {
+  public static void removeChildren(ASTNode parent, @Nonnull ASTNode first, @Nonnull ASTNode last) {
     final boolean tailingElement = last.getStartOffset() + last.getTextLength() == parent.getStartOffset() + parent.getTextLength();
     final boolean forceReformat = needToForceReformat(parent, first, last);
     saveWhitespacesInfo(first);
@@ -182,7 +182,7 @@ public class CodeEditUtil {
     return buffer.toString().trim().length();
   }
 
-  public static void replaceChild(ASTNode parent, @NotNull ASTNode oldChild, @NotNull ASTNode newChild) {
+  public static void replaceChild(ASTNode parent, @Nonnull ASTNode oldChild, @Nonnull ASTNode newChild) {
     saveWhitespacesInfo(oldChild);
     saveWhitespacesInfo(newChild);
     checkForOuters(oldChild);
@@ -302,7 +302,7 @@ public class CodeEditUtil {
     right.getTreeParent().replaceChild(right, merged);
   }
 
-  private static void markToReformatBeforeOrInsertWhitespace(final ASTNode left, @NotNull final ASTNode right) {
+  private static void markToReformatBeforeOrInsertWhitespace(final ASTNode left, @Nonnull final ASTNode right) {
     final Language leftLang = left != null ? PsiUtilCore.getNotAnyLanguage(left) : null;
     final Language rightLang = PsiUtilCore.getNotAnyLanguage(right);
 

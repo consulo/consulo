@@ -41,8 +41,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -121,7 +121,7 @@ class Browser extends JPanel {
     void referenceClicked(ClickEvent e);
   }
 
-  private void showPageFromHistory(@NotNull RefEntity newEntity) {
+  private void showPageFromHistory(@Nonnull RefEntity newEntity) {
     InspectionToolWrapper toolWrapper = getToolWrapper(newEntity);
     try {
       String html = generateHTML(newEntity, toolWrapper);
@@ -163,7 +163,7 @@ class Browser extends JPanel {
     showPageFromHistory(newEntity.getRefManager().getRefinedElement(newEntity));
   }
 
-  public Browser(@NotNull InspectionResultsView view) {
+  public Browser(@Nonnull InspectionResultsView view) {
     super(new BorderLayout());
     myView = view;
 
@@ -297,7 +297,7 @@ class Browser extends JPanel {
     }
   }
 
-  private String generateHTML(final RefEntity refEntity, @NotNull final InspectionToolWrapper toolWrapper) {
+  private String generateHTML(final RefEntity refEntity, @Nonnull final InspectionToolWrapper toolWrapper) {
     final StringBuffer buf = new StringBuffer();
     final HTMLComposerImpl htmlComposer = getPresentation(toolWrapper).getComposer();
     if (refEntity instanceof RefElement) {
@@ -323,7 +323,7 @@ class Browser extends JPanel {
     return buf.toString();
   }
 
-  private InspectionToolPresentation getPresentation(@NotNull InspectionToolWrapper toolWrapper) {
+  private InspectionToolPresentation getPresentation(@Nonnull InspectionToolWrapper toolWrapper) {
     return myView.getGlobalInspectionContext().getPresentation(toolWrapper);
   }
 
@@ -420,7 +420,7 @@ class Browser extends JPanel {
     }
   }
 
-  public void showDescription(@NotNull InspectionToolWrapper toolWrapper){
+  public void showDescription(@Nonnull InspectionToolWrapper toolWrapper){
     if (toolWrapper.getShortName().isEmpty()){
       showEmpty();
       return;

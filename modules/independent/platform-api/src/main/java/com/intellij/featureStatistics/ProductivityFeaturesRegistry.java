@@ -16,7 +16,7 @@
 package com.intellij.featureStatistics;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -25,17 +25,17 @@ import java.util.Set;
  * Date: Feb 3, 2005
  */
 public abstract class ProductivityFeaturesRegistry {
-  @NotNull
+  @Nonnull
   public abstract Set<String> getFeatureIds();
 
-  public abstract FeatureDescriptor getFeatureDescriptor(@NotNull String id);
+  public abstract FeatureDescriptor getFeatureDescriptor(@Nonnull String id);
 
-  public abstract GroupDescriptor getGroupDescriptor(@NotNull String id);
+  public abstract GroupDescriptor getGroupDescriptor(@Nonnull String id);
 
-  @NotNull
-  public abstract ApplicabilityFilter[] getMatchingFilters(@NotNull String featureId);
+  @Nonnull
+  public abstract ApplicabilityFilter[] getMatchingFilters(@Nonnull String featureId);
 
-  @NotNull
+  @Nonnull
   public static ProductivityFeaturesRegistry getInstance() {
     return ServiceManager.getService(ProductivityFeaturesRegistry.class);
   }

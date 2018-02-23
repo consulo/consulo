@@ -16,7 +16,7 @@
 package consulo.bundle;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,45 +25,45 @@ import org.jetbrains.annotations.NotNull;
 public interface SdkTableListener {
   class Adapter implements SdkTableListener {
     @Override
-    public void beforeSdkAdded(@NotNull Sdk sdk) {
+    public void beforeSdkAdded(@Nonnull Sdk sdk) {
 
     }
 
     @Override
-    public void sdkAdded(@NotNull Sdk sdk) {
+    public void sdkAdded(@Nonnull Sdk sdk) {
 
     }
 
     @Override
-    public void beforeSdkRemoved(@NotNull Sdk sdk) {
+    public void beforeSdkRemoved(@Nonnull Sdk sdk) {
 
     }
 
     @Override
-    public void sdkRemoved(@NotNull Sdk sdk) {
+    public void sdkRemoved(@Nonnull Sdk sdk) {
 
     }
 
     @Override
-    public void beforeSdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+    public void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
 
     }
 
     @Override
-    public void sdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName) {
+    public void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
 
     }
   }
 
-  void beforeSdkAdded(@NotNull Sdk sdk);
+  void beforeSdkAdded(@Nonnull Sdk sdk);
 
-  void sdkAdded(@NotNull Sdk sdk);
+  void sdkAdded(@Nonnull Sdk sdk);
 
-  void beforeSdkRemoved(@NotNull Sdk sdk);
+  void beforeSdkRemoved(@Nonnull Sdk sdk);
 
-  void sdkRemoved(@NotNull Sdk sdk);
+  void sdkRemoved(@Nonnull Sdk sdk);
 
-  void beforeSdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName);
+  void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName);
 
-  void sdkNameChanged(@NotNull Sdk sdk, @NotNull String previousName);
+  void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName);
 }

@@ -46,9 +46,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -132,7 +132,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     super.disposeUIResources();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JPanel createComponentImpl() {
     final Module module = getModule();
@@ -340,12 +340,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
   private final class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
     @Override
-    public void editingStarted(@NotNull ContentEntryEditor editor) {
+    public void editingStarted(@Nonnull ContentEntryEditor editor) {
       selectContentEntry(editor.getContentEntry());
     }
 
     @Override
-    public void beforeEntryDeleted(@NotNull ContentEntryEditor editor) {
+    public void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
       final ContentEntry entryUrl = editor.getContentEntry();
       if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
         myRootTreeEditor.setContentEntryEditor(null);
@@ -357,7 +357,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     @Override
-    public void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file) {
+    public void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
       if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
         myRootTreeEditor.requestFocus();
         myRootTreeEditor.select(file);

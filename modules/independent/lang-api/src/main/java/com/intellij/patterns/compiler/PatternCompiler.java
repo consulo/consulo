@@ -16,7 +16,7 @@
 package com.intellij.patterns.compiler;
 
 import com.intellij.patterns.ElementPattern;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Gregory.Shrago

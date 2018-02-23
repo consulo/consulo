@@ -21,8 +21,8 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +33,13 @@ public class RunnerRegistryImpl extends RunnerRegistry {
   private final List<ProgramRunner> myRunnersOrder = new ArrayList<ProgramRunner>();
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "RunnerRegistryImpl";
   }
 
   @Override
-  public boolean hasRunner(@NotNull final String executorId, @NotNull final RunProfile settings) {
+  public boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings) {
     final ProgramRunner[] runners = getRegisteredRunners();
     for (final ProgramRunner runner : runners) {
       if (runner.canRun(executorId, settings)) {

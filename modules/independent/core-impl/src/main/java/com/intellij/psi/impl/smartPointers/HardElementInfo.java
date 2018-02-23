@@ -21,18 +21,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: cdr
  */
 class HardElementInfo extends SmartPointerElementInfo {
-  @NotNull
+  @Nonnull
   private final PsiElement myElement;
-  @NotNull
+  @Nonnull
   private final Project myProject;
 
-  public HardElementInfo(@NotNull Project project, @NotNull PsiElement element) {
+  public HardElementInfo(@Nonnull Project project, @Nonnull PsiElement element) {
     myElement = element;
     myProject = project;
   }
@@ -53,7 +53,7 @@ class HardElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull final SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other) {
     return other instanceof HardElementInfo && myElement.equals(((HardElementInfo)other).myElement);
   }
 
@@ -72,7 +72,7 @@ class HardElementInfo extends SmartPointerElementInfo {
     return getRange();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;

@@ -22,7 +22,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class HippieBackwardCompletionAction extends BaseCodeInsightAction implements DumbAware {
@@ -32,12 +32,12 @@ public class HippieBackwardCompletionAction extends BaseCodeInsightAction implem
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformedImpl(@NotNull Project project, Editor editor) {
+  public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.hippie");
     super.actionPerformedImpl(project, editor);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new HippieWordCompletionHandler(false);

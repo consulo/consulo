@@ -29,8 +29,8 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ import javax.swing.*;
 class FakeRerunAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     ExecutionEnvironment environment = getEnvironment(event);
     if (environment != null) {
@@ -53,7 +53,7 @@ class FakeRerunAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent event) {
+  public void actionPerformed(@Nonnull AnActionEvent event) {
     ExecutionEnvironment environment = getEnvironment(event);
     if (environment != null) {
       ExecutionUtil.restart(environment);
@@ -66,7 +66,7 @@ class FakeRerunAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  protected ExecutionEnvironment getEnvironment(@NotNull AnActionEvent event) {
+  protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
     ExecutionEnvironment environment = event.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       Project project = event.getProject();

@@ -31,7 +31,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -52,7 +52,7 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
   }
 
   @Override
-  public InplaceRefactoring doRename(@NotNull final PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
+  public InplaceRefactoring doRename(@Nonnull final PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
     if (elementToRename instanceof PsiNameIdentifierOwner) {
       final RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(elementToRename);
       if (processor.isInplaceRenameSupported()) {
@@ -85,8 +85,8 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
     return null;
   }
 
-  @NotNull
-  protected MemberInplaceRenamer createMemberRenamer(@NotNull PsiElement element, PsiNameIdentifierOwner elementToRename, Editor editor) {
+  @Nonnull
+  protected MemberInplaceRenamer createMemberRenamer(@Nonnull PsiElement element, PsiNameIdentifierOwner elementToRename, Editor editor) {
     return new MemberInplaceRenamer(elementToRename, element, editor);
   }
 }

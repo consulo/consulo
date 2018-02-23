@@ -23,7 +23,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.SizedIcon;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

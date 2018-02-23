@@ -18,8 +18,8 @@ package com.intellij.ide.wizard;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -73,7 +73,7 @@ public abstract class AbstractWizardStepEx implements Step, Disposable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public abstract Object getStepId();
 
   @Nullable

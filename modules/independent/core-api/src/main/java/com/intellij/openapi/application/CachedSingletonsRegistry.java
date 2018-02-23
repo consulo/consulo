@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.application;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class CachedSingletonsRegistry {
   private CachedSingletonsRegistry() {}
 
   @Nullable
-  public static <T> T markCachedField(@NotNull Class<T> klass) {
+  public static <T> T markCachedField(@Nonnull Class<T> klass) {
     synchronized (LOCK) {
       ourRegisteredClasses.add(klass);
     }

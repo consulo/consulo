@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.AutoScrollFromSourceHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class FavoritesAutoscrollFromSourceHandler extends AutoScrollFromSourceHandler {
   private final FavoritesViewSelectInTarget mySelectInTarget = new FavoritesViewSelectInTarget(myProject);
 
-  public FavoritesAutoscrollFromSourceHandler(@NotNull Project project, @NotNull FavoritesViewTreeBuilder builder) {
+  public FavoritesAutoscrollFromSourceHandler(@Nonnull Project project, @Nonnull FavoritesViewTreeBuilder builder) {
     super(project, builder.getTree(), builder);
   }
 
@@ -48,7 +48,7 @@ public class FavoritesAutoscrollFromSourceHandler extends AutoScrollFromSourceHa
   }
 
   @Override
-  protected void selectElementFromEditor(@NotNull FileEditor editor) {
+  protected void selectElementFromEditor(@Nonnull FileEditor editor) {
     final VirtualFile file = FileEditorManagerEx.getInstanceEx(myProject).getFile(editor);
     if (file != null) {
       final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);

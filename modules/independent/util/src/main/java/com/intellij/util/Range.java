@@ -16,7 +16,7 @@
 
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class Range<T extends Comparable<T>> {
 
@@ -24,7 +24,7 @@ public class Range<T extends Comparable<T>> {
   private final T myTo;
 
 
-  public Range(@NotNull final T from, @NotNull final T to) {
+  public Range(@Nonnull final T from, @Nonnull final T to) {
     myFrom = from;
     myTo = to;
   }

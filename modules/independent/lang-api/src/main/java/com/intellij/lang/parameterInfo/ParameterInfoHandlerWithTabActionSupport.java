@@ -18,25 +18,28 @@ package com.intellij.lang.parameterInfo;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public interface ParameterInfoHandlerWithTabActionSupport<ParameterOwner extends PsiElement, ParameterType, ActualParameterType extends PsiElement>
   extends ParameterInfoHandler<ParameterOwner, ParameterType> {
 
-  @NotNull ActualParameterType[] getActualParameters(@NotNull ParameterOwner o);
+  @Nonnull
+  ActualParameterType[] getActualParameters(@Nonnull ParameterOwner o);
 
-  @NotNull IElementType getActualParameterDelimiterType();
+  @Nonnull
+  IElementType getActualParameterDelimiterType();
 
-  @NotNull
+  @Nonnull
   IElementType getActualParametersRBraceType();
 
-  @NotNull
+  @Nonnull
   Set<Class> getArgumentListAllowedParentClasses();
 
-  @NotNull
+  @Nonnull
   Set<? extends Class> getArgListStopSearchClasses();
 
-  @NotNull Class<ParameterOwner> getArgumentListClass();
+  @Nonnull
+  Class<ParameterOwner> getArgumentListClass();
 }

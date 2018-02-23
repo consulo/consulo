@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -47,7 +47,7 @@ public interface RunDashboardManager {
 
   boolean isToolWindowAvailable();
 
-  void createToolWindowContent(@NotNull ToolWindow toolWindow);
+  void createToolWindowContent(@Nonnull ToolWindow toolWindow);
 
   List<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>> getRunConfigurations();
 }

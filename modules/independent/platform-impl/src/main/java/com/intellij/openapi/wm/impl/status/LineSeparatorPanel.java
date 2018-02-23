@@ -41,8 +41,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,17 +54,17 @@ import java.awt.event.MouseEvent;
  */
 public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, CustomStatusBarWidget {
 
-  @NotNull
+  @Nonnull
   private final TextPanel myComponent;
 
   private boolean myActionEnabled;
 
-  public LineSeparatorPanel(@NotNull final Project project) {
+  public LineSeparatorPanel(@Nonnull final Project project) {
     super(project);
 
     myComponent = new TextPanel.ExtraSize() {
       @Override
-      protected void paintComponent(@NotNull final Graphics g) {
+      protected void paintComponent(@Nonnull final Graphics g) {
         super.paintComponent(g);
         if (myActionEnabled && getText() != null) {
           final Rectangle r = getBounds();
@@ -77,7 +77,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         update();
         showPopup(e);
         return true;
@@ -154,18 +154,18 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
-      public void fileContentReloaded(@NotNull VirtualFile file, @NotNull Document document) {
+      public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
         update();
       }
     });
   }
 
-  @NotNull
+  @Nonnull
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
@@ -183,7 +183,7 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
     return new LineSeparatorPanel(getProject());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String ID() {
     return "LineSeparator";
@@ -191,18 +191,18 @@ public class LineSeparatorPanel extends EditorBasedWidget implements StatusBarWi
 
   @Nullable
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     update();
   }
 
   @Override
-  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     update();
   }
 }

@@ -19,8 +19,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
@@ -38,7 +37,7 @@ public interface TestResultsViewer extends Disposable {
    *
    * @param proxy
    */
-  void selectAndNotify(@Nullable AbstractTestProxy proxy);
+  void selectAndNotify(@javax.annotation.Nullable AbstractTestProxy proxy);
 
   void addEventsListener(EventsListener listener);
 
@@ -72,9 +71,9 @@ public interface TestResultsViewer extends Disposable {
     }
 
     @Override
-    public void onSelected(@Nullable SMTestProxy selectedTestProxy,
-                           @NotNull TestResultsViewer viewer,
-                           @NotNull TestFrameworkRunningModel model) {
+    public void onSelected(@javax.annotation.Nullable SMTestProxy selectedTestProxy,
+                           @Nonnull TestResultsViewer viewer,
+                           @Nonnull TestFrameworkRunningModel model) {
     }
   }
 }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.io.win32;
 
 import com.intellij.openapi.util.io.FileAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.util.BitUtil.isSet;
 
@@ -47,7 +47,7 @@ public class FileInfo {
     return name;
   }
 
-  @NotNull
+  @Nonnull
   public FileAttributes toFileAttributes() {
     if (attributes == BROKEN_SYMLINK) return FileAttributes.BROKEN_SYMLINK;
 

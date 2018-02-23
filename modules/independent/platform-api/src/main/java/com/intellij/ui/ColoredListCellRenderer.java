@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,7 +110,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
    * It guaranties readability of selected text in any LAF.
    */
   @Override
-  public final void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, boolean isMainText) {
+  public final void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
     if (mySelected) {
       super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), mySelectionForeground), isMainText);
     }
@@ -123,7 +123,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Dimension getPreferredSize() {
     // There is a bug in BasicComboPopup. It does not add renderer into CellRendererPane,
     // so font can be null here.
@@ -140,7 +140,7 @@ public abstract class ColoredListCellRenderer<T> extends SimpleColoredComponent 
     return result;
   }
 
-  protected abstract void customizeCellRenderer(@NotNull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
+  protected abstract void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
 
   /**
    * Copied AS IS

@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "ProjectViewSharedSettings",
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/projectView.xml"))
 public class ProjectViewSharedSettings implements PersistentStateComponent<ProjectViewSharedSettings> {
-  @NotNull
+  @Nonnull
   public static ProjectViewSharedSettings getInstance() {
     return ServiceManager.getService(ProjectViewSharedSettings.class);
   }
@@ -45,13 +45,13 @@ public class ProjectViewSharedSettings implements PersistentStateComponent<Proje
   private boolean myFoldersAlwaysOnTop = true;
 
   @Override
-  @NotNull
+  @Nonnull
   public ProjectViewSharedSettings getState() {
     return this;
   }
 
   @Override
-  public void loadState(@NotNull ProjectViewSharedSettings state) {
+  public void loadState(@Nonnull ProjectViewSharedSettings state) {
     XmlSerializerUtil.copyBean(state, this);
   }
 

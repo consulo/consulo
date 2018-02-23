@@ -18,8 +18,8 @@ package com.intellij.psi.injection;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -30,10 +30,10 @@ import javax.swing.*;
 public abstract class Injectable implements Comparable<Injectable> {
 
   /** Unique ID among injected language and reference injector IDs */
-  @NotNull
+  @Nonnull
   public abstract String getId();
 
-  @NotNull
+  @Nonnull
   public abstract String getDisplayName();
 
   @Nullable
@@ -41,20 +41,20 @@ public abstract class Injectable implements Comparable<Injectable> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return EmptyIcon.ICON_16;
   }
 
   @Override
-  public int compareTo(@NotNull Injectable o) {
+  public int compareTo(@Nonnull Injectable o) {
     return getDisplayName().compareTo(o.getDisplayName());
   }
 
   /**
    * @return null for reference injections
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Language getLanguage();
 
   public Language toLanguage() {
@@ -68,13 +68,13 @@ public abstract class Injectable implements Comparable<Injectable> {
 
   public static Injectable fromLanguage(final Language language) {
     return new Injectable() {
-      @NotNull
+      @Nonnull
       @Override
       public String getId() {
         return language.getID();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDisplayName() {
         return language.getDisplayName();
@@ -87,7 +87,7 @@ public abstract class Injectable implements Comparable<Injectable> {
         return ft != null ? " (" + ft.getDescription() + ")" : null;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Icon getIcon() {
         final FileType ft = language.getAssociatedFileType();

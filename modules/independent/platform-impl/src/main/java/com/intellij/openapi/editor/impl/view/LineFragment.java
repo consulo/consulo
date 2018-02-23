@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -56,6 +56,6 @@ interface LineFragment {
   void draw(Graphics2D g, float x, float y, int startColumn, int endColumn);
 
   // offsets are logical
-  @NotNull
+  @Nonnull
   LineFragment subFragment(int startOffset, int endOffset);
 }

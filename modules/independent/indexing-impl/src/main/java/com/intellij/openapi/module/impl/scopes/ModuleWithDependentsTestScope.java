@@ -18,22 +18,22 @@ package com.intellij.openapi.module.impl.scopes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.DelegatingGlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 // Tests only (module plus dependencies) scope
 // Delegates to ModuleWithDependentsScope with extra flag testOnly to reduce memory for holding modules and CPU for traversing dependencies.
 class ModuleWithDependentsTestScope extends DelegatingGlobalSearchScope {
-  ModuleWithDependentsTestScope(@NotNull Module module) {
+  ModuleWithDependentsTestScope(@Nonnull Module module) {
     // the additional equality argument allows to distinguish ModuleWithDependentsTestScope from ModuleWithDependentsScope
     super(new ModuleWithDependentsScope(module), true);
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return getBaseScope().contains(file, true);
   }
 
-  @NotNull
+  @Nonnull
   ModuleWithDependentsScope getBaseScope() {
     return (ModuleWithDependentsScope)myBaseScope;
   }

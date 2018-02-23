@@ -18,7 +18,7 @@ package com.intellij.testIntegration;
 import com.intellij.execution.Location;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,6 +26,6 @@ import java.util.List;
 public interface TestLocationProvider {
   @SuppressWarnings("deprecation") ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create("com.intellij.testSrcLocator");
 
-  @NotNull
-  List<Location> getLocation(@NotNull String protocolId, @NotNull String locationData, Project project);
+  @Nonnull
+  List<Location> getLocation(@Nonnull String protocolId, @Nonnull String locationData, Project project);
 }

@@ -18,7 +18,7 @@ package consulo.diagram.provider;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import consulo.diagram.builder.GraphBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public interface GraphProvider {
   ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create("com.intellij.graphProvider");
 
-  @NotNull
-  GraphBuilder createBuilder(@NotNull PsiElement element);
+  @Nonnull
+  GraphBuilder createBuilder(@Nonnull PsiElement element);
 
-  boolean isSupported(@NotNull PsiElement element);
+  boolean isSupported(@Nonnull PsiElement element);
 }

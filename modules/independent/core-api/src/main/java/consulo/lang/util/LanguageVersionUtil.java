@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LanguageVersionUtil {
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
     final LanguageVersion languageVersion = LanguageVersion.KEY.get(virtualFile);
     if (languageVersion != null) {
       return languageVersion;
@@ -44,7 +44,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@NotNull Language language, @NotNull PsiFile psiFile) {
+  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nonnull PsiFile psiFile) {
     if (psiFile.getLanguage() == language) {
       return psiFile.getLanguageVersion();
     }
@@ -59,7 +59,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findLanguageVersion(@NotNull Language language, @NotNull PsiElement element) {
+  public static LanguageVersion findLanguageVersion(@Nonnull Language language, @Nonnull PsiElement element) {
     if (element.getLanguage() == language) {
       return element.getLanguageVersion();
     }
@@ -71,7 +71,7 @@ public class LanguageVersionUtil {
   }
 
   @RequiredReadAction
-  public static LanguageVersion findDefaultVersion(@NotNull Language language) {
+  public static LanguageVersion findDefaultVersion(@Nonnull Language language) {
     return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
   }
 }

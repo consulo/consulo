@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,12 +33,12 @@ public class ProhibitAWTEvents implements IdeEventQueue.EventDispatcher {
   private final String myActivityName;
   private boolean myReported;
 
-  private ProhibitAWTEvents(@NotNull String activityName) {
+  private ProhibitAWTEvents(@Nonnull String activityName) {
     myActivityName = activityName;
   }
 
   @Override
-  public boolean dispatch(@NotNull AWTEvent e) {
+  public boolean dispatch(@Nonnull AWTEvent e) {
     if (!myReported) {
       myReported = true;
       LOG.error("AWT events are prohibited inside " + myActivityName + "; got " + e);
@@ -46,8 +46,8 @@ public class ProhibitAWTEvents implements IdeEventQueue.EventDispatcher {
     return true;
   }
 
-  @NotNull
-  public static AccessToken start(@NotNull String activityName) {
+  @Nonnull
+  public static AccessToken start(@Nonnull String activityName) {
     if (!SwingUtilities.isEventDispatchThread()) {
       // some crazy highlighting queries getData outside EDT: https://youtrack.jetbrains.com/issue/IDEA-162970
       return AccessToken.EMPTY_ACCESS_TOKEN;

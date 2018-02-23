@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiab
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -72,7 +72,7 @@ public class EditExistingLibraryDialog extends LibraryEditorDialogBase {
     }
     context.addLibraryEditorListener(new LibraryEditorListener() {
       @Override
-      public void libraryRenamed(@NotNull Library library, String oldName, String newName) {
+      public void libraryRenamed(@Nonnull Library library, String oldName, String newName) {
         if (library.equals(myLibraryEditor.getLibrary())) {
           myNameField.setText(newName);
         }

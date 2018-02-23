@@ -17,7 +17,7 @@ package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class SimpleTreeStructure extends AbstractTreeStructure {
 
@@ -34,7 +34,7 @@ public abstract class SimpleTreeStructure extends AbstractTreeStructure {
     return ((SimpleNode)element).isAlwaysLeaf();
   }
 
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor) element;
   }

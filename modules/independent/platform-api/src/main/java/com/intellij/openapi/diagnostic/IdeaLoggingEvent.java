@@ -17,7 +17,8 @@ package com.intellij.openapi.diagnostic;
 
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author kir

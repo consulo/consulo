@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -26,13 +26,13 @@ class IdentityVirtualFilePointer implements VirtualFilePointer {
   private final VirtualFile myFile;
   private final String myUrl;
 
-  IdentityVirtualFilePointer(VirtualFile file, @NotNull String url) {
+  IdentityVirtualFilePointer(VirtualFile file, @Nonnull String url) {
     myFile = file;
     myUrl = url;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFileName() {
     return getUrl();
   }
@@ -43,13 +43,13 @@ class IdentityVirtualFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableUrl() {
     return getUrl();
   }

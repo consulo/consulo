@@ -16,7 +16,7 @@
 
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /*
  * @author max
@@ -47,7 +47,7 @@ public class LimitedPool<T> {
     return result;
   }
 
-  public void recycle(@NotNull T t) {
+  public void recycle(@Nonnull T t) {
     factory.cleanup(t);
 
     if (index >= capacity) return;

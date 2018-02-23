@@ -27,8 +27,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -53,18 +53,18 @@ public class FileSystemUtil {
 
   private abstract static class Mediator {
     @Nullable
-    protected abstract FileAttributes getAttributes(@NotNull String path) throws Exception;
+    protected abstract FileAttributes getAttributes(@Nonnull String path) throws Exception;
 
     @Nullable
-    protected abstract String resolveSymLink(@NotNull String path) throws Exception;
+    protected abstract String resolveSymLink(@Nonnull String path) throws Exception;
 
-    protected boolean clonePermissions(@NotNull String source, @NotNull String target, boolean onlyPermissionsToExecute) throws Exception { return false; }
+    protected boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean onlyPermissionsToExecute) throws Exception { return false; }
 
-    @NotNull
+    @Nonnull
     private String getName() { return getClass().getSimpleName().replace("MediatorImpl", ""); }
   }
 
-  @NotNull
+  @Nonnull
   private static Mediator ourMediator = getMediator();
 
   private static Mediator getMediator() {
@@ -113,7 +113,7 @@ public class FileSystemUtil {
   private FileSystemUtil() { }
 
   @Nullable
-  public static FileAttributes getAttributes(@NotNull String path) {
+  public static FileAttributes getAttributes(@Nonnull String path) {
     try {
       return ourMediator.getAttributes(path);
     }
@@ -124,11 +124,11 @@ public class FileSystemUtil {
   }
 
   @Nullable
-  public static FileAttributes getAttributes(@NotNull File file) {
+  public static FileAttributes getAttributes(@Nonnull File file) {
     return getAttributes(file.getPath());
   }
 
-  public static long lastModified(@NotNull File file) {
+  public static long lastModified(@Nonnull File file) {
     FileAttributes attributes = getAttributes(file);
     return attributes != null ? attributes.lastModified : 0;
   }
@@ -136,7 +136,7 @@ public class FileSystemUtil {
   /**
    * Checks if a last element in the path is a symlink.
    */
-  public static boolean isSymLink(@NotNull String path) {
+  public static boolean isSymLink(@Nonnull String path) {
     if (SystemInfo.areSymLinksSupported) {
       final FileAttributes attributes = getAttributes(path);
       return attributes != null && attributes.isSymLink();
@@ -147,12 +147,12 @@ public class FileSystemUtil {
   /**
    * Checks if a last element in the path is a symlink.
    */
-  public static boolean isSymLink(@NotNull File file) {
+  public static boolean isSymLink(@Nonnull File file) {
     return isSymLink(file.getAbsolutePath());
   }
 
   @Nullable
-  public static String resolveSymLink(@NotNull String path) {
+  public static String resolveSymLink(@Nonnull String path) {
     try {
       final String realPath = ourMediator.resolveSymLink(path);
       if (realPath != null && new File(realPath).exists()) {
@@ -166,7 +166,7 @@ public class FileSystemUtil {
   }
 
   @Nullable
-  public static String resolveSymLink(@NotNull File file) {
+  public static String resolveSymLink(@Nonnull File file) {
     return resolveSymLink(file.getAbsolutePath());
   }
 
@@ -174,7 +174,7 @@ public class FileSystemUtil {
    * Gives the second file permissions of the first one if possible; returns true if succeed.
    * Will do nothing on Windows.
    */
-  public static boolean clonePermissions(@NotNull String source, @NotNull String target) {
+  public static boolean clonePermissions(@Nonnull String source, @Nonnull String target) {
     try {
       return ourMediator.clonePermissions(source, target, false);
     }
@@ -188,7 +188,7 @@ public class FileSystemUtil {
    * Gives the second file permissions to execute of the first one if possible; returns true if succeed.
    * Will do nothing on Windows.
    */
-  public static boolean clonePermissionsToExecute(@NotNull String source, @NotNull String target) {
+  public static boolean clonePermissionsToExecute(@Nonnull String source, @Nonnull String target) {
     try {
       return ourMediator.clonePermissions(source, target, true);
     }
@@ -244,7 +244,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected FileAttributes getAttributes(@NotNull String path) throws Exception {
+    protected FileAttributes getAttributes(@Nonnull String path) throws Exception {
       try {
         Object pathObj = myGetPath.invoke(myDefaultFileSystem, path, ArrayUtil.EMPTY_STRING_ARRAY);
 
@@ -287,7 +287,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected String resolveSymLink(@NotNull final String path) throws Exception {
+    protected String resolveSymLink(@Nonnull final String path) throws Exception {
       if (!new File(path).exists()) return null;
       final Object pathObj = myGetPath.invoke(myDefaultFileSystem, path, ArrayUtil.EMPTY_STRING_ARRAY);
       final Method toRealPath = pathObj.getClass().getMethod("toRealPath", myLinkOptions.getClass());
@@ -296,7 +296,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected boolean clonePermissions(@NotNull String source, @NotNull String target, boolean onlyPermissionsToExecute) throws Exception {
+    protected boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean onlyPermissionsToExecute) throws Exception {
       if (SystemInfo.isUnix) {
         Object sourcePath = myGetPath.invoke(myDefaultFileSystem, source, ArrayUtil.EMPTY_STRING_ARRAY);
         Object targetPath = myGetPath.invoke(myDefaultFileSystem, target, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -340,13 +340,13 @@ public class FileSystemUtil {
     private IdeaWin32 myInstance = IdeaWin32.getInstance();
 
     @Override
-    protected FileAttributes getAttributes(@NotNull final String path) throws Exception {
+    protected FileAttributes getAttributes(@Nonnull final String path) throws Exception {
       final FileInfo fileInfo = myInstance.getInfo(path);
       return fileInfo != null ? fileInfo.toFileAttributes() : null;
     }
 
     @Override
-    protected String resolveSymLink(@NotNull final String path) throws Exception {
+    protected String resolveSymLink(@Nonnull final String path) throws Exception {
       return myInstance.resolveSymLink(path);
     }
   }
@@ -431,7 +431,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected FileAttributes getAttributes(@NotNull String path) throws Exception {
+    protected FileAttributes getAttributes(@Nonnull String path) throws Exception {
       Memory buffer = new Memory(256);
       int res = SystemInfo.isLinux ? myLibC.__lxstat64(STAT_VER, path, buffer) : myLibC.lstat(path, buffer);
       if (res != 0) return null;
@@ -457,12 +457,12 @@ public class FileSystemUtil {
       return new FileAttributes(isDirectory, isSpecial, isSymlink, false, size, mTime, writable);
     }
 
-    private boolean loadFileStatus(@NotNull String path, Memory buffer) {
+    private boolean loadFileStatus(@Nonnull String path, Memory buffer) {
       return (SystemInfo.isLinux ? myLibC.__xstat64(STAT_VER, path, buffer) : myLibC.stat(path, buffer)) == 0;
     }
 
     @Override
-    protected String resolveSymLink(@NotNull final String path) throws Exception {
+    protected String resolveSymLink(@Nonnull final String path) throws Exception {
       try {
         return new File(path).getCanonicalPath();
       }
@@ -477,7 +477,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected boolean clonePermissions(@NotNull String source, @NotNull String target, boolean onlyPermissionsToExecute) throws Exception {
+    protected boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean onlyPermissionsToExecute) throws Exception {
       Memory buffer = new Memory(256);
       if (!loadFileStatus(source, buffer)) return false;
 
@@ -533,7 +533,7 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected FileAttributes getAttributes(@NotNull final String path) throws Exception {
+    protected FileAttributes getAttributes(@Nonnull final String path) throws Exception {
       final File file = new File(path);
       if (myFileSystem != null) {
         final int flags = (Integer)myGetBooleanAttributes.invoke(myFileSystem, file);
@@ -557,12 +557,12 @@ public class FileSystemUtil {
     }
 
     @Override
-    protected String resolveSymLink(@NotNull final String path) throws Exception {
+    protected String resolveSymLink(@Nonnull final String path) throws Exception {
       return new File(path).getCanonicalPath();
     }
 
     @Override
-    protected boolean clonePermissions(@NotNull String source, @NotNull String target, boolean onlyPermissionsToExecute) throws Exception {
+    protected boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean onlyPermissionsToExecute) throws Exception {
       if (SystemInfo.isUnix) {
         File srcFile = new File(source);
         File dstFile = new File(target);

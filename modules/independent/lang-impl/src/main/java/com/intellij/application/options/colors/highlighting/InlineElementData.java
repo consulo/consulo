@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -67,7 +67,7 @@ public class InlineElementData extends HighlightData {
   }
 
   @Override
-  public void addToCollection(@NotNull Collection<HighlightData> list, boolean highlighted) {
+  public void addToCollection(@Nonnull Collection<HighlightData> list, boolean highlighted) {
     list.add(new InlineElementData(getStartOffset(), getHighlightKey(), myText, highlighted));
   }
 
@@ -80,12 +80,12 @@ public class InlineElementData extends HighlightData {
     }
 
     @Override
-    public int calcWidthInPixels(@NotNull Editor editor) {
+    public int calcWidthInPixels(@Nonnull Editor editor) {
       return myDelegate.calcWidthInPixels(editor);
     }
 
     @Override
-    public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {
+    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
       myDelegate.paint(editor, g, r);
       if (drawBorder) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);

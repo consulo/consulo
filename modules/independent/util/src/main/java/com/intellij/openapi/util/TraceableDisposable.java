@@ -18,8 +18,8 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.util.objectTree.ThrowableInterner;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -47,7 +47,7 @@ public class TraceableDisposable {
     }
   }
 
-  public void killExceptionally(@NotNull Throwable throwable) {
+  public void killExceptionally(@Nonnull Throwable throwable) {
     if (CREATE_TRACE != null) {
       KILL_TRACE = throwable;
     }
@@ -56,7 +56,7 @@ public class TraceableDisposable {
   /**
    * Call when object is not disposed while it should
    */
-  public void throwObjectNotDisposedError(@NonNls @NotNull final String msg) {
+  public void throwObjectNotDisposedError(@NonNls @Nonnull final String msg) {
     throw new ObjectNotDisposedException(msg);
   }
 
@@ -89,7 +89,7 @@ public class TraceableDisposable {
     }
 
     @Override
-    public void printStackTrace(@NotNull PrintStream s) {
+    public void printStackTrace(@Nonnull PrintStream s) {
       //noinspection IOResourceOpenedButNotSafelyClosed
       PrintWriter writer = new PrintWriter(s);
       printStackTrace(writer);
@@ -118,7 +118,7 @@ public class TraceableDisposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getStackTrace() {
     StringWriter out = new StringWriter();
     new DisposalException("").printStackTrace(new PrintWriter(out));

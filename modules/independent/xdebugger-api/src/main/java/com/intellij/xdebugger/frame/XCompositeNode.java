@@ -17,8 +17,8 @@ package com.intellij.xdebugger.frame;
 
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.Obsolescent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -40,7 +40,7 @@ public interface XCompositeNode extends Obsolescent {
    * @param children child nodes to add
    * @param last <code>true</code> if all children added
    */
-  void addChildren(@NotNull XValueChildrenList children, final boolean last);
+  void addChildren(@Nonnull XValueChildrenList children, final boolean last);
 
   /**
    * Add an ellipsis node ("...") indicating that the node has too many children. If user double-click on that node
@@ -59,14 +59,14 @@ public interface XCompositeNode extends Obsolescent {
    * Indicates that an error occurs
    * @param errorMessage message describing the error
    */
-  void setErrorMessage(@NotNull String errorMessage);
+  void setErrorMessage(@Nonnull String errorMessage);
 
   /**
    * Indicates that an error occurs
    * @param errorMessage message describing the error
    * @param link describes a hyperlink which will be appended to the error message
    */
-  void setErrorMessage(@NotNull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
+  void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
 
-  void setMessage(@NotNull String message, final @Nullable Icon icon, final @NotNull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
+  void setMessage(@Nonnull String message, final @Nullable Icon icon, final @Nonnull SimpleTextAttributes attributes, @Nullable XDebuggerTreeNodeHyperlink link);
 }

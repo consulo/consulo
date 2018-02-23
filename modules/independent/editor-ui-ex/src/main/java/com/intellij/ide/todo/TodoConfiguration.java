@@ -27,7 +27,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -54,7 +54,7 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   /**
    * public for upsource
    */
-  public TodoConfiguration(@NotNull MessageBus messageBus) {
+  public TodoConfiguration(@Nonnull MessageBus messageBus) {
     myMessageBus = messageBus;
     resetToDefaultTodoPatterns();
   }
@@ -80,26 +80,26 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "TodoConfiguration";
   }
 
-  @NotNull
+  @Nonnull
   public TodoPattern[] getTodoPatterns() {
     return myTodoPatterns;
   }
 
-  @NotNull
+  @Nonnull
   public IndexPattern[] getIndexPatterns() {
     return myIndexPatterns;
   }
 
-  public void setTodoPatterns(@NotNull TodoPattern[] todoPatterns) {
+  public void setTodoPatterns(@Nonnull TodoPattern[] todoPatterns) {
     doSetTodoPatterns(todoPatterns, true);
   }
 
-  private void doSetTodoPatterns(@NotNull TodoPattern[] todoPatterns, final boolean shouldNotifyIndices) {
+  private void doSetTodoPatterns(@Nonnull TodoPattern[] todoPatterns, final boolean shouldNotifyIndices) {
     TodoPattern[] oldTodoPatterns = myTodoPatterns;
     IndexPattern[] oldIndexPatterns = myIndexPatterns;
 
@@ -136,24 +136,24 @@ public class TodoConfiguration implements NamedComponent, JDOMExternalizable {
   /**
    * @return all <code>TodoFilter</code>s.
    */
-  @NotNull
+  @Nonnull
   public TodoFilter[] getTodoFilters() {
     return myTodoFilters;
   }
 
-  public void setTodoFilters(@NotNull TodoFilter[] filters) {
+  public void setTodoFilters(@Nonnull TodoFilter[] filters) {
     TodoFilter[] oldFilters = myTodoFilters;
     myTodoFilters = filters;
     myPropertyChangeMulticaster.getMulticaster().propertyChange(new PropertyChangeEvent(this, PROP_TODO_FILTERS, oldFilters, filters));
   }
 
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.addListener(listener);
   }
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
     myPropertyChangeMulticaster.addListener(listener,parentDisposable);
   }
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.removeListener(listener);
   }
 

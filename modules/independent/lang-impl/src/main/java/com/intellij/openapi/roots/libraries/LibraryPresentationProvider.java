@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -30,11 +30,11 @@ public abstract class LibraryPresentationProvider<P extends LibraryProperties> {
   public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create("com.intellij.library.presentationProvider");
   private final LibraryKind myKind;
 
-  protected LibraryPresentationProvider(@NotNull LibraryKind kind) {
+  protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {
     myKind = kind;
   }
 
-  @NotNull
+  @Nonnull
   public LibraryKind getKind() {
     return myKind;
   }
@@ -43,10 +43,10 @@ public abstract class LibraryPresentationProvider<P extends LibraryProperties> {
   public abstract Icon getIcon();
 
   @Nullable
-  public String getDescription(@NotNull P properties) {
+  public String getDescription(@Nonnull P properties) {
     return null;
   }
 
   @Nullable
-  public abstract P detect(@NotNull List<VirtualFile> classesRoots);
+  public abstract P detect(@Nonnull List<VirtualFile> classesRoots);
 }

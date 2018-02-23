@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -29,11 +29,11 @@ import java.util.List;
 
 public class CompositeException extends Exception {
   private final List<Throwable> myExceptions = new ArrayList<>();
-  public CompositeException(@NotNull Throwable... e) {
+  public CompositeException(@Nonnull Throwable... e) {
     myExceptions.addAll(Arrays.asList(e));
   }
 
-  public void add(@NotNull Throwable e) {
+  public void add(@Nonnull Throwable e) {
     if (e instanceof CompositeException) {
       myExceptions.addAll(((CompositeException)e).myExceptions);
     }

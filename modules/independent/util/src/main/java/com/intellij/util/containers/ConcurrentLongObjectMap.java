@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -31,22 +31,22 @@ public interface ConcurrentLongObjectMap<V> {
   /**
    * @return written value
    */
-  @NotNull
-  V cacheOrGet(long key, @NotNull V value);
-  boolean remove(long key, @NotNull V value);
-  boolean replace(long key, @NotNull V oldValue, @NotNull V newValue);
-  V replace(long key, @NotNull V value);
+  @Nonnull
+  V cacheOrGet(long key, @Nonnull V value);
+  boolean remove(long key, @Nonnull V value);
+  boolean replace(long key, @Nonnull V oldValue, @Nonnull V newValue);
+  V replace(long key, @Nonnull V value);
 
   // regular Map methods
-  V put(long key, @NotNull V value);
+  V put(long key, @Nonnull V value);
   V get(long key);
   V remove(long key);
   boolean containsKey(long key);
   void clear();
-  @NotNull
+  @Nonnull
   Iterable<LongEntry<V>> entries();
 
-  @NotNull
+  @Nonnull
   long[] keys();
 
   /**
@@ -59,16 +59,16 @@ public interface ConcurrentLongObjectMap<V> {
   int size();
 
   boolean isEmpty();
-  @NotNull
+  @Nonnull
   public Enumeration<V> elements();
-  @NotNull
+  @Nonnull
   Collection<V> values();
-  boolean containsValue(@NotNull V value);
-  V putIfAbsent(long key, @NotNull V value);
+  boolean containsValue(@Nonnull V value);
+  V putIfAbsent(long key, @Nonnull V value);
 
   interface LongEntry<V> {
     long getKey();
-    @NotNull
+    @Nonnull
     V getValue();
   }
 }

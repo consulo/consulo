@@ -27,24 +27,27 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class VcsRootScanner implements BulkFileListener, ModuleRootListener, VcsListener {
 
-  @NotNull private final VcsRootProblemNotifier myRootProblemNotifier;
-  @NotNull private final VcsRootChecker[] myCheckers;
+  @Nonnull
+  private final VcsRootProblemNotifier myRootProblemNotifier;
+  @Nonnull
+  private final VcsRootChecker[] myCheckers;
 
-  @NotNull private final Alarm myAlarm;
+  @Nonnull
+  private final Alarm myAlarm;
   private static final long WAIT_BEFORE_SCAN = TimeUnit.SECONDS.toMillis(1);
 
-  public static void start(@NotNull Project project, @NotNull VcsRootChecker[] checkers) {
+  public static void start(@Nonnull Project project, @Nonnull VcsRootChecker[] checkers) {
     new VcsRootScanner(project, checkers).scheduleScan();
   }
 
-  private VcsRootScanner(@NotNull Project project, @NotNull VcsRootChecker[] checkers) {
+  private VcsRootScanner(@Nonnull Project project, @Nonnull VcsRootChecker[] checkers) {
     myRootProblemNotifier = VcsRootProblemNotifier.getInstance(project);
     myCheckers = checkers;
 
@@ -57,11 +60,11 @@ public class VcsRootScanner implements BulkFileListener, ModuleRootListener, Vcs
   }
 
   @Override
-  public void before(@NotNull List<? extends VFileEvent> events) {
+  public void before(@Nonnull List<? extends VFileEvent> events) {
   }
 
   @Override
-  public void after(@NotNull List<? extends VFileEvent> events) {
+  public void after(@Nonnull List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       String filePath = event.getPath();
       for (VcsRootChecker checker : myCheckers) {

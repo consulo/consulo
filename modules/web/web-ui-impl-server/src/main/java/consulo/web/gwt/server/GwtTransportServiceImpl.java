@@ -72,8 +72,8 @@ import consulo.web.gwt.shared.transport.GwtProjectInfo;
 import consulo.web.gwt.shared.transport.GwtTextAttributes;
 import consulo.web.gwt.shared.transport.GwtTextRange;
 import consulo.web.gwt.shared.transport.GwtVirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.servlet.annotation.WebServlet;
 import javax.swing.*;
@@ -123,7 +123,7 @@ public class GwtTransportServiceImpl {
     return application instanceof ApplicationEx && ((ApplicationEx)application).isLoaded();
   }
 
-  @NotNull
+  @Nonnull
   
   public List<GwtVirtualFile> listChildren(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
@@ -218,7 +218,7 @@ public class GwtTransportServiceImpl {
     return new GwtNavigateInfo(text[0], range[0], navigatables);
   }
 
-  @NotNull
+  @Nonnull
   
   public GwtEditorColorScheme serviceEditorColorScheme(String scheme, String[] colorKeys, String[] attributes) {
     GwtEditorColorScheme gwtScheme = new GwtEditorColorScheme(scheme);
@@ -257,7 +257,7 @@ public class GwtTransportServiceImpl {
     return gwtScheme;
   }
 
-  @NotNull
+  @Nonnull
   
   public List<String> serviceEditorColorSchemeList() {
     List<String> list = new ArrayList<String>();
@@ -299,7 +299,7 @@ public class GwtTransportServiceImpl {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   
   public List<GwtHighlightInfo> getLexerHighlight(String fileUrl) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
@@ -353,12 +353,12 @@ public class GwtTransportServiceImpl {
   }
 
 
-  @NotNull
+  @Nonnull
   public static GwtHighlightInfo createHighlightInfo(TextAttributes textAttributes, GwtTextRange textRange, int severity) {
     return new GwtHighlightInfo(createTextAttributes(textAttributes), textRange, severity);
   }
 
-  @NotNull
+  @Nonnull
   public static GwtTextAttributes createTextAttributes(TextAttributes textAttributes) {
     GwtColor foreground = null;
     GwtColor background = null;
@@ -382,12 +382,12 @@ public class GwtTransportServiceImpl {
     return new GwtTextAttributes(foreground, background, flags);
   }
 
-  @NotNull
+  @Nonnull
   private static GwtColor createColor(Color color) {
     return new GwtColor(color.getRed(), color.getGreen(), color.getBlue());
   }
 
-  @NotNull
+  @Nonnull
   
   public List<GwtHighlightInfo> runHighlightPasses(String fileUrl, final int offset) {
     final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(fileUrl);
@@ -442,7 +442,7 @@ public class GwtTransportServiceImpl {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   private static Editor findEditor(Project project, VirtualFile fileByUrl, final int offset) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     final FileEditor[] editors = fileEditorManager.getEditors(fileByUrl);

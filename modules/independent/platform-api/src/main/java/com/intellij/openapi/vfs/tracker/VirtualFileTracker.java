@@ -18,15 +18,15 @@ package com.intellij.openapi.vfs.tracker;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFileListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public interface VirtualFileTracker {
   void addTracker(
-    @NotNull String fileUrl,
-    @NotNull VirtualFileListener listener,
+    @Nonnull String fileUrl,
+    @Nonnull VirtualFileListener listener,
     boolean fromRefreshOnly,
-    @NotNull Disposable parentDisposable);
+    @Nonnull Disposable parentDisposable);
 }

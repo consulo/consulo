@@ -25,8 +25,8 @@ import com.intellij.util.ArrayUtil;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -42,7 +42,7 @@ class Win32FsCache {
     myCache = null;
   }
 
-  @NotNull
+  @Nonnull
   private TIntObjectHashMap<THashMap<String, FileAttributes>> getMap() {
     TIntObjectHashMap<THashMap<String, FileAttributes>> map = com.intellij.reference.SoftReference.dereference(myCache);
     if (map == null) {
@@ -52,8 +52,8 @@ class Win32FsCache {
     return map;
   }
 
-  @NotNull
-  String[] list(@NotNull VirtualFile file) {
+  @Nonnull
+  String[] list(@Nonnull VirtualFile file) {
     String path = file.getPath();
     FileInfo[] fileInfo = myKernel.listChildren(path);
     if (fileInfo == null || fileInfo.length == 0) {
@@ -78,7 +78,7 @@ class Win32FsCache {
   }
 
   @Nullable
-  FileAttributes getAttributes(@NotNull VirtualFile file) {
+  FileAttributes getAttributes(@Nonnull VirtualFile file) {
     VirtualFile parent = file.getParent();
     int parentId = parent instanceof VirtualFileWithId ? ((VirtualFileWithId)parent).getId() : -((VirtualFileWithId)file).getId();
     TIntObjectHashMap<THashMap<String, FileAttributes>> map = getMap();

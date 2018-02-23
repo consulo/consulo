@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -32,7 +32,7 @@ public class MockCreateParameterInfoContext implements CreateParameterInfoContex
   private final Editor myEditor;
   private final PsiFile myFile;
 
-  public MockCreateParameterInfoContext(@NotNull Editor editor, @NotNull PsiFile file) {
+  public MockCreateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file) {
     myEditor = editor;
     myFile = file;
   }
@@ -81,7 +81,7 @@ public class MockCreateParameterInfoContext implements CreateParameterInfoContex
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }

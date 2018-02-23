@@ -66,8 +66,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -117,15 +117,15 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
   };
 
-  public LanguageConsoleImpl(@NotNull Project project, @NotNull String title, @NotNull Language language) {
+  public LanguageConsoleImpl(@Nonnull Project project, @Nonnull String title, @Nonnull Language language) {
     this(new Helper(project, new LightVirtualFile(title, language, "")));
   }
 
-  public LanguageConsoleImpl(@NotNull Project project, @NotNull String title, @NotNull VirtualFile virtualFile) {
+  public LanguageConsoleImpl(@Nonnull Project project, @Nonnull String title, @Nonnull VirtualFile virtualFile) {
     this(new Helper(project, virtualFile).setTitle(title));
   }
 
-  public LanguageConsoleImpl(@NotNull Helper helper) {
+  public LanguageConsoleImpl(@Nonnull Helper helper) {
     super(helper.project, GlobalSearchScope.allScope(helper.project), true, true);
     myHelper = helper;
     EditorFactory editorFactory = EditorFactory.getInstance();
@@ -149,7 +149,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     ApplicationManager.getApplication().invokeLater(() -> installEditorFactoryListener(), getProject().getDisposed());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected final EditorEx doCreateConsoleEditor() {
     return myHistoryViewer;
@@ -159,7 +159,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
   protected final void disposeEditor() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createCenterComponent() {
     initComponents();
@@ -244,7 +244,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return myPromptAttributes;
   }
 
-  public void setPromptAttributes(@NotNull ConsoleViewContentType textAttributes) {
+  public void setPromptAttributes(@Nonnull ConsoleViewContentType textAttributes) {
     myPromptAttributes = textAttributes;
   }
 
@@ -271,45 +271,45 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return !myConsoleEditor.isRendererMode();
   }
 
-  @NotNull
+  @Nonnull
   public final PsiFile getFile() {
     return myHelper.getFileSafe();
   }
 
-  @NotNull
+  @Nonnull
   public final VirtualFile getVirtualFile() {
     return myHelper.virtualFile;
   }
 
-  @NotNull
+  @Nonnull
   public final EditorEx getHistoryViewer() {
     return myHistoryViewer;
   }
 
-  @NotNull
+  @Nonnull
   public final Document getEditorDocument() {
     return myEditorDocument;
   }
 
-  @NotNull
+  @Nonnull
   public final EditorEx getConsoleEditor() {
     return myConsoleEditor;
   }
 
-  @NotNull
+  @Nonnull
   public String getTitle() {
     return myHelper.title;
   }
 
-  public void setTitle(@NotNull String title) {
+  public void setTitle(@Nonnull String title) {
     myHelper.setTitle(title);
   }
 
-  public String addToHistory(@NotNull TextRange textRange, @NotNull EditorEx editor, boolean preserveMarkup) {
+  public String addToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean preserveMarkup) {
     return addToHistoryInner(textRange, editor, false, preserveMarkup);
   }
 
-  @NotNull
+  @Nonnull
   public String prepareExecuteAction(boolean addToHistory, boolean preserveMarkup, boolean clearInput) {
     EditorEx editor = getCurrentEditor();
     Document document = editor.getDocument();
@@ -328,8 +328,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return text;
   }
 
-  @NotNull
-  protected String addToHistoryInner(@NotNull final TextRange textRange, @NotNull final EditorEx editor, boolean erase, final boolean preserveMarkup) {
+  @Nonnull
+  protected String addToHistoryInner(@Nonnull final TextRange textRange, @Nonnull final EditorEx editor, boolean erase, final boolean preserveMarkup) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     String result = addTextRangeToHistory(textRange, editor, preserveMarkup);
@@ -341,7 +341,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return result;
   }
 
-  public static String printWithHighlighting(@NotNull LanguageConsoleView console, @NotNull Editor inputEditor, @NotNull TextRange textRange) {
+  public static String printWithHighlighting(@Nonnull LanguageConsoleView console, @Nonnull Editor inputEditor, @Nonnull TextRange textRange) {
     String text;
     EditorHighlighter highlighter;
     if (inputEditor instanceof EditorWindow) {
@@ -367,8 +367,8 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return text;
   }
 
-  @NotNull
-  protected String addTextRangeToHistory(@NotNull TextRange textRange, @NotNull EditorEx inputEditor, boolean preserveMarkup) {
+  @Nonnull
+  protected String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup) {
     return printWithHighlighting(this, inputEditor, textRange);
 
 
@@ -439,14 +439,14 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     return super.getData(dataId);
   }
 
   private void installEditorFactoryListener() {
     FileEditorManagerAdapter fileEditorListener = new FileEditorManagerAdapter() {
       @Override
-      public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (myConsoleEditor == null || !Comparing.equal(file, getVirtualFile())) {
           return;
         }
@@ -467,7 +467,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       }
 
       @Override
-      public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (!Comparing.equal(file, getVirtualFile())) {
           return;
         }
@@ -485,22 +485,22 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
   }
 
-  @NotNull
+  @Nonnull
   public EditorEx getCurrentEditor() {
     return ObjectUtils.notNull(myCurrentEditor, myConsoleEditor);
   }
 
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return getFile().getLanguage();
   }
 
-  public void setLanguage(@NotNull Language language) {
+  public void setLanguage(@Nonnull Language language) {
     myHelper.setLanguage(language);
     myHelper.getFileSafe();
   }
 
-  public void setInputText(@NotNull final String query) {
+  public void setInputText(@Nonnull final String query) {
     DocumentUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
   }
 
@@ -518,7 +518,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     String title;
     PsiFile file;
 
-    public Helper(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    public Helper(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
       this.project = project;
       this.virtualFile = virtualFile;
       title = virtualFile.getName();
@@ -529,12 +529,12 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public PsiFile getFile() {
       return ReadAction.compute(() -> PsiUtilCore.getPsiFile(project, virtualFile));
     }
 
-    @NotNull
+    @Nonnull
     public Document getDocument() {
       Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
       if (document == null) {
@@ -552,7 +552,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       FileContentUtil.reparseFiles(project, Collections.singletonList(virtualFile), false);
     }
 
-    public void setupEditor(@NotNull EditorEx editor) {
+    public void setupEditor(@Nonnull EditorEx editor) {
       ConsoleViewUtil.setupConsoleEditor(editor, false, false);
       editor.getContentComponent().setFocusCycleRoot(false);
       editor.setHorizontalScrollbarVisible(true);
@@ -566,13 +566,13 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
       DataManager.registerDataProvider(editor.getComponent(), (dataId) -> getEditorData(editor, dataId));
     }
 
-    @NotNull
+    @Nonnull
     PsiFile getFileSafe() {
       return file == null || !file.isValid() ? file = getFile() : file;
     }
 
     @Nullable
-    protected Object getEditorData(@NotNull EditorEx editor, Key dataId) {
+    protected Object getEditorData(@Nonnull EditorEx editor, Key dataId) {
       if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
         return editor;
       }
@@ -591,7 +591,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
 
     @Override
-    public void layoutContainer(@NotNull final Container parent) {
+    public void layoutContainer(@Nonnull final Container parent) {
       final int componentCount = parent.getComponentCount();
       if (componentCount == 0) {
         return;

@@ -18,7 +18,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeListener;
 
@@ -49,5 +49,6 @@ public interface IndexPatternProvider {
    *
    * @return the array of index patterns
    */
-  @NotNull IndexPattern[] getIndexPatterns();
+  @Nonnull
+  IndexPattern[] getIndexPatterns();
 }

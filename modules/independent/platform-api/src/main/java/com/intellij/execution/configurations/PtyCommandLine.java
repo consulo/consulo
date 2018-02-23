@@ -23,7 +23,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ArrayUtil;
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,9 +53,9 @@ public class PtyCommandLine extends GeneralCommandLine {
   public PtyCommandLine() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected Process startProcess(@NotNull List<String> commands) throws IOException {
+  protected Process startProcess(@Nonnull List<String> commands) throws IOException {
     try {
       return startProcessWithPty(commands, myConsoleMode);
     }
@@ -92,8 +92,8 @@ public class PtyCommandLine extends GeneralCommandLine {
     return ApplicationProperties.isInSandbox() ? new File(PathManager.getLogPath(), "pty.log") : null;
   }
 
-  @NotNull
-  public Process startProcessWithPty(@NotNull List<String> commands, boolean console) throws IOException {
+  @Nonnull
+  public Process startProcessWithPty(@Nonnull List<String> commands, boolean console) throws IOException {
     Map<String, String> env = new HashMap<>();
     setupEnvironment(env);
 

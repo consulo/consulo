@@ -19,8 +19,8 @@ import com.intellij.diff.tools.util.DiffSplitter.Painter;
 import com.intellij.diff.util.Side;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -28,10 +28,12 @@ import java.awt.*;
 import java.util.List;
 
 public class ThreeDiffSplitter extends JPanel {
-  @NotNull private final List<Divider> myDividers;
-  @NotNull private final List<? extends JComponent> myContents;
+  @Nonnull
+  private final List<Divider> myDividers;
+  @Nonnull
+  private final List<? extends JComponent> myContents;
 
-  public ThreeDiffSplitter(@NotNull List<? extends JComponent> components) {
+  public ThreeDiffSplitter(@Nonnull List<? extends JComponent> components) {
     myDividers = ContainerUtil.list(new Divider(), new Divider());
     myContents = components;
 
@@ -40,7 +42,7 @@ public class ThreeDiffSplitter extends JPanel {
   }
 
   @RequiredDispatchThread
-  public void setPainter(@Nullable Painter painter, @NotNull Side side) {
+  public void setPainter(@javax.annotation.Nullable Painter painter, @Nonnull Side side) {
     getDivider(side).setPainter(painter);
   }
 
@@ -49,16 +51,16 @@ public class ThreeDiffSplitter extends JPanel {
     repaintDivider(Side.RIGHT);
   }
 
-  public void repaintDivider(@NotNull Side side) {
+  public void repaintDivider(@Nonnull Side side) {
     getDivider(side).repaint();
   }
 
-  @NotNull
-  private Divider getDivider(@NotNull Side side) {
+  @Nonnull
+  private Divider getDivider(@Nonnull Side side) {
     return myDividers.get(side.getIndex());
   }
 
-  private void addAll(@NotNull List<? extends JComponent> components) {
+  private void addAll(@Nonnull List<? extends JComponent> components) {
     for (JComponent component : components) {
       add(component, -1);
     }
@@ -101,7 +103,7 @@ public class ThreeDiffSplitter extends JPanel {
     }
 
     @RequiredDispatchThread
-    public void setPainter(@Nullable Painter painter) {
+    public void setPainter(@javax.annotation.Nullable Painter painter) {
       myPainter = painter;
     }
   }

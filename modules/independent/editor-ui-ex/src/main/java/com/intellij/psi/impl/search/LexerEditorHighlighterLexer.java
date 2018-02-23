@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.text.CharSequenceSubSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Sergey Evdokimov
@@ -39,7 +39,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
   }
 
   @Override
-  public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int state) {
+  public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int state) {
     if (myAlreadyInitializedHighlighter) {
       this.buffer = buffer;
       start = startOffset;
@@ -80,7 +80,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
     iterator.advance();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getBufferSequence() {
     return buffer;

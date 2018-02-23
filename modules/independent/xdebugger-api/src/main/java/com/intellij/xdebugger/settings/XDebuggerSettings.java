@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.xdebugger.XDebuggerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +40,7 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
 
   private final String myId;
 
-  protected XDebuggerSettings(final @NotNull @NonNls String id) {
+  protected XDebuggerSettings(final @Nonnull @NonNls String id) {
     myId = id;
   }
 
@@ -52,11 +52,11 @@ public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T
     return myId;
   }
 
-  @NotNull
-  public Collection<? extends Configurable> createConfigurables(@NotNull DebuggerSettingsCategory category) {
+  @Nonnull
+  public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
     return Collections.emptyList();
   }
 
-  public void generalApplied(@NotNull DebuggerSettingsCategory category) {
+  public void generalApplied(@Nonnull DebuggerSettingsCategory category) {
   }
 }

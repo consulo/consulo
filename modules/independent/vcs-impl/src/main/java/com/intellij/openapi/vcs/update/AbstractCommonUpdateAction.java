@@ -49,8 +49,7 @@ import com.intellij.vcs.ViewUpdateInfoNotification;
 import com.intellij.vcsUtil.VcsUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -78,7 +77,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
   }
 
   @Override
-  protected void actionPerformed(@NotNull final VcsContext context) {
+  protected void actionPerformed(@Nonnull final VcsContext context) {
     final Project project = context.getProject();
 
     boolean showUpdateOptions = myActionInfo.showOptions(project);
@@ -179,7 +178,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     return envToConfMap;
   }
 
-  private Map<AbstractVcs, Collection<FilePath>> createVcsToFilesMap(@NotNull FilePath[] roots, @NotNull Project project) {
+  private Map<AbstractVcs, Collection<FilePath>> createVcsToFilesMap(@Nonnull FilePath[] roots, @Nonnull Project project) {
     MultiMap<AbstractVcs, FilePath> resultPrep = MultiMap.createSet();
     for (FilePath file : roots) {
       AbstractVcs vcs = VcsUtil.getVcsFor(project, file);
@@ -199,7 +198,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private FilePath[] filterRoots(FilePath[] roots, VcsContext vcsContext) {
     final ArrayList<FilePath> result = new ArrayList<>();
     final Project project = vcsContext.getProject();
@@ -232,7 +231,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
   protected abstract boolean filterRootsBeforeAction();
 
   @Override
-  protected void update(@NotNull VcsContext vcsContext, @NotNull Presentation presentation) {
+  protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
     Project project = vcsContext.getProject();
 
     if (project != null) {
@@ -331,7 +330,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     }
 
     @Override
-    public void run(@NotNull final ProgressIndicator indicator) {
+    public void run(@Nonnull final ProgressIndicator indicator) {
       runImpl();
     }
 
@@ -397,7 +396,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       }
     }
 
-    private void putExceptions(final HotfixData key, @NotNull final List<VcsException> list) {
+    private void putExceptions(final HotfixData key, @Nonnull final List<VcsException> list) {
       if (list.isEmpty()) return;
       myGroupedExceptions.computeIfAbsent(key, k -> new ArrayList<>()).addAll(list);
     }
@@ -418,8 +417,8 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       });
     }
 
-    @NotNull
-    private Notification prepareNotification(@NotNull UpdateInfoTree tree, boolean someSessionWasCancelled) {
+    @Nonnull
+    private Notification prepareNotification(@Nonnull UpdateInfoTree tree, boolean someSessionWasCancelled) {
       int allFiles = getUpdatedFilesCount();
 
       String title;
@@ -443,12 +442,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       return myUpdatedFiles.getTopLevelGroups().stream().mapToInt(this::getFilesCount).sum();
     }
 
-    private int getFilesCount(@NotNull FileGroup group) {
+    private int getFilesCount(@Nonnull FileGroup group) {
       return group.getFiles().size() + group.getChildren().stream().mapToInt(g -> getFilesCount(g)).sum();
     }
 
-    @Nullable
-    private String prepareScopeUpdatedText(@NotNull UpdateInfoTree tree) {
+    @javax.annotation.Nullable
+    private String prepareScopeUpdatedText(@Nonnull UpdateInfoTree tree) {
       String scopeText = null;
       NamedScope scopeFilter = tree.getFilterScope();
       if (scopeFilter != null) {
@@ -586,7 +585,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
       }
     }
 
-    @NotNull
+    @Nonnull
     private UpdateInfoTree showUpdateTree(final boolean willBeContinued, final boolean wasCanceled) {
       RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(myProject);
       restoreUpdateTree.registerUpdateInformation(myUpdatedFiles, myActionInfo);

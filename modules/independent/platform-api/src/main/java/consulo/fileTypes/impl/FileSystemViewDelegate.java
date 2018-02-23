@@ -17,10 +17,11 @@ package consulo.fileTypes.impl;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import sun.awt.shell.ShellFolder;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -45,7 +46,7 @@ public class FileSystemViewDelegate {
   }
 
   @Nullable
-  public static Icon getIcon(@NotNull File file) {
+  public static Icon getIcon(@Nonnull File file) {
     if (ourShellFolderMethod == null) {
       return getDefaultIcon(file);
     }
@@ -82,7 +83,7 @@ public class FileSystemViewDelegate {
     return getDefaultIcon(file);
   }
 
-  private static Icon getDefaultIcon(@NotNull File f) {
+  private static Icon getDefaultIcon(@Nonnull File f) {
     return UIManager.getIcon(f.isDirectory() ? "FileView.directoryIcon" : "FileView.fileIcon");
   }
 }

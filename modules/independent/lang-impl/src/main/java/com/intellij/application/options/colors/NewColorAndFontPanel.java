@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.GuiUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -143,7 +143,7 @@ public class NewColorAndFontPanel extends JPanel {
     return myOptionsPanel.showOption(option);
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> processListOptions() {
     if (myOptionList == null) {
       return myOptionsPanel.processListOptions();

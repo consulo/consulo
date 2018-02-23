@@ -24,8 +24,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.text.ParseException;
@@ -35,7 +34,7 @@ import java.util.Date;
 public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
   private String myFileName;
 
-  public ImportTestsFromHistoryAction(@Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
+  public ImportTestsFromHistoryAction(@javax.annotation.Nullable SMTRunnerConsoleProperties properties, Project project, String name) {
     super(properties, getPresentableText(project, name), getPresentableText(project, name), getIcon(project, name));
     myFileName = name;
   }
@@ -60,9 +59,9 @@ public class ImportTestsFromHistoryAction extends AbstractImportTestsAction {
     return nameWithoutExtension;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public VirtualFile getFile(@NotNull Project project) {
+  public VirtualFile getFile(@Nonnull Project project) {
     return LocalFileSystem.getInstance().findFileByPath(TestStateStorage.getTestHistoryRoot(project).getPath() + "/" + myFileName);
   }
 }

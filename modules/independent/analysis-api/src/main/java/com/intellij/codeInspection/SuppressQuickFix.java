@@ -17,9 +17,9 @@ package com.intellij.codeInspection;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SuppressQuickFix extends LocalQuickFix {
   SuppressQuickFix[] EMPTY_ARRAY = new SuppressQuickFix[0];
-  boolean isAvailable(@NotNull final Project project, @NotNull final PsiElement context);
+  boolean isAvailable(@Nonnull final Project project, @Nonnull final PsiElement context);
 }

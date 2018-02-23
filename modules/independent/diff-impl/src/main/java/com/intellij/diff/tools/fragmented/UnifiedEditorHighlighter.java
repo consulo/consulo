@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,22 +37,24 @@ import java.util.List;
 class UnifiedEditorHighlighter implements EditorHighlighter {
   public static final Logger LOG = UnifiedDiffViewer.LOG;
 
-  @NotNull private final Document myDocument;
-  @NotNull private final List<Element> myPieces;
+  @Nonnull
+  private final Document myDocument;
+  @Nonnull
+  private final List<Element> myPieces;
 
-  public UnifiedEditorHighlighter(@NotNull Document document,
-                                  @NotNull EditorHighlighter highlighter1,
-                                  @NotNull EditorHighlighter highlighter2,
-                                  @NotNull List<HighlightRange> ranges,
+  public UnifiedEditorHighlighter(@Nonnull Document document,
+                                  @Nonnull EditorHighlighter highlighter1,
+                                  @Nonnull EditorHighlighter highlighter2,
+                                  @Nonnull List<HighlightRange> ranges,
                                   int textLength) {
     myDocument = document;
     myPieces = new ArrayList<Element>();
     init(highlighter1.createIterator(0), highlighter2.createIterator(0), ranges, textLength);
   }
 
-  private void init(@NotNull HighlighterIterator it1,
-                    @NotNull HighlighterIterator it2,
-                    @NotNull List<HighlightRange> ranges,
+  private void init(@Nonnull HighlighterIterator it1,
+                    @Nonnull HighlighterIterator it2,
+                    @Nonnull List<HighlightRange> ranges,
                     int textLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
@@ -110,7 +112,7 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
     }
   }
 
-  private void addElement(@NotNull Element element) {
+  private void addElement(@Nonnull Element element) {
     boolean merged = false;
     if (!myPieces.isEmpty()) {
       Element oldElement = myPieces.get(myPieces.size() - 1);
@@ -130,7 +132,7 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     int index = Collections.binarySearch(myPieces, new Element(startOffset, 0, null, null), new Comparator<Element>() {
@@ -146,15 +148,15 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
   }
 
   @Override
-  public void setColorScheme(@NotNull EditorColorsScheme scheme) {
+  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
   }
 
   @Override
-  public void setEditor(@NotNull HighlighterClient editor) {
+  public void setEditor(@Nonnull HighlighterClient editor) {
   }
 
   @Override
-  public void setText(@NotNull CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
   }
 
   @Override
@@ -170,7 +172,7 @@ class UnifiedEditorHighlighter implements EditorHighlighter {
     private int myIdx;
     private final List<Element> myPieces;
 
-    private ProxyIterator(@NotNull Document document, int idx, @NotNull List<Element> pieces) {
+    private ProxyIterator(@Nonnull Document document, int idx, @Nonnull List<Element> pieces) {
       myDocument = document;
       myIdx = idx;
       myPieces = pieces;

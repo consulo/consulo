@@ -19,8 +19,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.ide.script.IdeScriptEngine;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class IDE {
   private final Map<Object, Object> bindings = ContainerUtil.newConcurrentMap();
   private final IdeScriptEngine myEngine;
 
-  public IDE(@Nullable Project project, @NotNull IdeScriptEngine engine) {
+  public IDE(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
     this.project = project;
     myEngine = engine;
   }

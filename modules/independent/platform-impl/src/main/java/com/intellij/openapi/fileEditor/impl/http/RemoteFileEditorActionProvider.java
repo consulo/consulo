@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class RemoteFileEditorActionProvider {
   public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.http.fileEditorActionProvider");
 
-  @NotNull
-  public abstract AnAction[] createToolbarActions(@NotNull Project project, @NotNull HttpVirtualFile file);
+  @Nonnull
+  public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);
 
 }

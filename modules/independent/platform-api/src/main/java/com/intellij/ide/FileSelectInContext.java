@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,18 +26,18 @@ public class FileSelectInContext implements SelectInContext {
   private final Project myProject;
   private final VirtualFile myFile;
 
-  public FileSelectInContext(@NotNull Project project, @NotNull VirtualFile file) {
+  public FileSelectInContext(@Nonnull Project project, @Nonnull VirtualFile file) {
     myProject = project;
     myFile = file;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getVirtualFile() {
     return myFile;

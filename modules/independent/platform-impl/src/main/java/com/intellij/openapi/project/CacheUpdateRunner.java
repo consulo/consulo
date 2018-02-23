@@ -32,7 +32,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -92,11 +92,11 @@ public class CacheUpdateRunner {
     }
   }
 
-  private static boolean processSomeFilesWhileUserIsInactive(@NotNull FileContentQueue queue,
-                                                             @NotNull Consumer<VirtualFile> progressUpdater,
+  private static boolean processSomeFilesWhileUserIsInactive(@Nonnull FileContentQueue queue,
+                                                             @Nonnull Consumer<VirtualFile> progressUpdater,
                                                              final boolean processInReadAction,
-                                                             @NotNull Project project,
-                                                             @NotNull Consumer<FileContent> fileProcessor) {
+                                                             @Nonnull Project project,
+                                                             @Nonnull Consumer<FileContent> fileProcessor) {
     final ProgressIndicatorBase innerIndicator = new ProgressIndicatorBase() {
       @Override
       protected boolean isCancelable() {
@@ -105,7 +105,7 @@ public class CacheUpdateRunner {
     };
     final ApplicationAdapter canceller = new ApplicationAdapter() {
       @Override
-      public void beforeWriteActionStart(@NotNull Object action) {
+      public void beforeWriteActionStart(@Nonnull Object action) {
         innerIndicator.cancel();
       }
     };
@@ -152,7 +152,7 @@ public class CacheUpdateRunner {
     return threadsCount;
   }
 
-  private static boolean waitForAll(@NotNull AtomicBoolean[] finishedRefs, @NotNull Future<?>[] futures) {
+  private static boolean waitForAll(@Nonnull AtomicBoolean[] finishedRefs, @Nonnull Future<?>[] futures) {
     assert !ApplicationManager.getApplication().isWriteAccessAllowed();
     try {
       for (Future<?> future : futures) {
@@ -182,16 +182,18 @@ public class CacheUpdateRunner {
     private final AtomicBoolean myFinished;
     private final Consumer<VirtualFile> myProgressUpdater;
     private final boolean myProcessInReadAction;
-    @NotNull private final Project myProject;
-    @NotNull private final Consumer<FileContent> myProcessor;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final Consumer<FileContent> myProcessor;
 
-    public MyRunnable(@NotNull ProgressIndicatorBase innerIndicator,
-                      @NotNull FileContentQueue queue,
-                      @NotNull AtomicBoolean finished,
-                      @NotNull Consumer<VirtualFile> progressUpdater,
+    public MyRunnable(@Nonnull ProgressIndicatorBase innerIndicator,
+                      @Nonnull FileContentQueue queue,
+                      @Nonnull AtomicBoolean finished,
+                      @Nonnull Consumer<VirtualFile> progressUpdater,
                       boolean processInReadAction,
-                      @NotNull Project project,
-                      @NotNull Consumer<FileContent> fileProcessor) {
+                      @Nonnull Project project,
+                      @Nonnull Consumer<FileContent> fileProcessor) {
       myInnerIndicator = innerIndicator;
       myQueue = queue;
       myFinished = finished;

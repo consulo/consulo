@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface VcsLineAnnotationData {
   int getNumLines();
-  @Nullable
+  @javax.annotation.Nullable
   VcsRevisionNumber getRevision(final int lineNumber);
   void put(final int lineNumber, final VcsRevisionNumber revisionNumber);
 }

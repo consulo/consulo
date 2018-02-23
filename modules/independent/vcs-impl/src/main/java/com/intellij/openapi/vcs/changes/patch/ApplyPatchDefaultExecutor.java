@@ -31,8 +31,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -51,8 +51,8 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
   @RequiredDispatchThread
   @Override
-  public void apply(@NotNull List<FilePatch> remaining, @NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
-                    @Nullable LocalChangeList localList,
+  public void apply(@Nonnull List<FilePatch> remaining, @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
+                    @javax.annotation.Nullable LocalChangeList localList,
                     @Nullable String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     final CommitContext commitContext = new CommitContext();
@@ -61,10 +61,10 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     executeAndApplyAdditionalInfo(localList, additionalInfo, commitContext, appliers);
   }
 
-  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@Nullable LocalChangeList localList,
+  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@javax.annotation.Nullable LocalChangeList localList,
                                                            @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
-                                                           @NotNull CommitContext commitContext,
-                                                           @NotNull Collection<PatchApplier> appliers) {
+                                                           @Nonnull CommitContext commitContext,
+                                                           @Nonnull Collection<PatchApplier> appliers) {
     final ApplyPatchStatus applyPatchStatus = PatchApplier.executePatchGroup(appliers, localList);
     if (applyPatchStatus != ApplyPatchStatus.ABORT) {
       applyAdditionalInfo(myProject, additionalInfo, commitContext);
@@ -72,10 +72,10 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     return applyPatchStatus;
   }
 
-  @NotNull
-  protected Collection<PatchApplier> getPatchAppliers(@NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups,
+  @Nonnull
+  protected Collection<PatchApplier> getPatchAppliers(@Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups,
                                                       @Nullable LocalChangeList localList,
-                                                      @NotNull CommitContext commitContext) {
+                                                      @Nonnull CommitContext commitContext) {
     final Collection<PatchApplier> appliers = new LinkedList<>();
     for (VirtualFile base : patchGroups.keySet()) {
       appliers.add(new PatchApplier<BinaryFilePatch>(myProject, base,
@@ -114,7 +114,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   private static void applyAdditionalInfoImpl(final Project project,
-                                              @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                              @javax.annotation.Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                               CommitContext commitContext, final Consumer<InfoGroup> worker) {
     final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
     if (extensions.length == 0) return;

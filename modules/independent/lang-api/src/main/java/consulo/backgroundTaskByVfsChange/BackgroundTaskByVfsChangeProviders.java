@@ -18,8 +18,8 @@ package consulo.backgroundTaskByVfsChange;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
-import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +29,8 @@ import java.util.List;
  * @since 01.05.14
  */
 public class BackgroundTaskByVfsChangeProviders {
-  @NotNull
-  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+  @Nonnull
+  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     List<BackgroundTaskByVfsChangeProvider> providers = new SmartList<BackgroundTaskByVfsChangeProvider>();
     for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensions()) {
       if (provider.validate(project, virtualFile)) {

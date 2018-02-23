@@ -27,8 +27,8 @@ import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -42,12 +42,15 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   private static final Logger LOG = Logger.getInstance("#com.intellij.util.gist.VirtualFileGist");
   private static final int ourInternalVersion = 2;
 
-  @NotNull private final String myId;
+  @Nonnull
+  private final String myId;
   private final int myVersion;
-  @NotNull private final GistCalculator<Data> myCalculator;
-  @NotNull private final DataExternalizer<Data> myExternalizer;
+  @Nonnull
+  private final GistCalculator<Data> myCalculator;
+  @Nonnull
+  private final DataExternalizer<Data> myExternalizer;
 
-  VirtualFileGistImpl(@NotNull String id, int version, @NotNull DataExternalizer<Data> externalizer, @NotNull GistCalculator<Data> calcData) {
+  VirtualFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull GistCalculator<Data> calcData) {
     myId = id;
     myVersion = version;
     myExternalizer = externalizer;
@@ -55,7 +58,7 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   }
 
   @Override
-  public Data getFileData(@NotNull Project project, @NotNull VirtualFile file) {
+  public Data getFileData(@Nonnull Project project, @Nonnull VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     ProgressManager.checkCanceled();
 

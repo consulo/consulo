@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.compiler;
 
 import com.intellij.packaging.artifacts.Artifact;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -25,6 +25,6 @@ import java.util.Collection;
  */
 public interface ArtifactAwareCompiler {
 
-  boolean shouldRun(@NotNull Collection<? extends Artifact> changedArtifacts);
+  boolean shouldRun(@Nonnull Collection<? extends Artifact> changedArtifacts);
 
 }

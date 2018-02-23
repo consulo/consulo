@@ -26,7 +26,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -35,7 +35,7 @@ import java.util.*;
 * @author nik
 */
 public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPackagingElement> {
-  @NotNull
+  @Nonnull
   public static ArtifactElementType getInstance() {
     return getInstance(ArtifactElementType.class);
   }
@@ -44,21 +44,21 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     super("artifact", CompilerBundle.message("element.type.name.artifact"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
     return !getAvailableArtifacts(context, artifact, false).isEmpty();
   }
 
   @Override
-  @NotNull
-  public List<? extends ArtifactPackagingElement> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                   @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends ArtifactPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                                  @Nonnull CompositePackagingElement<?> parent) {
     final Project project = context.getProject();
     List<Artifact> artifacts = context.chooseArtifacts(getAvailableArtifacts(context, artifact, false), CompilerBundle.message("dialog.title.choose.artifacts"));
     final List<ArtifactPackagingElement> elements = new ArrayList<ArtifactPackagingElement>();
@@ -68,9 +68,9 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
     return elements;
   }
 
-  @NotNull
-  public static List<? extends Artifact> getAvailableArtifacts(@NotNull final ArtifactEditorContext context,
-                                                               @NotNull final Artifact artifact,
+  @Nonnull
+  public static List<? extends Artifact> getAvailableArtifacts(@Nonnull final ArtifactEditorContext context,
+                                                               @Nonnull final Artifact artifact,
                                                                final boolean notIncludedOnly) {
     final Set<Artifact> result = new HashSet<Artifact>(Arrays.asList(context.getArtifactModel().getArtifacts()));
     if (notIncludedOnly) {
@@ -103,8 +103,8 @@ public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPac
   }
 
   @Override
-  @NotNull
-  public ArtifactPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public ArtifactPackagingElement createEmpty(@Nonnull Project project) {
     return new ArtifactPackagingElement(project);
   }
 

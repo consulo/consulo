@@ -48,8 +48,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Collection;
@@ -60,25 +60,25 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   private final DocumentCommitProcessor myDocumentCommitThread;
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
-  public PsiDocumentManagerImpl(@NotNull final Project project,
-                                @NotNull PsiManager psiManager,
-                                @NotNull EditorFactory editorFactory,
-                                @NotNull MessageBus bus,
-                                @NonNls @NotNull final DocumentCommitProcessor documentCommitThread) {
+  public PsiDocumentManagerImpl(@Nonnull final Project project,
+                                @Nonnull PsiManager psiManager,
+                                @Nonnull EditorFactory editorFactory,
+                                @Nonnull MessageBus bus,
+                                @NonNls @Nonnull final DocumentCommitProcessor documentCommitThread) {
     super(project, psiManager, bus, documentCommitThread);
     myDocumentCommitThread = documentCommitThread;
     editorFactory.getEventMulticaster().addDocumentListener(this, project);
     MessageBusConnection connection = bus.connect();
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
-      public void fileContentLoaded(@NotNull final VirtualFile virtualFile, @NotNull Document document) {
+      public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {
         PsiFile psiFile = ReadAction.compute(() -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile));
         fireDocumentCreated(document, psiFile);
       }
     });
     connection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
       @Override
-      public void updateFinished(@NotNull Document doc) {
+      public void updateFinished(@Nonnull Document doc) {
         documentCommitThread.commitAsynchronously(project, doc, "Bulk update finished", TransactionGuard.getInstance().getContextTransaction());
       }
     });
@@ -87,7 +87,7 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
 
   @Nullable
   @Override
-  public PsiFile getPsiFile(@NotNull Document document) {
+  public PsiFile getPsiFile(@Nonnull Document document) {
     final PsiFile psiFile = super.getPsiFile(document);
     if (myUnitTestMode) {
       final VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
@@ -128,14 +128,14 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   }
 
   @Override
-  protected void beforeDocumentChangeOnUnlockedDocument(@NotNull final FileViewProvider viewProvider) {
+  protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
     PostprocessReformattingAspect.getInstance(myProject).beforeDocumentChanged(viewProvider);
     super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
   }
 
   @Override
-  protected boolean finishCommitInWriteAction(@NotNull Document document,
-                                              @NotNull List<Processor<Document>> finishProcessors,
+  protected boolean finishCommitInWriteAction(@Nonnull Document document,
+                                              @Nonnull List<Processor<Document>> finishProcessors,
                                               boolean synchronously) {
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) { // can be false for non-physical PSI
       EditorWindowImpl.disposeInvalidEditors();
@@ -144,13 +144,13 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   }
 
   @Override
-  public boolean isDocumentBlockedByPsi(@NotNull Document doc) {
+  public boolean isDocumentBlockedByPsi(@Nonnull Document doc) {
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
     return viewProvider != null && PostprocessReformattingAspect.getInstance(myProject).isViewProviderLocked(viewProvider);
   }
 
   @Override
-  public void doPostponedOperationsAndUnblockDocument(@NotNull Document doc) {
+  public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
     final PostprocessReformattingAspect component = myProject.getComponent(PostprocessReformattingAspect.class);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
@@ -182,13 +182,13 @@ public class PsiDocumentManagerImpl extends PsiDocumentManagerBase implements Se
   }
 
   @Override
-  public void reparseFiles(@NotNull Collection<VirtualFile> files, boolean includeOpenFiles) {
+  public void reparseFiles(@Nonnull Collection<VirtualFile> files, boolean includeOpenFiles) {
     FileContentUtil.reparseFiles(myProject, files, includeOpenFiles);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DocumentWindow freezeWindow(@NotNull DocumentWindow document) {
+  protected DocumentWindow freezeWindow(@Nonnull DocumentWindow document) {
     return MultiHostRegistrarImpl.freezeWindow((DocumentWindowImpl)document);
   }
 }

@@ -25,7 +25,7 @@ import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,8 +36,8 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
   }
 
   @Override
-  @NotNull
-  protected DebuggerActionHandler getHandler(@NotNull final DebuggerSupport debuggerSupport) {
+  @Nonnull
+  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
     return new QuickEvaluateHandlerWrapper(debuggerSupport.getQuickEvaluateHandler());
   }
 
@@ -49,7 +49,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
     }
 
     @Override
-    public void perform(@NotNull final Project project, final AnActionEvent event) {
+    public void perform(@Nonnull final Project project, final AnActionEvent event) {
       Editor editor = event.getData(CommonDataKeys.EDITOR);
       if (editor != null) {
         LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
@@ -59,7 +59,7 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
     }
 
     @Override
-    public boolean isEnabled(@NotNull final Project project, final AnActionEvent event) {
+    public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
       if (!myHandler.isEnabled(project)) {
         return false;
       }

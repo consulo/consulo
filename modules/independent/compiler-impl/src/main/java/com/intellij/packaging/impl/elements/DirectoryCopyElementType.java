@@ -25,7 +25,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,15 +43,15 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
     super("dir-copy", "Directory Content");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.CopyOfFolder;
   }
 
-  @NotNull
-  public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                   @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends DirectoryCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                                       @Nonnull CompositePackagingElement<?> parent) {
     final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
     final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<DirectoryCopyPackagingElement> list = new ArrayList<DirectoryCopyPackagingElement>();
@@ -61,8 +61,8 @@ public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopy
     return list;
   }
 
-  @NotNull
-  public DirectoryCopyPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public DirectoryCopyPackagingElement createEmpty(@Nonnull Project project) {
     return new DirectoryCopyPackagingElement();
   }
 }

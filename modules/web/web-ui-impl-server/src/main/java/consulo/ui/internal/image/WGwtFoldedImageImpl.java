@@ -19,7 +19,7 @@ import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +42,7 @@ public class WGwtFoldedImageImpl implements FoldedImage, WGwtImageWithState {
     return myImages[0].getWidth();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Image[] getImages() {
     return myImages;

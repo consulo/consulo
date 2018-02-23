@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class DirectoryInfo {
   /**
@@ -54,6 +54,6 @@ public abstract class DirectoryInfo {
   @Nullable
   public abstract VirtualFile getContentRoot();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Module getModule();
 }

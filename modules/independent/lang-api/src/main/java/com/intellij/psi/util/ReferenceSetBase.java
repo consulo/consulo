@@ -20,8 +20,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,15 +38,15 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
   private final PsiElement myElement;
   private final char mySeparator;
 
-  public ReferenceSetBase(@NotNull PsiElement element) {
+  public ReferenceSetBase(@Nonnull PsiElement element) {
     this(element, ElementManipulators.getOffsetInElement(element));
   }
   
-  public ReferenceSetBase(@NotNull PsiElement element, int offset) {
+  public ReferenceSetBase(@Nonnull PsiElement element, int offset) {
     this(ElementManipulators.getValueText(element), element, offset, DOT_SEPARATOR);
   }
 
-  public ReferenceSetBase(final String text, @NotNull PsiElement element, int offset, final char separator) {
+  public ReferenceSetBase(final String text, @Nonnull PsiElement element, int offset, final char separator) {
     myElement = element;
     mySeparator = separator;
     myReferences = parse(text, offset);
@@ -56,7 +56,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return true;
   }
   
-  @NotNull
+  @Nonnull
   protected List<T> parse(String str, int offset) {
 
     final List<T> references = new ArrayList<T>();
@@ -78,7 +78,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return next;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected T createReference(final TextRange range, final int index) {
     return null;
   }

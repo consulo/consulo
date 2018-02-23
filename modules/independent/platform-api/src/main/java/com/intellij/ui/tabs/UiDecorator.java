@@ -15,13 +15,13 @@
  */
 package com.intellij.ui.tabs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
 public interface UiDecorator {
-  @NotNull
+  @Nonnull
   UiDecoration getDecoration();
 
   class UiDecoration {

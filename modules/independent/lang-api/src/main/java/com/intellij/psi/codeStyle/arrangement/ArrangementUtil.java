@@ -32,8 +32,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -51,8 +51,8 @@ public class ArrangementUtil {
 
   //region Serialization
 
-  @Nullable
-  public static ArrangementSettings readExternal(@NotNull Element element, @NotNull Language language) {
+  @javax.annotation.Nullable
+  public static ArrangementSettings readExternal(@Nonnull Element element, @Nonnull Language language) {
     ArrangementSettingsSerializer serializer = getSerializer(language);
     if (serializer == null) {
       LOG.error("Can't find serializer for language: " + language.getDisplayName() + "(" + language.getID() + ")");
@@ -62,7 +62,7 @@ public class ArrangementUtil {
     return serializer.deserialize(element);
   }
 
-  public static void writeExternal(@NotNull Element element, @NotNull ArrangementSettings settings, @NotNull Language language) {
+  public static void writeExternal(@Nonnull Element element, @Nonnull ArrangementSettings settings, @Nonnull Language language) {
     ArrangementSettingsSerializer serializer = getSerializer(language);
     if (serializer == null) {
       LOG.error("Can't find serializer for language: " + language.getDisplayName() + "(" + language.getID() + ")");
@@ -73,24 +73,24 @@ public class ArrangementUtil {
   }
 
   @Nullable
-  private static ArrangementSettingsSerializer getSerializer(@NotNull Language language) {
+  private static ArrangementSettingsSerializer getSerializer(@Nonnull Language language) {
     Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
     return rearranger == null ? null : rearranger.getSerializer();
   }
 
   //endregion
 
-  @NotNull
-  public static ArrangementMatchCondition combine(@NotNull ArrangementMatchCondition... nodes) {
+  @Nonnull
+  public static ArrangementMatchCondition combine(@Nonnull ArrangementMatchCondition... nodes) {
     final ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();
     final ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@NotNull ArrangementAtomMatchCondition node) {
+      public void visit(@Nonnull ArrangementAtomMatchCondition node) {
         result.addOperand(node);
       }
 
       @Override
-      public void visit(@NotNull ArrangementCompositeMatchCondition node) {
+      public void visit(@Nonnull ArrangementCompositeMatchCondition node) {
         for (ArrangementMatchCondition operand : node.getOperands()) {
           operand.invite(this);
         }
@@ -144,8 +144,8 @@ public class ArrangementUtil {
    * @param document      target document against which the ranges are built
    * @return              expanded range if possible; <code>null</code> otherwise
    */
-  @NotNull
-  public static TextRange expandToLineIfPossible(@NotNull TextRange initialRange, @NotNull Document document) {
+  @Nonnull
+  public static TextRange expandToLineIfPossible(@Nonnull TextRange initialRange, @Nonnull Document document) {
     CharSequence text = document.getCharsSequence();
     String ws = " \t";
 
@@ -164,12 +164,12 @@ public class ArrangementUtil {
   }
   //endregion
 
-  @Nullable
-  public static ArrangementSettingsToken parseType(@NotNull ArrangementMatchCondition condition) throws IllegalArgumentException {
+  @javax.annotation.Nullable
+  public static ArrangementSettingsToken parseType(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException {
     final Ref<ArrangementSettingsToken> result = new Ref<ArrangementSettingsToken>();
     condition.invite(new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
         ArrangementSettingsToken type = condition.getType();
         if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType()) || MODIFIER_AS_TYPE.contains(type)) {
           result.set(condition.getType());
@@ -177,7 +177,7 @@ public class ArrangementUtil {
       }
 
       @Override
-      public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
         for (ArrangementMatchCondition c : condition.getOperands()) {
           c.invite(this);
           if (result.get() != null) {
@@ -190,7 +190,7 @@ public class ArrangementUtil {
     return result.get();
   }
 
-  public static <T> Set<T> flatten(@NotNull Iterable<? extends Iterable<T>> data) {
+  public static <T> Set<T> flatten(@Nonnull Iterable<? extends Iterable<T>> data) {
     Set<T> result = ContainerUtilRt.newHashSet();
     for (Iterable<T> i : data) {
       for (T t : i) {
@@ -200,12 +200,12 @@ public class ArrangementUtil {
     return result;
   }
 
-  @NotNull
-  public static Map<ArrangementSettingsToken, Object> extractTokens(@NotNull ArrangementMatchCondition condition) {
+  @Nonnull
+  public static Map<ArrangementSettingsToken, Object> extractTokens(@Nonnull ArrangementMatchCondition condition) {
     final Map<ArrangementSettingsToken, Object> result = ContainerUtilRt.newHashMap();
     condition.invite(new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
         ArrangementSettingsToken type = condition.getType();
         Object value = condition.getValue();
         result.put(condition.getType(), type.equals(value) ? null : value);
@@ -219,7 +219,7 @@ public class ArrangementUtil {
       }
 
       @Override
-      public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
         for (ArrangementMatchCondition operand : condition.getOperands()) {
           operand.invite(this);
         }
@@ -228,13 +228,13 @@ public class ArrangementUtil {
     return result;
   }
 
-  @Nullable
-  public static ArrangementEntryMatcher buildMatcher(@NotNull ArrangementMatchCondition condition) {
+  @javax.annotation.Nullable
+  public static ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) {
     final Ref<ArrangementEntryMatcher> result = new Ref<ArrangementEntryMatcher>();
     final Stack<CompositeArrangementEntryMatcher> composites = new Stack<CompositeArrangementEntryMatcher>();
     ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
         ArrangementEntryMatcher matcher = buildMatcher(condition);
         if (matcher == null) {
           return;
@@ -248,7 +248,7 @@ public class ArrangementUtil {
       }
 
       @Override
-      public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
         composites.push(new CompositeArrangementEntryMatcher());
         try {
           for (ArrangementMatchCondition operand : condition.getOperands()) {
@@ -268,7 +268,7 @@ public class ArrangementUtil {
   }
 
   @Nullable
-  public static ArrangementEntryMatcher buildMatcher(@NotNull ArrangementAtomMatchCondition condition) {
+  public static ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementAtomMatchCondition condition) {
     if (StdArrangementTokenType.ENTRY_TYPE.is(condition.getType())) {
       return new ByTypeArrangementEntryMatcher(condition);
     }
@@ -286,11 +286,11 @@ public class ArrangementUtil {
     }
   }
 
-  @NotNull
-  public static ArrangementUiComponent buildUiComponent(@NotNull StdArrangementTokenUiRole role,
-                                                        @NotNull List<ArrangementSettingsToken> tokens,
-                                                        @NotNull ArrangementColorsProvider colorsProvider,
-                                                        @NotNull ArrangementStandardSettingsManager settingsManager)
+  @Nonnull
+  public static ArrangementUiComponent buildUiComponent(@Nonnull StdArrangementTokenUiRole role,
+                                                        @Nonnull List<ArrangementSettingsToken> tokens,
+                                                        @Nonnull ArrangementColorsProvider colorsProvider,
+                                                        @Nonnull ArrangementStandardSettingsManager settingsManager)
           throws IllegalArgumentException
   {
     for (ArrangementUiComponent.Factory factory : Extensions.getExtensions(ArrangementUiComponent.Factory.EP_NAME)) {
@@ -302,8 +302,8 @@ public class ArrangementUtil {
     throw new IllegalArgumentException("Unsupported UI token role " + role);
   }
 
-  @NotNull
-  public static List<CompositeArrangementSettingsToken> flatten(@NotNull CompositeArrangementSettingsToken base) {
+  @Nonnull
+  public static List<CompositeArrangementSettingsToken> flatten(@Nonnull CompositeArrangementSettingsToken base) {
     List<CompositeArrangementSettingsToken> result = ContainerUtilRt.newArrayList();
     Queue<CompositeArrangementSettingsToken> toProcess = ContainerUtilRt.newLinkedList(base);
     while (!toProcess.isEmpty()) {
@@ -315,8 +315,8 @@ public class ArrangementUtil {
   }
 
   //region Arrangement Sections
-  @NotNull
-  public static List<StdArrangementMatchRule> collectMatchRules(@NotNull List<ArrangementSectionRule> sections) {
+  @Nonnull
+  public static List<StdArrangementMatchRule> collectMatchRules(@Nonnull List<ArrangementSectionRule> sections) {
     final List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
     for (ArrangementSectionRule section : sections) {
       matchRules.addAll(section.getMatchRules());
@@ -326,12 +326,12 @@ public class ArrangementUtil {
   //endregion
 
   //region Arrangement Custom Tokens
-  public static List<ArrangementSectionRule> getExtendedSectionRules(@NotNull ArrangementSettings settings) {
+  public static List<ArrangementSectionRule> getExtendedSectionRules(@Nonnull ArrangementSettings settings) {
     return settings instanceof ArrangementExtendableSettings ?
            ((ArrangementExtendableSettings)settings).getExtendedSectionRules() : settings.getSections();
   }
 
-  public static boolean isAliasedCondition(@NotNull ArrangementAtomMatchCondition condition) {
+  public static boolean isAliasedCondition(@Nonnull ArrangementAtomMatchCondition condition) {
     return StdArrangementTokenType.ALIAS.is(condition.getType());
   }
   //endregion

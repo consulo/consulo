@@ -43,7 +43,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +64,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   private VirtualFile myActiveFile;
   private static final LightVirtualFile LIGHT_VIRTUAL_FILE = new LightVirtualFile("Dummy.java");
 
-  public TestEditorManagerImpl(@NotNull Project project) {
+  public TestEditorManagerImpl(@Nonnull Project project) {
     myProject = project;
     registerExtraEditorDataProvider(new TextEditorPsiDataProvider(), null);
 
@@ -79,8 +79,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  @NotNull
-  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull final VirtualFile file,
+  @Nonnull
+  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull final VirtualFile file,
                                                                         final boolean focusEditor,
                                                                         boolean searchForSplitter) {
     final Ref<Pair<FileEditor[], FileEditorProvider[]>> result = new Ref<>();
@@ -136,11 +136,11 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file,
+  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
                                                                         boolean focusEditor,
-                                                                        @NotNull EditorWindow window) {
+                                                                        @Nonnull EditorWindow window) {
     return openFileWithProviders(file, focusEditor, false);
   }
 
@@ -149,9 +149,9 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback notifyPublisher(@NotNull Runnable runnable) {
+  public ActionCallback notifyPublisher(@Nonnull Runnable runnable) {
     runnable.run();
     return ActionCallback.DONE;
   }
@@ -204,39 +204,39 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@NotNull VirtualFile file) {
+  public Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
     return null;
   }
 
   @Override
-  public boolean isChanged(@NotNull EditorComposite editor) {
+  public boolean isChanged(@Nonnull EditorComposite editor) {
     return false;
   }
 
   @Override
-  public EditorWindow getNextWindow(@NotNull EditorWindow window) {
+  public EditorWindow getNextWindow(@Nonnull EditorWindow window) {
     return null;
   }
 
   @Override
-  public EditorWindow getPrevWindow(@NotNull EditorWindow window) {
+  public EditorWindow getPrevWindow(@Nonnull EditorWindow window) {
     return null;
   }
 
   @Override
-  public void addTopComponent(@NotNull final FileEditor editor, @NotNull final JComponent component) {
+  public void addTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
   }
 
   @Override
-  public void removeTopComponent(@NotNull final FileEditor editor, @NotNull final JComponent component) {
+  public void removeTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
   }
 
   @Override
-  public void addBottomComponent(@NotNull final FileEditor editor, @NotNull final JComponent component) {
+  public void addBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
   }
 
   @Override
-  public void removeBottomComponent(@NotNull final FileEditor editor, @NotNull final JComponent component) {
+  public void removeBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component) {
   }
 
   @Override
@@ -249,34 +249,34 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   private static FileEditorProvider getProvider() {
     return new FileEditorProvider() {
       @Override
-      public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+      public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
         return false;
       }
 
       @Override
-      @NotNull
-      public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+      @Nonnull
+      public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
         throw new IncorrectOperationException();
       }
 
       @Override
-      public void disposeEditor(@NotNull FileEditor editor) {
+      public void disposeEditor(@Nonnull FileEditor editor) {
       }
 
       @Override
-      @NotNull
-      public FileEditorState readState(@NotNull Element sourceElement, @NotNull Project project, @NotNull VirtualFile file) {
+      @Nonnull
+      public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
         throw new IncorrectOperationException();
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getEditorTypeId() {
         return "";
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public FileEditorPolicy getPolicy() {
         throw new IncorrectOperationException();
       }
@@ -288,7 +288,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AsyncResult<EditorWindow> getActiveWindow() {
     return AsyncResult.done(null);
@@ -299,12 +299,12 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public VirtualFile getFile(@NotNull FileEditor editor) {
+  public VirtualFile getFile(@Nonnull FileEditor editor) {
     return LIGHT_VIRTUAL_FILE;
   }
 
   @Override
-  public void updateFilePresentation(@NotNull VirtualFile file) {
+  public void updateFilePresentation(@Nonnull VirtualFile file) {
   }
 
   @Override
@@ -318,39 +318,39 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorWindow[] getWindows() {
     return new EditorWindow[0];  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
-  public FileEditor getSelectedEditor(@NotNull VirtualFile file) {
+  public FileEditor getSelectedEditor(@Nonnull VirtualFile file) {
     final Editor editor = getEditor(file);
     return editor == null ? null : TextEditorProvider.getInstance().getTextEditor(editor);
   }
 
   @Override
-  public boolean isFileOpen(@NotNull VirtualFile file) {
+  public boolean isFileOpen(@Nonnull VirtualFile file) {
     return getEditor(file) != null;
   }
 
   @Override
-  @NotNull
-  public FileEditor[] getEditors(@NotNull VirtualFile file) {
+  @Nonnull
+  public FileEditor[] getEditors(@Nonnull VirtualFile file) {
     FileEditor e = getSelectedEditor(file);
     if (e == null) return new FileEditor[0];
     return new FileEditor[] {e};
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileEditor[] getAllEditors(@NotNull VirtualFile file) {
+  public FileEditor[] getAllEditors(@Nonnull VirtualFile file) {
     return getEditors(file);
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] getSiblings(@NotNull VirtualFile file) {
+  @Nonnull
+  public VirtualFile[] getSiblings(@Nonnull VirtualFile file) {
     throw new UnsupportedOperationException();
   }
 
@@ -360,7 +360,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void closeFile(@NotNull final VirtualFile file) {
+  public void closeFile(@Nonnull final VirtualFile file) {
     Editor editor = myVirtualFile2Editor.remove(file);
     if (editor != null){
       TextEditorProvider editorProvider = TextEditorProvider.getInstance();
@@ -380,18 +380,18 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void closeFile(@NotNull VirtualFile file, @NotNull EditorWindow window) {
+  public void closeFile(@Nonnull VirtualFile file, @Nonnull EditorWindow window) {
     closeFile(file);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSelectedFiles() {
     return myActiveFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{myActiveFile};
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileEditor[] getSelectedEditors() {
     return new FileEditor[0];
   }
@@ -407,7 +407,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getOpenFiles() {
     return VfsUtilCore.toVirtualFileArray(myVirtualFile2Editor.keySet());
   }
@@ -417,7 +417,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileEditor[] getAllEditors() {
     FileEditor[] result = new FileEditor[myVirtualFile2Editor.size()];
     int i = 0;
@@ -429,16 +429,16 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void showEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComponent) {
+  public void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
   }
 
 
   @Override
-  public void removeEditorAnnotation(@NotNull FileEditor editor, @NotNull JComponent annotationComponent) {
+  public void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
   }
 
   @Override
-  public Editor openTextEditor(@NotNull OpenFileDescriptor descriptor, boolean focusEditor) {
+  public Editor openTextEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
     final VirtualFile file = descriptor.getFile();
     Editor editor = myVirtualFile2Editor.get(file);
 
@@ -468,25 +468,25 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void addFileEditorManagerListener(@NotNull FileEditorManagerListener listener) {
+  public void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener) {
   }
 
   @Override
-  public void addFileEditorManagerListener(@NotNull FileEditorManagerListener listener, @NotNull Disposable parentDisposable) {
+  public void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeFileEditorManagerListener(@NotNull FileEditorManagerListener listener) {
+  public void removeFileEditorManagerListener(@Nonnull FileEditorManagerListener listener) {
   }
 
   @Override
-  @NotNull
-  public List<FileEditor> openEditor(@NotNull OpenFileDescriptor descriptor, boolean focusEditor) {
+  @Nonnull
+  public List<FileEditor> openEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
     return Collections.emptyList();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -497,8 +497,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  @NotNull
-  public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@NotNull VirtualFile file) {
+  @Nonnull
+  public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file) {
 
     Pair<FileEditor, FileEditorProvider> editorAndProvider = myTestEditorSplitter.getEditorAndProvider(file);
 
@@ -522,19 +522,19 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DesktopEditorsSplitters getSplitters() {
     throw new IncorrectOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     return ActionCallback.DONE;
   }
 
   @Override
-  public void setSelectedEditor(@NotNull VirtualFile file, @NotNull String fileEditorProviderId) {
+  public void setSelectedEditor(@Nonnull VirtualFile file, @Nonnull String fileEditorProviderId) {
   }
 }

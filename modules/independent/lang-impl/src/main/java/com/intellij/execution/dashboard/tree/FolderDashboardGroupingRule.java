@@ -25,8 +25,8 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author konstantin.aleev
@@ -35,12 +35,12 @@ public class FolderDashboardGroupingRule implements DashboardGroupingRule {
   @NonNls private static final String NAME = "FolderDashboardGroupingRule";
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionPresentation getPresentation() {
     return new ActionPresentationData(ExecutionBundle.message("run.dashboard.group.by.folder.action.name"),

@@ -25,32 +25,32 @@ import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.HtmlListCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
 public class FileAppearanceServiceImpl extends FileAppearanceService {
   private static CellAppearanceEx EMPTY = new CellAppearanceEx() {
     @Override
-    public void customize(@NotNull SimpleColoredComponent component) { }
+    public void customize(@Nonnull SimpleColoredComponent component) { }
 
     @Override
-    public void customize(@NotNull HtmlListCellRenderer renderer) { }
+    public void customize(@Nonnull HtmlListCellRenderer renderer) { }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getText() { return ""; }
   };
 
-  @NotNull
+  @Nonnull
   @Override
   public CellAppearanceEx empty() {
     return EMPTY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx forVirtualFile(@NotNull final VirtualFile file) {
+  public CellAppearanceEx forVirtualFile(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
       return forInvalidUrl(file.getPresentableUrl());
     }
@@ -68,9 +68,9 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
     return new ValidFileCellAppearance(file);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx forIoFile(@NotNull final File file) {
+  public CellAppearanceEx forIoFile(@Nonnull final File file) {
     final String absolutePath = file.getAbsolutePath();
     if (!file.exists()) {
       return forInvalidUrl(absolutePath);
@@ -89,8 +89,8 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
   }
 
   @Override
-  @NotNull
-  public CellAppearanceEx forInvalidUrl(@NotNull final String text) {
+  @Nonnull
+  public CellAppearanceEx forInvalidUrl(@Nonnull final String text) {
     return SimpleTextCellAppearance.invalid(text, AllIcons.Nodes.PpInvalid);
   }
 }

@@ -23,8 +23,8 @@ import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueCallback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -36,7 +36,7 @@ public abstract class XDebuggerEvaluator {
    * @param expression expression to evaluate
    * @param callback   used to notify that the expression has been evaluated or an error occurs
    */
-  public abstract void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition);
+  public abstract void evaluate(@Nonnull String expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition);
 
   /**
    * Start evaluating expression.
@@ -45,7 +45,7 @@ public abstract class XDebuggerEvaluator {
    * @param callback           used to notify that the expression has been evaluated or an error occurs
    * @param expressionPosition position where this expression should be evaluated
    */
-  public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
+  public void evaluate(@Nonnull XExpression expression, @Nonnull XEvaluationCallback callback, @javax.annotation.Nullable XSourcePosition expressionPosition) {
     evaluate(expression.getExpression(), callback, expressionPosition);
   }
 
@@ -82,8 +82,8 @@ public abstract class XDebuggerEvaluator {
    *                           (such expressions are evaluated in quick popups)
    * @return {@link ExpressionInfo} of expression which can be evaluated
    */
-  @Nullable
-  public ExpressionInfo getExpressionInfoAtOffset(@NotNull Project project, @NotNull Document document, int offset, boolean sideEffectsAllowed) {
+  @javax.annotation.Nullable
+  public ExpressionInfo getExpressionInfoAtOffset(@Nonnull Project project, @Nonnull Document document, int offset, boolean sideEffectsAllowed) {
     TextRange range = getExpressionRangeAtOffset(project, document, offset, sideEffectsAllowed);
     return range == null ? null : new ExpressionInfo(range);
   }
@@ -91,19 +91,19 @@ public abstract class XDebuggerEvaluator {
   /**
    * Override this method to format selected text before it is shown in 'Evaluate' dialog
    */
-  @NotNull
-  public String formatTextForEvaluation(@NotNull String text) {
+  @Nonnull
+  public String formatTextForEvaluation(@Nonnull String text) {
     return text;
   }
 
   /**
    * Returns mode which should be used to evaluate the text
    */
-  public EvaluationMode getEvaluationMode(@NotNull String text, int startOffset, int endOffset, @Nullable PsiFile psiFile) {
+  public EvaluationMode getEvaluationMode(@Nonnull String text, int startOffset, int endOffset, @Nullable PsiFile psiFile) {
     return text.contains("\n") ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION;
   }
 
   public interface XEvaluationCallback extends XValueCallback {
-    void evaluated(@NotNull XValue result);
+    void evaluated(@Nonnull XValue result);
   }
 }

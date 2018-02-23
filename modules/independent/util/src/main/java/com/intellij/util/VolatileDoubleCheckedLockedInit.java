@@ -16,7 +16,7 @@
 
 package com.intellij.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class VolatileDoubleCheckedLockedInit<T> {
   private volatile boolean myInitialized;

@@ -22,17 +22,17 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface StubIndexExtension<Key, Psi extends PsiElement> {
   ExtensionPointName<StubIndexExtension> EP_NAME = ExtensionPointName.create("com.intellij.stubIndex");
 
-  @NotNull
+  @Nonnull
   StubIndexKey<Key, Psi> getKey();
 
   int getVersion();
 
-  @NotNull
+  @Nonnull
   KeyDescriptor<Key> getKeyDescriptor();
 
   int getCacheSize();

@@ -19,7 +19,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +61,7 @@ public class EditSourceOnEnterKeyHandler{
   }
 
   public static void install(@Nullable final Runnable before, final JComponent component,
-                           @Nullable final Runnable whenPerformed) {
+                             @Nullable final Runnable whenPerformed) {
     component.registerKeyboardAction(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         DataContext dataContext = DataManager.getInstance().getDataContext(component);

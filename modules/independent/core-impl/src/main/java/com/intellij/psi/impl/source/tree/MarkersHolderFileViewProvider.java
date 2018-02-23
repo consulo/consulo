@@ -16,10 +16,10 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.openapi.editor.RangeMarker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface MarkersHolderFileViewProvider {
 
-  @NotNull
+  @Nonnull
   RangeMarker[] getCachedMarkers();
 }

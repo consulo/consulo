@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
     final InsertionContext context = createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);
     new WriteCommandAction(context.getProject()) {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         doHandleInsert(context);
       }
     }.execute();

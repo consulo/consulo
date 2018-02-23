@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.component;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,27 +28,29 @@ import javax.swing.*;
  */
 public class ArrangementLabelUiComponent extends AbstractArrangementUiComponent {
 
-  @NotNull private final ArrangementAtomMatchCondition myCondition;
-  @NotNull private final JLabel                        myLabel;
+  @Nonnull
+  private final ArrangementAtomMatchCondition myCondition;
+  @Nonnull
+  private final JLabel                        myLabel;
 
-  public ArrangementLabelUiComponent(@NotNull ArrangementSettingsToken token) {
+  public ArrangementLabelUiComponent(@Nonnull ArrangementSettingsToken token) {
     super(token);
     myCondition = new ArrangementAtomMatchCondition(token);
     myLabel = new JLabel(token.getRepresentationValue());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementSettingsToken getToken() {
     return myCondition.getType();
   }
 
   @Override
-  public void chooseToken(@NotNull ArrangementSettingsToken data) throws UnsupportedOperationException {
+  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return myCondition;

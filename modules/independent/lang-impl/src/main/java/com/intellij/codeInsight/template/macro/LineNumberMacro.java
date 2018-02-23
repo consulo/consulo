@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LineNumberMacro extends Macro {
   @Override
@@ -32,14 +32,14 @@ public class LineNumberMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@NotNull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
     final int offset = context.getStartOffset();
     int line = context.getEditor().offsetToLogicalPosition(offset).line + 1;
     return new TextResult("" + line);
   }
 
   @Override
-  public Result calculateQuickResult(@NotNull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
     return calculateResult(params, context);
   }
 

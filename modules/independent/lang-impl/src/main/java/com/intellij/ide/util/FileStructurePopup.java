@@ -79,8 +79,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -123,14 +123,15 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
   private boolean myInitialNodeIsLeaf;
   private final List<Pair<String, JCheckBox>> myTriggeredCheckboxes = new ArrayList<>();
   private final TreeExpander myTreeExpander;
-  @NotNull private final FileEditor myFileEditor;
+  @Nonnull
+  private final FileEditor myFileEditor;
   private final StructureView myStructureViewDelegate;
   private boolean myCanClose = true;
 
 
-  public FileStructurePopup(@NotNull Project project,
-                            @NotNull FileEditor fileEditor,
-                            @NotNull StructureView structureView,
+  public FileStructurePopup(@Nonnull Project project,
+                            @Nonnull FileEditor fileEditor,
+                            @Nonnull StructureView structureView,
                             final boolean applySortAndFilter) {
     myProject = project;
     myFileEditor = fileEditor;
@@ -197,7 +198,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     myTree.setTransferHandler(new TransferHandler() {
       @Override
-      public boolean importData(@NotNull TransferSupport support) {
+      public boolean importData(@Nonnull TransferSupport support) {
         String s = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
         if (s != null && !mySpeedSearch.isPopupActive()) {
           mySpeedSearch.showPopup(s);
@@ -243,9 +244,9 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     mySpeedSearch = new MyTreeSpeedSearch();
     mySpeedSearch.setComparator(new SpeedSearchComparator(false, true) {
-      @NotNull
+      @Nonnull
       @Override
-      protected MinusculeMatcher createMatcher(@NotNull String pattern) {
+      protected MinusculeMatcher createMatcher(@Nonnull String pattern) {
         return NameUtil.buildMatcher(pattern).withSeparators(" ()").build();
       }
     });
@@ -597,7 +598,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         final TreePath path = myTree.getPathForLocation(e.getX(), e.getY());
         if (path == null) return false; // user wants to expand/collapse a node
         navigateSelectedElement();
@@ -627,7 +628,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     //panel.add(createSouthPanel(), BorderLayout.SOUTH);
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         if (CommonDataKeys.PROJECT == dataId) {
           return myProject;
         }
@@ -662,7 +663,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   private List<PsiElement> getPsiElementsFromSelection() {
     Set<Object> nodes = myAbstractTreeBuilder.getSelectedElements();
     if (nodes.isEmpty()) return Collections.emptyList();
@@ -674,12 +675,12 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   protected JComponent createSettingsButton() {
     final JLabel label = new JLabel(AllIcons.General.SecondaryGroup);
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         DefaultActionGroup group = new DefaultActionGroup();
         //addSorters(group);
         //addGroupers(group);
@@ -867,8 +868,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     myCheckBoxes.put(action.getClass(), chkFilter);
   }
 
-  @NotNull
-  static Shortcut[] extractShortcutFor(@NotNull TreeAction action) {
+  @Nonnull
+  static Shortcut[] extractShortcutFor(@Nonnull TreeAction action) {
     if (action instanceof ActionShortcutProvider) {
       String actionId = ((ActionShortcutProvider)action).getActionIdForShortcut();
       return getActiveKeymapShortcuts(actionId).getShortcuts();
@@ -1007,7 +1008,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
       return true;
     }
 
-    private boolean matches(@NotNull String text) {
+    private boolean matches(@Nonnull String text) {
       if (isUnitTest) {
         final SpeedSearchComparator comparator = mySpeedSearch.getComparator();
         return StringUtil.isNotEmpty(myTestSearchFilter) && comparator.matchingFragments(myTestSearchFilter, text) != null;

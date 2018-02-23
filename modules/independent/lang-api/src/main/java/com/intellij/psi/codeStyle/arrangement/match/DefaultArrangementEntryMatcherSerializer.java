@@ -28,8 +28,8 @@ import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -63,9 +63,11 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
   };
 
-  @NotNull private static final Logger LOG = Logger.getInstance("#" + DefaultArrangementEntryMatcherSerializer.class.getName());
+  @Nonnull
+  private static final Logger LOG = Logger.getInstance("#" + DefaultArrangementEntryMatcherSerializer.class.getName());
 
-  @NotNull private static final String COMPOSITE_CONDITION_NAME = "AND";
+  @Nonnull
+  private static final String COMPOSITE_CONDITION_NAME = "AND";
 
   private final DefaultArrangementSettingsSerializer.Mixin myMixin;
 
@@ -74,8 +76,8 @@ public class DefaultArrangementEntryMatcherSerializer {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @Nullable
-  public <T extends ArrangementEntryMatcher> Element serialize(@NotNull T matcher) {
+  @javax.annotation.Nullable
+  public <T extends ArrangementEntryMatcher> Element serialize(@Nonnull T matcher) {
     if (matcher instanceof StdArrangementEntryMatcher) {
       return serialize(((StdArrangementEntryMatcher)matcher).getCondition());
     }
@@ -86,22 +88,22 @@ public class DefaultArrangementEntryMatcherSerializer {
     return null;
   }
 
-  @NotNull
-  private static Element serialize(@NotNull ArrangementMatchCondition condition) {
+  @Nonnull
+  private static Element serialize(@Nonnull ArrangementMatchCondition condition) {
     MySerializationVisitor visitor = new MySerializationVisitor();
     condition.invite(visitor);
     return visitor.result;
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @Nullable
-  public StdArrangementEntryMatcher deserialize(@NotNull Element matcherElement) {
+  @javax.annotation.Nullable
+  public StdArrangementEntryMatcher deserialize(@Nonnull Element matcherElement) {
     ArrangementMatchCondition condition = deserializeCondition(matcherElement);
     return condition == null ? null : new StdArrangementEntryMatcher(condition);
   }
 
   @Nullable
-  private ArrangementMatchCondition deserializeCondition(@NotNull Element matcherElement) {
+  private ArrangementMatchCondition deserializeCondition(@Nonnull Element matcherElement) {
     String name = matcherElement.getName();
     if (COMPOSITE_CONDITION_NAME.equals(name)) {
       ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
@@ -118,8 +120,8 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
   }
 
-  @Nullable
-  private ArrangementMatchCondition deserializeAtomCondition(@NotNull Element matcherElement) {
+  @javax.annotation.Nullable
+  private ArrangementMatchCondition deserializeAtomCondition(@Nonnull Element matcherElement) {
     String id = matcherElement.getName();
     ArrangementSettingsToken token = StdArrangementTokens.byId(id);
     boolean processInnerText = true;
@@ -162,7 +164,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     Element parent;
 
     @Override
-    public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+    public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
       ArrangementSettingsToken type = condition.getType();
       final Element element = new Element(type.getId());
       if (StdArrangementTokenType.REG_EXP.is(type)) {
@@ -172,7 +174,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
 
     @Override
-    public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+    public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
       Element composite = new Element(COMPOSITE_CONDITION_NAME);
       register(composite);
       parent = composite;
@@ -183,7 +185,7 @@ public class DefaultArrangementEntryMatcherSerializer {
       }
     }
 
-    private void register(@NotNull Element element) {
+    private void register(@Nonnull Element element) {
       if (result == null) {
         result = element;
       }

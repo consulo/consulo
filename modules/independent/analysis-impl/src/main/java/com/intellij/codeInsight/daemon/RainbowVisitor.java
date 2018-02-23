@@ -23,27 +23,26 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public abstract class RainbowVisitor implements HighlightVisitor {
   private HighlightInfoHolder myHolder;
   private RainbowHighlighter myRainbowHighlighter;
 
-  @NotNull
+  @Nonnull
   @Override
   public abstract HighlightVisitor clone();
 
-  @NotNull
+  @Nonnull
   protected RainbowHighlighter getHighlighter() {
     return myRainbowHighlighter;
   }
 
   @Override
-  public final boolean analyze(@NotNull PsiFile file,
+  public final boolean analyze(@Nonnull PsiFile file,
                                boolean updateWholeFile,
-                               @NotNull HighlightInfoHolder holder,
-                               @NotNull Runnable action) {
+                               @Nonnull HighlightInfoHolder holder,
+                               @Nonnull Runnable action) {
     myHolder = holder;
     myRainbowHighlighter = new RainbowHighlighter(myHolder.getColorsScheme());
     try {
@@ -61,14 +60,14 @@ public abstract class RainbowVisitor implements HighlightVisitor {
     return 1;
   }
 
-  protected void addInfo(@Nullable HighlightInfo highlightInfo) {
+  protected void addInfo(@javax.annotation.Nullable HighlightInfo highlightInfo) {
     myHolder.add(highlightInfo);
   }
 
-  protected HighlightInfo getInfo(@NotNull final PsiElement context,
-                                  @NotNull final PsiElement rainbowElement,
-                                  @NotNull final String name,
-                                  @Nullable final TextAttributesKey colorKey) {
+  protected HighlightInfo getInfo(@Nonnull final PsiElement context,
+                                  @Nonnull final PsiElement rainbowElement,
+                                  @Nonnull final String name,
+                                  @javax.annotation.Nullable final TextAttributesKey colorKey) {
     int colorIndex = UsedColors.getOrAddColorIndex((UserDataHolderEx)context, name, getHighlighter().getColorsCount());
     return getHighlighter().getInfo(colorIndex, rainbowElement, colorKey);
   }

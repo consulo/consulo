@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.richcopy;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.reflect.Method;
@@ -70,8 +70,8 @@ public class FontMapper {
   }
 
   public static
-  @NotNull
-  String getPhysicalFontName(@NotNull String logicalFontName) {
+  @Nonnull
+  String getPhysicalFontName(@Nonnull String logicalFontName) {
     String mapped = logicalToPhysicalMapping.get(logicalFontName);
     return mapped == null ? logicalFontName : mapped;
   }

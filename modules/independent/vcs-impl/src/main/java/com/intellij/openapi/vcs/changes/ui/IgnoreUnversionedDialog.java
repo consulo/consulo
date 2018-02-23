@@ -30,8 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -92,7 +91,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     updateControls();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -122,7 +121,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent createCenterPanel() {
     return myPanel;
   }
@@ -245,7 +244,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return "IgnoreUnversionedDialog";
   }
 
-  public static void ignoreSelectedFiles(@NotNull Project project, @NotNull List<VirtualFile> files, @Nullable Runnable callback) {
+  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @javax.annotation.Nullable Runnable callback) {
     IgnoreUnversionedDialog dlg = new IgnoreUnversionedDialog(project);
     dlg.setFilesToIgnore(files);
 

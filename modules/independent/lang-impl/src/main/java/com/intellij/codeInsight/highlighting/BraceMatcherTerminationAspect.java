@@ -2,7 +2,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * In some cases brace matching should be terminated to prevent search for a paired brace beyond some element types.
@@ -26,5 +26,5 @@ public interface BraceMatcherTerminationAspect {
    * @param iterator  The iterator at the current position to be checked.
    * @return  True if the search should be stopped or false if it should continue.
    */
-  boolean shouldStopMatch(boolean forward, @NotNull IElementType braceType, @NotNull HighlighterIterator iterator);
+  boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator);
 }

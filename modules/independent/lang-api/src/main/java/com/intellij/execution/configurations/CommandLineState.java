@@ -33,8 +33,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
@@ -65,7 +64,7 @@ public abstract class CommandLineState implements RunProfileState {
     return myEnvironment.getRunnerSettings();
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionTarget getExecutionTarget() {
     return myEnvironment.getExecutionTarget();
   }
@@ -75,8 +74,8 @@ public abstract class CommandLineState implements RunProfileState {
   }
 
   @Override
-  @NotNull
-  public ExecutionResult execute(@NotNull final Executor executor, @NotNull final ProgramRunner runner) throws ExecutionException {
+  @Nonnull
+  public ExecutionResult execute(@Nonnull final Executor executor, @Nonnull final ProgramRunner runner) throws ExecutionException {
     final ProcessHandler processHandler = startProcess();
     final ConsoleView console = createConsole(executor);
     if (console != null) {
@@ -85,8 +84,8 @@ public abstract class CommandLineState implements RunProfileState {
     return new DefaultExecutionResult(console, processHandler, createActions(console, processHandler, executor));
   }
 
-  @Nullable
-  protected ConsoleView createConsole(@NotNull final Executor executor) throws ExecutionException {
+  @javax.annotation.Nullable
+  protected ConsoleView createConsole(@Nonnull final Executor executor) throws ExecutionException {
     TextConsoleBuilder builder = getConsoleBuilder();
     return builder != null ? builder.getConsole() : null;
   }
@@ -99,7 +98,7 @@ public abstract class CommandLineState implements RunProfileState {
    * @see GeneralCommandLine
    * @see com.intellij.execution.process.OSProcessHandler
    */
-  @NotNull
+  @Nonnull
   protected abstract ProcessHandler startProcess() throws ExecutionException;
 
   protected AnAction[] createActions(final ConsoleView console, final ProcessHandler processHandler) {

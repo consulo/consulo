@@ -18,8 +18,8 @@ package com.intellij.remote.ext;
 import com.intellij.remote.CredentialsType;
 import com.intellij.remote.RemoteSdkAdditionalData;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

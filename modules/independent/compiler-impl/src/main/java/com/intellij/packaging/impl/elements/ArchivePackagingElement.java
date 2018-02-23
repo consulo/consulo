@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.packaging.elements.ArchivePackageWriter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,25 +36,25 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
 
   protected String myArchiveFileName;
 
-  public ArchivePackagingElement(@NotNull PackagingElementType<? extends ArchivePackagingElement> type) {
+  public ArchivePackagingElement(@Nonnull PackagingElementType<? extends ArchivePackagingElement> type) {
     super(type);
   }
 
-  public ArchivePackagingElement(@NotNull PackagingElementType<? extends ArchivePackagingElement> type, @NotNull String archiveFileName) {
+  public ArchivePackagingElement(@Nonnull PackagingElementType<? extends ArchivePackagingElement> type, @Nonnull String archiveFileName) {
     super(type);
     myArchiveFileName = archiveFileName;
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new ArchiveElementPresentation(this);
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
+                                                     @Nonnull ArtifactType artifactType) {
     computeChildrenInstructions(creator.archive(myArchiveFileName, getPackageWriter()), resolvingContext, compilerContext, artifactType);
   }
 
@@ -86,12 +86,12 @@ public abstract class ArchivePackagingElement extends CompositePackagingElement<
   }
 
   @Override
-  public void rename(@NotNull String newName) {
+  public void rename(@Nonnull String newName) {
     myArchiveFileName = newName;
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(myArchiveFileName);
   }
 

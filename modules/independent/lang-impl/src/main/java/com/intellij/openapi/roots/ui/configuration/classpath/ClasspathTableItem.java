@@ -21,14 +21,14 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class ClasspathTableItem<T extends OrderEntry> {
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public static ClasspathTableItem<?> createItem(OrderEntry orderEntry, StructureConfigurableContext context) {
     OrderEntryType<?> type = orderEntry.getType();
@@ -40,10 +40,10 @@ public class ClasspathTableItem<T extends OrderEntry> {
     return new ClasspathTableItem<OrderEntry>(orderEntry);
   }
 
-  @NotNull
+  @Nonnull
   protected final T myEntry;
 
-  public ClasspathTableItem(@NotNull T entry) {
+  public ClasspathTableItem(@Nonnull T entry) {
     myEntry = entry;
   }
 
@@ -72,7 +72,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public final T getEntry() {
     return myEntry;
   }

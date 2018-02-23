@@ -16,8 +16,8 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -35,7 +35,7 @@ public interface ComponentWithActions {
   @Nullable
   JComponent getToolbarContextComponent();
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
   boolean isContentBuiltIn();
@@ -81,7 +81,7 @@ public interface ComponentWithActions {
       return myToolbarContext;
     }
 
-    @NotNull
+    @Nonnull
     public JComponent getComponent() {
       return myComponent;
     }

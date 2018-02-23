@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +38,15 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   // result object or error message
   private volatile Object result;
 
-  @NotNull
+  @Nonnull
   @Override
   public State getState() {
     return state;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> done(@NotNull Consumer<T> done) {
+  public Promise<T> done(@Nonnull Consumer<T> done) {
     if (isObsolete(done)) {
       return this;
     }
@@ -66,9 +66,9 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> rejected(@NotNull Consumer<Throwable> rejected) {
+  public Promise<T> rejected(@Nonnull Consumer<Throwable> rejected) {
     if (isObsolete(rejected)) {
       return this;
     }
@@ -97,7 +97,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   private static final class CompoundConsumer<T> implements Consumer<T> {
     private List<Consumer<T>> consumers = new ArrayList<>();
 
-    public CompoundConsumer(@NotNull Consumer<T> c1, @NotNull Consumer<T> c2) {
+    public CompoundConsumer(@Nonnull Consumer<T> c1, @Nonnull Consumer<T> c2) {
       synchronized (this) {
         consumers.add(c1);
         consumers.add(c2);
@@ -121,7 +121,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
       }
     }
 
-    public void add(@NotNull Consumer<T> consumer) {
+    public void add(@Nonnull Consumer<T> consumer) {
       synchronized (this) {
         if (consumers != null) {
           consumers.add(consumer);
@@ -131,8 +131,8 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  @NotNull
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull final Function<T, SUB_RESULT> fulfilled) {
+  @Nonnull
+  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull final Function<T, SUB_RESULT> fulfilled) {
     switch (state) {
       case PENDING:
         break;
@@ -161,7 +161,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  public void notify(@NotNull final AsyncPromise<T> child) {
+  public void notify(@Nonnull final AsyncPromise<T> child) {
     LOG.assertTrue(child != this);
 
     switch (state) {
@@ -188,8 +188,8 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
 
 
   @Override
-  @NotNull
-  public Promise<T> processed(@NotNull final AsyncPromise<T> fulfilled) {
+  @Nonnull
+  public Promise<T> processed(@Nonnull final AsyncPromise<T> fulfilled) {
     switch (state) {
       case PENDING:
         break;
@@ -213,13 +213,13 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
     return this;
   }
 
-  private void addHandlers(@NotNull Consumer<T> done, @NotNull Consumer<Throwable> rejected) {
+  private void addHandlers(@Nonnull Consumer<T> done, @Nonnull Consumer<Throwable> rejected) {
     this.done = setHandler(this.done, done);
     this.rejected = setHandler(this.rejected, rejected);
   }
 
-  @NotNull
-  private static <T> Consumer<T> setHandler(@Nullable Consumer<T> oldConsumer, @NotNull Consumer<T> newConsumer) {
+  @Nonnull
+  private static <T> Consumer<T> setHandler(@Nullable Consumer<T> oldConsumer, @Nonnull Consumer<T> newConsumer) {
     if (oldConsumer == null) {
       return newConsumer;
     }
@@ -251,11 +251,11 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
     return consumer instanceof Obsolescent && ((Obsolescent)consumer).isObsolete();
   }
 
-  public boolean setError(@NotNull String error) {
+  public boolean setError(@Nonnull String error) {
     return setError(Promise.createError(error));
   }
 
-  public boolean setError(@NotNull Throwable error) {
+  public boolean setError(@Nonnull Throwable error) {
     if (state != State.PENDING) {
       return false;
     }
@@ -282,7 +282,7 @@ public class AsyncPromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  public Promise<T> processed(@NotNull final Consumer<T> processed) {
+  public Promise<T> processed(@Nonnull final Consumer<T> processed) {
     done(processed);
     rejected(error -> processed.consume(null));
     return this;

@@ -35,7 +35,7 @@ import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.messages.MessageBus;
 import consulo.lang.util.LanguageVersionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -70,13 +70,13 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     }
 
     @Override
-    public void save(@NotNull final DataOutput out, final TodoIndexEntry value) throws IOException {
+    public void save(@Nonnull final DataOutput out, final TodoIndexEntry value) throws IOException {
       out.writeUTF(value.pattern);
       out.writeBoolean(value.caseSensitive);
     }
 
     @Override
-    public TodoIndexEntry read(@NotNull final DataInput in) throws IOException {
+    public TodoIndexEntry read(@Nonnull final DataInput in) throws IOException {
       final String pattern = in.readUTF();
       final boolean caseSensitive = in.readBoolean();
       return new TodoIndexEntry(pattern, caseSensitive);
@@ -137,31 +137,31 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<TodoIndexEntry, Integer> getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<TodoIndexEntry, Integer, FileContent> getIndexer() {
     return myIndexer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<TodoIndexEntry> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<Integer> getValueExternalizer() {
     return myValueExternalizer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;

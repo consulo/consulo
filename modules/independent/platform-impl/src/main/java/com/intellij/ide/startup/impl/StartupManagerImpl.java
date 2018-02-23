@@ -45,7 +45,7 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -78,21 +78,21 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   @Override
-  public void registerPreStartupActivity(@NotNull Runnable runnable) {
+  public void registerPreStartupActivity(@Nonnull Runnable runnable) {
     checkNonDefaultProject();
     LOG.assertTrue(!myPreStartupActivitiesPassed, "Registering pre startup activity that will never be run");
     myPreStartupActivities.add(runnable);
   }
 
   @Override
-  public void registerStartupActivity(@NotNull Runnable runnable) {
+  public void registerStartupActivity(@Nonnull Runnable runnable) {
     checkNonDefaultProject();
     LOG.assertTrue(!myStartupActivitiesPassed, "Registering startup activity that will never be run");
     myStartupActivities.add(runnable);
   }
 
   @Override
-  public synchronized void registerPostStartupActivity(@NotNull Runnable runnable) {
+  public synchronized void registerPostStartupActivity(@Nonnull Runnable runnable) {
     checkNonDefaultProject();
     LOG.assertTrue(!myPostStartupActivitiesPassed, "Registering post-startup activity that will never be run:" +
                                                    " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen() + "; passed=" + myStartupActivitiesPassed);
@@ -140,7 +140,7 @@ public class StartupManagerImpl extends StartupManagerEx {
     });
   }
 
-  public void runPostStartupActivitiesFromExtensions(@NotNull UIAccess uiAccess) {
+  public void runPostStartupActivitiesFromExtensions(@Nonnull UIAccess uiAccess) {
     StartupActivity[] extensions = Extensions.getExtensions(StartupActivity.POST_STARTUP_ACTIVITY);
     for (final StartupActivity extension : extensions) {
       final Runnable runnable = () -> {
@@ -230,7 +230,7 @@ public class StartupManagerImpl extends StartupManagerEx {
         final MessageBusConnection connection = app.getMessageBus().connect();
         connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
           @Override
-          public void afterProjectClosed(@NotNull Project project) {
+          public void afterProjectClosed(@Nonnull Project project) {
             if (project != myProject) return;
 
             RefreshQueue.getInstance().cancelSession(sessionId);
@@ -316,7 +316,7 @@ public class StartupManagerImpl extends StartupManagerEx {
         // only after these tasks pass does VFS refresh make sense
         dumbService.queueTask(new DumbModeTask() {
           @Override
-          public void performInDumbMode(@NotNull ProgressIndicator indicator) {
+          public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
             scheduleInitialVfsRefresh();
           }
 
@@ -335,7 +335,7 @@ public class StartupManagerImpl extends StartupManagerEx {
     }
   }
 
-  private static void runActivities(@NotNull List<Runnable> activities) {
+  private static void runActivities(@Nonnull List<Runnable> activities) {
     while (!activities.isEmpty()) {
       runActivity(activities.remove(0));
     }
@@ -356,7 +356,7 @@ public class StartupManagerImpl extends StartupManagerEx {
   }
 
   @Override
-  public void runWhenProjectIsInitialized(@NotNull final Runnable action) {
+  public void runWhenProjectIsInitialized(@Nonnull final Runnable action) {
     final Application application = ApplicationManager.getApplication();
     if (application == null) return;
 

@@ -29,8 +29,8 @@ import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -49,7 +49,8 @@ public class GenericPatchApplier {
   private final ArrayList<SplitHunk> myNotBound;
   private final ArrayList<SplitHunk> myNotExact;
   private boolean mySuppressNewLineInEnd;
-  @NotNull private List<AppliedTextPatch.AppliedSplitPatchHunk> myAppliedInfo;
+  @Nonnull
+  private List<AppliedTextPatch.AppliedSplitPatchHunk> myAppliedInfo;
   private static IntPair EMPTY_OFFSET = new IntPair(0, 0);
 
   private static void debug(final String s) {
@@ -178,8 +179,8 @@ public class GenericPatchApplier {
     return myNotExact.isEmpty();
   }
 
-  @NotNull
-  private static SplitHunk copySplitHunk(@NotNull SplitHunk hunk, @NotNull List<String> contextAfter, @NotNull List<String> contextBefore) {
+  @Nonnull
+  private static SplitHunk copySplitHunk(@Nonnull SplitHunk hunk, @Nonnull List<String> contextAfter, @Nonnull List<String> contextBefore) {
     ArrayList<BeforeAfter<List<String>>> steps = new ArrayList<>();
     for (BeforeAfter<List<String>> step : hunk.getPatchSteps()) {
       steps.add(new BeforeAfter<>(new ArrayList<>(step.getBefore()), new ArrayList<>(step.getAfter())));
@@ -222,7 +223,7 @@ public class GenericPatchApplier {
     return copy;
   }
 
-  @NotNull
+  @Nonnull
   private static String constructHunkWarnMessage(int startLineBefore, int startLineAfter, int sizeBefore, int sizeAfter) {
     return String.format("Can't detect hunk modification lines for: -%d,%d +%d,%d", startLineBefore, sizeBefore,
                          startLineAfter, sizeAfter);
@@ -305,7 +306,7 @@ public class GenericPatchApplier {
 
   private boolean testForPartialContextMatch(final SplitHunk splitHunkWithExtendedContext,
                                              final MismatchSolver mismatchSolver,
-                                             final int maxWalkFromBinding, @Nullable final SplitHunk originalSplitHunk) {
+                                             final int maxWalkFromBinding, @javax.annotation.Nullable final SplitHunk originalSplitHunk) {
     final List<BeforeAfter<List<String>>> steps = splitHunkWithExtendedContext.getPatchSteps();
     final BetterPoint betterPoint = new BetterPoint();
 
@@ -417,7 +418,7 @@ public class GenericPatchApplier {
     return fragmentResult;
   }
 
-  @NotNull
+  @Nonnull
   public List<AppliedTextPatch.AppliedSplitPatchHunk> getAppliedInfo() {
     return myAppliedInfo;
   }
@@ -508,7 +509,7 @@ public class GenericPatchApplier {
   public void putCutIntoTransformations(TextRange range,
                                         @Nullable SplitHunk splitHunk,
                                         final MyAppliedData value,
-                                        @NotNull IntPair contextOffsetInPatchSteps) {
+                                        @Nonnull IntPair contextOffsetInPatchSteps) {
     // cut last lines but not the very first
     final List<String> list = value.getList();
     //last line should be taken from includeConsumer even it seems to be equal with base context line( they can differ with line separator)
@@ -585,12 +586,12 @@ public class GenericPatchApplier {
   }
 
 
-  private void processAppliedInfoForUnApplied(@NotNull SplitHunk original) {
+  private void processAppliedInfoForUnApplied(@Nonnull SplitHunk original) {
     myAppliedInfo.add(new AppliedTextPatch.AppliedSplitPatchHunk(original, -1, -1, AppliedTextPatch.HunkStatus.NOT_APPLIED));
   }
 
-  private void processAppliedInfo(@Nullable SplitHunk hunk, @NotNull TextRange lineWithPartContextApplied,
-                                  @NotNull IntPair contextRangeShift,
+  private void processAppliedInfo(@javax.annotation.Nullable SplitHunk hunk, @Nonnull TextRange lineWithPartContextApplied,
+                                  @Nonnull IntPair contextRangeShift,
                                   AppliedTextPatch.HunkStatus hunkStatus) {
     if (hunk != null) {
       // +1 to the end  because end range is always not included -> [i;j); except add modification;
@@ -613,7 +614,7 @@ public class GenericPatchApplier {
   private static class BetterPoint {
     private Point myPoint;
 
-    public void feed(@NotNull final Point point) {
+    public void feed(@Nonnull final Point point) {
       if (myPoint == null || point.meBetter(myPoint)) {
         myPoint = point;
       }
@@ -1062,7 +1063,7 @@ public class GenericPatchApplier {
     return sb.toString();
   }
 
-  private boolean containsLastLine(@NotNull TextRange range) {
+  private boolean containsLastLine(@Nonnull TextRange range) {
     return range.getEndOffset() == myLines.size() - 1;
   }
 
@@ -1106,12 +1107,13 @@ public class GenericPatchApplier {
   public static class SplitHunk {
     private final List<String> myContextBefore;
     private final List<String> myContextAfter;
-    @NotNull private final List<BeforeAfter<List<String>>> myPatchSteps;
+    @Nonnull
+    private final List<BeforeAfter<List<String>>> myPatchSteps;
     private final int myStartLineBefore;
     private final int myStartLineAfter;
 
     public SplitHunk(int startLineBefore, int startLineAfter,
-                     @NotNull List<BeforeAfter<List<String>>> patchSteps,
+                     @Nonnull List<BeforeAfter<List<String>>> patchSteps,
                      List<String> contextAfter,
                      List<String> contextBefore) {
       myStartLineBefore = startLineBefore;
@@ -1249,7 +1251,7 @@ public class GenericPatchApplier {
       return myContextAfter;
     }
 
-    @NotNull
+    @Nonnull
     public List<BeforeAfter<List<String>>> getPatchSteps() {
       return myPatchSteps;
     }

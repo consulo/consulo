@@ -22,8 +22,8 @@ import com.intellij.lang.folding.LanguageFolding;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FoldingPolicy {
   
@@ -38,7 +38,7 @@ public class FoldingPolicy {
   }
 
   @Nullable
-  public static String getSignature(@NotNull PsiElement element) {
+  public static String getSignature(@Nonnull PsiElement element) {
     for(ElementSignatureProvider provider: Extensions.getExtensions(ElementSignatureProvider.EP_NAME)) {
       String signature = provider.getSignature(element);
       if (signature != null) return signature;
@@ -47,7 +47,7 @@ public class FoldingPolicy {
   }
   
   @Nullable
-  public static PsiElement restoreBySignature(@NotNull PsiFile file, @NotNull String signature) {
+  public static PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature) {
     return restoreBySignature(file, signature, null);
   }
 
@@ -61,8 +61,8 @@ public class FoldingPolicy {
    *                               <code>null</code> otherwise
    */
   @Nullable
-  public static PsiElement restoreBySignature(@NotNull PsiFile file,
-                                              @NotNull String signature,
+  public static PsiElement restoreBySignature(@Nonnull PsiFile file,
+                                              @Nonnull String signature,
                                               @Nullable StringBuilder processingInfoStorage)
   {
     for(ElementSignatureProvider provider: Extensions.getExtensions(ElementSignatureProvider.EP_NAME)) {

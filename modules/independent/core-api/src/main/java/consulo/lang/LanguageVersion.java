@@ -19,8 +19,8 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @since 17:59/30.05.13
  */
 public class LanguageVersion {
-  @NotNull
+  @Nonnull
   public static final Key<LanguageVersion> KEY = Key.create("LANGUAGE_VERSION");
 
   private final String myId;
@@ -37,31 +37,31 @@ public class LanguageVersion {
   private final Language myLanguage;
   private final String[] myMimeTypes;
 
-  public LanguageVersion(@NotNull String id, @NotNull String name, @NotNull Language language, String... mimeTypes) {
+  public LanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes) {
     myId = id;
     myName = name;
     myLanguage = language;
     myMimeTypes = mimeTypes;
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myLanguage;
   }
 
-  @NotNull
+  @Nonnull
   public String[] getMimeTypes() {
     return myMimeTypes;
   }

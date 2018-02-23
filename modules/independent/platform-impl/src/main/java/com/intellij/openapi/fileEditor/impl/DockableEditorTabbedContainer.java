@@ -31,8 +31,8 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,9 +97,9 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     return root != null ? new RelativeRectangle(root) : new RelativeRectangle(mySplitters);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentResponse getContentResponse(@NotNull DockableContent content, RelativePoint point) {
+  public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
     return getTabsAt(content, point) != null ? ContentResponse.ACCEPT_MOVE : ContentResponse.DENY;
   }
 
@@ -131,7 +131,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   }
 
   @Override
-  public void add(@NotNull DockableContent content, RelativePoint dropTarget) {
+  public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
     EditorWindow window = null;
     if (myCurrentOver != null) {
       final DataProvider provider = myCurrentOver.getDataProvider();
@@ -159,12 +159,12 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   }
 
   @Override
-  public Image startDropOver(@NotNull DockableContent content, RelativePoint point) {
+  public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
     return null;
   }
 
   @Override
-  public Image processDropOver(@NotNull DockableContent content, RelativePoint point) {
+  public Image processDropOver(@Nonnull DockableContent content, RelativePoint point) {
     JBTabs current = getTabsAt(content, point);
 
     if (myCurrentOver != null && myCurrentOver != current) {
@@ -186,7 +186,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
   }
 
   @Override
-  public void resetDropOver(@NotNull DockableContent content) {
+  public void resetDropOver(@Nonnull DockableContent content) {
     if (myCurrentOver != null) {
       myCurrentOver.resetDropOver(myCurrentOverInfo);
       myCurrentOver = null;

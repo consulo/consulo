@@ -31,8 +31,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -52,15 +52,15 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
   private final String myDisplayName;
   private final Icon myIcon;
 
-  IntentionActionWithTextCaching(@NotNull IntentionAction action){
+  IntentionActionWithTextCaching(@Nonnull IntentionAction action){
     this(action, action.getText(), null, null);
   }
 
-  IntentionActionWithTextCaching(@NotNull HighlightInfo.IntentionActionDescriptor descriptor, @Nullable BiConsumer<IntentionActionWithTextCaching,IntentionAction> markInvoked){
+  IntentionActionWithTextCaching(@Nonnull HighlightInfo.IntentionActionDescriptor descriptor, @Nullable BiConsumer<IntentionActionWithTextCaching,IntentionAction> markInvoked){
     this(descriptor.getAction(), descriptor.getDisplayName(), descriptor.getIcon(), markInvoked);
   }
 
-  private IntentionActionWithTextCaching(@NotNull IntentionAction action, String displayName, @Nullable Icon icon, @Nullable BiConsumer<IntentionActionWithTextCaching, IntentionAction> markInvoked) {
+  private IntentionActionWithTextCaching(@Nonnull IntentionAction action, String displayName, @Nullable Icon icon, @Nullable BiConsumer<IntentionActionWithTextCaching, IntentionAction> markInvoked) {
     myIcon = icon;
     myText = action.getText();
     // needed for checking errors in user written actions
@@ -70,37 +70,37 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     myDisplayName = displayName;
   }
 
-  @NotNull
+  @Nonnull
   String getText() {
     return myText;
   }
 
-  void addIntention(@NotNull IntentionAction action) {
+  void addIntention(@Nonnull IntentionAction action) {
     myOptionIntentions.add(action);
   }
-  void addErrorFix(@NotNull IntentionAction action) {
+  void addErrorFix(@Nonnull IntentionAction action) {
     myOptionErrorFixes.add(action);
   }
-  void addInspectionFix(@NotNull  IntentionAction action) {
+  void addInspectionFix(@Nonnull IntentionAction action) {
     myOptionInspectionFixes.add(action);
   }
 
-  @NotNull
+  @Nonnull
   public IntentionAction getAction() {
     return myAction;
   }
 
-  @NotNull
+  @Nonnull
   List<IntentionAction> getOptionIntentions() {
     return myOptionIntentions;
   }
 
-  @NotNull
+  @Nonnull
   List<IntentionAction> getOptionErrorFixes() {
     return myOptionErrorFixes;
   }
 
-  @NotNull
+  @Nonnull
   List<IntentionAction> getOptionInspectionFixes() {
     return myOptionInspectionFixes;
   }
@@ -109,13 +109,13 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     return myDisplayName;
   }
 
-  @NotNull
+  @Nonnull
   public String toString() {
     return getText();
   }
 
   @Override
-  public int compareTo(@NotNull final IntentionActionWithTextCaching other) {
+  public int compareTo(@Nonnull final IntentionActionWithTextCaching other) {
     if (myAction instanceof Comparable) {
       //noinspection unchecked
       return ((Comparable)myAction).compareTo(other.getAction());
@@ -153,7 +153,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getText() {
       return myAction.getText();
@@ -165,19 +165,19 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return myAction.getFamilyName();
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return myAction.isAvailable(project, editor, file);
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
       try {
         myAction.invoke(project, editor, file);
       }
@@ -193,7 +193,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
       return myAction.startInWriteAction();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public IntentionAction getDelegate() {
       return myAction;
@@ -201,7 +201,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
 
     @Nullable
     @Override
-    public PsiElement getElementToMakeWritable(@NotNull PsiFile currentFile) {
+    public PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {
       return myAction.getElementToMakeWritable(currentFile);
     }
 
@@ -212,7 +212,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     @Override
-    public int compareTo(@NotNull final MyIntentionAction other) {
+    public int compareTo(@Nonnull final MyIntentionAction other) {
       if (myAction instanceof Comparable) {
         //noinspection unchecked
         return ((Comparable)myAction).compareTo(other.getDelegate());

@@ -17,10 +17,10 @@ package com.intellij.execution.testframework.sm;
 
 import com.intellij.execution.Location;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface SMStacktraceParserEx extends SMStacktraceParser {
   @Nullable
-  Navigatable getErrorNavigatable(@NotNull Location<?> location, @NotNull String stacktrace);
+  Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace);
 }

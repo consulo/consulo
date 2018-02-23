@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class InjectedCaret implements Caret {
   private final EditorWindow myEditorWindow;
@@ -31,13 +31,13 @@ public class InjectedCaret implements Caret {
     myDelegate = delegate;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Editor getEditor() {
     return myEditorWindow;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CaretModel getCaretModel() {
     return myEditorWindow.getCaretModel();
@@ -58,13 +58,13 @@ public class InjectedCaret implements Caret {
   }
 
   @Override
-  public void moveToLogicalPosition(@NotNull LogicalPosition pos) {
+  public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
     LogicalPosition hostPos = myEditorWindow.injectedToHost(pos);
     myDelegate.moveToLogicalPosition(hostPos);
   }
 
   @Override
-  public void moveToVisualPosition(@NotNull VisualPosition pos) {
+  public void moveToVisualPosition(@Nonnull VisualPosition pos) {
     LogicalPosition hostPos = myEditorWindow.injectedToHost(myEditorWindow.visualToLogicalPosition(pos));
     myDelegate.moveToLogicalPosition(hostPos);
   }
@@ -85,14 +85,14 @@ public class InjectedCaret implements Caret {
     return myDelegate.isUpToDate();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LogicalPosition getLogicalPosition() {
     LogicalPosition hostPos = myDelegate.getLogicalPosition();
     return myEditorWindow.hostToInjected(hostPos);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getVisualPosition() {
     LogicalPosition logicalPosition = getLogicalPosition();
@@ -119,7 +119,7 @@ public class InjectedCaret implements Caret {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getSelectionStart());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getSelectionStartPosition() {
     return myDelegate.getSelectionStartPosition();
@@ -130,7 +130,7 @@ public class InjectedCaret implements Caret {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getSelectionEnd());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getSelectionEndPosition() {
     return myDelegate.getSelectionEndPosition();
@@ -147,7 +147,7 @@ public class InjectedCaret implements Caret {
     return myEditorWindow.getDocument().hostToInjected(myDelegate.getLeadSelectionOffset());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getLeadSelectionPosition() {
     return myDelegate.getLeadSelectionPosition();
@@ -216,25 +216,25 @@ public class InjectedCaret implements Caret {
     myDelegate.dispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T putUserDataIfAbsent(@NotNull Key<T> key, @NotNull T value) {
+  public <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
     return myDelegate.putUserDataIfAbsent(key, value);
   }
 
   @Override
-  public <T> boolean replace(@NotNull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+  public <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
     return myDelegate.replace(key, oldValue, newValue);
   }
 
   @Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myDelegate.putUserData(key, value);
   }
 
@@ -248,14 +248,14 @@ public class InjectedCaret implements Caret {
     return myDelegate.isAtBidiRunBoundary();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CaretVisualAttributes getVisualAttributes() {
     return myDelegate.getVisualAttributes();
   }
 
   @Override
-  public void setVisualAttributes(@NotNull CaretVisualAttributes attributes) {
+  public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
     myDelegate.setVisualAttributes(attributes);
   }
 }

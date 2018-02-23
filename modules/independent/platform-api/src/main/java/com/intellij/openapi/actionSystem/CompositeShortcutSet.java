@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class CompositeShortcutSet implements ShortcutSet {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Shortcut[] getShortcuts() {
     List<Shortcut> result = new ArrayList<Shortcut>();
     for (ShortcutSet each : mySets) {

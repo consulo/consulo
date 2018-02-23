@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.Compiler;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -32,21 +32,21 @@ public abstract class GenericCompiler<Key, SourceState, OutputState> implements 
   private final int myVersion;
   private final CompileOrderPlace myOrderPlace;
 
-  protected GenericCompiler(@NotNull String id, int version, @NotNull CompileOrderPlace orderPlace) {
+  protected GenericCompiler(@Nonnull String id, int version, @Nonnull CompileOrderPlace orderPlace) {
     myId = id;
     myVersion = version;
     myOrderPlace = orderPlace;
   }
 
-  @NotNull
+  @Nonnull
   public abstract KeyDescriptor<Key> getItemKeyDescriptor();
-  @NotNull
+  @Nonnull
   public abstract DataExternalizer<SourceState> getSourceStateExternalizer();
-  @NotNull
+  @Nonnull
   public abstract DataExternalizer<OutputState> getOutputStateExternalizer();
 
-  @NotNull
-  public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> createInstance(@NotNull CompileContext context);
+  @Nonnull
+  public abstract GenericCompilerInstance<?, ? extends CompileItem<Key, SourceState, OutputState>, Key, SourceState, OutputState> createInstance(@Nonnull CompileContext context);
 
   public final String getId() {
     return myId;

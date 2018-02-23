@@ -30,9 +30,9 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -57,16 +57,16 @@ public class ParameterHintsPresentationManager implements Disposable {
   private ParameterHintsPresentationManager() {
   }
 
-  public boolean isParameterHint(@NotNull Inlay inlay) {
+  public boolean isParameterHint(@Nonnull Inlay inlay) {
     return inlay.getRenderer() instanceof MyRenderer;
   }
 
-  public String getHintText(@NotNull Inlay inlay) {
+  public String getHintText(@Nonnull Inlay inlay) {
     EditorCustomElementRenderer renderer = inlay.getRenderer();
     return renderer instanceof MyRenderer ? ((MyRenderer)renderer).getText() : null;
   }
 
-  public void addHint(@NotNull Editor editor, int offset, @NotNull String hintText, boolean useAnimation) {
+  public void addHint(@Nonnull Editor editor, int offset, @Nonnull String hintText, boolean useAnimation) {
     MyRenderer renderer = new MyRenderer(editor, hintText, useAnimation);
     Inlay inlay = editor.getInlayModel().addInlineElement(offset, renderer);
     if (useAnimation && inlay != null) {
@@ -74,15 +74,15 @@ public class ParameterHintsPresentationManager implements Disposable {
     }
   }
 
-  public void deleteHint(@NotNull Editor editor, @NotNull Inlay hint) {
+  public void deleteHint(@Nonnull Editor editor, @Nonnull Inlay hint) {
     updateRenderer(editor, hint, null);
   }
 
-  public void replaceHint(@NotNull Editor editor, @NotNull Inlay hint, @NotNull String newText) {
+  public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nonnull String newText) {
     updateRenderer(editor, hint, newText);
   }
 
-  private void updateRenderer(@NotNull Editor editor, @NotNull Inlay hint, @Nullable String newText) {
+  private void updateRenderer(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable String newText) {
     MyRenderer renderer = (MyRenderer)hint.getRenderer();
     renderer.update(editor, newText);
     hint.updateSize();
@@ -106,11 +106,11 @@ public class ParameterHintsPresentationManager implements Disposable {
     myAlarm.addRequest(step, ANIMATION_STEP_MS, ModalityState.any());
   }
 
-  private static Font getFont(@NotNull Editor editor) {
+  private static Font getFont(@Nonnull Editor editor) {
     return getFontMetrics(editor).getFont();
   }
 
-  private static MyFontMetrics getFontMetrics(@NotNull Editor editor) {
+  private static MyFontMetrics getFontMetrics(@Nonnull Editor editor) {
     String familyName = UIManager.getFont("Label.font").getFamily();
     int size = Math.max(1, editor.getColorsScheme().getEditorFontSize() - 1);
     MyFontMetrics metrics = editor.getUserData(HINT_FONT_METRICS);
@@ -184,18 +184,18 @@ public class ParameterHintsPresentationManager implements Disposable {
     }
 
     @Override
-    public int calcWidthInPixels(@NotNull Editor editor) {
+    public int calcWidthInPixels(@Nonnull Editor editor) {
       FontMetrics metrics = getFontMetrics(editor).metrics;
       int endWidth = doCalcWidth(myText, metrics);
       return step <= steps ? Math.max(1, startWidth + (endWidth - startWidth) / steps * step) : endWidth;
     }
 
-    private static int doCalcWidth(@Nullable String text, @NotNull FontMetrics fontMetrics) {
+    private static int doCalcWidth(@Nullable String text, @Nonnull FontMetrics fontMetrics) {
       return text == null ? 0 : fontMetrics.stringWidth(text) + 14;
     }
 
     @Override
-    public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {
+    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
       if (myText != null && (step > steps || startWidth != 0)) {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
         if (attributes != null) {

@@ -15,15 +15,15 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 
 /**
  * @author nik
  */
 public class ForceStepIntoAction extends XDebuggerActionBase {
-  @NotNull
-  protected DebuggerActionHandler getHandler(@NotNull final DebuggerSupport debuggerSupport) {
+  @Nonnull
+  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
     return debuggerSupport.getForceStepIntoHandler();
   }
 }

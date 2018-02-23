@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Nullable
   @Override
   @RequiredReadAction
-  public Module findByName(@NotNull String name) {
+  public Module findByName(@Nonnull String name) {
     return ModuleManager.getInstance(myProject).findModuleByName(name);
   }
 }

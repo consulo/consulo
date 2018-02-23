@@ -16,10 +16,9 @@
 package com.intellij.internal.statistic.connect;
 
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface StatisticsDataSender {
 
-   void send(@NotNull String url, @NotNull String content) throws StatServiceException;
+   void send(@Nonnull String url, @Nonnull String content) throws StatServiceException;
 }

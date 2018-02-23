@@ -18,7 +18,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface XmlAwareBraceMatcher extends BraceMatcher {
   boolean isStrictTagMatching(final FileType fileType, final int braceGroupId);

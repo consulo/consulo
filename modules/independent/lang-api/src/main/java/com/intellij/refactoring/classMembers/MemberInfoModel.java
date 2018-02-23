@@ -25,7 +25,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 public interface MemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> extends MemberInfoChangeListener<T, M> {
@@ -48,7 +48,7 @@ public interface MemberInfoModel<T extends PsiElement, M extends MemberInfoBase<
    */
   Boolean isFixedAbstract(M member);
 
-  int checkForProblems(@NotNull M member);
+  int checkForProblems(@Nonnull M member);
 
   String getTooltipText(M member);
 }

@@ -20,7 +20,7 @@
 package com.intellij.concurrency;
 
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -33,11 +33,11 @@ public interface Job<T> {
 
   String getTitle();
 
-  void addTask(@NotNull Callable<T> task);
+  void addTask(@Nonnull Callable<T> task);
 
-  void addTask(@NotNull Runnable task, T result);
+  void addTask(@Nonnull Runnable task, T result);
 
-  void addTask(@NotNull Runnable task);
+  void addTask(@Nonnull Runnable task);
 
   List<T> scheduleAndWaitForResults() throws Throwable;
 
@@ -51,7 +51,7 @@ public interface Job<T> {
 
   void waitForCompletion(int millis) throws InterruptedException, ExecutionException, TimeoutException;
 
-  @NotNull
+  @Nonnull
   Job NULL_JOB = new Job() {
     @Override
     public boolean isDone() {
@@ -73,17 +73,17 @@ public interface Job<T> {
     }
 
     @Override
-    public void addTask(@NotNull Callable task) {
+    public void addTask(@Nonnull Callable task) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public void addTask(@NotNull Runnable task, Object result) {
+    public void addTask(@Nonnull Runnable task, Object result) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public void addTask(@NotNull Runnable task) {
+    public void addTask(@Nonnull Runnable task) {
       throw new IncorrectOperationException();
     }
 

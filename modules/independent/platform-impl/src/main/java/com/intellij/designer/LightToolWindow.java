@@ -36,8 +36,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.util.ui.ToolwindowPaintUtil;
 import consulo.wm.impl.ToolWindowContentUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,17 +83,17 @@ public class LightToolWindow extends JPanel {
     }
   };
 
-  public LightToolWindow(@NotNull LightToolWindowContent content,
-                         @NotNull String title,
-                         @NotNull Icon icon,
-                         @NotNull JComponent component,
-                         @NotNull JComponent focusedComponent,
-                         @NotNull ThreeComponentsSplitter contentSplitter,
+  public LightToolWindow(@Nonnull LightToolWindowContent content,
+                         @Nonnull String title,
+                         @Nonnull Icon icon,
+                         @Nonnull JComponent component,
+                         @Nonnull JComponent focusedComponent,
+                         @Nonnull ThreeComponentsSplitter contentSplitter,
                          @Nullable ToolWindowAnchor anchor,
-                         @NotNull LightToolWindowManager manager,
-                         @NotNull Project project,
-                         @NotNull PropertiesComponent propertiesComponent,
-                         @NotNull String key,
+                         @Nonnull LightToolWindowManager manager,
+                         @Nonnull Project project,
+                         @Nonnull PropertiesComponent propertiesComponent,
+                         @Nonnull String key,
                          int defaultWidth,
                          @Nullable AnAction[] actions) {
     super(new BorderLayout());

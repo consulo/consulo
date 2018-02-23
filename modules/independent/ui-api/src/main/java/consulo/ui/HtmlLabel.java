@@ -15,15 +15,15 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface HtmlLabel extends Label {
-  @NotNull
-  static HtmlLabel create(@NotNull String html) {
+  @Nonnull
+  static HtmlLabel create(@Nonnull String html) {
     return UIInternal.get()._Components_htmlLabel(html);
   }
 }

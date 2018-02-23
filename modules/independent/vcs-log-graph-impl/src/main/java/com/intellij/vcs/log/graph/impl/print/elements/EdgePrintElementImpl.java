@@ -20,12 +20,12 @@ import com.intellij.vcs.log.graph.EdgePrintElement;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.api.printer.PrintElementManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EdgePrintElementImpl extends PrintElementWithGraphElement implements EdgePrintElement {
 
-  @NotNull
-  public static EdgePrintElement.LineStyle convertToLineStyle(@NotNull GraphEdgeType edgeType) {
+  @Nonnull
+  public static EdgePrintElement.LineStyle convertToLineStyle(@Nonnull GraphEdgeType edgeType) {
     switch (edgeType) {
       case USUAL:
       case NOT_LOAD_COMMIT:
@@ -39,18 +39,20 @@ public class EdgePrintElementImpl extends PrintElementWithGraphElement implement
     }
   }
 
-  @NotNull private final Type myType;
-  @NotNull private final LineStyle myLineStyle;
+  @Nonnull
+  private final Type myType;
+  @Nonnull
+  private final LineStyle myLineStyle;
   private final int myPositionInOtherRow;
   private final boolean myHasArrow;
 
   public EdgePrintElementImpl(int rowIndex,
                               int positionInCurrentRow,
                               int positionInOtherRow,
-                              @NotNull Type type,
-                              @NotNull GraphEdge graphEdge,
+                              @Nonnull Type type,
+                              @Nonnull GraphEdge graphEdge,
                               boolean hasArrow,
-                              @NotNull PrintElementManager printElementManager) {
+                              @Nonnull PrintElementManager printElementManager) {
     super(rowIndex, positionInCurrentRow, graphEdge, printElementManager);
     myType = type;
     myLineStyle = convertToLineStyle(graphEdge.getType());
@@ -63,13 +65,13 @@ public class EdgePrintElementImpl extends PrintElementWithGraphElement implement
     return myPositionInOtherRow;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Type getType() {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineStyle getLineStyle() {
     return myLineStyle;

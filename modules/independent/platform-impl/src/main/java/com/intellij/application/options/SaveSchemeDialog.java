@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.text.UniqueNameGenerator;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class SaveSchemeDialog extends DialogWrapper {
   private final JTextField mySchemeName = new JTextField();
   private final List<String> myExistingNames;
 
-  public SaveSchemeDialog(@NotNull Component parent, String title, @NotNull List<String> existingNames, @NotNull String selectedName) {
+  public SaveSchemeDialog(@Nonnull Component parent, String title, @Nonnull List<String> existingNames, @Nonnull String selectedName) {
     super(parent, false);
     myExistingNames = existingNames;
     setTitle(title);

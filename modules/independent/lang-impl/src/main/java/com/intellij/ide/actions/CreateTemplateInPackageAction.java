@@ -31,8 +31,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.psi.PsiPackageSupportProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -54,7 +54,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
   }
 
   @Nullable
-  protected abstract PsiElement getNavigationElement(@NotNull T createdElement);
+  protected abstract PsiElement getNavigationElement(@Nonnull T createdElement);
 
   @Override
   @SuppressWarnings("unchecked")

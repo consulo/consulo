@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,11 +54,11 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     myFiles.clear();
   }
 
-  public void fileDirty(@NotNull final VirtualFile file) {
+  public void fileDirty(@Nonnull final VirtualFile file) {
     myVFiles.add(file);
   }
 
-  public void fileDirty(@NotNull final FilePath file) {
+  public void fileDirty(@Nonnull final FilePath file) {
     myFiles.add(file);
   }
 
@@ -78,13 +78,13 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<FilePath> whatFilesDirty(@NotNull Collection<FilePath> files) {
+  public Collection<FilePath> whatFilesDirty(@Nonnull Collection<FilePath> files) {
     throw new UnsupportedOperationException();
   }
 
-  public void filePathsDirty(@Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty) {
+  public void filePathsDirty(@javax.annotation.Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myFiles.addAll(filesDirty);
     }
@@ -94,7 +94,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     return;
   }
 
-  public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
+  public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @javax.annotation.Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myVFiles.addAll(filesDirty);
     }

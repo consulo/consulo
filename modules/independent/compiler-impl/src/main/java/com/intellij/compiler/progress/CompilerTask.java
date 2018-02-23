@@ -53,8 +53,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.util.ui.UIUtil;
 import consulo.compiler.impl.CompilerManagerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.Semaphore;
@@ -78,11 +77,11 @@ public class CompilerTask extends Task.Backgroundable {
   private final boolean myCompilationStartedAutomatically;
 
   @Deprecated
-  public CompilerTask(@NotNull Project project, String contentName, final boolean headlessMode, boolean forceAsync, boolean waitForPreviousSession) {
+  public CompilerTask(@Nonnull Project project, String contentName, final boolean headlessMode, boolean forceAsync, boolean waitForPreviousSession) {
     this(project, contentName, headlessMode, forceAsync, waitForPreviousSession, false);
   }
 
-  public CompilerTask(@NotNull Project project,
+  public CompilerTask(@Nonnull Project project,
                       String contentName,
                       final boolean headlessMode,
                       boolean forceAsync,
@@ -115,14 +114,14 @@ public class CompilerTask extends Task.Backgroundable {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public NotificationInfo getNotificationInfo() {
     return new NotificationInfo(myErrorCount > 0 ? "Compiler (errors)" : "Compiler (success)", "Compilation Finished",
                                 myErrorCount + " Errors, " + myWarningCount + " Warnings", true);
   }
 
   @Override
-  public void run(@NotNull final ProgressIndicator indicator) {
+  public void run(@Nonnull final ProgressIndicator indicator) {
     myIndicator = indicator;
 
     final ProjectManager projectManager = ProjectManager.getInstance();

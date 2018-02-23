@@ -16,7 +16,7 @@
 package com.intellij.psi.util;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 

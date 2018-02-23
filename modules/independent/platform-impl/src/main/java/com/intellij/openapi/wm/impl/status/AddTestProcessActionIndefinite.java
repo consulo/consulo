@@ -22,7 +22,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessActionIndefinite extends AnAction implements DumbAware {
@@ -34,7 +34,7 @@ public class AddTestProcessActionIndefinite extends AnAction implements DumbAwar
     final Project project = e.getData(CommonDataKeys.PROJECT);
 
     new Task.Backgroundable(project, "Test", true) {
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           Thread.currentThread().sleep(6000);
 

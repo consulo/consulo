@@ -20,7 +20,7 @@ import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,11 +29,11 @@ import org.jetbrains.annotations.NotNull;
 public interface OrderEntryType<T extends OrderEntry> {
   ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryType");
 
-  @NotNull
+  @Nonnull
   String getId();
 
-  @NotNull
-  T loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
+  @Nonnull
+  T loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
 
-  void storeOrderEntry(@NotNull Element element, @NotNull T orderEntry);
+  void storeOrderEntry(@Nonnull Element element, @Nonnull T orderEntry);
 }

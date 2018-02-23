@@ -16,7 +16,7 @@
 package consulo.ide.eap;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,10 +25,10 @@ import org.jetbrains.annotations.NotNull;
 public abstract class EarlyAccessProgramDescriptor {
   public static final ExtensionPointName<EarlyAccessProgramDescriptor> EP_NAME = ExtensionPointName.create("com.intellij.eapDescriptor");
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
-  @NotNull
+  @Nonnull
   public String getGroupName() {
     return "Platform";
   }
@@ -45,7 +45,7 @@ public abstract class EarlyAccessProgramDescriptor {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "";
   }

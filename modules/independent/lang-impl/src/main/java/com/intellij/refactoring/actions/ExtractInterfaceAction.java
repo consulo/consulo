@@ -18,8 +18,8 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.refactoring.RefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ExtractInterfaceAction extends ExtractSuperActionBase {
 
@@ -29,7 +29,7 @@ public class ExtractInterfaceAction extends ExtractSuperActionBase {
 
   @Nullable
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider supportProvider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
     return supportProvider.getExtractInterfaceHandler();
   }
 

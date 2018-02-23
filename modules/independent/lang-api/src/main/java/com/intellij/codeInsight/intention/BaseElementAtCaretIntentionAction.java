@@ -22,8 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Danila Ponomarenko
@@ -32,7 +31,7 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
   private volatile boolean useElementToTheLeft = false;
 
   @Override
-  public final boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (!file.getManager().isInProject(file)) return false;
 
     useElementToTheLeft = false;
@@ -63,10 +62,10 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    * @param element the element under caret.
    * @return true if the intention is available, false otherwise.
    */
-  public abstract boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element);
+  public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
 
   @Override
-  public final void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final PsiElement element = useElementToTheLeft ? getElementToTheLeft(editor, file) : getElementToTheRight(editor,file);
     if (element == null){
       return;
@@ -84,15 +83,15 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    * @throws com.intellij.util.IncorrectOperationException
    *
    */
-  public abstract void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException;
+  public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
 
-  @Nullable
-  protected static PsiElement getElementToTheRight(Editor editor, @NotNull PsiFile file) {
+  @javax.annotation.Nullable
+  protected static PsiElement getElementToTheRight(Editor editor, @Nonnull PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset());
   }
 
-  @Nullable
-  protected static PsiElement getElementToTheLeft(Editor editor, @NotNull PsiFile file) {
+  @javax.annotation.Nullable
+  protected static PsiElement getElementToTheLeft(Editor editor, @Nonnull PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset() - 1);
   }
 

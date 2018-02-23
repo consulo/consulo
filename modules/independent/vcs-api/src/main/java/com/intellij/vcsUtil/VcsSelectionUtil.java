@@ -19,7 +19,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.actions.VcsContext;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -28,7 +27,7 @@ public class VcsSelectionUtil {
   private VcsSelectionUtil() {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VcsSelection getSelection(VcsContext context) {
 
     VcsSelection selectionFromEditor = getSelectionFromEditor(context);
@@ -43,7 +42,7 @@ public class VcsSelectionUtil {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static VcsSelection getSelectionFromEditor(VcsContext context) {
     Editor editor = context.getEditor();
     if (editor == null) return null;

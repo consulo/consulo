@@ -32,8 +32,8 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class IterationState {
 
   private boolean myNextIsFoldRegion;
 
-  public IterationState(@NotNull EditorEx editor, int start, int end, @Nullable CaretData caretData, boolean useOnlyFullLineHighlighters,
+  public IterationState(@Nonnull EditorEx editor, int start, int end, @Nullable CaretData caretData, boolean useOnlyFullLineHighlighters,
                         boolean useOnlyFontOrForegroundAffectingHighlighters, boolean useFoldRegions, boolean iterateBackwards) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     myDocument = editor.getDocument();
@@ -169,7 +169,7 @@ public class IterationState {
     advance();
   }
 
-  public static CaretData createCaretData(@NotNull EditorEx editor) {
+  public static CaretData createCaretData(@Nonnull EditorEx editor) {
     Document document = editor.getDocument();
     CaretModel caretModel = editor.getCaretModel();
     SoftWrapModel softWrapModel = editor.getSoftWrapModel();
@@ -201,7 +201,7 @@ public class IterationState {
     int i;
     private final RangeHighlighterEx[] highlighters;
 
-    private HighlighterSweep(@NotNull MarkupModelEx markupModel, int start, int end,
+    private HighlighterSweep(@Nonnull MarkupModelEx markupModel, int start, int end,
                              final boolean onlyFullLine, final boolean onlyFontOrForegroundAffecting) {
       // we have to get all highlighters in advance and sort them by affected offsets
       // since these can be different from the real offsets the highlighters are sorted by in the tree.  (See LINES_IN_RANGE perverts)
@@ -264,7 +264,7 @@ public class IterationState {
     }
   }
 
-  private boolean skipHighlighter(@NotNull RangeHighlighterEx highlighter) {
+  private boolean skipHighlighter(@Nonnull RangeHighlighterEx highlighter) {
     if (!highlighter.isValid() || highlighter.isAfterEndOfLine() || highlighter.getTextAttributes() == null) return true;
     final FoldRegion region = myFoldingModel == null ? null :
                               myFoldingModel.getCollapsedRegionAtOffset(highlighter.getAffectedAreaStartOffset());
@@ -629,7 +629,7 @@ public class IterationState {
     return myEndOffset;
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributes getMergedAttributes() {
     return myMergedAttributes;
   }
@@ -643,14 +643,14 @@ public class IterationState {
   }
 
 
-  @NotNull
+  @Nonnull
   public TextAttributes getPastLineEndBackgroundAttributes() {
     myMergedAttributes.setBackgroundColor(myEditor.getSoftWrapModel().getSoftWrap(myStartOffset) != null ? getBreakBackgroundColor(true) :
                                           myCurrentBackgroundColor);
     return myMergedAttributes;
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributes getBeforeLineStartBackgroundAttributes() {
     return new TextAttributes(null, getBreakBackgroundColor(false), null, null, Font.PLAIN);
   }

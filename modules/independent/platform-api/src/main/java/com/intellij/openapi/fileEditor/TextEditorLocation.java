@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.LogicalPosition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,23 +28,23 @@ public class TextEditorLocation implements FileEditorLocation {
   private final TextEditor myEditor;
   private final LogicalPosition myPosition;
 
-  public TextEditorLocation(int offset, @NotNull TextEditor editor) {
+  public TextEditorLocation(int offset, @Nonnull TextEditor editor) {
     this(editor.getEditor().offsetToLogicalPosition(offset), editor);
   }
 
-  public TextEditorLocation(@NotNull LogicalPosition position, @NotNull TextEditor editor) {
+  public TextEditorLocation(@Nonnull LogicalPosition position, @Nonnull TextEditor editor) {
     myEditor = editor;
     myPosition = position;
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public FileEditor getEditor() {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   public LogicalPosition getPosition() {
     return myPosition;
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -23,7 +23,7 @@ import java.awt.*;
  * Fragment of text using a common font
  */
 abstract class TextFragment implements LineFragment {
-  @NotNull
+  @Nonnull
   final float[] myCharPositions; // i-th value is the x coordinate of right edge of i-th character (counted in visual order)
 
   TextFragment(int charCount) {
@@ -38,7 +38,7 @@ abstract class TextFragment implements LineFragment {
 
   abstract boolean isRtl();
 
-  @NotNull
+  @Nonnull
   @Override
   public LineFragment subFragment(int startOffset, int endOffset) {
     assert startOffset >= 0;
@@ -143,7 +143,7 @@ abstract class TextFragment implements LineFragment {
       TextFragment.this.draw(g, x, y, visualOffsetToParent(startOffset), visualOffsetToParent(endOffset));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public LineFragment subFragment(int startOffset, int endOffset) {
       return TextFragment.this.subFragment(startOffset + myStartOffset, endOffset + myStartOffset);

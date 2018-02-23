@@ -16,18 +16,19 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
 class SubiterableDiffIterable extends ChangeDiffIterableBase {
-  @NotNull private final DiffIterable myIterable;
+  @Nonnull
+  private final DiffIterable myIterable;
   private final int myStart1;
   private final int myStart2;
   private final int myEnd1;
   private final int myEnd2;
 
-  public SubiterableDiffIterable(@NotNull DiffIterable iterable, int start1, int end1, int start2, int end2) {
+  public SubiterableDiffIterable(@Nonnull DiffIterable iterable, int start1, int end1, int start2, int end2) {
     super(end1 - start1, end2 - start2);
     myIterable = iterable;
     myStart1 = start1;
@@ -36,7 +37,7 @@ class SubiterableDiffIterable extends ChangeDiffIterableBase {
     myEnd2 = end2;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ChangeIterable createChangeIterable() {
     return new SubiterableChangeIterable();

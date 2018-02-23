@@ -37,8 +37,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,13 +47,13 @@ import java.util.Map;
 
 public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
   @Override
-  public boolean canDeleteElement(@NotNull DataContext dataContext) {
+  public boolean canDeleteElement(@Nonnull DataContext dataContext) {
     final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     return modules != null;
   }
 
   @Override
-  public void deleteElement(@NotNull DataContext dataContext) {
+  public void deleteElement(@Nonnull DataContext dataContext) {
     final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     assert modules != null;
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -103,10 +103,10 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
     return "Remove Module";
   }
 
-  public static void removeModule(@NotNull final Module moduleToRemove,
+  public static void removeModule(@Nonnull final Module moduleToRemove,
                                    @Nullable ModifiableRootModel modifiableRootModelToRemove,
-                                   @NotNull Collection<ModifiableRootModel> otherModuleRootModels,
-                                   @NotNull final ModifiableModuleModel moduleModel) {
+                                   @Nonnull Collection<ModifiableRootModel> otherModuleRootModels,
+                                   @Nonnull final ModifiableModuleModel moduleModel) {
     // remove all dependencies on the module that is about to be removed
     for (final ModifiableRootModel modifiableRootModel : otherModuleRootModels) {
       final OrderEntry[] orderEntries = modifiableRootModel.getOrderEntries();

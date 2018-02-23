@@ -18,7 +18,7 @@ package com.intellij.pom;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Consumer;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PomDeclarationSearcher {
   public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create("com.intellij.pom.declarationSearcher");
 
-  public abstract void findDeclarationsAt(@NotNull PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
+  public abstract void findDeclarationsAt(@Nonnull PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
 
 }

@@ -27,30 +27,31 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLogDetailsFilter;
 import com.intellij.vcs.log.VcsLogStructureFilter;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
 
 public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStructureFilter {
-  @NotNull private final Collection<FilePath> myFiles;
+  @Nonnull
+  private final Collection<FilePath> myFiles;
 
-  public VcsLogStructureFilterImpl(@NotNull Set<VirtualFile> files) {
+  public VcsLogStructureFilterImpl(@Nonnull Set<VirtualFile> files) {
     this(ContainerUtil.map(files, file -> VcsUtil.getFilePath(file)));
   }
 
-  public VcsLogStructureFilterImpl(@NotNull Collection<FilePath> files) {
+  public VcsLogStructureFilterImpl(@Nonnull Collection<FilePath> files) {
     myFiles = files;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<FilePath> getFiles() {
     return myFiles;
   }
 
   @Override
-  public boolean matches(@NotNull VcsCommitMetadata details) {
+  public boolean matches(@Nonnull VcsCommitMetadata details) {
     if ((details instanceof VcsFullCommitDetails)) {
       for (Change change : ((VcsFullCommitDetails)details).getChanges()) {
         ContentRevision before = change.getBeforeRevision();
@@ -69,7 +70,7 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
     }
   }
 
-  private boolean matches(@NotNull final String path) {
+  private boolean matches(@Nonnull final String path) {
     return ContainerUtil.find(myFiles, new Condition<VirtualFile>() {
       @Override
       public boolean value(VirtualFile file) {

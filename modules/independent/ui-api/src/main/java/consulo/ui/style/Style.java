@@ -16,16 +16,16 @@
 package consulo.ui.style;
 
 import consulo.ui.shared.ColorValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22-Jun-16
  */
 public interface Style {
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
-  ColorValue getColor(@NotNull ColorKey colorKey);
+  @Nonnull
+  ColorValue getColor(@Nonnull ColorKey colorKey);
 }

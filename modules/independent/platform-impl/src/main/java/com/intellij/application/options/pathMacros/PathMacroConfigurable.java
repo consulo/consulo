@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -70,7 +70,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     return myEditor != null && myEditor.isModified();
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

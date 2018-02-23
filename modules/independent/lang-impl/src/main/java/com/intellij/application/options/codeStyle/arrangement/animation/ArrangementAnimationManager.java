@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.animation;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -28,14 +28,17 @@ import java.awt.event.ActionListener;
  */
 public class ArrangementAnimationManager implements ArrangementAnimationPanel.Listener, ActionListener {
 
-  @NotNull private final Timer myTimer = new Timer(ArrangementConstants.ANIMATION_STEPS_TIME_GAP_MILLIS, this);
+  @Nonnull
+  private final Timer myTimer = new Timer(ArrangementConstants.ANIMATION_STEPS_TIME_GAP_MILLIS, this);
 
-  @NotNull private final ArrangementAnimationPanel myAnimationPanel;
-  @NotNull private final Callback                  myCallback;
+  @Nonnull
+  private final ArrangementAnimationPanel myAnimationPanel;
+  @Nonnull
+  private final Callback                  myCallback;
   
   private boolean myFinished;
 
-  public ArrangementAnimationManager(@NotNull ArrangementAnimationPanel panel, @NotNull Callback callback) {
+  public ArrangementAnimationManager(@Nonnull ArrangementAnimationPanel panel, @Nonnull Callback callback) {
     myAnimationPanel = panel;
     myCallback = callback;
     myAnimationPanel.setListener(this);

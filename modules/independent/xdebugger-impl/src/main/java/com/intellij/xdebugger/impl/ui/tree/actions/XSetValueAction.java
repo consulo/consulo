@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.xdebugger.impl.ui.tree.SetValueInplaceEditor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -41,12 +41,12 @@ public class XSetValueAction extends XDebuggerTreeActionBase {
   }
 
   @Override
-  protected boolean isEnabled(@NotNull XValueNodeImpl node, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return super.isEnabled(node, e) && node.getValueContainer().getModifier() != null;
   }
 
   @Override
-  protected void perform(final XValueNodeImpl node, @NotNull final String nodeName, final AnActionEvent e) {
+  protected void perform(final XValueNodeImpl node, @Nonnull final String nodeName, final AnActionEvent e) {
     SetValueInplaceEditor.show(node, nodeName);
   }
 }

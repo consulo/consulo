@@ -22,8 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,13 +42,13 @@ public class MockVirtualFile extends VirtualFile {
 
   private String myPath;
 
-  @NotNull
-  static VirtualFile fromPath(@NotNull String absolutePath) {
+  @Nonnull
+  static VirtualFile fromPath(@Nonnull String absolutePath) {
     return new MockVirtualFile(FileUtil.toSystemIndependentName(absolutePath));
   }
 
-  @NotNull
-  static VirtualFile fromPath(@NotNull String relativePath, @NotNull Project project) {
+  @Nonnull
+  static VirtualFile fromPath(@Nonnull String relativePath, @Nonnull Project project) {
     try {
       return fromPath(new File(project.getBaseDir().getPath() + "/" + relativePath).getCanonicalPath());
     }
@@ -58,8 +57,8 @@ public class MockVirtualFile extends VirtualFile {
     }
   }
 
-  @NotNull
-  static VirtualFile fromPath(@NotNull String relativePath, @NotNull String basePath) {
+  @Nonnull
+  static VirtualFile fromPath(@Nonnull String relativePath, @Nonnull String basePath) {
     try {
       return fromPath(new File(basePath + "/" + relativePath).getCanonicalPath());
     }
@@ -68,17 +67,17 @@ public class MockVirtualFile extends VirtualFile {
     }
   }
 
-  public MockVirtualFile(@NotNull String path) {
+  public MockVirtualFile(@Nonnull String path) {
     myPath = FileUtil.toSystemIndependentName(path);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return new File(myPath).getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return ourFileSystem;
@@ -105,7 +104,7 @@ public class MockVirtualFile extends VirtualFile {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getParent() {
     File parentFile = FileUtil.getParentFile(new File(myPath));
     return parentFile != null ? new MockVirtualFile(parentFile.getPath()) : null;
@@ -124,13 +123,13 @@ public class MockVirtualFile extends VirtualFile {
     return files;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public byte[] contentsToByteArray() {
     throw new UnsupportedOperationException();
@@ -160,13 +159,13 @@ public class MockVirtualFile extends VirtualFile {
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUrl() {
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     return PlainTextFileType.INSTANCE;

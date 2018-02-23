@@ -35,7 +35,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

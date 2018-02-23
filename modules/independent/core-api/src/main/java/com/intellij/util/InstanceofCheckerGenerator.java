@@ -22,7 +22,7 @@ import net.sf.cglib.asm.$ClassVisitor;
 import net.sf.cglib.asm.$Label;
 import net.sf.cglib.asm.$Type;
 import net.sf.cglib.core.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Modifier;
 
@@ -68,7 +68,7 @@ public class InstanceofCheckerGenerator {
     }
   };
 
-  @NotNull
+  @Nonnull
   public Condition<Object> getInstanceofChecker(final Class<?> someClass) {
     return myCache.get(someClass);
   }

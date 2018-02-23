@@ -17,11 +17,11 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface IdeValidationHost extends Validator.ValidationHost {
-  void addMessageWithFixes(PsiElement context, String message, @NotNull ErrorType type, @NotNull IntentionAction... fixes);
+  void addMessageWithFixes(PsiElement context, String message, @Nonnull ErrorType type, @Nonnull IntentionAction... fixes);
 }

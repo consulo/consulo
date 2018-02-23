@@ -40,7 +40,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,7 @@ public class ShowRunningListAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getProject();
     if (project == null || project.isDisposed()) return;
     final Ref<Pair<? extends JComponent, String>> stateRef = new Ref<>();
@@ -132,7 +132,7 @@ public class ShowRunningListAction extends AnAction {
 
   private static final Object KEY = new Object();
 
-  private static Pair<? extends JComponent, String> getCurrentState(@NotNull List<Project> projects) {
+  private static Pair<? extends JComponent, String> getCurrentState(@Nonnull List<Project> projects) {
     NonOpaquePanel panel = new NonOpaquePanel(new GridLayout(0, 1, 10, 10));
     StringBuilder state = new StringBuilder();
     for (int i = 0; i < projects.size(); i++) {
@@ -175,7 +175,7 @@ public class ShowRunningListAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
       boolean enabled = project != null && !project.isDisposed() && !ExecutionManagerImpl.getInstance(project).getRunningDescriptors(Condition.TRUE).isEmpty();

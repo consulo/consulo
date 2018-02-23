@@ -16,7 +16,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Used by UI trees to get a more memory-efficient representation of their user objects.

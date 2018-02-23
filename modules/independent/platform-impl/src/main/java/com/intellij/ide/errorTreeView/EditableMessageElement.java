@@ -16,8 +16,8 @@
 package com.intellij.ide.errorTreeView;
 
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeCellEditor;
 
@@ -26,7 +26,7 @@ import javax.swing.tree.TreeCellEditor;
  * @since 3/26/14
  */
 public interface EditableMessageElement {
-  @NotNull
+  @Nonnull
   TreeCellEditor getRightSelfEditor();
   @Nullable
   CustomizeColoredTreeCellRenderer getLeftSelfRenderer();

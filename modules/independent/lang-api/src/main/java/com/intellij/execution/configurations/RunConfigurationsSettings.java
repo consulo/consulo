@@ -17,11 +17,11 @@ package com.intellij.execution.configurations;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.UnnamedConfigurable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface RunConfigurationsSettings {
   ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create("com.intellij.runConfigurationsSettings");
 
-  @NotNull
+  @Nonnull
   UnnamedConfigurable createConfigurable();
 }

@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -30,7 +30,7 @@ public abstract class TooltipLinkHandler {
    * @param editor    an editor in which tooltip with a link was shown.
    * @return {@code true} if a link was handled.
    */
-  public boolean handleLink(@NotNull String refSuffix, @NotNull Editor editor) {
+  public boolean handleLink(@Nonnull String refSuffix, @Nonnull Editor editor) {
     return false;
   }
 
@@ -44,7 +44,7 @@ public abstract class TooltipLinkHandler {
    * @return detailed description to show.
    */
   @Nullable
-  public String getDescription(@NotNull String refSuffix, @NotNull Editor editor) {
+  public String getDescription(@Nonnull String refSuffix, @Nonnull Editor editor) {
     return null;
   }
 }

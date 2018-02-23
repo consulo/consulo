@@ -23,22 +23,22 @@ import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   private final SuppressQuickFix myFix;
 
-  private SuppressIntentionActionFromFix(@NotNull SuppressQuickFix fix) {
+  private SuppressIntentionActionFromFix(@Nonnull SuppressQuickFix fix) {
     myFix = fix;
   }
 
-  @NotNull
-  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(@NotNull final SuppressQuickFix fix) {
+  @Nonnull
+  public static SuppressIntentionAction convertBatchToSuppressIntentionAction(@Nonnull final SuppressQuickFix fix) {
     return new SuppressIntentionActionFromFix(fix);
   }
 
-  @NotNull
-  public static SuppressIntentionAction[] convertBatchToSuppressIntentionActions(@NotNull SuppressQuickFix[] actions) {
+  @Nonnull
+  public static SuppressIntentionAction[] convertBatchToSuppressIntentionActions(@Nonnull SuppressQuickFix[] actions) {
     return ContainerUtil.map2Array(actions, SuppressIntentionAction.class, new Function<SuppressQuickFix, SuppressIntentionAction>() {
       @Override
       public SuppressIntentionAction fun(SuppressQuickFix fix) {
@@ -48,7 +48,7 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
     PsiElement container = getContainer(element);
     boolean caretWasBeforeStatement = editor != null && container != null && editor.getCaretModel().getOffset() == container.getTextRange().getStartOffset();
     InspectionManager inspectionManager = InspectionManager.getInstance(project);
@@ -72,17 +72,17 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
     return myFix.isAvailable(project, element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return myFix.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return myFix.getFamilyName();

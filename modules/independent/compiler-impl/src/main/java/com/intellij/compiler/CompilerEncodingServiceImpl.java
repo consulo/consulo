@@ -30,8 +30,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -43,10 +42,11 @@ import java.util.Set;
  * @author nik
  */
 public class CompilerEncodingServiceImpl extends CompilerEncodingService {
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final CachedValue<Map<Module, Set<Charset>>> myModuleFileEncodings;
 
-  public CompilerEncodingServiceImpl(@NotNull Project project) {
+  public CompilerEncodingServiceImpl(@Nonnull Project project) {
     myProject = project;
     myModuleFileEncodings = CachedValuesManager.getManager(project).createCachedValue(new CachedValueProvider<Map<Module, Set<Charset>>>() {
       @Override
@@ -115,15 +115,15 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   }
 
   @Override
-  @Nullable
-  public Charset getPreferredModuleEncoding(@NotNull Module module) {
+  @javax.annotation.Nullable
+  public Charset getPreferredModuleEncoding(@Nonnull Module module) {
     final Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
     return ContainerUtil.getFirstItem(encodings, EncodingProjectManager.getInstance(myProject).getDefaultCharset());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<Charset> getAllModuleEncodings(@NotNull Module module) {
+  public Collection<Charset> getAllModuleEncodings(@Nonnull Module module) {
     final Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
     if (encodings != null) {
       return encodings;

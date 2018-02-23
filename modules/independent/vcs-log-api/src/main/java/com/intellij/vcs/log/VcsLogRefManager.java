@@ -1,6 +1,6 @@
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -34,7 +34,7 @@ public interface VcsLogRefManager {
    *
    * @see #getLabelsOrderComparator()
    */
-  @NotNull
+  @Nonnull
   Comparator<VcsRef> getBranchLayoutComparator();
 
   /**
@@ -52,7 +52,7 @@ public interface VcsLogRefManager {
    *
    * @see #getBranchLayoutComparator()
    */
-  @NotNull
+  @Nonnull
   Comparator<VcsRef> getLabelsOrderComparator();
 
   /**
@@ -60,15 +60,15 @@ public interface VcsLogRefManager {
    * <p>Groups containing only one element will be displayed as a single ref. Others will provide a popup menu.</p>
    * <p>Groups must be pre-sorted in the order which they are to be painted on the panel.</p>
    */
-  @NotNull
-  List<RefGroup> groupForBranchFilter(@NotNull Collection<VcsRef> refs);
+  @Nonnull
+  List<RefGroup> groupForBranchFilter(@Nonnull Collection<VcsRef> refs);
 
   /**
    * Groups VCS references to show them in graph table.
    * All references given to this method are from the same commit.
    */
-  @NotNull
-  List<RefGroup> groupForTable(@NotNull Collection<VcsRef> refs, boolean compact, boolean showTagNames);
+  @Nonnull
+  List<RefGroup> groupForTable(@Nonnull Collection<VcsRef> refs, boolean compact, boolean showTagNames);
 
   /**
    * Writes given reference type to the output.
@@ -76,7 +76,7 @@ public interface VcsLogRefManager {
    * @param out  output to write type into
    * @param type type to serialize
    */
-  void serialize(@NotNull DataOutput out, @NotNull VcsRefType type) throws IOException;
+  void serialize(@Nonnull DataOutput out, @Nonnull VcsRefType type) throws IOException;
 
   /**
    * Reads reference type from given input.
@@ -84,6 +84,6 @@ public interface VcsLogRefManager {
    * @param in input to read type from
    * @return reference type read from the input
    */
-  @NotNull
-  VcsRefType deserialize(@NotNull DataInput in) throws IOException;
+  @Nonnull
+  VcsRefType deserialize(@Nonnull DataInput in) throws IOException;
 }

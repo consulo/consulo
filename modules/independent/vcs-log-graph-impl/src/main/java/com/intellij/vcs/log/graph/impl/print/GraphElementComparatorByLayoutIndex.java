@@ -20,7 +20,7 @@ import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
 import com.intellij.vcs.log.graph.utils.NormalEdge;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -28,14 +28,15 @@ import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.asNormalEdge;
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getNotNullNodeIndex;
 
 public class GraphElementComparatorByLayoutIndex implements Comparator<GraphElement> {
-  @NotNull private final NotNullFunction<Integer, Integer> myLayoutIndexGetter;
+  @Nonnull
+  private final NotNullFunction<Integer, Integer> myLayoutIndexGetter;
 
-  public GraphElementComparatorByLayoutIndex(@NotNull NotNullFunction<Integer, Integer> layoutIndexGetter) {
+  public GraphElementComparatorByLayoutIndex(@Nonnull NotNullFunction<Integer, Integer> layoutIndexGetter) {
     myLayoutIndexGetter = layoutIndexGetter;
   }
 
   @Override
-  public int compare(@NotNull GraphElement o1, @NotNull GraphElement o2) {
+  public int compare(@Nonnull GraphElement o1, @Nonnull GraphElement o2) {
     if (o1 instanceof GraphEdge && o2 instanceof GraphEdge) {
       GraphEdge edge1 = (GraphEdge)o1;
       GraphEdge edge2 = (GraphEdge)o2;
@@ -69,7 +70,7 @@ public class GraphElementComparatorByLayoutIndex implements Comparator<GraphElem
     return 0;
   }
 
-  private int compare2(@NotNull GraphEdge edge, @NotNull GraphNode node) {
+  private int compare2(@Nonnull GraphEdge edge, @Nonnull GraphNode node) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge == null) {
       return getLayoutIndex(getNotNullNodeIndex(edge)) - getLayoutIndex(node.getNodeIndex());

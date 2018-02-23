@@ -22,7 +22,7 @@ import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -77,7 +77,7 @@ public class FragmentHighlighterImpl implements FragmentHighlighter {
     otherWrapper.addAction(MergeOperations.mostSensible(otherDocument, document, otherRange, range), otherRange.getStartOffset());
   }
 
-  private static void addSeparatingLine(@NotNull LineFragment fragment, @NotNull DiffMarkup appender, int startLine, int endLine) {
+  private static void addSeparatingLine(@Nonnull LineFragment fragment, @Nonnull DiffMarkup appender, int startLine, int endLine) {
     if (endLine <= 0) return;
     TextDiffTypeEnum type = fragment.getType();
     appender.addLineMarker(endLine - 1, type == null ? null : DiffUtil.makeTextDiffType(fragment), SeparatorPlacement.BOTTOM);

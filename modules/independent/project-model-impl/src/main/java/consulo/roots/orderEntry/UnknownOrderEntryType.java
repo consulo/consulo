@@ -20,7 +20,7 @@ import consulo.roots.impl.UnknownOrderEntryImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,20 +37,20 @@ public class UnknownOrderEntryType implements OrderEntryType<UnknownOrderEntryIm
     myElement = element;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public UnknownOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public UnknownOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     throw new IllegalArgumentException("this method ill never call");
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull UnknownOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull UnknownOrderEntryImpl orderEntry) {
     List<Attribute> attributes = myElement.getAttributes();
     for (Attribute attribute : attributes) {
       element.setAttribute(attribute.getName(), attribute.getValue());

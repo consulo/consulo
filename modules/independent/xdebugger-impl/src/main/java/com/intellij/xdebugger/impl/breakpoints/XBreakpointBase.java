@@ -51,8 +51,8 @@ import com.intellij.xml.CommonXmlStrings;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -145,13 +145,13 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SuspendPolicy getSuspendPolicy() {
     return myState.getSuspendPolicy();
   }
 
   @Override
-  public void setSuspendPolicy(@NotNull SuspendPolicy policy) {
+  public void setSuspendPolicy(@Nonnull SuspendPolicy policy) {
     if (myState.getSuspendPolicy() != policy) {
       myState.setSuspendPolicy(policy);
       fireBreakpointChanged();
@@ -273,7 +273,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public XBreakpointType<Self,P> getType() {
     return myType;
   }
@@ -337,7 +337,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     @NonNls StringBuilder builder = new StringBuilder();
     builder.append(CommonXmlStrings.HTML_START).append(CommonXmlStrings.BODY_START);
@@ -488,7 +488,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     myCustomizedPresentation = presentation;
   }
 
-  @NotNull
+  @Nonnull
   public GutterIconRenderer createGutterIconRenderer() {
     return new BreakpointGutterIconRenderer();
   }
@@ -498,13 +498,13 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   @Override
-  public int compareTo(@NotNull Self self) {
+  public int compareTo(@Nonnull Self self) {
     return myType.getBreakpointComparator().compare((Self)this, self);
   }
 
   protected class BreakpointGutterIconRenderer extends GutterIconRenderer implements DumbAware {
     @Override
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return XBreakpointBase.this.getIcon();
     }
@@ -535,7 +535,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
       return new EditBreakpointAction.ContextAction(this, XBreakpointBase.this, DebuggerSupport.getDebuggerSupport(XDebuggerSupport.class));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Alignment getAlignment() {
       return Alignment.RIGHT;

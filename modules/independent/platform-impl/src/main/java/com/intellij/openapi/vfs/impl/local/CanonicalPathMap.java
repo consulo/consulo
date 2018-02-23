@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -44,7 +44,7 @@ class CanonicalPathMap {
     myPathMapping = MultiMap.empty();
   }
 
-  public CanonicalPathMap(@NotNull List<String> recursive, @NotNull List<String> flat) {
+  public CanonicalPathMap(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
     myRecursiveWatchRoots = ContainerUtil.newArrayList(recursive);
     myFlatWatchRoots = ContainerUtil.newArrayList(flat);
 
@@ -90,7 +90,7 @@ class CanonicalPathMap {
     return myCanonicalFlatWatchRoots;
   }
 
-  public void addMapping(@NotNull Collection<Pair<String, String>> mapping) {
+  public void addMapping(@Nonnull Collection<Pair<String, String>> mapping) {
     for (Pair<String, String> pair : mapping) {
       // See if we are adding a mapping that itself should be mapped to a different path
       // Example: /foo/real_path -> /foo/symlink, /foo/remapped_path -> /foo/real_path
@@ -120,8 +120,8 @@ class CanonicalPathMap {
    * For recursive roots, if the path given to us is already the parent of the actual dirty path, we need to compare the path to the parent
    * of the recursive root because if the root itself was changed, we need to know about it.
    */
-  @NotNull
-  public Collection<String> getWatchedPaths(@NotNull String reportedPath, boolean isExact) {
+  @Nonnull
+  public Collection<String> getWatchedPaths(@Nonnull String reportedPath, boolean isExact) {
     if (myFlatWatchRoots.isEmpty() && myRecursiveWatchRoots.isEmpty()) return Collections.emptyList();
 
     Collection<String> affectedPaths = applyMapping(reportedPath);

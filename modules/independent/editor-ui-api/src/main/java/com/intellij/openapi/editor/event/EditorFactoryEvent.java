@@ -17,24 +17,24 @@ package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventObject;
 
 public class EditorFactoryEvent extends EventObject {
   private final Editor myEditor;
 
-  public EditorFactoryEvent(@NotNull EditorFactory editorFactory, @NotNull Editor editor) {
+  public EditorFactoryEvent(@Nonnull EditorFactory editorFactory, @Nonnull Editor editor) {
     super(editorFactory);
     myEditor = editor;
   }
 
-  @NotNull
+  @Nonnull
   public EditorFactory getFactory(){
     return (EditorFactory) getSource();
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }

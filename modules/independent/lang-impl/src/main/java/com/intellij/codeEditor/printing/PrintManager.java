@@ -39,7 +39,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.print.*;
@@ -149,7 +149,7 @@ class PrintManager {
 
     ProgressManager.getInstance().run(new Task.Backgroundable(project, CodeEditorBundle.message("print.progress"), true, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
           if (painter0 instanceof MultiFilePainter) {
@@ -239,7 +239,7 @@ class PrintManager {
     return new TextPainter(doc, highlighter, fileName, psiFile, psiFile.getFileType(), editor);
   }
 
-  public static TextPainter initTextPainter(@NotNull final DocumentEx doc, final Project project) {
+  public static TextPainter initTextPainter(@Nonnull final DocumentEx doc, final Project project) {
     final TextPainter[] res = new TextPainter[1];
     ApplicationManager.getApplication().runReadAction(
       new Runnable() {
@@ -252,7 +252,7 @@ class PrintManager {
     return res[0];
   }
 
-  private static TextPainter doInitTextPainter(@NotNull final DocumentEx doc, Project project) {
+  private static TextPainter doInitTextPainter(@Nonnull final DocumentEx doc, Project project) {
      EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
      highlighter.setText(doc.getCharsSequence());
      return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);

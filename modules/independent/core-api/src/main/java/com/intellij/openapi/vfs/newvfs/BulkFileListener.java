@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,13 +26,13 @@ public interface BulkFileListener {
    */
   class Adapter implements BulkFileListener {
     @Override
-    public void before(@NotNull List<? extends VFileEvent> events) { }
+    public void before(@Nonnull List<? extends VFileEvent> events) { }
 
     @Override
-    public void after(@NotNull List<? extends VFileEvent> events) { }
+    public void after(@Nonnull List<? extends VFileEvent> events) { }
   }
 
-  default void before(@NotNull List<? extends VFileEvent> events) { }
+  default void before(@Nonnull List<? extends VFileEvent> events) { }
 
-  default void after(@NotNull List<? extends VFileEvent> events) { }
+  default void after(@Nonnull List<? extends VFileEvent> events) { }
 }

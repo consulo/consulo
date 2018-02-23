@@ -43,8 +43,8 @@ import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.ArrayUtil;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -54,13 +54,13 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   private final TodoTreeBuilder myBuilder;
   @Nullable private final String myPresentationName;
 
-  public TodoPackageNode(@NotNull Project project,
+  public TodoPackageNode(@Nonnull Project project,
                          PackageElement element,
                          TodoTreeBuilder builder) {
     this(project, element, builder,null);
   }
 
-  public TodoPackageNode(@NotNull Project project,
+  public TodoPackageNode(@Nonnull Project project,
                          PackageElement element,
                          TodoTreeBuilder builder,
                          @Nullable String name) {
@@ -136,7 +136,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   }
 
   @Override
-  public void apply(@NotNull Map<String, String> info) {
+  public void apply(@Nonnull Map<String, String> info) {
     info.put("toDoFileCount", String.valueOf(getFileCount(getValue())));
     info.put("toDoItemCount", String.valueOf(getTodoItemCount(getValue())));
   }
@@ -198,7 +198,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     final Project project = getProject();

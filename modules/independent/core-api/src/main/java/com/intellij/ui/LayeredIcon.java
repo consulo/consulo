@@ -23,7 +23,7 @@ import consulo.ui.image.FoldedImage;
 import consulo.ui.image.Image;
 import consulo.ui.migration.ToImageWrapper;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon implements ToImageWrappe
     myVShifts = new int[layerCount];
   }
 
-  public LayeredIcon(@NotNull Icon... icons) {
+  public LayeredIcon(@Nonnull Icon... icons) {
     this(icons.length);
     for (int i = 0; i < icons.length; i++) {
       setIcon(icons[i], i);
@@ -75,7 +75,7 @@ public class LayeredIcon extends JBUI.AuxScalableJBIcon implements ToImageWrappe
     return new LayeredIcon(this);
   }
 
-  @NotNull
+  @Nonnull
   private Icon[] myScaledIcons() {
     if (myScaledIcons != null) {
       return myScaledIcons;

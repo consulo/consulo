@@ -18,8 +18,8 @@ package com.intellij.psi.codeStyle.arrangement.std;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,14 +39,15 @@ public interface ArrangementUiComponent {
 
   @Nullable ArrangementSettingsToken getToken();
 
-  @NotNull Set<ArrangementSettingsToken> getAvailableTokens();
+  @Nonnull
+  Set<ArrangementSettingsToken> getAvailableTokens();
 
-  void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException;
+  void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException;
 
-  @NotNull
+  @Nonnull
   ArrangementMatchCondition getMatchCondition();
 
-  @NotNull
+  @Nonnull
   JComponent getUiComponent();
 
   /**
@@ -74,7 +75,7 @@ public interface ArrangementUiComponent {
    */
   void setSelected(boolean selected);
 
-  void setData(@NotNull Object data);
+  void setData(@Nonnull Object data);
 
   void reset();
 
@@ -89,15 +90,15 @@ public interface ArrangementUiComponent {
    * @return       bounds to be repainted (in screen coordinates) if any; <code>null</code> otherwise
    */
   @Nullable
-  Rectangle onMouseMove(@NotNull MouseEvent event);
+  Rectangle onMouseMove(@Nonnull MouseEvent event);
 
-  void onMouseRelease(@NotNull MouseEvent event);
+  void onMouseRelease(@Nonnull MouseEvent event);
 
   @Nullable
   Rectangle onMouseExited();
 
   @Nullable
-  Rectangle onMouseEntered(@NotNull MouseEvent e);
+  Rectangle onMouseEntered(@Nonnull MouseEvent e);
 
   /**
    * @param width   the width to get baseline for
@@ -106,7 +107,7 @@ public interface ArrangementUiComponent {
    */
   int getBaselineToUse(int width, int height);
 
-  void setListener(@NotNull Listener listener);
+  void setListener(@Nonnull Listener listener);
 
   /**
    * Method to process second click on the component,
@@ -125,10 +126,10 @@ public interface ArrangementUiComponent {
     ExtensionPointName<Factory> EP_NAME = ExtensionPointName.create("com.intellij.rearranger.ui");
 
     @Nullable
-    ArrangementUiComponent build(@NotNull StdArrangementTokenUiRole role,
-                                 @NotNull List<ArrangementSettingsToken> tokens,
-                                 @NotNull ArrangementColorsProvider colorsProvider,
-                                 @NotNull ArrangementStandardSettingsManager settingsManager);
+    ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
+                                 @Nonnull List<ArrangementSettingsToken> tokens,
+                                 @Nonnull ArrangementColorsProvider colorsProvider,
+                                 @Nonnull ArrangementStandardSettingsManager settingsManager);
   }
 
   interface Listener {

@@ -17,17 +17,17 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class PushedFilePropertiesUpdater {
-  @NotNull
+  @Nonnull
   public static PushedFilePropertiesUpdater getInstance(Project project) {
     return project.getComponent(PushedFilePropertiesUpdater.class);
   }
 
   public abstract void initializeProperties();
   public abstract void pushAll(final FilePropertyPusher... pushers);
-  public abstract void filePropertiesChanged(@NotNull final VirtualFile file);
+  public abstract void filePropertiesChanged(@Nonnull final VirtualFile file);
   public abstract void pushAllPropertiesNow();
   public abstract <T> void findAndUpdateValue(final VirtualFile fileOrDir, final FilePropertyPusher<T> pusher, final T moduleValue);
 }

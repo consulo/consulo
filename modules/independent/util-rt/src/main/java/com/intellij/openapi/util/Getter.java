@@ -15,9 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface Getter<A> {
-  @Nullable
+  @javax.annotation.Nullable
   A get();
 }

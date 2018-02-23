@@ -23,8 +23,7 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -33,8 +32,8 @@ import java.util.Comparator;
  * @author nik
  */
 public abstract class ArtifactManager implements ArtifactModel {
-  @NotNull
-  public static ArtifactManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ArtifactManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactManager.class);
   }
 
@@ -52,14 +51,14 @@ public abstract class ArtifactManager implements ArtifactModel {
 
   public abstract PackagingElementResolvingContext getResolvingContext();
 
-  @NotNull
-  public abstract Artifact addArtifact(@NonNls @NotNull String name, @NotNull ArtifactType type, @Nullable CompositePackagingElement<?> root);
+  @Nonnull
+  public abstract Artifact addArtifact(@NonNls @Nonnull String name, @Nonnull ArtifactType type, @javax.annotation.Nullable CompositePackagingElement<?> root);
 
-  public abstract void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath,
-                                              @NotNull Collection<? extends PackagingElement<?>> elements);
+  public abstract void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath,
+                                              @Nonnull Collection<? extends PackagingElement<?>> elements);
 
-  public abstract void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath,
-                                              @NotNull PackagingElement<?> element);
+  public abstract void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath,
+                                              @Nonnull PackagingElement<?> element);
 
   public abstract ModificationTracker getModificationTracker();
 }

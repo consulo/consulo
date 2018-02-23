@@ -17,7 +17,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -38,7 +38,7 @@ public interface RangeMarker extends UserDataHolder, Segment {
    *
    * @return the document instance.
    */
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   /**

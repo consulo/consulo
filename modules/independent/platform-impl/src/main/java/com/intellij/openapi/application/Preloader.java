@@ -25,7 +25,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
 
@@ -92,7 +92,7 @@ public class Preloader implements ApplicationComponent {
     myIndicator.cancel();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "Preloader";

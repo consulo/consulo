@@ -18,7 +18,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IndentInfo {
 
@@ -68,8 +68,8 @@ public class IndentInfo {
 
   }
 
-  private static void generateLineWhitespace(@NotNull StringBuffer buffer,
-                                      @NotNull CommonCodeStyleSettings.IndentOptions options,
+  private static void generateLineWhitespace(@Nonnull StringBuffer buffer,
+                                      @Nonnull CommonCodeStyleSettings.IndentOptions options,
                                       int indentSpaces,
                                       int alignmentSpaces,
                                       boolean tabsAllowed) {

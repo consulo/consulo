@@ -15,8 +15,8 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,12 +47,12 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   static final int VERSION = 6;
   private static final Version ourVersion = new Version(VERSION);
 
-  public PersistentEnumerator(@NotNull File file, @NotNull KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentEnumerator(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null, 0);
   }
 
-  public PersistentEnumerator(@NotNull File file,
-                              @NotNull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumerator(@Nonnull File file,
+                              @Nonnull KeyDescriptor<Data> dataDescriptor,
                               int initialSize,
                               @Nullable PagedFileStorage.StorageLockContext storageLockContext,
                               int version) throws IOException {
@@ -66,11 +66,11 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
   }
 
   @Override
-  public synchronized boolean traverseAllRecords(@NotNull RecordsProcessor p) throws IOException {
+  public synchronized boolean traverseAllRecords(@Nonnull RecordsProcessor p) throws IOException {
     return traverseRecords(FIRST_VECTOR_OFFSET, SLOTS_PER_FIRST_VECTOR, p);
   }
 
-  private boolean traverseRecords(int vectorStart, int slotsCount, @NotNull RecordsProcessor p) throws IOException {
+  private boolean traverseRecords(int vectorStart, int slotsCount, @Nonnull RecordsProcessor p) throws IOException {
     lockStorage();
     try {
       for (int slotIdx = 0; slotIdx < slotsCount; slotIdx++) {
@@ -205,7 +205,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     return (hashcode >>> (byteN * BITS_PER_LEVEL)) & LEVEL_MASK;
   }
 
-  private int allocVector(@NotNull final byte[] empty) throws IOException {
+  private int allocVector(@Nonnull final byte[] empty) throws IOException {
     final int pos = (int)myStorage.length();
     myStorage.put(pos, empty, 0, empty.length);
     return pos;
@@ -228,11 +228,11 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     private final byte[] myBuffer = new byte[RECORD_SIZE];
 
     @Override
-    protected int recordWriteOffset(@NotNull PersistentEnumerator enumerator, byte[] buf) {
+    protected int recordWriteOffset(@Nonnull PersistentEnumerator enumerator, byte[] buf) {
       return (int)enumerator.myStorage.length();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     byte[] getRecordBuffer(PersistentEnumerator t) {
       return myBuffer;

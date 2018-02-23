@@ -17,8 +17,7 @@ package com.intellij.codeInspection.reference;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -35,7 +34,8 @@ public interface RefElement extends RefEntity {
    * @return the node for the module, or null if the element is not valid or the module
    * was not found.
    */
-  @Nullable RefModule getModule();
+  @javax.annotation.Nullable
+  RefModule getModule();
 
   /**
    * Returns the PSI element corresponding to the node.
@@ -65,14 +65,16 @@ public interface RefElement extends RefEntity {
    *
    * @return the collection of outgoing references.
    */
-  @NotNull Collection<RefElement> getOutReferences();
+  @Nonnull
+  Collection<RefElement> getOutReferences();
 
   /**
    * Returns the collection of references from other elements to this element.
    *
    * @return the collection of incoming references.
    */
-  @NotNull Collection<RefElement> getInReferences();
+  @Nonnull
+  Collection<RefElement> getInReferences();
 
   /**
    * Checks if the element is an entry point for reachability analysis.
@@ -89,6 +91,6 @@ public interface RefElement extends RefEntity {
    */
   boolean isPermanentEntry();
 
-  @NotNull
+  @Nonnull
   RefElement getContainingEntry();
 }

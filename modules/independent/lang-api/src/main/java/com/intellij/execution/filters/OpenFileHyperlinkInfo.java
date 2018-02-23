@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
 
@@ -35,11 +35,11 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
   private final int myDocumentLine;
   private final int myDocumentColumn;
 
-  public OpenFileHyperlinkInfo(@NotNull OpenFileDescriptor descriptor) {
+  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptor descriptor) {
     this(descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 
-  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull VirtualFile file, boolean includeInOccurenceNavigation,
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurenceNavigation,
                                int documentLine, int documentColumn) {
     myProject = project;
     myFile = file;
@@ -48,11 +48,11 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
     myDocumentColumn = documentColumn;
   }
 
-  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull final VirtualFile file, final int line) {
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull final VirtualFile file, final int line) {
     this(project, file, line, 0);
   }
 
-  public OpenFileHyperlinkInfo(@NotNull Project project, @NotNull VirtualFile file, int line, int column) {
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, int line, int column) {
     this(project, file, true, line, column);
   }
 
@@ -103,7 +103,7 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
    * @param documentColumn zero-based column of the document
    * @return calculated offset or UNDEFINED_OFFSET if it's impossible to calculate
    */
-  private static int calculateOffset(@NotNull final VirtualFile file,
+  private static int calculateOffset(@Nonnull final VirtualFile file,
                                      final int documentLine, final int documentColumn) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
 

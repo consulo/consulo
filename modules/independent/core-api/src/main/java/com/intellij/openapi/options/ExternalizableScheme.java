@@ -16,10 +16,10 @@
 package com.intellij.openapi.options;
 
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ExternalizableScheme extends Named {
-  @NotNull
+  @Nonnull
   ExternalInfo getExternalInfo();
 
   void setName(String newName);

@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.URLUtil;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,48 +39,48 @@ public final class Urls {
   // about ";" see WEB-100359
   private static final Pattern URI_PATTERN = Pattern.compile("^([^:/?#]+):(//)?([^/?#]*)([^?#;]*)(.*)");
 
-  @NotNull
-  public static Url newUri(@NotNull String scheme, @NotNull String path) {
+  @Nonnull
+  public static Url newUri(@Nonnull String scheme, @Nonnull String path) {
     return new UrlImpl(scheme, null, path);
   }
 
-  @NotNull
-  public static Url newLocalFileUrl(@NotNull String path) {
+  @Nonnull
+  public static Url newLocalFileUrl(@Nonnull String path) {
     return new LocalFileUrl(path);
   }
 
-  @NotNull
-  public static Url newLocalFileUrl(@NotNull VirtualFile file) {
+  @Nonnull
+  public static Url newLocalFileUrl(@Nonnull VirtualFile file) {
     return newLocalFileUrl(file.getPath());
   }
 
-  @NotNull
-  public static Url newFromEncoded(@NotNull String url) {
+  @Nonnull
+  public static Url newFromEncoded(@Nonnull String url) {
     Url result = parseEncoded(url);
     LOG.assertTrue(result != null, url);
     return result;
   }
 
   @Nullable
-  public static Url parseEncoded(@NotNull String url) {
+  public static Url parseEncoded(@Nonnull String url) {
     return parse(url, false);
   }
 
-  @NotNull
-  public static Url newHttpUrl(@NotNull String authority, @Nullable String path) {
+  @Nonnull
+  public static Url newHttpUrl(@Nonnull String authority, @Nullable String path) {
     return newUrl("http", authority, path);
   }
 
-  @NotNull
-  public static Url newUrl(@NotNull String scheme, @NotNull String authority, @Nullable String path) {
+  @Nonnull
+  public static Url newUrl(@Nonnull String scheme, @Nonnull String authority, @Nullable String path) {
     return new UrlImpl(scheme, authority, path);
   }
 
-  @NotNull
+  @Nonnull
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
    */
-  public static Url newFromIdea(@NotNull String url) {
+  public static Url newFromIdea(@Nonnull String url) {
     Url result = parseFromIdea(url);
     LOG.assertTrue(result != null, url);
     return result;
@@ -88,12 +88,12 @@ public final class Urls {
 
   // java.net.URI.create cannot parse "file:///Test Stuff" - but you don't need to worry about it - this method is aware
   @Nullable
-  public static Url parseFromIdea(@NotNull String url) {
+  public static Url parseFromIdea(@Nonnull String url) {
     return URLUtil.containsScheme(url) ? parseUrl(url) : newLocalFileUrl(url);
   }
 
   @Nullable
-  public static Url parse(@NotNull String url, boolean asLocalIfNoScheme) {
+  public static Url parse(@Nonnull String url, boolean asLocalIfNoScheme) {
     if (url.isEmpty()) {
       return null;
     }
@@ -106,7 +106,7 @@ public final class Urls {
   }
 
   @Nullable
-  public static URI parseAsJavaUriWithoutParameters(@NotNull String url) {
+  public static URI parseAsJavaUriWithoutParameters(@Nonnull String url) {
     Url asUrl = parseUrl(url);
     if (asUrl == null) {
       return null;
@@ -122,7 +122,7 @@ public final class Urls {
   }
 
   @Nullable
-  private static Url parseUrl(@NotNull String url) {
+  private static Url parseUrl(@Nonnull String url) {
     String urlToParse;
     if (url.startsWith("jar:file://")) {
       urlToParse = url.substring("jar:".length());
@@ -154,8 +154,8 @@ public final class Urls {
     return new UrlImpl(scheme, authority, path, matcher.group(5));
   }
 
-  @NotNull
-  public static Url newFromVirtualFile(@NotNull VirtualFile file) {
+  @Nonnull
+  public static Url newFromVirtualFile(@Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem()) {
       return newUri(file.getFileSystem().getProtocol(), file.getPath());
     }
@@ -165,11 +165,11 @@ public final class Urls {
     }
   }
 
-  public static boolean equalsIgnoreParameters(@NotNull Url url, @NotNull Collection<Url> urls) {
+  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull Collection<Url> urls) {
     return equalsIgnoreParameters(url, urls, true);
   }
 
-  public static boolean equalsIgnoreParameters(@NotNull Url url, @NotNull Collection<Url> urls, boolean caseSensitive) {
+  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull Collection<Url> urls, boolean caseSensitive) {
     for (Url otherUrl : urls) {
       if (equals(url, otherUrl, caseSensitive, true)) {
         return true;
@@ -178,7 +178,7 @@ public final class Urls {
     return false;
   }
 
-  public static boolean equalsIgnoreParameters(@NotNull Url url, @NotNull VirtualFile file) {
+  public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem()) {
       return url.isInLocalFileSystem() && (SystemInfoRt.isFileSystemCaseSensitive
                                            ? url.getPath().equals(file.getPath()) :
@@ -202,8 +202,8 @@ public final class Urls {
     return caseSensitive ? o1.equals(o2) : o1.equalsIgnoreCase(o2);
   }
 
-  @NotNull
-  public static URI toUriWithoutParameters(@NotNull Url url) {
+  @Nonnull
+  public static URI toUriWithoutParameters(@Nonnull Url url) {
     try {
       String externalPath = url.getPath();
       boolean inLocalFileSystem = url.isInLocalFileSystem();

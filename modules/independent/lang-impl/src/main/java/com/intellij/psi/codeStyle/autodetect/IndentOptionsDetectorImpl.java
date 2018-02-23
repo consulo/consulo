@@ -26,7 +26,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,14 +42,14 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   private final Project myProject;
   private final Document myDocument;
 
-  public IndentOptionsDetectorImpl(@NotNull PsiFile file) {
+  public IndentOptionsDetectorImpl(@Nonnull PsiFile file) {
     myFile = file;
     myProject = file.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IndentOptions getIndentOptions() {
     IndentOptions indentOptions = (IndentOptions)CodeStyleSettingsManager.getSettings(myProject).getIndentOptions(myFile.getFileType()).clone();
 
@@ -73,7 +73,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
     return new FormatterBasedLineIndentInfoBuilder(myDocument, rootBlock).build();
   }
 
-  private void adjustIndentOptions(@NotNull IndentOptions indentOptions, @NotNull IndentUsageStatistics stats) {
+  private void adjustIndentOptions(@Nonnull IndentOptions indentOptions, @Nonnull IndentUsageStatistics stats) {
     if (isTabsUsed(stats)) {
       adjustForTabUsage(indentOptions);
     }
@@ -100,7 +100,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
     return stats.getTotalLinesWithLeadingTabs() > stats.getTotalLinesWithLeadingSpaces();
   }
 
-  private void adjustForTabUsage(@NotNull IndentOptions indentOptions) {
+  private void adjustForTabUsage(@Nonnull IndentOptions indentOptions) {
     if (indentOptions.USE_TAB_CHARACTER) return;
 
     int continuationRatio = indentOptions.INDENT_SIZE == 0 ? 1 : indentOptions.CONTINUATION_INDENT_SIZE / indentOptions.INDENT_SIZE;
@@ -112,7 +112,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
     LOG.debug("Using tabs for: " + myFile);
   }
 
-  private static int getPositiveIndentSize(@NotNull IndentUsageStatistics stats) {
+  private static int getPositiveIndentSize(@Nonnull IndentUsageStatistics stats) {
     int totalIndentSizesDetected = stats.getTotalIndentSizesDetected();
     if (totalIndentSizesDetected == 0) return -1;
 

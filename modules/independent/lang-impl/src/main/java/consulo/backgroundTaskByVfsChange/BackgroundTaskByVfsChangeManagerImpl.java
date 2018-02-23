@@ -32,8 +32,8 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,25 +46,25 @@ import java.util.List;
 public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager implements PersistentStateComponent<Element>, Disposable {
   private static final Key<Boolean> PROCESSING_BACKGROUND_TASK = Key.create("processing.background.task");
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
 
   private final List<BackgroundTaskByVfsChangeTaskImpl> myTasks = new ArrayList<>();
 
-  public BackgroundTaskByVfsChangeManagerImpl(@NotNull Project project) {
+  public BackgroundTaskByVfsChangeManagerImpl(@Nonnull Project project) {
     myProject = project;
 
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void contentsChanged(@NotNull VirtualFileEvent event) {
+      public void contentsChanged(@Nonnull VirtualFileEvent event) {
         runTasks(event.getFile());
       }
     }, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public BackgroundTaskByVfsChangeTask createTask(@NotNull BackgroundTaskByVfsChangeProvider provider, @NotNull VirtualFile virtualFile, @NotNull String name) {
+  public BackgroundTaskByVfsChangeTask createTask(@Nonnull BackgroundTaskByVfsChangeProvider provider, @Nonnull VirtualFile virtualFile, @Nonnull String name) {
     BackgroundTaskByVfsParametersImpl parameters = new BackgroundTaskByVfsParametersImpl(myProject);
     parameters.setPassParentEnvs(true);
 
@@ -75,13 +75,13 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   }
 
   @Override
-  public void openManageDialog(@NotNull VirtualFile virtualFile) {
+  public void openManageDialog(@Nonnull VirtualFile virtualFile) {
     new BackgroundTaskByVfsChangeManageDialog(myProject, virtualFile).show();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<BackgroundTaskByVfsChangeTask> findTasks(@NotNull VirtualFile virtualFile) {
+  public List<BackgroundTaskByVfsChangeTask> findTasks(@Nonnull VirtualFile virtualFile) {
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
       VirtualFile file = task.getVirtualFilePointer().getFile();
@@ -95,9 +95,9 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return list;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@NotNull VirtualFile virtualFile) {
+  public List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@Nonnull VirtualFile virtualFile) {
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
       if (!task.isEnabled()) {
@@ -114,26 +114,26 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return list;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public BackgroundTaskByVfsChangeTask[] getTasks() {
     return myTasks.toArray(new BackgroundTaskByVfsChangeTask[myTasks.size()]);
   }
 
   @Override
-  public boolean removeTask(@NotNull BackgroundTaskByVfsChangeTask task) {
+  public boolean removeTask(@Nonnull BackgroundTaskByVfsChangeTask task) {
     assert task instanceof BackgroundTaskByVfsChangeTaskImpl;
     return myTasks.remove(task);
   }
 
   @Override
-  public void registerTask(@NotNull BackgroundTaskByVfsChangeTask task) {
+  public void registerTask(@Nonnull BackgroundTaskByVfsChangeTask task) {
     BackgroundTaskByVfsChangeTaskImpl implTask = (BackgroundTaskByVfsChangeTaskImpl)task;
     myTasks.add(implTask);
   }
 
   @Override
-  public void runTasks(@NotNull final VirtualFile virtualFile) {
+  public void runTasks(@Nonnull final VirtualFile virtualFile) {
     Boolean processed = virtualFile.getUserData(PROCESSING_BACKGROUND_TASK);
     if (processed == Boolean.TRUE) {
       return;
@@ -146,7 +146,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
 
     Task.Backgroundable backgroundTask = new Task.Backgroundable(myProject, "Processing: " + virtualFile.getName()) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         virtualFile.putUserData(PROCESSING_BACKGROUND_TASK, Boolean.TRUE);
         call(indicator, virtualFile, tasks, 0);
       }

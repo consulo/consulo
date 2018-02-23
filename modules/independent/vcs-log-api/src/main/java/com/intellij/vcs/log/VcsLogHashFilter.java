@@ -15,12 +15,12 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface VcsLogHashFilter {
 
-  @NotNull
+  @Nonnull
   Collection<String> getHashes();
 }

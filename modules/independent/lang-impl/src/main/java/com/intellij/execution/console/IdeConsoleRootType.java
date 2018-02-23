@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.LayeredIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -38,14 +38,14 @@ public class IdeConsoleRootType extends ConsoleRootType {
     super("ide", "IDE Scripting");
   }
 
-  @NotNull
+  @Nonnull
   public static IdeConsoleRootType getInstance() {
     return findByClass(IdeConsoleRootType.class);
   }
 
   @Nullable
   @Override
-  public Icon substituteIcon(@NotNull Project project, @NotNull VirtualFile file) {
+  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getName());
     if (fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE) {
       return AllIcons.Debugger.ToolConsole;
@@ -59,7 +59,7 @@ public class IdeConsoleRootType extends ConsoleRootType {
   }
 
   @Override
-  public void fileOpened(@NotNull VirtualFile file, @NotNull FileEditorManager source) {
+  public void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
     RunIdeConsoleAction.configureConsole(file, source);
   }
 

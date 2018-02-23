@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,19 +34,19 @@ import java.util.List;
 class CompositeSdkRoot implements SdkRoot {
   private final List<SdkRoot> myRoots = new ArrayList<SdkRoot>();
 
-  @NotNull 
+  @Nonnull
   SdkRoot[] getProjectRoots() {
     return myRoots.toArray(new SdkRoot[myRoots.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableString() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getVirtualFiles() {
     List<VirtualFile> result = new ArrayList<VirtualFile>();
     for (SdkRoot root : myRoots) {
@@ -57,7 +57,7 @@ class CompositeSdkRoot implements SdkRoot {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getUrls() {
     final List<String> result = new ArrayList<String>();
     for (SdkRoot root : myRoots) {
@@ -71,22 +71,22 @@ class CompositeSdkRoot implements SdkRoot {
     return true;
   }
 
-  void remove(@NotNull SdkRoot root) {
+  void remove(@Nonnull SdkRoot root) {
     myRoots.remove(root);
   }
 
-  @NotNull
-  SdkRoot add(@NotNull VirtualFile virtualFile) {
+  @Nonnull
+  SdkRoot add(@Nonnull VirtualFile virtualFile) {
     final SimpleSdkRoot root = new SimpleSdkRoot(virtualFile);
     myRoots.add(root);
     return root;
   }
 
-  void add(@NotNull SdkRoot root) {
+  void add(@Nonnull SdkRoot root) {
     myRoots.add(root);
   }
 
-  void remove(@NotNull VirtualFile root) {
+  void remove(@Nonnull VirtualFile root) {
     for (Iterator<SdkRoot> iterator = myRoots.iterator(); iterator.hasNext();) {
       SdkRoot sdkRoot = iterator.next();
       if (sdkRoot instanceof SimpleSdkRoot) {

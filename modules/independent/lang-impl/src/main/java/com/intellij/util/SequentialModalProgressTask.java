@@ -20,8 +20,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -48,17 +48,17 @@ public class SequentialModalProgressTask extends Task.Modal {
   private ProgressIndicator myIndicator;
   private SequentialTask myTask;
 
-  public SequentialModalProgressTask(@Nullable Project project, @NotNull String title) {
+  public SequentialModalProgressTask(@Nullable Project project, @Nonnull String title) {
     this(project, title, true);
   }
 
-  public SequentialModalProgressTask(@Nullable Project project, @NotNull String title, boolean canBeCancelled) {
+  public SequentialModalProgressTask(@Nullable Project project, @Nonnull String title, boolean canBeCancelled) {
     super(project, title, canBeCancelled);
     myTitle = title;
   }
 
   @Override
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     try {
       doRun(indicator);
     }
@@ -70,7 +70,7 @@ public class SequentialModalProgressTask extends Task.Modal {
     }
   }
 
-  public void doRun(@NotNull ProgressIndicator indicator) throws InvocationTargetException, InterruptedException {
+  public void doRun(@Nonnull ProgressIndicator indicator) throws InvocationTargetException, InterruptedException {
     final SequentialTask task = myTask;
     if (task == null) {
       return;
@@ -128,7 +128,7 @@ public class SequentialModalProgressTask extends Task.Modal {
    * 
    * @param task  task to be executed
    */
-  protected void prepare(@NotNull SequentialTask task) {
+  protected void prepare(@Nonnull SequentialTask task) {
     task.prepare();
   }
 }

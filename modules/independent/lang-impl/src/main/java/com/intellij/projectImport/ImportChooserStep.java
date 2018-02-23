@@ -30,7 +30,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import consulo.moduleImport.ModuleImportProvider;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +88,7 @@ public class ImportChooserStep extends ProjectImportWizardStep {
   }
 
   @Override
-  public void updateStep(@NotNull WizardContext wizardContext) {
+  public void updateStep(@Nonnull WizardContext wizardContext) {
     if (myList.getSelectedValue() != null) return;
 
     if (myList.getSelectedValue() == null) {
@@ -105,7 +105,7 @@ public class ImportChooserStep extends ProjectImportWizardStep {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<ModuleImportProvider> sorted(ModuleImportProvider[] providers) {
     List<ModuleImportProvider> result = new ArrayList<>();
     Collections.addAll(result, providers);

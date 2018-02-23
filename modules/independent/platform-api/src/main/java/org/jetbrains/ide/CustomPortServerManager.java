@@ -16,7 +16,7 @@
 package org.jetbrains.ide;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 

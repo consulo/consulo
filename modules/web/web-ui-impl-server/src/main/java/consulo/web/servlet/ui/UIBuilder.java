@@ -17,7 +17,7 @@ package consulo.web.servlet.ui;
 
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.Window;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface UIBuilder {
   @RequiredUIAccess
-  void build(@NotNull Window window);
+  void build(@Nonnull Window window);
 }

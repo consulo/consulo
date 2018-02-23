@@ -25,8 +25,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -99,7 +99,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
     return new ArrayList<>(myChangeLists.values());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<LocalChangeList> getChangeLists() {
     return getChangeListsCopy();
@@ -110,7 +110,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VirtualFile> getAffectedFiles() {
     throw new UnsupportedOperationException();
@@ -121,7 +121,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Change> getAllChanges() {
     Collection<Change> changes = new ArrayList<>();
@@ -152,7 +152,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public LocalChangeList getChangeList(@NotNull Change change) {
+  public LocalChangeList getChangeList(@Nonnull Change change) {
     throw new UnsupportedOperationException();
   }
 
@@ -161,19 +161,19 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Runnable prepareForChangeDeletion(Collection<Change> changes) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Change getChange(@NotNull VirtualFile file) {
+  public Change getChange(@Nonnull VirtualFile file) {
     return getChange(VcsUtil.getFilePath(file));
   }
 
   @Override
-  public LocalChangeList getChangeList(@NotNull VirtualFile file) {
+  public LocalChangeList getChangeList(@Nonnull VirtualFile file) {
     throw new UnsupportedOperationException();
   }
 
@@ -194,19 +194,19 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileStatus getStatus(VirtualFile file) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Change> getChangesIn(VirtualFile dir) {
     return getChangesIn(VcsUtil.getFilePath(dir));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Change> getChangesIn(FilePath path) {
     List<Change> changes = new ArrayList<>();
@@ -222,13 +222,13 @@ public class MockChangeListManager extends ChangeListManagerEx {
 
   @Nullable
   @Override
-  public AbstractVcs getVcsFor(@NotNull Change change) {
+  public AbstractVcs getVcsFor(@Nonnull Change change) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ThreeState haveChangesUnder(@NotNull VirtualFile vf) {
+  public ThreeState haveChangesUnder(@Nonnull VirtualFile vf) {
     throw new UnsupportedOperationException();
   }
 
@@ -278,7 +278,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public void addDirectoryToIgnoreImplicitly(@NotNull String path) {
+  public void addDirectoryToIgnoreImplicitly(@Nonnull String path) {
     throw new UnsupportedOperationException();
   }
 
@@ -293,7 +293,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public boolean isIgnoredFile(@NotNull VirtualFile file) {
+  public boolean isIgnoredFile(@Nonnull VirtualFile file) {
     throw new UnsupportedOperationException();
   }
 
@@ -317,7 +317,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public boolean isFreezedWithNotification(@Nullable String modalTitle) {
+  public boolean isFreezedWithNotification(@javax.annotation.Nullable String modalTitle) {
     throw new UnsupportedOperationException();
   }
 
@@ -327,14 +327,14 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public LocalChangeList addChangeList(@NotNull String name, @Nullable String comment) {
+  public LocalChangeList addChangeList(@Nonnull String name, @javax.annotation.Nullable String comment) {
     MockChangeList changeList = new MockChangeList(name);
     myChangeLists.put(name, changeList);
     return changeList;
   }
 
   @Override
-  public void setDefaultChangeList(@NotNull LocalChangeList list) {
+  public void setDefaultChangeList(@Nonnull LocalChangeList list) {
     myActiveChangeList = list;
   }
 
@@ -361,16 +361,16 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public boolean editName(@NotNull String fromName, @NotNull String toName) {
+  public boolean editName(@Nonnull String fromName, @Nonnull String toName) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public String editComment(@NotNull String fromName, String newComment) {
+  public String editComment(@Nonnull String fromName, String newComment) {
     throw new UnsupportedOperationException();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public LocalChangeList getIdentityChangeList(Change change) {
     throw new UnsupportedOperationException();
@@ -381,15 +381,15 @@ public class MockChangeListManager extends ChangeListManagerEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes, List<Change> validChanges) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LocalChangeList addChangeList(@NotNull String name, @Nullable String comment, @Nullable Object data) {
+  public LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @javax.annotation.Nullable Object data) {
     return addChangeList(name, comment);
   }
 
@@ -406,7 +406,7 @@ public class MockChangeListManager extends ChangeListManagerEx {
   }
 
   @Override
-  public void freeze(@NotNull String reason) {
+  public void freeze(@Nonnull String reason) {
 
   }
 

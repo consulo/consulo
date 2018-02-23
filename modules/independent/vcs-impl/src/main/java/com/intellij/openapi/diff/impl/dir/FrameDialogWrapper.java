@@ -5,15 +5,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public abstract class FrameDialogWrapper {
   public enum Mode {FRAME, MODAL, NON_MODAL}
 
-  @NotNull
+  @Nonnull
   protected abstract JComponent getPanel();
 
   @Nullable
@@ -21,22 +21,22 @@ public abstract class FrameDialogWrapper {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent getPreferredFocusedComponent() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected String getTitle() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected Project getProject() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected Mode getMode() {
     return Mode.MODAL;
   }
@@ -69,13 +69,13 @@ public abstract class FrameDialogWrapper {
     private final JComponent myPreferredFocusedComponent;
     private final String myDimensionServiceKey;
 
-    public MyDialogWrapper(@Nullable Project project,
-                           @NotNull Mode mode,
-                           @NotNull JComponent component,
-                           @Nullable JComponent preferredFocusedComponent,
+    public MyDialogWrapper(@javax.annotation.Nullable Project project,
+                           @Nonnull Mode mode,
+                           @Nonnull JComponent component,
+                           @javax.annotation.Nullable JComponent preferredFocusedComponent,
                            @Nullable String title,
-                           @Nullable String dimensionServiceKey,
-                           @Nullable Disposable disposable) {
+                           @javax.annotation.Nullable String dimensionServiceKey,
+                           @javax.annotation.Nullable Disposable disposable) {
       super(project, true);
       myComponent = component;
       myPreferredFocusedComponent = preferredFocusedComponent;
@@ -107,20 +107,20 @@ public abstract class FrameDialogWrapper {
       return myComponent;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return myPreferredFocusedComponent;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected String getDimensionServiceKey() {
       return myDimensionServiceKey;
     }
 
     // it is information dialog - no need to OK or Cancel. Close the dialog by clicking the cross button or pressing Esc.
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       return new Action[0];
@@ -128,13 +128,13 @@ public abstract class FrameDialogWrapper {
   }
 
   private static class MyFrameWrapper extends FrameWrapper {
-    public MyFrameWrapper(@Nullable Project project,
-                          @NotNull Mode mode,
-                          @NotNull JComponent component,
+    public MyFrameWrapper(@javax.annotation.Nullable Project project,
+                          @Nonnull Mode mode,
+                          @Nonnull JComponent component,
                           @Nullable JComponent preferredFocusedComponent,
-                          @Nullable String title,
-                          @Nullable String dimensionServiceKey,
-                          @Nullable Disposable disposable) {
+                          @javax.annotation.Nullable String title,
+                          @javax.annotation.Nullable String dimensionServiceKey,
+                          @javax.annotation.Nullable Disposable disposable) {
       super(project, dimensionServiceKey);
 
       assert mode == Mode.FRAME;

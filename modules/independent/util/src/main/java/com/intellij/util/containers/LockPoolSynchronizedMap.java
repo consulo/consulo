@@ -21,7 +21,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Comparing;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class LockPoolSynchronizedMap<K, V> extends THashMap<K, V> implements Con
   private final Lock w;
 
   private static final StripedLockHolder<ReentrantReadWriteLock> LOCKS = new StripedLockHolder<ReentrantReadWriteLock>(ReentrantReadWriteLock.class) {
-    @NotNull
+    @Nonnull
     @Override
     protected ReentrantReadWriteLock create() {
       return new ReentrantReadWriteLock();
@@ -202,7 +202,7 @@ public class LockPoolSynchronizedMap<K, V> extends THashMap<K, V> implements Con
   }
 
   @Override
-  public boolean replace(@NotNull K key, @NotNull V oldValue, @NotNull V newValue) {
+  public boolean replace(@Nonnull K key, @Nonnull V oldValue, @Nonnull V newValue) {
     w.lock();
     try {
       V prev = get(key);
@@ -219,7 +219,7 @@ public class LockPoolSynchronizedMap<K, V> extends THashMap<K, V> implements Con
   }
 
   @Override
-  public V replace(@NotNull K key, @NotNull V newValue) {
+  public V replace(@Nonnull K key, @Nonnull V newValue) {
     w.lock();
     try {
       V prev = get(key);
@@ -233,7 +233,7 @@ public class LockPoolSynchronizedMap<K, V> extends THashMap<K, V> implements Con
   }
 
   @Override
-  public V putIfAbsent(@NotNull K key, V value) {
+  public V putIfAbsent(@Nonnull K key, V value) {
     w.lock();
     try {
       V prev = get(key);
@@ -251,7 +251,7 @@ public class LockPoolSynchronizedMap<K, V> extends THashMap<K, V> implements Con
   }
 
   @Override
-  public boolean remove(@NotNull Object key, Object oldValue) {
+  public boolean remove(@Nonnull Object key, Object oldValue) {
     w.lock();
     try {
       V currentValue = get(key);

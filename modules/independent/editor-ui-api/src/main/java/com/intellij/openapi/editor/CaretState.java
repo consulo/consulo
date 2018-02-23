@@ -15,30 +15,30 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class CaretState {
   private final LogicalPosition caretPosition;
   private final LogicalPosition selectionStart;
   private final LogicalPosition selectionEnd;
 
-  public CaretState(@Nullable LogicalPosition position, @Nullable LogicalPosition start, @Nullable LogicalPosition end) {
+  public CaretState(@Nullable LogicalPosition position, @javax.annotation.Nullable LogicalPosition start, @javax.annotation.Nullable LogicalPosition end) {
     caretPosition = position;
     selectionStart = start;
     selectionEnd = end;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LogicalPosition getCaretPosition(){
     return caretPosition;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LogicalPosition getSelectionStart() {
     return selectionStart;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LogicalPosition getSelectionEnd() {
     return selectionEnd;
   }

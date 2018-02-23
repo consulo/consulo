@@ -15,11 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.test
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.externalSystem.service.project.PlatformFacade
-import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings
-import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.NotNull
+
 /**
  * @author Denis Zhdanov
  * @since 8/8/13 5:21 PM

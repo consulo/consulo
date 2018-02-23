@@ -53,8 +53,8 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.NullableFunction;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -122,7 +122,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   public static final String SCOPE_CLASS = IdeBundle.message("hierarchy.scope.this.class");
   private final Map<String, String> myType2ScopeMap = new HashMap<String, String>();
 
-  public HierarchyBrowserBaseEx(@NotNull Project project, @NotNull PsiElement element) {
+  public HierarchyBrowserBaseEx(@Nonnull Project project, @Nonnull PsiElement element) {
     super(project);
 
     setHierarchyBase(element);
@@ -181,37 +181,37 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   @Nullable
-  protected PsiElement getOpenFileElementFromDescriptor(@NotNull HierarchyNodeDescriptor descriptor) {
+  protected PsiElement getOpenFileElementFromDescriptor(@Nonnull HierarchyNodeDescriptor descriptor) {
     return getElementFromDescriptor(descriptor);
   }
 
   @Override
   @Nullable
-  protected abstract PsiElement getElementFromDescriptor(@NotNull HierarchyNodeDescriptor descriptor);
+  protected abstract PsiElement getElementFromDescriptor(@Nonnull HierarchyNodeDescriptor descriptor);
 
-  @NotNull
+  @Nonnull
   protected abstract String getPrevOccurenceActionNameImpl();
 
-  @NotNull
+  @Nonnull
   protected abstract String getNextOccurenceActionNameImpl();
 
-  protected abstract void createTrees(@NotNull Map<String, JTree> trees);
+  protected abstract void createTrees(@Nonnull Map<String, JTree> trees);
 
   @Nullable
   protected abstract JPanel createLegendPanel();
 
-  protected abstract boolean isApplicableElement(@NotNull PsiElement element);
+  protected abstract boolean isApplicableElement(@Nonnull PsiElement element);
 
   @Nullable
-  protected abstract HierarchyTreeStructure createHierarchyTreeStructure(@NotNull String type, @NotNull PsiElement psiElement);
+  protected abstract HierarchyTreeStructure createHierarchyTreeStructure(@Nonnull String type, @Nonnull PsiElement psiElement);
 
   @Nullable
   protected abstract Comparator<NodeDescriptor> getComparator();
 
-  @NotNull
+  @Nonnull
   protected abstract String getActionPlace();
 
-  @NotNull
+  @Nonnull
   protected abstract Key<?> getBrowserDataKey();
 
   protected final JTree createTree(boolean dndAware) {
@@ -313,7 +313,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     return tree;
   }
 
-  protected void setHierarchyBase(@NotNull PsiElement element) {
+  protected void setHierarchyBase(@Nonnull PsiElement element) {
     mySmartPsiElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
   }
 
@@ -331,7 +331,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }, 100);
   }
 
-  public final void changeView(@NotNull final String typeName) {
+  public final void changeView(@Nonnull final String typeName) {
     myCurrentViewType = typeName;
 
     final PsiElement element = mySmartPsiElementPointer.getElement();
@@ -390,7 +390,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   @Nullable
-  protected String getContentDisplayName(@NotNull String typeName, @NotNull PsiElement element) {
+  protected String getContentDisplayName(@Nonnull String typeName, @Nonnull PsiElement element) {
     if (element instanceof PsiNamedElement) {
       return MessageFormat.format(typeName, ((PsiNamedElement)element).getName());
     }
@@ -398,7 +398,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   @Override
-  protected void appendActions(@NotNull DefaultActionGroup actionGroup, String helpID) {
+  protected void appendActions(@Nonnull DefaultActionGroup actionGroup, String helpID) {
     prependActions(actionGroup);
     actionGroup.add(myRefreshAction);
     super.appendActions(actionGroup, helpID);
@@ -471,7 +471,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   @Override
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     if (getBrowserDataKey() == dataId) {
       return this;
     }
@@ -554,7 +554,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @RequiredDispatchThread
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       super.update(event);
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(isValidBase());
@@ -564,12 +564,13 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   static class BaseOnThisElementAction extends AnAction {
     private final String myActionId;
     private final Key<?> myBrowserDataKey;
-    @NotNull private final LanguageExtension<HierarchyProvider> myProviderLanguageExtension;
+    @Nonnull
+    private final LanguageExtension<HierarchyProvider> myProviderLanguageExtension;
 
-    BaseOnThisElementAction(@NotNull String text,
-                            @NotNull String actionId,
-                            @NotNull Key<?> browserDataKey,
-                            @NotNull LanguageExtension<HierarchyProvider> providerLanguageExtension) {
+    BaseOnThisElementAction(@Nonnull String text,
+                            @Nonnull String actionId,
+                            @Nonnull Key<?> browserDataKey,
+                            @Nonnull LanguageExtension<HierarchyProvider> providerLanguageExtension) {
       super(text);
       myActionId = actionId;
       myBrowserDataKey = browserDataKey;
@@ -578,7 +579,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @RequiredDispatchThread
     @Override
-    public final void actionPerformed(@NotNull final AnActionEvent event) {
+    public final void actionPerformed(@Nonnull final AnActionEvent event) {
       final DataContext dataContext = event.getDataContext();
       final HierarchyBrowserBaseEx browser = (HierarchyBrowserBaseEx)dataContext.getData(myBrowserDataKey);
       if (browser == null) return;
@@ -605,7 +606,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @RequiredDispatchThread
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
 
       registerCustomShortcutSet(ActionManager.getInstance().getAction(myActionId).getShortcutSet(), null);
@@ -634,12 +635,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       }
     }
 
-    protected boolean isEnabled(@NotNull HierarchyBrowserBaseEx browser, @NotNull PsiElement element) {
+    protected boolean isEnabled(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
       return !element.equals(browser.mySmartPsiElementPointer.getElement()) && element.isValid();
     }
 
     @Nullable
-    protected String getNonDefaultText(@NotNull HierarchyBrowserBaseEx browser, @NotNull PsiElement element) {
+    protected String getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
       return null;
     }
   }
@@ -664,7 +665,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   public class ChangeScopeAction extends ComboBoxAction {
     @RequiredDispatchThread
     @Override
-    public final void update(@NotNull final AnActionEvent e) {
+    public final void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
@@ -677,7 +678,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected final DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
@@ -720,7 +721,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       });
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public final JComponent createCustomComponent(final Presentation presentation) {
       final JPanel panel = new JPanel(new GridBagLayout());
@@ -741,7 +742,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       @RequiredDispatchThread
       @Override
-      public final void actionPerformed(@NotNull final AnActionEvent e) {
+      public final void actionPerformed(@Nonnull final AnActionEvent e) {
         selectScope(myScopeType);
       }
     }
@@ -753,7 +754,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         EditScopesDialog.showDialog(myProject, null);
         if (!getValidScopeNames().contains(myType2ScopeMap.get(myCurrentViewType))) {
           selectScope(SCOPE_ALL);

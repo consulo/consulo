@@ -24,7 +24,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.PathsList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -76,7 +76,7 @@ public class SimpleJavaParameters extends SimpleProgramParameters {
     return myCharset;
   }
 
-  public void setCharset(@Nullable final Charset charset) {
+  public void setCharset(@javax.annotation.Nullable final Charset charset) {
     myCharset = charset;
   }
 

@@ -16,8 +16,7 @@
 package com.intellij.openapi.externalSystem.service;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * External system integration consists of common 'external system' functionality and external system-specific code. There are at
@@ -49,8 +48,8 @@ public interface ExternalSystemCommunicationManager {
    * @return newly created facade for the given arguments (if it was possible to create one)
    * @throws Exception in case something goes wrong
    */
-  @Nullable
-  RemoteExternalSystemFacade acquire(@NotNull String id, @NotNull ProjectSystemId externalSystemId)
+  @javax.annotation.Nullable
+  RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId)
     throws Exception;
 
   /**
@@ -60,9 +59,9 @@ public interface ExternalSystemCommunicationManager {
    * @param externalSystemId target external system id
    * @throws Exception in case something goes wrong
    */
-  void release(@NotNull String id, @NotNull ProjectSystemId externalSystemId) throws Exception;
+  void release(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception;
 
-  boolean isAlive(@NotNull RemoteExternalSystemFacade facade);
+  boolean isAlive(@Nonnull RemoteExternalSystemFacade facade);
 
   /**
    * Disposes all resources acquired by the current manager.

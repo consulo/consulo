@@ -18,7 +18,7 @@ package com.intellij.application.options.colors;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Generalises {@link ColorSettingsPage} in a way that allows to provide custom {@link PreviewPanel preview panel}.
@@ -29,9 +29,9 @@ public interface ColorAndFontPanelFactory {
 
   ExtensionPointName<ColorAndFontPanelFactory> EP_NAME = ExtensionPointName.create("com.intellij.colorAndFontPanelFactory");
   
-  @NotNull
-  NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options);
+  @Nonnull
+  NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options);
   
-  @NotNull
+  @Nonnull
   String getPanelDisplayName();
 }

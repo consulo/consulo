@@ -17,8 +17,8 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,10 +28,10 @@ import java.util.Map;
  */
 public interface PerFileMappings<T> {
 
-  @NotNull
+  @Nonnull
   Map<VirtualFile, T> getMappings();
 
-  void setMappings(@NotNull Map<VirtualFile, T> mappings);
+  void setMappings(@Nonnull Map<VirtualFile, T> mappings);
 
   void setMapping(@Nullable VirtualFile file, T value);
 

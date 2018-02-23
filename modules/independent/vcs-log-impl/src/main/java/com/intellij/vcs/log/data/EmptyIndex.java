@@ -18,8 +18,8 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsLogDetailsFilter;
 import com.intellij.vcs.log.data.index.VcsLogIndex;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -35,22 +35,22 @@ public class EmptyIndex implements VcsLogIndex {
   }
 
   @Override
-  public boolean isIndexed(@NotNull VirtualFile root) {
+  public boolean isIndexed(@Nonnull VirtualFile root) {
     return false;
   }
 
   @Override
-  public void markForIndexing(int commit, @NotNull VirtualFile root) {
+  public void markForIndexing(int commit, @Nonnull VirtualFile root) {
   }
 
   @Override
-  public boolean canFilter(@NotNull List<VcsLogDetailsFilter> filters) {
+  public boolean canFilter(@Nonnull List<VcsLogDetailsFilter> filters) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<Integer> filter(@NotNull List<VcsLogDetailsFilter> detailsFilters) {
+  public Set<Integer> filter(@Nonnull List<VcsLogDetailsFilter> detailsFilters) {
     throw new UnsupportedOperationException();
   }
 

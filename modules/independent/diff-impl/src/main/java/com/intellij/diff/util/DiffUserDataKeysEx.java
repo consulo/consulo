@@ -30,8 +30,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -50,8 +49,8 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   enum ScrollToPolicy {
     FIRST_CHANGE, LAST_CHANGE;
 
-    @Nullable
-    public <T> T select(@NotNull List<T> changes) {
+    @javax.annotation.Nullable
+    public <T> T select(@Nonnull List<T> changes) {
       if (this == FIRST_CHANGE) return ContainerUtil.getFirstItem(changes);
       if (this == LAST_CHANGE) return ContainerUtil.getLastItem(changes);
       throw new IllegalStateException();
@@ -64,12 +63,12 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   Key<DiffNavigationContext> NAVIGATION_CONTEXT = Key.create("Diff.NavigationContext");
 
   interface DiffComputer {
-    @NotNull
-    List<LineFragment> compute(@NotNull CharSequence text1,
-                               @NotNull CharSequence text2,
-                               @NotNull ComparisonPolicy policy,
+    @Nonnull
+    List<LineFragment> compute(@Nonnull CharSequence text1,
+                               @Nonnull CharSequence text2,
+                               @Nonnull ComparisonPolicy policy,
                                boolean innerChanges,
-                               @NotNull ProgressIndicator indicator);
+                               @Nonnull ProgressIndicator indicator);
   }
   Key<DiffComputer> CUSTOM_DIFF_COMPUTER = Key.create("Diff.CustomDiffComputer");
 

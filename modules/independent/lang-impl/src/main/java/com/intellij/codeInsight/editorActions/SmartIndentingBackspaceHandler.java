@@ -27,7 +27,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {
   private static final Logger LOG = Logger.getInstance(SmartIndentingBackspaceHandler.class);
@@ -97,7 +97,7 @@ public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHa
     return true;
   }
 
-  private static int getWidth(@NotNull String indent, int tabSize) {
+  private static int getWidth(@Nonnull String indent, int tabSize) {
     int width = 0;
     for (int i = 0; i < indent.length(); i++) {
       char c = indent.charAt(i);

@@ -40,8 +40,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
@@ -170,7 +170,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public final void setAnchor(@NotNull final ToolWindowAnchor anchor, @Nullable final Runnable runnable) {
+  public final void setAnchor(@Nonnull final ToolWindowAnchor anchor, @Nullable final Runnable runnable) {
     UIAccess.assertIsUIThread();
     myToolWindowManager.setToolWindowAnchor(myId, anchor);
     if (runnable != null) {
@@ -187,7 +187,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public void setContentUiType(@NotNull ToolWindowContentUiType type, @Nullable Runnable runnable) {
+  public void setContentUiType(@Nonnull ToolWindowContentUiType type, @Nullable Runnable runnable) {
     UIAccess.assertIsUIThread();
     myToolWindowManager.setContentUiType(myId, type);
     if (runnable != null) {
@@ -196,12 +196,12 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   }
 
   @Override
-  public void setDefaultContentUiType(@NotNull ToolWindowContentUiType type) {
+  public void setDefaultContentUiType(@Nonnull ToolWindowContentUiType type) {
     myToolWindowManager.setDefaultContentUiType(this, type);
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public ToolWindowContentUiType getContentUiType() {
     UIAccess.assertIsUIThread();
@@ -232,7 +232,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     return myToolWindowManager.isToolWindowAutoHide(myId);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final ToolWindowType getType() {
     return myToolWindowManager.getToolWindowType(myId);
@@ -240,7 +240,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public final void setType(@NotNull final ToolWindowType type, @Nullable final Runnable runnable) {
+  public final void setType(@Nonnull final ToolWindowType type, @Nullable final Runnable runnable) {
     UIAccess.assertIsUIThread();
     myToolWindowManager.setToolWindowType(myId, type);
     if (runnable != null) {
@@ -283,7 +283,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   }
 
   @Override
-  public void installWatcher(@NotNull ContentManager contentManager) {
+  public void installWatcher(@Nonnull ContentManager contentManager) {
     new ContentManagerWatcher(this, contentManager);
   }
 
@@ -304,7 +304,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getId() {
     return myId;
   }
@@ -318,7 +318,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  @NotNull
+  @Nonnull
   public final String getStripeTitle() {
     UIAccess.assertIsUIThread();
     return ObjectUtil.notNull(myStripeTitle, myId);
@@ -335,7 +335,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @RequiredUIAccess
   @Override
-  public final void setStripeTitle(@NotNull String stripeTitle) {
+  public final void setStripeTitle(@Nonnull String stripeTitle) {
     UIAccess.assertIsUIThread();
     String oldTitle = myStripeTitle;
     myStripeTitle = stripeTitle;

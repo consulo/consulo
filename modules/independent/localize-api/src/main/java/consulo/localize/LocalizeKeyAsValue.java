@@ -15,43 +15,43 @@
  */
 package consulo.localize;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Nov-17
  */
 public interface LocalizeKeyAsValue extends LocalizeKey, LocalizeValue {
-  @NotNull
-  static LocalizeKeyAsValue of(@NotNull String text) {
+  @Nonnull
+  static LocalizeKeyAsValue of(@Nonnull String text) {
     return new SingleLocalizeKeyAsValue(text);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default LocalizeValue getValue(Object arg) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default LocalizeValue getValue(Object arg0, Object arg1) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default LocalizeValue getValue(Object arg0, Object arg1, Object arg2) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
     return this;

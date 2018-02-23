@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
     return myDestinations;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArtifactPackagingItemOutputState computeOutputState() {
     final SmartList<Pair<String, Long>> pairs = new SmartList<Pair<String, Long>>();
@@ -58,7 +58,7 @@ public class ArtifactCompilerCompileItem extends VirtualFileCompileItem<Artifact
   }
 
   @Override
-  public boolean isOutputUpToDate(@NotNull ArtifactPackagingItemOutputState state) {
+  public boolean isOutputUpToDate(@Nonnull ArtifactPackagingItemOutputState state) {
     final SmartList<Pair<String, Long>> cachedDestinations = state.myDestinations;
     if (cachedDestinations.size() != myDestinations.size()) {
       return false;

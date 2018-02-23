@@ -23,7 +23,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -39,7 +39,7 @@ public class CompletionInitializationContext {
   public static @NonNls final String DUMMY_IDENTIFIER = CompletionUtilCore.DUMMY_IDENTIFIER;
   public static @NonNls final String DUMMY_IDENTIFIER_TRIMMED = CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED;
   private final Editor myEditor;
-  @NotNull
+  @Nonnull
   private final Caret myCaret;
   private final PsiFile myFile;
   private final CompletionType myCompletionType;
@@ -47,7 +47,7 @@ public class CompletionInitializationContext {
   private final OffsetMap myOffsetMap;
   private String myDummyIdentifier = DUMMY_IDENTIFIER;
 
-  public CompletionInitializationContext(final Editor editor, final @NotNull Caret caret, final PsiFile file, final CompletionType completionType, int invocationCount) {
+  public CompletionInitializationContext(final Editor editor, final @Nonnull Caret caret, final PsiFile file, final CompletionType completionType, int invocationCount) {
     myEditor = editor;
     myCaret = caret;
     myFile = file;
@@ -77,11 +77,11 @@ public class CompletionInitializationContext {
     return idEnd;
   }
 
-  public void setDummyIdentifier(@NotNull String dummyIdentifier) {
+  public void setDummyIdentifier(@Nonnull String dummyIdentifier) {
     myDummyIdentifier = dummyIdentifier;
   }
 
-  @NotNull
+  @Nonnull
   public Language getPositionLanguage() {
     return ObjectUtil.assertNotNull(PsiUtilBase.getLanguageInEditor(getEditor(), getProject()));
   }
@@ -90,32 +90,32 @@ public class CompletionInitializationContext {
     return myDummyIdentifier;
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   public Caret getCaret() {
     return myCaret;
   }
 
-  @NotNull
+  @Nonnull
   public CompletionType getCompletionType() {
     return myCompletionType;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myFile.getProject();
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public OffsetMap getOffsetMap() {
     return myOffsetMap;
   }

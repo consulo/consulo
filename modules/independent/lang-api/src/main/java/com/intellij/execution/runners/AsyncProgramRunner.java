@@ -23,8 +23,7 @@ import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,18 +33,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
   @Override
-  protected void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback, @NotNull RunProfileState state) throws ExecutionException {
+  protected void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
     startRunProfile(environment, state, callback, runProfileStarter(() -> execute(environment, state)));
   }
 
-  @NotNull
-  protected abstract AsyncResult<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) throws ExecutionException;
+  @Nonnull
+  protected abstract AsyncResult<RunContentDescriptor> execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException;
 
 
   protected static void startRunProfile(ExecutionEnvironment environment,
                                         RunProfileState state,
                                         ProgramRunner.Callback callback,
-                                        @Nullable RunProfileStarter starter) {
+                                        @javax.annotation.Nullable RunProfileStarter starter) {
 
     ThrowableComputable<AsyncResult<RunContentDescriptor>, ExecutionException> func = () -> {
       AsyncResult<RunContentDescriptor> promise = starter == null ? AsyncResult.done(null) : starter.executeAsync(state, environment);
@@ -67,7 +66,7 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
     }
 
     @Override
-    public AsyncResult<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+    public AsyncResult<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
       return starter.compute();
     }
   }

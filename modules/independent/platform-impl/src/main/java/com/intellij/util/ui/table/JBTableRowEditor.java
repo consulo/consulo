@@ -22,8 +22,8 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.List;

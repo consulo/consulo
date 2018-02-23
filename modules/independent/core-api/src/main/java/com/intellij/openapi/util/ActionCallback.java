@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -92,14 +92,14 @@ public class ActionCallback implements Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback reject(String error) {
     myError = error;
     setRejected();
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback rejectWithThrowable(Throwable error) {
     myThrowable = error;
     setRejected();
@@ -111,20 +111,20 @@ public class ActionCallback implements Disposable {
     return myError;
   }
 
-  @NotNull
-  public final ActionCallback doWhenDone(@NotNull final Runnable runnable) {
+  @Nonnull
+  public final ActionCallback doWhenDone(@Nonnull final Runnable runnable) {
     myDone.doWhenExecuted(runnable);
     return this;
   }
 
-  @NotNull
-  public final ActionCallback doWhenRejected(@NotNull final Runnable runnable) {
+  @Nonnull
+  public final ActionCallback doWhenRejected(@Nonnull final Runnable runnable) {
     myRejected.doWhenExecuted(runnable);
     return this;
   }
 
-  @NotNull
-  public final ActionCallback doWhenRejectedButNotThrowable(@NotNull final Runnable runnable) {
+  @Nonnull
+  public final ActionCallback doWhenRejectedButNotThrowable(@Nonnull final Runnable runnable) {
     myRejected.doWhenExecuted(() -> {
       if (myThrowable == null) {
         runnable.run();
@@ -133,8 +133,8 @@ public class ActionCallback implements Disposable {
     return this;
   }
 
-  @NotNull
-  public final ActionCallback doWhenRejectedWithThrowable(@NotNull final Consumer<Throwable> consumer) {
+  @Nonnull
+  public final ActionCallback doWhenRejectedWithThrowable(@Nonnull final Consumer<Throwable> consumer) {
     myRejected.doWhenExecuted(() -> {
       if (myThrowable != null) {
         consumer.consume(myThrowable);
@@ -143,36 +143,36 @@ public class ActionCallback implements Disposable {
     return this;
   }
 
-  @NotNull
-  public final ActionCallback doWhenRejected(@NotNull final Consumer<String> consumer) {
+  @Nonnull
+  public final ActionCallback doWhenRejected(@Nonnull final Consumer<String> consumer) {
     myRejected.doWhenExecuted(() -> consumer.consume(myError));
     return this;
   }
 
-  @NotNull
-  public final ActionCallback doWhenProcessed(@NotNull final Runnable runnable) {
+  @Nonnull
+  public final ActionCallback doWhenProcessed(@Nonnull final Runnable runnable) {
     doWhenDone(runnable);
     doWhenRejected(runnable);
     return this;
   }
 
-  @NotNull
-  public final ActionCallback notifyWhenDone(@NotNull final ActionCallback child) {
+  @Nonnull
+  public final ActionCallback notifyWhenDone(@Nonnull final ActionCallback child) {
     return doWhenDone(child.createSetDoneRunnable());
   }
 
-  @NotNull
-  public final ActionCallback notifyWhenRejected(@NotNull final ActionCallback child) {
+  @Nonnull
+  public final ActionCallback notifyWhenRejected(@Nonnull final ActionCallback child) {
     return doWhenRejected(() -> child.reject(myError));
   }
 
-  @NotNull
-  public ActionCallback notify(@NotNull final ActionCallback child) {
+  @Nonnull
+  public ActionCallback notify(@Nonnull final ActionCallback child) {
     return doWhenDone(child.createSetDoneRunnable()).notifyWhenRejected(child);
   }
 
-  @NotNull
-  public final ActionCallback processOnDone(@NotNull Runnable runnable, boolean requiresDone) {
+  @Nonnull
+  public final ActionCallback processOnDone(@Nonnull Runnable runnable, boolean requiresDone) {
     if (requiresDone) {
       return doWhenDone(runnable);
     }
@@ -202,11 +202,11 @@ public class ActionCallback implements Disposable {
   public static class Chunk {
     private final Set<ActionCallback> myCallbacks = new LinkedHashSet<>();
 
-    public void add(@NotNull ActionCallback callback) {
+    public void add(@Nonnull ActionCallback callback) {
       myCallbacks.add(callback);
     }
 
-    @NotNull
+    @Nonnull
     public ActionCallback create() {
       if (myCallbacks.isEmpty()) {
         return new Done();
@@ -220,7 +220,7 @@ public class ActionCallback implements Disposable {
       return result;
     }
 
-    @NotNull
+    @Nonnull
     public ActionCallback getWhenProcessed() {
       final ActionCallback result = new ActionCallback(myCallbacks.size());
       Runnable setDoneRunnable = result.createSetDoneRunnable();
@@ -235,13 +235,13 @@ public class ActionCallback implements Disposable {
   public void dispose() {
   }
 
-  @NotNull
+  @Nonnull
   public Runnable createSetDoneRunnable() {
     return this::setDone;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  @NotNull
+  @Nonnull
   @Deprecated
   /**
    * @deprecated use {@link #notifyWhenRejected(ActionCallback)}

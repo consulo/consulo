@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.vfs.backgroundTask;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParameters;
@@ -32,13 +32,13 @@ public class SandBackgroundTaskByVfsChangeProvider extends BackgroundTaskByVfsCh
   }
 
   @Override
-  public void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters) {
+  public void setDefaultParameters(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull BackgroundTaskByVfsParameters parameters) {
     parameters.setExePath("notepad.exe");
     parameters.setProgramParameters(virtualFile.getPresentableUrl());
     parameters.setWorkingDirectory("$FileParentPath$");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getTemplateName() {
     return "#Sand";

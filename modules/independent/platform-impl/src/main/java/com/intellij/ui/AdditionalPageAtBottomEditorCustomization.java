@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -32,7 +32,7 @@ public class AdditionalPageAtBottomEditorCustomization extends SimpleEditorCusto
   }
 
   @Override
-  public void customize(@NotNull EditorEx editor) {
+  public void customize(@Nonnull EditorEx editor) {
     editor.getSettings().setAdditionalPageAtBottom(isEnabled());
   }
 }

@@ -26,7 +26,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.ui.migration.SwingImageRef;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.Callable;
@@ -45,7 +45,7 @@ import java.util.concurrent.Future;
  * If there are read actions running at this moment <code>runWriteAction</code> is blocked until they are completed.
  */
 public interface Application extends ComponentManager {
-  @NotNull
+  @Nonnull
   public static Application get() {
     Application application = ApplicationManager.getApplication();
     if (application == null) {
@@ -60,7 +60,7 @@ public interface Application extends ComponentManager {
    *
    * @param action the action to run.
    */
-  void runReadAction(@NotNull Runnable action);
+  void runReadAction(@Nonnull Runnable action);
 
   /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -70,7 +70,7 @@ public interface Application extends ComponentManager {
    * @param computation the computation to perform.
    * @return the result returned by the computation.
    */
-  <T> T runReadAction(@NotNull Computable<T> computation);
+  <T> T runReadAction(@Nonnull Computable<T> computation);
 
   /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -81,7 +81,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  <T, E extends Throwable> T runReadAction(@NotNull ThrowableComputable<T, E> computation) throws E;
+  <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
 
   /**
    * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -90,7 +90,7 @@ public interface Application extends ComponentManager {
    * @param action the action to run
    */
   @RequiredDispatchThread
-  void runWriteAction(@NotNull Runnable action);
+  void runWriteAction(@Nonnull Runnable action);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -101,7 +101,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    */
   @RequiredDispatchThread
-  <T> T runWriteAction(@NotNull Computable<T> computation);
+  <T> T runWriteAction(@Nonnull Computable<T> computation);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -113,7 +113,7 @@ public interface Application extends ComponentManager {
    * @throws E re-frown from ThrowableComputable
    */
   @RequiredDispatchThread
-  <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E;
+  <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
 
   /**
    * Returns true if there is currently executing write action of the specified class.
@@ -122,7 +122,7 @@ public interface Application extends ComponentManager {
    * @return true if the action is running, or false if no action of the specified class is currently executing.
    */
   @RequiredReadAction
-  boolean hasWriteAction(@NotNull Class<?> actionClass);
+  boolean hasWriteAction(@Nonnull Class<?> actionClass);
 
   /**
    * Asserts whether the read access is allowed.
@@ -147,7 +147,7 @@ public interface Application extends ComponentManager {
    *
    * @param listener the listener to add
    */
-  void addApplicationListener(@NotNull ApplicationListener listener);
+  void addApplicationListener(@Nonnull ApplicationListener listener);
 
   /**
    * Adds an {@link ApplicationListener}.
@@ -155,14 +155,14 @@ public interface Application extends ComponentManager {
    * @param listener the listener to add
    * @param parent   the parent disposable which dispose will trigger this listener removal
    */
-  void addApplicationListener(@NotNull ApplicationListener listener, @NotNull Disposable parent);
+  void addApplicationListener(@Nonnull ApplicationListener listener, @Nonnull Disposable parent);
 
   /**
    * Removes an {@link ApplicationListener}.
    *
    * @param listener the listener to remove
    */
-  void removeApplicationListener(@NotNull ApplicationListener listener);
+  void removeApplicationListener(@Nonnull ApplicationListener listener);
 
   /**
    * Saves all open documents and projects.
@@ -217,12 +217,12 @@ public interface Application extends ComponentManager {
   /**
    * Execute action in write thread. Write thread can be not UI thread
    */
-  void runInWriteThreadAndWait(@NotNull Runnable runnable);
+  void runInWriteThreadAndWait(@Nonnull Runnable runnable);
 
   /**
    * @return a facade, which lets to call all those invokeLater() with a ActionCallback handle returned.
    */
-  @NotNull
+  @Nonnull
   ModalityInvokator getInvokator();
 
   /**
@@ -232,7 +232,7 @@ public interface Application extends ComponentManager {
    *
    * @param runnable the runnable to execute.
    */
-  void invokeLater(@NotNull Runnable runnable);
+  void invokeLater(@Nonnull Runnable runnable);
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -242,7 +242,7 @@ public interface Application extends ComponentManager {
    * @param runnable the runnable to execute.
    * @param expired  condition to check before execution.
    */
-  void invokeLater(@NotNull Runnable runnable, @NotNull Condition expired);
+  void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired);
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -252,12 +252,12 @@ public interface Application extends ComponentManager {
    * @param runnable the runnable to execute.
    * @param state    the state in which the runnable will be executed.
    */
-  void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state);
+  void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state);
 
   /**
    * Same as {@link #invokeAndWait(Runnable, ModalityState)}, using {@link ModalityState#defaultModalityState()}.
    */
-  default void invokeAndWait(@NotNull Runnable runnable) throws ProcessCanceledException {
+  default void invokeAndWait(@Nonnull Runnable runnable) throws ProcessCanceledException {
     invokeAndWait(runnable, ModalityState.defaultModalityState());
   }
 
@@ -271,7 +271,7 @@ public interface Application extends ComponentManager {
    * @param state    the state in which the runnable will be executed.
    * @param expired  condition to check before execution.
    */
-  void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired);
+  void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired);
 
   /**
    * <p>Causes {@code runnable.run()} to be executed synchronously on the
@@ -285,14 +285,14 @@ public interface Application extends ComponentManager {
    * @param runnable      the runnable to execute.
    * @param modalityState the state in which the runnable will be executed.
    */
-  void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState);
+  void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
 
   /**
    * Returns the current modality state for the Swing dispatch thread.
    *
    * @return the current modality state.
    */
-  @NotNull
+  @Nonnull
   ModalityState getCurrentModalityState();
 
   /**
@@ -301,8 +301,8 @@ public interface Application extends ComponentManager {
    * @param c the component for which the modality state is requested.
    * @return the modality state.
    */
-  @NotNull
-  ModalityState getModalityStateForComponent(@NotNull Component c);
+  @Nonnull
+  ModalityState getModalityStateForComponent(@Nonnull Component c);
 
   /**
    * Returns the current modality state for the current thread (which may be different
@@ -310,7 +310,7 @@ public interface Application extends ComponentManager {
    *
    * @return the modality state for the current thread.
    */
-  @NotNull
+  @Nonnull
   ModalityState getDefaultModalityState();
 
   /**
@@ -319,7 +319,7 @@ public interface Application extends ComponentManager {
    *
    * @return the modality state for no modal dialogs.
    */
-  @NotNull
+  @Nonnull
   ModalityState getNoneModalityState();
 
   /**
@@ -327,7 +327,7 @@ public interface Application extends ComponentManager {
    *
    * @return modality state
    */
-  @NotNull
+  @Nonnull
   ModalityState getAnyModalityState();
 
   /**
@@ -387,8 +387,8 @@ public interface Application extends ComponentManager {
    * @param action to be executed
    * @return future result
    */
-  @NotNull
-  Future<?> executeOnPooledThread(@NotNull Runnable action);
+  @Nonnull
+  Future<?> executeOnPooledThread(@Nonnull Runnable action);
 
   /**
    * Requests pooled thread to execute the action
@@ -396,8 +396,8 @@ public interface Application extends ComponentManager {
    * @param action to be executed
    * @return future result
    */
-  @NotNull
-  <T> Future<T> executeOnPooledThread(@NotNull Callable<T> action);
+  @Nonnull
+  <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action);
 
   /**
    * @return true if application is currently disposing (but not yet disposed completely)
@@ -430,14 +430,14 @@ public interface Application extends ComponentManager {
   /**
    * @return Application icon. In sandbox icon maybe different
    */
-  @NotNull
+  @Nonnull
   SwingImageRef getIcon();
 
   // region Deprecated stuff
   /**
    * Returns lock used for read operations, should be closed in finally block
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Use runReadAction(Runnable)")
   AccessToken acquireReadActionLock();
@@ -445,11 +445,11 @@ public interface Application extends ComponentManager {
   /**
    * Returns lock used for write operations, should be closed in finally block
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Use runWriteAction(Runnable)")
   @RequiredDispatchThread
-  AccessToken acquireWriteActionLock(@NotNull Class marker);
+  AccessToken acquireWriteActionLock(@Nonnull Class marker);
 
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")

@@ -38,8 +38,8 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,8 +80,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
   }
 
-  @NotNull
-  private static JPanel centerComponentVertically(@NotNull Component component) {
+  @Nonnull
+  private static JPanel centerComponentVertically(@Nonnull Component component) {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.add(component, new GridBagConstraints());
     return panel;
@@ -282,8 +282,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       return path;
     }
 
-    @NotNull
-    protected String expandPath(@NotNull String path) {
+    @Nonnull
+    protected String expandPath(@Nonnull String path) {
       return path;
     }
 
@@ -291,12 +291,12 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
       return myAccessor.getText(myTextComponent.getChildComponent()).trim();
     }
 
-    @NotNull
-    protected String chosenFileToResultingText(@NotNull VirtualFile chosenFile) {
+    @Nonnull
+    protected String chosenFileToResultingText(@Nonnull VirtualFile chosenFile) {
       return chosenFile.getPresentableUrl();
     }
 
-    protected void onFileChosen(@NotNull VirtualFile chosenFile) {
+    protected void onFileChosen(@Nonnull VirtualFile chosenFile) {
       myAccessor.setText(myTextComponent.getChildComponent(), chosenFileToResultingText(chosenFile));
     }
   }

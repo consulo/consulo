@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
   private final FileColorSettingsTable myLocalTable;
   private final FileColorSettingsTable mySharedTable;
 
-  public FileColorsConfigurablePanel(@NotNull final FileColorManagerImpl manager) {
+  public FileColorsConfigurablePanel(@Nonnull final FileColorManagerImpl manager) {
     setLayout(new BorderLayout());
     myManager = manager;
 
@@ -76,7 +76,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     final List<FileColorConfiguration> localConfigurations = manager.getLocalConfigurations();
     myLocalTable = new FileColorSettingsTable(manager, localConfigurations) {
       @Override
-      protected void apply(@NotNull List<FileColorConfiguration> configurations) {
+      protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
         final List<FileColorConfiguration> copied = new ArrayList<FileColorConfiguration>();
         try {
           for (final FileColorConfiguration configuration : configurations) {
@@ -108,7 +108,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
 
     mySharedTable = new FileColorSettingsTable(manager, manager.getSharedConfigurations()) {
       @Override
-      protected void apply(@NotNull List<FileColorConfiguration> configurations) {
+      protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
         final List<FileColorConfiguration> copied = new ArrayList<FileColorConfiguration>();
         for (final FileColorConfiguration configuration : configurations) {
           try {

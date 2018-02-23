@@ -29,7 +29,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.List;
 public abstract class TemplateLanguageFormattingModelBuilder implements DelegatingFormattingModelBuilder, TemplateLanguageBlockFactory {
 
   @Override
-  @NotNull
+  @Nonnull
   public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
     final PsiFile file = element.getContainingFile();
     Block rootBlock = getRootBlock(file, file.getViewProvider(), settings);
@@ -81,7 +81,7 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
       }
 
       @Override
-      public Spacing getSpacing(final Block child1, @NotNull final Block child2) {
+      public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

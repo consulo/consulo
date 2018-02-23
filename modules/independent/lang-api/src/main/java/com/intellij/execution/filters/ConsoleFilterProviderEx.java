@@ -22,8 +22,8 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConsoleFilterProviderEx extends ConsoleFilterProvider {
-  Filter[] getDefaultFilters(@NotNull Project project, @NotNull GlobalSearchScope scope);
+  Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull GlobalSearchScope scope);
 }

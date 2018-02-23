@@ -39,8 +39,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -56,26 +56,31 @@ import static java.util.stream.Collectors.toList;
 
 public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
-  @NotNull private final ChangeListChooser myChangeListChooser;
-  @NotNull final ChangeListListener myChangeListListener = new MyChangeListListener();
-  @NotNull private final EventDispatcher<SelectedListChangeListener> myDispatcher =
+  @Nonnull
+  private final ChangeListChooser myChangeListChooser;
+  @Nonnull
+  final ChangeListListener myChangeListListener = new MyChangeListListener();
+  @Nonnull
+  private final EventDispatcher<SelectedListChangeListener> myDispatcher =
           EventDispatcher.create(SelectedListChangeListener.class);
-  @Nullable private final Runnable myRebuildListListener;
-  @NotNull private final VcsConfiguration myVcsConfiguration;
+  @javax.annotation.Nullable
+  private final Runnable myRebuildListListener;
+  @Nonnull
+  private final VcsConfiguration myVcsConfiguration;
   private final boolean myUnversionedFilesEnabled;
   private Collection<Change> myAllChanges;
   private boolean myInRebuildList;
   private AnAction myMoveActionWithCustomShortcut;
 
   // todo terrible constructor
-  public MultipleChangeListBrowser(@NotNull Project project,
-                                   @NotNull List<? extends ChangeList> changeLists,
-                                   @NotNull List<Object> changes,
-                                   @Nullable ChangeList initialListSelection,
+  public MultipleChangeListBrowser(@Nonnull Project project,
+                                   @Nonnull List<? extends ChangeList> changeLists,
+                                   @Nonnull List<Object> changes,
+                                   @javax.annotation.Nullable ChangeList initialListSelection,
                                    boolean capableOfExcludingChanges,
                                    boolean highlightProblems,
                                    @Nullable Runnable rebuildListListener,
-                                   @Nullable Runnable inclusionListener,
+                                   @javax.annotation.Nullable Runnable inclusionListener,
                                    boolean unversionedFilesEnabled) {
     super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null,
           Object.class);
@@ -118,9 +123,9 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   }
 
   @Override
-  protected void setInitialSelection(@NotNull List<? extends ChangeList> changeLists,
-                                     @NotNull List<Object> changes,
-                                     @Nullable ChangeList initialListSelection) {
+  protected void setInitialSelection(@Nonnull List<? extends ChangeList> changeLists,
+                                     @Nonnull List<Object> changes,
+                                     @javax.annotation.Nullable ChangeList initialListSelection) {
     myAllChanges = ContainerUtil.newArrayList();
     mySelectedChangeList = initialListSelection;
 
@@ -143,11 +148,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     ChangeListManager.getInstance(myProject).removeChangeListListener(myChangeListListener);
   }
 
-  public void addSelectedListChangeListener(@NotNull SelectedListChangeListener listener) {
+  public void addSelectedListChangeListener(@Nonnull SelectedListChangeListener listener) {
     myDispatcher.addListener(listener);
   }
 
-  private void setSelectedList(@Nullable ChangeList list) {
+  private void setSelectedList(@javax.annotation.Nullable ChangeList list) {
     mySelectedChangeList = list;
     rebuildList();
     myDispatcher.getMulticaster().selectedListChanged();
@@ -170,7 +175,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
   }
 
-  @NotNull
+  @Nonnull
   private Collection<Change> getLocalChanges() {
     Collection<Change> result = ContainerUtil.newArrayList();
     ChangeListManager manager = ChangeListManager.getInstance(myProject);
@@ -185,17 +190,17 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Change> getCurrentIncludedChanges() {
     Collection<Object> includedObjects = myViewer.getIncludedChanges();
 
     return mySelectedChangeList.getChanges().stream().filter(includedObjects::contains).collect(toList());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DefaultTreeModel buildTreeModel(@NotNull List<Object> objects,
-                                            @Nullable ChangeNodeDecorator changeNodeDecorator,
+  protected DefaultTreeModel buildTreeModel(@Nonnull List<Object> objects,
+                                            @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator,
                                             boolean showFlatten) {
     ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
@@ -208,9 +213,9 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return builder.build();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected List<Object> getSelectedObjects(@NotNull ChangesBrowserNode<Object> node) {
+  protected List<Object> getSelectedObjects(@Nonnull ChangesBrowserNode<Object> node) {
     List<Object> result = ContainerUtil.newArrayList();
 
     result.addAll(node.getAllChangesUnder());
@@ -221,9 +226,9 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected Object getLeadSelectedObject(@NotNull ChangesBrowserNode node) {
+  protected Object getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
     Object result = null;
     Object userObject = node.getUserObject();
 
@@ -234,14 +239,14 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Object> getCurrentDisplayedObjects() {
     //noinspection unchecked
     return (List)getCurrentDisplayedChanges();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VirtualFile> getIncludedUnversionedFiles() {
     return isShowUnversioned()
@@ -264,7 +269,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
     //noinspection unchecked
     Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
@@ -272,7 +277,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return ContainerUtil.findInstance(ContainerUtil.iterate(nodes), ChangesBrowserUnversionedFilesNode.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getSelectedChanges() {
     Set<Change> changes = ContainerUtil.newLinkedHashSet();
@@ -288,20 +293,20 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return ContainerUtil.newArrayList(changes);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getAllChanges() {
     return myViewer.getRoot().getAllChangesUnder();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<AbstractVcs> getAffectedVcses() {
     return ChangesUtil.getAffectedVcses(myAllChanges, myProject);
   }
 
   @Override
-  protected void buildToolBar(@NotNull DefaultActionGroup toolBarGroup) {
+  protected void buildToolBar(@Nonnull DefaultActionGroup toolBarGroup) {
     super.buildToolBar(toolBarGroup);
 
     toolBarGroup.add(new AnAction("Refresh Changes", null, AllIcons.Actions.Refresh) {
@@ -367,11 +372,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
   }
 
-  @Nullable
-  private static ChangeList findDefaultList(@NotNull List<? extends ChangeList> lists) {
+  @javax.annotation.Nullable
+  private static ChangeList findDefaultList(@Nonnull List<? extends ChangeList> lists) {
     return ContainerUtil.find(lists, new Condition<ChangeList>() {
       @Override
-      public boolean value(@NotNull ChangeList list) {
+      public boolean value(@Nonnull ChangeList list) {
         return list instanceof LocalChangeList && ((LocalChangeList)list).isDefault();
       }
     });
@@ -379,7 +384,8 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
   private class ChangeListChooser extends JPanel {
     private final static int MAX_LEN = 35;
-    @NotNull private final ComboBox myChooser;
+    @Nonnull
+    private final ComboBox myChooser;
 
     public ChangeListChooser() {
       super(new BorderLayout(4, 2));
@@ -414,7 +420,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
       add(label, BorderLayout.WEST);
     }
 
-    public void updateLists(@NotNull List<? extends ChangeList> lists) {
+    public void updateLists(@Nonnull List<? extends ChangeList> lists) {
       //noinspection unchecked
       myChooser.setModel(new DefaultComboBoxModel(lists.toArray()));
       myChooser.setEnabled(lists.size() > 1);
@@ -442,19 +448,19 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
 
       e.getPresentation().setEnabledAndVisible(ActionPlaces.isToolbarPlace(e.getPlace()));
     }
 
     @Override
-    public boolean isSelected(@NotNull AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT;
     }
 
     @Override
-    public void setSelected(@NotNull AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT = state;
       rebuildList();
     }
@@ -462,14 +468,14 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
   private class MoveAction extends MoveChangesToAnotherListAction {
     @Override
-    protected boolean isEnabled(@NotNull AnActionEvent e) {
+    protected boolean isEnabled(@Nonnull AnActionEvent e) {
       Change change = e.getData(VcsDataKeys.CURRENT_CHANGE);
       if (change == null) return false;
       return super.isEnabled(e);
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       Change change = e.getRequiredData(VcsDataKeys.CURRENT_CHANGE);
       askAndMove(myProject, Collections.singletonList(change), Collections.<VirtualFile>emptyList());
     }

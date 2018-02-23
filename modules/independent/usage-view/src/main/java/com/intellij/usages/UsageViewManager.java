@@ -23,8 +23,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Factory;
 import com.intellij.psi.PsiElement;
 import com.intellij.usages.rules.PsiElementUsage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -34,38 +33,38 @@ public abstract class UsageViewManager {
     return ServiceManager.getService(project, UsageViewManager.class);
   }
 
-  @NotNull
-  public abstract UsageView createUsageView(@NotNull UsageTarget[] targets, @NotNull Usage[] usages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory);
+  @Nonnull
+  public abstract UsageView createUsageView(@Nonnull UsageTarget[] targets, @Nonnull Usage[] usages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory);
 
-  @NotNull
-  public abstract UsageView showUsages(@NotNull UsageTarget[] searchedFor, @NotNull Usage[] foundUsages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> factory);
+  @Nonnull
+  public abstract UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> factory);
 
-  @NotNull
-  public abstract UsageView showUsages(@NotNull UsageTarget[] searchedFor, @NotNull Usage[] foundUsages, @NotNull UsageViewPresentation presentation);
+  @Nonnull
+  public abstract UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation);
 
-  @Nullable ("returns null in case of no usages found or usage view not shown for one usage")
-  public abstract UsageView searchAndShowUsages(@NotNull UsageTarget[] searchFor,
-                                                @NotNull Factory<UsageSearcher> searcherFactory,
+  @javax.annotation.Nullable("returns null in case of no usages found or usage view not shown for one usage")
+  public abstract UsageView searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
+                                                @Nonnull Factory<UsageSearcher> searcherFactory,
                                                 boolean showPanelIfOnlyOneUsage,
                                                 boolean showNotFoundMessage,
-                                                @NotNull UsageViewPresentation presentation,
-                                                @Nullable UsageViewStateListener listener);
+                                                @Nonnull UsageViewPresentation presentation,
+                                                @javax.annotation.Nullable UsageViewStateListener listener);
 
   public interface UsageViewStateListener {
-    void usageViewCreated(@NotNull UsageView usageView);
+    void usageViewCreated(@Nonnull UsageView usageView);
     void findingUsagesFinished(UsageView usageView);
   }
 
-  public abstract void searchAndShowUsages(@NotNull UsageTarget[] searchFor,
-                                           @NotNull Factory<UsageSearcher> searcherFactory,
-                                           @NotNull FindUsagesProcessPresentation processPresentation,
-                                           @NotNull UsageViewPresentation presentation,
-                                           @Nullable UsageViewStateListener listener);
+  public abstract void searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
+                                           @Nonnull Factory<UsageSearcher> searcherFactory,
+                                           @Nonnull FindUsagesProcessPresentation processPresentation,
+                                           @Nonnull UsageViewPresentation presentation,
+                                           @javax.annotation.Nullable UsageViewStateListener listener);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract UsageView getSelectedUsageView();
 
-  public static boolean isSelfUsage(@NotNull final Usage usage, @NotNull final UsageTarget[] searchForTarget) {
+  public static boolean isSelfUsage(@Nonnull final Usage usage, @Nonnull final UsageTarget[] searchForTarget) {
     if (!(usage instanceof PsiElementUsage)) return false;
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
@@ -85,7 +84,7 @@ public abstract class UsageViewManager {
     });
   }
 
-  private static boolean isSelfUsage(@NotNull PsiElement element, PsiElement psiElement) {
+  private static boolean isSelfUsage(@Nonnull PsiElement element, PsiElement psiElement) {
     return element.getParent() == psiElement; // self usage might be configurable
   }
 }

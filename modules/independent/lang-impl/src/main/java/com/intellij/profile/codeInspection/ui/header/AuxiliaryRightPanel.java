@@ -20,8 +20,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,12 +51,12 @@ public class AuxiliaryRightPanel extends JPanel {
 
     myValidatedTextField = new ValidatedTextField(new SaveInputComponentValidator() {
       @Override
-      public void doSave(@NotNull String text) {
+      public void doSave(@Nonnull String text) {
         descriptionListener.saveDescription(text.trim());
       }
 
       @Override
-      public boolean checkValid(@NotNull String text) {
+      public boolean checkValid(@Nonnull String text) {
         return true;
       }
 
@@ -71,7 +71,7 @@ public class AuxiliaryRightPanel extends JPanel {
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         if (clickCount != 2) {
           return false;
         }
@@ -104,7 +104,7 @@ public class AuxiliaryRightPanel extends JPanel {
     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myValidatedTextField);
   }
 
-  public void showError(final @NotNull String errorText) {
+  public void showError(final @Nonnull String errorText) {
     myErrorLabel.setText(errorText);
     myLayout.show(this, ERROR_CARD);
   }
@@ -114,7 +114,7 @@ public class AuxiliaryRightPanel extends JPanel {
   }
 
   public interface DescriptionSaveListener {
-    void saveDescription(@NotNull String description);
+    void saveDescription(@Nonnull String description);
 
     void cancel();
   }

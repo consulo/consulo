@@ -20,7 +20,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.ProjectReloadState;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 @State(name = "ProjectReloadState", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ProjectReloadStateImpl implements ProjectReloadState, PersistentStateComponent<ProjectReloadStateImpl> {

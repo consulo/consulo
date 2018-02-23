@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -46,7 +46,7 @@ public abstract class CachingReference implements PsiReference {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public static <T extends PsiElement> ElementManipulator<T> getManipulator(T currentElement){
     ElementManipulator<T> manipulator = ElementManipulators.getManipulator(currentElement);
     if (manipulator == null) {
@@ -59,7 +59,7 @@ public abstract class CachingReference implements PsiReference {
     private static final MyResolver INSTANCE = new MyResolver();
     @Override
     @Nullable
-    public PsiElement resolve(@NotNull PsiReference ref, boolean incompleteCode) {
+    public PsiElement resolve(@Nonnull PsiReference ref, boolean incompleteCode) {
       return ((CachingReference)ref).resolveInner();
     }
   }

@@ -17,7 +17,7 @@ package com.intellij.diff.util;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LineCol {
   // counting from zero
@@ -58,31 +58,31 @@ public class LineCol {
     return String.format("{ line: %s, column: %s }", line, column);
   }
 
-  @NotNull
-  public static LineCol fromOffset(@NotNull Document document, int offset) {
+  @Nonnull
+  public static LineCol fromOffset(@Nonnull Document document, int offset) {
     int line = document.getLineNumber(offset);
     int column = offset - document.getLineStartOffset(line);
     return new LineCol(line, column);
   }
 
-  @NotNull
-  public static LineCol fromCaret(@NotNull Editor editor) {
+  @Nonnull
+  public static LineCol fromCaret(@Nonnull Editor editor) {
     return fromOffset(editor.getDocument(), editor.getCaretModel().getOffset());
   }
 
-  public static int toOffset(@NotNull Document document, @NotNull LineCol linecol) {
+  public static int toOffset(@Nonnull Document document, @Nonnull LineCol linecol) {
     return linecol.toOffset(document);
   }
 
-  public static int toOffset(@NotNull Document document, int line, int col) {
+  public static int toOffset(@Nonnull Document document, int line, int col) {
     return new LineCol(line, col).toOffset(document);
   }
 
-  public int toOffset(@NotNull Document document) {
+  public int toOffset(@Nonnull Document document) {
     return document.getLineStartOffset(line) + column;
   }
 
-  public int toOffset(@NotNull Editor editor) {
+  public int toOffset(@Nonnull Editor editor) {
     return toOffset(editor.getDocument());
   }
 }

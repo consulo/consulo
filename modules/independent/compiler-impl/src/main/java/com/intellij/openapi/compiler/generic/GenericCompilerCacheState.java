@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,23 +25,23 @@ public class GenericCompilerCacheState<Key, SourceState, OutputState> {
   private final SourceState mySourceState;
   private final OutputState myOutputState;
 
-  public GenericCompilerCacheState(@NotNull Key key, @NotNull SourceState sourceState, @NotNull OutputState outputState) {
+  public GenericCompilerCacheState(@Nonnull Key key, @Nonnull SourceState sourceState, @Nonnull OutputState outputState) {
     myKey = key;
     mySourceState = sourceState;
     myOutputState = outputState;
   }
 
-  @NotNull
+  @Nonnull
   public Key getKey() {
     return myKey;
   }
 
-  @NotNull
+  @Nonnull
   public SourceState getSourceState() {
     return mySourceState;
   }
 
-  @NotNull
+  @Nonnull
   public OutputState getOutputState() {
     return myOutputState;
   }

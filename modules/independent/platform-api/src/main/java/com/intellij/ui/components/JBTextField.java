@@ -19,7 +19,7 @@ import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
@@ -63,7 +63,7 @@ public class JBTextField extends JTextField implements ComponentWithEmptyText {
     UIUtil.resetUndoRedoActions(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;

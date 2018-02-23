@@ -24,7 +24,7 @@ import com.intellij.util.pico.AssignableToComponentAdapter;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.*;
 
 /**
@@ -44,7 +44,7 @@ public class ExtensionComponentAdapter implements LoadingOrder.Orderable, Assign
   private Class myImplementationClass;
   private boolean myNotificationSent = false;
 
-  public ExtensionComponentAdapter(@NotNull String implementationClass,
+  public ExtensionComponentAdapter(@Nonnull String implementationClass,
                                    Element extensionElement,
                                    PicoContainer container,
                                    PluginDescriptor pluginDescriptor,

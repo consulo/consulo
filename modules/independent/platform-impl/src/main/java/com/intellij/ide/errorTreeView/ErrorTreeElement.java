@@ -16,8 +16,8 @@
 package com.intellij.ide.errorTreeView;
 
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -32,11 +32,11 @@ public abstract class ErrorTreeElement {
     this(ErrorTreeElementKind.GENERIC);
   }
 
-  protected ErrorTreeElement(@NotNull ErrorTreeElementKind kind) {
+  protected ErrorTreeElement(@Nonnull ErrorTreeElementKind kind) {
     myKind = kind;
   }
 
-  @NotNull
+  @Nonnull
   public ErrorTreeElementKind getKind() {
     return myKind;
   }

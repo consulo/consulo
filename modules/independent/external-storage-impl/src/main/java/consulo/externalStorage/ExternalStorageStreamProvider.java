@@ -22,8 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.externalStorage.storage.ExternalStorage;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServicesConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,25 +46,25 @@ public class ExternalStorageStreamProvider extends StreamProvider {
     return !StringUtil.isEmpty(WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<String> listSubFiles(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     return myStorage.listSubFiles(fileSpec, roamingType);
   }
 
   @Override
-  public void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType) throws IOException {
+  public void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, int size, @Nonnull RoamingType roamingType) throws IOException {
     myStorage.saveContent(fileSpec, roamingType, content, size);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public InputStream loadContent(@NotNull String fileSpec, @NotNull RoamingType roamingType) throws IOException {
+  public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
     return myStorage.loadContent(fileSpec, roamingType, myStateStorageManager);
   }
 
   @Override
-  public void delete(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     myStorage.delete(fileSpec, roamingType);
   }
 }

@@ -19,8 +19,8 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -34,7 +34,7 @@ public class CapturingProcessHandler extends OSProcessHandler {
 
   private final ProcessOutput myOutput = new ProcessOutput();
 
-  public CapturingProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  public CapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     addProcessListener(createProcessAdapter(myOutput));
   }
@@ -42,7 +42,7 @@ public class CapturingProcessHandler extends OSProcessHandler {
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public CapturingProcessHandler(@NotNull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
+  public CapturingProcessHandler(@Nonnull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
     super(process, commandLine, charset);
     addProcessListener(createProcessAdapter(myOutput));
   }
@@ -51,7 +51,7 @@ public class CapturingProcessHandler extends OSProcessHandler {
     return new CapturingProcessAdapter(processOutput);
   }
 
-  @NotNull
+  @Nonnull
   public ProcessOutput runProcess() {
     startNotify();
     if (waitFor()) {
@@ -110,18 +110,18 @@ public class CapturingProcessHandler extends OSProcessHandler {
     return myCharset != null ? myCharset : super.getCharset();
   }
 
-  @NotNull
-  public ProcessOutput runProcessWithProgressIndicator(@NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator) {
     return runProcessWithProgressIndicator(indicator, Integer.MAX_VALUE);
   }
 
-  @NotNull
-  public ProcessOutput runProcessWithProgressIndicator(@NotNull ProgressIndicator indicator, int timeoutInMilliseconds) {
+  @Nonnull
+  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds) {
     return runProcessWithProgressIndicator(indicator, timeoutInMilliseconds, true);
   }
 
-  @NotNull
-  public ProcessOutput runProcessWithProgressIndicator(@NotNull ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
+  @Nonnull
+  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
     final int WAIT_INTERVAL = 100;
     int waitingTime = 0;
     boolean setExitCode = true;

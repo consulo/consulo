@@ -30,8 +30,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -54,7 +54,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getVirtualFile() {
     return myViewProvider.getVirtualFile();
   }
@@ -70,14 +70,14 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return !isCopy() ? getVirtualFile().getName() : myName;
   }
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
     checkSetName(name);
 
     if (isCopy()) {
@@ -118,7 +118,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return Language.ANY;
   }
@@ -130,7 +130,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -145,7 +145,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   @Override
   public TextRange getTextRange() {
@@ -183,23 +183,23 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO[max] throw new UnsupportedOperationException()
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return false;
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return false;
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitBinaryFile(this);
   }
 
@@ -220,22 +220,22 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
@@ -254,7 +254,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     return null;
   }
 
@@ -275,7 +275,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getOriginalFile() {
     return this;
   }
@@ -286,19 +286,19 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return myViewProvider.getFileType();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile[] getPsiRoots() {
     return new PsiFile[]{this};
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileViewProvider getViewProvider() {
     return myViewProvider;
   }
@@ -318,7 +318,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     info.put("fileName", getName());
     info.put("fileType", getFileType().getName());
   }

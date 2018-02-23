@@ -44,15 +44,15 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     @Nullable final Project project = e.getData(CommonDataKeys.PROJECT);
     final boolean showFiles = project != null;
 
@@ -111,14 +111,14 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (WelcomeFrame.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
     }
   }
 
   private static void doOpenFile(@Nullable final Project project,
-                                 @NotNull final List<VirtualFile> result) {
+                                 @Nonnull final List<VirtualFile> result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
         Project openedProject = ProjectUtil.open(file.getPath(), project, false);

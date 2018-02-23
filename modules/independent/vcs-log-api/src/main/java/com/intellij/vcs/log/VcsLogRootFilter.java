@@ -16,7 +16,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -28,6 +28,6 @@ public interface VcsLogRootFilter extends VcsLogFilter {
   /**
    * Returns vcs roots that are visible.
    */
-  @NotNull
+  @Nonnull
   Collection<VirtualFile> getRoots();
 }

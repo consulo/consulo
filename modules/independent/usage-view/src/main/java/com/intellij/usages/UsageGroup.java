@@ -17,8 +17,8 @@ package com.intellij.usages;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -26,10 +26,10 @@ public interface UsageGroup extends Comparable<UsageGroup>, Navigatable {
   @Nullable
   Icon getIcon(boolean isOpen);
 
-  @NotNull
-  String getText(@Nullable UsageView view);
+  @Nonnull
+  String getText(@javax.annotation.Nullable UsageView view);
 
-  @Nullable
+  @javax.annotation.Nullable
   FileStatus getFileStatus();
 
   boolean isValid();

@@ -19,11 +19,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class AbstractEmptyIntentionAction implements IntentionAction {
   @Override
-  public final void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {}
+  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {}
 
   @Override
   public final boolean startInWriteAction() {

@@ -15,7 +15,7 @@
 package com.intellij.codeInsight.dataflow;
 
 import com.intellij.codeInsight.controlflow.Instruction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DfaInstance<E> {
   // Please ensure that E has correctly implemented equals method
@@ -23,7 +23,7 @@ public interface DfaInstance<E> {
   // Invariant: fun must create new instance of DFAMap if modifies it
   E fun(E e, Instruction instruction);
 
-  @NotNull
+  @Nonnull
   E initial();
 
   boolean isForward();

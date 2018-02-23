@@ -20,21 +20,21 @@ import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ModulePointerManager extends NamedPointerManager<Module> {
-  @NotNull
-  static ModulePointerManager getInstance(@NotNull Project project) {
+  @Nonnull
+  static ModulePointerManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ModulePointerManager.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredReadAction
-  NamedPointer<Module> create(@NotNull String name);
+  NamedPointer<Module> create(@Nonnull String name);
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredReadAction
-  NamedPointer<Module> create(@NotNull Module value);
+  NamedPointer<Module> create(@Nonnull Module value);
 }

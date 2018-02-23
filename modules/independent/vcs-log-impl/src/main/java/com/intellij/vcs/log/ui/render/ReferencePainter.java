@@ -17,21 +17,21 @@ package com.intellij.vcs.log.ui.render;
 
 import com.intellij.vcs.log.VcsLogRefManager;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
 public interface ReferencePainter {
-  void customizePainter(@NotNull JComponent component,
-                        @NotNull Collection<VcsRef> references,
+  void customizePainter(@Nonnull JComponent component,
+                        @Nonnull Collection<VcsRef> references,
                         @Nullable VcsLogRefManager manager,
-                        @NotNull Color background,
-                        @NotNull Color foreground);
+                        @Nonnull Color background,
+                        @Nonnull Color foreground);
 
-  void paint(@NotNull Graphics2D g2, int x, int y, int height);
+  void paint(@Nonnull Graphics2D g2, int x, int y, int height);
 
   Dimension getSize();
 

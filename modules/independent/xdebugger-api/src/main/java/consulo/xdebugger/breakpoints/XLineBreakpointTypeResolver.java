@@ -18,8 +18,8 @@ package consulo.xdebugger.breakpoints;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -27,7 +27,7 @@ import consulo.annotations.RequiredReadAction;
  * @since 5/7/2016
  */
 public interface XLineBreakpointTypeResolver {
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
-  XLineBreakpointType<?> resolveBreakpointType(@NotNull Project project, @NotNull VirtualFile virtualFile, int line);
+  XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line);
 }

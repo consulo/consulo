@@ -16,7 +16,8 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author cdr

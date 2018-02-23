@@ -20,7 +20,7 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -30,7 +30,7 @@ public abstract class ExecutorRegistry implements ApplicationComponent {
     return ApplicationManager.getApplication().getComponent(ExecutorRegistry.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract Executor[] getRegisteredExecutors();
 
   public abstract Executor getExecutorById(final String executorId);
@@ -40,5 +40,5 @@ public abstract class ExecutorRegistry implements ApplicationComponent {
    */
   public abstract boolean isStarting(Project project, String executorId, String runnerId);
 
-  public abstract boolean isStarting(@NotNull ExecutionEnvironment environment);
+  public abstract boolean isStarting(@Nonnull ExecutionEnvironment environment);
 }

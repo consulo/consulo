@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.colors;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ public interface PreviewPanel {
     }
 
     @Override
-    public void addListener(@NotNull final ColorAndFontSettingsListener listener) {
+    public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
 
     }
 
@@ -55,5 +55,5 @@ public interface PreviewPanel {
 
   void updateView();
 
-  void addListener(@NotNull ColorAndFontSettingsListener listener);
+  void addListener(@Nonnull ColorAndFontSettingsListener listener);
 }

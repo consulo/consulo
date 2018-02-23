@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.util.KeyWithDefaultValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -74,14 +74,14 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyWithDefaultValue<Boolean> getKey() {
     return KEY;
   }
 
   @Override
-  public void addToolbarActions(@NotNull AbstractProjectViewPane pane, @NotNull DefaultActionGroup actionGroup) {
+  public void addToolbarActions(@Nonnull AbstractProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
     if (pane instanceof ProjectViewPane) {
       actionGroup.addAction(new ShowExcludedFilesAction(pane)).setAsSecondary(true);
     }

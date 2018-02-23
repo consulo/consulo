@@ -17,8 +17,8 @@ package com.intellij.ide;
 
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class UiActivity implements ComparableObject{
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getEqualityObjects() {
     return new Object[] {myElements};

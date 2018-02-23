@@ -18,7 +18,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
  *         Time: 10:08 AM
  */
 public abstract class PsiTodoSearchHelper {
-  @NotNull
-  public static PsiTodoSearchHelper getInstance(@NotNull Project project) {
+  @Nonnull
+  public static PsiTodoSearchHelper getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, PsiTodoSearchHelper.class);
   }
 
@@ -36,7 +36,7 @@ public abstract class PsiTodoSearchHelper {
    *
    * @return the list of files with to do items.
    */
-  @NotNull
+  @Nonnull
   public abstract PsiFile[] findFilesWithTodoItems();
 
   /**
@@ -45,8 +45,8 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to search for to do items.
    * @return the array of found items.
    */
-  @NotNull
-  public abstract TodoItem[] findTodoItems(@NotNull PsiFile file);
+  @Nonnull
+  public abstract TodoItem[] findTodoItems(@Nonnull PsiFile file);
 
   /**
    * Searches the specified range of text in the specified file for to do items.
@@ -56,13 +56,13 @@ public abstract class PsiTodoSearchHelper {
    * @param endOffset   the end offset of the text range to search to do items in.
    * @return the array of found items.
    */
-  @NotNull
-  public abstract TodoItem[] findTodoItems(@NotNull PsiFile file, int startOffset, int endOffset);
+  @Nonnull
+  public abstract TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset);
 
-  @NotNull
-  public abstract TodoItem[] findTodoItemsLight(@NotNull PsiFile file);
-  @NotNull
-  public abstract TodoItem[] findTodoItemsLight(@NotNull PsiFile file, int startOffset, int endOffset);
+  @Nonnull
+  public abstract TodoItem[] findTodoItemsLight(@Nonnull PsiFile file);
+  @Nonnull
+  public abstract TodoItem[] findTodoItemsLight(@Nonnull PsiFile file, int startOffset, int endOffset);
 
   /**
    * Returns the number of to do items in the specified file.
@@ -70,7 +70,7 @@ public abstract class PsiTodoSearchHelper {
    * @param file the file to return the to do count for.
    * @return the count of to do items in the file.
    */
-  public abstract int getTodoItemsCount(@NotNull PsiFile file);
+  public abstract int getTodoItemsCount(@Nonnull PsiFile file);
 
   /**
    * Returns the number of to do items matching the specified pattern in the specified file.
@@ -79,5 +79,5 @@ public abstract class PsiTodoSearchHelper {
    * @param pattern the pattern of to do items to find.
    * @return the count of to do items in the file.
    */
-  public abstract int getTodoItemsCount(@NotNull PsiFile file, @NotNull TodoPattern pattern);
+  public abstract int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern);
 }

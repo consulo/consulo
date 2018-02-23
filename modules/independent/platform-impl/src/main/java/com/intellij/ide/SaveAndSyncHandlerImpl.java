@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -58,10 +58,10 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
 
-  public SaveAndSyncHandlerImpl(@NotNull GeneralSettings generalSettings,
-                                @NotNull ProgressManager progressManager,
-                                @NotNull FrameStateManager frameStateManager,
-                                @NotNull FileDocumentManager fileDocumentManager) {
+  public SaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
+                                @Nonnull ProgressManager progressManager,
+                                @Nonnull FrameStateManager frameStateManager,
+                                @Nonnull FileDocumentManager fileDocumentManager) {
     mySettings = generalSettings;
     myProgressManager = progressManager;
 
@@ -74,7 +74,7 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
 
     myGeneralSettingsListener = new PropertyChangeListener() {
       @Override
-      public void propertyChange(@NotNull PropertyChangeEvent e) {
+      public void propertyChange(@Nonnull PropertyChangeEvent e) {
         if (GeneralSettings.PROP_INACTIVE_TIMEOUT.equals(e.getPropertyName())) {
           IdeEventQueue eventQueue = IdeEventQueue.getInstance();
           eventQueue.removeIdleListener(myIdleListener);
@@ -139,7 +139,7 @@ public class SaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Dispos
     maybeRefresh(ModalityState.NON_MODAL);
   }
 
-  public void maybeRefresh(@NotNull ModalityState modalityState) {
+  public void maybeRefresh(@Nonnull ModalityState modalityState) {
     if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
       RefreshQueue queue = RefreshQueue.getInstance();
       queue.cancelSession(myRefreshSessionId);

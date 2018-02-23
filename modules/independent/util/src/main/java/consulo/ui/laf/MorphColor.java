@@ -16,7 +16,7 @@
 package consulo.ui.laf;
 
 import com.intellij.util.NotNullProducer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -29,20 +29,20 @@ import java.awt.image.ColorModel;
  * @since 17-Jun-17
  */
 public class MorphColor extends Color {
-  public static Color of(@NotNull NotNullProducer<Color> func) {
+  public static Color of(@Nonnull NotNullProducer<Color> func) {
     Color color = func.produce();
     return new MorphColor(color, func);
   }
 
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  @NotNull
+  @Nonnull
   private final NotNullProducer<Color> myColorProducer;
   private long myLastModificationCount;
 
   private Color myLastComputedColor;
 
-  private MorphColor(Color color, @NotNull NotNullProducer<Color> function) {
+  private MorphColor(Color color, @Nonnull NotNullProducer<Color> function) {
     super(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     myLastComputedColor = color;
     myColorProducer = function;
@@ -92,7 +92,7 @@ public class MorphColor extends Color {
   @Override
   public Color brighter() {
     return of(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return myColorProducer.produce().brighter();
@@ -103,7 +103,7 @@ public class MorphColor extends Color {
   @Override
   public Color darker() {
     return of(new NotNullProducer<Color>() {
-      @NotNull
+      @Nonnull
       @Override
       public Color produce() {
         return myColorProducer.produce().darker();

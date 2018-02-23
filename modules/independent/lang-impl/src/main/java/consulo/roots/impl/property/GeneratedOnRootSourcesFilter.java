@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class GeneratedOnRootSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@NotNull VirtualFile file, @NotNull Project project) {
+  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
     VirtualFile contentRootForFile = ProjectFileIndex.SERVICE.getInstance(project).getSourceRootForFile(file);
     if(contentRootForFile == null) {
       return false;

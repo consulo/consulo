@@ -19,8 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Creates {@link Repository} instance for appropriate vcs if root is valid
@@ -29,9 +28,9 @@ public abstract class VcsRepositoryCreator {
   @NonNls public static final ExtensionPointName<VcsRepositoryCreator> EXTENSION_POINT_NAME =
           ExtensionPointName.create("com.intellij.vcsRepositoryCreator");
 
-  @Nullable
-  public abstract Repository createRepositoryIfValid(@NotNull VirtualFile root);
+  @javax.annotation.Nullable
+  public abstract Repository createRepositoryIfValid(@Nonnull VirtualFile root);
 
-  @NotNull
+  @Nonnull
   public abstract VcsKey getVcsKey();
 }

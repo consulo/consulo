@@ -17,15 +17,15 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModelDiff {
   @Nullable
-  public static List<Cmd> createDiffCmds(@NotNull Model<Object> listModel, @NotNull Object[] oldElements, @NotNull Object[] newElements) {
+  public static List<Cmd> createDiffCmds(@Nonnull Model<Object> listModel, @Nonnull Object[] oldElements, @Nonnull Object[] newElements) {
     Diff.Change change = null;
     try {
       change = Diff.buildChanges(oldElements, newElements);
@@ -75,7 +75,7 @@ public class ModelDiff {
     private final int start;
     private final int end;
 
-    private RemoveCmd(@NotNull Model<T> model, final int start, final int end) {
+    private RemoveCmd(@Nonnull Model<T> model, final int start, final int end) {
       myListModel = model;
       this.start = start;
       this.end = end;
@@ -104,7 +104,7 @@ public class ModelDiff {
     private final int idx;
     private final T element;
 
-    private InsertCmd(@NotNull Model<T> model, final int idx, @NotNull T element) {
+    private InsertCmd(@Nonnull Model<T> model, final int idx, @Nonnull T element) {
       myListModel = model;
       this.idx = idx;
       this.element = element;

@@ -16,8 +16,8 @@
 package com.intellij.util.graph.impl;
 
 import com.intellij.util.graph.Graph;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**

@@ -23,29 +23,31 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class VcsGuess {
 
-  @NotNull private final Project myProject;
-  @NotNull private final ProjectLevelVcsManagerImpl myVcsManager;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ProjectLevelVcsManagerImpl myVcsManager;
 
-  public VcsGuess(@NotNull Project project) {
+  public VcsGuess(@Nonnull Project project) {
     myProject = project;
     myVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(myProject);
   }
 
   @Nullable
-  public AbstractVcs getVcsForDirty(@NotNull VirtualFile file) {
+  public AbstractVcs getVcsForDirty(@Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem() && isFileInIndex(null, file)) {
       return myVcsManager.getVcsFor(file);
     }
     return null;
   }
 
-  @Nullable
-  public AbstractVcs getVcsForDirty(@NotNull FilePath filePath) {
+  @javax.annotation.Nullable
+  public AbstractVcs getVcsForDirty(@Nonnull FilePath filePath) {
     if (filePath.isNonLocal()) {
       return null;
     }
@@ -56,7 +58,7 @@ public class VcsGuess {
     return null;
   }
 
-  private boolean isFileInIndex(@Nullable final FilePath filePath, @NotNull final VirtualFile validParent) {
+  private boolean isFileInIndex(@Nullable final FilePath filePath, @Nonnull final VirtualFile validParent) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       public Boolean compute() {
         if (myProject.isDisposed()) return false;
@@ -70,7 +72,7 @@ public class VcsGuess {
     });
   }
 
-  private static boolean isFileInBaseDir(@NotNull  FilePath filePath, @Nullable VirtualFile baseDir) {
+  private static boolean isFileInBaseDir(@Nonnull FilePath filePath, @Nullable VirtualFile baseDir) {
     VirtualFile parent = filePath.getVirtualFileParent();
     return !filePath.isDirectory() && parent != null && parent.equals(baseDir);
   }

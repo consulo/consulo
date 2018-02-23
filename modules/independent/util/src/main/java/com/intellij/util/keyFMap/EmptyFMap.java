@@ -16,7 +16,7 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class EmptyFMap implements KeyFMap {
   private static final Key[] EMPTY_KEYS_ARRAY = {};
@@ -24,24 +24,24 @@ class EmptyFMap implements KeyFMap {
   EmptyFMap() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value) {
+  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     return new OneElementFMap<V>(key, value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public KeyFMap minus(@NotNull Key<?> key) {
+  public KeyFMap minus(@Nonnull Key<?> key) {
     return this;
   }
 
   @Override
-  public <V> V get(@NotNull Key<V> key) {
+  public <V> V get(@Nonnull Key<V> key) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key[] getKeys() {
     return EMPTY_KEYS_ARRAY;

@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.text.DateFormatUtil;
 import com.michaelbaranov.microba.calendar.DatePicker;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

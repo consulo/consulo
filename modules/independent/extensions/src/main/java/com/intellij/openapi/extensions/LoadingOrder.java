@@ -23,8 +23,7 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class LoadingOrder {
     myLast = false;
   }
 
-  private LoadingOrder(@NonNls @NotNull String text) {
+  private LoadingOrder(@NonNls @Nonnull String text) {
     myName = text;
     boolean last = false;
     boolean first = false;
@@ -117,11 +116,11 @@ public class LoadingOrder {
     return new LoadingOrder(AFTER_STR + id);
   }
 
-  public static void sort(@NotNull Orderable... orderable) {
+  public static void sort(@Nonnull Orderable... orderable) {
     sort(Arrays.asList(orderable));
   }
 
-  public static void sort(@NotNull final List<? extends Orderable> orderable) {
+  public static void sort(@Nonnull final List<? extends Orderable> orderable) {
     // our graph is pretty sparse so do benefit from the fact
     final Map<String, Orderable> map = ContainerUtil.newLinkedHashMap();
     final Map<Orderable, LoadingOrder> cachedMap = ContainerUtil.newLinkedHashMap();
@@ -198,7 +197,7 @@ public class LoadingOrder {
   }
 
   public interface Orderable {
-    @Nullable
+    @javax.annotation.Nullable
     String getOrderId();
     LoadingOrder getOrder();
     Element getDescribingElement();

@@ -18,34 +18,37 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedBinaryFile;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChange;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChangeList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class ShelvedChangeListDragBean {
-  @NotNull private List<ShelvedChange> myShelvedChanges;
-  @NotNull private List<ShelvedBinaryFile> myBinaries;
-  @NotNull private List<ShelvedChangeList> myShelvedChangelists;
+  @Nonnull
+  private List<ShelvedChange> myShelvedChanges;
+  @Nonnull
+  private List<ShelvedBinaryFile> myBinaries;
+  @Nonnull
+  private List<ShelvedChangeList> myShelvedChangelists;
 
-  public ShelvedChangeListDragBean(@NotNull List<ShelvedChange> shelvedChanges,
-                                   @NotNull List<ShelvedBinaryFile> binaries,
-                                   @NotNull List<ShelvedChangeList> shelvedChangelists) {
+  public ShelvedChangeListDragBean(@Nonnull List<ShelvedChange> shelvedChanges,
+                                   @Nonnull List<ShelvedBinaryFile> binaries,
+                                   @Nonnull List<ShelvedChangeList> shelvedChangelists) {
     myShelvedChanges = shelvedChanges;
     myBinaries = binaries;
     myShelvedChangelists = shelvedChangelists;
   }
 
-  @NotNull
+  @Nonnull
   public List<ShelvedChange> getChanges() {
     return myShelvedChanges;
   }
 
-  @NotNull
+  @Nonnull
   public List<ShelvedBinaryFile> getBinaryFiles() {
     return myBinaries;
   }
 
-  @NotNull
+  @Nonnull
   public List<ShelvedChangeList> getShelvedChangelists() {
     return myShelvedChangelists;
   }

@@ -24,8 +24,8 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -165,18 +165,18 @@ public abstract class FocusCommand extends ActiveRunnable implements Expirable {
     @Nullable private final Project myProject;
     private Throwable myAllocation;
 
-    public ByComponent(@Nullable Component toFocus, @NotNull Throwable allocation) {
+    public ByComponent(@Nullable Component toFocus, @Nonnull Throwable allocation) {
       this(toFocus, toFocus, null, allocation);
     }
 
-    public ByComponent(@Nullable Component toFocus, @Nullable Component dominationComponent, @Nullable Project project, @NotNull Throwable allocation) {
+    public ByComponent(@Nullable Component toFocus, @Nullable Component dominationComponent, @Nullable Project project, @Nonnull Throwable allocation) {
       super(toFocus, dominationComponent);
       myProject = project;
       myAllocation = allocation;
       myToFocus = toFocus;
     }
 
-    @NotNull
+    @Nonnull
     public final ActionCallback run() {
 
       boolean shouldLogFocuses = Registry.is("ide.log.focuses");

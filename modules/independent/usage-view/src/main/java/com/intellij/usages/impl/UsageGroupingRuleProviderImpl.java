@@ -26,7 +26,7 @@ import com.intellij.usages.UsageViewSettings;
 import com.intellij.usages.impl.rules.*;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageGroupingRuleProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider {
   @Override
-  @NotNull
+  @Nonnull
   public UsageGroupingRule[] getActiveRules(Project project) {
     List<UsageGroupingRule> rules = new ArrayList<UsageGroupingRule>();
     rules.add(new NonCodeUsageGroupingRule(project));
@@ -72,7 +72,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] createGroupingActions(UsageView view) {
     final UsageViewImpl impl = (UsageViewImpl)view;
     final JComponent component = impl.getComponent();

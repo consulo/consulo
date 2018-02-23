@@ -20,8 +20,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.SMTestsRunnerBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -35,12 +34,12 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy>{
     super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.test.title"));
   }
 
-  @NotNull
+  @Nonnull
   public String valueOf(final SMTestProxy testProxy) {
     return testProxy.getPresentableName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Comparator<SMTestProxy> getComparator(){
     return this;
   }

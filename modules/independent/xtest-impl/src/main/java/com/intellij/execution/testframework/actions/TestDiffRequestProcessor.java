@@ -31,16 +31,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class TestDiffRequestProcessor extends DiffRequestProcessor {
-  @NotNull private final List<DiffHyperlink> myRequests;
+  @Nonnull
+  private final List<DiffHyperlink> myRequests;
   private int myIndex;
 
-  public TestDiffRequestProcessor(@Nullable Project project, @NotNull List<DiffHyperlink> requests, int index) {
+  public TestDiffRequestProcessor(@Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
     super(project, DiffPlaces.TESTS_FAILED_ASSERTIONS);
     myRequests = requests;
     myIndex = index;
@@ -57,7 +58,7 @@ public class TestDiffRequestProcessor extends DiffRequestProcessor {
     applyRequest(loadRequest(), force, scrollToChangePolicy);
   }
 
-  @NotNull
+  @Nonnull
   private DiffRequest loadRequest() {
     if (myIndex < 0 || myIndex >= myRequests.size()) return NoDiffRequest.INSTANCE;
     DiffHyperlink hyperlink = myRequests.get(myIndex);

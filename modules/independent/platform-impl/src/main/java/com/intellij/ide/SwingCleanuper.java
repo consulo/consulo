@@ -30,7 +30,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -59,7 +59,7 @@ import java.util.LinkedList;
 public final class SwingCleanuper {
   private final Alarm myAlarm;
 
-  public SwingCleanuper(@NotNull Application application, ProjectManager projectManager) {
+  public SwingCleanuper(@Nonnull Application application, ProjectManager projectManager) {
     myAlarm = new Alarm(application);
     projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
       @Override

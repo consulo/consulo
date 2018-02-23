@@ -16,7 +16,7 @@
 
 package com.intellij.ide.ui.search;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class PorterStemmerUtil {

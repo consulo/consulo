@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,7 +30,7 @@ public class HttpFileSystemImpl extends HttpFileSystemBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "HttpFileSystem";
   }

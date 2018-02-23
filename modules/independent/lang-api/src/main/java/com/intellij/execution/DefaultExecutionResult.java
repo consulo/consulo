@@ -18,7 +18,7 @@ package com.intellij.execution;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +39,11 @@ public class DefaultExecutionResult implements ExecutionResult {
     myActions = AnAction.EMPTY_ARRAY;
   }
 
-  public DefaultExecutionResult(final ExecutionConsole console, @NotNull final ProcessHandler processHandler) {
+  public DefaultExecutionResult(final ExecutionConsole console, @Nonnull final ProcessHandler processHandler) {
     this(console, processHandler, AnAction.EMPTY_ARRAY);
   }
 
-  public DefaultExecutionResult(final ExecutionConsole console, @NotNull final ProcessHandler processHandler, final AnAction... actions) {
+  public DefaultExecutionResult(final ExecutionConsole console, @Nonnull final ProcessHandler processHandler, final AnAction... actions) {
     myConsole = console;
     myProcessHandler = processHandler;
     myActions = actions;
@@ -59,7 +59,7 @@ public class DefaultExecutionResult implements ExecutionResult {
     return myActions;
   }
 
-  public void setActions(@NotNull final AnAction... actions) {
+  public void setActions(@Nonnull final AnAction... actions) {
     myActions = actions;
   }
 
@@ -75,7 +75,7 @@ public class DefaultExecutionResult implements ExecutionResult {
     myStopActions.add(action);
   }
 
-  @NotNull
+  @Nonnull
   public AnAction[] getAdditionalStopActions() {
     return myStopActions.toArray(new AnAction[myStopActions.size()]);
   }

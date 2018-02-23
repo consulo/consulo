@@ -33,8 +33,8 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -54,11 +54,11 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
 
   protected static final WebReference[] EMPTY_ARRAY = new WebReference[0];
 
-  @NotNull
-  protected abstract WebReference[] collectWebReferences(@NotNull PsiFile file);
+  @Nonnull
+  protected abstract WebReference[] collectWebReferences(@Nonnull PsiFile file);
 
   @Nullable
-  protected static WebReference lookForWebReference(@NotNull PsiElement element) {
+  protected static WebReference lookForWebReference(@Nonnull PsiElement element) {
     return lookForWebReference(Arrays.asList(element.getReferences()));
   }
 
@@ -80,7 +80,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   }
 
   @Override
-  public MyInfo[] collectInformation(@NotNull PsiFile file) {
+  public MyInfo[] collectInformation(@Nonnull PsiFile file) {
     final WebReference[] references = collectWebReferences(file);
     final MyInfo[] infos = new MyInfo[references.length];
 
@@ -119,7 +119,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   }
 
   @Override
-  public void apply(@NotNull PsiFile file, MyInfo[] infos, @NotNull AnnotationHolder holder) {
+  public void apply(@Nonnull PsiFile file, MyInfo[] infos, @Nonnull AnnotationHolder holder) {
     if (infos.length == 0) {
       return;
     }
@@ -157,18 +157,18 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
     }
   }
 
-  @NotNull
-  protected abstract String getErrorMessage(@NotNull String url);
+  @Nonnull
+  protected abstract String getErrorMessage(@Nonnull String url);
 
-  @NotNull
+  @Nonnull
   protected IntentionAction[] getQuickFixes() {
     return IntentionAction.EMPTY_ARRAY;
   }
 
-  @NotNull
-  protected abstract HighlightDisplayLevel getHighlightDisplayLevel(@NotNull PsiElement context);
+  @Nonnull
+  protected abstract HighlightDisplayLevel getHighlightDisplayLevel(@Nonnull PsiElement context);
 
-  @NotNull
+  @Nonnull
   private MyFetchResult checkUrl(String url) {
     synchronized (myFetchCacheLock) {
       final MyFetchCacheEntry entry = myFetchCache.get(url);
@@ -215,7 +215,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
     private final long myTime;
     private final MyFetchResult myFetchResult;
 
-    private MyFetchCacheEntry(long time, @NotNull MyFetchResult fetchResult) {
+    private MyFetchCacheEntry(long time, @Nonnull MyFetchResult fetchResult) {
       myTime = time;
       myFetchResult = fetchResult;
     }
@@ -224,7 +224,7 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
       return myTime;
     }
 
-    @NotNull
+    @Nonnull
     public MyFetchResult getFetchResult() {
       return myFetchResult;
     }

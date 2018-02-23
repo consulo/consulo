@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -152,9 +152,10 @@ public class DnDSupport implements DnDTarget, DnDSource, Disposable {
   }
 
   private static class DnDNativeTargetWrapper implements DnDNativeTarget {
-    @NotNull private final DnDTarget myTarget;
+    @Nonnull
+    private final DnDTarget myTarget;
 
-    private DnDNativeTargetWrapper(@NotNull DnDTarget target) {
+    private DnDNativeTargetWrapper(@Nonnull DnDTarget target) {
       myTarget = target;
     }
 

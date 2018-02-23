@@ -5,27 +5,27 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class XLineBreakpointTypeBase extends XLineBreakpointType<XBreakpointProperties> {
   private final XDebuggerEditorsProvider myEditorsProvider;
 
-  protected XLineBreakpointTypeBase(@NonNls @NotNull final String id, @Nls @NotNull final String title, @Nullable XDebuggerEditorsProvider editorsProvider) {
+  protected XLineBreakpointTypeBase(@NonNls @Nonnull final String id, @Nls @Nonnull final String title, @Nullable XDebuggerEditorsProvider editorsProvider) {
     super(id, title);
 
     myEditorsProvider = editorsProvider;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, @NotNull Project project) {
+  public XDebuggerEditorsProvider getEditorsProvider(@Nonnull XLineBreakpoint<XBreakpointProperties> breakpoint, @Nonnull Project project) {
     return myEditorsProvider;
   }
 
   @Override
   @Nullable
-  public XBreakpointProperties createBreakpointProperties(@NotNull final VirtualFile file, final int line) {
+  public XBreakpointProperties createBreakpointProperties(@Nonnull final VirtualFile file, final int line) {
     return null;
   }
 }

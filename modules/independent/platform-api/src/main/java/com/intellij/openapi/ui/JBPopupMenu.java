@@ -21,7 +21,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -224,7 +224,7 @@ public class JBPopupMenu extends JPopupMenu {
       return screenRectangle.height;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Dimension preferredLayoutSize(Container target) {
       Dimension dimension = super.preferredLayoutSize(target);

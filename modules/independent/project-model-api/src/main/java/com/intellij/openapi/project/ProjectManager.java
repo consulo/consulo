@@ -21,8 +21,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -46,15 +46,15 @@ public abstract class ProjectManager {
    *
    * @param listener listener to add
    */
-  public abstract void addProjectManagerListener(@NotNull ProjectManagerListener listener);
-  public abstract void addProjectManagerListener(@NotNull ProjectManagerListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Removes global listener from all projects.
    *
    * @param listener listener to remove
    */
-  public abstract void removeProjectManagerListener(@NotNull ProjectManagerListener listener);
+  public abstract void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
 
   /**
    * Adds listener to the specified project.
@@ -62,7 +62,7 @@ public abstract class ProjectManager {
    * @param project  project to add listener to
    * @param listener listener to add
    */
-  public abstract void addProjectManagerListener(@NotNull Project project, @NotNull ProjectManagerListener listener);
+  public abstract void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
 
   /**
    * Removes listener from the specified project.
@@ -70,14 +70,14 @@ public abstract class ProjectManager {
    * @param project  project to remove listener from
    * @param listener listener to remove
    */
-  public abstract void removeProjectManagerListener(@NotNull Project project, @NotNull ProjectManagerListener listener);
+  public abstract void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
 
   /**
    * Returns the list of currently opened projects.
    *
    * @return the array of currently opened projects.
    */
-  @NotNull
+  @Nonnull
   public abstract Project[] getOpenProjects();
 
   /**
@@ -87,7 +87,7 @@ public abstract class ProjectManager {
    *
    * @return the template project instance.
    */
-  @NotNull
+  @Nonnull
   public abstract Project getDefaultProject();
 
   /**
@@ -104,7 +104,7 @@ public abstract class ProjectManager {
    */
   @Nullable
   @RequiredDispatchThread
-  public abstract Project loadAndOpenProject(@NotNull String filePath) throws IOException, JDOMException, InvalidDataException;
+  public abstract Project loadAndOpenProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   /**
    * Closes the specified project.
@@ -113,14 +113,14 @@ public abstract class ProjectManager {
    * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
    */
   @RequiredDispatchThread
-  public abstract boolean closeProject(@NotNull Project project);
+  public abstract boolean closeProject(@Nonnull Project project);
 
   /**
    * Asynchronously reloads the specified project.
    *
    * @param project the project to reload.
    */
-  public abstract void reloadProject(@NotNull Project project);
+  public abstract void reloadProject(@Nonnull Project project);
 
   /**
    * Create new project in given location.
@@ -130,6 +130,6 @@ public abstract class ProjectManager {
    *
    * @return newly crated project
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Project createProject(String name, String path);
 }

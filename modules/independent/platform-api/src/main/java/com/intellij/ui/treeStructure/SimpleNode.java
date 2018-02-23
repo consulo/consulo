@@ -26,8 +26,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -257,7 +257,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getEqualityObjects() {
     return NONE;
   }

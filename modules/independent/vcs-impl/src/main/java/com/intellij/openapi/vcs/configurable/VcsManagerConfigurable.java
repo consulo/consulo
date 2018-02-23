@@ -29,7 +29,7 @@ import com.intellij.openapi.vcs.changes.conflicts.ChangelistConflictConfigurable
 import com.intellij.openapi.vcs.changes.ui.IgnoredSettingsPanel;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -100,12 +100,12 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getDefaultConfigurableIdValue(this);
   }
 
-  @NotNull
+  @Nonnull
   private static String getDefaultConfigurableIdValue(final Configurable configurable) {
     final String helpTopic = configurable.getHelpTopic();
     return helpTopic == null ? configurable.getClass().getName() : helpTopic;
@@ -171,7 +171,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
   private Configurable createVcsConfigurableWrapper(final VcsDescriptor vcs) {
     final NotNullLazyValue<Configurable> delegate = new NotNullLazyValue<Configurable>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Configurable compute() {
         return ProjectLevelVcsManager.getInstance(myProject).findVcsByName(vcs.getName()).getConfigurable();
@@ -216,7 +216,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getId() {
         return "vcs." + getDisplayName();
       }

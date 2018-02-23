@@ -31,8 +31,8 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -44,13 +44,14 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   private Reference<E> myElement;
   private final SmartPointerElementInfo myElementInfo;
   private byte myReferenceCount = 1;
-  @Nullable SmartPointerTracker.PointerReference pointerReference;
+  @Nullable
+  SmartPointerTracker.PointerReference pointerReference;
 
-  SmartPsiElementPointerImpl(@NotNull Project project, @NotNull E element, @Nullable PsiFile containingFile, boolean forInjected) {
+  SmartPsiElementPointerImpl(@Nonnull Project project, @Nonnull E element, @Nullable PsiFile containingFile, boolean forInjected) {
     this(element, createElementInfo(project, element, containingFile, forInjected));
   }
-  SmartPsiElementPointerImpl(@NotNull E element,
-                             @NotNull SmartPointerElementInfo elementInfo) {
+  SmartPsiElementPointerImpl(@Nonnull E element,
+                             @Nonnull SmartPointerElementInfo elementInfo) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     myElementInfo = elementInfo;
     cacheElement(element);
@@ -67,7 +68,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myElementInfo.getProject();
   }
@@ -136,9 +137,9 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return myElementInfo.getPsiRange();
   }
 
-  @NotNull
-  private static <E extends PsiElement> SmartPointerElementInfo createElementInfo(@NotNull Project project,
-                                                                                  @NotNull E element,
+  @Nonnull
+  private static <E extends PsiElement> SmartPointerElementInfo createElementInfo(@Nonnull Project project,
+                                                                                  @Nonnull E element,
                                                                                   PsiFile containingFile, boolean forInjected) {
     SmartPointerElementInfo elementInfo = doCreateElementInfo(project, element, containingFile, forInjected);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -151,9 +152,9 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return elementInfo;
   }
 
-  @NotNull
-  private static <E extends PsiElement> SmartPointerElementInfo doCreateElementInfo(@NotNull Project project,
-                                                                                    @NotNull E element,
+  @Nonnull
+  private static <E extends PsiElement> SmartPointerElementInfo doCreateElementInfo(@Nonnull Project project,
+                                                                                    @Nonnull E element,
                                                                                     PsiFile containingFile, boolean forInjected) {
     if (element instanceof PsiDirectory) {
       return new DirElementInfo((PsiDirectory)element);
@@ -205,7 +206,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Nullable
-  private static SmartPointerElementInfo createAnchorInfo(@NotNull PsiElement element, @NotNull PsiFile containingFile) {
+  private static SmartPointerElementInfo createAnchorInfo(@Nonnull PsiElement element, @Nonnull PsiFile containingFile) {
     if (element instanceof StubBasedPsiElement && containingFile instanceof PsiFileImpl) {
       IStubFileElementType stubType = ((PsiFileImpl)containingFile).getElementTypeForStubBuilder();
       if (stubType != null && stubType.shouldBuildStubFor(containingFile.getViewProvider().getVirtualFile())) {
@@ -224,12 +225,12 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return null;
   }
 
-  @NotNull
+  @Nonnull
   SmartPointerElementInfo getElementInfo() {
     return myElementInfo;
   }
 
-  static boolean pointsToTheSameElementAs(@NotNull SmartPsiElementPointer pointer1, @NotNull SmartPsiElementPointer pointer2) {
+  static boolean pointsToTheSameElementAs(@Nonnull SmartPsiElementPointer pointer1, @Nonnull SmartPsiElementPointer pointer2) {
     if (pointer1 == pointer2) return true;
     if (pointer1 instanceof SmartPsiElementPointerImpl && pointer2 instanceof SmartPsiElementPointerImpl) {
       SmartPsiElementPointerImpl impl1 = (SmartPsiElementPointerImpl)pointer1;

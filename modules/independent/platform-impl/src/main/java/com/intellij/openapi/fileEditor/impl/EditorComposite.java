@@ -48,8 +48,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -72,7 +72,8 @@ public abstract class EditorComposite implements Disposable {
   /**
    * File for which composite is created
    */
-  @NotNull private final VirtualFile myFile;
+  @Nonnull
+  private final VirtualFile myFile;
   /**
    * Whether the composite is pinned or not
    */
@@ -106,9 +107,9 @@ public abstract class EditorComposite implements Disposable {
    * @exception IllegalArgumentException if {@code editors}
    * is {@code null} or {@code providers} is {@code null} or {@code myEditor} arrays is empty
    */
-  EditorComposite(@NotNull final VirtualFile file,
-                  @NotNull final FileEditor[] editors,
-                  @NotNull final FileEditorManagerEx fileEditorManager) {
+  EditorComposite(@Nonnull final VirtualFile file,
+                  @Nonnull final FileEditor[] editors,
+                  @Nonnull final FileEditorManagerEx fileEditorManager) {
     myFile = file;
     myEditors = editors;
     if (NullUtils.hasNull(editors)) throw new IllegalArgumentException("Must not pass null editors in " + Arrays.asList(editors));
@@ -137,7 +138,7 @@ public abstract class EditorComposite implements Disposable {
 
     myFileEditorManager.addFileEditorManagerListener(new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@NotNull final FileEditorManagerEvent event) {
+      public void selectionChanged(@Nonnull final FileEditorManagerEvent event) {
         final VirtualFile oldFile = event.getOldFile();
         final VirtualFile newFile = event.getNewFile();
         if (Comparing.equal(oldFile, newFile) && Comparing.equal(getFile(), newFile)) {
@@ -160,7 +161,7 @@ public abstract class EditorComposite implements Disposable {
     }, this);
   }
 
-  @NotNull
+  @Nonnull
   private TabbedPaneWrapper.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
     PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
     final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
@@ -247,7 +248,7 @@ public abstract class EditorComposite implements Disposable {
   /**
    * @return file for which composite was created.
    */
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -268,23 +269,23 @@ public abstract class EditorComposite implements Disposable {
    * @return editors which are opened in the composite. <b>Do not modify
    * this array</b>.
    */
-  @NotNull
+  @Nonnull
   public FileEditor[] getEditors() {
     return myEditors;
   }
 
-  @NotNull
-  List<JComponent> getTopComponents(@NotNull FileEditor editor) {
+  @Nonnull
+  List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
     return getTopBottomComponents(editor, true);
   }
 
-  @NotNull
-  public List<JComponent> getBottomComponents(@NotNull FileEditor editor) {
+  @Nonnull
+  public List<JComponent> getBottomComponents(@Nonnull FileEditor editor) {
     return getTopBottomComponents(editor, false);
   }
 
-  @NotNull
-  private List<JComponent> getTopBottomComponents(@NotNull FileEditor editor, boolean top) {
+  @Nonnull
+  private List<JComponent> getTopBottomComponents(@Nonnull FileEditor editor, boolean top) {
     SmartList<JComponent> result = new SmartList<>();
     JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
     for (Component each : container.getComponents()) {
@@ -326,7 +327,7 @@ public abstract class EditorComposite implements Disposable {
     container.revalidate();
   }
 
-  private static int calcComponentInsertionIndex(@NotNull JComponent newComponent, @NotNull JComponent container) {
+  private static int calcComponentInsertionIndex(@Nonnull JComponent newComponent, @Nonnull JComponent container) {
     for (int i = 0, max = container.getComponentCount(); i < max; i++) {
       Component childWrapper = container.getComponent(i);
       Component childComponent = childWrapper instanceof Wrapper ? ((Wrapper)childWrapper).getTargetComponent() : childWrapper;
@@ -342,7 +343,7 @@ public abstract class EditorComposite implements Disposable {
     return -1;
   }
 
-  public void setDisplayName(@NotNull FileEditor editor, @NotNull String name) {
+  public void setDisplayName(@Nonnull FileEditor editor, @Nonnull String name) {
     int index = ContainerUtil.indexOfIdentity(ContainerUtil.immutableList(myEditors), editor);
     assert index != -1;
 
@@ -352,15 +353,15 @@ public abstract class EditorComposite implements Disposable {
     }
   }
 
-  @NotNull
-  protected String getDisplayName(@NotNull FileEditor editor) {
+  @Nonnull
+  protected String getDisplayName(@Nonnull FileEditor editor) {
     return ObjectUtils.notNull(myDisplayNames.get(editor), editor.getName());
   }
 
   /**
    * @return currently selected myEditor.
    */
-  @NotNull
+  @Nonnull
   FileEditor getSelectedEditor() {
     return getSelectedEditorWithProvider().getFirst ();
   }
@@ -372,7 +373,7 @@ public abstract class EditorComposite implements Disposable {
   /**
    * @return currently selected myEditor with its provider.
    */
-  @NotNull
+  @Nonnull
   public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider();
 
   void setSelectedEditor(final int index){
@@ -425,7 +426,7 @@ public abstract class EditorComposite implements Disposable {
     @Nullable
     private JComponent myFocusComponent;
 
-    public MyComponent(@NotNull JComponent realComponent, @Nullable JComponent focusComponent){
+    public MyComponent(@Nonnull JComponent realComponent, @Nullable JComponent focusComponent){
       super(new BorderLayout());
       myFocusComponent = focusComponent;
       add(realComponent, BorderLayout.CENTER);
@@ -456,7 +457,7 @@ public abstract class EditorComposite implements Disposable {
     }
 
     @Override
-    public final Object getData(@NotNull Key<?> dataId){
+    public final Object getData(@Nonnull Key<?> dataId){
       if (PlatformDataKeys.FILE_EDITOR == dataId) {
         return getSelectedEditor();
       }
@@ -487,7 +488,7 @@ public abstract class EditorComposite implements Disposable {
   }
 
   @RequiredDispatchThread
-  void addEditor(@NotNull FileEditor editor) {
+  void addEditor(@Nonnull FileEditor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myEditors = ArrayUtil.append(myEditors, editor);
     if (myTabbedPaneWrapper == null) {
@@ -514,7 +515,7 @@ public abstract class EditorComposite implements Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static SideBorder createTopBottomSideBorder(boolean top) {
     return new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
       @Override

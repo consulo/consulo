@@ -52,8 +52,8 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     });
   }
 
-  public void processAfterVfsChanges(@NotNull List<? extends VFileEvent> events) {
+  public void processAfterVfsChanges(@Nonnull List<? extends VFileEvent> events) {
     boolean pushedSomething = false;
     List<Runnable> delayedTasks = ContainerUtil.newArrayList();
     for (VFileEvent event : events) {
@@ -190,7 +190,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
     }
     final DumbModeTask task = new DumbModeTask() {
       @Override
-      public void performInDumbMode(@NotNull ProgressIndicator indicator) {
+      public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
         performPushTasks();
       }
     };
@@ -400,7 +400,7 @@ public class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater
   }
 
   @Override
-  public void filePropertiesChanged(@NotNull final VirtualFile file) {
+  public void filePropertiesChanged(@Nonnull final VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     FileBasedIndex.getInstance().requestReindex(file);
     for (final Project project : ProjectManager.getInstance().getOpenProjects()) {

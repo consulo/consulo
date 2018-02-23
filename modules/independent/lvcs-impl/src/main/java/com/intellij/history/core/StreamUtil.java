@@ -20,8 +20,8 @@ import com.intellij.history.core.changes.*;
 import com.intellij.history.core.tree.DirectoryEntry;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.core.tree.FileEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -97,12 +97,12 @@ public class StreamUtil {
     change.write(out);
   }
 
-  @NotNull
+  @Nonnull
   public static String readString(DataInput in) throws IOException {
     return in.readUTF();
   }
 
-  public static void writeString(DataOutput out, @NotNull String s) throws IOException {
+  public static void writeString(DataOutput out, @Nonnull String s) throws IOException {
     out.writeUTF(s);
   }
 

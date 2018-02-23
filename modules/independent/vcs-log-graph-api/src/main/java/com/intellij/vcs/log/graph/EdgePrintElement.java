@@ -15,16 +15,16 @@
  */
 package com.intellij.vcs.log.graph;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface EdgePrintElement extends PrintElement {
 
   int getPositionInOtherRow();
 
-  @NotNull
+  @Nonnull
   Type getType();
 
-  @NotNull
+  @Nonnull
   LineStyle getLineStyle();
 
   boolean hasArrow();

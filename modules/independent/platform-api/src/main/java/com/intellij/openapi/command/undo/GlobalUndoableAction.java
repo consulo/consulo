@@ -18,7 +18,7 @@ package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class GlobalUndoableAction extends BasicUndoableAction {
   public GlobalUndoableAction() {
@@ -28,11 +28,11 @@ public abstract class GlobalUndoableAction extends BasicUndoableAction {
     super(refs);
   }
 
-  public GlobalUndoableAction(@NotNull Document... docs) {
+  public GlobalUndoableAction(@Nonnull Document... docs) {
     super(docs);
   }
 
-  public GlobalUndoableAction(@NotNull VirtualFile... files) {
+  public GlobalUndoableAction(@Nonnull VirtualFile... files) {
     super(files);
   }
 

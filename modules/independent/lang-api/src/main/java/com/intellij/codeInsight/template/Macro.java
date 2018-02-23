@@ -19,8 +19,8 @@ package com.intellij.codeInsight.template;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A macro which can be used in live templates.
@@ -37,21 +37,21 @@ public abstract class Macro {
   public abstract String getPresentableName();
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getDefaultValue() {
     return "";
   }
 
   @Nullable
-  public abstract Result calculateResult(@NotNull Expression[] params, ExpressionContext context);
+  public abstract Result calculateResult(@Nonnull Expression[] params, ExpressionContext context);
 
-  @Nullable
-  public Result calculateQuickResult(@NotNull Expression[] params, ExpressionContext context) {
+  @javax.annotation.Nullable
+  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
     return null;
   }
 
   @Nullable
-  public LookupElement[] calculateLookupItems(@NotNull Expression[] params, ExpressionContext context) {
+  public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
     return null;
   }
 

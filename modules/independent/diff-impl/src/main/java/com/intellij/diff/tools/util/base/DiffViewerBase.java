@@ -37,8 +37,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -47,23 +47,29 @@ import java.util.List;
 public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   protected static final Logger LOG = Logger.getInstance(DiffViewerBase.class);
 
-  @NotNull private final List<DiffViewerListener> myListeners = new SmartList<>();
+  @Nonnull
+  private final List<DiffViewerListener> myListeners = new SmartList<>();
 
-  @Nullable protected final Project myProject;
-  @NotNull protected final DiffContext myContext;
-  @NotNull protected final ContentDiffRequest myRequest;
+  @javax.annotation.Nullable
+  protected final Project myProject;
+  @Nonnull
+  protected final DiffContext myContext;
+  @Nonnull
+  protected final ContentDiffRequest myRequest;
 
-  @NotNull private final DiffTaskQueue myTaskExecutor = new DiffTaskQueue();
-  @NotNull private final Alarm myTaskAlarm = new Alarm();
+  @Nonnull
+  private final DiffTaskQueue myTaskExecutor = new DiffTaskQueue();
+  @Nonnull
+  private final Alarm myTaskAlarm = new Alarm();
   private volatile boolean myDisposed;
 
-  public DiffViewerBase(@NotNull DiffContext context, @NotNull ContentDiffRequest request) {
+  public DiffViewerBase(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
     myProject = context.getProject();
     myContext = context;
     myRequest = request;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final FrameDiffTool.ToolbarComponents init() {
     processContextHints();
@@ -155,17 +161,17 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Getters
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public ContentDiffRequest getRequest() {
     return myRequest;
   }
 
-  @NotNull
+  @Nonnull
   public DiffContext getContext() {
     return myContext;
   }
@@ -202,7 +208,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return group;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent getStatusPanel() {
     return null;
   }
@@ -224,8 +230,8 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   }
 
   @CalledInBackground
-  @NotNull
-  protected abstract Runnable performRediff(@NotNull ProgressIndicator indicator);
+  @Nonnull
+  protected abstract Runnable performRediff(@Nonnull ProgressIndicator indicator);
 
   @RequiredDispatchThread
   protected void onDispose() {
@@ -242,23 +248,23 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   //
 
   @RequiredDispatchThread
-  public void addListener(@NotNull DiffViewerListener listener) {
+  public void addListener(@Nonnull DiffViewerListener listener) {
     myListeners.add(listener);
   }
 
   @RequiredDispatchThread
-  public void removeListener(@NotNull DiffViewerListener listener) {
+  public void removeListener(@Nonnull DiffViewerListener listener) {
     myListeners.remove(listener);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   protected List<DiffViewerListener> getListeners() {
     return myListeners;
   }
 
   @RequiredDispatchThread
-  private void fireEvent(@NotNull EventType type) {
+  private void fireEvent(@Nonnull EventType type) {
     for (DiffViewerListener listener : myListeners) {
       switch (type) {
         case INIT:
@@ -284,9 +290,9 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Helpers
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.NAVIGATABLE == dataId) {
       return getNavigatable();
     }

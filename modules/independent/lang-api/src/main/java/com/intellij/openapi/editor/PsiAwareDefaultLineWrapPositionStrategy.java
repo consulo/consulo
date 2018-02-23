@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * {@link LineWrapPositionStrategy} implementation that uses
@@ -30,12 +30,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PsiAwareDefaultLineWrapPositionStrategy extends PsiAwareLineWrapPositionStrategy {
 
-  public PsiAwareDefaultLineWrapPositionStrategy(boolean nonVirtualOnly, @NotNull IElementType ... enabledTypes) {
+  public PsiAwareDefaultLineWrapPositionStrategy(boolean nonVirtualOnly, @Nonnull IElementType ... enabledTypes) {
     super(nonVirtualOnly, enabledTypes);
   }
 
   @Override
-  protected int doCalculateWrapPosition(@NotNull Document document,
+  protected int doCalculateWrapPosition(@Nonnull Document document,
                                         @Nullable Project project,
                                         int startOffset,
                                         int endOffset,

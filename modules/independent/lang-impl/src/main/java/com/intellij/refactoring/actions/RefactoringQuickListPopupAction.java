@@ -20,15 +20,15 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
 
   @Override
   protected void fillActions(@Nullable final Project project,
-                             @NotNull final DefaultActionGroup group,
-                             @NotNull final DataContext dataContext) {
+                             @Nonnull final DefaultActionGroup group,
+                             @Nonnull final DataContext dataContext) {
     if (project == null) {
       return;
     }
@@ -39,9 +39,9 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
   }
 
   private static void collectEnabledChildren(AnAction action,
-                                             @NotNull DefaultActionGroup destinationGroup,
-                                             @NotNull DataContext dataContext,
-                                             @NotNull ActionManager actionManager,
+                                             @Nonnull DefaultActionGroup destinationGroup,
+                                             @Nonnull DataContext dataContext,
+                                             @Nonnull ActionManager actionManager,
                                              boolean popup) {
     if (action instanceof DefaultActionGroup) {
       final AnAction[] children = ((DefaultActionGroup)action).getChildren(null);

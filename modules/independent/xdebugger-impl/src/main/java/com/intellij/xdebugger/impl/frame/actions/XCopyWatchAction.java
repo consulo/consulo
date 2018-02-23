@@ -25,7 +25,7 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author egor
@@ -33,12 +33,12 @@ import org.jetbrains.annotations.NotNull;
 public class XCopyWatchAction extends XWatchesTreeActionBase {
 
   @Override
-  protected boolean isEnabled(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree) {
+  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
     return !getSelectedNodes(tree, XValueNodeImpl.class).isEmpty();
   }
 
   @Override
-  protected void perform(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree, @NotNull final XWatchesView watchesView) {
+  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull final XWatchesView watchesView) {
     final XDebuggerTreeNode root = tree.getRoot();
     for (final XValueNodeImpl node : getSelectedNodes(tree, XValueNodeImpl.class)) {
       node.getValueContainer().calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {

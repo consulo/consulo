@@ -20,7 +20,7 @@ import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,17 +31,17 @@ import org.jetbrains.annotations.NotNull;
 )
 public class AutoTestManager extends AbstractAutoTestManager {
 
-  @NotNull
+  @Nonnull
   public static AutoTestManager getInstance(Project project) {
     return ServiceManager.getService(project, AutoTestManager.class);
   }
 
-  public AutoTestManager(@NotNull Project project) {
+  public AutoTestManager(@Nonnull Project project) {
     super(project);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected AutoTestWatcher createWatcher(Project project) {
     return new DelayedDocumentWatcher(project, myDelayMillis, this::restartAllAutoTests, file -> {
       if (ScratchFileService.getInstance().getRootType(file) != null) {

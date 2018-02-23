@@ -27,12 +27,12 @@ package com.intellij.util;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ParameterizedCachedValueImpl<T,P> extends CachedValueBase<T> implements ParameterizedCachedValue<T,P> {
   private final ParameterizedCachedValueProvider<T,P> myProvider;
 
-  public ParameterizedCachedValueImpl(@NotNull ParameterizedCachedValueProvider<T,P> provider) {
+  public ParameterizedCachedValueImpl(@Nonnull ParameterizedCachedValueProvider<T,P> provider) {
     myProvider = provider;
   }
 

@@ -32,29 +32,36 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsNotifier;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 
 public abstract class DvcsBranchPopup<Repo extends Repository> {
-  @NotNull protected final Project myProject;
-  @NotNull protected final AbstractRepositoryManager<Repo> myRepositoryManager;
-  @NotNull protected final DvcsSyncSettings myVcsSettings;
-  @NotNull protected final AbstractVcs myVcs;
-  @NotNull protected final DvcsMultiRootBranchConfig<Repo> myMultiRootBranchConfig;
+  @Nonnull
+  protected final Project myProject;
+  @Nonnull
+  protected final AbstractRepositoryManager<Repo> myRepositoryManager;
+  @Nonnull
+  protected final DvcsSyncSettings myVcsSettings;
+  @Nonnull
+  protected final AbstractVcs myVcs;
+  @Nonnull
+  protected final DvcsMultiRootBranchConfig<Repo> myMultiRootBranchConfig;
 
-  @NotNull protected final Repo myCurrentRepository;
-  @NotNull protected final ListPopupImpl myPopup;
-  @NotNull protected final String myRepoTitleInfo;
+  @Nonnull
+  protected final Repo myCurrentRepository;
+  @Nonnull
+  protected final ListPopupImpl myPopup;
+  @Nonnull
+  protected final String myRepoTitleInfo;
 
-  protected DvcsBranchPopup(@NotNull Repo currentRepository,
-                            @NotNull AbstractRepositoryManager<Repo> repositoryManager,
-                            @NotNull DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
-                            @NotNull DvcsSyncSettings vcsSettings,
-                            @NotNull Condition<AnAction> preselectActionCondition) {
+  protected DvcsBranchPopup(@Nonnull Repo currentRepository,
+                            @Nonnull AbstractRepositoryManager<Repo> repositoryManager,
+                            @Nonnull DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
+                            @Nonnull DvcsSyncSettings vcsSettings,
+                            @Nonnull Condition<AnAction> preselectActionCondition) {
     myProject = currentRepository.getProject();
     myCurrentRepository = currentRepository;
     myRepositoryManager = repositoryManager;
@@ -71,7 +78,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     warnThatBranchesDivergedIfNeeded();
   }
 
-  @NotNull
+  @Nonnull
   public ListPopup asListPopup() {
     return myPopup;
   }
@@ -101,7 +108,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
             "you may <a href='settings'>disable</a> the setting.";
     NotificationListener listener = new NotificationListener() {
       @Override
-      public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getConfigurable().getDisplayName());
           if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
@@ -113,7 +120,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     VcsNotifier.getInstance(myProject).notifyImportantInfo("Synchronous branch control enabled", description, listener);
   }
 
-  @NotNull
+  @Nonnull
   private ActionGroup createActions() {
     DefaultActionGroup popupGroup = new DefaultActionGroup(null, false);
     AbstractRepositoryManager<Repo> repositoryManager = myRepositoryManager;
@@ -136,12 +143,12 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     return (myVcsSettings.getSyncSetting() != DvcsSyncSettings.Value.DONT_SYNC);
   }
 
-  protected abstract void fillWithCommonRepositoryActions(@NotNull DefaultActionGroup popupGroup,
-                                                          @NotNull AbstractRepositoryManager<Repo> repositoryManager);
+  protected abstract void fillWithCommonRepositoryActions(@Nonnull DefaultActionGroup popupGroup,
+                                                          @Nonnull AbstractRepositoryManager<Repo> repositoryManager);
 
-  @NotNull
-  protected List<Repo> filterRepositoriesNotOnThisBranch(@NotNull final String branch,
-                                                         @NotNull List<Repo> allRepositories) {
+  @Nonnull
+  protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull final String branch,
+                                                         @Nonnull List<Repo> allRepositories) {
     return ContainerUtil.filter(allRepositories, repository -> !branch.equals(repository.getCurrentBranchName()));
   }
 
@@ -151,15 +158,15 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected abstract DefaultActionGroup createRepositoriesActions();
 
   protected boolean highlightCurrentRepo() {
     return !userWantsSyncControl() || myMultiRootBranchConfig.diverged();
   }
 
-  protected abstract void fillPopupWithCurrentRepositoryActions(@NotNull DefaultActionGroup popupGroup,
-                                                                @Nullable DefaultActionGroup actions);
+  protected abstract void fillPopupWithCurrentRepositoryActions(@Nonnull DefaultActionGroup popupGroup,
+                                                                @javax.annotation.Nullable DefaultActionGroup actions);
 
   public static class MyMoreIndex {
     public static final int MAX_REPO_NUM = 8;

@@ -24,8 +24,8 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -36,31 +36,31 @@ public interface ArtifactEditorContext extends PackagingElementResolvingContext 
 
   void queueValidation();
 
-  @NotNull
+  @Nonnull
   ArtifactType getArtifactType();
 
-  @NotNull
+  @Nonnull
   ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
   @Nullable
   ModifiableModuleModel getModifiableModuleModel();
 
-  @NotNull
-  ModifiableRootModel getOrCreateModifiableRootModel(@NotNull Module module);
+  @Nonnull
+  ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module);
 
-  CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact);
+  CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
 
-  void editLayout(@NotNull Artifact artifact, Runnable runnable);
+  void editLayout(@Nonnull Artifact artifact, Runnable runnable);
 
   ArtifactEditor getOrCreateEditor(Artifact originalArtifact);
 
   ArtifactEditor getThisArtifactEditor();
 
-  void selectArtifact(@NotNull Artifact artifact);
+  void selectArtifact(@Nonnull Artifact artifact);
 
-  void selectModule(@NotNull Module module);
+  void selectModule(@Nonnull Module module);
 
-  void selectLibrary(@NotNull Library library);
+  void selectLibrary(@Nonnull Library library);
 
 
   List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, String title);

@@ -22,8 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 
@@ -31,41 +30,41 @@ public interface DocumentContent extends DiffContent {
   /**
    * Represents this content as Document
    */
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   /**
    * This file could be used for better syntax highlighting.
    * Some file types can't be highlighted properly depending only on their FileType (ex: SQL dialects, PHP templates).
    */
-  @Nullable
+  @javax.annotation.Nullable
   default VirtualFile getHighlightFile() { return null; }
 
   /**
    * Provides a way to open given text place in editor
    */
-  @Nullable
-  default Navigatable getNavigatable(@NotNull LineCol position) { return null; }
+  @javax.annotation.Nullable
+  default Navigatable getNavigatable(@Nonnull LineCol position) { return null; }
 
   /**
    * @return original file line separator
    */
-  @Nullable
+  @javax.annotation.Nullable
   default LineSeparator getLineSeparator() { return null; }
 
   /**
    * @return original file charset
    */
-  @Nullable
+  @javax.annotation.Nullable
   default Charset getCharset() { return null; }
 
   /**
    * @return original file byte order mark
    */
-  @Nullable
+  @javax.annotation.Nullable
   default Boolean hasBom() { return null; }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   default OpenFileDescriptor getOpenFileDescriptor(int offset) {
     LineCol position = LineCol.fromOffset(getDocument(), offset);

@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -36,7 +36,7 @@ public interface EditorHighlighterProvider {
    */
 
   EditorHighlighter getEditorHighlighter(@Nullable Project project,
-                                         @NotNull FileType fileType,
-                                         @Nullable final VirtualFile virtualFile,
-                                         @NotNull EditorColorsScheme colors);
+                                         @Nonnull FileType fileType,
+                                         @javax.annotation.Nullable final VirtualFile virtualFile,
+                                         @Nonnull EditorColorsScheme colors);
 }

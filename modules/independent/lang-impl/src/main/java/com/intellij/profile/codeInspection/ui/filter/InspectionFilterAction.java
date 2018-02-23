@@ -37,7 +37,7 @@ import com.intellij.profile.codeInspection.ui.LevelChooserAction;
 import com.intellij.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -113,12 +113,12 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myInspectionsFilter.reset();
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       presentation.setEnabled(!myInspectionsFilter.isEmptyFilter());
     }

@@ -20,8 +20,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -31,25 +31,25 @@ public abstract class TreeFileChooserFactory {
     return ServiceManager.getService(project, TreeFileChooserFactory.class);
   }
 
-  @NotNull
-  public abstract TreeFileChooser createFileChooser(@NotNull String title,
+  @Nonnull
+  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
                                                     @Nullable PsiFile initialFile,
                                                     @Nullable FileType fileType,
                                                     @Nullable TreeFileChooser.PsiFileFilter filter);
 
 
-  @NotNull
-  public abstract TreeFileChooser createFileChooser(@NotNull String title,
-                                                    @Nullable PsiFile initialFile,
-                                                    @Nullable FileType fileType,
+  @Nonnull
+  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
+                                                    @javax.annotation.Nullable PsiFile initialFile,
+                                                    @javax.annotation.Nullable FileType fileType,
                                                     @Nullable TreeFileChooser.PsiFileFilter filter,
                                                     boolean disableStructureProviders);
 
 
-  @NotNull
-  public abstract TreeFileChooser createFileChooser(@NotNull String title,
-                                                    @Nullable PsiFile initialFile,
-                                                    @Nullable FileType fileType,
+  @Nonnull
+  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
+                                                    @javax.annotation.Nullable PsiFile initialFile,
+                                                    @javax.annotation.Nullable FileType fileType,
                                                     @Nullable TreeFileChooser.PsiFileFilter filter,
                                                     boolean disableStructureProviders,
                                                     boolean showLibraryContents);

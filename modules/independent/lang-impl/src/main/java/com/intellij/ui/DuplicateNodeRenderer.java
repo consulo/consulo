@@ -16,9 +16,9 @@
 
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -33,7 +33,8 @@ public class DuplicateNodeRenderer {
   public interface DuplicatableNode<T> {
     //returns first duplicate node, if any, or null if there are none
     //duplicate nodes are painted gray
-    @Nullable T getDuplicate();
+    @Nullable
+    T getDuplicate();
 
   }
 
@@ -75,7 +76,7 @@ public class DuplicateNodeRenderer {
     g.setColor(old);
   }
 
-  @NotNull
+  @Nonnull
   private static Rectangle union(Rectangle r1, Rectangle r2) {
     if (r1 == null) return r2;
     if (r2 == null) return r1;

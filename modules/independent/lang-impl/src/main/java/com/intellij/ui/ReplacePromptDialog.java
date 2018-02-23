@@ -20,8 +20,8 @@ import com.intellij.find.FindManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +44,7 @@ public class ReplacePromptDialog extends DialogWrapper {
     init();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions(){
     DoAction replaceAction = new DoAction(UIBundle.message("replace.prompt.replace.button"), FindManager.PromptResult.OK);

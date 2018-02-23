@@ -30,7 +30,7 @@ import com.intellij.util.containers.JBIterable;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,14 +42,14 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
   private final ProjectFileIndex myProjectFileIndex;
   private final FileTypeManager myFileTypeManager;
 
-  public FileBasedIndexScanRunnableCollectorImpl(@NotNull Project project) {
+  public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project) {
     this.myProject = project;
     this.myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     this.myFileTypeManager = FileTypeManager.getInstance();
   }
 
   @Override
-  public boolean shouldCollect(@NotNull VirtualFile file) {
+  public boolean shouldCollect(@Nonnull VirtualFile file) {
     if (myProjectFileIndex.isInContent(file) || myProjectFileIndex.isInLibraryClasses(file) || myProjectFileIndex.isInLibrarySource(file)) {
       return !myFileTypeManager.isFileIgnored(file);
     }
@@ -57,7 +57,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
   }
 
   @Override
-  public List<Runnable> collectScanRootRunnables(@NotNull ContentIterator processor, ProgressIndicator indicator) {
+  public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
     try (AccessToken ignore = ReadAction.start()) {
       if (myProject.isDisposed()) {
         return Collections.emptyList();

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class ExternalInfo {
   // we keep it to detect rename
@@ -57,7 +57,7 @@ public final class ExternalInfo {
     myCurrentFileName = currentFileName;
   }
 
-  public void copy(@NotNull ExternalInfo externalInfo) {
+  public void copy(@Nonnull ExternalInfo externalInfo) {
     myCurrentFileName = externalInfo.myCurrentFileName;
   }
 

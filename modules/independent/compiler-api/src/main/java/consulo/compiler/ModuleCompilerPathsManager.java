@@ -20,16 +20,16 @@ import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 18:27/20.10.13
  */
 public abstract class ModuleCompilerPathsManager {
-  @NotNull
-  public static ModuleCompilerPathsManager getInstance(@NotNull Module module) {
+  @Nonnull
+  public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
     return ModuleServiceManager.getService(module, ModuleCompilerPathsManager.class);
   }
 
@@ -41,14 +41,14 @@ public abstract class ModuleCompilerPathsManager {
 
   public abstract void setExcludeOutput(boolean val);
 
-  public abstract void setCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
+  public abstract void setCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType, @Nullable String compilerOutputUrl);
 
   @Nullable
-  public abstract String getCompilerOutputUrl(@NotNull ContentFolderTypeProvider contentFolderType);
+  public abstract String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @Nullable
-  public abstract VirtualFile getCompilerOutput(@NotNull ContentFolderTypeProvider contentFolderType);
+  @javax.annotation.Nullable
+  public abstract VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @NotNull
-  public abstract VirtualFilePointer getCompilerOutputPointer(@NotNull ContentFolderTypeProvider contentFolderType);
+  @Nonnull
+  public abstract VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType);
 }

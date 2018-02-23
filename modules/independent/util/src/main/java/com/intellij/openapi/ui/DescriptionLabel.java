@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

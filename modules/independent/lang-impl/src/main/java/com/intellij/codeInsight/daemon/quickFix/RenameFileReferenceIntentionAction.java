@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -42,25 +42,25 @@ class RenameFileReferenceIntentionAction implements IntentionAction, LocalQuickF
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return CodeInsightBundle.message("rename.file.reference.text", myExistingElementName);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return CodeInsightBundle.message("rename.file.reference.family");
   }
 
   @Override
-  public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
+  public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
     if (isAvailable(project, null, null)) {
       new WriteCommandAction(project) {
         @Override
@@ -72,12 +72,12 @@ class RenameFileReferenceIntentionAction implements IntentionAction, LocalQuickF
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
     myFileReference.handleElementRename(myExistingElementName);
   }

@@ -20,16 +20,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class SkipAutopopupInComments extends CompletionConfidence {
 
-  @NotNull
+  @Nonnull
   @Override
-  public ThreeState shouldSkipAutopopup(@NotNull PsiElement contextElement, @NotNull PsiFile psiFile, int offset) {
+  public ThreeState shouldSkipAutopopup(@Nonnull PsiElement contextElement, @Nonnull PsiFile psiFile, int offset) {
     if (PsiTreeUtil.getNonStrictParentOfType(contextElement, PsiComment.class) != null) {
       return ThreeState.YES;
     }

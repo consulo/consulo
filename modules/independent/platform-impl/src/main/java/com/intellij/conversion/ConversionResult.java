@@ -16,7 +16,7 @@
 package com.intellij.conversion;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,5 +26,5 @@ public interface ConversionResult {
 
   boolean openingIsCanceled();
 
-  void postStartupActivity(@NotNull Project project);
+  void postStartupActivity(@Nonnull Project project);
 }

@@ -41,8 +41,8 @@ import com.intellij.util.ui.Html;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -632,7 +632,7 @@ public class IdeTooltipManager implements ApplicationComponent, AWTEventListener
             BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "IDE Tooltip Manager";

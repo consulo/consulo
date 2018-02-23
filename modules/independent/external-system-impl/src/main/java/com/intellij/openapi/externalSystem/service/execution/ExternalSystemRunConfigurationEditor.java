@@ -5,7 +5,7 @@ import com.intellij.openapi.externalSystem.util.PaintAwarePanel;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +16,10 @@ import java.awt.*;
  */
 public class ExternalSystemRunConfigurationEditor extends SettingsEditor<ExternalSystemRunConfiguration> {
 
-  @NotNull private final ExternalSystemTaskSettingsControl myControl;
+  @Nonnull
+  private final ExternalSystemTaskSettingsControl myControl;
 
-  public ExternalSystemRunConfigurationEditor(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  public ExternalSystemRunConfigurationEditor(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     myControl = new ExternalSystemTaskSettingsControl(project, externalSystemId);
   }
 
@@ -33,7 +34,7 @@ public class ExternalSystemRunConfigurationEditor extends SettingsEditor<Externa
     myControl.apply(s.getSettings());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createEditor() {
     PaintAwarePanel result = new PaintAwarePanel(new GridBagLayout());

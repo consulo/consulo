@@ -27,7 +27,7 @@ import com.intellij.vcs.log.graph.impl.print.elements.EdgePrintElementImpl;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 import com.intellij.vcs.log.graph.impl.print.elements.SimplePrintElementImpl;
 import com.intellij.vcs.log.graph.impl.print.elements.TerminalEdgePrintElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,15 +35,17 @@ import java.util.Map;
 
 public abstract class AbstractPrintElementGenerator implements PrintElementGenerator {
 
-  @NotNull protected final LinearGraph myLinearGraph;
-  @NotNull protected final PrintElementManager myPrintElementManager;
+  @Nonnull
+  protected final LinearGraph myLinearGraph;
+  @Nonnull
+  protected final PrintElementManager myPrintElementManager;
 
-  protected AbstractPrintElementGenerator(@NotNull LinearGraph linearGraph, @NotNull PrintElementManager printElementManager) {
+  protected AbstractPrintElementGenerator(@Nonnull LinearGraph linearGraph, @Nonnull PrintElementManager printElementManager) {
     myLinearGraph = linearGraph;
     myPrintElementManager = printElementManager;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<PrintElementWithGraphElement> getPrintElements(int rowIndex) {
     Collection<PrintElementWithGraphElement> result = new ArrayList<>();
 
@@ -93,15 +95,15 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
     return result;
   }
 
-  @NotNull
-  private SimplePrintElementImpl createSimplePrintElement(int rowIndex, @NotNull SimpleRowElement rowElement) {
+  @Nonnull
+  private SimplePrintElementImpl createSimplePrintElement(int rowIndex, @Nonnull SimpleRowElement rowElement) {
     return new SimplePrintElementImpl(rowIndex, rowElement.myPosition, rowElement.myElement, myPrintElementManager);
   }
 
-  @NotNull
+  @Nonnull
   private EdgePrintElementImpl createEdgePrintElement(int rowIndex,
-                                                      @NotNull ShortEdge shortEdge,
-                                                      @NotNull EdgePrintElement.Type type,
+                                                      @Nonnull ShortEdge shortEdge,
+                                                      @Nonnull EdgePrintElement.Type type,
                                                       boolean hasArrow) {
     int positionInCurrentRow, positionInOtherRow;
     if (type == EdgePrintElement.Type.DOWN) {
@@ -116,9 +118,9 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
                                     myPrintElementManager);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PrintElementWithGraphElement withGraphElement(@NotNull PrintElement printElement) {
+  public PrintElementWithGraphElement withGraphElement(@Nonnull PrintElement printElement) {
     if (printElement instanceof PrintElementWithGraphElement) {
       return (PrintElementWithGraphElement)printElement;
     }
@@ -131,18 +133,19 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   }
 
   // rowIndex in [0, getCountVisibleRow() - 2]
-  @NotNull
+  @Nonnull
   protected abstract Collection<ShortEdge> getDownShortEdges(int rowIndex);
 
-  @NotNull
+  @Nonnull
   protected abstract Collection<SimpleRowElement> getSimpleRowElements(int rowIndex);
 
   protected static class ShortEdge {
-    @NotNull public final GraphEdge myEdge;
+    @Nonnull
+    public final GraphEdge myEdge;
     public final int myUpPosition;
     public final int myDownPosition;
 
-    public ShortEdge(@NotNull GraphEdge edge, int upPosition, int downPosition) {
+    public ShortEdge(@Nonnull GraphEdge edge, int upPosition, int downPosition) {
       myEdge = edge;
       myUpPosition = upPosition;
       myDownPosition = downPosition;
@@ -150,11 +153,13 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   }
 
   protected static class SimpleRowElement {
-    @NotNull public final GraphElement myElement;
-    @NotNull public final RowElementType myType;
+    @Nonnull
+    public final GraphElement myElement;
+    @Nonnull
+    public final RowElementType myType;
     public final int myPosition;
 
-    public SimpleRowElement(@NotNull GraphElement element, @NotNull RowElementType type, int position) {
+    public SimpleRowElement(@Nonnull GraphElement element, @Nonnull RowElementType type, int position) {
       myElement = element;
       myPosition = position;
       myType = type;

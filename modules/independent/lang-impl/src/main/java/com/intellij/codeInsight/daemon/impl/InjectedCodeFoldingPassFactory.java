@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -38,14 +38,14 @@ public class InjectedCodeFoldingPassFactory extends AbstractProjectComponent imp
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "InjectedCodeFoldingPassFactory";
   }
 
   @Override
-  @NotNull
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  @Nonnull
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     return new InjectedCodeFoldingPass(myProject, editor, file);
   }
 }

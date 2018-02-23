@@ -25,8 +25,7 @@ import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.ThrowableRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,23 +38,25 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
 
   private static final Logger LOG = Logger.getInstance(BackgroundTaskGroup.class);
 
-  @NotNull protected final List<VcsException> myExceptions = createLockFreeCopyOnWriteList();
-  @NotNull private final Project myProject;
+  @Nonnull
+  protected final List<VcsException> myExceptions = createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final Project myProject;
 
-  public BackgroundTaskGroup(@NotNull Project project, @NotNull String title) {
+  public BackgroundTaskGroup(@Nonnull Project project, @Nonnull String title) {
     super(project, title);
     myProject = project;
   }
 
   @Override
-  public void run(@NotNull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @javax.annotation.Nullable ModalityState modalityState, @javax.annotation.Nullable ProgressIndicator indicator) {
     throw new UnsupportedOperationException();
   }
 
-  public void runInBackground(@NotNull String title, @NotNull ThrowableConsumer<ProgressIndicator, VcsException> task) {
+  public void runInBackground(@Nonnull String title, @Nonnull ThrowableConsumer<ProgressIndicator, VcsException> task) {
     myProcessor.add(continuation -> new Task.Backgroundable(myProject, title, true) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         try {
           task.consume(indicator);
@@ -74,7 +75,7 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
       }
 
       @Override
-      public void onThrowable(@NotNull Throwable e) {
+      public void onThrowable(@Nonnull Throwable e) {
         LOG.error(e);
         end();
       }
@@ -86,7 +87,7 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
     }.queue());
   }
 
-  public void runInEdt(@NotNull ThrowableRunnable<VcsException> task) {
+  public void runInEdt(@Nonnull ThrowableRunnable<VcsException> task) {
     myProcessor.add(continuation -> {
       boolean isSuccess = false;
       try {
@@ -106,7 +107,7 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
     });
   }
 
-  public void addError(@NotNull VcsException e) {
+  public void addError(@Nonnull VcsException e) {
     myExceptions.add(e);
   }
 

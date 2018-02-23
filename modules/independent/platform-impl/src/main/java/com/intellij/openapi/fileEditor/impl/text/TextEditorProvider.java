@@ -36,10 +36,11 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -73,20 +74,20 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
   }
 
   @Override
-  public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return isTextFile(file) && !SingleRootFileViewProvider.isTooLargeForContentLoading(file);
   }
 
   @Override
-  @NotNull
-  public FileEditor createEditor(@NotNull Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
     LOG.assertTrue(accept(project, file));
     return new TextEditorImpl(project, file, this);
   }
 
   @Override
-  @NotNull
-  public FileEditorState readState(@NotNull Element element, @NotNull Project project, @NotNull VirtualFile file) {
+  @Nonnull
+  public FileEditorState readState(@Nonnull Element element, @Nonnull Project project, @Nonnull VirtualFile file) {
     TextEditorState state = new TextEditorState();
 
     try {
@@ -133,7 +134,7 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
   }
 
   @Override
-  public void writeState(@NotNull FileEditorState _state, @NotNull Project project, @NotNull Element element) {
+  public void writeState(@Nonnull FileEditorState _state, @Nonnull Project project, @Nonnull Element element) {
     TextEditorState state = (TextEditorState)_state;
 
     element.setAttribute(RELATIVE_CARET_POSITION_ATTR, Integer.toString(state.RELATIVE_CARET_POSITION));
@@ -153,19 +154,19 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getEditorTypeId() {
     return TYPE_ID;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.NONE;
   }
 
-  @NotNull
-  public TextEditor getTextEditor(@NotNull Editor editor) {
+  @Nonnull
+  public TextEditor getTextEditor(@Nonnull Editor editor) {
     TextEditor textEditor = editor.getUserData(TEXT_EDITOR_KEY);
     if (textEditor == null) {
       textEditor = createWrapperForEditor(editor);
@@ -175,13 +176,13 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     return textEditor;
   }
 
-  @NotNull
-  protected EditorWrapper createWrapperForEditor(@NotNull Editor editor) {
+  @Nonnull
+  protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
     return new EditorWrapper(editor);
   }
 
   @Nullable
-  public static Document[] getDocuments(@NotNull FileEditor editor) {
+  public static Document[] getDocuments(@Nonnull FileEditor editor) {
     if (editor instanceof DocumentsEditor) {
       DocumentsEditor documentsEditor = (DocumentsEditor)editor;
       Document[] documents = documentsEditor.getDocuments();
@@ -211,8 +212,8 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     editor.putUserData(TEXT_EDITOR_KEY, textEditor);
   }
 
-  @NotNull
-  protected TextEditorState getStateImpl(final Project project, @NotNull Editor editor, @NotNull FileEditorStateLevel level){
+  @Nonnull
+  protected TextEditorState getStateImpl(final Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level){
     TextEditorState state = new TextEditorState();
     CaretModel caretModel = editor.getCaretModel();
     if (caretModel.supportsMultipleCarets()) {
@@ -241,7 +242,7 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     return state;
   }
 
-  public static boolean isTextFile(@NotNull VirtualFile file) {
+  public static boolean isTextFile(@Nonnull VirtualFile file) {
     if (file.isDirectory() || !file.isValid()) {
       return false;
     }
@@ -318,18 +319,18 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
   protected class EditorWrapper extends UserDataHolderBase implements TextEditor {
     private final Editor myEditor;
 
-    EditorWrapper(@NotNull Editor editor) {
+    EditorWrapper(@Nonnull Editor editor) {
       myEditor = editor;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Editor getEditor() {
       return myEditor;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public JComponent getComponent() {
       return myEditor.getComponent();
     }
@@ -340,7 +341,7 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getName() {
       return "Text";
     }
@@ -362,13 +363,13 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     }
 
     @Override
-    @NotNull
-    public FileEditorState getState(@NotNull FileEditorStateLevel level) {
+    @Nonnull
+    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
       return getStateImpl(null, myEditor, level);
     }
 
     @Override
-    public void setState(@NotNull FileEditorState state) {
+    public void setState(@Nonnull FileEditorState state) {
       setStateImpl(null, myEditor, (TextEditorState)state);
     }
 
@@ -392,10 +393,10 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     public void deselectNotify() { }
 
     @Override
-    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) { }
+    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
 
     @Override
-    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) { }
+    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) { }
 
     @Override
     public BackgroundEditorHighlighter getBackgroundHighlighter() {
@@ -408,12 +409,12 @@ public class TextEditorProvider implements FileEditorProvider, DumbAware {
     }
 
     @Override
-    public boolean canNavigateTo(@NotNull final Navigatable navigatable) {
+    public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
       return false;
     }
 
     @Override
-    public void navigateTo(@NotNull final Navigatable navigatable) {
+    public void navigateTo(@Nonnull final Navigatable navigatable) {
     }
   }
 }

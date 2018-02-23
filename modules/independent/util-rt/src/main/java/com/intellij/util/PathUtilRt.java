@@ -18,8 +18,7 @@ package com.intellij.util;
 import com.intellij.openapi.diagnostic.LoggerRt;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -29,8 +28,8 @@ import java.util.Set;
  * @author nik
  */
 public class PathUtilRt {
-  @NotNull
-  public static String getFileName(@NotNull String path) {
+  @Nonnull
+  public static String getFileName(@Nonnull String path) {
     if (path.length() == 0) return "";
     char c = path.charAt(path.length() - 1);
     int end = c == '/' || c == '\\' ? path.length() - 1 : path.length();
@@ -38,8 +37,8 @@ public class PathUtilRt {
     return path.substring(start, end);
   }
 
-  @NotNull
-  public static String getParentPath(@NotNull String path) {
+  @Nonnull
+  public static String getParentPath(@Nonnull String path) {
     if (path.length() == 0) return "";
     int end = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
     if (end == path.length() - 1) {
@@ -48,13 +47,13 @@ public class PathUtilRt {
     return end == -1 ? "" : path.substring(0, end);
   }
 
-  @NotNull
-  public static String suggestFileName(@NotNull String text) {
+  @Nonnull
+  public static String suggestFileName(@Nonnull String text) {
     return suggestFileName(text, false, false);
   }
 
-  @NotNull
-  public static String suggestFileName(@NotNull String text, boolean allowDots, boolean allowSpaces) {
+  @Nonnull
+  public static String suggestFileName(@Nonnull String text, boolean allowDots, boolean allowSpaces) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
@@ -72,7 +71,7 @@ public class PathUtilRt {
    * Checks whether a file with the given name can be created on a current platform.
    * @see #isValidFileName(String, Platform, boolean, Charset)
    */
-  public static boolean isValidFileName(@NotNull String fileName, boolean strict) {
+  public static boolean isValidFileName(@Nonnull String fileName, boolean strict) {
     return isValidFileName(fileName, Platform.CURRENT, strict, FS_CHARSET);
   }
 
@@ -94,7 +93,7 @@ public class PathUtilRt {
    * @param strict prohibits names containing any of characters {@code <>:"/\|?*;} and control characters (range 0..31).
    * @param cs     prohibits names which cannot be encoded by this charset (optional).
    */
-  public static boolean isValidFileName(@NotNull String name, @NotNull Platform os, boolean strict, @Nullable Charset cs) {
+  public static boolean isValidFileName(@Nonnull String name, @Nonnull Platform os, boolean strict, @javax.annotation.Nullable Charset cs) {
     if (name.length() == 0 || name.equals(".") || name.equals("..")) {
       return false;
     }

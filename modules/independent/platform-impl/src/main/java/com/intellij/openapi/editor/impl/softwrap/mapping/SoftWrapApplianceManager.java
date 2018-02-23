@@ -35,8 +35,8 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -105,13 +105,13 @@ public class SoftWrapApplianceManager implements Dumpable {
   private boolean                        myInProgress;
   private boolean                        myIsDirty = true;
   private IncrementalCacheUpdateEvent    myDocumentChangedEvent;
-  @NotNull
+  @Nonnull
   private final Rectangle                myAvailableArea = new Rectangle(); // mutable
 
 
-  public SoftWrapApplianceManager(@NotNull SoftWrapsStorage storage,
-                                  @NotNull EditorImpl editor,
-                                  @NotNull SoftWrapPainter painter,
+  public SoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage,
+                                  @Nonnull EditorImpl editor,
+                                  @Nonnull SoftWrapPainter painter,
                                   CachingSoftWrapDataMapper dataMapper)
   {
     myStorage = storage;
@@ -170,7 +170,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     final int[] lastRecalculatedOffset = new int[] {0};
     SoftWrapAwareDocumentParsingListenerAdapter listener = new SoftWrapAwareDocumentParsingListenerAdapter() {
       @Override
-      public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event) {
+      public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
         lastRecalculatedOffset[0] = event.getActualEndOffset();
       }
     };
@@ -219,7 +219,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     }
   }
 
-  private void recalculateSoftWraps(@NotNull IncrementalCacheUpdateEvent event) {
+  private void recalculateSoftWraps(@Nonnull IncrementalCacheUpdateEvent event) {
     if (myEditor.getDocument() instanceof DocumentImpl && ((DocumentImpl)myEditor.getDocument()).acceptsSlashR()) {
       LOG.error("Soft wrapping is not supported for documents with non-standard line endings. File: " + myEditor.getVirtualFile());
     }
@@ -672,7 +672,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     return registerSoftWrap(softWrapOffset, spaceSize, lineData);
   }
 
-  @NotNull
+  @Nonnull
   private SoftWrapImpl registerSoftWrap(int offset, int spaceSize, LogicalLineData lineData) {
     assert !DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), offset);
     int indentInColumns = 0;
@@ -873,11 +873,11 @@ public class SoftWrapApplianceManager implements Dumpable {
    * @param listener    listener to register
    * @return            <code>true</code> if this collection changed as a result of the call; <code>false</code> otherwise
    */
-  public boolean addListener(@NotNull SoftWrapAwareDocumentParsingListener listener) {
+  public boolean addListener(@Nonnull SoftWrapAwareDocumentParsingListener listener) {
     return myListeners.add(listener);
   }
 
-  public boolean removeListener(@NotNull SoftWrapAwareDocumentParsingListener listener) {
+  public boolean removeListener(@Nonnull SoftWrapAwareDocumentParsingListener listener) {
     return myListeners.remove(listener);
   }
 
@@ -911,12 +911,12 @@ public class SoftWrapApplianceManager implements Dumpable {
     myDocumentChangedEvent = null;
   }
 
-  public void setWidthProvider(@NotNull VisibleAreaWidthProvider widthProvider) {
+  public void setWidthProvider(@Nonnull VisibleAreaWidthProvider widthProvider) {
     myWidthProvider = widthProvider;
     reset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return String.format(
@@ -935,7 +935,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     myPainter = painter;
   }
 
-  @NotNull
+  @Nonnull
   public Rectangle getAvailableArea() {
     return myAvailableArea;
   }

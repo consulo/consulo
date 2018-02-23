@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -30,7 +30,7 @@ public final class LibraryGroupElement {
   
   private final Module myModule;
 
-  public LibraryGroupElement(@NotNull Module module) {
+  public LibraryGroupElement(@Nonnull Module module) {
     myModule = module;
   }
 

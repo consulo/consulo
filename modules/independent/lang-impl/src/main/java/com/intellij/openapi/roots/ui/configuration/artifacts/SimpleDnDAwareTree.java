@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.ide.dnd.DnDAware;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class SimpleDnDAwareTree extends SimpleTree implements DnDAware {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return this;
   }

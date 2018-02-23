@@ -25,7 +25,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -58,7 +58,7 @@ public class PathsList {
     addAllLast(chooseFirstTimeItems(path), myPath);
   }
 
-  public void remove(@NotNull String path) {
+  public void remove(@Nonnull String path) {
     myPath.remove(path);
     myPathTail.remove(path);
     myPathSet.remove(path);
@@ -106,12 +106,12 @@ public class PathsList {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getPathsString() {
     return StringUtil.join(getPathList(), File.pathSeparator);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getPathList() {
     List<String> result = new ArrayList<>();
     result.addAll(myPath);

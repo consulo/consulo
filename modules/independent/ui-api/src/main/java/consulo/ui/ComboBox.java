@@ -17,7 +17,7 @@ package consulo.ui;
 
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,14 +28,14 @@ import java.util.function.Function;
  * @since 09-Jun-16
  */
 public interface ComboBox<E> extends ValueComponent<E> {
-  @NotNull
+  @Nonnull
   @SafeVarargs
-  static <E> ComboBox<E> create(@NotNull E... elements) {
+  static <E> ComboBox<E> create(@Nonnull E... elements) {
     return UIInternal.get()._Components_comboBox(new ImmutableListModel<E>(elements));
   }
 
-  @NotNull
-  static <E> ComboBox<E> create(@NotNull ListModel<E> model) {
+  @Nonnull
+  static <E> ComboBox<E> create(@Nonnull ListModel<E> model) {
     return UIInternal.get()._Components_comboBox(model);
   }
 
@@ -58,7 +58,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
       return this;
     }
 
-    @NotNull
+    @Nonnull
     @SuppressWarnings("unchecked")
     public ComboBox<K> build() {
       K[] objects = (K[])myValues.keySet().toArray();
@@ -68,15 +68,15 @@ public interface ComboBox<E> extends ValueComponent<E> {
     }
   }
 
-  @NotNull
+  @Nonnull
   static <K> Builder<K> builder() {
     return new Builder<>();
   }
 
-  @NotNull
+  @Nonnull
   ListModel<E> getListModel();
 
-  void setRender(@NotNull ListItemRender<E> render);
+  void setRender(@Nonnull ListItemRender<E> render);
 
   void setValueByIndex(int index);
 }

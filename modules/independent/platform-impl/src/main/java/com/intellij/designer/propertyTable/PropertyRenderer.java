@@ -17,8 +17,8 @@ package com.intellij.designer.propertyTable;
 
 import com.intellij.designer.model.PropertiesContainer;
 import com.intellij.designer.model.PropertyContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -26,7 +26,7 @@ import javax.swing.*;
  * @author Alexander Lobas
  */
 public interface PropertyRenderer {
-  @NotNull
+  @Nonnull
   JComponent getComponent(@Nullable PropertiesContainer container,
                           PropertyContext context, @Nullable Object value, boolean selected, boolean hasFocus);
 

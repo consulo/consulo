@@ -17,9 +17,9 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ abstract class FileTemplateTab {
 
   public abstract void fireDataChanged();
 
-  @NotNull 
+  @Nonnull
   public FileTemplate[] getTemplates() {
     return myTemplates.toArray(new FileTemplate[myTemplates.size()]);
   }

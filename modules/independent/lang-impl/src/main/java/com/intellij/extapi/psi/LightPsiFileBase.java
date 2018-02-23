@@ -20,7 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.LightPsiFileImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {
   public LightPsiFileBase(final FileViewProvider provider, final Language language) {
@@ -33,7 +33,7 @@ public abstract class LightPsiFileBase extends LightPsiFileImpl {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitFile(this);
   }
 }

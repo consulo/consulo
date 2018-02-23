@@ -17,9 +17,9 @@ package com.intellij.ide;
 
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -31,7 +31,7 @@ import java.util.List;
 public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
   private final JTree myTree;
 
-  public OccurenceNavigatorSupport(@NotNull JTree tree) {
+  public OccurenceNavigatorSupport(@Nonnull JTree tree) {
     myTree = tree;
   }
 
@@ -85,7 +85,7 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     int myOccurencesCount;
   }
 
-  private DefaultMutableTreeNode findNode(@NotNull JTree tree, boolean forward, Counters counters) {
+  private DefaultMutableTreeNode findNode(@Nonnull JTree tree, boolean forward, Counters counters) {
     TreePath selectionPath = tree.getSelectionPath();
     TreeNode selectedNode = null;
     if (selectionPath != null) {
@@ -94,7 +94,7 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     return findNode(tree, selectedNode, forward, counters);
   }
 
-  public DefaultMutableTreeNode findNode(@NotNull JTree tree, TreeNode selectedNode, boolean forward, Counters counters) {
+  public DefaultMutableTreeNode findNode(@Nonnull JTree tree, TreeNode selectedNode, boolean forward, Counters counters) {
     boolean[] ready = {selectedNode == null};
 
     DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();

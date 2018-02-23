@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.history;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Date;

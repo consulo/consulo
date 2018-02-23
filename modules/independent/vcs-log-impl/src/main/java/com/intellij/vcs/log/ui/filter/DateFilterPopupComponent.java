@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.versionBrowser.DateFilterComponent;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcs.log.VcsLogDateFilter;
 import com.intellij.vcs.log.data.VcsLogDateFilterImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -37,9 +37,9 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
     super("Date", filterModel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String getText(@NotNull VcsLogDateFilter filter) {
+  protected String getText(@Nonnull VcsLogDateFilter filter) {
     Date after = filter.getAfter();
     Date before = filter.getBefore();
     if (after != null && before != null) {
@@ -58,7 +58,7 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
 
   @Nullable
   @Override
-  protected String getToolTip(@NotNull VcsLogDateFilter filter) {
+  protected String getToolTip(@Nonnull VcsLogDateFilter filter) {
     return null;
   }
 
@@ -79,15 +79,16 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
 
   private class DateAction extends DumbAwareAction {
 
-    @NotNull private final Date mySince;
+    @Nonnull
+    private final Date mySince;
 
-    DateAction(@NotNull Date since, @NotNull String text) {
+    DateAction(@Nonnull Date since, @Nonnull String text) {
       super(text);
       mySince = since;
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myFilterModel.setFilter(new VcsLogDateFilterImpl(mySince, null));
     }
   }
@@ -99,7 +100,7 @@ class DateFilterPopupComponent extends FilterPopupComponent<VcsLogDateFilter> {
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final DateFilterComponent dateComponent = new DateFilterComponent(false, DateFormatUtil.getDateFormat().getDelegate());
       VcsLogDateFilter currentFilter = myFilterModel.getFilter();
       if (currentFilter != null) {

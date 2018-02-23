@@ -26,8 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public abstract class DiffElement<T> {
 
   public abstract String getPath();
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
   public String getPresentablePath() {
@@ -61,7 +61,7 @@ public abstract class DiffElement<T> {
 
   public abstract DiffElement[] getChildren() throws IOException;
 
-  @Nullable
+  @javax.annotation.Nullable
   public Navigatable getNavigatable(@Nullable Project project) {
     return null;
   }
@@ -71,10 +71,10 @@ public abstract class DiffElement<T> {
    * @return content byte array
    * @throws java.io.IOException when reading
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract byte[] getContent() throws IOException;
 
-  @NotNull
+  @Nonnull
   public Charset getCharset() {
     return EncodingManager.getInstance().getDefaultCharset();
   }
@@ -85,7 +85,7 @@ public abstract class DiffElement<T> {
     return "/";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return null;
   }
@@ -95,8 +95,8 @@ public abstract class DiffElement<T> {
    *
    * @see com.intellij.diff.chains.DiffRequestProducer#process
    */
-  @NotNull
-  public DiffContent createDiffContent(@Nullable Project project, @NotNull ProgressIndicator indicator)
+  @Nonnull
+  public DiffContent createDiffContent(@javax.annotation.Nullable Project project, @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     try {
       final T src = getValue();
@@ -114,7 +114,7 @@ public abstract class DiffElement<T> {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Callable<DiffElement<T>> getElementChooser(Project project) {
     return null;
   }
@@ -137,7 +137,7 @@ public abstract class DiffElement<T> {
    * @return <code>true</code> if coping was completed successfully,
    *        <code>false</code> otherwise
    */
-  @Nullable
+  @javax.annotation.Nullable
   public DiffElement<?> copyTo(DiffElement<T> container, String relativePath) {
     return null;
   }

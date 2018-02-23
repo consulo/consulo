@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.SimpleContentRevision;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -72,7 +72,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
     return myNewContentRevision;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, final PatchReader patchReader) {
     final PatchChange change = getChange();
@@ -85,9 +85,9 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
       }
     };
     return new DiffRequestProducer() {
-      @NotNull
+      @Nonnull
       @Override
-      public DiffRequest process(@NotNull UserDataHolder context, @NotNull ProgressIndicator indicator)
+      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
               throws DiffRequestProducerException, ProcessCanceledException {
         if (myCurrentBase != null && myCurrentBase.getFileType() == UnknownFileType.INSTANCE) {
           return new UnknownFileTypeDiffRequest(myCurrentBase, getName());
@@ -112,7 +112,7 @@ public class TextFilePatchInProgress extends AbstractFilePatchInProgress<TextFil
         }
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         final File ioCurrentBase = getIoCurrentBase();

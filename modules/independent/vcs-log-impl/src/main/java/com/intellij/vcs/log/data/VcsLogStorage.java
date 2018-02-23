@@ -20,8 +20,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Storage for various Log objects like CommitId or VcsRef
@@ -38,7 +38,7 @@ public interface VcsLogStorage {
    * @param root root of the repository for the commit
    * @return a commit index
    */
-  int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root);
+  int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
 
   /**
    * Returns a commit for a specified index or null if this index does not correspond to any commit.
@@ -55,7 +55,7 @@ public interface VcsLogStorage {
    * @return matching commit or null if no commit matches the given condition
    */
   @Nullable
-  CommitId findCommitId(@NotNull Condition<CommitId> condition);
+  CommitId findCommitId(@Nonnull Condition<CommitId> condition);
 
   /**
    * Returns an integer index that is a unique identifier for a reference.
@@ -63,7 +63,7 @@ public interface VcsLogStorage {
    * @param ref reference
    * @return a reference index
    */
-  int getRefIndex(@NotNull VcsRef ref);
+  int getRefIndex(@Nonnull VcsRef ref);
 
   /**
    * Returns a reference for a specified index or null if this index does not correspond to any reference.

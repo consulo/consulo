@@ -16,7 +16,7 @@
 package com.intellij.remote;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Irina.Chernushina on 2/4/2016.
@@ -25,6 +25,6 @@ public interface RemoteMappingsListener {
   Topic<RemoteMappingsListener> REMOTE_MAPPINGS_CHANGED =
     new Topic<>("remotesdk.RemoteMappingsListener", RemoteMappingsListener.class);
 
-  void mappingsChanged(@NotNull String prefix, @NotNull String serverId);
+  void mappingsChanged(@Nonnull String prefix, @Nonnull String serverId);
   void mappingsChanged();
 }

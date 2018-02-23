@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,19 +35,19 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
   private final Color myFillColor;
   private final Color myBorderColor;
 
-  public NotificationBalloonShadowBorderProvider(@NotNull Color fillColor, @NotNull Color borderColor) {
+  public NotificationBalloonShadowBorderProvider(@Nonnull Color fillColor, @Nonnull Color borderColor) {
     myFillColor = fillColor;
     myBorderColor = borderColor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Insets getInsets() {
     return INSETS;
   }
 
   @Override
-  public void paintShadow(@NotNull JComponent component, @NotNull Graphics g) {
+  public void paintShadow(@Nonnull JComponent component, @Nonnull Graphics g) {
     int width = component.getWidth();
     int height = component.getHeight();
 
@@ -85,9 +85,9 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     Shadow.Bottom_left.paintIcon(component, g, 0, height - bottomLeftHeight);
   }
 
-  private static void drawLine(@NotNull JComponent component,
-                               @NotNull Graphics g,
-                               @NotNull Icon icon,
+  private static void drawLine(@Nonnull JComponent component,
+                               @Nonnull Graphics g,
+                               @Nonnull Icon icon,
                                int fullLength,
                                int start,
                                int end,
@@ -122,7 +122,7 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
   }
 
   @Override
-  public void paintBorder(@NotNull Rectangle bounds, @NotNull Graphics2D g) {
+  public void paintBorder(@Nonnull Rectangle bounds, @Nonnull Graphics2D g) {
     g.setColor(myFillColor);
     g.fill(new Rectangle2D.Double(bounds.x, bounds.y, bounds.width, bounds.height));
     g.setColor(myBorderColor);
@@ -130,10 +130,10 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
   }
 
   @Override
-  public void paintPointingShape(@NotNull Rectangle bounds,
-                                 @NotNull Point pointTarget,
-                                 @NotNull Balloon.Position position,
-                                 @NotNull Graphics2D g) {
+  public void paintPointingShape(@Nonnull Rectangle bounds,
+                                 @Nonnull Point pointTarget,
+                                 @Nonnull Balloon.Position position,
+                                 @Nonnull Graphics2D g) {
     int x, y, length;
 
     if (position == Balloon.Position.above) {

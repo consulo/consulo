@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityInvokator;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -29,27 +29,27 @@ class ModalityInvokatorImpl implements ModalityInvokator {
   ModalityInvokatorImpl() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback invokeLater(@NotNull Runnable runnable) {
+  public ActionCallback invokeLater(@Nonnull Runnable runnable) {
     return invokeLater(runnable, ApplicationManager.getApplication().getDisposed());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull Condition expired) {
+  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
     return LaterInvocator.invokeLater(runnable, expired);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired) {
+  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
     return LaterInvocator.invokeLater(runnable, state, expired);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state) {
+  public ActionCallback invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     return invokeLater(runnable, state, ApplicationManager.getApplication().getDisposed());
   }
 }

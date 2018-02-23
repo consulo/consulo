@@ -4,14 +4,15 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +38,7 @@ public class ComboBoxWithHistory extends JComboBox {
     setModelFrom(items);
   }
 
-  public ComboBoxWithHistory(@NotNull String historyId, Object[] items) {
+  public ComboBoxWithHistory(@Nonnull String historyId, Object[] items) {
     this(null, historyId, items);
   }
 

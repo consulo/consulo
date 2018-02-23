@@ -16,8 +16,8 @@
 package consulo.vfs.impl.archive;
 
 import com.intellij.util.containers.EmptyIterator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 public interface ArchiveFile {
   ArchiveFile EMPTY = new ArchiveFile() {
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       throw new UnsupportedOperationException();
@@ -39,11 +39,11 @@ public interface ArchiveFile {
 
     @Nullable
     @Override
-    public InputStream getInputStream(@NotNull ArchiveEntry entry) throws IOException {
+    public InputStream getInputStream(@Nonnull ArchiveEntry entry) throws IOException {
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<? extends ArchiveEntry> entries() {
       return EmptyIterator.getInstance();
@@ -55,16 +55,16 @@ public interface ArchiveFile {
     }
   };
 
-  @NotNull
+  @Nonnull
   String getName();
 
   @Nullable
   ArchiveEntry getEntry(String name);
 
   @Nullable
-  InputStream getInputStream(@NotNull ArchiveEntry entry) throws IOException;
+  InputStream getInputStream(@Nonnull ArchiveEntry entry) throws IOException;
 
-  @NotNull
+  @Nonnull
   Iterator<? extends ArchiveEntry> entries();
 
   int getSize();

@@ -4,7 +4,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -21,7 +21,7 @@ public class CustomFoldingConfigurable implements SearchableConfigurable {
     mySettingsPanel = new CustomFoldingSettingsPanel();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return getDisplayName();

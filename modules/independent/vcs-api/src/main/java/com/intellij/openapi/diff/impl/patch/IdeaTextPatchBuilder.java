@@ -26,8 +26,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -77,12 +76,12 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static List<FilePatch> buildPatch(final Project project, final Collection<Change> changes, final String basePath, final boolean reversePatch) throws VcsException {
     return buildPatch(project, changes, basePath, reversePatch, false);
   }
 
-  @NotNull
+  @Nonnull
   public static List<FilePatch> buildPatch(final Project project, final Collection<Change> changes, final String basePath,
                                            final boolean reversePatch, final boolean includeBaseText) throws VcsException {
     final Collection<BeforeAfter<AirContentRevision>> revisions;
@@ -102,12 +101,12 @@ public class IdeaTextPatchBuilder {
     }, includeBaseText);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr) {
     return convertRevisionToAir(cr, null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr, final Long ts) {
     if (cr == null) return null;
     final FilePath fp = cr.getFile();
@@ -132,7 +131,7 @@ public class IdeaTextPatchBuilder {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
         @Override
-        @NotNull
+        @Nonnull
         public PathDescription getPath() {
           return description;
         }
@@ -161,7 +160,7 @@ public class IdeaTextPatchBuilder {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
         @Override
-        @NotNull
+        @Nonnull
         public PathDescription getPath() {
           return description;
         }
@@ -174,8 +173,8 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @Nullable
-  private static AirContentRevision convertRevision(@Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
+  @javax.annotation.Nullable
+  private static AirContentRevision convertRevision(@javax.annotation.Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
     if (cr == null) return null;
     final Date date = provider.getRevisionDate(cr.getRevisionNumber(), cr.getFile());
     final Long ts = date == null ? null : date.getTime();

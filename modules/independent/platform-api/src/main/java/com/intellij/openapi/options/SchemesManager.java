@@ -18,26 +18,26 @@ package com.intellij.openapi.options;
 import com.intellij.util.ThrowableConvertor;
 import consulo.util.pointers.Named;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class SchemesManager<T extends Named, E extends ExternalizableScheme> {
-  @NotNull
+  @Nonnull
   public abstract Collection<E> loadSchemes();
 
-  public abstract void addNewScheme(@NotNull T scheme, final boolean replaceExisting);
+  public abstract void addNewScheme(@Nonnull T scheme, final boolean replaceExisting);
 
   public abstract void clearAllSchemes();
 
-  @NotNull
+  @Nonnull
   public abstract List<T> getAllSchemes();
 
   @Nullable
-  public abstract T findSchemeByName(@NotNull String schemeName);
+  public abstract T findSchemeByName(@Nonnull String schemeName);
 
   public abstract void save();
 
@@ -46,13 +46,13 @@ public abstract class SchemesManager<T extends Named, E extends ExternalizableSc
   @Nullable
   public abstract T getCurrentScheme();
 
-  public abstract void removeScheme(@NotNull T scheme);
+  public abstract void removeScheme(@Nonnull T scheme);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<String> getAllSchemeNames();
 
   public abstract File getRootDirectory();
 
-  public void loadBundledScheme(@NotNull String resourceName, @NotNull Object requestor, @NotNull ThrowableConvertor<Element, T, Throwable> convertor) {
+  public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableConvertor<Element, T, Throwable> convertor) {
   }
 }

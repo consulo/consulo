@@ -16,7 +16,7 @@
 package com.intellij.find.impl;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface FindUI {
   void showUI();
@@ -27,6 +27,6 @@ public interface FindUI {
 
   void initByModel();
 
-  @NotNull
+  @Nonnull
   Disposable getDisposable();
 }

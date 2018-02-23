@@ -14,8 +14,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.IntroduceTargetChooser;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -23,12 +23,12 @@ import java.util.List;
  * @author Nikolay Matveev
  */
 public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElement> extends AnAction {
-  @NotNull
+  @Nonnull
   protected final Class<T> myClass;  
-  @NotNull
+  @Nonnull
   protected final Class<? extends PsiFile> myFileClass;
 
-  protected SelectionBasedPsiElementInternalAction(@NotNull Class<T> aClass, @NotNull Class<? extends PsiFile> fileClass) {
+  protected SelectionBasedPsiElementInternalAction(@Nonnull Class<T> aClass, @Nonnull Class<? extends PsiFile> fileClass) {
     myClass = aClass;
     myFileClass = fileClass;
   }
@@ -47,12 +47,12 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
         editor, expressions,
         new Pass<T>() {
           @Override
-          public void pass(@NotNull T expression) {
+          public void pass(@Nonnull T expression) {
             performOnElement(editor, expression);
           }
         },
         new Function<T, String>() {
-          public String fun(@NotNull T expression) {
+          public String fun(@Nonnull T expression) {
             return expression.getText();
           }
         }
@@ -66,7 +66,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     }
   }
 
-  protected void showError(@NotNull final Editor editor) {
+  protected void showError(@Nonnull final Editor editor) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -76,7 +76,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     });
   }
 
-  private void performOnElement(@NotNull final Editor editor, @NotNull T first) {
+  private void performOnElement(@Nonnull final Editor editor, @Nonnull T first) {
     final TextRange textRange = first.getTextRange();
     editor.getSelectionModel().setSelection(textRange.getStartOffset(), textRange.getEndOffset());
     final String informationHint = getInformationHint(first);
@@ -99,13 +99,13 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   }
 
   @Nullable
-  protected abstract String getInformationHint(@NotNull T element);
+  protected abstract String getInformationHint(@Nonnull T element);
 
-  @NotNull
+  @Nonnull
   protected abstract String getErrorHint();
 
-  @NotNull
-  protected List<T> getElement(@NotNull Editor editor, @NotNull PsiFile file) {
+  @Nonnull
+  protected List<T> getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
     final SelectionModel selectionModel = editor.getSelectionModel();
     if (selectionModel.hasSelection()) {
       return ContainerUtil.list(getElementFromSelection(file, selectionModel));
@@ -113,13 +113,13 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     return getElementAtOffset(editor, file);
   }
 
-  @NotNull
-  protected List<T> getElementAtOffset(@NotNull Editor editor, @NotNull PsiFile file) {
+  @Nonnull
+  protected List<T> getElementAtOffset(@Nonnull Editor editor, @Nonnull PsiFile file) {
     return ContainerUtil.list(PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), myClass, false));
   }
 
   @Nullable
-  protected T getElementFromSelection(@NotNull PsiFile file, @NotNull SelectionModel selectionModel) {
+  protected T getElementFromSelection(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
     final int selectionStart = selectionModel.getSelectionStart();
     final int selectionEnd = selectionModel.getSelectionEnd();
     return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass);
@@ -134,12 +134,12 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   }
 
   @Nullable
-  private static Editor getEditor(@NotNull AnActionEvent e) {
+  private static Editor getEditor(@Nonnull AnActionEvent e) {
     return e.getDataContext().getData(PlatformDataKeys.EDITOR);
   }
 
   @Nullable
-  private static PsiFile getPsiFile(@NotNull AnActionEvent e) {
+  private static PsiFile getPsiFile(@Nonnull AnActionEvent e) {
     return e.getDataContext().getData(LangDataKeys.PSI_FILE);
   }
 }

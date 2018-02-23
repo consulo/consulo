@@ -10,7 +10,7 @@ import com.intellij.util.io.socketConnection.*;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
   private Thread myThread;
   private final Alarm myTimeoutAlarm;
 
-  public ResponseProcessor(@NotNull SocketConnection<?, R> connection) {
+  public ResponseProcessor(@Nonnull SocketConnection<?, R> connection) {
     myTimeoutAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, connection);
   }
 
@@ -113,13 +113,13 @@ public class ResponseProcessor<R extends AbstractResponse> {
     }
   }
 
-  public <T extends R> void registerHandler(@NotNull Class<T> responseClass, @NotNull AbstractResponseHandler<T> handler) {
+  public <T extends R> void registerHandler(@Nonnull Class<T> responseClass, @Nonnull AbstractResponseHandler<T> handler) {
     synchronized (myLock) {
       myClassHandlers.put(responseClass, handler);
     }
   }
 
-  public void registerHandler(int id, @NotNull AbstractResponseToRequestHandler<?> handler) {
+  public void registerHandler(int id, @Nonnull AbstractResponseToRequestHandler<?> handler) {
     synchronized (myLock) {
       myHandlers.put(id, handler);
     }

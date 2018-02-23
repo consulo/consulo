@@ -21,7 +21,7 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,17 +30,17 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PredefinedBundlesProvider {
   public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create("com.intellij.predefinedBundlesProvider");
 
-  public abstract void createBundles(@NotNull Consumer<SdkImpl> consumer);
+  public abstract void createBundles(@Nonnull Consumer<SdkImpl> consumer);
 
-  @NotNull
-  public SdkImpl createSdkWithName(@NotNull SdkType sdkType, @NotNull String suggestName) {
+  @Nonnull
+  public SdkImpl createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
     String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, SdkTable.getInstance().getAllSdks());
 
     return new SdkImpl(uniqueSdkName, sdkType);
   }
 
-  @NotNull
-  public SdkImpl createSdk(@NotNull SdkType sdkType, @NotNull String sdkHome) {
+  @Nonnull
+  public SdkImpl createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
     return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
   }
 }

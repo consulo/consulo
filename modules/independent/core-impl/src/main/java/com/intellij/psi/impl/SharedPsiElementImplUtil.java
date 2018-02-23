@@ -22,8 +22,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class SharedPsiElementImplUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static PsiReference[] getReferences(PsiElement thisElement) {
     PsiReference ref = thisElement.getReference();
     if (ref == null) return PsiReference.EMPTY_ARRAY;

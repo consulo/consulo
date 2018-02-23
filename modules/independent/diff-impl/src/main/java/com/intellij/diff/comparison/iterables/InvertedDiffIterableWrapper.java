@@ -16,15 +16,16 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 class InvertedDiffIterableWrapper extends DiffIterableBase {
-  @NotNull private final DiffIterable myIterable;
+  @Nonnull
+  private final DiffIterable myIterable;
 
-  public InvertedDiffIterableWrapper(@NotNull DiffIterable iterable) {
+  public InvertedDiffIterableWrapper(@Nonnull DiffIterable iterable) {
     myIterable = iterable;
   }
 
@@ -39,13 +40,13 @@ class InvertedDiffIterableWrapper extends DiffIterableBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<Range> changes() {
     return myIterable.unchanged();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<Range> unchanged() {
     return myIterable.changes();
   }

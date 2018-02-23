@@ -18,8 +18,8 @@ package com.intellij.util.text;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -41,15 +41,15 @@ public class StringSearcher {
     return myPatternLength;
   }
 
-  public StringSearcher(@NotNull String pattern, boolean caseSensitive, boolean forwardDirection) {
+  public StringSearcher(@Nonnull String pattern, boolean caseSensitive, boolean forwardDirection) {
     this(pattern, caseSensitive, forwardDirection, false);
   }
 
-  public StringSearcher(@NotNull String pattern, boolean caseSensitive, boolean forwardDirection, boolean handleEscapeSequences) {
+  public StringSearcher(@Nonnull String pattern, boolean caseSensitive, boolean forwardDirection, boolean handleEscapeSequences) {
     this(pattern, caseSensitive, forwardDirection, handleEscapeSequences, true);
   }
 
-  public StringSearcher(@NotNull String pattern,
+  public StringSearcher(@Nonnull String pattern,
                         boolean caseSensitive,
                         boolean forwardDirection,
                         boolean handleEscapeSequences,
@@ -75,7 +75,7 @@ public class StringSearcher {
                         Character.isJavaIdentifierPart(pattern.charAt(pattern.length() - 1)));
   }
 
-  @NotNull
+  @Nonnull
   public String getPattern(){
     return myPattern;
   }
@@ -96,16 +96,16 @@ public class StringSearcher {
     return myHandleEscapeSequences;
   }
 
-  public int scan(@NotNull CharSequence text) {
+  public int scan(@Nonnull CharSequence text) {
     return scan(text,0,text.length());
   }
 
-  public int scan(@NotNull CharSequence text, int _start, int _end) {
+  public int scan(@Nonnull CharSequence text, int _start, int _end) {
     return scan(text, null, _start, _end);
   }
 
-  @NotNull
-  public int[] findAllOccurrences(@NotNull CharSequence text) {
+  @Nonnull
+  public int[] findAllOccurrences(@Nonnull CharSequence text) {
     int end = text.length();
     TIntArrayList result = new TIntArrayList();
     for (int index = 0; index < end; index++) {
@@ -117,7 +117,7 @@ public class StringSearcher {
     return result.toNativeArray();
   }
 
-  public int scan(@NotNull CharSequence text, @Nullable char[] textArray, int _start, int _end) {
+  public int scan(@Nonnull CharSequence text, @Nullable char[] textArray, int _start, int _end) {
     if (_start > _end) {
       throw new AssertionError("start > end, " + _start + ">" + _end);
     }
@@ -198,7 +198,7 @@ public class StringSearcher {
     }
   }
 
-  private char normalizedCharAt(@NotNull CharSequence text, @Nullable char[] textArray, int index) {
+  private char normalizedCharAt(@Nonnull CharSequence text, @Nullable char[] textArray, int index) {
     char lastChar = textArray != null ? textArray[index] : text.charAt(index);
     if (myCaseSensitive) {
       return lastChar;

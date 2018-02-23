@@ -15,7 +15,7 @@
  */
 package com.intellij.diagnostic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Dumpable {
 
-  @NotNull
+  @Nonnull
   String dumpState();
 }

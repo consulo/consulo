@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SafeDeleteAction extends BaseRefactoringAction {
   public SafeDeleteAction() {
@@ -42,7 +42,7 @@ public class SafeDeleteAction extends BaseRefactoringAction {
   }
 
   @Override
-  public boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     for (PsiElement element : elements) {
       if (!SafeDeleteProcessor.validElement(element)) return false;
     }
@@ -50,12 +50,12 @@ public class SafeDeleteAction extends BaseRefactoringAction {
   }
 
   @Override
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull final PsiElement element, @NotNull final Editor editor, @NotNull PsiFile file, @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull final PsiElement element, @Nonnull final Editor editor, @Nonnull PsiFile file, @Nonnull DataContext context) {
     return SafeDeleteProcessor.validElement(element);
   }
 
   @Override
-  public RefactoringActionHandler getHandler(@NotNull DataContext dataContext) {
+  public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
     return new SafeDeleteHandler();
   }
 

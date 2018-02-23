@@ -16,11 +16,11 @@
 package com.intellij.diff.requests;
 
 import com.intellij.diff.DiffContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class ComponentDiffRequest extends DiffRequest {
-  @NotNull
-  public abstract JComponent getComponent(@NotNull DiffContext context);
+  @Nonnull
+  public abstract JComponent getComponent(@Nonnull DiffContext context);
 }

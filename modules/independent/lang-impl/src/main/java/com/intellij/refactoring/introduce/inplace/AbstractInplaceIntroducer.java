@@ -46,8 +46,8 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.PositionTracker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,7 +171,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   @Override
   protected abstract JComponent getComponent();
 
-  protected abstract void saveSettings(@NotNull V variable);
+  protected abstract void saveSettings(@Nonnull V variable);
   @Override
   protected abstract V getVariable();
 
@@ -404,10 +404,10 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   protected void correctExpression() {}
 
   @Override
-  protected void addHighlights(@NotNull Map<TextRange, TextAttributes> ranges,
-                               @NotNull Editor editor,
-                               @NotNull Collection<RangeHighlighter> highlighters,
-                               @NotNull HighlightManager highlightManager) {
+  protected void addHighlights(@Nonnull Map<TextRange, TextAttributes> ranges,
+                               @Nonnull Editor editor,
+                               @Nonnull Collection<RangeHighlighter> highlighters,
+                               @Nonnull HighlightManager highlightManager) {
     final TextAttributes attributes =
       EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
     final V variable = getVariable();

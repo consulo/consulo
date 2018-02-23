@@ -17,14 +17,14 @@ package consulo.sandboxPlugin.lang.psi;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandDef extends ASTWrapperPsiElement {
-  public SandDef(@NotNull ASTNode node) {
+  public SandDef(@Nonnull ASTNode node) {
     super(node);
   }
 }

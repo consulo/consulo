@@ -17,7 +17,7 @@ package consulo.lang;
 
 import com.intellij.lang.Language;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ public class BaseLanguageVersion<T extends Language> extends LanguageVersion {
     super(name, name, language);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public T getLanguage() {
     return (T)super.getLanguage();

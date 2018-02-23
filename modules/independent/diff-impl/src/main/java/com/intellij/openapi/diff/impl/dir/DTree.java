@@ -21,8 +21,7 @@ import com.intellij.ide.diff.DiffType;
 import com.intellij.ide.diff.DirDiffSettings;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.SortedList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -47,7 +46,8 @@ public class DTree {
   };
 
   private boolean myExpanded = true;
-  @Nullable private final DTree myParent;
+  @javax.annotation.Nullable
+  private final DTree myParent;
   private HashMap<String, DTree> myChildren;
   private String myName;
   private final boolean isContainer;
@@ -59,13 +59,13 @@ public class DTree {
   private String mySeparator = null;
   private String myPath = null;
 
-  public DTree(@Nullable DTree parent, @NotNull String name, boolean container) {
+  public DTree(@javax.annotation.Nullable DTree parent, @Nonnull String name, boolean container) {
     this.myParent = parent;
     this.myName = name;
     isContainer = container;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<DTree> getChildren() {
     init();
     if (myChildrenList == null) {
@@ -75,7 +75,7 @@ public class DTree {
     return myChildrenList;
   }
 
-  public DTree addChild(@NotNull DiffElement element, boolean source) {
+  public DTree addChild(@Nonnull DiffElement element, boolean source) {
     init();
     myChildrenList = null;
     final DTree node;
@@ -122,7 +122,7 @@ public class DTree {
     return myName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public DTree getParent() {
     return myParent;
   }

@@ -28,7 +28,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -122,7 +122,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     return myPanel;
   }
 
-  protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
+  protected void updatePresentation(boolean isSelected, @Nonnull IdeaPluginDescriptor pluginNode, TableModel model) {
     final IdeaPluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
     if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
       if (!isSelected) {

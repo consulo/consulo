@@ -20,7 +20,7 @@ import com.intellij.util.IntSLRUCache;
 import com.intellij.util.containers.IntObjectLinkedMap;
 import com.intellij.util.io.PersistentStringEnumerator;
 import com.intellij.util.text.ByteArrayCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,13 +39,13 @@ public class FileNameCache {
     }
   }
 
-  public static int storeName(@NotNull String name) {
+  public static int storeName(@Nonnull String name) {
     final int idx = FSRecords.getNameId(name);
     cacheData(name, idx, calcStripeIdFromNameId(idx));
     return idx;
   }
 
-  @NotNull
+  @Nonnull
   private static IntObjectLinkedMap.MapEntry<CharSequence> cacheData(String name, int id, int stripe) {
     if (name == null) {
       ourNames.markCorrupted();
@@ -80,7 +80,7 @@ public class FileNameCache {
   private static final AtomicInteger ourQueries = new AtomicInteger();
   private static final AtomicInteger ourMisses = new AtomicInteger();
 
-  @NotNull
+  @Nonnull
   public static CharSequence getVFileName(int nameId) {
     assert nameId > 0;
 

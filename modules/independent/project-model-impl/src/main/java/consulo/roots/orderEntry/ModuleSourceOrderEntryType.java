@@ -20,31 +20,31 @@ import com.intellij.openapi.util.InvalidDataException;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
-  @NotNull
+  @Nonnull
   public static ModuleSourceOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleSourceOrderEntryType.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "sourceFolder";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleSourceOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public ModuleSourceOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     return new ModuleSourceOrderEntryImpl((ModuleRootLayerImpl)moduleRootLayer);
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull ModuleSourceOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleSourceOrderEntryImpl orderEntry) {
   }
 }

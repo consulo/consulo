@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.autodetect;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LineIndentInfo {
   public static final LineIndentInfo EMPTY_LINE = new LineIndentInfo(LineType.EMPTY_LINE, -1);
@@ -27,12 +27,12 @@ public class LineIndentInfo {
   private final int myIndentSize;
   private final LineType myType;
 
-  private LineIndentInfo(@NotNull LineType type, int indentSize) {
+  private LineIndentInfo(@Nonnull LineType type, int indentSize) {
     myType = type;
     myIndentSize = indentSize;
   }
 
-  @NotNull
+  @Nonnull
   public static LineIndentInfo newNormalIndent(int indentSize) {
     return new LineIndentInfo(LineType.LINE_WITH_NORMAL_WHITESPACE_INDENT, indentSize);
   }

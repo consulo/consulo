@@ -16,23 +16,23 @@
 package com.intellij.notification;
 
 import com.intellij.ide.BrowserUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.net.URL;
 
 public interface NotificationListener {
-  void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event);
+  void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event);
 
   abstract class Adapter implements NotificationListener {
     @Override
-    public final void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+    public final void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         hyperlinkActivated(notification, event);
       }
     }
 
-    protected abstract void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e);
+    protected abstract void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e);
   }
 
   NotificationListener URL_OPENING_LISTENER = new UrlOpeningListener(false);
@@ -45,7 +45,7 @@ public interface NotificationListener {
     }
 
     @Override
-    protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       URL url = event.getURL();
       if (url == null) {
         BrowserUtil.browse(event.getDescription());

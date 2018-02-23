@@ -26,8 +26,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +39,17 @@ import java.util.Set;
  */
 public class CustomTemplateCallback {
   private final TemplateManager myTemplateManager;
-  @NotNull private final Editor myEditor;
-  @NotNull private final PsiFile myFile;
+  @Nonnull
+  private final Editor myEditor;
+  @Nonnull
+  private final PsiFile myFile;
   private final int myOffset;
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final boolean myInInjectedFragment;
   private Set<TemplateContextType> myApplicableContextTypes;
 
-  public CustomTemplateCallback(@NotNull Editor editor, @NotNull PsiFile file) {
+  public CustomTemplateCallback(@Nonnull Editor editor, @Nonnull PsiFile file) {
     myProject = file.getProject();
     myTemplateManager = TemplateManager.getInstance(myProject);
 
@@ -62,12 +65,12 @@ public class CustomTemplateCallback {
     return myTemplateManager;
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement getContext() {
     return getContext(myFile, myOffset);
   }
@@ -76,18 +79,18 @@ public class CustomTemplateCallback {
     return myOffset;
   }
 
-  public static int getOffset(@NotNull Editor editor) {
+  public static int getOffset(@Nonnull Editor editor) {
     return Math.max(editor.getSelectionModel().getSelectionStart() - 1, 0);
   }
 
   @Nullable
-  public TemplateImpl findApplicableTemplate(@NotNull String key) {
+  public TemplateImpl findApplicableTemplate(@Nonnull String key) {
     List<TemplateImpl> templates = findApplicableTemplates(key);
     return templates.size() > 0 ? templates.get(0) : null;
   }
 
-  @NotNull
-  public List<TemplateImpl> findApplicableTemplates(@NotNull String key) {
+  @Nonnull
+  public List<TemplateImpl> findApplicableTemplates(@Nonnull String key) {
     List<TemplateImpl> result = new ArrayList<TemplateImpl>();
     for (TemplateImpl candidate : getMatchingTemplates(key)) {
       if (isAvailableTemplate(candidate)) {
@@ -97,22 +100,22 @@ public class CustomTemplateCallback {
     return result;
   }
 
-  private boolean isAvailableTemplate(@NotNull TemplateImpl template) {
+  private boolean isAvailableTemplate(@Nonnull TemplateImpl template) {
     if (myApplicableContextTypes == null) {
       myApplicableContextTypes = TemplateManagerImpl.getApplicableContextTypes(myFile, myOffset);
     }
     return !template.isDeactivated() && TemplateManagerImpl.isApplicable(template, myApplicableContextTypes);
   }
 
-  public void startTemplate(@NotNull Template template, Map<String, String> predefinedValues, TemplateEditingListener listener) {
+  public void startTemplate(@Nonnull Template template, Map<String, String> predefinedValues, TemplateEditingListener listener) {
     if(myInInjectedFragment) {
       template.setToReformat(false);
     }
     myTemplateManager.startTemplate(myEditor, template, false, predefinedValues, listener);
   }
 
-  @NotNull
-  private static List<TemplateImpl> getMatchingTemplates(@NotNull String templateKey) {
+  @Nonnull
+  private static List<TemplateImpl> getMatchingTemplates(@Nonnull String templateKey) {
     TemplateSettings settings = TemplateSettings.getInstance();
     List<TemplateImpl> candidates = new ArrayList<TemplateImpl>();
     for (TemplateImpl template : settings.getTemplates(templateKey)) {
@@ -123,28 +126,28 @@ public class CustomTemplateCallback {
     return candidates;
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return myFile.getFileType();
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  public void deleteTemplateKey(@NotNull String key) {
+  public void deleteTemplateKey(@Nonnull String key) {
     int caretAt = myEditor.getCaretModel().getOffset();
     myEditor.getDocument().deleteString(caretAt - key.length(), caretAt);
   }
 
-  @NotNull
-  public static PsiElement getContext(@NotNull PsiFile file, int offset) {
+  @Nonnull
+  public static PsiElement getContext(@Nonnull PsiFile file, int offset) {
     PsiElement element = null;
     if (!InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file)) {
       element = InjectedLanguageUtil.findInjectedElementNoCommit(file, offset);

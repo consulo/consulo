@@ -2,7 +2,7 @@ package com.intellij.vcs.log.graph.parser;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.vcs.log.graph.GraphCommit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class CommitParser {
 
   public static final String SEPARATOR = "|-";
 
-  public static int nextSeparatorIndex(@NotNull String line, int startIndex) {
+  public static int nextSeparatorIndex(@Nonnull String line, int startIndex) {
     int nextIndex = line.indexOf(SEPARATOR, startIndex);
     if (nextIndex == -1) {
       throw new IllegalArgumentException("not found separator \"" + SEPARATOR + "\", with startIndex=" + startIndex +
@@ -28,8 +28,8 @@ public class CommitParser {
    *             ab123|-adada 193 352
    *             123|-             // no parent
    */
-  @NotNull
-  public static Pair<String, String[]> parseCommitParents(@NotNull String line) {
+  @Nonnull
+  public static Pair<String, String[]> parseCommitParents(@Nonnull String line) {
     int separatorIndex = nextSeparatorIndex(line, 0);
     String commitHashStr = line.substring(0, separatorIndex);
 
@@ -38,23 +38,23 @@ public class CommitParser {
     return new Pair<String, String[]>(commitHashStr, parentsHashes);
   }
 
-  @NotNull
-  public static GraphCommit<String> parseCommitParentsAsString(@NotNull String line) {
+  @Nonnull
+  public static GraphCommit<String> parseCommitParentsAsString(@Nonnull String line) {
     Pair<String, String[]> stringPair = parseCommitParents(line);
     return SimpleCommit.asStringCommit(stringPair.first, stringPair.second);
   }
 
-  @NotNull
-  public static GraphCommit<Integer> parseCommitParentsAsInteger(@NotNull String line) {
+  @Nonnull
+  public static GraphCommit<Integer> parseCommitParentsAsInteger(@Nonnull String line) {
     Pair<String, String[]> stringPair = parseCommitParents(line);
     return SimpleCommit.asIntegerCommit(stringPair.first, stringPair.second);
   }
 
-  public static int createHash(@NotNull String s) {
+  public static int createHash(@Nonnull String s) {
     return Integer.parseInt(s, 16);
   }
 
-  public static List<String> toLines(@NotNull String in) {
+  public static List<String> toLines(@Nonnull String in) {
     String[] split = in.split("\n");
     List<String> result = new ArrayList<String>();
     for (String line : split) {

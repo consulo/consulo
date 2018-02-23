@@ -26,7 +26,7 @@ import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -44,20 +44,20 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     super("library", CompilerBundle.message("element.type.name.library.files"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.PpLib;
   }
 
   @Override
-  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
     return !getAllLibraries(context).isEmpty();
   }
 
-  @NotNull
-  public List<? extends LibraryPackagingElement> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                  @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends LibraryPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                                 @Nonnull CompositePackagingElement<?> parent) {
     final List<Library> selected = context.chooseLibraries(ProjectBundle.message("dialog.title.packaging.choose.library"));
     final List<LibraryPackagingElement> elements = new ArrayList<LibraryPackagingElement>();
     for (Library library : selected) {
@@ -73,8 +73,8 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     return libraries;
   }
 
-  @NotNull
-  public LibraryPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public LibraryPackagingElement createEmpty(@Nonnull Project project) {
     return new LibraryPackagingElement();
   }
 

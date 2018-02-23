@@ -21,8 +21,8 @@ import com.intellij.internal.statistic.beans.GroupDescriptor;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -30,13 +30,13 @@ public class DisabledPluginsUsagesCollector extends UsagesCollector {
   private static final String GROUP_ID = "disabled-plugins";
 
   @Override
-  @NotNull
+  @Nonnull
   public GroupDescriptor getGroupId() {
     return GroupDescriptor.create(GROUP_ID, GroupDescriptor.HIGHER_PRIORITY);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<UsageDescriptor> getUsages(@Nullable Project project) {
     return ContainerUtil.map2Set(PluginManagerCore.getDisabledPlugins(), new Function<String, UsageDescriptor>() {
       @Override

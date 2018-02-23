@@ -19,11 +19,11 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {
 
-  protected CompatibleRunConfigurationProducer(@NotNull ConfigurationType configurationType) {
+  protected CompatibleRunConfigurationProducer(@Nonnull ConfigurationType configurationType) {
     super(configurationType);
   }
 
@@ -35,7 +35,7 @@ public abstract class CompatibleRunConfigurationProducer<T extends RunConfigurat
     return setupConfigurationFromCompatibleContext(configuration, context, sourceElement);
   }
 
-  protected abstract boolean setupConfigurationFromCompatibleContext(@NotNull T configuration, @NotNull ConfigurationContext context, @NotNull Ref<PsiElement> sourceElement);
+  protected abstract boolean setupConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context, @Nonnull Ref<PsiElement> sourceElement);
 
   @Override
   public final boolean isConfigurationFromContext(T configuration, ConfigurationContext context) {
@@ -45,9 +45,9 @@ public abstract class CompatibleRunConfigurationProducer<T extends RunConfigurat
     return isConfigurationFromCompatibleContext(configuration, context);
   }
 
-  protected abstract boolean isConfigurationFromCompatibleContext(@NotNull T configuration, @NotNull ConfigurationContext context);
+  protected abstract boolean isConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context);
 
-  protected boolean isContextCompatible(@NotNull ConfigurationContext context) {
+  protected boolean isContextCompatible(@Nonnull ConfigurationContext context) {
     ConfigurationType type = getConfigurationType();
     return context.isCompatibleWithOriginalRunConfiguration(type);
   }

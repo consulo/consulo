@@ -24,8 +24,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.WaitFor;
 import com.intellij.util.containers.HashMap;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -142,7 +142,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
     super.tearDown();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   Node removeFromParentButKeepRef(NodeElement child) {
     NodeElement parent = (NodeElement)myStructure.getParentElement(child);
     AbstractTreeBuilderTest.Node node = myStructure.getNodeFor(parent).remove(child, false);
@@ -301,7 +301,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
     return findNode((DefaultMutableTreeNode)myTree.getModel().getRoot(), element, shouldBeSelected);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private DefaultMutableTreeNode findNode(DefaultMutableTreeNode treeNode, NodeElement toFind, boolean shouldBeSelected) {
     final Object object = treeNode.getUserObject();
     Assert.assertNotNull(object);
@@ -373,7 +373,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
       myChildElements.clear();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Node getChildNode(String name) {
       for (Node each : myChildElements) {
         if (name.equals(each.myElement.myName)) return each;
@@ -397,7 +397,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
       myStructure.getNodeFor(parent).remove(myElement, true);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private Node remove(final NodeElement name, boolean removeRefToParent) {
       final Iterator<Node> kids = myChildElements.iterator();
       Node removed = null;
@@ -466,7 +466,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
     }
 
     @Override
-    @NotNull
+    @Nonnull
       public NodeDescriptor doCreateDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
       return new PresentableNodeDescriptor(null, parentDescriptor) {
         @Override
@@ -481,7 +481,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
           }
         }
 
-        @Nullable
+        @javax.annotation.Nullable
         @Override
         public PresentableNodeDescriptor getChildToHighlightAt(int index) {
           return null;
@@ -524,7 +524,7 @@ abstract class AbstractTreeBuilderTest extends BaseTreeTestCase<BaseTreeTestCase
       return myReValidator != null ? myReValidator.revalidate((NodeElement)element) : super.revalidateElement(element);
     }
 
-    public void setReValidator(@Nullable ReValidator reValidator) {
+    public void setReValidator(@javax.annotation.Nullable ReValidator reValidator) {
       myReValidator = reValidator;
     }
   }

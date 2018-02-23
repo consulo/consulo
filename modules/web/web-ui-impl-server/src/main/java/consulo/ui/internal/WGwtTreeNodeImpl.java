@@ -17,8 +17,8 @@ package consulo.ui.internal;
 
 import consulo.ui.ItemPresentation;
 import consulo.ui.TreeNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class WGwtTreeNodeImpl<N> implements TreeNode<N> {
   }
 
   @Override
-  public void setRender(@NotNull BiConsumer<N, ItemPresentation> render) {
+  public void setRender(@Nonnull BiConsumer<N, ItemPresentation> render) {
     myRender = render;
   }
 

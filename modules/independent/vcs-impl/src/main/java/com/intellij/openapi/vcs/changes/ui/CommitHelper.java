@@ -46,8 +46,8 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.WaitForProgressToShow;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.ConfirmationDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,7 +133,7 @@ public class CommitHelper {
     else {
       Task.Backgroundable task = new Task.Backgroundable(myProject, myActionName, true, myConfiguration.getCommitOption()) {
         @Override
-        public void run(@NotNull final ProgressIndicator indicator) {
+        public void run(@Nonnull final ProgressIndicator indicator) {
           final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
           vcsManager.startBackgroundVcsOperation();
           try {
@@ -209,7 +209,7 @@ public class CommitHelper {
     return text;
   }
 
-  private static NotificationType resolveNotificationType(@NotNull GeneralCommitProcessor processor) {
+  private static NotificationType resolveNotificationType(@Nonnull GeneralCommitProcessor processor) {
     boolean hasExceptions = !processor.getVcsExceptions().isEmpty();
     boolean hasOnlyWarnings = doesntContainErrors(processor.getVcsExceptions());
 
@@ -572,8 +572,8 @@ public class CommitHelper {
    * @see #unmarkCommittingDocuments(java.util.Collection)
    * @see VetoSavingCommittingDocumentsAdapter
    */
-  @NotNull
-  public static Collection<Document> markCommittingDocuments(@NotNull Project project, @NotNull List<Change> changes) {
+  @Nonnull
+  public static Collection<Document> markCommittingDocuments(@Nonnull Project project, @Nonnull List<Change> changes) {
     Collection<Document> committingDocs = new ArrayList<Document>();
     for (Change change : changes) {
       Document doc = ChangesUtil.getFilePath(change).getDocument();
@@ -591,7 +591,7 @@ public class CommitHelper {
    * @see #markCommittingDocuments(com.intellij.openapi.project.Project, java.util.List)
    * @see VetoSavingCommittingDocumentsAdapter
    */
-  public static void unmarkCommittingDocuments(@NotNull Collection<Document> committingDocs) {
+  public static void unmarkCommittingDocuments(@Nonnull Collection<Document> committingDocs) {
     for (Document doc : committingDocs) {
       doc.putUserData(DOCUMENT_BEING_COMMITTED_KEY, null);
     }
@@ -637,7 +637,7 @@ public class CommitHelper {
   private void showErrorDialogAndMoveToAnotherList(final GeneralCommitProcessor processor,
                                                    final int errorsSize,
                                                    final int warningsSize,
-                                                   @NotNull final List<VcsException> errors) {
+                                                   @Nonnull final List<VcsException> errors) {
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
       @Override
       public void run() {

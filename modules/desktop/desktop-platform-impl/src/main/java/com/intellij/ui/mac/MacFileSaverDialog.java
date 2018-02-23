@@ -27,7 +27,6 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -59,9 +58,9 @@ public class MacFileSaverDialog implements FileSaverDialog {
     OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable String filename) {
+  public VirtualFileWrapper save(@javax.annotation.Nullable VirtualFile baseDir, @javax.annotation.Nullable String filename) {
     myFileDialog.setDirectory(baseDir == null ? null : baseDir.getCanonicalPath());
     myFileDialog.setFile(filename);
     myFileDialog.setFilenameFilter((dir, name) -> {

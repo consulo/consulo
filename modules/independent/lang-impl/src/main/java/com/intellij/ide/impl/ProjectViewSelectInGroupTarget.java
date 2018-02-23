@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -36,7 +36,7 @@ import java.util.LinkedHashSet;
  */
 public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, DumbAware {
   @Override
-  @NotNull
+  @Nonnull
   public Collection<SelectInTarget> getSubTargets(SelectInContext context) {
     return ProjectView.getInstance(context.getProject()).getSelectInTargets();
   }
@@ -68,7 +68,7 @@ public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, 
       if (target.canSelect(context)) {
         if (requestFocus) {
           IdeFocusManager.getInstance(context.getProject()).requestFocus(new FocusCommand() {
-            @NotNull
+            @Nonnull
             @Override
             public ActionCallback run() {
               target.selectIn(context, requestFocus);

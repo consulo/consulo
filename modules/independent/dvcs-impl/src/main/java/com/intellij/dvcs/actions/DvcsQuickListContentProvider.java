@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.actions.VcsQuickListContentProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,8 @@ import java.util.List;
 public abstract class DvcsQuickListContentProvider implements VcsQuickListContentProvider {
 
   @Nullable
-  public List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs,
-                                      @Nullable DataContext dataContext) {
+  public List<AnAction> getVcsActions(@Nullable Project project, @javax.annotation.Nullable AbstractVcs activeVcs,
+                                      @javax.annotation.Nullable DataContext dataContext) {
 
     if (activeVcs == null || !getVcsName().equals(activeVcs.getName())) {
       return null;
@@ -53,17 +53,17 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
     return actions;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract String getVcsName();
 
-  protected abstract void addVcsSpecificActions(@NotNull ActionManager manager, @NotNull List<AnAction> actions);
+  protected abstract void addVcsSpecificActions(@Nonnull ActionManager manager, @Nonnull List<AnAction> actions);
 
   @Override
-  public boolean replaceVcsActionsFor(@NotNull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
+  public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @javax.annotation.Nullable DataContext dataContext) {
     return getVcsName().equals(activeVcs.getName());
   }
 
-  protected static void addSeparator(@NotNull final List<AnAction> actions) {
+  protected static void addSeparator(@Nonnull final List<AnAction> actions) {
     actions.add(new AnSeparator());
   }
 

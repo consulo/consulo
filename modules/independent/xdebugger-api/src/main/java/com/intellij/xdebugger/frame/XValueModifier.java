@@ -15,8 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,12 +27,12 @@ public abstract class XValueModifier {
    * @param expression new value
    * @param callback used to notify that value has been successfully modified or an error occurs
    */
-  public abstract void setValue(@NotNull String expression, @NotNull XModificationCallback callback);
+  public abstract void setValue(@Nonnull String expression, @Nonnull XModificationCallback callback);
 
   /**
    * @return return text to show in expression editor when "Set Value" action is invoked
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getInitialValueEditorText() {
     return null;
   }

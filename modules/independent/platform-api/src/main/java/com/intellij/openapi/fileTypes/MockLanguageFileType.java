@@ -20,7 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.lang.Language;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,17 +31,17 @@ public class MockLanguageFileType extends LanguageFileType {
     super(Language.ANY);
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return "Mock";
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "Mock";
   }
 
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return ".mockExtensionThatProbablyWon'tEverExist";
   }

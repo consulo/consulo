@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -39,9 +39,9 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
   private StdArrangementRuleAliasToken myToken;
   private ArrangementRuleAliasesPanel myTokenRulesPanel;
 
-  public ArrangementRuleAliasConfigurable(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                          @NotNull ArrangementColorsProvider colorsProvider,
-                                          @NotNull StdArrangementRuleAliasToken token) {
+  public ArrangementRuleAliasConfigurable(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                          @Nonnull ArrangementColorsProvider colorsProvider,
+                                          @Nonnull StdArrangementRuleAliasToken token) {
     myToken = token;
     myTokenRulesPanel = new ArrangementRuleAliasesPanel(settingsManager, colorsProvider);
     myTokenRulesPanel.setRuleSequences(token.getDefinitionRules());
@@ -54,16 +54,16 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
     registerShortcut(ArrangementConstants.MATCHING_ALIAS_RULE_EDIT, edit, myTokenRulesPanel);
   }
 
-  private static void registerShortcut(@NotNull String actionId,
-                                       @NotNull ShortcutSet shortcut,
-                                       @NotNull JComponent component) {
+  private static void registerShortcut(@Nonnull String actionId,
+                                       @Nonnull ShortcutSet shortcut,
+                                       @Nonnull JComponent component) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.registerCustomShortcutSet(shortcut, component);
     }
   }
 
-  private static void unregisterShortcut(@NotNull String actionId, @NotNull JComponent component) {
+  private static void unregisterShortcut(@Nonnull String actionId, @Nonnull JComponent component) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.unregisterCustomShortcutSet(component);

@@ -27,7 +27,7 @@ import com.intellij.openapi.diff.impl.ComparisonPolicy;
 import com.intellij.openapi.diff.impl.DiffPanelImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -57,7 +57,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   protected DefaultActionGroup createPopupActionGroup(JComponent button) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (ComparisonPolicy comparisonPolicy : ourActionOrder) {
@@ -67,7 +67,7 @@ public class IgnoreWhiteSpacesAction extends ComboBoxAction implements DumbAware
   }
 
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();
     DiffPanelEx diffPanel = DiffPanelImpl.fromDataContext(e.getDataContext());

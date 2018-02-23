@@ -29,13 +29,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LanguageFileTypeStructureViewBuilderProvider implements StructureViewBuilderProvider {
   @Override
   @Nullable
-  public StructureViewBuilder getStructureViewBuilder(@NotNull final FileType fileType, @NotNull final VirtualFile file, @NotNull final Project project) {
+  public StructureViewBuilder getStructureViewBuilder(@Nonnull final FileType fileType, @Nonnull final VirtualFile file, @Nonnull final Project project) {
     if (!(fileType instanceof LanguageFileType)) return null;
 
     final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);

@@ -37,7 +37,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.bundle.SdkUtil;
 
@@ -52,7 +52,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     LibraryGroupNode.addLibraryChildren(getValue().getOrderEntry(), children, getProject(), this);
@@ -70,7 +70,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return orderEntryContainsFile(getValue().getOrderEntry(), file);
   }
 

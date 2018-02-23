@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import com.intellij.openapi.application.ApplicationBundle;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class MoveArrangementMatchingRuleUpAction extends AbstractMoveArrangement
   }
 
   @Override
-  protected void fillMappings(@NotNull ArrangementMatchingRulesControl control, @NotNull List<int[]> mappings) {
+  protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
     TIntArrayList rows = control.getSelectedModelRows();
     rows.reverse();
     int top = -1;

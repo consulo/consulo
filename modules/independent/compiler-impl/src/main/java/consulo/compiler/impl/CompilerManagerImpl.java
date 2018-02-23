@@ -46,8 +46,8 @@ import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -132,21 +132,21 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<FileType> getRegisteredInputTypes(@NotNull TranslatingCompiler compiler) {
+  public Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler) {
     final Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
     return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<FileType> getRegisteredOutputTypes(@NotNull TranslatingCompiler compiler) {
+  public Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler) {
     final Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
     return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Compiler[] getAllCompilers() {
     if (myAllCompilers == null) {
@@ -159,15 +159,15 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  @NotNull
-  public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass) {
+  @Nonnull
+  public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass) {
     return getCompilers(compilerClass, Conditions.<Compiler>alwaysTrue());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
-  public <T extends Compiler> T[] getCompilers(@NotNull Class<T> compilerClass, Condition<Compiler> filter) {
+  public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Condition<Compiler> filter) {
     final List<T> compilers = new ArrayList<>(myCompilers.size());
     for (final Compiler item : myCompilers) {
       if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
@@ -212,34 +212,34 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public boolean isCompilableFileType(@NotNull FileType type) {
+  public boolean isCompilableFileType(@Nonnull FileType type) {
     return myCompilableFileTypes.contains(type);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CompileTask[] getBeforeTasks() {
     return CompileTask.BEFORE_EP_NAME.getExtensions();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CompileTask[] getAfterTasks() {
     return CompileTask.AFTER_EP_NAME.getExtensions();
   }
 
   @Override
-  public void compile(@NotNull VirtualFile[] files, CompileStatusNotification callback) {
+  public void compile(@Nonnull VirtualFile[] files, CompileStatusNotification callback) {
     compile(createFilesCompileScope(files), callback);
   }
 
   @Override
-  public void compile(@NotNull Module module, CompileStatusNotification callback) {
+  public void compile(@Nonnull Module module, CompileStatusNotification callback) {
     new CompileDriver(myProject).compile(createModuleCompileScope(module, false), new ListenerNotificator(callback), true);
   }
 
   @Override
-  public void compile(@NotNull CompileScope scope, CompileStatusNotification callback) {
+  public void compile(@Nonnull CompileScope scope, CompileStatusNotification callback) {
     new CompileDriver(myProject).compile(scope, new ListenerNotificator(callback), false);
   }
 
@@ -249,29 +249,29 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public void make(@NotNull Module module, CompileStatusNotification callback) {
+  public void make(@Nonnull Module module, CompileStatusNotification callback) {
     new CompileDriver(myProject).make(createModuleCompileScope(module, true), new ListenerNotificator(callback));
   }
 
   @Override
-  public void make(@NotNull Project project, @NotNull Module[] modules, CompileStatusNotification callback) {
+  public void make(@Nonnull Project project, @Nonnull Module[] modules, CompileStatusNotification callback) {
     new CompileDriver(myProject).make(createModuleGroupCompileScope(project, modules, true), new ListenerNotificator(callback));
   }
 
   @Override
-  public void make(@NotNull CompileScope scope, CompileStatusNotification callback) {
+  public void make(@Nonnull CompileScope scope, CompileStatusNotification callback) {
     new CompileDriver(myProject).make(scope, new ListenerNotificator(callback));
   }
 
   @Override
-  public void make(@NotNull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback) {
+  public void make(@Nonnull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback) {
     final CompileDriver compileDriver = new CompileDriver(myProject);
     compileDriver.setCompilerFilter(filter);
     compileDriver.make(scope, new ListenerNotificator(callback));
   }
 
   @Override
-  public boolean isUpToDate(@NotNull final CompileScope scope) {
+  public boolean isUpToDate(@Nonnull final CompileScope scope) {
     return new CompileDriver(myProject).isUpToDate(scope);
   }
 
@@ -282,27 +282,27 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public void executeTask(@NotNull CompileTask task, @NotNull CompileScope scope, String contentName, Runnable onTaskFinished) {
+  public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName, Runnable onTaskFinished) {
     final CompileDriver compileDriver = new CompileDriver(myProject);
     compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
   }
 
   @Override
-  public void addCompilationStatusListener(@NotNull final CompilationStatusListener listener) {
+  public void addCompilationStatusListener(@Nonnull final CompilationStatusListener listener) {
     myProject.getMessageBus().connect().subscribe(CompilerTopics.COMPILATION_STATUS, listener);
   }
 
   @Override
-  public void addCompilationStatusListener(@NotNull CompilationStatusListener listener, @NotNull Disposable parentDisposable) {
+  public void addCompilationStatusListener(@Nonnull CompilationStatusListener listener, @Nonnull Disposable parentDisposable) {
     myProject.getMessageBus().connect(parentDisposable).subscribe(CompilerTopics.COMPILATION_STATUS, listener);
   }
 
   @Override
-  public void removeCompilationStatusListener(@NotNull final CompilationStatusListener listener) {
+  public void removeCompilationStatusListener(@Nonnull final CompilationStatusListener listener) {
   }
 
   @Override
-  public boolean isExcludedFromCompilation(@NotNull VirtualFile file) {
+  public boolean isExcludedFromCompilation(@Nonnull VirtualFile file) {
     return myExcludedEntriesConfiguration.isExcluded(file);
   }
 
@@ -312,8 +312,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  @NotNull
-  public CompileScope createFilesCompileScope(@NotNull final VirtualFile[] files) {
+  @Nonnull
+  public CompileScope createFilesCompileScope(@Nonnull final VirtualFile[] files) {
     CompileScope[] scopes = new CompileScope[files.length];
     for (int i = 0; i < files.length; i++) {
       scopes[i] = new OneProjectItemCompileScope(myProject, files[i]);
@@ -321,7 +321,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     return new CompositeScope(scopes);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredReadAction
   public CompileScope createProjectCompileScope() {
@@ -330,8 +330,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  @NotNull
-  public CompileScope createModuleCompileScope(@NotNull final Module module, final boolean includeDependentModules) {
+  @Nonnull
+  public CompileScope createModuleCompileScope(@Nonnull final Module module, final boolean includeDependentModules) {
     for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensions()) {
       FileIndexCompileScope scope = compileModuleScopeFactory.createScope(module, includeDependentModules);
       if (scope != null) {
@@ -342,8 +342,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  @NotNull
-  public CompileScope createModulesCompileScope(@NotNull final Module[] modules, final boolean includeDependentModules) {
+  @Nonnull
+  public CompileScope createModulesCompileScope(@Nonnull final Module[] modules, final boolean includeDependentModules) {
     List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
       list.add(createModuleCompileScope(module, includeDependentModules));
@@ -352,8 +352,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  @NotNull
-  public CompileScope createModuleGroupCompileScope(@NotNull final Project project, @NotNull final Module[] modules, final boolean includeDependentModules) {
+  @Nonnull
+  public CompileScope createModuleGroupCompileScope(@Nonnull final Project project, @Nonnull final Module[] modules, final boolean includeDependentModules) {
     List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
       list.add(createModuleCompileScope(module, includeDependentModules));
@@ -366,7 +366,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Element getState() {
     final Element state = new Element("state");

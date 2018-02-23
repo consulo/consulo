@@ -18,8 +18,8 @@ package com.intellij.remote.ext;
 import com.intellij.remote.RemoteCredentials;
 import com.intellij.remote.RemoteCredentialsHolder;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SshCredentialsHandler extends RemoteCredentialsHandlerBase<RemoteCredentialsHolder> {
 
@@ -33,7 +33,7 @@ public class SshCredentialsHandler extends RemoteCredentialsHandlerBase<RemoteCr
   }
 
   @Override
-  public void save(@NotNull Element rootElement) {
+  public void save(@Nonnull Element rootElement) {
     getCredentials().save(rootElement);
   }
 
@@ -49,7 +49,7 @@ public class SshCredentialsHandler extends RemoteCredentialsHandlerBase<RemoteCr
     }
   }
 
-  @NotNull
+  @Nonnull
   private String constructSshCredentialsFullPath() {
     RemoteCredentials cred = getCredentials();
     return RemoteCredentialsHolder.SSH_PREFIX + cred.getUserName() + "@" + cred.getHost() + ":" + cred.getLiteralPort();

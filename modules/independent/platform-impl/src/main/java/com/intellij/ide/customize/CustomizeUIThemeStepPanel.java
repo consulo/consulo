@@ -24,8 +24,8 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -170,7 +170,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Nullable
-  private static UIManager.LookAndFeelInfo getLookAndFeelInfo(@NotNull String name) {
+  private static UIManager.LookAndFeelInfo getLookAndFeelInfo(@Nonnull String name) {
     for (UIManager.LookAndFeelInfo lookAndFeelInfo : LafManager.getInstance().getInstalledLookAndFeels()) {
       if(name.equals(lookAndFeelInfo.getName())) {
         return lookAndFeelInfo;

@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.PatchedWeakReference;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -59,7 +59,7 @@ public class WhiteSpaceFormattingStrategyFactory {
    * @return            white space strategy to use for the given language
    * @throws IllegalStateException      if white space strategies configuration is invalid
    */
-  public static WhiteSpaceFormattingStrategy getStrategy(@NotNull Language language) throws IllegalStateException {
+  public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Language language) throws IllegalStateException {
     CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(SHARED_STRATEGIES);
     WhiteSpaceFormattingStrategy strategy = LanguageWhiteSpaceFormattingStrategy.INSTANCE.forLanguage(language);
     if (strategy != null) {
@@ -71,7 +71,7 @@ public class WhiteSpaceFormattingStrategyFactory {
   /**
    * @return    collection of all registered white space strategies
    */
-  @NotNull
+  @Nonnull
   public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
     final WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
     if (reference != null) {
@@ -106,7 +106,7 @@ public class WhiteSpaceFormattingStrategyFactory {
    * @return            white space strategy for the document managed by the given editor
    * @throws IllegalStateException    if white space strategies configuration is invalid
    */
-  public static WhiteSpaceFormattingStrategy getStrategy(@NotNull Editor editor) throws IllegalStateException {
+  public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Editor editor) throws IllegalStateException {
     Project project = editor.getProject();
     if (project != null) {
       PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());

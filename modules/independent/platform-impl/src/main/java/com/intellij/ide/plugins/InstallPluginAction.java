@@ -33,8 +33,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.ide.updateSettings.impl.PluginListDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -58,7 +58,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     IdeaPluginDescriptor[] selection = getPluginTable().getSelectedObjects();
     boolean enabled = (selection != null);
@@ -90,7 +90,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     install(e.getProject(), null);
   }
 
@@ -173,8 +173,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   }
 
   public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                               @NotNull final List<IdeaPluginDescriptor> toInstall,
-                                               @NotNull final List<IdeaPluginDescriptor> allPlugins,
+                                               @Nonnull final List<IdeaPluginDescriptor> toInstall,
+                                               @Nonnull final List<IdeaPluginDescriptor> allPlugins,
                                                @Nullable final Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     Set<IdeaPluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 

@@ -16,7 +16,7 @@
 package consulo.ide;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.extensions.CompositeExtensionPointName;
 
@@ -29,5 +29,5 @@ public interface IconDescriptorUpdater {
           CompositeExtensionPointName.applicationPoint("com.intellij.iconDescriptorUpdater", IconDescriptorUpdater.class);
 
   @RequiredReadAction
-  void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags);
+  void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags);
 }

@@ -48,8 +48,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
@@ -172,7 +172,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     CommonProxy.getInstance().setCustomAuth(name, new IdeaWideAuthenticator(this));
   }
 
-  @NotNull
+  @Nonnull
   public ProxySelector getOnlyBySettingsSelector() {
     return mySelector;
   }
@@ -184,7 +184,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     CommonProxy.getInstance().removeCustomAuth(name);
   }
 
-  private void correctPasswords(@NotNull HttpConfigurable to) {
+  private void correctPasswords(@Nonnull HttpConfigurable to) {
     synchronized (myLock) {
       to.myGenericPasswords.retainEntries(new TObjectObjectProcedure<CommonProxy.HostInfo, ProxyInfo>() {
         @Override
@@ -196,7 +196,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
   }
 
   @Override
-  public void loadState(@NotNull HttpConfigurable state) {
+  public void loadState(@Nonnull HttpConfigurable state) {
     XmlSerializerUtil.copyBean(state, this);
     if (!KEEP_PROXY_PASSWORD) {
       removeSecure("proxy.password");
@@ -204,7 +204,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     correctPasswords(this);
   }
 
-  public boolean isGenericPasswordCanceled(@NotNull String host, int port) {
+  public boolean isGenericPasswordCanceled(@Nonnull String host, int port) {
     synchronized (myLock) {
       return myGenericCancelled.contains(new CommonProxy.HostInfo(null, host, port));
     }
@@ -216,7 +216,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     }
   }
 
-  public PasswordAuthentication getGenericPassword(@NotNull String host, int port) {
+  public PasswordAuthentication getGenericPassword(@Nonnull String host, int port) {
     final ProxyInfo proxyInfo;
     synchronized (myLock) {
       proxyInfo = myGenericPasswords.get(new CommonProxy.HostInfo(null, host, port));
@@ -227,7 +227,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     return new PasswordAuthentication(proxyInfo.getUsername(), decode(String.valueOf(proxyInfo.getPasswordCrypt())).toCharArray());
   }
 
-  public void putGenericPassword(final String host, final int port, @NotNull PasswordAuthentication authentication, boolean remember) {
+  public void putGenericPassword(final String host, final int port, @Nonnull PasswordAuthentication authentication, boolean remember) {
     PasswordAuthentication coded = new PasswordAuthentication(authentication.getUserName(), encode(String.valueOf(authentication.getPassword())).toCharArray());
     synchronized (myLock) {
       myGenericPasswords.put(new CommonProxy.HostInfo(null, host, port), new ProxyInfo(remember, coded.getUserName(), String.valueOf(coded.getPassword())));
@@ -361,7 +361,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     return value[0];
   }
 
-  private static void runAboveAll(@NotNull final Runnable runnable) {
+  private static void runAboveAll(@Nonnull final Runnable runnable) {
     ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     if (progressIndicator != null && progressIndicator.isModal()) {
       WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(runnable);
@@ -404,7 +404,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
    *
    * @param url URL for HTTP connection
    */
-  public void prepareURL(@NotNull String url) throws IOException {
+  public void prepareURL(@Nonnull String url) throws IOException {
     URLConnection connection = openConnection(url);
     try {
       connection.connect();
@@ -422,8 +422,8 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     }
   }
 
-  @NotNull
-  public URLConnection openConnection(@NotNull String location) throws IOException {
+  @Nonnull
+  public URLConnection openConnection(@Nonnull String location) throws IOException {
     final URL url = new URL(location);
     URLConnection urlConnection = null;
     final List<Proxy> proxies = CommonProxy.getInstance().select(url);
@@ -458,8 +458,8 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
    * @return instance of {@link HttpURLConnection}
    * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
    */
-  @NotNull
-  public HttpURLConnection openHttpConnection(@NotNull String location) throws IOException {
+  @Nonnull
+  public HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
     URLConnection urlConnection = openConnection(location);
     if (urlConnection instanceof HttpURLConnection) {
       return (HttpURLConnection) urlConnection;
@@ -482,7 +482,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     return properties.stream().map(p -> KeyValue.create(p.first, p.second)).collect(Collectors.toList());
   }
 
-  @NotNull
+  @Nonnull
   public List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri) {
     if (!USE_HTTP_PROXY && !USE_PROXY_PAC) {
       return Collections.emptyList();
@@ -538,14 +538,14 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     return result;
   }
 
-  public static boolean isRealProxy(@NotNull Proxy proxy) {
+  public static boolean isRealProxy(@Nonnull Proxy proxy) {
     return !Proxy.NO_PROXY.equals(proxy) && !Proxy.Type.DIRECT.equals(proxy.type());
   }
 
   /** @deprecated use {@link com.intellij.execution.configurations.ParametersList#addProperty(String, String)} (to be removed in IDEA 2018) */
   @SuppressWarnings({"deprecation", "unused"})
-  @NotNull
-  public static List<String> convertArguments(@NotNull final List<KeyValue<String, String>> list) {
+  @Nonnull
+  public static List<String> convertArguments(@Nonnull final List<KeyValue<String, String>> list) {
     if (list.isEmpty()) {
       return Collections.emptyList();
     }
@@ -563,7 +563,7 @@ public class HttpConfigurable extends ApplicationComponent.Adapter implements Pe
     }
   }
 
-  public void removeGeneric(@NotNull CommonProxy.HostInfo info) {
+  public void removeGeneric(@Nonnull CommonProxy.HostInfo info) {
     synchronized (myLock) {
       myGenericPasswords.remove(info);
     }

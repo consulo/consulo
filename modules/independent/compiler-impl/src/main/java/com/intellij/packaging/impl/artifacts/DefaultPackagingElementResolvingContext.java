@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactManager;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
 * @author nik
@@ -40,25 +40,25 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ArtifactModel getArtifactModel() {
     return ArtifactManager.getInstance(myProject);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModulesProvider getModulesProvider() {
     return myModulesProvider;
   }
 
   @Override
-  public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
+  public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
     return findLibrary(myProject, level, libraryName);
   }
 

@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.HideableDecorator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +89,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected JComponent createEditor() {
     myComponentPlace.setLayout(new BorderLayout());
     myComponentPlace.add(myEditor.getComponent(), BorderLayout.CENTER);

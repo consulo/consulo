@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 interface SoftWrapAwareDocumentParsingListener {
 
@@ -24,14 +24,14 @@ interface SoftWrapAwareDocumentParsingListener {
    *
    * @param event   object that contains information about re-parsed document region
    */
-  void onCacheUpdateStart(@NotNull IncrementalCacheUpdateEvent event);
+  void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event);
 
   /**
    * Notifies current listener that particular document region re-parsing has just finished.
    *
    * @param event   object that contains information about re-parsed document region
    */
-  void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event);
+  void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event);
 
   /**
    * Notifies current listener that all dirty regions for the current editor have been recalculated.

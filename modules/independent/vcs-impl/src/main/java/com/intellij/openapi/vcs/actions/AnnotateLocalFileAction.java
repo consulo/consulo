@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -115,7 +115,7 @@ public class AnnotateLocalFileAction {
     }
   }
 
-  private static void doAnnotate(@NotNull final Editor editor, @NotNull final Project project) {
+  private static void doAnnotate(@Nonnull final Editor editor, @Nonnull final Project project) {
     final VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
     if (file == null) return;
 
@@ -132,7 +132,7 @@ public class AnnotateLocalFileAction {
 
     final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsBundle.message("retrieving.annotations"), true) {
       @Override
-      public void run(final @NotNull ProgressIndicator indicator) {
+      public void run(final @Nonnull ProgressIndicator indicator) {
         try {
           fileAnnotationRef.set(annotationProvider.annotate(file));
         }
@@ -169,8 +169,8 @@ public class AnnotateLocalFileAction {
     ProgressManager.getInstance().run(annotateTask);
   }
 
-  @NotNull
-  private static List<Editor> getEditors(@NotNull VcsContext context) {
+  @Nonnull
+  private static List<Editor> getEditors(@Nonnull VcsContext context) {
     Project project = assertNotNull(context.getProject());
     VirtualFile file = assertNotNull(context.getSelectedFile());
     return VcsAnnotateUtil.getEditors(project, file);

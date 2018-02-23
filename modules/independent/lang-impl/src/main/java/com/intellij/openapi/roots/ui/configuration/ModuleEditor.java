@@ -38,8 +38,8 @@ import com.intellij.ui.navigation.Place;
 import com.intellij.util.EventDispatcher;
 import consulo.roots.ui.configuration.ExtensionEditor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +76,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
   protected History myHistory;
 
   public ModuleEditor(Project project, ModulesProvider modulesProvider,
-                      @NotNull Module module) {
+                      @Nonnull Module module) {
     myProject = project;
     myModulesProvider = modulesProvider;
     myModule = module;
@@ -105,7 +105,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
   protected abstract void restoreSelectedEditor();
 
   @Nullable
-  public abstract ModuleConfigurationEditor getEditor(@NotNull String displayName);
+  public abstract ModuleConfigurationEditor getEditor(@Nonnull String displayName);
 
   protected abstract void disposeCenterPanel();
 
@@ -525,7 +525,7 @@ public abstract class ModuleEditor implements Place.Navigator, Disposable {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (LangDataKeys.MODULE_CONTEXT == dataId) {
         return getModule();
       }

@@ -20,7 +20,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.WeakList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class ModalityStateEx extends ModalityState {
 
   public ModalityStateEx() { } // used by reflection to initialize NON_MODAL
 
-  public ModalityStateEx(@NotNull Object[] modalEntities) {
+  public ModalityStateEx(@Nonnull Object[] modalEntities) {
     Collections.addAll(myModalEntities, modalEntities);
   }
 
@@ -43,13 +43,13 @@ public class ModalityStateEx extends ModalityState {
     return result;
   }
 
-  @NotNull
-  public ModalityState appendProgress(@NotNull ProgressIndicator progress){
+  @Nonnull
+  public ModalityState appendProgress(@Nonnull ProgressIndicator progress){
     return appendEntity(progress);
   }
 
-  @NotNull
-  ModalityStateEx appendEntity(@NotNull Object anEntity){
+  @Nonnull
+  ModalityStateEx appendEntity(@Nonnull Object anEntity){
     List<Object> modalEntities = getModalEntities();
     List<Object> list = new ArrayList<Object>(modalEntities.size() + 1);
     list.addAll(modalEntities);
@@ -58,7 +58,7 @@ public class ModalityStateEx extends ModalityState {
   }
 
   @Override
-  public boolean dominates(@NotNull ModalityState anotherState){
+  public boolean dominates(@Nonnull ModalityState anotherState){
     if (anotherState == ModalityState.any()) return false;
 
     List<Object> otherEntities = ((ModalityStateEx)anotherState).getModalEntities();

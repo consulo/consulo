@@ -26,7 +26,7 @@ import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
 
@@ -45,7 +45,7 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
     extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result) {
         if (inCommentOrLiteral(parameters)) {
           return;
         }

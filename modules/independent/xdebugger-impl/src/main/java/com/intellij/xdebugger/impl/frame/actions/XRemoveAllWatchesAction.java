@@ -18,19 +18,19 @@ package com.intellij.xdebugger.impl.frame.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class XRemoveAllWatchesAction extends XWatchesTreeActionBase {
   @Override
-  protected boolean isEnabled(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree) {
+  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
     return tree.getRoot().getChildCount() > 0;
   }
 
   @Override
-  protected void perform(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree, @NotNull XWatchesView watchesView) {
+  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
     watchesView.removeAllWatches();
   }
 }

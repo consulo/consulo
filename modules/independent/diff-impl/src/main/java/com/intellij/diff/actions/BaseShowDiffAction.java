@@ -26,13 +26,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithoutContent;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 abstract class BaseShowDiffAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     boolean canShow = isAvailable(e);
     presentation.setEnabled(canShow);
@@ -43,7 +43,7 @@ abstract class BaseShowDiffAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     DiffRequest request = getDiffRequest(e);
     if (request == null) return;
@@ -51,12 +51,12 @@ abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     DiffManager.getInstance().showDiff(project, request);
   }
 
-  protected abstract boolean isAvailable(@NotNull AnActionEvent e);
+  protected abstract boolean isAvailable(@Nonnull AnActionEvent e);
 
   protected static boolean hasContent(VirtualFile file) {
     return !(file instanceof VirtualFileWithoutContent);
   }
 
   @Nullable
-  protected abstract DiffRequest getDiffRequest(@NotNull AnActionEvent e);
+  protected abstract DiffRequest getDiffRequest(@Nonnull AnActionEvent e);
 }

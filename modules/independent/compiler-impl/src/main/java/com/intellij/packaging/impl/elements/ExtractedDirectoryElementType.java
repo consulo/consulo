@@ -26,7 +26,7 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -44,15 +44,15 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     super("extracted-dir", "Extracted Directory");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.ExtractedFolder;
   }
 
-  @NotNull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                   @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                             @Nonnull CompositePackagingElement<?> parent) {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
       @Override
       public boolean isFileSelectable(VirtualFile file) {
@@ -69,8 +69,8 @@ public class ExtractedDirectoryElementType extends PackagingElementType<Extracte
     return list;
   }
 
-  @NotNull
-  public ExtractedDirectoryPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public ExtractedDirectoryPackagingElement createEmpty(@Nonnull Project project) {
     return new ExtractedDirectoryPackagingElement();
   }
 }

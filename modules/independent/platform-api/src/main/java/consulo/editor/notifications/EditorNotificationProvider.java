@@ -19,10 +19,11 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -32,10 +33,10 @@ import javax.swing.*;
 public interface EditorNotificationProvider<T extends JComponent> {
   ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = new ExtensionPointName<EditorNotificationProvider<?>>("com.intellij.editorNotificationProvider");
 
-  @NotNull
+  @Nonnull
   Key<T> getKey();
 
   @Nullable
   @RequiredReadAction
-  T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
+  T createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor);
 }

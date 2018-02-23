@@ -19,7 +19,7 @@ package com.intellij.execution.configurations;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jdom.Element;
 
@@ -41,7 +41,7 @@ public class PredefinedLogFile implements JDOMExternalizable {
     myId = logFile.myId;
   }
 
-  public PredefinedLogFile(final @NotNull @NonNls String id, final boolean enabled) {
+  public PredefinedLogFile(final @Nonnull @NonNls String id, final boolean enabled) {
     myEnabled = enabled;
     myId = id;
   }

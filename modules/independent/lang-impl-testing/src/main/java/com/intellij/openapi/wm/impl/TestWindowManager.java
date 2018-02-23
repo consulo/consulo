@@ -33,8 +33,8 @@ import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -54,17 +54,17 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public StatusBar getStatusBar(@NotNull Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(@Nonnull Component c, @javax.annotation.Nullable Project project) {
     return null;
   }
 
   @Override
-  public StatusBar getStatusBar(@NotNull Component c) {
+  public StatusBar getStatusBar(@Nonnull Component c) {
     return null;
   }
 
   @Override
-  public final Window suggestParentWindow(@Nullable final Project project) {
+  public final Window suggestParentWindow(@javax.annotation.Nullable final Project project) {
     return null;
   }
 
@@ -79,7 +79,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public Rectangle getScreenBounds(@NotNull Project project) {
+  public Rectangle getScreenBounds(@Nonnull Project project) {
     return null;
   }
 
@@ -117,7 +117,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void setInfo(@Nullable String s, @Nullable String requestor) {
+    public void setInfo(@Nullable String s, @javax.annotation.Nullable String requestor) {
     }
 
     @Override
@@ -135,15 +135,15 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void addCustomIndicationComponent(@NotNull JComponent c) {
+    public void addCustomIndicationComponent(@Nonnull JComponent c) {
     }
 
     @Override
-    public void removeCustomIndicationComponent(@NotNull JComponent c) {
+    public void removeCustomIndicationComponent(@Nonnull JComponent c) {
     }
 
     @Override
-    public void addProgress(@NotNull ProgressIndicatorEx indicator, @NotNull TaskInfo info) {
+    public void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info) {
     }
 
     @Override
@@ -152,12 +152,12 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void addWidget(@NotNull StatusBarWidget widget, @NotNull Disposable parentDisposable) {
+    public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Disposable parentDisposable) {
       Disposer.register(parentDisposable, widget);
     }
 
     @Override
-    public void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor, @NotNull Disposable parentDisposable) {
+    public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor, @Nonnull Disposable parentDisposable) {
       Disposer.register(parentDisposable, widget);
     }
 
@@ -166,7 +166,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void addWidget(@NotNull StatusBarWidget widget) {
+    public void addWidget(@Nonnull StatusBarWidget widget) {
     }
 
     @Override
@@ -174,11 +174,11 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor) {
+    public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor) {
     }
 
     @Override
-    public void updateWidget(@NotNull String id) {
+    public void updateWidget(@Nonnull String id) {
     }
 
     @Override
@@ -187,11 +187,11 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public void removeWidget(@NotNull String id) {
+    public void removeWidget(@Nonnull String id) {
     }
 
     @Override
-    public void fireNotificationPopup(@NotNull JComponent content, final Color backgroundColor) {
+    public void fireNotificationPopup(@Nonnull JComponent content, final Color backgroundColor) {
     }
 
     @Override
@@ -226,7 +226,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody) {
+    public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody) {
       return new BalloonHandler() {
         public void hide() {
         }
@@ -234,7 +234,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
     }
 
     @Override
-    public BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
+    public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable HyperlinkListener listener) {
       return new BalloonHandler() {
         public void hide() {
         }
@@ -243,7 +243,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IdeFrameEx[] getAllProjectFrames() {
     return new IdeFrameEx[0];
   }
@@ -259,7 +259,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public final IdeFrameEx allocateFrame(final Project project) {
     throw new UnsupportedOperationException();
@@ -271,7 +271,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public final Component getFocusedComponent(@NotNull final Window window) {
+  public final Component getFocusedComponent(@Nonnull final Window window) {
     throw new UnsupportedOperationException();
   }
 
@@ -286,7 +286,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  public IdeFrame findFrameFor(@Nullable Project project) {
+  public IdeFrame findFrameFor(@javax.annotation.Nullable Project project) {
     throw new UnsupportedOperationException();
   }
 
@@ -365,7 +365,7 @@ public final class TestWindowManager extends WindowManagerEx implements Applicat
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getComponentName() {
     return "TestWindowManager";
   }

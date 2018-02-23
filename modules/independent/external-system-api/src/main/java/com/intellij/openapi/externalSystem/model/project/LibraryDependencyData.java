@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Not thread-safe.
@@ -10,14 +10,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LibraryDependencyData extends AbstractDependencyData<LibraryData> implements Named {
   
-  @NotNull private final LibraryLevel myLevel;
+  @Nonnull
+  private final LibraryLevel myLevel;
   
-  public LibraryDependencyData(@NotNull ModuleData ownerModule, @NotNull LibraryData library, @NotNull LibraryLevel level) {
+  public LibraryDependencyData(@Nonnull ModuleData ownerModule, @Nonnull LibraryData library, @Nonnull LibraryLevel level) {
     super(ownerModule, library);
     myLevel = level;
   }
 
-  @NotNull
+  @Nonnull
   public LibraryLevel getLevel() {
     return myLevel;
   }

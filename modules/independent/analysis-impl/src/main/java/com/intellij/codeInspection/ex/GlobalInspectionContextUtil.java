@@ -27,10 +27,10 @@ import com.intellij.profile.ProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class GlobalInspectionContextUtil {
-  public static RefElement retrieveRefElement(@NotNull PsiElement element, @NotNull GlobalInspectionContext globalContext) {
+  public static RefElement retrieveRefElement(@Nonnull PsiElement element, @Nonnull GlobalInspectionContext globalContext) {
     PsiFile elementFile = element.getContainingFile();
     RefElement refElement = globalContext.getRefManager().getReference(elementFile);
     if (refElement == null) {
@@ -41,11 +41,11 @@ public class GlobalInspectionContextUtil {
   }
 
 
-  public static boolean isToCheckMember(@NotNull RefElement owner, @NotNull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
+  public static boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
     return isToCheckFile(((RefElementImpl)owner).getContainingFile(), tool, tools, profileManager) && !((RefElementImpl)owner).isSuppressed(tool.getShortName());
   }
 
-  public static boolean isToCheckFile(PsiFile file, @NotNull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
+  public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
     if (tools != null && file != null) {
       for (ScopeToolState state : tools.getTools()) {
         final NamedScope namedScope = state.getScope(file.getProject());
@@ -62,7 +62,7 @@ public class GlobalInspectionContextUtil {
   }
 
 
-  public static boolean canRunInspections(@NotNull Project project, final boolean online) {
+  public static boolean canRunInspections(@Nonnull Project project, final boolean online) {
     for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
       if (!factory.isProjectConfiguredToRunInspections(project, online)) {
         return false;

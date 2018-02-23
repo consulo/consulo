@@ -18,7 +18,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class IntToIntBtree {
   private TIntIntHashMap myCachedMappings;
   private final int myCachedMappingsSize;
 
-  public IntToIntBtree(int pageSize, @NotNull File file, @NotNull PagedFileStorage.StorageLockContext storageLockContext, boolean initial) throws IOException {
+  public IntToIntBtree(int pageSize, @Nonnull File file, @Nonnull PagedFileStorage.StorageLockContext storageLockContext, boolean initial) throws IOException {
     this.pageSize = pageSize;
 
     if (initial) {
@@ -118,7 +118,7 @@ public class IntToIntBtree {
   }
 
   // return total number of bytes needed for storing information
-  public int persistVars(@NotNull BtreeDataStorage storage, boolean toDisk) {
+  public int persistVars(@Nonnull BtreeDataStorage storage, boolean toDisk) {
     int i = storage.persistInt(0, height | (hasZeroKey ? HAS_ZERO_KEY_MASK :0), toDisk);
     hasZeroKey = (i & HAS_ZERO_KEY_MASK) != 0;
     height = i & ~HAS_ZERO_KEY_MASK;
@@ -160,7 +160,7 @@ public class IntToIntBtree {
   private int myOptimizedInserts;
   private boolean myCanUseLastKey;
 
-  public boolean get(int key, @NotNull int[] result) {
+  public boolean get(int key, @Nonnull int[] result) {
     if (key == 0) {
       if (hasZeroKey) {
         result[0] = zeroKeyValue;
@@ -1125,7 +1125,7 @@ public class IntToIntBtree {
     public abstract boolean process(int key, int value) throws IOException;
   }
 
-  public boolean processMappings(@NotNull KeyValueProcessor processor) throws IOException {
+  public boolean processMappings(@Nonnull KeyValueProcessor processor) throws IOException {
     doFlush();
     root.syncWithStore();
 
@@ -1135,7 +1135,7 @@ public class IntToIntBtree {
     return processLeafPages(root, processor);
   }
 
-  private boolean processLeafPages(@NotNull BtreeIndexNodeView node, @NotNull KeyValueProcessor processor) throws IOException {
+  private boolean processLeafPages(@Nonnull BtreeIndexNodeView node, @Nonnull KeyValueProcessor processor) throws IOException {
     if (node.isIndexLeaf()) {
       return node.processMappings(processor);
     }
@@ -1158,7 +1158,7 @@ public class IntToIntBtree {
     return true;
   }
 
-  public void withStorageLock(@NotNull Runnable runnable) {
+  public void withStorageLock(@Nonnull Runnable runnable) {
     storage.getPagedFileStorage().lock();
     try {
       runnable.run();

@@ -17,78 +17,78 @@ package com.intellij.mock;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.event.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockEditorEventMulticaster implements EditorEventMulticaster {
   public MockEditorEventMulticaster() {
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener) {
+  public void addDocumentListener(@Nonnull DocumentListener listener) {
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
       }
 
   @Override
-  public void removeDocumentListener(@NotNull DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull DocumentListener listener) {
   }
 
   @Override
-  public void addEditorMouseListener(@NotNull EditorMouseListener listener) {
+  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
   }
 
   @Override
-  public void addEditorMouseListener(@NotNull final EditorMouseListener listener, @NotNull final Disposable parentDisposable) {
+  public void addEditorMouseListener(@Nonnull final EditorMouseListener listener, @Nonnull final Disposable parentDisposable) {
   }
 
   @Override
-  public void removeEditorMouseListener(@NotNull EditorMouseListener listener) {
+  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
   }
 
   @Override
-  public void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
   }
 
   @Override
-  public void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener, @NotNull Disposable parentDisposable) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
   }
 
   @Override
-  public void addCaretListener(@NotNull CaretListener listener) {
+  public void addCaretListener(@Nonnull CaretListener listener) {
   }
 
   @Override
-  public void addCaretListener(@NotNull CaretListener listener, @NotNull Disposable parentDisposable) {
+  public void addCaretListener(@Nonnull CaretListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeCaretListener(@NotNull CaretListener listener) {
+  public void removeCaretListener(@Nonnull CaretListener listener) {
   }
 
   @Override
-  public void addSelectionListener(@NotNull SelectionListener listener) {
+  public void addSelectionListener(@Nonnull SelectionListener listener) {
   }
 
   @Override
-  public void addSelectionListener(@NotNull SelectionListener listener, @NotNull Disposable parentDisposable) {
+  public void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeSelectionListener(@NotNull SelectionListener listener) {
+  public void removeSelectionListener(@Nonnull SelectionListener listener) {
   }
 
   @Override
-  public void addVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
   }
 
   @Override
-  public void removeVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
   }
 
 }

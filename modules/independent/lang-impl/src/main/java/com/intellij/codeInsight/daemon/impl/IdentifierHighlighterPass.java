@@ -43,7 +43,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -60,7 +60,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   private final int myCaretOffset;
   private final HighlightUsagesHandlerBase<PsiElement> myHighlightUsagesHandler;
 
-  IdentifierHighlighterPass(@NotNull Project project, @NotNull PsiFile file, @NotNull Editor editor) {
+  IdentifierHighlighterPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor) {
     super(project, editor.getDocument(), false);
     myFile = file;
     myEditor = editor;
@@ -69,7 +69,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doCollectInformation(@NotNull final ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull final ProgressIndicator progress) {
     if (myHighlightUsagesHandler != null) {
       List<PsiElement> targets = myHighlightUsagesHandler.getTargets();
       myHighlightUsagesHandler.computeUsages(targets);
@@ -129,8 +129,8 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
    * @param psiElement psi element to search in
    * @return a pair where first element is read usages and second is write usages
    */
-  @NotNull
-  public static Couple<Collection<TextRange>> getHighlightUsages(@NotNull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
+  @Nonnull
+  public static Couple<Collection<TextRange>> getHighlightUsages(@Nonnull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
     return getUsages(target, psiElement, withDeclarations, true);
   }
 
@@ -140,13 +140,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
    * @param target target psi element
    * @param psiElement psi element to search in
    */
-  @NotNull
-  public static Collection<TextRange> getUsages(@NotNull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
+  @Nonnull
+  public static Collection<TextRange> getUsages(@Nonnull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
     return getUsages(target, psiElement, withDeclarations, false).first;
   }
 
-  @NotNull
-  private static Couple<Collection<TextRange>> getUsages(@NotNull PsiElement target, PsiElement psiElement, boolean withDeclarations, boolean detectAccess) {
+  @Nonnull
+  private static Couple<Collection<TextRange>> getUsages(@Nonnull PsiElement target, PsiElement psiElement, boolean withDeclarations, boolean detectAccess) {
     List<TextRange> readRanges = new ArrayList<>();
     List<TextRange> writeRanges = new ArrayList<>();
     final ReadWriteAccessDetector detector = detectAccess ? ReadWriteAccessDetector.findDetector(target) : null;
@@ -186,7 +186,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     return Couple.<Collection<TextRange>>of(readRanges, writeRanges);
   }
 
-  private void highlightTargetUsages(@NotNull PsiElement target) {
+  private void highlightTargetUsages(@Nonnull PsiElement target) {
     final Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile, true);
     myReadAccessRanges.addAll(usages.first);
     myWriteAccessRanges.addAll(usages.second);

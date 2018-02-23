@@ -19,8 +19,8 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Refreshes file history.
@@ -44,7 +44,7 @@ public class FileHistoryRefresher implements FileHistoryRefresherI {
 
   public FileHistoryRefresher(final VcsHistoryProviderEx vcsHistoryProvider,
                               final FilePath path,
-                              @Nullable VcsRevisionNumber startingRevisionNumber,
+                              @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
                               final AbstractVcs vcs) {
     this((VcsHistoryProvider)vcsHistoryProvider, path, startingRevisionNumber, vcs);
   }
@@ -61,18 +61,18 @@ public class FileHistoryRefresher implements FileHistoryRefresherI {
     myCanUseCache = true;
   }
 
-  @NotNull
-  public static FileHistoryRefresherI findOrCreate(@NotNull VcsHistoryProvider vcsHistoryProvider,
-                                                   @NotNull FilePath path,
-                                                   @NotNull AbstractVcs vcs) {
+  @Nonnull
+  public static FileHistoryRefresherI findOrCreate(@Nonnull VcsHistoryProvider vcsHistoryProvider,
+                                                   @Nonnull FilePath path,
+                                                   @Nonnull AbstractVcs vcs) {
     FileHistoryRefresherI refresher = FileHistorySessionPartner.findExistingHistoryRefresher(vcs.getProject(), path, null);
     return refresher == null ? new FileHistoryRefresher(vcsHistoryProvider, path, vcs) : refresher;
   }
 
-  @NotNull
-  public static FileHistoryRefresherI findOrCreate(@NotNull VcsHistoryProviderEx vcsHistoryProvider,
-                                                   @NotNull FilePath path,
-                                                   @NotNull AbstractVcs vcs,
+  @Nonnull
+  public static FileHistoryRefresherI findOrCreate(@Nonnull VcsHistoryProviderEx vcsHistoryProvider,
+                                                   @Nonnull FilePath path,
+                                                   @Nonnull AbstractVcs vcs,
                                                    @Nullable VcsRevisionNumber startingRevisionNumber) {
     FileHistoryRefresherI refresher = FileHistorySessionPartner.findExistingHistoryRefresher(vcs.getProject(), path, startingRevisionNumber);
     return refresher == null ? new FileHistoryRefresher(vcsHistoryProvider, path, startingRevisionNumber, vcs) : refresher;

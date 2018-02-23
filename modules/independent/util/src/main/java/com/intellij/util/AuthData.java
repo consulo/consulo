@@ -15,8 +15,8 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Container for authentication data: login and password.
@@ -26,15 +26,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class AuthData {
 
-  @NotNull private final String myLogin;
-  @Nullable private final String myPassword;
+  @Nonnull
+  private final String myLogin;
+  @Nullable
+  private final String myPassword;
 
-  public AuthData(@NotNull String login, @Nullable String password) {
+  public AuthData(@Nonnull String login, @Nullable String password) {
     myPassword = password;
     myLogin = login;
   }
 
-  @NotNull
+  @Nonnull
   public String getLogin() {
     return myLogin;
   }

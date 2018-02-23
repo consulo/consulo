@@ -16,15 +16,14 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  */
 public interface VcsLogDataProvider {
 
-  @Nullable
+  @javax.annotation.Nullable
   CommitId getCommitId(int commitIndex);
 
-  int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root);
+  int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
 }

@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.PoolOfTestIcons;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.LayeredIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -44,8 +44,8 @@ public class SMPoolOfTestIcons implements PoolOfTestIcons {
     }
   }
 
-  @NotNull
-  public static Icon addErrorMarkTo(@NotNull
+  @Nonnull
+  public static Icon addErrorMarkTo(@Nonnull
                                     final Icon baseIcon) {
     return new LayeredIcon(baseIcon, ERROR_ICON_MARK);
   }

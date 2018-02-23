@@ -17,8 +17,8 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -242,7 +242,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
     return sameValue[0];
   }
 
-  @NotNull
+  @Nonnull
   private OutputStream buildOldComparerStream(final int addr, final boolean[] sameValue) {
     OutputStream comparer;
     final PagedFileStorage storage = getPagedFileStorage();
@@ -326,7 +326,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       myFile = file;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) throws IOException {
       byte[] buf = new byte[pageSize];
@@ -367,7 +367,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected File getChunksFile() {
       return myFile;

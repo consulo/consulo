@@ -31,25 +31,28 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class HighlightingSessionImpl implements HighlightingSession {
-  @NotNull private final PsiFile myPsiFile;
+  @Nonnull
+  private final PsiFile myPsiFile;
   @Nullable private final Editor myEditor;
-  @NotNull private final ProgressIndicator myProgressIndicator;
+  @Nonnull
+  private final ProgressIndicator myProgressIndicator;
   private final EditorColorsScheme myEditorColorsScheme;
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final Document myDocument;
   private final Map<TextRange,RangeMarker> myRanges2markersCache = new THashMap<>();
   private final TransferToEDTQueue<Runnable> myEDTQueue;
 
-  private HighlightingSessionImpl(@NotNull PsiFile psiFile,
+  private HighlightingSessionImpl(@Nonnull PsiFile psiFile,
                                   @Nullable Editor editor,
-                                  @NotNull DaemonProgressIndicator progressIndicator,
+                                  @Nonnull DaemonProgressIndicator progressIndicator,
                                   EditorColorsScheme editorColorsScheme) {
     myPsiFile = psiFile;
     myEditor = editor;
@@ -65,20 +68,20 @@ public class HighlightingSessionImpl implements HighlightingSession {
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
 
-  void applyInEDT(@NotNull Runnable runnable) {
+  void applyInEDT(@Nonnull Runnable runnable) {
     myEDTQueue.offer(runnable);
   }
 
-  public static HighlightingSession getHighlightingSession(@NotNull PsiFile psiFile, @NotNull ProgressIndicator progressIndicator) {
+  public static HighlightingSession getHighlightingSession(@Nonnull PsiFile psiFile, @Nonnull ProgressIndicator progressIndicator) {
     Map<PsiFile, HighlightingSession> map = ((DaemonProgressIndicator)progressIndicator).getUserData(HIGHLIGHTING_SESSION);
     return map == null ? null : map.get(psiFile);
   }
 
-  @NotNull
-  static HighlightingSession getOrCreateHighlightingSession(@NotNull PsiFile psiFile,
+  @Nonnull
+  static HighlightingSession getOrCreateHighlightingSession(@Nonnull PsiFile psiFile,
                                                             @Nullable Editor editor,
-                                                            @NotNull DaemonProgressIndicator progressIndicator,
-                                                            @Nullable EditorColorsScheme editorColorsScheme) {
+                                                            @Nonnull DaemonProgressIndicator progressIndicator,
+                                                            @javax.annotation.Nullable EditorColorsScheme editorColorsScheme) {
     HighlightingSession session = getHighlightingSession(psiFile, progressIndicator);
     if (session == null) {
       ConcurrentMap<PsiFile, HighlightingSession> map = progressIndicator.getUserData(HIGHLIGHTING_SESSION);
@@ -91,7 +94,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return session;
   }
 
-  static void waitForAllSessionsHighlightInfosApplied(@NotNull DaemonProgressIndicator progressIndicator) {
+  static void waitForAllSessionsHighlightInfosApplied(@Nonnull DaemonProgressIndicator progressIndicator) {
     ConcurrentMap<PsiFile, HighlightingSession> map = progressIndicator.getUserData(HIGHLIGHTING_SESSION);
     if (map != null) {
       for (HighlightingSession session : map.values()) {
@@ -101,7 +104,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiFile getPsiFile() {
     return myPsiFile;
@@ -113,19 +116,19 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     return myDocument;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProgressIndicator getProgressIndicator() {
     return myProgressIndicator;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;
@@ -136,8 +139,8 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return myEditorColorsScheme;
   }
 
-  void queueHighlightInfo(@NotNull HighlightInfo info,
-                          @NotNull TextRange restrictedRange,
+  void queueHighlightInfo(@Nonnull HighlightInfo info,
+                          @Nonnull TextRange restrictedRange,
                           int groupId) {
     myEDTQueue.offer(() -> {
       final EditorColorsScheme colorsScheme = getColorsScheme();
@@ -147,7 +150,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
     });
   }
 
-  void queueDisposeHighlighterFor(@NotNull HighlightInfo info) {
+  void queueDisposeHighlighterFor(@Nonnull HighlightInfo info) {
     RangeHighlighterEx highlighter = info.getHighlighter();
     if (highlighter == null) return;
     // that highlighter may have been reused for another info

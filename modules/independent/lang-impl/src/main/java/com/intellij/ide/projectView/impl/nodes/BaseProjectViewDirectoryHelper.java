@@ -52,8 +52,8 @@ import consulo.psi.PsiPackageManager;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class BaseProjectViewDirectoryHelper {
 
   @Nullable
   @RequiredReadAction
-  public static String getLocationString(@NotNull PsiDirectory psiDirectory) {
+  public static String getLocationString(@Nonnull PsiDirectory psiDirectory) {
     PsiPackage aPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
     if (ProjectRootsUtil.isSourceRoot(psiDirectory) && aPackage != null) {
       return aPackage.getQualifiedName();
@@ -86,9 +86,9 @@ public class BaseProjectViewDirectoryHelper {
            !aPackage.getQualifiedName().isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static String getNodeName(ViewSettings settings, Object parentValue, @NotNull PsiDirectory directory) {
+  public static String getNodeName(ViewSettings settings, Object parentValue, @Nonnull PsiDirectory directory) {
     Project project = directory.getProject();
 
     PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);

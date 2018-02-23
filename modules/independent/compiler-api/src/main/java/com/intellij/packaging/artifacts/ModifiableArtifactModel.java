@@ -16,31 +16,30 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.packaging.elements.CompositePackagingElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ModifiableArtifactModel extends ArtifactModel {
 
-  @NotNull
-  ModifiableArtifact addArtifact(final @NotNull String name, @NotNull ArtifactType artifactType);
+  @Nonnull
+  ModifiableArtifact addArtifact(final @Nonnull String name, @Nonnull ArtifactType artifactType);
 
-  @NotNull
-  ModifiableArtifact addArtifact(final @NotNull String name, @NotNull ArtifactType artifactType, CompositePackagingElement<?> rootElement);
+  @Nonnull
+  ModifiableArtifact addArtifact(final @Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement);
 
-  void removeArtifact(@NotNull Artifact artifact);
+  void removeArtifact(@Nonnull Artifact artifact);
 
-  @NotNull
-  ModifiableArtifact getOrCreateModifiableArtifact(@NotNull Artifact artifact);
+  @Nonnull
+  ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact);
 
-  @Nullable
+  @javax.annotation.Nullable
   Artifact getModifiableCopy(Artifact artifact);
 
-  void addListener(@NotNull ArtifactListener listener);
+  void addListener(@Nonnull ArtifactListener listener);
 
-  void removeListener(@NotNull ArtifactListener listener);
+  void removeListener(@Nonnull ArtifactListener listener);
 
 
   boolean isModified();

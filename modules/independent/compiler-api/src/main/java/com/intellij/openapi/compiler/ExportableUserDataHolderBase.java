@@ -17,15 +17,15 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
 public class ExportableUserDataHolderBase extends UserDataHolderBase implements ExportableUserDataHolder{
   private final Set<Key> myKeys = Collections.synchronizedSet(new HashSet<Key>());
 
-  @NotNull
+  @Nonnull
   public final Map<Key, Object> exportUserData() {
     final Map<Key, Object> result = new HashMap<Key, Object>();
     synchronized (myKeys) {
@@ -40,7 +40,7 @@ public class ExportableUserDataHolderBase extends UserDataHolderBase implements 
   }
 
   @Override
-  public final <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public final <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     if (value != null) {
       myKeys.add(key);
     }

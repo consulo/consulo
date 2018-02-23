@@ -2,7 +2,7 @@ package com.intellij.openapi.externalSystem.service.internal;
 
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -24,7 +24,7 @@ public interface ExternalSystemTaskAware {
    *            <code>false</code> otherwise
    * @throws RemoteException      as required by RMI
    */
-  boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException;
+  boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException;
 
   /**
    * Allows to cancel the target task by the current service.
@@ -35,7 +35,7 @@ public interface ExternalSystemTaskAware {
    *            <code>false</code> otherwise
    * @throws RemoteException      as required by RMI
    */
-  boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException;
+  boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException;
 
   /**
    * Allows to ask current service for all tasks being executed at the moment.  
@@ -43,6 +43,6 @@ public interface ExternalSystemTaskAware {
    * @return      ids of all tasks being executed at the moment grouped by type
    * @throws RemoteException      as required by RMI
    */
-  @NotNull
+  @Nonnull
   Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException;
 }

@@ -44,7 +44,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -325,7 +325,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (CommonDataKeys.PROJECT == dataId) {
         return myModule.getProject();
       }
@@ -528,7 +528,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     public CellAppearanceEx getAppearance(boolean selected, final boolean isBold) {
       return new CellAppearanceEx() {
         @Override
-        public void customize(@NotNull SimpleColoredComponent component) {
+        public void customize(@Nonnull SimpleColoredComponent component) {
           component.setIcon(getIcon());
           final Font font = UIUtil.getTreeFont();
           if (isBold) {
@@ -544,11 +544,11 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         }
 
         @Override
-        public void customize(@NotNull final HtmlListCellRenderer renderer) {
+        public void customize(@Nonnull final HtmlListCellRenderer renderer) {
           throw new UnsupportedOperationException("Rendering in combo box not supported yet.");
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getText() {
           return getDisplayName();
@@ -609,17 +609,17 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         if (e.getOwnerModule() == myModule) {
           return new CellAppearanceEx() {
             @Override
-            public void customize(@NotNull SimpleColoredComponent component) {
+            public void customize(@Nonnull SimpleColoredComponent component) {
               component.setIcon(AllIcons.Nodes.Module);
               component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
             }
 
             @Override
-            public void customize(@NotNull final HtmlListCellRenderer renderer) {
+            public void customize(@Nonnull final HtmlListCellRenderer renderer) {
               throw new UnsupportedOperationException("Rendering in combo box not supported yet.");
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public String getText() {
               return "<This Module>";
@@ -729,7 +729,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       if (myItems == null) {
@@ -753,7 +753,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       updateText(presentation);
     }

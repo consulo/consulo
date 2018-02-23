@@ -17,24 +17,24 @@ package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.FindModel;
 import com.intellij.find.SearchSession;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {
   private final FindModel.SearchContext myContext;
 
-  protected EditorHeaderSetSearchContextAction(@NotNull String text, @NotNull FindModel.SearchContext context) {
+  protected EditorHeaderSetSearchContextAction(@Nonnull String text, @Nonnull FindModel.SearchContext context) {
     super(text);
 
     myContext = context;
   }
 
   @Override
-  protected boolean isSelected(@NotNull SearchSession session) {
+  protected boolean isSelected(@Nonnull SearchSession session) {
     return session.getFindModel().getSearchContext() == myContext;
   }
 
   @Override
-  protected void setSelected(@NotNull SearchSession session, boolean selected) {
+  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
     session.getFindModel().setSearchContext(selected ? myContext : FindModel.SearchContext.ANY);
   }
 }

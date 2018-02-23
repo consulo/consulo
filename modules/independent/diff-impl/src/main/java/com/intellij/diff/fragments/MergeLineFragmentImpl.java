@@ -17,8 +17,8 @@ package com.intellij.diff.fragments;
 
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.ThreeSide;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -30,7 +30,8 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   private final int myStartLine3;
   private final int myEndLine3;
 
-  @Nullable private final List<MergeWordFragment> myInnerFragments;
+  @javax.annotation.Nullable
+  private final List<MergeWordFragment> myInnerFragments;
 
   public MergeLineFragmentImpl(int startLine1,
                                int endLine1,
@@ -47,7 +48,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
                                int endLine2,
                                int startLine3,
                                int endLine3,
-                               @Nullable List<MergeWordFragment> innerFragments) {
+                               @javax.annotation.Nullable List<MergeWordFragment> innerFragments) {
     myStartLine1 = startLine1;
     myEndLine1 = endLine1;
     myStartLine2 = startLine2;
@@ -57,15 +58,15 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
     myInnerFragments = innerFragments;
   }
 
-  public MergeLineFragmentImpl(@NotNull MergeRange range) {
+  public MergeLineFragmentImpl(@Nonnull MergeRange range) {
     this(range, null);
   }
 
-  public MergeLineFragmentImpl(@NotNull MergeRange range, @Nullable List<MergeWordFragment> innerFragments) {
+  public MergeLineFragmentImpl(@Nonnull MergeRange range, @javax.annotation.Nullable List<MergeWordFragment> innerFragments) {
     this(range.start1, range.end1, range.start2, range.end2, range.start3, range.end3, innerFragments);
   }
 
-  public MergeLineFragmentImpl(@NotNull MergeLineFragment fragment, @Nullable List<MergeWordFragment> fragments) {
+  public MergeLineFragmentImpl(@Nonnull MergeLineFragment fragment, @Nullable List<MergeWordFragment> fragments) {
     this(fragment.getStartLine(ThreeSide.LEFT), fragment.getEndLine(ThreeSide.LEFT),
          fragment.getStartLine(ThreeSide.BASE), fragment.getEndLine(ThreeSide.BASE),
          fragment.getStartLine(ThreeSide.RIGHT), fragment.getEndLine(ThreeSide.RIGHT),
@@ -73,16 +74,16 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   }
 
   @Override
-  public int getStartLine(@NotNull ThreeSide side) {
+  public int getStartLine(@Nonnull ThreeSide side) {
     return side.select(myStartLine1, myStartLine2, myStartLine3);
   }
 
   @Override
-  public int getEndLine(@NotNull ThreeSide side) {
+  public int getEndLine(@Nonnull ThreeSide side) {
     return side.select(myEndLine1, myEndLine2, myEndLine3);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public List<MergeWordFragment> getInnerFragments() {
     return myInnerFragments;

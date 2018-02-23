@@ -30,7 +30,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInLibrary;
 import com.intellij.usages.rules.UsageInModule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ import javax.swing.*;
  */
 public class ModuleGroupingRule implements UsageGroupingRule {
   @Override
-  public UsageGroup groupUsage(@NotNull Usage usage) {
+  public UsageGroup groupUsage(@Nonnull Usage usage) {
     if (usage instanceof UsageInModule) {
       UsageInModule usageInModule = (UsageInModule)usage;
       Module module = usageInModule.getModule();
@@ -63,7 +63,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     public void update() {
     }
 
-    public LibraryUsageGroup(@NotNull OrderEntry entry) {
+    public LibraryUsageGroup(@Nonnull OrderEntry entry) {
       myEntry = entry;
     }
 
@@ -73,7 +73,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return myEntry.getPresentableName();
     }
@@ -123,7 +123,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
   private static class ModuleUsageGroup implements UsageGroup, TypeSafeDataProvider {
     private final Module myModule;
 
-    public ModuleUsageGroup(@NotNull Module module) {
+    public ModuleUsageGroup(@Nonnull Module module) {
       myModule = module;
     }
 
@@ -150,7 +150,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return myModule.isDisposed() ? "" : myModule.getName();
     }

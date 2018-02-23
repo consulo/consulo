@@ -16,12 +16,12 @@
 
 package com.intellij.vcs.log.graph.utils;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ListenerController<Listener> {
-  void addListener(@NotNull Listener listener);
+  void addListener(@Nonnull Listener listener);
 
-  void removeListener(@NotNull Listener listener);
+  void removeListener(@Nonnull Listener listener);
 
   void removeAllListeners();
 }

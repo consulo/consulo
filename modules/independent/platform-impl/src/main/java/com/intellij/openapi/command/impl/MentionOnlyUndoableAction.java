@@ -17,7 +17,7 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.UndoableAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Used to make Undo/Redo action available for some Document, even if it was not modified.
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 class MentionOnlyUndoableAction implements UndoableAction {
   private final DocumentReference[] myRefs;
 
-  protected MentionOnlyUndoableAction(@NotNull DocumentReference[] refs) {
+  protected MentionOnlyUndoableAction(@Nonnull DocumentReference[] refs) {
     myRefs = refs;
   }
 

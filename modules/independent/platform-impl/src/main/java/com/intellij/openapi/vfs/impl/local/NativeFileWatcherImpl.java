@@ -37,8 +37,9 @@ import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BaseOutputReader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -75,7 +76,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private int myLastChangedPathIndex;
 
   @Override
-  public void initialize(@NotNull ManagingFS managingFS, @NotNull FileWatcherNotificationSink notificationSink) {
+  public void initialize(@Nonnull ManagingFS managingFS, @Nonnull FileWatcherNotificationSink notificationSink) {
     myNotificationSink = notificationSink;
 
     boolean disabled = isDisabled();
@@ -120,7 +121,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   }
 
   @Override
-  public void setWatchRoots(@NotNull List<String> recursive, @NotNull List<String> flat) {
+  public void setWatchRoots(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
     setWatchRoots(recursive, flat, false);
   }
 
@@ -306,7 +307,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     private final List<String> myLines = ContainerUtil.newArrayList();
 
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
-    private MyProcessHandler(@NotNull Process process, @NotNull String commandLine) {
+    private MyProcessHandler(@Nonnull Process process, @Nonnull String commandLine) {
       super(process, commandLine, CHARSET);
       myWriter = new BufferedWriter(writer(process.getOutputStream()));
     }
@@ -321,7 +322,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       myWriter.flush();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected BaseOutputReader.Options readerOptions() {
       return READER_OPTIONS;

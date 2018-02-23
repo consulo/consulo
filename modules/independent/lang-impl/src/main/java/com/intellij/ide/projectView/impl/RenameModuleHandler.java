@@ -36,8 +36,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.RenameHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author dsl
@@ -58,12 +58,12 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     LOG.assertTrue(false);
   }
 
   @Override
-  public void invoke(@NotNull final Project project, @NotNull PsiElement[] elements, @NotNull DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     LOG.assertTrue(module != null);
     Messages.showInputDialog(project,

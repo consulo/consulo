@@ -29,8 +29,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
 import com.intellij.reference.SoftReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -43,7 +43,7 @@ public class EditorHighlighterCache {
   private EditorHighlighterCache() {
   }
 
-  public static void rememberEditorHighlighterForCachesOptimization(Document document, @NotNull final EditorHighlighter highlighter) {
+  public static void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
     document.putUserData(ourSomeEditorSyntaxHighlighter, new WeakReference<EditorHighlighter>(highlighter));
   }
 

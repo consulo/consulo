@@ -16,8 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -61,11 +61,11 @@ public final class EmptyAction extends AnAction {
     e.getPresentation().setEnabledAndVisible(myEnabled);
   }
 
-  public static void setupAction(@NotNull AnAction action, @NotNull String id, @Nullable JComponent component) {
+  public static void setupAction(@Nonnull AnAction action, @Nonnull String id, @Nullable JComponent component) {
     ActionUtil.mergeFrom(action, id).registerCustomShortcutSet(component, null);
   }
 
-  public static void registerActionShortcuts(@NotNull JComponent component, @NotNull JComponent fromComponent) {
+  public static void registerActionShortcuts(@Nonnull JComponent component, @Nonnull JComponent fromComponent) {
     ActionUtil.copyRegisteredShortcuts(component, fromComponent);
   }
 
@@ -75,8 +75,8 @@ public final class EmptyAction extends AnAction {
    * ActionManager.getInstance().getAction(id).registerCustomShortcutSet(shortcutSet, component) shouldn't be used directly,
    * because it will erase shortcuts, assigned to this action in keymap.
    */
-  @NotNull
-  public static AnAction registerWithShortcutSet(@NotNull String id, @NotNull ShortcutSet shortcutSet, @NotNull JComponent component) {
+  @Nonnull
+  public static AnAction registerWithShortcutSet(@Nonnull String id, @Nonnull ShortcutSet shortcutSet, @Nonnull JComponent component) {
     AnAction newAction = wrap(ActionManager.getInstance().getAction(id));
     newAction.registerCustomShortcutSet(shortcutSet, component);
     return newAction;
@@ -94,9 +94,10 @@ public final class EmptyAction extends AnAction {
   }
 
   public static class MyDelegatingAction extends AnAction {
-    @NotNull private final AnAction myDelegate;
+    @Nonnull
+    private final AnAction myDelegate;
 
-    public MyDelegatingAction(@NotNull AnAction action) {
+    public MyDelegatingAction(@Nonnull AnAction action) {
       myDelegate = action;
       copyFrom(action);
       setEnabledInModalContext(action.isEnabledInModalContext());
@@ -129,15 +130,16 @@ public final class EmptyAction extends AnAction {
   }
 
   public static class MyDelegatingActionGroup extends ActionGroup {
-    @NotNull private final ActionGroup myDelegate;
+    @Nonnull
+    private final ActionGroup myDelegate;
 
-    public MyDelegatingActionGroup(@NotNull ActionGroup action) {
+    public MyDelegatingActionGroup(@Nonnull ActionGroup action) {
       myDelegate = action;
       copyFrom(action);
       setEnabledInModalContext(action.isEnabledInModalContext());
     }
 
-    @NotNull
+    @Nonnull
     public ActionGroup getDelegate() {
       return myDelegate;
     }
@@ -147,7 +149,7 @@ public final class EmptyAction extends AnAction {
       return myDelegate.isPopup();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable final AnActionEvent e) {
       return myDelegate.getChildren(e);

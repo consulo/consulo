@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.testFramework.LeakHunter;
 import com.intellij.testFramework.TestFileType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class BookmarkManagerTest extends AbstractEditorTest {
   }
 
   @Override
-  public Object getData(@NotNull Key dataId) {
+  public Object getData(@Nonnull Key dataId) {
     if (OpenFileDescriptor.NAVIGATE_IN_EDITOR == dataId) {
       return myEditor;
     }

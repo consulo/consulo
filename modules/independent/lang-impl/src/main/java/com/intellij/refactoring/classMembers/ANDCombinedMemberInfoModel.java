@@ -25,7 +25,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {
   private final MemberInfoModel<T, M> myModel1;
@@ -66,7 +66,7 @@ public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberIn
   }
 
   @Override
-  public int checkForProblems(@NotNull M member) {
+  public int checkForProblems(@Nonnull M member) {
     return Math.max(myModel1.checkForProblems(member), myModel2.checkForProblems(member));
   }
 

@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -32,8 +32,8 @@ public final class CompletionParameters {
   private final int myOffset;
   private final int myInvocationCount;
 
-  CompletionParameters(@NotNull final PsiElement position, @NotNull final PsiFile originalFile,
-                       final CompletionType completionType, int offset, final int invocationCount, @NotNull Editor editor) {
+  CompletionParameters(@Nonnull final PsiElement position, @Nonnull final PsiFile originalFile,
+                       final CompletionType completionType, int offset, final int invocationCount, @Nonnull Editor editor) {
     assert offset >= position.getTextRange().getStartOffset();
     myPosition = position;
     assert position.isValid();
@@ -56,7 +56,7 @@ public final class CompletionParameters {
     return new CompletionParameters(myPosition, myOriginalFile, myCompletionType, myOffset, newCount, myEditor);
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement getPosition() {
     return myPosition;
   }
@@ -66,12 +66,12 @@ public final class CompletionParameters {
     return myOriginalFile.findElementAt(myPosition.getTextRange().getStartOffset());
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getOriginalFile() {
     return myOriginalFile;
   }
 
-  @NotNull
+  @Nonnull
   public CompletionType getCompletionType() {
     return myCompletionType;
   }

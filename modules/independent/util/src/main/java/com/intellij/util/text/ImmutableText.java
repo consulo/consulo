@@ -30,8 +30,8 @@ package com.intellij.util.text;
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A pruned and optimized version of javolution.text.Text
@@ -78,17 +78,17 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
    * @param  obj the object to represent as text.
    * @return the textual representation of the specified object.
    */
-  static ImmutableText valueOf(@NotNull Object obj) {
+  static ImmutableText valueOf(@Nonnull Object obj) {
     if (obj instanceof ImmutableText) return (ImmutableText)obj;
     if (obj instanceof CharSequence) return ((CharSequence)obj).length() == 0 ? EMPTY : valueOf((CharSequence)obj);
     return valueOf(String.valueOf(obj));
   }
 
-  private static ImmutableText valueOf(@NotNull CharSequence str) {
+  private static ImmutableText valueOf(@Nonnull CharSequence str) {
     return new ImmutableText(createLeafNode(str));
   }
 
-  private static LeafNode createLeafNode(@NotNull CharSequence str) {
+  private static LeafNode createLeafNode(@Nonnull CharSequence str) {
     byte[] bytes = toBytesIfPossible(str);
     if (bytes != null) {
       return new Leaf8BitNode(bytes);
@@ -136,7 +136,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     return this;
   }
 
-  private static Node nodeOf(@NotNull LeafNode node, int offset, int length) {
+  private static Node nodeOf(@Nonnull LeafNode node, int offset, int length) {
     if (length <= BLOCK_SIZE) {
       return node.subNode(offset, offset+length);
     }
@@ -308,7 +308,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     final LeafNode leafNode;
     final int offset;
 
-    private InnerLeaf(@NotNull LeafNode leafNode, int offset) {
+    private InnerLeaf(@Nonnull LeafNode leafNode, int offset) {
       this.leafNode = leafNode;
       this.offset = offset;
     }
@@ -351,7 +351,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
    *         (start > end) || (end > this.length())</code>
    */
   @Override
-  public void getChars(int start, int end, @NotNull char[] dest, int destPos) {
+  public void getChars(int start, int end, @Nonnull char[] dest, int destPos) {
     myNode.getChars(start, end, dest, destPos);
   }
 
@@ -361,15 +361,15 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
    * @return the <code>java.lang.String</code> for this text.
    */
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     return myNode.toString();
   }
 
   private abstract static class Node implements CharSequence {
-    abstract void getChars(int start, int end, @NotNull char[] dest, int destPos);
+    abstract void getChars(int start, int end, @Nonnull char[] dest, int destPos);
     abstract Node subNode(int start, int end);
-    @NotNull
+    @Nonnull
     @Override
     public String toString() {
       int len = length();
@@ -385,8 +385,8 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
   private abstract static class LeafNode extends Node {
   }
 
-  @NotNull
-  private static Node concatNodes(@NotNull Node node1, @NotNull Node node2) {
+  @Nonnull
+  private static Node concatNodes(@Nonnull Node node1, @Nonnull Node node2) {
     // All Text instances are maintained balanced:
     //   (head < tail * 2) & (tail < head * 2)
     final int length = node1.length() + node2.length();
@@ -422,7 +422,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
   private static class WideLeafNode extends LeafNode {
     private final char[] data;
 
-    WideLeafNode(@NotNull char[] data) {
+    WideLeafNode(@Nonnull char[] data) {
       this.data = data;
     }
 
@@ -432,7 +432,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     }
 
     @Override
-    void getChars(int start, int end, @NotNull char[] dest, int destPos) {
+    void getChars(int start, int end, @Nonnull char[] dest, int destPos) {
       if (start < 0 || end > length() || start > end) {
         throw new IndexOutOfBoundsException();
       }
@@ -447,7 +447,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
       return createLeafNode(new CharArrayCharSequence(data, start, end));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String toString() {
       return StringFactory.createShared(data);
@@ -461,7 +461,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
 
   private static class Leaf8BitNode extends LeafNode {
     private final byte[] data;
-    Leaf8BitNode(@NotNull byte[] data) {
+    Leaf8BitNode(@Nonnull byte[] data) {
       this.data = data;
     }
 
@@ -471,7 +471,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     }
 
     @Override
-    void getChars(int start, int end, @NotNull char[] dest, int destPos) {
+    void getChars(int start, int end, @Nonnull char[] dest, int destPos) {
       if (start < 0 || end > length() || start > end) {
         throw new IndexOutOfBoundsException();
       }
@@ -548,7 +548,7 @@ final class ImmutableText extends ImmutableCharSequence implements CharArrayExte
     }
 
     @Override
-    void getChars(int start, int end, @NotNull char[] dest, int destPos) {
+    void getChars(int start, int end, @Nonnull char[] dest, int destPos) {
       final int cesure = head.length();
       if (end <= cesure) {
         head.getChars(start, end, dest, destPos);

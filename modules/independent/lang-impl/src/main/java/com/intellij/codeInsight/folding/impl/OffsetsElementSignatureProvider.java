@@ -20,8 +20,8 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.StringTokenizer;
 
@@ -38,10 +38,10 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
   private static final String TYPE_MARKER = "e";
   
   @Override
-  protected PsiElement restoreBySignatureTokens(@NotNull PsiFile file,
-                                                @NotNull PsiElement parent,
-                                                @NotNull String type,
-                                                @NotNull StringTokenizer tokenizer,
+  protected PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
+                                                @Nonnull PsiElement parent,
+                                                @Nonnull String type,
+                                                @Nonnull StringTokenizer tokenizer,
                                                 @Nullable StringBuilder processingInfoStorage)
   {
     if (!TYPE_MARKER.equals(type)) {
@@ -107,7 +107,7 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
   }
 
   @Nullable
-  private PsiElement findElement(int start, int end, int index, @NotNull PsiElement element, @Nullable StringBuilder processingInfoStorage) {
+  private PsiElement findElement(int start, int end, int index, @Nonnull PsiElement element, @Nullable StringBuilder processingInfoStorage) {
     TextRange range = element.getTextRange();
     if (processingInfoStorage != null) {
       processingInfoStorage.append(String.format("Starting processing from element '%s'. It's range is %s%n", element, range));
@@ -167,7 +167,7 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
   }
 
   @Override
-  public String getSignature(@NotNull PsiElement element) {
+  public String getSignature(@Nonnull PsiElement element) {
     TextRange range = element.getTextRange();
     if (range.isEmpty()) {
       return null;

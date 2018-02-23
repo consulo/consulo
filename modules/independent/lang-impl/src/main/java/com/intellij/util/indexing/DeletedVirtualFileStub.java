@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko on 11/18/2015.
@@ -68,7 +68,7 @@ class DeletedVirtualFileStub extends LightVirtualFile implements VirtualFileWith
     return "invalid:" + getOriginalFile().toString() + ", resurrected:" + myResurrected;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUrl() {
     return "invalid:" + super.getUrl();

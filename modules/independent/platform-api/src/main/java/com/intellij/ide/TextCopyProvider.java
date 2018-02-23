@@ -18,8 +18,8 @@ package com.intellij.ide;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.Collection;
@@ -40,7 +40,7 @@ public abstract class TextCopyProvider implements CopyProvider {
   public abstract Collection<String> getTextLinesToCopy();
 
   @Override
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     Collection<String> lines = getTextLinesToCopy();
     if (lines != null && !lines.isEmpty()) {
       String text = StringUtil.join(lines, getLinesSeparator());
@@ -53,12 +53,12 @@ public abstract class TextCopyProvider implements CopyProvider {
   }
 
   @Override
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     return getTextLinesToCopy() != null;
   }
 
   @Override
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 }

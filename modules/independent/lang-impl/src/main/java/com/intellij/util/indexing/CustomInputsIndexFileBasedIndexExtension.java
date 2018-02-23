@@ -20,11 +20,11 @@
 package com.intellij.util.indexing;
 
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface CustomInputsIndexFileBasedIndexExtension<K> {
-  @NotNull
+  @Nonnull
   DataExternalizer<Collection<K>> createExternalizer();
 }

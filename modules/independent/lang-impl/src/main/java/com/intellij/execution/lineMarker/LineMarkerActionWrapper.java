@@ -25,8 +25,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -35,7 +35,7 @@ public class LineMarkerActionWrapper extends AnAction {
   protected final PsiElement myElement;
   private final AnAction myOrigin;
 
-  public LineMarkerActionWrapper(PsiElement element, @NotNull AnAction origin) {
+  public LineMarkerActionWrapper(PsiElement element, @Nonnull AnAction origin) {
     myElement = element;
     myOrigin = origin;
     copyFrom(origin);
@@ -43,12 +43,12 @@ public class LineMarkerActionWrapper extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     AnActionEvent event = wrapEvent(e);
     myOrigin.update(event);
   }
 
-  @NotNull
+  @Nonnull
   protected AnActionEvent wrapEvent(AnActionEvent e) {
     return new AnActionEvent(e.getInputEvent(), new MyDataContext(e.getDataContext()), e.getPlace(), e.getPresentation(), e.getActionManager(),
                              e.getModifiers());
@@ -56,7 +56,7 @@ public class LineMarkerActionWrapper extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(wrapEvent(e));
   }
 

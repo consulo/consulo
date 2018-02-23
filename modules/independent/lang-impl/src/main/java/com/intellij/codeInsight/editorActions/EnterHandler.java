@@ -54,8 +54,8 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EnterHandler extends BaseEnterHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.editorActions.EnterHandler");
@@ -69,7 +69,7 @@ public class EnterHandler extends BaseEnterHandler {
   }
 
   @Override
-  public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
@@ -180,10 +180,10 @@ public class EnterHandler extends BaseEnterHandler {
     }
   }
 
-  @NotNull
-  private static DataContext getExtendedContext(@NotNull DataContext originalContext,
-                                                @NotNull Project project,
-                                                @NotNull Caret caret) {
+  @Nonnull
+  private static DataContext getExtendedContext(@Nonnull DataContext originalContext,
+                                                @Nonnull Project project,
+                                                @Nonnull Caret caret) {
     DataContext context = originalContext instanceof UserDataHolder ? originalContext : new DataContextWrapper(originalContext);
     ((UserDataHolder)context).putUserData(CONTEXT_LANGUAGE, PsiUtilBase.getLanguageInEditor(caret, project));
     return context;
@@ -287,7 +287,7 @@ public class EnterHandler extends BaseEnterHandler {
    * '*comment*&#47; 1;' as comment end. Current approach is to check if next PSI sibling to the current PSI comment is invalid.
    * This method allows to perform such an examination.
    */
-  private static boolean isInvalidPsi(@NotNull PsiElement base) {
+  private static boolean isInvalidPsi(@Nonnull PsiElement base) {
     for (PsiElement current = base.getNextSibling(); current != null; current = current.getNextSibling()) {
       if (current instanceof PsiErrorElement) {
         return true;
@@ -742,7 +742,7 @@ public class EnterHandler extends BaseEnterHandler {
 
 
   @Nullable
-  public static Language getLanguage(@NotNull DataContext dataContext) {
+  public static Language getLanguage(@Nonnull DataContext dataContext) {
     if (dataContext instanceof UserDataHolder) {
       return CONTEXT_LANGUAGE.get((UserDataHolder)dataContext);
     }

@@ -20,23 +20,22 @@ import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.WizardPopup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
   public FlatSpeedSearchPopup(String title,
-                              @NotNull DefaultActionGroup actionGroup,
-                              @NotNull DataContext dataContext,
-                              @Nullable Condition<AnAction> preselectActionCondition, boolean showDisableActions) {
+                              @Nonnull DefaultActionGroup actionGroup,
+                              @Nonnull DataContext dataContext,
+                              @javax.annotation.Nullable Condition<AnAction> preselectActionCondition, boolean showDisableActions) {
     super(title, actionGroup, dataContext, false, false, showDisableActions, false,
           null, -1, preselectActionCondition, null);
   }
 
-  protected FlatSpeedSearchPopup(@Nullable WizardPopup parent,
-                                 @NotNull ListPopupStep step,
-                                 @NotNull DataContext dataContext,
-                                 @Nullable Object value) {
+  protected FlatSpeedSearchPopup(@javax.annotation.Nullable WizardPopup parent,
+                                 @Nonnull ListPopupStep step,
+                                 @Nonnull DataContext dataContext,
+                                 @javax.annotation.Nullable Object value) {
     super(parent, step, null, dataContext, null, -1);
     setParentValue(value);
   }
@@ -48,21 +47,21 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
     return shouldBeShowing(((PopupFactoryImpl.ActionItem)value).getAction());
   }
 
-  protected boolean shouldBeShowing(@NotNull AnAction action) {
+  protected boolean shouldBeShowing(@Nonnull AnAction action) {
     return getSpeedSearch().isHoldingFilter() || !isSpeedsearchAction(action);
   }
 
-  @NotNull
-  public static AnAction createSpeedSearchWrapper(@NotNull AnAction child) {
+  @Nonnull
+  public static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {
     return new MySpeedSearchAction(child);
   }
 
-  @NotNull
-  public static ActionGroup createSpeedSearchActionGroupWrapper(@NotNull ActionGroup child) {
+  @Nonnull
+  public static ActionGroup createSpeedSearchActionGroupWrapper(@Nonnull ActionGroup child) {
     return new MySpeedSearchActionGroup(child);
   }
 
-  protected static boolean isSpeedsearchAction(@NotNull AnAction action) {
+  protected static boolean isSpeedsearchAction(@Nonnull AnAction action) {
     return action instanceof SpeedsearchAction;
   }
 
@@ -71,13 +70,13 @@ public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 
   private static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements SpeedsearchAction {
 
-    public MySpeedSearchAction(@NotNull AnAction action) {
+    public MySpeedSearchAction(@Nonnull AnAction action) {
       super(action);
     }
   }
 
   private static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements SpeedsearchAction {
-    public MySpeedSearchActionGroup(@NotNull ActionGroup actionGroup) {
+    public MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
       super(actionGroup);
     }
   }

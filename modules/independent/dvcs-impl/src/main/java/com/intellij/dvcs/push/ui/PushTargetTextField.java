@@ -22,14 +22,14 @@ import com.intellij.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import com.intellij.util.textCompletion.TextCompletionProvider;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
 public class PushTargetTextField extends TextFieldWithCompletion {
-  public PushTargetTextField(@NotNull Project project, @NotNull List<String> targetVariants, @NotNull String defaultTargetName) {
+  public PushTargetTextField(@Nonnull Project project, @Nonnull List<String> targetVariants, @Nonnull String defaultTargetName) {
     super(project, getCompletionProvider(targetVariants), defaultTargetName, true, true, true);
     addFocusListener(new FocusAdapter() {
       @Override
@@ -45,11 +45,11 @@ public class PushTargetTextField extends TextFieldWithCompletion {
   }
 
   @Override
-  protected void updateBorder(@NotNull final EditorEx editor) {
+  protected void updateBorder(@Nonnull final EditorEx editor) {
   }
 
-  @NotNull
-  private static TextCompletionProvider getCompletionProvider(@NotNull final List<String> targetVariants) {
+  @Nonnull
+  private static TextCompletionProvider getCompletionProvider(@Nonnull final List<String> targetVariants) {
     return new ValuesCompletionProviderDumbAware<>(new DefaultTextCompletionValueDescriptor.StringValueDescriptor() {
       @Override
       public int compare(String item1, String item2) {

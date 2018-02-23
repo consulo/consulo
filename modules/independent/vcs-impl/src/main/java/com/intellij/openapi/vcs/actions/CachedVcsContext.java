@@ -22,8 +22,8 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -79,7 +79,7 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSelectedFiles() {
     return mySelectedFiles;
   }
@@ -115,7 +115,7 @@ public class CachedVcsContext implements VcsContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FilePath[] getSelectedFilePaths() {
     return mySelectedFilePaths;
   }

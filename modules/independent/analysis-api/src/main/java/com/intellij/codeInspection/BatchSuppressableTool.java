@@ -16,8 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface BatchSuppressableTool {
   /**
@@ -26,7 +25,7 @@ public interface BatchSuppressableTool {
    * @param element the element to check
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressedFor(@NotNull PsiElement element);
+  boolean isSuppressedFor(@Nonnull PsiElement element);
 
 
   /**
@@ -36,7 +35,7 @@ public interface BatchSuppressableTool {
    *                Inspections tool window
    * @return the list of suppression actions.
    */
-  @NotNull
-  SuppressQuickFix[] getBatchSuppressActions(@Nullable final PsiElement element);
+  @Nonnull
+  SuppressQuickFix[] getBatchSuppressActions(@javax.annotation.Nullable final PsiElement element);
 
 }

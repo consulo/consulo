@@ -37,8 +37,8 @@ import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.XLineBreakpointImpl;
 import junit.framework.Assert;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -102,20 +102,20 @@ public class XDebuggerTestUtil {
     assertPosition(session.getCurrentPosition(), file, line);
   }
 
-  public static XExecutionStack getActiveThread(@NotNull XDebugSession session) {
+  public static XExecutionStack getActiveThread(@Nonnull XDebugSession session) {
     return session.getSuspendContext().getActiveExecutionStack();
   }
 
-  public static List<XStackFrame> collectFrames(@NotNull XDebugSession session) throws InterruptedException {
+  public static List<XStackFrame> collectFrames(@Nonnull XDebugSession session) throws InterruptedException {
     return collectFrames(null, session);
   }
 
-  public static List<XStackFrame> collectFrames(@Nullable XExecutionStack thread, @NotNull XDebugSession session)
+  public static List<XStackFrame> collectFrames(@Nullable XExecutionStack thread, @Nonnull XDebugSession session)
     throws InterruptedException {
     return collectStacks(thread == null ? getActiveThread(session) : thread);
   }
 
-  public static List<XStackFrame> collectStacks(@NotNull XExecutionStack thread) throws InterruptedException {
+  public static List<XStackFrame> collectStacks(@Nonnull XExecutionStack thread) throws InterruptedException {
     return collectStacks(thread, TIMEOUT * 2);
   }
 
@@ -151,7 +151,7 @@ public class XDebuggerTestUtil {
     });
   }
 
-  @NotNull
+  @Nonnull
   public static XValue findVar(Collection<XValue> vars, String name) {
     StringBuilder names = new StringBuilder();
     for (XValue each : vars) {
@@ -166,7 +166,7 @@ public class XDebuggerTestUtil {
     throw new AssertionError("var '" + name + "' not found among " + names);
   }
 
-  public static XTestValueNode computePresentation(@NotNull XValue value) throws InterruptedException {
+  public static XTestValueNode computePresentation(@Nonnull XValue value) throws InterruptedException {
     return computePresentation(value, TIMEOUT);
   }
 
@@ -202,19 +202,19 @@ public class XDebuggerTestUtil {
     assertVariableValue(findVar(vars, name), name, value);
   }
 
-  public static void assertVariableValueMatches(@NotNull Collection<XValue> vars,
+  public static void assertVariableValueMatches(@Nonnull Collection<XValue> vars,
                                                 @Nullable String name,
                                                 @Nullable @Language("RegExp") String valuePattern) throws InterruptedException {
     assertVariableValueMatches(findVar(vars, name), name, valuePattern);
   }
 
-  public static void assertVariableValueMatches(@NotNull XValue var,
+  public static void assertVariableValueMatches(@Nonnull XValue var,
                                                 @Nullable String name,
                                                 @Nullable @Language("RegExp") String valuePattern) throws InterruptedException {
     assertVariableValueMatches(var, name, null, valuePattern);
   }
 
-  public static void assertVariableValueMatches(@NotNull XValue var,
+  public static void assertVariableValueMatches(@Nonnull XValue var,
                                                 @Nullable String name,
                                                 @Nullable String type,
                                                 @Nullable @Language("RegExp") String valuePattern) throws InterruptedException {
@@ -226,13 +226,13 @@ public class XDebuggerTestUtil {
     }
   }
 
-  public static void assertVariableTypeMatches(@NotNull Collection<XValue> vars,
+  public static void assertVariableTypeMatches(@Nonnull Collection<XValue> vars,
                                                @Nullable String name,
                                                @Nullable @Language("RegExp") String typePattern) throws InterruptedException {
     assertVariableTypeMatches(findVar(vars, name), name, typePattern);
   }
 
-  public static void assertVariableTypeMatches(@NotNull XValue var,
+  public static void assertVariableTypeMatches(@Nonnull XValue var,
                                                @Nullable String name,
                                                @Nullable @Language("RegExp") String typePattern) throws InterruptedException {
     XTestValueNode node = computePresentation(var);
@@ -244,24 +244,24 @@ public class XDebuggerTestUtil {
     }
   }
 
-  public static void assertVariableFullValue(@NotNull XValue var,
+  public static void assertVariableFullValue(@Nonnull XValue var,
                                              @Nullable String value) throws InterruptedException {
     XTestValueNode node = computePresentation(var);
     final String[] result = new String[1];
 
     node.myFullValueEvaluator.startEvaluation(new XFullValueEvaluator.XFullValueEvaluationCallback() {
       @Override
-      public void evaluated(@NotNull String fullValue) {
+      public void evaluated(@Nonnull String fullValue) {
         result[0] = fullValue;
       }
 
       @Override
-      public void evaluated(@NotNull String fullValue, @Nullable Font font) {
+      public void evaluated(@Nonnull String fullValue, @Nullable Font font) {
         result[0] = fullValue;
       }
 
       @Override
-      public void errorOccurred(@NotNull String errorMessage) {
+      public void errorOccurred(@Nonnull String errorMessage) {
         result[0] = errorMessage;
       }
 
@@ -331,8 +331,8 @@ public class XDebuggerTestUtil {
     assertVariable(findVar(vars, name), name, type, value, hasChildren);
   }
 
-  @NotNull
-  public static String getConsoleText(final @NotNull ConsoleViewImpl consoleView) {
+  @Nonnull
+  public static String getConsoleText(final @Nonnull ConsoleViewImpl consoleView) {
     new WriteAction() {
       protected void run(Result result) throws Throwable {
         consoleView.flushDeferredText();
@@ -342,9 +342,9 @@ public class XDebuggerTestUtil {
     return consoleView.getEditor().getDocument().getText();
   }
 
-  public static <T extends XBreakpointType> XBreakpoint addBreakpoint(@NotNull final Project project,
-                                                                      @NotNull final Class<T> exceptionType,
-                                                                      @NotNull final XBreakpointProperties properties) {
+  public static <T extends XBreakpointType> XBreakpoint addBreakpoint(@Nonnull final Project project,
+                                                                      @Nonnull final Class<T> exceptionType,
+                                                                      @Nonnull final XBreakpointProperties properties) {
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     XBreakpointType[] types = XBreakpointUtil.getBreakpointTypes();
     final Ref<XBreakpoint> breakpoint = Ref.create(null);
@@ -363,7 +363,7 @@ public class XDebuggerTestUtil {
     return breakpoint.get();
   }
 
-  public static void removeAllBreakpoints(@NotNull final Project project) {
+  public static void removeAllBreakpoints(@Nonnull final Project project) {
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     XBreakpoint<?>[] breakpoints = breakpointManager.getAllBreakpoints();
     for (XBreakpoint b : breakpoints) {
@@ -434,12 +434,12 @@ public class XDebuggerTestUtil {
   }
 
   public static class XTestStackFrameContainer extends XTestContainer<XStackFrame> implements XExecutionStack.XStackFrameContainer {
-    public void addStackFrames(@NotNull List<? extends XStackFrame> stackFrames, boolean last) {
+    public void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, boolean last) {
       addChildren(stackFrames, last);
     }
 
     @Override
-    public void errorOccurred(@NotNull String errorMessage) {
+    public void errorOccurred(@Nonnull String errorMessage) {
       setErrorMessage(errorMessage);
     }
   }

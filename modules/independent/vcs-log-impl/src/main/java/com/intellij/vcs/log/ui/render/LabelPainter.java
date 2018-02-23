@@ -47,8 +47,8 @@ import com.intellij.vcs.log.RefGroup;
 import com.intellij.vcs.log.VcsLogRefManager;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.data.VcsLogData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,25 +75,30 @@ public class LabelPainter {
   private static final float BALANCE = 0.08f;
   private static final JBColor TEXT_COLOR = new JBColor(new Color(0x7a7a7a), new Color(0x909090));
 
-  @NotNull private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogData myLogData;
 
-  @NotNull private List<Pair<String, LabelIcon>> myLabels = ContainerUtil.newArrayList();
+  @Nonnull
+  private List<Pair<String, LabelIcon>> myLabels = ContainerUtil.newArrayList();
   private int myHeight = JBUI.scale(22);
   private int myWidth = 0;
-  @NotNull private Color myBackground = UIUtil.getTableBackground();
-  @Nullable private Color myGreyBackground = null;
-  @NotNull private Color myForeground = UIUtil.getTableForeground();
+  @Nonnull
+  private Color myBackground = UIUtil.getTableBackground();
+  @Nullable
+  private Color myGreyBackground = null;
+  @Nonnull
+  private Color myForeground = UIUtil.getTableForeground();
   private boolean myCompact;
   private boolean myShowTagNames;
 
-  public LabelPainter(@NotNull VcsLogData data, boolean compact, boolean showTagNames) {
+  public LabelPainter(@Nonnull VcsLogData data, boolean compact, boolean showTagNames) {
     myLogData = data;
     myCompact = compact;
     myShowTagNames = showTagNames;
   }
 
   @Nullable
-  public static VcsLogRefManager getRefManager(@NotNull VcsLogData logData, @NotNull Collection<VcsRef> references) {
+  public static VcsLogRefManager getRefManager(@Nonnull VcsLogData logData, @Nonnull Collection<VcsRef> references) {
     if (!references.isEmpty()) {
       VirtualFile root = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(references)).getRoot();
       return logData.getLogProvider(root).getReferenceManager();
@@ -103,10 +108,10 @@ public class LabelPainter {
     }
   }
 
-  public void customizePainter(@NotNull JComponent component,
-                               @NotNull Collection<VcsRef> references,
-                               @NotNull Color background,
-                               @NotNull Color foreground,
+  public void customizePainter(@Nonnull JComponent component,
+                               @Nonnull Collection<VcsRef> references,
+                               @Nonnull Color background,
+                               @Nonnull Color foreground,
                                boolean isSelected,
                                int availableWidth) {
     myBackground = background;
@@ -127,11 +132,11 @@ public class LabelPainter {
     myWidth = presentation.second;
   }
 
-  @NotNull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculatePresentation(@NotNull List<RefGroup> refGroups,
-                                                                                    @NotNull FontMetrics fontMetrics,
+  @Nonnull
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculatePresentation(@Nonnull List<RefGroup> refGroups,
+                                                                                    @Nonnull FontMetrics fontMetrics,
                                                                                     int height,
-                                                                                    @NotNull Color background,
+                                                                                    @Nonnull Color background,
                                                                                     int availableWidth,
                                                                                     boolean compact) {
     int width = LEFT_PADDING + RIGHT_PADDING;
@@ -144,11 +149,11 @@ public class LabelPainter {
   }
 
 
-  @NotNull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(@NotNull List<RefGroup> refGroups,
-                                                                                           @NotNull FontMetrics fontMetrics,
+  @Nonnull
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(@Nonnull List<RefGroup> refGroups,
+                                                                                           @Nonnull FontMetrics fontMetrics,
                                                                                            int height,
-                                                                                           @NotNull Color background,
+                                                                                           @Nonnull Color background,
                                                                                            int availableWidth) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
@@ -170,11 +175,11 @@ public class LabelPainter {
     return Pair.create(labels, width);
   }
 
-  @NotNull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateLongPresentation(@NotNull List<RefGroup> refGroups,
-                                                                                        @NotNull FontMetrics fontMetrics,
+  @Nonnull
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateLongPresentation(@Nonnull List<RefGroup> refGroups,
+                                                                                        @Nonnull FontMetrics fontMetrics,
                                                                                         int height,
-                                                                                        @NotNull Color background,
+                                                                                        @Nonnull Color background,
                                                                                         int availableWidth) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
@@ -213,8 +218,8 @@ public class LabelPainter {
     return Pair.create(labels, width);
   }
 
-  @NotNull
-  private static Color[] getColors(@NotNull Collection<RefGroup> groups) {
+  @Nonnull
+  private static Color[] getColors(@Nonnull Collection<RefGroup> groups) {
     LinkedHashMap<Color, Integer> usedColors = ContainerUtil.newLinkedHashMap();
 
     for (RefGroup group : groups) {
@@ -237,8 +242,8 @@ public class LabelPainter {
     return result.toArray(new Color[result.size()]);
   }
 
-  @NotNull
-  private static String getGroupText(@NotNull RefGroup group, @NotNull FontMetrics fontMetrics, int availableWidth) {
+  @Nonnull
+  private static String getGroupText(@Nonnull RefGroup group, @Nonnull FontMetrics fontMetrics, int availableWidth) {
     if (!group.isExpanded()) {
       return shortenRefName(group.getName(), fontMetrics, availableWidth);
     }
@@ -267,8 +272,8 @@ public class LabelPainter {
   }
 
   @Nullable
-  private static Color calculateGreyBackground(@NotNull List<RefGroup> refGroups,
-                                               @NotNull Color background,
+  private static Color calculateGreyBackground(@Nonnull List<RefGroup> refGroups,
+                                               @Nonnull Color background,
                                                boolean isSelected,
                                                boolean isCompact) {
     if (isSelected) return null;
@@ -289,8 +294,8 @@ public class LabelPainter {
     return null;
   }
 
-  @NotNull
-  private static String shortenRefName(@NotNull String refName, @NotNull FontMetrics fontMetrics, int availableWidth) {
+  @Nonnull
+  private static String shortenRefName(@Nonnull String refName, @Nonnull FontMetrics fontMetrics, int availableWidth) {
     if (fontMetrics.stringWidth(refName) > availableWidth && refName.length() > MAX_LENGTH) {
       int separatorIndex = refName.indexOf(SEPARATOR);
       if (separatorIndex > TWO_DOTS.length()) {
@@ -312,7 +317,7 @@ public class LabelPainter {
     return refName;
   }
 
-  public void paint(@NotNull Graphics2D g2, int x, int y, int height) {
+  public void paint(@Nonnull Graphics2D g2, int x, int y, int height) {
     if (myLabels.isEmpty()) return;
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);

@@ -21,7 +21,7 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import com.intellij.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -33,14 +33,14 @@ public class ModuleDeploymentSourceType extends DeploymentSourceType<ModuleDeplo
     super("module");
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleDeploymentSource load(@NotNull Element tag, @NotNull Project project) {
+  public ModuleDeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
     return new ModuleDeploymentSourceImpl(ModuleUtilCore.createPointer(project, tag.getAttributeValue(NAME_ATTRIBUTE)));
   }
 
   @Override
-  public void save(@NotNull ModuleDeploymentSource source, @NotNull Element tag) {
+  public void save(@Nonnull ModuleDeploymentSource source, @Nonnull Element tag) {
     tag.setAttribute(NAME_ATTRIBUTE, source.getModulePointer().getName());
   }
 }

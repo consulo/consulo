@@ -21,9 +21,9 @@ import com.intellij.openapi.diff.*;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.AbstractDataProviderPanel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,12 +34,15 @@ import java.awt.*;
  * @author Kirill Likhodedov
  */
 public class ErrorDiffViewer implements DiffViewer {
-  @NotNull private final DiffRequest myRequest;
+  @Nonnull
+  private final DiffRequest myRequest;
 
-  @NotNull private final JPanel myPanel;
-  @NotNull private final DiffToolbarComponent myToolbar;
+  @Nonnull
+  private final JPanel myPanel;
+  @Nonnull
+  private final DiffToolbarComponent myToolbar;
 
-  protected ErrorDiffViewer(Window window, @NotNull DiffRequest request) {
+  protected ErrorDiffViewer(Window window, @Nonnull DiffRequest request) {
     myRequest = request;
 
     myPanel = new AbstractDataProviderPanel(new BorderLayout(), false) {
@@ -111,8 +114,8 @@ public class ErrorDiffViewer implements DiffViewer {
     return myPanel;
   }
 
-  @NotNull
-  private static JPanel createMessagePanel(@NotNull String message) {
+  @Nonnull
+  private static JPanel createMessagePanel(@Nonnull String message) {
     final JLabel label = new JLabel(message);
     label.setForeground(UIUtil.getInactiveTextColor());
     final JPanel wrapper = new JPanel(new GridBagLayout());

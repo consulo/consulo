@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A scheme processor can implement this interface to provide a file extension different from default .xml.
@@ -27,7 +27,7 @@ public interface SchemeExtensionProvider {
   /**
    * @return The scheme file extension <b>with e leading dot</b>, for example ".ext".
    */
-  @NotNull
+  @Nonnull
   String getSchemeExtension();
 
   /**

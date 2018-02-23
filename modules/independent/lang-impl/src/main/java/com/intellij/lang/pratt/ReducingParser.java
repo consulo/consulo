@@ -16,7 +16,8 @@
 package com.intellij.lang.pratt;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -32,5 +33,6 @@ public abstract class ReducingParser extends TokenParser{
     return true;
   }
 
-  @Nullable public abstract IElementType parseFurther(final PrattBuilder builder);
+  @Nullable
+  public abstract IElementType parseFurther(final PrattBuilder builder);
 }

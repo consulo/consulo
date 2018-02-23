@@ -20,19 +20,19 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class TestActionEvent extends AnActionEvent {
 
-  public TestActionEvent(@NotNull DataContext dataContext,
-                         @NotNull AnAction action) {
+  public TestActionEvent(@Nonnull DataContext dataContext,
+                         @Nonnull AnAction action) {
     super(null, dataContext, "", action.getTemplatePresentation(), ActionManager.getInstance(), 0);
   }
 
-  public TestActionEvent(@NotNull AnAction action) {
+  public TestActionEvent(@Nonnull AnAction action) {
     this(DataManager.getInstance().getDataContext(), action);
   }
 }

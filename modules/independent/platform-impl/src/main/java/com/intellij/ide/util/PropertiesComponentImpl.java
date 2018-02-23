@@ -19,8 +19,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.LinkedHashMap;
@@ -32,7 +32,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   @NonNls private static final String ATTRIBUTE_NAME = "name";
   @NonNls private static final String ATTRIBUTE_VALUE = "value";
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "PropertiesComponent";
   }
@@ -78,7 +78,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   }
 
   @Override
-  public void setValue(@NotNull String name, @Nullable String value) {
+  public void setValue(@Nonnull String name, @Nullable String value) {
     if (value == null) {
       myMap.remove(name);
     }
@@ -88,7 +88,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   }
 
   @Override
-  public void setValue(@NotNull String name, @Nullable String value, @Nullable String defaultValue) {
+  public void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue) {
     if (value == null || value.equals(defaultValue)) {
       myMap.remove(name);
     }
@@ -98,7 +98,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   }
 
   @Override
-  public void setValue(@NotNull String name, float value, float defaultValue) {
+  public void setValue(@Nonnull String name, float value, float defaultValue) {
     if (value == defaultValue) {
       myMap.remove(name);
     }
@@ -108,7 +108,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   }
 
   @Override
-  public void setValue(@NotNull String name, int value, int defaultValue) {
+  public void setValue(@Nonnull String name, int value, int defaultValue) {
     if (value == defaultValue) {
       myMap.remove(name);
     }
@@ -118,7 +118,7 @@ public class PropertiesComponentImpl extends PropertiesComponent implements Pers
   }
 
   @Override
-  public void setValue(@NotNull String name, boolean value, boolean defaultValue) {
+  public void setValue(@Nonnull String name, boolean value, boolean defaultValue) {
     if (value == defaultValue) {
       myMap.remove(name);
     }

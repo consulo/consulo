@@ -8,8 +8,8 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 
@@ -27,19 +27,20 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
   implements RemoteExternalSystemProjectResolver<S>
 {
 
-  @NotNull private final RemoteExternalSystemProgressNotificationManager myProgressManager;
+  @Nonnull
+  private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemProjectResolverWrapper(@NotNull RemoteExternalSystemProjectResolver<S> delegate,
-                                              @NotNull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemProjectResolverWrapper(@Nonnull RemoteExternalSystemProjectResolver<S> delegate,
+                                              @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
   {
     super(delegate);
     myProgressManager = progressManager;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(@NotNull ExternalSystemTaskId id,
-                                                    @NotNull String projectPath,
+  public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
+                                                    @Nonnull String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable S settings)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException
@@ -64,7 +65,7 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
   }
 
   @Override
-  public boolean cancelTask(@NotNull ExternalSystemTaskId id)
+  public boolean cancelTask(@Nonnull ExternalSystemTaskId id)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException {
     myProgressManager.onQueued(id);
     try {

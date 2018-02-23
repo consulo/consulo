@@ -30,8 +30,8 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -42,7 +42,8 @@ import java.util.List;
  * @date Aug 13, 2009
  */
 public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements ContainerBasedSuppressQuickFix, InjectionAwareSuppressQuickFix, Iconable {
-  @NotNull protected final String myID;
+  @Nonnull
+  protected final String myID;
   private final boolean myReplaceOtherSuppressionIds;
   private ThreeState myShouldBeAppliedToInjectionHost = ThreeState.UNSURE;
 
@@ -55,23 +56,23 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
    * @param replaceOtherSuppressionIds Merge suppression policy. If false new tool id will be append to the end
    *                                   otherwise replace other ids
    */
-  public AbstractBatchSuppressByNoInspectionCommentFix(@NotNull String ID, final boolean replaceOtherSuppressionIds) {
+  public AbstractBatchSuppressByNoInspectionCommentFix(@Nonnull String ID, final boolean replaceOtherSuppressionIds) {
     myID = ID;
     myReplaceOtherSuppressionIds = replaceOtherSuppressionIds;
   }
 
   @Override
-  public void setShouldBeAppliedToInjectionHost(@NotNull ThreeState shouldBeAppliedToInjectionHost) {
+  public void setShouldBeAppliedToInjectionHost(@Nonnull ThreeState shouldBeAppliedToInjectionHost) {
     myShouldBeAppliedToInjectionHost = shouldBeAppliedToInjectionHost;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ThreeState isShouldBeAppliedToInjectionHost() {
     return myShouldBeAppliedToInjectionHost;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return getText();
@@ -83,12 +84,12 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   private String myText = "";
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  protected void setText(@NotNull String text) {
+  protected void setText(@Nonnull String text) {
     myText = text;
   }
 
@@ -102,19 +103,19 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
   }
 
   @Override
-  public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+  public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
     PsiElement element = descriptor.getStartElement();
     if (element == null) return;
     invoke(project, element);
   }
 
-  protected final void replaceSuppressionComment(@NotNull final PsiElement comment) {
+  protected final void replaceSuppressionComment(@Nonnull final PsiElement comment) {
     SuppressionUtil.replaceSuppressionComment(comment, myID, myReplaceOtherSuppressionIds, getCommentLanguage(comment));
   }
 
-  protected void createSuppression(@NotNull Project project,
-                                   @NotNull PsiElement element,
-                                   @NotNull PsiElement container) throws IncorrectOperationException {
+  protected void createSuppression(@Nonnull Project project,
+                                   @Nonnull PsiElement element,
+                                   @Nonnull PsiElement container) throws IncorrectOperationException {
     SuppressionUtil.createSuppression(project, container, myID, getCommentLanguage(element));
   }
 
@@ -123,17 +124,17 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
    * @return language that will be used for comment creating.
    * In common case language will be the same as language of quickfix target
    */
-  @NotNull
-  protected Language getCommentLanguage(@NotNull PsiElement element) {
+  @Nonnull
+  protected Language getCommentLanguage(@Nonnull PsiElement element) {
     return element.getLanguage();
   }
 
   @Override
-  public boolean isAvailable(@NotNull final Project project, @NotNull final PsiElement context) {
+  public boolean isAvailable(@Nonnull final Project project, @Nonnull final PsiElement context) {
     return context.isValid() && PsiManager.getInstance(project).isInProject(context) && getContainer(context) != null;
   }
 
-  public void invoke(@NotNull final Project project, @NotNull final PsiElement element) throws IncorrectOperationException {
+  public void invoke(@Nonnull final Project project, @Nonnull final PsiElement element) throws IncorrectOperationException {
     if (!isAvailable(project, element)) return;
     PsiElement container = getContainer(element);
     if (container == null) return;
@@ -159,8 +160,8 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return false;
   }
 
-  @Nullable
-  protected List<? extends PsiElement> getCommentsFor(@NotNull final PsiElement container) {
+  @javax.annotation.Nullable
+  protected List<? extends PsiElement> getCommentsFor(@Nonnull final PsiElement container) {
     final PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {
       return null;
@@ -170,7 +171,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
 
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return InspectionsBundle.message("suppress.inspection.family");
   }

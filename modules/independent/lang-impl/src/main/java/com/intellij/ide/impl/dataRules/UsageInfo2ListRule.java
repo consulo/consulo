@@ -17,8 +17,8 @@
 package com.intellij.ide.impl.dataRules;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.usages.UsageView;
 import com.intellij.usageView.UsageInfo;
@@ -30,7 +30,7 @@ import java.util.List;
  * @author cdr
  */
 public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<List<UsageInfo>> getKey() {
     return UsageView.USAGE_INFO_LIST_KEY;
@@ -38,7 +38,7 @@ public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
 
   @Override
   @Nullable
-  public List<UsageInfo> getData(@NotNull final DataProvider dataProvider) {
+  public List<UsageInfo> getData(@Nonnull final DataProvider dataProvider) {
     UsageInfo usageInfo = dataProvider.getDataUnchecked(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;

@@ -22,7 +22,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.packaging.artifacts.Artifact;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -31,9 +31,9 @@ import java.util.Set;
  */
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
-  public CompileScope getAdditionalScope(@NotNull final CompileScope baseScope,
-                                         @NotNull Condition<com.intellij.openapi.compiler.Compiler> filter,
-                                         @NotNull final Project project) {
+  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope,
+                                         @Nonnull Condition<com.intellij.openapi.compiler.Compiler> filter,
+                                         @Nonnull final Project project) {
     if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
     }

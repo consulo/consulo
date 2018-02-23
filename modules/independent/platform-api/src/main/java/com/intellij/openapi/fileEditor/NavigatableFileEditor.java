@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileEditor;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.pom.Navigatable;
 
 /**
@@ -32,13 +32,13 @@ public interface NavigatableFileEditor extends FileEditor {
    * @param navigatable
    * @return true if editor can navigate, false otherwise
    */
-  boolean canNavigateTo(@NotNull final Navigatable navigatable);
+  boolean canNavigateTo(@Nonnull final Navigatable navigatable);
 
   /**
    * Navigate editor to the given navigatable if {@link #canNavigateTo(com.intellij.pom.Navigatable)} is true
    *
    * @param navigatable navigation target
    */
-  void navigateTo(@NotNull final Navigatable navigatable);
+  void navigateTo(@Nonnull final Navigatable navigatable);
 
 }

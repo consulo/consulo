@@ -40,8 +40,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.net.URL;
@@ -136,7 +136,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
       extension.appendShortName(refElement, buf);
     } else {
       refElement.accept(new RefVisitor() {
-        @Override public void visitFile(@NotNull RefFile file) {
+        @Override public void visitFile(@Nonnull RefFile file) {
           final PsiFile psiFile = file.getElement();
           if (psiFile != null) {
             buf.append(B_OPENING);

@@ -36,8 +36,8 @@ import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -62,7 +62,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return (LocalHistoryImpl)getInstance();
   }
 
-  public LocalHistoryImpl(@NotNull MessageBus bus) {
+  public LocalHistoryImpl(@Nonnull MessageBus bus) {
     myBus = bus;
   }
 
@@ -148,7 +148,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   }
 
   @Override
-  public Label putUserLabel(Project p, @NotNull String name) {
+  public Label putUserLabel(Project p, @Nonnull String name) {
     if (!isInitialized()) return Label.NULL_INSTANCE;
     myGateway.registerUnsavedDocuments(myVcs);
     return label(myVcs.putUserLabel(name, getProjectId(p)));
@@ -159,7 +159,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   }
 
   @Override
-  public Label putSystemLabel(Project p, @NotNull String name, int color) {
+  public Label putSystemLabel(Project p, @Nonnull String name, int color) {
     if (!isInitialized()) return Label.NULL_INSTANCE;
     myGateway.registerUnsavedDocuments(myVcs);
     return label(myVcs.putSystemLabel(name, getProjectId(p), color));
@@ -172,7 +172,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
   private Label label(final LabelImpl impl) {
     return new Label() {
       @Override
-      public void revert(@NotNull Project project, @NotNull VirtualFile file) throws LocalHistoryException {
+      public void revert(@Nonnull Project project, @Nonnull VirtualFile file) throws LocalHistoryException {
         revertToLabel(project, file, impl);
       }
 
@@ -200,7 +200,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return isInitialized.get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LocalHistoryFacade getFacade() {
     return myVcs;
   }
@@ -210,7 +210,7 @@ public class LocalHistoryImpl extends LocalHistory implements ApplicationCompone
     return myGateway;
   }
 
-  private void revertToLabel(@NotNull Project project, @NotNull VirtualFile f, @NotNull LabelImpl impl) throws LocalHistoryException{
+  private void revertToLabel(@Nonnull Project project, @Nonnull VirtualFile f, @Nonnull LabelImpl impl) throws LocalHistoryException{
     HistoryDialogModel dirHistoryModel = f.isDirectory()
                                          ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f)
                                          : new EntireFileHistoryDialogModel(project, myGateway, myVcs, f);

@@ -21,7 +21,7 @@ import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.text.StringFactory;
 import org.iq80.snappy.CorruptionException;
 import org.iq80.snappy.Snappy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.CharBuffer;
@@ -36,7 +36,7 @@ public class CompressionUtil {
   private static final int COMPRESSION_THRESHOLD = 64;
   private static final ThreadLocalCachedByteArray spareBufferLocal = new ThreadLocalCachedByteArray();
 
-  public static int writeCompressed(@NotNull DataOutput out, @NotNull byte[] bytes, int length) throws IOException {
+  public static int writeCompressed(@Nonnull DataOutput out, @Nonnull byte[] bytes, int length) throws IOException {
     if (length > COMPRESSION_THRESHOLD) {
       final byte[] compressedOutputBuffer = spareBufferLocal.getBuffer(Snappy.maxCompressedLength(length));
 
@@ -62,7 +62,7 @@ public class CompressionUtil {
 
   public static final boolean DUMP_COMPRESSION_STATS = SystemProperties.getBooleanProperty("idea.dump.compression.stats", false);
 
-  public static int writeCompressedWithoutOriginalBufferLength(@NotNull DataOutput out, @NotNull byte[] bytes, int length) throws IOException {
+  public static int writeCompressedWithoutOriginalBufferLength(@Nonnull DataOutput out, @Nonnull byte[] bytes, int length) throws IOException {
     long started = System.nanoTime();
 
     final byte[] compressedOutputBuffer = spareBufferLocal.getBuffer(Snappy.maxCompressedLength(length));
@@ -84,8 +84,8 @@ public class CompressionUtil {
     return compressedSize;
   }
 
-  @NotNull
-  public static byte[] readCompressedWithoutOriginalBufferLength(@NotNull DataInput in) throws IOException {
+  @Nonnull
+  public static byte[] readCompressedWithoutOriginalBufferLength(@Nonnull DataInput in) throws IOException {
     int size = DataInputOutputUtil.readINT(in);
 
     byte[] bytes = spareBufferLocal.getBuffer(size);
@@ -106,8 +106,8 @@ public class CompressionUtil {
     return decompressedResult;
   }
 
-  @NotNull
-  public static byte[] readCompressed(@NotNull DataInput in) throws IOException {
+  @Nonnull
+  public static byte[] readCompressed(@Nonnull DataInput in) throws IOException {
     int size = DataInputOutputUtil.readINT(in);
     if (size < 0) {
       byte[] bytes = spareBufferLocal.getBuffer(-size);
@@ -123,8 +123,8 @@ public class CompressionUtil {
 
   private static final int STRING_COMPRESSION_THRESHOLD = 1024;
 
-  @NotNull
-  public static CharSequence uncompressCharSequence(@NotNull Object string, @NotNull Charset charset) {
+  @Nonnull
+  public static CharSequence uncompressCharSequence(@Nonnull Object string, @Nonnull Charset charset) {
     if (string instanceof CharSequence) return (CharSequence)string;
     byte[] b = (byte[])string;
     try {
@@ -138,8 +138,8 @@ public class CompressionUtil {
     }
   }
 
-  @NotNull
-  public static Object compressCharSequence(@NotNull CharSequence string, @NotNull Charset charset) {
+  @Nonnull
+  public static Object compressCharSequence(@Nonnull CharSequence string, @Nonnull Charset charset) {
     if (string.length() < STRING_COMPRESSION_THRESHOLD) {
       if (string instanceof CharBuffer && ((CharBuffer)string).capacity() > STRING_COMPRESSION_THRESHOLD) {
         string = string.toString();   // shrink to size
@@ -155,8 +155,8 @@ public class CompressionUtil {
     }
   }
 
-  @NotNull
-  public static Object compressStringRawBytes(@NotNull CharSequence string) {
+  @Nonnull
+  public static Object compressStringRawBytes(@Nonnull CharSequence string) {
     int length = string.length();
     if (length < STRING_COMPRESSION_THRESHOLD) {
       if (string instanceof CharBuffer && ((CharBuffer)string).capacity() > STRING_COMPRESSION_THRESHOLD) {
@@ -166,7 +166,7 @@ public class CompressionUtil {
     }
     try {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream(length);
-      @NotNull DataOutput out = new DataOutputStream(bytes);
+      @Nonnull DataOutput out = new DataOutputStream(bytes);
 
       DataInputOutputUtil.writeINT(out, length);
       for (int i=0; i< length;i++) {
@@ -186,8 +186,8 @@ public class CompressionUtil {
     }
   }
 
-  @NotNull
-  public static CharSequence uncompressStringRawBytes(@NotNull Object compressed) {
+  @Nonnull
+  public static CharSequence uncompressStringRawBytes(@Nonnull Object compressed) {
     if (compressed instanceof CharSequence) return (CharSequence)compressed;
     byte[] b = (byte[])compressed;
     try {
@@ -195,7 +195,7 @@ public class CompressionUtil {
       byte[] bytes = spareBufferLocal.getBuffer(uncompressedLength);
       int bytesLength = Snappy.uncompress(b, 0, b.length, bytes, 0);
       ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes, 0, bytesLength);
-      @NotNull DataInput in = new DataInputStream(byteStream);
+      @Nonnull DataInput in = new DataInputStream(byteStream);
 
       int len = DataInputOutputUtil.readINT(in);
       char[] chars = new char[len];

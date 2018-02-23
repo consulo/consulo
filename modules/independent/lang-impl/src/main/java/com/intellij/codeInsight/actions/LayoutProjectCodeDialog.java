@@ -31,9 +31,9 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.IdeBorderFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.regex.PatternSyntaxException;
@@ -67,9 +67,9 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
   private JPanel myFiltersPanel;
   private JLabel myMaskWarningLabel;
 
-  public LayoutProjectCodeDialog(@NotNull Project project,
-                                 @NotNull String title,
-                                 @NotNull String text,
+  public LayoutProjectCodeDialog(@Nonnull Project project,
+                                 @Nonnull String title,
+                                 @Nonnull String text,
                                  boolean enableOnlyVCSChangedTextCb)
   {
     super(project, false);
@@ -161,7 +161,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     setOKActionEnabled(true);
   }
 
-  private static boolean isMaskValid(@NotNull String mask) {
+  private static boolean isMaskValid(@Nonnull String mask) {
     try {
       FindInProjectUtil.createFileMaskCondition(mask);
     }
@@ -172,7 +172,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

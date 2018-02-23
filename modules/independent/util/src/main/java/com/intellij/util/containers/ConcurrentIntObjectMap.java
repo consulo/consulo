@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -31,21 +31,21 @@ public interface ConcurrentIntObjectMap<V> {
   /**
    * @return written value
    */
-  @NotNull
-  V cacheOrGet(int key, @NotNull V value);
-  boolean remove(int key, @NotNull V value);
-  boolean replace(int key, @NotNull V oldValue, @NotNull  V newValue);
+  @Nonnull
+  V cacheOrGet(int key, @Nonnull V value);
+  boolean remove(int key, @Nonnull V value);
+  boolean replace(int key, @Nonnull V oldValue, @Nonnull V newValue);
 
   // regular Map methods
-  V put(int key, @NotNull V value);
+  V put(int key, @Nonnull V value);
   V get(int key);
   V remove(int key);
   boolean containsKey(int key);
   void clear();
-  @NotNull
+  @Nonnull
   Iterable<IntEntry<V>> entries();
 
-  @NotNull
+  @Nonnull
   int[] keys();
 
   /**
@@ -58,16 +58,16 @@ public interface ConcurrentIntObjectMap<V> {
   int size();
 
   boolean isEmpty();
-  @NotNull
+  @Nonnull
   Enumeration<V> elements();
-  @NotNull
+  @Nonnull
   Collection<V> values();
-  boolean containsValue(@NotNull V value);
-  V putIfAbsent(int key, @NotNull V value);
+  boolean containsValue(@Nonnull V value);
+  V putIfAbsent(int key, @Nonnull V value);
 
   interface IntEntry<V> {
     int getKey();
-    @NotNull
+    @Nonnull
     V getValue();
   }
 }

@@ -39,8 +39,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -81,10 +81,12 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   private boolean myDisabled = false;
 
   @Nullable private final ClockPanel myClockPanel;
-  @Nullable private final MyExitFullScreenButton myButton;
+  @Nullable
+  private final MyExitFullScreenButton myButton;
   @Nullable private final Animator myAnimator;
   @Nullable private final Timer myActivationWatcher;
-  @NotNull private State myState = State.EXPANDED;
+  @Nonnull
+  private State myState = State.EXPANDED;
   private double myProgress = 0;
   private boolean myActivated = false;
 
@@ -219,7 +221,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
     }
   }
 
-  private void setState(@NotNull State state) {
+  private void setState(@Nonnull State state) {
     myState = state;
     if (myState == State.EXPANDING && myActivationWatcher != null && !myActivationWatcher.isRunning()) {
       myActivationWatcher.start();

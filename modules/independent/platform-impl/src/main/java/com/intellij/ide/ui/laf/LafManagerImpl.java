@@ -67,8 +67,8 @@ import consulo.ui.laf.UIModificationTracker;
 import consulo.util.ui.BuildInLookAndFeel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -170,7 +170,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
    * Adds specified listener
    */
   @Override
-  public void addLafManagerListener(@NotNull final LafManagerListener l) {
+  public void addLafManagerListener(@Nonnull final LafManagerListener l) {
     myListenerList.add(LafManagerListener.class, l);
   }
 
@@ -178,7 +178,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
    * Removes specified listener
    */
   @Override
-  public void removeLafManagerListener(@NotNull final LafManagerListener l) {
+  public void removeLafManagerListener(@Nonnull final LafManagerListener l) {
     myListenerList.remove(LafManagerListener.class, l);
   }
 
@@ -190,7 +190,7 @@ public final class LafManagerImpl extends LafManager implements ApplicationCompo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "LafManager";
   }

@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ExternallyRenamedChange extends Change {
   private String myRenamedTargetName;

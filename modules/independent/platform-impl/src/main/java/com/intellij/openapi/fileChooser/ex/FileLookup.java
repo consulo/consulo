@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -25,9 +25,9 @@ public interface FileLookup {
 
   interface Finder {
     @Nullable
-    LookupFile find(@NotNull String path);
+    LookupFile find(@Nonnull String path);
 
-    String normalize(@NotNull final String path);
+    String normalize(@Nonnull final String path);
 
     String getSeparator();
   }

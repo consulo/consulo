@@ -66,8 +66,8 @@ import com.intellij.xml.util.XmlStringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -453,7 +453,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   @Override
   @Nullable
   @NonNls
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (LangDataKeys.PSI_ELEMENT == dataId) {
       final PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
       if (selectedNode != null) {
@@ -767,7 +767,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private static class MyTree extends Tree implements DataProvider {
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       PackageDependenciesNode node = getSelectedNode();
       if (PlatformDataKeys.NAVIGATABLE == dataId) {
         return node;
@@ -1030,7 +1030,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private final class ChooseScopeTypeAction extends ComboBoxAction {
     @Override
-    @NotNull
+    @Nonnull
     protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
@@ -1048,7 +1048,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       final PatternDialectProvider provider = PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE);
       e.getPresentation().setText(provider.getDisplayName());

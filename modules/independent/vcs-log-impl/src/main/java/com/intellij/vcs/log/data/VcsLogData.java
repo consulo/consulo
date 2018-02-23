@@ -39,8 +39,8 @@ import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.VcsLogCachesInvalidator;
 import com.intellij.vcs.log.util.PersistentUtil;
 import com.intellij.vcs.log.util.StopWatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -57,11 +57,16 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
   };
   public static final int RECENT_COMMITS_COUNT = Registry.intValue("vcs.log.recent.commits.count", 1000);
 
-  @NotNull private final Project myProject;
-  @NotNull private final Map<VirtualFile, VcsLogProvider> myLogProviders;
-  @NotNull private final BackgroundTaskQueue myDataLoaderQueue;
-  @NotNull private final MiniDetailsGetter myMiniDetailsGetter;
-  @NotNull private final CommitDetailsGetter myDetailsGetter;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final Map<VirtualFile, VcsLogProvider> myLogProviders;
+  @Nonnull
+  private final BackgroundTaskQueue myDataLoaderQueue;
+  @Nonnull
+  private final MiniDetailsGetter myMiniDetailsGetter;
+  @Nonnull
+  private final CommitDetailsGetter myDetailsGetter;
 
   /**
    * Current user name, as specified in the VCS settings.
@@ -75,19 +80,27 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
    * which is important because these details will be constantly visible to the user,
    * thus it would be annoying to re-load them from VCS if the cache overflows.
    */
-  @NotNull private final TopCommitsCache myTopCommitsDetailsCache;
-  @NotNull private final VcsUserRegistryImpl myUserRegistry;
-  @NotNull private final VcsLogStorage myHashMap;
-  @NotNull private final ContainingBranchesGetter myContainingBranchesGetter;
-  @NotNull private final VcsLogRefresherImpl myRefresher;
-  @NotNull private final List<DataPackChangeListener> myDataPackChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final TopCommitsCache myTopCommitsDetailsCache;
+  @Nonnull
+  private final VcsUserRegistryImpl myUserRegistry;
+  @Nonnull
+  private final VcsLogStorage myHashMap;
+  @Nonnull
+  private final ContainingBranchesGetter myContainingBranchesGetter;
+  @Nonnull
+  private final VcsLogRefresherImpl myRefresher;
+  @Nonnull
+  private final List<DataPackChangeListener> myDataPackChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  @NotNull private final FatalErrorHandler myFatalErrorsConsumer;
-  @NotNull private final VcsLogIndex myIndex;
+  @Nonnull
+  private final FatalErrorHandler myFatalErrorsConsumer;
+  @Nonnull
+  private final VcsLogIndex myIndex;
 
-  public VcsLogData(@NotNull Project project,
-                    @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                    @NotNull FatalErrorHandler fatalErrorsConsumer) {
+  public VcsLogData(@Nonnull Project project,
+                    @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                    @Nonnull FatalErrorHandler fatalErrorsConsumer) {
     myProject = project;
     myLogProviders = logProviders;
     myDataLoaderQueue = new BackgroundTaskQueue(project, "Loading history...");
@@ -124,7 +137,7 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     myContainingBranchesGetter = new ContainingBranchesGetter(this, this);
   }
 
-  @NotNull
+  @Nonnull
   private VcsLogStorage createLogHashMap() {
     VcsLogStorage hashMap;
     try {
@@ -137,7 +150,7 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     return hashMap;
   }
 
-  private void fireDataPackChangeEvent(@NotNull final DataPack dataPack) {
+  private void fireDataPackChangeEvent(@Nonnull final DataPack dataPack) {
     ApplicationManager.getApplication().invokeLater(() -> {
       for (DataPackChangeListener listener : myDataPackChangeListeners) {
         listener.onDataPackChange(dataPack);
@@ -145,20 +158,20 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     });
   }
 
-  public void addDataPackChangeListener(@NotNull final DataPackChangeListener listener) {
+  public void addDataPackChangeListener(@Nonnull final DataPackChangeListener listener) {
     myDataPackChangeListeners.add(listener);
   }
 
-  public void removeDataPackChangeListener(@NotNull DataPackChangeListener listener) {
+  public void removeDataPackChangeListener(@Nonnull DataPackChangeListener listener) {
     myDataPackChangeListeners.remove(listener);
   }
 
-  @NotNull
+  @Nonnull
   public DataPack getDataPack() {
     return myRefresher.getCurrentDataPack();
   }
 
-  @NotNull
+  @Nonnull
   public VisiblePackBuilder createVisiblePackBuilder() {
     return new VisiblePackBuilder(myLogProviders, myHashMap, myTopCommitsDetailsCache, myDetailsGetter, myIndex);
   }
@@ -170,11 +183,11 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
   }
 
   @Override
-  public int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root) {
+  public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
     return myHashMap.getCommitIndex(hash, root);
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogStorage getHashMap() {
     return myHashMap;
   }
@@ -216,40 +229,40 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     myTopCommitsDetailsCache.clear();
   }
 
-  @NotNull
+  @Nonnull
   public Set<VcsUser> getAllUsers() {
     return myUserRegistry.getUsers();
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, VcsUser> getCurrentUser() {
     return myCurrentUser;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getRoots() {
     return myLogProviders.keySet();
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myLogProviders;
   }
 
-  @NotNull
+  @Nonnull
   public ContainingBranchesGetter getContainingBranchesGetter() {
     return myContainingBranchesGetter;
   }
 
-  private void runInBackground(@NotNull ThrowableConsumer<ProgressIndicator, VcsException> task) {
+  private void runInBackground(@Nonnull ThrowableConsumer<ProgressIndicator, VcsException> task) {
     Task.Backgroundable backgroundable = new Task.Backgroundable(myProject, "Loading History...", false) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         try {
           task.consume(indicator);
@@ -274,7 +287,7 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
    * Makes the log perform refresh for the given root.
    * This refresh can be optimized, i. e. it can query VCS just for the part of the log.
    */
-  public void refresh(@NotNull Collection<VirtualFile> roots) {
+  public void refresh(@Nonnull Collection<VirtualFile> roots) {
     myRefresher.refresh(roots);
   }
 
@@ -282,7 +295,7 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     return myDetailsGetter;
   }
 
-  @NotNull
+  @Nonnull
   public MiniDetailsGetter getMiniDetailsGetter() {
     return myMiniDetailsGetter;
   }
@@ -293,27 +306,27 @@ public class VcsLogData implements Disposable, VcsLogDataProvider {
     resetState();
   }
 
-  @NotNull
-  public VcsLogProvider getLogProvider(@NotNull VirtualFile root) {
+  @Nonnull
+  public VcsLogProvider getLogProvider(@Nonnull VirtualFile root) {
     return myLogProviders.get(root);
   }
 
-  @NotNull
+  @Nonnull
   public VcsUserRegistryImpl getUserRegistry() {
     return myUserRegistry;
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogProgress getProgress() {
     return myRefresher.getProgress();
   }
 
-  @NotNull
+  @Nonnull
   public TopCommitsCache getTopCommitsCache() {
     return myTopCommitsDetailsCache;
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogIndex getIndex() {
     return myIndex;
   }

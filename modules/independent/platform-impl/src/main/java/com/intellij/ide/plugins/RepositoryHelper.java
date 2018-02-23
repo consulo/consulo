@@ -27,8 +27,8 @@ import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.webService.WebServiceApi;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,14 +45,14 @@ import java.util.zip.GZIPInputStream;
  * @since Mar 28, 2003
  */
 public class RepositoryHelper {
-  @NotNull
-  public static String buildUrlForList(@NotNull UpdateChannel channel, @NotNull String platformVersion) {
+  @Nonnull
+  public static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion) {
     return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + platformVersion + "&channel=" + channel;
   }
 
-  @NotNull
-  public static String buildUrlForDownload(@NotNull UpdateChannel channel,
-                                           @NotNull String pluginId,
+  @Nonnull
+  public static String buildUrlForDownload(@Nonnull UpdateChannel channel,
+                                           @Nonnull String pluginId,
                                            @Nullable String platformVersion,
                                            boolean noTracking,
                                            boolean viaUpdate) {
@@ -85,21 +85,21 @@ public class RepositoryHelper {
   /**
    * Load & return only plugins from repository
    */
-  @NotNull
-  public static List<IdeaPluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel)
+  @Nonnull
+  public static List<IdeaPluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel)
           throws Exception {
     List<IdeaPluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
     return ContainerUtil.filter(ideaPluginDescriptors, it -> !PlatformOrPluginUpdateChecker.isPlatform(it.getPluginId()));
   }
 
-  @NotNull
-  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @NotNull UpdateChannel channel) throws Exception {
+  @Nonnull
+  public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel) throws Exception {
     return loadPluginsFromRepository(indicator, channel, null);
   }
 
-  @NotNull
+  @Nonnull
   public static List<IdeaPluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
-                                                                     @NotNull UpdateChannel channel,
+                                                                     @Nonnull UpdateChannel channel,
                                                                      @Nullable("if null used app build number") String buildNumber) throws Exception {
     if (buildNumber == null) {
       ApplicationInfoEx appInfo = ApplicationInfoImpl.getShadowInstance();

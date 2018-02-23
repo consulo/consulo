@@ -15,13 +15,13 @@
  */
 package com.intellij.ui.docking;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 
 public interface DragSession {
 
-  @NotNull
+  @Nonnull
   DockContainer.ContentResponse getResponse(MouseEvent e);
   void process(MouseEvent e);
   void cancel();

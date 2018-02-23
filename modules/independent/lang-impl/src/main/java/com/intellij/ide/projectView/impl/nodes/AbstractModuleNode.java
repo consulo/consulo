@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -67,7 +67,7 @@ public abstract class AbstractModuleNode extends ProjectViewNode<Module> impleme
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     Module module = getValue();
     if (module == null || module.isDisposed()) return false;
 

@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -71,7 +71,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     }
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(FileType fileType, boolean inSourceOnly) {
     Set<VirtualFile> allFiles = new THashSet<VirtualFile>();
     for (CompileScope scope : myScopes) {
@@ -92,7 +92,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public Module[] getAffectedModules() {
     Set<Module> modules = new HashSet<Module>();
     for (final CompileScope compileScope : myScopes) {
@@ -101,7 +101,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     return modules.toArray(new Module[modules.size()]);
   }
 
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     for (CompileScope compileScope : myScopes) {
       T userData = compileScope.getUserData(key);
       if (userData != null) {

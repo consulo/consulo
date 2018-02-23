@@ -37,8 +37,8 @@ import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ import java.util.Set;
 public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   public static final Logger LOGGER = Logger.getInstance(BaseSdkEditor.class);
 
-  @NotNull
+  @Nonnull
   protected final Sdk mySdk;
   private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<OrderRootType, SdkPathEditor>();
 
@@ -71,7 +71,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   // GUI components
   private JPanel myMainPanel;
 
-  @NotNull
+  @Nonnull
   private final SdkModel mySdkModel;
   private JLabel myHomeFieldLabel;
   private String myVersionString;
@@ -81,14 +81,14 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
 
   protected final Disposable myDisposable = Disposer.newDisposable();
 
-  public BaseSdkEditor(@NotNull SdkModel sdkModel, @NotNull SdkImpl sdk) {
+  public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     mySdkModel = sdkModel;
     mySdk = sdk;
     createMainPanel();
     initSdk(sdk);
   }
 
-  private void initSdk(@NotNull Sdk sdk) {
+  private void initSdk(@Nonnull Sdk sdk) {
     myInitialName = mySdk.getName();
     myInitialPath = mySdk.getHomePath();
 
@@ -156,7 +156,7 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
                                            GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
   }
 
-  @NotNull
+  @Nonnull
   protected abstract JComponent createCenterComponent();
 
   protected TextFieldWithBrowseButton createHomeComponent() {
@@ -176,8 +176,8 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     return ProjectBundle.message("sdk.configure.type.home.path", ((SdkType)mySdk.getSdkType()).getPresentableName());
   }
 
-  @NotNull
-  public SdkPathEditor getPathEditor(@NotNull OrderRootType rootType) {
+  @Nonnull
+  public SdkPathEditor getPathEditor(@Nonnull OrderRootType rootType) {
     return myPathEditors.get(rootType);
   }
 
@@ -425,12 +425,12 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
     }
 
     @Override
-    public void addRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
+    public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
       myPathEditors.get(rootType).addPaths(root);
     }
 
     @Override
-    public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType rootType) {
+    public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
       myPathEditors.get(rootType).removePaths(root);
     }
 
@@ -462,10 +462,10 @@ public abstract class BaseSdkEditor implements Configurable, Place.Navigator {
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
   }
 
   @Override
-  public void setHistory(@NotNull final History history) {
+  public void setHistory(@Nonnull final History history) {
   }
 }

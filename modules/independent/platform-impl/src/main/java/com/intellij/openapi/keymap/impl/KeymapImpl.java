@@ -35,7 +35,7 @@ import com.intellij.util.containers.HashMap;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -483,7 +483,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
     return ids;
   }
 
-  public boolean isActionBound(@NotNull final String actionId) {
+  public boolean isActionBound(@Nonnull final String actionId) {
     return getKeymapManager().getBoundActions().contains(actionId);
   }
 
@@ -869,7 +869,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

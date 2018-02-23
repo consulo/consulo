@@ -23,8 +23,8 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   /**
    * @deprecated use {@link com.intellij.openapi.fileTypes.FileTypeFactory} instead
    */
-  public abstract void registerFileType(@NotNull FileType type, @NotNull List<FileNameMatcher> defaultAssociations);
+  public abstract void registerFileType(@Nonnull FileType type, @Nonnull List<FileNameMatcher> defaultAssociations);
 
   /**
    * Registers a file type.
@@ -73,7 +73,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *                                    treated as the specified file type. The extensions should not start with '.'.
    * @deprecated use {@link com.intellij.openapi.fileTypes.FileTypeFactory} instead
    */
-  public final void registerFileType(@NotNull FileType type, @NonNls @Nullable String... defaultAssociatedExtensions) {
+  public final void registerFileType(@Nonnull FileType type, @NonNls @Nullable String... defaultAssociatedExtensions) {
     List<FileNameMatcher> matchers = new ArrayList<FileNameMatcher>();
     if (defaultAssociatedExtensions != null) {
       for (String extension : defaultAssociatedExtensions) {
@@ -91,7 +91,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @return true if the file is ignored, false otherwise.
    */
 
-  public abstract boolean isFileIgnored(@NonNls @NotNull CharSequence name);
+  public abstract boolean isFileIgnored(@NonNls @Nonnull CharSequence name);
 
   /**
    * Returns the list of extensions associated with the specified file type.
@@ -100,12 +100,12 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @return The array of extensions associated with the file type.
    * @deprecated since more generic way of associations by means of wildcards exist not every associations matches extension paradigm
    */
-  @NotNull
-  public abstract String[] getAssociatedExtensions(@NotNull FileType type);
+  @Nonnull
+  public abstract String[] getAssociatedExtensions(@Nonnull FileType type);
 
 
-  @NotNull
-  public abstract List<FileNameMatcher> getAssociations(@NotNull FileType type);
+  @Nonnull
+  public abstract List<FileNameMatcher> getAssociations(@Nonnull FileType type);
 
   public abstract boolean isFileOfType(VirtualFile file, FileType type);
 
@@ -117,7 +117,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated Subscribe to #TOPIC on any message bus level.
    */
 
-  public abstract void addFileTypeListener(@NotNull FileTypeListener listener);
+  public abstract void addFileTypeListener(@Nonnull FileTypeListener listener);
 
   /**
    * Removes a listener for receiving notifications about changes in the list of
@@ -127,7 +127,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @deprecated Subscribe to #TOPIC on any message bus level.
    */
 
-  public abstract void removeFileTypeListener(@NotNull FileTypeListener listener);
+  public abstract void removeFileTypeListener(@Nonnull FileTypeListener listener);
 
   /**
    * If fileName is already associated with any known file type returns it.
@@ -138,9 +138,9 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    */
   @Nullable
   @Deprecated() // use getKnownFileTypeOrAssociate(VirtualFile file, Project project) instead
-  public abstract FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file);
+  public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file);
   @Nullable
-  public abstract FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @NotNull Project project);
+  public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project);
 
   /**
    * Returns the semicolon-delimited list of patterns for files and folders
@@ -149,7 +149,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @return Semicolon-delimited list of patterns.
    */
-  @NotNull
+  @Nonnull
   public abstract String getIgnoredFilesList();
 
   /**
@@ -158,7 +158,7 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @param list List of semicolon-delimited patterns.
    */
-  public abstract void setIgnoredFilesList(@NotNull String list);
+  public abstract void setIgnoredFilesList(@Nonnull String list);
 
   /**
    * Adds an extension to the list of extensions associated with a file type.
@@ -167,15 +167,15 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @param extension the extension to associate.
    * @since 5.0.2
    */
-  public final void associateExtension(@NotNull FileType type, @NotNull @NonNls String extension) {
+  public final void associateExtension(@Nonnull FileType type, @Nonnull @NonNls String extension) {
     associate(type, new ExtensionFileNameMatcher(extension));
   }
 
-  public final void associatePattern(@NotNull FileType type, @NotNull @NonNls String pattern) {
+  public final void associatePattern(@Nonnull FileType type, @Nonnull @NonNls String pattern) {
     associate(type, parseFromString(pattern));
   }
 
-  public abstract void associate(@NotNull FileType type, @NotNull FileNameMatcher matcher);
+  public abstract void associate(@Nonnull FileType type, @Nonnull FileNameMatcher matcher);
 
   /**
    * Removes an extension from the list of extensions associated with a file type.
@@ -184,16 +184,16 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @param extension the extension to remove.
    * @since 5.0.2
    */
-  public final void removeAssociatedExtension(@NotNull FileType type, @NotNull @NonNls String extension) {
+  public final void removeAssociatedExtension(@Nonnull FileType type, @Nonnull @NonNls String extension) {
     removeAssociation(type, new ExtensionFileNameMatcher(extension));
   }
 
-  public abstract void removeAssociation(@NotNull FileType type, @NotNull FileNameMatcher matcher);
+  public abstract void removeAssociation(@Nonnull FileType type, @Nonnull FileNameMatcher matcher);
 
   public static FileNameMatcher parseFromString(String pattern) {
     return FileNameMatcherFactory.getInstance().createMatcher(pattern);
   }
 
-  @NotNull
-  public abstract FileType getStdFileType(@NotNull @NonNls String fileTypeName);
+  @Nonnull
+  public abstract FileType getStdFileType(@Nonnull @NonNls String fileTypeName);
 }

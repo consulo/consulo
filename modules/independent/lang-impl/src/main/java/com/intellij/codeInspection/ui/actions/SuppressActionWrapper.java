@@ -29,8 +29,8 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -43,7 +43,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
   private final InspectionToolWrapper myToolWrapper;
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.actions.SuppressActionWrapper");
 
-  public SuppressActionWrapper(@NotNull final Project project, @NotNull final InspectionToolWrapper toolWrapper, @NotNull final TreePath[] paths) {
+  public SuppressActionWrapper(@Nonnull final Project project, @Nonnull final InspectionToolWrapper toolWrapper, @Nonnull final TreePath[] paths) {
     super(InspectionsBundle.message("suppress.inspection.problem"), false);
     myProject = project;
     myManager = (InspectionManagerEx)InspectionManager.getInstance(myProject);
@@ -65,7 +65,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SuppressTreeAction[] getChildren(@Nullable final AnActionEvent e) {
     final SuppressIntentionAction[] suppressActions = InspectionManagerEx.getSuppressActions(myToolWrapper);
     if (suppressActions == null || suppressActions.length == 0) return new SuppressTreeAction[0];

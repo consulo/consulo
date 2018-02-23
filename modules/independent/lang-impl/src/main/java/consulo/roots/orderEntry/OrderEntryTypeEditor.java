@@ -29,7 +29,7 @@ import com.intellij.openapi.util.KeyedExtensionFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +42,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
           new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME,
                                                                           ApplicationManager.getApplication().getPicoContainer()) {
             @Override
-            public OrderEntryTypeEditor getByKey(@NotNull OrderEntryType key) {
+            public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
               // special hack for unknown order entry type
               if (key instanceof UnknownOrderEntryType) {
                 return new UnknownOrderEntryTypeEditor();
@@ -51,22 +51,22 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
             }
 
             @Override
-            public String getKey(@NotNull final OrderEntryType key) {
+            public String getKey(@Nonnull final OrderEntryType key) {
               return key.getId();
             }
           };
 
-  @NotNull
-  default CellAppearanceEx getCellAppearance(@NotNull T orderEntry) {
+  @Nonnull
+  default CellAppearanceEx getCellAppearance(@Nonnull T orderEntry) {
     return new SimpleTextCellAppearance(orderEntry.getPresentableName(), null, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  @NotNull
-  default ClasspathTableItem<T> createTableItem(@NotNull T orderEntry, @NotNull StructureConfigurableContext context) {
+  @Nonnull
+  default ClasspathTableItem<T> createTableItem(@Nonnull T orderEntry, @Nonnull StructureConfigurableContext context) {
     return new ClasspathTableItem<T>(orderEntry);
   }
 
-  default void navigate(@NotNull final T orderEntry) {
+  default void navigate(@Nonnull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(project);
     ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {

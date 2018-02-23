@@ -16,13 +16,13 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 abstract class DiffIterableBase implements DiffIterable {
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<Range> iterateUnchanged() {
     return new Iterable<Range>() {
@@ -33,7 +33,7 @@ abstract class DiffIterableBase implements DiffIterable {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<Range> iterateChanges() {
     return new Iterable<Range>() {

@@ -2,7 +2,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ public class DelegatingGlobalSearchScope extends GlobalSearchScope {
   protected final GlobalSearchScope myBaseScope;
   private final Object myEquality;
 
-  public DelegatingGlobalSearchScope(@NotNull GlobalSearchScope baseScope) {
+  public DelegatingGlobalSearchScope(@Nonnull GlobalSearchScope baseScope) {
     super(baseScope.getProject());
     myBaseScope = baseScope;
     myEquality = new Object();
@@ -26,22 +26,22 @@ public class DelegatingGlobalSearchScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return myBaseScope.contains(file);
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return myBaseScope.compare(file1, file2);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return myBaseScope.isSearchInModuleContent(aModule);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule, boolean testSources) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
     return myBaseScope.isSearchInModuleContent(aModule, testSources);
   }
 

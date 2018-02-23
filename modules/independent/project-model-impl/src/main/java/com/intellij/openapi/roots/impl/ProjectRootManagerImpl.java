@@ -36,7 +36,7 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -138,13 +138,13 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ProjectFileIndex getFileIndex() {
     return ProjectFileIndex.getInstance(myProject);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<String> getContentRootUrls() {
     final List<String> result = new ArrayList<String>();
     for (Module module : getModuleManager().getModules()) {
@@ -155,7 +155,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getContentRoots() {
     final List<VirtualFile> result = new ArrayList<VirtualFile>();
     for (Module module : getModuleManager().getModules()) {
@@ -175,15 +175,15 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     return VfsUtilCore.toVirtualFileArray(result);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderEnumerator orderEntries() {
     return new ProjectOrderEnumerator(myProject, myRootsCache);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderEnumerator orderEntries(@NotNull Collection<? extends Module> modules) {
+  public OrderEnumerator orderEntries(@Nonnull Collection<? extends Module> modules) {
     return new ModulesOrderEnumerator(myProject, modules);
   }
 
@@ -208,7 +208,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ProjectRootManager";
   }
@@ -226,7 +226,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   private int myRootsChangesDepth = 0;
 
   @Override
-  public void mergeRootsChangesDuring(@NotNull Runnable runnable) {
+  public void mergeRootsChangesDuring(@Nonnull Runnable runnable) {
     if (getBatchSession(false).myBatchLevel == 0 && !myMergedCallStarted) {
       LOG.assertTrue(myRootsChangesDepth == 0, "Merged rootsChanged not allowed inside rootsChanged, rootsChanged level == " + myRootsChangesDepth);
       myMergedCallStarted = true;
@@ -262,7 +262,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
   }
 
   @Override
-  public void makeRootsChange(@NotNull Runnable runnable, boolean filetypes, boolean fireEvents) {
+  public void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents) {
     if (myProject.isDisposed()) return;
     BatchSession session = getBatchSession(filetypes);
     if (fireEvents) session.beforeRootsChanged();
@@ -393,11 +393,11 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx implements Proj
     multilistener.addListener(libraryListener);
   }
 
-  public void addOrderWithTracking(@NotNull OrderEntryWithTracking orderEntry) {
+  public void addOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry) {
     myModuleExtensionWithSdkOrderEntries.add(orderEntry);
   }
 
-  public void removeOrderWithTracking(@NotNull OrderEntryWithTracking orderEntry) {
+  public void removeOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry) {
     myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
   }
 

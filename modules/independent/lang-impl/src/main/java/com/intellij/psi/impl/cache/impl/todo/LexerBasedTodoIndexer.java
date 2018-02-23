@@ -19,7 +19,7 @@ package com.intellij.psi.impl.cache.impl.todo;
 import com.intellij.psi.impl.cache.impl.BaseFilterLexerUtil;
 import com.intellij.psi.impl.cache.impl.IdAndToDoScannerBasedOnFilterLexer;
 import com.intellij.util.indexing.FileContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public abstract class LexerBasedTodoIndexer implements VersionedTodoIndexer, IdAndToDoScannerBasedOnFilterLexer {
   @Override
-  @NotNull
+  @Nonnull
   public Map<TodoIndexEntry, Integer> map(final FileContent inputData) {
     return BaseFilterLexerUtil.scanContent(inputData, this).todoMap;
   }

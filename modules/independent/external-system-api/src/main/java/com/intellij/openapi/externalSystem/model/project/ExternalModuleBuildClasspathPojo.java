@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,8 +26,10 @@ import java.util.List;
  */
 public class ExternalModuleBuildClasspathPojo {
 
-  @NotNull private List<String> myEntries;
-  @NotNull private String myPath;
+  @Nonnull
+  private List<String> myEntries;
+  @Nonnull
+  private String myPath;
 
   @SuppressWarnings("UnusedDeclaration")
   public ExternalModuleBuildClasspathPojo() {
@@ -35,26 +37,26 @@ public class ExternalModuleBuildClasspathPojo {
     this("___DUMMY___", ContainerUtil.<String>newArrayList());
   }
 
-  public ExternalModuleBuildClasspathPojo(@NotNull String path, @NotNull List<String> entries) {
+  public ExternalModuleBuildClasspathPojo(@Nonnull String path, @Nonnull List<String> entries) {
     myPath = path;
     myEntries = entries;
   }
 
-  @NotNull
+  @Nonnull
   public String getPath() {
     return myPath;
   }
 
-  public void setPath(@NotNull String path) {
+  public void setPath(@Nonnull String path) {
     myPath = path;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getEntries() {
     return myEntries;
   }
 
-  public void setEntries(@NotNull List<String> entries) {
+  public void setEntries(@Nonnull List<String> entries) {
     myEntries = entries;
   }
 

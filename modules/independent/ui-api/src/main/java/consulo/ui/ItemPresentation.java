@@ -16,16 +16,16 @@
 package consulo.ui;
 
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface ItemPresentation {
-  void setIcon(@NotNull Image image);
+  void setIcon(@Nonnull Image image);
 
-  void append(@NotNull String text);
+  void append(@Nonnull String text);
 
-  void append(@NotNull String text, @NotNull TextStyle... styles);
+  void append(@Nonnull String text, @Nonnull TextStyle... styles);
 }

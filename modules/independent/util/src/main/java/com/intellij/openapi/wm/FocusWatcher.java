@@ -16,8 +16,8 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,7 +114,7 @@ public class FocusWatcher implements ContainerListener,FocusListener{
     return myNearestFocusableComponent != null ? myNearestFocusableComponent.get() : null;
   }
 
-  public final void install(@NotNull Component component){
+  public final void install(@Nonnull Component component){
     myTopComponent = component;
     installImpl(component);
   }

@@ -18,8 +18,8 @@ package com.intellij.packaging.impl.elements;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
@@ -31,12 +31,12 @@ public interface ModuleOutputPackagingElement {
   @Nullable
   String getModuleName();
 
-  @NotNull
+  @Nonnull
   ContentFolderTypeProvider getContentFolderType();
 
   @Nullable
   Module findModule(PackagingElementResolvingContext context);
 
-  @NotNull
+  @Nonnull
   Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context);
 }

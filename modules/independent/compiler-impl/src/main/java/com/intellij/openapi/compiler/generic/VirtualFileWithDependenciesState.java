@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IOUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -39,11 +39,11 @@ public class VirtualFileWithDependenciesState {
     mySourceTimestamp = sourceTimestamp;
   }
 
-  public void addDependency(@NotNull VirtualFile file) {
+  public void addDependency(@Nonnull VirtualFile file) {
     myDependencies.put(file.getUrl(), file.getTimeStamp());
   }
 
-  public boolean isUpToDate(@NotNull VirtualFile sourceFile) {
+  public boolean isUpToDate(@Nonnull VirtualFile sourceFile) {
     if (sourceFile.getTimeStamp() != mySourceTimestamp) {
       return false;
     }
@@ -61,7 +61,7 @@ public class VirtualFileWithDependenciesState {
 
   private static class VirtualFileWithDependenciesExternalizer implements DataExternalizer<VirtualFileWithDependenciesState> {
     @Override
-    public void save(@NotNull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
+    public void save(@Nonnull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
       out.writeLong(value.mySourceTimestamp);
       final Map<String, Long> dependencies = value.myDependencies;
       out.writeInt(dependencies.size());
@@ -72,7 +72,7 @@ public class VirtualFileWithDependenciesState {
     }
 
     @Override
-    public VirtualFileWithDependenciesState read(@NotNull DataInput in) throws IOException {
+    public VirtualFileWithDependenciesState read(@Nonnull DataInput in) throws IOException {
       final VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
       int size = in.readInt();
       while (size-- > 0) {

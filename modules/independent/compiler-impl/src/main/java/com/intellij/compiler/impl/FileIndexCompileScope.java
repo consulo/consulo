@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase
 
   protected abstract FileIndex[] getFileIndices();
 
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(final FileType fileType, final boolean inSourceOnly) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>();
     final FileIndex[] fileIndices = getFileIndices();

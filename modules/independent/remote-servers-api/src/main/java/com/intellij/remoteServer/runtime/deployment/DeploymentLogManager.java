@@ -16,15 +16,15 @@
 package com.intellij.remoteServer.runtime.deployment;
 
 import com.intellij.remoteServer.runtime.log.LoggingHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface DeploymentLogManager {
-  @NotNull
+  @Nonnull
   LoggingHandler getMainLoggingHandler();
 
-  @NotNull
-  LoggingHandler addAdditionalLog(@NotNull String presentableName);
+  @Nonnull
+  LoggingHandler addAdditionalLog(@Nonnull String presentableName);
 }

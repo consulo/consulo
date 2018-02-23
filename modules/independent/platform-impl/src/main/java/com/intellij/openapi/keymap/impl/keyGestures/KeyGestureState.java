@@ -17,7 +17,7 @@ package com.intellij.openapi.keymap.impl.keyGestures;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.KeyboardGestureAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -55,7 +55,7 @@ abstract class KeyGestureState {
         || event.getKeyCode() == KeyEvent.VK_META;
   }
 
-  @NotNull
+  @Nonnull
   public AnActionEvent createActionEvent() {
     throw new IllegalStateException(getClass().getName());
   }

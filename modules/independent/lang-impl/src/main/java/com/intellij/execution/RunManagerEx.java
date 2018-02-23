@@ -20,8 +20,8 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -54,29 +54,29 @@ public abstract class RunManagerEx extends RunManager {
    * @return
    * @deprecated use {@link RunManager#createRunConfiguration(String, ConfigurationFactory)} instead
    */
-  @NotNull
+  @Nonnull
   public abstract RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory type);
 
   public abstract void addConfiguration(RunnerAndConfigurationSettings settings, boolean isShared, List<BeforeRunTask> tasks, boolean addTemplateTasksIfAbsent);
 
   public abstract boolean isConfigurationShared(RunnerAndConfigurationSettings settings);
 
-  @NotNull
+  @Nonnull
   public abstract List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings);
 
   public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
 
-  @NotNull
+  @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
 
-  @NotNull
+  @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
 
-  public abstract Icon getConfigurationIcon(@NotNull RunnerAndConfigurationSettings settings);
+  public abstract Icon getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
@@ -88,8 +88,8 @@ public abstract class RunManagerEx extends RunManager {
   public void addRunManagerListener(RunManagerListener listener) {
   }
 
-  @NotNull
-  public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@NotNull ConfigurationType type);
+  @Nonnull
+  public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type);
 
   public static void disableTasks(Project project, RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
     for (Key<? extends BeforeRunTask> key : keys) {

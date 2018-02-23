@@ -8,7 +8,7 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -20,13 +20,13 @@ public class TestGrouper implements Grouper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ActionPresentation getPresentation() {
     throw new RuntimeException();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     throw new RuntimeException();
   }
@@ -79,7 +79,7 @@ public class TestGrouper implements Grouper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Group> group(final AbstractTreeNode parent, Collection<TreeElement> children) {
     List<Group> result = new ArrayList<Group>();
     Collection<String> parentGroupUsedStrings = parent.getValue() instanceof StringGroup ?

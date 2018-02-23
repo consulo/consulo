@@ -5,8 +5,8 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -21,19 +21,19 @@ public class MockContentRevision implements ContentRevision {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getContent() throws VcsException {
     return null;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FilePath getFile() {
     return myPath;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsRevisionNumber getRevisionNumber() {
     return myRevisionNumber;
   }

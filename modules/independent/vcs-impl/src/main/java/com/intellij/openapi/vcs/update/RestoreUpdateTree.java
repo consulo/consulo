@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, RoamingTypeDisabled {
   private final Project myProject;
@@ -70,7 +70,7 @@ public class RestoreUpdateTree implements ProjectComponent, JDOMExternalizable, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "RestoreUpdateTree";
   }

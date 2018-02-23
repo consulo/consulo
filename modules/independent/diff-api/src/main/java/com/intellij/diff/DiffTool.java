@@ -17,13 +17,13 @@ package com.intellij.diff;
 
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DiffTool {
   ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create("com.intellij.diff.DiffTool");
 
-  @NotNull
+  @Nonnull
   String getName();
 
-  boolean canShow(@NotNull DiffContext context, @NotNull DiffRequest request);
+  boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request);
 }

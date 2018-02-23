@@ -27,7 +27,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -44,7 +44,7 @@ public class RefCountingStorage extends AbstractStorage {
   private int myPendingWriteRequestsSize;
   private final ExecutorService myPendingWriteRequestsExecutor = createExecutor();
 
-  @NotNull
+  @Nonnull
   protected ExecutorService createExecutor() {
     return new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS, new LinkedBlockingQueue<Runnable>(), ConcurrencyUtil
             .newNamedThreadFactory("RefCountingStorage write content helper"));

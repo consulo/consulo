@@ -5,8 +5,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.*;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,15 +15,19 @@ import java.util.stream.Stream;
 public class RefsModel implements VcsLogRefs {
   private static final Logger LOG = Logger.getInstance(RefsModel.class);
 
-  @NotNull private final VcsLogStorage myHashMap;
-  @NotNull private final Map<VirtualFile, CompressedRefs> myRefs;
-  @NotNull private final TIntObjectHashMap<VcsRef> myBestRefForHead;
-  @NotNull private final TIntObjectHashMap<VirtualFile> myRootForHead;
+  @Nonnull
+  private final VcsLogStorage myHashMap;
+  @Nonnull
+  private final Map<VirtualFile, CompressedRefs> myRefs;
+  @Nonnull
+  private final TIntObjectHashMap<VcsRef> myBestRefForHead;
+  @Nonnull
+  private final TIntObjectHashMap<VirtualFile> myRootForHead;
 
-  public RefsModel(@NotNull Map<VirtualFile, CompressedRefs> refs,
-                   @NotNull Set<Integer> heads,
-                   @NotNull VcsLogStorage hashMap,
-                   @NotNull Map<VirtualFile, VcsLogProvider> providers) {
+  public RefsModel(@Nonnull Map<VirtualFile, CompressedRefs> refs,
+                   @Nonnull Set<Integer> heads,
+                   @Nonnull VcsLogStorage hashMap,
+                   @Nonnull Map<VirtualFile, VcsLogProvider> providers) {
     myRefs = refs;
     myHashMap = hashMap;
 
@@ -51,12 +55,12 @@ public class RefsModel implements VcsLogRefs {
     return myBestRefForHead.get(headIndex);
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile rootAtHead(int headIndex) {
     return myRootForHead.get(headIndex);
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, CompressedRefs> getAllRefsByRoot() {
     return myRefs;
   }
@@ -69,12 +73,12 @@ public class RefsModel implements VcsLogRefs {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<VcsRef> getBranches() {
     return myRefs.values().stream().flatMap(CompressedRefs::streamBranches).collect(Collectors.toList());
   }
 
-  @NotNull
+  @Nonnull
   public Stream<VcsRef> stream() {
     assert !ApplicationManager.getApplication().isDispatchThread();
     return myRefs.values().stream().flatMap(CompressedRefs::stream);

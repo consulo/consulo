@@ -19,8 +19,8 @@ import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -31,11 +31,11 @@ public abstract class PathMacroMap {
 
   public abstract String substitute(String text, boolean caseSensitive);
 
-  public final void substitute(@NotNull Element e, boolean caseSensitive) {
+  public final void substitute(@Nonnull Element e, boolean caseSensitive) {
     substitute(e, caseSensitive, false);
   }
 
-  public final void substitute(@NotNull Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
+  public final void substitute(@Nonnull Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
     for (Content child : e.getContent()) {
       if (child instanceof Element) {
         substitute((Element)child, caseSensitive, recursively, filter);
@@ -70,7 +70,7 @@ public abstract class PathMacroMap {
     }
   }
 
-  public final void substitute(@NotNull Element e, boolean caseSensitive, final boolean recursively) {
+  public final void substitute(@Nonnull Element e, boolean caseSensitive, final boolean recursively) {
     substitute(e, caseSensitive, recursively, null);
   }
 

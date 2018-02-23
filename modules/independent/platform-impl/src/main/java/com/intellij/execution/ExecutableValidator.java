@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -50,11 +50,15 @@ public abstract class ExecutableValidator {
 
   private static final Logger LOG = Logger.getInstance(ExecutableValidator.class);
   private static final NotificationGroup ourNotificationGroup = new NotificationGroup("External Executable Critical Failures", STICKY_BALLOON, true);
-  @NotNull protected final Project myProject;
-  @NotNull protected final NotificationsManager myNotificationManager;
+  @Nonnull
+  protected final Project myProject;
+  @Nonnull
+  protected final NotificationsManager myNotificationManager;
 
-  @NotNull private final String myNotificationErrorTitle;
-  @NotNull private final String myNotificationErrorDescription;
+  @Nonnull
+  private final String myNotificationErrorTitle;
+  @Nonnull
+  private final String myNotificationErrorDescription;
 
   /**
    * Configures notification and dialog by setting text messages and titles specific to the whoever uses the validator.
@@ -63,7 +67,7 @@ public abstract class ExecutableValidator {
    * @param notificationErrorDescription description of this notification with a link to fix it (link action is defined by
    *                                     {@link #showSettingsAndExpireIfFixed(com.intellij.notification.Notification)}
    */
-  public ExecutableValidator(@NotNull Project project, @NotNull String notificationErrorTitle, @NotNull String notificationErrorDescription) {
+  public ExecutableValidator(@Nonnull Project project, @Nonnull String notificationErrorTitle, @Nonnull String notificationErrorDescription) {
     myProject = project;
     myNotificationErrorTitle = notificationErrorTitle;
     myNotificationErrorDescription = notificationErrorDescription;
@@ -76,15 +80,15 @@ public abstract class ExecutableValidator {
    * @return the settings configurable display name, where the executable is shown and can be fixed.
    * This configurable will be opened if user presses "Fix" on the notification about invalid executable.
    */
-  @NotNull
+  @Nonnull
   protected abstract String getConfigurableDisplayName();
 
   @Nullable
-  protected Notification validate(@NotNull String executable) {
+  protected Notification validate(@Nonnull String executable) {
     return !isExecutableValid(executable) ? createDefaultNotification() : null;
   }
 
-  @NotNull
+  @Nonnull
   protected ExecutableNotValidNotification createDefaultNotification() {
     return new ExecutableNotValidNotification();
   }
@@ -97,11 +101,11 @@ public abstract class ExecutableValidator {
    * @param executable Path to executable.
    * @return true if process with the supplied executable completed without errors and with exit code 0.
    */
-  protected boolean isExecutableValid(@NotNull String executable) {
+  protected boolean isExecutableValid(@Nonnull String executable) {
     return doCheckExecutable(executable, Collections.<String>emptyList());
   }
 
-  protected static boolean doCheckExecutable(@NotNull String executable, @NotNull List<String> processParameters) {
+  protected static boolean doCheckExecutable(@Nonnull String executable, @Nonnull List<String> processParameters) {
     try {
       GeneralCommandLine commandLine = new GeneralCommandLine();
       commandLine.setExePath(executable);
@@ -134,7 +138,7 @@ public abstract class ExecutableValidator {
    * Expires the notification if user fixes the path from the opened Settings dialog.
    * Makes sure that there is always only one notification about the problem in the stack of notifications.
    */
-  private void showExecutableNotConfiguredNotification(@NotNull Notification notification) {
+  private void showExecutableNotConfiguredNotification(@Nonnull Notification notification) {
     if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
       return;
     }
@@ -145,8 +149,8 @@ public abstract class ExecutableValidator {
     }
   }
 
-  @NotNull
-  protected String prepareDescription(@NotNull String description, boolean appendFixIt) {
+  @Nonnull
+  protected String prepareDescription(@Nonnull String description, boolean appendFixIt) {
     StringBuilder result = new StringBuilder();
     String executable = getCurrentExecutable();
 
@@ -163,7 +167,7 @@ public abstract class ExecutableValidator {
     return result.toString();
   }
 
-  protected void showSettingsAndExpireIfFixed(@NotNull Notification notification) {
+  protected void showSettingsAndExpireIfFixed(@Nonnull Notification notification) {
     showSettings();
     if (validate(getCurrentExecutable()) == null) {
       notification.expire();
@@ -240,14 +244,14 @@ public abstract class ExecutableValidator {
       this(myNotificationErrorDescription);
     }
 
-    public ExecutableNotValidNotification(@NotNull String description) {
+    public ExecutableNotValidNotification(@Nonnull String description) {
       this(prepareDescription(description, true), NotificationType.ERROR);
     }
 
-    public ExecutableNotValidNotification(@NotNull String preparedDescription, @NotNull NotificationType type) {
+    public ExecutableNotValidNotification(@Nonnull String preparedDescription, @Nonnull NotificationType type) {
       super(ourNotificationGroup.getDisplayId(), "", preparedDescription, type, new NotificationListener.Adapter() {
         @Override
-        protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           showSettingsAndExpireIfFixed(notification);
         }
       });

@@ -40,8 +40,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -57,21 +57,21 @@ public class ExecutionUtil {
   private ExecutionUtil() {
   }
 
-  public static void handleExecutionError(@NotNull Project project,
-                                          @NotNull String toolWindowId,
-                                          @NotNull RunProfile runProfile,
-                                          @NotNull ExecutionException e) {
+  public static void handleExecutionError(@Nonnull Project project,
+                                          @Nonnull String toolWindowId,
+                                          @Nonnull RunProfile runProfile,
+                                          @Nonnull ExecutionException e) {
     handleExecutionError(project, toolWindowId, runProfile.getName(), e);
   }
 
-  public static void handleExecutionError(@NotNull ExecutionEnvironment environment, @NotNull ExecutionException e) {
+  public static void handleExecutionError(@Nonnull ExecutionEnvironment environment, @Nonnull ExecutionException e) {
     handleExecutionError(environment.getProject(), environment.getExecutor().getToolWindowId(), environment.getRunProfile().getName(), e);
   }
 
-  public static void handleExecutionError(@NotNull final Project project,
-                                          @NotNull final String toolWindowId,
-                                          @NotNull String taskName,
-                                          @NotNull ExecutionException e) {
+  public static void handleExecutionError(@Nonnull final Project project,
+                                          @Nonnull final String toolWindowId,
+                                          @Nonnull String taskName,
+                                          @Nonnull ExecutionException e) {
     if (e instanceof RunCanceledByUserException) {
       return;
     }
@@ -132,7 +132,7 @@ public class ExecutionUtil {
         }
         NotificationListener notificationListener = finalListener == null ? null : new NotificationListener() {
           @Override
-          public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
             finalListener.hyperlinkUpdate(event);
           }
         };
@@ -141,7 +141,7 @@ public class ExecutionUtil {
     });
   }
 
-  public static void restartIfActive(@NotNull RunContentDescriptor descriptor) {
+  public static void restartIfActive(@Nonnull RunContentDescriptor descriptor) {
     ProcessHandler processHandler = descriptor.getProcessHandler();
     if (processHandler != null
         && processHandler.isStartNotified()
@@ -151,11 +151,11 @@ public class ExecutionUtil {
     }
   }
 
-  public static void restart(@NotNull RunContentDescriptor descriptor) {
+  public static void restart(@Nonnull RunContentDescriptor descriptor) {
     restart(descriptor.getComponent());
   }
 
-  public static void restart(@NotNull Content content) {
+  public static void restart(@Nonnull Content content) {
     restart(content.getComponent());
   }
 
@@ -168,13 +168,13 @@ public class ExecutionUtil {
     }
   }
 
-  public static void restart(@NotNull ExecutionEnvironment environment) {
+  public static void restart(@Nonnull ExecutionEnvironment environment) {
     if (!ExecutorRegistry.getInstance().isStarting(environment)) {
       ExecutionManager.getInstance(environment.getProject()).restartRunProfile(environment);
     }
   }
 
-  public static void runConfiguration(@NotNull RunnerAndConfigurationSettings configuration, @NotNull Executor executor) {
+  public static void runConfiguration(@Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Executor executor) {
     ExecutionEnvironmentBuilder builder = createEnvironment(executor, configuration);
     if (builder != null) {
       ExecutionManager.getInstance(configuration.getConfiguration().getProject()).restartRunProfile(builder
@@ -183,8 +183,8 @@ public class ExecutionUtil {
     }
   }
 
-  @Nullable
-  public static ExecutionEnvironmentBuilder createEnvironment(@NotNull Executor executor, @NotNull RunnerAndConfigurationSettings settings) {
+  @javax.annotation.Nullable
+  public static ExecutionEnvironmentBuilder createEnvironment(@Nonnull Executor executor, @Nonnull RunnerAndConfigurationSettings settings) {
     try {
       return ExecutionEnvironmentBuilder.create(executor, settings);
     }

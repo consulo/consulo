@@ -19,7 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -32,19 +32,19 @@ import java.awt.*;
 )
 final class WindowStateApplicationService extends WindowStateServiceImpl {
   @Override
-  Point getDefaultLocationFor(Object object, @NotNull String key) {
+  Point getDefaultLocationFor(Object object, @Nonnull String key) {
     //  backward compatibility when this service is used instead of DimensionService
     return DimensionService.getInstance().getLocation(key);
   }
 
   @Override
-  Dimension getDefaultSizeFor(Object object, @NotNull String key) {
+  Dimension getDefaultSizeFor(Object object, @Nonnull String key) {
     //  backward compatibility when this service is used instead of DimensionService
     return DimensionService.getInstance().getSize(key);
   }
 
   @Override
-  Rectangle getDefaultBoundsFor(Object object, @NotNull String key) {
+  Rectangle getDefaultBoundsFor(Object object, @Nonnull String key) {
     Point location = getDefaultLocationFor(object, key);
     if (location == null) {
       return null;
@@ -57,7 +57,7 @@ final class WindowStateApplicationService extends WindowStateServiceImpl {
   }
 
   @Override
-  boolean getDefaultMaximizedFor(Object object, @NotNull String key) {
+  boolean getDefaultMaximizedFor(Object object, @Nonnull String key) {
     //  backward compatibility when this service is used instead of DimensionService
     return Frame.MAXIMIZED_BOTH == DimensionService.getInstance().getExtendedState(key);
   }

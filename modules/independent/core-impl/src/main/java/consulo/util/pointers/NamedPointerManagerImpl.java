@@ -15,8 +15,8 @@
  */
 package consulo.util.pointers;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +33,13 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
   private final Map<T, NamedPointerImpl<T>> myPointers = new HashMap<T, NamedPointerImpl<T>>();
 
   @Nullable
-  public abstract T findByName(@NotNull String name);
+  public abstract T findByName(@Nonnull String name);
 
   protected void updatePointers(T value) {
     updatePointers(value, value.getName());
   }
 
-  protected void updatePointers(T value, @NotNull String name) {
+  protected void updatePointers(T value, @Nonnull String name) {
     NamedPointerImpl<T> pointer = myUnresolved.remove(name);
     if (pointer != null && pointer.get() == null) {
       pointer.setValue(value);
@@ -65,9 +65,9 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public NamedPointer<T> create(@NotNull T value) {
+  public NamedPointer<T> create(@Nonnull T value) {
     NamedPointerImpl<T> pointer = myPointers.get(value);
     if (pointer == null) {
       pointer = myUnresolved.get(value.getName());
@@ -82,9 +82,9 @@ public abstract class NamedPointerManagerImpl<T extends Named> implements NamedP
     return pointer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public NamedPointer<T> create(@NotNull String name) {
+  public NamedPointer<T> create(@Nonnull String name) {
     final T value = findByName(name);
     if (value != null) {
       return create(value);

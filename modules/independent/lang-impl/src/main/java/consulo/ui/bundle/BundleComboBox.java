@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Conditions;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.ui.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -75,7 +75,7 @@ public class BundleComboBox implements PseudoComponent {
       return mySdkPointer.getName();
     }
 
-    @NotNull
+    @Nonnull
     public Module getModule() {
       return myModuleExtension.getModule();
     }
@@ -93,12 +93,12 @@ public class BundleComboBox implements PseudoComponent {
       myIcon = icon;
     }
 
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return myIcon;
     }
 
-    @NotNull
+    @Nonnull
     public String getPresentableName() {
       return myPresentableName;
     }
@@ -118,7 +118,7 @@ public class BundleComboBox implements PseudoComponent {
       myModuleName = moduleName;
     }
 
-    @NotNull
+    @Nonnull
     public String getModuleName() {
       return myModuleName;
     }
@@ -154,33 +154,33 @@ public class BundleComboBox implements PseudoComponent {
   @Nullable
   private final Condition<SdkTypeId> myCreationFilter;
 
-  public BundleComboBox(@NotNull final SdkModel sdksModel) {
+  public BundleComboBox(@Nonnull final SdkModel sdksModel) {
     this(sdksModel, null, false);
   }
 
-  public BundleComboBox(@NotNull SdkModel sdksModel, @Nullable Condition<SdkTypeId> filter, boolean withNoneItem) {
+  public BundleComboBox(@Nonnull SdkModel sdksModel, @Nullable Condition<SdkTypeId> filter, boolean withNoneItem) {
     this(sdksModel, filter, filter, withNoneItem);
   }
 
-  public BundleComboBox(@NotNull SdkModel sdksModel, @Nullable Condition<SdkTypeId> filter, @Nullable String nullItemName) {
+  public BundleComboBox(@Nonnull SdkModel sdksModel, @Nullable Condition<SdkTypeId> filter, @Nullable String nullItemName) {
     this(sdksModel, filter, filter, nullItemName, null);
   }
 
-  public BundleComboBox(@NotNull SdkModel sdksModel,
+  public BundleComboBox(@Nonnull SdkModel sdksModel,
                         @Nullable Condition<SdkTypeId> filter,
                         @Nullable Condition<SdkTypeId> creationFilter,
                         boolean withNoneItem) {
     this(sdksModel, filter, creationFilter, withNoneItem ? ProjectBundle.message("sdk.combo.box.item") : null, null);
   }
 
-  public BundleComboBox(@NotNull SdkModel sdksModel,
+  public BundleComboBox(@Nonnull SdkModel sdksModel,
                         @Nullable Condition<SdkTypeId> filter,
                         @Nullable Condition<SdkTypeId> creationFilter,
                         @Nullable String nullItemName) {
     this(sdksModel, filter, creationFilter, nullItemName, null);
   }
 
-  public BundleComboBox(@NotNull SdkModel sdksModel,
+  public BundleComboBox(@Nonnull SdkModel sdksModel,
                         @Nullable Condition<SdkTypeId> filter,
                         @Nullable Condition<SdkTypeId> creationFilter,
                         @Nullable final String nullItemName,
@@ -234,7 +234,7 @@ public class BundleComboBox implements PseudoComponent {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public Component getComponent() {
     return myOriginalComboBox;

@@ -16,22 +16,21 @@
 
 package com.intellij.execution;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class ExecutionTarget {
-  @NotNull
+  @Nonnull
   public abstract String getId();
 
-  @NotNull
+  @Nonnull
   public abstract String getDisplayName();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Icon getIcon();
 
-  public abstract boolean canRun(@NotNull RunnerAndConfigurationSettings configuration);
+  public abstract boolean canRun(@Nonnull RunnerAndConfigurationSettings configuration);
 
   @Override
   public boolean equals(Object obj) {

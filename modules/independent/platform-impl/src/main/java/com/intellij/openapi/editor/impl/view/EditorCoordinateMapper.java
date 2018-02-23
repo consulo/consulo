@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.impl.FoldingModelImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -57,17 +57,17 @@ class EditorCoordinateMapper {
     return Math.max(0, y - myView.getInsets().top) / myView.getLineHeight();
   }
 
-  @NotNull
+  @Nonnull
   LogicalPosition offsetToLogicalPosition(int offset) {
     return myView.getLogicalPositionCache().offsetToLogicalPosition(offset);
   }
 
-  int logicalPositionToOffset(@NotNull LogicalPosition pos) {
+  int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     return myView.getLogicalPositionCache().logicalPositionToOffset(pos);
   }
 
-  @NotNull
-  VisualPosition logicalToVisualPosition(@NotNull LogicalPosition pos, boolean beforeSoftWrap) {
+  @Nonnull
+  VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos, boolean beforeSoftWrap) {
     int line = pos.line;
     int column = pos.column;
     int logicalLineCount = myDocument.getLineCount();
@@ -126,8 +126,8 @@ class EditorCoordinateMapper {
     return new VisualPosition(visualLine, resultColumn, pos.leansForward);
   }
 
-  @NotNull
-  LogicalPosition visualToLogicalPosition(@NotNull VisualPosition pos) {
+  @Nonnull
+  LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
     int line = pos.line;
     int column = pos.column;
     int visualLineCount = myView.getEditor().getVisibleLineCount();
@@ -172,7 +172,7 @@ class EditorCoordinateMapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   VisualPosition offsetToVisualPosition(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
     return logicalToVisualPosition(offsetToLogicalPosition(offset).leanForward(leanTowardsLargerOffsets), beforeSoftWrap);
   }
@@ -251,8 +251,8 @@ class EditorCoordinateMapper {
     return myView.getInsets().left + (line == 0 ? myView.getPrefixTextWidthInPixels() : 0);
   }
 
-  @NotNull
-  VisualPosition xyToVisualPosition(@NotNull Point2D p) {
+  @Nonnull
+  VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
     int visualLine = yToVisualLine((int)p.getY());
     int lastColumn = 0;
     float x = getStartX(visualLine);
@@ -299,8 +299,8 @@ class EditorCoordinateMapper {
                               remainingShift > 0 && additionalColumns == (remainingShift - 1) / plainSpaceWidth);
   }
 
-  @NotNull
-  Point2D visualPositionToXY(@NotNull VisualPosition pos) {
+  @Nonnull
+  Point2D visualPositionToXY(@Nonnull VisualPosition pos) {
     int visualLine = pos.line;
     int column = pos.column;
     int y = visualLineToY(visualLine);
@@ -331,7 +331,7 @@ class EditorCoordinateMapper {
     return new Point2D.Float(x + additionalShift, y);
   }
 
-  @NotNull
+  @Nonnull
   Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
     offset = Math.max(0, Math.min(myDocument.getTextLength(), offset));
     offset = DocumentUtil.alignToCodePointBoundary(myDocument, offset);

@@ -18,7 +18,7 @@ package consulo.ide.updateSettings;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ import java.io.File;
         name = "UpdateSettings",
         storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
-  @NotNull
+  @Nonnull
   public static UpdateSettings getInstance() {
     return ServiceManager.getService(UpdateSettings.class);
   }
@@ -43,7 +43,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
 
   private State myState = new State();
 
-  @NotNull
+  @Nonnull
   private static UpdateChannel findDefaultChannel() {
     if(ApplicationProperties.isInSandbox()) {
       return UpdateChannel.nightly;
@@ -59,7 +59,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     return UpdateChannel.release;
   }
 
-  @NotNull
+  @Nonnull
   public UpdateChannel getChannel() {
     UpdateChannel channel = myState.channel;
     if (channel == null) {
@@ -68,7 +68,7 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     return channel;
   }
 
-  public void setChannel(@NotNull UpdateChannel channel) {
+  public void setChannel(@Nonnull UpdateChannel channel) {
     myState.channel = channel;
   }
 

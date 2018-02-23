@@ -16,16 +16,15 @@
 package com.intellij.packaging.artifacts;
 
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ArtifactPointer extends NamedPointer<Artifact> {
-  @NotNull
-  String getArtifactName(@NotNull ArtifactModel artifactModel);
+  @Nonnull
+  String getArtifactName(@Nonnull ArtifactModel artifactModel);
 
-  @Nullable
-  Artifact findArtifact(@NotNull ArtifactModel artifactModel);
+  @javax.annotation.Nullable
+  Artifact findArtifact(@Nonnull ArtifactModel artifactModel);
 }

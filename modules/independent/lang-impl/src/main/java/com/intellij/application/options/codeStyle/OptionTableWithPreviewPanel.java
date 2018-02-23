@@ -34,8 +34,8 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -327,16 +327,16 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     return false;
   }
 
-  protected void addOption(@NotNull String fieldName, @NotNull String title) {
+  protected void addOption(@Nonnull String fieldName, @Nonnull String title) {
     addOption(fieldName, title, null);
   }
 
-  protected void addOption(@NotNull String fieldName, @NotNull String title, @NotNull String[] options, @NotNull int[] values) {
+  protected void addOption(@Nonnull String fieldName, @Nonnull String title, @Nonnull String[] options, @Nonnull int[] values) {
     addOption(fieldName, title, null, options, values);
   }
 
-  protected void addOption(@NotNull String fieldName,
-                           @NotNull String title,
+  protected void addOption(@Nonnull String fieldName,
+                           @Nonnull String title,
                            @Nullable String groupName,
                            int minValue,
                            int maxValue,
@@ -345,25 +345,29 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     myOptions.add(new IntOption(null, fieldName, title, groupName, null, null, minValue, maxValue, defaultValue, defaultValueText));
   }
 
-  protected void addOption(@NotNull String fieldName, @NotNull String title, @Nullable String groupName) {
+  protected void addOption(@Nonnull String fieldName, @Nonnull String title, @Nullable String groupName) {
     myOptions.add(new BooleanOption(null, fieldName, title, groupName, null, null));
   }
 
-  protected void addOption(@NotNull String fieldName, @NotNull String title, @Nullable String groupName,
-                           @NotNull String[] options, @NotNull int[] values) {
+  protected void addOption(@Nonnull String fieldName, @Nonnull String title, @Nullable String groupName,
+                           @Nonnull String[] options, @Nonnull int[] values) {
     myOptions.add(new SelectionOption(null, fieldName, title, groupName, null, null, options, values));
   }
 
   private abstract class Option extends OrderedOption {
-    @Nullable final Class<? extends CustomCodeStyleSettings> clazz;
-    @NotNull final Field field;
-    @NotNull final String title;
-    @Nullable final String groupName;
+    @Nullable
+    final Class<? extends CustomCodeStyleSettings> clazz;
+    @Nonnull
+    final Field field;
+    @Nonnull
+    final String title;
+    @Nullable
+    final String groupName;
     private boolean myEnabled = false;
 
     public Option(@Nullable Class<? extends CustomCodeStyleSettings> clazz,
-                  @NotNull String fieldName,
-                  @NotNull String title,
+                  @Nonnull String fieldName,
+                  @Nonnull String title,
                   @Nullable String groupName,
                   @Nullable OptionAnchor anchor,
                   @Nullable String anchorFiledName) {
@@ -401,8 +405,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
   private class BooleanOption extends Option {
     private BooleanOption(Class<? extends CustomCodeStyleSettings> clazz,
-                          @NotNull String fieldName,
-                          @NotNull String title,
+                          @Nonnull String fieldName,
+                          @Nonnull String title,
                           @Nullable String groupName,
                           @Nullable OptionAnchor anchor,
                           @Nullable String anchorFiledName) {
@@ -430,17 +434,19 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
   }
 
   private class SelectionOption extends Option {
-    @NotNull final String[] options;
-    @NotNull final int[] values;
+    @Nonnull
+    final String[] options;
+    @Nonnull
+    final int[] values;
 
     public SelectionOption(Class<? extends CustomCodeStyleSettings> clazz,
-                           @NotNull String fieldName,
-                           @NotNull String title,
+                           @Nonnull String fieldName,
+                           @Nonnull String title,
                            @Nullable String groupName,
                            @Nullable OptionAnchor anchor,
                            @Nullable String anchorFiledName,
-                           @NotNull String[] options,
-                           @NotNull int[] values) {
+                           @Nonnull String[] options,
+                           @Nonnull int[] values) {
       super(clazz, fieldName, title, groupName, anchor, anchorFiledName);
       this.options = options;
       this.values = values;
@@ -479,11 +485,12 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private final int myMinValue;
     private final int myMaxValue;
     private final int myDefaultValue;
-    @Nullable private String myDefaultValueText;
+    @Nullable
+    private String myDefaultValueText;
 
     public IntOption(Class<? extends CustomCodeStyleSettings> clazz,
-                     @NotNull String fieldName,
-                     @NotNull String title,
+                     @Nonnull String fieldName,
+                     @Nonnull String title,
                      @Nullable String groupName,
                      @Nullable OptionAnchor anchor,
                      @Nullable String anchorFiledName,
@@ -605,9 +612,9 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
   private final TreeCellRenderer myTitleRenderer = new TreeCellRenderer() {
     private final JLabel myLabel = new JLabel();
 
-    @NotNull
+    @Nonnull
     @Override
-    public Component getTreeCellRendererComponent(@NotNull JTree tree,
+    public Component getTreeCellRendererComponent(@Nonnull JTree tree,
                                                   Object value,
                                                   boolean selected,
                                                   boolean expanded,
@@ -684,9 +691,9 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private final JPanel myEmptyLabel = new JPanel();
     private final JLabel myIntLabel = new JLabel();
 
-    @NotNull
+    @Nonnull
     @Override
-    public Component getTableCellRendererComponent(@NotNull JTable table,
+    public Component getTableCellRendererComponent(@Nonnull JTable table,
                                                    Object value,
                                                    boolean isSelected,
                                                    boolean hasFocus,
@@ -787,7 +794,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     public MyValueEditor() {
       final ActionListener itemChoosen = new ActionListener() {
         @Override
-        public void actionPerformed(@NotNull ActionEvent e) {
+        public void actionPerformed(@Nonnull ActionEvent e) {
           if (myCurrentNode != null) {
             myCurrentNode.setValue(getCellEditorValue());
             somethingChanged();

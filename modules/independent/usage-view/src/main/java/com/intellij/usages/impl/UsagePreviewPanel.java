@@ -36,9 +36,9 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageContextPanel;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewPresentation;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,12 +54,12 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   private int myLineHeight;
   private List<UsageInfo> myCachedSelectedUsageInfos;
 
-  public UsagePreviewPanel(@NotNull Project project, @NotNull UsageViewPresentation presentation) {
+  public UsagePreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
     this(project, presentation, false);
   }
 
-  public UsagePreviewPanel(@NotNull Project project,
-                           @NotNull UsageViewPresentation presentation,
+  public UsagePreviewPanel(@Nonnull Project project,
+                           @Nonnull UsageViewPresentation presentation,
                            boolean isEditor) {
     super(project, presentation);
     myIsEditor = isEditor;
@@ -67,7 +67,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.EDITOR == dataId && myEditor != null) {
       return myEditor;
     }
@@ -75,24 +75,24 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   }
 
   public static class Provider implements UsageContextPanel.Provider {
-    @NotNull
+    @Nonnull
     @Override
-    public UsageContextPanel create(@NotNull UsageView usageView) {
+    public UsageContextPanel create(@Nonnull UsageView usageView) {
       return new UsagePreviewPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation(), true);
     }
 
     @Override
-    public boolean isAvailableFor(@NotNull UsageView usageView) {
+    public boolean isAvailableFor(@Nonnull UsageView usageView) {
       return true;
     }
-    @NotNull
+    @Nonnull
     @Override
     public String getTabTitle() {
       return "Preview";
     }
   }
 
-  private void resetEditor(@NotNull final List<UsageInfo> infos) {
+  private void resetEditor(@Nonnull final List<UsageInfo> infos) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiElement psiElement = infos.get(0).getElement();
     if (psiElement == null) return;
@@ -133,9 +133,9 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
   private static final Key<Boolean> IN_PREVIEW_USAGE_FLAG = Key.create("IN_PREVIEW_USAGE_FLAG");
 
-  public static void highlight(@NotNull final List<UsageInfo> infos,
-                               @NotNull final Editor editor,
-                               @NotNull final Project project,
+  public static void highlight(@Nonnull final List<UsageInfo> infos,
+                               @Nonnull final Editor editor,
+                               @Nonnull final Project project,
                                boolean highlightOnlyNameElements,
                                int highlightLayer) {
     LOG.assertTrue(!PsiDocumentManager.getInstance(project).hasUncommitedDocuments());

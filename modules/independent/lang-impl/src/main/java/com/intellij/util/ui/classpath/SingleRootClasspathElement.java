@@ -4,7 +4,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,7 +17,7 @@ public class SingleRootClasspathElement implements SimpleClasspathElement {
   @NonNls public static final String URL_ELEMENT = "url";
   private final String myUrl;
 
-  public SingleRootClasspathElement(@NotNull String url) {
+  public SingleRootClasspathElement(@Nonnull String url) {
     myUrl = url;
   }
 

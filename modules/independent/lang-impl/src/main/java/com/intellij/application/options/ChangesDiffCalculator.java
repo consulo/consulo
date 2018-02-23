@@ -35,8 +35,8 @@ import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -54,7 +54,7 @@ public class ChangesDiffCalculator implements Disposable {
   private final ChangesCollector myNewMarkup = new ChangesCollector(this);
   private final TextCompareProcessor myCompareProcessor = new TextCompareProcessor(ComparisonPolicy.DEFAULT);
 
-  public Collection<TextRange> calculateDiff(@NotNull final Document beforeDocument, @NotNull final Document currentDocument) {
+  public Collection<TextRange> calculateDiff(@Nonnull final Document beforeDocument, @Nonnull final Document currentDocument) {
     myNewMarkup.ranges.clear();
     myOldMarkup.document = beforeDocument;
     myNewMarkup.document = currentDocument;
@@ -91,7 +91,7 @@ public class ChangesDiffCalculator implements Disposable {
     public Document document;
     private final FragmentSide mySide;
 
-    BaseMarkup(@NotNull FragmentSide side, @NotNull Disposable parentDisposable) {
+    BaseMarkup(@Nonnull FragmentSide side, @Nonnull Disposable parentDisposable) {
       super(null, parentDisposable);
       mySide = side;
     }
@@ -126,7 +126,7 @@ public class ChangesDiffCalculator implements Disposable {
     }
 
     @Override
-    public void highlightText(@NotNull Fragment fragment, GutterIconRenderer gutterIconRenderer) {
+    public void highlightText(@Nonnull Fragment fragment, GutterIconRenderer gutterIconRenderer) {
     }
 
 
@@ -141,12 +141,12 @@ public class ChangesDiffCalculator implements Disposable {
 
     public final List<TextRange> ranges = new ArrayList<TextRange>();
 
-    ChangesCollector(@NotNull Disposable parentDisposable) {
+    ChangesCollector(@Nonnull Disposable parentDisposable) {
       super(FragmentSide.SIDE2, parentDisposable);
     }
 
     @Override
-    public void highlightText(@NotNull Fragment fragment, GutterIconRenderer gutterIconRenderer) {
+    public void highlightText(@Nonnull Fragment fragment, GutterIconRenderer gutterIconRenderer) {
       TextRange currentRange = fragment.getRange(FragmentSide.SIDE2);
       if (INTERESTED_DIFF_TYPES.contains(fragment.getType())) {
         ranges.add(currentRange);

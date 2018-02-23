@@ -6,9 +6,9 @@ import com.intellij.ide.browsers.chrome.ChromeSettings;
 import com.intellij.ide.browsers.firefox.FirefoxSettings;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public enum BrowserFamily implements Iconable {
@@ -34,11 +34,11 @@ public enum BrowserFamily implements Iconable {
   private final String myMacPath;
   private final Icon myIcon;
 
-  BrowserFamily(@NotNull String name,
-                @NotNull final String windowsPath,
+  BrowserFamily(@Nonnull String name,
+                @Nonnull final String windowsPath,
                 @Nullable final String unixPath,
                 @Nullable final String macPath,
-                @NotNull Icon icon) {
+                @Nonnull Icon icon) {
     myName = name;
     myWindowsPath = windowsPath;
     myUnixPath = unixPath;

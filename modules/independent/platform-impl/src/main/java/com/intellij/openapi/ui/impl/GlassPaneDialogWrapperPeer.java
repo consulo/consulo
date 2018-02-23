@@ -46,8 +46,8 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,7 +110,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     this(wrapper, (Project)null, canBeParent);
   }
 
-  public GlassPaneDialogWrapperPeer(DialogWrapper wrapper, @NotNull Component parent, boolean canBeParent)
+  public GlassPaneDialogWrapperPeer(DialogWrapper wrapper, @Nonnull Component parent, boolean canBeParent)
           throws GlasspanePeerUnavailableException {
     myWrapper = wrapper;
     myCanBeParent = canBeParent;
@@ -284,14 +284,14 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     throw new UnsupportedOperationException("Not implemented in " + getClass().getCanonicalName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Point getLocation() {
     return myDialog.getLocation();
   }
 
   @Override
-  public void setLocation(@NotNull final Point p) {
+  public void setLocation(@Nonnull final Point p) {
     setLocation(p.x, p.y);
   }
 
@@ -643,7 +643,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer implements Foc
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       final DialogWrapper wrapper = myDialogWrapper.get();
       if (wrapper instanceof DataProvider) {
         return ((DataProvider) wrapper).getData(dataId);

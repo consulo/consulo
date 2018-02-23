@@ -20,8 +20,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -31,19 +31,19 @@ public interface Sdk extends UserDataHolder, Named {
   public static final Sdk[] EMPTY_ARRAY = new Sdk[0];
 
   public static ArrayFactory<Sdk> ARRAY_FACTORY = new ArrayFactory<Sdk>() {
-    @NotNull
+    @Nonnull
     @Override
     public Sdk[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new Sdk[count];
     }
   };
 
-  @NotNull
+  @Nonnull
   SdkTypeId getSdkType();
 
   boolean isPredefined();
 
-  @NotNull
+  @Nonnull
   @Override
   String getName();
 
@@ -56,15 +56,15 @@ public interface Sdk extends UserDataHolder, Named {
   @Nullable
   VirtualFile getHomeDirectory();
 
-  @NotNull
+  @Nonnull
   RootProvider getRootProvider();
 
-  @NotNull
+  @Nonnull
   SdkModificator getSdkModificator();
 
   @Nullable
   SdkAdditionalData getSdkAdditionalData();
 
-  @NotNull
+  @Nonnull
   Object clone() throws CloneNotSupportedException;
 }

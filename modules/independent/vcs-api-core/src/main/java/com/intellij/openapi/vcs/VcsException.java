@@ -19,7 +19,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -91,8 +90,8 @@ public class VcsException extends Exception {
     return StringUtil.join(myMessages, ", ");
   }
 
-  @Nullable
-  public static String getMessage(@Nullable Throwable throwable) {
+  @javax.annotation.Nullable
+  public static String getMessage(@javax.annotation.Nullable Throwable throwable) {
     return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
   }
 }

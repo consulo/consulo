@@ -2,7 +2,7 @@ package com.intellij.usages.impl.rules;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.usages.UsageGroup;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

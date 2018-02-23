@@ -22,8 +22,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.image.Image;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +42,7 @@ public class WGwtButtonImpl extends AbstractComponent implements Button, VaadinW
     getState().caption = text;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return getState().caption;
@@ -50,7 +50,7 @@ public class WGwtButtonImpl extends AbstractComponent implements Button, VaadinW
 
   @RequiredUIAccess
   @Override
-  public void setText(@NotNull String text) {
+  public void setText(@Nonnull String text) {
     getState().caption = text;
     markAsDirty();
   }
@@ -63,7 +63,7 @@ public class WGwtButtonImpl extends AbstractComponent implements Button, VaadinW
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

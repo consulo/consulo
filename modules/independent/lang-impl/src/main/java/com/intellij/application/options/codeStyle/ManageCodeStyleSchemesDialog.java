@@ -39,8 +39,8 @@ import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -82,7 +82,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
     mySchemesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     mySchemesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
-      public void valueChanged(@NotNull ListSelectionEvent e) {
+      public void valueChanged(@Nonnull ListSelectionEvent e) {
         updateActions();
       }
     });
@@ -91,25 +91,25 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
 
     myDeleteButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         deleteSelected();
       }
     });
     mySaveAsButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         onSaveAs();
       }
     });
     myCopyToProjectButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         onCopyToProject();
       }
     });
     myCloseButton.addActionListener(new ActionListener(){
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         doCancelAction();
       }
     });
@@ -123,7 +123,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
       myImportButton.setVisible(true);
       myImportButton.addActionListener(new ActionListener() {
         @Override
-        public void actionPerformed(@NotNull final ActionEvent e) {
+        public void actionPerformed(@Nonnull final ActionEvent e) {
           chooseAndImport();
         }
       });
@@ -267,14 +267,14 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
     myCopyToProjectButton.setEnabled(!mySchemesTableModel.isProjectScheme(selectedScheme));
   }
 
-  @NotNull
+  @Nonnull
   private CodeStyleScheme getSelectedScheme() {
     int row = mySchemesTable.getSelectedRow();
     assert row >= 0;
     return mySchemesTableModel.getSchemeAt(row);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{};
@@ -306,9 +306,9 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
 
     private MySchemesTable() {
       myFixedItemsRenderer = new DefaultTableCellRenderer() {
-        @NotNull
+        @Nonnull
         @Override
-        public Component getTableCellRendererComponent(@NotNull JTable table,
+        public Component getTableCellRendererComponent(@Nonnull JTable table,
                                                        Object value,
                                                        boolean isSelected,
                                                        boolean hasFocus,
@@ -342,7 +342,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
       updateSchemes();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getColumnName(int column) {
       assert column == 0;

@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +30,7 @@ public abstract class InspectionFixtureTestCase extends CodeInsightFixtureTestCa
     doTest(folderName, new LocalInspectionToolWrapper(tool));
   }
 
-  public void doTest(@NonNls String folderName, @NotNull InspectionToolWrapper toolWrapper) throws Exception {
+  public void doTest(@NonNls String folderName, @Nonnull InspectionToolWrapper toolWrapper) throws Exception {
     myFixture.testInspection(folderName, toolWrapper);
   }
 }

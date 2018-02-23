@@ -28,7 +28,8 @@ import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class GenerateCopyrightAction extends AnAction {
   public void update(AnActionEvent event) {

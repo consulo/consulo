@@ -31,8 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.NonFocusableCheckBox;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,24 +50,30 @@ public abstract class AmendComponent {
 
   private static final Logger LOG = Logger.getInstance(AmendComponent.class);
 
-  @NotNull private final RepositoryManager<? extends Repository> myRepoManager;
-  @NotNull private final CheckinProjectPanel myCheckinPanel;
-  @NotNull private final JCheckBox myAmend;
-  @NotNull private final String myPreviousMessage;
+  @Nonnull
+  private final RepositoryManager<? extends Repository> myRepoManager;
+  @Nonnull
+  private final CheckinProjectPanel myCheckinPanel;
+  @Nonnull
+  private final JCheckBox myAmend;
+  @Nonnull
+  private final String myPreviousMessage;
 
-  @Nullable private Map<VirtualFile, String> myMessagesForRoots;
-  @Nullable private String myAmendedMessage;
+  @javax.annotation.Nullable
+  private Map<VirtualFile, String> myMessagesForRoots;
+  @javax.annotation.Nullable
+  private String myAmendedMessage;
 
-  public AmendComponent(@NotNull Project project,
-                        @NotNull RepositoryManager<? extends Repository> repoManager,
-                        @NotNull CheckinProjectPanel panel) {
+  public AmendComponent(@Nonnull Project project,
+                        @Nonnull RepositoryManager<? extends Repository> repoManager,
+                        @Nonnull CheckinProjectPanel panel) {
     this(project, repoManager, panel, DvcsBundle.message("commit.amend"));
   }
 
-  public AmendComponent(@NotNull Project project,
-                        @NotNull RepositoryManager<? extends Repository> repoManager,
-                        @NotNull CheckinProjectPanel panel,
-                        @NotNull String title) {
+  public AmendComponent(@Nonnull Project project,
+                        @Nonnull RepositoryManager<? extends Repository> repoManager,
+                        @Nonnull CheckinProjectPanel panel,
+                        @Nonnull String title) {
     myRepoManager = repoManager;
     myCheckinPanel = panel;
     myAmend = new NonFocusableCheckBox(title);
@@ -101,7 +106,7 @@ public abstract class AmendComponent {
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private String constructAmendedMessage() {
     Set<VirtualFile> selectedRoots = getVcsRoots(getSelectedFilePaths()); // get only selected files
     LinkedHashSet<String> messages = ContainerUtil.newLinkedHashSet();
@@ -120,17 +125,17 @@ public abstract class AmendComponent {
     myAmend.setSelected(false);
   }
 
-  @NotNull
+  @Nonnull
   public Component getComponent() {
     return myAmend;
   }
 
-  @NotNull
+  @Nonnull
   public JCheckBox getCheckBox() {
     return myAmend;
   }
 
-  private void loadMessagesInModalTask(@NotNull Project project) {
+  private void loadMessagesInModalTask(@Nonnull Project project) {
     try {
       myMessagesForRoots = ProgressManager.getInstance().runProcessWithProgressSynchronously(this::getLastCommitMessages,
                                                                                              "Reading Commit Message...", true, project);
@@ -142,14 +147,14 @@ public abstract class AmendComponent {
     }
   }
 
-  private void substituteCommitMessage(@NotNull String newMessage) {
+  private void substituteCommitMessage(@Nonnull String newMessage) {
     if (!StringUtil.equalsIgnoreWhitespaces(myPreviousMessage, newMessage)) {
       VcsConfiguration.getInstance(myCheckinPanel.getProject()).saveCommitMessage(myPreviousMessage);
       myCheckinPanel.setCommitMessage(newMessage);
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<>();
     // load all vcs roots visible in the commit dialog (not only selected ones), to avoid another loading task if selection changes
@@ -160,7 +165,7 @@ public abstract class AmendComponent {
     return messagesForRoots;
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<VirtualFile> getAffectedRoots() {
     return myRepoManager.getRepositories().stream().
             filter(repo -> !repo.isFresh()).
@@ -169,16 +174,16 @@ public abstract class AmendComponent {
             collect(Collectors.toList());
   }
 
-  @NotNull
+  @Nonnull
   private List<FilePath> getSelectedFilePaths() {
     return ContainerUtil.map(myCheckinPanel.getFiles(), VcsUtil::getFilePath);
   }
 
-  @NotNull
-  protected abstract Set<VirtualFile> getVcsRoots(@NotNull Collection<FilePath> files);
+  @Nonnull
+  protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
 
-  @Nullable
-  protected abstract String getLastCommitMessage(@NotNull VirtualFile repo) throws VcsException;
+  @javax.annotation.Nullable
+  protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
 
   public boolean isAmend() {
     return myAmend.isSelected();

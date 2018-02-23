@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   private Runnable myRunWhenInitialized = null;
 
   private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions = new NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> compute() {
       MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map =
@@ -88,7 +88,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public State getState() {
     return myState;
   }

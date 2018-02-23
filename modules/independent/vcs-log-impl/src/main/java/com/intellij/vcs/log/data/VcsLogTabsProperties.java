@@ -20,8 +20,8 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -44,10 +44,10 @@ public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabs
     myState = state;
   }
 
-  public MainVcsLogUiProperties createProperties(@NotNull final String id) {
+  public MainVcsLogUiProperties createProperties(@Nonnull final String id) {
     myState.TAB_STATES.putIfAbsent(id, new VcsLogUiPropertiesImpl.State());
     return new VcsLogUiPropertiesImpl() {
-      @NotNull
+      @Nonnull
       @Override
       public State getState() {
         State state = myState.TAB_STATES.get(id);

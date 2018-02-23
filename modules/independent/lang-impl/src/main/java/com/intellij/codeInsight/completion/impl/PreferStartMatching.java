@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementWeigher;
 import com.intellij.codeInsight.lookup.WeighingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Peter
@@ -15,7 +15,7 @@ public class PreferStartMatching extends LookupElementWeigher {
   }
 
   @Override
-  public Comparable weigh(@NotNull LookupElement element, @NotNull WeighingContext context) {
+  public Comparable weigh(@Nonnull LookupElement element, @Nonnull WeighingContext context) {
     return !CompletionServiceImpl.isStartMatch(element, context);
   }
 }

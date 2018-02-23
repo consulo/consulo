@@ -21,7 +21,7 @@ import consulo.ui.internal.WGwtUIThreadLocal;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.servlet.ui.UIServlet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.net.URL;
@@ -34,7 +34,7 @@ public class WGwtImageImpl implements Image, WGwtImageWithState {
   private Icon myIcon;
   private int myURLHash;
 
-  public WGwtImageImpl(@NotNull URL url) {
+  public WGwtImageImpl(@Nonnull URL url) {
     myIcon = IconLoader.findIcon(url);
     myURLHash = WGwtImageUrlCache.hashCode(url);
   }

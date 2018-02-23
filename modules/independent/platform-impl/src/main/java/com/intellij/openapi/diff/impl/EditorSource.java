@@ -21,23 +21,26 @@ import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileEditor.FileEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  * @author max
  */
 public interface EditorSource {
-  @Nullable FragmentSide getSide();
+  @Nullable
+  FragmentSide getSide();
 
-  @Nullable DiffContent getContent();
+  @Nullable
+  DiffContent getContent();
 
-  @Nullable EditorEx getEditor();
+  @Nullable
+  EditorEx getEditor();
 
   @Nullable FileEditor getFileEditor();
 
-  void addDisposable(@NotNull Disposable disposable);
+  void addDisposable(@Nonnull Disposable disposable);
 
   EditorSource NULL = new EditorSource() {
     public EditorEx getEditor() {
@@ -49,7 +52,7 @@ public interface EditorSource {
       return null;
     }
 
-    public void addDisposable(@NotNull Disposable disposable) {
+    public void addDisposable(@Nonnull Disposable disposable) {
       Logger.getInstance("#com.intellij.openapi.diff.impl.EditorSource").assertTrue(false);
     }
 

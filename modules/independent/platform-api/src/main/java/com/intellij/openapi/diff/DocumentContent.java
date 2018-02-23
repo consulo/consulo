@@ -22,8 +22,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DocumentContent extends DiffContent {
   private final Document myDocument;
@@ -36,7 +36,7 @@ public class DocumentContent extends DiffContent {
     this(project, document, null);
   }
 
-  public DocumentContent(Project project, @NotNull Document document, FileType type) {
+  public DocumentContent(Project project, @Nonnull Document document, FileType type) {
     myProject = project;
     myDocument = document;
     myDocumentManager = FileDocumentManager.getInstance();
@@ -76,7 +76,7 @@ public class DocumentContent extends DiffContent {
     return myDocument.getText().getBytes();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineSeparator getLineSeparator() {
     return LineSeparator.fromString(myDocumentManager.getLineSeparator(myFile, myProject));

@@ -22,7 +22,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ProjectScope {
   private static final Key<GlobalSearchScope> ALL_SCOPE_KEY = new Key<GlobalSearchScope>("ALL_SCOPE_KEY");
@@ -33,26 +33,26 @@ public class ProjectScope {
   private ProjectScope() {
   }
 
-  @NotNull
-  public static GlobalSearchScope getAllScope(@NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope getAllScope(@Nonnull Project project) {
     GlobalSearchScope cached = project.getUserData(ALL_SCOPE_KEY);
     return cached != null ? cached : ((UserDataHolderEx)project).putUserDataIfAbsent(ALL_SCOPE_KEY, ProjectScopeBuilder.getInstance(project).buildAllScope());
   }
 
-  @NotNull
-  public static GlobalSearchScope getProjectScope(@NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope getProjectScope(@Nonnull Project project) {
     GlobalSearchScope cached = project.getUserData(PROJECT_SCOPE_KEY);
     return cached != null ? cached : ((UserDataHolderEx)project).putUserDataIfAbsent(PROJECT_SCOPE_KEY, ProjectScopeBuilder.getInstance(project).buildProjectScope());
   }
 
-  @NotNull
-  public static GlobalSearchScope getLibrariesScope(@NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope getLibrariesScope(@Nonnull Project project) {
     GlobalSearchScope cached = project.getUserData(LIBRARIES_SCOPE_KEY);
     return cached != null ? cached : ((UserDataHolderEx)project).putUserDataIfAbsent(LIBRARIES_SCOPE_KEY, ProjectScopeBuilder.getInstance(project).buildLibrariesScope());
   }
 
-  @NotNull
-  public static GlobalSearchScope getContentScope(@NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope getContentScope(@Nonnull Project project) {
     GlobalSearchScope cached = project.getUserData(CONTENT_SCOPE_KEY);
     return cached != null ? cached : ((UserDataHolderEx)project).putUserDataIfAbsent(CONTENT_SCOPE_KEY, ProjectScopeBuilder.getInstance(project).buildContentScope());
   }

@@ -19,7 +19,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import consulo.util.pointers.NamedPointerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,13 +29,13 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
     super(value);
   }
 
-  public ArtifactPointerImpl(@NotNull String name) {
+  public ArtifactPointerImpl(@Nonnull String name) {
     super(name);
   }
 
   @Override
-  @NotNull
-  public String getArtifactName(@NotNull ArtifactModel artifactModel) {
+  @Nonnull
+  public String getArtifactName(@Nonnull ArtifactModel artifactModel) {
     final Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact).getName();
@@ -44,7 +44,7 @@ public class ArtifactPointerImpl extends NamedPointerImpl<Artifact> implements A
   }
 
   @Override
-  public Artifact findArtifact(@NotNull ArtifactModel artifactModel) {
+  public Artifact findArtifact(@Nonnull ArtifactModel artifactModel) {
     final Artifact artifact = get();
     if (artifact != null) {
       return artifactModel.getArtifactByOriginal(artifact);

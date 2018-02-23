@@ -32,7 +32,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -71,7 +71,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
 
   private final Project myProject;
 
-  public ServersToolWindowContent(@NotNull Project project) {
+  public ServersToolWindowContent(@Nonnull Project project) {
     super(new BorderLayout());
     myProject = project;
 
@@ -174,7 +174,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     myPropertiesPanelLayout.show(myPropertiesPanel, MESSAGE_CARD);
   }
 
-  private void setupBuilder(final @NotNull Project project) {
+  private void setupBuilder(final @Nonnull Project project) {
     ServersTreeStructure structure = new ServersTreeStructure(project);
     myBuilder = new TreeBuilderBase(myTree, structure, myTreeModel) {
       @Override
@@ -186,18 +186,18 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
 
     project.getMessageBus().connect().subscribe(ServerConnectionListener.TOPIC, new ServerConnectionListener() {
       @Override
-      public void onConnectionCreated(@NotNull ServerConnection<?> connection) {
+      public void onConnectionCreated(@Nonnull ServerConnection<?> connection) {
         getBuilder().queueUpdate();
       }
 
       @Override
-      public void onConnectionStatusChanged(@NotNull ServerConnection<?> connection) {
+      public void onConnectionStatusChanged(@Nonnull ServerConnection<?> connection) {
         getBuilder().queueUpdate();
         updateSelectedServerDetails();
       }
 
       @Override
-      public void onDeploymentsChanged(@NotNull ServerConnection<?> connection) {
+      public void onDeploymentsChanged(@Nonnull ServerConnection<?> connection) {
         getBuilder().queueUpdate();
         updateSelectedServerDetails();
       }
@@ -222,7 +222,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     myTree.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, new DataProvider() {
 
       @Override
-      public Object getData(@NotNull Key dataId) {
+      public Object getData(@Nonnull Key dataId) {
         if (KEY == dataId) {
           return ServersToolWindowContent.this;
         }
@@ -263,27 +263,27 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     return myBuilder;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  public void select(@NotNull final ServerConnection<?> connection) {
+  public void select(@Nonnull final ServerConnection<?> connection) {
     myBuilder.select(ServersTreeStructure.RemoteServerNode.class, new TreeVisitor<ServersTreeStructure.RemoteServerNode>() {
       @Override
-      public boolean visit(@NotNull ServersTreeStructure.RemoteServerNode node) {
+      public boolean visit(@Nonnull ServersTreeStructure.RemoteServerNode node) {
         return node.getValue().equals(connection.getServer());
       }
     }, null, false);
   }
 
-  public void select(@NotNull final ServerConnection<?> connection, @NotNull final String deploymentName) {
+  public void select(@Nonnull final ServerConnection<?> connection, @Nonnull final String deploymentName) {
     myBuilder.getUi().queueUpdate(connection).doWhenDone(new Runnable() {
       @Override
       public void run() {
         myBuilder.select(ServersTreeStructure.DeploymentNodeImpl.class, new TreeVisitor<ServersTreeStructure.DeploymentNodeImpl>() {
           @Override
-          public boolean visit(@NotNull ServersTreeStructure.DeploymentNodeImpl node) {
+          public boolean visit(@Nonnull ServersTreeStructure.DeploymentNodeImpl node) {
             AbstractTreeNode parent = node.getParent();
             return parent instanceof ServersTreeStructure.RemoteServerNode &&
                    ((ServersTreeStructure.RemoteServerNode)parent).getValue().equals(connection.getServer())

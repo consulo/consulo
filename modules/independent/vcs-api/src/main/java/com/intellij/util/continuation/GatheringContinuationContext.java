@@ -16,7 +16,7 @@
 package com.intellij.util.continuation;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class GatheringContinuationContext implements ContinuationContext {
   }
 
   @Override
-  public void after(@NotNull TaskDescriptor inQueue, TaskDescriptor... next) {
+  public void after(@Nonnull TaskDescriptor inQueue, TaskDescriptor... next) {
     int idx = -1;
     for (int i = 0; i < myList.size(); i++) {
       final TaskDescriptor descriptor = myList.get(i);
@@ -106,10 +106,10 @@ public class GatheringContinuationContext implements ContinuationContext {
   }
 
   @Override
-  public void addNewTasksPatcher(@NotNull Consumer<TaskDescriptor> consumer) {
+  public void addNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer) {
   }
 
   @Override
-  public void removeNewTasksPatcher(@NotNull Consumer<TaskDescriptor> consumer) {
+  public void removeNewTasksPatcher(@Nonnull Consumer<TaskDescriptor> consumer) {
   }
 }

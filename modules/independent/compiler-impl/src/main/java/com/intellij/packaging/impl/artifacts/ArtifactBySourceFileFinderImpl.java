@@ -32,7 +32,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,7 +75,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
       final PackagingElementResolvingContext context = artifactManager.getResolvingContext();
       ArtifactUtil.processPackagingElements(artifact, null, new PackagingElementProcessor<PackagingElement<?>>() {
         @Override
-        public boolean process(@NotNull PackagingElement<?> element, @NotNull PackagingElementPath path) {
+        public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
           if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
             final VirtualFile root = ((FileOrDirectoryCopyPackagingElement)element).findFile();
             if (root != null) {
@@ -95,7 +95,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
   }
 
   @Override
-  public Collection<? extends Artifact> findArtifacts(@NotNull VirtualFile sourceFile) {
+  public Collection<? extends Artifact> findArtifacts(@Nonnull VirtualFile sourceFile) {
     final MultiValuesMap<VirtualFile, Artifact> map = getFileToArtifactsMap().getValue();
     if (map.isEmpty()) {
       return Collections.emptyList();

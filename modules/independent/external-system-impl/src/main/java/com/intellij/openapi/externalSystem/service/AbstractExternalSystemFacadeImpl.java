@@ -8,8 +8,7 @@ import com.intellij.openapi.externalSystem.service.remote.*;
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -30,11 +29,13 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   private final AtomicReference<ExternalSystemTaskNotificationListener> myNotificationListener =
     new AtomicReference<ExternalSystemTaskNotificationListener>(new ExternalSystemTaskNotificationListenerAdapter() {});
 
-  @NotNull private final RemoteExternalSystemProjectResolverImpl<S> myProjectResolver;
-  @NotNull private final RemoteExternalSystemTaskManagerImpl<S>     myTaskManager;
+  @Nonnull
+  private final RemoteExternalSystemProjectResolverImpl<S> myProjectResolver;
+  @Nonnull
+  private final RemoteExternalSystemTaskManagerImpl<S>     myTaskManager;
 
-  public AbstractExternalSystemFacadeImpl(@NotNull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                          @NotNull Class<ExternalSystemTaskManager<S>> buildManagerClass)
+  public AbstractExternalSystemFacadeImpl(@Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
+                                          @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass)
     throws IllegalAccessException, InstantiationException
   {
     myProjectResolver = new RemoteExternalSystemProjectResolverImpl<S>(projectResolverClass.newInstance());
@@ -45,18 +46,18 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     applyProgressManager(RemoteExternalSystemProgressNotificationManager.NULL_OBJECT);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected S getSettings() {
     return mySettings.get();
   }
   
-  @NotNull
+  @Nonnull
   protected ExternalSystemTaskNotificationListener getNotificationListener() {
     return myNotificationListener.get();
   }
   
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   @Override
   public RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException {
     try {
@@ -69,7 +70,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   @Override
   public RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException {
     try {
@@ -81,8 +82,8 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   }
 
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed", "UseOfSystemOutOrSystemErr"})
-  private <I extends RemoteExternalSystemService<S>, C extends I> I getService(@NotNull Class<I> interfaceClass,
-                                                                               @NotNull final C impl)
+  private <I extends RemoteExternalSystemService<S>, C extends I> I getService(@Nonnull Class<I> interfaceClass,
+                                                                               @Nonnull final C impl)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException
   {
     Object cachedResult = myRemotes.get(interfaceClass);
@@ -131,12 +132,12 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
    * @throws RemoteException
    */
   @SuppressWarnings({"unchecked", "IOResourceOpenedButNotSafelyClosed", "UseOfSystemOutOrSystemErr"})
-  protected abstract  <I extends RemoteExternalSystemService<S>, C extends I> I createService(@NotNull Class<I> interfaceClass,
-                                                                                              @NotNull final C impl)
+  protected abstract  <I extends RemoteExternalSystemService<S>, C extends I> I createService(@Nonnull Class<I> interfaceClass,
+                                                                                              @Nonnull final C impl)
   throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException;
 
   @Override
-  public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
     for (RemoteExternalSystemService service : myRemotes.values()) {
       if (service.isTaskInProgress(id)) {
         return true;
@@ -145,7 +146,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> result = null;
@@ -172,7 +173,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   }
 
   @Override
-  public void applySettings(@NotNull S settings) throws RemoteException {
+  public void applySettings(@Nonnull S settings) throws RemoteException {
     mySettings.set(settings);
     List<RemoteExternalSystemService<S>> services = ContainerUtilRt.newArrayList(myRemotes.values());
     for (RemoteExternalSystemService<S> service : services) {
@@ -181,7 +182,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   }
 
   @Override
-  public void applyProgressManager(@NotNull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+  public void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
     ExternalSystemTaskNotificationListener listener = new SwallowingNotificationListener(progressManager);
     myNotificationListener.set(listener);
     myProjectResolver.setNotificationListener(listener);
@@ -189,7 +190,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
   }
 
   @Override
-  public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException {
+  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
     if(id.getType() == ExternalSystemTaskType.RESOLVE_PROJECT) {
       return myProjectResolver.cancelTask(id);
     } else{
@@ -199,18 +200,19 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
 
   private static class SwallowingNotificationListener implements ExternalSystemTaskNotificationListener {
 
-    @NotNull private final RemoteExternalSystemProgressNotificationManager myManager;
+    @Nonnull
+    private final RemoteExternalSystemProgressNotificationManager myManager;
 
-    SwallowingNotificationListener(@NotNull RemoteExternalSystemProgressNotificationManager manager) {
+    SwallowingNotificationListener(@Nonnull RemoteExternalSystemProgressNotificationManager manager) {
       myManager = manager;
     }
 
     @Override
-    public void onQueued(@NotNull ExternalSystemTaskId id) {
+    public void onQueued(@Nonnull ExternalSystemTaskId id) {
     }
 
     @Override
-    public void onStart(@NotNull ExternalSystemTaskId id) {
+    public void onStart(@Nonnull ExternalSystemTaskId id) {
       try {
         myManager.onStart(id);
       }
@@ -220,7 +222,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     }
 
     @Override
-    public void onStatusChange(@NotNull ExternalSystemTaskNotificationEvent event) {
+    public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
       try {
         myManager.onStatusChange(event);
       }
@@ -230,7 +232,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     }
 
     @Override
-    public void onTaskOutput(@NotNull ExternalSystemTaskId id, @NotNull String text, boolean stdOut) {
+    public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
       try {
         myManager.onTaskOutput(id, text, stdOut);
       }
@@ -240,7 +242,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     }
 
     @Override
-    public void onEnd(@NotNull ExternalSystemTaskId id) {
+    public void onEnd(@Nonnull ExternalSystemTaskId id) {
       try {
         myManager.onEnd(id);
       }
@@ -250,7 +252,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     }
 
     @Override
-    public void onSuccess(@NotNull ExternalSystemTaskId id) {
+    public void onSuccess(@Nonnull ExternalSystemTaskId id) {
       try {
         myManager.onSuccess(id);
       }
@@ -260,7 +262,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     }
 
     @Override
-    public void onFailure(@NotNull ExternalSystemTaskId id, @NotNull Exception ex) {
+    public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception ex) {
       try {
         myManager.onFailure(id, ex);
       }

@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.util.IncorrectOperationException;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -29,18 +29,18 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
     this(ContainerUtil.<T>canonicalStrategy());
   }
 
-  public OrderedSet(@NotNull Collection<T> set) {
+  public OrderedSet(@Nonnull Collection<T> set) {
     super(set.size());
 
     myHashSet = new OpenTHashSet<T>(set.size());
     addAll(set);
   }
 
-  public OrderedSet(@NotNull TObjectHashingStrategy<T> hashingStrategy) {
+  public OrderedSet(@Nonnull TObjectHashingStrategy<T> hashingStrategy) {
     this(hashingStrategy, 4);
   }
 
-  public OrderedSet(@NotNull TObjectHashingStrategy<T> hashingStrategy, int capacity) {
+  public OrderedSet(@Nonnull TObjectHashingStrategy<T> hashingStrategy, int capacity) {
     super(capacity);
     myHashSet = new OpenTHashSet<T>(capacity, hashingStrategy);
   }
@@ -50,7 +50,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean removeAll(@NotNull Collection<?> c) {
+  public boolean removeAll(@Nonnull Collection<?> c) {
     boolean removed = false;
     for (Object o : c) {
       removed |= remove(o);
@@ -59,7 +59,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean retainAll(@NotNull Collection<?> c) {
+  public boolean retainAll(@Nonnull Collection<?> c) {
     boolean removed = false;
     for (int i = size() - 1; i >= 0; i--) {
       Object o = get(i);
@@ -70,7 +70,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
     return removed;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<T> subList(int fromIndex, int toIndex) {
     throw new IncorrectOperationException();
@@ -82,7 +82,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean addAll(@NotNull Collection<? extends T> c) {
+  public boolean addAll(@Nonnull Collection<? extends T> c) {
     boolean result = false;
     for (T t : c) {
       result |= add(t);
@@ -115,19 +115,19 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   @Override
-  public boolean addAll(final int index, @NotNull final Collection<? extends T> c) {
+  public boolean addAll(final int index, @Nonnull final Collection<? extends T> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public T set(final int index, @NotNull final T element) {
+  public T set(final int index, @Nonnull final T element) {
     final T removed = remove(index);
     add(index, element);
     return removed;
   }
 
   @Override
-  public void add(final int index, @NotNull final T element) {
+  public void add(final int index, @Nonnull final T element) {
     if (myHashSet.add(element)){
       super.add(index, element);
     }

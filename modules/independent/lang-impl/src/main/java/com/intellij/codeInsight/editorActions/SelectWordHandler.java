@@ -35,8 +35,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class SelectWordHandler extends EditorActionHandler {
   }
 
   @Override
-  public void execute(@NotNull Editor editor, DataContext dataContext) {
+  public void execute(@Nonnull Editor editor, DataContext dataContext) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: execute(editor='" + editor + "')");
     }
@@ -91,7 +91,7 @@ public class SelectWordHandler extends EditorActionHandler {
   }
 
   @Nullable("null means unable to select")
-  private static TextRange selectWord(@NotNull Editor editor, @NotNull Project project) {
+  private static TextRange selectWord(@Nonnull Editor editor, @Nonnull Project project) {
     Document document = editor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (file instanceof PsiCompiledFile) {
@@ -155,7 +155,7 @@ public class SelectWordHandler extends EditorActionHandler {
 
     SelectWordUtil.processRanges(element, editor.getDocument().getCharsSequence(), caretOffset, editor, new Processor<TextRange>() {
       @Override
-      public boolean process(@NotNull TextRange range) {
+      public boolean process(@Nonnull TextRange range) {
         if (range.contains(selectionRange) && !range.equals(selectionRange)) {
           if (minimumRange.get().contains(range)) {
             minimumRange.set(range);
@@ -169,7 +169,7 @@ public class SelectWordHandler extends EditorActionHandler {
     return minimumRange.get();
   }
 
-  private static int adjustCaretOffset(@NotNull Editor editor) {
+  private static int adjustCaretOffset(@Nonnull Editor editor) {
     int caretOffset = editor.getCaretModel().getOffset();
     if (caretOffset == 0) {
       return caretOffset;
@@ -188,7 +188,7 @@ public class SelectWordHandler extends EditorActionHandler {
   }
 
   @Nullable
-  private static PsiElement findElementAt(@NotNull final PsiFile file, final int caretOffset) {
+  private static PsiElement findElementAt(@Nonnull final PsiFile file, final int caretOffset) {
     PsiElement elementAt = file.findElementAt(caretOffset);
     if (elementAt != null && isLanguageExtension(file, elementAt)) {
       return file.getViewProvider().findElementAt(caretOffset, file.getLanguage());
@@ -196,7 +196,7 @@ public class SelectWordHandler extends EditorActionHandler {
     return elementAt;
   }
 
-  private static boolean isLanguageExtension(@NotNull final PsiFile file, @NotNull final PsiElement elementAt) {
+  private static boolean isLanguageExtension(@Nonnull final PsiFile file, @Nonnull final PsiElement elementAt) {
     final Language elementLanguage = elementAt.getLanguage();
     if (file.getLanguage() instanceof CompositeLanguage) {
       CompositeLanguage compositeLanguage = (CompositeLanguage) file.getLanguage();

@@ -16,7 +16,7 @@
 package com.intellij.ui.content;
 
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -28,8 +28,8 @@ import java.util.List;
 public interface TabbedContent extends Content {
   String SPLIT_PROPERTY_PREFIX = "tabbed.toolwindow.expanded.";
 
-  void addContent(@NotNull JComponent content, @NotNull String name, boolean selectTab);
-  void removeContent(@NotNull JComponent content);
+  void addContent(@Nonnull JComponent content, @Nonnull String name, boolean selectTab);
+  void removeContent(@Nonnull JComponent content);
   void selectContent(int index);
   List<Pair<String, JComponent>> getTabs();
   String getTitlePrefix();

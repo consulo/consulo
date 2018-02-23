@@ -18,8 +18,8 @@ package com.intellij.notification;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -30,8 +30,8 @@ public abstract class NotificationsManager {
     return ApplicationManager.getApplication().getComponent(NotificationsManager.class);
   }
 
-  public abstract void expire(@NotNull final Notification notification);
+  public abstract void expire(@Nonnull final Notification notification);
 
-  public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project); 
+  public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> klass, @Nullable Project project);
 
 }

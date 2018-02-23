@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -143,7 +143,7 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     initDelegateIfNecessary();
     if (!myEditor.getSettings().isAllSoftWrapsShown()) {
       int visualLine = y / lineHeight;
@@ -156,13 +156,13 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     initDelegateIfNecessary();
     return myDelegate.getDrawingHorizontalOffset(g, drawingType, x, y, lineHeight);
   }
 
   @Override
-  public int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
     initDelegateIfNecessary();
     return myDelegate.getMinDrawingWidth(drawingType);
   }

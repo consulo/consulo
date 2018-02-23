@@ -23,8 +23,7 @@ import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -40,23 +39,23 @@ import static java.util.function.Function.identity;
 public class RootsCalculator {
   private final static Logger LOG = Logger.getInstance(RootsCalculator.class);
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
-  @NotNull
+  @Nonnull
   private final AbstractVcs<?> myVcs;
-  @NotNull
+  @Nonnull
   private final ProjectLevelVcsManager myPlManager;
-  @NotNull
+  @Nonnull
   private final RepositoryLocationCache myLocationCache;
 
-  public RootsCalculator(@NotNull Project project, @NotNull AbstractVcs vcs, @NotNull RepositoryLocationCache locationCache) {
+  public RootsCalculator(@Nonnull Project project, @Nonnull AbstractVcs vcs, @Nonnull RepositoryLocationCache locationCache) {
     myProject = project;
     myLocationCache = locationCache;
     myPlManager = ProjectLevelVcsManager.getInstance(myProject);
     myVcs = vcs;
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, RepositoryLocation> getRoots() {
     LOG.debug("Collecting roots for " + myVcs);
     // TODO: It is not quite clear why using just ProjectLevelVcsManager.getRootsUnderVcs() is not sufficient
@@ -85,7 +84,7 @@ public class RootsCalculator {
     return map;
   }
 
-  @NotNull
+  @Nonnull
   private List<VirtualFile> getRootsFromMappings() {
     List<VirtualFile> result = newArrayList();
 
@@ -109,12 +108,12 @@ public class RootsCalculator {
     return result;
   }
 
-  @Nullable
-  private RepositoryLocation getLocation(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private RepositoryLocation getLocation(@Nonnull VirtualFile file) {
     return myLocationCache.getLocation(myVcs, getFilePath(file), false);
   }
 
-  private static void logRoots(@NotNull String prefix, @NotNull Collection<VirtualFile> roots) {
+  private static void logRoots(@Nonnull String prefix, @Nonnull Collection<VirtualFile> roots) {
     if (LOG.isDebugEnabled()) {
       LOG.debug(prefix + ": " + join(roots, VirtualFile::getPath, ", "));
     }

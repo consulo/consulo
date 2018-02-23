@@ -36,8 +36,8 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowStripeButton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -69,7 +69,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   private boolean myDragCancelled = false;
   private final DesktopStripeButton.MyKeymapListener myKeymapListener;
 
-  DesktopStripeButton(@NotNull final DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
+  DesktopStripeButton(@Nonnull final DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
     myDecorator = decorator;
     myKeymapListener = new MyKeymapListener();
     myPane = pane;
@@ -104,7 +104,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public WindowInfoImpl getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
@@ -174,7 +174,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     return c == this;
   }
 
-  @NotNull
+  @Nonnull
   public DesktopInternalDecorator getDecorator() {
     return myDecorator;
   }
@@ -309,7 +309,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   }
 
   @Override
-  public void apply(@NotNull WindowInfo info) {
+  public void apply(@Nonnull WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
     updateState();
   }

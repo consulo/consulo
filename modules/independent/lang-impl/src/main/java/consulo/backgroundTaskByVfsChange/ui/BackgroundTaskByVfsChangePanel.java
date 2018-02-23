@@ -24,7 +24,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParameters;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsParametersImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -40,7 +40,7 @@ public class BackgroundTaskByVfsChangePanel extends JPanel {
     myExePath.addBrowseFolderListener("Select Executable", null, project, new FileChooserDescriptor(true, false, false, false, false, false));
   }
 
-  public void reset(@NotNull BackgroundTaskByVfsParameters parameters) {
+  public void reset(@Nonnull BackgroundTaskByVfsParameters parameters) {
     myProgramParametersPanel.reset(parameters);
     myExePath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getExePath())));
     myOutPath.setText(FileUtil.toSystemDependentName(StringUtil.notNullize(parameters.getOutPath())));
@@ -48,7 +48,7 @@ public class BackgroundTaskByVfsChangePanel extends JPanel {
     UIUtil.setEnabled(this, parameters != BackgroundTaskByVfsParametersImpl.EMPTY, true);
   }
 
-  protected void applyTo(@NotNull BackgroundTaskByVfsParameters parameters) {
+  protected void applyTo(@Nonnull BackgroundTaskByVfsParameters parameters) {
     parameters.setExePath(FileUtil.toSystemIndependentName(myExePath.getText()));
     parameters.setOutPath(FileUtil.toSystemIndependentName(myOutPath.getText()));
     myProgramParametersPanel.applyTo(parameters);

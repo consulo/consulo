@@ -16,8 +16,8 @@
 package com.intellij.lang;
 
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Top-level node in AST, corresponds to PsiFile.
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @see com.intellij.psi.PsiFile
  */
 public interface FileASTNode extends ASTNode {
-  @NotNull
+  @Nonnull
   CharTable getCharTable();
 
   boolean isParsed();

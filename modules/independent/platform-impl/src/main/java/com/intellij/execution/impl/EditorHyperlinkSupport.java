@@ -44,8 +44,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -66,10 +66,11 @@ public class EditorHyperlinkSupport {
   private static final int HIGHLIGHT_LAYER = HighlighterLayer.SELECTION - 111;
 
   private final Editor myEditor;
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final AsyncFilterRunner myFilterRunner;
 
-  public EditorHyperlinkSupport(@NotNull final Editor editor, @NotNull final Project project) {
+  public EditorHyperlinkSupport(@Nonnull final Editor editor, @Nonnull final Project project) {
     myEditor = editor;
     myProject = project;
     myFilterRunner = new AsyncFilterRunner(this, myEditor);
@@ -154,7 +155,7 @@ public class EditorHyperlinkSupport {
   }
 
   @Nullable
-  public static HyperlinkInfo getHyperlinkInfo(@NotNull RangeHighlighter range) {
+  public static HyperlinkInfo getHyperlinkInfo(@Nonnull RangeHighlighter range) {
     final HyperlinkInfoTextAttributes attributes = range.getUserData(HYPERLINK);
     return attributes != null ? attributes.getHyperlinkInfo() : null;
   }
@@ -192,7 +193,7 @@ public class EditorHyperlinkSupport {
     return new ArrayList<>(processor.getResults());
   }
 
-  public void removeHyperlink(@NotNull RangeHighlighter hyperlink) {
+  public void removeHyperlink(@Nonnull RangeHighlighter hyperlink) {
     myEditor.getMarkupModel().removeHighlighter(hyperlink);
   }
 
@@ -208,23 +209,23 @@ public class EditorHyperlinkSupport {
   public void addHyperlink(final int highlightStartOffset,
                            final int highlightEndOffset,
                            @Nullable final TextAttributes highlightAttributes,
-                           @NotNull final HyperlinkInfo hyperlinkInfo) {
+                           @Nonnull final HyperlinkInfo hyperlinkInfo) {
     createHyperlink(highlightStartOffset, highlightEndOffset, highlightAttributes, hyperlinkInfo);
   }
 
-  @NotNull
+  @Nonnull
   public RangeHighlighter createHyperlink(int highlightStartOffset,
                                           int highlightEndOffset,
                                           @Nullable TextAttributes highlightAttributes,
-                                          @NotNull HyperlinkInfo hyperlinkInfo) {
+                                          @Nonnull HyperlinkInfo hyperlinkInfo) {
     return createHyperlink(highlightStartOffset, highlightEndOffset, highlightAttributes, hyperlinkInfo, null);
   }
 
-  @NotNull
+  @Nonnull
   private RangeHighlighter createHyperlink(final int highlightStartOffset,
                                            final int highlightEndOffset,
                                            @Nullable final TextAttributes highlightAttributes,
-                                           @NotNull final HyperlinkInfo hyperlinkInfo,
+                                           @Nonnull final HyperlinkInfo hyperlinkInfo,
                                            @Nullable TextAttributes followedHyperlinkAttributes) {
     TextAttributes textAttributes = highlightAttributes != null ? highlightAttributes : getHyperlinkAttributes();
     final RangeHighlighter highlighter = myEditor.getMarkupModel().addRangeHighlighter(highlightStartOffset,
@@ -236,12 +237,12 @@ public class EditorHyperlinkSupport {
     return highlighter;
   }
 
-  public static void associateHyperlink(@NotNull RangeHighlighter highlighter, @NotNull HyperlinkInfo hyperlinkInfo) {
+  public static void associateHyperlink(@Nonnull RangeHighlighter highlighter, @Nonnull HyperlinkInfo hyperlinkInfo) {
     associateHyperlink(highlighter, hyperlinkInfo, null);
   }
 
-  private static void associateHyperlink(@NotNull RangeHighlighter highlighter,
-                                         @NotNull HyperlinkInfo hyperlinkInfo,
+  private static void associateHyperlink(@Nonnull RangeHighlighter highlighter,
+                                         @Nonnull HyperlinkInfo hyperlinkInfo,
                                          @Nullable TextAttributes followedHyperlinkAttributes) {
     highlighter.putUserData(HYPERLINK, new HyperlinkInfoTextAttributes(hyperlinkInfo, followedHyperlinkAttributes));
   }
@@ -272,7 +273,7 @@ public class EditorHyperlinkSupport {
     myFilterRunner.highlightHyperlinks(customFilter, Math.max(0, line1), endLine);
   }
 
-  void highlightHyperlinks(@NotNull Filter.Result result, int offsetDelta) {
+  void highlightHyperlinks(@Nonnull Filter.Result result, int offsetDelta) {
     Document document = myEditor.getDocument();
     for (Filter.ResultItem resultItem : result.getResultItems()) {
       int start = resultItem.getHighlightStartOffset() + offsetDelta;
@@ -300,8 +301,8 @@ public class EditorHyperlinkSupport {
     return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.HYPERLINK_ATTRIBUTES);
   }
 
-  @NotNull
-  private static TextAttributes getFollowedHyperlinkAttributes(@NotNull RangeHighlighter range) {
+  @Nonnull
+  private static TextAttributes getFollowedHyperlinkAttributes(@Nonnull RangeHighlighter range) {
     HyperlinkInfoTextAttributes attrs = HYPERLINK.get(range);
     TextAttributes result = attrs != null ? attrs.getFollowedHyperlinkAttributes() : null;
     if (result == null) {
@@ -369,8 +370,8 @@ public class EditorHyperlinkSupport {
   }
 
 
-  @NotNull
-  public static String getLineText(@NotNull Document document, int lineNumber, boolean includeEol) {
+  @Nonnull
+  public static String getLineText(@Nonnull Document document, int lineNumber, boolean includeEol) {
     int endOffset = document.getLineEndOffset(lineNumber);
     if (includeEol && endOffset < document.getTextLength()) {
       endOffset++;
@@ -382,12 +383,12 @@ public class EditorHyperlinkSupport {
     private final HyperlinkInfo myHyperlinkInfo;
     private final TextAttributes myFollowedHyperlinkAttributes;
 
-    public HyperlinkInfoTextAttributes(@NotNull HyperlinkInfo hyperlinkInfo, @Nullable TextAttributes followedHyperlinkAttributes) {
+    public HyperlinkInfoTextAttributes(@Nonnull HyperlinkInfo hyperlinkInfo, @Nullable TextAttributes followedHyperlinkAttributes) {
       myHyperlinkInfo = hyperlinkInfo;
       myFollowedHyperlinkAttributes = followedHyperlinkAttributes;
     }
 
-    @NotNull
+    @Nonnull
     public HyperlinkInfo getHyperlinkInfo() {
       return myHyperlinkInfo;
     }

@@ -29,8 +29,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -54,22 +54,22 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
     mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<KeymapImpl>() {
-      @NotNull
+      @Nonnull
       @Override
-      public KeymapImpl readScheme(@NotNull Element element) throws InvalidDataException {
+      public KeymapImpl readScheme(@Nonnull Element element) throws InvalidDataException {
         KeymapImpl keymap = new KeymapImpl();
         keymap.readExternal(element, getAllIncludingDefaultsKeymaps());
         return keymap;
       }
 
       @Override
-      public Element writeScheme(@NotNull final KeymapImpl scheme) {
+      public Element writeScheme(@Nonnull final KeymapImpl scheme) {
         return scheme.writeExternal();
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public State getState(@NotNull KeymapImpl scheme) {
+      public State getState(@Nonnull KeymapImpl scheme) {
         return scheme.canModify() ? State.POSSIBLY_CHANGED : State.NON_PERSISTENT;
       }
     }, RoamingType.PER_USER);
@@ -106,7 +106,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   @Override
   @Nullable
-  public Keymap getKeymap(@NotNull String name) {
+  public Keymap getKeymap(@Nonnull String name) {
     return mySchemesManager.findSchemeByName(name);
   }
 
@@ -209,13 +209,13 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public void addKeymapManagerListener(@NotNull KeymapManagerListener listener) {
+  public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
     pollQueue();
     myListeners.add(listener);
   }
 
   @Override
-  public void addKeymapManagerListener(@NotNull final KeymapManagerListener listener, @NotNull Disposable parentDisposable) {
+  public void addKeymapManagerListener(@Nonnull final KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
     pollQueue();
     myListeners.add(listener);
     Disposer.register(parentDisposable, new Disposable() {
@@ -236,18 +236,18 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public void removeKeymapManagerListener(@NotNull KeymapManagerListener listener) {
+  public void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
     pollQueue();
     myListeners.remove(listener);
   }
 
   @Override
-  public void addWeakListener(@NotNull KeymapManagerListener listener) {
+  public void addWeakListener(@Nonnull KeymapManagerListener listener) {
     addKeymapManagerListener(new WeakKeymapManagerListener(this, listener));
   }
 
   @Override
-  public void removeWeakListener(@NotNull KeymapManagerListener listenerToRemove) {
+  public void removeWeakListener(@Nonnull KeymapManagerListener listenerToRemove) {
     // assume it is safe to remove elements during iteration, as is the case with the COWAL
     for (KeymapManagerListener listener : myListeners) {
       if (listener instanceof WeakKeymapManagerListener && ((WeakKeymapManagerListener)listener).isWrapped(listenerToRemove)) {
@@ -257,7 +257,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "KeymapManager";
   }

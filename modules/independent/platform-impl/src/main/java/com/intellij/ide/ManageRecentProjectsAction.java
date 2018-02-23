@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.impl.welcomeScreen.NewRecentProjectPanel;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,7 +36,7 @@ import javax.swing.*;
 public class ManageRecentProjectsAction extends DumbAwareAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Disposable disposable = Disposer.newDisposable();
     NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable);
     JList list = UIUtil.findComponentOfType(panel, JList.class);
@@ -54,7 +54,7 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     boolean enable = false;
     if (project != null) {

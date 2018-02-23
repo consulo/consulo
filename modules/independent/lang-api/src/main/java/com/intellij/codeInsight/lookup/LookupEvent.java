@@ -16,8 +16,6 @@
 
 package com.intellij.codeInsight.lookup;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.EventObject;
 
 public class LookupEvent extends EventObject {
@@ -47,7 +45,7 @@ public class LookupEvent extends EventObject {
     return myLookup;
   }
 
-  @Nullable("in case ENTER was pressed when no suggestions were available")
+  @javax.annotation.Nullable("in case ENTER was pressed when no suggestions were available")
   public LookupElement getItem(){
     return myItem;
   }

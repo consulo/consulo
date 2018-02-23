@@ -18,8 +18,7 @@ package com.intellij.formatting;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Represents a model of the document containing the formatted text, as seen by the
@@ -56,7 +55,7 @@ public interface FormattingDocumentModel {
    */
   int getTextLength();
 
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   /**
@@ -84,9 +83,9 @@ public interface FormattingDocumentModel {
    * @param changedViaPsi     flag that identifies whether formatter introduces changes via PSI tree or directly via the document
    * @return                  white space to use for replacing document symbols at <code>[startOffset; endOffset)</code> region
    */
-  @NotNull
-  CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText, int startOffset, int endOffset,
-                                           @Nullable ASTNode nodeAfter, boolean changedViaPsi);
+  @Nonnull
+  CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset,
+                                           @javax.annotation.Nullable ASTNode nodeAfter, boolean changedViaPsi);
 
   ///**
   // * Allows to answer if given symbol is treated by the current model as white space symbol during formatting.

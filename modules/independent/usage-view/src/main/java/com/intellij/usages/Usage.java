@@ -17,8 +17,8 @@ package com.intellij.usages;
 
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public interface Usage extends Navigatable {
   Usage[] EMPTY_ARRAY = new Usage[0];
 
-  @NotNull
+  @Nonnull
   UsagePresentation getPresentation();
   boolean isValid();
   boolean isReadOnly();

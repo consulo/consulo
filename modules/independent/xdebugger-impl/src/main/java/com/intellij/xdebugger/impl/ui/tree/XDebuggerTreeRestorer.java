@@ -22,7 +22,7 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -114,7 +114,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   // comparing only named nodes
-  private static boolean pathsEqual(@NotNull TreePath path1, @NotNull TreePath path2) {
+  private static boolean pathsEqual(@Nonnull TreePath path1, @Nonnull TreePath path2) {
     if (path1.getPathCount() != path2.getPathCount()) {
       return false;
     }
@@ -146,7 +146,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void nodeLoaded(@NotNull final RestorableStateNode node, final String name) {
+  public void nodeLoaded(@Nonnull final RestorableStateNode node, final String name) {
     XDebuggerTreeState.NodeInfo parentInfo = myNode2ParentState.remove(node);
     if (parentInfo != null) {
       doRestoreNode(node, parentInfo.getChild(node));
@@ -165,7 +165,7 @@ public class XDebuggerTreeRestorer implements XDebuggerTreeListener, TreeSelecti
   }
 
   @Override
-  public void childrenLoaded(@NotNull final XDebuggerTreeNode node, @NotNull final List<XValueContainerNode<?>> children, final boolean last) {
+  public void childrenLoaded(@Nonnull final XDebuggerTreeNode node, @Nonnull final List<XValueContainerNode<?>> children, final boolean last) {
     XDebuggerTreeState.NodeInfo nodeInfo = myNode2State.get(node);
     if (nodeInfo != null) {
       for (XDebuggerTreeNode child : children) {

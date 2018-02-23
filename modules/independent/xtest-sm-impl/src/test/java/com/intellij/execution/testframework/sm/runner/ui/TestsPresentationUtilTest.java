@@ -27,7 +27,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.LinkedHashSet;
@@ -737,8 +737,8 @@ public class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
     }
 
     @Override
-    public void append(@NotNull @Nls final String fragment,
-                       @NotNull final SimpleTextAttributes attributes,
+    public void append(@Nonnull @Nls final String fragment,
+                       @Nonnull final SimpleTextAttributes attributes,
                        final boolean isMainText) {
       myFragmentsContainer.append(fragment, attributes);
     }

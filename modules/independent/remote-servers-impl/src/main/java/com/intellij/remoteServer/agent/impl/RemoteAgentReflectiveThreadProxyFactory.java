@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.agent.impl;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author michael.golubev

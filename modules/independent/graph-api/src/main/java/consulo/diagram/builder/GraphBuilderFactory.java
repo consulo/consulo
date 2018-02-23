@@ -16,14 +16,14 @@
 package consulo.diagram.builder;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22:36/15.10.13
  */
 public abstract class GraphBuilderFactory {
-  @NotNull
+  @Nonnull
   public static GraphBuilderFactory getInstance() {
     return ServiceManager.getService(GraphBuilderFactory.class);
   }

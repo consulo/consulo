@@ -32,8 +32,9 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -51,7 +52,7 @@ public class DetectedIndentOptionsNotificationProvider implements EditorNotifica
 
   private static boolean myShowNotificationInTest = false;
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -61,7 +62,7 @@ public class DetectedIndentOptionsNotificationProvider implements EditorNotifica
   @RequiredDispatchThread
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor) {
     Boolean notifiedFlag = fileEditor.getUserData(NOTIFIED_FLAG);
     if (fileEditor instanceof TextEditor && notifiedFlag != null) {
       final Editor editor = ((TextEditor)fileEditor).getEditor();
@@ -114,7 +115,7 @@ public class DetectedIndentOptionsNotificationProvider implements EditorNotifica
     return null;
   }
 
-  public static void updateIndentNotification(@NotNull PsiFile file, boolean enforce) {
+  public static void updateIndentNotification(@Nonnull PsiFile file, boolean enforce) {
     VirtualFile vFile = file.getVirtualFile();
     if (vFile == null) return;
 

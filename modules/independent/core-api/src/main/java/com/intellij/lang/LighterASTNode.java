@@ -21,13 +21,13 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface LighterASTNode {
   public static final LighterASTNode[] EMPTY_ARRAY = new LighterASTNode[0];
 
   public static ArrayFactory<LighterASTNode> ARRAY_FACTORY = new ArrayFactory<LighterASTNode>() {
-    @NotNull
+    @Nonnull
     @Override
     public LighterASTNode[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new LighterASTNode[count];

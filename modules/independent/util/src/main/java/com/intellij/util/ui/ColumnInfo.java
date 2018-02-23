@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

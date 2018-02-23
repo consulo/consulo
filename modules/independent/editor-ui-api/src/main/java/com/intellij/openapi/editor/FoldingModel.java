@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides services for controlling and getting information about folded regions in the
@@ -37,7 +37,7 @@ public interface FoldingModel {
    * intersects with another existing region)
    */
   @Nullable
-  FoldRegion addFoldRegion(int startOffset, int endOffset, @NotNull String placeholderText);
+  FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText);
 
   /**
    * Tries to add given region to the folding model. This method must be called
@@ -46,7 +46,7 @@ public interface FoldingModel {
    * @return <code>true</code>, if region was added successfully, <code>false</code> if the region cannot be added, e.g. if it
    * intersects with another existing region
    */
-  boolean addFoldRegion(@NotNull FoldRegion region);
+  boolean addFoldRegion(@Nonnull FoldRegion region);
 
   /**
    * Removes the specified fold region. This method must be called
@@ -54,7 +54,7 @@ public interface FoldingModel {
    *
    * @param region the region to remove.
    */
-  void removeFoldRegion(@NotNull FoldRegion region);
+  void removeFoldRegion(@Nonnull FoldRegion region);
 
   /**
    * Gets the list of all fold regions in the specified editor.
@@ -62,7 +62,7 @@ public interface FoldingModel {
    *
    * @return the array of fold regions, or an empty array if folding is currently disabled.
    */
-  @NotNull
+  @Nonnull
   FoldRegion[] getAllFoldRegions();
 
   /**
@@ -101,7 +101,7 @@ public interface FoldingModel {
    *
    * @param operation the operation to execute.
    */
-  void runBatchFoldingOperation(@NotNull Runnable operation);
+  void runBatchFoldingOperation(@Nonnull Runnable operation);
 
   /**
    * Runs an operation which is allowed to modify fold regions in the editor by calling
@@ -111,7 +111,7 @@ public interface FoldingModel {
    * @param moveCaretFromCollapsedRegion flag that identifies whether caret position should be changed if it's located inside
    *                                     collapsed fold region after the operation
    */
-  void runBatchFoldingOperation(@NotNull Runnable operation, boolean moveCaretFromCollapsedRegion);
+  void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion);
 
-  void runBatchFoldingOperationDoNotCollapseCaret(@NotNull Runnable operation);
+  void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation);
 }

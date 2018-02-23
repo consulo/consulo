@@ -48,8 +48,8 @@ import com.intellij.util.containers.Queue;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -90,12 +90,12 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static DumbServiceImpl getInstance(@NotNull Project project) {
+  public static DumbServiceImpl getInstance(@Nonnull Project project) {
     return (DumbServiceImpl)DumbService.getInstance(project);
   }
 
   @Override
-  public void cancelTask(@NotNull DumbModeTask task) {
+  public void cancelTask(@Nonnull DumbModeTask task) {
     if (ApplicationManager.getApplication().isInternal()) LOG.info("cancel " + task);
     ProgressIndicatorEx indicator = myProgresses.get(task);
     if (indicator != null) {
@@ -156,7 +156,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public void runWhenSmart(@NotNull Runnable runnable) {
+  public void runWhenSmart(@Nonnull Runnable runnable) {
     myStartupManager.runWhenProjectIsInitialized(() -> {
       synchronized (myRunWhenSmartQueue) {
         if (isDumb()) {
@@ -170,7 +170,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public void queueTask(@NotNull DumbModeTask task) {
+  public void queueTask(@Nonnull DumbModeTask task) {
     if (LOG.isDebugEnabled()) LOG.debug("Scheduling task " + task);
     LOG.assertTrue(!myProject.isDefault(), "No indexing tasks should be created for default project: " + task);
     final Application application = ApplicationManager.getApplication();
@@ -182,7 +182,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
   }
 
-  private static void runTaskSynchronously(@NotNull DumbModeTask task) {
+  private static void runTaskSynchronously(@Nonnull DumbModeTask task) {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator == null) indicator = new EmptyProgressIndicator();
 
@@ -197,7 +197,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @VisibleForTesting
-  void queueAsynchronousTask(@NotNull DumbModeTask task) {
+  void queueAsynchronousTask(@Nonnull DumbModeTask task) {
     Throwable trace = new Throwable(); // please report exceptions here to peter
     TransactionId contextTransaction = TransactionGuard.getInstance().getContextTransaction();
     Runnable runnable = () -> queueTaskOnEdt(task, contextTransaction, trace);
@@ -208,9 +208,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
   }
 
-  private void queueTaskOnEdt(@NotNull DumbModeTask task,
+  private void queueTaskOnEdt(@Nonnull DumbModeTask task,
                               @Nullable TransactionId contextTransaction,
-                              @NotNull Throwable trace) {
+                              @Nonnull Throwable trace) {
     if (!addTaskToQueue(task)) return;
 
     if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
@@ -219,7 +219,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
   }
 
-  private boolean addTaskToQueue(@NotNull DumbModeTask task) {
+  private boolean addTaskToQueue(@Nonnull DumbModeTask task) {
     if (!myQueuedEquivalences.add(task.getEquivalenceObject())) {
       Disposer.dispose(task);
       return false;
@@ -234,7 +234,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     return true;
   }
 
-  private void enterDumbMode(@Nullable TransactionId contextTransaction, @NotNull Throwable trace) {
+  private void enterDumbMode(@Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
     boolean wasSmart = !isDumb();
     WriteAction.run(() -> {
       synchronized (myRunWhenSmartQueue) {
@@ -306,7 +306,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public void showDumbModeNotification(@NotNull final String message) {
+  public void showDumbModeNotification(@Nonnull final String message) {
     UIUtil.invokeLaterIfNeeded(() -> {
       final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
       if (ideFrame != null) {
@@ -339,7 +339,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable) {
+  public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
     final DumbUnawareHider wrapper = new DumbUnawareHider(dumbUnawareContent);
     wrapper.setContentVisible(!isDumb());
     getProject().getMessageBus().connect(parentDisposable).subscribe(DUMB_MODE, new DumbModeListener() {
@@ -359,12 +359,12 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Override
-  public void smartInvokeLater(@NotNull final Runnable runnable) {
+  public void smartInvokeLater(@Nonnull final Runnable runnable) {
     smartInvokeLater(runnable, ModalityState.defaultModalityState());
   }
 
   @Override
-  public void smartInvokeLater(@NotNull final Runnable runnable, @NotNull ModalityState modalityState) {
+  public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     ApplicationManager.getApplication().invokeLater(() -> {
       if (isDumb()) {
         runWhenSmart(() -> smartInvokeLater(runnable, modalityState));
@@ -404,7 +404,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     try {
       ProgressManager.getInstance().run(new Task.Backgroundable(myProject, IdeBundle.message("progress.indexing"), false) {
         @Override
-        public void run(@NotNull final ProgressIndicator visibleIndicator) {
+        public void run(@Nonnull final ProgressIndicator visibleIndicator) {
           runBackgroundProcess(visibleIndicator);
         }
       });
@@ -415,7 +415,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
   }
 
-  private void runBackgroundProcess(@NotNull final ProgressIndicator visibleIndicator) {
+  private void runBackgroundProcess(@Nonnull final ProgressIndicator visibleIndicator) {
     if (!myState.compareAndSet(State.SCHEDULED_TASKS, State.RUNNING_DUMB_TASKS)) return;
 
     ProgressSuspender.markSuspendable(visibleIndicator);
@@ -439,7 +439,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
         if (visibleIndicator instanceof ProgressIndicatorEx) {
           taskIndicator.addStateDelegate(new AbstractProgressIndicatorExBase() {
             @Override
-            protected void delegateProgressChange(@NotNull IndicatorAction action) {
+            protected void delegateProgressChange(@Nonnull IndicatorAction action) {
               super.delegateProgressChange(action);
               action.execute((ProgressIndicatorEx)visibleIndicator);
             }
@@ -480,7 +480,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   @Nullable
-  private Pair<DumbModeTask, ProgressIndicatorEx> getNextTask(@Nullable DumbModeTask prevTask, @NotNull ProgressIndicator indicator) {
+  private Pair<DumbModeTask, ProgressIndicatorEx> getNextTask(@Nullable DumbModeTask prevTask, @Nonnull ProgressIndicator indicator) {
     CompletableFuture<Pair<DumbModeTask, ProgressIndicatorEx>> result = new CompletableFuture<>();
     UIUtil.invokeLaterIfNeeded(() -> {
       if (myProject.isDisposed()) {
@@ -581,7 +581,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
 
     @Override
-    public void finish(@NotNull TaskInfo task) {
+    public void finish(@Nonnull TaskInfo task) {
       if (lastFraction != 0) { // we should call setProgress at least once before
         UIUtil.invokeLaterIfNeeded(() -> {
           AppIcon appIcon = AppIcon.getInstance();

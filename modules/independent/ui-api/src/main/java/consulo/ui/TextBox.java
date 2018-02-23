@@ -15,20 +15,20 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 19-Nov-16.
  */
 public interface TextBox extends ValueComponent<String> {
-  @NotNull
+  @Nonnull
   static TextBox create() {
     return create(null);
   }
 
-  @NotNull
+  @Nonnull
   static TextBox create(@Nullable String text) {
     return UIInternal.get()._Components_textBox(text);
   }

@@ -36,12 +36,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.editor.notifications.EditorNotificationProviders;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -57,7 +58,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
   private final Project myProject;
 
   private final NotNullLazyValue<List<EditorNotificationProvider<?>>> myProvidersValue = new NotNullLazyValue<List<EditorNotificationProvider<?>>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected List<EditorNotificationProvider<?>> compute() {
       return EditorNotificationProviders.createProviders(myProject);
@@ -70,7 +71,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
     MessageBusConnection connection = project.getMessageBus().connect(project);
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
-      public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateNotifications(file);
       }
     });
@@ -89,7 +90,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
   }
 
   @Override
-  public void updateNotifications(@NotNull final VirtualFile file) {
+  public void updateNotifications(@Nonnull final VirtualFile file) {
     UIUtil.invokeLaterIfNeeded(() -> {
       ProgressIndicator indicator = getCurrentProgress(file);
       if (indicator != null) {
@@ -119,7 +120,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
   }
 
   @Nullable
-  private ReadTask createTask(@NotNull final ProgressIndicator indicator, @NotNull final VirtualFile file) {
+  private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
     List<FileEditor> editors = ContainerUtil.filter(
             FileEditorManager.getInstance(myProject).getAllEditors(file),
             editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor) editor).getEditor()));
@@ -144,7 +145,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
       @RequiredReadAction
       @Nullable
       @Override
-      public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+      public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         if (isOutdated()) return null;
 
         final List<EditorNotificationProvider<?>> providers = DumbService.getInstance(myProject). filterByDumbAwareness(myProvidersValue.getValue());
@@ -168,7 +169,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
       }
 
       @Override
-      public void onCanceled(@NotNull ProgressIndicator ignored) {
+      public void onCanceled(@Nonnull ProgressIndicator ignored) {
         if (getCurrentProgress(file) == indicator) {
           updateNotifications(file);
         }
@@ -181,7 +182,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
   }
 
 
-  private void updateNotification(@NotNull FileEditor editor, @NotNull Key<? extends JComponent> key, @Nullable JComponent component) {
+  private void updateNotification(@Nonnull FileEditor editor, @Nonnull Key<? extends JComponent> key, @Nullable JComponent component) {
     JComponent old = editor.getUserData(key);
     if (old != null) {
       FileEditorManager.getInstance(myProject).removeTopComponent(editor, old);

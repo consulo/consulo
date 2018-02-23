@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +25,12 @@ public class LineTokenizer extends LineTokenizerBase<String> {
   private final char[] myChars;
   private final String myText;
 
-  public LineTokenizer(@NotNull String text) {
+  public LineTokenizer(@Nonnull String text) {
     myChars = text.toCharArray();
     myText = text;
   }
 
-  @NotNull
+  @Nonnull
   public String[] execute() {
     ArrayList<String> lines = new ArrayList<String>();
     doExecute(lines);
@@ -57,14 +57,14 @@ public class LineTokenizer extends LineTokenizerBase<String> {
     return myChars.length;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String substring(int start, int end) {
     return myText.substring(start, end);
   }
 
-  @NotNull
-  public static String concatLines(@NotNull String[] lines) {
+  @Nonnull
+  public static String concatLines(@Nonnull String[] lines) {
     StringBuilder buffer = new StringBuilder();
     for (String line : lines) {
       buffer.append(line);
@@ -72,8 +72,8 @@ public class LineTokenizer extends LineTokenizerBase<String> {
     return buffer.substring(0, buffer.length());
   }
 
-  @NotNull
-  public static String correctLineSeparators(@NotNull String text) {
+  @Nonnull
+  public static String correctLineSeparators(@Nonnull String text) {
     return concatLines(new LineTokenizer(text).execute());
   }
 

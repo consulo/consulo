@@ -51,8 +51,8 @@ import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class PlatformOrPluginUpdateChecker {
 
   private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
 
-  @NotNull
+  @Nonnull
   public static PluginId getPlatformPluginId() {
     boolean isJreBuild = new File(PathManager.getHomePath(), "jre").exists();
     boolean is64Bit = SystemInfo.is64Bit;
@@ -100,7 +100,7 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static boolean isPlatform(@NotNull PluginId pluginId) {
+  public static boolean isPlatform(@Nonnull PluginId pluginId) {
     return ArrayUtil.contains(pluginId, ourPlatformIds);
   }
 
@@ -155,7 +155,7 @@ public class PlatformOrPluginUpdateChecker {
           Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @Override
-            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
               new PluginListDialog(project, targetsForUpdate, null, null).show();
             }
           });
@@ -181,7 +181,7 @@ public class PlatformOrPluginUpdateChecker {
     return actionCallback;
   }
 
-  @NotNull
+  @Nonnull
   private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults, @Nullable ProgressIndicator indicator) {
     PluginId platformPluginId = getPlatformPluginId();
 
@@ -296,7 +296,7 @@ public class PlatformOrPluginUpdateChecker {
     return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }
 
-  private static void processDependencies(@NotNull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {
+  private static void processDependencies(@Nonnull IdeaPluginDescriptor target, List<Couple<IdeaPluginDescriptor>> targets, List<IdeaPluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
       IdeaPluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);

@@ -46,8 +46,8 @@ import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.WrappedLayout;
 import consulo.web.ui.TreeStructureWrappenModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -60,7 +60,7 @@ import java.util.function.Function;
  */
 public class WebProjectViewImpl implements ProjectViewEx {
   private final class MyDataProvider implements Function<Key<?>, Object> {
-    @Nullable
+    @javax.annotation.Nullable
     private Object getSelectedNodeElement() {
       final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
       if (currentProjectViewPane == null) { // can happen if not initialized yet
@@ -81,7 +81,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
     }
 
     @Override
-    public Object apply(@NotNull Key<?> dataId) {
+    public Object apply(@Nonnull Key<?> dataId) {
       final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
       if (currentProjectViewPane != null) {
         final Object paneSpecificData = currentProjectViewPane.getData(dataId);
@@ -201,7 +201,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       return null;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private LibraryOrderEntry getSelectedLibrary() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
@@ -231,7 +231,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       return null;
     }
 
-    private void detachLibrary(@NotNull final LibraryOrderEntry orderEntry, @NotNull Project project) {
+    private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
       String message = IdeBundle.message("detach.library.from.module", orderEntry.getPresentableName(), module.getName());
       String title = IdeBundle.message("detach.library");
@@ -255,7 +255,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
       }, title, null);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private Module[] getSelectedModules() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       if (viewPane == null) return null;
@@ -310,8 +310,8 @@ public class WebProjectViewImpl implements ProjectViewEx {
    * => MODULE_CONTEXT should be only available for the module node
    * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
    */
-  @Nullable
-  private Module moduleBySingleContentRoot(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
     if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
       Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
       if (module != null && !module.isDisposed() && ModuleRootManager.getInstance(module).getContentRoots().length == 1) {
@@ -322,7 +322,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus) {
     return ActionCallback.DONE;
@@ -330,7 +330,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
   @RequiredUIAccess
   @Override
-  public void setupToolWindow(@NotNull ToolWindow toolWindow, boolean loadPaneExtensions) {
+  public void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions) {
 
     ProjectViewPane projectViewPane = null;
     for (AbstractProjectViewPane pane : AbstractProjectViewPane.EP_NAME.getExtensions(myProject)) {
@@ -352,7 +352,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
 
     TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<AbstractTreeNode>(structure) {
       @Override
-      public boolean onDoubleClick(@NotNull Tree tree, @NotNull TreeNode node) {
+      public boolean onDoubleClick(@Nonnull Tree tree, @Nonnull TreeNode node) {
         if (node.isLeaf()) {
           AbstractTreeNode value = (AbstractTreeNode)node.getValue();
 
@@ -375,8 +375,8 @@ public class WebProjectViewImpl implements ProjectViewEx {
     toolWindow.getContentManager().addContent(content);
   }
 
-  @NotNull
-  private <T> List<T> getSelectedElements(@NotNull Class<T> klass) {
+  @Nonnull
+  private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
     List<T> result = new ArrayList<>();
     final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane == null) return result;
@@ -390,9 +390,9 @@ public class WebProjectViewImpl implements ProjectViewEx {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback changeViewCB(@NotNull String viewId, String subId) {
+  public ActionCallback changeViewCB(@Nonnull String viewId, String subId) {
     return ActionCallback.DONE;
   }
 
@@ -508,7 +508,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
   }
 
   @Override
-  public void setManualOrder(@NotNull String paneId, boolean enabled) {
+  public void setManualOrder(@Nonnull String paneId, boolean enabled) {
 
   }
 
@@ -537,7 +537,7 @@ public class WebProjectViewImpl implements ProjectViewEx {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<SelectInTarget> getSelectInTargets() {
     return mySelectInTargets.values();

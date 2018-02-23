@@ -18,19 +18,20 @@ package com.intellij.diff.util;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public class DiffEmptyHighlighterRenderer implements CustomHighlighterRenderer {
-  @NotNull private final TextDiffType myDiffType;
+  @Nonnull
+  private final TextDiffType myDiffType;
 
-  public DiffEmptyHighlighterRenderer(@NotNull TextDiffType diffType) {
+  public DiffEmptyHighlighterRenderer(@Nonnull TextDiffType diffType) {
     myDiffType = diffType;
   }
 
   @Override
-  public void paint(@NotNull Editor editor, @NotNull RangeHighlighter highlighter, @NotNull Graphics g) {
+  public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
     g.setColor(myDiffType.getColor(editor));
     Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(highlighter.getStartOffset()));
     int endy = point.y + editor.getLineHeight() - 1;

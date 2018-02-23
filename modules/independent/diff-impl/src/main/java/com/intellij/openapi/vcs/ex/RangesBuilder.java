@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,20 +31,20 @@ import java.util.List;
 public class RangesBuilder {
   private static final Logger LOG = Logger.getInstance(RangesBuilder.class);
 
-  @NotNull
-  public static List<Range> createRanges(@NotNull Document current, @NotNull Document vcs) throws FilesTooBigForDiffException {
+  @Nonnull
+  public static List<Range> createRanges(@Nonnull Document current, @Nonnull Document vcs) throws FilesTooBigForDiffException {
     return createRanges(current, vcs, false);
   }
 
-  @NotNull
-  public static List<Range> createRanges(@NotNull Document current, @NotNull Document vcs, boolean innerWhitespaceChanges)
+  @Nonnull
+  public static List<Range> createRanges(@Nonnull Document current, @Nonnull Document vcs, boolean innerWhitespaceChanges)
           throws FilesTooBigForDiffException {
     return createRanges(DiffUtil.getLines(current), DiffUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
   }
 
-  @NotNull
-  public static List<Range> createRanges(@NotNull List<String> current,
-                                         @NotNull List<String> vcs,
+  @Nonnull
+  public static List<Range> createRanges(@Nonnull List<String> current,
+                                         @Nonnull List<String> vcs,
                                          int shift,
                                          int vcsShift,
                                          boolean innerWhitespaceChanges) throws FilesTooBigForDiffException {
@@ -63,7 +63,7 @@ public class RangesBuilder {
     return result;
   }
 
-  private static Range createOn(@NotNull Diff.Change change, int shift, int vcsShift) {
+  private static Range createOn(@Nonnull Diff.Change change, int shift, int vcsShift) {
     int offset1 = shift + change.line1;
     int offset2 = offset1 + change.inserted;
 
@@ -73,11 +73,11 @@ public class RangesBuilder {
     return new Range(offset1, offset2, uOffset1, uOffset2);
   }
 
-  private static Range createOnSmart(@NotNull Diff.Change change,
+  private static Range createOnSmart(@Nonnull Diff.Change change,
                                      int shift,
                                      int vcsShift,
-                                     @NotNull List<String> current,
-                                     @NotNull List<String> vcs) throws FilesTooBigForDiffException {
+                                     @Nonnull List<String> current,
+                                     @Nonnull List<String> vcs) throws FilesTooBigForDiffException {
     byte type = getChangeType(change);
 
     int offset1 = shift + change.line1;
@@ -133,7 +133,7 @@ public class RangesBuilder {
     return new Range(offset1, offset2, uOffset1, uOffset2, inner);
   }
 
-  private static byte getChangeType(@NotNull Diff.Change change) {
+  private static byte getChangeType(@Nonnull Diff.Change change) {
     if ((change.deleted > 0) && (change.inserted > 0)) return Range.MODIFIED;
     if ((change.deleted > 0)) return Range.DELETED;
     if ((change.inserted > 0)) return Range.INSERTED;
@@ -142,15 +142,16 @@ public class RangesBuilder {
   }
 
   private static class LineWrapper {
-    @NotNull private final String myLine;
+    @Nonnull
+    private final String myLine;
     private final int myHash;
 
-    public LineWrapper(@NotNull String line) {
+    public LineWrapper(@Nonnull String line) {
       myLine = line;
       myHash = StringUtil.stringHashCodeIgnoreWhitespaces(line);
     }
 
-    @NotNull
+    @Nonnull
     public String getLine() {
       return myLine;
     }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.openapi.diff.DiffNavigationContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowDiffUIContext {
   private DiffExtendUIFactory myActionsFactory;
@@ -36,7 +36,7 @@ public class ShowDiffUIContext {
     return myActionsFactory;
   }
 
-  public void setActionsFactory(@NotNull DiffExtendUIFactory actionsFactory) {
+  public void setActionsFactory(@Nonnull DiffExtendUIFactory actionsFactory) {
     this.myActionsFactory = actionsFactory;
   }
 

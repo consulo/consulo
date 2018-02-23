@@ -2,7 +2,7 @@ package com.intellij.util.net.ssl;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
 class ConfirmingHostnameVerifier implements X509HostnameVerifier {
   private final X509HostnameVerifier myVerifier;
 
-  public ConfirmingHostnameVerifier(@NotNull X509HostnameVerifier verifier) {
+  public ConfirmingHostnameVerifier(@Nonnull X509HostnameVerifier verifier) {
     myVerifier = verifier;
   }
 

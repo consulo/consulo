@@ -17,7 +17,7 @@ package consulo.web.application.impl;
 
 import com.intellij.ide.StartupProgress;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -46,7 +46,7 @@ public class WebStartupProgressImpl implements StartupProgress {
     myListeners.clear();
   }
 
-  public void addListener(@NotNull Consumer<WebStartupProgressImpl> consumer) {
+  public void addListener(@Nonnull Consumer<WebStartupProgressImpl> consumer) {
     myListeners.add(consumer);
   }
 

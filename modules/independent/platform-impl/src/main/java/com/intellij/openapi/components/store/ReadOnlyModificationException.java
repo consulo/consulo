@@ -16,16 +16,16 @@
 package com.intellij.openapi.components.store;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class ReadOnlyModificationException extends RuntimeException {
   private final VirtualFile myFile;
 
-  public ReadOnlyModificationException(@NotNull VirtualFile file) {
+  public ReadOnlyModificationException(@Nonnull VirtualFile file) {
     myFile = file;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }

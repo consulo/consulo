@@ -24,31 +24,30 @@ import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.orderEntry.OrderEntryType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry {
-  public UnknownOrderEntryImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
+  public UnknownOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(provider, rootLayer);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getFiles(OrderRootType type) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getUrls(OrderRootType rootType) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return "Unknown Order Entry. Type: " + getType().getId();
@@ -59,19 +58,19 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module getOwnerModule() {
     return getRootModel().getModule();
   }
 
   @Override
-  public <R> R accept(RootPolicy<R> policy, @Nullable R initialValue) {
+  public <R> R accept(RootPolicy<R> policy, @javax.annotation.Nullable R initialValue) {
     return policy.visitOrderEntry(this, initialValue);
   }
 
   @Override
-  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
     return getType() == other.getType();
   }
 

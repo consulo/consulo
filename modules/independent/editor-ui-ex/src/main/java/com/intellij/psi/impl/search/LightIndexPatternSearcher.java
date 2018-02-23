@@ -18,7 +18,7 @@ package com.intellij.psi.impl.search;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.searches.IndexPatternSearch;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LightIndexPatternSearcher extends IndexPatternSearcher {
   @Override
-  public boolean execute(@NotNull IndexPatternSearch.SearchParameters queryParameters,
-                         @NotNull Processor<IndexPatternOccurrence> consumer) {
+  public boolean execute(@Nonnull IndexPatternSearch.SearchParameters queryParameters,
+                         @Nonnull Processor<IndexPatternOccurrence> consumer) {
     return executeImpl(queryParameters, consumer);
   }
 }

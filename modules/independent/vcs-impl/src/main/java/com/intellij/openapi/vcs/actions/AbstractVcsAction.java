@@ -21,7 +21,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -31,26 +31,26 @@ import static java.util.Collections.emptySet;
 public abstract class AbstractVcsAction extends DumbAwareAction {
 
   @SuppressWarnings("unused") // Required for compatibility with external plugins.
-  public static Collection<AbstractVcs> getActiveVcses(@NotNull VcsContext dataContext) {
+  public static Collection<AbstractVcs> getActiveVcses(@Nonnull VcsContext dataContext) {
     Project project = dataContext.getProject();
 
     return project != null ? newHashSet(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()) : emptySet();
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     //noinspection deprecation - required for compatibility with external plugins.
     performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e));
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(VcsContextWrapper.createCachedInstanceOn(e));
   }
 
-  protected abstract void update(@NotNull VcsContext vcsContext, @NotNull Presentation presentation);
+  protected abstract void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation);
 
-  protected abstract void actionPerformed(@NotNull VcsContext e);
+  protected abstract void actionPerformed(@Nonnull VcsContext e);
 
   /**
    * @deprecated Only sync update is currently supported by {@link AbstractVcsAction}. Use
@@ -58,7 +58,7 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
    */
   @SuppressWarnings("unused") // Required for compatibility with external plugins.
   @Deprecated
-  protected boolean forceSyncUpdate(@NotNull AnActionEvent e) {
+  protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
     return true;
   }
 
@@ -67,7 +67,7 @@ public abstract class AbstractVcsAction extends DumbAwareAction {
    * @deprecated Use {@link AbstractVcsAction#update(VcsContext, Presentation)}.
    */
   @Deprecated
-  protected void performUpdate(@NotNull Presentation presentation, @NotNull VcsContext vcsContext) {
+  protected void performUpdate(@Nonnull Presentation presentation, @Nonnull VcsContext vcsContext) {
     update(vcsContext, presentation);
   }
 }

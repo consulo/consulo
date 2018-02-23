@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputStream {
   public BufferExposingByteArrayOutputStream() {}
@@ -29,7 +29,7 @@ public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputSt
     super(buffer);
   }
 
-  @NotNull
+  @Nonnull
   public byte[] getInternalBuffer() {
     return myBuffer;
   }

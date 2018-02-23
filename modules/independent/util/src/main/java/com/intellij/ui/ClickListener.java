@@ -20,7 +20,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,9 +32,9 @@ public abstract class ClickListener {
   private static final int EPS = 4;
   private MouseAdapter myListener;
 
-  public abstract boolean onClick(@NotNull MouseEvent event, int clickCount);
+  public abstract boolean onClick(@Nonnull MouseEvent event, int clickCount);
 
-  public void installOn(@NotNull Component c) {
+  public void installOn(@Nonnull Component c) {
     myListener = new MouseAdapter() {
       private Point pressPoint;
       private Point lastClickPoint;

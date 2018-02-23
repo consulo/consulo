@@ -33,8 +33,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.io.File;
@@ -59,23 +59,23 @@ public class IndexInfrastructure {
   private IndexInfrastructure() {
   }
 
-  @NotNull
-  public static File getVersionFile(@NotNull ID<?, ?> indexName) {
+  @Nonnull
+  public static File getVersionFile(@Nonnull ID<?, ?> indexName) {
     return new File(getIndexDirectory(indexName, true), indexName + ".ver");
   }
 
-  @NotNull
-  public static File getStorageFile(@NotNull ID<?, ?> indexName) {
+  @Nonnull
+  public static File getStorageFile(@Nonnull ID<?, ?> indexName) {
     return new File(getIndexRootDir(indexName), indexName.toString());
   }
 
-  @NotNull
-  public static File getInputIndexStorageFile(@NotNull ID<?, ?> indexName) {
+  @Nonnull
+  public static File getInputIndexStorageFile(@Nonnull ID<?, ?> indexName) {
     return new File(getIndexRootDir(indexName), indexName +"_inputs");
   }
 
-  @NotNull
-  public static File getIndexRootDir(@NotNull ID<?, ?> indexName) {
+  @Nonnull
+  public static File getIndexRootDir(@Nonnull ID<?, ?> indexName) {
     return getIndexDirectory(indexName, false);
   }
 
@@ -85,18 +85,18 @@ public class IndexInfrastructure {
     return indexDir;
   }
 
-  @NotNull
-  public static File getPersistentIndexRootDir(@NotNull ID<?, ?> indexName) {
+  @Nonnull
+  public static File getPersistentIndexRootDir(@Nonnull ID<?, ?> indexName) {
     return getIndexDirectory(indexName, false, PERSISTENT_INDEX_DIRECTORY_NAME);
   }
 
-  @NotNull
-  private static File getIndexDirectory(@NotNull ID<?, ?> indexName, boolean forVersion) {
+  @Nonnull
+  private static File getIndexDirectory(@Nonnull ID<?, ?> indexName, boolean forVersion) {
     return getIndexDirectory(indexName, forVersion, "");
   }
 
-  @NotNull
-  private static File getIndexDirectory(@NotNull ID<?, ?> indexName, boolean forVersion, String relativePath) {
+  @Nonnull
+  private static File getIndexDirectory(@Nonnull ID<?, ?> indexName, boolean forVersion, String relativePath) {
     final String dirName = indexName.toString().toLowerCase(Locale.US);
     File indexDir;
 
@@ -113,7 +113,7 @@ public class IndexInfrastructure {
   }
 
   @Nullable
-  public static VirtualFile findFileById(@NotNull PersistentFS fs, final int id) {
+  public static VirtualFile findFileById(@Nonnull PersistentFS fs, final int id) {
     if (ourUnitTestMode) {
       final VirtualFile testFile = findTestFile(id);
       if (testFile != null) {
@@ -135,7 +135,7 @@ public class IndexInfrastructure {
   }
 
   @Nullable
-  public static VirtualFile findFileByIdIfCached(@NotNull PersistentFS fs, final int id) {
+  public static VirtualFile findFileByIdIfCached(@Nonnull PersistentFS fs, final int id) {
     if (ourUnitTestMode) {
       final VirtualFile testFile = findTestFile(id);
       if (testFile != null) {

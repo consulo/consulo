@@ -25,7 +25,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class CharFilter {
   public static final ExtensionPointName<CharFilter> EP_NAME = ExtensionPointName.create("com.intellij.lookup.charFilter");

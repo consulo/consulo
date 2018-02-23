@@ -44,8 +44,8 @@ import com.intellij.util.UnmodifiableIterator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -92,7 +92,7 @@ public class CompletionUtil {
   }
 
   @Nullable
-  public static CompletionData getCompletionDataByElement(@Nullable final PsiElement position, @NotNull PsiFile originalFile) {
+  public static CompletionData getCompletionDataByElement(@Nullable final PsiElement position, @Nonnull PsiFile originalFile) {
     if (position == null) return null;
 
     PsiElement parent = position.getParent();
@@ -227,12 +227,12 @@ public class CompletionUtil {
   }
 
   @Nullable
-  public static <T extends PsiElement> T getOriginalElement(@NotNull T psi) {
+  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
     return CompletionUtilCoreImpl.getOriginalElement(psi);
   }
 
-  @NotNull
-  public static <T extends PsiElement> T getOriginalOrSelf(@NotNull T psi) {
+  @Nonnull
+  public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
     final T element = getOriginalElement(psi);
     return element == null ? psi : element;
   }
@@ -272,9 +272,9 @@ public class CompletionUtil {
     return result;
   }
 
-  public static Iterable<String> iterateLookupStrings(@NotNull final LookupElement element) {
+  public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
     return new Iterable<String>() {
-      @NotNull
+      @Nonnull
       @Override
       public Iterator<String> iterator() {
         final Iterator<String> original = element.getAllLookupStrings().iterator();

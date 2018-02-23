@@ -15,18 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.test
 
-import com.intellij.openapi.externalSystem.model.DataNode
-import com.intellij.openapi.externalSystem.model.ProjectKeys
-import com.intellij.openapi.externalSystem.model.ProjectSystemId
-import com.intellij.openapi.externalSystem.model.project.*
-import com.intellij.openapi.externalSystem.model.task.TaskData
-import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.module.ModuleTypeId
-import com.intellij.openapi.roots.DependencyScope
-import com.intellij.util.BooleanFunction
-import org.jetbrains.annotations.NotNull
 
-import static com.intellij.openapi.externalSystem.test.ExternalSystemTestUtil.TEST_EXTERNAL_SYSTEM_ID
 /**
  * @author Denis Zhdanov
  * @since 8/8/13 12:42 PM

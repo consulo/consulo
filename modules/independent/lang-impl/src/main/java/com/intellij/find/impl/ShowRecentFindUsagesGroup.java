@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.impl.UsageViewImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable final AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
     Project project = e.getData(CommonDataKeys.PROJECT);

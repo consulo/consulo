@@ -18,7 +18,7 @@ package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -38,12 +38,12 @@ public abstract class AbstractUsesDependencyMemberInfoModel<T extends Navigatabl
   }
 
   @Override
-  public int checkForProblems(@NotNull M memberInfo) {
+  public int checkForProblems(@Nonnull M memberInfo) {
     final int problem = super.checkForProblems(memberInfo);
     return doCheck(memberInfo, problem);
   }
 
-  protected abstract int doCheck(@NotNull M memberInfo, int problem);
+  protected abstract int doCheck(@Nonnull M memberInfo, int problem);
 
   public void setSuperClass(C superClass) {
     setMemberDependencyGraph(new UsesMemberDependencyGraph<T, C, M>(myClass, superClass, false));

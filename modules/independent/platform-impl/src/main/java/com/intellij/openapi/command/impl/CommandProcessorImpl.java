@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class CommandProcessorImpl extends CoreCommandProcessor {
   @Override
@@ -75,12 +75,12 @@ class CommandProcessorImpl extends CoreCommandProcessor {
   }
 
   @Override
-  public void addAffectedDocuments(Project project, @NotNull Document... docs) {
+  public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
     getUndoManager(project).addAffectedDocuments(docs);
   }
 
   @Override
-  public void addAffectedFiles(Project project, @NotNull VirtualFile... files) {
+  public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
     getUndoManager(project).addAffectedFiles(files);
   }
 }

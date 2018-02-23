@@ -7,27 +7,27 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author oleg
  */
 @Exported
 public abstract class IndentationParser implements PsiParser {
-  @NotNull
+  @Nonnull
   private final IElementType myEolTokenType;
-  @NotNull
+  @Nonnull
   private final IElementType myIndentTokenType;
-  @NotNull
+  @Nonnull
   private final IElementType myBlockElementType;
   @Nullable
   private final IElementType myDocumentType;
 
   public IndentationParser(@Nullable IElementType documentType,
-                           @NotNull IElementType blockElementType,
-                           @NotNull IElementType eolTokenType,
-                           @NotNull IElementType indentTokenType) {
+                           @Nonnull IElementType blockElementType,
+                           @Nonnull IElementType eolTokenType,
+                           @Nonnull IElementType indentTokenType) {
     myDocumentType = documentType;
     myBlockElementType = blockElementType;
     myEolTokenType = eolTokenType;
@@ -35,8 +35,8 @@ public abstract class IndentationParser implements PsiParser {
   }
 
   @Override
-  @NotNull
-  public final ASTNode parse(@NotNull final IElementType root, @NotNull final PsiBuilder builder, @NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public final ASTNode parse(@Nonnull final IElementType root, @Nonnull final PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
     final PsiBuilder.Marker fileMarker = builder.mark();
     final PsiBuilder.Marker documentMarker = myDocumentType == null ? null : builder.mark();
 
@@ -113,15 +113,15 @@ public abstract class IndentationParser implements PsiParser {
     return builder.getTreeBuilt();
   }
 
-  protected void closeBlock(final @NotNull PsiBuilder builder, final @NotNull PsiBuilder.Marker marker, final @Nullable IElementType startTokenType) {
+  protected void closeBlock(final @Nonnull PsiBuilder builder, final @Nonnull PsiBuilder.Marker marker, final @Nullable IElementType startTokenType) {
     marker.done(myBlockElementType);
   }
 
-  protected void advanceLexer(@NotNull PsiBuilder builder) {
+  protected void advanceLexer(@Nonnull PsiBuilder builder) {
     builder.advanceLexer();
   }
 
-  private void passEOLsAndIndents(@NotNull final PsiBuilder builder) {
+  private void passEOLsAndIndents(@Nonnull final PsiBuilder builder) {
     IElementType tokenType = builder.getTokenType();
     while (tokenType == myEolTokenType || tokenType == myIndentTokenType) {
       builder.advanceLexer();
@@ -131,12 +131,12 @@ public abstract class IndentationParser implements PsiParser {
 
   private static final class BlockInfo {
     private final int myIndent;
-    @NotNull
+    @Nonnull
     private final PsiBuilder.Marker myMarker;
     @Nullable
     private final IElementType myStartTokenType;
 
-    private BlockInfo(final int indent, final @NotNull PsiBuilder.Marker marker, final @Nullable IElementType type) {
+    private BlockInfo(final int indent, final @Nonnull PsiBuilder.Marker marker, final @Nullable IElementType type) {
       myIndent = indent;
       myMarker = marker;
       myStartTokenType = type;
@@ -146,7 +146,7 @@ public abstract class IndentationParser implements PsiParser {
       return myIndent;
     }
 
-    @NotNull
+    @Nonnull
     public PsiBuilder.Marker getMarker() {
       return myMarker;
     }

@@ -20,9 +20,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.ui.components.JBRadioButton;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -179,7 +179,7 @@ public class GeneralSettingsConfigurable implements SearchableConfigurable, Conf
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getHelpTopic() {
     return "preferences.general";
   }
@@ -207,7 +207,7 @@ public class GeneralSettingsConfigurable implements SearchableConfigurable, Conf
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

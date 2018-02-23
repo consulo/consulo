@@ -1,8 +1,8 @@
 package com.intellij.webcore.packaging;
 
 import com.intellij.util.CatchingConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public abstract class PackageManagementService {
    *         zero, if the versions are equals,
    *         a positive integer, if the first version is newer than the second.
    */
-  public int compareVersions(@NotNull String version1, @NotNull String version2) {
+  public int compareVersions(@Nonnull String version1, @Nonnull String version2) {
     return PackageVersionComparator.VERSION_COMPARATOR.compare(version1, version2);
   }
 
@@ -147,17 +147,21 @@ public abstract class PackageManagementService {
   }
 
   public static class ErrorDescription {
-    @NotNull private final String myMessage;
-    @Nullable private final String myCommand;
-    @Nullable private final String myOutput;
-    @Nullable private final String mySolution;
+    @Nonnull
+    private final String myMessage;
+    @Nullable
+    private final String myCommand;
+    @Nullable
+    private final String myOutput;
+    @Nullable
+    private final String mySolution;
 
     @Nullable
     public static ErrorDescription fromMessage(@Nullable String message) {
       return message != null ? new ErrorDescription(message, null, null, null) : null;
     }
 
-    public ErrorDescription(@NotNull String message, @Nullable String command, @Nullable String output, @Nullable String solution) {
+    public ErrorDescription(@Nonnull String message, @Nullable String command, @Nullable String output, @Nullable String solution) {
       myMessage = message;
       myCommand = command;
       myOutput = output;
@@ -167,7 +171,7 @@ public abstract class PackageManagementService {
     /**
      * The reason message that explains why the error has occurred.
      */
-    @NotNull
+    @Nonnull
     public String getMessage() {
       return myMessage;
     }

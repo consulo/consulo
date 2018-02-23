@@ -32,8 +32,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -55,14 +55,14 @@ public class ExternalToolPassFactory extends AbstractProjectComponent implements
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ExternalToolPassFactory";
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange textRange = FileStatusMap.getDirtyTextRange(editor, Pass.EXTERNAL_TOOLS) == null ? null : file.getTextRange();
     if (textRange == null || !externalAnnotatorsDefined(file)) {
       return null;
@@ -70,7 +70,7 @@ public class ExternalToolPassFactory extends AbstractProjectComponent implements
     return new ExternalToolPass(this, file, editor, textRange.getStartOffset(), textRange.getEndOffset());
   }
 
-  private static boolean externalAnnotatorsDefined(@NotNull PsiFile file) {
+  private static boolean externalAnnotatorsDefined(@Nonnull PsiFile file) {
     for (Language language : file.getViewProvider().getLanguages()) {
       final List<ExternalAnnotator> externalAnnotators = ExternalLanguageAnnotators.allForFile(language, file);
       if (!externalAnnotators.isEmpty()) {
@@ -80,7 +80,7 @@ public class ExternalToolPassFactory extends AbstractProjectComponent implements
     return false;
   }
 
-  void scheduleExternalActivity(@NotNull Update update) {
+  void scheduleExternalActivity(@Nonnull Update update) {
     myExternalActivitiesQueue.queue(update);
   }
 }

@@ -41,8 +41,8 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -51,12 +51,12 @@ import java.util.List;
 public class LazyParseablePsiElement extends LazyParseableElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.tree.LazyParseablePsiElement");
 
-  public LazyParseablePsiElement(@NotNull IElementType type, @Nullable CharSequence buffer) {
+  public LazyParseablePsiElement(@Nonnull IElementType type, @Nullable CharSequence buffer) {
     super(type, buffer);
     setPsi(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LazyParseablePsiElement clone() {
     LazyParseablePsiElement clone = (LazyParseablePsiElement)super.clone();
@@ -65,7 +65,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return getChildrenAsPsiElements((TokenSet)null, PsiElement.ARRAY_FACTORY);
   }
@@ -78,7 +78,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<>();
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
@@ -102,7 +102,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public void acceptChildren(@NotNull PsiElementVisitor visitor) {
+  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
     PsiElement child = getFirstChild();
     while (child != null) {
       child.accept(visitor);
@@ -168,23 +168,23 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     return addInnerBefore(element, null);
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return addInnerBefore(element, anchor);
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     TreeElement treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
@@ -193,7 +193,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public final void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
   }
 
@@ -203,7 +203,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public final PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
+  public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
           throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
@@ -238,20 +238,20 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     return SharedImplUtil.doReplace(this, this, newElement);
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) { //TODO: remove this method!!
+  public void accept(@Nonnull PsiElementVisitor visitor) { //TODO: remove this method!!
     visitor.visitElement(this);
   }
 
   @Override
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
+                                     @Nonnull ResolveState state,
                                      PsiElement lastParent,
-                                     @NotNull PsiElement place) {
+                                     @Nonnull PsiElement place) {
     return true;
   }
 
@@ -265,7 +265,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement getNavigationElement() {
     return this;
   }
@@ -282,14 +282,14 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getResolveScope() {
     assert isValid();
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
@@ -320,7 +320,7 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     Project project = ProjectCoreUtil.theOnlyOpenProject();
     if (project != null) {
@@ -333,19 +333,19 @@ public class LazyParseablePsiElement extends LazyParseableElement implements Psi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return getElementType().getLanguage();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ASTNode getNode() {
     return this;
   }

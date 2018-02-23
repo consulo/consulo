@@ -18,18 +18,18 @@ package com.intellij.vcs.log.ui.frame;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AsyncProcessIcon;
 import icons.VcsLogIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class TableWithProgress extends JBTable {
-  public TableWithProgress(@NotNull TableModel model) {
+  public TableWithProgress(@Nonnull TableModel model) {
     super(model);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected AsyncProcessIcon createBusyIcon() {
     return new LastRowLoadingIcon();
@@ -49,7 +49,7 @@ public class TableWithProgress extends JBTable {
   }
 
   @Override
-  protected void paintComponent(@NotNull Graphics g) {
+  protected void paintComponent(@Nonnull Graphics g) {
     super.paintComponent(g);
     if (isBusy()) {
       int preferredHeight = super.getPreferredSize().height;
@@ -57,7 +57,7 @@ public class TableWithProgress extends JBTable {
     }
   }
 
-  protected void paintFooter(@NotNull Graphics g, int x, int y, int width, int height) {
+  protected void paintFooter(@Nonnull Graphics g, int x, int y, int width, int height) {
     g.setColor(getBackground());
     g.fillRect(x, y, width, height);
   }
@@ -70,9 +70,9 @@ public class TableWithProgress extends JBTable {
       setUseMask(false);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Rectangle calculateBounds(@NotNull JComponent container) {
+    protected Rectangle calculateBounds(@Nonnull JComponent container) {
       Dimension iconSize = getPreferredSize();
       return new Rectangle((container.getWidth() - iconSize.width) / 2, container.getPreferredSize().height - iconSize.height, iconSize.width,
                            iconSize.height);

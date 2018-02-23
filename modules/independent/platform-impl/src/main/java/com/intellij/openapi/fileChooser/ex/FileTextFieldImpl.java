@@ -42,8 +42,8 @@ import com.intellij.util.ui.update.LazyUiDisposable;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -163,7 +163,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
 
     new LazyUiDisposable<FileTextFieldImpl>(parent, field, this) {
-      protected void initialize(@NotNull Disposable parent, @NotNull FileTextFieldImpl child, @Nullable Project project) {
+      protected void initialize(@Nonnull Disposable parent, @Nonnull FileTextFieldImpl child, @Nullable Project project) {
         Disposer.register(child, myUiUpdater);
       }
     };

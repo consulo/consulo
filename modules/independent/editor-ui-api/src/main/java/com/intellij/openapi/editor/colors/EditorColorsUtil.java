@@ -17,8 +17,8 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,13 +34,13 @@ public class EditorColorsUtil {
    * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
    * depending on the current LAF and current editor color scheme.
    */
-  @NotNull
+  @Nonnull
   public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
     return getColorSchemeForBackground(null);
   }
 
   @Nullable
-  public static Color getGlobalOrDefaultColor(@NotNull ColorKey colorKey) {
+  public static Color getGlobalOrDefaultColor(@Nonnull ColorKey colorKey) {
     return getColorSchemeForBackground(null).getColor(colorKey);
   }
 
@@ -48,7 +48,7 @@ public class EditorColorsUtil {
    * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
    * depending on the current LAF, current editor color scheme and the component background.
    */
-  @NotNull
+  @Nonnull
   public static EditorColorsScheme getColorSchemeForComponent(@Nullable JComponent component) {
     return getColorSchemeForBackground(component != null ? component.getBackground() : null);
   }

@@ -18,7 +18,7 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ import java.awt.*;
  * @since 22:44/31.10.13
  */
 public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
-  @NotNull
+  @Nonnull
   public static TestResourceContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestResourceContentFolderTypeProvider.class);
   }
@@ -42,19 +42,19 @@ public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProv
     return 200;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.TestResourcesRoot;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.test.resources.action");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return new Color(0x739503);

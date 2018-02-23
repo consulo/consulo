@@ -20,10 +20,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
@@ -36,8 +33,8 @@ import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -57,7 +54,8 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
   private static final AtomicBoolean myInitialized = new AtomicBoolean();
 
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   @Nullable private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
 
   @TestOnly
@@ -65,7 +63,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     ourCustomUnlocker = unlocker;
   }
 
-  public NonProjectFileWritingAccessProvider(@NotNull Project project) {
+  public NonProjectFileWritingAccessProvider(@Nonnull Project project) {
     myProject = project;
 
     if (myInitialized.compareAndSet(false, true)) {
@@ -74,11 +72,11 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   @Override
-  public boolean isPotentiallyWritable(@NotNull VirtualFile file) {
+  public boolean isPotentiallyWritable(@Nonnull VirtualFile file) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> requestWriting(VirtualFile... files) {
     if (isAllAccessAllowed()) return Collections.emptyList();
@@ -106,7 +104,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   @Nullable
-  private UnlockOption askToUnlock(@NotNull List<VirtualFile> files) {
+  private UnlockOption askToUnlock(@Nonnull List<VirtualFile> files) {
     if (ourCustomUnlocker != null) return ourCustomUnlocker.fun(files);
 
     NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
@@ -114,7 +112,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     return dialog.getUnlockOption();
   }
 
-  public static boolean isWriteAccessAllowed(@NotNull VirtualFile file, @NotNull Project project) {
+  public static boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
     if (isAllAccessAllowed()) return true;
     if (file.isDirectory()) return true;
 
@@ -136,7 +134,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     return isProjectFile(file, project);
   }
 
-  private static boolean isProjectFile(@NotNull VirtualFile file, @NotNull Project project) {
+  private static boolean isProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     for (NonProjectFileWritingAccessExtension each : Extensions.getExtensions(NonProjectFileWritingAccessExtension.EP_NAME, project)) {
       if (each.isWritable(file)) return true;
       if (each.isNotWritable(file)) return false;
@@ -159,7 +157,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     }
   }
 
-  public static void disableChecksDuring(@NotNull Runnable runnable) {
+  public static void disableChecksDuring(@Nonnull Runnable runnable) {
     Application app = getApp();
     ACCESS_ALLOWED.getValue(app).incrementAndGet();
     try {
@@ -171,7 +169,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   @TestOnly
-  public static void enableChecksInTests(@NotNull Disposable disposable) {
+  public static void enableChecksInTests(@Nonnull Disposable disposable) {
     getApp().putUserData(ENABLE_IN_TESTS, Boolean.TRUE);
     getApp().putUserData(ACCESS_ALLOWED, null);
 
@@ -199,16 +197,16 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
   private static class OurVirtualFileAdapter extends VirtualFileAdapter {
     @Override
-    public void fileCreated(@NotNull VirtualFileEvent event) {
+    public void fileCreated(@Nonnull VirtualFileEvent event) {
       unlock(event);
     }
 
     @Override
-    public void fileCopied(@NotNull VirtualFileCopyEvent event) {
+    public void fileCopied(@Nonnull VirtualFileCopyEvent event) {
       unlock(event);
     }
 
-    private static void unlock(@NotNull VirtualFileEvent event) {
+    private static void unlock(@Nonnull VirtualFileEvent event) {
       if (!event.isFromRefresh() && !event.getFile().isDirectory()) allowWriting(event.getFile());
     }
   }

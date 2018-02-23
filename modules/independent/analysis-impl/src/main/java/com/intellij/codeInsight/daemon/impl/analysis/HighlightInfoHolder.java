@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,13 +41,13 @@ public class HighlightInfoHolder {
   private int myErrorCount;
   private final List<HighlightInfo> myInfos = new ArrayList<HighlightInfo>(5);
 
-  public HighlightInfoHolder(@NotNull final PsiFile contextFile, @NotNull final HighlightInfoFilter... filters) {
+  public HighlightInfoHolder(@Nonnull final PsiFile contextFile, @Nonnull final HighlightInfoFilter... filters) {
     myContextFile = contextFile;
     myAnnotationSession = new AnnotationSession(contextFile);
     myFilters = filters;
   }
 
-  @NotNull
+  @Nonnull
   public AnnotationSession getAnnotationSession() {
     return myAnnotationSession;
   }
@@ -90,7 +90,7 @@ public class HighlightInfoHolder {
     return myInfos.get(i);
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myContextFile.getProject();
   }
@@ -106,7 +106,7 @@ public class HighlightInfoHolder {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributesScheme getColorsScheme() {
     return new TextAttributesScheme() {
       @Override

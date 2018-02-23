@@ -17,7 +17,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class WhitespacesBinders {
   public static final WhitespacesAndCommentsBinder GREEDY_LEFT_BINDER = DEFAULT_RIGHT_BINDER;
   public static final WhitespacesAndCommentsBinder GREEDY_RIGHT_BINDER = DEFAULT_LEFT_BINDER;
 
-  public static WhitespacesAndCommentsBinder leadingCommentsBinder(@NotNull final TokenSet commentTypes) {
+  public static WhitespacesAndCommentsBinder leadingCommentsBinder(@Nonnull final TokenSet commentTypes) {
     return new WhitespacesAndCommentsBinder() {
       @Override
       public int getEdgePosition(List<IElementType> tokens, boolean atStreamEdge, TokenTextGetter getter) {
@@ -54,7 +54,7 @@ public class WhitespacesBinders {
     };
   }
 
-  public static WhitespacesAndCommentsBinder trailingCommentsBinder(@NotNull final TokenSet commentTypes) {
+  public static WhitespacesAndCommentsBinder trailingCommentsBinder(@Nonnull final TokenSet commentTypes) {
     return new WhitespacesAndCommentsBinder() {
       @Override
       public int getEdgePosition(List<IElementType> tokens, boolean atStreamEdge, TokenTextGetter getter) {

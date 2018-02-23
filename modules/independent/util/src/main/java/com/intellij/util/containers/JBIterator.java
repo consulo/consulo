@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -50,18 +50,18 @@ import java.util.NoSuchElementException;
  */
 public abstract class JBIterator<E> implements Iterator<E> {
 
-  @NotNull
-  public static <E extends JBIterator<?>> JBIterable<E> cursor(@NotNull E iterator) {
+  @Nonnull
+  public static <E extends JBIterator<?>> JBIterable<E> cursor(@Nonnull E iterator) {
     return JBIterable.generate(iterator, Functions.<E>id()).intercept(CURSOR_NEXT);
   }
 
-  @NotNull
-  public static <E> JBIterator<E> from(@NotNull final Iterator<E> it) {
+  @Nonnull
+  public static <E> JBIterator<E> from(@Nonnull final Iterator<E> it) {
     return it instanceof JBIterator ? (JBIterator<E>)it : wrap(it);
   }
 
-  @NotNull
-  static <E> JBIterator<E> wrap(@NotNull final Iterator<E> it) {
+  @Nonnull
+  static <E> JBIterator<E> wrap(@Nonnull final Iterator<E> it) {
     return new JBIterator<E>() {
       @Override
       protected E nextImpl() {
@@ -163,39 +163,39 @@ public abstract class JBIterator<E> implements Iterator<E> {
     myNext = o;
   }
 
-  @NotNull
-  public final <T> JBIterator<T> map(@NotNull Function<? super E, T> function) {
+  @Nonnull
+  public final <T> JBIterator<T> map(@Nonnull Function<? super E, T> function) {
     return addOp(true, new TransformOp<E, T>(function));
   }
 
-  @NotNull
-  public final JBIterator<E> filter(@NotNull Condition<? super E> condition) {
+  @Nonnull
+  public final JBIterator<E> filter(@Nonnull Condition<? super E> condition) {
     return addOp(true, new FilterOp<E>(condition));
   }
 
-  @NotNull
+  @Nonnull
   public final JBIterator<E> take(int count) {
     // add first so that the underlying iterator stay on 'count' position
     return addOp(!(myLastOp instanceof NextOp), new WhileOp<E>(new CountDown<E>(count)));
   }
 
-  @NotNull
-  public final JBIterator<E> takeWhile(@NotNull Condition<? super E> condition) {
+  @Nonnull
+  public final JBIterator<E> takeWhile(@Nonnull Condition<? super E> condition) {
     return addOp(true, new WhileOp<E>(condition));
   }
 
-  @NotNull
+  @Nonnull
   public final JBIterator<E> skip(int count) {
     return skipWhile(new CountDown<E>(count));
   }
 
-  @NotNull
-  public final JBIterator<E> skipWhile(@NotNull final Condition<? super E> condition) {
+  @Nonnull
+  public final JBIterator<E> skipWhile(@Nonnull final Condition<? super E> condition) {
     return addOp(true, new SkipOp<E>(condition));
   }
 
-  @NotNull
-  private <T> T addOp(boolean last, @NotNull Op op) {
+  @Nonnull
+  private <T> T addOp(boolean last, @Nonnull Op op) {
     if (op.impl == null) {
       myFirstOp = myLastOp = op;
     }
@@ -215,7 +215,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   public final List<E> toList() {
     return Collections.unmodifiableList(ContainerUtil.newArrayList(JBIterable.once(this)));
   }
@@ -226,7 +226,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     return "{cur=" + myCurrent + "; next=" + myNext + (ops.size() < 2 ? "" : "; ops=" + ops) + "}";
   }
 
-  @NotNull
+  @Nonnull
   public final JBIterable<Function<Object, Object>> getTransformations() {
     return (JBIterable<Function<Object, Object>>)(JBIterable)operationsImpl().map(new Function<Op, Object>() {
       @Override
@@ -236,7 +236,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }).filter(Function.class);
   }
 
-  @NotNull
+  @Nonnull
   private JBIterable<Op> operationsImpl() {
     return JBIterable.generate(myFirstOp, new Function<Op, Op>() {
       @Override
@@ -246,8 +246,8 @@ public abstract class JBIterator<E> implements Iterator<E> {
     });
   }
 
-  @NotNull
-  static String toShortString(@NotNull Object o) {
+  @Nonnull
+  static String toShortString(@Nonnull Object o) {
     String name = o.getClass().getName();
     int idx = name.lastIndexOf('$');
     if (idx > 0 && idx < name.length() && StringUtil.isJavaIdentifierStart(name.charAt(idx + 1))) {

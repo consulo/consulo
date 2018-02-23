@@ -28,9 +28,9 @@ import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.frame.WatchInplaceEditor;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.TreeNode;
 import java.util.Collection;
 import java.util.List;
@@ -42,20 +42,20 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
   private final XWatchesView myWatchesView;
   private final List<WatchNodeImpl> myChildren;
 
-  public WatchesRootNode(@NotNull XDebuggerTree tree,
-                         @NotNull XWatchesView watchesView,
-                         @NotNull XExpression[] expressions) {
+  public WatchesRootNode(@Nonnull XDebuggerTree tree,
+                         @Nonnull XWatchesView watchesView,
+                         @Nonnull XExpression[] expressions) {
     this(tree, watchesView, expressions, null, false);
   }
 
-  public WatchesRootNode(@NotNull XDebuggerTree tree,
-                         @NotNull XWatchesView watchesView,
-                         @NotNull XExpression[] expressions,
+  public WatchesRootNode(@Nonnull XDebuggerTree tree,
+                         @Nonnull XWatchesView watchesView,
+                         @Nonnull XExpression[] expressions,
                          @Nullable XStackFrame stackFrame,
                          boolean watchesInVariables) {
     super(tree, null, new XValueContainer() {
       @Override
-      public void computeChildren(@NotNull XCompositeNode node) {
+      public void computeChildren(@Nonnull XCompositeNode node) {
         if (stackFrame != null && watchesInVariables) {
           stackFrame.computeChildren(node);
         }
@@ -72,13 +72,13 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     return ContainerUtil.concat(myChildren, super.getLoadedChildren());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends TreeNode> getChildren() {
     List<? extends TreeNode> children = super.getChildren();
@@ -88,12 +88,12 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
   /**
    * @deprecated use {@link #getWatchChildren()} instead
    */
-  @NotNull
+  @Nonnull
   public List<? extends WatchNode> getAllChildren() {
     return getWatchChildren();
   }
 
-  @NotNull
+  @Nonnull
   public List<? extends WatchNode> getWatchChildren() {
     return myChildren;
   }
@@ -113,14 +113,14 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
    */
   @Deprecated
   public void addWatchExpression(@Nullable XDebuggerEvaluator evaluator,
-                                 @NotNull XExpression expression,
+                                 @Nonnull XExpression expression,
                                  int index,
                                  boolean navigateToWatchNode) {
     addWatchExpression((XStackFrame)null, expression, index, navigateToWatchNode);
   }
 
   public void addWatchExpression(@Nullable XStackFrame stackFrame,
-                                 @NotNull XExpression expression,
+                                 @Nonnull XExpression expression,
                                  int index,
                                  boolean navigateToWatchNode) {
     WatchNodeImpl message = new WatchNodeImpl(myTree, this, expression, stackFrame);

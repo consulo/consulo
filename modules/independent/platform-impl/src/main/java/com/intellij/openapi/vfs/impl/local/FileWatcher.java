@@ -27,8 +27,8 @@ import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;
 import com.intellij.openapi.vfs.local.PluggableFileWatcher;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class FileWatcher {
   private static final Logger LOG = Logger.getInstance(FileWatcher.class);
 
   public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
-    @NotNull
+    @Nonnull
     @Override
     protected NotificationGroup compute() {
       return new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
@@ -85,7 +85,7 @@ public class FileWatcher {
   private volatile CanonicalPathMap myPathMap = new CanonicalPathMap();
   private volatile List<Collection<String>> myManualWatchRoots = Collections.emptyList();
 
-  FileWatcher(@NotNull ManagingFS managingFS) {
+  FileWatcher(@Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myNotificationSink = new MyFileWatcherNotificationSink();
     myWatchers = new PluggableFileWatcher[] {new NativeFileWatcherImpl()}; //FIXME [VISTALL] this is dirty hack, due we don't allow change file watcher
@@ -114,12 +114,12 @@ public class FileWatcher {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public DirtyPaths getDirtyPaths() {
     return myNotificationSink.getDirtyPaths();
   }
 
-  @NotNull
+  @Nonnull
   public Collection<String> getManualWatchRoots() {
     List<Collection<String>> manualWatchRoots = myManualWatchRoots;
 
@@ -139,7 +139,7 @@ public class FileWatcher {
   /**
    * Clients should take care of not calling this method in parallel.
    */
-  public void setWatchRoots(@NotNull List<String> recursive, @NotNull List<String> flat) {
+  public void setWatchRoots(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
     CanonicalPathMap pathMap = new CanonicalPathMap(recursive, flat);
 
     myPathMap = pathMap;
@@ -150,7 +150,7 @@ public class FileWatcher {
     }
   }
 
-  public void notifyOnFailure(@NotNull String cause, @Nullable NotificationListener listener) {
+  public void notifyOnFailure(@Nonnull String cause, @Nullable NotificationListener listener) {
     LOG.warn(cause);
 
     if (myFailureShown.compareAndSet(false, true)) {
@@ -181,13 +181,13 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyManualWatchRoots(@NotNull Collection<String> roots) {
+    public void notifyManualWatchRoots(@Nonnull Collection<String> roots) {
       myManualWatchRoots.add(roots.isEmpty() ? Collections.emptySet() : ContainerUtil.newHashSet(roots));
       notifyOnAnyEvent();
     }
 
     @Override
-    public void notifyMapping(@NotNull Collection<Pair<String, String>> mapping) {
+    public void notifyMapping(@Nonnull Collection<Pair<String, String>> mapping) {
       if (!mapping.isEmpty()) {
         myPathMap.addMapping(mapping);
       }
@@ -195,7 +195,7 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyDirtyPath(@NotNull String path) {
+    public void notifyDirtyPath(@Nonnull String path) {
       Collection<String> paths = myPathMap.getWatchedPaths(path, true);
       if (!paths.isEmpty()) {
         synchronized (myLock) {
@@ -208,7 +208,7 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyPathCreatedOrDeleted(@NotNull String path) {
+    public void notifyPathCreatedOrDeleted(@Nonnull String path) {
       Collection<String> paths = myPathMap.getWatchedPaths(path, true);
       if (!paths.isEmpty()) {
         synchronized (myLock) {
@@ -225,7 +225,7 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyDirtyDirectory(@NotNull String path) {
+    public void notifyDirtyDirectory(@Nonnull String path) {
       Collection<String> paths = myPathMap.getWatchedPaths(path, false);
       if (!paths.isEmpty()) {
         synchronized (myLock) {
@@ -236,7 +236,7 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyDirtyPathRecursive(@NotNull String path) {
+    public void notifyDirtyPathRecursive(@Nonnull String path) {
       Collection<String> paths = myPathMap.getWatchedPaths(path, false);
       if (!paths.isEmpty()) {
         synchronized (myLock) {
@@ -267,7 +267,7 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyUserOnFailure(@NotNull String cause, @Nullable NotificationListener listener) {
+    public void notifyUserOnFailure(@Nonnull String cause, @Nullable NotificationListener listener) {
       notifyOnFailure(cause, listener);
     }
   }

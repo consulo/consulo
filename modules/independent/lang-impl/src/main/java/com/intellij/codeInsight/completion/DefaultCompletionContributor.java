@@ -23,14 +23,14 @@ import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class DefaultCompletionContributor extends CompletionContributor {
 
-  static void addDefaultAdvertisements(@NotNull final CompletionParameters parameters, LookupImpl lookup, boolean includePsiFeatures) {
+  static void addDefaultAdvertisements(@Nonnull final CompletionParameters parameters, LookupImpl lookup, boolean includePsiFeatures) {
     if (CompletionUtil.shouldShowFeature(parameters, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_DOT_ETC)) {
       lookup.addAdvertisement(LangBundle.message("completion.dot.etc.ad"), null);
     }
@@ -61,12 +61,12 @@ public class DefaultCompletionContributor extends CompletionContributor {
   }
 
   @Override
-  public String handleEmptyLookup(@NotNull final CompletionParameters parameters, final Editor editor) {
+  public String handleEmptyLookup(@Nonnull final CompletionParameters parameters, final Editor editor) {
     return LangBundle.message("completion.no.suggestions");
   }
 
   @Override
-  public AutoCompletionDecision handleAutoCompletionPossibility(@NotNull AutoCompletionContext context) {
+  public AutoCompletionDecision handleAutoCompletionPossibility(@Nonnull AutoCompletionContext context) {
     final LookupElement[] items = context.getItems();
     if (items.length == 1) {
       final LookupElement item = items[0];

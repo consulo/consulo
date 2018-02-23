@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.mac.growl.Growl;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -55,7 +55,7 @@ class GrowlNotifications implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@NotNull String name, @NotNull String title, @NotNull String description) {
+  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
     try {
       if (myNotifications.add(name)) {
         register();

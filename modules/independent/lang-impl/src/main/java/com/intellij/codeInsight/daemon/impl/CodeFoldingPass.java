@@ -26,20 +26,20 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {
   private static final Key<Boolean> THE_FIRST_TIME = Key.create("FirstFoldingPass");
   private volatile Runnable myRunnable;
 
-  CodeFoldingPass(@NotNull Editor editor, @NotNull PsiFile file) {
+  CodeFoldingPass(@Nonnull Editor editor, @Nonnull PsiFile file) {
     super(editor, file, false);
   }
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     final boolean firstTime = isFirstTime(myFile, myEditor, THE_FIRST_TIME);
     myRunnable = CodeFoldingManager.getInstance(myProject).updateFoldRegionsAsync(myEditor, firstTime);
   }

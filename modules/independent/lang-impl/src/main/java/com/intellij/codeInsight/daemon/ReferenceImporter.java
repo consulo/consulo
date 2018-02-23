@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ReferenceImporter {
   ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create("com.intellij.referenceImporter");
 
-  boolean autoImportReferenceAtCursor(@NotNull Editor editor, @NotNull PsiFile file);
-  boolean autoImportReferenceAt(@NotNull Editor editor, @NotNull PsiFile file, int offset);
+  boolean autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
+  boolean autoImportReferenceAt(@Nonnull Editor editor, @Nonnull PsiFile file, int offset);
 }

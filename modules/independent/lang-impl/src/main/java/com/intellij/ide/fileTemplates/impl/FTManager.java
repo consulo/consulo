@@ -25,8 +25,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -50,18 +50,18 @@ class FTManager {
   private volatile List<FileTemplateBase> mySortedTemplates;
   private final List<DefaultTemplate> myDefaultTemplates = new ArrayList<>();
 
-  FTManager(@NotNull @NonNls String name, @NotNull @NonNls File defaultTemplatesDirName) {
+  FTManager(@Nonnull @NonNls String name, @Nonnull @NonNls File defaultTemplatesDirName) {
     this(name, defaultTemplatesDirName, false);
   }
 
-  FTManager(@NotNull @NonNls String name, @NotNull @NonNls File defaultTemplatesDirName, boolean internal) {
+  FTManager(@Nonnull @NonNls String name, @Nonnull @NonNls File defaultTemplatesDirName, boolean internal) {
     myName = name;
     myInternal = internal;
     myTemplatesDir = defaultTemplatesDirName;
     myOriginal = null;
   }
 
-  FTManager(@NotNull FTManager original) {
+  FTManager(@Nonnull FTManager original) {
     myOriginal = original;
     myName = original.getName();
     myTemplatesDir = original.myTemplatesDir;
@@ -74,7 +74,7 @@ class FTManager {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<FileTemplateBase> getAllTemplates(boolean includeDisabled) {
     List<FileTemplateBase> sorted = mySortedTemplates;
     if (sorted == null) {
@@ -102,7 +102,7 @@ class FTManager {
    * @return template no matter enabled or disabled it is
    */
   @Nullable
-  public FileTemplateBase getTemplate(@NotNull String templateQname) {
+  public FileTemplateBase getTemplate(@Nonnull String templateQname) {
     return getTemplates().get(templateQname);
   }
 
@@ -112,7 +112,7 @@ class FTManager {
    * @return
    */
   @Nullable
-  public FileTemplateBase findTemplateByName(@NotNull String templateName) {
+  public FileTemplateBase findTemplateByName(@Nonnull String templateName) {
     final FileTemplateBase template = getTemplates().get(templateName);
     if (template != null) {
       final boolean isEnabled = !(template instanceof BundledFileTemplate) || ((BundledFileTemplate)template).isEnabled();
@@ -133,7 +133,7 @@ class FTManager {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public FileTemplateBase addTemplate(String name, String extension) {
     final String qName = FileTemplateBase.getQualifiedName(name, extension);
     FileTemplateBase template = getTemplate(qName);
@@ -150,7 +150,7 @@ class FTManager {
     return template;
   }
 
-  public void removeTemplate(@NotNull String qName) {
+  public void removeTemplate(@Nonnull String qName) {
     final FileTemplateBase template = getTemplates().get(qName);
     if (template instanceof CustomFileTemplate) {
       getTemplates().remove(qName);
@@ -161,7 +161,7 @@ class FTManager {
     }
   }
 
-  public void updateTemplates(@NotNull Collection<FileTemplate> newTemplates) {
+  public void updateTemplates(@Nonnull Collection<FileTemplate> newTemplates) {
     final Set<String> toDisable = new HashSet<>();
     for (DefaultTemplate template : myDefaultTemplates) {
       toDisable.add(template.getQualifiedName());
@@ -355,7 +355,7 @@ class FTManager {
     fileOutputStream.close();
   }
 
-  @NotNull
+  @Nonnull
   public File getConfigRoot(boolean create) {
     if (create && !myTemplatesDir.mkdirs() && !myTemplatesDir.exists()) {
       LOG.info("Cannot create directory: " + myTemplatesDir.getAbsolutePath());

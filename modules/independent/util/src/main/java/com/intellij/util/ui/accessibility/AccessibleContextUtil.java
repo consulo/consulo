@@ -16,8 +16,8 @@
 package com.intellij.util.ui.accessibility;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.swing.*;
@@ -29,19 +29,19 @@ public class AccessibleContextUtil {
   //@VisibleForTesting
   static final String PUNCTUATION_SEPARATOR = "  ";
 
-  public static void setName(@NotNull JComponent component, @NotNull String name) {
+  public static void setName(@Nonnull JComponent component, @Nonnull String name) {
     component.getAccessibleContext().setAccessibleName(name);
   }
 
-  public static void setName(@NotNull JComponent component, @NotNull JComponent source) {
+  public static void setName(@Nonnull JComponent component, @Nonnull JComponent source) {
     String name = source.getAccessibleContext().getAccessibleName();
     if (name != null) {
       component.getAccessibleContext().setAccessibleName(name);
     }
   }
 
-  public static void setCombinedName(@NotNull JComponent component,
-                                     @NotNull JComponent j1, @NotNull String separator, @NotNull JComponent j2) {
+  public static void setCombinedName(@Nonnull JComponent component,
+                                     @Nonnull JComponent j1, @Nonnull String separator, @Nonnull JComponent j2) {
     component.getAccessibleContext().setAccessibleName(
             combineAccessibleStrings(
                     j1.getAccessibleContext().getAccessibleName(),
@@ -49,9 +49,9 @@ public class AccessibleContextUtil {
                     j2.getAccessibleContext().getAccessibleName()));
   }
 
-  public static void setCombinedName(@NotNull JComponent component,
-                                     @NotNull JComponent j1, @NotNull String separator1,
-                                     @NotNull JComponent j2, @NotNull String separator2, @NotNull JComponent j3) {
+  public static void setCombinedName(@Nonnull JComponent component,
+                                     @Nonnull JComponent j1, @Nonnull String separator1,
+                                     @Nonnull JComponent j2, @Nonnull String separator2, @Nonnull JComponent j3) {
     component.getAccessibleContext().setAccessibleName(
             combineAccessibleStrings(
                     j1.getAccessibleContext().getAccessibleName(),
@@ -61,15 +61,15 @@ public class AccessibleContextUtil {
                     j3.getAccessibleContext().getAccessibleName()));
   }
 
-  public static void setDescription(@NotNull JComponent component, @NotNull JComponent source) {
+  public static void setDescription(@Nonnull JComponent component, @Nonnull JComponent source) {
     String description = source.getAccessibleContext().getAccessibleDescription();
     if (description != null) {
       component.getAccessibleContext().setAccessibleDescription(description);
     }
   }
 
-  public static void setCombinedDescription(@NotNull JComponent component, @NotNull JComponent j1,
-                                            @NotNull String separator, @NotNull JComponent j2) {
+  public static void setCombinedDescription(@Nonnull JComponent component, @Nonnull JComponent j1,
+                                            @Nonnull String separator, @Nonnull JComponent j2) {
     component.getAccessibleContext().setAccessibleDescription(
             combineAccessibleStrings(
                     j1.getAccessibleContext().getAccessibleDescription(),
@@ -77,8 +77,8 @@ public class AccessibleContextUtil {
                     j2.getAccessibleContext().getAccessibleDescription()));
   }
 
-  public static void setCombinedDescription(@NotNull JComponent component, @NotNull JComponent j1, @NotNull String separator1,
-                                            @NotNull JComponent j2, @NotNull String separator2, @NotNull JComponent j3) {
+  public static void setCombinedDescription(@Nonnull JComponent component, @Nonnull JComponent j1, @Nonnull String separator1,
+                                            @Nonnull JComponent j2, @Nonnull String separator2, @Nonnull JComponent j3) {
     component.getAccessibleContext().setAccessibleDescription(
             combineAccessibleStrings(
                     j1.getAccessibleContext().getAccessibleDescription(),
@@ -88,7 +88,7 @@ public class AccessibleContextUtil {
                     j3.getAccessibleContext().getAccessibleDescription()));
   }
 
-  public static void setParent(@NotNull JComponent component, @Nullable Component newParent) {
+  public static void setParent(@Nonnull JComponent component, @Nullable Component newParent) {
     if (newParent instanceof Accessible) {
       component.getAccessibleContext().setAccessibleParent((Accessible)newParent);
       return;
@@ -96,7 +96,8 @@ public class AccessibleContextUtil {
     component.getAccessibleContext().setAccessibleParent(null);
   }
 
-  public static @Nullable String combineAccessibleStrings(@Nullable String s1, @NotNull String separator, @Nullable String s2) {
+  public static @Nullable
+  String combineAccessibleStrings(@Nullable String s1, @Nonnull String separator, @Nullable String s2) {
     if (StringUtil.isEmpty(s1))
       return s2;
     if (StringUtil.isEmpty(s2))
@@ -104,8 +105,9 @@ public class AccessibleContextUtil {
     return String.format("%s%s%s", s1, separator, s2);
   }
 
-  public static @Nullable String combineAccessibleStrings(@Nullable String s1, @NotNull String separator1, @Nullable  String s2,
-                                                          @NotNull String separator2, @Nullable  String s3) {
+  public static @Nullable
+  String combineAccessibleStrings(@Nullable String s1, @Nonnull String separator1, @Nullable  String s2,
+                                  @Nonnull String separator2, @Nullable  String s3) {
     return combineAccessibleStrings(combineAccessibleStrings(s1, separator1, s2), separator2, s3);
   }
 
@@ -115,7 +117,8 @@ public class AccessibleContextUtil {
    * screen readers, as they tend to ignore new line separators during speech, but
    * they do pause at punctuation characters.
    */
-  public static @NotNull String replaceLineSeparatorsWithPunctuation(@Nullable String text) {
+  public static @Nonnull
+  String replaceLineSeparatorsWithPunctuation(@Nullable String text) {
     if (StringUtil.isEmpty(text))
       return "";
 

@@ -45,8 +45,8 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,11 +60,11 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   private final Map<Document, List<Pair<PsiElement, Boolean>>> changedElements = new WeakHashMap<>();
   private final FileStatusMap myFileStatusMap;
 
-  PsiChangeHandler(@NotNull Project project,
-                   @NotNull final PsiDocumentManagerImpl documentManager,
-                   @NotNull EditorFactory editorFactory,
-                   @NotNull MessageBusConnection connection,
-                   @NotNull FileStatusMap fileStatusMap) {
+  PsiChangeHandler(@Nonnull Project project,
+                   @Nonnull final PsiDocumentManagerImpl documentManager,
+                   @Nonnull EditorFactory editorFactory,
+                   @Nonnull MessageBusConnection connection,
+                   @Nonnull FileStatusMap fileStatusMap) {
     myProject = project;
     myFileStatusMap = fileStatusMap;
     editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
@@ -87,11 +87,11 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
 
     connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
       @Override
-      public void transactionStarted(@NotNull final Document doc, @NotNull final PsiFile file) {
+      public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {
       }
 
       @Override
-      public void transactionCompleted(@NotNull final Document document, @NotNull final PsiFile file) {
+      public void transactionCompleted(@Nonnull final Document document, @Nonnull final PsiFile file) {
         updateChangesForDocument(document);
         document.putUserData(UPDATE_ON_COMMIT_ENGAGED, null); // ensure we don't call updateChangesForDocument() twice which can lead to whole file re-highlight
       }
@@ -102,7 +102,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   public void dispose() {
   }
 
-  private void updateChangesForDocument(@NotNull final Document document) {
+  private void updateChangesForDocument(@Nonnull final Document document) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject.isDisposed()) return;
     List<Pair<PsiElement, Boolean>> toUpdate = changedElements.get(document);
@@ -138,17 +138,17 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   @Override
-  public void childAdded(@NotNull PsiTreeChangeEvent event) {
+  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
     queueElement(event.getParent(), true, event);
   }
 
   @Override
-  public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
     queueElement(event.getParent(), true, event);
   }
 
   @Override
-  public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
     queueElement(event.getNewChild(), typesEqual(event.getNewChild(), event.getOldChild()), event);
   }
 
@@ -157,7 +157,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   @Override
-  public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
     if (((PsiTreeChangeEventImpl)event).isGenericChange()) {
       return;
     }
@@ -165,13 +165,13 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   @Override
-  public void beforeChildMovement(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
     queueElement(event.getOldParent(), true, event);
     queueElement(event.getNewParent(), true, event);
   }
 
   @Override
-  public void beforeChildrenChange(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {
     // this event sent always before every PSI change, even not significant one (like after quick typing/backspacing char)
     // mark file dirty just in case
     PsiFile psiFile = event.getFile();
@@ -181,7 +181,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
   }
 
   @Override
-  public void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
     String propertyName = event.getPropertyName();
     if (!propertyName.equals(PsiTreeChangeEvent.PROP_WRITABLE)) {
       Object oldValue = event.getOldValue();
@@ -193,7 +193,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
     }
   }
 
-  private void queueElement(@NotNull PsiElement child, final boolean whitespaceOptimizationAllowed, @NotNull PsiTreeChangeEvent event) {
+  private void queueElement(@Nonnull PsiElement child, final boolean whitespaceOptimizationAllowed, @Nonnull PsiTreeChangeEvent event) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiFile file = event.getFile();
     if (file == null) file = child.getContainingFile();
@@ -222,7 +222,7 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
     }
   }
 
-  private void updateByChange(@NotNull PsiElement child, @NotNull final Document document, final boolean whitespaceOptimizationAllowed) {
+  private void updateByChange(@Nonnull PsiElement child, @Nonnull final Document document, final boolean whitespaceOptimizationAllowed) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final PsiFile file;
     try {
@@ -265,13 +265,13 @@ class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
     }
   }
 
-  private boolean shouldBeIgnored(@NotNull VirtualFile virtualFile) {
+  private boolean shouldBeIgnored(@Nonnull VirtualFile virtualFile) {
     return ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile) ||
            ProjectRootManager.getInstance(myProject).getFileIndex().isExcluded(virtualFile);
   }
 
   @Nullable
-  private static PsiElement getChangeHighlightingScope(@NotNull PsiElement element) {
+  private static PsiElement getChangeHighlightingScope(@Nonnull PsiElement element) {
     DefaultChangeLocalityDetector defaultDetector = null;
     for (ChangeLocalityDetector detector : Extensions.getExtensions(EP_NAME)) {
       if (detector instanceof DefaultChangeLocalityDetector) {

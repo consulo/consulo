@@ -28,7 +28,7 @@ import com.intellij.util.containers.StripedLockConcurrentHashMap;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.ConcurrentMap;
@@ -91,7 +91,7 @@ public class AttributesFlyweight {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static AttributesFlyweight create(Color foreground,
                                            Color background,
                                            @JdkConstants.FontStyle int fontType,
@@ -133,8 +133,8 @@ public class AttributesFlyweight {
     myHashCode = calcHashCode(foreground, background, fontType, effectColor, effectType, errorStripeColor);
   }
 
-  @NotNull
-  public static AttributesFlyweight create(@NotNull  Element element) throws InvalidDataException {
+  @Nonnull
+  public static AttributesFlyweight create(@Nonnull Element element) throws InvalidDataException {
     Color FOREGROUND = DefaultJDOMExternalizer.toColor(JDOMExternalizerUtil.readField(element, "FOREGROUND"));
     Color BACKGROUND = DefaultJDOMExternalizer.toColor(JDOMExternalizerUtil.readField(element, "BACKGROUND"));
     Color EFFECT_COLOR = DefaultJDOMExternalizer.toColor(JDOMExternalizerUtil.readField(element, "EFFECT_COLOR"));
@@ -156,7 +156,7 @@ public class AttributesFlyweight {
     }
   }
 
-  void writeExternal(@NotNull Element element) {
+  void writeExternal(@Nonnull Element element) {
     writeColor(element, "FOREGROUND", getForeground());
     writeColor(element, "BACKGROUND", getBackground());
     int fontType = getFontType();
@@ -253,32 +253,32 @@ public class AttributesFlyweight {
     return myErrorStripeColor;
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withForeground(Color foreground) {
     return Comparing.equal(foreground, myForeground) ? this : create(foreground, myBackground, myFontType, myEffectColor, myEffectType, myErrorStripeColor);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withBackground(Color background) {
     return Comparing.equal(background, myBackground) ? this : create(myForeground, background, myFontType, myEffectColor, myEffectType, myErrorStripeColor);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withFontType(@JdkConstants.FontStyle int fontType) {
     return fontType == myFontType ? this : create(myForeground, myBackground, fontType, myEffectColor, myEffectType, myErrorStripeColor);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withEffectColor(Color effectColor) {
     return Comparing.equal(effectColor, myEffectColor) ? this : create(myForeground, myBackground, myFontType, effectColor, myEffectType, myErrorStripeColor);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withEffectType(EffectType effectType) {
     return Comparing.equal(effectType, myEffectType) ? this : create(myForeground, myBackground, myFontType, myEffectColor, effectType, myErrorStripeColor);
   }
 
-  @NotNull
+  @Nonnull
   public AttributesFlyweight withErrorStripeColor(Color stripeColor) {
     return Comparing.equal(stripeColor, myErrorStripeColor) ? this : create(myForeground, myBackground, myFontType, myEffectColor, myEffectType, stripeColor);
   }

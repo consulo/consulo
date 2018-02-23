@@ -26,8 +26,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +53,7 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     private final int[] startingPredecessorIds;
     private final int[] completionPredecessorIds;
 
-    private PassConfig(@NotNull TextEditorHighlightingPassFactory passFactory, @NotNull int[] completionPredecessorIds, @NotNull int[] startingPredecessorIds) {
+    private PassConfig(@Nonnull TextEditorHighlightingPassFactory passFactory, @Nonnull int[] completionPredecessorIds, @Nonnull int[] startingPredecessorIds) {
       this.completionPredecessorIds = completionPredecessorIds;
       this.startingPredecessorIds = startingPredecessorIds;
       this.passFactory = passFactory;
@@ -77,7 +77,7 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
   }
 
   @Override
-  public synchronized int registerTextEditorHighlightingPass(@NotNull TextEditorHighlightingPassFactory factory,
+  public synchronized int registerTextEditorHighlightingPass(@Nonnull TextEditorHighlightingPassFactory factory,
                                                              @Nullable int[] runAfterCompletionOf,
                                                              @Nullable int[] runAfterOfStartingOf,
                                                              boolean runIntentionsPassAfter,
@@ -97,8 +97,8 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
   }
 
   @Override
-  @NotNull
-  public List<TextEditorHighlightingPass> instantiatePasses(@NotNull final PsiFile psiFile, @NotNull final Editor editor, @NotNull final int[] passesToIgnore) {
+  @Nonnull
+  public List<TextEditorHighlightingPass> instantiatePasses(@Nonnull final PsiFile psiFile, @Nonnull final Editor editor, @Nonnull final int[] passesToIgnore) {
     synchronized (this) {
       if (!checkedForCycles) {
         checkedForCycles = true;
@@ -163,11 +163,11 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     return (List)Arrays.asList(id2Pass.getValues());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<TextEditorHighlightingPass> instantiateMainPasses(@NotNull final PsiFile psiFile,
-                                                                @NotNull final Document document,
-                                                                @NotNull final HighlightInfoProcessor highlightInfoProcessor) {
+  public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull final PsiFile psiFile,
+                                                                @Nonnull final Document document,
+                                                                @Nonnull final HighlightInfoProcessor highlightInfoProcessor) {
     final THashSet<TextEditorHighlightingPass> ids = new THashSet<>();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
@@ -225,7 +225,7 @@ public class TextEditorHighlightingPassRegistrarImpl extends TextEditorHighlight
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories() {
     return myDirtyScopeTrackingFactories;

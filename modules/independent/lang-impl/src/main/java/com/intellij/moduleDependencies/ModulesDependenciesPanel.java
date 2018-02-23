@@ -50,7 +50,7 @@ import com.intellij.util.graph.GraphAlgorithms;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -511,7 +511,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     }
 
     @Override
-    public Object getData(@NotNull Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
       if (CommonDataKeys.PROJECT == dataId){
         return myProject;
       }

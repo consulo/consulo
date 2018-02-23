@@ -30,7 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.TimeoutUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -45,7 +45,8 @@ public class VcsInitialization implements Disposable {
 
   private final List<Pair<VcsInitObject, Runnable>> myList = new ArrayList<>();
   private final Object myLock = new Object();
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
 
   // the initialization lifecycle: IDLE -(on startup completion)-> RUNNING -(on all tasks executed or project canceled)-> FINISHED
   private enum Status { IDLE, RUNNING, FINISHED, }
@@ -54,7 +55,7 @@ public class VcsInitialization implements Disposable {
   private volatile Future<?> myFuture;
   private final ProgressIndicator myIndicator = new StandardProgressIndicatorBase();
 
-  VcsInitialization(@NotNull final Project project) {
+  VcsInitialization(@Nonnull final Project project) {
     myProject = project;
     if (project.isDefault()) return;
 
@@ -63,14 +64,14 @@ public class VcsInitialization implements Disposable {
       myFuture = ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(
               new Task.Backgroundable(myProject, "VCS Initialization") {
                 @Override
-                public void run(@NotNull ProgressIndicator indicator) {
+                public void run(@Nonnull ProgressIndicator indicator) {
                   execute(indicator);
                 }
               }, myIndicator, null);
     });
   }
 
-  public void add(@NotNull final VcsInitObject vcsInitObject, @NotNull final Runnable runnable) {
+  public void add(@Nonnull final VcsInitObject vcsInitObject, @Nonnull final Runnable runnable) {
     synchronized (myLock) {
       if (myStatus != Status.IDLE) {
         if (!vcsInitObject.isCanBeLast()) {
@@ -84,7 +85,7 @@ public class VcsInitialization implements Disposable {
     }
   }
 
-  private void execute(@NotNull ProgressIndicator indicator) {
+  private void execute(@Nonnull ProgressIndicator indicator) {
     try {
       final List<Pair<VcsInitObject, Runnable>> list;
       synchronized (myLock) {
@@ -142,7 +143,7 @@ public class VcsInitialization implements Disposable {
     waitFor(status -> status == Status.FINISHED);
   }
 
-  private void waitFor(@NotNull Predicate<Status> predicate) {
+  private void waitFor(@Nonnull Predicate<Status> predicate) {
     LOG.debug("waitFor() status=" + myStatus);
     // have to wait for task completion to avoid running it in background for closed project
     long start = System.currentTimeMillis();

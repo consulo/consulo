@@ -16,10 +16,10 @@
 package com.intellij.remote.ext;
 
 import com.intellij.remote.PathMappingProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class PathMappingProviderEx extends PathMappingProvider {
 
-  @NotNull
+  @Nonnull
   public abstract PathMappingType getMappingType();
 }

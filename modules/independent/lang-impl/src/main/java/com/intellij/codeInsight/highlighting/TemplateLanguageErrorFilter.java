@@ -20,7 +20,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -28,9 +28,9 @@ import java.util.*;
  * @author Dennis.Ushakov
  */
 public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
-  @NotNull
+  @Nonnull
   private final TokenSet myTemplateExpressionStartTokens;
-  @NotNull
+  @Nonnull
   private final Class myTemplateFileViewProviderClass;
 
   private final Set<Language> knownLanguageSet;
@@ -38,16 +38,16 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
   private final static Key<Class> TEMPLATE_VIEW_PROVIDER_CLASS_KEY = Key.create("TEMPLATE_VIEW_PROVIDER_CLASS");
 
   protected TemplateLanguageErrorFilter(
-    final @NotNull TokenSet templateExpressionStartTokens,
-    final @NotNull Class templateFileViewProviderClass)
+    final @Nonnull TokenSet templateExpressionStartTokens,
+    final @Nonnull Class templateFileViewProviderClass)
   {
     this(templateExpressionStartTokens, templateFileViewProviderClass, new String[0]);
   }
 
   protected TemplateLanguageErrorFilter(
-    final @NotNull TokenSet templateExpressionStartTokens,
-    final @NotNull Class templateFileViewProviderClass,
-    final @NotNull String... knownSubLanguageNames)
+    final @Nonnull TokenSet templateExpressionStartTokens,
+    final @Nonnull Class templateFileViewProviderClass,
+    final @Nonnull String... knownSubLanguageNames)
   {
     myTemplateExpressionStartTokens = TokenSet.create(templateExpressionStartTokens.getTypes());
     myTemplateFileViewProviderClass = templateFileViewProviderClass;
@@ -65,7 +65,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
   }
 
   @Override
-  public boolean shouldHighlightErrorElement(@NotNull PsiErrorElement element) {        
+  public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {
     if (isKnownSubLanguage(element.getParent().getLanguage())) {
       //
       // Immediately discard filters with non-matching template class if already known
@@ -96,7 +96,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     return true;
   }
   
-  private boolean shouldIgnoreErrorAt(@NotNull FileViewProvider viewProvider, int offset) {
+  private boolean shouldIgnoreErrorAt(@Nonnull FileViewProvider viewProvider, int offset) {
     PsiElement element = viewProvider.findElementAt(offset, viewProvider.getBaseLanguage());
     if (element instanceof PsiWhiteSpace) element = element.getNextSibling();
     if (element != null && myTemplateExpressionStartTokens.contains(element.getNode().getElementType())) {
@@ -105,7 +105,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     return false;
   }
   
-  protected boolean isKnownSubLanguage(final @NotNull Language language) {
+  protected boolean isKnownSubLanguage(final @Nonnull Language language) {
     for (Language knownLanguage : knownLanguageSet) {
       if (language.is(knownLanguage)) {
         return true;

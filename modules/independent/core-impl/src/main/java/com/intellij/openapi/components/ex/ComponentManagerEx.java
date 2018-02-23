@@ -18,15 +18,15 @@ package com.intellij.openapi.components.ex;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.PluginDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface ComponentManagerEx extends ComponentManager {
 
-  void registerComponent(@NotNull ComponentConfig config);
-  void registerComponent(@NotNull ComponentConfig config, PluginDescriptor pluginDescriptor);
+  void registerComponent(@Nonnull ComponentConfig config);
+  void registerComponent(@Nonnull ComponentConfig config, PluginDescriptor pluginDescriptor);
 
-  void initializeComponent(@NotNull Object component, boolean service);
+  void initializeComponent(@Nonnull Object component, boolean service);
 }

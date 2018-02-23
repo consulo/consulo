@@ -16,19 +16,19 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class PlaceInProjectStructure {
-  @NotNull
+  @Nonnull
   public abstract ProjectStructureElement getContainingElement();
 
   @Nullable
   public abstract String getPlacePath();
 
-  @NotNull
+  @Nonnull
   public abstract ActionCallback navigate();
 }

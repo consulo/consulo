@@ -17,7 +17,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
   private final List<Fixer<? extends SmartEnterProcessorWithFixers>> myFixers = new ArrayList<Fixer<? extends SmartEnterProcessorWithFixers>>();
   private final List<FixEnterProcessor> myEnterProcessors = new ArrayList<FixEnterProcessor>();
 
-  protected static void plainEnter(@NotNull final Editor editor) {
+  protected static void plainEnter(@Nonnull final Editor editor) {
     getEnterHandler().execute(editor, ((EditorEx)editor).getDataContext());
   }
 
@@ -43,7 +43,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     return EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_START_NEW_LINE);
   }
 
-  protected static boolean isModified(@NotNull final Editor editor) {
+  protected static boolean isModified(@Nonnull final Editor editor) {
     final Long timestamp = editor.getUserData(SMART_ENTER_TIMESTAMP);
     assert timestamp != null;
     return editor.getDocument().getModificationStamp() != timestamp.longValue();
@@ -54,7 +54,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
   }
 
   @Override
-  public boolean process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile psiFile) {
+  public boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
     final Document document = editor.getDocument();
     final String textForRollback = document.getText();
     try {
@@ -71,7 +71,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     return true;
   }
 
-  protected void process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file, final int attempt)
+  protected void process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file, final int attempt)
     throws TooManyAttemptsException {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.complete.statement");
     if (attempt > MAX_ATTEMPTS) throw new TooManyAttemptsException();
@@ -114,7 +114,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     }
   }
 
-  protected void collectAllElements(@NotNull PsiElement element, @NotNull OrderedSet<PsiElement> result, boolean recursive) {
+  protected void collectAllElements(@Nonnull PsiElement element, @Nonnull OrderedSet<PsiElement> result, boolean recursive) {
     result.add(0, element);
     if (doNotStepInto(element)) {
       if (!recursive) return;
@@ -128,7 +128,7 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     }
   }
 
-  protected void doEnter(@NotNull PsiElement atCaret, @NotNull PsiFile file, @NotNull Editor editor) throws IncorrectOperationException {
+  protected void doEnter(@Nonnull PsiElement atCaret, @Nonnull PsiFile file, @Nonnull Editor editor) throws IncorrectOperationException {
     if (myFirstErrorOffset != Integer.MAX_VALUE) {
       editor.getCaretModel().moveToOffset(myFirstErrorOffset);
       reformat(atCaret);
@@ -165,29 +165,29 @@ public abstract class SmartEnterProcessorWithFixers extends SmartEnterProcessor 
     ContainerUtil.addAllNotNull(myFixers, fixers);
   }
 
-  protected void collectAdditionalElements(@NotNull PsiElement element, @NotNull List<PsiElement> result) {
+  protected void collectAdditionalElements(@Nonnull PsiElement element, @Nonnull List<PsiElement> result) {
   }
 
-  protected void moveCaretInsideBracesIfAny(@NotNull Editor editor, @NotNull PsiFile file) throws IncorrectOperationException {
+  protected void moveCaretInsideBracesIfAny(@Nonnull Editor editor, @Nonnull PsiFile file) throws IncorrectOperationException {
   }
 
   public static class TooManyAttemptsException extends Exception {
   }
 
   public abstract static class Fixer<P extends SmartEnterProcessorWithFixers> {
-    abstract public void apply(@NotNull Editor editor, @NotNull P processor, @NotNull PsiElement element) throws IncorrectOperationException;
+    abstract public void apply(@Nonnull Editor editor, @Nonnull P processor, @Nonnull PsiElement element) throws IncorrectOperationException;
   }
 
   public abstract static class FixEnterProcessor {
-    abstract public boolean doEnter(PsiElement atCaret, PsiFile file, @NotNull Editor editor, boolean modified);
+    abstract public boolean doEnter(PsiElement atCaret, PsiFile file, @Nonnull Editor editor, boolean modified);
     
-    protected void plainEnter(@NotNull Editor editor) {
+    protected void plainEnter(@Nonnull Editor editor) {
       SmartEnterProcessorWithFixers.plainEnter(editor);
     }
   }
 
   @Override
-  public void commit(@NotNull Editor editor) { // pull up
+  public void commit(@Nonnull Editor editor) { // pull up
     super.commit(editor);
   }
 }

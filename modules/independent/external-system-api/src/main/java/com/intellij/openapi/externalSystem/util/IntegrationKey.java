@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Unique key which encapsulates information about target ide and external projects.
@@ -29,19 +29,23 @@ import org.jetbrains.annotations.NotNull;
  */
 public class IntegrationKey {
 
-  @NotNull private final String          myIdeProjectName;
-  @NotNull private final String          myIdeProjectLocationHash;
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final String          myExternalProjectConfigPath;
+  @Nonnull
+  private final String          myIdeProjectName;
+  @Nonnull
+  private final String          myIdeProjectLocationHash;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final String          myExternalProjectConfigPath;
 
-  public IntegrationKey(@NotNull Project ideProject, @NotNull ProjectSystemId externalSystemId, @NotNull String externalProjectConfigPath) {
+  public IntegrationKey(@Nonnull Project ideProject, @Nonnull ProjectSystemId externalSystemId, @Nonnull String externalProjectConfigPath) {
     this(ideProject.getName(), ideProject.getLocationHash(), externalSystemId, externalProjectConfigPath);
   }
 
-  public IntegrationKey(@NotNull String ideProjectName,
-                        @NotNull String ideProjectLocationHash,
-                        @NotNull ProjectSystemId externalSystemId,
-                        @NotNull String externalProjectConfigPath)
+  public IntegrationKey(@Nonnull String ideProjectName,
+                        @Nonnull String ideProjectLocationHash,
+                        @Nonnull ProjectSystemId externalSystemId,
+                        @Nonnull String externalProjectConfigPath)
   {
     myIdeProjectName = ideProjectName;
     myIdeProjectLocationHash = ideProjectLocationHash;
@@ -49,22 +53,22 @@ public class IntegrationKey {
     myExternalProjectConfigPath = externalProjectConfigPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getIdeProjectName() {
     return myIdeProjectName;
   }
 
-  @NotNull
+  @Nonnull
   public String getIdeProjectLocationHash() {
     return myIdeProjectLocationHash;
   }
 
-  @NotNull
+  @Nonnull
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @NotNull
+  @Nonnull
   public String getExternalProjectConfigPath() {
     return myExternalProjectConfigPath;
   }

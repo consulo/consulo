@@ -20,15 +20,14 @@ import com.intellij.history.core.revisions.ChangeRevision;
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.integration.ui.models.RevisionItem;
-import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class LocalHistoryUtil {
 
-  static int findRevisionIndexToRevert(@NotNull HistoryDialogModel dirHistoryModel, @NotNull LabelImpl label) {
+  static int findRevisionIndexToRevert(@Nonnull HistoryDialogModel dirHistoryModel, @Nonnull LabelImpl label) {
     List<RevisionItem> revs = dirHistoryModel.getRevisions();
     for (int i = 0; i < revs.size(); i++) {
       final RevisionItem rev = revs.get(i);
@@ -39,12 +38,12 @@ public class LocalHistoryUtil {
     return -1;
   }
 
-  static boolean isLabelRevision(@NotNull RevisionItem rev, @NotNull LabelImpl label) {
+  static boolean isLabelRevision(@Nonnull RevisionItem rev, @Nonnull LabelImpl label) {
     final long targetChangeId = label.getLabelChangeId();
     return ContainerUtil.exists(rev.labels, revision -> isChangeWithId(revision, targetChangeId));
   }
 
-  private static boolean isChangeWithId(@NotNull Revision revision, long targetChangeId) {
+  private static boolean isChangeWithId(@Nonnull Revision revision, long targetChangeId) {
     return revision instanceof ChangeRevision && ((ChangeRevision)revision).containsChangeWithId(targetChangeId);
   }
 }

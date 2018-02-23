@@ -26,8 +26,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,7 +43,7 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
   private String myFileToImport;
   private ProjectImportProvider myProvider;
 
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
   public abstract Icon getIcon();
@@ -61,7 +61,7 @@ public abstract class ProjectImportBuilder<T> extends ProjectBuilder {
     return commit(project, model, modulesProvider, null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract List<Module> commit(Project project, ModifiableModuleModel model, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel);
 
   public void setFileToImport(String path) {

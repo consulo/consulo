@@ -13,8 +13,8 @@ import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.util.containers.FList;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -27,7 +27,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
   private static boolean ourForceStartMatching;
 
 
-  public CamelHumpMatcher(@NotNull final String prefix) {
+  public CamelHumpMatcher(@Nonnull final String prefix) {
     this(prefix, true);
   }
 
@@ -56,17 +56,17 @@ public class CamelHumpMatcher extends PrefixMatcher {
     return false;
   }
 
-  private static int skipUnderscores(@NotNull String name) {
+  private static int skipUnderscores(@Nonnull String name) {
     return CharArrayUtil.shiftForward(name, 0, "_");
   }
 
   @Override
-  public boolean prefixMatches(@NotNull final String name) {
+  public boolean prefixMatches(@Nonnull final String name) {
     return myMatcher.matches(name);
   }
 
   @Override
-  public boolean prefixMatches(@NotNull final LookupElement element) {
+  public boolean prefixMatches(@Nonnull final LookupElement element) {
     return prefixMatchersInternal(element, !element.isCaseSensitive());
   }
 
@@ -85,8 +85,8 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  @NotNull
-  public PrefixMatcher cloneWithPrefix(@NotNull final String prefix) {
+  @Nonnull
+  public PrefixMatcher cloneWithPrefix(@Nonnull final String prefix) {
     return new CamelHumpMatcher(prefix, myCaseSensitive);
   }
 

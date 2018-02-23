@@ -17,11 +17,11 @@
 package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.IntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FullIntList implements IntList {
 
-  public static FullIntList newInstance(@NotNull IntList delegateList) {
+  public static FullIntList newInstance(@Nonnull IntList delegateList) {
     int[] list = new int[delegateList.size()];
     for (int i = 0; i < list.length; i++) {
       list[i] = delegateList.get(i);

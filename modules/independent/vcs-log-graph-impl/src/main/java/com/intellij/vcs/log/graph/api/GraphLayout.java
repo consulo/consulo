@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.api;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ public interface GraphLayout {
 
   int getOneOfHeadNodeIndex(int nodeIndex);
 
-  @NotNull
+  @Nonnull
   List<Integer> getHeadNodeIndex();
 }

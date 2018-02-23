@@ -34,10 +34,11 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -57,7 +58,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
   }
 
   @RequiredDispatchThread
-  private boolean checkEnabled(@NotNull VirtualFile virtualFile) {
+  private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
     if (allowDirectories && virtualFile.isDirectory()) return true;
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     Document document = documentManager.getDocument(virtualFile);
@@ -88,7 +89,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
   @Nullable
   @RequiredDispatchThread
-  public ListPopup createPopup(@NotNull DataContext dataContext) {
+  public ListPopup createPopup(@Nonnull DataContext dataContext) {
     final VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) return null;
     boolean enabled = checkEnabled(virtualFile);
@@ -111,7 +112,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             .createActionGroupPopup(getTemplatePresentation().getText(), group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
-  public DefaultActionGroup createActionGroup(@NotNull final VirtualFile myFile,
+  public DefaultActionGroup createActionGroup(@Nonnull final VirtualFile myFile,
                                               final Editor editor,
                                               final Document document,
                                               final byte[] bytes,
@@ -121,10 +122,10 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     return new ChooseFileEncodingAction(myFile) {
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull final AnActionEvent e) {
+      public void update(@Nonnull final AnActionEvent e) {
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected DefaultActionGroup createPopupActionGroup(JComponent button) {
         return createCharsetsActionGroup(clearItemText, null, new Function<Charset, String>() {
@@ -145,7 +146,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
       }
 
       @Override
-      protected void chosen(@Nullable VirtualFile virtualFile, @NotNull Charset charset) {
+      protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
         if (virtualFile != null) {
           ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
         }
@@ -154,7 +155,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
   }
 
   // returns true if charset was changed, false if failed
-  protected boolean chosen(final Document document, final Editor editor, @NotNull final VirtualFile virtualFile, byte[] bytes, @NotNull final Charset charset) {
+  protected boolean chosen(final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, byte[] bytes, @Nonnull final Charset charset) {
 
     String text = document.getText();
     EncodingUtil.Magic8 isSafeToConvert = EncodingUtil.isSafeToConvertTo(virtualFile, text, bytes, charset);

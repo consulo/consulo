@@ -20,7 +20,7 @@ import com.intellij.openapi.util.io.win32.FileInfo;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.TimeoutUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -412,13 +412,13 @@ public class FileAttributesReadingTest {
     assertTrue(attributes.lastModified + " not in " + t1 + ".." + t2, t1 <= attributes.lastModified && attributes.lastModified <= t2);
   }
 
-  @NotNull
-  private static FileAttributes getAttributes(@NotNull final File file) {
+  @Nonnull
+  private static FileAttributes getAttributes(@Nonnull final File file) {
     return getAttributes(file, true);
   }
 
-  @NotNull
-  private static FileAttributes getAttributes(@NotNull final File file, final boolean checkList) {
+  @Nonnull
+  private static FileAttributes getAttributes(@Nonnull final File file, final boolean checkList) {
     final FileAttributes attributes = FileSystemUtil.getAttributes(file);
     assertNotNull(attributes);
     System.out.println(attributes + ": " + file);
@@ -441,7 +441,7 @@ public class FileAttributesReadingTest {
     return attributes;
   }
 
-  private static void assertFileAttributes(@NotNull final File file) {
+  private static void assertFileAttributes(@Nonnull final File file) {
     final FileAttributes attributes = getAttributes(file);
     assertEquals(FileAttributes.Type.FILE, attributes.type);
     assertEquals(0, attributes.flags);
@@ -450,7 +450,7 @@ public class FileAttributesReadingTest {
     assertTrue(attributes.isWritable());
   }
 
-  private static void assertDirectoriesEqual(@NotNull final File dir) {
+  private static void assertDirectoriesEqual(@Nonnull final File dir) {
     final String[] list1 = dir.list();
     assertNotNull(list1);
     final FileInfo[] list2 = IdeaWin32.getInstance().listChildren(dir.getPath());

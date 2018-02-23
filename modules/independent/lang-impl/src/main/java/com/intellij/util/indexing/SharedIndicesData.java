@@ -24,8 +24,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import gnu.trove.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.Arrays;
@@ -72,16 +72,16 @@ public class SharedIndicesData {
   private static class IndexedStateMap extends PersistentHashMap<Integer, byte[]> {
     final IndexedStateCache myStateCache;
 
-    public IndexedStateMap(@NotNull File file) throws IOException {
+    public IndexedStateMap(@Nonnull File file) throws IOException {
       super(file, EnumeratorIntegerDescriptor.INSTANCE,
             new DataExternalizer<byte[]>() {
               @Override
-              public void save(@NotNull DataOutput out, byte[] value) throws IOException {
+              public void save(@Nonnull DataOutput out, byte[] value) throws IOException {
                 out.write(value);
               }
 
               @Override
-              public byte[] read(@NotNull DataInput in) throws IOException {
+              public byte[] read(@Nonnull DataInput in) throws IOException {
                 int available = ((InputStream)in).available();
                 byte[] result = new byte[available];
                 in.readFully(result);
@@ -304,7 +304,8 @@ public class SharedIndicesData {
 
   // Record:  (<chunkSize> <indexId> <indexStamp> <SavedData>)*
 
-  public static @Nullable <Key, Value> Value recallFileData(int id, ID<Key, ?> indexId, DataExternalizer<Value> externalizer)
+  public static @Nullable
+  <Key, Value> Value recallFileData(int id, ID<Key, ?> indexId, DataExternalizer<Value> externalizer)
           throws IOException {
     int type = ourRegisteredIndices.get(indexId.getUniqueId());
     if (type == 0) return null;
@@ -314,7 +315,8 @@ public class SharedIndicesData {
     return doRecallData(id, indexId, externalizer, states);
   }
 
-  public static @Nullable <Key, Value> Value recallContentData(int id, ID<Key, ?> indexId, DataExternalizer<Value> externalizer)
+  public static @Nullable
+  <Key, Value> Value recallContentData(int id, ID<Key, ?> indexId, DataExternalizer<Value> externalizer)
           throws IOException {
     return doRecallData(id, indexId, externalizer, ourSharedContentInputs);
   }

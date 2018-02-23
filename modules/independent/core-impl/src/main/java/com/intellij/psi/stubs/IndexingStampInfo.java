@@ -20,8 +20,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -40,7 +40,7 @@ class IndexingStampInfo {
     return "indexed at " + indexingFileStamp + " with document size " + indexingContentLength;
   }
 
-  public boolean isUpToDate(@Nullable Document document, @NotNull VirtualFile file, @NotNull PsiFile psi) {
+  public boolean isUpToDate(@Nullable Document document, @Nonnull VirtualFile file, @Nonnull PsiFile psi) {
     if (document == null ||
         FileDocumentManager.getInstance().isDocumentUnsaved(document) ||
         !PsiDocumentManager.getInstance(psi.getProject()).isCommitted(document)) {

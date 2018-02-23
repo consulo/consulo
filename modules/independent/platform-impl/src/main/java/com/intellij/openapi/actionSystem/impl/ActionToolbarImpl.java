@@ -46,7 +46,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -131,31 +131,31 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
   private boolean myAddSeparatorFirst;
 
   public ActionToolbarImpl(String place,
-                           @NotNull final ActionGroup actionGroup,
+                           @Nonnull final ActionGroup actionGroup,
                            boolean horizontal,
-                           @NotNull DataManager dataManager,
-                           @NotNull ActionManagerEx actionManager,
-                           @NotNull KeymapManagerEx keymapManager) {
+                           @Nonnull DataManager dataManager,
+                           @Nonnull ActionManagerEx actionManager,
+                           @Nonnull KeymapManagerEx keymapManager) {
     this(place, actionGroup, horizontal, false, dataManager, actionManager, keymapManager, false);
   }
 
   public ActionToolbarImpl(String place,
-                           @NotNull ActionGroup actionGroup,
+                           @Nonnull ActionGroup actionGroup,
                            boolean horizontal,
                            boolean decorateButtons,
-                           @NotNull DataManager dataManager,
-                           @NotNull ActionManagerEx actionManager,
-                           @NotNull KeymapManagerEx keymapManager) {
+                           @Nonnull DataManager dataManager,
+                           @Nonnull ActionManagerEx actionManager,
+                           @Nonnull KeymapManagerEx keymapManager) {
     this(place, actionGroup, horizontal, decorateButtons, dataManager, actionManager, keymapManager, false);
   }
 
   public ActionToolbarImpl(String place,
-                           @NotNull ActionGroup actionGroup,
+                           @Nonnull ActionGroup actionGroup,
                            final boolean horizontal,
                            final boolean decorateButtons,
-                           @NotNull DataManager dataManager,
-                           @NotNull ActionManagerEx actionManager,
-                           @NotNull KeymapManagerEx keymapManager,
+                           @Nonnull DataManager dataManager,
+                           @Nonnull ActionManagerEx actionManager,
+                           @Nonnull KeymapManagerEx keymapManager,
                            boolean updateActionsNow) {
     super(null);
     myActionManager = actionManager;
@@ -354,7 +354,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
     return customComponent;
   }
 
-  private void tweakActionComponentUI(@NotNull Component actionComponent) {
+  private void tweakActionComponentUI(@Nonnull Component actionComponent) {
     if (ActionPlaces.EDITOR_TOOLBAR.equals(myPlace)) {
       // tweak font & color for editor toolbar to match editor tabs style
       actionComponent.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
@@ -907,7 +907,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
   }
 
   @Override
-  public void setMinimumButtonSize(@NotNull final Dimension size) {
+  public void setMinimumButtonSize(@Nonnull final Dimension size) {
     myMinimumButtonSize = size;
     for (int i = getComponentCount() - 1; i >= 0; i--) {
       final Component component = getComponent(i);
@@ -1181,7 +1181,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
                         final ActionGroup actionGroup,
                         final boolean horizontal,
                         final DataManager dataManager,
-                        @NotNull ActionManagerEx actionManager,
+                        @Nonnull ActionManagerEx actionManager,
                         final KeymapManagerEx keymapManager,
                         JComponent parent) {
       super(place, actionGroup, horizontal, false, dataManager, actionManager, keymapManager, true);
@@ -1294,7 +1294,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public List<AnAction> getActions() {
     ArrayList<AnAction> result = new ArrayList<>();

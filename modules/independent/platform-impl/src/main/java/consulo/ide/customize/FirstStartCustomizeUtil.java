@@ -34,8 +34,8 @@ import consulo.ide.updateSettings.UpdateSettings;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;

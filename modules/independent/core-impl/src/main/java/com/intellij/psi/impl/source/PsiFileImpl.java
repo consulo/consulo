@@ -61,8 +61,8 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.lang.LanguageVersion;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.Array;
@@ -88,12 +88,12 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   public static final Key<Boolean> BUILDING_STUB = new Key<>("Don't use stubs mark!");
   private final PsiLock myPsiLock = new PsiLock();
 
-  protected PsiFileImpl(@NotNull IElementType elementType, IElementType contentElementType, @NotNull FileViewProvider provider) {
+  protected PsiFileImpl(@Nonnull IElementType elementType, IElementType contentElementType, @Nonnull FileViewProvider provider) {
     this(provider);
     init(elementType, contentElementType);
   }
 
-  protected PsiFileImpl(@NotNull FileViewProvider provider ) {
+  protected PsiFileImpl(@Nonnull FileViewProvider provider ) {
     myManager = (PsiManagerEx)provider.getManager();
     myViewProvider = provider;
     myRefToPsi = new AstPathPsiMap(getProject());
@@ -104,7 +104,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     myContentElementType = contentElementType;
   }
 
-  @NotNull
+  @Nonnull
   public PsiLock getFilePsiLock() {
     return myPsiLock;
   }
@@ -113,7 +113,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return myContentElementType;
   }
 
-  protected void init(@NotNull final IElementType elementType, final IElementType contentElementType) {
+  protected void init(@Nonnull final IElementType elementType, final IElementType contentElementType) {
     myElementType = elementType;
     setContentElementType(contentElementType);
   }
@@ -182,7 +182,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return derefTreeElement() != null;
   }
 
-  @NotNull
+  @Nonnull
   private FileElement loadTreeElement() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
@@ -212,10 +212,10 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Nullable
-  private FileElement ensureTreeElement(@NotNull FileViewProvider viewProvider,
-                                        @NotNull FileElement treeElement,
-                                        @NotNull FileTrees trees,
-                                        @NotNull List<Pair<StubBasedPsiElementBase, AstPath>> bindings) {
+  private FileElement ensureTreeElement(@Nonnull FileViewProvider viewProvider,
+                                        @Nonnull FileElement treeElement,
+                                        @Nonnull FileTrees trees,
+                                        @Nonnull List<Pair<StubBasedPsiElementBase, AstPath>> bindings) {
     synchronized (myPsiLock) {
       FileElement existing = derefTreeElement();
       if (existing != null) {
@@ -281,7 +281,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     }
   }
 
-  private List<Pair<StubBasedPsiElementBase, AstPath>> calcStubAstBindings(@NotNull FileElement root, FileTrees trees) {
+  private List<Pair<StubBasedPsiElementBase, AstPath>> calcStubAstBindings(@Nonnull FileElement root, FileTrees trees) {
     final StubTree stubTree = trees.derefStub();
     if (stubTree == null || trees.astLoaded) { // don't bind green stub to AST: the PSI should already be cached in myRefToPsi
       return Collections.emptyList();
@@ -350,7 +350,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     throw StubTreeLoader.getInstance().stubTreeAndIndexDoNotMatch(message, stubTree, this);
   }
 
-  @NotNull
+  @Nonnull
   protected FileElement createFileElement(CharSequence docText) {
     final FileElement treeElement;
     final TreeElement contentLeaf = createContentLeafElement(docText);
@@ -480,13 +480,14 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @RequiredReadAction
   @Override
-  @NotNull public String getName() {
+  @Nonnull
+  public String getName() {
     return getViewProvider().getVirtualFile().getName();
   }
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
     checkSetName(name);
     doClearCaches("setName");
     return PsiFileImplUtil.setName(this, name);
@@ -522,7 +523,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getContainingFile() {
     return this;
   }
@@ -542,17 +543,17 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getOriginalFile() {
     return myOriginalFile == null ? this : myOriginalFile;
   }
 
-  public void setOriginalFile(@NotNull final PsiFile originalFile) {
+  public void setOriginalFile(@Nonnull final PsiFile originalFile) {
     myOriginalFile = originalFile.getOriginalFile();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile[] getPsiRoots() {
     final FileViewProvider viewProvider = getViewProvider();
     final Set<Language> languages = viewProvider.getLanguages();
@@ -581,19 +582,19 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myElementType.getLanguage();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileViewProvider getViewProvider() {
     return myViewProvider;
   }
@@ -616,13 +617,13 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return CharArrayUtil.fromSequence(getViewProvider().getContents());
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   public <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<>();
     for (PsiElement child : getChildren()) {
@@ -800,7 +801,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return myTrees.derefStub();
   }
 
-  private void updateTrees(@NotNull FileTrees trees) {
+  private void updateTrees(@Nonnull FileTrees trees) {
     if (!ourTreeUpdater.compareAndSet(this, myTrees, trees)) {
       LOG.error("Non-atomic trees update");
       myTrees = trees;
@@ -829,8 +830,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return !getViewProvider().isEventSystemEnabled();
   }
 
-  @NotNull
-  private Getter<FileElement> createTreeElementPointer(@NotNull FileElement treeElement) {
+  @Nonnull
+  private Getter<FileElement> createTreeElementPointer(@Nonnull FileElement treeElement) {
     if (isKeepTreeElementByHardReference()) {
       return treeElement;
     }
@@ -854,7 +855,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return getOriginalFile();
   }
 
-  @NotNull
+  @Nonnull
   public final FileElement calcTreeElement() {
     // Attempt to find (loaded) tree element without taking lock first.
     FileElement treeElement = getTreeElement();
@@ -868,7 +869,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return calcTreeElement().getChildrenAsPsiElements((TokenSet)null, PsiElement.ARRAY_FACTORY);
   }
@@ -886,7 +887,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public void acceptChildren(@NotNull PsiElementVisitor visitor) {
+  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
     SharedImplUtil.acceptChildren(visitor, getNode());
   }
 
@@ -902,12 +903,12 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return calcTreeElement().textMatches(text);
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return calcTreeElement().textMatches(element);
   }
 
@@ -923,7 +924,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     calcTreeElement().addInternal(elementCopy, elementCopy, null, null);
@@ -932,7 +933,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     calcTreeElement().addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
@@ -941,7 +942,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     calcTreeElement().addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
@@ -950,7 +951,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public final void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
   }
 
@@ -960,7 +961,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor)
+  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
           throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
@@ -987,7 +988,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     CompositeElement treeElement = calcTreeElement();
     return SharedImplUtil.doReplace(this, treeElement, newElement);
   }
@@ -998,27 +999,27 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
 
   @Override
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
+                                     @Nonnull ResolveState state,
                                      PsiElement lastParent,
-                                     @NotNull PsiElement place) {
+                                     @Nonnull PsiElement place) {
     return true;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getResolveScope() {
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
@@ -1065,12 +1066,12 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final Project getProject() {
     return getManager().getProject();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileASTNode getNode() {
     return calcTreeElement();
@@ -1092,7 +1093,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return result != null ? result : getStubTree();
   }
 
-  @NotNull
+  @Nonnull
   public StubTree calcStubTree() {
     StubTree tree = derefStub();
     if (tree != null) {
@@ -1159,7 +1160,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     putInfo(this, info);
   }
 
@@ -1193,7 +1194,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Nullable
-  public StubBasedPsiElementBase<?> obtainPsi(@NotNull AstPath path, @NotNull Factory<StubBasedPsiElementBase<?>> creator) {
+  public StubBasedPsiElementBase<?> obtainPsi(@Nonnull AstPath path, @Nonnull Factory<StubBasedPsiElementBase<?>> creator) {
     if (useStrongRefs()) {
       return null;
     }

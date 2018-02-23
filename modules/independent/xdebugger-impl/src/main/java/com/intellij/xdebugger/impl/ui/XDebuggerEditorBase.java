@@ -49,8 +49,8 @@ import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,8 @@ import java.util.List;
 public abstract class XDebuggerEditorBase {
   private final Project myProject;
   private final XDebuggerEditorsProvider myDebuggerEditorsProvider;
-  @NotNull private final EvaluationMode myMode;
+  @Nonnull
+  private final EvaluationMode myMode;
   @Nullable private final String myHistoryId;
   @Nullable private XSourcePosition mySourcePosition;
   private int myHistoryIndex = -1;
@@ -76,8 +77,8 @@ public abstract class XDebuggerEditorBase {
   private WeakReference<ListPopup> myPopup;
 
   protected XDebuggerEditorBase(final Project project,
-                                @NotNull XDebuggerEditorsProvider debuggerEditorsProvider,
-                                @NotNull EvaluationMode mode,
+                                @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+                                @Nonnull EvaluationMode mode,
                                 @Nullable @NonNls String historyId,
                                 final @Nullable XSourcePosition sourcePosition) {
     myProject = project;
@@ -90,7 +91,7 @@ public abstract class XDebuggerEditorBase {
     myChooseFactory.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         if (myChooseFactory.isEnabled()) {
           ListPopup oldPopup = SoftReference.dereference(myPopup);
           if (oldPopup != null && !oldPopup.isDisposed()) {
@@ -114,7 +115,7 @@ public abstract class XDebuggerEditorBase {
       //noinspection ConstantConditions
       actions.add(new AnAction(language.getDisplayName(), null, language.getAssociatedFileType().getIcon()) {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           XExpression currentExpression = getExpression();
           setExpression(new XExpressionImpl(currentExpression.getExpression(), language, currentExpression.getCustomInfo()));
           requestFocusInEditor();
@@ -128,7 +129,7 @@ public abstract class XDebuggerEditorBase {
                                                                false);
   }
 
-  @NotNull
+  @Nonnull
   private Collection<Language> getSupportedLanguages() {
     XDebuggerEditorsProvider editorsProvider = getEditorsProvider();
     if (myContext != null && editorsProvider instanceof XDebuggerEditorsProviderBase) {
@@ -184,7 +185,7 @@ public abstract class XDebuggerEditorBase {
     }
   }
 
-  @NotNull
+  @Nonnull
   public EvaluationMode getMode() {
     return myMode;
   }
@@ -276,8 +277,8 @@ public abstract class XDebuggerEditorBase {
     }
   }
 
-  @NotNull
-  protected FileType getFileType(@NotNull XExpression expression) {
+  @Nonnull
+  protected FileType getFileType(@Nonnull XExpression expression) {
     FileType fileType = LanguageUtil.getLanguageFileType(expression.getLanguage());
     if (fileType != null) {
       return fileType;

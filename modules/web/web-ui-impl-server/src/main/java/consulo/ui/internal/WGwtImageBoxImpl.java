@@ -24,8 +24,8 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.ui.internal.image.WGwtImageWithState;
 import consulo.web.gwt.shared.ui.state.ImageBoxState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +45,7 @@ public class WGwtImageBoxImpl extends AbstractComponent implements ImageBox, Vaa
     return (ImageBoxState)super.getState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Image getImage() {
     return myImage;
@@ -59,6 +59,6 @@ public class WGwtImageBoxImpl extends AbstractComponent implements ImageBox, Vaa
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

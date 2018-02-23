@@ -18,7 +18,7 @@ package consulo.compiler.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.NotNull;
 public interface AdditionalOutputDirectoriesProvider {
   ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create("com.intellij.compiler.additionalOutputDirectoriesProvider");
 
-  @NotNull
-  String[] getOutputDirectories(@NotNull Project project, @NotNull Module modules);
+  @Nonnull
+  String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);
 }

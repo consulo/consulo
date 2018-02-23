@@ -23,8 +23,8 @@ import com.intellij.openapi.components.PathMacroMap;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.application.options.PathMacrosService;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -39,8 +39,8 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   private static final String FILE_PROTOCOL = "file:";
   private static final String JAR_PROTOCOL = "jar:";
 
-  @NotNull
-  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @NotNull final PathMacros pathMacros) {
+  @Nonnull
+  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull final PathMacros pathMacros) {
     final PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
     final HashSet<String> result = new HashSet<String>(collector.myMacroMap.keySet());

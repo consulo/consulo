@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Interface for intention actions. Intention actions are invoked by pressing
@@ -49,7 +49,8 @@ public interface IntentionAction extends FileModifier {
    * @return the text to show in the intention popup.
    */
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  @NotNull String getText();
+  @Nonnull
+  String getText();
 
   /**
    * Returns the name of the family of intentions. It is used to externalize
@@ -60,7 +61,7 @@ public interface IntentionAction extends FileModifier {
    * @return the intention family name.
    * @see IntentionManager#registerIntentionAndMetaData(IntentionAction, String...)
    */
-  @NotNull
+  @Nonnull
   @Nls(capitalization = Nls.Capitalization.Sentence)
   String getFamilyName();
 
@@ -73,7 +74,7 @@ public interface IntentionAction extends FileModifier {
    * @param file the file open in the editor.
    * @return true if the intention is available, false otherwise.
    */
-  boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file);
+  boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file);
 
   /**
    * Called when user invokes intention. This method is called inside command.
@@ -84,7 +85,7 @@ public interface IntentionAction extends FileModifier {
    * @param editor the editor in which the intention is invoked.
    * @param file the file open in the editor.
    */
-  void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException;
+  void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException;
 
   /**
    * Indicate whether this action should be invoked inside write action.

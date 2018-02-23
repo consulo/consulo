@@ -20,16 +20,16 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public abstract class ReadonlyStatusHandler {
-  public static boolean ensureFilesWritable(@NotNull Project project, @NotNull VirtualFile... files) {
+  public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull VirtualFile... files) {
     return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
   }
 
-  public static boolean ensureDocumentWritable(@NotNull Project project, @NotNull Document document) {
+  public static boolean ensureDocumentWritable(@Nonnull Project project, @Nonnull Document document) {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     boolean okWritable;
     if (psiFile == null) {
@@ -48,18 +48,18 @@ public abstract class ReadonlyStatusHandler {
   }
 
   public abstract static class OperationStatus {
-    @NotNull
+    @Nonnull
     public abstract VirtualFile[] getReadonlyFiles();
 
     public abstract boolean hasReadonlyFiles();
 
-    @NotNull
+    @Nonnull
     public abstract String getReadonlyFilesMessage();
   }
 
-  public abstract OperationStatus ensureFilesWritable(@NotNull VirtualFile... files);
+  public abstract OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files);
 
-  public OperationStatus ensureFilesWritable(@NotNull Collection<VirtualFile> files) {
+  public OperationStatus ensureFilesWritable(@Nonnull Collection<VirtualFile> files) {
     return ensureFilesWritable(VfsUtilCore.toVirtualFileArray(files));
   }
 

@@ -39,8 +39,8 @@ import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ import static com.intellij.util.containers.UtilKt.notNullize;
 
 public class ScheduleForAdditionAction extends AnAction implements DumbAware {
 
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean enabled = e.getProject() != null && !isEmpty(getUnversionedFiles(e, e.getProject()));
 
     e.getPresentation().setEnabled(enabled);
@@ -60,16 +60,16 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     }
   }
 
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
     addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowserBase.DATA_KEY));
   }
 
-  public static boolean addUnversioned(@NotNull Project project,
-                                       @NotNull List<VirtualFile> files,
-                                       @NotNull Condition<FileStatus> unversionedFileCondition,
+  public static boolean addUnversioned(@Nonnull Project project,
+                                       @Nonnull List<VirtualFile> files,
+                                       @Nonnull Condition<FileStatus> unversionedFileCondition,
                                        @Nullable ChangesBrowserBase browser) {
     boolean result = true;
 
@@ -91,8 +91,8 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     return result;
   }
 
-  @NotNull
-  private Stream<VirtualFile> getUnversionedFiles(@NotNull AnActionEvent e, @NotNull Project project) {
+  @Nonnull
+  private Stream<VirtualFile> getUnversionedFiles(@Nonnull AnActionEvent e, @Nonnull Project project) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
     FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
     boolean hasExplicitUnversioned = !isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
@@ -103,7 +103,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
                    .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager)) : Stream.empty();
   }
 
-  private boolean isFileUnversioned(@NotNull VirtualFile file, @NotNull ProjectLevelVcsManager vcsManager, @NotNull FileStatusManager fileStatusManager) {
+  private boolean isFileUnversioned(@Nonnull VirtualFile file, @Nonnull ProjectLevelVcsManager vcsManager, @Nonnull FileStatusManager fileStatusManager) {
     AbstractVcs vcs = vcsManager.getVcsFor(file);
     return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory() || isStatusForAddition(fileStatusManager.getStatus(file));
   }
@@ -119,7 +119,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
    * {@link VcsDataKeys.VIRTUAL_FILE_STREAM}. So there will be no files with {@link FileStatus.UNKNOWN} status and we should not explicitly
    * check {@link VcsDataKeys.VIRTUAL_FILE_STREAM} files in this case.
    */
-  protected boolean checkVirtualFiles(@NotNull AnActionEvent e) {
+  protected boolean checkVirtualFiles(@Nonnull AnActionEvent e) {
     return ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES));
   }
 }

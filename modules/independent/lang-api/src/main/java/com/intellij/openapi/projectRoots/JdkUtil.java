@@ -34,8 +34,7 @@ import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.lang.UrlClassLoader;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -56,8 +55,8 @@ public class JdkUtil {
   /**
    * @return the specified attribute of the JDK (examines rt.jar) or null if cannot determine the value
    */
-  @Nullable
-  public static String getJdkMainAttribute(@NotNull Sdk jdk, Attributes.Name attributeName) {
+  @javax.annotation.Nullable
+  public static String getJdkMainAttribute(@Nonnull Sdk jdk, Attributes.Name attributeName) {
     final VirtualFile homeDirectory = jdk.getHomeDirectory();
     if (homeDirectory == null) {
       return null;
@@ -284,7 +283,7 @@ public class JdkUtil {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Class getCommandLineWrapperClass() {
     try {
       return Class.forName(WRAPPER_CLASS);
@@ -294,7 +293,7 @@ public class JdkUtil {
     }
   }
 
-  public static boolean useDynamicClasspath(@Nullable Project project) {
+  public static boolean useDynamicClasspath(@javax.annotation.Nullable Project project) {
     final String hasDynamicProperty = System.getProperty("idea.dynamic.classpath", "false");
     return Boolean.valueOf(project != null
                            ? PropertiesComponent.getInstance(project).getOrInit("dynamic.classpath", hasDynamicProperty)

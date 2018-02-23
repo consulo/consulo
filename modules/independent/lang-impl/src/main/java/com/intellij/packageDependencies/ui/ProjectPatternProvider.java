@@ -36,10 +36,11 @@ import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import consulo.psi.PsiPackageSupportProviders;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getShortName() {
     return FILE;
   }

@@ -21,8 +21,8 @@ import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ModuleRootLayer;
 import consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -36,18 +36,18 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   protected final String myId;
   protected final ModuleRootLayer myModuleRootLayer;
 
-  public ModuleExtensionImpl(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+  public ModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     myId = id;
     myModuleRootLayer = moduleRootLayer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModifiableModuleRootLayer getModuleRootLayer() {
     return (ModifiableModuleRootLayer)myModuleRootLayer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myId;
@@ -58,13 +58,13 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     return myIsEnabled;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module getModule() {
     return myModuleRootLayer.getModule();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return getModule().getProject();
@@ -72,11 +72,11 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
 
   @RequiredReadAction
   @Override
-  public void commit(@NotNull T mutableModuleExtension) {
+  public void commit(@Nonnull T mutableModuleExtension) {
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public final Element getState() {
     if (!isEnabled()) {
@@ -90,7 +90,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
     return element;
   }
 
-  protected void getStateImpl(@NotNull Element element) {
+  protected void getStateImpl(@Nonnull Element element) {
 
   }
 
@@ -103,7 +103,7 @@ public class ModuleExtensionImpl<T extends ModuleExtension<T>> implements Module
   }
 
   @RequiredReadAction
-  protected void loadStateImpl(@NotNull Element element) {
+  protected void loadStateImpl(@Nonnull Element element) {
 
   }
 

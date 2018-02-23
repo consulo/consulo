@@ -19,8 +19,8 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -127,11 +127,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     myCertificatesListPanel.add(decorator.createPanel(), BorderLayout.CENTER);
   }
 
-  private void showCard(@NotNull String cardName) {
+  private void showCard(@Nonnull String cardName) {
     ((CardLayout)myDetailsPanel.getLayout()).show(myDetailsPanel, cardName);
   }
 
-  private void addCertificatePanel(@NotNull X509Certificate certificate) {
+  private void addCertificatePanel(@Nonnull X509Certificate certificate) {
     String uniqueName = getCardName(certificate);
     JPanel infoPanel = new CertificateInfoPanel(certificate);
     UIUtil.addInsets(infoPanel, UIUtil.PANEL_REGULAR_INSETS);
@@ -140,11 +140,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     myDetailsPanel.add(scrollPane, uniqueName);
   }
 
-  private static String getCardName(@NotNull X509Certificate certificate) {
+  private static String getCardName(@Nonnull X509Certificate certificate) {
     return certificate.getSubjectX500Principal().getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "http.certificates";

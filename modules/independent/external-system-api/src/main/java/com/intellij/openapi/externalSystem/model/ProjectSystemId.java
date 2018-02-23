@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -18,16 +18,19 @@ public class ProjectSystemId implements Serializable {
 
   private static final long serialVersionUID = 1L;
   
-  @NotNull public static final ProjectSystemId IDE = new ProjectSystemId("IDE");
+  @Nonnull
+  public static final ProjectSystemId IDE = new ProjectSystemId("IDE");
 
-  @NotNull private final String myId;
-  @NotNull private final String myReadableName;
+  @Nonnull
+  private final String myId;
+  @Nonnull
+  private final String myReadableName;
 
-  public ProjectSystemId(@NotNull String id) {
+  public ProjectSystemId(@Nonnull String id) {
     this(id, StringUtil.capitalize(id.toLowerCase()));
   }
 
-  public ProjectSystemId(@NotNull String id, @NotNull String readableName) {
+  public ProjectSystemId(@Nonnull String id, @Nonnull String readableName) {
     myId = id;
     myReadableName = readableName;
   }
@@ -47,12 +50,12 @@ public class ProjectSystemId implements Serializable {
     return myId.equals(owner.myId);
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public String getReadableName() {
     return myReadableName;
   }

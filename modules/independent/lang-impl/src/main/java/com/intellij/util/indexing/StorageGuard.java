@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @SuppressWarnings({"WhileLoopSpinsOnField", "SynchronizeOnThis"})
 class StorageGuard {
@@ -39,7 +39,7 @@ class StorageGuard {
     }
   };
 
-  @NotNull
+  @Nonnull
   synchronized StorageModeExitHandler enter(boolean mode) {
     if (mode) {
       while (myHolds < 0) {

@@ -16,8 +16,8 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.packaging.elements.CompositePackagingElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -30,7 +30,7 @@ public abstract class ArtifactTemplate {
    * @deprecated override {@link #createArtifact()} instead
    */
   @Deprecated
-  public CompositePackagingElement<?> createRootElement(@NotNull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
     return null;
   }
 
@@ -38,7 +38,7 @@ public abstract class ArtifactTemplate {
    * @deprecated override {@link #createArtifact()} instead
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   public String suggestArtifactName() {
     return "unnamed";
   }
@@ -49,7 +49,7 @@ public abstract class ArtifactTemplate {
     return new NewArtifactConfiguration(createRootElement(name), name, null);
   }
 
-  public void setUpArtifact(@NotNull Artifact artifact, @NotNull NewArtifactConfiguration configuration) {
+  public void setUpArtifact(@Nonnull Artifact artifact, @Nonnull NewArtifactConfiguration configuration) {
   }
 
   public static class NewArtifactConfiguration {

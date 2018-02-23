@@ -22,7 +22,7 @@ package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface PackageSetParserExtension {
   ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create("com.intellij.scopeParserExtension");

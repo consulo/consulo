@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,13 +39,13 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     throw new IOException("Cannot get content of " + this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract NewVirtualFileSystem getFileSystem();
 
   @Override
@@ -57,25 +57,26 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   @Override
   @Nullable
-  public abstract NewVirtualFile findChild(@NotNull @NonNls final String name);
+  public abstract NewVirtualFile findChild(@Nonnull @NonNls final String name);
 
   @Nullable
-  public abstract NewVirtualFile refreshAndFindChild(@NotNull String name);
+  public abstract NewVirtualFile refreshAndFindChild(@Nonnull String name);
 
   @Nullable
-  public abstract NewVirtualFile findChildIfCached(@NotNull String name);
+  public abstract NewVirtualFile findChildIfCached(@Nonnull String name);
 
 
   public abstract void setTimeStamp(final long time) throws IOException;
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract CharSequence getNameSequence();
 
   @Override
   public abstract int getId();
 
-  @Nullable @Deprecated
+  @Nullable
+  @Deprecated
   public NewVirtualFile findChildById(int id) {return null;}
 
   @Nullable @Deprecated
@@ -97,7 +98,7 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
   public abstract void markClean();
 
   @Override
-  public void move(final Object requestor, @NotNull final VirtualFile newParent) throws IOException {
+  public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
     if (!exists()) {
       throw new IOException("File to move does not exist: " + getPath());
     }
@@ -124,11 +125,11 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
     });
   }
 
-  @NotNull
+  @Nonnull
   public abstract Collection<VirtualFile> getCachedChildren();
 
   /** iterated children will NOT contain NullVirtualFile.INSTANCE */
-  @NotNull
+  @Nonnull
   public abstract Iterable<VirtualFile> iterInDbChildren();
 
 }

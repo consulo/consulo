@@ -32,8 +32,8 @@ import com.intellij.util.ImageLoader;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,7 @@ final class PaintersHelper implements Painter.Listener {
 
   private final JComponent myRootComponent;
 
-  public PaintersHelper(@NotNull JComponent component) {
+  public PaintersHelper(@Nonnull JComponent component) {
     myRootComponent = component;
   }
 
@@ -71,13 +71,13 @@ final class PaintersHelper implements Painter.Listener {
     return false;
   }
 
-  public void addPainter(@NotNull Painter painter, @Nullable Component component) {
+  public void addPainter(@Nonnull Painter painter, @Nullable Component component) {
     myPainters.add(painter);
     myPainter2Component.put(painter, component == null ? myRootComponent : component);
     painter.addListener(this);
   }
 
-  public void removePainter(@NotNull Painter painter) {
+  public void removePainter(@Nonnull Painter painter) {
     painter.removeListener(this);
     myPainters.remove(painter);
     myPainter2Component.remove(painter);
@@ -117,8 +117,8 @@ final class PaintersHelper implements Painter.Listener {
     g.setTransform(orig);
   }
 
-  @NotNull
-  int[] computeOffsets(Graphics gg, @NotNull JComponent component) {
+  @Nonnull
+  int[] computeOffsets(Graphics gg, @Nonnull JComponent component) {
     if (myPainters.isEmpty()) return ArrayUtil.EMPTY_INT_ARRAY;
     int i = 0;
     int[] offsets = new int[2 + myPainters.size() * 2];
@@ -168,13 +168,13 @@ final class PaintersHelper implements Painter.Listener {
     TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
   }
 
-  public static void initWallpaperPainter(@NotNull String propertyName, @NotNull PaintersHelper painters) {
+  public static void initWallpaperPainter(@Nonnull String propertyName, @Nonnull PaintersHelper painters) {
     ImagePainter painter = (ImagePainter)newWallpaperPainter(propertyName, painters.myRootComponent);
     painters.addPainter(painter, null);
   }
 
-  private static AbstractPainter newWallpaperPainter(@NotNull final String propertyName,
-                                                     @NotNull final JComponent rootComponent) {
+  private static AbstractPainter newWallpaperPainter(@Nonnull final String propertyName,
+                                                     @Nonnull final JComponent rootComponent) {
     return new ImagePainter() {
       Image image;
       float alpha;
@@ -256,7 +256,7 @@ final class PaintersHelper implements Painter.Listener {
     };
   }
 
-  public static AbstractPainter newImagePainter(@NotNull final Image image, final Fill fillType, final Place place, final float alpha, final Insets insets) {
+  public static AbstractPainter newImagePainter(@Nonnull final Image image, final Fill fillType, final Place place, final float alpha, final Insets insets) {
     return new ImagePainter() {
       @Override
       public boolean needsRepaint() {
@@ -410,7 +410,7 @@ final class PaintersHelper implements Painter.Listener {
       return image;
     }
 
-    @NotNull
+    @Nonnull
     private static VolatileImage createImage(@Nullable GraphicsConfiguration cfg, int w, int h) {
       GraphicsConfiguration safe;
       safe = cfg != null ? cfg : GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -433,8 +433,8 @@ final class PaintersHelper implements Painter.Listener {
       return image;
     }
 
-    @NotNull
-    private static String logPrefix(@Nullable GraphicsConfiguration cfg, @NotNull VolatileImage image) {
+    @Nonnull
+    private static String logPrefix(@Nullable GraphicsConfiguration cfg, @Nonnull VolatileImage image) {
       return "(" + (cfg == null ? "null" : cfg.getClass().getSimpleName()) + ") "
              + image.getWidth() + "x" + image.getHeight() + " ";
     }

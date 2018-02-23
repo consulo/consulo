@@ -26,8 +26,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -42,18 +42,20 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   private final String myPresentableName;
   protected final PsiFile myFile;
   @Nullable private final Editor myEditor;
-  @NotNull protected final TextRange myRestrictRange;
-  @NotNull protected final HighlightInfoProcessor myHighlightInfoProcessor;
+  @Nonnull
+  protected final TextRange myRestrictRange;
+  @Nonnull
+  protected final HighlightInfoProcessor myHighlightInfoProcessor;
   protected HighlightingSession myHighlightingSession;
 
-  protected ProgressableTextEditorHighlightingPass(@NotNull Project project,
-                                                   @Nullable final Document document,
-                                                   @NotNull String presentableName,
+  protected ProgressableTextEditorHighlightingPass(@Nonnull Project project,
+                                                   @javax.annotation.Nullable final Document document,
+                                                   @Nonnull String presentableName,
                                                    @Nullable PsiFile file,
                                                    @Nullable Editor editor,
-                                                   @NotNull TextRange restrictRange,
+                                                   @Nonnull TextRange restrictRange,
                                                    boolean runIntentionPassAfter,
-                                                   @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+                                                   @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     super(project, document, runIntentionPassAfter);
     myPresentableName = presentableName;
     myFile = file;
@@ -73,7 +75,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
   @RequiredReadAction
   @Override
-  public final void doCollectInformation(@NotNull final ProgressIndicator progress) {
+  public final void doCollectInformation(@Nonnull final ProgressIndicator progress) {
     if (!(progress instanceof DaemonProgressIndicator)) {
       throw new IncorrectOperationException("Highlighting must be run under DaemonProgressIndicator, but got: "+progress);
     }
@@ -91,7 +93,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
   }
 
-  protected abstract void collectInformationWithProgress(@NotNull ProgressIndicator progress);
+  protected abstract void collectInformationWithProgress(@Nonnull ProgressIndicator progress);
 
   @Override
   public final void doApplyInformationToEditor() {
@@ -163,12 +165,12 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   }
 
   static class EmptyPass extends TextEditorHighlightingPass {
-    EmptyPass(final Project project, @Nullable final Document document) {
+    EmptyPass(final Project project, @javax.annotation.Nullable final Document document) {
       super(project, document, false);
     }
 
     @Override
-    public void doCollectInformation(@NotNull final ProgressIndicator progress) {
+    public void doCollectInformation(@Nonnull final ProgressIndicator progress) {
     }
 
     @Override

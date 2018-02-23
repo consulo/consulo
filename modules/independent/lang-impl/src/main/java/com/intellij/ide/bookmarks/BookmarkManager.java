@@ -41,8 +41,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -75,7 +75,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
 
     documentManager.addListener(new PsiDocumentManager.Listener() {
       @Override
-      public void documentCreated(@NotNull final Document document, PsiFile psiFile) {
+      public void documentCreated(@Nonnull final Document document, PsiFile psiFile) {
         final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file == null) return;
         for (final Bookmark bookmark : myBookmarks) {
@@ -92,12 +92,12 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
       }
 
       @Override
-      public void fileCreated(@NotNull PsiFile file, @NotNull Document document) {
+      public void fileCreated(@Nonnull PsiFile file, @Nonnull Document document) {
       }
     });
   }
 
-  public void editDescription(@NotNull Bookmark bookmark) {
+  public void editDescription(@Nonnull Bookmark bookmark) {
     String description = Messages
             .showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"),
                              IdeBundle.message("action.bookmark.edit.description.dialog.title"), Messages.getQuestionIcon(),
@@ -117,7 +117,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "BookmarkManager";
@@ -166,7 +166,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   }
 
 
-  @NotNull
+  @Nonnull
   public List<Bookmark> getValidBookmarks() {
     List<Bookmark> answer = new ArrayList<Bookmark>();
     for (Bookmark bookmark : myBookmarks) {
@@ -177,7 +177,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
 
 
   @Nullable
-  public Bookmark findEditorBookmark(@NotNull Document document, int line) {
+  public Bookmark findEditorBookmark(@Nonnull Document document, int line) {
     for (Bookmark bookmark : myBookmarks) {
       if (bookmark.getDocument() == document && bookmark.getLine() == line) {
         return bookmark;
@@ -188,7 +188,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   }
 
   @Nullable
-  public Bookmark findFileBookmark(@NotNull VirtualFile file) {
+  public Bookmark findFileBookmark(@Nonnull VirtualFile file) {
     for (Bookmark bookmark : myBookmarks) {
       if (Comparing.equal(bookmark.getFile(), file) && bookmark.getLine() == -1) return bookmark;
     }
@@ -213,7 +213,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     return false;
   }
 
-  public void removeBookmark(@NotNull Bookmark bookmark) {
+  public void removeBookmark(@Nonnull Bookmark bookmark) {
     myBookmarks.remove(bookmark);
     bookmark.release();
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkRemoved(bookmark);
@@ -311,8 +311,8 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
    *
    * @return bookmark list after moving
    */
-  @NotNull
-  public List<Bookmark> moveBookmarkUp(@NotNull Bookmark bookmark) {
+  @Nonnull
+  public List<Bookmark> moveBookmarkUp(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);
     if (index > 0) {
       Collections.swap(myBookmarks, index, index - 1);
@@ -333,8 +333,8 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
    *
    * @return bookmark list after moving
    */
-  @NotNull
-  public List<Bookmark> moveBookmarkDown(@NotNull Bookmark bookmark) {
+  @Nonnull
+  public List<Bookmark> moveBookmarkDown(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);
     if (index < myBookmarks.size() - 1) {
       Collections.swap(myBookmarks, index, index + 1);
@@ -351,7 +351,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   }
 
   @Nullable
-  public Bookmark getNextBookmark(@NotNull Editor editor, boolean isWrapped) {
+  public Bookmark getNextBookmark(@Nonnull Editor editor, boolean isWrapped) {
     Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
     for (Bookmark bookmark : bookmarksForDocument) {
@@ -364,7 +364,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
   }
 
   @Nullable
-  public Bookmark getPreviousBookmark(@NotNull Editor editor, boolean isWrapped) {
+  public Bookmark getPreviousBookmark(@Nonnull Editor editor, boolean isWrapped) {
     Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
     for (int i = bookmarksForDocument.length - 1; i >= 0; i--) {
@@ -377,8 +377,8 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     return null;
   }
 
-  @NotNull
-  private Bookmark[] getBookmarksForDocument(@NotNull Document document) {
+  @Nonnull
+  private Bookmark[] getBookmarksForDocument(@Nonnull Document document) {
     ArrayList<Bookmark> answer = new ArrayList<Bookmark>();
     for (Bookmark bookmark : getValidBookmarks()) {
       if (document.equals(bookmark.getDocument())) {
@@ -396,7 +396,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     return bookmarks;
   }
 
-  public void setMnemonic(@NotNull Bookmark bookmark, char c) {
+  public void setMnemonic(@Nonnull Bookmark bookmark, char c) {
     final Bookmark old = findBookmarkForMnemonic(c);
     if (old != null) removeBookmark(old);
 
@@ -404,7 +404,7 @@ public class BookmarkManager extends AbstractProjectComponent implements Persist
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(bookmark);
   }
 
-  public void setDescription(@NotNull Bookmark bookmark, String description) {
+  public void setDescription(@Nonnull Bookmark bookmark, String description) {
     bookmark.setDescription(description);
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(bookmark);
   }

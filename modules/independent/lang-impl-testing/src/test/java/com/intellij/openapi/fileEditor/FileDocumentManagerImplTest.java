@@ -35,7 +35,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -190,7 +190,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
     try {
       final VirtualFile file = new MockVirtualFile("test.txt", "test") {
         @Override
-        @NotNull
+        @Nonnull
         public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
           throw new IOException("");
         }
@@ -385,7 +385,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
 
   public void testContentChanged_ignoreEventsFromSelfOnSave() throws Exception {
     final VirtualFile file = new MockVirtualFile("test.txt", "test\rtest") {
-      @NotNull
+      @Nonnull
       @Override
       public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
         final VirtualFile self = this;
@@ -470,7 +470,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
 
     getProject().getMessageBus().connect(getTestRootDisposable()).subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
-      public void beforeDocumentSaving(@NotNull Document documentToSave) {
+      public void beforeDocumentSaving(@Nonnull Document documentToSave) {
         assertNotSame(document, documentToSave);
       }
     });
@@ -552,7 +552,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
 
         getProject().getMessageBus().connect(getTestRootDisposable()).subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
           @Override
-          public void beforeDocumentSaving(@NotNull Document documentToSave) {
+          public void beforeDocumentSaving(@Nonnull Document documentToSave) {
             assertNotSame(document, documentToSave);
           }
         });
@@ -634,7 +634,7 @@ public class FileDocumentManagerImplTest extends PlatformLangTestCase {
     final PsiFile file = getPsiFile(original);
     FileDocumentManagerListener saveListener = new FileDocumentManagerAdapter() {
       @Override
-      public void beforeDocumentSaving(@NotNull Document document) {
+      public void beforeDocumentSaving(@Nonnull Document document) {
         WriteCommandAction.runWriteCommandAction(getProject(), new Runnable() {
           @Override
           public void run() {

@@ -2,7 +2,7 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -29,7 +29,7 @@ public class PsiReferenceWrapper implements PsiReference {
     return myOriginalPsiReference.resolve();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCanonicalText() {
     return myOriginalPsiReference.getCanonicalText();
@@ -41,7 +41,7 @@ public class PsiReferenceWrapper implements PsiReference {
   }
 
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return myOriginalPsiReference.bindToElement(element);
   }
 
@@ -50,7 +50,7 @@ public class PsiReferenceWrapper implements PsiReference {
     return myOriginalPsiReference.isReferenceTo(element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getVariants() {
     return myOriginalPsiReference.getVariants();

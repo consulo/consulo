@@ -78,8 +78,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -147,7 +147,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
       if (!virtualFile.isValid()) return;
       final PsiFile file = PsiManager.getInstance(myProject).findFile(virtualFile);
       if (file != null) {
@@ -266,7 +266,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     new TreeSpeedSearch(myTree);
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         return getSelectedPsiElements();
       }
@@ -296,7 +296,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     CustomizationUtil.installPopupHandler(myTree, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
   }
 
-  @NotNull
+  @Nonnull
   private PsiElement[] getSelectedPsiElements() {
     final TreePath[] treePaths = myTree.getSelectionPaths();
     if (treePaths != null) {
@@ -542,7 +542,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   private class MyPsiTreeChangeAdapter extends PsiTreeChangeAdapter {
     @Override
-    public void childAdded(@NotNull final PsiTreeChangeEvent event) {
+    public void childAdded(@Nonnull final PsiTreeChangeEvent event) {
       final PsiElement element = event.getParent();
       final PsiElement child = event.getChild();
       if (child == null) return;
@@ -580,7 +580,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public void beforeChildRemoval(@NotNull final PsiTreeChangeEvent event) {
+    public void beforeChildRemoval(@Nonnull final PsiTreeChangeEvent event) {
       final PsiElement child = event.getChild();
       final PsiElement parent = event.getParent();
       if (parent instanceof PsiDirectory && (child instanceof PsiFile && !isInjected((PsiFile)child) || child instanceof PsiDirectory)) {
@@ -597,7 +597,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public void beforeChildMovement(@NotNull PsiTreeChangeEvent event) {
+    public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
       final PsiElement oldParent = event.getOldParent();
       final PsiElement child = event.getChild();
       if (oldParent instanceof PsiDirectory) {
@@ -617,7 +617,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public void childMoved(@NotNull PsiTreeChangeEvent event) {
+    public void childMoved(@Nonnull PsiTreeChangeEvent event) {
       final PsiElement newParent = event.getNewParent();
       final PsiElement child = event.getChild();
       if (newParent instanceof PsiDirectory) {
@@ -647,7 +647,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
 
     @Override
-    public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+    public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
       final PsiElement parent = event.getParent();
       final PsiFile file = parent.getContainingFile();
       if (file != null) {
@@ -669,7 +669,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public final void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+    public final void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
       String propertyName = event.getPropertyName();
       final PsiElement element = event.getElement();
       if (element != null) {
@@ -691,7 +691,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     @Override
-    public void childReplaced(@NotNull final PsiTreeChangeEvent event) {
+    public void childReplaced(@Nonnull final PsiTreeChangeEvent event) {
       final NamedScope scope = getCurrentScope();
       final PsiElement element = event.getNewChild();
       final PsiFile psiFile = event.getFile();
@@ -868,13 +868,13 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   private final class MyDeletePSIElementProvider implements DeleteProvider {
     @Override
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       final PsiElement[] elements = getSelectedPsiElements();
       return DeleteHandler.shouldEnableDeleteAction(elements);
     }
 
     @Override
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       List<PsiElement> allElements = Arrays.asList(getSelectedPsiElements());
       ArrayList<PsiElement> validElements = new ArrayList<PsiElement>();
       for (PsiElement psiElement : allElements) {
@@ -898,12 +898,12 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     @Override
-    public void problemsAppeared(@NotNull VirtualFile file) {
+    public void problemsAppeared(@Nonnull VirtualFile file) {
       addNode(file, DefaultScopesProvider.getInstance(myProject).getProblemsScope().getName());
     }
 
     @Override
-    public void problemsDisappeared(@NotNull VirtualFile file) {
+    public void problemsDisappeared(@Nonnull VirtualFile file) {
       removeNode(file, DefaultScopesProvider.getInstance(myProject).getProblemsScope().getName());
     }
   }

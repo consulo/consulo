@@ -22,7 +22,7 @@ package com.intellij.openapi.projectRoots;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface JavaSdkType {
   @NonNls
@@ -31,5 +31,5 @@ public interface JavaSdkType {
   @NonNls
   String getToolsPath(Sdk sdk);
 
-  void setupCommandLine(@NotNull GeneralCommandLine commandLine, @NotNull Sdk sdk);
+  void setupCommandLine(@Nonnull GeneralCommandLine commandLine, @Nonnull Sdk sdk);
 }

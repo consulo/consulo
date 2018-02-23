@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -30,7 +30,7 @@ public class VFileContentChangeEvent extends VFileEvent {
   private final long myNewModificationStamp;
 
   public VFileContentChangeEvent(final Object requestor,
-                                 @NotNull final VirtualFile file,
+                                 @Nonnull final VirtualFile file,
                                  final long oldModificationStamp,
                                  final long newModificationStamp,
                                  final boolean isFromRefresh) {
@@ -40,7 +40,7 @@ public class VFileContentChangeEvent extends VFileEvent {
     myNewModificationStamp = newModificationStamp == -1 ? LocalTimeCounter.currentTime() : newModificationStamp;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
@@ -59,13 +59,13 @@ public class VFileContentChangeEvent extends VFileEvent {
     return "VfsEvent[update: " + myFile.getUrl() + "]";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return myFile.getPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

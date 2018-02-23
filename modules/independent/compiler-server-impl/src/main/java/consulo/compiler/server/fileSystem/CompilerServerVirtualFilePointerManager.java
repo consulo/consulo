@@ -22,43 +22,43 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 19:54/19.08.13
  */
 public class CompilerServerVirtualFilePointerManager extends VirtualFilePointerManager {
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointer create(@NotNull String url, @NotNull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @javax.annotation.Nullable VirtualFilePointerListener listener) {
     return new CompilerServerVirtualFilePointer(url);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointer create(@NotNull VirtualFile file, @NotNull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @javax.annotation.Nullable VirtualFilePointerListener listener) {
     return new CompilerServerVirtualFilePointer(file.getUrl());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointer duplicate(@NotNull VirtualFilePointer pointer,
-                                      @NotNull Disposable parent,
-                                      @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer,
+                                      @Nonnull Disposable parent,
+                                      @javax.annotation.Nullable VirtualFilePointerListener listener) {
     return new CompilerServerVirtualFilePointer(pointer.getUrl());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointerContainer createContainer(@NotNull Disposable parent) {
+  public VirtualFilePointerContainer createContainer(@Nonnull Disposable parent) {
     return createContainer(parent, null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFilePointerContainer createContainer(@NotNull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointerContainer createContainer(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
     return new VirtualFilePointerContainerImpl(this, parent, listener);
   }
 

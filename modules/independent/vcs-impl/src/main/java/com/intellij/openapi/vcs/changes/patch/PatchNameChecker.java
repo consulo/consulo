@@ -16,8 +16,7 @@
 package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -25,8 +24,8 @@ public class PatchNameChecker {
   public final static int MAX = 100;
   private final static int MAX_PATH = 255; // Windows path len restrictions
 
-  @Nullable
-  public static String validateName(@NotNull String name) {
+  @javax.annotation.Nullable
+  public static String validateName(@Nonnull String name) {
     String fileName = new File(name).getName();
     if (StringUtil.isEmptyOrSpaces(fileName)) {
       return "File name cannot be empty";

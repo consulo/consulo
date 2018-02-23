@@ -28,7 +28,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +59,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
   private final Action myShutdownAction;
   private final Action myHeapDumpAction;
 
-  public OutOfMemoryDialog(@NotNull MemoryKind memoryKind) {
+  public OutOfMemoryDialog(@Nonnull MemoryKind memoryKind) {
     super(false);
     myMemoryKind = memoryKind;
     setTitle(DiagnosticBundle.message("diagnostic.out.of.memory.title"));
@@ -197,7 +197,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
     return myContentPane;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return myHeapDumpAction != null ? new Action[]{myShutdownAction, myContinueAction, myHeapDumpAction}

@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.deployment;
 
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -10,12 +10,12 @@ public class DeploymentInformation {
   private final DeploymentStatus myStatus;
   private final String myStatusText;
 
-  public DeploymentInformation(@NotNull DeploymentStatus status) {
+  public DeploymentInformation(@Nonnull DeploymentStatus status) {
     myStatus = status;
     myStatusText = status.name();
   }
 
-  public DeploymentInformation(@NotNull DeploymentStatus status, @NotNull String statusText) {
+  public DeploymentInformation(@Nonnull DeploymentStatus status, @Nonnull String statusText) {
     myStatus = status;
     myStatusText = statusText;
   }

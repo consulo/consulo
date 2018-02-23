@@ -40,9 +40,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.ScrollUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -88,7 +88,7 @@ public class DiffSideView {
       insertComponent(fileEditor == null ? MOCK_COMPONENT : fileEditor.getComponent());
       DataManager.registerDataProvider(myPanel, new DataProvider() {
         @Override
-        public Object getData(@NotNull @NonNls Key<?> dataId) {
+        public Object getData(@Nonnull @NonNls Key<?> dataId) {
           if (CommonDataKeys.PROJECT == dataId) {
             return project;
           }
@@ -133,7 +133,7 @@ public class DiffSideView {
     editor.getColorsScheme().setColor(EditorColors.CARET_ROW_COLOR, null);
   }
 
-  public void setTitle(@NotNull JComponent title) {
+  public void setTitle(@Nonnull JComponent title) {
     myTitle = title;
     myPanel.updateTitle(myTitle);
   }

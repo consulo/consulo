@@ -21,7 +21,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -32,17 +32,19 @@ import java.util.List;
  */
 public class ExternalSystemRecentTaskListModel extends DefaultListModel {
 
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final Project         myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final Project         myProject;
 
-  public ExternalSystemRecentTaskListModel(@NotNull ProjectSystemId externalSystemId, @NotNull Project project) {
+  public ExternalSystemRecentTaskListModel(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project project) {
     myExternalSystemId = externalSystemId;
     myProject = project;
     ensureSize(ExternalSystemConstants.RECENT_TASKS_NUMBER);
   }
 
   @SuppressWarnings("unchecked")
-  public void setTasks(@NotNull List<ExternalTaskExecutionInfo> tasks) {
+  public void setTasks(@Nonnull List<ExternalTaskExecutionInfo> tasks) {
     clear();
     List<ExternalTaskExecutionInfo> tasksToUse = ContainerUtilRt.newArrayList(tasks);
     for (ExternalTaskExecutionInfo task : tasksToUse) {
@@ -51,7 +53,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
   }
 
   @SuppressWarnings("unchecked")
-  public void setFirst(@NotNull ExternalTaskExecutionInfo task) {
+  public void setFirst(@Nonnull ExternalTaskExecutionInfo task) {
     insertElementAt(task, 0);
     for (int i = 1; i < size(); i++) {
       if (task.equals(getElementAt(i))) {
@@ -62,7 +64,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
     ensureSize(ExternalSystemConstants.RECENT_TASKS_NUMBER);
   }
 
-  @NotNull
+  @Nonnull
   public List<ExternalTaskExecutionInfo> getTasks() {
     List<ExternalTaskExecutionInfo> result = ContainerUtilRt.newArrayList();
     for (int i = 0; i < size(); i++) {
@@ -93,7 +95,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
    * 
    * @param externalProjectPath  target external project's path
    */
-  public void forgetTasksFrom(@NotNull String externalProjectPath) {
+  public void forgetTasksFrom(@Nonnull String externalProjectPath) {
     for (int i = size() - 1; i >= 0; i--) {
       Object e = getElementAt(i);
       if (e instanceof ExternalTaskExecutionInfo) {

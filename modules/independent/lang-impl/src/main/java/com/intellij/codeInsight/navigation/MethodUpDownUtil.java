@@ -27,7 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -73,7 +73,7 @@ public class MethodUpDownUtil {
     }
   }
 
-  private static void addStructureViewElements(final TreeElement parent, final Collection<PsiElement> array, @NotNull PsiFile file) {
+  private static void addStructureViewElements(final TreeElement parent, final Collection<PsiElement> array, @Nonnull PsiFile file) {
     for(TreeElement treeElement: parent.getChildren()) {
       Object value = ((StructureViewTreeElement)treeElement).getValue();
       if (value instanceof PsiElement) {

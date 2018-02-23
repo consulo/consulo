@@ -15,15 +15,15 @@
  */
 package com.intellij.vcs.log.graph.actions;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author erokhins
  */
 public interface ActionController<Id> {
 
-  @NotNull
-  GraphAnswer<Id> performAction(@NotNull GraphAction graphAction);
+  @Nonnull
+  GraphAnswer<Id> performAction(@Nonnull GraphAction graphAction);
 
   boolean areLongEdgesHidden();
 

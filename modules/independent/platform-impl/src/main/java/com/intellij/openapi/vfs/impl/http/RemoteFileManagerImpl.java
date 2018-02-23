@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
 import com.intellij.util.EventDispatcher;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +45,8 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
     myDefaultRemoteContentProvider = new DefaultRemoteContentProvider();
   }
 
-  @NotNull
-  public RemoteContentProvider findContentProvider(final @NotNull String url) {
+  @Nonnull
+  public RemoteContentProvider findContentProvider(final @Nonnull String url) {
     for (RemoteContentProvider provider : myProviders) {
       if (provider.canProvideContent(url)) {
         return provider;
@@ -55,7 +55,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
     return myDefaultRemoteContentProvider;
   }
 
-  public synchronized VirtualFileImpl getOrCreateFile(final @NotNull String url, final @NotNull String path, final boolean directory) throws IOException {
+  public synchronized VirtualFileImpl getOrCreateFile(final @Nonnull String url, final @Nonnull String path, final boolean directory) throws IOException {
     Pair<Boolean, String> key = Pair.create(directory, url);
     VirtualFileImpl file = myRemoteFiles.get(key);
 
@@ -73,12 +73,12 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
     return file;
   }
 
-  private static HttpFileSystemBase getHttpFileSystem(@NotNull String url) {
+  private static HttpFileSystemBase getHttpFileSystem(@Nonnull String url) {
     return url.startsWith(HttpsFileSystem.HTTPS_PROTOCOL) ? HttpsFileSystem.getHttpsInstance() : HttpFileSystemImpl.getInstanceImpl();
   }
 
   @Override
-  public void addRemoteContentProvider(@NotNull final RemoteContentProvider provider, @NotNull Disposable parentDisposable) {
+  public void addRemoteContentProvider(@Nonnull final RemoteContentProvider provider, @Nonnull Disposable parentDisposable) {
     addRemoteContentProvider(provider);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -89,22 +89,22 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   }
 
   @Override
-  public void addRemoteContentProvider(@NotNull RemoteContentProvider provider) {
+  public void addRemoteContentProvider(@Nonnull RemoteContentProvider provider) {
     myProviders.add(provider);
   }
 
   @Override
-  public void removeRemoteContentProvider(@NotNull RemoteContentProvider provider) {
+  public void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider) {
     myProviders.remove(provider);
   }
 
   @Override
-  public void addFileListener(@NotNull final HttpVirtualFileListener listener) {
+  public void addFileListener(@Nonnull final HttpVirtualFileListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void addFileListener(@NotNull final HttpVirtualFileListener listener, @NotNull final Disposable parentDisposable) {
+  public void addFileListener(@Nonnull final HttpVirtualFileListener listener, @Nonnull final Disposable parentDisposable) {
     addFileListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -115,11 +115,11 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   }
 
   @Override
-  public void removeFileListener(@NotNull final HttpVirtualFileListener listener) {
+  public void removeFileListener(@Nonnull final HttpVirtualFileListener listener) {
     myDispatcher.removeListener(listener);
   }
 
-  public void fireFileDownloaded(@NotNull VirtualFile file) {
+  public void fireFileDownloaded(@Nonnull VirtualFile file) {
     myDispatcher.getMulticaster().fileDownloaded(file);
   }
 

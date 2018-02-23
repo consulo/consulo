@@ -23,8 +23,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import com.intellij.refactoring.changeSignature.ParameterInfo;
 import com.intellij.refactoring.rename.RenameProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class RenameChangeInfo implements ChangeInfo {
   private final PsiFile myFile;
@@ -37,7 +37,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
     myOffset = namedElement.getTextOffset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ParameterInfo[] getNewParameters() {
     return new ParameterInfo[0];

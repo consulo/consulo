@@ -9,8 +9,8 @@ import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +28,8 @@ public class SimpleDuplicatesFinder {
   private final Set<String> myParameters;
   private final Collection<String> myOutputVariables;
 
-  public SimpleDuplicatesFinder(@NotNull final PsiElement statement1,
-                                @NotNull final PsiElement statement2,
+  public SimpleDuplicatesFinder(@Nonnull final PsiElement statement1,
+                                @Nonnull final PsiElement statement2,
                                 Collection<String> variables,
                                 AbstractVariableData[] variableData) {
     myOutputVariables = variables;
@@ -48,7 +48,7 @@ public class SimpleDuplicatesFinder {
   }
 
   public List<SimpleMatch> findDuplicates(@Nullable final List<PsiElement> scope,
-                                          @NotNull final PsiElement generatedMethod) {
+                                          @Nonnull final PsiElement generatedMethod) {
     final List<SimpleMatch> result = new ArrayList<>();
     annotatePattern();
     if (scope != null) {
@@ -87,8 +87,8 @@ public class SimpleDuplicatesFinder {
     }
   }
 
-  private void findPatternOccurrences(@NotNull final List<SimpleMatch> array, @NotNull final PsiElement scope,
-                                      @NotNull final PsiElement generatedMethod) {
+  private void findPatternOccurrences(@Nonnull final List<SimpleMatch> array, @Nonnull final PsiElement scope,
+                                      @Nonnull final PsiElement generatedMethod) {
     if (scope == generatedMethod) return;
     final PsiElement[] children = scope.getChildren();
     for (PsiElement child : children) {
@@ -102,7 +102,7 @@ public class SimpleDuplicatesFinder {
   }
 
   @Nullable
-  protected SimpleMatch isDuplicateFragment(@NotNull final PsiElement candidate) {
+  protected SimpleMatch isDuplicateFragment(@Nonnull final PsiElement candidate) {
     if (!canReplace(myReplacement, candidate)) return null;
     for (PsiElement pattern : myPattern) {
       if (PsiTreeUtil.isAncestor(pattern, candidate, false)) return null;
@@ -126,7 +126,7 @@ public class SimpleDuplicatesFinder {
 
   private boolean matchPattern(@Nullable final PsiElement pattern,
                                @Nullable final PsiElement candidate,
-                               @NotNull final SimpleMatch match) {
+                               @Nonnull final SimpleMatch match) {
     ProgressManager.checkCanceled();
     if (pattern == null || candidate == null) return pattern == candidate;
     final PsiElement[] children1 = PsiEquivalenceUtil.getFilteredChildren(pattern, null, true);

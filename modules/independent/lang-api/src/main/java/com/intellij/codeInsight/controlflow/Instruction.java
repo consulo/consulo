@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.controlflow;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -24,7 +23,7 @@ import java.util.Collection;
  * @author oleg
  */
 public interface Instruction {
-  @Nullable
+  @javax.annotation.Nullable
   PsiElement getElement();
 
   Collection<Instruction> allSucc();

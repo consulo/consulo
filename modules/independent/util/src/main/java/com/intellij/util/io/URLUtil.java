@@ -22,8 +22,8 @@ import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -53,7 +53,7 @@ public class URLUtil {
   /**
    * @return if false, then the line contains no URL; if true, then more heavy {@link #URL_PATTERN} check should be used.
    */
-  public static boolean canContainUrl(@NotNull String line) {
+  public static boolean canContainUrl(@Nonnull String line) {
     return line.contains("mailto:") || line.contains("://") || line.contains("www.");
   }
 
@@ -62,14 +62,14 @@ public class URLUtil {
    * separate method is needed, since jar URLs open jars via JarFactory and thus keep them
    * mapped into memory.
    */
-  @NotNull
-  public static InputStream openStream(@NotNull URL url) throws IOException {
+  @Nonnull
+  public static InputStream openStream(@Nonnull URL url) throws IOException {
     String protocol = url.getProtocol();
     return protocol.equals(JAR_PROTOCOL) ? openJarStream(url) : url.openStream();
   }
 
-  @NotNull
-  public static InputStream openResourceStream(@NotNull URL url) throws IOException {
+  @Nonnull
+  public static InputStream openResourceStream(@Nonnull URL url) throws IOException {
     try {
       return openStream(url);
     }
@@ -93,8 +93,8 @@ public class URLUtil {
     }
   }
 
-  @NotNull
-  private static InputStream openJarStream(@NotNull URL url) throws IOException {
+  @Nonnull
+  private static InputStream openJarStream(@Nonnull URL url) throws IOException {
     Pair<String, String> paths = splitJarUrl(url.getFile());
     if (paths == null) {
       throw new MalformedURLException(url.getFile());
@@ -119,8 +119,8 @@ public class URLUtil {
   /**
    * Checks whether local resource specified by {@code url} exists. Returns {@link ThreeState#UNSURE} if {@code url} point to a remote resource.
    */
-  @NotNull
-  public static ThreeState resourceExists(@NotNull URL url) {
+  @Nonnull
+  public static ThreeState resourceExists(@Nonnull URL url) {
     if (url.getProtocol().equals(FILE_PROTOCOL)) {
       return ThreeState.fromBoolean(urlToFile(url).exists());
     }
@@ -157,7 +157,7 @@ public class URLUtil {
    * Please note that the first part is platform-dependent - see UrlUtilTest.testJarUrlSplitter() for examples.
    */
   @Nullable
-  public static Pair<String, String> splitJarUrl(@NotNull String url) {
+  public static Pair<String, String> splitJarUrl(@Nonnull String url) {
     int pivot = url.indexOf(JAR_SEPARATOR);
     if (pivot < 0) return null;
 
@@ -186,8 +186,8 @@ public class URLUtil {
     return Pair.create(jarPath, resourcePath);
   }
 
-  @NotNull
-  public static File urlToFile(@NotNull URL url) {
+  @Nonnull
+  public static File urlToFile(@Nonnull URL url) {
     try {
       return new File(url.toURI().getSchemeSpecificPart());
     }
@@ -196,8 +196,8 @@ public class URLUtil {
     }
   }
 
-  @NotNull
-  public static String unescapePercentSequences(@NotNull String s) {
+  @Nonnull
+  public static String unescapePercentSequences(@Nonnull String s) {
     if (s.indexOf('%') == -1) {
       return s;
     }
@@ -243,11 +243,11 @@ public class URLUtil {
     return -1;
   }
 
-  public static boolean containsScheme(@NotNull String url) {
+  public static boolean containsScheme(@Nonnull String url) {
     return url.contains(SCHEME_SEPARATOR);
   }
 
-  public static boolean isDataUri(@NotNull String value) {
+  public static boolean isDataUri(@Nonnull String value) {
     return !value.isEmpty() && value.startsWith("data:", value.charAt(0) == '"' || value.charAt(0) == '\'' ? 1 : 0);
   }
 
@@ -259,7 +259,7 @@ public class URLUtil {
    * @return extracted byte array or {@code null} if it cannot be extracted.
    */
   @Nullable
-  public static byte[] getBytesFromDataUri(@NotNull String dataUrl) {
+  public static byte[] getBytesFromDataUri(@Nonnull String dataUrl) {
     Matcher matcher = DATA_URI_PATTERN.matcher(StringUtil.unquoteString(dataUrl));
     if (matcher.matches()) {
       try {
@@ -275,8 +275,8 @@ public class URLUtil {
     return null;
   }
 
-  @NotNull
-  public static String parseHostFromSshUrl(@NotNull String sshUrl) {
+  @Nonnull
+  public static String parseHostFromSshUrl(@Nonnull String sshUrl) {
     // [ssh://]git@github.com:user/project.git
     String host = sshUrl;
     int at = host.lastIndexOf('@');
@@ -303,8 +303,8 @@ public class URLUtil {
     return host;
   }
 
-  @NotNull
-  public static URL getJarEntryURL(@NotNull File file, @NotNull String pathInJar) throws MalformedURLException {
+  @Nonnull
+  public static URL getJarEntryURL(@Nonnull File file, @Nonnull String pathInJar) throws MalformedURLException {
     String fileURL = StringUtil.replace(file.toURI().toASCIIString(), "!", "%21");
     return new URL(JAR_PROTOCOL + ':' + fileURL + JAR_SEPARATOR + StringUtil.trimLeading(pathInJar, '/'));
   }

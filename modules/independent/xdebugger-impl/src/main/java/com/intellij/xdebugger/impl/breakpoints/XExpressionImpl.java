@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.breakpoints;
 import com.intellij.lang.Language;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author egor
@@ -28,23 +28,24 @@ public class XExpressionImpl implements XExpression {
   public static final XExpression EMPTY_EXPRESSION = fromText("", EvaluationMode.EXPRESSION);
   public static final XExpression EMPTY_CODE_FRAGMENT = fromText("", EvaluationMode.CODE_FRAGMENT);
 
-  @NotNull private final String myExpression;
+  @Nonnull
+  private final String myExpression;
   private final Language myLanguage;
   private final String myCustomInfo;
   private final EvaluationMode myMode;
 
-  public XExpressionImpl(@NotNull String expression, Language language, String customInfo) {
+  public XExpressionImpl(@Nonnull String expression, Language language, String customInfo) {
     this(expression, language, customInfo, EvaluationMode.EXPRESSION);
   }
 
-  public XExpressionImpl(@NotNull String expression, Language language, String customInfo, EvaluationMode mode) {
+  public XExpressionImpl(@Nonnull String expression, Language language, String customInfo, EvaluationMode mode) {
     myExpression = expression;
     myLanguage = language;
     myCustomInfo = customInfo;
     myMode = mode;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExpression() {
     return myExpression;

@@ -29,8 +29,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

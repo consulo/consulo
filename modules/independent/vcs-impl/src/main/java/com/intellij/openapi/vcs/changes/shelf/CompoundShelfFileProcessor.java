@@ -17,24 +17,24 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 
 public class CompoundShelfFileProcessor {
   private final File shelfDir;
 
-  public CompoundShelfFileProcessor(@NotNull File shelfDir) {
+  public CompoundShelfFileProcessor(@Nonnull File shelfDir) {
     this.shelfDir = shelfDir;
   }
 
   public interface ContentProvider {
-    void writeContentTo(@NotNull Writer writer, @NotNull CommitContext commitContext) throws IOException;
+    void writeContentTo(@Nonnull Writer writer, @Nonnull CommitContext commitContext) throws IOException;
   }
 
-  public void savePathFile(@NotNull ContentProvider contentProvider,
-                           @NotNull final File patchPath,
-                           @NotNull CommitContext commitContext)
+  public void savePathFile(@Nonnull ContentProvider contentProvider,
+                           @Nonnull final File patchPath,
+                           @Nonnull CommitContext commitContext)
           throws IOException {
     OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(patchPath), CharsetToolkit.UTF8_CHARSET);
     try {
@@ -45,7 +45,7 @@ public class CompoundShelfFileProcessor {
     }
   }
 
-  @NotNull
+  @Nonnull
   public File getBaseDir() {
     return shelfDir;
   }

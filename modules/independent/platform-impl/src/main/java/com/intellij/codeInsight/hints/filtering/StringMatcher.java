@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.hints.filtering;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -23,5 +23,5 @@ import org.jetbrains.annotations.NotNull;
  */
 @FunctionalInterface
 public interface StringMatcher {
-  boolean isMatching(@NotNull String text);
+  boolean isMatching(@Nonnull String text);
 }

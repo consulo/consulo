@@ -26,8 +26,8 @@ import com.intellij.vcs.log.graph.utils.IntIntMultiMap;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIterator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,10 +38,11 @@ class LinearBekGraphBuilder {
   private static final int MAX_BLOCK_SIZE = 200;
   private static final int MAGIC_SET_SIZE = PrintElementGeneratorImpl.LONG_EDGE_SIZE;
   private static final GraphEdgeToDownNode GRAPH_EDGE_TO_DOWN_NODE = new GraphEdgeToDownNode();
-  @NotNull private final GraphLayout myGraphLayout;
+  @Nonnull
+  private final GraphLayout myGraphLayout;
   private final LinearBekGraph myLinearBekGraph;
 
-  public LinearBekGraphBuilder(@NotNull LinearBekGraph bekGraph, @NotNull GraphLayout graphLayout) {
+  public LinearBekGraphBuilder(@Nonnull LinearBekGraph bekGraph, @Nonnull GraphLayout graphLayout) {
     myLinearBekGraph = bekGraph;
     myGraphLayout = graphLayout;
   }
@@ -55,7 +56,7 @@ class LinearBekGraphBuilder {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public MergeFragment collapseFragment(int mergeCommit) {
     MergeFragment fragment = getFragment(mergeCommit);
     if (fragment != null) {
@@ -65,7 +66,7 @@ class LinearBekGraphBuilder {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public MergeFragment getFragment(int mergeCommit) {
     List<Integer> downNodes = ContainerUtil.sorted(LinearGraphUtils.getDownNodes(myLinearBekGraph, mergeCommit));
     if (downNodes.size() != 2) return null;
@@ -73,7 +74,7 @@ class LinearBekGraphBuilder {
     return getFragment(downNodes.get(1), downNodes.get(0), mergeCommit);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private MergeFragment getFragment(int leftChild, int rightChild, int parent) {
     MergeFragment fragment = new MergeFragment(parent, leftChild, rightChild);
 
@@ -175,7 +176,7 @@ class LinearBekGraphBuilder {
     return fragment;
   }
 
-  @NotNull
+  @Nonnull
   private Set<Integer> calculateMagicSet(int node) {
     Set<Integer> magicSet;
     magicSet = ContainerUtil.newHashSet(MAGIC_SET_SIZE);
@@ -197,9 +198,12 @@ class LinearBekGraphBuilder {
     private final int myRightChild;
 
     private boolean myMergeWithOldCommit = false;
-    @NotNull private final IntIntMultiMap myTailEdges = new IntIntMultiMap();
-    @NotNull private final TIntHashSet myBlockBody = new TIntHashSet();
-    @NotNull private final TIntHashSet myTails = new TIntHashSet();
+    @Nonnull
+    private final IntIntMultiMap myTailEdges = new IntIntMultiMap();
+    @Nonnull
+    private final TIntHashSet myBlockBody = new TIntHashSet();
+    @Nonnull
+    private final TIntHashSet myTails = new TIntHashSet();
 
     private MergeFragment(int parent, int leftChild, int rightChild) {
       myParent = parent;
@@ -232,7 +236,7 @@ class LinearBekGraphBuilder {
       myBlockBody.add(body);
     }
 
-    @NotNull
+    @Nonnull
     public TIntHashSet getTails() {
       return myTails;
     }
@@ -319,7 +323,7 @@ class LinearBekGraphBuilder {
 
   private static class GraphEdgeComparator implements Comparator<GraphEdge> {
     @Override
-    public int compare(@NotNull GraphEdge e1, @NotNull GraphEdge e2) {
+    public int compare(@Nonnull GraphEdge e1, @Nonnull GraphEdge e2) {
       Integer d1 = e1.getDownNodeIndex();
       Integer d2 = e2.getDownNodeIndex();
 

@@ -4,9 +4,9 @@ import com.intellij.xdebugger.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodePresentationConfigurator;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.concurrent.Semaphore;
 
@@ -22,7 +22,7 @@ public class XTestValueNode extends XValueNodePresentationConfigurator.Configura
 
   @Override
   public void applyPresentation(@Nullable Icon icon,
-                                @NotNull XValuePresentation valuePresentation,
+                                @Nonnull XValuePresentation valuePresentation,
                                 boolean hasChildren) {
     myType = valuePresentation.getType();
     myValue = XValuePresentationUtil.computeValueText(valuePresentation);
@@ -32,7 +32,7 @@ public class XTestValueNode extends XValueNodePresentationConfigurator.Configura
   }
 
   @Override
-  public void setFullValueEvaluator(@NotNull XFullValueEvaluator fullValueEvaluator) {
+  public void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator) {
     myFullValueEvaluator = fullValueEvaluator;
   }
 

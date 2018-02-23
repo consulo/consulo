@@ -19,28 +19,28 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class VirtualFilePointerManager extends SimpleModificationTracker implements Disposable {
-  @NotNull
+  @Nonnull
   public static VirtualFilePointerManager getInstance() {
     return ServiceManager.getService(VirtualFilePointerManager.class);
   }
 
-  @NotNull
-  public abstract VirtualFilePointer create(@NotNull String url, @NotNull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  @Nonnull
+  public abstract VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @NotNull
-  public abstract VirtualFilePointer create(@NotNull VirtualFile file, @NotNull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  @Nonnull
+  public abstract VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @NotNull
-  public abstract VirtualFilePointer duplicate(@NotNull VirtualFilePointer pointer, @NotNull Disposable parent,
+  @Nonnull
+  public abstract VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer, @Nonnull Disposable parent,
                                                @Nullable VirtualFilePointerListener listener);
 
-  @NotNull
-  public abstract VirtualFilePointerContainer createContainer(@NotNull Disposable parent);
+  @Nonnull
+  public abstract VirtualFilePointerContainer createContainer(@Nonnull Disposable parent);
 
-  @NotNull
-  public abstract VirtualFilePointerContainer createContainer(@NotNull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  @Nonnull
+  public abstract VirtualFilePointerContainer createContainer(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
 }

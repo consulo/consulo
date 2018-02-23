@@ -19,7 +19,7 @@ import com.intellij.util.containers.SingletonIterator;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   public SmartHashSet() {
   }
 
-  public SmartHashSet(@NotNull TObjectHashingStrategy<T> strategy) {
+  public SmartHashSet(@Nonnull TObjectHashingStrategy<T> strategy) {
     super(strategy);
   }
 
@@ -66,7 +66,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   }
 
   @Override
-  public boolean contains(@NotNull Object obj) {
+  public boolean contains(@Nonnull Object obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       return eq(theElement, (T)obj);
@@ -75,7 +75,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   }
 
   @Override
-  public boolean add(@NotNull T obj) {
+  public boolean add(@Nonnull T obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       if (eq(theElement, obj)) return false;
@@ -95,7 +95,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   }
 
   @Override
-  public boolean equals(@NotNull Object other) {
+  public boolean equals(@Nonnull Object other) {
     T theElement = this.theElement;
     if (theElement != null) {
       return other instanceof Set && ((Set)other).size() == 1 && eq(theElement, (T)((Set)other).iterator().next());
@@ -135,7 +135,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   }
 
   @Override
-  public boolean remove(@NotNull Object obj) {
+  public boolean remove(@Nonnull Object obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       if (eq(theElement, (T)obj)) {
@@ -147,7 +147,7 @@ public class SmartHashSet<T> extends THashSet<T> {
     return super.remove(obj);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<T> iterator() {
     T theElement = this.theElement;
@@ -158,7 +158,7 @@ public class SmartHashSet<T> extends THashSet<T> {
   }
 
   @Override
-  public boolean forEach(@NotNull TObjectProcedure<T> procedure) {
+  public boolean forEach(@Nonnull TObjectProcedure<T> procedure) {
     T theElement = this.theElement;
     if (theElement != null) {
       return procedure.execute(theElement);
@@ -166,7 +166,7 @@ public class SmartHashSet<T> extends THashSet<T> {
     return super.forEach(procedure);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] toArray() {
     T theElement = this.theElement;
@@ -176,9 +176,9 @@ public class SmartHashSet<T> extends THashSet<T> {
     return super.toArray();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] toArray(@NotNull T[] a) {
+  public <T> T[] toArray(@Nonnull T[] a) {
     T theElement = (T)this.theElement;
     if (theElement != null) {
       if (a.length == 0) {

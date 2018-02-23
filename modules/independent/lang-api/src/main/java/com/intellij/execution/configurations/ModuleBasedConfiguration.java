@@ -25,8 +25,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,7 +62,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
     myModule.setModule(module);
   }
 
-  public void setModuleName(@Nullable String moduleName) {
+  public void setModuleName(@javax.annotation.Nullable String moduleName) {
     getConfigurationModule().setModuleName(moduleName);
   }
 
@@ -121,7 +120,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     return ReadAction.compute(() -> {
       final Module module = getConfigurationModule().getModule();

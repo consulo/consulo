@@ -19,7 +19,7 @@ import com.intellij.ide.dnd.*;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.Function;
 import com.intellij.util.ui.EditableModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,22 +33,22 @@ public class RowsDnDSupport {
   private RowsDnDSupport() {
   }
 
-  public static void install(@NotNull final JTable table, @NotNull final EditableModel model) {
+  public static void install(@Nonnull final JTable table, @Nonnull final EditableModel model) {
     table.setDragEnabled(true);
     installImpl(table, model);
   }
 
-  public static void install(@NotNull final JList list, @NotNull final EditableModel model) {
+  public static void install(@Nonnull final JList list, @Nonnull final EditableModel model) {
     list.setDragEnabled(true);
     installImpl(list, model);
   }
 
-  public static void install(@NotNull final JTree tree, @NotNull final EditableModel model) {
+  public static void install(@Nonnull final JTree tree, @Nonnull final EditableModel model) {
     tree.setDragEnabled(true);
     installImpl(tree, model);
   }
 
-  private static void installImpl(@NotNull final JComponent component, @NotNull final EditableModel model) {
+  private static void installImpl(@Nonnull final JComponent component, @Nonnull final EditableModel model) {
     component.setTransferHandler(new TransferHandler(null));
     DnDSupport.createBuilder(component)
       .setBeanProvider(new Function<DnDActionInfo, DnDDragStartBean>() {
@@ -241,9 +241,9 @@ public class RowsDnDSupport {
 
     boolean isDropInto(JComponent component, int oldIndex, int newIndex);
     //oldIndex may be equal to newIndex
-    boolean canDrop(int oldIndex, int newIndex, @NotNull Position position);
+    boolean canDrop(int oldIndex, int newIndex, @Nonnull Position position);
 
     //This method is also responsible for selection changing
-    void drop(int oldIndex, int newIndex, @NotNull Position position);
+    void drop(int oldIndex, int newIndex, @Nonnull Position position);
   }
 }

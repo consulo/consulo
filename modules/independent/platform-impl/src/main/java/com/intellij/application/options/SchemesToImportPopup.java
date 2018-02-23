@@ -21,7 +21,7 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +71,7 @@ public abstract class SchemesToImportPopup<T> {
     }
 
     @Override
-    public Component getListCellRendererComponent(@NotNull JList list, Object val, int i, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(@Nonnull JList list, Object val, int i, boolean isSelected, boolean cellHasFocus) {
       Named c = (Named)val;
       myNameLabel.setText(c.getName());
 

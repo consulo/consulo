@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static List<AnAction> getSelectedElements(AnActionEvent e) {
     final JList list = getList(e);
     final List<AnAction> actions = new ArrayList<AnAction>();
@@ -88,7 +88,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
     }
   }
 
-  public static void rebuildRecentProjectDataModel(@NotNull DefaultListModel model) {
+  public static void rebuildRecentProjectDataModel(@Nonnull DefaultListModel model) {
     model.clear();
     for (AnAction action : RecentProjectsManager.getInstance().getRecentProjectsActions(false, true)) {
       //noinspection unchecked

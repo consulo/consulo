@@ -20,28 +20,32 @@ import com.intellij.vcs.log.graph.api.LiteLinearGraph;
 import com.intellij.vcs.log.graph.api.LiteLinearGraph.NodeFilter;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.vcs.log.graph.api.elements.GraphEdgeType.*;
 
 public class DottedFilterEdgesGenerator {
-  public static void update(@NotNull CollapsedGraph collapsedGraph, int upDelegateNodeIndex, int downDelegateNodeIndex) {
+  public static void update(@Nonnull CollapsedGraph collapsedGraph, int upDelegateNodeIndex, int downDelegateNodeIndex) {
     CollapsedGraph.Modification modification = collapsedGraph.startModification();
     new DottedFilterEdgesGenerator(collapsedGraph, modification, upDelegateNodeIndex, downDelegateNodeIndex).update();
     modification.apply();
   }
 
-  @NotNull private final CollapsedGraph myCollapsedGraph;
-  @NotNull private final CollapsedGraph.Modification myModification;
+  @Nonnull
+  private final CollapsedGraph myCollapsedGraph;
+  @Nonnull
+  private final CollapsedGraph.Modification myModification;
 
-  @NotNull private final LiteLinearGraph myLiteDelegateGraph;
+  @Nonnull
+  private final LiteLinearGraph myLiteDelegateGraph;
 
   private final int myUpIndex;
   private final int myDownIndex;
-  @NotNull private final ShiftNumber myNumbers;
+  @Nonnull
+  private final ShiftNumber myNumbers;
 
-  private DottedFilterEdgesGenerator(@NotNull CollapsedGraph collapsedGraph,
-                                     @NotNull CollapsedGraph.Modification modification,
+  private DottedFilterEdgesGenerator(@Nonnull CollapsedGraph collapsedGraph,
+                                     @Nonnull CollapsedGraph.Modification modification,
                                      int upIndex,
                                      int downIndex) {
     myCollapsedGraph = collapsedGraph;

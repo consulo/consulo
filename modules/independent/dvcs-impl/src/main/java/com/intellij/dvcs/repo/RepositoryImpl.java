@@ -19,37 +19,40 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Nadya Zabrodina
  */
 public abstract class RepositoryImpl implements Repository {
 
-  @NotNull private final Project myProject;
-  @NotNull private final VirtualFile myRootDir;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VirtualFile myRootDir;
 
 
-  @NotNull protected volatile State myState;
+  @Nonnull
+  protected volatile State myState;
   @Nullable protected volatile String myCurrentRevision;
 
-  protected RepositoryImpl(@NotNull Project project,
-                           @NotNull VirtualFile dir,
-                           @NotNull Disposable parentDisposable) {
+  protected RepositoryImpl(@Nonnull Project project,
+                           @Nonnull VirtualFile dir,
+                           @Nonnull Disposable parentDisposable) {
     myProject = project;
     myRootDir = dir;
     Disposer.register(parentDisposable, this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getRoot() {
     return myRootDir;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableUrl() {
     return getRoot().getPresentableUrl();
   }
@@ -60,12 +63,12 @@ public abstract class RepositoryImpl implements Repository {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public State getState() {
     return myState;
@@ -73,7 +76,7 @@ public abstract class RepositoryImpl implements Repository {
 
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getCurrentRevision() {
     return myCurrentRevision;
   }

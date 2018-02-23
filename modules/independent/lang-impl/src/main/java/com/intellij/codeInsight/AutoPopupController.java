@@ -46,8 +46,8 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.TimeUnit;
@@ -177,7 +177,7 @@ public class AutoPopupController implements Disposable {
   }
 
   @RequiredDispatchThread
-  public void autoPopupParameterInfo(@NotNull final Editor editor, @Nullable final Object highlightedMethod) {
+  public void autoPopupParameterInfo(@Nonnull final Editor editor, @Nullable final Object highlightedMethod) {
     if (DumbService.isDumb(myProject)) return;
     if (PowerSaveMode.isEnabled()) return;
 
@@ -213,7 +213,7 @@ public class AutoPopupController implements Disposable {
   public void dispose() {
   }
 
-  public static void runTransactionWithEverythingCommitted(@NotNull final Project project, @NotNull final Runnable runnable) {
+  public static void runTransactionWithEverythingCommitted(@Nonnull final Project project, @Nonnull final Runnable runnable) {
     TransactionGuard guard = TransactionGuard.getInstance();
     TransactionId id = guard.getContextTransaction();
     final PsiDocumentManager pdm = PsiDocumentManager.getInstance(project);
@@ -229,7 +229,7 @@ public class AutoPopupController implements Disposable {
   }
 
   @TestOnly
-  public void waitForDelayedActions(long timeout, @NotNull TimeUnit unit) throws TimeoutException {
+  public void waitForDelayedActions(long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
     long deadline = System.currentTimeMillis() + unit.toMillis(timeout);
     while (System.currentTimeMillis() < deadline) {
       if (myAlarm.isEmpty()) return;

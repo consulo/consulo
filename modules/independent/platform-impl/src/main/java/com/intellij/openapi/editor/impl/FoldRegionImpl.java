@@ -30,8 +30,8 @@ import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.util.DocumentUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class FoldRegionImpl extends RangeMarkerImpl implements FoldRegion {
   private boolean myIsExpanded;
@@ -41,10 +41,10 @@ class FoldRegionImpl extends RangeMarkerImpl implements FoldRegion {
   private final boolean myShouldNeverExpand;
   private boolean myDocumentRegionWasChanged;
 
-  FoldRegionImpl(@NotNull Editor editor,
+  FoldRegionImpl(@Nonnull Editor editor,
                  int startOffset,
                  int endOffset,
-                 @NotNull String placeholder,
+                 @Nonnull String placeholder,
                  @Nullable FoldingGroup group,
                  boolean shouldNeverExpand) {
     super((DocumentEx)editor.getDocument(), startOffset, endOffset,true);
@@ -102,7 +102,7 @@ class FoldRegionImpl extends RangeMarkerImpl implements FoldRegion {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPlaceholderText() {
     return myPlaceholderText;
   }
@@ -132,7 +132,7 @@ class FoldRegionImpl extends RangeMarkerImpl implements FoldRegion {
   }
 
   @Override
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     if (isValid()) {
       int oldStart = intervalStart();
       int oldEnd = intervalEnd();

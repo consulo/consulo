@@ -6,14 +6,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import consulo.xdebugger.impl.settings.XDebuggerGeneralConfigurable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class XDebuggerConfigurableProvider {
-  @NotNull
-  public static Collection<Configurable> getConfigurables(@NotNull DebuggerSettingsCategory category) {
+  @Nonnull
+  public static Collection<Configurable> getConfigurables(@Nonnull DebuggerSettingsCategory category) {
     List<Configurable> list;
     if (category == DebuggerSettingsCategory.GENERAL) {
       list = new SmartList<>(new XDebuggerGeneralConfigurable());
@@ -34,7 +34,7 @@ public class XDebuggerConfigurableProvider {
     return ContainerUtil.notNullize(list);
   }
 
-  public static void generalApplied(@NotNull DebuggerSettingsCategory category) {
+  public static void generalApplied(@Nonnull DebuggerSettingsCategory category) {
     for (XDebuggerSettings<?> settings : XDebuggerSettingManagerImpl.getInstanceImpl().getSettingsList()) {
       settings.generalApplied(category);
     }

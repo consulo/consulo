@@ -15,21 +15,21 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class BuildTarget {
   public static final BuildTarget DEFAULT = new BuildTarget() {
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
       return "<default>";
     }
   };
 
-  @NotNull
+  @Nonnull
   public abstract String getId();
 
   @Override

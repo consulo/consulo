@@ -20,7 +20,7 @@
 package com.intellij.util;
 
 import com.intellij.concurrency.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class MergeQuery<T> implements Query<T>{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<T> findAll() {
     List<T> results = new ArrayList<T>();
     forEach(new CommonProcessors.CollectProcessor<T>(results));
@@ -52,13 +52,13 @@ public class MergeQuery<T> implements Query<T>{
   }
 
   @Override
-  public boolean forEach(@NotNull final Processor<T> consumer) {
+  public boolean forEach(@Nonnull final Processor<T> consumer) {
     return processSubQuery(consumer, myQuery1) && processSubQuery(consumer, myQuery2);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull final Processor<T> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull final Processor<T> consumer) {
     final AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
 
     final AsyncFuture<Boolean> fq = processSubQueryAsync(consumer, myQuery1);
@@ -97,9 +97,9 @@ public class MergeQuery<T> implements Query<T>{
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public T[] toArray(@NotNull final T[] a) {
+  public T[] toArray(@Nonnull final T[] a) {
     final Collection<T> results = findAll();
     return results.toArray(a);
   }

@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     SURROUNDERS = surrounderList.toArray(new CustomFoldingRegionSurrounder[surrounderList.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
     if (startOffset >= endOffset - 1) return PsiElement.EMPTY_ARRAY;
@@ -132,7 +132,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     return lineFeedFound;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Surrounder[] getSurrounders() {
     return SURROUNDERS;
@@ -147,7 +147,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
 
     private final CustomFoldingProvider myProvider;
 
-    public CustomFoldingRegionSurrounder(@NotNull CustomFoldingProvider provider) {
+    public CustomFoldingRegionSurrounder(@Nonnull CustomFoldingProvider provider) {
       myProvider = provider;
     }
 
@@ -157,7 +157,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    public boolean isApplicable(@NotNull PsiElement[] elements) {
+    public boolean isApplicable(@Nonnull PsiElement[] elements) {
       if (elements.length == 0) return false;
       for (FoldingBuilder each : LanguageFolding.INSTANCE.allForLanguage(elements[0].getLanguage())) {
         if (each instanceof CustomFoldingBuilder) return true;
@@ -166,7 +166,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements)
+    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
       throws IncorrectOperationException {
       if (elements.length == 0) return null;
       PsiElement firstElement = elements[0];
@@ -204,7 +204,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
       return rangeToSelect;
     }
 
-    private static void adjustLineIndent(@NotNull Project project, PsiFile file, Language language, TextRange range) {
+    private static void adjustLineIndent(@Nonnull Project project, PsiFile file, Language language, TextRange range) {
       CommonCodeStyleSettings formatSettings = CodeStyleSettingsManager.getSettings(project).getCommonSettings(language);
       boolean keepAtFirstCol = formatSettings.KEEP_FIRST_COLUMN_COMMENT;
       formatSettings.KEEP_FIRST_COLUMN_COMMENT = false;

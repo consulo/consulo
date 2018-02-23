@@ -35,9 +35,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.Nullable;
 import consulo.roots.ContentFolderScopes;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**

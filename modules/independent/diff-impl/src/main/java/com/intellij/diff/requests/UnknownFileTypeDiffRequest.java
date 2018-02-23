@@ -27,28 +27,30 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
-  @Nullable private final String myFileName;
-  @Nullable private final String myTitle;
+  @javax.annotation.Nullable
+  private final String myFileName;
+  @javax.annotation.Nullable
+  private final String myTitle;
 
-  public UnknownFileTypeDiffRequest(@NotNull VirtualFile file, @Nullable String title) {
+  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @javax.annotation.Nullable String title) {
     this(file.getName(), title);
   }
 
-  public UnknownFileTypeDiffRequest(@NotNull String fileName, @Nullable String title) {
+  public UnknownFileTypeDiffRequest(@Nonnull String fileName, @Nullable String title) {
     boolean knownFileType = FileTypeManager.getInstance().getFileTypeByFileName(fileName) != UnknownFileType.INSTANCE;
     myFileName = knownFileType ? null : fileName;
     myTitle = title;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public JComponent getComponent(@NotNull final DiffContext context) {
+  public JComponent getComponent(@Nonnull final DiffContext context) {
     final SimpleColoredComponent label = new SimpleColoredComponent();
     label.setTextAlign(SwingConstants.CENTER);
     label.append("Can't show diff for unknown file type. ",
@@ -66,18 +68,18 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
     return JBUI.Panels.simplePanel(label).withBorder(JBUI.Borders.empty(5));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getFileName() {
     return myFileName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTitle() {
     return myTitle;
   }
 
-  protected void onSuccess(@NotNull DiffContext context) {
+  protected void onSuccess(@Nonnull DiffContext context) {
     if (context instanceof DiffContextEx) ((DiffContextEx)context).reloadDiffRequest();
   }
 }

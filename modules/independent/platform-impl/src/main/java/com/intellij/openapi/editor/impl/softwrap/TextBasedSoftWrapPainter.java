@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +69,7 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     FontInfo fontInfo = myFonts.get(drawingType);
     if (fontInfo != null) {
       char[] buffer = mySymbols.get(drawingType);
@@ -80,12 +80,12 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return getMinDrawingWidth(drawingType);
   }
 
   @Override
-  public int getMinDrawingWidth(@NotNull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
     return myWidths[drawingType.ordinal()];
   }
 

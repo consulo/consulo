@@ -36,16 +36,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotifications;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
-  public PsiAwareTextEditorImpl(@NotNull final Project project, @NotNull final VirtualFile file, final TextEditorProvider provider) {
+  public PsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProvider provider) {
     super(project, file, provider);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
@@ -66,7 +66,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
     return new PsiAwareTextEditorComponent(project, file, this);
@@ -88,9 +88,9 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(@NotNull final Project project,
-                                        @NotNull final VirtualFile file,
-                                        @NotNull final TextEditorImpl textEditor) {
+    private PsiAwareTextEditorComponent(@Nonnull final Project project,
+                                        @Nonnull final VirtualFile file,
+                                        @Nonnull final TextEditorImpl textEditor) {
       super(project, file, textEditor);
       myProject = project;
       myFile = file;
@@ -106,7 +106,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public Object getData(@NotNull final Key<?> dataId) {
+    public Object getData(@Nonnull final Key<?> dataId) {
       if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {

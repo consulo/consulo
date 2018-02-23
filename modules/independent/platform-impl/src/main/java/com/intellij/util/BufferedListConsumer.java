@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.application.ApplicationManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,11 +77,11 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     }
   }
 
-  protected void invokeConsumer(@NotNull Runnable consumerRunnable) {
+  protected void invokeConsumer(@Nonnull Runnable consumerRunnable) {
     ApplicationManager.getApplication().executeOnPooledThread(consumerRunnable);
   }
 
-  @NotNull
+  @Nonnull
   private Runnable createConsumerRunnable(final long ts) {
     return new Runnable() {
       @Override

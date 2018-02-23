@@ -50,8 +50,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.HashSet;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -65,7 +65,8 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
   private static final int COMMAND_TO_RUN_COMPACT = 20;
   private static final int FREE_QUEUES_LIMIT = 30;
 
-  @Nullable private final ProjectEx myProject;
+  @Nullable
+  private final ProjectEx myProject;
   private final CommandProcessor myCommandProcessor;
 
   private UndoProvider[] myUndoProviders;
@@ -279,14 +280,14 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
   }
 
   @Override
-  public void nonundoableActionPerformed(@NotNull final DocumentReference ref, final boolean isGlobal) {
+  public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject != null && myProject.isDisposed()) return;
     undoableActionPerformed(new NonUndoableAction(ref, isGlobal));
   }
 
   @Override
-  public void undoableActionPerformed(@NotNull UndoableAction action) {
+  public void undoableActionPerformed(@Nonnull UndoableAction action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject != null && myProject.isDisposed()) return;
 
@@ -310,7 +311,7 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     myCurrentMerger.markAsGlobal();
   }
 
-  void addAffectedDocuments(@NotNull Document... docs) {
+  void addAffectedDocuments(@Nonnull Document... docs) {
     if (!isInsideCommand()) {
       LOG.error("Must be called inside command");
       return;
@@ -326,7 +327,7 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     myCurrentMerger.addAdditionalAffectedDocuments(refs);
   }
 
-  public void addAffectedFiles(@NotNull VirtualFile... files) {
+  public void addAffectedFiles(@Nonnull VirtualFile... files) {
     if (!isInsideCommand()) {
       LOG.error("Must be called inside command");
       return;
@@ -338,7 +339,7 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     myCurrentMerger.addAdditionalAffectedDocuments(refs);
   }
 
-  public void invalidateActionsFor(@NotNull DocumentReference ref) {
+  public void invalidateActionsFor(@Nonnull DocumentReference ref) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myMerger.invalidateActionsFor(ref);
     if (myCurrentMerger != null) myCurrentMerger.invalidateActionsFor(ref);
@@ -413,12 +414,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return refs != null && isUndoOrRedoAvailable(refs, undo);
   }
 
-  boolean isUndoOrRedoAvailable(@NotNull DocumentReference ref) {
+  boolean isUndoOrRedoAvailable(@Nonnull DocumentReference ref) {
     Set<DocumentReference> refs = Collections.singleton(ref);
     return isUndoOrRedoAvailable(refs, true) || isUndoOrRedoAvailable(refs, false);
   }
 
-  private boolean isUndoOrRedoAvailable(@NotNull Collection<DocumentReference> refs, boolean isUndo) {
+  private boolean isUndoOrRedoAvailable(@Nonnull Collection<DocumentReference> refs, boolean isUndo) {
     if (isUndo && myMerger.isUndoAvailable(refs)) return true;
     UndoRedoStacksHolder stackHolder = getStackHolder(isUndo);
     return stackHolder.canBeUndoneOrRedone(refs);
@@ -434,8 +435,8 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return getDocumentReferences(editor);
   }
 
-  @NotNull
-  static Set<DocumentReference> getDocumentReferences(@NotNull FileEditor editor) {
+  @Nonnull
+  static Set<DocumentReference> getDocumentReferences(@Nonnull FileEditor editor) {
     Set<DocumentReference> result = new THashSet<>();
 
     if (editor instanceof DocumentReferenceProvider) {
@@ -456,24 +457,24 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private UndoRedoStacksHolder getStackHolder(boolean isUndo) {
     return isUndo ? myUndoStacksHolder : myRedoStacksHolder;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Pair<String, String> getUndoActionNameAndDescription(FileEditor editor) {
     return getUndoOrRedoActionNameAndDescription(editor, true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Pair<String, String> getRedoActionNameAndDescription(FileEditor editor) {
     return getUndoOrRedoActionNameAndDescription(editor, false);
   }
 
-  @NotNull
+  @Nonnull
   private Pair<String, String> getUndoOrRedoActionNameAndDescription(FileEditor editor, boolean undo) {
     String desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : null;
     if (desc == null) desc = "";
@@ -499,12 +500,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return getStackHolder(isUndo).getLastAction(refs).getCommandName();
   }
 
-  @NotNull
+  @Nonnull
   UndoRedoStacksHolder getUndoStacksHolder() {
     return myUndoStacksHolder;
   }
 
-  @NotNull
+  @Nonnull
   UndoRedoStacksHolder getRedoStacksHolder() {
     return myRedoStacksHolder;
   }
@@ -513,13 +514,13 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return ++myCommandTimestamp;
   }
 
-  @NotNull
-  private static Document getOriginal(@NotNull Document document) {
+  @Nonnull
+  private static Document getOriginal(@Nonnull Document document) {
     Document result = document.getUserData(ORIGINAL_DOCUMENT);
     return result == null ? document : result;
   }
 
-  static boolean isCopy(@NotNull Document d) {
+  static boolean isCopy(@Nonnull Document d) {
     return d.getUserData(ORIGINAL_DOCUMENT) != null;
   }
 
@@ -561,11 +562,11 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     }
   }
 
-  private int getLastCommandTimestamp(@NotNull DocumentReference ref) {
+  private int getLastCommandTimestamp(@Nonnull DocumentReference ref) {
     return Math.max(myUndoStacksHolder.getLastCommandTimestamp(ref), myRedoStacksHolder.getLastCommandTimestamp(ref));
   }
 
-  @NotNull
+  @Nonnull
   private Collection<DocumentReference> collectReferencesWithoutMergers() {
     Set<DocumentReference> result = new THashSet<>();
     myUndoStacksHolder.collectAllAffectedDocuments(result);
@@ -573,7 +574,7 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
     return result;
   }
 
-  private void clearUndoRedoQueue(@NotNull DocumentReference docRef) {
+  private void clearUndoRedoQueue(@Nonnull DocumentReference docRef) {
     myMerger.flushCurrentCommand();
     disposeCurrentMerger();
 
@@ -582,12 +583,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
   }
 
   @TestOnly
-  public void setEditorProvider(@NotNull CurrentEditorProvider p) {
+  public void setEditorProvider(@Nonnull CurrentEditorProvider p) {
     myEditorProvider = p;
   }
 
   @TestOnly
-  @NotNull
+  @Nonnull
   public CurrentEditorProvider getEditorProvider() {
     return myEditorProvider;
   }
@@ -614,12 +615,12 @@ public class UndoManagerImpl extends UndoManager implements Disposable {
   }
 
   @TestOnly
-  public void clearUndoRedoQueueInTests(@NotNull VirtualFile file) {
+  public void clearUndoRedoQueueInTests(@Nonnull VirtualFile file) {
     clearUndoRedoQueue(DocumentReferenceManager.getInstance().create(file));
   }
 
   @TestOnly
-  public void clearUndoRedoQueueInTests(@NotNull Document document) {
+  public void clearUndoRedoQueueInTests(@Nonnull Document document) {
     clearUndoRedoQueue(DocumentReferenceManager.getInstance().create(document));
   }
 

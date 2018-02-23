@@ -27,8 +27,8 @@ import consulo.application.options.PathMacrosService;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -43,23 +43,23 @@ public class StorageData extends StorageDataBase {
 
   protected final String myRootElementName;
 
-  public StorageData(@NotNull String rootElementName) {
+  public StorageData(@Nonnull String rootElementName) {
     myStates = new StateMap();
     myRootElementName = rootElementName;
   }
 
-  StorageData(@NotNull StorageData storageData) {
+  StorageData(@Nonnull StorageData storageData) {
     myRootElementName = storageData.myRootElementName;
     myStates = new StateMap(storageData.myStates);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<String> getComponentNames() {
     return myStates.keys();
   }
 
-  public void load(@NotNull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
+  public void load(@Nonnull Element rootElement, @Nullable PathMacroSubstitutor pathMacroSubstitutor, boolean intern) {
     if (pathMacroSubstitutor != null) {
       pathMacroSubstitutor.expandPaths(rootElement);
     }
@@ -89,7 +89,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  static String getComponentNameIfValid(@NotNull Element element) {
+  static String getComponentNameIfValid(@Nonnull Element element) {
     String name = element.getAttributeValue(NAME);
     if (StringUtil.isEmpty(name)) {
       LOG.warn("No name attribute for component in " + JDOMUtil.writeElement(element));
@@ -99,7 +99,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  protected Element save(@NotNull Map<String, Element> newLiveStates) {
+  protected Element save(@Nonnull Map<String, Element> newLiveStates) {
     if (myStates.isEmpty()) {
       return null;
     }
@@ -136,17 +136,17 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  public Element getState(@NotNull String name) {
+  public Element getState(@Nonnull String name) {
     return myStates.getState(name);
   }
 
   @Nullable
-  public Element getStateAndArchive(@NotNull String name) {
+  public Element getStateAndArchive(@Nonnull String name) {
     return myStates.getStateAndArchive(name);
   }
 
   @Nullable
-  static StorageData setStateAndCloneIfNeed(@NotNull String componentName, @Nullable Element newState, @NotNull StorageData storageData, @NotNull Map<String, Element> newLiveStates) {
+  static StorageData setStateAndCloneIfNeed(@Nonnull String componentName, @Nullable Element newState, @Nonnull StorageData storageData, @Nonnull Map<String, Element> newLiveStates) {
     Object oldState = storageData.myStates.get(componentName);
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       if (oldState == null) {
@@ -181,7 +181,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Nullable
-  final Object setState(@NotNull String componentName, @Nullable Element newState, @NotNull Map<String, Element> newLiveStates) {
+  final Object setState(@Nonnull String componentName, @Nullable Element newState, @Nonnull Map<String, Element> newLiveStates) {
     if (newState == null || JDOMUtil.isEmpty(newState)) {
       return myStates.remove(componentName);
     }
@@ -209,7 +209,7 @@ public class StorageData extends StorageDataBase {
     return newState;
   }
 
-  private static void prepareElement(@NotNull Element state) {
+  private static void prepareElement(@Nonnull Element state) {
     if (state.getParent() != null) {
       LOG.warn("State element must not have parent " + JDOMUtil.writeElement(state));
       state.detach();
@@ -223,7 +223,7 @@ public class StorageData extends StorageDataBase {
   }
 
   // newStorageData - myStates contains only live (unarchived) states
-  public Set<String> getChangedComponentNames(@NotNull StorageData newStorageData, @Nullable PathMacroSubstitutor substitutor) {
+  public Set<String> getChangedComponentNames(@Nonnull StorageData newStorageData, @Nullable PathMacroSubstitutor substitutor) {
     Set<String> bothStates = new SmartHashSet<String>(myStates.keys());
     bothStates.retainAll(newStorageData.myStates.keys());
 
@@ -239,7 +239,7 @@ public class StorageData extends StorageDataBase {
   }
 
   @Override
-  public boolean hasState(@NotNull String componentName) {
+  public boolean hasState(@Nonnull String componentName) {
     return myStates.hasState(componentName);
   }
 }

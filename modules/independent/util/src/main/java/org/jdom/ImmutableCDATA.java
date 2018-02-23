@@ -13,10 +13,10 @@
 // limitations under the License.
 package org.jdom;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ImmutableCDATA extends CDATA {
-  ImmutableCDATA(@NotNull String str) {
+  ImmutableCDATA(@Nonnull String str) {
     super.setText(str);
   }
 

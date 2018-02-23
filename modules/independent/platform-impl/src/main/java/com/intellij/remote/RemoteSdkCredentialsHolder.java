@@ -3,8 +3,8 @@ package com.intellij.remote;
 import com.intellij.remote.ext.CredentialsManager;
 import com.intellij.util.PathMappingSettings;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class RemoteSdkCredentialsHolder extends RemoteCredentialsHolder implements RemoteSdkCredentials {
 
-  @NotNull
+  @Nonnull
   private final RemoteSdkPropertiesHolder myRemoteSdkProperties;
 
-  public RemoteSdkCredentialsHolder(@NotNull final String defaultHelpersDirName) {
+  public RemoteSdkCredentialsHolder(@Nonnull final String defaultHelpersDirName) {
     myRemoteSdkProperties = new RemoteSdkPropertiesHolder(defaultHelpersDirName);
   }
 
-  public static String constructSshCredentialsSdkFullPath(@NotNull RemoteSdkCredentials cred) {
+  public static String constructSshCredentialsSdkFullPath(@Nonnull RemoteSdkCredentials cred) {
     return getCredentialsString(cred) + cred.getInterpreterPath();
   }
 
@@ -50,7 +50,7 @@ public class RemoteSdkCredentialsHolder extends RemoteCredentialsHolder implemen
   }
 
 
-  @NotNull
+  @Nonnull
   public RemoteSdkPropertiesHolder getRemoteSdkProperties() {
     return myRemoteSdkProperties;
   }
@@ -99,7 +99,7 @@ public class RemoteSdkCredentialsHolder extends RemoteCredentialsHolder implemen
     myRemoteSdkProperties.setRemoteRoots(remoteRoots);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PathMappingSettings getPathMappings() {
     return myRemoteSdkProperties.getPathMappings();

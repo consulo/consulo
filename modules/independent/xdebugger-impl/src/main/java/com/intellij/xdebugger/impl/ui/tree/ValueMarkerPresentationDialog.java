@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author nik

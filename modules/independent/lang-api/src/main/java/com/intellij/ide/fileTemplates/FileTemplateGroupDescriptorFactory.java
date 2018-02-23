@@ -16,7 +16,6 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Should be implemented in an extension point
@@ -24,6 +23,6 @@ import org.jetbrains.annotations.Nullable;
 public interface FileTemplateGroupDescriptorFactory {
   ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create("com.intellij.fileTemplateGroup");
 
-  @Nullable
+  @javax.annotation.Nullable
   FileTemplateGroupDescriptor getFileTemplatesDescriptor();
 }

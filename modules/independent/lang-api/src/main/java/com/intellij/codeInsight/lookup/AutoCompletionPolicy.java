@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.ClassConditionKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * What to do if there's only one element in completion lookup? Should IDEA show lookup or just insert this element? Call
@@ -50,8 +50,8 @@ public enum AutoCompletionPolicy {
    */
   ALWAYS_AUTOCOMPLETE;
 
-  @NotNull
-  public LookupElement applyPolicy(@NotNull LookupElement element) {
+  @Nonnull
+  public LookupElement applyPolicy(@Nonnull LookupElement element) {
     return new PolicyDecorator(element, this);
   }
 

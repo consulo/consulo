@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.IOUtil;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.HashMap;
@@ -103,7 +103,7 @@ public class GenericCompilerPersistentData {
     }
   }
 
-  public int getId(@NotNull String target) {
+  public int getId(@Nonnull String target) {
     if (myTarget2Id.containsKey(target)) {
       return myTarget2Id.get(target);
     }

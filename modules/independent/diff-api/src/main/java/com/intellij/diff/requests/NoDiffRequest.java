@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.requests;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class NoDiffRequest extends MessageDiffRequest {
   public static NoDiffRequest INSTANCE = new NoDiffRequest();

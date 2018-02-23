@@ -16,7 +16,7 @@
 package com.intellij.psi.stubs;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -26,13 +26,13 @@ import java.io.IOException;
  */
 public interface ObjectStubSerializer<T extends Stub, P extends Stub> {
   @NonNls
-  @NotNull
+  @Nonnull
   String getExternalId();
 
-  void serialize(@NotNull T stub, @NotNull StubOutputStream dataStream) throws IOException;
-  @NotNull
-  T deserialize(@NotNull StubInputStream dataStream, final P parentStub) throws IOException;
+  void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException;
+  @Nonnull
+  T deserialize(@Nonnull StubInputStream dataStream, final P parentStub) throws IOException;
 
-  void indexStub(@NotNull T stub, @NotNull IndexSink sink);
+  void indexStub(@Nonnull T stub, @Nonnull IndexSink sink);
 
 }

@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -71,18 +71,19 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
-  public EditorTextField getEditorField(@NotNull Language language, @NotNull Project project,
-                                        @NotNull final Iterable<EditorCustomization> features) {
+  public EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project,
+                                        @Nonnull final Iterable<EditorCustomization> features) {
     return new MyEditorTextField(language, project, features);
   }
 
   private static class MyEditorTextField extends LanguageTextField {
 
-    @NotNull private final Iterable<EditorCustomization> myCustomizations;
+    @Nonnull
+    private final Iterable<EditorCustomization> myCustomizations;
 
-    MyEditorTextField(@NotNull Language language, @NotNull Project project, @NotNull Iterable<EditorCustomization> customizations) {
+    MyEditorTextField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<EditorCustomization> customizations) {
       super(language, project, "", false);
       myCustomizations = customizations;
     }
@@ -103,7 +104,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
       settings.setVirtualSpace(false);
     }
 
-    private void applyCustomizations(@NotNull EditorEx editor) {
+    private void applyCustomizations(@Nonnull EditorEx editor) {
       for (EditorCustomization customization : myCustomizations) {
         customization.customize(editor);
       }
@@ -115,7 +116,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (PlatformDataKeys.ACTIONS_SORTER == dataId) {
         return ACTIONS_COMPARATOR;
       }

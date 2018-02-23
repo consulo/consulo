@@ -20,8 +20,8 @@ import com.intellij.openapi.wm.*;
 import consulo.ui.shared.Rectangle2D;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Anton Katilin
@@ -46,7 +46,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   private static final float DEFAULT_SIDE_WEIGHT = 0.5f;
 
   private boolean myActive;
-  @NotNull
+  @Nonnull
   private ToolWindowAnchor myAnchor = ToolWindowAnchor.LEFT;
   private boolean myAutoHide;
   /**
@@ -63,7 +63,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   private float mySideWeight = DEFAULT_SIDE_WEIGHT;
   private boolean mySplitMode;
 
-  @NotNull
+  @Nonnull
   private ToolWindowContentUiType myContentUiType = ToolWindowContentUiType.TABBED;
   /**
    * Defines order of tool window button inside the stripe.
@@ -110,7 +110,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Creates <code>WindowInfo</code> for tool window with specified <code>ID</code>.
    */
-  WindowInfoImpl(@NotNull String id) {
+  WindowInfoImpl(@Nonnull String id) {
     myId = id;
     setType(ToolWindowType.DOCKED);
   }
@@ -118,7 +118,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Creates copy of <code>WindowInfo</code> object.
    */
-  @NotNull
+  @Nonnull
   public WindowInfoImpl copy() {
     try {
       WindowInfoImpl info = (WindowInfoImpl)clone();
@@ -135,7 +135,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Copies all data from the passed <code>WindowInfo</code> into itself.
    */
-  void copyFrom(@NotNull WindowInfoImpl info) {
+  void copyFrom(@Nonnull WindowInfoImpl info) {
     myActive = info.myActive;
     myAnchor = info.myAnchor;
     myAutoHide = info.myAutoHide;
@@ -154,19 +154,19 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * @return tool window's anchor in internal mode.
    */
-  @NotNull
+  @Nonnull
   @Override
   public ToolWindowAnchor getAnchor() {
     return myAnchor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ToolWindowContentUiType getContentUiType() {
     return myContentUiType;
   }
 
-  public void setContentUiType(@NotNull ToolWindowContentUiType type) {
+  public void setContentUiType(@Nonnull ToolWindowContentUiType type) {
     myContentUiType = type;
   }
 
@@ -182,7 +182,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * @return <code>ID</code> of the tool window.
    */
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
@@ -192,7 +192,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * window can be in floating mode, but this method has sense if you want to know what type
    * tool window had when it was internal one. The method never returns <code>null</code>.
    */
-  @NotNull
+  @Nonnull
   public ToolWindowType getInternalType() {
     return myInternalType;
   }
@@ -377,7 +377,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Sets new anchor.
    */
-  public void setAnchor(@NotNull final ToolWindowAnchor anchor) {
+  public void setAnchor(@Nonnull final ToolWindowAnchor anchor) {
     myAnchor = anchor;
   }
 
@@ -393,7 +393,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myFloatingBounds = floatingBounds;
   }
 
-  public void setType(@NotNull final ToolWindowType type) {
+  public void setType(@Nonnull final ToolWindowType type) {
     if (ToolWindowType.DOCKED == type || ToolWindowType.SLIDING == type) {
       myInternalType = type;
     }
@@ -401,7 +401,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   }
 
   //Hardcoded to avoid single-usage-API
-  private void setTypeAndCheck(@NotNull ToolWindowType type) {
+  private void setTypeAndCheck(@Nonnull ToolWindowType type) {
     myType = ToolWindowId.PREVIEW == myId && type == ToolWindowType.DOCKED ? ToolWindowType.SLIDING : type;
   }
 

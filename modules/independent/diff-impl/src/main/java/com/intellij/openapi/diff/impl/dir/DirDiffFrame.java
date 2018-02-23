@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -46,7 +46,7 @@ public class DirDiffFrame extends FrameWrapper {
     closeOnEsc();
     DataManager.registerDataProvider(myPanel.getPanel(), new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         if (PlatformDataKeys.HELP_ID == dataId) {
           return "reference.dialogs.diff.folder";
         }

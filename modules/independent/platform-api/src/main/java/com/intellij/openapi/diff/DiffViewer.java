@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.diff;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

@@ -22,8 +22,8 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -127,7 +127,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
 
 
   @Nullable
-  private static VcsIgnoredFilesHolder getHolderFromEP(AbstractVcs vcs, @NotNull Project project) {
+  private static VcsIgnoredFilesHolder getHolderFromEP(AbstractVcs vcs, @Nonnull Project project) {
     Optional<VcsIgnoredFilesHolder> ignoredFilesHolder =
             Stream.of(Extensions.getExtensions(VcsIgnoredFilesHolder.VCS_IGNORED_FILES_HOLDER_EP, project))
                     .filter(holder -> holder.getVcs().equals(vcs))

@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -42,7 +42,7 @@ class TaskQueue {
     myTimeStampUpdateSizeLimit = 32;
   }
 
-  void submit(@NotNull final Computable<Boolean> update, @NotNull final Runnable successRunnable) {
+  void submit(@Nonnull final Computable<Boolean> update, @Nonnull final Runnable successRunnable) {
     int currentTasksCount = myUpdatesCount.incrementAndGet();
 
     myPendingWriteRequestsQueue.add(new Runnable() {

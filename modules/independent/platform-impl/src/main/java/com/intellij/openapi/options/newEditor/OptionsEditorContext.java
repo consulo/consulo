@@ -20,8 +20,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.speedSearch.ElementFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -44,7 +44,7 @@ class OptionsEditorContext {
     myFilter = filter;
   }
 
-  ActionCallback fireSelected(@Nullable final Configurable configurable, @NotNull OptionsEditorColleague requestor) {
+  ActionCallback fireSelected(@Nullable final Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
     if (myCurrentConfigurable == configurable) return new ActionCallback.Rejected();
 
     final Configurable old = myCurrentConfigurable;
@@ -53,7 +53,7 @@ class OptionsEditorContext {
     return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
-  ActionCallback fireModifiedAdded(@NotNull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  ActionCallback fireModifiedAdded(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if (myModified.contains(configurable)) return new ActionCallback.Rejected();
 
     myModified.add(configurable);
@@ -61,7 +61,7 @@ class OptionsEditorContext {
     return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
-  ActionCallback fireModifiedRemoved(@NotNull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+  ActionCallback fireModifiedRemoved(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
     if (!myModified.contains(configurable)) return new ActionCallback.Rejected();
 
     myModified.remove(configurable);
@@ -126,7 +126,7 @@ class OptionsEditorContext {
     return result == null ? Collections.<Configurable>emptySet() : result;
   }
 
-  @NotNull
+  @Nonnull
   ElementFilter<Configurable> getFilter() {
     return myFilter;
   }

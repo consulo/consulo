@@ -43,7 +43,7 @@ import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -226,32 +226,32 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
   }
 
   @Override
-  public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+  public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
     rebuildUI();
   }
 
   @Override
-  public void childAdded(@NotNull PsiTreeChangeEvent event) {
+  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childMoved(@NotNull PsiTreeChangeEvent event) {
+  public void childMoved(@Nonnull PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void propertyChanged(@NotNull final PsiTreeChangeEvent event) {
+  public void propertyChanged(@Nonnull final PsiTreeChangeEvent event) {
     updateModel();
   }
 
@@ -261,12 +261,12 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
   }
 
   @Override
-  public void problemsAppeared(@NotNull VirtualFile file) {
+  public void problemsAppeared(@Nonnull VirtualFile file) {
     updateModel();
   }
 
   @Override
-  public void problemsDisappeared(@NotNull VirtualFile file) {
+  public void problemsDisappeared(@Nonnull VirtualFile file) {
     updateModel();
   }
 
@@ -344,7 +344,7 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
   }
 
   @Override
-  public void fileOpened(@NotNull final FileEditorManager manager, @NotNull final VirtualFile file) {
+  public void fileOpened(@Nonnull final FileEditorManager manager, @Nonnull final VirtualFile file) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -382,29 +382,29 @@ public class NavBarListener extends WolfTheProblemSolver.ProblemListener
   public void beforeRootsChange(ModuleRootEvent event) {}
 
   @Override
-  public void beforeChildAddition(@NotNull PsiTreeChangeEvent event) {}
+  public void beforeChildAddition(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildRemoval(@NotNull PsiTreeChangeEvent event) {}
+  public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildReplacement(@NotNull PsiTreeChangeEvent event) {}
+  public void beforeChildReplacement(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildMovement(@NotNull PsiTreeChangeEvent event) {}
+  public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildrenChange(@NotNull PsiTreeChangeEvent event) {}
+  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforePropertyChange(@NotNull PsiTreeChangeEvent event) {}
+  public void beforePropertyChange(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void childRemoved(@NotNull PsiTreeChangeEvent event) {}
+  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {}
 
   @Override
-  public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {}
+  public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {}
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {}
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {}
 }

@@ -20,7 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,19 +35,19 @@ public class NativeFileType implements INativeFileType {
   private NativeFileType() { }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "Native";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "Files opened in associated applications";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "";
   }
@@ -63,11 +63,11 @@ public class NativeFileType implements INativeFileType {
   }
 
   @Override
-  public boolean openFileInAssociatedApplication(final Project project, @NotNull final VirtualFile file) {
+  public boolean openFileInAssociatedApplication(final Project project, @Nonnull final VirtualFile file) {
     return openAssociatedApplication(file);
   }
 
-  public static boolean openAssociatedApplication(@NotNull final VirtualFile file) {
+  public static boolean openAssociatedApplication(@Nonnull final VirtualFile file) {
     final List<String> commands = new ArrayList<>();
     if (SystemInfo.isWindows) {
       commands.add("rundll32.exe");

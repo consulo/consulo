@@ -18,7 +18,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The plugin side of a custom language parser. Receives tokens returned from
@@ -40,6 +40,6 @@ public interface PsiParser {
    * @param languageVersion
    * @return the root of the resulting AST tree.
    */
-  @NotNull
-  ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion);
+  @Nonnull
+  ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion);
 }

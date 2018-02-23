@@ -31,8 +31,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.HashSet;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class GotoCustomRegionDialog extends DialogWrapper {
   private final Project myProject;
 
   @RequiredReadAction
-  protected GotoCustomRegionDialog(@Nullable Project project, @NotNull Editor editor) {
+  protected GotoCustomRegionDialog(@Nullable Project project, @Nonnull Editor editor) {
     super(project);
     myEditor = editor;
     myProject = project;
@@ -142,13 +142,14 @@ public class GotoCustomRegionDialog extends DialogWrapper {
   }
 
   private static class MyFoldingDescriptorWrapper {
-    private final @NotNull FoldingDescriptor myDescriptor;
+    private final @Nonnull
+    FoldingDescriptor myDescriptor;
 
-    private MyFoldingDescriptorWrapper(@NotNull FoldingDescriptor descriptor) {
+    private MyFoldingDescriptorWrapper(@Nonnull FoldingDescriptor descriptor) {
       myDescriptor = descriptor;
     }
 
-    @NotNull
+    @Nonnull
     public FoldingDescriptor getDescriptor() {
       return myDescriptor;
     }

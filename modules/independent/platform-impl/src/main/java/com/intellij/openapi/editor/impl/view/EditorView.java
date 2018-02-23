@@ -35,7 +35,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -152,34 +152,34 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     return myMapper.visualLineToY(line);
   }
 
-  @NotNull
+  @Nonnull
   public LogicalPosition offsetToLogicalPosition(int offset) {
     assertIsReadAccess();
     return myMapper.offsetToLogicalPosition(offset);
   }
 
-  public int logicalPositionToOffset(@NotNull LogicalPosition pos) {
+  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     assertIsReadAccess();
     return myMapper.logicalPositionToOffset(pos);
   }
 
-  @NotNull
-  public VisualPosition logicalToVisualPosition(@NotNull LogicalPosition pos, boolean beforeSoftWrap) {
+  @Nonnull
+  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos, boolean beforeSoftWrap) {
     assertIsDispatchThread();
     assertNotInBulkMode();
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.logicalToVisualPosition(pos, beforeSoftWrap);
   }
 
-  @NotNull
-  public LogicalPosition visualToLogicalPosition(@NotNull VisualPosition pos) {
+  @Nonnull
+  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
     assertIsDispatchThread();
     assertNotInBulkMode();
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.visualToLogicalPosition(pos);
   }
 
-  @NotNull
+  @Nonnull
   public VisualPosition offsetToVisualPosition(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
     assertIsDispatchThread();
     assertNotInBulkMode();
@@ -208,23 +208,23 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     return myMapper.visualLineToOffset(visualLine);
   }
 
-  @NotNull
-  public VisualPosition xyToVisualPosition(@NotNull Point2D p) {
+  @Nonnull
+  public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
     assertIsDispatchThread();
     assertNotInBulkMode();
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.xyToVisualPosition(p);
   }
 
-  @NotNull
-  public Point2D visualPositionToXY(@NotNull VisualPosition pos) {
+  @Nonnull
+  public Point2D visualPositionToXY(@Nonnull VisualPosition pos) {
     assertIsDispatchThread();
     assertNotInBulkMode();
     myEditor.getSoftWrapModel().prepareToMapping();
     return myMapper.visualPositionToXY(pos);
   }
 
-  @NotNull
+  @Nonnull
   public Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
     assertIsDispatchThread();
     assertNotInBulkMode();
@@ -368,7 +368,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     mySizeManager.reset();
   }
 
-  public boolean isRtlLocation(@NotNull VisualPosition visualPosition) {
+  public boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
     assertIsDispatchThread();
     if (myDocument.getTextLength() == 0) return false;
     LogicalPosition logicalPosition = visualToLogicalPosition(visualPosition);
@@ -392,7 +392,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     return layout.isRtlLocation(offset - myDocument.getLineStartOffset(line), logicalPosition.leansForward);
   }
 
-  public boolean isAtBidiRunBoundary(@NotNull VisualPosition visualPosition) {
+  public boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
     assertIsDispatchThread();
     int offset = visualPositionToOffset(visualPosition);
     int otherSideOffset = visualPositionToOffset(visualPosition.leanRight(!visualPosition.leansRight));
@@ -564,11 +564,11 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   }
 
   @Override
-  public void drawChars(@NotNull Graphics g, @NotNull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo) {
+  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo) {
     myPainter.drawChars(g, data, start, end, x, y, color, fontInfo);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     String prefixText = myPrefixText;

@@ -25,9 +25,9 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -73,10 +73,10 @@ public abstract class ChooseByNameFilter<T> {
    * @param filterConfiguration storage for selected filter values
    * @param project             a context project
    */
-  public ChooseByNameFilter(@NotNull ChooseByNamePopup popup,
-                            @NotNull FilteringGotoByModel<T> model,
-                            @NotNull ChooseByNameFilterConfiguration<T> filterConfiguration,
-                            @NotNull Project project) {
+  public ChooseByNameFilter(@Nonnull ChooseByNamePopup popup,
+                            @Nonnull FilteringGotoByModel<T> model,
+                            @Nonnull ChooseByNameFilterConfiguration<T> filterConfiguration,
+                            @Nonnull Project project) {
     myParentPopup = popup;
     DefaultActionGroup actionGroup = new DefaultActionGroup("go.to.file.filter", false);
     ToggleAction action = new ToggleAction("Filter", "Filter files by type", AllIcons.General.Filter) {
@@ -151,18 +151,18 @@ public abstract class ChooseByNameFilter<T> {
    * @param filterConfiguration
    * @return a created file chooser
    */
-  @NotNull
-  protected ElementsChooser<T> createChooser(@NotNull final FilteringGotoByModel<T> model,
-                                             @NotNull final ChooseByNameFilterConfiguration<T> filterConfiguration) {
+  @Nonnull
+  protected ElementsChooser<T> createChooser(@Nonnull final FilteringGotoByModel<T> model,
+                                             @Nonnull final ChooseByNameFilterConfiguration<T> filterConfiguration) {
     List<T> elements = new ArrayList<T>(getAllFilterValues());
     final ElementsChooser<T> chooser = new ElementsChooser<T>(elements, true) {
       @Override
-      protected String getItemText(@NotNull final T value) {
+      protected String getItemText(@Nonnull final T value) {
         return textForFilterValue(value);
       }
 
       @Override
-      protected Icon getItemIcon(@NotNull final T value) {
+      protected Icon getItemIcon(@Nonnull final T value) {
         return iconForFilterValue(value);
       }
     };
@@ -185,12 +185,12 @@ public abstract class ChooseByNameFilter<T> {
     return chooser;
   }
 
-  protected abstract String textForFilterValue(@NotNull T value);
+  protected abstract String textForFilterValue(@Nonnull T value);
 
   @Nullable
-  protected abstract Icon iconForFilterValue(@NotNull T value);
+  protected abstract Icon iconForFilterValue(@Nonnull T value);
 
-  @NotNull
+  @Nonnull
   protected abstract Collection<T> getAllFilterValues();
 
   /**
@@ -199,7 +199,7 @@ public abstract class ChooseByNameFilter<T> {
    * @param gotoFileModel a model
    * @param chooser       a file type chooser
    */
-  protected void updateModel(@NotNull FilteringGotoByModel<T> gotoFileModel, @NotNull ElementsChooser<T> chooser, boolean initial) {
+  protected void updateModel(@Nonnull FilteringGotoByModel<T> gotoFileModel, @Nonnull ElementsChooser<T> chooser, boolean initial) {
     final List<T> markedElements = chooser.getMarkedElements();
     gotoFileModel.setFilterItems(markedElements);
     myParentPopup.rebuildList(initial);

@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class AtomicClearableLazyValue<T> extends ClearableLazyValue<T> {
-  @NotNull
+  @Nonnull
   @Override
   public final synchronized T getValue() {
     return super.getValue();

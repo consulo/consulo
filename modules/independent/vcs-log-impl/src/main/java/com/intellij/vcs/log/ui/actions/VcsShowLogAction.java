@@ -17,10 +17,10 @@ package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.vcs.VcsShowToolWindowTabAction;
 import com.intellij.vcs.log.impl.VcsLogContentProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VcsShowLogAction extends VcsShowToolWindowTabAction {
-  @NotNull
+  @Nonnull
   @Override
   protected String getTabName() {
     return VcsLogContentProvider.TAB_NAME;

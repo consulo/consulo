@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -72,7 +72,7 @@ public class SelectInAction extends AnAction implements DumbAware {
     private final SelectInContext mySelectInContext;
     private final List<SelectInTarget> myVisibleTargets;
 
-    public SelectInActionsStep(@NotNull final Collection<SelectInTarget> targetVector, SelectInContext selectInContext) {
+    public SelectInActionsStep(@Nonnull final Collection<SelectInTarget> targetVector, SelectInContext selectInContext) {
       mySelectInContext = selectInContext;
       myVisibleTargets = new ArrayList<SelectInTarget>();
       for (SelectInTarget target : targetVector) {
@@ -82,7 +82,7 @@ public class SelectInAction extends AnAction implements DumbAware {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getTextFor(final SelectInTarget value) {
       String text = value.toString();
       int n = myVisibleTargets.indexOf(value);

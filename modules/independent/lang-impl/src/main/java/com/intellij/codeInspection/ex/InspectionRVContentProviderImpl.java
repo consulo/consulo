@@ -28,9 +28,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +42,8 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   @Override
-  public boolean checkReportedProblems(@NotNull GlobalInspectionContextImpl context,
-                                       @NotNull final InspectionToolWrapper toolWrapper) {
+  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context,
+                                       @Nonnull final InspectionToolWrapper toolWrapper) {
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
     presentation.updateContent();
     return presentation.hasReportedProblems();
@@ -51,7 +51,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
 
   @Override
   @Nullable
-  public QuickFixAction[] getQuickFixes(@NotNull final InspectionToolWrapper toolWrapper, @NotNull final InspectionTree tree) {
+  public QuickFixAction[] getQuickFixes(@Nonnull final InspectionToolWrapper toolWrapper, @Nonnull final InspectionTree tree) {
     final RefEntity[] refEntities = tree.getSelectedElements();
     InspectionToolPresentation presentation = tree.getContext().getPresentation(toolWrapper);
     return refEntities.length == 0 ? null : presentation.getQuickFixes(refEntities);
@@ -59,12 +59,12 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
 
 
   @Override
-  public void appendToolNodeContent(@NotNull GlobalInspectionContextImpl context,
-                                    @NotNull final InspectionNode toolNode,
-                                    @NotNull final InspectionTreeNode parentNode,
+  public void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
+                                    @Nonnull final InspectionNode toolNode,
+                                    @Nonnull final InspectionTreeNode parentNode,
                                     final boolean showStructure,
-                                    @NotNull final Map<String, Set<RefEntity>> contents,
-                                    @NotNull final Map<RefEntity, CommonProblemDescriptor[]> problems,
+                                    @Nonnull final Map<String, Set<RefEntity>> contents,
+                                    @Nonnull final Map<RefEntity, CommonProblemDescriptor[]> problems,
                                     DefaultTreeModel model) {
     final InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
 
@@ -109,10 +109,10 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   @Override
-  protected void appendDescriptor(@NotNull GlobalInspectionContextImpl context,
-                                  @NotNull final InspectionToolWrapper toolWrapper,
-                                  @NotNull final UserObjectContainer container,
-                                  @NotNull final InspectionPackageNode pNode,
+  protected void appendDescriptor(@Nonnull GlobalInspectionContextImpl context,
+                                  @Nonnull final InspectionToolWrapper toolWrapper,
+                                  @Nonnull final UserObjectContainer container,
+                                  @Nonnull final InspectionPackageNode pNode,
                                   final boolean canPackageRepeat) {
     final RefElementContainer refElementDescriptor = (RefElementContainer)container;
     final RefEntity refElement = refElementDescriptor.getUserObject();
@@ -145,11 +145,11 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   private static class RefElementContainer implements UserObjectContainer<RefEntity> {
-    @NotNull
+    @Nonnull
     private final RefEntity myElement;
     private final CommonProblemDescriptor[] myDescriptors;
 
-    public RefElementContainer(@NotNull RefEntity element, CommonProblemDescriptor[] descriptors) {
+    public RefElementContainer(@Nonnull RefEntity element, CommonProblemDescriptor[] descriptors) {
       myElement = element;
       myDescriptors = descriptors;
     }
@@ -164,14 +164,14 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RefElementNode createNode(@NotNull InspectionToolPresentation presentation) {
+    public RefElementNode createNode(@Nonnull InspectionToolPresentation presentation) {
       return new RefElementNode(myElement, presentation);
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public RefEntity getUserObject() {
       return myElement;
     }

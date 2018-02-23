@@ -19,21 +19,22 @@ import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CascadeController implements LinearGraphController {
   @Nullable private final CascadeController myDelegateController;
-  @NotNull protected final PermanentGraphInfo myPermanentGraphInfo;
+  @Nonnull
+  protected final PermanentGraphInfo myPermanentGraphInfo;
 
-  protected CascadeController(@Nullable CascadeController delegateController, @NotNull PermanentGraphInfo permanentGraphInfo) {
+  protected CascadeController(@Nullable CascadeController delegateController, @Nonnull PermanentGraphInfo permanentGraphInfo) {
     myDelegateController = delegateController;
     myPermanentGraphInfo = permanentGraphInfo;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LinearGraphAnswer performLinearGraphAction(@NotNull LinearGraphAction action) {
+  public LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action) {
     LinearGraphAnswer answer = performAction(action);
     if (answer == null && myDelegateController != null) {
       answer = myDelegateController.performLinearGraphAction(
@@ -53,25 +54,25 @@ public abstract class CascadeController implements LinearGraphController {
   }
 
   @Nullable
-  protected GraphElement convertToDelegate(@NotNull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     return graphElement;
   }
 
-  @NotNull
+  @Nonnull
   protected CascadeController getDelegateController() {
     assert myDelegateController != null;
     return myDelegateController;
   }
 
-  @NotNull
+  @Nonnull
   public PermanentGraphInfo getPermanentGraphInfo() {
     return myPermanentGraphInfo;
   }
 
-  @NotNull
-  protected abstract LinearGraphAnswer delegateGraphChanged(@NotNull LinearGraphAnswer delegateAnswer);
+  @Nonnull
+  protected abstract LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer);
 
   // null mean that this action must be performed by delegateGraphController
   @Nullable
-  protected abstract LinearGraphAnswer performAction(@NotNull LinearGraphAction action);
+  protected abstract LinearGraphAnswer performAction(@Nonnull LinearGraphAction action);
 }

@@ -17,8 +17,8 @@ package com.intellij.xdebugger.frame;
 
 import com.intellij.xdebugger.Obsolescent;
 import com.intellij.xdebugger.XDebuggerBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -44,7 +44,7 @@ public abstract class XFullValueEvaluator {
   /**
    * @param linkText text of the link what will be appended to a variables tree node text
    */
-  protected XFullValueEvaluator(@NotNull String linkText) {
+  protected XFullValueEvaluator(@Nonnull String linkText) {
     myLinkText = linkText;
   }
 
@@ -61,15 +61,15 @@ public abstract class XFullValueEvaluator {
    * Start fetching full text of the value. Note that this method is called from the Event Dispatch Thread so it should return quickly
    * @param callback used to notify that the full text has been successfully evaluated or an error occurs
    */
-  public abstract void startEvaluation(@NotNull XFullValueEvaluationCallback callback);
+  public abstract void startEvaluation(@Nonnull XFullValueEvaluationCallback callback);
 
   public String getLinkText() {
     return myLinkText;
   }
 
   public interface XFullValueEvaluationCallback extends Obsolescent, XValueCallback {
-    void evaluated(@NotNull String fullValue);
+    void evaluated(@Nonnull String fullValue);
 
-    void evaluated(@NotNull String fullValue, @Nullable Font font);
+    void evaluated(@Nonnull String fullValue, @Nullable Font font);
   }
 }

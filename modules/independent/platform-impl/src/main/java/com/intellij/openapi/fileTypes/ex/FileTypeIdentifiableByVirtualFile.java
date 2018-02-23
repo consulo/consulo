@@ -25,13 +25,13 @@ package com.intellij.openapi.fileTypes.ex;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface FileTypeIdentifiableByVirtualFile extends FileType {
   public static final FileTypeIdentifiableByVirtualFile[] EMPTY_ARRAY = new FileTypeIdentifiableByVirtualFile[0];
 
   public static ArrayFactory<FileTypeIdentifiableByVirtualFile> ARRAY_FACTORY = new ArrayFactory<FileTypeIdentifiableByVirtualFile>() {
-    @NotNull
+    @Nonnull
     @Override
     public FileTypeIdentifiableByVirtualFile[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new FileTypeIdentifiableByVirtualFile[count];

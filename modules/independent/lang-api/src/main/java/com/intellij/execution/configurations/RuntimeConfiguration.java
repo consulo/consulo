@@ -18,8 +18,8 @@ package com.intellij.execution.configurations;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @deprecated
@@ -30,7 +30,7 @@ public abstract class RuntimeConfiguration extends LocatableConfigurationBase im
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     return Module.EMPTY_ARRAY;
   }

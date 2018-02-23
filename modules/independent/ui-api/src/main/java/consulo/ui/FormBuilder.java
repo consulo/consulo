@@ -17,14 +17,14 @@ package consulo.ui;
 
 import com.intellij.openapi.util.text.StringUtilRt;
 import consulo.ui.shared.StaticPosition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06-Nov-17
  */
 public class FormBuilder {
-  @NotNull
+  @Nonnull
   public static FormBuilder create() {
     return new FormBuilder();
   }
@@ -32,9 +32,9 @@ public class FormBuilder {
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@NotNull final String labelText, @NotNull Component component) {
+  public FormBuilder addLabeled(@Nonnull final String labelText, @Nonnull Component component) {
     String newLabelText = labelText;
     if (!StringUtilRt.endsWithChar(newLabelText, ':')) {
       newLabelText += ": ";
@@ -47,7 +47,7 @@ public class FormBuilder {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public Component build() {
     return myLayout;
   }

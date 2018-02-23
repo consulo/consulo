@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public abstract class AddModuleDependencyTabContext {
     myContext = context;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getTabName();
 
   public boolean isEmpty() {
@@ -64,10 +64,10 @@ public abstract class AddModuleDependencyTabContext {
     myClasspathPanel.addItems(items);
   }
 
-  public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public abstract JComponent getComponent();
 }

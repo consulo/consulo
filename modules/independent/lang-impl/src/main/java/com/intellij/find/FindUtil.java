@@ -62,8 +62,8 @@ import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class FindUtil {
   }
 
   @Nullable
-  private static VirtualFile getVirtualFile(@NotNull Editor myEditor) {
+  private static VirtualFile getVirtualFile(@Nonnull Editor myEditor) {
     Project project = myEditor.getProject();
     PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()) : null;
     return file != null ? file.getVirtualFile() : null;
@@ -143,7 +143,7 @@ public class FindUtil {
     model.setPromptOnReplace(false);
   }
 
-  public static void updateFindInFileModel(@Nullable Project project, @NotNull FindModel with, boolean saveFindString) {
+  public static void updateFindInFileModel(@Nullable Project project, @Nonnull FindModel with, boolean saveFindString) {
     FindModel model = FindManager.getInstance(project).getFindInFileModel();
     model.setCaseSensitive(with.isCaseSensitive());
     model.setWholeWordsOnly(with.isWholeWordsOnly());
@@ -225,7 +225,7 @@ public class FindUtil {
     doSearch(project, editor, caretOffset, true, model, true);
   }
 
-  public static void find(@NotNull final Project project, @NotNull final Editor editor) {
+  public static void find(@Nonnull final Project project, @Nonnull final Editor editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final FindManager findManager = FindManager.getInstance(project);
     String s = editor.getSelectionModel().getSelectedText();
@@ -290,7 +290,7 @@ public class FindUtil {
   }
 
   @Nullable
-  public static List<Usage> findAll(@NotNull Project project, @NotNull Editor editor, @NotNull FindModel findModel) {
+  public static List<Usage> findAll(@Nonnull Project project, @Nonnull Editor editor, @Nonnull FindModel findModel) {
     final Document document = editor.getDocument();
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (psiFile == null) return null;
@@ -321,7 +321,7 @@ public class FindUtil {
     return usages;
   }
 
-  public static void findAllAndShow(@NotNull Project project, @NotNull Editor editor, @NotNull FindModel findModel) {
+  public static void findAllAndShow(@Nonnull Project project, @Nonnull Editor editor, @Nonnull FindModel findModel) {
     List<Usage> usages = findAll(project, editor, findModel);
     if (usages == null) return;
     final UsageTarget[] usageTargets = {new FindInProjectUtil.StringUsageTarget(project, findModel)};
@@ -659,11 +659,11 @@ public class FindUtil {
   }
 
   @Nullable
-  private static FindResult doSearch(@NotNull Project project,
-                                     @NotNull final Editor editor,
+  private static FindResult doSearch(@Nonnull Project project,
+                                     @Nonnull final Editor editor,
                                      int offset,
                                      boolean toWarn,
-                                     @NotNull FindModel model,
+                                     @Nonnull FindModel model,
                                      boolean adjustEditor) {
     FindManager findManager = FindManager.getInstance(project);
     Document document = editor.getDocument();
@@ -751,7 +751,7 @@ public class FindUtil {
     private final Editor myEditor;
     private final RangeHighlighter mySegmentHighlighter;
 
-    private MyListener(@NotNull Editor editor, @NotNull RangeHighlighter segmentHighlighter) {
+    private MyListener(@Nonnull Editor editor, @Nonnull RangeHighlighter segmentHighlighter) {
       myEditor = editor;
       mySegmentHighlighter = segmentHighlighter;
     }
@@ -835,7 +835,7 @@ public class FindUtil {
                                     final Document document,
                                     final FindModel model,
                                     FindResult result,
-                                    @NotNull String stringToReplace,
+                                    @Nonnull String stringToReplace,
                                     boolean reallyReplace,
                                     List<Pair<TextRange, String>> rangesToChange) {
     final int startOffset = result.getStartOffset();
@@ -906,9 +906,9 @@ public class FindUtil {
 
   @Nullable
   public static UsageView showInUsageView(@Nullable PsiElement sourceElement,
-                                          @NotNull PsiElement[] targets,
-                                          @NotNull String title,
-                                          @NotNull final Project project) {
+                                          @Nonnull PsiElement[] targets,
+                                          @Nonnull String title,
+                                          @Nonnull final Project project) {
     if (targets.length == 0) return null;
     final UsageViewPresentation presentation = new UsageViewPresentation();
     presentation.setCodeUsagesString(title);
@@ -928,7 +928,7 @@ public class FindUtil {
 
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Updating Usage View ...") {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         for (final SmartPsiElementPointer pointer : pointers) {
           if (((UsageViewImpl)view).isDisposed()) break;
           ApplicationManager.getApplication().runReadAction(() -> {
@@ -950,8 +950,8 @@ public class FindUtil {
    * @param caretShiftFromSelectionStart if non-negative, defines caret position relative to selection start, for each created selection.
    *                                     if negative, carets will be positioned at selection ends
    */
-  public static void selectSearchResultsInEditor(@NotNull Editor editor,
-                                                 @NotNull Iterator<FindResult> resultIterator,
+  public static void selectSearchResultsInEditor(@Nonnull Editor editor,
+                                                 @Nonnull Iterator<FindResult> resultIterator,
                                                  int caretShiftFromSelectionStart) {
     if (!editor.getCaretModel().supportsMultipleCarets()) {
       return;
@@ -983,7 +983,7 @@ public class FindUtil {
    * @return <code>true</code> if caret was added successfully, <code>false</code> if it cannot be done, e.g. because a caret already
    * exists at target position
    */
-  public static boolean selectSearchResultInEditor(@NotNull Editor editor, @NotNull FindResult result, int caretShiftFromSelectionStart) {
+  public static boolean selectSearchResultInEditor(@Nonnull Editor editor, @Nonnull FindResult result, int caretShiftFromSelectionStart) {
     if (!editor.getCaretModel().supportsMultipleCarets()) {
       return false;
     }

@@ -17,8 +17,8 @@ package consulo.web.application;
 
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ public interface WebSession {
 
   void close();
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   WebSession copy();
 }

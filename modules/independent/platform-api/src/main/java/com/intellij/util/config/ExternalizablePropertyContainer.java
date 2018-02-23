@@ -24,7 +24,7 @@ import com.intellij.util.SmartList;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +78,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     return new ListExternalizer(itemExternalizer, itemTagName);
   }
 
-  public void readExternal(@NotNull Element element) {
+  public void readExternal(@Nonnull Element element) {
     Map<String, AbstractProperty> propertyByName = new THashMap<String, AbstractProperty>();
     for (AbstractProperty abstractProperty : myExternalizers.keySet()) {
       propertyByName.put(abstractProperty.getName(), abstractProperty);
@@ -101,7 +101,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
     }
   }
 
-  public void writeExternal(@NotNull Element element) {
+  public void writeExternal(@Nonnull Element element) {
     if (myExternalizers.isEmpty()) {
       return;
     }

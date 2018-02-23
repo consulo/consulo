@@ -20,7 +20,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ReadonlyList;
 import com.intellij.util.containers.StepList;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.List;

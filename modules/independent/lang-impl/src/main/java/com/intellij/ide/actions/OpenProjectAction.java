@@ -36,12 +36,12 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class OpenProjectAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true);
     descriptor.setTitle(IdeBundle.message("title.open.project"));
     descriptor.setDescription(getFileChooserDescription());
@@ -68,7 +68,7 @@ public class OpenProjectAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (WelcomeFrame.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
     }

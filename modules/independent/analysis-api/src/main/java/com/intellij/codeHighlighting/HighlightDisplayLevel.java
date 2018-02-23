@@ -28,8 +28,8 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,13 +77,13 @@ public class HighlightDisplayLevel {
     return ourMap.get(severity);
   }
 
-  public HighlightDisplayLevel(@NotNull HighlightSeverity severity, @NotNull Icon icon) {
+  public HighlightDisplayLevel(@Nonnull HighlightSeverity severity, @Nonnull Icon icon) {
     this(severity);
     myIcon = icon;
     ourMap.put(mySeverity, this);
   }
 
-  public HighlightDisplayLevel(@NotNull HighlightSeverity severity) {
+  public HighlightDisplayLevel(@Nonnull HighlightSeverity severity) {
     mySeverity = severity;
   }
 
@@ -93,7 +93,7 @@ public class HighlightDisplayLevel {
     return mySeverity.toString();
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return mySeverity.getName();
   }
@@ -102,12 +102,12 @@ public class HighlightDisplayLevel {
     return myIcon;
   }
 
-  @NotNull
+  @Nonnull
   public HighlightSeverity getSeverity() {
     return mySeverity;
   }
 
-  public static void registerSeverity(@NotNull HighlightSeverity severity, final TextAttributesKey key, @Nullable Icon icon) {
+  public static void registerSeverity(@Nonnull HighlightSeverity severity, final TextAttributesKey key, @javax.annotation.Nullable Icon icon) {
     Icon severityIcon = icon != null ? icon : createBoxIcon(key);
     final HighlightDisplayLevel level = ourMap.get(severity);
     if (level == null) {
@@ -122,12 +122,12 @@ public class HighlightDisplayLevel {
     return JBUI.scale(14);
   }
 
-  public static Icon createBoxIcon(@NotNull TextAttributesKey key) {
+  public static Icon createBoxIcon(@Nonnull TextAttributesKey key) {
     return new SingleColorIcon(key);
   }
 
-  @NotNull
-  private static Icon createErrorIcon(@NotNull TextAttributesKey textAttributesKey) {
+  @Nonnull
+  private static Icon createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
     return new SingleColorIcon(textAttributesKey) {
       @Override
       public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -136,13 +136,13 @@ public class HighlightDisplayLevel {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static Icon createIconByMask(final Color renderColor) {
     return new MyColorIcon(getEmptyIconDim(), renderColor);
   }
 
   private static class MyColorIcon extends ColorIcon implements ColoredIcon {
-    public MyColorIcon(int size, @NotNull Color color) {
+    public MyColorIcon(int size, @Nonnull Color color) {
       super(size, color);
     }
 
@@ -170,7 +170,7 @@ public class HighlightDisplayLevel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Color getColor() {
       return ObjectUtil.notNull(getColorInner(), JBColor.GRAY);
     }

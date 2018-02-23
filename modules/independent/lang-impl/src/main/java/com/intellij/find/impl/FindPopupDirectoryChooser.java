@@ -35,9 +35,9 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -47,12 +47,16 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class FindPopupDirectoryChooser extends JPanel {
-  @NotNull private final FindUIHelper myHelper;
-  @NotNull private final Project myProject;
-  @NotNull private final FindPopupPanel myFindPopupPanel;
-  @NotNull private final ComboBox<String> myDirectoryComboBox;
+  @Nonnull
+  private final FindUIHelper myHelper;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final FindPopupPanel myFindPopupPanel;
+  @Nonnull
+  private final ComboBox<String> myDirectoryComboBox;
 
-  public FindPopupDirectoryChooser(@NotNull FindPopupPanel panel) {
+  public FindPopupDirectoryChooser(@Nonnull FindPopupPanel panel) {
     super(new BorderLayout());
 
     myHelper = panel.getHelper();
@@ -115,7 +119,7 @@ public class FindPopupDirectoryChooser extends JPanel {
     add(buttonsPanel, BorderLayout.EAST);
   }
 
-  public void initByModel(@NotNull FindModel findModel) {
+  public void initByModel(@Nonnull FindModel findModel) {
     final String directoryName = findModel.getDirectoryName();
     java.util.List<String> strings = FindInProjectSettings.getInstance(myProject).getRecentDirectories();
 
@@ -136,18 +140,18 @@ public class FindPopupDirectoryChooser extends JPanel {
     }
   }
 
-  @NotNull
+  @Nonnull
   public ComboBox getComboBox() {
     return myDirectoryComboBox;
   }
 
-  @NotNull
+  @Nonnull
   public String getDirectory() {
     return (String)myDirectoryComboBox.getSelectedItem();
   }
 
   @Nullable
-  public ValidationInfo validate(@NotNull FindModel model) {
+  public ValidationInfo validate(@Nonnull FindModel model) {
     VirtualFile directory = FindInProjectUtil.getDirectory(model);
     if (directory == null) {
       return new ValidationInfo(FindBundle.message("find.directory.not.found.error", getDirectory()), myDirectoryComboBox);

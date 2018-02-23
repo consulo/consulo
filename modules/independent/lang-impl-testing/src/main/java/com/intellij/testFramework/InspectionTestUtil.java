@@ -26,7 +26,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import junit.framework.Assert;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.CharArrayReader;
 import java.io.File;
@@ -128,8 +128,8 @@ public class InspectionTestUtil {
     return Comparing.equal(reportedFile.getName(), expectedProblem.getChildText("file"));
   }
 
-  public static void compareToolResults(@NotNull GlobalInspectionContextImpl context,
-                                        @NotNull InspectionToolWrapper toolWrapper,
+  public static void compareToolResults(@Nonnull GlobalInspectionContextImpl context,
+                                        @Nonnull InspectionToolWrapper toolWrapper,
                                         boolean checkRange,
                                         String testDir) {
     final Element root = new Element("problems");
@@ -150,10 +150,10 @@ public class InspectionTestUtil {
     }
   }
 
-  public static void runTool(@NotNull InspectionToolWrapper toolWrapper,
-                             @NotNull final AnalysisScope scope,
-                             @NotNull final GlobalInspectionContextImpl globalContext,
-                             @NotNull final InspectionManagerEx inspectionManager) {
+  public static void runTool(@Nonnull InspectionToolWrapper toolWrapper,
+                             @Nonnull final AnalysisScope scope,
+                             @Nonnull final GlobalInspectionContextImpl globalContext,
+                             @Nonnull final InspectionManagerEx inspectionManager) {
     final String shortName = toolWrapper.getShortName();
     final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
     if (key == null){

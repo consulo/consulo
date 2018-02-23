@@ -1,6 +1,6 @@
 package com.intellij.execution.process;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.*;
@@ -21,9 +21,9 @@ public class ProcessIOExecutorService extends ThreadPoolExecutor {
   private ProcessIOExecutorService() {
     super(1, Integer.MAX_VALUE, 1, TimeUnit.MINUTES, new SynchronousQueue<Runnable>());
     setThreadFactory(new ThreadFactory() {
-      @NotNull
+      @Nonnull
       @Override
-      public Thread newThread(@NotNull final Runnable r) {
+      public Thread newThread(@Nonnull final Runnable r) {
         Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
         thread.setPriority(Thread.NORM_PRIORITY - 1);
         return thread;

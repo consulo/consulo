@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.xdebugger.XDebuggerBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -44,7 +44,7 @@ public class DefaultDebugExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return AllIcons.Actions.StartDebugger;
   }
@@ -55,13 +55,13 @@ public class DefaultDebugExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getActionName() {
     return UIBundle.message("tool.window.name.debug");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return EXECUTOR_ID;
   }
@@ -72,7 +72,7 @@ public class DefaultDebugExecutor extends Executor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getStartActionText() {
     return XDebuggerBundle.message("debugger.runner.start.action.text");
   }

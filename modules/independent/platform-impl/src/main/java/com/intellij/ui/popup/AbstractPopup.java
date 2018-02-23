@@ -52,8 +52,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -188,7 +188,7 @@ public class AbstractPopup implements JBPopup {
   AbstractPopup() { }
 
   AbstractPopup init(Project project,
-                     @NotNull JComponent component,
+                     @Nonnull JComponent component,
                      @Nullable JComponent preferredFocusedComponent,
                      boolean requestFocus,
                      boolean focusable,
@@ -217,7 +217,7 @@ public class AbstractPopup implements JBPopup {
                      @Nullable String adText,
                      int adTextAlignment,
                      boolean headerAlwaysFocusable,
-                     @NotNull List<Pair<ActionListener, KeyStroke>> keyboardActions,
+                     @Nonnull List<Pair<ActionListener, KeyStroke>> keyboardActions,
                      Component settingsButtons,
                      @Nullable final Processor<JBPopup> pinCallback,
                      boolean mayBeParent,
@@ -341,7 +341,7 @@ public class AbstractPopup implements JBPopup {
   }
 
 
-  @NotNull
+  @Nonnull
   protected MyContentPanel createContentPanel(final boolean resizable, PopupBorder border, boolean isToDrawMacCorner) {
     return new MyContentPanel(resizable, border, isToDrawMacCorner);
   }
@@ -389,22 +389,22 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void showInCenterOf(@NotNull Component aContainer) {
+  public void showInCenterOf(@Nonnull Component aContainer) {
     final Point popupPoint = getCenterOf(aContainer, myContent);
     show(aContainer, popupPoint.x, popupPoint.y, false);
   }
 
-  public void setAdText(@NotNull final String s) {
+  public void setAdText(@Nonnull final String s) {
     setAdText(s, SwingConstants.LEFT);
   }
 
-  @NotNull
+  @Nonnull
   public PopupBorder getPopupBorder() {
     return myPopupBorder;
   }
 
   @Override
-  public void setAdText(@NotNull final String s, int alignment) {
+  public void setAdText(@Nonnull final String s, int alignment) {
     if (myAdComponent == null) {
       myAdComponent = HintUtil.createAdComponent(s, JBUI.Borders.empty(1, 5), alignment);
       JPanel wrapper = new JPanel(new BorderLayout()) {
@@ -440,7 +440,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void showCenteredInCurrentWindow(@NotNull Project project) {
+  public void showCenteredInCurrentWindow(@Nonnull Project project) {
     Window window = null;
 
     Component focusedComponent = getWndManager().getFocusedComponent(project);
@@ -460,23 +460,23 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void showUnderneathOf(@NotNull Component aComponent) {
+  public void showUnderneathOf(@Nonnull Component aComponent) {
     show(new RelativePoint(aComponent, new Point(0, aComponent.getHeight())));
   }
 
   @Override
-  public void show(@NotNull RelativePoint aPoint) {
+  public void show(@Nonnull RelativePoint aPoint) {
     final Point screenPoint = aPoint.getScreenPoint();
     show(aPoint.getComponent(), screenPoint.x, screenPoint.y, false);
   }
 
   @Override
-  public void showInScreenCoordinates(@NotNull Component owner, @NotNull Point point) {
+  public void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point) {
     show(owner, point.x, point.y, false);
   }
 
   @Override
-  public void showInBestPositionFor(@NotNull DataContext dataContext) {
+  public void showInBestPositionFor(@Nonnull DataContext dataContext) {
     final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       showInBestPositionFor(editor);
@@ -528,7 +528,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void showInBestPositionFor(@NotNull Editor editor) {
+  public void showInBestPositionFor(@Nonnull Editor editor) {
     assert editor.getComponent().isShowing() : "Editor must be showing on the screen";
 
     // Set the accessible parent so that screen readers don't announce
@@ -546,8 +546,8 @@ public class AbstractPopup implements JBPopup {
     }
   }
 
-  @NotNull
-  private RelativePoint guessBestPopupLocation(@NotNull Editor editor) {
+  @Nonnull
+  private RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
     RelativePoint preferredLocation = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
     if (myDimensionServiceKey == null) {
       return preferredLocation;
@@ -969,7 +969,7 @@ public class AbstractPopup implements JBPopup {
 
     if (myRequestFocus) {
       getFocusManager().requestFocus(new FocusCommand() {
-        @NotNull
+        @Nonnull
         @Override
         public ActionCallback run() {
           if (isDisposed()) {
@@ -1000,7 +1000,7 @@ public class AbstractPopup implements JBPopup {
                 }
 
                 furtherRequestor.requestFocus(new FocusCommand() {
-                  @NotNull
+                  @Nonnull
                   @Override
                   public ActionCallback run() {
                     if (isDisposed()) {
@@ -1223,7 +1223,7 @@ public class AbstractPopup implements JBPopup {
     if (!myFocusable) return false;
 
     getFocusManager().requestFocus(new FocusCommand() {
-      @NotNull
+      @Nonnull
       @Override
       public ActionCallback run() {
         _requestFocus();
@@ -1513,7 +1513,7 @@ public class AbstractPopup implements JBPopup {
 
     @Nullable
     @Override
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       return myDataProvider != null ? myDataProvider.getData(dataId) : null;
     }
 
@@ -1565,7 +1565,7 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void setLocation(@NotNull final Point screenPoint) {
+  public void setLocation(@Nonnull final Point screenPoint) {
     if (myPopup == null) {
       myForcedLocation = screenPoint;
     }
@@ -1610,7 +1610,7 @@ public class AbstractPopup implements JBPopup {
 
 
   @Override
-  public void setSize(@NotNull final Dimension size) {
+  public void setSize(@Nonnull final Dimension size) {
     setSize(size, true);
   }
 
@@ -1780,7 +1780,7 @@ public class AbstractPopup implements JBPopup {
     return myCancelKeyEnabled;
   }
 
-  @NotNull
+  @Nonnull
   CaptionPanel getTitle() {
     return myCaption;
   }
@@ -1809,7 +1809,7 @@ public class AbstractPopup implements JBPopup {
     if (doRevalidate) myContent.revalidate();
   }
 
-  public void setWarning(@NotNull String text) {
+  public void setWarning(@Nonnull String text) {
     JBLabel label = new JBLabel(text, UIUtil.getBalloonWarningIcon(), SwingConstants.CENTER);
     label.setOpaque(true);
     Color color = HintUtil.INFORMATION_COLOR;
@@ -1876,14 +1876,14 @@ public class AbstractPopup implements JBPopup {
   }
 
   @Override
-  public void setDataProvider(@NotNull DataProvider dataProvider) {
+  public void setDataProvider(@Nonnull DataProvider dataProvider) {
     if (myContent != null) {
       myContent.setDataProvider(dataProvider);
     }
   }
 
   @Override
-  public boolean dispatchKeyEvent(@NotNull KeyEvent e) {
+  public boolean dispatchKeyEvent(@Nonnull KeyEvent e) {
     BooleanFunction<KeyEvent> handler = myKeyEventHandler;
     if (handler != null) {
       return handler.fun(e);
@@ -1914,11 +1914,11 @@ public class AbstractPopup implements JBPopup {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Dimension getHeaderPreferredSize() {
     return myHeaderPanel.getPreferredSize();
   }
-  @NotNull
+  @Nonnull
   public Dimension getFooterPreferredSize() {
     return myAdComponent == null ? new Dimension(0,0) : myAdComponent.getPreferredSize();
   }

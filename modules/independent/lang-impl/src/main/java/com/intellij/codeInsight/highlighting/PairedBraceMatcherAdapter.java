@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +69,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
   }
 
   @Override
-  public IElementType getOppositeBraceTokenType(@NotNull final IElementType type) {
+  public IElementType getOppositeBraceTokenType(@Nonnull final IElementType type) {
     final BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
       if (type == pair.getRightBraceType()) return pair.getLeftBraceType();
@@ -102,7 +102,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
   }
 
   @Override
-  public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
+  public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
     return myMatcher.isPairedBracesAllowedBeforeType(lbraceType, contextType);
   }
 
@@ -112,8 +112,8 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
   }
 
   @Override
-  @NotNull
-  public List<IElementType> getOppositeBraceTokenTypes(@NotNull IElementType type) {
+  @Nonnull
+  public List<IElementType> getOppositeBraceTokenTypes(@Nonnull IElementType type) {
     List<IElementType> result = null;
 
     for (BracePair pair : myMatcher.getPairs()) {
@@ -132,7 +132,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
   }
 
   @Override
-  public boolean shouldStopMatch(boolean forward, @NotNull IElementType braceType, @NotNull HighlighterIterator iterator) {
+  public boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator) {
     if (myMatcher instanceof BraceMatcherTerminationAspect) {
       return ((BraceMatcherTerminationAspect)myMatcher).shouldStopMatch(forward, braceType, iterator);
     }

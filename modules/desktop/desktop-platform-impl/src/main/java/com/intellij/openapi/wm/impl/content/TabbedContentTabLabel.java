@@ -26,7 +26,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,7 +56,7 @@ public class TabbedContentTabLabel extends ContentTabLabel implements Disposable
     myContent = content;
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         showPopup();
         return true;
       }
@@ -75,7 +75,7 @@ public class TabbedContentTabLabel extends ContentTabLabel implements Disposable
       {
         label.setBorder(new EmptyBorder(UIUtil.getListCellPadding()));
       }
-      @NotNull
+      @Nonnull
       @Override
       public JComponent fun(Object dom) {
         label.setText(dom.toString());

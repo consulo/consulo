@@ -36,8 +36,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,18 +56,18 @@ public class ConflictsDialog extends DialogWrapper{
   private final boolean myCanShowConflictsInView;
   private String myCommandName;
 
-  public ConflictsDialog(@NotNull Project project, @NotNull MultiMap<PsiElement, String> conflictDescriptions) {
+  public ConflictsDialog(@Nonnull Project project, @Nonnull MultiMap<PsiElement, String> conflictDescriptions) {
     this(project, conflictDescriptions, null, true, true);
   }
 
-  public ConflictsDialog(@NotNull Project project,
-                         @NotNull MultiMap<PsiElement, String> conflictDescriptions,
+  public ConflictsDialog(@Nonnull Project project,
+                         @Nonnull MultiMap<PsiElement, String> conflictDescriptions,
                          @Nullable Runnable doRefactoringRunnable) {
     this(project, conflictDescriptions, doRefactoringRunnable, true, true);
   }
 
-  public ConflictsDialog(@NotNull Project project,
-                         @NotNull MultiMap<PsiElement, String> conflictDescriptions,
+  public ConflictsDialog(@Nonnull Project project,
+                         @Nonnull MultiMap<PsiElement, String> conflictDescriptions,
                          @Nullable Runnable doRefactoringRunnable,
                          boolean alwaysShowOkButton,
                          boolean canShowConflictsInView) {
@@ -106,7 +106,7 @@ public class ConflictsDialog extends DialogWrapper{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions(){
     final Action okAction = getOKAction();
     boolean showUsagesButton = myElementConflictDescription != null && myCanShowConflictsInView;
@@ -202,14 +202,14 @@ public class ConflictsDialog extends DialogWrapper{
         }
 
         usages[i++] = isRead || isWrite ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
-          @NotNull
+          @Nonnull
           @Override
           public UsagePresentation getPresentation() {
             final UsagePresentation usagePresentation = super.getPresentation();
             return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
           }
         } : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
-          @NotNull
+          @Nonnull
           @Override
           public UsagePresentation getPresentation() {
             final UsagePresentation usagePresentation = super.getPresentation();
@@ -231,7 +231,7 @@ public class ConflictsDialog extends DialogWrapper{
       final String conflictDescription = " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
       return new UsagePresentation() {
         @Override
-        @NotNull
+        @Nonnull
         public TextChunk[] getText() {
           final TextChunk[] chunks = usagePresentation.getText();
           return ArrayUtil
@@ -239,7 +239,7 @@ public class ConflictsDialog extends DialogWrapper{
         }
 
         @Override
-        @NotNull
+        @Nonnull
         public String getPlainText() {
           return usagePresentation.getPlainText() + conflictDescription;
         }
@@ -260,11 +260,11 @@ public class ConflictsDialog extends DialogWrapper{
       private final String myConflictDescription = Pattern.compile("<[^<>]*>").matcher(StringUtil.join(new LinkedHashSet<String>(myElementConflictDescription.get(null)), "\n")).replaceAll("");
 
       @Override
-      @NotNull
+      @Nonnull
       public UsagePresentation getPresentation() {
         return new UsagePresentation() {
           @Override
-          @NotNull
+          @Nonnull
           public TextChunk[] getText() {
             return new TextChunk[0];
           }
@@ -281,7 +281,7 @@ public class ConflictsDialog extends DialogWrapper{
           }
 
           @Override
-          @NotNull
+          @Nonnull
           public String getPlainText() {
             return myConflictDescription;
           }

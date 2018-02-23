@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 
@@ -31,13 +31,13 @@ public abstract class Location<E extends PsiElement> {
   public static final Key<Location<?>> DATA_KEY = Key.create("Location");
   public static final Key<Location<?>[]> DATA_KEYS = Key.create("LocationArray");
 
-  @NotNull
+  @Nonnull
   public abstract E getPsiElement();
 
-  @NotNull
+  @Nonnull
   public abstract Project getProject();
 
-  @NotNull
+  @Nonnull
   public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
 
   @Nullable
@@ -69,7 +69,7 @@ public abstract class Location<E extends PsiElement> {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public <T extends PsiElement> Location<T> getAncestorOrSelf(final Class<T> ancestorClass) {
     final Iterator<Location<T>> ancestors = getAncestors(ancestorClass, false);
     if (!ancestors.hasNext()) return null;
@@ -92,7 +92,7 @@ public abstract class Location<E extends PsiElement> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public PsiLocation<E> toPsiLocation() {
     return new PsiLocation<>(getProject(), getPsiElement());
   }

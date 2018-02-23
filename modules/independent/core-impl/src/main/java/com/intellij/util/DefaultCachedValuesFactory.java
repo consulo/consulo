@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -33,7 +33,7 @@ public class DefaultCachedValuesFactory implements CachedValuesFactory {
   }
 
   @Override
-  public <T> CachedValue<T> createCachedValue(@NotNull CachedValueProvider<T> provider, boolean trackValue) {
+  public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
     return trackValue ? new CachedValueImpl<T>(provider) {
       @Override
       protected Object[] getDependencies(CachedValueProvider.Result<T> result) {
@@ -54,7 +54,7 @@ public class DefaultCachedValuesFactory implements CachedValuesFactory {
   }
 
   @Override
-  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@NotNull ParameterizedCachedValueProvider<T, P> provider,
+  public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider,
                                                                               boolean trackValue) {
     return trackValue ? new ParameterizedCachedValueImpl<T, P>(provider) {
       @Override

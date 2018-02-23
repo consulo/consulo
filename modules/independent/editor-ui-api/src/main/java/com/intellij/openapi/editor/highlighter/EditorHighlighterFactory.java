@@ -21,8 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,26 +32,26 @@ public abstract class EditorHighlighterFactory {
     return ServiceManager.getService(EditorHighlighterFactory.class);
   }
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(final SyntaxHighlighter syntaxHighlighter, @NotNull EditorColorsScheme colors);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(final SyntaxHighlighter syntaxHighlighter, @Nonnull EditorColorsScheme colors);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(@NotNull FileType fileType, @NotNull EditorColorsScheme settings, final Project project);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull FileType fileType, @Nonnull EditorColorsScheme settings, final Project project);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @NotNull FileType fileType);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull FileType fileType);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(@NotNull final VirtualFile file,
-                                                            @NotNull EditorColorsScheme globalScheme,
-                                                            @Nullable final Project project);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull final VirtualFile file,
+                                                            @Nonnull EditorColorsScheme globalScheme,
+                                                            @javax.annotation.Nullable final Project project);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @NotNull VirtualFile file);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull VirtualFile file);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(final Project project, @NotNull String fileName);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull String fileName);
 
-  @NotNull
-  public abstract EditorHighlighter createEditorHighlighter(@NotNull EditorColorsScheme settings, @NotNull String fileName, @Nullable final Project project);
+  @Nonnull
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @javax.annotation.Nullable final Project project);
 }

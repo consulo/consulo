@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -29,6 +29,6 @@ public interface BundledQuickListsProvider {
    * @return Array of relative paths without extensions for lists.
    * E.g. : ["/quickLists/myList", "otherList"] for quickLists/myList.xml, otherList.xml
    */
-  @NotNull
+  @Nonnull
   String[] getBundledListsRelativePaths();
 }

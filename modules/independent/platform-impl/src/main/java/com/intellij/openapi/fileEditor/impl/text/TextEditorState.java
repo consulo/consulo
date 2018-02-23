@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 
@@ -38,7 +38,8 @@ public final class TextEditorState implements FileEditorState {
    * This field can be <code>null</code>.
    */
   private           CodeFoldingState           myFoldingState;
-  @Nullable private Producer<CodeFoldingState> myDelayedFoldInfoProducer;
+  @Nullable
+  private Producer<CodeFoldingState> myDelayedFoldInfoProducer;
 
   private static final int MIN_CHANGE_DISTANCE = 4;
 
@@ -54,7 +55,7 @@ public final class TextEditorState implements FileEditorState {
    *
    * @param producer  delayed folding info producer
    */
-  public void setDelayedFoldState(@NotNull Producer<CodeFoldingState> producer) {
+  public void setDelayedFoldState(@Nonnull Producer<CodeFoldingState> producer) {
     myDelayedFoldInfoProducer = producer;
   }
 

@@ -19,8 +19,7 @@ package com.intellij.codeInsight.preview;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,6 +46,6 @@ public interface PreviewHintProvider {
    * @param element the element for which preview is requested
    * @return the component or null if no preview is available for the specified element.
    */
-  @Nullable
-  JComponent getPreviewComponent(@NotNull PsiElement element);
+  @javax.annotation.Nullable
+  JComponent getPreviewComponent(@Nonnull PsiElement element);
 }

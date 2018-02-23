@@ -3,79 +3,79 @@ package com.intellij.vcs.log.impl;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.WeakInterner;
 import com.intellij.vcs.log.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
-  @NotNull private final VcsUserRegistry myUserRegistry;
+  @Nonnull
+  private final VcsUserRegistry myUserRegistry;
 
   // created as application service
   @SuppressWarnings("unused")
-  private VcsLogObjectsFactoryImpl(@NotNull VcsUserRegistry userRegistry) {
+  private VcsLogObjectsFactoryImpl(@Nonnull VcsUserRegistry userRegistry) {
     myUserRegistry = userRegistry;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Hash createHash(@NotNull String stringHash) {
+  public Hash createHash(@Nonnull String stringHash) {
     return HashImpl.build(stringHash);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TimedVcsCommit createTimedCommit(@NotNull Hash hash, @NotNull List<Hash> parents, long timeStamp) {
+  public TimedVcsCommit createTimedCommit(@Nonnull Hash hash, @Nonnull List<Hash> parents, long timeStamp) {
     return new TimedVcsCommitImpl(hash, parents, timeStamp);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsShortCommitDetails createShortDetails(@NotNull Hash hash, @NotNull List<Hash> parents, long commitTime,
-                                                  @NotNull VirtualFile root, @NotNull String subject,
-                                                  @NotNull String authorName, String authorEmail,
-                                                  @NotNull String committerName, @NotNull String committerEmail, long authorTime) {
+  public VcsShortCommitDetails createShortDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime,
+                                                  @Nonnull VirtualFile root, @Nonnull String subject,
+                                                  @Nonnull String authorName, String authorEmail,
+                                                  @Nonnull String committerName, @Nonnull String committerEmail, long authorTime) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
     return new VcsShortCommitDetailsImpl(hash, parents, commitTime, root, subject, author, committer, authorTime);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsCommitMetadata createCommitMetadata(@NotNull Hash hash, @NotNull List<Hash> parents, long commitTime, @NotNull VirtualFile root,
-                                                @NotNull String subject, @NotNull String authorName, @NotNull String authorEmail,
-                                                @NotNull String message, @NotNull String committerName,
-                                                @NotNull String committerEmail, long authorTime) {
+  public VcsCommitMetadata createCommitMetadata(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
+                                                @Nonnull String subject, @Nonnull String authorName, @Nonnull String authorEmail,
+                                                @Nonnull String message, @Nonnull String committerName,
+                                                @Nonnull String committerEmail, long authorTime) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
     return new VcsCommitMetadataImpl(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsFullCommitDetails createFullDetails(@NotNull Hash hash, @NotNull List<Hash> parents, long commitTime, VirtualFile root,
-                                                @NotNull String subject, @NotNull String authorName, @NotNull String authorEmail,
-                                                @NotNull String message, @NotNull String committerName, @NotNull String committerEmail,
+  public VcsFullCommitDetails createFullDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, VirtualFile root,
+                                                @Nonnull String subject, @Nonnull String authorName, @Nonnull String authorEmail,
+                                                @Nonnull String message, @Nonnull String committerName, @Nonnull String committerEmail,
                                                 long authorTime,
-                                                @NotNull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
+                                                @Nonnull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
     return new VcsChangesLazilyParsedDetails(hash, parents, commitTime, root, subject, author, message, committer, authorTime,
                                              changesGetter);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsUser createUser(@NotNull String name, @NotNull String email) {
+  public VcsUser createUser(@Nonnull String name, @Nonnull String email) {
     return myUserRegistry.createUser(name, email);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsRef createRef(@NotNull Hash commitHash, @NotNull String name, @NotNull VcsRefType type, @NotNull VirtualFile root) {
+  public VcsRef createRef(@Nonnull Hash commitHash, @Nonnull String name, @Nonnull VcsRefType type, @Nonnull VirtualFile root) {
     return new VcsRefImpl(commitHash, name, type, root);
   }
 }

@@ -24,8 +24,8 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.concurrency.*;
 
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class Promises {
   private static final NotNullLazyValue<RuntimeException> OBSOLETE_ERROR = NotNullLazyValue.createValue(() -> Promise.createError("Obsolete"));
   private static final NotNullLazyValue<Promise> CANCELLED_PROMISE = NotNullLazyValue.createValue(() -> new RejectedPromise(OBSOLETE_ERROR.getValue()));
 
-  public static boolean isFulfilled(@Nullable  Promise<?> promise) {
+  public static boolean isFulfilled(@Nullable Promise<?> promise) {
     return promise != null && promise.getState() == Promise.State.FULFILLED;
   }
 
@@ -52,29 +52,29 @@ public class Promises {
     return promise != null && promise.getState() == Promise.State.REJECTED;
   }
 
-  public static boolean isPending(@Nullable  Promise<?> promise) {
+  public static boolean isPending(@Nullable Promise<?> promise) {
     return promise != null && promise.getState() == Promise.State.PENDING;
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public static <T> Promise<T> rejectedPromise() {
     return REJECTED.getValue();
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public static <T> Promise<T> resolvedPromise() {
     return DONE.getValue();
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public static <T> Promise<T> cancelledPromise() {
     return CANCELLED_PROMISE.getValue();
   }
 
-  @NotNull
+  @Nonnull
   public static <T> Promise<T> rejectedPromise(@Nullable Throwable error) {
     if (error == null) {
       //noinspection unchecked
@@ -85,30 +85,30 @@ public class Promises {
     }
   }
 
-  @NotNull
-  public static <T> Promise<T> rejectedPromise(@NotNull String error) {
+  @Nonnull
+  public static <T> Promise<T> rejectedPromise(@Nonnull String error) {
     return rejectedPromise(Promise.createError(error));
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   public static <T> Promise<T> reject(@Nullable Throwable error) {
     return rejectedPromise(error);
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public static <T> Promise<T> reject(@NotNull String error) {
+  public static <T> Promise<T> reject(@Nonnull String error) {
     return rejectedPromise(error);
   }
 
-  @NotNull
-  public static Promise<Void> all(@NotNull Collection<Promise<?>> promises) {
+  @Nonnull
+  public static Promise<Void> all(@Nonnull Collection<Promise<?>> promises) {
     return all(promises, null);
   }
 
-  @NotNull
-  public static <T> Promise<T> all(@NotNull Collection<Promise<?>> promises, @Nullable T totalResult) {
+  @Nonnull
+  public static <T> Promise<T> all(@Nonnull Collection<Promise<?>> promises, @Nullable T totalResult) {
     if (promises.isEmpty()) {
       //noinspection unchecked
       return (Promise<T>)DONE.getValue();
@@ -130,22 +130,22 @@ public class Promises {
     return totalPromise;
   }
 
-  @NotNull
-  public static Promise<Void> wrapAsVoid(@NotNull ActionCallback asyncResult) {
+  @Nonnull
+  public static Promise<Void> wrapAsVoid(@Nonnull ActionCallback asyncResult) {
     final AsyncPromise<Void> promise = new AsyncPromise<>();
     asyncResult.doWhenDone(() -> promise.setResult(null))
             .doWhenRejected(error -> promise.setError(Promise.createError(error == null ? "Internal error" : error)));
     return promise;
   }
 
-  @NotNull
-  public static <T> Promise<T> wrap(@NotNull AsyncResult<T> asyncResult) {
+  @Nonnull
+  public static <T> Promise<T> wrap(@Nonnull AsyncResult<T> asyncResult) {
     final AsyncPromise<T> promise = new AsyncPromise<>();
     asyncResult.doWhenDone(promise::setResult).doWhenRejected(error -> promise.setError(Promise.createError(error)));
     return promise;
   }
 
-  @NotNull
+  @Nonnull
   public static <T> Promise<T> resolve(T result) {
     if (result == null) {
       //noinspection unchecked

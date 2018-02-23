@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,12 +31,12 @@ public class CopyrightUpdaters extends FileTypeExtension<UpdateCopyrightsProvide
     super("com.intellij.copyright.updater");
   }
 
-  public static boolean hasExtension(@NotNull PsiFile psiFile) {
+  public static boolean hasExtension(@Nonnull PsiFile psiFile) {
     VirtualFile virtualFile = psiFile.getVirtualFile();
     return virtualFile != null && hasExtension(virtualFile);
   }
 
-  public static boolean hasExtension(@NotNull VirtualFile virtualFile) {
+  public static boolean hasExtension(@Nonnull VirtualFile virtualFile) {
     return INSTANCE.forFileType(virtualFile.getFileType()) != null;
   }
 }

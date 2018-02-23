@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 
@@ -64,7 +64,7 @@ public class PsiFileSystemItemUtil {
     return componentsList.toArray(new PsiFileSystemItem[componentsList.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public static String getNotNullRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) throws IncorrectOperationException {
     final String s = getRelativePath(src, dst);
     if (s == null) throw new IncorrectOperationException("Cannot find path between files; src = " + src.getVirtualFile().getPresentableUrl() + "; dst = " + dst.getVirtualFile().getPresentableUrl());

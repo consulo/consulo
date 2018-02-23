@@ -37,8 +37,8 @@ import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +51,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
 
   private final Project myProject;
 
-  public static EditorHistoryManager getInstance(@NotNull Project project) {
+  public static EditorHistoryManager getInstance(@Nonnull Project project) {
     return project.getComponent(EditorHistoryManager.class);
   }
 
@@ -60,7 +60,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
    */
   private final List<HistoryEntry> myEntriesList = new ArrayList<>();
 
-  EditorHistoryManager(@NotNull Project project) {
+  EditorHistoryManager(@Nonnull Project project) {
     myProject = project;
 
     MessageBusConnection connection = project.getMessageBus().connect();
@@ -74,7 +74,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
 
     connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new FileEditorManagerListener.Before.Adapter() {
       @Override
-      public void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateHistoryEntry(file, false);
       }
     });
@@ -98,7 +98,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
   /**
    * Makes file most recent one
    */
-  private void fileOpenedImpl(@NotNull final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
+  private void fileOpenedImpl(@Nonnull final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
@@ -235,7 +235,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
     return result;
   }
 
-  public synchronized boolean hasBeenOpen(@NotNull VirtualFile f) {
+  public synchronized boolean hasBeenOpen(@Nonnull VirtualFile f) {
     for (HistoryEntry each : myEntriesList) {
       if (Comparing.equal(each.getFile(), f)) return true;
     }
@@ -249,14 +249,14 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
    * @throws IllegalArgumentException if <code>file</code>
    *                                  is <code>null</code>
    */
-  public synchronized void removeFile(@NotNull final VirtualFile file) {
+  public synchronized void removeFile(@Nonnull final VirtualFile file) {
     final HistoryEntry entry = getEntry(file);
     if (entry != null) {
       removeEntry(entry);
     }
   }
 
-  public FileEditorState getState(@NotNull VirtualFile file, final FileEditorProvider provider) {
+  public FileEditorState getState(@Nonnull VirtualFile file, final FileEditorProvider provider) {
     final HistoryEntry entry = getEntry(file);
     return entry != null ? entry.getState(provider) : null;
   }
@@ -269,7 +269,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
     return entry != null ? entry.getSelectedProvider() : null;
   }
 
-  private synchronized HistoryEntry getEntry(@NotNull VirtualFile file) {
+  private synchronized HistoryEntry getEntry(@Nonnull VirtualFile file) {
     for (int i = myEntriesList.size() - 1; i >= 0; i--) {
       final HistoryEntry entry = myEntriesList.get(i);
       VirtualFile entryFile = entry.getFile();
@@ -293,7 +293,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
   }
 
   @Override
-  public void loadState(@NotNull Element element) {
+  public void loadState(@Nonnull Element element) {
     // we have to delay xml processing because history entries require EditorStates to be created
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
@@ -359,7 +359,7 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
     myEntriesList.clear();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "editorHistoryManager";
@@ -370,12 +370,12 @@ public final class EditorHistoryManager implements PersistentStateComponent<Elem
    */
   private final class MyEditorManagerListener extends FileEditorManagerAdapter {
     @Override
-    public void fileOpened(@NotNull final FileEditorManager source, @NotNull final VirtualFile file) {
+    public void fileOpened(@Nonnull final FileEditorManager source, @Nonnull final VirtualFile file) {
       fileOpenedImpl(file, null, null);
     }
 
     @Override
-    public void selectionChanged(@NotNull final FileEditorManagerEvent event) {
+    public void selectionChanged(@Nonnull final FileEditorManagerEvent event) {
       // updateHistoryEntry does commitDocument which is 1) very expensive and 2) cannot be performed from within PSI change listener
       // so defer updating history entry until documents committed to improve responsiveness
       PsiDocumentManager.getInstance(myProject).performWhenAllCommitted(() -> {

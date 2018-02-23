@@ -28,8 +28,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,11 +42,12 @@ import java.util.List;
  */
 public class ArrangementMatchingRulesPanel extends JPanel implements DataProvider {
 
-  @NotNull protected final ArrangementSectionRulesControl myControl;
+  @Nonnull
+  protected final ArrangementSectionRulesControl myControl;
 
-  public ArrangementMatchingRulesPanel(@NotNull Language language,
-                                       @NotNull ArrangementStandardSettingsManager settingsManager,
-                                       @NotNull ArrangementColorsProvider colorsProvider)
+  public ArrangementMatchingRulesPanel(@Nonnull Language language,
+                                       @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                       @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new GridBagLayout());
 
@@ -54,7 +55,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
     final JViewport viewport = scrollPane.getViewport();
     ArrangementSectionRulesControl.RepresentationCallback callback = new ArrangementSectionRulesControl.RepresentationCallback() {
       @Override
-      public void ensureVisible(@NotNull Rectangle r) {
+      public void ensureVisible(@Nonnull Rectangle r) {
         Rectangle visibleRect = viewport.getViewRect();
         if (r.y <= visibleRect.y) {
           return;
@@ -87,14 +88,14 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  protected ArrangementSectionRulesControl createRulesControl(@NotNull Language language,
-                                                              @NotNull ArrangementStandardSettingsManager settingsManager,
-                                                              @NotNull ArrangementColorsProvider colorsProvider,
-                                                              @NotNull ArrangementSectionRulesControl.RepresentationCallback callback) {
+  protected ArrangementSectionRulesControl createRulesControl(@Nonnull Language language,
+                                                              @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                                              @Nonnull ArrangementColorsProvider colorsProvider,
+                                                              @Nonnull ArrangementSectionRulesControl.RepresentationCallback callback) {
     return new ArrangementSectionRulesControl(language, settingsManager, colorsProvider, callback);
   }
 
-  @NotNull
+  @Nonnull
   public List<ArrangementSectionRule> getSections() {
     return myControl.getSections();
   }
@@ -118,7 +119,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key dataId) {
+  public Object getData(@Nonnull Key dataId) {
     if (ArrangementSectionRulesControl.KEY == dataId) {
       return myControl;
     }

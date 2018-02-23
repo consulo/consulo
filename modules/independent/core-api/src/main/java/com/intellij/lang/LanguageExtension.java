@@ -24,8 +24,8 @@ import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   }
 
   @SuppressWarnings("ConstantConditions")
-  public T forLanguage(@NotNull Language l) {
+  public T forLanguage(@Nonnull Language l) {
     T cached = l.getUserData(IN_LANGUAGE_CACHE);
     if (cached != null) return cached;
 
@@ -67,7 +67,7 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Immutable
   public List<T> allForLanguage(Language l) {
     List<T> list = forKey(l);
@@ -90,8 +90,8 @@ public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
     return list;
   }
 
-  @NotNull
-  public List<T> allForLanguageOrAny(@NotNull Language l) {
+  @Nonnull
+  public List<T> allForLanguageOrAny(@Nonnull Language l) {
     List<T> providers = allForLanguage(l);
     if (l == Language.ANY) return providers;
     return ContainerUtil.concat(providers, allForLanguage(Language.ANY));

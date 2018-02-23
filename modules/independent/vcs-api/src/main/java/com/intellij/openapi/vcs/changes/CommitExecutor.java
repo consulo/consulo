@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -26,6 +26,6 @@ public interface CommitExecutor {
   @Nls
   String getActionText();
 
-  @NotNull
+  @Nonnull
   CommitSession createCommitSession();
 }

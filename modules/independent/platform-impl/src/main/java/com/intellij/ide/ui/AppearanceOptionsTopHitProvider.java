@@ -19,8 +19,8 @@ import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -51,7 +51,7 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
           appearance("Window: " + messageIde("checkbox.right.toolwindow.layout"), "RIGHT_HORIZONTAL_SPLIT"),
           appearance("Window: " + messageIde("checkbox.use.preview.window"), "NAVIGATE_TO_PREVIEW"));
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
     return ourOptions;
@@ -97,7 +97,7 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
             appearance("View: Show Navigation Bar", "SHOW_NAVIGATION_BAR")
     );
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<BooleanOptionDescription> getOptions(@Nullable Project project) {
       return ourOptions;

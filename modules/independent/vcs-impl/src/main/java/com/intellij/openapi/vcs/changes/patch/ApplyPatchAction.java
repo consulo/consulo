@@ -58,8 +58,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.io.File;
@@ -117,12 +117,12 @@ public class ApplyPatchAction extends DumbAwareAction {
     }
   }
 
-  private static boolean isProjectOrScopeView(@NotNull String place) {
+  private static boolean isProjectOrScopeView(@Nonnull String place) {
     return place.equals(ActionPlaces.PROJECT_VIEW_POPUP) || place.equals(ActionPlaces.SCOPE_VIEW_POPUP);
   }
 
   // used by TeamCity plugin
-  public static void showApplyPatch(@NotNull final Project project, @NotNull final VirtualFile file) {
+  public static void showApplyPatch(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
             project, new ApplyPatchDefaultExecutor(project),
             Collections.<ApplyPatchExecutor>singletonList(new ImportToShelfExecutor(project)), ApplyPatchMode.APPLY, file);
@@ -130,7 +130,7 @@ public class ApplyPatchAction extends DumbAwareAction {
   }
 
   @RequiredDispatchThread
-  public static Boolean showAndGetApplyPatch(@NotNull final Project project, @NotNull final File file) {
+  public static Boolean showAndGetApplyPatch(@Nonnull final Project project, @Nonnull final File file) {
     VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
     String patchPath = file.getPath();
     if (vFile == null) {
@@ -168,15 +168,15 @@ public class ApplyPatchAction extends DumbAwareAction {
     return sb.toString();
   }
 
-  @NotNull
-  public static ApplyPatchStatus applyOnly(@Nullable final Project project,
-                                           @NotNull final ApplyFilePatchBase patch,
-                                           @Nullable final ApplyPatchContext context,
-                                           @NotNull final VirtualFile file,
-                                           @Nullable final CommitContext commitContext,
+  @Nonnull
+  public static ApplyPatchStatus applyOnly(@javax.annotation.Nullable final Project project,
+                                           @Nonnull final ApplyFilePatchBase patch,
+                                           @javax.annotation.Nullable final ApplyPatchContext context,
+                                           @Nonnull final VirtualFile file,
+                                           @javax.annotation.Nullable final CommitContext commitContext,
                                            boolean reverse,
-                                           @Nullable String leftPanelTitle,
-                                           @Nullable String rightPanelTitle) {
+                                           @javax.annotation.Nullable String leftPanelTitle,
+                                           @javax.annotation.Nullable String rightPanelTitle) {
     final ApplyFilePatch.Result result = tryApplyPatch(project, patch, context, file, commitContext);
 
     final ApplyPatchStatus status = result.getStatus();
@@ -263,12 +263,12 @@ public class ApplyPatchAction extends DumbAwareAction {
     }
   }
 
-  @NotNull
-  private static ApplyFilePatch.Result tryApplyPatch(@Nullable final Project project,
-                                                     @NotNull final ApplyFilePatchBase patch,
-                                                     @Nullable final ApplyPatchContext context,
-                                                     @NotNull final VirtualFile file,
-                                                     @Nullable final CommitContext commitContext) {
+  @Nonnull
+  private static ApplyFilePatch.Result tryApplyPatch(@javax.annotation.Nullable final Project project,
+                                                     @Nonnull final ApplyFilePatchBase patch,
+                                                     @javax.annotation.Nullable final ApplyPatchContext context,
+                                                     @Nonnull final VirtualFile file,
+                                                     @javax.annotation.Nullable final CommitContext commitContext) {
     final FilePatch patchBase = patch.getPatch();
     return ApplicationManager.getApplication().runWriteAction(
             new Computable<ApplyFilePatch.Result>() {
@@ -293,8 +293,8 @@ public class ApplyPatchAction extends DumbAwareAction {
             });
   }
 
-  @Nullable
-  private static String toString(@Nullable CharSequence charSequence) {
+  @javax.annotation.Nullable
+  private static String toString(@javax.annotation.Nullable CharSequence charSequence) {
     return charSequence != null ? StringUtil.convertLineSeparators(charSequence.toString()) : null;
   }
 }

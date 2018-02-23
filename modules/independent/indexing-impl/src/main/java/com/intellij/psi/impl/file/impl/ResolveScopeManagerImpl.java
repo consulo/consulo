@@ -33,7 +33,7 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.annotations.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     ((PsiManagerImpl)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
   }
 
-  @NotNull
+  @Nonnull
   private GlobalSearchScope getInherentResolveScope(VirtualFile vFile) {
     ProjectFileIndex projectFileIndex = myProjectRootManager.getFileIndex();
     Module module = projectFileIndex.getModuleForFile(vFile);
@@ -107,7 +107,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         // prefer current library
         return new DelegatingGlobalSearchScope(allCandidates, preferred) {
           @Override
-          public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+          public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
             boolean c1 = preferred.contains(file1);
             boolean c2 = preferred.contains(file2);
             if (c1 && !c2) return 1;
@@ -122,8 +122,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
   }
 
   @Override
-  @NotNull
-  public GlobalSearchScope getResolveScope(@NotNull PsiElement element) {
+  @Nonnull
+  public GlobalSearchScope getResolveScope(@Nonnull PsiElement element) {
     ProgressIndicatorProvider.checkCanceled();
 
     VirtualFile vFile;
@@ -162,7 +162,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     return myDefaultResolveScopesCache.get(vFile);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   @Override
   public GlobalSearchScope getDefaultResolveScope(final VirtualFile vFile) {
@@ -172,8 +172,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
   }
 
   @Override
-  @NotNull
-  public GlobalSearchScope getUseScope(@NotNull PsiElement element) {
+  @Nonnull
+  public GlobalSearchScope getUseScope(@Nonnull PsiElement element) {
     Pair<GlobalSearchScope, VirtualFile> pair = getDefaultResultScopeInfo(element);
     if(pair.getSecond() == null) {
       return pair.getFirst();
@@ -189,8 +189,8 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     return targetScope;
   }
 
-  @NotNull
-  private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@NotNull PsiElement element) {
+  @Nonnull
+  private Pair<GlobalSearchScope, VirtualFile> getDefaultResultScopeInfo(@Nonnull PsiElement element) {
     VirtualFile vFile;
     final GlobalSearchScope allScope = GlobalSearchScope.allScope(myManager.getProject());
     if (element instanceof PsiDirectory) {

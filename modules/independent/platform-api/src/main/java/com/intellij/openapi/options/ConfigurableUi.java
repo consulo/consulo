@@ -16,19 +16,19 @@
 package com.intellij.openapi.options;
 
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 @Deprecated
 @DeprecationInfo("Use consulo.options.SimpleConfigurable")
 public interface ConfigurableUi<S> {
-  void reset(@NotNull S settings);
+  void reset(@Nonnull S settings);
 
-  boolean isModified(@NotNull S settings);
+  boolean isModified(@Nonnull S settings);
 
-  void apply(@NotNull S settings);
+  void apply(@Nonnull S settings);
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 }

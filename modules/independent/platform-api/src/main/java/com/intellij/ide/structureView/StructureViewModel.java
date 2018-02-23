@@ -16,8 +16,8 @@
 package com.intellij.ide.structureView;
 
 import com.intellij.ide.util.treeView.smartTree.TreeModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines the model for the data displayed in the standard structure view or file structure
@@ -33,7 +33,8 @@ public interface StructureViewModel extends TreeModel {
    * @return the selected element, or null if the current editor position does not
    * correspond to any element that can be shown in the structure view.
    */
-  @Nullable Object getCurrentEditorElement();
+  @Nullable
+  Object getCurrentEditorElement();
 
   /**
    * Adds a listener which gets notified when the selection in the editor linked to the
@@ -73,7 +74,7 @@ public interface StructureViewModel extends TreeModel {
    * @return the structure view root.
    */
   @Override
-  @NotNull
+  @Nonnull
   StructureViewTreeElement getRoot();
 
   /**

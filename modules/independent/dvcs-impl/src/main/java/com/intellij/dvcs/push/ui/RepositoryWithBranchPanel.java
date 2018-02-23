@@ -29,7 +29,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -46,10 +46,11 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
   private final JLabel myArrowLabel;
   private final JLabel myRepositoryLabel;
   private final ColoredTreeCellRenderer myTextRenderer;
-  @NotNull private final List<RepositoryNodeListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final List<RepositoryNodeListener<T>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public RepositoryWithBranchPanel(@NotNull final Project project, @NotNull String repoName,
-                                   @NotNull String sourceName, @NotNull PushTargetPanel<T> destPushTargetPanelComponent) {
+  public RepositoryWithBranchPanel(@Nonnull final Project project, @Nonnull String repoName,
+                                   @Nonnull String sourceName, @Nonnull PushTargetPanel<T> destPushTargetPanelComponent) {
     super();
     setLayout(new BorderLayout());
     myRepositoryCheckbox = new JBCheckBox();
@@ -58,7 +59,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     myRepositoryCheckbox.setBorder(null);
     myRepositoryCheckbox.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         fireOnSelectionChange(myRepositoryCheckbox.isSelected());
       }
     });
@@ -69,7 +70,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     myTextRenderer = new ColoredTreeCellRenderer() {
       @RequiredDispatchThread
       @Override
-      public void customizeCellRenderer(@NotNull JTree tree,
+      public void customizeCellRenderer(@Nonnull JTree tree,
                                         Object value,
                                         boolean selected,
                                         boolean expanded,
@@ -106,7 +107,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     add(panel, BorderLayout.CENTER);
   }
 
-  @NotNull
+  @Nonnull
   public String getRepositoryName() {
     return myRepositoryLabel.getText();
   }
@@ -119,7 +120,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     return myArrowLabel.getText();
   }
 
-  @NotNull
+  @Nonnull
   public Component getTreeCellEditorComponent(JTree tree,
                                               Object value,
                                               boolean selected,
@@ -154,12 +155,12 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     return this;
   }
 
-  public void addRepoNodeListener(@NotNull RepositoryNodeListener<T> listener) {
+  public void addRepoNodeListener(@Nonnull RepositoryNodeListener<T> listener) {
     myListeners.add(listener);
     myDestPushTargetPanelComponent.addTargetEditorListener(new PushTargetEditorListener() {
 
       @Override
-      public void onTargetInEditModeChanged(@NotNull String value) {
+      public void onTargetInEditModeChanged(@Nonnull String value) {
         for (RepositoryNodeListener listener : myListeners) {
           listener.onTargetInEditMode(value);
         }

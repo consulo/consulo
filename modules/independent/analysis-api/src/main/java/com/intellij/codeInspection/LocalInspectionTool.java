@@ -20,8 +20,8 @@ import com.intellij.psi.*;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
   @NonNls @Language("RegExp")
   public static final String VALID_ID_PATTERN = "[a-zA-Z_0-9.-]+";
 
-  public static boolean isValidID(@NotNull String id) {
+  public static boolean isValidID(@Nonnull String id) {
     return !id.isEmpty() && id.matches(VALID_ID_PATTERN);
   }
 
@@ -60,7 +60,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
    */
   @Pattern(VALID_ID_PATTERN)
   @NonNls
-  @NotNull
+  @Nonnull
   public String getID() {
     if (myNameProvider instanceof LocalDefaultNameProvider) {
       final String id = ((LocalDefaultNameProvider)myNameProvider).getDefaultID();
@@ -105,7 +105,7 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
    * @return <code>null</code> if no problems found or not applicable at file level.
    */
   @Nullable
-  public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly) {
+  public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
     return null;
   }
 
@@ -121,8 +121,8 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
    * @param session    the session in the context of which the tool runs.
    * @return not-null visitor for this inspection.
    */
-  @NotNull
-  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+  @Nonnull
+  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, final boolean isOnTheFly, @Nonnull LocalInspectionToolSession session) {
     return buildVisitor(holder, isOnTheFly);
   }
 
@@ -136,8 +136,8 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
    * @param isOnTheFly true if inspection was run in non-batch mode
    * @return not-null visitor for this inspection.
    */
-  @NotNull
-  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, final boolean isOnTheFly) {
+  @Nonnull
+  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, final boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override
       public void visitFile(PsiFile file) {
@@ -163,17 +163,17 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
     return (PsiFile)psiElement;
   }
 
-  public void inspectionStarted(@NotNull LocalInspectionToolSession session, boolean isOnTheFly) {}
+  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly) {}
 
-  public void inspectionFinished(@NotNull LocalInspectionToolSession session, @NotNull ProblemsHolder problemsHolder) {
+  public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder) {
     inspectionFinished(session);
   }
 
   @Deprecated()
-  public void inspectionFinished(@NotNull LocalInspectionToolSession session) {}
-  @NotNull
-  public List<ProblemDescriptor> processFile(@NotNull PsiFile file,
-                                             @NotNull InspectionManager manager) {
+  public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {}
+  @Nonnull
+  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file,
+                                             @Nonnull InspectionManager manager) {
     final ProblemsHolder holder = new ProblemsHolder(manager, file, false);
     LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
     final PsiElementVisitor customVisitor = buildVisitor(holder, false, session);

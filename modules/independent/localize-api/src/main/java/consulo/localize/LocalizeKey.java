@@ -15,25 +15,25 @@
  */
 package consulo.localize;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Nov-17
  */
 public interface LocalizeKey {
-  @NotNull
+  @Nonnull
   LocalizeValue getValue(Object arg);
 
-  @NotNull
+  @Nonnull
   LocalizeValue getValue(Object arg0, Object arg1);
 
-  @NotNull
+  @Nonnull
   LocalizeValue getValue(Object arg0, Object arg1, Object arg2);
 
-  @NotNull
+  @Nonnull
   LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3);
 
-  @NotNull
+  @Nonnull
   LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4);
 }

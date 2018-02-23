@@ -18,12 +18,13 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.vcs.log.CommitId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CommitIdByStringCondition implements Condition<CommitId> {
-  @NotNull private final String myHashString;
+  @Nonnull
+  private final String myHashString;
 
-  public CommitIdByStringCondition(@NotNull String hashString) {
+  public CommitIdByStringCondition(@Nonnull String hashString) {
     myHashString = hashString;
   }
 

@@ -23,8 +23,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,7 +38,7 @@ public class FileAttribute {
   private final int myVersion;
   private final boolean myFixedSize;
 
-  public FileAttribute(@NonNls @NotNull String id) {
+  public FileAttribute(@NonNls @Nonnull String id) {
     this(id, UNDEFINED_VERSION, false);
   }
 
@@ -46,29 +46,29 @@ public class FileAttribute {
    * @deprecated
    * @see #FileAttribute(String, int, boolean)
    */
-  public FileAttribute(@NonNls @NotNull String id, int version) {
+  public FileAttribute(@NonNls @Nonnull String id, int version) {
     this(id, version, false);
   }
 
-  public FileAttribute(@NonNls @NotNull String id, int version, boolean fixedSize) {
+  public FileAttribute(@NonNls @Nonnull String id, int version, boolean fixedSize) {
     this(version, fixedSize, id);
     boolean added = ourRegisteredIds.add(id);
     assert added : "Attribute id='" + id+ "' is not unique";
   }
 
-  private FileAttribute(int version, boolean fixedSize,@NotNull String id) {
+  private FileAttribute(int version, boolean fixedSize,@Nonnull String id) {
     myId = id;
     myVersion = version;
     myFixedSize = fixedSize;
   }
 
   @Nullable
-  public DataInputStream readAttribute(@NotNull VirtualFile file) {
+  public DataInputStream readAttribute(@Nonnull VirtualFile file) {
     return ManagingFS.getInstance().readAttribute(file, this);
   }
 
-  @NotNull
-  public DataOutputStream writeAttribute(@NotNull VirtualFile file) {
+  @Nonnull
+  public DataOutputStream writeAttribute(@Nonnull VirtualFile file) {
     return ManagingFS.getInstance().writeAttribute(file, this);
   }
 
@@ -86,7 +86,7 @@ public class FileAttribute {
     }
   }
 
-  public void writeAttributeBytes(VirtualFile file, @NotNull byte[] bytes) throws IOException {
+  public void writeAttributeBytes(VirtualFile file, @Nonnull byte[] bytes) throws IOException {
     writeAttributeBytes(file, bytes, 0, bytes.length);
   }
 
@@ -101,7 +101,7 @@ public class FileAttribute {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
@@ -110,7 +110,7 @@ public class FileAttribute {
     return myFixedSize;
   }
 
-  @NotNull
+  @Nonnull
   public FileAttribute newVersion(int newVersion) {
     return new FileAttribute(newVersion, myFixedSize, myId);
   }

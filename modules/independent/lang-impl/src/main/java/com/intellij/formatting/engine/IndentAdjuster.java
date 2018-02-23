@@ -18,7 +18,7 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.*;
 import com.intellij.formatting.FormatProcessor;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class IndentAdjuster {
   private final AlignmentHelper myAlignmentHelper;

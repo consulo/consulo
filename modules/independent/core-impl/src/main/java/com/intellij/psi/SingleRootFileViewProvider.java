@@ -53,8 +53,8 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -67,47 +67,47 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   private static final Key<Boolean> OUR_NO_SIZE_LIMIT_KEY = Key.create("no.size.limit");
   private static final Logger LOG = Logger.getInstance("#" + SingleRootFileViewProvider.class.getCanonicalName());
   public static final Key<Object> FREE_THREADED = Key.create("FREE_THREADED");
-  @NotNull
+  @Nonnull
   private final PsiManager myManager;
-  @NotNull
+  @Nonnull
   private final VirtualFile myVirtualFile;
   private final boolean myEventSystemEnabled;
   private final boolean myPhysical;
   private final AtomicReference<PsiFile> myPsiFile = Atomics.newReference();
   private volatile Content myContent;
   private volatile Reference<Document> myDocument;
-  @NotNull
+  @Nonnull
   private final Language myBaseLanguage;
-  @NotNull
+  @Nonnull
   private final FileType myFileType;
 
-  public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile file) {
+  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile file) {
     this(manager, file, true);
   }
 
-  public SingleRootFileViewProvider(@NotNull PsiManager manager, @NotNull VirtualFile virtualFile, final boolean eventSystemEnabled) {
+  public SingleRootFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, final boolean eventSystemEnabled) {
     this(manager, virtualFile, eventSystemEnabled, virtualFile.getFileType());
   }
 
-  public SingleRootFileViewProvider(@NotNull PsiManager manager,
-                                    @NotNull VirtualFile virtualFile,
+  public SingleRootFileViewProvider(@Nonnull PsiManager manager,
+                                    @Nonnull VirtualFile virtualFile,
                                     final boolean eventSystemEnabled,
-                                    @NotNull final FileType fileType) {
+                                    @Nonnull final FileType fileType) {
     this(manager, virtualFile, eventSystemEnabled, calcBaseLanguage(virtualFile, manager.getProject(), fileType), fileType);
   }
 
-  protected SingleRootFileViewProvider(@NotNull PsiManager manager,
-                                       @NotNull VirtualFile virtualFile,
+  protected SingleRootFileViewProvider(@Nonnull PsiManager manager,
+                                       @Nonnull VirtualFile virtualFile,
                                        final boolean eventSystemEnabled,
-                                       @NotNull Language language) {
+                                       @Nonnull Language language) {
     this(manager, virtualFile, eventSystemEnabled, language, virtualFile.getFileType());
   }
 
-  protected SingleRootFileViewProvider(@NotNull PsiManager manager,
-                                       @NotNull VirtualFile virtualFile,
+  protected SingleRootFileViewProvider(@Nonnull PsiManager manager,
+                                       @Nonnull VirtualFile virtualFile,
                                        final boolean eventSystemEnabled,
-                                       @NotNull Language language,
-                                       @NotNull FileType type) {
+                                       @Nonnull Language language,
+                                       @Nonnull FileType type) {
     myManager = manager;
     myVirtualFile = virtualFile;
     myEventSystemEnabled = eventSystemEnabled;
@@ -118,17 +118,17 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     myFileType = type;
   }
 
-  public static boolean isFreeThreaded(@NotNull FileViewProvider provider) {
+  public static boolean isFreeThreaded(@Nonnull FileViewProvider provider) {
     return provider.getVirtualFile() instanceof LightVirtualFile && !provider.isEventSystemEnabled();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getBaseLanguage() {
     return myBaseLanguage;
   }
 
-  private static Language calcBaseLanguage(@NotNull VirtualFile file, @NotNull Project project, @NotNull final FileType fileType) {
+  private static Language calcBaseLanguage(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull final FileType fileType) {
     if (fileType.isBinary()) return Language.ANY;
     if (isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
 
@@ -138,14 +138,14 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<Language> getLanguages() {
     return Collections.singleton(getBaseLanguage());
   }
 
   @Override
   @Nullable
-  public final PsiFile getPsi(@NotNull Language target) {
+  public final PsiFile getPsi(@Nonnull Language target) {
     if (!isPhysical()) {
       FileManager fileManager = ((PsiManagerEx)myManager).getFileManager();
       VirtualFile virtualFile = getVirtualFile();
@@ -157,13 +157,13 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<PsiFile> getAllFiles() {
     return ContainerUtil.createMaybeSingletonList(getPsi(getBaseLanguage()));
   }
 
   @Nullable
-  protected PsiFile getPsiInner(@NotNull Language target) {
+  protected PsiFile getPsiInner(@Nonnull Language target) {
     if (target != getBaseLanguage()) {
       return null;
     }
@@ -261,7 +261,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  public void rootChanged(@NotNull PsiFile psiFile) {
+  public void rootChanged(@Nonnull PsiFile psiFile) {
     if (psiFile instanceof PsiFileImpl && ((PsiFileImpl)psiFile).isContentsLoaded()) {
       setContent(new PsiFileContent((PsiFileImpl)psiFile, LocalTimeCounter.currentTime()));
     }
@@ -283,12 +283,12 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  public boolean supportsIncrementalReparse(@NotNull final Language rootLanguage) {
+  public boolean supportsIncrementalReparse(@Nonnull final Language rootLanguage) {
     return true;
   }
 
 
-  public PsiFile getCachedPsi(@NotNull Language target) {
+  public PsiFile getCachedPsi(@Nonnull Language target) {
     PsiFile file = myPsiFile.get();
     return file == PsiUtilCore.NULL_PSI_FILE ? null : file;
   }
@@ -297,7 +297,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     return ContainerUtil.createMaybeSingletonList(getCachedPsi(myBaseLanguage));
   }
 
-  @NotNull
+  @Nonnull
   public List<FileElement> getKnownTreeRoots() {
     PsiFile psiFile = getCachedPsi(myBaseLanguage);
     if (!(psiFile instanceof PsiFileImpl)) return Collections.emptyList();
@@ -341,7 +341,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Nullable
-  protected PsiFile createFile(@NotNull Project project, @NotNull VirtualFile file, @NotNull FileType fileType) {
+  protected PsiFile createFile(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull FileType fileType) {
     if (fileType.isBinary() || file.is(VFileProperty.SPECIAL)) {
       return isTooLargeForContentLoading(file)
              ? new PsiLargeBinaryFileImpl(((PsiManagerImpl)getManager()), this)
@@ -360,38 +360,38 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Deprecated
-  public static boolean isTooLarge(@NotNull VirtualFile vFile) {
+  public static boolean isTooLarge(@Nonnull VirtualFile vFile) {
     return isTooLargeForIntelligence(vFile);
   }
 
-  public static boolean isTooLargeForIntelligence(@NotNull VirtualFile vFile) {
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
     if (!checkFileSizeLimit(vFile)) return false;
     return fileSizeIsGreaterThan(vFile, PersistentFSConstants.getMaxIntellisenseFileSize());
   }
 
-  public static boolean isTooLargeForContentLoading(@NotNull VirtualFile vFile) {
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
     return fileSizeIsGreaterThan(vFile, PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD);
   }
 
-  private static boolean checkFileSizeLimit(@NotNull VirtualFile vFile) {
+  private static boolean checkFileSizeLimit(@Nonnull VirtualFile vFile) {
     return !Boolean.TRUE.equals(vFile.getUserData(OUR_NO_SIZE_LIMIT_KEY));
   }
 
-  public static void doNotCheckFileSizeLimit(@NotNull VirtualFile vFile) {
+  public static void doNotCheckFileSizeLimit(@Nonnull VirtualFile vFile) {
     vFile.putUserData(OUR_NO_SIZE_LIMIT_KEY, Boolean.TRUE);
   }
 
-  public static boolean isTooLargeForIntelligence(@NotNull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
     if (!checkFileSizeLimit(vFile)) return false;
     return contentSize > PersistentFSConstants.getMaxIntellisenseFileSize();
   }
 
   @SuppressWarnings("UnusedParameters")
-  public static boolean isTooLargeForContentLoading(@NotNull VirtualFile vFile, final long contentSize) {
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
     return contentSize > PersistentFSConstants.FILE_LENGTH_TO_CACHE_THRESHOLD;
   }
 
-  public static boolean fileSizeIsGreaterThan(@NotNull VirtualFile vFile, final long maxBytes) {
+  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {
     if (vFile instanceof LightVirtualFile) {
       // This is optimization in order to avoid conversion of [large] file contents to bytes
       final int lengthInChars = ((LightVirtualFile)vFile).getContent().length();
@@ -403,7 +403,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Nullable
-  protected PsiFile createFile(@NotNull Language lang) {
+  protected PsiFile createFile(@Nonnull Language lang) {
     if (lang != getBaseLanguage()) return null;
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
     if (parserDefinition != null) {
@@ -413,19 +413,19 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiManager getManager() {
     return myManager;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence getContents() {
     return getContent().getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
@@ -458,9 +458,9 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     return createCopy(copy);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public SingleRootFileViewProvider createCopy(@NotNull final VirtualFile copy) {
+  public SingleRootFileViewProvider createCopy(@Nonnull final VirtualFile copy) {
     return new SingleRootFileViewProvider(getManager(), copy, false, myBaseLanguage);
   }
 
@@ -471,14 +471,14 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
   }
 
   @Override
-  public PsiElement findElementAt(final int offset, @NotNull final Language language) {
+  public PsiElement findElementAt(final int offset, @Nonnull final Language language) {
     final PsiFile psiFile = getPsi(language);
     return psiFile != null ? findElementAt(psiFile, offset) : null;
   }
 
   @Override
   @Nullable
-  public PsiReference findReferenceAt(final int offset, @NotNull final Language language) {
+  public PsiReference findReferenceAt(final int offset, @Nonnull final Language language) {
     final PsiFile psiFile = getPsi(language);
     return psiFile != null ? findReferenceAt(psiFile, offset) : null;
   }
@@ -507,7 +507,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
 
 
   @Override
-  public PsiElement findElementAt(int offset, @NotNull Class<? extends Language> lang) {
+  public PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang) {
     if (!ReflectionUtil.isAssignable(lang, getBaseLanguage().getClass())) return null;
     return findElementAt(offset);
   }
@@ -518,7 +518,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     return node == null ? null : SourceTreeToPsiMap.treeElementToPsi(node.findLeafElementAt(offset));
   }
 
-  public void forceCachedPsi(@NotNull PsiFile psiFile) {
+  public void forceCachedPsi(@Nonnull PsiFile psiFile) {
     PsiFile prev = myPsiFile.getAndSet(psiFile);
     if (prev != null && prev != psiFile && prev instanceof PsiFileEx) {
       ((PsiFileEx)prev).markInvalidated();
@@ -526,12 +526,12 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     ((PsiManagerEx)myManager).getFileManager().setViewProvider(getVirtualFile(), this);
   }
 
-  @NotNull
+  @Nonnull
   private Content getContent() {
     return myContent;
   }
 
-  private void setContent(@NotNull Content content) {
+  private void setContent(@Nonnull Content content) {
     myContent = content;
   }
 
@@ -673,7 +673,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiFile getStubBindingRoot() {
     final PsiFile psi = getPsi(getBaseLanguage());
@@ -681,7 +681,7 @@ public class SingleRootFileViewProvider extends UserDataHolderBase implements Fi
     return psi;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final FileType getFileType() {
     return myFileType;

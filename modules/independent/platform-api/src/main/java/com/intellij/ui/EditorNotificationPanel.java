@@ -37,9 +37,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -84,12 +84,12 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     myLabel.setText(text);
   }
 
-  public EditorNotificationPanel text(@NotNull String text) {
+  public EditorNotificationPanel text(@Nonnull String text) {
     myLabel.setText(text);
     return this;
   }
 
-  public EditorNotificationPanel icon(@NotNull Icon icon) {
+  public EditorNotificationPanel icon(@Nonnull Icon icon) {
     myLabel.setIcon(icon);
     return this;
   }
@@ -158,14 +158,14 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<IntentionAction> getOptions() {
       return myOptions;
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getText() {
       String text = myLabel.getText();
@@ -173,14 +173,14 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return "Editor notification";
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return true;
     }
 
@@ -198,26 +198,26 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getText() {
       return myLabel.getText();
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return "Editor notification option";
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return true;
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
       myLabel.doClick();
     }
 
@@ -235,26 +235,26 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getText() {
       return EditorBundle.message("editor.notification.settings.option.name");
     }
 
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getFamilyName() {
       return "Editor notification settings";
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return true;
     }
 
     @Override
-    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
       myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, 0, 0, 1, false));
       myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, 0, 0, 1, false));
       myLabel.dispatchEvent(new MouseEvent(myLabel, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));

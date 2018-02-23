@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.HashSet;
 import consulo.roots.ContentFolderScopes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getAffectedModules() {
     return myScopeModules.toArray(new Module[myScopeModules.size()]);
   }
@@ -105,7 +105,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(final FileType fileType, final boolean inSourceOnly) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>();
     final FileIndex[] fileIndices = getFileIndices();

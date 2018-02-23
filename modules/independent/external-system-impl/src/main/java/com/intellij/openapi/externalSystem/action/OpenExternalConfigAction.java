@@ -13,8 +13,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -60,7 +60,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  private static VirtualFile getExternalConfig(@NotNull DataContext context) {
+  private static VirtualFile getExternalConfig(@Nonnull DataContext context) {
     ProjectSystemId externalSystemId = context.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return null;

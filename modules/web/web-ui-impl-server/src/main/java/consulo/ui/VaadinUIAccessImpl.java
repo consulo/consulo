@@ -16,7 +16,7 @@
 package consulo.ui;
 
 import com.vaadin.ui.UI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,14 +35,14 @@ public class VaadinUIAccessImpl implements UIAccess {
   }
 
   @Override
-  public void give(@RequiredUIAccess @NotNull Runnable runnable) {
+  public void give(@RequiredUIAccess @Nonnull Runnable runnable) {
     if (isValid()) {
       myUI.access(runnable);
     }
   }
 
   @Override
-  public void giveAndWait(@NotNull Runnable runnable) {
+  public void giveAndWait(@Nonnull Runnable runnable) {
     if (isValid()) {
       myUI.accessSynchronously(runnable);
     }

@@ -22,43 +22,45 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Consumer;
 
 class CallbackData {
   private final static Logger LOG = Logger.getInstance(CallbackData.class);
 
-  @NotNull private final Runnable myCallback;
-  @NotNull private final Runnable myWrapperStarter;
+  @Nonnull
+  private final Runnable myCallback;
+  @Nonnull
+  private final Runnable myWrapperStarter;
 
-  CallbackData(@NotNull Runnable callback, @NotNull Runnable wrapperStarter) {
+  CallbackData(@Nonnull Runnable callback, @Nonnull Runnable wrapperStarter) {
     myCallback = callback;
     myWrapperStarter = wrapperStarter;
   }
 
-  @NotNull
+  @Nonnull
   public Runnable getCallback() {
     return myCallback;
   }
 
-  @NotNull
+  @Nonnull
   public Runnable getWrapperStarter() {
     return myWrapperStarter;
   }
 
-  @NotNull
-  public static CallbackData create(@NotNull Project project,
-                                    @NotNull InvokeAfterUpdateMode mode,
-                                    @NotNull Runnable afterUpdate,
+  @Nonnull
+  public static CallbackData create(@Nonnull Project project,
+                                    @Nonnull InvokeAfterUpdateMode mode,
+                                    @Nonnull Runnable afterUpdate,
                                     @Nullable String title,
                                     @Nullable ModalityState state) {
     return mode.isSilent() ? createSilent(project, mode, afterUpdate) : createInteractive(project, mode, afterUpdate, title, state);
   }
 
-  @NotNull
-  private static CallbackData createSilent(@NotNull Project project, @NotNull InvokeAfterUpdateMode mode, @NotNull Runnable afterUpdate) {
+  @Nonnull
+  private static CallbackData createSilent(@Nonnull Project project, @Nonnull InvokeAfterUpdateMode mode, @Nonnull Runnable afterUpdate) {
     Consumer<Runnable> callbackCaller = mode.isCallbackOnAwt()
                                         ? ApplicationManager.getApplication()::invokeLater
                                         : ApplicationManager.getApplication()::executeOnPooledThread;
@@ -69,10 +71,10 @@ class CallbackData {
     return new CallbackData(() -> callbackCaller.accept(callback), EmptyRunnable.INSTANCE);
   }
 
-  @NotNull
-  private static CallbackData createInteractive(@NotNull Project project,
-                                                @NotNull InvokeAfterUpdateMode mode,
-                                                @NotNull Runnable afterUpdate,
+  @Nonnull
+  private static CallbackData createInteractive(@Nonnull Project project,
+                                                @Nonnull InvokeAfterUpdateMode mode,
+                                                @Nonnull Runnable afterUpdate,
                                                 String title,
                                                 @Nullable ModalityState state) {
     Task task = mode.isSynchronous()
@@ -85,7 +87,7 @@ class CallbackData {
     return new CallbackData(callback, () -> ProgressManager.getInstance().run(task));
   }
 
-  private static void setDone(@NotNull Task task) {
+  private static void setDone(@Nonnull Task task) {
     if (task instanceof Waiter) {
       ((Waiter)task).done();
     }
@@ -97,7 +99,7 @@ class CallbackData {
     }
   }
 
-  private static void logUpdateFinished(@NotNull Project project, @NotNull InvokeAfterUpdateMode mode) {
+  private static void logUpdateFinished(@Nonnull Project project, @Nonnull InvokeAfterUpdateMode mode) {
     LOG.debug(mode + " changes update finished for project " + project.getName());
   }
 }

@@ -23,8 +23,8 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
 
 
     @Override
-    public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+    public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
       builder.append("string()");
     }
   };
@@ -51,42 +51,42 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     super(CONDITION);
   }
 
-  @NotNull
-  public StringPattern startsWith(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern startsWith(@NonNls @Nonnull final String s) {
     return with(new PatternCondition<String>("startsWith") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         return str.startsWith(s);
       }
     });
   }
 
-  @NotNull
-  public StringPattern endsWith(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern endsWith(@NonNls @Nonnull final String s) {
     return with(new PatternCondition<String>("endsWith") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         return str.endsWith(s);
       }
     });
   }
 
-  @NotNull
-  public StringPattern contains(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern contains(@NonNls @Nonnull final String s) {
     return with(new PatternCondition<String>("contains") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         return str.contains(s);
       }
 
     });
   }
 
-  @NotNull
-  public StringPattern containsChars(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern containsChars(@NonNls @Nonnull final String s) {
     return with(new PatternCondition<String>("containsChars") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         for (int i=0, len=s.length(); i<len; i++) {
           if (str.indexOf(s.charAt(i))>-1) return true;
         }
@@ -95,8 +95,8 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     });
   }
 
-  @NotNull
-  public StringPattern matches(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern matches(@NonNls @Nonnull final String s) {
     final String escaped = StringUtil.escapeToRegexp(s);
     if (escaped.equals(s)) {
       return equalTo(s);
@@ -105,7 +105,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     final Pattern pattern = Pattern.compile(s);
     return with(new ValuePatternCondition<String>("matches") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         return pattern.matcher(newBombedCharSequence(str)).matches();
       }
 
@@ -116,8 +116,8 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     });
   }
 
-  @NotNull
-  public StringPattern matchesBrics(@NonNls @NotNull final String s) {
+  @Nonnull
+  public StringPattern matchesBrics(@NonNls @Nonnull final String s) {
     final String escaped = StringUtil.escapeToRegexp(s);
     if (escaped.equals(s)) {
       return equalTo(s);
@@ -145,7 +145,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
 
     return with(new ValuePatternCondition<String>("matchesBrics") {
       @Override
-      public boolean accepts(@NotNull String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull String str, final ProcessingContext context) {
         if (!str.isEmpty() && (str.charAt(0) == '"' || str.charAt(0) == '\'')) str = str.substring(1);
         return runAutomaton.run(str);
       }
@@ -157,11 +157,11 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     });
   }
 
-  @NotNull
-  public StringPattern contains(@NonNls @NotNull final ElementPattern<Character> pattern) {
+  @Nonnull
+  public StringPattern contains(@NonNls @Nonnull final ElementPattern<Character> pattern) {
     return with(new PatternCondition<String>("contains") {
       @Override
-      public boolean accepts(@NotNull final String str, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String str, final ProcessingContext context) {
         for (int i = 0; i < str.length(); i++) {
           if (pattern.accepts(str.charAt(i))) return true;
         }
@@ -173,7 +173,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern longerThan(final int minLength) {
     return with(new PatternCondition<String>("longerThan") {
       @Override
-      public boolean accepts(@NotNull final String s, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String s, final ProcessingContext context) {
         return s.length() > minLength;
       }
     });
@@ -181,7 +181,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern shorterThan(final int maxLength) {
     return with(new PatternCondition<String>("shorterThan") {
       @Override
-      public boolean accepts(@NotNull final String s, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String s, final ProcessingContext context) {
         return s.length() < maxLength;
       }
     });
@@ -189,31 +189,31 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern withLength(final int length) {
     return with(new PatternCondition<String>("withLength") {
       @Override
-      public boolean accepts(@NotNull final String s, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final String s, final ProcessingContext context) {
         return s.length() == length;
       }
     });
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StringPattern oneOf(@NonNls final String... values) {
     return super.oneOf(values);
   }
 
-  @NotNull
+  @Nonnull
   public StringPattern oneOfIgnoreCase(@NonNls final String... values) {
     return with(new CaseInsensitiveValuePatternCondition("oneOfIgnoreCase", values));
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StringPattern oneOf(@NonNls final Collection<String> set) {
     return super.oneOf(set);
   }
 
-  @NotNull
-  public static CharSequence newBombedCharSequence(@NotNull CharSequence sequence) {
+  @Nonnull
+  public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence) {
     return new StringUtil.BombedCharSequence(sequence) {
       @Override
       protected void checkCanceled() {

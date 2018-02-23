@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.navigation.Place;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -40,13 +40,13 @@ public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectStructureElement getContainingElement() {
     return myElement;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback navigate() {
     return ProjectStructureConfigurable.getInstance(myProject).navigateTo(myPlace, true);

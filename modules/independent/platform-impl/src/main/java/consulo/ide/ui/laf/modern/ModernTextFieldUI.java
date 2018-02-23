@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -225,7 +225,7 @@ public class ModernTextFieldUI extends BasicTextFieldUI implements ModernTextBor
     return myFocus;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MouseEnterHandler getMouseEnterHandler() {
     return myMouseEnterHandler;

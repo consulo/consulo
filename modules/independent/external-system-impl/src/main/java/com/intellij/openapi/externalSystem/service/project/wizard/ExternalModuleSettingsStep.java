@@ -22,8 +22,8 @@ import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel;
 import com.intellij.openapi.options.ConfigurationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -34,12 +34,14 @@ import javax.swing.*;
 @Deprecated
 public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> extends ModuleWizardStep {
 
-  @NotNull private final AbstractExternalModuleBuilder<S> myExternalModuleBuilder;
-  @NotNull private final AbstractExternalProjectSettingsControl<S> myControl;
+  @Nonnull
+  private final AbstractExternalModuleBuilder<S> myExternalModuleBuilder;
+  @Nonnull
+  private final AbstractExternalProjectSettingsControl<S> myControl;
   
   @Nullable private PaintAwarePanel myComponent;
 
-  public ExternalModuleSettingsStep(@NotNull AbstractExternalModuleBuilder<S> externalModuleBuilder, @NotNull AbstractExternalProjectSettingsControl<S> control) {
+  public ExternalModuleSettingsStep(@Nonnull AbstractExternalModuleBuilder<S> externalModuleBuilder, @Nonnull AbstractExternalProjectSettingsControl<S> control) {
     myExternalModuleBuilder = externalModuleBuilder;
     myControl = control;
   }
@@ -59,7 +61,7 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     if (!super.validate(wizardContext)) {
       return false;
     }
@@ -73,7 +75,7 @@ public class ExternalModuleSettingsStep<S extends ExternalProjectSettings> exten
   }
 
   @Override
-  public void updateStep(@NotNull WizardContext wizardContext) {
+  public void updateStep(@Nonnull WizardContext wizardContext) {
     String contentPath = myExternalModuleBuilder.getContentEntryPath();
     if (contentPath != null) {
       myControl.getInitialSettings().setExternalProjectPath(contentPath);

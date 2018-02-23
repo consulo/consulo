@@ -22,8 +22,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.FormatterUtil;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +40,14 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
   private boolean myChildrenBuilt = false;
   private BlockWithParent myParent;
 
-  protected TemplateLanguageBlock(@NotNull TemplateLanguageBlockFactory blockFactory, @NotNull CodeStyleSettings settings,
-                                  @NotNull ASTNode node, @Nullable List<DataLanguageBlockWrapper> foreignChildren) {
+  protected TemplateLanguageBlock(@Nonnull TemplateLanguageBlockFactory blockFactory, @Nonnull CodeStyleSettings settings,
+                                  @Nonnull ASTNode node, @Nullable List<DataLanguageBlockWrapper> foreignChildren) {
     this(node, null, null, blockFactory, settings, foreignChildren);
   }
 
-  protected TemplateLanguageBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment,
-                                  @NotNull TemplateLanguageBlockFactory blockFactory,
-                                  @NotNull CodeStyleSettings settings,
+  protected TemplateLanguageBlock(@Nonnull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment,
+                                  @Nonnull TemplateLanguageBlockFactory blockFactory,
+                                  @Nonnull CodeStyleSettings settings,
                                   @Nullable List<DataLanguageBlockWrapper> foreignChildren) {
     super(node, wrap, alignment);
     myBlockFactory = blockFactory;
@@ -84,7 +84,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
     return (myForeignChildren == null || myForeignChildren.isEmpty());
   }
 
-  void addForeignChild(@NotNull DataLanguageBlockWrapper foreignChild) {
+  void addForeignChild(@Nonnull DataLanguageBlockWrapper foreignChild) {
     initForeignChildren();
     myForeignChildren.add(foreignChild);
   }
@@ -103,7 +103,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
 
   @Override
   @Nullable
-  public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+  public Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2) {
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return ((DataLanguageBlockWrapper)child1).getRightHandSpacing((DataLanguageBlockWrapper)child2);
     }
@@ -118,7 +118,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
    * @return the spacing between the current block and its right neighbor
    */
   @Nullable
-  public Spacing getRightNeighborSpacing(@NotNull Block rightNeighbor, @NotNull DataLanguageBlockWrapper parent, int thisBlockIndex) {
+  public Spacing getRightNeighborSpacing(@Nonnull Block rightNeighbor, @Nonnull DataLanguageBlockWrapper parent, int thisBlockIndex) {
     return null;
   }
 
@@ -165,7 +165,7 @@ public abstract class TemplateLanguageBlock extends AbstractBlock implements Blo
   }
 
   @Nullable
-  public Wrap substituteTemplateChildWrap(@NotNull DataLanguageBlockWrapper child, @Nullable Wrap childWrap) {
+  public Wrap substituteTemplateChildWrap(@Nonnull DataLanguageBlockWrapper child, @Nullable Wrap childWrap) {
     return childWrap;
   }
 }

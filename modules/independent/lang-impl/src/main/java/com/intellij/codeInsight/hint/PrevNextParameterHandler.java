@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -41,7 +41,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   @RequiredDispatchThread
   @Override
-  protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return false;
 
@@ -67,13 +67,13 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   }
 
   @Nullable
-  private static PsiElement getExpressionList(@NotNull Editor editor, int offset, DataContext dataContext) {
+  private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, DataContext dataContext) {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     return project != null ? getExpressionList(editor, offset, project) : null;
   }
 
   @Nullable
-  private static PsiElement getExpressionList(@NotNull Editor editor, int offset, @NotNull Project project) {
+  private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, @Nonnull Project project) {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return file != null ? ParameterInfoController.findArgumentList(file, offset, -1) : null;
   }

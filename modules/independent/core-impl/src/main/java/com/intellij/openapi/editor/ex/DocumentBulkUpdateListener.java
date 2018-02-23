@@ -21,18 +21,18 @@ package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DocumentBulkUpdateListener {
   Topic<DocumentBulkUpdateListener> TOPIC = Topic.create("Bulk document change notification like reformat, etc.", DocumentBulkUpdateListener.class);
 
-  void updateStarted(@NotNull Document doc);
-  void updateFinished(@NotNull Document doc);
+  void updateStarted(@Nonnull Document doc);
+  void updateFinished(@Nonnull Document doc);
 
   abstract class Adapter implements DocumentBulkUpdateListener {
     @Override
-    public void updateFinished(@NotNull final Document doc) {}
+    public void updateFinished(@Nonnull final Document doc) {}
     @Override
-    public void updateStarted(@NotNull final Document doc) {}
+    public void updateStarted(@Nonnull final Document doc) {}
   }
 }

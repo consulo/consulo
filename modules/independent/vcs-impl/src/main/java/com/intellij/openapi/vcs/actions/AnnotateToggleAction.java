@@ -44,8 +44,8 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
           ExtensionPointName.create("com.intellij.openapi.vcs.actions.AnnotateToggleAction.Provider");
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     Provider provider = getProvider(e);
     e.getPresentation().setEnabled(provider != null && !provider.isSuspended(e));
@@ -89,30 +89,30 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     if (provider != null) provider.perform(e, selected);
   }
 
-  public static void doAnnotate(@NotNull final Editor editor,
-                                @NotNull final Project project,
+  public static void doAnnotate(@Nonnull final Editor editor,
+                                @Nonnull final Project project,
                                 @Nullable final VirtualFile currentFile,
-                                @NotNull final FileAnnotation fileAnnotation,
-                                @NotNull final AbstractVcs vcs) {
+                                @Nonnull final FileAnnotation fileAnnotation,
+                                @Nonnull final AbstractVcs vcs) {
     UpToDateLineNumberProvider upToDateLineNumberProvider = new UpToDateLineNumberProviderImpl(editor.getDocument(), project);
     doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumberProvider);
   }
 
-  public static void doAnnotate(@NotNull final Editor editor,
-                                @NotNull final Project project,
-                                @Nullable final VirtualFile currentFile,
-                                @NotNull final FileAnnotation fileAnnotation,
-                                @NotNull final AbstractVcs vcs,
-                                @NotNull final UpToDateLineNumberProvider upToDateLineNumbers) {
+  public static void doAnnotate(@Nonnull final Editor editor,
+                                @Nonnull final Project project,
+                                @javax.annotation.Nullable final VirtualFile currentFile,
+                                @Nonnull final FileAnnotation fileAnnotation,
+                                @Nonnull final AbstractVcs vcs,
+                                @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers) {
     doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumbers, true);
   }
 
-  private static void doAnnotate(@NotNull final Editor editor,
-                                 @NotNull final Project project,
+  private static void doAnnotate(@Nonnull final Editor editor,
+                                 @Nonnull final Project project,
                                  @Nullable final VirtualFile currentFile,
-                                 @NotNull final FileAnnotation fileAnnotation,
-                                 @NotNull final AbstractVcs vcs,
-                                 @NotNull final UpToDateLineNumberProvider upToDateLineNumbers,
+                                 @Nonnull final FileAnnotation fileAnnotation,
+                                 @Nonnull final AbstractVcs vcs,
+                                 @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers,
                                  final boolean warnAboutSuspiciousAnnotations) {
     if (warnAboutSuspiciousAnnotations) {
       int expectedLines = Math.max(upToDateLineNumbers.getLineCount(), 1);
@@ -223,7 +223,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
   }
 
-  private static void addActionsFromExtensions(@NotNull AnnotationPresentation presentation, @NotNull FileAnnotation fileAnnotation) {
+  private static void addActionsFromExtensions(@Nonnull AnnotationPresentation presentation, @Nonnull FileAnnotation fileAnnotation) {
     AnnotationGutterActionProvider[] extensions = AnnotationGutterActionProvider.EP_NAME.getExtensions();
     if (extensions.length > 0) {
       presentation.addAction(new AnSeparator());
@@ -233,8 +233,8 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
   }
 
-  @Nullable
-  private static Map<VcsRevisionNumber, Integer> computeLineNumbers(@NotNull FileAnnotation fileAnnotation) {
+  @javax.annotation.Nullable
+  private static Map<VcsRevisionNumber, Integer> computeLineNumbers(@Nonnull FileAnnotation fileAnnotation) {
     final Map<VcsRevisionNumber, Integer> numbers = new HashMap<>();
     final List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
     if (fileRevisionList != null) {
@@ -250,7 +250,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   }
 
   @Nullable
-  private static Couple<Map<VcsRevisionNumber, Color>> computeBgColors(@NotNull FileAnnotation fileAnnotation, @NotNull Editor editor) {
+  private static Couple<Map<VcsRevisionNumber, Color>> computeBgColors(@Nonnull FileAnnotation fileAnnotation, @Nonnull Editor editor) {
     Map<VcsRevisionNumber, Color> commitOrderColors = new HashMap<>();
     Map<VcsRevisionNumber, Color> commitAuthorColors = new HashMap<>();
 
@@ -296,7 +296,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
                      commitAuthorColors.size() > 1 ? commitAuthorColors : null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Provider getProvider(AnActionEvent e) {
     for (Provider provider : EP_NAME.getExtensions()) {
       if (provider.isEnabled(e)) return provider;
@@ -318,7 +318,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     private final Editor myEditor;
     private final Runnable myShowAnnotations;
 
-    public MyEditorNotificationPanel(@NotNull Editor editor, @NotNull AbstractVcs vcs, @NotNull Runnable doShowAnnotations) {
+    public MyEditorNotificationPanel(@Nonnull Editor editor, @Nonnull AbstractVcs vcs, @Nonnull Runnable doShowAnnotations) {
       super(LightColors.RED);
       myEditor = editor;
       myShowAnnotations = doShowAnnotations;

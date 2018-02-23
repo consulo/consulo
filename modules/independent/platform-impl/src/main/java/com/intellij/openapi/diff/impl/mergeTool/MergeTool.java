@@ -24,7 +24,7 @@ import com.intellij.openapi.diff.impl.incrementalMerge.ui.MergePanel2;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -44,7 +44,7 @@ public class MergeTool implements DiffTool {
     frameWrapper.show();
   }
 
-  private static MergePanel2 createMergeComponent(DiffRequest data, DialogBuilder builder, @NotNull Disposable parent) {
+  private static MergePanel2 createMergeComponent(DiffRequest data, DialogBuilder builder, @Nonnull Disposable parent) {
     MergePanel2 mergePanel = new MergePanel2(builder, parent);
     mergePanel.setDiffRequest(data);
     return mergePanel;
@@ -81,7 +81,7 @@ public class MergeTool implements DiffTool {
   }
 
   @Override
-  public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+  public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
     return createMergeComponent(request, null, parentDisposable);
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.macro;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
@@ -36,7 +36,7 @@ public class FileNameWithoutExtensionMacro extends FileNameMacro {
   }
 
   @Override
-  protected TextResult calculateResult(@NotNull VirtualFile virtualFile) {
+  protected TextResult calculateResult(@Nonnull VirtualFile virtualFile) {
     return new TextResult(virtualFile.getNameWithoutExtension());
   }
 }

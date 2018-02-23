@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ApplicationAdapter implements ApplicationListener {
   @Override
@@ -28,18 +28,18 @@ public abstract class ApplicationAdapter implements ApplicationListener {
   }
 
   @Override
-  public void beforeWriteActionStart(@NotNull Object action) {
+  public void beforeWriteActionStart(@Nonnull Object action) {
   }
 
   @Override
-  public void writeActionStarted(@NotNull Object action) {
+  public void writeActionStarted(@Nonnull Object action) {
   }
 
   @Override
-  public void writeActionFinished(@NotNull Object action) {
+  public void writeActionFinished(@Nonnull Object action) {
   }
 
   @Override
-  public void afterWriteActionFinished(@NotNull Object action) {
+  public void afterWriteActionFinished(@Nonnull Object action) {
   }
 }

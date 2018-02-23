@@ -16,12 +16,12 @@
 package com.intellij.util.ui.update;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ComparableObject {
   Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;
 
-  @NotNull
+  @Nonnull
   Object[] getEqualityObjects();
 
   class Impl implements ComparableObject {
@@ -31,11 +31,11 @@ public interface ComparableObject {
       this(NONE);
     }
 
-    public Impl(@NotNull Object... objects) {
+    public Impl(@Nonnull Object... objects) {
       myObjects = objects;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Object[] getEqualityObjects() {
       return myObjects;

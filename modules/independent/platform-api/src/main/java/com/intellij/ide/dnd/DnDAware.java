@@ -16,7 +16,7 @@
 
 package com.intellij.ide.dnd;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public interface DnDAware {
   
   void dropSelectionButUnderPoint(Point point);
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
 }

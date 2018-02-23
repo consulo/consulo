@@ -16,30 +16,30 @@
 package com.intellij.openapi.util;
 
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class Pair<A, B> {
   public final A first;
   public final B second;
 
-  @NotNull
+  @Nonnull
   public static <A, B> Pair<A, B> create(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
   }
-  @NotNull
-  public static <A, B> NonNull<A, B> createNonNull(@NotNull A first, @NotNull B second) {
+  @Nonnull
+  public static <A, B> NonNull<A, B> createNonNull(@Nonnull A first, @Nonnull B second) {
     return new NonNull<A, B>(first, second);
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
   public static <A, B> Pair<A, B> pair(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
   }
 
-  @NotNull
+  @Nonnull
   public static <A, B> Function<A, Pair<A, B>> createFunction(final B value) {
     return new Function<A, Pair<A, B>>() {
       @Override
@@ -96,7 +96,7 @@ public class Pair<A, B> {
   }
 
   public static class NonNull<A, B> extends Pair<A,B> {
-    public NonNull(@NotNull A first, @NotNull B second) {
+    public NonNull(@Nonnull A first, @Nonnull B second) {
       super(first, second);
     }
   }

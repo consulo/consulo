@@ -35,8 +35,8 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.extensions.CompositeExtensionPointName;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     public static final CompositeExtensionPointName<ModuleResolver> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.createFromTemplateActionModuleResolver", ModuleResolver.class);
 
     @Nullable
-    Module resolveModule(@NotNull PsiDirectory directory, @NotNull FileType fileType);
+    Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);
   }
 
   public CreateFileFromTemplateAction(String text, String description, Icon icon) {
@@ -62,17 +62,17 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
   }
 
   @Nullable
-  public static PsiFile createFileFromTemplate(@Nullable String name, @NotNull FileTemplate template, @NotNull PsiDirectory dir, @Nullable String defaultTemplateProperty, boolean openFile) {
+  public static PsiFile createFileFromTemplate(@Nullable String name, @Nonnull FileTemplate template, @Nonnull PsiDirectory dir, @Nullable String defaultTemplateProperty, boolean openFile) {
     return createFileFromTemplate(name, template, dir, defaultTemplateProperty, openFile, Collections.emptyMap());
   }
 
   @Nullable
   public static PsiFile createFileFromTemplate(@Nullable String name,
-                                               @NotNull FileTemplate template,
-                                               @NotNull PsiDirectory dir,
+                                               @Nonnull FileTemplate template,
+                                               @Nonnull PsiDirectory dir,
                                                @Nullable String defaultTemplateProperty,
                                                boolean openFile,
-                                               @NotNull Map<String, String> liveTemplateDefaultValues) {
+                                               @Nonnull Map<String, String> liveTemplateDefaultValues) {
     if (name != null) {
       CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(name, dir);
       name = mkdirs.newName;

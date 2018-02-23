@@ -38,7 +38,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -257,17 +257,17 @@ public class GenericCompilerRunner {
     final List<File> dirsToRefresh = new ArrayList<File>();
     instance.processItems(target, toProcess, obsoleteItems, new GenericCompilerInstance.OutputConsumer<Item>() {
       @Override
-      public void addFileToRefresh(@NotNull File file) {
+      public void addFileToRefresh(@Nonnull File file) {
         filesToRefresh.add(file);
       }
 
       @Override
-      public void addDirectoryToRefresh(@NotNull File dir) {
+      public void addDirectoryToRefresh(@Nonnull File dir) {
         dirsToRefresh.add(dir);
       }
 
       @Override
-      public void addProcessedItem(@NotNull Item sourceItem) {
+      public void addProcessedItem(@Nonnull Item sourceItem) {
         processedItems.add(sourceItem);
       }
     });

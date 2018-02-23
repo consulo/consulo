@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Field;
 
@@ -31,7 +31,7 @@ public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter {
     myParentSettings = parentObject;
   }
 
-  public boolean isAccept(@NotNull Field field) {
+  public boolean isAccept(@Nonnull Field field) {
     try {
       Object thisValue = field.get(myThisSettings);
       Object parentValue = field.get(myParentSettings);

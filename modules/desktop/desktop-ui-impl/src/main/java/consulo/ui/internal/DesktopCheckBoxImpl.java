@@ -19,8 +19,7 @@ import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWr
     super(text, selected);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Boolean getValue() {
     return isSelected();
@@ -39,7 +38,7 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWr
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nullable Boolean value, boolean fireEvents) {
+  public void setValue(@javax.annotation.Nullable Boolean value, boolean fireEvents) {
     if (value == null) {
       throw new IllegalArgumentException();
     }
@@ -48,12 +47,12 @@ public class DesktopCheckBoxImpl extends JBCheckBox implements CheckBox, SwingWr
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
+  public void addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
     addItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
+  public void removeValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
     removeItemListener(new DesktopValueListenerAsItemListenerImpl<Boolean>(valueListener, false));
   }
 }

@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.compiler.server.rmi.CompilerServerConnector;
 import consulo.compiler.server.rmi.CompilerServerInterface;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -91,7 +91,7 @@ public class CompilerServerConnectorImpl extends CompilerServerConnector impleme
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "CompilerSwapperManager";

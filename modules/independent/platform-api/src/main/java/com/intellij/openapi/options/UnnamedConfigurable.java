@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

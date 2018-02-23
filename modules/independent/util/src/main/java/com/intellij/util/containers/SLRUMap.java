@@ -22,8 +22,8 @@ package com.intellij.util.containers;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.hash.EqualityPolicy;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -94,7 +94,7 @@ public class SLRUMap<K,V> {
     myProtectedQueue.put(getStableKey(key), value);
   }
 
-  public void put(K key, @NotNull V value) {
+  public void put(K key, @Nonnull V value) {
     V oldValue = myProtectedQueue.remove(key);
     if (oldValue != null) {
       onDropFromCache(key, oldValue);

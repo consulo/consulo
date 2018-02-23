@@ -20,7 +20,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
@@ -37,7 +37,7 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
     myConflictTracker = changeListManager.getConflictTracker();
   }
 
-  @NotNull
+  @Nonnull
   public Key<ChangelistConflictNotificationPanel> getKey() {
     return KEY;
   }

@@ -15,8 +15,9 @@
  */
 package com.intellij.ide;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface HelpIdProvider {
-  @Nullable String getHelpId();
+  @Nullable
+  String getHelpId();
 }

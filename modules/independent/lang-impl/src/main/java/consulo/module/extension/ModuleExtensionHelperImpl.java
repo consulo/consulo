@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.Immutable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,14 +38,14 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
     myProject = project;
     project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
       @Override
-      public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension) {
+      public void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension) {
         myExtensions = null;
       }
     });
   }
 
   @Override
-  public boolean hasModuleExtension(@NotNull Class<? extends ModuleExtension> clazz) {
+  public boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz) {
     checkInit();
 
     assert myExtensions != null;
@@ -54,10 +54,10 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @Immutable
   @SuppressWarnings("unchecked")
-  public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@NotNull Class<T> clazz) {
+  public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz) {
     checkInit();
 
     assert myExtensions != null;

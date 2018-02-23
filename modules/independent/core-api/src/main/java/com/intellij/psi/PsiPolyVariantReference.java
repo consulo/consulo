@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Inherit this interface if you want the reference to resolve to more than one element,
@@ -37,7 +37,7 @@ public interface PsiPolyVariantReference extends PsiReference {
    *
    * @return the array of results for resolving the reference.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   ResolveResult[] multiResolve(final boolean incompleteCode);
 }

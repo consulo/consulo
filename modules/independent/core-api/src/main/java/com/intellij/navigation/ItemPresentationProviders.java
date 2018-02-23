@@ -16,8 +16,8 @@
 package com.intellij.navigation;
 
 import com.intellij.openapi.util.ClassExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -30,7 +30,7 @@ public class ItemPresentationProviders extends ClassExtension<ItemPresentationPr
   }
 
   @Nullable
-  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(@NotNull T element) {
+  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(@Nonnull T element) {
     @SuppressWarnings({"unchecked"}) final ItemPresentationProvider<T> provider = INSTANCE.forClass(element.getClass());
     return provider;
   }

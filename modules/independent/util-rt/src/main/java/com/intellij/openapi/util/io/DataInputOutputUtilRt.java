@@ -17,7 +17,7 @@ package com.intellij.openapi.util.io;
 
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableConsumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class DataInputOutputUtilRt {
-  public static int readINT(@NotNull DataInput record) throws IOException {
+  public static int readINT(@Nonnull DataInput record) throws IOException {
     final int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
@@ -43,7 +43,7 @@ public class DataInputOutputUtilRt {
     }
   }
 
-  public static void writeINT(@NotNull DataOutput record, int val) throws IOException {
+  public static void writeINT(@Nonnull DataOutput record, int val) throws IOException {
     if (0 <= val && val < 192) {
       record.writeByte(val);
     }
@@ -62,7 +62,7 @@ public class DataInputOutputUtilRt {
    * Writes the given collection to the output using the given procedure to write each element.
    * Should be coupled with {@link #readSeq}
    */
-  public static <T> void writeSeq(@NotNull DataOutput out, @NotNull Collection<T> collection, @NotNull ThrowableConsumer<T, IOException> writeElement) throws IOException {
+  public static <T> void writeSeq(@Nonnull DataOutput out, @Nonnull Collection<T> collection, @Nonnull ThrowableConsumer<T, IOException> writeElement) throws IOException {
     writeINT(out, collection.size());
     for (T t : collection) {
       writeElement.consume(t);
@@ -73,8 +73,8 @@ public class DataInputOutputUtilRt {
    * Reads a collection using the given function to read each element.
    * Should be coupled with {@link #writeSeq}
    */
-  @NotNull
-  public static <T> List<T> readSeq(@NotNull DataInput in, @NotNull ThrowableComputable<T, IOException> readElement) throws IOException {
+  @Nonnull
+  public static <T> List<T> readSeq(@Nonnull DataInput in, @Nonnull ThrowableComputable<T, IOException> readElement) throws IOException {
     int size = readINT(in);
     List<T> result = new ArrayList<T>(size);
     for (int i = 0; i < size; i++) {

@@ -27,7 +27,7 @@ import com.intellij.packageDependencies.ui.DependenciesPanel;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public abstract class DependenciesHandlerBase {
     if (canStartInBackground()) {
       task = new Task.Backgroundable(myProject, getProgressTitle(), true, new PerformAnalysisInBackgroundOption(myProject)) {
         @Override
-        public void run(@NotNull final ProgressIndicator indicator) {
+        public void run(@Nonnull final ProgressIndicator indicator) {
           perform(builders);
         }
 
@@ -69,7 +69,7 @@ public abstract class DependenciesHandlerBase {
     } else {
       task = new Task.Modal(myProject, getProgressTitle(), true) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           perform(builders);
         }
 

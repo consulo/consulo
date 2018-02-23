@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -30,12 +30,12 @@ public class ObjectUtil {
 
   public static final Object NULL = new Object();
 
-  @NotNull
+  @Nonnull
   public static <T> T assertNotNull(@Nullable T t) {
     return notNull(t);
   }
 
-  public static <T> void assertAllElementsNotNull(@NotNull T[] array) {
+  public static <T> void assertAllElementsNotNull(@Nonnull T[] array) {
     for (int i = 0; i < array.length; i++) {
       T t = array[i];
       if (t == null) {
@@ -68,19 +68,19 @@ public class ObjectUtil {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static <T> T notNull(@Nullable T value) {
     //noinspection ConstantConditions
     return notNull(value, value);
   }
 
-  @NotNull
-  public static <T> T notNull(@Nullable T value, @NotNull T defaultValue) {
+  @Nonnull
+  public static <T> T notNull(@Nullable T value, @Nonnull T defaultValue) {
     return value == null ? defaultValue : value;
   }
 
   @Nullable
-  public static <T> T tryCast(@Nullable Object obj, @NotNull Class<T> clazz) {
+  public static <T> T tryCast(@Nullable Object obj, @Nonnull Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       return clazz.cast(obj);
     }
@@ -88,7 +88,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  public static <T, S> S doIfCast(@Nullable Object obj, @NotNull Class<T> clazz, final Convertor<T, S> convertor) {
+  public static <T, S> S doIfCast(@Nullable Object obj, @Nonnull Class<T> clazz, final Convertor<T, S> convertor) {
     if (clazz.isInstance(obj)) {
       //noinspection unchecked
       return convertor.convert((T)obj);
@@ -97,7 +97,7 @@ public class ObjectUtil {
   }
 
   @Nullable
-  public static <T> T nullizeByCondition(@Nullable final T obj, @NotNull final Condition<T> condition) {
+  public static <T> T nullizeByCondition(@Nullable final T obj, @Nonnull final Condition<T> condition) {
     if (condition.value(obj)) {
       return null;
     }

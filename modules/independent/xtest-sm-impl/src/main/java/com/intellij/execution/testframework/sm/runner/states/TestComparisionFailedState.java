@@ -22,8 +22,8 @@ import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -39,24 +39,24 @@ public class TestComparisionFailedState extends TestFailedState {
 
 
   public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @Nullable final String stackTrace,
-                                    @NotNull final String actualText,
-                                    @NotNull final String expectedText) {
+                                    @javax.annotation.Nullable final String stackTrace,
+                                    @Nonnull final String actualText,
+                                    @Nonnull final String expectedText) {
     this(localizedMessage, stackTrace, actualText, expectedText, null);
   }
 
   public TestComparisionFailedState(@Nullable final String localizedMessage,
                                     @Nullable final String stackTrace,
-                                    @NotNull final String actualText,
-                                    @NotNull final String expectedText,
-                                    @Nullable final String filePath) {
+                                    @Nonnull final String actualText,
+                                    @Nonnull final String expectedText,
+                                    @javax.annotation.Nullable final String filePath) {
     this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
   }
 
-  public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @Nullable final String stackTrace,
-                                    @NotNull final String actualText,
-                                    @NotNull final String expectedText,
+  public TestComparisionFailedState(@javax.annotation.Nullable final String localizedMessage,
+                                    @javax.annotation.Nullable final String stackTrace,
+                                    @Nonnull final String actualText,
+                                    @Nonnull final String expectedText,
                                     @Nullable final String expectedFilePath,
                                     @Nullable final String actualFilePath) {
     super(localizedMessage, stackTrace);

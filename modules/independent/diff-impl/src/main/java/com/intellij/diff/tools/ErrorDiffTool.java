@@ -28,8 +28,8 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -39,38 +39,41 @@ public class ErrorDiffTool implements FrameDiffTool {
   public static final ErrorDiffTool INSTANCE = new ErrorDiffTool();
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
-  public DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return new MyViewer(context, request);
   }
 
   @Override
-  public boolean canShow(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Error viewer";
   }
 
   private static class MyViewer implements DiffViewer {
-    @NotNull private final DiffContext myContext;
-    @NotNull private final DiffRequest myRequest;
+    @Nonnull
+    private final DiffContext myContext;
+    @Nonnull
+    private final DiffRequest myRequest;
 
-    @NotNull private final JPanel myPanel;
+    @Nonnull
+    private final JPanel myPanel;
 
-    public MyViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+    public MyViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
       myContext = context;
       myRequest = request;
 
       myPanel = JBUI.Panels.simplePanel(createComponent(request));
     }
 
-    @NotNull
-    private JComponent createComponent(@NotNull DiffRequest request) {
+    @Nonnull
+    private JComponent createComponent(@Nonnull DiffRequest request) {
       if (request instanceof MessageDiffRequest) {
         // TODO: explain some of ErrorDiffRequest exceptions ?
         String message = ((MessageDiffRequest)request).getMessage();
@@ -94,20 +97,20 @@ public class ErrorDiffTool implements FrameDiffTool {
       return DiffUtil.createMessagePanel("Can't show diff");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return myPanel;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return null;
     }
 
     @RequiredDispatchThread
-    @NotNull
+    @Nonnull
     @Override
     public ToolbarComponents init() {
       if (myRequest instanceof UnknownFileTypeDiffRequest) {

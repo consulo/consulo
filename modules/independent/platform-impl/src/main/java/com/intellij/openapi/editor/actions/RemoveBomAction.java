@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,8 +100,8 @@ public class RemoveBomAction extends AnAction implements DumbAware {
    * @param all     flag the defines if all files with {@link VirtualFile#getBOM() BOM} should be collected or just any of them
    * @return        collection of detected files with defined {@link VirtualFile#getBOM() BOM} if any; empty collection otherwise
    */
-  @NotNull
-  private static List<VirtualFile> getFilesWithBom(@NotNull VirtualFile[] roots, boolean all) {
+  @Nonnull
+  private static List<VirtualFile> getFilesWithBom(@Nonnull VirtualFile[] roots, boolean all) {
     List<VirtualFile> result = new ArrayList<VirtualFile>();
     for (VirtualFile root : roots) {
       if (!all && !result.isEmpty()) {
@@ -112,10 +112,10 @@ public class RemoveBomAction extends AnAction implements DumbAware {
     return result;
   }
   
-  private static void getFilesWithBom(@NotNull VirtualFile root, @NotNull final List<VirtualFile> result, final boolean all) {
+  private static void getFilesWithBom(@Nonnull VirtualFile root, @Nonnull final List<VirtualFile> result, final boolean all) {
     VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (file.isDirectory()) {
           if (!all && !result.isEmpty()) {
             return false;

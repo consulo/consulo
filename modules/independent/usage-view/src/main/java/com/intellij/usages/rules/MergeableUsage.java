@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.rules;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -25,7 +25,7 @@ public interface MergeableUsage {
    * @param mergeableUsage
    * @return true if merge succeeded
    */
-  boolean merge(@NotNull MergeableUsage mergeableUsage);
+  boolean merge(@Nonnull MergeableUsage mergeableUsage);
 
   /**
    * Revert to original status prior any merges

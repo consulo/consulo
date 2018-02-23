@@ -16,7 +16,7 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A node in the reference graph corresponding to a module.
@@ -31,5 +31,6 @@ public interface RefModule extends RefEntity {
    *
    * @return the module for the node.
    */
-  @NotNull Module getModule();
+  @Nonnull
+  Module getModule();
 }

@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
@@ -45,7 +45,7 @@ public class DataValidators {
       myElementValidator = elementValidator;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Key<T[]> getKey() {
       throw new UnsupportedOperationException("should never called");
@@ -70,7 +70,7 @@ public class DataValidators {
   }
 
   private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<VirtualFile>() {
-    @NotNull
+    @Nonnull
     @Override
     public Key<VirtualFile> getKey() {
       return PlatformDataKeys.VIRTUAL_FILE;
@@ -83,7 +83,7 @@ public class DataValidators {
   };
 
   private static final DataValidator<Project> PROJECT_VALIDATOR = new DataValidator<Project>() {
-    @NotNull
+    @Nonnull
     @Override
     public Key<Project> getKey() {
       return CommonDataKeys.PROJECT;

@@ -29,8 +29,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,18 +59,18 @@ public final class Annotation implements Segment {
   private boolean myAfterEndOfLine = false;
   private boolean myIsFileLevelAnnotation = false;
   private GutterIconRenderer myGutterIconRenderer;
-  @Nullable
+  @javax.annotation.Nullable
   private ProblemGroup myProblemGroup;
   private List<QuickFixInfo> myBatchFixes;
 
   public static class QuickFixInfo {
-    @NotNull
+    @Nonnull
     public final IntentionAction quickFix;
-    @NotNull
+    @Nonnull
     public final TextRange textRange;
     public final HighlightDisplayKey key;
 
-    public QuickFixInfo(@NotNull IntentionAction fix, @NotNull TextRange range, @Nullable final HighlightDisplayKey key) {
+    public QuickFixInfo(@Nonnull IntentionAction fix, @Nonnull TextRange range, @Nullable final HighlightDisplayKey key) {
       this.key = key;
       quickFix = fix;
       textRange = range;
@@ -94,7 +94,7 @@ public final class Annotation implements Segment {
    * @see AnnotationHolder#createWarningAnnotation
    * @see AnnotationHolder#createInfoAnnotation
    */
-  public Annotation(final int startOffset, final int endOffset, @NotNull HighlightSeverity severity, final String message, String tooltip) {
+  public Annotation(final int startOffset, final int endOffset, @Nonnull HighlightSeverity severity, final String message, String tooltip) {
     assert startOffset <= endOffset : startOffset + ":" + endOffset;
     assert startOffset >= 0 : "Start offset must not be negative: " + startOffset;
     myStartOffset = startOffset;
@@ -109,18 +109,18 @@ public final class Annotation implements Segment {
    *
    * @param fix the quick fix implementation.
    */
-  public void registerFix(@NotNull IntentionAction fix) {
+  public void registerFix(@Nonnull IntentionAction fix) {
     registerFix(fix, null);
   }
 
-  public void registerFix(@NotNull IntentionAction fix, TextRange range) {
+  public void registerFix(@Nonnull IntentionAction fix, TextRange range) {
     registerFix(fix, range, null);
   }
 
-  public void registerFix(@NotNull LocalQuickFix fix,
-                          @Nullable TextRange range,
-                          @Nullable HighlightDisplayKey key,
-                          @NotNull ProblemDescriptor problemDescriptor) {
+  public void registerFix(@Nonnull LocalQuickFix fix,
+                          @javax.annotation.Nullable TextRange range,
+                          @javax.annotation.Nullable HighlightDisplayKey key,
+                          @Nonnull ProblemDescriptor problemDescriptor) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
     }
@@ -137,7 +137,7 @@ public final class Annotation implements Segment {
    * @param fix   the quick fix implementation.
    * @param range the text range (relative to the document) where the quick fix is available.
    */
-  public void registerFix(@NotNull IntentionAction fix, @Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
+  public void registerFix(@Nonnull IntentionAction fix, @javax.annotation.Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
     }
@@ -151,7 +151,7 @@ public final class Annotation implements Segment {
    * Registers a quickfix which would be available during batch mode only,
    * in particular during com.intellij.codeInspection.DefaultHighlightVisitorBasedInspection run
    */
-  public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@NotNull T fix, @Nullable TextRange range, @Nullable final HighlightDisplayKey key) {
+  public <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull T fix, @Nullable TextRange range, @javax.annotation.Nullable final HighlightDisplayKey key) {
     if (range == null) {
       range = new TextRange(myStartOffset, myEndOffset);
     }
@@ -165,9 +165,9 @@ public final class Annotation implements Segment {
   /**
    * Register a quickfix which would be available onTheFly and in the batch mode. Should implement both IntentionAction and LocalQuickFix.
    */
-  public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@NotNull T fix,
-                                                                               @Nullable TextRange range,
-                                                                               @Nullable final HighlightDisplayKey key) {
+  public <T extends IntentionAction & LocalQuickFix> void registerUniversalFix(@Nonnull T fix,
+                                                                               @javax.annotation.Nullable TextRange range,
+                                                                               @javax.annotation.Nullable final HighlightDisplayKey key) {
     registerBatchFix(fix, range, key);
     registerFix(fix, range, key);
   }
@@ -224,7 +224,7 @@ public final class Annotation implements Segment {
    *
    * @return the annotation severity.
    */
-  @NotNull
+  @Nonnull
   public HighlightSeverity getSeverity() {
     return mySeverity;
   }
@@ -246,7 +246,7 @@ public final class Annotation implements Segment {
    *
    * @return the text attribute key used for highlighting
    */
-  @NotNull
+  @Nonnull
   public TextAttributesKey getTextAttributes() {
     if (myEnforcedAttributesKey != null) return myEnforcedAttributesKey;
 
@@ -291,12 +291,12 @@ public final class Annotation implements Segment {
    * @return the list of quick fixes, or null if none have been registered.
    */
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<QuickFixInfo> getQuickFixes() {
     return myQuickFixes;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<QuickFixInfo> getBatchFixes() {
     return myBatchFixes;
   }
@@ -410,7 +410,7 @@ public final class Annotation implements Segment {
    *
    * @return the problem group
    */
-  @Nullable
+  @javax.annotation.Nullable
   public ProblemGroup getProblemGroup() {
     return myProblemGroup;
   }
@@ -420,7 +420,7 @@ public final class Annotation implements Segment {
    *
    * @param problemGroup the problem group
    */
-  public void setProblemGroup(@Nullable ProblemGroup problemGroup) {
+  public void setProblemGroup(@javax.annotation.Nullable ProblemGroup problemGroup) {
     myProblemGroup = problemGroup;
   }
 

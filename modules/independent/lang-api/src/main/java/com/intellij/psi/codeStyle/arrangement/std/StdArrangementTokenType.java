@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Type of {@link StdArrangementSettingsToken}. Defines UI role used to display the token. Used to differentiate between semantically
@@ -26,15 +26,18 @@ import org.jetbrains.annotations.NotNull;
  * Date: 31.07.13
  */
 public class StdArrangementTokenType {
-  @NotNull private final StdArrangementTokenUiRole myUiRole;
-  @NotNull private final String myId;
+  @Nonnull
+  private final StdArrangementTokenUiRole myUiRole;
+  @Nonnull
+  private final String myId;
 
-  public StdArrangementTokenType(@NotNull StdArrangementTokenUiRole uiRole, @NotNull String id) {
+  public StdArrangementTokenType(@Nonnull StdArrangementTokenUiRole uiRole, @Nonnull String id) {
     myUiRole = uiRole;
     myId = id;
   }
 
-  @NotNull public StdArrangementTokenUiRole getUiRole() {
+  @Nonnull
+  public StdArrangementTokenUiRole getUiRole() {
     return myUiRole;
   }
 

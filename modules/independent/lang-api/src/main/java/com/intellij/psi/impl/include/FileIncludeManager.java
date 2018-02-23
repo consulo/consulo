@@ -23,8 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -35,12 +34,12 @@ public abstract class FileIncludeManager {
     return ServiceManager.getService(project, FileIncludeManager.class);
   }
 
-  public abstract VirtualFile[] getIncludedFiles(@NotNull VirtualFile file, boolean compileTimeOnly);
+  public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
 
-  public abstract VirtualFile[] getIncludingFiles(@NotNull VirtualFile file, boolean compileTimeOnly);
+  public abstract VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);
 
   public abstract void processIncludingFiles(PsiFile context, Processor<Pair<VirtualFile, FileIncludeInfo>> processor);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract PsiFileSystemItem resolveFileInclude(FileIncludeInfo info, PsiFile context);
 }

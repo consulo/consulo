@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +57,18 @@ class ReadMostlyRWLock {
 
   private volatile SuspensionId currentSuspension;
 
-  ReadMostlyRWLock(@NotNull Thread writeThread) {
+  ReadMostlyRWLock(@Nonnull Thread writeThread) {
     this.writeThread = writeThread;
   }
 
   // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.
   private static class Reader {
-    @NotNull private final Thread thread;   // its thread
+    @Nonnull
+    private final Thread thread;   // its thread
     private volatile boolean readRequested; // this reader is requesting or obtained read access. Written by reader thread only, read by writer.
     private volatile boolean blocked;       // this reader is blocked waiting for the writer thread to release write lock. Written by reader thread only, read by writer.
     private boolean impatientReads; // true if should throw PCE on contented read lock
-    Reader(@NotNull Thread readerThread) {
+    Reader(@Nonnull Thread readerThread) {
       thread = readerThread;
     }
   }
@@ -133,7 +134,7 @@ class ReadMostlyRWLock {
    * will fail (i.e. throw {@link ApplicationUtil.CannotRunReadActionException})
    * if there is a pending write lock request.
    */
-  void executeByImpatientReader(@NotNull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+  void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
     checkReadThreadAccess();
     Reader status = R.get();
     boolean old = status.impatientReads;
@@ -229,7 +230,8 @@ class ReadMostlyRWLock {
     return privilegedReaders.get(Thread.currentThread());
   }
 
-  @NotNull AccessToken applyReadPrivilege(@Nullable SuspensionId context) {
+  @Nonnull
+  AccessToken applyReadPrivilege(@Nullable SuspensionId context) {
     Reader status = R.get();
     int iter = 0;
     while (context != null && context == currentSuspension) {
@@ -247,7 +249,7 @@ class ReadMostlyRWLock {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
-  @NotNull
+  @Nonnull
   AccessToken grantReadPrivilege() {
     Thread thread = Thread.currentThread();
     privilegedReaders.put(thread, currentSuspension);

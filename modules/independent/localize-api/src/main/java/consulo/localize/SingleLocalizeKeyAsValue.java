@@ -15,7 +15,7 @@
  */
 package consulo.localize;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Locale;
 
@@ -30,15 +30,15 @@ class SingleLocalizeKeyAsValue implements LocalizeKeyAsValue {
     myValue = value;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getValue() {
     return myValue;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getValue(@NotNull Locale locale) {
+  public String getValue(@Nonnull Locale locale) {
     return myValue;
   }
 }

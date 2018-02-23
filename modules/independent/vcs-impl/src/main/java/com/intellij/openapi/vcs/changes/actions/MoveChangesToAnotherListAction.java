@@ -38,8 +38,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -54,7 +53,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
           AllIcons.Actions.MoveToAnotherChangelist);
   }
 
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     boolean isEnabled = isEnabled(e);
 
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
@@ -65,7 +64,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
-  protected boolean isEnabled(@NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
       return false;
@@ -76,11 +75,11 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
            !ArrayUtil.isEmpty(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY));
   }
 
-  @NotNull
-  private static List<Change> getChangesForSelectedFiles(@NotNull Project project,
-                                                         @NotNull VirtualFile[] selectedFiles,
-                                                         @NotNull List<VirtualFile> unversionedFiles,
-                                                         @NotNull List<VirtualFile> changedFiles) {
+  @Nonnull
+  private static List<Change> getChangesForSelectedFiles(@Nonnull Project project,
+                                                         @Nonnull VirtualFile[] selectedFiles,
+                                                         @Nonnull List<VirtualFile> unversionedFiles,
+                                                         @Nonnull List<VirtualFile> changedFiles) {
     List<Change> changes = new ArrayList<>();
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
 
@@ -110,10 +109,10 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return changes;
   }
 
-  private static void addAllChangesUnderPath(@NotNull ChangeListManager changeListManager,
-                                             @NotNull FilePath file,
-                                             @NotNull List<Change> changes,
-                                             @NotNull List<VirtualFile> changedFiles) {
+  private static void addAllChangesUnderPath(@Nonnull ChangeListManager changeListManager,
+                                             @Nonnull FilePath file,
+                                             @Nonnull List<Change> changes,
+                                             @Nonnull List<VirtualFile> changedFiles) {
     for (Change change : changeListManager.getChangesIn(file)) {
       changes.add(change);
 
@@ -124,7 +123,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     List<Change> changesList = ContainerUtil.newArrayList();
 
@@ -151,7 +150,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
-  private static void selectAndShowFile(@NotNull final Project project, @NotNull final VirtualFile file) {
+  private static void selectAndShowFile(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
 
     if (!window.isVisible()) {
@@ -163,9 +162,9 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
-  public static boolean askAndMove(@NotNull Project project,
-                                   @NotNull Collection<Change> changes,
-                                   @NotNull List<VirtualFile> unversionedFiles) {
+  public static boolean askAndMove(@Nonnull Project project,
+                                   @Nonnull Collection<Change> changes,
+                                   @Nonnull List<VirtualFile> unversionedFiles) {
     if (changes.isEmpty() && unversionedFiles.isEmpty()) return false;
 
     LocalChangeList targetList = askTargetList(project, changes);
@@ -182,8 +181,8 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return false;
   }
 
-  @Nullable
-  private static LocalChangeList askTargetList(@NotNull Project project, @NotNull Collection<Change> changes) {
+  @javax.annotation.Nullable
+  private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
     ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
     List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
     List<LocalChangeList> listsForChooser =
@@ -195,8 +194,8 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return chooser.getSelectedList();
   }
 
-  @Nullable
-  private static ChangeList guessPreferredList(@NotNull List<LocalChangeList> lists) {
+  @javax.annotation.Nullable
+  private static ChangeList guessPreferredList(@Nonnull List<LocalChangeList> lists) {
     LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
     if (activeChangeList != null) return activeChangeList;
 
@@ -205,13 +204,13 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return ObjectUtils.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
   }
 
-  @NotNull
-  private static List<LocalChangeList> getPreferredLists(@NotNull List<LocalChangeList> lists, @NotNull Collection<Change> changes) {
+  @Nonnull
+  private static List<LocalChangeList> getPreferredLists(@Nonnull List<LocalChangeList> lists, @Nonnull Collection<Change> changes) {
     final Set<Change> changesSet = ContainerUtil.newHashSet(changes);
 
     return ContainerUtil.findAll(lists, new Condition<LocalChangeList>() {
       @Override
-      public boolean value(@NotNull LocalChangeList list) {
+      public boolean value(@Nonnull LocalChangeList list) {
         return !ContainerUtil.intersects(changesSet, list.getChanges());
       }
     });

@@ -16,7 +16,7 @@
 package consulo.ide.newProject;
 
 import consulo.extensions.CompositeExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
 public interface NewModuleBuilder {
   CompositeExtensionPointName<NewModuleBuilder> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.newModuleBuilder", NewModuleBuilder.class);
 
-  void setupContext(@NotNull NewModuleContext context);
+  void setupContext(@Nonnull NewModuleContext context);
 }

@@ -16,14 +16,13 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface FileReferenceResolver {
-  @Nullable
-  PsiFileSystemItem resolveFileReference(@NotNull FileReference reference, @NotNull String name);
+  @javax.annotation.Nullable
+  PsiFileSystemItem resolveFileReference(@Nonnull FileReference reference, @Nonnull String name);
 
-  Collection<Object> getVariants(@NotNull FileReference reference);
+  Collection<Object> getVariants(@Nonnull FileReference reference);
 }

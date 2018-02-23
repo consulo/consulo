@@ -25,21 +25,21 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowParameterInfoAction extends BaseCodeInsightAction implements DumbAware {
   public ShowParameterInfoAction() {
     setEnabledInModalContext(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new ShowParameterInfoHandler();
   }
 
   @Override
-  protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull final PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
     final Language language = PsiUtilCore.getLanguageAtOffset(file, editor.getCaretModel().getOffset());
     return ShowParameterInfoHandler.getHandlers(project, language, file.getViewProvider().getBaseLanguage()) != null;
   }

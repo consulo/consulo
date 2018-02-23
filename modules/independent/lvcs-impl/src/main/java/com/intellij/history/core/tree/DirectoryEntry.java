@@ -24,7 +24,7 @@ import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -120,7 +120,7 @@ public class DirectoryEntry extends Entry {
     return !entriesWithUnavailableContent.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DirectoryEntry copy() {
     DirectoryEntry result = copyEntry();

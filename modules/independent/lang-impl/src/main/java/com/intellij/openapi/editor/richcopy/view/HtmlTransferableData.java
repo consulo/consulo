@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.richcopy.model.MarkupHandler;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -32,7 +32,8 @@ import java.awt.datatransfer.DataFlavor;
  */
 public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableData implements MarkupHandler {
 
-  @NotNull public static final DataFlavor FLAVOR = new DataFlavor("text/html; class=java.io.Reader; charset=UTF-8", "HTML text");
+  @Nonnull
+  public static final DataFlavor FLAVOR = new DataFlavor("text/html; class=java.io.Reader; charset=UTF-8", "HTML text");
 
   private final int myTabSize;
   private StringBuilder    myResultBuffer;
@@ -52,13 +53,13 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
 
   private final TIntObjectHashMap<String> myColors = new TIntObjectHashMap<String>();
 
-  public HtmlTransferableData(@NotNull SyntaxInfo syntaxInfo, int tabSize) {
+  public HtmlTransferableData(@Nonnull SyntaxInfo syntaxInfo, int tabSize) {
     super(syntaxInfo, FLAVOR);
     myTabSize = tabSize;
   }
 
   @Override
-  protected void build(@NotNull StringBuilder holder, int maxLength) {
+  protected void build(@Nonnull StringBuilder holder, int maxLength) {
     myResultBuffer = holder;
     myColorRegistry = mySyntaxInfo.getColorRegistry();
     myFontNameRegistry = mySyntaxInfo.getFontNameRegistry();
@@ -97,25 +98,25 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
     }
   }
 
-  private void appendFontFamilyRule(@NotNull StringBuilder styleBuffer, int fontFamilyId) {
+  private void appendFontFamilyRule(@Nonnull StringBuilder styleBuffer, int fontFamilyId) {
     styleBuffer.append("font-family:'").append(myFontNameRegistry.dataById(fontFamilyId)).append("';");
   }
 
-  private static void defineBold(@NotNull StringBuilder styleBuffer) {
+  private static void defineBold(@Nonnull StringBuilder styleBuffer) {
     styleBuffer.append("font-weight:bold;");
   }
 
-  private static void defineItalic(@NotNull StringBuilder styleBuffer) {
+  private static void defineItalic(@Nonnull StringBuilder styleBuffer) {
     styleBuffer.append("font-style:italic;");
   }
 
-  private void defineForeground(int id, @NotNull StringBuilder styleBuffer) {
+  private void defineForeground(int id, @Nonnull StringBuilder styleBuffer) {
     styleBuffer.append("color:");
     appendColor(styleBuffer, id);
     styleBuffer.append(";");
   }
 
-  private void defineBackground(int id, @NotNull StringBuilder styleBuffer) {
+  private void defineBackground(int id, @Nonnull StringBuilder styleBuffer) {
     styleBuffer.append("background-color:");
     appendColor(styleBuffer, id);
     styleBuffer.append(";");

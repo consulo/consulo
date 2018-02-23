@@ -19,8 +19,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -30,11 +30,11 @@ public abstract class InspectionManager {
     return ServiceManager.getService(project, InspectionManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract Project getProject();
 
-  @NotNull
-  public abstract CommonProblemDescriptor createProblemDescriptor(@NotNull String descriptionTemplate, QuickFix... fixes);
+  @Nonnull
+  public abstract CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes);
 
   /**
    * Factory method for ProblemDescriptor. Should be called from LocalInspectionTool.checkXXX() methods.
@@ -43,116 +43,116 @@ public abstract class InspectionManager {
    * @param fix should be null if no fix is provided.
    * @param onTheFly for local tools on batch run
    */
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             LocalQuickFix fix,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly);
 
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             boolean onTheFly,
                                                             LocalQuickFix[] fixes,
-                                                            @NotNull ProblemHighlightType highlightType);
+                                                            @Nonnull ProblemHighlightType highlightType);
 
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             LocalQuickFix[] fixes,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly,
                                                             boolean isAfterEndOfLine);
 
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement startElement,
-                                                            @NotNull PsiElement endElement,
-                                                            @NotNull String descriptionTemplate,
-                                                            @NotNull ProblemHighlightType highlightType,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement startElement,
+                                                            @Nonnull PsiElement endElement,
+                                                            @Nonnull String descriptionTemplate,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly,
                                                             LocalQuickFix... fixes);
 
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
                                                             @Nullable("null means the text range of the element") TextRange rangeInElement,
-                                                            @NotNull final String descriptionTemplate,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull final String descriptionTemplate,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly,
                                                             LocalQuickFix... fixes);
 
-  @NotNull
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
-                                                            @NotNull final String descriptionTemplate,
+  @Nonnull
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
+                                                            @Nonnull final String descriptionTemplate,
                                                             final boolean showTooltip,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean onTheFly,
                                                             final LocalQuickFix... fixes);
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix, ProblemHighlightType)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             LocalQuickFix fix,
-                                                            @NotNull ProblemHighlightType highlightType);
+                                                            @Nonnull ProblemHighlightType highlightType);
 
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix[], ProblemHighlightType)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             LocalQuickFix[] fixes,
-                                                            @NotNull ProblemHighlightType highlightType);
+                                                            @Nonnull ProblemHighlightType highlightType);
 
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, String, LocalQuickFix[], ProblemHighlightType, boolean, boolean)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement psiElement,
-                                                            @NotNull String descriptionTemplate,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement psiElement,
+                                                            @Nonnull String descriptionTemplate,
                                                             LocalQuickFix[] fixes,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             boolean isAfterEndOfLine);
 
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, PsiElement, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull PsiElement startElement,
-                                                            @NotNull PsiElement endElement,
-                                                            @NotNull String descriptionTemplate,
-                                                            @NotNull ProblemHighlightType highlightType,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull PsiElement startElement,
+                                                            @Nonnull PsiElement endElement,
+                                                            @Nonnull String descriptionTemplate,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             LocalQuickFix... fixes);
 
 
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, TextRange, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
                                                             final TextRange rangeInElement,
-                                                            @NotNull final String descriptionTemplate,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull final String descriptionTemplate,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             final LocalQuickFix... fixes);
 
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * use {@link #createProblemDescriptor(PsiElement, String, boolean, ProblemHighlightType, boolean, LocalQuickFix...)} instead
    */
-  public abstract ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
-                                                            @NotNull final String descriptionTemplate,
+  public abstract ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
+                                                            @Nonnull final String descriptionTemplate,
                                                             final boolean showTooltip,
-                                                            @NotNull ProblemHighlightType highlightType,
+                                                            @Nonnull ProblemHighlightType highlightType,
                                                             final LocalQuickFix... fixes);
 
-  @NotNull
+  @Nonnull
   public abstract GlobalInspectionContext createNewGlobalContext(boolean reuse);
 }

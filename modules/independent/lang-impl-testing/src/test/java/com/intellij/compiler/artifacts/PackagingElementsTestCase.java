@@ -18,7 +18,7 @@ import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.util.PathUtil;
 import consulo.vfs.util.ArchiveVfsUtil;
 import junit.framework.Assert;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -93,7 +93,7 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
     return jarRoot;
   }
 
-  protected Library addProjectLibrary(final @Nullable Module module, final String name, final VirtualFile... jars) {
+  protected Library addProjectLibrary(final @javax.annotation.Nullable Module module, final String name, final VirtualFile... jars) {
     return addProjectLibrary(module, name, DependencyScope.COMPILE, jars);
   }
 
@@ -102,7 +102,7 @@ public abstract class PackagingElementsTestCase extends ArtifactsTestCase {
     return addProjectLibrary(myProject, module, name, scope, jars);
   }
 
-  static Library addProjectLibrary(final Project project, final @Nullable Module module, final String name, final DependencyScope scope,
+  static Library addProjectLibrary(final Project project, final @javax.annotation.Nullable Module module, final String name, final DependencyScope scope,
                                    final VirtualFile[] jars) {
     return new WriteAction<Library>() {
       @Override

@@ -15,7 +15,7 @@
  */
 package com.intellij.usages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -23,10 +23,10 @@ import javax.swing.*;
  * @author max
  */
 public interface UsagePresentation {
-  @NotNull
+  @Nonnull
   TextChunk[] getText();
 
-  @NotNull
+  @Nonnull
   String getPlainText();
 
   Icon getIcon();

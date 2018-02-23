@@ -23,7 +23,7 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -31,32 +31,32 @@ import org.jetbrains.annotations.NotNull;
 public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T>, ActionShortcutProvider {
   @NonNls public static final String ID = "SHOW_INHERITED";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCheckBoxText() {
     return IdeBundle.message("file.structure.toggle.show.inherited");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Shortcut[] getShortcut() {
     throw new IncorrectOperationException("see getActionIdForShortcut()");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getActionIdForShortcut() {
     return "FileStructurePopup";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ActionPresentation getPresentation() {
     return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, AllIcons.Hierarchy.Supertypes);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return ID;
   }

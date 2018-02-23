@@ -21,8 +21,7 @@ import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.ArtifactIncrementalCompilerContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
   }
 
-  public boolean addDestination(@NotNull VirtualFile sourceFile, @NotNull DestinationInfo destinationInfo) {
+  public boolean addDestination(@Nonnull VirtualFile sourceFile, @Nonnull DestinationInfo destinationInfo) {
     if (destinationInfo instanceof ExplodedDestinationInfo && sourceFile.equals(destinationInfo.getOutputFile())) {
       return false;
     }
@@ -79,7 +78,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     return myItemsBySource.get(source);
   }
 
-  public boolean registerJarFile(@NotNull ArchivePackageInfo archivePackageInfo, @NotNull String outputPath) {
+  public boolean registerJarFile(@Nonnull ArchivePackageInfo archivePackageInfo, @Nonnull String outputPath) {
     if (mySourceByOutput.containsKey(outputPath) || myJarByPath.containsKey(outputPath)) {
       return false;
     }
@@ -87,12 +86,12 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public ArchivePackageInfo getJarInfo(String outputPath) {
     return myJarByPath.get(outputPath);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getSourceByOutput(String outputPath) {
     return mySourceByOutput.get(outputPath);
   }

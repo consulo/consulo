@@ -17,8 +17,8 @@
 package com.intellij.psi;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -26,7 +26,8 @@ import java.util.Collection;
  * Trivial implementation of {@link ResolveResult}.
  */
 public class PsiElementResolveResult implements ResolveResult{
-  @NotNull private final PsiElement myElement;
+  @Nonnull
+  private final PsiElement myElement;
   private final boolean myValidResult;
 
   /**
@@ -34,17 +35,18 @@ public class PsiElementResolveResult implements ResolveResult{
    *
    * @param element the resolve target element.
    */
-  public PsiElementResolveResult(@NotNull PsiElement element) {
+  public PsiElementResolveResult(@Nonnull PsiElement element) {
     this(element, true);
   }
 
-  public PsiElementResolveResult(@NotNull final PsiElement element, final boolean validResult) {
+  public PsiElementResolveResult(@Nonnull final PsiElement element, final boolean validResult) {
     myElement = element;
     myValidResult = validResult;
   }
 
   @Override
-  @NotNull public PsiElement getElement() {
+  @Nonnull
+  public PsiElement getElement() {
     return myElement;
   }
 
@@ -74,7 +76,7 @@ public class PsiElementResolveResult implements ResolveResult{
            (myElement instanceof PsiNamedElement ? ((PsiNamedElement)myElement).getName() : myElement.getText());
   }
 
-  @NotNull
+  @Nonnull
   public static ResolveResult[] createResults(@Nullable Collection<? extends PsiElement> elements) {
     if (elements == null || elements.isEmpty()) return EMPTY_ARRAY;
 
@@ -86,7 +88,7 @@ public class PsiElementResolveResult implements ResolveResult{
     return results;
   }
 
-  @NotNull
+  @Nonnull
   public static ResolveResult[] createResults(@Nullable PsiElement... elements) {
     if (elements == null || elements.length == 0) return EMPTY_ARRAY;
 

@@ -19,8 +19,8 @@ import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextStyle;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -30,17 +30,17 @@ import java.util.function.BiConsumer;
  */
 public class DesktopTabImpl implements Tab {
   @Override
-  public void setIcon(@NotNull Image image) {
+  public void setIcon(@Nonnull Image image) {
 
   }
 
   @Override
-  public void append(@NotNull String text) {
+  public void append(@Nonnull String text) {
 
   }
 
   @Override
-  public void append(@NotNull String text, @NotNull TextStyle... styles) {
+  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
 
   }
 

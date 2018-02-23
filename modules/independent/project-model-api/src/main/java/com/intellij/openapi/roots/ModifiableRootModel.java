@@ -17,8 +17,8 @@ package com.intellij.openapi.roots;
 
 import consulo.roots.ModifiableModuleRootLayer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredWriteAction;
 
 /**
@@ -31,15 +31,15 @@ public interface ModifiableRootModel extends ModuleRootModel, ModifiableModuleRo
   @NonNls
   String DEFAULT_LAYER_NAME = "Default";
 
-  @NotNull
-  ModifiableModuleRootLayer addLayer(@NotNull String name, @Nullable String nameForCopy, boolean activate);
+  @Nonnull
+  ModifiableModuleRootLayer addLayer(@Nonnull String name, @javax.annotation.Nullable String nameForCopy, boolean activate);
 
-  boolean removeLayer(@NotNull String name, boolean initDefault);
+  boolean removeLayer(@Nonnull String name, boolean initDefault);
 
   void removeAllLayers(boolean initDefault);
 
-  @Nullable()
-  ModifiableModuleRootLayer setCurrentLayer(@NotNull String name);
+  @javax.annotation.Nullable()
+  ModifiableModuleRootLayer setCurrentLayer(@Nonnull String name);
 
   void clear();
 

@@ -21,8 +21,8 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -46,7 +46,7 @@ public abstract class FileOrDirectoryCopyPackagingElement<T extends FileOrDirect
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element instanceof FileOrDirectoryCopyPackagingElement &&
            myFilePath != null &&
            myFilePath.equals(((FileOrDirectoryCopyPackagingElement)element).getFilePath());

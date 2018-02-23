@@ -19,8 +19,8 @@ import com.intellij.openapi.options.Configurable;
 import consulo.ui.*;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Function;
 
@@ -43,12 +43,12 @@ public class SettingsDialog extends WindowWrapper {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   protected Component createCenterComponent() {
     TreeModel<Configurable> configurableTreeModel = new TreeModel<Configurable>() {
       @Override
-      public void fetchChildren(@NotNull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
+      public void fetchChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
         if (parentValue != null) {
           if (parentValue instanceof Configurable.Composite) {
             build(nodeFactory, ((Configurable.Composite)parentValue).getConfigurables());
@@ -59,7 +59,7 @@ public class SettingsDialog extends WindowWrapper {
         }
       }
 
-      private void build(@NotNull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
+      private void build(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
         for (Configurable configurable : configurables) {
           TreeNode<Configurable> node = nodeFactory.apply(configurable);
 

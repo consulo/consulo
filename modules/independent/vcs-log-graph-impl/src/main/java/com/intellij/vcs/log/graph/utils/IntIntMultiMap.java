@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.graph.utils;
 
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.AbstractList;
 import java.util.Collection;
@@ -73,11 +73,11 @@ public class IntIntMultiMap {
     myKeyToArrayMap.put(key, newValues);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Integer> get(int key) {
     final int[] asArray = getAsArray(key);
     return new AbstractList<Integer>() {
-      @NotNull
+      @Nonnull
       @Override
       public Integer get(int index) {
         return asArray[index];
@@ -90,7 +90,7 @@ public class IntIntMultiMap {
     };
   }
 
-  @NotNull
+  @Nonnull
   public int[] getAsArray(int key) {
     int[] result = myKeyToArrayMap.get(key);
     if (result == null) {
@@ -109,7 +109,7 @@ public class IntIntMultiMap {
     return myKeyToArrayMap.containsKey(key);
   }
 
-  @NotNull
+  @Nonnull
   public int[] keys() {
     return myKeyToArrayMap.keys();
   }

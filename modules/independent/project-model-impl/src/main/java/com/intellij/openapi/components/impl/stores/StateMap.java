@@ -31,8 +31,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -62,29 +62,29 @@ final class StateMap {
     states = new THashMap<String, Object>((Map<String, Object>)stateMap.states);
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> keys() {
     return states.keySet();
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Object> values() {
     return states.values();
   }
 
   @Nullable
-  public Object get(@NotNull String key) {
+  public Object get(@Nonnull String key) {
     return states.get(key);
   }
 
-  @NotNull
-  public Element getElement(@NotNull String key, @NotNull Map<String, Element> newLiveStates) {
+  @Nonnull
+  public Element getElement(@Nonnull String key, @Nonnull Map<String, Element> newLiveStates) {
     Object state = states.get(key);
     return stateToElement(key, state, newLiveStates);
   }
 
-  @NotNull
-  static Element stateToElement(@NotNull String key, @Nullable Object state, @NotNull Map<String, Element> newLiveStates) {
+  @Nonnull
+  static Element stateToElement(@Nonnull String key, @Nullable Object state, @Nonnull Map<String, Element> newLiveStates) {
     if (state instanceof Element) {
       return ((Element)state).clone();
     }
@@ -98,7 +98,7 @@ final class StateMap {
     }
   }
 
-  public void put(@NotNull String key, @NotNull Object value) {
+  public void put(@Nonnull String key, @Nonnull Object value) {
     states.put(key, value);
   }
 
@@ -107,12 +107,12 @@ final class StateMap {
   }
 
   @Nullable
-  public Element getState(@NotNull String key) {
+  public Element getState(@Nonnull String key) {
     Object state = states.get(key);
     return state instanceof Element ? (Element)state : null;
   }
 
-  public boolean hasState(@NotNull String key) {
+  public boolean hasState(@Nonnull String key) {
     return states.get(key) instanceof Element;
   }
 
@@ -129,7 +129,7 @@ final class StateMap {
     return false;
   }
 
-  public void compare(@NotNull String key, @NotNull StateMap newStates, @NotNull Set<String> diffs) {
+  public void compare(@Nonnull String key, @Nonnull StateMap newStates, @Nonnull Set<String> diffs) {
     Object oldState = states.get(key);
     Object newState = newStates.get(key);
     if (oldState instanceof Element) {
@@ -146,7 +146,7 @@ final class StateMap {
   }
 
   @Nullable
-  public static byte[] getNewByteIfDiffers(@NotNull String key, @NotNull Object newState, @NotNull byte[] oldState) {
+  public static byte[] getNewByteIfDiffers(@Nonnull String key, @Nonnull Object newState, @Nonnull byte[] oldState) {
     byte[] newBytes = newState instanceof Element ? archiveState((Element)newState) : (byte[])newState;
     if (Arrays.equals(newBytes, oldState)) {
       return null;
@@ -164,8 +164,8 @@ final class StateMap {
     return newBytes;
   }
 
-  @NotNull
-  private static byte[] archiveState(@NotNull Element state) {
+  @Nonnull
+  private static byte[] archiveState(@Nonnull Element state) {
     BufferExposingByteArrayOutputStream byteOut = new BufferExposingByteArrayOutputStream();
     try {
       OutputStreamWriter writer = new OutputStreamWriter(new SnappyOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET);
@@ -184,8 +184,8 @@ final class StateMap {
     return ArrayUtil.realloc(byteOut.getInternalBuffer(), byteOut.size());
   }
 
-  @Nullable
-  public Element getStateAndArchive(@NotNull String key) {
+  @javax.annotation.Nullable
+  public Element getStateAndArchive(@Nonnull String key) {
     Object state = states.get(key);
     if (!(state instanceof Element)) {
       return null;
@@ -195,8 +195,8 @@ final class StateMap {
     return (Element)state;
   }
 
-  @NotNull
-  public static Element unarchiveState(@NotNull byte[] state) {
+  @Nonnull
+  public static Element unarchiveState(@Nonnull byte[] state) {
     InputStream in = null;
     try {
       try {
@@ -218,8 +218,8 @@ final class StateMap {
     }
   }
 
-  @NotNull
-  public static String stateToString(@NotNull Object state) {
+  @Nonnull
+  public static String stateToString(@Nonnull Object state) {
     Element element;
     if (state instanceof Element) {
       element = (Element)state;
@@ -236,8 +236,8 @@ final class StateMap {
     return JDOMUtil.writeParent(element, "\n");
   }
 
-  @Nullable
-  public Object remove(@NotNull String key) {
+  @javax.annotation.Nullable
+  public Object remove(@Nonnull String key) {
     return states.remove(key);
   }
 
@@ -245,7 +245,7 @@ final class StateMap {
     return states.size();
   }
 
-  public void forEachEntry(@NotNull TObjectObjectProcedure<String, Object> consumer) {
+  public void forEachEntry(@Nonnull TObjectObjectProcedure<String, Object> consumer) {
     states.forEachEntry(consumer);
   }
 }

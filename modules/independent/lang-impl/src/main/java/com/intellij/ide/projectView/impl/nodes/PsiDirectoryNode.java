@@ -48,7 +48,7 @@ import com.intellij.ui.RowIcon;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import consulo.fileTypes.impl.VfsIconUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -144,7 +144,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     final PsiDirectory value = getValue();
     if (value == null) {
       return false;

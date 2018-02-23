@@ -16,18 +16,19 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class VcsLogRootFilterImpl implements VcsLogRootFilter {
-  @NotNull private final Collection<VirtualFile> myRoots;
+  @Nonnull
+  private final Collection<VirtualFile> myRoots;
 
-  public VcsLogRootFilterImpl(@NotNull Collection<VirtualFile> roots) {
+  public VcsLogRootFilterImpl(@Nonnull Collection<VirtualFile> roots) {
     myRoots = roots;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getRoots() {
     return myRoots;

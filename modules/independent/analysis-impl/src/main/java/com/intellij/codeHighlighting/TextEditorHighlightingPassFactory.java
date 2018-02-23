@@ -19,8 +19,8 @@ package com.intellij.codeHighlighting;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -28,5 +28,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TextEditorHighlightingPassFactory extends ProjectComponent{
   @Nullable
-  TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor);
+  TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor);
 }

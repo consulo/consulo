@@ -1,7 +1,6 @@
 package com.intellij.remoteServer.agent.impl;
 
 import com.intellij.remoteServer.agent.impl.util.SequentialTaskExecutor;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Proxy;
 
@@ -14,7 +13,7 @@ public class RemoteAgentThreadProxyCreator {
   private final ChildWrapperCreator myPreWrapperCreator;
 
   public RemoteAgentThreadProxyCreator(CallerClassLoaderProvider callerClassLoaderProvider,
-                                       @Nullable ChildWrapperCreator preWrapperCreator) {
+                                       @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myPreWrapperCreator = preWrapperCreator;
     myCallerClassLoaderProvider = callerClassLoaderProvider;
   }

@@ -17,7 +17,7 @@ package com.intellij.diff.util;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -26,17 +26,18 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class CopyableLabel extends JTextArea {
-  @NotNull private JLabel ELLIPSIS_LABEL = new JLabel("...");
+  @Nonnull
+  private JLabel ELLIPSIS_LABEL = new JLabel("...");
 
-  @NotNull
-  public static JComponent create(@NotNull String text) {
+  @Nonnull
+  public static JComponent create(@Nonnull String text) {
     if (text.isEmpty()) text = " ";
     text = text.replace('\r', ' ').replace('\n', ' ');
 
     return new CopyableLabel(text);
   }
 
-  private CopyableLabel(@NotNull String text) {
+  private CopyableLabel(@Nonnull String text) {
     addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {

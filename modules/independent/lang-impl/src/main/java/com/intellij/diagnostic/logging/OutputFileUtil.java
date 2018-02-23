@@ -35,8 +35,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,7 +53,7 @@ public class OutputFileUtil {
   private OutputFileUtil() {
   }
 
-  public static File getOutputFile(@NotNull final RunConfigurationBase configuration) {
+  public static File getOutputFile(@Nonnull final RunConfigurationBase configuration) {
     String outputFilePath = configuration.getOutputFilePath();
     if (outputFilePath != null) {
       final String filePath = FileUtil.toSystemDependentName(outputFilePath);

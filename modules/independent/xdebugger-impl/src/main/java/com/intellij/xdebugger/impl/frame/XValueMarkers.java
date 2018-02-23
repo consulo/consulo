@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.frame;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,17 +32,17 @@ public class XValueMarkers<V extends XValue, M> {
   private final XValueMarkerProvider<V, M> myProvider;
   private final Map<M, ValueMarkup> myMarkers;
 
-  private XValueMarkers(@NotNull XValueMarkerProvider<V, M> provider) {
+  private XValueMarkers(@Nonnull XValueMarkerProvider<V, M> provider) {
     myProvider = provider;
     myMarkers = new HashMap<M, ValueMarkup>();
   }
 
-  public static <V extends XValue, M> XValueMarkers<V, M> createValueMarkers(@NotNull XValueMarkerProvider<V, M> provider) {
+  public static <V extends XValue, M> XValueMarkers<V, M> createValueMarkers(@Nonnull XValueMarkerProvider<V, M> provider) {
     return new XValueMarkers<V, M>(provider);
   }
 
   @Nullable
-  public ValueMarkup getMarkup(@NotNull XValue value) {
+  public ValueMarkup getMarkup(@Nonnull XValue value) {
     Class<V> valueClass = myProvider.getValueClass();
     if (!valueClass.isInstance(value)) return null;
 
@@ -55,20 +55,20 @@ public class XValueMarkers<V extends XValue, M> {
     return myMarkers.get(m);
   }
 
-  public boolean canMarkValue(@NotNull XValue value) {
+  public boolean canMarkValue(@Nonnull XValue value) {
     Class<V> valueClass = myProvider.getValueClass();
     if (!valueClass.isInstance(value)) return false;
 
     return myProvider.canMark(valueClass.cast(value));
   }
 
-  public void markValue(@NotNull XValue value, @NotNull ValueMarkup markup) {
+  public void markValue(@Nonnull XValue value, @Nonnull ValueMarkup markup) {
     //noinspection unchecked
     M m = myProvider.markValue((V)value);
     myMarkers.put(m, markup);
   }
 
-  public void unmarkValue(@NotNull XValue value) {
+  public void unmarkValue(@Nonnull XValue value) {
     //noinspection unchecked
     final V v = (V)value;
     M m = myProvider.getMarker(v);

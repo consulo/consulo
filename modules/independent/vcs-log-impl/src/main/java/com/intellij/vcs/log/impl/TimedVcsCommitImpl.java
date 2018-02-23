@@ -4,7 +4,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.TimedVcsCommit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,24 +20,26 @@ import java.util.List;
  */
 public class TimedVcsCommitImpl implements TimedVcsCommit {
 
-  @NotNull private final Hash myHash;
-  @NotNull private final List<Hash> myParents;
+  @Nonnull
+  private final Hash myHash;
+  @Nonnull
+  private final List<Hash> myParents;
   private final long myTime;
 
-  public TimedVcsCommitImpl(@NotNull Hash hash, @NotNull List<Hash> parents, long timeStamp) {
+  public TimedVcsCommitImpl(@Nonnull Hash hash, @Nonnull List<Hash> parents, long timeStamp) {
     myHash = hash;
     myParents = parents;
     myTime = timeStamp;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final Hash getId() {
     return myHash;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final List<Hash> getParents() {
     return myParents;
   }

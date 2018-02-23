@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +25,12 @@ import java.io.InputStream;
  */
 public abstract class BinaryOutputReader extends BaseDataReader {
 
-  @NotNull private final InputStream myStream;
-  @NotNull private final byte[] myBuffer = new byte[8192];
+  @Nonnull
+  private final InputStream myStream;
+  @Nonnull
+  private final byte[] myBuffer = new byte[8192];
 
-  public BinaryOutputReader(@NotNull InputStream stream, SleepingPolicy sleepingPolicy) {
+  public BinaryOutputReader(@Nonnull InputStream stream, SleepingPolicy sleepingPolicy) {
     super(sleepingPolicy);
     myStream = stream;
   }
@@ -49,7 +51,7 @@ public abstract class BinaryOutputReader extends BaseDataReader {
     return read;
   }
 
-  protected abstract void onBinaryAvailable(@NotNull byte[] data, int size);
+  protected abstract void onBinaryAvailable(@Nonnull byte[] data, int size);
 
   @Override
   protected void close() throws IOException {

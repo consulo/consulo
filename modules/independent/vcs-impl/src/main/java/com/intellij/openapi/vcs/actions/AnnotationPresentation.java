@@ -24,25 +24,28 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.annotate.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class AnnotationPresentation implements TextAnnotationPresentation {
-  @NotNull private final FileAnnotation myFileAnnotation;
-  @NotNull private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
+  @Nonnull
+  private final FileAnnotation myFileAnnotation;
+  @Nonnull
+  private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
   @Nullable private final AnnotationSourceSwitcher mySwitcher;
   private final ArrayList<AnAction> myActions = new ArrayList<>();
 
-  @NotNull private final Disposable myDisposable;
+  @Nonnull
+  private final Disposable myDisposable;
   private boolean myDisposed = false;
 
-  AnnotationPresentation(@NotNull FileAnnotation fileAnnotation,
-                         @NotNull UpToDateLineNumberProvider upToDateLineNumberProvider,
+  AnnotationPresentation(@Nonnull FileAnnotation fileAnnotation,
+                         @Nonnull UpToDateLineNumberProvider upToDateLineNumberProvider,
                          @Nullable AnnotationSourceSwitcher switcher,
-                         @NotNull Disposable disposable) {
+                         @Nonnull Disposable disposable) {
     myUpToDateLineNumberProvider = upToDateLineNumberProvider;
     myFileAnnotation = fileAnnotation;
     mySwitcher = switcher;
@@ -76,7 +79,7 @@ class AnnotationPresentation implements TextAnnotationPresentation {
     return myActions;
   }
 
-  @NotNull
+  @Nonnull
   public List<AnAction> getActions() {
     return myActions;
   }

@@ -33,7 +33,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -61,10 +61,10 @@ class UpdateFoldRegionsOperation implements Runnable {
   private final boolean myKeepCollapsedRegions;
   private final boolean myForInjected;
 
-  UpdateFoldRegionsOperation(@NotNull Project project,
-                             @NotNull Editor editor,
-                             @NotNull PsiFile file,
-                             @NotNull FoldingUpdate.FoldingMap elementsToFoldMap,
+  UpdateFoldRegionsOperation(@Nonnull Project project,
+                             @Nonnull Editor editor,
+                             @Nonnull PsiFile file,
+                             @Nonnull FoldingUpdate.FoldingMap elementsToFoldMap,
                              ApplyDefaultStateMode applyDefaultState,
                              boolean keepCollapsedRegions,
                              boolean forInjected) {
@@ -97,9 +97,9 @@ class UpdateFoldRegionsOperation implements Runnable {
     foldingModel.clearDocumentRangesModificationStatus();
   }
 
-  private static void applyExpandStatus(@NotNull List<FoldRegion> newRegions,
-                                        @NotNull Map<FoldRegion, Boolean> shouldExpand,
-                                        @NotNull Map<FoldingGroup, Boolean> groupExpand) {
+  private static void applyExpandStatus(@Nonnull List<FoldRegion> newRegions,
+                                        @Nonnull Map<FoldRegion, Boolean> shouldExpand,
+                                        @Nonnull Map<FoldingGroup, Boolean> groupExpand) {
     for (final FoldRegion region : newRegions) {
       final FoldingGroup group = region.getGroup();
       final Boolean expanded = group == null ? shouldExpand.get(region) : groupExpand.get(group);
@@ -110,11 +110,11 @@ class UpdateFoldRegionsOperation implements Runnable {
     }
   }
 
-  private List<FoldRegion> addNewRegions(@NotNull EditorFoldingInfo info,
-                                         @NotNull FoldingModelEx foldingModel,
-                                         FoldingUpdate.FoldingMap elementsToFold, @NotNull Map<TextRange, Boolean> rangeToExpandStatusMap,
-                                         @NotNull Map<FoldRegion, Boolean> shouldExpand,
-                                         @NotNull Map<FoldingGroup, Boolean> groupExpand) {
+  private List<FoldRegion> addNewRegions(@Nonnull EditorFoldingInfo info,
+                                         @Nonnull FoldingModelEx foldingModel,
+                                         FoldingUpdate.FoldingMap elementsToFold, @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap,
+                                         @Nonnull Map<FoldRegion, Boolean> shouldExpand,
+                                         @Nonnull Map<FoldingGroup, Boolean> groupExpand) {
     List<FoldRegion> newRegions = newArrayList();
     SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(myProject);
     for (PsiElement element : elementsToFold.keySet()) {
@@ -177,9 +177,9 @@ class UpdateFoldRegionsOperation implements Runnable {
     return oldStatus == null || FoldingUtil.caretInsideRange(myEditor, range) || oldStatus.booleanValue();
   }
 
-  private void removeInvalidRegions(@NotNull EditorFoldingInfo info,
-                                    @NotNull FoldingModelEx foldingModel,
-                                    FoldingUpdate.FoldingMap elementsToFold, @NotNull Map<TextRange, Boolean> rangeToExpandStatusMap) {
+  private void removeInvalidRegions(@Nonnull EditorFoldingInfo info,
+                                    @Nonnull FoldingModelEx foldingModel,
+                                    FoldingUpdate.FoldingMap elementsToFold, @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap) {
     List<FoldRegion> toRemove = newArrayList();
     InjectedLanguageManager injectedManager = InjectedLanguageManager.getInstance(myProject);
     for (FoldRegion region : foldingModel.getAllFoldRegions()) {

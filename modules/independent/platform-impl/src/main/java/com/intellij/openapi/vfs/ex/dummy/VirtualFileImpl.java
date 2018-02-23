@@ -19,7 +19,7 @@ package com.intellij.openapi.vfs.ex.dummy;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFileWithId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId {
   private final DummyFileSystem myFileSystem;
@@ -40,7 +40,7 @@ abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
@@ -55,7 +55,7 @@ abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }

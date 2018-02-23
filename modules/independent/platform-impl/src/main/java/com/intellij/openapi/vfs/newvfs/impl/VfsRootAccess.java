@@ -40,7 +40,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class VfsRootAccess {
   private static boolean insideGettingRoots;
 
   @TestOnly
-  static void assertAccessInTests(@NotNull VirtualFileSystemEntry child, @NotNull NewVirtualFileSystem delegate) {
+  static void assertAccessInTests(@Nonnull VirtualFileSystemEntry child, @Nonnull NewVirtualFileSystem delegate) {
     final Application application = ApplicationManager.getApplication();
     if (SHOULD_PERFORM_ACCESS_CHECK &&
         application.isUnitTestMode() &&
@@ -155,7 +155,7 @@ public class VfsRootAccess {
     return allowed;
   }
 
-  private static VirtualFile[] getAllRoots(@NotNull Project project) {
+  private static VirtualFile[] getAllRoots(@Nonnull Project project) {
     insideGettingRoots = true;
     final Set<VirtualFile> roots = new THashSet<VirtualFile>();
 
@@ -168,7 +168,7 @@ public class VfsRootAccess {
   }
 
   @TestOnly
-  public static void allowRootAccess(@NotNull Disposable disposable, @NotNull final String... roots) {
+  public static void allowRootAccess(@Nonnull Disposable disposable, @Nonnull final String... roots) {
     if (roots.length == 0) return;
     allowRootAccess(roots);
     Disposer.register(disposable, new Disposable() {
@@ -180,14 +180,14 @@ public class VfsRootAccess {
   }
 
   @TestOnly
-  public static void allowRootAccess(@NotNull String... roots) {
+  public static void allowRootAccess(@Nonnull String... roots) {
     for (String root : roots) {
       ourAdditionalRoots.add(FileUtil.toSystemIndependentName(root));
     }
   }
 
   @TestOnly
-  public static void disallowRootAccess(@NotNull String... roots) {
+  public static void disallowRootAccess(@Nonnull String... roots) {
     for (String root : roots) {
       ourAdditionalRoots.remove(FileUtil.toSystemIndependentName(root));
     }

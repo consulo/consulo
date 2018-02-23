@@ -25,13 +25,13 @@ import com.intellij.psi.search.SearchRequestCollector;
 import com.intellij.psi.search.SearchScope;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class FindUsagesOptions implements Cloneable {
-  @NotNull
+  @Nonnull
   public SearchScope searchScope;
 
   public boolean isSearchForTextOccurrences = true;
@@ -40,17 +40,17 @@ public class FindUsagesOptions implements Cloneable {
   public SearchRequestCollector fastTrack;
 
   @RequiredReadAction
-  public FindUsagesOptions(@NotNull Project project) {
+  public FindUsagesOptions(@Nonnull Project project) {
     this(project, null);
   }
 
   @RequiredReadAction
-  public FindUsagesOptions(@NotNull Project project, @Nullable final DataContext dataContext) {
+  public FindUsagesOptions(@Nonnull Project project, @Nullable final DataContext dataContext) {
     this(calcScope(project, dataContext));
   }
 
-  @NotNull
-  private static SearchScope calcScope(@NotNull Project project, @Nullable DataContext dataContext) {
+  @Nonnull
+  private static SearchScope calcScope(@Nonnull Project project, @Nullable DataContext dataContext) {
     String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
     List<SearchScope> predefined = PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(project, dataContext, true, false, false,
                                                                                                    false);
@@ -67,7 +67,7 @@ public class FindUsagesOptions implements Cloneable {
     return resultScope;
   }
 
-  public FindUsagesOptions(@NotNull SearchScope searchScope) {
+  public FindUsagesOptions(@Nonnull SearchScope searchScope) {
     this.searchScope = searchScope;
   }
 
@@ -111,7 +111,7 @@ public class FindUsagesOptions implements Cloneable {
            '}';
   }
 
-  @NotNull
+  @Nonnull
   public String generateUsagesString() {
     return "Usages";
   }

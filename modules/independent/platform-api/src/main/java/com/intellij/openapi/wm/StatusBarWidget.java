@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -35,13 +35,13 @@ public interface StatusBarWidget extends Disposable {
     DEFAULT, MAC
   }
 
-  @NotNull
+  @Nonnull
   String ID();
 
   @Nullable
-  WidgetPresentation getPresentation(@NotNull PlatformType type);
+  WidgetPresentation getPresentation(@Nonnull PlatformType type);
 
-  void install(@NotNull final StatusBar statusBar);
+  void install(@Nonnull final StatusBar statusBar);
 
   interface Multiframe extends StatusBarWidget {
     StatusBarWidget copy();
@@ -61,10 +61,10 @@ public interface StatusBarWidget extends Disposable {
   }
 
   interface TextPresentation extends WidgetPresentation {
-    @NotNull
+    @Nonnull
     String getText();
 
-    @NotNull
+    @Nonnull
     @Deprecated
     String getMaxPossibleText();
 
@@ -79,7 +79,7 @@ public interface StatusBarWidget extends Disposable {
     @RequiredDispatchThread
     String getSelectedValue();
 
-    @NotNull
+    @Nonnull
     @Deprecated
     String getMaxValue();
   }

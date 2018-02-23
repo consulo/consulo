@@ -32,8 +32,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Project project = event.getRequiredData(CommonDataKeys.PROJECT);
     Presentation presentation = event.getPresentation();
@@ -60,7 +60,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;

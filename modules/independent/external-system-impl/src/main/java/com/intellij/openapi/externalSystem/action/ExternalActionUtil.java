@@ -25,16 +25,16 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettin
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka
  * @since 9/18/13
  */
 public class ExternalActionUtil {
-  @NotNull
-  public static MyInfo getProcessingInfo(@NotNull DataContext context) {
+  @Nonnull
+  public static MyInfo getProcessingInfo(@Nonnull DataContext context) {
     ExternalProjectPojo externalProject = context.getData(ExternalSystemDataKeys.SELECTED_PROJECT);
     if (externalProject == null) {
       return MyInfo.EMPTY;
@@ -65,16 +65,19 @@ public class ExternalActionUtil {
 
     public static final MyInfo EMPTY = new MyInfo(null, null, null, null, null);
 
-    @Nullable public final AbstractExternalSystemSettings<?, ?, ?> settings;
+    @javax.annotation.Nullable
+    public final AbstractExternalSystemSettings<?, ?, ?> settings;
     @Nullable public final AbstractExternalSystemLocalSettings  localSettings;
-    @Nullable public final ExternalProjectPojo                  externalProject;
+    @javax.annotation.Nullable
+    public final ExternalProjectPojo                  externalProject;
     @Nullable public final Project                              ideProject;
-    @Nullable public final ProjectSystemId                      externalSystemId;
+    @javax.annotation.Nullable
+    public final ProjectSystemId                      externalSystemId;
 
     MyInfo(@Nullable AbstractExternalSystemSettings<?, ?, ?> settings,
            @Nullable AbstractExternalSystemLocalSettings localSettings,
-           @Nullable ExternalProjectPojo externalProject,
-           @Nullable Project ideProject,
+           @javax.annotation.Nullable ExternalProjectPojo externalProject,
+           @javax.annotation.Nullable Project ideProject,
            @Nullable ProjectSystemId externalSystemId)
     {
       this.settings = settings;

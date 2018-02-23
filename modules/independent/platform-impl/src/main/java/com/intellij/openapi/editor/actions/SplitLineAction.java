@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 /**
@@ -47,7 +47,7 @@ public class SplitLineAction extends EditorAction {
     }
 
     @Override
-    public boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       return getEnterHandler().isEnabled(editor, caret, dataContext) &&
              !((EditorEx)editor).isEmbeddedIntoDialogWrapper();
     }

@@ -18,21 +18,21 @@ package com.intellij.execution.runners;
 
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author AG
  */
 public class BasicProgramRunner extends DefaultProgramRunner {
 
-  @NotNull
+  @Nonnull
   @Override
   public String getRunnerId() {
     return "Basic";
   }
 
   @Override
-  public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
+  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
     return DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && !(profile instanceof RunConfigurationWithSuppressedDefaultRunAction);
   }
 }

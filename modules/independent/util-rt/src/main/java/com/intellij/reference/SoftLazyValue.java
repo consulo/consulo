@@ -15,7 +15,7 @@
  */
 package com.intellij.reference;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.SoftReference;
 
@@ -35,6 +35,6 @@ public abstract class SoftLazyValue<T> {
     return t;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract T compute();
 }

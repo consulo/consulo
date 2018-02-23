@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -53,8 +53,8 @@ public class CompletionResult {
     return myLookupElement;
   }
 
-  @NotNull
-  public CompletionResult withLookupElement(@NotNull LookupElement element) {
+  @Nonnull
+  public CompletionResult withLookupElement(@Nonnull LookupElement element) {
     if (!myMatcher.prefixMatches(element)) {
       throw new AssertionError("The new element doesn't match the prefix");
     }

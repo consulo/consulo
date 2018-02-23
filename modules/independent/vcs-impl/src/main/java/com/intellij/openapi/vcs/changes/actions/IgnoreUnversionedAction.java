@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowserBase;
 import com.intellij.openapi.vcs.changes.ui.IgnoreUnversionedDialog;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ import static com.intellij.util.containers.UtilKt.isEmpty;
 
 public class IgnoreUnversionedAction extends AnAction {
 
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
 
     if (!ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
@@ -56,7 +56,7 @@ public class IgnoreUnversionedAction extends AnAction {
     }
   }
 
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(e.getProject() != null && !isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
   }
 }

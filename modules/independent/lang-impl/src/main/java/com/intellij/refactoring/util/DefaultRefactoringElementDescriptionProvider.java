@@ -21,7 +21,7 @@ import com.intellij.psi.ElementDescriptionProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionLocation;
 import com.intellij.usageView.UsageViewUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +30,7 @@ public class DefaultRefactoringElementDescriptionProvider implements ElementDesc
   public static final DefaultRefactoringElementDescriptionProvider INSTANCE = new DefaultRefactoringElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
+  public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
     final String typeString = UsageViewUtil.getType(element);
     final String name = DescriptiveNameUtil.getDescriptiveName(element);
     return typeString + " " + CommonRefactoringUtil.htmlEmphasize(name);

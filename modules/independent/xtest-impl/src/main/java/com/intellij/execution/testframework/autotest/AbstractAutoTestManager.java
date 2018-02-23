@@ -42,8 +42,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -58,14 +58,14 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
   protected int myDelayMillis;
   private AutoTestWatcher myWatcher;
 
-  public AbstractAutoTestManager(@NotNull Project project) {
+  public AbstractAutoTestManager(@Nonnull Project project) {
     myProject = project;
     myDelayMillis = PropertiesComponent.getInstance(project).getInt(AUTO_TEST_MANAGER_DELAY, AUTO_TEST_MANAGER_DELAY_DEFAULT);
     myWatcher = createWatcher(project);
   }
 
   @Nullable
-  private static ExecutionEnvironment getCurrentEnvironment(@NotNull Content content) {
+  private static ExecutionEnvironment getCurrentEnvironment(@Nonnull Content content) {
     JComponent component = content.getComponent();
     if (component == null) {
       return null;
@@ -73,7 +73,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     return DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
   }
 
-  private static void clearRestarterListener(@NotNull ProcessHandler processHandler) {
+  private static void clearRestarterListener(@Nonnull ProcessHandler processHandler) {
     ProcessListener restarterListener = ON_TERMINATION_RESTARTER_KEY.get(processHandler, null);
     if (restarterListener != null) {
       processHandler.removeProcessListener(restarterListener);
@@ -81,7 +81,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     }
   }
 
-  private static void restart(@NotNull RunContentDescriptor descriptor) {
+  private static void restart(@Nonnull RunContentDescriptor descriptor) {
     descriptor.setActivateToolWindowWhenAdded(false);
     descriptor.setReuseToolWindowActivation(true);
     ExecutionUtil.restart(descriptor);
@@ -114,10 +114,10 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     return configurations;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract AutoTestWatcher createWatcher(Project project);
 
-  public void setAutoTestEnabled(@NotNull RunContentDescriptor descriptor, @NotNull ExecutionEnvironment environment, boolean enabled) {
+  public void setAutoTestEnabled(@Nonnull RunContentDescriptor descriptor, @Nonnull ExecutionEnvironment environment, boolean enabled) {
     Content content = descriptor.getAttachedContent();
     if (content != null) {
       if (enabled) {
@@ -147,11 +147,11 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     return false;
   }
 
-  public boolean isAutoTestEnabled(@NotNull RunContentDescriptor descriptor) {
+  public boolean isAutoTestEnabled(@Nonnull RunContentDescriptor descriptor) {
     return isAutoTestEnabledForDescriptor(descriptor);
   }
 
-  private boolean isAutoTestEnabledForDescriptor(@NotNull RunContentDescriptor descriptor) {
+  private boolean isAutoTestEnabledForDescriptor(@Nonnull RunContentDescriptor descriptor) {
     Content content = descriptor.getAttachedContent();
     if (content != null) {
       ExecutionEnvironment environment = getCurrentEnvironment(content);
@@ -174,9 +174,9 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     }
   }
 
-  private void restartAutoTest(@NotNull RunContentDescriptor descriptor,
+  private void restartAutoTest(@Nonnull RunContentDescriptor descriptor,
                                int modificationStamp,
-                               @NotNull AutoTestWatcher documentWatcher) {
+                               @Nonnull AutoTestWatcher documentWatcher) {
     ProcessHandler processHandler = descriptor.getProcessHandler();
     if (processHandler != null && !processHandler.isProcessTerminated()) {
       scheduleRestartOnTermination(descriptor, processHandler, modificationStamp, documentWatcher);
@@ -186,10 +186,10 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     }
   }
 
-  private void scheduleRestartOnTermination(@NotNull final RunContentDescriptor descriptor,
-                                            @NotNull final ProcessHandler processHandler,
+  private void scheduleRestartOnTermination(@Nonnull final RunContentDescriptor descriptor,
+                                            @Nonnull final ProcessHandler processHandler,
                                             final int modificationStamp,
-                                            @NotNull final AutoTestWatcher watcher) {
+                                            @Nonnull final AutoTestWatcher watcher) {
     ProcessListener restarterListener = ON_TERMINATION_RESTARTER_KEY.get(processHandler);
     if (restarterListener != null) {
       clearRestarterListener(processHandler);

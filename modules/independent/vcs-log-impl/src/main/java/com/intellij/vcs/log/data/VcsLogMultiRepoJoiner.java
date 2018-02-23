@@ -2,14 +2,14 @@ package com.intellij.vcs.log.data;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.GraphCommit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
 public class VcsLogMultiRepoJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
 
-  @NotNull
-  public List<Commit> join(@NotNull Collection<List<Commit>> logsFromRepos) {
+  @Nonnull
+  public List<Commit> join(@Nonnull Collection<List<Commit>> logsFromRepos) {
     if (logsFromRepos.size() == 1) {
       return logsFromRepos.iterator().next();
     }
@@ -42,8 +42,8 @@ public class VcsLogMultiRepoJoiner<CommitId, Commit extends GraphCommit<CommitId
     return result;
   }
 
-  @NotNull
-  private Commit findLatestCommit(@NotNull Set<Commit> commits) {
+  @Nonnull
+  private Commit findLatestCommit(@Nonnull Set<Commit> commits) {
     long maxTimeStamp = Long.MIN_VALUE;
     Commit lastCommit = null;
     for (Commit commit : commits) {

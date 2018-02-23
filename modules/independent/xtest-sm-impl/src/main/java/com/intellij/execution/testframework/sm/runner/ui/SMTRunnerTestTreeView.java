@@ -20,8 +20,8 @@ import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -34,7 +34,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
 
   public static final Key<SMTRunnerTestTreeView> SM_TEST_RUNNER_VIEW = Key.create("SM_TEST_RUNNER_VIEW");
 
-  @Nullable
+  @javax.annotation.Nullable
   private TestResultsViewer myResultsViewer;
 
   protected TreeCellRenderer getRenderer(final TestConsoleProperties properties) {
@@ -42,7 +42,7 @@ public class SMTRunnerTestTreeView extends TestTreeView {
   }
 
   @Nullable
-  public SMTestProxy getSelectedTest(@NotNull final TreePath selectionPath) {
+  public SMTestProxy getSelectedTest(@Nonnull final TreePath selectionPath) {
     final Object lastComponent = selectionPath.getLastPathComponent();
     assert lastComponent != null;
 
@@ -63,13 +63,13 @@ public class SMTRunnerTestTreeView extends TestTreeView {
     myResultsViewer = resultsViewer;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TestResultsViewer getResultsViewer() {
     return myResultsViewer;
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (SM_TEST_RUNNER_VIEW == dataId) {
       return this;
     }

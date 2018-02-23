@@ -24,10 +24,11 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiReference;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -52,14 +53,14 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   private static final Key<String> FORMAT_KEY = Key.create("Image.format");
 
   private static final List<String> supportedExtensions = Arrays.asList(ImageIO.getReaderFormatNames());
-  @NotNull
+  @Nonnull
   private final BufferedImage myImage;
 
   /**
    * @param image buffered image
    * @param imageFileSize File length in bytes.
    */
-  private ImagePreviewComponent(@NotNull final BufferedImage image, final long imageFileSize) {
+  private ImagePreviewComponent(@Nonnull final BufferedImage image, final long imageFileSize) {
     setLayout(new BorderLayout());
 
     myImage = image;
@@ -90,8 +91,8 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
     return false;
   }
 
-  @NotNull
-  private static JLabel createLabel(@NotNull final BufferedImage image, long imageFileSize) {
+  @Nonnull
+  private static JLabel createLabel(@Nonnull final BufferedImage image, long imageFileSize) {
     final int width = image.getWidth();
     final int height = image.getHeight();
     final ColorModel colorModel = image.getColorModel();
@@ -100,7 +101,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   }
 
   @SuppressWarnings({"AutoUnboxing"})
-  private static boolean refresh(@NotNull VirtualFile file) throws IOException {
+  private static boolean refresh(@Nonnull VirtualFile file) throws IOException {
     Long loadedTimeStamp = file.getUserData(TIMESTAMP_KEY);
     SoftReference<BufferedImage> imageRef = file.getUserData(BUFFERED_IMAGE_REF_KEY);
     if (loadedTimeStamp == null || loadedTimeStamp < file.getTimeStamp() || SoftReference.dereference(imageRef) == null) {
@@ -172,7 +173,7 @@ public class ImagePreviewComponent extends JPanel implements PreviewHintComponen
   /**
    * This method doesn't use caching, so if you want to use it then you should consider implementing external cache.
    */
-  public static ImagePreviewComponent getPreviewComponent(@NotNull final BufferedImage image, final long imageFileSize) {
+  public static ImagePreviewComponent getPreviewComponent(@Nonnull final BufferedImage image, final long imageFileSize) {
     return new ImagePreviewComponent(image, imageFileSize);
   }
 

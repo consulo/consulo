@@ -41,8 +41,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,11 +53,11 @@ import java.util.Enumeration;
 import java.util.Set;
 
 public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
-  public ProjectTreeBuilder(@NotNull Project project,
-                            @NotNull JTree tree,
-                            @NotNull DefaultTreeModel treeModel,
+  public ProjectTreeBuilder(@Nonnull Project project,
+                            @Nonnull JTree tree,
+                            @Nonnull DefaultTreeModel treeModel,
                             @Nullable Comparator<NodeDescriptor> comparator,
-                            @NotNull ProjectAbstractTreeStructureBase treeStructure) {
+                            @Nonnull ProjectAbstractTreeStructureBase treeStructure) {
     super(project, tree, treeModel, treeStructure, comparator);
 
     final MessageBusConnection connection = project.getMessageBus().connect(this);
@@ -116,21 +116,21 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private final class MyBookmarksListener implements BookmarksListener {
     @Override
-    public void bookmarkAdded(@NotNull Bookmark b) {
+    public void bookmarkAdded(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkRemoved(@NotNull Bookmark b) {
+    public void bookmarkRemoved(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkChanged(@NotNull Bookmark b) {
+    public void bookmarkChanged(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 
-    private void updateForFile(@NotNull VirtualFile file) {
+    private void updateForFile(@Nonnull VirtualFile file) {
       PsiElement element = findPsi(file);
       if (element != null) {
         queueUpdateFrom(element, false);
@@ -145,12 +145,12 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile vFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile vFile) {
       queueUpdate(false);
     }
   }
 
-  private PsiElement findPsi(@NotNull VirtualFile vFile) {
+  private PsiElement findPsi(@Nonnull VirtualFile vFile) {
     if (!vFile.isValid()) return null;
     PsiManager psiManager = PsiManager.getInstance(myProject);
     return vFile.isDirectory() ? psiManager.findDirectory(vFile) : psiManager.findFile(vFile);
@@ -161,16 +161,16 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     private final Collection<VirtualFile> myFilesToRefresh = new THashSet<>();
 
     @Override
-    public void problemsAppeared(@NotNull VirtualFile file) {
+    public void problemsAppeared(@Nonnull VirtualFile file) {
       queueUpdate(file);
     }
 
     @Override
-    public void problemsDisappeared(@NotNull VirtualFile file) {
+    public void problemsDisappeared(@Nonnull VirtualFile file) {
       queueUpdate(file);
     }
 
-    private void queueUpdate(@NotNull VirtualFile fileToRefresh) {
+    private void queueUpdate(@Nonnull VirtualFile fileToRefresh) {
       synchronized (myFilesToRefresh) {
         if (myFilesToRefresh.add(fileToRefresh)) {
           myUpdateProblemAlarm.cancelAllRequests();
@@ -193,7 +193,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     }
   }
 
-  private void updateNodesContaining(@NotNull Collection<VirtualFile> filesToRefresh, @NotNull DefaultMutableTreeNode rootNode) {
+  private void updateNodesContaining(@Nonnull Collection<VirtualFile> filesToRefresh, @Nonnull DefaultMutableTreeNode rootNode) {
     if (!(rootNode.getUserObject() instanceof ProjectViewNode)) return;
     ProjectViewNode node = (ProjectViewNode)rootNode.getUserObject();
     Collection<VirtualFile> containingFiles = null;

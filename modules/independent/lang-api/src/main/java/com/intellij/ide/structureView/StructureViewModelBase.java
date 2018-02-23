@@ -19,8 +19,8 @@ package com.intellij.ide.structureView;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -30,41 +30,41 @@ public class StructureViewModelBase extends TextEditorBasedStructureViewModel {
   private Sorter[] mySorters = Sorter.EMPTY_ARRAY;
   private Class[] mySuitableClasses = null;
 
-  public StructureViewModelBase(@NotNull PsiFile psiFile, @Nullable Editor editor, @NotNull StructureViewTreeElement root) {
+  public StructureViewModelBase(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nonnull StructureViewTreeElement root) {
     super(editor, psiFile);
 
     myRoot = root;
   }
 
-  public StructureViewModelBase(@NotNull PsiFile psiFile, @NotNull StructureViewTreeElement root) {
+  public StructureViewModelBase(@Nonnull PsiFile psiFile, @Nonnull StructureViewTreeElement root) {
     this(psiFile, null, root);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewTreeElement getRoot() {
     return myRoot;
   }
 
-  @NotNull
-  public StructureViewModelBase withSorters(@NotNull Sorter... sorters) {
+  @Nonnull
+  public StructureViewModelBase withSorters(@Nonnull Sorter... sorters) {
     mySorters = sorters;
     return this;
   }
 
-  @NotNull
-  public StructureViewModelBase withSuitableClasses(@NotNull Class... suitableClasses) {
+  @Nonnull
+  public StructureViewModelBase withSuitableClasses(@Nonnull Class... suitableClasses) {
     mySuitableClasses = suitableClasses;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Sorter[] getSorters() {
     return mySorters;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Class[] getSuitableClasses() {
     if (mySuitableClasses != null) {

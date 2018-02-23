@@ -37,8 +37,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -54,11 +54,11 @@ public class RunContentBuilder extends RunTab {
    * to remove in IDEA 14
    */
   @SuppressWarnings("UnusedParameters")
-  public RunContentBuilder(@NotNull Project project,
+  public RunContentBuilder(@Nonnull Project project,
                            ProgramRunner runner,
                            Executor executor,
                            ExecutionResult executionResult,
-                           @NotNull ExecutionEnvironment environment) {
+                           @Nonnull ExecutionEnvironment environment) {
     //noinspection deprecation
     this(runner, executionResult, environment);
   }
@@ -69,19 +69,19 @@ public class RunContentBuilder extends RunTab {
    */
   public RunContentBuilder(ProgramRunner runner,
                            ExecutionResult executionResult,
-                           @NotNull ExecutionEnvironment environment) {
+                           @Nonnull ExecutionEnvironment environment) {
     this(executionResult, fix(environment, runner));
   }
 
-  public RunContentBuilder(@NotNull ExecutionResult executionResult, @NotNull ExecutionEnvironment environment) {
+  public RunContentBuilder(@Nonnull ExecutionResult executionResult, @Nonnull ExecutionEnvironment environment) {
     super(environment, getRunnerType(executionResult.getExecutionConsole()));
 
     myExecutionResult = executionResult;
     myUi.getOptions().setMoveToGridActionEnabled(false).setMinimizeActionEnabled(false);
   }
 
-  @NotNull
-  public static ExecutionEnvironment fix(@NotNull ExecutionEnvironment environment, @Nullable ProgramRunner runner) {
+  @Nonnull
+  public static ExecutionEnvironment fix(@Nonnull ExecutionEnvironment environment, @Nullable ProgramRunner runner) {
     if (runner == null || runner.equals(environment.getRunner())) {
       return environment;
     }
@@ -92,7 +92,7 @@ public class RunContentBuilder extends RunTab {
 
   @SuppressWarnings("UnusedDeclaration")
   @Deprecated
-  @NotNull
+  @Nonnull
   /**
    * @deprecated to remove in IDEA 15
    */
@@ -100,16 +100,16 @@ public class RunContentBuilder extends RunTab {
     return SearchScopeProvider.createSearchScope(project, runProfile);
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionResult getExecutionResult() {
     return myExecutionResult;
   }
 
-  public void addAction(@NotNull final AnAction action) {
+  public void addAction(@Nonnull final AnAction action) {
     myRunnerActions.add(action);
   }
 
-  @NotNull
+  @Nonnull
   private RunContentDescriptor createDescriptor() {
     final RunProfile profile = myEnvironment.getRunProfile();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -143,7 +143,7 @@ public class RunContentBuilder extends RunTab {
     return contentDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   private static String getRunnerType(@Nullable ExecutionConsole console) {
     String runnerType = JAVA_RUNNER;
     if (console instanceof ExecutionConsoleEx) {
@@ -176,8 +176,8 @@ public class RunContentBuilder extends RunTab {
     consoleContent.setActions(consoleActions, ActionPlaces.UNKNOWN, console.getComponent());
   }
 
-  @NotNull
-  private ActionGroup createActionToolbar(@NotNull RunContentDescriptor contentDescriptor) {
+  @Nonnull
+  private ActionGroup createActionToolbar(@Nonnull RunContentDescriptor contentDescriptor) {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_RERUN));
     final AnAction[] actions = contentDescriptor.getRestartActions();
@@ -225,17 +225,22 @@ public class RunContentBuilder extends RunTab {
   }
 
   public static class ConsoleToFrontListener implements ConsoleViewImpl.ChangeListener {
-    @NotNull private final RunConfigurationBase myRunConfigurationBase;
-    @NotNull private final Project myProject;
-    @NotNull private final Executor myExecutor;
-    @NotNull private final RunContentDescriptor myRunContentDescriptor;
-    @NotNull private final RunnerLayoutUi myUi;
+    @Nonnull
+    private final RunConfigurationBase myRunConfigurationBase;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final Executor myExecutor;
+    @Nonnull
+    private final RunContentDescriptor myRunContentDescriptor;
+    @Nonnull
+    private final RunnerLayoutUi myUi;
 
-    public ConsoleToFrontListener(@NotNull RunConfigurationBase runConfigurationBase,
-                                  @NotNull Project project,
-                                  @NotNull Executor executor,
-                                  @NotNull RunContentDescriptor runContentDescriptor,
-                                  @NotNull RunnerLayoutUi ui) {
+    public ConsoleToFrontListener(@Nonnull RunConfigurationBase runConfigurationBase,
+                                  @Nonnull Project project,
+                                  @Nonnull Executor executor,
+                                  @Nonnull RunContentDescriptor runContentDescriptor,
+                                  @Nonnull RunnerLayoutUi ui) {
       myRunConfigurationBase = runConfigurationBase;
       myProject = project;
       myExecutor = executor;

@@ -18,7 +18,7 @@ package com.intellij.find.findUsages;
 import com.intellij.openapi.util.Condition;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ public class UsageHistory {
   // the last element is the most recent
   private final List<ConfigurableUsageTarget> myHistory = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public void add(@NotNull ConfigurableUsageTarget usageTarget) {
+  public void add(@Nonnull ConfigurableUsageTarget usageTarget) {
     final String descriptiveName = usageTarget.getLongDescriptiveName();
     ContainerUtil.retainAll(myHistory, new Condition<ConfigurableUsageTarget>() {
       @Override
@@ -43,7 +43,7 @@ public class UsageHistory {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<ConfigurableUsageTarget> getAll() {
     removeInvalidElementsFromHistory();
     return Collections.unmodifiableList(myHistory);

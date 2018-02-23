@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Formatter-based line indent provider which calculates indent using formatting model.
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 public class FormatterBasedLineIndentProvider implements LineIndentProvider {
   @Nullable
   @Override
-  public String getLineIndent(@NotNull Project project, @NotNull Editor editor, Language language, int offset) {
+  public String getLineIndent(@Nonnull Project project, @Nonnull Editor editor, Language language, int offset) {
     Document document = editor.getDocument();
     PsiDocumentManager.getInstance(project).commitDocument(document);
     return CodeStyleManager.getInstance(project).getLineIndent(document, offset);

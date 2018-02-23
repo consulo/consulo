@@ -17,24 +17,24 @@ package com.intellij.openapi.vcs.changes;
 
 import com.google.common.primitives.Ints;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ChangeListUtil {
 
-  @Nullable
-  public static LocalChangeList getPredefinedChangeList(@NotNull String defaultName, @NotNull ChangeListManager changeListManager) {
+  @javax.annotation.Nullable
+  public static LocalChangeList getPredefinedChangeList(@Nonnull String defaultName, @Nonnull ChangeListManager changeListManager) {
     final LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
     if (sameNamedList != null) return sameNamedList;
     return tryToMatchWithExistingChangelist(changeListManager, defaultName);
   }
 
   @Nullable
-  private static LocalChangeList tryToMatchWithExistingChangelist(@NotNull ChangeListManager changeListManager,
-                                                                  @NotNull final String defaultName) {
+  private static LocalChangeList tryToMatchWithExistingChangelist(@Nonnull ChangeListManager changeListManager,
+                                                                  @Nonnull final String defaultName) {
     List<LocalChangeList> matched = ContainerUtil.findAll(changeListManager.getChangeListsCopy(),
                                                           list -> defaultName.contains(list.getName().trim()));
 

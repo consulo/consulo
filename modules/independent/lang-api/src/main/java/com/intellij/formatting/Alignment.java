@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The alignment setting for a formatting model block. Blocks which return the same
@@ -109,7 +109,7 @@ public abstract class Alignment {
    * @param anchor                alignment anchor
    * @return                      alignment object with the given <code>'allow backward shift'</code> setting
    */
-  public static Alignment createAlignment(boolean allowBackwardShift, @NotNull Anchor anchor) {
+  public static Alignment createAlignment(boolean allowBackwardShift, @Nonnull Anchor anchor) {
     return myFactory.createAlignment(allowBackwardShift, anchor);
   }
   

@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -26,7 +26,7 @@ public interface IdePerformanceListener {
   /**
    * Invoked after thread state has been dumped to a file.
    */
-  void dumpedThreads(@NotNull File toFile, @NotNull ThreadDump dump);
+  void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump);
 
   /**
    * Invoked when IDE has detected that the UI hasn't responded for some time (5 seconds by default)
@@ -44,7 +44,7 @@ public interface IdePerformanceListener {
    */
   class Adapter implements IdePerformanceListener {
     @Override
-    public void dumpedThreads(@NotNull File toFile, @NotNull ThreadDump dump) { }
+    public void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump) { }
 
     @Override
     public void uiFreezeStarted() { }

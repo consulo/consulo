@@ -22,7 +22,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.ScreenUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
   }
 
   @Override
-  public LightweightHint show(@NotNull final Editor editor, @NotNull Point p, boolean alignToRight, @NotNull TooltipGroup group, @NotNull HintHint intInfo) {
+  public LightweightHint show(@Nonnull final Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint intInfo) {
     LightweightHint hint;
 
     final JComponent editorComponent = editor.getComponent();

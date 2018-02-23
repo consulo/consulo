@@ -28,7 +28,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.roots.ModifiableModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -71,7 +71,7 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
     return elements;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getTabName() {
     return "Module";
@@ -83,7 +83,7 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
   }
 
   @Override
-  public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
     Object[] selectedValues = myModuleList.getSelectedValues();
     List<OrderEntry> orderEntries = new ArrayList<OrderEntry>(selectedValues.length);
     for (Object selectedValue : selectedValues) {
@@ -92,7 +92,7 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
     return orderEntries;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myModuleList;

@@ -15,10 +15,10 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ComponentWithExpandableItems<T> {
-  @NotNull
+  @Nonnull
   ExpandableItemsHandler<T> getExpandableItemsHandler();
 
   void setExpandableItemsEnabled(boolean enabled);

@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,24 +27,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ContentEntryEditorListenerAdapter implements ContentEntryEditor.ContentEntryEditorListener{
   @Override
-  public void editingStarted(@NotNull ContentEntryEditor editor) {
+  public void editingStarted(@Nonnull ContentEntryEditor editor) {
   }
 
   @Override
-  public void beforeEntryDeleted(@NotNull ContentEntryEditor editor) {
+  public void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
   }
 
   @Override
-  public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
-
-  }
-
-  @Override
-  public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder) {
+  public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
 
   }
 
   @Override
-  public void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file) {
+  public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
+
+  }
+
+  @Override
+  public void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
   }
 }

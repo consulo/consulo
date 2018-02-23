@@ -43,7 +43,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class SystemHealthMonitor implements ApplicationComponent {
 
   private final PropertiesComponent myProperties;
 
-  public SystemHealthMonitor(@NotNull PropertiesComponent properties) {
+  public SystemHealthMonitor(@Nonnull PropertiesComponent properties) {
     myProperties = properties;
   }
 
@@ -147,7 +147,7 @@ public class SystemHealthMonitor implements ApplicationComponent {
     Application app = ApplicationManager.getApplication();
     app.getMessageBus().connect(app).subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
       @Override
-      public void appFrameCreated(CommandLineArgs commandLineArgs, @NotNull boolean willOpenProject) {
+      public void appFrameCreated(CommandLineArgs commandLineArgs, @Nonnull boolean willOpenProject) {
         app.invokeLater(() -> {
           JComponent component = WindowManager.getInstance().findVisibleFrame().getRootPane();
           if (component != null) {
@@ -165,7 +165,7 @@ public class SystemHealthMonitor implements ApplicationComponent {
           Notification notification = LOG_GROUP.createNotification("", message, NotificationType.WARNING,
                                                                    new NotificationListener.Adapter() {
                                                                      @Override
-                                                                     protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
+                                                                     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
                                                                        adapter.hyperlinkActivated(e);
                                                                      }
                                                                    });

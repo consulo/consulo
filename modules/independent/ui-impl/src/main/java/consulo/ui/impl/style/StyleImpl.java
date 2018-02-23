@@ -18,22 +18,22 @@ package consulo.ui.impl.style;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.Style;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05-Nov-17
  */
 public class StyleImpl implements Style {
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ColorValue getColor(@NotNull ColorKey colorKey) {
+  public ColorValue getColor(@Nonnull ColorKey colorKey) {
     return null;
   }
 }

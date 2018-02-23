@@ -32,7 +32,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public abstract class ChooseItemAction extends EditorAction {
     }
 
     @Override
-    public void execute(@NotNull final Editor editor, final DataContext dataContext) {
+    public void execute(@Nonnull final Editor editor, final DataContext dataContext) {
       final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
       if (lookup == null) {
         throw new AssertionError("The last lookup disposed at: " + LookupImpl.getLastLookupDisposeTrace() + "\n-----------------------\n");

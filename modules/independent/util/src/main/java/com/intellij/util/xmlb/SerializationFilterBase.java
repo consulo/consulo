@@ -15,14 +15,14 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class SerializationFilterBase implements SerializationFilter {
   @Override
-  public boolean accepts(@NotNull Accessor accessor, @NotNull Object bean) {
+  public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
     return accepts(accessor, bean, accessor.read(bean));
   }
 
-  protected abstract boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue);
+  protected abstract boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue);
 }

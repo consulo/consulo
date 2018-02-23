@@ -21,27 +21,27 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class TodoCacheManager {
-  @NotNull
-  public static TodoCacheManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static TodoCacheManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, TodoCacheManager.class);
   }
 
   /**
    * @return all files that contains todoitems under project
    */
-  @NotNull
+  @Nonnull
   public abstract PsiFile[] getFilesWithTodoItems();
 
   /**
    * @return -1 if it's not known
    */
-  public abstract int getTodoCount(@NotNull VirtualFile file, IndexPatternProvider patternProvider);
+  public abstract int getTodoCount(@Nonnull VirtualFile file, IndexPatternProvider patternProvider);
 
   /**
    * @return -1 if it's not known
    */
-  public abstract int getTodoCount(@NotNull VirtualFile file, IndexPattern pattern);
+  public abstract int getTodoCount(@Nonnull VirtualFile file, IndexPattern pattern);
 }

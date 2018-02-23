@@ -16,8 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,13 +28,14 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
       throw new UnsupportedOperationException("Method compareTo is not yet implemented in " + getClass().getName());
     }
   };
-  @NotNull private Comparable[] myComputedWeighs;
+  @Nonnull
+  private Comparable[] myComputedWeighs;
   private final Computable<T> myElement;
   private final Loc myLocation;
   private final Weigher<T,Loc>[] myWeighers;
 
   public WeighingComparable(final Computable<T> element,
-                            @Nullable final Loc location,
+                            @javax.annotation.Nullable final Loc location,
                             final Weigher<T,Loc>[] weighers) {
     myElement = element;
     myLocation = location;
@@ -54,7 +54,7 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
   }
 
   @Override
-  public int compareTo(@NotNull final WeighingComparable<T,Loc> comparable) {
+  public int compareTo(@Nonnull final WeighingComparable<T,Loc> comparable) {
     if (myComputedWeighs == comparable.myComputedWeighs) return 0;
 
     for (int i = 0; i < myComputedWeighs.length; i++) {
@@ -75,7 +75,7 @@ public class WeighingComparable<T,Loc> implements Comparable<WeighingComparable<
     return 0;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Comparable getWeight(final int index) {
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {

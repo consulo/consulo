@@ -21,15 +21,15 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
 public class ImageConverter {
-  @NotNull
-  public static Widget create(@NotNull MultiImageState state) {
+  @Nonnull
+  public static Widget create(@Nonnull MultiImageState state) {
     Widget widget = null;
     if (state.myImageState != null) {
       Image box = new Image();

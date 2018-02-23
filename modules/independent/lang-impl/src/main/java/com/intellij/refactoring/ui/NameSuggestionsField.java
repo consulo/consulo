@@ -31,7 +31,7 @@ import com.intellij.ui.EditorComboBoxRenderer;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.StringComboboxEditor;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;

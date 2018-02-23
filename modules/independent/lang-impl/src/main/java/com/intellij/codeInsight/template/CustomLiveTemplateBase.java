@@ -20,8 +20,8 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,15 +31,15 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
    * Implementation should returns {@code true} if it has own lookup item in completion autopopup
    * and it is supposed that template should be expanded while completion auto-popup is active.
    */
-  public boolean hasCompletionItem(@NotNull PsiFile file, int offset) {
+  public boolean hasCompletionItem(@Nonnull PsiFile file, int offset) {
     return false;
   }
 
   /**
    * Return lookup elements for popup that appears on ListTemplateAction (Ctrl + J)
    */
-  @NotNull
-  public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(@NotNull PsiFile file, @NotNull Editor editor, int offset) {
+  @Nonnull
+  public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
     return Collections.emptyList();
   }
 
@@ -55,7 +55,7 @@ abstract public class CustomLiveTemplateBase implements CustomLiveTemplate {
   }
 
   @Nullable
-  public String computeTemplateKeyWithoutContextChecking(@NotNull CustomTemplateCallback callback) {
+  public String computeTemplateKeyWithoutContextChecking(@Nonnull CustomTemplateCallback callback) {
     return computeTemplateKey(callback);
   }
 

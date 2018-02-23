@@ -54,9 +54,9 @@ import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.AdapterProcessor;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -87,22 +87,22 @@ public class ReplaceInProjectManager {
     private final FindModel findModel;
     private Set<Usage> excludedSet;
 
-    ReplaceContext(@NotNull UsageView usageView, @NotNull FindModel findModel) {
+    ReplaceContext(@Nonnull UsageView usageView, @Nonnull FindModel findModel) {
       this.usageView = usageView;
       this.findModel = findModel;
     }
 
-    @NotNull
+    @Nonnull
     public FindModel getFindModel() {
       return findModel;
     }
 
-    @NotNull
+    @Nonnull
     public UsageView getUsageView() {
       return usageView;
     }
 
-    @NotNull
+    @Nonnull
     public Set<Usage> getExcludedSetCached() {
       if (excludedSet == null) excludedSet = usageView.getExcludedUsages();
       return excludedSet;
@@ -113,7 +113,7 @@ public class ReplaceInProjectManager {
     }
   }
 
-  public void replaceInProject(@NotNull DataContext dataContext) {
+  public void replaceInProject(@Nonnull DataContext dataContext) {
     final boolean isOpenInNewTabEnabled;
     final boolean toOpenInNewTab;
     final Content selectedContent = com.intellij.usageView.UsageViewManager.getInstance(myProject).getSelectedContent(true);
@@ -156,10 +156,10 @@ public class ReplaceInProjectManager {
     });
   }
 
-  public void searchAndShowUsages(@NotNull UsageViewManager manager,
-                                  @NotNull Factory<UsageSearcher> usageSearcherFactory,
-                                  @NotNull FindModel findModelCopy,
-                                  @NotNull FindManager findManager) {
+  public void searchAndShowUsages(@Nonnull UsageViewManager manager,
+                                  @Nonnull Factory<UsageSearcher> usageSearcherFactory,
+                                  @Nonnull FindModel findModelCopy,
+                                  @Nonnull FindManager findManager) {
     final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(true, findModelCopy);
     final FindUsagesProcessPresentation processPresentation = FindInProjectUtil.setupProcessPresentation(myProject, true, presentation);
 
@@ -167,11 +167,11 @@ public class ReplaceInProjectManager {
   }
 
   private static class ReplaceInProjectTarget extends FindInProjectUtil.StringUsageTarget {
-    public ReplaceInProjectTarget(@NotNull Project project, @NotNull FindModel findModel) {
+    public ReplaceInProjectTarget(@Nonnull Project project, @Nonnull FindModel findModel) {
       super(project, findModel);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getLongDescriptiveName() {
       UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(false, myFindModel);
@@ -192,11 +192,11 @@ public class ReplaceInProjectManager {
     }
   }
 
-  public void searchAndShowUsages(@NotNull UsageViewManager manager,
-                                  @NotNull Factory<UsageSearcher> usageSearcherFactory,
-                                  @NotNull final FindModel findModelCopy,
-                                  @NotNull UsageViewPresentation presentation,
-                                  @NotNull FindUsagesProcessPresentation processPresentation,
+  public void searchAndShowUsages(@Nonnull UsageViewManager manager,
+                                  @Nonnull Factory<UsageSearcher> usageSearcherFactory,
+                                  @Nonnull final FindModel findModelCopy,
+                                  @Nonnull UsageViewPresentation presentation,
+                                  @Nonnull FindUsagesProcessPresentation processPresentation,
                                   final FindManager findManager) {
     presentation.setMergeDupLinesAvailable(false);
     final ReplaceContext[] context = new ReplaceContext[1];
@@ -205,7 +205,7 @@ public class ReplaceInProjectManager {
     manager.searchAndShowUsages(new UsageTarget[]{target}, usageSearcherFactory, processPresentation, presentation,
                                 new UsageViewManager.UsageViewStateListener() {
                                   @Override
-                                  public void usageViewCreated(@NotNull UsageView usageView) {
+                                  public void usageViewCreated(@Nonnull UsageView usageView) {
                                     context[0] = new ReplaceContext(usageView, findModelCopy);
                                     addReplaceActions(context[0]);
                                   }
@@ -368,7 +368,7 @@ public class ReplaceInProjectManager {
     replaceContext.getUsageView().addButtonToLowerPane(replaceSelectedRunnable, FindBundle.message("find.replace.selected.action"));
   }
 
-  private boolean replaceUsages(@NotNull ReplaceContext replaceContext, @NotNull Collection<Usage> usages) {
+  private boolean replaceUsages(@Nonnull ReplaceContext replaceContext, @Nonnull Collection<Usage> usages) {
     if (!ensureUsagesWritable(replaceContext, usages)) {
       return true;
     }
@@ -403,7 +403,7 @@ public class ReplaceInProjectManager {
     }
   }
 
-  public boolean replaceUsage(@NotNull final Usage usage, @NotNull final FindModel findModel, @NotNull final Set<Usage> excludedSet, final boolean justCheck)
+  public boolean replaceUsage(@Nonnull final Usage usage, @Nonnull final FindModel findModel, @Nonnull final Set<Usage> excludedSet, final boolean justCheck)
           throws FindManager.MalformedReplacementStringException {
     final Ref<FindManager.MalformedReplacementStringException> exceptionResult = Ref.create();
     final boolean result = ApplicationManager.getApplication().runWriteAction(new Computable<Boolean>() {
@@ -465,7 +465,7 @@ public class ReplaceInProjectManager {
     return true;
   }
 
-  private void replaceUsagesUnderCommand(@NotNull final ReplaceContext replaceContext, @Nullable final Set<Usage> usagesSet) {
+  private void replaceUsagesUnderCommand(@Nonnull final ReplaceContext replaceContext, @Nullable final Set<Usage> usagesSet) {
     if (usagesSet == null) {
       return;
     }
@@ -537,7 +537,7 @@ public class ReplaceInProjectManager {
     private final FindModel myFindModelCopy;
     private final FindUsagesProcessPresentation myProcessPresentation;
 
-    private UsageSearcherFactory(@NotNull FindModel findModelCopy, @NotNull FindUsagesProcessPresentation processPresentation) {
+    private UsageSearcherFactory(@Nonnull FindModel findModelCopy, @Nonnull FindUsagesProcessPresentation processPresentation) {
       myFindModelCopy = findModelCopy;
       myProcessPresentation = processPresentation;
     }
@@ -547,7 +547,7 @@ public class ReplaceInProjectManager {
       return new UsageSearcher() {
 
         @Override
-        public void generate(@NotNull final Processor<Usage> processor) {
+        public void generate(@Nonnull final Processor<Usage> processor) {
           try {
             myIsFindInProgress = true;
 

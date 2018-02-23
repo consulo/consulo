@@ -26,7 +26,7 @@ import consulo.ui.internal.image.WGwtImageImpl;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 
@@ -41,7 +41,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  CheckBox _Components_checkBox(@NotNull String text, boolean selected) {
+  CheckBox _Components_checkBox(@Nonnull String text, boolean selected) {
     return new WGwtCheckBoxImpl(selected, text);
   }
 
@@ -164,7 +164,7 @@ public class WebUIInternalImpl extends UIInternal {
 
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
         return this;
@@ -177,13 +177,13 @@ public class WebUIInternalImpl extends UIInternal {
     return new WGwtMenuBarImpl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
     return WGwtStyleManagerImpl.ourInstance;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Window _Windows_modalWindow(String title) {
     VaadinWindowImpl window = new VaadinWindowImpl(true);
@@ -197,7 +197,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   UIAccess _UIAccess_get() {
     UI ui = UI.getCurrent();

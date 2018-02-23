@@ -19,8 +19,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -28,12 +28,12 @@ import java.util.Collection;
  * @author nik
  */
 public interface Artifact extends UserDataHolder, Named {
-  @NotNull
+  @Nonnull
   ArtifactType getArtifactType();
 
   boolean isBuildOnMake();
 
-  @NotNull
+  @Nonnull
   CompositePackagingElement<?> getRootElement();
 
   @Nullable
@@ -41,7 +41,7 @@ public interface Artifact extends UserDataHolder, Named {
 
   Collection<? extends ArtifactPropertiesProvider> getPropertiesProviders();
 
-  ArtifactProperties<?> getProperties(@NotNull ArtifactPropertiesProvider propertiesProvider);
+  ArtifactProperties<?> getProperties(@Nonnull ArtifactPropertiesProvider propertiesProvider);
 
   @Nullable
   VirtualFile getOutputFile();

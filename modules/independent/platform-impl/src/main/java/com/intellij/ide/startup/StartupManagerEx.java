@@ -17,7 +17,7 @@ package com.intellij.ide.startup;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
@@ -29,7 +29,7 @@ public abstract class StartupManagerEx extends StartupManager {
   public abstract boolean postStartupActivityPassed();
 
   @Override
-  public abstract void registerPreStartupActivity(@NotNull Runnable runnable); // should be used only to register to FileSystemSynchronizer!
+  public abstract void registerPreStartupActivity(@Nonnull Runnable runnable); // should be used only to register to FileSystemSynchronizer!
 
   public static StartupManagerEx getInstanceEx(Project project) {
     return (StartupManagerEx)getInstance(project);

@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public abstract class LibraryEditorBase implements LibraryEditor {
 
   public abstract void setProperties(LibraryProperties properties);
 
-  public abstract void setType(@NotNull LibraryType<?> type);
+  public abstract void setType(@Nonnull LibraryType<?> type);
 
   @Override
   public void addRoots(Collection<? extends OrderRoot> roots) {

@@ -15,13 +15,13 @@
  */
 package com.intellij.ui.breadcrumbs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
  */
 public interface BreadcrumbsItemListener<T extends BreadcrumbsItem> {
-  void itemSelected(@NotNull final T item, final int modifiers);
+  void itemSelected(@Nonnull final T item, final int modifiers);
   void itemHovered(@Nullable final T item);
 }

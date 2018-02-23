@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,10 +41,10 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
   }
 
   @Override
-  public boolean createReferences(@NotNull final PsiElement psiElement,
+  public boolean createReferences(@Nonnull final PsiElement psiElement,
                                   final int offset,
                                   final String text,
-                                  final @NotNull List<PsiReference> references,
+                                  final @Nonnull List<PsiReference> references,
                                   final boolean soft) {
 
     FileReferenceSet set = new FileReferenceSet(text, psiElement, offset, null, true, myEndingSlashNotAllowed, mySuitableFileTypes) {
@@ -67,7 +67,7 @@ public class StaticPathReferenceProvider extends PathReferenceProviderBase {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@NotNull final String path, @NotNull final PsiElement element) {
+  public PathReference getPathReference(@Nonnull final String path, @Nonnull final PsiElement element) {
     final List<PsiReference> list = new SmartList<PsiReference>();
     createReferences(element, list, true);
     if (list.isEmpty()) return null;

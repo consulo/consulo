@@ -21,10 +21,10 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PlainSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
     return new PlainSyntaxHighlighter();
   }

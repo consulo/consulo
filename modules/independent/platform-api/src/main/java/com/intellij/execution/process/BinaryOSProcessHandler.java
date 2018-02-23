@@ -20,8 +20,8 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BinaryOutputReader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -30,20 +30,20 @@ import java.util.concurrent.Future;
 public class BinaryOSProcessHandler extends OSProcessHandler {
   private final BufferExposingByteArrayOutputStream myOutput = new BufferExposingByteArrayOutputStream();
 
-  public BinaryOSProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  public BinaryOSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
   }
 
-  public BinaryOSProcessHandler(@NotNull Process process, @NotNull String commandLine, @Nullable Charset charset) {
+  public BinaryOSProcessHandler(@Nonnull Process process, @Nonnull String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
   }
 
-  @NotNull
+  @Nonnull
   public byte[] getOutput() {
     return myOutput.toByteArray();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected BaseDataReader createOutputDataReader() {
     return new SimpleBinaryReader(myProcess.getInputStream(), readerOptions().policy());
@@ -56,13 +56,13 @@ public class BinaryOSProcessHandler extends OSProcessHandler {
     }
 
     @Override
-    protected void onBinaryAvailable(@NotNull byte[] data, int size) {
+    protected void onBinaryAvailable(@Nonnull byte[] data, int size) {
       myOutput.write(data, 0, size);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
+    protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
       return BinaryOSProcessHandler.this.executeOnPooledThread(runnable);
     }
   }

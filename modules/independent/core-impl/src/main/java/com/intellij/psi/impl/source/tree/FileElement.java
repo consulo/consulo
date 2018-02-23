@@ -26,7 +26,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.CharTable;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FileElement extends LazyParseableElement implements FileASTNode, Getter<FileElement> {
   public static final FileElement[] EMPTY_ARRAY = new FileElement[0];
@@ -45,12 +45,12 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharTable getCharTable() {
     return myCharTable;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LighterAST getLighterAST() {
     IElementType contentType = getElementType();
@@ -60,7 +60,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return new TreeBackedLighterAST(this);
   }
 
-  public FileElement(@NotNull IElementType type, CharSequence text) {
+  public FileElement(@Nonnull IElementType type, CharSequence text) {
     super(type, text);
   }
 
@@ -83,7 +83,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Ge
     return psiElementCopy.getTreeElement();
   }
 
-  public void setCharTable(@NotNull CharTable table) {
+  public void setCharTable(@Nonnull CharTable table) {
     myCharTable = table;
   }
 

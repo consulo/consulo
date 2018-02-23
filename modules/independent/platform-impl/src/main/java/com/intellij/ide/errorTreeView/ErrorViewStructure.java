@@ -30,8 +30,8 @@ import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.MutableErrorTreeView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -145,7 +145,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return new ErrorTreeNodeDescriptor(myProject, parentDescriptor, (ErrorTreeElement)element);
   }
@@ -159,8 +159,8 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     return false;
   }
 
-  public void addMessage(@NotNull ErrorTreeElementKind kind,
-                         @NotNull String[] text,
+  public void addMessage(@Nonnull ErrorTreeElementKind kind,
+                         @Nonnull String[] text,
                          @Nullable VirtualFile underFileGroup,
                          @Nullable VirtualFile file,
                          int line,
@@ -227,13 +227,13 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
   }
 
-  public void addMessage(@NotNull ErrorTreeElementKind kind, String[] text, Object data) {
+  public void addMessage(@Nonnull ErrorTreeElementKind kind, String[] text, Object data) {
     addSimpleMessage(kind, text, data);
   }
 
   public void addNavigatableMessage(@Nullable String groupName,
                                     Navigatable navigatable,
-                                    @NotNull ErrorTreeElementKind kind,
+                                    @Nonnull ErrorTreeElementKind kind,
                                     final String[] message,
                                     final Object data,
                                     String exportText,
@@ -254,7 +254,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
   }
 
-  public void addNavigatableMessage(@NotNull String groupName, @NotNull NavigatableMessageElement navigatableMessageElement) {
+  public void addNavigatableMessage(@Nonnull String groupName, @Nonnull NavigatableMessageElement navigatableMessageElement) {
     synchronized (myLock) {
       List<NavigatableMessageElement> elements = myGroupNameToMessagesMap.get(groupName);
       if (elements == null) {
@@ -269,7 +269,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     }
   }
 
-  private void addSimpleMessage(@NotNull ErrorTreeElementKind kind, final String[] text, final Object data) {
+  private void addSimpleMessage(@Nonnull ErrorTreeElementKind kind, final String[] text, final Object data) {
     addSimpleMessageElement(new SimpleMessageElement(kind, text, data));
   }
 
@@ -321,7 +321,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
   }
 
   @Nullable
-  public ErrorTreeElement getFirstMessage(@NotNull ErrorTreeElementKind kind) {
+  public ErrorTreeElement getFirstMessage(@Nonnull ErrorTreeElementKind kind) {
     if (!canShowKind(kind)) {
       return null; // no warnings are available
     }
@@ -344,7 +344,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     return null;
   }
 
-  private boolean canShowKind(@NotNull ErrorTreeElementKind kind) {
+  private boolean canShowKind(@Nonnull ErrorTreeElementKind kind) {
     if (myConfiguration == null) {
       return true;
     }
@@ -429,10 +429,10 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     private final CustomizeColoredTreeCellRenderer myCustomizeColoredTreeCellRenderer;
 
     private MyNavigatableWithDataElement(final Project project,
-                                         @NotNull ErrorTreeElementKind kind,
+                                         @Nonnull ErrorTreeElementKind kind,
                                          GroupingElement parent,
                                          String[] message,
-                                         @NotNull final VirtualFile vf,
+                                         @Nonnull final VirtualFile vf,
                                          String exportText,
                                          String rendererTextPrefix) {
       super(kind, parent, message, new OpenFileDescriptor(project, vf, -1, -1), exportText, rendererTextPrefix);

@@ -18,14 +18,15 @@ package com.intellij.openapi.editor.colors;
 import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
 public interface FontPreferences {
-  @NonNls @NotNull String DEFAULT_FONT_NAME = getDefaultFontName();
+  @NonNls @Nonnull
+  String DEFAULT_FONT_NAME = getDefaultFontName();
   int DEFAULT_FONT_SIZE = FontSize.SMALL.getSize();
 
   float DEFAULT_LINE_SPACING = 1.0f;
@@ -33,22 +34,22 @@ public interface FontPreferences {
   String LINUX_DEFAULT_FONT_FAMILY    = "DejaVu Sans Mono";
   String WINDOWS_DEFAULT_FONT_FAMILY  = "Monospaced";
 
-  @NotNull
+  @Nonnull
   List<String> getEffectiveFontFamilies();
 
-  @NotNull
+  @Nonnull
   List<String> getRealFontFamilies();
 
-  @NotNull
+  @Nonnull
   String getFontFamily();
 
-  int getSize(@NotNull String fontFamily);
+  int getSize(@Nonnull String fontFamily);
 
-  void copyTo(@NotNull FontPreferences preferences);
+  void copyTo(@Nonnull FontPreferences preferences);
 
   boolean useLigatures();
 
-  boolean hasSize(@NotNull String fontName);
+  boolean hasSize(@Nonnull String fontName);
 
   float getLineSpacing();
 
@@ -68,7 +69,7 @@ public interface FontPreferences {
    *                        <code>null</code> if font family with the given name is registered at the current environment
    */
   @Nullable
-  static String getFallbackName(@NotNull String fontName, int fontSize, @Nullable EditorColorsScheme fallbackScheme) {
+  static String getFallbackName(@Nonnull String fontName, int fontSize, @javax.annotation.Nullable EditorColorsScheme fallbackScheme) {
     Font plainFont = new Font(fontName, Font.PLAIN, fontSize);
     if (plainFont.getFamily().equals("Dialog") && !("Dialog".equals(fontName) || fontName.startsWith("Dialog."))) {
       return fallbackScheme == null ? DEFAULT_FONT_NAME : fallbackScheme.getEditorFontName();

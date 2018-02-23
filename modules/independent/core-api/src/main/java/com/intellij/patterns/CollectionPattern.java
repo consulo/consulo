@@ -16,8 +16,8 @@
 package com.intellij.patterns;
 
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> all(final ElementPattern<? extends T> pattern) {
     return with(new PatternCondition<Collection<T>>("all") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         for (final T t : collection) {
           if (!pattern.getCondition().accepts(t, context)) return false;
         }
@@ -50,7 +50,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> atLeastOne(final ElementPattern<? extends T> pattern) {
     return with(new PatternCondition<Collection<T>>("atLeastOne") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         for (final T t : collection) {
           if (pattern.getCondition().accepts(t, context)) return true;
         }
@@ -61,7 +61,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> filter(final ElementPattern<? extends T> elementPattern, final ElementPattern<Collection<T>> continuationPattern) {
     return with(new PatternCondition<Collection<T>>("filter") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         List<T> filtered = new ArrayList<T>();
         for (final T t : collection) {
           if (elementPattern.getCondition().accepts(t, context)) {
@@ -75,7 +75,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> first(final ElementPattern<? extends T> elementPattern) {
     return with(new PatternCondition<Collection<T>>("first") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         return !collection.isEmpty() &&
                elementPattern.getCondition().accepts(collection.iterator().next(), context);
       }
@@ -92,7 +92,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> atLeast(final int size) {
     return with(new PatternCondition<Collection<T>>("atLeast") {
-      public boolean accepts(@NotNull final Collection<T> ts, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> ts, final ProcessingContext context) {
         return ts.size() >= size;
       }
     });
@@ -100,7 +100,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> size(final int size) {
     return with(new PatternCondition<Collection<T>>("size") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         return size == collection.size();
       }
     });
@@ -108,7 +108,7 @@ public class CollectionPattern<T> extends ObjectPattern<Collection<T>, Collectio
 
   public CollectionPattern<T> last(final ElementPattern elementPattern) {
     return with(new PatternCondition<Collection<T>>("last") {
-      public boolean accepts(@NotNull final Collection<T> collection, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Collection<T> collection, final ProcessingContext context) {
         if (collection.isEmpty()) {
           return false;
         }

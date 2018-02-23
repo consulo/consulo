@@ -26,8 +26,8 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.treeStructure.SimpleNode;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

@@ -21,7 +21,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -39,7 +39,7 @@ class HighlightersRecycler {
     }
   };
 
-  void recycleHighlighter(@NotNull RangeHighlighter highlighter) {
+  void recycleHighlighter(@Nonnull RangeHighlighter highlighter) {
     if (highlighter.isValid()) {
       incinerator.putValue(ProperTextRange.create(highlighter), highlighter);
     }
@@ -57,7 +57,7 @@ class HighlightersRecycler {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   Collection<? extends RangeHighlighter> forAllInGarbageBin() {
     return incinerator.values();
   }

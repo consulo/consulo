@@ -15,7 +15,7 @@
  */
 package com.intellij.util.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 import java.util.Map;
@@ -27,11 +27,11 @@ import java.util.concurrent.ConcurrentHashMap;
 class CachePoolImpl implements UrlClassLoader.CachePool {
   private final Map<URL, ClasspathCache.LoaderData> myLoaderIndexCache = new ConcurrentHashMap<URL, ClasspathCache.LoaderData>();
 
-  void cacheData(@NotNull URL url, @NotNull ClasspathCache.LoaderData data) {
+  void cacheData(@Nonnull URL url, @Nonnull ClasspathCache.LoaderData data) {
     myLoaderIndexCache.put(url, data);
   }
 
-  ClasspathCache.LoaderData getCachedData(@NotNull URL url) {
+  ClasspathCache.LoaderData getCachedData(@Nonnull URL url) {
     return myLoaderIndexCache.get(url);
   }
 

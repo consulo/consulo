@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.resolve.reference;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceService;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -36,15 +36,15 @@ public interface ProviderBinding<T> {
     public final Context processingContext;
     public final double priority;
 
-    public ProviderInfo(@NotNull T provider, @NotNull Context processingContext, double priority) {
+    public ProviderInfo(@Nonnull T provider, @Nonnull Context processingContext, double priority) {
       this.provider = provider;
       this.processingContext = processingContext;
       this.priority = priority;
     }
   }
-  void addAcceptableReferenceProviders(@NotNull PsiElement position,
-                                       @NotNull List<ProviderInfo<T, ProcessingContext>> list,
-                                       @NotNull PsiReferenceService.Hints hints);
+  void addAcceptableReferenceProviders(@Nonnull PsiElement position,
+                                       @Nonnull List<ProviderInfo<T, ProcessingContext>> list,
+                                       @Nonnull PsiReferenceService.Hints hints);
 
-  void unregisterProvider(@NotNull T provider);
+  void unregisterProvider(@Nonnull T provider);
 }

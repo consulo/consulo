@@ -18,9 +18,9 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 5:33 PM
  */
 public class FavoritesTreeUtil {
-  @NotNull
+  @Nonnull
   public static FavoritesTreeNodeDescriptor[] getSelectedNodeDescriptors(final DnDAwareTree tree) {
     TreePath[] path = tree.getSelectionPaths();
     if (path == null) {
@@ -121,7 +121,7 @@ public class FavoritesTreeUtil {
     return null;
   }
 
-  static FavoritesListProvider getProvider(@NotNull FavoritesManager manager, @NotNull FavoritesTreeNodeDescriptor descriptor) {
+  static FavoritesListProvider getProvider(@Nonnull FavoritesManager manager, @Nonnull FavoritesTreeNodeDescriptor descriptor) {
     AbstractTreeNode treeNode = descriptor.getElement();
     while (treeNode != null && (!(treeNode instanceof FavoritesListNode))) {
       treeNode = treeNode.getParent();

@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.SLRUMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public abstract class FileAccessorCache<K, T> implements com.intellij.util.conta
   protected abstract T createAccessor(K key) throws IOException;
   protected abstract void disposeAccessor(T fileAccessor) throws IOException;
 
-  @NotNull
+  @Nonnull
   public final Handle<T> get(K key) {
     Handle<T> cached = getIfCached(key);
     if (cached != null) return cached;
@@ -58,7 +58,7 @@ public abstract class FileAccessorCache<K, T> implements com.intellij.util.conta
   //private static final AtomicInteger myCreateRequests = new AtomicInteger();
   //private static final AtomicInteger myCloseRequests = new AtomicInteger();
   //private static final AtomicLong myCloseTime = new AtomicLong();
-  @NotNull
+  @Nonnull
   private Handle<T> createHandle(K key) {
     Handle<T> cached;
     try {

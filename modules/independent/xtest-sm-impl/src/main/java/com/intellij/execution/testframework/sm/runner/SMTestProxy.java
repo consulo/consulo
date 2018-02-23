@@ -39,8 +39,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,15 +84,15 @@ public class SMTestProxy extends AbstractTestProxy {
   //false:: printables appear as soon as they are discovered in the output; true :: predefined test structure
   private boolean myTreeBuildBeforeStart = false;
 
-  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl) {
+  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl) {
     this(testName, isSuite, locationUrl, false);
   }
 
-  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl, boolean preservePresentableName) {
+  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl, boolean preservePresentableName) {
     this(testName, isSuite, locationUrl, null, preservePresentableName);
   }
 
-  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl, @Nullable String metainfo, boolean preservePresentableName) {
+  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl, @javax.annotation.Nullable String metainfo, boolean preservePresentableName) {
     myName = testName;
     myIsSuite = isSuite;
     myLocationUrl = locationUrl;
@@ -104,7 +104,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myPreservePresentableName;
   }
 
-  public void setLocator(@NotNull SMTestLocator testLocator) {
+  public void setLocator(@Nonnull SMTestLocator testLocator) {
     myLocator = testLocator;
   }
 
@@ -112,7 +112,7 @@ public class SMTestProxy extends AbstractTestProxy {
     myConfig = config;
   }
 
-  public void setPreferredPrinter(@NotNull Printer preferredPrinter) {
+  public void setPreferredPrinter(@Nonnull Printer preferredPrinter) {
     myPreferredPrinter = preferredPrinter;
   }
 
@@ -149,7 +149,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.isFinal();
   }
 
-  private void setStacktraceIfNotSet(@Nullable String stacktrace) {
+  private void setStacktraceIfNotSet(@javax.annotation.Nullable String stacktrace) {
     if (myStacktrace == null) myStacktrace = stacktrace;
   }
 
@@ -199,7 +199,7 @@ public class SMTestProxy extends AbstractTestProxy {
            myState.getMagnitude() == TestStateInfo.Magnitude.PASSED_INDEX;
   }
 
-  public void addChild(@NotNull SMTestProxy child) {
+  public void addChild(@Nonnull SMTestProxy child) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     if (myChildren == null) {
@@ -228,7 +228,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Printer getRightPrinter(@Nullable Printer printer) {
     if (myPreferredPrinter != null && printer != null) {
       return myPreferredPrinter;
@@ -250,12 +250,12 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   @Nullable
-  public Location getLocation(@NotNull Project project, @NotNull GlobalSearchScope searchScope) {
+  public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
     //determines location of test proxy
     return getLocation(project, searchScope, myLocationUrl);
   }
 
-  protected Location getLocation(@NotNull Project project, @NotNull GlobalSearchScope searchScope, String locationUrl) {
+  protected Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope, String locationUrl) {
     if (locationUrl != null && myLocator != null) {
       String protocolId = VirtualFileManager.extractProtocol(locationUrl);
       if (protocolId != null) {
@@ -272,8 +272,8 @@ public class SMTestProxy extends AbstractTestProxy {
     return null;
   }
 
-  @Nullable
-  public Navigatable getDescriptor(@Nullable Location location, @NotNull TestConsoleProperties properties) {
+  @javax.annotation.Nullable
+  public Navigatable getDescriptor(@javax.annotation.Nullable Location location, @Nonnull TestConsoleProperties properties) {
     // by location gets navigatable element.
     // It can be file or place in file (e.g. when OPEN_FAILURE_LINE is enabled)
     if (location == null) return null;
@@ -331,7 +331,7 @@ public class SMTestProxy extends AbstractTestProxy {
    *
    * @return null if duration is unknown, otherwise duration value in milliseconds;
    */
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Long getDuration() {
     // Returns duration value for tests
@@ -351,7 +351,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myDuration;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getDurationString(TestConsoleProperties consoleProperties) {
     switch (getMagnitudeInfo()) {
@@ -425,7 +425,7 @@ public class SMTestProxy extends AbstractTestProxy {
     fireOnNewPrintable(myState);
   }
 
-  public void setTestFailed(@NotNull String localizedMessage, @Nullable String stackTrace, boolean testError) {
+  public void setTestFailed(@Nonnull String localizedMessage, @Nullable String stackTrace, boolean testError) {
     setStacktraceIfNotSet(stackTrace);
     TestFailedState failedState = new TestFailedState(localizedMessage, stackTrace);
     if (myState instanceof TestComparisionFailedState) {
@@ -448,28 +448,28 @@ public class SMTestProxy extends AbstractTestProxy {
     }
   }
 
-  public void setTestComparisonFailed(@NotNull final String localizedMessage,
-                                      @Nullable final String stackTrace,
-                                      @NotNull final String actualText,
-                                      @NotNull final String expectedText) {
+  public void setTestComparisonFailed(@Nonnull final String localizedMessage,
+                                      @javax.annotation.Nullable final String stackTrace,
+                                      @Nonnull final String actualText,
+                                      @Nonnull final String expectedText) {
     setTestComparisonFailed(localizedMessage, stackTrace, actualText, expectedText, null, null);
   }
 
-  public void setTestComparisonFailed(@NotNull final String localizedMessage,
-                                      @Nullable final String stackTrace,
-                                      @NotNull final String actualText,
-                                      @NotNull final String expectedText,
-                                      @NotNull final TestFailedEvent event) {
+  public void setTestComparisonFailed(@Nonnull final String localizedMessage,
+                                      @javax.annotation.Nullable final String stackTrace,
+                                      @Nonnull final String actualText,
+                                      @Nonnull final String expectedText,
+                                      @Nonnull final TestFailedEvent event) {
     TestComparisionFailedState comparisionFailedState =
             setTestComparisonFailed(localizedMessage, stackTrace, actualText, expectedText, event.getExpectedFilePath(), event.getActualFilePath());
     comparisionFailedState.setToDeleteExpectedFile(event.isExpectedFileTemp());
     comparisionFailedState.setToDeleteActualFile(event.isActualFileTemp());
   }
 
-  public TestComparisionFailedState setTestComparisonFailed(@NotNull final String localizedMessage,
-                                                            @Nullable final String stackTrace,
-                                                            @NotNull final String actualText,
-                                                            @NotNull final String expectedText,
+  public TestComparisionFailedState setTestComparisonFailed(@Nonnull final String localizedMessage,
+                                                            @javax.annotation.Nullable final String stackTrace,
+                                                            @Nonnull final String actualText,
+                                                            @Nonnull final String expectedText,
                                                             @Nullable final String expectedFilePath,
                                                             @Nullable final String actualFilePath) {
     setStacktraceIfNotSet(stackTrace);
@@ -499,13 +499,13 @@ public class SMTestProxy extends AbstractTestProxy {
     super.dispose();
   }
 
-  public void setTestIgnored(@Nullable String ignoreComment, @Nullable String stackTrace) {
+  public void setTestIgnored(@javax.annotation.Nullable String ignoreComment, @javax.annotation.Nullable String stackTrace) {
     setStacktraceIfNotSet(stackTrace);
     myState = new TestIgnoredState(ignoreComment, stackTrace);
     fireOnNewPrintable(myState);
   }
 
-  public void setParent(@Nullable final SMTestProxy parent) {
+  public void setParent(@javax.annotation.Nullable final SMTestProxy parent) {
     myParent = parent;
   }
 
@@ -527,7 +527,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return result;
   }
 
-  public List<? extends SMTestProxy> getChildren(@Nullable Filter<? super SMTestProxy> filter) {
+  public List<? extends SMTestProxy> getChildren(@javax.annotation.Nullable Filter<? super SMTestProxy> filter) {
     return filterChildren(filter, getChildren());
   }
 
@@ -614,9 +614,9 @@ public class SMTestProxy extends AbstractTestProxy {
     addOutput(output, ProcessOutputTypes.STDERR);
   }
 
-  public void addOutput(@NotNull String output, @NotNull Key outputType) {
+  public void addOutput(@Nonnull String output, @Nonnull Key outputType) {
     addAfterLastPassed(new Printable() {
-      public void printOn(@NotNull Printer printer) {
+      public void printOn(@Nonnull Printer printer) {
         printer.print(output, ConsoleViewContentType.getConsoleViewType(outputType));
       }
     });
@@ -652,7 +652,7 @@ public class SMTestProxy extends AbstractTestProxy {
     addOutput(output, ProcessOutputTypes.SYSTEM);
   }
 
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     if (myPresentableName == null) {
       if (myPreservePresentableName) {
@@ -665,7 +665,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public DiffHyperlink getDiffViewerProvider() {
     if (myState instanceof TestComparisionFailedState) {
       return ((TestComparisionFailedState)myState).getHyperlink();
@@ -687,7 +687,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DiffHyperlink> getDiffViewerProviders() {
     if (myState instanceof CompoundTestFailedState) {
@@ -720,12 +720,12 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.wasTerminated();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getLocationUrl() {
     return myLocationUrl;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getMetainfo() {
     return myMetainfo;
   }
@@ -828,7 +828,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
 
-  @Nullable
+  @javax.annotation.Nullable
   private Long calcSuiteDuration() {
     long partialDuration = 0;
     boolean durationOfChildrenIsUnknown = true;
@@ -940,9 +940,9 @@ public class SMTestProxy extends AbstractTestProxy {
       myHandler = handler;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    public Location getLocation(@NotNull Project project, @NotNull GlobalSearchScope searchScope) {
+    public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
       return myRootLocationUrl != null ? super.getLocation(project, searchScope, myRootLocationUrl)
                                        : super.getLocation(project, searchScope);
     }
@@ -970,7 +970,7 @@ public class SMTestProxy extends AbstractTestProxy {
       myShouldPrintOwnContentOnly = shouldPrintOwnContentOnly;
     }
 
-    public void printOn(@NotNull Printer printer) {
+    public void printOn(@Nonnull Printer printer) {
       if (myShouldPrintOwnContentOnly) {
         printOwnPrintablesOn(printer, false);
       }

@@ -17,17 +17,12 @@ package com.intellij.psi.codeStyle.arrangement.engine;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Comparator;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -36,10 +31,12 @@ import java.util.List;
  */
 public class RestoreFoldArrangementCallback implements ArrangementCallback {
 
-  @NotNull private final  Editor           myEditor;
-  @Nullable private final CodeFoldingState myCodeFoldingState;
+  @Nonnull
+  private final  Editor           myEditor;
+  @Nullable
+  private final CodeFoldingState myCodeFoldingState;
 
-  public RestoreFoldArrangementCallback(@NotNull Editor editor) {
+  public RestoreFoldArrangementCallback(@Nonnull Editor editor) {
     myEditor = editor;
 
     Project project = editor.getProject();
@@ -53,7 +50,7 @@ public class RestoreFoldArrangementCallback implements ArrangementCallback {
   }
 
   @Override
-  public void afterArrangement(@NotNull final List<ArrangementMoveInfo> moveInfos) {
+  public void afterArrangement(@Nonnull final List<ArrangementMoveInfo> moveInfos) {
     // Restore state for the PSI elements not affected by arrangement.
     Project project = myEditor.getProject();
     if (myCodeFoldingState != null && project != null) {

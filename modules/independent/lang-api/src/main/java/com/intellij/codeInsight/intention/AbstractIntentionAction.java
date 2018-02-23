@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.intention;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
@@ -27,13 +27,13 @@ import com.intellij.psi.PsiFile;
 public abstract class AbstractIntentionAction implements IntentionAction {
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return getText();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }
 

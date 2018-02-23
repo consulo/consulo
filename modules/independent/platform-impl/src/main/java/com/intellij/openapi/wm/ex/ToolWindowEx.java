@@ -22,8 +22,8 @@ import com.intellij.openapi.wm.ToolWindowType;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.beans.PropertyChangeListener;
 
 public interface ToolWindowEx extends ToolWindow {

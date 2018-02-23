@@ -27,8 +27,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -82,7 +82,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
-  public void executeProcessUnderProgress(@NotNull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
+  public void executeProcessUnderProgress(@Nonnull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
     if (progress instanceof ProgressWindow) myCurrentUnsafeProgressCount.incrementAndGet();
 
     CheckCanceledHook hook = progress instanceof PingProgress && ApplicationManager.getApplication().isDispatchThread()
@@ -100,7 +100,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @TestOnly
-  public static void runWithAlwaysCheckingCanceled(@NotNull Runnable runnable) {
+  public static void runWithAlwaysCheckingCanceled(@Nonnull Runnable runnable) {
     Thread fake = new Thread("fake");
     try {
       threadsUnderCanceledIndicator.add(fake);
@@ -112,7 +112,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Task task, @Nullable final JComponent parentComponent) {
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Task task, @Nullable final JComponent parentComponent) {
     final long start = System.currentTimeMillis();
     final boolean result = super.runProcessWithProgressSynchronously(task, parentComponent);
     if (result) {
@@ -129,13 +129,13 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     return result;
   }
 
-  private static void systemNotify(@NotNull Task.NotificationInfo info) {
+  private static void systemNotify(@Nonnull Task.NotificationInfo info) {
     SystemNotifications.getInstance().notify(info.getNotificationName(), info.getNotificationTitle(), info.getNotificationText());
   }
 
   @Override
-  @NotNull
-  public Future<?> runProcessWithProgressAsynchronously(@NotNull Task.Backgroundable task) {
+  @Nonnull
+  public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task) {
     ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() ?
                                           new EmptyProgressIndicator() :
                                           new BackgroundableProcessIndicator(task);
@@ -143,11 +143,11 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
-  @NotNull
-  public Future<?> runProcessWithProgressAsynchronously(@NotNull final Task.Backgroundable task,
-                                                        @NotNull final ProgressIndicator progressIndicator,
+  @Nonnull
+  public Future<?> runProcessWithProgressAsynchronously(@Nonnull final Task.Backgroundable task,
+                                                        @Nonnull final ProgressIndicator progressIndicator,
                                                         @Nullable final Runnable continuation,
-                                                        @NotNull final ModalityState modalityState) {
+                                                        @Nonnull final ModalityState modalityState) {
     if (progressIndicator instanceof Disposable) {
       Disposer.register(ApplicationManager.getApplication(), (Disposable)progressIndicator);
     }
@@ -194,7 +194,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
-  public boolean runInReadActionWithWriteActionPriority(@NotNull Runnable action, @Nullable ProgressIndicator indicator) {
+  public boolean runInReadActionWithWriteActionPriority(@Nonnull Runnable action, @Nullable ProgressIndicator indicator) {
     return ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, indicator);
   }
 
@@ -202,13 +202,13 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
    * An absolutely guru method, very dangerous, don't use unless you're desperate,
    * because hooks will be executed on every checkCanceled and can dramatically slow down everything in the IDE.
    */
-  void addCheckCanceledHook(@NotNull CheckCanceledHook hook) {
+  void addCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
     if (myHooks.add(hook)) {
       updateShouldCheckCanceled();
     }
   }
 
-  void removeCheckCanceledHook(@NotNull CheckCanceledHook hook) {
+  void removeCheckCanceledHook(@Nonnull CheckCanceledHook hook) {
     if (myHooks.remove(hook)) {
       updateShouldCheckCanceled();
     }

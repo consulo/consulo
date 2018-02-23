@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,17 +62,17 @@ abstract class DocumentsSynchronizer {
     myProject = project;
   }
 
-  protected abstract void onCopyChanged(@NotNull DocumentEvent event, @NotNull Document original);
+  protected abstract void onCopyChanged(@Nonnull DocumentEvent event, @Nonnull Document original);
 
-  protected abstract void onOriginalChanged(@NotNull DocumentEvent event, @NotNull Document copy);
+  protected abstract void onOriginalChanged(@Nonnull DocumentEvent event, @Nonnull Document copy);
 
-  protected abstract void beforeListenersAttached(@NotNull Document original, @NotNull Document copy);
+  protected abstract void beforeListenersAttached(@Nonnull Document original, @Nonnull Document copy);
 
   protected abstract Document createOriginal();
 
   protected abstract Document createCopy();
 
-  protected void replaceString(@NotNull final Document document, final int startOffset, final int endOffset, @NotNull final String newText) {
+  protected void replaceString(@Nonnull final Document document, final int startOffset, final int endOffset, @Nonnull final String newText) {
     LOG.assertTrue(!myDuringModification);
     try {
       myDuringModification = true;

@@ -15,8 +15,8 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
     final AtomicReference<Runnable> showResultRef = new AtomicReference<Runnable>(null);
     new Task.Modal(null, "Connecting...", true) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         final Semaphore semaphore = new Semaphore();
         semaphore.down();

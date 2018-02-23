@@ -1,11 +1,11 @@
 package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.process.ProcessHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Sergey Simonchik
  */
 public interface AttachToProcessListener {
-  void onAttachToProcess(@NotNull ProcessHandler processHandler);
+  void onAttachToProcess(@Nonnull ProcessHandler processHandler);
 }

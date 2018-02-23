@@ -26,8 +26,7 @@ import com.intellij.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.AsynchConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,16 +34,16 @@ import java.util.List;
  * @author yole
  */
 public interface CommittedChangesProvider<T extends CommittedChangeList, U extends ChangeBrowserSettings> extends VcsProviderMarker {
-  @NotNull
+  @Nonnull
   U createDefaultSettings();
   ChangesBrowserSettingsEditor<U> createFilterUI(final boolean showDateFilter);
 
-  @Nullable
+  @javax.annotation.Nullable
   RepositoryLocation getLocationFor(FilePath root);
-  @Nullable
+  @javax.annotation.Nullable
   RepositoryLocation getLocationFor(final FilePath root, final String repositoryPath);
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsCommittedListsZipper getZipper();
 
   List<T> getCommittedChanges(U settings, RepositoryLocation location, final int maxCount) throws VcsException;
@@ -53,7 +52,7 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
 
   ChangeListColumn[] getColumns();
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsCommittedViewAuxiliary createActions(final DecoratorManager manager, final RepositoryLocation location);
 
   /**
@@ -64,7 +63,7 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
   /**
    * @return required list and path of the target file in that revision (changes when move/rename)
    */
-  @Nullable
+  @javax.annotation.Nullable
   Pair<T, FilePath> getOneList(final VirtualFile file, final VcsRevisionNumber number) throws VcsException;
 
   RepositoryLocation getForNonLocal(final VirtualFile file);

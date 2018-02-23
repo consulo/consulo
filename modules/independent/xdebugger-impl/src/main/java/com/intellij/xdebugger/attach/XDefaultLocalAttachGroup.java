@@ -19,7 +19,7 @@ import com.intellij.execution.process.ProcessInfo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,26 +29,26 @@ public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
     return 0;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getGroupName() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Icon getProcessIcon(@NotNull Project project, @NotNull ProcessInfo info, @NotNull UserDataHolder dataHolder) {
+  public Icon getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
     return AllIcons.RunConfigurations.Application;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getProcessDisplayText(@NotNull Project project, @NotNull ProcessInfo info, @NotNull UserDataHolder dataHolder) {
+  public String getProcessDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
     return info.getExecutableDisplayName();
   }
 
   @Override
-  public int compare(@NotNull Project project, @NotNull ProcessInfo a, @NotNull ProcessInfo b, @NotNull UserDataHolder dataHolder) {
+  public int compare(@Nonnull Project project, @Nonnull ProcessInfo a, @Nonnull ProcessInfo b, @Nonnull UserDataHolder dataHolder) {
     return a.getPid() - b.getPid();
   }
 }

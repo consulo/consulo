@@ -21,7 +21,7 @@ import com.intellij.openapi.diff.impl.processing.DiffPolicy;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -36,22 +36,23 @@ import java.util.List;
 public class PresetBlocksDiffPolicy implements DiffPolicy {
   // fragment _start_ offsets
   private List<BeforeAfter<TextRange>> myRanges;
-  @NotNull private final DiffPolicy myDelegate;
+  @Nonnull
+  private final DiffPolicy myDelegate;
 
-  public PresetBlocksDiffPolicy(@NotNull DiffPolicy delegate) {
+  public PresetBlocksDiffPolicy(@Nonnull DiffPolicy delegate) {
     myDelegate = delegate;
   }
 
   @TestOnly
-  @NotNull
+  @Nonnull
   @Override
-  public DiffFragment[] buildFragments(@NotNull String text1, @NotNull String text2) throws FilesTooBigForDiffException {
+  public DiffFragment[] buildFragments(@Nonnull String text1, @Nonnull String text2) throws FilesTooBigForDiffException {
     return buildFragments(DiffString.create(text1), DiffString.create(text2));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DiffFragment[] buildFragments(@NotNull DiffString text1, @NotNull DiffString text2) throws FilesTooBigForDiffException {
+  public DiffFragment[] buildFragments(@Nonnull DiffString text1, @Nonnull DiffString text2) throws FilesTooBigForDiffException {
     final List<DiffFragment> fragments = new ArrayList<DiffFragment>();
     for (int i = 0; i < myRanges.size(); i++) {
       final BeforeAfter<TextRange> range = myRanges.get(i);

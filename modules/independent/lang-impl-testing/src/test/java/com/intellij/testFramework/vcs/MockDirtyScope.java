@@ -23,8 +23,8 @@ import com.intellij.openapi.vcs.changes.VcsModifiableDirtyScope;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class MockDirtyScope extends VcsModifiableDirtyScope {
   private final Set<FilePath> myDirtyDirs = new HashSet<FilePath>();
   private final Set<VirtualFile> myContentRoots = new HashSet<VirtualFile>();
 
-  public MockDirtyScope(@NotNull Project project, @NotNull AbstractVcs vcs) {
+  public MockDirtyScope(@Nonnull Project project, @Nonnull AbstractVcs vcs) {
     myProject = project;
     myVcs = vcs;
     myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
@@ -66,37 +66,37 @@ public class MockDirtyScope extends VcsModifiableDirtyScope {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getAffectedContentRoots() {
     return myContentRoots;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AbstractVcs getVcs() {
     return myVcs;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<FilePath> getDirtyFiles() {
     return myDirtyFiles;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<FilePath> getDirtyFilesNoExpand() {
     return myDirtyFiles;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<FilePath> getRecursivelyDirtyDirectories() {
     return myDirtyDirs;
   }

@@ -22,8 +22,8 @@ import com.intellij.openapi.diff.SimpleContent;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -53,7 +53,7 @@ public class ClipboardVsValueContents extends DiffRequest {
     return !SystemInfo.isMac;
   }
 
-  @NotNull
+  @Nonnull
   public DiffContent[] getContents() {
     if (myContents != null) return myContents;
     DiffContent clipboardContent = createClipboardContent();

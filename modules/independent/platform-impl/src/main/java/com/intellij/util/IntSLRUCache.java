@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.IntObjectLinkedMap;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author peter

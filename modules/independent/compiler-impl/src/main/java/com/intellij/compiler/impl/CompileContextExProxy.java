@@ -26,8 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collection;
@@ -65,18 +65,18 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<VirtualFile> getTestOutputDirectories() {
     return myDelegate.getTestOutputDirectories();
   }
 
   @Override
-  public boolean isInTestSourceContent(@NotNull final VirtualFile fileOrDir) {
+  public boolean isInTestSourceContent(@Nonnull final VirtualFile fileOrDir) {
     return myDelegate.isInTestSourceContent(fileOrDir);
   }
 
   @Override
-  public boolean isInSourceContent(@NotNull final VirtualFile fileOrDir) {
+  public boolean isInSourceContent(@Nonnull final VirtualFile fileOrDir) {
     return myDelegate.isInSourceContent(fileOrDir);
   }
 
@@ -92,7 +92,7 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public void addMessage(final CompilerMessageCategory category, final String message, @Nullable final String url,
+  public void addMessage(final CompilerMessageCategory category, final String message, @javax.annotation.Nullable final String url,
                          final int lineNum,
                          final int columnNum,
                          final Navigatable navigatable) {
@@ -171,12 +171,12 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public <T> T getUserData(@NotNull final Key<T> key) {
+  public <T> T getUserData(@Nonnull final Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull final Key<T> key, final T value) {
+  public <T> void putUserData(@Nonnull final Key<T> key, final T value) {
     myDelegate.putUserData(key, value);
   }
 
@@ -201,7 +201,7 @@ public class CompileContextExProxy implements CompileContextEx {
   }
 
   @Override
-  public void assignModule(@NotNull VirtualFile root, @NotNull Module module, boolean isTestSource, com.intellij.openapi.compiler.Compiler compiler) {
+  public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, com.intellij.openapi.compiler.Compiler compiler) {
     myDelegate.assignModule(root, module, isTestSource, compiler);
   }
 }

@@ -22,8 +22,8 @@ import com.intellij.ui.SimpleColoredRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -45,15 +45,15 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
   private final String myDefaultText;
   private final boolean myShowRootNode;
 
-  public TreeComboBox(@NotNull final TreeModel model) {
+  public TreeComboBox(@Nonnull final TreeModel model) {
     this(model, true);
   }
 
-  public TreeComboBox(@NotNull final TreeModel model, final boolean showRootNode) {
+  public TreeComboBox(@Nonnull final TreeModel model, final boolean showRootNode) {
     this(model, showRootNode, null);
   }
 
-  public TreeComboBox(@NotNull final TreeModel model, final boolean showRootNode, final String defaultText) {
+  public TreeComboBox(@Nonnull final TreeModel model, final boolean showRootNode, final String defaultText) {
     myTreeModel = model;
     myDefaultText = defaultText;
     myShowRootNode = showRootNode;
@@ -62,7 +62,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
-  public void setTreeModel(@NotNull final TreeModel model, final boolean showRootNode) {
+  public void setTreeModel(@Nonnull final TreeModel model, final boolean showRootNode) {
     myTreeModel = model;
     setModel(new TreeModelWrapper(model, showRootNode));
   }
@@ -89,7 +89,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     private final boolean myShowRootNode;
     private final String myDefaultText;
 
-    private TreeListCellRenderer(@NotNull final JComboBox comboBox, final boolean showRootNode, @Nullable final String defaultText) {
+    private TreeListCellRenderer(@Nonnull final JComboBox comboBox, final boolean showRootNode, @Nullable final String defaultText) {
       myComboBox = comboBox;
       myShowRootNode = showRootNode;
       myDefaultText = defaultText;
@@ -200,7 +200,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     private final boolean myShowRootNode;
     private final List<TreeNode> myTreeModelAsList = new ArrayList<TreeNode>();
 
-    private TreeModelWrapper(@NotNull final TreeModel treeModel, final boolean showRootNode) {
+    private TreeModelWrapper(@Nonnull final TreeModel treeModel, final boolean showRootNode) {
       myTreeModel = treeModel;
       myShowRootNode = showRootNode;
       accumulateChildren((TreeNode) treeModel.getRoot(), myTreeModelAsList, showRootNode);
@@ -218,7 +218,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       }
     }
 
-    private static void accumulateChildren(@NotNull final TreeNode node, @NotNull final List<TreeNode> list, final boolean showRoot) {
+    private static void accumulateChildren(@Nonnull final TreeNode node, @Nonnull final List<TreeNode> list, final boolean showRoot) {
       if (showRoot || node.getParent() != null) list.add(node);
 
       final int count = node.getChildCount();
@@ -272,7 +272,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     private final Object myNode;
     private int myIndex = -1;
 
-    public ChildrenEnumeration(@NotNull final TreeModel treeModel, @NotNull final Object node) {
+    public ChildrenEnumeration(@Nonnull final TreeModel treeModel, @Nonnull final Object node) {
       myTreeModel = treeModel;
       myNode = node;
     }
@@ -292,7 +292,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     private final TreeModel myTreeModel;
     private final Stack<Enumeration> myStack;
 
-    public PreorderEnumeration(@NotNull final TreeModel treeModel) {
+    public PreorderEnumeration(@Nonnull final TreeModel treeModel) {
       myTreeModel = treeModel;
       myStack = new Stack<Enumeration>();
       myStack.push(Collections.enumeration(Collections.singleton(treeModel.getRoot())));

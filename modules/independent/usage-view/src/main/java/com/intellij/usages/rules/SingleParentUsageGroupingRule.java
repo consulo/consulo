@@ -19,8 +19,7 @@ import com.intellij.usages.Usage;
 import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageTarget;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,12 +30,12 @@ public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule
   /**
    * @return a group a specific usage should be placed into, or null, if this rule doesn't apply to this kind of usages.
    */
-  @Nullable
-  protected abstract UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets);
+  @javax.annotation.Nullable
+  protected abstract UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
 
-  @NotNull
+  @Nonnull
   @Override
-  public final List<UsageGroup> getParentGroupsFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  public final List<UsageGroup> getParentGroupsFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     return ContainerUtil.createMaybeSingletonList(getParentGroupFor(usage, targets));
   }
 
@@ -44,7 +43,7 @@ public abstract class SingleParentUsageGroupingRule implements UsageGroupingRule
    * @deprecated override {@link #getParentGroupFor(Usage, UsageTarget[])} instead
    */
   @Override
-  public UsageGroup groupUsage(@NotNull Usage usage) {
+  public UsageGroup groupUsage(@Nonnull Usage usage) {
     return getParentGroupFor(usage, UsageTarget.EMPTY_ARRAY);
   }
 }

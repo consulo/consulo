@@ -1,10 +1,6 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Comparator;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -15,7 +11,7 @@ public interface Named {
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   String getName();
 
@@ -23,13 +19,13 @@ public interface Named {
    * please use {@link #setExternalName(String)} or {@link #setInternalName(String)} instead
    */
   @Deprecated
-  void setName(@NotNull String name);
+  void setName(@Nonnull String name);
 
-  @NotNull
+  @Nonnull
   String getExternalName();
-  void setExternalName(@NotNull String name);
+  void setExternalName(@Nonnull String name);
 
-  @NotNull
+  @Nonnull
   String getInternalName();
-  void setInternalName(@NotNull String name);
+  void setInternalName(@Nonnull String name);
 }

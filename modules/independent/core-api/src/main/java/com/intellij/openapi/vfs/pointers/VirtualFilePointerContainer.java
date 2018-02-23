@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -30,38 +30,44 @@ import java.util.List;
 public interface VirtualFilePointerContainer {
   void killAll();
 
-  void add(@NotNull VirtualFile file);
+  void add(@Nonnull VirtualFile file);
 
-  void add(@NotNull String url);
+  void add(@Nonnull String url);
 
-  void remove(@NotNull VirtualFilePointer pointer);
+  void remove(@Nonnull VirtualFilePointer pointer);
 
-  @NotNull List<VirtualFilePointer> getList();
+  @Nonnull
+  List<VirtualFilePointer> getList();
 
-  void addAll(@NotNull VirtualFilePointerContainer that);
+  void addAll(@Nonnull VirtualFilePointerContainer that);
 
-  @NotNull String[] getUrls();
+  @Nonnull
+  String[] getUrls();
 
-  @NotNull VirtualFile[] getFiles();
+  @Nonnull
+  VirtualFile[] getFiles();
 
-  @NotNull VirtualFile[] getDirectories();
+  @Nonnull
+  VirtualFile[] getDirectories();
 
   @Nullable
-  VirtualFilePointer findByUrl(@NotNull String url);
+  VirtualFilePointer findByUrl(@Nonnull String url);
 
   void clear();
 
   int size();
 
-  void readExternal(@NotNull Element rootChild, @NotNull String childElementName) throws InvalidDataException;
+  void readExternal(@Nonnull Element rootChild, @Nonnull String childElementName) throws InvalidDataException;
 
-  void writeExternal(@NotNull Element element, @NotNull String childElementName);
+  void writeExternal(@Nonnull Element element, @Nonnull String childElementName);
 
-  void moveUp(@NotNull String url);
+  void moveUp(@Nonnull String url);
 
-  void moveDown(@NotNull String url);
+  void moveDown(@Nonnull String url);
 
-  @NotNull VirtualFilePointerContainer clone(@NotNull Disposable parent);
+  @Nonnull
+  VirtualFilePointerContainer clone(@Nonnull Disposable parent);
 
-  @NotNull VirtualFilePointerContainer clone(@NotNull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  @Nonnull
+  VirtualFilePointerContainer clone(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
 }

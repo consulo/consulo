@@ -10,8 +10,8 @@ import com.intellij.util.Producer;
 import com.intellij.util.containers.Predicate;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -49,9 +49,9 @@ public class DownloadUtil {
    * @throws IOException if an I/O error occurs
    */
   public static boolean downloadAtomically(@Nullable ProgressIndicator indicator,
-                                           @NotNull String url,
-                                           @NotNull File outputFile,
-                                           @NotNull File tempFile,
+                                           @Nonnull String url,
+                                           @Nonnull File outputFile,
+                                           @Nonnull File tempFile,
                                            @Nullable Predicate<String> contentChecker) throws IOException
   {
     try {
@@ -79,20 +79,20 @@ public class DownloadUtil {
    * @param tempFile    temporary file to download to. This file is deleted on method exit.
    */
   public static void downloadAtomically(@Nullable ProgressIndicator indicator,
-                                        @NotNull String url,
-                                        @NotNull File outputFile,
-                                        @NotNull File tempFile) throws IOException
+                                        @Nonnull String url,
+                                        @Nonnull File outputFile,
+                                        @Nonnull File tempFile) throws IOException
   {
     downloadAtomically(indicator, url, outputFile, tempFile, null);
   }
 
 
-  @NotNull
+  @Nonnull
   public static <V> Outcome<V> provideDataWithProgressSynchronously(
           @Nullable Project project,
-          @NotNull String progressTitle,
-          @NotNull final String actionShortDescription,
-          @NotNull final Callable<V> supplier,
+          @Nonnull String progressTitle,
+          @Nonnull final String actionShortDescription,
+          @Nonnull final Callable<V> supplier,
           @Nullable Producer<Boolean> tryAgainProvider)
   {
     int attemptNumber = 1;
@@ -133,8 +133,8 @@ public class DownloadUtil {
   }
 
   public static void downloadContentToFile(@Nullable ProgressIndicator progress,
-                                           @NotNull String url,
-                                           @NotNull File outputFile) throws IOException {
+                                           @Nonnull String url,
+                                           @Nonnull File outputFile) throws IOException {
     boolean parentDirExists = FileUtil.createParentDirs(outputFile);
     if (!parentDirExists) {
       throw new IOException("Parent dir of '" + outputFile.getAbsolutePath() + "' can not be created!");
@@ -148,8 +148,8 @@ public class DownloadUtil {
   }
 
   private static void download(@Nullable ProgressIndicator progress,
-                               @NotNull String location,
-                               @NotNull OutputStream output) throws IOException {
+                               @Nonnull String location,
+                               @Nonnull OutputStream output) throws IOException {
     String originalText = progress != null ? progress.getText() : null;
     substituteContentLength(progress, originalText, -1);
     if (progress != null) {

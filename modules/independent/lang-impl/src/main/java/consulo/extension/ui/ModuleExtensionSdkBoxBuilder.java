@@ -33,8 +33,8 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.roots.ui.configuration.SdkComboBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -46,22 +46,22 @@ import java.util.Set;
  * @since 15.03.2015
  */
 public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
-  @NotNull
-  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionSdkBoxBuilder createAndDefine(@NotNull T extension, @Nullable Runnable updater) {
+  @Nonnull
+  public static <T extends MutableModuleExtensionWithSdk<?>> ModuleExtensionSdkBoxBuilder createAndDefine(@Nonnull T extension, @Nullable Runnable updater) {
     ModuleExtensionSdkBoxBuilder<T> builder = create(extension, updater);
     builder.sdkTypeClass(extension.getSdkTypeClass());
     builder.sdkPointerFunc(dom -> dom.getInheritableSdk());
     return builder;
   }
 
-  @NotNull
-  public static <T extends MutableModuleExtension<?>> ModuleExtensionSdkBoxBuilder<T> create(@NotNull T extension, @Nullable Runnable updater) {
+  @Nonnull
+  public static <T extends MutableModuleExtension<?>> ModuleExtensionSdkBoxBuilder<T> create(@Nonnull T extension, @Nullable Runnable updater) {
     return new ModuleExtensionSdkBoxBuilder<>(extension).laterUpdater(updater);
   }
 
-  @NotNull
+  @Nonnull
   private NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
-  @NotNull
+  @Nonnull
   private Condition<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
 
   private final T myMutableModuleExtension;
@@ -76,59 +76,59 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   private PairConsumer<Sdk, Sdk> myPostConsumer;
 
-  private ModuleExtensionSdkBoxBuilder(@NotNull T mutableModuleExtension) {
+  private ModuleExtensionSdkBoxBuilder(@Nonnull T mutableModuleExtension) {
     myMutableModuleExtension = mutableModuleExtension;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@NotNull final Class<? extends SdkTypeId> clazz) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkTypeClass(@Nonnull final Class<? extends SdkTypeId> clazz) {
     mySdkFilter = sdkTypeId -> clazz.isAssignableFrom(sdkTypeId.getClass());
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@NotNull final Set<SdkType> sdkTypes) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkTypes(@Nonnull final Set<SdkType> sdkTypes) {
     mySdkFilter = sdkTypes::contains;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> sdkType(@NotNull final SdkType sdkType) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkType(@Nonnull final SdkType sdkType) {
     return sdkTypes(Collections.singleton(sdkType));
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@NotNull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
     mySdkPointerFunction = function;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> labelText(@NotNull String labelText) {
+  public ModuleExtensionSdkBoxBuilder<T> labelText(@Nonnull String labelText) {
     myLabelText = labelText;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
   public ModuleExtensionSdkBoxBuilder<T> laterUpdater(@Nullable Runnable runnable) {
     myLaterUpdater = runnable;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@NotNull PairConsumer<Sdk, Sdk> consumer) {
+  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull PairConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
   public ModuleExtensionSdkBoxBuilder<T> nullItem(@Nullable String name, @Nullable Icon icon) {
     myNullItemName = name;
@@ -136,7 +136,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public JComponent build() {
     final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();

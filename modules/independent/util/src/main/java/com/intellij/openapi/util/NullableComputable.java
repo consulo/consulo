@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface NullableComputable<T> extends Computable<T> {
   @Nullable

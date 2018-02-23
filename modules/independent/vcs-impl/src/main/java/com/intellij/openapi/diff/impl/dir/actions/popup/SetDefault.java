@@ -17,13 +17,13 @@ package com.intellij.openapi.diff.impl.dir.actions.popup;
 
 import com.intellij.ide.diff.DirDiffElement;
 import com.intellij.ide.diff.DirDiffOperation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class SetDefault extends SetOperationToBase {
-  @NotNull
+  @Nonnull
   @Override
   protected DirDiffOperation getOperation() {
     return DirDiffOperation.NONE;

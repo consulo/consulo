@@ -15,31 +15,31 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Jun-16
  */
 public interface LabeledLayout extends Layout {
-  @NotNull
-  static LabeledLayout create(@NotNull String label) {
+  @Nonnull
+  static LabeledLayout create(@Nonnull String label) {
     return UIInternal.get()._Layouts_labeled(label);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  static LabeledLayout create(@NotNull String label, @NotNull Component component) {
+  static LabeledLayout create(@Nonnull String label, @Nonnull Component component) {
     return UIInternal.get()._Layouts_labeled(label).set(component);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default LabeledLayout set(@NotNull PseudoComponent component) {
+  default LabeledLayout set(@Nonnull PseudoComponent component) {
     return set(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  LabeledLayout set(@NotNull Component component);
+  LabeledLayout set(@Nonnull Component component);
 }

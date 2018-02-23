@@ -23,8 +23,8 @@ import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.util.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -49,17 +49,17 @@ public class PackagingElementPath {
     return new PackagingElementPath(this, element);
   }
 
-  @NotNull
+  @Nonnull
   public String getPathString() {
     return getPathString("/");
   }
 
-  @NotNull
+  @Nonnull
   public String getPathString(String separator) {
     return getPathStringFrom(separator, null);
   }
 
-  @NotNull
+  @Nonnull
   public String getPathStringFrom(String separator, @Nullable CompositePackagingElement<?> ancestor) {
     final StringBuilder builder = StringBuilderSpinAllocator.alloc();
     try {
@@ -103,7 +103,7 @@ public class PackagingElementPath {
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public CompositePackagingElement<?> getLastParent() {
     PackagingElementPath path = this;
     while (path != EMPTY) {
@@ -115,7 +115,7 @@ public class PackagingElementPath {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Artifact findLastArtifact(PackagingElementResolvingContext context) {
     PackagingElementPath path = this;
     while (path != EMPTY) {
@@ -128,7 +128,7 @@ public class PackagingElementPath {
     return null;
   }
 
-  public static PackagingElementPath createPath(@NotNull List<PackagingElement<?>> elements) {
+  public static PackagingElementPath createPath(@Nonnull List<PackagingElement<?>> elements) {
     PackagingElementPath path = EMPTY;
     for (PackagingElement<?> element : elements) {
       path = new PackagingElementPath(path, element);

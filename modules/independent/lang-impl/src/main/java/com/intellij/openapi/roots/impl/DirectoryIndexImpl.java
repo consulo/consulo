@@ -39,8 +39,8 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private volatile boolean myDisposed = false;
   private volatile RootIndex myRootIndex = null;
 
-  public DirectoryIndexImpl(@NotNull Project project) {
+  public DirectoryIndexImpl(@Nonnull Project project) {
     myProject = project;
     myConnection = project.getMessageBus().connect(project);
     subscribeToFileChanges();
@@ -71,7 +71,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   private void subscribeToFileChanges() {
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener.Adapter() {
       @Override
-      public void fileTypesChanged(@NotNull FileTypeEvent event) {
+      public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         myRootIndex = null;
       }
     });
@@ -85,11 +85,11 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
     myConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
-      public void before(@NotNull List<? extends VFileEvent> events) {
+      public void before(@Nonnull List<? extends VFileEvent> events) {
       }
 
       @Override
-      public void after(@NotNull List<? extends VFileEvent> events) {
+      public void after(@Nonnull List<? extends VFileEvent> events) {
         RootIndex rootIndex = myRootIndex;
         if (rootIndex != null && rootIndex.resetOnEvents(events)) {
           myRootIndex = null;
@@ -115,12 +115,12 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   }
 
   @Override
-  @NotNull
-  public Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources) {
+  @Nonnull
+  public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
     return getRootIndex().getDirectoriesByPackageName(packageName, includeLibrarySources);
   }
 
-  @NotNull
+  @Nonnull
   private RootIndex getRootIndex() {
     RootIndex rootIndex = myRootIndex;
     if (rootIndex == null) {
@@ -134,26 +134,26 @@ public class DirectoryIndexImpl extends DirectoryIndex {
       // Upsource can't use int-mapping because different files may have the same id there
       private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = new StripedLockIntObjectConcurrentHashMap<DirectoryInfo>();
       @Override
-      public void cacheInfo(@NotNull VirtualFile dir, @NotNull DirectoryInfo info) {
+      public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {
         myInfoCache.put(((NewVirtualFile)dir).getId(), info);
       }
 
       @Override
-      public DirectoryInfo getCachedInfo(@NotNull VirtualFile dir) {
+      public DirectoryInfo getCachedInfo(@Nonnull VirtualFile dir) {
         return myInfoCache.get(((NewVirtualFile)dir).getId());
       }
     };
   }
 
   @Override
-  public DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir) {
+  public DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir) {
     DirectoryInfo info = getInfoForFile(dir);
     return info.isInProject() ? info : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DirectoryInfo getInfoForFile(@NotNull VirtualFile file) {
+  public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
     checkAvailability();
     dispatchPendingEvents();
 
@@ -164,7 +164,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
   @Override
   @Nullable
-  public ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info) {
+  public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info) {
     if (info.isInModuleSource()) {
       return getRootIndex().getContentFolderType(info);
     }
@@ -172,16 +172,16 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   }
 
   @Override
-  public String getPackageName(@NotNull VirtualFile dir) {
+  public String getPackageName(@Nonnull VirtualFile dir) {
     checkAvailability();
     if (!(dir instanceof NewVirtualFile)) return null;
 
     return getRootIndex().getPackageName(dir);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderEntry[] getOrderEntries(@NotNull DirectoryInfo info) {
+  public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
     checkAvailability();
     return getRootIndex().getOrderEntries(info);
   }

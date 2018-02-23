@@ -1,7 +1,7 @@
 package com.intellij.remote;
 
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -11,20 +11,20 @@ public class RemoteFile {
   private final boolean myWin;
   private final String myPath;
 
-  public RemoteFile(@NotNull String path, boolean isWin) {
+  public RemoteFile(@Nonnull String path, boolean isWin) {
     myPath = toSystemDependent(path, isWin);
     myWin = isWin;
   }
 
-  public RemoteFile(@NotNull String parent, String child) {
+  public RemoteFile(@Nonnull String parent, String child) {
     this(resolveChild(parent, child, isWindowsPath(parent)), isWindowsPath(parent));
   }
 
-  public RemoteFile(@NotNull String parent, String child, boolean isWin) {
+  public RemoteFile(@Nonnull String parent, String child, boolean isWin) {
     this(resolveChild(parent, child, isWin), isWin);
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     int ind = myPath.lastIndexOf(getSeparator(myWin));
     if (ind != -1 && ind < myPath.length() - 1) { //not last char
@@ -35,7 +35,7 @@ public class RemoteFile {
     }
   }
 
-  private static String resolveChild(@NotNull String parent, @NotNull String child, boolean win) {
+  private static String resolveChild(@Nonnull String parent, @Nonnull String child, boolean win) {
     String separator = getSeparator(win);
 
     String path;
@@ -68,18 +68,18 @@ public class RemoteFile {
     return isWindowsPath(myPath);
   }
 
-  public static boolean isWindowsPath(@NotNull String path) {
+  public static boolean isWindowsPath(@Nonnull String path) {
     path = RemoteSdkCredentialsHolder.getInterpreterPathFromFullPath(path);
 
     return (path.length() > 1 && path.charAt(1) == ':');
   }
 
-  private static String toSystemDependent(@NotNull String path, boolean isWin) {
+  private static String toSystemDependent(@Nonnull String path, boolean isWin) {
     char separator = isWin ? '\\' : '/';
     return FileUtil.toSystemIndependentName(path).replace('/', separator);
   }
 
-  public static RemoteFileBuilder detectSystemByPath(@NotNull String path) {
+  public static RemoteFileBuilder detectSystemByPath(@Nonnull String path) {
     return new RemoteFileBuilder(isWindowsPath(path));
   }
 

@@ -15,8 +15,8 @@
  */
 package com.intellij.dvcs.push;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VcsErrorHandler {
-  void handleError(@NotNull CommitLoader loader);
+  void handleError(@Nonnull CommitLoader loader);
 }

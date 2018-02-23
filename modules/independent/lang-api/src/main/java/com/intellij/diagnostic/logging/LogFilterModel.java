@@ -19,8 +19,8 @@ package com.intellij.diagnostic.logging;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.StringBuilderSpinAllocator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -37,7 +37,7 @@ public abstract class LogFilterModel {
 
   public abstract String getCustomFilter();
 
-  @Nullable
+  @javax.annotation.Nullable
   private Pattern getCustomPattern() {
     String customFilter = getCustomFilter();
     if (myCustomPattern == null && customFilter != null) {
@@ -79,7 +79,7 @@ public abstract class LogFilterModel {
 
   public abstract void selectFilter(LogFilter filter);
 
-  @NotNull
+  @Nonnull
   public abstract MyProcessingResult processLine(String line);
 
   public void processingStarted() {
@@ -90,9 +90,9 @@ public abstract class LogFilterModel {
     private final boolean myApplicable;
     private final String myMessagePrefix;
 
-    public MyProcessingResult(@Nullable Key key,
+    public MyProcessingResult(@javax.annotation.Nullable Key key,
                                boolean applicable,
-                               @Nullable String messagePrefix) {
+                               @javax.annotation.Nullable String messagePrefix) {
       myKey = key;
       myApplicable = applicable;
       myMessagePrefix = messagePrefix;

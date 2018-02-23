@@ -20,8 +20,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
@@ -96,7 +97,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
     return presentation;
   }
 
-  @NotNull
+  @Nonnull
   protected PresentationData createPresentation() {
     return new PresentationData();
   }
@@ -119,7 +120,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E>  {
 
   protected abstract void update(PresentationData presentation);
 
-  @NotNull
+  @Nonnull
   public final PresentationData getPresentation() {
     PresentationData result;
     if (myUpdatedPresentation == null) {

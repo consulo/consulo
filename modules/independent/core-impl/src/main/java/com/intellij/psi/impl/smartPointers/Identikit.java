@@ -26,8 +26,8 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.WeakInterner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -37,19 +37,19 @@ public abstract class Identikit {
   private static final WeakInterner<ByAnchor> ourAnchorInterner = new WeakInterner<>();
 
   @Nullable
-  public abstract PsiElement findPsiElement(@NotNull PsiFile file, int startOffset, int endOffset);
+  public abstract PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset);
 
-  @NotNull
+  @Nonnull
   public abstract Language getFileLanguage();
 
   public abstract boolean isForPsiFile();
 
-  public static ByType fromPsi(@NotNull PsiElement element, @NotNull Language fileLanguage) {
+  public static ByType fromPsi(@Nonnull PsiElement element, @Nonnull Language fileLanguage) {
     return fromTypes(element.getClass(), PsiUtilCore.getElementType(element), fileLanguage);
   }
 
   @Nullable
-  static Pair<ByAnchor, PsiElement> withAnchor(@NotNull PsiElement element, @NotNull Language fileLanguage) {
+  static Pair<ByAnchor, PsiElement> withAnchor(@Nonnull PsiElement element, @Nonnull Language fileLanguage) {
     PsiUtilCore.ensureValid(element);
     if (element.isPhysical()) {
       for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensions()) {
@@ -63,8 +63,8 @@ public abstract class Identikit {
     return null;
   }
 
-  @NotNull
-  static ByType fromTypes(@NotNull Class elementClass, @Nullable IElementType elementType, @NotNull Language fileLanguage) {
+  @Nonnull
+  static ByType fromTypes(@Nonnull Class elementClass, @Nullable IElementType elementType, @Nonnull Language fileLanguage) {
     return ourPlainInterner.intern(new ByType(elementClass, elementType, fileLanguage));
   }
 
@@ -73,7 +73,7 @@ public abstract class Identikit {
     private final IElementType myElementType;
     private final Language myFileLanguage;
 
-    private ByType(@NotNull Class elementClass, @Nullable IElementType elementType, Language fileLanguage) {
+    private ByType(@Nonnull Class elementClass, @Nullable IElementType elementType, Language fileLanguage) {
       myElementClass = elementClass;
       myElementType = elementType;
       myFileLanguage = fileLanguage;
@@ -81,7 +81,7 @@ public abstract class Identikit {
 
     @Nullable
     @Override
-    public PsiElement findPsiElement(@NotNull PsiFile file, int startOffset, int endOffset) {
+    public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
       PsiElement anchor = file.getViewProvider().findElementAt(startOffset, myFileLanguage);
       if (anchor == null && startOffset == file.getTextLength()) {
         PsiElement lastChild = file.getViewProvider().getPsi(myFileLanguage).getLastChild();
@@ -148,7 +148,7 @@ public abstract class Identikit {
       return MoreObjects.toStringHelper(this).add("class", myElementClass).add("elementType", myElementType).add("fileLanguage", myFileLanguage).toString();
     }
 
-    @NotNull
+    @Nonnull
     public Language getFileLanguage() {
       return myFileLanguage;
     }
@@ -158,7 +158,7 @@ public abstract class Identikit {
       return myElementType instanceof IFileElementType;
     }
 
-    private boolean isAcceptable(@NotNull PsiElement element) {
+    private boolean isAcceptable(@Nonnull PsiElement element) {
       return myElementClass == element.getClass() && myElementType == PsiUtilCore.getElementType(element);
     }
   }
@@ -195,13 +195,13 @@ public abstract class Identikit {
 
     @Nullable
     @Override
-    public PsiElement findPsiElement(@NotNull PsiFile file, int startOffset, int endOffset) {
+    public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
       PsiElement anchor = myAnchorInfo.findPsiElement(file, startOffset, endOffset);
       PsiElement element = anchor == null ? null : myAnchorProvider.restoreElement(anchor);
       return element != null && myElementInfo.isAcceptable(element) ? element : null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Language getFileLanguage() {
       return myAnchorInfo.getFileLanguage();

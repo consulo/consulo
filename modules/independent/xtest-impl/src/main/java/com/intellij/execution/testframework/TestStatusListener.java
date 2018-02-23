@@ -18,14 +18,13 @@ package com.intellij.execution.testframework;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class TestStatusListener {
   public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create("com.intellij.testStatusListener");
 
-  public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
+  public abstract void testSuiteFinished(@javax.annotation.Nullable AbstractTestProxy root);
 
-  public void testSuiteFinished(@Nullable AbstractTestProxy root, Project project) {
+  public void testSuiteFinished(@javax.annotation.Nullable AbstractTestProxy root, Project project) {
     testSuiteFinished(root);
   }
 
@@ -37,7 +36,7 @@ public abstract class TestStatusListener {
     }
   }
 
-  public static void notifySuiteFinished(@Nullable AbstractTestProxy root, Project project) {
+  public static void notifySuiteFinished(@javax.annotation.Nullable AbstractTestProxy root, Project project) {
     for (TestStatusListener statusListener : Extensions.getExtensions(EP_NAME)) {
       statusListener.testSuiteFinished(root, project);
     }

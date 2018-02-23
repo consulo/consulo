@@ -32,7 +32,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.io.File;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class FileListPasteProvider implements PasteProvider {
   @Override
-  public void performPaste(@NotNull DataContext dataContext) {
+  public void performPaste(@Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final IdeView ideView = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (project == null || ideView == null) return;
@@ -83,12 +83,12 @@ public class FileListPasteProvider implements PasteProvider {
   }
 
   @Override
-  public boolean isPastePossible(@NotNull DataContext dataContext) {
+  public boolean isPastePossible(@Nonnull DataContext dataContext) {
     return true;
   }
 
   @Override
-  public boolean isPasteEnabled(@NotNull DataContext dataContext) {
+  public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
     return dataContext.getData(LangDataKeys.IDE_VIEW) != null &&
            FileCopyPasteUtil.isFileListFlavorAvailable();
   }

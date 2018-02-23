@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs.impl;
 
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -30,7 +30,7 @@ public abstract class TabLayout {
     return new ShapeTransform.Top(rectangle);
   }
 
-  public boolean isDragOut(@NotNull TabLabel tabLabel, int deltaX, int deltaY) {
+  public boolean isDragOut(@Nonnull TabLabel tabLabel, int deltaX, int deltaY) {
     return Math.abs(deltaY) > tabLabel.getSize().height * getDragOutMultiplier();
   }
 

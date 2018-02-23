@@ -21,8 +21,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ public class FormatProcessor {
   private boolean myReformatContext;
   private final Document myDocument;
 
-  @NotNull
+  @Nonnull
   private final FormattingProgressCallback myProgressCallback;
 
-  @NotNull
+  @Nonnull
   private StateProcessor myStateProcessor;
 
   public FormatProcessor(final FormattingDocumentModel docModel,
@@ -46,7 +46,7 @@ public class FormatProcessor {
                          CodeStyleSettings settings,
                          CommonCodeStyleSettings.IndentOptions indentOptions,
                          @Nullable FormatTextRanges affectedRanges,
-                         @NotNull FormattingProgressCallback progressCallback)
+                         @Nonnull FormattingProgressCallback progressCallback)
   {
     this(docModel, rootBlock, new FormatOptions(settings, indentOptions, affectedRanges, false), progressCallback);
   }
@@ -54,7 +54,7 @@ public class FormatProcessor {
   public FormatProcessor(final FormattingDocumentModel model,
                          Block block,
                          FormatOptions options,
-                         @NotNull FormattingProgressCallback callback)
+                         @Nonnull FormattingProgressCallback callback)
   {
     myProgressCallback = callback;
 
@@ -193,7 +193,7 @@ public class FormatProcessor {
   }
 
   @Nullable
-  private static ChildAttributesInfo getChildAttributesInfo(@NotNull final Block block,
+  private static ChildAttributesInfo getChildAttributesInfo(@Nonnull final Block block,
                                                             final int index,
                                                             @Nullable AbstractBlockWrapper parent) {
     if (parent == null) {
@@ -339,8 +339,8 @@ public class FormatProcessor {
    * @param block   block to check
    * @return        the most nested block of the given one that shares the same text range if any; given block otherwise
    */
-  @NotNull
-  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@NotNull final AbstractBlockWrapper block) {
+  @Nonnull
+  private static AbstractBlockWrapper getLastNestedCompositeBlockForSameRange(@Nonnull final AbstractBlockWrapper block) {
     if (!(block instanceof CompositeBlockWrapper)) {
       return block;
     }

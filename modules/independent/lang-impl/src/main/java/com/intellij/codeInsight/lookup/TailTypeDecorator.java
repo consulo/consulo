@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.TailType;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Consider using {@link InsertHandler} instead

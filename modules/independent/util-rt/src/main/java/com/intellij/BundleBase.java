@@ -16,8 +16,7 @@
 package com.intellij;
 
 import com.intellij.openapi.util.SystemInfoRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -31,10 +30,10 @@ public abstract class BundleBase {
 
   public static boolean assertKeyIsFound = false;
 
-  public static String messageOrDefault(@Nullable final ResourceBundle bundle,
-                                        @NotNull String key,
-                                        @Nullable final String defaultValue,
-                                        @NotNull Object... params) {
+  public static String messageOrDefault(@javax.annotation.Nullable final ResourceBundle bundle,
+                                        @Nonnull String key,
+                                        @javax.annotation.Nullable final String defaultValue,
+                                        @Nonnull Object... params) {
     if (bundle == null) return defaultValue;
 
     String value;
@@ -58,8 +57,8 @@ public abstract class BundleBase {
     return format(value, params);
   }
 
-  @NotNull
-  public static String format(@NotNull String value, @NotNull Object... params) {
+  @Nonnull
+  public static String format(@Nonnull String value, @Nonnull Object... params) {
     if (params.length > 0 && value.indexOf('{') >= 0) {
       return MessageFormat.format(value, params);
     }
@@ -67,12 +66,12 @@ public abstract class BundleBase {
     return value;
   }
 
-  @NotNull
-  public static String message(@NotNull ResourceBundle bundle, @NotNull String key, @NotNull Object... params) {
+  @Nonnull
+  public static String message(@Nonnull ResourceBundle bundle, @Nonnull String key, @Nonnull Object... params) {
     return messageOrDefault(bundle, key, null, params);
   }
 
-  public static String replaceMnemonicAmpersand(@Nullable final String value) {
+  public static String replaceMnemonicAmpersand(@javax.annotation.Nullable final String value) {
     if (value == null) {
       //noinspection ConstantConditions
       return null;

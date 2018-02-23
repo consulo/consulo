@@ -73,8 +73,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.FocusManager;
 import javax.swing.*;
@@ -128,7 +128,7 @@ public class SingleInspectionProfilePanel extends JPanel {
   private boolean myModified = false;
   private InspectionsConfigTreeTable myTreeTable;
   private TreeExpander myTreeExpander;
-  @NotNull
+  @Nonnull
   private String myCurrentProfileName;
   private boolean myIsInRestore = false;
   private boolean myShareProfile;
@@ -141,9 +141,9 @@ public class SingleInspectionProfilePanel extends JPanel {
     public void dispose() {}
   };
 
-  public SingleInspectionProfilePanel(@NotNull InspectionProjectProfileManager projectProfileManager,
-                                      @NotNull String inspectionProfileName,
-                                      @NotNull ModifiableModel profile) {
+  public SingleInspectionProfilePanel(@Nonnull InspectionProjectProfileManager projectProfileManager,
+                                      @Nonnull String inspectionProfileName,
+                                      @Nonnull ModifiableModel profile) {
     super(new BorderLayout());
     myProjectProfileManager = projectProfileManager;
     mySelectedProfile = (InspectionProfileImpl)profile;
@@ -167,7 +167,7 @@ public class SingleInspectionProfilePanel extends JPanel {
                                                  JPanel parent,
                                                  String profileName,
                                                  Set<String> existingProfileNames,
-                                                 @NotNull Project project) {
+                                                 @Nonnull Project project) {
     profileName = Messages.showInputDialog(parent, profileName, "Create New Inspection Profile", Messages.getQuestionIcon());
     if (profileName == null) return null;
     final ProfileManager profileManager = selectedProfile.getProfileManager();
@@ -552,12 +552,12 @@ public class SingleInspectionProfilePanel extends JPanel {
     actions.add(new DumbAwareAction("Reset to Empty", "Reset to empty", AllIcons.Actions.Reset_to_empty){
 
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(mySelectedProfile != null && mySelectedProfile.isExecutable(myProjectProfileManager.getProject()));
       }
 
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         mySelectedProfile.resetToEmpty(e.getProject());
         loadDescriptorsConfigs(false);
         postProcessModification();
@@ -757,7 +757,7 @@ public class SingleInspectionProfilePanel extends JPanel {
       final HighlightDisplayLevel level = HighlightDisplayLevel.find(severity);
       group.add(new AnAction(renderSeverity(severity), renderSeverity(severity), level.getIcon()) {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           setNewHighlightingLevel(level);
         }
 
@@ -772,7 +772,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     return menu.getComponent();
   }
 
-  @NotNull
+  @Nonnull
   public InspectionsFilter getInspectionsFilter() {
     return myInspectionsFilter;
   }
@@ -954,7 +954,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         final JTable scopesAndScopesAndSeveritiesTable =
                 new ScopesAndSeveritiesTable(new ScopesAndSeveritiesTable.TableSettings(nodes, mySelectedProfile, project) {
                   @Override
-                  protected void onScopeChosen(@NotNull final ScopeToolState state) {
+                  protected void onScopeChosen(@Nonnull final ScopeToolState state) {
                     setConfigPanel(configPanelAnchor, state);
                     configPanelAnchor.revalidate();
                     configPanelAnchor.repaint();
@@ -1232,12 +1232,12 @@ public class SingleInspectionProfilePanel extends JPanel {
     myShareProfile = profileShared;
   }
 
-  @NotNull
+  @Nonnull
   public String getCurrentProfileName() {
     return myCurrentProfileName;
   }
 
-  public void setCurrentProfileName(@NotNull String currentProfileName) {
+  public void setCurrentProfileName(@Nonnull String currentProfileName) {
     myCurrentProfileName = currentProfileName;
   }
 
@@ -1249,7 +1249,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     super.setVisible(aFlag);
   }
 
-  private void setNewHighlightingLevel(@NotNull HighlightDisplayLevel level) {
+  private void setNewHighlightingLevel(@Nonnull HighlightDisplayLevel level) {
     final int[] rows = myTreeTable.getTree().getSelectionRows();
     final boolean showOptionsAndDescriptorPanels = rows != null && rows.length == 1;
     for (int i = 0; rows != null && i < rows.length; i++) {
@@ -1274,7 +1274,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     repaintTableData();
   }
 
-  private void updateErrorLevelUpInHierarchy(@NotNull HighlightDisplayLevel level,
+  private void updateErrorLevelUpInHierarchy(@Nonnull HighlightDisplayLevel level,
                                              boolean showOptionsAndDescriptorPanels,
                                              InspectionConfigTreeNode node) {
     node.dropCache();
@@ -1292,7 +1292,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
   private void updateErrorLevel(final InspectionConfigTreeNode child,
                                 final boolean showOptionsAndDescriptorPanels,
-                                @NotNull HighlightDisplayLevel level) {
+                                @Nonnull HighlightDisplayLevel level) {
     final HighlightDisplayKey key = child.getDefaultDescriptor().getKey();
     mySelectedProfile.setErrorLevel(key, level, null, myProjectProfileManager.getProject());
     child.dropCache();

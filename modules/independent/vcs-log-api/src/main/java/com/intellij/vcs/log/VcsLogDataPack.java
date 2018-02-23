@@ -16,18 +16,18 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
 public interface VcsLogDataPack {
 
-  @NotNull
+  @Nonnull
   Map<VirtualFile, VcsLogProvider> getLogProviders();
 
-  @NotNull
+  @Nonnull
   VcsLogRefs getRefs();
 
-  @NotNull
+  @Nonnull
   VcsLogFilterCollection getFilters();
 }

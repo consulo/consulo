@@ -19,7 +19,7 @@ import com.intellij.execution.TaskExecutor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.*;
 
@@ -33,11 +33,11 @@ public class ProcessWaitFor {
    * @deprecated use {@link #ProcessWaitFor(Process, TaskExecutor, String)} instead (to be removed in IDEA 17)
    */
   @Deprecated
-  public ProcessWaitFor(@NotNull final Process process, @NotNull TaskExecutor executor) {
+  public ProcessWaitFor(@Nonnull final Process process, @Nonnull TaskExecutor executor) {
     this(process, executor, "");
   }
 
-  public ProcessWaitFor(@NotNull final Process process, @NotNull TaskExecutor executor, @NotNull final String presentableName) {
+  public ProcessWaitFor(@Nonnull final Process process, @Nonnull TaskExecutor executor, @Nonnull final String presentableName) {
     myWaitForThreadFuture = executor.executeTask(new Runnable() {
       @Override
       public void run() {
@@ -76,7 +76,7 @@ public class ProcessWaitFor {
     myWaitForThreadFuture.cancel(true);
   }
 
-  public void setTerminationCallback(@NotNull Consumer<Integer> r) {
+  public void setTerminationCallback(@Nonnull Consumer<Integer> r) {
     myTerminationCallback.offer(r);
   }
 
@@ -91,7 +91,7 @@ public class ProcessWaitFor {
     }
   }
 
-  public boolean waitFor(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+  public boolean waitFor(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
     try {
       myWaitForThreadFuture.get(timeout, unit);
     }

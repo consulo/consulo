@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public interface ChangeListManagerGate {
   List<LocalChangeList> getListsCopy();
-  @Nullable
+  @javax.annotation.Nullable
   LocalChangeList findChangeList(final String name);
   LocalChangeList addChangeList(final String name, final String comment);
   LocalChangeList findOrCreateList(final String name, final String comment);
@@ -44,7 +44,7 @@ public interface ChangeListManagerGate {
   FileStatus getStatus(final VirtualFile file);
 
   @Nullable
-  FileStatus getStatus(@NotNull FilePath filePath);
+  FileStatus getStatus(@Nonnull FilePath filePath);
 
   /**
    * Use {@link #getStatus(FilePath)
@@ -53,5 +53,5 @@ public interface ChangeListManagerGate {
   @Deprecated
   FileStatus getStatus(final File file);
 
-  void setDefaultChangeList(@NotNull String list);
+  void setDefaultChangeList(@Nonnull String list);
 }

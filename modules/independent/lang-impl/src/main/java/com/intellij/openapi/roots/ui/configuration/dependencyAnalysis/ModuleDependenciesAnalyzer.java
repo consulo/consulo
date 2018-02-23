@@ -27,8 +27,8 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.Processor;
 import consulo.compiler.ModuleCompilerPathsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
@@ -320,7 +320,7 @@ public class ModuleDependenciesAnalyzer {
      * @param isSelected true if the element is selected
      * @return the appearance to use for rendering
      */
-    @NotNull
+    @Nonnull
     public abstract CellAppearanceEx getAppearance(boolean isSelected);
   }
 
@@ -380,7 +380,7 @@ public class ModuleDependenciesAnalyzer {
     /**
      * {@inheritDoc}
      */
-    @NotNull
+    @Nonnull
     @Override
     public CellAppearanceEx getAppearance(boolean isSelected) {
       return OrderEntryAppearanceService.getInstance().forOrderEntry(myEntry.getOwnerModule().getProject(), myEntry, isSelected);

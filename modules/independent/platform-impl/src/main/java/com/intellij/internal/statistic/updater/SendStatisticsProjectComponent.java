@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SendStatisticsProjectComponent implements ProjectComponent {
   private static final int DELAY_IN_MIN = 10;
@@ -63,7 +63,7 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
     }
   }
 
-  private void runWithDelay(final @NotNull StatisticsService statisticsService) {
+  private void runWithDelay(final @Nonnull StatisticsService statisticsService) {
     myAlarm.addRequest(new Runnable() {
       @Override
       public void run() {
@@ -89,7 +89,7 @@ public class SendStatisticsProjectComponent implements ProjectComponent {
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return SendStatisticsProjectComponent.class.getName();

@@ -37,8 +37,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -54,10 +53,10 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   protected boolean myInRefresh;
   protected final Project myProject;
 
-  protected SpecificFilesViewDialog(@NotNull Project project,
-                                    @NotNull String title,
-                                    @NotNull Key<Stream<VirtualFile>> shownDataKey,
-                                    @NotNull List<VirtualFile> initDataFiles) {
+  protected SpecificFilesViewDialog(@Nonnull Project project,
+                                    @Nonnull String title,
+                                    @Nonnull Key<Stream<VirtualFile>> shownDataKey,
+                                    @Nonnull List<VirtualFile> initDataFiles) {
     super(project, true);
     setTitle(title);
     myProject = project;
@@ -87,13 +86,13 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction()};
   }
 
-  private void initData(@NotNull final List<VirtualFile> files) {
+  private void initData(@Nonnull final List<VirtualFile> files) {
     final TreeState state = TreeState.createOn(myView, (ChangesBrowserNode)myView.getModel().getRoot());
 
     final DefaultTreeModel model = TreeModelBuilder.buildFromVirtualFiles(myProject, myView.isShowFlatten(), files);
@@ -123,7 +122,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     myView.setShowFlatten(false);
   }
 
-  protected void addCustomActions(@NotNull DefaultActionGroup group, @NotNull ActionToolbar actionToolbar) {
+  protected void addCustomActions(@Nonnull DefaultActionGroup group, @Nonnull ActionToolbar actionToolbar) {
   }
 
   @Override
@@ -176,14 +175,14 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", ModalityState.current());
   }
 
-  @NotNull
+  @Nonnull
   protected abstract List<VirtualFile> getFiles();
 
-  protected static ChangesBrowserBase getBrowserBase(@NotNull ChangesListView view) {
+  protected static ChangesBrowserBase getBrowserBase(@Nonnull ChangesListView view) {
     return DataManager.getInstance().getDataContext(view).getData(ChangesBrowserBase.DATA_KEY);
   }
 
-  public static void refreshChanges(@NotNull Project project, @Nullable ChangesBrowserBase browser) {
+  public static void refreshChanges(@Nonnull Project project, @javax.annotation.Nullable ChangesBrowserBase browser) {
     if (browser != null) {
       ChangeListManager.getInstance(project)
               .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);

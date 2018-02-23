@@ -16,7 +16,7 @@
 package consulo.ui.shared;
 
 import com.google.common.annotations.GwtIncompatible;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -41,7 +41,7 @@ public class Rectangle2D implements Serializable, Cloneable {
     this(new Coordinate2D(x, y), new Size(width, height));
   }
 
-  public Rectangle2D(@NotNull Coordinate2D coordinate, @NotNull Size size) {
+  public Rectangle2D(@Nonnull Coordinate2D coordinate, @Nonnull Size size) {
     myCoordinate = coordinate;
     mySize = size;
   }
@@ -62,12 +62,12 @@ public class Rectangle2D implements Serializable, Cloneable {
     return myCoordinate.getY();
   }
 
-  @NotNull
+  @Nonnull
   public Coordinate2D getCoordinate() {
     return myCoordinate;
   }
 
-  @NotNull
+  @Nonnull
   public Size getSize() {
     return mySize;
   }

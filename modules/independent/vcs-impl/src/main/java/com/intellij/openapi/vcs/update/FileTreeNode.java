@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -39,9 +39,9 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
   private static final Collection<VirtualFile> EMPTY_VIRTUAL_FILE_ARRAY = new ArrayList<VirtualFile>();
 
 
-  public FileTreeNode(@NotNull String path,
-                      @NotNull SimpleTextAttributes invalidAttributes,
-                      @NotNull Project project,
+  public FileTreeNode(@Nonnull String path,
+                      @Nonnull SimpleTextAttributes invalidAttributes,
+                      @Nonnull Project project,
                       String parentPath) {
     super(path, invalidAttributes, project, parentPath);
   }
@@ -74,7 +74,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getVirtualFiles() {
     VirtualFile virtualFile = getFilePointer().getFile();
@@ -82,7 +82,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
     return Collections.singleton(virtualFile);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<File> getFiles() {
     if (getFilePointer().getFile() == null) {

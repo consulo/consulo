@@ -25,8 +25,8 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,37 +42,54 @@ import java.util.Set;
 public class DefaultArrangementSettingsSerializer implements ArrangementSettingsSerializer {
   private static final Logger LOG = Logger.getInstance("#" + DefaultArrangementSettingsSerializer.class.getName());
 
-  @NotNull @NonNls private static final String GROUPS_ELEMENT_NAME     = "groups";
-  @NotNull @NonNls private static final String GROUP_ELEMENT_NAME      = "group";
-  @NotNull @NonNls private static final String RULES_ELEMENT_NAME      = "rules";
-  @NotNull @NonNls private static final String TOKENS_ELEMENT_NAME     = "tokens";
-  @NotNull @NonNls private static final String TOKEN_ELEMENT_NAME      = "token";
-  @NotNull @NonNls private static final String TOKEN_ID                = "id";
-  @NotNull @NonNls private static final String TOKEN_NAME              = "name";
-  @NotNull @NonNls private static final String SECTION_ELEMENT_NAME    = "section";
-  @NotNull @NonNls private static final String SECTION_START_ATTRIBUTE = "start_comment";
-  @NotNull @NonNls private static final String SECTION_END_ATTRIBUTE   = "end_comment";
-  @NotNull @NonNls private static final String RULE_ELEMENT_NAME       = "rule";
-  @NotNull @NonNls private static final String TYPE_ELEMENT_NAME       = "type";
-  @NotNull @NonNls private static final String MATCHER_ELEMENT_NAME    = "match";
-  @NotNull @NonNls private static final String ORDER_TYPE_ELEMENT_NAME = "order";
+  @Nonnull
+  @NonNls private static final String GROUPS_ELEMENT_NAME     = "groups";
+  @Nonnull
+  @NonNls private static final String GROUP_ELEMENT_NAME      = "group";
+  @Nonnull
+  @NonNls private static final String RULES_ELEMENT_NAME      = "rules";
+  @Nonnull
+  @NonNls private static final String TOKENS_ELEMENT_NAME     = "tokens";
+  @Nonnull
+  @NonNls private static final String TOKEN_ELEMENT_NAME      = "token";
+  @Nonnull
+  @NonNls private static final String TOKEN_ID                = "id";
+  @Nonnull
+  @NonNls private static final String TOKEN_NAME              = "name";
+  @Nonnull
+  @NonNls private static final String SECTION_ELEMENT_NAME    = "section";
+  @Nonnull
+  @NonNls private static final String SECTION_START_ATTRIBUTE = "start_comment";
+  @Nonnull
+  @NonNls private static final String SECTION_END_ATTRIBUTE   = "end_comment";
+  @Nonnull
+  @NonNls private static final String RULE_ELEMENT_NAME       = "rule";
+  @Nonnull
+  @NonNls private static final String TYPE_ELEMENT_NAME       = "type";
+  @Nonnull
+  @NonNls private static final String MATCHER_ELEMENT_NAME    = "match";
+  @Nonnull
+  @NonNls private static final String ORDER_TYPE_ELEMENT_NAME = "order";
 
-  @NotNull private final DefaultArrangementEntryMatcherSerializer myMatcherSerializer;
-  @NotNull private final Mixin                                    myMixin;
-  @NotNull private final ArrangementSettings                      myDefaultSettings;
+  @Nonnull
+  private final DefaultArrangementEntryMatcherSerializer myMatcherSerializer;
+  @Nonnull
+  private final Mixin                                    myMixin;
+  @Nonnull
+  private final ArrangementSettings                      myDefaultSettings;
 
-  public DefaultArrangementSettingsSerializer(@NotNull StdArrangementSettings defaultSettings) {
+  public DefaultArrangementSettingsSerializer(@Nonnull StdArrangementSettings defaultSettings) {
     this(Mixin.NULL, defaultSettings);
   }
 
-  public DefaultArrangementSettingsSerializer(@NotNull Mixin mixin, @NotNull StdArrangementSettings defaultSettings) {
+  public DefaultArrangementSettingsSerializer(@Nonnull Mixin mixin, @Nonnull StdArrangementSettings defaultSettings) {
     myMixin = new MutableMixin(mixin);
     myMatcherSerializer = new DefaultArrangementEntryMatcherSerializer(myMixin);
     myDefaultSettings = defaultSettings;
   }
 
   @Override
-  public void serialize(@NotNull ArrangementSettings s, @NotNull Element holder) {
+  public void serialize(@Nonnull ArrangementSettings s, @Nonnull Element holder) {
     if (!(s instanceof StdArrangementSettings)) {
       return;
     }
@@ -125,7 +142,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
 
   @Nullable
   @Override
-  public ArrangementSettings deserialize(@NotNull Element element) {
+  public ArrangementSettings deserialize(@Nonnull Element element) {
     final Set<StdArrangementRuleAliasToken> tokensDefinition = deserializeTokensDefinition(element, myDefaultSettings);
     final List<ArrangementGroupingRule> groupingRules = deserializeGropings(element, myDefaultSettings);
     final Element rulesElement = element.getChild(RULES_ELEMENT_NAME);
@@ -148,8 +165,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return new StdArrangementExtendableSettings(groupingRules, sectionRules, tokensDefinition);
   }
 
-  @Nullable
-  private Set<StdArrangementRuleAliasToken> deserializeTokensDefinition(@NotNull Element element, @NotNull ArrangementSettings defaultSettings) {
+  @javax.annotation.Nullable
+  private Set<StdArrangementRuleAliasToken> deserializeTokensDefinition(@Nonnull Element element, @Nonnull ArrangementSettings defaultSettings) {
     if (!(defaultSettings instanceof ArrangementExtendableSettings)) {
       return null;
     }
@@ -173,8 +190,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return tokenDefinitions;
   }
 
-  @NotNull
-  private List<ArrangementGroupingRule> deserializeGropings(@NotNull Element element, @Nullable ArrangementSettings defaultSettings) {
+  @Nonnull
+  private List<ArrangementGroupingRule> deserializeGropings(@Nonnull Element element, @Nullable ArrangementSettings defaultSettings) {
     Element groups = element.getChild(GROUPS_ELEMENT_NAME);
     if (groups == null) {
       return defaultSettings == null ? ContainerUtil.<ArrangementGroupingRule>newSmartList() : defaultSettings.getGroupings();
@@ -210,9 +227,9 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return groupings;
   }
 
-  @NotNull
-  private List<ArrangementSectionRule> deserializeSectionRules(@NotNull Element rulesElement,
-                                                               @Nullable Set<StdArrangementRuleAliasToken> tokens) {
+  @Nonnull
+  private List<ArrangementSectionRule> deserializeSectionRules(@Nonnull Element rulesElement,
+                                                               @javax.annotation.Nullable Set<StdArrangementRuleAliasToken> tokens) {
     final List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
     for (Object o : rulesElement.getChildren(SECTION_ELEMENT_NAME)) {
       final Element sectionElement = (Element)o;
@@ -226,8 +243,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return sectionRules;
   }
 
-  @NotNull
-  private List<StdArrangementMatchRule> deserializeRules(@NotNull Element element, @Nullable final Set<StdArrangementRuleAliasToken> aliases) {
+  @Nonnull
+  private List<StdArrangementMatchRule> deserializeRules(@Nonnull Element element, @Nullable final Set<StdArrangementRuleAliasToken> aliases) {
     if (aliases != null && myMixin instanceof MutableMixin) {
       ((MutableMixin)myMixin).setMyRuleAliases(aliases);
     }
@@ -273,7 +290,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
   }
 
   @Nullable
-  public Element serialize(@NotNull ArrangementMatchRule rule) {
+  public Element serialize(@Nonnull ArrangementMatchRule rule) {
     Element matcherElement = myMatcherSerializer.serialize(rule.getMatcher());
     if (matcherElement == null) {
       return null;
@@ -287,8 +304,8 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return result;
   }
 
-  @Nullable
-  public Element serialize(@NotNull ArrangementSectionRule section) {
+  @javax.annotation.Nullable
+  public Element serialize(@Nonnull ArrangementSectionRule section) {
     final Element sectionElement = new Element(SECTION_ELEMENT_NAME);
     if (StringUtil.isNotEmpty(section.getStartComment())) {
       // or only != null ?
@@ -324,7 +341,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
 
     @Nullable
     @Override
-    public ArrangementSettingsToken deserializeToken(@NotNull String id) {
+    public ArrangementSettingsToken deserializeToken(@Nonnull String id) {
       final ArrangementSettingsToken token = myDelegate.deserializeToken(id);
       if (token != null || myRuleAliases == null) {
         return token;
@@ -344,10 +361,10 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     Mixin NULL = new Mixin() {
       @Nullable
       @Override
-      public ArrangementSettingsToken deserializeToken(@NotNull String id) { return null; }
+      public ArrangementSettingsToken deserializeToken(@Nonnull String id) { return null; }
     };
 
     @Nullable
-    ArrangementSettingsToken deserializeToken(@NotNull String id);
+    ArrangementSettingsToken deserializeToken(@Nonnull String id);
   }
 }

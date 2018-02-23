@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -179,7 +179,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     LOG.assertTrue(element instanceof FileElement, element.getClass().getName());
     VirtualFile file = ((FileElement)element).getFile();

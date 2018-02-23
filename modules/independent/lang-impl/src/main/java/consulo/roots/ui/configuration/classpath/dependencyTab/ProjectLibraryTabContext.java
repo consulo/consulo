@@ -36,9 +36,9 @@ import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ModifiableModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -80,7 +80,7 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
   }
 
   @Override
-  public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
     Object[] selectedValues = myLibraryList.getSelectedValues();
 
     List<OrderEntry> entries = new ArrayList<OrderEntry>(selectedValues.length);
@@ -136,13 +136,13 @@ public class ProjectLibraryTabContext extends AddModuleDependencyTabContext {
     return myItems.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getTabName() {
     return "Library";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myLibraryList;

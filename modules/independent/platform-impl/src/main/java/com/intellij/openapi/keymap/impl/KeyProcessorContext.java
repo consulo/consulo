@@ -18,8 +18,8 @@ package com.intellij.openapi.keymap.impl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.reference.SoftReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class KeyProcessorContext {
   private WeakReference<Component> myFocusOwner;
   private KeyEvent myInputEvent;
 
-  @NotNull
+  @Nonnull
   List<AnAction> getActions() {
     return myActions;
   }

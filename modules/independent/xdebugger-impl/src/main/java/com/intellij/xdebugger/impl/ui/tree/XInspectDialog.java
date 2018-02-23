@@ -26,8 +26,8 @@ import com.intellij.xdebugger.impl.evaluate.quick.XDebuggerTreeCreator;
 import com.intellij.xdebugger.impl.evaluate.quick.common.DebuggerTreeWithHistoryPanel;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -37,11 +37,11 @@ import javax.swing.*;
 public class XInspectDialog extends DialogWrapper {
   private final DebuggerTreeWithHistoryPanel<Pair<XValue, String>> myDebuggerTreePanel;
 
-  public XInspectDialog(@NotNull Project project,
+  public XInspectDialog(@Nonnull Project project,
                         XDebuggerEditorsProvider editorsProvider,
                         XSourcePosition sourcePosition,
-                        @NotNull String name,
-                        @NotNull XValue value,
+                        @Nonnull String name,
+                        @Nonnull XValue value,
                         XValueMarkers<?, ?> markers) {
     super(project, false);
 

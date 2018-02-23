@@ -40,8 +40,8 @@ import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectori
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -88,7 +88,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   }
 
   @Nullable
-  private static PsiDirectory tryNotNullizeDirectory(@NotNull Project project, @Nullable PsiDirectory defaultTargetDirectory) {
+  private static PsiDirectory tryNotNullizeDirectory(@Nonnull Project project, @Nullable PsiDirectory defaultTargetDirectory) {
     if (defaultTargetDirectory == null) {
       VirtualFile root = ArrayUtil.getFirstElement(ProjectRootManager.getInstance(project).getContentRoots());
       if (root == null) root = project.getBaseDir();
@@ -214,9 +214,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
    * @param targetDirectory
    * @param openInEditor
    */
-  private static void copyImpl(@NotNull final VirtualFile[] files,
+  private static void copyImpl(@Nonnull final VirtualFile[] files,
                                @Nullable final String newName,
-                               @NotNull final PsiDirectory targetDirectory,
+                               @Nonnull final PsiDirectory targetDirectory,
                                final boolean doClone,
                                final boolean openInEditor) {
     if (doClone && files.length != 1) {
@@ -268,9 +268,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
    * @return first copied PsiFile (recursively); null if no PsiFiles copied
    */
   @Nullable
-  public static PsiFile copyToDirectory(@NotNull PsiFileSystemItem elementToCopy,
+  public static PsiFile copyToDirectory(@Nonnull PsiFileSystemItem elementToCopy,
                                         @Nullable String newName,
-                                        @NotNull PsiDirectory targetDirectory) throws IncorrectOperationException, IOException {
+                                        @Nonnull PsiDirectory targetDirectory) throws IncorrectOperationException, IOException {
     return copyToDirectory(elementToCopy, newName, targetDirectory, null, null);
   }
 
@@ -281,9 +281,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
    * @return first copied PsiFile (recursively); null if no PsiFiles copied
    */
   @Nullable
-  public static PsiFile copyToDirectory(@NotNull PsiFileSystemItem elementToCopy,
+  public static PsiFile copyToDirectory(@Nonnull PsiFileSystemItem elementToCopy,
                                         @Nullable String newName,
-                                        @NotNull PsiDirectory targetDirectory,
+                                        @Nonnull PsiDirectory targetDirectory,
                                         @Nullable int[] choice,
                                         @Nullable String title) throws IncorrectOperationException, IOException {
     if (elementToCopy instanceof PsiFile) {
@@ -292,7 +292,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
       if (checkFileExist(targetDirectory, choice, file, name, "Copy")) return null;
       return new WriteCommandAction<PsiFile>(targetDirectory.getProject(), title) {
         @Override
-        protected void run(@NotNull Result<PsiFile> result) throws Throwable {
+        protected void run(@Nonnull Result<PsiFile> result) throws Throwable {
           result.setResult(targetDirectory.copyFileFrom(name, file));
         }
       }.execute().getResultObject();
@@ -309,7 +309,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         String finalNewName = newName;
         subdirectory = new WriteCommandAction<PsiDirectory>(targetDirectory.getProject(), title) {
           @Override
-          protected void run(@NotNull Result<PsiDirectory> result) throws Throwable {
+          protected void run(@Nonnull Result<PsiDirectory> result) throws Throwable {
             result.setResult(targetDirectory.createSubdirectory(finalNewName));
           }
         }.execute().getResultObject();
@@ -376,7 +376,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   }
 
   @Nullable
-  public static PsiDirectory resolveDirectory(@NotNull PsiDirectory defaultTargetDirectory) {
+  public static PsiDirectory resolveDirectory(@Nonnull PsiDirectory defaultTargetDirectory) {
     final Project project = defaultTargetDirectory.getProject();
     final Boolean showDirsChooser = defaultTargetDirectory.getCopyableUserData(CopyPasteDelegator.SHOW_CHOOSER_KEY);
     if (showDirsChooser != null && showDirsChooser.booleanValue()) {

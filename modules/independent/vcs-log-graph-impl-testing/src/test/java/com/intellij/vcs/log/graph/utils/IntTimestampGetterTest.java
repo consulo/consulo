@@ -16,9 +16,8 @@
 
 package com.intellij.vcs.log.graph.utils;
 
-import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.IntTimestampGetter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -43,7 +42,7 @@ public class IntTimestampGetterTest {
     };
   }
 
-  private static String toStr(@NotNull TimestampGetter timestampGetter) {
+  private static String toStr(@Nonnull TimestampGetter timestampGetter) {
     StringBuilder s = new StringBuilder();
     for (int i = 0; i < timestampGetter.size(); i++) {
       if (i != 0)

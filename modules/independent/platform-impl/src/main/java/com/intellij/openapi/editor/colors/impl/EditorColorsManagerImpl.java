@@ -39,8 +39,8 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.annotations.Immutable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.net.URL;
@@ -67,16 +67,16 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   public EditorColorsManagerImpl(SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsSchemeImpl>() {
-      @NotNull
+      @Nonnull
       @Override
-      public EditorColorsSchemeImpl readScheme(@NotNull Element element) {
+      public EditorColorsSchemeImpl readScheme(@Nonnull Element element) {
         EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
         scheme.readExternal(element);
         return scheme;
       }
 
       @Override
-      public Element writeScheme(@NotNull final EditorColorsSchemeImpl scheme) {
+      public Element writeScheme(@Nonnull final EditorColorsSchemeImpl scheme) {
         Element root = new Element(SCHEME_NODE_NAME);
         try {
           scheme.writeExternal(root);
@@ -88,9 +88,9 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
         return root;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public State getState(@NotNull EditorColorsSchemeImpl scheme) {
+      public State getState(@Nonnull EditorColorsSchemeImpl scheme) {
         return scheme instanceof ReadOnlyColorsScheme ? State.NON_PERSISTENT : State.POSSIBLY_CHANGED;
       }
 
@@ -99,7 +99,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
         fireChanges(mySchemesManager.getCurrentScheme());
       }
 
-      @NotNull
+      @Nonnull
       @NonNls
       @Override
       public String getSchemeExtension() {
@@ -175,7 +175,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   @Override
-  public void addColorsScheme(@NotNull EditorColorsScheme scheme) {
+  public void addColorsScheme(@Nonnull EditorColorsScheme scheme) {
     if (!isDefaultScheme(scheme) && !StringUtil.isEmpty(scheme.getName())) {
       mySchemesManager.addNewScheme(scheme, true);
     }
@@ -188,7 +188,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @Immutable
   public Map<String, EditorColorsScheme> getBundledSchemes() {
     return myDefaultColorsSchemes;
@@ -200,14 +200,14 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorColorsScheme[] getAllSchemes() {
     List<EditorColorsScheme> schemes = mySchemesManager.getAllSchemes();
     EditorColorsScheme[] result = schemes.toArray(new EditorColorsScheme[schemes.size()]);
     Arrays.sort(result, new Comparator<EditorColorsScheme>() {
       @Override
-      public int compare(@NotNull EditorColorsScheme s1, @NotNull EditorColorsScheme s2) {
+      public int compare(@Nonnull EditorColorsScheme s1, @Nonnull EditorColorsScheme s2) {
         if (isDefaultScheme(s1) && !isDefaultScheme(s2)) return -1;
         if (!isDefaultScheme(s1) && isDefaultScheme(s2)) return 1;
         if (s1.getName().equals(DEFAULT_NAME)) return -1;
@@ -232,12 +232,12 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     mySchemesManager.setCurrentSchemeName(scheme == null ? getDefaultScheme().getName() : scheme.getName());
   }
 
-  @NotNull
+  @Nonnull
   private EditorColorsScheme getDefaultScheme() {
     return myDefaultColorsSchemes.get(DEFAULT_SCHEME_NAME);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorColorsScheme getGlobalScheme() {
     EditorColorsScheme scheme = mySchemesManager.getCurrentScheme();
@@ -245,7 +245,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   @Override
-  public EditorColorsScheme getScheme(@NotNull String schemeName) {
+  public EditorColorsScheme getScheme(@Nonnull String schemeName) {
     return mySchemesManager.findSchemeByName(schemeName);
   }
 

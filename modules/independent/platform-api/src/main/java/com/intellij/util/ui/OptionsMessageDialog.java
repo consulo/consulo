@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog{
   protected abstract String getOkActionName();
   protected abstract String getCancelActionName();
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     final Action okAction = getOKAction();
     final Action cancelAction = getCancelAction();

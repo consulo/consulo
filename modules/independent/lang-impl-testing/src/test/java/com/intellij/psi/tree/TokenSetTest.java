@@ -21,7 +21,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -101,7 +101,7 @@ public class TokenSetTest {
     }
   }
 
-  private static void check(@NotNull TokenSet set, @NotNull IElementType... elements) {
+  private static void check(@Nonnull TokenSet set, @Nonnull IElementType... elements) {
     final Set<IElementType> expected = ContainerUtil.newHashSet(elements);
     for (IElementType t : Arrays.asList(T1, T2, T3, T4, T5, T6)) {
       if (expected.contains(t)) {
@@ -113,7 +113,7 @@ public class TokenSetTest {
     }
   }
 
-  private static void checkNot(@NotNull TokenSet set, @NotNull IElementType... elements) {
+  private static void checkNot(@Nonnull TokenSet set, @Nonnull IElementType... elements) {
     final Set<IElementType> expected = ContainerUtil.newHashSet(elements);
     for (IElementType t : Arrays.asList(T1, T2, T3, T4, T5, T6)) {
       if (!expected.contains(t)) {

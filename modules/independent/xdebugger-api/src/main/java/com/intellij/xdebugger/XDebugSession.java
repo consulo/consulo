@@ -31,8 +31,8 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -48,10 +48,10 @@ import javax.swing.event.HyperlinkListener;
 public interface XDebugSession extends AbstractDebuggerSession {
   Key<XDebugSession> DATA_KEY = Key.create("XDebugSessionTab.XDebugSession");
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   XDebugProcess getDebugProcess();
 
   boolean isSuspended();
@@ -83,7 +83,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void forceStepInto();
 
-  void runToPosition(@NotNull XSourcePosition position, final boolean ignoreBreakpoints);
+  void runToPosition(@Nonnull XSourcePosition position, final boolean ignoreBreakpoints);
 
   void pause();
 
@@ -91,9 +91,9 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   void showExecutionPoint();
 
-  void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame, boolean isTopFrame);
+  void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame, boolean isTopFrame);
 
-  default void setCurrentStackFrame(@NotNull XExecutionStack executionStack, @NotNull XStackFrame frame) {
+  default void setCurrentStackFrame(@Nonnull XExecutionStack executionStack, @Nonnull XStackFrame frame) {
     setCurrentStackFrame(executionStack, frame, frame.equals(executionStack.getTopFrame()));
   }
 
@@ -104,7 +104,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * @param icon         icon (<code>null</code> if default icon should be used). You can use icons from {@link com.intellij.icons.AllIcons.Debugger}
    * @param errorMessage an error message if breakpoint isn't successfully registered
    */
-  void updateBreakpointPresentation(@NotNull XLineBreakpoint<?> breakpoint, @Nullable Icon icon, @Nullable String errorMessage);
+  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable String errorMessage);
 
   /**
    * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.
@@ -116,21 +116,21 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * @param suspendContext         context
    * @return <code>true</code> if the debug process should be suspended
    */
-  boolean breakpointReached(@NotNull XBreakpoint<?> breakpoint,
+  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint,
                             @Nullable String evaluatedLogExpression,
-                            @NotNull XSuspendContext suspendContext);
+                            @Nonnull XSuspendContext suspendContext);
 
   /**
    * @deprecated use {@link #breakpointReached(com.intellij.xdebugger.breakpoints.XBreakpoint, String, com.intellij.xdebugger.frame.XSuspendContext)} instead
    */
-  boolean breakpointReached(@NotNull XBreakpoint<?> breakpoint, @NotNull XSuspendContext suspendContext);
+  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nonnull XSuspendContext suspendContext);
 
   /**
    * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
    *
    * @param suspendContext context
    */
-  void positionReached(@NotNull XSuspendContext suspendContext);
+  void positionReached(@Nonnull XSuspendContext suspendContext);
 
   /**
    * Call this method when session resumed because of some external event, e.g. from the debugger console
@@ -144,22 +144,22 @@ public interface XDebugSession extends AbstractDebuggerSession {
   boolean areBreakpointsMuted();
 
 
-  void addSessionListener(@NotNull XDebugSessionListener listener, @NotNull Disposable parentDisposable);
+  void addSessionListener(@Nonnull XDebugSessionListener listener, @Nonnull Disposable parentDisposable);
 
-  void addSessionListener(@NotNull XDebugSessionListener listener);
+  void addSessionListener(@Nonnull XDebugSessionListener listener);
 
-  void removeSessionListener(@NotNull XDebugSessionListener listener);
+  void removeSessionListener(@Nonnull XDebugSessionListener listener);
 
-  void reportError(@NotNull String message);
+  void reportError(@Nonnull String message);
 
-  void reportMessage(@NotNull String message, @NotNull MessageType type);
+  void reportMessage(@Nonnull String message, @Nonnull MessageType type);
 
-  void reportMessage(@NotNull String message, @NotNull MessageType type, @Nullable HyperlinkListener listener);
+  void reportMessage(@Nonnull String message, @Nonnull MessageType type, @javax.annotation.Nullable HyperlinkListener listener);
 
-  @NotNull
+  @Nonnull
   String getSessionName();
 
-  @NotNull
+  @Nonnull
   RunContentDescriptor getRunContentDescriptor();
 
   @Nullable

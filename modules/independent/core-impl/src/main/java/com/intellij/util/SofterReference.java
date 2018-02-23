@@ -17,8 +17,8 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.util.containers.WeakList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -43,7 +43,7 @@ public class SofterReference<T> {
     }
   });
 
-  public SofterReference(@NotNull T referent) {
+  public SofterReference(@Nonnull T referent) {
     ourRegistry.add(this);
     myRef = new SoftReference<T>(referent);
   }

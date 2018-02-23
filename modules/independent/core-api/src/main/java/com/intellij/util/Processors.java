@@ -16,13 +16,13 @@
 package com.intellij.util;
 
 import com.intellij.openapi.progress.ProgressManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class Processors {
-  @NotNull
-  public static <T> Processor<T> cancelableCollectProcessor(@NotNull Collection<T> collection) {
+  @Nonnull
+  public static <T> Processor<T> cancelableCollectProcessor(@Nonnull Collection<T> collection) {
     return new CommonProcessors.CollectProcessor<T>(collection){
       @Override
       public boolean process(T t) {

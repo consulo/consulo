@@ -23,20 +23,20 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.util.concurrent.*;
 
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
-  public static <T> T tryRunReadAction(@NotNull final Computable<T> computable) throws CannotRunReadActionException {
+  public static <T> T tryRunReadAction(@Nonnull final Computable<T> computable) throws CannotRunReadActionException {
     final Ref<T> result = new Ref<>();
     tryRunReadAction(() -> result.set(computable.compute()));
     return result.get();
   }
 
-  public static void tryRunReadAction(@NotNull final Runnable computable) throws CannotRunReadActionException {
+  public static void tryRunReadAction(@Nonnull final Runnable computable) throws CannotRunReadActionException {
     if (!((ApplicationEx)ApplicationManager.getApplication()).tryRunReadAction(computable)) {
       throw new CannotRunReadActionException();
     }
@@ -46,7 +46,7 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(@NotNull final Callable<T> callable, @NotNull final ProgressIndicator indicator) throws Exception {
+  public static <T> T runWithCheckCanceled(@Nonnull final Callable<T> callable, @Nonnull final ProgressIndicator indicator) throws Exception {
     final Ref<T> result = Ref.create();
     final Ref<Throwable> error = Ref.create();
 
@@ -77,7 +77,7 @@ public class ApplicationUtil {
     }
   }
 
-  public static void showDialogAfterWriteAction(@NotNull Runnable runnable) {
+  public static void showDialogAfterWriteAction(@Nonnull Runnable runnable) {
     Application application = ApplicationManager.getApplication();
     if (application.isWriteAccessAllowed()) {
       application.invokeLater(runnable);

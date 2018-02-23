@@ -32,14 +32,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BraceHighlighter implements StartupActivity {
 
   private final Alarm myAlarm = new Alarm();
 
   @Override
-  public void runActivity(@NotNull final Project project) {
+  public void runActivity(@Nonnull final Project project) {
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return; // sorry, upsource
     final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
@@ -113,13 +113,13 @@ public class BraceHighlighter implements StartupActivity {
 
     fileEditorManager.addFileEditorManagerListener(new FileEditorManagerAdapter() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent e) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         myAlarm.cancelAllRequests();
       }
     }, project);
   }
 
-  static void updateBraces(@NotNull final Editor editor, @NotNull final Alarm alarm) {
+  static void updateBraces(@Nonnull final Editor editor, @Nonnull final Alarm alarm) {
     final Document document = editor.getDocument();
     if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
 
@@ -129,7 +129,7 @@ public class BraceHighlighter implements StartupActivity {
     });
   }
 
-  private void clearBraces(@NotNull final Editor editor) {
+  private void clearBraces(@Nonnull final Editor editor) {
     BraceHighlightingHandler.lookForInjectedAndMatchBracesInOtherThread(editor, myAlarm, handler -> {
       handler.clearBraceHighlighters();
       return false;

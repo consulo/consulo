@@ -49,8 +49,7 @@ import junit.framework.*;
 import org.intellij.lang.annotations.RegExp;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.File;
@@ -196,8 +195,8 @@ public abstract class UsefulTestCase extends TestCase {
     doCheckForSettingsDamage(oldCodeStyleSettings, getCurrentCodeStyleSettings());
   }
 
-  public static void doCheckForSettingsDamage(@NotNull CodeStyleSettings oldCodeStyleSettings,
-                                              @NotNull CodeStyleSettings currentCodeStyleSettings) throws Exception {
+  public static void doCheckForSettingsDamage(@Nonnull CodeStyleSettings oldCodeStyleSettings,
+                                              @Nonnull CodeStyleSettings currentCodeStyleSettings) throws Exception {
     CompositeException result = new CompositeException();
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
     try {
@@ -360,7 +359,7 @@ public abstract class UsefulTestCase extends TestCase {
     assertOrderedEquals(null, actual, expected);
   }
 
-  public static void assertOrderedEquals(@NotNull byte[] actual, @NotNull byte[] expected) {
+  public static void assertOrderedEquals(@Nonnull byte[] actual, @Nonnull byte[] expected) {
     assertEquals(actual.length, expected.length);
     for (int i = 0; i < actual.length; i++) {
       byte a = actual[i];
@@ -369,7 +368,7 @@ public abstract class UsefulTestCase extends TestCase {
     }
   }
 
-  public static <T> void assertOrderedEquals(final String errorMsg, @NotNull Iterable<T> actual, @NotNull T... expected) {
+  public static <T> void assertOrderedEquals(final String errorMsg, @Nonnull Iterable<T> actual, @Nonnull T... expected) {
     assertNotNull(actual);
     assertNotNull(expected);
     assertOrderedEquals(errorMsg, actual, Arrays.asList(expected));
@@ -394,7 +393,7 @@ public abstract class UsefulTestCase extends TestCase {
     }
   }
 
-  public static <T> void assertOrderedCollection(T[] collection, @NotNull Consumer<T>... checkers) {
+  public static <T> void assertOrderedCollection(T[] collection, @Nonnull Consumer<T>... checkers) {
     assertNotNull(collection);
     assertOrderedCollection(Arrays.asList(collection), checkers);
   }
@@ -769,7 +768,7 @@ public abstract class UsefulTestCase extends TestCase {
    * @throws Throwable
    */
   protected void assertException(final AbstractExceptionCase exceptionCase,
-                                 @Nullable final String expectedErrorMsg) throws Throwable {
+                                 @javax.annotation.Nullable final String expectedErrorMsg) throws Throwable {
     assertExceptionOccurred(true, exceptionCase, expectedErrorMsg);
   }
 
@@ -829,7 +828,7 @@ public abstract class UsefulTestCase extends TestCase {
     }
   }
 
-  protected boolean annotatedWith(@NotNull Class annotationClass) {
+  protected boolean annotatedWith(@Nonnull Class annotationClass) {
     Class aClass = getClass();
     String methodName = "test" + getTestName(false);
     boolean methodChecked = false;
@@ -857,10 +856,10 @@ public abstract class UsefulTestCase extends TestCase {
     return GraphicsEnvironment.isHeadless();
   }
 
-  public static void refreshRecursively(@NotNull VirtualFile file) {
+  public static void refreshRecursively(@Nonnull VirtualFile file) {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         file.getChildren();
         return true;
       }
@@ -868,7 +867,8 @@ public abstract class UsefulTestCase extends TestCase {
     file.refresh(false, true);
   }
 
-  public static @NotNull Test filteredSuite(@RegExp String regexp, @NotNull Test test) {
+  public static @Nonnull
+  Test filteredSuite(@RegExp String regexp, @Nonnull Test test) {
     final Pattern pattern = Pattern.compile(regexp);
     final TestSuite testSuite = new TestSuite();
     new Processor<Test>() {

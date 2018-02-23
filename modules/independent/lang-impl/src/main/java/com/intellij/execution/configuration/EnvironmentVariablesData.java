@@ -20,7 +20,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class EnvironmentVariablesData {
   private final ImmutableMap<String, String> myEnvs;
   private final boolean myPassParentEnvs;
 
-  private EnvironmentVariablesData(@NotNull Map<String, String> envs, boolean passParentEnvs) {
+  private EnvironmentVariablesData(@Nonnull Map<String, String> envs, boolean passParentEnvs) {
     myEnvs = ImmutableMap.copyOf(envs);
     myPassParentEnvs = passParentEnvs;
   }
@@ -53,7 +53,7 @@ public class EnvironmentVariablesData {
   /**
    * @return immutable Map instance containing user-defined environment variables (iteration order is reliable user-specified)
    */
-  @NotNull
+  @Nonnull
   public Map<String, String> getEnvs() {
     return myEnvs;
   }
@@ -82,8 +82,8 @@ public class EnvironmentVariablesData {
     return "envs=" + myEnvs + ", passParentEnvs=" + myPassParentEnvs;
   }
 
-  @NotNull
-  public static EnvironmentVariablesData readExternal(@NotNull Element element) {
+  @Nonnull
+  public static EnvironmentVariablesData readExternal(@Nonnull Element element) {
     Element envsElement = element.getChild(ENVS);
     if (envsElement == null) {
       return DEFAULT;
@@ -104,7 +104,7 @@ public class EnvironmentVariablesData {
     return create(envs, passParentEnvs);
   }
 
-  public void writeExternal(@NotNull Element parent) {
+  public void writeExternal(@Nonnull Element parent) {
     Element envsElement = new Element(ENVS);
     if (!myPassParentEnvs) {
       // Avoid writing pass-parent-envs="true" to minimize changes in xml comparing it to xml written by
@@ -120,7 +120,7 @@ public class EnvironmentVariablesData {
     parent.addContent(envsElement);
   }
 
-  public void configureCommandLine(@NotNull GeneralCommandLine commandLine, boolean consoleParentEnvs) {
+  public void configureCommandLine(@Nonnull GeneralCommandLine commandLine, boolean consoleParentEnvs) {
     if (myPassParentEnvs) {
       commandLine.withParentEnvironmentType(consoleParentEnvs ? GeneralCommandLine.ParentEnvironmentType.CONSOLE
                                                               : GeneralCommandLine.ParentEnvironmentType.SYSTEM);
@@ -136,8 +136,8 @@ public class EnvironmentVariablesData {
    *             (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
    * @param passParentEnvs true if system environment should be passed
    */
-  @NotNull
-  public static EnvironmentVariablesData create(@NotNull Map<String, String> envs, boolean passParentEnvs) {
+  @Nonnull
+  public static EnvironmentVariablesData create(@Nonnull Map<String, String> envs, boolean passParentEnvs) {
     if (passParentEnvs && envs.isEmpty()) {
       return DEFAULT;
     }

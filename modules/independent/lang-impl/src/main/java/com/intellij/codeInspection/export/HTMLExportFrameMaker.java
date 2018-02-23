@@ -29,7 +29,7 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class HTMLExportFrameMaker {
     HTMLExportUtil.writeFile(myRootFolder, "index.html", buf, myProject);
   }
 
-  public void startInspection(@NotNull InspectionToolWrapper toolWrapper) {
+  public void startInspection(@Nonnull InspectionToolWrapper toolWrapper) {
     myInspectionToolWrappers.add(toolWrapper);
     @NonNls StringBuffer buf = new StringBuffer();
     buf.append("<HTML><HEAD><TITLE>");

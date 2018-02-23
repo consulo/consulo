@@ -38,9 +38,9 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.util.RadioUpDownListener;
 import com.intellij.ui.TitledSeparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -72,15 +72,16 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
   private static final String ALL = AnalysisScopeBundle.message("scope.option.uncommited.files.all.changelists.choice");
   private final AnalysisUIOptions myAnalysisOptions;
-  @Nullable private final PsiElement myContext;
+  @Nullable
+  private final PsiElement myContext;
 
-  public BaseAnalysisActionDialog(@NotNull String title,
-                                  @NotNull String analysisNoon,
-                                  @NotNull Project project,
-                                  @NotNull final AnalysisScope scope,
+  public BaseAnalysisActionDialog(@Nonnull String title,
+                                  @Nonnull String analysisNoon,
+                                  @Nonnull Project project,
+                                  @Nonnull final AnalysisScope scope,
                                   final String moduleName,
                                   final boolean rememberScope,
-                                  @NotNull AnalysisUIOptions analysisUIOptions,
+                                  @Nonnull AnalysisUIOptions analysisUIOptions,
                                   @Nullable PsiElement context) {
     super(true);
     Disposer.register(myDisposable, myScopeCombo);
@@ -259,8 +260,8 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     return myInspectTestSource.isSelected();
   }
 
-  @NotNull
-  public AnalysisScope getScope(@NotNull AnalysisUIOptions uiOptions, @NotNull AnalysisScope defaultScope, @NotNull Project project, Module module) {
+  @Nonnull
+  public AnalysisScope getScope(@Nonnull AnalysisUIOptions uiOptions, @Nonnull AnalysisScope defaultScope, @Nonnull Project project, Module module) {
     AnalysisScope scope;
     if (isProjectScopeSelected()) {
       scope = new AnalysisScope(project);

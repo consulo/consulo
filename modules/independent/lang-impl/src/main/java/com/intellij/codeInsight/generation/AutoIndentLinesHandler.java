@@ -27,7 +27,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 public class AutoIndentLinesHandler extends CodeInsightActionHandler.WriteActionAdapter {
@@ -35,7 +35,7 @@ public class AutoIndentLinesHandler extends CodeInsightActionHandler.WriteAction
 
   @RequiredWriteAction
   @Override
-  public void invokeInWriteAction(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invokeInWriteAction(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 

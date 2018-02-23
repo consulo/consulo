@@ -30,7 +30,7 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.actions.DebuggerActionHandler;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -46,7 +46,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   }
 
   @Override
-  public boolean isEnabled(@NotNull final Project project, final AnActionEvent event) {
+  public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
     XLineBreakpointType<?>[] breakpointTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {
@@ -63,7 +63,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   }
 
   @Override
-  public void perform(@NotNull final Project project, final AnActionEvent event) {
+  public void perform(@Nonnull final Project project, final AnActionEvent event) {
     Editor editor = event.getData(CommonDataKeys.EDITOR);
     // do not toggle more than once on the same line
     Set<Integer> processedLines = new HashSet<>();

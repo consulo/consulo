@@ -17,7 +17,7 @@ package com.intellij.util.pico;
 
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.*;
 import org.picocontainer.defaults.*;
 
@@ -39,19 +39,19 @@ public class CachingConstructorInjectionComponentAdapter extends InstantiatingCo
           new ThreadLocal<Set<CachingConstructorInjectionComponentAdapter>>();
   private Object myInstance;
 
-  public CachingConstructorInjectionComponentAdapter(@NotNull Object componentKey, @NotNull Class componentImplementation, Parameter[] parameters, boolean allowNonPublicClasses, ComponentMonitor monitor, LifecycleStrategy lifecycleStrategy) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
+  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters, boolean allowNonPublicClasses, ComponentMonitor monitor, LifecycleStrategy lifecycleStrategy) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
     super(componentKey, componentImplementation, parameters, allowNonPublicClasses, monitor, lifecycleStrategy);
   }
 
-  public CachingConstructorInjectionComponentAdapter(@NotNull Object componentKey, @NotNull Class componentImplementation, Parameter[] parameters, boolean allowNonPublicClasses) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
+  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters, boolean allowNonPublicClasses) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
     super(componentKey, componentImplementation, parameters, allowNonPublicClasses);
   }
 
-  public CachingConstructorInjectionComponentAdapter(@NotNull Object componentKey, @NotNull Class componentImplementation, Parameter[] parameters) {
+  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters) {
     this(componentKey, componentImplementation, parameters, false);
   }
 
-  public CachingConstructorInjectionComponentAdapter(@NotNull Object componentKey, @NotNull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
+  public CachingConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class componentImplementation) throws AssignabilityRegistrationException, NotConcreteRegistrationException {
     this(componentKey, componentImplementation, null);
   }
 

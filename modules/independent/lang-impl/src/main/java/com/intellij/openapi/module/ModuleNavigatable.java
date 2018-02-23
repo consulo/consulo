@@ -17,7 +17,7 @@ package com.intellij.openapi.module;
 
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public class ModuleNavigatable implements Navigatable {
   private final Module module;
 
-  public ModuleNavigatable(@NotNull Module module) {
+  public ModuleNavigatable(@Nonnull Module module) {
     this.module = module;
   }
 

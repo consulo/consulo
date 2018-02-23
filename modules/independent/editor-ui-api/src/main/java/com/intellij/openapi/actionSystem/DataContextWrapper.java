@@ -18,33 +18,33 @@ package com.intellij.openapi.actionSystem;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 // We implement UserDataHolder to support DataManager.saveInDataContext/loadFromDataContext methods
 public class DataContextWrapper implements DataContext, UserDataHolder {
   private final DataContext myDelegate;
   private final UserDataHolder myDataHolder;
 
-  public DataContextWrapper(@NotNull DataContext delegate) {
+  public DataContextWrapper(@Nonnull DataContext delegate) {
     myDelegate = delegate;
     myDataHolder = delegate instanceof UserDataHolder ? (UserDataHolder) delegate : new UserDataHolderBase();
   }
 
   @Nullable
   @Override
-  public <T> T getData(@NotNull Key<T> dataId) {
+  public <T> T getData(@Nonnull Key<T> dataId) {
     return myDelegate.getData(dataId);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myDataHolder.putUserData(key, value);
   }
 }

@@ -17,7 +17,7 @@ package com.intellij.remote;
 
 import com.google.common.net.HostAndPort;
 import com.intellij.execution.process.SelfKiller;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Alexander Koshevoy

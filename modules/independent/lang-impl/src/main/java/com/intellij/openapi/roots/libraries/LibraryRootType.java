@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.roots.OrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,12 +25,12 @@ public class LibraryRootType {
   private final OrderRootType myType;
   private final boolean myJarDirectory;
 
-  public LibraryRootType(@NotNull OrderRootType type, boolean jarDirectory) {
+  public LibraryRootType(@Nonnull OrderRootType type, boolean jarDirectory) {
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  @NotNull
+  @Nonnull
   public OrderRootType getType() {
     return myType;
   }

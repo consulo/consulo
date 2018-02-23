@@ -24,15 +24,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface HolderFactory {
-  DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context);
-  DummyHolder createHolder(@NotNull PsiManager manager, CharTable table, boolean validity);
-  DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context);
-  DummyHolder createHolder(@NotNull PsiManager manager, Language language, PsiElement context);
-  DummyHolder createHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table);
-  DummyHolder createHolder(@NotNull PsiManager manager, PsiElement context, CharTable table);
-  DummyHolder createHolder(@NotNull PsiManager manager, final CharTable table, final Language language);
+  DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context);
+  DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, boolean validity);
+  DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context);
+  DummyHolder createHolder(@Nonnull PsiManager manager, Language language, PsiElement context);
+  DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table);
+  DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table);
+  DummyHolder createHolder(@Nonnull PsiManager manager, final CharTable table, final Language language);
   
 }

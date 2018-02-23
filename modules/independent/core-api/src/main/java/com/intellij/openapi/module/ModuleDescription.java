@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ import java.util.List;
  * @author nik
  */
 public interface ModuleDescription {
-  @NotNull
+  @Nonnull
   String getName();
 
   /**
    * Names of the modules on which the current module depend.
    */
-  @NotNull
+  @Nonnull
   List<String> getDependencyModuleNames();
 }

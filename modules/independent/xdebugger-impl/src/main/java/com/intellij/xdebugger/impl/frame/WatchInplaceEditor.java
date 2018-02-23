@@ -22,8 +22,8 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeInplaceEditor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchesRootNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -33,7 +33,7 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final XWatchesView myWatchesView;
   private final WatchNode myOldNode;
 
-  public WatchInplaceEditor(@NotNull WatchesRootNode rootNode,
+  public WatchInplaceEditor(@Nonnull WatchesRootNode rootNode,
                             XWatchesView watchesView,
                             WatchNode node,
                             @Nullable WatchNode oldNode) {

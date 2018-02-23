@@ -26,7 +26,7 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.usageView.UsageViewUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,11 +34,12 @@ import javax.swing.*;
  * @author max
  */
 public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
-  @NotNull protected final PsiElement myPsiElement;
+  @Nonnull
+  protected final PsiElement myPsiElement;
 
-  public CommonFindUsagesDialog(@NotNull PsiElement element,
-                                @NotNull Project project,
-                                @NotNull FindUsagesOptions findUsagesOptions,
+  public CommonFindUsagesDialog(@Nonnull PsiElement element,
+                                @Nonnull Project project,
+                                @Nonnull FindUsagesOptions findUsagesOptions,
                                 boolean toShowInNewTab,
                                 boolean mustOpenInNewTab,
                                 boolean isSingleFile,
@@ -65,7 +66,7 @@ public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
   }
 
   @Override
-  public void configureLabelComponent(@NotNull SimpleColoredComponent coloredComponent) {
+  public void configureLabelComponent(@Nonnull SimpleColoredComponent coloredComponent) {
     coloredComponent.append(StringUtil.capitalize(UsageViewUtil.getType(myPsiElement)));
     coloredComponent.append(" ");
     coloredComponent.append(DescriptiveNameUtil.getDescriptiveName(myPsiElement), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);

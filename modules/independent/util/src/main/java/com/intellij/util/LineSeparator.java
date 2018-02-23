@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * <p>Identifies a line separator:
@@ -39,13 +39,13 @@ public enum LineSeparator {
   private final String mySeparatorString;
   private final byte[] myBytes;
 
-  LineSeparator(@NotNull String separatorString) {
+  LineSeparator(@Nonnull String separatorString) {
     mySeparatorString = separatorString;
     myBytes = separatorString.getBytes(CharsetToolkit.UTF8_CHARSET);
   }
 
-  @NotNull
-  public static LineSeparator fromString(@NotNull String string) {
+  @Nonnull
+  public static LineSeparator fromString(@Nonnull String string) {
     for (LineSeparator separator : values()) {
       if (separator.getSeparatorString().equals(string)) {
         return separator;
@@ -55,12 +55,12 @@ public enum LineSeparator {
     return getSystemLineSeparator();
   }
 
-  @NotNull
+  @Nonnull
   public String getSeparatorString() {
     return mySeparatorString;
   }
 
-  @NotNull
+  @Nonnull
   public byte[] getSeparatorBytes() {
     return myBytes;
   }
@@ -69,7 +69,7 @@ public enum LineSeparator {
     return separator1 != null && separator2 != null && !separator1.equals(separator2);
   }
 
-  @NotNull
+  @Nonnull
   public static LineSeparator getSystemLineSeparator() {
     if (SystemInfo.isWindows) {
       return CRLF;

@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.openapi.vfs.newvfs.persistent.RefreshWorker;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -75,7 +75,7 @@ public class RefreshSessionImpl extends RefreshSession {
     return null;
   }
 
-  RefreshSessionImpl(@NotNull List<VFileEvent> events) {
+  RefreshSessionImpl(@Nonnull List<VFileEvent> events) {
     this(false, false, null, null);
     myEvents.addAll(events);
   }
@@ -86,7 +86,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   @Override
-  public void addAllFiles(@NotNull Collection<? extends VirtualFile> files) {
+  public void addAllFiles(@Nonnull Collection<? extends VirtualFile> files) {
     for (VirtualFile file : files) {
       if (file == null) {
         LOG.error("null passed among " + files);
@@ -98,7 +98,7 @@ public class RefreshSessionImpl extends RefreshSession {
   }
 
   @Override
-  public void addFile(@NotNull VirtualFile file) {
+  public void addFile(@Nonnull VirtualFile file) {
     myWorkQueue.add(file);
   }
 

@@ -29,8 +29,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +46,7 @@ public abstract class CodeStyleManager  {
    * @param project the project to get the code style manager for.
    * @return the code style manager instance.
    */
-  public static CodeStyleManager getInstance(@NotNull Project project) {
+  public static CodeStyleManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CodeStyleManager.class);
   }
 
@@ -57,7 +57,7 @@ public abstract class CodeStyleManager  {
    * @param manager the PSI manager to get the code style manager for.
    * @return the code style manager instance.
    */
-  public static CodeStyleManager getInstance(@NotNull PsiManager manager) {
+  public static CodeStyleManager getInstance(@Nonnull PsiManager manager) {
     return getInstance(manager.getProject());
   }
 
@@ -66,7 +66,8 @@ public abstract class CodeStyleManager  {
    *
    * @return the project instance.
    */
-  @NotNull public abstract Project getProject();
+  @Nonnull
+  public abstract Project getProject();
 
   /**
    * Reformats the contents of the specified PSI element, enforces braces and splits import
@@ -78,7 +79,8 @@ public abstract class CodeStyleManager  {
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
-  @NotNull public abstract PsiElement reformat(@NotNull PsiElement element) throws IncorrectOperationException;
+  @Nonnull
+  public abstract PsiElement reformat(@Nonnull PsiElement element) throws IncorrectOperationException;
 
   /**
    * Reformats the contents of the specified PSI element, and optionally enforces braces
@@ -92,7 +94,8 @@ public abstract class CodeStyleManager  {
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
-  @NotNull public abstract PsiElement reformat(@NotNull PsiElement element, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
+  @Nonnull
+  public abstract PsiElement reformat(@Nonnull PsiElement element, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
 
   /**
    * Reformats part of the contents of the specified PSI element, enforces braces
@@ -106,7 +109,7 @@ public abstract class CodeStyleManager  {
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
-  public abstract PsiElement reformatRange(@NotNull PsiElement element, int startOffset, int endOffset) throws IncorrectOperationException;
+  public abstract PsiElement reformatRange(@Nonnull PsiElement element, int startOffset, int endOffset) throws IncorrectOperationException;
 
   /**
    * Reformats part of the contents of the specified PSI element, and optionally enforces braces
@@ -122,7 +125,7 @@ public abstract class CodeStyleManager  {
    * @throws IncorrectOperationException if the file to reformat is read-only.
    * @see #reformatText(PsiFile, int, int)
    */
-  public abstract PsiElement reformatRange(@NotNull PsiElement element,
+  public abstract PsiElement reformatRange(@Nonnull PsiElement element,
                                            int startOffset,
                                            int endOffset,
                                            boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException;
@@ -135,7 +138,7 @@ public abstract class CodeStyleManager  {
    * @param endOffset   the end of the text range to reformat.
    * @throws IncorrectOperationException if the file to reformat is read-only.
    */
-  public abstract void reformatText(@NotNull PsiFile file, int startOffset, int endOffset) throws IncorrectOperationException;
+  public abstract void reformatText(@Nonnull PsiFile file, int startOffset, int endOffset) throws IncorrectOperationException;
 
   /**
    * Re-formats a ranges of text in the specified file. This method works faster than
@@ -146,11 +149,11 @@ public abstract class CodeStyleManager  {
    * @param ranges   ranges to process
    * @throws IncorrectOperationException  if the file to reformat is read-only.
    */
-  public abstract void reformatText(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges) throws IncorrectOperationException;
+  public abstract void reformatText(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) throws IncorrectOperationException;
 
-  public abstract void reformatTextWithContext(@NotNull PsiFile file, @NotNull ChangedRangesInfo info) throws IncorrectOperationException;
+  public abstract void reformatTextWithContext(@Nonnull PsiFile file, @Nonnull ChangedRangesInfo info) throws IncorrectOperationException;
 
-  public void reformatTextWithContext(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges) throws IncorrectOperationException {
+  public void reformatTextWithContext(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) throws IncorrectOperationException {
     List<TextRange> rangesList = ContainerUtil.newArrayList(ranges);
     reformatTextWithContext(file, new ChangedRangesInfo(rangesList, null));
   }
@@ -163,7 +166,7 @@ public abstract class CodeStyleManager  {
    * @param rangeToAdjust the range of text in which indents should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
    */
-  public abstract void adjustLineIndent(@NotNull PsiFile file, TextRange rangeToAdjust) throws IncorrectOperationException;
+  public abstract void adjustLineIndent(@Nonnull PsiFile file, TextRange rangeToAdjust) throws IncorrectOperationException;
 
   /**
    * Reformats the line at the specified offset in the specified file, modifying only the line indent
@@ -173,7 +176,7 @@ public abstract class CodeStyleManager  {
    * @param offset the offset the line at which should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
    */
-  public abstract int adjustLineIndent(@NotNull PsiFile file, int offset) throws IncorrectOperationException;
+  public abstract int adjustLineIndent(@Nonnull PsiFile file, int offset) throws IncorrectOperationException;
 
   /**
    * Reformats the line at the specified offset in the specified file, modifying only the line indent
@@ -183,12 +186,12 @@ public abstract class CodeStyleManager  {
    * @param offset the offset the line at which should be reformatted.
    * @throws IncorrectOperationException if the file is read-only.
    */
-  public abstract int adjustLineIndent(@NotNull Document document, int offset);
+  public abstract int adjustLineIndent(@Nonnull Document document, int offset);
 
   /**
    * @deprecated this method is not intended to be used by plugins.
    */
-  public abstract boolean isLineToBeIndented(@NotNull PsiFile file, int offset);
+  public abstract boolean isLineToBeIndented(@Nonnull PsiFile file, int offset);
 
   /**
    * Calculates the indent that should be used for the specified line in
@@ -200,7 +203,7 @@ public abstract class CodeStyleManager  {
    *         was not possible to calculate the indent.
    */
   @Nullable
-  public abstract String getLineIndent(@NotNull PsiFile file, int offset);
+  public abstract String getLineIndent(@Nonnull PsiFile file, int offset);
 
   /**
    * Calculates the indent that should be used for the current line in the specified
@@ -211,7 +214,7 @@ public abstract class CodeStyleManager  {
    *         was not possible to calculate the indent.
    */
   @Nullable
-  public abstract String getLineIndent(@NotNull Document document, int offset);
+  public abstract String getLineIndent(@Nonnull Document document, int offset);
 
   /**
    * @deprecated
@@ -235,7 +238,7 @@ public abstract class CodeStyleManager  {
    * @throws IncorrectOperationException if the operation fails for some reason (for example,
    *                                     the file is read-only).
    */
-  public abstract void reformatNewlyAddedElement(@NotNull final ASTNode block, @NotNull final ASTNode addedElement) throws IncorrectOperationException;
+  public abstract void reformatNewlyAddedElement(@Nonnull final ASTNode block, @Nonnull final ASTNode addedElement) throws IncorrectOperationException;
 
   /**
    * Formatting may be executed sequentially, i.e. the whole (re)formatting task is split into a number of smaller sub-tasks
@@ -274,7 +277,7 @@ public abstract class CodeStyleManager  {
    * Returns <code>-1</code>, if required block cannot be found at provided offset,
    * or spacing cannot be calculated due to some other reason.
    */
-  public int getSpacing(@NotNull PsiFile file, int offset) {
+  public int getSpacing(@Nonnull PsiFile file, int offset) {
     return -1;
   }
 
@@ -283,7 +286,7 @@ public abstract class CodeStyleManager  {
    * Returns <code>-1</code>, if required block cannot be found at provided offset,
    * or spacing cannot be calculated due to some other reason.
    */
-  public int getMinLineFeeds(@NotNull PsiFile file, int offset) {
+  public int getMinLineFeeds(@Nonnull PsiFile file, int offset) {
     return -1;
   }
 
@@ -294,7 +297,7 @@ public abstract class CodeStyleManager  {
    * @return The current formatting mode.
    * @see FormattingMode
    */
-  public static FormattingMode getCurrentFormattingMode(@NotNull Project project) {
+  public static FormattingMode getCurrentFormattingMode(@Nonnull Project project) {
     if (!project.isDisposed()) {
       CodeStyleManager instance = getInstance(project);
       if (instance instanceof FormattingModeAwareIndentAdjuster) {

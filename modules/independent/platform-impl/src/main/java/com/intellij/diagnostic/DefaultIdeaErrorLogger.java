@@ -24,7 +24,7 @@ import com.intellij.openapi.diagnostic.ErrorLogger;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.MappingFailedException;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;

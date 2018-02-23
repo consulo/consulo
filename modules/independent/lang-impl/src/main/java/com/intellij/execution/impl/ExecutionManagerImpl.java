@@ -58,8 +58,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -81,12 +81,12 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   private final List<Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor>> myRunningConfigurations = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  @NotNull
-  public static ExecutionManagerImpl getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ExecutionManagerImpl getInstance(@Nonnull Project project) {
     return (ExecutionManagerImpl)ServiceManager.getService(project, ExecutionManager.class);
   }
 
-  ExecutionManagerImpl(@NotNull Project project) {
+  ExecutionManagerImpl(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -126,7 +126,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     myRunningConfigurations.clear();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunContentManager getContentManager() {
     if (myContentManager == null) {
@@ -136,7 +136,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return myContentManager;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProcessHandler[] getRunningProcesses() {
     if (myContentManager == null) return EMPTY_PROCESS_HANDLERS;
@@ -154,7 +154,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void compileAndRun(@NotNull final Runnable startRunnable, @NotNull final ExecutionEnvironment environment, @Nullable final RunProfileState state, @Nullable final Runnable onCancelRunnable) {
+  public void compileAndRun(@Nonnull final Runnable startRunnable, @Nonnull final ExecutionEnvironment environment, @Nullable final RunProfileState state, @Nullable final Runnable onCancelRunnable) {
     long id = environment.getExecutionId();
     if (id == 0) {
       id = environment.assignNewExecutionId();
@@ -212,7 +212,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void startRunProfile(@NotNull final RunProfileStarter starter, @NotNull final RunProfileState state, @NotNull final ExecutionEnvironment environment) {
+  public void startRunProfile(@Nonnull final RunProfileStarter starter, @Nonnull final RunProfileState state, @Nonnull final ExecutionEnvironment environment) {
     final Project project = environment.getProject();
     RunContentDescriptor reuseContent = getContentManager().getReuseContent(environment);
     if (reuseContent != null) {
@@ -302,9 +302,9 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@NotNull Project project,
-                                @NotNull Executor executor,
-                                @NotNull ExecutionTarget target,
+  public void restartRunProfile(@Nonnull Project project,
+                                @Nonnull Executor executor,
+                                @Nonnull ExecutionTarget target,
                                 @Nullable RunnerAndConfigurationSettings configuration,
                                 @Nullable ProcessHandler processHandler) {
     ExecutionEnvironmentBuilder builder = createEnvironmentBuilder(project, executor, configuration);
@@ -319,8 +319,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     restartRunProfile(builder.target(target).build());
   }
 
-  @NotNull
-  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@NotNull Project project, @NotNull Executor executor, @Nullable RunnerAndConfigurationSettings configuration) {
+  @Nonnull
+  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@Nonnull Project project, @Nonnull Executor executor, @Nullable RunnerAndConfigurationSettings configuration) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(project, executor);
 
     ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), configuration != null ? configuration.getConfiguration() : null);
@@ -335,9 +335,9 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@NotNull Project project,
-                                @NotNull Executor executor,
-                                @NotNull ExecutionTarget target,
+  public void restartRunProfile(@Nonnull Project project,
+                                @Nonnull Executor executor,
+                                @Nonnull ExecutionTarget target,
                                 @Nullable RunnerAndConfigurationSettings configuration,
                                 @Nullable RunContentDescriptor currentDescriptor) {
     ExecutionEnvironmentBuilder builder = createEnvironmentBuilder(project, executor, configuration);
@@ -345,7 +345,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@Nullable ProgramRunner runner, @NotNull ExecutionEnvironment environment, @Nullable RunContentDescriptor currentDescriptor) {
+  public void restartRunProfile(@Nullable ProgramRunner runner, @Nonnull ExecutionEnvironment environment, @Nullable RunContentDescriptor currentDescriptor) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(environment).contentToReuse(currentDescriptor);
     if (runner != null) {
       builder.runner(runner);
@@ -359,7 +359,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Override
-  public void restartRunProfile(@NotNull final ExecutionEnvironment environment) {
+  public void restartRunProfile(@Nonnull final ExecutionEnvironment environment) {
     RunnerAndConfigurationSettings configuration = environment.getRunnerAndConfigurationSettings();
 
     List<RunContentDescriptor> runningIncompatible;
@@ -417,7 +417,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     }, 50);
   }
 
-  private static void start(@NotNull ExecutionEnvironment environment) {
+  private static void start(@Nonnull ExecutionEnvironment environment) {
     RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
     ProgramRunnerUtil.executeConfiguration(environment, settings != null && settings.isEditBeforeRun(), true);
   }
@@ -448,7 +448,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDoNotShowMessage() {
         return CommonBundle.message("dialog.options.do.not.show");
@@ -485,7 +485,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDoNotShowMessage() {
         return CommonBundle.message("dialog.options.do.not.show");
@@ -507,13 +507,13 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
                                        ExecutionBundle.message("stop.incompatible.confirmation.button.text"), CommonBundle.message("button.cancel"), Messages.getQuestionIcon(), option) == Messages.OK;
   }
 
-  @NotNull
-  private List<RunContentDescriptor> getRunningDescriptorsOfTheSameConfigType(@NotNull final RunnerAndConfigurationSettings configurationAndSettings) {
+  @Nonnull
+  private List<RunContentDescriptor> getRunningDescriptorsOfTheSameConfigType(@Nonnull final RunnerAndConfigurationSettings configurationAndSettings) {
     return getRunningDescriptors(runningConfigurationAndSettings -> configurationAndSettings == runningConfigurationAndSettings);
   }
 
-  @NotNull
-  private List<RunContentDescriptor> getIncompatibleRunningDescriptors(@NotNull RunnerAndConfigurationSettings configurationAndSettings) {
+  @Nonnull
+  private List<RunContentDescriptor> getIncompatibleRunningDescriptors(@Nonnull RunnerAndConfigurationSettings configurationAndSettings) {
     final RunConfiguration configurationToCheckCompatibility = configurationAndSettings.getConfiguration();
     return getRunningDescriptors(runningConfigurationAndSettings -> {
       RunConfiguration runningConfiguration = runningConfigurationAndSettings == null ? null : runningConfigurationAndSettings.getConfiguration();
@@ -524,8 +524,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     });
   }
 
-  @NotNull
-  public List<RunContentDescriptor> getRunningDescriptors(@NotNull Condition<RunnerAndConfigurationSettings> condition) {
+  @Nonnull
+  public List<RunContentDescriptor> getRunningDescriptors(@Nonnull Condition<RunnerAndConfigurationSettings> condition) {
     List<RunContentDescriptor> result = new SmartList<>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
       if (condition.value(trinity.getSecond())) {
@@ -538,8 +538,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return result;
   }
 
-  @NotNull
-  public List<RunContentDescriptor> getDescriptors(@NotNull Condition<RunnerAndConfigurationSettings> condition) {
+  @Nonnull
+  public List<RunContentDescriptor> getDescriptors(@Nonnull Condition<RunnerAndConfigurationSettings> condition) {
     List<RunContentDescriptor> result = new SmartList<>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
       if (trinity.getSecond() != null && condition.value(trinity.getSecond())) {
@@ -549,7 +549,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Set<Executor> getExecutors(RunContentDescriptor descriptor) {
     Set<Executor> result = new HashSet<>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
@@ -558,7 +558,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Set<RunnerAndConfigurationSettings> getConfigurations(RunContentDescriptor descriptor) {
     Set<RunnerAndConfigurationSettings> result = new HashSet<>();
     for (Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor> trinity : myRunningConfigurations) {
@@ -568,26 +568,26 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   private static class ProcessExecutionListener extends ProcessAdapter {
-    @NotNull
+    @Nonnull
     private final Project myProject;
-    @NotNull
+    @Nonnull
     private final String myExecutorId;
-    @NotNull
+    @Nonnull
     private final ExecutionEnvironment myEnvironment;
-    @NotNull
+    @Nonnull
     private final ProcessHandler myProcessHandler;
-    @NotNull
+    @Nonnull
     private final RunContentDescriptor myDescriptor;
-    @NotNull
+    @Nonnull
     private final AtomicBoolean myWillTerminateNotified = new AtomicBoolean();
-    @NotNull
+    @Nonnull
     private final AtomicBoolean myTerminateNotified = new AtomicBoolean();
 
-    public ProcessExecutionListener(@NotNull Project project,
-                                    @NotNull String executorId,
-                                    @NotNull ExecutionEnvironment environment,
-                                    @NotNull ProcessHandler processHandler,
-                                    @NotNull RunContentDescriptor descriptor) {
+    public ProcessExecutionListener(@Nonnull Project project,
+                                    @Nonnull String executorId,
+                                    @Nonnull ExecutionEnvironment environment,
+                                    @Nonnull ProcessHandler processHandler,
+                                    @Nonnull RunContentDescriptor descriptor) {
       myProject = project;
       myExecutorId = executorId;
       myEnvironment = environment;

@@ -20,8 +20,6 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Factory which provides callbacks to run before and after checkin operations.
@@ -48,7 +46,7 @@ public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory
    * @return the handler instance.
    */
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
 
   @Override

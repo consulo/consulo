@@ -52,8 +52,8 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -89,8 +89,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
   private final VirtualFileRenderer myVirtualFileRenderer = new VirtualFileRenderer();
 
-  public MultipleFileMergeDialog(@Nullable Project project, @NotNull final List<VirtualFile> files, @NotNull final MergeProvider provider,
-                                 @NotNull MergeDialogCustomizer mergeDialogCustomizer) {
+  public MultipleFileMergeDialog(@Nullable Project project, @Nonnull final List<VirtualFile> files, @Nonnull final MergeProvider provider,
+                                 @Nonnull MergeDialogCustomizer mergeDialogCustomizer) {
     super(project);
 
     myProject = project;
@@ -151,19 +151,19 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     init();
     myAcceptYoursButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         acceptRevision(true);
       }
     });
     myAcceptTheirsButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         acceptRevision(false);
       }
     });
     myTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       @Override
-      public void valueChanged(@NotNull final ListSelectionEvent e) {
+      public void valueChanged(@Nonnull final ListSelectionEvent e) {
         updateButtonState();
       }
     });
@@ -198,13 +198,13 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     return myRootPanel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getCancelAction()};
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action getCancelAction() {
     Action action = super.getCancelAction();
@@ -275,7 +275,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     updateModelFromFiles();
   }
 
-  private void markFileProcessed(@NotNull VirtualFile file, @NotNull MergeSession.Resolution resolution) {
+  private void markFileProcessed(@Nonnull VirtualFile file, @Nonnull MergeSession.Resolution resolution) {
     myFiles.remove(file);
     if (myProvider instanceof MergeProvider2) {
       myMergeSession.conflictResolvedForFile(file, resolution);
@@ -371,8 +371,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     updateModelFromFiles();
   }
 
-  @NotNull
-  private static MergeSession.Resolution getSessionResolution(@NotNull MergeResult result) {
+  @Nonnull
+  private static MergeSession.Resolution getSessionResolution(@Nonnull MergeResult result) {
     switch (result) {
       case LEFT:
         return MergeSession.Resolution.AcceptedYours;
@@ -385,14 +385,14 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
   }
 
-  private void checkMarkModifiedProject(@NotNull VirtualFile file) {
+  private void checkMarkModifiedProject(@Nonnull VirtualFile file) {
     MergeVersion.MergeDocumentVersion.reportProjectFileChangeIfNeeded(myProject, file);
   }
 
   private void createUIComponents() {
     Action mergeAction = new AbstractAction() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         showMergeDialog();
       }
     };
@@ -405,7 +405,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     return myTable;
   }
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getProcessedFiles() {
     return myProcessedFiles;
   }

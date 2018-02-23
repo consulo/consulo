@@ -21,8 +21,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -64,13 +64,13 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getHelpTopic() {
     return "editing.templates";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

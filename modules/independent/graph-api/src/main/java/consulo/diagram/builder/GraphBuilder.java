@@ -15,7 +15,7 @@
  */
 package consulo.diagram.builder;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -24,9 +24,9 @@ import javax.swing.*;
  * @since 22:36/15.10.13
  */
 public interface GraphBuilder {
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
-  @NotNull
+  @Nonnull
   <E> GraphNode<E> createNode(E value, GraphPositionStrategy strategy);
 }

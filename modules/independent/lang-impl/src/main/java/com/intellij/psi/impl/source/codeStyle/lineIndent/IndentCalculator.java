@@ -28,23 +28,27 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.formatting.Indent.Type.CONTINUATION;
 import static com.intellij.formatting.Indent.Type.NORMAL;
 
 public class IndentCalculator {
 
-  private @NotNull final Project myProject;
-  private @NotNull final Editor myEditor;
-  private @NotNull BaseLineOffsetCalculator myBaseLineOffsetCalculator;
-  private @NotNull final Indent.Type myIndentType;
+  private @Nonnull
+  final Project myProject;
+  private @Nonnull
+  final Editor myEditor;
+  private @Nonnull
+  BaseLineOffsetCalculator myBaseLineOffsetCalculator;
+  private @Nonnull
+  final Indent.Type myIndentType;
 
-  public IndentCalculator(@NotNull Project project,
-                          @NotNull Editor editor,
-                          @NotNull BaseLineOffsetCalculator baseLineOffsetCalculator,
-                          @NotNull Indent.Type type) {
+  public IndentCalculator(@Nonnull Project project,
+                          @Nonnull Editor editor,
+                          @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator,
+                          @Nonnull Indent.Type type) {
     myProject = project;
     myEditor = editor;
     myBaseLineOffsetCalculator = baseLineOffsetCalculator;
@@ -53,20 +57,20 @@ public class IndentCalculator {
 
   public final static BaseLineOffsetCalculator LINE_BEFORE = new BaseLineOffsetCalculator() {
     @Override
-    public int getOffsetInBaseIndentLine(@NotNull SemanticEditorPosition currPosition) {
+    public int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition currPosition) {
       return CharArrayUtil.shiftBackward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
     }
   };
 
   public final static BaseLineOffsetCalculator LINE_AFTER = new BaseLineOffsetCalculator() {
     @Override
-    public int getOffsetInBaseIndentLine(@NotNull SemanticEditorPosition currPosition) {
+    public int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition currPosition) {
       return CharArrayUtil.shiftForward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
     }
   };
 
   @Nullable
-  String getIndentString(@Nullable Language language, @NotNull SemanticEditorPosition currPosition) {
+  String getIndentString(@Nullable Language language, @Nonnull SemanticEditorPosition currPosition) {
     String baseIndent = getBaseIndent(currPosition);
     Document document = myEditor.getDocument();
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
@@ -83,8 +87,8 @@ public class IndentCalculator {
   }
 
 
-  @NotNull
-  private String getBaseIndent(@NotNull SemanticEditorPosition currPosition) {
+  @Nonnull
+  private String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
     CharSequence docChars = myEditor.getDocument().getCharsSequence();
     int offset = currPosition.getStartOffset();
     if (offset > 0) {
@@ -102,7 +106,7 @@ public class IndentCalculator {
     return "";
   }
 
-  private static int indentTypeToSize(@NotNull Indent.Type indentType, @NotNull CommonCodeStyleSettings.IndentOptions options) {
+  private static int indentTypeToSize(@Nonnull Indent.Type indentType, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
     if (indentType == NORMAL) {
       return options.INDENT_SIZE;
     }
@@ -114,6 +118,6 @@ public class IndentCalculator {
 
 
   public interface BaseLineOffsetCalculator  {
-    int getOffsetInBaseIndentLine(@NotNull SemanticEditorPosition position);
+    int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition position);
   }
 }

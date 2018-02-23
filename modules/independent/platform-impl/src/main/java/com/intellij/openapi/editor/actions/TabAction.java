@@ -38,8 +38,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TabAction extends EditorAction {
   public TabAction() {
@@ -69,7 +69,7 @@ public class TabAction extends EditorAction {
     }
   }
 
-  private static void insertTabAtCaret(Editor editor, @NotNull Caret caret, @Nullable Project project) {
+  private static void insertTabAtCaret(Editor editor, @Nonnull Caret caret, @Nullable Project project) {
     EditorUIUtil.hideCursorInEditor(editor);
     int columnNumber;
     if (caret.hasSelection()) {

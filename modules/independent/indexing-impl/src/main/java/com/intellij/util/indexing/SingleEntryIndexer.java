@@ -16,8 +16,8 @@
 
 package com.intellij.util.indexing;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,7 +36,7 @@ public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, F
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final Map<Integer, V> map(FileContent inputData) {
     if (inputData == null) {
       return Collections.emptyMap();
@@ -49,5 +49,5 @@ public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, F
     return Collections.singletonMap(key, value);
   }
 
-  protected abstract @Nullable V computeValue(@NotNull FileContent inputData);
+  protected abstract @Nullable V computeValue(@Nonnull FileContent inputData);
 }

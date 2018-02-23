@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,9 +30,9 @@ import org.jetbrains.annotations.Nullable;
 public interface LanguageVersionResolver {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
     @RequiredReadAction
-    @NotNull
+    @Nonnull
     @Override
-    public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable PsiElement element) {
+    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element) {
       final LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyElement(element)) {
@@ -43,9 +43,9 @@ public interface LanguageVersionResolver {
     }
 
     @RequiredReadAction
-    @NotNull
+    @Nonnull
     @Override
-    public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       final LanguageVersion[] versions = language.getVersions();
       for (LanguageVersion version : versions) {
         if (version instanceof LanguageVersionWithDefinition && ((LanguageVersionWithDefinition)version).isMyFile(project, virtualFile)) {
@@ -56,11 +56,11 @@ public interface LanguageVersionResolver {
     }
   };
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable PsiElement element);
+  LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element);
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
+  LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile);
 }

@@ -18,8 +18,8 @@ package com.intellij.openapi.ide;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.ui.Gray;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -33,24 +33,24 @@ public abstract class CopyPasteManager {
     return ServiceManager.getService(CopyPasteManager.class);
   }
 
-  public abstract void addContentChangedListener(@NotNull ContentChangedListener listener);
+  public abstract void addContentChangedListener(@Nonnull ContentChangedListener listener);
 
-  public abstract void addContentChangedListener(@NotNull ContentChangedListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addContentChangedListener(@Nonnull ContentChangedListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeContentChangedListener(@NotNull ContentChangedListener listener);
+  public abstract void removeContentChangedListener(@Nonnull ContentChangedListener listener);
 
-  public abstract boolean areDataFlavorsAvailable(@NotNull DataFlavor... flavors);
+  public abstract boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors);
 
   @Nullable
   public abstract Transferable getContents();
 
   @Nullable
-  public abstract <T> T getContents(@NotNull DataFlavor flavor);
+  public abstract <T> T getContents(@Nonnull DataFlavor flavor);
 
-  @NotNull
+  @Nonnull
   public abstract Transferable[] getAllContents();
 
-  public abstract void setContents(@NotNull Transferable content);
+  public abstract void setContents(@Nonnull Transferable content);
 
   public abstract boolean isCutElement(@Nullable Object element);
 

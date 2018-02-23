@@ -34,7 +34,7 @@ import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
 import consulo.ui.shared.Size;
 import consulo.web.application.WebApplication;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
   private Window myWindow;
 
   @Inject
-  public WebWelcomeFrameManager(@NotNull Application application) {
+  public WebWelcomeFrameManager(@Nonnull Application application) {
     application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project) {
@@ -65,7 +65,7 @@ public class WebWelcomeFrameManager implements WelcomeFrameManager {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public Window openFrame() {
     Window welcomeFrame = Window.createModal(FrameTitleUtil.buildTitle());

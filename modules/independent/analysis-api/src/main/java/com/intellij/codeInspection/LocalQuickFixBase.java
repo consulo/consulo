@@ -16,7 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +29,7 @@ public abstract class LocalQuickFixBase implements LocalQuickFix {
    *
    * @param name the name of the quick fix
    */
-  protected LocalQuickFixBase(@NotNull String name) {
+  protected LocalQuickFixBase(@Nonnull String name) {
     this(name, name);
   }
 
@@ -40,23 +40,23 @@ public abstract class LocalQuickFixBase implements LocalQuickFix {
    *        if the name of the quickfix is "Create template &lt;filename&gt", the return value of getFamilyName() should be "Create template".
    *        If the name of the quickfix does not depend on a specific element, simply return getName().
    */
-  protected LocalQuickFixBase(@NotNull String name, @NotNull String familyName) {
+  protected LocalQuickFixBase(@Nonnull String name, @Nonnull String familyName) {
     myName = name;
     myFamilyName = familyName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return myFamilyName;
   }
 
   @Override
-  public abstract void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor);
+  public abstract void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor);
 }

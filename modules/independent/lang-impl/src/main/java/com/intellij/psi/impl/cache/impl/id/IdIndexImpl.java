@@ -22,7 +22,7 @@ import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -54,12 +54,12 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
     return version;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<Collection<IdIndexEntry>> createExternalizer() {
     return new DataExternalizer<Collection<IdIndexEntry>>() {
       @Override
-      public void save(@NotNull DataOutput out, @NotNull Collection<IdIndexEntry> value) throws IOException {
+      public void save(@Nonnull DataOutput out, @Nonnull Collection<IdIndexEntry> value) throws IOException {
         int size = value.size();
         final int[] values = spareBufferLocal.getBuffer(size);
         int ptr = 0;
@@ -76,7 +76,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
       }
 
       @Override
-      public Collection<IdIndexEntry> read(@NotNull DataInput in) throws IOException {
+      public Collection<IdIndexEntry> read(@Nonnull DataInput in) throws IOException {
         int length = DataInputOutputUtil.readINT(in);
         ArrayList<IdIndexEntry> entries = new ArrayList<>(length);
         int prev = 0;

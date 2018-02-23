@@ -16,8 +16,8 @@
 package com.intellij.diagnostic;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -35,14 +35,14 @@ public class ThreadDumper {
   private ThreadDumper() {
   }
 
-  @NotNull
+  @Nonnull
   public static String dumpThreadsToString() {
     StringWriter writer = new StringWriter();
     dumpThreadsToFile(ManagementFactory.getThreadMXBean(), writer);
     return writer.toString();
   }
 
-  @NotNull
+  @Nonnull
   public static String dumpEdtStackTrace(ThreadInfo[] threadInfos) {
     StringWriter writer = new StringWriter();
     if (threadInfos.length > 0) {
@@ -52,21 +52,21 @@ public class ThreadDumper {
     return writer.toString();
   }
 
-  @NotNull
+  @Nonnull
   public static ThreadInfo[] getThreadInfos() {
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
     return sort(threadMXBean.dumpAllThreads(false, false));
   }
 
-  @NotNull
-  public static ThreadDump getThreadDumpInfo(@NotNull final ThreadMXBean threadMXBean) {
+  @Nonnull
+  public static ThreadDump getThreadDumpInfo(@Nonnull final ThreadMXBean threadMXBean) {
     StringWriter writer = new StringWriter();
     StackTraceElement[] edtStack = dumpThreadsToFile(threadMXBean, writer);
     return new ThreadDump(writer.toString(), edtStack);
   }
 
   @Nullable
-  private static StackTraceElement[] dumpThreadsToFile(@NotNull ThreadMXBean threadMXBean, @NotNull Writer f) {
+  private static StackTraceElement[] dumpThreadsToFile(@Nonnull ThreadMXBean threadMXBean, @Nonnull Writer f) {
     StackTraceElement[] edtStack = null;
     boolean dumpSuccessful = false;
 
@@ -88,7 +88,7 @@ public class ThreadDumper {
     return edtStack;
   }
 
-  private static StackTraceElement[] dumpThreadInfos(@NotNull ThreadInfo[] threadInfo, @NotNull Writer f) {
+  private static StackTraceElement[] dumpThreadInfos(@Nonnull ThreadInfo[] threadInfo, @Nonnull Writer f) {
     StackTraceElement[] edtStack = null;
     for (ThreadInfo info : threadInfo) {
       if (info != null) {
@@ -101,8 +101,8 @@ public class ThreadDumper {
     return edtStack;
   }
 
-  @NotNull
-  private static ThreadInfo[] sort(@NotNull ThreadInfo[] threads) {
+  @Nonnull
+  private static ThreadInfo[] sort(@Nonnull ThreadInfo[] threads) {
     Arrays.sort(threads, new Comparator<ThreadInfo>() {
       @Override
       public int compare(ThreadInfo o1, ThreadInfo o2) {
@@ -121,11 +121,11 @@ public class ThreadDumper {
     return threads;
   }
 
-  private static void dumpThreadInfo(@NotNull ThreadInfo info, @NotNull Writer f) {
+  private static void dumpThreadInfo(@Nonnull ThreadInfo info, @Nonnull Writer f) {
     dumpCallStack(info, f, info.getStackTrace());
   }
 
-  private static void dumpCallStack(@NotNull ThreadInfo info, @NotNull Writer f, @NotNull StackTraceElement[] stackTraceElements) {
+  private static void dumpCallStack(@Nonnull ThreadInfo info, @Nonnull Writer f, @Nonnull StackTraceElement[] stackTraceElements) {
     try {
       @NonNls StringBuilder sb = new StringBuilder("\"").append(info.getThreadName()).append("\"");
       sb.append(" prio=0 tid=0x0 nid=0x0 ").append(getReadableState(info.getThreadState())).append("\n");
@@ -152,7 +152,7 @@ public class ThreadDumper {
     }
   }
 
-  private static void printStackTrace(@NotNull Writer f, @NotNull StackTraceElement[] stackTraceElements) {
+  private static void printStackTrace(@Nonnull Writer f, @Nonnull StackTraceElement[] stackTraceElements) {
     try {
       for (StackTraceElement element : stackTraceElements) {
         f.write("\tat " + element.toString() + "\n");
@@ -163,7 +163,7 @@ public class ThreadDumper {
     }
   }
 
-  private static String getReadableState(@NotNull Thread.State state) {
+  private static String getReadableState(@Nonnull Thread.State state) {
     switch (state) {
       case BLOCKED: return "blocked";
       case TIMED_WAITING:

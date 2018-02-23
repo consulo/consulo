@@ -18,7 +18,7 @@ package com.intellij.codeInspection.reference;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides quick fixes for "Unused declaration" inspection
@@ -30,6 +30,6 @@ public interface UnusedDeclarationFixProvider {
 
   ExtensionPointName<UnusedDeclarationFixProvider> EP_NAME = ExtensionPointName.create("com.intellij.unusedDeclarationFixProvider");
 
-  @NotNull
+  @Nonnull
   IntentionAction[] getQuickFixes(PsiElement unusedElement);
 }

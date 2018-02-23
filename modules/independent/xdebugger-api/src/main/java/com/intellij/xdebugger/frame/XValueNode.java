@@ -18,8 +18,8 @@ package com.intellij.xdebugger.frame;
 import com.intellij.xdebugger.Obsolescent;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -44,7 +44,7 @@ public interface XValueNode extends Obsolescent {
    * @param value string representation of value. It is also used in 'Copy Value' action
    * @param hasChildren {@code false} if the node is a leaf
    */
-  void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull String value, boolean hasChildren);
+  void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren);
 
   /**
    * Setup presentation of the value. This method allows to change separator between name and value and customize the way value text is shown
@@ -52,12 +52,12 @@ public interface XValueNode extends Obsolescent {
    * @param presentation a new {@link XValuePresentation} instance which determines how the value is show
    * @param hasChildren {@code false} if the node is a leaf
    */
-  void setPresentation(@Nullable Icon icon, @NotNull XValuePresentation presentation, boolean hasChildren);
+  void setPresentation(@javax.annotation.Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren);
 
   /**
    * @deprecated use {@link #setPresentation(javax.swing.Icon, XValuePresentation, boolean)}
    */
-  void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull String separator, @NonNls @Nullable String value, boolean hasChildren);
+  void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String separator, @NonNls @Nullable String value, boolean hasChildren);
 
   /**
    * If string representation of the value is too long to show in the tree pass truncated value to {@link #setPresentation(javax.swing.Icon, String, String, boolean)}
@@ -66,5 +66,5 @@ public interface XValueNode extends Obsolescent {
    * @param fullValueEvaluator will be used to obtain full text of the value
    * @see #MAX_VALUE_LENGTH
    */
-  void setFullValueEvaluator(@NotNull XFullValueEvaluator fullValueEvaluator);
+  void setFullValueEvaluator(@Nonnull XFullValueEvaluator fullValueEvaluator);
 }

@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,7 +33,7 @@ public class CapitalizeAndUnderscoreMacro extends MacroBase {
   }
 
   @Override
-  protected Result calculateResult(@NotNull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
     String text = getTextResult(params, context, true);
     if (text != null && text.length() > 0) {
       final String[] words = NameUtil.nameToWords(text);

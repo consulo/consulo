@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,7 +39,7 @@ public class EOFAction extends DumbAwareAction implements AnAction.TransparentUp
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
     ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
     e.getPresentation().setEnabledAndVisible(e.getData(LangDataKeys.CONSOLE_VIEW) != null
@@ -50,7 +50,7 @@ public class EOFAction extends DumbAwareAction implements AnAction.TransparentUp
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
     ProcessHandler activeProcessHandler = descriptor != null ? descriptor.getProcessHandler() : null;
     if (activeProcessHandler == null || activeProcessHandler.isProcessTerminated()) return;

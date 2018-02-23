@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.proxy.CommonProxy;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.*;
@@ -49,7 +49,7 @@ public class IdeaWideProxySelector extends ProxySelector {
   }
 
   @Override
-  public List<Proxy> select(@NotNull URI uri) {
+  public List<Proxy> select(@Nonnull URI uri) {
     LOG.debug("IDEA-wide proxy selector asked for " + uri.toString());
 
     String scheme = uri.getScheme();

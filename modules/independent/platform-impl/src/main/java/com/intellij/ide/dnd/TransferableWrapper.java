@@ -16,8 +16,8 @@
 package com.intellij.ide.dnd;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.TreeNode;
 
 /**

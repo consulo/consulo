@@ -30,7 +30,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -201,7 +201,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
     return new QuickList(myQuickListPanel.getDisplayName(), myQuickListPanel.getDescription(), ids, false);
   }
 
-  @NotNull
+  @Nonnull
   private QuickList[] getCurrentQuickListIds() {
     if (myCurrentIndex > -1 && myQuickListsModel.getSize() > myCurrentIndex) {
       updateList(myCurrentIndex);
@@ -215,7 +215,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }
@@ -241,7 +241,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getHelpTopic() {
     return "reference.idesettings.quicklists";
   }

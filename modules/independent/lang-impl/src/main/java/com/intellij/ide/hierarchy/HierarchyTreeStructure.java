@@ -36,7 +36,7 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
@@ -44,7 +44,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   private HierarchyNodeDescriptor myRoot;
   protected final Project myProject;
 
-  protected HierarchyTreeStructure(@NotNull Project project, HierarchyNodeDescriptor baseDescriptor) {
+  protected HierarchyTreeStructure(@Nonnull Project project, HierarchyNodeDescriptor baseDescriptor) {
     myBaseDescriptor = baseDescriptor;
     myProject = project;
     myRoot = baseDescriptor;
@@ -54,7 +54,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     return myBaseDescriptor;
   }
 
-  protected final void setBaseElement(@NotNull HierarchyNodeDescriptor baseElement) {
+  protected final void setBaseElement(@Nonnull HierarchyNodeDescriptor baseElement) {
     myBaseDescriptor = baseElement;
     myRoot = baseElement;
     while(myRoot.getParentDescriptor() != null){
@@ -63,7 +63,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final NodeDescriptor createDescriptor(final Object element, final NodeDescriptor parentDescriptor) {
     if (element instanceof HierarchyNodeDescriptor) {
       return (HierarchyNodeDescriptor)element;
@@ -122,7 +122,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   public final boolean hasSomethingToCommit() {
     return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
   }
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback asyncCommit() {
     return asyncCommitDocuments(myProject);

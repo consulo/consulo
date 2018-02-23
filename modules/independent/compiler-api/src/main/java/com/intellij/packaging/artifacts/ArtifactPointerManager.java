@@ -16,20 +16,20 @@
 package com.intellij.packaging.artifacts;
 
 import consulo.util.pointers.NamedPointerManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ArtifactPointerManager extends NamedPointerManager<Artifact> {
-  @NotNull
+  @Nonnull
   @Override
-  ArtifactPointer create(@NotNull String name);
+  ArtifactPointer create(@Nonnull String name);
 
-  @NotNull
+  @Nonnull
   @Override
-  ArtifactPointer create(@NotNull Artifact value);
+  ArtifactPointer create(@Nonnull Artifact value);
 
-  @NotNull
-  ArtifactPointer create(@NotNull Artifact artifact, @NotNull ArtifactModel artifactModel);
+  @Nonnull
+  ArtifactPointer create(@Nonnull Artifact artifact, @Nonnull ArtifactModel artifactModel);
 }

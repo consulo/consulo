@@ -16,44 +16,44 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class HighlightInfoProcessor {
-  public void highlightsInsideVisiblePartAreProduced(@NotNull HighlightingSession session,
-                                                     @NotNull List<HighlightInfo> infos,
-                                                     @NotNull TextRange priorityRange,
-                                                     @NotNull TextRange restrictRange,
+  public void highlightsInsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
+                                                     @Nonnull List<HighlightInfo> infos,
+                                                     @Nonnull TextRange priorityRange,
+                                                     @Nonnull TextRange restrictRange,
                                                      int groupId) {
   }
 
-  public void highlightsOutsideVisiblePartAreProduced(@NotNull HighlightingSession session,
-                                                      @NotNull List<HighlightInfo> infos,
-                                                      @NotNull TextRange priorityRange,
-                                                      @NotNull TextRange restrictedRange,
+  public void highlightsOutsideVisiblePartAreProduced(@Nonnull HighlightingSession session,
+                                                      @Nonnull List<HighlightInfo> infos,
+                                                      @Nonnull TextRange priorityRange,
+                                                      @Nonnull TextRange restrictedRange,
                                                       int groupId) {
   }
 
-  public void infoIsAvailable(@NotNull HighlightingSession session,
-                              @NotNull HighlightInfo info,
-                              @NotNull TextRange priorityRange,
-                              @NotNull TextRange restrictedRange,
+  public void infoIsAvailable(@Nonnull HighlightingSession session,
+                              @Nonnull HighlightInfo info,
+                              @Nonnull TextRange priorityRange,
+                              @Nonnull TextRange restrictedRange,
                               int groupId) {
   }
 
-  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session, @NotNull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
+  public void allHighlightsForRangeAreProduced(@Nonnull HighlightingSession session, @Nonnull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
   }
 
-  public void progressIsAdvanced(@NotNull HighlightingSession highlightingSession, double progress) {
+  public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, double progress) {
   }
 
 
   private static final HighlightInfoProcessor EMPTY = new HighlightInfoProcessor() {
   };
 
-  @NotNull
+  @Nonnull
   public static HighlightInfoProcessor getEmpty() {
     return EMPTY;
   }

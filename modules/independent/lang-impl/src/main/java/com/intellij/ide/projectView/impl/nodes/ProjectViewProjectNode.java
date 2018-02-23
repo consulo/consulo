@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     List<VirtualFile> topLevelContentRoots = BaseProjectViewDirectoryHelper.getTopLevelRoots(myProject);
 

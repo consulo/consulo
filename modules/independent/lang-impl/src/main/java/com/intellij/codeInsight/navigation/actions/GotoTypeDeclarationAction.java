@@ -34,8 +34,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -43,7 +43,7 @@ import java.util.Set;
 
 public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return this;
@@ -67,7 +67,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
 
   @Override
   @RequiredDispatchThread
-  public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     int offset = editor.getCaretModel().getOffset();
@@ -81,7 +81,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     }
   }
 
-  private static void navigate(@NotNull Project project, @NotNull PsiElement symbolType) {
+  private static void navigate(@Nonnull Project project, @Nonnull PsiElement symbolType) {
     PsiElement element = symbolType.getNavigationElement();
     assert element != null : "SymbolType :" + symbolType + "; file: " + symbolType.getContainingFile();
     VirtualFile file = element.getContainingFile().getVirtualFile();

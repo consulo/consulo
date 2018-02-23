@@ -21,7 +21,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.lang.annotation.ElementType;
@@ -39,11 +39,11 @@ public class FormattingTestCase extends OneFileAtProjectTestCase {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   public static @interface Setup {
-    @NotNull
+    @Nonnull
     Class<Consumer<CodeStyleSettings>> value();
   }
 
-  public FormattingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+  public FormattingTestCase(@NonNls @Nonnull String dataPath, @Nonnull String ext) {
     super(dataPath, ext);
   }
 

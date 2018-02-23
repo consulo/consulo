@@ -16,8 +16,8 @@
 package com.intellij.formatting;
 
 import com.intellij.util.SequentialTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -37,7 +37,7 @@ public interface FormattingProgressCallback {
    * @param wrapped   wrapped code block
    * @see FormattingStateId#WRAPPING_BLOCKS
    */
-  void afterWrappingBlock(@NotNull LeafBlockWrapper wrapped);
+  void afterWrappingBlock(@Nonnull LeafBlockWrapper wrapped);
 
   /**
    * Notifies current indicator that given {@link LeafBlockWrapper wrapped code block} is processed, i.e. its
@@ -46,7 +46,7 @@ public interface FormattingProgressCallback {
    * @param block     processed wrapped block which white space if adjusted
    * @see FormattingStateId#PROCESSING_BLOCKS
    */
-  void afterProcessingBlock(@NotNull LeafBlockWrapper block);
+  void afterProcessingBlock(@Nonnull LeafBlockWrapper block);
 
   /**
    * Notifies current indicator that changes from the given {@link LeafBlockWrapper wrapped code blocks} are about to be flushed
@@ -56,7 +56,7 @@ public interface FormattingProgressCallback {
    *                            to be flushed to the underlying document
    * @see FormattingStateId#APPLYING_CHANGES
    */
-  void beforeApplyingFormatChanges(@NotNull Collection<LeafBlockWrapper> modifiedBlocks);
+  void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks);
 
   /**
    * Notifies current indicator that change from the given {@link LeafBlockWrapper wrapped code block} is successfully flushed
@@ -65,7 +65,7 @@ public interface FormattingProgressCallback {
    * @param block     {@link LeafBlockWrapper wrapped code block} which change is successfully flushed to the underlying document
    * @see FormattingStateId#APPLYING_CHANGES
    */
-  void afterApplyingChange(@NotNull LeafBlockWrapper block);
+  void afterApplyingChange(@Nonnull LeafBlockWrapper block);
 
   /**
    * Allows to define an actual formatting task to process.
@@ -87,26 +87,26 @@ public interface FormattingProgressCallback {
    * @return              <code>true</code> if given callback is successfully registered for the given event type;
    *                      <code>false</code> otherwise
    */
-  boolean addCallback(@NotNull EventType eventType, @NotNull Runnable callback);
+  boolean addCallback(@Nonnull EventType eventType, @Nonnull Runnable callback);
   
   /**
    * <a hrep="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link FormattingProgressCallback}. 
    */
   FormattingProgressCallback EMPTY = new FormattingProgressCallback() {
     @Override
-    public void afterWrappingBlock(@NotNull LeafBlockWrapper wrapped) {
+    public void afterWrappingBlock(@Nonnull LeafBlockWrapper wrapped) {
     }
 
     @Override
-    public void afterProcessingBlock(@NotNull LeafBlockWrapper block) {
+    public void afterProcessingBlock(@Nonnull LeafBlockWrapper block) {
     }
 
     @Override
-    public void beforeApplyingFormatChanges(@NotNull Collection<LeafBlockWrapper> modifiedBlocks) {
+    public void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks) {
     }
 
     @Override
-    public void afterApplyingChange(@NotNull LeafBlockWrapper block) {
+    public void afterApplyingChange(@Nonnull LeafBlockWrapper block) {
     }
 
     @Override
@@ -114,7 +114,7 @@ public interface FormattingProgressCallback {
     }
 
     @Override
-    public boolean addCallback(@NotNull EventType eventType, @NotNull Runnable callback) {
+    public boolean addCallback(@Nonnull EventType eventType, @Nonnull Runnable callback) {
       return false;
     }
   };

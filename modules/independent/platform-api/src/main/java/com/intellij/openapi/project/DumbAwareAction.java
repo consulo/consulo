@@ -17,7 +17,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

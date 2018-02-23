@@ -16,11 +16,11 @@
 package com.intellij.psi.codeStyle.autodetect;
 
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IndentOptionsDetector {
 
-  @NotNull
+  @Nonnull
   CommonCodeStyleSettings.IndentOptions getIndentOptions();
 
 }

@@ -20,8 +20,7 @@ import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +32,10 @@ import java.util.List;
 public class ChildArchiveNewVirtualDirectory extends ChildArchiveNewVirtualFile {
   protected List<NewVirtualFile> myChilds = new ArrayList<NewVirtualFile>();
 
-  public ChildArchiveNewVirtualDirectory(@NotNull ArchiveNewVirtualFile parentFile,
-                                         @Nullable ChildArchiveNewVirtualDirectory parentDir,
-                                         @NotNull String name,
-                                         @NotNull ArchiveFileSystem archiveFileSystem,
+  public ChildArchiveNewVirtualDirectory(@Nonnull ArchiveNewVirtualFile parentFile,
+                                         @javax.annotation.Nullable ChildArchiveNewVirtualDirectory parentDir,
+                                         @Nonnull String name,
+                                         @Nonnull ArchiveFileSystem archiveFileSystem,
                                          ArchiveFile archiveFile,
                                          ArchiveEntry archiveEntry) {
     super(parentFile, parentDir, name, archiveFileSystem, archiveFile, archiveEntry);
@@ -53,9 +52,9 @@ public class ChildArchiveNewVirtualDirectory extends ChildArchiveNewVirtualFile 
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public NewVirtualFile findChild(@NotNull @NonNls String name) {
+  public NewVirtualFile findChild(@Nonnull @NonNls String name) {
     NewVirtualFile[] children = getChildren();
     if (children == null) return null;
     for (NewVirtualFile child : children) {

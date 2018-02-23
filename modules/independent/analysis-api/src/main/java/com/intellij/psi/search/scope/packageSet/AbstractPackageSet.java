@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -24,17 +24,17 @@ public abstract class AbstractPackageSet extends PackageSetBase {
   private final String myText;
   private final int myPriority;
 
-  public AbstractPackageSet(@NotNull String text) {
+  public AbstractPackageSet(@Nonnull String text) {
     this(text, 1);
   }
 
-  public AbstractPackageSet(@NotNull String text, int priority) {
+  public AbstractPackageSet(@Nonnull String text, int priority) {
     myText = text;
     myPriority = priority;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AbstractPackageSet createCopy() {
     return this;
   }
@@ -44,7 +44,7 @@ public abstract class AbstractPackageSet extends PackageSetBase {
     return myPriority;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return myText;

@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -38,20 +38,20 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProtocol() {
     return StandardFileSystems.JAR_PROTOCOL;
   }
 
   @Override
-  public VirtualFile findFileByPath(@NotNull @NonNls String path) {
+  public VirtualFile findFileByPath(@Nonnull @NonNls String path) {
     Couple<String> pair = splitPath(path);
     return myHandlers.get(pair.first).findFileByPath(pair.second);
   }
 
-  @NotNull
-  protected Couple<String> splitPath(@NotNull String path) {
+  @Nonnull
+  protected Couple<String> splitPath(@Nonnull String path) {
     int separator = path.indexOf("!/");
     if (separator < 0) {
       throw new IllegalArgumentException("Path in JarFileSystem must contain a separator: " + path);
@@ -65,7 +65,7 @@ public class CoreJarFileSystem extends DeprecatedVirtualFileSystem {
   public void refresh(boolean asynchronous) { }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return findFileByPath(path);
   }
 

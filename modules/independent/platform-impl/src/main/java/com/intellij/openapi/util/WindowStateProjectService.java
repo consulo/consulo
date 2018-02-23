@@ -20,7 +20,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.impl.ProjectFrameBounds;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -38,25 +38,25 @@ final class WindowStateProjectService extends WindowStateServiceImpl {
   }
 
   @Override
-  Point getDefaultLocationFor(Object object, @NotNull String key) {
+  Point getDefaultLocationFor(Object object, @Nonnull String key) {
     Rectangle bounds = getDefaultBoundsFor(object, key);
     return bounds == null ? null : bounds.getLocation();
   }
 
   @Override
-  Dimension getDefaultSizeFor(Object object, @NotNull String key) {
+  Dimension getDefaultSizeFor(Object object, @Nonnull String key) {
     Rectangle bounds = getDefaultBoundsFor(object, key);
     return bounds == null ? null : bounds.getSize();
   }
 
   @Override
-  Rectangle getDefaultBoundsFor(Object object, @NotNull String key) {
+  Rectangle getDefaultBoundsFor(Object object, @Nonnull String key) {
     //  backward compatibility when this service is used instead of ProjectFrameBounds
     return !key.equals("ProjectFrameBounds") ? null : ProjectFrameBounds.getInstance(myProject).getBounds();
   }
 
   @Override
-  boolean getDefaultMaximizedFor(Object object, @NotNull String key) {
+  boolean getDefaultMaximizedFor(Object object, @Nonnull String key) {
     return false;
   }
 }

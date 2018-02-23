@@ -19,7 +19,7 @@ package com.intellij.patterns;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -32,7 +32,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern ofType(final FileType type) {
     return with(new PatternCondition<VirtualFile>("ofType") {
       @Override
-      public boolean accepts(@NotNull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
         return type.equals(virtualFile.getFileType());
       }
     });
@@ -42,10 +42,10 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
     return withName(PlatformPatterns.string().equalTo(name));
   }
 
-  public VirtualFilePattern withExtension(@NotNull final String... alternatives) {
+  public VirtualFilePattern withExtension(@Nonnull final String... alternatives) {
     return with(new PatternCondition<VirtualFile>("withExtension") {
       @Override
-      public boolean accepts(@NotNull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
         final String extension = virtualFile.getExtension();
         for (String alternative : alternatives) {
           if (alternative.equals(extension)) {
@@ -57,10 +57,10 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
     });
   }
 
-  public VirtualFilePattern withExtension(@NotNull final String extension) {
+  public VirtualFilePattern withExtension(@Nonnull final String extension) {
     return with(new PatternCondition<VirtualFile>("withExtension") {
       @Override
-      public boolean accepts(@NotNull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
         return extension.equals(virtualFile.getExtension());
       }
     });
@@ -69,7 +69,7 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withName(final ElementPattern<String> namePattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
-      public boolean accepts(@NotNull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
         return namePattern.getCondition().accepts(virtualFile.getName(), context);
       }
     });
@@ -78,19 +78,19 @@ public class VirtualFilePattern extends TreeElementPattern<VirtualFile, VirtualF
   public VirtualFilePattern withPath(final ElementPattern<String> pathPattern) {
     return with(new PatternCondition<VirtualFile>("withName") {
       @Override
-      public boolean accepts(@NotNull final VirtualFile virtualFile, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final VirtualFile virtualFile, final ProcessingContext context) {
         return pathPattern.accepts(virtualFile.getPath(), context);
       }
     });
   }
 
   @Override
-  protected VirtualFile getParent(@NotNull final VirtualFile t) {
+  protected VirtualFile getParent(@Nonnull final VirtualFile t) {
     return t.getParent();
   }
 
   @Override
-  protected VirtualFile[] getChildren(@NotNull final VirtualFile file) {
+  protected VirtualFile[] getChildren(@Nonnull final VirtualFile file) {
     return file.getChildren();
   }
 }

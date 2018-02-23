@@ -44,9 +44,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -135,7 +135,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
   }
 
   @Override
-  public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
     List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(myFileSystemTree.getSelectedFiles()));
     if (chosenFiles.isEmpty()) {
       return Collections.emptyList();
@@ -248,13 +248,13 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getTabName() {
     return "File or directory";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myFileSystemTree.getTree();

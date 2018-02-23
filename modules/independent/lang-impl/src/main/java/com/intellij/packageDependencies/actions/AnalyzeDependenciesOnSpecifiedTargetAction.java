@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -35,7 +35,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     final GlobalSearchScope targetScope = e.getData(TARGET_SCOPE_KEY);
     if (module == null || targetScope == null) return;
@@ -45,7 +45,7 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     final GlobalSearchScope scope = e.getData(TARGET_SCOPE_KEY);
     final Presentation presentation = e.getPresentation();

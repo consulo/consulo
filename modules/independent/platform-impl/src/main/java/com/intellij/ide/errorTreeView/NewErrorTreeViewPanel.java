@@ -43,8 +43,8 @@ import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -185,7 +185,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
     if (descriptor != null) {
       final String[] lines = descriptor.getElement().getText();
@@ -194,17 +194,17 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     return getSelectedNodeDescriptor() != null;
   }
 
   @Override
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
@@ -277,13 +277,13 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  public void addMessage(int type, @NotNull String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
+  public void addMessage(int type, @Nonnull String[] text, @Nullable VirtualFile file, int line, int column, @Nullable Object data) {
     addMessage(type, text, null, file, line, column, data);
   }
 
   @Override
   public void addMessage(int type,
-                         @NotNull String[] text,
+                         @Nonnull String[] text,
                          @Nullable VirtualFile underFileGroup,
                          @Nullable VirtualFile file,
                          int line,
@@ -298,9 +298,9 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   @Override
   public void addMessage(int type,
-                         @NotNull String[] text,
+                         @Nonnull String[] text,
                          @Nullable String groupName,
-                         @NotNull Navigatable navigatable,
+                         @Nonnull Navigatable navigatable,
                          @Nullable String exportTextPrefix,
                          @Nullable String rendererTextPrefix,
                          @Nullable Object data) {
@@ -333,7 +333,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return this;
   }
@@ -511,7 +511,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     AnAction closeMessageViewAction = new CloseTabToolbarAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         close();
       }
     };
@@ -587,7 +587,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     private final Runnable myRerunAction;
     private final AnAction myCloseAction;
 
-    public RerunAction(@NotNull Runnable rerunAction, @NotNull AnAction closeAction) {
+    public RerunAction(@Nonnull Runnable rerunAction, @Nonnull AnAction closeAction) {
       super(IdeBundle.message("action.refresh"), null, AllIcons.Actions.Rerun);
       myRerunAction = rerunAction;
       myCloseAction = closeAction;
@@ -595,14 +595,14 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myCloseAction.actionPerformed(e);
       myRerunAction.run();
     }
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(canControlProcess() && isProcessStopped());
     }
@@ -615,7 +615,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (canControlProcess()) {
         stopProcess();
       }
@@ -625,7 +625,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent event) {
+    public void update(@Nonnull AnActionEvent event) {
       Presentation presentation = event.getPresentation();
       presentation.setEnabled(canControlProcess() && !isProcessStopped());
       presentation.setVisible(canControlProcess());

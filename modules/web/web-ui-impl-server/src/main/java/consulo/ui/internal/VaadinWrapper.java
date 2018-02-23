@@ -21,7 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.impl.SomeUIWrapper;
 import consulo.ui.impl.UIDataObject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public interface VaadinWrapper extends SomeUIWrapper {
     return (Component)toVaadin().getParent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   default UIDataObject dataObject() {
     AbstractComponent component = (AbstractComponent)toVaadin();
@@ -50,6 +50,6 @@ public interface VaadinWrapper extends SomeUIWrapper {
 
   @RequiredUIAccess
   @Override
-  default void setSize(@NotNull Size size) {
+  default void setSize(@Nonnull Size size) {
   }
 }

@@ -21,8 +21,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsProviderMarker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -57,9 +57,9 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    *                                  cancellation can be reported by returning true from
    *                                  {@link UpdateSession#isCanceled}.
    */
-  @NotNull
-  UpdateSession updateDirectories(@NotNull FilePath[] contentRoots, UpdatedFiles updatedFiles,
-                                  ProgressIndicator progressIndicator, @NotNull final Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
+  @Nonnull
+  UpdateSession updateDirectories(@Nonnull FilePath[] contentRoots, UpdatedFiles updatedFiles,
+                                  ProgressIndicator progressIndicator, @Nonnull final Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
 
   /**
    * Allows to show a settings dialog for the operation.

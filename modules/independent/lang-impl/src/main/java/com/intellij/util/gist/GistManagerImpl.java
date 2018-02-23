@@ -26,7 +26,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class GistManagerImpl extends GistManager {
   public GistManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
       @Override
-      public void after(@NotNull List<? extends VFileEvent> events) {
+      public void after(@Nonnull List<? extends VFileEvent> events) {
         if (events.stream().anyMatch(this::shouldDropCache)) {
           invalidateData();
         }
@@ -59,12 +59,12 @@ public class GistManagerImpl extends GistManager {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Data> VirtualFileGist<Data> newVirtualFileGist(@NotNull String id,
+  public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id,
                                                          int version,
-                                                         @NotNull DataExternalizer<Data> externalizer,
-                                                         @NotNull VirtualFileGist.GistCalculator<Data> calcData) {
+                                                         @Nonnull DataExternalizer<Data> externalizer,
+                                                         @Nonnull VirtualFileGist.GistCalculator<Data> calcData) {
     if (!ourKnownIds.add(id)) {
       throw new IllegalArgumentException("Gist '" + id + "' is already registered");
     }
@@ -72,12 +72,12 @@ public class GistManagerImpl extends GistManager {
     return new VirtualFileGistImpl<>(id, version, externalizer, calcData);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Data> PsiFileGist<Data> newPsiFileGist(@NotNull String id,
+  public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id,
                                                  int version,
-                                                 @NotNull DataExternalizer<Data> externalizer,
-                                                 @NotNull NullableFunction<PsiFile, Data> calculator) {
+                                                 @Nonnull DataExternalizer<Data> externalizer,
+                                                 @Nonnull NullableFunction<PsiFile, Data> calculator) {
     return new PsiFileGistImpl<>(id, version, externalizer, calculator);
   }
 

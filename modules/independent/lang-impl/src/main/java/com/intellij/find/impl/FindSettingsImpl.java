@@ -27,7 +27,7 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,7 +245,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public void initModelBySetings(@NotNull FindModel model){
+  public void initModelBySetings(@Nonnull FindModel model){
     model.setCaseSensitive(isCaseSensitive());
     model.setForward(isForward());
     model.setFromCursor(isFromCursor());
@@ -271,39 +271,39 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   }
 
   @Override
-  public void addStringToFind(@NotNull String s){
+  public void addStringToFind(@Nonnull String s){
     FindRecents.getInstance().addStringToFind(s);
   }
 
   @Override
-  public void addStringToReplace(@NotNull String s) {
+  public void addStringToReplace(@Nonnull String s) {
     FindRecents.getInstance().addStringToReplace(s);
   }
 
   @Override
-  public void addDirectory(@NotNull String s) {
+  public void addDirectory(@Nonnull String s) {
     FindRecents.getInstance().addDirectory(s);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getRecentFindStrings(){
     return FindRecents.getInstance().getRecentFindStrings();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getRecentReplaceStrings(){
     return FindRecents.getInstance().getRecentReplaceStrings();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getRecentFileMasks() {
     return ArrayUtil.toStringArray(recentFileMasks);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getRecentDirectories(){
     return FindRecents.getInstance().getRecentDirectories();

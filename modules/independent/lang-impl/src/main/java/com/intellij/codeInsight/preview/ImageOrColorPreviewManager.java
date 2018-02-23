@@ -37,9 +37,9 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -67,12 +67,12 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     // we don't use multicaster because we don't want to serve all editors - only supported
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
-      public void editorCreated(@NotNull EditorFactoryEvent event) {
+      public void editorCreated(@Nonnull EditorFactoryEvent event) {
         registerListeners(event.getEditor());
       }
 
       @Override
-      public void editorReleased(@NotNull EditorFactoryEvent event) {
+      public void editorReleased(@Nonnull EditorFactoryEvent event) {
         Editor editor = event.getEditor();
         if (editor.isOneLineMode()) {
           return;
@@ -135,7 +135,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private static Collection<PsiElement> getPsiElementsAt(Point point, Editor editor) {
     if (editor.isDisposed()) {
       return Collections.emptySet();
@@ -172,7 +172,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
   }
 
   @Override
-  public void mouseMoved(@NotNull EditorMouseEvent event) {
+  public void mouseMoved(@Nonnull EditorMouseEvent event) {
     Editor editor = event.getEditor();
     if (editor.isOneLineMode()) {
       return;

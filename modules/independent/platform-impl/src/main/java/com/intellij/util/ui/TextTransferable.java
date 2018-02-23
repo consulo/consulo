@@ -18,8 +18,8 @@ package com.intellij.util.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
@@ -94,7 +94,7 @@ public class TextTransferable implements Transferable {
   public static class ColoredStringBuilder implements ColoredTextContainer {
     private final StringBuilder builder = new StringBuilder();
 
-    public void appendTo(@NotNull StringBuilder... subBuilders) {
+    public void appendTo(@Nonnull StringBuilder... subBuilders) {
       for (StringBuilder subBuilder : subBuilders) {
         subBuilder.append(builder);
       }
@@ -102,12 +102,12 @@ public class TextTransferable implements Transferable {
     }
 
     @Override
-    public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes) {
+    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
       builder.append(fragment);
     }
 
     @Override
-    public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, Object tag) {
+    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
       builder.append(fragment);
     }
 

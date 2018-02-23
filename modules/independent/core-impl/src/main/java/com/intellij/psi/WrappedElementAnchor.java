@@ -16,8 +16,8 @@
 package com.intellij.psi;
 
 import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -26,7 +26,7 @@ public class WrappedElementAnchor extends PsiAnchor {
   private final SmartPointerAnchorProvider myAnchorProvider;
   private final PsiAnchor myBaseAnchor;
 
-  public WrappedElementAnchor(@NotNull SmartPointerAnchorProvider provider, @NotNull PsiAnchor anchor) {
+  public WrappedElementAnchor(@Nonnull SmartPointerAnchorProvider provider, @Nonnull PsiAnchor anchor) {
     myAnchorProvider = provider;
     myBaseAnchor = anchor;
   }

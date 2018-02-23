@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 public interface DirectoryIndexExcludePolicy {
   ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create("com.intellij.directoryIndexExcludePolicy");
 
-   @NotNull
+   @Nonnull
   VirtualFile[] getExcludeRootsForProject();
 
-  @NotNull
-  VirtualFilePointer[] getExcludeRootsForModule(@NotNull ModuleRootLayer rootModel);
+  @Nonnull
+  VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer rootModel);
 }

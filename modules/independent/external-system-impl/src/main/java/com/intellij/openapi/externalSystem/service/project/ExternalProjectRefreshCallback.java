@@ -20,8 +20,7 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
 * @author Denis Zhdanov
@@ -36,7 +35,7 @@ public interface ExternalProjectRefreshCallback {
    *
    * @param externalProject  target external project (if available)
    */
-  void onSuccess(@Nullable DataNode<ProjectData> externalProject);
+  void onSuccess(@javax.annotation.Nullable DataNode<ProjectData> externalProject);
 
-  void onFailure(@NotNull String errorMessage, @Nullable String errorDetails);
+  void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails);
 }

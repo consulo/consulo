@@ -16,7 +16,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.util.xmlb.annotations.OptionTag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TodoPanelSettings {
   @OptionTag(tag = "are-packages-shown", nameAttribute = "")
@@ -35,7 +35,7 @@ public class TodoPanelSettings {
   public TodoPanelSettings() {
   }
 
-  public TodoPanelSettings(@NotNull TodoPanelSettings s) {
+  public TodoPanelSettings(@Nonnull TodoPanelSettings s) {
     arePackagesShown = s.arePackagesShown;
     areModulesShown = s.areModulesShown;
     areFlattenPackages = s.areFlattenPackages;

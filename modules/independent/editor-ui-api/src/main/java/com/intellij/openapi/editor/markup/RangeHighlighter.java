@@ -16,8 +16,8 @@
 package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.editor.RangeMarker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -53,7 +53,7 @@ public interface RangeHighlighter extends RangeMarker {
    * @return the attributes to use for highlighting, or null if the highlighter
    * does not modify the text attributes.
    */
-  @Nullable
+  @javax.annotation.Nullable
   TextAttributes getTextAttributes();
 
   /**
@@ -80,7 +80,7 @@ public interface RangeHighlighter extends RangeMarker {
   void setLineMarkerRenderer(@Nullable LineMarkerRenderer renderer);
 
 
-  @Nullable
+  @javax.annotation.Nullable
   CustomHighlighterRenderer getCustomRenderer();
 
   void setCustomRenderer(CustomHighlighterRenderer renderer);
@@ -91,7 +91,7 @@ public interface RangeHighlighter extends RangeMarker {
    *
    * @return the renderer instance, or null if the highlighter does not add any gutter icons.
    */
-  @Nullable
+  @javax.annotation.Nullable
   GutterIconRenderer getGutterIconRenderer();
 
   /**
@@ -101,7 +101,7 @@ public interface RangeHighlighter extends RangeMarker {
    *
    * @param renderer the renderer instance, or null if the highlighter does not add any gutter icons.
    */
-  void setGutterIconRenderer(@Nullable GutterIconRenderer renderer);
+  void setGutterIconRenderer(@javax.annotation.Nullable GutterIconRenderer renderer);
 
   /**
    * Returns the color of the marker drawn in the error stripe in the area covered by the highlighter.
@@ -118,7 +118,7 @@ public interface RangeHighlighter extends RangeMarker {
    * @param color the error stripe marker color, or null if the highlighter does not add any
    * error stripe markers.
    */
-  void setErrorStripeMarkColor(@Nullable Color color);
+  void setErrorStripeMarkColor(@javax.annotation.Nullable Color color);
 
   /**
    * Returns the object whose <code>toString()</code> method is called to get the text of the tooltip
@@ -127,7 +127,7 @@ public interface RangeHighlighter extends RangeMarker {
    * @return the error stripe tooltip objects, or null if the highlighter does not add any error
    * stripe markers or the marker has no tooltip.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Object getErrorStripeTooltip();
 
   /**
@@ -161,7 +161,7 @@ public interface RangeHighlighter extends RangeMarker {
    *
    * @return the separator color, or null if the highlighter does not add a line separator.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Color getLineSeparatorColor();
 
   /**
@@ -199,13 +199,13 @@ public interface RangeHighlighter extends RangeMarker {
    * @param filter the filter controlling the highlighter availability, or MarkupEditorFilter.EMPTY if
    * highlighter is available in all editors.
    */
-  void setEditorFilter(@NotNull MarkupEditorFilter filter);
+  void setEditorFilter(@Nonnull MarkupEditorFilter filter);
 
   /**
    * Gets the filter which can disable the highlighter in specific editor instances.
    *
    * @return the filter controlling the highlighter availability. Default availability is controlled by MarkupEditorFilter.EMPTY
    */
-  @NotNull
+  @Nonnull
   MarkupEditorFilter getEditorFilter();
 }

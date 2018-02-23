@@ -37,8 +37,8 @@ import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -49,18 +49,18 @@ import java.net.ServerSocket;
  * @since 18.05.14
  */
 public class ThriftTestExecutionUtil {
-  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@NotNull final String testFrameworkName,
-                                                                          @NotNull final TestConsoleProperties consoleProperties,
-                                                                          @NotNull ExecutionEnvironment environment,
-                                                                          @NotNull ThriftTestHandlerFactory factory,
-                                                                          @Nullable final TestLocationProvider locator) {
+  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@Nonnull final String testFrameworkName,
+                                                                          @Nonnull final TestConsoleProperties consoleProperties,
+                                                                          @Nonnull ExecutionEnvironment environment,
+                                                                          @Nonnull ThriftTestHandlerFactory factory,
+                                                                          @javax.annotation.Nullable final TestLocationProvider locator) {
     return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, locator, factory, null);
   }
 
-  public static SMTRunnerConsoleView createConsoleWithCustomLocator(@NotNull final String testFrameworkName,
-                                                                    @NotNull final TestConsoleProperties consoleProperties,
+  public static SMTRunnerConsoleView createConsoleWithCustomLocator(@Nonnull final String testFrameworkName,
+                                                                    @Nonnull final TestConsoleProperties consoleProperties,
                                                                     ExecutionEnvironment environment,
-                                                                    @Nullable final TestLocationProvider locator,
+                                                                    @javax.annotation.Nullable final TestLocationProvider locator,
                                                                     final ThriftTestHandlerFactory factory,
                                                                     @Nullable final TestProxyFilterProvider filterProvider) {
     String splitterPropertyName = SMTestRunnerConnectionUtil.getSplitterPropertyName(testFrameworkName);
@@ -69,14 +69,14 @@ public class ThriftTestExecutionUtil {
     return consoleView;
   }
 
-  public static void initConsoleView(@NotNull final SMTRunnerConsoleView consoleView,
-                                     @NotNull final String testFrameworkName,
-                                     @Nullable final TestLocationProvider locator,
+  public static void initConsoleView(@Nonnull final SMTRunnerConsoleView consoleView,
+                                     @Nonnull final String testFrameworkName,
+                                     @javax.annotation.Nullable final TestLocationProvider locator,
                                      final ThriftTestHandlerFactory factory,
                                      @Nullable final TestProxyFilterProvider filterProvider) {
     consoleView.addAttachToProcessListener(new AttachToProcessListener() {
       @Override
-      public void onAttachToProcess(@NotNull ProcessHandler processHandler) {
+      public void onAttachToProcess(@Nonnull ProcessHandler processHandler) {
         TestProxyPrinterProvider printerProvider = null;
         if (filterProvider != null) {
           printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
@@ -90,12 +90,12 @@ public class ThriftTestExecutionUtil {
     consoleView.initUI();
   }
 
-  private static void attachEventsProcessors(@NotNull final TestConsoleProperties consoleProperties,
+  private static void attachEventsProcessors(@Nonnull final TestConsoleProperties consoleProperties,
                                              final SMTestRunnerResultsForm resultsViewer,
                                              final StatisticsPanel statisticsPane,
                                              final ProcessHandler processHandler,
-                                             @NotNull final String testFrameworkName,
-                                             @Nullable final com.intellij.testIntegration.TestLocationProvider locator,
+                                             @Nonnull final String testFrameworkName,
+                                             @javax.annotation.Nullable final com.intellij.testIntegration.TestLocationProvider locator,
                                              ThriftTestHandlerFactory factory,
                                              @Nullable TestProxyPrinterProvider printerProvider) {
     //build messages consumer

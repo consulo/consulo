@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.LoadingOrder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -56,8 +56,8 @@ public class ExtensionComponentAdapterTest {
     return new ExtensionComponentAdapter(Object.class.getName(), element, new DefaultPicoContainer(), new DefaultPluginDescriptor(""), false);
   }
 
-  @NotNull
-  static Element readElement(@NotNull String text) {
+  @Nonnull
+  static Element readElement(@Nonnull String text) {
     try {
       return new SAXBuilder().build(new StringReader(text)).getRootElement();
     }

@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,6 +35,6 @@ public interface PsiViewerExtension {
   Icon getIcon();
   PsiElement createElement(Project project, String text);
 
-  @NotNull
+  @Nonnull
   FileType getDefaultFileType();
 }

@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectLongHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * return -1 instead of 0 if no such mapping exists
@@ -27,11 +27,11 @@ public class ObjectLongHashMap<K> extends TObjectLongHashMap<K> {
     super(initialCapacity);
   }
 
-  public ObjectLongHashMap(@NotNull TObjectHashingStrategy<K> strategy) {
+  public ObjectLongHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
-  public ObjectLongHashMap(int initialCapacity, @NotNull TObjectHashingStrategy<K> strategy) {
+  public ObjectLongHashMap(int initialCapacity, @Nonnull TObjectHashingStrategy<K> strategy) {
     super(initialCapacity, strategy);
   }
 

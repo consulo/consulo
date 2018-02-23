@@ -15,7 +15,7 @@
  */
 package consulo.ui.style;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,5 +24,5 @@ import java.util.EventListener;
  * @since 05-Nov-17
  */
 public interface StyleChangeListener extends EventListener {
-  void styleChanged(@NotNull Style newStyle);
+  void styleChanged(@Nonnull Style newStyle);
 }

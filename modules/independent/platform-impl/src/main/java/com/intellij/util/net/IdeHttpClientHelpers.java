@@ -23,8 +23,8 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Mikhail Golubev
@@ -33,7 +33,7 @@ public class IdeHttpClientHelpers {
   private IdeHttpClientHelpers() {
   }
 
-  @NotNull
+  @Nonnull
   private static HttpConfigurable getHttpConfigurable() {
     return HttpConfigurable.getInstance();
   }
@@ -46,7 +46,7 @@ public class IdeHttpClientHelpers {
     return getHttpConfigurable().PROXY_AUTHENTICATION;
   }
 
-  @NotNull
+  @Nonnull
   private static String getProxyHost() {
     return StringUtil.notNullize(getHttpConfigurable().PROXY_HOST);
   }
@@ -55,12 +55,12 @@ public class IdeHttpClientHelpers {
     return getHttpConfigurable().PROXY_PORT;
   }
 
-  @NotNull
+  @Nonnull
   private static String getProxyLogin() {
     return StringUtil.notNullize(getHttpConfigurable().getProxyLogin());
   }
 
-  @NotNull
+  @Nonnull
   private static String getProxyPassword() {
     return StringUtil.notNullize(getHttpConfigurable().getPlainProxyPassword());
   }
@@ -73,7 +73,7 @@ public class IdeHttpClientHelpers {
      * @param builder HttpClient's request builder used to configure new client
      * @see #setProxyForUrlIfEnabled(RequestConfig.Builder, String)
      */
-    public static void setProxyIfEnabled(@NotNull RequestConfig.Builder builder) {
+    public static void setProxyIfEnabled(@Nonnull RequestConfig.Builder builder) {
       if (isHttpProxyEnabled()) {
         builder.setProxy(new HttpHost(getProxyHost(), getProxyPort()));
       }
@@ -85,7 +85,7 @@ public class IdeHttpClientHelpers {
      * @param provider HttpClient's credentials provider used to configure new client
      * @see #setProxyCredentialsForUrlIfEnabled(CredentialsProvider, String)
      */
-    public static void setProxyCredentialsIfEnabled(@NotNull CredentialsProvider provider) {
+    public static void setProxyCredentialsIfEnabled(@Nonnull CredentialsProvider provider) {
       if (isHttpProxyEnabled() && isProxyAuthenticationEnabled()) {
         final String ntlmUserPassword = getProxyLogin().replace('\\', '/') + ":" + getProxyPassword();
         provider.setCredentials(new AuthScope(getProxyHost(), getProxyPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM),
@@ -102,7 +102,7 @@ public class IdeHttpClientHelpers {
      * @param builder HttpClient's request builder used to configure new client
      * @param url     URL to access (only host part is checked)
      */
-    public static void setProxyForUrlIfEnabled(@NotNull RequestConfig.Builder builder, @Nullable String url) {
+    public static void setProxyForUrlIfEnabled(@Nonnull RequestConfig.Builder builder, @Nullable String url) {
       if (getHttpConfigurable().isHttpProxyEnabledForUrl(url)) {
         setProxyIfEnabled(builder);
       }
@@ -115,7 +115,7 @@ public class IdeHttpClientHelpers {
      * @param provider HttpClient's credentials provider used to configure new client
      * @param url      URL to access (only host part is checked)
      */
-    public static void setProxyCredentialsForUrlIfEnabled(@NotNull CredentialsProvider provider, @Nullable String url) {
+    public static void setProxyCredentialsForUrlIfEnabled(@Nonnull CredentialsProvider provider, @Nullable String url) {
       if (getHttpConfigurable().isHttpProxyEnabledForUrl(url)) {
         setProxyCredentialsIfEnabled(provider);
       }

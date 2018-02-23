@@ -24,9 +24,9 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class PostfixDescriptionPanel implements Disposable {
   }
 
 
-  public void reset(@NotNull PostfixTemplateMetaData actionMetaData) {
+  public void reset(@Nonnull PostfixTemplateMetaData actionMetaData) {
 
     final TextDescriptor url = actionMetaData.getDescription();
     final String description = getDescription(url);
@@ -55,7 +55,7 @@ public class PostfixDescriptionPanel implements Disposable {
     showUsages(myAfterPanel, ArrayUtil.getFirstElement(actionMetaData.getExampleUsagesAfter()));
   }
 
-  @NotNull
+  @Nonnull
   private static String getDescription(TextDescriptor url) {
     try {
       return url.getText();
@@ -66,7 +66,7 @@ public class PostfixDescriptionPanel implements Disposable {
     return "";
   }
 
-  private static void showUsages(@NotNull JPanel panel, @Nullable TextDescriptor exampleUsage) {
+  private static void showUsages(@Nonnull JPanel panel, @Nullable TextDescriptor exampleUsage) {
     String text = "";
     FileType fileType = PlainTextFileType.INSTANCE;
     if (exampleUsage != null) {
@@ -86,7 +86,7 @@ public class PostfixDescriptionPanel implements Disposable {
     panel.repaint();
   }
 
-  private void initializeExamplePanel(@NotNull JPanel panel) {
+  private void initializeExamplePanel(@Nonnull JPanel panel) {
     panel.setLayout(new BorderLayout());
     ActionUsagePanel actionUsagePanel = new ActionUsagePanel();
     panel.add(actionUsagePanel);

@@ -22,13 +22,13 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CaretSpecificDataContext extends DataContextWrapper {
   private final Caret myCaret;
 
-  public CaretSpecificDataContext(@NotNull DataContext delegate, @NotNull Caret caret) {
+  public CaretSpecificDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
     super(delegate);
     myCaret = caret;
   }
@@ -36,7 +36,7 @@ public class CaretSpecificDataContext extends DataContextWrapper {
   @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(@NotNull Key<T> dataId) {
+  public <T> T getData(@Nonnull Key<T> dataId) {
     Project project = super.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       FileEditorManager fm = FileEditorManager.getInstance(project);

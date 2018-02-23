@@ -24,8 +24,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -44,12 +44,12 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
   private final List<String> myInitialCollection;
   @Nullable private final Project myProject;
 
-  public PathsChooserComponent(@NotNull final List<String> collection, @NotNull final PathProcessor processor) {
+  public PathsChooserComponent(@Nonnull final List<String> collection, @Nonnull final PathProcessor processor) {
     this(collection, processor, null);
   }
 
-  public PathsChooserComponent(@NotNull final List<String> collection,
-                               @NotNull final PathProcessor processor,
+  public PathsChooserComponent(@Nonnull final List<String> collection,
+                               @Nonnull final PathProcessor processor,
                                @Nullable final Project project) {
     myList = new JBList();
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -97,7 +97,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
     reset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();

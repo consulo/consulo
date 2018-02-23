@@ -25,7 +25,7 @@ import consulo.web.gwt.shared.transport.GwtColor;
 import consulo.web.gwt.shared.transport.GwtHighlightInfo;
 import consulo.web.gwt.shared.transport.GwtTextAttributes;
 import consulo.web.gwt.shared.transport.GwtTextRange;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -28,8 +28,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Set;
@@ -51,7 +51,7 @@ public abstract class PatternDialectProvider {
 
   public abstract String getDisplayName();
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public abstract String getShortName();
 
   public abstract AnAction[] createActions(Project project, final Runnable update);

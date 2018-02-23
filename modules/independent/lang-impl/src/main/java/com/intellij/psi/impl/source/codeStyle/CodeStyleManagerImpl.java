@@ -49,8 +49,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,20 +76,20 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @NotNull
-  public PsiElement reformat(@NotNull PsiElement element) throws IncorrectOperationException {
+  @Nonnull
+  public PsiElement reformat(@Nonnull PsiElement element) throws IncorrectOperationException {
     return reformat(element, false);
   }
 
   @Override
-  @NotNull
-  public PsiElement reformat(@NotNull PsiElement element, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException {
+  @Nonnull
+  public PsiElement reformat(@Nonnull PsiElement element, boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException {
     CheckUtil.checkWritable(element);
     if( !SourceTreeToPsiMap.hasTreeElement( element ) )
     {
@@ -104,7 +104,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return formatted;
   }
 
-  private PsiElement postProcessElement(@NotNull final PsiElement formatted) {
+  private PsiElement postProcessElement(@Nonnull final PsiElement formatted) {
     PsiElement result = formatted;
     if (getSettings().FORMATTER_TAGS_ENABLED && formatted instanceof PsiFile) {
       postProcessEnabledRanges((PsiFile) formatted, formatted.getTextRange(), getSettings());
@@ -117,7 +117,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return result;
   }
 
-  private void postProcessText(@NotNull final PsiFile file, @NotNull final TextRange textRange) {
+  private void postProcessText(@Nonnull final PsiFile file, @Nonnull final TextRange textRange) {
     if (!getSettings().FORMATTER_TAGS_ENABLED) {
       TextRange currentRange = textRange;
       for (final PostFormatProcessor myPostFormatProcessor : Extensions.getExtensions(PostFormatProcessor.EP_NAME)) {
@@ -130,7 +130,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public PsiElement reformatRange(@NotNull PsiElement element,
+  public PsiElement reformatRange(@Nonnull PsiElement element,
                                   int startOffset,
                                   int endOffset,
                                   boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException {
@@ -138,7 +138,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public PsiElement reformatRange(@NotNull PsiElement element, int startOffset, int endOffset)
+  public PsiElement reformatRange(@Nonnull PsiElement element, int startOffset, int endOffset)
           throws IncorrectOperationException {
     return reformatRangeImpl(element, startOffset, endOffset, false);
 
@@ -151,31 +151,31 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
 
   @Override
-  public void reformatText(@NotNull PsiFile file, int startOffset, int endOffset) throws IncorrectOperationException {
+  public void reformatText(@Nonnull PsiFile file, int startOffset, int endOffset) throws IncorrectOperationException {
     reformatText(file, Collections.singleton(new TextRange(startOffset, endOffset)));
   }
 
   @Override
-  public void reformatText(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges) throws IncorrectOperationException {
+  public void reformatText(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges) throws IncorrectOperationException {
     reformatText(file, ranges, null);
   }
 
   @Override
-  public void reformatTextWithContext(@NotNull PsiFile file,
-                                      @NotNull ChangedRangesInfo info) throws IncorrectOperationException
+  public void reformatTextWithContext(@Nonnull PsiFile file,
+                                      @Nonnull ChangedRangesInfo info) throws IncorrectOperationException
   {
     FormatTextRanges formatRanges = new FormatTextRanges(info);
     reformatText(file, formatRanges, null, true);
   }
 
-  public void reformatText(@NotNull PsiFile file, @NotNull Collection<TextRange> ranges, @Nullable Editor editor) throws IncorrectOperationException {
+  public void reformatText(@Nonnull PsiFile file, @Nonnull Collection<TextRange> ranges, @Nullable Editor editor) throws IncorrectOperationException {
     FormatTextRanges formatRanges = new FormatTextRanges();
     ranges.forEach((range) -> formatRanges.add(range, true));
     reformatText(file, formatRanges, editor, false);
   }
 
-  private void reformatText(@NotNull PsiFile file,
-                            @NotNull FormatTextRanges ranges,
+  private void reformatText(@Nonnull PsiFile file,
+                            @Nonnull FormatTextRanges ranges,
                             @Nullable Editor editor,
                             boolean reformatContext) throws IncorrectOperationException
   {
@@ -255,7 +255,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     }
   }
 
-  private static void removeEndingWhiteSpaceFromEachRange(@NotNull PsiFile file, @NotNull FormatTextRanges ranges) {
+  private static void removeEndingWhiteSpaceFromEachRange(@Nonnull PsiFile file, @Nonnull FormatTextRanges ranges) {
     for (FormatTextRange formatRange : ranges.getRanges()) {
       TextRange range = formatRange.getTextRange();
 
@@ -273,7 +273,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     }
   }
 
-  private PsiElement reformatRangeImpl(final @NotNull PsiElement element,
+  private PsiElement reformatRangeImpl(final @Nonnull PsiElement element,
                                        final int startOffset,
                                        final int endOffset,
                                        boolean canChangeWhiteSpacesOnly) throws IncorrectOperationException {
@@ -293,7 +293,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
 
   @Override
-  public void reformatNewlyAddedElement(@NotNull final ASTNode parent, @NotNull final ASTNode addedElement) throws IncorrectOperationException {
+  public void reformatNewlyAddedElement(@Nonnull final ASTNode parent, @Nonnull final ASTNode addedElement) throws IncorrectOperationException {
 
     LOG.assertTrue(addedElement.getTreeParent() == parent, "addedElement must be added to parent");
 
@@ -322,7 +322,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public int adjustLineIndent(@NotNull final PsiFile file, final int offset) throws IncorrectOperationException {
+  public int adjustLineIndent(@Nonnull final PsiFile file, final int offset) throws IncorrectOperationException {
     DetectedIndentOptionsNotificationProvider.updateIndentNotification(file, false);
     return PostprocessReformattingAspect.getInstance(file.getProject()).disablePostprocessFormattingInside(
             () -> doAdjustLineIndentByOffset(file, offset, FormattingMode.ADJUST_INDENT));
@@ -343,7 +343,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return bottomost;
   }
 
-  public int adjustLineIndent(@NotNull final Document document, final int offset, FormattingMode mode) {
+  public int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode) {
     return PostprocessReformattingAspect.getInstance(getProject()).disablePostprocessFormattingInside(() -> {
       final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
       documentManager.commitDocument(document);
@@ -356,11 +356,11 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public int adjustLineIndent(@NotNull Document document, int offset) {
+  public int adjustLineIndent(@Nonnull Document document, int offset) {
     return adjustLineIndent(document, offset, FormattingMode.ADJUST_INDENT);
   }
 
-  private int doAdjustLineIndentByOffset(@NotNull PsiFile file, int offset, FormattingMode mode) {
+  private int doAdjustLineIndentByOffset(@Nonnull PsiFile file, int offset, FormattingMode mode) {
     final Integer result = new CodeStyleManagerRunnable<Integer>(this, mode) {
       @Override
       protected Integer doPerform(int offset, TextRange range) {
@@ -383,7 +383,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public void adjustLineIndent(@NotNull PsiFile file, TextRange rangeToAdjust) throws IncorrectOperationException {
+  public void adjustLineIndent(@Nonnull PsiFile file, TextRange rangeToAdjust) throws IncorrectOperationException {
     new CodeStyleManagerRunnable<Object>(this, FormattingMode.ADJUST_INDENT) {
       @Override
       protected Object doPerform(int offset, TextRange range) {
@@ -395,7 +395,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   @Nullable
-  public String getLineIndent(@NotNull PsiFile file, int offset) {
+  public String getLineIndent(@Nonnull PsiFile file, int offset) {
     return new CodeStyleManagerRunnable<String>(this, FormattingMode.ADJUST_INDENT) {
       @Override
       protected boolean useDocumentBaseFormattingModel() {
@@ -411,7 +411,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   @Nullable
-  public String getLineIndent(@NotNull Document document, int offset) {
+  public String getLineIndent(@Nonnull Document document, int offset) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
     if (file == null) return "";
 
@@ -419,7 +419,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
   @Override
-  public boolean isLineToBeIndented(@NotNull PsiFile file, int offset) {
+  public boolean isLineToBeIndented(@Nonnull PsiFile file, int offset) {
     if (!SourceTreeToPsiMap.hasTreeElement(file)) {
       return false;
     }
@@ -501,7 +501,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
    * @throws IncorrectOperationException  if given file is read-only
    */
   @Nullable
-  public static TextRange insertNewLineIndentMarker(@NotNull PsiFile file, @NotNull Document document, int offset) {
+  public static TextRange insertNewLineIndentMarker(@Nonnull PsiFile file, @Nonnull Document document, int offset) {
     CharSequence text = document.getImmutableCharSequence();
     if (offset <= 0 || offset >= text.length() || !isWhiteSpaceSymbol(text.charAt(offset))) {
       return null;
@@ -527,8 +527,8 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return new TextRange(offset, offset + dummy.length());
   }
 
-  @NotNull
-  private static String createDummy(@NotNull PsiFile file) {
+  @Nonnull
+  private static String createDummy(@Nonnull PsiFile file) {
     Language language = file.getLanguage();
     PsiComment comment = null;
     try {
@@ -549,12 +549,12 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
    * @return        target white space element for the given offset within the given file (if any); {@code null} otherwise
    */
   @Nullable
-  public static PsiElement findWhiteSpaceNode(@NotNull PsiFile file, int offset) {
+  public static PsiElement findWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
     return doFindWhiteSpaceNode(file, offset).first;
   }
 
-  @NotNull
-  private static Pair<PsiElement, CharTable> doFindWhiteSpaceNode(@NotNull PsiFile file, int offset) {
+  @Nonnull
+  private static Pair<PsiElement, CharTable> doFindWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
     ASTNode astNode = SourceTreeToPsiMap.psiElementToTree(file);
     if (!(astNode instanceof FileElement)) {
       return new Pair<>(null, null);
@@ -614,7 +614,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   }
 
 
-  @NotNull
+  @Nonnull
   private CodeStyleSettings getSettings() {
     return CodeStyleSettingsManager.getSettings(myProject);
   }
@@ -739,7 +739,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     int myVisualColumnToRestore = -1;
     boolean myBlankLineIndentPreserved = true;
 
-    CaretPositionKeeper(@NotNull Editor editor, @NotNull CodeStyleSettings settings, @NotNull Language language) {
+    CaretPositionKeeper(@Nonnull Editor editor, @Nonnull CodeStyleSettings settings, @Nonnull Language language) {
       myEditor = editor;
       myCaretModel = editor.getCaretModel();
       myDocument = editor.getDocument();
@@ -755,7 +755,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
       }
     }
 
-    private static boolean isBlankLineIndentPreserved(@NotNull CodeStyleSettings settings, @NotNull Language language) {
+    private static boolean isBlankLineIndentPreserved(@Nonnull CodeStyleSettings settings, @Nonnull Language language) {
       CommonCodeStyleSettings langSettings = settings.getCommonSettings(language);
       if (langSettings != null) {
         CommonCodeStyleSettings.IndentOptions indentOptions = langSettings.getIndentOptions();
@@ -861,7 +861,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     }
   }
 
-  private void postProcessEnabledRanges(@NotNull final PsiFile file, @NotNull TextRange range, CodeStyleSettings settings) {
+  private void postProcessEnabledRanges(@Nonnull final PsiFile file, @Nonnull TextRange range, CodeStyleSettings settings) {
     List<TextRange> enabledRanges = myTagHandler.getEnabledRanges(file.getNode(), range);
     int delta = 0;
     for (TextRange enabledRange : enabledRanges) {
@@ -878,24 +878,24 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return myCurrentFormattingMode.get();
   }
 
-  void setCurrentFormattingMode(@NotNull FormattingMode mode) {
+  void setCurrentFormattingMode(@Nonnull FormattingMode mode) {
     myCurrentFormattingMode.set(mode);
   }
 
   @Override
-  public int getSpacing(@NotNull PsiFile file, int offset) {
+  public int getSpacing(@Nonnull PsiFile file, int offset) {
     FormattingModel model = createFormattingModel(file);
     return model == null ? -1 : FormatterEx.getInstance().getSpacingForBlockAtOffset(model, offset);
   }
 
   @Override
-  public int getMinLineFeeds(@NotNull PsiFile file, int offset) {
+  public int getMinLineFeeds(@Nonnull PsiFile file, int offset) {
     FormattingModel model = createFormattingModel(file);
     return model == null ? -1 : FormatterEx.getInstance().getMinLineFeedsBeforeBlockAtOffset(model, offset);
   }
 
   @Nullable
-  private static FormattingModel createFormattingModel(@NotNull PsiFile file) {
+  private static FormattingModel createFormattingModel(@Nonnull PsiFile file) {
     FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
     if (builder == null) return null;
     CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(file.getProject());

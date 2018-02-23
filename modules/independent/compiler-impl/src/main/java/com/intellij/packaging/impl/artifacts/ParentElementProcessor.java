@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.artifacts;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public abstract class ParentElementProcessor {
 
-  public abstract boolean process(@NotNull CompositePackagingElement<?> element, @NotNull List<Pair<Artifact,CompositePackagingElement<?>>> parents,
-                                  @NotNull Artifact artifact);
+  public abstract boolean process(@Nonnull CompositePackagingElement<?> element, @Nonnull List<Pair<Artifact,CompositePackagingElement<?>>> parents,
+                                  @Nonnull Artifact artifact);
 
 }

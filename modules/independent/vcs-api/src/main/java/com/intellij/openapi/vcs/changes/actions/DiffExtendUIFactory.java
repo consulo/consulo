@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.vcs.changes.Change;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public interface DiffExtendUIFactory {
       return Collections.emptyList();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public JComponent createBottomComponent() {
       return null;
     }

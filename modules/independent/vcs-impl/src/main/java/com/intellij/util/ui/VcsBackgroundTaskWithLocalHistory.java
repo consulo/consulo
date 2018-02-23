@@ -20,8 +20,8 @@ import com.intellij.history.LocalHistoryAction;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -35,8 +35,8 @@ public abstract class VcsBackgroundTaskWithLocalHistory<T> extends VcsBackground
   private final String myActionName;
 
   protected VcsBackgroundTaskWithLocalHistory(Project project,
-                                              @NotNull String title,
-                                              @NotNull PerformInBackgroundOption backgroundOption,
+                                              @Nonnull String title,
+                                              @Nonnull PerformInBackgroundOption backgroundOption,
                                               Collection<T> itemsToProcess,
                                               String actionName) {
     super(project, title, backgroundOption, itemsToProcess);
@@ -44,8 +44,8 @@ public abstract class VcsBackgroundTaskWithLocalHistory<T> extends VcsBackground
   }
 
   protected VcsBackgroundTaskWithLocalHistory(Project project,
-                                              @NotNull String title,
-                                              @NotNull PerformInBackgroundOption backgroundOption,
+                                              @Nonnull String title,
+                                              @Nonnull PerformInBackgroundOption backgroundOption,
                                               Collection<T> itemsToProcess,
                                               boolean canBeCanceled, String actionName) {
     super(project, title, backgroundOption, itemsToProcess, canBeCanceled);
@@ -53,7 +53,7 @@ public abstract class VcsBackgroundTaskWithLocalHistory<T> extends VcsBackground
   }
 
   @Override
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     LocalHistoryAction action = LocalHistoryAction.NULL;
     if (myActionName != null) {
       action = LocalHistory.getInstance().startAction(myActionName);

@@ -20,8 +20,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.ui.VcsLogPopupComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Base class for components which allow to set up filter for the VCS Log, by displaying a popup with available choices.
@@ -32,9 +32,10 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
    * Special value that indicates that no filtering is on.
    */
   protected static final String ALL = "All";
-  @NotNull protected final FilterModel<Filter> myFilterModel;
+  @Nonnull
+  protected final FilterModel<Filter> myFilterModel;
 
-  FilterPopupComponent(@NotNull String filterName, @NotNull FilterModel<Filter> filterModel) {
+  FilterPopupComponent(@Nonnull String filterName, @Nonnull FilterModel<Filter> filterModel) {
     super(filterName);
     myFilterModel = filterModel;
   }
@@ -46,15 +47,15 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
   }
 
   @Override
-  public void installChangeListener(@NotNull Runnable onChange) {
+  public void installChangeListener(@Nonnull Runnable onChange) {
     myFilterModel.addSetFilterListener(onChange);
   }
 
-  @NotNull
-  protected abstract String getText(@NotNull Filter filter);
+  @Nonnull
+  protected abstract String getText(@Nonnull Filter filter);
 
   @Nullable
-  protected abstract String getToolTip(@NotNull Filter filter);
+  protected abstract String getToolTip(@Nonnull Filter filter);
 
   @Override
   public String getToolTipText() {
@@ -65,7 +66,7 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
   /**
    * Returns the special action that indicates that no filtering is selected in this component.
    */
-  @NotNull
+  @Nonnull
   protected AnAction createAllAction() {
     return new AllAction();
   }
@@ -77,7 +78,7 @@ abstract class FilterPopupComponent<Filter extends VcsLogFilter> extends VcsLogP
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myFilterModel.setFilter(null);
     }
   }

@@ -21,8 +21,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcs.log.VcsFullCommitDetails;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,20 +29,20 @@ import java.util.Map;
 public abstract class VcsLogOneCommitPerRepoAction<Repo extends Repository> extends VcsLogAction<Repo> {
 
   @Override
-  protected void actionPerformed(@NotNull Project project, @NotNull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected void actionPerformed(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
     Map<Repo, VcsFullCommitDetails> singleElementMap = convertToSingleElementMap(grouped);
     assert singleElementMap != null;
     actionPerformed(project, singleElementMap);
   }
 
   @Override
-  protected boolean isEnabled(@NotNull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected boolean isEnabled(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return allValuesAreSingletons(grouped);
   }
 
-  protected abstract void actionPerformed(@NotNull Project project, @NotNull Map<Repo, VcsFullCommitDetails> commits);
+  protected abstract void actionPerformed(@Nonnull Project project, @Nonnull Map<Repo, VcsFullCommitDetails> commits);
 
-  private boolean allValuesAreSingletons(@NotNull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  private boolean allValuesAreSingletons(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return !ContainerUtil.exists(grouped.entrySet(), new Condition<Map.Entry<Repo, Collection<VcsFullCommitDetails>>>() {
       @Override
       public boolean value(Map.Entry<Repo, Collection<VcsFullCommitDetails>> entry) {
@@ -52,8 +51,8 @@ public abstract class VcsLogOneCommitPerRepoAction<Repo extends Repository> exte
     });
   }
 
-  @Nullable
-  private Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(@NotNull MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
+  @javax.annotation.Nullable
+  private Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(@Nonnull MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
     Map<Repo, VcsFullCommitDetails> map = ContainerUtil.newHashMap();
     for (Map.Entry<Repo, Collection<VcsFullCommitDetails>> entry : groupedCommits.entrySet()) {
       Collection<VcsFullCommitDetails> commits = entry.getValue();

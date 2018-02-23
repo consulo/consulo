@@ -18,8 +18,8 @@ package com.intellij.ui;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Major difference between the parent class and <code>JBSplitter</code> is an ability to save proportion
@@ -41,11 +41,11 @@ public class JBSplitter extends Splitter {
     myDefaultProportion = 0.5f;
   }
 
-  public JBSplitter(@NotNull String proportionKey, float defaultProportion) {
+  public JBSplitter(@Nonnull String proportionKey, float defaultProportion) {
     this(false, proportionKey, defaultProportion);
   }
 
-  public JBSplitter(boolean vertical, @NotNull String proportionKey, float defaultProportion) {
+  public JBSplitter(boolean vertical, @Nonnull String proportionKey, float defaultProportion) {
     super(vertical, defaultProportion);
 
     mySplitterProportionKey = proportionKey;
@@ -99,7 +99,7 @@ public class JBSplitter extends Splitter {
    * Sets proportion key and load from settings.
    * @param key
    */
-  public final void setAndLoadSplitterProportionKey(@NotNull String key) {
+  public final void setAndLoadSplitterProportionKey(@Nonnull String key) {
     setSplitterProportionKey(key);
     loadProportion();
   }

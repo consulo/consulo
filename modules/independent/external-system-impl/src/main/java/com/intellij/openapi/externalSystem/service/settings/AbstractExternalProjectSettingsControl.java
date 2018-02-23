@@ -21,7 +21,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemSettingsControl;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel;
 import com.intellij.ui.components.JBCheckBox;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Templates class for managing single external project settings (single ide project might contain multiple bindings to external
@@ -34,17 +34,18 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
   implements ExternalSystemSettingsControl<S>
 {
 
-  @NotNull private S myInitialSettings;
+  @Nonnull
+  private S myInitialSettings;
 
   private JBCheckBox myUseAutoImportBox;
   private JBCheckBox myCreateEmptyContentRootDirectoriesBox;
   private boolean myHideUseAutoImportBox;
 
-  protected AbstractExternalProjectSettingsControl(@NotNull S initialSettings) {
+  protected AbstractExternalProjectSettingsControl(@Nonnull S initialSettings) {
     myInitialSettings = initialSettings;
   }
 
-  @NotNull
+  @Nonnull
   public S getInitialSettings() {
     return myInitialSettings;
   }
@@ -54,7 +55,7 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
   }
 
   @Override
-  public void fillUi(@NotNull PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(@Nonnull PaintAwarePanel canvas, int indentLevel) {
     myUseAutoImportBox = new JBCheckBox(ExternalSystemBundle.message("settings.label.use.auto.import"));
     myUseAutoImportBox.setVisible(!myHideUseAutoImportBox);
     canvas.add(myUseAutoImportBox, ExternalSystemUiUtil.getFillLineConstraints(indentLevel));
@@ -64,7 +65,7 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
     fillExtraControls(canvas, indentLevel); 
   }
   
-  protected abstract void fillExtraControls(@NotNull PaintAwarePanel content, int indentLevel);
+  protected abstract void fillExtraControls(@Nonnull PaintAwarePanel content, int indentLevel);
 
   public boolean isModified() {
     return myUseAutoImportBox.isSelected() != getInitialSettings().isUseAutoImport()
@@ -87,7 +88,7 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
   protected abstract void resetExtraSettings(boolean isDefaultModuleCreation);
 
   @Override
-  public void apply(@NotNull S settings) {
+  public void apply(@Nonnull S settings) {
     settings.setUseAutoImport(myUseAutoImportBox.isSelected());
     settings.setCreateEmptyContentRootDirectories(myCreateEmptyContentRootDirectoriesBox.isSelected());
     if (myInitialSettings.getExternalProjectPath() != null) {
@@ -96,7 +97,7 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
     applyExtraSettings(settings);
   }
 
-  protected abstract void applyExtraSettings(@NotNull S settings);
+  protected abstract void applyExtraSettings(@Nonnull S settings);
 
   public void disposeUIResources() {
     ExternalSystemUiUtil.disposeUi(this);

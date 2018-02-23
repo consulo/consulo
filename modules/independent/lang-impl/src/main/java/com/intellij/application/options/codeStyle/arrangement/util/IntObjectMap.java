@@ -15,8 +15,8 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 
@@ -27,7 +27,8 @@ import java.util.Arrays;
 @SuppressWarnings("unchecked")
 public class IntObjectMap<V> {
   
-  @NotNull private Object[] myData;
+  @Nonnull
+  private Object[] myData;
   private int myMaxUsed = -1;
   private int mySize;
 
@@ -47,7 +48,7 @@ public class IntObjectMap<V> {
     return (V)myData[key];
   }
 
-  public void set(int key, @NotNull V value) {
+  public void set(int key, @Nonnull V value) {
     if (key >= myData.length) {
       int newCapacity = myData.length;
       while (newCapacity <= key) {

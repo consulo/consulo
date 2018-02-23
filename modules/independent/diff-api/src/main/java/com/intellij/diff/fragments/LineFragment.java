@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.fragments;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

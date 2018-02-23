@@ -18,10 +18,11 @@ package com.intellij.testFramework;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class HighlightTestInfo implements Disposable {
-  @NotNull protected final String[] filePaths;
+  @Nonnull
+  protected final String[] filePaths;
   protected boolean checkWarnings;
   protected boolean checkInfos;
   protected boolean checkSymbolNames;
@@ -30,7 +31,7 @@ public abstract class HighlightTestInfo implements Disposable {
   private boolean tested;
   private final String myPlace;
 
-  public HighlightTestInfo(@NotNull Disposable parentDisposable, @NonNls @NotNull String... filePaths) {
+  public HighlightTestInfo(@Nonnull Disposable parentDisposable, @NonNls @Nonnull String... filePaths) {
     this.filePaths = filePaths;
     // disposer here for catching the case of not calling test()
     Disposer.register(parentDisposable, this);
@@ -41,7 +42,7 @@ public abstract class HighlightTestInfo implements Disposable {
   public HighlightTestInfo checkWeakWarnings() { checkWeakWarnings = true; return this; }
   public HighlightTestInfo checkInfos() { checkInfos = true; return this; }
   public HighlightTestInfo checkSymbolNames() { checkSymbolNames = true; return this; }
-  public HighlightTestInfo projectRoot(@NonNls @NotNull String root) { projectRoot = root; return this; }
+  public HighlightTestInfo projectRoot(@NonNls @Nonnull String root) { projectRoot = root; return this; }
 
   public HighlightTestInfo test() {
     try {

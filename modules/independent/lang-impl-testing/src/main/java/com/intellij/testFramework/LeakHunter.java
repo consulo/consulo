@@ -29,8 +29,8 @@ import com.intellij.util.io.PersistentEnumerator;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public class LeakHunter {
   private static final Map<Class, Field[]> allFields = new THashMap<Class, Field[]>();
   private static final Field[] EMPTY_FIELD_ARRAY = new Field[0];
 
-  private static Field[] getAllFields(@NotNull Class aClass) {
+  private static Field[] getAllFields(@Nonnull Class aClass) {
     Field[] cached = allFields.get(aClass);
     if (cached == null) {
       Field[] declaredFields = aClass.getDeclaredFields();
@@ -78,7 +78,7 @@ public class LeakHunter {
     private final Field field;
     private final BackLink backLink;
 
-    private BackLink(@NotNull Class aClass, @NotNull Object value, Field field, BackLink backLink) {
+    private BackLink(@Nonnull Class aClass, @Nonnull Object value, Field field, BackLink backLink) {
       this.aClass = aClass;
       this.value = value;
       this.field = field;
@@ -87,7 +87,7 @@ public class LeakHunter {
   }
 
   private static final Stack<BackLink> toVisit = new Stack<BackLink>();
-  private static void walkObjects(@NotNull Class lookFor, @NotNull Processor<BackLink> leakProcessor) {
+  private static void walkObjects(@Nonnull Class lookFor, @Nonnull Processor<BackLink> leakProcessor) {
     while (true) {
       if (toVisit.isEmpty()) return;
       BackLink backLink = toVisit.pop();
@@ -140,7 +140,7 @@ public class LeakHunter {
   }
 
   private static final Key<Boolean> IS_NOT_A_LEAK = Key.create("IS_NOT_A_LEAK");
-  public static void markAsNotALeak(@NotNull UserDataHolder object) {
+  public static void markAsNotALeak(@Nonnull UserDataHolder object) {
     object.putUserData(IS_NOT_A_LEAK, Boolean.TRUE);
   }
   private static boolean isReallyLeak(Field field, String fieldName, Object value, Class valueClass) {
@@ -169,15 +169,15 @@ public class LeakHunter {
 
   private static final Key<Boolean> REPORTED_LEAKED = Key.create("REPORTED_LEAKED");
   @TestOnly
-  public static void checkProjectLeak(@NotNull Object root) throws Exception {
+  public static void checkProjectLeak(@Nonnull Object root) throws Exception {
     checkLeak(root, ProjectImpl.class);
   }
   @TestOnly
-  public static void checkLeak(@NotNull Object root, @NotNull Class suspectClass) throws AssertionError {
+  public static void checkLeak(@Nonnull Object root, @Nonnull Class suspectClass) throws AssertionError {
     checkLeak(root, suspectClass, null);
   }
   @TestOnly
-  public static <T> void checkLeak(@NotNull Object root, @NotNull Class<T> suspectClass, @Nullable final Processor<T> isReallyLeak) throws AssertionError {
+  public static <T> void checkLeak(@Nonnull Object root, @Nonnull Class<T> suspectClass, @javax.annotation.Nullable final Processor<T> isReallyLeak) throws AssertionError {
     if (SwingUtilities.isEventDispatchThread()) {
       UIUtil.dispatchAllInvocationEvents();
     }

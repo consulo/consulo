@@ -43,9 +43,9 @@ import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.copyright.generate.TemplateCopyrightCommenter;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.EventListenerList;
@@ -91,14 +91,14 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   private Editor myEditor;
   private Project myProject;
 
-  public TemplateCommentPanel(@NotNull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
+  public TemplateCommentPanel(@Nonnull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
     this(fileType.getName(), fileType, parentPanel, project);
     myAllowBlock = FileTypeUtil.hasBlockComment(fileType);
     myCommenter = FileTypeUtil.getCommenter(fileType);
     myAllowSeparator = CopyrightUpdaters.INSTANCE.forFileType(fileType).isAllowSeparator();
   }
 
-  public TemplateCommentPanel(@NotNull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @NotNull Project project) {
+  public TemplateCommentPanel(@Nonnull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
     this.parentPanel = parentPanel;
     myOptionName = optionName;
     myProject = project;
@@ -201,11 +201,11 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     txtFiller.setEnabled(either);
   }
 
-  public void addAdditionalComponents(@NotNull JPanel additionalPanel) {
+  public void addAdditionalComponents(@Nonnull JPanel additionalPanel) {
 
   }
 
-  public void addLocationInFile(@NotNull String[] locations) {
+  public void addLocationInFile(@Nonnull String[] locations) {
     fileLocationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Location in File"));
     fileLocations = new JRadioButton[locations.length];
     ButtonGroup group = new ButtonGroup();
@@ -475,7 +475,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic() + "." + myOptionName;
   }

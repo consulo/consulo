@@ -18,8 +18,8 @@ package com.intellij.openapi.module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.graph.Graph;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -36,8 +36,8 @@ public abstract class ModuleManager {
    * @param project the project for which the module manager is requested.
    * @return the module manager instance.
    */
-  @NotNull
-  public static ModuleManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ModuleManager getInstance(@Nonnull Project project) {
     return project.getComponent(ModuleManager.class);
   }
 
@@ -50,9 +50,9 @@ public abstract class ModuleManager {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  @NotNull
+  @Nonnull
   @RequiredWriteAction
-  public abstract Module newModule(@NotNull @NonNls String name, @NotNull @NonNls String dirPath);
+  public abstract Module newModule(@Nonnull @NonNls String name, @Nonnull @NonNls String dirPath);
 
   /**
    * Disposes of the specified module and removes it from the project.
@@ -60,14 +60,14 @@ public abstract class ModuleManager {
    * @param module the module to remove.
    */
   @RequiredWriteAction
-  public abstract void disposeModule(@NotNull Module module);
+  public abstract void disposeModule(@Nonnull Module module);
 
   /**
    * Returns the list of all modules in the project.
    *
    * @return the array of modules.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract Module[] getModules();
 
@@ -77,9 +77,9 @@ public abstract class ModuleManager {
    * @param name the name of the module to find.
    * @return the module instance, or null if no module with such name exists.
    */
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
-  public abstract Module findModuleByName(@NonNls @NotNull String name);
+  public abstract Module findModuleByName(@NonNls @Nonnull String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend
@@ -88,7 +88,7 @@ public abstract class ModuleManager {
    *
    * @return the sorted array of modules.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract Module[] getSortedModules();
 
@@ -99,7 +99,7 @@ public abstract class ModuleManager {
    *
    * @return the module comparator instance.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract Comparator<Module> moduleDependencyComparator();
 
@@ -111,9 +111,9 @@ public abstract class ModuleManager {
    *
    * @see ModuleUtil#getAllDependentModules(Module)
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public abstract List<Module> getModuleDependentModules(@NotNull Module module);
+  public abstract List<Module> getModuleDependentModules(@Nonnull Module module);
 
   /**
    * Checks if one of the specified modules directly depends on the other module.
@@ -123,14 +123,14 @@ public abstract class ModuleManager {
    * @return true if <code>module</code> directly depends on <code>onModule</code>, false otherwise.
    */
   @RequiredReadAction
-  public abstract boolean isModuleDependent(@NotNull Module module, @NotNull Module onModule);
+  public abstract boolean isModuleDependent(@Nonnull Module module, @Nonnull Module onModule);
 
   /**
    * Returns the graph of dependencies between modules in the project.
    *
    * @return the module dependency graph.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph();
 
@@ -141,7 +141,7 @@ public abstract class ModuleManager {
    * @return the module dependency graph.
    * @since 11.0
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph(boolean includeTests);
 
@@ -151,7 +151,7 @@ public abstract class ModuleManager {
    *
    * @return the modifiable model instance.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract ModifiableModuleModel getModifiableModel();
 
@@ -165,10 +165,10 @@ public abstract class ModuleManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract String[] getModuleGroupPath(@NotNull Module module);
+  public abstract String[] getModuleGroupPath(@Nonnull Module module);
 
-  @Nullable
-  public UnloadedModuleDescription getUnloadedModuleDescription(@NotNull String name) {
+  @javax.annotation.Nullable
+  public UnloadedModuleDescription getUnloadedModuleDescription(@Nonnull String name) {
     // we not support module unloading
     return null;
   }

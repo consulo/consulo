@@ -18,8 +18,8 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,16 +30,19 @@ import java.util.regex.Pattern;
 public class VcsLinkedTextComponent extends JLabel {
   private static final Pattern HREF_PATTERN = Pattern.compile("<a(?:\\s+href\\s*=\\s*[\"']([^\"']*)[\"'])?\\s*>([^<]*)</a>");
 
-  @NotNull private String myTextBefore;
-  @NotNull private String myTextAfter;
-  @NotNull private String myHandledLink;
+  @Nonnull
+  private String myTextBefore;
+  @Nonnull
+  private String myTextAfter;
+  @Nonnull
+  private String myHandledLink;
 
   @Nullable private final VcsLinkListener myLinkListener;
   private boolean mySelected;
   private boolean myUnderlined;
   private boolean myTransparent;
 
-  public VcsLinkedTextComponent(@NotNull String text, @Nullable VcsLinkListener listener) {
+  public VcsLinkedTextComponent(@Nonnull String text, @javax.annotation.Nullable VcsLinkListener listener) {
     Matcher aMatcher = HREF_PATTERN.matcher(text);
     if (aMatcher.find()) {
       myTextBefore = text.substring(0, aMatcher.start());
@@ -54,17 +57,17 @@ public class VcsLinkedTextComponent extends JLabel {
     myLinkListener = listener;
   }
 
-  public void updateLinkText(@NotNull String text) {
+  public void updateLinkText(@Nonnull String text) {
     myHandledLink = text;
   }
 
-  public void fireOnClick(@NotNull DefaultMutableTreeNode relatedNode, @NotNull MouseEvent event) {
+  public void fireOnClick(@Nonnull DefaultMutableTreeNode relatedNode, @Nonnull MouseEvent event) {
     if (myLinkListener != null) {
       myLinkListener.hyperlinkActivated(relatedNode, event);
     }
   }
 
-  public void render(@NotNull ColoredTreeCellRenderer renderer) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
     boolean isActive = mySelected || myUnderlined;
     SimpleTextAttributes linkTextAttributes = isActive ? SimpleTextAttributes.LINK_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES;
     isActive = isActive || !myTransparent;
@@ -92,7 +95,7 @@ public class VcsLinkedTextComponent extends JLabel {
     myTransparent = transparent;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myTextBefore + myHandledLink + myTextAfter;
   }

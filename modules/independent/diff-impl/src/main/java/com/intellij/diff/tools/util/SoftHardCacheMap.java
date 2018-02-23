@@ -17,12 +17,14 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.SoftValueHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SoftHardCacheMap<K, V> {
-  @NotNull private final SLRUMap<K, V> mySLRUMap;
-  @NotNull private final SoftValueHashMap<K, V> mySoftLinkMap;
+  @Nonnull
+  private final SLRUMap<K, V> mySLRUMap;
+  @Nonnull
+  private final SoftValueHashMap<K, V> mySoftLinkMap;
 
   public SoftHardCacheMap(final int protectedQueueSize, final int probationalQueueSize) {
     mySLRUMap = new SLRUMap<K, V>(protectedQueueSize, probationalQueueSize);
@@ -30,7 +32,7 @@ public class SoftHardCacheMap<K, V> {
   }
 
   @Nullable
-  public V get(@NotNull K key) {
+  public V get(@Nonnull K key) {
     V val = mySLRUMap.get(key);
     if (val != null) return val;
 
@@ -40,12 +42,12 @@ public class SoftHardCacheMap<K, V> {
     return val;
   }
 
-  public void put(@NotNull K key, @NotNull V value) {
+  public void put(@Nonnull K key, @Nonnull V value) {
     mySLRUMap.put(key, value);
     mySoftLinkMap.put(key, value);
   }
 
-  public boolean remove(@NotNull K key) {
+  public boolean remove(@Nonnull K key) {
     boolean remove1 = mySLRUMap.remove(key);
     boolean remove2 = mySoftLinkMap.remove(key) != null;
     return remove1 || remove2;

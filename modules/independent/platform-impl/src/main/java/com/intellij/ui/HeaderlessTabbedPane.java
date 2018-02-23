@@ -1,8 +1,8 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.ui.TabbedPaneWrapper;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

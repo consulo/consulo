@@ -27,8 +27,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,7 +69,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public void setType(@NotNull LibraryType<?> type) {
+  public void setType(@Nonnull LibraryType<?> type) {
     myType = type;
   }
 
@@ -148,11 +148,11 @@ public class NewLibraryEditor extends LibraryEditorBase {
   }
 
   @Override
-  public void addExcludedRoot(@NotNull String url) {
+  public void addExcludedRoot(@Nonnull String url) {
     myExcludedRoots.add(new LightFilePointer(url));
   }
 
-  public void removeExcludedRoot(@NotNull String url) {
+  public void removeExcludedRoot(@Nonnull String url) {
     myExcludedRoots.remove(new LightFilePointer(url));
   }
 
@@ -175,7 +175,7 @@ public class NewLibraryEditor extends LibraryEditorBase {
     myJarDirectories.remove(rootType, url);
   }
 
-  private boolean isUnderRoots(@NotNull String url) {
+  private boolean isUnderRoots(@Nonnull String url) {
     for (LightFilePointer pointer : myRoots.values()) {
       if (VfsUtilCore.isEqualOrAncestor(pointer.getUrl(), url)) {
         return true;

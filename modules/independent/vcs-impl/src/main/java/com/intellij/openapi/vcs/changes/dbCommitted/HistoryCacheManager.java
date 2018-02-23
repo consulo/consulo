@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
@@ -120,7 +120,7 @@ public class HistoryCacheManager {
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       try {
         myDbUtil.appendLists(myVcs, myRoot, myLists);
       }
@@ -149,7 +149,7 @@ public class HistoryCacheManager {
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       try {
         //indicator.setText2("Checking and possibly creating database");
         indicator.setText2("Updating VCS and roots");

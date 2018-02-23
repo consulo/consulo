@@ -44,8 +44,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +59,8 @@ import java.util.List;
  */
 public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreakpointBase<XLineBreakpoint<P>, P, LineBreakpointState<P>>
         implements XLineBreakpoint<P> {
-  @Nullable private RangeHighlighter myHighlighter;
+  @Nullable
+  private RangeHighlighter myHighlighter;
   private final XLineBreakpointType<P> myType;
   private XSourcePosition mySourcePosition;
 
@@ -154,7 +155,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public XLineBreakpointType<P> getType() {
     return myType;
   }

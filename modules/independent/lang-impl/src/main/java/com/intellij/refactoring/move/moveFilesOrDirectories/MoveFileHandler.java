@@ -23,8 +23,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ public abstract class MoveFileHandler {
   public abstract void retargetUsages(List<UsageInfo> usageInfos, Map<PsiElement, PsiElement> oldToNewMap) ;
   public abstract void updateMovedFile(PsiFile file) throws IncorrectOperationException;
 
-  @NotNull
+  @Nonnull
   public static MoveFileHandler forElement(PsiFile element) {
     for(MoveFileHandler processor: Extensions.getExtensions(EP_NAME)) {
       if (processor.canProcessElement(element)) {

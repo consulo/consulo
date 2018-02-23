@@ -22,8 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,13 +42,13 @@ public class TestClientRunner {
   private final File myClientBinaryPath;
   private final Map<String, String> myClientEnvironment;
 
-  public TestClientRunner(boolean traceClient, File clientBinaryPath, @Nullable Map<String, String> clientEnvironment) {
+  public TestClientRunner(boolean traceClient, File clientBinaryPath, @javax.annotation.Nullable Map<String, String> clientEnvironment) {
     myTraceClient = traceClient;
     myClientBinaryPath = clientBinaryPath;
     myClientEnvironment = clientEnvironment;
   }
 
-  public ProcessOutput runClient(@NotNull String exeName, @Nullable String stdin, @Nullable final File workingDir, String... commandLine) throws IOException {
+  public ProcessOutput runClient(@Nonnull String exeName, @javax.annotation.Nullable String stdin, @javax.annotation.Nullable final File workingDir, String... commandLine) throws IOException {
     final List<String> arguments = new ArrayList<String>();
 
     final File client = new File(myClientBinaryPath, SystemInfo.isWindows ? exeName + ".exe" : exeName);

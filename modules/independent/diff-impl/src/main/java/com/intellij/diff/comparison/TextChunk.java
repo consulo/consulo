@@ -15,14 +15,15 @@
  */
 package com.intellij.diff.comparison;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 abstract class TextChunk {
-  @NotNull private final CharSequence myText;
+  @Nonnull
+  private final CharSequence myText;
   private final int myOffset1;
   private final int myOffset2;
 
-  public TextChunk(@NotNull CharSequence text, int offset1, int offset2) {
+  public TextChunk(@Nonnull CharSequence text, int offset1, int offset2) {
     myText = text;
     myOffset1 = offset1;
     myOffset2 = offset2;
@@ -34,12 +35,12 @@ abstract class TextChunk {
   @Override
   public abstract boolean equals(Object obj);
 
-  @NotNull
+  @Nonnull
   public CharSequence getContent() {
     return myText.subSequence(myOffset1, myOffset2);
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getOriginalText() {
     return myText;
   }

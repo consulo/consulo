@@ -30,8 +30,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -72,13 +72,13 @@ public class PatchReader {
     return myPatches;
   }
 
-  @NotNull
+  @Nonnull
   public List<TextFilePatch> readTextPatches() throws PatchSyntaxException {
     parseAllPatches();
     return getTextPatches();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public CharSequence getBaseRevision(final Project project, final String relativeFilePath) {
     final Map<String, Map<String, CharSequence>> map = myAdditionalInfoParser.getResultMap();
     if (! map.isEmpty()) {
@@ -116,12 +116,12 @@ public class PatchReader {
   }*/
 
   @Deprecated
-  @NotNull
+  @Nonnull
   public List<TextFilePatch> getPatches() {
     return myPatches;
   }
 
-  @NotNull
+  @Nonnull
   public List<TextFilePatch> getTextPatches() {
     return ContainerUtil.findAll(myPatches, TextFilePatch.class);
   }
@@ -168,7 +168,7 @@ public class PatchReader {
     myPatches = myPatchContentParser.getResult();
   }
 
-  @NotNull
+  @Nonnull
   public ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(@Nullable Set<String> paths) {
     ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> result;
     PatchSyntaxException e = myAdditionalInfoParser.getSyntaxException();
@@ -351,7 +351,7 @@ public class PatchReader {
       return curPatch;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private PatchHunk readNextHunkUnified(ListIterator<String> iterator) throws PatchSyntaxException {
       String curLine = null;
       int numIncrements = 0;
@@ -646,7 +646,7 @@ public class PatchReader {
     }
   }
 
-  public static boolean isPatchContent(@Nullable String content) {
+  public static boolean isPatchContent(@javax.annotation.Nullable String content) {
     if (content == null) return false;
     List<String> lines = LineTokenizer.tokenizeIntoList(content, false);
     final ListIterator<String> iterator = lines.listIterator();

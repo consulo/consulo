@@ -17,25 +17,25 @@ package com.intellij.vcs.log.data;
 
 import com.intellij.vcs.log.VcsLogFilterCollection;
 import com.intellij.vcs.log.graph.PermanentGraph;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  */
 public interface VcsLogFilterer {
 
-  void addVisiblePackChangeListener(@NotNull VisiblePackChangeListener listener);
+  void addVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener);
 
-  void removeVisiblePackChangeListener(@NotNull VisiblePackChangeListener listener);
+  void removeVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener);
 
   void onRefresh();
 
   void setValid(boolean validate);
 
-  void onFiltersChange(@NotNull VcsLogFilterCollection filters);
+  void onFiltersChange(@Nonnull VcsLogFilterCollection filters);
 
-  void onSortTypeChange(@NotNull PermanentGraph.SortType sortType);
+  void onSortTypeChange(@Nonnull PermanentGraph.SortType sortType);
 
-  void moreCommitsNeeded(@NotNull Runnable onLoaded);
+  void moreCommitsNeeded(@Nonnull Runnable onLoaded);
 
   boolean isValid();
 }

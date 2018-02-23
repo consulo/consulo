@@ -17,7 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The main (and single) purpose of this class is provide lazy initialization
@@ -35,9 +35,9 @@ public class ActionStub extends AnAction {
   private final PluginId myPluginId;
   private final String myIconPath;
 
-  public ActionStub(@NotNull String actionClass,
-                    @NotNull String id,
-                    @NotNull String text,
+  public ActionStub(@Nonnull String actionClass,
+                    @Nonnull String id,
+                    @Nonnull String text,
                     ClassLoader loader,
                     PluginId pluginId,
                     String iconPath) {
@@ -84,7 +84,7 @@ public class ActionStub extends AnAction {
    *
    * @param targetAction cannot be <code>null</code>
    */
-  public final void initAction(@NotNull AnAction targetAction) {
+  public final void initAction(@Nonnull AnAction targetAction) {
     Presentation sourcePresentation = getTemplatePresentation();
     Presentation targetPresentation = targetAction.getTemplatePresentation();
     if (targetPresentation.getIcon() == null && sourcePresentation.getIcon() != null) {

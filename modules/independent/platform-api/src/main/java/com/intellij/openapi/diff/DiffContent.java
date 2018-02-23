@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -110,7 +110,7 @@ public abstract class DiffContent {
    * @return FileType of content.
    *         null means use other content's type for this one
    */
-  @Nullable 
+  @Nullable
   public abstract FileType getContentType();
 
   /**

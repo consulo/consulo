@@ -44,8 +44,8 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntProcedure;
 import org.jdom.Document;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -111,7 +111,7 @@ public class PluginManagerCore {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static List<String> getDisabledPlugins() {
     if (ourDisabledPlugins == null) {
       ourDisabledPlugins = new ArrayList<>();
@@ -209,7 +209,7 @@ public class PluginManagerCore {
   }
 
   @Nullable
-  public static PluginId getPluginByClassName(@NotNull String className) {
+  public static PluginId getPluginByClassName(@Nonnull String className) {
     if (className.startsWith("java.") || className.startsWith("javax.") || className.startsWith("kotlin.") || className.startsWith("groovy.")) {
       return null;
     }
@@ -223,7 +223,7 @@ public class PluginManagerCore {
     return null;
   }
 
-  private static boolean hasLoadedClass(@NotNull String className, ClassLoader loader) {
+  private static boolean hasLoadedClass(@Nonnull String className, ClassLoader loader) {
     if (loader instanceof UrlClassLoader) return ((UrlClassLoader)loader).hasLoadedClass(className);
 
     // it can be an UrlClassLoader loaded by another class loader, so instanceof doesn't work
@@ -236,7 +236,7 @@ public class PluginManagerCore {
   }
 
   @Nullable
-  public static PluginId getPluginId(@NotNull Class<?> clazz) {
+  public static PluginId getPluginId(@Nonnull Class<?> clazz) {
     ClassLoader loader = clazz.getClassLoader();
     if (!(loader instanceof PluginClassLoader)) {
       return null;
@@ -285,7 +285,7 @@ public class PluginManagerCore {
   }
 
   @Nullable
-  static ClassLoader createPluginClassLoader(@NotNull File[] classPath, @NotNull ClassLoader[] parentLoaders, @NotNull IdeaPluginDescriptor pluginDescriptor) {
+  static ClassLoader createPluginClassLoader(@Nonnull File[] classPath, @Nonnull ClassLoader[] parentLoaders, @Nonnull IdeaPluginDescriptor pluginDescriptor) {
 
     PluginId pluginId = pluginDescriptor.getPluginId();
     File pluginRoot = pluginDescriptor.getPath();
@@ -475,7 +475,7 @@ public class PluginManagerCore {
   }
 
   @Nullable
-  static IdeaPluginDescriptorImpl loadDescriptorFromJar(@NotNull File file, @NotNull String fileName) {
+  static IdeaPluginDescriptorImpl loadDescriptorFromJar(@Nonnull File file, @Nonnull String fileName) {
     try {
       String fileURL = StringUtil.replace(file.toURI().toASCIIString(), "!", "%21");
       URL jarURL = new URL("jar:" + fileURL + "!/META-INF/" + fileName);
@@ -600,7 +600,7 @@ public class PluginManagerCore {
     loadDescriptors(new File(pluginsPath), result, progress, pluginsCount);
   }
 
-  public static void loadDescriptors(@NotNull File pluginsHome, List<IdeaPluginDescriptorImpl> result, @Nullable StartupProgress progress, int pluginsCount) {
+  public static void loadDescriptors(@Nonnull File pluginsHome, List<IdeaPluginDescriptorImpl> result, @Nullable StartupProgress progress, int pluginsCount) {
     final File[] files = pluginsHome.listFiles();
     if (files != null) {
       int i = result.size();
@@ -766,7 +766,7 @@ public class PluginManagerCore {
     }
   }
 
-  public static void initClassLoader(@NotNull ClassLoader parentLoader, @NotNull IdeaPluginDescriptorImpl descriptor) {
+  public static void initClassLoader(@Nonnull ClassLoader parentLoader, @Nonnull IdeaPluginDescriptorImpl descriptor) {
     final List<File> classPath = descriptor.getClassPath();
     final ClassLoader loader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]), new ClassLoader[]{parentLoader}, descriptor);
     descriptor.setLoader(loader);
@@ -966,12 +966,12 @@ public class PluginManagerCore {
     registerExtensionPointsAndExtensions(Extensions.getRootArea(), result);
     Extensions.getRootArea().getExtensionPoint(Extensions.AREA_LISTENER_EXTENSION_POINT).registerExtension(new AreaListener() {
       @Override
-      public void areaCreated(@NotNull String areaClass, @NotNull AreaInstance areaInstance) {
+      public void areaCreated(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance) {
         registerExtensionPointsAndExtensions(Extensions.getArea(areaInstance), result);
       }
 
       @Override
-      public void areaDisposing(@NotNull String areaClass, @NotNull AreaInstance areaInstance) {
+      public void areaDisposing(@Nonnull String areaClass, @Nonnull AreaInstance areaInstance) {
       }
     });
 
@@ -1011,7 +1011,7 @@ public class PluginManagerCore {
     ClassUtilCore.clearJarURLCache();
   }
 
-  public static boolean isSystemPlugin(@NotNull PluginId pluginId) {
+  public static boolean isSystemPlugin(@Nonnull PluginId pluginId) {
     return CORE_PLUGIN.equals(pluginId) || Platform.current().getPluginId().equals(pluginId);
   }
 

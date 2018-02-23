@@ -25,8 +25,7 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.text.StringFactory;
 import net.n3.nanoxml.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +73,7 @@ public class NanoXmlUtil {
     parse(reader, builder, null);
   }
 
-  public static void parse(final Reader reader, final IXMLBuilder builder, @Nullable final IXMLValidator validator) {
+  public static void parse(final Reader reader, final IXMLBuilder builder, @javax.annotation.Nullable final IXMLValidator validator) {
     try {
       parse(new MyXMLReader(reader), builder, validator);
     }
@@ -95,7 +94,7 @@ public class NanoXmlUtil {
     parse(r, builder, null);
   }
 
-  public static void parse(final IXMLReader r, final IXMLBuilder builder, @Nullable final IXMLValidator validator) {
+  public static void parse(final IXMLReader r, final IXMLBuilder builder, @javax.annotation.Nullable final IXMLValidator validator) {
     try {
       final IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
       parser.setReader(r);
@@ -122,7 +121,7 @@ public class NanoXmlUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeader(VirtualFile file) {
     try {
       return parseHeaderWithException(file);
@@ -133,18 +132,18 @@ public class NanoXmlUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeaderWithException(Reader reader) throws IOException {
     return parseHeader(new MyXMLReader(reader));
   }
 
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeaderWithException(final VirtualFile file) throws IOException {
     return parseHeader(new MyXMLReader(file.getInputStream()));
   }
 
   @Deprecated  // TODO: remove
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeader(final InputStream inputStream) {
     try {
       return parseHeader(new MyXMLReader(inputStream));
@@ -155,17 +154,17 @@ public class NanoXmlUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeader(final Reader reader) {
     return parseHeader(new MyXMLReader(reader));
   }
 
-  @NotNull
+  @Nonnull
   public static XmlFileHeader parseHeader(PsiFile file) {
     return parseHeader(createReader(file));
   }
 
-  @NotNull
+  @Nonnull
   private static XmlFileHeader parseHeader(final MyXMLReader r) {
     final RootTagInfoBuilder builder = new RootTagInfoBuilder();
     parse(r, builder);
@@ -222,7 +221,7 @@ public class NanoXmlUtil {
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public Object getResult() throws Exception {
       return null;
     }

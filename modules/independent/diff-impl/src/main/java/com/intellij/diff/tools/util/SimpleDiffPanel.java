@@ -20,7 +20,7 @@ import com.intellij.diff.tools.util.base.DiffPanelBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,9 +28,9 @@ public class SimpleDiffPanel extends DiffPanelBase {
   private static final String GOOD_CONTENT = "GoodContent";
   private static final String ERROR_CONTENT = "ErrorContent";
 
-  public SimpleDiffPanel(@NotNull JComponent editorPanel,
-                         @NotNull DataProvider dataProvider,
-                         @NotNull DiffContext context) {
+  public SimpleDiffPanel(@Nonnull JComponent editorPanel,
+                         @Nonnull DataProvider dataProvider,
+                         @Nonnull DiffContext context) {
     super(context.getProject(), dataProvider, context);
     JPanel centerPanel = JBUI.Panels.simplePanel(editorPanel).addToTop(myNotificationsPanel);
 

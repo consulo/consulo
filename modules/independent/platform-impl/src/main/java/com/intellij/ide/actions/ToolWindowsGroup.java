@@ -20,8 +20,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,7 +56,7 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
     e.getPresentation().setEnabledAndVisible(getEventProject(e) != null);
   }
 
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     Project project = getEventProject(e);
     if (project == null) return EMPTY_ARRAY;
@@ -64,7 +64,7 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
     return result.toArray(new AnAction[result.size()]);
   }
 
-  public static List<ActivateToolWindowAction> getToolWindowActions(@NotNull Project project, boolean shouldSkipHidden) {
+  public static List<ActivateToolWindowAction> getToolWindowActions(@Nonnull Project project, boolean shouldSkipHidden) {
     ActionManager actionManager = ActionManager.getInstance();
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
     List<ActivateToolWindowAction> result = ContainerUtil.newArrayList();

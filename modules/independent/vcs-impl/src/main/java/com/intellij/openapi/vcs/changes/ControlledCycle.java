@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.SomeQueue;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,7 +37,7 @@ public class ControlledCycle {
 
   private final AtomicBoolean myActive;
 
-  public ControlledCycle(final Project project, final Getter<Boolean> callback, @NotNull final String name, final int refreshInterval) {
+  public ControlledCycle(final Project project, final Getter<Boolean> callback, @Nonnull final String name, final int refreshInterval) {
     myRefreshInterval = (refreshInterval <= 0) ? ourRefreshInterval : refreshInterval;
     myActive = new AtomicBoolean(false);
     myRunnable = new Runnable() {

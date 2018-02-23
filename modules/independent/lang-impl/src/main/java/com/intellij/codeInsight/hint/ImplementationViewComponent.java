@@ -50,8 +50,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.usages.UsageView;
 import com.intellij.util.PairFunction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -267,7 +267,7 @@ public class ImplementationViewComponent extends JPanel {
     return result;
   }
 
-  public void update(@NotNull final PsiElement[] elements, final int index) {
+  public void update(@Nonnull final PsiElement[] elements, final int index) {
     update(elements, new PairFunction<PsiElement[], List<FileDescriptor>, Boolean>() {
       @Override
       public Boolean fun(PsiElement[] psiElements, List<FileDescriptor> fileDescriptors) {
@@ -323,7 +323,7 @@ public class ImplementationViewComponent extends JPanel {
     
   }
   
-  private static void update(@NotNull PsiElement[] elements, @NotNull PairFunction<PsiElement[], List<FileDescriptor>, Boolean> fun) {
+  private static void update(@Nonnull PsiElement[] elements, @Nonnull PairFunction<PsiElement[], List<FileDescriptor>, Boolean> fun) {
     List<PsiElement> candidates = new ArrayList<PsiElement>(elements.length);
     List<FileDescriptor> files = new ArrayList<FileDescriptor>(elements.length);
     final Set<String> names = new HashSet<String>();

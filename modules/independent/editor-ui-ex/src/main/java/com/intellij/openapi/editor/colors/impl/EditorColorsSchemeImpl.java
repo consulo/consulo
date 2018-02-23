@@ -23,8 +23,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -34,7 +33,7 @@ import java.awt.*;
 public class EditorColorsSchemeImpl extends AbstractColorsScheme implements ExternalizableScheme {
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, @NotNull EditorColorsManager editorColorsManager) {
+  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
     super(parentScheme, editorColorsManager);
   }
 
@@ -73,7 +72,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
     return myAttributesMap.containsKey(key);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Color getColor(ColorKey key) {
     if (myColorsMap.containsKey(key)) {
@@ -93,7 +92,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

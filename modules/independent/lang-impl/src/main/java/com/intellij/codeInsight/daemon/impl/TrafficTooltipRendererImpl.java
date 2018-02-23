@@ -26,7 +26,7 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.ui.update.ComparableObject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.EventObject;
@@ -39,7 +39,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   private final Runnable onHide;
   private TrafficLightRenderer myTrafficLightRenderer;
 
-  TrafficTooltipRendererImpl(@NotNull Runnable onHide, @NotNull Editor editor) {
+  TrafficTooltipRendererImpl(@Nonnull Runnable onHide, @Nonnull Editor editor) {
     super(editor);
     this.onHide = onHide;
   }
@@ -54,7 +54,7 @@ class TrafficTooltipRendererImpl extends ComparableObject.Impl implements Traffi
   }
 
   @Override
-  public LightweightHint show(@NotNull Editor editor, @NotNull Point p, boolean alignToRight, @NotNull TooltipGroup group, @NotNull HintHint hintHint) {
+  public LightweightHint show(@Nonnull Editor editor, @Nonnull Point p, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
     myTrafficLightRenderer = (TrafficLightRenderer)((EditorMarkupModelImpl)editor.getMarkupModel()).getErrorStripeRenderer();
     myPanel = new TrafficProgressPanel(myTrafficLightRenderer, editor, hintHint);
     repaintTooltipWindow();

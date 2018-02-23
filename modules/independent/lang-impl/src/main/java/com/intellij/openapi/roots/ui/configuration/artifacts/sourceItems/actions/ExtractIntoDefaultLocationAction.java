@@ -30,7 +30,7 @@ import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.FileCopyPackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +76,7 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
         final List<? extends PackagingElement<?>> elements = item.createElements(context);
         ArtifactUtil.processElementsWithSubstitutions(elements, context, context.getArtifactType(), PackagingElementPath.EMPTY, new PackagingElementProcessor<PackagingElement<?>>() {
           @Override
-          public boolean process(@NotNull PackagingElement<?> element, @NotNull PackagingElementPath path) {
+          public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
             if (element instanceof FileCopyPackagingElement) {
               final VirtualFile file = ((FileCopyPackagingElement)element).findFile();
               if (file != null) {

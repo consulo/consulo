@@ -15,18 +15,18 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface MenuItem extends Component {
-  @NotNull
-  static MenuItem create(@NotNull String text) {
+  @Nonnull
+  static MenuItem create(@Nonnull String text) {
     return UIInternal.get()._MenuItems_item(text);
   }
 
-  @NotNull
+  @Nonnull
   String getText();
 }

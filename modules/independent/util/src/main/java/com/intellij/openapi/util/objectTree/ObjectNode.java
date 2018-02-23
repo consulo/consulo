@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Collection;
@@ -45,9 +45,9 @@ final class ObjectNode<T> {
 
   private final long myOwnModification;
 
-  ObjectNode(@NotNull ObjectTree<T> tree,
+  ObjectNode(@Nonnull ObjectTree<T> tree,
              @Nullable ObjectNode<T> parentNode,
-             @NotNull T object,
+             @Nonnull T object,
              long modification) {
     myTree = tree;
     myParent = parentNode;
@@ -58,14 +58,14 @@ final class ObjectNode<T> {
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   private ObjectNode<T>[] getChildrenArray() {
     List<ObjectNode<T>> children = myChildren;
     if (children == null || children.isEmpty()) return EMPTY_ARRAY;
     return children.toArray(new ObjectNode[children.size()]);
   }
 
-  void addChild(@NotNull ObjectNode<T> child) {
+  void addChild(@Nonnull ObjectNode<T> child) {
     List<ObjectNode<T>> children = myChildren;
     if (children == null) {
       myChildren = new SmartList<ObjectNode<T>>(child);
@@ -76,7 +76,7 @@ final class ObjectNode<T> {
     child.myParent = this;
   }
 
-  void removeChild(@NotNull ObjectNode<T> child) {
+  void removeChild(@Nonnull ObjectNode<T> child) {
     List<ObjectNode<T>> children = myChildren;
     if (children != null) {
       // optimisation: iterate backwards
@@ -95,7 +95,7 @@ final class ObjectNode<T> {
     return myParent;
   }
 
-  @NotNull
+  @Nonnull
   Collection<ObjectNode<T>> getChildren() {
     synchronized (myTree.treeLock) {
       if (myChildren == null) return Collections.emptyList();
@@ -103,10 +103,10 @@ final class ObjectNode<T> {
     }
   }
 
-  void execute(@NotNull final ObjectTreeAction<T> action) {
+  void execute(@Nonnull final ObjectTreeAction<T> action) {
     ObjectTree.executeActionWithRecursiveGuard(this, myTree.getNodesInExecution(), new ObjectTreeAction<ObjectNode<T>>() {
       @Override
-      public void execute(@NotNull ObjectNode<T> each) {
+      public void execute(@Nonnull ObjectNode<T> each) {
         try {
           action.beforeTreeExecution(myObject);
         }
@@ -148,7 +148,7 @@ final class ObjectNode<T> {
       }
 
       @Override
-      public void beforeTreeExecution(@NotNull ObjectNode<T> parent) {
+      public void beforeTreeExecution(@Nonnull ObjectNode<T> parent) {
 
       }
     });
@@ -181,7 +181,7 @@ final class ObjectNode<T> {
     }
   }
 
-  @NotNull
+  @Nonnull
   T getObject() {
     return myObject;
   }
@@ -197,7 +197,7 @@ final class ObjectNode<T> {
   }
 
   @TestOnly
-  void assertNoReferencesKept(@NotNull T aDisposable) {
+  void assertNoReferencesKept(@Nonnull T aDisposable) {
     assert getObject() != aDisposable;
     synchronized (myTree.treeLock) {
       if (myChildren != null) {
@@ -220,7 +220,7 @@ final class ObjectNode<T> {
     return getOwnModification();
   }
 
-  <D extends Disposable> D findChildEqualTo(@NotNull D object) {
+  <D extends Disposable> D findChildEqualTo(@Nonnull D object) {
     synchronized (myTree.treeLock) {
       List<ObjectNode<T>> children = myChildren;
       if (children != null) {

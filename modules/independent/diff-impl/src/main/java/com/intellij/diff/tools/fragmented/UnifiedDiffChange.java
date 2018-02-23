@@ -27,27 +27,32 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UnifiedDiffChange {
-  @NotNull private final UnifiedDiffViewer myViewer;
-  @NotNull private final EditorEx myEditor;
+  @Nonnull
+  private final UnifiedDiffViewer myViewer;
+  @Nonnull
+  private final EditorEx myEditor;
 
   // Boundaries of this change in myEditor. If current state is out-of-date - approximate value.
   private int myLine1;
   private int myLine2;
 
-  @NotNull private final LineFragment myLineFragment;
+  @Nonnull
+  private final LineFragment myLineFragment;
 
-  @NotNull private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-  @NotNull private final List<MyGutterOperation> myOperations = new ArrayList<>();
+  @Nonnull
+  private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
+  @Nonnull
+  private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
-  public UnifiedDiffChange(@NotNull UnifiedDiffViewer viewer, @NotNull ChangedBlock block) {
+  public UnifiedDiffChange(@Nonnull UnifiedDiffViewer viewer, @Nonnull ChangedBlock block) {
     myViewer = viewer;
     myEditor = viewer.getEditor();
 
@@ -73,7 +78,7 @@ public class UnifiedDiffChange {
     myOperations.clear();
   }
 
-  private void installHighlighter(@NotNull LineRange deleted, @NotNull LineRange inserted) {
+  private void installHighlighter(@Nonnull LineRange deleted, @Nonnull LineRange inserted) {
     assert myHighlighters.isEmpty();
 
     doInstallHighlighters(deleted, inserted);
@@ -93,7 +98,7 @@ public class UnifiedDiffChange {
     }
   }
 
-  private void doInstallHighlighters(@NotNull LineRange deleted, @NotNull LineRange inserted) {
+  private void doInstallHighlighters(@Nonnull LineRange deleted, @Nonnull LineRange inserted) {
     myHighlighters.addAll(DiffDrawUtil.createUnifiedChunkHighlighters(myEditor, deleted, inserted, myLineFragment.getInnerFragments()));
   }
 
@@ -108,7 +113,7 @@ public class UnifiedDiffChange {
   /*
    * Warning: It does not updated on document change. Check myViewer.isStateInconsistent() before use.
    */
-  @NotNull
+  @Nonnull
   public LineFragment getLineFragment() {
     return myLineFragment;
   }
@@ -129,8 +134,8 @@ public class UnifiedDiffChange {
     }
   }
 
-  @NotNull
-  private MyGutterOperation createOperation(@NotNull Side sourceSide) {
+  @Nonnull
+  private MyGutterOperation createOperation(@Nonnull Side sourceSide) {
     int offset = myEditor.getDocument().getLineStartOffset(myLine1);
     RangeHighlighter highlighter = myEditor.getMarkupModel().addRangeHighlighter(offset, offset,
                                                                                  HighlighterLayer.ADDITIONAL_SYNTAX,
@@ -140,10 +145,12 @@ public class UnifiedDiffChange {
   }
 
   private class MyGutterOperation {
-    @NotNull private final Side mySide;
-    @NotNull private final RangeHighlighter myHighlighter;
+    @Nonnull
+    private final Side mySide;
+    @Nonnull
+    private final RangeHighlighter myHighlighter;
 
-    private MyGutterOperation(@NotNull Side sourceSide, @NotNull RangeHighlighter highlighter) {
+    private MyGutterOperation(@Nonnull Side sourceSide, @Nonnull RangeHighlighter highlighter) {
       mySide = sourceSide;
       myHighlighter = highlighter;
 
@@ -158,7 +165,7 @@ public class UnifiedDiffChange {
       if (myHighlighter.isValid()) myHighlighter.setGutterIconRenderer(createRenderer());
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public GutterIconRenderer createRenderer() {
       if (myViewer.isStateIsOutOfDate()) return null;
       if (!myViewer.isEditable(mySide.other(), true)) return null;
@@ -173,9 +180,9 @@ public class UnifiedDiffChange {
   }
 
   @Nullable
-  private GutterIconRenderer createIconRenderer(@NotNull final Side sourceSide,
-                                                @NotNull final String tooltipText,
-                                                @NotNull final Icon icon) {
+  private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
+                                                @Nonnull final String tooltipText,
+                                                @Nonnull final Icon icon) {
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
       protected void performAction(AnActionEvent e) {

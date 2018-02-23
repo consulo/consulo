@@ -29,8 +29,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -85,7 +85,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
   }
 
   @Nullable
-  public RunnerAndConfigurationSettings findExistingConfiguration(@NotNull Location location, ConfigurationContext context) {
+  public RunnerAndConfigurationSettings findExistingConfiguration(@Nonnull Location location, ConfigurationContext context) {
     assert isClone;
     final RunManager runManager = RunManager.getInstance(location.getProject());
     final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(getConfigurationType());
@@ -109,7 +109,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
 
   @Nullable
   protected RunnerAndConfigurationSettings findExistingByElement(final Location location,
-                                                                 @NotNull final List<RunnerAndConfigurationSettings> existingConfigurations,
+                                                                 @Nonnull final List<RunnerAndConfigurationSettings> existingConfigurations,
                                                                  ConfigurationContext context) {
     assert isClone;
     return null;
@@ -192,7 +192,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
       myConfig = config;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
       return myConfig.getConfigurationEditor();
@@ -205,7 +205,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
     }
 
     @Override
-    public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+    public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
       return myConfig.getState(executor, env);
     }
 
@@ -234,7 +234,7 @@ public abstract class RuntimeConfigurationProducer implements Comparable, Clonea
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Module[] getModules() {
       return Module.EMPTY_ARRAY;
     }

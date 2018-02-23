@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.PairConvertor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * Time: 1:56 PM
  */
 public class MultipleTraitsListSpeedSearch extends MultipleTraitsSpeedSearch<JList> {
-  public MultipleTraitsListSpeedSearch(JList component, @NotNull List<PairConvertor<Object, String, Boolean>> convertors) {
+  public MultipleTraitsListSpeedSearch(JList component, @Nonnull List<PairConvertor<Object, String, Boolean>> convertors) {
     super(component, convertors);
   }
 

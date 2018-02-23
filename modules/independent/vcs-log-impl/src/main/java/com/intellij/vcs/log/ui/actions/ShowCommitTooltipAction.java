@@ -23,7 +23,7 @@ import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowCommitTooltipAction extends DumbAwareAction {
   public ShowCommitTooltipAction() {
@@ -31,7 +31,7 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     if (project == null || ui == null) {
@@ -43,7 +43,7 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VcsLogGraphTable table = ((VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI)).getTable();
     int row = table.getSelectedRow();
     if (ScrollingUtil.isVisible(table, row)) {

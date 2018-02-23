@@ -36,8 +36,8 @@ import consulo.start.CommandLineArgs;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.io.BuiltInServer;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public class StartupUtil {
   private StartupUtil() {
   }
 
-  public synchronized static void addExternalInstanceListener(@NotNull Consumer<CommandLineArgs> consumer) {
+  public synchronized static void addExternalInstanceListener(@Nonnull Consumer<CommandLineArgs> consumer) {
     ourSocketLock.setExternalInstanceListener(consumer);
   }
 
@@ -127,7 +127,7 @@ public class StartupUtil {
     FAILED
   }
 
-  @NotNull
+  @Nonnull
   private synchronized static ActivationResult lockSystemFolders(String[] args) {
     if (ourSocketLock != null) {
       throw new AssertionError();

@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -32,29 +32,29 @@ public interface BackgroundTaskByVfsChangeTask extends Named {
 
   void setEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   String getProviderName();
 
   @Nullable
   BackgroundTaskByVfsChangeProvider getProvider();
 
-  @NotNull
+  @Nonnull
   VirtualFilePointer getVirtualFilePointer();
 
-  @NotNull
+  @Nonnull
   BackgroundTaskByVfsParameters getParameters();
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   String[] getGeneratedFilePaths();
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   VirtualFile[] getGeneratedFiles();
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   BackgroundTaskByVfsChangeTask clone();
 }

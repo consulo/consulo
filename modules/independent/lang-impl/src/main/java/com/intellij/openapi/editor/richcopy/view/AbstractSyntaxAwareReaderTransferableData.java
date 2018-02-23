@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.StringBuilderSpinAllocator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
@@ -38,14 +38,15 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
   private static final Logger LOG = Logger.getInstance("#" + AbstractSyntaxAwareReaderTransferableData.class.getName());
 
   protected String myRawText;
-  @NotNull
+  @Nonnull
   protected final SyntaxInfo mySyntaxInfo;
-  @NotNull
+  @Nonnull
   private final DataFlavor myDataFlavor;
 
-  @Nullable private transient Reader myDelegate;
+  @Nullable
+  private transient Reader myDelegate;
 
-  public AbstractSyntaxAwareReaderTransferableData(@NotNull SyntaxInfo syntaxInfo, @NotNull DataFlavor dataFlavor) {
+  public AbstractSyntaxAwareReaderTransferableData(@Nonnull SyntaxInfo syntaxInfo, @Nonnull DataFlavor dataFlavor) {
     mySyntaxInfo = syntaxInfo;
     myDataFlavor = dataFlavor;
   }
@@ -76,7 +77,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
   }
 
   @Override
-  public int read(@NotNull char[] cbuf, int off, int len) throws IOException {
+  public int read(@Nonnull char[] cbuf, int off, int len) throws IOException {
     return getDelegate().read(cbuf, off, len);
   }
 
@@ -90,7 +91,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
     myRawText = rawText;
   }
 
-  @NotNull
+  @Nonnull
   private Reader getDelegate() {
     if (myDelegate != null) {
       return myDelegate;
@@ -117,5 +118,5 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
     }
   }
 
-  protected abstract void build(@NotNull StringBuilder holder, int maxLength);
+  protected abstract void build(@Nonnull StringBuilder holder, int maxLength);
 }

@@ -58,8 +58,8 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.OwnerOptional;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +84,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   private final ActionCallback myTypeAheadDone = new ActionCallback("DialogTypeAheadDone");
   private ActionCallback myTypeAheadCallback;
 
-  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, @NotNull DialogWrapper.IdeModalityType ideModalityType) {
+  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myTypeAheadCallback = myWrapper.isTypeAheadEnabled() ? new ActionCallback() : null;
     myWindowManager = null;
@@ -145,11 +145,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
    * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
    *                    by <code>WindowManager</code>.
    */
-  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
+  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
     this(wrapper, project, canBeParent, DialogWrapper.IdeModalityType.IDE);
   }
 
-  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, boolean canBeParent) {
+  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, boolean canBeParent) {
     this(wrapper, (Project)null, canBeParent);
   }
 
@@ -174,7 +174,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
    * @param parent parent component which is used to calculate heavy weight window ancestor.
    *               <code>parent</code> cannot be <code>null</code> and must be showing.
    */
-  protected DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, @NotNull Component parent, final boolean canBeParent) {
+  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, final boolean canBeParent) {
     myWrapper = wrapper;
 
     myWindowManager = null;
@@ -188,7 +188,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     });
   }
 
-  public DialogWrapperPeerImpl(@NotNull final DialogWrapper wrapper,final Window owner, final boolean canBeParent,
+  public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper, final Window owner, final boolean canBeParent,
                                final DialogWrapper.IdeModalityType ideModalityType ) {
     myWrapper = wrapper;
     myWindowManager = null;
@@ -210,12 +210,12 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
   /** @see DialogWrapper#DialogWrapper(boolean, boolean)
    */
   @Deprecated
-  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, final boolean canBeParent, final boolean applicationModalIfPossible) {
     this(wrapper, null, canBeParent, applicationModalIfPossible);
   }
 
   @Deprecated
-  public DialogWrapperPeerImpl(@NotNull DialogWrapper wrapper,final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+  public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
     this(wrapper, owner, canBeParent, applicationModalIfPossible ? DialogWrapper.IdeModalityType.IDE : DialogWrapper.IdeModalityType.PROJECT);
   }
 
@@ -239,7 +239,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     myDialog.addKeyListener(listener);
   }
 
-  private void createDialog(@Nullable Window owner, boolean canBeParent, @NotNull DialogWrapper.IdeModalityType ideModalityType) {
+  private void createDialog(@Nullable Window owner, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     if (isHeadless()) {
       myDialog = new HeadlessDialog(myWrapper);
     }
@@ -399,14 +399,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     myDialog.setResizable(resizable);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Point getLocation() {
     return myDialog.getLocation();
   }
 
   @Override
-  public void setLocation(@NotNull Point p) {
+  public void setLocation(@Nonnull Point p) {
     myDialog.setLocation(p);
   }
 
@@ -556,8 +556,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     public MyDialog(Window owner,
                     DialogWrapper dialogWrapper,
                     Project project,
-                    @NotNull ActionCallback focused,
-                    @NotNull ActionCallback typeAheadDone,
+                    @Nonnull ActionCallback focused,
+                    @Nonnull ActionCallback typeAheadDone,
                     ActionCallback typeAheadCallback) {
       super(owner);
       myDialogWrapper = new WeakReference<>(dialogWrapper);
@@ -591,7 +591,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     }
 
     @Override
-    public void putInfo(@NotNull Map<String, String> info) {
+    public void putInfo(@Nonnull Map<String, String> info) {
       info.put("dialog", getTitle());
     }
 
@@ -611,7 +611,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       final DialogWrapper wrapper = myDialogWrapper.get();
       if (wrapper instanceof DataProvider) {
         return ((DataProvider)wrapper).getData(dataId);
@@ -652,7 +652,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       super.setBounds(r);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected JRootPane createRootPane() {
       return new DialogRootPane();
@@ -741,7 +741,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       return SoftReference.dereference(myProject);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public IdeFocusManager getFocusManager() {
       Project project = getProject();
@@ -1018,7 +1018,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
         putClientProperty("DIALOG_ROOT_PANE", true);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected JLayeredPane createLayeredPane() {
         JLayeredPane p = new JBLayeredPane();
@@ -1068,7 +1068,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer implements FocusTra
       }
 
       @Override
-      public Object getData(@NotNull Key<?> dataId) {
+      public Object getData(@Nonnull Key<?> dataId) {
         final DialogWrapper wrapper = myDialogWrapper.get();
         return wrapper != null && PlatformDataKeys.UI_DISPOSABLE == dataId ? wrapper.getDisposable() : null;
       }

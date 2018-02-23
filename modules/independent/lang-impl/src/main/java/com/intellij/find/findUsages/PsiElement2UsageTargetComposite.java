@@ -24,15 +24,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.usages.UsageInfoToUsageConverter;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapter {
   private final UsageInfoToUsageConverter.TargetElementsDescriptor myDescriptor;
-  public PsiElement2UsageTargetComposite(@NotNull PsiElement[] primaryElements,
-                                         @NotNull PsiElement[] secondaryElements,
-                                         @NotNull FindUsagesOptions options) {
+  public PsiElement2UsageTargetComposite(@Nonnull PsiElement[] primaryElements,
+                                         @Nonnull PsiElement[] secondaryElements,
+                                         @Nonnull FindUsagesOptions options) {
     super(primaryElements[0], options);
     myDescriptor = new UsageInfoToUsageConverter.TargetElementsDescriptor(primaryElements, secondaryElements);
   }
@@ -53,11 +53,11 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
     return VfsUtilCore.toVirtualFileArray(files);
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement[] getPrimaryElements() {
     return myDescriptor.getPrimaryElements();
   }
-  @NotNull
+  @Nonnull
   public PsiElement[] getSecondaryElements() {
     return myDescriptor.getAdditionalElements();
   }

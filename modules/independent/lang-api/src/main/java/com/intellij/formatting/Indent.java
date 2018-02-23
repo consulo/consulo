@@ -16,7 +16,7 @@
 package com.intellij.formatting;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The indent setting for a formatting model block. Indicates how the block is indented
@@ -250,7 +250,7 @@ public abstract class Indent {
    *                                  (feel free to get more information about that at class-level javadoc)
    * @return                          newly created indent configured in accordance with the given arguments
    */
-  public static Indent getIndent(@NotNull Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+  public static Indent getIndent(@Nonnull Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
     return myFactory.getIndent(type, relativeToDirectParent, enforceIndentToChildren);
   }
 
@@ -265,7 +265,7 @@ public abstract class Indent {
    *                                  (feel free to get more information about that at class-level javadoc)
    * @return                          newly created indent configured in accordance with the given arguments
    */
-  public static Indent getIndent(@NotNull Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+  public static Indent getIndent(@Nonnull Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
     return myFactory.getIndent(type, spaces, relativeToDirectParent, enforceIndentToChildren);
   }
 

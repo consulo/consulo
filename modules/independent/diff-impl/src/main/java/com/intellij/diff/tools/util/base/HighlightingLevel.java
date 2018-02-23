@@ -19,8 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -46,27 +45,30 @@ public enum HighlightingLevel {
     }
   });
 
-  @NotNull private final String myText;
-  @Nullable private final Icon myIcon;
-  @NotNull private final Condition<RangeHighlighter> myCondition;
+  @Nonnull
+  private final String myText;
+  @javax.annotation.Nullable
+  private final Icon myIcon;
+  @Nonnull
+  private final Condition<RangeHighlighter> myCondition;
 
-  HighlightingLevel(@NotNull String text, @Nullable Icon icon, @NotNull Condition<RangeHighlighter> condition) {
+  HighlightingLevel(@Nonnull String text, @javax.annotation.Nullable Icon icon, @Nonnull Condition<RangeHighlighter> condition) {
     myText = text;
     myIcon = icon;
     myCondition = condition;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return myIcon;
   }
 
-  @NotNull
+  @Nonnull
   public Condition<RangeHighlighter> getCondition() {
     return myCondition;
   }

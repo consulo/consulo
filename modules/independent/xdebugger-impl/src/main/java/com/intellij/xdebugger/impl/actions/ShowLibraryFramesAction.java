@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author egor
@@ -42,7 +42,7 @@ final class ShowLibraryFramesAction extends ToggleAction {
   }
 
   @Override
-  public void update(@NotNull final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
 
     Presentation presentation = e.getPresentation();

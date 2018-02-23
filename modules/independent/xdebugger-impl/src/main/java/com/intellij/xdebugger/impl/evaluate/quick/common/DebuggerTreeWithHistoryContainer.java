@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.xdebugger.XDebuggerBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -47,9 +47,10 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
   private final List<D> myHistory = new ArrayList<D>();
   private int myCurrentIndex = -1;
   protected final DebuggerTreeCreator<D> myTreeCreator;
-  @NotNull protected final Project myProject;
+  @Nonnull
+  protected final Project myProject;
 
-  protected DebuggerTreeWithHistoryContainer(@NotNull D initialItem, @NotNull DebuggerTreeCreator<D> creator, @NotNull Project project) {
+  protected DebuggerTreeWithHistoryContainer(@Nonnull D initialItem, @Nonnull DebuggerTreeCreator<D> creator, @Nonnull Project project) {
     myTreeCreator = creator;
     myProject = project;
     myHistory.add(initialItem);
@@ -67,7 +68,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     updateTree(item);
   }
 
-  protected void updateTree(@NotNull D selectedItem) {
+  protected void updateTree(@Nonnull D selectedItem) {
     updateContainer(myTreeCreator.createTree(selectedItem), myTreeCreator.getTitle(selectedItem));
   }
 
@@ -179,7 +180,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
           }
 
           @Override
-          public void onFailure(@NotNull Throwable t) {
+          public void onFailure(@Nonnull Throwable t) {
             LOG.debug(t);
           }
         });

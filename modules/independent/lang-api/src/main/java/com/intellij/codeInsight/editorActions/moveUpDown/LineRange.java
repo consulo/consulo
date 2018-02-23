@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LineRange {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.actions.moveUpDown.LineRange");
@@ -38,16 +38,16 @@ public class LineRange {
       LOG.error("start > end: start=" + startLine+"; end="+endLine);
     }
   }
-  public LineRange(@NotNull PsiElement startElement, @NotNull PsiElement endElement, @NotNull Document document) {
+  public LineRange(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement, @Nonnull Document document) {
     this(document.getLineNumber(startElement.getTextRange().getStartOffset()),
          document.getLineNumber(endElement.getTextRange().getEndOffset()) + 1);
   }
 
-  public LineRange(@NotNull PsiElement startElement, @NotNull PsiElement endElement) {
+  public LineRange(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
     this(startElement, endElement, startElement.getContainingFile().getViewProvider().getDocument());
   }
 
-  public LineRange(@NotNull PsiElement element) {
+  public LineRange(@Nonnull PsiElement element) {
     this(element, element);
   }
 

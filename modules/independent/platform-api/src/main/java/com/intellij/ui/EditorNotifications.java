@@ -20,13 +20,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -37,16 +38,16 @@ public abstract class EditorNotifications  {
   @DeprecationInfo(value = "Use consulo.editor.notifications.EditorNotificationProvider", until = "2.0")
   public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
     @Override
-    @NotNull
+    @Nonnull
     public abstract Key<T> getKey();
 
     @RequiredReadAction
     @Override
     @Nullable
-    public abstract T createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor);
+    public abstract T createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor);
   }
 
-  @NotNull
+  @Nonnull
   public static EditorNotifications getInstance(Project project) {
     return project.getComponent(EditorNotifications.class);
   }

@@ -21,23 +21,27 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.charset.Charset;
 
 public class IncompatibleEncodingDialog extends DialogWrapper {
-  @NotNull private final VirtualFile virtualFile;
-  @NotNull private final Charset charset;
-  @NotNull private final EncodingUtil.Magic8 safeToReload;
-  @NotNull private final EncodingUtil.Magic8 safeToConvert;
+  @Nonnull
+  private final VirtualFile virtualFile;
+  @Nonnull
+  private final Charset charset;
+  @Nonnull
+  private final EncodingUtil.Magic8 safeToReload;
+  @Nonnull
+  private final EncodingUtil.Magic8 safeToConvert;
 
-  public IncompatibleEncodingDialog(@NotNull VirtualFile virtualFile,
-                                    @NotNull final Charset charset,
-                                    @NotNull EncodingUtil.Magic8 safeToReload,
-                                    @NotNull EncodingUtil.Magic8 safeToConvert) {
+  public IncompatibleEncodingDialog(@Nonnull VirtualFile virtualFile,
+                                    @Nonnull final Charset charset,
+                                    @Nonnull EncodingUtil.Magic8 safeToReload,
+                                    @Nonnull EncodingUtil.Magic8 safeToConvert) {
     super(false);
     this.virtualFile = virtualFile;
     this.charset = charset;
@@ -60,7 +64,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
     return label;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     DialogWrapperAction reloadAction = new DialogWrapperAction("Reload") {

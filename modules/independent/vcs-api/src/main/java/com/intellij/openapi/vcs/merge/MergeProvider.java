@@ -18,15 +18,16 @@ package com.intellij.openapi.vcs.merge;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 public interface MergeProvider extends VcsProviderMarker {
-  @NotNull MergeData loadRevisions(final VirtualFile file) throws VcsException;
+  @Nonnull
+  MergeData loadRevisions(final VirtualFile file) throws VcsException;
 
   /**
    * called for text conflict
    */
   void conflictResolvedForFile(VirtualFile file);
-  boolean isBinary(@NotNull VirtualFile file);
+  boolean isBinary(@Nonnull VirtualFile file);
 }

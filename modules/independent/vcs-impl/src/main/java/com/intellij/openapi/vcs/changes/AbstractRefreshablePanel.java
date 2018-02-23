@@ -29,8 +29,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.Ticket;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -135,7 +135,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     private final Ticket myTicketCopy;
     private T myT;
 
-    private Loader(@Nullable Project project, @NotNull String title, final Ticket ticketCopy) {
+    private Loader(@javax.annotation.Nullable Project project, @Nonnull String title, final Ticket ticketCopy) {
       super(project, title, false, BackgroundFromStartOption.getInstance());
       myTicketCopy = ticketCopy;
     }
@@ -173,7 +173,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     }
 
     @Override
-    protected void runImpl(@NotNull ProgressIndicator indicator) {
+    protected void runImpl(@Nonnull ProgressIndicator indicator) {
       if (myDisposed) return;
       try {
         myT = loadImpl();

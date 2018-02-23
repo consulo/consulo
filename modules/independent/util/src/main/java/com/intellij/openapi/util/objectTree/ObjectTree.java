@@ -22,8 +22,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -46,20 +47,20 @@ public final class ObjectTree<T> {
 
   private final AtomicLong myModification = new AtomicLong(0);
 
-  ObjectNode<T> getNode(@NotNull T object) {
+  ObjectNode<T> getNode(@Nonnull T object) {
     return myObject2NodeMap.get(object);
   }
 
-  ObjectNode<T> putNode(@NotNull T object, @Nullable("null means remove") ObjectNode<T> node) {
+  ObjectNode<T> putNode(@Nonnull T object, @Nullable("null means remove") ObjectNode<T> node) {
     return node == null ? myObject2NodeMap.remove(object) : myObject2NodeMap.put(object, node);
   }
 
-  @NotNull
+  @Nonnull
   final List<ObjectNode<T>> getNodesInExecution() {
     return myExecutedNodes;
   }
 
-  public final void register(@NotNull T parent, @NotNull T child) {
+  public final void register(@Nonnull T parent, @Nonnull T child) {
     if (parent == child) throw new IllegalArgumentException("Cannot register to itself: "+parent);
     Object wasDisposed = getDisposalInfo(parent);
     if (wasDisposed != null) {
@@ -93,13 +94,13 @@ public final class ObjectTree<T> {
     }
   }
 
-  public Object getDisposalInfo(@NotNull T parent) {
+  public Object getDisposalInfo(@Nonnull T parent) {
     synchronized (treeLock) {
       return myDisposedObjects.get(parent);
     }
   }
 
-  private void checkWasNotAddedAlready(ObjectNode<T> childNode, @NotNull ObjectNode<T> parentNode) {
+  private void checkWasNotAddedAlready(ObjectNode<T> childNode, @Nonnull ObjectNode<T> parentNode) {
     for (ObjectNode<T> node = childNode; node != null; node = node.getParent()) {
       if (node == parentNode) {
         throw new IncorrectOperationException("'"+childNode.getObject() + "' was already added as a child of '" + parentNode.getObject()+"'");
@@ -107,8 +108,8 @@ public final class ObjectTree<T> {
     }
   }
 
-  @NotNull
-  private ObjectNode<T> createNodeFor(@NotNull T object, @Nullable ObjectNode<T> parentNode) {
+  @Nonnull
+  private ObjectNode<T> createNodeFor(@Nonnull T object, @Nullable ObjectNode<T> parentNode) {
     final ObjectNode<T> newNode = new ObjectNode<T>(this, parentNode, object, getNextModification());
     if (parentNode == null) {
       myRootObjects.add(object);
@@ -121,7 +122,7 @@ public final class ObjectTree<T> {
     return myModification.incrementAndGet();
   }
 
-  public final boolean executeAll(@NotNull T object, @NotNull ObjectTreeAction<T> action, boolean processUnregistered) {
+  public final boolean executeAll(@Nonnull T object, @Nonnull ObjectTreeAction<T> action, boolean processUnregistered) {
     ObjectNode<T> node;
     synchronized (treeLock) {
       node = getNode(object);
@@ -139,9 +140,9 @@ public final class ObjectTree<T> {
   }
 
   @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-  static <T> void executeActionWithRecursiveGuard(@NotNull T object,
-                                                  @NotNull List<T> recursiveGuard,
-                                                  @NotNull final ObjectTreeAction<T> action) {
+  static <T> void executeActionWithRecursiveGuard(@Nonnull T object,
+                                                  @Nonnull List<T> recursiveGuard,
+                                                  @Nonnull final ObjectTreeAction<T> action) {
     synchronized (recursiveGuard) {
       if (ArrayUtil.indexOf(recursiveGuard, object, ContainerUtil.<T>identityStrategy()) != -1) return;
       recursiveGuard.add(object);
@@ -159,13 +160,13 @@ public final class ObjectTree<T> {
     }
   }
 
-  private void executeUnregistered(@NotNull final T object, @NotNull final ObjectTreeAction<T> action) {
+  private void executeUnregistered(@Nonnull final T object, @Nonnull final ObjectTreeAction<T> action) {
     executeActionWithRecursiveGuard(object, myExecutedUnregisteredNodes, action);
   }
 
-  public final void executeChildAndReplace(@NotNull T toExecute,
-                                           @NotNull T toReplace,
-                                           @NotNull ObjectTreeAction<T> action) {
+  public final void executeChildAndReplace(@Nonnull T toExecute,
+                                           @Nonnull T toReplace,
+                                           @Nonnull ObjectTreeAction<T> action) {
     final ObjectNode<T> toExecuteNode;
     T parentObject;
     synchronized (treeLock) {
@@ -181,7 +182,7 @@ public final class ObjectTree<T> {
     register(parentObject, toReplace);
   }
 
-  public boolean containsKey(@NotNull T object) {
+  public boolean containsKey(@Nonnull T object) {
     synchronized (treeLock) {
       return getNode(object) != null;
     }
@@ -189,7 +190,7 @@ public final class ObjectTree<T> {
 
   @TestOnly
   // public for Upsource
-  public void assertNoReferenceKeptInTree(@NotNull T disposable) {
+  public void assertNoReferenceKeptInTree(@Nonnull T disposable) {
     synchronized (treeLock) {
       Collection<ObjectNode<T>> nodes = myObject2NodeMap.values();
       for (ObjectNode<T> node : nodes) {
@@ -198,7 +199,7 @@ public final class ObjectTree<T> {
     }
   }
 
-  void removeRootObject(@NotNull T object) {
+  void removeRootObject(@Nonnull T object) {
     myRootObjects.remove(object);
   }
 
@@ -231,35 +232,35 @@ public final class ObjectTree<T> {
     }
   }
 
-  @NotNull
+  @Nonnull
   Set<T> getRootObjects() {
     synchronized (treeLock) {
       return myRootObjects;
     }
   }
 
-  void addListener(@NotNull ObjectTreeListener listener) {
+  void addListener(@Nonnull ObjectTreeListener listener) {
     myListeners.add(listener);
   }
 
-  void removeListener(@NotNull ObjectTreeListener listener) {
+  void removeListener(@Nonnull ObjectTreeListener listener) {
     myListeners.remove(listener);
   }
 
-  private void fireRegistered(@NotNull Object object) {
+  private void fireRegistered(@Nonnull Object object) {
     for (ObjectTreeListener each : myListeners) {
       each.objectRegistered(object);
     }
   }
 
-  void fireExecuted(@NotNull Object object) {
+  void fireExecuted(@Nonnull Object object) {
     for (ObjectTreeListener each : myListeners) {
       each.objectExecuted(object);
     }
     rememberDisposedTrace(object);
   }
 
-  private void rememberDisposedTrace(@NotNull Object object) {
+  private void rememberDisposedTrace(@Nonnull Object object) {
     synchronized (treeLock) {
       myDisposedObjects.put(object, Disposer.isDebugMode() ? ThrowableInterner.intern(new Throwable()) : Boolean.TRUE);
     }
@@ -272,7 +273,7 @@ public final class ObjectTree<T> {
   }
 
   @Nullable
-  public <D extends Disposable> D findRegisteredObject(@NotNull T parentDisposable, @NotNull D object) {
+  public <D extends Disposable> D findRegisteredObject(@Nonnull T parentDisposable, @Nonnull D object) {
     synchronized (treeLock) {
       ObjectNode<T> parentNode = getNode(parentDisposable);
       if (parentNode == null) return null;

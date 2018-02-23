@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
@@ -29,7 +29,7 @@ public interface CodeInsightActionHandler {
   abstract class WriteActionAdapter implements CodeInsightActionHandler{
     @Override
     @RequiredDispatchThread
-    public final void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
+    public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
@@ -39,7 +39,7 @@ public interface CodeInsightActionHandler {
     }
 
     @RequiredWriteAction
-    public abstract void invokeInWriteAction(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
+    public abstract void invokeInWriteAction(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 
     @Override
     public final boolean startInWriteAction() {
@@ -48,7 +48,7 @@ public interface CodeInsightActionHandler {
   }
 
   @RequiredDispatchThread
-  void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
+  void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 
   @Deprecated
   @DeprecationInfo("Please return 'false' always, if u need wrap into write action - use WriteActionAdapter")

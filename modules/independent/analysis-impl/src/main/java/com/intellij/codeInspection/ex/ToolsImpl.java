@@ -39,8 +39,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -58,43 +58,43 @@ public class ToolsImpl implements Tools {
   private List<ScopeToolState> myTools;
   private boolean myEnabled;
 
-  public ToolsImpl(@NotNull InspectionToolWrapper toolWrapper, @NotNull HighlightDisplayLevel level, boolean enabled, boolean enabledByDefault) {
+  public ToolsImpl(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull HighlightDisplayLevel level, boolean enabled, boolean enabledByDefault) {
     this(toolWrapper.getShortName(), new ScopeToolState(CustomScopesProviderEx.getAllScope(), toolWrapper, enabledByDefault, level), null, enabled);
   }
 
   @TestOnly
-  public ToolsImpl(@NotNull InspectionToolWrapper toolWrapper, @NotNull HighlightDisplayLevel level, boolean enabled) {
+  public ToolsImpl(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull HighlightDisplayLevel level, boolean enabled) {
     this(toolWrapper, level, enabled, enabled);
   }
 
-  private ToolsImpl(@NotNull String shortName, @NotNull ScopeToolState defaultState, @Nullable List<ScopeToolState> tools, boolean enabled) {
+  private ToolsImpl(@Nonnull String shortName, @Nonnull ScopeToolState defaultState, @javax.annotation.Nullable List<ScopeToolState> tools, boolean enabled) {
     myShortName = shortName;
     myDefaultState = defaultState;
     myTools = tools;
     myEnabled = enabled;
   }
 
-  @NotNull
-  public ScopeToolState addTool(@NotNull NamedScope scope, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  @Nonnull
+  public ScopeToolState addTool(@Nonnull NamedScope scope, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     return insertTool(scope, toolWrapper, enabled, level, myTools != null ? myTools.size() : 0);
   }
 
-  @NotNull
-  public ScopeToolState prependTool(@NotNull NamedScope scope, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  @Nonnull
+  public ScopeToolState prependTool(@Nonnull NamedScope scope, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     return insertTool(scope, toolWrapper, enabled, level, 0);
   }
 
-  public ScopeToolState addTool(@NotNull String scopeName, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  public ScopeToolState addTool(@Nonnull String scopeName, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     return insertTool(new ScopeToolState(scopeName, toolWrapper, enabled, level), myTools != null ? myTools.size() : 0);
   }
 
-  @NotNull
-  private ScopeToolState insertTool(@NotNull NamedScope scope, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level, int idx) {
+  @Nonnull
+  private ScopeToolState insertTool(@Nonnull NamedScope scope, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level, int idx) {
     return insertTool(new ScopeToolState(scope, toolWrapper, enabled, level), idx);
   }
 
-  @NotNull
-  private ScopeToolState insertTool(@NotNull final ScopeToolState scopeToolState, final int idx) {
+  @Nonnull
+  private ScopeToolState insertTool(@Nonnull final ScopeToolState scopeToolState, final int idx) {
     if (myTools == null) {
       myTools = new ArrayList<ScopeToolState>();
       if (scopeToolState.isEnabled()) {
@@ -105,7 +105,7 @@ public class ToolsImpl implements Tools {
     return scopeToolState;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InspectionToolWrapper getInspectionTool(PsiElement element) {
     if (myTools != null) {
@@ -130,13 +130,13 @@ public class ToolsImpl implements Tools {
     return myDefaultState.getTool();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getShortName() {
     return myShortName;
   }
 
-  @NotNull
+  @Nonnull
   public List<InspectionToolWrapper> getAllTools() {
     List<InspectionToolWrapper> result = new ArrayList<InspectionToolWrapper>();
     for (ScopeToolState state : getTools()) {
@@ -169,7 +169,7 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  void readExternal(@NotNull Element toolElement, @NotNull InspectionProfile profile, Map<String, List<String>> dependencies) throws InvalidDataException {
+  void readExternal(@Nonnull Element toolElement, @Nonnull InspectionProfile profile, Map<String, List<String>> dependencies) throws InvalidDataException {
     final String levelName = toolElement.getAttributeValue(LEVEL_ATTRIBUTE);
     final ProfileManager profileManager = profile.getProfileManager();
     final SeverityRegistrar registrar = ((SeverityProvider)profileManager).getOwnSeverityRegistrar();
@@ -240,7 +240,7 @@ public class ToolsImpl implements Tools {
     myEnabled = isEnabled;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InspectionToolWrapper getTool() {
     if (myTools == null) return myDefaultState.getTool();
@@ -248,7 +248,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<ScopeToolState> getTools() {
     if (myTools == null) return Collections.singletonList(myDefaultState);
     List<ScopeToolState> result = new ArrayList<ScopeToolState>(myTools);
@@ -257,7 +257,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ScopeToolState getDefaultState() {
     return myDefaultState;
   }
@@ -269,7 +269,7 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  public void removeScope(final @NotNull String scopeName) {
+  public void removeScope(final @Nonnull String scopeName) {
     if (myTools != null) {
       for (ScopeToolState tool : myTools) {
         if (scopeName.equals(tool.getScopeName())) {
@@ -364,7 +364,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public InspectionToolWrapper getEnabledTool(PsiElement element) {
     if (!myEnabled) return null;
     if (myTools == null || element == null) {
@@ -410,7 +410,7 @@ public class ToolsImpl implements Tools {
   }
 
 
-  public void disableTool(@NotNull PsiElement element) {
+  public void disableTool(@Nonnull PsiElement element) {
     final Project project = element.getProject();
     final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(project);
     if (myTools != null) {
@@ -432,7 +432,7 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  @NotNull
+  @Nonnull
   public HighlightDisplayLevel getLevel(final NamedScope scope, Project project) {
     if (myTools != null && scope != null){
       for (ScopeToolState state : myTools) {
@@ -460,7 +460,7 @@ public class ToolsImpl implements Tools {
 
   }
 
-  public void setLevel(@NotNull HighlightDisplayLevel level, @Nullable String scopeName, Project project) {
+  public void setLevel(@Nonnull HighlightDisplayLevel level, @javax.annotation.Nullable String scopeName, Project project) {
     if (scopeName == null) {
       myDefaultState.setLevel(level);
     } else {
@@ -492,17 +492,17 @@ public class ToolsImpl implements Tools {
     }
   }
 
-  public void setDefaultState(@NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  public void setDefaultState(@Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     myDefaultState.setTool(toolWrapper);
     myDefaultState.setLevel(level);
     myDefaultState.setEnabled(enabled);
   }
 
-  public void setLevel(@NotNull HighlightDisplayLevel level) {
+  public void setLevel(@Nonnull HighlightDisplayLevel level) {
     myDefaultState.setLevel(level);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<ScopeToolState> getNonDefaultTools() {
     return myTools;
   }

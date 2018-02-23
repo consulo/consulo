@@ -15,14 +15,14 @@
  */
 package com.intellij.notification.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.notification.Notification;
 
 /**
  * @author spleaner
  */
 public interface NotificationModelListener {
-  void notificationsAdded(@NotNull Notification... notification);
-  void notificationsRemoved(@NotNull Notification... notification);
-  void notificationsRead(@NotNull Notification... notification);
+  void notificationsAdded(@Nonnull Notification... notification);
+  void notificationsRemoved(@Nonnull Notification... notification);
+  void notificationsRead(@Nonnull Notification... notification);
 }

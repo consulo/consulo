@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -33,33 +33,33 @@ import java.io.IOException;
 public interface FilePropertyPusher<T> {
   ExtensionPointName<FilePropertyPusher> EP_NAME = ExtensionPointName.create("com.intellij.filePropertyPusher");
 
-  void initExtra(@NotNull Project project, @NotNull MessageBus bus, @NotNull Engine languageLevelUpdater);
-  @NotNull
+  void initExtra(@Nonnull Project project, @Nonnull MessageBus bus, @Nonnull Engine languageLevelUpdater);
+  @Nonnull
   Key<T> getFileDataKey();
   boolean pushDirectoriesOnly();
 
-  @NotNull
+  @Nonnull
   T getDefaultValue();
 
   @Nullable
-  T getImmediateValue(@NotNull Project project, @Nullable VirtualFile file);
+  T getImmediateValue(@Nonnull Project project, @Nullable VirtualFile file);
 
   @Nullable
-  T getImmediateValue(@NotNull Module module);
+  T getImmediateValue(@Nonnull Module module);
 
-  default boolean acceptsFile(@NotNull VirtualFile file, @NotNull Project project) {
+  default boolean acceptsFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     return acceptsFile(file);
   }
 
-  boolean acceptsFile(@NotNull VirtualFile file);
-  boolean acceptsDirectory(@NotNull VirtualFile file, @NotNull Project project);
+  boolean acceptsFile(@Nonnull VirtualFile file);
+  boolean acceptsDirectory(@Nonnull VirtualFile file, @Nonnull Project project);
 
-  void persistAttribute(@NotNull Project project, @NotNull VirtualFile fileOrDir, @NotNull T value) throws IOException;
+  void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T value) throws IOException;
 
   interface Engine {
     void pushAll();
     void pushRecursively(VirtualFile vile, Project project);
   }
 
-  void afterRootsChanged(@NotNull Project project);
+  void afterRootsChanged(@Nonnull Project project);
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,17 +30,17 @@ import java.util.Set;
 public class DefaultExternalSourceDirectorySet implements ExternalSourceDirectorySet {
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myName;
-  @NotNull
+  @Nonnull
   private Set<File> mySrcDirs;
-  @NotNull
+  @Nonnull
   private File myOutputDir;
-  @NotNull
+  @Nonnull
   private Set<String> myExcludes;
-  @NotNull
+  @Nonnull
   private Set<String> myIncludes;
-  @NotNull
+  @Nonnull
   private List<ExternalFilter> myFilters;
 
   public DefaultExternalSourceDirectorySet() {
@@ -62,63 +62,63 @@ public class DefaultExternalSourceDirectorySet implements ExternalSourceDirector
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<File> getSrcDirs() {
     return mySrcDirs;
   }
 
-  public void setSrcDirs(@NotNull Set<File> srcDirs) {
+  public void setSrcDirs(@Nonnull Set<File> srcDirs) {
     mySrcDirs = srcDirs;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public File getOutputDir() {
     return myOutputDir;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<String> getIncludes() {
     return myIncludes;
   }
 
-  public void setIncludes(@NotNull Set<String> includes) {
+  public void setIncludes(@Nonnull Set<String> includes) {
     myIncludes = includes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<String> getExcludes() {
     return myExcludes;
   }
 
-  public void setExcludes(@NotNull Set<String> excludes) {
+  public void setExcludes(@Nonnull Set<String> excludes) {
     myExcludes = excludes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<ExternalFilter> getFilters() {
     return myFilters;
   }
 
-  public void setFilters(@NotNull List<ExternalFilter> filters) {
+  public void setFilters(@Nonnull List<ExternalFilter> filters) {
     myFilters = filters;
   }
 
-  public void setOutputDir(@NotNull File outputDir) {
+  public void setOutputDir(@Nonnull File outputDir) {
     myOutputDir = outputDir;
   }
 }

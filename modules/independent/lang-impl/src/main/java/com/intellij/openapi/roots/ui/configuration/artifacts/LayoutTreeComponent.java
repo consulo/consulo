@@ -50,8 +50,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -169,7 +169,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     return myTree.getSelection();
   }
 
-  public void addNewPackagingElement(@NotNull PackagingElementType<?> type) {
+  public void addNewPackagingElement(@Nonnull PackagingElementType<?> type) {
     PackagingElementNode<?> parentNode = getParentNode(myTree.getSelection());
     final PackagingElement<?> element = parentNode.getFirstElement();
     final CompositePackagingElement<?> parent;
@@ -217,13 +217,13 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     return PackagingElementFactory.getInstance().getOrCreateDirectory((CompositePackagingElement<?>)rootElement, path);
   }
 
-  public boolean checkCanModify(@NotNull PackagingElement<?> element, @NotNull PackagingElementNode<?> node) {
+  public boolean checkCanModify(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementNode<?> node) {
     return checkCanModify(node.getNodeSource(element));
   }
 
-  public boolean checkCanModifyChildren(@NotNull PackagingElement<?> parentElement,
-                                        @NotNull PackagingElementNode<?> parentNode,
-                                        @NotNull Collection<? extends PackagingElementNode<?>> children) {
+  public boolean checkCanModifyChildren(@Nonnull PackagingElement<?> parentElement,
+                                        @Nonnull PackagingElementNode<?> parentNode,
+                                        @Nonnull Collection<? extends PackagingElementNode<?>> children) {
     final List<PackagingNodeSource> sources = new ArrayList<PackagingNodeSource>(parentNode.getNodeSource(parentElement));
     for (PackagingElementNode<?> child : children) {
       sources.addAll(child.getNodeSources());
@@ -300,7 +300,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     });
   }
 
-  public void selectNode(@NotNull String parentPath, @NotNull PackagingElement<?> element) {
+  public void selectNode(@Nonnull String parentPath, @Nonnull PackagingElement<?> element) {
     final PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
     if (parent == null) return;
 
@@ -318,7 +318,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
   }
 
   @TestOnly
-  public void selectNode(@NotNull String parentPath, @NotNull String nodeName) {
+  public void selectNode(@Nonnull String parentPath, @Nonnull String nodeName) {
     final PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
     if (parent == null) return;
 
@@ -530,7 +530,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     mySelectedElementInfo.showPropertiesPanel();
   }
 
-  public void putIntoDefaultLocations(@NotNull final List<? extends PackagingSourceItem> items) {
+  public void putIntoDefaultLocations(@Nonnull final List<? extends PackagingSourceItem> items) {
     final List<PackagingElement<?>> toSelect = new ArrayList<PackagingElement<?>>();
     editLayout(new Runnable() {
       @Override
@@ -552,7 +552,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     updateAndSelect(myTree.getRootPackagingNode(), toSelect);
   }
 
-  public void putElements(@NotNull final String path, @NotNull final List<? extends PackagingElement<?>> elements) {
+  public void putElements(@Nonnull final String path, @Nonnull final List<? extends PackagingElement<?>> elements) {
     final List<PackagingElement<?>> toSelect = new ArrayList<PackagingElement<?>>();
     editLayout(new Runnable() {
       @Override
@@ -566,7 +566,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     updateAndSelect(myTree.getRootPackagingNode(), toSelect);
   }
 
-  public void packInto(@NotNull final List<? extends PackagingSourceItem> items, final String pathToJar) {
+  public void packInto(@Nonnull final List<? extends PackagingSourceItem> items, final String pathToJar) {
     final List<PackagingElement<?>> toSelect = new ArrayList<PackagingElement<?>>();
     final CompositePackagingElement<?> rootElement = getArtifact().getRootElement();
     editLayout(new Runnable() {

@@ -17,12 +17,15 @@ package com.intellij.vcs.log.util;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UserNameRegex implements Function<String, String> {
-  @NotNull public static final UserNameRegex EXTENDED_INSTANCE = new UserNameRegex(true);
-  @NotNull private static final char[] BASIC_REGEX_CHARS = new char[]{'.', '^', '$', '*', '[', ']'};
-  @NotNull public static final char[] EXTENDED_REGEX_CHARS = new char[]{'.', '^', '$', '*', '+', '-', '?', '(', ')', '[', ']', '{', '}', '|'};
+  @Nonnull
+  public static final UserNameRegex EXTENDED_INSTANCE = new UserNameRegex(true);
+  @Nonnull
+  private static final char[] BASIC_REGEX_CHARS = new char[]{'.', '^', '$', '*', '[', ']'};
+  @Nonnull
+  public static final char[] EXTENDED_REGEX_CHARS = new char[]{'.', '^', '$', '*', '+', '-', '?', '(', ')', '[', ']', '{', '}', '|'};
   private final boolean myExtended;
 
   private UserNameRegex(boolean extended) {

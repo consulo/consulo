@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -38,21 +38,21 @@ public abstract class FileIndexFacade {
     return ServiceManager.getService(project, FileIndexFacade.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract ModificationTracker getRootModificationTracker();
 
-  public abstract boolean isInContent(@NotNull VirtualFile file);
-  public abstract boolean isInSource(@NotNull VirtualFile file);
-  public abstract boolean isInSourceContent(@NotNull VirtualFile file);
-  public abstract boolean isInLibraryClasses(@NotNull VirtualFile file);
+  public abstract boolean isInContent(@Nonnull VirtualFile file);
+  public abstract boolean isInSource(@Nonnull VirtualFile file);
+  public abstract boolean isInSourceContent(@Nonnull VirtualFile file);
+  public abstract boolean isInLibraryClasses(@Nonnull VirtualFile file);
 
-  public abstract boolean isInLibrarySource(@NotNull VirtualFile file);
+  public abstract boolean isInLibrarySource(@Nonnull VirtualFile file);
 
-  public abstract boolean isExcludedFile(@NotNull VirtualFile file);
-  public abstract boolean isUnderIgnored(@NotNull VirtualFile file);
+  public abstract boolean isExcludedFile(@Nonnull VirtualFile file);
+  public abstract boolean isUnderIgnored(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract Module getModuleForFile(@NotNull VirtualFile file);
+  public abstract Module getModuleForFile(@Nonnull VirtualFile file);
 
   /**
    * Checks if <code>file</code> is an ancestor of <code>baseDir</code> and none of the files
@@ -62,7 +62,7 @@ public abstract class FileIndexFacade {
    * @param child the child directory or file to check for ancestry.
    * @return true if it's a valid ancestor, false otherwise.
    */
-  public abstract boolean isValidAncestor(@NotNull VirtualFile baseDir, @NotNull VirtualFile child);
+  public abstract boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child);
 
   public boolean shouldBeFound(GlobalSearchScope scope, VirtualFile virtualFile) {
     return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile)) && !virtualFile.getFileType().isBinary();

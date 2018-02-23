@@ -43,8 +43,7 @@ import consulo.web.application.WebApplication;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -102,7 +101,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   protected consulo.ui.Component createInitializingLabel() {
     Label label = Label.create("Initializing...");
@@ -117,38 +116,38 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     UIAccess.get().give(runnable);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CommandProcessorBase createCommandProcessor() {
     return new WebCommandProcessorImpl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected InternalDecoratorListener createInternalDecoratorListener() {
     return new MyInternalDecoratorListenerBase() {
       @Override
-      public void resized(@NotNull ToolWindowInternalDecorator source) {
+      public void resized(@Nonnull ToolWindowInternalDecorator source) {
 
       }
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
     return new WGwtToolWindowStripeButton((WebToolWindowInternalDecorator)internalDecorator, (WGwtToolWindowPanel)myToolWindowPanel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @Nullable Object component) {
+  protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @javax.annotation.Nullable Object component) {
     return new UnifiedToolWindowImpl(this, id, canCloseContent, component);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @NotNull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
+  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
     return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
   }
 
@@ -192,14 +191,14 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Element getState() {
     return new Element("state");
   }
 
   @Override
-  public boolean canShowNotification(@NotNull String toolWindowId) {
+  public boolean canShowNotification(@Nonnull String toolWindowId) {
     return false;
   }
 
@@ -215,23 +214,23 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void notifyByBalloon(@NotNull String toolWindowId, @NotNull MessageType type, @NotNull String htmlBody) {
+  public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull MessageType type, @Nonnull String htmlBody) {
 
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Balloon getToolWindowBalloon(String id) {
     return null;
   }
 
   @Override
-  public boolean isMaximized(@NotNull ToolWindow wnd) {
+  public boolean isMaximized(@Nonnull ToolWindow wnd) {
     return false;
   }
 
   @Override
-  public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
+  public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
 
   }
 }

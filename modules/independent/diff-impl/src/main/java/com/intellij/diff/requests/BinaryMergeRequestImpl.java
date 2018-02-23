@@ -28,8 +28,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,25 +38,30 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
   private static final Logger LOG = Logger.getInstance(BinaryMergeRequestImpl.class);
 
   @Nullable private final Project myProject;
-  @NotNull private final FileContent myFile;
-  @NotNull private final List<DiffContent> myContents;
+  @Nonnull
+  private final FileContent myFile;
+  @Nonnull
+  private final List<DiffContent> myContents;
 
-  @NotNull private final List<byte[]> myByteContents;
-  @NotNull private final byte[] myOriginalContent;
+  @Nonnull
+  private final List<byte[]> myByteContents;
+  @Nonnull
+  private final byte[] myOriginalContent;
 
   @Nullable private final String myTitle;
-  @NotNull private final List<String> myTitles;
+  @Nonnull
+  private final List<String> myTitles;
 
   @Nullable private final Consumer<MergeResult> myApplyCallback;
 
   public BinaryMergeRequestImpl(@Nullable Project project,
-                                @NotNull FileContent file,
-                                @NotNull byte[] originalContent,
-                                @NotNull List<DiffContent> contents,
-                                @NotNull List<byte[]> byteContents,
+                                @Nonnull FileContent file,
+                                @Nonnull byte[] originalContent,
+                                @Nonnull List<DiffContent> contents,
+                                @Nonnull List<byte[]> byteContents,
                                 @Nullable String title,
-                                @NotNull List<String> contentTitles,
-                                @Nullable Consumer<MergeResult> applyCallback) {
+                                @Nonnull List<String> contentTitles,
+                                @javax.annotation.Nullable Consumer<MergeResult> applyCallback) {
     assert byteContents.size() == 3;
     assert contents.size() == 3;
     assert contentTitles.size() == 3;
@@ -73,19 +78,19 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     myApplyCallback = applyCallback;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileContent getOutputContent() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DiffContent> getContents() {
     return myContents;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<byte[]> getByteContents() {
     return myByteContents;
@@ -97,14 +102,14 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getContentTitles() {
     return myTitles;
   }
 
   @Override
-  public void applyResult(@NotNull MergeResult result) {
+  public void applyResult(@Nonnull MergeResult result) {
     final byte[] applyContent;
     switch (result) {
       case CANCEL:

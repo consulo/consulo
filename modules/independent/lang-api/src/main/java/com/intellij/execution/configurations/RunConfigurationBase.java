@@ -26,8 +26,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ConfigurationType getType() {
     return myFactory.getType();
   }
@@ -107,7 +107,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
     return super.hashCode();
   }
 
-  public void checkRunnerSettings(@NotNull ProgramRunner runner, @Nullable RunnerSettings runnerSettings,
+  public void checkRunnerSettings(@Nonnull ProgramRunner runner, @javax.annotation.Nullable RunnerSettings runnerSettings,
                                   @Nullable ConfigurationPerRunnerSettings configurationPerRunnerSettings) throws RuntimeConfigurationException {
   }
 
@@ -115,7 +115,7 @@ public abstract class RunConfigurationBase extends UserDataHolderBase implements
   }
 
   @Override
-  public boolean canRunOn(@NotNull ExecutionTarget target) {
+  public boolean canRunOn(@Nonnull ExecutionTarget target) {
     return true;
   }
 

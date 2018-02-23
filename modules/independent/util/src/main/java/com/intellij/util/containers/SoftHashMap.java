@@ -18,7 +18,7 @@ package com.intellij.util.containers;
 import com.intellij.reference.SoftReference;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
@@ -40,29 +40,30 @@ public final class SoftHashMap<K,V> extends RefHashMap<K,V> {
   public SoftHashMap() {
   }
 
-  public SoftHashMap(@NotNull Map<K, V> t) {
+  public SoftHashMap(@Nonnull Map<K, V> t) {
     super(t);
   }
 
-  public SoftHashMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public SoftHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     super(hashingStrategy);
   }
 
-  public SoftHashMap(int initialCapacity, float loadFactor, @NotNull TObjectHashingStrategy<K> strategy) {
+  public SoftHashMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<K> strategy) {
     super(initialCapacity, loadFactor, strategy);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected <T> Key<T> createKey(@NotNull T k, @NotNull TObjectHashingStrategy<T> strategy, @NotNull ReferenceQueue<? super T> q) {
+  protected <T> Key<T> createKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
     return new SoftKey<T>(k, strategy, q);
   }
 
   private static class SoftKey<T> extends SoftReference<T> implements Key<T> {
     private final int myHash;  /* Hash code of key, stored here since the key may be tossed by the GC */
-    @NotNull private final TObjectHashingStrategy<T> myStrategy;
+    @Nonnull
+    private final TObjectHashingStrategy<T> myStrategy;
 
-    private SoftKey(@NotNull T k, @NotNull TObjectHashingStrategy<T> strategy, @NotNull ReferenceQueue<? super T> q) {
+    private SoftKey(@Nonnull T k, @Nonnull TObjectHashingStrategy<T> strategy, @Nonnull ReferenceQueue<? super T> q) {
       super(k, q);
       myStrategy = strategy;
       myHash = strategy.computeHashCode(k);

@@ -47,9 +47,9 @@ import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.actions.XWatchTransferable;
 import com.intellij.xdebugger.impl.ui.tree.nodes.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -73,7 +73,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
   private final CompositeDisposable myDisposables = new CompositeDisposable();
   private final boolean myWatchesInVariables;
 
-  public XWatchesViewImpl(@NotNull XDebugSessionImpl session, boolean watchesInVariables) {
+  public XWatchesViewImpl(@Nonnull XDebugSessionImpl session, boolean watchesInVariables) {
     super(session);
     myWatchesInVariables = watchesInVariables;
 
@@ -94,7 +94,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
     new AnAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
         if (contents instanceof List) {
           for (Object item : ((List)contents)){
@@ -129,7 +129,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     final Alarm editAlarm = new Alarm();
     final ClickListener mouseListener = new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         if (!SwingUtilities.isLeftMouseButton(event) ||
             ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) !=0) ) {
           return false;
@@ -167,12 +167,12 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
     final FocusListener focusListener = new FocusListener() {
       @Override
-      public void focusGained(@NotNull FocusEvent e) {
+      public void focusGained(@Nonnull FocusEvent e) {
         quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
       }
 
       @Override
-      public void focusLost(@NotNull FocusEvent e) {
+      public void focusLost(@Nonnull FocusEvent e) {
         editAlarm.cancelAllRequests();
       }
     };
@@ -180,7 +180,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
     final TreeSelectionListener selectionListener = new TreeSelectionListener() {
       @Override
-      public void valueChanged(@NotNull TreeSelectionEvent e) {
+      public void valueChanged(@Nonnull TreeSelectionEvent e) {
         quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
       }
     };
@@ -214,7 +214,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     return false;
   }
 
-  private void executeAction(@NotNull String watch) {
+  private void executeAction(@Nonnull String watch) {
     AnAction action = ActionManager.getInstance().getAction(watch);
     Presentation presentation = action.getTemplatePresentation().clone();
     DataContext context = DataManager.getInstance().getDataContext(getTree());
@@ -225,7 +225,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
   }
 
   @Override
-  public void addWatchExpression(@NotNull XExpression expression, int index, final boolean navigateToWatchNode) {
+  public void addWatchExpression(@Nonnull XExpression expression, int index, final boolean navigateToWatchNode) {
     XDebugSession session = getSession(getTree());
     myRootNode.addWatchExpression(session != null ? session.getCurrentStackFrame() : null, expression, index, navigateToWatchNode);
     updateSessionData();
@@ -253,7 +253,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
   }
 
-  @NotNull
+  @Nonnull
   private XExpression[] getExpressions() {
     XDebuggerTree tree = getTree();
     XDebugSession session = getSession(tree);
@@ -276,7 +276,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (XWatchesView.DATA_KEY == dataId) {
       return this;
     }

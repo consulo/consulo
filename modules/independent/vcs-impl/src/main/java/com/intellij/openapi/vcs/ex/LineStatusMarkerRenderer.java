@@ -29,8 +29,8 @@ import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -39,16 +39,17 @@ import java.util.List;
 import static com.intellij.diff.util.DiffDrawUtil.lineToY;
 
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
-  @NotNull protected final Range myRange;
+  @Nonnull
+  protected final Range myRange;
 
-  public LineStatusMarkerRenderer(@NotNull Range range) {
+  public LineStatusMarkerRenderer(@Nonnull Range range) {
     myRange = range;
   }
 
-  @NotNull
-  public static RangeHighlighter createRangeHighlighter(@NotNull Range range,
-                                                        @NotNull TextRange textRange,
-                                                        @NotNull MarkupModel markupModel) {
+  @Nonnull
+  public static RangeHighlighter createRangeHighlighter(@Nonnull Range range,
+                                                        @Nonnull TextRange textRange,
+                                                        @Nonnull MarkupModel markupModel) {
     TextAttributes attributes = getTextAttributes(range);
 
     final RangeHighlighter highlighter = markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(),
@@ -64,9 +65,9 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     return highlighter;
   }
 
-  @NotNull
-  public static LineMarkerRenderer createRenderer(@NotNull Range range,
-                                                  @Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder) {
+  @Nonnull
+  public static LineMarkerRenderer createRenderer(@Nonnull Range range,
+                                                  @javax.annotation.Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder) {
     return new LineStatusMarkerRenderer(range) {
       @Override
       public boolean canDoAction(MouseEvent e) {
@@ -81,8 +82,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     };
   }
 
-  @NotNull
-  public static LineMarkerRenderer createRenderer(int line1, int line2, @NotNull Color color, @Nullable String tooltip,
+  @Nonnull
+  public static LineMarkerRenderer createRenderer(int line1, int line2, @Nonnull Color color, @javax.annotation.Nullable String tooltip,
                                                   @Nullable PairConsumer<Editor, MouseEvent> action) {
     return new ActiveGutterRenderer() {
       @Override
@@ -97,7 +98,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         }
       }
 
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public String getTooltipText() {
         return tooltip;
@@ -115,8 +116,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     };
   }
 
-  @NotNull
-  private static TextAttributes getTextAttributes(@NotNull final Range range) {
+  @Nonnull
+  private static TextAttributes getTextAttributes(@Nonnull final Range range) {
     return new TextAttributes() {
       @Override
       public Color getErrorStripeColor() {
@@ -125,8 +126,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     };
   }
 
-  @NotNull
-  private static String getTooltipText(@NotNull Range range) {
+  @Nonnull
+  private static String getTooltipText(@Nonnull Range range) {
     if (range.getLine1() == range.getLine2()) {
       if (range.getVcsLine1() + 1 == range.getVcsLine2()) {
         return VcsBundle.message("tooltip.text.line.before.deleted", range.getLine1() + 1);
@@ -194,7 +195,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  private static void paintRect(@NotNull Graphics g, @Nullable Color color, @Nullable Color borderColor, int x1, int y1, int x2, int y2) {
+  private static void paintRect(@Nonnull Graphics g, @javax.annotation.Nullable Color color, @Nullable Color borderColor, int x1, int y1, int x2, int y2) {
     if (color != null) {
       g.setColor(color);
       g.fillRect(x1, y1, x2 - x1, y2 - y1);
@@ -207,8 +208,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @NotNull
-  public static Rectangle getMarkerArea(@NotNull Editor editor, @NotNull Rectangle r, int line1, int line2) {
+  @Nonnull
+  public static Rectangle getMarkerArea(@Nonnull Editor editor, @Nonnull Rectangle r, int line1, int line2) {
     EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
     int x = r.x + JBUI.scale(1); // leave 1px for brace highlighters
     int endX = gutter.getWhitespaceSeparatorOffset();
@@ -217,12 +218,12 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     return new Rectangle(x, y, endX - x, endY - y);
   }
 
-  public static boolean isInsideMarkerArea(@NotNull MouseEvent e) {
+  public static boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
     final EditorGutterComponentEx gutter = (EditorGutterComponentEx)e.getComponent();
     return e.getX() > gutter.getLineMarkerFreePaintersAreaOffset();
   }
 
-  private static void paintTriangle(@NotNull Graphics g, @Nullable Color color, @Nullable Color borderColor, int x1, int x2, int y) {
+  private static void paintTriangle(@Nonnull Graphics g, @javax.annotation.Nullable Color color, @javax.annotation.Nullable Color borderColor, int x1, int x2, int y) {
     int size = JBUI.scale(4);
 
     final int[] xPoints = new int[]{x1, x1, x2};
@@ -238,8 +239,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @Nullable
-  private static Color getGutterColor(@NotNull Range.InnerRange range, @Nullable Editor editor) {
+  @javax.annotation.Nullable
+  private static Color getGutterColor(@Nonnull Range.InnerRange range, @javax.annotation.Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -256,8 +257,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @Nullable
-  private static Color getErrorStripeColor(@NotNull Range range, @Nullable Editor editor) {
+  @javax.annotation.Nullable
+  private static Color getErrorStripeColor(@Nonnull Range range, @javax.annotation.Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -272,8 +273,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @Nullable
-  private static Color getGutterColor(@NotNull Range range, @Nullable Editor editor) {
+  @javax.annotation.Nullable
+  private static Color getGutterColor(@Nonnull Range range, @javax.annotation.Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -288,12 +289,12 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @Nullable
-  private static Color getGutterBorderColor(@Nullable Editor editor) {
+  @javax.annotation.Nullable
+  private static Color getGutterBorderColor(@javax.annotation.Nullable Editor editor) {
     return getColorScheme(editor).getColor(EditorColors.BORDER_LINES_COLOR);
   }
 
-  @NotNull
+  @Nonnull
   private static EditorColorsScheme getColorScheme(@Nullable Editor editor) {
     return editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme();
   }

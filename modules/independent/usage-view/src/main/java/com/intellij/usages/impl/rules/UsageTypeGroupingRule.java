@@ -24,8 +24,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.SingleParentUsageGroupingRule;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -35,7 +35,7 @@ import javax.swing.*;
 public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
   @Nullable
   @Override
-  protected UsageGroup getParentGroupFor(@NotNull Usage usage, @NotNull UsageTarget[] targets) {
+  protected UsageGroup getParentGroupFor(@Nonnull Usage usage, @Nonnull UsageTarget[] targets) {
     if (usage instanceof PsiElementUsage) {
       PsiElementUsage elementUsage = (PsiElementUsage)usage;
 
@@ -60,8 +60,8 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     return null;
   }
 
-  @Nullable
-  private static UsageType getUsageType(PsiElement element, @NotNull UsageTarget[] targets) {
+  @javax.annotation.Nullable
+  private static UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
     if (element == null) return null;
 
     if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) { return UsageType.COMMENT_USAGE; }
@@ -86,7 +86,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
   private static class UsageTypeGroup implements UsageGroup {
     private final UsageType myUsageType;
 
-    private UsageTypeGroup(@NotNull UsageType usageType) {
+    private UsageTypeGroup(@Nonnull UsageType usageType) {
       myUsageType = usageType;
     }
 
@@ -100,7 +100,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(@Nullable UsageView view) {
       return view == null ? myUsageType.toString() : myUsageType.toString(view.getPresentation());
     }
@@ -123,7 +123,7 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     }
 
     @Override
-    public int compareTo(@NotNull UsageGroup usageGroup) {
+    public int compareTo(@Nonnull UsageGroup usageGroup) {
       return getText(null).compareTo(usageGroup.getText(null));
     }
 

@@ -16,19 +16,20 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.util.diff.Diff;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("ConstantConditions")
 class DiffChangeDiffIterable extends ChangeDiffIterableBase {
-  @Nullable private final Diff.Change myChange;
+  @javax.annotation.Nullable
+  private final Diff.Change myChange;
 
   public DiffChangeDiffIterable(@Nullable Diff.Change change, int length1, int length2) {
     super(length1, length2);
     myChange = change;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ChangeIterable createChangeIterable() {
     return new DiffChangeChangeIterable(myChange);

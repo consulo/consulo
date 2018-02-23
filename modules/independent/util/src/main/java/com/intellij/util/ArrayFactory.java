@@ -19,10 +19,10 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface ArrayFactory<T> {
-  @NotNull
+  @Nonnull
   T[] create(int count);
 }

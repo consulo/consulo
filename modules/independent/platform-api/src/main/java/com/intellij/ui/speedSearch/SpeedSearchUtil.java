@@ -25,7 +25,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +41,8 @@ public final class SpeedSearchUtil {
   private SpeedSearchUtil() {
   }
 
-  public static void applySpeedSearchHighlighting(@NotNull JComponent speedSearchEnabledComponent,
-                                                  @NotNull SimpleColoredComponent coloredComponent,
+  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent,
+                                                  @Nonnull SimpleColoredComponent coloredComponent,
                                                   boolean mainTextOnly,
                                                   boolean selected) {
     SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
@@ -84,11 +84,11 @@ public final class SpeedSearchUtil {
     }
   }
 
-  public static void appendFragmentsForSpeedSearch(@NotNull JComponent speedSearchEnabledComponent,
-                                                   @NotNull String text,
-                                                   @NotNull SimpleTextAttributes attributes,
+  public static void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
+                                                   @Nonnull String text,
+                                                   @Nonnull SimpleTextAttributes attributes,
                                                    boolean selected,
-                                                   @NotNull SimpleColoredComponent simpleColoredComponent) {
+                                                   @Nonnull SimpleColoredComponent simpleColoredComponent) {
     final SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     if (speedSearch != null) {
       final Iterable<TextRange> fragments = speedSearch.matchingFragments(text);
@@ -105,9 +105,9 @@ public final class SpeedSearchUtil {
     simpleColoredComponent.append(text, attributes);
   }
 
-  public static void appendColoredFragmentForMatcher(@NotNull String text,
+  public static void appendColoredFragmentForMatcher(@Nonnull String text,
                                                      SimpleColoredComponent component,
-                                                     @NotNull final SimpleTextAttributes attributes,
+                                                     @Nonnull final SimpleTextAttributes attributes,
                                                      Matcher matcher,
                                                      Color selectedBg,
                                                      boolean selected) {

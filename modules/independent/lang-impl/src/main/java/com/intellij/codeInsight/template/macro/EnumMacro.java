@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.Result;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -39,19 +39,19 @@ public class EnumMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@NotNull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
     if (params.length == 0) return null;
     return params[0].calculateResult(context);
   }
 
   @Override
-  public Result calculateQuickResult(@NotNull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
     if (params.length == 0) return null;
     return params[0].calculateQuickResult(context);
   }
 
   @Override
-  public LookupElement[] calculateLookupItems(@NotNull Expression[] params, ExpressionContext context) {
+  public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
     if (params.length ==0) return null;
     Set<LookupElement> set = new LinkedHashSet<LookupElement>();
 

@@ -18,8 +18,8 @@ package com.intellij.execution.testframework.sm.runner.history;
 import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
@@ -40,10 +40,10 @@ public interface ImportTestOutputExtension {
    * @return handler if xml contains tests output in recognised format,
    *         otherwise null
    */
-  @Nullable
+  @javax.annotation.Nullable
   DefaultHandler createHandler(final Reader reader, GeneralTestEventsProcessor processor) throws IOException;
 
-  @NotNull
+  @Nonnull
   static DefaultHandler findHandler(final Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
     for (ImportTestOutputExtension extension : Extensions.getExtensions(EP_NAME)) {
       Reader reader = readerSupplier.get();

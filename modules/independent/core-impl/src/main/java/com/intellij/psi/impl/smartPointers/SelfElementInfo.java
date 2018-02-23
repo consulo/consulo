@@ -26,8 +26,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -43,10 +43,10 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   private int myStartOffset;
   private int myEndOffset;
 
-  SelfElementInfo(@NotNull Project project,
+  SelfElementInfo(@Nonnull Project project,
                   @Nullable ProperTextRange range,
-                  @NotNull Identikit identikit,
-                  @NotNull PsiFile containingFile,
+                  @Nonnull Identikit identikit,
+                  @Nonnull PsiFile containingFile,
                   boolean forInjected) {
     myForInjected = forInjected;
     myIdentikit = identikit;
@@ -56,7 +56,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     setRange(range);
   }
 
-  void switchToAnchor(@NotNull PsiElement element) {
+  void switchToAnchor(@Nonnull PsiElement element) {
     Pair<Identikit.ByAnchor, PsiElement> pair = Identikit.withAnchor(element, myIdentikit.getFileLanguage());
     if (pair != null) {
       assert pair.first.hashCode() == myIdentikit.hashCode();
@@ -131,7 +131,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  public static PsiFile restoreFileFromVirtual(@NotNull final VirtualFile virtualFile, @NotNull final Project project, @Nullable final Language language) {
+  public static PsiFile restoreFileFromVirtual(@Nonnull final VirtualFile virtualFile, @Nonnull final Project project, @Nullable final Language language) {
     return ApplicationManager.getApplication().runReadAction((NullableComputable<PsiFile>)() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
@@ -146,7 +146,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  public static PsiDirectory restoreDirectoryFromVirtual(final VirtualFile virtualFile, @NotNull final Project project) {
+  public static PsiDirectory restoreDirectoryFromVirtual(final VirtualFile virtualFile, @Nonnull final Project project) {
     if (virtualFile == null) return null;
 
     return ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>)() -> {
@@ -179,7 +179,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull final SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other) {
     if (other instanceof SelfElementInfo) {
       final SelfElementInfo otherInfo = (SelfElementInfo)other;
       if (!getVirtualFile().equals(other.getVirtualFile()) || myIdentikit != otherInfo.myIdentikit) return false;
@@ -196,7 +196,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final VirtualFile getVirtualFile() {
     return myFile;
   }
@@ -220,7 +220,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return calcPsiRange();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final Project getProject() {
     return myManager.getProject();

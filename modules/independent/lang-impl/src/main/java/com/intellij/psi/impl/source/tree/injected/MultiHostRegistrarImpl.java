@@ -58,8 +58,8 @@ import consulo.lang.util.LanguageVersionUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   private final PsiFile myHostPsiFile;
   private ReferenceInjector myReferenceInjector;
 
-  public MultiHostRegistrarImpl(@NotNull Project project, @NotNull PsiFile hostPsiFile, @NotNull PsiElement contextElement) {
+  public MultiHostRegistrarImpl(@Nonnull Project project, @Nonnull PsiFile hostPsiFile, @Nonnull PsiElement contextElement) {
     myProject = project;
     myContextElement = contextElement;
     myHostPsiFile = PsiUtilCore.getTemplateLanguageFile(hostPsiFile);
@@ -100,20 +100,20 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement getContextElement() {
     return myContextElement;
   }
 
   @Override
-  @NotNull
-  public MultiHostRegistrar startInjecting(@NotNull Language language) {
+  @Nonnull
+  public MultiHostRegistrar startInjecting(@Nonnull Language language) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language));
   }
 
   @Override
-  @NotNull
-  public MultiHostRegistrar startInjecting(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public MultiHostRegistrar startInjecting(@Nonnull LanguageVersion languageVersion) {
     escapers = new SmartList<LiteralTextEscaper<? extends PsiLanguageInjectionHost>>();
     shreds = new SmartList<PsiLanguageInjectionHost.Shred>();
     outChars = new StringBuilder();
@@ -149,11 +149,11 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MultiHostRegistrar addPlace(@NonNls @Nullable String prefix,
                                      @NonNls @Nullable String suffix,
-                                     @NotNull PsiLanguageInjectionHost host,
-                                     @NotNull TextRange rangeInsideHost) {
+                                     @Nonnull PsiLanguageInjectionHost host,
+                                     @Nonnull TextRange rangeInsideHost) {
 
     PsiFile containingFile = PsiUtilCore.getTemplateLanguageFile(host);
     assert containingFile == myHostPsiFile : exceptionContext("Trying to inject into foreign file: " + containingFile);
@@ -307,8 +307,8 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     }
   }
 
-  @NotNull
-  private static DocumentEx createDocument(@NotNull LightVirtualFile virtualFile) {
+  @Nonnull
+  private static DocumentEx createDocument(@Nonnull LightVirtualFile virtualFile) {
     CharSequence content = virtualFile.getContent();
     DocumentImpl document = new DocumentImpl(content, StringUtil.indexOf(content, '\r') >= 0, false);
     FileDocumentManagerImpl.registerDocument(document, virtualFile);
@@ -316,11 +316,11 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   }
 
   // returns true if shreds were set, false if old ones were reused
-  private static boolean cacheEverything(@NotNull Place place,
-                                         @NotNull DocumentWindowImpl documentWindow,
-                                         @NotNull InjectedFileViewProvider viewProvider,
-                                         @NotNull PsiFile psiFile,
-                                         @NotNull SmartPsiElementPointer<PsiLanguageInjectionHost> pointer) {
+  private static boolean cacheEverything(@Nonnull Place place,
+                                         @Nonnull DocumentWindowImpl documentWindow,
+                                         @Nonnull InjectedFileViewProvider viewProvider,
+                                         @Nonnull PsiFile psiFile,
+                                         @Nonnull SmartPsiElementPointer<PsiLanguageInjectionHost> pointer) {
     FileDocumentManagerImpl.registerDocument(documentWindow, viewProvider.getVirtualFile());
 
     DebugUtil.startPsiModification("MultiHostRegistrar cacheEverything");
@@ -398,9 +398,9 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
   }
 
 
-  private static void patchLeaves(@NotNull ASTNode parsedNode,
-                                  @NotNull List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers,
-                                  @NotNull Place shreds) {
+  private static void patchLeaves(@Nonnull ASTNode parsedNode,
+                                  @Nonnull List<LiteralTextEscaper<? extends PsiLanguageInjectionHost>> escapers,
+                                  @Nonnull Place shreds) {
     LeafPatcher patcher = new LeafPatcher(shreds, escapers);
     ((TreeElement)parsedNode).acceptTree(patcher);
 
@@ -564,7 +564,7 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     return String.valueOf(result);
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getHostPsiFile() {
     return myHostPsiFile;
   }
@@ -573,8 +573,8 @@ public class MultiHostRegistrarImpl implements MultiHostRegistrar, ModificationT
     return myReferenceInjector;
   }
 
-  @NotNull
-  public static DocumentWindow freezeWindow(@NotNull DocumentWindowImpl window) {
+  @Nonnull
+  public static DocumentWindow freezeWindow(@Nonnull DocumentWindowImpl window) {
     Place shreds = window.getShreds();
     Project project = shreds.getHostPointer().getProject();
     DocumentEx delegate = ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(project)).getLastCommittedDocument(window.getDelegate());

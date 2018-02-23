@@ -28,7 +28,6 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,7 +137,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     return service.getEditorField(PlainTextLanguage.INSTANCE, project, features);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static ActionGroup getToolbarActions() {
     return (ActionGroup)ActionManager.getInstance().getAction("Vcs.MessageActionGroup");
   }

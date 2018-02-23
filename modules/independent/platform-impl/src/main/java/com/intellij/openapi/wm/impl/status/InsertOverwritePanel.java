@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -34,12 +34,12 @@ public class InsertOverwritePanel extends EditorBasedWidget implements StatusBar
     super(project);
   }
 
-  @NotNull
+  @Nonnull
   public String ID() {
     return "InsertOverwrite";
   }
 
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return this;
   }
 
@@ -49,7 +49,7 @@ public class InsertOverwritePanel extends EditorBasedWidget implements StatusBar
   }
 
 
-  @NotNull
+  @Nonnull
   public String getText() {
     final Editor editor = getEditor();
     if (editor != null) {
@@ -64,7 +64,7 @@ public class InsertOverwritePanel extends EditorBasedWidget implements StatusBar
     return "";
   }
 
-  @NotNull
+  @Nonnull
   public String getMaxPossibleText() {
     return UIBundle.message("status.bar.overwrite.status.text");
   }

@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile{
   private final FileType myFileType;
@@ -32,7 +32,7 @@ public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFil
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor){
     visitor.visitPlainTextFile(this);
   }
 
@@ -42,13 +42,13 @@ public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFil
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return myFileType;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this,PsiPlainTextFile.class);
   }

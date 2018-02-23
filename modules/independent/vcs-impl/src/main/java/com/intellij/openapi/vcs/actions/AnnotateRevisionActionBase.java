@@ -21,8 +21,8 @@ import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.concurrent.Semaphore;
@@ -30,34 +30,34 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AnnotateRevisionActionBase extends AnAction {
-  public AnnotateRevisionActionBase(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public AnnotateRevisionActionBase(@javax.annotation.Nullable String text, @javax.annotation.Nullable String description, @javax.annotation.Nullable Icon icon) {
     super(text, description, icon);
   }
 
-  @Nullable
-  protected abstract AbstractVcs getVcs(@NotNull AnActionEvent e);
+  @javax.annotation.Nullable
+  protected abstract AbstractVcs getVcs(@Nonnull AnActionEvent e);
 
   @Nullable
-  protected abstract VirtualFile getFile(@NotNull AnActionEvent e);
+  protected abstract VirtualFile getFile(@Nonnull AnActionEvent e);
 
   @Nullable
-  protected abstract VcsFileRevision getFileRevision(@NotNull AnActionEvent e);
+  protected abstract VcsFileRevision getFileRevision(@Nonnull AnActionEvent e);
 
-  @Nullable
-  protected Editor getEditor(@NotNull AnActionEvent e) {
+  @javax.annotation.Nullable
+  protected Editor getEditor(@Nonnull AnActionEvent e) {
     return null;
   }
 
-  protected int getAnnotatedLine(@NotNull AnActionEvent e) {
+  protected int getAnnotatedLine(@Nonnull AnActionEvent e) {
     Editor editor = getEditor(e);
     return editor == null ? 0 : editor.getCaretModel().getLogicalPosition().line;
   }
 
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e));
   }
 
-  public boolean isEnabled(@NotNull AnActionEvent e) {
+  public boolean isEnabled(@Nonnull AnActionEvent e) {
     if (e.getProject() == null) return false;
 
     VcsFileRevision fileRevision = getFileRevision(e);
@@ -78,7 +78,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final VcsFileRevision fileRevision = getFileRevision(e);
     final VirtualFile file = getFile(e);
     final AbstractVcs vcs = getVcs(e);
@@ -103,7 +103,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     AtomicBoolean shouldOpenEditorInSync = new AtomicBoolean(true);
 
     ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsBundle.message("retrieving.annotations"), true) {
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           FileAnnotation fileAnnotation = annotationProvider.annotate(file, fileRevision);
 
@@ -153,7 +153,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     }
   }
 
-  private static int translateLine(@Nullable CharSequence oldContent, @Nullable CharSequence newContent, int line) {
+  private static int translateLine(@javax.annotation.Nullable CharSequence oldContent, @javax.annotation.Nullable CharSequence newContent, int line) {
     if (oldContent == null || newContent == null) return line;
     try {
       return Diff.translateLine(oldContent, newContent, line, true);

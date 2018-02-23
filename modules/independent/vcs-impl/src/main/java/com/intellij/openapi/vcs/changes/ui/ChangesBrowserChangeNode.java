@@ -26,8 +26,8 @@ import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -35,10 +35,12 @@ import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> implements TreeLinkMouseListener.HaveTooltip {
 
-  @NotNull private final Project myProject;
-  @Nullable private final ChangeNodeDecorator myDecorator;
+  @Nonnull
+  private final Project myProject;
+  @javax.annotation.Nullable
+  private final ChangeNodeDecorator myDecorator;
 
-  protected ChangesBrowserChangeNode(@NotNull Project project, @NotNull Change userObject, @Nullable ChangeNodeDecorator decorator) {
+  protected ChangesBrowserChangeNode(@Nonnull Project project, @Nonnull Change userObject, @Nullable ChangeNodeDecorator decorator) {
     super(userObject);
     myProject = project;
     myDecorator = decorator;
@@ -55,7 +57,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
   }
 
   @Override
-  public void render(@NotNull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     Change change = getUserObject();
     FilePath filePath = ChangesUtil.getFilePath(change);
     VirtualFile file = filePath.getVirtualFile();
@@ -94,8 +96,8 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     }
   }
 
-  @Nullable
-  private Icon getIcon(@NotNull Change change, @NotNull FilePath filePath) {
+  @javax.annotation.Nullable
+  private Icon getIcon(@Nonnull Change change, @Nonnull FilePath filePath) {
     Icon result = change.getAdditionalIcon();
 
     if (result == null) {
@@ -105,7 +107,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     return result;
   }
 
-  private void appendSwitched(@NotNull ChangesBrowserNodeRenderer renderer, @Nullable VirtualFile file) {
+  private void appendSwitched(@Nonnull ChangesBrowserNodeRenderer renderer, @javax.annotation.Nullable VirtualFile file) {
     if (file != null && !myProject.isDefault()) {
       String branch = ChangeListManager.getInstance(myProject).getSwitchedBranch(file);
       if (branch != null) {

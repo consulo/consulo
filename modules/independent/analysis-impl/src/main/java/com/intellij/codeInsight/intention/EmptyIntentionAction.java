@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -34,24 +34,24 @@ import java.util.List;
 public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements LowPriorityAction, Iconable {
   private final String myName;
 
-  public EmptyIntentionAction(@NotNull String name) {
+  public EmptyIntentionAction(@Nonnull String name) {
     myName = name;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("inspection.options.action.text", myName);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return myName;
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true; //edit inspection settings is always enabled
   }
 
@@ -70,7 +70,7 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
 
   // used by TeamCity plugin
   @Deprecated
-  public EmptyIntentionAction(@NotNull final String name, @NotNull List<IntentionAction> options) {
+  public EmptyIntentionAction(@Nonnull final String name, @Nonnull List<IntentionAction> options) {
     myName = name;
   }
 

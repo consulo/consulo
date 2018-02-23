@@ -31,7 +31,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,14 +50,14 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     e.getPresentation().setEnabled(info.externalProject != null);
   }
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
     if (info.settings == null || info.localSettings == null || info.externalProject == null || info.ideProject == null
         || info.externalSystemId == null)

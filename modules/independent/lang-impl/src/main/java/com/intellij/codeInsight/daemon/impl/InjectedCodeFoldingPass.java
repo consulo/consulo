@@ -25,7 +25,7 @@ import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements DumbAware {
@@ -34,7 +34,7 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements Dumb
   private final Editor myEditor;
   private final PsiFile myFile;
 
-  InjectedCodeFoldingPass(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  InjectedCodeFoldingPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     super(project, editor.getDocument(), false);
     myEditor = editor;
     myFile = file;
@@ -42,7 +42,7 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass implements Dumb
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
     Runnable runnable = FoldingUpdate.updateInjectedFoldRegions(myEditor, myFile, firstTime);
     synchronized (this) {

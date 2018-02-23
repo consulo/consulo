@@ -1,8 +1,8 @@
 package com.intellij.execution.filters;
 
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 

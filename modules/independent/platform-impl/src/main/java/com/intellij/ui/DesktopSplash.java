@@ -20,8 +20,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import consulo.application.ApplicationProperties;
 import consulo.spash.AnimatedLogoLabel;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

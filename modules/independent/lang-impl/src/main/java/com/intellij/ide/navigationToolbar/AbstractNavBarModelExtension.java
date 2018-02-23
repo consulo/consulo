@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public abstract class AbstractNavBarModelExtension implements NavBarModelExtensi
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> additionalRoots(Project project) {
     return Collections.emptyList();

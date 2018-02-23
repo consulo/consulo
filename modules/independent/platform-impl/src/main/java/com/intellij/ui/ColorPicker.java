@@ -29,8 +29,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -86,7 +86,7 @@ public class ColorPicker extends JPanel implements ColorListener, DocumentListen
     }
   };
 
-  public ColorPicker(@NotNull Disposable parent, @Nullable Color color, boolean enableOpacity) {
+  public ColorPicker(@Nonnull Disposable parent, @Nullable Color color, boolean enableOpacity) {
     this(parent, color, true, enableOpacity, new ColorPickerListener[0], false);
   }
 

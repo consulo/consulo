@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Base interface for a single step (submenu) of a popup, displaying a list of items or a single level of a tree structure.

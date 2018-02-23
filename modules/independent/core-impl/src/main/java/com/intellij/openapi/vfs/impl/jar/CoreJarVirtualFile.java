@@ -22,8 +22,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +40,7 @@ public class CoreJarVirtualFile extends VirtualFile {
   private final VirtualFile myParent;
   private List<VirtualFile> myChildren = null;
 
-  public CoreJarVirtualFile(@NotNull CoreJarHandler handler, @NotNull String name, @NotNull FileAttributes entry, @Nullable CoreJarVirtualFile parent) {
+  public CoreJarVirtualFile(@Nonnull CoreJarHandler handler, @Nonnull String name, @Nonnull FileAttributes entry, @Nullable CoreJarVirtualFile parent) {
     myHandler = handler;
     myName = name;
     myEntry = entry;
@@ -54,20 +54,20 @@ public class CoreJarVirtualFile extends VirtualFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myHandler.getFileSystem();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPath() {
     if (myParent == null) {
       return FileUtil.toSystemIndependentName(myHandler.getFile().getPath()) + "!/";
@@ -112,13 +112,13 @@ public class CoreJarVirtualFile extends VirtualFile {
     return myChildren.toArray(new VirtualFile[myChildren.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException("JarFileSystem is read-only");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public byte[] contentsToByteArray() throws IOException {
     Couple<String> pair = ((CoreJarFileSystem)getFileSystem()).splitPath(getPath());

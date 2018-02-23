@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

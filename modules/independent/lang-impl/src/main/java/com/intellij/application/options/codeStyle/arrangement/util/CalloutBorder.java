@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.util;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -28,7 +28,8 @@ import java.awt.*;
  */
 public class CalloutBorder implements Border {
 
-  @NotNull private static final Insets INSETS = new Insets(
+  @Nonnull
+  private static final Insets INSETS = new Insets(
     ArrangementConstants.CALLOUT_BORDER_HEIGHT,
     ArrangementConstants.HORIZONTAL_PADDING,
     ArrangementConstants.VERTICAL_PADDING,

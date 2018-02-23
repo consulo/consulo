@@ -19,14 +19,14 @@ package com.intellij.vcs.log.graph.impl.print.elements;
 import com.intellij.vcs.log.graph.NodePrintElement;
 import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.api.printer.PrintElementManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SimplePrintElementImpl extends PrintElementWithGraphElement implements NodePrintElement {
 
   public SimplePrintElementImpl(int rowIndex,
                                 int positionInCurrentRow,
-                                @NotNull GraphElement graphElement,
-                                @NotNull PrintElementManager printElementManager) {
+                                @Nonnull GraphElement graphElement,
+                                @Nonnull PrintElementManager printElementManager) {
     super(rowIndex, positionInCurrentRow, graphElement, printElementManager);
   }
 

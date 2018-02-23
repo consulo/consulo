@@ -22,8 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -36,19 +35,19 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
     myHolder = holder;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextAttributesScheme getColorsScheme() {
     return myHolder.getColorsScheme();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiFile getContextFile() {
     return myHolder.getContextFile();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myHolder.getProject();
@@ -60,7 +59,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   }
 
   @Override
-  public boolean add(@Nullable HighlightInfo info) {
+  public boolean add(@javax.annotation.Nullable HighlightInfo info) {
     if (info == null) return false;
     PsiElement psiElement = info.psiElement;
     if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement,false)) {
@@ -89,7 +88,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
     return myHolder.get(i);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnnotationSession getAnnotationSession() {
     return myHolder.getAnnotationSession();

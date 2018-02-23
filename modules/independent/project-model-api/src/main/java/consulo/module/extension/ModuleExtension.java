@@ -22,7 +22,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.util.messages.Topic;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,20 +33,20 @@ public interface ModuleExtension<T extends ModuleExtension> extends PersistentSt
 
   Topic<ModuleExtensionChangeListener> CHANGE_TOPIC = Topic.create("module extension change topic", ModuleExtensionChangeListener.class);
 
-  @NotNull
+  @Nonnull
   String getId();
 
   boolean isEnabled();
 
-  @NotNull
+  @Nonnull
   Module getModule();
 
-  @NotNull
+  @Nonnull
   ModuleRootLayer getModuleRootLayer();
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
   @RequiredReadAction
-  void commit(@NotNull T mutableModuleExtension);
+  void commit(@Nonnull T mutableModuleExtension);
 }

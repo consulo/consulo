@@ -49,8 +49,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate.CANNOT_JOIN;
 
@@ -63,15 +63,15 @@ public class JoinLinesHandler extends EditorActionHandler {
     myOriginalHandler = originalHandler;
   }
 
-  @NotNull
-  private static TextRange findStartAndEnd(@NotNull CharSequence text, int start, int end, int maxoffset) {
+  @Nonnull
+  private static TextRange findStartAndEnd(@Nonnull CharSequence text, int start, int end, int maxoffset) {
     while (start > 0 && (text.charAt(start) == ' ' || text.charAt(start) == '\t')) start--;
     while (end < maxoffset && (text.charAt(end) == ' ' || text.charAt(end) == '\t')) end++;
     return new TextRange(start, end);
   }
 
   @Override
-  public void doExecute(@NotNull final Editor editor, @Nullable Caret caret, final DataContext dataContext) {
+  public void doExecute(@Nonnull final Editor editor, @Nullable Caret caret, final DataContext dataContext) {
     assert caret != null;
     if (!(editor.getDocument() instanceof DocumentEx)) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -136,10 +136,10 @@ public class JoinLinesHandler extends EditorActionHandler {
     }
   }
 
-  private static void doJoinTwoLines(@NotNull DocumentEx doc,
-                                     @NotNull Project project,
-                                     @NotNull PsiDocumentManager docManager,
-                                     @NotNull PsiFile psiFile,
+  private static void doJoinTwoLines(@Nonnull DocumentEx doc,
+                                     @Nonnull Project project,
+                                     @Nonnull PsiDocumentManager docManager,
+                                     @Nonnull PsiFile psiFile,
                                      int startLine,
                                      Ref<Integer> caretRestoreOffset) {
     if (startLine >= doc.getLineCount() - 1) return;

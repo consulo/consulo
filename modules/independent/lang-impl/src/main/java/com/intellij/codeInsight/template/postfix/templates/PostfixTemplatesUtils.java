@@ -24,17 +24,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class PostfixTemplatesUtils {
   private PostfixTemplatesUtils() {
   }
 
   @Nullable
-  public static TextRange surround(@NotNull Surrounder surrounder,
-                                   @NotNull Editor editor,
-                                   @NotNull PsiElement expr) {
+  public static TextRange surround(@Nonnull Surrounder surrounder,
+                                   @Nonnull Editor editor,
+                                   @Nonnull PsiElement expr) {
     Project project = expr.getProject();
     PsiElement[] elements = {expr};
     if (surrounder.isApplicable(elements)) {
@@ -46,12 +46,12 @@ public abstract class PostfixTemplatesUtils {
     return null;
   }
 
-  public static void showErrorHint(@NotNull Project project, @NotNull Editor editor) {
+  public static void showErrorHint(@Nonnull Project project, @Nonnull Editor editor) {
     CommonRefactoringUtil.showErrorHint(project, editor, "Can't expand postfix template", "Can't expand postfix template", "");
   }
 
-  @NotNull
-  public static String getLangForProvider(@NotNull PostfixTemplateProvider provider) {
+  @Nonnull
+  public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
     LanguageExtensionPoint[] extensions = new ExtensionPointName<LanguageExtensionPoint>(LanguagePostfixTemplate.EP_NAME).getExtensions();
 
     for (LanguageExtensionPoint extension : extensions) {

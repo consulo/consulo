@@ -32,7 +32,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.LightweightHint;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -43,7 +43,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement container = null;

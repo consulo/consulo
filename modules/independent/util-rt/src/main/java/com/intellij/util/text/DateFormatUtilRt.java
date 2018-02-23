@@ -15,7 +15,7 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,8 +24,8 @@ import java.util.Locale;
 public class DateFormatUtilRt {
   private static final SimpleDateFormat BUILD_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy HH:ss", Locale.US);
 
-  @NotNull
-  public static String formatBuildDate(@NotNull Calendar cal) {
+  @Nonnull
+  public static String formatBuildDate(@Nonnull Calendar cal) {
     return BUILD_DATE_FORMAT.format(cal.getTime());
   }
 }

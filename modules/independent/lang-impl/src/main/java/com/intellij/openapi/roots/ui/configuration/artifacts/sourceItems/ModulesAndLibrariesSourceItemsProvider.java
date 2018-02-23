@@ -36,7 +36,7 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import java.util.*;
@@ -47,9 +47,9 @@ import java.util.*;
 public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItemsProvider {
 
   @Override
-  @NotNull
-  public Collection<? extends PackagingSourceItem> getSourceItems(@NotNull ArtifactEditorContext editorContext,
-                                                                  @NotNull Artifact artifact,
+  @Nonnull
+  public Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext,
+                                                                  @Nonnull Artifact artifact,
                                                                   PackagingSourceItem parent) {
     if (parent == null) {
       return createModuleItems(editorContext, artifact, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -65,7 +65,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
 
   private static Collection<? extends PackagingSourceItem> createClasspathItems(ArtifactEditorContext editorContext,
                                                                                 Artifact artifact,
-                                                                                @NotNull Module module) {
+                                                                                @Nonnull Module module) {
     final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     final ModuleRootModel rootModel = editorContext.getModulesProvider().getRootModel(module);
     List<Library> libraries = new ArrayList<Library>();
@@ -97,7 +97,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
   }
 
   private static Collection<? extends PackagingSourceItem> createModuleItems(ArtifactEditorContext editorContext, Artifact artifact,
-                                                                             @NotNull String[] groupPath) {
+                                                                             @Nonnull String[] groupPath) {
     final Module[] modules = editorContext.getModulesProvider().getModules();
     final List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     Set<String> groups = new HashSet<String>();
@@ -120,8 +120,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return items;
   }
 
-  private static <T extends ModuleOutputElementTypeBase> boolean canAddModuleOutputType(@NotNull final ArtifactEditorContext context,
-                                                                                           @NotNull Artifact artifact,
+  private static <T extends ModuleOutputElementTypeBase> boolean canAddModuleOutputType(@Nonnull final ArtifactEditorContext context,
+                                                                                           @Nonnull Artifact artifact,
                                                                                            T type,
                                                                                            final Module module) {
     final Ref<Boolean> find = new Ref<Boolean>(true);
@@ -149,8 +149,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return false;
   }
 
-  private static List<? extends Library> getNotAddedLibraries(@NotNull final ArtifactEditorContext context,
-                                                              @NotNull Artifact artifact,
+  private static List<? extends Library> getNotAddedLibraries(@Nonnull final ArtifactEditorContext context,
+                                                              @Nonnull Artifact artifact,
                                                               List<Library> librariesList) {
     final Set<VirtualFile> roots = new HashSet<VirtualFile>();
     ArtifactUtil

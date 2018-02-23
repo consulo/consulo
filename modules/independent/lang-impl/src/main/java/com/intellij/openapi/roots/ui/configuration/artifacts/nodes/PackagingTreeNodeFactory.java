@@ -23,8 +23,8 @@ import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,12 +38,12 @@ public class PackagingTreeNodeFactory {
   private PackagingTreeNodeFactory() {
   }
 
-  public static void addNodes(@NotNull List<? extends PackagingElement<?>> elements, @NotNull CompositePackagingElementNode parentNode,
-                               @NotNull CompositePackagingElement parentElement, @NotNull ArtifactEditorContext context,
-                               @NotNull ComplexElementSubstitutionParameters substitutionParameters, @NotNull Collection<PackagingNodeSource> nodeSources,
-                               @NotNull List<PackagingElementNode<?>> nodes,
-                               ArtifactType artifactType,
-                               Set<PackagingElement<?>> processed) {
+  public static void addNodes(@Nonnull List<? extends PackagingElement<?>> elements, @Nonnull CompositePackagingElementNode parentNode,
+                              @Nonnull CompositePackagingElement parentElement, @Nonnull ArtifactEditorContext context,
+                              @Nonnull ComplexElementSubstitutionParameters substitutionParameters, @Nonnull Collection<PackagingNodeSource> nodeSources,
+                              @Nonnull List<PackagingElementNode<?>> nodes,
+                              ArtifactType artifactType,
+                              Set<PackagingElement<?>> processed) {
     for (PackagingElement<?> element : elements) {
       final PackagingElementNode<?> prev = findEqual(nodes, element);
       if (prev != null) {
@@ -87,7 +87,7 @@ public class PackagingTreeNodeFactory {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static ArtifactRootNode createRootNode(ArtifactEditorImpl artifactsEditor, ArtifactEditorContext context,
                                                 ComplexElementSubstitutionParameters substitutionParameters, final ArtifactType artifactType) {
     return new ArtifactRootNode(artifactsEditor, context, substitutionParameters, artifactType);

@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -25,28 +25,28 @@ public interface FileEditorManagerListener extends EventListener{
   Topic<FileEditorManagerListener> FILE_EDITOR_MANAGER =
           new Topic<>("file editor events", FileEditorManagerListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-  default void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
   }
 
-  default void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  default void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
   }
 
-  default void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
   }
 
   interface Before extends EventListener {
     Topic<Before> FILE_EDITOR_MANAGER =
             new Topic<>("file editor before events", Before.class, Topic.BroadcastDirection.TO_PARENT);
 
-    void beforeFileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file);
-    void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file);
+    void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
+    void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
 
     class Adapter implements Before {
       @Override
-      public void beforeFileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) { }
+      public void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) { }
 
       @Override
-      public void beforeFileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) { }
+      public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) { }
     }
   }
 }

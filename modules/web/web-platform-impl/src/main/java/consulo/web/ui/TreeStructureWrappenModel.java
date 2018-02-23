@@ -21,8 +21,8 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.application.ReadAction;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Function;
 
@@ -43,12 +43,12 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
   }
 
   @Override
-  public boolean isNeedBuildChildrenBeforeOpen(@NotNull TreeNode<T> node) {
+  public boolean isNeedBuildChildrenBeforeOpen(@Nonnull TreeNode<T> node) {
     return myStructure.isToBuildChildrenInBackground(node.getValue());
   }
 
   @Override
-  public void fetchChildren(@NotNull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
+  public void fetchChildren(@Nonnull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
     for (Object o : ReadAction.compute(() -> myStructure.getChildElements(parentValue))) {
       T element = (T)o;
       TreeNode<T> apply = nodeFactory.apply(element);

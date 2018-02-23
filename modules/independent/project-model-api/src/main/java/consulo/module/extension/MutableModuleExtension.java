@@ -18,8 +18,8 @@ package consulo.module.extension;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -29,23 +29,23 @@ import javax.swing.*;
  * @since 10:58/19.05.13
  */
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredDispatchThread
-  default JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
+  default JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredUIAccess
-  default Component createConfigurationComponent(@NotNull Runnable updateOnCheck) {
+  default Component createConfigurationComponent(@Nonnull Runnable updateOnCheck) {
     return null;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   ModifiableModuleRootLayer getModuleRootLayer();
 
   void setEnabled(boolean val);
 
-  boolean isModified(@NotNull T originalExtension);
+  boolean isModified(@Nonnull T originalExtension);
 }

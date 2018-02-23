@@ -24,12 +24,12 @@ import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowDiffWithLocalAction extends DumbAwareAction {
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
 
@@ -45,7 +45,7 @@ public class ShowDiffWithLocalAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     VcsFileRevision[] selectedRevisions = e.getData(VcsDataKeys.VCS_FILE_REVISIONS);
     VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
     VcsHistorySession historySession = e.getData(VcsDataKeys.HISTORY_SESSION);

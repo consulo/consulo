@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ReadOnlyModificationException extends RuntimeException {
   private final Document myDocument;
 
-  public ReadOnlyModificationException(@NotNull Document document) {
+  public ReadOnlyModificationException(@Nonnull Document document) {
     super(EditorBundle.message("attempt.to.modify.read.only.document.error.message"));
     myDocument = document;
   }

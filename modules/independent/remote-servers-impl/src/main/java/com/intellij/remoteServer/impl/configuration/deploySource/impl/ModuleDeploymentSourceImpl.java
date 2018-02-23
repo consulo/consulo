@@ -25,8 +25,8 @@ import com.intellij.remoteServer.configuration.deployment.ModuleDeploymentSource
 import com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;
 import com.intellij.util.ArrayUtil;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -37,11 +37,11 @@ import java.io.File;
 public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
   private final NamedPointer<Module> myPointer;
 
-  public ModuleDeploymentSourceImpl(@NotNull NamedPointer<Module> pointer) {
+  public ModuleDeploymentSourceImpl(@Nonnull NamedPointer<Module> pointer) {
     myPointer = pointer;
   }
 
-  @NotNull
+  @Nonnull
   public NamedPointer<Module> getModulePointer() {
     return myPointer;
   }
@@ -61,7 +61,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     return ArrayUtil.getFirstElement(ModuleRootManager.getInstance(module).getContentRoots());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public File getFile() {
     VirtualFile contentRoot = getContentRoot();
@@ -81,7 +81,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     return file.getAbsolutePath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return myPointer.getName();
@@ -116,7 +116,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     return myPointer.hashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DeploymentSourceType<?> getType() {
     return DeploymentSourceType.EP_NAME.findExtension(ModuleDeploymentSourceType.class);

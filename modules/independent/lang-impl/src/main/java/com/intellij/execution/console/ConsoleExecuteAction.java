@@ -31,8 +31,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ConsoleExecuteAction extends DumbAwareAction {
   static final String CONSOLE_EXECUTE_ACTION_ID = "Console.Execute";
@@ -42,23 +42,23 @@ public class ConsoleExecuteAction extends DumbAwareAction {
   private final Condition<LanguageConsoleView> myEnabledCondition;
 
   @SuppressWarnings("UnusedDeclaration")
-  public ConsoleExecuteAction(@NotNull LanguageConsoleView console, @NotNull BaseConsoleExecuteActionHandler executeActionHandler) {
+  public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler) {
     this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Conditions.<LanguageConsoleView>alwaysTrue());
   }
 
-  ConsoleExecuteAction(@NotNull LanguageConsoleView console, final @NotNull ConsoleExecuteActionHandler executeActionHandler, @Nullable Condition<LanguageConsoleView> enabledCondition) {
+  ConsoleExecuteAction(@Nonnull LanguageConsoleView console, final @Nonnull ConsoleExecuteActionHandler executeActionHandler, @Nullable Condition<LanguageConsoleView> enabledCondition) {
     this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
   }
 
-  public ConsoleExecuteAction(@NotNull LanguageConsoleView console,
-                              @NotNull BaseConsoleExecuteActionHandler executeActionHandler,
+  public ConsoleExecuteAction(@Nonnull LanguageConsoleView console,
+                              @Nonnull BaseConsoleExecuteActionHandler executeActionHandler,
                               @Nullable Condition<LanguageConsoleView> enabledCondition) {
     this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
   }
 
-  public ConsoleExecuteAction(@NotNull LanguageConsoleView consoleView,
-                              @NotNull ConsoleExecuteActionHandler executeActionHandler,
-                              @NotNull String emptyExecuteActionId,
+  public ConsoleExecuteAction(@Nonnull LanguageConsoleView consoleView,
+                              @Nonnull ConsoleExecuteActionHandler executeActionHandler,
+                              @Nonnull String emptyExecuteActionId,
                               @Nullable Condition<LanguageConsoleView> enabledCondition) {
     super(null, null, AllIcons.Actions.Execute);
 
@@ -70,7 +70,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
   }
 
   @Override
-  public final void update(@NotNull AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     EditorEx editor = myConsoleView.getConsoleEditor();
     boolean enabled = !editor.isRendererMode() && isEnabled() &&
                       (myExecuteActionHandler.isEmptyCommandExecutionAllowed() || !StringUtil.isEmptyOrSpaces(editor.getDocument().getCharsSequence()));
@@ -85,7 +85,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
   }
 
   @Override
-  public final void actionPerformed(@NotNull AnActionEvent e) {
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     myExecuteActionHandler.runExecuteAction(myConsoleView);
   }
 
@@ -93,7 +93,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
     return myEnabledCondition.value(myConsoleView);
   }
 
-  public void execute(@Nullable TextRange range, @NotNull String text, @Nullable EditorEx editor) {
+  public void execute(@Nullable TextRange range, @Nonnull String text, @Nullable EditorEx editor) {
     if (range == null) {
       ((LanguageConsoleImpl)myConsoleView).doAddPromptToHistory();
       myConsoleView.print(text, ConsoleViewContentType.USER_INPUT);
@@ -127,10 +127,10 @@ public class ConsoleExecuteAction extends DumbAwareAction {
       myAddToHistory = addCurrentToHistory;
     }
 
-    protected void beforeExecution(@NotNull LanguageConsoleView consoleView) {
+    protected void beforeExecution(@Nonnull LanguageConsoleView consoleView) {
     }
 
-    public void runExecuteAction(@NotNull LanguageConsoleView consoleView) {
+    public void runExecuteAction(@Nonnull LanguageConsoleView consoleView) {
       if (!myUseProcessStdIn) {
         beforeExecution(consoleView);
       }
@@ -149,11 +149,11 @@ public class ConsoleExecuteAction extends DumbAwareAction {
       }
     }
 
-    private void addToCommandHistoryAndExecute(@NotNull LanguageConsoleView consoleView, @NotNull String text) {
+    private void addToCommandHistoryAndExecute(@Nonnull LanguageConsoleView consoleView, @Nonnull String text) {
       ConsoleHistoryController.addToHistory(consoleView, text);
       doExecute(text, consoleView);
     }
 
-    abstract void doExecute(@NotNull String text, @NotNull LanguageConsoleView consoleView);
+    abstract void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView);
   }
 }

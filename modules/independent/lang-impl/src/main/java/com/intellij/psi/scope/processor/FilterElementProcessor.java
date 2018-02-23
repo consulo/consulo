@@ -19,7 +19,7 @@ package com.intellij.psi.scope.processor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.search.PsiElementProcessor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class FilterElementProcessor implements PsiElementProcessor{
   }
 
   @Override
-  public boolean execute(@NotNull PsiElement element){
+  public boolean execute(@Nonnull PsiElement element){
     if(myFilter.isClassAcceptable(element.getClass()) && myFilter.isAcceptable(element, element.getParent())){
       if(myProcessor != null){
         return myProcessor.execute(element);

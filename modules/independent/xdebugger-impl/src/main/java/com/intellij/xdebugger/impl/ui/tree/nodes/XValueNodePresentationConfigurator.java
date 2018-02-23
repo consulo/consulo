@@ -24,57 +24,57 @@ import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public final class XValueNodePresentationConfigurator {
   public interface ConfigurableXValueNode {
     void applyPresentation(@Nullable Icon icon,
-                           @NotNull XValuePresentation valuePresenter,
+                           @Nonnull XValuePresentation valuePresenter,
                            boolean hasChildren);
   }
 
   public static abstract class ConfigurableXValueNodeImpl implements ConfigurableXValueNode, XValueNode {
     @Override
-    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull String value, boolean hasChildren) {
+    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
     }
 
     @Override
-    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull String separator,
+    public void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull String separator,
                                 @NonNls @Nullable String value, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
     }
 
     @Override
-    public void setPresentation(@Nullable Icon icon, @NotNull XValuePresentation presentation, boolean hasChildren) {
+    public void setPresentation(@Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren) {
       XValueNodePresentationConfigurator.setPresentation(icon, presentation, hasChildren, this);
     }
   }
 
-  public static void setPresentation(@Nullable Icon icon, @NotNull XValuePresentation presentation, boolean hasChildren,
+  public static void setPresentation(@Nullable Icon icon, @Nonnull XValuePresentation presentation, boolean hasChildren,
                                      ConfigurableXValueNode node) {
     doSetPresentation(icon, presentation, hasChildren, node);
   }
 
   public static void setPresentation(@Nullable Icon icon,
                                      @NonNls @Nullable String type,
-                                     @NonNls @NotNull String value,
+                                     @NonNls @Nonnull String value,
                                      boolean hasChildren,
                                      ConfigurableXValueNode node) {
     doSetPresentation(icon, new XRegularValuePresentation(value, type), hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @NotNull final String separator,
+  public static void setPresentation(@Nullable Icon icon, @NonNls @Nullable String type, @NonNls @Nonnull final String separator,
                                      @NonNls @Nullable String value, boolean hasChildren, ConfigurableXValueNode node) {
     doSetPresentation(icon, new XRegularValuePresentation(StringUtil.notNullize(value), type, separator), hasChildren, node);
   }
 
   public static void setPresentation(@Nullable Icon icon,
                                      @NonNls @Nullable String type,
-                                     @NonNls @NotNull String value,
+                                     @NonNls @Nonnull String value,
                                      @Nullable NotNullFunction<String, String> valuePresenter,
                                      boolean hasChildren, ConfigurableXValueNode node) {
     doSetPresentation(icon,
@@ -83,7 +83,7 @@ public final class XValueNodePresentationConfigurator {
   }
 
   private static void doSetPresentation(@Nullable final Icon icon,
-                                        @NotNull final XValuePresentation presentation,
+                                        @Nonnull final XValuePresentation presentation,
                                         final boolean hasChildren,
                                         final ConfigurableXValueNode node) {
     if (DebuggerUIUtil.isObsolete(node)) {
@@ -128,7 +128,7 @@ public final class XValueNodePresentationConfigurator {
     }
 
     @Override
-    public void renderValue(@NotNull XValueTextRenderer renderer) {
+    public void renderValue(@Nonnull XValueTextRenderer renderer) {
       renderer.renderValue(valuePresenter.fun(myValue));
     }
   }

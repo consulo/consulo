@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.OrderEntry;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.orderEntry.OrderEntryType;
 
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
@@ -33,7 +33,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
   private int myIndex;
   private OrderEntryType<?> myType;
 
-  protected OrderEntryBaseImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootLayer) {
+  protected OrderEntryBaseImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(rootLayer);
     myType = provider;
   }
@@ -42,14 +42,14 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     myIndex = index;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderEntryType<?> getType() {
     return myType;
   }
 
   @Override
-  public int compareTo(@NotNull OrderEntry orderEntry) {
+  public int compareTo(@Nonnull OrderEntry orderEntry) {
     LOGGER.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
     return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
   }
@@ -65,7 +65,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     return hc;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String toString() {
     return getOwnerModule().getName() + " -> " + getPresentableName();

@@ -3,7 +3,7 @@ package consulo.ui.internal.image;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import consulo.ui.migration.ToImageWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 import java.util.concurrent.ConcurrentMap;
@@ -26,7 +26,7 @@ public class WGwtImageUrlCache {
     return (WGwtImageWithState)other;
   }
 
-  @NotNull
+  @Nonnull
   public static String createURL(int hash, String prefix) {
     return prefix + "/image?urlHash=\"" + hash + "\"";
   }

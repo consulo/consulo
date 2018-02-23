@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.utils.DfsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,8 +34,8 @@ public class GraphLayoutBuilder {
 
   private static final Logger LOG = Logger.getInstance(GraphLayoutBuilder.class);
 
-  @NotNull
-  public static GraphLayoutImpl build(@NotNull LinearGraph graph, @NotNull Comparator<Integer> headNodeIndexComparator) {
+  @Nonnull
+  public static GraphLayoutImpl build(@Nonnull LinearGraph graph, @Nonnull Comparator<Integer> headNodeIndexComparator) {
     List<Integer> heads = new ArrayList<>();
     for (int i = 0; i < graph.nodesCount(); i++) {
       if (getUpNodes(graph, i).size() == 0) {
@@ -56,17 +56,22 @@ public class GraphLayoutBuilder {
     return builder.build();
   }
 
-  @NotNull private final LinearGraph myGraph;
-  @NotNull private final int[] myLayoutIndex;
+  @Nonnull
+  private final LinearGraph myGraph;
+  @Nonnull
+  private final int[] myLayoutIndex;
 
-  @NotNull private final List<Integer> myHeadNodeIndex;
-  @NotNull private final int[] myStartLayoutIndexForHead;
+  @Nonnull
+  private final List<Integer> myHeadNodeIndex;
+  @Nonnull
+  private final int[] myStartLayoutIndexForHead;
 
-  @NotNull private final DfsUtil myDfsUtil = new DfsUtil();
+  @Nonnull
+  private final DfsUtil myDfsUtil = new DfsUtil();
 
   private int currentLayoutIndex = 1;
 
-  private GraphLayoutBuilder(@NotNull LinearGraph graph, @NotNull List<Integer> headNodeIndex) {
+  private GraphLayoutBuilder(@Nonnull LinearGraph graph, @Nonnull List<Integer> headNodeIndex) {
     myGraph = graph;
     myLayoutIndex = new int[graph.nodesCount()];
 
@@ -101,7 +106,7 @@ public class GraphLayoutBuilder {
     });
   }
 
-  @NotNull
+  @Nonnull
   private GraphLayoutImpl build() {
     for (int i = 0; i < myHeadNodeIndex.size(); i++) {
       int headNodeIndex = myHeadNodeIndex.get(i);

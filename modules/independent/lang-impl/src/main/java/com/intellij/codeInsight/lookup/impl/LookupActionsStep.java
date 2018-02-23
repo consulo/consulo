@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.popup.ClosableByLeftArrow;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
     return LookupCellRenderer.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getTextFor(LookupElementAction value) {
     return value.getText();

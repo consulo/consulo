@@ -16,15 +16,15 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElementWeigher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class CompletionSorter {
-  public abstract CompletionSorter weighBefore(@NotNull String beforeId, LookupElementWeigher... weighers);
+  public abstract CompletionSorter weighBefore(@Nonnull String beforeId, LookupElementWeigher... weighers);
 
-  public abstract CompletionSorter weighAfter(@NotNull String afterId, LookupElementWeigher... weighers);
+  public abstract CompletionSorter weighAfter(@Nonnull String afterId, LookupElementWeigher... weighers);
 
   public abstract CompletionSorter weigh(LookupElementWeigher weigher);
 

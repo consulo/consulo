@@ -20,8 +20,8 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Comparator;

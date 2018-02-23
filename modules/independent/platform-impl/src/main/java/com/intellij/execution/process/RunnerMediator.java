@@ -20,8 +20,8 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -53,7 +53,7 @@ public class RunnerMediator {
   /**
    * Sends sequence of two chars(codes 5 and {@code event}) to a process output stream
    */
-  private static void sendCtrlEventThroughStream(@NotNull final Process process, final char event) {
+  private static void sendCtrlEventThroughStream(@Nonnull final Process process, final char event) {
     OutputStream os = process.getOutputStream();
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
     PrintWriter pw = new PrintWriter(os);
@@ -69,11 +69,11 @@ public class RunnerMediator {
    * Returns appropriate process handle, which in case of Unix is able to terminate whole process tree by sending sig_kill
    *
    */
-  public ProcessHandler createProcess(@NotNull final GeneralCommandLine commandLine) throws ExecutionException {
+  public ProcessHandler createProcess(@Nonnull final GeneralCommandLine commandLine) throws ExecutionException {
     return createProcess(commandLine, false);
   }
 
-  public ProcessHandler createProcess(@NotNull final GeneralCommandLine commandLine, final boolean useSoftKill) throws ExecutionException {
+  public ProcessHandler createProcess(@Nonnull final GeneralCommandLine commandLine, final boolean useSoftKill) throws ExecutionException {
     if (SystemInfo.isWindows) {
       injectRunnerCommand(commandLine);
     }
@@ -101,7 +101,7 @@ public class RunnerMediator {
     return null;
   }
 
-  static boolean injectRunnerCommand(@NotNull GeneralCommandLine commandLine) {
+  static boolean injectRunnerCommand(@Nonnull GeneralCommandLine commandLine) {
     final String path = getRunnerPath();
     if (path != null) {
       commandLine.getParametersList().addAt(0, commandLine.getExePath());
@@ -115,7 +115,7 @@ public class RunnerMediator {
    * Destroys process tree: in case of windows via imitating ctrl+break, in case of unix via sending sig_kill to every process in tree.
    * @param process to kill with all sub-processes.
    */
-  public static boolean destroyProcess(@NotNull final Process process) {
+  public static boolean destroyProcess(@Nonnull final Process process) {
     return destroyProcess(process, false);
   }
 
@@ -123,7 +123,7 @@ public class RunnerMediator {
    * Destroys process tree: in case of windows via imitating ctrl+c, in case of unix via sending sig_int to every process in tree.
    * @param process to kill with all sub-processes.
    */
-  static boolean destroyProcess(@NotNull final Process process, final boolean softKill) {
+  static boolean destroyProcess(@Nonnull final Process process, final boolean softKill) {
     try {
       if (SystemInfo.isWindows) {
         sendCtrlEventThroughStream(process, softKill ? C : BRK);
@@ -151,22 +151,22 @@ public class RunnerMediator {
     private final boolean mySoftKill;
 
     /** @deprecated use CustomDestroyProcessHandler(GeneralCommandLine commandLine) (to remove in IDEA 16) */
-    public CustomDestroyProcessHandler(@NotNull Process process, @NotNull GeneralCommandLine commandLine) {
+    public CustomDestroyProcessHandler(@Nonnull Process process, @Nonnull GeneralCommandLine commandLine) {
       super(process, commandLine.getCommandLineString());
       mySoftKill = false;
     }
 
     /** @deprecated use CustomDestroyProcessHandler(GeneralCommandLine commandLine, boolean softKill) (to remove in IDEA 16) */
-    public CustomDestroyProcessHandler(@NotNull Process process, @NotNull GeneralCommandLine commandLine, boolean softKill) {
+    public CustomDestroyProcessHandler(@Nonnull Process process, @Nonnull GeneralCommandLine commandLine, boolean softKill) {
       super(process, commandLine.getCommandLineString());
       mySoftKill = softKill;
     }
 
-    public CustomDestroyProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+    public CustomDestroyProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
       this(commandLine, false);
     }
 
-    public CustomDestroyProcessHandler(@NotNull GeneralCommandLine commandLine, final boolean softKill) throws ExecutionException {
+    public CustomDestroyProcessHandler(@Nonnull GeneralCommandLine commandLine, final boolean softKill) throws ExecutionException {
       super(commandLine);
       mySoftKill = softKill;
     }

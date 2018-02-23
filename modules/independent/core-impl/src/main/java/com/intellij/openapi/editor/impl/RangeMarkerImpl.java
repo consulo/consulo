@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx, MutableInterval {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.editor.impl.RangeMarkerImpl");
@@ -36,10 +36,10 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   private final long myId;
   private static final StripedIDGenerator counter = new StripedIDGenerator();
 
-  protected RangeMarkerImpl(@NotNull DocumentEx document, int start, int end, boolean register) {
+  protected RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register) {
     this(document, start, end, register, false, false);
   }
-  private RangeMarkerImpl(@NotNull DocumentEx document, int start, int end, boolean register, boolean greedyToLeft, boolean greedyToRight) {
+  private RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register, boolean greedyToLeft, boolean greedyToRight) {
     if (start < 0) {
       throw new IllegalArgumentException("Wrong start: " + start+"; end="+end);
     }
@@ -92,7 +92,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     return node == null ? -1 : node.intervalEnd() + node.computeDeltaUpToRoot();
   }
 
-  void invalidate(@NotNull final Object reason) {
+  void invalidate(@Nonnull final Object reason) {
     setValid(false);
     RangeMarkerTree.RMNode<RangeMarkerEx> node = myNode;
 
@@ -108,7 +108,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentEx getDocument() {
     return myDocument;
   }
@@ -144,7 +144,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Override
-  public final void documentChanged(@NotNull DocumentEvent e) {
+  public final void documentChanged(@Nonnull DocumentEvent e) {
     int oldStart = intervalStart();
     int oldEnd = intervalEnd();
     int docLength = myDocument.getTextLength();
@@ -169,7 +169,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
   }
 
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     if (!isValid()) return;
 
     TextRange newRange = applyChange(e, intervalStart(), intervalEnd(), isGreedyToLeft(), isGreedyToRight());
@@ -185,7 +185,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   protected void onReTarget(int startOffset, int endOffset, int destOffset) {}
 
   @Nullable
-  static TextRange applyChange(@NotNull DocumentEvent e, int intervalStart, int intervalEnd, boolean isGreedyToLeft, boolean isGreedyToRight) {
+  static TextRange applyChange(@Nonnull DocumentEvent e, int intervalStart, int intervalEnd, boolean isGreedyToLeft, boolean isGreedyToRight) {
     if (intervalStart == intervalEnd) {
       return processIfOnePoint(e, intervalStart, isGreedyToRight);
     }
@@ -238,7 +238,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   }
 
   @Nullable
-  private static TextRange processIfOnePoint(@NotNull DocumentEvent e, int intervalStart, boolean greedyRight) {
+  private static TextRange processIfOnePoint(@Nonnull DocumentEvent e, int intervalStart, boolean greedyRight) {
     int offset = e.getOffset();
     int oldLength = e.getOldLength();
     int oldEnd = offset + oldLength;

@@ -30,8 +30,8 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -50,9 +50,10 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
 
   private final Application myApp;
   private IdeFrame myFrame;
-  @Nullable private Getter<DataContext> myDataContextProvider;
+  @Nullable
+  private Getter<DataContext> myDataContextProvider;
 
-  public ActionPopupMenuImpl(String place, @NotNull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
+  public ActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
     myManager = actionManager;
     myMenu = new MyMenu(place, group, factory);
     myApp = ApplicationManager.getApplication();
@@ -73,7 +74,7 @@ public final class ActionPopupMenuImpl extends ApplicationActivationListener.Ada
     private DataContext myContext;
     private final PresentationFactory myPresentationFactory;
 
-    public MyMenu(String place, @NotNull ActionGroup group, @Nullable PresentationFactory factory) {
+    public MyMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory factory) {
       myPlace = place;
       myGroup = group;
       myPresentationFactory = factory != null ? factory : new MenuItemPresentationFactory();

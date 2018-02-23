@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.ui.components.JBList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -84,7 +84,7 @@ public class TreeList extends JBList implements TreeModelListener {
    *   attribute: visualUpdate true
    * description: The object that contains the data to be drawn by this JList.
    */
-  public void setModel(@NotNull ListModel model) {
+  public void setModel(@Nonnull ListModel model) {
     throw new UnsupportedOperationException("TreeList accepts only TreeModel as a model");
   }
 

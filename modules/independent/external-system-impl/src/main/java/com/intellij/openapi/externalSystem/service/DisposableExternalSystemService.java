@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -33,5 +33,5 @@ public interface DisposableExternalSystemService {
    * @param externalSystemId  target external system id
    * @param ideProject        target ide project
    */
-  void onExternalSystemUnlinked(@NotNull ProjectSystemId externalSystemId, @NotNull Project ideProject);
+  void onExternalSystemUnlinked(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project ideProject);
 }

@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.ArrayUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +37,8 @@ import java.util.StringTokenizer;
  *         Date: 9/18/12
  */
 public abstract class ProblemsView {
-  @NotNull
-  public static ProblemsView getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ProblemsView getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ProblemsView.class);
   }
 
@@ -51,7 +51,7 @@ public abstract class ProblemsView {
   public abstract void clearOldMessages();
 
   public abstract void addMessage(int type,
-                                  @NotNull String[] text,
+                                  @Nonnull String[] text,
                                   @Nullable String groupName,
                                   @Nullable Navigatable navigatable,
                                   @Nullable String exportTextPrefix,

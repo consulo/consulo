@@ -50,8 +50,8 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
   private Editor myEditor;
   private Caret myCaret;
   private
-  @NotNull
+  @Nonnull
   PsiFile myFile;
   private Document myDocument;
   private Commenter myCommenter;
@@ -71,7 +71,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
   private RangeMarker myWarningLocation;
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
     myProject = project;
     myEditor = editor;
     myCaret = caret;
@@ -203,7 +203,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     return true;
   }
 
-  private boolean isInjectedWhiteSpace(@NotNull TextRange range, @NotNull OuterLanguageElement element) {
+  private boolean isInjectedWhiteSpace(@Nonnull TextRange range, @Nonnull OuterLanguageElement element) {
     PsiElement psi = element.getContainingFile().getViewProvider().getPsi(element.getLanguage());
     if (psi == null) {
       return false;
@@ -217,7 +217,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     return true;
   }
 
-  private boolean isWhiteSpaceOrComment(@NotNull PsiElement element, @NotNull TextRange range) {
+  private boolean isWhiteSpaceOrComment(@Nonnull PsiElement element, @Nonnull TextRange range) {
     final TextRange textRange = element.getTextRange();
     TextRange intersection = range.intersection(textRange);
     if (intersection == null) {
@@ -593,7 +593,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     return result == -1 ? text.length() : result;
   }
 
-  static void commentNestedComments(@NotNull Document document, TextRange range, Commenter commenter) {
+  static void commentNestedComments(@Nonnull Document document, TextRange range, Commenter commenter) {
     final int offset = range.getStartOffset();
     final IntArrayList toReplaceWithComments = new IntArrayList();
     final IntArrayList prefixes = new IntArrayList();

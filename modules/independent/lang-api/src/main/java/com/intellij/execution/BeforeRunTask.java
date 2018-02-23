@@ -18,22 +18,22 @@ package com.intellij.execution;
 
 import com.intellij.openapi.util.Key;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: May 18, 2009
  */
 public abstract class BeforeRunTask<T extends BeforeRunTask> implements Cloneable {
-  @NotNull
+  @Nonnull
   protected final Key<T> myProviderId;
   private boolean myIsEnabled;
 
-  protected BeforeRunTask(@NotNull Key<T> providerId) {
+  protected BeforeRunTask(@Nonnull Key<T> providerId) {
     myProviderId = providerId;
   }
 
-  @NotNull
+  @Nonnull
   public final Key<T> getProviderId() {
     return myProviderId;
   }

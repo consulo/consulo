@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.versionBrowser;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

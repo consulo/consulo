@@ -37,8 +37,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,16 +55,16 @@ public class ExternalDiffTool {
     return ExternalDiffSettings.getInstance().isDiffEnabled();
   }
 
-  public static void show(@Nullable final Project project,
-                          @NotNull final DiffRequestChain chain,
-                          @NotNull final DiffDialogHints hints) {
+  public static void show(@javax.annotation.Nullable final Project project,
+                          @Nonnull final DiffRequestChain chain,
+                          @Nonnull final DiffDialogHints hints) {
     try {
       //noinspection unchecked
       final Ref<List<DiffRequest>> requestsRef = new Ref<List<DiffRequest>>();
       final Ref<Throwable> exceptionRef = new Ref<Throwable>();
       ProgressManager.getInstance().run(new Task.Modal(project, "Loading Requests", true) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           try {
             requestsRef.set(collectRequests(project, chain, indicator));
           }
@@ -99,10 +98,10 @@ public class ExternalDiffTool {
     }
   }
 
-  @NotNull
-  private static List<DiffRequest> collectRequests(@Nullable Project project,
-                                                   @NotNull final DiffRequestChain chain,
-                                                   @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static List<DiffRequest> collectRequests(@javax.annotation.Nullable Project project,
+                                                   @Nonnull final DiffRequestChain chain,
+                                                   @Nonnull ProgressIndicator indicator) {
     List<DiffRequest> requests = new ArrayList<DiffRequest>();
 
     UserDataHolderBase context = new UserDataHolderBase();
@@ -128,7 +127,7 @@ public class ExternalDiffTool {
     return requests;
   }
 
-  public static void showRequest(@Nullable Project project, @NotNull DiffRequest request)
+  public static void showRequest(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request)
           throws ExecutionException, IOException {
     request.onAssigned(true);
 
@@ -142,7 +141,7 @@ public class ExternalDiffTool {
     request.onAssigned(false);
   }
 
-  public static boolean canShow(@NotNull DiffRequest request) {
+  public static boolean canShow(@Nonnull DiffRequest request) {
     if (!(request instanceof ContentDiffRequest)) return false;
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
     if (contents.size() != 2 && contents.size() != 3) return false;

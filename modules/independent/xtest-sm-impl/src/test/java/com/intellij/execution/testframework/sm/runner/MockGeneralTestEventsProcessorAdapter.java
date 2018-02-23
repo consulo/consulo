@@ -18,8 +18,7 @@ package com.intellij.execution.testframework.sm.runner;
 import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
 * @author Roman.Chernyatchik
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class MockGeneralTestEventsProcessorAdapter extends GeneralTestEventsProcessor {
   private final StringBuilder myOutputBuffer = new StringBuilder();
 
-  public MockGeneralTestEventsProcessorAdapter(Project project, @NotNull String testFrameworkName, @NotNull SMTestProxy.SMRootTestProxy testsRootProxy) {
+  public MockGeneralTestEventsProcessorAdapter(Project project, @Nonnull String testFrameworkName, @Nonnull SMTestProxy.SMRootTestProxy testsRootProxy) {
     super(project, testFrameworkName, testsRootProxy);
   }
 
@@ -40,44 +39,44 @@ public class MockGeneralTestEventsProcessorAdapter extends GeneralTestEventsProc
   }
 
   @Override
-  public void onTestStarted(@NotNull TestStartedEvent testStartedEvent) {
+  public void onTestStarted(@Nonnull TestStartedEvent testStartedEvent) {
   }
 
   @Override
-  public void onTestFinished(@NotNull TestFinishedEvent testFinishedEvent) {
+  public void onTestFinished(@Nonnull TestFinishedEvent testFinishedEvent) {
   }
 
   @Override
-  public void onTestFailure(@NotNull TestFailedEvent testFailedEvent) {
+  public void onTestFailure(@Nonnull TestFailedEvent testFailedEvent) {
   }
 
   @Override
-  public void onTestIgnored(@NotNull TestIgnoredEvent testIgnoredEvent) {
+  public void onTestIgnored(@Nonnull TestIgnoredEvent testIgnoredEvent) {
   }
 
   @Override
-  public void onTestOutput(@NotNull TestOutputEvent testOutputEvent) {
+  public void onTestOutput(@Nonnull TestOutputEvent testOutputEvent) {
   }
 
   @Override
-  public void onSuiteStarted(@NotNull TestSuiteStartedEvent suiteStartedEvent) {
+  public void onSuiteStarted(@Nonnull TestSuiteStartedEvent suiteStartedEvent) {
   }
 
   @Override
-  public void onSuiteFinished(@NotNull TestSuiteFinishedEvent suiteFinishedEvent) {
+  public void onSuiteFinished(@Nonnull TestSuiteFinishedEvent suiteFinishedEvent) {
   }
 
   @Override
-  public void onUncapturedOutput(@NotNull String text, Key outputType) {
+  public void onUncapturedOutput(@Nonnull String text, Key outputType) {
     myOutputBuffer.append("[").append(outputType.toString()).append("]").append(text);
   }
 
   @Override
-  public void onError(@NotNull String localizedMessage, @Nullable String stackTrace, boolean isCritical) {
+  public void onError(@Nonnull String localizedMessage, @javax.annotation.Nullable String stackTrace, boolean isCritical) {
   }
 
   @Override
-  public void onCustomProgressTestsCategory(@Nullable String categoryName, int testCount) {
+  public void onCustomProgressTestsCategory(@javax.annotation.Nullable String categoryName, int testCount) {
   }
 
   @Override
@@ -93,12 +92,12 @@ public class MockGeneralTestEventsProcessorAdapter extends GeneralTestEventsProc
   }
 
   @Override
-  public void setLocator(@NotNull SMTestLocator locator) {
+  public void setLocator(@Nonnull SMTestLocator locator) {
 
   }
 
   @Override
-  public void addEventsListener(@NotNull SMTRunnerEventsListener viewer) {
+  public void addEventsListener(@Nonnull SMTRunnerEventsListener viewer) {
   }
 
   @Override
@@ -106,7 +105,7 @@ public class MockGeneralTestEventsProcessorAdapter extends GeneralTestEventsProc
   }
 
   @Override
-  public void setPrinterProvider(@NotNull TestProxyPrinterProvider printerProvider) {
+  public void setPrinterProvider(@Nonnull TestProxyPrinterProvider printerProvider) {
   }
 
   @Override

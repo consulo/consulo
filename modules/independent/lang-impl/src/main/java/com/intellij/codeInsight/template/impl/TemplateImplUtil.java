@@ -19,8 +19,8 @@ package com.intellij.codeInsight.template.impl;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 

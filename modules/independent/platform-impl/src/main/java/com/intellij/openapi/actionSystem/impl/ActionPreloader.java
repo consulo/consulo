@@ -19,14 +19,14 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PreloadingActivity;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class ActionPreloader extends PreloadingActivity {
   @Override
-  public void preload(@NotNull ProgressIndicator indicator) {
+  public void preload(@Nonnull ProgressIndicator indicator) {
     if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
       ((ActionManagerImpl)ActionManager.getInstance()).preloadActions(indicator);
     }

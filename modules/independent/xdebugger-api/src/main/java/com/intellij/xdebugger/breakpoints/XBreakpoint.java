@@ -20,8 +20,8 @@ import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.pom.Navigatable;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a breakpoint. This interface isn't supposed to be implemented by a plugin. In order to support breakpoint provide
@@ -37,7 +37,7 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
   void setEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   XBreakpointType<?, P> getType();
 
   P getProperties();
@@ -45,13 +45,13 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
   @Nullable
   XSourcePosition getSourcePosition();
 
-  @Nullable
+  @javax.annotation.Nullable
   Navigatable getNavigatable();
 
-  @NotNull
+  @Nonnull
   SuspendPolicy getSuspendPolicy();
 
-  void setSuspendPolicy(@NotNull SuspendPolicy policy);
+  void setSuspendPolicy(@Nonnull SuspendPolicy policy);
 
   boolean isLogMessage();
 
@@ -64,26 +64,26 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
   @Nullable
   String getLogExpression();
 
-  void setLogExpression(@Nullable String expression);
+  void setLogExpression(@javax.annotation.Nullable String expression);
 
   @Nullable
   XExpression getLogExpressionObject();
 
-  void setLogExpressionObject(@Nullable XExpression expression);
+  void setLogExpressionObject(@javax.annotation.Nullable XExpression expression);
 
   /**
    * @deprecated use {@link #getConditionExpression()} instead
    */
   @Deprecated
-  @Nullable
+  @javax.annotation.Nullable
   String getCondition();
 
-  void setCondition(@Nullable String condition);
+  void setCondition(@javax.annotation.Nullable String condition);
 
-  @Nullable
+  @javax.annotation.Nullable
   XExpression getConditionExpression();
 
-  void setConditionExpression(@Nullable XExpression condition);
+  void setConditionExpression(@javax.annotation.Nullable XExpression condition);
 
   long getTimeStamp();
 }

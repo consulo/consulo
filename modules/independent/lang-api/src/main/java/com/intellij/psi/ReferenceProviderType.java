@@ -18,7 +18,7 @@ package com.intellij.psi;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,11 +37,11 @@ public class ReferenceProviderType {
   };
   private final String myId;
 
-  public ReferenceProviderType(@NonNls @NotNull String id) {
+  public ReferenceProviderType(@NonNls @Nonnull String id) {
     myId = id;
   }
 
-  @NotNull
+  @Nonnull
   public PsiReferenceProvider getProvider() {
     final List<PsiReferenceProvider> list = COLLECTOR.forKey(this);
     LOG.assertTrue(list.size() == 1, list.toString());

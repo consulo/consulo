@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 
@@ -40,7 +40,7 @@ public class WeigherExtensionPoint extends AbstractExtensionPointBean implements
 
   private final NotNullLazyValue<Weigher> myHandler = new NotNullLazyValue<Weigher>() {
     @Override
-    @NotNull
+    @Nonnull
     protected final Weigher compute() {
       try {
         Class<Weigher> tClass = findClass(implementationClass);

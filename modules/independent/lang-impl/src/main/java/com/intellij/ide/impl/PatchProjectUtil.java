@@ -33,7 +33,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.HashMap;
@@ -131,7 +131,7 @@ public class PatchProjectUtil {
   public static void iterate(VirtualFile contentRoot, final ContentIterator iterator, final ProjectFileIndex idx) {
     VfsUtilCore.visitChildrenRecursively(contentRoot, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (!iterator.processFile(file)) return false;
         if (idx.getModuleForFile(file) == null) return false;  // already excluded
         return true;

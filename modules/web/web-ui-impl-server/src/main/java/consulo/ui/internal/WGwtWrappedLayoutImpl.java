@@ -20,8 +20,7 @@ import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.WrappedLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +34,7 @@ public class WGwtWrappedLayoutImpl extends AbstractComponentContainer implements
   private Component myComponent;
 
   @Override
-  public void remove(@NotNull consulo.ui.Component component) {
+  public void remove(@Nonnull consulo.ui.Component component) {
     if (myComponent == component) {
       removeComponent(myComponent);
       myComponent = null;
@@ -58,9 +57,9 @@ public class WGwtWrappedLayoutImpl extends AbstractComponentContainer implements
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public WrappedLayout set(@Nullable consulo.ui.Component component) {
+  public WrappedLayout set(@javax.annotation.Nullable consulo.ui.Component component) {
     if (myComponent != null) {
       removeComponent(myComponent);
     }
@@ -75,7 +74,7 @@ public class WGwtWrappedLayoutImpl extends AbstractComponentContainer implements
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

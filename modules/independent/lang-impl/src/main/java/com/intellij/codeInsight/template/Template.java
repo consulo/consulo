@@ -17,9 +17,8 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.template.impl.Variable;
-import com.intellij.openapi.editor.RangeMarker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -36,10 +35,10 @@ public abstract class Template {
 
   private final Map<Property, Boolean> myProperties = new EnumMap<Property, Boolean>(Property.class);
   
-  public abstract void addTextSegment(@NotNull String text);
+  public abstract void addTextSegment(@Nonnull String text);
   public abstract void addVariableSegment(@NonNls String name);
 
-  public Variable addVariable(@NonNls String name, @NotNull Expression defaultValueExpression, boolean isAlwaysStopAt) {
+  public Variable addVariable(@NonNls String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
     return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
   }
   public abstract Variable addVariable(Expression expression, boolean isAlwaysStopAt);
@@ -81,16 +80,16 @@ public abstract class Template {
   public abstract boolean isToShortenLongNames();
   public abstract void setToShortenLongNames(boolean toShortenLongNames);
 
-  public boolean getValue(@NotNull Property key) {
+  public boolean getValue(@Nonnull Property key) {
     Boolean result = myProperties.get(key);
     return result == null ? getDefaultValue(key) : result;
   }
 
-  public void setValue(@NotNull Property key, boolean value) {
+  public void setValue(@Nonnull Property key, boolean value) {
     myProperties.put(key, value);
   }
 
-  public static boolean getDefaultValue(@NotNull Property key) {
+  public static boolean getDefaultValue(@Nonnull Property key) {
     Boolean result = DEFAULT_PROPERTIES.get(key);
     return result == null ? false : result;
   }

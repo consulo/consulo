@@ -28,8 +28,8 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author cdr
@@ -42,14 +42,14 @@ public class InjectedGeneralHighlightingPassFactory extends AbstractProjectCompo
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "InjectedGeneralHighlightingPassFactory";
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange textRange = FileStatusMap.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(myProject, editor.getDocument());
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
@@ -58,9 +58,9 @@ public class InjectedGeneralHighlightingPassFactory extends AbstractProjectCompo
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@NotNull PsiFile file,
-                                                               @NotNull Document document,
-                                                               @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
+                                                               @Nonnull Document document,
+                                                               @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     return new InjectedGeneralHighlightingPass(myProject, file, document, 0, document.getTextLength(), true, new ProperTextRange(0,document.getTextLength()), null,
                                                highlightInfoProcessor);
   }

@@ -23,8 +23,8 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.FactoryMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -43,8 +43,8 @@ public class MockFileManager implements FileManager {
   };
 
   @Override
-  @NotNull
-  public FileViewProvider createFileViewProvider(@NotNull final VirtualFile file, final boolean physical) {
+  @Nonnull
+  public FileViewProvider createFileViewProvider(@Nonnull final VirtualFile file, final boolean physical) {
     return new SingleRootFileViewProvider(myManager, file, physical);
   }
 
@@ -60,20 +60,20 @@ public class MockFileManager implements FileManager {
   @RequiredReadAction
   @Override
   @Nullable
-  public PsiFile findFile(@NotNull VirtualFile vFile) {
+  public PsiFile findFile(@Nonnull VirtualFile vFile) {
     return getCachedPsiFile(vFile);
   }
 
   @RequiredReadAction
   @Override
   @Nullable
-  public PsiDirectory findDirectory(@NotNull VirtualFile vFile) {
+  public PsiDirectory findDirectory(@Nonnull VirtualFile vFile) {
     throw new UnsupportedOperationException("Method findDirectory is not yet implemented in " + getClass().getName());
   }
 
   @RequiredWriteAction
   @Override
-  public void reloadFromDisk(@NotNull PsiFile file) //Q: move to PsiFile(Impl)?
+  public void reloadFromDisk(@Nonnull PsiFile file) //Q: move to PsiFile(Impl)?
   {
     throw new UnsupportedOperationException("Method reloadFromDisk is not yet implemented in " + getClass().getName());
   }
@@ -81,7 +81,7 @@ public class MockFileManager implements FileManager {
   @RequiredReadAction
   @Override
   @Nullable
-  public PsiFile getCachedPsiFile(@NotNull VirtualFile vFile) {
+  public PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile) {
     final FileViewProvider provider = findCachedViewProvider(vFile);
     return provider.getPsi(provider.getBaseLanguage());
   }
@@ -93,24 +93,24 @@ public class MockFileManager implements FileManager {
 
   @RequiredReadAction
   @Override
-  public FileViewProvider findViewProvider(@NotNull VirtualFile file) {
+  public FileViewProvider findViewProvider(@Nonnull VirtualFile file) {
     throw new UnsupportedOperationException("Method findViewProvider is not yet implemented in " + getClass().getName());
   }
 
   @RequiredReadAction
   @Override
-  public FileViewProvider findCachedViewProvider(@NotNull VirtualFile file) {
+  public FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file) {
     return myViewProviders.get(file);
   }
 
   @RequiredReadAction
   @Override
-  public void setViewProvider(@NotNull VirtualFile virtualFile, FileViewProvider fileViewProvider) {
+  public void setViewProvider(@Nonnull VirtualFile virtualFile, FileViewProvider fileViewProvider) {
     myViewProviders.put(virtualFile, fileViewProvider);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<PsiFile> getAllCachedFiles() {
     throw new UnsupportedOperationException("Method getAllCachedFiles is not yet implemented in " + getClass().getName());
   }

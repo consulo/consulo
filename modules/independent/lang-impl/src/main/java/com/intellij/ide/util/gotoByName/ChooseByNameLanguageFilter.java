@@ -20,9 +20,9 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -30,26 +30,26 @@ import java.util.*;
  * @author yole
  */
 public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
-  public ChooseByNameLanguageFilter(@NotNull ChooseByNamePopup popup,
-                                    @NotNull FilteringGotoByModel<Language> languageFilteringGotoByModel,
-                                    @NotNull ChooseByNameFilterConfiguration<Language> languageChooseByNameFilterConfiguration,
-                                    @NotNull Project project) {
+  public ChooseByNameLanguageFilter(@Nonnull ChooseByNamePopup popup,
+                                    @Nonnull FilteringGotoByModel<Language> languageFilteringGotoByModel,
+                                    @Nonnull ChooseByNameFilterConfiguration<Language> languageChooseByNameFilterConfiguration,
+                                    @Nonnull Project project) {
     super(popup, languageFilteringGotoByModel, languageChooseByNameFilterConfiguration, project);
   }
 
   @Override
-  protected String textForFilterValue(@NotNull Language value) {
+  protected String textForFilterValue(@Nonnull Language value) {
     return value.getDisplayName();
   }
 
   @Nullable
   @Override
-  protected Icon iconForFilterValue(@NotNull Language value) {
+  protected Icon iconForFilterValue(@Nonnull Language value) {
     final LanguageFileType fileType = value.getAssociatedFileType();
     return fileType != null ? fileType.getIcon() : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Collection<Language> getAllFilterValues() {
     final Collection<Language> registeredLanguages = Language.getRegisteredLanguages();

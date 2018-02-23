@@ -31,7 +31,6 @@ import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -80,13 +79,13 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
     return VcsBundle.message("settings.filter.update.project.info.by.scope");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getHelpTopic() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent createComponent() {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

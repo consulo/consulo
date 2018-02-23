@@ -18,7 +18,7 @@ package com.intellij.execution.console;
 import com.intellij.execution.process.BaseOSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,16 +36,16 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
     myProcessHandler = processHandler;
   }
 
-  public void setProcessHandler(@NotNull ProcessHandler processHandler) {
+  public void setProcessHandler(@Nonnull ProcessHandler processHandler) {
     myProcessHandler = processHandler;
   }
 
   @Override
-  protected void execute(@NotNull String text, @NotNull LanguageConsoleView console) {
+  protected void execute(@Nonnull String text, @Nonnull LanguageConsoleView console) {
     processLine(text);
   }
 
-  public void processLine(@NotNull String line) {
+  public void processLine(@Nonnull String line) {
     sendText(line + "\n");
   }
 

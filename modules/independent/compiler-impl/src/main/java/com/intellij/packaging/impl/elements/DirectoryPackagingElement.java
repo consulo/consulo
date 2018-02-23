@@ -23,7 +23,7 @@ import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,14 +42,14 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new DirectoryElementPresentation(this); 
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
     computeChildrenInstructions(creator.subFolder(myDirectoryName), resolvingContext, compilerContext, artifactType);
   }
 
@@ -73,7 +73,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public void rename(@NotNull String newName) {
+  public void rename(@Nonnull String newName) {
     myDirectoryName = newName;
   }
 
@@ -83,7 +83,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(myDirectoryName);
   }
 

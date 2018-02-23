@@ -47,8 +47,8 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.text.StringSearcher;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -360,7 +360,7 @@ public class IncrementalSearchHandler {
     }
 
     @Override
-    public void execute(@NotNull Editor editor, char charTyped, @NotNull DataContext dataContext) {
+    public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
       PerEditorSearchData data = editor.getUserData(SEARCH_DATA_IN_EDITOR_VIEW_KEY);
       if (data == null || data.hint == null){
         if (myOriginalHandler != null) myOriginalHandler.execute(editor, charTyped, dataContext);

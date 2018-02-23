@@ -21,17 +21,17 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiElementFromSelectionsRule implements GetDataRule<PsiElement[]> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiElement[]> getKey() {
     return LangDataKeys.PSI_ELEMENT_ARRAY;
   }
 
   @Override
-  public PsiElement[] getData(@NotNull DataProvider dataProvider) {
+  public PsiElement[] getData(@Nonnull DataProvider dataProvider) {
     final Object[] objects = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEMS);
     if (objects != null) {
       final PsiElement[] elements = new PsiElement[objects.length];

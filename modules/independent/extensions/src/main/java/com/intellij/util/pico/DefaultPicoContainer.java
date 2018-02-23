@@ -21,8 +21,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.picocontainer.*;
 import org.picocontainer.defaults.*;
 
@@ -38,7 +38,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   private final Map<String, ComponentAdapter> classNameToAdapter = ContainerUtil.newConcurrentMap();
   private final AtomicReference<FList<ComponentAdapter>> nonAssignableComponentAdapters = new AtomicReference<FList<ComponentAdapter>>(FList.<ComponentAdapter>emptyList());
 
-  public DefaultPicoContainer(@Nullable PicoContainer parent) {
+  public DefaultPicoContainer(@javax.annotation.Nullable PicoContainer parent) {
     this.parent = parent == null ? null : ImmutablePicoContainerProxyFactory.newProxyInstance(parent);
   }
 
@@ -51,7 +51,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return componentAdapters.getImmutableSet();
   }
 
-  private void appendNonAssignableAdaptersOfType(@NotNull Class componentType, @NotNull List<ComponentAdapter> result) {
+  private void appendNonAssignableAdaptersOfType(@Nonnull Class componentType, @Nonnull List<ComponentAdapter> result) {
     List<ComponentAdapter> comp = new ArrayList<ComponentAdapter>();
     for (final ComponentAdapter componentAdapter : nonAssignableComponentAdapters.get()) {
       if (ReflectionUtil.isAssignable(componentType, componentAdapter.getComponentImplementation())) {
@@ -73,7 +73,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return adapter;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private ComponentAdapter getFromCache(final Object componentKey) {
     ComponentAdapter adapter = componentKeyToAdapterCache.get(componentKey);
     if (adapter != null) {
@@ -88,8 +88,8 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @Nullable
-  public ComponentAdapter getComponentAdapterOfType(@NotNull Class componentType) {
+  @javax.annotation.Nullable
+  public ComponentAdapter getComponentAdapterOfType(@Nonnull Class componentType) {
     // See http://jira.codehaus.org/secure/ViewIssue.jspa?key=PICO-115
     ComponentAdapter adapterByKey = getComponentAdapter(componentType);
     if (adapterByKey != null) {
@@ -129,7 +129,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public ComponentAdapter registerComponent(@NotNull ComponentAdapter componentAdapter) {
+  public ComponentAdapter registerComponent(@Nonnull ComponentAdapter componentAdapter) {
     Object componentKey = componentAdapter.getComponentKey();
     if (componentKeyToAdapterCache.containsKey(componentKey)) {
       throw new DuplicateComponentKeyRegistrationException(componentKey);
@@ -157,7 +157,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public ComponentAdapter unregisterComponent(@NotNull Object componentKey) {
+  public ComponentAdapter unregisterComponent(@Nonnull Object componentKey) {
     ComponentAdapter adapter = componentKeyToAdapterCache.remove(componentKey);
     componentAdapters.remove(adapter);
     if (adapter instanceof AssignableToComponentAdapter) {
@@ -182,7 +182,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public List<Object> getComponentInstancesOfType(@Nullable Class componentType) {
+  public List<Object> getComponentInstancesOfType(@javax.annotation.Nullable Class componentType) {
     if (componentType == null) {
       return Collections.emptyList();
     }
@@ -198,7 +198,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Object getComponentInstance(Object componentKey) {
     ComponentAdapter adapter = getFromCache(componentKey);
     if (adapter != null) {
@@ -214,14 +214,14 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Object getComponentInstanceOfType(Class componentType) {
     final ComponentAdapter componentAdapter = getComponentAdapterOfType(componentType);
     return componentAdapter == null ? null : getInstance(componentAdapter);
   }
 
-  @Nullable
-  private Object getInstance(@NotNull ComponentAdapter componentAdapter) {
+  @javax.annotation.Nullable
+  private Object getInstance(@Nonnull ComponentAdapter componentAdapter) {
     if (getComponentAdapters().contains(componentAdapter)) {
       return getLocalInstance(componentAdapter);
     }
@@ -232,7 +232,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     return null;
   }
 
-  private Object getLocalInstance(@NotNull ComponentAdapter componentAdapter) {
+  private Object getLocalInstance(@Nonnull ComponentAdapter componentAdapter) {
     PicoException firstLevelException;
     try {
       return componentAdapter.getComponentInstance(this);
@@ -255,8 +255,8 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  @Nullable
-  public ComponentAdapter unregisterComponentByInstance(@NotNull Object componentInstance) {
+  @javax.annotation.Nullable
+  public ComponentAdapter unregisterComponentByInstance(@Nonnull Object componentInstance) {
     for (ComponentAdapter adapter : getComponentAdapters()) {
       Object o = getInstance(adapter);
       if (o != null && o.equals(componentInstance)) {
@@ -286,7 +286,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MutablePicoContainer makeChildContainer() {
     DefaultPicoContainer pc = new DefaultPicoContainer(this);
@@ -295,12 +295,12 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public boolean addChildContainer(@NotNull PicoContainer child) {
+  public boolean addChildContainer(@Nonnull PicoContainer child) {
     return children.add(child);
   }
 
   @Override
-  public boolean removeChildContainer(@NotNull PicoContainer child) {
+  public boolean removeChildContainer(@Nonnull PicoContainer child) {
     return children.remove(child);
   }
 
@@ -317,27 +317,27 @@ public class DefaultPicoContainer implements AreaPicoContainer {
   }
 
   @Override
-  public ComponentAdapter registerComponentInstance(@NotNull Object component) {
+  public ComponentAdapter registerComponentInstance(@Nonnull Object component) {
     return registerComponentInstance(component.getClass(), component);
   }
 
   @Override
-  public ComponentAdapter registerComponentInstance(@NotNull Object componentKey, @NotNull Object componentInstance) {
+  public ComponentAdapter registerComponentInstance(@Nonnull Object componentKey, @Nonnull Object componentInstance) {
     return registerComponent(new InstanceComponentAdapter(componentKey, componentInstance));
   }
 
   @Override
-  public ComponentAdapter registerComponentImplementation(@NotNull Class componentImplementation) {
+  public ComponentAdapter registerComponentImplementation(@Nonnull Class componentImplementation) {
     return registerComponentImplementation(componentImplementation, componentImplementation);
   }
 
   @Override
-  public ComponentAdapter registerComponentImplementation(@NotNull Object componentKey, @NotNull Class componentImplementation) {
+  public ComponentAdapter registerComponentImplementation(@Nonnull Object componentKey, @Nonnull Class componentImplementation) {
     return registerComponentImplementation(componentKey, componentImplementation, null);
   }
 
   @Override
-  public ComponentAdapter registerComponentImplementation(@NotNull Object componentKey, @NotNull Class componentImplementation, Parameter[] parameters) {
+  public ComponentAdapter registerComponentImplementation(@Nonnull Object componentKey, @Nonnull Class componentImplementation, Parameter[] parameters) {
     ComponentAdapter componentAdapter = new CachingConstructorInjectionComponentAdapter(componentKey, componentImplementation, parameters, true);
     return registerComponent(componentAdapter);
   }
@@ -356,7 +356,7 @@ public class DefaultPicoContainer implements AreaPicoContainer {
     private volatile Set<T> immutableSet;
     private LinkedHashSet<T> synchronizedSet = new LinkedHashSet<T>();
 
-    public void add(@NotNull T element) {
+    public void add(@Nonnull T element) {
       synchronized (lock) {
         if (!synchronizedSet.contains(element)) {
           copySyncSetIfExposedAsImmutable().add(element);
@@ -372,13 +372,13 @@ public class DefaultPicoContainer implements AreaPicoContainer {
       return synchronizedSet;
     }
 
-    public void remove(@Nullable T element) {
+    public void remove(@javax.annotation.Nullable T element) {
       synchronized (lock) {
         copySyncSetIfExposedAsImmutable().remove(element);
       }
     }
 
-    @NotNull
+    @Nonnull
     public Set<T> getImmutableSet() {
       Set<T> res = immutableSet;
       if (res == null) {

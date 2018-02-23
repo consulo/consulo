@@ -47,8 +47,8 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
 
   @Override
   // first pass - adjacent carets are grouped into blocks
-  public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
     myProject = project;
     file = file.getViewProvider().getPsi(file.getViewProvider().getBaseLanguage());
 
@@ -372,7 +372,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
   }
 
   @Nullable
-  private static Commenter findCommenter(@NotNull Editor editor, @NotNull PsiFile file, final int line) {
+  private static Commenter findCommenter(@Nonnull Editor editor, @Nonnull PsiFile file, final int line) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof AbstractFileType) {
       return ((AbstractFileType)fileType).getCommenter();
@@ -382,16 +382,16 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     return CommentByBlockCommentHandler.getCommenter(file, editor, lineStartLanguage, lineEndLanguage);
   }
 
-  @NotNull
-  private static Language getLineStartLanguage(@NotNull Editor editor, @NotNull PsiFile file, int line) {
+  @Nonnull
+  private static Language getLineStartLanguage(@Nonnull Editor editor, @Nonnull PsiFile file, int line) {
     Document document = editor.getDocument();
     int lineStartOffset = document.getLineStartOffset(line);
     lineStartOffset = Math.max(0, CharArrayUtil.shiftForward(document.getCharsSequence(), lineStartOffset, " \t"));
     return PsiUtilCore.getLanguageAtOffset(file, lineStartOffset);
   }
 
-  @NotNull
-  private static Language getLineEndLanguage(@NotNull PsiFile file, @NotNull Editor editor, int line) {
+  @Nonnull
+  private static Language getLineEndLanguage(@Nonnull PsiFile file, @Nonnull Editor editor, int line) {
     Document document = editor.getDocument();
     int lineEndOffset = document.getLineEndOffset(line) - 1;
     lineEndOffset = Math.max(0, CharArrayUtil.shiftBackward(document.getCharsSequence(), lineEndOffset < 0 ? 0 : lineEndOffset, " \t"));
@@ -468,7 +468,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     });
   }
 
-  private static void uncommentRange(Document document, int startOffset, int endOffset, @NotNull Commenter commenter) {
+  private static void uncommentRange(Document document, int startOffset, int endOffset, @Nonnull Commenter commenter) {
     final String commentedSuffix = commenter.getCommentedBlockCommentSuffix();
     final String commentedPrefix = commenter.getCommentedBlockCommentPrefix();
     final String prefix = commenter.getBlockCommentPrefix();

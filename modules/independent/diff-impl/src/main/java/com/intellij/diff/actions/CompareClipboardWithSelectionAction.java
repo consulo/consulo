@@ -36,12 +36,12 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   @Nullable
-  private static Editor getEditor(@NotNull AnActionEvent e) {
+  private static Editor getEditor(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project == null) return null;
 
@@ -55,7 +55,7 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   }
 
   @Nullable
-  private static FileType getEditorFileType(@NotNull AnActionEvent e) {
+  private static FileType getEditorFileType(@Nonnull AnActionEvent e) {
     DiffContent content = e.getData(DiffDataKeys.CURRENT_CONTENT);
     if (content != null && content.getContentType() != null) return content.getContentType();
 
@@ -71,14 +71,14 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   }
 
   @Override
-  protected boolean isAvailable(@NotNull AnActionEvent e) {
+  protected boolean isAvailable(@Nonnull AnActionEvent e) {
     Editor editor = getEditor(e);
     return editor != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected DiffRequest getDiffRequest(@NotNull AnActionEvent e) {
+  protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     Editor editor = getEditor(e);
     FileType editorFileType = getEditorFileType(e);
@@ -99,8 +99,8 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     return request;
   }
 
-  @NotNull
-  private static DocumentContent createContent(@NotNull Project project, @NotNull Editor editor, @Nullable FileType type) {
+  @Nonnull
+  private static DocumentContent createContent(@Nonnull Project project, @Nonnull Editor editor, @Nullable FileType type) {
     DocumentContent content = DiffContentFactory.getInstance().create(project, editor.getDocument(), type);
 
     SelectionModel selectionModel = editor.getSelectionModel();
@@ -112,8 +112,8 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     return content;
   }
 
-  @NotNull
-  private static String createContentTitle(@NotNull Editor editor) {
+  @Nonnull
+  private static String createContentTitle(@Nonnull Editor editor) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
     String title = file != null ? DiffRequestFactory.getInstance().getContentTitle(file) : "Editor";
 

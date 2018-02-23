@@ -28,8 +28,8 @@ import com.intellij.openapi.vcs.changes.ui.CommitChangeListDialog;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -39,7 +39,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
   private static final Logger LOG = Logger.getInstance(AbstractCommonCheckinAction.class);
 
   @Override
-  public void actionPerformed(@NotNull VcsContext context) {
+  public void actionPerformed(@Nonnull VcsContext context) {
     LOG.debug("actionPerformed. ");
     Project project = ObjectUtils.notNull(context.getProject());
 
@@ -57,7 +57,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
   }
 
-  protected void performCheckIn(@NotNull VcsContext context, @NotNull Project project, @NotNull FilePath[] roots) {
+  protected void performCheckIn(@Nonnull VcsContext context, @Nonnull Project project, @Nonnull FilePath[] roots) {
     LOG.debug("invoking commit dialog after update");
     LocalChangeList initialSelection = getInitiallySelectedChangeList(context, project);
     Change[] changes = context.getSelectedChanges();
@@ -70,24 +70,24 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
   }
 
-  @NotNull
-  protected FilePath[] prepareRootsForCommit(@NotNull FilePath[] roots, @NotNull Project project) {
+  @Nonnull
+  protected FilePath[] prepareRootsForCommit(@Nonnull FilePath[] roots, @Nonnull Project project) {
     ApplicationManager.getApplication().saveAll();
 
     return DescindingFilesFilter.filterDescindingFiles(roots, project);
   }
 
-  protected String getMnemonicsFreeActionName(@NotNull VcsContext context) {
+  protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
     return getActionName(context);
   }
 
   @Nullable
-  protected CommitExecutor getExecutor(@NotNull Project project) {
+  protected CommitExecutor getExecutor(@Nonnull Project project) {
     return null;
   }
 
   @Nullable
-  protected LocalChangeList getInitiallySelectedChangeList(@NotNull VcsContext context, @NotNull Project project) {
+  protected LocalChangeList getInitiallySelectedChangeList(@Nonnull VcsContext context, @Nonnull Project project) {
     LocalChangeList result;
     ChangeListManager manager = ChangeListManager.getInstance(project);
     ChangeList[] changeLists = context.getSelectedChangeLists();
@@ -104,15 +104,15 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     return result;
   }
 
-  protected abstract String getActionName(@NotNull VcsContext dataContext);
+  protected abstract String getActionName(@Nonnull VcsContext dataContext);
 
-  @NotNull
-  protected abstract FilePath[] getRoots(@NotNull VcsContext dataContext);
+  @Nonnull
+  protected abstract FilePath[] getRoots(@Nonnull VcsContext dataContext);
 
-  protected abstract boolean approximatelyHasRoots(@NotNull VcsContext dataContext);
+  protected abstract boolean approximatelyHasRoots(@Nonnull VcsContext dataContext);
 
   @Override
-  protected void update(@NotNull VcsContext vcsContext, @NotNull Presentation presentation) {
+  protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
     Project project = vcsContext.getProject();
 
     if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
@@ -128,8 +128,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
   }
 
-  @NotNull
-  protected static FilePath[] getAllContentRoots(@NotNull VcsContext context) {
+  @Nonnull
+  protected static FilePath[] getAllContentRoots(@Nonnull VcsContext context) {
     return Stream.of(ProjectLevelVcsManager.getInstance(context.getProject()).getAllVersionedRoots())
             .map(VcsUtil::getFilePath)
             .toArray(FilePath[]::new);

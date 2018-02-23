@@ -23,7 +23,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.util.containers.ConcurrentWeakHashMap;
 import consulo.psi.PsiPackage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -58,7 +58,7 @@ public class TreeViewUtil {
     return ret;
   }
 
-  private static boolean scanPackages(@NotNull PsiPackage p, int packageNameOccurrencesFound) {
+  private static boolean scanPackages(@Nonnull PsiPackage p, int packageNameOccurrencesFound) {
     final PsiPackage[] subPackages = p.getSubPackages();
     packageNameOccurrencesFound += subPackages.length;
     if (packageNameOccurrencesFound > SUBPACKAGE_LIMIT) {
@@ -72,8 +72,8 @@ public class TreeViewUtil {
     return false;
   }
 
-  @NotNull
-  public static String calcAbbreviatedPackageFQName(@NotNull PsiPackage aPackage) {
+  @Nonnull
+  public static String calcAbbreviatedPackageFQName(@Nonnull PsiPackage aPackage) {
     final StringBuilder name = new StringBuilder(aPackage.getName());
     for (PsiPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
       final String packageName = parentPackage.getName();
@@ -91,11 +91,11 @@ public class TreeViewUtil {
     return name.toString();
   }
 
-  @NotNull
-  public static String getNodeName(@NotNull ViewSettings settings,
+  @Nonnull
+  public static String getNodeName(@Nonnull ViewSettings settings,
                                    PsiPackage aPackage,
                                    final PsiPackage parentPackageInTree,
-                                   @NotNull String defaultShortName,
+                                   @Nonnull String defaultShortName,
                                    boolean isFQNameShown) {
     final String name;
     if (isFQNameShown) {

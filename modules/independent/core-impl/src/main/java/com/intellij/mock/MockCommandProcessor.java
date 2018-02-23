@@ -8,33 +8,33 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class MockCommandProcessor extends CommandProcessor {
   @Override
-  public void executeCommand(@NotNull Runnable runnable, String name, Object groupId) {
+  public void executeCommand(@Nonnull Runnable runnable, String name, Object groupId) {
   }
 
   @Override
-  public void executeCommand(Project project, @NotNull Runnable runnable, String name, Object groupId) {
+  public void executeCommand(Project project, @Nonnull Runnable runnable, String name, Object groupId) {
   }
 
   @Override
   public void executeCommand(Project project,
-                             @NotNull Runnable runnable,
+                             @Nonnull Runnable runnable,
                              String name,
                              Object groupId,
-                             @NotNull UndoConfirmationPolicy confirmationPolicy) {
+                             @Nonnull UndoConfirmationPolicy confirmationPolicy) {
 
   }
 
   @Override
   public void executeCommand(@Nullable Project project,
-                             @NotNull Runnable command,
+                             @Nonnull Runnable command,
                              @Nullable String name,
                              @Nullable Object groupId,
-                             @NotNull UndoConfirmationPolicy confirmationPolicy,
+                             @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              boolean shouldRecordCommandForActiveDocument) {
   }
 
@@ -68,15 +68,15 @@ public class MockCommandProcessor extends CommandProcessor {
   }
 
   @Override
-  public void addCommandListener(@NotNull CommandListener listener) {
+  public void addCommandListener(@Nonnull CommandListener listener) {
   }
 
   @Override
-  public void addCommandListener(@NotNull CommandListener listener, @NotNull Disposable parentDisposable) {
+  public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
   }
 
   @Override
-  public void removeCommandListener(@NotNull CommandListener listener) {
+  public void removeCommandListener(@Nonnull CommandListener listener) {
   }
 
   @Override
@@ -90,24 +90,24 @@ public class MockCommandProcessor extends CommandProcessor {
   }
 
   @Override
-  public void runUndoTransparentAction(@NotNull Runnable action) {
+  public void runUndoTransparentAction(@Nonnull Runnable action) {
   }
 
   @Override
-  public void executeCommand(Project project, @NotNull Runnable command, String name, Object groupId, @NotNull UndoConfirmationPolicy confirmationPolicy,
+  public void executeCommand(Project project, @Nonnull Runnable command, String name, Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              Document document) {
   }
 
   @Override
-  public void executeCommand(Project project, @NotNull Runnable runnable, @Nls String name, Object groupId, @Nullable Document document) {
+  public void executeCommand(Project project, @Nonnull Runnable runnable, @Nls String name, Object groupId, @Nullable Document document) {
 
   }
 
   @Override
-  public void addAffectedDocuments(Project project, @NotNull Document... docs) {
+  public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
   }
 
   @Override
-  public void addAffectedFiles(Project project, @NotNull VirtualFile... files) {
+  public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
   }
 }

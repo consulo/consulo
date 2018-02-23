@@ -23,8 +23,8 @@ import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,116 +36,116 @@ import java.util.List;
  * @author max
  */
 public interface ComponentPopupBuilder {
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setTitle(String title);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setResizable(boolean forceResizable);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setMovable(boolean forceMovable);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setRequestFocus(boolean requestFocus);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setFocusable(boolean focusable);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setRequestFocusCondition(Project project, Condition<Project> condition);
 
   /**
    * @see com.intellij.openapi.util.DimensionService
    */
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setDimensionServiceKey(@Nullable Project project, @NonNls String key, boolean useForXYLocation);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCancelCallback(Computable<Boolean> shouldProceed);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCancelOnClickOutside(boolean cancel);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder addListener(JBPopupListener listener);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCancelOnMouseOutCallback(MouseChecker shouldCancel);
 
-  @NotNull
+  @Nonnull
   JBPopup createPopup();
 
-  @NotNull
-  ComponentPopupBuilder setCancelButton(@NotNull IconButton cancelButton);
+  @Nonnull
+  ComponentPopupBuilder setCancelButton(@Nonnull IconButton cancelButton);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCancelOnOtherWindowOpen(boolean cancelOnWindow);
 
-  @NotNull
-  ComponentPopupBuilder setTitleIcon(@NotNull ActiveIcon icon);
+  @Nonnull
+  ComponentPopupBuilder setTitleIcon(@Nonnull ActiveIcon icon);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCancelKeyEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setLocateByContent(boolean byContent);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setLocateWithinScreenBounds(boolean within);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setMinSize(Dimension minSize);
 
   /**
    * Use this method to customize shape of popup window (e.g. to use bounded corners).
    */
   @SuppressWarnings("UnusedDeclaration")//used in 'Presentation Assistant' plugin
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setMaskProvider(MaskProvider maskProvider);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setAlpha(float alpha);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setBelongsToGlobalPopupStack(boolean isInStack);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setProject(Project project);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder addUserData(Object object);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setModalContext(boolean modal);
 
-  @NotNull
-  ComponentPopupBuilder setFocusOwners(@NotNull Component[] focusOwners);
+  @Nonnull
+  ComponentPopupBuilder setFocusOwners(@Nonnull Component[] focusOwners);
 
   /**
    * Adds "advertising" text to the bottom (e.g.: hints in code completion popup).
    */
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setAdText(@Nullable String text);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setAdText(@Nullable String text, int textAlignment);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setShowShadow(boolean show);
 
-  @NotNull
-  ComponentPopupBuilder setCommandButton(@NotNull ActiveComponent commandButton);
+  @Nonnull
+  ComponentPopupBuilder setCommandButton(@Nonnull ActiveComponent commandButton);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setCouldPin(@Nullable Processor<JBPopup> callback);
 
-  @NotNull
-  ComponentPopupBuilder setKeyboardActions(@NotNull List<Pair<ActionListener, KeyStroke>> keyboardActions);
+  @Nonnull
+  ComponentPopupBuilder setKeyboardActions(@Nonnull List<Pair<ActionListener, KeyStroke>> keyboardActions);
 
-  @NotNull
-  ComponentPopupBuilder setSettingButtons(@NotNull Component button);
+  @Nonnull
+  ComponentPopupBuilder setSettingButtons(@Nonnull Component button);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setMayBeParent(boolean mayBeParent);
 
   ComponentPopupBuilder setCancelOnWindowDeactivation(boolean cancelOnWindowDeactivation);
@@ -153,9 +153,9 @@ public interface ComponentPopupBuilder {
   /**
    * Allows to define custom strategy for processing {@link JBPopup#dispatchKeyEvent(KeyEvent)}.
    */
-  @NotNull
-  ComponentPopupBuilder setKeyEventHandler(@NotNull BooleanFunction<KeyEvent> handler);
+  @Nonnull
+  ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<KeyEvent> handler);
 
-  @NotNull
+  @Nonnull
   ComponentPopupBuilder setShowBorder(boolean show);
 }

@@ -23,8 +23,8 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private final ProjectManagerImpl myProjectManager;
   @NonNls private static final String ROOT_TAG_NAME = "defaultProject";
 
-  public DefaultProjectStoreImpl(@NotNull ProjectImpl project, @NotNull ProjectManagerImpl projectManager, @NotNull PathMacroManager pathMacroManager) {
+  public DefaultProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull ProjectManagerImpl projectManager, @Nonnull PathMacroManager pathMacroManager) {
     super(project, pathMacroManager);
 
     myProjectManager = projectManager;
@@ -47,7 +47,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     return element != null ? element.clone() : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
     final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, myPathMacroManager.createTrackingSubstitutor(),
@@ -59,7 +59,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       }
 
       @Override
-      protected XmlElementStorageSaveSession createSaveSession(@NotNull StorageData storageData) {
+      protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
         return new XmlElementStorageSaveSession(storageData) {
           @Override
           protected void doSave(@Nullable Element element) {
@@ -78,7 +78,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       }
 
       @Override
-      @NotNull
+      @Nonnull
       protected StorageData createStorageData() {
         return new StorageData(ROOT_TAG_NAME);
       }
@@ -87,13 +87,13 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     //noinspection deprecation
     return new StateStorageManager() {
       @Override
-      public void addMacro(@NotNull String macro, @NotNull String expansion) {
+      public void addMacro(@Nonnull String macro, @Nonnull String expansion) {
         throw new UnsupportedOperationException("Method addMacro not implemented in " + getClass());
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public String buildFileSpec(@NotNull Storage storage) {
+      public String buildFileSpec(@Nonnull Storage storage) {
         throw new UnsupportedOperationException("Method buildFileSpec not implemented in " + getClass());
       }
 
@@ -105,24 +105,24 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @Override
       @Nullable
-      public StateStorage getStateStorage(@NotNull Storage storageSpec) throws StateStorageException {
+      public StateStorage getStateStorage(@Nonnull Storage storageSpec) throws StateStorageException {
         return storage;
       }
 
       @Nullable
       @Override
-      public StateStorage getStateStorage(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+      public StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
         return storage;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted) {
+      public Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
         return new Couple<>(Collections.<FileBasedStorage>emptyList(), Collections.<FileBasedStorage>emptyList());
       }
 
       @Override
-      public void clearStateStorage(@NotNull String file) {
+      public void clearStateStorage(@Nonnull String file) {
       }
 
       @Nullable
@@ -132,15 +132,15 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         return externalizationSession == null ? null : new MyExternalizationSession(externalizationSession);
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public String expandMacros(@NotNull String file) {
+      public String expandMacros(@Nonnull String file) {
         throw new UnsupportedOperationException("Method expandMacros not implemented in " + getClass());
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public String collapseMacros(@NotNull String path) {
+      public String collapseMacros(@Nonnull String path) {
         throw new UnsupportedOperationException("Method collapseMacros not implemented in " + getClass());
       }
 
@@ -155,7 +155,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         throw new UnsupportedOperationException("Method getStreamProviders not implemented in " + getClass());
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Collection<String> getStorageFileNames() {
         throw new UnsupportedOperationException("Method getStorageFileNames not implemented in " + getClass());
@@ -171,18 +171,19 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   }
 
   private static class MyExternalizationSession implements StateStorageManager.ExternalizationSession {
-    @NotNull final StateStorage.ExternalizationSession externalizationSession;
+    @Nonnull
+    final StateStorage.ExternalizationSession externalizationSession;
 
-    public MyExternalizationSession(@NotNull StateStorage.ExternalizationSession externalizationSession) {
+    public MyExternalizationSession(@Nonnull StateStorage.ExternalizationSession externalizationSession) {
       this.externalizationSession = externalizationSession;
     }
 
     @Override
-    public void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state) {
+    public void setState(@Nonnull Storage[] storageSpecs, @Nonnull Object component, @Nonnull String componentName, @Nonnull Object state) {
       externalizationSession.setState(component, componentName, state, null);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<SaveSession> createSaveSessions() {
       return ContainerUtil.createMaybeSingletonList(externalizationSession.createSaveSession());

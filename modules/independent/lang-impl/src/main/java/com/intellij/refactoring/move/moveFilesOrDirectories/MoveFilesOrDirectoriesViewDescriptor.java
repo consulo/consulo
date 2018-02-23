@@ -24,7 +24,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
   private final PsiElement[] myElementsToMove;
@@ -54,7 +54,7 @@ class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getElements() {
     return myElementsToMove;
   }

@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.Transferable;
 
@@ -26,7 +26,7 @@ import java.awt.datatransfer.Transferable;
  * Support for data transfer between editor and clipboard.
  */
 public abstract class EditorCopyPasteHelper {
-  @NotNull
+  @Nonnull
   public static EditorCopyPasteHelper getInstance() {
     return ServiceManager.getService(EditorCopyPasteHelper.class);
   }
@@ -34,7 +34,7 @@ public abstract class EditorCopyPasteHelper {
   /**
    * Copies text selected in editor to clipboard.
    */
-  public abstract void copySelectionToClipboard(@NotNull Editor editor);
+  public abstract void copySelectionToClipboard(@Nonnull Editor editor);
 
   /**
    * Pastes from clipboard into editor at caret(s) position.
@@ -42,7 +42,7 @@ public abstract class EditorCopyPasteHelper {
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
   @Nullable
-  public abstract TextRange[] pasteFromClipboard(@NotNull Editor editor);
+  public abstract TextRange[] pasteFromClipboard(@Nonnull Editor editor);
 
   /**
    * Pastes given Transferable instance into editor at caret(s) position.
@@ -50,5 +50,5 @@ public abstract class EditorCopyPasteHelper {
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
   @Nullable
-  public abstract TextRange[] pasteTransferable(@NotNull Editor editor, @NotNull Transferable content);
+  public abstract TextRange[] pasteTransferable(@Nonnull Editor editor, @Nonnull Transferable content);
 }

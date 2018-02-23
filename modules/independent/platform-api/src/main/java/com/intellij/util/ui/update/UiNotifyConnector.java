@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,11 +31,11 @@ import java.lang.ref.WeakReference;
 
 public class UiNotifyConnector implements Disposable, HierarchyListener{
 
-  @NotNull
+  @Nonnull
   private final WeakReference<Component> myComponent;
   private Activatable myTarget;
 
-  public UiNotifyConnector(@NotNull final Component component, @NotNull final Activatable target) {
+  public UiNotifyConnector(@Nonnull final Component component, @Nonnull final Activatable target) {
     myComponent = new WeakReference<Component>(component);
     myTarget = target;
     if (component.isShowing()) {
@@ -48,7 +48,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
   }
 
   @Override
-  public void hierarchyChanged(@NotNull HierarchyEvent e) {
+  public void hierarchyChanged(@Nonnull HierarchyEvent e) {
     if (isDisposed()) return;
 
     if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) > 0) {
@@ -132,7 +132,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener{
     }
   }
 
-  public static void doWhenFirstShown(@NotNull JComponent c, @NotNull final Runnable runnable) {
+  public static void doWhenFirstShown(@Nonnull JComponent c, @Nonnull final Runnable runnable) {
     Activatable activatable = new Activatable() {
       @Override
       public void showNotify() {

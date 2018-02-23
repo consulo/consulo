@@ -25,7 +25,7 @@ import com.intellij.util.BitUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 import java.io.File;
@@ -39,7 +39,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
   private final String myProjectName;
   private List<String> myExtensions;
 
-  public ReopenProjectAction(final String projectPath, final String projectName, final String displayName, @NotNull List<String> extensions) {
+  public ReopenProjectAction(final String projectPath, final String projectName, final String displayName, @Nonnull List<String> extensions) {
     myProjectPath = projectPath;
     myProjectName = projectName;
     myExtensions = extensions;
@@ -53,7 +53,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     //Force move focus to IdeFrame
     IdeEventQueue.getInstance().getPopupManager().closeAllPopups();
 
@@ -75,7 +75,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     Platform.hacky(() -> ProjectUtil.open(myProjectPath, project, forceOpenInNewFrame), () -> ProjectUtil.openAsync(myProjectPath, null, forceOpenInNewFrame, UIAccess.get()));
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getExtensions() {
     return myExtensions;
   }

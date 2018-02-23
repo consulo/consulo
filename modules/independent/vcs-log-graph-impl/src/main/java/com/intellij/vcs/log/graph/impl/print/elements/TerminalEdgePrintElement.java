@@ -17,14 +17,14 @@ package com.intellij.vcs.log.graph.impl.print.elements;
 
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.printer.PrintElementManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TerminalEdgePrintElement extends EdgePrintElementImpl {
   public TerminalEdgePrintElement(int rowIndex,
                                   int position,
-                                  @NotNull Type type,
-                                  @NotNull GraphEdge graphEdge,
-                                  @NotNull PrintElementManager printElementManager) {
+                                  @Nonnull Type type,
+                                  @Nonnull GraphEdge graphEdge,
+                                  @Nonnull PrintElementManager printElementManager) {
     super(rowIndex, position, position, type, graphEdge, true, printElementManager);
   }
 }

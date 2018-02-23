@@ -23,8 +23,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -36,13 +35,13 @@ public abstract class TemplateContextType {
   private final String myPresentableName;
   private final Class<? extends TemplateContextType> myBaseContextType;
 
-  protected TemplateContextType(@NotNull @NonNls String id, @NotNull String presentableName) {
+  protected TemplateContextType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
     this(id, presentableName, EverywhereContextType.class);
   }
 
-  protected TemplateContextType(@NotNull @NonNls String id,
-                                @NotNull String presentableName,
-                                @Nullable Class<? extends TemplateContextType> baseContextType) {
+  protected TemplateContextType(@Nonnull @NonNls String id,
+                                @Nonnull String presentableName,
+                                @javax.annotation.Nullable Class<? extends TemplateContextType> baseContextType) {
     myContextId = id;
     myPresentableName = presentableName;
     myBaseContextType = baseContextType;
@@ -56,7 +55,7 @@ public abstract class TemplateContextType {
     return myContextId;
   }
 
-  public abstract boolean isInContext(@NotNull PsiFile file, int offset);
+  public abstract boolean isInContext(@Nonnull PsiFile file, int offset);
 
   /**
    * @return whether an abbreviation of this context's template can be entered in editor
@@ -66,12 +65,12 @@ public abstract class TemplateContextType {
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public SyntaxHighlighter createHighlighter() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TemplateContextType getBaseContextType() {
     return myBaseContextType != null ? EP_NAME.findExtension(myBaseContextType) : null;
   }

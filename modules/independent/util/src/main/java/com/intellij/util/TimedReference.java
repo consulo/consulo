@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
 public class TimedReference<T> extends Timed<T> {

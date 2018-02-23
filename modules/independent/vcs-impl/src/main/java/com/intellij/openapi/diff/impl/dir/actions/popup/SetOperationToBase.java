@@ -22,8 +22,7 @@ import com.intellij.openapi.diff.impl.dir.DirDiffElementImpl;
 import com.intellij.ide.diff.DirDiffOperation;
 import com.intellij.openapi.diff.impl.dir.DirDiffPanel;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -48,7 +47,7 @@ public abstract class SetOperationToBase extends AnAction {
     table.repaint();
   }
 
-  @NotNull
+  @Nonnull
   protected abstract DirDiffOperation getOperation();
 
   @Override
@@ -68,12 +67,12 @@ public abstract class SetOperationToBase extends AnAction {
 
   protected abstract boolean isEnabledFor(DirDiffElement element);
 
-  @Nullable
+  @javax.annotation.Nullable
   static JTable getTable(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_TABLE);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static DirDiffTableModel getModel(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_MODEL);
   }

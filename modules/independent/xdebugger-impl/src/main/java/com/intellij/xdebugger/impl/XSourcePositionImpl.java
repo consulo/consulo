@@ -27,8 +27,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -38,7 +38,7 @@ public class XSourcePositionImpl implements XSourcePosition {
   private final int myLine;
   private final int myOffset;
 
-  private XSourcePositionImpl(@NotNull VirtualFile file, final int line, final int offset) {
+  private XSourcePositionImpl(@Nonnull VirtualFile file, final int line, final int offset) {
     myFile = file;
     myLine = line;
     myOffset = offset;
@@ -55,7 +55,7 @@ public class XSourcePositionImpl implements XSourcePosition {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -128,13 +128,13 @@ public class XSourcePositionImpl implements XSourcePosition {
   }
 
   @Override
-  @NotNull
-  public Navigatable createNavigatable(@NotNull Project project) {
+  @Nonnull
+  public Navigatable createNavigatable(@Nonnull Project project) {
     return doCreateOpenFileDescriptor(project, this);
   }
 
-  @NotNull
-  public static OpenFileDescriptor createOpenFileDescriptor(@NotNull Project project, @NotNull XSourcePosition position) {
+  @Nonnull
+  public static OpenFileDescriptor createOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
     Navigatable navigatable = position.createNavigatable(project);
     if (navigatable instanceof OpenFileDescriptor) {
       return (OpenFileDescriptor)navigatable;
@@ -144,8 +144,8 @@ public class XSourcePositionImpl implements XSourcePosition {
     }
   }
 
-  @NotNull
-  public static OpenFileDescriptor doCreateOpenFileDescriptor(@NotNull Project project, @NotNull XSourcePosition position) {
+  @Nonnull
+  public static OpenFileDescriptor doCreateOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
     return position.getOffset() != -1
            ? new OpenFileDescriptor(project, position.getFile(), position.getOffset())
            : new OpenFileDescriptor(project, position.getFile(), position.getLine(), 0);

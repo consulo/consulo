@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +50,7 @@ public class CompositeDiffPanel implements DiffViewer {
   private final Disposable myParentDisposable;
   private final Map<String, Pair<DiffViewer, Content>> myMap;
 
-  public CompositeDiffPanel(Project project, final DiscloseMultiRequest request, final Window window, @NotNull Disposable parentDisposable) {
+  public CompositeDiffPanel(Project project, final DiscloseMultiRequest request, final Window window, @Nonnull Disposable parentDisposable) {
     myRequest = request;
     myWindow = window;
     myParentDisposable = parentDisposable;

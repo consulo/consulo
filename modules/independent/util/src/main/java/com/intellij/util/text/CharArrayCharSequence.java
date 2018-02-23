@@ -16,18 +16,18 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CharArrayCharSequence implements CharSequenceBackedByArray {
   protected final char[] myChars;
   protected final int myStart;
   private final int myEnd;
 
-  public CharArrayCharSequence(@NotNull char... chars) {
+  public CharArrayCharSequence(@Nonnull char... chars) {
     this(chars, 0, chars.length);
   }
 
-  public CharArrayCharSequence(@NotNull char[] chars, int start, int end) {
+  public CharArrayCharSequence(@Nonnull char[] chars, int start, int end) {
     if (start < 0 || end > chars.length || start > end) {
       throw new IndexOutOfBoundsException("chars.length:" + chars.length +
                                           ", start:" + start +
@@ -54,13 +54,13 @@ public class CharArrayCharSequence implements CharSequenceBackedByArray {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     return new String(myChars, myStart, myEnd - myStart); //TODO StringFactory
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] getChars() {
     if (myStart == 0 /*&& myEnd == myChars.length*/) return myChars;
     char[] chars = new char[length()];
@@ -74,7 +74,7 @@ public class CharArrayCharSequence implements CharSequenceBackedByArray {
   }
 
   @Override
-  public void getChars(@NotNull char[] dst, int dstOffset) {
+  public void getChars(@Nonnull char[] dst, int dstOffset) {
     System.arraycopy(myChars, myStart, dst, dstOffset, length());
   }
 

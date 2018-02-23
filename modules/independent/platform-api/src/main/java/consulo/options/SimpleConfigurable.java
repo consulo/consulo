@@ -21,8 +21,8 @@ import com.intellij.openapi.util.NotNullComputable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -32,25 +32,25 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
   private T myComponent;
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   protected abstract T createPanel();
 
   @RequiredUIAccess
-  protected abstract boolean isModified(@NotNull T component);
+  protected abstract boolean isModified(@Nonnull T component);
 
   @RequiredUIAccess
-  protected abstract void apply(@NotNull T component) throws ConfigurationException;
+  protected abstract void apply(@Nonnull T component) throws ConfigurationException;
 
   @RequiredUIAccess
-  protected abstract void reset(@NotNull T component);
+  protected abstract void reset(@Nonnull T component);
 
   @Nullable
-  public final Component getPreferredFocusedComponent(@NotNull T component) {
+  public final Component getPreferredFocusedComponent(@Nonnull T component) {
     return null;
   }
 
   @RequiredDispatchThread
-  protected void disposeUIResources(@NotNull T component) {
+  protected void disposeUIResources(@Nonnull T component) {
     // nothing
   }
 

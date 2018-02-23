@@ -3,7 +3,7 @@ package com.intellij.application.options;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.ui.ListCellRendererWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -17,7 +17,7 @@ public class ModuleListCellRenderer extends ListCellRendererWrapper<Module> {
     this("[none]");
   }
 
-  public ModuleListCellRenderer(@NotNull String emptySelectionText) {
+  public ModuleListCellRenderer(@Nonnull String emptySelectionText) {
     myEmptySelectionText = emptySelectionText;
   }
 

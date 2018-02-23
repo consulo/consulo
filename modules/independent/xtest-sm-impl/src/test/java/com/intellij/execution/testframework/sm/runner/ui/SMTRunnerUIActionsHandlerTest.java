@@ -20,7 +20,6 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.BaseSMTRunnerTestCase;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -38,7 +37,7 @@ public class SMTRunnerUIActionsHandlerTest extends BaseSMTRunnerTestCase {
     myProperties = createConsoleProperties();
     myResultsViewer = new MockTestResultsViewer(myProperties, mySuite) {
       @Override
-      public void selectAndNotify(@Nullable final AbstractTestProxy proxy) {
+      public void selectAndNotify(@javax.annotation.Nullable final AbstractTestProxy proxy) {
         super.selectAndNotify(proxy);
         mySelectedTestProxy = proxy;
       }

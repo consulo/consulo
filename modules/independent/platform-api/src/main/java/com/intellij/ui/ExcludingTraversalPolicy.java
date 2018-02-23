@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
     this(KeyboardFocusManager.getCurrentKeyboardFocusManager().getDefaultFocusTraversalPolicy(), excludes);
   }
 
-  public ExcludingTraversalPolicy(@NotNull FocusTraversalPolicy wrappee, Component... excludes) {
+  public ExcludingTraversalPolicy(@Nonnull FocusTraversalPolicy wrappee, Component... excludes) {
     myWrappee = wrappee;
     Collections.addAll(myExcludes, excludes);
   }

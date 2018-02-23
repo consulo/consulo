@@ -15,7 +15,7 @@
  */
 package consulo.diagram.builder;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,9 +29,9 @@ public interface GraphNode<T> {
    *  [THIS NODE] -> [TARGET NODE]
    * @param target
    */
-  void makeArrow(@NotNull GraphNode<?> target);
+  void makeArrow(@Nonnull GraphNode<?> target);
 
-  @NotNull
+  @Nonnull
   List<GraphNode<?>> getArrowNodes();
 
   T getValue();

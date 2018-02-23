@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Date;
@@ -35,7 +35,7 @@ public class Clock {
   }
 
   @TestOnly
-  public static void setTime(@NotNull Date date) {
+  public static void setTime(@Nonnull Date date) {
     setTime(date.getTime());
   }
 

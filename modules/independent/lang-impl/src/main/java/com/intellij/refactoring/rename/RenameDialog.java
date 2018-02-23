@@ -42,8 +42,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.xml.util.XmlStringUtil;
 import com.intellij.xml.util.XmlTagUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,8 @@ public class RenameDialog extends RefactoringDialog {
   private JCheckBox myCbSearchTextOccurences;
   private final JLabel myNewNamePrefix = new JLabel("");
   private final String myHelpID;
-  @NotNull private final PsiElement myPsiElement;
+  @Nonnull
+  private final PsiElement myPsiElement;
   private final PsiElement myNameSuggestionContext;
   private final Editor myEditor;
   private static final String REFACTORING_NAME = RefactoringBundle.message("rename.title");
@@ -69,7 +70,7 @@ public class RenameDialog extends RefactoringDialog {
   private final Map<AutomaticRenamerFactory, JCheckBox> myAutomaticRenamers = new HashMap<AutomaticRenamerFactory, JCheckBox>();
   private String myOldName;
 
-  public RenameDialog(@NotNull Project project, @NotNull PsiElement psiElement, @Nullable PsiElement nameSuggestionContext,
+  public RenameDialog(@Nonnull Project project, @Nonnull PsiElement psiElement, @Nullable PsiElement nameSuggestionContext,
                       Editor editor) {
     super(project, true);
 
@@ -108,12 +109,12 @@ public class RenameDialog extends RefactoringDialog {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected String getLabelText() {
     return RefactoringBundle.message("rename.0.and.its.usages.to", getFullName());
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement getPsiElement() {
     return myPsiElement;
   }

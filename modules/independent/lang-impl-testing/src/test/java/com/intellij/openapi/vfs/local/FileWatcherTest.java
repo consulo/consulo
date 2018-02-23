@@ -35,8 +35,7 @@ import com.intellij.util.Function;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,7 +113,7 @@ public class FileWatcherTest extends PlatformLangTestCase {
     myConnection = ApplicationManager.getApplication().getMessageBus().connect();
     myConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
       @Override
-      public void after(@NotNull List<? extends VFileEvent> events) {
+      public void after(@Nonnull List<? extends VFileEvent> events) {
         synchronized (myEvents) {
           myEvents.addAll(events);
         }
@@ -728,12 +727,12 @@ public class FileWatcherTest extends PlatformLangTestCase {
   }
 
 
-  @NotNull
+  @Nonnull
   private LocalFileSystem.WatchRequest watch(File watchFile) {
     return watch(watchFile, true);
   }
 
-  @NotNull
+  @Nonnull
   private LocalFileSystem.WatchRequest watch(final File watchFile, final boolean recursive) {
     final Ref<LocalFileSystem.WatchRequest> request = Ref.create();
     getEvents("events to add watch " + watchFile, new Runnable() {
@@ -761,7 +760,7 @@ public class FileWatcherTest extends PlatformLangTestCase {
     assertNotNull(file.toString(), vFile);
     VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         file.getChildren();
         return true;
       }
@@ -785,7 +784,7 @@ public class FileWatcherTest extends PlatformLangTestCase {
     }
   }
 
-  private List<VFileEvent> getEvents(String msg, @Nullable Runnable action) {
+  private List<VFileEvent> getEvents(String msg, @javax.annotation.Nullable Runnable action) {
     LOG.debug("** waiting for " + msg);
     myAccept = true;
 

@@ -19,8 +19,8 @@ import com.intellij.ide.passwordSafe.MasterPasswordUnavailableException;
 import com.intellij.ide.passwordSafe.PasswordSafeException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -87,7 +87,7 @@ public class MasterPasswordDialog extends DialogWrapper {
   /**
    * {@inheritDoc}
    */
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), new DialogWrapperExitAction("C&hange Password", CHANGE_USER_CODE),

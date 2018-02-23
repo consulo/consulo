@@ -18,8 +18,9 @@ package com.intellij.psi;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.PsiElementProcessor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -39,7 +40,8 @@ public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatableP
 
   @RequiredReadAction
   @Override
-  @NotNull @NonNls
+  @Nonnull
+  @NonNls
   String getName();
 
   boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor);

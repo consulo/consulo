@@ -28,8 +28,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +69,8 @@ public class ImageLoader implements Serializable {
     }
 
     public final String path;
-    public final @Nullable Class cls; // resource class if present
+    public final @Nullable
+    Class cls; // resource class if present
     public final float scale; // initial scale factor
     public final Type type;
     public final boolean original; // path is not altered
@@ -131,7 +132,7 @@ public class ImageLoader implements Serializable {
     }
 
     @Nullable
-    public Image load(@NotNull ImageConverterChain converters) {
+    public Image load(@Nonnull ImageConverterChain converters) {
       for (ImageDesc desc : this) {
         try {
           Image image = desc.load();
@@ -145,7 +146,7 @@ public class ImageLoader implements Serializable {
       return null;
     }
 
-    public static ImageDescList create(@NotNull String file,
+    public static ImageDescList create(@Nonnull String file,
                                        @Nullable Class cls,
                                        boolean dark,
                                        boolean retina,
@@ -154,7 +155,7 @@ public class ImageLoader implements Serializable {
       return create(file, cls, dark, retina, allowFloatScaling, JBUI.pixScale());
     }
 
-    public static ImageDescList create(@NotNull String file,
+    public static ImageDescList create(@Nonnull String file,
                                        @Nullable Class cls,
                                        boolean dark,
                                        boolean retina,
@@ -264,17 +265,17 @@ public class ImageLoader implements Serializable {
   }
 
   @Nullable
-  public static Image loadFromUrl(@NotNull URL url) {
+  public static Image loadFromUrl(@Nonnull URL url) {
     return loadFromUrl(url, true);
   }
 
   @Nullable
-  public static Image loadFromUrl(@NotNull URL url, boolean allowFloatScaling) {
+  public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling) {
     return loadFromUrl(url, allowFloatScaling, (ImageFilter)null);
   }
 
   @Nullable
-  public static Image loadFromUrl(@NotNull URL url, boolean allowFloatScaling, ImageFilter filter) {
+  public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling, ImageFilter filter) {
     return loadFromUrl(url, allowFloatScaling, new ImageFilter[] {filter}, JBUI.pixScale());
   }
 
@@ -284,7 +285,7 @@ public class ImageLoader implements Serializable {
    * according to the passed scale and returns.
    */
   @Nullable
-  public static Image loadFromUrl(@NotNull URL url, boolean allowFloatScaling, ImageFilter[] filters, float pixScale) {
+  public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling, ImageFilter[] filters, float pixScale) {
     final float scaleFactor = adjustScaleFactor(allowFloatScaling, pixScale); // valid for Retina as well
 
     // We can't check all 3rd party plugins and convince the authors to add @2x icons.
@@ -318,7 +319,7 @@ public class ImageLoader implements Serializable {
     return allowFloatScaling ? scale : scale > 1.5f ? 2f : 1f;
   }
 
-  @NotNull
+  @Nonnull
   public static Image scaleImage(Image image, float scale) {
     if (scale == 1.0) return image;
 
@@ -355,33 +356,33 @@ public class ImageLoader implements Serializable {
   }
 
   @Nullable
-  public static Image loadFromResource(@NonNls @NotNull String s) {
+  public static Image loadFromResource(@NonNls @Nonnull String s) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
     if (callerClass == null) return null;
     return loadFromResource(s, callerClass);
   }
 
   @Nullable
-  public static Image loadFromResource(@NonNls @NotNull String path, @NotNull Class aClass) {
+  public static Image loadFromResource(@NonNls @Nonnull String path, @Nonnull Class aClass) {
     return ImageDescList.create(path, aClass, UIUtil.isUnderDarcula(), JBUI.pixScale() >= 1.5f, true).
             load(ImageConverterChain.create().withRetina());
   }
 
-  public static Image loadFromStream(@NotNull final InputStream inputStream) {
+  public static Image loadFromStream(@Nonnull final InputStream inputStream) {
     return loadFromStream(inputStream, 1);
   }
 
-  public static Image loadFromStream(@NotNull final InputStream inputStream, final int scale) {
+  public static Image loadFromStream(@Nonnull final InputStream inputStream, final int scale) {
     return loadFromStream(inputStream, scale, null);
   }
 
-  public static Image loadFromStream(@NotNull final InputStream inputStream, final int scale, ImageFilter filter) {
+  public static Image loadFromStream(@Nonnull final InputStream inputStream, final int scale, ImageFilter filter) {
     Image image = load(inputStream, scale);
     ImageDesc desc = new ImageDesc("", null, scale, ImageDesc.Type.UNDEFINED);
     return ImageConverterChain.create().withFilter(filter).withRetina().convert(image, desc);
   }
 
-  private static Image load(@NotNull final InputStream inputStream, final int scale) {
+  private static Image load(@Nonnull final InputStream inputStream, final int scale) {
     if (scale <= 0) throw new IllegalArgumentException("Scale must be 1 or greater");
     try {
       BufferExposingByteArrayOutputStream outputStream = new BufferExposingByteArrayOutputStream();
@@ -417,14 +418,14 @@ public class ImageLoader implements Serializable {
   /**
    * @deprecated use {@link ImageDescList}
    */
-  public static List<Pair<String, Integer>> getFileNames(@NotNull String file) {
+  public static List<Pair<String, Integer>> getFileNames(@Nonnull String file) {
     return getFileNames(file, false, false);
   }
 
   /**
    * @deprecated use {@link ImageDescList}
    */
-  public static List<Pair<String, Integer>> getFileNames(@NotNull String file, boolean dark, boolean retina) {
+  public static List<Pair<String, Integer>> getFileNames(@Nonnull String file, boolean dark, boolean retina) {
     new UnsupportedOperationException("unsupported method").printStackTrace();
     return new ArrayList<Pair<String, Integer>>();
   }

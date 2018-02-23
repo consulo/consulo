@@ -42,8 +42,8 @@ import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ArrayUtilRt;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -158,7 +158,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     return path == null ? null : (TreeNode)path.getLastPathComponent();
   }
 
-  private void doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
+  private void doDrop(@Nonnull final TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode, final int dropAction) {
     TreeNode validTargetNode = getValidTargetNode(sourceNodes, targetNode, dropAction);
     if (validTargetNode != null) {
       final TreeNode[] filteredSourceNodes = removeRedundantSourceNodes(sourceNodes, validTargetNode, dropAction);
@@ -169,7 +169,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
   }
 
   @Nullable
-  private TreeNode getValidTargetNode(final @NotNull TreeNode[] sourceNodes, final @NotNull TreeNode targetNode, final int dropAction) {
+  private TreeNode getValidTargetNode(final @Nonnull TreeNode[] sourceNodes, final @Nonnull TreeNode targetNode, final int dropAction) {
     final DropHandler dropHandler = getDropHandler(dropAction);
     TreeNode currentNode = targetNode;
     while (true) {
@@ -182,7 +182,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
   }
 
-  private TreeNode[] removeRedundantSourceNodes(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode, final int dropAction) {
+  private TreeNode[] removeRedundantSourceNodes(@Nonnull final TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode, final int dropAction) {
     final DropHandler dropHandler = getDropHandler(dropAction);
     List<TreeNode> result = new ArrayList<>(sourceNodes.length);
     for (TreeNode sourceNode : sourceNodes) {
@@ -198,15 +198,15 @@ class ProjectViewDropTarget implements DnDNativeTarget {
   }
 
   private interface DropHandler {
-    boolean isValidSource(@NotNull TreeNode[] sourceNodes, TreeNode targetNode);
+    boolean isValidSource(@Nonnull TreeNode[] sourceNodes, TreeNode targetNode);
 
-    boolean isValidTarget(@NotNull TreeNode[] sourceNodes, @NotNull TreeNode targetNode);
+    boolean isValidTarget(@Nonnull TreeNode[] sourceNodes, @Nonnull TreeNode targetNode);
 
-    boolean shouldDelegateToParent(TreeNode[] sourceNodes, @NotNull TreeNode targetNode);
+    boolean shouldDelegateToParent(TreeNode[] sourceNodes, @Nonnull TreeNode targetNode);
 
-    boolean isDropRedundant(@NotNull TreeNode sourceNode, @NotNull TreeNode targetNode);
+    boolean isDropRedundant(@Nonnull TreeNode sourceNode, @Nonnull TreeNode targetNode);
 
-    void doDrop(@NotNull TreeNode[] sourceNodes, @NotNull TreeNode targetNode);
+    void doDrop(@Nonnull TreeNode[] sourceNodes, @Nonnull TreeNode targetNode);
 
     void doDropFiles(List<File> fileList, TreeNode targetNode);
   }
@@ -222,19 +222,19 @@ class ProjectViewDropTarget implements DnDNativeTarget {
 
   public abstract class MoveCopyDropHandler implements DropHandler {
     @Override
-    public boolean isValidSource(@NotNull final TreeNode[] sourceNodes, TreeNode targetNode) {
+    public boolean isValidSource(@Nonnull final TreeNode[] sourceNodes, TreeNode targetNode) {
       return canDrop(sourceNodes, targetNode);
     }
 
     @Override
-    public boolean isValidTarget(@NotNull final TreeNode[] sourceNodes, final @NotNull TreeNode targetNode) {
+    public boolean isValidTarget(@Nonnull final TreeNode[] sourceNodes, final @Nonnull TreeNode targetNode) {
       return canDrop(sourceNodes, targetNode);
     }
 
-    protected abstract boolean canDrop(@NotNull TreeNode[] sourceNodes, @Nullable TreeNode targetNode);
+    protected abstract boolean canDrop(@Nonnull TreeNode[] sourceNodes, @Nullable TreeNode targetNode);
 
-    @NotNull
-    protected PsiElement[] getPsiElements(@NotNull TreeNode[] nodes) {
+    @Nonnull
+    protected PsiElement[] getPsiElements(@Nonnull TreeNode[] nodes) {
       List<PsiElement> psiElements = new ArrayList<>(nodes.length);
       for (TreeNode node : nodes) {
         PsiElement psiElement = getPsiElement(node);
@@ -270,7 +270,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
 
   private class MoveDropHandler extends MoveCopyDropHandler {
     @Override
-    protected boolean canDrop(@NotNull final TreeNode[] sourceNodes, @Nullable final TreeNode targetNode) {
+    protected boolean canDrop(@Nonnull final TreeNode[] sourceNodes, @Nullable final TreeNode targetNode) {
       if (targetNode instanceof DefaultMutableTreeNode) {
         final Object userObject = ((DefaultMutableTreeNode)targetNode).getUserObject();
         if (userObject instanceof DropTargetNode && ((DropTargetNode)userObject).canDrop(sourceNodes)) {
@@ -283,7 +283,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public void doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode) {
+    public void doDrop(@Nonnull final TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode) {
       if (targetNode instanceof DefaultMutableTreeNode) {
         final Object userObject = ((DefaultMutableTreeNode)targetNode).getUserObject();
         if (userObject instanceof DropTargetNode && ((DropTargetNode)userObject).canDrop(sourceNodes)) {
@@ -336,12 +336,12 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public boolean isDropRedundant(@NotNull TreeNode sourceNode, @NotNull TreeNode targetNode) {
+    public boolean isDropRedundant(@Nonnull TreeNode sourceNode, @Nonnull TreeNode targetNode) {
       return sourceNode.getParent() == targetNode || MoveHandler.isMoveRedundant(getPsiElement(sourceNode), getPsiElement(targetNode));
     }
 
     @Override
-    public boolean shouldDelegateToParent(TreeNode[] sourceNodes, @NotNull final TreeNode targetNode) {
+    public boolean shouldDelegateToParent(TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode) {
       final PsiElement psiElement = getPsiElement(targetNode);
       return !MoveHandler.isValidTarget(psiElement, getPsiElements(sourceNodes));
     }
@@ -364,7 +364,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
 
   private class CopyDropHandler extends MoveCopyDropHandler {
     @Override
-    protected boolean canDrop(@NotNull final TreeNode[] sourceNodes, @Nullable final TreeNode targetNode) {
+    protected boolean canDrop(@Nonnull final TreeNode[] sourceNodes, @Nullable final TreeNode targetNode) {
       final PsiElement[] sourceElements = getPsiElements(sourceNodes);
       final PsiElement targetElement = getPsiElement(targetNode);
       if (targetElement == null) return false;
@@ -376,7 +376,7 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public void doDrop(@NotNull final TreeNode[] sourceNodes, @NotNull final TreeNode targetNode) {
+    public void doDrop(@Nonnull final TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode) {
       final PsiElement[] sourceElements = getPsiElements(sourceNodes);
       doDrop(targetNode, sourceElements);
     }
@@ -408,12 +408,12 @@ class ProjectViewDropTarget implements DnDNativeTarget {
     }
 
     @Override
-    public boolean isDropRedundant(@NotNull TreeNode sourceNode, @NotNull TreeNode targetNode) {
+    public boolean isDropRedundant(@Nonnull TreeNode sourceNode, @Nonnull TreeNode targetNode) {
       return false;
     }
 
     @Override
-    public boolean shouldDelegateToParent(TreeNode[] sourceNodes, @NotNull final TreeNode targetNode) {
+    public boolean shouldDelegateToParent(TreeNode[] sourceNodes, @Nonnull final TreeNode targetNode) {
       final PsiElement psiElement = getPsiElement(targetNode);
       return psiElement == null || (!(psiElement instanceof PsiDirectoryContainer) && !(psiElement instanceof PsiDirectory));
     }

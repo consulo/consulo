@@ -18,7 +18,7 @@ package com.intellij.psi.util;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class PsiFilter<T extends PsiElement> {
   private final Class<T> filter;
   public static final PsiFilter<?>[] EMPTY = {}; 
 
-  public PsiFilter(@NotNull Class<T> filter) {
+  public PsiFilter(@Nonnull Class<T> filter) {
     this.filter = filter;
   }
 

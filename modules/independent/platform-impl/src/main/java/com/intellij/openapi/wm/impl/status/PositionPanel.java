@@ -26,7 +26,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -34,17 +34,17 @@ import java.awt.event.MouseEvent;
 public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener {
   private String myText;
 
-  public PositionPanel(@NotNull final Project project) {
+  public PositionPanel(@Nonnull final Project project) {
     super(project);
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     updatePosition(getEditor());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return "Position";
   }
@@ -55,18 +55,18 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull final PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull final PlatformType type) {
     return this;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText == null ? "" : myText;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getMaxPossibleText() {
     return "0000000000000";
   }
@@ -102,7 +102,7 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
     final EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     multicaster.addCaretListener(this, this);
@@ -142,7 +142,7 @@ public class PositionPanel extends EditorBasedWidget implements StatusBarWidget.
     }
   }
 
-  private String getPositionText(@NotNull Editor editor) {
+  private String getPositionText(@Nonnull Editor editor) {
     if (!editor.isDisposed() && myStatusBar != null) {
       StringBuilder message = new StringBuilder();
 

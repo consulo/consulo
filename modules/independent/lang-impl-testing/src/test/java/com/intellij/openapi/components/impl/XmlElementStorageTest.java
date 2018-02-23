@@ -26,8 +26,8 @@ import com.intellij.openapi.util.Disposer;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.testFramework.MockApplicationTestCase;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -98,7 +98,7 @@ public class XmlElementStorageTest extends MockApplicationTestCase {
     }
 
     @Override
-    protected XmlElementStorageSaveSession createSaveSession(@NotNull StorageData storageData) {
+    protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
       return new XmlElementStorageSaveSession(storageData) {
         @Override
         protected void doSave(@Nullable Element element) {
@@ -110,21 +110,21 @@ public class XmlElementStorageTest extends MockApplicationTestCase {
 
   private static class MyPathMacroManager implements TrackingPathMacroSubstitutor {
     @Override
-    public void expandPaths(@NotNull final Element element) {
+    public void expandPaths(@Nonnull final Element element) {
     }
 
     @Override
     public void reset() {
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Set<String> getComponents(@NotNull Collection<String> macros) {
+    public Set<String> getComponents(@Nonnull Collection<String> macros) {
       return Collections.emptySet();
     }
 
     @Override
-    public void collapsePaths(@NotNull final Element element) {
+    public void collapsePaths(@Nonnull final Element element) {
     }
 
     @Override
@@ -137,18 +137,18 @@ public class XmlElementStorageTest extends MockApplicationTestCase {
       throw new UnsupportedOperationException("Method collapsePath not implemented in " + getClass());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Set<String> getUnknownMacros(final String componentName) {
       return Collections.emptySet();
     }
 
     @Override
-    public void invalidateUnknownMacros(@NotNull Set<String> macros) {
+    public void invalidateUnknownMacros(@Nonnull Set<String> macros) {
     }
 
     @Override
-    public void addUnknownMacros(@NotNull String componentName, @NotNull Collection<String> unknownMacros) {
+    public void addUnknownMacros(@Nonnull String componentName, @Nonnull Collection<String> unknownMacros) {
     }
   }
 }

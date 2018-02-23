@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.containers.HashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class PersistentFileSetManager implements PersistentStateComponent<Elemen
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getFiles() {
     return myFiles;
   }

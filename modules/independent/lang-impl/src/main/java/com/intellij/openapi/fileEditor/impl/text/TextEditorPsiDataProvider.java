@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedHashSet;
 
@@ -46,7 +46,7 @@ import static com.intellij.util.containers.ContainerUtil.addIfNotNull;
 public class TextEditorPsiDataProvider implements EditorDataProvider {
   @Override
   @Nullable
-  public Object getData(@NotNull final Key<?> dataId, @NotNull final Editor e, @NotNull final Caret caret) {
+  public Object getData(@Nonnull final Key<?> dataId, @Nonnull final Editor e, @Nonnull final Caret caret) {
     if (!(e instanceof EditorEx)) {
       return null;
     }
@@ -126,7 +126,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
             }
           }
 
-          @NotNull
+          @Nonnull
           @Override
           public PsiDirectory[] getDirectories() {
             return new PsiDirectory[]{psiDirectory};
@@ -145,8 +145,8 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
     return null;
   }
 
-  @NotNull
-  private static Caret getInjectedCaret(@NotNull Editor editor, @NotNull Caret hostCaret) {
+  @Nonnull
+  private static Caret getInjectedCaret(@Nonnull Editor editor, @Nonnull Caret hostCaret) {
     if (!(editor instanceof EditorWindow) || hostCaret instanceof InjectedCaret) {
       return hostCaret;
     }
@@ -184,7 +184,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   }
 
   @Nullable
-  private static PsiElement getPsiElementIn(@NotNull Editor editor, @NotNull Caret caret, @NotNull VirtualFile file) {
+  private static PsiElement getPsiElementIn(@Nonnull Editor editor, @Nonnull Caret caret, @Nonnull VirtualFile file) {
     final PsiFile psiFile = getPsiFile(editor, file);
     if (psiFile == null) return null;
 
@@ -197,7 +197,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
   }
 
   @Nullable
-  private static PsiFile getPsiFile(@NotNull Editor e, @NotNull VirtualFile file) {
+  private static PsiFile getPsiFile(@Nonnull Editor e, @Nonnull VirtualFile file) {
     if (!file.isValid()) {
       return null; // fix for SCR 40329
     }
@@ -209,7 +209,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
     return psiFile != null && psiFile.isValid() ? psiFile : null;
   }
 
-  private Language[] computeLanguages(@NotNull Editor editor, @NotNull Caret caret) {
+  private Language[] computeLanguages(@Nonnull Editor editor, @Nonnull Caret caret) {
     LinkedHashSet<Language> set = new LinkedHashSet<>(4);
     Language injectedLanguage = (Language)getData(injectedId(LANGUAGE), editor, caret);
     addIfNotNull(set, injectedLanguage);

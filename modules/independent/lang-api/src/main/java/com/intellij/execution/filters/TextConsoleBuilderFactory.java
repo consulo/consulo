@@ -25,15 +25,15 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dyoma
  */
 public abstract class TextConsoleBuilderFactory {
-  public abstract TextConsoleBuilder createBuilder(@NotNull Project project);
+  public abstract TextConsoleBuilder createBuilder(@Nonnull Project project);
 
-  public abstract TextConsoleBuilder createBuilder(@NotNull Project project, @NotNull GlobalSearchScope scope);
+  public abstract TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull GlobalSearchScope scope);
 
   public static TextConsoleBuilderFactory getInstance() {
     return ServiceManager.getService(TextConsoleBuilderFactory.class);

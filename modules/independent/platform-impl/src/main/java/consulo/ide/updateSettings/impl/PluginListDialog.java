@@ -45,9 +45,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.ide.plugins.InstalledPluginsState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
@@ -78,7 +78,7 @@ public class PluginListDialog extends DialogWrapper {
     public TableCellRenderer getRenderer(final IdeaPluginDescriptor pluginDescriptor) {
       return new PluginsTableRenderer(pluginDescriptor, true) {
         @Override
-        protected void updatePresentation(boolean isSelected, @NotNull IdeaPluginDescriptor pluginNode, TableModel model) {
+        protected void updatePresentation(boolean isSelected, @Nonnull IdeaPluginDescriptor pluginNode, TableModel model) {
           Couple<IdeaPluginDescriptor> couple = ContainerUtil.find(myNodes, it -> it.getSecond() == pluginDescriptor);
           assert couple != null;
           IdeaPluginDescriptor oldPlugin = couple.getFirst();
@@ -134,9 +134,9 @@ public class PluginListDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   private JComponent myRoot;
-  @NotNull
+  @Nonnull
   private List<Couple<IdeaPluginDescriptor>> myNodes;
   @Nullable
   private Project myProject;
@@ -144,13 +144,13 @@ public class PluginListDialog extends DialogWrapper {
   private Consumer<Collection<IdeaPluginDescriptor>> myAfterCallback;
   @Nullable
   private String myPlatformVersion;
-  @NotNull
+  @Nonnull
   private Predicate<PluginId> myGreenStrategy;
-  @NotNull
+  @Nonnull
   private PlatformOrPluginUpdateResult.Type myType;
 
   public PluginListDialog(@Nullable Project project,
-                          @NotNull PlatformOrPluginUpdateResult updateResult,
+                          @Nonnull PlatformOrPluginUpdateResult updateResult,
                           @Nullable Predicate<PluginId> greenStrategy,
                           @Nullable Consumer<Collection<IdeaPluginDescriptor>> afterCallback) {
     super(project);

@@ -21,8 +21,8 @@ import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -84,9 +84,9 @@ public class BalloonLayoutConfiguration {
 
   public static final int NotificationSpace = JBUI.scale(10);
 
-  @NotNull
-  public static BalloonLayoutConfiguration create(@NotNull Notification notification,
-                                                  @NotNull BalloonLayoutData layoutData,
+  @Nonnull
+  public static BalloonLayoutConfiguration create(@Nonnull Notification notification,
+                                                  @Nonnull BalloonLayoutData layoutData,
                                                   boolean actions) {
     boolean title = notification.hasTitle();
     boolean content = notification.hasContent();
@@ -99,25 +99,25 @@ public class BalloonLayoutConfiguration {
     return twoLines();
   }
 
-  @NotNull
+  @Nonnull
   public BalloonLayoutConfiguration replace(int topSpaceHeight, int bottomSpaceHeight) {
     return new BalloonLayoutConfiguration(iconPanelWidth, iconOffset, topSpaceHeight, titleContentSpaceHeight, contentActionsSpaceHeight,
                                           titleActionsSpaceHeight, bottomSpaceHeight, actionGap, null, 0, 0, 0);
   }
 
-  @NotNull
+  @Nonnull
   private static BalloonLayoutConfiguration twoLines() {
     return new BalloonLayoutConfiguration(new JBDimension(10, 11),
                                           JBUI.scale(11), JBUI.scale(5), JBUI.scale(5), JBUI.scale(5), JBUI.scale(14));
   }
 
-  @NotNull
+  @Nonnull
   private static BalloonLayoutConfiguration treeLines() {
     return new BalloonLayoutConfiguration(new JBDimension(10, 7),
                                           JBUI.scale(7), JBUI.scale(3), JBUI.scale(7), 0, JBUI.scale(8));
   }
 
-  private BalloonLayoutConfiguration(@NotNull Dimension iconOffset,
+  private BalloonLayoutConfiguration(@Nonnull Dimension iconOffset,
                                      int topSpaceHeight,
                                      int titleContentSpaceHeight,
                                      int contentActionsSpaceHeight,
@@ -130,7 +130,7 @@ public class BalloonLayoutConfiguration {
   }
 
   private BalloonLayoutConfiguration(int iconPanelWidth,
-                                     @NotNull Dimension iconOffset,
+                                     @Nonnull Dimension iconOffset,
                                      int topSpaceHeight,
                                      int titleContentSpaceHeight,
                                      int contentActionsSpaceHeight,

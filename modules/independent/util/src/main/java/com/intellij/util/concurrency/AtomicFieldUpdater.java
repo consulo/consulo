@@ -23,7 +23,7 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -37,7 +37,7 @@ import java.lang.reflect.Modifier;
 public class AtomicFieldUpdater<T,V> {
   private static final Unsafe unsafe = getUnsafe();
 
-  @NotNull
+  @Nonnull
   public static Unsafe getUnsafe() {
     Unsafe unsafe = ReflectionUtil.getStaticFieldValue(Unsafe.class, Unsafe.class, "theUnsafe");
     if (unsafe == null) {
@@ -48,28 +48,28 @@ public class AtomicFieldUpdater<T,V> {
 
   private final long offset;
 
-  @NotNull
-  public static <T, V> AtomicFieldUpdater<T, V> forFieldOfType(@NotNull Class<T> ownerClass, @NotNull Class<V> fieldType) {
+  @Nonnull
+  public static <T, V> AtomicFieldUpdater<T, V> forFieldOfType(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
     return new AtomicFieldUpdater<T, V>(ownerClass, fieldType);
   }
 
-  @NotNull
-  public static <T> AtomicFieldUpdater<T, Long> forLongFieldIn(@NotNull Class<T> ownerClass) {
+  @Nonnull
+  public static <T> AtomicFieldUpdater<T, Long> forLongFieldIn(@Nonnull Class<T> ownerClass) {
     return new AtomicFieldUpdater<T, Long>(ownerClass, long.class);
   }
 
-  @NotNull
-  public static <T> AtomicFieldUpdater<T, Integer> forIntFieldIn(@NotNull Class<T> ownerClass) {
+  @Nonnull
+  public static <T> AtomicFieldUpdater<T, Integer> forIntFieldIn(@Nonnull Class<T> ownerClass) {
     return new AtomicFieldUpdater<T, Integer>(ownerClass, int.class);
   }
 
-  private AtomicFieldUpdater(@NotNull Class<T> ownerClass, @NotNull Class<V> fieldType) {
+  private AtomicFieldUpdater(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
     Field found = getTheOnlyVolatileFieldOfClass(ownerClass, fieldType);
     offset = unsafe.objectFieldOffset(found);
   }
 
-  @NotNull
-  private static <T,V> Field getTheOnlyVolatileFieldOfClass(@NotNull Class<T> ownerClass, @NotNull Class<V> fieldType) {
+  @Nonnull
+  private static <T,V> Field getTheOnlyVolatileFieldOfClass(@Nonnull Class<T> ownerClass, @Nonnull Class<V> fieldType) {
     Field[] declaredFields = ownerClass.getDeclaredFields();
     Field found = null;
     for (Field field : declaredFields) {
@@ -95,23 +95,23 @@ public class AtomicFieldUpdater<T,V> {
     return found;
   }
 
-  public boolean compareAndSet(@NotNull T owner, V expected, V newValue) {
+  public boolean compareAndSet(@Nonnull T owner, V expected, V newValue) {
     return unsafe.compareAndSwapObject(owner, offset, expected, newValue);
   }
 
-  public boolean compareAndSetLong(@NotNull T owner, long expected, long newValue) {
+  public boolean compareAndSetLong(@Nonnull T owner, long expected, long newValue) {
     return unsafe.compareAndSwapLong(owner, offset, expected, newValue);
   }
 
-  public boolean compareAndSetInt(@NotNull T owner, int expected, int newValue) {
+  public boolean compareAndSetInt(@Nonnull T owner, int expected, int newValue) {
     return unsafe.compareAndSwapInt(owner, offset, expected, newValue);
   }
 
-  public void set(@NotNull T owner, V newValue) {
+  public void set(@Nonnull T owner, V newValue) {
     unsafe.putObjectVolatile(owner, offset, newValue);
   }
 
-  public V get(@NotNull T owner) {
+  public V get(@Nonnull T owner) {
     //noinspection unchecked
     return (V)unsafe.getObjectVolatile(owner, offset);
   }

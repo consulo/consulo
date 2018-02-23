@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.FormattingModeAwareIndentAdjuster;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FormatterBasedIndentAdjuster {
 
@@ -32,7 +32,7 @@ public class FormatterBasedIndentAdjuster {
   private FormatterBasedIndentAdjuster() {
   }
 
-  public static void scheduleIndentAdjustment(@NotNull Project myProject, @NotNull Document myDocument, int myOffset) {
+  public static void scheduleIndentAdjustment(@Nonnull Project myProject, @Nonnull Document myDocument, int myOffset) {
     IndentAdjusterRunnable fixer = new IndentAdjusterRunnable(myProject, myDocument, myOffset);
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
     if (isSynchronousAdjustment(myDocument)) {
@@ -44,7 +44,7 @@ public class FormatterBasedIndentAdjuster {
     }
   }
 
-  private static boolean isSynchronousAdjustment(@NotNull Document document) {
+  private static boolean isSynchronousAdjustment(@Nonnull Document document) {
     return ApplicationManager.getApplication().isUnitTestMode() || document.getTextLength() <= MAX_SYNCHRONOUS_ADJUSTMENT_DOC_SIZE;
   }
 

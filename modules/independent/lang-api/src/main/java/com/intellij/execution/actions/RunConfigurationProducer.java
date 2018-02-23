@@ -26,8 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,8 +41,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create("com.intellij.runConfigurationProducer");
   private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class.getName());
 
-  @NotNull
-  public static List<RunConfigurationProducer<?>> getProducers(@NotNull Project project) {
+  @Nonnull
+  public static List<RunConfigurationProducer<?>> getProducers(@Nonnull Project project) {
     RunConfigurationProducer[] producers = Extensions.getExtensions(EP_NAME);
     // no filter. IDEA have filter for it.
     return ContainerUtil.newArrayList(producers);
@@ -74,7 +73,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @return a container with a prepared run configuration and the context element from which it was created, or null if the context is
    * not applicable to this run configuration producer.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public ConfigurationFromContext createConfigurationFromContext(ConfigurationContext context) {
     final RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(context);
     Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
@@ -160,7 +159,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @param context contains the information about a location in the source code.
    * @return a configuration (new or existing) matching the context, or null if the context is not applicable to this producer.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public ConfigurationFromContext findOrCreateConfigurationFromContext(ConfigurationContext context) {
     Location location = context.getLocation();
     if (location == null) {
@@ -192,7 +191,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @param context contains the information about a location in the source code.
    * @return an existing configuration matching the context, or null if no such configuration is found.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public RunnerAndConfigurationSettings findExistingConfiguration(ConfigurationContext context) {
     final RunManager runManager = RunManager.getInstance(context.getProject());
     final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(myConfigurationFactory.getType());
@@ -204,7 +203,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     return null;
   }
 
-  protected RunnerAndConfigurationSettings cloneTemplateConfiguration(@NotNull final ConfigurationContext context) {
+  protected RunnerAndConfigurationSettings cloneTemplateConfiguration(@Nonnull final ConfigurationContext context) {
     final RunConfiguration original = context.getOriginalConfiguration(myConfigurationFactory.getType());
     if (original != null) {
       return RunManager.getInstance(context.getProject()).createConfiguration(original.clone(), myConfigurationFactory);
@@ -212,7 +211,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     return RunManager.getInstance(context.getProject()).createRunConfiguration("", myConfigurationFactory);
   }
 
-  @NotNull
+  @Nonnull
   public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
     for (RunConfigurationProducer producer : Extensions.getExtensions(EP_NAME)) {
       if (aClass.isInstance(producer)) {
@@ -223,8 +222,8 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     return null;
   }
 
-  @Nullable
-  public RunConfiguration createLightConfiguration(@NotNull final ConfigurationContext context) {
+  @javax.annotation.Nullable
+  public RunConfiguration createLightConfiguration(@Nonnull final ConfigurationContext context) {
     RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
     final Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
     try {

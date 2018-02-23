@@ -15,8 +15,7 @@
  */
 package com.intellij.ui.wizard;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class WizardStep<T extends WizardModel> {

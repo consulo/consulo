@@ -49,8 +49,7 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -74,7 +73,7 @@ public class AnalysisScope {
   @MagicConstant(intValues = {PROJECT, DIRECTORY, FILE, MODULE, INVALID, MODULES, CUSTOM, VIRTUAL_FILES, UNCOMMITTED_FILES})
   public @interface Type { }
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
   protected List<Module> myModules;
   protected Module myModule;
@@ -88,7 +87,7 @@ public class AnalysisScope {
 
   protected boolean myIncludeTestSource = true;
 
-  public AnalysisScope(@NotNull Project project) {
+  public AnalysisScope(@Nonnull Project project) {
     myProject = project;
     myElement = null;
     myModules = null;
@@ -98,7 +97,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull Module module) {
+  public AnalysisScope(@Nonnull Module module) {
     myProject = module.getProject();
     myElement = null;
     myModules = null;
@@ -108,7 +107,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull Module[] modules) {
+  public AnalysisScope(@Nonnull Module[] modules) {
     myModules = Arrays.asList(modules);
     myModule = null;
     myProject = modules[0].getProject();
@@ -118,7 +117,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull PsiDirectory psiDirectory) {
+  public AnalysisScope(@Nonnull PsiDirectory psiDirectory) {
     myProject = psiDirectory.getProject();
     myModules = null;
     myModule = null;
@@ -128,7 +127,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull PsiFile psiFile) {
+  public AnalysisScope(@Nonnull PsiFile psiFile) {
     myProject = psiFile.getProject();
     myElement = psiFile;
     myModule = null;
@@ -138,7 +137,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull SearchScope scope, @NotNull Project project) {
+  public AnalysisScope(@Nonnull SearchScope scope, @Nonnull Project project) {
     myProject = project;
     myElement = null;
     myModule = null;
@@ -149,7 +148,7 @@ public class AnalysisScope {
     myVFiles = null;
   }
 
-  public AnalysisScope(@NotNull Project project, @NotNull Collection<VirtualFile> virtualFiles) {
+  public AnalysisScope(@Nonnull Project project, @Nonnull Collection<VirtualFile> virtualFiles) {
     myProject = project;
     myElement = null;
     myModule = null;
@@ -171,7 +170,7 @@ public class AnalysisScope {
     myIncludeTestSource = includeTestSource;
   }
 
-  @NotNull
+  @Nonnull
   protected PsiElementVisitor createFileSearcher() {
     final FileIndex fileIndex = getFileIndex();
     final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
@@ -181,7 +180,7 @@ public class AnalysisScope {
 
     return new PsiElementVisitor() {
       @Override
-      public void visitFile(@NotNull PsiFile file) {
+      public void visitFile(@Nonnull PsiFile file) {
         if (mySearchInLibraries || !(file instanceof PsiCompiledElement)) {
           final VirtualFile virtualFile = file.getVirtualFile();
           if (virtualFile == null) return;
@@ -197,7 +196,7 @@ public class AnalysisScope {
     };
   }
 
-  @NotNull
+  @Nonnull
   private FileIndex getFileIndex() {
     final FileIndex fileIndex;
     if (myModule != null) {
@@ -209,16 +208,16 @@ public class AnalysisScope {
     return fileIndex;
   }
 
-  private static String displayProjectRelativePath(@NotNull VirtualFile virtualFile, @NotNull Project project) {
+  private static String displayProjectRelativePath(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
     return ProjectUtilCore.displayUrlRelativeToProject(virtualFile, virtualFile.getPresentableUrl(), project, false, false);
   }
 
-  public boolean contains(@NotNull PsiElement psiElement) {
+  public boolean contains(@Nonnull PsiElement psiElement) {
     VirtualFile file = psiElement.getContainingFile().getVirtualFile();
     return file != null && contains(file);
   }
 
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     if (myFilesSet == null) {
       if (myType == CUSTOM) {
         // optimization
@@ -250,9 +249,9 @@ public class AnalysisScope {
       for (Iterator<VirtualFile> iterator = myVFiles.iterator(); iterator.hasNext(); ) {
         final VirtualFile vFile = iterator.next();
         VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
-          @NotNull
+          @Nonnull
           @Override
-          public Result visitFileEx(@NotNull VirtualFile file) {
+          public Result visitFileEx(@Nonnull VirtualFile file) {
             boolean ignored = fileIndex.isExcluded(file);
             if (!ignored && !file.isDirectory()) {
               myFilesSet.add(file);
@@ -269,11 +268,11 @@ public class AnalysisScope {
   }
 
 
-  public void accept(@NotNull final PsiElementVisitor visitor) {
+  public void accept(@Nonnull final PsiElementVisitor visitor) {
     accept(visitor, true);
   }
 
-  private void accept(@NotNull final PsiElementVisitor visitor, final boolean clearResolveCache) {
+  private void accept(@Nonnull final PsiElementVisitor visitor, final boolean clearResolveCache) {
     final boolean needReadAction = !ApplicationManager.getApplication().isReadAccessAllowed();
     final PsiManager psiManager = PsiManager.getInstance(myProject);
     final FileIndex fileIndex = getFileIndex();
@@ -291,7 +290,7 @@ public class AnalysisScope {
     });
   }
 
-  public boolean accept(@NotNull final Processor<VirtualFile> processor) {
+  public boolean accept(@Nonnull final Processor<VirtualFile> processor) {
     if (myType == VIRTUAL_FILES) {
       if (myFilesSet == null) initFilesSet();
       final FileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
@@ -305,7 +304,7 @@ public class AnalysisScope {
       final FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
       final ContentIterator contentIterator = new ContentIterator() {
         @Override
-        public boolean processFile(@NotNull final VirtualFile fileOrDir) {
+        public boolean processFile(@Nonnull final VirtualFile fileOrDir) {
           final boolean isInScope = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
             @Override
             public Boolean compute() {
@@ -348,7 +347,7 @@ public class AnalysisScope {
         final FileIndex moduleFileIndex = ModuleRootManager.getInstance(module).getFileIndex();
         if (!moduleFileIndex.iterateContent(new ContentIterator() {
           @Override
-          public boolean processFile(@NotNull VirtualFile fileOrDir) {
+          public boolean processFile(@Nonnull VirtualFile fileOrDir) {
             return processor.process(fileOrDir);
           }
         })) return false;
@@ -371,13 +370,13 @@ public class AnalysisScope {
     final FileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
     return projectFileIndex.iterateContent(new ContentIterator() {
       @Override
-      public boolean processFile(@NotNull final VirtualFile fileOrDir) {
+      public boolean processFile(@Nonnull final VirtualFile fileOrDir) {
         return processor.process(fileOrDir);
       }
     });
   }
 
-  private static boolean isInGeneratedSources(@NotNull VirtualFile file, @NotNull Project project) {
+  private static boolean isInGeneratedSources(@Nonnull VirtualFile file, @Nonnull Project project) {
     for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensions()) {
       if (filter.isGeneratedSource(file, project)) {
         return true;
@@ -386,9 +385,9 @@ public class AnalysisScope {
     return false;
   }
 
-  private static boolean processFile(@NotNull final VirtualFile vFile,
-                                     @NotNull final PsiElementVisitor visitor,
-                                     @NotNull final PsiManager psiManager,
+  private static boolean processFile(@Nonnull final VirtualFile vFile,
+                                     @Nonnull final PsiElementVisitor visitor,
+                                     @Nonnull final PsiManager psiManager,
                                      final boolean needReadAction,
                                      final boolean clearResolveCache) {
     final Runnable runnable = new Runnable() {
@@ -425,11 +424,11 @@ public class AnalysisScope {
     }
   }
 
-  protected static boolean shouldHighlightFile(@NotNull PsiFile file) {
+  protected static boolean shouldHighlightFile(@Nonnull PsiFile file) {
     return ProblemHighlightFilter.shouldProcessFileInBatch(file);
   }
 
-  public boolean containsModule(@NotNull Module module) {
+  public boolean containsModule(@Nonnull Module module) {
     switch (myType) {
       case PROJECT:
         return true;
@@ -442,7 +441,7 @@ public class AnalysisScope {
     }
   }
 
-  private static void doProcessFile(@NotNull PsiElementVisitor visitor, @NotNull PsiManager psiManager, @NotNull VirtualFile vFile,
+  private static void doProcessFile(@Nonnull PsiElementVisitor visitor, @Nonnull PsiManager psiManager, @Nonnull VirtualFile vFile,
                                     boolean clearResolveCache) {
     if (!vFile.isValid()) return;
 
@@ -456,7 +455,7 @@ public class AnalysisScope {
     }
   }
 
-  protected boolean accept(@NotNull final PsiDirectory dir, @NotNull final Processor<VirtualFile> processor) {
+  protected boolean accept(@Nonnull final PsiDirectory dir, @Nonnull final Processor<VirtualFile> processor) {
     final Project project = dir.getProject();
     final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     //we should analyze generated source files only if the action is explicitly invoked for a directory located under generated roots
@@ -464,7 +463,7 @@ public class AnalysisScope {
     return VfsUtilCore.iterateChildrenRecursively(dir.getVirtualFile(), VirtualFileFilter.ALL, new ContentIterator() {
       @Override
       @SuppressWarnings({"SimplifiableIfStatement"})
-      public boolean processFile(@NotNull final VirtualFile fileOrDir) {
+      public boolean processFile(@Nonnull final VirtualFile fileOrDir) {
         if (!myIncludeTestSource && index.isInTestSourceContent(fileOrDir)) return true;
         if (!processGeneratedFiles && isInGeneratedSources(fileOrDir, project)) return true;
         if (!fileOrDir.isDirectory()) {
@@ -494,7 +493,7 @@ public class AnalysisScope {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     switch (myType) {
       case CUSTOM:
@@ -506,7 +505,7 @@ public class AnalysisScope {
       case MODULES:
         String modules = StringUtil.join(myModules, new Function<Module, String>() {
           @Override
-          public String fun(@NotNull final Module module) {
+          public String fun(@Nonnull final Module module) {
             return pathToName(module.getModuleDirPath());
           }
         }, ", ");
@@ -529,14 +528,14 @@ public class AnalysisScope {
     return "";
   }
 
-  @NotNull
-  private static String getPresentableUrl(@NotNull final PsiFileSystemItem element) {
+  @Nonnull
+  private static String getPresentableUrl(@Nonnull final PsiFileSystemItem element) {
     final VirtualFile virtualFile = element.getVirtualFile();
     assert virtualFile != null : element;
     return virtualFile.getPresentableUrl();
   }
 
-  @NotNull
+  @Nonnull
   public String getShortenName(){
     switch (myType) {
       case CUSTOM:
@@ -548,8 +547,8 @@ public class AnalysisScope {
       case MODULES:
         String modules = StringUtil.join(myModules, new Function<Module, String>() {
           @Override
-          @NotNull
-          public String fun(@NotNull final Module module) {
+          @Nonnull
+          public String fun(@Nonnull final Module module) {
             return module.getName();
           }
         }, ", ");
@@ -574,7 +573,7 @@ public class AnalysisScope {
     return "";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private String getRelativePath() {
     final String relativePath = displayProjectRelativePath(((PsiFileSystemItem)myElement).getVirtualFile(), myElement.getProject());
     if (relativePath.length() > 100) {
@@ -583,8 +582,8 @@ public class AnalysisScope {
     return relativePath;
   }
 
-  @NotNull
-  private static String pathToName(@NotNull String path) {
+  @Nonnull
+  private static String pathToName(@Nonnull String path) {
     File file = new File(path);
     return FileUtil.getNameWithoutExtension(file);
   }
@@ -603,7 +602,7 @@ public class AnalysisScope {
    * scope elements should be checked only when needed
    */
   @Deprecated
-  public boolean checkScopeWritable(@NotNull Project project) {
+  public boolean checkScopeWritable(@Nonnull Project project) {
     if (myFilesSet == null) initFilesSet();
     return !FileModificationService.getInstance().prepareVirtualFilesForWrite(project, myFilesSet);
   }
@@ -641,8 +640,8 @@ public class AnalysisScope {
     return true;
   }
 
-  @NotNull
-  public AnalysisScope getNarrowedComplementaryScope(@NotNull Project defaultProject) {
+  @Nonnull
+  public AnalysisScope getNarrowedComplementaryScope(@Nonnull Project defaultProject) {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(defaultProject).getFileIndex();
     final HashSet<Module> modules = new HashSet<Module>();
     if (myType == FILE || myType == DIRECTORY) {
@@ -658,8 +657,8 @@ public class AnalysisScope {
     return collectScopes(defaultProject, modules);
   }
 
-  @NotNull
-  protected static AnalysisScope collectScopes(@NotNull final Project defaultProject, @NotNull final HashSet<Module> modules) {
+  @Nonnull
+  protected static AnalysisScope collectScopes(@Nonnull final Project defaultProject, @Nonnull final HashSet<Module> modules) {
     if (modules.isEmpty()) {
       return new AnalysisScope(defaultProject);
     }
@@ -673,8 +672,8 @@ public class AnalysisScope {
     return new AnalysisScope(modulesToAnalyze.toArray(new Module[modulesToAnalyze.size()]));
   }
 
-  @NotNull
-  private static Set<Module> getExportBackwardDependencies(@NotNull Module fromModule, @NotNull Module[] allModules) {
+  @Nonnull
+  private static Set<Module> getExportBackwardDependencies(@Nonnull Module fromModule, @Nonnull Module[] allModules) {
     Set<Module> result = new HashSet<Module>();
     for (Module module : allModules) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -689,8 +688,8 @@ public class AnalysisScope {
     return result;
   }
 
-  @NotNull
-  private static Set<Module> getDirectBackwardDependencies(@NotNull Module module, @NotNull Module[] allModules) {
+  @Nonnull
+  private static Set<Module> getDirectBackwardDependencies(@Nonnull Module module, @Nonnull Module[] allModules) {
     Set<Module> result = new HashSet<Module>();
     for (Module dependency : allModules) {
       if (ArrayUtil.find(ModuleRootManager.getInstance(dependency).getDependencies(), module) > -1) {
@@ -700,8 +699,8 @@ public class AnalysisScope {
     return result;
   }
 
-  @NotNull
-  protected static HashSet<Module> getAllInterestingModules(@NotNull final ProjectFileIndex fileIndex, @NotNull final VirtualFile vFile) {
+  @Nonnull
+  protected static HashSet<Module> getAllInterestingModules(@Nonnull final ProjectFileIndex fileIndex, @Nonnull final VirtualFile vFile) {
     final HashSet<Module> modules = new HashSet<Module>();
     if (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)) {
       for (OrderEntry orderEntry : fileIndex.getOrderEntriesForFile(vFile)) {
@@ -714,7 +713,7 @@ public class AnalysisScope {
     return modules;
   }
 
-  @NotNull
+  @Nonnull
   public SearchScope toSearchScope() {
     switch (myType) {
       case CUSTOM:
@@ -739,17 +738,17 @@ public class AnalysisScope {
       case VIRTUAL_FILES:
         return new GlobalSearchScope() {
           @Override
-          public boolean contains(@NotNull VirtualFile file) {
+          public boolean contains(@Nonnull VirtualFile file) {
             return myFilesSet.contains(file);
           }
 
           @Override
-          public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+          public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
             return 0;
           }
 
           @Override
-          public boolean isSearchInModuleContent(@NotNull Module aModule) {
+          public boolean isSearchInModuleContent(@Nonnull Module aModule) {
             return false;
           }
 
@@ -784,7 +783,7 @@ public class AnalysisScope {
     return false;
   }
 
-  private static boolean isTestOnly(@NotNull Module module) {
+  private static boolean isTestOnly(@Nonnull Module module) {
     return ModuleRootManager.getInstance(module).getSourceRootUrls(false).length == 0;
   }
 

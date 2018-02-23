@@ -5,8 +5,7 @@ import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import com.intellij.remoteServer.runtime.ServerConnectionManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,9 +19,9 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
   private final Map<RemoteServer<?>, ServerConnection> myConnections = new HashMap<RemoteServer<?>, ServerConnection>();
   private final ServerConnectionEventDispatcher myEventDispatcher = new ServerConnectionEventDispatcher();
 
-  @NotNull
+  @Nonnull
   @Override
-  public <C extends ServerConfiguration> ServerConnection getOrCreateConnection(@NotNull RemoteServer<C> server) {
+  public <C extends ServerConfiguration> ServerConnection getOrCreateConnection(@Nonnull RemoteServer<C> server) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     ServerConnection connection = myConnections.get(server);
     if (connection == null) {
@@ -34,9 +33,9 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     return connection;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <C extends ServerConfiguration> ServerConnection getConnection(@NotNull RemoteServer<C> server) {
+  public <C extends ServerConfiguration> ServerConnection getConnection(@Nonnull RemoteServer<C> server) {
     return myConnections.get(server);
   }
 
@@ -49,7 +48,7 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     return myEventDispatcher;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<ServerConnection> getConnections() {
     ApplicationManager.getApplication().assertIsDispatchThread();

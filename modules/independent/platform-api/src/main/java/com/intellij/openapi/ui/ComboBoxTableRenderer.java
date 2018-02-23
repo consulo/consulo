@@ -23,7 +23,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -73,11 +73,11 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
                          Math.max(d.height, AllIcons.General.ArrowDown.getIconHeight()));
   }
 
-  protected String getTextFor(@NotNull T value) {
+  protected String getTextFor(@Nonnull T value) {
     return value.toString();
   }
 
-  protected Icon getIconFor(@NotNull T value) {
+  protected Icon getIconFor(@Nonnull T value) {
     return null;
   }
 
@@ -85,7 +85,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     myPaintArrow = paintArrow;
   }
 
-  protected Runnable onChosen(@NotNull final T value) {
+  protected Runnable onChosen(@Nonnull final T value) {
     stopCellEditing(value);
 
     return new Runnable() {
@@ -155,7 +155,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     });
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new ListStep<T>(filtered, value) {
       @Override
-      @NotNull
+      @Nonnull
       public String getTextFor(T value) {
         return ComboBoxTableRenderer.this.getTextFor(value);
       }
@@ -334,7 +334,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public List<T> getValues() {
       return myValues;
     }

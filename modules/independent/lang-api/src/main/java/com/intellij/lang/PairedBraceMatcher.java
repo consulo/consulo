@@ -17,8 +17,8 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines the brace matching support required for a custom language. For paired
@@ -46,7 +46,7 @@ public interface PairedBraceMatcher {
    * @param contextType token type that follows lbrace
    * @return true / false as described
    */
-  boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType);
+  boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType);
 
   /**
    * Returns the start offset of the code construct which owns the opening structural brace at the specified offset. For example,

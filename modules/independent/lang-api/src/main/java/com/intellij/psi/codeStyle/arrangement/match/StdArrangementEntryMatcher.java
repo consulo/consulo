@@ -20,8 +20,8 @@ import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
 import com.intellij.psi.codeStyle.arrangement.model.*;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,25 +36,27 @@ import java.util.List;
  */
 public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @NotNull private final ArrangementMatchCondition myCondition;
-  @NotNull private final ArrangementEntryMatcher   myDelegate;
+  @Nonnull
+  private final ArrangementMatchCondition myCondition;
+  @Nonnull
+  private final ArrangementEntryMatcher   myDelegate;
 
-  public StdArrangementEntryMatcher(@NotNull ArrangementMatchCondition condition) {
+  public StdArrangementEntryMatcher(@Nonnull ArrangementMatchCondition condition) {
     this(condition, new StdMatcherBuilderImpl());
   }
 
-  public StdArrangementEntryMatcher(@NotNull ArrangementMatchCondition condition, @NotNull StdMatcherBuilder builder) {
+  public StdArrangementEntryMatcher(@Nonnull ArrangementMatchCondition condition, @Nonnull StdMatcherBuilder builder) {
     myCondition = condition;
     myDelegate = doBuildMatcher(condition, builder);
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementMatchCondition getCondition() {
     return myCondition;
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     return myDelegate.isMatched(entry);
   }
 
@@ -81,8 +83,8 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
     return myCondition.toString();
   }
 
-  @NotNull
-  private static ArrangementEntryMatcher doBuildMatcher(@NotNull ArrangementMatchCondition condition, @NotNull StdMatcherBuilder builder) {
+  @Nonnull
+  private static ArrangementEntryMatcher doBuildMatcher(@Nonnull ArrangementMatchCondition condition, @Nonnull StdMatcherBuilder builder) {
     MyVisitor visitor = new MyVisitor(builder);
     condition.invite(visitor);
     return visitor.getMatcher();
@@ -99,7 +101,7 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
      * {@link StdArrangementEntryMatcher} creation.
      * @param condition condition to parse
      */
-    void onCondition(@NotNull ArrangementAtomMatchCondition condition);
+    void onCondition(@Nonnull ArrangementAtomMatchCondition condition);
 
     /**
      * Returns a collection of matchers obtained through {@link #addMatcher(ArrangementEntryMatcher) addMatcher} calls or
@@ -112,7 +114,7 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
      * Adds given matcher to collection provided by {@link #buildMatchers() buildMatchers} calls.
      * @param matcher matcher to be added
      */
-    void addMatcher(@NotNull ArrangementEntryMatcher matcher);
+    void addMatcher(@Nonnull ArrangementEntryMatcher matcher);
   }
 
   /**
@@ -121,14 +123,17 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
    */
   public static class StdMatcherBuilderImpl implements StdMatcherBuilder {
 
-    @NotNull private final List<ArrangementEntryMatcher> myMatchers  = ContainerUtilRt.newArrayList();
+    @Nonnull
+    private final List<ArrangementEntryMatcher> myMatchers  = ContainerUtilRt.newArrayList();
     /**
      * Maps token type to all arrangement tokens that were encountered so far by parsing conditions with
      * {@link #onCondition(ArrangementAtomMatchCondition) onCondition} calls.
      */
-    @NotNull protected final MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition> context =
+    @Nonnull
+    protected final MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition> context =
             new MultiValuesMap<StdArrangementTokenType, ArrangementAtomMatchCondition>();
-    @Nullable private String myNamePattern;
+    @javax.annotation.Nullable
+    private String myNamePattern;
     @Nullable private String myNamespacePattern;
     @Nullable private String myText;
 
@@ -136,13 +141,13 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
      * Adds given entry to context by given entry type.
      * @param token token added to context
      */
-    protected void addToContext(@NotNull StdArrangementSettingsToken token, @NotNull ArrangementAtomMatchCondition condition) {
+    protected void addToContext(@Nonnull StdArrangementSettingsToken token, @Nonnull ArrangementAtomMatchCondition condition) {
       StdArrangementTokenType tokenType = token.getTokenType();
       context.put(tokenType, condition);
     }
 
     @Override
-    public void onCondition(@NotNull ArrangementAtomMatchCondition condition) {
+    public void onCondition(@Nonnull ArrangementAtomMatchCondition condition) {
       if (StdArrangementTokens.Regexp.NAME.equals(condition.getType())) {
         myNamePattern = condition.getValue().toString();
         return;
@@ -161,7 +166,7 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
       }
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Collection<ArrangementEntryMatcher> buildMatchers() {
       List<ArrangementEntryMatcher> result = ContainerUtilRt.newArrayList(myMatchers);
@@ -186,27 +191,28 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
     }
 
     @Override
-    public void addMatcher(@NotNull ArrangementEntryMatcher matcher) {
+    public void addMatcher(@Nonnull ArrangementEntryMatcher matcher) {
       myMatchers.add(matcher);
     }
   }
 
   private static class MyVisitor implements ArrangementMatchConditionVisitor {
 
-    @NotNull private final StdMatcherBuilder myMatcherBuilder;
+    @Nonnull
+    private final StdMatcherBuilder myMatcherBuilder;
     private boolean nestedComposite;
 
-    private MyVisitor(@NotNull StdMatcherBuilder matcherBuilder) {
+    private MyVisitor(@Nonnull StdMatcherBuilder matcherBuilder) {
       myMatcherBuilder = matcherBuilder;
     }
 
     @Override
-    public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+    public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
       myMatcherBuilder.onCondition(condition);
     }
 
     @Override
-    public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+    public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
       if (!nestedComposite) {
         nestedComposite = true;
         for (ArrangementMatchCondition c : condition.getOperands()) {
@@ -219,7 +225,7 @@ public class StdArrangementEntryMatcher implements ArrangementEntryMatcher {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @NotNull
+    @Nonnull
     public ArrangementEntryMatcher getMatcher() {
       Collection<ArrangementEntryMatcher> matchers = myMatcherBuilder.buildMatchers();
 

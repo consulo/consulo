@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Describes logic for injecting language inside hosting PSI element.
@@ -35,5 +35,5 @@ public interface LanguageInjector {
    *        For example, to inject your language in string literal inside quotes, you might want to <br>
    *        <code>injectionPlacesRegistrar.addPlace(myLanguage, new TextRange(1,host.getTextLength()-1))</code>
    */
-  void getLanguagesToInject(@NotNull PsiLanguageInjectionHost host, @NotNull InjectedLanguagePlaces injectionPlacesRegistrar);
+  void getLanguagesToInject(@Nonnull PsiLanguageInjectionHost host, @Nonnull InjectedLanguagePlaces injectionPlacesRegistrar);
 }

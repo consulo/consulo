@@ -31,7 +31,7 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -57,7 +57,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
   private final TextPanel myProcessName = new TextPanel();
   private boolean myDisposed;
 
-  public InlineProgressIndicator(boolean compact, @NotNull TaskInfo processInfo) {
+  public InlineProgressIndicator(boolean compact, @Nonnull TaskInfo processInfo) {
     myCompact = compact;
     myInfo = processInfo;
 
@@ -211,7 +211,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     updateAndRepaint();
   }
 
-  protected void queueRunningUpdate(@NotNull Runnable update) {
+  protected void queueRunningUpdate(@Nonnull Runnable update) {
     update.run();
   }
 

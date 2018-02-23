@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -27,5 +27,5 @@ import java.awt.*;
 interface SuitableFontProvider {
   ExtensionPointName<SuitableFontProvider> EP_NAME = ExtensionPointName.create("com.intellij.ui.suitableFontProvider");
 
-  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily);
+  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily);
 }

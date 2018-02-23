@@ -25,8 +25,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.SingleAlarm;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.EventObject;
@@ -54,21 +54,21 @@ public abstract class XDebugView implements Disposable {
 
   protected abstract void clear();
 
-  public abstract void processSessionEvent(@NotNull SessionEvent event, @NotNull XDebugSession session);
+  public abstract void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session);
 
   @Nullable
-  protected static XDebugSession getSession(@NotNull EventObject e) {
+  protected static XDebugSession getSession(@Nonnull EventObject e) {
     Component component = e.getSource() instanceof Component ? (Component)e.getSource() : null;
     return component == null ? null : getSession(component);
   }
 
   @Nullable
-  public static XDebugSession getSession(@NotNull Component component) {
+  public static XDebugSession getSession(@Nonnull Component component) {
     return getData(XDebugSession.DATA_KEY, component);
   }
 
   @Nullable
-  protected VirtualFile getCurrentFile(@NotNull Component component) {
+  protected VirtualFile getCurrentFile(@Nonnull Component component) {
     XDebugSession session = getSession(component);
     if (session != null) {
       XSourcePosition position = session.getCurrentPosition();
@@ -81,7 +81,7 @@ public abstract class XDebugView implements Disposable {
 
 
   @Nullable
-  public static <T> T getData(Key<T> key, @NotNull Component component) {
+  public static <T> T getData(Key<T> key, @Nonnull Component component) {
     DataContext dataContext = DataManager.getInstance().getDataContext(component);
     ViewContext viewContext = dataContext.getData(ViewContext.CONTEXT_KEY);
     ContentManager contentManager = viewContext == null ? null : viewContext.getContentManager();

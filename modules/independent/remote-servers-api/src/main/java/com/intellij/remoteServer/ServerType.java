@@ -10,8 +10,8 @@ import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.runtime.ServerConnector;
 import com.intellij.remoteServer.runtime.ServerTaskExecutor;
 import com.intellij.remoteServer.runtime.deployment.debug.DebugConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -30,25 +30,25 @@ public abstract class ServerType<C extends ServerConfiguration> {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getPresentableName();
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
-  @NotNull
+  @Nonnull
   public abstract C createDefaultConfiguration();
 
-  @NotNull
-  public abstract UnnamedConfigurable createConfigurable(@NotNull C configuration);
+  @Nonnull
+  public abstract UnnamedConfigurable createConfigurable(@Nonnull C configuration);
 
-  @NotNull
+  @Nonnull
   public abstract DeploymentConfigurator<?> createDeploymentConfigurator(Project project);
 
-  @NotNull
-  public abstract ServerConnector<?> createConnector(@NotNull C configuration, @NotNull ServerTaskExecutor asyncTasksExecutor);
+  @Nonnull
+  public abstract ServerConnector<?> createConnector(@Nonnull C configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor);
 
-  public boolean isConfigurationTypeIsAvailable(@NotNull Project project) {
+  public boolean isConfigurationTypeIsAvailable(@Nonnull Project project) {
     return !RemoteServersManager.getInstance().getServers(this).isEmpty();
   }
 

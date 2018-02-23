@@ -21,7 +21,7 @@ import consulo.annotations.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,30 +30,30 @@ import javax.swing.*;
  */
 public abstract class XBreakpointCustomPropertiesPanel<B extends XBreakpoint<?>> implements Disposable {
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Please implement interface via new UI API")
   public JComponent getComponent() {
     return (JComponent)TargetAWT.to(getUIComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   public Component getUIComponent() {
     throw new AbstractMethodError();
   }
 
   @RequiredUIAccess
-  public abstract void saveTo(@NotNull B breakpoint);
+  public abstract void saveTo(@Nonnull B breakpoint);
 
   @RequiredUIAccess
-  public abstract void loadFrom(@NotNull B breakpoint);
+  public abstract void loadFrom(@Nonnull B breakpoint);
 
   @Override
   public void dispose() {
   }
 
-  public boolean isVisibleOnPopup(@NotNull B breakpoint) {
+  public boolean isVisibleOnPopup(@Nonnull B breakpoint) {
     return true;
   }
 }

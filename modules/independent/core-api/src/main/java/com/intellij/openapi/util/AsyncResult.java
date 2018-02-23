@@ -20,8 +20,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,25 +32,25 @@ public class AsyncResult<T> extends ActionCallback {
 
   private static final AsyncResult REJECTED = new Rejected();
 
-  @NotNull
+  @Nonnull
   public static <R> AsyncResult<R> rejected() {
     //noinspection unchecked
     return REJECTED;
   }
 
-  @NotNull
-  public static <R> AsyncResult<R> rejected(@NotNull String errorMessage) {
+  @Nonnull
+  public static <R> AsyncResult<R> rejected(@Nonnull String errorMessage) {
     AsyncResult<R> result = new AsyncResult<>();
     result.reject(errorMessage);
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public static <R> AsyncResult<R> done(@Nullable R result) {
     return new AsyncResult<R>().setDone(result);
   }
 
-  public static AsyncResult<?> merge(@NotNull Collection<AsyncResult<?>> list) {
+  public static AsyncResult<?> merge(@Nonnull Collection<AsyncResult<?>> list) {
     if (list.isEmpty()) {
       return done(null);
     }
@@ -94,53 +94,53 @@ public class AsyncResult<T> extends ActionCallback {
     myResult = result;
   }
 
-  @NotNull
+  @Nonnull
   public AsyncResult<T> setDone(T result) {
     myResult = result;
     setDone();
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public AsyncResult<T> setRejected(T result) {
     myResult = result;
     setRejected();
     return this;
   }
 
-  @NotNull
-  public <DependentResult> AsyncResult<DependentResult> subResult(@NotNull Function<T, DependentResult> doneHandler) {
+  @Nonnull
+  public <DependentResult> AsyncResult<DependentResult> subResult(@Nonnull Function<T, DependentResult> doneHandler) {
     return subResult(new AsyncResult<DependentResult>(), doneHandler);
   }
 
-  @NotNull
-  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@NotNull SubAsyncResult subResult, @NotNull Function<T, SubResult> doneHandler) {
+  @Nonnull
+  public <SubResult, SubAsyncResult extends AsyncResult<SubResult>> SubAsyncResult subResult(@Nonnull SubAsyncResult subResult, @Nonnull Function<T, SubResult> doneHandler) {
     doWhenDone(new SubResultDoneCallback<>(subResult, doneHandler)).notifyWhenRejected(subResult);
     return subResult;
   }
 
-  @NotNull
-  public ActionCallback subCallback(@NotNull Consumer<T> doneHandler) {
+  @Nonnull
+  public ActionCallback subCallback(@Nonnull Consumer<T> doneHandler) {
     ActionCallback subCallback = new ActionCallback();
     doWhenDone(new SubCallbackDoneCallback<>(subCallback, doneHandler)).notifyWhenRejected(subCallback);
     return subCallback;
   }
 
-  @NotNull
-  public AsyncResult<T> doWhenDone(@NotNull final Consumer<T> consumer) {
+  @Nonnull
+  public AsyncResult<T> doWhenDone(@Nonnull final Consumer<T> consumer) {
     doWhenDone(() -> consumer.consume(myResult));
     return this;
   }
 
-  @NotNull
-  public AsyncResult<T> doWhenRejected(@NotNull final PairConsumer<T, String> consumer) {
+  @Nonnull
+  public AsyncResult<T> doWhenRejected(@Nonnull final PairConsumer<T, String> consumer) {
     doWhenRejected(() -> consumer.consume(myResult, myError));
     return this;
   }
 
   @Override
-  @NotNull
-  public final AsyncResult<T> notify(@NotNull final ActionCallback child) {
+  @Nonnull
+  public final AsyncResult<T> notify(@Nonnull final ActionCallback child) {
     super.notify(child);
     return this;
   }
@@ -159,8 +159,8 @@ public class AsyncResult<T> extends ActionCallback {
     return myResult;
   }
 
-  @NotNull
-  public final ActionCallback doWhenProcessed(@NotNull final Consumer<T> consumer) {
+  @Nonnull
+  public final ActionCallback doWhenProcessed(@Nonnull final Consumer<T> consumer) {
     doWhenDone(consumer);
     doWhenRejected((result, error) -> consumer.consume(result));
     return this;

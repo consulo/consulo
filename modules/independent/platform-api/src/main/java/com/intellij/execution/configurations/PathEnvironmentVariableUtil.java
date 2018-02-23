@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class PathEnvironmentVariableUtil {
    * @return {@code File} instance or null if not found
    */
   @Nullable
-  public static File findInPath(@NotNull String fileBaseName) {
+  public static File findInPath(@Nonnull String fileBaseName) {
     return findInPath(fileBaseName, false);
   }
 
@@ -56,7 +56,7 @@ public class PathEnvironmentVariableUtil {
    * @return {@code File} instance or null if not found
    */
   @Nullable
-  public static File findInPath(@NotNull String fileBaseName, boolean logFindDetails) {
+  public static File findInPath(@Nonnull String fileBaseName, boolean logFindDetails) {
     List<File> exeFiles = findExeFilesInPath(fileBaseName, true, logFindDetails);
     return exeFiles.size() > 0 ? exeFiles.get(0) : null;
   }
@@ -68,13 +68,13 @@ public class PathEnvironmentVariableUtil {
    * @param fileBaseName file base name
    * @return file list
    */
-  @NotNull
-  public static List<File> findAllExeFilesInPath(@NotNull String fileBaseName) {
+  @Nonnull
+  public static List<File> findAllExeFilesInPath(@Nonnull String fileBaseName) {
     return findExeFilesInPath(fileBaseName, false, false);
   }
 
-  @NotNull
-  private static List<File> findExeFilesInPath(@NotNull String fileBaseName,
+  @Nonnull
+  private static List<File> findExeFilesInPath(@Nonnull String fileBaseName,
                                                boolean stopAfterFirstMatch,
                                                boolean logFindDetails) {
     String systemPath = EnvironmentUtil.getValue("PATH");

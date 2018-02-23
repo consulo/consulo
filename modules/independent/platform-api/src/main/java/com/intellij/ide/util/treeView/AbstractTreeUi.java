@@ -44,8 +44,8 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -202,9 +202,9 @@ public class AbstractTreeUi {
   @NonNls
   private UiActivity myActivityId;
 
-  protected void init(@NotNull AbstractTreeBuilder builder,
-                      @NotNull JTree tree,
-                      @NotNull DefaultTreeModel treeModel,
+  protected void init(@Nonnull AbstractTreeBuilder builder,
+                      @Nonnull JTree tree,
+                      @Nonnull DefaultTreeModel treeModel,
                       AbstractTreeStructure treeStructure,
                       @Nullable Comparator<NodeDescriptor> comparator,
                       boolean updateIfInactive) {
@@ -356,7 +356,7 @@ public class AbstractTreeUi {
     }
   }
 
-  void invokeLaterIfNeeded(boolean forceEdt, @NotNull final Runnable runnable) {
+  void invokeLaterIfNeeded(boolean forceEdt, @Nonnull final Runnable runnable) {
     Runnable actual = new TreeRunnable("AbstractTreeUi.invokeLaterIfNeeded") {
       @Override
       public void perform() {
@@ -474,7 +474,7 @@ public class AbstractTreeUi {
     return myBuilder == null;
   }
 
-  void doExpandNodeChildren(@NotNull final DefaultMutableTreeNode node) {
+  void doExpandNodeChildren(@Nonnull final DefaultMutableTreeNode node) {
     if (!myUnbuiltNodes.contains(node)) return;
     if (isLoadedInBackground(getElementFor(node))) return;
 
@@ -543,11 +543,11 @@ public class AbstractTreeUi {
     return TreeUtil.isAncestor(getRootNode(), node) && getRootNode() == myTreeModel.getRoot();
   }
 
-  private boolean isNodeValidForElement(@NotNull final Object element, @NotNull final DefaultMutableTreeNode node) {
+  private boolean isNodeValidForElement(@Nonnull final Object element, @Nonnull final DefaultMutableTreeNode node) {
     return isSameHierarchy(element, node) || isValidChildOfParent(element, node);
   }
 
-  private boolean isValidChildOfParent(@NotNull final Object element, @NotNull final DefaultMutableTreeNode node) {
+  private boolean isValidChildOfParent(@Nonnull final Object element, @Nonnull final DefaultMutableTreeNode node) {
     final DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
     final Object parentElement = getElementFor(parent);
     if (!isInStructure(parentElement)) return false;
@@ -584,7 +584,7 @@ public class AbstractTreeUi {
   }
 
   @Nullable
-  public final DefaultMutableTreeNode getNodeForPath(@NotNull Object[] path) {
+  public final DefaultMutableTreeNode getNodeForPath(@Nonnull Object[] path) {
     DefaultMutableTreeNode node = null;
     for (final Object pathElement : path) {
       node = node == null ? getFirstNode(pathElement) : findNodeForChildElement(node, pathElement);
@@ -617,7 +617,7 @@ public class AbstractTreeUi {
     }
   }
 
-  public final void buildNodeForPath(@NotNull Object[] path) {
+  public final void buildNodeForPath(@Nonnull Object[] path) {
     getUpdater().performUpdate();
     DefaultMutableTreeNode node = null;
     for (final Object pathElement : path) {
@@ -634,7 +634,7 @@ public class AbstractTreeUi {
     getBuilder().queueUpdateFrom(getTreeStructure().getRootElement(), true);
   }
 
-  @NotNull
+  @Nonnull
   protected AbstractTreeBuilder getBuilder() {
     return myBuilder;
   }
@@ -648,7 +648,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean initRootNodeNowIfNeeded(@NotNull final TreeUpdatePass pass) {
+  private boolean initRootNodeNowIfNeeded(@Nonnull final TreeUpdatePass pass) {
     boolean wasCleanedUp = false;
     if (myRootNodeWasQueuedToInitialize) {
       Object root = getTreeStructure().getRootElement();
@@ -818,7 +818,7 @@ public class AbstractTreeUi {
     return eachParent != null ? distance : -1;
   }
 
-  private boolean isAutoExpand(@NotNull DefaultMutableTreeNode node) {
+  private boolean isAutoExpand(@Nonnull DefaultMutableTreeNode node) {
     return isAutoExpand(getDescriptorFrom(node));
   }
 
@@ -826,8 +826,8 @@ public class AbstractTreeUi {
     return myTree instanceof AlwaysExpandedTree && ((AlwaysExpandedTree)myTree).isAlwaysExpanded();
   }
 
-  @NotNull
-  private AsyncResult<Boolean> update(@NotNull final NodeDescriptor nodeDescriptor, boolean now) {
+  @Nonnull
+  private AsyncResult<Boolean> update(@Nonnull final NodeDescriptor nodeDescriptor, boolean now) {
     AsyncResult<Boolean> promise;
     if (now || isPassthroughMode()) {
       promise = AsyncResult.done(update(nodeDescriptor));
@@ -900,7 +900,7 @@ public class AbstractTreeUi {
     return promise;
   }
 
-  private boolean update(@NotNull final NodeDescriptor nodeDescriptor) {
+  private boolean update(@Nonnull final NodeDescriptor nodeDescriptor) {
     try (LockToken ignored = acquireLock()) {
       final AtomicBoolean update = new AtomicBoolean();
       execute(new TreeRunnable("AbstractTreeUi.update") {
@@ -947,7 +947,7 @@ public class AbstractTreeUi {
     processDeferredActions(myDeferredExpansions);
   }
 
-  private static void processDeferredActions(@NotNull Set<Runnable> actions) {
+  private static void processDeferredActions(@Nonnull Set<Runnable> actions) {
     final Runnable[] runnables = actions.toArray(new Runnable[actions.size()]);
     actions.clear();
     for (Runnable runnable : runnables) {
@@ -956,12 +956,12 @@ public class AbstractTreeUi {
   }
 
   //todo: to make real callback
-  @NotNull
+  @Nonnull
   public ActionCallback queueUpdate(Object element) {
     return queueUpdate(element, true);
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback queueUpdate(Object element, boolean updateStructure) {
     assertIsDispatchThread();
 
@@ -1007,11 +1007,11 @@ public class AbstractTreeUi {
     updateSubtree(getRootNode(), false);
   }
 
-  public final void updateSubtree(@NotNull DefaultMutableTreeNode node, boolean canSmartExpand) {
+  public final void updateSubtree(@Nonnull DefaultMutableTreeNode node, boolean canSmartExpand) {
     updateSubtree(new TreeUpdatePass(node), canSmartExpand);
   }
 
-  public final void updateSubtree(@NotNull TreeUpdatePass pass, boolean canSmartExpand) {
+  public final void updateSubtree(@Nonnull TreeUpdatePass pass, boolean canSmartExpand) {
     if (getUpdater() != null) {
       getUpdater().addSubtreeToUpdate(pass);
     }
@@ -1020,7 +1020,7 @@ public class AbstractTreeUi {
     }
   }
 
-  final void updateSubtreeNow(@NotNull TreeUpdatePass pass, boolean canSmartExpand) {
+  final void updateSubtreeNow(@Nonnull TreeUpdatePass pass, boolean canSmartExpand) {
     maybeSetBusyAndScheduleWaiterForReady(true, getElementFor(pass.getNode()));
     setHoldSize(true);
 
@@ -1050,7 +1050,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void updateRow(final int row, @NotNull final TreeUpdatePass pass) {
+  private void updateRow(final int row, @Nonnull final TreeUpdatePass pass) {
     invokeLaterIfNeeded(false, new TreeRunnable("AbstractTreeUi.updateRow") {
       @Override
       public void perform() {
@@ -1082,8 +1082,8 @@ public class AbstractTreeUi {
     return isToBuildChildrenInBackground(getElementFromDescriptor(descriptor));
   }
 
-  @NotNull
-  private UpdaterTreeState setUpdaterState(@NotNull UpdaterTreeState state) {
+  @Nonnull
+  private UpdaterTreeState setUpdaterState(@Nonnull UpdaterTreeState state) {
     if (myUpdaterState != null && myUpdaterState.equals(state)) return state;
 
     final UpdaterTreeState oldState = myUpdaterState;
@@ -1097,7 +1097,7 @@ public class AbstractTreeUi {
     }
   }
 
-  protected void doUpdateNode(@NotNull final DefaultMutableTreeNode node) {
+  protected void doUpdateNode(@Nonnull final DefaultMutableTreeNode node) {
     NodeDescriptor descriptor = getDescriptorFrom(node);
     if (descriptor == null) return;
     final Object prevElement = getElementFromDescriptor(descriptor);
@@ -1119,9 +1119,9 @@ public class AbstractTreeUi {
     return getBuilder().getTreeStructureElement(descriptor);
   }
 
-  @NotNull
-  private ActionCallback updateNodeChildren(@NotNull final DefaultMutableTreeNode node,
-                                            @NotNull final TreeUpdatePass pass,
+  @Nonnull
+  private ActionCallback updateNodeChildren(@Nonnull final DefaultMutableTreeNode node,
+                                            @Nonnull final TreeUpdatePass pass,
                                             @Nullable final LoadedChildren loadedChildren,
                                             final boolean forcedNow,
                                             final boolean toSmartExpand,
@@ -1152,8 +1152,8 @@ public class AbstractTreeUi {
     return result;
   }
 
-  private void doUpdateChildren(@NotNull final DefaultMutableTreeNode node,
-                                @NotNull final TreeUpdatePass pass,
+  private void doUpdateChildren(@Nonnull final DefaultMutableTreeNode node,
+                                @Nonnull final TreeUpdatePass pass,
                                 @Nullable final LoadedChildren loadedChildren,
                                 boolean forcedNow,
                                 final boolean toSmartExpand,
@@ -1254,7 +1254,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean processAlwaysLeaf(@NotNull DefaultMutableTreeNode node) {
+  private boolean processAlwaysLeaf(@Nonnull DefaultMutableTreeNode node) {
     Object element = getElementFor(node);
     NodeDescriptor desc = getDescriptorFrom(node);
 
@@ -1302,13 +1302,13 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean isChildNodeForceUpdate(@NotNull DefaultMutableTreeNode node, boolean parentForceUpdate, boolean parentExpanded) {
+  private boolean isChildNodeForceUpdate(@Nonnull DefaultMutableTreeNode node, boolean parentForceUpdate, boolean parentExpanded) {
     TreePath path = getPathFor(node);
     return parentForceUpdate && (parentExpanded || myTree.isExpanded(path));
   }
 
-  private void updateNodeChildrenNow(@NotNull final DefaultMutableTreeNode node,
-                                     @NotNull final TreeUpdatePass pass,
+  private void updateNodeChildrenNow(@Nonnull final DefaultMutableTreeNode node,
+                                     @Nonnull final TreeUpdatePass pass,
                                      @Nullable final LoadedChildren preloadedChildren,
                                      final boolean toSmartExpand,
                                      final boolean wasExpanded,
@@ -1396,7 +1396,7 @@ public class AbstractTreeUi {
     });
   }
 
-  private boolean isDisposed(@NotNull DefaultMutableTreeNode node) {
+  private boolean isDisposed(@Nonnull DefaultMutableTreeNode node) {
     return !node.isNodeAncestor((DefaultMutableTreeNode)myTree.getModel().getRoot());
   }
 
@@ -1424,11 +1424,11 @@ public class AbstractTreeUi {
     }
   }
 
-  private void expand(@NotNull DefaultMutableTreeNode node, boolean canSmartExpand) {
+  private void expand(@Nonnull DefaultMutableTreeNode node, boolean canSmartExpand) {
     expand(new TreePath(node.getPath()), canSmartExpand);
   }
 
-  private void expand(@NotNull final TreePath path, boolean canSmartExpand) {
+  private void expand(@Nonnull final TreePath path, boolean canSmartExpand) {
     final Object last = path.getLastPathComponent();
     boolean isLeaf = myTree.getModel().isLeaf(path.getLastPathComponent());
     final boolean isRoot = last == myTree.getModel().getRoot();
@@ -1470,9 +1470,9 @@ public class AbstractTreeUi {
     myUnbuiltNodes.remove(node);
   }
 
-  private Pair<Boolean, LoadedChildren> processUnbuilt(@NotNull final DefaultMutableTreeNode node,
+  private Pair<Boolean, LoadedChildren> processUnbuilt(@Nonnull final DefaultMutableTreeNode node,
                                                        final NodeDescriptor descriptor,
-                                                       @NotNull final TreeUpdatePass pass,
+                                                       @Nonnull final TreeUpdatePass pass,
                                                        final boolean isExpanded,
                                                        @Nullable final LoadedChildren loadedChildren) {
     final Ref<Pair<Boolean, LoadedChildren>> result = new Ref<>();
@@ -1537,7 +1537,7 @@ public class AbstractTreeUi {
     return result.get();
   }
 
-  private boolean removeIfLoading(@NotNull TreeNode node) {
+  private boolean removeIfLoading(@Nonnull TreeNode node) {
     if (isLoadingNode(node)) {
       moveSelectionToParentIfNeeded(node);
       removeNodeFromParent((MutableTreeNode)node, false);
@@ -1547,7 +1547,7 @@ public class AbstractTreeUi {
     return false;
   }
 
-  private void moveSelectionToParentIfNeeded(@NotNull TreeNode node) {
+  private void moveSelectionToParentIfNeeded(@Nonnull TreeNode node) {
     TreePath path = getPathFor(node);
     if (myTree.getSelectionModel().isPathSelected(path)) {
       TreePath parentPath = path.getParentPath();
@@ -1602,8 +1602,8 @@ public class AbstractTreeUi {
     }
   }
 
-  @NotNull
-  private ActionCallback updateNodesToInsert(@NotNull final List<TreeNode> nodesToInsert, @NotNull TreeUpdatePass pass, boolean canSmartExpand, boolean forceUpdate) {
+  @Nonnull
+  private ActionCallback updateNodesToInsert(@Nonnull final List<TreeNode> nodesToInsert, @Nonnull TreeUpdatePass pass, boolean canSmartExpand, boolean forceUpdate) {
     ActionCallback.Chunk chunk = new ActionCallback.Chunk();
     for (TreeNode node : nodesToInsert) {
       DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)node;
@@ -1615,10 +1615,10 @@ public class AbstractTreeUi {
     return chunk.getWhenProcessed();
   }
 
-  @NotNull
-  private AsyncResult<?> processExistingNodes(@NotNull final DefaultMutableTreeNode node,
-                                              @NotNull final MutualMap<Object, Integer> elementToIndexMap,
-                                              @NotNull final TreeUpdatePass pass,
+  @Nonnull
+  private AsyncResult<?> processExistingNodes(@Nonnull final DefaultMutableTreeNode node,
+                                              @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                              @Nonnull final TreeUpdatePass pass,
                                               final boolean canSmartExpand,
                                               final boolean forceUpdate,
                                               final boolean wasExpaned,
@@ -1664,7 +1664,7 @@ public class AbstractTreeUi {
     }, pass, node);
   }
 
-  private boolean isRerunNeeded(@NotNull TreeUpdatePass pass) {
+  private boolean isRerunNeeded(@Nonnull TreeUpdatePass pass) {
     if (pass.isExpired() || !canInitiateNewActivity()) return false;
 
     final boolean rerunBecauseTreeIsHidden = !pass.isExpired() && !isTreeShowing() && getUpdater().isInPostponeMode();
@@ -1677,8 +1677,8 @@ public class AbstractTreeUi {
     public abstract AsyncResult<?> run();
   }
 
-  @NotNull
-  private AsyncResult<?> maybeYeild(@NotNull final AsyncRunnable processRunnable, @NotNull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
+  @Nonnull
+  private AsyncResult<?> maybeYeild(@Nonnull final AsyncRunnable processRunnable, @Nonnull final TreeUpdatePass pass, final DefaultMutableTreeNode node) {
     if (isRerunNeeded(pass)) {
       getUpdater().requeue(pass);
       return AsyncResult.rejected();
@@ -1736,8 +1736,8 @@ public class AbstractTreeUi {
     }
   }
 
-  @NotNull
-  private AsyncResult<?> execute(@NotNull AsyncRunnable runnable) throws ProcessCanceledException {
+  @Nonnull
+  private AsyncResult<?> execute(@Nonnull AsyncRunnable runnable) throws ProcessCanceledException {
     try {
       if (!canInitiateNewActivity()) {
         throw new ProcessCanceledException();
@@ -1758,7 +1758,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void execute(@NotNull Runnable runnable) throws ProcessCanceledException {
+  private void execute(@Nonnull Runnable runnable) throws ProcessCanceledException {
     try {
       if (!canInitiateNewActivity()) {
         throw new ProcessCanceledException();
@@ -1813,7 +1813,7 @@ public class AbstractTreeUi {
     });
   }
 
-  @NotNull
+  @Nonnull
   private ActionCallback resetToReadyNow() {
     if (isReleased()) return ActionCallback.REJECTED;
 
@@ -1868,11 +1868,11 @@ public class AbstractTreeUi {
     return result;
   }
 
-  public void addToCancelled(@NotNull DefaultMutableTreeNode node) {
+  public void addToCancelled(@Nonnull DefaultMutableTreeNode node) {
     myCancelledBuild.put(node, node);
   }
 
-  public void removeFromCancelled(@NotNull DefaultMutableTreeNode node) {
+  public void removeFromCancelled(@Nonnull DefaultMutableTreeNode node) {
     myCancelledBuild.remove(node);
   }
 
@@ -1880,7 +1880,7 @@ public class AbstractTreeUi {
     return node instanceof DefaultMutableTreeNode && myCancelledBuild.containsKey(node);
   }
 
-  private void resetIncompleteNode(@NotNull DefaultMutableTreeNode node) {
+  private void resetIncompleteNode(@Nonnull DefaultMutableTreeNode node) {
     if (myReleaseRequested) return;
 
     addToCancelled(node);
@@ -1897,7 +1897,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean yieldAndRun(@NotNull final Runnable runnable, @NotNull final TreeUpdatePass pass) {
+  private boolean yieldAndRun(@Nonnull final Runnable runnable, @Nonnull final TreeUpdatePass pass) {
     myYieldingPasses.add(pass);
     myYieldingNow = true;
     yield(new TreeRunnable("AbstractTreeUi.yieldAndRun") {
@@ -1944,7 +1944,7 @@ public class AbstractTreeUi {
   }
 
   @Nullable
-  private Boolean checkValue(@NotNull Computable<Boolean> computable, boolean attempt) {
+  private Boolean checkValue(@Nonnull Computable<Boolean> computable, boolean attempt) {
     try (LockToken ignored = attempt ? attemptLock() : acquireLock()) {
       return computable.compute();
     }
@@ -1954,7 +1954,7 @@ public class AbstractTreeUi {
     }
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getStatus() {
     return "isReady=" +
@@ -2025,7 +2025,7 @@ public class AbstractTreeUi {
     return !isYeildingNow() && !isWorkerBusy() && !hasUpdatingChildrenNow() && !isLoadingInBackgroundNow();
   }
 
-  private void executeYieldingRequest(@NotNull Runnable runnable, @NotNull TreeUpdatePass pass) {
+  private void executeYieldingRequest(@Nonnull Runnable runnable, @Nonnull TreeUpdatePass pass) {
     try {
       try {
         myYieldingPasses.remove(pass);
@@ -2141,7 +2141,7 @@ public class AbstractTreeUi {
     return canYield() && getBuilder().isToYieldUpdateFor(node);
   }
 
-  @NotNull
+  @Nonnull
   private MutualMap<Object, Integer> loadElementsFromStructure(final NodeDescriptor descriptor, @Nullable LoadedChildren preloadedChildren) {
     MutualMap<Object, Integer> elementToIndexMap = new MutualMap<>(true);
     final Object element = getElementFromDescriptor(descriptor);
@@ -2162,12 +2162,12 @@ public class AbstractTreeUi {
     return node instanceof LoadingNode;
   }
 
-  @NotNull
+  @Nonnull
   private AsyncResult<List<TreeNode>> collectNodesToInsert(final NodeDescriptor descriptor,
-                                                           @NotNull final MutualMap<Object, Integer> elementToIndexMap,
+                                                           @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
                                                            final DefaultMutableTreeNode parent,
                                                            final boolean addLoadingNode,
-                                                           @NotNull final LoadedChildren loadedChildren) {
+                                                           @Nonnull final LoadedChildren loadedChildren) {
     final AsyncResult<List<TreeNode>> result = new AsyncResult<>();
 
     final List<TreeNode> nodesToInsert = new ArrayList<>();
@@ -2239,7 +2239,7 @@ public class AbstractTreeUi {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   protected DefaultMutableTreeNode createChildNode(final NodeDescriptor descriptor) {
     return new ElementNode(this, descriptor);
   }
@@ -2252,12 +2252,12 @@ public class AbstractTreeUi {
     return myClearOnHideDelay;
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback getInitialized() {
     return myInitialized;
   }
 
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     return myBusyObject.getReady(requestor);
   }
 
@@ -2265,13 +2265,13 @@ public class AbstractTreeUi {
     return getReady(this);
   }
 
-  private void addToUpdatingChildren(@NotNull DefaultMutableTreeNode node) {
+  private void addToUpdatingChildren(@Nonnull DefaultMutableTreeNode node) {
     synchronized (myUpdatingChildren) {
       myUpdatingChildren.add(node);
     }
   }
 
-  private void removeFromUpdatingChildren(@NotNull DefaultMutableTreeNode node) {
+  private void removeFromUpdatingChildren(@Nonnull DefaultMutableTreeNode node) {
     synchronized (myUpdatingChildren) {
       myUpdatingChildren.remove(node);
     }
@@ -2283,7 +2283,7 @@ public class AbstractTreeUi {
     }
   }
 
-  public boolean isParentUpdatingChildrenNow(@NotNull DefaultMutableTreeNode node) {
+  public boolean isParentUpdatingChildrenNow(@Nonnull DefaultMutableTreeNode node) {
     synchronized (myUpdatingChildren) {
       DefaultMutableTreeNode eachParent = (DefaultMutableTreeNode)node.getParent();
       while (eachParent != null) {
@@ -2302,12 +2302,12 @@ public class AbstractTreeUi {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Map<Object, List<NodeAction>> getNodeActions() {
     return myNodeActions;
   }
 
-  @NotNull
+  @Nonnull
   public List<Object> getLoadedChildrenFor(Object element) {
     List<Object> result = new ArrayList<>();
 
@@ -2328,7 +2328,7 @@ public class AbstractTreeUi {
     return getUpdater().hasNodesToUpdate();
   }
 
-  @NotNull
+  @Nonnull
   public List<Object> getExpandedElements() {
     final List<Object> result = new ArrayList<>();
     if (isReleased()) return result;
@@ -2347,7 +2347,7 @@ public class AbstractTreeUi {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback cancelUpdate() {
     if (isReleased()) return ActionCallback.REJECTED;
 
@@ -2404,13 +2404,13 @@ public class AbstractTreeUi {
     return LockToken.attemptLock(myStateLock, Registry.intValue("ide.tree.uiLockAttempt"));
   }
 
-  @NotNull
+  @Nonnull
   private LockToken acquireLock() {
     return LockToken.acquireLock(myStateLock);
   }
 
-  @NotNull
-  public ActionCallback batch(@NotNull final Progressive progressive) {
+  @Nonnull
+  public ActionCallback batch(@Nonnull final Progressive progressive) {
     assertIsDispatchThread();
 
     EmptyProgressIndicator indicator = new EmptyProgressIndicator();
@@ -2473,7 +2473,7 @@ public class AbstractTreeUi {
     return myReleaseRequested;
   }
 
-  public void executeUserRunnable(@NotNull Runnable runnable) {
+  public void executeUserRunnable(@Nonnull Runnable runnable) {
     try {
       myUserRunnables.add(runnable);
       runnable.run();
@@ -2565,7 +2565,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean queueBackgroundUpdate(@NotNull final UpdateInfo updateInfo, @NotNull final DefaultMutableTreeNode node) {
+  private boolean queueBackgroundUpdate(@Nonnull final UpdateInfo updateInfo, @Nonnull final DefaultMutableTreeNode node) {
     assertIsDispatchThread();
 
     final Object oldElementFromDescriptor = getElementFromDescriptor(updateInfo.getDescriptor());
@@ -2657,7 +2657,7 @@ public class AbstractTreeUi {
         children.set(loaded);
       }
 
-      @NotNull
+      @Nonnull
       @NonNls
       @Override
       public String toString() {
@@ -2723,11 +2723,11 @@ public class AbstractTreeUi {
     return true;
   }
 
-  private boolean isExpanded(@NotNull DefaultMutableTreeNode node, boolean isExpanded) {
+  private boolean isExpanded(@Nonnull DefaultMutableTreeNode node, boolean isExpanded) {
     return isExpanded || myTree.isExpanded(getPathFor(node));
   }
 
-  private void removeLoading(@NotNull DefaultMutableTreeNode parent, boolean forced) {
+  private void removeLoading(@Nonnull DefaultMutableTreeNode parent, boolean forced) {
     if (!forced && myUnbuiltNodes.contains(parent) && !myCancelledBuild.containsKey(parent)) {
       return;
     }
@@ -2752,7 +2752,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void processNodeActionsIfReady(@NotNull final DefaultMutableTreeNode node) {
+  private void processNodeActionsIfReady(@Nonnull final DefaultMutableTreeNode node) {
     assertIsDispatchThread();
 
     if (isNodeBeingBuilt(node)) return;
@@ -2792,7 +2792,7 @@ public class AbstractTreeUi {
 
   private static void processActions(DefaultMutableTreeNode node,
                                      Object element,
-                                     @NotNull final Map<Object, List<NodeAction>> nodeActions,
+                                     @Nonnull final Map<Object, List<NodeAction>> nodeActions,
                                      @Nullable final Map<Object, List<NodeAction>> secondaryNodeAction) {
     final List<NodeAction> actions = nodeActions.get(element);
     if (actions != null) {
@@ -2817,7 +2817,7 @@ public class AbstractTreeUi {
     return smartExpand && validateAutoExpand(true, getElementFor(node));
   }
 
-  private void processSmartExpand(@NotNull final DefaultMutableTreeNode node, final boolean canSmartExpand, boolean forced) {
+  private void processSmartExpand(@Nonnull final DefaultMutableTreeNode node, final boolean canSmartExpand, boolean forced) {
     if (!canInitiateNewActivity()) return;
     if (!getBuilder().isSmartExpand()) return;
 
@@ -2843,7 +2843,7 @@ public class AbstractTreeUi {
   }
 
   @Nullable
-  private static TreeNode getChildForSmartExpand(@NotNull DefaultMutableTreeNode node) {
+  private static TreeNode getChildForSmartExpand(@Nonnull DefaultMutableTreeNode node) {
     int realChildCount = 0;
     TreeNode nodeToExpand = null;
 
@@ -2908,12 +2908,12 @@ public class AbstractTreeUi {
     return IdeBundle.message("progress.searching");
   }
 
-  @NotNull
-  private AsyncResult<?> processExistingNode(@NotNull final DefaultMutableTreeNode childNode,
+  @Nonnull
+  private AsyncResult<?> processExistingNode(@Nonnull final DefaultMutableTreeNode childNode,
                                              final NodeDescriptor childDescriptor,
-                                             @NotNull final DefaultMutableTreeNode parentNode,
-                                             @NotNull final MutualMap<Object, Integer> elementToIndexMap,
-                                             @NotNull final TreeUpdatePass pass,
+                                             @Nonnull final DefaultMutableTreeNode parentNode,
+                                             @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                             @Nonnull final TreeUpdatePass pass,
                                              final boolean canSmartExpand,
                                              final boolean forceUpdate,
                                              @Nullable LoadedChildren parentPreloadedChildren) {
@@ -3045,7 +3045,7 @@ public class AbstractTreeUi {
     return result;
   }
 
-  private void adjustSelectionOnChildRemove(@NotNull DefaultMutableTreeNode parentNode, int selectedIndex, Object disposedElement) {
+  private void adjustSelectionOnChildRemove(@Nonnull DefaultMutableTreeNode parentNode, int selectedIndex, Object disposedElement) {
     if (selectedIndex >= 0 && !getSelectedElements().isEmpty()) return;
 
     DefaultMutableTreeNode node = getNodeForElement(disposedElement, false);
@@ -3077,7 +3077,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private boolean isValidForSelectionAdjusting(@NotNull TreeNode node) {
+  private boolean isValidForSelectionAdjusting(@Nonnull TreeNode node) {
     if (!myTree.isRootVisible() && getRootNode() == node) return false;
 
     if (isLoadingNode(node)) return true;
@@ -3094,12 +3094,12 @@ public class AbstractTreeUi {
     return parentElementInTree.equals(parentElement);
   }
 
-  @NotNull
+  @Nonnull
   public Condition getExpiredElementCondition(final Object element) {
     return o -> isInStructure(element);
   }
 
-  private void addSelectionPath(@NotNull final TreePath path, final boolean isAdjustedSelection, final Condition isExpiredAdjustement, @Nullable final Object adjustmentCause) {
+  private void addSelectionPath(@Nonnull final TreePath path, final boolean isAdjustedSelection, final Condition isExpiredAdjustement, @Nullable final Object adjustmentCause) {
     processInnerChange(new TreeRunnable("AbstractTreeUi.addSelectionPath") {
       @Override
       public void perform() {
@@ -3134,8 +3134,8 @@ public class AbstractTreeUi {
     });
   }
 
-  @NotNull
-  private static TreePath getPathFor(@NotNull TreeNode node) {
+  @Nonnull
+  private static TreePath getPathFor(@Nonnull TreeNode node) {
     if (node instanceof DefaultMutableTreeNode) {
       return new TreePath(((DefaultMutableTreeNode)node).getPath());
     }
@@ -3152,7 +3152,7 @@ public class AbstractTreeUi {
   }
 
 
-  private void removeNodeFromParent(@NotNull final MutableTreeNode node, final boolean willAdjustSelection) {
+  private void removeNodeFromParent(@Nonnull final MutableTreeNode node, final boolean willAdjustSelection) {
     processInnerChange(new TreeRunnable("AbstractTreeUi.removeNodeFromParent") {
       @Override
       public void perform() {
@@ -3170,7 +3170,7 @@ public class AbstractTreeUi {
     });
   }
 
-  private void expandPath(@NotNull final TreePath path, final boolean canSmartExpand) {
+  private void expandPath(@Nonnull final TreePath path, final boolean canSmartExpand) {
     processInnerChange(new TreeRunnable("AbstractTreeUi.expandPath") {
       @Override
       public void perform() {
@@ -3210,7 +3210,7 @@ public class AbstractTreeUi {
     return myUpdaterState != null && myUpdaterState.isProcessingNow() && myUserRunnables.isEmpty();
   }
 
-  private void makeLoadingOrLeafIfNoChildren(@NotNull final DefaultMutableTreeNode node) {
+  private void makeLoadingOrLeafIfNoChildren(@Nonnull final DefaultMutableTreeNode node) {
     TreePath path = getPathFor(node);
 
     insertLoadingNode(node, true);
@@ -3257,8 +3257,8 @@ public class AbstractTreeUi {
   }
 
 
-  @NotNull
-  private AsyncResult<Void> queueToBackground(@NotNull final Runnable bgBuildAction, @Nullable final Runnable edtPostRunnable) {
+  @Nonnull
+  private AsyncResult<Void> queueToBackground(@Nonnull final Runnable bgBuildAction, @Nullable final Runnable edtPostRunnable) {
     if (!canInitiateNewActivity()) return AsyncResult.rejected();
     final AsyncResult<Void> result = new AsyncResult<>();
     final AtomicReference<ProcessCanceledException> fail = new AtomicReference<>();
@@ -3372,13 +3372,13 @@ public class AbstractTreeUi {
     return result;
   }
 
-  private void registerWorkerTask(@NotNull Runnable runnable) {
+  private void registerWorkerTask(@Nonnull Runnable runnable) {
     synchronized (myActiveWorkerTasks) {
       myActiveWorkerTasks.add(runnable);
     }
   }
 
-  private void unregisterWorkerTask(@NotNull Runnable runnable, @Nullable Runnable finalizeRunnable) {
+  private void unregisterWorkerTask(@Nonnull Runnable runnable, @Nullable Runnable finalizeRunnable) {
     boolean wasRemoved;
 
     synchronized (myActiveWorkerTasks) {
@@ -3409,7 +3409,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void updateNodeImageAndPosition(@NotNull final DefaultMutableTreeNode node, boolean updatePosition, boolean nodeChanged) {
+  private void updateNodeImageAndPosition(@Nonnull final DefaultMutableTreeNode node, boolean updatePosition, boolean nodeChanged) {
     NodeDescriptor descriptor = getDescriptorFrom(node);
     if (descriptor == null) return;
     if (getElementFromDescriptor(descriptor) == null) return;
@@ -3475,7 +3475,7 @@ public class AbstractTreeUi {
     return myTreeModel;
   }
 
-  private void insertNodesInto(@NotNull final List<TreeNode> toInsert, @NotNull final DefaultMutableTreeNode parentNode) {
+  private void insertNodesInto(@Nonnull final List<TreeNode> toInsert, @Nonnull final DefaultMutableTreeNode parentNode) {
     sortChildren(parentNode, toInsert, false, true);
     final List<TreeNode> all = new ArrayList<>(toInsert.size() + parentNode.getChildCount());
     all.addAll(toInsert);
@@ -3540,7 +3540,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void sortChildren(@NotNull DefaultMutableTreeNode node, @NotNull List<TreeNode> children, boolean updateStamp, boolean forceSort) {
+  private void sortChildren(@Nonnull DefaultMutableTreeNode node, @Nonnull List<TreeNode> children, boolean updateStamp, boolean forceSort) {
     NodeDescriptor descriptor = getDescriptorFrom(node);
     assert descriptor != null;
 
@@ -3558,7 +3558,7 @@ public class AbstractTreeUi {
     return myNodeDescriptorComparator;
   }
 
-  private void disposeNode(@NotNull DefaultMutableTreeNode node) {
+  private void disposeNode(@Nonnull DefaultMutableTreeNode node) {
     TreeNode parent = node.getParent();
     if (parent instanceof DefaultMutableTreeNode) {
       addToUnbuilt((DefaultMutableTreeNode)parent);
@@ -3586,19 +3586,19 @@ public class AbstractTreeUi {
     node.removeAllChildren();
   }
 
-  public boolean addSubtreeToUpdate(@NotNull final DefaultMutableTreeNode root) {
+  public boolean addSubtreeToUpdate(@Nonnull final DefaultMutableTreeNode root) {
     return addSubtreeToUpdate(root, true);
   }
 
-  public boolean addSubtreeToUpdate(@NotNull final DefaultMutableTreeNode root, boolean updateStructure) {
+  public boolean addSubtreeToUpdate(@Nonnull final DefaultMutableTreeNode root, boolean updateStructure) {
     return addSubtreeToUpdate(root, null, updateStructure);
   }
 
-  public boolean addSubtreeToUpdate(@NotNull final DefaultMutableTreeNode root, final Runnable runAfterUpdate) {
+  public boolean addSubtreeToUpdate(@Nonnull final DefaultMutableTreeNode root, final Runnable runAfterUpdate) {
     return addSubtreeToUpdate(root, runAfterUpdate, true);
   }
 
-  public boolean addSubtreeToUpdate(@NotNull final DefaultMutableTreeNode root, @Nullable final Runnable runAfterUpdate, final boolean updateStructure) {
+  public boolean addSubtreeToUpdate(@Nonnull final DefaultMutableTreeNode root, @Nullable final Runnable runAfterUpdate, final boolean updateStructure) {
     Object element = getElementFor(root);
     if (element != null && getTreeStructure().isAlwaysLeaf(element)) {
       removeFromUnbuilt(root);
@@ -3630,24 +3630,24 @@ public class AbstractTreeUi {
     return myRootNodeWasQueuedToInitialize && myRootNodeInitialized;
   }
 
-  public void select(@NotNull final Object[] elements, @Nullable final Runnable onDone) {
+  public void select(@Nonnull final Object[] elements, @Nullable final Runnable onDone) {
     select(elements, onDone, false);
   }
 
-  public void select(@NotNull final Object[] elements, @Nullable final Runnable onDone, boolean addToSelection) {
+  public void select(@Nonnull final Object[] elements, @Nullable final Runnable onDone, boolean addToSelection) {
     select(elements, onDone, addToSelection, false);
   }
 
-  public void select(@NotNull final Object[] elements, @Nullable final Runnable onDone, boolean addToSelection, boolean deferred) {
+  public void select(@Nonnull final Object[] elements, @Nullable final Runnable onDone, boolean addToSelection, boolean deferred) {
     _select(elements, onDone, addToSelection, true, false, true, deferred, false, false);
   }
 
-  void _select(@NotNull final Object[] elements, final Runnable onDone, final boolean addToSelection, final boolean checkCurrentSelection, final boolean checkIfInStructure) {
+  void _select(@Nonnull final Object[] elements, final Runnable onDone, final boolean addToSelection, final boolean checkCurrentSelection, final boolean checkIfInStructure) {
 
     _select(elements, onDone, addToSelection, checkCurrentSelection, checkIfInStructure, true, false, false, false);
   }
 
-  void _select(@NotNull final Object[] elements,
+  void _select(@Nonnull final Object[] elements,
                final Runnable onDone,
                final boolean addToSelection,
                final boolean checkCurrentSelection,
@@ -3657,11 +3657,11 @@ public class AbstractTreeUi {
     _select(elements, onDone, addToSelection, checkCurrentSelection, checkIfInStructure, scrollToVisible, false, false, false);
   }
 
-  public void userSelect(@NotNull final Object[] elements, final Runnable onDone, final boolean addToSelection, boolean scroll) {
+  public void userSelect(@Nonnull final Object[] elements, final Runnable onDone, final boolean addToSelection, boolean scroll) {
     _select(elements, onDone, addToSelection, true, false, scroll, false, true, true);
   }
 
-  void _select(@NotNull final Object[] elements,
+  void _select(@Nonnull final Object[] elements,
                final Runnable onDone,
                final boolean addToSelection,
                final boolean checkCurrentSelection,
@@ -3796,7 +3796,7 @@ public class AbstractTreeUi {
     return mySelectionIsBeingAdjusted;
   }
 
-  private void restoreSelection(@NotNull Set<Object> selection) {
+  private void restoreSelection(@Nonnull Set<Object> selection) {
     for (Object each : selection) {
       DefaultMutableTreeNode node = getNodeForElement(each, false);
       if (node != null && isValidForSelectionAdjusting(node)) {
@@ -3806,7 +3806,7 @@ public class AbstractTreeUi {
   }
 
 
-  private void addToDeferred(@NotNull final Object[] elementsToSelect, final Runnable onDone, final boolean addToSelection) {
+  private void addToDeferred(@Nonnull final Object[] elementsToSelect, final Runnable onDone, final boolean addToSelection) {
     if (!addToSelection) {
       myDeferredSelections.clear();
     }
@@ -3828,7 +3828,7 @@ public class AbstractTreeUi {
     }
   }
 
-  @NotNull
+  @Nonnull
   final Set<Object> getSelectedElements() {
     TreePath[] paths = myTree.getSelectionPaths();
 
@@ -3849,7 +3849,7 @@ public class AbstractTreeUi {
   }
 
 
-  private void addNext(@NotNull final Object[] elements,
+  private void addNext(@Nonnull final Object[] elements,
                        final int i,
                        @Nullable final Runnable onDone,
                        final int[] originalRows,
@@ -3887,7 +3887,7 @@ public class AbstractTreeUi {
     _select(new Object[]{element}, onDone, addToSelection, true, false);
   }
 
-  private void doSelect(@NotNull final Object element,
+  private void doSelect(@Nonnull final Object element,
                         final Runnable onDone,
                         final boolean addToSelection,
                         final boolean deferred,
@@ -3910,7 +3910,7 @@ public class AbstractTreeUi {
     _expand(element, _onDone, true, false, canSmartExpand);
   }
 
-  private void checkPathAndMaybeRevalidate(@NotNull Object element, @NotNull final Runnable onDone, final boolean parentsOnly, final boolean checkIfInStructure, final boolean canSmartExpand) {
+  private void checkPathAndMaybeRevalidate(@Nonnull Object element, @Nonnull final Runnable onDone, final boolean parentsOnly, final boolean checkIfInStructure, final boolean canSmartExpand) {
     boolean toRevalidate = isValid(element) && !myRevalidatedObjects.contains(element) && getNodeForElement(element, false) == null && isInStructure(element);
     if (!toRevalidate) {
       runDone(onDone);
@@ -3953,7 +3953,7 @@ public class AbstractTreeUi {
     });
   }
 
-  private void selectVisible(@NotNull Object element, final Runnable onDone, boolean addToSelection, boolean canBeCentered, final boolean scroll) {
+  private void selectVisible(@Nonnull Object element, final Runnable onDone, boolean addToSelection, boolean canBeCentered, final boolean scroll) {
     DefaultMutableTreeNode toSelect = getNodeToScroll(element);
     if (toSelect == null) {
       runDone(onDone);
@@ -4005,7 +4005,7 @@ public class AbstractTreeUi {
     };
   }
 
-  private int getRowIfUnderSelection(@NotNull Object element) {
+  private int getRowIfUnderSelection(@Nonnull Object element) {
     final Set<Object> selection = getSelectedElements();
 
     if (selection.contains(element)) {
@@ -4107,16 +4107,16 @@ public class AbstractTreeUi {
     expand(new Object[]{element}, onDone);
   }
 
-  public void expand(@NotNull final Object[] element, @Nullable final Runnable onDone) {
+  public void expand(@Nonnull final Object[] element, @Nullable final Runnable onDone) {
     expand(element, onDone, false);
   }
 
 
-  void expand(@NotNull final Object[] element, @Nullable final Runnable onDone, boolean checkIfInStructure) {
+  void expand(@Nonnull final Object[] element, @Nullable final Runnable onDone, boolean checkIfInStructure) {
     _expand(element, onDone == null ? new EmptyRunnable() : onDone, false, checkIfInStructure, false);
   }
 
-  void _expand(@NotNull final Object[] element, @NotNull final Runnable onDone, final boolean parentsOnly, final boolean checkIfInStructure, final boolean canSmartExpand) {
+  void _expand(@Nonnull final Object[] element, @Nonnull final Runnable onDone, final boolean parentsOnly, final boolean checkIfInStructure, final boolean canSmartExpand) {
 
     try {
       runDone(new TreeRunnable("AbstractTreeUi._expand") {
@@ -4149,12 +4149,12 @@ public class AbstractTreeUi {
     }
   }
 
-  private void expandNext(@NotNull final Object[] elements,
+  private void expandNext(@Nonnull final Object[] elements,
                           final int index,
                           final boolean parentsOnly,
                           final boolean checkIfInStricture,
                           final boolean canSmartExpand,
-                          @NotNull final ActionCallback done,
+                          @Nonnull final ActionCallback done,
                           final int currentDepth) {
     if (elements.length <= 0) {
       done.setDone();
@@ -4193,7 +4193,7 @@ public class AbstractTreeUi {
     }
   }
 
-  public void collapseChildren(@NotNull final Object element, @Nullable final Runnable onDone) {
+  public void collapseChildren(@Nonnull final Object element, @Nullable final Runnable onDone) {
     runDone(new TreeRunnable("AbstractTreeUi.collapseChildren") {
       @Override
       public void perform() {
@@ -4229,7 +4229,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void _expand(final Object element, @NotNull final Runnable onDone, final boolean parentsOnly, boolean checkIfInStructure, boolean canSmartExpand) {
+  private void _expand(final Object element, @Nonnull final Runnable onDone, final boolean parentsOnly, boolean checkIfInStructure, boolean canSmartExpand) {
 
     if (checkIfInStructure && !isInStructure(element)) {
       runDone(onDone);
@@ -4316,7 +4316,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void deferExpansion(final Object element, @NotNull final Runnable onDone, final boolean parentsOnly, final boolean canSmartExpand) {
+  private void deferExpansion(final Object element, @Nonnull final Runnable onDone, final boolean parentsOnly, final boolean canSmartExpand) {
     myDeferredExpansions.add(new TreeRunnable("AbstractTreeUi.deferExpansion") {
       @Override
       public void perform() {
@@ -4325,7 +4325,7 @@ public class AbstractTreeUi {
     });
   }
 
-  private void processExpand(final DefaultMutableTreeNode toExpand, @NotNull final List<Object> kidsToExpand, final int expandIndex, @NotNull final Runnable onDone, final boolean canSmartExpand) {
+  private void processExpand(final DefaultMutableTreeNode toExpand, @Nonnull final List<Object> kidsToExpand, final int expandIndex, @Nonnull final Runnable onDone, final boolean canSmartExpand) {
 
     final Object element = getElementFor(toExpand);
     if (element == null) {
@@ -4383,16 +4383,16 @@ public class AbstractTreeUi {
     return descriptor == null ? null : getElementFromDescriptor(descriptor);
   }
 
-  public final boolean isNodeBeingBuilt(@NotNull final TreePath path) {
+  public final boolean isNodeBeingBuilt(@Nonnull final TreePath path) {
     return isNodeBeingBuilt(path.getLastPathComponent());
   }
 
-  public final boolean isNodeBeingBuilt(@NotNull Object node) {
+  public final boolean isNodeBeingBuilt(@Nonnull Object node) {
     return getParentBuiltNode(node) != null || myRootNode == node && !wasRootNodeInitialized();
   }
 
   @Nullable
-  public final DefaultMutableTreeNode getParentBuiltNode(@NotNull Object node) {
+  public final DefaultMutableTreeNode getParentBuiltNode(@Nonnull Object node) {
     DefaultMutableTreeNode parent = getParentLoadingInBackground(node);
     if (parent != null) return parent;
 
@@ -4416,7 +4416,7 @@ public class AbstractTreeUi {
     return node instanceof DefaultMutableTreeNode && isLoadedInBackground(getElementFor(node));
   }
 
-  public void setTreeStructure(@NotNull AbstractTreeStructure treeStructure) {
+  public void setTreeStructure(@Nonnull AbstractTreeStructure treeStructure) {
     myTreeStructure = treeStructure;
     clearUpdaterState();
   }
@@ -4440,7 +4440,7 @@ public class AbstractTreeUi {
     return myRootNode;
   }
 
-  public void setRootNode(@NotNull final DefaultMutableTreeNode rootNode) {
+  public void setRootNode(@Nonnull final DefaultMutableTreeNode rootNode) {
     myRootNode = rootNode;
   }
 
@@ -4456,7 +4456,7 @@ public class AbstractTreeUi {
     myUpdaterState = null;
   }
 
-  private void createMapping(@NotNull Object element, DefaultMutableTreeNode node) {
+  private void createMapping(@Nonnull Object element, DefaultMutableTreeNode node) {
     element = TreeAnchorizer.getService().createAnchor(element);
     if (!myElementToNodeMap.containsKey(element)) {
       myElementToNodeMap.put(element, node);
@@ -4476,7 +4476,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void removeMapping(@NotNull Object element, DefaultMutableTreeNode node, @Nullable Object elementToPutNodeActionsFor) {
+  private void removeMapping(@Nonnull Object element, DefaultMutableTreeNode node, @Nullable Object elementToPutNodeActionsFor) {
     element = TreeAnchorizer.getService().createAnchor(element);
     final Object value = myElementToNodeMap.get(element);
     if (value != null) {
@@ -4505,7 +4505,7 @@ public class AbstractTreeUi {
     _remapNodeActions(element, elementToPutNodeActionsFor, myNodeChildrenActions);
   }
 
-  private static void _remapNodeActions(Object element, @Nullable Object elementToPutNodeActionsFor, @NotNull final Map<Object, List<NodeAction>> nodeActions) {
+  private static void _remapNodeActions(Object element, @Nullable Object elementToPutNodeActionsFor, @Nonnull final Map<Object, List<NodeAction>> nodeActions) {
     final List<NodeAction> actions = nodeActions.get(element);
     nodeActions.remove(element);
 
@@ -4549,7 +4549,7 @@ public class AbstractTreeUi {
   }
 
   @Nullable
-  private DefaultMutableTreeNode findNodeForChildElement(@NotNull DefaultMutableTreeNode parentNode, Object element) {
+  private DefaultMutableTreeNode findNodeForChildElement(@Nonnull DefaultMutableTreeNode parentNode, Object element) {
     Object anchor = TreeAnchorizer.getService().createAnchor(element);
     final Object value = myElementToNodeMap.get(anchor);
     TreeAnchorizer.getService().freeAnchor(anchor);
@@ -4592,7 +4592,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void _addNodeAction(Object element, NodeAction action, @NotNull Map<Object, List<NodeAction>> map) {
+  private void _addNodeAction(Object element, NodeAction action, @Nonnull Map<Object, List<NodeAction>> map) {
     maybeSetBusyAndScheduleWaiterForReady(true, element);
     map.computeIfAbsent(element, k -> new ArrayList<>()).add(action);
 
@@ -4626,7 +4626,7 @@ public class AbstractTreeUi {
     state.restore(null);
   }
 
-  @NotNull
+  @Nonnull
   public AbstractTreeUi setClearOnHideDelay(final long clearOnHideDelay) {
     myClearOnHideDelay = clearOnHideDelay;
     return this;
@@ -4634,7 +4634,7 @@ public class AbstractTreeUi {
 
   private class MySelectionListener implements TreeSelectionListener {
     @Override
-    public void valueChanged(@NotNull final TreeSelectionEvent e) {
+    public void valueChanged(@Nonnull final TreeSelectionEvent e) {
       if (mySilentSelect != null && mySilentSelect.equals(e.getNewLeadSelectionPath())) return;
 
       dropUpdaterStateIfExternalChange();
@@ -4644,7 +4644,7 @@ public class AbstractTreeUi {
 
   private class MyExpansionListener implements TreeExpansionListener {
     @Override
-    public void treeExpanded(@NotNull TreeExpansionEvent event) {
+    public void treeExpanded(@Nonnull TreeExpansionEvent event) {
       final TreePath path = event.getPath();
 
       if (mySilentExpand != null && mySilentExpand.equals(path)) return;
@@ -4692,7 +4692,7 @@ public class AbstractTreeUi {
     }
 
     @Override
-    public void treeCollapsed(@NotNull TreeExpansionEvent e) {
+    public void treeCollapsed(@Nonnull TreeExpansionEvent e) {
       dropUpdaterStateIfExternalChange();
 
       final TreePath path = e.getPath();
@@ -4735,7 +4735,7 @@ public class AbstractTreeUi {
     }
   }
 
-  private void removeChildren(@NotNull DefaultMutableTreeNode node) {
+  private void removeChildren(@Nonnull DefaultMutableTreeNode node) {
     EnumerationCopy copy = new EnumerationCopy(node.children());
     while (copy.hasMoreElements()) {
       disposeNode((DefaultMutableTreeNode)copy.nextElement());
@@ -4744,7 +4744,7 @@ public class AbstractTreeUi {
     nodeStructureChanged(node);
   }
 
-  private void maybeUpdateSubtreeToUpdate(@NotNull final DefaultMutableTreeNode subtreeRoot) {
+  private void maybeUpdateSubtreeToUpdate(@Nonnull final DefaultMutableTreeNode subtreeRoot) {
     if (!myUnbuiltNodes.contains(subtreeRoot)) return;
     TreePath path = getPathFor(subtreeRoot);
 
@@ -4793,13 +4793,13 @@ public class AbstractTreeUi {
     myCanYield = canYield;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<TreeUpdatePass> getYeildingPasses() {
     return myYieldingPasses;
   }
 
   private static class LoadedChildren {
-    @NotNull
+    @Nonnull
     private final List<Object> myElements;
     private final Map<Object, NodeDescriptor> myDescriptors = new HashMap<>();
     private final Map<NodeDescriptor, Boolean> myChanges = new HashMap<>();
@@ -4816,7 +4816,7 @@ public class AbstractTreeUi {
       myChanges.put(descriptor, isChanged);
     }
 
-    @NotNull
+    @Nonnull
     List<Object> getElements() {
       return myElements;
     }
@@ -4825,7 +4825,7 @@ public class AbstractTreeUi {
       return myDescriptors.get(element);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String toString() {
       return myElements + "->" + myChanges;
@@ -4899,7 +4899,7 @@ public class AbstractTreeUi {
       return myDescriptorIsUpToDate;
     }
 
-    public synchronized void apply(@NotNull UpdateInfo updateInfo) {
+    public synchronized void apply(@Nonnull UpdateInfo updateInfo) {
       myDescriptor = updateInfo.myDescriptor;
       myPass = updateInfo.myPass;
       myCanSmartExpand = updateInfo.myCanSmartExpand;
@@ -4913,7 +4913,7 @@ public class AbstractTreeUi {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     @NonNls
     public synchronized String toString() {
       return "UpdateInfo: desc=" +

@@ -15,20 +15,19 @@
  */
 package com.intellij.psi.codeStyle;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.Icon;
 import java.util.List;
 
 public abstract class EditorNotificationInfo {
-  @NotNull
+  @Nonnull
   public abstract List<ActionLabelData> getLabelAndActions();
 
-  @NotNull
+  @Nonnull
   public abstract String getTitle();
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return null;
   }
@@ -37,7 +36,7 @@ public abstract class EditorNotificationInfo {
     public final String label;
     public final Runnable action;
 
-    public ActionLabelData(@NotNull String label, @NotNull Runnable action) {
+    public ActionLabelData(@Nonnull String label, @Nonnull Runnable action) {
       this.label = label;
       this.action = action;
     }

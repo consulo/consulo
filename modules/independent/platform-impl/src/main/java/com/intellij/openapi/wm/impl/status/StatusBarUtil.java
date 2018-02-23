@@ -25,8 +25,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Kirill Likhodedov
@@ -38,7 +38,7 @@ public class StatusBarUtil {
    * Finds the current file editor.
    */
   @Nullable
-  public static FileEditor getCurrentFileEditor(@NotNull Project project, @Nullable StatusBar statusBar) {
+  public static FileEditor getCurrentFileEditor(@Nonnull Project project, @Nullable StatusBar statusBar) {
     if (statusBar == null) {
       return null;
     }
@@ -58,7 +58,7 @@ public class StatusBarUtil {
     return null;
   }
 
-  public static void setStatusBarInfo(@NotNull Project project, @NotNull @Nls String message) {
+  public static void setStatusBarInfo(@Nonnull Project project, @Nonnull @Nls String message) {
     final StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
     if (statusBar != null) {
       statusBar.setInfo(message);

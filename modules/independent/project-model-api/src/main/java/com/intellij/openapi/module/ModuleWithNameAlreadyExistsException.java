@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ModuleWithNameAlreadyExistsException extends Exception {
   private final String myModuleName;
@@ -25,7 +25,7 @@ public class ModuleWithNameAlreadyExistsException extends Exception {
     myModuleName = moduleName;
   }
 
-  @NotNull
+  @Nonnull
   public String getModuleName() {
     return myModuleName;
   }

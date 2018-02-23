@@ -53,8 +53,8 @@ import consulo.compiler.impl.AdditionalOutputDirectoriesProvider;
 import gnu.trove.TIntHashSet;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.compiler.server.rmi.CompilerClientConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
@@ -341,7 +341,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return myRebuildReason;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProgressIndicator getProgressIndicator() {
     //if (myProgressIndicatorProxy != null) {
@@ -351,7 +351,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
-  public void assignModule(@NotNull VirtualFile root, @NotNull Module module, final boolean isTestSource, @Nullable Compiler compiler) {
+  public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, final boolean isTestSource, @Nullable Compiler compiler) {
     try {
       myRootToModuleMap.put(root, module);
       Set<VirtualFile> set = myModuleToRootsMap.get(module);
@@ -444,7 +444,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<VirtualFile> getTestOutputDirectories() {
     return myTestOutputDirectories;
   }
@@ -491,7 +491,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
-  public boolean isInTestSourceContent(@NotNull final VirtualFile fileOrDir) {
+  public boolean isInTestSourceContent(@Nonnull final VirtualFile fileOrDir) {
     if (myProjectFileIndex.isInTestSourceContent(fileOrDir) || myProjectFileIndex.isInTestResource(fileOrDir)) {
       return true;
     }
@@ -502,7 +502,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
   @Override
-  public boolean isInSourceContent(@NotNull final VirtualFile fileOrDir) {
+  public boolean isInSourceContent(@Nonnull final VirtualFile fileOrDir) {
     if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
       return true;
     }
@@ -512,7 +512,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     return false;
   }
 
-  public static boolean isUnderRoots(@NotNull Set<VirtualFile> roots, @NotNull VirtualFile file) {
+  public static boolean isUnderRoots(@Nonnull Set<VirtualFile> roots, @Nonnull VirtualFile file) {
     VirtualFile parent = file;
     while (true) {
       if (parent == null) {

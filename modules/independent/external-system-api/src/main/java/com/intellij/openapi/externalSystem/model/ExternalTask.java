@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -25,11 +25,11 @@ import java.io.Serializable;
  * @since 7/14/2014
  */
 public interface ExternalTask extends Serializable {
-  @NotNull
+  @Nonnull
   String getName();
-  @NotNull
+  @Nonnull
   String getQName();
-  @Nullable
+  @javax.annotation.Nullable
   String getDescription();
   @Nullable
   String getGroup();

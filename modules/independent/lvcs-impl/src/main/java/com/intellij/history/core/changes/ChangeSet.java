@@ -22,8 +22,8 @@ import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.util.Producer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -88,7 +88,7 @@ public class ChangeSet {
     isLocked = true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getLabel() {
     return accessChanges(new Producer<String>() {
       @Override
@@ -283,7 +283,7 @@ public class ChangeSet {
     v.end(this);
   }
 
-  private <T> T accessChanges(@NotNull Producer<T> func) {
+  private <T> T accessChanges(@Nonnull Producer<T> func) {
     if (isLocked) {
       //noinspection ConstantConditions
       return func.produce();
@@ -295,7 +295,7 @@ public class ChangeSet {
     }
   }
 
-  private void accessChanges(@NotNull final Runnable func) {
+  private void accessChanges(@Nonnull final Runnable func) {
     accessChanges(new Producer<Object>() {
       @Override
       public Object produce() {

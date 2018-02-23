@@ -38,8 +38,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -47,14 +47,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ThreesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @NotNull protected final SimpleDiffPanel myPanel;
-  @NotNull protected final ThreesideContentPanel myContentPanel;
+  @Nonnull
+  protected final SimpleDiffPanel myPanel;
+  @Nonnull
+  protected final ThreesideContentPanel myContentPanel;
 
-  @NotNull private final List<T> myHolders;
+  @Nonnull
+  private final List<T> myHolders;
 
-  @NotNull private final FocusTrackerSupport<ThreeSide> myFocusTrackerSupport;
+  @Nonnull
+  private final FocusTrackerSupport<ThreeSide> myFocusTrackerSupport;
 
-  public ThreesideDiffViewer(@NotNull DiffContext context, @NotNull ContentDiffRequest request, @NotNull EditorHolderFactory<T> factory) {
+  public ThreesideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
     super(context, request);
 
     myHolders = createEditorHolders(factory);
@@ -93,8 +97,8 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     myFocusTrackerSupport.updateContextHints(myRequest, myContext);
   }
 
-  @NotNull
-  protected List<T> createEditorHolders(@NotNull EditorHolderFactory<T> factory) {
+  @Nonnull
+  protected List<T> createEditorHolders(@Nonnull EditorHolderFactory<T> factory) {
     List<DiffContent> contents = myRequest.getContents();
 
     List<T> holders = new ArrayList<>(3);
@@ -111,7 +115,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     }
   }
 
-  @NotNull
+  @Nonnull
   protected List<JComponent> createTitles() {
     return DiffUtil.createSyncHeightComponents(DiffUtil.createSimpleTitles(myRequest));
   }
@@ -120,41 +124,41 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   // Getters
   //
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
 
-  @NotNull
+  @Nonnull
   public ThreeSide getCurrentSide() {
     return myFocusTrackerSupport.getCurrentSide();
   }
 
-  protected void setCurrentSide(@NotNull ThreeSide side) {
+  protected void setCurrentSide(@Nonnull ThreeSide side) {
     myFocusTrackerSupport.setCurrentSide(side);
   }
 
-  @NotNull
+  @Nonnull
   protected List<T> getEditorHolders() {
     return myHolders;
   }
 
-  @NotNull
+  @Nonnull
   protected T getCurrentEditorHolder() {
     return getCurrentSide().select(getEditorHolders());
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.VIRTUAL_FILE == dataId) {
       return DiffUtil.getVirtualFile(myRequest, getCurrentSide());
     }
@@ -168,15 +172,15 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   // Misc
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getCurrentSide().select(getRequest().getContents()).getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@NotNull DiffContext context,
-                                                                @NotNull DiffRequest request,
-                                                                @NotNull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
+                                                                @Nonnull DiffRequest request,
+                                                                @Nonnull EditorHolderFactory<T> factory) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
@@ -197,10 +201,12 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
 
   protected enum PartialDiffMode {LEFT_BASE, BASE_RIGHT, LEFT_RIGHT}
   protected class ShowPartialDiffAction extends DumbAwareAction {
-    @NotNull protected final ThreeSide mySide1;
-    @NotNull protected final ThreeSide mySide2;
+    @Nonnull
+    protected final ThreeSide mySide1;
+    @Nonnull
+    protected final ThreeSide mySide2;
 
-    public ShowPartialDiffAction(@NotNull PartialDiffMode mode) {
+    public ShowPartialDiffAction(@Nonnull PartialDiffMode mode) {
       String id;
       switch (mode) {
         case LEFT_BASE:
@@ -230,7 +236,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
       DiffManager.getInstance().showDiff(myProject, request, new DiffDialogHints(null, myPanel));
     }
 
-    @NotNull
+    @Nonnull
     protected SimpleDiffRequest createRequest() {
       List<DiffContent> contents = myRequest.getContents();
       List<String> titles = myRequest.getContentTitles();

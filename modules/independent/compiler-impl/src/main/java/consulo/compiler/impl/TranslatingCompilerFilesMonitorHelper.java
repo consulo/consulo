@@ -19,8 +19,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ public interface TranslatingCompilerFilesMonitorHelper {
   ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create("com.intellij.compiler.translatingHelper");
 
   @Nullable
-  VirtualFile[] getRootsForModule(@NotNull Module module);
+  VirtualFile[] getRootsForModule(@Nonnull Module module);
 
   boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> oldExtension);
 }

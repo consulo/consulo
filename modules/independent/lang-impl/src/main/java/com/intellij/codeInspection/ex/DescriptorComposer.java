@@ -27,7 +27,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 import java.net.MalformedURLException;
@@ -42,7 +42,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.DescriptorComposer");
   private final InspectionToolPresentation myTool;
 
-  public DescriptorComposer(@NotNull InspectionToolPresentation tool) {
+  public DescriptorComposer(@Nonnull InspectionToolPresentation tool) {
     myTool = tool;
   }
 
@@ -75,7 +75,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
     }
   }
 
-  public static String[] quickFixTexts(RefEntity where, @NotNull InspectionToolPresentation toolPresentation){
+  public static String[] quickFixTexts(RefEntity where, @Nonnull InspectionToolPresentation toolPresentation){
     QuickFixAction[] quickFixes = toolPresentation.getQuickFixes(new RefEntity[] {where});
     if (quickFixes == null) {
       return null;
@@ -89,7 +89,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
     return texts.toArray(new String[texts.size()]);
   }
 
-  protected void composeAdditionalDescription(@NotNull StringBuffer buf, @NotNull RefEntity refEntity) {}
+  protected void composeAdditionalDescription(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity) {}
 
   @RequiredReadAction
   @Override
@@ -145,7 +145,7 @@ public class DescriptorComposer extends HTMLComposerImpl {
   }
 
   @RequiredReadAction
-  protected void composeDescription(@NotNull CommonProblemDescriptor description, int i, @NotNull StringBuffer buf, @NotNull RefEntity refElement) {
+  protected void composeDescription(@Nonnull CommonProblemDescriptor description, int i, @Nonnull StringBuffer buf, @Nonnull RefEntity refElement) {
     PsiElement expression = description instanceof ProblemDescriptor ? ((ProblemDescriptor)description).getPsiElement() : null;
     StringBuilder anchor = new StringBuilder();
     VirtualFile vFile = null;

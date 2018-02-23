@@ -19,8 +19,8 @@ import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -34,10 +34,10 @@ public class MessageCounter {
   private final Map<ProjectSystemId, Map<String/* group */, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>>
           map = new HashMap<ProjectSystemId, Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>>();
 
-  public synchronized void increment(@NotNull String groupName,
-                                     @NotNull NotificationSource source,
-                                     @NotNull NotificationCategory category,
-                                     @NotNull ProjectSystemId projectSystemId) {
+  public synchronized void increment(@Nonnull String groupName,
+                                     @Nonnull NotificationSource source,
+                                     @Nonnull NotificationCategory category,
+                                     @Nonnull ProjectSystemId projectSystemId) {
 
     final TObjectIntHashMap<NotificationCategory> counter =
             ContainerUtil.getOrCreate(
@@ -56,8 +56,8 @@ public class MessageCounter {
   }
 
   public synchronized void remove(@Nullable final String groupName,
-                                  @NotNull final NotificationSource notificationSource,
-                                  @NotNull final ProjectSystemId projectSystemId) {
+                                  @Nonnull final NotificationSource notificationSource,
+                                  @Nonnull final ProjectSystemId projectSystemId) {
     final Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>> groupMap =
             ContainerUtil.getOrCreate(
                     map,
@@ -83,9 +83,9 @@ public class MessageCounter {
   }
 
   public synchronized int getCount(@Nullable final String groupName,
-                                   @NotNull final NotificationSource notificationSource,
+                                   @Nonnull final NotificationSource notificationSource,
                                    @Nullable final NotificationCategory notificationCategory,
-                                   @NotNull final ProjectSystemId projectSystemId) {
+                                   @Nonnull final ProjectSystemId projectSystemId) {
     int count = 0;
     final Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>> groupMap = ContainerUtil.getOrElse(
             map,

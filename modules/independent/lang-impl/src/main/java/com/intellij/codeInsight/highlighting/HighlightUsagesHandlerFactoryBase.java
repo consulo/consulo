@@ -19,8 +19,8 @@ import consulo.codeInsight.TargetElementUtil;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,5 +36,5 @@ public abstract class HighlightUsagesHandlerFactoryBase implements HighlightUsag
   }
 
   @Nullable
-  public abstract HighlightUsagesHandlerBase createHighlightUsagesHandler(@NotNull Editor editor, @NotNull PsiFile file, @NotNull PsiElement target);
+  public abstract HighlightUsagesHandlerBase createHighlightUsagesHandler(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull PsiElement target);
 }

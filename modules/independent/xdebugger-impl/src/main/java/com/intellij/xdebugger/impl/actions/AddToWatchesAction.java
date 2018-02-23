@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,9 +26,9 @@ public class AddToWatchesAction extends XDebuggerActionBase {
     super(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DebuggerActionHandler getHandler(@NotNull DebuggerSupport debuggerSupport) {
+  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
     return debuggerSupport.getAddToWatchesActionHandler();
   }
 }

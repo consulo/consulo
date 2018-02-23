@@ -27,9 +27,9 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -314,7 +314,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
   }
 
   @Override
-  public int getPopupOffset(@NotNull NavBarItem item) {
+  public int getPopupOffset(@Nonnull NavBarItem item) {
     return item.isFirstElement() ? 0 : 5;
   }
 }

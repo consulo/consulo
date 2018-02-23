@@ -21,7 +21,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -31,7 +31,7 @@ public class SortValuesToggleAction extends ToggleAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     XDebugSession session = e.getDataContext().getData(XDebugSession.DATA_KEY);
     e.getPresentation().setEnabledAndVisible(session != null && !session.getDebugProcess().isValuesCustomSorted());

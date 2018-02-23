@@ -26,8 +26,8 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   protected StatusBar myStatusBar;
@@ -36,7 +36,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   protected MessageBusConnection myConnection;
   private volatile boolean myDisposed;
 
-  protected EditorBasedWidget(@NotNull Project project) {
+  protected EditorBasedWidget(@Nonnull Project project) {
     myProject = project;
     myConnection = myProject.getMessageBus().connect(this);
     myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
@@ -87,7 +87,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     myStatusBar = statusBar;
   }
 

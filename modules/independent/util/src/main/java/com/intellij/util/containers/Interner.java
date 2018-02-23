@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -34,12 +34,12 @@ public class Interner<T> {
   public Interner() {
     mySet = new OpenTHashSet<T>();
   }
-  public Interner(@NotNull TObjectHashingStrategy<T> strategy) {
+  public Interner(@Nonnull TObjectHashingStrategy<T> strategy) {
     mySet = new OpenTHashSet<T>(strategy);
   }
 
-  @NotNull
-  public T intern(@NotNull T name) {
+  @Nonnull
+  public T intern(@Nonnull T name) {
     T interned = mySet.get(name);
     if (interned != null) {
       return interned;
@@ -55,7 +55,7 @@ public class Interner<T> {
     mySet.clear();
   }
 
-  @NotNull
+  @Nonnull
   public Set<T> getValues() {
     return mySet;
   }

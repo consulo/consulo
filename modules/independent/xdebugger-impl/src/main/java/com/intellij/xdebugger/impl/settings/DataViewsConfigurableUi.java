@@ -22,7 +22,7 @@ import com.intellij.ui.border.IdeaTitledBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,12 +47,12 @@ public class DataViewsConfigurableUi {
            StringUtilRt.parseInt((String)value, XDebuggerDataViewSettings.DEFAULT_VALUE_TOOLTIP_DELAY);
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return panel;
   }
 
-  public boolean isModified(@NotNull XDebuggerDataViewSettings settings) {
+  public boolean isModified(@Nonnull XDebuggerDataViewSettings settings) {
     return getValueTooltipDelay() != settings.getValueLookupDelay() ||
            sortAlphabeticallyCheckBox.isSelected() != settings.isSortValues() ||
            enableAutoExpressionsCheckBox.isSelected() != settings.isAutoExpressions() ||
@@ -61,7 +61,7 @@ public class DataViewsConfigurableUi {
            myShowValueTooltipOnCheckBox.isSelected() != settings.isValueTooltipAutoShowOnSelection();
   }
 
-  public void reset(@NotNull XDebuggerDataViewSettings settings) {
+  public void reset(@Nonnull XDebuggerDataViewSettings settings) {
     valueTooltipDelayTextField.setValue(settings.getValueLookupDelay());
     sortAlphabeticallyCheckBox.setSelected(settings.isSortValues());
     enableAutoExpressionsCheckBox.setSelected(settings.isAutoExpressions());
@@ -71,7 +71,7 @@ public class DataViewsConfigurableUi {
     myTooltipLabel.setText(XDebuggerBundle.message("settings.tooltip.label", Registry.stringValue("ide.forcedShowTooltip")));
   }
 
-  public void apply(@NotNull XDebuggerDataViewSettings settings) {
+  public void apply(@Nonnull XDebuggerDataViewSettings settings) {
     settings.setValueLookupDelay(getValueTooltipDelay());
     settings.setSortValues(sortAlphabeticallyCheckBox.isSelected());
     settings.setAutoExpressions(enableAutoExpressionsCheckBox.isSelected());

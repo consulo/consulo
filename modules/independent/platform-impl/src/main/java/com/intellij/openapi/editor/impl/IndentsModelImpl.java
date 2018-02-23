@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.IndentGuideDescriptor;
 import com.intellij.openapi.editor.IndentsModel;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -32,13 +32,14 @@ public class IndentsModelImpl implements IndentsModel {
 
   private final Map<IntPair, IndentGuideDescriptor> myIndentsByLines = ContainerUtilRt.newHashMap();
   private       List<IndentGuideDescriptor>         myIndents        = ContainerUtilRt.newArrayList();
-  @NotNull private final EditorImpl myEditor;
+  @Nonnull
+  private final EditorImpl myEditor;
 
-  public IndentsModelImpl(@NotNull EditorImpl editor) {
+  public IndentsModelImpl(@Nonnull EditorImpl editor) {
     myEditor = editor;
   }
 
-  @NotNull
+  @Nonnull
   public List<IndentGuideDescriptor> getIndents() {
     return myIndents;
   }
@@ -65,7 +66,7 @@ public class IndentsModelImpl implements IndentsModel {
   }
 
   @Override
-  public void assumeIndents(@NotNull List<IndentGuideDescriptor> descriptors) {
+  public void assumeIndents(@Nonnull List<IndentGuideDescriptor> descriptors) {
     myIndents = descriptors;
     myIndentsByLines.clear();
     for (IndentGuideDescriptor descriptor : myIndents) {

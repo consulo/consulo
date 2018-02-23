@@ -16,8 +16,8 @@
 package com.intellij.remote;
 
 import com.intellij.util.PathMappingSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public interface RemoteSdkProperties {
   @Deprecated
   void setRemoteRoots(List<String> remoteRoots);
 
-  @NotNull
+  @Nonnull
   PathMappingSettings getPathMappings();
 
   void setPathMappings(@Nullable PathMappingSettings pathMappings);

@@ -24,8 +24,8 @@ import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import com.intellij.vcs.log.graph.utils.UnsignedBitSet;
 import com.intellij.vcs.log.graph.utils.impl.BitSetFlags;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,17 +33,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ReachableNodes {
-  @NotNull private final LiteLinearGraph myGraph;
-  @NotNull private final DfsUtil myDfsUtil = new DfsUtil();
-  @NotNull private final Flags myTempFlags;
+  @Nonnull
+  private final LiteLinearGraph myGraph;
+  @Nonnull
+  private final DfsUtil myDfsUtil = new DfsUtil();
+  @Nonnull
+  private final Flags myTempFlags;
 
-  public ReachableNodes(@NotNull LiteLinearGraph graph) {
+  public ReachableNodes(@Nonnull LiteLinearGraph graph) {
     myGraph = graph;
     myTempFlags = new BitSetFlags(graph.nodesCount());
   }
 
-  @NotNull
-  public static UnsignedBitSet getReachableNodes(@NotNull LinearGraph permanentGraph, @Nullable Set<Integer> headNodeIndexes) {
+  @Nonnull
+  public static UnsignedBitSet getReachableNodes(@Nonnull LinearGraph permanentGraph, @Nullable Set<Integer> headNodeIndexes) {
     if (headNodeIndexes == null) {
       UnsignedBitSet nodesVisibility = new UnsignedBitSet();
       nodesVisibility.set(0, permanentGraph.nodesCount() - 1, true);
@@ -62,7 +65,7 @@ public class ReachableNodes {
     return result;
   }
 
-  public Set<Integer> getContainingBranches(int nodeIndex, @NotNull final Collection<Integer> branchNodeIndexes) {
+  public Set<Integer> getContainingBranches(int nodeIndex, @Nonnull final Collection<Integer> branchNodeIndexes) {
     final Set<Integer> result = new HashSet<>();
 
     walk(Collections.singletonList(nodeIndex), false, new Consumer<Integer>() {
@@ -75,11 +78,11 @@ public class ReachableNodes {
     return result;
   }
 
-  public void walk(@NotNull Collection<Integer> headIds, @NotNull final Consumer<Integer> consumer) {
+  public void walk(@Nonnull Collection<Integer> headIds, @Nonnull final Consumer<Integer> consumer) {
     walk(headIds, true, consumer);
   }
 
-  private void walk(@NotNull Collection<Integer> startNodes, final boolean goDown, @NotNull final Consumer<Integer> consumer) {
+  private void walk(@Nonnull Collection<Integer> startNodes, final boolean goDown, @Nonnull final Consumer<Integer> consumer) {
     synchronized (myTempFlags) {
 
       myTempFlags.setAll(false);

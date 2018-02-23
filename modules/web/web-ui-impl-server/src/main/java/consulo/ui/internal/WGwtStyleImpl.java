@@ -21,7 +21,7 @@ import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,15 +44,15 @@ public class WGwtStyleImpl implements Style {
     myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ColorValue getColor(@NotNull ColorKey colorKey) {
+  public ColorValue getColor(@Nonnull ColorKey colorKey) {
     return myColors.get(colorKey);
   }
 }

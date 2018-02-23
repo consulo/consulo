@@ -23,8 +23,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -533,7 +533,7 @@ public class PagedFileStorage implements Forceable {
       myDefaultStorageLockContext.unlock();
     }
 
-    private int registerPagedFileStorage(@NotNull PagedFileStorage storage) {
+    private int registerPagedFileStorage(@Nonnull PagedFileStorage storage) {
       int registered = myIndex2Storage.size();
       assert registered <= MAX_LIVE_STORAGES_COUNT;
       int value = registered << FILE_INDEX_SHIFT;
@@ -627,7 +627,7 @@ public class PagedFileStorage implements Forceable {
       disposeRemovedSegments();
     }
 
-    @NotNull
+    @Nonnull
     private ByteBufferWrapper createValue(Integer key) {
       final int storageIndex = key & FILE_INDEX_MASK;
       PagedFileStorage owner = getRegisteredPagedFileStorageByIndex(storageIndex);

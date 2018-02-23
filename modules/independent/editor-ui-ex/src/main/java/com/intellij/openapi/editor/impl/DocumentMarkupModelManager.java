@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.WeakList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,7 +37,7 @@ public class DocumentMarkupModelManager extends AbstractProjectComponent {
     return project.getComponent(DocumentMarkupModelManager.class);
   }
 
-  public DocumentMarkupModelManager(@NotNull Project project) {
+  public DocumentMarkupModelManager(@Nonnull Project project) {
     super(project);
     Disposer.register(project, new Disposable() {
       @Override

@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.compiler.server.rmi.CompilerClientInterface;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,7 +40,7 @@ public class CompilerClientInterfaceImpl extends UnicastRemoteObject implements 
   }
 
   @Override
-  public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
+  public void addMessage(@Nonnull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
     throws RemoteException {
 
     final int type = CompilerTask.translateCategory(category);
@@ -55,7 +55,7 @@ public class CompilerClientInterfaceImpl extends UnicastRemoteObject implements 
   public void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProjectDir() {
     return myProject.getProjectFilePath();

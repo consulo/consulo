@@ -18,21 +18,21 @@ package com.intellij.openapi.vcs.history;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class StandardDiffFromHistoryHandler implements DiffFromHistoryHandler {
 
   @Override
-  public void showDiffForOne(@NotNull AnActionEvent e, @NotNull Project project, @NotNull FilePath filePath,
-                             @NotNull VcsFileRevision previousRevision, @NotNull VcsFileRevision revision) {
+  public void showDiffForOne(@Nonnull AnActionEvent e, @Nonnull Project project, @Nonnull FilePath filePath,
+                             @Nonnull VcsFileRevision previousRevision, @Nonnull VcsFileRevision revision) {
     VcsHistoryUtil.showDifferencesInBackground(project, filePath, previousRevision, revision);
   }
 
   @Override
-  public void showDiffForTwo(@NotNull Project project,
-                             @NotNull FilePath filePath,
-                             @NotNull VcsFileRevision revision1,
-                             @NotNull VcsFileRevision revision2) {
+  public void showDiffForTwo(@Nonnull Project project,
+                             @Nonnull FilePath filePath,
+                             @Nonnull VcsFileRevision revision1,
+                             @Nonnull VcsFileRevision revision2) {
     VcsHistoryUtil.showDifferencesInBackground(project, filePath, revision1, revision2);
   }
 }

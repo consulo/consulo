@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;
@@ -41,7 +41,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
   }
 
   @Override
-  protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
     if (templateState != null && !templateState.isFinished()) {
       TextRange range = templateState.getCurrentVariableRange();

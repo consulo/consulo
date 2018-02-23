@@ -32,7 +32,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -61,14 +61,14 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] getRootFiles(@NotNull OrderRootType type) {
+  @Nonnull
+  public VirtualFile[] getRootFiles(@Nonnull OrderRootType type) {
     return myFiles.get(type);
   }
 
   @Override
-  @NotNull
-  public SdkRoot[] getRoots(@NotNull OrderRootType type) {
+  @Nonnull
+  public SdkRoot[] getRoots(@Nonnull OrderRootType type) {
     return myRoots.get(type).getProjectRoots();
   }
 
@@ -121,32 +121,32 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
 
 
   @Override
-  public void removeRoot(@NotNull SdkRoot root, @NotNull OrderRootType type) {
+  public void removeRoot(@Nonnull SdkRoot root, @Nonnull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).remove(root);
   }
 
   @Override
-  @NotNull
-  public SdkRoot addRoot(@NotNull VirtualFile virtualFile, @NotNull OrderRootType type) {
+  @Nonnull
+  public SdkRoot addRoot(@Nonnull VirtualFile virtualFile, @Nonnull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     return myRoots.get(type).add(virtualFile);
   }
 
   @Override
-  public void addRoot(@NotNull SdkRoot root, @NotNull OrderRootType type) {
+  public void addRoot(@Nonnull SdkRoot root, @Nonnull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).add(root);
   }
 
   @Override
-  public void removeAllRoots(@NotNull OrderRootType type) {
+  public void removeAllRoots(@Nonnull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).clear();
   }
 
   @Override
-  public void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType type) {
+  public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType type) {
     LOGGER.assertTrue(myInsideChange);
     myRoots.get(type).remove(root);
   }
@@ -196,7 +196,7 @@ public class SdkRootContainerImpl implements PersistentStateComponent<Element>, 
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Element getState() {
     Element element = new Element("state");

@@ -15,18 +15,18 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiElement> implements PsiRefElementCreator<Parent, Child> {
   
-  @Nullable public abstract Child findLinkedChild(@Nullable Parent parent);
+  @javax.annotation.Nullable
+  public abstract Child findLinkedChild(@javax.annotation.Nullable Parent parent);
 
-  @NotNull
-  public final PsiElementRef<Child> createChildRef(@NotNull Parent parent) {
+  @Nonnull
+  public final PsiElementRef<Child> createChildRef(@Nonnull Parent parent) {
     final Child existing = findLinkedChild(parent);
     if (existing != null) {
       return PsiElementRef.real(existing);
@@ -34,8 +34,8 @@ public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiE
     return PsiElementRef.imaginary(PsiElementRef.real(parent), this);
   }
 
-  @NotNull
-  public final PsiElementRef<Child> createChildRef(@NotNull PsiElementRef<? extends Parent> parentRef) {
+  @Nonnull
+  public final PsiElementRef<Child> createChildRef(@Nonnull PsiElementRef<? extends Parent> parentRef) {
     final Parent parent = parentRef.getPsiElement();
     if (parent != null) {
       final Child existing = findLinkedChild(parent);

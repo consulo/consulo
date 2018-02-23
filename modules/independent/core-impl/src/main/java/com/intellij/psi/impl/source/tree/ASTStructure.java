@@ -19,7 +19,7 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,29 +27,29 @@ import org.jetbrains.annotations.NotNull;
 public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   private final ASTNode myRoot;
 
-  public ASTStructure(@NotNull final ASTNode root) {
+  public ASTStructure(@Nonnull final ASTNode root) {
     myRoot = root;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ASTNode getRoot() {
     return myRoot;
   }
 
   @Override
-  public ASTNode getParent(@NotNull final ASTNode node) {
+  public ASTNode getParent(@Nonnull final ASTNode node) {
     return node.getTreeParent();
   }
 
   @Override
-  @NotNull
-  public ASTNode prepareForGetChildren(@NotNull final ASTNode astNode) {
+  @Nonnull
+  public ASTNode prepareForGetChildren(@Nonnull final ASTNode astNode) {
     return astNode;
   }
 
   @Override
-  public int getChildren(@NotNull final ASTNode astNode, @NotNull final Ref<ASTNode[]> into) {
+  public int getChildren(@Nonnull final ASTNode astNode, @Nonnull final Ref<ASTNode[]> into) {
     ASTNode child = astNode.getFirstChildNode();
     if (child == null) return 0;
 
@@ -78,19 +78,19 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   public void disposeChildren(final ASTNode[] nodes, final int count) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence toString(@NotNull ASTNode node) {
+  public CharSequence toString(@Nonnull ASTNode node) {
     return node.getChars();
   }
 
   @Override
-  public int getStartOffset(@NotNull ASTNode node) {
+  public int getStartOffset(@Nonnull ASTNode node) {
     return node.getStartOffset();
   }
 
   @Override
-  public int getEndOffset(@NotNull ASTNode node) {
+  public int getEndOffset(@Nonnull ASTNode node) {
     return node.getStartOffset() + node.getTextLength();
   }
 }

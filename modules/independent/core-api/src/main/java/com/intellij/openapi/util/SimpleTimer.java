@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class SimpleTimer {
   private final Map<Long, ArrayList<SimpleTimerTask>> myTime2Task = new TreeMap<Long, ArrayList<SimpleTimerTask>>();
   private String myThreadName;
 
-  private SimpleTimer(@NotNull String threadName) {
+  private SimpleTimer(@Nonnull String threadName) {
     myThreadName = threadName;
     
     final Thread thread = Thread.currentThread();
@@ -57,7 +57,7 @@ public class SimpleTimer {
     return ourInstance;
   }
   
-  public static SimpleTimer newInstance(@NotNull String name) {
+  public static SimpleTimer newInstance(@Nonnull String name) {
     return new SimpleTimer(name);
   }
 

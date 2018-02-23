@@ -19,8 +19,8 @@ import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.AreaInstance;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Project interface class.
@@ -34,7 +34,7 @@ public interface Project extends ComponentManager, AreaInstance {
    *
    * @return project name
    */
-  @NotNull
+  @Nonnull
   @NonNls
   String getName();
 
@@ -76,7 +76,7 @@ public interface Project extends ComponentManager, AreaInstance {
    *
    * @return project descriptor file, or empty string for default project
    */
-  @NotNull
+  @Nonnull
   @NonNls
   String getProjectFilePath();
 
@@ -105,7 +105,7 @@ public interface Project extends ComponentManager, AreaInstance {
   @Nullable
   VirtualFile getWorkspaceFile();
 
-  @NotNull
+  @Nonnull
   @NonNls
   String getLocationHash();
 

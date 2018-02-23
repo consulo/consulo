@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.compiler;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,17 +29,17 @@ public class SkipAllInstructionCreator extends IncrementalCompilerInstructionCre
   }
 
   @Override
-  public void addFileCopyInstruction(@NotNull VirtualFile file, @NotNull String outputFileName) {
+  public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
   }
 
   @Override
-  public SkipAllInstructionCreator subFolder(@NotNull String directoryName) {
+  public SkipAllInstructionCreator subFolder(@Nonnull String directoryName) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter) {
+  public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
     return this;
   }
 }

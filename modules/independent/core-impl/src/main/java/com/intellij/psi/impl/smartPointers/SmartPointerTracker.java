@@ -26,8 +26,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.ref.ReferenceQueue;
@@ -47,7 +47,7 @@ class SmartPointerTracker {
     LowMemoryWatcher.register(() -> processQueue(), ApplicationManager.getApplication());
   }
 
-  synchronized boolean addReference(@NotNull PointerReference reference, @NotNull SmartPsiElementPointerImpl pointer) {
+  synchronized boolean addReference(@Nonnull PointerReference reference, @Nonnull SmartPsiElementPointerImpl pointer) {
     if (!isActual(reference.file, reference.key)) {
       // this pointer list has been removed by another thread; clients should get/create an up-to-date list and try adding to it
       return false;
@@ -94,7 +94,7 @@ class SmartPointerTracker {
     nextAvailableIndex = index;
   }
 
-  synchronized void removeReference(@NotNull PointerReference reference, @NotNull Key<SmartPointerTracker> expectedKey) {
+  synchronized void removeReference(@Nonnull PointerReference reference, @Nonnull Key<SmartPointerTracker> expectedKey) {
     int index = reference.index;
     if (index < 0) return;
 
@@ -114,7 +114,7 @@ class SmartPointerTracker {
                                     (file.getUserData(refKey) != null ? "; has another pointer list" : "");
   }
 
-  private void processAlivePointers(@NotNull Processor<SmartPsiElementPointerImpl> processor) {
+  private void processAlivePointers(@Nonnull Processor<SmartPsiElementPointerImpl> processor) {
     for (int i = 0; i < nextAvailableIndex; i++) {
       PointerReference ref = references[i];
       if (ref == null) continue;
@@ -187,7 +187,7 @@ class SmartPointerTracker {
 
   // after reparse and its complex tree diff, the element might have "moved" to other range
   // but if an element of the same type can still be found at the old range, let's point there
-  private static <E extends PsiElement> void updatePointerTarget(@NotNull SmartPsiElementPointerImpl<E> pointer, @Nullable Segment pointerRange) {
+  private static <E extends PsiElement> void updatePointerTarget(@Nonnull SmartPsiElementPointerImpl<E> pointer, @Nullable Segment pointerRange) {
     E cachedElement = pointer.getCachedElement();
     if (cachedElement == null || cachedElement.isValid() && pointerRange != null && pointerRange.equals(cachedElement.getTextRange())) {
       return;
@@ -221,13 +221,15 @@ class SmartPointerTracker {
   }
 
   static class PointerReference extends WeakReference<SmartPsiElementPointerImpl> {
-    @NotNull private final VirtualFile file;
-    @NotNull private final Key<SmartPointerTracker> key;
+    @Nonnull
+    private final VirtualFile file;
+    @Nonnull
+    private final Key<SmartPointerTracker> key;
     private int index = -2;
 
-    PointerReference(@NotNull SmartPsiElementPointerImpl<?> pointer,
-                     @NotNull VirtualFile containingFile,
-                     @NotNull Key<SmartPointerTracker> key) {
+    PointerReference(@Nonnull SmartPsiElementPointerImpl<?> pointer,
+                     @Nonnull VirtualFile containingFile,
+                     @Nonnull Key<SmartPointerTracker> key) {
       super(pointer, ourQueue);
       file = containingFile;
       this.key = key;

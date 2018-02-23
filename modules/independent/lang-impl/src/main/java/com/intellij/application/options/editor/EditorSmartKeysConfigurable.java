@@ -31,7 +31,7 @@ import com.intellij.openapi.util.NotNullComputable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -117,7 +117,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Component compute() {
       return myWholeLayout;
@@ -139,7 +139,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   protected Panel createPanel() {
     return new Panel();
@@ -147,7 +147,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @RequiredUIAccess
   @Override
-  protected boolean isModified(@NotNull Panel panel) {
+  protected boolean isModified(@Nonnull Panel panel) {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
@@ -174,7 +174,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @RequiredUIAccess
   @Override
-  protected void apply(@NotNull Panel panel) throws ConfigurationException {
+  protected void apply(@Nonnull Panel panel) throws ConfigurationException {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
@@ -195,7 +195,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
   @RequiredUIAccess
   @Override
-  protected void reset(@NotNull Panel panel) {
+  protected void reset(@Nonnull Panel panel) {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 

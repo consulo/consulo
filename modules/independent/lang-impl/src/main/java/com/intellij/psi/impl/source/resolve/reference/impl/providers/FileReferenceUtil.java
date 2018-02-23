@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -66,7 +66,7 @@ public class FileReferenceUtil {
   }
 
   @Nullable
-  public static PsiFileReference findFileReference(@NotNull PsiElement element) {
+  public static PsiFileReference findFileReference(@Nonnull PsiElement element) {
     final PsiReference[] references = element.getReferences();
     for (int i = references.length - 1; i >= 0; i--) {
       PsiReference ref = references[i];

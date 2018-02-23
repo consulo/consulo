@@ -16,7 +16,7 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -156,10 +156,10 @@ public abstract class Spacing {
    */
   public static Spacing createDependentLFSpacing(int minSpaces,
                                                  int maxSpaces,
-                                                 @NotNull TextRange dependencyRange,
+                                                 @Nonnull TextRange dependencyRange,
                                                  boolean keepLineBreaks,
                                                  int keepBlankLines,
-                                                 @NotNull DependentSpacingRule rule)
+                                                 @Nonnull DependentSpacingRule rule)
   {
     return myFactory.createDependentLFSpacing(minSpaces, maxSpaces, dependencyRange, keepLineBreaks, keepBlankLines, rule);
   }

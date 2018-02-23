@@ -34,8 +34,8 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -73,7 +73,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     return title != null ? title : UIBundle.message("file.chooser.default.title");
   }
 
-  @NotNull
+  @Nonnull
   private List<VirtualFile> getChosenFiles(final Stream<File> streamOfFiles) {
     final List<VirtualFile> virtualFiles = new ArrayList<>();
 
@@ -93,7 +93,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @NotNull Consumer<List<VirtualFile>> callback) {
+  public void choose(@javax.annotation.Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -174,7 +174,7 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     }
   }
 
-  @NotNull
+  @Nonnull
   private static FileDialog createFileDialogWithoutOwner(String title, int load) {
     // This is bad. But sometimes we do not have any windows at all.
     // On the other hand, it is a bit strange to show a file dialog without an owner
@@ -182,17 +182,17 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     return new FileDialog((Frame)null, title, load);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable Project project) {
+  public VirtualFile[] choose(@Nullable VirtualFile toSelect, @javax.annotation.Nullable Project project) {
     choose(toSelect, files -> {
     });
     return virtualFiles;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] choose(@Nullable Project project, @NotNull VirtualFile... toSelect) {
+  public VirtualFile[] choose(@Nullable Project project, @Nonnull VirtualFile... toSelect) {
     return choose((toSelect.length > 0 ? toSelect[0] : null), project);
   }
 }

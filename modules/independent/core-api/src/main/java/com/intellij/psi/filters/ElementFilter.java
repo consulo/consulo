@@ -18,7 +18,7 @@ package com.intellij.psi.filters;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface ElementFilter{
   /**

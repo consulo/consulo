@@ -33,8 +33,8 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -160,7 +160,7 @@ public class MetaRegistry extends MetaDataRegistrar {
     private final ElementFilter myFilter;
     private final Class<? extends PsiMetaData> myDataClass;
 
-    public MyBinding(@NotNull ElementFilter filter, @NotNull Class<? extends PsiMetaData> dataClass) {
+    public MyBinding(@Nonnull ElementFilter filter, @Nonnull Class<? extends PsiMetaData> dataClass) {
       myFilter = filter;
       myDataClass = dataClass;
     }

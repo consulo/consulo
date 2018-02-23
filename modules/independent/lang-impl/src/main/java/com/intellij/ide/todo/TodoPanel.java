@@ -58,8 +58,8 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.psi.PsiPackageSupportProviders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -339,7 +339,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       TreePath path = myTree.getSelectionPath();
       if (path == null) {
@@ -651,7 +651,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
 
       Presentation presentation = e.getPresentation();

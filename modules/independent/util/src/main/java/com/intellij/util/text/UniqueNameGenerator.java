@@ -18,8 +18,8 @@ package com.intellij.util.text;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 

@@ -18,7 +18,7 @@ package com.intellij.psi.impl.source.tree.injected;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.injection.ReferenceInjector;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
  */
 public abstract class InjectedReferenceVisitor implements PsiLanguageInjectionHost.InjectedPsiVisitor {
   @Override
-  public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {}
+  public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {}
 
-  public abstract void visitInjectedReference(@NotNull ReferenceInjector injector, @NotNull List<PsiLanguageInjectionHost.Shred> places);
+  public abstract void visitInjectedReference(@Nonnull ReferenceInjector injector, @Nonnull List<PsiLanguageInjectionHost.Shred> places);
 }

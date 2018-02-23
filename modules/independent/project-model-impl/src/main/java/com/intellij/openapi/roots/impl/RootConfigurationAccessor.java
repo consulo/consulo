@@ -24,24 +24,23 @@ import com.intellij.openapi.roots.libraries.Library;
 import consulo.annotations.RequiredReadAction;
 import consulo.bundle.SdkPointerManager;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class RootConfigurationAccessor {
-  @Nullable
+  @javax.annotation.Nullable
   public Library getLibrary(final Library library, final String libraryName, final String libraryLevel) {
     return library;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
     return sdk;
   }
 
-  @NotNull
+  @Nonnull
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return SdkPointerManager.getInstance().create(sdkName);
   }
@@ -50,7 +49,7 @@ public class RootConfigurationAccessor {
     return module;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return ModuleUtilCore.createPointer(project, name);

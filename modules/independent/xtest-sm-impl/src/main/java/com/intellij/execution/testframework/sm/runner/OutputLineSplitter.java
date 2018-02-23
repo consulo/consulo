@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.sm.runner;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.openapi.util.Key;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,11 +150,11 @@ public abstract class OutputLineSplitter {
     }
   }
 
-  protected boolean isMostLikelyServiceMessagePart(@NotNull final String text) {
+  protected boolean isMostLikelyServiceMessagePart(@Nonnull final String text) {
     return text.startsWith(TEAMCITY_SERVICE_MESSAGE_PREFIX);
   }
 
-  protected abstract void onLineAvailable(@NotNull String text, @NotNull Key outputType, boolean tcLikeFakeOutput);
+  protected abstract void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput);
 
   private static class OutputChunk {
     private final Key myKey;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -69,8 +69,8 @@ public class WindowsRegistryUtil {
     return output.subSequence(startPos, endPos + 1).toString();
   }
 
-  @NotNull
-  public static List<String> readRegistryBranch(@NotNull String location) {
+  @Nonnull
+  public static List<String> readRegistryBranch(@Nonnull String location) {
     List<String> result = new ArrayList<String>();
     StringBuilder output = readRegistry("reg query \"" + location + "\" /s");
     if (output != null) {
@@ -89,12 +89,12 @@ public class WindowsRegistryUtil {
   }
 
   @Nullable
-  public static String readRegistryDefault(@NotNull String location) {
+  public static String readRegistryDefault(@Nonnull String location) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /ve"));
   }
 
   @Nullable
-  public static String readRegistryValue(@NotNull String location, @NotNull String key) {
+  public static String readRegistryValue(@Nonnull String location, @Nonnull String key) {
     return trimToValue(readRegistry("reg query \"" + location + "\" /v " + key));
   }
 

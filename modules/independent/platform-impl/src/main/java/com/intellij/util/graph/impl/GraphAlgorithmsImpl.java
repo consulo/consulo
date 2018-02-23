@@ -18,7 +18,7 @@ package com.intellij.util.graph.impl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -27,26 +27,26 @@ import java.util.*;
  */
 public class GraphAlgorithmsImpl extends GraphAlgorithms {
   @Override
-  public <Node> List<Node> findShortestPath(@NotNull Graph<Node> graph, @NotNull Node start, @NotNull Node finish) {
+  public <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish) {
     return new ShortestPathFinder<>(graph).findPath(start, finish);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> List<List<Node>> findKShortestPaths(@NotNull Graph<Node> graph, @NotNull Node start, @NotNull Node finish, int k,
-                                                    @NotNull ProgressIndicator progressIndicator) {
+  public <Node> List<List<Node>> findKShortestPaths(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, int k,
+                                                    @Nonnull ProgressIndicator progressIndicator) {
     return new KShortestPathsFinder<>(graph, start, finish, progressIndicator).findShortestPaths(k);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> Set<List<Node>> findCycles(@NotNull Graph<Node> graph, @NotNull Node node) {
+  public <Node> Set<List<Node>> findCycles(@Nonnull Graph<Node> graph, @Nonnull Node node) {
     return new CycleFinder<>(graph).getNodeCycles(node);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> Graph<Node> invertEdgeDirections(@NotNull final Graph<Node> graph) {
+  public <Node> Graph<Node> invertEdgeDirections(@Nonnull final Graph<Node> graph) {
     return new Graph<Node>() {
       public Collection<Node> getNodes() {
         return graph.getNodes();
@@ -63,9 +63,9 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> Graph<Chunk<Node>> computeSCCGraph(@NotNull final Graph<Node> graph) {
+  public <Node> Graph<Chunk<Node>> computeSCCGraph(@Nonnull final Graph<Node> graph) {
     final DFSTBuilder<Node> builder = new DFSTBuilder<>(graph);
 
     final Collection<Collection<Node>> components = builder.getComponents();
@@ -105,7 +105,7 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
   }
 
   @Override
-  public <Node> void collectOutsRecursively(@NotNull Graph<Node> graph, Node start, Set<Node> set) {
+  public <Node> void collectOutsRecursively(@Nonnull Graph<Node> graph, Node start, Set<Node> set) {
     if (!set.add(start)) {
       return;
     }
@@ -116,15 +116,15 @@ public class GraphAlgorithmsImpl extends GraphAlgorithms {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(@NotNull Graph<Node> graph) {
+  public <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(@Nonnull Graph<Node> graph) {
     return computeSCCGraph(graph).getNodes();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <Node> List<List<Node>> removePathsWithCycles(@NotNull List<List<Node>> paths) {
+  public <Node> List<List<Node>> removePathsWithCycles(@Nonnull List<List<Node>> paths) {
     final List<List<Node>> result = new ArrayList<>();
     for (List<Node> path : paths) {
       if (!containsCycle(path)) {

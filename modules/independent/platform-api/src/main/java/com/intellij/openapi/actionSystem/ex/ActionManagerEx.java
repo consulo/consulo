@@ -19,7 +19,7 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.extensions.PluginId;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;

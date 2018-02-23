@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.vcs.CalledInAwt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DataPackChangeListener {
   /**
@@ -25,5 +25,5 @@ public interface DataPackChangeListener {
    * @param newDataPack new data pack
    */
   @CalledInAwt
-  void onDataPackChange(@NotNull DataPack newDataPack);
+  void onDataPackChange(@Nonnull DataPack newDataPack);
 }

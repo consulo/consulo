@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.patterns.ElementPattern;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to register reference providers for specific locations. The locations are described by
@@ -37,7 +37,7 @@ public abstract class PsiReferenceRegistrar {
    * @param pattern reference place description. See {@link com.intellij.patterns.StandardPatterns}, {@link com.intellij.patterns.PlatformPatterns} and their extenders
    * @param provider provider to be registered
    */
-  public void registerReferenceProvider(@NotNull ElementPattern<? extends PsiElement> pattern, @NotNull PsiReferenceProvider provider) {
+  public void registerReferenceProvider(@Nonnull ElementPattern<? extends PsiElement> pattern, @Nonnull PsiReferenceProvider provider) {
     registerReferenceProvider(pattern, provider, DEFAULT_PRIORITY);
   }
 
@@ -48,5 +48,5 @@ public abstract class PsiReferenceRegistrar {
    * @param provider provider to be registered
    * @param priority @see DEFAULT_PRIORITY, HIGHER_PRIORITY, LOWER_PRIORITY
    */
-  public abstract <T extends PsiElement> void registerReferenceProvider(@NotNull ElementPattern<T> pattern, @NotNull PsiReferenceProvider provider, double priority);
+  public abstract <T extends PsiElement> void registerReferenceProvider(@Nonnull ElementPattern<T> pattern, @Nonnull PsiReferenceProvider provider, double priority);
 }

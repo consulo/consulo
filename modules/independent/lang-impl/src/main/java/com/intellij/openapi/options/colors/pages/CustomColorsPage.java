@@ -26,7 +26,7 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class CustomColorsPage implements ColorSettingsPage {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return OptionsBundle.message("options.custom.display.name");
   }
@@ -76,25 +76,25 @@ public class CustomColorsPage implements ColorSettingsPage {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATTRS;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ColorDescriptor[] getColorDescriptors() {
     return ColorDescriptor.EMPTY_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getHighlighter() {
     return new CustomFileHighlighter(SYNTAX_TABLE);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDemoText() {
     return "# Line comment\n"
            + "aKeyword1 variable = 123;\n"

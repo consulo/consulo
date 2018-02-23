@@ -26,8 +26,8 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ final class UseConsoleInputAction extends ToggleAction implements DumbAware {
   private final String processInputStateKey;
   private boolean useProcessStdIn;
 
-  public UseConsoleInputAction(@NotNull String processInputStateKey) {
+  public UseConsoleInputAction(@Nonnull String processInputStateKey) {
     super("Use Console Input", null, AllIcons.Debugger.CommandLine);
 
     this.processInputStateKey = processInputStateKey;

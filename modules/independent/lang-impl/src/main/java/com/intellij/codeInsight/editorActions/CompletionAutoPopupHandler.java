@@ -32,7 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -67,7 +67,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
     return Result.CONTINUE;
   }
 
-  public static void invokeCompletion(@NotNull CompletionType completionType,
+  public static void invokeCompletion(@Nonnull CompletionType completionType,
                                       boolean autopopup,
                                       Project project, Editor editor, int time, boolean restart) {
     if (editor.isDisposed()) {
@@ -101,7 +101,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
    * @see AutoPopupController#runTransactionWithEverythingCommitted(Project, Runnable)
    */
   @Deprecated
-  public static void runLaterWithCommitted(@NotNull final Project project, final Document document, @NotNull final Runnable runnable) {
+  public static void runLaterWithCommitted(@Nonnull final Project project, final Document document, @Nonnull final Runnable runnable) {
     AutoPopupController.runTransactionWithEverythingCommitted(project, runnable);
   }
 }

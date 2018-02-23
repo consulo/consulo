@@ -23,13 +23,13 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
 
 public class EditorNotificationActions {
-  public static void collectDescriptorsForEditor(@NotNull Editor editor, @NotNull List<HighlightInfo.IntentionActionDescriptor> descriptors) {
+  public static void collectDescriptorsForEditor(@Nonnull Editor editor, @Nonnull List<HighlightInfo.IntentionActionDescriptor> descriptors) {
     Project project = editor.getProject();
     if (project == null) return;
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);

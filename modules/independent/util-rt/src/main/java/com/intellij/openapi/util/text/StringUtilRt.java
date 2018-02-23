@@ -17,8 +17,8 @@ package com.intellij.openapi.util.text;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Stripped-down version of {@code com.intellij.openapi.util.text.StringUtil}.
@@ -33,9 +33,9 @@ public class StringUtilRt {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static CharSequence toUpperCase(@NotNull CharSequence s) {
+  public static CharSequence toUpperCase(@Nonnull CharSequence s) {
     StringBuilder answer = null;
 
     for (int i = 0; i < s.length(); i++) {
@@ -81,52 +81,52 @@ public class StringUtilRt {
   /**
    * Converts line separators to <code>"\n"</code>
    */
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String convertLineSeparators(@NotNull String text) {
+  public static String convertLineSeparators(@Nonnull String text) {
     return convertLineSeparators(text, false);
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String convertLineSeparators(@NotNull String text, boolean keepCarriageReturn) {
+  public static String convertLineSeparators(@Nonnull String text, boolean keepCarriageReturn) {
     return convertLineSeparators(text, "\n", null, keepCarriageReturn);
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String convertLineSeparators(@NotNull String text, @NotNull String newSeparator) {
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator) {
     return convertLineSeparators(text, newSeparator, null);
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static CharSequence convertLineSeparators(@NotNull CharSequence text, @NotNull String newSeparator) {
+  public static CharSequence convertLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator) {
     return unifyLineSeparators(text, newSeparator, null, false);
   }
 
-  @NotNull
-  public static String convertLineSeparators(@NotNull String text, @NotNull String newSeparator, @Nullable int[] offsetsToKeep) {
+  @Nonnull
+  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep) {
     return convertLineSeparators(text, newSeparator, offsetsToKeep, false);
   }
 
-  @NotNull
-  public static String convertLineSeparators(@NotNull String text,
-                                             @NotNull String newSeparator,
+  @Nonnull
+  public static String convertLineSeparators(@Nonnull String text,
+                                             @Nonnull String newSeparator,
                                              @Nullable int[] offsetsToKeep,
                                              boolean keepCarriageReturn) {
     return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static CharSequence unifyLineSeparators(@NotNull CharSequence text) {
+  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text) {
     return unifyLineSeparators(text, "\n", null, false);
   }
 
-  @NotNull
-  public static CharSequence unifyLineSeparators(@NotNull CharSequence text,
-                                                 @NotNull String newSeparator,
+  @Nonnull
+  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text,
+                                                 @Nonnull String newSeparator,
                                                  @Nullable int[] offsetsToKeep,
                                                  boolean keepCarriageReturn) {
     StringBuilder buffer = null;
@@ -200,7 +200,7 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static int parseInt(@Nullable String string, final int defaultValue) {
+  public static int parseInt(@javax.annotation.Nullable String string, final int defaultValue) {
     if (string == null) {
       return defaultValue;
     }
@@ -243,21 +243,21 @@ public class StringUtilRt {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String getShortName(@NotNull Class aClass) {
+  public static String getShortName(@Nonnull Class aClass) {
     return getShortName(aClass.getName());
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String getShortName(@NotNull String fqName) {
+  public static String getShortName(@Nonnull String fqName) {
     return getShortName(fqName, '.');
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
-  public static String getShortName(@NotNull String fqName, char separator) {
+  public static String getShortName(@Nonnull String fqName, char separator) {
     int lastPointIdx = fqName.lastIndexOf(separator);
     if (lastPointIdx >= 0) {
       return fqName.substring(lastPointIdx + 1);
@@ -266,19 +266,19 @@ public class StringUtilRt {
   }
 
   @Contract(pure = true)
-  public static boolean endsWithChar(@Nullable CharSequence s, char suffix) {
+  public static boolean endsWithChar(@javax.annotation.Nullable CharSequence s, char suffix) {
     return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
   }
 
   @Contract(pure = true)
-  public static boolean startsWithIgnoreCase(@NonNls @NotNull String str, @NonNls @NotNull String prefix) {
+  public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
     final int stringLength = str.length();
     final int prefixLength = prefix.length();
     return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
   }
 
   @Contract(pure = true)
-  public static boolean endsWithIgnoreCase(@NonNls @NotNull CharSequence text, @NonNls @NotNull CharSequence suffix) {
+  public static boolean endsWithIgnoreCase(@NonNls @Nonnull CharSequence text, @NonNls @Nonnull CharSequence suffix) {
     int l1 = text.length();
     int l2 = suffix.length();
     if (l1 < l2) return false;
@@ -303,7 +303,7 @@ public class StringUtilRt {
    * <code>-1</code> otherwise
    */
   @Contract(pure = true)
-  public static int lastIndexOf(@NotNull CharSequence s, char c, int start, int end) {
+  public static int lastIndexOf(@Nonnull CharSequence s, char c, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       if (s.charAt(i) == c) return i;
     }

@@ -16,7 +16,7 @@
 package com.intellij.formatting;
 
 import com.intellij.lang.Language;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov

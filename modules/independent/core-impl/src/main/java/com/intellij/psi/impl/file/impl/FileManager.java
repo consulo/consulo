@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
@@ -32,34 +32,34 @@ import java.util.List;
 public interface FileManager extends Disposable {
   @Nullable
   @RequiredReadAction
-  PsiFile findFile(@NotNull VirtualFile vFile);
+  PsiFile findFile(@Nonnull VirtualFile vFile);
 
   @Nullable
   @RequiredReadAction
-  PsiDirectory findDirectory(@NotNull VirtualFile vFile);
+  PsiDirectory findDirectory(@Nonnull VirtualFile vFile);
 
   @RequiredWriteAction
-  void reloadFromDisk(@NotNull PsiFile file); //Q: move to PsiFile(Impl)?
+  void reloadFromDisk(@Nonnull PsiFile file); //Q: move to PsiFile(Impl)?
 
   @Nullable
   @RequiredReadAction
-  PsiFile getCachedPsiFile(@NotNull VirtualFile vFile);
+  PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile);
 
   @TestOnly
   void cleanupForNextTest();
 
   @RequiredReadAction
-  FileViewProvider findViewProvider(@NotNull VirtualFile file);
+  FileViewProvider findViewProvider(@Nonnull VirtualFile file);
 
   @RequiredReadAction
-  FileViewProvider findCachedViewProvider(@NotNull VirtualFile file);
+  FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file);
 
   @RequiredReadAction
-  void setViewProvider(@NotNull VirtualFile virtualFile, FileViewProvider fileViewProvider);
+  void setViewProvider(@Nonnull VirtualFile virtualFile, FileViewProvider fileViewProvider);
 
-  @NotNull
+  @Nonnull
   List<PsiFile> getAllCachedFiles();
 
-  @NotNull
-  FileViewProvider createFileViewProvider(@NotNull VirtualFile file, boolean physical);
+  @Nonnull
+  FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, boolean physical);
 }

@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.frame.presentation;
 
 import com.intellij.xdebugger.frame.XValueNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Renders a value as a string
@@ -26,12 +26,12 @@ import org.jetbrains.annotations.NotNull;
 public class XStringValuePresentation extends XValuePresentation {
   private final String myValue;
 
-  public XStringValuePresentation(@NotNull String value) {
+  public XStringValuePresentation(@Nonnull String value) {
     myValue = value;
   }
 
   @Override
-  public void renderValue(@NotNull XValueTextRenderer renderer) {
+  public void renderValue(@Nonnull XValueTextRenderer renderer) {
     renderer.renderStringValue(myValue, "\"\\", XValueNode.MAX_VALUE_LENGTH);
   }
 }

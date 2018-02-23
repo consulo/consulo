@@ -51,8 +51,8 @@ import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -71,7 +71,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   private VirtualFile mySelectedFile;
   private FilePath mySelectedUrl;
   private final Tree myTree = new Tree();
-  @NotNull
+  @Nonnull
   private final Project myProject;
   private final UpdatedFiles myUpdatedFiles;
   private UpdateRootNode myRoot;
@@ -97,7 +97,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   private Label myBefore;
   private Label myAfter;
 
-  public UpdateInfoTree(@NotNull ContentManager contentManager, @NotNull Project project, UpdatedFiles updatedFiles, String rootName, ActionInfo actionInfo) {
+  public UpdateInfoTree(@Nonnull ContentManager contentManager, @Nonnull Project project, UpdatedFiles updatedFiles, String rootName, ActionInfo actionInfo) {
     super(contentManager, "reference.versionControl.toolwindow.update");
     myActionInfo = actionInfo;
 
@@ -106,7 +106,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
         myTree.repaint();
       }
 
-      public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+      public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
         myTree.repaint();
       }
     };
@@ -231,7 +231,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (myTreeBrowser != null && myTreeBrowser.isVisible()) {
       return null;
     }
@@ -317,8 +317,8 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       }
     }
 
-    @Nullable
-    private GroupTreeNode findParentGroupTreeNode(@NotNull TreeNode treeNode) {
+    @javax.annotation.Nullable
+    private GroupTreeNode findParentGroupTreeNode(@Nonnull TreeNode treeNode) {
       TreeNode currentNode = treeNode;
       while (currentNode != null && !(currentNode instanceof GroupTreeNode)) {
         currentNode = currentNode.getParent();
@@ -349,7 +349,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return VfsUtil.toVirtualFileArray(result);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private File[] getFileArray() {
     ArrayList<File> result = new ArrayList<>();
     TreePath[] selectionPaths = myTree.getSelectionPaths();
@@ -481,7 +481,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private String getFilterScopeName() {
     return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
   }
@@ -515,8 +515,8 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     }
   }
 
-  @NotNull
-  private static FilePath getFilePath(@NotNull VirtualFilePointer filePointer) {
+  @Nonnull
+  private static FilePath getFilePath(@Nonnull VirtualFilePointer filePointer) {
     return VcsUtil.getFilePath(filePointer.getPresentableUrl(), false);
   }
 }

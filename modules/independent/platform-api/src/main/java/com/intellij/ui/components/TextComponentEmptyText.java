@@ -16,7 +16,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -47,11 +47,11 @@ class TextComponentEmptyText extends StatusText {
     });
   }
 
-  public void setTextToTriggerStatus(@NotNull String defaultText) {
+  public void setTextToTriggerStatus(@Nonnull String defaultText) {
     myStatusTriggerText = defaultText;
   }
 
-  @NotNull
+  @Nonnull
   public String getStatusTriggerText() {
     return myStatusTriggerText;
   }

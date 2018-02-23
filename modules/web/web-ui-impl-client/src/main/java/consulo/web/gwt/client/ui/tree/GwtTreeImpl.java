@@ -20,8 +20,8 @@ import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.TreeNode;
 import consulo.web.gwt.client.ui.DefaultCellTreeResources;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,11 +49,11 @@ public class GwtTreeImpl extends CellTree {
     getTreeViewModel().init(this);
   }
 
-  public void setChildrenOpenHandler(@NotNull Consumer<TreeState.TreeNodeState> handler) {
+  public void setChildrenOpenHandler(@Nonnull Consumer<TreeState.TreeNodeState> handler) {
     getTreeViewModel().setChildrenOpenHandler(handler);
   }
 
-  public void setDoubleClickHandler(@NotNull Consumer<TreeState.TreeNodeState> handler) {
+  public void setDoubleClickHandler(@Nonnull Consumer<TreeState.TreeNodeState> handler) {
     getTreeViewModel().setDoubleClickHandler(handler);
   }
 

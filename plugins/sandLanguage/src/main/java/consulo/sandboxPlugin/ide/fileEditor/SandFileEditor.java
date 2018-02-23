@@ -22,8 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.util.UserDataHolderBase;
 import consulo.ui.Component;
 import consulo.ui.Label;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeListener;
 
@@ -32,26 +31,26 @@ import java.beans.PropertyChangeListener;
  * @since 30.05.14
  */
 public class SandFileEditor extends UserDataHolderBase implements FileEditor {
-  @NotNull
+  @Nonnull
   @Override
   public Component getUIComponent() {
     return Label.create("Hello World");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Sand";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileEditorState getState(@NotNull FileEditorStateLevel level) {
+  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
     return FileEditorState.INSTANCE;
   }
 
   @Override
-  public void setState(@NotNull FileEditorState state) {
+  public void setState(@Nonnull FileEditorState state) {
 
   }
 
@@ -76,16 +75,16 @@ public class SandFileEditor extends UserDataHolderBase implements FileEditor {
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
 
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
 
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public FileEditorLocation getCurrentLocation() {
     return null;

@@ -24,8 +24,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -71,7 +70,7 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
     return myErrorText;
   }
 
-  protected boolean acceptFilter(@Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  protected boolean acceptFilter(@javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     boolean apply = false;
     if (children != null && filter != null) {
       for (Iterator it = children.iterator(); it.hasNext(); ) {
@@ -121,7 +120,7 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
     return VcsBundle.message("update.tree.node.size.statistics", itemsCount);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract String getName();
 
   protected abstract int getItemsCount();
@@ -131,13 +130,13 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
   @NonNls
   public abstract Icon getIcon(boolean expanded);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<VirtualFile> getVirtualFiles();
 
-  @NotNull
+  @Nonnull
   public abstract Collection<File> getFiles();
 
-  @NotNull
+  @Nonnull
   public abstract SimpleTextAttributes getAttributes();
 
   public abstract boolean getSupportsDeletion();

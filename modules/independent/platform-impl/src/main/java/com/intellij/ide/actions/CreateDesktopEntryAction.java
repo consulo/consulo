@@ -40,9 +40,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     final boolean enabled = isAvailable();
     final Presentation presentation = event.getPresentation();
     presentation.setEnabled(enabled);
@@ -66,7 +66,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent event) {
+  public void actionPerformed(@Nonnull final AnActionEvent event) {
     if (!isAvailable()) return;
 
     final Project project = event.getProject();
@@ -78,13 +78,13 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     final boolean globalEntry = dialog.myGlobalEntryCheckBox.isSelected();
     ProgressManager.getInstance().run(new Task.Backgroundable(project, event.getPresentation().getText()) {
       @Override
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         createDesktopEntry(getProject(), indicator, globalEntry);
       }
     });
   }
 
-  public static void createDesktopEntry(@Nullable final Project project, @NotNull final ProgressIndicator indicator, final boolean globalEntry) {
+  public static void createDesktopEntry(@Nullable final Project project, @Nonnull final ProgressIndicator indicator, final boolean globalEntry) {
     if (!isAvailable()) return;
     final double step = (1.0 - indicator.getFraction()) / 3.0;
 

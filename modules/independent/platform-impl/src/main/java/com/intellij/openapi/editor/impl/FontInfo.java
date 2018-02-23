@@ -22,8 +22,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import sun.font.FontDesignMetrics;
 
 import java.awt.*;
@@ -84,7 +84,7 @@ public class FontInfo {
     myContext = context;
   }
 
-  @NotNull
+  @Nonnull
   private static Font getFontWithLigaturesEnabled(Font font, @JdkConstants.FontStyle int fontStyle) {
     if (Patches.JDK_BUG_ID_7162125) {
       // Ligatures don't work on Mac for fonts loaded natively, so we need to locate and load font manually
@@ -109,7 +109,7 @@ public class FontInfo {
   private static final Comparator<File> BY_NAME = Comparator.comparing(File::getName);
 
   @Nullable
-  private static File findFileForFont(@NotNull String familyName, int style) {
+  private static File findFileForFont(@Nonnull String familyName, int style) {
     File fontFile = doFindFileForFont(familyName, style);
     if (fontFile == null && style != Font.PLAIN) fontFile = doFindFileForFont(familyName, Font.PLAIN);
     if (fontFile == null) fontFile = doFindFileForFont(familyName, -1);
@@ -117,7 +117,7 @@ public class FontInfo {
   }
 
   @Nullable
-  private static File doFindFileForFont(@NotNull String familyName, final int style) {
+  private static File doFindFileForFont(@Nonnull String familyName, final int style) {
     final String normalizedFamilyName = familyName.toLowerCase(Locale.getDefault()).replace(" ", "");
     FilenameFilter filter = (file, name) -> {
       String normalizedName = name.toLowerCase(Locale.getDefault());
@@ -144,7 +144,7 @@ public class FontInfo {
     return Collections.min(files, BY_NAME);
   }
 
-  private static int getFontStyle(@NotNull String fontFileNameLowercase) {
+  private static int getFontStyle(@Nonnull String fontFileNameLowercase) {
     String baseName = fontFileNameLowercase.substring(0, fontFileNameLowercase.length() - 4);
     if (baseName.endsWith("-it")) return Font.ITALIC;
     else if (baseName.endsWith("-boldit")) return Font.BOLD | Font.ITALIC;

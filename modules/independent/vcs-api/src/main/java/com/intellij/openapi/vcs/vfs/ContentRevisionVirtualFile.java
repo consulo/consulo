@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.WeakHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -33,13 +33,14 @@ import java.io.IOException;
  * @author yole
  */
 public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
-  @NotNull private final ContentRevision myContentRevision;
+  @Nonnull
+  private final ContentRevision myContentRevision;
   private byte[] myContent;
   private boolean myContentLoadFailed;
 
   private static final WeakHashMap<ContentRevision, ContentRevisionVirtualFile> ourMap = new WeakHashMap<>();
 
-  public static ContentRevisionVirtualFile create(@NotNull ContentRevision contentRevision) {
+  public static ContentRevisionVirtualFile create(@Nonnull ContentRevision contentRevision) {
     synchronized(ourMap) {
       ContentRevisionVirtualFile revisionVirtualFile = ourMap.get(contentRevision);
       if (revisionVirtualFile == null) {
@@ -50,7 +51,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
   }
 
-  private ContentRevisionVirtualFile(@NotNull ContentRevision contentRevision) {
+  private ContentRevisionVirtualFile(@Nonnull ContentRevision contentRevision) {
     super(contentRevision.getFile().getPath(), VcsFileSystem.getInstance());
     myContentRevision = contentRevision;
     setCharset(CharsetToolkit.UTF8_CHARSET);
@@ -62,7 +63,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
       return ArrayUtil.EMPTY_BYTE_ARRAY;
@@ -123,7 +124,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   public ContentRevision getContentRevision() {
     return myContentRevision;
   }

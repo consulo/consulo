@@ -19,8 +19,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +45,7 @@ class IndexConfiguration {
     return (UpdatableIndex<K, V, FileContent>)pair.getFirst();
   }
 
-  FileBasedIndex.InputFilter getInputFilter(@NotNull ID<?, ?> indexId) {
+  FileBasedIndex.InputFilter getInputFilter(@Nonnull ID<?, ?> indexId) {
     assert myFreezed;
     final Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 

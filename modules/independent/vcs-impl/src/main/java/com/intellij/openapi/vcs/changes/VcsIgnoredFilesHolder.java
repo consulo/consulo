@@ -17,13 +17,13 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vcs.AbstractVcs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
   ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create("com.intellij.vcs.ignoredFilesHolder");
 
   default boolean isInUpdatingMode() {return false;}
 
-  @NotNull
+  @Nonnull
   AbstractVcs getVcs();
 }

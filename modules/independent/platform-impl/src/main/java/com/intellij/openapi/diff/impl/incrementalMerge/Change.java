@@ -27,8 +27,8 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 
@@ -65,7 +65,7 @@ public abstract class Change {
    * Apply the change, i.e. change the "Merge result" document and update range markers, highlighting, gutters, etc.
    * @param source The source side of the change, which is being applied.
    */
-  private void apply(@NotNull FragmentSide original) {
+  private void apply(@Nonnull FragmentSide original) {
     FragmentSide targetSide = original.otherSide();
     RangeMarker originalRangeMarker = getRangeMarker(original);
     RangeMarker rangeMarker = getRangeMarker(targetSide);
@@ -85,7 +85,7 @@ public abstract class Change {
    * @param targetFragmentSide The side to be changed.
    * @param updatedTextRange   New text range to be applied to the side.
    */
-  protected final void updateTargetRangeMarker(@NotNull FragmentSide targetFragmentSide, @NotNull TextRange updatedTextRange) {
+  protected final void updateTargetRangeMarker(@Nonnull FragmentSide targetFragmentSide, @Nonnull TextRange updatedTextRange) {
     ChangeSide targetSide = getChangeSide(targetFragmentSide);
     DiffRangeMarker originalRange = targetSide.getRange();
     DiffRangeMarker updatedRange = new DiffRangeMarker(originalRange.getDocument(), updatedTextRange, null);
@@ -104,7 +104,7 @@ public abstract class Change {
    * @return the resulting TextRange from the target document, or null if the document if not writable.
    */
   @Nullable
-  private static TextRange modifyDocument(@NotNull Project project, @NotNull RangeMarker original, @NotNull RangeMarker target) {
+  private static TextRange modifyDocument(@Nonnull Project project, @Nonnull RangeMarker original, @Nonnull RangeMarker target) {
     Document document = target.getDocument();
     if (!ReadonlyStatusHandler.ensureDocumentWritable(project, document)) { return null; }
     if (DocumentUtil.isEmpty(original)) {

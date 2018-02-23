@@ -50,15 +50,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GotoClassAction extends GotoActionBase implements DumbAware {
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     assert project != null;
     if (!DumbService.getInstance(project).isDumb()) {
@@ -84,7 +84,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     final GotoClassModel2 model = new GotoClassModel2(project);
     showNavigationPopup(e, model, new GotoActionCallback<Language>() {
       @Override
-      protected ChooseByNameFilter<Language> createFilter(@NotNull ChooseByNamePopup popup) {
+      protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
         return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
       }
 
@@ -124,7 +124,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }, "Classes matching pattern", true);
   }
 
-  @Nullable private static Navigatable findMember(String pattern, PsiElement psiElement, VirtualFile file) {
+  @Nullable
+  private static Navigatable findMember(String pattern, PsiElement psiElement, VirtualFile file) {
     final PsiStructureViewFactory factory = LanguageStructureViewBuilder.INSTANCE.forLanguage(psiElement.getLanguage());
     final StructureViewBuilder builder = factory == null ? null : factory.getStructureViewBuilder(psiElement.getContainingFile());
     final FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
@@ -181,7 +182,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     return null;
   }
 
-  private static PsiElement getElement(@NotNull PsiElement element, ChooseByNamePopup popup) {
+  private static PsiElement getElement(@Nonnull PsiElement element, ChooseByNamePopup popup) {
     final String path = popup.getPathToAnonymous();
     if (path != null) {
       final String[] classes = path.split("\\$");
@@ -210,8 +211,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     return element;
   }
 
-  @NotNull
-  private static PsiElement[] getAnonymousClasses(@NotNull PsiElement element) {
+  @Nonnull
+  private static PsiElement[] getAnonymousClasses(@Nonnull PsiElement element) {
     for (AnonymousElementProvider provider : Extensions.getExtensions(AnonymousElementProvider.EP_NAME)) {
       final PsiElement[] elements = provider.getAnonymousElements(element);
       if (elements.length > 0) {

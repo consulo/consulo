@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class ModuleGroup {
 
   private final String[] myGroupPath;
 
-  public ModuleGroup(@NotNull String[] groupPath) {
+  public ModuleGroup(@Nonnull String[] groupPath) {
     myGroupPath = groupPath;
   }
 
@@ -59,7 +59,7 @@ public class ModuleGroup {
     return myGroupPath;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Module> modulesInGroup(Project project, boolean recursively) {
     final Module[] allModules = ModuleManager.getInstance(project).getModules();
     List<Module> result = new ArrayList<Module>();

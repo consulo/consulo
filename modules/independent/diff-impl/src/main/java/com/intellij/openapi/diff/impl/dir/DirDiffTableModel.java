@@ -48,8 +48,8 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -87,7 +87,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
   private DirDiffPanel myPanel;
   private volatile boolean myDisposed;
 
-  public DirDiffTableModel(@NotNull Project project, DiffElement src, DiffElement trg, DirDiffSettings settings) {
+  public DirDiffTableModel(@Nonnull Project project, DiffElement src, DiffElement trg, DirDiffSettings settings) {
     UsageTrigger.trigger("diff.DirDiffTableModel");
     myProject = project;
     mySettings = settings;
@@ -458,7 +458,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     myTable = table;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     try {
@@ -815,7 +815,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                 return true;
               }
 
-              @NotNull
+              @Nonnull
               @Override
               public String getDoNotShowMessage() {
                 return "Do not ask me again";

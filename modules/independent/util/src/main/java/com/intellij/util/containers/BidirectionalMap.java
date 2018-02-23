@@ -16,8 +16,8 @@
 package com.intellij.util.containers;
 
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -54,7 +54,7 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
     return myValueToKeysMap.get(value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     return myKeyToValueMap.keySet();
@@ -112,19 +112,19 @@ public class BidirectionalMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public void putAll(@NotNull Map<? extends K, ? extends V> t) {
+  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
     for (final K k1 : t.keySet()) {
       put(k1, t.get(k1));
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     return myValueToKeysMap.keySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     return myKeyToValueMap.entrySet();

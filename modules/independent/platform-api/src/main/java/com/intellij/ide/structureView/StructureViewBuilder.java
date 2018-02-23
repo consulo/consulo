@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileTypes.FileTypeExtensionFactory;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines the implementation of Structure View and the file structure popup for
@@ -47,6 +47,6 @@ public interface StructureViewBuilder {
    * @return the structure view implementation.
    * @see TreeBasedStructureViewBuilder
    */
-  @NotNull
-  StructureView createStructureView(FileEditor fileEditor, @NotNull Project project);
+  @Nonnull
+  StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project);
 }

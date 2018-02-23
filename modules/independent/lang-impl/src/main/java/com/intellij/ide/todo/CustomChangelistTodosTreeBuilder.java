@@ -27,7 +27,7 @@ import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -72,7 +72,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
 
   private void initHelper() {
     myPsiTodoSearchHelper = new PsiTodoSearchHelper() {
-      @NotNull
+      @Nonnull
       @Override
       public PsiFile[] findFilesWithTodoItems() {
         final List<Change> changes = new ArrayList<Change>();
@@ -102,27 +102,27 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
         return files.toArray(new PsiFile[files.size()]);
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public TodoItem[] findTodoItems(@NotNull PsiFile file) {
+      public TodoItem[] findTodoItems(@Nonnull PsiFile file) {
         return findPatternedTodoItems(file, getTodoTreeStructure().getTodoFilter());
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public TodoItem[] findTodoItemsLight(@NotNull PsiFile file) {
+      public TodoItem[] findTodoItemsLight(@Nonnull PsiFile file) {
         return findTodoItems(file);
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public TodoItem[] findTodoItemsLight(@NotNull PsiFile file, int startOffset, int endOffset) {
+      public TodoItem[] findTodoItemsLight(@Nonnull PsiFile file, int startOffset, int endOffset) {
         return findTodoItems(file, startOffset, endOffset);
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public TodoItem[] findTodoItems(@NotNull PsiFile file, int startOffset, int endOffset) {
+      public TodoItem[] findTodoItems(@Nonnull PsiFile file, int startOffset, int endOffset) {
         final TodoItem[] todoItems = findTodoItems(file);
         if (todoItems.length == 0) {
           return todoItems;
@@ -138,12 +138,12 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
       }
 
       @Override
-      public int getTodoItemsCount(@NotNull PsiFile file) {
+      public int getTodoItemsCount(@Nonnull PsiFile file) {
         return findTodoItems(file).length;
       }
 
       @Override
-      public int getTodoItemsCount(@NotNull PsiFile file, @NotNull TodoPattern pattern) {
+      public int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern) {
         final TodoFilter filter = new TodoFilter();
         filter.addTodoPattern(pattern);
         return findPatternedTodoItems(file, filter).length;
@@ -172,7 +172,7 @@ public class CustomChangelistTodosTreeBuilder extends TodoTreeBuilder {
     return todoItems == null || todoItems.isEmpty() ? EMPTY_ITEMS : todoItems.toArray(new TodoItem[todoItems.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected TodoTreeStructure createTreeStructure() {
     return new CustomChangelistTodoTreeStructure(myProject, myPsiTodoSearchHelper);

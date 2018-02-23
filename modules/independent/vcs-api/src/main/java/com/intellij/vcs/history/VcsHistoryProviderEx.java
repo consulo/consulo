@@ -21,14 +21,14 @@ import com.intellij.openapi.vcs.history.VcsAppendableHistorySessionPartner;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface VcsHistoryProviderEx extends VcsHistoryProvider {
-  @Nullable
+  @javax.annotation.Nullable
   VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
 
-  void reportAppendableHistory(@NotNull FilePath path,
+  void reportAppendableHistory(@Nonnull FilePath path,
                                @Nullable VcsRevisionNumber startingRevision,
-                               @NotNull VcsAppendableHistorySessionPartner partner) throws VcsException;
+                               @Nonnull VcsAppendableHistorySessionPartner partner) throws VcsException;
 }

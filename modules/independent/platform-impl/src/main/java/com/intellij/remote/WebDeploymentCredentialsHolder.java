@@ -17,8 +17,8 @@ package com.intellij.remote;
 
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author traff
@@ -36,7 +36,7 @@ public class WebDeploymentCredentialsHolder {
   public WebDeploymentCredentialsHolder() {
   }
 
-  public WebDeploymentCredentialsHolder(@NotNull String webServerConfigId, String name, @NotNull RemoteCredentials remoteCredentials) {
+  public WebDeploymentCredentialsHolder(@Nonnull String webServerConfigId, String name, @Nonnull RemoteCredentials remoteCredentials) {
     myWebServerConfigId = webServerConfigId;
     myWebServerConfigName = name;
     myRemoteCredentials.copyFrom(remoteCredentials);
@@ -47,7 +47,7 @@ public class WebDeploymentCredentialsHolder {
     return myWebServerConfigId;
   }
 
-  public void setWebServerConfigId(@NotNull String webServerConfigId) {
+  public void setWebServerConfigId(@Nonnull String webServerConfigId) {
     myWebServerConfigId = webServerConfigId;
   }
 
@@ -55,7 +55,7 @@ public class WebDeploymentCredentialsHolder {
     return myWebServerConfigName;
   }
 
-  public void setWebServerConfigName(@NotNull String name) {
+  public void setWebServerConfigName(@Nonnull String name) {
     myWebServerConfigName = name;
   }
 

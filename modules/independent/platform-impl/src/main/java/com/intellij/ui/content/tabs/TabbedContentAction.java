@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class TabbedContentAction extends AnAction implements DumbAware {
 
@@ -30,13 +30,13 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
   protected final ShadowAction myShadow;
 
-  protected TabbedContentAction(@NotNull final ContentManager manager, @NotNull AnAction shortcutTemplate, @NotNull String text) {
+  protected TabbedContentAction(@Nonnull final ContentManager manager, @Nonnull AnAction shortcutTemplate, @Nonnull String text) {
     super(text);
     myManager = manager;
     myShadow = new ShadowAction(this, shortcutTemplate, manager.getComponent(), new Presentation(text));
   }
 
-  protected TabbedContentAction(@NotNull final ContentManager manager, @NotNull AnAction template) {
+  protected TabbedContentAction(@Nonnull final ContentManager manager, @Nonnull AnAction template) {
     myManager = manager;
     myShadow = new ShadowAction(this, template, manager.getComponent());
   }
@@ -45,13 +45,13 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
     protected final Content myContent;
 
-    public ForContent(@NotNull Content content, @NotNull AnAction shortcutTemplate, final String text) {
+    public ForContent(@Nonnull Content content, @Nonnull AnAction shortcutTemplate, final String text) {
       super(content.getManager(), shortcutTemplate, text);
       myContent = content;
       Disposer.register(content, myShadow);
     }
 
-    public ForContent(@NotNull Content content, final AnAction template) {
+    public ForContent(@Nonnull Content content, final AnAction template) {
       super(content.getManager(), template);
       myContent = content;
       Disposer.register(content, myShadow);
@@ -66,7 +66,7 @@ public abstract class TabbedContentAction extends AnAction implements DumbAware 
 
   public static class CloseAction extends ForContent {
 
-    public CloseAction(@NotNull Content content) {
+    public CloseAction(@Nonnull Content content) {
       super(content, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
     }
 

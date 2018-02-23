@@ -18,7 +18,6 @@ package com.intellij.refactoring;
 
 import com.intellij.CommonBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -68,7 +67,7 @@ public class RefactoringBundle {
     return message("visibility.escalate");
   }
 
-  public static String getCannotRefactorMessage(@Nullable final String message) {
+  public static String getCannotRefactorMessage(@javax.annotation.Nullable final String message) {
     return message("cannot.perform.refactoring") + (message == null ? "" : "\n" + message);
   }
 

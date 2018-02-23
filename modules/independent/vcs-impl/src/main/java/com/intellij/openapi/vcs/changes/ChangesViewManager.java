@@ -58,8 +58,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -79,39 +79,46 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.changes.ChangesViewManager");
 
-  @NotNull private final ChangesListView myView;
+  @Nonnull
+  private final ChangesListView myView;
   private JPanel myProgressLabel;
 
   private final Alarm myRepaintAlarm;
 
   private boolean myDisposed = false;
 
-  @NotNull private final ChangeListListener myListener = new MyChangeListListener();
-  @NotNull private final Project myProject;
-  @NotNull private final ChangesViewContentManager myContentManager;
+  @Nonnull
+  private final ChangeListListener myListener = new MyChangeListListener();
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ChangesViewContentManager myContentManager;
 
-  @NotNull private ChangesViewManager.State myState = new ChangesViewManager.State();
+  @Nonnull
+  private ChangesViewManager.State myState = new ChangesViewManager.State();
 
   private JBSplitter mySplitter;
 
   private boolean myDetailsOn;
-  @NotNull private final NotNullLazyValue<MyChangeProcessor> myDiffDetails = new NotNullLazyValue<MyChangeProcessor>() {
-    @NotNull
+  @Nonnull
+  private final NotNullLazyValue<MyChangeProcessor> myDiffDetails = new NotNullLazyValue<MyChangeProcessor>() {
+    @Nonnull
     @Override
     protected MyChangeProcessor compute() {
       return new MyChangeProcessor(myProject);
     }
   };
 
-  @NotNull private final TreeSelectionListener myTsl;
+  @Nonnull
+  private final TreeSelectionListener myTsl;
   private Content myContent;
 
-  @NotNull
-  public static ChangesViewI getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ChangesViewI getInstance(@Nonnull Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, ChangesViewI.class);
   }
 
-  public ChangesViewManager(@NotNull Project project, @NotNull ChangesViewContentManager contentManager) {
+  public ChangesViewManager(@Nonnull Project project, @Nonnull ChangesViewContentManager contentManager) {
     myProject = project;
     myContentManager = contentManager;
     myView = new ChangesListView(project);
@@ -176,7 +183,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ChangesViewManager";
   }
@@ -272,7 +279,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     return SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
   }
 
-  private void updateProgressComponent(@NotNull final Factory<JComponent> progress) {
+  private void updateProgressComponent(@Nonnull final Factory<JComponent> progress) {
     //noinspection SSBasedInspection
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -299,7 +306,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     });
   }
 
-  @NotNull
+  @Nonnull
   public static Factory<JComponent> createTextStatusFactory(final String text, final boolean isError) {
     return new Factory<JComponent>() {
       @Override
@@ -347,14 +354,14 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     changeDetails();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ChangesViewManager.State getState() {
     return myState;
   }
 
   @Override
-  public void loadState(@NotNull ChangesViewManager.State state) {
+  public void loadState(@Nonnull ChangesViewManager.State state) {
     myState = state;
   }
 
@@ -379,7 +386,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   }
 
   @Override
-  public void refreshChangesViewNodeAsync(@NotNull final VirtualFile file) {
+  public void refreshChangesViewNodeAsync(@Nonnull final VirtualFile file) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       public void run() {
         refreshChangesViewNode(file);
@@ -387,7 +394,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     }, myProject.getDisposed());
   }
 
-  private void refreshChangesViewNode(@NotNull VirtualFile file) {
+  private void refreshChangesViewNode(@Nonnull VirtualFile file) {
     ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     Object userObject = changeListManager.isUnversioned(file) ? file : changeListManager.getChange(file);
 
@@ -527,7 +534,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   }
 
   private class MyChangeProcessor extends CacheChangeProcessor {
-    public MyChangeProcessor(@NotNull Project project) {
+    public MyChangeProcessor(@Nonnull Project project) {
       super(project, DiffPlaces.CHANGES_VIEW);
       Disposer.register(project, this);
     }
@@ -537,7 +544,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
       return DiffUtil.isFocusedComponent(myProject, myContent.getComponent());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<Change> getSelectedChanges() {
       List<Change> result = myView.getSelectedChanges().collect(toList());
@@ -545,14 +552,14 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
       return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<Change> getAllChanges() {
       return myView.getChanges().collect(toList());
     }
 
     @Override
-    protected void selectChange(@NotNull Change change) {
+    protected void selectChange(@Nonnull Change change) {
       DefaultMutableTreeNode root = (DefaultMutableTreeNode)myView.getModel().getRoot();
       DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(root, change);
       if (node != null) {

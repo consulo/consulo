@@ -17,15 +17,15 @@ package com.intellij.psi.impl.source.resolve.reference.impl;
 
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantReference {
   @Override
-  @NotNull
+  @Nonnull
   public final ResolveResult[] multiResolve(boolean incompleteCode) {
     PsiElement element = getElement();
     PsiFile file = element.getContainingFile();
@@ -38,8 +38,8 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
     return results.length == 1 ? results[0].getElement() : null;
   }
 
-  @NotNull
-  protected abstract ResolveResult[] resolveInner(boolean incompleteCode, @NotNull PsiFile containingFile);
+  @Nonnull
+  protected abstract ResolveResult[] resolveInner(boolean incompleteCode, @Nonnull PsiFile containingFile);
 
   @Override
   public boolean isReferenceTo(final PsiElement element) {
@@ -59,9 +59,9 @@ public abstract class PsiPolyVariantCachingReference implements PsiPolyVariantRe
   private static class MyResolver implements ResolveCache.PolyVariantContextResolver<PsiPolyVariantReference> {
     private static final MyResolver INSTANCE = new MyResolver();
 
-    @NotNull
+    @Nonnull
     @Override
-    public ResolveResult[] resolve(@NotNull PsiPolyVariantReference ref, @NotNull PsiFile containingFile, boolean incompleteCode) {
+    public ResolveResult[] resolve(@Nonnull PsiPolyVariantReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode) {
       return ((PsiPolyVariantCachingReference)ref).resolveInner(incompleteCode, containingFile);
     }
   }

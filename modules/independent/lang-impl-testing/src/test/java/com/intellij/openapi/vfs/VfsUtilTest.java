@@ -34,7 +34,7 @@ import com.intellij.testFramework.vcs.DirectoryData;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -155,7 +155,7 @@ public class VfsUtilTest extends PlatformLangTestCase {
 
       VfsUtilCore.visitChildrenRecursively(data.getBase(), new VirtualFileVisitor() {
         @Override
-        public boolean visitFile(@NotNull VirtualFile file) {
+        public boolean visitFile(@Nonnull VirtualFile file) {
           assertTrue(!VfsUtilCore.isAncestor(vSubDir, file, true));
           return !vSubDir.equals(file);
         }

@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.roots.ContentFolderTypeProvider;
 
 public abstract class DirectoryIndex {
@@ -37,21 +37,21 @@ public abstract class DirectoryIndex {
    * @deprecated use {@link #getInfoForFile(com.intellij.openapi.vfs.VirtualFile)} instead
    */
   @Deprecated
-  public abstract DirectoryInfo getInfoForDirectory(@NotNull VirtualFile dir);
+  public abstract DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir);
 
-  @NotNull
-  public abstract DirectoryInfo getInfoForFile(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
 
-  @Nullable
-  public abstract ContentFolderTypeProvider getContentFolderType(@NotNull DirectoryInfo info);
+  @javax.annotation.Nullable
+  public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info);
 
-  @NotNull
+  @Nonnull
   public abstract
-  Query<VirtualFile> getDirectoriesByPackageName(@NotNull String packageName, boolean includeLibrarySources);
+  Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
 
-  @Nullable
-  public abstract String getPackageName(@NotNull VirtualFile dir);
+  @javax.annotation.Nullable
+  public abstract String getPackageName(@Nonnull VirtualFile dir);
 
-  @NotNull
-  public abstract OrderEntry[] getOrderEntries(@NotNull DirectoryInfo info);
+  @Nonnull
+  public abstract OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info);
 }

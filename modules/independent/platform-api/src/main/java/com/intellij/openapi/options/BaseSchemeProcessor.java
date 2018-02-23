@@ -19,8 +19,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -29,15 +29,15 @@ import java.io.IOException;
  */
 public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implements SchemeProcessor<T>, SchemeExtensionProvider {
   @Override
-  public void initScheme(@NotNull T scheme) {
+  public void initScheme(@Nonnull T scheme) {
   }
 
   @Override
-  public void onSchemeAdded(@NotNull T scheme) {
+  public void onSchemeAdded(@Nonnull T scheme) {
   }
 
   @Override
-  public void onSchemeDeleted(@NotNull T scheme) {
+  public void onSchemeDeleted(@Nonnull T scheme) {
   }
 
   @Override
@@ -45,7 +45,7 @@ public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implem
   }
 
   @Nullable
-  public T readScheme(@NotNull Element element) throws InvalidDataException, IOException, JDOMException {
+  public T readScheme(@Nonnull Element element) throws InvalidDataException, IOException, JDOMException {
     return readScheme(new Document((Element)element.detach()));
   }
 
@@ -53,12 +53,12 @@ public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implem
   /**
    * @param duringLoad If occurred during {@link SchemesManager#loadSchemes()} call
    */
-  public T readScheme(@NotNull Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
+  public T readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
     return readScheme(element);
   }
 
   @Override
-  public T readScheme(@NotNull Document schemeContent) throws InvalidDataException, IOException, JDOMException {
+  public T readScheme(@Nonnull Document schemeContent) throws InvalidDataException, IOException, JDOMException {
     throw new AbstractMethodError();
   }
 
@@ -67,12 +67,12 @@ public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implem
   }
 
   @Override
-  public boolean shouldBeSaved(@NotNull T scheme) {
+  public boolean shouldBeSaved(@Nonnull T scheme) {
     return true;
   }
 
-  @NotNull
-  public State getState(@NotNull T scheme) {
+  @Nonnull
+  public State getState(@Nonnull T scheme) {
     return shouldBeSaved(scheme) ? State.POSSIBLY_CHANGED : State.NON_PERSISTENT;
   }
 
@@ -81,7 +81,7 @@ public abstract class BaseSchemeProcessor<T extends ExternalizableScheme> implem
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSchemeExtension() {
     return ".xml";

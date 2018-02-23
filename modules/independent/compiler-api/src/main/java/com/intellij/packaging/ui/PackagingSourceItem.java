@@ -17,7 +17,7 @@ package com.intellij.packaging.ui;
 
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -41,16 +41,16 @@ public abstract class PackagingSourceItem {
   @Override
   public abstract int hashCode();
 
-  public abstract SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context);
+  public abstract SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context);
 
-  @NotNull
-  public abstract List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context);
+  @Nonnull
+  public abstract List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context);
 
   public boolean isProvideElements() {
     return myProvideElements;
   }
 
-  @NotNull
+  @Nonnull
   public PackagingElementOutputKind getKindOfProducedElements() {
     return PackagingElementOutputKind.OTHER;
   }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.ui;
 
 import com.intellij.ui.EditorCustomization;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ public class SpellCheckerCustomization {
     return ourInstance;
   }
 
-  @NotNull
+  @Nonnull
   public EditorCustomization getCustomization(boolean enabled) {
     throw new UnsupportedOperationException();
   }

@@ -25,8 +25,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -230,7 +230,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
     myChanged = changed;
   }
 
-  @NotNull
+  @Nonnull
   public List<PresentableNodeDescriptor.ColoredFragment> getColoredText() {
     return myColoredText;
   }
@@ -263,7 +263,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getEqualityObjects() {
     return new Object[]{myIcon, myColoredText, myAttributesKey, myFont, myForcedTextForeground, myPresentableText,
       myLocationString, mySeparatorAbove, myLocationPrefix, myLocationSuffix};

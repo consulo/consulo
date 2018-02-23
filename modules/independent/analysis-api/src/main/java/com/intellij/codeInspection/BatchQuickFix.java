@@ -17,7 +17,7 @@ package com.intellij.codeInspection;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ public interface BatchQuickFix<D extends CommonProblemDescriptor> {
    * @param psiElementsToIgnore elements to be excluded from view during post-refresh
    * @param refreshViews post-refresh inspection results view; would remove collected elements from the view
    */
-  void applyFix(@NotNull final Project project,
-                @NotNull final D[] descriptors,
+  void applyFix(@Nonnull final Project project,
+                @Nonnull final D[] descriptors,
                 final List<PsiElement> psiElementsToIgnore,
                 final Runnable refreshViews);
 }

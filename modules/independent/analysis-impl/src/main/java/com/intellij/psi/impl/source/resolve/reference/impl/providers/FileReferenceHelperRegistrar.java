@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class FileReferenceHelperRegistrar {
    * @deprecated this method is broken, please avoid using it, use getHelpers() instead
    */
   @Deprecated
-  @NotNull
-  public static <T extends PsiFileSystemItem> FileReferenceHelper getNotNullHelper(@NotNull T psiFileSystemItem) {
+  @Nonnull
+  public static <T extends PsiFileSystemItem> FileReferenceHelper getNotNullHelper(@Nonnull T psiFileSystemItem) {
     FileReferenceHelper helper = getHelper(psiFileSystemItem);
     if (helper != null) {
       return helper;
@@ -55,7 +55,7 @@ public class FileReferenceHelperRegistrar {
    * @deprecated this method is broken, please avoid using it, use getHelpers() instead
    */
   @Deprecated
-  public static <T extends PsiFileSystemItem> FileReferenceHelper getHelper(@NotNull final T psiFileSystemItem) {
+  public static <T extends PsiFileSystemItem> FileReferenceHelper getHelper(@Nonnull final T psiFileSystemItem) {
     final VirtualFile file = psiFileSystemItem.getVirtualFile();
     if (file == null) return null;
     final Project project = psiFileSystemItem.getProject();
@@ -67,7 +67,7 @@ public class FileReferenceHelperRegistrar {
     });
   }
 
-  public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(@NotNull final T psiFileSystemItem) {
+  public static <T extends PsiFileSystemItem> List<FileReferenceHelper> getHelpers(@Nonnull final T psiFileSystemItem) {
     final VirtualFile file = psiFileSystemItem.getVirtualFile();
     if (file == null) return null;
     final Project project = psiFileSystemItem.getProject();
@@ -79,7 +79,7 @@ public class FileReferenceHelperRegistrar {
     });
   }
 
-  public static boolean areElementsEquivalent(@NotNull final PsiFileSystemItem element1, @NotNull final PsiFileSystemItem element2) {
+  public static boolean areElementsEquivalent(@Nonnull final PsiFileSystemItem element1, @Nonnull final PsiFileSystemItem element2) {
     return element2.getManager().areElementsEquivalent(element1, element2);
   }
 }

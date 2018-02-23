@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.navigation.Place;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -14,7 +14,7 @@ import javax.swing.*;
  */
 public class HeaderHidingTabbedModuleEditor extends TabbedModuleEditor {
 
-  public HeaderHidingTabbedModuleEditor(Project project, ModulesProvider modulesProvider, @NotNull Module module) {
+  public HeaderHidingTabbedModuleEditor(Project project, ModulesProvider modulesProvider, @Nonnull Module module) {
     super(project, modulesProvider, module);
   }
 
@@ -66,7 +66,7 @@ public class HeaderHidingTabbedModuleEditor extends TabbedModuleEditor {
 
   @Override
   @Nullable
-  public ModuleConfigurationEditor getEditor(@NotNull String displayName) {
+  public ModuleConfigurationEditor getEditor(@Nonnull String displayName) {
     ModuleConfigurationEditor singleEditor = getSingleEditor();
     if (singleEditor != null) {
       if (displayName.equals(singleEditor.getDisplayName())) {
@@ -89,7 +89,7 @@ public class HeaderHidingTabbedModuleEditor extends TabbedModuleEditor {
   }
 
   @Override
-  public void queryPlace(@NotNull Place place) {
+  public void queryPlace(@Nonnull Place place) {
     ModuleConfigurationEditor singleEditor = getSingleEditor();
     if (singleEditor != null) {
       place.putPath(ModuleEditor.SELECTED_EDITOR_NAME, singleEditor.getDisplayName());

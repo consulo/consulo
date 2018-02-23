@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * For old-style components, the contract specifies a lifecycle: the component gets created and notified during the project opening process.
@@ -28,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
 public class ServiceManager {
   private ServiceManager() { }
 
-  public static <T> T getService(@NotNull Class<T> serviceClass) {
+  public static <T> T getService(@Nonnull Class<T> serviceClass) {
     @SuppressWarnings("unchecked") T instance = (T)ApplicationManager.getApplication().getPicoContainer().getComponentInstance(serviceClass.getName());
     return instance;
   }
 
-  public static <T> T getService(@NotNull Project project, @NotNull Class<T> serviceClass) {
+  public static <T> T getService(@Nonnull Project project, @Nonnull Class<T> serviceClass) {
     @SuppressWarnings("unchecked") T instance = (T)project.getPicoContainer().getComponentInstance(serviceClass.getName());
     return instance;
   }
@@ -45,10 +45,10 @@ public class ServiceManager {
    * @param <T>          Service class type.
    * @return Key instance.
    */
-  public static <T> NotNullLazyKey<T, Project> createLazyKey(@NotNull final Class<T> serviceClass) {
+  public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull final Class<T> serviceClass) {
     return NotNullLazyKey.create("Service: " + serviceClass.getName(), new NotNullFunction<Project, T>() {
       @Override
-      @NotNull
+      @Nonnull
       public T fun(Project project) {
         return getService(project, serviceClass);
       }

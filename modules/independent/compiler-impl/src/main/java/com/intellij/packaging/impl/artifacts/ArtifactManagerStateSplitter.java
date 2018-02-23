@@ -19,7 +19,7 @@ import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.util.Pair;
 import com.intellij.packaging.impl.artifacts.state.ArtifactState;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
  */
 final class ArtifactManagerStateSplitter extends StateSplitterEx {
   @Override
-  public List<Pair<Element, String>> splitState(@NotNull Element state) {
+  public List<Pair<Element, String>> splitState(@Nonnull Element state) {
     return splitState(state, ArtifactState.NAME_ATTRIBUTE);
   }
 }

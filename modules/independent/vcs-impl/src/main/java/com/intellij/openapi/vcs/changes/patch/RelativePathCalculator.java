@@ -17,8 +17,7 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vcs.VcsBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -37,7 +36,7 @@ public class RelativePathCalculator {
     myBase = base;
   }
 
-  private static boolean stringEqual(@NotNull final String s1, @NotNull final String s2) {
+  private static boolean stringEqual(@Nonnull final String s1, @Nonnull final String s2) {
     if (! SystemInfo.isFileSystemCaseSensitive) {
       return s1.equalsIgnoreCase(s2);
     }
@@ -111,7 +110,7 @@ public class RelativePathCalculator {
     return myResult;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String getMovedString(final String beforeName, final String afterName) {
     if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
       final RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);

@@ -19,7 +19,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;

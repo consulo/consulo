@@ -40,7 +40,7 @@ import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ import java.util.List;
 public class TextDiffViewerUtil {
   public static final Logger LOG = Logger.getInstance(TextDiffViewerUtil.class);
 
-  @NotNull
+  @Nonnull
   public static List<AnAction> createEditorPopupActions() {
     List<AnAction> result = new ArrayList<AnAction>();
     result.add(ActionManager.getInstance().getAction("CompareClipboardWithSelection"));
@@ -64,14 +64,14 @@ public class TextDiffViewerUtil {
     return result;
   }
 
-  @NotNull
-  public static FoldingModelSupport.Settings getFoldingModelSettings(@NotNull DiffContext context) {
+  @Nonnull
+  public static FoldingModelSupport.Settings getFoldingModelSettings(@Nonnull DiffContext context) {
     TextDiffSettings settings = getTextSettings(context);
     return new FoldingModelSupport.Settings(settings.getContextRange(), settings.isExpandByDefault());
   }
 
-  @NotNull
-  public static TextDiffSettings getTextSettings(@NotNull DiffContext context) {
+  @Nonnull
+  public static TextDiffSettings getTextSettings(@Nonnull DiffContext context) {
     TextDiffSettings settings = context.getUserData(TextDiffSettingsHolder.KEY);
     if (settings == null) {
       settings = TextDiffSettings.getSettings(context.getUserData(DiffUserDataKeys.PLACE));
@@ -83,8 +83,8 @@ public class TextDiffViewerUtil {
     return settings;
   }
 
-  @NotNull
-  public static boolean[] checkForceReadOnly(@NotNull DiffContext context, @NotNull ContentDiffRequest request) {
+  @Nonnull
+  public static boolean[] checkForceReadOnly(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
     int contentCount = request.getContents().size();
     boolean[] result = new boolean[contentCount];
 
@@ -101,7 +101,7 @@ public class TextDiffViewerUtil {
     return result;
   }
 
-  public static void checkDifferentDocuments(@NotNull ContentDiffRequest request) {
+  public static void checkDifferentDocuments(@Nonnull ContentDiffRequest request) {
     // Actually, this should be a valid case. But it has little practical sense and will require explicit checks everywhere.
     // Some listeners will be processed once instead of 2 times, some listeners will cause illegal document modifications.
     List<DiffContent> contents = request.getContents();
@@ -128,7 +128,7 @@ public class TextDiffViewerUtil {
     }
   }
 
-  public static boolean areEqualLineSeparators(@NotNull List<? extends DiffContent> contents) {
+  public static boolean areEqualLineSeparators(@Nonnull List<? extends DiffContent> contents) {
     return areEqualDocumentContentProperties(contents, new Function<DocumentContent, Object>() {
       @Override
       public Object fun(DocumentContent documentContent) {
@@ -137,7 +137,7 @@ public class TextDiffViewerUtil {
     });
   }
 
-  public static boolean areEqualCharsets(@NotNull List<? extends DiffContent> contents) {
+  public static boolean areEqualCharsets(@Nonnull List<? extends DiffContent> contents) {
     return areEqualDocumentContentProperties(contents, new Function<DocumentContent, Object>() {
       @Override
       public Object fun(DocumentContent documentContent) {
@@ -146,8 +146,8 @@ public class TextDiffViewerUtil {
     });
   }
 
-  private static <T> boolean areEqualDocumentContentProperties(@NotNull List<? extends DiffContent> contents,
-                                                               @NotNull final Function<DocumentContent, T> propertyGetter) {
+  private static <T> boolean areEqualDocumentContentProperties(@Nonnull List<? extends DiffContent> contents,
+                                                               @Nonnull final Function<DocumentContent, T> propertyGetter) {
     List<T> properties = ContainerUtil.mapNotNull(contents, new Function<DiffContent, T>() {
       @Override
       public T fun(DiffContent content) {
@@ -179,13 +179,13 @@ public class TextDiffViewerUtil {
       presentation.setText(getText(getCurrentSetting()));
     }
 
-    @NotNull
+    @Nonnull
     public DefaultActionGroup getPopupGroup() {
       initChildren();
       return myChildren;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       initChildren();
@@ -201,21 +201,22 @@ public class TextDiffViewerUtil {
       }
     }
 
-    @NotNull
+    @Nonnull
     protected abstract List<T> getAvailableSettings();
 
-    @NotNull
-    protected abstract String getText(@NotNull T setting);
+    @Nonnull
+    protected abstract String getText(@Nonnull T setting);
 
-    @NotNull
+    @Nonnull
     protected abstract T getCurrentSetting();
 
-    protected abstract void applySetting(@NotNull T setting, @NotNull AnActionEvent e);
+    protected abstract void applySetting(@Nonnull T setting, @Nonnull AnActionEvent e);
 
     private class MyAction extends AnAction implements DumbAware {
-      @NotNull private final T mySetting;
+      @Nonnull
+      private final T mySetting;
 
-      public MyAction(@NotNull T setting) {
+      public MyAction(@Nonnull T setting) {
         super(getText(setting));
         setEnabledInModalContext(true);
         mySetting = setting;
@@ -223,21 +224,22 @@ public class TextDiffViewerUtil {
 
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         applySetting(mySetting, e);
       }
     }
   }
 
   public static abstract class HighlightPolicySettingAction extends ComboBoxSettingAction<HighlightPolicy> {
-    @NotNull protected final TextDiffSettings mySettings;
+    @Nonnull
+    protected final TextDiffSettings mySettings;
 
-    public HighlightPolicySettingAction(@NotNull TextDiffSettings settings) {
+    public HighlightPolicySettingAction(@Nonnull TextDiffSettings settings) {
       mySettings = settings;
     }
 
     @Override
-    protected void applySetting(@NotNull HighlightPolicy setting, @NotNull AnActionEvent e) {
+    protected void applySetting(@Nonnull HighlightPolicy setting, @Nonnull AnActionEvent e) {
       if (getCurrentSetting() == setting) return;
       UsageTrigger.trigger("diff.TextDiffSettings.HighlightPolicy." + setting.name());
       mySettings.setHighlightPolicy(setting);
@@ -245,19 +247,19 @@ public class TextDiffViewerUtil {
       onSettingsChanged();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected HighlightPolicy getCurrentSetting() {
       return mySettings.getHighlightPolicy();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected String getText(@NotNull HighlightPolicy setting) {
+    protected String getText(@Nonnull HighlightPolicy setting) {
       return setting.getText();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<HighlightPolicy> getAvailableSettings() {
       return Arrays.asList(HighlightPolicy.values());
@@ -267,14 +269,15 @@ public class TextDiffViewerUtil {
   }
 
   public static abstract class IgnorePolicySettingAction extends ComboBoxSettingAction<IgnorePolicy> {
-    @NotNull protected final TextDiffSettings mySettings;
+    @Nonnull
+    protected final TextDiffSettings mySettings;
 
-    public IgnorePolicySettingAction(@NotNull TextDiffSettings settings) {
+    public IgnorePolicySettingAction(@Nonnull TextDiffSettings settings) {
       mySettings = settings;
     }
 
     @Override
-    protected void applySetting(@NotNull IgnorePolicy setting, @NotNull AnActionEvent e) {
+    protected void applySetting(@Nonnull IgnorePolicy setting, @Nonnull AnActionEvent e) {
       if (getCurrentSetting() == setting) return;
       UsageTrigger.trigger("diff.TextDiffSettings.IgnorePolicy." + setting.name());
       mySettings.setIgnorePolicy(setting);
@@ -282,19 +285,19 @@ public class TextDiffViewerUtil {
       onSettingsChanged();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected IgnorePolicy getCurrentSetting() {
       return mySettings.getIgnorePolicy();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected String getText(@NotNull IgnorePolicy setting) {
+    protected String getText(@Nonnull IgnorePolicy setting) {
       return setting.getText();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected List<IgnorePolicy> getAvailableSettings() {
       return Arrays.asList(IgnorePolicy.values());
@@ -304,9 +307,10 @@ public class TextDiffViewerUtil {
   }
 
   public static class ToggleAutoScrollAction extends ToggleActionButton implements DumbAware {
-    @NotNull protected final TextDiffSettings mySettings;
+    @Nonnull
+    protected final TextDiffSettings mySettings;
 
-    public ToggleAutoScrollAction(@NotNull TextDiffSettings settings) {
+    public ToggleAutoScrollAction(@Nonnull TextDiffSettings settings) {
       super("Synchronize Scrolling", AllIcons.Actions.SynchronizeScrolling);
       mySettings = settings;
       setEnabledInModalContext(true);
@@ -324,9 +328,10 @@ public class TextDiffViewerUtil {
   }
 
   public static abstract class ToggleExpandByDefaultAction extends ToggleActionButton implements DumbAware {
-    @NotNull protected final TextDiffSettings mySettings;
+    @Nonnull
+    protected final TextDiffSettings mySettings;
 
-    public ToggleExpandByDefaultAction(@NotNull TextDiffSettings settings) {
+    public ToggleExpandByDefaultAction(@Nonnull TextDiffSettings settings) {
       super("Collapse unchanged fragments", AllIcons.Actions.Collapseall);
       mySettings = settings;
       setEnabledInModalContext(true);
@@ -354,10 +359,12 @@ public class TextDiffViewerUtil {
   }
 
   public static abstract class ReadOnlyLockAction extends ToggleAction implements DumbAware {
-    @NotNull protected final DiffContext myContext;
-    @NotNull protected final TextDiffSettings mySettings;
+    @Nonnull
+    protected final DiffContext myContext;
+    @Nonnull
+    protected final TextDiffSettings mySettings;
 
-    public ReadOnlyLockAction(@NotNull DiffContext context) {
+    public ReadOnlyLockAction(@Nonnull DiffContext context) {
       super("Disable editing", null, AllIcons.Nodes.Padlock);
       myContext = context;
       mySettings = getTextSettings(context);
@@ -372,7 +379,7 @@ public class TextDiffViewerUtil {
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       if (!isVisible()) {
         e.getPresentation().setEnabledAndVisible(false);
       }
@@ -404,7 +411,7 @@ public class TextDiffViewerUtil {
   public static class EditorReadOnlyLockAction extends ReadOnlyLockAction {
     private final List<? extends EditorEx> myEditableEditors;
 
-    public EditorReadOnlyLockAction(@NotNull DiffContext context, @NotNull List<? extends EditorEx> editableEditors) {
+    public EditorReadOnlyLockAction(@Nonnull DiffContext context, @Nonnull List<? extends EditorEx> editableEditors) {
       super(context);
       myEditableEditors = editableEditors;
       applyDefaults();
@@ -423,8 +430,8 @@ public class TextDiffViewerUtil {
     }
   }
 
-  @NotNull
-  public static List<? extends EditorEx> getEditableEditors(@NotNull List<? extends EditorEx> editors) {
+  @Nonnull
+  public static List<? extends EditorEx> getEditableEditors(@Nonnull List<? extends EditorEx> editors) {
     return ContainerUtil.filter(editors, new Condition<EditorEx>() {
       @Override
       public boolean value(EditorEx editor) {
@@ -434,15 +441,16 @@ public class TextDiffViewerUtil {
   }
 
   public static class EditorFontSizeSynchronizer implements PropertyChangeListener {
-    @NotNull private final List<? extends EditorEx> myEditors;
+    @Nonnull
+    private final List<? extends EditorEx> myEditors;
 
     private boolean myDuringUpdate = false;
 
-    public EditorFontSizeSynchronizer(@NotNull List<? extends EditorEx> editors) {
+    public EditorFontSizeSynchronizer(@Nonnull List<? extends EditorEx> editors) {
       myEditors = editors;
     }
 
-    public void install(@NotNull Disposable disposable) {
+    public void install(@Nonnull Disposable disposable) {
       if (myEditors.size() < 2) return;
       for (EditorEx editor : myEditors) {
         editor.addPropertyChangeListener(this, disposable);
@@ -462,7 +470,7 @@ public class TextDiffViewerUtil {
       }
     }
 
-    public void updateEditor(@NotNull EditorEx editor, int fontSize) {
+    public void updateEditor(@Nonnull EditorEx editor, int fontSize) {
       try {
         myDuringUpdate = true;
         editor.setFontSize(fontSize);
@@ -474,13 +482,14 @@ public class TextDiffViewerUtil {
   }
 
   public static class EditorActionsPopup extends EditorPopupHandler {
-    @NotNull private final List<? extends AnAction> myEditorPopupActions;
+    @Nonnull
+    private final List<? extends AnAction> myEditorPopupActions;
 
-    public EditorActionsPopup(@NotNull List<? extends AnAction> editorPopupActions) {
+    public EditorActionsPopup(@Nonnull List<? extends AnAction> editorPopupActions) {
       myEditorPopupActions = editorPopupActions;
     }
 
-    public void install(@NotNull List<? extends EditorEx> editors) {
+    public void install(@Nonnull List<? extends EditorEx> editors) {
       for (EditorEx editor : editors) {
         editor.addEditorMouseListener(this);
         editor.setContextMenuGroupId(null); // disabling default context menu

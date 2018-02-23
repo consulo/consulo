@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -58,12 +58,12 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     super(project, COMMAND_NAME, PROGRESS_TEXT, processChangedTextOnly);
   }
 
-  public ReformatCodeProcessor(@NotNull PsiFile file, @NotNull SelectionModel selectionModel) {
+  public ReformatCodeProcessor(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
     mySelectionModel = selectionModel;
   }
 
-  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, @NotNull SelectionModel selectionModel) {
+  public ReformatCodeProcessor(AbstractLayoutCodeProcessor processor, @Nonnull SelectionModel selectionModel) {
     super(processor, COMMAND_NAME, PROGRESS_TEXT);
     mySelectionModel = selectionModel;
   }
@@ -88,7 +88,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     }
   }
 
-  public ReformatCodeProcessor(@NotNull PsiFile file, boolean processChangedTextOnly) {
+  public ReformatCodeProcessor(@Nonnull PsiFile file, boolean processChangedTextOnly) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, processChangedTextOnly);
   }
 
@@ -106,8 +106,8 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
   }
 
   @Override
-  @NotNull
-  protected FutureTask<Boolean> prepareTask(@NotNull final PsiFile file, final boolean processChangedTextOnly)
+  @Nonnull
+  protected FutureTask<Boolean> prepareTask(@Nonnull final PsiFile file, final boolean processChangedTextOnly)
           throws IncorrectOperationException
   {
     return new FutureTask<Boolean>(new Callable<Boolean>() {
@@ -156,7 +156,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     });
   }
 
-  private void prepareUserNotificationMessage(@NotNull Document document, @NotNull CharSequence before) {
+  private void prepareUserNotificationMessage(@Nonnull Document document, @Nonnull CharSequence before) {
     LOG.assertTrue(getInfoCollector() != null);
     int number = FormatChangedTextUtil.getInstance().calculateChangedLinesNumber(document, before);
     if (number > 0) {
@@ -165,7 +165,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
     }
   }
 
-  @NotNull
+  @Nonnull
   private Collection<TextRange> getRangesToFormat(boolean processChangedTextOnly, PsiFile file) throws FilesTooBigForDiffException {
     if (mySelectionModel != null) {
       return getSelectedRanges(mySelectionModel);

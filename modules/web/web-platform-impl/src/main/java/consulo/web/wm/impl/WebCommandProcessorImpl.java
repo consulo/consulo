@@ -19,16 +19,16 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import consulo.web.application.WebApplication;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 13-Oct-17
  */
 public class WebCommandProcessorImpl extends CommandProcessorBase {
-  @NotNull
+  @Nonnull
   @Override
-  protected ActionCallback invokeLater(@NotNull Runnable command, @NotNull Condition<?> condition) {
+  protected ActionCallback invokeLater(@Nonnull Runnable command, @Nonnull Condition<?> condition) {
     ActionCallback actionCallback = new ActionCallback();
 
     WebApplication.invokeOnCurrentSession(() -> {

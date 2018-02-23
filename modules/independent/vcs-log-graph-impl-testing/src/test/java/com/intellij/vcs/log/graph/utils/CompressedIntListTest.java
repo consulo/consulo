@@ -16,9 +16,8 @@
 
 package com.intellij.vcs.log.graph.utils;
 
-import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +29,7 @@ public class CompressedIntListTest {
   private static final int BYTE3_MAX = 0x7fffff;
   private static final int INT_MAX = Integer.MAX_VALUE;
 
-  private static String toStr(@NotNull IntList intList) {
+  private static String toStr(@Nonnull IntList intList) {
     StringBuilder s = new StringBuilder();
     for (int i = 0; i < intList.size(); i++) {
       if (i != 0)

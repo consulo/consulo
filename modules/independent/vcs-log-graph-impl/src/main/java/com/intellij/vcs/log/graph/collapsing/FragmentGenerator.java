@@ -18,8 +18,8 @@ package com.intellij.vcs.log.graph.collapsing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.LiteLinearGraph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,9 +31,10 @@ public class FragmentGenerator {
   public static class GreenFragment {
     @Nullable private final Integer myUpRedNode;
     @Nullable private final Integer myDownRedNode;
-    @NotNull private final Set<Integer> myMiddleGreenNodes;
+    @Nonnull
+    private final Set<Integer> myMiddleGreenNodes;
 
-    private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, @NotNull Set<Integer> middleGreenNodes) {
+    private GreenFragment(@Nullable Integer upRedNode, @Nullable Integer downRedNode, @Nonnull Set<Integer> middleGreenNodes) {
       myUpRedNode = upRedNode;
       myDownRedNode = downRedNode;
       myMiddleGreenNodes = middleGreenNodes;
@@ -49,21 +50,23 @@ public class FragmentGenerator {
       return myDownRedNode;
     }
 
-    @NotNull
+    @Nonnull
     public Set<Integer> getMiddleGreenNodes() {
       return myMiddleGreenNodes;
     }
   }
 
-  @NotNull private final LiteLinearGraph myGraph;
-  @NotNull private final Condition<Integer> myRedNodes;
+  @Nonnull
+  private final LiteLinearGraph myGraph;
+  @Nonnull
+  private final Condition<Integer> myRedNodes;
 
-  public FragmentGenerator(@NotNull LiteLinearGraph graph, @NotNull Condition<Integer> redNodes) {
+  public FragmentGenerator(@Nonnull LiteLinearGraph graph, @Nonnull Condition<Integer> redNodes) {
     myGraph = graph;
     myRedNodes = redNodes;
   }
 
-  @NotNull
+  @Nonnull
   public Set<Integer> getMiddleNodes(final int upNode, final int downNode, boolean strict) {
     Set<Integer> downWalk = getWalkNodes(upNode, false, new Condition<Integer>() {
       @Override
@@ -105,7 +108,7 @@ public class FragmentGenerator {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public GreenFragment getGreenFragmentForCollapse(int startNode, int maxWalkSize) {
     if (myRedNodes.value(startNode)) return new GreenFragment(null, null, Collections.<Integer>emptySet());
     Integer upRedNode = getNearRedNode(startNode, maxWalkSize, true);
@@ -124,7 +127,7 @@ public class FragmentGenerator {
     return new GreenFragment(upRedNode, downRedNode, middleNodes);
   }
 
-  @NotNull
+  @Nonnull
   private Set<Integer> getWalkNodes(int startNode, boolean isUp, Condition<Integer> stopFunction) {
     Set<Integer> walkNodes = new HashSet<>();
 
@@ -140,12 +143,12 @@ public class FragmentGenerator {
     return walkNodes;
   }
 
-  @NotNull
+  @Nonnull
   private List<Integer> getNodes(int nodeIndex, boolean isUp) {
     return myGraph.getNodes(nodeIndex, LiteLinearGraph.NodeFilter.filter(isUp));
   }
 
-  @NotNull
+  @Nonnull
   private static Condition<Integer> createStopFunction(final int maxNodeCount) {
     return new Condition<Integer>() {
       private int count = maxNodeCount;

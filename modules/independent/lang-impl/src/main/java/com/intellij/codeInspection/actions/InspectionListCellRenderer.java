@@ -27,7 +27,7 @@ import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,8 +91,8 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
     return panel;
   }
 
-  @NotNull
-  private static Icon getIcon(@NotNull InspectionToolWrapper tool) {
+  @Nonnull
+  private static Icon getIcon(@Nonnull InspectionToolWrapper tool) {
     Icon icon = null;
     final Language language = Language.findLanguageByID(tool.getLanguage());
     if (language != null) {

@@ -17,7 +17,7 @@ package com.intellij.util.io.socketConnection;
 
 import com.intellij.util.io.socketConnection.impl.ServerSocketConnectionImpl;
 import com.intellij.util.io.socketConnection.impl.SocketConnectionImpl;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.net.InetAddress;
 

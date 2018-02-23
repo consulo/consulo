@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -21,7 +21,7 @@ import javax.swing.*;
  * To change this template use File | Settings | File Templates.
  */
 public class SwitchToReplace extends AnAction {
-  public SwitchToReplace(@NotNull JComponent shortcutHolder) {
+  public SwitchToReplace(@Nonnull JComponent shortcutHolder) {
     AnAction replaceAction = ActionManager.getInstance().getAction("Replace");
     if (replaceAction != null) {
       registerCustomShortcutSet(replaceAction.getShortcutSet(), shortcutHolder);

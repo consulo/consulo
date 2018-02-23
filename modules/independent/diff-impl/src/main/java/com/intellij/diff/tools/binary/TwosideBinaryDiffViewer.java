@@ -42,8 +42,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -56,10 +56,12 @@ import static com.intellij.diff.util.DiffUtil.getDiffSettings;
 public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolder> {
   public static final Logger LOG = Logger.getInstance(TwosideBinaryDiffViewer.class);
 
-  @NotNull private final TransferableFileEditorStateSupport myTransferableStateSupport;
-  @NotNull private final StatusPanel myStatusPanel;
+  @Nonnull
+  private final TransferableFileEditorStateSupport myTransferableStateSupport;
+  @Nonnull
+  private final StatusPanel myStatusPanel;
 
-  public TwosideBinaryDiffViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public TwosideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
 
     myStatusPanel = new StatusPanel();
@@ -108,8 +110,8 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   }
 
   @Override
-  @NotNull
-  protected Runnable performRediff(@NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
     try {
       indicator.checkCanceled();
 
@@ -151,7 +153,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
   }
 
-  @NotNull
+  @Nonnull
   private Runnable applyNotification(@Nullable final JComponent notification) {
     return () -> {
       clearDiffPresentation();
@@ -168,12 +170,12 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   // Getters
   //
 
-  @NotNull
+  @Nonnull
   FileEditor getCurrentEditor() {
     return getCurrentEditorHolder().getEditor();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent getStatusPanel() {
     return myStatusPanel;
@@ -183,7 +185,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   // Misc
   //
 
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return TwosideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
   }
 
@@ -192,9 +194,10 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   //
 
   private class MyAcceptSideAction extends DumbAwareAction {
-    @NotNull private final Side myBaseSide;
+    @Nonnull
+    private final Side myBaseSide;
 
-    public MyAcceptSideAction(@NotNull Side baseSide) {
+    public MyAcceptSideAction(@Nonnull Side baseSide) {
       myBaseSide = baseSide;
       getTemplatePresentation().setText("Copy Content to " + baseSide.select("Right", "Left"));
       getTemplatePresentation().setIcon(baseSide.select(AllIcons.Vcs.Arrow_right, AllIcons.Vcs.Arrow_left));
@@ -228,7 +231,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
 
     @Nullable
-    private VirtualFile getContentFile(@NotNull Side side) {
+    private VirtualFile getContentFile(@Nonnull Side side) {
       DiffContent content = side.select(myRequest.getContents());
       VirtualFile file = content instanceof FileContent ? ((FileContent)content).getFile() : null;
       return file != null && file.isValid() ? file : null;
@@ -237,7 +240,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
 
   private class MyFocusOppositePaneAction extends FocusOppositePaneAction {
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       setCurrentSide(getCurrentSide().other());
       DiffUtil.requestFocus(getProject(), getPreferredFocusedComponent());
     }

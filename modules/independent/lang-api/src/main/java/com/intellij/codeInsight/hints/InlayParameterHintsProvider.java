@@ -19,8 +19,8 @@ package com.intellij.codeInsight.hints;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -34,20 +34,20 @@ public interface InlayParameterHintsProvider {
   /**
    * Hints for params to be shown
    */
-  @NotNull
-  List<InlayInfo> getParameterHints(@NotNull PsiElement element);
+  @Nonnull
+  List<InlayInfo> getParameterHints(@Nonnull PsiElement element);
 
   /**
    * Provides fully qualified method name (e.g. "java.util.Map.put") and list of it's parameter names.
    * Used to obtain method information when adding it to blacklist
    */
   @Nullable
-  MethodInfo getMethodInfo(@NotNull PsiElement element);
+  MethodInfo getMethodInfo(@Nonnull PsiElement element);
 
   /**
    * Default list of patterns for which hints should not be shown
    */
-  @NotNull
+  @Nonnull
   Set<String> getDefaultBlackList();
 
   /**

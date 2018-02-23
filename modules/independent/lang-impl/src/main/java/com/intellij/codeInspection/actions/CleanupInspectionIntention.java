@@ -37,8 +37,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.SequentialModalProgressTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,26 +55,26 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   private final Class myQuickfixClass;
   private final String myText;
 
-  public CleanupInspectionIntention(@NotNull InspectionToolWrapper toolWrapper, @NotNull Class quickFixClass, String text) {
+  public CleanupInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Class quickFixClass, String text) {
     myToolWrapper = toolWrapper;
     myQuickfixClass = quickFixClass;
     myText = text;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("fix.all.inspection.problems.in.file", myToolWrapper.getDisplayName());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return getText();
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
 
     final List<ProblemDescriptor> descriptions =
             ProgressManager.getInstance().runProcess(() -> {
@@ -91,17 +91,17 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     }
   }
 
-  public static AbstractPerformFixesTask applyFixes(@NotNull Project project,
-                                                    @NotNull String presentationText,
-                                                    @NotNull List<ProblemDescriptor> descriptions,
+  public static AbstractPerformFixesTask applyFixes(@Nonnull Project project,
+                                                    @Nonnull String presentationText,
+                                                    @Nonnull List<ProblemDescriptor> descriptions,
                                                     @Nullable Class quickfixClass) {
     sortDescriptions(descriptions);
     return applyFixesNoSort(project, presentationText, descriptions, quickfixClass);
   }
 
-  public static AbstractPerformFixesTask applyFixesNoSort(@NotNull Project project,
-                                                          @NotNull String presentationText,
-                                                          @NotNull List<ProblemDescriptor> descriptions,
+  public static AbstractPerformFixesTask applyFixesNoSort(@Nonnull Project project,
+                                                          @Nonnull String presentationText,
+                                                          @Nonnull List<ProblemDescriptor> descriptions,
                                                           @Nullable Class quickfixClass) {
     final SequentialModalProgressTask progressTask =
             new SequentialModalProgressTask(project, presentationText, true);
@@ -118,7 +118,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     return fixesTask;
   }
 
-  public static void sortDescriptions(@NotNull List<ProblemDescriptor> descriptions) {
+  public static void sortDescriptions(@Nonnull List<ProblemDescriptor> descriptions) {
     Collections.sort(descriptions, (o1, o2) -> {
       final ProblemDescriptorBase d1 = (ProblemDescriptorBase)o1;
       final ProblemDescriptorBase d2 = (ProblemDescriptorBase)o2;
@@ -131,7 +131,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   }
 
   @Override
-  public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file) {
+  public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
     return myQuickfixClass != EmptyIntentionAction.class &&
            editor != null &&
            !(myToolWrapper instanceof LocalInspectionToolWrapper && ((LocalInspectionToolWrapper)myToolWrapper).isUnfair());
@@ -146,9 +146,9 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     private boolean myApplicableFixFound = false;
     protected final Class myQuickfixClass;
 
-    public AbstractPerformFixesTask(@NotNull Project project,
-                                    @NotNull CommonProblemDescriptor[] descriptors,
-                                    @NotNull SequentialModalProgressTask task,
+    public AbstractPerformFixesTask(@Nonnull Project project,
+                                    @Nonnull CommonProblemDescriptor[] descriptors,
+                                    @Nonnull SequentialModalProgressTask task,
                                     @Nullable Class quickfixClass) {
       super(project, descriptors, task);
       myQuickfixClass = quickfixClass;
@@ -183,10 +183,10 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     private final List<ProblemDescriptor> myBatchModeDescriptors = new ArrayList<>();
     private boolean myApplied = false;
 
-    public PerformBatchFixesTask(@NotNull Project project,
-                                 @NotNull CommonProblemDescriptor[] descriptors,
-                                 @NotNull SequentialModalProgressTask task,
-                                 @NotNull Class quickfixClass) {
+    public PerformBatchFixesTask(@Nonnull Project project,
+                                 @Nonnull CommonProblemDescriptor[] descriptors,
+                                 @Nonnull SequentialModalProgressTask task,
+                                 @Nonnull Class quickfixClass) {
       super(project, descriptors, task, quickfixClass);
     }
 
@@ -221,9 +221,9 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   }
 
   private static class PerformFixesTask extends AbstractPerformFixesTask {
-    public PerformFixesTask(@NotNull Project project,
-                            @NotNull CommonProblemDescriptor[] descriptors,
-                            @NotNull SequentialModalProgressTask task,
+    public PerformFixesTask(@Nonnull Project project,
+                            @Nonnull CommonProblemDescriptor[] descriptors,
+                            @Nonnull SequentialModalProgressTask task,
                             @Nullable Class quickFixClass) {
       super(project, descriptors, task, quickFixClass);
     }

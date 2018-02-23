@@ -20,8 +20,8 @@ import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.Disposer;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Map;
@@ -35,9 +35,10 @@ public class Extensions {
   private static Map<AreaInstance,ExtensionsAreaImpl> ourAreaInstance2area = new THashMap<AreaInstance, ExtensionsAreaImpl>();
   private static Map<String,AreaClassConfiguration> ourAreaClass2Configuration = new THashMap<String, AreaClassConfiguration>();
 
-  @NotNull private static ExtensionsAreaImpl ourRootArea = createRootArea();
+  @Nonnull
+  private static ExtensionsAreaImpl ourRootArea = createRootArea();
 
-  @NotNull
+  @Nonnull
   private static ExtensionsAreaImpl createRootArea() {
     ExtensionsAreaImpl rootArea = new ExtensionsAreaImpl(null, null, null, ourLogger);
     rootArea.registerExtensionPoint(AREA_LISTENER_EXTENSION_POINT.getName(), AreaListener.class.getName());
@@ -55,12 +56,12 @@ public class Extensions {
     ourAreaClass2Configuration = new ConcurrentHashMap<String, AreaClassConfiguration>();
   }
 
-  @NotNull
+  @Nonnull
   public static ExtensionsArea getRootArea() {
     return ourRootArea;
   }
 
-  @NotNull
+  @Nonnull
   public static ExtensionsArea getArea(@Nullable AreaInstance areaInstance) {
     if (areaInstance == null) {
       return ourRootArea;
@@ -73,7 +74,7 @@ public class Extensions {
   }
 
   @TestOnly
-  public static void cleanRootArea(@NotNull Disposable parentDisposable) {
+  public static void cleanRootArea(@Nonnull Disposable parentDisposable) {
     final ExtensionsAreaImpl oldRootArea = (ExtensionsAreaImpl)getRootArea();
     final ExtensionsAreaImpl newArea = createRootArea();
     ourRootArea = newArea;
@@ -87,32 +88,32 @@ public class Extensions {
     });
   }
 
-  @NotNull
+  @Nonnull
   public static Object[] getExtensions(@NonNls String extensionPointName) {
     return getExtensions(extensionPointName, null);
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings({"unchecked"})
-  public static <T> T[] getExtensions(@NotNull ExtensionPointName<T> extensionPointName) {
+  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
     return (T[])getExtensions(extensionPointName.getName(), null);
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings({"unchecked"})
-  public static <T> T[] getExtensions(@NotNull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance) {
+  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance) {
     return Extensions.<T>getExtensions(extensionPointName.getName(), areaInstance);
   }
 
-  @NotNull
+  @Nonnull
   public static <T> T[] getExtensions(String extensionPointName, @Nullable AreaInstance areaInstance) {
     ExtensionsArea area = getArea(areaInstance);
     ExtensionPoint<T> extensionPoint = area.getExtensionPoint(extensionPointName);
     return extensionPoint.getExtensions();
   }
 
-  @NotNull
-  public static <T, U extends T> U findExtension(@NotNull ExtensionPointName<T> extensionPointName, @NotNull Class<U> extClass) {
+  @Nonnull
+  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<U> extClass) {
     for (T t : getExtensions(extensionPointName)) {
       if (extClass.isInstance(t)) {
         //noinspection unchecked
@@ -122,8 +123,8 @@ public class Extensions {
     throw new IllegalArgumentException("could not find extension implementation " + extClass);
   }
 
-  @NotNull
-  public static <T, U extends T> U findExtension(@NotNull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance, @NotNull Class<U> extClass) {
+  @Nonnull
+  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, AreaInstance areaInstance, @Nonnull Class<U> extClass) {
     for (T t : getExtensions(extensionPointName, areaInstance)) {
       if (extClass.isInstance(t)) {
         //noinspection unchecked
@@ -133,7 +134,7 @@ public class Extensions {
     throw new IllegalArgumentException("could not find extension implementation " + extClass);
   }
 
-  public static void instantiateArea(@NonNls @NotNull String areaClass, @NotNull AreaInstance areaInstance, @Nullable AreaInstance parentAreaInstance) {
+  public static void instantiateArea(@NonNls @Nonnull String areaClass, @Nonnull AreaInstance areaInstance, @Nullable AreaInstance parentAreaInstance) {
     AreaClassConfiguration configuration = ourAreaClass2Configuration.get(areaClass);
     if (configuration == null) {
       throw new IllegalArgumentException("Area class is not registered: " + areaClass);
@@ -151,12 +152,12 @@ public class Extensions {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static AreaListener[] getAreaListeners() {
     return getRootArea().getExtensionPoint(AREA_LISTENER_EXTENSION_POINT).getExtensions();
   }
 
-  public static void registerAreaClass(@NonNls @NotNull String areaClass, @Nullable @NonNls String parentAreaClass) {
+  public static void registerAreaClass(@NonNls @Nonnull String areaClass, @javax.annotation.Nullable @NonNls String parentAreaClass) {
     if (ourAreaClass2Configuration.containsKey(areaClass)) {
       // allow duplicate area class registrations if they are the same - fixing duplicate registration in tests is much more trouble
       AreaClassConfiguration configuration = ourAreaClass2Configuration.get(areaClass);
@@ -171,7 +172,7 @@ public class Extensions {
     ourAreaClass2Configuration.put(areaClass, configuration);
   }
 
-  public static void disposeArea(@NotNull AreaInstance areaInstance) {
+  public static void disposeArea(@Nonnull AreaInstance areaInstance) {
     assert ourAreaInstance2area.containsKey(areaInstance);
 
     String areaClass = ourAreaInstance2area.get(areaInstance).getAreaClass();
@@ -188,11 +189,11 @@ public class Extensions {
     }
   }
 
-  private static boolean equals(@Nullable Object object1, @Nullable Object object2) {
+  private static boolean equals(@javax.annotation.Nullable Object object1, @javax.annotation.Nullable Object object2) {
     return object1 == object2 || object1 != null && object2 != null && object1.equals(object2);
   }
 
-  public static void setLogProvider(@NotNull LogProvider logProvider) {
+  public static void setLogProvider(@Nonnull LogProvider logProvider) {
     ourLogger = logProvider;
   }
 
@@ -200,12 +201,12 @@ public class Extensions {
     private final String myClassName;
     private final String myParentClassName;
 
-    AreaClassConfiguration(@NotNull String className, String parentClassName) {
+    AreaClassConfiguration(@Nonnull String className, String parentClassName) {
       myClassName = className;
       myParentClassName = parentClassName;
     }
 
-    @NotNull
+    @Nonnull
     public String getClassName() {
       return myClassName;
     }
@@ -223,13 +224,13 @@ public class Extensions {
     }
 
     @Override
-    public void error(String message, @NotNull Throwable t) {
+    public void error(String message, @Nonnull Throwable t) {
       System.err.println(message);
       t.printStackTrace();
     }
 
     @Override
-    public void error(@NotNull Throwable t) {
+    public void error(@Nonnull Throwable t) {
       t.printStackTrace();
     }
 
@@ -239,13 +240,13 @@ public class Extensions {
     }
 
     @Override
-    public void warn(String message, @NotNull Throwable t) {
+    public void warn(String message, @Nonnull Throwable t) {
       System.err.println(message);
       t.printStackTrace();
     }
 
     @Override
-    public void warn(@NotNull Throwable t) {
+    public void warn(@Nonnull Throwable t) {
       t.printStackTrace();
     }
   }

@@ -17,14 +17,15 @@ package com.intellij.ide.script;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.ide.script.IdeScriptEngine;
 
 public class IdeScriptBindings {
   public static final Binding<IDE> IDE = Binding.create("IDE", IDE.class);
 
-  public static void ensureIdeIsBound(@Nullable Project project, @NotNull IdeScriptEngine engine) {
+  public static void ensureIdeIsBound(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
     IDE oldIdeBinding = IDE.get(engine);
     if (oldIdeBinding == null) {
       IDE.set(engine, new IDE(project, engine));
@@ -38,20 +39,20 @@ public class IdeScriptBindings {
     private final String myName;
     private final Class<T> myClass;
 
-    private Binding(@NotNull String name, @NotNull Class<T> clazz) {
+    private Binding(@Nonnull String name, @Nonnull Class<T> clazz) {
       myName = name;
       myClass = clazz;
     }
 
-    public void set(@NotNull IdeScriptEngine engine, T value) {
+    public void set(@Nonnull IdeScriptEngine engine, T value) {
       engine.setBinding(myName, value);
     }
 
-    public T get(@NotNull IdeScriptEngine engine) {
+    public T get(@Nonnull IdeScriptEngine engine) {
       return ObjectUtils.tryCast(engine.getBinding(myName), myClass);
     }
 
-    static <T> Binding<T> create(@NotNull String name, @NotNull Class<T> clazz) {
+    static <T> Binding<T> create(@Nonnull String name, @Nonnull Class<T> clazz) {
       return new Binding<>(name, clazz);
     }
   }

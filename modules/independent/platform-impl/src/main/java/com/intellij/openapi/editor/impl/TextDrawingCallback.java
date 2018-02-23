@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -46,5 +46,5 @@ public interface TextDrawingCallback {
    * @param fontInfo  font info to use during drawing target text at the given graphics buffer
    * @param color     color to use during drawing target text at the given graphics buffer
    */
-  void drawChars(@NotNull Graphics g, @NotNull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo);
+  void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo);
 }

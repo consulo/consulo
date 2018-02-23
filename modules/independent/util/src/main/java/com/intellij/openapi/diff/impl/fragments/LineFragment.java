@@ -21,8 +21,8 @@ import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -149,8 +149,8 @@ public class LineFragment extends LineBlock implements Fragment {
     return myChildren == null || myChildren.isEmpty() ? null : myChildren.iterator();
   }
 
-  @NotNull
-  public DiffString getText(@NotNull DiffString text, @NotNull FragmentSide side) {
+  @Nonnull
+  public DiffString getText(@Nonnull DiffString text, @Nonnull FragmentSide side) {
     TextRange range = getRange(side);
     return text.substring(range.getStartOffset(), range.getEndOffset());
   }

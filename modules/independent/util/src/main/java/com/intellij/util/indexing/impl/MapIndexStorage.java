@@ -21,8 +21,8 @@ import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.io.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -43,17 +43,17 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   private final DataExternalizer<Value> myDataExternalizer;
   private final boolean myKeyIsUniqueForIndexedFile;
 
-  public MapIndexStorage(@NotNull File storageFile,
-                         @NotNull KeyDescriptor<Key> keyDescriptor,
-                         @NotNull DataExternalizer<Value> valueExternalizer,
+  public MapIndexStorage(@Nonnull File storageFile,
+                         @Nonnull KeyDescriptor<Key> keyDescriptor,
+                         @Nonnull DataExternalizer<Value> valueExternalizer,
                          final int cacheSize,
                          boolean keyIsUniqueForIndexedFile) throws IOException {
     this(storageFile, keyDescriptor, valueExternalizer, cacheSize, keyIsUniqueForIndexedFile, true);
   }
 
-  protected MapIndexStorage(@NotNull File storageFile,
-                            @NotNull KeyDescriptor<Key> keyDescriptor,
-                            @NotNull DataExternalizer<Value> valueExternalizer,
+  protected MapIndexStorage(@Nonnull File storageFile,
+                            @Nonnull KeyDescriptor<Key> keyDescriptor,
+                            @Nonnull DataExternalizer<Value> valueExternalizer,
                             final int cacheSize,
                             boolean keyIsUniqueForIndexedFile,
                             boolean initialize) throws IOException {
@@ -83,10 +83,10 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
     }
     myCache = new SLRUCache<Key, ChangeTrackingValueContainer<Value>>(myCacheSize, (int)(Math.ceil(myCacheSize * 0.25)) /* 25% from the main cache size*/) {
       @Override
-      @NotNull
+      @Nonnull
       public ChangeTrackingValueContainer<Value> createValue(final Key key) {
         return new ChangeTrackingValueContainer<Value>(new ChangeTrackingValueContainer.Initializer<Value>() {
-          @NotNull
+          @Nonnull
           @Override
           public Object getLock() {
             return map.getDataAccessLock();
@@ -111,7 +111,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       }
 
       @Override
-      protected void onDropFromCache(final Key key, @NotNull final ChangeTrackingValueContainer<Value> valueContainer) {
+      protected void onDropFromCache(final Key key, @Nonnull final ChangeTrackingValueContainer<Value> valueContainer) {
         if (valueContainer.isDirty()) {
           try {
             map.put(key, valueContainer);
@@ -128,7 +128,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   protected abstract void checkCanceled();
 
-  @NotNull
+  @Nonnull
   private File getStorageFile() {
     return new File(myBaseStorageFile.getPath() + ".storage");
   }
@@ -185,7 +185,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ChangeTrackingValueContainer<Value> read(final Key key) throws StorageException {
     l.lock();
     try {
@@ -232,7 +232,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @Override
-  public void removeAllValues(@NotNull Key key, int inputId) throws StorageException {
+  public void removeAllValues(@Nonnull Key key, int inputId) throws StorageException {
     try {
       myMap.markDirty();
       // important: assuming the key exists in the index
@@ -268,7 +268,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @TestOnly
-  public boolean processKeys(@NotNull Processor<Key> processor) throws StorageException {
+  public boolean processKeys(@Nonnull Processor<Key> processor) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map

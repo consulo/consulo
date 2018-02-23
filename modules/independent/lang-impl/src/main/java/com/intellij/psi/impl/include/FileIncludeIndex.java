@@ -29,7 +29,7 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.KeyDescriptor;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -71,19 +71,19 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<Key, List<FileIncludeInfoImpl>> getName() {
     return INDEX_ID;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<Key, List<FileIncludeInfoImpl>, FileContent> getIndexer() {
     return new DataIndexer<Key, List<FileIncludeInfoImpl>, FileContent>() {
       @Override
-      @NotNull
-      public Map<Key, List<FileIncludeInfoImpl>> map(@NotNull FileContent inputData) {
+      @Nonnull
+      public Map<Key, List<FileIncludeInfoImpl>> map(@Nonnull FileContent inputData) {
 
         Map<Key, List<FileIncludeInfoImpl>> map = new FactoryMap<Key, List<FileIncludeInfoImpl>>() {
           @Override
@@ -109,7 +109,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<Key> getKeyDescriptor() {
     return new KeyDescriptor<Key>() {
@@ -124,25 +124,25 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
       }
 
       @Override
-      public void save(@NotNull DataOutput out, Key value) throws IOException {
+      public void save(@Nonnull DataOutput out, Key value) throws IOException {
         out.writeBoolean(value.isInclude());
         value.writeValue(out);
       }
 
       @Override
-      public Key read(@NotNull DataInput in) throws IOException {
+      public Key read(@Nonnull DataInput in) throws IOException {
         boolean isInclude = in.readBoolean();
         return isInclude ? new IncludeKey(IOUtil.readUTF(in)) : new FileKey(in.readInt());
       }
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<List<FileIncludeInfoImpl>> getValueExternalizer() {
     return new DataExternalizer<List<FileIncludeInfoImpl>>() {
       @Override
-      public void save(@NotNull DataOutput out, List<FileIncludeInfoImpl> value) throws IOException {
+      public void save(@Nonnull DataOutput out, List<FileIncludeInfoImpl> value) throws IOException {
         out.writeInt(value.size());
         for (FileIncludeInfoImpl info : value) {
           IOUtil.writeUTF(out, info.path);
@@ -153,7 +153,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
       }
 
       @Override
-      public List<FileIncludeInfoImpl> read(@NotNull DataInput in) throws IOException {
+      public List<FileIncludeInfoImpl> read(@Nonnull DataInput in) throws IOException {
         int size = in.readInt();
         ArrayList<FileIncludeInfoImpl> infos = new ArrayList<FileIncludeInfoImpl>(size);
         for (int i = 0; i < size; i++) {
@@ -164,12 +164,12 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return new FileBasedIndex.FileTypeSpecificInputFilter() {
       @Override
-      public boolean acceptInput(Project project, @NotNull VirtualFile file) {
+      public boolean acceptInput(Project project, @Nonnull VirtualFile file) {
         if (file.getFileSystem() instanceof ArchiveFileSystem) {
           return false;
         }
@@ -182,7 +182,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<FileIncludeIndex.K
       }
 
       @Override
-      public void registerFileTypesUsedForIndexing(@NotNull Consumer<FileType> fileTypeSink) {
+      public void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink) {
         for (FileIncludeProvider provider : myProviders) {
           provider.registerFileTypesUsedForIndexing(fileTypeSink);
         }

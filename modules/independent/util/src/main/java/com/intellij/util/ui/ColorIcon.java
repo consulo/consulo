@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.Gray;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -28,18 +28,18 @@ public class ColorIcon extends EmptyIcon {
   private boolean myBorder;
   private int myColorSize;
 
-  public ColorIcon(int size, int colorSize, @NotNull Color color, final boolean border) {
+  public ColorIcon(int size, int colorSize, @Nonnull Color color, final boolean border) {
     super(size, size);
     myColor = color;
     myColorSize = colorSize;
     myBorder = border;
   }
 
-  public ColorIcon(int size, @NotNull Color color, final boolean border) {
+  public ColorIcon(int size, @Nonnull Color color, final boolean border) {
     this(size, size, color, border);
   }
 
-  public ColorIcon(int size, @NotNull Color color) {
+  public ColorIcon(int size, @Nonnull Color color) {
     this(size, color, false);
   }
 

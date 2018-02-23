@@ -22,25 +22,28 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows to compare files
  */
 public class FileContentImpl extends DiffContentBase implements FileContent {
-  @NotNull private final VirtualFile myFile;
-  @Nullable private final Project myProject;
-  @NotNull private final FileType myType;
+  @Nonnull
+  private final VirtualFile myFile;
+  @javax.annotation.Nullable
+  private final Project myProject;
+  @Nonnull
+  private final FileType myType;
   @Nullable private final VirtualFile myHighlightFile;
 
-  public FileContentImpl(@Nullable Project project, @NotNull VirtualFile file) {
+  public FileContentImpl(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file) {
     this(project, file, getHighlightFile(file));
   }
 
-  public FileContentImpl(@Nullable Project project,
-                         @NotNull VirtualFile file,
-                         @Nullable VirtualFile highlightFile) {
+  public FileContentImpl(@javax.annotation.Nullable Project project,
+                         @Nonnull VirtualFile file,
+                         @javax.annotation.Nullable VirtualFile highlightFile) {
     assert file.isValid() && !file.isDirectory();
     myFile = file;
     myProject = project;
@@ -56,25 +59,25 @@ public class FileContentImpl extends DiffContentBase implements FileContent {
     return new OpenFileDescriptor(myProject, myHighlightFile);
   }
 
-  @Nullable
-  private static VirtualFile getHighlightFile(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private static VirtualFile getHighlightFile(@Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem()) return file;
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getContentType() {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   public String getFilePath() {
     return myFile.getPath();
   }

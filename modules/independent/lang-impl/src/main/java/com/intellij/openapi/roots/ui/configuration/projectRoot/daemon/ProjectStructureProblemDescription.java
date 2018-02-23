@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,20 +34,20 @@ public class ProjectStructureProblemDescription {
   private final ProblemLevel myProblemLevel;
   private final boolean myCanShowPlace;
 
-  public ProjectStructureProblemDescription(@NotNull String message,
+  public ProjectStructureProblemDescription(@Nonnull String message,
                                             @Nullable String description,
-                                            @NotNull PlaceInProjectStructure place,
-                                            @NotNull ProjectStructureProblemType problemType,
-                                            @NotNull List<? extends ConfigurationErrorQuickFix> fixes) {
+                                            @Nonnull PlaceInProjectStructure place,
+                                            @Nonnull ProjectStructureProblemType problemType,
+                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes) {
     this(message, description, place, problemType, ProblemLevel.PROJECT, fixes, true);
   }
 
-  public ProjectStructureProblemDescription(@NotNull String message,
+  public ProjectStructureProblemDescription(@Nonnull String message,
                                             @Nullable String description,
-                                            @NotNull PlaceInProjectStructure place,
-                                            @NotNull ProjectStructureProblemType problemType,
-                                            @NotNull ProblemLevel level,
-                                            @NotNull List<? extends ConfigurationErrorQuickFix> fixes, final boolean canShowPlace) {
+                                            @Nonnull PlaceInProjectStructure place,
+                                            @Nonnull ProjectStructureProblemType problemType,
+                                            @Nonnull ProblemLevel level,
+                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes, final boolean canShowPlace) {
     myMessage = message;
     myDescription = description;
     myPlace = place;

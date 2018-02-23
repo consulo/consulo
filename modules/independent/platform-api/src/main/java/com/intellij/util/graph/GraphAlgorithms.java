@@ -18,8 +18,8 @@ package com.intellij.util.graph;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,26 +34,26 @@ public abstract class GraphAlgorithms {
   }
 
   @Nullable
-  public abstract <Node> List<Node> findShortestPath(@NotNull Graph<Node> graph, @NotNull Node start, @NotNull Node finish);
+  public abstract <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish);
 
-  @NotNull
-  public abstract <Node> List<List<Node>> findKShortestPaths(@NotNull Graph<Node> graph, @NotNull Node start, @NotNull Node finish, int k,
-                                                             @NotNull ProgressIndicator progressIndicator);
+  @Nonnull
+  public abstract <Node> List<List<Node>> findKShortestPaths(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, int k,
+                                                             @Nonnull ProgressIndicator progressIndicator);
 
-  @NotNull
-  public abstract <Node> Set<List<Node>> findCycles(@NotNull Graph<Node> graph, @NotNull Node node);
+  @Nonnull
+  public abstract <Node> Set<List<Node>> findCycles(@Nonnull Graph<Node> graph, @Nonnull Node node);
 
-  @NotNull
-  public abstract <Node> List<List<Node>> removePathsWithCycles(@NotNull List<List<Node>> paths);
+  @Nonnull
+  public abstract <Node> List<List<Node>> removePathsWithCycles(@Nonnull List<List<Node>> paths);
 
-  @NotNull
-  public abstract <Node> Graph<Node> invertEdgeDirections(@NotNull Graph<Node> graph);
+  @Nonnull
+  public abstract <Node> Graph<Node> invertEdgeDirections(@Nonnull Graph<Node> graph);
 
-  @NotNull
-  public abstract <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(@NotNull Graph<Node> graph);
+  @Nonnull
+  public abstract <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(@Nonnull Graph<Node> graph);
 
-  @NotNull
-  public abstract <Node> Graph<Chunk<Node>> computeSCCGraph(@NotNull Graph<Node> graph);
+  @Nonnull
+  public abstract <Node> Graph<Chunk<Node>> computeSCCGraph(@Nonnull Graph<Node> graph);
 
   /**
    * Adds start node and all its outs to given set recursively.
@@ -62,5 +62,5 @@ public abstract class GraphAlgorithms {
    * @param start node to start from
    * @param set set to be populated
    */
-  public abstract <Node> void collectOutsRecursively(@NotNull Graph<Node> graph, Node start, Set<Node> set);
+  public abstract <Node> void collectOutsRecursively(@Nonnull Graph<Node> graph, Node start, Set<Node> set);
 }

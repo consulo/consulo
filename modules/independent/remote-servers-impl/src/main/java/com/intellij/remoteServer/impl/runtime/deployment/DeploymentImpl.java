@@ -4,8 +4,8 @@ import com.intellij.remoteServer.runtime.Deployment;
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -15,25 +15,25 @@ public class DeploymentImpl implements Deployment {
   private final DeploymentTask<?> myDeploymentTask;
   private volatile DeploymentState myState;
 
-  public DeploymentImpl(@NotNull String name, @NotNull DeploymentStatus status, @Nullable String statusText,
-                        @Nullable DeploymentRuntime runtime, @Nullable DeploymentTask<?> deploymentTask) {
+  public DeploymentImpl(@Nonnull String name, @Nonnull DeploymentStatus status, @javax.annotation.Nullable String statusText,
+                        @javax.annotation.Nullable DeploymentRuntime runtime, @javax.annotation.Nullable DeploymentTask<?> deploymentTask) {
     myName = name;
     myDeploymentTask = deploymentTask;
     myState = new DeploymentState(status, statusText, runtime);
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DeploymentStatus getStatus() {
     return myState.getStatus();
   }
 
-  @NotNull
+  @Nonnull
   public String getStatusText() {
     String statusText = myState.getStatusText();
     return statusText != null ? statusText : getStatus().getPresentableText();
@@ -43,13 +43,13 @@ public class DeploymentImpl implements Deployment {
     return myState.getRuntime();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public DeploymentTask<?> getDeploymentTask() {
     return myDeploymentTask;
   }
 
-  public boolean changeState(@NotNull DeploymentStatus oldStatus, @NotNull DeploymentStatus newStatus, @Nullable String statusText,
+  public boolean changeState(@Nonnull DeploymentStatus oldStatus, @Nonnull DeploymentStatus newStatus, @Nullable String statusText,
                              @Nullable DeploymentRuntime runtime) {
     if (myState.getStatus() == oldStatus) {
       myState = new DeploymentState(newStatus, statusText, runtime);
@@ -63,13 +63,13 @@ public class DeploymentImpl implements Deployment {
     private final String myStatusText;
     private final DeploymentRuntime myRuntime;
 
-    private DeploymentState(@NotNull DeploymentStatus status, @Nullable String statusText, @Nullable DeploymentRuntime runtime) {
+    private DeploymentState(@Nonnull DeploymentStatus status, @javax.annotation.Nullable String statusText, @Nullable DeploymentRuntime runtime) {
       myStatus = status;
       myStatusText = statusText;
       myRuntime = runtime;
     }
 
-    @NotNull
+    @Nonnull
     public DeploymentStatus getStatus() {
       return myStatus;
     }
@@ -79,7 +79,7 @@ public class DeploymentImpl implements Deployment {
       return myStatusText;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public DeploymentRuntime getRuntime() {
       return myRuntime;
     }

@@ -15,11 +15,11 @@
  */
 package com.intellij.vcs.log.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface FatalErrorHandler {
-  void consume(@Nullable Object source, @NotNull Exception exception);
+  void consume(@Nullable Object source, @Nonnull Exception exception);
 
-  void displayFatalErrorMessage(@NotNull String message);
+  void displayFatalErrorMessage(@Nonnull String message);
 }

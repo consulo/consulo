@@ -22,8 +22,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -36,7 +35,7 @@ public abstract class PathReferenceManager {
   public static final ExtensionPointName<PathReferenceProvider> PATH_REFERENCE_PROVIDER_EP = ExtensionPointName.create("com.intellij.pathReferenceProvider");
   public static final ExtensionPointName<PathReferenceProvider> ANCHOR_REFERENCE_PROVIDER_EP = ExtensionPointName.create("com.intellij.anchorReferenceProvider");
 
-  @NotNull
+  @Nonnull
   public static PathReferenceManager getInstance(){
     return ServiceManager.getService(PathReferenceManager.class);
   }
@@ -51,8 +50,8 @@ public abstract class PathReferenceManager {
    * @param additionalProviders additional providers to process.
    * @return created references or an empty array.
    */
-  @NotNull
-  public abstract PsiReference[] createReferences(@NotNull PsiElement psiElement,
+  @Nonnull
+  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement,
                                                   boolean soft,
                                                   PathReferenceProvider... additionalProviders);
 
@@ -66,38 +65,38 @@ public abstract class PathReferenceManager {
    *        Otherwise, web application root will be used.
    *@param additionalProviders additional providers to process.  @return created references or an empty array.
    */
-  @NotNull
-  public abstract PsiReference[] createReferences(@NotNull PsiElement psiElement,
+  @Nonnull
+  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement,
                                                   boolean soft,
                                                   boolean endingSlashNotAllowed,
                                                   boolean relativePathsAllowed, PathReferenceProvider... additionalProviders);
 
-  public abstract PsiReference[] createReferences(@NotNull PsiElement psiElement,
+  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement,
                                                   boolean soft,
                                                   boolean endingSlashNotAllowed,
                                                   boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders);
 
-  @NotNull
-  public abstract PsiReference[] createCustomReferences(@NotNull PsiElement psiElement, 
+  @Nonnull
+  public abstract PsiReference[] createCustomReferences(@Nonnull PsiElement psiElement,
                                                         boolean soft,
                                                         PathReferenceProvider... providers);
 
 
-  @Nullable
-  public abstract PathReference getPathReference(@NotNull String path,
-                                                 @NotNull PsiElement element,
+  @javax.annotation.Nullable
+  public abstract PathReference getPathReference(@Nonnull String path,
+                                                 @Nonnull PsiElement element,
                                                  PathReferenceProvider... additionalProviders);
 
-  @Nullable
-  public abstract PathReference getCustomPathReference(@NotNull String path, @NotNull Module module, @NotNull PsiElement element, PathReferenceProvider... providers);
+  @javax.annotation.Nullable
+  public abstract PathReference getCustomPathReference(@Nonnull String path, @Nonnull Module module, @Nonnull PsiElement element, PathReferenceProvider... providers);
 
-  @NotNull
+  @Nonnull
   public abstract PathReferenceProvider getGlobalWebPathReferenceProvider();
 
-  @NotNull
+  @Nonnull
   public abstract PathReferenceProvider createStaticPathReferenceProvider(final boolean relativePathsAllowed);
 
-  public static PsiReference[] getReferencesFromProvider(@NotNull PathReferenceProvider provider, @NotNull PsiElement psiElement, boolean soft) {
+  public static PsiReference[] getReferencesFromProvider(@Nonnull PathReferenceProvider provider, @Nonnull PsiElement psiElement, boolean soft) {
     final ArrayList<PsiReference> references = new ArrayList<PsiReference>();
     provider.createReferences(psiElement, references, soft);
     return references.toArray(new PsiReference[references.size()]);    

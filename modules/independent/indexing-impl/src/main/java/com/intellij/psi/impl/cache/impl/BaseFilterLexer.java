@@ -23,8 +23,8 @@ import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.UsageSearchContext;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -149,7 +149,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
   }
 
   @Override
-  public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+  public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
     super.start(buffer, startOffset, endOffset, initialState);
     myCachedBufferSequence = getBufferSequence();
     myCachedArraySequence = CharArrayUtil.fromSequenceWithoutCopying(myCachedBufferSequence);

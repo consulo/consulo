@@ -30,7 +30,7 @@ import com.intellij.xdebugger.impl.actions.XDebuggerSuspendedActionHandler;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -41,12 +41,12 @@ import java.util.List;
 public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandler {
 
   @Override
-  protected boolean isEnabled(@NotNull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && session.getDebugProcess().getSmartStepIntoHandler() != null;
   }
 
   @Override
-  protected void perform(@NotNull XDebugSession session, DataContext dataContext) {
+  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
     XSmartStepIntoHandler<?> handler = session.getDebugProcess().getSmartStepIntoHandler();
     XSourcePosition position = session.getTopFramePosition();
     if (position == null || handler == null) return;
@@ -77,7 +77,7 @@ public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandl
         return aValue.getIcon();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getTextFor(V value) {
         return value.getText();

@@ -18,8 +18,8 @@ package com.intellij.ide;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Manager of listeners for notifications about activation and deactivation of the
@@ -43,15 +43,15 @@ public abstract class FrameStateManager {
    *
    * @param listener the listener instance.
    */
-  public abstract void addListener(@NotNull FrameStateListener listener);
-  public abstract void addListener(@NotNull FrameStateListener listener, @Nullable Disposable disposable);
+  public abstract void addListener(@Nonnull FrameStateListener listener);
+  public abstract void addListener(@Nonnull FrameStateListener listener, @Nullable Disposable disposable);
 
   /**
    * Removes a listener which is called when the IDEA window is activated or deactivated.
    *
    * @param listener the listener instance.
    */
-  public abstract void removeListener(@NotNull FrameStateListener listener);
+  public abstract void removeListener(@Nonnull FrameStateListener listener);
 
 
   /**

@@ -20,13 +20,13 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.ui.popup.Balloon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface BalloonLayout {
-  void add(@NotNull Balloon balloon);
+  void add(@Nonnull Balloon balloon);
 
-  void add(@NotNull Balloon balloon, @Nullable Object layoutData);
+  void add(@Nonnull Balloon balloon, @Nullable Object layoutData);
 
   default boolean isForWelcomeFrame() {
     return false;

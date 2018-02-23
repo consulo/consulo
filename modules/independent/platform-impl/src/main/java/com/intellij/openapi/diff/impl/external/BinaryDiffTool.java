@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +64,7 @@ public class BinaryDiffTool implements DiffTool {
               return "BinaryDiffDialog";
             }
 
-            @NotNull
+            @Nonnull
             @Override
             protected Action[] createActions() {
               final Action close = getCancelAction();
@@ -160,13 +160,13 @@ public class BinaryDiffTool implements DiffTool {
   }
 
   @Override
-  public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+  public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
     final PanelCreator creator = new PanelCreator(request);
     if (! creator.isCanCreatePanel()) return null;
     return creator.create(window, parentDisposable, BinaryDiffTool.this);
   }
 
-  public static boolean canShow(@NotNull Project project, VirtualFile file) {
+  public static boolean canShow(@Nonnull Project project, VirtualFile file) {
     if (file == null) return false;
     if (FileEditorProviderManager.getInstance().getProviders(project, file).length > 0) return true;
     

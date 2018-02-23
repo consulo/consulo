@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.rmi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.util.containers.ContainerUtilRt;
 
 import java.lang.ref.WeakReference;
@@ -42,8 +42,8 @@ public class RemoteObject implements Remote, Unreferenced {
     return myWeakRef;
   }
 
-  @Nullable
-  public synchronized <T extends Remote> T export(@Nullable T child) throws RemoteException {
+  @javax.annotation.Nullable
+  public synchronized <T extends Remote> T export(@javax.annotation.Nullable T child) throws RemoteException {
     if (child == null) return null;
     @SuppressWarnings("unchecked") final T result = (T)UnicastRemoteObject.exportObject(child, 0);
     myChildren.put((RemoteObject)child, result);
@@ -64,7 +64,7 @@ public class RemoteObject implements Remote, Unreferenced {
     }
   }
 
-  public synchronized void unexportChildren(@NotNull Collection<WeakReference<RemoteObject>> children) throws RemoteException {
+  public synchronized void unexportChildren(@Nonnull Collection<WeakReference<RemoteObject>> children) throws RemoteException {
     if (children.isEmpty()) return;
     final ArrayList<RemoteObject> list = new ArrayList<RemoteObject>(children.size());
     for (WeakReference<? extends RemoteObject> child : children) {

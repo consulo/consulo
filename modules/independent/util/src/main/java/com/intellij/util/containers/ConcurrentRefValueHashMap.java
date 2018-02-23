@@ -17,7 +17,7 @@
 package com.intellij.util.containers;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -55,14 +55,14 @@ abstract class ConcurrentRefValueHashMap<K,V> implements ConcurrentMap<K,V> {
   }
 
   @Override
-  public V get(@NotNull Object key) {
+  public V get(@Nonnull Object key) {
     MyReference<K, V> ref = myMap.get(key);
     if (ref == null) return null;
     return ref.get();
   }
 
   @Override
-  public V put(@NotNull K key, @NotNull V value) {
+  public V put(@Nonnull K key, @Nonnull V value) {
     processQueue();
     MyReference<K, V> oldRef = myMap.put(key, createRef(key, value));
     return oldRef != null ? oldRef.get() : null;
@@ -71,7 +71,7 @@ abstract class ConcurrentRefValueHashMap<K,V> implements ConcurrentMap<K,V> {
   protected abstract MyReference<K, V> createRef(K key, V value);
 
   @Override
-  public V putIfAbsent(@NotNull K key, V value) {
+  public V putIfAbsent(@Nonnull K key, V value) {
     MyReference<K, V> newRef = createRef(key, value);
     while (true) {
       processQueue();
@@ -88,19 +88,19 @@ abstract class ConcurrentRefValueHashMap<K,V> implements ConcurrentMap<K,V> {
   }
 
   @Override
-  public boolean remove(@NotNull final Object key, final Object value) {
+  public boolean remove(@Nonnull final Object key, final Object value) {
     processQueue();
     return myMap.remove(key, createRef((K)key, (V)value));
   }
 
   @Override
-  public boolean replace(@NotNull final K key, @NotNull final V oldValue, @NotNull final V newValue) {
+  public boolean replace(@Nonnull final K key, @Nonnull final V oldValue, @Nonnull final V newValue) {
     processQueue();
     return myMap.replace(key, createRef(key, oldValue), createRef(key, newValue));
   }
 
   @Override
-  public V replace(@NotNull final K key, @NotNull final V value) {
+  public V replace(@Nonnull final K key, @Nonnull final V value) {
     processQueue();
     MyReference<K, V> ref = myMap.replace(key, createRef(key, value));
     return ref == null ? null : ref.get();

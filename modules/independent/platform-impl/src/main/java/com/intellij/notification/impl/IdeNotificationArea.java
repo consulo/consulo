@@ -37,8 +37,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     }, this);
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         EventLog.toggleLog(getProject(), null);
         return true;
       }
@@ -82,7 +82,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
@@ -91,7 +91,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     myStatusBar = statusBar;
     updateStatus();
   }
@@ -102,7 +102,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return WIDGET_ID;
   }
@@ -136,7 +136,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     return createIconWithNotificationCount(this, getMaximumType(notifications), notifications.size());
   }
 
-  @NotNull
+  @Nonnull
   public static LayeredIcon createIconWithNotificationCount(JComponent component, NotificationType type, int size) {
     LayeredIcon icon = new LayeredIcon(2);
     icon.setIcon(getPendingNotificationsIcon(AllIcons.Ide.Notification.NoEvents, type), 0);
@@ -193,7 +193,7 @@ public class IdeNotificationArea extends JLabel implements CustomStatusBarWidget
     private final int myWidth;
     private final Font myFont;
 
-    public TextIcon(JComponent component, @NotNull String str, @NotNull Color textColor) {
+    public TextIcon(JComponent component, @Nonnull String str, @Nonnull Color textColor) {
       myStr = str;
       myComponent = component;
       myTextColor = textColor;

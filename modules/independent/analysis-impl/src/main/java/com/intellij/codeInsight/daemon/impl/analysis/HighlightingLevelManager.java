@@ -18,13 +18,13 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class HighlightingLevelManager {
   public static HighlightingLevelManager getInstance(Project project) {
     return ServiceManager.getService(project, HighlightingLevelManager.class);
   }
 
-  public abstract boolean shouldHighlight(@NotNull PsiElement psiRoot);
-  public abstract boolean shouldInspect(@NotNull PsiElement psiRoot);
+  public abstract boolean shouldHighlight(@Nonnull PsiElement psiRoot);
+  public abstract boolean shouldInspect(@Nonnull PsiElement psiRoot);
 }

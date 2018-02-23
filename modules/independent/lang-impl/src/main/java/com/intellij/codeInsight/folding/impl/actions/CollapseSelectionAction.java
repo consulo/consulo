@@ -20,13 +20,13 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.folding.impl.CollapseSelectionHandler;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author ven
  */
 public class CollapseSelectionAction extends BaseCodeInsightAction implements DumbAware {
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new CollapseSelectionHandler();

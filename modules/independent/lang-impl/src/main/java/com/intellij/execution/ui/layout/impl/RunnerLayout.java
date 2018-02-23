@@ -29,8 +29,8 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -51,7 +51,7 @@ public class RunnerLayout  {
   private Set<String> myLightWeightIds = null;
 
 
-  public RunnerLayout(@NotNull String ID) {
+  public RunnerLayout(@Nonnull String ID) {
     myID = ID;
   }
 
@@ -61,7 +61,7 @@ public class RunnerLayout  {
     return tab != null ? tab.myDisplayName : null;
   }
 
-  @NotNull
+  @Nonnull
   public TabImpl getOrCreateTab(final int index) {
     TabImpl tab = findTab(index);
     if (tab != null) return tab;
@@ -71,7 +71,7 @@ public class RunnerLayout  {
     return tab;
   }
 
-  @NotNull
+  @Nonnull
   private TabImpl createNewTab(final int index) {
     final TabImpl.Default defaultTab = getOrCreateDefaultTab(index);
     final TabImpl tab = defaultTab.createTab();
@@ -81,7 +81,7 @@ public class RunnerLayout  {
     return tab;
   }
 
-  @NotNull
+  @Nonnull
   private TabImpl.Default getOrCreateDefaultTab(final int index) {
     TabImpl.Default tab = myDefaultTabs.get(index);
     if (tab == null) {
@@ -91,12 +91,12 @@ public class RunnerLayout  {
     return tab;
   }
 
-  @NotNull
+  @Nonnull
   public TabImpl createNewTab() {
     return createNewTab(myTabs.size());
   }
 
-  private boolean isUsed(@NotNull TabImpl tab) {
+  private boolean isUsed(@Nonnull TabImpl tab) {
     for (ViewImpl each : myViews.values()) {
       if (each.getTab() == tab) return true;
     }
@@ -113,17 +113,17 @@ public class RunnerLayout  {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Element getState() {
     return write(new Element("layout"));
   }
 
-  public void loadState(@NotNull Element state) {
+  public void loadState(@Nonnull Element state) {
     read(state);
   }
 
-  @NotNull
-  public Element read(@NotNull Element parentNode) {
+  @Nonnull
+  public Element read(@Nonnull Element parentNode) {
     List<Element> tabs = parentNode.getChildren(StringUtil.getShortName(TabImpl.class.getName()));
     for (Element eachTabElement : tabs) {
       TabImpl eachTab = XmlSerializer.deserialize(eachTabElement, TabImpl.class);
@@ -142,8 +142,8 @@ public class RunnerLayout  {
     return parentNode;
   }
 
-  @NotNull
-  public Element write(@NotNull Element parentNode) {
+  @Nonnull
+  public Element write(@Nonnull Element parentNode) {
     for (ViewImpl eachState : myViews.values()) {
       if (myLightWeightIds != null && myLightWeightIds.contains(eachState.getID())) {
         continue;
@@ -177,12 +177,12 @@ public class RunnerLayout  {
     myGeneral.horizontalToolbar = horizontal;
   }
 
-  @NotNull
-  public ViewImpl getStateFor(@NotNull Content content) {
+  @Nonnull
+  public ViewImpl getStateFor(@Nonnull Content content) {
     return getOrCreateView(getOrCreateContentId(content));
   }
 
-  public void clearStateFor(@NotNull Content content) {
+  public void clearStateFor(@Nonnull Content content) {
     String id = getOrCreateContentId(content);
     myDefaultViews.remove(id);
     final ViewImpl view = myViews.remove(id);
@@ -194,8 +194,8 @@ public class RunnerLayout  {
     }
   }
 
-  @NotNull
-  private static String getOrCreateContentId(@NotNull Content content) {
+  @Nonnull
+  private static String getOrCreateContentId(@Nonnull Content content) {
     @NonNls String id = content.getUserData(ViewImpl.ID);
     if (id == null) {
       id = "UnknownView-" + content.getDisplayName();
@@ -204,8 +204,8 @@ public class RunnerLayout  {
     return id;
   }
 
-  @NotNull
-  private ViewImpl getOrCreateView(@NotNull String id) {
+  @Nonnull
+  private ViewImpl getOrCreateView(@Nonnull String id) {
     ViewImpl view = myViews.get(id);
     if (view == null) {
       view = getOrCreateDefault(id).createView(this);
@@ -214,8 +214,8 @@ public class RunnerLayout  {
     return view;
   }
 
-  @NotNull
-  private ViewImpl.Default getOrCreateDefault(@NotNull String id) {
+  @Nonnull
+  private ViewImpl.Default getOrCreateDefault(@Nonnull String id) {
     if (myDefaultViews.containsKey(id)) {
       return myDefaultViews.get(id);
     }
@@ -223,45 +223,45 @@ public class RunnerLayout  {
   }
 
 
-  @NotNull
+  @Nonnull
   public TabImpl.Default setDefault(int tabID, String displayName, Icon icon) {
     final TabImpl.Default tab = new TabImpl.Default(tabID, displayName, icon);
     myDefaultTabs.put(tabID, tab);
     return tab;
   }
 
-  @NotNull
-  public ViewImpl.Default setDefault(@NotNull String id, int tabIndex, @NotNull PlaceInGrid placeInGrid, boolean isMinimized) {
+  @Nonnull
+  public ViewImpl.Default setDefault(@Nonnull String id, int tabIndex, @Nonnull PlaceInGrid placeInGrid, boolean isMinimized) {
     final ViewImpl.Default view = new ViewImpl.Default(id, tabIndex, placeInGrid, isMinimized);
     myDefaultViews.put(id, view);
     return view;
   }
 
-  @NotNull
-  public PlaceInGrid getDefaultGridPlace(@NotNull Content content) {
+  @Nonnull
+  public PlaceInGrid getDefaultGridPlace(@Nonnull Content content) {
     return getOrCreateDefault(getOrCreateContentId(content)).getPlaceInGrid();
   }
 
-  public boolean isToFocus(final String id, @NotNull String condition) {
+  public boolean isToFocus(final String id, @Nonnull String condition) {
     return Comparing.equal(id, getToFocus(condition));
   }
 
-  public void setToFocus(final String id, @NotNull String condition) {
+  public void setToFocus(final String id, @Nonnull String condition) {
     myGeneral.focusOnCondition.put(condition, id);
   }
 
-  public void setDefaultToFocus(@NotNull String id, @NotNull String condition, @NotNull final LayoutAttractionPolicy policy) {
+  public void setDefaultToFocus(@Nonnull String id, @Nonnull String condition, @Nonnull final LayoutAttractionPolicy policy) {
     myDefaultFocus.put(condition, Pair.create(id, policy));
   }
 
   @Nullable
-  public String getToFocus(@NotNull String condition) {
+  public String getToFocus(@Nonnull String condition) {
     return myGeneral.focusOnCondition.containsKey(condition) ? myGeneral.focusOnCondition.get(condition) :
            myDefaultFocus.containsKey(condition) ? myDefaultFocus.get(condition).getFirst() : null;
   }
 
-  @NotNull
-  public LayoutAttractionPolicy getAttractionPolicy(@NotNull String condition) {
+  @Nonnull
+  public LayoutAttractionPolicy getAttractionPolicy(@Nonnull String condition) {
     final Pair<String, LayoutAttractionPolicy> pair = myDefaultFocus.get(condition);
     return pair == null ? new LayoutAttractionPolicy.FocusOnce() : pair.getSecond();
   }

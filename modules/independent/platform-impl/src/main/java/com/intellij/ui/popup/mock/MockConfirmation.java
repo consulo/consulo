@@ -17,7 +17,7 @@ package com.intellij.ui.popup.mock;
 
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -32,11 +32,11 @@ public class MockConfirmation extends ListPopupImpl {
     myOnYesText = onYesText;
   }
 
-  public void showInCenterOf(@NotNull Component aContainer) {
+  public void showInCenterOf(@Nonnull Component aContainer) {
     getStep().onChosen(myOnYesText, true);
   }
 
-  public void showUnderneathOf(@NotNull Component aComponent) {
+  public void showUnderneathOf(@Nonnull Component aComponent) {
     getStep().onChosen(myOnYesText, true);
   }
 }

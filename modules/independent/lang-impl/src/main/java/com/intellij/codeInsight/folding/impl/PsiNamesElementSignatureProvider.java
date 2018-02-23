@@ -17,8 +17,8 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -40,10 +40,10 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
   private static final String CODE_BLOCK_MARKER      = "!!block";
   
   @Override
-  protected PsiElement restoreBySignatureTokens(@NotNull PsiFile file,
-                                                @NotNull PsiElement parent,
-                                                @NotNull final String type,
-                                                @NotNull StringTokenizer tokenizer,
+  protected PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
+                                                @Nonnull PsiElement parent,
+                                                @Nonnull final String type,
+                                                @Nonnull StringTokenizer tokenizer,
                                                 @Nullable StringBuilder processingInfoStorage)
   {
     if (!TYPE_MARKER.equals(type)) {
@@ -119,7 +119,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
   }
 
   @Override
-  public String getSignature(@NotNull final PsiElement element) {
+  public String getSignature(@Nonnull final PsiElement element) {
     StringBuilder buffer = null;
     int length;
     for (PsiElement current = element; current != null && !(current instanceof PsiFile); current = current.getParent()) {
@@ -150,7 +150,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
    * @param element  element to check
    * @return         <code>true</code> if {@link #TOP_LEVEL_CHILD_MARKER} can be used for the given element; <code>false</code> otherwise
    */
-  private static boolean canResolveTopLevelChild(@NotNull PsiElement element) {
+  private static boolean canResolveTopLevelChild(@Nonnull PsiElement element) {
     final PsiElement parent = element.getParent();
     if (parent == null) {
       return false;
@@ -176,7 +176,7 @@ public class PsiNamesElementSignatureProvider extends AbstractElementSignaturePr
    */
   @SuppressWarnings("unchecked")
   @Nullable
-  private static StringBuilder getSignature(@NotNull PsiElement element, @Nullable StringBuilder buffer) {
+  private static StringBuilder getSignature(@Nonnull PsiElement element, @Nullable StringBuilder buffer) {
     if (element instanceof PsiNamedElement) {
       PsiNamedElement named = (PsiNamedElement)element;
       final String name = named.getName();

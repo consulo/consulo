@@ -15,19 +15,19 @@
  */
 package com.intellij.vcs.log.graph.api.permanent;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
 
 public interface PermanentCommitsInfo<CommitId> {
-  @NotNull
+  @Nonnull
   CommitId getCommitId(int nodeId);
 
   long getTimestamp(int nodeId);
 
-  int getNodeId(@NotNull CommitId commitId);
+  int getNodeId(@Nonnull CommitId commitId);
 
-  @NotNull
-  Set<Integer> convertToNodeIds(@NotNull Collection<CommitId> heads);
+  @Nonnull
+  Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> heads);
 }

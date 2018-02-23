@@ -16,7 +16,7 @@ import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.util.io.TestFileSystemBuilder;
 import com.intellij.util.io.TestFileSystemItem;
 import junit.framework.Assert;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public abstract class ArtifactCompilerTestCase extends BaseCompilerTestCase {
     return addProjectLibrary(module, name, DependencyScope.COMPILE, jars);
   }
 
-  protected Library addProjectLibrary(final @Nullable Module module, final String name, final DependencyScope scope,
+  protected Library addProjectLibrary(final @javax.annotation.Nullable Module module, final String name, final DependencyScope scope,
                                       final VirtualFile... jars) {
     return PackagingElementsTestCase.addProjectLibrary(myProject, module, name, scope, jars);
   }

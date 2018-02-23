@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -31,7 +31,7 @@ public interface IndexPatternBuilder {
 
   @Nullable
   Lexer getIndexingLexer(PsiFile file);
-  @Nullable
+  @javax.annotation.Nullable
   TokenSet getCommentTokenSet(PsiFile file);
   int getCommentStartDelta(IElementType tokenType);
   int getCommentEndDelta(IElementType tokenType);

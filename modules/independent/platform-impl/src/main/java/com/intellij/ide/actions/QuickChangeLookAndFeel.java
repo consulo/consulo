@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,7 +30,7 @@ import javax.swing.*;
  */
 public class QuickChangeLookAndFeel extends QuickSwitchSchemeAction {
   @Override
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     final LafManager manager = LafManager.getInstance();
     final UIManager.LookAndFeelInfo[] lfs = manager.getInstalledLookAndFeels();
     final UIManager.LookAndFeelInfo current = manager.getCurrentLookAndFeel();

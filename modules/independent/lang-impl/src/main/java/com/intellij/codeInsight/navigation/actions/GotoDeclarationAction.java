@@ -51,11 +51,12 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -69,7 +70,7 @@ import java.util.Set;
 public class GotoDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.navigation.actions.GotoDeclarationAction");
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return this;
@@ -82,7 +83,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
@@ -122,14 +123,14 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
   }
 
   @Nullable
-  private static PsiElementListCellRenderer<PsiElement> calcElementRender(@Nullable GotoDeclarationHandler declarationHandler, @NotNull PsiElement[] elements) {
+  private static PsiElementListCellRenderer<PsiElement> calcElementRender(@Nullable GotoDeclarationHandler declarationHandler, @Nonnull PsiElement[] elements) {
     if(declarationHandler instanceof GotoDeclarationHandlerEx) {
       return ((GotoDeclarationHandlerEx)declarationHandler).createRender(elements);
     }
     return null;
   }
 
-  public static PsiNameIdentifierOwner findElementToShowUsagesOf(@NotNull Editor editor, @NotNull PsiFile file, int offset) {
+  public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, @Nonnull PsiFile file, int offset) {
     PsiElement elementAt = TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED), offset);
     if (elementAt instanceof PsiNameIdentifierOwner) {
       return (PsiNameIdentifierOwner)elementAt;
@@ -140,7 +141,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
   private static void chooseAmbiguousTarget(final Editor editor, int offset, PsiElement[] elements, @Nullable PsiElementListCellRenderer<PsiElement> render) {
     PsiElementProcessor<PsiElement> navigateProcessor = new PsiElementProcessor<PsiElement>() {
       @Override
-      public boolean execute(@NotNull final PsiElement element) {
+      public boolean execute(@Nonnull final PsiElement element) {
         gotoTargetElement(element);
         return true;
       }
@@ -158,19 +159,19 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
   }
 
-  public static boolean chooseAmbiguousTarget(@NotNull Editor editor,
+  public static boolean chooseAmbiguousTarget(@Nonnull Editor editor,
                                               int offset,
-                                              @NotNull PsiElementProcessor<PsiElement> processor,
-                                              @NotNull String titlePattern,
+                                              @Nonnull PsiElementProcessor<PsiElement> processor,
+                                              @Nonnull String titlePattern,
                                               @Nullable PsiElement[] elements) {
     return chooseAmbiguousTarget(editor, offset, processor, titlePattern, elements, null);
   }
 
   // returns true if processor is run or is going to be run after showing popup
-  public static boolean chooseAmbiguousTarget(@NotNull Editor editor,
+  public static boolean chooseAmbiguousTarget(@Nonnull Editor editor,
                                               int offset,
-                                              @NotNull PsiElementProcessor<PsiElement> processor,
-                                              @NotNull String titlePattern,
+                                              @Nonnull PsiElementProcessor<PsiElement> processor,
+                                              @Nonnull String titlePattern,
                                               @Nullable PsiElement[] elements,
                                               @Nullable PsiElementListCellRenderer<PsiElement> renderer) {
     if (TargetElementUtil.inVirtualSpace(editor, offset)) {
@@ -232,7 +233,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return targets.length == 1 ? targets[0] : null;
   }
 
-  @NotNull
+  @Nonnull
   public static Pair<PsiElement[], GotoDeclarationHandler> findAllTargetElementsInfo(Project project, Editor editor, int offset) {
     if (TargetElementUtil.inVirtualSpace(editor, offset)) {
       return Pair.create(PsiElement.EMPTY_ARRAY, null);
@@ -247,7 +248,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     return findTargetElementsNoVSWithHandler(project, editor, offset, lookupAccepted).getFirst();
   }
 
-  @NotNull
+  @Nonnull
   public static Pair<PsiElement[], GotoDeclarationHandler> findTargetElementsNoVSWithHandler(Project project,
                                                                                              Editor editor,
                                                                                              int offset,

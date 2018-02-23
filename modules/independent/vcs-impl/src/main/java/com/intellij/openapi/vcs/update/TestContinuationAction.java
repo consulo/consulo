@@ -26,7 +26,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.continuation.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -56,7 +56,7 @@ public class TestContinuationAction extends AnAction {
                                                                 }
                                                               }) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         final Continuation continuation = Continuation.createForCurrentProgress(project, true, e.getPresentation().getText());
         final ReportTask finalBlock = new ReportTask("I'm finally block!");
         finalBlock.setHaveMagicCure(true);

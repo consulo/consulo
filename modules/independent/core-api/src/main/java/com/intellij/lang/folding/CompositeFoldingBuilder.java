@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,15 +45,15 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
     myBuilders = builders;
   }
 
-  @NotNull
+  @Nonnull
   public List<FoldingBuilder> getAllBuilders() {
     return Collections.unmodifiableList(myBuilders);
   }
 
   @Override
   @RequiredReadAction
-  @NotNull
-  public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
+  @Nonnull
+  public FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
     final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
 
     for (FoldingBuilder builder : myBuilders) {
@@ -68,7 +68,7 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
 
   @RequiredReadAction
   @Override
-  public String getPlaceholderText(@NotNull ASTNode node, @NotNull TextRange range) {
+  public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null
            ? node.getText()
@@ -77,14 +77,14 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
 
   @RequiredReadAction
   @Override
-  public String getPlaceholderText(@NotNull ASTNode node) {
+  public String getPlaceholderText(@Nonnull ASTNode node) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder.getPlaceholderText(node);
   }
 
   @Override
   @RequiredReadAction
-  public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+  public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder != null && builder.isCollapsedByDefault(node);
   }

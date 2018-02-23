@@ -17,9 +17,9 @@ package com.intellij.find.impl.livePreview;
 
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,7 +27,7 @@ public class ReplacementView extends JPanel {
   private static final String MALFORMED_REPLACEMENT_STRING = "Malformed replacement string";
 
   @Override
-  protected void paintComponent(@NotNull Graphics graphics) {
+  protected void paintComponent(@Nonnull Graphics graphics) {
   }
 
   public ReplacementView(@Nullable String replacement) {

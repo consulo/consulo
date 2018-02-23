@@ -31,8 +31,8 @@ import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -58,7 +58,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
   private JPanel myPanel;
   private JLabel myLabel;
 
-  protected LanguagePerFileConfigurable(@NotNull Project project, Class<T> valueClass, PerFileMappings<T> mappings, String caption, String treeTableTitle, String overrideQuestion, String overrideTitle) {
+  protected LanguagePerFileConfigurable(@Nonnull Project project, Class<T> valueClass, PerFileMappings<T> mappings, String caption, String treeTableTitle, String overrideQuestion, String overrideTitle) {
     myProject = project;
     myValueClass = valueClass;
     myMappings = mappings;
@@ -107,7 +107,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
   public void disposeUIResources() {
   }
 
-  public void selectFile(@NotNull VirtualFile virtualFile) {
+  public void selectFile(@Nonnull VirtualFile virtualFile) {
     myTreeView.select(virtualFile instanceof VirtualFileWindow? ((VirtualFileWindow)virtualFile).getDelegate() : virtualFile);
   }
 
@@ -115,14 +115,14 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
     myTreePanel = ScrollPaneFactory.createScrollPane(new JBTable());
   }
 
-  protected abstract String visualize(@NotNull T t);
+  protected abstract String visualize(@Nonnull T t);
 
   public AbstractFileTreeTable<T> getTreeView() {
     return myTreeView;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getDisplayName();
   }
@@ -160,7 +160,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
           final ChooseSomethingAction changeAction = new ChooseSomethingAction(myVirtualFile) {
             @RequiredDispatchThread
             @Override
-            public void update(@NotNull final AnActionEvent e) {
+            public void update(@Nonnull final AnActionEvent e) {
               boolean enabled = isValueEditableForFile(myVirtualFile);
               if (myVirtualFile != null) {
                 final T mapping = myMappings.getMapping(myVirtualFile);
@@ -256,7 +256,7 @@ public abstract class LanguagePerFileConfigurable<T> implements SearchableConfig
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
       return createGroup(true);
     }

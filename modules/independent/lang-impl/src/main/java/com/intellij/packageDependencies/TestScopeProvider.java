@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.scope.TestsScope;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ public class TestScopeProvider extends CustomScopesProviderEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<NamedScope> getCustomScopes() {
     return Collections.<NamedScope>singletonList(myTestsScope);
   }

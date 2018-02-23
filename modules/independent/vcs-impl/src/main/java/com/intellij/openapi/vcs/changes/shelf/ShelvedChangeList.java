@@ -35,7 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -104,11 +104,11 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
   }
 
   @Override
-  public void writeExternal(@NotNull Element element) throws WriteExternalException {
+  public void writeExternal(@Nonnull Element element) throws WriteExternalException {
     writeExternal(element, this);
   }
 
-  private static void writeExternal(@NotNull Element element, @NotNull ShelvedChangeList shelvedChangeList) throws WriteExternalException {
+  private static void writeExternal(@Nonnull Element element, @Nonnull ShelvedChangeList shelvedChangeList) throws WriteExternalException {
     DefaultJDOMExternalizer.writeExternal(shelvedChangeList, element);
     element.setAttribute(NAME_ATTRIBUTE, shelvedChangeList.getName());
     element.setAttribute(ATTRIBUTE_DATE, Long.toString(shelvedChangeList.DATE.getTime()));
@@ -162,20 +162,20 @@ public class ShelvedChangeList implements JDOMExternalizable, ExternalizableSche
     return myBinaryFiles;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return mySchemeName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }
 
   @Override
-  public void setName(@NotNull String newName) {
+  public void setName(@Nonnull String newName) {
     mySchemeName = newName;
   }
 

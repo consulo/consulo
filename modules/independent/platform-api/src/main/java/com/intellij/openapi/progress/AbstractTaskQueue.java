@@ -17,7 +17,7 @@ package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -45,7 +45,7 @@ public abstract class AbstractTaskQueue<T> {
   protected abstract void runMe();
   protected abstract void runStuff(T stuff);
 
-  public void run(@NotNull final T stuff) {
+  public void run(@Nonnull final T stuff) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runStuff(stuff);
       return;

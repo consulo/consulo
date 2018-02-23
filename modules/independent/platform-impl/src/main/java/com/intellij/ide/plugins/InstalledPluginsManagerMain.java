@@ -38,8 +38,8 @@ import com.intellij.util.ui.StatusText;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.AvailablePluginsDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -331,12 +331,12 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       final DefaultActionGroup gr = new DefaultActionGroup();
@@ -344,7 +344,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         gr.add(new AnAction(enabledValue) {
           @RequiredDispatchThread
           @Override
-          public void actionPerformed(@NotNull AnActionEvent e) {
+          public void actionPerformed(@Nonnull AnActionEvent e) {
             final IdeaPluginDescriptor[] selection = myPluginTable.getSelectedObjects();
             final String filter = myFilter.getFilter().toLowerCase();
             ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
@@ -357,7 +357,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       return gr;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent createCustomComponent(Presentation presentation) {
       final JComponent component = super.createCustomComponent(presentation);

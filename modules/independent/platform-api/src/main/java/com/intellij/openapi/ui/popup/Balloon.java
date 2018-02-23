@@ -18,7 +18,7 @@ package com.intellij.openapi.ui.popup;
 import com.intellij.openapi.Disposable;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.PositionTracker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
@@ -43,7 +43,7 @@ public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, Li
 
   void setBounds(Rectangle bounds);
 
-  void addListener(@NotNull JBPopupListener listener);
+  void addListener(@Nonnull JBPopupListener listener);
 
   void hide();
   void hide(boolean ok);

@@ -31,8 +31,8 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -89,7 +89,7 @@ public class VfsData {
   static {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
       @Override
-      public void writeActionFinished(@NotNull Object action) {
+      public void writeActionFinished(@Nonnull Object action) {
         // after top-level write action is finished, all the deletion listeners should have processed the deleted files
         // and their data is considered safe to remove. From this point on accessing a removed file will result in an exception.
         if (!ApplicationManager.getApplication().isWriteAccessAllowed()) {
@@ -141,7 +141,8 @@ public class VfsData {
     return id & OFFSET_MASK;
   }
 
-  @Nullable @Contract("_,true->!null")
+  @Nullable
+  @Contract("_,true->!null")
   public static Segment getSegment(int id, boolean create) {
     int key = id >>> SEGMENT_BITS;
     Segment segment = ourSegments.get(key);
@@ -155,7 +156,7 @@ public class VfsData {
     }
   }
 
-  public static void initFile(int id, Segment segment, int nameId, @NotNull Object data) throws FileAlreadyCreatedException {
+  public static void initFile(int id, Segment segment, int nameId, @Nonnull Object data) throws FileAlreadyCreatedException {
     assert id > 0;
     int offset = getOffset(id);
 
@@ -214,7 +215,7 @@ public class VfsData {
       myIntArray.set(getOffset(fileId) * 2, nameId);
     }
 
-    void setUserMap(int fileId, @NotNull KeyFMap map) {
+    void setUserMap(int fileId, @Nonnull KeyFMap map) {
       myObjectArray.set(getOffset(fileId), map);
     }
 
@@ -270,8 +271,10 @@ public class VfsData {
   // non-final field accesses are synchronized on this instance, but this happens in VirtualDirectoryImpl
   public static class DirectoryData {
     private static final AtomicFieldUpdater<DirectoryData, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(DirectoryData.class, KeyFMap.class);
-    @NotNull volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
-    @NotNull int[] myChildrenIds = ArrayUtil.EMPTY_INT_ARRAY;
+    @Nonnull
+    volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
+    @Nonnull
+    int[] myChildrenIds = ArrayUtil.EMPTY_INT_ARRAY;
     private Set<String> myAdoptedNames;
 
     VirtualFileSystemEntry[] getFileChildren(int fileId, VirtualDirectoryImpl parent) {

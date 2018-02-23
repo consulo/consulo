@@ -19,8 +19,8 @@ import com.intellij.application.options.codeStyle.arrangement.ArrangementConstan
 import com.intellij.ide.ui.UISettings;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,18 +32,21 @@ import java.awt.image.BufferedImage;
  */
 public class ArrangementAnimationPanel extends JPanel {
 
-  @NotNull private final JComponent myContent;
+  @Nonnull
+  private final JComponent myContent;
 
-  @Nullable private BufferedImage myImage;
+  @Nullable
+  private BufferedImage myImage;
   @Nullable private BufferedImage myCurrentImage;
-  @Nullable private Listener      myListener;
+  @Nullable
+  private Listener      myListener;
 
   private final boolean myExpand;
   private final boolean myHorizontal;
   private boolean myDelayedAnimation;
   private boolean myAnimated;
 
-  public ArrangementAnimationPanel(@NotNull JComponent content, boolean expand, boolean horizontal) {
+  public ArrangementAnimationPanel(@Nonnull JComponent content, boolean expand, boolean horizontal) {
     super(new GridBagLayout());
     myContent = content;
     myExpand = expand;

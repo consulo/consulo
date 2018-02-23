@@ -57,8 +57,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -69,27 +68,35 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
 
   @NonNls protected static final String IGNORE_CHANGEMARKERS_KEY = "idea.ignore.changemarkers";
 
-  @NotNull public final Object myLock = new Object();
+  @Nonnull
+  public final Object myLock = new Object();
 
-  @NotNull private final Project myProject;
-  @NotNull private final VcsBaseContentProvider myStatusProvider;
-  @NotNull private final Application myApplication;
-  @NotNull private final FileEditorManager myFileEditorManager;
-  @NotNull private final Disposable myDisposable;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VcsBaseContentProvider myStatusProvider;
+  @Nonnull
+  private final Application myApplication;
+  @Nonnull
+  private final FileEditorManager myFileEditorManager;
+  @Nonnull
+  private final Disposable myDisposable;
 
-  @NotNull private final Map<Document, TrackerData> myLineStatusTrackers;
+  @Nonnull
+  private final Map<Document, TrackerData> myLineStatusTrackers;
 
-  @NotNull private final QueueProcessorRemovePartner<Document, BaseRevisionLoader> myPartner;
+  @Nonnull
+  private final QueueProcessorRemovePartner<Document, BaseRevisionLoader> myPartner;
   private long myLoadCounter;
 
   public static LineStatusTrackerManagerI getInstance(final Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, LineStatusTrackerManagerI.class);
   }
 
-  public LineStatusTrackerManager(@NotNull final Project project,
-                                  @NotNull final VcsBaseContentProvider statusProvider,
-                                  @NotNull final Application application,
-                                  @NotNull final FileEditorManager fileEditorManager,
+  public LineStatusTrackerManager(@Nonnull final Project project,
+                                  @Nonnull final VcsBaseContentProvider statusProvider,
+                                  @Nonnull final Application application,
+                                  @Nonnull final FileEditorManager fileEditorManager,
                                   @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
     myLoadCounter = 0;
     myProject = project;
@@ -109,13 +116,13 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
       @Override
-      public void updateStarted(@NotNull final Document doc) {
+      public void updateStarted(@Nonnull final Document doc) {
         final LineStatusTracker tracker = getLineStatusTracker(doc);
         if (tracker != null) tracker.startBulkUpdate();
       }
 
       @Override
-      public void updateFinished(@NotNull final Document doc) {
+      public void updateFinished(@Nonnull final Document doc) {
         final LineStatusTracker tracker = getLineStatusTracker(doc);
         if (tracker != null) tracker.finishBulkUpdate();
       }
@@ -175,7 +182,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "LineStatusTrackerManager";
   }
@@ -193,7 +200,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public LineStatusTracker getLineStatusTracker(final Document document) {
     synchronized (myLock) {
       if (isDisabled()) return null;
@@ -219,11 +226,11 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private void resetTracker(@NotNull final VirtualFile virtualFile) {
+  private void resetTracker(@Nonnull final VirtualFile virtualFile) {
     resetTracker(virtualFile, false);
   }
 
-  private void resetTracker(@NotNull final VirtualFile virtualFile, boolean insertOnly) {
+  private void resetTracker(@Nonnull final VirtualFile virtualFile, boolean insertOnly) {
     final Document document = FileDocumentManager.getInstance().getCachedDocument(virtualFile);
     if (document == null) {
       log("resetTracker: no cached document", virtualFile);
@@ -239,7 +246,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private void resetTracker(@NotNull Document document, @NotNull VirtualFile virtualFile, @Nullable LineStatusTracker tracker) {
+  private void resetTracker(@Nonnull Document document, @Nonnull VirtualFile virtualFile, @javax.annotation.Nullable LineStatusTracker tracker) {
     final boolean editorOpened = myFileEditorManager.isFileOpen(virtualFile);
     final boolean shouldBeInstalled = editorOpened && shouldBeInstalled(virtualFile);
 
@@ -256,7 +263,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private boolean shouldBeInstalled(@Nullable final VirtualFile virtualFile) {
+  private boolean shouldBeInstalled(@javax.annotation.Nullable final VirtualFile virtualFile) {
     if (isDisabled()) return false;
 
     if (virtualFile == null || virtualFile instanceof LightVirtualFile) return false;
@@ -274,7 +281,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     return true;
   }
 
-  private void refreshTracker(@NotNull LineStatusTracker tracker) {
+  private void refreshTracker(@Nonnull LineStatusTracker tracker) {
     synchronized (myLock) {
       if (isDisabled()) return;
 
@@ -282,7 +289,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private void releaseTracker(@NotNull final Document document) {
+  private void releaseTracker(@Nonnull final Document document) {
     synchronized (myLock) {
       if (isDisabled()) return;
 
@@ -294,7 +301,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private void installTracker(@NotNull final VirtualFile virtualFile, @NotNull final Document document) {
+  private void installTracker(@Nonnull final VirtualFile virtualFile, @Nonnull final Document document) {
     synchronized (myLock) {
       if (isDisabled()) return;
 
@@ -308,24 +315,26 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  @NotNull
+  @Nonnull
   private static LineStatusTracker.Mode getMode() {
     VcsApplicationSettings vcsApplicationSettings = VcsApplicationSettings.getInstance();
     if (!vcsApplicationSettings.SHOW_LST_GUTTER_MARKERS) return LineStatusTracker.Mode.SILENT;
     return vcsApplicationSettings.SHOW_WHITESPACES_IN_LST ? LineStatusTracker.Mode.SMART : LineStatusTracker.Mode.DEFAULT;
   }
 
-  private void startAlarm(@NotNull final Document document, @NotNull final VirtualFile virtualFile) {
+  private void startAlarm(@Nonnull final Document document, @Nonnull final VirtualFile virtualFile) {
     synchronized (myLock) {
       myPartner.add(document, new BaseRevisionLoader(document, virtualFile));
     }
   }
 
   private class BaseRevisionLoader implements Runnable {
-    @NotNull private final VirtualFile myVirtualFile;
-    @NotNull private final Document myDocument;
+    @Nonnull
+    private final VirtualFile myVirtualFile;
+    @Nonnull
+    private final Document myDocument;
 
-    private BaseRevisionLoader(@NotNull final Document document, @NotNull final VirtualFile virtualFile) {
+    private BaseRevisionLoader(@Nonnull final Document document, @Nonnull final VirtualFile virtualFile) {
       myDocument = document;
       myVirtualFile = virtualFile;
     }
@@ -397,7 +406,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
       nonModalAliveInvokeLater(runnable);
     }
 
-    private void nonModalAliveInvokeLater(@NotNull Runnable runnable) {
+    private void nonModalAliveInvokeLater(@Nonnull Runnable runnable) {
       myApplication.invokeLater(runnable, ModalityState.NON_MODAL, new Condition() {
         @Override
         public boolean value(final Object ignore) {
@@ -420,14 +429,14 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
 
     @Override
-    public void fileStatusChanged(@NotNull VirtualFile virtualFile) {
+    public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
       resetTracker(virtualFile);
     }
   }
 
   private class MyEditorFactoryListener extends EditorFactoryAdapter {
     @Override
-    public void editorCreated(@NotNull EditorFactoryEvent event) {
+    public void editorCreated(@Nonnull EditorFactoryEvent event) {
       // note that in case of lazy loading of configurables, this event can happen
       // outside of EDT, so the EDT check mustn't be done here
       Editor editor = event.getEditor();
@@ -441,7 +450,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
 
     @Override
-    public void editorReleased(@NotNull EditorFactoryEvent event) {
+    public void editorReleased(@Nonnull EditorFactoryEvent event) {
       final Editor editor = event.getEditor();
       if (editor.getProject() != null && editor.getProject() != myProject) return;
       final Document doc = editor.getDocument();
@@ -454,14 +463,14 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
 
   private class MyVirtualFileListener extends VirtualFileAdapter {
     @Override
-    public void beforeContentsChange(@NotNull VirtualFileEvent event) {
+    public void beforeContentsChange(@Nonnull VirtualFileEvent event) {
       if (event.isFromRefresh()) {
         resetTracker(event.getFile());
       }
     }
 
     @Override
-    public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+    public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
       if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
         resetTracker(event.getFile());
       }
@@ -469,23 +478,25 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   private static class TrackerData {
-    @NotNull public final LineStatusTracker tracker;
-    @Nullable private final ContentInfo currentContent;
+    @Nonnull
+    public final LineStatusTracker tracker;
+    @javax.annotation.Nullable
+    private final ContentInfo currentContent;
 
-    public TrackerData(@NotNull LineStatusTracker tracker) {
+    public TrackerData(@Nonnull LineStatusTracker tracker) {
       this.tracker = tracker;
       this.currentContent = null;
     }
 
-    public TrackerData(@NotNull LineStatusTracker tracker,
-                       @NotNull VcsRevisionNumber revision,
-                       @NotNull Charset charset,
+    public TrackerData(@Nonnull LineStatusTracker tracker,
+                       @Nonnull VcsRevisionNumber revision,
+                       @Nonnull Charset charset,
                        long loadCounter) {
       this.tracker = tracker;
       this.currentContent = new ContentInfo(revision, charset, loadCounter);
     }
 
-    public boolean shouldBeUpdated(@NotNull VcsRevisionNumber revision, @NotNull Charset charset, long loadCounter) {
+    public boolean shouldBeUpdated(@Nonnull VcsRevisionNumber revision, @Nonnull Charset charset, long loadCounter) {
       if (currentContent == null) return true;
       if (currentContent.revision.equals(revision) && !currentContent.revision.equals(VcsRevisionNumber.NULL)) {
         return !currentContent.charset.equals(charset);
@@ -495,18 +506,20 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   private static class ContentInfo {
-    @NotNull public final VcsRevisionNumber revision;
-    @NotNull public final Charset charset;
+    @Nonnull
+    public final VcsRevisionNumber revision;
+    @Nonnull
+    public final Charset charset;
     public final long loadCounter;
 
-    public ContentInfo(@NotNull VcsRevisionNumber revision, @NotNull Charset charset, long loadCounter) {
+    public ContentInfo(@Nonnull VcsRevisionNumber revision, @Nonnull Charset charset, long loadCounter) {
       this.revision = revision;
       this.charset = charset;
       this.loadCounter = loadCounter;
     }
   }
 
-  private static void log(@NotNull String message, @Nullable VirtualFile file) {
+  private static void log(@Nonnull String message, @javax.annotation.Nullable VirtualFile file) {
     if (LOG.isDebugEnabled()) {
       if (file != null) message += "; file: " + file.getPath();
       LOG.debug(message);

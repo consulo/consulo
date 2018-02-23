@@ -23,49 +23,49 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 7:56/20.05.13
  */
 public abstract class PsiPackageManager {
-  @NotNull
-  public static PsiPackageManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static PsiPackageManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, PsiPackageManager.class);
   }
 
-  public abstract void dropCache(@NotNull Class<? extends ModuleExtension> extensionClass);
+  public abstract void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass);
+
+  @javax.annotation.Nullable
+  @RequiredReadAction
+  public abstract PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass);
+
+  @javax.annotation.Nullable
+  @RequiredReadAction
+  public abstract PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass);
-
-  @Nullable
-  @RequiredReadAction
-  public abstract PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass);
-
-  @Nullable
-  @RequiredReadAction
-  public PsiPackage findAnyPackage(@NotNull PsiDirectory directory) {
+  public PsiPackage findAnyPackage(@Nonnull PsiDirectory directory) {
     return findAnyPackage(directory.getVirtualFile());
   }
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(@NotNull VirtualFile directory);
+  public abstract PsiPackage findAnyPackage(@Nonnull VirtualFile directory);
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(@NotNull String packageName);
+  public abstract PsiPackage findAnyPackage(@Nonnull String packageName);
 
   @RequiredReadAction
-  public boolean isValidPackageName(@NotNull PsiDirectory directory, @NotNull String packageName) {
+  public boolean isValidPackageName(@Nonnull PsiDirectory directory, @Nonnull String packageName) {
     Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
     return moduleForPsiElement == null || isValidPackageName(moduleForPsiElement, packageName);
   }
 
   @RequiredReadAction
-  public abstract boolean isValidPackageName(@NotNull Module module, @NotNull String packageName);
+  public abstract boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName);
 }

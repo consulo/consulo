@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ExpandRegionAction extends EditorAction {
   public ExpandRegionAction() {
@@ -50,7 +50,7 @@ public class ExpandRegionAction extends EditorAction {
     expandRegionAtOffset(project, editor, editor.getCaretModel().getOffset());
   }
 
-  public static void expandRegionAtOffset(@NotNull Project project, @NotNull final Editor editor, final int offset) {
+  public static void expandRegionAtOffset(@Nonnull Project project, @Nonnull final Editor editor, final int offset) {
     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
     foldingManager.updateFoldRegions(editor);
 

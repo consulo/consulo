@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 
 /**

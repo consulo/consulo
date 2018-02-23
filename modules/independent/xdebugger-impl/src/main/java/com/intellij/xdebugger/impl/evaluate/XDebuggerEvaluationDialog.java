@@ -44,9 +44,9 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreePanel;
 import com.intellij.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import java.awt.*;
@@ -75,10 +75,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   private final SwitchModeAction mySwitchModeAction;
   private final boolean myIsCodeFragmentEvaluationSupported;
 
-  public XDebuggerEvaluationDialog(@NotNull XDebugSession session,
-                                   @NotNull XDebuggerEditorsProvider editorsProvider,
-                                   @NotNull XDebuggerEvaluator evaluator,
-                                   @NotNull XExpression text,
+  public XDebuggerEvaluationDialog(@Nonnull XDebugSession session,
+                                   @Nonnull XDebuggerEditorsProvider editorsProvider,
+                                   @Nonnull XDebuggerEvaluator evaluator,
+                                   @Nonnull XExpression text,
                                    @Nullable XSourcePosition sourcePosition) {
     super(WindowManager.getInstance().getFrame(session.getProject()), true);
     mySession = session;
@@ -197,7 +197,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     if (myIsCodeFragmentEvaluationSupported) {
@@ -313,7 +313,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     return myMainPanel;
   }
 
-  public void startEvaluation(@NotNull XDebuggerEvaluator.XEvaluationCallback evaluationCallback) {
+  public void startEvaluation(@Nonnull XDebuggerEvaluator.XEvaluationCallback evaluationCallback) {
     final XDebuggerEditorBase inputEditor = getInputEditor();
     inputEditor.saveTextInHistory();
     XExpression expression = inputEditor.getExpression();
@@ -350,7 +350,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   private class EvaluationMainPanel extends BorderLayoutPanel implements DataProvider {
     @Nullable
     @Override
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (KEY == dataId) {
         return XDebuggerEvaluationDialog.this;
       }

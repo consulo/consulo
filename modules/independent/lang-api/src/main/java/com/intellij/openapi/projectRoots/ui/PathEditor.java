@@ -39,8 +39,8 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import consulo.fileTypes.ArchiveFileType;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +100,7 @@ public class PathEditor {
     return roots;
   }
 
-  public void resetPath(@NotNull List<VirtualFile> paths) {
+  public void resetPath(@Nonnull List<VirtualFile> paths) {
     keepSelectionState();
     clearList();
     setEnabled(true);

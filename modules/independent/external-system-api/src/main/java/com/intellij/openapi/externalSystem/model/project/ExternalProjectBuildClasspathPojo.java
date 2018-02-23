@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -30,9 +30,12 @@ public class ExternalProjectBuildClasspathPojo {
   /**
    * Common for all project modules build classpath. E.g. it can be build system SDK libraries, configured at project level.
    */
-  @NotNull private List<String> myProjectBuildClasspath;
-  @NotNull private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;
-  @NotNull private String myName;
+  @Nonnull
+  private List<String> myProjectBuildClasspath;
+  @Nonnull
+  private Map<String, ExternalModuleBuildClasspathPojo> myModulesBuildClasspath;
+  @Nonnull
+  private String myName;
 
   @SuppressWarnings("UnusedDeclaration")
   public ExternalProjectBuildClasspathPojo() {
@@ -40,38 +43,38 @@ public class ExternalProjectBuildClasspathPojo {
     this("___DUMMY___", ContainerUtil.<String>newArrayList(), ContainerUtil.<String, ExternalModuleBuildClasspathPojo>newHashMap());
   }
 
-  public ExternalProjectBuildClasspathPojo(@NotNull String name,
-                                           @NotNull List<String> projectBuildClasspath,
-                                           @NotNull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
+  public ExternalProjectBuildClasspathPojo(@Nonnull String name,
+                                           @Nonnull List<String> projectBuildClasspath,
+                                           @Nonnull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
     myName = name;
     myProjectBuildClasspath = projectBuildClasspath;
     myModulesBuildClasspath = modulesBuildClasspath;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, ExternalModuleBuildClasspathPojo> getModulesBuildClasspath() {
     return myModulesBuildClasspath;
   }
 
-  public void setModulesBuildClasspath(@NotNull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
+  public void setModulesBuildClasspath(@Nonnull Map<String, ExternalModuleBuildClasspathPojo> modulesBuildClasspath) {
     myModulesBuildClasspath = modulesBuildClasspath;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getProjectBuildClasspath() {
     return myProjectBuildClasspath;
   }
 
-  public void setProjectBuildClasspath(@NotNull List<String> projectBuildClasspath) {
+  public void setProjectBuildClasspath(@Nonnull List<String> projectBuildClasspath) {
     myProjectBuildClasspath = projectBuildClasspath;
   }
 

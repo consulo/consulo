@@ -18,8 +18,8 @@ package com.intellij.openapi.roots.libraries;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,12 +31,12 @@ public abstract class LibraryDetectionManager {
     return ServiceManager.getService(LibraryDetectionManager.class);
   }
 
-  public abstract boolean processProperties(@NotNull List<VirtualFile> files, @NotNull LibraryPropertiesProcessor processor);
+  public abstract boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor);
 
   @Nullable
-  public abstract Pair<LibraryType<?>, LibraryProperties<?>> detectType(@NotNull List<VirtualFile> files);
+  public abstract Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files);
 
   public interface LibraryPropertiesProcessor {
-    <P extends LibraryProperties> boolean processProperties(@NotNull LibraryKind kind, @NotNull P properties);
+    <P extends LibraryProperties> boolean processProperties(@Nonnull LibraryKind kind, @Nonnull P properties);
   }
 }

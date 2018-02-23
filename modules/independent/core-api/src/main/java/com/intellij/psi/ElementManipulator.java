@@ -18,7 +18,7 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,10 +39,10 @@ public interface ElementManipulator<T extends PsiElement> {
    * @return changed element
    * @throws IncorrectOperationException if something goes wrong
    */
-  T handleContentChange(@NotNull T element, @NotNull TextRange range, String newContent) throws IncorrectOperationException;
+  T handleContentChange(@Nonnull T element, @Nonnull TextRange range, String newContent) throws IncorrectOperationException;
 
-  T handleContentChange(@NotNull T element, String newContent) throws IncorrectOperationException;
+  T handleContentChange(@Nonnull T element, String newContent) throws IncorrectOperationException;
 
-  @NotNull
-  TextRange getRangeInElement(@NotNull T element);
+  @Nonnull
+  TextRange getRangeInElement(@Nonnull T element);
 }

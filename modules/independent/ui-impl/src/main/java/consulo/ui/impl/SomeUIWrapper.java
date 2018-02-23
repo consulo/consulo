@@ -21,8 +21,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventListener;
 import java.util.function.Function;
@@ -33,53 +33,53 @@ import java.util.function.Supplier;
  * @since 15-Oct-17
  */
 public interface SomeUIWrapper extends Component {
-  @NotNull
+  @Nonnull
   UIDataObject dataObject();
 
   @Override
-  default <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  default <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     dataObject().putUserData(key, value);
   }
 
   @Nullable
   @Override
-  default <T> T getUserData(@NotNull Key<T> key) {
+  default <T> T getUserData(@Nonnull Key<T> key) {
     return dataObject().getUserData(key);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  default <T> Runnable addUserDataProvider(@NotNull Key<T> key, @NotNull Supplier<T> supplier) {
+  default <T> Runnable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
     return addUserDataProvider(k -> k == key ? supplier.get() : null);
   }
 
   @Override
-  @NotNull
-  default Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
+  @Nonnull
+  default Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     return dataObject().addUserDataProvider(function);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  default <T extends EventListener> Runnable addListener(@NotNull Class<T> eventClass, @NotNull T listener) {
+  default <T extends EventListener> Runnable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
     return dataObject().addListener(eventClass, listener);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  default <T extends EventListener> T getListenerDispatcher(@NotNull Class<T> eventClass) {
+  default <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
     return dataObject().getDispatcher(eventClass);
   }
 
   @RequiredUIAccess
   @Override
-  default void addBorder(@NotNull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
     dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
   }
 
   @RequiredUIAccess
   @Override
-  default void removeBorder(@NotNull BorderPosition borderPosition) {
+  default void removeBorder(@Nonnull BorderPosition borderPosition) {
     dataObject().removeBorder(borderPosition);
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.newvfs.events;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -31,16 +31,16 @@ public class VFileCreateEvent extends VFileEvent {
   private VirtualFile myCreatedFile;
 
   public VFileCreateEvent(Object requestor,
-                          @NotNull VirtualFile parent,
-                          @NotNull String childName,
+                          @Nonnull VirtualFile parent,
+                          @Nonnull String childName,
                           final boolean isDirectory,
                           final boolean isFromRefresh) {
     this(requestor, parent, childName, isDirectory, isFromRefresh, false);
   }
 
   public VFileCreateEvent(Object requestor,
-                          @NotNull VirtualFile parent,
-                          @NotNull String childName,
+                          @Nonnull VirtualFile parent,
+                          @Nonnull String childName,
                           boolean isDirectory,
                           boolean isFromRefresh,
                           boolean isReCreation) {
@@ -89,7 +89,7 @@ public class VFileCreateEvent extends VFileEvent {
     myCreatedFile = null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myParent.getFileSystem();

@@ -23,8 +23,8 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ConcurrentHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -52,7 +52,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
   }
 
   //read external only
-  public TextAttributesKey(@NotNull Element element) {
+  public TextAttributesKey(@Nonnull Element element) {
     this(JDOMExternalizerUtil.readField(element, "myExternalName"));
     Element myDefaultAttributesElement = JDOMExternalizerUtil.getOption(element, "myDefaultAttributes");
     if (myDefaultAttributesElement != null) {
@@ -60,8 +60,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     }
   }
 
-  @NotNull
-  public static TextAttributesKey find(@NotNull @NonNls String externalName) {
+  @Nonnull
+  public static TextAttributesKey find(@Nonnull @NonNls String externalName) {
     return ConcurrencyUtil.cacheOrGet(ourRegistry, externalName, new TextAttributesKey(externalName));
   }
 
@@ -75,7 +75,7 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
   }
 
   @Override
-  public int compareTo(@NotNull TextAttributesKey key) {
+  public int compareTo(@Nonnull TextAttributesKey key) {
     return myExternalName.compareTo(key.myExternalName);
   }
 
@@ -86,7 +86,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
    * @return the new key instance, or an existing instance if the key with the same
    *         identifier was already registered.
    */
-  @NotNull public static TextAttributesKey createTextAttributesKey(@NonNls @NotNull String externalName) {
+  @Nonnull
+  public static TextAttributesKey createTextAttributesKey(@NonNls @Nonnull String externalName) {
     return find(externalName);
   }
 
@@ -145,9 +146,9 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
    *         identifier was already registered.
    * @deprecated Use {@link #createTextAttributesKey(String, TextAttributesKey)} to guarantee compatibility with generic color schemes.
    */
-  @NotNull
+  @Nonnull
   @Deprecated
-  public static TextAttributesKey createTextAttributesKey(@NonNls @NotNull String externalName, TextAttributes defaultAttributes) {
+  public static TextAttributesKey createTextAttributesKey(@NonNls @Nonnull String externalName, TextAttributes defaultAttributes) {
     TextAttributesKey key = find(externalName);
     if (key.myDefaultAttributes == null || key.myDefaultAttributes == NULL_ATTRIBUTES) {
       key.myDefaultAttributes = defaultAttributes;
@@ -155,8 +156,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
     return key;
   }
 
-  @NotNull
-  public static TextAttributesKey createTextAttributesKey(@NonNls @NotNull Language language, TextAttributesKey defaultAttributes) {
+  @Nonnull
+  public static TextAttributesKey createTextAttributesKey(@NonNls @Nonnull Language language, TextAttributesKey defaultAttributes) {
     return createTextAttributesKey(language.getName() + "_" + defaultAttributes.getExternalName(), defaultAttributes);
   }
 
@@ -176,8 +177,8 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
    * @return the new key instance, or an existing instance if the key with the same
    *         identifier was already registered.
    */
-  @NotNull
-  public static TextAttributesKey createTextAttributesKey(@NonNls @NotNull String externalName, TextAttributesKey fallbackAttributeKey) {
+  @Nonnull
+  public static TextAttributesKey createTextAttributesKey(@NonNls @Nonnull String externalName, TextAttributesKey fallbackAttributeKey) {
     TextAttributesKey key = find(externalName);
     key.setFallbackAttributeKey(fallbackAttributeKey);
     return key;

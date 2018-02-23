@@ -20,8 +20,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +59,7 @@ public class SchemeImporterEP <S extends Named> extends AbstractExtensionPointBe
    * @return A collection of importers capable of importing schemes of the given class. An empty collection is returned if there are
    *         no matching importers.
    */
-  @NotNull
+  @Nonnull
   public static <S extends Named> Collection<SchemeImporterEP<S>> getExtensions(Class<S> schemeClass) {
     List<SchemeImporterEP<S>> importers = new ArrayList<SchemeImporterEP<S>>();
     for (SchemeImporterEP<?> importerEP : EP_NAME.getExtensions()) {
@@ -79,7 +79,7 @@ public class SchemeImporterEP <S extends Named> extends AbstractExtensionPointBe
    * @return The found importer or null if there are no importers for the given name and scheme class.
    */
   @Nullable
-  public static <S extends Named> SchemeImporter<S> getImporter(@NotNull String name, Class<S> schemeClass) {
+  public static <S extends Named> SchemeImporter<S> getImporter(@Nonnull String name, Class<S> schemeClass) {
     for (SchemeImporterEP<S> importerEP : getExtensions(schemeClass)) {
       if (name.equals(importerEP.name)) {
         return importerEP.getInstance();

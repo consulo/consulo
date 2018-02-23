@@ -1,8 +1,7 @@
 package com.intellij.openapi.externalSystem.model.task;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -10,16 +9,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ExternalSystemTask {
 
-  @NotNull
+  @Nonnull
   ExternalSystemTaskId getId();
 
-  @NotNull
+  @Nonnull
   ExternalSystemTaskState getState();
 
   /**
    * @return    error occurred during the task execution (if any)
    */
-  @Nullable
+  @javax.annotation.Nullable
   Throwable getError();
 
   /**
@@ -28,14 +27,14 @@ public interface ExternalSystemTask {
    * @param indicator  target progress indicator
    * @param listeners  callbacks to be notified on task execution update
    */
-  void execute(@NotNull ProgressIndicator indicator, @NotNull ExternalSystemTaskNotificationListener... listeners);
+  void execute(@Nonnull ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners);
   
   /**
    * Executes current task at the calling thread, i.e. the call to this method blocks.
    * 
    * @param listeners  callbacks to be notified about the task execution update
    */
-  void execute(@NotNull ExternalSystemTaskNotificationListener... listeners);
+  void execute(@Nonnull ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Cancels current task and updates given indicator's {@link ProgressIndicator#setText2(String) status} during that.
@@ -43,14 +42,14 @@ public interface ExternalSystemTask {
    * @param indicator  target progress indicator
    * @param listeners  callbacks to be notified on task execution update
    */
-  boolean cancel(@NotNull ProgressIndicator indicator, @NotNull ExternalSystemTaskNotificationListener... listeners);
+  boolean cancel(@Nonnull ProgressIndicator indicator, @Nonnull ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Cancels current task at the calling thread, i.e. the call to this method blocks.
    *
    * @param listeners  callbacks to be notified about the task execution update
    */
-  boolean cancel(@NotNull ExternalSystemTaskNotificationListener... listeners);
+  boolean cancel(@Nonnull ExternalSystemTaskNotificationListener... listeners);
 
   /**
    * Forces current task to refresh {@link #getState() its state}.

@@ -22,8 +22,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,12 +55,12 @@ public interface Rearranger<E extends ArrangementEntry> {
    *                  available at the given context plus newly created entry for the given element;
    *                  <code>null</code> otherwise
    */
-  @Nullable
-  Pair<E, List<E>> parseWithNew(@NotNull PsiElement root,
-                                @Nullable Document document,
-                                @NotNull Collection<TextRange> ranges,
-                                @NotNull PsiElement element,
-                                @NotNull ArrangementSettings settings);
+  @javax.annotation.Nullable
+  Pair<E, List<E>> parseWithNew(@Nonnull PsiElement root,
+                                @javax.annotation.Nullable Document document,
+                                @Nonnull Collection<TextRange> ranges,
+                                @Nonnull PsiElement element,
+                                @Nonnull ArrangementSettings settings);
 
   /**
    * Allows to build rearranger-interested data for the given element.
@@ -73,11 +73,11 @@ public interface Rearranger<E extends ArrangementEntry> {
    *                  in order to build method dependency graph if no such grouping rule is defined
    * @return          given root's children which are subject for further rearrangement
    */
-  @NotNull
-  List<E> parse(@NotNull PsiElement root,
-                @Nullable Document document,
-                @NotNull Collection<TextRange> ranges,
-                @NotNull ArrangementSettings settings);
+  @Nonnull
+  List<E> parse(@Nonnull PsiElement root,
+                @javax.annotation.Nullable Document document,
+                @Nonnull Collection<TextRange> ranges,
+                @Nonnull ArrangementSettings settings);
 
   /**
    * Allows to answer how many blank lines should be inserted before the target arrangement entry which position is changed.
@@ -89,7 +89,7 @@ public interface Rearranger<E extends ArrangementEntry> {
    * @return          number of blank lines to insert before the target entry;
    *                  negative as an indication that no blank lines adjustment is necessary
    */
-  int getBlankLines(@NotNull CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, @NotNull E target);
+  int getBlankLines(@Nonnull CodeStyleSettings settings, @javax.annotation.Nullable E parent, @Nullable E previous, @Nonnull E target);
 
 
   /**
@@ -99,6 +99,6 @@ public interface Rearranger<E extends ArrangementEntry> {
    * <p/>
    * @see com.intellij.psi.codeStyle.arrangement.DefaultArrangementSettingsSerializer
    */
-  @NotNull
+  @Nonnull
   ArrangementSettingsSerializer getSerializer();
 }

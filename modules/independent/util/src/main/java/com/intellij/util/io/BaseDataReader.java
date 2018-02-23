@@ -17,7 +17,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +45,7 @@ public abstract class BaseDataReader {
     start("");
   }
 
-  protected void start(@NotNull final String presentableName) {
+  protected void start(@Nonnull final String presentableName) {
     if (StringUtil.isEmptyOrSpaces(presentableName)) {
       LOG.warn(new Throwable("Must provide not-empty presentable name"));
     }
@@ -98,8 +98,8 @@ public abstract class BaseDataReader {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
-  protected abstract Future<?> executeOnPooledThread(@NotNull Runnable runnable);
+  @Nonnull
+  protected abstract Future<?> executeOnPooledThread(@Nonnull Runnable runnable);
 
   public interface SleepingPolicy {
     int sleepTimeWhenWasActive = 1;

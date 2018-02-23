@@ -15,8 +15,7 @@
  */
 package com.intellij.ui.popup;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**

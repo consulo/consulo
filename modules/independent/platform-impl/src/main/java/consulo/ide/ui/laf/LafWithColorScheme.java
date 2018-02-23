@@ -15,13 +15,13 @@
  */
 package consulo.ide.ui.laf;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14.12.14
  */
 public interface LafWithColorScheme {
-  @NotNull
+  @Nonnull
   String getColorSchemeName();
 }

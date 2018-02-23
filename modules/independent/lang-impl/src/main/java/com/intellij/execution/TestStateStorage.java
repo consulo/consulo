@@ -28,8 +28,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -71,7 +71,7 @@ public class TestStateStorage implements Disposable {
   private PersistentHashMap<String, Record> myMap;
   private volatile ScheduledFuture<?> myMapFlusher;
 
-  public static TestStateStorage getInstance(@NotNull Project project) {
+  public static TestStateStorage getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, TestStateStorage.class);
   }
 
@@ -98,18 +98,18 @@ public class TestStateStorage implements Disposable {
     if (myMap != null && myMap.isDirty()) myMap.force();
   }
 
-  @NotNull
+  @Nonnull
   private static ThrowableComputable<PersistentHashMap<String, Record>, IOException> getComputable(final File file) {
     return () -> new PersistentHashMap<>(file, EnumeratorStringDescriptor.INSTANCE, new DataExternalizer<Record>() {
       @Override
-      public void save(@NotNull DataOutput out, Record value) throws IOException {
+      public void save(@Nonnull DataOutput out, Record value) throws IOException {
         out.writeInt(value.magnitude);
         out.writeLong(value.date.getTime());
         out.writeLong(value.configurationHash);
       }
 
       @Override
-      public Record read(@NotNull DataInput in) throws IOException {
+      public Record read(@Nonnull DataInput in) throws IOException {
         return new Record(in.readInt(), new Date(in.readLong()), in.readLong());
       }
     }, 4096, CURRENT_VERSION);
@@ -160,7 +160,7 @@ public class TestStateStorage implements Disposable {
     return result;
   }
 
-  public synchronized void writeState(@NotNull String testUrl, Record record) {
+  public synchronized void writeState(@Nonnull String testUrl, Record record) {
     if (myMap == null) return;
     try {
       myMap.put(testUrl, record);

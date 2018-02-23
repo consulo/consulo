@@ -51,8 +51,8 @@ import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.table.JBListTable;
 import com.intellij.util.ui.table.JBTableRowEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -380,7 +380,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   }
 
 
-  @NotNull
+  @Nonnull
   protected List<Pair<String, JPanel>> createAdditionalPanels() {
     return Collections.emptyList();
   }
@@ -648,7 +648,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     return "refactoring.changeSignature";
   }
 
-  @NotNull
+  @Nonnull
   public UpdateSignatureListener getSignatureUpdater() {
     return mySignatureUpdater;
   }

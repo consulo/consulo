@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -47,7 +47,7 @@ public class AnsiEscapeDecoder {
    * @param textAcceptor receives text fragments with color attributes.
    *                     It can implement ColoredChunksAcceptor to receive list of pairs (text, attribute).
    */
-  public void escapeText(@NotNull String text, @NotNull Key outputType, @NotNull ColoredTextAcceptor textAcceptor) {
+  public void escapeText(@Nonnull String text, @Nonnull Key outputType, @Nonnull ColoredTextAcceptor textAcceptor) {
     List<Pair<String, Key>> chunks = null;
     int pos = 0;
     text = normalizeAsciiControlCharacters(text);
@@ -80,8 +80,8 @@ public class AnsiEscapeDecoder {
     }
   }
 
-  @NotNull
-  private static String normalizeAsciiControlCharacters(@NotNull String text) {
+  @Nonnull
+  private static String normalizeAsciiControlCharacters(@Nonnull String text) {
     int ind = text.indexOf(BACKSPACE);
     if (ind == -1) {
       return text;
@@ -126,7 +126,7 @@ public class AnsiEscapeDecoder {
    * Selects all consecutive escape sequences and returns escape sequence end index (exclusive).
    * If the escape sequence isn't finished, returns -1.
    */
-  private static int findEscSeqEndIndex(@NotNull String text, final int escSeqBeginInd) {
+  private static int findEscSeqEndIndex(@Nonnull String text, final int escSeqBeginInd) {
     int beginInd = escSeqBeginInd;
     while (true) {
       int letterInd = findEscSeqLetterIndex(text, beginInd);
@@ -140,7 +140,7 @@ public class AnsiEscapeDecoder {
     }
   }
 
-  private static int findEscSeqLetterIndex(@NotNull String text, int escSeqBeginInd) {
+  private static int findEscSeqLetterIndex(@Nonnull String text, int escSeqBeginInd) {
     if (!text.regionMatches(escSeqBeginInd, CSI, 0, CSI.length())) {
       return -1;
     }
@@ -165,9 +165,9 @@ public class AnsiEscapeDecoder {
 
   @Nullable
   private List<Pair<String, Key>> processTextChunk(@Nullable List<Pair<String, Key>> buffer,
-                                                   @NotNull String text,
-                                                   @NotNull Key outputType,
-                                                   @NotNull ColoredTextAcceptor textAcceptor) {
+                                                   @Nonnull String text,
+                                                   @Nonnull Key outputType,
+                                                   @Nonnull ColoredTextAcceptor textAcceptor) {
     Key attributes = getCurrentOutputAttributes(outputType);
     if (textAcceptor instanceof ColoredChunksAcceptor) {
       if (buffer == null) {
@@ -181,15 +181,15 @@ public class AnsiEscapeDecoder {
     return buffer;
   }
 
-  @NotNull
-  protected Key getCurrentOutputAttributes(@NotNull Key outputType) {
+  @Nonnull
+  protected Key getCurrentOutputAttributes(@Nonnull Key outputType) {
     if (outputType == ProcessOutputTypes.STDERR || outputType == ProcessOutputTypes.SYSTEM) {
       return outputType;
     }
     return myCurrentTextAttributes != null ? myCurrentTextAttributes : outputType;
   }
 
-  public void coloredTextAvailable(@NotNull List<Pair<String, Key>> textChunks, ColoredTextAcceptor textAcceptor) {
+  public void coloredTextAvailable(@Nonnull List<Pair<String, Key>> textChunks, ColoredTextAcceptor textAcceptor) {
     for (Pair<String, Key> textChunk : textChunks) {
       textAcceptor.coloredTextAvailable(textChunk.getFirst(), textChunk.getSecond());
     }

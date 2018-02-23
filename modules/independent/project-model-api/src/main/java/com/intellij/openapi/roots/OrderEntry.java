@@ -17,8 +17,8 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.orderEntry.OrderEntryType;
 
 /**
@@ -37,7 +37,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * Return provider of ths order entry
    * @return provider
    */
-  @NotNull
+  @Nonnull
   OrderEntryType<?> getType();
 
   /**
@@ -52,7 +52,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @return list of virtual files.
    * @see #getUrls(OrderRootType)
    */
-  @NotNull
+  @Nonnull
   VirtualFile[] getFiles(OrderRootType type);
 
   /**
@@ -64,7 +64,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @param rootType the type of roots which should be returned.
    * @return the list of roots of the specified type.
    */
-  @NotNull
+  @Nonnull
   String[] getUrls(OrderRootType rootType);
 
   /**
@@ -72,7 +72,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return name of this OrderEntry to be shown to user.
    */
-  @NotNull
+  @Nonnull
   String getPresentableName();
 
   /**
@@ -88,7 +88,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return the module instance.
    */
-  @NotNull
+  @Nonnull
   Module getOwnerModule();
 
   /**
@@ -100,5 +100,5 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    */
   <R> R accept(RootPolicy<R> policy, @Nullable R initialValue);
 
-  boolean isEquivalentTo(@NotNull OrderEntry other);
+  boolean isEquivalentTo(@Nonnull OrderEntry other);
 }

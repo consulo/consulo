@@ -20,8 +20,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface ChangeLocalityDetector {
   /**
@@ -36,6 +35,6 @@ public interface ChangeLocalityDetector {
    *       changed element and all its parents anyway.
    *       So the parent check is enough, e.g: {@code changedElement.getParent() instanceof PsiCodeBlock}
    */
-  @Nullable
-  PsiElement getChangeHighlightingDirtyScopeFor(@NotNull PsiElement changedElement);
+  @javax.annotation.Nullable
+  PsiElement getChangeHighlightingDirtyScopeFor(@Nonnull PsiElement changedElement);
 }

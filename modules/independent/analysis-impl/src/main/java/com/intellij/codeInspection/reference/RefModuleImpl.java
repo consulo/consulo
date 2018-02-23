@@ -4,8 +4,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module getModule() {
     return myModule;
   }

@@ -23,7 +23,7 @@ import com.intellij.util.xmlb.SmartSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -37,7 +37,7 @@ public abstract class ProfileEx implements Profile {
 
   private final SmartSerializer mySerializer;
 
-  @NotNull
+  @Nonnull
   protected String myName;
 
   @SuppressWarnings("unused")
@@ -49,17 +49,17 @@ public abstract class ProfileEx implements Profile {
 
   private boolean myIsProjectLevel;
 
-  public ProfileEx(@NotNull String name) {
+  public ProfileEx(@Nonnull String name) {
     this(name, SmartSerializer.skipEmptySerializer());
   }
 
-  protected ProfileEx(@NotNull String name, @NotNull SmartSerializer serializer) {
+  protected ProfileEx(@Nonnull String name, @Nonnull SmartSerializer serializer) {
     myName = name;
     mySerializer = serializer;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   // ugly name to preserve compatibility
   @OptionTag("myName")
   public String getName() {
@@ -67,7 +67,7 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public void copyFrom(@NotNull Profile profile) {
+  public void copyFrom(@Nonnull Profile profile) {
     try {
       Element config = new Element("config");
       profile.writeExternal(config);
@@ -104,19 +104,19 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @Transient
   public ProfileManager getProfileManager() {
     return myProfileManager;
   }
 
   @Override
-  public void setProfileManager(@NotNull ProfileManager profileManager) {
+  public void setProfileManager(@Nonnull ProfileManager profileManager) {
     myProfileManager = profileManager;
   }
 
@@ -125,7 +125,7 @@ public abstract class ProfileEx implements Profile {
     mySerializer.readExternal(this, element);
   }
 
-  public void serializeInto(@NotNull Element element, boolean preserveCompatibility) {
+  public void serializeInto(@Nonnull Element element, boolean preserveCompatibility) {
     mySerializer.writeExternal(this, element, preserveCompatibility);
   }
 
@@ -146,13 +146,13 @@ public abstract class ProfileEx implements Profile {
   }
 
   @Override
-  public int compareTo(@NotNull Object o) {
+  public int compareTo(@Nonnull Object o) {
     if (o instanceof Profile) {
       return getName().compareToIgnoreCase(((Profile)o).getName());
     }
     return 0;
   }
 
-  public void convert(@NotNull Element element, @NotNull Project project) {
+  public void convert(@Nonnull Element element, @Nonnull Project project) {
   }
 }

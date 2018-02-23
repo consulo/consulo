@@ -26,8 +26,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.speedSearch.FilteringListModel;
 import com.intellij.util.Function;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -459,11 +459,11 @@ public class MasterDetailPopupBuilder implements MasterController {
   }
 
   private class MyPopupChooserBuilder extends PopupChooserBuilder {
-    public MyPopupChooserBuilder(@NotNull JList list) {
+    public MyPopupChooserBuilder(@Nonnull JList list) {
       super(list);
     }
 
-    private MyPopupChooserBuilder(@NotNull JTree tree) {
+    private MyPopupChooserBuilder(@Nonnull JTree tree) {
       super(tree);
     }
 

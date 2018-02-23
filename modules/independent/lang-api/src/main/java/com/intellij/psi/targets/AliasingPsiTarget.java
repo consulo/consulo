@@ -21,11 +21,11 @@ import com.intellij.psi.DelegatePsiTarget;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.RefactoringFactory;
 import com.intellij.refactoring.RenameRefactoring;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class AliasingPsiTarget extends DelegatePsiTarget implements PomRenameableTarget<AliasingPsiTarget>{
-  public AliasingPsiTarget(@NotNull PsiNamedElement element) {
+  public AliasingPsiTarget(@Nonnull PsiNamedElement element) {
     super(element);
   }
 
@@ -35,27 +35,27 @@ public class AliasingPsiTarget extends DelegatePsiTarget implements PomRenameabl
   }
 
   @Override
-  public AliasingPsiTarget setName(@NotNull String newName) {
+  public AliasingPsiTarget setName(@Nonnull String newName) {
     return setAliasName(newName);
   }
 
    @Override
-   @NotNull
+   @Nonnull
   public String getName() {
     return StringUtil.notNullize(getNameAlias(((PsiNamedElement)getNavigationElement()).getName()));
   }
 
-  @NotNull
-  public AliasingPsiTarget setAliasName(@NotNull String newAliasName) {
+  @Nonnull
+  public AliasingPsiTarget setAliasName(@Nonnull String newAliasName) {
     return this;
   }
 
   @Nullable
-  public String getNameAlias(@Nullable String delegatePsiTargetName) {
+  public String getNameAlias(@javax.annotation.Nullable String delegatePsiTargetName) {
     return delegatePsiTargetName;
   }
 
-  protected void renameTargets(@NotNull String newDelegateName) {
+  protected void renameTargets(@Nonnull String newDelegateName) {
     final PsiNamedElement namedElement = (PsiNamedElement)getNavigationElement();
     if (!newDelegateName.equals(namedElement.getName())) {
       final RenameRefactoring refactoring =

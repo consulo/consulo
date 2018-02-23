@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,19 +41,19 @@ import java.util.List;
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
  */
 public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
-  @NotNull
+  @Nonnull
   private final ProjectLevelVcsManager myVcsManager;
 
   private boolean myForbid; // for tests only
 
-  @NotNull
+  @Nonnull
   private final ZipperUpdater myZipperUpdater;
   private final List<FilesAndDirs> myQueue;
   private final Object myLock;
-  @NotNull
+  @Nonnull
   private final Runnable myDirtReporter;
 
-  public VcsDirtyScopeVfsListener(@NotNull Project project, @NotNull ProjectLevelVcsManager vcsManager, @NotNull VcsDirtyScopeManager dirtyScopeManager) {
+  public VcsDirtyScopeVfsListener(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager, @Nonnull VcsDirtyScopeManager dirtyScopeManager) {
     myVcsManager = vcsManager;
 
     myLock = new Object();
@@ -83,11 +83,11 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
     project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, this);
   }
 
-  public static VcsDirtyScopeVfsListener getInstance(@NotNull Project project) {
+  public static VcsDirtyScopeVfsListener getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsDirtyScopeVfsListener.class);
   }
 
-  public static void install(@NotNull Project project) {
+  public static void install(@Nonnull Project project) {
     if (!project.isOpen()) {
       throw new RuntimeException("Already closed: " + project);
     }
@@ -111,7 +111,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
   }
 
   @Override
-  public void before(@NotNull List<? extends VFileEvent> events) {
+  public void before(@Nonnull List<? extends VFileEvent> events) {
     if (myForbid || !myVcsManager.hasAnyMappings()) return;
     final FilesAndDirs dirtyFilesAndDirs = new FilesAndDirs();
     // collect files and directories - sources of events
@@ -131,7 +131,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
   }
 
   @Override
-  public void after(@NotNull List<? extends VFileEvent> events) {
+  public void after(@Nonnull List<? extends VFileEvent> events) {
     if (myForbid || !myVcsManager.hasAnyMappings()) return;
     final FilesAndDirs dirtyFilesAndDirs = new FilesAndDirs();
     // collect files and directories - sources of events
@@ -166,7 +166,7 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
     markDirtyOnPooled(dirtyFilesAndDirs);
   }
 
-  private void markDirtyOnPooled(@NotNull FilesAndDirs dirtyFilesAndDirs) {
+  private void markDirtyOnPooled(@Nonnull FilesAndDirs dirtyFilesAndDirs) {
     if (!dirtyFilesAndDirs.isEmpty()) {
       synchronized (myLock) {
         myQueue.add(dirtyFilesAndDirs);
@@ -181,9 +181,9 @@ public class VcsDirtyScopeVfsListener implements BulkFileListener, Disposable {
    * not recursively, you should add it to files.
    */
   private static class FilesAndDirs {
-    @NotNull
+    @Nonnull
     HashSet<FilePath> dirtyFiles = ContainerUtil.newHashSet();
-    @NotNull
+    @Nonnull
     HashSet<FilePath> dirtyDirs = ContainerUtil.newHashSet();
 
     private void add(@Nullable VirtualFile file, boolean addToFiles) {

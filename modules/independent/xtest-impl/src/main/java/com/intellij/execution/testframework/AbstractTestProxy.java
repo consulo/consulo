@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,9 +60,9 @@ public abstract class AbstractTestProxy extends CompositePrintable {
 
   public abstract boolean isConfig();
 
-  public abstract Location getLocation(@NotNull Project project, @NotNull GlobalSearchScope searchScope);
+  public abstract Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope);
 
-  public abstract Navigatable getDescriptor(@Nullable Location location, @NotNull TestConsoleProperties properties);
+  public abstract Navigatable getDescriptor(@Nullable Location location, @Nonnull TestConsoleProperties properties);
 
   public abstract AbstractTestProxy getParent();
 
@@ -75,14 +75,14 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getDurationString(TestConsoleProperties consoleProperties) {
     return null;
   }
 
   public abstract boolean shouldSkipRootNodeForExport();
 
-  public void fireOnNewPrintable(@NotNull final Printable printable) {
+  public void fireOnNewPrintable(@Nonnull final Printable printable) {
     if (myPrinter != null) {
       myPrinter.onNewAvailable(printable);
     }
@@ -101,13 +101,13 @@ public abstract class AbstractTestProxy extends CompositePrintable {
    * @param printable Printable info
    */
   @Override
-  public void addLast(@NotNull final Printable printable) {
+  public void addLast(@Nonnull final Printable printable) {
     super.addLast(printable);
     fireOnNewPrintable(printable);
   }
 
   @Override
-  public void insert(@NotNull final Printable printable, int i) {
+  public void insert(@Nonnull final Printable printable, int i) {
     super.insert(printable, i);
     fireOnNewPrintable(printable);
   }
@@ -148,13 +148,13 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return myExceptionMark;
   }
 
-  @NotNull
+  @Nonnull
   public List<DiffHyperlink> getDiffViewerProviders() {
     final DiffHyperlink provider = getDiffViewerProvider();
     return provider == null ? Collections.emptyList() : Collections.singletonList(provider);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public DiffHyperlink getDiffViewerProvider() {
     return null;
   }
@@ -164,7 +164,7 @@ public abstract class AbstractTestProxy extends CompositePrintable {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getMetainfo() {
     return null;
   }

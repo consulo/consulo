@@ -23,7 +23,7 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.PlatformColors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 public class BlockTreeNode extends SimpleNode {
@@ -73,7 +73,7 @@ public class BlockTreeNode extends SimpleNode {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{myBlock};

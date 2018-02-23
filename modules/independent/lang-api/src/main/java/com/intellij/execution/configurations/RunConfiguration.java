@@ -20,8 +20,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Interface for run configurations which can be managed by a user and displayed in the UI.
@@ -38,7 +37,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the configuration type.
    */
-  @NotNull
+  @Nonnull
   ConfigurationType getType();
 
   /**
@@ -63,7 +62,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the settings editor component.
    */
-  @NotNull
+  @Nonnull
   SettingsEditor<? extends RunConfiguration> getConfigurationEditor();
 
   /**
@@ -80,7 +79,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    * @param provider source of assorted information about the configuration being edited.
    * @return the per-runner settings.
    */
-  @Nullable
+  @javax.annotation.Nullable
   ConfigurationPerRunnerSettings createRunnerSettings(ConfigurationInfoProvider provider);
 
   /**
@@ -90,7 +89,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    * @param runner the runner the settings for which need to be edited.
    * @return the editor for the per-runner settings.
    */
-  @Nullable
+  @javax.annotation.Nullable
   SettingsEditor<ConfigurationPerRunnerSettings> getRunnerSettingsEditor(ProgramRunner runner);
 
   /**

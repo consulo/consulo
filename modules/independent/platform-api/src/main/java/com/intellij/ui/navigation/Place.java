@@ -19,8 +19,8 @@ package com.intellij.ui.navigation;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,7 +30,7 @@ public class Place implements ComparableObject {
   private LinkedHashMap<String, Object> myPath = new LinkedHashMap<>();
 
   @Override
-  @NotNull
+  @Nonnull
   public final Object[] getEqualityObjects() {
     return new Object[] {myPath};
   }
@@ -45,7 +45,7 @@ public class Place implements ComparableObject {
     return ComparableObjectCheck.hashCode(this, super.hashCode());
   }
 
-  @NotNull
+  @Nonnull
   public Place putPath(String name, Object value) {
     myPath.put(name, value);
     return this;
@@ -97,7 +97,7 @@ public class Place implements ComparableObject {
 
     ActionCallback navigateTo(@Nullable Place place, final boolean requestFocus);
 
-    void queryPlace(@NotNull Place place);
+    void queryPlace(@Nonnull Place place);
 
   }
 

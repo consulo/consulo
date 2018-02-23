@@ -25,7 +25,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,7 @@ public class PresentationModeProgressPanel {
     myUpdateQueue.queue(myUpdate);
   }
 
-  @NotNull
+  @Nonnull
   private static Color getTextForeground() {
     return EditorColorsManager.getInstance().getGlobalScheme().getDefaultForeground();
   }
@@ -95,7 +95,7 @@ public class PresentationModeProgressPanel {
     myEastButtons.forEach(b -> b.updateAction.run());
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getProgressPanel() {
     return myRootPanel;
   }

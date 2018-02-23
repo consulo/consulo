@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ public class TextDiffTypeFactory {
   private TextDiffTypeFactory() {
   }
 
-  @NotNull
-  public synchronized TextDiffType createTextDiffType(@NonNls @NotNull TextAttributesKey key,
-                                                      @NotNull String name) {
+  @Nonnull
+  public synchronized TextDiffType createTextDiffType(@NonNls @Nonnull TextAttributesKey key,
+                                                      @Nonnull String name) {
     TextDiffType type = new TextDiffTypeImpl(key, name);
     myTypes.add(type);
     return type;
@@ -52,22 +52,24 @@ public class TextDiffTypeFactory {
   }
 
   private static class TextDiffTypeImpl implements TextDiffType {
-    @NotNull private final TextAttributesKey myKey;
-    @NotNull private final String myName;
+    @Nonnull
+    private final TextAttributesKey myKey;
+    @Nonnull
+    private final String myName;
 
     @SuppressWarnings("SpellCheckingInspection")
-    public TextDiffTypeImpl(@NotNull TextAttributesKey key, @NotNull String name) {
+    public TextDiffTypeImpl(@Nonnull TextAttributesKey key, @Nonnull String name) {
       myKey = key;
       myName = name;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return myName;
     }
 
-    @NotNull
+    @Nonnull
     public TextAttributes getAttributes(@Nullable Editor editor) {
       if (editor == null) {
         return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(myKey);
@@ -77,13 +79,13 @@ public class TextDiffTypeFactory {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Color getColor(@Nullable Editor editor) {
+    public Color getColor(@javax.annotation.Nullable Editor editor) {
       return getAttributes(editor).getBackgroundColor();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Color getIgnoredColor(@Nullable Editor editor) {
       TextAttributes attributes = getAttributes(editor);
@@ -102,9 +104,9 @@ public class TextDiffTypeFactory {
       }
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    public Color getMarkerColor(@Nullable Editor editor) {
+    public Color getMarkerColor(@javax.annotation.Nullable Editor editor) {
       return getAttributes(editor).getErrorStripeColor();
     }
 
@@ -116,8 +118,8 @@ public class TextDiffTypeFactory {
 
   private static final double MIDDLE_COLOR_FACTOR = 0.6;
 
-  @NotNull
-  private static Color getMiddleColor(@NotNull Color fg, @NotNull Color bg) {
+  @Nonnull
+  private static Color getMiddleColor(@Nonnull Color fg, @Nonnull Color bg) {
     int red = avg(fg.getRed(), bg.getRed(), MIDDLE_COLOR_FACTOR);
     int green = avg(fg.getGreen(), bg.getGreen(), MIDDLE_COLOR_FACTOR);
     int blue = avg(fg.getBlue(), bg.getBlue(), MIDDLE_COLOR_FACTOR);

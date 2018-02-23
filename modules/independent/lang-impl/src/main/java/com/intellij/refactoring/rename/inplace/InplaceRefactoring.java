@@ -80,8 +80,8 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.PositionTracker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -215,7 +215,7 @@ public abstract class InplaceRefactoring {
     return buildTemplateAndStart(refs, stringUsages, scope, containingFile);
   }
 
-  protected boolean notSameFile(@Nullable VirtualFile file, @NotNull PsiFile containingFile) {
+  protected boolean notSameFile(@Nullable VirtualFile file, @Nonnull PsiFile containingFile) {
     return !Comparing.equal(getTopLevelVirtualFile(containingFile.getViewProvider()), file);
   }
 
@@ -570,7 +570,7 @@ public abstract class InplaceRefactoring {
     }
   }
 
-  private void addReferenceIfNeeded(@NotNull final Collection<PsiReference> refs, @Nullable final PsiReference reference) {
+  private void addReferenceIfNeeded(@Nonnull final Collection<PsiReference> refs, @Nullable final PsiReference reference) {
     if (reference != null && reference.isReferenceTo(myElementToRename) && !refs.contains(reference)) {
       refs.add(reference);
     }
@@ -649,10 +649,10 @@ public abstract class InplaceRefactoring {
     }
   }
 
-  protected void addHighlights(@NotNull Map<TextRange, TextAttributes> ranges,
-                               @NotNull Editor editor,
-                               @NotNull Collection<RangeHighlighter> highlighters,
-                               @NotNull HighlightManager highlightManager) {
+  protected void addHighlights(@Nonnull Map<TextRange, TextAttributes> ranges,
+                               @Nonnull Editor editor,
+                               @Nonnull Collection<RangeHighlighter> highlighters,
+                               @Nonnull HighlightManager highlightManager) {
     for (Map.Entry<TextRange, TextAttributes> entry : ranges.entrySet()) {
       TextRange range = entry.getKey();
       TextAttributes attributes = entry.getValue();

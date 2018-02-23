@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -30,7 +30,7 @@ public interface StartupActivity {
 
   ExtensionPointName<StartupActivity> POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.postStartupActivity");
 
-  default void runActivity(@NotNull UIAccess uiAccess, @NotNull Project project) {
+  default void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     runActivity(project);
   }
 

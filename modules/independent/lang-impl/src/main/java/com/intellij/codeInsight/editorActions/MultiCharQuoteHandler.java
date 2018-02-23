@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Max Medvedev

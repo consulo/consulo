@@ -21,8 +21,8 @@ import com.intellij.openapi.util.JDOMExternalizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathMappingSettings;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class RemoteSdkPropertiesHolder implements RemoteSdkProperties {
 
   private boolean myValid = true;
 
-  @NotNull
+  @Nonnull
   private PathMappingSettings myPathMappings = new PathMappingSettings();
 
   public RemoteSdkPropertiesHolder(String name) {
@@ -105,7 +105,7 @@ public class RemoteSdkPropertiesHolder implements RemoteSdkProperties {
     myRemoteRoots = Sets.newTreeSet(remoteRoots);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PathMappingSettings getPathMappings() {
     return myPathMappings;

@@ -3,7 +3,7 @@ package com.intellij.vcs.log.graph;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.paint.ColorGenerator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class DefaultColorGenerator implements ColorGenerator {
     ourColorMap.put(GraphColorManagerImpl.DEFAULT_COLOR, JBColor.BLACK);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JBColor getColor(int branchNumber) {
     JBColor color = ourColorMap.get(branchNumber);
@@ -34,7 +34,7 @@ public class DefaultColorGenerator implements ColorGenerator {
     return Math.abs(n) % 100 + 70;
   }
 
-  @NotNull
+  @Nonnull
   private static JBColor calcColor(int indexColor) {
     int r = indexColor * 200 + 30;
     int g = indexColor * 130 + 50;

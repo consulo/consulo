@@ -44,9 +44,9 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import org.apache.oro.text.regex.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -56,7 +56,8 @@ import static com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN;
 import static com.intellij.ui.SimpleTextAttributes.STYLE_SEARCH_MATCH;
 
 public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, Comparator<Object>, EdtSortingModel {
-  @Nullable private final Project myProject;
+  @Nullable
+  private final Project myProject;
   private final Component myContextComponent;
 
   protected final ActionManager myActionManager = ActionManager.getInstance();
@@ -126,10 +127,12 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   }
 
   public static class MatchedValue implements Comparable<MatchedValue> {
-    @NotNull public final Comparable value;
-    @NotNull final String pattern;
+    @Nonnull
+    public final Comparable value;
+    @Nonnull
+    final String pattern;
 
-    MatchedValue(@NotNull Comparable value, @NotNull String pattern) {
+    MatchedValue(@Nonnull Comparable value, @Nonnull String pattern) {
       this.value = value;
       this.pattern = pattern;
     }
@@ -150,7 +153,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
       return 0;
     }
 
-    private int getRank(@NotNull String text) {
+    private int getRank(@Nonnull String text) {
       if (StringUtil.equalsIgnoreCase(StringUtil.trimEnd(text, "..."), pattern)) return 3;
       if (StringUtil.startsWithIgnoreCase(text, pattern)) return 2;
       if (StringUtil.containsIgnoreCase(text, pattern)) return 1;
@@ -158,7 +161,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     }
 
     @Override
-    public int compareTo(@NotNull MatchedValue o) {
+    public int compareTo(@Nonnull MatchedValue o) {
       boolean edt = ApplicationManager.getApplication().isDispatchThread();
 
       if (value instanceof ActionWrapper && o.value instanceof ActionWrapper && edt) {
@@ -195,7 +198,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   public ListCellRenderer getListCellRenderer() {
     return new DefaultListCellRenderer() {
       @Override
-      public Component getListCellRendererComponent(@NotNull final JList list,
+      public Component getListCellRendererComponent(@Nonnull final JList list,
                                                     final Object matchedValue,
                                                     final int index, final boolean isSelected, final boolean cellHasFocus) {
         final JPanel panel = new JPanel(new BorderLayout());
@@ -310,7 +313,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     };
   }
 
-  protected String getActionId(@NotNull final AnAction anAction) {
+  protected String getActionId(@Nonnull final AnAction anAction) {
     return myActionManager.getId(anAction);
   }
 
@@ -355,7 +358,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   }
 
   @Override
-  public int compare(@NotNull Object o1, @NotNull Object o2) {
+  public int compare(@Nonnull Object o1, @Nonnull Object o2) {
     if (ChooseByNameBase.EXTRA_ELEM.equals(o1)) return 1;
     if (ChooseByNameBase.EXTRA_ELEM.equals(o2)) return -1;
     return ((MatchedValue)o1).compareTo((MatchedValue)o2);
@@ -376,19 +379,19 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getNames(boolean checkBoxState) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getElementsByName(final String id, final boolean checkBoxState, final String pattern) {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
-  @NotNull
-  String getGroupName(@NotNull OptionDescription description) {
+  @Nonnull
+  String getGroupName(@Nonnull OptionDescription description) {
     String id = description.getConfigurableId();
     String name = myConfigurablesNames.get(id);
     String settings = ShowSettingsUtil.getSettingsMenuName();
@@ -447,7 +450,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSeparators() {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
@@ -458,13 +461,13 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
   }
 
   @Override
-  public boolean matches(@NotNull final String name, @NotNull final String pattern) {
+  public boolean matches(@Nonnull final String name, @Nonnull final String pattern) {
     final AnAction anAction = myActionManager.getAction(name);
     if (anAction == null) return true;
     return actionMatches(pattern, anAction) != MatchMode.NONE;
   }
 
-  protected MatchMode actionMatches(String pattern, @NotNull AnAction anAction) {
+  protected MatchMode actionMatches(String pattern, @Nonnull AnAction anAction) {
     Pattern compiledPattern = getPattern(pattern);
     Presentation presentation = anAction.getTemplatePresentation();
     String text = presentation.getText();
@@ -502,8 +505,8 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     return myContextComponent;
   }
 
-  @NotNull
-  Pattern getPattern(@NotNull String pattern) {
+  @Nonnull
+  Pattern getPattern(@Nonnull String pattern) {
     String converted = convertPattern(pattern.trim());
     Pattern compiledPattern = myCompiledPattern;
     if (compiledPattern != null && !Comparing.strEqual(converted, compiledPattern.getPattern())) {
@@ -521,9 +524,9 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     return compiledPattern;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public SortedSet<Object> sort(@NotNull Set<Object> elements) {
+  public SortedSet<Object> sort(@Nonnull Set<Object> elements) {
     TreeSet<Object> objects = ContainerUtilRt.newTreeSet(this);
     objects.addAll(elements);
     return objects;
@@ -648,7 +651,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     private final DataContext myDataContext;
     private Presentation myPresentation;
 
-    public ActionWrapper(@NotNull AnAction action, String groupName, MatchMode mode, DataContext dataContext) {
+    public ActionWrapper(@Nonnull AnAction action, String groupName, MatchMode mode, DataContext dataContext) {
       myAction = action;
       myMode = mode;
       myGroupName = groupName;
@@ -664,7 +667,7 @@ public class GotoActionModel implements ChooseByNameModel, CustomMatcherModel, C
     }
 
     @Override
-    public int compareTo(@NotNull ActionWrapper o) {
+    public int compareTo(@Nonnull ActionWrapper o) {
       int compared = myMode.compareTo(o.getMode());
       if (compared != 0) return compared;
       Presentation myPresentation = myAction.getTemplatePresentation();

@@ -3,7 +3,7 @@ package com.intellij.openapi.externalSystem.model.project;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,11 +24,11 @@ public class LibraryData extends AbstractNamedData implements Named {
   
   private final boolean myUnresolved;
 
-  public LibraryData(@NotNull ProjectSystemId owner, @NotNull String name) {
+  public LibraryData(@Nonnull ProjectSystemId owner, @Nonnull String name) {
     this(owner, name, false);
   }
 
-  public LibraryData(@NotNull ProjectSystemId owner, @NotNull String name, boolean unresolved) {
+  public LibraryData(@Nonnull ProjectSystemId owner, @Nonnull String name, boolean unresolved) {
     super(owner, name, String.format("%s: %s", owner.getReadableName(), name));
     myUnresolved = unresolved;
   }
@@ -37,13 +37,13 @@ public class LibraryData extends AbstractNamedData implements Named {
     return myUnresolved;
   }
 
-  @NotNull
-  public Set<String> getPaths(@NotNull LibraryPathType type) {
+  @Nonnull
+  public Set<String> getPaths(@Nonnull LibraryPathType type) {
     Set<String> result = myPaths.get(type);
     return result == null ? Collections.<String>emptySet() : result;
   }
 
-  public void addPath(@NotNull LibraryPathType type, @NotNull String path) {
+  public void addPath(@Nonnull LibraryPathType type, @Nonnull String path) {
     Set<String> paths = myPaths.get(type);
     if (paths == null) {
       myPaths.put(type, paths = new HashSet<String>());

@@ -16,7 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.shared.StaticPosition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -46,29 +46,29 @@ public interface TableLayout extends Layout {
       return myColumn;
     }
 
-    @NotNull
+    @Nonnull
     public TableCell fill() {
       myFill = true;
       return this;
     }
   }
 
-  static TableLayout create(@NotNull StaticPosition fillOption) {
+  static TableLayout create(@Nonnull StaticPosition fillOption) {
     return UIInternal.get()._Layouts_table(fillOption);
   }
 
-  @NotNull
+  @Nonnull
   static TableCell cell(int row, int column) {
     return new TableCell(row, column);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default TableLayout add(@NotNull PseudoComponent pseudoComponent, @NotNull TableCell tableCell) {
+  default TableLayout add(@Nonnull PseudoComponent pseudoComponent, @Nonnull TableCell tableCell) {
     return add(pseudoComponent.getComponent(), tableCell);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  TableLayout add(@NotNull Component component, @NotNull TableCell tableCell);
+  TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell);
 }

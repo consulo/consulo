@@ -34,8 +34,8 @@ import com.intellij.util.ui.EdtInvocationManager;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -115,15 +115,15 @@ public class Alarm implements Disposable {
     this(ThreadToUse.SWING_THREAD);
   }
 
-  public Alarm(@NotNull Disposable parentDisposable) {
+  public Alarm(@Nonnull Disposable parentDisposable) {
     this(ThreadToUse.SWING_THREAD, parentDisposable);
   }
 
-  public Alarm(@NotNull ThreadToUse threadToUse) {
+  public Alarm(@Nonnull ThreadToUse threadToUse) {
     this(threadToUse, null);
   }
 
-  public Alarm(@NotNull ThreadToUse threadToUse, @Nullable Disposable parentDisposable) {
+  public Alarm(@Nonnull ThreadToUse threadToUse, @Nullable Disposable parentDisposable) {
     myThreadToUse = threadToUse;
 
     myExecutorService = threadToUse == ThreadToUse.SWING_THREAD ?
@@ -151,7 +151,7 @@ public class Alarm implements Disposable {
     }
   }
 
-  public void addRequest(@NotNull final Runnable request, final int delay, boolean runWithActiveFrameOnly) {
+  public void addRequest(@Nonnull final Runnable request, final int delay, boolean runWithActiveFrameOnly) {
     if (runWithActiveFrameOnly && !ApplicationManager.getApplication().isActive()) {
       final MessageBus bus = ApplicationManager.getApplication().getMessageBus();
       final MessageBusConnection connection = bus.connect(this);
@@ -175,35 +175,35 @@ public class Alarm implements Disposable {
     return application.getCurrentModalityState();
   }
 
-  public void addRequest(@NotNull Runnable request, long delayMillis) {
+  public void addRequest(@Nonnull Runnable request, long delayMillis) {
     _addRequest(request, delayMillis, getModalityState());
   }
 
-  public void addRequest(@NotNull Runnable request, int delayMillis) {
+  public void addRequest(@Nonnull Runnable request, int delayMillis) {
     _addRequest(request, delayMillis, getModalityState());
   }
 
-  public void addComponentRequest(@NotNull Runnable request, int delay) {
+  public void addComponentRequest(@Nonnull Runnable request, int delay) {
     assert myActivationComponent != null;
     _addRequest(request, delay, ModalityState.stateForComponent(myActivationComponent));
   }
 
-  public void addComponentRequest(@NotNull Runnable request, long delayMillis) {
+  public void addComponentRequest(@Nonnull Runnable request, long delayMillis) {
     assert myActivationComponent != null;
     _addRequest(request, delayMillis, ModalityState.stateForComponent(myActivationComponent));
   }
 
-  public void addRequest(@NotNull Runnable request, int delayMillis, @Nullable final ModalityState modalityState) {
+  public void addRequest(@Nonnull Runnable request, int delayMillis, @Nullable final ModalityState modalityState) {
     LOG.assertTrue(myThreadToUse == ThreadToUse.SWING_THREAD);
     _addRequest(request, delayMillis, modalityState);
   }
 
-  public void addRequest(@NotNull Runnable request, long delayMillis, @Nullable final ModalityState modalityState) {
+  public void addRequest(@Nonnull Runnable request, long delayMillis, @Nullable final ModalityState modalityState) {
     LOG.assertTrue(myThreadToUse == ThreadToUse.SWING_THREAD);
     _addRequest(request, delayMillis, modalityState);
   }
 
-  void _addRequest(@NotNull Runnable request, long delayMillis, @Nullable ModalityState modalityState) {
+  void _addRequest(@Nonnull Runnable request, long delayMillis, @Nullable ModalityState modalityState) {
     synchronized (LOCK) {
       checkDisposed();
       final Request requestToSchedule = new Request(request, modalityState, delayMillis);
@@ -218,7 +218,7 @@ public class Alarm implements Disposable {
   }
 
   // must be called under LOCK
-  private void _add(@NotNull Request requestToSchedule) {
+  private void _add(@Nonnull Request requestToSchedule) {
     requestToSchedule.schedule();
     myRequests.add(requestToSchedule);
   }
@@ -233,7 +233,7 @@ public class Alarm implements Disposable {
     }
   }
 
-  public boolean cancelRequest(@NotNull Runnable request) {
+  public boolean cancelRequest(@Nonnull Runnable request) {
     synchronized (LOCK) {
       cancelRequest(request, myRequests);
       cancelRequest(request, myPendingRequests);
@@ -241,7 +241,7 @@ public class Alarm implements Disposable {
     }
   }
 
-  private void cancelRequest(@NotNull Runnable request, @NotNull List<Request> list) {
+  private void cancelRequest(@Nonnull Runnable request, @Nonnull List<Request> list) {
     for (int i = list.size()-1; i>=0; i--) {
       Request r = list.get(i);
       if (r.myTask == request) {
@@ -259,7 +259,7 @@ public class Alarm implements Disposable {
     }
   }
 
-  private int cancelAllRequests(@NotNull List<Request> list) {
+  private int cancelAllRequests(@Nonnull List<Request> list) {
     int count = 0;
     for (Request request : list) {
       count++;
@@ -297,7 +297,7 @@ public class Alarm implements Disposable {
   }
 
   @TestOnly
-  void waitForAllExecuted(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  void waitForAllExecuted(long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     List<Request> requests;
     synchronized (LOCK) {
       requests = new ArrayList<>(myRequests);
@@ -341,7 +341,7 @@ public class Alarm implements Disposable {
     private Future<?> myFuture; // guarded by LOCK
     private final long myDelay;
 
-    private Request(@NotNull final Runnable task, @Nullable ModalityState modalityState, long delayMillis) {
+    private Request(@Nonnull final Runnable task, @Nullable ModalityState modalityState, long delayMillis) {
       synchronized (LOCK) {
         myTask = task;
 
@@ -446,8 +446,8 @@ public class Alarm implements Disposable {
     }
   }
 
-  @NotNull
-  public Alarm setActivationComponent(@NotNull final JComponent component) {
+  @Nonnull
+  public Alarm setActivationComponent(@Nonnull final JComponent component) {
     myActivationComponent = component;
     //noinspection ResultOfObjectAllocationIgnored
     new UiNotifyConnector(component, new Activatable() {

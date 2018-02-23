@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.platform.Platform;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +23,7 @@ public class ServersToolWindowOpener extends AbstractProjectComponent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ServersToolWindowOpener";
   }

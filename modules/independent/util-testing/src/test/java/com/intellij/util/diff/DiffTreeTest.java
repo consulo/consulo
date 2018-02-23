@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ThreeState;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,11 +34,11 @@ import java.util.List;
 public class DiffTreeTest extends TestCase {
   private static class Node {
     private final int myStartOffset;
-    @NotNull
+    @Nonnull
     private final Node[] myChildren;
     private final int myId;
 
-    public Node(final int id, int startOffset, @NotNull Node... children) {
+    public Node(final int id, int startOffset, @Nonnull Node... children) {
       myStartOffset = startOffset;
       myChildren = children;
       myId = id;
@@ -49,7 +49,7 @@ public class DiffTreeTest extends TestCase {
       return myId + myChildren.length; // This is intentionally bad hashcode
     }
 
-    @NotNull
+    @Nonnull
     public Node[] getChildren() {
       return myChildren;
     }
@@ -82,24 +82,24 @@ public class DiffTreeTest extends TestCase {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Node getRoot() {
       return myRoot;
     }
 
     @Override
-    public Node getParent(@NotNull final Node node) {
+    public Node getParent(@Nonnull final Node node) {
       return null;
     }
 
     @Override
-    @NotNull
-    public Node prepareForGetChildren(@NotNull final Node node) {
+    @Nonnull
+    public Node prepareForGetChildren(@Nonnull final Node node) {
       return node;
     }
 
     @Override
-    public int getChildren(@NotNull final Node node, @NotNull final Ref<Node[]> into) {
+    public int getChildren(@Nonnull final Node node, @Nonnull final Ref<Node[]> into) {
       into.set(node.getChildren());
       return into.get().length;
     }
@@ -108,37 +108,37 @@ public class DiffTreeTest extends TestCase {
     public void disposeChildren(final Node[] nodes, final int count) {
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public CharSequence toString(@NotNull Node node) {
+    public CharSequence toString(@Nonnull Node node) {
       return node.toString();
     }
 
     @Override
-    public int getStartOffset(@NotNull Node node) {
+    public int getStartOffset(@Nonnull Node node) {
       return node.getTextRange().getStartOffset();
     }
 
     @Override
-    public int getEndOffset(@NotNull Node node) {
+    public int getEndOffset(@Nonnull Node node) {
       return node.getTextRange().getEndOffset();
     }
   }
 
   private static class NodeComparator implements ShallowNodeComparator<Node, Node> {
-    @NotNull
+    @Nonnull
     @Override
-    public ThreeState deepEqual(@NotNull final Node node, @NotNull final Node node1) {
+    public ThreeState deepEqual(@Nonnull final Node node, @Nonnull final Node node1) {
       return ThreeState.UNSURE;
     }
 
     @Override
-    public boolean typesEqual(@NotNull final Node node, @NotNull final Node node1) {
+    public boolean typesEqual(@Nonnull final Node node, @Nonnull final Node node1) {
       return node.getId() == node1.getId();
     }
 
     @Override
-    public boolean hashCodesEqual(@NotNull final Node node, @NotNull final Node node1) {
+    public boolean hashCodesEqual(@Nonnull final Node node, @Nonnull final Node node1) {
       return node.hashCode() == node1.hashCode();
     }
   }
@@ -147,17 +147,17 @@ public class DiffTreeTest extends TestCase {
     private final List<String> myResults = new ArrayList<String>();
 
     @Override
-    public void nodeReplaced(@NotNull final Node oldNode, @NotNull final Node newNode) {
+    public void nodeReplaced(@Nonnull final Node oldNode, @Nonnull final Node newNode) {
       myResults.add("REPLACED: " + oldNode.getId() + " to " + newNode.getId());
     }
 
     @Override
-    public void nodeDeleted(@NotNull final Node parent, @NotNull final Node child) {
+    public void nodeDeleted(@Nonnull final Node parent, @Nonnull final Node child) {
       myResults.add("DELETED from " + parent.getId() + ": " + child.getId());
     }
 
     @Override
-    public void nodeInserted(@NotNull final Node oldParent, @NotNull final Node node, final int pos) {
+    public void nodeInserted(@Nonnull final Node oldParent, @Nonnull final Node node, final int pos) {
       myResults.add("INSERTED to " + oldParent.getId() + ": " + node.getId() + " at " + pos);
     }
 

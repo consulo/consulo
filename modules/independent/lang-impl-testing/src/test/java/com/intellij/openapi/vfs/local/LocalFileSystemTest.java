@@ -39,7 +39,7 @@ import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,9 +56,9 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(myTestRootDisposable);
     connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
-      @Override public void before(@NotNull List<? extends VFileEvent> events) { checkFiles(events, true); }
+      @Override public void before(@Nonnull List<? extends VFileEvent> events) { checkFiles(events, true); }
 
-      @Override public void after(@NotNull List<? extends VFileEvent> events) { checkFiles(events, false); }
+      @Override public void after(@Nonnull List<? extends VFileEvent> events) { checkFiles(events, false); }
 
       private void checkFiles(List<? extends VFileEvent> events, boolean before) {
         for (VFileEvent event : events) {
@@ -468,7 +468,7 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
     doTestPartialRefresh(top);
   }
 
-  public static void doTestPartialRefresh(@NotNull File top) throws IOException {
+  public static void doTestPartialRefresh(@Nonnull File top) throws IOException {
     File sub = IoTestUtil.createTestDir(top, "sub");
     File file = IoTestUtil.createTestFile(top, "sub.txt");
     LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -543,7 +543,7 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
     doTestInterruptedRefresh(top);
   }
 
-  public static void doTestInterruptedRefresh(@NotNull File top) throws Exception {
+  public static void doTestInterruptedRefresh(@Nonnull File top) throws Exception {
     File sub = IoTestUtil.createTestDir(top, "sub");
     File subSub = IoTestUtil.createTestDir(sub, "sub_sub");
     File file1 = IoTestUtil.createTestFile(sub, "sub_file_to_stop_at");
@@ -588,7 +588,7 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
   public void testInvalidFileName() {
     new WriteAction() {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
         assertNotNull(tempDir);
         try {
@@ -605,7 +605,7 @@ public class LocalFileSystemTest extends PlatformLangTestCase {
   public void testDuplicateViaRename() {
     new WriteAction() {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         VirtualFile tempDir = myFS.refreshAndFindFileByIoFile(createTempDirectory());
         assertNotNull(tempDir);
 

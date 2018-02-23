@@ -24,8 +24,8 @@ import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
 
   private PsiElement mySourceElement;
   
-  public AbstractExternalSystemRuntimeConfigurationProducer(@NotNull AbstractExternalSystemTaskConfigurationType type) {
+  public AbstractExternalSystemRuntimeConfigurationProducer(@Nonnull AbstractExternalSystemTaskConfigurationType type) {
     super(type);
   }
 
@@ -70,7 +70,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
   @Nullable
   @Override
   protected RunnerAndConfigurationSettings findExistingByElement(Location location,
-                                                                 @NotNull List<RunnerAndConfigurationSettings> existingConfigurationsSettings,
+                                                                 @Nonnull List<RunnerAndConfigurationSettings> existingConfigurationsSettings,
                                                                  ConfigurationContext context) {
     if (!(location instanceof ExternalSystemTaskLocation)) {
       return null;
@@ -89,7 +89,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
     return null;
   }
 
-  private static boolean match(@NotNull ExternalTaskExecutionInfo task, @NotNull ExternalSystemTaskExecutionSettings settings) {
+  private static boolean match(@Nonnull ExternalTaskExecutionInfo task, @Nonnull ExternalSystemTaskExecutionSettings settings) {
     if (!task.getSettings().getExternalProjectPath().equals(settings.getExternalProjectPath())) {
       return false;
     }
@@ -98,7 +98,7 @@ public abstract class AbstractExternalSystemRuntimeConfigurationProducer extends
   }
 
   @Override
-  public int compareTo(@NotNull Object o) {
+  public int compareTo(@Nonnull Object o) {
     return PREFERED;
   }
 }

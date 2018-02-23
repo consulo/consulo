@@ -39,9 +39,9 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -55,7 +55,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
   private final XDebuggerExpressionEditor myExpressionEditor;
   private final JPanel myMainPanel;
 
-  public ExpressionInputComponent(final @NotNull Project project, @NotNull XDebuggerEditorsProvider editorsProvider, final @Nullable XSourcePosition sourcePosition,
+  public ExpressionInputComponent(final @Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, final @Nullable XSourcePosition sourcePosition,
                                   @Nullable XExpression expression, Disposable parentDisposable) {
     super(XDebuggerBundle.message("xdebugger.dialog.title.evaluate.expression"));
     myMainPanel = new JPanel(new BorderLayout());
@@ -113,7 +113,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
         protected ListCellRenderer getListElementRenderer() {
           return new ColoredListCellRenderer<XExpression>() {
             @Override
-            protected void customizeCellRenderer(@NotNull JList list, XExpression value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(@Nonnull JList list, XExpression value, int index, boolean selected, boolean hasFocus) {
               append(value.getExpression());
             }
           };
@@ -130,7 +130,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
     contentPanel.add(myMainPanel, BorderLayout.NORTH);
   }
 
-  @NotNull
+  @Nonnull
   protected XDebuggerEditorBase getInputEditor() {
     return myExpressionEditor;
   }

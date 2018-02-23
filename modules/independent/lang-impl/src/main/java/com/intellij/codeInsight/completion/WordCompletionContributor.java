@@ -30,8 +30,8 @@ import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@NotNull final CompletionParameters parameters, @NotNull final CompletionResultSet result) {
+  public void fillCompletionVariants(@Nonnull final CompletionParameters parameters, @Nonnull final CompletionResultSet result) {
     if (parameters.getCompletionType() == CompletionType.BASIC && shouldPerformWordCompletion(parameters)) {
       addWordCompletionVariants(result, parameters, Collections.emptySet());
     }

@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.dataflow.map;
 
 import com.intellij.codeInsight.dataflow.SetUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.*;
 

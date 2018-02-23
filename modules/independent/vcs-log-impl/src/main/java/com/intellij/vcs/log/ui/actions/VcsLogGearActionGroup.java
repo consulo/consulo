@@ -26,20 +26,20 @@ import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import consulo.wm.impl.ToolWindowContentUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public class VcsLogGearActionGroup extends DumbAwareAction {
-  @NotNull
+  @Nonnull
   private final String myActionGroup;
 
-  public VcsLogGearActionGroup(@NotNull String group) {
+  public VcsLogGearActionGroup(@Nonnull String group) {
     myActionGroup = group;
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
 
     ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.MNEMONICS, true, ToolWindowContentUI.POPUP_PLACE);
@@ -53,7 +53,7 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     VcsLogUi logUi = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     e.getPresentation().setEnabledAndVisible(project != null && logUi != null);

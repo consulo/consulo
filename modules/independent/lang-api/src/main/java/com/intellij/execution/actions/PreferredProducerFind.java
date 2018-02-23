@@ -25,8 +25,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +38,8 @@ class PreferredProducerFind {
 
   private PreferredProducerFind() {}
 
-  @Nullable
-  public static RunnerAndConfigurationSettings createConfiguration(@NotNull Location location, final ConfigurationContext context) {
+  @javax.annotation.Nullable
+  public static RunnerAndConfigurationSettings createConfiguration(@Nonnull Location location, final ConfigurationContext context) {
     final ConfigurationFromContext fromContext = findConfigurationFromContext(location, context);
     return fromContext != null ? fromContext.getConfigurationSettings() : null;
   }
@@ -126,7 +126,7 @@ class PreferredProducerFind {
   }
 
 
-  @Nullable
+  @javax.annotation.Nullable
   private static ConfigurationFromContext findConfigurationFromContext(final Location location, final ConfigurationContext context) {
     final List<ConfigurationFromContext> producers = getConfigurationsFromContext(location, context, true);
     if (producers != null){

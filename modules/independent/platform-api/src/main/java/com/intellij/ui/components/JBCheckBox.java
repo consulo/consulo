@@ -1,8 +1,8 @@
 package com.intellij.ui.components;
 
 import com.intellij.ui.AnchorableComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
@@ -64,7 +64,7 @@ public class JBCheckBox extends JCheckBox implements AnchorableComponent {
    *
    * @return true in case of success and false otherwise
    */
-  public boolean setTextIcon(@NotNull Icon icon) {
+  public boolean setTextIcon(@Nonnull Icon icon) {
     ButtonUI ui = getUI();
     if (ui instanceof BasicRadioButtonUI) {
       Icon defaultIcon = ((BasicRadioButtonUI) ui).getDefaultIcon();
@@ -83,7 +83,7 @@ public class JBCheckBox extends JCheckBox implements AnchorableComponent {
     private final int myHorizontalStrut;
     private final Icon myRightIcon;
 
-    public MergedIcon(@NotNull Icon leftIcon, int horizontalStrut, @NotNull Icon rightIcon) {
+    public MergedIcon(@Nonnull Icon leftIcon, int horizontalStrut, @Nonnull Icon rightIcon) {
       myLeftIcon = leftIcon;
       myHorizontalStrut = horizontalStrut;
       myRightIcon = rightIcon;
@@ -95,7 +95,7 @@ public class JBCheckBox extends JCheckBox implements AnchorableComponent {
       paintIconAlignedCenter(c, g, x + myLeftIcon.getIconWidth() + myHorizontalStrut, y, myRightIcon);
     }
 
-    private void paintIconAlignedCenter(Component c, Graphics g, int x, int y, @NotNull Icon icon) {
+    private void paintIconAlignedCenter(Component c, Graphics g, int x, int y, @Nonnull Icon icon) {
       int iconHeight = getIconHeight();
       icon.paintIcon(c, g, x, y + (iconHeight - icon.getIconHeight()) / 2);
     }

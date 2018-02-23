@@ -22,11 +22,11 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ScopeDescriptorProvider {
   ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create("com.intellij.scopeDescriptorProvider");
 
-  @NotNull
+  @Nonnull
   ScopeDescriptor[] getScopeDescriptors(Project project);
 }

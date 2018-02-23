@@ -29,7 +29,6 @@ import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -59,7 +58,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
     myValidateAlarm.addRequest(myValidateRunnable, 500, ModalityState.stateForComponent(myPanel.getComponent()));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(myPanel.getComponent(), BorderLayout.CENTER);

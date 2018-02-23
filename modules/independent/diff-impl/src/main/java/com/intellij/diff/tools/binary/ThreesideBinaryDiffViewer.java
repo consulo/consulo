@@ -22,20 +22,20 @@ import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.side.ThreesideDiffViewer;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.EmptyRunnable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorHolder> {
-  public ThreesideBinaryDiffViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public ThreesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
   }
 
   @Override
-  @NotNull
-  protected Runnable performRediff(@NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
     return EmptyRunnable.INSTANCE;
   }
 
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return ThreesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
   }
 }

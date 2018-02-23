@@ -27,7 +27,7 @@ import com.intellij.util.QueryExecutor;
 import com.intellij.util.QueryFactory;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,11 +44,11 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
   protected ExtensibleQueryFactory(@NonNls final String epNamespace) {
     myPoint = new NotNullLazyValue<SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>>>() {
       @Override
-      @NotNull
+      @Nonnull
       protected SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>> compute() {
         return new SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>>(new SmartList<QueryExecutor<Result, Parameters>>()){
           @Override
-          @NotNull
+          @Nonnull
           protected ExtensionPoint<QueryExecutor<Result, Parameters>> getExtensionPoint() {
             @NonNls String epName = ExtensibleQueryFactory.this.getClass().getName();
             int pos = epName.lastIndexOf('.');
@@ -74,17 +74,17 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
   }
 
   @Override
-  public void registerExecutor(@NotNull final QueryExecutor<Result, Parameters> queryExecutor) {
+  public void registerExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
     myPoint.getValue().addExplicitExtension(queryExecutor);
   }
 
   @Override
-  public void unregisterExecutor(@NotNull final QueryExecutor<Result, Parameters> queryExecutor) {
+  public void unregisterExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
     myPoint.getValue().removeExplicitExtension(queryExecutor);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected List<QueryExecutor<Result, Parameters>> getExecutors() {
     return myPoint.getValue().getExtensions();
   }

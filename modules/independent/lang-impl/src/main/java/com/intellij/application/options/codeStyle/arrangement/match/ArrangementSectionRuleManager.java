@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import com.intellij.psi.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -57,20 +57,20 @@ public class ArrangementSectionRuleManager {
   private ArrangementMatchingRuleEditor myEditor;
 
   @Nullable
-  public static ArrangementSectionRuleManager getInstance(@NotNull Language language,
-                                                          @NotNull ArrangementStandardSettingsManager settingsManager,
-                                                          @NotNull ArrangementColorsProvider colorsProvider,
-                                                          @NotNull ArrangementMatchingRulesControl control) {
+  public static ArrangementSectionRuleManager getInstance(@Nonnull Language language,
+                                                          @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                                          @Nonnull ArrangementColorsProvider colorsProvider,
+                                                          @Nonnull ArrangementMatchingRulesControl control) {
     if (settingsManager.isSectionRulesSupported()) {
       return new ArrangementSectionRuleManager(language, settingsManager, colorsProvider, control);
     }
     return null;
   }
 
-  private ArrangementSectionRuleManager(@NotNull Language language,
-                                        @NotNull ArrangementStandardSettingsManager settingsManager,
-                                        @NotNull ArrangementColorsProvider colorsProvider,
-                                        @NotNull ArrangementMatchingRulesControl control) {
+  private ArrangementSectionRuleManager(@Nonnull Language language,
+                                        @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                        @Nonnull ArrangementColorsProvider colorsProvider,
+                                        @Nonnull ArrangementMatchingRulesControl control) {
     myCommenter = LanguageCommenters.INSTANCE.forLanguage(language);
     myControl = control;
     final List<CompositeArrangementSettingsToken> tokens = ContainerUtil.newArrayList();
@@ -83,12 +83,12 @@ public class ArrangementSectionRuleManager {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   public static Set<ArrangementSettingsToken> getSectionMutexes() {
     return MUTEXES;
   }
 
-  public static boolean isEnabled(@NotNull ArrangementSettingsToken token) {
+  public static boolean isEnabled(@Nonnull ArrangementSettingsToken token) {
     return TOKENS.contains(token);
   }
 
@@ -101,18 +101,18 @@ public class ArrangementSectionRuleManager {
   }
 
   @Nullable
-  public ArrangementSectionRuleData getSectionRuleData(@NotNull StdArrangementMatchRule element) {
+  public ArrangementSectionRuleData getSectionRuleData(@Nonnull StdArrangementMatchRule element) {
     final ArrangementMatchCondition condition = element.getMatcher().getCondition();
     return getSectionRuleData(condition);
   }
 
   @Nullable
-  public ArrangementSectionRuleData getSectionRuleData(@NotNull ArrangementMatchCondition condition) {
+  public ArrangementSectionRuleData getSectionRuleData(@Nonnull ArrangementMatchCondition condition) {
     final Ref<Boolean> isStart = new Ref<Boolean>();
     final Ref<String> text = new Ref<String>();
     condition.invite(new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
         final ArrangementSettingsToken type = condition.getType();
         if (type.equals(START_SECTION)) {
           isStart.set(true);
@@ -126,7 +126,7 @@ public class ArrangementSectionRuleManager {
       }
 
       @Override
-      public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
         for (ArrangementMatchCondition c : condition.getOperands()) {
           c.invite(this);
           if (!text.isNull() && !isStart.isNull()) {
@@ -142,7 +142,7 @@ public class ArrangementSectionRuleManager {
     return new ArrangementSectionRuleData(processSectionText(StringUtil.notNullize(text.get())), isStart.get());
   }
 
-  @NotNull
+  @Nonnull
   public StdArrangementMatchRule createDefaultSectionRule() {
     final ArrangementAtomMatchCondition type = new ArrangementAtomMatchCondition(START_SECTION);
     final ArrangementAtomMatchCondition text = new ArrangementAtomMatchCondition(TEXT, createDefaultSectionText());
@@ -150,8 +150,8 @@ public class ArrangementSectionRuleManager {
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
-  @NotNull
-  private String processSectionText(@NotNull String text) {
+  @Nonnull
+  private String processSectionText(@Nonnull String text) {
     final String lineCommentPrefix = myCommenter.getLineCommentPrefix();
     if (lineCommentPrefix != null && text.startsWith(lineCommentPrefix)) {
       return text;
@@ -167,7 +167,7 @@ public class ArrangementSectionRuleManager {
            prefix != null && suffix != null ? wrapIntoBlockComment(prefix, suffix, text) : "";
   }
 
-  @NotNull
+  @Nonnull
   private String createDefaultSectionText() {
     if (myCommenter != null) {
       final String lineCommentPrefix = myCommenter.getLineCommentPrefix();
@@ -184,11 +184,11 @@ public class ArrangementSectionRuleManager {
     return "";
   }
 
-  private static String wrapIntoBlockComment(@NotNull String prefix, @NotNull String suffix, @NotNull String text) {
+  private static String wrapIntoBlockComment(@Nonnull String prefix, @Nonnull String suffix, @Nonnull String text) {
     return prefix + text + suffix;
   }
 
-  private static String wrapIntoLineComment(@NotNull String lineCommentPrefix, @NotNull String text) {
+  private static String wrapIntoLineComment(@Nonnull String lineCommentPrefix, @Nonnull String text) {
     return lineCommentPrefix + text;
   }
 
@@ -196,7 +196,7 @@ public class ArrangementSectionRuleManager {
     private boolean myIsSectionStart;
     private String myText;
 
-    private ArrangementSectionRuleData(@NotNull String text, boolean isStart) {
+    private ArrangementSectionRuleData(@Nonnull String text, boolean isStart) {
       myText = text;
       myIsSectionStart = isStart;
     }
@@ -205,7 +205,7 @@ public class ArrangementSectionRuleManager {
       return myIsSectionStart;
     }
 
-    @NotNull
+    @Nonnull
     public String getText() {
       return myText;
     }

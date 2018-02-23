@@ -18,24 +18,24 @@ package com.intellij.ui.content;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.ui.content.impl.DesktopContentManagerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ContentFactoryImpl implements ContentFactory {
-  @NotNull
+  @Nonnull
   @Override
-  public ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
     return new DesktopContentManagerImpl(contentUI, canCloseContents, project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @NotNull Project project) {
+  public ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
-  @NotNull
+  @Nonnull
   @Override
   public ContentImpl createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
     return new ContentImpl(component, displayName, isLockable);

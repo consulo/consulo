@@ -7,7 +7,7 @@ import com.intellij.openapi.externalSystem.service.internal.ExternalSystemTaskAw
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -28,7 +28,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
 
   /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemFacade}. */
   RemoteExternalSystemFacade<?> NULL_OBJECT = new RemoteExternalSystemFacade<ExternalSystemExecutionSettings>() {
-    @NotNull
+    @Nonnull
     @Override
     public RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> getResolver()
       throws RemoteException, IllegalStateException
@@ -37,31 +37,31 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
     public RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings> getTaskManager() throws RemoteException {
       return RemoteExternalSystemTaskManager.NULL_OBJECT;
     }
 
     @Override
-    public void applySettings(@NotNull ExternalSystemExecutionSettings settings) throws RemoteException {
+    public void applySettings(@Nonnull ExternalSystemExecutionSettings settings) throws RemoteException {
     }
 
     @Override
-    public void applyProgressManager(@NotNull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+    public void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
     }
 
     @Override
-    public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+    public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
     @Override
-    public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException {
+    public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
       return Collections.emptyMap();
@@ -75,7 +75,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @throws RemoteException        in case of unexpected I/O exception during processing
    * @throws IllegalStateException  in case of inability to create the service
    */
-  @NotNull
+  @Nonnull
   RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException;
 
   /**
@@ -84,7 +84,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @return external system build manager
    * @throws RemoteException  in case of inability to create the service
    */
-  @NotNull
+  @Nonnull
   RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException;
 
   /**
@@ -93,7 +93,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @param settings            settings to apply
    * @throws RemoteException    in case of unexpected I/O exception during processing
    */
-  void applySettings(@NotNull S settings) throws RemoteException;
+  void applySettings(@Nonnull S settings) throws RemoteException;
 
   /**
    * Asks remote external system process to use given progress manager.
@@ -101,5 +101,5 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @param progressManager  progress manager to use
    * @throws RemoteException    in case of unexpected I/O exception during processing
    */
-  void applyProgressManager(@NotNull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException;
+  void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException;
 }

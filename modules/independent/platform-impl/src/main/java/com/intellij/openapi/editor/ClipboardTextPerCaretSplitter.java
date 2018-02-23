@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ClipboardTextPerCaretSplitter {
-  @NotNull
-  public List<String> split(@NotNull String input, @Nullable CaretStateTransferableData caretData, int caretCount) {
+  @Nonnull
+  public List<String> split(@Nonnull String input, @Nullable CaretStateTransferableData caretData, int caretCount) {
     if (caretCount <= 0) {
       throw new IllegalArgumentException("Caret count must be positive");
     }

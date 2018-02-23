@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -93,7 +93,7 @@ public class CompositeChangeListFilteringStrategy implements ChangeListFiltering
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<CommittedChangeList> filterChangeLists(final List<CommittedChangeList> changeLists) {
     return setFilterBaseImpl(changeLists, false);
   }

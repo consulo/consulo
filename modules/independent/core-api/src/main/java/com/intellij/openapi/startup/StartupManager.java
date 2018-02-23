@@ -17,7 +17,7 @@ package com.intellij.openapi.startup;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to register activities which are run during project loading. Methods of StartupManager are typically
@@ -34,7 +34,7 @@ public abstract class StartupManager {
     return ServiceManager.getService(project, StartupManager.class);
   }
 
-  public abstract void registerPreStartupActivity(@NotNull Runnable runnable);
+  public abstract void registerPreStartupActivity(@Nonnull Runnable runnable);
 
   /**
    * Registers an activity which is performed during project load while the "Loading Project"
@@ -42,7 +42,7 @@ public abstract class StartupManager {
    *
    * @param runnable the activity to execute.
    */
-  public abstract void registerStartupActivity(@NotNull Runnable runnable);
+  public abstract void registerStartupActivity(@Nonnull Runnable runnable);
 
   /**
    * Registers an activity which is performed during project load after the "Loading Project"
@@ -51,7 +51,7 @@ public abstract class StartupManager {
    * @param runnable the activity to execute.
    * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
-  public abstract void registerPostStartupActivity(@NotNull Runnable runnable);
+  public abstract void registerPostStartupActivity(@Nonnull Runnable runnable);
 
   /**
    * Executes the specified runnable immediately if the initialization of the current project
@@ -59,5 +59,5 @@ public abstract class StartupManager {
    *
    * @param runnable the activity to execute.
    */
-  public abstract void runWhenProjectIsInitialized(@NotNull Runnable runnable);
+  public abstract void runWhenProjectIsInitialized(@Nonnull Runnable runnable);
 }

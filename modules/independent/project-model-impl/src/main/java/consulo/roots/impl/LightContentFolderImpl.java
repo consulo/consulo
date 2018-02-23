@@ -20,8 +20,8 @@ import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class LightContentFolderImpl implements ContentFolder {
     myContentEntry = contentEntry;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ContentFolderTypeProvider getType() {
     return myContentFolderTypeProvider;
@@ -54,19 +54,19 @@ public class LightContentFolderImpl implements ContentFolder {
     return myFile.getFile();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ContentEntry getContentEntry() {
     return myContentEntry;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUrl() {
     return myFile.getUrl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<Key, Object> getProperties() {
     return Collections.emptyMap();
@@ -74,12 +74,12 @@ public class LightContentFolderImpl implements ContentFolder {
 
   @Nullable
   @Override
-  public <T> T getPropertyValue(@NotNull Key<T> key) {
+  public <T> T getPropertyValue(@Nonnull Key<T> key) {
     return null;
   }
 
   @Override
-  public <T> void setPropertyValue(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void setPropertyValue(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
 
   }
 

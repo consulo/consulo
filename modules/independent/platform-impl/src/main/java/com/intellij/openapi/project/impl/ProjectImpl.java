@@ -52,12 +52,13 @@ import com.intellij.util.TimedReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.picocontainer.*;
 import org.picocontainer.defaults.CachingComponentAdapter;
 import org.picocontainer.defaults.ConstructorInjectionComponentAdapter;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
@@ -84,7 +85,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  protected ProjectImpl(@NotNull ProjectManager manager, @NotNull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
+  protected ProjectImpl(@Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName) {
     super(ApplicationManager.getApplication(), "Project " + (projectName == null ? dirPath : projectName));
     putUserData(CREATION_TIME, System.nanoTime());
 
@@ -106,7 +107,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void setProjectName(@NotNull String projectName) {
+  public void setProjectName(@Nonnull String projectName) {
     if (!projectName.equals(myName)) {
       myName = projectName;
       StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
@@ -125,7 +126,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
+  protected void bootstrapPicoContainer(@Nonnull String name) {
     Extensions.instantiateArea(ExtensionAreas.PROJECT, this, null);
     super.bootstrapPicoContainer(name);
     final MutablePicoContainer picoContainer = getPicoContainer();
@@ -173,7 +174,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IProjectStore getStateStore() {
     return (IProjectStore)getPicoContainer().getComponentInstance(IComponentStore.class);
@@ -212,7 +213,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getProjectFilePath() {
     return getStateStore().getProjectFilePath();
   }
@@ -232,7 +233,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return getStateStore().getProjectBasePath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
@@ -245,7 +246,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return getStateStore().getPresentableUrl();
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   @Override
   public String getLocationHash() {
@@ -467,7 +468,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
            myName;
   }
 
-  public static void dropUnableToSaveProjectNotification(@NotNull final Project project, final VirtualFile[] readOnlyFiles) {
+  public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, final VirtualFile[] readOnlyFiles) {
     final UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
     if (notifications.length == 0) {
       Notifications.Bus.notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);
@@ -478,10 +479,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     private Project myProject;
     private final String[] myFileNames;
 
-    private UnableToSaveProjectNotification(@NotNull final Project project, final VirtualFile[] readOnlyFiles) {
+    private UnableToSaveProjectNotification(@Nonnull final Project project, final VirtualFile[] readOnlyFiles) {
       super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, new NotificationListener() {
         @Override
-        public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
           final Project _project = unableToSaveProjectNotification.getProject();
           notification.expire();

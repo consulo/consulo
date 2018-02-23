@@ -15,24 +15,24 @@
  */
 package com.intellij.openapi.compiler.generic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class CompileItem<Key, SourceState, OutputState> {
-  @NotNull
+  @Nonnull
   public abstract Key getKey();
 
-  public abstract boolean isSourceUpToDate(@NotNull SourceState state);
+  public abstract boolean isSourceUpToDate(@Nonnull SourceState state);
 
-  @NotNull
+  @Nonnull
   public abstract SourceState computeSourceState();
 
 
-  public abstract boolean isOutputUpToDate(@NotNull OutputState state);
+  public abstract boolean isOutputUpToDate(@Nonnull OutputState state);
 
-  @NotNull
+  @Nonnull
   public abstract OutputState computeOutputState();
 
   public boolean isExcluded() {

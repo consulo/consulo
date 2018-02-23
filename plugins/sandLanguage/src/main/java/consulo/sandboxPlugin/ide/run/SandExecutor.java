@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.ide.run;
 import com.intellij.execution.Executor;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
@@ -39,7 +39,7 @@ public class SandExecutor extends Executor {
     return AllIcons.Toolwindows.ToolWindowInspection;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Ide.HectorOn;
@@ -56,23 +56,23 @@ public class SandExecutor extends Executor {
   }
 
   @Override
-  public boolean isApplicable(@NotNull Project project) {
+  public boolean isApplicable(@Nonnull Project project) {
     return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getActionName() {
     return "Sand";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "SandExecutor";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getStartActionText() {
     return "Start Sand";

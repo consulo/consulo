@@ -28,7 +28,7 @@ import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class EditSourceUtil {
   private EditSourceUtil() { }

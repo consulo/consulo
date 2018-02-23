@@ -19,7 +19,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LocalTimeCounter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 
@@ -52,7 +52,7 @@ class VirtualFileDataImpl extends VirtualFileImpl {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(final Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return VfsUtilCore.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
@@ -68,7 +68,7 @@ class VirtualFileDataImpl extends VirtualFileImpl {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     return myContents;
   }

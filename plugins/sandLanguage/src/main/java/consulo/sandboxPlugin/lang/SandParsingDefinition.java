@@ -24,7 +24,7 @@ import com.intellij.psi.tree.IFileElementType;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,16 +33,16 @@ import org.jetbrains.annotations.NotNull;
 public class SandParsingDefinition extends LanguageVersionableParserDefinition {
   private static IFileElementType FILE = new IFileElementType(SandLanguage.INSTANCE);
 
-  @NotNull
+  @Nonnull
   @Override
   public IFileElementType getFileNodeType() {
     return FILE;
   }
 
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   @Override
-  public PsiElement createElement(@NotNull ASTNode node) {
+  public PsiElement createElement(@Nonnull ASTNode node) {
     return new ASTWrapperPsiElement(node);
   }
 
@@ -51,7 +51,7 @@ public class SandParsingDefinition extends LanguageVersionableParserDefinition {
     return new SandFile(viewProvider);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
     return SpaceRequirements.MAY;

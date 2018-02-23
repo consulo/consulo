@@ -12,8 +12,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author sergey.evdokimov
@@ -32,18 +32,18 @@ public abstract class TextFieldCompletionProvider {
     myCaseInsensitivity = caseInsensitivity;
   }
 
-  public void apply(@NotNull EditorTextField field, @NotNull String text) {
+  public void apply(@Nonnull EditorTextField field, @Nonnull String text) {
     Project project = field.getProject();
     if (project != null) {
       field.setDocument(createDocument(project, text));
     }
   }
 
-  public void apply(@NotNull EditorTextField field) {
+  public void apply(@Nonnull EditorTextField field) {
     apply(field, "");
   }
 
-  private Document createDocument(final Project project, @NotNull String text) {
+  private Document createDocument(final Project project, @Nonnull String text) {
     final FileType fileType = PlainTextLanguage.INSTANCE.getAssociatedFileType();
     assert fileType != null;
 
@@ -62,24 +62,24 @@ public abstract class TextFieldCompletionProvider {
     return myCaseInsensitivity;
   }
 
-  @NotNull
-  protected String getPrefix(@NotNull String currentTextPrefix) {
+  @Nonnull
+  protected String getPrefix(@Nonnull String currentTextPrefix) {
     return currentTextPrefix;
   }
 
-  protected abstract void addCompletionVariants(@NotNull String text, int offset, @NotNull String prefix, @NotNull CompletionResultSet result);
+  protected abstract void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result);
 
-  @NotNull
+  @Nonnull
   public EditorTextField createEditor(Project project) {
     return createEditor(project, true);
   }
 
-  @NotNull
+  @Nonnull
   public EditorTextField createEditor(Project project, final boolean shouldHaveBorder) {
     return createEditor(project, shouldHaveBorder, null);
   }
 
-  @NotNull
+  @Nonnull
   public EditorTextField createEditor(Project project,
                                       final boolean shouldHaveBorder,
                                       @Nullable final Consumer<Editor> editorConstructionCallback)
@@ -91,7 +91,7 @@ public abstract class TextFieldCompletionProvider {
       }
 
       @Override
-      protected void updateBorder(@NotNull EditorEx editor) {
+      protected void updateBorder(@Nonnull EditorEx editor) {
         if (shouldHaveBorder) {
           super.updateBorder(editor);
         }

@@ -20,7 +20,7 @@ import com.intellij.util.containers.SortedList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -43,12 +43,12 @@ public class ProjectStructureProblemsSettingsBase extends ProjectStructureProble
   }
 
   @Override
-  public boolean isIgnored(@NotNull ProjectStructureProblemDescription description) {
+  public boolean isIgnored(@Nonnull ProjectStructureProblemDescription description) {
     return myIgnoredProblems.contains(description.getId());
   }
 
   @Override
-  public void setIgnored(@NotNull ProjectStructureProblemDescription description, boolean ignored) {
+  public void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored) {
     final String id = description.getId();
     if (ignored) {
       myIgnoredProblems.add(id);

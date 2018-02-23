@@ -28,7 +28,7 @@ import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
 import consulo.wm.ContentEx;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

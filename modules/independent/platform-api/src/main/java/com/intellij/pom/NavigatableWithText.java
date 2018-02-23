@@ -15,7 +15,7 @@
  */
 package com.intellij.pom;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author yole

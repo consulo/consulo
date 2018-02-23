@@ -39,7 +39,7 @@ import com.intellij.util.ProxyComparator;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -217,7 +217,7 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFavoriteTypeId() {
     return "usage";

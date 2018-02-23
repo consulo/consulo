@@ -21,7 +21,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.ReflectionUtil;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +65,7 @@ public class UnixProcessManager {
 
   private UnixProcessManager() { }
 
-  public static int getProcessId(@NotNull Process process) {
+  public static int getProcessId(@Nonnull Process process) {
     try {
       if (SystemInfo.IS_AT_LEAST_JAVA9 && "java.lang.ProcessImpl".equals(process.getClass().getName())) {
         //noinspection JavaReflectionMemberAccess
@@ -94,15 +94,15 @@ public class UnixProcessManager {
     }
   }
 
-  public static boolean sendSigIntToProcessTree(@NotNull Process process) {
+  public static boolean sendSigIntToProcessTree(@Nonnull Process process) {
     return sendSignalToProcessTree(process, SIGINT);
   }
 
-  public static boolean sendSigKillToProcessTree(@NotNull Process process) {
+  public static boolean sendSigKillToProcessTree(@Nonnull Process process) {
     return sendSignalToProcessTree(process, SIGKILL);
   }
 
-  public static boolean sendSignalToProcessTree(@NotNull Process process, int signal) {
+  public static boolean sendSignalToProcessTree(@Nonnull Process process, int signal) {
     try {
       return sendSignalToProcessTree(getProcessId(process), signal);
     }
@@ -276,7 +276,7 @@ public class UnixProcessManager {
   }
 
   /** @deprecated to be removed in IDEA 2018 */
-  public static int getProcessPid(@NotNull Process process) {
+  public static int getProcessPid(@Nonnull Process process) {
     return getProcessId(process);
   }
 }

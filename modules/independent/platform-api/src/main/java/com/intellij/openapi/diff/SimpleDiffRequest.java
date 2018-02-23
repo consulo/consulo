@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Two contents for general diff
@@ -32,14 +32,14 @@ public class SimpleDiffRequest extends DiffRequest {
     myWindowTitle = windowTitle;
   }
 
-  @NotNull
+  @Nonnull
   public DiffContent[] getContents() { return myContents; }
 
   public String[] getContentTitles() { return myContentTitles; }
 
   public String getWindowTitle() { return myWindowTitle; }
 
-  public void setContents(@NotNull DiffContent content1, @NotNull DiffContent content2) {
+  public void setContents(@Nonnull DiffContent content1, @Nonnull DiffContent content2) {
     myContents[0] = content1;
     myContents[1] = content2;
   }
@@ -62,7 +62,7 @@ public class SimpleDiffRequest extends DiffRequest {
     return result;
   }
 
-  public static SimpleDiffRequest compareFiles(@NotNull VirtualFile file1, @NotNull VirtualFile file2, @NotNull Project project) {
+  public static SimpleDiffRequest compareFiles(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2, @Nonnull Project project) {
     final String title = DiffBundle.message("compare.file.vs.file.dialog.title", file1.getPresentableUrl(), file2.getPresentableUrl());
     return compareFiles(file1, file2, project, title);
   }
@@ -75,7 +75,7 @@ public class SimpleDiffRequest extends DiffRequest {
       super(project, title);
     }
 
-    @NotNull
+    @Nonnull
     public DiffContent[] getContents() {
       return new DiffContent[]{
         DiffContent.fromFile(getProject(), myVirtualFiles[0]),

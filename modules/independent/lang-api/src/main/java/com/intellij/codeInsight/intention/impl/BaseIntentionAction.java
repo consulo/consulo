@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Mike
@@ -26,12 +26,12 @@ public abstract class BaseIntentionAction implements IntentionAction {
   private String myText = "";
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  protected void setText(@NotNull String text) {
+  protected void setText(@Nonnull String text) {
     myText = text;
   }
 

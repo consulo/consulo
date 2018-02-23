@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * To change this template use Options | File Templates.
  */
 public class MacrosGroup extends ActionGroup {
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     ArrayList<AnAction> actions = new ArrayList<AnAction>();
     final ActionManagerEx actionManager = ((ActionManagerEx) ActionManager.getInstance());

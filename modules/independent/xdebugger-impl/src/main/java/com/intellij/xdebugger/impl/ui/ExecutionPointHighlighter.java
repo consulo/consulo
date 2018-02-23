@@ -40,10 +40,11 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -77,7 +78,7 @@ public class ExecutionPointHighlighter {
     }
   }
 
-  public void show(final @NotNull XSourcePosition position, final boolean notTopFrame,
+  public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame,
                    @Nullable final GutterIconRenderer gutterIconRenderer) {
     updateRequested.set(false);
     AppUIUtil.invokeLaterIfProjectAlive(myProject, new Runnable() {
@@ -246,7 +247,7 @@ public class ExecutionPointHighlighter {
     return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
   }
 
-  private static void adjustCounter(@NotNull final Editor editor, final int increment) {
+  private static void adjustCounter(@Nonnull final Editor editor, final int increment) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
 
     // need to always invoke later to maintain order of increment/decrement

@@ -19,8 +19,8 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextFieldUI;
@@ -49,7 +49,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     return (component != null) && !StringUtil.isEmpty(component.getText());
   }
 
-  protected abstract SearchAction getActionUnder(@NotNull Point p);
+  protected abstract SearchAction getActionUnder(@Nonnull Point p);
 
   protected abstract void showSearchPopup();
 

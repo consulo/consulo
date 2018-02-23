@@ -36,8 +36,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -59,7 +59,7 @@ public abstract class GotoActionBase extends AnAction {
   private int myHistoryIndex = 0;
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     LOG.assertTrue(!getClass().equals(myInAction));
     try {
       myInAction = getClass();
@@ -76,7 +76,7 @@ public abstract class GotoActionBase extends AnAction {
   protected abstract void gotoActionPerformed(AnActionEvent e);
 
   @Override
-  public void update(@NotNull final AnActionEvent event) {
+  public void update(@Nonnull final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -111,7 +111,7 @@ public abstract class GotoActionBase extends AnAction {
 
   protected abstract static class GotoActionCallback<T> {
     @Nullable
-    protected ChooseByNameFilter<T> createFilter(@NotNull ChooseByNamePopup popup) {
+    protected ChooseByNameFilter<T> createFilter(@Nonnull ChooseByNamePopup popup) {
       return null;
     }
 
@@ -269,11 +269,11 @@ public abstract class GotoActionBase extends AnAction {
 
     abstract class HistoryAction extends DumbAwareAction {
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(historyEnabled());
       }
 
-      void setText(@NotNull List<String> strings) {
+      void setText(@Nonnull List<String> strings) {
         javax.swing.text.Document document = editor.getDocument();
         document.removeDocumentListener(historyResetListener);
         editor.setText(strings.get(myHistoryIndex));
@@ -286,7 +286,7 @@ public abstract class GotoActionBase extends AnAction {
 
     new HistoryAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         List<String> strings = ourHistory.get(myInAction);
         setText(strings);
         myHistoryIndex = myHistoryIndex >= strings.size() - 1 ? 0 : myHistoryIndex + 1;
@@ -296,7 +296,7 @@ public abstract class GotoActionBase extends AnAction {
 
     new HistoryAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         List<String> strings = ourHistory.get(myInAction);
         setText(strings);
         myHistoryIndex = myHistoryIndex <= 0 ? strings.size() - 1 : myHistoryIndex - 1;

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
@@ -43,11 +43,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   private static class QueueEntry<T> {
-    @NotNull private final T t;
+    @Nonnull
+    private final T t;
     private QueueEntry<T> next;
     private QueueEntry<T> prev;
 
-    public QueueEntry(@NotNull T t) {
+    public QueueEntry(@Nonnull T t) {
       this.t = t;
     }
 
@@ -63,12 +64,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  public boolean offer(@NotNull T t) {
+  public boolean offer(@Nonnull T t) {
     return add(t);
   }
 
   @Override
-  public boolean add(@NotNull T t) {
+  public boolean add(@Nonnull T t) {
     QueueEntry<T> newLast = new QueueEntry<T>(t);
     boolean added = set.add(newLast);
     if (!added) return false;
@@ -83,7 +84,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public T remove() {
     T poll = poll();
     if (poll == null) throw new NoSuchElementException();
@@ -100,7 +101,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public T element() {
     T peek = peek();
     if (peek == null) throw new NoSuchElementException();
@@ -112,12 +113,12 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     return TOMB.next == TOMB ? null : TOMB.next.t;
   }
 
-  public T find(@NotNull T t) {
+  public T find(@Nonnull T t) {
     QueueEntry<T> existing = findEntry(t);
     return existing == null ? null : existing.t;
   }
 
-  private QueueEntry<T> findEntry(@NotNull T t) {
+  private QueueEntry<T> findEntry(@Nonnull T t) {
     return set.get(new QueueEntry<T>(t));
   }
 
@@ -151,7 +152,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     return (T)o;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PositionalIterator<T> iterator() {
     return new PositionalIterator<T>() {
@@ -175,7 +176,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
         HashSetQueue.this.remove(cursor.t);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public IteratorPosition<T> position() {
         return new MyIteratorPosition<T>(cursor, count, TOMB);
@@ -188,7 +189,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     private final long count;
     private final QueueEntry<T> TOMB;
 
-    private MyIteratorPosition(@NotNull QueueEntry<T> cursor, long count, QueueEntry<T> TOMB) {
+    private MyIteratorPosition(@Nonnull QueueEntry<T> cursor, long count, QueueEntry<T> TOMB) {
       this.cursor = cursor;
       this.count = count;
       this.TOMB = TOMB;
@@ -208,7 +209,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
     }
 
     @Override
-    public int compareTo(@NotNull PositionalIterator.IteratorPosition<T> o) {
+    public int compareTo(@Nonnull PositionalIterator.IteratorPosition<T> o) {
       return compare(count, ((MyIteratorPosition)o).count);
     }
 
@@ -222,7 +223,7 @@ public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
      * @return the current position of this iterator.
      * The position of the newly created iterator is before the first element of the queue (so the {@link IteratorPosition#peek()} value is undefined)
      */
-    @NotNull
+    @Nonnull
     IteratorPosition<T> position();
 
     interface IteratorPosition<T> extends Comparable<IteratorPosition<T>>  {

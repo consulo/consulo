@@ -23,9 +23,9 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,18 +40,18 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
     insertLabel();
   }
 
-  @NotNull
-  public static <Comp extends JComponent> LabeledComponent<Comp> create(@NotNull Comp component, @NotNull String text) {
+  @Nonnull
+  public static <Comp extends JComponent> LabeledComponent<Comp> create(@Nonnull Comp component, @Nonnull String text) {
     final LabeledComponent<Comp> labeledComponent = new LabeledComponent<Comp>();
     labeledComponent.setComponent(component);
     labeledComponent.setText(text);
     return labeledComponent;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #create() - default position is left already")
-  public static <Comp extends JComponent> LabeledComponent<Comp> left(@NotNull Comp component, @NotNull String text) {
+  public static <Comp extends JComponent> LabeledComponent<Comp> left(@Nonnull Comp component, @Nonnull String text) {
     LabeledComponent<Comp> labeledComponent = create(component, text);
     labeledComponent.setLabelLocation(BorderLayout.WEST);
     return labeledComponent;

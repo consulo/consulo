@@ -30,7 +30,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -253,7 +253,7 @@ public class TestResultsXmlFormatter {
       }
 
       @Override
-      public void onNewAvailable(@NotNull Printable printable) {
+      public void onNewAvailable(@Nonnull Printable printable) {
       }
 
       @Override

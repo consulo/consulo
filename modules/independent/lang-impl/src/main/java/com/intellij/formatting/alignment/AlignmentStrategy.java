@@ -17,8 +17,8 @@ package com.intellij.formatting.alignment;
 
 import com.intellij.formatting.Alignment;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -68,7 +68,7 @@ public abstract class AlignmentStrategy {
    * @param allowBackwardShift    flag that defines if backward alignment shift is allowed
    * @return                      alignment strategy for the given arguments
    */
-  public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(@NotNull Collection<IElementType> targetTypes,
+  public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(@Nonnull Collection<IElementType> targetTypes,
                                                                         boolean allowBackwardShift)
   {
     return new AlignmentPerTypeStrategy(targetTypes, null, allowBackwardShift, Alignment.Anchor.LEFT);
@@ -85,7 +85,7 @@ public abstract class AlignmentStrategy {
    * @return                   alignment retrieval strategy that follows the rules described above
    */
   public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(
-    @NotNull Collection<IElementType> targetTypes, @Nullable IElementType parentType, boolean allowBackwardShift)
+          @Nonnull Collection<IElementType> targetTypes, @Nullable IElementType parentType, boolean allowBackwardShift)
   {
     return createAlignmentPerTypeStrategy(targetTypes, parentType, allowBackwardShift, Alignment.Anchor.LEFT);
   }
@@ -114,8 +114,8 @@ public abstract class AlignmentStrategy {
    * @return                   alignment retrieval strategy that follows the rules described above
    */
   public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(
-    @NotNull Collection<IElementType> targetTypes, @Nullable IElementType parentType, boolean allowBackwardShift,
-    @NotNull Alignment.Anchor anchor)
+          @Nonnull Collection<IElementType> targetTypes, @Nullable IElementType parentType, boolean allowBackwardShift,
+          @Nonnull Alignment.Anchor anchor)
   {
     return new AlignmentPerTypeStrategy(targetTypes, parentType, allowBackwardShift, anchor);
   }

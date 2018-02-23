@@ -36,8 +36,9 @@ import com.intellij.psi.PsiFileFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
   /**
    * @return psiFile associated with the content. If the file was not set on FileContentCreation, it will be created on the spot
    */
-  @NotNull
+  @Nonnull
   @Override
   public PsiFile getPsiFile() {
     PsiFile psi = getUserData(IndexingDataKeys.PSI_FILE);
@@ -87,7 +88,8 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return psi;
   }
 
-  public @NotNull LighterAST getLighterASTForPsiDependentIndex() {
+  public @Nonnull
+  LighterAST getLighterASTForPsiDependentIndex() {
     LighterAST lighterAST = getUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY);
     if (lighterAST == null) {
       FileASTNode node = getPsiFileForPsiDependentIndex().getNode();
@@ -106,7 +108,7 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
   }
 
   @RequiredReadAction
-  public PsiFile createFileFromText(@NotNull CharSequence text) {
+  public PsiFile createFileFromText(@Nonnull CharSequence text) {
     Project project = getProject();
     if (project == null) {
       project = DefaultProjectFactory.getInstance().getDefaultProject();
@@ -114,10 +116,10 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return createFileFromText(project, text, (LanguageFileType)getFileTypeWithoutSubstitution(), myFile, myFileName);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static PsiFile createFileFromText(@NotNull Project project, @NotNull CharSequence text, @NotNull LanguageFileType fileType,
-                                           @NotNull VirtualFile file, @NotNull String fileName) {
+  public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType,
+                                           @Nonnull VirtualFile file, @Nonnull String fileName) {
     final Language language = fileType.getLanguage();
     final Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
     LanguageVersion languageVersion =
@@ -131,23 +133,23 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     }
   }
 
-  public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset) {
+  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, final Charset charset) {
     this(file, contentAsText, null, charset, -1);
   }
 
-  public FileContentImpl(@NotNull final VirtualFile file, @NotNull final CharSequence contentAsText, final Charset charset, long documentStamp) {
+  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final CharSequence contentAsText, final Charset charset, long documentStamp) {
     this(file, contentAsText, null, charset, documentStamp);
   }
 
-  public FileContentImpl(@NotNull final VirtualFile file, @NotNull final byte[] content) {
+  public FileContentImpl(@Nonnull final VirtualFile file, @Nonnull final byte[] content) {
     this(file, null, content, LoadTextUtil.detectCharsetAndSetBOM(file, content), -1);
   }
 
-  public FileContentImpl(@NotNull final VirtualFile file) {
+  public FileContentImpl(@Nonnull final VirtualFile file) {
     this(file, null, null, null, -1);
   }
 
-  private FileContentImpl(@NotNull VirtualFile file,
+  private FileContentImpl(@Nonnull VirtualFile file,
                           CharSequence contentAsText,
                           byte[] content,
                           Charset charset,
@@ -163,13 +165,13 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     myStamp = stamp;
   }
 
-  @NotNull
+  @Nonnull
   public FileType getSubstitutedFileType() {
     return SubstitutedFileType.substituteFileType(myFile, myFileType, getProject());
   }
 
   @TestOnly
-  public static FileContent createByFile(@NotNull VirtualFile file) {
+  public static FileContent createByFile(@Nonnull VirtualFile file) {
     try {
       return new FileContentImpl(file, file.contentsToByteArray());
     }
@@ -182,19 +184,19 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return myFileType;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     return getSubstitutedFileType();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFileName() {
     return myFileName;
@@ -223,7 +225,7 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return myContent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getContentAsText() {
     if (myFileType.isBinary()) {
@@ -247,7 +249,8 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     return myFileName;
   }
 
-  public @Nullable byte[] getHash() {
+  public @Nullable
+  byte[] getHash() {
     return myHash;
   }
 
@@ -255,7 +258,7 @@ public class FileContentImpl extends UserDataHolderBase implements FileContent {
     myHash = hash;
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getPsiFileForPsiDependentIndex() {
     Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
     PsiFile psi = null;

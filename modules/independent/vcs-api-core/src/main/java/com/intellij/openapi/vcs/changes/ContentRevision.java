@@ -19,8 +19,8 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -40,7 +40,7 @@ public interface ContentRevision {
   /**
    * @return file path of the revision
    */
-  @NotNull
+  @Nonnull
   FilePath getFile();
 
   /**
@@ -49,6 +49,6 @@ public interface ContentRevision {
    * the currently uncommited revision.
    * @return revision ID in terms of version control
    */
-  @NotNull
+  @Nonnull
   VcsRevisionNumber getRevisionNumber();
 }

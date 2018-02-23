@@ -33,8 +33,9 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.jdom.Document;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.picocontainer.PicoContainer;
 
 import java.io.*;
@@ -72,7 +73,7 @@ public class PathManager {
   /**
    * @return home path of platform (in most cases path is $APP_HOME_PATH$/platform/$HOME_PATH$)
    */
-  @NotNull
+  @Nonnull
   public static String getHomePath() {
     if (ourHomePath != null) return ourHomePath;
 
@@ -103,7 +104,7 @@ public class PathManager {
   /**
    * @return external platform directory for mac, or platform directory inside application for other oses
    */
-  @NotNull
+  @Nonnull
   public static File getExternalPlatformDirectory() {
     File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
 
@@ -117,7 +118,7 @@ public class PathManager {
   /**
    * @return app home, equal IDE installation path
    */
-  @NotNull
+  @Nonnull
   public static File getAppHomeDirectory() {
     String appHomePath = System.getProperty(ApplicationProperties.CONSULO_APP_HOME_PATH);
     if (appHomePath != null) {
@@ -135,23 +136,23 @@ public class PathManager {
     return parentFile.getParentFile();
   }
 
-  @NotNull
+  @Nonnull
   public static String getBinPath() {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
 
-  @NotNull
+  @Nonnull
   public static String getLibPath() {
     return getHomePath() + File.separator + LIB_FOLDER;
   }
 
-  @NotNull
+  @Nonnull
   public static String getPreInstalledPluginsPath() {
     return getHomePath() + File.separatorChar + PLUGINS_FOLDER;
   }
 
   // config paths
-  @NotNull
+  @Nonnull
   public static String getConfigPath() {
     if (ourConfigPath != null) return ourConfigPath;
 
@@ -170,7 +171,7 @@ public class PathManager {
     return ourConfigPath;
   }
 
-  @NotNull
+  @Nonnull
   public static String getScratchPath() {
     if (ourScratchPath != null) return ourScratchPath;
 
@@ -188,17 +189,17 @@ public class PathManager {
     checkAndCreate(getConfigPath(), true);
   }
 
-  @NotNull
+  @Nonnull
   public static String getOptionsPath() {
     return getConfigPath() + File.separator + OPTIONS_FOLDER;
   }
 
-  @NotNull
-  public static File getOptionsFile(@NotNull String fileName) {
+  @Nonnull
+  public static File getOptionsFile(@Nonnull String fileName) {
     return new File(getOptionsPath(), fileName + ".xml");
   }
 
-  @NotNull
+  @Nonnull
   public static String getInstallPluginsPath() {
     if (ourInstallPluginsPath != null) {
       return ourInstallPluginsPath;
@@ -224,7 +225,7 @@ public class PathManager {
     return ourInstallPluginsPath;
   }
 
-  @NotNull
+  @Nonnull
   public static String[] getPluginsPaths() {
     if (ourPluginsPaths != null) return ourPluginsPaths;
 
@@ -264,7 +265,7 @@ public class PathManager {
     return ourPluginsPaths;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Please use #getPluginsPaths()")
   public static String getPluginsPath() {
@@ -278,7 +279,7 @@ public class PathManager {
 
   // runtime paths
 
-  @NotNull
+  @Nonnull
   public static String getSystemPath() {
     if (ourSystemPath != null) return ourSystemPath;
 
@@ -298,19 +299,19 @@ public class PathManager {
     return ourSystemPath;
   }
 
-  @NotNull
+  @Nonnull
   public static String getTempPath() {
     return getSystemPath() + File.separator + "tmp";
   }
 
-  @NotNull
+  @Nonnull
   public static File getIndexRoot() {
     String indexRoot = System.getProperty("index_root_path", getSystemPath() + "/index");
     checkAndCreate(indexRoot, true);
     return new File(indexRoot);
   }
 
-  @NotNull
+  @Nonnull
   public static String getLogPath() {
     if (ourLogPath != null) return ourLogPath;
 
@@ -328,7 +329,7 @@ public class PathManager {
     return ourLogPath;
   }
 
-  @NotNull
+  @Nonnull
   public static String getPluginTempPath() {
     return getSystemPath() + File.separator + PLUGINS_FOLDER;
   }
@@ -339,7 +340,7 @@ public class PathManager {
    * Attempts to detect classpath entry which contains given resource.
    */
   @Nullable
-  public static String getResourceRoot(@NotNull Class context, String path) {
+  public static String getResourceRoot(@Nonnull Class context, String path) {
     URL url = context.getResource(path);
     if (url == null) {
       url = ClassLoader.getSystemResource(path.substring(1));
@@ -447,21 +448,21 @@ public class PathManager {
     return s;
   }
 
-  @NotNull
-  public static File findFileInLibDirectory(@NotNull String relativePath) {
+  @Nonnull
+  public static File findFileInLibDirectory(@Nonnull String relativePath) {
     return new File(getLibPath() + File.separator + relativePath);
   }
 
   @Nullable
-  public static String getJarPathForClass(@NotNull Class aClass) {
+  public static String getJarPathForClass(@Nonnull Class aClass) {
     String resourceRoot = getResourceRoot(aClass, "/" + aClass.getName().replace('.', '/') + ".class");
     return resourceRoot != null ? new File(resourceRoot).getAbsolutePath() : null;
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<String> getUtilClassPath() {
     final Class<?>[] classes = {PathManager.class,            // module 'util'
-            NotNull.class,                // module 'annotations'
+            Nonnull.class,                // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
             Appender.class,               // log4j

@@ -8,8 +8,8 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -19,9 +19,9 @@ public class RemotelyConfigurableStatisticsService implements StatisticsService 
   private StatisticsDataSender sender;
   private StatisticsUploadAssistant myAssistant;
 
-  public RemotelyConfigurableStatisticsService(@NotNull StatisticsConnectionService connectionService,
-                                               @NotNull StatisticsDataSender sender,
-                                               @NotNull StatisticsUploadAssistant assistant) {
+  public RemotelyConfigurableStatisticsService(@Nonnull StatisticsConnectionService connectionService,
+                                               @Nonnull StatisticsDataSender sender,
+                                               @Nonnull StatisticsUploadAssistant assistant) {
     myConnectionService = connectionService;
     this.sender = sender;
     myAssistant = assistant;
@@ -58,7 +58,7 @@ public class RemotelyConfigurableStatisticsService implements StatisticsService 
 
 
   @Override
-  public Notification createNotification(@NotNull final String groupDisplayId, @Nullable NotificationListener listener) {
+  public Notification createNotification(@Nonnull final String groupDisplayId, @Nullable NotificationListener listener) {
     final String fullProductName = ApplicationNamesInfo.getInstance().getFullProductName();
     final String companyName = ApplicationInfo.getInstance().getCompanyName();
 

@@ -43,8 +43,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import consulo.fileTypes.ArchiveFileType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,13 +53,17 @@ import java.util.Collections;
 import java.util.List;
 
 class DirDiffViewer implements FrameDiffTool.DiffViewer {
-  @NotNull private final DiffContext myContext;
-  @NotNull private final ContentDiffRequest myRequest;
+  @Nonnull
+  private final DiffContext myContext;
+  @Nonnull
+  private final ContentDiffRequest myRequest;
 
-  @NotNull private final DirDiffPanel myDirDiffPanel;
-  @NotNull private final JPanel myPanel;
+  @Nonnull
+  private final DirDiffPanel myDirDiffPanel;
+  @Nonnull
+  private final JPanel myPanel;
 
-  public DirDiffViewer(@NotNull DiffContext context, @NotNull ContentDiffRequest request) {
+  public DirDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
     myContext = context;
     myRequest = request;
 
@@ -92,7 +96,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     myPanel.add(myDirDiffPanel.getPanel(), BorderLayout.CENTER);
     DataManager.registerDataProvider(myPanel, new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         if (PlatformDataKeys.HELP_ID == dataId) {
           return "reference.dialogs.diff.folder";
         }
@@ -101,7 +105,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FrameDiffTool.ToolbarComponents init() {
     myDirDiffPanel.setupSplitter();
@@ -120,7 +124,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     Disposer.dispose(myDirDiffPanel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -136,7 +140,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
   // Misc
   //
 
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     if (!(request instanceof ContentDiffRequest)) return false;
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
     if (contents.size() != 2) return false;
@@ -149,7 +153,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     return true;
   }
 
-  private static boolean canShowContent(@NotNull DiffContent content) {
+  private static boolean canShowContent(@Nonnull DiffContent content) {
     if (content instanceof EmptyContent) return true;
     if (content instanceof DirectoryContent) return true;
     if (content instanceof FileContent &&
@@ -162,8 +166,8 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     return false;
   }
 
-  @NotNull
-  private static DiffElement createDiffElement(@NotNull DiffContent content) {
+  @Nonnull
+  private static DiffElement createDiffElement(@Nonnull DiffContent content) {
     if (content instanceof EmptyContent) {
       return new DiffElement() {
         @Override
@@ -171,7 +175,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
           return "";
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getName() {
           return "Nothing";

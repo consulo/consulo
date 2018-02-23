@@ -24,8 +24,8 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.impl.UnknownOrderEntryImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -40,13 +40,13 @@ public class OrderEntrySerializationUtil {
   @NonNls
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
-  @NotNull
+  @Nonnull
   public static Map<String, OrderEntryType> getProvidersAsMap() {
     return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensions(), orderEntryType -> Pair.create(orderEntryType.getId(), orderEntryType));
   }
 
   @Nullable
-  public static OrderEntry loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) {
+  public static OrderEntry loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) {
     String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
     if(type == null) {
       return null;
@@ -64,8 +64,8 @@ public class OrderEntrySerializationUtil {
     }
   }
 
-  @NotNull
-  public static Element storeOrderEntry(@NotNull OrderEntry entry) {
+  @Nonnull
+  public static Element storeOrderEntry(@Nonnull OrderEntry entry) {
     OrderEntryType provider = entry.getType();
 
     Element element = new Element(ORDER_ENTRY_ELEMENT_NAME);

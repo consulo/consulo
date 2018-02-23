@@ -17,7 +17,6 @@
 package com.intellij.util.graph;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class ShortestPathTest extends GraphTestCase {
     assertEquals(expectedPath, StringUtil.join(shortestPath, ""));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static List<String> getShortestPath(Map<String, String> graph, final String from, final String to) {
     return getAlgorithmsInstance().findShortestPath(initGraph(graph), from, to);
   }

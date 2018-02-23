@@ -1,9 +1,9 @@
 package com.intellij.util.ui.table;
 
 import com.intellij.openapi.util.Iconable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -13,16 +13,16 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   public static final IconTableCellRenderer<Iconable> ICONABLE = new IconTableCellRenderer<Iconable>() {
     @Nullable
     @Override
-    protected Icon getIcon(@NotNull Iconable value, JTable table, int row) {
+    protected Icon getIcon(@Nonnull Iconable value, JTable table, int row) {
       return value.getIcon(Iconable.ICON_FLAG_VISIBILITY);
     }
   };
 
-  public static TableCellRenderer create(@NotNull final Icon icon) {
+  public static TableCellRenderer create(@Nonnull final Icon icon) {
     return new IconTableCellRenderer() {
       @Nullable
       @Override
-      protected Icon getIcon(@NotNull Object value, JTable table, int row) {
+      protected Icon getIcon(@Nonnull Object value, JTable table, int row) {
         return icon;
       }
     };
@@ -45,5 +45,5 @@ public abstract class IconTableCellRenderer<T> extends DefaultTableCellRenderer 
   }
 
   @Nullable
-  protected abstract Icon getIcon(@NotNull T value, JTable table, int row);
+  protected abstract Icon getIcon(@Nonnull T value, JTable table, int row);
 }

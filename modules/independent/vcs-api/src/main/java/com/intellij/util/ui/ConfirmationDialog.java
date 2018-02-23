@@ -18,8 +18,8 @@ package com.intellij.util.ui;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -29,18 +29,18 @@ public class ConfirmationDialog extends OptionsMessageDialog {
   private final String myOkActionName;
   private final String myCancelActionName;
 
-  public static boolean requestForConfirmation(@NotNull VcsShowConfirmationOption option,
-                                               @NotNull Project project,
-                                               @NotNull String message,
-                                               @NotNull String title,
-                                               @Nullable Icon icon) {
+  public static boolean requestForConfirmation(@Nonnull VcsShowConfirmationOption option,
+                                               @Nonnull Project project,
+                                               @Nonnull String message,
+                                               @Nonnull String title,
+                                               @javax.annotation.Nullable Icon icon) {
     return requestForConfirmation(option, project, message, title, icon, null, null);
   }
 
-  public static boolean requestForConfirmation(@NotNull VcsShowConfirmationOption option,
-                                               @NotNull Project project,
-                                               @NotNull String message,
-                                               @NotNull String title,
+  public static boolean requestForConfirmation(@Nonnull VcsShowConfirmationOption option,
+                                               @Nonnull Project project,
+                                               @Nonnull String message,
+                                               @Nonnull String title,
                                                @Nullable Icon icon,
                                                @Nullable String okActionName,
                                                @Nullable String cancelActionName) {
@@ -64,7 +64,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
                             String title,
                             final Icon icon,
                             final VcsShowConfirmationOption option,
-                            @Nullable String okActionName,
+                            @javax.annotation.Nullable String okActionName,
                             @Nullable String cancelActionName) {
     super(project, message, title, icon);
     myOption = option;
@@ -78,7 +78,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     myCheckBoxDoNotShowDialog.setText(doNotShowAgainMessage);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getDoNotShowMessage() {
     return myDoNotShowAgainMessage == null ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;

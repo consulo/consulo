@@ -26,28 +26,28 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class CodeInsightUtilCore extends FileModificationService {
   @RequiredReadAction
-  public static <T extends PsiElement> T findElementInRange(@NotNull PsiFile file,
+  public static <T extends PsiElement> T findElementInRange(@Nonnull PsiFile file,
                                                             int startOffset,
                                                             int endOffset,
-                                                            @NotNull Class<T> klass,
-                                                            @NotNull Language language) {
+                                                            @Nonnull Class<T> klass,
+                                                            @Nonnull Language language) {
     return findElementInRange(file, startOffset, endOffset, klass, language, null);
   }
 
   @RequiredReadAction
-  private static <T extends PsiElement> T findElementInRange(@NotNull PsiFile file,
+  private static <T extends PsiElement> T findElementInRange(@Nonnull PsiFile file,
                                                              int startOffset,
                                                              int endOffset,
-                                                             @NotNull Class<T> klass,
-                                                             @NotNull Language language,
+                                                             @Nonnull Class<T> klass,
+                                                             @Nonnull Language language,
                                                              @Nullable PsiElement initialElement) {
     PsiElement element1 = file.getViewProvider().findElementAt(startOffset, language);
     PsiElement element2 = file.getViewProvider().findElementAt(endOffset - 1, language);
@@ -76,12 +76,12 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
   }
 
   @RequiredReadAction
-  public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@NotNull T element) {
+  public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@Nonnull T element) {
     return forcePsiPostprocessAndRestoreElement(element, false);
   }
 
   @RequiredReadAction
-  public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@NotNull T element,
+  public static <T extends PsiElement> T forcePsiPostprocessAndRestoreElement(@Nonnull T element,
                                                                               boolean useFileLanguage) {
     final PsiFile psiFile = element.getContainingFile();
     final Document document = psiFile.getViewProvider().getDocument();
@@ -99,11 +99,11 @@ public abstract class CodeInsightUtilCore extends FileModificationService {
     return elementInRange;
   }
 
-  public static boolean parseStringCharacters(@NotNull String chars, @NotNull StringBuilder outChars, @Nullable int[] sourceOffsets) {
+  public static boolean parseStringCharacters(@Nonnull String chars, @Nonnull StringBuilder outChars, @Nullable int[] sourceOffsets) {
     return parseStringCharacters(chars, outChars, sourceOffsets, '"', '\'');
   }
 
-  public static boolean parseStringCharacters(@NotNull String chars, @NotNull StringBuilder outChars, @Nullable int[] sourceOffsets, Character... endChars) {
+  public static boolean parseStringCharacters(@Nonnull String chars, @Nonnull StringBuilder outChars, @Nullable int[] sourceOffsets, Character... endChars) {
     assert sourceOffsets == null || sourceOffsets.length == chars.length()+1;
     List<Character> endCharList = Arrays.asList(endChars);
     if (chars.indexOf('\\') < 0) {

@@ -32,7 +32,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PlainTextParserDefinition implements ParserDefinition {
   private static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
@@ -44,45 +44,45 @@ public class PlainTextParserDefinition implements ParserDefinition {
   };
 
   @Override
-  @NotNull
-  public Lexer createLexer(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
     return new EmptyLexer();
   }
 
   @Override
-  @NotNull
-  public PsiParser createParser(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
     throw new UnsupportedOperationException("Not supported");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IFileElementType getFileNodeType() {
     return PLAIN_FILE_ELEMENT_TYPE;
   }
 
   @Override
-  @NotNull
-  public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @Override
-  @NotNull
-  public TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @Override
-  @NotNull
-  public TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion) {
+  @Nonnull
+  public TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @RequiredReadAction
   @Override
-  @NotNull
-  public PsiElement createElement(@NotNull ASTNode node) {
+  @Nonnull
+  public PsiElement createElement(@Nonnull ASTNode node) {
     return PsiUtilCore.NULL_PSI_ELEMENT;
   }
 

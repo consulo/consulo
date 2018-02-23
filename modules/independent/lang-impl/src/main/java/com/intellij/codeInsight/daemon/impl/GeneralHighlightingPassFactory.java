@@ -26,8 +26,8 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author cdr
@@ -43,14 +43,14 @@ public class GeneralHighlightingPassFactory extends AbstractProjectComponent imp
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "GeneralHighlightingPassFactory";
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange textRange = FileStatusMap.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (textRange == null) return new EmptyPass(myProject, editor.getDocument());
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
@@ -58,9 +58,9 @@ public class GeneralHighlightingPassFactory extends AbstractProjectComponent imp
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@NotNull PsiFile file,
-                                                               @NotNull Document document,
-                                                               @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
+                                                               @Nonnull Document document,
+                                                               @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     // no applying to the editor - for read-only analysis only
     return new GeneralHighlightingPass(myProject, file, document, 0, file.getTextLength(),
                                        true, new ProperTextRange(0, document.getTextLength()), null, highlightInfoProcessor);

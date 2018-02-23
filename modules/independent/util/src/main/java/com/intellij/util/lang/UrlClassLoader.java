@@ -23,8 +23,8 @@ import com.intellij.util.Function;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakStringInterner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class UrlClassLoader extends ClassLoader {
 
   private static final boolean ourClassPathIndexEnabled = Boolean.parseBoolean(System.getProperty("idea.classpath.index.enabled", "true"));
 
-  @NotNull
+  @Nonnull
   protected ClassPath getClassPath() {
     return myClassPath;
   }
@@ -127,7 +127,7 @@ public class UrlClassLoader extends ClassLoader {
      *
      * @see #createCachePool()
      */
-    public Builder useCache(@NotNull CachePool pool, @NotNull CachingCondition condition) {
+    public Builder useCache(@Nonnull CachePool pool, @Nonnull CachingCondition condition) {
       myUseCache = true;
       myCachePool = (CachePoolImpl)pool;
       myCachingCondition = condition;
@@ -156,12 +156,12 @@ public class UrlClassLoader extends ClassLoader {
   private final boolean myAllowBootstrapResources;
 
   /** @deprecated use {@link #build()}, left for compatibility with java.system.class.loader setting */
-  public UrlClassLoader(@NotNull ClassLoader parent) {
+  public UrlClassLoader(@Nonnull ClassLoader parent) {
     this(build().urls(((URLClassLoader)parent).getURLs()).parent(parent.getParent()).allowLock().useCache()
                  .usePersistentClasspathIndexForLocalClassDirectories());
   }
 
-  protected UrlClassLoader(@NotNull Builder builder) {
+  protected UrlClassLoader(@Nonnull Builder builder) {
     super(builder.myParent);
     myURLs = ContainerUtil.map(builder.myURLs, new Function<URL, URL>() {
       @Override
@@ -174,13 +174,13 @@ public class UrlClassLoader extends ClassLoader {
     myClassNameInterner = ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new WeakStringInterner() : null;
   }
 
-  @NotNull
-  protected final ClassPath createClassPath(@NotNull Builder builder) {
+  @Nonnull
+  protected final ClassPath createClassPath(@Nonnull Builder builder) {
     return new ClassPath(myURLs, builder.myLockJars, builder.myUseCache, builder.myAcceptUnescaped, builder.myPreload,
                          builder.myUsePersistentClasspathIndex, builder.myCachePool, builder.myCachingCondition);
   }
 
-  public static URL internProtocol(@NotNull URL url) {
+  public static URL internProtocol(@Nonnull URL url) {
     try {
       final String protocol = url.getProtocol();
       if ("file".equals(protocol) || "jar".equals(protocol)) {
@@ -226,7 +226,7 @@ public class UrlClassLoader extends ClassLoader {
   }
 
   @Nullable
-  protected Class _findClass(@NotNull String name) {
+  protected Class _findClass(@Nonnull String name) {
     Resource res = getClassPath().getResource(name.replace('.', '/') + CLASS_EXTENSION, false);
     if (res == null) {
       return null;
@@ -312,7 +312,7 @@ public class UrlClassLoader extends ClassLoader {
     return getClassPath().getResources(name, true);
   }
 
-  public static void loadPlatformLibrary(@NotNull String libName) {
+  public static void loadPlatformLibrary(@Nonnull String libName) {
     String libFileName = mapLibraryName(libName);
     String libPath = PathManager.getBinPath() + "/" + libFileName;
 
@@ -364,14 +364,14 @@ public class UrlClassLoader extends ClassLoader {
      * @return whether the internal information should be cached for files in a specific classpath component URL: inside the directory or
      * a jar.
      */
-    boolean shouldCacheData(@NotNull URL url);
+    boolean shouldCacheData(@Nonnull URL url);
   }
 
   /**
    * @return a new pool to be able to share internal class loader caches between several different class loaders, if they contain the same URLs
    * in their class paths.
    */
-  @NotNull
+  @Nonnull
   public static CachePool createCachePool() {
     return new CachePoolImpl();
   }

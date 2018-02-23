@@ -22,10 +22,11 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -42,15 +43,15 @@ public class ActionLink extends LinkLabel implements DataProvider {
   private Color myActiveColor;
   private Color myNormalColor;
 
-  public ActionLink(String text, @NotNull AnAction action) {
+  public ActionLink(String text, @Nonnull AnAction action) {
     this(text, ICON, action);
   }
 
-  public ActionLink(String text, Icon icon, @NotNull AnAction action) {
+  public ActionLink(String text, Icon icon, @Nonnull AnAction action) {
     this(text, icon, action, null);
   }
 
-  public ActionLink(String text, Icon icon, @NotNull AnAction action, @Nullable final Runnable onDone) {
+  public ActionLink(String text, Icon icon, @Nonnull AnAction action, @Nullable final Runnable onDone) {
     super(text, icon);
     setListener(new LinkListener() {
       @Override
@@ -111,7 +112,7 @@ public class ActionLink extends LinkLabel implements DataProvider {
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
       final Point p = SwingUtilities.getRoot(this).getLocationOnScreen();
       return new Rectangle(p.x, p.y + getHeight(), 0, 0);

@@ -18,7 +18,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
@@ -31,7 +31,7 @@ public abstract class PredefinedCodeStyle {
   private final String myName;
   private final Language myLanguage;
 
-  public PredefinedCodeStyle(@NotNull String name, @NotNull Language language) {
+  public PredefinedCodeStyle(@Nonnull String name, @Nonnull Language language) {
     myName = name;
     myLanguage = language;
   }
@@ -69,7 +69,7 @@ public abstract class PredefinedCodeStyle {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myLanguage;
   }

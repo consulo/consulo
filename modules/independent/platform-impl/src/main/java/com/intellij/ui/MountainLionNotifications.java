@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.ui.mac.foundation.Foundation.invoke;
 import static com.intellij.ui.mac.foundation.Foundation.nsString;
@@ -58,7 +58,7 @@ class MountainLionNotifications implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@NotNull String name, @NotNull String title, @NotNull String description) {
+  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
     final ID notification = invoke(Foundation.getObjcClass("NSUserNotification"), "new");
     invoke(notification, "setTitle:", nsString(StringUtil.stripHtml(title, true).replace("%", "%%")));
     invoke(notification, "setInformativeText:", nsString(StringUtil.stripHtml(description, true).replace("%", "%%")));

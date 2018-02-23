@@ -28,8 +28,9 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.picocontainer.PicoContainer;
 
 import java.util.ResourceBundle;
@@ -127,7 +128,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
     myProject = project;
     myPicoContainer = picoContainer;
     myFactory = new AtomicNotNullLazyValue<NullableFactory<T>>() {
-      @NotNull
+      @Nonnull
       @Override
       protected NullableFactory<T> compute() {
         if (providerClass != null) {
@@ -175,7 +176,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
       return (T)getValue().createConfigurable();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected ConfigurableProvider compute() {
       try {
@@ -192,7 +193,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
       return instantiate(getValue(), myPicoContainer, true);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Class<? extends T> compute() {
       try {
@@ -210,7 +211,7 @@ public class ConfigurableEP<T extends UnnamedConfigurable> extends AbstractExten
       return compute();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected T compute() {
       try {

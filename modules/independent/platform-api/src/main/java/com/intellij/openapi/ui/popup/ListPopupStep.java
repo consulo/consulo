@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -35,7 +35,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
    *
    * @return the list of values to be displayed in the list popup.
    */
-  @NotNull
+  @Nonnull
   List<T> getValues();
 
   /**
@@ -61,7 +61,7 @@ public interface ListPopupStep<T> extends PopupStep<T> {
    * @param value the value for which the text is requested.
    * @return the text to display.
    */
-  @NotNull
+  @Nonnull
   String getTextFor(T value);
 
   /**

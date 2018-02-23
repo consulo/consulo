@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.Weigher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
 public abstract class CompletionWeigher extends Weigher<LookupElement, CompletionLocation> {
 
   @Override
-  public abstract Comparable weigh(@NotNull final LookupElement element, @NotNull final CompletionLocation location);
+  public abstract Comparable weigh(@Nonnull final LookupElement element, @Nonnull final CompletionLocation location);
 }

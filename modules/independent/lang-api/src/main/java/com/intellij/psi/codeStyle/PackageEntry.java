@@ -18,8 +18,7 @@ package com.intellij.psi.codeStyle;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * User: cdr
@@ -29,7 +28,7 @@ public class PackageEntry {
   private final boolean myWithSubpackages;
   private final boolean isStatic;
 
-  public PackageEntry(boolean isStatic, @NotNull @NonNls String packageName, boolean withSubpackages) {
+  public PackageEntry(boolean isStatic, @Nonnull @NonNls String packageName, boolean withSubpackages) {
     this.isStatic = isStatic;
     myPackageName = packageName;
     myWithSubpackages = withSubpackages;
@@ -94,7 +93,7 @@ public class PackageEntry {
     return this == BLANK_LINE_ENTRY || this == ALL_OTHER_IMPORTS_ENTRY || this == ALL_OTHER_STATIC_IMPORTS_ENTRY;
   }
 
-  public boolean isBetterMatchForPackageThan(@Nullable PackageEntry entry, @NotNull String packageName, boolean isStatic) {
+  public boolean isBetterMatchForPackageThan(@javax.annotation.Nullable PackageEntry entry, @Nonnull String packageName, boolean isStatic) {
     if (isStatic() != isStatic || !matchesPackageName(packageName)) return false;
     if (entry == null) {
       return true;

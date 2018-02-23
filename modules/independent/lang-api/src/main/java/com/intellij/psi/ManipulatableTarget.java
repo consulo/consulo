@@ -18,14 +18,14 @@ package com.intellij.psi;
 import com.intellij.pom.PsiDeclaredTarget;
 import com.intellij.pom.PomRenameableTarget;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public class ManipulatableTarget extends DelegatePsiTarget implements PsiDeclaredTarget, PomRenameableTarget<Object> {
-  public ManipulatableTarget(@NotNull PsiElement element) {
+  public ManipulatableTarget(@Nonnull PsiElement element) {
     super(element);
   }
 
@@ -41,7 +41,7 @@ public class ManipulatableTarget extends DelegatePsiTarget implements PsiDeclare
 
   @Override
   @Nullable
-  public Object setName(@NotNull String newName) {
+  public Object setName(@Nonnull String newName) {
     ElementManipulators.getManipulator(getNavigationElement()).handleContentChange(getNavigationElement(), newName);
     return null;
   }

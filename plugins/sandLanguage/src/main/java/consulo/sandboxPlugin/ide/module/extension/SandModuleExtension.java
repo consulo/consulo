@@ -19,18 +19,18 @@ import com.intellij.openapi.projectRoots.SdkType;
 import consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import consulo.roots.ModuleRootLayer;
 import consulo.sandboxPlugin.ide.bundle.SandBundleType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandModuleExtension extends ModuleExtensionWithSdkImpl<SandModuleExtension> {
-  public SandModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
+  public SandModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Class<? extends SdkType> getSdkTypeClass() {
     return SandBundleType.class;

@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.text.JTextComponent;
 
@@ -31,18 +31,18 @@ import javax.swing.text.JTextComponent;
  * @author yole
  */
 public abstract class TextComponentEditorAction extends EditorAction {
-  protected TextComponentEditorAction(@NotNull EditorActionHandler defaultHandler) {
+  protected TextComponentEditorAction(@Nonnull EditorActionHandler defaultHandler) {
     super(defaultHandler);
   }
 
   @Override
   @Nullable
-  protected Editor getEditor(@NotNull final DataContext dataContext) {
+  protected Editor getEditor(@Nonnull final DataContext dataContext) {
     return getEditorFromContext(dataContext);
   }
 
   @Nullable
-  public static Editor getEditorFromContext(@NotNull DataContext dataContext) {
+  public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
     final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) return editor;
     final Object data = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);

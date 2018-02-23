@@ -22,8 +22,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.OptionAction;
 import com.intellij.openapi.ui.ValidationInfo;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,11 +40,12 @@ public class VcsPushDialog extends DialogWrapper {
   private final Map<PushSupport, VcsPushOptionsPanel> myAdditionalPanels;
 
   private Action myPushAction;
-  @Nullable private ForcePushAction myForcePushAction;
+  @javax.annotation.Nullable
+  private ForcePushAction myForcePushAction;
 
-  public VcsPushDialog(@NotNull Project project,
-                       @NotNull List<? extends Repository> selectedRepositories,
-                       @Nullable Repository currentRepo) {
+  public VcsPushDialog(@Nonnull Project project,
+                       @Nonnull List<? extends Repository> selectedRepositories,
+                       @javax.annotation.Nullable Repository currentRepo) {
     super(project);
     myController = new PushController(project, this, selectedRepositories, currentRepo);
     myAdditionalPanels = myController.createAdditionalPanels();
@@ -75,7 +75,7 @@ public class VcsPushDialog extends DialogWrapper {
     return ID;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected ValidationInfo doValidate() {
     updateOkActions();
@@ -88,7 +88,7 @@ public class VcsPushDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     final List<Action> actions = new ArrayList<Action>();
     myForcePushAction = new ForcePushAction();
@@ -109,13 +109,13 @@ public class VcsPushDialog extends DialogWrapper {
     return myController.isForcePushEnabled() && myController.getProhibitedTarget() == null && myController.isPushAllowed(true);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myListPanel.getPreferredFocusedComponent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action getOKAction() {
     return myPushAction;
@@ -146,8 +146,8 @@ public class VcsPushDialog extends DialogWrapper {
     myPushAction.setEnabled(false);
   }
 
-  @Nullable
-  public VcsPushOptionValue getAdditionalOptionValue(@NotNull PushSupport support) {
+  @javax.annotation.Nullable
+  public VcsPushOptionValue getAdditionalOptionValue(@Nonnull PushSupport support) {
     VcsPushOptionsPanel panel = myAdditionalPanels.get(support);
     return panel == null ? null : panel.getValue();
   }
@@ -188,7 +188,7 @@ public class VcsPushDialog extends DialogWrapper {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Action[] getOptions() {
       return myOptions;

@@ -40,8 +40,8 @@ import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;

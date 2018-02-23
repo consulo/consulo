@@ -2,7 +2,6 @@ package com.intellij.remoteServer.configuration;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author nik
@@ -13,7 +12,7 @@ public abstract class ServerConfigurationBase<Self extends ServerConfigurationBa
     return this;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Self getState() {
     return (Self)this;

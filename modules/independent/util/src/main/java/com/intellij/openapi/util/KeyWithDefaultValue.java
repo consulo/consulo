@@ -16,21 +16,21 @@
 
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * @author peter
  */
 public abstract class KeyWithDefaultValue<T> extends Key<T> {
-  public KeyWithDefaultValue(@NotNull @NonNls String name) {
+  public KeyWithDefaultValue(@Nonnull @NonNls String name) {
     super(name);
   }
 
   public abstract T getDefaultValue();
 
-  @NotNull
-  public static <T> KeyWithDefaultValue<T> create(@NotNull @NonNls String name, final T defValue) {
+  @Nonnull
+  public static <T> KeyWithDefaultValue<T> create(@Nonnull @NonNls String name, final T defValue) {
     return new KeyWithDefaultValue<T>(name) {
       @Override
       public T getDefaultValue() {

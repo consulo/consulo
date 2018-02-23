@@ -22,7 +22,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,7 +81,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
     myInitial = false;
   }
 
-  private void applyKeymap(@NotNull String keymapName) {
+  private void applyKeymap(@Nonnull String keymapName) {
     if(myInitial) {
       return;
     }

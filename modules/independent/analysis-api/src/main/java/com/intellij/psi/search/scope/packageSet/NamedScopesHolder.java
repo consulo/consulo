@@ -22,8 +22,8 @@ import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   protected final Project myProject;
   private VirtualFile myProjectBaseDir;
 
-  public NamedScopesHolder(@NotNull Project project) {
+  public NamedScopesHolder(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -60,10 +60,10 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   }
 
   private final List<ScopeListener> myScopeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  public void addScopeListener(@NotNull ScopeListener scopeListener) {
+  public void addScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.add(scopeListener);
   }
-  public void removeScopeListener(@NotNull ScopeListener scopeListener) {
+  public void removeScopeListener(@Nonnull ScopeListener scopeListener) {
     myScopeListeners.remove(scopeListener);
   }
 
@@ -73,7 +73,8 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     }
   }
 
-  @NotNull public NamedScope[] getScopes() {
+  @Nonnull
+  public NamedScope[] getScopes() {
     final List<NamedScope> scopes = new ArrayList<NamedScope>();
     List<NamedScope> list = getPredefinedScopes();
     scopes.addAll(list);
@@ -101,7 +102,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   }
 
   @Nullable
-  public static NamedScope getScope(@NotNull Project project, final String scopeName) {
+  public static NamedScope getScope(@Nonnull Project project, final String scopeName) {
     final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
     for (NamedScopesHolder holder : holders) {
       final NamedScope scope = holder.getScope(scopeName);
@@ -112,8 +113,8 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     return null;
   }
 
-  @NotNull
-  public static NamedScopesHolder[] getAllNamedScopeHolders(@NotNull Project project) {
+  @Nonnull
+  public static NamedScopesHolder[] getAllNamedScopeHolders(@Nonnull Project project) {
     NamedScopesHolder[] holders = new NamedScopesHolder[2];
     holders [0] = NamedScopeManager.getInstance(project);
     holders [1] = DependencyValidationManager.getInstance(project);
@@ -181,7 +182,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     return getPredefinedScope(name);
   }
 
-  @NotNull
+  @Nonnull
   public List<NamedScope> getPredefinedScopes(){
     return Collections.emptyList();
   }
@@ -191,7 +192,7 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }

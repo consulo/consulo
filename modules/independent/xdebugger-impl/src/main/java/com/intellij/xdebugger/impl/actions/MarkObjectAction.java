@@ -19,11 +19,10 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -57,9 +56,9 @@ public class MarkObjectAction extends XDebuggerActionBase {
     presentation.setEnabled(enabled);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DebuggerActionHandler getHandler(@NotNull DebuggerSupport debuggerSupport) {
+  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
     return debuggerSupport.getMarkObjectHandler();
   }
 }

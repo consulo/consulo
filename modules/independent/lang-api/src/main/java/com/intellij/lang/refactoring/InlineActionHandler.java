@@ -21,7 +21,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -39,7 +38,7 @@ public abstract class InlineActionHandler {
     return canInlineElement(element);
   }
 
-  public boolean isEnabledOnElement(PsiElement element, @Nullable Editor editor) {
+  public boolean isEnabledOnElement(PsiElement element, @javax.annotation.Nullable Editor editor) {
     return isEnabledOnElement(element);
   }
 

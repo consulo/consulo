@@ -26,8 +26,8 @@ import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.RequiredUIAccess;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
 
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Window suggestParentWindow(@Nullable Project project) {
     return null;
@@ -82,7 +82,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public StatusBar getStatusBar(@NotNull Component c) {
+  public StatusBar getStatusBar(@Nonnull Component c) {
     return null;
   }
 
@@ -92,7 +92,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public IdeFrameEx getIdeFrame(@Nullable Project project) {
+  public IdeFrameEx getIdeFrame(@javax.annotation.Nullable Project project) {
     return myProject2Frame.get(project);
   }
 
@@ -106,7 +106,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IdeFrame[] getAllProjectFrames() {
     return new IdeFrame[0];
@@ -133,9 +133,9 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public IdeFrameEx allocateFrame(@NotNull Project project) {
+  public IdeFrameEx allocateFrame(@Nonnull Project project) {
     WebIdeFrameImpl frame = new WebIdeFrameImpl(project);
     myProject2Frame.put(project, frame);
 
@@ -152,7 +152,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public Component getFocusedComponent(@NotNull Window window) {
+  public Component getFocusedComponent(@Nonnull Window window) {
     return null;
   }
 
@@ -198,7 +198,7 @@ public class WebWindowManagerImpl extends WindowManagerEx implements NamedCompon
   }
 
   @Override
-  public Rectangle getScreenBounds(@NotNull Project project) {
+  public Rectangle getScreenBounds(@Nonnull Project project) {
     return null;
   }
 

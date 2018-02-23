@@ -28,8 +28,8 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -37,32 +37,33 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
   private static final Logger LOG = Logger.getInstance(BaseDiffFromHistoryHandler.class);
 
-  @NotNull protected final Project myProject;
+  @Nonnull
+  protected final Project myProject;
 
-  protected BaseDiffFromHistoryHandler(@NotNull Project project) {
+  protected BaseDiffFromHistoryHandler(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  public void showDiffForOne(@NotNull AnActionEvent e,
-                             @NotNull Project project, @NotNull FilePath filePath,
-                             @NotNull VcsFileRevision previousRevision,
-                             @NotNull VcsFileRevision revision) {
+  public void showDiffForOne(@Nonnull AnActionEvent e,
+                             @Nonnull Project project, @Nonnull FilePath filePath,
+                             @Nonnull VcsFileRevision previousRevision,
+                             @Nonnull VcsFileRevision revision) {
     doShowDiff(filePath, previousRevision, revision);
   }
 
   @Override
-  public void showDiffForTwo(@NotNull Project project,
-                             @NotNull FilePath filePath,
-                             @NotNull VcsFileRevision older,
-                             @NotNull VcsFileRevision newer) {
+  public void showDiffForTwo(@Nonnull Project project,
+                             @Nonnull FilePath filePath,
+                             @Nonnull VcsFileRevision older,
+                             @Nonnull VcsFileRevision newer) {
     doShowDiff(filePath, older, newer);
   }
 
   @SuppressWarnings("unchecked")
-  protected void doShowDiff(@NotNull FilePath filePath,
-                            @NotNull VcsFileRevision older,
-                            @NotNull VcsFileRevision newer) {
+  protected void doShowDiff(@Nonnull FilePath filePath,
+                            @Nonnull VcsFileRevision older,
+                            @Nonnull VcsFileRevision newer) {
     if (!filePath.isDirectory()) {
       VcsHistoryUtil.showDifferencesInBackground(myProject, filePath, older, newer);
     }
@@ -81,16 +82,16 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
     }
   }
 
-  protected void showChangesBetweenRevisions(@NotNull final FilePath path, @NotNull final T older, @Nullable final T newer) {
+  protected void showChangesBetweenRevisions(@Nonnull final FilePath path, @Nonnull final T older, @Nullable final T newer) {
     new CollectChangesTask("Comparing revisions...") {
 
-      @NotNull
+      @Nonnull
       @Override
       public List<Change> getChanges() throws VcsException {
         return getChangesBetweenRevisions(path, older, newer);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDialogTitle() {
         return getChangesBetweenRevisionsDialogTitle(path, older, newer);
@@ -98,16 +99,16 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
     }.queue();
   }
 
-  protected void showAffectedChanges(@NotNull final FilePath path, @NotNull final T rev) {
+  protected void showAffectedChanges(@Nonnull final FilePath path, @Nonnull final T rev) {
     new CollectChangesTask("Collecting affected changes...") {
 
-      @NotNull
+      @Nonnull
       @Override
       public List<Change> getChanges() throws VcsException {
         return getAffectedChanges(path, rev);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getDialogTitle() {
         return getAffectedChangesDialogTitle(path, rev);
@@ -117,17 +118,17 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
   // rev2 == null -> compare rev1 with local
   // rev2 != null -> compare rev1 with rev2
-  @NotNull
-  protected abstract List<Change> getChangesBetweenRevisions(@NotNull final FilePath path, @NotNull final T rev1, @Nullable final T rev2)
+  @Nonnull
+  protected abstract List<Change> getChangesBetweenRevisions(@Nonnull final FilePath path, @Nonnull final T rev1, @Nullable final T rev2)
           throws VcsException;
 
-  @NotNull
-  protected abstract List<Change> getAffectedChanges(@NotNull final FilePath path, @NotNull final T rev) throws VcsException;
+  @Nonnull
+  protected abstract List<Change> getAffectedChanges(@Nonnull final FilePath path, @Nonnull final T rev) throws VcsException;
 
-  @NotNull
-  protected abstract String getPresentableName(@NotNull T revision);
+  @Nonnull
+  protected abstract String getPresentableName(@Nonnull T revision);
 
-  protected void showChangesDialog(@NotNull String title, @NotNull List<Change> changes) {
+  protected void showChangesDialog(@Nonnull String title, @Nonnull List<Change> changes) {
     DialogBuilder dialogBuilder = new DialogBuilder(myProject);
 
     dialogBuilder.setTitle(title);
@@ -140,13 +141,13 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
     dialogBuilder.showNotModal();
   }
 
-  protected void showError(@NotNull VcsException e, @NotNull String logMessage) {
+  protected void showError(@Nonnull VcsException e, @Nonnull String logMessage) {
     LOG.info(logMessage, e);
     VcsBalloonProblemNotifier.showOverVersionControlView(myProject, e.getMessage(), MessageType.ERROR);
   }
 
-  @NotNull
-  protected String getChangesBetweenRevisionsDialogTitle(@NotNull final FilePath path, @NotNull final T rev1, @Nullable final T rev2) {
+  @Nonnull
+  protected String getChangesBetweenRevisionsDialogTitle(@Nonnull final FilePath path, @Nonnull final T rev1, @Nullable final T rev2) {
     String rev1Title = getPresentableName(rev1);
 
     return rev2 != null
@@ -154,8 +155,8 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
            : String.format("Difference between %s and local version in %s", rev1Title, path.getName());
   }
 
-  @NotNull
-  protected String getAffectedChangesDialogTitle(@NotNull final FilePath path, @NotNull final T rev) {
+  @Nonnull
+  protected String getAffectedChangesDialogTitle(@Nonnull final FilePath path, @Nonnull final T rev) {
     return String.format("Initial commit %s in %s", getPresentableName(rev), path.getName());
   }
 
@@ -163,12 +164,12 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
 
     private List<Change> myChanges;
 
-    public CollectChangesTask(@NotNull String title) {
+    public CollectChangesTask(@Nonnull String title) {
       super(BaseDiffFromHistoryHandler.this.myProject, title);
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       try {
         myChanges = getChanges();
       }
@@ -177,10 +178,10 @@ public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> impl
       }
     }
 
-    @NotNull
+    @Nonnull
     public abstract List<Change> getChanges() throws VcsException;
 
-    @NotNull
+    @Nonnull
     public abstract String getDialogTitle();
 
     @Override

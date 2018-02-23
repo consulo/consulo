@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.xdebugger.XNamedTreeNode;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreePath;
 

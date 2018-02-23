@@ -40,8 +40,9 @@ import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.*;
@@ -201,7 +202,7 @@ public class NavBarModel {
   }
 
   @RequiredReadAction
-  private void traverseToRoot(@NotNull PsiElement psiElement, Set<VirtualFile> roots, List<Object> model) {
+  private void traverseToRoot(@Nonnull PsiElement psiElement, Set<VirtualFile> roots, List<Object> model) {
     if (!psiElement.isValid()) return;
     final PsiFile containingFile = psiElement.getContainingFile();
     if (containingFile != null &&
@@ -416,7 +417,7 @@ public class NavBarModel {
               }
 
               @Override
-              public boolean execute(@NotNull PsiFileSystemItem element) {
+              public boolean execute(@Nonnull PsiFileSystemItem element) {
                 result.add(element);
                 return true;
               }

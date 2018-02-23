@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -140,7 +140,7 @@ public class Queue<T> {
     return t;
   }
 
-  public boolean process(@NotNull Processor<T> processor) {
+  public boolean process(@Nonnull Processor<T> processor) {
     if (isWrapped) {
       for (int i = myFirst; i < myArray.length; i++) {
         @SuppressWarnings("unchecked") T t = (T)myArray[i];

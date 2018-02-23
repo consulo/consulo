@@ -27,7 +27,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.help.BadIDException;
 import javax.help.HelpSet;
@@ -43,7 +43,7 @@ public class DesktopHelpManagerImpl extends HelpManager {
   private IdeaHelpBroker myBroker = null;
 
   @Override
-  public void invokeHelp(@Nullable String id) {
+  public void invokeHelp(@javax.annotation.Nullable String id) {
     if (MacHelpUtil.isApplicable()) {
       if (MacHelpUtil.invokeHelp(id)) return;
     }

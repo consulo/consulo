@@ -20,8 +20,8 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ven
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCommentFix {
   protected Class<? extends PsiElement> mySuppressionHolderClass;
 
-  public SuppressByCommentFix(@NotNull HighlightDisplayKey key, @NotNull Class<? extends PsiElement> suppressionHolderClass) {
+  public SuppressByCommentFix(@Nonnull HighlightDisplayKey key, @Nonnull Class<? extends PsiElement> suppressionHolderClass) {
     this(key.getID());
     mySuppressionHolderClass = suppressionHolderClass;
   }
@@ -39,7 +39,7 @@ public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCom
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("suppress.inspection.statement");
   }

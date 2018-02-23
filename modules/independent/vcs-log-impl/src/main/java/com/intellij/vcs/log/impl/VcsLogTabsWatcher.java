@@ -29,8 +29,8 @@ import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.data.VcsLogFilterer;
 import com.intellij.vcs.log.impl.PostponableLogRefresher.VcsLogWindow;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -38,13 +38,17 @@ import java.beans.PropertyChangeListener;
 public class VcsLogTabsWatcher implements Disposable {
   private static final String TOOLWINDOW_ID = ChangesViewContentManager.TOOLWINDOW_ID;
 
-  @NotNull private final PostponableLogRefresher myRefresher;
+  @Nonnull
+  private final PostponableLogRefresher myRefresher;
 
-  @NotNull private final ToolWindowManagerEx myToolWindowManager;
-  @NotNull private final MyRefreshPostponedEventsListener myPostponedEventsListener;
-  @Nullable private ToolWindow myToolWindow;
+  @Nonnull
+  private final ToolWindowManagerEx myToolWindowManager;
+  @Nonnull
+  private final MyRefreshPostponedEventsListener myPostponedEventsListener;
+  @Nullable
+  private ToolWindow myToolWindow;
 
-  public VcsLogTabsWatcher(@NotNull Project project, @NotNull PostponableLogRefresher refresher, @NotNull Disposable parentDisposable) {
+  public VcsLogTabsWatcher(@Nonnull Project project, @Nonnull PostponableLogRefresher refresher, @Nonnull Disposable parentDisposable) {
     myRefresher = refresher;
     myToolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
@@ -66,8 +70,8 @@ public class VcsLogTabsWatcher implements Disposable {
     return null;
   }
 
-  @NotNull
-  public Disposable addTabToWatch(@NotNull String contentTabName, @NotNull VcsLogFilterer filterer) {
+  @Nonnull
+  public Disposable addTabToWatch(@Nonnull String contentTabName, @Nonnull VcsLogFilterer filterer) {
     return myRefresher.addLogWindow(new VcsLogTab(filterer, contentTabName));
   }
 
@@ -95,9 +99,10 @@ public class VcsLogTabsWatcher implements Disposable {
   }
 
   public class VcsLogTab extends PostponableLogRefresher.VcsLogWindow {
-    @NotNull private final String myTabName;
+    @Nonnull
+    private final String myTabName;
 
-    public VcsLogTab(@NotNull VcsLogFilterer filterer, @NotNull String tabName) {
+    public VcsLogTab(@Nonnull VcsLogFilterer filterer, @Nonnull String tabName) {
       super(filterer);
       myTabName = tabName;
     }
@@ -156,7 +161,7 @@ public class VcsLogTabsWatcher implements Disposable {
     }
 
     @Override
-    public void toolWindowRegistered(@NotNull String id) {
+    public void toolWindowRegistered(@Nonnull String id) {
       if (id.equals(TOOLWINDOW_ID)) {
         installContentListener();
       }

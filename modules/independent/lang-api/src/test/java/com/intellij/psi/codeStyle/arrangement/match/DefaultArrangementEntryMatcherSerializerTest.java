@@ -24,7 +24,7 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtilRt;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class DefaultArrangementEntryMatcherSerializerTest {
     doTest(condition);
   }
 
-  private static void checkElements(@NotNull Element expected, @NotNull Element actual) {
+  private static void checkElements(@Nonnull Element expected, @Nonnull Element actual) {
     assertTrue(
       String.format("Tag name mismatch - expected: '%s', actual: '%s'", expected.getName(), actual.getName()),
       Comparing.equal(expected.getName(), actual.getName())
@@ -142,7 +142,7 @@ public class DefaultArrangementEntryMatcherSerializerTest {
     }
   }
   
-  private void doTest(@NotNull ArrangementMatchCondition condition) {
+  private void doTest(@Nonnull ArrangementMatchCondition condition) {
     Element element = mySerializer.serialize(new StdArrangementEntryMatcher(condition));
     assertNotNull(String.format("Can't serialize match condition '%s'", condition), element);
     ArrangementEntryMatcher matcher = mySerializer.deserialize(element);

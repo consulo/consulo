@@ -18,7 +18,7 @@ package com.intellij.conversion;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -27,21 +27,21 @@ import java.io.File;
  */
 public abstract class ConversionService {
 
-  @NotNull
+  @Nonnull
   public static ConversionService getInstance() {
     ConversionService service = ServiceManager.getService(ConversionService.class);
     return service == null ? new DummyConversionService() : service;
   }
 
-  @NotNull
-  public abstract ConversionResult convertSilently(@NotNull String projectPath);
+  @Nonnull
+  public abstract ConversionResult convertSilently(@Nonnull String projectPath);
 
-  @NotNull
-  public abstract ConversionResult convertSilently(@NotNull String projectPath, @NotNull ConversionListener conversionListener);
+  @Nonnull
+  public abstract ConversionResult convertSilently(@Nonnull String projectPath, @Nonnull ConversionListener conversionListener);
 
-  @NotNull
-  public abstract ConversionResult convert(@NotNull String projectPath);
+  @Nonnull
+  public abstract ConversionResult convert(@Nonnull String projectPath);
 
-  @NotNull
-  public abstract ConversionResult convertModule(@NotNull Project project, @NotNull File moduleFile);
+  @Nonnull
+  public abstract ConversionResult convertModule(@Nonnull Project project, @Nonnull File moduleFile);
 }

@@ -17,8 +17,7 @@ package com.intellij.lang.findUsages;
 
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Defines the support for the "Find Usages" feature in a custom language.
@@ -35,7 +34,7 @@ public interface FindUsagesProvider {
    *
    * @return the word scanner implementation, or null if {@link com.intellij.lang.cacheBuilder.SimpleWordsScanner} is OK.
    */
-  @Nullable
+  @javax.annotation.Nullable
   WordsScanner getWordsScanner();
 
   /**
@@ -45,7 +44,7 @@ public interface FindUsagesProvider {
    * @return true if the search is allowed, false otherwise.
    * @see com.intellij.find.FindManager#canFindUsages(com.intellij.psi.PsiElement)
    */
-  boolean canFindUsagesFor(@NotNull PsiElement psiElement);
+  boolean canFindUsagesFor(@Nonnull PsiElement psiElement);
 
   /**
    * Returns the ID of the help topic which is shown when the specified element is selected
@@ -54,8 +53,8 @@ public interface FindUsagesProvider {
    * @param psiElement the element for which the help topic is requested.
    * @return the help topic ID, or null if no help is available.
    */
-  @Nullable
-  String getHelpId(@NotNull PsiElement psiElement);
+  @javax.annotation.Nullable
+  String getHelpId(@Nonnull PsiElement psiElement);
 
   /**
    * Returns the user-visible type of the specified element, shown in the "Find Usages"
@@ -64,8 +63,8 @@ public interface FindUsagesProvider {
    * @param element the element for which the type is requested.
    * @return the type of the element.
    */
-  @NotNull
-  String getType(@NotNull PsiElement element);
+  @Nonnull
+  String getType(@Nonnull PsiElement element);
 
   /**
    * Returns an expanded user-visible name of the specified element, shown in the "Find Usages"
@@ -75,8 +74,8 @@ public interface FindUsagesProvider {
    * @param element the element for which the name is requested.
    * @return the user-visible name.
    */
-  @NotNull
-  String getDescriptiveName(@NotNull PsiElement element);
+  @Nonnull
+  String getDescriptiveName(@Nonnull PsiElement element);
 
   /**
    * Returns the text representing the specified PSI element in the Find Usages tree.
@@ -85,6 +84,6 @@ public interface FindUsagesProvider {
    * @param useFullName if true, the returned text should use fully qualified names
    * @return the text representing the element.
    */
-  @NotNull
-  String getNodeText(@NotNull PsiElement element, boolean useFullName);
+  @Nonnull
+  String getNodeText(@Nonnull PsiElement element, boolean useFullName);
 }

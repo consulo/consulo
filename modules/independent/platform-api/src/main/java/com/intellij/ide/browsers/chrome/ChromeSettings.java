@@ -22,16 +22,18 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 public final class ChromeSettings extends BrowserSpecificSettings {
   public static final String USER_DATA_DIR_ARG = "--user-data-dir=";
-  private @Nullable String myCommandLineOptions;
-  private @Nullable String myUserDataDirectoryPath;
+  private @Nullable
+  String myCommandLineOptions;
+  private @Nullable
+  String myUserDataDirectoryPath;
   private boolean myUseCustomProfile;
 
   public ChromeSettings() {
@@ -66,7 +68,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
     myUseCustomProfile = useCustomProfile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getAdditionalParameters() {
     if (myCommandLineOptions == null) {
@@ -85,7 +87,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
     return cliOptions;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ChromeSettingsConfigurable createConfigurable() {
     return new ChromeSettingsConfigurable(this);

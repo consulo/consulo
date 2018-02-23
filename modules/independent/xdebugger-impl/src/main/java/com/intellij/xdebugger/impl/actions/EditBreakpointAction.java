@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EditBreakpointAction extends XDebuggerActionBase {
 
@@ -46,9 +46,9 @@ public class EditBreakpointAction extends XDebuggerActionBase {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DebuggerActionHandler getHandler(@NotNull DebuggerSupport debuggerSupport) {
+  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
     return debuggerSupport.getEditBreakpointAction();
   }
 }

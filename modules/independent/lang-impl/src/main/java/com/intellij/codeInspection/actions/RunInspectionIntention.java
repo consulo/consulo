@@ -37,7 +37,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 
@@ -48,7 +48,7 @@ import java.util.LinkedHashSet;
 public class RunInspectionIntention implements IntentionAction, HighPriorityAction {
   private final String myShortName;
 
-  public RunInspectionIntention(@NotNull InspectionToolWrapper toolWrapper) {
+  public RunInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper) {
     myShortName = toolWrapper.getShortName();
   }
 
@@ -57,24 +57,24 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("run.inspection.on.file.intention.text");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return getText();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName) != null;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
     final Module module = ModuleUtilCore.findModuleForPsiElement(file);
     AnalysisScope analysisScope = new AnalysisScope(file);
@@ -95,16 +95,16 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     rerunInspection(LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName), managerEx, analysisScope, file);
   }
 
-  public static void rerunInspection(@NotNull InspectionToolWrapper toolWrapper,
-                                     @NotNull InspectionManagerEx managerEx,
-                                     @NotNull AnalysisScope scope,
+  public static void rerunInspection(@Nonnull InspectionToolWrapper toolWrapper,
+                                     @Nonnull InspectionManagerEx managerEx,
+                                     @Nonnull AnalysisScope scope,
                                      PsiElement psiElement) {
     GlobalInspectionContextImpl inspectionContext = createContext(toolWrapper, managerEx, psiElement);
     inspectionContext.doInspections(scope);
   }
 
-  public static GlobalInspectionContextImpl createContext(@NotNull InspectionToolWrapper toolWrapper,
-                                                          @NotNull InspectionManagerEx managerEx,
+  public static GlobalInspectionContextImpl createContext(@Nonnull InspectionToolWrapper toolWrapper,
+                                                          @Nonnull InspectionManagerEx managerEx,
                                                           PsiElement psiElement) {
     final InspectionProfileImpl rootProfile = (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
     LinkedHashSet<InspectionToolWrapper> allWrappers = new LinkedHashSet<InspectionToolWrapper>();

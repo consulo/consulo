@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.vfs.ArchiveFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -38,12 +38,12 @@ public class SimpleSdkRoot implements SdkRoot {
   private final VirtualFile[] myFileArray = new VirtualFile[1];
   private boolean myInitialized = false;
 
-  public SimpleSdkRoot(@NotNull VirtualFile file) {
+  public SimpleSdkRoot(@Nonnull VirtualFile file) {
     myFile = file;
     myUrl = myFile.getUrl();
   }
 
-  public SimpleSdkRoot(@NotNull String url) {
+  public SimpleSdkRoot(@Nonnull String url) {
     myUrl = url;
   }
 
@@ -55,7 +55,7 @@ public class SimpleSdkRoot implements SdkRoot {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableString() {
     String path = VirtualFileManager.extractPath(myUrl);
     if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) {
@@ -65,7 +65,7 @@ public class SimpleSdkRoot implements SdkRoot {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getVirtualFiles() {
     if (!myInitialized) initialize();
 
@@ -78,7 +78,7 @@ public class SimpleSdkRoot implements SdkRoot {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getUrls() {
     return new String[]{myUrl};
   }

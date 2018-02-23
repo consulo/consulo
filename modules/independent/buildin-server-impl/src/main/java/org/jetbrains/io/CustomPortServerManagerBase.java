@@ -15,7 +15,7 @@
  */
 package org.jetbrains.io;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.CustomPortServerManager;
 
 public abstract class CustomPortServerManagerBase extends CustomPortServerManager {
@@ -23,7 +23,7 @@ public abstract class CustomPortServerManagerBase extends CustomPortServerManage
   protected CustomPortService manager;
 
   @Override
-  public void setManager(@Nullable CustomPortService manager) {
+  public void setManager(@javax.annotation.Nullable CustomPortService manager) {
     this.manager = manager;
   }
 

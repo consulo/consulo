@@ -28,8 +28,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -38,18 +38,18 @@ public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
   public static final String NAME = "PATCH";
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return VcsBundle.message("patch.file.type.description");
   }
 
-  @NotNull
+  @Nonnull
   @NonNls
   public String getDefaultExtension() {
     return "patch";
@@ -70,15 +70,15 @@ public class PatchFileType implements FileType {
 
   @Nullable
   @NonNls
-  public String getCharset(@NotNull VirtualFile file, @NotNull final byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, @Nonnull final byte[] content) {
     return null;
   }
 
-  public static boolean isPatchFile(@Nullable VirtualFile vFile) {
+  public static boolean isPatchFile(@javax.annotation.Nullable VirtualFile vFile) {
     return vFile != null && vFile.getFileType() == PatchFileType.INSTANCE;
   }
 
-  public static boolean isPatchFile(@NotNull File file) {
+  public static boolean isPatchFile(@Nonnull File file) {
     return isPatchFile(VfsUtil.findFileByIoFile(file, true));
   }
 }

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -91,7 +91,7 @@ public class RowIcon extends JBUI.AuxScalableJBIcon {
   }
 
   @TestOnly
-  @NotNull
+  @Nonnull
   Icon[] getAllIcons() {
     List<Icon> icons = ContainerUtil.packNullables(myIcons);
     return icons.toArray(new Icon[icons.size()]);

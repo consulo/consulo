@@ -3,20 +3,20 @@ package com.intellij.remoteServer.runtime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface Deployment {
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   DeploymentStatus getStatus();
 
-  @NotNull
+  @Nonnull
   String getStatusText();
 
   @Nullable

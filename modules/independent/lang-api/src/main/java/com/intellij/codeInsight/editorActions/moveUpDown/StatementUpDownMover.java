@@ -24,8 +24,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -35,7 +35,7 @@ public abstract class StatementUpDownMover {
 
   public static class MoveInfo {
     /** Source line range */
-    @NotNull
+    @Nonnull
     public LineRange toMove;
 
     /**
@@ -60,21 +60,21 @@ public abstract class StatementUpDownMover {
     }
   }
 
-  public abstract boolean checkAvailable(@NotNull final Editor editor, @NotNull final PsiFile file, @NotNull final MoveInfo info, final boolean down);
+  public abstract boolean checkAvailable(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down);
 
-  public void beforeMove(@NotNull final Editor editor, @NotNull final MoveInfo info, final boolean down) {
+  public void beforeMove(@Nonnull final Editor editor, @Nonnull final MoveInfo info, final boolean down) {
   }
 
-  public void afterMove(@NotNull final Editor editor, @NotNull final PsiFile file, @NotNull final MoveInfo info, final boolean down) {
+  public void afterMove(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down) {
   }
 
-  public static int getLineStartSafeOffset(@NotNull Document document, int line) {
+  public static int getLineStartSafeOffset(@Nonnull Document document, int line) {
     if (line == document.getLineCount()) return document.getTextLength();
     return document.getLineStartOffset(line);
   }
 
-  @NotNull
-  protected static LineRange getLineRangeFromSelection(@NotNull Editor editor) {
+  @Nonnull
+  protected static LineRange getLineRangeFromSelection(@Nonnull Editor editor) {
     final int startLine;
     final int endLine;
     final SelectionModel selectionModel = editor.getSelectionModel();
@@ -94,7 +94,7 @@ public abstract class StatementUpDownMover {
   }
 
   @Nullable
-  protected static Pair<PsiElement, PsiElement> getElementRange(@NotNull Editor editor, @NotNull PsiFile file, @NotNull LineRange range) {
+  protected static Pair<PsiElement, PsiElement> getElementRange(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull LineRange range) {
     final int startOffset = editor.logicalPositionToOffset(new LogicalPosition(range.startLine, 0));
     PsiElement startingElement = firstNonWhiteElement(startOffset, file, true);
     if (startingElement == null) return null;
@@ -112,13 +112,13 @@ public abstract class StatementUpDownMover {
     return null;
   }
 
-  @Nullable
-  protected static PsiElement firstNonWhiteElement(int offset, @NotNull PsiFile file, final boolean lookRight) {
+  @javax.annotation.Nullable
+  protected static PsiElement firstNonWhiteElement(int offset, @Nonnull PsiFile file, final boolean lookRight) {
     final ASTNode leafElement = file.getNode().findLeafElementAt(offset);
     return leafElement == null ? null : firstNonWhiteElement(leafElement.getPsi(), lookRight);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected static PsiElement firstNonWhiteElement(PsiElement element, final boolean lookRight) {
     if (element instanceof PsiWhiteSpace) {
       element = lookRight ? element.getNextSibling() : element.getPrevSibling();

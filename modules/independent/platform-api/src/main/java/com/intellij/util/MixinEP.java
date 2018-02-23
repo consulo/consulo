@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.LazyInstance;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -34,7 +34,7 @@ public class MixinEP<T> extends AbstractExtensionPointBean {
   public String implementationClass;
 
   private final NotNullLazyValue<Class> myKey = new NotNullLazyValue<Class>() {
-    @NotNull
+    @Nonnull
     protected Class compute() {
       try {
         return findClass(key);

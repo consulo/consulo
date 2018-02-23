@@ -17,7 +17,6 @@ package com.intellij.refactoring.listeners;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Refactorings invoke {@link #getListener(com.intellij.psi.PsiElement)} of registered
@@ -31,5 +30,6 @@ public interface RefactoringElementListenerProvider {
    *
    * Should return a listener for particular element. Invoked in read action.
    */
-  @Nullable RefactoringElementListener getListener(PsiElement element);
+  @javax.annotation.Nullable
+  RefactoringElementListener getListener(PsiElement element);
 }

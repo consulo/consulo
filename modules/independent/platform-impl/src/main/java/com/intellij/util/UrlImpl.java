@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.util.io.URLUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class UrlImpl implements Url {
   private final String scheme;
@@ -37,7 +37,7 @@ public final class UrlImpl implements Url {
     this(null, null, path, null);
   }
 
-  UrlImpl(@NotNull String scheme, @Nullable String authority, @Nullable String path) {
+  UrlImpl(@Nonnull String scheme, @Nullable String authority, @Nullable String path) {
     this(scheme, authority, path, null);
   }
 
@@ -48,7 +48,7 @@ public final class UrlImpl implements Url {
     this.parameters = StringUtil.nullize(parameters);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     if (decodedPath == null) {
@@ -104,7 +104,7 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toExternalForm() {
     if (externalForm != null) {
       return externalForm;
@@ -125,7 +125,7 @@ public final class UrlImpl implements Url {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Url trimParameters() {
     if (parameters == null) {
       return this;

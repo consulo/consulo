@@ -27,7 +27,7 @@ import com.intellij.psi.*;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.pattern.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UpdateCopyrightAction extends BaseAnalysisAction {
   protected UpdateCopyrightAction() {
@@ -101,7 +101,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
   }
 
   @Override
-  protected void analyze(@NotNull final Project project, @NotNull AnalysisScope scope) {
+  protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
     if (scope.checkScopeWritable(project)) return;
     scope.accept(new PsiElementVisitor() {
       @Override

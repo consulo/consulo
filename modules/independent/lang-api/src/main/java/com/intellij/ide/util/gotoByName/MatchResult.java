@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MatchResult implements Comparable<MatchResult> {
   public final String elementName;
@@ -29,7 +29,7 @@ public class MatchResult implements Comparable<MatchResult> {
   }
 
   @Override
-  public int compareTo(@NotNull MatchResult that) {
+  public int compareTo(@Nonnull MatchResult that) {
     boolean start1 = startMatch;
     boolean start2 = that.startMatch;
     if (start1 != start2) return start1 ? -1 : 1;

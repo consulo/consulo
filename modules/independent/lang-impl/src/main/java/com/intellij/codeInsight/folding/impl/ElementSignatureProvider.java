@@ -19,8 +19,8 @@ package com.intellij.codeInsight.folding.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -29,8 +29,8 @@ public interface ElementSignatureProvider {
   ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create("com.intellij.elementSignatureProvider");
 
   @Nullable
-  String getSignature(@NotNull PsiElement element);
+  String getSignature(@Nonnull PsiElement element);
 
   @Nullable
-  PsiElement restoreBySignature(@NotNull PsiFile file, @NotNull String signature, @Nullable StringBuilder processingInfoStorage);
+  PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage);
 }

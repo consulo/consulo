@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -84,7 +84,7 @@ public class KillToWordEndActionTest extends LightPlatformCodeInsightTestCase {
     );
   }
   
-  private void doTest(@NotNull String before, @NotNull String after) throws IOException {
+  private void doTest(@Nonnull String before, @Nonnull String after) throws IOException {
     configureFromFileText(getTestName(false) + ".txt", before);
     killToWordEnd();
     checkResultByText(after);

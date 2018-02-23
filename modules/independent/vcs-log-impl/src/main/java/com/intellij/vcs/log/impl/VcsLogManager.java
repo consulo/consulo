@@ -38,8 +38,8 @@ import com.intellij.vcs.log.data.*;
 import com.intellij.vcs.log.ui.VcsLogColorManagerImpl;
 import com.intellij.vcs.log.ui.VcsLogPanel;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -50,23 +50,29 @@ public class VcsLogManager implements Disposable {
   public static final ExtensionPointName<VcsLogProvider> LOG_PROVIDER_EP = ExtensionPointName.create("com.intellij.logProvider");
   private static final Logger LOG = Logger.getInstance(VcsLogManager.class);
 
-  @NotNull private final Project myProject;
-  @NotNull private final VcsLogTabsProperties myUiProperties;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VcsLogTabsProperties myUiProperties;
   @Nullable private final Runnable myRecreateMainLogHandler;
 
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final VcsLogColorManagerImpl myColorManager;
-  @NotNull private final VcsLogTabsWatcher myTabsLogRefresher;
-  @NotNull private final PostponableLogRefresher myPostponableRefresher;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogColorManagerImpl myColorManager;
+  @Nonnull
+  private final VcsLogTabsWatcher myTabsLogRefresher;
+  @Nonnull
+  private final PostponableLogRefresher myPostponableRefresher;
   private boolean myInitialized = false;
 
-  public VcsLogManager(@NotNull Project project, @NotNull VcsLogTabsProperties uiProperties, @NotNull Collection<VcsRoot> roots) {
+  public VcsLogManager(@Nonnull Project project, @Nonnull VcsLogTabsProperties uiProperties, @Nonnull Collection<VcsRoot> roots) {
     this(project, uiProperties, roots, true, null);
   }
 
-  public VcsLogManager(@NotNull Project project,
-                       @NotNull VcsLogTabsProperties uiProperties,
-                       @NotNull Collection<VcsRoot> roots,
+  public VcsLogManager(@Nonnull Project project,
+                       @Nonnull VcsLogTabsProperties uiProperties,
+                       @Nonnull Collection<VcsRoot> roots,
                        boolean scheduleRefreshImmediately,
                        @Nullable Runnable recreateHandler) {
     myProject = project;
@@ -102,19 +108,19 @@ public class VcsLogManager implements Disposable {
     return myPostponableRefresher.isLogVisible();
   }
 
-  @NotNull
+  @Nonnull
   public VcsLogData getDataManager() {
     return myLogData;
   }
 
-  @NotNull
-  public JComponent createLogPanel(@NotNull String logId, @Nullable String contentTabName) {
+  @Nonnull
+  public JComponent createLogPanel(@Nonnull String logId, @Nullable String contentTabName) {
     VcsLogUiImpl ui = createLogUi(logId, contentTabName, null);
     return new VcsLogPanel(this, ui);
   }
 
-  @NotNull
-  public VcsLogUiImpl createLogUi(@NotNull String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
+  @Nonnull
+  public VcsLogUiImpl createLogUi(@Nonnull String logId, @Nullable String contentTabName, @Nullable VcsLogFilter filter) {
     MainVcsLogUiProperties properties = myUiProperties.createProperties(logId);
     VcsLogFiltererImpl filterer = new VcsLogFiltererImpl(myProject, myLogData, properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE));
     VcsLogUiImpl ui = new VcsLogUiImpl(myLogData, myProject, myColorManager, properties, filterer);
@@ -135,9 +141,9 @@ public class VcsLogManager implements Disposable {
     return ui;
   }
 
-  private static void refreshLogOnVcsEvents(@NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                                            @NotNull VcsLogRefresher refresher,
-                                            @NotNull Disposable disposableParent) {
+  private static void refreshLogOnVcsEvents(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                                            @Nonnull VcsLogRefresher refresher,
+                                            @Nonnull Disposable disposableParent) {
     MultiMap<VcsLogProvider, VirtualFile> providers2roots = MultiMap.create();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : logProviders.entrySet()) {
       providers2roots.putValue(entry.getValue(), entry.getKey());
@@ -149,8 +155,8 @@ public class VcsLogManager implements Disposable {
     }
   }
 
-  @NotNull
-  public static Map<VirtualFile, VcsLogProvider> findLogProviders(@NotNull Collection<VcsRoot> roots, @NotNull Project project) {
+  @Nonnull
+  public static Map<VirtualFile, VcsLogProvider> findLogProviders(@Nonnull Collection<VcsRoot> roots, @Nonnull Project project) {
     Map<VirtualFile, VcsLogProvider> logProviders = ContainerUtil.newHashMap();
     VcsLogProvider[] allLogProviders = Extensions.getExtensions(LOG_PROVIDER_EP, project);
     for (VcsRoot root : roots) {
@@ -181,7 +187,7 @@ public class VcsLogManager implements Disposable {
    * */
   @Nullable
   @Deprecated
-  public static VcsLogManager getInstance(@NotNull Project project) {
+  public static VcsLogManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsProjectLog.class).getLogManager();
   }
 
@@ -204,7 +210,7 @@ public class VcsLogManager implements Disposable {
     private final AtomicBoolean myIsBroken = new AtomicBoolean(false);
 
     @Override
-    public void consume(@Nullable Object source, @NotNull final Exception e) {
+    public void consume(@Nullable Object source, @Nonnull final Exception e) {
       if (myIsBroken.compareAndSet(false, true)) {
         processError(source, e);
       }
@@ -213,7 +219,7 @@ public class VcsLogManager implements Disposable {
       }
     }
 
-    protected void processError(@Nullable Object source, @NotNull Exception e) {
+    protected void processError(@Nullable Object source, @Nonnull Exception e) {
       if (myRecreateMainLogHandler != null) {
         ApplicationManager.getApplication().invokeLater(() -> {
           String message = "Fatal error, VCS Log re-created: " + e.getMessage();
@@ -237,7 +243,7 @@ public class VcsLogManager implements Disposable {
     }
 
     @Override
-    public void displayFatalErrorMessage(@NotNull String message) {
+    public void displayFatalErrorMessage(@Nonnull String message) {
       VcsBalloonProblemNotifier.showOverChangesView(myProject, message, MessageType.ERROR);
     }
   }

@@ -26,7 +26,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class SimpleTemplateLanguageFormattingModelBuilder implements FormattingModelBuilder{
   @Override
-  @NotNull
+  @Nonnull
   public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings) {
     if (element instanceof PsiFile) {
       final FileViewProvider viewProvider = ((PsiFile)element).getViewProvider();
@@ -57,7 +57,7 @@ public class SimpleTemplateLanguageFormattingModelBuilder implements FormattingM
       }
 
       @Override
-      public Spacing getSpacing(final Block child1, @NotNull final Block child2) {
+      public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

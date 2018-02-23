@@ -15,9 +15,8 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -43,8 +42,8 @@ public class ArrayUtilRt {
   public static final File[] EMPTY_FILE_ARRAY = new File[0];
   public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
 
-  @NotNull
-  public static String[] toStringArray(@Nullable Collection<String> collection) {
+  @Nonnull
+  public static String[] toStringArray(@javax.annotation.Nullable Collection<String> collection) {
     return collection == null || collection.isEmpty()
            ? EMPTY_STRING_ARRAY : ContainerUtilRt.toArray(collection, new String[collection.size()]);
   }
@@ -57,7 +56,7 @@ public class ArrayUtilRt {
    *         <code>equals</code> of arrays elements to compare <code>obj</code> with
    *         these elements.
    */
-  public static <T> int find(@NotNull final T[] src, final T obj) {
+  public static <T> int find(@Nonnull final T[] src, final T obj) {
     for (int i = 0; i < src.length; i++) {
       final T o = src[i];
       if (o == null) {

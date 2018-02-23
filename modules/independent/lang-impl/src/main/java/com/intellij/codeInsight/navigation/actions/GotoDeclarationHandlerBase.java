@@ -18,7 +18,8 @@ package com.intellij.codeInsight.navigation.actions;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

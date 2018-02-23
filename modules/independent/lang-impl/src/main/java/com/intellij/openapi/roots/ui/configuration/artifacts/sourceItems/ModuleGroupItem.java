@@ -24,7 +24,7 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,13 +52,13 @@ public class ModuleGroupItem extends PackagingSourceItem {
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new ModuleGroupSourceItemPresentation(myGroupName);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     return Collections.emptyList();
   }
 
@@ -79,7 +79,7 @@ public class ModuleGroupItem extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       presentationData.setIcon(AllIcons.Nodes.ModuleGroup);
       presentationData.addText(myGroupName, mainAttributes);

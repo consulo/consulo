@@ -19,19 +19,19 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class NonCodeUsageInfo extends MoveRenameUsageInfo{
   public final String newText;
 
-  private NonCodeUsageInfo(@NotNull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText){
+  private NonCodeUsageInfo(@Nonnull PsiElement element, int startOffset, int endOffset, PsiElement referencedElement, String newText){
     super(element, null, startOffset, endOffset, referencedElement, true);
     this.newText = newText;
   }
 
-  @Nullable
-  public static NonCodeUsageInfo create(@NotNull PsiFile file,
+  @javax.annotation.Nullable
+  public static NonCodeUsageInfo create(@Nonnull PsiFile file,
                                         int startOffset,
                                         int endOffset,
                                         PsiElement referencedElement,

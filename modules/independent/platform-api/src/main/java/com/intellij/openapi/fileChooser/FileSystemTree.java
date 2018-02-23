@@ -18,8 +18,8 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -34,7 +34,7 @@ public interface FileSystemTree extends Disposable {
   @Nullable
   VirtualFile getSelectedFile();
 
-  @NotNull
+  @Nonnull
   VirtualFile[] getSelectedFiles();
 
   @Nullable
@@ -50,7 +50,7 @@ public interface FileSystemTree extends Disposable {
 
   void addListener(Listener listener, Disposable parent);
 
-  boolean isUnderRoots(@NotNull VirtualFile file);
+  boolean isUnderRoots(@Nonnull VirtualFile file);
 
   boolean selectionExists();
 

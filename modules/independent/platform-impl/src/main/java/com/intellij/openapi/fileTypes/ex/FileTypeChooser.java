@@ -37,8 +37,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -60,7 +60,7 @@ public class FileTypeChooser extends DialogWrapper {
 
   private final Set<IdeaPluginDescriptor> myFeaturePlugins;
 
-  private FileTypeChooser(@NotNull List<String> patterns, @NotNull String fileName) {
+  private FileTypeChooser(@Nonnull List<String> patterns, @Nonnull String fileName) {
     super(true);
     myFileName = fileName;
 
@@ -151,7 +151,7 @@ public class FileTypeChooser extends DialogWrapper {
    */
   @Nullable
   @RequiredDispatchThread
-  public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile parent, @NotNull String newName, @Nullable Project project) {
+  public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile parent, @Nonnull String newName, @Nullable Project project) {
     return getKnownFileTypeOrAssociate(new FakeVirtualFile(parent, newName), project);
   }
 
@@ -163,7 +163,7 @@ public class FileTypeChooser extends DialogWrapper {
    */
   @Nullable
   @RequiredDispatchThread
-  public static FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @Nullable Project project) {
+  public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nullable Project project) {
     if (project != null && !(file instanceof FakeVirtualFile)) {
       PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
     }
@@ -176,7 +176,7 @@ public class FileTypeChooser extends DialogWrapper {
 
   @Nullable
   @RequiredDispatchThread
-  public static FileType getKnownFileTypeOrAssociate(@NotNull String fileName) {
+  public static FileType getKnownFileTypeOrAssociate(@Nonnull String fileName) {
     FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     FileType type = fileTypeManager.getFileTypeByFileName(fileName);
     if (type == UnknownFileType.INSTANCE) {
@@ -187,7 +187,7 @@ public class FileTypeChooser extends DialogWrapper {
 
   @Nullable
   @RequiredDispatchThread
-  public static FileType associateFileType(@NotNull final String fileName) {
+  public static FileType associateFileType(@Nonnull final String fileName) {
     final FileTypeChooser chooser = new FileTypeChooser(suggestPatterns(fileName), fileName);
     if (!chooser.showAndGet()) {
       return null;
@@ -209,8 +209,8 @@ public class FileTypeChooser extends DialogWrapper {
     return type;
   }
 
-  @NotNull
-  static List<String> suggestPatterns(@NotNull String fileName) {
+  @Nonnull
+  static List<String> suggestPatterns(@Nonnull String fileName) {
     List<String> patterns = ContainerUtil.newLinkedList(fileName);
 
     int i = -1;

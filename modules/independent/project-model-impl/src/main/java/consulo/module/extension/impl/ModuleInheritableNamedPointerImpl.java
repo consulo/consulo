@@ -26,8 +26,8 @@ import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.Named;
 import consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -45,15 +45,15 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
   }
 
   @Nullable
-  public abstract String getItemNameFromModule(@NotNull Module module);
+  public abstract String getItemNameFromModule(@Nonnull Module module);
 
   @Nullable
-  public abstract T getItemFromModule(@NotNull Module module);
+  public abstract T getItemFromModule(@Nonnull Module module);
 
-  @NotNull
-  public abstract NamedPointer<T> getPointer(@NotNull ModuleRootLayer layer, @NotNull String name);
+  @Nonnull
+  public abstract NamedPointer<T> getPointer(@Nonnull ModuleRootLayer layer, @Nonnull String name);
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public T get() {
     if (myModulePointer != null) {
@@ -92,7 +92,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
   @RequiredReadAction
   @Override
-  public void set(@NotNull ModuleInheritableNamedPointer<T> anotherItem) {
+  public void set(@Nonnull ModuleInheritableNamedPointer<T> anotherItem) {
     if (anotherItem.isNull()) {
       myModulePointer = null;
       myTargetPointer = null;
@@ -110,7 +110,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
   @RequiredReadAction
   @Override
-  public void set(@Nullable String moduleName, @Nullable String name) {
+  public void set(@Nullable String moduleName, @javax.annotation.Nullable String name) {
     if (moduleName != null) {
       myModulePointer = createModulePointer(moduleName);
       myTargetPointer = null;
@@ -127,7 +127,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
   @RequiredReadAction
   @Override
-  public void set(@Nullable Module module, @Nullable T named) {
+  public void set(@Nullable Module module, @javax.annotation.Nullable T named) {
     if (module != null) {
       myModulePointer = createModulePointer(module.getName());
       myTargetPointer = null;
@@ -163,7 +163,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     }
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   private NamedPointer<Module> createModulePointer(String name) {
     return ((ModuleRootLayerImpl)myRootLayer).getRootModel().getConfigurationAccessor().getModulePointer(myRootLayer.getProject(), name);
@@ -174,7 +174,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Module getModule() {
     if (myModulePointer == null) {
@@ -183,7 +183,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
     return myModulePointer.get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getModuleName() {
     if (myModulePointer == null) {

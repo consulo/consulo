@@ -25,7 +25,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListUtil;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class JBMovePanel extends JBPanel {
 
   public static final InsertPositionStrategy ANCHORING_SELECTION = new InsertPositionStrategy() {
     @Override
-    public int getInsertionIndex(@NotNull Object data, @NotNull JList list) {
+    public int getInsertionIndex(@Nonnull Object data, @Nonnull JList list) {
       int index = list.getSelectedIndex();
       DefaultListModel model = (DefaultListModel)list.getModel();
       return index < 0 ? model.getSize() : index + 1;
@@ -59,7 +59,7 @@ public class JBMovePanel extends JBPanel {
   public static final InsertPositionStrategy NATURAL_ORDER = new InsertPositionStrategy() {
     @SuppressWarnings("unchecked")
     @Override
-    public int getInsertionIndex(@NotNull Object data, @NotNull JList list) {
+    public int getInsertionIndex(@Nonnull Object data, @Nonnull JList list) {
       Enumeration elements = ((DefaultListModel)list.getModel()).elements();
       int index = 0;
       while (elements.hasMoreElements()) {
@@ -74,28 +74,41 @@ public class JBMovePanel extends JBPanel {
     }
   };
 
-  @NotNull private final Map<ButtonType, ActionButton> myButtons = new EnumMap<ButtonType, ActionButton>(ButtonType.class);
+  @Nonnull
+  private final Map<ButtonType, ActionButton> myButtons = new EnumMap<ButtonType, ActionButton>(ButtonType.class);
 
-  @NotNull private final ListPanel myLeftPanel  = new ListPanel();
-  @NotNull private final ListPanel myRightPanel = new ListPanel();
+  @Nonnull
+  private final ListPanel myLeftPanel  = new ListPanel();
+  @Nonnull
+  private final ListPanel myRightPanel = new ListPanel();
 
-  @NotNull protected final JList        myLeftList;
-  @NotNull protected final JList        myRightList;
-  @NotNull protected final ActionButton myLeftButton;
-  @NotNull protected final ActionButton myAllLeftButton;
-  @NotNull protected final ActionButton myRightButton;
-  @NotNull protected final ActionButton myAllRightButton;
-  @NotNull protected final ActionButton myUpButton;
-  @NotNull protected final ActionButton myDownButton;
+  @Nonnull
+  protected final JList        myLeftList;
+  @Nonnull
+  protected final JList        myRightList;
+  @Nonnull
+  protected final ActionButton myLeftButton;
+  @Nonnull
+  protected final ActionButton myAllLeftButton;
+  @Nonnull
+  protected final ActionButton myRightButton;
+  @Nonnull
+  protected final ActionButton myAllRightButton;
+  @Nonnull
+  protected final ActionButton myUpButton;
+  @Nonnull
+  protected final ActionButton myDownButton;
 
-  @NotNull private InsertPositionStrategy myLeftInsertionStrategy = ANCHORING_SELECTION;
-  @NotNull private InsertPositionStrategy myRightInsertionStrategy = ANCHORING_SELECTION;
+  @Nonnull
+  private InsertPositionStrategy myLeftInsertionStrategy = ANCHORING_SELECTION;
+  @Nonnull
+  private InsertPositionStrategy myRightInsertionStrategy = ANCHORING_SELECTION;
 
   private boolean myActivePreferredSizeProcessing;
 
   public enum ButtonType {LEFT, RIGHT, ALL_LEFT, ALL_RIGHT}
 
-  public JBMovePanel(@NotNull JList left, @NotNull JList right) {
+  public JBMovePanel(@Nonnull JList left, @Nonnull JList right) {
     super(new GridBagLayout());
     assertModelIsEditable(left);
     assertModelIsEditable(right);
@@ -141,12 +154,12 @@ public class JBMovePanel extends JBPanel {
     add(upDownButtonsPanel, buttonConstraints);
   }
 
-  private static void assertModelIsEditable(@NotNull JList list) {
+  private static void assertModelIsEditable(@Nonnull JList list) {
     assert list.getModel() instanceof DefaultListModel : String
       .format("List model should extends %s interface", DefaultListModel.class.getName());
   }
 
-  public void setShowButtons(@NotNull ButtonType... types) {
+  public void setShowButtons(@Nonnull ButtonType... types) {
     for (ActionButton button : myButtons.values()) {
       button.setVisible(false);
     }
@@ -155,7 +168,7 @@ public class JBMovePanel extends JBPanel {
     }
   }
 
-  public void setListLabels(@NotNull String left, @NotNull String right) {
+  public void setListLabels(@Nonnull String left, @Nonnull String right) {
     // Border insets are used as a component insets (see JComponent.getInsets()). That's why an ugly bottom inset is used when
     // we create a border with default insets. That is the reason why we explicitly specify bottom inset as zero.
     Insets insets = new Insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET,
@@ -166,7 +179,7 @@ public class JBMovePanel extends JBPanel {
     myRightPanel.setBorder(IdeBorderFactory.createTitledBorder(right, false, insets));
   }
 
-  public void setLeftInsertionStrategy(@NotNull InsertPositionStrategy leftInsertionStrategy) {
+  public void setLeftInsertionStrategy(@Nonnull InsertPositionStrategy leftInsertionStrategy) {
     myLeftInsertionStrategy = leftInsertionStrategy;
   }
   
@@ -185,8 +198,8 @@ public class JBMovePanel extends JBPanel {
     }
   }
 
-  @NotNull
-  private ActionButton createButton(@NotNull final ButtonType type) {
+  @Nonnull
+  private ActionButton createButton(@Nonnull final ButtonType type) {
     final AnAction action;
     switch (type) {
       case LEFT:
@@ -210,8 +223,8 @@ public class JBMovePanel extends JBPanel {
     return button;
   }
 
-  @NotNull
-  private static ActionButton createButton(@NotNull final AnAction action) {
+  @Nonnull
+  private static ActionButton createButton(@Nonnull final AnAction action) {
     PresentationFactory presentationFactory = new PresentationFactory();
     Icon icon = AllIcons.Actions.AllLeft;
     Dimension size = new Dimension(icon.getIconWidth(), icon.getIconHeight());
@@ -234,7 +247,7 @@ public class JBMovePanel extends JBPanel {
     moveAllBetween(myRightList, myLeftList);
   }
 
-  private static void moveBetween(@NotNull JList to, @NotNull InsertPositionStrategy strategy, @NotNull JList from) {
+  private static void moveBetween(@Nonnull JList to, @Nonnull InsertPositionStrategy strategy, @Nonnull JList from) {
     final int[] indices = from.getSelectedIndices();
     if (indices.length <= 0) {
       return;
@@ -265,7 +278,7 @@ public class JBMovePanel extends JBPanel {
     }
   }
 
-  private static void moveAllBetween(@NotNull JList to, @NotNull JList from) {
+  private static void moveAllBetween(@Nonnull JList to, @Nonnull JList from) {
     final DefaultListModel fromModel = (DefaultListModel)from.getModel();
     final DefaultListModel toModel = (DefaultListModel)to.getModel();
     while (fromModel.getSize() > 0) {
@@ -287,7 +300,7 @@ public class JBMovePanel extends JBPanel {
   }
   
   public interface InsertPositionStrategy {
-    int getInsertionIndex(@NotNull Object data, @NotNull JList list);
+    int getInsertionIndex(@Nonnull Object data, @Nonnull JList list);
   }
 
   /**

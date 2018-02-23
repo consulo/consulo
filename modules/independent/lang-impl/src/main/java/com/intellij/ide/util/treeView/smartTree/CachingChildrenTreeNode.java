@@ -21,7 +21,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     ensureChildrenAreInitialized();
     return new ArrayList<AbstractTreeNode>(myChildren);

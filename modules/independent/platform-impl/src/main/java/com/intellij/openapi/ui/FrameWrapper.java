@@ -47,9 +47,9 @@ import consulo.awt.TargetAWT;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.ui.shared.Rectangle2D;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -105,7 +105,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myDataMap.put(dataId, data);
   }
 
-  public void setProject(@NotNull final Project project) {
+  public void setProject(@Nonnull final Project project) {
     myProject = project;
     setData(CommonDataKeys.PROJECT, project);
     ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
@@ -297,7 +297,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
@@ -349,7 +349,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myTitle = title;
   }
 
-  public void addDisposable(@NotNull Disposable disposable) {
+  public void addDisposable(@Nonnull Disposable disposable) {
     Disposer.register(this, disposable);
   }
 
@@ -465,7 +465,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (IdeFrame.KEY == dataId) {
         return this;
       }
@@ -554,7 +554,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (IdeFrame.KEY == dataId) {
         return this;
       }

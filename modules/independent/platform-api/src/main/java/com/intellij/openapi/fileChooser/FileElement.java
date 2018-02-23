@@ -21,8 +21,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -53,7 +53,7 @@ public class FileElement {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public final String getPath() {
     if (myPath == null) {
       final StringBuilder sb = new StringBuilder();

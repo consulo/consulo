@@ -19,7 +19,7 @@ package com.intellij.tools;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.runners.DefaultProgramRunner;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
 public class ToolProgramRunner extends DefaultProgramRunner {
 
   @Override
-  @NotNull
+  @Nonnull
   public String getRunnerId() {
     return "ToolProgramRunner";
   }
 
   @Override
-  public boolean canRun(@NotNull final String executorId, @NotNull final RunProfile profile) {
+  public boolean canRun(@Nonnull final String executorId, @Nonnull final RunProfile profile) {
     return DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && profile instanceof ToolRunProfile;
   }
 

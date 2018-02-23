@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ui.border.IdeaTitledBorder;
 import com.intellij.util.ui.JBInsets;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -44,17 +44,17 @@ public class IdeBorderFactory {
     return new SideBorder(getBorderColor(), borders);
   }
 
-  @NotNull
+  @Nonnull
   public static RoundedLineBorder createRoundedBorder() {
     return createRoundedBorder(BORDER_ROUNDNESS);
   }
 
-  @NotNull
+  @Nonnull
   public static RoundedLineBorder createRoundedBorder(int arcSize) {
     return new RoundedLineBorder(getBorderColor(), arcSize);
   }
 
-  @NotNull
+  @Nonnull
   public static RoundedLineBorder createRoundedBorder(int arcSize, final int thickness) {
     return new RoundedLineBorder(getBorderColor(), arcSize, thickness);
   }

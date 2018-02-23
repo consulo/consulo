@@ -36,58 +36,58 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Kirill Likhodedov
  */
 public abstract class DvcsPlatformFacadeImpl implements DvcsPlatformFacade {
 
-  @NotNull
+  @Nonnull
   @Override
-  public ProjectLevelVcsManager getVcsManager(@NotNull Project project) {
+  public ProjectLevelVcsManager getVcsManager(@Nonnull Project project) {
     return ProjectLevelVcsManager.getInstance(project);
   }
 
   @Override
-  public void showDialog(@NotNull DialogWrapper dialog) {
+  public void showDialog(@Nonnull DialogWrapper dialog) {
     dialog.show();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ProjectRootManager getProjectRootManager(@NotNull Project project) {
+  public ProjectRootManager getProjectRootManager(@Nonnull Project project) {
     return ProjectRootManager.getInstance(project);
   }
 
   @Override
-  public <T> T runReadAction(@NotNull Computable<T> computable) {
+  public <T> T runReadAction(@Nonnull Computable<T> computable) {
     return ApplicationManager.getApplication().runReadAction(computable);
   }
 
   @Override
-  public void runReadAction(@NotNull Runnable runnable) {
+  public void runReadAction(@Nonnull Runnable runnable) {
     ApplicationManager.getApplication().runReadAction(runnable);
   }
 
   @Override
-  public void runWriteAction(@NotNull Runnable runnable) {
+  public void runWriteAction(@Nonnull Runnable runnable) {
     ApplicationManager.getApplication().runWriteAction(runnable);
   }
 
   @Override
-  public void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     ApplicationManager.getApplication().invokeAndWait(runnable, modalityState);
   }
 
   @Override
-  public void executeOnPooledThread(@NotNull Runnable runnable) {
+  public void executeOnPooledThread(@Nonnull Runnable runnable) {
     ApplicationManager.getApplication().executeOnPooledThread(runnable);
   }
 
   @Override
-  public ChangeListManagerEx getChangeListManager(@NotNull Project project) {
+  public ChangeListManagerEx getChangeListManager(@Nonnull Project project) {
     return (ChangeListManagerEx)ChangeListManager.getInstance(project);
   }
 
@@ -96,21 +96,21 @@ public abstract class DvcsPlatformFacadeImpl implements DvcsPlatformFacade {
     return LocalFileSystem.getInstance();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AbstractVcsHelper getVcsHelper(@NotNull Project project) {
+  public AbstractVcsHelper getVcsHelper(@Nonnull Project project) {
     return AbstractVcsHelper.getInstance(project);
   }
 
   @Nullable
   @Override
-  public IdeaPluginDescriptor getPluginByClassName(@NotNull String name) {
+  public IdeaPluginDescriptor getPluginByClassName(@Nonnull String name) {
     return PluginManager.getPlugin(PluginManager.getPluginByClassName(name));
   }
 
   @Nullable
   @Override
-  public String getLineSeparator(@NotNull VirtualFile file, boolean detect) {
+  public String getLineSeparator(@Nonnull VirtualFile file, boolean detect) {
     return LoadTextUtil.detectLineSeparator(file, detect);
   }
 
@@ -124,20 +124,20 @@ public abstract class DvcsPlatformFacadeImpl implements DvcsPlatformFacade {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectManagerEx getProjectManager() {
     return ProjectManagerEx.getInstanceEx();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SaveAndSyncHandler getSaveAndSyncHandler() {
     return SaveAndSyncHandlerImpl.getInstance();
   }
 
   @Override
-  public void hardRefresh(@NotNull VirtualFile root) {
+  public void hardRefresh(@Nonnull VirtualFile root) {
     VfsUtil.markDirtyAndRefresh(true, true, false, root);
   }
 

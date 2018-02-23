@@ -17,8 +17,8 @@ package com.intellij.util.proxy;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Properties;
@@ -37,14 +37,14 @@ public class SharedProxyConfig {
     public final int port;
     @Nullable
     public final String login;
-    @NotNull
+    @Nonnull
     public final char[] password;
 
     public ProxyParameters(@Nullable String host, int port) {
       this(host, port, null, new char[0]);
     }
 
-    public ProxyParameters(@Nullable String host, int port, @Nullable String login, @NotNull char[] password) {
+    public ProxyParameters(@Nullable String host, int port, @Nullable String login, @Nonnull char[] password) {
       this.host = host;
       this.port = port;
       this.login = login;
@@ -73,7 +73,7 @@ public class SharedProxyConfig {
     return null;
   }
 
-  public static boolean store(@NotNull ProxyParameters params) {
+  public static boolean store(@Nonnull ProxyParameters params) {
     if (params.host != null) {
       try {
         final Properties props = new Properties();

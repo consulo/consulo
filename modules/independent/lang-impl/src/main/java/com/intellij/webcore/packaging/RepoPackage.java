@@ -1,7 +1,6 @@
 package com.intellij.webcore.packaging;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -10,8 +9,10 @@ import java.util.Collections;
  */
 public class RepoPackage implements Comparable {
   private final String myName;
-  @Nullable final String myRepoUrl;
-  @Nullable final String myLatestVersion;
+  @Nullable
+  final String myRepoUrl;
+  @Nullable
+  final String myLatestVersion;
   private final Collection<String> myKeywords;
 
   public RepoPackage(String name, String repoUrl) {

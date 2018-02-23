@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -191,7 +191,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

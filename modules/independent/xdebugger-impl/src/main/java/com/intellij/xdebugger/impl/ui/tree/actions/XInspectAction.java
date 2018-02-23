@@ -20,14 +20,14 @@ import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XInspectDialog;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class XInspectAction extends XDebuggerTreeActionBase {
   @Override
-  protected void perform(XValueNodeImpl node, @NotNull final String nodeName, AnActionEvent e) {
+  protected void perform(XValueNodeImpl node, @Nonnull final String nodeName, AnActionEvent e) {
     XDebuggerTree tree = node.getTree();
     XValue value = node.getValueContainer();
     XInspectDialog dialog = new XInspectDialog(tree.getProject(), tree.getEditorsProvider(), tree.getSourcePosition(), nodeName, value,

@@ -21,7 +21,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -103,7 +103,7 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Insets getInsetsForTabComponent() {
     return UIUtil.PANEL_SMALL_INSETS;
   }

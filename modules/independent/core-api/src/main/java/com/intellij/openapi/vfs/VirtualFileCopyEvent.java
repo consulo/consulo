@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides data for event which is fired when a virtual file is copied.
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class VirtualFileCopyEvent extends VirtualFileEvent {
   private final VirtualFile myOriginalFile;
 
-  public VirtualFileCopyEvent(@Nullable Object requestor, @NotNull VirtualFile original, @NotNull VirtualFile created) {
+  public VirtualFileCopyEvent(@Nullable Object requestor, @Nonnull VirtualFile original, @Nonnull VirtualFile created) {
     super(requestor, created, created.getName(), created.getParent());
     myOriginalFile = original;
   }
@@ -37,7 +37,7 @@ public class VirtualFileCopyEvent extends VirtualFileEvent {
    *
    * @return original file.
    */
-  @NotNull
+  @Nonnull
   public VirtualFile getOriginalFile() {
     return myOriginalFile;
   }

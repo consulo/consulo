@@ -25,7 +25,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -33,15 +33,15 @@ import org.jetbrains.annotations.NotNull;
 public class RefreshProgress extends ProgressIndicatorBase {
   private static final Project[] NULL_ARRAY = {null};
 
-  @NotNull
-  public static ProgressIndicator create(@NotNull String message) {
+  @Nonnull
+  public static ProgressIndicator create(@Nonnull String message) {
     Application app = ApplicationManager.getApplication();
     return app == null || app.isUnitTestMode() ? new EmptyProgressIndicator() : new RefreshProgress(message);
   }
 
   private final String myMessage;
 
-  private RefreshProgress(@NotNull String message) {
+  private RefreshProgress(@Nonnull String message) {
     super(true);
     myMessage = message;
   }

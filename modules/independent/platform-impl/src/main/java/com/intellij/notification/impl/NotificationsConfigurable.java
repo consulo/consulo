@@ -21,7 +21,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getHelpTopic() {
     return ID;
   }
@@ -84,7 +84,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

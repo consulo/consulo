@@ -16,14 +16,13 @@
 package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.tools.holders.EditorHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class HolderPanel extends JPanel {
-  public HolderPanel(@NotNull EditorHolder holder, @Nullable JComponent title) {
+  public HolderPanel(@Nonnull EditorHolder holder, @javax.annotation.Nullable JComponent title) {
     super(new BorderLayout());
     add(holder.getComponent(), BorderLayout.CENTER);
     if (title != null) add(title, BorderLayout.NORTH);

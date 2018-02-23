@@ -21,7 +21,7 @@ import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import icons.VcsLogIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
   public ShowLongEdgesAction() {
@@ -34,7 +34,7 @@ public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     if (ui != null && !ui.areGraphActionsEnabled()) e.getPresentation().setEnabled(false);

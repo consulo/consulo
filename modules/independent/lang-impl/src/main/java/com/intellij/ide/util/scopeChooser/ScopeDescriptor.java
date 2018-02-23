@@ -16,7 +16,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.psi.search.SearchScope;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author anna

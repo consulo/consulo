@@ -22,8 +22,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.GroupedElementsRenderer;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Map;
@@ -34,13 +34,19 @@ import java.util.Map;
  */
 public class ArrangementColorsProviderImpl implements ArrangementColorsProvider {
 
-  @NotNull private final Map<ArrangementSettingsToken, TextAttributes> myNormalAttributesCache   = ContainerUtilRt.newHashMap();
-  @NotNull private final Map<ArrangementSettingsToken, TextAttributes> mySelectedAttributesCache = ContainerUtilRt.newHashMap();
+  @Nonnull
+  private final Map<ArrangementSettingsToken, TextAttributes> myNormalAttributesCache   = ContainerUtilRt.newHashMap();
+  @Nonnull
+  private final Map<ArrangementSettingsToken, TextAttributes> mySelectedAttributesCache = ContainerUtilRt.newHashMap();
 
-  @NotNull private final TextAttributes myDefaultNormalAttributes   = new TextAttributes();
-  @NotNull private final TextAttributes myDefaultSelectedAttributes = new TextAttributes();
-  @NotNull private final Color myDefaultNormalBorderColor;
-  @NotNull private final Color myDefaultSelectedBorderColor;
+  @Nonnull
+  private final TextAttributes myDefaultNormalAttributes   = new TextAttributes();
+  @Nonnull
+  private final TextAttributes myDefaultSelectedAttributes = new TextAttributes();
+  @Nonnull
+  private final Color myDefaultNormalBorderColor;
+  @Nonnull
+  private final Color myDefaultSelectedBorderColor;
 
   @Nullable private final ArrangementColorsAware myColorsAware;
 
@@ -63,7 +69,7 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
     myDefaultSelectedBorderColor = selectionBorderColor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getBorderColor(boolean selected) {
     final Color cached;
@@ -93,9 +99,9 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TextAttributes getTextAttributes(@NotNull ArrangementSettingsToken token, boolean selected) {
+  public TextAttributes getTextAttributes(@Nonnull ArrangementSettingsToken token, boolean selected) {
     final TextAttributes cached;
     if (selected) {
       cached = mySelectedAttributesCache.get(token);

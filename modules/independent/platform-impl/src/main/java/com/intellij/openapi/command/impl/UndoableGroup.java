@@ -33,8 +33,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -278,7 +278,7 @@ class UndoableGroup {
     return myActions;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<DocumentReference> getAffectedDocuments() {
     Set<DocumentReference> result = new THashSet<>();
     for (UndoableAction action : myActions) {

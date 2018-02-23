@@ -3,7 +3,7 @@ package com.intellij.xdebugger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.xdebugger.frame.XValue;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Semaphore;
 
@@ -13,13 +13,13 @@ public class XTestEvaluationCallback extends com.intellij.xdebugger.impl.ui.tree
   private final Semaphore myFinished = new Semaphore(0);
 
   @Override
-  public void evaluated(@NotNull XValue result) {
+  public void evaluated(@Nonnull XValue result) {
     myResult = result;
     myFinished.release();
   }
 
   @Override
-  public void errorOccurred(@NotNull String errorMessage) {
+  public void errorOccurred(@Nonnull String errorMessage) {
     myErrorMessage = errorMessage;
     myFinished.release();
   }

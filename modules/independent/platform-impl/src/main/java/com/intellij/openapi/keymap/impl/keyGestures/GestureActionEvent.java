@@ -18,7 +18,7 @@ package com.intellij.openapi.keymap.impl.keyGestures;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.AnActionEventVisitor;
 import com.intellij.openapi.actionSystem.ActionManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class GestureActionEvent extends AnActionEvent {
   public GestureActionEvent(KeyboardGestureProcessor processor) {
@@ -35,7 +35,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@NotNull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull final AnActionEventVisitor visitor) {
       visitor.visitGestureInitEvent(this);
     }
   }
@@ -46,7 +46,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@NotNull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull final AnActionEventVisitor visitor) {
       visitor.visitGesturePerformedEvent(this);
     }
   }
@@ -57,7 +57,7 @@ public class GestureActionEvent extends AnActionEvent {
     }
 
     @Override
-    public void accept(@NotNull final AnActionEventVisitor visitor) {
+    public void accept(@Nonnull final AnActionEventVisitor visitor) {
       visitor.visitGestureFinishEvent(this);
     }
   }

@@ -20,8 +20,8 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -30,11 +30,11 @@ import java.util.TreeMap;
 public class LogFilesManager {
   private final LogConsoleManager myManager;
 
-  public LogFilesManager(@NotNull LogConsoleManager manager) {
+  public LogFilesManager(@Nonnull LogConsoleManager manager) {
     myManager = manager;
   }
 
-  public void addLogConsoles(@NotNull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
+  public void addLogConsoles(@Nonnull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
     for (LogFileOptions logFileOptions : runConfiguration.getAllLogFiles()) {
       if (logFileOptions.isEnabled()) {
         addConfigurationConsoles(logFileOptions, Conditions.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
@@ -43,7 +43,7 @@ public class LogFilesManager {
     runConfiguration.createAdditionalTabComponents(myManager, startedProcess);
   }
 
-  private void addConfigurationConsoles(@NotNull LogFileOptions logFile, @NotNull Condition<String> shouldInclude, @NotNull Set<String> paths, @NotNull RunConfigurationBase runConfiguration) {
+  private void addConfigurationConsoles(@Nonnull LogFileOptions logFile, @Nonnull Condition<String> shouldInclude, @Nonnull Set<String> paths, @Nonnull RunConfigurationBase runConfiguration) {
     if (paths.isEmpty()) {
       return;
     }

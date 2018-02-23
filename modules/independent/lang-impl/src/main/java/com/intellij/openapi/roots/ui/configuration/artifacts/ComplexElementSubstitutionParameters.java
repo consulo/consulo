@@ -20,7 +20,7 @@ import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.ComplexPackagingElementType;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -41,7 +41,7 @@ public class ComplexElementSubstitutionParameters {
     mySubstituted.clear();
   }
 
-  public boolean shouldSubstitute(@NotNull ComplexPackagingElement<?> element) {
+  public boolean shouldSubstitute(@Nonnull ComplexPackagingElement<?> element) {
     final ComplexPackagingElementType<?> type = (ComplexPackagingElementType<?>)element.getType();
     return myTypesToSubstitute.contains(type) || mySubstituted.contains(element);
   }
@@ -73,7 +73,7 @@ public class ComplexElementSubstitutionParameters {
     mySubstituted.remove(element);
   }
 
-  public boolean isShowContentForType(@NotNull ComplexPackagingElementType type) {
+  public boolean isShowContentForType(@Nonnull ComplexPackagingElementType type) {
     return myTypesToSubstitute.contains(type);
   }
 

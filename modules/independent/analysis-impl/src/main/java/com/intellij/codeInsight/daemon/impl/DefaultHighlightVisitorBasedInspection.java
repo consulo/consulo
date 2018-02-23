@@ -33,7 +33,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +54,13 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
       super(false, true);
     }
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getDisplayName() {
       return getShortName();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getShortName() {
       return ANNOTATOR_SHORT_NAME;
@@ -72,31 +72,31 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
       super(true, false);
     }
     @Nls
-    @NotNull
+    @Nonnull
     @Override
     public String getDisplayName() {
       return "Syntax error";
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getShortName() {
       return "SyntaxError";
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HighlightDisplayLevel getDefaultLevel() {
     return HighlightDisplayLevel.ERROR;
   }
 
   @Override
-  public void checkFile(@NotNull PsiFile originalFile,
-                        @NotNull final InspectionManager manager,
-                        @NotNull ProblemsHolder problemsHolder,
-                        @NotNull final GlobalInspectionContext globalContext,
-                        @NotNull final ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+  public void checkFile(@Nonnull PsiFile originalFile,
+                        @Nonnull final InspectionManager manager,
+                        @Nonnull ProblemsHolder problemsHolder,
+                        @Nonnull final GlobalInspectionContext globalContext,
+                        @Nonnull final ProblemDescriptionsProcessor problemDescriptionsProcessor) {
     for (Pair<PsiFile, HighlightInfo> pair : runGeneralHighlighting(originalFile, highlightErrorElements, runAnnotators,
                                                                     problemsHolder.isOnTheFly())) {
       PsiFile file = pair.first;
@@ -134,7 +134,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   }
 
   @Nls
-  @NotNull
+  @Nonnull
   @Override
   public String getGroupDisplayName() {
     return GENERAL_GROUP_NAME;

@@ -38,8 +38,8 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -87,15 +87,15 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   private Runnable myFinalRunnable;
 
   public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent,
-                           @NotNull ShowIntentionsPass.IntentionsInfo intentions,
+                           @Nonnull ShowIntentionsPass.IntentionsInfo intentions,
                            @Nullable Editor editor,
-                           @NotNull PsiFile file,
-                           @NotNull Project project) {
+                           @Nonnull PsiFile file,
+                           @Nonnull Project project) {
     this(intentionHintComponent, editor, file, project);
     wrapAndUpdateActions(intentions, false); // when create bulb do not update actions again since it would impede the EDT
   }
 
-  IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent, @Nullable Editor editor, @NotNull PsiFile file, @NotNull Project project) {
+  IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent, @Nullable Editor editor, @Nonnull PsiFile file, @Nonnull Project project) {
     myIntentionHintComponent = intentionHintComponent;
     myEditor = editor;
     myFile = file;
@@ -104,7 +104,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   }
 
   //true if something changed
-  boolean wrapAndUpdateActions(@NotNull ShowIntentionsPass.IntentionsInfo newInfo, boolean callUpdate) {
+  boolean wrapAndUpdateActions(@Nonnull ShowIntentionsPass.IntentionsInfo newInfo, boolean callUpdate) {
     boolean changed = wrapActionsTo(newInfo.errorFixesToShow, myCachedErrorFixes, callUpdate);
     changed |= wrapActionsTo(newInfo.inspectionFixesToShow, myCachedInspectionFixes, callUpdate);
     changed |= wrapActionsTo(newInfo.intentionsToShow, myCachedIntentions, callUpdate);
@@ -113,8 +113,8 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     return changed;
   }
 
-  private boolean wrapActionsTo(@NotNull List<HighlightInfo.IntentionActionDescriptor> newDescriptors,
-                                @NotNull Set<IntentionActionWithTextCaching> cachedActions,
+  private boolean wrapActionsTo(@Nonnull List<HighlightInfo.IntentionActionDescriptor> newDescriptors,
+                                @Nonnull Set<IntentionActionWithTextCaching> cachedActions,
                                 boolean callUpdate) {
     boolean changed = false;
     if (myEditor == null) {
@@ -187,8 +187,8 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     return changed;
   }
 
-  @NotNull
-  IntentionActionWithTextCaching wrapAction(@NotNull HighlightInfo.IntentionActionDescriptor descriptor,
+  @Nonnull
+  IntentionActionWithTextCaching wrapAction(@Nonnull HighlightInfo.IntentionActionDescriptor descriptor,
                                             @Nullable PsiElement element,
                                             @Nullable PsiFile containingFile,
                                             @Nullable Editor containingEditor) {
@@ -259,7 +259,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     return myFinalRunnable;
   }
 
-  private void applyAction(@NotNull IntentionActionWithTextCaching cachedAction) {
+  private void applyAction(@Nonnull IntentionActionWithTextCaching cachedAction) {
     myFinalRunnable = () -> {
       HintManager.getInstance().hideAllHints();
       if (myProject.isDisposed() || myEditor != null && myEditor.isDisposed()) return;
@@ -279,11 +279,11 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     };
   }
 
-  private void markInvoked(@NotNull IntentionAction action) {
+  private void markInvoked(@Nonnull IntentionAction action) {
     ShowIntentionsPass.markActionInvoked(myFile.getProject(), myEditor, action);
   }
 
-  private void removeActionFromCached(@NotNull IntentionActionWithTextCaching action) {
+  private void removeActionFromCached(@Nonnull IntentionActionWithTextCaching action) {
     // remove from the action from the list after invocation to make it appear unavailable sooner.
     // (the highlighting will process the whole file and remove the no more available action from the list automatically - but it's may be too long)
     myCachedErrorFixes.remove(action);
@@ -293,8 +293,8 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     myCachedNotifications.remove(action);
   }
 
-  @NotNull
-  IntentionListStep getSubStep(@NotNull IntentionActionWithTextCaching action, final String title) {
+  @Nonnull
+  IntentionListStep getSubStep(@Nonnull IntentionActionWithTextCaching action, final String title) {
     ShowIntentionsPass.IntentionsInfo intentions = new ShowIntentionsPass.IntentionsInfo();
     for (final IntentionAction optionIntention : action.getOptionIntentions()) {
       intentions.intentionsToShow.add(new HighlightInfo.IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
@@ -340,7 +340,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<IntentionActionWithTextCaching> getValues() {
     List<IntentionActionWithTextCaching> result = new ArrayList<>(myCachedErrorFixes);
     result.addAll(myCachedInspectionFixes);
@@ -408,7 +408,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getTextFor(final IntentionActionWithTextCaching action) {
     final String text = action.getAction().getText();
     if (LOG.isDebugEnabled() && text.startsWith("<html>")) {

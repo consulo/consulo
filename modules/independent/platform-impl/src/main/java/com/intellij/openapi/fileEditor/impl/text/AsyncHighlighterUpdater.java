@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Set;
@@ -52,7 +52,7 @@ public class AsyncHighlighterUpdater extends ReadTask {
   }
 
   @Override
-  public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+  public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
     if (!isEverythingValid()) return null;
 
     EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myProject, myFile);
@@ -60,7 +60,7 @@ public class AsyncHighlighterUpdater extends ReadTask {
   }
 
   @Override
-  public void onCanceled(@NotNull ProgressIndicator indicator) {
+  public void onCanceled(@Nonnull ProgressIndicator indicator) {
     updateHighlighters(myProject, myEditor, myFile);
   }
 
@@ -68,7 +68,7 @@ public class AsyncHighlighterUpdater extends ReadTask {
     return !myProject.isDisposed() && !myEditor.isDisposed() && myFile.isValid();
   }
 
-  public static void updateHighlighters(@NotNull Project project, @NotNull Editor editor, @NotNull VirtualFile file) {
+  public static void updateHighlighters(@Nonnull Project project, @Nonnull Editor editor, @Nonnull VirtualFile file) {
     AsyncHighlighterUpdater task = new AsyncHighlighterUpdater(project, editor, file);
     if (task.isEverythingValid()) {
       CompletableFuture<?> future = ProgressIndicatorUtils.scheduleWithWriteActionPriority(ourExecutor, task);

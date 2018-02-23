@@ -19,20 +19,21 @@ import com.intellij.find.FindModel;
 import com.intellij.find.FindSettings;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.*;
+
+import javax.annotation.*;
 import javax.swing.*;
 
 public interface FindPopupScopeUI {
-  @NotNull
+  @Nonnull
   Pair<ScopeType, JComponent>[] getComponents();
 
-  @NotNull
-  ScopeType initByModel(@NotNull FindModel findModel);
-  void applyTo(@NotNull FindSettings findSettings, @NotNull FindPopupScopeUI.ScopeType selectedScope);
-  void applyTo(@NotNull FindModel findModel, @NotNull FindPopupScopeUI.ScopeType selectedScope);
+  @Nonnull
+  ScopeType initByModel(@Nonnull FindModel findModel);
+  void applyTo(@Nonnull FindSettings findSettings, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
+  void applyTo(@Nonnull FindModel findModel, @Nonnull FindPopupScopeUI.ScopeType selectedScope);
 
   @Nullable("null means OK")
-  default ValidationInfo validate(@NotNull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
+  default ValidationInfo validate(@Nonnull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
     return null;
   }
 

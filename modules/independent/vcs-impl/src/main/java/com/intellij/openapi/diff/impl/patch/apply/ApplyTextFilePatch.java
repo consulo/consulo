@@ -27,7 +27,6 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,7 +36,7 @@ public class ApplyTextFilePatch extends ApplyFilePatchBase<TextFilePatch> {
     super(patch);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected Result applyChange(final Project project, final VirtualFile fileToPatch, final FilePath pathBeforeRename, final Getter<CharSequence> baseContents) throws IOException {
     byte[] fileContents = fileToPatch.contentsToByteArray();
     CharSequence text = LoadTextUtil.getTextByBinaryPresentation(fileContents, fileToPatch);

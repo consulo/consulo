@@ -21,8 +21,8 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class ProjectLocatorImpl extends ProjectLocator {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Project> getProjectsForFile(VirtualFile file) {
     ProjectManager projectManager = ProjectManager.getInstance();
     if (projectManager == null || file == null) {

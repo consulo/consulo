@@ -19,7 +19,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 )
 public class ExportableFileTemplateSettings extends FileTemplateSettings {
 
-  public ExportableFileTemplateSettings(@NotNull FileTypeManagerEx typeManager) {
+  public ExportableFileTemplateSettings(@Nonnull FileTypeManagerEx typeManager) {
     super(typeManager, null);
   }
 }

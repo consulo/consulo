@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -40,30 +40,30 @@ public class LightVirtualFile extends LightVirtualFileBase {
     this("");
   }
 
-  public LightVirtualFile(@NonNls @NotNull String name) {
+  public LightVirtualFile(@NonNls @Nonnull String name) {
     this(name, "");
   }
 
-  public LightVirtualFile(@NonNls @NotNull String name, @NotNull CharSequence content) {
+  public LightVirtualFile(@NonNls @Nonnull String name, @Nonnull CharSequence content) {
     this(name, null, content, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(@NotNull String name, final FileType fileType, @NotNull CharSequence text) {
+  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text) {
     this(name, fileType, text, LocalTimeCounter.currentTime());
   }
 
-  public LightVirtualFile(VirtualFile original, @NotNull CharSequence text, long modificationStamp) {
+  public LightVirtualFile(VirtualFile original, @Nonnull CharSequence text, long modificationStamp) {
     this(original.getName(), original.getFileType(), text, modificationStamp);
     setCharset(original.getCharset());
   }
 
-  public LightVirtualFile(@NotNull String name, final FileType fileType, @NotNull CharSequence text, final long modificationStamp) {
+  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text, final long modificationStamp) {
     this(name, fileType, text, CharsetUtil.extractCharsetFromFileContent(null, null, fileType, text), modificationStamp);
   }
 
-  public LightVirtualFile(@NotNull String name,
+  public LightVirtualFile(@Nonnull String name,
                           final FileType fileType,
-                          @NotNull CharSequence text,
+                          @Nonnull CharSequence text,
                           Charset charset,
                           final long modificationStamp) {
     super(name, fileType, modificationStamp);
@@ -71,7 +71,7 @@ public class LightVirtualFile extends LightVirtualFileBase {
     setCharset(charset);
   }
 
-  public LightVirtualFile(@NotNull String name, final Language language, @NotNull CharSequence text) {
+  public LightVirtualFile(@Nonnull String name, final Language language, @Nonnull CharSequence text) {
     super(name, null, LocalTimeCounter.currentTime());
     setContent(text);
     setLanguage(language);
@@ -81,7 +81,7 @@ public class LightVirtualFile extends LightVirtualFileBase {
     return myLanguage;
   }
 
-  public void setLanguage(@NotNull Language language) {
+  public void setLanguage(@Nonnull Language language) {
     myLanguage = language;
     FileType type = language.getAssociatedFileType();
     if (type == null) {
@@ -96,7 +96,7 @@ public class LightVirtualFile extends LightVirtualFileBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
     return VfsUtilCore.outputStreamAddingBOM(new ByteArrayOutputStream() {
       @Override
@@ -115,25 +115,25 @@ public class LightVirtualFile extends LightVirtualFileBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     final Charset charset = getCharset();
     final String s = getContent().toString();
     return s.getBytes(charset.name());
   }
 
-  public void setContent(Object requestor, @NotNull CharSequence content, boolean fireEvent) {
+  public void setContent(Object requestor, @Nonnull CharSequence content, boolean fireEvent) {
     setContent(content);
     setModificationStamp(LocalTimeCounter.currentTime());
   }
 
-  private void setContent(@NotNull CharSequence content) {
+  private void setContent(@Nonnull CharSequence content) {
     assert !myReadOnly;
     //StringUtil.assertValidSeparators(content);
     myContent = content;
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getContent() {
     return myContent;
   }

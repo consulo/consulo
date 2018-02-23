@@ -19,7 +19,7 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * @author VISTALL
@@ -31,12 +31,12 @@ public class DDTemplate extends PostfixTemplate {
   }
 
   @Override
-  public boolean isApplicable(@NotNull PsiElement context, @NotNull Document copyDocument, int newOffset) {
+  public boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset) {
     return true;
   }
 
   @Override
-  public void expand(@NotNull PsiElement context, @NotNull Editor editor) {
+  public void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
 
   }
 }

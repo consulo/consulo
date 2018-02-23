@@ -35,8 +35,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.SystemNotifications;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -112,11 +112,11 @@ public class TestsUIUtil {
     return null;
   }
 
-  public static void notifyByBalloon(@NotNull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @Nullable final String comment) {
+  public static void notifyByBalloon(@Nonnull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @javax.annotation.Nullable final String comment) {
     notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
   }
 
-  public static void notifyByBalloon(@NotNull final Project project, final AbstractTestProxy root, final TestConsoleProperties properties, TestResultPresentation testResultPresentation) {
+  public static void notifyByBalloon(@Nonnull final Project project, final AbstractTestProxy root, final TestConsoleProperties properties, TestResultPresentation testResultPresentation) {
     if (project.isDisposed()) return;
     if (properties == null) return;
 

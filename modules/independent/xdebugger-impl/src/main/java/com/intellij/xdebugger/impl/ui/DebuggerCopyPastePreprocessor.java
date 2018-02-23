@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author egor
@@ -37,7 +37,7 @@ public class DebuggerCopyPastePreprocessor implements CopyPastePreProcessor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
     if (editor.getUserData(REMOVE_NEWLINES_ON_PASTE) != null) {

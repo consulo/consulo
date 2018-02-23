@@ -21,8 +21,8 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -33,22 +33,22 @@ import java.util.Collection;
 public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
   private final NotNullLazyValue<Collection<? extends GotoRelatedItem>> myTargets;
 
-  public RelatedItemLineMarkerInfo(@NotNull T element, @NotNull TextRange range, Icon icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Icon icon, int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
-                                   @Nullable GutterIconNavigationHandler<T> navHandler,
+                                   @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @NotNull NotNullLazyValue<Collection<? extends GotoRelatedItem>> targets) {
+                                   @Nonnull NotNullLazyValue<Collection<? extends GotoRelatedItem>> targets) {
     super(element, range, icon, updatePass, tooltipProvider, navHandler, alignment);
     myTargets = targets;
   }
 
-  public RelatedItemLineMarkerInfo(@NotNull T element, @NotNull TextRange range, Icon icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Icon icon, int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
-                                   @Nullable GutterIconNavigationHandler<T> navHandler,
+                                   @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @NotNull final Collection<? extends GotoRelatedItem> targets) {
+                                   @Nonnull final Collection<? extends GotoRelatedItem> targets) {
     this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, new NotNullLazyValue<Collection<? extends GotoRelatedItem>>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<? extends GotoRelatedItem> compute() {
         return targets;
@@ -56,7 +56,7 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
     });
   }
 
-  @NotNull
+  @Nonnull
   public Collection<? extends GotoRelatedItem> createGotoRelatedItems() {
     return myTargets.getValue();
   }
@@ -73,7 +73,7 @@ public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerI
     }
 
     @Override
-    protected boolean looksTheSameAs(@NotNull LineMarkerGutterIconRenderer renderer) {
+    protected boolean looksTheSameAs(@Nonnull LineMarkerGutterIconRenderer renderer) {
       if (!(renderer instanceof RelatedItemLineMarkerGutterIconRenderer) || !super.looksTheSameAs(renderer)) {
         return false;
       }

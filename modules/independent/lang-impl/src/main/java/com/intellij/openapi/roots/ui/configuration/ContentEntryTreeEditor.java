@@ -49,8 +49,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ContentFoldersSupportUtil;
 
@@ -239,12 +239,12 @@ public class ContentEntryTreeEditor {
 
   private class MyContentEntryEditorListener extends ContentEntryEditorListenerAdapter {
     @Override
-    public void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder folder) {
+    public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
       update();
     }
 
     @Override
-    public void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder file) {
+    public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
       update();
     }
   }
@@ -284,7 +284,7 @@ public class ContentEntryTreeEditor {
 
     @Override
     @Nullable
-    public Object getData(@NotNull @NonNls final Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls final Key<?> dataId) {
       if (FileSystemTree.DATA_KEY == dataId) {
         return myFileSystemTree;
       }

@@ -23,7 +23,8 @@ import com.intellij.openapi.module.ModuleNavigatable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

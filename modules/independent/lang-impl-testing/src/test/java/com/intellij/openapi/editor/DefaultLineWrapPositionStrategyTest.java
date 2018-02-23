@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -91,7 +91,7 @@ public class DefaultLineWrapPositionStrategyTest {
     assertSame(context.wrapIndex, actual);
   }
 
-  private Document createMockDocument(@NotNull final String text) {
+  private Document createMockDocument(@Nonnull final String text) {
     final Document result = myMockery.mock(Document.class);
     myMockery.checking(new Expectations() {{
       allowing(result).getCharsSequence(); will(returnValue(text));

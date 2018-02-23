@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 public class PathManagerEx {
   private static final Logger LOGGER = Logger.getInstance(PathManagerEx.class);
 
-  @NotNull
+  @Nonnull
   public static Path getAppSystemDir() {
     Path path = Paths.get(PathManager.getSystemPath());
     try {

@@ -35,8 +35,8 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -58,7 +58,7 @@ public class JDOMUtil {
   private JDOMUtil() {
   }
 
-  @NotNull
+  @Nonnull
   public static List<Element> getChildren(@Nullable Element parent) {
     if (parent == null) {
       return Collections.emptyList();
@@ -68,8 +68,8 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  public static List<Element> getChildren(@Nullable Element parent, @NotNull String name) {
+  @Nonnull
+  public static List<Element> getChildren(@Nullable Element parent, @Nonnull String name) {
     if (parent != null) {
       return parent.getChildren(name);
     }
@@ -96,21 +96,21 @@ public class JDOMUtil {
 
   private static final EmptyTextFilter CONTENT_FILTER = new EmptyTextFilter();
 
-  public static int getTreeHash(@NotNull Element root) {
+  public static int getTreeHash(@Nonnull Element root) {
     return getTreeHash(root, false);
   }
 
-  public static int getTreeHash(@NotNull Element root, boolean skipEmptyText) {
+  public static int getTreeHash(@Nonnull Element root, boolean skipEmptyText) {
     return addToHash(0, root, skipEmptyText);
   }
 
   @SuppressWarnings("unused")
   @Deprecated
-  public static int getTreeHash(@NotNull Document document) {
+  public static int getTreeHash(@Nonnull Document document) {
     return getTreeHash(document.getRootElement());
   }
 
-  private static int addToHash(int i, @NotNull Element element, boolean skipEmptyText) {
+  private static int addToHash(int i, @Nonnull Element element, boolean skipEmptyText) {
     i = addToHash(i, element.getName());
 
     for (Attribute attribute : element.getAttributes()) {
@@ -132,38 +132,38 @@ public class JDOMUtil {
     return i;
   }
 
-  private static int addToHash(final int i, @NotNull final String s) {
+  private static int addToHash(final int i, @Nonnull final String s) {
     return i * 31 + s.hashCode();
   }
 
   @SuppressWarnings("unused")
-  @NotNull
+  @Nonnull
   @Deprecated
   /**
    * to remove in IDEA 15
-   */ public static Object[] getChildNodesWithAttrs(@NotNull Element e) {
+   */ public static Object[] getChildNodesWithAttrs(@Nonnull Element e) {
     ArrayList<Object> result = new ArrayList<Object>();
     result.addAll(e.getContent());
     result.addAll(e.getAttributes());
     return ArrayUtil.toObjectArray(result);
   }
 
-  @NotNull
-  public static Content[] getContent(@NotNull Element m) {
+  @Nonnull
+  public static Content[] getContent(@Nonnull Element m) {
     List<Content> list = m.getContent();
     return list.toArray(new Content[list.size()]);
   }
 
-  @NotNull
-  public static Element[] getElements(@NotNull Element m) {
+  @Nonnull
+  public static Element[] getElements(@Nonnull Element m) {
     List<Element> list = m.getChildren();
     return list.toArray(new Element[list.size()]);
   }
 
   @Deprecated
   @SuppressWarnings("unused")
-  @NotNull
-  public static String concatTextNodesValues(@NotNull final Object[] nodes) {
+  @Nonnull
+  public static String concatTextNodesValues(@Nonnull final Object[] nodes) {
     StringBuilder result = new StringBuilder();
     for (Object node : nodes) {
       result.append(((Content)node).getValue());
@@ -171,7 +171,7 @@ public class JDOMUtil {
     return result.toString();
   }
 
-  public static void addContent(@NotNull final Element targetElement, final Object node) {
+  public static void addContent(@Nonnull final Element targetElement, final Object node) {
     if (node instanceof Content) {
       Content content = (Content)node;
       targetElement.addContent(content);
@@ -189,7 +189,7 @@ public class JDOMUtil {
    * Replace all strings in JDOM {@code element} with their interned variants with the help of {@code interner} to reduce memory.
    * It's better to use {@link #internElement(Element)} though because the latter will intern the Element instances too.
    */
-  public static void internStringsInElement(@NotNull Element element, @NotNull StringInterner interner) {
+  public static void internStringsInElement(@Nonnull Element element, @Nonnull StringInterner interner) {
     element.setName(intern(interner, element.getName()));
 
     for (Attribute attr : element.getAttributes()) {
@@ -216,18 +216,18 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  private static String intern(@NotNull final StringInterner interner, @NotNull final String s) {
+  @Nonnull
+  private static String intern(@Nonnull final StringInterner interner, @Nonnull final String s) {
     return interner.intern(s);
   }
 
-  @NotNull
-  public static String legalizeText(@NotNull String str) {
+  @Nonnull
+  public static String legalizeText(@Nonnull String str) {
     return legalizeChars(str).toString();
   }
 
-  @NotNull
-  public static CharSequence legalizeChars(@NotNull CharSequence str) {
+  @Nonnull
+  public static CharSequence legalizeChars(@Nonnull CharSequence str) {
     StringBuilder result = new StringBuilder(str.length());
     for (int i = 0, len = str.length(); i < len; i++) {
       appendLegalized(result, str.charAt(i));
@@ -235,7 +235,7 @@ public class JDOMUtil {
     return result;
   }
 
-  public static void appendLegalized(@NotNull StringBuilder sb, char each) {
+  public static void appendLegalized(@Nonnull StringBuilder sb, char each) {
     if (each == '<' || each == '>') {
       sb.append(each == '<' ? "&lt;" : "&gt;");
     }
@@ -277,7 +277,7 @@ public class JDOMUtil {
     return c1 instanceof Element && c2 instanceof Element && areElementsEqual((Element)c1, (Element)c2);
   }
 
-  private static boolean attListsEqual(@NotNull List a1, @NotNull List a2) {
+  private static boolean attListsEqual(@Nonnull List a1, @Nonnull List a2) {
     if (a1.size() != a2.size()) return false;
     for (int i = 0; i < a1.size(); i++) {
       if (!attEqual((Attribute)a1.get(i), (Attribute)a2.get(i))) return false;
@@ -285,11 +285,11 @@ public class JDOMUtil {
     return true;
   }
 
-  private static boolean attEqual(@NotNull Attribute a1, @NotNull Attribute a2) {
+  private static boolean attEqual(@Nonnull Attribute a1, @Nonnull Attribute a2) {
     return a1.getName().equals(a2.getName()) && a1.getValue().equals(a2.getValue());
   }
 
-  public static boolean areDocumentsEqual(@NotNull Document d1, @NotNull Document d2) {
+  public static boolean areDocumentsEqual(@Nonnull Document d1, @Nonnull Document d2) {
     if (d1.hasRootElement() != d2.hasRootElement()) return false;
 
     if (!d1.hasRootElement()) return true;
@@ -308,12 +308,12 @@ public class JDOMUtil {
     return w1.size() == w2.size() && w1.toString().equals(w2.toString());
   }
 
-  @NotNull
+  @Nonnull
   public static Document loadDocument(char[] chars, int length) throws IOException, JDOMException {
     return getSaxBuilder().build(new CharArrayReader(chars, 0, length));
   }
 
-  @NotNull
+  @Nonnull
   public static Document loadDocument(byte[] bytes) throws IOException, JDOMException {
     return loadDocument(new ByteArrayInputStream(bytes));
   }
@@ -325,7 +325,7 @@ public class JDOMUtil {
       saxBuilder = new SAXBuilder();
       saxBuilder.setEntityResolver(new EntityResolver() {
         @Override
-        @NotNull
+        @Nonnull
         public InputSource resolveEntity(String publicId, String systemId) {
           return new InputSource(new CharArrayReader(ArrayUtil.EMPTY_CHAR_ARRAY));
         }
@@ -335,13 +335,13 @@ public class JDOMUtil {
     return saxBuilder;
   }
 
-  @NotNull
-  public static Document loadDocument(@NotNull CharSequence seq) throws IOException, JDOMException {
+  @Nonnull
+  public static Document loadDocument(@Nonnull CharSequence seq) throws IOException, JDOMException {
     return loadDocument(new CharSequenceReader(seq));
   }
 
-  @NotNull
-  public static Document loadDocument(@NotNull Reader reader) throws IOException, JDOMException {
+  @Nonnull
+  public static Document loadDocument(@Nonnull Reader reader) throws IOException, JDOMException {
     try {
       return getSaxBuilder().build(reader);
     }
@@ -350,18 +350,18 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Document loadDocument(File file) throws JDOMException, IOException {
     return loadDocument(new BufferedInputStream(new FileInputStream(file)));
   }
 
-  @NotNull
-  public static Element load(@NotNull File file) throws JDOMException, IOException {
+  @Nonnull
+  public static Element load(@Nonnull File file) throws JDOMException, IOException {
     return load(new BufferedInputStream(new FileInputStream(file)));
   }
 
-  @NotNull
-  public static Document loadDocument(@NotNull InputStream stream) throws JDOMException, IOException {
+  @Nonnull
+  public static Document loadDocument(@Nonnull InputStream stream) throws JDOMException, IOException {
     return loadDocument(new InputStreamReader(stream, CharsetToolkit.UTF8_CHARSET));
   }
 
@@ -375,8 +375,8 @@ public class JDOMUtil {
     return stream == null ? null : loadDocument(stream).detachRootElement();
   }
 
-  @NotNull
-  public static Document loadDocument(@NotNull Class clazz, String resource) throws JDOMException, IOException {
+  @Nonnull
+  public static Document loadDocument(@Nonnull Class clazz, String resource) throws JDOMException, IOException {
     InputStream stream = clazz.getResourceAsStream(resource);
     if (stream == null) {
       throw new FileNotFoundException(resource);
@@ -384,17 +384,17 @@ public class JDOMUtil {
     return loadDocument(stream);
   }
 
-  @NotNull
+  @Nonnull
   public static Document loadDocument(URL url) throws JDOMException, IOException {
     return loadDocument(URLUtil.openStream(url));
   }
 
-  @NotNull
+  @Nonnull
   public static Document loadResourceDocument(URL url) throws JDOMException, IOException {
     return loadDocument(URLUtil.openResourceStream(url));
   }
 
-  public static void writeDocument(@NotNull Document document, @NotNull String filePath, String lineSeparator) throws IOException {
+  public static void writeDocument(@Nonnull Document document, @Nonnull String filePath, String lineSeparator) throws IOException {
     OutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath));
     try {
       writeDocument(document, stream, lineSeparator);
@@ -404,11 +404,11 @@ public class JDOMUtil {
     }
   }
 
-  public static void writeDocument(@NotNull Document document, @NotNull File file, String lineSeparator) throws IOException {
+  public static void writeDocument(@Nonnull Document document, @Nonnull File file, String lineSeparator) throws IOException {
     writeParent(document, file, lineSeparator);
   }
 
-  public static void writeParent(@NotNull Parent element, @NotNull File file, String lineSeparator) throws IOException {
+  public static void writeParent(@Nonnull Parent element, @Nonnull File file, String lineSeparator) throws IOException {
     OutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
     try {
       writeParent(element, stream, lineSeparator);
@@ -418,11 +418,11 @@ public class JDOMUtil {
     }
   }
 
-  public static void writeDocument(@NotNull Document document, @NotNull OutputStream stream, String lineSeparator) throws IOException {
+  public static void writeDocument(@Nonnull Document document, @Nonnull OutputStream stream, String lineSeparator) throws IOException {
     writeParent(document, stream, lineSeparator);
   }
 
-  public static void writeParent(@NotNull Parent element, @NotNull OutputStream stream, @NotNull String lineSeparator) throws IOException {
+  public static void writeParent(@Nonnull Parent element, @Nonnull OutputStream stream, @Nonnull String lineSeparator) throws IOException {
     OutputStreamWriter writer = new OutputStreamWriter(stream, CharsetToolkit.UTF8_CHARSET);
     try {
       if (element instanceof Document) {
@@ -437,16 +437,16 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  public static byte[] printDocument(@NotNull Document document, String lineSeparator) throws IOException {
+  @Nonnull
+  public static byte[] printDocument(@Nonnull Document document, String lineSeparator) throws IOException {
     CharArrayWriter writer = new CharArrayWriter();
     writeDocument(document, writer, lineSeparator);
 
     return StringFactory.createShared(writer.toCharArray()).getBytes(CharsetToolkit.UTF8_CHARSET);
   }
 
-  @NotNull
-  public static String writeDocument(@NotNull Document document, String lineSeparator) {
+  @Nonnull
+  public static String writeDocument(@Nonnull Document document, String lineSeparator) {
     try {
       final StringWriter writer = new StringWriter();
       writeDocument(document, writer, lineSeparator);
@@ -458,7 +458,7 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String writeParent(Parent element, String lineSeparator) {
     try {
       final StringWriter writer = new StringWriter();
@@ -479,7 +479,7 @@ public class JDOMUtil {
     }
   }
 
-  public static void writeElement(@NotNull Element element, Writer writer, String lineSeparator) throws IOException {
+  public static void writeElement(@Nonnull Element element, Writer writer, String lineSeparator) throws IOException {
     XMLOutputter xmlOutputter = createOutputter(lineSeparator);
     try {
       xmlOutputter.output(element, writer);
@@ -490,13 +490,13 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  public static String writeElement(@NotNull Element element) {
+  @Nonnull
+  public static String writeElement(@Nonnull Element element) {
     return writeElement(element, "\n");
   }
 
-  @NotNull
-  public static String writeElement(@NotNull Element element, String lineSeparator) {
+  @Nonnull
+  public static String writeElement(@Nonnull Element element, String lineSeparator) {
     try {
       final StringWriter writer = new StringWriter();
       writeElement(element, writer, lineSeparator);
@@ -507,8 +507,8 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  public static String writeChildren(@Nullable final Element element, @NotNull final String lineSeparator) throws IOException {
+  @Nonnull
+  public static String writeChildren(@Nullable final Element element, @Nonnull final String lineSeparator) throws IOException {
     final StringWriter writer = new StringWriter();
     for (Element child : getChildren(element)) {
       writeElement(child, writer, lineSeparator);
@@ -517,7 +517,7 @@ public class JDOMUtil {
     return writer.toString();
   }
 
-  public static void writeDocument(@NotNull Document document, @NotNull Writer writer, String lineSeparator) throws IOException {
+  public static void writeDocument(@Nonnull Document document, @Nonnull Writer writer, String lineSeparator) throws IOException {
     XMLOutputter xmlOutputter = createOutputter(lineSeparator);
     try {
       xmlOutputter.output(document, writer);
@@ -528,7 +528,7 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static XMLOutputter createOutputter(String lineSeparator) {
     XMLOutputter xmlOutputter = new MyXMLOutputter();
     Format format = Format.getCompactFormat().
@@ -570,18 +570,18 @@ public class JDOMUtil {
     return null;
   }
 
-  @NotNull
-  public static String escapeText(@NotNull String text) {
+  @Nonnull
+  public static String escapeText(@Nonnull String text) {
     return escapeText(text, false, false);
   }
 
-  @NotNull
-  public static String escapeText(@NotNull String text, boolean escapeSpaces, boolean escapeLineEnds) {
+  @Nonnull
+  public static String escapeText(@Nonnull String text, boolean escapeSpaces, boolean escapeLineEnds) {
     return escapeText(text, false, escapeSpaces, escapeLineEnds);
   }
 
-  @NotNull
-  public static String escapeText(@NotNull String text, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
+  @Nonnull
+  public static String escapeText(@Nonnull String text, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
     StringBuilder buffer = null;
     for (int i = 0; i < text.length(); i++) {
       final char ch = text.charAt(i);
@@ -612,8 +612,8 @@ public class JDOMUtil {
 
   @SuppressWarnings("unused")
   @Deprecated
-  @NotNull
-  public static List<Element> getChildrenFromAllNamespaces(@NotNull final Element element, @NotNull @NonNls final String name) {
+  @Nonnull
+  public static List<Element> getChildrenFromAllNamespaces(@Nonnull final Element element, @Nonnull @NonNls final String name) {
     List<Element> result = new SmartList<Element>();
     for (Element child : element.getChildren()) {
       if (name.equals(child.getName())) {
@@ -625,19 +625,19 @@ public class JDOMUtil {
 
   public static class MyXMLOutputter extends XMLOutputter {
     @Override
-    @NotNull
-    public String escapeAttributeEntities(@NotNull String str) {
+    @Nonnull
+    public String escapeAttributeEntities(@Nonnull String str) {
       return escapeText(str, false, true);
     }
 
     @Override
-    @NotNull
-    public String escapeElementEntities(@NotNull String str) {
+    @Nonnull
+    public String escapeElementEntities(@Nonnull String str) {
       return escapeText(str, false, false);
     }
   }
 
-  private static void printDiagnostics(@NotNull Element element, String prefix) {
+  private static void printDiagnostics(@Nonnull Element element, String prefix) {
     ElementInfo info = getElementInfo(element);
     prefix += "/" + info.name;
     if (info.hasNullAttributes) {
@@ -651,8 +651,8 @@ public class JDOMUtil {
     }
   }
 
-  @NotNull
-  private static ElementInfo getElementInfo(@NotNull Element element) {
+  @Nonnull
+  private static ElementInfo getElementInfo(@Nonnull Element element) {
     ElementInfo info = new ElementInfo();
     StringBuilder buf = new StringBuilder(element.getName());
     List attributes = element.getAttributes();
@@ -679,7 +679,7 @@ public class JDOMUtil {
     return info;
   }
 
-  public static void updateFileSet(@NotNull File[] oldFiles, @NotNull String[] newFilePaths, @NotNull Document[] newFileDocuments, String lineSeparator)
+  public static void updateFileSet(@Nonnull File[] oldFiles, @Nonnull String[] newFilePaths, @Nonnull Document[] newFileDocuments, String lineSeparator)
           throws IOException {
     getLogger().assertTrue(newFilePaths.length == newFileDocuments.length);
 
@@ -723,14 +723,14 @@ public class JDOMUtil {
   }
 
   private static class ElementInfo {
-    @NotNull
+    @Nonnull
     public String name = "";
     public boolean hasNullAttributes = false;
   }
 
   @SuppressWarnings("unused")
   @Deprecated
-  public static org.w3c.dom.Element convertToDOM(@NotNull Element e) {
+  public static org.w3c.dom.Element convertToDOM(@Nonnull Element e) {
     try {
       final Document d = new Document();
       final Element newRoot = new Element(e.getName());
@@ -774,7 +774,7 @@ public class JDOMUtil {
   @SuppressWarnings("unused")
   @Nullable
   @Deprecated
-  public static Element cloneElement(@NotNull Element element, @NotNull ElementFilter elementFilter) {
+  public static Element cloneElement(@Nonnull Element element, @Nonnull ElementFilter elementFilter) {
     Element result = new Element(element.getName(), element.getNamespace());
     List<Attribute> attributes = element.getAttributes();
     if (!attributes.isEmpty()) {
@@ -849,8 +849,8 @@ public class JDOMUtil {
    *
    *
    */
-  @NotNull
-  public static Element internElement(@NotNull Element element) {
+  @Nonnull
+  public static Element internElement(@Nonnull Element element) {
     return ourJDOMInterner.internElement(element);
   }
 }

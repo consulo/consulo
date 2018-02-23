@@ -46,8 +46,7 @@ import com.intellij.vcsUtil.VcsUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -82,7 +81,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     return "reference.dialogs.vcs.patch.create";
   }
 
-  @NotNull
+  @Nonnull
   public CommitSession createCommitSession() {
     return new CreatePatchCommitSession();
   }
@@ -95,7 +94,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "CreatePatchCommitExecutor";
   }
@@ -126,7 +125,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       myCommitContext = context;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public JComponent getAdditionalConfigurationUI() {
       return myPanel.getPanel();
     }
@@ -249,7 +248,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public ValidationInfo validateFields() {
       return myPanel.validateFields();
     }

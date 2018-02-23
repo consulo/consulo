@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ public interface Splittable {
    */
   void setOrientation(boolean verticalSplit);
 
-  @NotNull
+  @Nonnull
   Component asComponent();
 
   void setDragging(boolean dragging);

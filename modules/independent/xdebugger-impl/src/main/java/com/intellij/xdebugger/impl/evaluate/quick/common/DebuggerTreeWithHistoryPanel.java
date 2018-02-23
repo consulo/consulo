@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.evaluate.quick.common;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ import java.awt.*;
 public class DebuggerTreeWithHistoryPanel<D> extends DebuggerTreeWithHistoryContainer<D> {
   private final JPanel myMainPanel;
 
-  public DebuggerTreeWithHistoryPanel(@NotNull D initialItem, @NotNull DebuggerTreeCreator<D> creator, @NotNull Project project) {
+  public DebuggerTreeWithHistoryPanel(@Nonnull D initialItem, @Nonnull DebuggerTreeCreator<D> creator, @Nonnull Project project) {
     super(initialItem, creator, project);
     myMainPanel = createMainPanel(myTreeCreator.createTree(initialItem));
   }

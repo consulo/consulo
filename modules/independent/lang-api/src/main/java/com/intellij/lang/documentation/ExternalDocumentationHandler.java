@@ -17,8 +17,8 @@ package com.intellij.lang.documentation;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: spLeaner
@@ -28,6 +28,6 @@ public interface ExternalDocumentationHandler {
   boolean handleExternalLink(PsiManager psiManager, String link, PsiElement context);
   boolean canFetchDocumentationLink(String link);
 
-  @NotNull
-  String fetchExternalDocumentation(@NotNull String link, @Nullable PsiElement element);
+  @Nonnull
+  String fetchExternalDocumentation(@Nonnull String link, @Nullable PsiElement element);
 }

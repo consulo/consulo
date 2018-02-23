@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +37,8 @@ public interface SMTestLocator {
   /**
    * Creates the <code>Location</code> list from <code>protocol</code> and <code>path</code> in <code>scope</code>.
    */
-  @NotNull
-  List<Location> getLocation(@NotNull String protocol, @NotNull String path, @NotNull Project project, @NotNull GlobalSearchScope scope);
+  @Nonnull
+  List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nonnull Project project, @Nonnull GlobalSearchScope scope);
 
   /**
    * Creates the <code>Location</code> list from <code>protocol</code>, <code>path</code>, and <code>metainfo</code> in <code>scope</code>.
@@ -47,9 +47,9 @@ public interface SMTestLocator {
    * A good example for code>metainfo</code> is the line number of the beginning of the test. It can speed up the search procedure,
    * but it changes when editing.
    */
-  @NotNull
-  default List<Location> getLocation(@NotNull String protocol, @NotNull String path, @Nullable String metainfo, @NotNull Project project,
-                                     @NotNull GlobalSearchScope scope) {
+  @Nonnull
+  default List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nullable String metainfo, @Nonnull Project project,
+                                     @Nonnull GlobalSearchScope scope) {
     return getLocation(protocol, path, project, scope);
   }
 
@@ -57,17 +57,17 @@ public interface SMTestLocator {
   class Composite implements SMTestLocator, DumbAware {
     private final Map<String, ? extends SMTestLocator> myLocators;
 
-    public Composite(@NotNull Pair<String, ? extends SMTestLocator> first, @NotNull Pair<String, ? extends SMTestLocator>... rest) {
+    public Composite(@Nonnull Pair<String, ? extends SMTestLocator> first, @Nonnull Pair<String, ? extends SMTestLocator>... rest) {
       myLocators = ContainerUtil.newHashMap(first, rest);
     }
 
-    public Composite(@NotNull Map<String, ? extends SMTestLocator> locators) {
+    public Composite(@Nonnull Map<String, ? extends SMTestLocator> locators) {
       myLocators = ContainerUtil.newHashMap(locators);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<Location> getLocation(@NotNull String protocol, @NotNull String path, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+    public List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nonnull Project project, @Nonnull GlobalSearchScope scope) {
       SMTestLocator locator = myLocators.get(protocol);
 
       if (locator != null && (!DumbService.isDumb(project) || DumbService.isDumbAware(locator))) {

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.intention;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -23,5 +23,6 @@ import java.util.List;
  * Intention action with sub-actions (options)
  */
 public interface IntentionActionWithOptions extends IntentionAction {
-  @NotNull List<IntentionAction> getOptions();
+  @Nonnull
+  List<IntentionAction> getOptions();
 }

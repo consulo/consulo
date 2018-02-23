@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,35 +35,35 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
   }
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull Component c, boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull Component c, boolean forced) {
     c.requestFocus();
     return ActionCallback.DONE;
   }
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull FocusCommand command, boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced) {
     return command.run();
   }
 
   @Override
-  public JComponent getFocusTargetFor(@NotNull JComponent comp) {
+  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
     return comp;
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
     if (!runnable.isExpired()) {
       runnable.run();
     }
@@ -80,12 +80,12 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
   }
 
   @Override
-  public boolean dispatch(@NotNull KeyEvent e) {
+  public boolean dispatch(@Nonnull KeyEvent e) {
     return false;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ActionCallback requestDefaultFocus(boolean forced) {
     return ActionCallback.DONE;
   }
@@ -95,7 +95,7 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return new Expirable() {
@@ -106,14 +106,14 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FocusRequestor getFurtherRequestor() {
     return this;
   }
 
   @Override
-  public void revalidateFocus(@NotNull ExpirableRunnable runnable) {
+  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
 
   }
 
@@ -127,7 +127,7 @@ public class PassThroughIdeFocusManager extends IdeFocusManager {
   }
 
   @Override
-  public void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable) {
+  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
     runnable.run();
   }
 

@@ -24,7 +24,7 @@ import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
 import javax.swing.*;
@@ -46,24 +46,24 @@ public class SandArtifactType extends ArtifactType {
   }
 
   @Override
-  public boolean isAvailableForAdd(@NotNull ModulesProvider modulesProvider) {
+  public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
     return ModuleUtil.hasModuleExtension(modulesProvider, SandModuleExtension.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public String getDefaultPathFor(@NotNull PackagingElementOutputKind kind) {
+  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
     return "/";
   }
 
   @Override
-  @NotNull
-  public CompositePackagingElement<?> createRootElement(@NotNull String artifactName) {
+  @Nonnull
+  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
     return new ArtifactRootElementImpl();
   }
 }

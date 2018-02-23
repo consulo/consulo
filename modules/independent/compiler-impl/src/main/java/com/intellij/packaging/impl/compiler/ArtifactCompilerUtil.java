@@ -37,7 +37,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -56,7 +56,7 @@ public class ArtifactCompilerUtil {
   private ArtifactCompilerUtil() {
   }
 
-  @NotNull
+  @Nonnull
   public static Pair<InputStream, Long> getArchiveEntryInputStream(VirtualFile sourceFile, final CompileContext context) throws IOException {
     final String fullPath = sourceFile.getPath();
     final int jarEnd = fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
@@ -85,8 +85,8 @@ public class ArtifactCompilerUtil {
     return new File(FileUtil.toSystemDependentName(fullPath.substring(fullPath.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR))));
   }
 
-  @NotNull
-  public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(final @NotNull Project project) {
+  @Nonnull
+  public static Set<VirtualFile> getArtifactOutputsContainingSourceFiles(final @Nonnull Project project) {
     final List<VirtualFile> allOutputs = new ArrayList<VirtualFile>();
     for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
       ContainerUtil.addIfNotNull(artifact.getOutputFile(), allOutputs);
@@ -97,7 +97,7 @@ public class ArtifactCompilerUtil {
     for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
       Processor<PackagingElement<?>> processor = new Processor<PackagingElement<?>>() {
         @Override
-        public boolean process(@NotNull PackagingElement<?> element) {
+        public boolean process(@Nonnull PackagingElement<?> element) {
           if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
             final VirtualFile file = ((FileOrDirectoryCopyPackagingElement)element).findFile();
             if (file != null) {
@@ -123,7 +123,7 @@ public class ArtifactCompilerUtil {
 
   public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
     final MultiMap<String, Artifact> result = new MultiMap<String, Artifact>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<String, Collection<Artifact>> createMap() {
         return new THashMap<String, Collection<Artifact>>(FileUtil.PATH_HASHING_STRATEGY);

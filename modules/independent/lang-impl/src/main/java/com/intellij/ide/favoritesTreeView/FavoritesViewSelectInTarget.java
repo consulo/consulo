@@ -27,7 +27,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author anna
@@ -61,7 +61,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
     }
   }
 
-  private static ActionCallback select(@NotNull Project project, Object toSelect, VirtualFile virtualFile, boolean requestFocus) {
+  private static ActionCallback select(@Nonnull Project project, Object toSelect, VirtualFile virtualFile, boolean requestFocus) {
     final ActionCallback result = new ActionCallback();
 
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);

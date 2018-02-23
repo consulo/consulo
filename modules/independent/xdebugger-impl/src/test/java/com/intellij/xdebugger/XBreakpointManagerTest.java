@@ -21,7 +21,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointAdapter;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -113,17 +113,17 @@ public class XBreakpointManagerTest extends XBreakpointsTestCase {
     final StringBuilder out = new StringBuilder();
     XBreakpointAdapter<XLineBreakpoint<MyBreakpointProperties>> listener = new XBreakpointAdapter<XLineBreakpoint<MyBreakpointProperties>>() {
       @Override
-      public void breakpointAdded(@NotNull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
+      public void breakpointAdded(@Nonnull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
         out.append("added[").append(breakpoint.getProperties().myOption).append("];");
       }
 
       @Override
-      public void breakpointRemoved(@NotNull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
+      public void breakpointRemoved(@Nonnull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
         out.append("removed[").append(breakpoint.getProperties().myOption).append("];");
       }
 
       @Override
-      public void breakpointChanged(@NotNull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
+      public void breakpointChanged(@Nonnull final XLineBreakpoint<MyBreakpointProperties> breakpoint) {
         out.append("changed[").append(breakpoint.getProperties().myOption).append("];");
       }
     };

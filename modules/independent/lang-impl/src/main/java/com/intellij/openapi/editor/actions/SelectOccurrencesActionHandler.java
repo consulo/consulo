@@ -28,7 +28,8 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.LightweightHint;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 abstract public class SelectOccurrencesActionHandler extends EditorActionHandler {
 

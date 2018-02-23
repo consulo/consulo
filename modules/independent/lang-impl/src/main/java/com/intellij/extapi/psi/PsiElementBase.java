@@ -32,8 +32,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.lang.reflect.Array;
@@ -49,22 +49,22 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
@@ -74,7 +74,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
@@ -99,7 +99,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     throw new UnsupportedOperationException(getClass().getName());
   }
 
@@ -109,12 +109,12 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
     return true;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     final PsiManager manager = getManager();
     if (manager == null) {
@@ -143,7 +143,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement getNavigationElement() {
     return this;
   }
@@ -155,22 +155,22 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
 
   //Q: get rid of these methods?
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return Comparing.equal(getText(), text, true);
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return getText().equals(element.getText());
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitElement(this);
   }
 
   @Override
-  public void acceptChildren(@NotNull PsiElementVisitor visitor) {
+  public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
     PsiElement child = getFirstChild();
     while (child != null) {
       child.accept(visitor);
@@ -191,7 +191,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return SharedPsiElementImplUtil.getReferences(this);
   }
@@ -208,13 +208,13 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getResolveScope() {
     return ResolveScopeManager.getElementResolveScope(this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SearchScope getUseScope() {
     return ResolveScopeManager.getElementUseScope(this);
   }
@@ -252,7 +252,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     return descriptor != null && descriptor.canNavigateToSource();
   }
 
-  @NotNull
+  @Nonnull
   protected <T> T[] findChildrenByClass(Class<T> aClass) {
     List<T> result = new ArrayList<T>();
     for (PsiElement cur = getFirstChild(); cur != null; cur = cur.getNextSibling()) {
@@ -269,12 +269,12 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected <T> T findNotNullChildByClass(Class<T> aClass) {
     return notNullChild(findChildByClass(aClass));
   }
 
-  @NotNull
+  @Nonnull
   protected <T> T notNullChild(T child) {
     if (child == null) {
       LOG.error(getText() + "\n parent=" + getParent().getText());
@@ -287,7 +287,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     return this == another;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
     return PsiTreeUtil.getLanguageVersion(this);

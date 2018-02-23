@@ -20,18 +20,19 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.util.ObjectUtils.notNull;
 import static com.intellij.util.WaitForProgressToShow.runOrInvokeLaterAboveProgress;
 
 class FictiveBackgroundable extends Task.Backgroundable {
-  @NotNull private final Waiter myWaiter;
+  @Nonnull
+  private final Waiter myWaiter;
   @Nullable private final ModalityState myState;
 
-  FictiveBackgroundable(@NotNull Project project,
-                        @NotNull Runnable runnable,
+  FictiveBackgroundable(@Nonnull Project project,
+                        @Nonnull Runnable runnable,
                         String title,
                         boolean cancellable,
                         @Nullable ModalityState state) {
@@ -40,7 +41,7 @@ class FictiveBackgroundable extends Task.Backgroundable {
     myWaiter = new Waiter(project, runnable, title, cancellable);
   }
 
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     myWaiter.run(indicator);
     runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), notNull(myState, ModalityState.NON_MODAL), myProject);
   }

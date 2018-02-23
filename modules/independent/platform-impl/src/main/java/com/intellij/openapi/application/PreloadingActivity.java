@@ -17,7 +17,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * An activity to be executed in background on IDE startup. It may load some classes or other configuration
@@ -36,6 +36,6 @@ public abstract class PreloadingActivity {
    *                  Canceled if the application has exited.
    *                  Long actions should periodically perform <code>indicator.checkCanceled()</code>.
    */
-  public abstract void preload(@NotNull ProgressIndicator indicator);
+  public abstract void preload(@Nonnull ProgressIndicator indicator);
 
 }

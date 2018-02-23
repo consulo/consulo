@@ -22,14 +22,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GlobalSearchScopeUtil {
-  @NotNull
-  public static GlobalSearchScope toGlobalSearchScope(@NotNull final SearchScope scope, @NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope toGlobalSearchScope(@Nonnull final SearchScope scope, @Nonnull Project project) {
     if (scope instanceof GlobalSearchScope) {
       return (GlobalSearchScope)scope;
     }
@@ -37,8 +37,8 @@ public class GlobalSearchScopeUtil {
             .runReadAction((Computable<GlobalSearchScope>)() -> GlobalSearchScope.filesScope(project, getLocalScopeFiles((LocalSearchScope)scope)));
   }
 
-  @NotNull
-  public static Set<VirtualFile> getLocalScopeFiles(@NotNull final LocalSearchScope scope) {
+  @Nonnull
+  public static Set<VirtualFile> getLocalScopeFiles(@Nonnull final LocalSearchScope scope) {
     return ApplicationManager.getApplication().runReadAction((Computable<Set<VirtualFile>>)() -> {
       Set<VirtualFile> files = new LinkedHashSet<>();
       for (PsiElement element : scope.getScope()) {

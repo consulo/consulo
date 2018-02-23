@@ -23,9 +23,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.Html;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -43,11 +43,11 @@ public class HintUtil {
   private HintUtil() {
   }
 
-  public static JComponent createInformationLabel(@NotNull String text) {
+  public static JComponent createInformationLabel(@Nonnull String text) {
     return createInformationLabel(text, null, null, null);
   }
 
-  public static JComponent createInformationLabel(@NotNull String text,
+  public static JComponent createInformationLabel(@Nonnull String text,
                                                   @Nullable HyperlinkListener hyperlinkListener,
                                                   @Nullable MouseListener mouseListener,
                                                   @Nullable Ref<Consumer<String>> updatedTextConsumer)
@@ -88,7 +88,7 @@ public class HintUtil {
     return label;
   }
 
-  @NotNull
+  @Nonnull
   public static HintHint getInformationHint() {
     //noinspection UseJBColor
     return new HintHint().setTextBg(INFORMATION_COLOR)
@@ -105,7 +105,7 @@ public class HintUtil {
     );
   }
 
-  @NotNull
+  @Nonnull
   public static JComponent createInformationLabel(SimpleColoredText text) {
     return createInformationLabel(text, null);
   }
@@ -130,7 +130,7 @@ public class HintUtil {
     return label;
   }
 
-  @NotNull
+  @Nonnull
   public static SimpleColoredComponent createInformationComponent() {
     SimpleColoredComponent component = new SimpleColoredComponent();
     component.setBackground(INFORMATION_COLOR);
@@ -139,8 +139,8 @@ public class HintUtil {
     return component;
   }
 
-  @NotNull
-  public static JComponent createInformationLabel(@NotNull SimpleColoredText text, @Nullable Icon icon) {
+  @Nonnull
+  public static JComponent createInformationLabel(@Nonnull SimpleColoredText text, @Nullable Icon icon) {
     SimpleColoredComponent component = createInformationComponent();
     component.setIcon(icon);
     text.appendToComponent(component);
@@ -183,12 +183,12 @@ public class HintUtil {
     return label;
   }
 
-  @NotNull
-  public static String prepareHintText(@NotNull String text, @NotNull HintHint hintHint) {
+  @Nonnull
+  public static String prepareHintText(@Nonnull String text, @Nonnull HintHint hintHint) {
     return prepareHintText(new Html(text), hintHint);
   }
 
-  public static String prepareHintText(@NotNull Html text, @NotNull HintHint hintHint) {
+  public static String prepareHintText(@Nonnull Html text, @Nonnull HintHint hintHint) {
     String htmlBody = UIUtil.getHtmlBody(text);
     return String.format(
             "<html><head>%s</head><body>%s</body></html>",
@@ -206,12 +206,12 @@ public class HintUtil {
       setLayout(new BorderLayout());
     }
 
-    private HintLabel(@NotNull SimpleColoredComponent component) {
+    private HintLabel(@Nonnull SimpleColoredComponent component) {
       this();
       setText(component);
     }
 
-    public void setText(@NotNull SimpleColoredComponent colored) {
+    public void setText(@Nonnull SimpleColoredComponent colored) {
       clearText();
 
       myColored = colored;

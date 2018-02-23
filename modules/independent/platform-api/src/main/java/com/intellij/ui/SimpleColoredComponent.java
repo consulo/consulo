@@ -28,8 +28,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntIntHashMap;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -137,7 +137,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     UISettings.setupComponentAntialiasing(this);
   }
 
-  @NotNull
+  @Nonnull
   public ColoredIterator iterator() {
     return new MyIterator();
   }
@@ -150,8 +150,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     myIconOnTheRight = iconOnTheRight;
   }
 
-  @NotNull
-  public final SimpleColoredComponent append(@NotNull String fragment) {
+  @Nonnull
+  public final SimpleColoredComponent append(@Nonnull String fragment) {
     append(fragment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     return this;
   }
@@ -164,7 +164,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @param attributes text attributes
    */
   @Override
-  public final void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes) {
+  public final void append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes) {
     append(fragment, attributes, myMainTextLastIndex < 0);
   }
 
@@ -177,8 +177,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @param padding    end offset of the text
    * @param align      alignment between current offset and padding
    */
-  public final void append(@NotNull final String fragment,
-                           @NotNull final SimpleTextAttributes attributes,
+  public final void append(@Nonnull final String fragment,
+                           @Nonnull final SimpleTextAttributes attributes,
                            int padding,
                            @JdkConstants.HorizontalAlignment int align) {
     append(fragment, attributes, myMainTextLastIndex < 0);
@@ -193,12 +193,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @param attributes text attributes
    * @param isMainText main text of not
    */
-  public void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes, boolean isMainText) {
     _append(fragment, attributes, isMainText);
     revalidateAndRepaint();
   }
 
-  private synchronized void _append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, boolean isMainText) {
+  private synchronized void _append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes, boolean isMainText) {
     myFragments.add(fragment);
     myAttributes.add(attributes);
     if (isMainText) {
@@ -215,7 +215,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   @Override
-  public void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, Object tag) {
+  public void append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes, Object tag) {
     _append(fragment, attributes, tag);
     revalidateAndRepaint();
   }
@@ -301,7 +301,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   /**
    * @return "leave" (internal) internal paddings of the component
    */
-  @NotNull
+  @Nonnull
   public Insets getIpad() {
     return myIpad;
   }
@@ -311,7 +311,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    *
    * @param ipad insets
    */
-  public void setIpad(@NotNull Insets ipad) {
+  public void setIpad(@Nonnull Insets ipad) {
     myIpad = ipad;
 
     revalidateAndRepaint();
@@ -382,13 +382,13 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Dimension getPreferredSize() {
     return computePreferredSize(false);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Dimension getMinimumSize() {
     return computePreferredSize(false);
   }
@@ -401,7 +401,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public final synchronized Dimension computePreferredSize(final boolean mainTextOnly) {
     // Calculate width
     int width = myIpad.left;
@@ -447,7 +447,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return new Dimension(width, height);
   }
 
-  private int computeTextWidth(@NotNull Font font, final boolean mainTextOnly) {
+  private int computeTextWidth(@Nonnull Font font, final boolean mainTextOnly) {
     int result = 0;
     int baseSize = font.getSize();
     boolean wasSmaller = false;
@@ -595,8 +595,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return index < 0 ? null : getFragmentTag(index);
   }
 
-  @NotNull
-  protected JLabel formatToLabel(@NotNull JLabel label) {
+  @Nonnull
+  protected JLabel formatToLabel(@Nonnull JLabel label) {
     label.setIcon(myIcon);
 
     if (!myFragments.isEmpty()) {
@@ -622,7 +622,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return label;
   }
 
-  static void formatText(@NotNull StringBuilder builder, @NotNull String fragment, @NotNull SimpleTextAttributes attributes) {
+  static void formatText(@Nonnull StringBuilder builder, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
     if (!fragment.isEmpty()) {
       builder.append("<span");
       formatStyle(builder, attributes);
@@ -630,7 +630,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
   }
 
-  static void formatLink(@NotNull StringBuilder builder, @NotNull String fragment, @NotNull SimpleTextAttributes attributes, @NotNull String url) {
+  static void formatLink(@Nonnull StringBuilder builder, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, @Nonnull String url) {
     if (!fragment.isEmpty()) {
       builder.append("<a href=\"").append(StringUtil.replace(url, "\"", "%22")).append("\"");
       formatStyle(builder, attributes);
@@ -714,7 +714,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     g.fillRect(x, 0, width, height);
   }
 
-  protected void doPaintIcon(@NotNull Graphics2D g, @NotNull Icon icon, int offset) {
+  protected void doPaintIcon(@Nonnull Graphics2D g, @Nonnull Icon icon, int offset) {
     final Container parent = getParent();
     Color iconBackgroundColor = null;
     if ((isOpaque() || isIconOpaque()) && !isTransparentIconBackground()) {
@@ -876,7 +876,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return offset;
   }
 
-  private int computeTextAlignShift(@NotNull Font font) {
+  private int computeTextAlignShift(@Nonnull Font font) {
     if (myTextAlign == SwingConstants.LEFT || myTextAlign == SwingConstants.LEADING) {
       return 0;
     }
@@ -909,11 +909,11 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return false;
   }
 
-  protected void paintIcon(@NotNull Graphics g, @NotNull Icon icon, int offset) {
+  protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon, int offset) {
     icon.paintIcon(this, g, offset, (getHeight() - icon.getIconHeight()) / 2);
   }
 
-  protected void applyAdditionalHints(@NotNull Graphics2D g) {
+  protected void applyAdditionalHints(@Nonnull Graphics2D g) {
     UISettings.setupAntialiasing(g);
   }
 
@@ -931,7 +931,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     myTransparentIconBackground = transparentIconBackground;
   }
 
-  public static int getTextBaseLine(@NotNull FontMetrics metrics, final int height) {
+  public static int getTextBaseLine(@Nonnull FontMetrics metrics, final int height) {
     return (height - metrics.getHeight()) / 2 + metrics.getAscent();
   }
 
@@ -952,7 +952,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
   }
 
-  @NotNull
+  @Nonnull
   private String logSwingPath() {
     //noinspection HardCodedStringLiteral
     final StringBuilder buffer = new StringBuilder("Components hierarchy:\n");
@@ -999,7 +999,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getCharSequence(boolean mainOnly) {
     List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size()
                              ? myFragments.subList(0, myMainTextLastIndex + 1)
@@ -1012,7 +1012,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return getCharSequence(false).toString();
   }
 
-  public void change(@NotNull Runnable runnable, boolean autoInvalidate) {
+  public void change(@Nonnull Runnable runnable, boolean autoInvalidate) {
     boolean old = myAutoInvalidate;
     myAutoInvalidate = autoInvalidate;
     try {
@@ -1064,7 +1064,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   public static class BrowserLauncherTag implements Runnable {
     private final String myUrl;
 
-    public BrowserLauncherTag(@NotNull String url) {
+    public BrowserLauncherTag(@Nonnull String url) {
       myUrl = url;
     }
 
@@ -1079,13 +1079,13 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
     int getEndOffset();
 
-    @NotNull
+    @Nonnull
     String getFragment();
 
-    @NotNull
+    @Nonnull
     SimpleTextAttributes getTextAttributes();
 
-    int split(int offset, @NotNull SimpleTextAttributes attributes);
+    int split(int offset, @Nonnull SimpleTextAttributes attributes);
   }
 
   private class MyIterator implements ColoredIterator {
@@ -1103,20 +1103,20 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       return myEndOffset;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getFragment() {
       return myFragments.get(myIndex);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public SimpleTextAttributes getTextAttributes() {
       return myAttributes.get(myIndex);
     }
 
     @Override
-    public int split(int offset, @NotNull SimpleTextAttributes attributes) {
+    public int split(int offset, @Nonnull SimpleTextAttributes attributes) {
       if (offset < 0 || offset > myEndOffset - myOffset) {
         throw new IllegalArgumentException(offset + " is not within [0, " + (myEndOffset - myOffset) + "]");
       }

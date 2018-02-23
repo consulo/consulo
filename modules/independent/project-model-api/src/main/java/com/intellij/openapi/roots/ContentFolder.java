@@ -17,8 +17,8 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 import java.util.Map;
@@ -37,7 +37,7 @@ public interface ContentFolder extends Synthetic {
    * Returns the type of root directory
    * @return
    */
-  @NotNull
+  @Nonnull
   ContentFolderTypeProvider getType();
 
   /**
@@ -53,7 +53,7 @@ public interface ContentFolder extends Synthetic {
    *
    * @return this <code>ContentFolder</code>s {@link com.intellij.openapi.roots.ContentEntry}.
    */
-  @NotNull
+  @Nonnull
   ContentEntry getContentEntry();
 
   /**
@@ -61,14 +61,14 @@ public interface ContentFolder extends Synthetic {
    *
    * @return the root directory URL.
    */
-  @NotNull
+  @Nonnull
   String getUrl();
 
-  @NotNull
+  @Nonnull
   Map<Key, Object> getProperties();
 
   @Nullable
-  <T> T getPropertyValue(@NotNull Key<T> key);
+  <T> T getPropertyValue(@Nonnull Key<T> key);
 
-  <T> void setPropertyValue(@NotNull Key<T> key, @Nullable T value);
+  <T> void setPropertyValue(@Nonnull Key<T> key, @Nullable T value);
 }

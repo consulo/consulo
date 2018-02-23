@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.task;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -8,33 +8,34 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ExternalSystemTaskNotificationListenerAdapter implements ExternalSystemTaskNotificationListener {
 
-  @NotNull public static final ExternalSystemTaskNotificationListener NULL_OBJECT = new ExternalSystemTaskNotificationListenerAdapter() { };
+  @Nonnull
+  public static final ExternalSystemTaskNotificationListener NULL_OBJECT = new ExternalSystemTaskNotificationListenerAdapter() { };
 
   @Override
-  public void onQueued(@NotNull ExternalSystemTaskId id) {
+  public void onQueued(@Nonnull ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onStart(@NotNull ExternalSystemTaskId id) {
+  public void onStart(@Nonnull ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onStatusChange(@NotNull ExternalSystemTaskNotificationEvent event) {
+  public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
   }
 
   @Override
-  public void onTaskOutput(@NotNull ExternalSystemTaskId id, @NotNull String text, boolean stdOut) {
+  public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
   }
 
   @Override
-  public void onEnd(@NotNull ExternalSystemTaskId id) {
+  public void onEnd(@Nonnull ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onSuccess(@NotNull ExternalSystemTaskId id) {
+  public void onSuccess(@Nonnull ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onFailure(@NotNull ExternalSystemTaskId id, @NotNull Exception e) {
+  public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
   }
 }

@@ -39,7 +39,7 @@ import com.intellij.ui.content.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -78,15 +78,15 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
   private Set<Object> myCollapsedTreeNodeValues = new HashSet<>();
   private List<DashboardGrouper> myGroupers;
 
-  @NotNull
+  @Nonnull
   private final ContentManager myContentManager;
-  @NotNull
+  @Nonnull
   private final ContentManagerListener myContentManagerListener;
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
 
-  public RunDashboardContent(@NotNull Project project, @NotNull ContentManager contentManager, @NotNull List<DashboardGrouper> groupers) {
+  public RunDashboardContent(@Nonnull Project project, @Nonnull ContentManager contentManager, @Nonnull List<DashboardGrouper> groupers) {
     super(new BorderLayout());
     myProject = project;
     myGroupers = groupers;
@@ -119,7 +119,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
         }
         myBuilder.queueUpdate().doWhenDone(() -> myBuilder.accept(DashboardNode.class, new TreeVisitor<DashboardNode>() {
           @Override
-          public boolean visit(@NotNull DashboardNode node) {
+          public boolean visit(@Nonnull DashboardNode node) {
             if (node.getContent() == event.getContent()) {
               myBuilder.select(node);
             }
@@ -248,7 +248,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
 
     myTree.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         if (KEY == dataId) {
           return RunDashboardContent.this;
         }
@@ -289,7 +289,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
       Set<Object> nodes = new HashSet<>();
       myBuilder.accept(AbstractTreeNode.class, new TreeVisitor<AbstractTreeNode>() {
         @Override
-        public boolean visit(@NotNull AbstractTreeNode node) {
+        public boolean visit(@Nonnull AbstractTreeNode node) {
           nodes.add(node.getValue());
           return false;
         }
@@ -299,7 +299,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AbstractTreeBuilder getBuilder() {
     return myBuilder;
   }
@@ -313,7 +313,7 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       Presentation presentation = e.getPresentation();
       ActionPresentation actionPresentation = myGrouper.getRule().getPresentation();

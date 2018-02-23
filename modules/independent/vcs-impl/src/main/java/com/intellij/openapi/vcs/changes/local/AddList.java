@@ -19,17 +19,18 @@ import com.intellij.openapi.vcs.changes.ChangeListListener;
 import com.intellij.openapi.vcs.changes.ChangeListWorker;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class AddList implements ChangeListCommand {
-  @NotNull private final String myName;
+  @Nonnull
+  private final String myName;
   @Nullable private final String myComment;
   @Nullable private final Object myData;
 
   private LocalChangeList myNewListCopy;
 
-  public AddList(@NotNull final String name, @Nullable final String comment, @Nullable Object data) {
+  public AddList(@Nonnull final String name, @Nullable final String comment, @Nullable Object data) {
     myName = name;
     myComment = comment;
     myData = data;

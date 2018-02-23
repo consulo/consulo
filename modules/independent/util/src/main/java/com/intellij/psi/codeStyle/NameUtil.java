@@ -20,7 +20,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +36,13 @@ public class NameUtil {
 
   private NameUtil() {}
 
-  @NotNull
-  public static List<String> nameToWordsLowerCase(@NotNull String name){
+  @Nonnull
+  public static List<String> nameToWordsLowerCase(@Nonnull String name){
     return ContainerUtil.map(nameToWords(name), LOWERCASE_MAPPING);
   }
 
-  @NotNull
-  public static String[] nameToWords(@NotNull String name){
+  @Nonnull
+  public static String[] nameToWords(@Nonnull String name){
     List<String> array = new ArrayList<String>();
     int index = 0;
 
@@ -84,13 +84,13 @@ public class NameUtil {
     return ArrayUtil.toStringArray(array);
   }
 
-  @NotNull
-  public static String buildRegexp(@NotNull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
+  @Nonnull
+  public static String buildRegexp(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     return buildRegexp(pattern, exactPrefixLen, allowToUpper, allowToLower, false, false);
   }
 
-  @NotNull
-  public static String buildRegexp(@NotNull String pattern,
+  @Nonnull
+  public static String buildRegexp(@Nonnull String pattern,
                                    int exactPrefixLen,
                                    boolean allowToUpper,
                                    boolean allowToLower,
@@ -238,8 +238,8 @@ public class NameUtil {
    * @param name the identifier to split.
    * @return the array of strings into which the identifier has been split.
    */
-  @NotNull
-  public static String[] splitNameIntoWords(@NotNull String name) {
+  @Nonnull
+  public static String[] splitNameIntoWords(@Nonnull String name) {
     final String[] underlineDelimited = name.split("_");
     List<String> result = new ArrayList<String>();
     for (String word : underlineDelimited) {
@@ -248,10 +248,10 @@ public class NameUtil {
     return ArrayUtil.toStringArray(result);
   }
 
-  @NotNull
-  public static List<String> getSuggestionsByName(@NotNull String name,
-                                                  @NotNull String prefix,
-                                                  @NotNull String suffix,
+  @Nonnull
+  public static List<String> getSuggestionsByName(@Nonnull String name,
+                                                  @Nonnull String prefix,
+                                                  @Nonnull String suffix,
                                                   boolean upperCaseStyle,
                                                   boolean preferLongerNames,
                                                   boolean isArray) {
@@ -274,12 +274,12 @@ public class NameUtil {
     return answer;
   }
 
-  @NotNull
-  private static String compoundSuggestion(@NotNull String prefix,
+  @Nonnull
+  private static String compoundSuggestion(@Nonnull String prefix,
                                            boolean upperCaseStyle,
-                                           @NotNull String[] words,
+                                           @Nonnull String[] words,
                                            int wordCount,
-                                           @NotNull String startWord,
+                                           @Nonnull String startWord,
                                            char c,
                                            boolean isArray,
                                            boolean skip_) {
@@ -338,7 +338,7 @@ public class NameUtil {
     return Character.isUpperCase(p) || Character.isDigit(p);
   }
 
-  static int nextWord(@NotNull String text, int start) {
+  static int nextWord(@Nonnull String text, int start) {
     if (!Character.isLetterOrDigit(text.charAt(start))) {
       return start + 1;
     }
@@ -364,7 +364,7 @@ public class NameUtil {
     return i;
   }
 
-  private static void addAllWords(@NotNull String text, @NotNull List<String> result) {
+  private static void addAllWords(@Nonnull String text, @Nonnull List<String> result) {
     int start = 0;
     while (start < text.length()) {
       int next = nextWord(text, start);
@@ -377,27 +377,27 @@ public class NameUtil {
    * @deprecated use com.intellij.util.text.Matcher
    */
   public interface Matcher {
-    boolean matches(@NotNull String name);
+    boolean matches(@Nonnull String name);
   }
 
   @SuppressWarnings("UnusedDeclaration")
   @Deprecated
-  @NotNull
-  public static com.intellij.util.text.Matcher buildCompletionMatcher(@NotNull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
+  @Nonnull
+  public static com.intellij.util.text.Matcher buildCompletionMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
     return buildMatcher(pattern, options);
   }
 
-  @NotNull
-  public static com.intellij.util.text.Matcher buildMatcher(@NotNull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
+  @Nonnull
+  public static com.intellij.util.text.Matcher buildMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower) {
     MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
     return buildMatcher(pattern, options);
   }
 
   @SuppressWarnings("UnusedParameters")
   @Deprecated
-  @NotNull
-  public static com.intellij.util.text.Matcher buildMatcher(@NotNull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords) {
+  @Nonnull
+  public static com.intellij.util.text.Matcher buildMatcher(@Nonnull String pattern, int exactPrefixLen, boolean allowToUpper, boolean allowToLower, boolean lowerCaseWords) {
     MatchingCaseSensitivity options = !allowToLower && !allowToUpper ? MatchingCaseSensitivity.ALL : exactPrefixLen > 0 ? MatchingCaseSensitivity.FIRST_LETTER : MatchingCaseSensitivity.NONE;
     return buildMatcher(pattern, options);
   }
@@ -426,18 +426,18 @@ public class NameUtil {
     }
   }
 
-  @NotNull
-  public static MatcherBuilder buildMatcher(@NotNull String pattern) {
+  @Nonnull
+  public static MatcherBuilder buildMatcher(@Nonnull String pattern) {
     return new MatcherBuilder(pattern);
   }
 
-  @NotNull
-  public static MinusculeMatcher buildMatcher(@NotNull String pattern, @NotNull MatchingCaseSensitivity options) {
+  @Nonnull
+  public static MinusculeMatcher buildMatcher(@Nonnull String pattern, @Nonnull MatchingCaseSensitivity options) {
     return buildMatcher(pattern).withCaseSensitivity(options).build();
   }
 
-  @NotNull
-  public static String capitalizeAndUnderscore(@NotNull String name) {
+  @Nonnull
+  public static String capitalizeAndUnderscore(@Nonnull String name) {
     return splitWords(name, '_', new Function<String, String>() {
       @Override
       public String fun(String s) {
@@ -446,8 +446,8 @@ public class NameUtil {
     });
   }
 
-  @NotNull
-  public static String splitWords(@NotNull String text, char separator, @NotNull Function<String, String> transformWord) {
+  @Nonnull
+  public static String splitWords(@Nonnull String text, char separator, @Nonnull Function<String, String> transformWord) {
     final String[] words = nameToWords(text);
     boolean insertSeparator = false;
     final StringBuilder buf = new StringBuilder();

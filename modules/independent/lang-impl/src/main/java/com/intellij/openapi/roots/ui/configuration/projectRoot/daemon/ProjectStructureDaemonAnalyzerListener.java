@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -23,5 +23,5 @@ import java.util.EventListener;
  * @author nik
  */
 public interface ProjectStructureDaemonAnalyzerListener extends EventListener {
-  void problemsChanged(@NotNull ProjectStructureElement element);
+  void problemsChanged(@Nonnull ProjectStructureElement element);
 }

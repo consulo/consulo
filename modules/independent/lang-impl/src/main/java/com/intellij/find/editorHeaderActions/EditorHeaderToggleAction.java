@@ -5,12 +5,12 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class EditorHeaderToggleAction extends CheckboxAction implements DumbAware {
-  protected EditorHeaderToggleAction(@NotNull String text) {
+  protected EditorHeaderToggleAction(@Nonnull String text) {
     super(text);
   }
 
@@ -46,7 +46,7 @@ public abstract class EditorHeaderToggleAction extends CheckboxAction implements
     }
   }
 
-  protected abstract boolean isSelected(@NotNull SearchSession session);
+  protected abstract boolean isSelected(@Nonnull SearchSession session);
 
-  protected abstract void setSelected(@NotNull SearchSession session, boolean selected);
+  protected abstract void setSelected(@Nonnull SearchSession session, boolean selected);
 }

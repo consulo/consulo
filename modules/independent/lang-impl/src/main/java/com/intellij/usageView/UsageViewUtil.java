@@ -38,7 +38,7 @@ import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsageView;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class UsageViewUtil {
     return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewLongNameLocation.INSTANCE);
   }
 
-  public static String getType(@NotNull PsiElement psiElement) {
+  public static String getType(@Nonnull PsiElement psiElement) {
     return ElementDescriptionUtil.getElementDescription(psiElement, UsageViewTypeLocation.INSTANCE);
   }
 
@@ -98,7 +98,7 @@ public class UsageViewUtil {
     return false;
   }
 
-  public static UsageInfo[] removeDuplicatedUsages(@NotNull UsageInfo[] usages) {
+  public static UsageInfo[] removeDuplicatedUsages(@Nonnull UsageInfo[] usages) {
     Set<UsageInfo> set = new LinkedHashSet<UsageInfo>(Arrays.asList(usages));
 
     // Replace duplicates of move rename usage infos in injections from non code usages of master files
@@ -147,14 +147,14 @@ public class UsageViewUtil {
     return set.toArray(new UsageInfo[set.size()]);
   }
 
-  @NotNull
-  public static UsageInfo[] toUsageInfoArray(@NotNull final Collection<? extends UsageInfo> collection) {
+  @Nonnull
+  public static UsageInfo[] toUsageInfoArray(@Nonnull final Collection<? extends UsageInfo> collection) {
     final int size = collection.size();
     return size == 0 ? UsageInfo.EMPTY_ARRAY : collection.toArray(new UsageInfo[size]);
   }
 
-  @NotNull
-  public static PsiElement[] toElements(@NotNull UsageInfo[] usageInfos) {
+  @Nonnull
+  public static PsiElement[] toElements(@Nonnull UsageInfo[] usageInfos) {
     return ContainerUtil.map2Array(usageInfos, PsiElement.class, new Function<UsageInfo, PsiElement>() {
       @Override
       public PsiElement fun(UsageInfo info) {
@@ -163,7 +163,7 @@ public class UsageViewUtil {
     });
   }
 
-  public static void navigateTo(@NotNull UsageInfo info, boolean requestFocus) {
+  public static void navigateTo(@Nonnull UsageInfo info, boolean requestFocus) {
     int offset = info.getNavigationOffset();
     VirtualFile file = info.getVirtualFile();
     Project project = info.getProject();

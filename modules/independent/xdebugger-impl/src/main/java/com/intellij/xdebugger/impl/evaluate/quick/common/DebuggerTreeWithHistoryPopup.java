@@ -31,8 +31,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -51,11 +51,11 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
   private final Point myPoint;
   @Nullable private final Runnable myHideRunnable;
 
-  private DebuggerTreeWithHistoryPopup(@NotNull D initialItem,
-                                       @NotNull DebuggerTreeCreator<D> creator,
-                                       @NotNull Editor editor,
-                                       @NotNull Point point,
-                                       @NotNull Project project,
+  private DebuggerTreeWithHistoryPopup(@Nonnull D initialItem,
+                                       @Nonnull DebuggerTreeCreator<D> creator,
+                                       @Nonnull Editor editor,
+                                       @Nonnull Point point,
+                                       @Nonnull Project project,
                                        @Nullable Runnable hideRunnable) {
     super(initialItem, creator, project);
     myEditor = editor;
@@ -63,8 +63,8 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     myHideRunnable = hideRunnable;
   }
 
-  public static <D> void showTreePopup(@NotNull DebuggerTreeCreator<D> creator, @NotNull D initialItem, @NotNull Editor editor,
-                                       @NotNull Point point, @NotNull Project project, Runnable hideRunnable) {
+  public static <D> void showTreePopup(@Nonnull DebuggerTreeCreator<D> creator, @Nonnull D initialItem, @Nonnull Editor editor,
+                                       @Nonnull Point point, @Nonnull Project project, Runnable hideRunnable) {
     new DebuggerTreeWithHistoryPopup<D>(initialItem, creator, editor, point, project, hideRunnable).updateTree(initialItem);
   }
 

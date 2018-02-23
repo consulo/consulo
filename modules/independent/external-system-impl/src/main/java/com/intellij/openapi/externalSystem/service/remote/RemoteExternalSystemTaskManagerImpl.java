@@ -20,8 +20,8 @@ import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutio
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -34,19 +34,20 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
         extends AbstractRemoteExternalSystemService<S> implements RemoteExternalSystemTaskManager<S>
 {
 
-  @NotNull private final ExternalSystemTaskManager<S> myDelegate;
+  @Nonnull
+  private final ExternalSystemTaskManager<S> myDelegate;
 
-  public RemoteExternalSystemTaskManagerImpl(@NotNull ExternalSystemTaskManager<S> delegate) {
+  public RemoteExternalSystemTaskManagerImpl(@Nonnull ExternalSystemTaskManager<S> delegate) {
     myDelegate = delegate;
   }
 
   @Override
-  public void executeTasks(@NotNull final ExternalSystemTaskId id,
-                           @NotNull final List<String> taskNames,
-                           @NotNull final String projectPath,
+  public void executeTasks(@Nonnull final ExternalSystemTaskId id,
+                           @Nonnull final List<String> taskNames,
+                           @Nonnull final String projectPath,
                            @Nullable final S settings,
-                           @NotNull final List<String> vmOptions,
-                           @NotNull final List<String> scriptParameters,
+                           @Nonnull final List<String> vmOptions,
+                           @Nonnull final List<String> scriptParameters,
                            @Nullable final String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     execute(id, new Producer<Object>() {
@@ -61,7 +62,7 @@ public class RemoteExternalSystemTaskManagerImpl<S extends ExternalSystemExecuti
   }
 
   @Override
-  public boolean cancelTask(@NotNull final ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(@Nonnull final ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
   {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

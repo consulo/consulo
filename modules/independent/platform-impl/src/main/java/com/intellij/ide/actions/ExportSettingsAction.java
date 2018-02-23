@@ -47,8 +47,8 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -130,7 +130,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static MultiMap<File, ExportableItem> getExportableComponentsMap(final boolean onlyExisting) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
@@ -191,8 +191,8 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     return result;
   }
 
-  @NotNull
-  private static String getComponentPresentableName(@NotNull State state, @NotNull Class<?> aClass, @Nullable PluginDescriptor pluginDescriptor) {
+  @Nonnull
+  private static String getComponentPresentableName(@Nonnull State state, @Nonnull Class<?> aClass, @Nullable PluginDescriptor pluginDescriptor) {
     String defaultName = state.name();
     String resourceBundleName;
     if (pluginDescriptor != null && pluginDescriptor instanceof IdeaPluginDescriptor && !PluginManagerCore.CORE_PLUGIN.equals(pluginDescriptor.getPluginId())) {
@@ -221,17 +221,17 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     private final File[] files;
     private final String name;
 
-    public ExportableItem(@NotNull File[] files, @NotNull String name) {
+    public ExportableItem(@Nonnull File[] files, @Nonnull String name) {
       this.files = files;
       this.name = name;
     }
 
-    @NotNull
+    @Nonnull
     public File[] getExportFiles() {
       return files;
     }
 
-    @NotNull
+    @Nonnull
     public String getPresentableName() {
       return name;
     }

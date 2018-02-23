@@ -47,8 +47,8 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -242,7 +242,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   @Override
-  public boolean isInside(@NotNull RelativePoint target) {
+  public boolean isInside(@Nonnull RelativePoint target) {
     if (myComp == null) return false;
     Component cmp = target.getOriginalComponent();
 
@@ -297,10 +297,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   private final Dimension myPointerSize;
   private final int myCornerToPointerDistance;
 
-  public BalloonImpl(@NotNull JComponent content,
-                     @NotNull Color borderColor,
+  public BalloonImpl(@Nonnull JComponent content,
+                     @Nonnull Color borderColor,
                      Insets borderInsets,
-                     @NotNull Color fillColor,
+                     @Nonnull Color fillColor,
                      boolean hideOnMouse,
                      boolean hideOnKey,
                      boolean hideOnAction,
@@ -603,7 +603,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   /**
    * Figure out the component to focus inside the {@link myContent} field.
    */
-  @NotNull
+  @Nonnull
   private Component getContentToFocus() {
     Component focusComponent = myContent;
     while (true) {
@@ -679,7 +679,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
       myActionProvider = new ActionProvider() {
         private ActionButton myCloseButton;
 
-        @NotNull
+        @Nonnull
         @Override
         public List<ActionButton> createActions() {
           myCloseButton = new CloseButton(listener);
@@ -687,7 +687,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
         }
 
         @Override
-        public void layout(@NotNull Rectangle lpBounds) {
+        public void layout(@Nonnull Rectangle lpBounds) {
           if (!myCloseButton.isVisible()) {
             return;
           }
@@ -736,7 +736,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
 
-  @NotNull
+  @Nonnull
   private EmptyBorder getPointlessBorder() {
     return new EmptyBorder(myBorderInsets);
   }
@@ -747,7 +747,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   @Override
-  public void revalidate(@NotNull PositionTracker<Balloon> tracker) {
+  public void revalidate(@Nonnull PositionTracker<Balloon> tracker) {
     RelativePoint newPosition = tracker.recalculateLocation(this);
 
     if (newPosition != null) {
@@ -756,7 +756,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     }
   }
 
-  public void setShadowBorderProvider(@NotNull ShadowBorderProvider provider) {
+  public void setShadowBorderProvider(@Nonnull ShadowBorderProvider provider) {
     myShadowBorderProvider = provider;
   }
 
@@ -764,7 +764,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     return hasShadow() ? myShadowSize : 0;
   }
 
-  @NotNull
+  @Nonnull
   public Insets getShadowBorderInsets() {
     if (myShadowBorderProvider != null) {
       return myShadowBorderProvider.getInsets();
@@ -778,14 +778,14 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   public interface ShadowBorderProvider {
-    @NotNull
+    @Nonnull
     Insets getInsets();
 
-    void paintShadow(@NotNull JComponent component, @NotNull Graphics g);
+    void paintShadow(@Nonnull JComponent component, @Nonnull Graphics g);
 
-    void paintBorder(@NotNull Rectangle bounds, @NotNull Graphics2D g);
+    void paintBorder(@Nonnull Rectangle bounds, @Nonnull Graphics2D g);
 
-    void paintPointingShape(@NotNull Rectangle bounds, @NotNull Point pointTarget, @NotNull Position position, @NotNull Graphics2D g);
+    void paintPointingShape(@Nonnull Rectangle bounds, @Nonnull Point pointTarget, @Nonnull Position position, @Nonnull Graphics2D g);
   }
 
   @Override
@@ -854,7 +854,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     myAnimator.resume();
   }
 
-  public void runWithSmartFadeoutPause(@NotNull Runnable handler) {
+  public void runWithSmartFadeoutPause(@Nonnull Runnable handler) {
     if (mySmartFadeout) {
       mySmartFadeoutPaused = true;
       handler.run();
@@ -1020,7 +1020,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   @Override
-  public void addListener(@NotNull JBPopupListener listener) {
+  public void addListener(@Nonnull JBPopupListener listener) {
     myListeners.add(listener);
   }
 
@@ -1032,7 +1032,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     myHideOnMouse = hideOnMouse;
   }
 
-  public void setHideListener(@NotNull Runnable listener) {
+  public void setHideListener(@Nonnull Runnable listener) {
     myHideListener = listener;
     myHideOnMouse = true;
   }
@@ -1517,10 +1517,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
   }
 
   public interface ActionProvider {
-    @NotNull
+    @Nonnull
     List<ActionButton> createActions();
 
-    void layout(@NotNull Rectangle bounds);
+    void layout(@Nonnull Rectangle bounds);
   }
 
   public class ActionButton extends NonOpaquePanel {
@@ -1529,7 +1529,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     private final Consumer<MouseEvent> myListener;
     protected final BaseButtonBehavior myButton;
 
-    public ActionButton(@NotNull Icon icon, @Nullable Icon hoverIcon, @Nullable String hint, @NotNull Consumer<MouseEvent> listener) {
+    public ActionButton(@Nonnull Icon icon, @Nullable Icon hoverIcon, @Nullable String hint, @Nonnull Consumer<MouseEvent> listener) {
       myIcon = icon;
       myHoverIcon = hoverIcon;
       myListener = listener;
@@ -1561,19 +1561,19 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
       return getWidth() > 0 && myLastMoveWasInsideBalloon;
     }
 
-    protected void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
+    protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
       icon.paintIcon(this, g, 0, 0);
     }
   }
 
   private class CloseButton extends ActionButton {
-    private CloseButton(@NotNull Consumer<MouseEvent> listener) {
+    private CloseButton(@Nonnull Consumer<MouseEvent> listener) {
       super(getCloseButton(), null, null, listener);
       setVisible(myEnableButtons);
     }
 
     @Override
-    protected void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
+    protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
       if (myEnableButtons) {
         final boolean pressed = myButton.isPressedByMouse();
         icon.paintIcon(this, g, pressed ? 1 : 0, pressed ? 1 : 0);
@@ -1949,7 +1949,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui {
     myTitleLabel.setText(title);
   }
 
-  public void setActionProvider(@NotNull ActionProvider actionProvider) {
+  public void setActionProvider(@Nonnull ActionProvider actionProvider) {
     myActionProvider = actionProvider;
   }
 

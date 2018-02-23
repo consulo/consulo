@@ -34,7 +34,7 @@ import com.intellij.util.Consumer;
 import com.intellij.vcsUtil.VcsSelection;
 import com.intellij.vcsUtil.VcsSelectionUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SelectedBlockHistoryAction extends AbstractVcsAction {
 
@@ -63,7 +63,7 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull final VcsContext context) {
+  public void actionPerformed(@Nonnull final VcsContext context) {
     try {
       final Project project = context.getProject();
       assert project != null;
@@ -103,7 +103,7 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
   }
 
   @Override
-  protected void update(@NotNull VcsContext context, @NotNull Presentation presentation) {
+  protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
     presentation.setEnabled(isEnabled(context));
     VcsSelection selection = VcsSelectionUtil.getSelection(context);
     if (selection != null) {

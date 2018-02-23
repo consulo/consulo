@@ -27,8 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -36,17 +36,17 @@ import org.jetbrains.annotations.Nullable;
 public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
   private final Project myProject;
 
-  public GotoFileItemProvider(@NotNull Project project, @Nullable PsiElement context) {
+  public GotoFileItemProvider(@Nonnull Project project, @Nullable PsiElement context) {
     super(context);
     myProject = project;
   }
 
   @Override
-  public boolean filterElements(@NotNull ChooseByNameBase base,
-                                @NotNull String pattern,
+  public boolean filterElements(@Nonnull ChooseByNameBase base,
+                                @Nonnull String pattern,
                                 boolean everywhere,
-                                @NotNull ProgressIndicator indicator,
-                                @NotNull Processor<Object> consumer) {
+                                @Nonnull ProgressIndicator indicator,
+                                @Nonnull Processor<Object> consumer) {
     if (pattern.contains("/") || pattern.contains("\\")) {
       VirtualFile vFile = LocalFileSystem.getInstance().findFileByPathIfCached(FileUtil.toSystemIndependentName(pattern));
       if (vFile != null) {

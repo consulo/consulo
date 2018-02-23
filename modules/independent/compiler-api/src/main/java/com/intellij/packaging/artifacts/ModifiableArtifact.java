@@ -16,7 +16,7 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.packaging.elements.CompositePackagingElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,11 +27,11 @@ public interface ModifiableArtifact extends Artifact {
 
   void setOutputPath(String outputPath);
 
-  void setName(@NotNull String name);
+  void setName(@Nonnull String name);
 
   void setRootElement(CompositePackagingElement<?> root);
 
   void setProperties(ArtifactPropertiesProvider provider, ArtifactProperties<?> properties);
 
-  void setArtifactType(@NotNull ArtifactType selected);
+  void setArtifactType(@Nonnull ArtifactType selected);
 }

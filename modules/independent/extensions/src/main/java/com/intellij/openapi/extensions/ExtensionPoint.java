@@ -16,49 +16,48 @@
 package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author AKireyev
  */
 public interface ExtensionPoint<T> {
-  @NotNull
+  @Nonnull
   String getName();
   AreaInstance getArea();
 
   /**
    * @deprecated use {@link #getClassName()} instead
    */
-  @NotNull
+  @Nonnull
   String getBeanClassName();
 
-  void registerExtension(@NotNull T extension);
-  void registerExtension(@NotNull T extension, @NotNull LoadingOrder order);
+  void registerExtension(@Nonnull T extension);
+  void registerExtension(@Nonnull T extension, @Nonnull LoadingOrder order);
 
-  @NotNull
+  @Nonnull
   T[] getExtensions();
   boolean hasAnyExtensions();
 
-  @Nullable
+  @javax.annotation.Nullable
   T getExtension();
-  boolean hasExtension(@NotNull T extension);
+  boolean hasExtension(@Nonnull T extension);
 
-  void unregisterExtension(@NotNull T extension);
+  void unregisterExtension(@Nonnull T extension);
 
-  void addExtensionPointListener(@NotNull ExtensionPointListener<T> listener, @NotNull Disposable parentDisposable);
-  void addExtensionPointListener(@NotNull ExtensionPointListener<T> listener);
-  void removeExtensionPointListener(@NotNull ExtensionPointListener<T> extensionPointListener);
+  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener, @Nonnull Disposable parentDisposable);
+  void addExtensionPointListener(@Nonnull ExtensionPointListener<T> listener);
+  void removeExtensionPointListener(@Nonnull ExtensionPointListener<T> extensionPointListener);
 
   void reset();
 
-  @NotNull
+  @Nonnull
   Class<T> getExtensionClass();
 
-  @NotNull
+  @Nonnull
   Kind getKind();
 
-  @NotNull
+  @Nonnull
   String getClassName();
 
   enum Kind {INTERFACE, BEAN_CLASS}

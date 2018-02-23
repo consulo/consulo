@@ -17,8 +17,8 @@ package com.intellij.codeInspection;
 
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This interface needs to be implemented by implementers of {@link ProblemGroup}
@@ -32,6 +32,6 @@ public interface SuppressableProblemGroup extends ProblemGroup {
    *                Inspections tool window
    * @return the list of suppression actions.
    */
-  @NotNull
+  @Nonnull
   SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element);
 }

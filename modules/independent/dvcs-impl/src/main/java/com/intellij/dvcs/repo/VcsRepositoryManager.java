@@ -30,8 +30,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -45,23 +45,29 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
   public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =
           Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
 
-  @NotNull private final ProjectLevelVcsManager myVcsManager;
+  @Nonnull
+  private final ProjectLevelVcsManager myVcsManager;
 
-  @NotNull private final ReentrantReadWriteLock REPO_LOCK = new ReentrantReadWriteLock();
-  @NotNull private final ReentrantReadWriteLock.WriteLock MODIFY_LOCK = new ReentrantReadWriteLock().writeLock();
+  @Nonnull
+  private final ReentrantReadWriteLock REPO_LOCK = new ReentrantReadWriteLock();
+  @Nonnull
+  private final ReentrantReadWriteLock.WriteLock MODIFY_LOCK = new ReentrantReadWriteLock().writeLock();
 
-  @NotNull private final Map<VirtualFile, Repository> myRepositories = ContainerUtil.newHashMap();
-  @NotNull private final Map<VirtualFile, Repository> myExternalRepositories = ContainerUtil.newHashMap();
-  @NotNull private final List<VcsRepositoryCreator> myRepositoryCreators;
+  @Nonnull
+  private final Map<VirtualFile, Repository> myRepositories = ContainerUtil.newHashMap();
+  @Nonnull
+  private final Map<VirtualFile, Repository> myExternalRepositories = ContainerUtil.newHashMap();
+  @Nonnull
+  private final List<VcsRepositoryCreator> myRepositoryCreators;
 
   private volatile boolean myDisposed;
 
-  @NotNull
-  public static VcsRepositoryManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static VcsRepositoryManager getInstance(@Nonnull Project project) {
     return ObjectUtils.assertNotNull(project.getComponent(VcsRepositoryManager.class));
   }
 
-  public VcsRepositoryManager(@NotNull Project project, @NotNull ProjectLevelVcsManager vcsManager) {
+  public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
     super(project);
     myVcsManager = vcsManager;
     myRepositoryCreators = Arrays.asList(Extensions.getExtensions(VcsRepositoryCreator.EXTENSION_POINT_NAME, project));
@@ -90,7 +96,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
   }
 
   @Nullable
-  public Repository getRepositoryForFile(@NotNull VirtualFile file) {
+  public Repository getRepositoryForFile(@Nonnull VirtualFile file) {
     return getRepositoryForFile(file, false);
   }
 
@@ -99,28 +105,28 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
    */
   @Nullable
   @Deprecated
-  public Repository getRepositoryForFileQuick(@NotNull VirtualFile file) {
+  public Repository getRepositoryForFileQuick(@Nonnull VirtualFile file) {
     return getRepositoryForFile(file, true);
   }
 
-  @Nullable
-  public Repository getRepositoryForFile(@NotNull VirtualFile file, boolean quick) {
+  @javax.annotation.Nullable
+  public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
     final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) return null;
     return quick ? getRepositoryForRootQuick(vcsRoot.getPath()) : getRepositoryForRoot(vcsRoot.getPath());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Repository getRepositoryForRootQuick(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, false);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Repository getRepositoryForRoot(@Nullable VirtualFile root) {
     return getRepositoryForRoot(root, true);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Repository getRepositoryForRoot(@Nullable VirtualFile root, boolean updateIfNeeded) {
     if (root == null) return null;
     Repository result;
@@ -152,7 +158,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
-  public void addExternalRepository(@NotNull VirtualFile root, @NotNull Repository repository) {
+  public void addExternalRepository(@Nonnull VirtualFile root, @Nonnull Repository repository) {
     REPO_LOCK.writeLock().lock();
     try {
       myExternalRepositories.put(root, repository);
@@ -162,7 +168,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
-  public void removeExternalRepository(@NotNull VirtualFile root) {
+  public void removeExternalRepository(@Nonnull VirtualFile root) {
     REPO_LOCK.writeLock().lock();
     try {
       myExternalRepositories.remove(root);
@@ -172,7 +178,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
-  public boolean isExternal(@NotNull Repository repository) {
+  public boolean isExternal(@Nonnull Repository repository) {
     try {
       REPO_LOCK.readLock().lock();
       return !myRepositories.containsValue(repository) && myExternalRepositories.containsValue(repository);
@@ -182,7 +188,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Repository> getRepositories() {
     try {
       REPO_LOCK.readLock().lock();
@@ -194,7 +200,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
   }
 
   // note: we are not calling this method during the project startup - it is called anyway by f.e the GitRootTracker
-  private void checkAndUpdateRepositoriesCollection(@Nullable VirtualFile checkedRoot) {
+  private void checkAndUpdateRepositoriesCollection(@javax.annotation.Nullable VirtualFile checkedRoot) {
     Map<VirtualFile, Repository> repositories;
     try {
       MODIFY_LOCK.lock();
@@ -229,8 +235,8 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     }
   }
 
-  @NotNull
-  private Map<VirtualFile, Repository> findNewRoots(@NotNull Set<VirtualFile> knownRoots) {
+  @Nonnull
+  private Map<VirtualFile, Repository> findNewRoots(@Nonnull Set<VirtualFile> knownRoots) {
     Map<VirtualFile, Repository> newRootsMap = ContainerUtil.newHashMap();
     for (VcsRoot root : myVcsManager.getAllVcsRoots()) {
       VirtualFile rootPath = root.getPath();
@@ -247,8 +253,8 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     return newRootsMap;
   }
 
-  @NotNull
-  private Collection<VirtualFile> findInvalidRoots(@NotNull final Collection<VirtualFile> roots) {
+  @Nonnull
+  private Collection<VirtualFile> findInvalidRoots(@Nonnull final Collection<VirtualFile> roots) {
     final VirtualFile[] validRoots = myVcsManager.getAllVersionedRoots();
     return ContainerUtil.filter(roots, file -> !ArrayUtil.contains(file, validRoots));
   }
@@ -259,7 +265,7 @@ public class VcsRepositoryManager extends AbstractProjectComponent implements Di
     return ContainerUtil.find(myRepositoryCreators, creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));
   }
 
-  @NotNull
+  @Nonnull
   public String toString() {
     return "RepositoryManager{myRepositories: " + myRepositories + '}';
   }

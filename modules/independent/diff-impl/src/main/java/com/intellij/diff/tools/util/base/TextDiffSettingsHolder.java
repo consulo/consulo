@@ -23,8 +23,8 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -67,14 +67,16 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
   }
 
   public static class TextDiffSettings {
-    @NotNull public SharedSettings SHARED_SETTINGS = new SharedSettings();
-    @NotNull public PlaceSettings PLACE_SETTINGS = new PlaceSettings();
+    @Nonnull
+    public SharedSettings SHARED_SETTINGS = new SharedSettings();
+    @Nonnull
+    public PlaceSettings PLACE_SETTINGS = new PlaceSettings();
 
     public TextDiffSettings() {
     }
 
-    public TextDiffSettings(@NotNull SharedSettings SHARED_SETTINGS,
-                            @NotNull PlaceSettings PLACE_SETTINGS) {
+    public TextDiffSettings(@Nonnull SharedSettings SHARED_SETTINGS,
+                            @Nonnull PlaceSettings PLACE_SETTINGS) {
       this.SHARED_SETTINGS = SHARED_SETTINGS;
       this.PLACE_SETTINGS = PLACE_SETTINGS;
     }
@@ -91,21 +93,21 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
 
     // Diff settings
 
-    @NotNull
+    @Nonnull
     public HighlightPolicy getHighlightPolicy() {
       return PLACE_SETTINGS.HIGHLIGHT_POLICY;
     }
 
-    public void setHighlightPolicy(@NotNull HighlightPolicy value) {
+    public void setHighlightPolicy(@Nonnull HighlightPolicy value) {
       PLACE_SETTINGS.HIGHLIGHT_POLICY = value;
     }
 
-    @NotNull
+    @Nonnull
     public IgnorePolicy getIgnorePolicy() {
       return PLACE_SETTINGS.IGNORE_POLICY;
     }
 
-    public void setIgnorePolicy(@NotNull IgnorePolicy policy) {
+    public void setIgnorePolicy(@Nonnull IgnorePolicy policy) {
       PLACE_SETTINGS.IGNORE_POLICY = policy;
     }
 
@@ -155,12 +157,12 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
       PLACE_SETTINGS.USE_SOFT_WRAPS = state;
     }
 
-    @NotNull
+    @Nonnull
     public HighlightingLevel getHighlightingLevel() {
       return PLACE_SETTINGS.HIGHLIGHTING_LEVEL;
     }
 
-    public void setHighlightingLevel(@NotNull HighlightingLevel state) {
+    public void setHighlightingLevel(@Nonnull HighlightingLevel state) {
       PLACE_SETTINGS.HIGHLIGHTING_LEVEL = state;
     }
 
@@ -192,18 +194,18 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
     // Impl
     //
 
-    @NotNull
+    @Nonnull
     public static TextDiffSettings getSettings() {
       return getSettings(null);
     }
 
-    @NotNull
+    @Nonnull
     public static TextDiffSettings getSettings(@Nullable String place) {
       return getInstance().getSettings(place);
     }
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffSettings getSettings(@Nullable String place) {
     if (place == null) place = DiffPlaces.DEFAULT;
 
@@ -223,7 +225,7 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
 
   private State myState = new State();
 
-  @NotNull
+  @Nonnull
   @Override
   public State getState() {
     return myState;
@@ -238,7 +240,7 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
     return ServiceManager.getService(TextDiffSettingsHolder.class);
   }
 
-  @NotNull
+  @Nonnull
   public static Map<String, PlaceSettings> getDefaultPlaceSettings() {
     Map<String, PlaceSettings> map = new TreeMap<>();
 

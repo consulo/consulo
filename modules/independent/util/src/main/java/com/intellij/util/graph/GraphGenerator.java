@@ -15,7 +15,7 @@
  */
 package com.intellij.util.graph;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -23,7 +23,7 @@ import java.util.*;
  * @author dsl
  */
 public class GraphGenerator<Node> implements Graph<Node> {
-  @NotNull
+  @Nonnull
   public static <T> Graph<T> generate(InboundSemiGraph<T> graph) {
     return new GraphGenerator<T>(graph);
   }
@@ -31,7 +31,7 @@ public class GraphGenerator<Node> implements Graph<Node> {
   private final InboundSemiGraph<Node> myGraph;
   private final Map<Node, Set<Node>> myOuts;
 
-  private GraphGenerator(@NotNull InboundSemiGraph<Node> graph) {
+  private GraphGenerator(@Nonnull InboundSemiGraph<Node> graph) {
     myGraph = graph;
     myOuts = new LinkedHashMap<Node, Set<Node>>();
     buildOuts();

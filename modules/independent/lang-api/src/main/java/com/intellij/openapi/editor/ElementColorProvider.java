@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -32,8 +32,8 @@ public interface ElementColorProvider {
 
   @Nullable
   @RequiredReadAction
-  Color getColorFrom(@NotNull PsiElement element);
+  Color getColorFrom(@Nonnull PsiElement element);
 
   @RequiredWriteAction
-  void setColorTo(@NotNull PsiElement element, @NotNull Color color);
+  void setColorTo(@Nonnull PsiElement element, @Nonnull Color color);
 }

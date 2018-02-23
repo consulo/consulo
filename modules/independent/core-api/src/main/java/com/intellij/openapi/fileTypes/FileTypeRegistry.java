@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FileTypeRegistry {
   public static Getter<FileTypeRegistry> ourInstanceGetter;
 
-  public abstract boolean isFileIgnored(@NonNls @NotNull VirtualFile file);
+  public abstract boolean isFileIgnored(@NonNls @Nonnull VirtualFile file);
 
   public static FileTypeRegistry getInstance() {
     return ourInstanceGetter.get();
@@ -48,8 +48,8 @@ public abstract class FileTypeRegistry {
    * @param file The file for which the type is requested.
    * @return The file type instance.
    */
-  @NotNull
-  public abstract FileType getFileTypeByFile(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract FileType getFileTypeByFile(@Nonnull VirtualFile file);
 
   /**
    * Returns the file type for the specified file name.
@@ -57,8 +57,8 @@ public abstract class FileTypeRegistry {
    * @param fileName The file name for which the type is requested.
    * @return The file type instance, or {@link UnknownFileType#INSTANCE} if not found.
    */
-  @NotNull
-  public abstract FileType getFileTypeByFileName(@NotNull @NonNls String fileName);
+  @Nonnull
+  public abstract FileType getFileTypeByFileName(@Nonnull @NonNls String fileName);
 
   /**
    * Returns the file type for the specified extension.
@@ -67,8 +67,8 @@ public abstract class FileTypeRegistry {
    * @param extension The extension for which the file type is requested, not including the leading '.'.
    * @return The file type instance, or {@link UnknownFileType#INSTANCE} if corresponding file type not found
    */
-  @NotNull
-  public abstract FileType getFileTypeByExtension(@NonNls @NotNull String extension);
+  @Nonnull
+  public abstract FileType getFileTypeByExtension(@NonNls @Nonnull String extension);
 
   /**
    * Tries to detect whether the file is text or not by analyzing its content.
@@ -77,8 +77,8 @@ public abstract class FileTypeRegistry {
    *          or another file type if some file type detector identified the file
    *          or the {@link UnknownFileType} if file is binary or we are unable to detect.
    */
-  @NotNull
-  public abstract FileType detectFileTypeFromContent(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract FileType detectFileTypeFromContent(@Nonnull VirtualFile file);
 
   /**
    * Finds a file type with the specified name.
@@ -99,7 +99,7 @@ public abstract class FileTypeRegistry {
      * @return detected file type, or null if was unable to detect
      */
     @Nullable
-    FileType detect(@NotNull VirtualFile file, @NotNull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
+    FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
 
     int getVersion();
   }

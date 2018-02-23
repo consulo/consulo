@@ -50,8 +50,8 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.WeakList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -81,7 +81,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   private final SoftWrapModelWindow mySoftWrapModel;
   private final InlayModelWindow myInlayModel;
 
-  public static Editor create(@NotNull final DocumentWindowImpl documentRange, @NotNull final EditorImpl editor, @NotNull final PsiFile injectedFile) {
+  public static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final EditorImpl editor, @Nonnull final PsiFile injectedFile) {
     assert documentRange.isValid();
     assert injectedFile.isValid();
     EditorWindowImpl window;
@@ -104,9 +104,9 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return window;
   }
 
-  private EditorWindowImpl(@NotNull DocumentWindowImpl documentWindow,
-                           @NotNull final EditorImpl delegate,
-                           @NotNull PsiFile injectedFile,
+  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow,
+                           @Nonnull final EditorImpl delegate,
+                           @Nonnull PsiFile injectedFile,
                            boolean oneLine) {
     myDocumentWindow = documentWindow;
     myDelegate = delegate;
@@ -153,14 +153,14 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile getInjectedFile() {
     return myInjectedFile;
   }
 
   @Override
-  @NotNull
-  public LogicalPosition hostToInjected(@NotNull LogicalPosition hPos) {
+  @Nonnull
+  public LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos) {
     checkValid();
     DocumentEx hostDocument = myDelegate.getDocument();
     int hLineEndOffset = hPos.line >= hostDocument.getLineCount() ? hostDocument.getTextLength() : hostDocument.getLineEndOffset(hPos.line);
@@ -179,8 +179,8 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
-  public LogicalPosition injectedToHost(@NotNull LogicalPosition pos) {
+  @Nonnull
+  public LogicalPosition injectedToHost(@Nonnull LogicalPosition pos) {
     checkValid();
 
     int offset = logicalPositionToOffset(pos);
@@ -257,54 +257,54 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SelectionModel getSelectionModel() {
     return mySelectionModelDelegate;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MarkupModelEx getMarkupModel() {
     return myMarkupModelDelegate;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MarkupModelEx getFilteredDocumentMarkupModel() {
     return myDocumentMarkupModelDelegate;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FoldingModelEx getFoldingModel() {
     return myFoldingModelWindow;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CaretModel getCaretModel() {
     return myCaretModelDelegate;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ScrollingModelEx getScrollingModel() {
     return myDelegate.getScrollingModel();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SoftWrapModelEx getSoftWrapModel() {
     return mySoftWrapModel;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorSettings getSettings() {
     return myDelegate.getSettings();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InlayModel getInlayModel() {
     return myInlayModel;
@@ -321,11 +321,11 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public void setHighlighter(@NotNull final EditorHighlighter highlighter) {
+  public void setHighlighter(@Nonnull final EditorHighlighter highlighter) {
     myDelegate.setHighlighter(highlighter);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorHighlighter getHighlighter() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -348,29 +348,29 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getContentComponent() {
     return myDelegate.getContentComponent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
     return myDelegate.getGutterComponentEx();
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myDelegate.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
     myDelegate.addPropertyChangeListener(listener, parentDisposable);
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myDelegate.removePropertyChangeListener(listener);
   }
 
@@ -395,14 +395,14 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
-  public VisualPosition xyToVisualPosition(@NotNull final Point p) {
+  @Nonnull
+  public VisualPosition xyToVisualPosition(@Nonnull final Point p) {
     return logicalToVisualPosition(xyToLogicalPosition(p));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VisualPosition xyToVisualPosition(@NotNull Point2D p) {
+  public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
     checkValid();
     Point2D pp = p.getX() >= 0 && p.getY() >= 0 ? p : new Point2D.Double(Math.max(p.getX(), 0), Math.max(p.getY(), 0));
     LogicalPosition hostPos = myDelegate.visualToLogicalPosition(myDelegate.xyToVisualPosition(pp));
@@ -410,19 +410,19 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VisualPosition offsetToVisualPosition(final int offset) {
     return logicalToVisualPosition(offsetToLogicalPosition(offset));
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     return logicalToVisualPosition(offsetToLogicalPosition(offset).leanForward(leanForward));
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LogicalPosition offsetToLogicalPosition(final int offset) {
     checkValid();
     int lineNumber = myDocumentWindow.getLineNumber(offset);
@@ -431,38 +431,38 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return new LogicalPosition(lineNumber, column);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
     return myDelegate.createBoundColorSchemeDelegate(customGlobalScheme);
   }
 
   @Override
-  @NotNull
-  public LogicalPosition xyToLogicalPosition(@NotNull final Point p) {
+  @Nonnull
+  public LogicalPosition xyToLogicalPosition(@Nonnull final Point p) {
     checkValid();
     LogicalPosition hostPos = myDelegate.xyToLogicalPosition(p);
     return hostToInjected(hostPos);
   }
 
   @Override
-  @NotNull
-  public Point logicalPositionToXY(@NotNull final LogicalPosition pos) {
+  @Nonnull
+  public Point logicalPositionToXY(@Nonnull final LogicalPosition pos) {
     checkValid();
     LogicalPosition hostPos = injectedToHost(pos);
     return myDelegate.logicalPositionToXY(hostPos);
   }
 
   @Override
-  @NotNull
-  public Point visualPositionToXY(@NotNull final VisualPosition pos) {
+  @Nonnull
+  public Point visualPositionToXY(@Nonnull final VisualPosition pos) {
     checkValid();
     return logicalPositionToXY(visualToLogicalPosition(pos));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Point2D visualPositionToPoint2D(@NotNull VisualPosition pos) {
+  public Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
     checkValid();
     LogicalPosition hostLogical = injectedToHost(visualToLogicalPosition(pos));
     VisualPosition hostVisual = myDelegate.logicalToVisualPosition(hostLogical);
@@ -476,20 +476,20 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentWindowImpl getDocument() {
     return myDocumentWindow;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myDelegate.getComponent();
   }
 
   private final ListenerWrapperMap<EditorMouseListener> myEditorMouseListeners = new ListenerWrapperMap<>();
   @Override
-  public void addEditorMouseListener(@NotNull final EditorMouseListener listener) {
+  public void addEditorMouseListener(@Nonnull final EditorMouseListener listener) {
     checkValid();
     EditorMouseListener wrapper = new EditorMouseListener() {
       @Override
@@ -523,7 +523,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public void removeEditorMouseListener(@NotNull final EditorMouseListener listener) {
+  public void removeEditorMouseListener(@Nonnull final EditorMouseListener listener) {
     EditorMouseListener wrapper = myEditorMouseListeners.removeWrapper(listener);
     // HintManager might have an old editor instance
     if (wrapper != null) {
@@ -533,7 +533,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
 
   private final ListenerWrapperMap<EditorMouseMotionListener> myEditorMouseMotionListeners = new ListenerWrapperMap<>();
   @Override
-  public void addEditorMouseMotionListener(@NotNull final EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
     checkValid();
     EditorMouseMotionListener wrapper = new EditorMouseMotionListener() {
       @Override
@@ -551,7 +551,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@NotNull final EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
     EditorMouseMotionListener wrapper = myEditorMouseMotionListeners.removeWrapper(listener);
     if (wrapper != null) {
       myDelegate.removeEditorMouseMotionListener(wrapper);
@@ -588,7 +588,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return myDelegate.getContentSize();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JScrollPane getScrollPane() {
     return myDelegate.getScrollPane();
@@ -605,7 +605,7 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public int logicalPositionToOffset(@NotNull final LogicalPosition pos) {
+  public int logicalPositionToOffset(@Nonnull final LogicalPosition pos) {
     int lineStartOffset = myDocumentWindow.getLineStartOffset(pos.line);
     return calcOffset(pos.column, pos.line, lineStartOffset);
   }
@@ -641,27 +641,27 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
 
   // assuming there is no folding in injected documents
   @Override
-  @NotNull
-  public VisualPosition logicalToVisualPosition(@NotNull final LogicalPosition pos) {
+  @Nonnull
+  public VisualPosition logicalToVisualPosition(@Nonnull final LogicalPosition pos) {
     checkValid();
     return new VisualPosition(pos.line, pos.column);
   }
 
   @Override
-  @NotNull
-  public LogicalPosition visualToLogicalPosition(@NotNull final VisualPosition pos) {
+  @Nonnull
+  public LogicalPosition visualToLogicalPosition(@Nonnull final VisualPosition pos) {
     checkValid();
     return new LogicalPosition(pos.line, pos.column);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataContext getDataContext() {
     return myDelegate.getDataContext();
   }
 
   @Override
-  public EditorMouseEventArea getMouseEventArea(@NotNull final MouseEvent e) {
+  public EditorMouseEventArea getMouseEventArea(@Nonnull final MouseEvent e) {
     return myDelegate.getMouseEventArea(e);
   }
 
@@ -676,12 +676,12 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public void addFocusListener(@NotNull final FocusChangeListener listener) {
+  public void addFocusListener(@Nonnull final FocusChangeListener listener) {
     myDelegate.addFocusListener(listener);
   }
 
   @Override
-  public void addFocusListener(@NotNull FocusChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
     myDelegate.addFocusListener(listener, parentDisposable);
   }
 
@@ -736,12 +736,12 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public void setColorsScheme(@NotNull final EditorColorsScheme scheme) {
+  public void setColorsScheme(@Nonnull final EditorColorsScheme scheme) {
     myDelegate.setColorsScheme(scheme);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorColorsScheme getColorsScheme() {
     return myDelegate.getColorsScheme();
   }
@@ -767,12 +767,12 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
   }
 
   @Override
-  public boolean processKeyTyped(@NotNull final KeyEvent e) {
+  public boolean processKeyTyped(@Nonnull final KeyEvent e) {
     return myDelegate.processKeyTyped(e);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorGutter getGutter() {
     return myDelegate.getGutter();
   }
@@ -791,14 +791,14 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
     return myDocumentWindow.hashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Editor getDelegate() {
     return myDelegate;
   }
 
   @Override
-  public int calcColumnNumber(@NotNull final CharSequence text, final int start, final int offset, final int tabSize) {
+  public int calcColumnNumber(@Nonnull final CharSequence text, final int start, final int offset, final int tabSize) {
     int column = 0;
     for (int i = start; i < offset; i++) {
       char c = text.charAt(i);
@@ -818,14 +818,14 @@ public class EditorWindowImpl extends UserDataHolderBase implements EditorWindow
                             EditorUtil.getTabSize(myDelegate));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IndentsModel getIndentsModel() {
     return myDelegate.getIndentsModel();
   }
 
   @Override
-  public void setSoftWrapAppliancePlace(@NotNull SoftWrapAppliancePlaces place) {
+  public void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place) {
     myDelegate.setSoftWrapAppliancePlace(place);
   }
 

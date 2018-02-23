@@ -29,7 +29,7 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -56,7 +56,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
     for (final Artifact artifact : myArtifactManager.getArtifacts()) {
       ArtifactUtil.processFileOrDirectoryCopyElements(artifact, new PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>>() {
         @Override
-        public boolean process(@NotNull FileOrDirectoryCopyPackagingElement<?> element, @NotNull PackagingElementPath pathToElement) {
+        public boolean process(@Nonnull FileOrDirectoryCopyPackagingElement<?> element, @Nonnull PackagingElementPath pathToElement) {
           String path = element.getFilePath();
           while (path.length() > 0) {
             result.put(path, artifact);
@@ -71,12 +71,12 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
 
 
   @Override
-  public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+  public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
     final String oldPath = event.getOldParent().getPath() + "/" + event.getFileName();
     filePathChanged(oldPath, event.getNewParent().getPath() + "/" + event.getFileName());
   }
 
-  private void filePathChanged(@NotNull final String oldPath, @NotNull final String newPath) {
+  private void filePathChanged(@Nonnull final String oldPath, @Nonnull final String newPath) {
     final Collection<Artifact> artifacts = myParentPathsToArtifacts.getValue().get(oldPath);
     if (artifacts != null) {
       final ModifiableArtifactModel model = myArtifactManager.createModifiableModel();
@@ -84,7 +84,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
         final Artifact copy = model.getOrCreateModifiableArtifact(artifact);
         ArtifactUtil.processFileOrDirectoryCopyElements(copy, new PackagingElementProcessor<FileOrDirectoryCopyPackagingElement<?>>() {
           @Override
-          public boolean process(@NotNull FileOrDirectoryCopyPackagingElement<?> element, @NotNull PackagingElementPath pathToElement) {
+          public boolean process(@Nonnull FileOrDirectoryCopyPackagingElement<?> element, @Nonnull PackagingElementPath pathToElement) {
             final String path = element.getFilePath();
             if (FileUtil.startsWith(path, oldPath)) {
               element.setFilePath(newPath + path.substring(oldPath.length()));
@@ -98,7 +98,7 @@ public class ArtifactVirtualFileListener extends VirtualFileAdapter {
   }
 
   @Override
-  public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+  public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
       final VirtualFile parent = event.getParent();
       if (parent != null) {

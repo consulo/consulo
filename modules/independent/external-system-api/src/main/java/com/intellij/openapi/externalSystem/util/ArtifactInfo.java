@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -27,7 +27,7 @@ public class ArtifactInfo {
   @Nullable private final String myGroup;
   @Nullable private final String myVersion;
 
-  public ArtifactInfo(@Nullable String name, @Nullable String group, @Nullable String version) {
+  public ArtifactInfo(@Nullable String name, @Nullable String group, @javax.annotation.Nullable String version) {
     assert name != null || group != null || version != null;
     myName = name;
     myGroup = group;

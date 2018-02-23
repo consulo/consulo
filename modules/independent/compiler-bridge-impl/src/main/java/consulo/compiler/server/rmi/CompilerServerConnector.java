@@ -16,14 +16,14 @@
 package consulo.compiler.server.rmi;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11:16/13.08.13
  */
 public abstract class CompilerServerConnector {
-  @NotNull
+  @Nonnull
   public static CompilerServerConnector getInstance() {
     return ServiceManager.getService(CompilerServerConnector.class);
   }

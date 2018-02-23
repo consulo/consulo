@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author yole
  */
 public abstract class CloseEditorsActionBase extends AnAction implements DumbAware {
-  @NotNull
+  @Nonnull
   protected List<Pair<EditorComposite, EditorWindow>> getFilesToClose(final AnActionEvent event) {
     final ArrayList<Pair<EditorComposite, EditorWindow>> res = new ArrayList<>();
     final Project project = event.getData(CommonDataKeys.PROJECT);

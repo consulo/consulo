@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -77,7 +77,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
   }
 
   @Override
-  public int compareTo(@NotNull BuildNumber o) {
+  public int compareTo(@Nonnull BuildNumber o) {
     return myBuildNumber - o.myBuildNumber;
   }
 

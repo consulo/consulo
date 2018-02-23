@@ -45,8 +45,8 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -223,13 +223,13 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    * @param inspections inspections to be enabled in highlighting tests.
    * @see #enableInspections(com.intellij.codeInspection.InspectionToolProvider...)
    */
-  void enableInspections(@NotNull InspectionProfileEntry... inspections);
+  void enableInspections(@Nonnull InspectionProfileEntry... inspections);
 
-  void enableInspections(@NotNull Class<? extends LocalInspectionTool>... inspections);
+  void enableInspections(@Nonnull Class<? extends LocalInspectionTool>... inspections);
 
-  void enableInspections(@NotNull Collection<Class<? extends LocalInspectionTool>> inspections);
+  void enableInspections(@Nonnull Collection<Class<? extends LocalInspectionTool>> inspections);
 
-  void disableInspections(@NotNull InspectionProfileEntry... inspections);
+  void disableInspections(@Nonnull InspectionProfileEntry... inspections);
 
   /**
    * Enable all inspections provided by given providers.
@@ -275,14 +275,14 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
   long testHighlighting(@TestDataFile @NonNls String... filePaths);
 
   long testHighlighting(boolean checkWarnings, boolean checkInfos, boolean checkWeakWarnings, VirtualFile file);
-  HighlightTestInfo testFile(@NonNls @NotNull String... filePath);
+  HighlightTestInfo testFile(@NonNls @Nonnull String... filePath);
 
-  void testInspection(@NotNull String testDir, @NotNull InspectionToolWrapper toolWrapper);
+  void testInspection(@Nonnull String testDir, @Nonnull InspectionToolWrapper toolWrapper);
 
   /**
    * @return all highlight infos for current file
    */
-  @NotNull
+  @Nonnull
   List<HighlightInfo> doHighlighting();
 
   /**
@@ -303,7 +303,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    *
    * @see #getReferenceAtCaretPosition(String...)
    */
-  @NotNull
+  @Nonnull
   PsiReference getReferenceAtCaretPositionWithAssertion(@NonNls @TestDataFile String... filePaths);
 
   /**
@@ -313,13 +313,13 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    * @return available intentions.
    * @see #CARET_MARKER
    */
-  @NotNull
+  @Nonnull
   List<IntentionAction> getAvailableIntentions(@NonNls String... filePaths);
 
-  @NotNull
+  @Nonnull
   List<IntentionAction> getAllQuickFixes(@NonNls String... filePaths);
 
-  @NotNull
+  @Nonnull
   List<IntentionAction> getAvailableIntentions();
 
   /**
@@ -328,7 +328,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    * @param hint the text that the intention text should begin with.
    * @return the list of matching intentions
    */
-  List<IntentionAction> filterAvailableIntentions(@NotNull String hint);
+  List<IntentionAction> filterAvailableIntentions(@Nonnull String hint);
 
   /**
    * Returns a single intention or quickfix which is available at the current caret position and whose text starts with the specified
@@ -337,7 +337,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    * @param hint the text that the intention text should begin with.
    * @return the list of matching intentions
    */
-  IntentionAction findSingleIntention(@NotNull String hint);
+  IntentionAction findSingleIntention(@Nonnull String hint);
 
   /**
    * Copies multiple files from the testdata directory to the same relative paths in the test project directory, opens the first of them
@@ -355,7 +355,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    *
    * @param action the action to be launched.
    */
-  void launchAction(@NotNull IntentionAction action);
+  void launchAction(@Nonnull IntentionAction action);
 
   void testCompletion(@NonNls String[] filesBefore, @TestDataFile @NonNls String fileAfter);
 
@@ -404,7 +404,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
    * @param filePath file path
    * @return gutter renderer at the caret position.
    */
-  @Nullable
+  @javax.annotation.Nullable
   GutterMark findGutter(@TestDataFile @NonNls String filePath);
 
   PsiManager getPsiManager();
@@ -430,7 +430,7 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
 
   Document getDocument(PsiFile file);
 
-  @NotNull
+  @Nonnull
   Collection<GutterMark> findAllGutters(String filePath);
 
   void type(final char c);
@@ -457,14 +457,14 @@ public interface CodeInsightTestFixture extends IdeaProjectTestFixture {
 
   VirtualFile findFileInTempDir(String filePath);
 
-  @Nullable
+  @javax.annotation.Nullable
   List<String> getLookupElementStrings();
 
   void finishLookup(@MagicConstant(valuesFromClass = Lookup.class) char completionChar);
 
   LookupEx getLookup();
 
-  @NotNull
+  @Nonnull
   PsiElement getElementAtCaret();
 
   void renameElementAtCaret(String newName);

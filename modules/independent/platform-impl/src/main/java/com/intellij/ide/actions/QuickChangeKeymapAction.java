@@ -23,14 +23,14 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
   @Override
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     KeymapManagerEx manager = (KeymapManagerEx) KeymapManager.getInstance();
     Keymap current = manager.getActiveKeymap();
     for (Keymap keymap : manager.getAllKeymaps()) {

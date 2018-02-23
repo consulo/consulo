@@ -20,23 +20,23 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class XDebuggerToggleActionHandler extends DebuggerToggleActionHandler {
-  public final boolean isEnabled(@NotNull final Project project, final AnActionEvent event) {
+  public final boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isEnabled(session, event);
   }
 
-  public boolean isSelected(@NotNull final Project project, final AnActionEvent event) {
+  public boolean isSelected(@Nonnull final Project project, final AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && isSelected(session, event);
   }
 
-  public void setSelected(@NotNull final Project project, final AnActionEvent event, final boolean state) {
+  public void setSelected(@Nonnull final Project project, final AnActionEvent event, final boolean state) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session != null) {
       setSelected(session, event, state);

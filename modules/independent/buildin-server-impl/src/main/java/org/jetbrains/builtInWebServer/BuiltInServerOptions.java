@@ -14,8 +14,8 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.BuiltInServerManager;
 import org.jetbrains.ide.BuiltInServerManagerImpl;
 import org.jetbrains.ide.CustomPortServerManager;
@@ -50,9 +50,9 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
       super("buildin-server");
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Collection<? extends Configurable> createConfigurables(@NotNull DebuggerSettingsCategory category) {
+    public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
       if (category == DebuggerSettingsCategory.GENERAL) {
         SimpleConfigurable<BuiltInServerConfigurableUi, BuiltInServerOptions> configurable =
                 SimpleConfigurable.create("builtInServer", "Built-in server", BuiltInServerConfigurableUi.class, BuiltInServerOptions.getInstance());

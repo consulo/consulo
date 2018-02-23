@@ -23,8 +23,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: cdr
@@ -34,7 +34,7 @@ class DirElementInfo extends SmartPointerElementInfo {
   private final Project myProject;
 
 
-  public DirElementInfo(@NotNull PsiDirectory directory) {
+  public DirElementInfo(@Nonnull PsiDirectory directory) {
     myProject = directory.getProject();
     myVirtualFile = directory.getVirtualFile();
   }
@@ -56,7 +56,7 @@ class DirElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other) {
     return other instanceof DirElementInfo && Comparing.equal(myVirtualFile, ((DirElementInfo)other).myVirtualFile);
   }
 
@@ -70,7 +70,7 @@ class DirElementInfo extends SmartPointerElementInfo {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;

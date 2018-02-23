@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Simple bean representing error submission status.

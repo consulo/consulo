@@ -20,8 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.WrappedLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,9 +30,9 @@ import javax.swing.*;
  */
 public class DesktopWrappedLayoutImpl extends Wrapper2 implements WrappedLayout, SwingWrapper {
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public WrappedLayout set(@Nullable Component component) {
+  public WrappedLayout set(@javax.annotation.Nullable Component component) {
     setContent(component == null ? null : (JComponent)TargetAWT.to(component));
     return this;
   }

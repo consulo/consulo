@@ -35,8 +35,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class VcsHistoryProviderBackgroundableProxy {
   }
 
   public void executeAppendableSession(final VcsKey vcsKey, final FilePath filePath, final VcsAppendableHistorySessionPartner partner,
-                                       @Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
+                                       @javax.annotation.Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
     doExecuteAppendableSession(vcsKey, filePath, null, partner, actionKey, canUseCache, canUseLastRevisionCheck);
   }
 
@@ -169,7 +169,7 @@ public class VcsHistoryProviderBackgroundableProxy {
                              final BackgroundableActionEnabledHandler handler,
                              final VcsAppendableHistorySessionPartner cachedPartner, final boolean canUseLastRevisionCheck) {
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, VcsBundle.message("loading.file.history.progress"), true) {
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setText(VcsUtil.getPathForProgressPresentation(filePath.getIOFile()));
         indicator.setIndeterminate(true);
         try {
@@ -310,7 +310,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(final FilePath filePath, final VcsKey vcsKey) {
     final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
     if (pi != null) {

@@ -15,24 +15,24 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
  */
 public class SMTRunnerEventsAdapter implements SMTRunnerEventsListener {
-  public void onTestingStarted(@NotNull SMTestProxy.SMRootTestProxy testsRoot){}
-  public void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot){}
+  public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot){}
+  public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot){}
   public void onTestsCountInSuite(final int count) {}
 
-  public void onTestStarted(@NotNull final SMTestProxy test) {}
-  public void onTestFinished(@NotNull final SMTestProxy test) {}
-  public void onTestFailed(@NotNull final SMTestProxy test) {}
-  public void onTestIgnored(@NotNull final SMTestProxy test) {}
+  public void onTestStarted(@Nonnull final SMTestProxy test) {}
+  public void onTestFinished(@Nonnull final SMTestProxy test) {}
+  public void onTestFailed(@Nonnull final SMTestProxy test) {}
+  public void onTestIgnored(@Nonnull final SMTestProxy test) {}
 
-  public void onSuiteStarted(@NotNull final SMTestProxy suite) {}
-  public void onSuiteFinished(@NotNull final SMTestProxy suite) {}
+  public void onSuiteStarted(@Nonnull final SMTestProxy suite) {}
+  public void onSuiteFinished(@Nonnull final SMTestProxy suite) {}
 
   // Custom progress status
 

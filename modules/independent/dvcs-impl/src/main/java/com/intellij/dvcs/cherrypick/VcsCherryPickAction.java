@@ -31,8 +31,8 @@ import com.intellij.vcs.log.VcsLog;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import icons.DvcsImplIcons;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +57,7 @@ public class VcsCherryPickAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(true);
 
@@ -91,13 +91,13 @@ public class VcsCherryPickAction extends DumbAwareAction {
   }
 
   @Nullable
-  private static VcsCherryPicker getActiveCherryPicker(@NotNull List<VcsCherryPicker> cherryPickers,
-                                                       @NotNull Collection<VirtualFile> roots) {
+  private static VcsCherryPicker getActiveCherryPicker(@Nonnull List<VcsCherryPicker> cherryPickers,
+                                                       @Nonnull Collection<VirtualFile> roots) {
     return ContainerUtil.find(cherryPickers, picker -> picker.canHandleForRoots(roots));
   }
 
-  @NotNull
-  private static Map<VirtualFile, List<Hash>> groupByRoot(@NotNull List<CommitId> details) {
+  @Nonnull
+  private static Map<VirtualFile, List<Hash>> groupByRoot(@Nonnull List<CommitId> details) {
     Map<VirtualFile, List<Hash>> result = ContainerUtil.newHashMap();
     for (CommitId commit : details) {
       List<Hash> hashes = result.get(commit.getRoot());
@@ -110,12 +110,12 @@ public class VcsCherryPickAction extends DumbAwareAction {
     return result;
   }
 
-  @NotNull
-  private static String concatActionNamesForAllAvailable(@NotNull final List<VcsCherryPicker> pickers) {
+  @Nonnull
+  private static String concatActionNamesForAllAvailable(@Nonnull final List<VcsCherryPicker> pickers) {
     return StringUtil.join(pickers, VcsCherryPicker::getActionTitle, "/");
   }
 
-  @NotNull
+  @Nonnull
   private static List<VcsCherryPicker> getActiveCherryPickersForProject(@Nullable final Project project) {
     if (project != null) {
       final ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);

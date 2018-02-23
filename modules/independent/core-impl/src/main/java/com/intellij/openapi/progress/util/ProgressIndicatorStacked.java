@@ -18,18 +18,18 @@ package com.intellij.openapi.progress.util;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.containers.DoubleArrayList;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ProgressIndicatorStacked extends ProgressIndicator {
-  void initStateFrom(@NotNull ProgressIndicator indicator);
+  void initStateFrom(@Nonnull ProgressIndicator indicator);
 
-  @NotNull
+  @Nonnull
   Stack<String> getTextStack();
 
-  @NotNull
+  @Nonnull
   DoubleArrayList getFractionStack();
 
-  @NotNull
+  @Nonnull
   Stack<String> getText2Stack();
 
   int getNonCancelableCount();

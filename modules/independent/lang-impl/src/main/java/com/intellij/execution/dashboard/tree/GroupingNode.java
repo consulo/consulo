@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class GroupingNode extends AbstractTreeNode<Pair<Object, DashboardGroup>>
     return getValue().getSecond();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return myChildren;

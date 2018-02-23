@@ -20,19 +20,19 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 
 public abstract class FileBasedIndexScanRunnableCollector {
-  public static FileBasedIndexScanRunnableCollector getInstance(@NotNull Project project) {
+  public static FileBasedIndexScanRunnableCollector getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, FileBasedIndexScanRunnableCollector.class);
   }
 
   // Returns true if file should be indexed
-  public abstract boolean shouldCollect(@NotNull final VirtualFile file);
+  public abstract boolean shouldCollect(@Nonnull final VirtualFile file);
 
   // Collect all roots for indexing
-  public abstract List<Runnable> collectScanRootRunnables(@NotNull final ContentIterator processor, final ProgressIndicator indicator);
+  public abstract List<Runnable> collectScanRootRunnables(@Nonnull final ContentIterator processor, final ProgressIndicator indicator);
 }

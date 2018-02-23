@@ -25,13 +25,13 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.testFramework.TestDataFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Set;
 
 public abstract class ParsingTestCase extends OneFileAtProjectTestCase {
-  public ParsingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+  public ParsingTestCase(@NonNls @Nonnull String dataPath, @Nonnull String ext) {
     super(dataPath, ext);
   }
 

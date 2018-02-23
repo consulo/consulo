@@ -26,11 +26,13 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.util.BekUtil;
 import icons.VcsLogIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
-  @NotNull private static final String DEFAULT_TEXT = "IntelliSort";
-  @NotNull private static final String DEFAULT_DESCRIPTION = "Turn IntelliSort On/Off";
+  @Nonnull
+  private static final String DEFAULT_TEXT = "IntelliSort";
+  @Nonnull
+  private static final String DEFAULT_DESCRIPTION = "Turn IntelliSort On/Off";
 
   public IntelliSortChooserToggleAction() {
     super(DEFAULT_TEXT, DEFAULT_DESCRIPTION, VcsLogIcons.IntelliSort);
@@ -54,7 +56,7 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
     VcsLogUi logUI = e.getData(VcsLogDataKeys.VCS_LOG_UI);

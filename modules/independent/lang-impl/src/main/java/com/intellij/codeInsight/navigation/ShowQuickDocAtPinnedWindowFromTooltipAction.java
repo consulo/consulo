@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -39,7 +39,7 @@ public class ShowQuickDocAtPinnedWindowFromTooltipAction extends AbstractDocumen
   }
 
   @Override
-  protected void doActionPerformed(@NotNull DataContext context, @NotNull PsiElement docAnchor, @NotNull PsiElement originalElement) {
+  protected void doActionPerformed(@Nonnull DataContext context, @Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
     Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;

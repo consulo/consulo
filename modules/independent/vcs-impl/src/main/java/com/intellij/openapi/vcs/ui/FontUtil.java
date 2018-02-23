@@ -17,24 +17,24 @@ package com.intellij.openapi.vcs.ui;
 
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public class FontUtil {
-  @NotNull
-  public static Font getFontAbleToDisplay(char c, int size, int style, @NotNull String family) {
+  @Nonnull
+  public static Font getFontAbleToDisplay(char c, int size, int style, @Nonnull String family) {
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, family).getFont();
   }
 
-  @NotNull
-  public static String getHtmlWithFonts(@NotNull String input) {
+  @Nonnull
+  public static String getHtmlWithFonts(@Nonnull String input) {
     Font font = UIUtil.getLabelFont();
     return getHtmlWithFonts(input, font.getStyle(), font);
   }
 
-  @NotNull
-  public static String getHtmlWithFonts(@NotNull String input, int style, @NotNull Font baseFont) {
+  @Nonnull
+  public static String getHtmlWithFonts(@Nonnull String input, int style, @Nonnull Font baseFont) {
     int start = baseFont.canDisplayUpTo(input);
     if (start == -1) return input;
 

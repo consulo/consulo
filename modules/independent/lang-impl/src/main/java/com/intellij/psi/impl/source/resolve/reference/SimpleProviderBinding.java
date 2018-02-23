@@ -23,7 +23,7 @@ import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.PsiReferenceService;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +43,9 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
   }
 
   @Override
-  public void addAcceptableReferenceProviders(@NotNull PsiElement position,
-                                              @NotNull List<ProviderInfo<Provider, ProcessingContext>> list,
-                                              @NotNull PsiReferenceService.Hints hints) {
+  public void addAcceptableReferenceProviders(@Nonnull PsiElement position,
+                                              @Nonnull List<ProviderInfo<Provider, ProcessingContext>> list,
+                                              @Nonnull PsiReferenceService.Hints hints) {
     for (ProviderInfo<Provider, ElementPattern> trinity : myProviderPairs) {
       if (hints != PsiReferenceService.Hints.NO_HINTS && !((PsiReferenceProvider)trinity.provider).acceptsHints(position, hints)) {
         continue;
@@ -68,7 +68,7 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
   }
 
   @Override
-  public void unregisterProvider(@NotNull final Provider provider) {
+  public void unregisterProvider(@Nonnull final Provider provider) {
     for (final ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<ProviderInfo<Provider, ElementPattern>>(myProviderPairs)) {
       if (trinity.provider.equals(provider)) {
         myProviderPairs.remove(trinity);

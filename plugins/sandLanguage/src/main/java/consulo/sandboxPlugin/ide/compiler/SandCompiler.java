@@ -20,7 +20,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 
 /**
@@ -45,19 +45,19 @@ public class SandCompiler implements TranslatingCompiler {
     context.addMessage(CompilerMessageCategory.ERROR, "my error", null, -1, -1);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getInputFileTypes() {
     return new FileType[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getOutputFileTypes() {
     return new FileType[0];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "test";

@@ -23,7 +23,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.TreeItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return getFavoritesRoots(myProject, myName, this);
@@ -65,16 +65,16 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
     presentation.setLocationString(myDescription);
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<AbstractTreeNode> getFavoritesRoots(Project project, String listName, final FavoritesListNode listNode) {
     final Collection<TreeItem<Pair<AbstractUrl, String>>> pairs = FavoritesManager.getInstance(project).getFavoritesListRootUrls(listName);
     if (pairs.isEmpty()) return Collections.emptyList();
     return createFavoriteRoots(project, pairs, listNode);
   }
 
-  @NotNull
+  @Nonnull
   private static Collection<AbstractTreeNode> createFavoriteRoots(Project project,
-                                                                  @NotNull Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
+                                                                  @Nonnull Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
                                                                   final AbstractTreeNode me) {
     Collection<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
     processUrls(project, urls, result, me);

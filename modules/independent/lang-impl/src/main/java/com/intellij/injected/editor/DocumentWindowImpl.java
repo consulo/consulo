@@ -34,8 +34,8 @@ import com.intellij.psi.impl.source.tree.injected.Place;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
 
   private CachedText myCachedText = null;
 
-  public DocumentWindowImpl(@NotNull DocumentEx delegate, boolean oneLine, @NotNull Place shreds) {
+  public DocumentWindowImpl(@Nonnull DocumentEx delegate, boolean oneLine, @Nonnull Place shreds) {
     myDelegate = delegate;
     myOneLine = oneLine;
     synchronized (myLock) {
@@ -67,7 +67,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Nullable("null means we were unable to calculate")
-  LogicalPosition hostToInjectedInVirtualSpace(@NotNull LogicalPosition hPos) {
+  LogicalPosition hostToInjectedInVirtualSpace(@Nonnull LogicalPosition hPos) {
     // beware the virtual space
     int hLineStartOffset = hPos.line >= myDelegate.getLineCount() ? myDelegate.getTextLength() : myDelegate.getLineStartOffset(hPos.line);
     int iLineStartOffset = hostToInjected(hLineStartOffset);
@@ -101,12 +101,12 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     private final String text;
     private final long modificationStamp;
 
-    private CachedText(@NotNull String text, long modificationStamp) {
+    private CachedText(@Nonnull String text, long modificationStamp) {
       this.text = text;
       this.modificationStamp = modificationStamp;
     }
 
-    @NotNull
+    @Nonnull
     private String getText() {
       return text;
     }
@@ -171,7 +171,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     return startOffsetOfNextLine == 0 || getText().charAt(startOffsetOfNextLine - 1) != '\n' ? startOffsetOfNextLine : startOffsetOfNextLine - 1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     CachedText cachedText = myCachedText;
@@ -183,7 +183,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     return cachedText.getText();
   }
 
-  @NotNull
+  @Nonnull
   private String calcText() {
     StringBuilder text = new StringBuilder();
     CharSequence hostText = myDelegate.getCharsSequence();
@@ -200,26 +200,26 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     return text.toString();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getText(@NotNull TextRange range) {
+  public String getText(@Nonnull TextRange range) {
     return range.substring(getText());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence getCharsSequence() {
     return getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getImmutableCharSequence() {
     return ImmutableCharSequence.asImmutable(getText());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] getChars() {
     return CharArrayUtil.fromSequence(getText());
   }
@@ -290,7 +290,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void insertString(final int offset, @NotNull CharSequence s) {
+  public void insertString(final int offset, @Nonnull CharSequence s) {
     synchronized (myLock) {
       LOG.assertTrue(offset >= myShreds.get(0).getPrefix().length(), myShreds.get(0).getPrefix());
       LOG.assertTrue(offset <= getTextLength() - myShreds.get(myShreds.size() - 1).getSuffix().length(),
@@ -339,7 +339,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void replaceString(int startOffset, int endOffset, @NotNull CharSequence s) {
+  public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
     if (isOneLine()) {
       s = StringUtil.replace(s.toString(), "\n", "");
     }
@@ -425,22 +425,22 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void addDocumentListener(@NotNull final DocumentListener listener) {
+  public void addDocumentListener(@Nonnull final DocumentListener listener) {
     myDelegate.addDocumentListener(listener);
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
     myDelegate.addDocumentListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeDocumentListener(@NotNull final DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull final DocumentListener listener) {
     myDelegate.removeDocumentListener(listener);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(final int startOffset, final int endOffset) {
     ProperTextRange hostRange = injectedToHost(new ProperTextRange(startOffset, endOffset));
     RangeMarker hostMarker = myDelegate.createRangeMarker(hostRange);
@@ -450,7 +450,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(final int startOffset, final int endOffset, final boolean surviveOnExternalChange) {
     if (!surviveOnExternalChange) {
       return createRangeMarker(startOffset, endOffset);
@@ -464,12 +464,12 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myDelegate.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myDelegate.removePropertyChangeListener(listener);
   }
 
@@ -479,14 +479,14 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createGuardedBlock(final int startOffset, final int endOffset) {
     ProperTextRange hostRange = injectedToHost(new ProperTextRange(startOffset, endOffset));
     return myDelegate.createGuardedBlock(hostRange.getStartOffset(), hostRange.getEndOffset());
   }
 
   @Override
-  public void removeGuardedBlock(@NotNull final RangeMarker block) {
+  public void removeGuardedBlock(@Nonnull final RangeMarker block) {
     myDelegate.removeGuardedBlock(block);
   }
 
@@ -518,7 +518,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void setText(@NotNull CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
     synchronized (myLock) {
       LOG.assertTrue(text.toString().startsWith(myShreds.get(0).getPrefix()));
       LOG.assertTrue(text.toString().endsWith(myShreds.get(myShreds.size() - 1).getSuffix()));
@@ -539,7 +539,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Segment[] getHostRanges() {
     synchronized (myLock) {
       List<Segment> markers = new ArrayList<>(myShreds.size());
@@ -554,8 +554,8 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
-  public RangeMarker createRangeMarker(@NotNull final TextRange textRange) {
+  @Nonnull
+  public RangeMarker createRangeMarker(@Nonnull final TextRange textRange) {
     final ProperTextRange properTextRange = new ProperTextRange(textRange);
     return createRangeMarker(properTextRange.getStartOffset(), properTextRange.getEndOffset());
   }
@@ -571,7 +571,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LineIterator createLineIterator() {
     return myDelegate.createLineIterator();
   }
@@ -582,17 +582,17 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public void addEditReadOnlyListener(@NotNull final EditReadOnlyListener listener) {
+  public void addEditReadOnlyListener(@Nonnull final EditReadOnlyListener listener) {
     myDelegate.addEditReadOnlyListener(listener);
   }
 
   @Override
-  public void removeEditReadOnlyListener(@NotNull final EditReadOnlyListener listener) {
+  public void removeEditReadOnlyListener(@Nonnull final EditReadOnlyListener listener) {
     myDelegate.removeEditReadOnlyListener(listener);
   }
 
   @Override
-  public void replaceText(@NotNull final CharSequence chars, final long newModificationStamp) {
+  public void replaceText(@Nonnull final CharSequence chars, final long newModificationStamp) {
     setText(chars);
     myDelegate.setModificationStamp(newModificationStamp);
   }
@@ -617,12 +617,12 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker) {
+  public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
     return myDelegate.removeRangeMarker(((RangeMarkerWindow)rangeMarker).getDelegate());
   }
 
   @Override
-  public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
                                   int start,
                                   int end,
                                   boolean greedyToLeft,
@@ -641,7 +641,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentEx getDelegate() {
     return myDelegate;
   }
@@ -744,8 +744,8 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
-  public ProperTextRange injectedToHost(@NotNull TextRange injected) {
+  @Nonnull
+  public ProperTextRange injectedToHost(@Nonnull TextRange injected) {
     int start = injectedToHost(injected.getStartOffset(), false);
     int end = injectedToHost(injected.getEndOffset(), true);
     if (end < start) {
@@ -789,7 +789,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   @Override
   @Deprecated
   @Nullable
-  public TextRange intersectWithEditable(@NotNull TextRange rangeToEdit) {
+  public TextRange intersectWithEditable(@Nonnull TextRange rangeToEdit) {
     int startOffset = -1;
     int endOffset = -1;
     synchronized (myLock) {
@@ -836,7 +836,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     }
   }
 
-  private String getRangeText(@NotNull String hostText, int hostNum) {
+  private String getRangeText(@Nonnull String hostText, int hostNum) {
     synchronized (myLock) {
       PsiLanguageInjectionHost.Shred shred = myShreds.get(hostNum);
       Segment hostRangeMarker = shred.getHostRangeMarker();
@@ -902,7 +902,7 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  public boolean areRangesEqual(@NotNull DocumentWindow otherd) {
+  public boolean areRangesEqual(@Nonnull DocumentWindow otherd) {
     DocumentWindowImpl window = (DocumentWindowImpl)otherd;
     Place shreds = getShreds();
     Place otherShreds = window.getShreds();
@@ -958,14 +958,14 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
     }
   }
 
-  public void setShreds(@NotNull Place shreds) {
+  public void setShreds(@Nonnull Place shreds) {
     synchronized (myLock) {
       myShreds.dispose();
       myShreds = shreds;
     }
   }
 
-  @NotNull
+  @Nonnull
   public Place getShreds() {
     synchronized (myLock) {
       return myShreds;
@@ -973,19 +973,19 @@ public class DocumentWindowImpl extends UserDataHolderBase implements Disposable
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<RangeMarker> getGuardedBlocks() {
     return Collections.emptyList();
   }
 
   //todo convert injected RMs to host
   @Override
-  public boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
     return myDelegate.processRangeMarkers(processor);
   }
 
   @Override
-  public boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
     return myDelegate.processRangeMarkersOverlappingWith(start, end, processor);
   }
 }

@@ -37,8 +37,8 @@ import com.intellij.util.containers.OpenTHashSet;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.text.FilePathHashingStrategy;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -61,12 +61,12 @@ public class RefreshWorker {
   private final List<VFileEvent> myEvents = new ArrayList<VFileEvent>();
   private volatile boolean myCancelled;
 
-  public RefreshWorker(@NotNull NewVirtualFile refreshRoot, boolean isRecursive) {
+  public RefreshWorker(@Nonnull NewVirtualFile refreshRoot, boolean isRecursive) {
     myIsRecursive = isRecursive;
     myRefreshQueue.addLast(pair(refreshRoot, null));
   }
 
-  @NotNull
+  @Nonnull
   public List<VFileEvent> getEvents() {
     return myEvents;
   }
@@ -350,7 +350,7 @@ public class RefreshWorker {
 
   private static class RefreshCancelledException extends RuntimeException { }
 
-  private void checkCancelled(@NotNull NewVirtualFile stopAt) {
+  private void checkCancelled(@Nonnull NewVirtualFile stopAt) {
     if (myCancelled || ourCancellingCondition != null && ourCancellingCondition.fun(stopAt)) {
       forceMarkDirty(stopAt);
       while (!myRefreshQueue.isEmpty()) {
@@ -366,9 +366,9 @@ public class RefreshWorker {
     file.markDirty();
   }
 
-  private void checkAndScheduleChildRefresh(@NotNull VirtualFile parent,
-                                            @NotNull VirtualFile child,
-                                            @NotNull FileAttributes childAttributes) {
+  private void checkAndScheduleChildRefresh(@Nonnull VirtualFile parent,
+                                            @Nonnull VirtualFile child,
+                                            @Nonnull FileAttributes childAttributes) {
     if (!checkAndScheduleFileTypeChange(parent, child, childAttributes)) {
       boolean upToDateIsDirectory = childAttributes.isDirectory();
       if (myIsRecursive || !upToDateIsDirectory) {
@@ -377,9 +377,9 @@ public class RefreshWorker {
     }
   }
 
-  private boolean checkAndScheduleFileTypeChange(@NotNull VirtualFile parent,
-                                                 @NotNull VirtualFile child,
-                                                 @NotNull FileAttributes childAttributes) {
+  private boolean checkAndScheduleFileTypeChange(@Nonnull VirtualFile parent,
+                                                 @Nonnull VirtualFile child,
+                                                 @Nonnull FileAttributes childAttributes) {
     boolean currentIsDirectory = child.isDirectory();
     boolean currentIsSymlink = child.is(VFileProperty.SYMLINK);
     boolean currentIsSpecial = child.is(VFileProperty.SPECIAL);
@@ -396,17 +396,17 @@ public class RefreshWorker {
     return false;
   }
 
-  private void scheduleAttributeChange(@NotNull VirtualFile file, @NotNull String property, Object current, Object upToDate) {
+  private void scheduleAttributeChange(@Nonnull VirtualFile file, @Nonnull String property, Object current, Object upToDate) {
     if (LOG.isTraceEnabled()) LOG.trace("update '" + property + "' file=" + file);
     myEvents.add(new VFilePropertyChangeEvent(null, file, property, current, upToDate, true));
   }
 
-  private void scheduleUpdateContent(@NotNull VirtualFile file) {
+  private void scheduleUpdateContent(@Nonnull VirtualFile file) {
     if (LOG.isTraceEnabled()) LOG.trace("update file=" + file);
     myEvents.add(new VFileContentChangeEvent(null, file, file.getModificationStamp(), -1, true));
   }
 
-  private void scheduleCreation(@NotNull VirtualFile parent, @NotNull String childName, boolean isDirectory, boolean isReCreation) {
+  private void scheduleCreation(@Nonnull VirtualFile parent, @Nonnull String childName, boolean isDirectory, boolean isReCreation) {
     if (LOG.isTraceEnabled()) LOG.trace("create parent=" + parent + " name=" + childName + " dir=" + isDirectory);
     myEvents.add(new VFileCreateEvent(null, parent, childName, isDirectory, true, isReCreation));
   }

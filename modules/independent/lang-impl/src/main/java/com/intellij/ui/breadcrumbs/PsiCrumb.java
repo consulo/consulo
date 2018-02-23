@@ -18,7 +18,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.breadcrumbs.Crumb;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Sergey.Malenkov

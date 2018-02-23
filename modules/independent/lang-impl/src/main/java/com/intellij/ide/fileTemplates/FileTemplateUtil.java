@@ -46,8 +46,8 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
 import org.apache.velocity.runtime.parser.node.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -230,7 +230,7 @@ public class FileTemplateUtil {
   }
 
   @Deprecated
-  public static PsiElement createFromTemplate(@NotNull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Properties props, @NotNull final PsiDirectory directory)
+  public static PsiElement createFromTemplate(@Nonnull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Properties props, @Nonnull final PsiDirectory directory)
           throws Exception {
     Map<String, Object> map;
     if (props != null) {
@@ -243,8 +243,8 @@ public class FileTemplateUtil {
     return createFromTemplate(template, fileName, map, directory, null);
   }
 
-  @NotNull
-  public static PsiElement createFromTemplate(@NotNull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Map<String, Object> props, @NotNull final PsiDirectory directory)
+  @Nonnull
+  public static PsiElement createFromTemplate(@Nonnull final FileTemplate template, @NonNls @Nullable final String fileName, @Nullable Map<String, Object> props, @Nonnull final PsiDirectory directory)
           throws Exception {
     Map<String, Object> map;
     if (props != null) {
@@ -256,8 +256,8 @@ public class FileTemplateUtil {
     return createFromTemplate(template, fileName, map, directory, null);
   }
 
-  @NotNull
-  public static FileTemplate createTemplate(@NotNull String prefName, @NotNull String extension, @NotNull String content, FileTemplate[] templates) {
+  @Nonnull
+  public static FileTemplate createTemplate(@Nonnull String prefName, @Nonnull String extension, @Nonnull String content, FileTemplate[] templates) {
     final Set<String> names = new HashSet<>();
     for (FileTemplate template : templates) {
       names.add(template.getName());
@@ -274,10 +274,10 @@ public class FileTemplateUtil {
 
   @Deprecated
   @DeprecationInfo("Use #createFromTemplate with Map parameter")
-  public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
+  public static PsiElement createFromTemplate(@Nonnull final FileTemplate template,
                                               @NonNls @Nullable String fileName,
                                               @Nullable Properties props,
-                                              @NotNull final PsiDirectory directory,
+                                              @Nonnull final PsiDirectory directory,
                                               @Nullable ClassLoader classLoader) throws Exception {
     Map<String, Object> map;
     if (props != null) {
@@ -290,10 +290,10 @@ public class FileTemplateUtil {
     return createFromTemplate(template, fileName, map, directory, classLoader);
   }
 
-  public static PsiElement createFromTemplate(@NotNull final FileTemplate template,
+  public static PsiElement createFromTemplate(@Nonnull final FileTemplate template,
                                               @NonNls @Nullable String fileName,
                                               @Nullable Map<String, Object> additionalProperties,
-                                              @NotNull final PsiDirectory directory,
+                                              @Nonnull final PsiDirectory directory,
                                               @Nullable ClassLoader classLoader) throws Exception {
     final Project project = directory.getProject();
 
@@ -376,7 +376,7 @@ public class FileTemplateUtil {
   }
 
   @Nullable
-  public static Icon getIcon(@NotNull FileTemplate fileTemplate) {
+  public static Icon getIcon(@Nonnull FileTemplate fileTemplate) {
     String extension = fileTemplate.getExtension();
     return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
   }
@@ -389,7 +389,7 @@ public class FileTemplateUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Map<String, Object> convert2Map(final Properties p) {
     Map<String, Object> map = new HashMap<>();
     for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements(); ) {
@@ -399,7 +399,7 @@ public class FileTemplateUtil {
     return map;
   }
 
-  public static Pattern getTemplatePattern(@NotNull FileTemplate template, @NotNull Project project, @NotNull TIntObjectHashMap<String> offsetToProperty) {
+  public static Pattern getTemplatePattern(@Nonnull FileTemplate template, @Nonnull Project project, @Nonnull TIntObjectHashMap<String> offsetToProperty) {
     String templateText = template.getText().trim();
     String regex = templateToRegex(templateText, offsetToProperty, project);
     regex = StringUtil.replace(regex, "with", "(?:with|by)");

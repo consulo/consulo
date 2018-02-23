@@ -33,8 +33,8 @@ import com.intellij.vcs.log.impl.HashImpl;
 import com.intellij.vcs.log.impl.VcsRefImpl;
 import com.intellij.vcs.log.util.PersistentUtil;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -47,26 +47,34 @@ import java.util.stream.Collectors;
  * Supports the int <-> Hash and int <-> VcsRef persistent mappings.
  */
 public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
-  @NotNull private static final Logger LOG = Logger.getInstance(VcsLogStorage.class);
-  @NotNull private static final String HASHES_STORAGE = "hashes";
-  @NotNull private static final String REFS_STORAGE = "refs";
-  @NotNull public static final VcsLogStorage EMPTY = new EmptyLogStorage();
+  @Nonnull
+  private static final Logger LOG = Logger.getInstance(VcsLogStorage.class);
+  @Nonnull
+  private static final String HASHES_STORAGE = "hashes";
+  @Nonnull
+  private static final String REFS_STORAGE = "refs";
+  @Nonnull
+  public static final VcsLogStorage EMPTY = new EmptyLogStorage();
 
   public static final int VERSION = 5;
   private static final int REFS_VERSION = 1;
-  @NotNull private static final String ROOT_STORAGE_KIND = "roots";
+  @Nonnull
+  private static final String ROOT_STORAGE_KIND = "roots";
 
   public static final int NO_INDEX = -1;
 
-  @NotNull private final PersistentEnumeratorBase<CommitId> myCommitIdEnumerator;
-  @NotNull private final PersistentEnumeratorBase<VcsRef> myRefsEnumerator;
-  @NotNull private final FatalErrorHandler myExceptionReporter;
+  @Nonnull
+  private final PersistentEnumeratorBase<CommitId> myCommitIdEnumerator;
+  @Nonnull
+  private final PersistentEnumeratorBase<VcsRef> myRefsEnumerator;
+  @Nonnull
+  private final FatalErrorHandler myExceptionReporter;
   private volatile boolean myDisposed = false;
 
-  public VcsLogStorageImpl(@NotNull Project project,
-                           @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                           @NotNull FatalErrorHandler exceptionReporter,
-                           @NotNull Disposable parent) throws IOException {
+  public VcsLogStorageImpl(@Nonnull Project project,
+                           @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                           @Nonnull FatalErrorHandler exceptionReporter,
+                           @Nonnull Disposable parent) throws IOException {
     myExceptionReporter = exceptionReporter;
 
     List<VirtualFile> roots =
@@ -91,12 +99,12 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     return myCommitIdEnumerator.valueOf(index);
   }
 
-  private int getOrPut(@NotNull Hash hash, @NotNull VirtualFile root) throws IOException {
+  private int getOrPut(@Nonnull Hash hash, @Nonnull VirtualFile root) throws IOException {
     return myCommitIdEnumerator.enumerate(new CommitId(hash, root));
   }
 
   @Override
-  public int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root) {
+  public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
     checkDisposed();
     try {
       return getOrPut(hash, root);
@@ -126,7 +134,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
   @Override
   @Nullable
-  public CommitId findCommitId(@NotNull final Condition<CommitId> condition) {
+  public CommitId findCommitId(@Nonnull final Condition<CommitId> condition) {
     checkDisposed();
     try {
       final Ref<CommitId> hashRef = Ref.create();
@@ -149,7 +157,7 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   }
 
   @Override
-  public int getRefIndex(@NotNull VcsRef ref) {
+  public int getRefIndex(@Nonnull VcsRef ref) {
     checkDisposed();
     try {
       return myRefsEnumerator.enumerate(ref);
@@ -196,10 +204,12 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   }
 
   private static class MyCommitIdKeyDescriptor implements KeyDescriptor<CommitId> {
-    @NotNull private final List<VirtualFile> myRoots;
-    @NotNull private final TObjectIntHashMap<VirtualFile> myRootsReversed;
+    @Nonnull
+    private final List<VirtualFile> myRoots;
+    @Nonnull
+    private final TObjectIntHashMap<VirtualFile> myRootsReversed;
 
-    public MyCommitIdKeyDescriptor(@NotNull List<VirtualFile> roots) {
+    public MyCommitIdKeyDescriptor(@Nonnull List<VirtualFile> roots) {
       myRoots = roots;
 
       myRootsReversed = new TObjectIntHashMap<>();
@@ -209,13 +219,13 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     }
 
     @Override
-    public void save(@NotNull DataOutput out, CommitId value) throws IOException {
+    public void save(@Nonnull DataOutput out, CommitId value) throws IOException {
       ((HashImpl)value.getHash()).write(out);
       out.writeInt(myRootsReversed.get(value.getRoot()));
     }
 
     @Override
-    public CommitId read(@NotNull DataInput in) throws IOException {
+    public CommitId read(@Nonnull DataInput in) throws IOException {
       Hash hash = HashImpl.read(in);
       VirtualFile root = myRoots.get(in.readInt());
       if (root == null) return null;
@@ -235,11 +245,11 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
   private static class EmptyLogStorage implements VcsLogStorage {
     @Override
-    public int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root) {
+    public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
       return 0;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CommitId getCommitId(int commitIndex) {
       throw new UnsupportedOperationException("Illegal access to empty hash map by index " + commitIndex);
@@ -247,12 +257,12 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
 
     @Nullable
     @Override
-    public CommitId findCommitId(@NotNull Condition<CommitId> string) {
+    public CommitId findCommitId(@Nonnull Condition<CommitId> string) {
       return null;
     }
 
     @Override
-    public int getRefIndex(@NotNull VcsRef ref) {
+    public int getRefIndex(@Nonnull VcsRef ref) {
       return 0;
     }
 
@@ -268,34 +278,36 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
   }
 
   private static class VcsRefKeyDescriptor implements KeyDescriptor<VcsRef> {
-    @NotNull private final Map<VirtualFile, VcsLogProvider> myLogProviders;
-    @NotNull private final KeyDescriptor<CommitId> myCommitIdKeyDescriptor;
+    @Nonnull
+    private final Map<VirtualFile, VcsLogProvider> myLogProviders;
+    @Nonnull
+    private final KeyDescriptor<CommitId> myCommitIdKeyDescriptor;
 
-    public VcsRefKeyDescriptor(@NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                               @NotNull KeyDescriptor<CommitId> commitIdKeyDescriptor) {
+    public VcsRefKeyDescriptor(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                               @Nonnull KeyDescriptor<CommitId> commitIdKeyDescriptor) {
       myLogProviders = logProviders;
       myCommitIdKeyDescriptor = commitIdKeyDescriptor;
     }
 
     @Override
-    public int getHashCode(@NotNull VcsRef value) {
+    public int getHashCode(@Nonnull VcsRef value) {
       return value.hashCode();
     }
 
     @Override
-    public boolean isEqual(@NotNull VcsRef val1, @NotNull VcsRef val2) {
+    public boolean isEqual(@Nonnull VcsRef val1, @Nonnull VcsRef val2) {
       return val1.equals(val2);
     }
 
     @Override
-    public void save(@NotNull DataOutput out, @NotNull VcsRef value) throws IOException {
+    public void save(@Nonnull DataOutput out, @Nonnull VcsRef value) throws IOException {
       myCommitIdKeyDescriptor.save(out, new CommitId(value.getCommitHash(), value.getRoot()));
       IOUtil.writeUTF(out, value.getName());
       myLogProviders.get(value.getRoot()).getReferenceManager().serialize(out, value.getType());
     }
 
     @Override
-    public VcsRef read(@NotNull DataInput in) throws IOException {
+    public VcsRef read(@Nonnull DataInput in) throws IOException {
       CommitId commitId = myCommitIdKeyDescriptor.read(in);
       if (commitId == null) throw new IOException("Can not read commit id for reference");
       String name = IOUtil.readUTF(in);

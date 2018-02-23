@@ -37,8 +37,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebuggerBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class DebuggerSessionTabBase extends RunTab {
   protected ExecutionConsole myConsole;
 
-  public DebuggerSessionTabBase(@NotNull Project project, @NotNull String runnerId, @NotNull String sessionName, @NotNull GlobalSearchScope searchScope) {
+  public DebuggerSessionTabBase(@Nonnull Project project, @Nonnull String runnerId, @Nonnull String sessionName, @Nonnull GlobalSearchScope searchScope) {
     super(project, searchScope, runnerId, XDebuggerBundle.message("xdebugger.default.content.title"), sessionName);
 
     myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), null)

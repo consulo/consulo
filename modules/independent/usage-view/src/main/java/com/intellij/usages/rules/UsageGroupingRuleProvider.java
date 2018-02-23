@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,8 +27,9 @@ import org.jetbrains.annotations.NotNull;
 public interface UsageGroupingRuleProvider {
   ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageGroupingRuleProvider");
 
-  @NotNull UsageGroupingRule[] getActiveRules(Project project);
+  @Nonnull
+  UsageGroupingRule[] getActiveRules(Project project);
 
-  @NotNull
+  @Nonnull
   AnAction[] createGroupingActions(UsageView view);
 }

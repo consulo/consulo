@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A wrapper object that holds a computation ({@link #getValueProvider()}) and caches the result of the computation.<p/>
@@ -51,7 +51,7 @@ public interface CachedValue<T> {
   /**
    * @return the object calculating the value to cache
    */
-  @NotNull
+  @Nonnull
   CachedValueProvider<T> getValueProvider();
 
   /**

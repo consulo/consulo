@@ -23,7 +23,7 @@ import com.intellij.remote.ext.CredentialsManager;
 import com.intellij.remote.ext.RemoteCredentialsHandler;
 import com.intellij.remote.ext.UnknownCredentialsHolder;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -58,7 +58,7 @@ public class RemoteConnectionCredentialsWrapper {
     credentialsAndProvider.getSecond().putCredentials(copy.myCredentialsTypeHolder, credentialsAndProvider.getFirst());
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return getTypeHandler().getId();
   }

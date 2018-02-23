@@ -21,8 +21,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.LeafElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Abstract common {@link WhiteSpaceFormattingStrategy} implementation that doesn't replace default strategy and doesn't
@@ -38,10 +38,10 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull CharSequence text,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull CharSequence text,
                                                   int startOffset,
                                                   int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter)
   {
@@ -50,8 +50,8 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
   }
 
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull PsiElement startElement,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull PsiElement startElement,
                                                   final int startOffset,
                                                   final int endOffset, CodeStyleSettings codeStyleSettings)
   {
@@ -89,7 +89,7 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
   }
 
   @Nullable
-  private static PsiElement next(@NotNull final PsiElement element) {
+  private static PsiElement next(@Nonnull final PsiElement element) {
     for (PsiElement anchor = element; anchor != null; anchor = anchor.getParent()) {
       final PsiElement result = element.getNextSibling();
       if (result != null) {
@@ -100,12 +100,12 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
   }
 
   @Override
-  public boolean containsWhitespacesOnly(@NotNull ASTNode node) {
+  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
     return false;
   }
 
   @Override
-  public boolean addWhitespace(@NotNull ASTNode treePrev, @NotNull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
     return false;
   }
 }

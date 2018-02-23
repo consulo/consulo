@@ -17,14 +17,14 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.ui.mac.foundation.Foundation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: spLeaner
  */
 public class FoundationLoader implements ApplicationComponent {
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "FoundationLoader";
   }

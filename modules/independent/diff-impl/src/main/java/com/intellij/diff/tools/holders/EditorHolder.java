@@ -16,19 +16,18 @@
 package com.intellij.diff.tools.holders;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public abstract class EditorHolder implements Disposable {
-  @NotNull
+  @Nonnull
   public abstract JComponent getComponent();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract JComponent getPreferredFocusedComponent();
 
-  public void installFocusListener(@NotNull FocusListener listener) {
+  public void installFocusListener(@Nonnull FocusListener listener) {
   }
 }

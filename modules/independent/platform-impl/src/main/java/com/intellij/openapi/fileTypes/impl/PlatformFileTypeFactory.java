@@ -17,14 +17,14 @@ package com.intellij.openapi.fileTypes.impl;
 
 import consulo.fileTypes.ZipArchiveFileType;
 import com.intellij.openapi.fileTypes.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class PlatformFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@NotNull final FileTypeConsumer consumer) {
+  public void createFileTypes(@Nonnull final FileTypeConsumer consumer) {
     // eat jar file type, but java plugin will rewrite it
     consumer.consume(ZipArchiveFileType.INSTANCE, "zip;ear;ane;egg;jar");
     consumer.consume(PlainTextFileType.INSTANCE, "txt;sh;bat;cmd;policy;log;cgi;MF;jad;jam;htaccess");

@@ -20,8 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +31,10 @@ import java.util.Map;
  */
 public class CustomizingReferenceProvider extends PsiReferenceProvider implements CustomizableReferenceProvider {
   private final CustomizableReferenceProvider myProvider;
-  private @Nullable Map<CustomizationKey, Object> myOptions;
+  private @Nullable
+  Map<CustomizationKey, Object> myOptions;
 
-  public CustomizingReferenceProvider(@NotNull CustomizableReferenceProvider provider) {
+  public CustomizingReferenceProvider(@Nonnull CustomizableReferenceProvider provider) {
     myProvider = provider;
   }
   
@@ -45,8 +46,8 @@ public class CustomizingReferenceProvider extends PsiReferenceProvider implement
   }
   
   @Override
-  @NotNull
-  public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull final ProcessingContext context) {
+  @Nonnull
+  public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull final ProcessingContext context) {
     myProvider.setOptions(myOptions);
     final PsiReference[] referencesByElement = myProvider.getReferencesByElement(element, context);
     myProvider.setOptions(null);

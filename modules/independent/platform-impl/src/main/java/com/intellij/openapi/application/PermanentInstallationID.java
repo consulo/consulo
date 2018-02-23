@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.UUID;
 import java.util.prefs.Preferences;
@@ -28,7 +28,7 @@ public class PermanentInstallationID {
   private static final String INSTALLATION_ID_KEY = "user_id_on_machine";
   private static final String INSTALLATION_ID = calculateInstallationId();
 
-  @NotNull
+  @Nonnull
   public static String get() {
     return INSTALLATION_ID;
   }

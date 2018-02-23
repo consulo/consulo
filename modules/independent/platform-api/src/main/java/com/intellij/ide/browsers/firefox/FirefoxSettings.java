@@ -22,8 +22,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
     myProfile = StringUtil.nullize(value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Configurable createConfigurable() {
     return new FirefoxSettingsConfigurable(this);
@@ -76,7 +76,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
     return FirefoxUtil.getDefaultProfileIniPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getAdditionalParameters() {
     List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(getProfilesIniFile());

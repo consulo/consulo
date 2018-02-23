@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.EventObject;
 
@@ -34,12 +34,12 @@ public class VirtualFileEvent extends EventObject {
   private final long myOldModificationStamp;
   private final long myNewModificationStamp;
 
-  public VirtualFileEvent(@Nullable Object requestor, @NotNull VirtualFile file, @NotNull String fileName, @Nullable VirtualFile parent) {
+  public VirtualFileEvent(@Nullable Object requestor, @Nonnull VirtualFile file, @Nonnull String fileName, @Nullable VirtualFile parent) {
     this(requestor, file, fileName, parent,0,0);
   }
 
   public VirtualFileEvent(@Nullable Object requestor,
-                          @NotNull VirtualFile file,
+                          @Nonnull VirtualFile file,
                           @Nullable VirtualFile parent,
                           long oldModificationStamp,
                           long newModificationStamp) {
@@ -47,8 +47,8 @@ public class VirtualFileEvent extends EventObject {
   }
 
   private VirtualFileEvent(@Nullable Object requestor,
-                          @NotNull VirtualFile file,
-                          @NotNull String fileName,
+                          @Nonnull VirtualFile file,
+                          @Nonnull String fileName,
                           @Nullable VirtualFile parent,
                           long oldModificationStamp,
                           long newModificationStamp) {
@@ -66,7 +66,7 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the changed file.
    */
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
@@ -76,7 +76,7 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the name of the changed file.
    */
-  @NotNull
+  @Nonnull
   public String getFileName() {
     return myFileName;
   }

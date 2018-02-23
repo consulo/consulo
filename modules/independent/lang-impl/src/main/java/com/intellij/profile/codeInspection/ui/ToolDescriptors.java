@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,13 @@ import java.util.List;
  */
 public class ToolDescriptors {
 
-  @NotNull
+  @Nonnull
   private final Descriptor myDefaultDescriptor;
-  @NotNull
+  @Nonnull
   private final List<Descriptor> myNonDefaultDescriptors;
 
-  private ToolDescriptors(final @NotNull Descriptor defaultDescriptor,
-                          final @NotNull List<Descriptor> nonDefaultDescriptors) {
+  private ToolDescriptors(final @Nonnull Descriptor defaultDescriptor,
+                          final @Nonnull List<Descriptor> nonDefaultDescriptors) {
     myDefaultDescriptor = defaultDescriptor;
     myNonDefaultDescriptors = nonDefaultDescriptors;
   }
@@ -53,17 +53,17 @@ public class ToolDescriptors {
     return new ToolDescriptors(new Descriptor(state, profile, project), descriptors);
   }
 
-  @NotNull
+  @Nonnull
   public Descriptor getDefaultDescriptor() {
     return myDefaultDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   public List<Descriptor> getNonDefaultDescriptors() {
     return myNonDefaultDescriptors;
   }
 
-  @NotNull
+  @Nonnull
   public ScopeToolState getDefaultScopeToolState() {
     return myDefaultDescriptor.getState();
   }

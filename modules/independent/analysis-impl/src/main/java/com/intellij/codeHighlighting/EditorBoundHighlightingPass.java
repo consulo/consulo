@@ -17,7 +17,7 @@ package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The pass which should be applied to every editor, even if there are many for this document.
@@ -28,11 +28,13 @@ import org.jetbrains.annotations.NotNull;
  * This pass however is for editor-specific markup, e.g. code folding.
  */
 public abstract class EditorBoundHighlightingPass extends TextEditorHighlightingPass {
-  @NotNull protected final Editor myEditor;
-  @NotNull protected final PsiFile myFile;
+  @Nonnull
+  protected final Editor myEditor;
+  @Nonnull
+  protected final PsiFile myFile;
 
-  protected EditorBoundHighlightingPass(@NotNull Editor editor,
-                                        @NotNull PsiFile psiFile,
+  protected EditorBoundHighlightingPass(@Nonnull Editor editor,
+                                        @Nonnull PsiFile psiFile,
                                         boolean runIntentionPassAfter) {
     super(psiFile.getProject(), editor.getDocument(), runIntentionPassAfter);
     myEditor = editor;

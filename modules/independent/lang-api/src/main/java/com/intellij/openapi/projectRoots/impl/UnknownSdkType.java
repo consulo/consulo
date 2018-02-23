@@ -18,8 +18,8 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.SdkType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class UnknownSdkType extends SdkType{
   public String suggestSdkName(String currentSdkName, String sdkHome) {
     return currentSdkName;
   }
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.unknown.name");

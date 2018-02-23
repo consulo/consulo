@@ -19,8 +19,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -32,18 +32,19 @@ import org.jetbrains.annotations.Nullable;
 )
 public class RichCopySettings extends ApplicationComponent.Adapter implements PersistentStateComponent<RichCopySettings>, ApplicationComponent {
 
-  @NotNull public static final String ACTIVE_GLOBAL_SCHEME_MARKER = "__ACTIVE_GLOBAL_SCHEME__";
+  @Nonnull
+  public static final String ACTIVE_GLOBAL_SCHEME_MARKER = "__ACTIVE_GLOBAL_SCHEME__";
 
   private boolean myEnabled = true;
   private String  mySchemeName = ACTIVE_GLOBAL_SCHEME_MARKER;
 
-  @NotNull
+  @Nonnull
   public static RichCopySettings getInstance() {
     return ServiceManager.getService(RichCopySettings.class);
   }
 
-  @NotNull
-  public EditorColorsScheme getColorsScheme(@NotNull EditorColorsScheme editorColorsScheme) {
+  @Nonnull
+  public EditorColorsScheme getColorsScheme(@Nonnull EditorColorsScheme editorColorsScheme) {
     EditorColorsScheme result = null;
     if (mySchemeName != null && !ACTIVE_GLOBAL_SCHEME_MARKER.equals(mySchemeName)) {
       result = EditorColorsManager.getInstance().getScheme(mySchemeName);
@@ -62,7 +63,7 @@ public class RichCopySettings extends ApplicationComponent.Adapter implements Pe
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  @NotNull
+  @Nonnull
   public String getSchemeName() {
     return mySchemeName == null ? ACTIVE_GLOBAL_SCHEME_MARKER : mySchemeName;
   }

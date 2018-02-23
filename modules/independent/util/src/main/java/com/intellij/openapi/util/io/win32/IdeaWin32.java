@@ -15,16 +15,11 @@
  */
 package com.intellij.openapi.util.io.win32;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.lang.UrlClassLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Do not use this class directly.
@@ -57,7 +52,7 @@ public class IdeaWin32 {
     return ourInstance != null;
   }
 
-  @NotNull
+  @Nonnull
   public static IdeaWin32 getInstance() {
     if (!isAvailable()) {
       throw new IllegalStateException("Native filesystem for Windows is not loaded");
@@ -72,7 +67,7 @@ public class IdeaWin32 {
   private static native void initIDs();
 
   @Nullable
-  public FileInfo getInfo(@NotNull String path) {
+  public FileInfo getInfo(@Nonnull String path) {
     path = path.replace('/', '\\');
     if (DEBUG_ENABLED) {
       long t = System.nanoTime();
@@ -87,7 +82,7 @@ public class IdeaWin32 {
   }
 
   @Nullable
-  public String resolveSymLink(@NotNull String path) {
+  public String resolveSymLink(@Nonnull String path) {
     path = path.replace('/', '\\');
     if (DEBUG_ENABLED) {
       long t = System.nanoTime();
@@ -102,7 +97,7 @@ public class IdeaWin32 {
   }
 
   @Nullable
-  public FileInfo[] listChildren(@NotNull String path) {
+  public FileInfo[] listChildren(@Nonnull String path) {
     path = path.replace('/', '\\');
     if (DEBUG_ENABLED) {
       long t = System.nanoTime();

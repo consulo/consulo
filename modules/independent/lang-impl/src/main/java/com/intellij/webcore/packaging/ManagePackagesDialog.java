@@ -37,8 +37,8 @@ import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -60,7 +60,8 @@ import java.util.List;
 public class ManagePackagesDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(ManagePackagesDialog.class);
 
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final PackageManagementService myController;
 
   private JPanel myFilter;
@@ -85,7 +86,7 @@ public class ManagePackagesDialog extends DialogWrapper {
   private Set<String> myCurrentlyInstalling = new HashSet<>();
   protected final ListSpeedSearch myListSpeedSearch;
 
-  public ManagePackagesDialog(@NotNull Project project, final PackageManagementService packageManagementService,
+  public ManagePackagesDialog(@Nonnull Project project, final PackageManagementService packageManagementService,
                               @Nullable final PackageManagementService.Listener packageListener) {
     super(project, true);
     myProject = project;
@@ -182,7 +183,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     myMainPanel.setPreferredSize(new Dimension(JBUI.scale(900), JBUI.scale(700)));
   }
 
-  public void selectPackage(@NotNull InstalledPackage pkg) {
+  public void selectPackage(@Nonnull InstalledPackage pkg) {
     mySelectedPackageName = pkg.getName();
     doSelectPackage(mySelectedPackageName);
   }
@@ -342,7 +343,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     myDescriptionTextArea = SwingHelper.createHtmlViewer(true, null, null, null);
   }
 
-  public void setOptionsText(@NotNull String optionsText) {
+  public void setOptionsText(@Nonnull String optionsText) {
     myOptionsField.setText(optionsText);
   }
 
@@ -499,7 +500,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[0];
   }

@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointsGroupingPriorities;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -46,7 +46,7 @@ public class XBreakpointGroupingByTypeRule<B> extends XBreakpointGroupingRule<B,
   }
 
   @Override
-  public XBreakpointTypeGroup getGroup(@NotNull B b, @NotNull Collection<XBreakpointTypeGroup> groups) {
+  public XBreakpointTypeGroup getGroup(@Nonnull B b, @Nonnull Collection<XBreakpointTypeGroup> groups) {
     if (b instanceof XBreakpoint) {
       final XBreakpoint breakpoint = (XBreakpoint)b;
       for (XBreakpointTypeGroup group : groups) {

@@ -2,7 +2,7 @@ package org.jetbrains.builtInWebServer;
 
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.ui.PortField;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -18,20 +18,20 @@ class BuiltInServerConfigurableUi implements ConfigurableUi<BuiltInServerOptions
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return mainPanel;
   }
 
   @Override
-  public boolean isModified(@NotNull BuiltInServerOptions settings) {
+  public boolean isModified(@Nonnull BuiltInServerOptions settings) {
     return builtInServerPort.getNumber() != settings.builtInServerPort ||
            builtInServerAvailableExternallyCheckBox.isSelected() != settings.builtInServerAvailableExternally ||
            allowUnsignedRequestsCheckBox.isSelected() != settings.allowUnsignedRequests;
   }
 
   @Override
-  public void apply(@NotNull BuiltInServerOptions settings) {
+  public void apply(@Nonnull BuiltInServerOptions settings) {
     boolean builtInServerPortChanged = settings.builtInServerPort != builtInServerPort.getNumber() || settings.builtInServerAvailableExternally != builtInServerAvailableExternallyCheckBox.isSelected();
     settings.allowUnsignedRequests = allowUnsignedRequestsCheckBox.isSelected();
     if (builtInServerPortChanged) {
@@ -43,7 +43,7 @@ class BuiltInServerConfigurableUi implements ConfigurableUi<BuiltInServerOptions
   }
 
   @Override
-  public void reset(@NotNull BuiltInServerOptions settings) {
+  public void reset(@Nonnull BuiltInServerOptions settings) {
     builtInServerPort.setNumber(settings.builtInServerPort);
     builtInServerAvailableExternallyCheckBox.setSelected(settings.builtInServerAvailableExternally);
     allowUnsignedRequestsCheckBox.setSelected(settings.allowUnsignedRequests);

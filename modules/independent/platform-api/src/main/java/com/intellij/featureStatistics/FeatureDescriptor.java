@@ -19,16 +19,19 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 public class FeatureDescriptor{
-  @NotNull private String myId;
+  @Nonnull
+  private String myId;
   private String myGroupId;
-  @NotNull private String myTipFileName;
-  @NotNull private String myDisplayName;
+  @Nonnull
+  private String myTipFileName;
+  @Nonnull
+  private String myDisplayName;
   private int myDaysBeforeFirstShowUp;
   private int myDaysBetweenSuccesiveShowUps;
   private Set<String> myDependencies;
@@ -102,7 +105,7 @@ public class FeatureDescriptor{
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
@@ -111,12 +114,12 @@ public class FeatureDescriptor{
     return myGroupId;
   }
 
-  @NotNull
+  @Nonnull
   public String getTipFileName() {
     return myTipFileName;
   }
 
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return myDisplayName;
   }

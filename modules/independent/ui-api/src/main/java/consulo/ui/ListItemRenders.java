@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +25,7 @@ public class ListItemRenders {
   private static final ListItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   public static <E> ListItemRender<E> defaultRender() {
     return ourDefaultRender;
   }

@@ -22,9 +22,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -34,12 +34,13 @@ import java.util.Collection;
  * @author Konstantin Bulenkov
  */
 public class JBList<E> extends JList<E> implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer> {
-  @NotNull
+  @Nonnull
   private StatusText myEmptyText;
-  @NotNull
+  @Nonnull
   private ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 
-  @Nullable private AsyncProcessIcon myBusyIcon;
+  @Nullable
+  private AsyncProcessIcon myBusyIcon;
   private boolean myBusy;
 
 
@@ -47,20 +48,20 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     init();
   }
 
-  public JBList(@NotNull ListModel<E> dataModel) {
+  public JBList(@Nonnull ListModel<E> dataModel) {
     super(dataModel);
     init();
   }
 
   @SafeVarargs
-  public JBList(@NotNull E... listData) {
+  public JBList(@Nonnull E... listData) {
     super(createDefaultListModel(listData));
     init();
   }
 
-  @NotNull
+  @Nonnull
   @SafeVarargs
-  public static <E> DefaultListModel<E> createDefaultListModel(@NotNull E... items) {
+  public static <E> DefaultListModel<E> createDefaultListModel(@Nonnull E... items) {
     final DefaultListModel<E> model = new DefaultListModel<>();
     for (E item : items) {
       model.add(model.getSize(), item);
@@ -68,8 +69,8 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model;
   }
 
-  @NotNull
-  public static <E> DefaultListModel<E> createDefaultListModel(@NotNull Iterable<? extends E> items) {
+  @Nonnull
+  public static <E> DefaultListModel<E> createDefaultListModel(@Nonnull Iterable<? extends E> items) {
     final DefaultListModel<E> model = new DefaultListModel<>();
     for (E item : items) {
       model.add(model.getSize(), item);
@@ -77,7 +78,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model;
   }
 
-  public JBList(@NotNull Collection<? extends E> items) {
+  public JBList(@Nonnull Collection<? extends E> items) {
     this(JBList.<E>createDefaultListModel(items));
   }
 
@@ -191,23 +192,23 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model == null ? 0 : model.getSize();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
-  public void setEmptyText(@NotNull String text) {
+  public void setEmptyText(@Nonnull String text) {
     myEmptyText.setText(text);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
     return myExpandableItemsHandler;
   }
 
-  @NotNull
+  @Nonnull
   protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
     return ExpandableItemsHandlerFactory.install(this);
   }
@@ -228,11 +229,11 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     super.setCellRenderer(new ExpandedItemListCellRendererWrapper<>(cellRenderer, myExpandableItemsHandler));
   }
 
-  public <T> void installCellRenderer(@NotNull final NotNullFunction<T, JComponent> fun) {
+  public <T> void installCellRenderer(@Nonnull final NotNullFunction<T, JComponent> fun) {
     setCellRenderer(new DefaultListCellRenderer() {
-      @NotNull
+      @Nonnull
       @Override
-      public Component getListCellRendererComponent(@NotNull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      public Component getListCellRendererComponent(@Nonnull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         @SuppressWarnings({"unchecked"})
         final JComponent comp = fun.fun((T)value);
         comp.setOpaque(true);
@@ -252,7 +253,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     });
   }
 
-  public void setDataProvider(@NotNull DataProvider provider) {
+  public void setDataProvider(@Nonnull DataProvider provider) {
     DataManager.registerDataProvider(this, provider);
   }
 

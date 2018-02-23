@@ -25,8 +25,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -43,8 +42,8 @@ public class InsertionContext {
   private boolean myAddCompletionChar;
 
   public InsertionContext(final OffsetMap offsetMap, final char completionChar, final LookupElement[] elements,
-                          @NotNull final PsiFile file,
-                          @NotNull final Editor editor, final boolean addCompletionChar) {
+                          @Nonnull final PsiFile file,
+                          @Nonnull final Editor editor, final boolean addCompletionChar) {
     myOffsetMap = offsetMap;
     myCompletionChar = completionChar;
     myElements = elements;
@@ -62,12 +61,12 @@ public class InsertionContext {
     return myOffsetMap.getOffset(TAIL_OFFSET);
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }
@@ -76,7 +75,7 @@ public class InsertionContext {
     PsiDocumentManager.getInstance(getProject()).commitDocument(getDocument());
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return getEditor().getDocument();
   }
@@ -115,12 +114,12 @@ public class InsertionContext {
     return myOffsetMap.getOffset(CompletionInitializationContext.SELECTION_END_OFFSET);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Runnable getLaterRunnable() {
     return myLaterRunnable;
   }
 
-  public void setLaterRunnable(@Nullable final Runnable laterRunnable) {
+  public void setLaterRunnable(@javax.annotation.Nullable final Runnable laterRunnable) {
     myLaterRunnable = laterRunnable;
   }
 

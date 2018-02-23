@@ -22,8 +22,8 @@ import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -160,13 +160,13 @@ public class PrattBuilderImpl extends PrattBuilder {
   }
 
   @Override
-  public void reduce(@NotNull final IElementType type) {
+  public void reduce(@Nonnull final IElementType type) {
     myStartMarker.finish(type);
     myStartMarker = myStartMarker.precede();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<IElementType> getResultTypes() {
     checkParsed();
     return myLeftSiblings;

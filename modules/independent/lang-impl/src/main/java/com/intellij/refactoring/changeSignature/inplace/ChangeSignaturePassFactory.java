@@ -34,7 +34,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class ChangeSignaturePassFactory extends AbstractProjectComponent impleme
   }
 
   @Override
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull final PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
     LanguageChangeSignatureDetector<ChangeInfo> detector =
             LanguageChangeSignatureDetectors.INSTANCE.forLanguage(file.getLanguage());
     if (detector == null) return null;
@@ -70,7 +70,7 @@ public class ChangeSignaturePassFactory extends AbstractProjectComponent impleme
 
     @RequiredReadAction
     @Override
-    public void doCollectInformation(@NotNull ProgressIndicator progress) {}
+    public void doCollectInformation(@Nonnull ProgressIndicator progress) {}
 
     @Override
     public void doApplyInformationToEditor() {

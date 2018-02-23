@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.NonFocusableCheckBox;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,8 +36,8 @@ import java.util.List;
 
 public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory  {
   @Override
-  @NotNull
-  public CheckinHandler createHandler(@NotNull final CheckinProjectPanel panel, @NotNull CommitContext commitContext) {
+  @Nonnull
+  public CheckinHandler createHandler(@Nonnull final CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
     return new CleanupCodeCheckinHandler(panel);
   }
 

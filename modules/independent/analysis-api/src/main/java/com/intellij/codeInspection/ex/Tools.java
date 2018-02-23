@@ -21,31 +21,30 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface Tools {
-  @NotNull
+  @Nonnull
   InspectionToolWrapper getInspectionTool(PsiElement element);
 
-  @NotNull
+  @Nonnull
   String getShortName();
 
-  @NotNull
+  @Nonnull
   InspectionToolWrapper getTool();
 
-  @NotNull
+  @Nonnull
   List<ScopeToolState> getTools();
 
-  @NotNull
+  @Nonnull
   ScopeToolState getDefaultState();
 
   boolean isEnabled();
 
-  boolean isEnabled(@Nullable PsiElement element);
+  boolean isEnabled(@javax.annotation.Nullable PsiElement element);
 
-  @Nullable
-  InspectionToolWrapper getEnabledTool(@Nullable PsiElement element);
+  @javax.annotation.Nullable
+  InspectionToolWrapper getEnabledTool(@javax.annotation.Nullable PsiElement element);
 }

@@ -20,7 +20,7 @@ import com.intellij.psi.ElementDescriptionLocation;
 import com.intellij.psi.ElementDescriptionProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiPresentableMetaData;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,7 +33,7 @@ public class HighlightUsagesDescriptionLocation extends ElementDescriptionLocati
   public ElementDescriptionProvider getDefaultProvider() {
     return new ElementDescriptionProvider() {
       @Override
-      public String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+      public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
         if (element instanceof PsiPresentableMetaData) {
           return ((PsiPresentableMetaData)element).getTypeName();
         }

@@ -31,8 +31,7 @@ import com.intellij.openapi.externalSystem.util.Order;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -45,7 +44,7 @@ import java.util.*;
 @Order(ExternalSystemConstants.BUILTIN_TOOL_WINDOW_SERVICE_ORDER)
 public class ToolWindowModuleService extends AbstractToolWindowService<ModuleData> {
 
-  @NotNull
+  @Nonnull
   public static final Function<DataNode<ModuleData>, ExternalProjectPojo> MAPPER
     = new Function<DataNode<ModuleData>, ExternalProjectPojo>() {
     @Override
@@ -54,16 +53,16 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<ModuleData> getTargetDataKey() {
     return ProjectKeys.MODULE;
   }
 
   @Override
-  protected void processData(@NotNull final Collection<DataNode<ModuleData>> nodes,
-                             @NotNull Project project,
-                             @Nullable final ExternalSystemTasksTreeModel model)
+  protected void processData(@Nonnull final Collection<DataNode<ModuleData>> nodes,
+                             @Nonnull Project project,
+                             @javax.annotation.Nullable final ExternalSystemTasksTreeModel model)
   {
     if (nodes.isEmpty()) {
       return;
@@ -88,9 +87,9 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
     settings.setAvailableProjects(projects);
   }
   
-  @NotNull
-  private static Set<String> detectRenamedProjects(@NotNull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
-                                                   @NotNull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo)
+  @Nonnull
+  private static Set<String> detectRenamedProjects(@Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
+                                                   @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo)
   {
     Map<String/* external config path */, String/* project name */> map = ContainerUtilRt.newHashMap();
     for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : currentInfo.entrySet()) {

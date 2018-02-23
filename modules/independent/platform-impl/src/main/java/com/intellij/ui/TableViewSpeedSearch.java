@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.ui.table.TableView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
   }
 
   @Nullable
-  protected abstract String getItemText(final @NotNull Item element);
+  protected abstract String getItemText(final @Nonnull Item element);
 
   @Override
   protected void selectElement(final Object element, final String selectedText) {

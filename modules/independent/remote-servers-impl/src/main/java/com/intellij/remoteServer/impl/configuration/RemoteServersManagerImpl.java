@@ -9,8 +9,7 @@ import com.intellij.remoteServer.configuration.ServerConfiguration;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
   }
 
   @Override
-  public <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@NotNull ServerType<C> type) {
+  public <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type) {
     List<RemoteServer<C>> servers = new ArrayList<RemoteServer<C>>();
     for (RemoteServer<?> server : myServers) {
       if (server.getType().equals(type)) {
@@ -48,9 +47,9 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
     return servers;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <C extends ServerConfiguration> RemoteServer<C> findByName(@NotNull String name, @NotNull ServerType<C> type) {
+  public <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type) {
     for (RemoteServer<?> server : myServers) {
       if (server.getType().equals(type) && server.getName().equals(name)) {
         return (RemoteServer<C>)server;
@@ -60,7 +59,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
   }
 
   @Override
-  public <C extends ServerConfiguration> RemoteServer<C> createServer(@NotNull ServerType<C> type, @NotNull String name) {
+  public <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name) {
     return new RemoteServerImpl<C>(name, type, type.createDefaultConfiguration());
   }
 
@@ -76,7 +75,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
     myMessageBus.syncPublisher(RemoteServerListener.TOPIC).serverRemoved(server);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public RemoteServersManagerState getState() {
     RemoteServersManagerState state = new RemoteServersManagerState();
@@ -113,8 +112,8 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
     return new RemoteServerImpl<C>(server.myName, type, configuration);
   }
 
-  @Nullable
-  private static ServerType<?> findServerType(@NotNull String typeId) {
+  @javax.annotation.Nullable
+  private static ServerType<?> findServerType(@Nonnull String typeId) {
     for (ServerType serverType : ServerType.EP_NAME.getExtensions()) {
       if (serverType.getId().equals(typeId)) {
         return serverType;

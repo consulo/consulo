@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.util.text.ImmutableCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Combined text/caret model that is used to record oncoming changes before acquiring
@@ -38,7 +38,7 @@ public interface ActionPlan {
    *
    * @return text content.
    */
-  @NotNull
+  @Nonnull
   ImmutableCharSequence getText();
 
   /**

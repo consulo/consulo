@@ -21,8 +21,8 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -36,14 +36,14 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   private @Nullable final Project myProject;
   private final boolean myShowCustomLibraryTables;
 
-  protected ChooseLibrariesFromTablesDialog(@NotNull String title, @NotNull Project project, final boolean showCustomLibraryTables) {
+  protected ChooseLibrariesFromTablesDialog(@Nonnull String title, @Nonnull Project project, final boolean showCustomLibraryTables) {
     super(project, title);
     myShowCustomLibraryTables = showCustomLibraryTables;
     myProject = project;
   }
 
-  protected ChooseLibrariesFromTablesDialog(@NotNull JComponent parentComponent,
-                                            @NotNull String title,
+  protected ChooseLibrariesFromTablesDialog(@Nonnull JComponent parentComponent,
+                                            @Nonnull String title,
                                             @Nullable Project project,
                                             final boolean showCustomLibraryTables) {
     super(parentComponent, title);
@@ -51,15 +51,15 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     myProject = project;
   }
 
-  public static ChooseLibrariesFromTablesDialog createDialog(@NotNull String title,
-                                                             @NotNull Project project,
+  public static ChooseLibrariesFromTablesDialog createDialog(@Nonnull String title,
+                                                             @Nonnull Project project,
                                                              final boolean showCustomLibraryTables) {
     final ChooseLibrariesFromTablesDialog dialog = new ChooseLibrariesFromTablesDialog(title, project, showCustomLibraryTables);
     dialog.init();
     return dialog;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Project getProject() {
     if (myProject != null) {
@@ -113,7 +113,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   }
 
   @Override
-  protected int getLibraryTableWeight(@NotNull LibraryTable libraryTable) {
+  protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
     if (libraryTable.getTableLevel().equals(LibraryTableImplUtil.MODULE_LEVEL)) return 0;
     if (isProjectLibraryTable(libraryTable)) return 1;
     if (isApplicationLibraryTable(libraryTable)) return 2;
@@ -130,12 +130,12 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   }
 
   @Override
-  protected boolean isAutoExpandLibraryTable(@NotNull LibraryTable libraryTable) {
+  protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
     return isApplicationLibraryTable(libraryTable) || isProjectLibraryTable(libraryTable);
   }
 
-  @NotNull
-  protected Library[] getLibraries(@NotNull LibraryTable table) {
+  @Nonnull
+  protected Library[] getLibraries(@Nonnull LibraryTable table) {
     return table.getLibraries();
   }
 }

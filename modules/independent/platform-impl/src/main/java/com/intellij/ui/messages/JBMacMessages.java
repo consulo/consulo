@@ -26,8 +26,8 @@ import com.intellij.ui.mac.MacMessageException;
 import com.intellij.ui.mac.MacMessagesEmulation;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,9 +38,9 @@ import java.awt.*;
 public class JBMacMessages extends MacMessagesEmulation {
 
   @Override
-  public int showYesNoCancelDialog(@NotNull String title,
+  public int showYesNoCancelDialog(@Nonnull String title,
                                    String message,
-                                   @NotNull String defaultButton,
+                                   @Nonnull String defaultButton,
                                    String alternateButton,
                                    String otherButton,
                                    @Nullable Window window,
@@ -59,9 +59,9 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public int showMessageDialog(@NotNull String title,
+  public int showMessageDialog(@Nonnull String title,
                                String message,
-                               @NotNull String[] buttons,
+                               @Nonnull String[] buttons,
                                boolean errorStyle,
                                @Nullable Window window,
                                int defaultOptionIndex,
@@ -90,7 +90,7 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText, @Nullable Window window) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window) {
     if (window == null) {
       window = getForemostWindow(null);
     }
@@ -98,7 +98,7 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText) {
     final Window foremostWindow = getForemostWindow(null);
     new SheetMessage(foremostWindow, title, message, UIUtil.getInformationIcon(), new String [] {okText},null, null, okText);
   }
@@ -160,10 +160,10 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public int showYesNoDialog(@NotNull String title,
+  public int showYesNoDialog(@Nonnull String title,
                              String message,
-                             @NotNull String yesButton,
-                             @NotNull String noButton,
+                             @Nonnull String yesButton,
+                             @Nonnull String noButton,
                              @Nullable Window window) {
     if (window == null) {
       window = getForemostWindow(null);
@@ -174,10 +174,10 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public int showYesNoDialog(@NotNull String title,
+  public int showYesNoDialog(@Nonnull String title,
                              String message,
-                             @NotNull String yesButton,
-                             @NotNull String noButton,
+                             @Nonnull String yesButton,
+                             @Nonnull String noButton,
                              @Nullable Window window,
                              @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption) {
     if (window == null) {
@@ -193,7 +193,7 @@ public class JBMacMessages extends MacMessagesEmulation {
   }
 
   @Override
-  public void showErrorDialog(@NotNull String title, String message, @NotNull String okButton, @Nullable Window window) {
+  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window) {
     if (window == null) {
       window = getForemostWindow(null);
     }

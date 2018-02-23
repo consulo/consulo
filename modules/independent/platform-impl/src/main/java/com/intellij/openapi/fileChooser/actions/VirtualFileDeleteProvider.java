@@ -33,7 +33,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -43,13 +43,13 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider");
 
   @Override
-  public boolean canDeleteElement(@NotNull DataContext dataContext) {
+  public boolean canDeleteElement(@Nonnull DataContext dataContext) {
     final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     return files != null && files.length > 0;
   }
 
   @Override
-  public void deleteElement(@NotNull DataContext dataContext) {
+  public void deleteElement(@Nonnull DataContext dataContext) {
     final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
     if (files == null || files.length == 0) return;
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -65,7 +65,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
     CommandProcessor.getInstance().executeCommand(project, () -> {
       new Task.Modal(project, "Deleting Files...", true) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           indicator.setIndeterminate(false);
           int i = 0;
           for (VirtualFile file : files) {
@@ -76,7 +76,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
 
             RunResult result = new WriteAction() {
               @Override
-              protected void run(@NotNull Result result) throws Throwable {
+              protected void run(@Nonnull Result result) throws Throwable {
                 file.delete(this);
               }
             }.execute();

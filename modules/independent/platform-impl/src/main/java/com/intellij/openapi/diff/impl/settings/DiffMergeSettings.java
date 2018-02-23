@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.settings;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Workspace-wide settings for diff and merge tool UI customization.
@@ -45,7 +45,7 @@ public class DiffMergeSettings {
     myState = state;
   }
 
-  public void setPreference(@NotNull DiffMergeEditorSetting setting, boolean state) {
+  public void setPreference(@Nonnull DiffMergeEditorSetting setting, boolean state) {
     switch (setting) {
       case WHITESPACES:
         setShowWhiteSpaces(state);
@@ -62,7 +62,7 @@ public class DiffMergeSettings {
     }
   }
 
-  public boolean getPreference(@NotNull DiffMergeEditorSetting setting) {
+  public boolean getPreference(@Nonnull DiffMergeEditorSetting setting) {
     switch (setting) {
       case WHITESPACES:
         return isShowWhitespaces();

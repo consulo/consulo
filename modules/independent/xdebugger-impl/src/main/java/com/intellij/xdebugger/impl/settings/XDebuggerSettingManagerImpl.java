@@ -27,7 +27,7 @@ import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -83,7 +83,7 @@ public class XDebuggerSettingManagerImpl extends com.intellij.xdebugger.settings
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public XDebuggerDataViewSettings getDataViewSettings() {
     return myDataViewSettings;
   }

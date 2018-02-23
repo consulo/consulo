@@ -23,8 +23,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class PackageDirectoryCache {
   private final Map<String, PackageInfo> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
   private final Set<String> myNonExistentPackages = ContainerUtil.newConcurrentSet();
 
-  public PackageDirectoryCache(@NotNull MultiMap<String, VirtualFile> rootsByPackagePrefix) {
+  public PackageDirectoryCache(@Nonnull MultiMap<String, VirtualFile> rootsByPackagePrefix) {
     myRootsByPackagePrefix = rootsByPackagePrefix;
   }
 
@@ -44,14 +44,14 @@ public class PackageDirectoryCache {
     myNonExistentPackages.clear();
   }
 
-  @NotNull
-  public List<VirtualFile> getDirectoriesByPackageName(@NotNull final String packageName) {
+  @Nonnull
+  public List<VirtualFile> getDirectoriesByPackageName(@Nonnull final String packageName) {
     PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptyList() : info.myPackageDirectories;
   }
 
   @Nullable
-  private PackageInfo getPackageInfo(@NotNull final String packageName) {
+  private PackageInfo getPackageInfo(@Nonnull final String packageName) {
     PackageInfo info = myDirectoriesByPackageNameCache.get(packageName);
     if (info == null) {
       if (myNonExistentPackages.contains(packageName)) return null;
@@ -91,7 +91,7 @@ public class PackageDirectoryCache {
     return info;
   }
 
-  public Set<String> getSubpackageNames(@NotNull final String packageName) {
+  public Set<String> getSubpackageNames(@Nonnull final String packageName) {
     final PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptySet() : Collections.unmodifiableSet(info.mySubPackages.getValue().keySet());
   }
@@ -100,7 +100,7 @@ public class PackageDirectoryCache {
     final String myQname;
     final List<VirtualFile> myPackageDirectories;
     final NotNullLazyValue<MultiMap<String, VirtualFile>> mySubPackages = new VolatileNotNullLazyValue<MultiMap<String, VirtualFile>>() {
-      @NotNull
+      @Nonnull
       @Override
       protected MultiMap<String, VirtualFile> compute() {
         MultiMap<String, VirtualFile> result = MultiMap.createLinked();
@@ -122,13 +122,13 @@ public class PackageDirectoryCache {
       myPackageDirectories = packageDirectories;
     }
 
-    @NotNull
+    @Nonnull
     Collection<VirtualFile> getSubPackageDirectories(String shortName) {
       return mySubPackages.getValue().get(shortName);
     }
   }
 
-  protected boolean isPackageDirectory(@NotNull VirtualFile dir, @NotNull String packageName) {
+  protected boolean isPackageDirectory(@Nonnull VirtualFile dir, @Nonnull String packageName) {
     return true;
   }
 }

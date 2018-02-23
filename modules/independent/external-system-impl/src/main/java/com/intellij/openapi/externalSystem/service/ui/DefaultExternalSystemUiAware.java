@@ -19,8 +19,8 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import icons.ExternalSystemIcons;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -33,11 +33,12 @@ import java.io.File;
  */
 public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
 
-  @NotNull public static final DefaultExternalSystemUiAware INSTANCE = new DefaultExternalSystemUiAware();
+  @Nonnull
+  public static final DefaultExternalSystemUiAware INSTANCE = new DefaultExternalSystemUiAware();
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getProjectRepresentationName(@NotNull String targetProjectPath, @Nullable String rootProjectPath) {
+  public String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath) {
     return new File(targetProjectPath).getParentFile().getName();
   }
 
@@ -47,13 +48,13 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getProjectIcon() {
     return Application.get().getIcon();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getTaskIcon() {
     return ExternalSystemIcons.Task;

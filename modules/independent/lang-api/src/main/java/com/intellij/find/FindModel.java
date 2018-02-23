@@ -21,8 +21,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.PatternUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -258,7 +258,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
    *
    * @return the string to find.
    */
-  @NotNull
+  @Nonnull
   public String getStringToFind() {
     return myStringToFind;
   }
@@ -268,7 +268,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
    *
    * @param s the string to find.
    */
-  public void setStringToFind(@NotNull String s) {
+  public void setStringToFind(@Nonnull String s) {
     boolean changed = !StringUtil.equals(s, myStringToFind);
     myStringToFind = s;
     myPattern = PatternUtil.NOTHING;
@@ -282,7 +282,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
    *
    * @return the string to replace with.
    */
-  @NotNull
+  @Nonnull
   public String getStringToReplace() {
     return myStringToReplace;
   }
@@ -292,7 +292,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
    *
    * @param s the string to replace with.
    */
-  public void setStringToReplace(@NotNull String s) {
+  public void setStringToReplace(@Nonnull String s) {
     boolean changed = !StringUtil.equals(s, myStringToReplace);
     myStringToReplace = s;
     if (changed) {
@@ -900,12 +900,12 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public SearchContext getSearchContext() {
     return searchContext;
   }
 
-  public void setSearchContext(@NotNull SearchContext _searchContext) {
+  public void setSearchContext(@Nonnull SearchContext _searchContext) {
     doSetContext(_searchContext);
   }
 

@@ -12,7 +12,7 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 public class ModuleProjectStructureElement extends ProjectStructureElement {
   private final Module myModule;
 
-  public ModuleProjectStructureElement(@NotNull StructureConfigurableContext context, @NotNull Module module) {
+  public ModuleProjectStructureElement(@Nonnull StructureConfigurableContext context, @Nonnull Module module) {
     super(context);
     myModule = module;
   }

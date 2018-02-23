@@ -30,8 +30,8 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.BalloonLayoutEx;
 import consulo.ui.impl.ToolWindowPanelImplEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ import java.util.List;
 public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   private final ComponentAdapter myResizeListener = new ComponentAdapter() {
     @Override
-    public void componentResized(@NotNull ComponentEvent e) {
+    public void componentResized(@Nonnull ComponentEvent e) {
       queueRelayout();
     }
   };
@@ -77,7 +77,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
 
   private final List<Runnable> myListeners = new ArrayList<>();
 
-  public DesktopBalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets) {
+  public DesktopBalloonLayoutImpl(@Nonnull JRootPane parent, @Nonnull Insets insets) {
     myParent = parent;
     myLayeredPane = parent.getLayeredPane();
     myInsets = insets;
@@ -122,12 +122,12 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   }
 
   @Override
-  public void add(@NotNull Balloon balloon) {
+  public void add(@Nonnull Balloon balloon) {
     add(balloon, null);
   }
 
   @Override
-  public void add(@NotNull final Balloon balloon, @Nullable Object layoutData) {
+  public void add(@Nonnull final Balloon balloon, @Nullable Object layoutData) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Balloon merge = merge(layoutData);
     if (merge == null) {
@@ -210,7 +210,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   }
 
   @Nullable
-  public BalloonLayoutData.MergeInfo preMerge(@NotNull Notification notification) {
+  public BalloonLayoutData.MergeInfo preMerge(@Nonnull Notification notification) {
     Balloon balloon = merge(notification.getGroupId());
     if (balloon != null) {
       BalloonLayoutData layoutData = myLayoutData.get(balloon);
@@ -221,27 +221,27 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     return null;
   }
 
-  public void remove(@NotNull Notification notification) {
+  public void remove(@Nonnull Notification notification) {
     Balloon balloon = merge(notification.getGroupId());
     if (balloon != null) {
       remove(balloon, true);
     }
   }
 
-  private void remove(@NotNull Balloon balloon) {
+  private void remove(@Nonnull Balloon balloon) {
     remove(balloon, false);
     balloon.hide(true);
     fireRelayout();
   }
 
-  private void clearNMore(@NotNull Balloon balloon) {
+  private void clearNMore(@Nonnull Balloon balloon) {
     BalloonLayoutData layoutData = myLayoutData.get(balloon);
     if (layoutData != null && layoutData.mergeData != null) {
       EventLog.clearNMore(layoutData.project, Collections.singleton(layoutData.groupId));
     }
   }
 
-  private void remove(@NotNull Balloon balloon, boolean hide) {
+  private void remove(@Nonnull Balloon balloon, boolean hide) {
     myBalloons.remove(balloon);
     BalloonLayoutData layoutData = myLayoutData.remove(balloon);
     if (layoutData != null) {
@@ -257,8 +257,8 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     return 2;
   }
 
-  @NotNull
-  private Dimension getSize(@NotNull Balloon balloon) {
+  @Nonnull
+  private Dimension getSize(@Nonnull Balloon balloon) {
     BalloonLayoutData layoutData = myLayoutData.get(balloon);
     if (layoutData == null) {
       Dimension size = balloon.getPreferredSize();

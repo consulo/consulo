@@ -27,8 +27,8 @@ import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.ArrayList;
@@ -40,7 +40,8 @@ import java.util.List;
  */
 public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
 
-  @NotNull private final VirtualFileList myFileList;
+  @Nonnull
+  private final VirtualFileList myFileList;
   private final boolean myDeletableFiles;
 
   protected SelectFilesDialog(Project project, List<VirtualFile> originalFiles, String prompt,
@@ -52,7 +53,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     myFileList.setChangesToDisplay(originalFiles);
   }
 
-  @NotNull
+  @Nonnull
   public static SelectFilesDialog init(Project project, List<VirtualFile> originalFiles, String prompt,
                                        VcsShowConfirmationOption confirmationOption,
                                        boolean selectableFiles, boolean showDoNotAskOption, boolean deletableFiles) {
@@ -66,17 +67,17 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     return myFileList.getIncludedChanges();
   }
 
-  public void setSelectedFiles(@NotNull final Collection<VirtualFile> selected) {
+  public void setSelectedFiles(@Nonnull final Collection<VirtualFile> selected) {
     myFileList.setIncludedChanges(selected);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ChangesTreeList getFileList() {
     return myFileList;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DefaultActionGroup createToolbarActions() {
     DefaultActionGroup defaultGroup = super.createToolbarActions();

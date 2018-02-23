@@ -31,8 +31,8 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   private XDebuggerComboBoxEditor myEditor;
   private XExpression myExpression;
 
-  public XDebuggerExpressionComboBox(@NotNull Project project, @NotNull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable @NonNls String historyId,
+  public XDebuggerExpressionComboBox(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable @NonNls String historyId,
                                      @Nullable XSourcePosition sourcePosition, boolean showEditor) {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myComboBox = new ComboBox<>(100);

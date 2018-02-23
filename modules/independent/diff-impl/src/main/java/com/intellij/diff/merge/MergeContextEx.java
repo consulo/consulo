@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.merge;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class MergeContextEx extends MergeContext {
@@ -23,5 +23,5 @@ public abstract class MergeContextEx extends MergeContext {
    * Destroy active MergeViewer and reopen current MergeRequest in the new one
    */
   @RequiredDispatchThread
-  public abstract void reopenWithTool(@NotNull MergeTool tool);
+  public abstract void reopenWithTool(@Nonnull MergeTool tool);
 }

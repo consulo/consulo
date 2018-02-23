@@ -5,7 +5,7 @@ import com.intellij.remoteServer.runtime.RemoteOperationCallback;
 import com.intellij.remoteServer.runtime.ServerTaskExecutor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.ExecutorService;
 
@@ -21,17 +21,17 @@ public class ServerTaskExecutorImpl implements ServerTaskExecutor {
   }
 
   @Override
-  public void execute(@NotNull Runnable command) {
+  public void execute(@Nonnull Runnable command) {
     myTaskExecutor.execute(command);
   }
 
   @Override
-  public void submit(@NotNull Runnable command) {
+  public void submit(@Nonnull Runnable command) {
     execute(command);
   }
 
   @Override
-  public void submit(@NotNull final ThrowableRunnable<?> command, @NotNull final RemoteOperationCallback callback) {
+  public void submit(@Nonnull final ThrowableRunnable<?> command, @Nonnull final RemoteOperationCallback callback) {
     execute(new Runnable() {
       @Override
       public void run() {

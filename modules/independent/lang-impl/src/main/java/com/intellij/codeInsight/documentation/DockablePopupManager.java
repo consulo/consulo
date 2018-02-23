@@ -39,7 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ui.shared.Rectangle2D;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -51,9 +51,10 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   protected ToolWindow myToolWindow = null;
   protected boolean myAutoUpdateDocumentation = PropertiesComponent.getInstance().isTrueValue(getAutoUpdateEnabledProperty());
   protected Runnable myAutoUpdateRequest;
-  @NotNull protected final Project myProject;
+  @Nonnull
+  protected final Project myProject;
 
-  public DockablePopupManager(@NotNull Project project) {
+  public DockablePopupManager(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -67,7 +68,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   protected abstract T createComponent();
   protected abstract void doUpdateComponent(PsiElement element, PsiElement originalElement, T component);
   protected abstract void doUpdateComponent(Editor editor, PsiFile psiFile);
-  protected abstract void doUpdateComponent(@NotNull PsiElement element);
+  protected abstract void doUpdateComponent(@Nonnull PsiElement element);
 
   protected abstract String getTitle(PsiElement element);
   protected abstract String getToolwindowId();
@@ -154,7 +155,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     return new AnAction[]{toggleAutoUpdateAction, createRestorePopupAction()};
   }
 
-  @NotNull
+  @Nonnull
   protected AnAction createRestorePopupAction() {
     return new AnAction("Restore Popup", getRestorePopupDescription(), AllIcons.Actions.Cancel) {
       @Override
@@ -195,14 +196,14 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
     DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>() {
       @Override
-      public void consume(@NotNull DataContext dataContext) {
+      public void consume(@Nonnull DataContext dataContext) {
         if (!myProject.isOpen()) return;
         updateComponentInner(dataContext);
       }
     });
   }
 
-  private void updateComponentInner(@NotNull DataContext dataContext) {
+  private void updateComponentInner(@Nonnull DataContext dataContext) {
     if (dataContext.getData(CommonDataKeys.PROJECT) != myProject) {
       return;
     }

@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -40,7 +40,7 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   private boolean myShouldKillProcessSoftly = true;
   private final boolean myMediatedProcess;
 
-  public KillableProcessHandler(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  public KillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     myMediatedProcess = MEDIATOR_KEY.get(commandLine) == Boolean.TRUE;
   }
@@ -48,14 +48,14 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   /**
    * Starts a process with a {@link RunnerMediator mediator} when {@code withMediator} is set to {@code true} and the platform is Windows.
    */
-  public KillableProcessHandler(@NotNull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
+  public KillableProcessHandler(@Nonnull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
     this(mediate(commandLine, withMediator));
   }
 
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine) {
+  public KillableProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     myMediatedProcess = false;
   }
@@ -63,13 +63,13 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @NotNull Charset charset) {
+  public KillableProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
     super(process, commandLine, charset);
     myMediatedProcess = false;
   }
 
-  @NotNull
-  protected static GeneralCommandLine mediate(@NotNull GeneralCommandLine commandLine, boolean withMediator) {
+  @Nonnull
+  protected static GeneralCommandLine mediate(@Nonnull GeneralCommandLine commandLine, boolean withMediator) {
     if (withMediator && SystemInfo.isWindows && MEDIATOR_KEY.get(commandLine) == null) {
       boolean mediatorInjected = RunnerMediator.injectRunnerCommand(commandLine);
       MEDIATOR_KEY.set(commandLine, mediatorInjected);

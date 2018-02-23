@@ -28,8 +28,8 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.FontUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -308,7 +308,7 @@ public class ColorAndFontDescriptionPanel extends JPanel {
      *
      * @param effectName
      */
-    public void setEffectName(@NotNull String effectName) {
+    public void setEffectName(@Nonnull String effectName) {
       mySelection = effectName;
     }
   }

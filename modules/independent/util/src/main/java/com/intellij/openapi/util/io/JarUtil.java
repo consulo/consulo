@@ -16,8 +16,8 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,14 +34,14 @@ public class JarUtil {
   /**
    * Returns true if the given .jar file exists and contains the given class.
    */
-  public static boolean containsClass(@NotNull String jarPath, @NotNull String className) {
+  public static boolean containsClass(@Nonnull String jarPath, @Nonnull String className) {
     return containsClass(new File(jarPath), className);
   }
 
   /**
    * Returns true if the given .jar file exists and contains the given class.
    */
-  public static boolean containsClass(@NotNull File file, String className) {
+  public static boolean containsClass(@Nonnull File file, String className) {
     String entryPath = className.replace('.', '/') + ".class";
     return containsEntry(file, entryPath);
   }
@@ -71,7 +71,7 @@ public class JarUtil {
    * or null if missing or a file does not contain a manifest.
    */
   @Nullable
-  public static String getJarAttribute(@NotNull File file, @NotNull Attributes.Name attribute) {
+  public static String getJarAttribute(@Nonnull File file, @Nonnull Attributes.Name attribute) {
     return getJarAttributeImpl(file, null, attribute);
   }
 
@@ -80,11 +80,11 @@ public class JarUtil {
    * or null if missing or a file does not contain a manifest.
    */
   @Nullable
-  public static String getJarAttribute(@NotNull File file, @NotNull String entryName, @NotNull Attributes.Name attribute) {
+  public static String getJarAttribute(@Nonnull File file, @Nonnull String entryName, @Nonnull Attributes.Name attribute) {
     return getJarAttributeImpl(file, entryName, attribute);
   }
 
-  private static String getJarAttributeImpl(@NotNull File file, @Nullable String entryName, @NotNull Attributes.Name attribute) {
+  private static String getJarAttributeImpl(@Nonnull File file, @Nullable String entryName, @Nonnull Attributes.Name attribute) {
     if (file.canRead()) {
       try {
         JarFile jarFile = new JarFile(file);
@@ -112,7 +112,7 @@ public class JarUtil {
    * Returns loaded instance, or null if requested entry is missed or invalid.
    */
   @Nullable
-  public static Properties loadProperties(@NotNull File file, @NotNull String entryName) {
+  public static Properties loadProperties(@Nonnull File file, @Nonnull String entryName) {
     if (file.canRead()) {
       try {
         ZipFile zipFile = new ZipFile(file);

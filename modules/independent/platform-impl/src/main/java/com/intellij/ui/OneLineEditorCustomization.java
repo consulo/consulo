@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov
@@ -31,7 +31,7 @@ public class OneLineEditorCustomization extends SimpleEditorCustomization {
   }
 
   @Override
-  public void customize(@NotNull EditorEx editor) {
+  public void customize(@Nonnull EditorEx editor) {
     editor.setOneLineMode(isEnabled());
   }
 

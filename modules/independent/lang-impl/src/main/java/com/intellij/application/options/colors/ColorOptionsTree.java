@@ -20,8 +20,8 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.*;
 import java.util.*;
@@ -42,7 +42,7 @@ public class ColorOptionsTree extends Tree {
     }
   };
 
-  public ColorOptionsTree(@NotNull String categoryName) {
+  public ColorOptionsTree(@Nonnull String categoryName) {
     super(createTreeModel());
     myTreeModel = (DefaultTreeModel)getModel();
     setRootVisible(false);
@@ -51,7 +51,7 @@ public class ColorOptionsTree extends Tree {
     new TreeSpeedSearch(this, TreeSpeedSearch.NODE_DESCRIPTOR_TOSTRING, true);
   }
 
-  public void fillOptions(@NotNull ColorAndFontOptions options) {
+  public void fillOptions(@Nonnull ColorAndFontOptions options) {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     for (EditorSchemeAttributeDescriptor description : getOrderedDescriptors(options)) {
       if (!description.getGroup().equals(myCategoryName)) continue;
@@ -71,7 +71,7 @@ public class ColorOptionsTree extends Tree {
     return new DefaultTreeModel(new DefaultMutableTreeTableNode());
   }
 
-  private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@NotNull ColorAndFontOptions options) {
+  private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@Nonnull ColorAndFontOptions options) {
     ArrayList<EditorSchemeAttributeDescriptor> list = ContainerUtil.newArrayList();
     for (EditorSchemeAttributeDescriptor description : options.getCurrentDescriptions()) {
       if (!description.getGroup().equals(myCategoryName)) continue;
@@ -96,10 +96,10 @@ public class ColorOptionsTree extends Tree {
     return null;
   }
 
-  public void selectOptionByType(@NotNull final String attributeType) {
+  public void selectOptionByType(@Nonnull final String attributeType) {
     selectPath(findOption(myTreeModel.getRoot(), new DescriptorMatcher() {
       @Override
-      public boolean matches(@NotNull Object data) {
+      public boolean matches(@Nonnull Object data) {
         if (data instanceof EditorSchemeAttributeDescriptor) {
           return attributeType.equals(((EditorSchemeAttributeDescriptor)data).getType());
         }
@@ -108,17 +108,17 @@ public class ColorOptionsTree extends Tree {
     }));
   }
 
-  public void selectOptionByName(@NotNull final String optionName) {
+  public void selectOptionByName(@Nonnull final String optionName) {
     selectPath(findOption(myTreeModel.getRoot(), new DescriptorMatcher() {
       @Override
-      public boolean matches(@NotNull Object data) {
+      public boolean matches(@Nonnull Object data) {
         return !optionName.isEmpty() &&  StringUtil.containsIgnoreCase(data.toString(), optionName);
       }
     }));
   }
 
   @Nullable
-  private TreePath findOption(@NotNull Object nodeObject, @NotNull DescriptorMatcher matcher) {
+  private TreePath findOption(@Nonnull Object nodeObject, @Nonnull DescriptorMatcher matcher) {
     for (int i = 0; i < myTreeModel.getChildCount(nodeObject); i ++) {
       Object childObject = myTreeModel.getChild(nodeObject, i);
       if (childObject instanceof MyTreeNode) {
@@ -141,7 +141,7 @@ public class ColorOptionsTree extends Tree {
   }
 
   @Nullable
-  private static List<String> extractPath(@NotNull EditorSchemeAttributeDescriptor descriptor) {
+  private static List<String> extractPath(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
     if (descriptor instanceof ColorAndFontDescription) {
       String name = descriptor.toString();
       List<String> path = new ArrayList<String>();
@@ -163,17 +163,17 @@ public class ColorOptionsTree extends Tree {
   private static class MyTreeNode extends DefaultMutableTreeNode {
     private final String myName;
 
-    public MyTreeNode(@NotNull EditorSchemeAttributeDescriptor descriptor, @NotNull String name) {
+    public MyTreeNode(@Nonnull EditorSchemeAttributeDescriptor descriptor, @Nonnull String name) {
       super(descriptor);
       myName = name;
     }
 
-    public MyTreeNode(@NotNull EditorSchemeAttributeDescriptor descriptor) {
+    public MyTreeNode(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
       super(descriptor);
       myName = descriptor.toString();
     }
 
-    public MyTreeNode(@NotNull String groupName) {
+    public MyTreeNode(@Nonnull String groupName) {
       super(groupName);
       myName = groupName;
     }
@@ -186,10 +186,10 @@ public class ColorOptionsTree extends Tree {
   }
 
   private interface DescriptorMatcher {
-    boolean matches(@NotNull Object data);
+    boolean matches(@Nonnull Object data);
   }
 
-  private static MyTreeNode ensureGroup(@NotNull DefaultMutableTreeNode root, @NotNull List<String> path, int index) {
+  private static MyTreeNode ensureGroup(@Nonnull DefaultMutableTreeNode root, @Nonnull List<String> path, int index) {
     String groupName = path.get(index ++);
     for (int i = 0; i < root.getChildCount(); i ++) {
       TreeNode child = root.getChildAt(i);

@@ -26,11 +26,12 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ui.StripeTabPanel;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -44,7 +45,7 @@ public class AddModuleDependencyDialog extends DialogWrapper {
   private StripeTabPanel myTabs;
 
   @RequiredDispatchThread
-  public AddModuleDependencyDialog(@NotNull ClasspathPanel panel, StructureConfigurableContext context) {
+  public AddModuleDependencyDialog(@Nonnull ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel.getComponent(), true);
 
     ModifiableRootModel rootModel = panel.getRootModel();

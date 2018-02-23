@@ -35,8 +35,8 @@ import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,15 +51,20 @@ import java.util.List;
  */
 public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
-  @NotNull private final JPanel myContent = new JPanel(new GridBagLayout());
+  @Nonnull
+  private final JPanel myContent = new JPanel(new GridBagLayout());
 
-  @NotNull private final Language                         myLanguage;
-  @NotNull private final ArrangementStandardSettingsAware mySettingsAware;
-  @NotNull private final ArrangementGroupingRulesPanel    myGroupingRulesPanel;
-  @NotNull private final ArrangementMatchingRulesPanel    myMatchingRulesPanel;
+  @Nonnull
+  private final Language                         myLanguage;
+  @Nonnull
+  private final ArrangementStandardSettingsAware mySettingsAware;
+  @Nonnull
+  private final ArrangementGroupingRulesPanel    myGroupingRulesPanel;
+  @Nonnull
+  private final ArrangementMatchingRulesPanel    myMatchingRulesPanel;
   @Nullable private final ForceArrangementPanel myForceArrangementPanel;
 
-  public ArrangementSettingsPanel(@NotNull CodeStyleSettings settings, @NotNull Language language) {
+  public ArrangementSettingsPanel(@Nonnull CodeStyleSettings settings, @Nonnull Language language) {
     super(settings);
     myLanguage = language;
     Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
@@ -108,7 +113,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myGroupingRulesPanel);
   }
 
-  private void registerShortcut(@NotNull String actionId, @NotNull ShortcutSet shortcut, @NotNull JComponent component) {
+  private void registerShortcut(@Nonnull String actionId, @Nonnull ShortcutSet shortcut, @Nonnull JComponent component) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.registerCustomShortcutSet(shortcut, component, this);
@@ -129,7 +134,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  private StdArrangementSettings getSettings(@NotNull CodeStyleSettings settings) {
+  private StdArrangementSettings getSettings(@Nonnull CodeStyleSettings settings) {
     StdArrangementSettings result = (StdArrangementSettings)settings.getCommonSettings(myLanguage).getArrangementSettings();
     if (result == null) {
       result = mySettingsAware.getDefaultSettings();
@@ -175,8 +180,8 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     }
   }
 
-  @NotNull
-  private static List<ArrangementSectionRule> copy(@NotNull List<ArrangementSectionRule> rules) {
+  @Nonnull
+  private static List<ArrangementSectionRule> copy(@Nonnull List<ArrangementSectionRule> rules) {
     List<ArrangementSectionRule> result = new ArrayList<ArrangementSectionRule>();
     for (ArrangementSectionRule rule : rules) {
       result.add(rule.clone());

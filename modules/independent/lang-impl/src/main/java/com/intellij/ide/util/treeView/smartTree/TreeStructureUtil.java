@@ -19,7 +19,7 @@ package com.intellij.ide.util.treeView.smartTree;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ui.PlaceHolder;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 
@@ -43,7 +43,7 @@ public class TreeStructureUtil {
     return items;
   }
 
-  public static boolean isInStructureViewPopup(@NotNull PlaceHolder<String> model) {
+  public static boolean isInStructureViewPopup(@Nonnull PlaceHolder<String> model) {
     return PLACE.equals(model.getPlace());
   }
 

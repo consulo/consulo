@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 
@@ -52,7 +52,7 @@ public final class TimedDeadzone {
     return myMouseWithin && System.currentTimeMillis() - myTimeEntered < getLength();
   }
 
-  public void setLength(@NotNull final Length deadZone) {
+  public void setLength(@Nonnull final Length deadZone) {
     myLength = deadZone;
   }
 

@@ -21,8 +21,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -41,7 +41,7 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
     myPackagingElement = packagingElement;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProjectStructureElement getContainingElement() {
     return myContext.getOrCreateArtifactElement(myArtifact);
@@ -56,7 +56,7 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback navigate() {
     final Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);

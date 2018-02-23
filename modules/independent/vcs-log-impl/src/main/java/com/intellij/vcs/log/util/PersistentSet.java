@@ -15,15 +15,15 @@
  */
 package com.intellij.vcs.log.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
 public interface PersistentSet<T> {
 
-  boolean contains(@NotNull T element) throws IOException;
+  boolean contains(@Nonnull T element) throws IOException;
 
-  void put(@NotNull T element) throws IOException;
+  void put(@Nonnull T element) throws IOException;
 
   void flush();
 

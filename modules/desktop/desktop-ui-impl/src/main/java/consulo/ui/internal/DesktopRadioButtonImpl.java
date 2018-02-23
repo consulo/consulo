@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.RadioButton;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,16 +31,16 @@ public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton,
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<Boolean> valueListener) {
+  public void addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
     addItemListener(new DesktopValueListenerAsItemListenerImpl<>(valueListener, false));
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueListener<Boolean> valueListener) {
+  public void removeValueListener(@Nonnull ValueListener<Boolean> valueListener) {
     removeItemListener(new DesktopValueListenerAsItemListenerImpl<>(valueListener, false));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Boolean getValue() {
     return isSelected();
@@ -48,7 +48,7 @@ public class DesktopRadioButtonImpl extends JRadioButton implements RadioButton,
 
   @RequiredUIAccess
   @Override
-  public void setValue(@NotNull Boolean value, boolean fireEvents) {
+  public void setValue(@Nonnull Boolean value, boolean fireEvents) {
     setSelected(value);
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This interface specifies a location in its file editor.
@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
  * not expected to be compared together.
  */
 public interface FileEditorLocation extends Comparable<FileEditorLocation> {
-  @NotNull
+  @Nonnull
   FileEditor getEditor();
 }

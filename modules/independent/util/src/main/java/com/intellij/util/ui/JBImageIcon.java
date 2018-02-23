@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ import java.awt.image.ImageObserver;
  * @author Konstantin Bulenkov
  */
 public class JBImageIcon extends ImageIcon {
-  public JBImageIcon(@NotNull Image image) {
+  public JBImageIcon(@Nonnull Image image) {
     super(image);
   }
 

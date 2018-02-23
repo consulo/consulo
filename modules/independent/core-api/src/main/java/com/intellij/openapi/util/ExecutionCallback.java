@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,7 +61,7 @@ class ExecutionCallback {
   }
 
   private static class CompositeRunnable extends ArrayList<Runnable> implements Runnable {
-    private CompositeRunnable(@NotNull Collection<? extends Runnable> c) {
+    private CompositeRunnable(@Nonnull Collection<? extends Runnable> c) {
       super(c);
     }
 
@@ -73,7 +73,7 @@ class ExecutionCallback {
     }
   }
 
-  final void doWhenExecuted(@NotNull final Runnable runnable) {
+  final void doWhenExecuted(@Nonnull final Runnable runnable) {
     Runnable toRun;
     synchronized (this) {
       if (isExecuted()) {

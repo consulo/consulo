@@ -19,8 +19,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     setTitle(title);
     myChooser = new ElementsChooser<T>(false) {
       @Override
-      protected String getItemText(@NotNull final T item) {
+      protected String getItemText(@Nonnull final T item) {
         return ChooseElementsDialog.this.getItemText(item);
       }
     };
@@ -106,12 +106,12 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
   @Nullable
   protected abstract Icon getItemIcon(T item);
 
-  @NotNull
+  @Nonnull
   public List<T> getChosenElements() {
     return isOK() ? myChooser.getSelectedElements() : Collections.<T>emptyList();
   }
 
-  public void selectElements(@NotNull List<T> elements) {
+  public void selectElements(@Nonnull List<T> elements) {
     myChooser.selectElements(elements);
   }
 

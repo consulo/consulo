@@ -19,8 +19,8 @@ import com.intellij.application.options.PathMacrosCollectorImpl;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.application.PathMacros;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class PathMacrosServiceImpl extends PathMacrosService {
   @Override
-  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @NotNull PathMacros pathMacros) {
+  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
     return PathMacrosCollectorImpl.getMacroNames(root, filter, pathMacros);
   }
 }

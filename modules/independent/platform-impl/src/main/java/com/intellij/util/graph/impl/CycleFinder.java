@@ -17,7 +17,7 @@
 package com.intellij.util.graph.impl;
 
 import com.intellij.util.graph.Graph;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ public class CycleFinder<Node> {
     myGraph = graph;
   }
 
-  @NotNull
+  @Nonnull
   public Set<List<Node>> getNodeCycles(final Node node){
     final Set<List<Node>> result = new HashSet<List<Node>>();
 

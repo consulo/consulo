@@ -17,7 +17,7 @@
 package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Gregory.Shrago

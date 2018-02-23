@@ -16,7 +16,7 @@
 package consulo.platform;
 
 import consulo.annotations.Internal;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Internal
 public class DesktopPlatformInternalImpl extends PlatformInternal {
-  @NotNull
+  @Nonnull
   @Override
   Platform build() {
     return new DesktopPlatformImpl();

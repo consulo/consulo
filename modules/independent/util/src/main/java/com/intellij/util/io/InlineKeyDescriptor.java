@@ -19,7 +19,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -43,14 +43,14 @@ public abstract class InlineKeyDescriptor<T> implements KeyDescriptor<T> {
   }
 
   @Override
-  public final void save(@NotNull DataOutput out, T value) throws IOException {
+  public final void save(@Nonnull DataOutput out, T value) throws IOException {
     int v = toInt(value);
     if (myCompactFormat) DataInputOutputUtil.writeINT(out, v);
     else out.writeInt(v);
   }
 
   @Override
-  public final T read(@NotNull DataInput in) throws IOException {
+  public final T read(@Nonnull DataInput in) throws IOException {
     int n;
     if (myCompactFormat) n = DataInputOutputUtil.readINT(in);
     else n = in.readInt();

@@ -25,8 +25,8 @@ import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.progress.util.ColorProgressBar;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -191,7 +191,7 @@ public class SMTestRunnerResultsFormTest extends BaseSMTRunnerTestCase {
 
     myResultsViewer.setShowStatisticForProxyHandler(new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender,
+      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender,
                                                   final boolean requestFocus) {
         onSelectedHappend.set();
         proxyRef.set(selectedTestProxy);

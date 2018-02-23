@@ -2,8 +2,7 @@ package com.intellij.remoteServer.configuration;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.remoteServer.ServerType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -17,12 +16,12 @@ public abstract class RemoteServersManager {
 
   public abstract List<RemoteServer<?>> getServers();
 
-  public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@NotNull ServerType<C> type);
+  public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type);
 
-  @Nullable
-  public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(@NotNull String name, @NotNull ServerType<C> type);
+  @javax.annotation.Nullable
+  public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type);
 
-  public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@NotNull ServerType<C> type, @NotNull String name);
+  public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name);
 
   public abstract void addServer(RemoteServer<?> server);
 

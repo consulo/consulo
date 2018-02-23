@@ -25,8 +25,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.CachedValueBase;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -35,7 +35,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
   private final PsiManager myManager;
   protected volatile long myLastPsiTimeStamp = -1;
 
-  public PsiCachedValue(@NotNull PsiManager manager) {
+  public PsiCachedValue(@Nonnull PsiManager manager) {
     myManager = manager;
   }
 
@@ -60,7 +60,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
   }
 
   @Override
-  protected boolean isUpToDate(@NotNull Data data) {
+  protected boolean isUpToDate(@Nonnull Data data) {
     return !myManager.isDisposed() && super.isUpToDate(data);
   }
 

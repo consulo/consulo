@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.rollback.RollbackProgressListener;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashSet;
@@ -74,11 +74,11 @@ public class RollbackProgressModifier implements RollbackProgressListener {
     }
   }
 
-  public void accept(@NotNull final Change change) {
+  public void accept(@Nonnull final Change change) {
     acceptImpl(ChangesUtil.getFilePath(change).getIOFile().getAbsolutePath());
   }
 
-  public void accept(@NotNull final FilePath filePath) {
+  public void accept(@Nonnull final FilePath filePath) {
     acceptImpl(filePath.getIOFile().getAbsolutePath());
   }
 

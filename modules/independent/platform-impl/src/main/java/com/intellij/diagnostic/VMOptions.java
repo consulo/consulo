@@ -22,8 +22,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class VMOptions {
     }
   }
 
-  public static int readOption(@NotNull MemoryKind kind, boolean effective) {
+  public static int readOption(@Nonnull MemoryKind kind, boolean effective) {
     List<String> arguments;
     if (effective) {
       arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
@@ -96,16 +96,16 @@ public class VMOptions {
     return 1;
   }
 
-  public static void writeOption(@NotNull MemoryKind option, int value) {
+  public static void writeOption(@Nonnull MemoryKind option, int value) {
     String optionValue = option.option + value + "m";
     writeGeneralOption(option.pattern, optionValue);
   }
 
-  public static void writeOption(@NotNull String option, @NotNull String separator, @NotNull String value) {
+  public static void writeOption(@Nonnull String option, @Nonnull String separator, @Nonnull String value) {
     writeGeneralOption(Pattern.compile("-D" + option + separator + "(true|false)*([a-zA-Z]*)"), "-D" + option + separator + value);
   }
 
-  private static void writeGeneralOption(@NotNull Pattern pattern, @NotNull String value) {
+  private static void writeGeneralOption(@Nonnull Pattern pattern, @Nonnull String value) {
     File file = getWriteFile();
     if (file == null) {
       LOG.warn("VM options file not configured");

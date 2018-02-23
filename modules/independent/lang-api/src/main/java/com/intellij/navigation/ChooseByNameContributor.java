@@ -17,7 +17,7 @@ package com.intellij.navigation;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows a plugin to add items to "Goto Class" and "Goto Symbol" lists.
@@ -40,7 +40,7 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of names.
    */
-  @NotNull
+  @Nonnull
   String[] getNames(Project project, boolean includeNonProjectItems);
 
   /**
@@ -53,6 +53,6 @@ public interface ChooseByNameContributor {
    *                               library classes) should be included in the returned array.
    * @return the array of navigation items.
    */
-  @NotNull
+  @Nonnull
   NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems);
 }

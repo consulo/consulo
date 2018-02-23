@@ -19,7 +19,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.ProximityLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class SameModuleWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@NotNull final PsiElement element, @NotNull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
     final Module elementModule = ModuleUtil.findModuleForPsiElement(element);
     if (location.getPositionModule() == elementModule) {
       return 2;

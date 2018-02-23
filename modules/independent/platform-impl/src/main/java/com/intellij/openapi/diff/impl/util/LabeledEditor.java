@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.diff.impl.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -36,7 +36,7 @@ public class LabeledEditor extends JPanel {
     this(null);
   }
 
-  public void setComponent(@NotNull JComponent component, @NotNull JComponent titleComponent) {
+  public void setComponent(@Nonnull JComponent component, @Nonnull JComponent titleComponent) {
     myMainComponent = component;
     removeAll();
 

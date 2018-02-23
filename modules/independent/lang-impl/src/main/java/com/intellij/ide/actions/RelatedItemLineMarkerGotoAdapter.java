@@ -25,7 +25,7 @@ import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,9 +33,9 @@ import java.util.*;
  * @author nik
  */
 public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
-  @NotNull
+  @Nonnull
   @Override
-  public List<? extends GotoRelatedItem> getItems(@NotNull PsiElement context) {
+  public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement context) {
     List<PsiElement> parents = new ArrayList<PsiElement>();
     PsiElement current = context;
     Set<Language> languages = new HashSet<Language>();

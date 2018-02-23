@@ -20,7 +20,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -36,7 +36,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the created run configuration settings.
    */
-  @NotNull
+  @Nonnull
   public abstract RunnerAndConfigurationSettings getConfigurationSettings();
 
   public abstract void setConfigurationSettings(RunnerAndConfigurationSettings configurationSettings);
@@ -46,7 +46,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the run configuration object.
    */
-  @NotNull
+  @Nonnull
   public RunConfiguration getConfiguration() {
     return getConfigurationSettings().getConfiguration();
   }
@@ -56,7 +56,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the configuration type.
    */
-  @NotNull
+  @Nonnull
   public ConfigurationType getConfigurationType() {
     return getConfiguration().getType();
   }
@@ -67,7 +67,7 @@ public abstract class ConfigurationFromContext {
    *
    * @return the PSI element from which the configuration was created.
    */
-  @NotNull
+  @Nonnull
   public abstract PsiElement getSourceElement();
 
   /**

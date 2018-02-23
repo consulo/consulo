@@ -23,7 +23,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,7 +92,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     myClickListener = clickListener;
   }
 
-  public void build(String text, @Nullable MultiImageState imageState) {
+  public void build(String text, @javax.annotation.Nullable MultiImageState imageState) {
     CellPanel cell = (CellPanel)getWidget();
 
     CellPanel panel = isVertical() ? new VerticalPanel() : new HorizontalPanel();

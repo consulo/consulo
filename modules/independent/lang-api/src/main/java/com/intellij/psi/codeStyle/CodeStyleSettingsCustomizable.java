@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface CodeStyleSettingsCustomizable {
   enum OptionAnchor {
@@ -262,7 +262,7 @@ public interface CodeStyleSettingsCustomizable {
 
   void showStandardOptions(String... optionNames);
 
-  default void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass, String fieldName, String title, @Nullable String groupName, Object... options) {
+  default void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass, String fieldName, String title, @javax.annotation.Nullable String groupName, Object... options) {
   }
 
   default void showCustomOption(Class<? extends CustomCodeStyleSettings> settingsClass,

@@ -23,13 +23,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     if (project != null) {
       Switcher.createAndShowSwitcher(e, "Recently Edited Files", true, IdeDocumentHistory.getInstance(project).getChangedFiles());
@@ -38,7 +38,7 @@ public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(e.getProject() != null);
   }
 }

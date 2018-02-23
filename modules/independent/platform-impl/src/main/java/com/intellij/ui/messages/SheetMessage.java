@@ -25,7 +25,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.Animator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +86,7 @@ public class SheetMessage {
 
     myWindow.addWindowListener(new WindowAdapter() {
       @Override
-      public void windowActivated(@NotNull WindowEvent e) {
+      public void windowActivated(@Nonnull WindowEvent e) {
         super.windowActivated(e);
       }
     });
@@ -108,7 +108,7 @@ public class SheetMessage {
 
       myWindow.addComponentListener(new ComponentAdapter() {
         @Override
-        public void componentShown(@NotNull ComponentEvent e) {
+        public void componentShown(@Nonnull ComponentEvent e) {
           super.componentShown(e);
           setWindowOpacity(1.0f);
           myWindow.setSize(myController.SHEET_NC_WIDTH, myController.SHEET_NC_HEIGHT);
@@ -183,7 +183,7 @@ public class SheetMessage {
     staticImage = myController.getStaticImage();
     JPanel staticPanel = new JPanel() {
       @Override
-      public void paint(@NotNull Graphics g) {
+      public void paint(@Nonnull Graphics g) {
         super.paint(g);
         if (staticImage != null) {
           Graphics2D g2d = (Graphics2D) g.create();

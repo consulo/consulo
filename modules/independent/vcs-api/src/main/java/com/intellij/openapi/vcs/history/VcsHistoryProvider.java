@@ -21,8 +21,8 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    */
   boolean isDateOmittable();
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   String getHelpId();
 
@@ -61,7 +61,7 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * The returned {@link DiffFromHistoryHandler} will be called, when user calls "Show Diff" from the file history panel.
    * If {@code null} is returned, the standard handler will be used, which is suitable for most cases.
    */
-  @Nullable
+  @javax.annotation.Nullable
   DiffFromHistoryHandler getHistoryDiffHandler();
 
   /**
@@ -70,6 +70,6 @@ public interface VcsHistoryProvider extends VcsProviderMarker {
    * @param file File which history is requested or may be requested.
    * @return true if the VCS can show history for this file.
    */
-  boolean canShowHistoryFor(@NotNull VirtualFile file);
+  boolean canShowHistoryFor(@Nonnull VirtualFile file);
 
 }

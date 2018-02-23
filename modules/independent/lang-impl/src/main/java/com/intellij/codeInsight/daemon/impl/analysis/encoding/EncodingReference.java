@@ -26,8 +26,8 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public String getCanonicalText() {
     return myCharsetName;
   }
@@ -85,7 +85,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredWriteAction
   @Override
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return null;
   }
 
@@ -97,7 +97,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getVariants() {
     Charset[] charsets = CharsetToolkit.getAvailableCharsets();
     List<LookupElement> suggestions = new ArrayList<>(charsets.length);
@@ -114,7 +114,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUnresolvedMessagePattern() {
     //noinspection UnresolvedPropertyKey
     return CodeInsightBundle.message("unknown.encoding.0");

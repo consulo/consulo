@@ -19,8 +19,8 @@ package com.intellij.history;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public abstract class LocalHistory {
@@ -32,13 +32,13 @@ public abstract class LocalHistory {
 
   public abstract LocalHistoryAction startAction(@Nullable String name);
 
-  public abstract Label putSystemLabel(Project p, @NotNull String name, int color);
+  public abstract Label putSystemLabel(Project p, @Nonnull String name, int color);
 
-  public Label putSystemLabel(Project p, @NotNull String name) {
+  public Label putSystemLabel(Project p, @Nonnull String name) {
     return putSystemLabel(p, name, -1);
   }
 
-  public abstract Label putUserLabel(Project p, @NotNull String name);
+  public abstract Label putUserLabel(Project p, @Nonnull String name);
 
   @Nullable
   public abstract byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c);

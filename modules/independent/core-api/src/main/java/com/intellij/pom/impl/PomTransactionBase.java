@@ -21,7 +21,7 @@ import com.intellij.pom.PomTransaction;
 import com.intellij.pom.event.PomModelEvent;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class PomTransactionBase implements PomTransaction{
   private final PsiElement myScope;

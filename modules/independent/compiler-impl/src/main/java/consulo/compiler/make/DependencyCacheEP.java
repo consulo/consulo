@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 
@@ -33,7 +33,7 @@ public class DependencyCacheEP extends AbstractExtensionPointBean {
   public String implementationClass;
 
   private NotNullLazyValue<Constructor<DependencyCache>> myClassValue = new NotNullLazyValue<Constructor<DependencyCache>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Constructor<DependencyCache> compute() {
       Class<DependencyCache> classNoExceptions = findClassNoExceptions(implementationClass);

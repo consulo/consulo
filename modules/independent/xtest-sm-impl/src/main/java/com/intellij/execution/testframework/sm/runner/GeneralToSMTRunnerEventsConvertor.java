@@ -23,8 +23,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -45,8 +45,8 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   private boolean myIsTestingFinished;
 
 
-  public GeneralToSMTRunnerEventsConvertor(Project project, @NotNull SMTestProxy.SMRootTestProxy testsRootNode,
-                                           @NotNull String testFrameworkName) {
+  public GeneralToSMTRunnerEventsConvertor(Project project, @Nonnull SMTestProxy.SMRootTestProxy testsRootNode,
+                                           @Nonnull String testFrameworkName) {
     super(project, testFrameworkName, testsRootNode);
     mySuitesStack = new TestSuiteStack(testFrameworkName);
   }
@@ -121,11 +121,11 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void setPrinterProvider(@NotNull TestProxyPrinterProvider printerProvider) {
+  public void setPrinterProvider(@Nonnull TestProxyPrinterProvider printerProvider) {
   }
 
   @Override
-  public void onTestStarted(@NotNull final TestStartedEvent testStartedEvent) {
+  public void onTestStarted(@Nonnull final TestStartedEvent testStartedEvent) {
     addToInvokeLater(() -> {
       final String testName = testStartedEvent.getName();
       final String locationUrl = testStartedEvent.getLocationUrl();
@@ -177,7 +177,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onSuiteStarted(@NotNull final TestSuiteStartedEvent suiteStartedEvent) {
+  public void onSuiteStarted(@Nonnull final TestSuiteStartedEvent suiteStartedEvent) {
     addToInvokeLater(() -> {
       final String suiteName = suiteStartedEvent.getName();
       final String locationUrl = suiteStartedEvent.getLocationUrl();
@@ -241,7 +241,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onTestFinished(@NotNull final TestFinishedEvent testFinishedEvent) {
+  public void onTestFinished(@Nonnull final TestFinishedEvent testFinishedEvent) {
     addToInvokeLater(() -> {
       final String testName = testFinishedEvent.getName();
       final Long duration = testFinishedEvent.getDuration();
@@ -266,7 +266,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onSuiteFinished(@NotNull final TestSuiteFinishedEvent suiteFinishedEvent) {
+  public void onSuiteFinished(@Nonnull final TestSuiteFinishedEvent suiteFinishedEvent) {
     addToInvokeLater(() -> {
       final String suiteName = suiteFinishedEvent.getName();
       final SMTestProxy mySuite = mySuitesStack.popSuite(suiteName);
@@ -282,7 +282,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onUncapturedOutput(@NotNull final String text, final Key outputType) {
+  public void onUncapturedOutput(@Nonnull final String text, final Key outputType) {
     addToInvokeLater(() -> {
       final SMTestProxy currentProxy = findCurrentTestOrSuite();
       currentProxy.addOutput(text, outputType);
@@ -290,8 +290,8 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onError(@NotNull final String localizedMessage,
-                      @Nullable final String stackTrace,
+  public void onError(@Nonnull final String localizedMessage,
+                      @javax.annotation.Nullable final String stackTrace,
                       final boolean isCritical) {
     addToInvokeLater(() -> {
       final SMTestProxy currentProxy = findCurrentTestOrSuite();
@@ -301,7 +301,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
 
 
   @Override
-  public void onTestFailure(@NotNull final TestFailedEvent testFailedEvent) {
+  public void onTestFailure(@Nonnull final TestFailedEvent testFailedEvent) {
     addToInvokeLater(() -> {
       final String testName = testFailedEvent.getName();
       if (testName == null) {
@@ -359,7 +359,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onTestIgnored(@NotNull final TestIgnoredEvent testIgnoredEvent) {
+  public void onTestIgnored(@Nonnull final TestIgnoredEvent testIgnoredEvent) {
     addToInvokeLater(() -> {
       final String testName = testIgnoredEvent.getName();
       if (testName == null) {
@@ -398,7 +398,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
   }
 
   @Override
-  public void onTestOutput(@NotNull final TestOutputEvent testOutputEvent) {
+  public void onTestOutput(@Nonnull final TestOutputEvent testOutputEvent) {
     addToInvokeLater(() -> {
       final String testName = testOutputEvent.getName();
       final String text = testOutputEvent.getText();
@@ -426,7 +426,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
     addToInvokeLater(() -> fireOnTestsCountInSuite(count));
   }
 
-  @NotNull
+  @Nonnull
   protected final SMTestProxy getCurrentSuite() {
     final SMTestProxy currentSuite = mySuitesStack.getCurrentSuite();
 
@@ -451,7 +451,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
     return myRunningTestsFullNameToProxy.size();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected SMTestProxy getProxyByFullTestName(final String fullTestName) {
     return myRunningTestsFullNameToProxy.get(fullTestName);
   }

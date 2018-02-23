@@ -18,8 +18,8 @@ package consulo.platform;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +33,7 @@ public interface Platform {
   @Deprecated
   @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
   @SuppressWarnings("deprecation")
-  static void hacky(@NotNull Runnable desktopVariant, @NotNull Runnable unifiedVariant) {
+  static void hacky(@Nonnull Runnable desktopVariant, @Nonnull Runnable unifiedVariant) {
     if (ourUnifiedVariantAnyway) {
       unifiedVariant.run();
       return;
@@ -50,7 +50,7 @@ public interface Platform {
   @Deprecated
   @DeprecationInfo("This is marker for future unify. In most case unified variant works good, but need more tests")
   @SuppressWarnings("deprecation")
-  static void onlyAtDesktop(@NotNull Runnable runnable) {
+  static void onlyAtDesktop(@Nonnull Runnable runnable) {
     if(current().isDesktop()) {
       runnable.run();
     }
@@ -62,12 +62,12 @@ public interface Platform {
   }
   //endregion
 
-  @NotNull
+  @Nonnull
   static Platform current() {
     return PlatformInternal.current();
   }
 
-  @NotNull
+  @Nonnull
   PluginId getPluginId();
 
   boolean isDesktop();
@@ -75,18 +75,18 @@ public interface Platform {
   boolean isWebService();
 
   @Nullable
-  String getRuntimeProperty(@NotNull String key);
+  String getRuntimeProperty(@Nonnull String key);
 
   @Nullable
-  default String getRuntimeProperty(@NotNull String key, @NotNull String defaultValue) {
+  default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
   }
 
   @Nullable
-  String getEnvironmentVariable(@NotNull String key);
+  String getEnvironmentVariable(@Nonnull String key);
 
   @Nullable
-  default String getEnvironmentVariable(@NotNull String key, @NotNull String defaultValue) {
+  default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
     return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
   }
 }

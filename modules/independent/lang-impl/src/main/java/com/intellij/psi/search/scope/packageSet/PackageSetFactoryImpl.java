@@ -22,7 +22,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopesLexer;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class PackageSetFactoryImpl extends PackageSetFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl");

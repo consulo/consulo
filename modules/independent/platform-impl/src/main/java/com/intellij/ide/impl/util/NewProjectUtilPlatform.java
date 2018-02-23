@@ -34,7 +34,7 @@ import consulo.annotations.RequiredWriteAction;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NewProjectUtilPlatform {
   public static void closePreviousProject(final Project projectToClose) {
@@ -47,14 +47,14 @@ public class NewProjectUtilPlatform {
     }
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static Module doCreate(@NotNull NewProjectPanel projectPanel, @NotNull final Project project, @NotNull final VirtualFile baseDir) {
+  public static Module doCreate(@Nonnull NewProjectPanel projectPanel, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
     return doCreate(projectPanel, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
-  @NotNull
-  public static Module doCreate(@NotNull NewProjectPanel projectPanel, @NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir, final boolean requireModelCommit) {
+  @Nonnull
+  public static Module doCreate(@Nonnull NewProjectPanel projectPanel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, final boolean requireModelCommit) {
     return new WriteAction<Module>() {
       @Override
       protected void run(Result<Module> result) throws Throwable {
@@ -64,9 +64,9 @@ public class NewProjectUtilPlatform {
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   @RequiredWriteAction
-  private static Module doCreateImpl(@NotNull NewProjectPanel projectPanel, @NotNull final ModifiableModuleModel modifiableModel, @NotNull final VirtualFile baseDir, boolean requireModelCommit) {
+  private static Module doCreateImpl(@Nonnull NewProjectPanel projectPanel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, boolean requireModelCommit) {
     String name = StringUtil.notNullize(projectPanel.getNameText(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());

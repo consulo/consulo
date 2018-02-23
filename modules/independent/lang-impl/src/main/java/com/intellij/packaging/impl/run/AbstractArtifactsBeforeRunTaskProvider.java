@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.packaging.artifacts.*;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     myId = id;
     project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactAdapter() {
       @Override
-      public void artifactRemoved(@NotNull Artifact artifact) {
+      public void artifactRemoved(@Nonnull Artifact artifact) {
         final RunManagerEx runManager = RunManagerEx.getInstanceEx(myProject);
         for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
           final List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());

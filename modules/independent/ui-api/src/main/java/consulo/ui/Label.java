@@ -17,7 +17,7 @@ package consulo.ui;
 
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -26,30 +26,30 @@ import java.util.function.Supplier;
  * @since 11-Jun-16
  */
 public interface Label extends Component {
-  @NotNull
-  static Label create(@NotNull String text) {
+  @Nonnull
+  static Label create(@Nonnull String text) {
     Label label = UIInternal.get()._Components_label(text);
     label.setHorizontalAlignment(HorizontalAlignment.LEFT);
     return label;
   }
 
-  @NotNull
+  @Nonnull
   String getText();
 
   @RequiredUIAccess
-  @NotNull
-  Label setText(@NotNull String text);
+  @Nonnull
+  Label setText(@Nonnull String text);
 
-  @NotNull
-  Label setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment);
+  @Nonnull
+  Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment);
 
-  @NotNull
+  @Nonnull
   HorizontalAlignment getHorizontalAlignment();
 
-  default Label setForeground(@NotNull ColorValue colorValue) {
+  default Label setForeground(@Nonnull ColorValue colorValue) {
     return setForeground(() -> colorValue);
   }
 
-  @NotNull
-  Label setForeground(@NotNull Supplier<ColorValue> colorValueSupplier);
+  @Nonnull
+  Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier);
 }

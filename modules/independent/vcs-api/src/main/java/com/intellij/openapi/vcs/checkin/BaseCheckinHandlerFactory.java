@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.checkin;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -37,9 +36,9 @@ public interface BaseCheckinHandlerFactory {
    * @param commitContext
    * @return the handler instance - null if not supported
    */
-  @Nullable
+  @javax.annotation.Nullable
   CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
 
-  @Nullable
+  @javax.annotation.Nullable
   BeforeCheckinDialogHandler createSystemReadyHandler(Project project);
 }

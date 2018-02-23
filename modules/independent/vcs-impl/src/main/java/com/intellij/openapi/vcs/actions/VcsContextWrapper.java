@@ -28,8 +28,8 @@ import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -40,19 +40,22 @@ import static com.intellij.util.containers.UtilKt.concat;
 import static com.intellij.util.containers.UtilKt.stream;
 
 public class VcsContextWrapper implements VcsContext {
-  @NotNull protected final DataContext myContext;
+  @Nonnull
+  protected final DataContext myContext;
   protected final int myModifiers;
-  @NotNull private final String myPlace;
-  @Nullable private final String myActionName;
+  @Nonnull
+  private final String myPlace;
+  @javax.annotation.Nullable
+  private final String myActionName;
 
-  public VcsContextWrapper(@NotNull DataContext context, int modifiers, @NotNull String place, @Nullable String actionName) {
+  public VcsContextWrapper(@Nonnull DataContext context, int modifiers, @Nonnull String place, @javax.annotation.Nullable String actionName) {
     myContext = context;
     myModifiers = modifiers;
     myPlace = place;
     myActionName = actionName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPlace() {
     return myPlace;
@@ -64,13 +67,13 @@ public class VcsContextWrapper implements VcsContext {
     return myActionName;
   }
 
-  @NotNull
-  public static VcsContext createCachedInstanceOn(@NotNull AnActionEvent event) {
+  @Nonnull
+  public static VcsContext createCachedInstanceOn(@Nonnull AnActionEvent event) {
     return new CachedVcsContext(createInstanceOn(event));
   }
 
-  @NotNull
-  public static VcsContextWrapper createInstanceOn(@NotNull AnActionEvent event) {
+  @Nonnull
+  public static VcsContextWrapper createInstanceOn(@Nonnull AnActionEvent event) {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
@@ -80,13 +83,13 @@ public class VcsContextWrapper implements VcsContext {
     return myContext.getData(CommonDataKeys.PROJECT);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VirtualFile getSelectedFile() {
     return getSelectedFilesStream().findFirst().orElse(null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getSelectedFiles() {
     VirtualFile[] fileArray = myContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
@@ -98,7 +101,7 @@ public class VcsContextWrapper implements VcsContext {
     return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Stream<VirtualFile> getSelectedFilesStream() {
     Stream<VirtualFile> result = myContext.getData(VcsDataKeys.VIRTUAL_FILE_STREAM);
@@ -116,7 +119,7 @@ public class VcsContextWrapper implements VcsContext {
     return Arrays.asList(getSelectedFiles());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public File getSelectedIOFile() {
     File file = myContext.getData(VcsDataKeys.IO_FILE);
@@ -124,7 +127,7 @@ public class VcsContextWrapper implements VcsContext {
     return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public File[] getSelectedIOFiles() {
     File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
@@ -144,13 +147,13 @@ public class VcsContextWrapper implements VcsContext {
     return myContext.getData(Refreshable.PANEL_KEY);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FilePath[] getSelectedFilePaths() {
     return getSelectedFilePathsStream().toArray(FilePath[]::new);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Stream<FilePath> getSelectedFilePathsStream() {
     FilePath path = myContext.getData(VcsDataKeys.FILE_PATH);
@@ -163,19 +166,19 @@ public class VcsContextWrapper implements VcsContext {
     );
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public FilePath getSelectedFilePath() {
     return ArrayUtil.getFirstElement(getSelectedFilePaths());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public ChangeList[] getSelectedChangeLists() {
     return myContext.getData(VcsDataKeys.CHANGE_LISTS);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Change[] getSelectedChanges() {
     return myContext.getData(VcsDataKeys.CHANGES);

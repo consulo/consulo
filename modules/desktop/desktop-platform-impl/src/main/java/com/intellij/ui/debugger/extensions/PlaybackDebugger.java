@@ -44,8 +44,8 @@ import com.intellij.util.WaitFor;
 import com.intellij.util.ui.PlatformColors;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -156,7 +156,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     myVfsListener = new VirtualFileAdapter() {
       @Override
-      public void contentsChanged(@NotNull VirtualFileEvent event) {
+      public void contentsChanged(@Nonnull VirtualFileEvent event) {
         final VirtualFile file = pathToFile();
         if (file != null && file.equals(event.getFile())) {
           loadFrom(event.getFile());
@@ -273,7 +273,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     }
   }
 
-  private void loadFrom(@NotNull VirtualFile file) {
+  private void loadFrom(@Nonnull VirtualFile file) {
     try {
       final String text = CharsetToolkit.bytesToString(file.contentsToByteArray(), EncodingRegistry.getInstance().getDefaultCharset());
       fillDocument(text);
@@ -454,11 +454,11 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
   }
 
   @Override
-  public void message(@Nullable final PlaybackContext context, final String text, final Type type) {
+  public void message(@javax.annotation.Nullable final PlaybackContext context, final String text, final Type type) {
     message(context, text, context != null ? context.getCurrentLine() : -1, type, false);
   }
 
-  private void message(@Nullable final PlaybackContext context, final String text, final int currentLine, final Type type, final boolean forced) {
+  private void message(@javax.annotation.Nullable final PlaybackContext context, final String text, final int currentLine, final Type type, final boolean forced) {
     final int depth = context != null ? context.getCurrentStageDepth() : 0;
 
     UIUtil.invokeLaterIfNeeded(new Runnable() {

@@ -25,17 +25,17 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NavigatableRule implements GetDataRule<Navigatable> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<Navigatable> getKey() {
     return CommonDataKeys.NAVIGATABLE;
   }
 
   @Override
-  public Navigatable getData(@NotNull DataProvider dataProvider) {
+  public Navigatable getData(@Nonnull DataProvider dataProvider) {
     final Navigatable navigatable = dataProvider.getDataUnchecked(PlatformDataKeys.NAVIGATABLE);
     if (navigatable != null && navigatable instanceof OpenFileDescriptor) {
       final OpenFileDescriptor openFileDescriptor = (OpenFileDescriptor)navigatable;

@@ -18,7 +18,7 @@ package com.intellij.openapi.options.colors;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Registry for custom pages shown in the "Colors and Fonts" settings dialog.

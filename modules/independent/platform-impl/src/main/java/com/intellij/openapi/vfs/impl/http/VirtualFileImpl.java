@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,7 +106,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
@@ -117,7 +117,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
@@ -157,7 +157,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     if (myFileInfo == null) {
       return super.getFileType();
@@ -186,7 +186,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     if (myFileInfo != null) {
       VirtualFile localFile = myFileInfo.getLocalFile();
@@ -198,7 +198,7 @@ class VirtualFileImpl extends HttpVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     if (myFileInfo == null) {
       throw new UnsupportedOperationException();

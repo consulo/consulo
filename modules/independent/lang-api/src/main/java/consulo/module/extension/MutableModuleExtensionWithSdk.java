@@ -16,7 +16,7 @@
 package consulo.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface MutableModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>, MutableModuleExtension<T> {
   @Override
-  @NotNull
+  @Nonnull
   MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

@@ -22,15 +22,15 @@ package com.intellij.psi.stubs;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.indexing.ID;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class StubIndexKey<K, Psi extends PsiElement> extends ID<K, Psi> {
   private StubIndexKey(@NonNls String name) {
     super(name);
   }
 
-  @NotNull
-  public static synchronized <K, Psi extends PsiElement> StubIndexKey<K, Psi> createIndexKey(@NonNls @NotNull String name) {
+  @Nonnull
+  public static synchronized <K, Psi extends PsiElement> StubIndexKey<K, Psi> createIndexKey(@NonNls @Nonnull String name) {
     return new StubIndexKey<K, Psi>(name);
   }
 }

@@ -27,7 +27,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -286,7 +286,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "preferences.sourceCode";
   }
@@ -306,7 +306,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     private final CodeStyleSettingsProvider myProvider;
     private final CodeStyleSettingsPanelFactory myFactory;
 
-    public CodeStyleConfigurableWrapper(@NotNull CodeStyleSettingsProvider provider, @NotNull CodeStyleSettingsPanelFactory factory) {
+    public CodeStyleConfigurableWrapper(@Nonnull CodeStyleSettingsProvider provider, @Nonnull CodeStyleSettingsPanelFactory factory) {
       myProvider = provider;
       myFactory = factory;
       myInitialResetInvoked = false;
@@ -382,7 +382,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
       return "preferences.sourceCode." + getDisplayName();
     }

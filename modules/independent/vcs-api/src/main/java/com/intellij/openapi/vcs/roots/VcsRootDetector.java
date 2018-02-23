@@ -2,8 +2,8 @@ package com.intellij.openapi.vcs.roots;
 
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -17,12 +17,12 @@ public interface VcsRootDetector {
   /**
    * Detect vcs roots for whole project
    */
-  @NotNull
+  @Nonnull
   Collection<VcsRoot> detect();
 
   /**
    * Detect vcs roots for startDir
    */
-  @NotNull
+  @Nonnull
   Collection<VcsRoot> detect(@Nullable VirtualFile startDir);
 }

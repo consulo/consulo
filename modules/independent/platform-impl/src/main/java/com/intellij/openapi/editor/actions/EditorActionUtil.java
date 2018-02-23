@@ -47,7 +47,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -68,7 +68,7 @@ public class EditorActionUtil {
    * @param columnShift  defines viewport position's horizontal change length
    * @param moveCaret  flag that identifies whether caret should be moved if its current position becomes off-screen
    */
-  public static void scrollRelatively(@NotNull Editor editor, int lineShift, int columnShift, boolean moveCaret) {
+  public static void scrollRelatively(@Nonnull Editor editor, int lineShift, int columnShift, boolean moveCaret) {
     if (lineShift != 0) {
       editor.getScrollingModel().scrollVertically(
               editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight()
@@ -98,7 +98,7 @@ public class EditorActionUtil {
     }
   }
 
-  public static void moveCaretRelativelyAndScroll(@NotNull Editor editor,
+  public static void moveCaretRelativelyAndScroll(@Nonnull Editor editor,
                                                   int columnShift,
                                                   int lineShift,
                                                   boolean withSelection) {
@@ -117,7 +117,7 @@ public class EditorActionUtil {
     }
   }
 
-  public static void indentLine(Project project, @NotNull Editor editor, int lineNumber, int indent) {
+  public static void indentLine(Project project, @Nonnull Editor editor, int lineNumber, int indent) {
     int caretOffset = editor.getCaretModel().getOffset();
     int newCaretOffset = indentLine(project, editor, lineNumber, indent, caretOffset);
     editor.getCaretModel().moveToOffset(newCaretOffset);
@@ -125,7 +125,7 @@ public class EditorActionUtil {
 
   // This method avoid moving caret directly, so it's suitable for invocation in bulk mode.
   // It does calculate (and returns) target caret position.
-  public static int indentLine(Project project, @NotNull Editor editor, int lineNumber, int indent, int caretOffset) {
+  public static int indentLine(Project project, @Nonnull Editor editor, int lineNumber, int indent, int caretOffset) {
     EditorSettings editorSettings = editor.getSettings();
     int tabSize = editorSettings.getTabSize(project);
     Document document = editor.getDocument();
@@ -223,18 +223,18 @@ public class EditorActionUtil {
     return result;
   }
 
-  private static boolean shouldUseSmartTabs(Project project, @NotNull Editor editor) {
+  private static boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
     if (!(editor instanceof EditorEx)) return false;
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     return CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).SMART_TABS;
   }
 
-  public static boolean isWordOrLexemeStart(@NotNull Editor editor, int offset, boolean isCamel) {
+  public static boolean isWordOrLexemeStart(@Nonnull Editor editor, int offset, boolean isCamel) {
     CharSequence chars = editor.getDocument().getCharsSequence();
     return isWordStart(chars, offset, isCamel) || !isWordEnd(chars, offset, isCamel) && isLexemeBoundary(editor, offset);
   }
 
-  public static boolean isWordOrLexemeEnd(@NotNull Editor editor, int offset, boolean isCamel) {
+  public static boolean isWordOrLexemeEnd(@Nonnull Editor editor, int offset, boolean isCamel) {
     CharSequence chars = editor.getDocument().getCharsSequence();
     return isWordEnd(chars, offset, isCamel) || !isWordStart(chars, offset, isCamel) && isLexemeBoundary(editor, offset);
   }
@@ -242,7 +242,7 @@ public class EditorActionUtil {
   /**
    * Finds out whether there's a boundary between two lexemes of different type at given offset.
    */
-  public static boolean isLexemeBoundary(@NotNull Editor editor, int offset) {
+  public static boolean isLexemeBoundary(@Nonnull Editor editor, int offset) {
     if (!(editor instanceof EditorEx) || offset <= 0 || offset >= editor.getDocument().getTextLength()) return false;
     if (CharArrayUtil.isEmptyOrSpaces(editor.getDocument().getImmutableCharSequence(), offset - 1, offset + 1)) return false;
     EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
@@ -256,7 +256,7 @@ public class EditorActionUtil {
     return !Comparing.equal(leftToken, rightToken);
   }
 
-  public static boolean isWordStart(@NotNull CharSequence text, int offset, boolean isCamel) {
+  public static boolean isWordStart(@Nonnull CharSequence text, int offset, boolean isCamel) {
     char prev = offset > 0 ? text.charAt(offset - 1) : 0;
     char current = text.charAt(offset);
 
@@ -278,7 +278,7 @@ public class EditorActionUtil {
     return Character.isLowerCase(c) || Character.isDigit(c);
   }
 
-  public static boolean isWordEnd(@NotNull CharSequence text, int offset, boolean isCamel) {
+  public static boolean isWordEnd(@Nonnull CharSequence text, int offset, boolean isCamel) {
     char prev = offset > 0 ? text.charAt(offset - 1) : 0;
     char current = text.charAt(offset);
     char next = offset + 1 < text.length() ? text.charAt(offset + 1) : 0;
@@ -311,7 +311,7 @@ public class EditorActionUtil {
    *
    * @see EditorActionUtil#moveCaretToLineStartIgnoringSoftWraps(Editor)
    */
-  public static void moveCaretToLineStart(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretToLineStart(@Nonnull Editor editor, boolean isWithSelection) {
     Document document = editor.getDocument();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -384,7 +384,7 @@ public class EditorActionUtil {
     EditorModificationUtil.scrollToCaret(editor);
   }
 
-  private static void moveCaretToStartOfSoftWrappedLine(@NotNull Editor editor, VisualPosition currentVisual, int softWrappedLines) {
+  private static void moveCaretToStartOfSoftWrappedLine(@Nonnull Editor editor, VisualPosition currentVisual, int softWrappedLines) {
     CaretModel caretModel = editor.getCaretModel();
     LogicalPosition startLineLogical = editor.visualToLogicalPosition(new VisualPosition(currentVisual.line, 0));
     int startLineOffset = editor.logicalPositionToOffset(startLineLogical);
@@ -425,7 +425,7 @@ public class EditorActionUtil {
     }
   }
 
-  private static int findSmartIndentColumn(@NotNull Editor editor, int visualLine) {
+  private static int findSmartIndentColumn(@Nonnull Editor editor, int visualLine) {
     for (int i = visualLine; i >= 0; i--) {
       int column = findFirstNonSpaceColumnOnTheLine(editor, i);
       if (column >= 0) {
@@ -443,7 +443,7 @@ public class EditorActionUtil {
    * @return                    visual column that points to the first non-white space symbol at the target visual line if the one exists;
    *                            <code>'-1'</code> otherwise
    */
-  public static int findFirstNonSpaceColumnOnTheLine(@NotNull Editor editor, int visualLineNumber) {
+  public static int findFirstNonSpaceColumnOnTheLine(@Nonnull Editor editor, int visualLineNumber) {
     Document document = editor.getDocument();
     VisualPosition visLine = new VisualPosition(visualLineNumber, 0);
     int logLine = editor.visualToLogicalPosition(visLine).line;
@@ -520,7 +520,7 @@ public class EditorActionUtil {
     return -1;
   }
 
-  public static int findFirstNonSpaceOffsetOnTheLine(@NotNull Document document, int lineNumber) {
+  public static int findFirstNonSpaceOffsetOnTheLine(@Nonnull Document document, int lineNumber) {
     int lineStart = document.getLineStartOffset(lineNumber);
     int lineEnd = document.getLineEndOffset(lineNumber);
     int result = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), lineStart, lineEnd);
@@ -536,7 +536,7 @@ public class EditorActionUtil {
    * @return            index of the first non-white space character at the given document at the given range if the one is found;
    *                    <code>'-1'</code> otherwise
    */
-  public static int findFirstNonSpaceOffsetInRange(@NotNull CharSequence text, int start, int end) {
+  public static int findFirstNonSpaceOffsetInRange(@Nonnull CharSequence text, int start, int end) {
     for (; start < end; start++) {
       char c = text.charAt(start);
       if (c != ' ' && c != '\t') {
@@ -546,7 +546,7 @@ public class EditorActionUtil {
     return -1;
   }
 
-  public static void moveCaretToLineEnd(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretToLineEnd(@Nonnull Editor editor, boolean isWithSelection) {
     moveCaretToLineEnd(editor, isWithSelection, true);
   }
 
@@ -558,7 +558,7 @@ public class EditorActionUtil {
    * @param ignoreTrailingWhitespace if <code>true</code>, line end will be determined while ignoring trailing whitespace, unless caret is
    *                                 already at so-determined target position, in which case trailing whitespace will be taken into account
    */
-  public static void moveCaretToLineEnd(@NotNull Editor editor, boolean isWithSelection, boolean ignoreTrailingWhitespace) {
+  public static void moveCaretToLineEnd(@Nonnull Editor editor, boolean isWithSelection, boolean ignoreTrailingWhitespace) {
     Document document = editor.getDocument();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -638,7 +638,7 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  public static void moveCaretToNextWord(@NotNull Editor editor, boolean isWithSelection, boolean camel) {
+  public static void moveCaretToNextWord(@Nonnull Editor editor, boolean isWithSelection, boolean camel) {
     Document document = editor.getDocument();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -689,10 +689,10 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  private static void setupSelection(@NotNull Editor editor,
+  private static void setupSelection(@Nonnull Editor editor,
                                      boolean isWithSelection,
                                      int selectionStart,
-                                     @NotNull LogicalPosition blockSelectionStart) {
+                                     @Nonnull LogicalPosition blockSelectionStart) {
     SelectionModel selectionModel = editor.getSelectionModel();
     CaretModel caretModel = editor.getCaretModel();
     if (isWithSelection) {
@@ -711,7 +711,7 @@ public class EditorActionUtil {
   }
 
   private static final Key<VisualPosition> PREV_POS = Key.create("PREV_POS");
-  public static void selectNonexpandableFold(@NotNull Editor editor) {
+  public static void selectNonexpandableFold(@Nonnull Editor editor) {
     final CaretModel caretModel = editor.getCaretModel();
     final VisualPosition pos = caretModel.getVisualPosition();
 
@@ -736,7 +736,7 @@ public class EditorActionUtil {
     editor.putUserData(PREV_POS, pos);
   }
 
-  public static void moveCaretToPreviousWord(@NotNull Editor editor, boolean isWithSelection, boolean camel) {
+  public static void moveCaretToPreviousWord(@Nonnull Editor editor, boolean isWithSelection, boolean camel) {
     Document document = editor.getDocument();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -780,7 +780,7 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  public static void moveCaretPageUp(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretPageUp(@Nonnull Editor editor, boolean isWithSelection) {
     int lineHeight = editor.getLineHeight();
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     int linesIncrement = visibleArea.height / lineHeight;
@@ -789,7 +789,7 @@ public class EditorActionUtil {
     editor.getCaretModel().moveCaretRelatively(0, lineShift, isWithSelection, editor.isColumnMode(), true);
   }
 
-  public static void moveCaretPageDown(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretPageDown(@Nonnull Editor editor, boolean isWithSelection) {
     int lineHeight = editor.getLineHeight();
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     int linesIncrement = visibleArea.height / lineHeight;
@@ -799,7 +799,7 @@ public class EditorActionUtil {
     editor.getCaretModel().moveCaretRelatively(0, linesIncrement, isWithSelection, editor.isColumnMode(), true);
   }
 
-  public static void moveCaretPageTop(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretPageTop(@Nonnull Editor editor, boolean isWithSelection) {
     int lineHeight = editor.getLineHeight();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -815,7 +815,7 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  public static void moveCaretPageBottom(@NotNull Editor editor, boolean isWithSelection) {
+  public static void moveCaretPageBottom(@Nonnull Editor editor, boolean isWithSelection) {
     int lineHeight = editor.getLineHeight();
     SelectionModel selectionModel = editor.getSelectionModel();
     int selectionStart = selectionModel.getLeadSelectionOffset();
@@ -828,7 +828,7 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  public static EditorPopupHandler createEditorPopupHandler(@NotNull final String groupId) {
+  public static EditorPopupHandler createEditorPopupHandler(@Nonnull final String groupId) {
     return new EditorPopupHandler() {
       @Override
       public void invokePopup(final EditorMouseEvent event) {
@@ -840,7 +840,7 @@ public class EditorActionUtil {
     };
   }
 
-  public static EditorPopupHandler createEditorPopupHandler(@NotNull final ActionGroup group) {
+  public static EditorPopupHandler createEditorPopupHandler(@Nonnull final ActionGroup group) {
     return new EditorPopupHandler() {
       @Override
       public void invokePopup(final EditorMouseEvent event) {
@@ -849,7 +849,7 @@ public class EditorActionUtil {
     };
   }
 
-  private static void showEditorPopup(final EditorMouseEvent event, @NotNull final ActionGroup group) {
+  private static void showEditorPopup(final EditorMouseEvent event, @Nonnull final ActionGroup group) {
     if (!event.isConsumed() && event.getArea() == EditorMouseEventArea.EDITING_AREA) {
       ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
       MouseEvent e = event.getMouseEvent();
@@ -861,7 +861,7 @@ public class EditorActionUtil {
     }
   }
 
-  public static boolean isHumpBound(@NotNull CharSequence editorText, int offset, boolean start) {
+  public static boolean isHumpBound(@Nonnull CharSequence editorText, int offset, boolean start) {
     if (offset <= 0 || offset >= editorText.length()) return false;
     final char prevChar = editorText.charAt(offset - 1);
     final char curChar = editorText.charAt(offset);
@@ -881,14 +881,14 @@ public class EditorActionUtil {
    * @see EditorUtil#calcCaretLineRange(Editor)
    * @see EditorActionUtil#moveCaretToLineStart(Editor, boolean)
    */
-  public static void moveCaretToLineStartIgnoringSoftWraps(@NotNull Editor editor) {
+  public static void moveCaretToLineStartIgnoringSoftWraps(@Nonnull Editor editor) {
     editor.getCaretModel().moveToLogicalPosition(EditorUtil.calcCaretLineRange(editor).first);
   }
 
   /**
    * This method will make required expansions of collapsed region to make given offset 'visible'.
    */
-  public static void makePositionVisible(@NotNull final Editor editor, final int offset) {
+  public static void makePositionVisible(@Nonnull final Editor editor, final int offset) {
     FoldingModel foldingModel = editor.getFoldingModel();
     FoldRegion collapsedRegionAtOffset;
     while ((collapsedRegionAtOffset  = foldingModel.getCollapsedRegionAtOffset(offset)) != null) {

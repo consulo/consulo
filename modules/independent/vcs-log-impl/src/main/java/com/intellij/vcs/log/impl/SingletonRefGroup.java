@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.vcs.log.RefGroup;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -38,19 +38,19 @@ public class SingletonRefGroup implements RefGroup {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myRef.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsRef> getRefs() {
     return Collections.singletonList(myRef);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Color> getColors() {
     return Collections.singletonList(myRef.getType().getBackgroundColor());

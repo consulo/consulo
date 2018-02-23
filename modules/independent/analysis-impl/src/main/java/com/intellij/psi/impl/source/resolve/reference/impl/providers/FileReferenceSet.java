@@ -31,8 +31,8 @@ import com.intellij.psi.*;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -65,17 +65,17 @@ public class FileReferenceSet {
   @Nullable private FileType[] mySuitableFileTypes;
 
   public FileReferenceSet(String str,
-                          @NotNull PsiElement element,
+                          @Nonnull PsiElement element,
                           int startInElement,
                           PsiReferenceProvider provider,
                           boolean caseSensitive,
                           boolean endingSlashNotAllowed,
-                          @Nullable FileType[] suitableFileTypes) {
+                          @javax.annotation.Nullable FileType[] suitableFileTypes) {
     this(str, element, startInElement, provider, caseSensitive, endingSlashNotAllowed, suitableFileTypes, true);
   }
 
   public FileReferenceSet(String str,
-                          @NotNull PsiElement element,
+                          @Nonnull PsiElement element,
                           int startInElement,
                           PsiReferenceProvider provider,
                           boolean caseSensitive,
@@ -105,11 +105,11 @@ public class FileReferenceSet {
     return "/";
   }
 
-  protected int findSeparatorLength(@NotNull CharSequence sequence, int atOffset) {
+  protected int findSeparatorLength(@Nonnull CharSequence sequence, int atOffset) {
     return StringUtil.startsWith(sequence, atOffset, getSeparatorString()) ? getSeparatorString().length() : 0;
   }
 
-  protected int findSeparatorOffset(@NotNull CharSequence sequence, int startingFrom) {
+  protected int findSeparatorOffset(@Nonnull CharSequence sequence, int startingFrom) {
     return StringUtil.indexOf(sequence, getSeparatorString(), startingFrom);
   }
 
@@ -121,7 +121,7 @@ public class FileReferenceSet {
     return Collections.emptyList();
   }
 
-  public static FileReferenceSet createSet(@NotNull PsiElement element, final boolean soft, boolean endingSlashNotAllowed, final boolean urlEncoded) {
+  public static FileReferenceSet createSet(@Nonnull PsiElement element, final boolean soft, boolean endingSlashNotAllowed, final boolean urlEncoded) {
 
     final ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(element);
     assert manipulator != null;
@@ -146,13 +146,13 @@ public class FileReferenceSet {
   }
 
 
-  public FileReferenceSet(String str, @NotNull PsiElement element, int startInElement, @Nullable PsiReferenceProvider provider, final boolean isCaseSensitive) {
+  public FileReferenceSet(String str, @Nonnull PsiElement element, int startInElement, @Nullable PsiReferenceProvider provider, final boolean isCaseSensitive) {
     this(str, element, startInElement, provider, isCaseSensitive, true);
   }
 
 
-  public FileReferenceSet(@NotNull String str,
-                          @NotNull PsiElement element,
+  public FileReferenceSet(@Nonnull String str,
+                          @Nonnull PsiElement element,
                           int startInElement,
                           PsiReferenceProvider provider,
                           final boolean isCaseSensitive,
@@ -160,7 +160,7 @@ public class FileReferenceSet {
     this(str, element, startInElement, provider, isCaseSensitive, endingSlashNotAllowed, null);
   }
 
-  public FileReferenceSet(@NotNull final PsiElement element) {
+  public FileReferenceSet(@Nonnull final PsiElement element) {
     myElement = element;
     TextRange range = ElementManipulators.getValueTextRange(element);
     myStartInElement = range.getStartOffset();
@@ -172,12 +172,12 @@ public class FileReferenceSet {
     reparse();
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement getElement() {
     return myElement;
   }
 
-  void setElement(@NotNull PsiElement element) {
+  void setElement(@Nonnull PsiElement element) {
     myElement = element;
   }
 
@@ -269,7 +269,7 @@ public class FileReferenceSet {
     return myReferences[index];
   }
 
-  @NotNull
+  @Nonnull
   public FileReference[] getAllReferences() {
     return myReferences;
   }
@@ -282,7 +282,7 @@ public class FileReferenceSet {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<PsiFileSystemItem> getDefaultContexts() {
     if (myDefaultContexts == null) {
       myDefaultContexts = computeDefaultContexts();
@@ -290,7 +290,7 @@ public class FileReferenceSet {
     return myDefaultContexts;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<PsiFileSystemItem> computeDefaultContexts() {
     final PsiFile file = getContainingFile();
     if (file == null) return Collections.emptyList();
@@ -326,8 +326,8 @@ public class FileReferenceSet {
     return null;
   }
 
-  @NotNull
-  private Collection<PsiFileSystemItem> getContextByFile(@NotNull PsiFile file) {
+  @Nonnull
+  private Collection<PsiFileSystemItem> getContextByFile(@Nonnull PsiFile file) {
     final PsiElement context = file.getContext();
     if (context != null) file = context.getContainingFile();
 
@@ -348,8 +348,8 @@ public class FileReferenceSet {
     return getContextByFileSystemItem(file.getOriginalFile());
   }
 
-  @NotNull
-  protected Collection<PsiFileSystemItem> getContextByFileSystemItem(@NotNull PsiFileSystemItem file) {
+  @Nonnull
+  protected Collection<PsiFileSystemItem> getContextByFileSystemItem(@Nonnull PsiFileSystemItem file) {
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile != null) {
       final FileReferenceHelper[] helpers = FileReferenceHelperRegistrar.getHelpers();
@@ -371,7 +371,7 @@ public class FileReferenceSet {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<PsiFileSystemItem> getParentDirectoryContext() {
     PsiFile file = getContainingFile();
     VirtualFile virtualFile = file == null ? null : file.getOriginalFile().getVirtualFile();
@@ -398,13 +398,13 @@ public class FileReferenceSet {
     return lastReference == null ? null : lastReference.resolve();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public FileReference getLastReference() {
     return myReferences == null || myReferences.length == 0 ? null : myReferences[myReferences.length - 1];
   }
 
-  @NotNull
-  public static Collection<PsiFileSystemItem> getAbsoluteTopLevelDirLocations(@NotNull final PsiFile file) {
+  @Nonnull
+  public static Collection<PsiFileSystemItem> getAbsoluteTopLevelDirLocations(@Nonnull final PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null) return Collections.emptyList();
 
@@ -431,13 +431,13 @@ public class FileReferenceSet {
     return list;
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<PsiFileSystemItem> toFileSystemItems(VirtualFile... files) {
     return toFileSystemItems(Arrays.asList(files));
   }
 
-  @NotNull
-  protected Collection<PsiFileSystemItem> toFileSystemItems(@NotNull Collection<VirtualFile> files) {
+  @Nonnull
+  protected Collection<PsiFileSystemItem> toFileSystemItems(@Nonnull Collection<VirtualFile> files) {
     final PsiManager manager = getElement().getManager();
     return ContainerUtil.mapNotNull(files, (NullableFunction<VirtualFile, PsiFileSystemItem>)file -> file != null ? manager.findDirectory(file) : null);
   }
@@ -461,7 +461,7 @@ public class FileReferenceSet {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public FileType[] getSuitableFileTypes() {
     return mySuitableFileTypes == null ? EMPTY_FILE_TYPES : mySuitableFileTypes;
   }

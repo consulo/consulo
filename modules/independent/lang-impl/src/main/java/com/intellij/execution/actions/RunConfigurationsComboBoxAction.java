@@ -37,8 +37,8 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +54,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
@@ -81,7 +81,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   private static void updatePresentation(@Nullable ExecutionTarget target,
                                          @Nullable RunnerAndConfigurationSettings settings,
                                          @Nullable Project project,
-                                         @NotNull Presentation presentation) {
+                                         @Nonnull Presentation presentation) {
     if (project != null && target != null && settings != null) {
       String name = settings.getName();
       if (target != DefaultExecutionTarget.INSTANCE) {
@@ -140,7 +140,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
 
   @Override
-  @NotNull
+  @Nonnull
   protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
     final DefaultActionGroup allActionsGroup = new DefaultActionGroup();
     final Project project = DataManager.getInstance().getDataContext(button).getData(CommonDataKeys.PROJECT);
@@ -228,7 +228,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
 
     @Nullable
-    private static RunnerAndConfigurationSettings chooseTempSettings(@NotNull Project project) {
+    private static RunnerAndConfigurationSettings chooseTempSettings(@Nonnull Project project) {
       RunnerAndConfigurationSettings selectedConfiguration = RunManager.getInstance(project).getSelectedConfiguration();
       if (selectedConfiguration != null && selectedConfiguration.isTemporary()) {
         return selectedConfiguration;

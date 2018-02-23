@@ -23,8 +23,8 @@ import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.util.ui.tree.TreeDecorationUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -96,7 +96,7 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
     myGroupingRules = new ArrayList<>(groupingRules);
   }
 
-  public void buildTree(@NotNull Collection<? extends BreakpointItem> breakpoints) {
+  public void buildTree(@Nonnull Collection<? extends BreakpointItem> breakpoints) {
     final TreeState state = TreeState.createOn(myTreeView, myRoot);
     myRoot.removeAllChildren();
     myNodes.clear();
@@ -114,7 +114,7 @@ public class BreakpointItemsTreeController implements BreakpointsCheckboxTree.De
   }
 
 
-  @NotNull
+  @Nonnull
   private CheckedTreeNode getParentNode(final BreakpointItem breakpoint) {
     CheckedTreeNode parent = myRoot;
     for (int i = 0; i < myGroupingRules.size(); i++) {

@@ -16,7 +16,8 @@
 package com.intellij.lang.pratt;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -38,6 +39,7 @@ public abstract class AppendTokenParser extends TokenParser {
     return true;
   }
 
-  @Nullable protected abstract IElementType parseAppend(PrattBuilder builder);
+  @Nullable
+  protected abstract IElementType parseAppend(PrattBuilder builder);
 
 }

@@ -16,17 +16,17 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class FileNameMatcherFactory {
-  @NotNull
+  @Nonnull
   public static FileNameMatcherFactory getInstance() {
     return ServiceManager.getService(FileNameMatcherFactory.class);
   }
 
-  @NotNull
-  public abstract FileNameMatcher createMatcher(@NotNull String pattern);
+  @Nonnull
+  public abstract FileNameMatcher createMatcher(@Nonnull String pattern);
 }

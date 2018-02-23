@@ -37,7 +37,7 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -54,7 +54,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
 
   private final MyListTableModel model;
 
-  public TableModelEditor(@NotNull ColumnInfo[] columns, @NotNull CollectionItemEditor<T> itemEditor, @NotNull String emptyText) {
+  public TableModelEditor(@Nonnull ColumnInfo[] columns, @Nonnull CollectionItemEditor<T> itemEditor, @Nonnull String emptyText) {
     this(Collections.emptyList(), columns, itemEditor, emptyText);
   }
 
@@ -63,7 +63,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
    *
    * Implement {@link DialogItemEditor} instead of {@link CollectionItemEditor} if you want provide dialog to edit.
    */
-  public TableModelEditor(@NotNull List<T> items, @NotNull ColumnInfo[] columns, @NotNull CollectionItemEditor<T> itemEditor, @NotNull String emptyText) {
+  public TableModelEditor(@Nonnull List<T> items, @Nonnull ColumnInfo[] columns, @Nonnull CollectionItemEditor<T> itemEditor, @Nonnull String emptyText) {
     super(itemEditor);
 
     model = new MyListTableModel(columns, new ArrayList<>(items));
@@ -99,7 +99,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
   }
 
-  @NotNull
+  @Nonnull
   public TableModelEditor<T> preferredScrollableViewportHeightInRows(int rows) {
     table.setPreferredScrollableViewportSize(new Dimension(200, table.getRowHeight() * rows));
     return this;
@@ -145,43 +145,43 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
   }
 
-  @NotNull
+  @Nonnull
   public TableModelEditor<T> disableUpDownActions() {
     toolbarDecorator.disableUpDownActions();
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public TableModelEditor<T> enabled(boolean value) {
     table.setEnabled(value);
     return this;
   }
 
   public static abstract class DataChangedListener<T> implements TableModelListener {
-    public abstract void dataChanged(@NotNull ColumnInfo<T, ?> columnInfo, int rowIndex);
+    public abstract void dataChanged(@Nonnull ColumnInfo<T, ?> columnInfo, int rowIndex);
 
     @Override
-    public void tableChanged(@NotNull TableModelEvent e) {
+    public void tableChanged(@Nonnull TableModelEvent e) {
     }
   }
 
-  public TableModelEditor<T> modelListener(@NotNull DataChangedListener<T> listener) {
+  public TableModelEditor<T> modelListener(@Nonnull DataChangedListener<T> listener) {
     model.dataChangedListener = listener;
     model.addTableModelListener(listener);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public ListTableModel<T> getModel() {
     return model;
   }
 
   public interface DialogItemEditor<T> extends CollectionItemEditor<T> {
-    void edit(@NotNull T item, @NotNull Function<T, T> mutator, boolean isAdd);
+    void edit(@Nonnull T item, @Nonnull Function<T, T> mutator, boolean isAdd);
 
-    void applyEdited(@NotNull T oldItem, @NotNull T newItem);
+    void applyEdited(@Nonnull T oldItem, @Nonnull T newItem);
 
-    default boolean isEditable(@NotNull T item) {
+    default boolean isEditable(@Nonnull T item) {
       return true;
     }
 
@@ -190,8 +190,8 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
   }
 
-  @NotNull
-  public static <T> T cloneUsingXmlSerialization(@NotNull T oldItem, @NotNull T newItem) {
+  @Nonnull
+  public static <T> T cloneUsingXmlSerialization(@Nonnull T oldItem, @Nonnull T newItem) {
     Element serialized = XmlSerializer.serialize(oldItem, new SkipDefaultValuesSerializationFilters());
     if (!JDOMUtil.isEmpty(serialized)) {
       XmlSerializer.deserializeInto(newItem, serialized);
@@ -203,14 +203,14 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     private List<T> items;
     private DataChangedListener<T> dataChangedListener;
 
-    public MyListTableModel(@NotNull ColumnInfo[] columns, @NotNull List<T> items) {
+    public MyListTableModel(@Nonnull ColumnInfo[] columns, @Nonnull List<T> items) {
       super(columns, items);
 
       this.items = items;
     }
 
     @Override
-    public void setItems(@NotNull List<T> items) {
+    public void setItems(@Nonnull List<T> items) {
       this.items = items;
       super.setItems(items);
     }
@@ -242,7 +242,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
   }
 
   public abstract static class EditableColumnInfo<Item, Aspect> extends ColumnInfo<Item, Aspect> {
-    public EditableColumnInfo(@NotNull String name) {
+    public EditableColumnInfo(@Nonnull String name) {
       super(name);
     }
 
@@ -256,12 +256,12 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
   }
 
-  @NotNull
+  @Nonnull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
       new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), PlatformIcons.COPY_ICON) {
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           TableUtil.stopEditing(table);
 
           List<T> selectedItems = table.getSelectedObjects();
@@ -280,13 +280,13 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     ).createPanel();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<T> getItems() {
     return model.items;
   }
 
-  public void selectItem(@NotNull final T item) {
+  public void selectItem(@Nonnull final T item) {
     table.clearSelection();
 
     final Ref<T> ref;
@@ -309,14 +309,14 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     table.addSelection(ref == null || ref.isNull() ? item : ref.get());
   }
 
-  @NotNull
+  @Nonnull
   public List<T> apply() {
     if (helper.hasModifiedItems()) {
       @SuppressWarnings("unchecked")
       final ColumnInfo<T, Object>[] columns = model.getColumnInfos();
       helper.process(new TObjectObjectProcedure<T, T>() {
         @Override
-        public boolean execute(T newItem, @NotNull T oldItem) {
+        public boolean execute(T newItem, @Nonnull T oldItem) {
           for (ColumnInfo<T, Object> column : columns) {
             if (column.isCellEditable(newItem)) {
               column.setValue(oldItem, column.valueOf(newItem));
@@ -337,7 +337,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     return model.items;
   }
 
-  public void reset(@NotNull List<T> items) {
+  public void reset(@Nonnull List<T> items) {
     super.reset(items);
     model.setItems(new ArrayList<>(items));
   }
@@ -352,7 +352,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     }
 
     @Override
-    public boolean isOperationApplyable(@NotNull TableModel ignored, int row) {
+    public boolean isOperationApplyable(@Nonnull TableModel ignored, int row) {
       T item = model.getItem(row);
       return item != null && itemEditor.isRemovable(item);
     }

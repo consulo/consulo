@@ -36,8 +36,8 @@ import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -61,12 +61,12 @@ public abstract class LightToolWindowManager implements ProjectComponent {
   private MessageBusConnection myConnection;
   private final FileEditorManagerListener myListener = new FileEditorManagerListener() {
     @Override
-    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
       bindToDesigner(getActiveDesigner());
     }
 
     @Override
-    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -76,7 +76,7 @@ public abstract class LightToolWindowManager implements ProjectComponent {
     }
 
     @Override
-    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
       bindToDesigner(getDesigner(event.getNewEditor()));
     }
   };
@@ -204,31 +204,31 @@ public abstract class LightToolWindowManager implements ProjectComponent {
 
   protected abstract ToggleEditorModeAction createToggleAction(ToolWindowAnchor anchor);
 
-  public final void bind(@NotNull DesignerEditorPanelFacade designer) {
+  public final void bind(@Nonnull DesignerEditorPanelFacade designer) {
     if (isEditorMode()) {
       myCreateAction.run(designer);
     }
   }
 
-  public final void dispose(@NotNull DesignerEditorPanelFacade designer) {
+  public final void dispose(@Nonnull DesignerEditorPanelFacade designer) {
     if (isEditorMode()) {
       disposeContent(designer);
     }
   }
 
-  protected final Object getContent(@NotNull DesignerEditorPanelFacade designer) {
+  protected final Object getContent(@Nonnull DesignerEditorPanelFacade designer) {
     LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getComponentName());
     return toolWindow.getContent();
   }
 
-  protected abstract LightToolWindow createContent(@NotNull DesignerEditorPanelFacade designer);
+  protected abstract LightToolWindow createContent(@Nonnull DesignerEditorPanelFacade designer);
 
-  protected final LightToolWindow createContent(@NotNull DesignerEditorPanelFacade designer,
-                                                @NotNull LightToolWindowContent content,
-                                                @NotNull String title,
-                                                @NotNull Icon icon,
-                                                @NotNull JComponent component,
-                                                @NotNull JComponent focusedComponent,
+  protected final LightToolWindow createContent(@Nonnull DesignerEditorPanelFacade designer,
+                                                @Nonnull LightToolWindowContent content,
+                                                @Nonnull String title,
+                                                @Nonnull Icon icon,
+                                                @Nonnull JComponent component,
+                                                @Nonnull JComponent focusedComponent,
                                                 int defaultWidth,
                                                 @Nullable AnAction[] actions) {
     return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject,

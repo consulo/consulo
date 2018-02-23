@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A helper class for working with file gists: associating persistent data with current VFS or PSI file contents.
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class GistManager {
 
-  @NotNull
+  @Nonnull
   public static GistManager getInstance() {
     return ApplicationManager.getApplication().getComponent(GistManager.class);
   }
@@ -43,11 +43,11 @@ public abstract class GistManager {
    * @param <Data> the type of the data to cache
    * @return the gist object, where {@link VirtualFileGist#getFileData} can later be used to retrieve the cached data
    */
-  @NotNull
-  public abstract <Data> VirtualFileGist<Data> newVirtualFileGist(@NotNull String id,
+  @Nonnull
+  public abstract <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id,
                                                                   int version,
-                                                                  @NotNull DataExternalizer<Data> externalizer,
-                                                                  @NotNull VirtualFileGist.GistCalculator<Data> calcData);
+                                                                  @Nonnull DataExternalizer<Data> externalizer,
+                                                                  @Nonnull VirtualFileGist.GistCalculator<Data> calcData);
 
   /**
    * Create a new {@link PsiFileGist}.
@@ -58,10 +58,10 @@ public abstract class GistManager {
    * @param <Data> the type of the data to cache
    * @return the gist object, where {@link PsiFileGist#getFileData} can later be used to retrieve the cached data
    */
-  @NotNull
-  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@NotNull String id,
+  @Nonnull
+  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id,
                                                           int version,
-                                                          @NotNull DataExternalizer<Data> externalizer,
-                                                          @NotNull NullableFunction<PsiFile, Data> calcData);
+                                                          @Nonnull DataExternalizer<Data> externalizer,
+                                                          @Nonnull NullableFunction<PsiFile, Data> calcData);
 
 }

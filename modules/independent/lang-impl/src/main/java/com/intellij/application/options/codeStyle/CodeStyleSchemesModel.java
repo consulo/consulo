@@ -25,8 +25,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemesImpl;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -219,7 +219,7 @@ public class CodeStyleSchemesModel {
     myDispatcher.getMulticaster().schemeChanged(myProjectScheme);
   }
 
-  public CodeStyleScheme exportProjectScheme(@NotNull String name) {
+  public CodeStyleScheme exportProjectScheme(@Nonnull String name) {
     CodeStyleScheme newScheme = createNewScheme(name, myProjectScheme);
     ((CodeStyleSchemeImpl)newScheme).setCodeStyleSettings(getCloneSettings(myProjectScheme));
     addScheme(newScheme, false);

@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.text.MessageFormat;
 
@@ -27,7 +27,7 @@ import java.text.MessageFormat;
 public class IndexAccessValidator {
   private final ThreadLocal<ID<?, ?>> ourAlreadyProcessingIndices = new ThreadLocal<>();
 
-  public void checkAccessingIndexDuringOtherIndexProcessing(@NotNull ID<?, ?> indexKey) {
+  public void checkAccessingIndexDuringOtherIndexProcessing(@Nonnull ID<?, ?> indexKey) {
     final ID<?, ?> alreadyProcessingIndex = ourAlreadyProcessingIndices.get();
     if (alreadyProcessingIndex != null && alreadyProcessingIndex != indexKey) {
       final String message = MessageFormat.format("Accessing ''{0}'' during processing ''{1}''. Nested different indices processing may cause deadlock",

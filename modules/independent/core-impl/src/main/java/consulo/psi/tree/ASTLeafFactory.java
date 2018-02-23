@@ -19,7 +19,7 @@ import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,6 +28,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ASTLeafFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.leafFactory");
 
-  @NotNull
-  LeafElement createLeaf(@NotNull final IElementType type, @NotNull final LanguageVersion languageVersion, @NotNull final CharSequence text);
+  @Nonnull
+  LeafElement createLeaf(@Nonnull final IElementType type, @Nonnull final LanguageVersion languageVersion, @Nonnull final CharSequence text);
 }

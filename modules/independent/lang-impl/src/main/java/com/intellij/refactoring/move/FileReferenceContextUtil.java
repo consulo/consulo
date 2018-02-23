@@ -25,7 +25,7 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileRefe
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class FileReferenceContextUtil {
         if (element instanceof PsiLanguageInjectionHost) {
           InjectedLanguageUtil.enumerate(element, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
             @Override
-            public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
+            public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places) {
               encodeFileReferences(injectedPsi);
             }
           });
@@ -92,7 +92,7 @@ public class FileReferenceContextUtil {
         if (element instanceof PsiLanguageInjectionHost) {
           InjectedLanguageUtil.enumerate(element, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
             @Override
-            public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
+            public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places) {
               decodeFileReferences(injectedPsi);
             }
           });

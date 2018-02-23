@@ -26,8 +26,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class ExecUtil {
   private static final NotNullLazyValue<Boolean> hasGkSudo = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/gksudo").canExecute();
@@ -45,7 +45,7 @@ public class ExecUtil {
   };
 
   private static final NotNullLazyValue<Boolean> hasKdeSudo = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/kdesudo").canExecute();
@@ -53,7 +53,7 @@ public class ExecUtil {
   };
 
   private static final NotNullLazyValue<Boolean> hasPkExec = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/pkexec").canExecute();
@@ -61,7 +61,7 @@ public class ExecUtil {
   };
 
   private static final NotNullLazyValue<Boolean> hasGnomeTerminal = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/gnome-terminal").canExecute();
@@ -69,7 +69,7 @@ public class ExecUtil {
   };
 
   private static final NotNullLazyValue<Boolean> hasKdeTerminal = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/konsole").canExecute();
@@ -77,7 +77,7 @@ public class ExecUtil {
   };
 
   private static final NotNullLazyValue<Boolean> hasXTerm = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return new File("/usr/bin/xterm").canExecute();
@@ -86,8 +86,8 @@ public class ExecUtil {
 
   private ExecUtil() { }
 
-  @NotNull
-  public static String loadTemplate(@NotNull ClassLoader loader, @NotNull String templateName, @Nullable Map<String, String> variables) throws IOException {
+  @Nonnull
+  public static String loadTemplate(@Nonnull ClassLoader loader, @Nonnull String templateName, @Nullable Map<String, String> variables) throws IOException {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStream stream = loader.getResourceAsStream(templateName);
     if (stream == null) {
       throw new IOException("Template '" + templateName + "' not found by " + loader);
@@ -109,8 +109,8 @@ public class ExecUtil {
     return buffer.toString();
   }
 
-  @NotNull
-  public static File createTempExecutableScript(@NotNull String prefix, @NotNull String suffix, @NotNull String content) throws IOException, ExecutionException {
+  @Nonnull
+  public static File createTempExecutableScript(@Nonnull String prefix, @Nonnull String suffix, @Nonnull String content) throws IOException, ExecutionException {
     File tempDir = new File(PathManager.getTempPath());
     File tempFile = FileUtil.createTempFile(tempDir, prefix, suffix, true, true);
     FileUtil.writeToFile(tempFile, content.getBytes(CharsetToolkit.UTF8));
@@ -120,28 +120,28 @@ public class ExecUtil {
     return tempFile;
   }
 
-  @NotNull
+  @Nonnull
   public static String getOsascriptPath() {
     return "/usr/bin/osascript";
   }
 
-  @NotNull
+  @Nonnull
   public static String getOpenCommandPath() {
     return "/usr/bin/open";
   }
 
-  @NotNull
+  @Nonnull
   public static String getWindowsShellName() {
     return SystemInfo.isWin2kOrNewer ? "cmd.exe" : "command.com";
   }
 
-  @NotNull
-  public static ProcessOutput execAndGetOutput(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  @Nonnull
+  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return new CapturingProcessHandler(commandLine).runProcess();
   }
 
   @Nullable
-  public static String execAndReadLine(@NotNull GeneralCommandLine commandLine) {
+  public static String execAndReadLine(@Nonnull GeneralCommandLine commandLine) {
     try {
       return readFirstLine(commandLine.createProcess().getInputStream(), commandLine.getCharset());
     }
@@ -151,7 +151,7 @@ public class ExecUtil {
   }
 
   @Nullable
-  public static String readFirstLine(@NotNull InputStream stream, @Nullable Charset cs) {
+  public static String readFirstLine(@Nonnull InputStream stream, @Nullable Charset cs) {
     try {
       BufferedReader reader = new BufferedReader(cs == null ? new InputStreamReader(stream) : new InputStreamReader(stream, cs));
       try {
@@ -175,13 +175,13 @@ public class ExecUtil {
    * @param prompt the prompt string for the users
    * @return the results of running the process
    */
-  @NotNull
-  public static Process sudo(@NotNull GeneralCommandLine commandLine, @NotNull String prompt) throws ExecutionException, IOException {
+  @Nonnull
+  public static Process sudo(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
     return sudoCommand(commandLine, prompt).createProcess();
   }
 
-  @NotNull
-  private static GeneralCommandLine sudoCommand(@NotNull GeneralCommandLine commandLine, @NotNull String prompt) throws ExecutionException, IOException {
+  @Nonnull
+  private static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
     if (SystemInfo.isUnix && "root".equals(System.getenv("USER"))) {
       return commandLine;
     }
@@ -240,18 +240,18 @@ public class ExecUtil {
             .withRedirectErrorStream(commandLine.isRedirectErrorStream());
   }
 
-  @NotNull
-  public static ProcessOutput sudoAndGetOutput(@NotNull GeneralCommandLine commandLine, @NotNull String prompt) throws IOException, ExecutionException {
+  @Nonnull
+  public static ProcessOutput sudoAndGetOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws IOException, ExecutionException {
     return execAndGetOutput(sudoCommand(commandLine, prompt));
   }
 
-  @NotNull
-  private static String escapeAppleScriptArgument(@NotNull String arg) {
+  @Nonnull
+  private static String escapeAppleScriptArgument(@Nonnull String arg) {
     return "quoted form of \"" + arg.replace("\"", "\\\"") + "\"";
   }
 
-  @NotNull
-  public static String escapeUnixShellArgument(@NotNull String arg) {
+  @Nonnull
+  public static String escapeUnixShellArgument(@Nonnull String arg) {
     return "'" + arg.replace("'", "'\"'\"'") + "'";
   }
 
@@ -259,8 +259,8 @@ public class ExecUtil {
     return SystemInfo.isWindows || SystemInfo.isMac || hasKdeTerminal.getValue() || hasGnomeTerminal.getValue() || hasXTerm.getValue();
   }
 
-  @NotNull
-  public static List<String> getTerminalCommand(@Nullable String title, @NotNull String command) {
+  @Nonnull
+  public static List<String> getTerminalCommand(@Nullable String title, @Nonnull String command) {
     if (SystemInfo.isWindows) {
       title = title != null ? title.replace("\"", "'") : "";
       return Arrays.asList(getWindowsShellName(), "/c", "start", GeneralCommandLine.inescapableQuote(title), command);
@@ -298,12 +298,12 @@ public class ExecUtil {
   }
 
   /** @deprecated use {@code new GeneralCommandLine(command).createProcess().waitFor()} (to be removed in IDEA 16) */
-  public static int execAndGetResult(@NotNull List<String> command) throws ExecutionException, InterruptedException {
+  public static int execAndGetResult(@Nonnull List<String> command) throws ExecutionException, InterruptedException {
     return new GeneralCommandLine(command).createProcess().waitFor();
   }
 
   /** @deprecated use {@link #execAndGetOutput(GeneralCommandLine)} instead (to be removed in IDEA 16) */
-  public static ProcessOutput execAndGetOutput(@NotNull List<String> command, @Nullable String workDir) throws ExecutionException {
+  public static ProcessOutput execAndGetOutput(@Nonnull List<String> command, @Nullable String workDir) throws ExecutionException {
     GeneralCommandLine commandLine = new GeneralCommandLine(command).withWorkDirectory(workDir);
     return new CapturingProcessHandler(commandLine).runProcess();
   }

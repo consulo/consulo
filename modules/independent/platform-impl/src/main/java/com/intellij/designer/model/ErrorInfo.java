@@ -16,8 +16,8 @@
 package com.intellij.designer.model;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public final class ErrorInfo {
   private final HighlightDisplayLevel myLevel;
   private final List<QuickFix> myQuickFixes = new ArrayList<QuickFix>();
 
-  public ErrorInfo(@NotNull String name, @Nullable String propertyName, @NotNull HighlightDisplayLevel level) {
+  public ErrorInfo(@Nonnull String name, @Nullable String propertyName, @Nonnull HighlightDisplayLevel level) {
     myName = name;
     myPropertyName = propertyName;
     myLevel = level;

@@ -18,8 +18,8 @@ package com.intellij.psi.search;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public abstract class PredefinedSearchScopeProvider {
    * @param usageView  add <i>Previous Search Result</i> and <i>Hierarchy 'X' (visible nodes only)</i> scopes if there are search results or hierarchies open
    * @param showEmptyScopes  add <i>Current File</i> and <i>Open Files</i> scopes even if there are no files open
    */
-  public abstract List<SearchScope> getPredefinedScopes(@NotNull final Project project,
+  public abstract List<SearchScope> getPredefinedScopes(@Nonnull final Project project,
                                                         @Nullable final DataContext dataContext,
                                                         boolean suggestSearchInLibs,
                                                         boolean prevSearchFiles,
@@ -43,7 +43,7 @@ public abstract class PredefinedSearchScopeProvider {
                                                         boolean usageView,
                                                         boolean showEmptyScopes);
 
-  public final List<SearchScope> getPredefinedScopes(@NotNull final Project project,
+  public final List<SearchScope> getPredefinedScopes(@Nonnull final Project project,
                                                      @Nullable final DataContext dataContext,
                                                      boolean suggestSearchInLibs,
                                                      boolean prevSearchFiles,

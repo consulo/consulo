@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.StringInterner;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.*;
@@ -55,7 +55,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   private static final StringInterner ourStringInterner = new StringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
-    private MetaDataKey(@NotNull String[] categoryNames, @NotNull final String familyName) {
+    private MetaDataKey(@Nonnull String[] categoryNames, @Nonnull final String familyName) {
       super(StringUtil.join(categoryNames, ":"), ourStringInterner.intern(familyName));
     }
   }
@@ -72,24 +72,24 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     return ServiceManager.getService(IntentionManagerSettings.class);
   }
 
-  public void registerIntentionMetaData(@NotNull IntentionAction intentionAction, @NotNull String[] category, @NotNull String descriptionDirectoryName) {
+  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
     registerMetaData(new IntentionActionMetaData(intentionAction, getClassLoader(intentionAction), category, descriptionDirectoryName));
   }
 
-  private static ClassLoader getClassLoader(@NotNull IntentionAction intentionAction) {
+  private static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
     return intentionAction instanceof IntentionActionWrapper
            ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader()
            : intentionAction.getClass().getClassLoader();
   }
 
-  public void registerIntentionMetaData(@NotNull IntentionAction intentionAction,
-                                        @NotNull String[] category,
-                                        @NotNull String descriptionDirectoryName,
+  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction,
+                                        @Nonnull String[] category,
+                                        @Nonnull String descriptionDirectoryName,
                                         final ClassLoader classLoader) {
     registerMetaData(new IntentionActionMetaData(intentionAction, classLoader, category, descriptionDirectoryName));
   }
 
-  public synchronized boolean isShowLightBulb(@NotNull IntentionAction action) {
+  public synchronized boolean isShowLightBulb(@Nonnull IntentionAction action) {
     return !myIgnoredActions.contains(action.getFamilyName());
   }
 
@@ -112,25 +112,25 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     return element;
   }
 
-  @NotNull
+  @Nonnull
   public synchronized List<IntentionActionMetaData> getMetaData() {
     IntentionManager.getInstance(); // TODO: Hack to make IntentionManager actually register metadata here. Dependencies between IntentionManager and IntentionManagerSettings should be revised.
     return new ArrayList<IntentionActionMetaData>(myMetaData.values());
   }
 
-  public synchronized boolean isEnabled(@NotNull IntentionActionMetaData metaData) {
+  public synchronized boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
     return !myIgnoredActions.contains(getFamilyName(metaData));
   }
 
-  private static String getFamilyName(@NotNull IntentionActionMetaData metaData) {
+  private static String getFamilyName(@Nonnull IntentionActionMetaData metaData) {
     return StringUtil.join(metaData.myCategory, "/") + "/" + metaData.getFamily();
   }
 
-  private static String getFamilyName(@NotNull IntentionAction action) {
+  private static String getFamilyName(@Nonnull IntentionAction action) {
     return action instanceof IntentionActionWrapper ? ((IntentionActionWrapper)action).getFullFamilyName() : action.getFamilyName();
   }
 
-  public synchronized void setEnabled(@NotNull IntentionActionMetaData metaData, boolean enabled) {
+  public synchronized void setEnabled(@Nonnull IntentionActionMetaData metaData, boolean enabled) {
     if (enabled) {
       myIgnoredActions.remove(getFamilyName(metaData));
     }
@@ -139,10 +139,10 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     }
   }
 
-  public synchronized boolean isEnabled(@NotNull IntentionAction action) {
+  public synchronized boolean isEnabled(@Nonnull IntentionAction action) {
     return !myIgnoredActions.contains(getFamilyName(action));
   }
-  public synchronized void setEnabled(@NotNull IntentionAction action, boolean enabled) {
+  public synchronized void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
     if (enabled) {
       myIgnoredActions.remove(getFamilyName(action));
     }
@@ -151,7 +151,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     }
   }
 
-  public synchronized void registerMetaData(@NotNull IntentionActionMetaData metaData) {
+  public synchronized void registerMetaData(@Nonnull IntentionActionMetaData metaData) {
     MetaDataKey key = new MetaDataKey(metaData.myCategory, metaData.getFamily());
     //LOG.assertTrue(!myMetaData.containsKey(metaData.myFamily), "Action '"+metaData.myFamily+"' already registered");
     if (!myMetaData.containsKey(key)){
@@ -160,7 +160,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     myMetaData.put(key, metaData);
   }
 
-  private static synchronized void processMetaData(@NotNull final IntentionActionMetaData metaData) {
+  private static synchronized void processMetaData(@Nonnull final IntentionActionMetaData metaData) {
     final Application app = ApplicationManager.getApplication();
     if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
 
@@ -187,7 +187,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     });
   }
 
-  public synchronized void unregisterMetaData(@NotNull IntentionAction intentionAction) {
+  public synchronized void unregisterMetaData(@Nonnull IntentionAction intentionAction) {
     for (Map.Entry<MetaDataKey, IntentionActionMetaData> entry : myMetaData.entrySet()) {
       if (entry.getValue().getAction() == intentionAction) {
         myMetaData.remove(entry.getKey());

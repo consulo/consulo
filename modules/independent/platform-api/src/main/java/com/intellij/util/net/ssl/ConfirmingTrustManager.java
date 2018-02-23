@@ -10,9 +10,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -54,7 +54,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
     }
   };
 
-  public static ConfirmingTrustManager createForStorage(@NotNull String path, @NotNull String password) {
+  public static ConfirmingTrustManager createForStorage(@Nonnull String path, @Nonnull String password) {
     return new ConfirmingTrustManager(getSystemDefault(), new MutableTrustManager(path, password));
   }
 
@@ -183,7 +183,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
 
     private final EventDispatcher<CertificateListener> myDispatcher = EventDispatcher.create(CertificateListener.class);
 
-    private MutableTrustManager(@NotNull String path, @NotNull String password) {
+    private MutableTrustManager(@Nonnull String path, @Nonnull String password) {
       myPath = path;
       myPassword = password;
       // initialization step
@@ -207,7 +207,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
       }
     }
 
-    private static KeyStore createKeyStore(@NotNull String path, @NotNull String password) {
+    private static KeyStore createKeyStore(@Nonnull String path, @Nonnull String password) {
       KeyStore keyStore;
       try {
         keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -244,7 +244,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @param certificate server's certificate
      * @return whether the operation was successful
      */
-    public boolean addCertificate(@NotNull X509Certificate certificate) {
+    public boolean addCertificate(@Nonnull X509Certificate certificate) {
       myWriteLock.lock();
       try {
         if (isBroken()) {
@@ -272,12 +272,12 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @param path path to file containing certificate
      * @return whether the operation was successful
      */
-    public boolean addCertificate(@NotNull String path) {
+    public boolean addCertificate(@Nonnull String path) {
       X509Certificate certificate = CertificateUtil.loadX509Certificate(path);
       return certificate != null && addCertificate(certificate);
     }
 
-    private static String createAlias(@NotNull X509Certificate certificate) {
+    private static String createAlias(@Nonnull X509Certificate certificate) {
       return CertificateUtil.getCommonName(certificate);
     }
 
@@ -287,7 +287,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @param certificate certificate alias
      * @return whether the operation was successful
      */
-    public boolean removeCertificate(@NotNull X509Certificate certificate) {
+    public boolean removeCertificate(@Nonnull X509Certificate certificate) {
       return removeCertificate(createAlias(certificate));
     }
 
@@ -297,7 +297,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @param alias certificate's alias
      * @return true if removal operation was successful and false otherwise
      */
-    public boolean removeCertificate(@NotNull String alias) {
+    public boolean removeCertificate(@Nonnull String alias) {
       myWriteLock.lock();
       try {
         if (isBroken()) {
@@ -332,7 +332,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @return certificate or null if it's not present
      */
     @Nullable
-    public X509Certificate getCertificate(@NotNull String alias) {
+    public X509Certificate getCertificate(@Nonnull String alias) {
       myReadLock.lock();
       try {
         return (X509Certificate)myKeyStore.getCertificate(alias);
@@ -374,7 +374,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
      * @param alias - certificate's alias to be checked
      * @return - whether certificate is in storage
      */
-    public boolean containsCertificate(@NotNull String alias) {
+    public boolean containsCertificate(@Nonnull String alias) {
       myReadLock.lock();
       try {
         return myKeyStore.containsAlias(alias);
@@ -425,11 +425,11 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
       }
     }
 
-    public void addListener(@NotNull CertificateListener listener) {
+    public void addListener(@Nonnull CertificateListener listener) {
       myDispatcher.addListener(listener);
     }
 
-    public void removeListener(@NotNull CertificateListener listener) {
+    public void removeListener(@Nonnull CertificateListener listener) {
       myDispatcher.removeListener(listener);
     }
 

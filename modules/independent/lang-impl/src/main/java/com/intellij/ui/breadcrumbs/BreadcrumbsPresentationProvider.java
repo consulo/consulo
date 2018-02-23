@@ -17,8 +17,8 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -27,5 +27,5 @@ public abstract class BreadcrumbsPresentationProvider {
   public static final ExtensionPointName<BreadcrumbsPresentationProvider> EP_NAME = ExtensionPointName.create("com.intellij.breadcrumbsPresentationProvider");
 
   @Nullable
-  public abstract CrumbPresentation[] getCrumbPresentations(@NotNull PsiElement[] element);
+  public abstract CrumbPresentation[] getCrumbPresentations(@Nonnull PsiElement[] element);
 }

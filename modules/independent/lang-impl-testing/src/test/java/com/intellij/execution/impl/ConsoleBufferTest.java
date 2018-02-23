@@ -2,7 +2,7 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -117,7 +117,7 @@ public class ConsoleBufferTest {
     return Arrays.asList(strings);
   }
   
-  private void checkState(@NotNull List<String> expectedBuffers, @NotNull TokenInfo ... expectedTokens) {
+  private void checkState(@Nonnull List<String> expectedBuffers, @Nonnull TokenInfo ... expectedTokens) {
     Deque<StringBuilder> actualBuffers = myBuffer.getDeferredOutput();
     assertEquals(expectedBuffers.size(), actualBuffers.size());
     int i = 0;

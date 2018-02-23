@@ -17,8 +17,8 @@ package com.intellij.util.xmlb;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 abstract class BasePrimitiveBinding extends Binding {
   protected final String myName;
@@ -29,7 +29,7 @@ abstract class BasePrimitiveBinding extends Binding {
   @Nullable
   protected Binding myBinding;
 
-  protected BasePrimitiveBinding(@NotNull MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
+  protected BasePrimitiveBinding(@Nonnull MutableAccessor accessor, @Nullable String suggestedName, @Nullable Class<? extends Converter> converterClass) {
     super(accessor);
 
     myName = StringUtil.isEmpty(suggestedName) ? myAccessor.getName() : suggestedName;

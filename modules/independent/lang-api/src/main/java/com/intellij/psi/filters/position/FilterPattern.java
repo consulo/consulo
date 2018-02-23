@@ -20,7 +20,7 @@ import com.intellij.patterns.InitialPatternCondition;
 import com.intellij.util.ProcessingContext;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author peter

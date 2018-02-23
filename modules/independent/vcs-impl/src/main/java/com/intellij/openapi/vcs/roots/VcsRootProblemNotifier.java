@@ -33,8 +33,8 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
@@ -50,22 +50,29 @@ public class VcsRootProblemNotifier {
 
   public static final Function<VcsRootError, String> PATH_FROM_ROOT_ERROR = VcsRootError::getMapping;
 
-  @NotNull private final Project myProject;
-  @NotNull private final VcsConfiguration mySettings;
-  @NotNull private final ProjectLevelVcsManager myVcsManager;
-  @NotNull private final ChangeListManager myChangeListManager;
-  @NotNull private final ProjectFileIndex myProjectFileIndex;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final VcsConfiguration mySettings;
+  @Nonnull
+  private final ProjectLevelVcsManager myVcsManager;
+  @Nonnull
+  private final ChangeListManager myChangeListManager;
+  @Nonnull
+  private final ProjectFileIndex myProjectFileIndex;
 
-  @NotNull private final Set<String> myReportedUnregisteredRoots;
+  @Nonnull
+  private final Set<String> myReportedUnregisteredRoots;
 
   @Nullable private Notification myNotification;
-  @NotNull private final Object NOTIFICATION_LOCK = new Object();
+  @Nonnull
+  private final Object NOTIFICATION_LOCK = new Object();
 
-  public static VcsRootProblemNotifier getInstance(@NotNull Project project) {
+  public static VcsRootProblemNotifier getInstance(@Nonnull Project project) {
     return new VcsRootProblemNotifier(project);
   }
 
-  private VcsRootProblemNotifier(@NotNull Project project) {
+  private VcsRootProblemNotifier(@Nonnull Project project) {
     myProject = project;
     mySettings = VcsConfiguration.getInstance(myProject);
     myChangeListManager = ChangeListManager.getInstance(project);
@@ -105,14 +112,14 @@ public class VcsRootProblemNotifier {
     }
   }
 
-  private boolean isUnderOrAboveProjectDir(@NotNull String mapping) {
+  private boolean isUnderOrAboveProjectDir(@Nonnull String mapping) {
     String projectDir = ObjectUtils.assertNotNull(myProject.getBasePath());
     return mapping.equals(VcsDirectoryMapping.PROJECT_CONSTANT) ||
            FileUtil.isAncestor(projectDir, mapping, false) ||
            FileUtil.isAncestor(mapping, projectDir, false);
   }
 
-  private boolean isIgnoredOrExcluded(@NotNull String mapping) {
+  private boolean isIgnoredOrExcluded(@Nonnull String mapping) {
     VirtualFile file = LocalFileSystem.getInstance().findFileByPath(mapping);
     return file != null && (myChangeListManager.isIgnoredFile(file) || myProjectFileIndex.isExcluded(file));
   }
@@ -126,15 +133,15 @@ public class VcsRootProblemNotifier {
     }
   }
 
-  @NotNull
+  @Nonnull
   private Collection<VcsRootError> scan() {
     return new VcsRootErrorsFinder(myProject).find();
   }
 
   @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-  @NotNull
-  private static String makeDescription(@NotNull Collection<VcsRootError> unregisteredRoots,
-                                        @NotNull Collection<VcsRootError> invalidRoots) {
+  @Nonnull
+  private static String makeDescription(@Nonnull Collection<VcsRootError> unregisteredRoots,
+                                        @Nonnull Collection<VcsRootError> invalidRoots) {
     Function<VcsRootError, String> rootToDisplayableString = rootError -> {
       if (rootError.getMapping().equals(VcsDirectoryMapping.PROJECT_CONSTANT)) {
         return StringUtil.escapeXml(rootError.getMapping());
@@ -178,8 +185,8 @@ public class VcsRootProblemNotifier {
     return description.toString();
   }
 
-  @NotNull
-  private static String makeTitle(@NotNull Collection<VcsRootError> unregisteredRoots, @NotNull Collection<VcsRootError> invalidRoots) {
+  @Nonnull
+  private static String makeTitle(@Nonnull Collection<VcsRootError> unregisteredRoots, @Nonnull Collection<VcsRootError> invalidRoots) {
     String title;
     if (unregisteredRoots.isEmpty()) {
       title = "Invalid VCS root " + pluralize("mapping", invalidRoots.size());
@@ -193,30 +200,34 @@ public class VcsRootProblemNotifier {
     return title;
   }
 
-  @NotNull
-  private List<VcsRootError> getImportantUnregisteredMappings(@NotNull Collection<VcsRootError> errors) {
+  @Nonnull
+  private List<VcsRootError> getImportantUnregisteredMappings(@Nonnull Collection<VcsRootError> errors) {
     return ContainerUtil.filter(errors, error -> {
       String mapping = error.getMapping();
       return error.getType() == VcsRootError.Type.UNREGISTERED_ROOT && isUnderOrAboveProjectDir(mapping) && !isIgnoredOrExcluded(mapping);
     });
   }
 
-  @NotNull
-  private static Collection<VcsRootError> getInvalidRoots(@NotNull Collection<VcsRootError> errors) {
+  @Nonnull
+  private static Collection<VcsRootError> getInvalidRoots(@Nonnull Collection<VcsRootError> errors) {
     return ContainerUtil.filter(errors, error -> error.getType() == VcsRootError.Type.EXTRA_MAPPING);
   }
 
   private static class MyNotificationListener extends NotificationListener.Adapter {
 
-    @NotNull private final Project myProject;
-    @NotNull private final VcsConfiguration mySettings;
-    @NotNull private final ProjectLevelVcsManager myVcsManager;
-    @NotNull private final Collection<VcsRootError> myImportantUnregisteredRoots;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final VcsConfiguration mySettings;
+    @Nonnull
+    private final ProjectLevelVcsManager myVcsManager;
+    @Nonnull
+    private final Collection<VcsRootError> myImportantUnregisteredRoots;
 
-    private MyNotificationListener(@NotNull Project project,
-                                   @NotNull VcsConfiguration settings,
-                                   @NotNull ProjectLevelVcsManager vcsManager,
-                                   @NotNull Collection<VcsRootError> importantUnregisteredRoots) {
+    private MyNotificationListener(@Nonnull Project project,
+                                   @Nonnull VcsConfiguration settings,
+                                   @Nonnull ProjectLevelVcsManager vcsManager,
+                                   @Nonnull Collection<VcsRootError> importantUnregisteredRoots) {
       myProject = project;
       mySettings = settings;
       myVcsManager = vcsManager;
@@ -224,7 +235,7 @@ public class VcsRootProblemNotifier {
     }
 
     @Override
-    protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       if (event.getDescription().equals("configure") && !myProject.isDisposed()) {
         ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionsBundle.message("group.VcsGroup.text"));
         Collection<VcsRootError> errorsAfterPossibleFix = getInstance(myProject).scan();

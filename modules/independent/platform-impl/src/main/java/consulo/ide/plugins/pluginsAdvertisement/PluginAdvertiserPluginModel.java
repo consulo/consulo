@@ -23,7 +23,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.util.ui.ColumnInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -104,7 +104,7 @@ public class PluginAdvertiserPluginModel extends PluginTableModel {
   }
 
 
-  public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @NotNull List<IdeaPluginDescriptor> pluginDescriptors) {
+  public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @Nonnull List<IdeaPluginDescriptor> pluginDescriptors) {
     columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(this), new DownloadCheckboxColumnInfo(downloadState)};
     view = new ArrayList<>();
     updatePluginsList(pluginDescriptors);

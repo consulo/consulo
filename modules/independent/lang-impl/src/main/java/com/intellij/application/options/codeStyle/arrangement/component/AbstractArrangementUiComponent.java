@@ -21,8 +21,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,8 +37,9 @@ import java.util.Set;
  */
 public abstract class AbstractArrangementUiComponent implements ArrangementUiComponent {
 
-  @NotNull private final NotNullLazyValue<JComponent> myComponent = new NotNullLazyValue<JComponent>() {
-    @NotNull
+  @Nonnull
+  private final NotNullLazyValue<JComponent> myComponent = new NotNullLazyValue<JComponent>() {
+    @Nonnull
     @Override
     protected JComponent compute() {
       JPanel result = new JPanel(new GridBagLayout()) {
@@ -84,28 +85,30 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
     }
   };
 
-  @NotNull private final Set<ArrangementSettingsToken> myAvailableTokens = ContainerUtilRt.newHashSet();
+  @Nonnull
+  private final Set<ArrangementSettingsToken> myAvailableTokens = ContainerUtilRt.newHashSet();
 
   @Nullable private Listener  myListener;
-  @Nullable private Rectangle myScreenBounds;
+  @Nullable
+  private Rectangle myScreenBounds;
 
   private boolean myEnabled = true;
 
-  protected AbstractArrangementUiComponent(@NotNull ArrangementSettingsToken ... availableTokens) {
+  protected AbstractArrangementUiComponent(@Nonnull ArrangementSettingsToken ... availableTokens) {
     myAvailableTokens.addAll(Arrays.asList(availableTokens));
   }
 
-  protected AbstractArrangementUiComponent(@NotNull Collection<ArrangementSettingsToken> availableTokens) {
+  protected AbstractArrangementUiComponent(@Nonnull Collection<ArrangementSettingsToken> availableTokens) {
     myAvailableTokens.addAll(availableTokens);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<ArrangementSettingsToken> getAvailableTokens() {
     return myAvailableTokens;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final JComponent getUiComponent() {
     return myComponent.getValue();
@@ -114,7 +117,7 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
   protected abstract JComponent doGetUiComponent();
 
   @Override
-  public void setData(@NotNull Object data) {
+  public void setData(@Nonnull Object data) {
     // Do nothing
   }
 
@@ -141,12 +144,12 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
 
   @Nullable
   @Override
-  public Rectangle onMouseMove(@NotNull MouseEvent event) {
+  public Rectangle onMouseMove(@Nonnull MouseEvent event) {
     return null;
   }
 
   @Override
-  public void onMouseRelease(@NotNull MouseEvent event) {
+  public void onMouseRelease(@Nonnull MouseEvent event) {
   }
 
   @Nullable
@@ -157,7 +160,7 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
 
   @Nullable
   @Override
-  public Rectangle onMouseEntered(@NotNull MouseEvent e) {
+  public Rectangle onMouseEntered(@Nonnull MouseEvent e) {
     return null;
   }
 

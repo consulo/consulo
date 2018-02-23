@@ -19,8 +19,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -49,14 +49,14 @@ public abstract class Decoder extends ChannelInboundHandlerAdapter {
     }
   }
 
-  protected abstract void messageReceived(@NotNull ChannelHandlerContext context, @NotNull ByteBuf input) throws Exception;
+  protected abstract void messageReceived(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf input) throws Exception;
 
   public interface FullMessageConsumer<T> {
-    T contentReceived(@NotNull ByteBuf input, @NotNull ChannelHandlerContext context, boolean isCumulateBuffer) throws IOException;
+    T contentReceived(@Nonnull ByteBuf input, @Nonnull ChannelHandlerContext context, boolean isCumulateBuffer) throws IOException;
   }
 
   @Nullable
-  protected final <T> T readContent(@NotNull ByteBuf input, @NotNull ChannelHandlerContext context, int contentLength, @NotNull FullMessageConsumer<T> fullMessageConsumer) throws IOException {
+  protected final <T> T readContent(@Nonnull ByteBuf input, @Nonnull ChannelHandlerContext context, int contentLength, @Nonnull FullMessageConsumer<T> fullMessageConsumer) throws IOException {
     ByteBuf buffer = getBufferIfSufficient(input, contentLength, context);
     if (buffer == null) {
       return null;
@@ -79,7 +79,7 @@ public abstract class Decoder extends ChannelInboundHandlerAdapter {
   }
 
   @Nullable
-  protected final ByteBuf getBufferIfSufficient(@NotNull ByteBuf input, int requiredLength, @NotNull ChannelHandlerContext context) {
+  protected final ByteBuf getBufferIfSufficient(@Nonnull ByteBuf input, int requiredLength, @Nonnull ChannelHandlerContext context) {
     if (!input.isReadable()) {
       return null;
     }

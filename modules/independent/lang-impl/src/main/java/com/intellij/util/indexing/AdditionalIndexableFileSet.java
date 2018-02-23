@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -74,7 +74,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
   }
 
   @Override
-  public boolean isInSet(@NotNull VirtualFile file) {
+  public boolean isInSet(@Nonnull VirtualFile file) {
     for (final VirtualFile root : getDirectories()) {
       if (VfsUtilCore.isAncestor(root, file, false)) {
         return true;
@@ -84,10 +84,10 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
   }
 
   @Override
-  public void iterateIndexableFilesIn(@NotNull VirtualFile file, @NotNull final ContentIterator iterator) {
+  public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull final ContentIterator iterator) {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (!isInSet(file)) {
           return false;
         }

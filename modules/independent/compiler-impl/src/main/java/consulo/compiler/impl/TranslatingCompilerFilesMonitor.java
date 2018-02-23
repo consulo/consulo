@@ -23,8 +23,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +36,7 @@ import java.util.List;
  * @since 13:36/06.11.13
  */
 public abstract class TranslatingCompilerFilesMonitor {
-  @NotNull
+  @Nonnull
   public static TranslatingCompilerFilesMonitor getInstance() {
     return ApplicationManager.getApplication().getComponent(TranslatingCompilerFilesMonitor.class);
   }
@@ -59,7 +58,7 @@ public abstract class TranslatingCompilerFilesMonitor {
                     Collection<Trinity<File, String, Boolean>> toDelete);
 
   public abstract void update(CompileContext context,
-              @Nullable String outputRoot,
+              @javax.annotation.Nullable String outputRoot,
               Collection<TranslatingCompiler.OutputItem> successfullyCompiled,
               VirtualFile[] filesToRecompile) throws IOException;
 

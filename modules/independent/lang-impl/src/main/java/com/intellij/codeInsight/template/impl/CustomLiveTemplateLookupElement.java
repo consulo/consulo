@@ -20,18 +20,21 @@ import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
-  @NotNull private final CustomLiveTemplateBase myCustomLiveTemplate;
+  @Nonnull
+  private final CustomLiveTemplateBase myCustomLiveTemplate;
 
-  @NotNull private final String myTemplateKey;
-  @NotNull private final String myItemText;
+  @Nonnull
+  private final String myTemplateKey;
+  @Nonnull
+  private final String myItemText;
 
-  public CustomLiveTemplateLookupElement(@NotNull CustomLiveTemplateBase customLiveTemplate,
-                                         @NotNull String templateKey,
-                                         @NotNull String itemText,
+  public CustomLiveTemplateLookupElement(@Nonnull CustomLiveTemplateBase customLiveTemplate,
+                                         @Nonnull String templateKey,
+                                         @Nonnull String itemText,
                                          @Nullable String description,
                                          boolean sudden,
                                          boolean worthShowingInAutoPopup) {
@@ -41,13 +44,13 @@ public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
     myItemText = itemText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getItemText() {
     return myItemText;
   }
 
-  @NotNull
+  @Nonnull
   public CustomLiveTemplateBase getCustomLiveTemplate() {
     return myCustomLiveTemplate;
   }
@@ -63,7 +66,7 @@ public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
     expandTemplate(context.getEditor(), context.getFile());
   }
 
-  public void expandTemplate(@NotNull Editor editor, @NotNull PsiFile file) {
+  public void expandTemplate(@Nonnull Editor editor, @Nonnull PsiFile file) {
     myCustomLiveTemplate.expand(myTemplateKey, new CustomTemplateCallback(editor, file));
   }
 }

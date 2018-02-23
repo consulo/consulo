@@ -20,14 +20,14 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<ChangesSelection> getKey() {
     return VcsDataKeys.CHANGES_SELECTION;
@@ -35,12 +35,12 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
 
   @Nullable
   @Override
-  public ChangesSelection getData(@NotNull DataProvider dataProvider) {
+  public ChangesSelection getData(@Nonnull DataProvider dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
-  @Nullable
-  public ChangesSelection getChangesSelection(@NotNull DataProvider dataProvider) {
+  @javax.annotation.Nullable
+  public ChangesSelection getChangesSelection(@Nonnull DataProvider dataProvider) {
     Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 
     Change[] selectedChanges = dataProvider.getDataUnchecked(VcsDataKeys.SELECTED_CHANGES);

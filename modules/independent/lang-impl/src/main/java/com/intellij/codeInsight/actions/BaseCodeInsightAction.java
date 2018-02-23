@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class BaseCodeInsightAction extends CodeInsightAction {
@@ -45,19 +45,19 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
   @RequiredDispatchThread
   @Override
   @Nullable
-  protected Editor getEditor(@NotNull final DataContext dataContext, @NotNull final Project project) {
+  protected Editor getEditor(@Nonnull final DataContext dataContext, @Nonnull final Project project) {
     Editor editor = getBaseEditor(dataContext, project);
     if (!myLookForInjectedEditor) return editor;
     return getInjectedEditor(project, editor);
   }
 
   @RequiredDispatchThread
-  public static Editor getInjectedEditor(@NotNull Project project, final Editor editor) {
+  public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor) {
     return getInjectedEditor(project, editor, true);
   }
 
   @RequiredDispatchThread
-  public static Editor getInjectedEditor(@NotNull Project project, final Editor editor, boolean commit) {
+  public static Editor getInjectedEditor(@Nonnull Project project, final Editor editor, boolean commit) {
     Editor injectedEditor = editor;
     if (editor != null) {
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);

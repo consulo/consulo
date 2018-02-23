@@ -18,7 +18,6 @@ package com.intellij.openapi.editor;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -39,15 +38,15 @@ public interface TextAnnotationGutterProvider {
    * @param editor the editor in which the text will be drawn.
    * @return the text to draw, or null if no text should be drawn.
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getLineText(int line, Editor editor);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getToolTip(int line, Editor editor);
 
   EditorFontType getStyle(int line, Editor editor);
 
-  @Nullable
+  @javax.annotation.Nullable
   ColorKey getColor(int line, Editor editor);
 
   /**
@@ -59,7 +58,7 @@ public interface TextAnnotationGutterProvider {
    * @param editor the editor in which the text will be drawn.
    * @return the text to draw, or null if no text should be drawn.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Color getBgColor(int line, Editor editor);
 
   /***

@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.impl.FileManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -34,31 +34,31 @@ public abstract class PsiManagerEx extends PsiManager {
   public abstract boolean isBatchFilesProcessingMode();
 
   @TestOnly
-  public abstract void setAssertOnFileLoadingFilter(@NotNull VirtualFileFilter filter, @NotNull Disposable parentDisposable);
+  public abstract void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable);
 
   @TestOnly
-  public abstract boolean isAssertOnFileLoading(@NotNull VirtualFile file);
+  public abstract boolean isAssertOnFileLoading(@Nonnull VirtualFile file);
 
   /**
    * @param runnable to be run before <b>physical</b> PSI change
    */
-  public abstract void registerRunnableToRunOnChange(@NotNull Runnable runnable);
+  public abstract void registerRunnableToRunOnChange(@Nonnull Runnable runnable);
 
   /**
    * @param runnable to be run before <b>physical</b> or <b>non-physical</b> PSI change
    */
-  public abstract void registerRunnableToRunOnAnyChange(@NotNull Runnable runnable);
+  public abstract void registerRunnableToRunOnAnyChange(@Nonnull Runnable runnable);
 
-  public abstract void registerRunnableToRunAfterAnyChange(@NotNull Runnable runnable);
+  public abstract void registerRunnableToRunAfterAnyChange(@Nonnull Runnable runnable);
 
-  @NotNull
+  @Nonnull
   public abstract FileManager getFileManager();
 
-  public abstract void beforeChildAddition(@NotNull PsiTreeChangeEventImpl event);
+  public abstract void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event);
 
-  public abstract void beforeChildRemoval(@NotNull PsiTreeChangeEventImpl event);
+  public abstract void beforeChildRemoval(@Nonnull PsiTreeChangeEventImpl event);
 
-  public abstract void beforeChildReplacement(@NotNull PsiTreeChangeEventImpl event);
+  public abstract void beforeChildReplacement(@Nonnull PsiTreeChangeEventImpl event);
 
   public abstract void beforeChange(boolean isPhysical);
 

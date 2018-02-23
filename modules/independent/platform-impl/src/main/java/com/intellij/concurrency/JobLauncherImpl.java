@@ -26,8 +26,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,11 +43,11 @@ public class JobLauncherImpl extends JobLauncher {
   static final int CORES_FORK_THRESHOLD = 1;
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@NotNull final List<T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull final List<T> things,
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @NotNull final Processor<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     @Nonnull final Processor<? super T> thingProcessor) throws ProcessCanceledException {
     // supply our own indicator even if we haven't given one - to support cancellation
     // use StandardProgressIndicator by default to avoid assertion in SensitiveProgressWrapper() ctr later
     final ProgressIndicator wrapper = progress == null ? new StandardProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
@@ -89,10 +89,10 @@ public class JobLauncherImpl extends JobLauncher {
 
   // if {@code things} are too few to be processed in the real pool, returns TRUE if processed successfully, FALSE if not
   // returns null if things need to be processed in the real pool
-  private static <T> Boolean processImmediatelyIfTooFew(@NotNull final List<T> things,
-                                                        @NotNull final ProgressIndicator progress,
+  private static <T> Boolean processImmediatelyIfTooFew(@Nonnull final List<T> things,
+                                                        @Nonnull final ProgressIndicator progress,
                                                         boolean runInReadAction,
-                                                        @NotNull final Processor<? super T> thingProcessor) {
+                                                        @Nonnull final Processor<? super T> thingProcessor) {
     // commit can be invoked from within write action
     //if (runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
     //  throw new RuntimeException("Must not run invokeConcurrentlyUnderProgress() from under write action because of imminent deadlock");
@@ -126,18 +126,18 @@ public class JobLauncherImpl extends JobLauncher {
 
   // This implementation is not really async
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<T> things,
+  public <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
                                                                        ProgressIndicator progress,
                                                                        boolean failFastOnAcquireReadAction,
-                                                                       @NotNull Processor<? super T> thingProcessor) {
+                                                                       @Nonnull Processor<? super T> thingProcessor) {
     return AsyncUtil.wrapBoolean(invokeConcurrentlyUnderProgress(things, progress, failFastOnAcquireReadAction, thingProcessor));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Job<Void> submitToJobThread(@NotNull final Runnable action, @Nullable Consumer<Future> onDoneCallback) {
+  public Job<Void> submitToJobThread(@Nonnull final Runnable action, @Nullable Consumer<Future> onDoneCallback) {
     VoidForkJoinTask task = new VoidForkJoinTask(action, onDoneCallback);
     task.submit();
     return task;
@@ -183,7 +183,7 @@ public class JobLauncherImpl extends JobLauncher {
       }
     };
 
-    private VoidForkJoinTask(@NotNull Runnable action, @Nullable Consumer<Future> onDoneCallback) {
+    private VoidForkJoinTask(@Nonnull Runnable action, @Nullable Consumer<Future> onDoneCallback) {
       myAction = action;
       myOnDoneCallback = onDoneCallback;
     }
@@ -212,17 +212,17 @@ public class JobLauncherImpl extends JobLauncher {
     }
 
     @Override
-    public void addTask(@NotNull Callable<Void> task) {
+    public void addTask(@Nonnull Callable<Void> task) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public void addTask(@NotNull Runnable task, Void result) {
+    public void addTask(@Nonnull Runnable task, Void result) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public void addTask(@NotNull Runnable task) {
+    public void addTask(@Nonnull Runnable task) {
       throw new IncorrectOperationException();
     }
 
@@ -270,11 +270,11 @@ public class JobLauncherImpl extends JobLauncher {
    *
    * @return true if all elements processed successfully, false if at least one processor returned false or exception occurred
    */
-  public <T> boolean processQueue(@NotNull final BlockingQueue<T> things,
-                                  @NotNull final Queue<T> failedToProcess,
-                                  @NotNull final ProgressIndicator progress,
-                                  @NotNull final T tombStone,
-                                  @NotNull final Processor<? super T> thingProcessor) {
+  public <T> boolean processQueue(@Nonnull final BlockingQueue<T> things,
+                                  @Nonnull final Queue<T> failedToProcess,
+                                  @Nonnull final ProgressIndicator progress,
+                                  @Nonnull final T tombStone,
+                                  @Nonnull final Processor<? super T> thingProcessor) {
     class MyTask implements Callable<Boolean> {
       private final int mySeq;
       private boolean result;

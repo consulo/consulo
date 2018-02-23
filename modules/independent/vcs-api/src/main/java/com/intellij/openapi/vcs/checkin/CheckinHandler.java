@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.changes.LocalCommitExecutor;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.PairConsumer;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public abstract class CheckinHandler {
    * @return the panel instance, or null if the handler does not provide any options to show in the
    * "Before Check In" group.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
     return null;
   }

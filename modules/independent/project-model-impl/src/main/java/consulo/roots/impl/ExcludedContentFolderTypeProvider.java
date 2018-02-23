@@ -20,7 +20,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.DarculaColors;
 import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ import java.awt.*;
 public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color EXCLUDED_COLOR = new JBColor(new Color(0x992E00), DarculaColors.RED);
 
-  @NotNull
+  @Nonnull
   public static ExcludedContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
   }
@@ -41,7 +41,7 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
     super("EXCLUDED");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.ExcludeRoot;
@@ -52,13 +52,13 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
     return AllIcons.Modules.ExcludeRoot;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.excluded.action");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return EXCLUDED_COLOR;

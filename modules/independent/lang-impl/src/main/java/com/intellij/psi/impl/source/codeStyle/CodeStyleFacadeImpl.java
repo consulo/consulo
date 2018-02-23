@@ -31,8 +31,8 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProviderEP;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CodeStyleFacadeImpl extends CodeStyleFacade {
   private final Project myProject;
@@ -53,14 +53,14 @@ public class CodeStyleFacadeImpl extends CodeStyleFacade {
   @Override
   @Nullable
   @Deprecated
-  public String getLineIndent(@NotNull final Document document, int offset) {
+  public String getLineIndent(@Nonnull final Document document, int offset) {
     if (myProject == null) return null;
     PsiDocumentManager.getInstance(myProject).commitDocument(document);
     return CodeStyleManager.getInstance(myProject).getLineIndent(document, offset);
   }
 
   @Override
-  public String getLineIndent(@NotNull Editor editor, @Nullable Language language, int offset) {
+  public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset) {
     if (myProject == null) return null;
     LineIndentProvider lineIndentProvider = LineIndentProviderEP.findLineIndentProvider(language);
     return lineIndentProvider != null ? lineIndentProvider.getLineIndent(myProject, editor, language, offset) : null;

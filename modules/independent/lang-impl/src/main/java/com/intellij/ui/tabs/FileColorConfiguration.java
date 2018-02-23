@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.ui.ColorUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -78,7 +78,7 @@ class FileColorConfiguration implements Cloneable {
     }
   }
 
-  public void save(@NotNull final Element e) {
+  public void save(@Nonnull final Element e) {
     if (!isValid(null)) {
       return;
     }
@@ -122,7 +122,7 @@ class FileColorConfiguration implements Cloneable {
   }
 
   @Nullable
-  public static FileColorConfiguration load(@NotNull final Element e) {
+  public static FileColorConfiguration load(@Nonnull final Element e) {
     final String path = e.getAttributeValue(SCOPE_NAME);
     if (path == null) {
       return null;

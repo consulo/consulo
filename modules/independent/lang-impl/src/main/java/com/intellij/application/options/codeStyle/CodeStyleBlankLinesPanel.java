@@ -29,7 +29,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

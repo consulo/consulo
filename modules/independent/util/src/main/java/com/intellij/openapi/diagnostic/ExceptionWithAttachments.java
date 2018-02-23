@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface ExceptionWithAttachments {
-  @NotNull
+  @Nonnull
   Attachment[] getAttachments();
 }

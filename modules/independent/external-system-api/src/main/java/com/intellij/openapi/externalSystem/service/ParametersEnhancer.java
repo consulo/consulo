@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.SimpleJavaParameters;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 import java.util.List;
@@ -37,7 +37,7 @@ public interface ParametersEnhancer {
    *
    * @param parameters  parameters to be applied to the slave process which will be used for external system communication
    */
-  void enhanceRemoteProcessing(@NotNull SimpleJavaParameters parameters) throws ExecutionException;
+  void enhanceRemoteProcessing(@Nonnull SimpleJavaParameters parameters) throws ExecutionException;
 
   /**
    * Allows to define custom classpath to be used at the in-process mode.
@@ -61,5 +61,5 @@ public interface ParametersEnhancer {
    * 
    * @param urls
    */
-  void enhanceLocalProcessing(@NotNull List<URL> urls);
+  void enhanceLocalProcessing(@Nonnull List<URL> urls);
 }

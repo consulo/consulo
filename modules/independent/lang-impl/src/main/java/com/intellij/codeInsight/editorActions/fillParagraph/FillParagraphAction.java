@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -19,7 +19,7 @@ import consulo.annotations.RequiredDispatchThread;
  */
 public class FillParagraphAction extends BaseCodeInsightAction {
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new Handler();
@@ -28,7 +28,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
 
     @RequiredDispatchThread
     @Override
-    public void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile file) {
+    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
 
       ParagraphFillHandler paragraphFillHandler = LanguageFillParagraphExtension.INSTANCE.forLanguage(file.getLanguage());
 
@@ -48,7 +48,7 @@ public class FillParagraphAction extends BaseCodeInsightAction {
   }
 
   @Override
-  protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     final ParagraphFillHandler handler =
       LanguageFillParagraphExtension.INSTANCE.forLanguage(file.getLanguage());
     return handler != null && handler.isAvailableForFile(file);

@@ -20,7 +20,7 @@ import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.Key;
 import com.intellij.openapi.externalSystem.util.Order;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -55,7 +55,7 @@ public interface ProjectDataService<E, I> {
   /**
    * @return key of project data supported by the current manager
    */
-  @NotNull
+  @Nonnull
   Key<E> getTargetDataKey();
 
   /**
@@ -77,7 +77,7 @@ public interface ProjectDataService<E, I> {
    * @param project
    * @param synchronous
    */
-  void importData(@NotNull Collection<DataNode<E>> toImport, @NotNull Project project, boolean synchronous);
+  void importData(@Nonnull Collection<DataNode<E>> toImport, @Nonnull Project project, boolean synchronous);
 
   /**
    * Asks to remove all given ide project entities.
@@ -90,5 +90,5 @@ public interface ProjectDataService<E, I> {
    * @param project      target project
    * @param synchronous  flag which defines if entities removal should be synchronous
    */
-  void removeData(@NotNull Collection<? extends I> toRemove, @NotNull Project project, boolean synchronous);
+  void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous);
 }

@@ -19,7 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.awt.RelativePoint;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,20 +60,20 @@ public abstract class HintManager {
   @MagicConstant(flags = {HIDE_BY_ESCAPE, HIDE_BY_ANY_KEY, HIDE_BY_LOOKUP_ITEM_CHANGE, HIDE_BY_TEXT_CHANGE, HIDE_BY_OTHER_HINT, HIDE_BY_SCROLLING, HIDE_IF_OUT_OF_EDITOR, UPDATE_BY_SCROLLING, HIDE_BY_MOUSEOVER})
   public @interface HideFlags {}
 
-  public abstract void showHint(@NotNull JComponent component, @NotNull RelativePoint p, @HideFlags int flags, int timeout);
+  public abstract void showHint(@Nonnull JComponent component, @Nonnull RelativePoint p, @HideFlags int flags, int timeout);
 
-  public abstract void showErrorHint(@NotNull Editor editor, @NotNull String text);
-  public abstract void showErrorHint(@NotNull Editor editor, @NotNull String text, @PositionFlags short position);
+  public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String text);
+  public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
 
-  public abstract void showInformationHint(@NotNull Editor editor, @NotNull String text);
+  public abstract void showInformationHint(@Nonnull Editor editor, @Nonnull String text);
 
-  public abstract void showInformationHint(@NotNull Editor editor, @NotNull JComponent component);
+  public abstract void showInformationHint(@Nonnull Editor editor, @Nonnull JComponent component);
 
-  public abstract void showQuestionHint(@NotNull Editor editor, @NotNull String hintText, int offset1, int offset2, @NotNull QuestionAction action);
+  public abstract void showQuestionHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @Nonnull QuestionAction action);
 
   public abstract boolean hideHints(@HideFlags int mask, boolean onlyOne, boolean editorChanged);
 
-  public abstract void showErrorHint(@NotNull Editor editor, @NotNull String hintText, int offset1, int offset2, @PositionFlags short constraint, @HideFlags int flags, int timeout);
+  public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @PositionFlags short constraint, @HideFlags int flags, int timeout);
 
   public abstract void hideAllHints();
 

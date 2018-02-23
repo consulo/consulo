@@ -17,8 +17,8 @@ package com.intellij.openapi.diff.impl;
 
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class GenericDataProvider implements DataProvider {
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     Object data = myGenericData.get(dataId);
     if (data != null) return data;
     return myParentProvider != null ? myParentProvider.getData(dataId) : null;

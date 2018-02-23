@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -25,6 +25,6 @@ import javax.swing.*;
  */
 public interface ArrangementRepresentationAware {
   
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 }

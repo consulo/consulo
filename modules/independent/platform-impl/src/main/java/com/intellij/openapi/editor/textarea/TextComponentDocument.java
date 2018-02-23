@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -38,7 +38,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     myTextComponent = textComponent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     try {
@@ -50,9 +50,9 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getText(@NotNull TextRange range) {
+  public String getText(@Nonnull TextRange range) {
     try {
       final javax.swing.text.Document document = myTextComponent.getDocument();
       return document.getText(range.getStartOffset(), range.getLength());
@@ -63,19 +63,19 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence getCharsSequence() {
     return getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getImmutableCharSequence() {
     return getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] getChars() {
     throw new UnsupportedOperationException("Not implemented");
   }
@@ -106,7 +106,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  public void insertString(final int offset, @NotNull final CharSequence s) {
+  public void insertString(final int offset, @Nonnull final CharSequence s) {
     try {
       myTextComponent.getDocument().insertString(offset, s.toString(), null);
     }
@@ -126,7 +126,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  public void replaceString(final int startOffset, final int endOffset, @NotNull final CharSequence s) {
+  public void replaceString(final int startOffset, final int endOffset, @Nonnull final CharSequence s) {
     final javax.swing.text.Document document = myTextComponent.getDocument();
     try {
       document.remove(startOffset, endOffset-startOffset);
@@ -153,39 +153,39 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  public void addDocumentListener(@NotNull final DocumentListener listener) {
+  public void addDocumentListener(@Nonnull final DocumentListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void addDocumentListener(@NotNull final DocumentListener listener, @NotNull final Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull final DocumentListener listener, @Nonnull final Disposable parentDisposable) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeDocumentListener(@NotNull final DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull final DocumentListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(final int startOffset, final int endOffset) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(final int startOffset, final int endOffset, final boolean surviveOnExternalChange) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -195,13 +195,13 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createGuardedBlock(final int startOffset, final int endOffset) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeGuardedBlock(@NotNull final RangeMarker block) {
+  public void removeGuardedBlock(@Nonnull final RangeMarker block) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -231,13 +231,13 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
   }
 
   @Override
-  public void setText(@NotNull final CharSequence text) {
+  public void setText(@Nonnull final CharSequence text) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @NotNull
-  public RangeMarker createRangeMarker(@NotNull final TextRange textRange) {
+  @Nonnull
+  public RangeMarker createRangeMarker(@Nonnull final TextRange textRange) {
     throw new UnsupportedOperationException("Not implemented");
   }
 

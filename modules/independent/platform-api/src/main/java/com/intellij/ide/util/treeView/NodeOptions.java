@@ -16,7 +16,7 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.util.KeyWithDefaultValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Common view settings for trees like the project view and packages view tree.
@@ -53,8 +53,8 @@ public interface NodeOptions {
    */
   boolean isShowLibraryContents();
 
-  @NotNull
-  <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option);
+  @Nonnull
+  <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option);
 
   /**
    * The default tree view settings.
@@ -80,9 +80,9 @@ public interface NodeOptions {
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
       return option.getDefaultValue();
     }
   };

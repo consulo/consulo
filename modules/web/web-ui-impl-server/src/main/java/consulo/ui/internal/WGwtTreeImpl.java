@@ -22,8 +22,8 @@ import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -107,11 +107,11 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
   }
 
   @Override
-  public void expand(@NotNull TreeNode<NODE> node) {
+  public void expand(@Nonnull TreeNode<NODE> node) {
     queue((WGwtTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
   }
 
-  private void queue(@NotNull WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
+  private void queue(@Nonnull WGwtTreeNodeImpl<NODE> parent, TreeState.TreeChangeType type) {
     UI ui = UI.getCurrent();
     myUpdater.execute(() -> {
       WGwtUIThreadLocal.setUI(ui);
@@ -132,7 +132,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     });
   }
 
-  private void mapChanges(@NotNull WGwtTreeNodeImpl<NODE> parent, List<WGwtTreeNodeImpl<NODE>> children, TreeState.TreeChangeType type) {
+  private void mapChanges(@Nonnull WGwtTreeNodeImpl<NODE> parent, List<WGwtTreeNodeImpl<NODE>> children, TreeState.TreeChangeType type) {
     synchronized (myChanges) {
       TreeState.TreeChange change = new TreeState.TreeChange();
       change.myId = parent.getId();
@@ -146,8 +146,8 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     }
   }
 
-  @NotNull
-  private List<WGwtTreeNodeImpl<NODE>> fetchChildren(@NotNull WGwtTreeNodeImpl<NODE> parent, boolean fetchNext) {
+  @Nonnull
+  private List<WGwtTreeNodeImpl<NODE>> fetchChildren(@Nonnull WGwtTreeNodeImpl<NODE> parent, boolean fetchNext) {
     List<WGwtTreeNodeImpl<NODE>> list = new ArrayList<>();
 
     myModel.fetchChildren(node -> {
@@ -192,7 +192,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
     }
   }
 
-  @NotNull
+  @Nonnull
   private TreeState.TreeNodeState convert(WGwtTreeNodeImpl<NODE> child) {
     TreeState.TreeNodeState e = new TreeState.TreeNodeState();
     e.myId = child.getId();
@@ -214,7 +214,7 @@ public class WGwtTreeImpl<NODE> extends AbstractComponent implements Tree<NODE>,
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

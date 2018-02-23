@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.reporting.FreezeLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides services for registering actions which are activated by typing in the editor.
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * @see EditorActionManager#getTypedAction()
  */
 public class TypedAction {
-  @NotNull
+  @Nonnull
   private TypedActionHandler myRawHandler;
   private TypedActionHandler myHandler;
   private boolean myHandlersLoaded;
@@ -55,7 +55,7 @@ public class TypedAction {
 
   private static class Handler implements TypedActionHandler {
     @Override
-    public void execute(@NotNull final Editor editor, char charTyped, @NotNull DataContext dataContext) {
+    public void execute(@Nonnull final Editor editor, char charTyped, @Nonnull DataContext dataContext) {
       if (editor.isViewer()) return;
 
       Document doc = editor.getDocument();
@@ -103,7 +103,7 @@ public class TypedAction {
    *
    * @see #setupRawHandler(TypedActionHandler)
    */
-  @NotNull
+  @Nonnull
   public TypedActionHandler getRawHandler() {
     return myRawHandler;
   }
@@ -122,14 +122,14 @@ public class TypedAction {
    * @see #getHandler()
    * @see #setupHandler(TypedActionHandler)
    */
-  @NotNull
-  public TypedActionHandler setupRawHandler(@NotNull TypedActionHandler handler) {
+  @Nonnull
+  public TypedActionHandler setupRawHandler(@Nonnull TypedActionHandler handler) {
     TypedActionHandler tmp = myRawHandler;
     myRawHandler = handler;
     return tmp;
   }
 
-  public void beforeActionPerformed(@NotNull Editor editor, char c, @NotNull DataContext context, @NotNull ActionPlan plan) {
+  public void beforeActionPerformed(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
     if (myRawHandler instanceof TypedActionHandlerEx) {
       ((TypedActionHandlerEx)myRawHandler).beforeExecute(editor, c, context, plan);
     }
@@ -143,7 +143,7 @@ public class TypedAction {
 
   private class DefaultRawHandler implements TypedActionHandlerEx {
     @Override
-    public void beforeExecute(@NotNull Editor editor, char c, @NotNull DataContext context, @NotNull ActionPlan plan) {
+    public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
       if (editor.isViewer() || !editor.getDocument().isWritable()) return;
 
       TypedActionHandler handler = getHandler();
@@ -154,7 +154,7 @@ public class TypedAction {
     }
 
     @Override
-    public void execute(@NotNull final Editor editor, final char charTyped, @NotNull final DataContext dataContext) {
+    public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
       CommandProcessor.getInstance().executeCommand(dataContext.getData(CommonDataKeys.PROJECT), () -> {
         if (!EditorModificationUtil.requestWriting(editor)) {
           HintManager.getInstance().showInformationHint(editor, "File is not writable");

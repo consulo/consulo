@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 enum CommitCountStage {
 
@@ -29,7 +29,7 @@ enum CommitCountStage {
     myCount = count;
   }
 
-  @NotNull
+  @Nonnull
   CommitCountStage next() {
     CommitCountStage[] values = values();
     return ordinal() == values.length - 1 ? this : values[ordinal() + 1];

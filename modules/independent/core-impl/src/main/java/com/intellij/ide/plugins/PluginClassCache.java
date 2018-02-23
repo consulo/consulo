@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.openapi.extensions.PluginId;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ class PluginClassCache {
   private static final Object ourLock = new Object();
   private final TObjectIntHashMap<PluginId> myClassCounts = new TObjectIntHashMap<>();
 
-  void addPluginClass(@NotNull PluginId pluginId) {
+  void addPluginClass(@Nonnull PluginId pluginId) {
     synchronized(ourLock) {
       myClassCounts.put(pluginId, myClassCounts.get(pluginId) + 1);
     }

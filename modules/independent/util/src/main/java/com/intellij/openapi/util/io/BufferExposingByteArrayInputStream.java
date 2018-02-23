@@ -16,18 +16,18 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BufferExposingByteArrayInputStream extends UnsyncByteArrayInputStream {
-  public BufferExposingByteArrayInputStream(@NotNull byte[] bytes) {
+  public BufferExposingByteArrayInputStream(@Nonnull byte[] bytes) {
     super(bytes);
   }
 
-  public BufferExposingByteArrayInputStream(@NotNull byte[] buf, int length) {
+  public BufferExposingByteArrayInputStream(@Nonnull byte[] buf, int length) {
     super(buf, 0, length);
   }
 
-  @NotNull
+  @Nonnull
   public byte[] getInternalBuffer() {
     return myBuffer;
   }

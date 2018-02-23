@@ -20,14 +20,14 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
   @Override
-  @NotNull
+  @Nonnull
   public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
     return new CodeStyleAbstractConfigurable(settings, originalSettings, ApplicationBundle.message("title.general")) {
       @Override

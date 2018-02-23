@@ -33,9 +33,9 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -326,7 +326,7 @@ public class SearchUtil {
     };
   }
 
-  public static String markup(@NonNls @NotNull String textToMarkup, @Nullable String filter) {
+  public static String markup(@NonNls @Nonnull String textToMarkup, @Nullable String filter) {
     if (filter == null || filter.length() == 0) {
       return textToMarkup;
     }

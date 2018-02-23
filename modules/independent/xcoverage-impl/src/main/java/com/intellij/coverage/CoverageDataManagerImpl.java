@@ -52,8 +52,8 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -104,7 +104,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
   }
 
 
-  @NotNull @NonNls
+  @Nonnull
+  @NonNls
   public String getComponentName() {
     return "CoverageDataManager";
   }
@@ -273,7 +274,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     fireAfterSuiteChosen();
   }
 
-  public void coverageGathered(@NotNull final CoverageSuite suite) {
+  public void coverageGathered(@Nonnull final CoverageSuite suite) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       public void run() {
         if (myProject.isDisposed()) return;
@@ -302,7 +303,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
               return true;
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public String getDoNotShowMessage() {
               return CommonBundle.message("dialog.options.do.not.show");
@@ -339,8 +340,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     });
   }
 
-  public void attachToProcess(@NotNull final ProcessHandler handler,
-                              @NotNull final RunConfigurationBase configuration,
+  public void attachToProcess(@Nonnull final ProcessHandler handler,
+                              @Nonnull final RunConfigurationBase configuration,
                               final RunnerSettings runnerSettings) {
     handler.addProcessListener(new ProcessAdapter() {
       public void processTerminated(final ProcessEvent event) {
@@ -350,7 +351,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
   }
 
   @Override
-  public void processGatheredCoverage(@NotNull RunConfigurationBase configuration, RunnerSettings runnerSettings) {
+  public void processGatheredCoverage(@Nonnull RunConfigurationBase configuration, RunnerSettings runnerSettings) {
     if (runnerSettings instanceof CoverageRunnerData) {
       processGatheredCoverage(configuration);
     }
@@ -369,7 +370,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     }
   }
 
-  protected void renewCoverageData(@NotNull final CoverageSuitesBundle suite) {
+  protected void renewCoverageData(@Nonnull final CoverageSuitesBundle suite) {
     if (myCurrentSuitesBundle != null) {
       myCurrentSuitesBundle.getCoverageEngine().getCoverageAnnotator(myProject).renewCoverageData(suite, this);
     }
@@ -453,7 +454,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     return ApplicationManager.getApplication().runReadAction(computation);
   }
 
-  public void selectSubCoverage(@NotNull final CoverageSuitesBundle suite, final List<String> testNames) {
+  public void selectSubCoverage(@Nonnull final CoverageSuitesBundle suite, final List<String> testNames) {
     suite.restoreCoverageData();
     final ProjectData data = suite.getCoverageData();
     if (data == null) return;
@@ -540,7 +541,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     return new File(new File(fileName).getParentFile(), FileUtil.getNameWithoutExtension(new File(fileName)));
   }
 
-  public void restoreMergedCoverage(@NotNull final CoverageSuitesBundle suite) {
+  public void restoreMergedCoverage(@Nonnull final CoverageSuitesBundle suite) {
     mySubCoverageIsActive = false;
     suite.restoreCoverageData();
     renewCoverageData(suite); 
@@ -590,7 +591,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     }
   }
 
-  @NotNull
+  @Nonnull
   private CoverageSuite createCoverageSuite(final CoverageEnabledConfiguration config,
                                             final String name,
                                             final CoverageRunner coverageRunner,
@@ -608,7 +609,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     return suite;
   }
 
-  @NotNull
+  @Nonnull
   private CoverageSuite createCoverageSuite(final CoverageRunner coverageRunner,
                                             final String name,
                                             final CoverageFileProvider fileProvider,
@@ -637,7 +638,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
     private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);
     private final Map<Editor, Runnable> myCurrentEditors = new HashMap<Editor, Runnable>();
 
-    public void editorCreated(@NotNull EditorFactoryEvent event) {
+    public void editorCreated(@Nonnull EditorFactoryEvent event) {
       synchronized (myLock) {
         if (myIsProjectClosing) return;
       }
@@ -688,7 +689,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager {
       }
     }
 
-    public void editorReleased(@NotNull EditorFactoryEvent event) {
+    public void editorReleased(@Nonnull EditorFactoryEvent event) {
       final Editor editor = event.getEditor();
       if (editor.getProject() != myProject) return;
       try {

@@ -19,7 +19,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationAdapter;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +40,7 @@ class NoSwingUnderWriteAction {
 
     application.addApplicationListener(new ApplicationAdapter() {
       @Override
-      public void afterWriteActionFinished(@NotNull Object action) {
+      public void afterWriteActionFinished(@Nonnull Object action) {
         reported.set(false);
       }
     });

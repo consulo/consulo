@@ -15,8 +15,9 @@
  */
 package com.intellij.codeInsight.preview;
 
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nullable;
 
 /**
  * User: zolotov

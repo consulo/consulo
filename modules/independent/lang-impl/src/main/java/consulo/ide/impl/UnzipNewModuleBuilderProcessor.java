@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -42,7 +42,7 @@ public abstract class UnzipNewModuleBuilderProcessor<T extends JComponent> imple
     myPath = path;
   }
 
-  protected void unzip(@NotNull ModifiableRootModel model) {
+  protected void unzip(@Nonnull ModifiableRootModel model) {
     InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(myPath);
     if(resourceAsStream == null) {
       LOGGER.error("Resource by path '" + myPath + "' not found");

@@ -17,11 +17,11 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class Expression {
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Result calculateResult(ExpressionContext context);
 
   @Nullable

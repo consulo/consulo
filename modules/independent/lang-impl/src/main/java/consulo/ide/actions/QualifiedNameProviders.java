@@ -30,8 +30,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.LogicalRoot;
 import com.intellij.util.LogicalRootsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -75,7 +75,7 @@ public class QualifiedNameProviders {
   }
 
   @Nullable
-  public static Pair<PsiElement, QualifiedNameProvider> findElementByQualifiedName(@Nullable String qName, @NotNull Project project) {
+  public static Pair<PsiElement, QualifiedNameProvider> findElementByQualifiedName(@Nullable String qName, @Nonnull Project project) {
     QualifiedNameProvider theProvider = null;
     PsiElement element = null;
     for(QualifiedNameProvider provider: QualifiedNameProvider.EP_NAME.getExtensions()) {
@@ -88,7 +88,7 @@ public class QualifiedNameProviders {
     return theProvider == null ? null : Pair.create(element, theProvider);
   }
 
-  @NotNull
+  @Nonnull
   public static String getFileFqn(final PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null) {

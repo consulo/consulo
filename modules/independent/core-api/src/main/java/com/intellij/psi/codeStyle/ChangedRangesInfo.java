@@ -16,8 +16,8 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ChangedRangesInfo {
   public final List<TextRange> insertedRanges;
   public final List<TextRange> allChangedRanges;
 
-  public ChangedRangesInfo(@NotNull List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
+  public ChangedRangesInfo(@Nonnull List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
     this.insertedRanges = insertedRanges;
     this.allChangedRanges = allChangedRanges;
   }

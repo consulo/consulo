@@ -1,8 +1,7 @@
 package com.intellij.remoteServer.agent.impl;
 
 import com.intellij.remoteServer.agent.RemoteAgentProxyFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -15,8 +14,8 @@ public class RemoteAgentThreadProxyFactory implements RemoteAgentProxyFactory {
   private final RemoteAgentThreadProxyCreator myCreator;
   private final RemoteAgentProxyFactory myDelegate;
 
-  public RemoteAgentThreadProxyFactory(CallerClassLoaderProvider callerClassLoaderProvider, @NotNull RemoteAgentProxyFactory delegate,
-                                       @Nullable ChildWrapperCreator preWrapperCreator) {
+  public RemoteAgentThreadProxyFactory(CallerClassLoaderProvider callerClassLoaderProvider, @Nonnull RemoteAgentProxyFactory delegate,
+                                       @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myCreator = new RemoteAgentThreadProxyCreator(callerClassLoaderProvider, preWrapperCreator);
     myDelegate = delegate;
   }

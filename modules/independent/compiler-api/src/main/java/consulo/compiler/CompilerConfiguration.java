@@ -19,26 +19,26 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 12:57/10.06.13
  */
 public abstract class CompilerConfiguration {
-  @NotNull
-  public static CompilerConfiguration getInstance(@NotNull Project project) {
+  @Nonnull
+  public static CompilerConfiguration getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CompilerConfiguration.class);
   }
 
   @Nullable
   public abstract VirtualFile getCompilerOutput();
 
-  @NotNull
+  @Nonnull
   public abstract String getCompilerOutputUrl();
 
   public abstract VirtualFilePointer getCompilerOutputPointer();
 
-  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
+  public abstract void setCompilerOutputUrl(@javax.annotation.Nullable String compilerOutputUrl);
 }

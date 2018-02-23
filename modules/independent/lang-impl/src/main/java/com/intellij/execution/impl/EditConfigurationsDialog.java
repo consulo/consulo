@@ -22,10 +22,11 @@ import com.intellij.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Couple;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
@@ -44,7 +45,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     RunConfigurable configurable = getConfigurable();

@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.HintHint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class DaemonTooltipUtil {
     TooltipController.getInstance().cancelTooltip(DAEMON_INFO_GROUP, null, true);
   }
 
-  public static void showInfoTooltip(@NotNull final HighlightInfo info, @NotNull Editor editor, final int defaultOffset, final int currentWidth) {
+  public static void showInfoTooltip(@Nonnull final HighlightInfo info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth) {
     if (info.getToolTip() == null) return;
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
 

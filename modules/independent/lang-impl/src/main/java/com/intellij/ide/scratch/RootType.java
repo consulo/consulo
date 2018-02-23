@@ -25,9 +25,9 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 
@@ -40,20 +40,20 @@ public abstract class RootType {
 
   public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("com.intellij.scratch.rootType");
 
-  @NotNull
+  @Nonnull
   public static RootType[] getAllRootIds() {
     return Extensions.getExtensions(ROOT_EP);
   }
 
-  @NotNull
-  public static RootType findById(@NotNull String id) {
+  @Nonnull
+  public static RootType findById(@Nonnull String id) {
     for (RootType type : getAllRootIds()) {
       if (id.equals(type.getId())) return type;
     }
     throw new AssertionError(id);
   }
 
-  @NotNull
+  @Nonnull
   public static <T extends RootType> T findByClass(Class<T> aClass) {
     return Extensions.findExtension(ROOT_EP, aClass);
   }
@@ -61,12 +61,12 @@ public abstract class RootType {
   private final String myId;
   private final String myDisplayName;
 
-  protected RootType(@NotNull String id, @Nullable String displayName) {
+  protected RootType(@Nonnull String id, @Nullable String displayName) {
     myId = id;
     myDisplayName = displayName;
   }
 
-  @NotNull
+  @Nonnull
   public final String getId() {
     return myId;
   }
@@ -87,12 +87,12 @@ public abstract class RootType {
   }
 
   @Nullable
-  public Language substituteLanguage(@NotNull Project project, @NotNull VirtualFile file) {
+  public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
     return null;
   }
 
   @Nullable
-  public Icon substituteIcon(@NotNull Project project, @NotNull VirtualFile file) {
+  public Icon substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     Language language = substituteLanguage(project, file);
     FileType fileType = LanguageUtil.getLanguageFileType(language);
     if (fileType == null) fileType = ScratchUtil.getFileTypeFromName(file);
@@ -100,25 +100,25 @@ public abstract class RootType {
   }
 
   @Nullable
-  public String substituteName(@NotNull Project project, @NotNull VirtualFile file) {
+  public String substituteName(@Nonnull Project project, @Nonnull VirtualFile file) {
     return null;
   }
 
-  public VirtualFile findFile(@Nullable Project project, @NotNull String pathName, ScratchFileService.Option option) throws IOException {
+  public VirtualFile findFile(@Nullable Project project, @Nonnull String pathName, ScratchFileService.Option option) throws IOException {
     return ScratchFileService.getInstance().findFile(this, pathName, option);
   }
 
-  public void fileOpened(@NotNull VirtualFile file, @NotNull FileEditorManager source) {
+  public void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
   }
 
-  public void fileClosed(@NotNull VirtualFile file, @NotNull FileEditorManager source) {
+  public void fileClosed(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
   }
 
-  public boolean isIgnored(@NotNull Project project, @NotNull VirtualFile element) {
+  public boolean isIgnored(@Nonnull Project project, @Nonnull VirtualFile element) {
     return false;
   }
 
-  public void registerTreeUpdater(@NotNull Project project, @NotNull AbstractTreeBuilder builder) {
+  public void registerTreeUpdater(@Nonnull Project project, @Nonnull AbstractTreeBuilder builder) {
   }
 
 }

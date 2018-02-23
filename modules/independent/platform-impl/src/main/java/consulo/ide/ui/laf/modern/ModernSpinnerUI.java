@@ -21,7 +21,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.DPIAwareArrowButton;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -204,7 +204,7 @@ public class ModernSpinnerUI extends BasicSpinnerUI implements ModernTextBorder.
     return myFocused;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MouseEnterHandler getMouseEnterHandler() {
     return myMouseEnterHandler;

@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class LocalQuickFixWrapper extends QuickFixAction {
   private final QuickFix myFix;
   private String myText;
 
-  public LocalQuickFixWrapper(@NotNull QuickFix fix, @NotNull InspectionToolWrapper toolWrapper) {
+  public LocalQuickFixWrapper(@Nonnull QuickFix fix, @Nonnull InspectionToolWrapper toolWrapper) {
     super(fix.getName(), toolWrapper);
     myFix = fix;
     myText = myFix.getName();
@@ -59,7 +59,7 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     return myText;
   }
 
-  public void setText(@NotNull String text) {
+  public void setText(@Nonnull String text) {
     myText = text;
   }
 
@@ -69,13 +69,13 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public QuickFix getFix() {
     return myFix;
   }
 
   @Nullable
-  protected QuickFix getWorkingQuickFix(@NotNull QuickFix[] fixes) {
+  protected QuickFix getWorkingQuickFix(@Nonnull QuickFix[] fixes) {
     for (QuickFix fix : fixes) {
       if (!myFix.getClass().isInstance(fix)) continue;
       if (myFix instanceof IntentionWrapper && fix instanceof IntentionWrapper &&
@@ -88,15 +88,15 @@ public class LocalQuickFixWrapper extends QuickFixAction {
   }
 
   @Override
-  protected boolean applyFix(@NotNull RefEntity[] refElements) {
+  protected boolean applyFix(@Nonnull RefEntity[] refElements) {
     return true;
   }
 
   @Override
-  protected void applyFix(@NotNull final Project project,
-                          @NotNull final GlobalInspectionContextImpl context,
-                          @NotNull final CommonProblemDescriptor[] descriptors,
-                          @NotNull final Set<PsiElement> ignoredElements) {
+  protected void applyFix(@Nonnull final Project project,
+                          @Nonnull final GlobalInspectionContextImpl context,
+                          @Nonnull final CommonProblemDescriptor[] descriptors,
+                          @Nonnull final Set<PsiElement> ignoredElements) {
     final PsiModificationTracker tracker = PsiManager.getInstance(project).getModificationTracker();
     if (myFix instanceof BatchQuickFix) {
       final List<PsiElement> collectedElementsToIgnore = new ArrayList<PsiElement>();
@@ -144,10 +144,10 @@ public class LocalQuickFixWrapper extends QuickFixAction {
     }
   }
 
-  private void ignore(@NotNull Set<PsiElement> ignoredElements,
-                      @NotNull CommonProblemDescriptor descriptor,
+  private void ignore(@Nonnull Set<PsiElement> ignoredElements,
+                      @Nonnull CommonProblemDescriptor descriptor,
                       @Nullable QuickFix fix,
-                      @NotNull GlobalInspectionContextImpl context) {
+                      @Nonnull GlobalInspectionContextImpl context) {
     if (fix != null) {
       InspectionToolPresentation presentation = context.getPresentation(myToolWrapper);
       presentation.ignoreProblem(descriptor, fix);

@@ -15,7 +15,7 @@
  */
 package consulo.ide.plugins;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,12 +30,12 @@ public class SimpleExtension {
     myValues = values;
   }
 
-  @NotNull
+  @Nonnull
   public String getKey() {
     return myKey;
   }
 
-  @NotNull
+  @Nonnull
   public String[] getValues() {
     return myValues;
   }

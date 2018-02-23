@@ -26,8 +26,8 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public abstract class PsiTreeElementBase <T extends PsiElement> implements Struc
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object getKey() {
     try {
       return myValue.toString();
@@ -132,7 +132,8 @@ public abstract class PsiTreeElementBase <T extends PsiElement> implements Struc
     return canNavigate();
   }
 
-  @NotNull public abstract Collection<StructureViewTreeElement> getChildrenBase();
+  @Nonnull
+  public abstract Collection<StructureViewTreeElement> getChildrenBase();
 
   public boolean equals(final Object o) {
     if (this == o) return true;

@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.util.ui.OptionsDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
     init();
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     setOKButtonText(CommonBundle.getYesButtonText());
     setCancelButtonText(CommonBundle.getNoButtonText());

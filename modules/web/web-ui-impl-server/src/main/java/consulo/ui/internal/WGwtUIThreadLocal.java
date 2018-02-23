@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import com.vaadin.ui.UI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ public class WGwtUIThreadLocal {
     ourUI.set(ui);
   }
 
-  @NotNull
+  @Nonnull
   public static UI getUI() {
     UI ui = ourUI.get();
     if (ui != null) {

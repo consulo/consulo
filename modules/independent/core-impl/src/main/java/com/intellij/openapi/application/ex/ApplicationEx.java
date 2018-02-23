@@ -18,10 +18,11 @@ package com.intellij.openapi.application.ex;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 
@@ -80,8 +81,8 @@ public interface ApplicationEx extends Application {
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredDispatchThread
-  boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                              @NotNull String progressTitle,
+  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                              @Nonnull String progressTitle,
                                               boolean canBeCanceled,
                                               Project project);
 
@@ -89,8 +90,8 @@ public interface ApplicationEx extends Application {
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredDispatchThread
-  boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                              @NotNull String progressTitle,
+  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                              @Nonnull String progressTitle,
                                               boolean canBeCanceled,
                                               @Nullable Project project,
                                               JComponent parentComponent);
@@ -99,8 +100,8 @@ public interface ApplicationEx extends Application {
    * Runs modal process. For internal use only, see {@link Task}
    */
   @RequiredDispatchThread
-  boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                              @NotNull String progressTitle,
+  boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                              @Nonnull String progressTitle,
                                               boolean canBeCanceled,
                                               @Nullable Project project,
                                               JComponent parentComponent,
@@ -116,5 +117,5 @@ public interface ApplicationEx extends Application {
    *
    * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
    */
-  boolean tryRunReadAction(@NotNull Runnable action);
+  boolean tryRunReadAction(@Nonnull Runnable action);
 }

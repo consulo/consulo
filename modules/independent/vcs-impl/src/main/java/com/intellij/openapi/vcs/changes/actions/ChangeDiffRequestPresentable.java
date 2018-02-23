@@ -39,8 +39,8 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class ChangeDiffRequestPresentable implements DiffRequestPresentable {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   private DiffContent createContent(final ContentRevision revision) {
     ProgressManager.checkCanceled();
     if (revision == null) return SimpleContent.createEmpty();

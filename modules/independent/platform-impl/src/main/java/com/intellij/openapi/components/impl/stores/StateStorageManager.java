@@ -17,43 +17,43 @@ package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Couple;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface StateStorageManager {
-  void addMacro(@NotNull String macro, @NotNull String expansion);
+  void addMacro(@Nonnull String macro, @Nonnull String expansion);
 
-  @NotNull
-  String buildFileSpec(@NotNull Storage storage);
+  @Nonnull
+  String buildFileSpec(@Nonnull Storage storage);
 
   @Nullable
   TrackingPathMacroSubstitutor getMacroSubstitutor();
 
   @Nullable
-  StateStorage getStateStorage(@NotNull Storage storageSpec);
+  StateStorage getStateStorage(@Nonnull Storage storageSpec);
 
   @Nullable
-  StateStorage getStateStorage(@NotNull String fileSpec, @NotNull RoamingType roamingType);
+  StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
 
-  @NotNull
-  Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@NotNull Collection<String> changed, @NotNull Collection<String> deleted);
+  @Nonnull
+  Couple<Collection<FileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted);
 
-  @NotNull
+  @Nonnull
   Collection<String> getStorageFileNames();
 
-  void clearStateStorage(@NotNull String file);
+  void clearStateStorage(@Nonnull String file);
 
   @Nullable
   ExternalizationSession startExternalization();
 
-  @NotNull
-  String expandMacros(@NotNull String file);
+  @Nonnull
+  String expandMacros(@Nonnull String file);
 
-  @NotNull
-  String collapseMacros(@NotNull String path);
+  @Nonnull
+  String collapseMacros(@Nonnull String path);
 
   void setStreamProvider(@Nullable StreamProvider streamProvider);
 
@@ -61,12 +61,12 @@ public interface StateStorageManager {
   StreamProvider getStreamProvider();
 
   interface ExternalizationSession {
-    void setState(@NotNull Storage[] storageSpecs, @NotNull Object component, @NotNull String componentName, @NotNull Object state);
+    void setState(@Nonnull Storage[] storageSpecs, @Nonnull Object component, @Nonnull String componentName, @Nonnull Object state);
 
     /**
      * return empty list if nothing to save
      */
-    @NotNull
+    @Nonnull
     List<StateStorage.SaveSession> createSaveSessions();
   }
 }

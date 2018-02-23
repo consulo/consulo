@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.AsynchConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.AdjustComponentWhenShown;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,7 +139,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     if (myMode == Mode.Simple) {

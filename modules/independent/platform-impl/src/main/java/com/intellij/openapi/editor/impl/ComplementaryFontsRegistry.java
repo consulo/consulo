@@ -23,8 +23,8 @@ import com.intellij.openapi.util.Pair;
 import gnu.trove.TIntHashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -134,8 +134,8 @@ public class ComplementaryFontsRegistry {
   /**
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, FontPreferences, FontRenderContext)}} instead.
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @NotNull FontPreferences preferences) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, @JdkConstants.FontStyle int style, @Nonnull FontPreferences preferences) {
     return getFontAbleToDisplay(codePoint, style, preferences, null);
   }
 
@@ -143,10 +143,10 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
+  @Nonnull
   public static FontInfo getFontAbleToDisplay(int codePoint,
                                               @JdkConstants.FontStyle int style,
-                                              @NotNull FontPreferences preferences,
+                                              @Nonnull FontPreferences preferences,
                                               FontRenderContext context) {
     boolean tryDefaultFont = true;
     List<String> fontFamilies = preferences.getEffectiveFontFamilies();
@@ -181,8 +181,8 @@ public class ComplementaryFontsRegistry {
   /**
    * @deprecated Use {{@link #getFontAbleToDisplay(int, int, int, String, FontRenderContext)}}
    */
-  @NotNull
-  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
+  @Nonnull
+  public static FontInfo getFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily) {
     return getFontAbleToDisplay(codePoint, size, style, defaultFontFamily, null);
   }
 
@@ -190,11 +190,11 @@ public class ComplementaryFontsRegistry {
    * If you intend to use font metrics from returned {@link FontInfo} object,
    * pass not-null correct {@link FontRenderContext} to this method.
    */
-  @NotNull
+  @Nonnull
   public static FontInfo getFontAbleToDisplay(int codePoint,
                                               int size,
                                               @JdkConstants.FontStyle int style,
-                                              @NotNull String defaultFontFamily,
+                                              @Nonnull String defaultFontFamily,
                                               FontRenderContext context) {
     FontInfo result = doGetFontAbleToDisplay(codePoint, size, style, defaultFontFamily, false, context);
     if (result != null) {
@@ -207,7 +207,7 @@ public class ComplementaryFontsRegistry {
   private static FontInfo doGetFontAbleToDisplay(int codePoint,
                                                  int size,
                                                  @JdkConstants.FontStyle int originalStyle,
-                                                 @NotNull String defaultFontFamily,
+                                                 @Nonnull String defaultFontFamily,
                                                  boolean useLigatures,
                                                  FontRenderContext context) {
     synchronized (lock) {
@@ -238,7 +238,7 @@ public class ComplementaryFontsRegistry {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static FontInfo doGetFontAbleToDisplay(int codePoint, int size, @JdkConstants.FontStyle int style, boolean useLigatures, FontRenderContext context) {
     synchronized (lock) {
       FallBackInfo fallBackInfo = DEFAULT_FONT_INFO;

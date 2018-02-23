@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -41,8 +41,8 @@ public final class LanguageSubstitutors extends LanguageExtension<LanguageSubsti
     super("com.intellij.lang.substitutor");
   }
 
-  @NotNull
-  public Language substituteLanguage(@NotNull Language lang, @NotNull VirtualFile file, @NotNull Project project) {
+  @Nonnull
+  public Language substituteLanguage(@Nonnull Language lang, @Nonnull VirtualFile file, @Nonnull Project project) {
     for (LanguageSubstitutor substitutor : forKey(lang)) {
       Language language = substitutor.getLanguage(file, project);
       if (language != null) {
@@ -53,9 +53,9 @@ public final class LanguageSubstitutors extends LanguageExtension<LanguageSubsti
     return lang;
   }
 
-  private static void processLanguageSubstitution(@NotNull final VirtualFile file,
-                                                  @NotNull Language originalLang,
-                                                  @NotNull final Language substitutedLang) {
+  private static void processLanguageSubstitution(@Nonnull final VirtualFile file,
+                                                  @Nonnull Language originalLang,
+                                                  @Nonnull final Language substitutedLang) {
     if (file instanceof VirtualFileWindow) {
       // Injected files are created with substituted language, no need to reparse:
       //   com.intellij.psi.impl.source.tree.injected.MultiHostRegistrarImpl#doneInjecting
@@ -86,7 +86,7 @@ public final class LanguageSubstitutors extends LanguageExtension<LanguageSubsti
     }
   }
 
-  public static void cancelReparsing(@NotNull VirtualFile file) {
+  public static void cancelReparsing(@Nonnull VirtualFile file) {
     REPARSING_SCHEDULED.set(file, null);
   }
 }

@@ -17,7 +17,7 @@
 package com.intellij.find;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -83,30 +83,30 @@ public abstract class FindSettings{
    * FindInProjectSettings.addDirectory
    */
   @Deprecated
-  public abstract void addStringToFind(@NotNull String s);
+  public abstract void addStringToFind(@Nonnull String s);
 
   /**
    * Use FindInProjectSettings.addDirectory
    */
   @Deprecated
-  public abstract void addStringToReplace(@NotNull String s);
+  public abstract void addStringToReplace(@Nonnull String s);
 
   /**
    * Use FindInProjectSettings.addDirectory
    */
   @Deprecated
-  public abstract void addDirectory(@NotNull String s);
+  public abstract void addDirectory(@Nonnull String s);
 
   /**
    * FindInProjectSettings.addDirectory
    */
-  @NotNull
+  @Nonnull
   public abstract String[] getRecentFindStrings();
 
   /**
    * FindInProjectSettings.addDirectory
    */
-  @NotNull
+  @Nonnull
   public abstract String[] getRecentReplaceStrings();
 
   /**
@@ -116,19 +116,19 @@ public abstract class FindSettings{
    * @return the recent file masks list
    * @since 5.0.2
    */
-  @NotNull
+  @Nonnull
   public abstract String[] getRecentFileMasks();
 
   /**
    * Use FindInProjectSettings.getRecentDirectories
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   public abstract List<String> getRecentDirectories();
 
   public abstract void setWithSubdirectories(boolean b);
 
-  public abstract void initModelBySetings(@NotNull FindModel model);
+  public abstract void initModelBySetings(@Nonnull FindModel model);
 
   public abstract String getFileMask();
 

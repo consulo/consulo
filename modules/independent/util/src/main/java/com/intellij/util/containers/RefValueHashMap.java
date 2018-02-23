@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -35,11 +35,11 @@ abstract class RefValueHashMap<K,V> implements Map<K,V>{
     myMap = new THashMap<K, MyReference<K,V>>();
   }
 
-  public RefValueHashMap(@NotNull TObjectHashingStrategy<K> strategy) {
+  public RefValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     myMap = new THashMap<K, MyReference<K,V>>(strategy);
   }
 
-  protected abstract MyReference<K,V> createReference(@NotNull K key, V value, @NotNull ReferenceQueue<V> queue);
+  protected abstract MyReference<K,V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<V> queue);
 
   private void processQueue() {
     while (true) {
@@ -63,7 +63,7 @@ abstract class RefValueHashMap<K,V> implements Map<K,V>{
   }
 
   @Override
-  public V put(@NotNull K key, V value) {
+  public V put(@Nonnull K key, V value) {
     processQueue();
     MyReference<K, V> reference = createReference(key, value, myQueue);
     MyReference<K,V> oldRef = myMap.put(key, reference);
@@ -78,7 +78,7 @@ abstract class RefValueHashMap<K,V> implements Map<K,V>{
   }
 
   @Override
-  public void putAll(@NotNull Map<? extends K, ? extends V> t) {
+  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
     throw new RuntimeException("method not implemented");
   }
 
@@ -107,13 +107,13 @@ abstract class RefValueHashMap<K,V> implements Map<K,V>{
     throw new RuntimeException("method not implemented");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     return myMap.keySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<V>();
@@ -127,7 +127,7 @@ abstract class RefValueHashMap<K,V> implements Map<K,V>{
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     throw new RuntimeException("method not implemented");

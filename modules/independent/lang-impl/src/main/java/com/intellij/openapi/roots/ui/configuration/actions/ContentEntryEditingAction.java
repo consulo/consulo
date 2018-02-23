@@ -24,7 +24,7 @@ import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,7 +62,7 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
     }
   }
 
-  @NotNull
+  @Nonnull
   protected final VirtualFile[] getSelectedFiles() {
     final TreePath[] selectionPaths = myTree.getSelectionPaths();
     if (selectionPaths == null) {

@@ -35,8 +35,8 @@ import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -58,17 +58,17 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         myPackageCache.clear();
       }
 
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent event) {
+      public void fileDeleted(@Nonnull VirtualFileEvent event) {
         myPackageCache.clear();
       }
 
       @Override
-      public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+      public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
         myPackageCache.clear();
       }
     }, this);
@@ -84,14 +84,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Override
-  public void dropCache(@NotNull Class<? extends ModuleExtension> extensionClass) {
+  public void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass) {
     myPackageCache.remove(extensionClass);
   }
 
   @RequiredReadAction
   @Nullable
   @Override
-  public PsiPackage findPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
+  public PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
     ConcurrentMap<String, Object> map = myPackageCache.get(extensionClass);
     if (map != null) {
       final Object value = map.get(qualifiedName);
@@ -114,7 +114,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Nullable
-  private PsiPackage createPackage(@NotNull String qualifiedName, @NotNull Class<? extends ModuleExtension> extensionClass) {
+  private PsiPackage createPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
     Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(qualifiedName, true);
     if (dirs.findFirst() == null) {
       return null;
@@ -135,9 +135,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Nullable
-  private PsiPackage createPackageFromProviders(@NotNull VirtualFile virtualFile,
-                                                @NotNull Class<? extends ModuleExtension> extensionClass,
-                                                @NotNull String qualifiedName) {
+  private PsiPackage createPackageFromProviders(@Nonnull VirtualFile virtualFile,
+                                                @Nonnull Class<? extends ModuleExtension> extensionClass,
+                                                @Nonnull String qualifiedName) {
     final Module moduleForFile = ModuleUtil.findModuleForFile(virtualFile, myProject);
     if (moduleForFile == null) {
       return null;
@@ -159,9 +159,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     return null;
   }
 
-  private PsiPackage createPackageFromLibrary(@NotNull VirtualFile virtualFile,
-                                              @NotNull Class<? extends ModuleExtension> extensionClass,
-                                              @NotNull String qualifiedName) {
+  private PsiPackage createPackageFromLibrary(@Nonnull VirtualFile virtualFile,
+                                              @Nonnull Class<? extends ModuleExtension> extensionClass,
+                                              @Nonnull String qualifiedName) {
     ProjectFileIndex fileIndexFacade = ProjectFileIndex.getInstance(myProject);
     PsiManager psiManager = PsiManager.getInstance(myProject);
     if (fileIndexFacade.isInLibraryClasses(virtualFile)) {
@@ -184,7 +184,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Nullable
   @Override
-  public PsiPackage findPackage(@NotNull PsiDirectory directory, @NotNull Class<? extends ModuleExtension> extensionClass) {
+  public PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass) {
     String packageName = myDirectoryIndex.getPackageName(directory.getVirtualFile());
     if (packageName == null) {
       return null;
@@ -195,7 +195,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Override
   @Nullable
-  public PsiPackage findAnyPackage(@NotNull VirtualFile directory) {
+  public PsiPackage findAnyPackage(@Nonnull VirtualFile directory) {
     String packageName = myDirectoryIndex.getPackageName(directory);
     if (packageName == null) {
       return null;
@@ -236,7 +236,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
   @RequiredReadAction
   @Override
-  public PsiPackage findAnyPackage(@NotNull String packageName) {
+  public PsiPackage findAnyPackage(@Nonnull String packageName) {
     Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(packageName, true);
     if (dirs.findFirst() == null) {
       return null;
@@ -257,7 +257,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   }
 
   @Nullable
-  private PsiPackage findAnyPackageFromCache(@NotNull String packageName) {
+  private PsiPackage findAnyPackageFromCache(@Nonnull String packageName) {
     for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
       Object o = map.get(packageName);
       if (o instanceof PsiPackage) {
@@ -269,7 +269,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
   @RequiredReadAction
   @Override
-  public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName) {
+  public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
     PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
 
     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);

@@ -23,7 +23,7 @@ import com.intellij.util.indexing.impl.ChangeTrackingValueContainer;
 import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.UpdatableValueContainer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.*;
@@ -36,7 +36,7 @@ import java.util.*;
  */
 public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key, Value> {
   private final Map<Key, ChangeTrackingValueContainer<Value>> myMap = new HashMap<>();
-  @NotNull
+  @Nonnull
   private final IndexStorage<Key, Value> myBackendStorage;
   private final List<BufferingStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final ID<?, ?> myIndexId;
@@ -48,25 +48,25 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
     void memoryStorageCleared();
   }
 
-  public MemoryIndexStorage(@NotNull IndexStorage<Key, Value> backend) {
+  public MemoryIndexStorage(@Nonnull IndexStorage<Key, Value> backend) {
     this(backend, null);
   }
 
-  public MemoryIndexStorage(@NotNull IndexStorage<Key, Value> backend, ID<?, ?> indexId) {
+  public MemoryIndexStorage(@Nonnull IndexStorage<Key, Value> backend, ID<?, ?> indexId) {
     myBackendStorage = backend;
     myIndexId = indexId;
   }
 
-  @NotNull
+  @Nonnull
   public IndexStorage<Key, Value> getBackendStorage() {
     return myBackendStorage;
   }
 
-  public void addBufferingStateListener(@NotNull BufferingStateListener listener) {
+  public void addBufferingStateListener(@Nonnull BufferingStateListener listener) {
     myListeners.add(listener);
   }
 
-  public void removeBufferingStateListener(@NotNull BufferingStateListener listener) {
+  public void removeBufferingStateListener(@Nonnull BufferingStateListener listener) {
     myListeners.remove(listener);
   }
 
@@ -130,7 +130,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public boolean processKeys(@NotNull final Processor<Key> processor, GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Processor<Key> processor, GlobalSearchScope scope, IdFilter idFilter) throws StorageException {
     final Set<Key> stopList = new HashSet<>();
 
     Processor<Key> decoratingProcessor = key -> {
@@ -168,7 +168,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public void removeAllValues(@NotNull Key key, int inputId) throws StorageException {
+  public void removeAllValues(@Nonnull Key key, int inputId) throws StorageException {
     if (myBufferingEnabled) {
       getMemValueContainer(key).removeAssociatedValue(inputId);
       return;
@@ -206,7 +206,7 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ValueContainer<Value> read(final Key key) throws StorageException {
     final ValueContainer<Value> valueContainer = myMap.get(key);
     if (valueContainer != null) {

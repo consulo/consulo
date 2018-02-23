@@ -16,7 +16,7 @@
 package consulo.roots;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,36 +25,36 @@ import org.jetbrains.annotations.NotNull;
 public interface ModuleRootLayerListener {
   class Adapter implements ModuleRootLayerListener {
     @Override
-    public void layerRemove(@NotNull Module module, @NotNull ModuleRootLayer removed) {
+    public void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
 
     }
 
     @Override
-    public void layerAdded(@NotNull Module module, @NotNull ModuleRootLayer removed) {
+    public void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
 
     }
 
     @Override
-    public void layerChanged(@NotNull Module module, @NotNull ModuleRootLayer added) {
+    public void layerChanged(@Nonnull Module module, @Nonnull ModuleRootLayer added) {
 
     }
 
     @Override
-    public void currentLayerChanged(@NotNull Module module,
-                                    @NotNull String oldName,
-                                    @NotNull ModuleRootLayer oldLayer,
-                                    @NotNull String newName,
-                                    @NotNull ModuleRootLayer newLayer) {
+    public void currentLayerChanged(@Nonnull Module module,
+                                    @Nonnull String oldName,
+                                    @Nonnull ModuleRootLayer oldLayer,
+                                    @Nonnull String newName,
+                                    @Nonnull ModuleRootLayer newLayer) {
 
     }
   }
 
-  void layerRemove(@NotNull Module module, @NotNull ModuleRootLayer removed);
+  void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed);
 
-  void layerAdded(@NotNull Module module, @NotNull ModuleRootLayer added);
+  void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer added);
 
-  void layerChanged(@NotNull Module module, @NotNull ModuleRootLayer added);
+  void layerChanged(@Nonnull Module module, @Nonnull ModuleRootLayer added);
 
-  void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull ModuleRootLayer oldLayer,
-                           @NotNull String newName, @NotNull ModuleRootLayer newLayer);
+  void currentLayerChanged(@Nonnull Module module, @Nonnull String oldName, @Nonnull ModuleRootLayer oldLayer,
+                           @Nonnull String newName, @Nonnull ModuleRootLayer newLayer);
 }

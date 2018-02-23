@@ -21,7 +21,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class EditorFileSwapper {
   public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create("com.intellij.editorFileSwapper");

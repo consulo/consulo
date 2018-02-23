@@ -20,28 +20,37 @@ import com.intellij.diff.util.LineRange;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // This class works incorrectly with non-fair differences (when chunk of matched lines has different length in left/right files)
 class UnifiedFragmentBuilder {
-  @NotNull private final List<LineFragment> myFragments;
-  @NotNull private final Document myDocument1;
-  @NotNull private final Document myDocument2;
-  @NotNull private final Side myMasterSide;
+  @Nonnull
+  private final List<LineFragment> myFragments;
+  @Nonnull
+  private final Document myDocument1;
+  @Nonnull
+  private final Document myDocument2;
+  @Nonnull
+  private final Side myMasterSide;
 
-  @NotNull private final StringBuilder myBuilder = new StringBuilder();
-  @NotNull private final List<ChangedBlock> myBlocks = new ArrayList<ChangedBlock>();
-  @NotNull private final List<HighlightRange> myRanges = new ArrayList<HighlightRange>();
-  @NotNull private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
-  @NotNull private final List<LineRange> myChangedLines = new ArrayList<LineRange>();
+  @Nonnull
+  private final StringBuilder myBuilder = new StringBuilder();
+  @Nonnull
+  private final List<ChangedBlock> myBlocks = new ArrayList<ChangedBlock>();
+  @Nonnull
+  private final List<HighlightRange> myRanges = new ArrayList<HighlightRange>();
+  @Nonnull
+  private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
+  @Nonnull
+  private final List<LineRange> myChangedLines = new ArrayList<LineRange>();
 
-  public UnifiedFragmentBuilder(@NotNull List<LineFragment> fragments,
-                                @NotNull Document document1,
-                                @NotNull Document document2,
-                                @NotNull Side masterSide) {
+  public UnifiedFragmentBuilder(@Nonnull List<LineFragment> fragments,
+                                @Nonnull Document document1,
+                                @Nonnull Document document2,
+                                @Nonnull Side masterSide) {
     myFragments = fragments;
     myDocument1 = document1;
     myDocument2 = document2;
@@ -76,7 +85,7 @@ class UnifiedFragmentBuilder {
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
-  private void processChanged(@NotNull LineFragment fragment) {
+  private void processChanged(@Nonnull LineFragment fragment) {
     int startLine1 = fragment.getStartLine1();
     int endLine1 = fragment.getEndLine1() - 1;
     int lines1 = endLine1 - startLine1;
@@ -131,7 +140,7 @@ class UnifiedFragmentBuilder {
     }
   }
 
-  private void appendTextSide(@NotNull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
+  private void appendTextSide(@Nonnull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
     int linesBefore = totalLines;
     appendText(side, offset1, offset2, lines, startLine1, startLine2);
     int linesAfter = totalLines;
@@ -139,7 +148,7 @@ class UnifiedFragmentBuilder {
     myChangedLines.add(new LineRange(linesBefore, linesAfter));
   }
 
-  private void appendText(@NotNull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
+  private void appendText(@Nonnull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
     Document document = side.select(myDocument1, myDocument2);
 
     int newline = document.getTextLength() > offset2 + 1 ? 1 : 0;
@@ -160,7 +169,7 @@ class UnifiedFragmentBuilder {
     totalLines += lines + 1;
   }
 
-  private static int getLineCount(@NotNull Document document) {
+  private static int getLineCount(@Nonnull Document document) {
     return Math.max(document.getLineCount(), 1);
   }
 
@@ -173,27 +182,27 @@ class UnifiedFragmentBuilder {
     return myEqual;
   }
 
-  @NotNull
+  @Nonnull
   public CharSequence getText() {
     return myBuilder;
   }
 
-  @NotNull
+  @Nonnull
   public List<ChangedBlock> getBlocks() {
     return myBlocks;
   }
 
-  @NotNull
+  @Nonnull
   public List<HighlightRange> getRanges() {
     return myRanges;
   }
 
-  @NotNull
+  @Nonnull
   public LineNumberConvertor getConvertor() {
     return myConvertor.build();
   }
 
-  @NotNull
+  @Nonnull
   public List<LineRange> getChangedLines() {
     return myChangedLines;
   }

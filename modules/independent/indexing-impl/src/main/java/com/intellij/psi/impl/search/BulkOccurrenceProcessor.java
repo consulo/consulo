@@ -17,9 +17,9 @@ package com.intellij.psi.impl.search;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.util.text.StringSearcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @FunctionalInterface
 interface BulkOccurrenceProcessor {
-  boolean execute(@NotNull PsiElement scope, @NotNull int[] offsetsInScope, @NotNull StringSearcher searcher);
+  boolean execute(@Nonnull PsiElement scope, @Nonnull int[] offsetsInScope, @Nonnull StringSearcher searcher);
 }

@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -14,18 +14,18 @@ import org.jetbrains.annotations.NotNull;
 public class EnterHandlerDelegateAdapter implements EnterHandlerDelegate {
 
   @Override
-  public Result preprocessEnter(@NotNull PsiFile file,
-                                @NotNull Editor editor,
-                                @NotNull Ref<Integer> caretOffset,
-                                @NotNull Ref<Integer> caretAdvance,
-                                @NotNull DataContext dataContext,
+  public Result preprocessEnter(@Nonnull PsiFile file,
+                                @Nonnull Editor editor,
+                                @Nonnull Ref<Integer> caretOffset,
+                                @Nonnull Ref<Integer> caretAdvance,
+                                @Nonnull DataContext dataContext,
                                 EditorActionHandler originalHandler)
   {
     return Result.Continue;
   }
 
   @Override
-  public Result postProcessEnter(@NotNull PsiFile file, @NotNull Editor editor, @NotNull DataContext dataContext) {
+  public Result postProcessEnter(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull DataContext dataContext) {
     return Result.Continue;
   }
 }

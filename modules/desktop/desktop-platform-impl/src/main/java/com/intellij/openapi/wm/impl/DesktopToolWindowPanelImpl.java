@@ -39,8 +39,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.impl.ToolWindowPanelImplEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,7 +97,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private boolean myLeftHorizontalSplit;
   private boolean myRightHorizontalSplit;
 
-  DesktopToolWindowPanelImpl(@NotNull IdeFrameImpl frame, @NotNull DesktopToolWindowManagerImpl manager) {
+  DesktopToolWindowPanelImpl(@Nonnull IdeFrameImpl frame, @Nonnull DesktopToolWindowManagerImpl manager) {
     myManager = manager;
 
     setOpaque(false);
@@ -224,11 +224,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    * @param finishCallBack invoked when the command is completed.
    */
   @Override
-  @NotNull
+  @Nonnull
   public final FinalizableCommand createAddButtonCmd(final ToolWindowStripeButton button,
-                                                     @NotNull WindowInfoImpl info,
-                                                     @NotNull Comparator<ToolWindowStripeButton> comparator,
-                                                     @NotNull Runnable finishCallBack) {
+                                                     @Nonnull WindowInfoImpl info,
+                                                     @Nonnull Comparator<ToolWindowStripeButton> comparator,
+                                                     @Nonnull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
     myId2Button.put(copiedInfo.getId(), (DesktopStripeButton)button);
     myButton2Info.put((DesktopStripeButton)button, copiedInfo);
@@ -243,8 +243,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    *                  the decorator. Moreover in this (dirty) mode animation doesn't work.
    */
   @Override
-  @NotNull
-  public FinalizableCommand createAddDecoratorCmd(@NotNull ToolWindowInternalDecorator decorator, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+  @Nonnull
+  public FinalizableCommand createAddDecoratorCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
     final WindowInfoImpl copiedInfo = info.copy();
     final String id = copiedInfo.getId();
 
@@ -274,8 +274,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    * @param id <code>ID</code> of the button to be removed.
    */
   @Override
-  @NotNull
-  public FinalizableCommand createRemoveButtonCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+  @Nonnull
+  public FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
     final DesktopStripeButton button = getButtonById(id);
     final WindowInfoImpl info = getButtonInfoById(id);
 
@@ -290,8 +290,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    * @param dirtyMode if <code>true</code> then JRootPane will not be validated and repainted after removing
    *                  the decorator. Moreover in this (dirty) mode animation doesn't work.
    */
-  @NotNull
-  public FinalizableCommand createRemoveDecoratorCmd(@NotNull String id, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+  @Nonnull
+  public FinalizableCommand createRemoveDecoratorCmd(@Nonnull String id, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
     final Component decorator = getDecoratorById(id);
     final WindowInfoImpl info = getDecoratorInfoById(id);
 
@@ -321,19 +321,19 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    *
    * @param component component to be set.
    */
-  @NotNull
-  final FinalizableCommand createSetEditorComponentCmd(final JComponent component, @NotNull Runnable finishCallBack) {
+  @Nonnull
+  final FinalizableCommand createSetEditorComponentCmd(final JComponent component, @Nonnull Runnable finishCallBack) {
     return new SetEditorComponentCmd(component, finishCallBack);
   }
 
   @Override
-  @NotNull
-  public FinalizableCommand createUpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallback) {
+  @Nonnull
+  public FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback) {
     return new UpdateButtonPositionCmd(id, finishCallback);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final JComponent getMyLayeredPane() {
     return myLayeredPane;
   }
@@ -366,7 +366,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   /**
    * Sets (docks) specified component to the specified anchor.
    */
-  private void setComponent(final JComponent component, @NotNull ToolWindowAnchor anchor, final float weight) {
+  private void setComponent(final JComponent component, @Nonnull ToolWindowAnchor anchor, final float weight) {
     if (ToolWindowAnchor.TOP == anchor) {
       myVerticalSplitter.setFirstComponent(component);
       myVerticalSplitter.setFirstSize((int)(myLayeredPane.getHeight() * weight));
@@ -388,7 +388,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
   }
 
-  private JComponent getComponentAt(@NotNull ToolWindowAnchor anchor) {
+  private JComponent getComponentAt(@Nonnull ToolWindowAnchor anchor) {
     if (ToolWindowAnchor.TOP == anchor) {
       return myVerticalSplitter.getFirstComponent();
     }
@@ -407,12 +407,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
   }
 
-  private float getPreferredSplitProportion(@NotNull String id, float defaultValue) {
+  private float getPreferredSplitProportion(@Nonnull String id, float defaultValue) {
     Float f = myId2SplitProportion.get(id);
     return f == null ? defaultValue : f;
   }
 
-  private WindowInfoImpl getDockedInfoAt(@NotNull ToolWindowAnchor anchor, boolean side) {
+  private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
     for (WindowInfoImpl info : myDecorator2Info.values()) {
       if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
         return info;
@@ -483,7 +483,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   }
 
   @Nullable
-  DesktopStripePanelImpl getStripeFor(@NotNull Rectangle screenRec, @NotNull DesktopStripePanelImpl preferred) {
+  DesktopStripePanelImpl getStripeFor(@Nonnull Rectangle screenRec, @Nonnull DesktopStripePanelImpl preferred) {
     if (preferred.containsScreen(screenRec)) {
       return myStripes.get(myStripes.indexOf(preferred));
     }
@@ -509,15 +509,15 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
   }
 
-  void stretchWidth(@NotNull ToolWindow wnd, int value) {
+  void stretchWidth(@Nonnull ToolWindow wnd, int value) {
     stretch(wnd, value);
   }
 
-  void stretchHeight(@NotNull ToolWindow wnd, int value) {
+  void stretchHeight(@Nonnull ToolWindow wnd, int value) {
     stretch(wnd, value);
   }
 
-  private void stretch(@NotNull ToolWindow wnd, int value) {
+  private void stretch(@Nonnull ToolWindow wnd, int value) {
     Pair<Resizer, Component> pair = findResizerAndComponent(wnd);
     if (pair == null) return;
 
@@ -531,7 +531,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   }
 
   @Nullable
-  private Pair<Resizer, Component> findResizerAndComponent(@NotNull ToolWindow wnd) {
+  private Pair<Resizer, Component> findResizerAndComponent(@Nonnull ToolWindow wnd) {
     if (!wnd.isVisible()) return null;
 
     Resizer resizer = null;
@@ -616,11 +616,11 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     }
   }
 
-  public boolean isMaximized(@NotNull ToolWindow wnd) {
+  public boolean isMaximized(@Nonnull ToolWindow wnd) {
     return myMaximizedProportion != null && myMaximizedProportion.first == wnd;
   }
 
-  void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
+  void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
     Pair<Resizer, Component> resizerAndComponent = findResizerAndComponent(wnd);
     if (resizerAndComponent == null) return;
 
@@ -647,12 +647,12 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     abstract class Splitter implements Resizer {
       ThreeComponentsSplitter mySplitter;
 
-      Splitter(@NotNull ThreeComponentsSplitter splitter) {
+      Splitter(@Nonnull ThreeComponentsSplitter splitter) {
         mySplitter = splitter;
       }
 
       static class FirstComponent extends Splitter {
-        FirstComponent(@NotNull ThreeComponentsSplitter splitter) {
+        FirstComponent(@Nonnull ThreeComponentsSplitter splitter) {
           super(splitter);
         }
 
@@ -663,7 +663,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       }
 
       static class LastComponent extends Splitter {
-        LastComponent(@NotNull ThreeComponentsSplitter splitter) {
+        LastComponent(@Nonnull ThreeComponentsSplitter splitter) {
           super(splitter);
         }
 
@@ -677,7 +677,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     abstract class LayeredPane implements Resizer {
       Component myComponent;
 
-      LayeredPane(@NotNull Component component) {
+      LayeredPane(@Nonnull Component component) {
         myComponent = component;
       }
 
@@ -695,7 +695,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
 
       static class Left extends LayeredPane {
 
-        Left(@NotNull Component component) {
+        Left(@Nonnull Component component) {
           super(component);
         }
 
@@ -706,7 +706,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       }
 
       static class Right extends LayeredPane {
-        Right(@NotNull Component component) {
+        Right(@Nonnull Component component) {
           super(component);
         }
 
@@ -721,7 +721,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       }
 
       static class Top extends LayeredPane {
-        Top(@NotNull Component component) {
+        Top(@Nonnull Component component) {
           super(component);
         }
 
@@ -732,7 +732,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       }
 
       static class Bottom extends LayeredPane {
-        Bottom(@NotNull Component component) {
+        Bottom(@Nonnull Component component) {
           super(component);
         }
 
@@ -753,7 +753,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddDockedComponentCmd(@NotNull JComponent component, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public AddDockedComponentCmd(@Nonnull JComponent component, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
@@ -781,7 +781,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    private AddAndSplitDockedComponentCmd(@NotNull JComponent newComponent, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    private AddAndSplitDockedComponentCmd(@Nonnull JComponent newComponent, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myNewComponent = newComponent;
       myInfo = info;
@@ -875,7 +875,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddSlidingComponentCmd(@NotNull Component component, @NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public AddSlidingComponentCmd(@Nonnull Component component, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
@@ -946,7 +946,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final DesktopStripeButton button, @NotNull WindowInfoImpl info, @NotNull Comparator<ToolWindowStripeButton> comparator, @NotNull Runnable finishCallBack) {
+    public AddToolStripeButtonCmd(final DesktopStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;
@@ -985,7 +985,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final DesktopStripeButton myButton;
     private final WindowInfoImpl myInfo;
 
-    public RemoveToolStripeButtonCmd(@NotNull DesktopStripeButton button, @NotNull WindowInfoImpl info, @NotNull Runnable finishCallBack) {
+    public RemoveToolStripeButtonCmd(@Nonnull DesktopStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myButton = button;
       myInfo = info;
@@ -1023,7 +1023,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveDockedComponentCmd(@NotNull WindowInfoImpl info, final boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -1048,7 +1048,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    private RemoveSplitAndDockedComponentCmd(@NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    private RemoveSplitAndDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -1086,7 +1086,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveSlidingComponentCmd(Component component, @NotNull WindowInfoImpl info, boolean dirtyMode, @NotNull Runnable finishCallBack) {
+    public RemoveSlidingComponentCmd(Component component, @Nonnull WindowInfoImpl info, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
       myInfo = info;
@@ -1149,7 +1149,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private final class SetEditorComponentCmd extends FinalizableCommand {
     private final JComponent myComponent;
 
-    public SetEditorComponentCmd(final JComponent component, @NotNull Runnable finishCallBack) {
+    public SetEditorComponentCmd(final JComponent component, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myComponent = component;
     }
@@ -1170,7 +1170,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
   private final class UpdateButtonPositionCmd extends FinalizableCommand {
     private final String myId;
 
-    private UpdateButtonPositionCmd(@NotNull String id, @NotNull Runnable finishCallBack) {
+    private UpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
       super(finishCallBack);
       myId = id;
     }
@@ -1216,7 +1216,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     private Reference<BufferedImage> myBottomImageRef;
     private Reference<BufferedImage> myTopImageRef;
 
-    public MyLayeredPane(@NotNull JComponent splitter) {
+    public MyLayeredPane(@Nonnull JComponent splitter) {
       setOpaque(false);
       add(splitter, JLayeredPane.DEFAULT_LAYER);
     }
@@ -1233,7 +1233,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       return result.first;
     }
 
-    @NotNull
+    @Nonnull
     private Pair<BufferedImage, Reference<BufferedImage>> getImage(@Nullable Reference<BufferedImage> imageRef) {
       LOG.assertTrue(UISettings.getInstance().getAnimateWindows());
       BufferedImage image = SoftReference.dereference(imageRef);
@@ -1296,7 +1296,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       }
     }
 
-    final void setBoundsInPaletteLayer(@NotNull Component component, @NotNull ToolWindowAnchor anchor, float weight) {
+    final void setBoundsInPaletteLayer(@Nonnull Component component, @Nonnull ToolWindowAnchor anchor, float weight) {
       if (weight < .0f) {
         weight = WindowInfoImpl.DEFAULT_WEIGHT;
       }

@@ -31,8 +31,8 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -227,8 +227,8 @@ public interface HighlightInfoType {
   HighlightInfoType ELEMENT_UNDER_CARET_WRITE =
           new HighlightInfoType.HighlightInfoTypeImpl(ELEMENT_UNDER_CARET_SEVERITY, EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
 
-  @NotNull
-  HighlightSeverity getSeverity(@Nullable PsiElement psiElement);
+  @Nonnull
+  HighlightSeverity getSeverity(@javax.annotation.Nullable PsiElement psiElement);
 
   TextAttributesKey getAttributesKey();
 
@@ -238,23 +238,23 @@ public interface HighlightInfoType {
     private boolean myNeedsUpdateOnTyping;
 
     //read external only
-    HighlightInfoTypeImpl(@NotNull Element element) {
+    HighlightInfoTypeImpl(@Nonnull Element element) {
       mySeverity = new HighlightSeverity(element);
       myAttributesKey = new TextAttributesKey(element);
     }
 
-    public HighlightInfoTypeImpl(@NotNull HighlightSeverity severity, TextAttributesKey attributesKey) {
+    public HighlightInfoTypeImpl(@Nonnull HighlightSeverity severity, TextAttributesKey attributesKey) {
       this(severity, attributesKey, true);
     }
 
-    public HighlightInfoTypeImpl(@NotNull HighlightSeverity severity, TextAttributesKey attributesKey, boolean needsUpdateOnTyping) {
+    public HighlightInfoTypeImpl(@Nonnull HighlightSeverity severity, TextAttributesKey attributesKey, boolean needsUpdateOnTyping) {
       mySeverity = severity;
       myAttributesKey = attributesKey;
       myNeedsUpdateOnTyping = needsUpdateOnTyping;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HighlightSeverity getSeverity(@Nullable PsiElement psiElement) {
       return mySeverity;
     }
@@ -318,7 +318,7 @@ public interface HighlightInfoType {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HighlightSeverity getSeverity(final PsiElement psiElement) {
       InspectionProfile profile = psiElement == null
                                   ? (InspectionProfile)InspectionProfileManager.getInstance().getRootProfile()

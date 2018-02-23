@@ -20,8 +20,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public final class History {
   private boolean myNavigatedNow;
   private final CopyOnWriteArraySet<HistoryListener> myListeners = new CopyOnWriteArraySet<>();
 
-  public History(@NotNull Place.Navigator root) {
+  public History(@Nonnull Place.Navigator root) {
     myRoot = root;
   }
 
@@ -50,7 +50,7 @@ public final class History {
     }
   }
 
-  public void pushPlace(@NotNull Place place) {
+  public void pushPlace(@Nonnull Place place) {
     while (myCurrentPos > 0 && myHistory.size() > 0 && myCurrentPos < myHistory.size() - 1) {
       myHistory.remove(myHistory.size() - 1);
     }

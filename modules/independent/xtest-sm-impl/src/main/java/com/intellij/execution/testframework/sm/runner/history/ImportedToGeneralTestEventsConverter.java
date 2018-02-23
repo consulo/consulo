@@ -22,7 +22,7 @@ import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsC
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -35,17 +35,17 @@ import java.util.function.Supplier;
 
 public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEventsConverter {
 
-  @NotNull
+  @Nonnull
   private final TestConsoleProperties myConsoleProperties;
-  @NotNull
+  @Nonnull
   private final File myFile;
-  @NotNull
+  @Nonnull
   private final ProcessHandler myHandler;
 
-  public ImportedToGeneralTestEventsConverter(@NotNull String testFrameworkName,
-                                              @NotNull TestConsoleProperties consoleProperties,
-                                              @NotNull File file,
-                                              @NotNull ProcessHandler handler) {
+  public ImportedToGeneralTestEventsConverter(@Nonnull String testFrameworkName,
+                                              @Nonnull TestConsoleProperties consoleProperties,
+                                              @Nonnull File file,
+                                              @Nonnull ProcessHandler handler) {
     super(testFrameworkName, consoleProperties);
     myConsoleProperties = consoleProperties;
     myFile = file;

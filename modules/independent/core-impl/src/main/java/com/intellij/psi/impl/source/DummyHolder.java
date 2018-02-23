@@ -27,8 +27,8 @@ import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DummyHolder extends PsiFileImpl {
   protected final PsiElement myContext;
@@ -38,19 +38,19 @@ public class DummyHolder extends PsiFileImpl {
   @SuppressWarnings("EmptyClass") private static class DummyHolderTreeLock {}
   private final DummyHolderTreeLock myTreeElementLock = new DummyHolderTreeLock();
 
-  public DummyHolder(@NotNull PsiManager manager, TreeElement contentElement, PsiElement context) {
+  public DummyHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context) {
     this(manager, contentElement, context, SharedImplUtil.findCharTableByTree(contentElement));
   }
 
-  public DummyHolder(@NotNull PsiManager manager, CharTable table, boolean validity) {
+  public DummyHolder(@Nonnull PsiManager manager, CharTable table, boolean validity) {
     this(manager, null, null, table, Boolean.valueOf(validity), PlainTextLanguage.INSTANCE);
   }
 
-  public DummyHolder(@NotNull PsiManager manager, PsiElement context) {
+  public DummyHolder(@Nonnull PsiManager manager, PsiElement context) {
     this(manager, null, context, null);
   }
 
-  public DummyHolder(@NotNull PsiManager manager, @Nullable TreeElement contentElement, PsiElement context, @Nullable CharTable table) {
+  public DummyHolder(@Nonnull PsiManager manager, @Nullable TreeElement contentElement, PsiElement context, @Nullable CharTable table) {
     this(manager, contentElement, context, table, null, language(context, PlainTextLanguage.INSTANCE));
   }
 
@@ -64,7 +64,7 @@ public class DummyHolder extends PsiFileImpl {
     return contextLanguage;
   }
 
-  public DummyHolder(@NotNull PsiManager manager, @Nullable TreeElement contentElement, @Nullable PsiElement context, @Nullable CharTable table, @Nullable Boolean validity, Language language) {
+  public DummyHolder(@Nonnull PsiManager manager, @Nullable TreeElement contentElement, @Nullable PsiElement context, @Nullable CharTable table, @Nullable Boolean validity, Language language) {
     super(TokenType.DUMMY_HOLDER, TokenType.DUMMY_HOLDER, new DummyHolderViewProvider(manager));
     myLanguage = language;
     ((DummyHolderViewProvider)getViewProvider()).setDummyHolder(this);
@@ -82,15 +82,15 @@ public class DummyHolder extends PsiFileImpl {
     myExplicitlyValid = validity;
   }
 
-  public DummyHolder(@NotNull PsiManager manager, PsiElement context, CharTable table) {
+  public DummyHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table) {
     this(manager, null, context, table);
   }
 
-  public DummyHolder(@NotNull PsiManager manager, final CharTable table, final Language language) {
+  public DummyHolder(@Nonnull PsiManager manager, final CharTable table, final Language language) {
     this(manager, null, null, table, null, language);
   }
 
-  public DummyHolder(@NotNull PsiManager manager, final Language language, final PsiElement context) {
+  public DummyHolder(@Nonnull PsiManager manager, final Language language, final PsiElement context) {
     this(manager, null, context, null, null, language);
   }
 
@@ -106,7 +106,7 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitFile(this);
   }
 
@@ -116,7 +116,7 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     PsiElement context = getContext();
     if (context != null) {
@@ -128,7 +128,7 @@ public class DummyHolder extends PsiFileImpl {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileElement getTreeElement() {
     FileElement fileElement = super.derefTreeElement();
     if (fileElement != null) return fileElement;
@@ -148,7 +148,7 @@ public class DummyHolder extends PsiFileImpl {
 
   @RequiredReadAction
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myLanguage;
   }
@@ -170,7 +170,7 @@ public class DummyHolder extends PsiFileImpl {
   private FileViewProvider myViewProvider;
 
   @Override
-  @NotNull
+  @Nonnull
   public FileViewProvider getViewProvider() {
     if(myViewProvider != null) return myViewProvider;
     return super.getViewProvider();

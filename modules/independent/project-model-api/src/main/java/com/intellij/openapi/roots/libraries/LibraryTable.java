@@ -17,8 +17,7 @@ package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.Disposable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.Iterator;
@@ -28,20 +27,20 @@ import java.util.Iterator;
  * @author dsl
  */
 public interface LibraryTable {
-  @NotNull
+  @Nonnull
   Library[] getLibraries();
 
   Library createLibrary();
 
   Library createLibrary(@NonNls String name);
 
-  void removeLibrary(@NotNull Library library);
+  void removeLibrary(@Nonnull Library library);
 
-  @NotNull
+  @Nonnull
   Iterator<Library> getLibraryIterator();
 
-  @Nullable
-  Library getLibraryByName(@NotNull String name);
+  @javax.annotation.Nullable
+  Library getLibraryByName(@Nonnull String name);
 
   String getTableLevel();
 
@@ -60,16 +59,18 @@ public interface LibraryTable {
   interface ModifiableModel {
     Library createLibrary(String name);
     
-    void removeLibrary(@NotNull Library library);
+    void removeLibrary(@Nonnull Library library);
 
     void commit();
 
-    @NotNull Iterator<Library> getLibraryIterator();
+    @Nonnull
+    Iterator<Library> getLibraryIterator();
 
-    @Nullable
-    Library getLibraryByName(@NotNull String name);
+    @javax.annotation.Nullable
+    Library getLibraryByName(@Nonnull String name);
 
-    @NotNull Library[] getLibraries();
+    @Nonnull
+    Library[] getLibraries();
 
     boolean isChanged();
   }

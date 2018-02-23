@@ -16,8 +16,8 @@
 package com.intellij.util.ui;
 
 import com.intellij.ide.ui.UISettings;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**

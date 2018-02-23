@@ -34,8 +34,8 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,20 +45,20 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   private Icon myCurrentIcon;
   private String myToolTipText;
 
-  public TogglePopupHintsPanel(@NotNull final Project project) {
+  public TogglePopupHintsPanel(@Nonnull final Project project) {
     super(project);
     myCurrentIcon = AllIcons.Ide.HectorNo;
     myConnection.subscribe(PowerSaveMode.TOPIC, this::updateStatus);
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     updateStatus();
   }
 
 
   @Override
-  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     updateStatus();
   }
 
@@ -68,7 +68,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return myCurrentIcon;
   }
@@ -94,13 +94,13 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return "InspectionProfile";
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return this;
   }
 

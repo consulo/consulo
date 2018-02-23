@@ -22,8 +22,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -88,20 +88,20 @@ public class FileGroup implements JDOMExternalizable {
     return mySupportsDeletion;
   }
 
-  public void addError(@NotNull final String path, @NotNull final String error) {
+  public void addError(@Nonnull final String path, @Nonnull final String error) {
     myErrorsMap.put(path, error);
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, String> getErrorsMap() {
     return myErrorsMap;
   }
 
-  public void add(@NotNull String path, @NotNull String vcsName, @Nullable VcsRevisionNumber revision) {
+  public void add(@Nonnull String path, @Nonnull String vcsName, @javax.annotation.Nullable VcsRevisionNumber revision) {
     myFiles.add(new UpdatedFile(path, vcsName, revision == null ? "" : revision.asString()));
   }
 
-  public void add(@NotNull String path, @NotNull VcsKey vcsKey, @Nullable VcsRevisionNumber revision) {
+  public void add(@Nonnull String path, @Nonnull VcsKey vcsKey, @javax.annotation.Nullable VcsRevisionNumber revision) {
     myFiles.add(new UpdatedFile(path, vcsKey, revision == null ? "" : revision.asString()));
   }
 
@@ -226,7 +226,7 @@ public class FileGroup implements JDOMExternalizable {
     return myId + " " + myFiles.size() + " items";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VcsRevisionNumber getRevision(final ProjectLevelVcsManager vcsManager, final String path) {
     for (UpdatedFile file : myFiles) {
       if (file.getPath().equals(path)) {
@@ -275,13 +275,13 @@ public class FileGroup implements JDOMExternalizable {
       myPath = path;
     }
 
-    public UpdatedFile(final String path, @NotNull final VcsKey vcsKey, final String revision) {
+    public UpdatedFile(final String path, @Nonnull final VcsKey vcsKey, final String revision) {
       myPath = path;
       myVcsName = vcsKey.getName();
       myRevision = revision;
     }
 
-    private UpdatedFile(final String path, @NotNull String vcsName, final String revision) {
+    private UpdatedFile(final String path, @Nonnull String vcsName, final String revision) {
       myPath = path;
       myVcsName = vcsName;
       myRevision = revision;

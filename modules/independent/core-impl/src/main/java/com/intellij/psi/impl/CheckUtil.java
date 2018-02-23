@@ -25,12 +25,12 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CheckUtil {
   private CheckUtil() { }
 
-  public static void checkWritable(@NotNull final PsiElement element) throws IncorrectOperationException {
+  public static void checkWritable(@Nonnull final PsiElement element) throws IncorrectOperationException {
     if (!element.isWritable()) {
       if (element instanceof PsiDirectory) {
         throw new IncorrectOperationException(
@@ -50,10 +50,10 @@ public class CheckUtil {
     }
   }
 
-  public static void checkDelete(@NotNull final VirtualFile file) throws IncorrectOperationException {
+  public static void checkDelete(@Nonnull final VirtualFile file) throws IncorrectOperationException {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         if (FileTypeRegistry.getInstance().isFileIgnored(file)) {
           return false;
         }

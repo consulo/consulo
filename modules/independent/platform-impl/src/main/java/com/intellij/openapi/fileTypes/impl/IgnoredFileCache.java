@@ -26,7 +26,7 @@ import com.intellij.util.containers.ConcurrentBitSet;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.StripedLockIntObjectConcurrentHashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,24 +39,24 @@ class IgnoredFileCache {
   private final IgnoredPatternSet myIgnoredPatterns;
   private volatile int myVfsEventNesting = 0;
 
-  IgnoredFileCache(@NotNull IgnoredPatternSet ignoredPatterns) {
+  IgnoredFileCache(@Nonnull IgnoredPatternSet ignoredPatterns) {
     myIgnoredPatterns = ignoredPatterns;
     MessageBusConnection connect = ApplicationManager.getApplication().getMessageBus().connect();
     connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
       @Override
-      public void before(@NotNull List<? extends VFileEvent> events) {
+      public void before(@Nonnull List<? extends VFileEvent> events) {
         // during VFS event processing the system may be in inconsistent state, don't cache it
         myVfsEventNesting++;
         clearCacheForChangedFiles(events);
       }
 
       @Override
-      public void after(@NotNull List<? extends VFileEvent> events) {
+      public void after(@Nonnull List<? extends VFileEvent> events) {
         clearCacheForChangedFiles(events);
         myVfsEventNesting--;
       }
 
-      private void clearCacheForChangedFiles(@NotNull List<? extends VFileEvent> events) {
+      private void clearCacheForChangedFiles(@Nonnull List<? extends VFileEvent> events) {
         for (final VFileEvent event : events) {
           VirtualFile file = event.getFile();
           if (file instanceof NewVirtualFile && event instanceof VFilePropertyChangeEvent) {
@@ -76,7 +76,7 @@ class IgnoredFileCache {
     myIgnoredIds.clear();
   }
 
-  boolean isFileIgnored(@NotNull VirtualFile file) {
+  boolean isFileIgnored(@Nonnull VirtualFile file) {
     if (myVfsEventNesting != 0 || !(file instanceof NewVirtualFile)) {
       return isFileIgnoredNoCache(file);
     }
@@ -102,7 +102,7 @@ class IgnoredFileCache {
     return result;
   }
 
-  private boolean isFileIgnoredNoCache(@NotNull VirtualFile file) {
+  private boolean isFileIgnoredNoCache(@Nonnull VirtualFile file) {
     return myIgnoredPatterns.isIgnored(file.getNameSequence());
   }
 }

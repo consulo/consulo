@@ -22,9 +22,9 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointsGroupingPriorities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 
@@ -41,7 +41,7 @@ public class XBreakpointFileGroupingRule<B> extends XBreakpointGroupingRule<B, X
     return XBreakpointsGroupingPriorities.BY_FILE;
   }
 
-  public XBreakpointFileGroup getGroup(@NotNull final B breakpoint, @NotNull final Collection<XBreakpointFileGroup> groups) {
+  public XBreakpointFileGroup getGroup(@Nonnull final B breakpoint, @Nonnull final Collection<XBreakpointFileGroup> groups) {
     if (!(breakpoint instanceof XLineBreakpoint)) {
       return null;
     }

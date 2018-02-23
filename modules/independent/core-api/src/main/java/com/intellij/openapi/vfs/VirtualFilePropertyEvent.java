@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides data for event which is fired when the name or writable status of a virtual file is changed.
@@ -28,7 +28,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
   private final Object myOldValue;
   private final Object myNewValue;
 
-  public VirtualFilePropertyEvent(Object requestor, @NotNull VirtualFile file, @NotNull String propertyName, Object oldValue, Object newValue){
+  public VirtualFilePropertyEvent(Object requestor, @Nonnull VirtualFile file, @Nonnull String propertyName, Object oldValue, Object newValue){
     super(requestor, file, file.getName(), file.getParent());
     myPropertyName = propertyName;
     myOldValue = oldValue;
@@ -42,7 +42,7 @@ public class VirtualFilePropertyEvent extends VirtualFileEvent {
    * @see VirtualFile#PROP_NAME
    * @see VirtualFile#PROP_WRITABLE
    */
-  @NotNull
+  @Nonnull
   public String getPropertyName() {
     return myPropertyName;
   }

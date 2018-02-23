@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +53,7 @@ public final class FileChooserUtil {
   }
 
   @Nullable
-  public static VirtualFile getFileToSelect(@NotNull FileChooserDescriptor descriptor, @Nullable Project project,
+  public static VirtualFile getFileToSelect(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project,
                                             @Nullable VirtualFile toSelect, @Nullable VirtualFile lastPath) {
     boolean chooseDir = descriptor instanceof FileSaverDescriptor;
     VirtualFile result;
@@ -88,9 +88,9 @@ public final class FileChooserUtil {
     return result;
   }
 
-  @NotNull
-  public static List<VirtualFile> getChosenFiles(@NotNull final FileChooserDescriptor descriptor,
-                                                 @NotNull final Collection<VirtualFile> selectedFiles) {
+  @Nonnull
+  public static List<VirtualFile> getChosenFiles(@Nonnull final FileChooserDescriptor descriptor,
+                                                 @Nonnull final Collection<VirtualFile> selectedFiles) {
     return ContainerUtil.mapNotNull(selectedFiles, new NullableFunction<VirtualFile, VirtualFile>() {
       @Override
       public VirtualFile fun(final VirtualFile file) {

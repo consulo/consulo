@@ -10,8 +10,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -22,11 +21,11 @@ import javax.swing.*;
 public class WebApplicationImpl extends ApplicationImpl implements WebApplication {
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(boolean isHeadless, @NotNull Ref<? extends StartupProgress> splash) {
+  public WebApplicationImpl(boolean isHeadless, @Nonnull Ref<? extends StartupProgress> splash) {
     super(isHeadless, splash);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
   }
@@ -38,10 +37,10 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
-                                                     @Nullable Project project,
+                                                     @javax.annotation.Nullable Project project,
                                                      JComponent parentComponent,
                                                      String cancelText) {
 
@@ -66,12 +65,12 @@ public class WebApplicationImpl extends ApplicationImpl implements WebApplicatio
   }
 
   @Override
-  public void setCurrentSession(@Nullable WebSession session) {
+  public void setCurrentSession(@javax.annotation.Nullable WebSession session) {
     myCurrentSession = session;
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public WebSession getCurrentSession() {
     return myCurrentSession;
   }

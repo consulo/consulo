@@ -21,18 +21,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.FreeThreadedFileViewProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: cdr
  */
 class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> implements SmartPsiFileRange {
-  SmartPsiFileRangePointerImpl(@NotNull PsiFile containingFile, @NotNull ProperTextRange range, boolean forInjected) {
+  SmartPsiFileRangePointerImpl(@Nonnull PsiFile containingFile, @Nonnull ProperTextRange range, boolean forInjected) {
     super(containingFile, createElementInfo(containingFile, range, forInjected));
   }
 
-  @NotNull
-  private static SmartPointerElementInfo createElementInfo(@NotNull PsiFile containingFile, @NotNull ProperTextRange range, boolean forInjected) {
+  @Nonnull
+  private static SmartPointerElementInfo createElementInfo(@Nonnull PsiFile containingFile, @Nonnull ProperTextRange range, boolean forInjected) {
     Project project = containingFile.getProject();
     if (containingFile.getViewProvider() instanceof FreeThreadedFileViewProvider) {
       PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(project).getInjectionHost(containingFile);

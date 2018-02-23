@@ -19,14 +19,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.LibraryProperties;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface LibraryEditorComponent<P extends LibraryProperties> {
-  @NotNull
+  @Nonnull
   P getProperties();
 
   boolean isNewLibrary();

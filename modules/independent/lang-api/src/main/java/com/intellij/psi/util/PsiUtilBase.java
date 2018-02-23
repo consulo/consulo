@@ -36,8 +36,8 @@ import com.intellij.openapi.vfs.NonPhysicalFileSystem;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class PsiUtilBase extends PsiUtilCore {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.util.PsiUtilBase");
   public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
     @Override
-    public int compare(@NotNull Language o1, @NotNull Language o2) {
+    public int compare(@Nonnull Language o1, @Nonnull Language o2) {
       return o1.getID().compareTo(o2.getID());
     }
   };
@@ -85,12 +85,12 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@NotNull final Editor editor, @NotNull final Project project) {
+  public static Language getLanguageInEditor(@Nonnull final Editor editor, @Nonnull final Project project) {
     return getLanguageInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@NotNull Caret caret, @NotNull final Project project) {
+  public static Language getLanguageInEditor(@Nonnull Caret caret, @Nonnull final Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
@@ -111,7 +111,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static PsiElement getElementAtCaret(@NotNull Editor editor) {
+  public static PsiElement getElementAtCaret(@Nonnull Editor editor) {
     Project project = editor.getProject();
     if (project == null) return null;
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -119,12 +119,12 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@NotNull final Editor editor, @NotNull final Project project) {
+  public static PsiFile getPsiFileInEditor(@Nonnull final Editor editor, @Nonnull final Project project) {
     return getPsiFileInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@NotNull Caret caret, @NotNull final Project project) {
+  public static PsiFile getPsiFileInEditor(@Nonnull Caret caret, @Nonnull final Project project) {
     Editor editor = caret.getEditor();
     final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
@@ -149,7 +149,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language reallyEvaluateLanguageInRange(final int start, final int end, @NotNull PsiFile file) {
+  public static Language reallyEvaluateLanguageInRange(final int start, final int end, @Nonnull PsiFile file) {
     if (file instanceof PsiBinaryFile) {
       return file.getLanguage();
     }
@@ -180,7 +180,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language evaluateLanguageInRange(final int start, final int end, @NotNull PsiFile file) {
+  public static Language evaluateLanguageInRange(final int start, final int end, @Nonnull PsiFile file) {
     PsiElement elt = getElementAtOffset(file, start);
 
     TextRange selectionRange = new TextRange(start, end);
@@ -203,8 +203,8 @@ public class PsiUtilBase extends PsiUtilCore {
     return reallyEvaluateLanguageInRange(start, end, file);
   }
 
-  @NotNull
-  public static ASTNode getRoot(@NotNull ASTNode node) {
+  @Nonnull
+  public static ASTNode getRoot(@Nonnull ASTNode node) {
     ASTNode child = node;
     do {
       final ASTNode parent = child.getTreeParent();
@@ -230,7 +230,7 @@ public class PsiUtilBase extends PsiUtilCore {
    * @return          editor that works with a given element if the one is found; <code>null</code> otherwise
    */
   @Nullable
-  public static Editor findEditor(@NotNull PsiElement element) {
+  public static Editor findEditor(@Nonnull PsiElement element) {
     if (!EventQueue.isDispatchThread()) {
       LOG.warn("Invoke findEditor() from EDT only. Otherwise, it causes deadlocks.");
     }
@@ -267,7 +267,7 @@ public class PsiUtilBase extends PsiUtilCore {
     return null;
   }
 
-  public static boolean isSymLink(@NotNull final PsiFileSystemItem element) {
+  public static boolean isSymLink(@Nonnull final PsiFileSystemItem element) {
     final VirtualFile virtualFile = element.getVirtualFile();
     return virtualFile != null && virtualFile.is(VFileProperty.SYMLINK);
   }

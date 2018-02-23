@@ -25,28 +25,29 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import com.intellij.vcs.log.util.StopWatch;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
 public class DataPack extends DataPackBase {
   public static final DataPack EMPTY = createEmptyInstance();
 
-  @NotNull private final PermanentGraph<Integer> myPermanentGraph;
+  @Nonnull
+  private final PermanentGraph<Integer> myPermanentGraph;
 
-  DataPack(@NotNull RefsModel refsModel,
-           @NotNull PermanentGraph<Integer> permanentGraph,
-           @NotNull Map<VirtualFile, VcsLogProvider> providers,
+  DataPack(@Nonnull RefsModel refsModel,
+           @Nonnull PermanentGraph<Integer> permanentGraph,
+           @Nonnull Map<VirtualFile, VcsLogProvider> providers,
            boolean full) {
     super(providers, refsModel, full);
     myPermanentGraph = permanentGraph;
   }
 
-  @NotNull
-  static DataPack build(@NotNull List<? extends GraphCommit<Integer>> commits,
-                        @NotNull Map<VirtualFile, CompressedRefs> refs,
-                        @NotNull Map<VirtualFile, VcsLogProvider> providers,
-                        @NotNull final VcsLogStorage hashMap,
+  @Nonnull
+  static DataPack build(@Nonnull List<? extends GraphCommit<Integer>> commits,
+                        @Nonnull Map<VirtualFile, CompressedRefs> refs,
+                        @Nonnull Map<VirtualFile, VcsLogProvider> providers,
+                        @Nonnull final VcsLogStorage hashMap,
                         boolean full) {
     RefsModel refsModel;
     PermanentGraph<Integer> permanentGraph;
@@ -68,8 +69,8 @@ public class DataPack extends DataPackBase {
     return new DataPack(refsModel, permanentGraph, providers, full);
   }
 
-  @NotNull
-  public static Function<Integer, Hash> createHashGetter(@NotNull final VcsLogStorage hashMap) {
+  @Nonnull
+  public static Function<Integer, Hash> createHashGetter(@Nonnull final VcsLogStorage hashMap) {
     return commitIndex -> {
       CommitId commitId = hashMap.getCommitId(commitIndex);
       if (commitId == null) return null;
@@ -77,8 +78,8 @@ public class DataPack extends DataPackBase {
     };
   }
 
-  @NotNull
-  private static Set<Integer> getHeads(@NotNull List<? extends GraphCommit<Integer>> commits) {
+  @Nonnull
+  private static Set<Integer> getHeads(@Nonnull List<? extends GraphCommit<Integer>> commits) {
     TIntHashSet parents = new TIntHashSet();
     for (GraphCommit<Integer> commit : commits) {
       for (int parent : commit.getParents()) {
@@ -95,8 +96,8 @@ public class DataPack extends DataPackBase {
     return heads;
   }
 
-  @NotNull
-  private static Set<Integer> getBranchCommitHashIndexes(@NotNull Collection<VcsRef> branches, @NotNull VcsLogStorage hashMap) {
+  @Nonnull
+  private static Set<Integer> getBranchCommitHashIndexes(@Nonnull Collection<VcsRef> branches, @Nonnull VcsLogStorage hashMap) {
     Set<Integer> result = new HashSet<>();
     for (VcsRef vcsRef : branches) {
       result.add(hashMap.getCommitIndex(vcsRef.getCommitHash(), vcsRef.getRoot()));
@@ -104,8 +105,8 @@ public class DataPack extends DataPackBase {
     return result;
   }
 
-  @NotNull
-  public static Map<VirtualFile, VcsLogRefManager> getRefManagerMap(@NotNull Map<VirtualFile, VcsLogProvider> logProviders) {
+  @Nonnull
+  public static Map<VirtualFile, VcsLogRefManager> getRefManagerMap(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders) {
     Map<VirtualFile, VcsLogRefManager> map = ContainerUtil.newHashMap();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : logProviders.entrySet()) {
       map.put(entry.getKey(), entry.getValue().getReferenceManager());
@@ -113,14 +114,14 @@ public class DataPack extends DataPackBase {
     return map;
   }
 
-  @NotNull
+  @Nonnull
   private static DataPack createEmptyInstance() {
     RefsModel emptyModel =
       new RefsModel(ContainerUtil.newHashMap(), ContainerUtil.<Integer>newHashSet(), VcsLogStorageImpl.EMPTY, ContainerUtil.newHashMap());
     return new DataPack(emptyModel, EmptyPermanentGraph.getInstance(), Collections.<VirtualFile, VcsLogProvider>emptyMap(), false);
   }
 
-  @NotNull
+  @Nonnull
   public PermanentGraph<Integer> getPermanentGraph() {
     return myPermanentGraph;
   }

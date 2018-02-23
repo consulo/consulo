@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -27,8 +27,8 @@ public class PresentationFactory {
   // Presentation can leak icon which can leak com.intellij.ui.DeferredIconImpl.myEvaluator which can leak enclosing class instance which can leak Project
   private final Map<AnAction, Presentation> myAction2Presentation = ContainerUtil.createWeakKeySoftValueMap();
 
-  @NotNull
-  public final Presentation getPresentation(@NotNull AnAction action){
+  @Nonnull
+  public final Presentation getPresentation(@Nonnull AnAction action){
     UIAccess.assertIsUIThread();
     Presentation presentation = myAction2Presentation.get(action);
     if (presentation == null || !action.isDefaultIcon()){

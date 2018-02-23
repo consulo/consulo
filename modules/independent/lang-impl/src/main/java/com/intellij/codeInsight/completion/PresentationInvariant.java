@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -40,7 +40,7 @@ public class PresentationInvariant implements Comparable<PresentationInvariant> 
   }
 
   @Override
-  public int compareTo(@NotNull PresentationInvariant other) {
+  public int compareTo(@Nonnull PresentationInvariant other) {
     int result = StringUtil.naturalCompare(itemText, other.itemText);
     if (result != 0) return result;
 

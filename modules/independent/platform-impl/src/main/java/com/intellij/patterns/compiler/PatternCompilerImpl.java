@@ -32,7 +32,7 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.StringInterner;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.*;
 import java.util.*;

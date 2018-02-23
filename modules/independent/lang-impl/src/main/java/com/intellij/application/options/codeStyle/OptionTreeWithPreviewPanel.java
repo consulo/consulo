@@ -29,8 +29,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -210,7 +210,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         if (!optionsTree.isEnabled()) return false;
         TreePath treePath = optionsTree.getPathForLocation(e.getX(), e.getY());
         selectCheckbox(treePath);
@@ -521,16 +521,20 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
   }
 
   private static class CustomBooleanOptionInfo {
-    @NotNull final Class<? extends CustomCodeStyleSettings> settingClass;
-    @NotNull final String fieldName;
-    @NotNull final String title;
+    @Nonnull
+    final Class<? extends CustomCodeStyleSettings> settingClass;
+    @Nonnull
+    final String fieldName;
+    @Nonnull
+    final String title;
     @Nullable final String groupName;
     @Nullable final OptionAnchor anchor;
-    @Nullable final String anchorFieldName;
+    @Nullable
+    final String anchorFieldName;
 
-    private CustomBooleanOptionInfo(@NotNull Class<? extends CustomCodeStyleSettings> settingClass,
-                                    @NotNull String fieldName,
-                                    @NotNull String title,
+    private CustomBooleanOptionInfo(@Nonnull Class<? extends CustomCodeStyleSettings> settingClass,
+                                    @Nonnull String fieldName,
+                                    @Nonnull String title,
                                     String groupName,
                                     OptionAnchor anchor,
                                     String anchorFieldName) {

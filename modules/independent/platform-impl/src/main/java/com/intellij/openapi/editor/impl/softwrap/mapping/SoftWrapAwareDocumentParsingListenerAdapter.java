@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,11 +23,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SoftWrapAwareDocumentParsingListenerAdapter implements SoftWrapAwareDocumentParsingListener {
   @Override
-  public void onCacheUpdateStart(@NotNull IncrementalCacheUpdateEvent event) {
+  public void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event) {
   }
 
   @Override
-  public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event) {
+  public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
   }
 
   @Override

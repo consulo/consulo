@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.EditableModel;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

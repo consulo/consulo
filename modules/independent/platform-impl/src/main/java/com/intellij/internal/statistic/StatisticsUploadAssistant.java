@@ -33,8 +33,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -64,36 +64,36 @@ public class StatisticsUploadAssistant {
     return settings != null && settings.isAllowed();
   }
 
-  public String getData(@NotNull Set<String> disabledGroups) {
+  public String getData(@Nonnull Set<String> disabledGroups) {
     return getStringPatch(disabledGroups, ProjectManager.getInstance().getOpenProjects());
   }
 
-  public static void persistSentPatch(@NotNull String patchStr) {
+  public static void persistSentPatch(@Nonnull String patchStr) {
     persistSentPatch(patchStr, UsageStatisticsPersistenceComponent.getInstance());
   }
 
-  public static void persistSentPatch(@NotNull String patchStr, @NotNull SentUsagesPersistence persistenceComponent) {
+  public static void persistSentPatch(@Nonnull String patchStr, @Nonnull SentUsagesPersistence persistenceComponent) {
     Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(ConvertUsagesUtil.convertString(patchStr));
 
     if (patchedUsages.size() > 0) persistenceComponent.persistPatch(patchedUsages);
   }
 
-  @NotNull
-  public static String getStringPatch(@NotNull Set<String> disabledGroups, Project... project) {
+  @Nonnull
+  public static String getStringPatch(@Nonnull Set<String> disabledGroups, Project... project) {
     return getStringPatch(disabledGroups, project, UsageStatisticsPersistenceComponent.getInstance(), 0);
   }
 
-  @NotNull
-  public static String getStringPatch(@NotNull Set<String> disabledGroups,
-                                      @NotNull Project[] projects,
-                                      @NotNull SentUsagesPersistence usagesPersistence,
+  @Nonnull
+  public static String getStringPatch(@Nonnull Set<String> disabledGroups,
+                                      @Nonnull Project[] projects,
+                                      @Nonnull SentUsagesPersistence usagesPersistence,
                                       int maxSize) {
     final Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = getPatchedUsages(disabledGroups, projects, usagesPersistence);
 
     return getStringPatch(patchedUsages, maxSize);
   }
 
-  public static String getStringPatch(@NotNull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, int maxSize) {
+  public static String getStringPatch(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, int maxSize) {
     if (patchedUsages.size() == 0) return "";
 
     String patchStr = ConvertUsagesUtil.convertUsages(patchedUsages);
@@ -104,10 +104,10 @@ public class StatisticsUploadAssistant {
     return patchStr;
   }
 
-  @NotNull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@NotNull Set<String> disabledGroups,
-                                                                         @NotNull Project[] projects,
-                                                                         @NotNull SentUsagesPersistence usagesPersistence) {
+  @Nonnull
+  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull Set<String> disabledGroups,
+                                                                         @Nonnull Project[] projects,
+                                                                         @Nonnull SentUsagesPersistence usagesPersistence) {
     Map<GroupDescriptor, Set<PatchedUsage>> usages = new LinkedHashMap<GroupDescriptor, Set<PatchedUsage>>();
 
     for (Project project : projects) {
@@ -119,8 +119,8 @@ public class StatisticsUploadAssistant {
     return usages;
   }
 
-  @NotNull
-  private static Map<GroupDescriptor, Set<UsageDescriptor>> filterDisabled(@NotNull Set<String> disabledGroups, @NotNull Map<GroupDescriptor, Set<UsageDescriptor>> usages) {
+  @Nonnull
+  private static Map<GroupDescriptor, Set<UsageDescriptor>> filterDisabled(@Nonnull Set<String> disabledGroups, @Nonnull Map<GroupDescriptor, Set<UsageDescriptor>> usages) {
     Map<GroupDescriptor, Set<UsageDescriptor>> filtered = new LinkedHashMap<GroupDescriptor, Set<UsageDescriptor>>();
 
     for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> usage : usages.entrySet()) {
@@ -131,14 +131,14 @@ public class StatisticsUploadAssistant {
     return filtered;
   }
 
-  @NotNull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@NotNull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages,
-                                                                         @NotNull SentUsagesPersistence usagesPersistence) {
+  @Nonnull
+  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages,
+                                                                         @Nonnull SentUsagesPersistence usagesPersistence) {
     return getPatchedUsages(allUsages, usagesPersistence.getSentUsages());
   }
 
-  @NotNull
-  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@NotNull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages, final Map<GroupDescriptor, Set<UsageDescriptor>> sentUsageMap) {
+  @Nonnull
+  public static Map<GroupDescriptor, Set<PatchedUsage>> getPatchedUsages(@Nonnull final Map<GroupDescriptor, Set<UsageDescriptor>> allUsages, final Map<GroupDescriptor, Set<UsageDescriptor>> sentUsageMap) {
     Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages = mapToPatchedUsagesMap(allUsages);
 
     for (Map.Entry<GroupDescriptor, Set<UsageDescriptor>> sentUsageEntry : sentUsageMap.entrySet()) {
@@ -181,8 +181,8 @@ public class StatisticsUploadAssistant {
     return patchedUsages;
   }
 
-  @NotNull
-  private static Map<GroupDescriptor, Set<PatchedUsage>> packCollection(@NotNull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, Condition<PatchedUsage> condition) {
+  @Nonnull
+  private static Map<GroupDescriptor, Set<PatchedUsage>> packCollection(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedUsages, Condition<PatchedUsage> condition) {
     Map<GroupDescriptor, Set<PatchedUsage>> result = new LinkedHashMap<GroupDescriptor, Set<PatchedUsage>>();
     for (GroupDescriptor descriptor : patchedUsages.keySet()) {
       final Set<PatchedUsage> usages = packCollection(patchedUsages.get(descriptor), condition);
@@ -194,8 +194,8 @@ public class StatisticsUploadAssistant {
     return result;
   }
 
-  @NotNull
-  private static <T> Set<T> packCollection(@NotNull Collection<T> set, @NotNull Condition<T> condition) {
+  @Nonnull
+  private static <T> Set<T> packCollection(@Nonnull Collection<T> set, @Nonnull Condition<T> condition) {
     final Set<T> result = new LinkedHashSet<T>();
     for (T t : set) {
       if (condition.value(t)) {
@@ -206,8 +206,8 @@ public class StatisticsUploadAssistant {
   }
 
   @Nullable
-  public static <T extends UsageDescriptor> T findDescriptor(@NotNull Map<GroupDescriptor, Set<T>> descriptors,
-                                                             @NotNull final Pair<GroupDescriptor, String> id) {
+  public static <T extends UsageDescriptor> T findDescriptor(@Nonnull Map<GroupDescriptor, Set<T>> descriptors,
+                                                             @Nonnull final Pair<GroupDescriptor, String> id) {
     final Set<T> usages = descriptors.get(id.getFirst());
     if (usages == null) return null;
 
@@ -219,8 +219,8 @@ public class StatisticsUploadAssistant {
     });
   }
 
-  @NotNull
-  public static Map<GroupDescriptor, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @NotNull Set<String> disabledGroups) {
+  @Nonnull
+  public static Map<GroupDescriptor, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
     Map<GroupDescriptor, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<GroupDescriptor, Set<UsageDescriptor>>();
 
     for (UsagesCollector usagesCollector : Extensions.getExtensions(UsagesCollector.EP_NAME)) {

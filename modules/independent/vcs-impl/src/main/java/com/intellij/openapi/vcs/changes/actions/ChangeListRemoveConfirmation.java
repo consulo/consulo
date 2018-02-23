@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ import java.util.*;
  * from kotlin platform\vcs-impl\src\com\intellij\openapi\vcs\changes\actions\ChangeListRemoveConfirmation.kt
  */
 public abstract class ChangeListRemoveConfirmation {
-  public abstract boolean askIfShouldRemoveChangeLists(@NotNull List<? extends LocalChangeList> toAsk);
+  public abstract boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> toAsk);
 
   public static void processLists(Project project, boolean explicitly, Collection<LocalChangeList> allLists, ChangeListRemoveConfirmation ask) {
     List<String> allIds = ContainerUtil.map(allLists, LocalChangeList::getId);

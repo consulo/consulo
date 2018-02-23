@@ -25,8 +25,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.util.ui.components.VerticalLayoutPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -288,7 +288,7 @@ public class JBUI {
   /**
    * Returns the pixel scale factor based on the JBUIScaleTrackable.
    */
-  public static float pixScale(@NotNull JBUIScaleTrackable trackable) {
+  public static float pixScale(@Nonnull JBUIScaleTrackable trackable) {
     return UIUtil.isJreHiDPIEnabled() ? sysScale(trackable) * trackable.getJBUIScale(ScaleType.USR) : trackable.getJBUIScale(ScaleType.USR);
   }
 
@@ -381,8 +381,8 @@ public class JBUI {
     return Math.round(userScaleFactor * i);
   }
 
-  @NotNull
-  public static Font scale(@NotNull Font font) {
+  @Nonnull
+  public static Font scale(@Nonnull Font font) {
     return font.deriveFont((float)scaleFontSize(font.getSize()));
   }
 
@@ -572,8 +572,8 @@ public class JBUI {
       return empty(0, 0, 0, 0);
     }
 
-    @NotNull
-    public static JBEmptyBorder empty(@NotNull Insets insets) {
+    @Nonnull
+    public static JBEmptyBorder empty(@Nonnull Insets insets) {
       return empty(insets.top, insets.left, insets.bottom, insets.right);
     }
 
@@ -593,19 +593,19 @@ public class JBUI {
       return customLine(color, 1);
     }
 
-    public static Border merge(@Nullable Border source, @NotNull Border extra, boolean extraIsOutside) {
+    public static Border merge(@Nullable Border source, @Nonnull Border extra, boolean extraIsOutside) {
       if (source == null) return extra;
       return new CompoundBorder(extraIsOutside ? extra : source, extraIsOutside ? source : extra);
     }
   }
 
   public static class Panels {
-    @NotNull
+    @Nonnull
     public static VerticalLayoutPanel verticalPanel() {
       return new VerticalLayoutPanel();
     }
 
-    @NotNull
+    @Nonnull
     public static VerticalLayoutPanel verticalPanel(int hgap, int vgap) {
       return new VerticalLayoutPanel(hgap, vgap);
     }
@@ -814,7 +814,7 @@ public class JBUI {
     /**
      * @return a copy of this icon instance
      */
-    @NotNull
+    @Nonnull
     protected abstract T copy();
   }
 

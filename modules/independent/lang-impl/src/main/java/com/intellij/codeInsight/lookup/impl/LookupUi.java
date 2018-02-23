@@ -51,9 +51,9 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.plaf.ScrollBarUIConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -69,7 +69,7 @@ import java.util.Collection;
  */
 class LookupUi {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.lookup.impl.LookupUi");
-  @NotNull
+  @Nonnull
   private final LookupImpl myLookup;
   private final Advertiser myAdvertiser;
   private final JBList myList;
@@ -87,7 +87,7 @@ class LookupUi {
   private int myMaximumHeight = Integer.MAX_VALUE;
   private Boolean myPositionedAbove = null;
 
-  LookupUi(@NotNull LookupImpl lookup, Advertiser advertiser, JBList list, Project project) {
+  LookupUi(@Nonnull LookupImpl lookup, Advertiser advertiser, JBList list, Project project) {
     myLookup = lookup;
     myAdvertiser = advertiser;
     myList = list;
@@ -169,7 +169,7 @@ class LookupUi {
     myScrollPane.setVerticalScrollBarPolicy(showSorting ? ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS : ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
   }
 
-  private void updateHint(@NotNull final LookupElement item) {
+  private void updateHint(@Nonnull final LookupElement item) {
     myLookup.checkValid();
     if (myElementHint != null) {
       myLayeredPane.remove(myElementHint);
@@ -450,7 +450,7 @@ class LookupUi {
   private class ChangeLookupSorting extends ClickListener {
 
     @Override
-    public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+    public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
       DataContext context = DataManager.getInstance().getDataContext(mySortingLabel);
       DefaultActionGroup group = new DefaultActionGroup();
       group.add(createSortingAction(true));

@@ -19,7 +19,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class PerIndexDocumentVersionMap {
     private int mapVersion;
     private long docVersion;
 
-    private IdVersionInfo(@NotNull ID<?, ?> id, long docVersion, int mapVersion) {
+    private IdVersionInfo(@Nonnull ID<?, ?> id, long docVersion, int mapVersion) {
       this.docVersion = docVersion;
       this.mapVersion = mapVersion;
       this.id = id;
@@ -44,7 +44,7 @@ public class PerIndexDocumentVersionMap {
   }
 
   private static final Key<List<IdVersionInfo>> KEY = Key.create("UnsavedDocIdVersionInfo");
-  public long set(@NotNull Document document, @NotNull ID<?, ?> indexId, long value) {
+  public long set(@Nonnull Document document, @Nonnull ID<?, ?> indexId, long value) {
     List<IdVersionInfo> list = document.getUserData(KEY);
     if (list == null) {
       list = ((UserDataHolderEx)document).putUserDataIfAbsent(KEY, new ArrayList<>());
@@ -67,7 +67,7 @@ public class PerIndexDocumentVersionMap {
     }
   }
 
-  public long get(@NotNull Document document, @NotNull ID<?, ?> indexId) {
+  public long get(@Nonnull Document document, @Nonnull ID<?, ?> indexId) {
     List<IdVersionInfo> list = document.getUserData(KEY);
     if (list == null) {
       return INVALID_STAMP;
@@ -87,7 +87,7 @@ public class PerIndexDocumentVersionMap {
     }
   }
 
-  public void clearForDocument(@NotNull Document document) {
+  public void clearForDocument(@Nonnull Document document) {
     document.putUserData(KEY, new ArrayList<>());
   }
   public void clear() {

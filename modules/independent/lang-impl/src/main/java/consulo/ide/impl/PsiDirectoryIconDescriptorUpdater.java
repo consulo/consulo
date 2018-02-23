@@ -32,7 +32,7 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -43,7 +43,7 @@ import javax.swing.*;
 public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     if (element instanceof PsiDirectory) {
       PsiDirectory psiDirectory = (PsiDirectory)element;
       VirtualFile virtualFile = psiDirectory.getVirtualFile();

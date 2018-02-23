@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TableLayout;
 import consulo.ui.shared.StaticPosition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,9 +59,9 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate implements Ta
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public TableLayout add(@NotNull Component component, @NotNull TableCell tableCell) {
+  public TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell) {
     GridBagConstraints constraints = new GridBagConstraints();
     constraints.gridwidth = 1;
     constraints.anchor = GridBagConstraints.WEST;

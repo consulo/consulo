@@ -17,7 +17,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Performs lazy initialization of a toolwindow registered in plugin.xml.
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * @see ToolWindowEP
  */
 public interface ToolWindowFactory {
-  void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow);
+  void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
 
   /**
    * Perform additional initialisation routine here
@@ -56,7 +56,7 @@ public interface ToolWindowFactory {
    *
    * @see ToolWindow#isAvailable()
    */
-  default boolean shouldBeAvailable(@NotNull Project project) {
+  default boolean shouldBeAvailable(@Nonnull Project project) {
     return true;
   }
 

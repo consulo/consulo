@@ -34,8 +34,8 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.io.PathKt;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.nio.file.Path;
@@ -74,17 +74,17 @@ public class ProjectUtil {
   }
 
   @Nullable
-  public static String getProjectLocationString(@NotNull final Project project) {
+  public static String getProjectLocationString(@Nonnull final Project project) {
     return FileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 
-  @NotNull
-  public static String calcRelativeToProjectPath(@NotNull final VirtualFile file, @Nullable final Project project, final boolean includeFilePath) {
+  @Nonnull
+  public static String calcRelativeToProjectPath(@Nonnull final VirtualFile file, @Nullable final Project project, final boolean includeFilePath) {
     return calcRelativeToProjectPath(file, project, includeFilePath, false, false);
   }
 
-  @NotNull
-  public static String calcRelativeToProjectPath(@NotNull final VirtualFile file,
+  @Nonnull
+  public static String calcRelativeToProjectPath(@Nonnull final VirtualFile file,
                                                  @Nullable final Project project,
                                                  final boolean includeFilePath,
                                                  final boolean includeUniqueFilePath,
@@ -143,12 +143,12 @@ public class ProjectUtil {
     return calcRelativeToProjectPath(file, project, true);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static Project guessProjectForFile(VirtualFile file) {
     return ProjectLocator.getInstance().guessProjectForFile(file);
   }
 
-  @NotNull
+  @Nonnull
   public static Project guessCurrentProject(JComponent component) {
     Project project = null;
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();

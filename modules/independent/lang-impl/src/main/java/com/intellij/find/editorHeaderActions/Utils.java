@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -70,13 +70,13 @@ public class Utils {
     }
   }
 
-  @NotNull
-  public static CustomShortcutSet shortcutSetOf(@NotNull List<Shortcut> shortcuts) {
+  @Nonnull
+  public static CustomShortcutSet shortcutSetOf(@Nonnull List<Shortcut> shortcuts) {
     return new CustomShortcutSet(shortcuts.toArray(new Shortcut[shortcuts.size()]));
   }
 
-  @NotNull
-  public static List<Shortcut> shortcutsOf(@NotNull String actionId) {
+  @Nonnull
+  public static List<Shortcut> shortcutsOf(@Nonnull String actionId) {
     AnAction action = ActionManager.getInstance().getAction(actionId);
     return action == null ? ContainerUtil.<Shortcut>emptyList() : ContainerUtil.immutableList(action.getShortcutSet().getShortcuts());
   }

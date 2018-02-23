@@ -15,7 +15,7 @@
  */
 package com.intellij.util.enumeration;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
@@ -36,7 +36,7 @@ public final class EmptyEnumeration<E> implements Enumeration<E> {
     throw new NoSuchElementException();
   }
 
-  @NotNull
+  @Nonnull
   public static <E> Enumeration<E> getInstance() {
     //noinspection unchecked
     return INSTANCE;

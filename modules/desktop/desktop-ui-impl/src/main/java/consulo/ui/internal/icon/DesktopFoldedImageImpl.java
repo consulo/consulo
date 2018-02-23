@@ -18,7 +18,7 @@ package consulo.ui.internal.icon;
 import com.intellij.ui.LayeredIcon;
 import consulo.ui.image.FoldedImage;
 import consulo.ui.internal.SwingIconWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import java.util.Arrays;
  * @since 11-Sep-17
  */
 public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrapper, FoldedImage {
-  @NotNull
+  @Nonnull
   public static Icon[] remap(consulo.ui.image.Image[] icons) {
     return Arrays.stream(icons).map(DesktopFoldedImageImpl::to).toArray(Icon[]::new);
   }
@@ -42,12 +42,12 @@ public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrap
 
   private final consulo.ui.image.Image[] myImages;
 
-  public DesktopFoldedImageImpl(@NotNull consulo.ui.image.Image... images) {
+  public DesktopFoldedImageImpl(@Nonnull consulo.ui.image.Image... images) {
     super(remap(images));
     myImages = images;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon toSwingIcon() {
     return this;
@@ -63,7 +63,7 @@ public class DesktopFoldedImageImpl extends LayeredIcon implements SwingIconWrap
     return getIconHeight();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public consulo.ui.image.Image[] getImages() {
     return myImages;

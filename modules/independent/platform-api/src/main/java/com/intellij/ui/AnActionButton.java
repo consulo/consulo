@@ -18,8 +18,8 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,7 +101,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     }
   }
   
-  public final void addCustomUpdater(@NotNull AnActionButtonUpdater updater) {
+  public final void addCustomUpdater(@Nonnull AnActionButtonUpdater updater) {
     if (myUpdaters == null) {
       myUpdaters = new HashSet<AnActionButtonUpdater>();
     }

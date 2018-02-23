@@ -18,7 +18,7 @@ package consulo.util.ui.components;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ public class VerticalLayoutPanel extends JBPanel<VerticalLayoutPanel> {
     super(new VerticalFlowLayout(JBUI.scale(hgap), JBUI.scale(vgap)));
   }
 
-  @NotNull
+  @Nonnull
   public VerticalLayoutPanel addComponent(Component comp) {
     add(comp);
     return this;

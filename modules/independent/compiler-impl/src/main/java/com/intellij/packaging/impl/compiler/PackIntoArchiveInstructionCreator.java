@@ -21,7 +21,7 @@ import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
 import com.intellij.packaging.elements.IncrementalCompilerInstructionCreator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -40,7 +40,7 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
   }
 
   @Override
-  public void addFileCopyInstruction(@NotNull VirtualFile file, @NotNull String outputFileName) {
+  public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
     final String pathInJar = childPathInJar(outputFileName);
     if (myContext.addDestination(file, new ArchiveDestinationInfo(pathInJar, myArchivePackageInfo, myDestinationInfo))) {
       myArchivePackageInfo.addContent(pathInJar, file);
@@ -52,13 +52,13 @@ public class PackIntoArchiveInstructionCreator extends IncrementalCompilerInstru
   }
 
   @Override
-  public PackIntoArchiveInstructionCreator subFolder(@NotNull String directoryName) {
+  public PackIntoArchiveInstructionCreator subFolder(@Nonnull String directoryName) {
     return new PackIntoArchiveInstructionCreator(myContext, myArchivePackageInfo, childPathInJar(directoryName), myDestinationInfo);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter) {
+  public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
     final ArchivePackageInfo archivePackageInfo = new ArchivePackageInfo(packageWriter);
     final String outputPath = myDestinationInfo.getOutputPath() + "/" + archiveFileName;
     if (!myContext.registerJarFile(archivePackageInfo, outputPath)) {

@@ -25,7 +25,7 @@ package com.intellij.util.containers;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.ParameterizedType;
@@ -573,9 +573,10 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     final K key;
     volatile V val;
     volatile Node<K, V> next;
-    @NotNull final TObjectHashingStrategy<K> myHashingStrategy;
+    @Nonnull
+    final TObjectHashingStrategy<K> myHashingStrategy;
 
-    Node(int hash, K key, V val, Node<K, V> next, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+    Node(int hash, K key, V val, Node<K, V> next, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
       this.hash = hash;
       this.key = key;
       this.val = val;
@@ -798,7 +799,8 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
   private transient ValuesView<K, V> values;
   private transient EntrySetView<K, V> entrySet;
 
-  @NotNull private final TObjectHashingStrategy<K> myHashingStrategy;
+  @Nonnull
+  private final TObjectHashingStrategy<K> myHashingStrategy;
 
     /* ---------------- Public operations -------------- */
 
@@ -886,7 +888,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
   };
 
-  public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     if (!(loadFactor > 0.0f) || initialCapacity < 0 || concurrencyLevel <= 0) {
       throw new IllegalArgumentException();
     }
@@ -901,7 +903,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     myHashingStrategy = hashingStrategy == THIS ? this : hashingStrategy;
   }
 
-  public ConcurrentHashMap(@NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  public ConcurrentHashMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     this(DEFAULT_CAPACITY, LOAD_FACTOR, NCPU, hashingStrategy);
   }
 
@@ -938,7 +940,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key is null
    */
   @Override
-  public V get(@NotNull Object key) {
+  public V get(@Nonnull Object key) {
     Node<K, V>[] tab;
     Node<K, V> e, p;
     int n, eh;
@@ -988,7 +990,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified value is null
    */
   @Override
-  public boolean containsValue(@NotNull Object value) {
+  public boolean containsValue(@Nonnull Object value) {
     Node<K, V>[] t;
     if ((t = table) != null) {
       Traverser<K, V> it = new Traverser<K, V>(t, t.length, 0, t.length);
@@ -1016,14 +1018,14 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key or value is null
    */
   @Override
-  public V put(@NotNull K key, @NotNull V value) {
+  public V put(@Nonnull K key, @Nonnull V value) {
     return putVal(key, value, false);
   }
 
   /**
    * Implementation for put and putIfAbsent
    */
-  private V putVal(@NotNull K key, @NotNull V value, boolean onlyIfAbsent) {
+  private V putVal(@Nonnull K key, @Nonnull V value, boolean onlyIfAbsent) {
     int hash = hash((K)key);
     int binCount = 0;
     for (Node<K, V>[] tab = table; ; ) {
@@ -1421,7 +1423,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key or value is null
    */
   @Override
-  public V putIfAbsent(@NotNull K key, @NotNull V value) {
+  public V putIfAbsent(@Nonnull K key, @Nonnull V value) {
     return putVal(key, value, true);
   }
 
@@ -1431,7 +1433,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key is null
    */
   @Override
-  public boolean remove(@NotNull Object key, Object value) {
+  public boolean remove(@Nonnull Object key, Object value) {
     return value != null && replaceNode(key, null, value) != null;
   }
 
@@ -1441,7 +1443,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if any of the arguments are null
    */
   @Override
-  public boolean replace(@NotNull K key, @NotNull V oldValue, @NotNull V newValue) {
+  public boolean replace(@Nonnull K key, @Nonnull V oldValue, @Nonnull V newValue) {
     return replaceNode(key, newValue, oldValue) != null;
   }
 
@@ -1453,7 +1455,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key or value is null
    */
   @Override
-  public V replace(@NotNull K key, @NotNull V value) {
+  public V replace(@Nonnull K key, @Nonnull V value) {
     return replaceNode(key, value, null);
   }
 
@@ -1471,7 +1473,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
    * @throws NullPointerException if the specified key is null
    */
   @SuppressWarnings("override") //no method in JDK6
-  public V getOrDefault(@NotNull Object key, V defaultValue) {
+  public V getOrDefault(@Nonnull Object key, V defaultValue) {
     V v;
     return (v = get(key)) == null ? defaultValue : v;
   }
@@ -1543,7 +1545,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
   private static final class ForwardingNode<K, V> extends Node<K, V> {
     private final Node<K, V>[] nextTable;
 
-    private ForwardingNode(Node<K, V>[] tab, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+    private ForwardingNode(Node<K, V>[] tab, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
       super(MOVED, null, null, null, hashingStrategy);
       this.nextTable = tab;
     }
@@ -3089,7 +3091,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
      * re-establish). We do not and cannot guarantee more.
      */
     @Override
-    public V setValue(@NotNull V value) {
+    public V setValue(@Nonnull V value) {
       V v = val;
       val = value;
       map.put(key, value);
@@ -3106,7 +3108,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
           implements Collection<E> {
     final ConcurrentHashMap<K, V> map;
 
-    CollectionView(@NotNull ConcurrentHashMap<K, V> map) {
+    CollectionView(@Nonnull ConcurrentHashMap<K, V> map) {
       this.map = map;
     }
 
@@ -3160,7 +3162,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
 
     private static final String oomeMsg = "Required array size too large";
 
-    @NotNull
+    @Nonnull
     @Override
     public final Object[] toArray() {
       long sz = map.mappingCount();
@@ -3188,10 +3190,10 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
       return (i == n) ? r : Arrays.copyOf(r, i);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public final <T> T[] toArray(@NotNull T[] a) {
+    public final <T> T[] toArray(@Nonnull T[] a) {
       long sz = map.mappingCount();
       if (sz > MAX_ARRAY_SIZE) {
         throw new OutOfMemoryError(oomeMsg);
@@ -3254,7 +3256,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final boolean containsAll(@NotNull Collection<?> c) {
+    public final boolean containsAll(@Nonnull Collection<?> c) {
       if (c != this) {
         for (Object e : c) {
           if (e == null || !contains(e)) {
@@ -3266,7 +3268,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final boolean removeAll(@NotNull Collection<?> c) {
+    public final boolean removeAll(@Nonnull Collection<?> c) {
       boolean modified = false;
       for (Iterator<E> it = iterator(); it.hasNext(); ) {
         if (c.contains(it.next())) {
@@ -3278,7 +3280,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final boolean retainAll(@NotNull Collection<?> c) {
+    public final boolean retainAll(@Nonnull Collection<?> c) {
       boolean modified = false;
       for (Iterator<E> it = iterator(); it.hasNext(); ) {
         if (!c.contains(it.next())) {
@@ -3344,7 +3346,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     /**
      * @return an iterator over the keys of the backing map
      */
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<K> iterator() {
       Node<K, V>[] t;
@@ -3364,7 +3366,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
      *                                       for additions was provided
      */
     @Override
-    public boolean add(@NotNull K e) {
+    public boolean add(@Nonnull K e) {
       V v;
       if ((v = value) == null) {
         throw new UnsupportedOperationException();
@@ -3384,7 +3386,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
      *                                       for additions was provided
      */
     @Override
-    public boolean addAll(@NotNull Collection<? extends K> c) {
+    public boolean addAll(@Nonnull Collection<? extends K> c) {
       boolean added = false;
       V v;
       if ((v = value) == null) {
@@ -3445,7 +3447,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
       return false;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public final Iterator<V> iterator() {
       ConcurrentHashMap<K, V> m = map;
@@ -3460,7 +3462,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public final boolean addAll(@NotNull Collection<? extends V> c) {
+    public final boolean addAll(@Nonnull Collection<? extends V> c) {
       throw new UnsupportedOperationException();
     }
   }
@@ -3500,7 +3502,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     /**
      * @return an iterator over the entries of the backing map
      */
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       ConcurrentHashMap<K, V> m = map;
@@ -3515,7 +3517,7 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     }
 
     @Override
-    public boolean addAll(@NotNull Collection<? extends Entry<K, V>> c) {
+    public boolean addAll(@Nonnull Collection<? extends Entry<K, V>> c) {
       boolean added = false;
       for (Entry<K, V> e : c) {
         if (add(e)) {
@@ -3602,11 +3604,11 @@ public final class ConcurrentHashMap<K, V> extends AbstractMap<K, V>
     return spread(myHashingStrategy.computeHashCode(key));
   }
 
-  private boolean isEqual(@NotNull K key1, K key2) {
+  private boolean isEqual(@Nonnull K key1, K key2) {
     return isEqual(key1, key2, myHashingStrategy);
   }
 
-  private static <K> boolean isEqual(@NotNull K key1, K key2, @NotNull TObjectHashingStrategy<K> hashingStrategy) {
+  private static <K> boolean isEqual(@Nonnull K key1, K key2, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
     return key1 == key2 || key2 != null && hashingStrategy.equals(key1, key2);
   }
 }

@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,6 +33,6 @@ public interface RulePriorityAwareSettings extends ArrangementSettings {
    * <b>Note:</b> It's expected that rules sort is stable
    * @return list of rules sorted in order of matching
    */
-  @NotNull
+  @Nonnull
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 }

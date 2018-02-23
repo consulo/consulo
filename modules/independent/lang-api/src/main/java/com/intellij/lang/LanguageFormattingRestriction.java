@@ -17,11 +17,11 @@ package com.intellij.lang;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface LanguageFormattingRestriction {
   ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create(
     "com.intellij.lang.formatter.restriction");
 
-  boolean isFormatterAllowed(@NotNull PsiElement context);
+  boolean isFormatterAllowed(@Nonnull PsiElement context);
 }

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -40,6 +40,6 @@ public abstract class FileCopyPatcher {
    * @param document
    * @param map {@link com.intellij.codeInsight.completion.CompletionInitializationContext#START_OFFSET} should be valid after return
    */
-  public abstract void patchFileCopy(@NotNull final PsiFile fileCopy, @NotNull Document document, @NotNull OffsetMap map);
+  public abstract void patchFileCopy(@Nonnull final PsiFile fileCopy, @Nonnull Document document, @Nonnull OffsetMap map);
 
 }

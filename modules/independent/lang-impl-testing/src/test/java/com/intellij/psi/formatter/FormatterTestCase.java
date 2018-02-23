@@ -61,7 +61,7 @@ import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.io.File;
@@ -129,7 +129,7 @@ public abstract class FormatterTestCase extends LightPlatformTestCase {
     doTextTest(text, textAfter, CheckPolicy.BOTH);
   }
 
-  protected void doTextTest(final String text, final String textAfter, @NotNull CheckPolicy checkPolicy)
+  protected void doTextTest(final String text, final String textAfter, @Nonnull CheckPolicy checkPolicy)
     throws IncorrectOperationException {
     final String fileName = "before." + getFileExtension();
     final PsiFile file = createFileFromText(text, fileName, PsiFileFactory.getInstance(getProject()));

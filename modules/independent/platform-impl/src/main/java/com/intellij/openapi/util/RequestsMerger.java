@@ -20,8 +20,8 @@ import com.intellij.openapi.progress.SomeQueue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,7 +163,7 @@ public class RequestsMerger {
 
   private static enum MyState {
     empty() {
-      @NotNull
+      @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.request.equals(action)) {
           return MyState.requestSubmitted;
@@ -172,7 +172,7 @@ public class RequestsMerger {
         return this;
       }},
     inProgress() {
-      @NotNull
+      @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return MyState.empty;
@@ -183,7 +183,7 @@ public class RequestsMerger {
         return this;
       }},
     inProgressRequestSubmitted() {
-      @NotNull
+      @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return MyState.requestSubmitted;
@@ -194,7 +194,7 @@ public class RequestsMerger {
         return this;
       }},
     requestSubmitted() {
-      @NotNull
+      @Nonnull
       public MyState transition(MyAction action) {
         if (MyAction.start.equals(action)) {
           return MyState.inProgress;
@@ -207,7 +207,7 @@ public class RequestsMerger {
       }};
 
     // under lock
-    @NotNull
+    @Nonnull
     public abstract MyState transition(final MyAction action);
 
     private static void logWrongAction(final MyState state, final MyAction action) {

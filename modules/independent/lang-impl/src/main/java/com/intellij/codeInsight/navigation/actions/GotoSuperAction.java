@@ -28,14 +28,14 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 
   @NonNls public static final String FEATURE_ID = "navigation.goto.super";
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return this;
@@ -43,7 +43,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull final Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     int offset = editor.getCaretModel().getOffset();

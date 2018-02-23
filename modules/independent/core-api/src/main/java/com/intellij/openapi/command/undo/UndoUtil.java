@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UndoUtil {
   private UndoUtil() {
@@ -36,7 +36,7 @@ public class UndoUtil {
    *
    * @param file to make editors of to respond to undo action.
    */
-  public static void markPsiFileForUndo(@NotNull final PsiFile file) {
+  public static void markPsiFileForUndo(@Nonnull final PsiFile file) {
     Project project = file.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     if (document == null) return;
@@ -46,15 +46,15 @@ public class UndoUtil {
   /**
    * @deprecated please use CommandProcessor.getInstance().addAffectedFiles instead
    */
-  public static void markVirtualFileForUndo(@NotNull Project project, @NotNull VirtualFile file) {
+  public static void markVirtualFileForUndo(@Nonnull Project project, @Nonnull VirtualFile file) {
     CommandProcessor.getInstance().addAffectedFiles(project, file);
   }
 
-  public static void disableUndoFor(@NotNull Document document) {
+  public static void disableUndoFor(@Nonnull Document document) {
     document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
   }
 
-  public static boolean isUndoDisabledFor(@NotNull Document document) {
+  public static boolean isUndoDisabledFor(@Nonnull Document document) {
     return Boolean.TRUE.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO));
   }
 }

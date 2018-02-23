@@ -52,8 +52,8 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -88,9 +88,9 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private final ArtifactValidationManagerImpl myValidationManager;
   private boolean myDisposed;
 
-  public ArtifactEditorImpl(final @NotNull ArtifactsStructureConfigurableContext context,
-                            @NotNull Artifact artifact,
-                            @NotNull ArtifactEditorSettings settings) {
+  public ArtifactEditorImpl(final @Nonnull ArtifactsStructureConfigurableContext context,
+                            @Nonnull Artifact artifact,
+                            @Nonnull ArtifactEditorSettings settings) {
     myContext = createArtifactEditorContext(context);
     myOriginalArtifact = artifact;
     myProject = context.getProject();
@@ -352,7 +352,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   @Override
-  public void addNewPackagingElement(@NotNull PackagingElementType<?> type) {
+  public void addNewPackagingElement(@Nonnull PackagingElementType<?> type) {
     myLayoutTreeComponent.addNewPackagingElement(type);
     mySourceItemsTree.rebuildTree();
   }
@@ -363,18 +363,18 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   @Override
-  public void removePackagingElement(@NotNull final String pathToParent, @NotNull final PackagingElement<?> element) {
+  public void removePackagingElement(@Nonnull final String pathToParent, @Nonnull final PackagingElement<?> element) {
     doReplaceElement(pathToParent, element, null);
   }
 
   @Override
-  public void replacePackagingElement(@NotNull final String pathToParent,
-                                      @NotNull final PackagingElement<?> element,
-                                      @NotNull final PackagingElement<?> replacement) {
+  public void replacePackagingElement(@Nonnull final String pathToParent,
+                                      @Nonnull final PackagingElement<?> element,
+                                      @Nonnull final PackagingElement<?> replacement) {
     doReplaceElement(pathToParent, element, replacement);
   }
 
-  private void doReplaceElement(final @NotNull String pathToParent, final @NotNull PackagingElement<?> element, final @Nullable PackagingElement replacement) {
+  private void doReplaceElement(final @Nonnull String pathToParent, final @Nonnull PackagingElement<?> element, final @Nullable PackagingElement replacement) {
     myLayoutTreeComponent.editLayout(new Runnable() {
       @Override
       public void run() {
@@ -426,7 +426,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     return myLayoutTreeComponent;
   }
 
-  public void updateOutputPath(@NotNull String oldArtifactName, @NotNull final String newArtifactName) {
+  public void updateOutputPath(@Nonnull String oldArtifactName, @Nonnull final String newArtifactName) {
     final String oldDefaultPath = ArtifactUtil.getDefaultArtifactOutputPath(oldArtifactName, myProject);
     if (Comparing.equal(oldDefaultPath, getConfiguredOutputPath())) {
       setOutputPath(ArtifactUtil.getDefaultArtifactOutputPath(newArtifactName, myProject));
@@ -455,7 +455,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   @Override
-  public void putLibraryIntoDefaultLocation(@NotNull Library library) {
+  public void putLibraryIntoDefaultLocation(@Nonnull Library library) {
     myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
   }
 

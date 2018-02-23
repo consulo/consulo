@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This class is a data structure specialized for working with the indexed segments, i.e. it holds numerous mappings like
@@ -57,7 +57,7 @@ public class SegmentArray {
     myEnds[i] = endOffset;
   }
 
-  protected void replace(int startOffset, @NotNull SegmentArray data, int len) {
+  protected void replace(int startOffset, @Nonnull SegmentArray data, int len) {
     System.arraycopy(data.myStarts, 0, myStarts, startOffset, len);
     System.arraycopy(data.myEnds, 0, myEnds, startOffset, len);
   }
@@ -75,8 +75,8 @@ public class SegmentArray {
     return currentArraySize;
   }
 
-  @NotNull
-  protected static int[] reallocateArray(@NotNull int[] array, int index) {
+  @Nonnull
+  protected static int[] reallocateArray(@Nonnull int[] array, int index) {
     if (index < array.length) return array;
 
     int[] newArray = new int[calcCapacity(array.length, index)];
@@ -161,22 +161,22 @@ public class SegmentArray {
     mySegmentCount -= endIndex - startIndex;
   }
 
-  @NotNull
-  protected int[] remove(@NotNull int[] array, int startIndex, int endIndex) {
+  @Nonnull
+  protected int[] remove(@Nonnull int[] array, int startIndex, int endIndex) {
     if (endIndex < mySegmentCount) {
       System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
     }
     return array;
   }
 
-  protected void insert(@NotNull SegmentArray segmentArray, int startIndex) {
+  protected void insert(@Nonnull SegmentArray segmentArray, int startIndex) {
     myStarts = insert(myStarts, segmentArray.myStarts, startIndex, segmentArray.getSegmentCount());
     myEnds = insert(myEnds, segmentArray.myEnds, startIndex, segmentArray.getSegmentCount());
     mySegmentCount += segmentArray.getSegmentCount();
   }
 
-  @NotNull
-  protected int[] insert(@NotNull int[] array, @NotNull int[] insertArray, int startIndex, int insertLength) {
+  @Nonnull
+  protected int[] insert(@Nonnull int[] array, @Nonnull int[] insertArray, int startIndex, int insertLength) {
     int[] newArray = reallocateArray(array, mySegmentCount + insertLength);
     if (startIndex < mySegmentCount) {
       System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);

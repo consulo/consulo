@@ -18,7 +18,7 @@ package com.intellij.usageView;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.Content;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -43,5 +43,5 @@ public abstract class UsageViewManager {
 
   public abstract Content getSelectedContent();
 
-  public abstract void closeContent(@NotNull Content usageView);
+  public abstract void closeContent(@Nonnull Content usageView);
 }

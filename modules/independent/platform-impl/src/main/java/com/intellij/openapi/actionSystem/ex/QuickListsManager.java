@@ -31,7 +31,7 @@ import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -44,17 +44,17 @@ public class QuickListsManager implements ApplicationComponent {
   private final ActionManager myActionManager;
   private final SchemesManager<QuickList, QuickList> mySchemesManager;
 
-  public QuickListsManager(@NotNull ActionManager actionManager, @NotNull SchemesManagerFactory schemesManagerFactory) {
+  public QuickListsManager(@Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myActionManager = actionManager;
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList>() {
-      @NotNull
+      @Nonnull
       @Override
-      public QuickList readScheme(@NotNull Element element) {
+      public QuickList readScheme(@Nonnull Element element) {
         return createItem(element);
       }
 
       @Override
-      public Element writeScheme(@NotNull QuickList scheme) {
+      public Element writeScheme(@Nonnull QuickList scheme) {
         Element element = new Element(LIST_TAG);
         scheme.writeExternal(element);
         return element;
@@ -66,15 +66,15 @@ public class QuickListsManager implements ApplicationComponent {
     return ApplicationManager.getApplication().getComponent(QuickListsManager.class);
   }
 
-  @NotNull
-  private static QuickList createItem(@NotNull Element element) {
+  @Nonnull
+  private static QuickList createItem(@Nonnull Element element) {
     QuickList item = new QuickList();
     item.readExternal(element);
     return item;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "QuickListsManager";
   }
@@ -103,7 +103,7 @@ public class QuickListsManager implements ApplicationComponent {
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   public QuickList[] getAllQuickLists() {
     Collection<QuickList> lists = mySchemesManager.getAllSchemes();
     return lists.toArray(new QuickList[lists.size()]);
@@ -126,7 +126,7 @@ public class QuickListsManager implements ApplicationComponent {
     }
   }
 
-  public void setQuickLists(@NotNull QuickList[] quickLists) {
+  public void setQuickLists(@Nonnull QuickList[] quickLists) {
     mySchemesManager.clearAllSchemes();
     unregisterActions();
     for (QuickList quickList : quickLists) {
@@ -138,7 +138,7 @@ public class QuickListsManager implements ApplicationComponent {
   private static class InvokeQuickListAction extends QuickSwitchSchemeAction {
     private final QuickList myQuickList;
 
-    public InvokeQuickListAction(@NotNull QuickList quickList) {
+    public InvokeQuickListAction(@Nonnull QuickList quickList) {
       myQuickList = quickList;
       myActionPlace = ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION;
       getTemplatePresentation().setDescription(myQuickList.getDescription());
@@ -146,7 +146,7 @@ public class QuickListsManager implements ApplicationComponent {
     }
 
     @Override
-    protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+    protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
       ActionManager actionManager = ActionManager.getInstance();
       for (String actionId : myQuickList.getActionIds()) {
         if (QuickList.SEPARATOR_ID.equals(actionId)) {

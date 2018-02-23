@@ -22,8 +22,8 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBRectangle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,9 +46,9 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
 
   private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
 
-  public NotificationBalloonActionProvider(@NotNull BalloonImpl balloon,
+  public NotificationBalloonActionProvider(@Nonnull BalloonImpl balloon,
                                            @Nullable Component repaintPanel,
-                                           @NotNull BalloonLayoutData layoutData,
+                                           @Nonnull BalloonLayoutData layoutData,
                                            @Nullable String displayGroupId) {
     myLayoutData = layoutData;
     myDisplayGroupId = displayGroupId;
@@ -56,7 +56,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
     myRepaintPanel = repaintPanel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<BalloonImpl.ActionButton> createActions() {
     myActions = new ArrayList<BalloonImpl.ActionButton>();
@@ -132,7 +132,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       }
     }) {
       @Override
-      protected void paintIcon(@NotNull Graphics g, @NotNull Icon icon) {
+      protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
         icon.paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
       }
     };
@@ -142,7 +142,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
   }
 
   @Override
-  public void layout(@NotNull Rectangle bounds) {
+  public void layout(@Nonnull Rectangle bounds) {
     Dimension closeSize = myCloseButton.getPreferredSize();
     Insets borderInsets = myBalloon.getShadowBorderInsets();
     int x = bounds.x + bounds.width - borderInsets.right - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;

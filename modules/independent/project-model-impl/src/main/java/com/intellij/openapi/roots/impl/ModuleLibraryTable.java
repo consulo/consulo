@@ -30,8 +30,7 @@ import com.intellij.util.containers.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.FilteringIterator;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,7 +64,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Library[] getLibraries() {
     final ArrayList<Library> result = new ArrayList<Library>();
     final Iterator<Library> libraryIterator = getLibraryIterator();
@@ -84,14 +83,14 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   }
 
   @Override
-  public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
+  public Library createLibrary(String name, @javax.annotation.Nullable PersistentLibraryKind kind) {
     final ModuleLibraryOrderEntryImpl orderEntry = new ModuleLibraryOrderEntryImpl(name, kind, myRootLayer);
     myRootLayer.addOrderEntry(orderEntry);
     return orderEntry.getLibrary();
   }
 
   @Override
-  public void removeLibrary(@NotNull Library library) {
+  public void removeLibrary(@Nonnull Library library) {
     final Iterator<OrderEntry> orderIterator = myRootLayer.getOrderIterator();
     while (orderIterator.hasNext()) {
       OrderEntry orderEntry = orderIterator.next();
@@ -109,7 +108,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<Library> getLibraryIterator() {
     FilteringIterator<OrderEntry, LibraryOrderEntry> filteringIterator =
       new FilteringIterator<OrderEntry, LibraryOrderEntry>(myRootLayer.getOrderIterator(), MODULE_LIBRARY_ORDER_ENTRY_FILTER);
@@ -132,8 +131,8 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   }
 
   @Override
-  @Nullable
-  public Library getLibraryByName(@NotNull String name) {
+  @javax.annotation.Nullable
+  public Library getLibraryByName(@Nonnull String name) {
     final Iterator<Library> libraryIterator = getLibraryIterator();
     while (libraryIterator.hasNext()) {
       Library library = libraryIterator.next();

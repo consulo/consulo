@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.lang.Commenter;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author oleg

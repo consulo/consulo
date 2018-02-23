@@ -23,7 +23,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBCheckBox;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -50,7 +50,7 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
     customizeSettings();
   }
 
-  public void reset(@NotNull CodeStyleSettings settings) {
+  public void reset(@Nonnull CodeStyleSettings settings) {
     CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
     myLineCommentAtFirstColumnCb.setSelected(langSettings.LINE_COMMENT_AT_FIRST_COLUMN);
     myBlockCommentAtFirstJBCheckBox.setSelected(langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN);
@@ -59,14 +59,14 @@ public class CommenterForm implements CodeStyleSettingsCustomizable {
   }
   
   
-  public void apply(@NotNull CodeStyleSettings settings) {
+  public void apply(@Nonnull CodeStyleSettings settings) {
     CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
     langSettings.LINE_COMMENT_AT_FIRST_COLUMN = myLineCommentAtFirstColumnCb.isSelected();
     langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN = myBlockCommentAtFirstJBCheckBox.isSelected();
     langSettings.LINE_COMMENT_ADD_SPACE = myLineCommentAddSpaceCb.isSelected();
   }
   
-  public boolean isModified(@NotNull CodeStyleSettings settings) {
+  public boolean isModified(@Nonnull CodeStyleSettings settings) {
     CommonCodeStyleSettings langSettings = settings.getCommonSettings(myLanguage);
     return myLineCommentAtFirstColumnCb.isSelected() != langSettings.LINE_COMMENT_AT_FIRST_COLUMN
            || myBlockCommentAtFirstJBCheckBox.isSelected() != langSettings.BLOCK_COMMENT_AT_FIRST_COLUMN

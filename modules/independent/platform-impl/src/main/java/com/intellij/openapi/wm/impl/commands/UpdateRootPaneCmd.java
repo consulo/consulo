@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.commands;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -25,7 +25,7 @@ import javax.swing.*;
 public final class UpdateRootPaneCmd extends FinalizableCommand {
   private final JRootPane myRootPane;
 
-  public UpdateRootPaneCmd(@NotNull final JRootPane rootPane, final Runnable finishCallBack) {
+  public UpdateRootPaneCmd(@Nonnull final JRootPane rootPane, final Runnable finishCallBack) {
     super(finishCallBack);
     myRootPane = rootPane;
   }

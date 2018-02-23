@@ -17,29 +17,29 @@
 package com.intellij.util.diff;
 
 import com.intellij.openapi.util.Ref;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
  */
 public interface FlyweightCapableTreeStructure<T> {
-  @NotNull
+  @Nonnull
   T getRoot();
 
   @Nullable
-  T getParent(@NotNull T node);
+  T getParent(@Nonnull T node);
 
-  @NotNull
-  T prepareForGetChildren(@NotNull T node);
+  @Nonnull
+  T prepareForGetChildren(@Nonnull T node);
 
-  int getChildren(@NotNull T parent, @NotNull Ref<T[]> into);
+  int getChildren(@Nonnull T parent, @Nonnull Ref<T[]> into);
 
   void disposeChildren(T[] nodes, int count);
 
-  @NotNull
-  CharSequence toString(@NotNull T node);
+  @Nonnull
+  CharSequence toString(@Nonnull T node);
 
-  int getStartOffset(@NotNull T node);
-  int getEndOffset(@NotNull T node);
+  int getStartOffset(@Nonnull T node);
+  int getEndOffset(@Nonnull T node);
 }

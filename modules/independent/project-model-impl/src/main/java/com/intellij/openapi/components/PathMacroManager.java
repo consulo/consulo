@@ -16,10 +16,10 @@
 package com.intellij.openapi.components;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class PathMacroManager implements PathMacroSubstitutor {
-  public static PathMacroManager getInstance(@NotNull ComponentManager componentManager) {
+  public static PathMacroManager getInstance(@Nonnull ComponentManager componentManager) {
     final PathMacroManager component = (PathMacroManager)componentManager.getPicoContainer().getComponentInstanceOfType(PathMacroManager.class);
     assert component != null;
     return component;

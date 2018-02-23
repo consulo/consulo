@@ -44,8 +44,8 @@ import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class FoldingUpdate {
   }
 
   @Nullable
-  static Runnable updateFoldRegions(@NotNull final Editor editor, @NotNull PsiFile file, final boolean applyDefaultState, final boolean quick) {
+  static Runnable updateFoldRegions(@Nonnull final Editor editor, @Nonnull PsiFile file, final boolean applyDefaultState, final boolean quick) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     final Project project = file.getProject();
@@ -110,7 +110,7 @@ public class FoldingUpdate {
   }
 
   private static CachedValueProvider.Result<Runnable> getUpdateResult(PsiFile file,
-                                                                      @NotNull Document document,
+                                                                      @Nonnull Document document,
                                                                       boolean quick,
                                                                       final Project project,
                                                                       final Editor editor,
@@ -137,7 +137,7 @@ public class FoldingUpdate {
 
   private static final Key<Object> LAST_UPDATE_INJECTED_STAMP_KEY = Key.create("LAST_UPDATE_INJECTED_STAMP_KEY");
   @Nullable
-  public static Runnable updateInjectedFoldRegions(@NotNull final Editor editor, @NotNull final PsiFile file, final boolean applyDefaultState) {
+  public static Runnable updateInjectedFoldRegions(@Nonnull final Editor editor, @Nonnull final PsiFile file, final boolean applyDefaultState) {
     if (file instanceof PsiCompiledElement) return null;
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
@@ -161,7 +161,7 @@ public class FoldingUpdate {
       }
       InjectedLanguageUtil.enumerate(injectedDocument, file, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
         @Override
-        public void visit(@NotNull PsiFile injectedFile, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
+        public void visit(@Nonnull PsiFile injectedFile, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
           if (!injectedFile.isValid()) return;
           Editor injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(editor, injectedFile);
           if (!(injectedEditor instanceof EditorWindow)) return;
@@ -208,7 +208,7 @@ public class FoldingUpdate {
    * @param editor the editor that holds file view
    * @return true  if folding initialization available in the Dumb Mode
    */
-  public static boolean supportsDumbModeFolding(@NotNull Editor editor) {
+  public static boolean supportsDumbModeFolding(@Nonnull Editor editor) {
     Project project = editor.getProject();
     if (project != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -225,7 +225,7 @@ public class FoldingUpdate {
    * @param file the file to test
    * @return true  if folding initialization available in the Dumb Mode
    */
-  public static boolean supportsDumbModeFolding(@NotNull PsiFile file) {
+  public static boolean supportsDumbModeFolding(@Nonnull PsiFile file) {
     final FileViewProvider viewProvider = file.getViewProvider();
     for (final Language language : viewProvider.getLanguages()) {
       final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(language);
@@ -235,7 +235,7 @@ public class FoldingUpdate {
     return true;
   }
 
-  static FoldingMap getFoldingsFor(@NotNull PsiFile file, @NotNull Document document, boolean quick) {
+  static FoldingMap getFoldingsFor(@Nonnull PsiFile file, @Nonnull Document document, boolean quick) {
     FoldingMap foldingMap = new FoldingMap();
     if (file instanceof PsiCompiledFile) {
       file = ((PsiCompiledFile)file).getDecompiledPsiFile();
@@ -244,9 +244,9 @@ public class FoldingUpdate {
     return foldingMap;
   }
 
-  private static void getFoldingsFor(@NotNull PsiFile file,
-                                     @NotNull Document document,
-                                     @NotNull FoldingMap elementsToFoldMap,
+  private static void getFoldingsFor(@Nonnull PsiFile file,
+                                     @Nonnull Document document,
+                                     @Nonnull FoldingMap elementsToFoldMap,
                                      boolean quick) {
     final FileViewProvider viewProvider = file.getViewProvider();
     TextRange docRange = TextRange.from(0, document.getTextLength());
@@ -270,8 +270,8 @@ public class FoldingUpdate {
     }
   }
 
-  private static void diagnoseIncorrectRange(@NotNull PsiFile file,
-                                             @NotNull Document document,
+  private static void diagnoseIncorrectRange(@Nonnull PsiFile file,
+                                             @Nonnull Document document,
                                              Language language,
                                              FoldingBuilder foldingBuilder, FoldingDescriptor descriptor, PsiElement psiElement) {
     String message = "Folding descriptor " + descriptor +
@@ -293,13 +293,13 @@ public class FoldingUpdate {
       super(map);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Map<PsiElement, Collection<FoldingDescriptor>> createMap() {
       return new TreeMap<PsiElement, Collection<FoldingDescriptor>>(COMPARE_BY_OFFSET_REVERSED);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Collection<FoldingDescriptor> createCollection() {
       return new ArrayList<FoldingDescriptor>(1);

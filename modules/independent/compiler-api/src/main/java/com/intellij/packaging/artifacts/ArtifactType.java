@@ -24,8 +24,8 @@ import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactProblemsHolder;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 public abstract class ArtifactType {
   @Nullable
-  public static ArtifactType findById(@NotNull @NonNls String id) {
+  public static ArtifactType findById(@Nonnull @NonNls String id) {
     for (ArtifactType type : EP_NAME.getExtensions()) {
       if (id.equals(type.getId())) {
         return type;
@@ -63,39 +63,39 @@ public abstract class ArtifactType {
     return myTitle;
   }                                
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
   @Nullable
-  public String getDefaultPathFor(@NotNull PackagingSourceItem sourceItem) {
+  public String getDefaultPathFor(@Nonnull PackagingSourceItem sourceItem) {
     return getDefaultPathFor(sourceItem.getKindOfProducedElements());
   }
 
   @Nullable
-  public abstract String getDefaultPathFor(@NotNull PackagingElementOutputKind kind);
+  public abstract String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind);
 
-  public boolean isSuitableItem(@NotNull PackagingSourceItem sourceItem) {
+  public boolean isSuitableItem(@Nonnull PackagingSourceItem sourceItem) {
     return true;
   }
 
-  public boolean isAvailableForAdd(@NotNull ModulesProvider modulesProvider) {
+  public boolean isAvailableForAdd(@Nonnull ModulesProvider modulesProvider) {
     return true;
   }
 
-  @NotNull
-  public abstract CompositePackagingElement<?> createRootElement(@NotNull String artifactName);
+  @Nonnull
+  public abstract CompositePackagingElement<?> createRootElement(@Nonnull String artifactName);
 
-  @NotNull
-  public List<? extends ArtifactTemplate> getNewArtifactTemplates(@NotNull PackagingElementResolvingContext context) {
+  @Nonnull
+  public List<? extends ArtifactTemplate> getNewArtifactTemplates(@Nonnull PackagingElementResolvingContext context) {
     return Collections.emptyList();
   }
 
-  public void checkRootElement(@NotNull CompositePackagingElement<?> rootElement, @NotNull Artifact artifact, @NotNull ArtifactProblemsHolder manager) {
+  public void checkRootElement(@Nonnull CompositePackagingElement<?> rootElement, @Nonnull Artifact artifact, @Nonnull ArtifactProblemsHolder manager) {
   }
 
-  @Nullable
-  public List<? extends PackagingElement<?>> getSubstitution(@NotNull Artifact artifact, @NotNull PackagingElementResolvingContext context,
-                                                             @NotNull ArtifactType parentType) {
+  @javax.annotation.Nullable
+  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull Artifact artifact, @Nonnull PackagingElementResolvingContext context,
+                                                             @Nonnull ArtifactType parentType) {
     return null;
   }
 }

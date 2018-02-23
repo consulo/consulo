@@ -5,8 +5,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.Serializable;
@@ -20,16 +19,18 @@ public class ContentRootData extends AbstractExternalEntityData {
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final Map<ExternalSystemSourceType, Collection<SourceRoot>> myData = ContainerUtilRt.newHashMap();
+  @Nonnull
+  private final Map<ExternalSystemSourceType, Collection<SourceRoot>> myData = ContainerUtilRt.newHashMap();
 
-  @NotNull private final String myRootPath;
+  @Nonnull
+  private final String myRootPath;
 
   /**
    * Creates new <code>GradleContentRootImpl</code> object.
    *
    * @param rootPath  path to the root directory
    */
-  public ContentRootData(@NotNull ProjectSystemId owner, @NotNull String rootPath) {
+  public ContentRootData(@Nonnull ProjectSystemId owner, @Nonnull String rootPath) {
     super(owner);
     myRootPath = ExternalSystemApiUtil.toCanonicalPath(rootPath);
   }
@@ -38,13 +39,13 @@ public class ContentRootData extends AbstractExternalEntityData {
    * @param type      target dir type
    * @return          directories of the target type configured for the current content root
    */
-  @NotNull
-  public Collection<SourceRoot> getPaths(@NotNull ExternalSystemSourceType type) {
+  @Nonnull
+  public Collection<SourceRoot> getPaths(@Nonnull ExternalSystemSourceType type) {
     final Collection<SourceRoot> result = myData.get(type);
     return result == null ? Collections.<SourceRoot>emptyList() : result;
   }
 
-  public void storePath(@NotNull ExternalSystemSourceType type, @NotNull String path) throws IllegalArgumentException {
+  public void storePath(@Nonnull ExternalSystemSourceType type, @Nonnull String path) throws IllegalArgumentException {
     storePath(type, path, null);
   }
 
@@ -57,7 +58,7 @@ public class ContentRootData extends AbstractExternalEntityData {
    * @throws IllegalArgumentException   if given path points to the directory that is not located
    *                                    under the {@link #getRootPath() content root}
    */
-  public void storePath(@NotNull ExternalSystemSourceType type, @NotNull String path, @Nullable String packagePrefix) throws IllegalArgumentException {
+  public void storePath(@Nonnull ExternalSystemSourceType type, @Nonnull String path, @javax.annotation.Nullable String packagePrefix) throws IllegalArgumentException {
     if (FileUtil.isAncestor(new File(getRootPath()), new File(path), false)) {
       Collection<SourceRoot> paths = myData.get(type);
       if (paths == null) {
@@ -78,7 +79,7 @@ public class ContentRootData extends AbstractExternalEntityData {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getRootPath() {
     return myRootPath;
   }
@@ -96,23 +97,23 @@ public class ContentRootData extends AbstractExternalEntityData {
   }
 
   public static class SourceRoot implements Serializable {
-    @NotNull
+    @Nonnull
     private final String myPath;
 
-    @Nullable
+    @javax.annotation.Nullable
     private final String myPackagePrefix;
 
-    public SourceRoot(@NotNull String path, @Nullable String prefix) {
+    public SourceRoot(@Nonnull String path, @javax.annotation.Nullable String prefix) {
       myPath = path;
       myPackagePrefix = prefix;
     }
 
-    @NotNull
+    @Nonnull
     public String getPath() {
       return myPath;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public String getPackagePrefix() {
       return myPackagePrefix;
     }
@@ -150,7 +151,7 @@ public class ContentRootData extends AbstractExternalEntityData {
     private static final SourceRootComparator INSTANCE = new SourceRootComparator();
 
     @Override
-    public int compare(@NotNull SourceRoot o1, @NotNull SourceRoot o2) {
+    public int compare(@Nonnull SourceRoot o1, @Nonnull SourceRoot o2) {
       return StringUtil.naturalCompare(o1.myPath, o2.myPath);
     }
   }

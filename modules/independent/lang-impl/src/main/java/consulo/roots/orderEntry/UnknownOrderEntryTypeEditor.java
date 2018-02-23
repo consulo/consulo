@@ -19,16 +19,16 @@ import com.intellij.icons.AllIcons;
 import consulo.roots.impl.UnknownOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
 public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<UnknownOrderEntryImpl>  {
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@NotNull UnknownOrderEntryImpl orderEntry) {
+  public CellAppearanceEx getCellAppearance(@Nonnull UnknownOrderEntryImpl orderEntry) {
     return SimpleTextCellAppearance.invalid(orderEntry.getPresentableName(), AllIcons.Toolbar.Unknown);
   }
 }

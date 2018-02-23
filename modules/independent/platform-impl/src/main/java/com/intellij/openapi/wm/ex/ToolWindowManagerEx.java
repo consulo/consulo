@@ -23,24 +23,24 @@ import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
   @RequiredUIAccess
-  public abstract void initToolWindow(@NotNull ToolWindowEP bean);
+  public abstract void initToolWindow(@Nonnull ToolWindowEP bean);
 
   public static ToolWindowManagerEx getInstanceEx(final Project project) {
     return (ToolWindowManagerEx)getInstance(project);
   }
 
-  public abstract void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l);
+  public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
-  public abstract void addToolWindowManagerListener(@NotNull ToolWindowManagerListener l, @NotNull Disposable parentDisposable);
+  public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeToolWindowManagerListener(@NotNull ToolWindowManagerListener l);
+  public abstract void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
 
   /**
    * @return <code>ID</code> of tool window that was activated last time.
@@ -55,7 +55,7 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
    * @return layout of tool windows.
    */
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   public abstract ToolWindowLayout getLayout();
 
   public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);
@@ -66,19 +66,19 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
    * Copied <code>layout</code> into internal layout and rearranges tool windows.
    */
   @RequiredUIAccess
-  public abstract void setLayout(@NotNull ToolWindowLayout layout);
+  public abstract void setLayout(@Nonnull ToolWindowLayout layout);
 
   public abstract void clearSideStack();
 
   @RequiredUIAccess
-  public abstract void hideToolWindow(@NotNull String id, boolean hideSide);
+  public abstract void hideToolWindow(@Nonnull String id, boolean hideSide);
 
   @RequiredUIAccess
   public void hideToolWindow(final String id, final boolean hideSide, final boolean moveFocus) {
     hideToolWindow(id, hideSide);
   }
 
-  public abstract List<String> getIdsOn(@NotNull ToolWindowAnchor anchor);
+  public abstract List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor);
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency

@@ -21,8 +21,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.IOUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -40,7 +39,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
   public abstract String getDestinationPath(CompileContext context, VirtualFile sourceFile);
 
   @Override
-  public final void processOutdatedItem(CompileContext context, File file, @Nullable ValidityState state) {
+  public final void processOutdatedItem(CompileContext context, File file, @javax.annotation.Nullable ValidityState state) {
     if (state != null) {
       final String destinationPath = ((DestinationFileInfo)state).getDestinationPath();
       new File(destinationPath).delete();
@@ -48,7 +47,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final ProcessingItem[] getProcessingItems(final CompileContext context) {
     return ApplicationManager.getApplication().runReadAction((Computable<ProcessingItem[]>)() -> {
       final VirtualFile[] filesToCopy = getFilesToCopy(context);
@@ -90,7 +89,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return CompilerBundle.message("file.copying.compiler.description");
   }
@@ -109,13 +108,13 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     private final File myFile;
     private final DestinationFileInfo myInfo;
 
-    public CopyItem(@NotNull VirtualFile file, @NotNull String destinationPath) {
+    public CopyItem(@Nonnull VirtualFile file, @Nonnull String destinationPath) {
       myFile = VfsUtilCore.virtualToIoFile(file);
       myInfo = new DestinationFileInfo(destinationPath, new File(destinationPath).exists());
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public File getFile() {
       return myFile;
     }

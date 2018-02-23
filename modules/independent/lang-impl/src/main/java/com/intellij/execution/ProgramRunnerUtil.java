@@ -33,8 +33,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LayeredIcon;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -45,11 +45,11 @@ public class ProgramRunnerUtil {
   }
 
   @Nullable
-  public static ProgramRunner getRunner(@NotNull final String executorId, final RunnerAndConfigurationSettings configuration) {
+  public static ProgramRunner getRunner(@Nonnull final String executorId, final RunnerAndConfigurationSettings configuration) {
     return configuration == null ? null : RunnerRegistry.getInstance().getRunner(executorId, configuration.getConfiguration());
   }
 
-  public static void executeConfiguration(@NotNull ExecutionEnvironment environment, boolean showSettings, boolean assignNewId) {
+  public static void executeConfiguration(@Nonnull ExecutionEnvironment environment, boolean showSettings, boolean assignNewId) {
     if (ExecutorRegistry.getInstance().isStarting(environment)) {
       return;
     }
@@ -108,9 +108,9 @@ public class ProgramRunnerUtil {
     }
   }
 
-  public static void executeConfiguration(@NotNull Project project,
-                                          @NotNull RunnerAndConfigurationSettings configuration,
-                                          @NotNull Executor executor) {
+  public static void executeConfiguration(@Nonnull Project project,
+                                          @Nonnull RunnerAndConfigurationSettings configuration,
+                                          @Nonnull Executor executor) {
     ExecutionEnvironmentBuilder builder;
     try {
       builder = ExecutionEnvironmentBuilder.create(executor, configuration);
@@ -139,7 +139,7 @@ public class ProgramRunnerUtil {
     return configurationIcon;
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getRawIcon(RunnerAndConfigurationSettings settings) {
     RunConfiguration configuration = settings.getConfiguration();
     ConfigurationFactory factory = settings.getFactory();
@@ -148,7 +148,7 @@ public class ProgramRunnerUtil {
     return icon;
   }
 
-  public static Icon getTemporaryIcon(@NotNull Icon rawIcon) {
+  public static Icon getTemporaryIcon(@Nonnull Icon rawIcon) {
     return IconLoader.getTransparentIcon(rawIcon, 0.3f);
   }
 

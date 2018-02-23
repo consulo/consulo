@@ -24,8 +24,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.ui.components.JBCheckBox;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,12 +34,15 @@ import java.awt.event.ActionListener;
 
 public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
 
-  @NotNull private final VcsConfiguration myConfiguration;
+  @Nonnull
+  private final VcsConfiguration myConfiguration;
 
-  @NotNull private final MySpinnerConfigurable mySpinnerConfigurable;
-  @NotNull private final JBCheckBox myWrapCheckbox;
+  @Nonnull
+  private final MySpinnerConfigurable mySpinnerConfigurable;
+  @Nonnull
+  private final JBCheckBox myWrapCheckbox;
 
-  public VcsCommitMessageMarginConfigurable(@NotNull Project project, @NotNull VcsConfiguration vcsConfiguration) {
+  public VcsCommitMessageMarginConfigurable(@Nonnull Project project, @Nonnull VcsConfiguration vcsConfiguration) {
     myConfiguration = vcsConfiguration;
     mySpinnerConfigurable = new MySpinnerConfigurable(project);
     myWrapCheckbox = new JBCheckBox(ApplicationBundle.message("checkbox.wrap.typing.on.right.margin"), false);

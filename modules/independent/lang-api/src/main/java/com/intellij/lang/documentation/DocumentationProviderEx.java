@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -41,7 +41,7 @@ public class DocumentationProviderEx implements DocumentationProvider {
   }
 
   @Override
-  public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+  public String generateDoc(PsiElement element, @javax.annotation.Nullable PsiElement originalElement) {
     return null;
   }
 
@@ -56,12 +56,12 @@ public class DocumentationProviderEx implements DocumentationProvider {
   }
 
   @Nullable
-  public PsiElement getCustomDocumentationElement(@NotNull final Editor editor, @NotNull final PsiFile file, @Nullable PsiElement contextElement) {
+  public PsiElement getCustomDocumentationElement(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nullable PsiElement contextElement) {
     return null;
   }
 
   @Nullable
-  public Image getLocalImageForElement(@NotNull PsiElement element, @NotNull String imageSpec) {
+  public Image getLocalImageForElement(@Nonnull PsiElement element, @Nonnull String imageSpec) {
     return null;
   }
 }

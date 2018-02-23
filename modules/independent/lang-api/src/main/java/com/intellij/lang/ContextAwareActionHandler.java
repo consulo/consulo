@@ -19,7 +19,7 @@ package com.intellij.lang;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ContextAwareActionHandler {
   /**
@@ -32,5 +32,5 @@ public interface ContextAwareActionHandler {
    * @return It's assumed that handler is valid for file. Still should be lightweight, because is invoked from action update.
    * false - if action won't proceed
    */
-  boolean isAvailableForQuickList(@NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext dataContext);
+  boolean isAvailableForQuickList(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext);
 }

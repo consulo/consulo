@@ -46,8 +46,8 @@ import com.intellij.usageView.UsageInfoFactory;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.*;
@@ -58,7 +58,7 @@ public class RenameUtil {
   private RenameUtil() {
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public static UsageInfo[] findUsages(final PsiElement element,
                                        final String newName,
@@ -116,7 +116,7 @@ public class RenameUtil {
                                         final String stringToSearch, final String stringToReplace) {
     UsageInfoFactory factory = new UsageInfoFactory() {
       @Override
-      public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
+      public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
         TextRange textRange = usage.getTextRange();
         int start = textRange == null ? 0 : textRange.getStartOffset();
         return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, stringToReplace);
@@ -209,7 +209,7 @@ public class RenameUtil {
     });
   }
 
-  public static void doRenameGenericNamedElement(@NotNull PsiElement namedElement, String newName, UsageInfo[] usages,
+  public static void doRenameGenericNamedElement(@Nonnull PsiElement namedElement, String newName, UsageInfo[] usages,
                                                  @Nullable RefactoringElementListener listener) throws IncorrectOperationException {
     PsiWritableMetaData writableMetaData = null;
     if (namedElement instanceof PsiMetaOwner) {
@@ -285,7 +285,7 @@ public class RenameUtil {
     }
   }
 
-  public static void renameNonCodeUsages(@NotNull Project project, @NotNull NonCodeUsageInfo[] usages) {
+  public static void renameNonCodeUsages(@Nonnull Project project, @Nonnull NonCodeUsageInfo[] usages) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     Map<Document, List<UsageOffset>> docsToOffsetsMap = new HashMap<Document, List<UsageOffset>>();
     final PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);

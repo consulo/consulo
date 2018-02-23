@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,14 +15,14 @@ public class DeployAllAction extends ServerActionBase {
   }
 
   @Override
-  protected void performAction(@NotNull ServerNode serverNode) {
+  protected void performAction(@Nonnull ServerNode serverNode) {
     if (serverNode.isDeployAllEnabled()) {
       serverNode.deployAll();
     }
   }
 
   @Override
-  protected boolean isEnabledForServer(@NotNull ServerNode serverNode) {
+  protected boolean isEnabledForServer(@Nonnull ServerNode serverNode) {
     return serverNode.isDeployAllEnabled();
   }
 }

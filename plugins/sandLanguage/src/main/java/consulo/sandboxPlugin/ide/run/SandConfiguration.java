@@ -23,8 +23,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBLabel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -37,7 +37,7 @@ public class SandConfiguration extends RunConfigurationBase {
     super(project, factory, name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new SettingsEditor<RunConfiguration>() {
@@ -51,7 +51,7 @@ public class SandConfiguration extends RunConfigurationBase {
 
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected JComponent createEditor() {
         return new JBLabel("DUMMY");
@@ -66,7 +66,7 @@ public class SandConfiguration extends RunConfigurationBase {
 
   @Nullable
   @Override
-  public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     return null;
   }
 }

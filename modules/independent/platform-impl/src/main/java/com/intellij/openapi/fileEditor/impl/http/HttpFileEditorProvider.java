@@ -25,35 +25,35 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
-  public boolean accept(@NotNull final Project project, @NotNull final VirtualFile file) {
+  public boolean accept(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     return file instanceof HttpVirtualFile && !file.isDirectory();
   }
 
-  @NotNull
-  public FileEditor createEditor(@NotNull final Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     return new HttpFileEditor(project, (HttpVirtualFile)file); 
   }
 
-  @NotNull
-  public FileEditorState readState(@NotNull final Element sourceElement, @NotNull final Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public FileEditorState readState(@Nonnull final Element sourceElement, @Nonnull final Project project, @Nonnull final VirtualFile file) {
     return new TextEditorState();
   }
 
-  public void writeState(@NotNull final FileEditorState state, @NotNull final Project project, @NotNull final Element targetElement) {
+  public void writeState(@Nonnull final FileEditorState state, @Nonnull final Project project, @Nonnull final Element targetElement) {
   }
 
-  @NotNull
+  @Nonnull
   public String getEditorTypeId() {
     return "httpFileEditor";
   }
 
-  @NotNull
+  @Nonnull
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
   }

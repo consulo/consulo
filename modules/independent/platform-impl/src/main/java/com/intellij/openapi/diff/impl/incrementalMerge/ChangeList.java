@@ -30,8 +30,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class ChangeList {
   private ArrayList<Change> myChanges;
   private ArrayList<Change> myAppliedChanges;
 
-  public ChangeList(@NotNull Document base, @NotNull Document version, @Nullable Project project) {
+  public ChangeList(@Nonnull Document base, @Nonnull Document version, @Nullable Project project) {
     myDocuments[0] = base;
     myDocuments[1] = version;
     myProject = project;
@@ -59,7 +59,7 @@ public class ChangeList {
     LOG.assertTrue(myListeners.remove(listener));
   }
 
-  public void setChanges(@NotNull ArrayList<Change> changes) {
+  public void setChanges(@Nonnull ArrayList<Change> changes) {
     if (myChanges != null) {
       HashSet<Change> newChanges = new HashSet<Change>(changes);
       LOG.assertTrue(newChanges.size() == changes.size());
@@ -83,12 +83,12 @@ public class ChangeList {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public List<Change> getChanges() {
     return new ArrayList<Change>(myChanges);
   }
 
-  public static ChangeList build(@NotNull Document base, @NotNull Document version, @NotNull Project project) throws FilesTooBigForDiffException {
+  public static ChangeList build(@Nonnull Document base, @Nonnull Document version, @Nonnull Project project) throws FilesTooBigForDiffException {
     ChangeList result = new ChangeList(base, version, project);
     ArrayList<Change> changes = result.buildChanges();
     Collections.sort(changes, CHANGE_ORDER);
@@ -109,8 +109,8 @@ public class ChangeList {
     }
   }
 
-  @NotNull
-  public Document getDocument(@NotNull FragmentSide side) {
+  @Nonnull
+  public Document getDocument(@Nonnull FragmentSide side) {
     return myDocuments[side.getIndex()];
   }
 
@@ -139,10 +139,12 @@ public class ChangeList {
   }
 
   private abstract static class DiffFragmentsEnumerator {
-    @NotNull private final DiffFragment[] myFragments;
-    @NotNull private final Context myContext;
+    @Nonnull
+    private final DiffFragment[] myFragments;
+    @Nonnull
+    private final Context myContext;
 
-    private DiffFragmentsEnumerator(@NotNull DiffFragment[] fragments) {
+    private DiffFragmentsEnumerator(@Nonnull DiffFragment[] fragments) {
       myContext = new Context();
       myFragments = fragments;
     }
@@ -165,7 +167,7 @@ public class ChangeList {
       return StringUtil.countNewLines(text);
     }
 
-    @NotNull
+    @Nonnull
     protected Context getContext() {
       return myContext;
     }
@@ -182,16 +184,16 @@ public class ChangeList {
       return myFragment;
     }
 
-    public int getStart(@NotNull FragmentSide side) {
+    public int getStart(@Nonnull FragmentSide side) {
       return myStarts[side.getIndex()];
     }
 
-    public int getEnd(@NotNull FragmentSide side) {
+    public int getEnd(@Nonnull FragmentSide side) {
       return getStart(side) + StringUtil.length(side.getText(myFragment));
     }
 
-    @NotNull
-    public TextRange createRange(@NotNull FragmentSide side) {
+    @Nonnull
+    public TextRange createRange(@Nonnull FragmentSide side) {
       return new TextRange(getStart(side), getEnd(side));
     }
   }
@@ -200,21 +202,21 @@ public class ChangeList {
     return myChanges.size();
   }
 
-  @NotNull
+  @Nonnull
   public LineBlocks getLineBlocks() {
     ArrayList<Change> changes = new ArrayList<Change>(myChanges);
     //changes.addAll(myAppliedChanges);
     return LineBlocks.fromChanges(changes);
   }
 
-  @NotNull
+  @Nonnull
   public LineBlocks getAllLineBlocks() {
     ArrayList<Change> changes = new ArrayList<Change>(myChanges);
     changes.addAll(myAppliedChanges);
     return LineBlocks.fromChanges(changes);
   }
 
-  public void remove(@NotNull Change change) {
+  public void remove(@Nonnull Change change) {
     if (change.getType().isApplied()) {
       LOG.assertTrue(myAppliedChanges.remove(change), change);
     }
@@ -225,7 +227,7 @@ public class ChangeList {
     fireOnChangeRemoved();
   }
 
-  public void apply(@NotNull Change change) {
+  public void apply(@Nonnull Change change) {
     LOG.assertTrue(myChanges.remove(change), change);
     myAppliedChanges.add(change);
     fireOnChangeApplied();

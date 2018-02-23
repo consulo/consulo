@@ -19,8 +19,8 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.runners.ProgramRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Describes a process which is ready to be started. Normally, a RunProfileState contains an initialized command line, set of environment
@@ -41,5 +41,5 @@ public interface RunProfileState {
    * @throws ExecutionException if the execution has failed.
    */
   @Nullable
-  ExecutionResult execute(final Executor executor, @NotNull ProgramRunner runner) throws ExecutionException;
+  ExecutionResult execute(final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException;
 }

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import consulo.concurrency.Promises;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Deprecated
 public class DonePromise<T> extends Promise<T> implements Getter<T> {
@@ -29,37 +29,37 @@ public class DonePromise<T> extends Promise<T> implements Getter<T> {
     this.result = result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> done(@NotNull Consumer<T> done) {
+  public Promise<T> done(@Nonnull Consumer<T> done) {
     if (!AsyncPromise.isObsolete(done)) {
       done.consume(result);
     }
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> processed(@NotNull AsyncPromise<T> fulfilled) {
+  public Promise<T> processed(@Nonnull AsyncPromise<T> fulfilled) {
     fulfilled.setResult(result);
     return this;
   }
 
   @Override
-  public Promise<T> processed(@NotNull Consumer<T> processed) {
+  public Promise<T> processed(@Nonnull Consumer<T> processed) {
     done(processed);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> rejected(@NotNull Consumer<Throwable> rejected) {
+  public Promise<T> rejected(@Nonnull Consumer<Throwable> rejected) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull Function<T, SUB_RESULT> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<T, SUB_RESULT> done) {
     if (done instanceof Obsolescent && ((Obsolescent)done).isObsolete()) {
       return Promises.reject("obsolete");
     }
@@ -68,7 +68,7 @@ public class DonePromise<T> extends Promise<T> implements Getter<T> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public State getState() {
     return State.FULFILLED;
@@ -80,7 +80,7 @@ public class DonePromise<T> extends Promise<T> implements Getter<T> {
   }
 
   @Override
-  public void notify(@NotNull AsyncPromise<T> child) {
+  public void notify(@Nonnull AsyncPromise<T> child) {
     child.setResult(result);
   }
 }

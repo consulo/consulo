@@ -18,8 +18,8 @@ package com.intellij.util.ui;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,7 +29,8 @@ import java.awt.image.BufferedImage;
  * @author Konstantin Bulenkov
  */
 public class TwoColorsIcon extends ColorIcon {
-  @NotNull private final Color mySecondColor;
+  @Nonnull
+  private final Color mySecondColor;
   private static final int SQUARE_SIZE = JBUI.scale(6);
   private static final BufferedImage CHESS_IMAGE = UIUtil.createImage(SQUARE_SIZE, SQUARE_SIZE, BufferedImage.TYPE_INT_RGB);
   private static final TexturePaint CHESS;

@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.orderEntry.OrderEntryType;
 
 /**
@@ -51,7 +51,7 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   }
 
   @Override
-  public void openLibrary(@NotNull final Library library) {
+  public void openLibrary(@Nonnull final Library library) {
     final ProjectStructureConfigurable config = ProjectStructureConfigurable.getInstance(myProject);
     ShowSettingsUtil.getInstance().editConfigurable(myProject, config, new Runnable() {
       @Override
@@ -97,7 +97,7 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
   }
 
   @Override
-  public void openModuleDependenciesSettings(@NotNull final Module module, @Nullable final OrderEntry orderEntry) {
+  public void openModuleDependenciesSettings(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
     ShowSettingsUtil.getInstance().editConfigurable(myProject, ProjectStructureConfigurable.getInstance(myProject), new Runnable() {
       @Override
       public void run() {
@@ -108,7 +108,7 @@ public class IdeaProjectSettingsService extends ProjectSettingsService implement
 
   @SuppressWarnings("unchecked")
   @Override
-  public void openLibraryOrSdkSettings(@NotNull final OrderEntry orderEntry) {
+  public void openLibraryOrSdkSettings(@Nonnull final OrderEntry orderEntry) {
     OrderEntryType type = orderEntry.getType();
 
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);

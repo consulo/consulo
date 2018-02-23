@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public abstract class NullableLazyValue<T> {
-  public static <E> NullableLazyValue<E> of(@NotNull final Factory<E> factory) {
+  public static <E> NullableLazyValue<E> of(@Nonnull final Factory<E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
       @Override

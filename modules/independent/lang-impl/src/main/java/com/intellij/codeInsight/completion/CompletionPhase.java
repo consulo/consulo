@@ -29,8 +29,8 @@ import com.intellij.openapi.editor.ex.FocusChangeListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventObject;
 
@@ -127,7 +127,7 @@ public abstract class CompletionPhase implements Disposable {
       super(indicator);
       ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
         @Override
-        public void beforeWriteActionStart(@NotNull Object action) {
+        public void beforeWriteActionStart(@Nonnull Object action) {
           if (!indicator.getLookup().isLookupDisposed() && !indicator.isCanceled()) {
             indicator.scheduleRestart();
           }
@@ -181,7 +181,7 @@ public abstract class CompletionPhase implements Disposable {
 
     protected ZombiePhase(@Nullable final LightweightHint hint, final CompletionProgressIndicator indicator) {
       super(indicator);
-      @NotNull Editor editor = indicator.getEditor();
+      @Nonnull Editor editor = indicator.getEditor();
       final HintListener hintListener = new HintListener() {
         @Override
         public void hintHidden(final EventObject event) {

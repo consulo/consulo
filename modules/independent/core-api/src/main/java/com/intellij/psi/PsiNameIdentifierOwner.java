@@ -18,8 +18,8 @@ package com.intellij.psi;
 
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -28,7 +28,7 @@ public interface PsiNameIdentifierOwner extends PsiNamedElement {
   public static final PsiNameIdentifierOwner[] EMPTY_ARRAY = new PsiNameIdentifierOwner[0];
 
   public static ArrayFactory<PsiNameIdentifierOwner> ARRAY_FACTORY = new ArrayFactory<PsiNameIdentifierOwner>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiNameIdentifierOwner[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiNameIdentifierOwner[count];

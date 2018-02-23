@@ -20,8 +20,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 
@@ -91,7 +91,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware,
         }
 
         @Override
-        public void onFailure(@NotNull String errorMessage, @Nullable String errorDetails) {
+        public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
         }
       }, false, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
   }

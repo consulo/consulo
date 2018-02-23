@@ -32,7 +32,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.util.FontUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -60,21 +60,21 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private boolean myCalculated;
   private int myRowHeight = AllIcons.Nodes.AbstractClass.getIconHeight() + 2;
 
-  UsageViewTreeCellRenderer(@NotNull UsageView view) {
+  UsageViewTreeCellRenderer(@Nonnull UsageView view) {
     myView = view;
     myPresentation = view.getPresentation();
   }
 
   private Dimension cachedPreferredSize;
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getPreferredSize() {
     return myCalculated ? super.getPreferredSize() : new Dimension(10, myRowHeight);
   }
 
   @Override
-  public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     boolean showAsReadOnly = false;
     if (value instanceof Node && value != tree.getModel().getRoot()) {
       Node node = (Node)value;
@@ -174,7 +174,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   }
 
   // computes the node text regardless of the node visibility
-  @NotNull
+  @Nonnull
   String getPlainTextForNode(Object value) {
     boolean showAsReadOnly = false;
     StringBuilder result = new StringBuilder();
@@ -253,8 +253,8 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     AFTER_VISIBLE_RECT
   }
 
-  @NotNull
-  RowLocation isRowVisible(int row, @NotNull Rectangle visibleRect) {
+  @Nonnull
+  RowLocation isRowVisible(int row, @Nonnull Rectangle visibleRect) {
     Dimension pref;
     if (cachedPreferredSize == null) {
       cachedPreferredSize = pref = getPreferredSize();
@@ -279,7 +279,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     return y < vis.getStartOffset() ? RowLocation.BEFORE_VISIBLE_RECT : RowLocation.AFTER_VISIBLE_RECT;
   }
 
-  private static SimpleTextAttributes patchAttrs(@NotNull Node node, @NotNull SimpleTextAttributes original) {
+  private static SimpleTextAttributes patchAttrs(@Nonnull Node node, @Nonnull SimpleTextAttributes original) {
     if (node.isExcluded()) {
       original = new SimpleTextAttributes(original.getStyle() | SimpleTextAttributes.STYLE_STRIKEOUT, original.getFgColor(), original.getWaveColor());
     }

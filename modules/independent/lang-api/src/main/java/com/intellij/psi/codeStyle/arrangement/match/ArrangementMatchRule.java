@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Container for matching strategies to be used during file entries arrangement. 
@@ -31,26 +31,29 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ArrangementMatchRule {
 
-  @NotNull public static final ArrangementSettingsToken DEFAULT_ORDER_TYPE = StdArrangementTokens.Order.KEEP;
+  @Nonnull
+  public static final ArrangementSettingsToken DEFAULT_ORDER_TYPE = StdArrangementTokens.Order.KEEP;
 
-  @NotNull private final ArrangementEntryMatcher  myMatcher;
-  @NotNull private final ArrangementSettingsToken myOrderType;
+  @Nonnull
+  private final ArrangementEntryMatcher  myMatcher;
+  @Nonnull
+  private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementMatchRule(@NotNull ArrangementEntryMatcher matcher) {
+  public ArrangementMatchRule(@Nonnull ArrangementEntryMatcher matcher) {
     this(matcher, DEFAULT_ORDER_TYPE);
   }
 
-  public ArrangementMatchRule(@NotNull ArrangementEntryMatcher matcher, @NotNull ArrangementSettingsToken orderType) {
+  public ArrangementMatchRule(@Nonnull ArrangementEntryMatcher matcher, @Nonnull ArrangementSettingsToken orderType) {
     myMatcher = matcher;
     myOrderType = orderType;
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementEntryMatcher getMatcher() {
     return myMatcher;
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementSettingsToken getOrderType() {
     return myOrderType;
   }

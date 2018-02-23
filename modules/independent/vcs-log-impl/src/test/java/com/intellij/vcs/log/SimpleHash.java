@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov
@@ -28,13 +28,13 @@ public class SimpleHash implements Hash {
     myHash = hash;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String asString() {
     return myHash;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String toShortString() {
     return myHash.substring(0, 7);

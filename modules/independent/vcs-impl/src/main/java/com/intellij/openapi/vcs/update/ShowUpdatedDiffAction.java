@@ -43,8 +43,7 @@ import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ import java.util.List;
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
 
     final Presentation presentation = e.getPresentation();
@@ -74,7 +73,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;
 
@@ -89,18 +88,22 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @Nullable private final Project myProject;
-    @NotNull private final Label myBefore;
-    @NotNull private final Label myAfter;
-    @NotNull private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
+    @javax.annotation.Nullable
+    private final Project myProject;
+    @Nonnull
+    private final Label myBefore;
+    @Nonnull
+    private final Label myAfter;
+    @Nonnull
+    private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
 
     private int myIndex;
 
-    public MyDiffRequestChain(@Nullable Project project,
-                              @NotNull Iterable<Pair<FilePath, FileStatus>> iterable,
-                              @NotNull Label before,
-                              @NotNull Label after,
-                              @Nullable FilePath filePath) {
+    public MyDiffRequestChain(@javax.annotation.Nullable Project project,
+                              @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
+                              @Nonnull Label before,
+                              @Nonnull Label after,
+                              @javax.annotation.Nullable FilePath filePath) {
       myProject = project;
       myBefore = before;
       myAfter = after;
@@ -113,7 +116,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
       if (selected != -1) myIndex = selected;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<MyDiffRequestProducer> getRequests() {
       return myRequests;
@@ -129,17 +132,17 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
       myIndex = index;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public AnAction createGoToChangeAction(@NotNull Consumer<Integer> onSelected) {
+    public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
       return new ChangeGoToChangePopupAction.Fake<MyDiffRequestChain>(this, myIndex, onSelected) {
-        @NotNull
+        @Nonnull
         @Override
         protected FilePath getFilePath(int index) {
           return myRequests.get(index).getFilePath();
         }
 
-        @NotNull
+        @Nonnull
         @Override
         protected FileStatus getFileStatus(int index) {
           return myRequests.get(index).getFileStatus();
@@ -148,33 +151,35 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     }
 
     private class MyDiffRequestProducer implements DiffRequestProducer {
-      @NotNull private final FileStatus myFileStatus;
-      @NotNull private final FilePath myFilePath;
+      @Nonnull
+      private final FileStatus myFileStatus;
+      @Nonnull
+      private final FilePath myFilePath;
 
-      public MyDiffRequestProducer(@NotNull FilePath filePath, @NotNull FileStatus fileStatus) {
+      public MyDiffRequestProducer(@Nonnull FilePath filePath, @Nonnull FileStatus fileStatus) {
         myFilePath = filePath;
         myFileStatus = fileStatus;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         return getFilePath().getPath();
       }
 
-      @NotNull
+      @Nonnull
       public FilePath getFilePath() {
         return myFilePath;
       }
 
-      @NotNull
+      @Nonnull
       public FileStatus getFileStatus() {
         return myFileStatus;
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public DiffRequest process(@NotNull UserDataHolder context, @NotNull ProgressIndicator indicator)
+      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
               throws DiffRequestProducerException, ProcessCanceledException {
         try {
           DiffContent content1;
@@ -207,8 +212,8 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
       }
     }
 
-    @NotNull
-    private static byte[] loadContent(@NotNull FilePath filePointer, @NotNull Label label) throws DiffRequestProducerException {
+    @Nonnull
+    private static byte[] loadContent(@Nonnull FilePath filePointer, @Nonnull Label label) throws DiffRequestProducerException {
       String path = filePointer.getPresentableUrl();
       ByteContent byteContent = label.getByteContent(FileUtil.toSystemIndependentName(path));
 

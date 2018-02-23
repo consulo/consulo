@@ -21,8 +21,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.SystemProperties;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,7 +70,7 @@ public class FirefoxUtil {
   }
 
   @Nullable
-  public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, @NotNull List<FirefoxProfile> profiles) {
+  public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, @Nonnull List<FirefoxProfile> profiles) {
     for (FirefoxProfile profile : profiles) {
       if (profile.getName().equals(name)) {
         return profile;
@@ -93,7 +93,7 @@ public class FirefoxUtil {
     return profiles.get(0);
   }
 
-  @NotNull
+  @Nonnull
   public static List<FirefoxProfile> computeProfiles(@Nullable File profilesFile) {
     if (profilesFile == null || !profilesFile.isFile()) {
       return Collections.emptyList();

@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.std;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Svetlana.Zemlyanskaya
@@ -24,19 +24,19 @@ import org.jetbrains.annotations.NotNull;
 public class StdInvertibleArrangementSettingsToken extends StdArrangementSettingsToken implements InvertibleArrangementSettingsToken {
   private static final String NOT = "not ";
 
-  private StdInvertibleArrangementSettingsToken(@NotNull String id,
-                                                @NotNull String uiName,
-                                                @NotNull StdArrangementTokenType tokenType) {
+  private StdInvertibleArrangementSettingsToken(@Nonnull String id,
+                                                @Nonnull String uiName,
+                                                @Nonnull StdArrangementTokenType tokenType) {
     super(id, uiName, tokenType);
   }
 
-  @NotNull
-  public static StdInvertibleArrangementSettingsToken invertibleTokenById(@NonNls @NotNull String id,
-                                                                          @NotNull StdArrangementTokenType tokenType) {
+  @Nonnull
+  public static StdInvertibleArrangementSettingsToken invertibleTokenById(@NonNls @Nonnull String id,
+                                                                          @Nonnull StdArrangementTokenType tokenType) {
     return new StdInvertibleArrangementSettingsToken(id, id.toLowerCase().replace("_", " "), tokenType);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getInvertedRepresentationValue() {
     return NOT + getRepresentationValue();

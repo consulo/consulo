@@ -19,44 +19,46 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.VcsLogData;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MergeCommitsHighlighter implements VcsLogHighlighter {
   public static final JBColor MERGE_COMMIT_FOREGROUND = new JBColor(Gray._128, Gray._96);
-  @NotNull private final VcsLogUi myLogUi;
+  @Nonnull
+  private final VcsLogUi myLogUi;
 
-  public MergeCommitsHighlighter(@NotNull VcsLogUi logUi) {
+  public MergeCommitsHighlighter(@Nonnull VcsLogUi logUi) {
     myLogUi = logUi;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsCommitStyle getStyle(@NotNull VcsShortCommitDetails details, boolean isSelected) {
+  public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
     if (isSelected || !myLogUi.isHighlighterEnabled(Factory.ID)) return VcsCommitStyle.DEFAULT;
     if (details.getParents().size() >= 2) return VcsCommitStyleFactory.foreground(MERGE_COMMIT_FOREGROUND);
     return VcsCommitStyle.DEFAULT;
   }
 
   @Override
-  public void update(@NotNull VcsLogDataPack dataPack, boolean refreshHappened) {
+  public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
   }
 
   public static class Factory implements VcsLogHighlighterFactory {
-    @NotNull private static final String ID = "MERGE_COMMITS";
+    @Nonnull
+    private static final String ID = "MERGE_COMMITS";
 
-    @NotNull
+    @Nonnull
     @Override
-    public VcsLogHighlighter createHighlighter(@NotNull VcsLogData logData, @NotNull VcsLogUi logUi) {
+    public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
       return new MergeCommitsHighlighter(logUi);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
       return ID;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTitle() {
       return "Merge Commits";

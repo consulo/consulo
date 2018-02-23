@@ -19,7 +19,7 @@ package com.intellij.lang.documentation;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -50,8 +50,8 @@ public interface DocumentationProvider {
    * @param originalElement  element initially picked up from the current context
    * @return                 target element's documentation (if any)
    */
-  @Nullable
-  String generateDoc(PsiElement element, @Nullable PsiElement originalElement);
+  @javax.annotation.Nullable
+  String generateDoc(PsiElement element, @javax.annotation.Nullable PsiElement originalElement);
 
   @Nullable
   PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element);

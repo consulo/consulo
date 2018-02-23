@@ -23,8 +23,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -110,8 +110,8 @@ public class SeparatePiecesRunner extends GeneralRunner {
     private final TaskDescriptor myTaskDescriptor;
     private volatile boolean mySuspended;
 
-    TaskWrapper(@Nullable Project project,
-                @NotNull String title,
+    TaskWrapper(@javax.annotation.Nullable Project project,
+                @Nonnull String title,
                 boolean canBeCancelled,
                 TaskDescriptor taskDescriptor) {
       super(project, title, canBeCancelled, BackgroundFromStartOption.getInstance());
@@ -140,7 +140,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
     }
 
     @Override
-    protected void runImpl(@NotNull ProgressIndicator indicator) {
+    protected void runImpl(@Nonnull ProgressIndicator indicator) {
       myTaskDescriptor.run(SeparatePiecesRunner.this);
     }
   }

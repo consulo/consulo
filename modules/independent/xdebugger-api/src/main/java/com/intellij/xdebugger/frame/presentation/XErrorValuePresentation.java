@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame.presentation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Renders a value as an error
@@ -25,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 public class XErrorValuePresentation extends XValuePresentation {
   private final String myError;
 
-  public XErrorValuePresentation(@NotNull String error) {
+  public XErrorValuePresentation(@Nonnull String error) {
     myError = error;
   }
 
   @Override
-  public void renderValue(@NotNull XValueTextRenderer renderer) {
+  public void renderValue(@Nonnull XValueTextRenderer renderer) {
     renderer.renderError(myError);
   }
 }

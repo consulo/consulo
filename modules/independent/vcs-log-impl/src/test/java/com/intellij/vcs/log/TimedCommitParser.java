@@ -20,7 +20,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.parser.CommitParser;
 import com.intellij.vcs.log.impl.HashImpl;
 import com.intellij.vcs.log.impl.TimedVcsCommitImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +31,8 @@ public class TimedCommitParser {
    * @param line 1231423|-adada|-193 adf45
    *             timestamp|-hash commit|-parent hashes
    */
-  @NotNull
-  public static TimedVcsCommit parseTimestampParentHashes(@NotNull String line) {
+  @Nonnull
+  public static TimedVcsCommit parseTimestampParentHashes(@Nonnull String line) {
     int firstSeparatorIndex = CommitParser.nextSeparatorIndex(line, 0);
     String timestampStr = line.substring(0, firstSeparatorIndex);
     long timestamp;
@@ -59,8 +59,8 @@ public class TimedCommitParser {
     return HashImpl.build(Integer.toHexString(index));
   }
 
-  @NotNull
-  public static List<TimedVcsCommit> log(@NotNull List<String> commits) {
+  @Nonnull
+  public static List<TimedVcsCommit> log(@Nonnull List<String> commits) {
     return ContainerUtil.map(commits, new Function<String, TimedVcsCommit>() {
       @Override
       public TimedVcsCommit fun(String commit) {
@@ -69,8 +69,8 @@ public class TimedCommitParser {
     });
   }
 
-  @NotNull
-  public static List<TimedVcsCommit> log(@NotNull String... commits) {
+  @Nonnull
+  public static List<TimedVcsCommit> log(@Nonnull String... commits) {
     return log(Arrays.asList(commits));
   }
 

@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.packaging.elements.ComplexPackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,5 +31,5 @@ public abstract class PackagingElementProcessor<E extends PackagingElement<?>> {
     return true;
   }
 
-  public abstract boolean process(@NotNull E element, @NotNull PackagingElementPath path);
+  public abstract boolean process(@Nonnull E element, @Nonnull PackagingElementPath path);
 }

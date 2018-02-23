@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class FileStatusFactory {
   private FileStatusFactory() {
   }
 
-  public synchronized FileStatus createFileStatus(@NonNls @NotNull String id, @NotNull String description) {
+  public synchronized FileStatus createFileStatus(@NonNls @Nonnull String id, @Nonnull String description) {
     return createFileStatus(id, description, null);
   }
 
-  public synchronized FileStatus createFileStatus(@NonNls @NotNull String id, @NotNull String description, @Nullable Color color) {
+  public synchronized FileStatus createFileStatus(@NonNls @Nonnull String id, @Nonnull String description, @Nullable Color color) {
     FileStatusImpl result = new FileStatusImpl(id, ColorKey.createColorKey("FILESTATUS_" + id, color), description);
     myStatuses.add(result);
     return result;
@@ -58,7 +58,7 @@ public class FileStatusFactory {
     private final ColorKey myColorKey;
     private final String myText;
 
-    public FileStatusImpl(@NotNull String status, @NotNull ColorKey key, String text) {
+    public FileStatusImpl(@Nonnull String status, @Nonnull ColorKey key, String text) {
       myStatus = status;
       myColorKey = key;
       myText = text;
@@ -78,13 +78,13 @@ public class FileStatusFactory {
       return EditorColorsManager.getInstance().getGlobalScheme().getColor(getColorKey());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ColorKey getColorKey() {
       return myColorKey;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
       return myStatus;

@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -39,7 +39,7 @@ public class ElementManipulators extends ClassExtension<ElementManipulator> {
   /**
    * @see #getNotNullManipulator(PsiElement)
    */
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(@NotNull T element) {
+  public static <T extends PsiElement> ElementManipulator<T> getManipulator(@Nonnull T element) {
     //noinspection unchecked
     return INSTANCE.forClass(element.getClass());
   }
@@ -60,7 +60,7 @@ public class ElementManipulators extends ClassExtension<ElementManipulator> {
     return manipulator == null ? TextRange.from(0, element.getTextLength()) : manipulator.getRangeInElement(element);
   }
 
-  @NotNull
+  @Nonnull
   public static String getValueText(final PsiElement element) {
     final TextRange valueTextRange = getValueTextRange(element);
     if (valueTextRange.isEmpty()) return "";

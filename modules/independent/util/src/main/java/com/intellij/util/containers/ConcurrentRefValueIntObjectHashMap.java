@@ -18,7 +18,7 @@ package com.intellij.util.containers;
 
 
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -31,7 +31,7 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
   private final ConcurrentIntObjectMap<IntReference<V>> myMap = ContainerUtil.createConcurrentIntObjectMap();
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<V>();
 
-  protected abstract IntReference<V> createReference(int key, @NotNull V value, ReferenceQueue<V> queue);
+  protected abstract IntReference<V> createReference(int key, @Nonnull V value, ReferenceQueue<V> queue);
 
   protected interface IntReference<V> {
     int getKey();
@@ -50,9 +50,9 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public V cacheOrGet(int key, @NotNull V value) {
+  public V cacheOrGet(int key, @Nonnull V value) {
     processQueue();
     IntReference<V> newRef = createReference(key, value, myQueue);
     while (true) {
@@ -70,19 +70,19 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
   }
 
   @Override
-  public boolean remove(int key, @NotNull V value) {
+  public boolean remove(int key, @Nonnull V value) {
     processQueue();
     return myMap.remove(key, createReference(key, value, myQueue));
   }
 
   @Override
-  public boolean replace(int key, @NotNull V oldValue, @NotNull V newValue) {
+  public boolean replace(int key, @Nonnull V oldValue, @Nonnull V newValue) {
     processQueue();
     return myMap.replace(key, createReference(key, oldValue,myQueue), createReference(key, newValue,myQueue));
   }
 
   @Override
-  public V put(int key, @NotNull V value) {
+  public V put(int key, @Nonnull V value) {
     processQueue();
     IntReference<V> ref = myMap.put(key, createReference(key, value, myQueue));
     return ref == null ? null : ref.get();
@@ -112,13 +112,13 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
     processQueue();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public int[] keys() {
     return myMap.keys();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<IntEntry<V>> entries() {
     final Iterator<IntEntry<IntReference<V>>> entryIterator = myMap.entries().iterator();
@@ -154,7 +154,7 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
                   return key;
                 }
 
-                @NotNull
+                @Nonnull
                 @Override
                 public V getValue() {
                   return v;
@@ -183,7 +183,7 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
     return myMap.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Enumeration<V> elements() {
     final Enumeration<IntReference<V>> elementRefs = myMap.elements();
@@ -216,12 +216,12 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
 
 
   @Override
-  public V putIfAbsent(int key, @NotNull V value) {
+  public V putIfAbsent(int key, @Nonnull V value) {
     IntReference<V> prev = myMap.putIfAbsent(key, createReference(key, value, myQueue));
     return prev == null ? null : prev.get();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     Set<V> result = new THashSet<V>();
@@ -230,7 +230,7 @@ abstract class ConcurrentRefValueIntObjectHashMap<V> implements ConcurrentIntObj
   }
 
   @Override
-  public boolean containsValue(@NotNull V value) {
+  public boolean containsValue(@Nonnull V value) {
     for (IntEntry<IntReference<V>> entry : myMap.entries()) {
       if (value.equals(entry.getValue().get())) {
         return true;

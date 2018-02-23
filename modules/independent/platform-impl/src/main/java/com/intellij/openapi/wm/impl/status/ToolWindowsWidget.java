@@ -38,7 +38,7 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +59,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   private JBPopup popup;
   private boolean wasExited = false;
 
-  ToolWindowsWidget(@NotNull Disposable parent) {
+  ToolWindowsWidget(@Nonnull Disposable parent) {
     new BaseButtonBehavior(this, TimedDeadzone.NULL) {
       @Override
       protected void execute(MouseEvent e) {
@@ -268,19 +268,19 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String ID() {
     return "ToolWindows Widget";
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     myStatusBar = statusBar;
     updateIcon();
   }

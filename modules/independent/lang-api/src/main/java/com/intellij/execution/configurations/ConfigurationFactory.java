@@ -19,7 +19,7 @@ import com.intellij.execution.BeforeRunTask;
 import com.intellij.execution.RunManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ import javax.swing.*;
 public abstract class ConfigurationFactory {
   private final ConfigurationType myType;
 
-  protected ConfigurationFactory(@NotNull final ConfigurationType type) {
+  protected ConfigurationFactory(@Nonnull final ConfigurationType type) {
     myType = type;
   }
 
@@ -54,7 +54,7 @@ public abstract class ConfigurationFactory {
    *
    * @return {@code true} if it makes sense to create configurations of this type in {@code project}
    */
-  public boolean isApplicable(@NotNull Project project) {
+  public boolean isApplicable(@Nonnull Project project) {
     return true;
   }
 
@@ -79,7 +79,7 @@ public abstract class ConfigurationFactory {
     return myType.getDisplayName();
   }
 
-  public Icon getIcon(@NotNull final RunConfiguration configuration) {
+  public Icon getIcon(@Nonnull final RunConfiguration configuration) {
     return getIcon();
   }
 
@@ -87,7 +87,7 @@ public abstract class ConfigurationFactory {
     return myType.getIcon();
   }
 
-  @NotNull
+  @Nonnull
   public ConfigurationType getType() {
     return myType;
   }

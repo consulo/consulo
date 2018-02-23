@@ -28,11 +28,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiTarget;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -42,18 +43,18 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
   private final PomTarget myTarget;
   private final Project myProject;
 
-  public PomTargetPsiElementImpl(@NotNull PsiTarget target) {
+  public PomTargetPsiElementImpl(@Nonnull PsiTarget target) {
     this(target.getNavigationElement().getProject(), target);
   }
 
-  public PomTargetPsiElementImpl(@NotNull Project project, @NotNull PomTarget target) {
+  public PomTargetPsiElementImpl(@Nonnull Project project, @Nonnull PomTarget target) {
     super(null);
     myProject = project;
     myTarget = target;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PomTarget getTarget() {
     return myTarget;
   }
@@ -80,7 +81,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     throw new UnsupportedOperationException("Method getTypeName is not yet implemented for " + myTarget.getClass().getName() + "; see PomDescriptionProvider");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement getNavigationElement() {
     if (myTarget instanceof PsiTarget) {
@@ -111,7 +112,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
     if (myTarget instanceof PomRenameableTarget) {
       ((PomRenameableTarget)myTarget).setName(name);
       return this;
@@ -181,7 +182,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     if (myTarget instanceof PsiTarget) {
       return ((PsiTarget)myTarget).getNavigationElement().getLanguage();
@@ -189,7 +190,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     return Language.ANY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;

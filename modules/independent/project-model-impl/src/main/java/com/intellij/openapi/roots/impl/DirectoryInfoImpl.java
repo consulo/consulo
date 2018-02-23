@@ -17,8 +17,7 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -35,7 +34,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   private final boolean myExcluded;
   private final byte mySourceRootTypeId;
 
-  DirectoryInfoImpl(@NotNull VirtualFile root, Module module, VirtualFile contentRoot, VirtualFile sourceRoot, VirtualFile libraryClassRoot,
+  DirectoryInfoImpl(@Nonnull VirtualFile root, Module module, VirtualFile contentRoot, VirtualFile sourceRoot, VirtualFile libraryClassRoot,
                     boolean inModuleSource, boolean inLibrarySource, boolean isExcluded, int sourceRootTypeId) {
     myRoot = root;
     this.module = module;
@@ -91,7 +90,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getSourceRoot() {
     return sourceRoot;
   }
@@ -102,7 +101,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile getContentRoot() {
     return contentRoot;
   }
@@ -132,7 +131,7 @@ public class DirectoryInfoImpl extends DirectoryInfo {
     return mySourceRootTypeId;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getRoot() {
     return myRoot;
   }

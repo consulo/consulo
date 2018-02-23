@@ -1,7 +1,6 @@
 package com.intellij.remoteServer.configuration.deployment;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author nik
@@ -12,7 +11,7 @@ public class DummyDeploymentConfiguration extends DeploymentConfiguration implem
     return this;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public DummyDeploymentConfiguration getState() {
     return null;

@@ -16,8 +16,8 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class ClassMapCachingNulls<T> {
   private final T[] myEmptyArray;
   private final Map<Class, T[]> myMap = ContainerUtil.newConcurrentMap();
 
-  public ClassMapCachingNulls(@NotNull Map<Class, T[]> backingMap, T[] emptyArray) {
+  public ClassMapCachingNulls(@Nonnull Map<Class, T[]> backingMap, T[] emptyArray) {
     myBackingMap = backingMap;
     myEmptyArray = emptyArray;
   }

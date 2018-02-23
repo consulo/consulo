@@ -22,7 +22,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EverythingGlobalScope extends GlobalSearchScope {
   public EverythingGlobalScope(Project project) {
@@ -33,12 +33,12 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
+  public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean contains(@NotNull final VirtualFile file) {
+  public boolean contains(@Nonnull final VirtualFile file) {
     return true;
   }
 
@@ -48,7 +48,7 @@ public class EverythingGlobalScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull final Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
     return true;
   }
 
@@ -57,15 +57,15 @@ public class EverythingGlobalScope extends GlobalSearchScope {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlobalSearchScope union(@NotNull SearchScope scope) {
+  public GlobalSearchScope union(@Nonnull SearchScope scope) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public SearchScope intersectWith(@NotNull SearchScope scope2) {
+  public SearchScope intersectWith(@Nonnull SearchScope scope2) {
     return scope2;
   }
 }

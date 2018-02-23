@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.EditorGutter;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import gnu.trove.TIntFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,9 +49,9 @@ public abstract class EditorGutterComponentEx extends JComponent implements Edit
   @Nullable
   public abstract Point getCenterPoint(GutterIconRenderer renderer);
 
-  public abstract void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor);
+  public abstract void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor);
 
-  public abstract void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
+  public abstract void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
 
   public abstract void setShowDefaultGutterPopup(boolean show);
 

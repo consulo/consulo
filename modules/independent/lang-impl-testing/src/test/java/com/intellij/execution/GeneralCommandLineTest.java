@@ -21,7 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.junit.Test;
 
 import java.io.File;

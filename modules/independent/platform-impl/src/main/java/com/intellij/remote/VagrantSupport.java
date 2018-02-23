@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public abstract class VagrantSupport {
     return ServiceManager.getService(VagrantSupport.class);
   }
   public abstract ListenableFuture<RemoteCredentials> computeVagrantSettings(@Nullable Project project,
-                                                                             @NotNull String vagrantFolder,
+                                                                             @Nonnull String vagrantFolder,
                                                                              @Nullable String machineName);
 
   public static void showMissingVagrantSupportMessage(final @Nullable Project project) {
@@ -46,29 +46,29 @@ public abstract class VagrantSupport {
                                                           "Vagrant Support Disabled"));
   }
 
-  @NotNull
-  public abstract RemoteCredentials getCredentials(@NotNull String vagrantFolder, @Nullable String machineName) throws IOException;
+  @Nonnull
+  public abstract RemoteCredentials getCredentials(@Nonnull String vagrantFolder, @Nullable String machineName) throws IOException;
 
-  public abstract boolean checkVagrantRunning(@NotNull String vagrantFolder, @Nullable String machineName, boolean askToRunIfDown);
+  public abstract boolean checkVagrantRunning(@Nonnull String vagrantFolder, @Nullable String machineName, boolean askToRunIfDown);
 
-  public abstract void runVagrant(@NotNull String vagrantFolder, @Nullable String machineName) throws ExecutionException;
+  public abstract void runVagrant(@Nonnull String vagrantFolder, @Nullable String machineName) throws ExecutionException;
 
-  public abstract Collection<? extends RemoteConnector> getVagrantInstancesConnectors(@NotNull Project project);
+  public abstract Collection<? extends RemoteConnector> getVagrantInstancesConnectors(@Nonnull Project project);
 
   public abstract boolean isVagrantInstance(VirtualFile dir);
 
-  public abstract List<String> getMachineNames(@NotNull String instanceFolder);
+  public abstract List<String> getMachineNames(@Nonnull String instanceFolder);
 
   public boolean isNotReadyForSsh(Throwable t) {
     return isNotReadyForSsh(t.getMessage());
   }
 
-  public static boolean isNotReadyForSsh(@NotNull String errorMessage) {
+  public static boolean isNotReadyForSsh(@Nonnull String errorMessage) {
     return errorMessage.contains("not yet ready for SSH");
   }
 
   @Nullable
-  public abstract String findVagrantFolder(@NotNull Project project);
+  public abstract String findVagrantFolder(@Nonnull Project project);
 
 
   public static class MultipleMachinesException extends Exception {

@@ -19,14 +19,14 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface AnnotationProvider extends VcsProviderMarker {
-  @NotNull
-  FileAnnotation annotate(@NotNull VirtualFile file) throws VcsException;
+  @Nonnull
+  FileAnnotation annotate(@Nonnull VirtualFile file) throws VcsException;
 
-  @NotNull
-  FileAnnotation annotate(@NotNull VirtualFile file, VcsFileRevision revision) throws VcsException;
+  @Nonnull
+  FileAnnotation annotate(@Nonnull VirtualFile file, VcsFileRevision revision) throws VcsException;
 
   /**
    * Check whether the annotation retrieval is valid (or possible) for the
@@ -34,7 +34,7 @@ public interface AnnotationProvider extends VcsProviderMarker {
    * @param rev File revision to be checked.
    * @return true if annotation it valid for the given revision.
    */
-  default boolean isAnnotationValid(@NotNull VcsFileRevision rev) { return true; }
+  default boolean isAnnotationValid(@Nonnull VcsFileRevision rev) { return true; }
 
   default boolean isCaching() { return false; }
 }

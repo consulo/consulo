@@ -19,7 +19,7 @@ import com.intellij.codeInsight.completion.CompletionSorter;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     };
   }
 
-  @Override public CompletionSorterImpl weighBefore(@NotNull final String beforeId, LookupElementWeigher... weighers) {
+  @Override public CompletionSorterImpl weighBefore(@Nonnull final String beforeId, LookupElementWeigher... weighers) {
     if (weighers.length == 0) return this;
 
     CompletionSorterImpl result = this;
@@ -56,7 +56,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     return result;
   }
 
-  @Override public CompletionSorterImpl weighAfter(@NotNull final String afterId, LookupElementWeigher... weighers) {
+  @Override public CompletionSorterImpl weighAfter(@Nonnull final String afterId, LookupElementWeigher... weighers) {
     if (weighers.length == 0) return this;
 
     CompletionSorterImpl result = this;
@@ -75,7 +75,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     return enhanced(classifierFactory, myMembers.size());
   }
 
-  public CompletionSorterImpl withClassifier(@NotNull String anchorId,
+  public CompletionSorterImpl withClassifier(@Nonnull String anchorId,
                                              boolean beforeAnchor, ClassifierFactory<LookupElement> classifierFactory) {
     final int i = idIndex(anchorId);
     return enhanced(classifierFactory, beforeAnchor ? Math.max(0, i) : i + 1);

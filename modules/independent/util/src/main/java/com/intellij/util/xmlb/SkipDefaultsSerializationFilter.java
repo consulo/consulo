@@ -19,11 +19,11 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.ThreeState;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class SkipDefaultsSerializationFilter extends SkipDefaultValuesSerializationFilters {
-  boolean equal(@NotNull Binding binding, @NotNull Object bean) {
+  boolean equal(@Nonnull Binding binding, @Nonnull Object bean) {
     Accessor accessor = binding.getAccessor();
     return equal(binding, accessor.read(bean), accessor.read(getDefaultBean(bean)));
   }

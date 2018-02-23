@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -41,7 +41,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
   private File myBaseDir = new File(SystemProperties.getUserHome());
 
   @Override
-  public LookupFile find(@NotNull final String path) {
+  public LookupFile find(@Nonnull final String path) {
     final VirtualFile byUrl = VirtualFileManager.getInstance().findFileByUrl(path);
     if (byUrl != null) {
       return new VfsFile(this, byUrl);
@@ -66,7 +66,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
   }
 
   @Override
-  public String normalize(@NotNull final String path) {
+  public String normalize(@Nonnull final String path) {
     final File file = new File(path);
     if (file.isAbsolute()) return file.getAbsolutePath();
 
@@ -78,7 +78,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     return File.separator;
   }
 
-  public void setBaseDir(@NotNull File baseDir) {
+  public void setBaseDir(@Nonnull File baseDir) {
     myBaseDir = baseDir;
   }
 

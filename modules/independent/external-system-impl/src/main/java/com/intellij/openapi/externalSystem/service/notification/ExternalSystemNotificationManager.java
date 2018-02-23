@@ -35,8 +35,8 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -55,30 +55,36 @@ import java.util.concurrent.ExecutorService;
  * @since 3/21/12 4:04 PM
  */
 public class ExternalSystemNotificationManager {
-  @NotNull private static final Key<Pair<NotificationSource, ProjectSystemId>> CONTENT_ID_KEY = Key.create("CONTENT_ID");
+  @Nonnull
+  private static final Key<Pair<NotificationSource, ProjectSystemId>> CONTENT_ID_KEY = Key.create("CONTENT_ID");
 
-  @NotNull private final ExecutorService myUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ExternalSystemNotificationManager pool");
+  @Nonnull
+  private final ExecutorService myUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ExternalSystemNotificationManager pool");
 
-  @NotNull private final Project myProject;
-  @NotNull private final List<Notification> myNotifications;
-  @NotNull private final Set<ProjectSystemId> initializedExternalSystem;
-  @NotNull private final MessageCounter myMessageCounter;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final List<Notification> myNotifications;
+  @Nonnull
+  private final Set<ProjectSystemId> initializedExternalSystem;
+  @Nonnull
+  private final MessageCounter myMessageCounter;
 
-  public ExternalSystemNotificationManager(@NotNull final Project project) {
+  public ExternalSystemNotificationManager(@Nonnull final Project project) {
     myProject = project;
     myNotifications = ContainerUtil.newArrayList();
     initializedExternalSystem = ContainerUtil.newHashSet();
     myMessageCounter = new MessageCounter();
   }
 
-  @NotNull
-  public static ExternalSystemNotificationManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ExternalSystemNotificationManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ExternalSystemNotificationManager.class);
   }
 
-  public void processExternalProjectRefreshError(@NotNull Throwable error,
-                                                 @NotNull String externalProjectName,
-                                                 @NotNull ProjectSystemId externalSystemId) {
+  public void processExternalProjectRefreshError(@Nonnull Throwable error,
+                                                 @Nonnull String externalProjectName,
+                                                 @Nonnull ProjectSystemId externalSystemId) {
     if (myProject.isDisposed() || !myProject.isOpen()) {
       return;
     }
@@ -120,7 +126,7 @@ public class ExternalSystemNotificationManager {
     showNotification(externalSystemId, notificationData);
   }
 
-  public void showNotification(@NotNull final ProjectSystemId externalSystemId, @NotNull final NotificationData notificationData) {
+  public void showNotification(@Nonnull final ProjectSystemId externalSystemId, @Nonnull final NotificationData notificationData) {
     myUpdater.execute(new Runnable() {
       @Override
       public void run() {
@@ -169,7 +175,7 @@ public class ExternalSystemNotificationManager {
     });
   }
 
-  public void openMessageView(@NotNull final ProjectSystemId externalSystemId, @NotNull final NotificationSource notificationSource) {
+  public void openMessageView(@Nonnull final ProjectSystemId externalSystemId, @Nonnull final NotificationSource notificationSource) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -178,14 +184,14 @@ public class ExternalSystemNotificationManager {
     });
   }
 
-  public void clearNotifications(@NotNull final NotificationSource notificationSource,
-                                 @NotNull final ProjectSystemId externalSystemId) {
+  public void clearNotifications(@Nonnull final NotificationSource notificationSource,
+                                 @Nonnull final ProjectSystemId externalSystemId) {
     clearNotifications(null, notificationSource, externalSystemId);
   }
 
   public void clearNotifications(@Nullable final String groupName,
-                                 @NotNull final NotificationSource notificationSource,
-                                 @NotNull final ProjectSystemId externalSystemId) {
+                                 @Nonnull final NotificationSource notificationSource,
+                                 @Nonnull final ProjectSystemId externalSystemId) {
     myMessageCounter.remove(groupName, notificationSource, externalSystemId);
     myUpdater.execute(new Runnable() {
       @Override
@@ -225,22 +231,22 @@ public class ExternalSystemNotificationManager {
     });
   }
 
-  public int getMessageCount(@NotNull final NotificationSource notificationSource,
-                             @Nullable final NotificationCategory notificationCategory,
-                             @NotNull final ProjectSystemId externalSystemId) {
+  public int getMessageCount(@Nonnull final NotificationSource notificationSource,
+                             @javax.annotation.Nullable final NotificationCategory notificationCategory,
+                             @Nonnull final ProjectSystemId externalSystemId) {
     return getMessageCount(null, notificationSource, notificationCategory, externalSystemId);
   }
 
   public int getMessageCount(@Nullable final String groupName,
-                             @NotNull final NotificationSource notificationSource,
+                             @Nonnull final NotificationSource notificationSource,
                              @Nullable final NotificationCategory notificationCategory,
-                             @NotNull final ProjectSystemId externalSystemId) {
+                             @Nonnull final ProjectSystemId externalSystemId) {
     return myMessageCounter.getCount(groupName, notificationSource, notificationCategory, externalSystemId);
   }
 
-  private void addMessage(@NotNull final Notification notification,
-                          @NotNull final ProjectSystemId externalSystemId,
-                          @NotNull final NotificationData notificationData) {
+  private void addMessage(@Nonnull final Notification notification,
+                          @Nonnull final ProjectSystemId externalSystemId,
+                          @Nonnull final NotificationData notificationData) {
     final VirtualFile virtualFile =
             notificationData.getFilePath() != null ? ExternalSystemUtil.waitForTheFile(notificationData.getFilePath()) : null;
     final String groupName = virtualFile != null ? virtualFile.getPresentableUrl() : notificationData.getTitle();
@@ -300,15 +306,15 @@ public class ExternalSystemNotificationManager {
     });
   }
 
-  private void applyNotification(@NotNull final Notification notification) {
+  private void applyNotification(@Nonnull final Notification notification) {
     if (!myProject.isDisposed() && myProject.isOpen()) {
       notification.notify(myProject);
     }
   }
 
-  @NotNull
-  public NewErrorTreeViewPanel prepareMessagesView(@NotNull final ProjectSystemId externalSystemId,
-                                                   @NotNull final NotificationSource notificationSource,
+  @Nonnull
+  public NewErrorTreeViewPanel prepareMessagesView(@Nonnull final ProjectSystemId externalSystemId,
+                                                   @Nonnull final NotificationSource notificationSource,
                                                    boolean activateView) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -340,7 +346,7 @@ public class ExternalSystemNotificationManager {
   }
 
   @Nullable
-  private Content findContent(@NotNull Pair<NotificationSource, ProjectSystemId> contentIdPair, @NotNull String contentDisplayName) {
+  private Content findContent(@Nonnull Pair<NotificationSource, ProjectSystemId> contentIdPair, @Nonnull String contentDisplayName) {
     Content targetContent = null;
     final MessageView messageView = ServiceManager.getService(myProject, MessageView.class);
     for (Content content : messageView.getContentManager().getContents()) {
@@ -352,9 +358,9 @@ public class ExternalSystemNotificationManager {
     return targetContent;
   }
 
-  @NotNull
-  public static String getContentDisplayName(@NotNull final NotificationSource notificationSource,
-                                             @NotNull final ProjectSystemId externalSystemId) {
+  @Nonnull
+  public static String getContentDisplayName(@Nonnull final NotificationSource notificationSource,
+                                             @Nonnull final ProjectSystemId externalSystemId) {
     final String contentDisplayName;
     switch (notificationSource) {
       case PROJECT_SYNC:

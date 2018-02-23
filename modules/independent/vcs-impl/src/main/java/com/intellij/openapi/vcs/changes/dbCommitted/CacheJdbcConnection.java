@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.ThrowableConvertor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.sql.Connection;
@@ -77,7 +77,7 @@ public class CacheJdbcConnection {
     }
   }
 
-  public PreparedStatement getOrCreatePreparedStatement(@NotNull final String name, final ThrowableConvertor<Connection, PreparedStatement, SQLException> getter)
+  public PreparedStatement getOrCreatePreparedStatement(@Nonnull final String name, final ThrowableConvertor<Connection, PreparedStatement, SQLException> getter)
     throws VcsException {
     synchronized (myLock) {
       getConnection();

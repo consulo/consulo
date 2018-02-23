@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,13 +37,13 @@ public abstract class TextEditorHighlightingPassRegistrarEx extends TextEditorHi
     return (TextEditorHighlightingPassRegistrarEx)getInstance(project);
   }
 
-  @NotNull
-  public abstract List<TextEditorHighlightingPass> instantiatePasses(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull int[] passesToIgnore);
-  @NotNull
-  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@NotNull PsiFile psiFile,
-                                                                         @NotNull Document document,
-                                                                         @NotNull HighlightInfoProcessor highlightInfoProcessor);
+  @Nonnull
+  public abstract List<TextEditorHighlightingPass> instantiatePasses(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull int[] passesToIgnore);
+  @Nonnull
+  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile,
+                                                                         @Nonnull Document document,
+                                                                         @Nonnull HighlightInfoProcessor highlightInfoProcessor);
 
-  @NotNull
+  @Nonnull
   public abstract List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories();
 }

@@ -22,7 +22,7 @@ import com.intellij.openapi.diff.impl.splitter.DiffDividerPaint;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +72,7 @@ public class DiffDivider extends JComponent {
     myEditors[1] = null;
   }
 
-  public void listenEditors(@NotNull EditingSides sides) {
+  public void listenEditors(@Nonnull EditingSides sides) {
     stopListenEditors();
     myPaint = new DiffDividerPaint(sides, myLeftSide, MERGE_DIVIDER_POLYGONS_OFFSET);
     myEditors[0] = sides.getEditor(FragmentSide.SIDE1);

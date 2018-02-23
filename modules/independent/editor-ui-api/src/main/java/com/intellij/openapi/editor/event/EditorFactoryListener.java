@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.event;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -23,7 +23,7 @@ import java.util.EventListener;
  * @see {@link com.intellij.openapi.editor.EditorFactory#addEditorFactoryListener(com.intellij.openapi.editor.event.EditorFactoryListener)}
  */
 public interface EditorFactoryListener extends EventListener {
-  void editorCreated(@NotNull EditorFactoryEvent event);
-  void editorReleased(@NotNull EditorFactoryEvent event);
+  void editorCreated(@Nonnull EditorFactoryEvent event);
+  void editorReleased(@Nonnull EditorFactoryEvent event);
 }
 

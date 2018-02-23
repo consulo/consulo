@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LazyPatchContentRevision implements ContentRevision {
   private volatile String myContent;
@@ -63,12 +63,12 @@ public class LazyPatchContentRevision implements ContentRevision {
     return myPatchApplyFailed;
   }
 
-  @NotNull
+  @Nonnull
   public FilePath getFile() {
     return myNewFilePath;
   }
 
-  @NotNull
+  @Nonnull
   public VcsRevisionNumber getRevisionNumber() {
     return new VcsRevisionNumber() {
       public String asString() {

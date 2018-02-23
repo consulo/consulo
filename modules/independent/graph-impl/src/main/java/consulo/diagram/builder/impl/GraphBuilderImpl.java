@@ -24,7 +24,7 @@ import com.mxgraph.view.mxGraph;
 import consulo.diagram.builder.GraphBuilder;
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class GraphBuilderImpl implements GraphBuilder {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     mxGraph graph = new mxGraph();
@@ -89,7 +89,7 @@ public class GraphBuilderImpl implements GraphBuilder {
     return mxGraphComponent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <E> GraphNode<E> createNode(E value, GraphPositionStrategy strategy) {
     GraphNodeImpl<E> graphNode = new GraphNodeImpl<E>(value, strategy);

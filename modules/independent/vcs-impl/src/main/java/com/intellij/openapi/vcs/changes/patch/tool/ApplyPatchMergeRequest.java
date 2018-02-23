@@ -24,33 +24,40 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
   @Nullable private final Project myProject;
 
-  @NotNull private final DocumentContent myResultContent;
-  @NotNull private final AppliedTextPatch myAppliedPatch;
+  @Nonnull
+  private final DocumentContent myResultContent;
+  @Nonnull
+  private final AppliedTextPatch myAppliedPatch;
 
-  @NotNull private final CharSequence myOriginalContent;
-  @NotNull private final String myLocalContent;
+  @Nonnull
+  private final CharSequence myOriginalContent;
+  @Nonnull
+  private final String myLocalContent;
 
   @Nullable private final String myWindowTitle;
-  @NotNull private final String myLocalTitle;
-  @NotNull private final String myResultTitle;
-  @NotNull private final String myPatchTitle;
+  @Nonnull
+  private final String myLocalTitle;
+  @Nonnull
+  private final String myResultTitle;
+  @Nonnull
+  private final String myPatchTitle;
 
   @Nullable private final Consumer<MergeResult> myCallback;
 
   public ApplyPatchMergeRequest(@Nullable Project project,
-                                @NotNull DocumentContent resultContent,
-                                @NotNull AppliedTextPatch appliedPatch,
-                                @NotNull String localContent,
+                                @Nonnull DocumentContent resultContent,
+                                @Nonnull AppliedTextPatch appliedPatch,
+                                @Nonnull String localContent,
                                 @Nullable String windowTitle,
-                                @NotNull String localTitle,
-                                @NotNull String resultTitle,
-                                @NotNull String patchTitle,
+                                @Nonnull String localTitle,
+                                @Nonnull String resultTitle,
+                                @Nonnull String patchTitle,
                                 @Nullable Consumer<MergeResult> callback) {
     myProject = project;
     myResultContent = resultContent;
@@ -78,49 +85,49 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DocumentContent getResultContent() {
     return myResultContent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLocalContent() {
     return myLocalContent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AppliedTextPatch getPatch() {
     return myAppliedPatch;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTitle() {
     return myWindowTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLocalTitle() {
     return myLocalTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getResultTitle() {
     return myResultTitle;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPatchTitle() {
     return myPatchTitle;
   }
 
   @Override
-  public void applyResult(@NotNull MergeResult result) {
+  public void applyResult(@Nonnull MergeResult result) {
     final CharSequence applyContent;
     switch (result) {
       case CANCEL:

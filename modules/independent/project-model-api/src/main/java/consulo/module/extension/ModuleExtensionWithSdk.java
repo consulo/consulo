@@ -17,23 +17,22 @@ package consulo.module.extension;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 23:26/18.05.13
  */
 public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
-  @NotNull
+  @Nonnull
   ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
-  @Nullable
+  @javax.annotation.Nullable
   Sdk getSdk();
 
-  @Nullable
+  @javax.annotation.Nullable
   String getSdkName();
 
-  @NotNull
+  @Nonnull
   Class<? extends SdkTypeId> getSdkTypeClass();
 }

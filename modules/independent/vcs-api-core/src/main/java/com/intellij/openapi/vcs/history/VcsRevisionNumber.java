@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
   VcsRevisionNumber NULL = new VcsRevisionNumber() {
@@ -23,7 +23,7 @@ public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
       return "";
     }
 
-    @Override public int compareTo(@NotNull VcsRevisionNumber vcsRevisionNumber) {
+    @Override public int compareTo(@Nonnull VcsRevisionNumber vcsRevisionNumber) {
       return 0;
     }
 
@@ -100,7 +100,7 @@ public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
     }
 
     @Override
-    public int compareTo(@NotNull VcsRevisionNumber vcsRevisionNumber) {
+    public int compareTo(@Nonnull VcsRevisionNumber vcsRevisionNumber) {
       if (vcsRevisionNumber instanceof VcsRevisionNumber.Long){
         return java.lang.Long.signum(myValue - ((Long)vcsRevisionNumber).myValue);
       }

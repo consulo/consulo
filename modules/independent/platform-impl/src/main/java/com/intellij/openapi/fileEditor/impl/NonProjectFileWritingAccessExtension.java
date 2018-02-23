@@ -17,7 +17,7 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface NonProjectFileWritingAccessExtension {
   ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME =
@@ -26,14 +26,14 @@ public interface NonProjectFileWritingAccessExtension {
   /**
    * @return true if the file should not be protected from accidental writing. false to use default logic.
    */
-  default boolean isWritable(@NotNull VirtualFile file) {
+  default boolean isWritable(@Nonnull VirtualFile file) {
     return false;
   }
 
   /**
    * @return true if the file should be protected from accidental writing. false to use default logic.
    */
-  default boolean isNotWritable(@NotNull VirtualFile file) {
+  default boolean isNotWritable(@Nonnull VirtualFile file) {
     return false;
   }
 }

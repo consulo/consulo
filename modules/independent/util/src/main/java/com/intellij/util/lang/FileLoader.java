@@ -17,8 +17,8 @@ package com.intellij.util.lang;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.URL;
@@ -169,12 +169,12 @@ class FileLoader extends Loader {
     for(String s: paths) writer.append(s).append('\n');
   }
 
-  @NotNull
+  @Nonnull
   private File getIndexFileFile() {
     return new File(myRootDir, "classpath.index");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ClasspathCache.LoaderData buildData() throws IOException {
     ClasspathCache.LoaderData fromIndex = tryReadFromIndex();

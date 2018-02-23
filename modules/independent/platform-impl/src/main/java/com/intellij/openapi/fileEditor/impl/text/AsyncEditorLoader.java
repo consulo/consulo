@@ -30,7 +30,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,16 +41,21 @@ public class AsyncEditorLoader {
   private static final Key<AsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
   private static final int SYNCHRONOUS_LOADING_WAITING_TIME_MS = 200;
   private static final int RETRY_TIME_MS = 10;
-  @NotNull private final Editor myEditor;
-  @NotNull private final Project myProject;
-  @NotNull private final TextEditorImpl myTextEditor;
-  @NotNull private final TextEditorComponent myEditorComponent;
-  @NotNull private final TextEditorProvider myProvider;
+  @Nonnull
+  private final Editor myEditor;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final TextEditorImpl myTextEditor;
+  @Nonnull
+  private final TextEditorComponent myEditorComponent;
+  @Nonnull
+  private final TextEditorProvider myProvider;
   private final List<Runnable> myDelayedActions = new ArrayList<>();
   private TextEditorState myDelayedState;
   private final CompletableFuture<?> myLoadingFinished = new CompletableFuture<>();
 
-  AsyncEditorLoader(@NotNull TextEditorImpl textEditor, @NotNull TextEditorComponent component, @NotNull TextEditorProvider provider) {
+  AsyncEditorLoader(@Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull TextEditorProvider provider) {
     myProvider = provider;
     myTextEditor = textEditor;
     myProject = textEditor.myProject;
@@ -62,7 +67,7 @@ public class AsyncEditorLoader {
     myEditorComponent.getContentPanel().setVisible(false);
   }
 
-  @NotNull
+  @Nonnull
   Future<?> start() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     Future<Runnable> continuationFuture = scheduleLoading();
@@ -172,7 +177,7 @@ public class AsyncEditorLoader {
     EditorNotifications.getInstance(myProject).updateNotifications(myTextEditor.myFile);
   }
 
-  public static void performWhenLoaded(@NotNull Editor editor, @NotNull Runnable runnable) {
+  public static void performWhenLoaded(@Nonnull Editor editor, @Nonnull Runnable runnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     AsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
     if (loader == null) {
@@ -183,8 +188,8 @@ public class AsyncEditorLoader {
     }
   }
 
-  @NotNull
-  TextEditorState getEditorState(@NotNull FileEditorStateLevel level) {
+  @Nonnull
+  TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
 
@@ -195,7 +200,7 @@ public class AsyncEditorLoader {
     return state;
   }
 
-  void setEditorState(@NotNull final TextEditorState state) {
+  void setEditorState(@Nonnull final TextEditorState state) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     if (!myLoadingFinished.isDone()) {
@@ -205,7 +210,7 @@ public class AsyncEditorLoader {
     myProvider.setStateImpl(myProject, myEditor, state);
   }
 
-  public static boolean isEditorLoaded(@NotNull Editor editor) {
+  public static boolean isEditorLoaded(@Nonnull Editor editor) {
     return editor.getUserData(ASYNC_LOADER) == null;
   }
 }

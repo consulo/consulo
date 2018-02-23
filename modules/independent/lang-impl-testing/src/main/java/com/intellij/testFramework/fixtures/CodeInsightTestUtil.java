@@ -44,8 +44,8 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 import org.junit.Assert;
 
@@ -57,7 +57,7 @@ import java.util.List;
 public class CodeInsightTestUtil {
   private CodeInsightTestUtil() { }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static IntentionAction findIntentionByText(List<IntentionAction> actions, @NonNls String text) {
     for (IntentionAction action : actions) {
       final String s = action.getText();
@@ -72,8 +72,8 @@ public class CodeInsightTestUtil {
     doIntentionTest(fixture, actionText, file + ".xml", file + "_after.xml");
   }
 
-  public static void doIntentionTest(@NotNull final CodeInsightTestFixture fixture, @NonNls final String action,
-                                     @NotNull final String before, @NotNull final String after) {
+  public static void doIntentionTest(@Nonnull final CodeInsightTestFixture fixture, @NonNls final String action,
+                                     @Nonnull final String before, @Nonnull final String after) {
     fixture.configureByFile(before);
     List<IntentionAction> availableIntentions = fixture.getAvailableIntentions();
     final IntentionAction intentionAction = findIntentionByText(availableIntentions, action);
@@ -89,8 +89,8 @@ public class CodeInsightTestUtil {
     fixture.checkResultByFile(after, false);
   }
 
-  public static void doWordSelectionTest(@NotNull final CodeInsightTestFixture fixture,
-                                         @NotNull final String before, final String... after) {
+  public static void doWordSelectionTest(@Nonnull final CodeInsightTestFixture fixture,
+                                         @Nonnull final String before, final String... after) {
     assert after != null && after.length > 0;
     fixture.configureByFile(before);
 
@@ -102,8 +102,8 @@ public class CodeInsightTestUtil {
     }
   }
 
-  public static void doSurroundWithTest(@NotNull final CodeInsightTestFixture fixture, @NotNull final Surrounder surrounder,
-                                        @NotNull final String before, @NotNull final String after) {
+  public static void doSurroundWithTest(@Nonnull final CodeInsightTestFixture fixture, @Nonnull final Surrounder surrounder,
+                                        @Nonnull final String before, @Nonnull final String after) {
     fixture.configureByFile(before);
     new WriteCommandAction.Simple(fixture.getProject()) {
       @Override
@@ -114,8 +114,8 @@ public class CodeInsightTestUtil {
     fixture.checkResultByFile(after, false);
   }
 
-  public static void doLiveTemplateTest(@NotNull final CodeInsightTestFixture fixture,
-                                        @NotNull final String before, @NotNull final String after) {
+  public static void doLiveTemplateTest(@Nonnull final CodeInsightTestFixture fixture,
+                                        @Nonnull final String before, @Nonnull final String after) {
     fixture.configureByFile(before);
     new WriteCommandAction(fixture.getProject()) {
       @Override
@@ -129,8 +129,8 @@ public class CodeInsightTestUtil {
     fixture.checkResultByFile(after, false);
   }
 
-  public static void doSmartEnterTest(@NotNull final CodeInsightTestFixture fixture,
-                                      @NotNull final String before, @NotNull final String after) {
+  public static void doSmartEnterTest(@Nonnull final CodeInsightTestFixture fixture,
+                                      @Nonnull final String before, @Nonnull final String after) {
     fixture.configureByFile(before);
     final List<SmartEnterProcessor> processors = SmartEnterProcessors.INSTANCE.forKey(fixture.getFile().getLanguage());
     new WriteCommandAction(fixture.getProject()) {
@@ -145,8 +145,8 @@ public class CodeInsightTestUtil {
     fixture.checkResultByFile(after, false);
   }
 
-  public static void doFormattingTest(@NotNull final CodeInsightTestFixture fixture,
-                                      @NotNull final String before, @NotNull final String after) {
+  public static void doFormattingTest(@Nonnull final CodeInsightTestFixture fixture,
+                                      @Nonnull final String before, @Nonnull final String after) {
     fixture.configureByFile(before);
     new WriteCommandAction(fixture.getProject()) {
       @Override

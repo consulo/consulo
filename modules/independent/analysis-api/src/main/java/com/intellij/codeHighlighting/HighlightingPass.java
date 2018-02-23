@@ -16,7 +16,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 public interface HighlightingPass {
@@ -30,7 +30,7 @@ public interface HighlightingPass {
    * throw {@link com.intellij.openapi.progress.ProcessCanceledException} if <code>true</code> is returned.
    */
   @RequiredReadAction
-  void collectInformation(@NotNull ProgressIndicator progress);
+  void collectInformation(@Nonnull ProgressIndicator progress);
 
   /**
    * Called to apply information collected by {@linkplain #collectInformation(com.intellij.openapi.progress.ProgressIndicator)} to the editor.

@@ -18,20 +18,20 @@ package com.intellij.openapi.diff.impl.highlighting;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public enum FragmentSide {
 
   SIDE1(0, 0) {
     @Override
     @Nullable
-    public DiffString getText(@NotNull DiffFragment fragment) {
+    public DiffString getText(@Nonnull DiffFragment fragment) {
       return fragment.getText1();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected DiffFragment createDiffFragment(@Nullable DiffString text, @Nullable DiffString otherText) {
       return new DiffFragment(text, otherText);
     }
@@ -45,12 +45,12 @@ public enum FragmentSide {
   SIDE2(1, 2) {
     @Override
     @Nullable
-    public DiffString getText(@NotNull DiffFragment fragment) {
+    public DiffString getText(@Nonnull DiffFragment fragment) {
       return fragment.getText2();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected DiffFragment createDiffFragment(@Nullable DiffString text, @Nullable DiffString otherText) {
       return new DiffFragment(otherText, text);
     }
@@ -71,7 +71,7 @@ public enum FragmentSide {
     myMergeIndex = mergeIndex;
   }
 
-  @NotNull
+  @Nonnull
   public DiffFragment createFragment(@Nullable DiffString text, @Nullable DiffString otherText, boolean modified) {
     DiffFragment fragment = createDiffFragment(text, otherText);
     if (!fragment.isOneSide()) fragment.setModified(modified);
@@ -79,9 +79,9 @@ public enum FragmentSide {
   }
 
   @Nullable
-  public abstract DiffString getText(@NotNull DiffFragment fragment);
+  public abstract DiffString getText(@Nonnull DiffFragment fragment);
   public abstract FragmentSide otherSide();
-  @NotNull
+  @Nonnull
   protected abstract DiffFragment createDiffFragment(@Nullable DiffString text, @Nullable DiffString otherText);
 
   public int getIndex() {
@@ -93,7 +93,7 @@ public enum FragmentSide {
   }
 
   @Nullable
-  public DiffString getOtherText(@NotNull DiffFragment fragment) {
+  public DiffString getOtherText(@Nonnull DiffFragment fragment) {
     return otherSide().getText(fragment);
   }
 
@@ -106,7 +106,7 @@ public enum FragmentSide {
     return oneSide.getText1() == null ? SIDE2 : SIDE1;
   }
 
-  @NotNull
+  @Nonnull
   public static FragmentSide fromIndex(int index) {
     for (FragmentSide side : FragmentSide.values()) {
       if (side.getIndex() == index) {

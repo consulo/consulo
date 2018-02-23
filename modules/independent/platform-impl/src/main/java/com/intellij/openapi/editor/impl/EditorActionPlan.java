@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.ActionPlan;
 import com.intellij.util.text.ImmutableCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,13 +30,13 @@ class EditorActionPlan implements ActionPlan {
   private int myCaretOffset;
   private final List<Replacement> myReplacements = new ArrayList<>();
 
-  EditorActionPlan(@NotNull Editor editor) {
+  EditorActionPlan(@Nonnull Editor editor) {
     myEditor = editor;
     myText = (ImmutableCharSequence)editor.getDocument().getImmutableCharSequence();
     myCaretOffset = editor.getCaretModel().getOffset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ImmutableCharSequence getText() {
     return myText;

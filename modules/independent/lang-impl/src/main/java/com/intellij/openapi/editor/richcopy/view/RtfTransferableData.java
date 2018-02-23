@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.richcopy.model.FontNameRegistry;
 import com.intellij.openapi.editor.richcopy.model.MarkupHandler;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -29,21 +29,28 @@ import java.awt.datatransfer.DataFlavor;
 
 public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransferableData {
 
-  @NotNull public static final DataFlavor FLAVOR = new DataFlavor("text/rtf;class=java.io.InputStream", "RTF text");
+  @Nonnull
+  public static final DataFlavor FLAVOR = new DataFlavor("text/rtf;class=java.io.InputStream", "RTF text");
 
-  @NotNull private static final String HEADER_PREFIX = "{\\rtf1\\ansi\\deff0";
-  @NotNull private static final String HEADER_SUFFIX = "}";
-  @NotNull private static final String TAB           = "\\tab\n";
-  @NotNull private static final String NEW_LINE      = "\\line\n";
-  @NotNull private static final String BOLD          = "\\b";
-  @NotNull private static final String ITALIC        = "\\i";
+  @Nonnull
+  private static final String HEADER_PREFIX = "{\\rtf1\\ansi\\deff0";
+  @Nonnull
+  private static final String HEADER_SUFFIX = "}";
+  @Nonnull
+  private static final String TAB           = "\\tab\n";
+  @Nonnull
+  private static final String NEW_LINE      = "\\line\n";
+  @Nonnull
+  private static final String BOLD          = "\\b";
+  @Nonnull
+  private static final String ITALIC        = "\\i";
 
-  public RtfTransferableData(@NotNull SyntaxInfo syntaxInfo) {
+  public RtfTransferableData(@Nonnull SyntaxInfo syntaxInfo) {
     super(syntaxInfo, FLAVOR);
   }
 
   @Override
-  protected void build(@NotNull final StringBuilder holder, final int maxLength) {
+  protected void build(@Nonnull final StringBuilder holder, final int maxLength) {
     holder.append(HEADER_PREFIX);
 
     holder.append("{\\colortbl;");
@@ -95,7 +102,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     return (int)(component * 255 + 0.5f);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getCharset() {
     return "US-ASCII";
@@ -107,8 +114,10 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
 
   private static class MyVisitor implements MarkupHandler {
 
-    @NotNull private final StringBuilder myBuffer;
-    @NotNull private final String        myRawText;
+    @Nonnull
+    private final StringBuilder myBuffer;
+    @Nonnull
+    private final String        myRawText;
     private final int myMaxLength;
 
     private final int myDefaultBackgroundId;
@@ -117,7 +126,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     private int myFontNameId   = -1;
     private int myFontStyle    = -1;
 
-    MyVisitor(@NotNull StringBuilder buffer, @NotNull String rawText, @NotNull SyntaxInfo syntaxInfo, int maxLength) {
+    MyVisitor(@Nonnull StringBuilder buffer, @Nonnull String rawText, @Nonnull SyntaxInfo syntaxInfo, int maxLength) {
       myBuffer = buffer;
       myRawText = rawText;
       myMaxLength = maxLength;

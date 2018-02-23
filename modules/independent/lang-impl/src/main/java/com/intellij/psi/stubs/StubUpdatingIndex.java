@@ -37,8 +37,8 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.io.*;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.io.DataOutputStream;
@@ -59,20 +59,20 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
 
   private static final DataExternalizer<SerializedStubTree> KEY_EXTERNALIZER = new DataExternalizer<SerializedStubTree>() {
     @Override
-    public void save(@NotNull final DataOutput out, @NotNull final SerializedStubTree v) throws IOException {
+    public void save(@Nonnull final DataOutput out, @Nonnull final SerializedStubTree v) throws IOException {
       v.write(out);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public SerializedStubTree read(@NotNull final DataInput in) throws IOException {
+    public SerializedStubTree read(@Nonnull final DataInput in) throws IOException {
       return new SerializedStubTree(in);
     }
   };
 
   private static final FileBasedIndex.InputFilter INPUT_FILTER = (project, file) -> canHaveStub(file);
 
-  public static boolean canHaveStub(@NotNull VirtualFile file) {
+  public static boolean canHaveStub(@Nonnull VirtualFile file) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof LanguageFileType) {
       final Language l = ((LanguageFileType)fileType).getLanguage();
@@ -100,7 +100,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
 
   private static final KeyDescriptor<Integer> DATA_DESCRIPTOR = new IntInlineKeyDescriptor();
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<Integer, SerializedStubTree> getName() {
     return INDEX_ID;
@@ -116,12 +116,12 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<Collection<Integer>> createExternalizer() {
     return new DataExternalizer<Collection<Integer>>() {
       @Override
-      public void save(@NotNull DataOutput out, Collection<Integer> value) throws IOException {
+      public void save(@Nonnull DataOutput out, Collection<Integer> value) throws IOException {
         DataInputOutputUtil.writeINT(out, value.iterator().next());
         Map<StubIndexKey, Map<Object, StubIdList>> stubIndicesValueMap = ((StubUpdatingIndexKeys)value).myStubIndicesValueMap;
         DataInputOutputUtil.writeINT(out, stubIndicesValueMap != null ? stubIndicesValueMap.size() : 0);
@@ -139,7 +139,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
       }
 
       @Override
-      public Collection<Integer> read(@NotNull DataInput in) throws IOException {
+      public Collection<Integer> read(@Nonnull DataInput in) throws IOException {
         int fileId = DataInputOutputUtil.readINT(in);
         StubUpdatingIndexKeys integers = new StubUpdatingIndexKeys(ContainerUtil.set(fileId));
 
@@ -182,13 +182,13 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<Integer, SerializedStubTree, FileContent> getIndexer() {
     return new DataIndexer<Integer, SerializedStubTree, FileContent>() {
       @Override
-      @NotNull
-      public Map<Integer, SerializedStubTree> map(@NotNull final FileContent inputData) {
+      @Nonnull
+      public Map<Integer, SerializedStubTree> map(@Nonnull final FileContent inputData) {
         final Map<Integer, SerializedStubTree> result = new THashMap<Integer, SerializedStubTree>() {
           StubUpdatingIndexKeys myKeySet;
 
@@ -282,19 +282,19 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<Integer> getKeyDescriptor() {
     return DATA_DESCRIPTOR;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<SerializedStubTree> getValueExternalizer() {
     return KEY_EXTERNALIZER;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return INPUT_FILTER;
@@ -310,10 +310,10 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     return VERSION;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(@NotNull final FileBasedIndexExtension<Integer, SerializedStubTree> extension,
-                                                                                            @NotNull IndexStorage<Integer, SerializedStubTree> storage)
+  public UpdatableIndex<Integer, SerializedStubTree, FileContent> createIndexImplementation(@Nonnull final FileBasedIndexExtension<Integer, SerializedStubTree> extension,
+                                                                                            @Nonnull IndexStorage<Integer, SerializedStubTree> storage)
           throws StorageException, IOException {
     if (storage instanceof MemoryIndexStorage) {
       final MemoryIndexStorage<Integer, SerializedStubTree> memStorage = (MemoryIndexStorage<Integer, SerializedStubTree>)storage;
@@ -332,10 +332,10 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     return new MyIndex(extension, storage);
   }
 
-  private static void updateStubIndices(@NotNull final Collection<StubIndexKey> indexKeys,
+  private static void updateStubIndices(@Nonnull final Collection<StubIndexKey> indexKeys,
                                         final int inputId,
-                                        @NotNull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                        @NotNull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+                                        @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                        @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
     final StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
     for (StubIndexKey key : indexKeys) {
       final Map<Object, StubIdList> oldMap = oldStubTree.get(key);
@@ -348,16 +348,17 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     }
   }
 
-  @NotNull
-  private static Collection<StubIndexKey> getAffectedIndices(@NotNull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                                             @NotNull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+  @Nonnull
+  private static Collection<StubIndexKey> getAffectedIndices(@Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                                             @Nonnull final Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
     Set<StubIndexKey> allIndices = new HashSet<>();
     allIndices.addAll(oldStubTree.keySet());
     allIndices.addAll(newStubTree.keySet());
     return allIndices;
   }
 
-  private static @NotNull Map<StubIndexKey, Map<Object, StubIdList>> calcStubIndicesValueMap(SerializedStubTree stub, int fileId)
+  private static @Nonnull
+  Map<StubIndexKey, Map<Object, StubIdList>> calcStubIndicesValueMap(SerializedStubTree stub, int fileId)
           throws StorageException {
     if (stub == null) return Collections.emptyMap();
     Map<StubIndexKey, Map<Object, StubIdList>> stubIndicesValueMap;
@@ -396,7 +397,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
       checkNameStorage();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected UpdateData<Integer, SerializedStubTree> createUpdateData(Map<Integer, SerializedStubTree> data,
                                                                        ThrowableComputable<InputDataDiffBuilder<Integer, SerializedStubTree>, IOException> oldKeys,
@@ -407,8 +408,8 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     static class StubUpdatingData extends UpdateData<Integer, SerializedStubTree> {
       private Collection<Integer> oldStubIndexKeys;
 
-      public StubUpdatingData(@NotNull Map<Integer, SerializedStubTree> newData,
-                              @NotNull ThrowableComputable<InputDataDiffBuilder<Integer, SerializedStubTree>, IOException> iterator,
+      public StubUpdatingData(@Nonnull Map<Integer, SerializedStubTree> newData,
+                              @Nonnull ThrowableComputable<InputDataDiffBuilder<Integer, SerializedStubTree>, IOException> iterator,
                               @Nullable ThrowableRunnable<IOException> forwardIndexUpdate) {
         super(newData, iterator, INDEX_ID, forwardIndexUpdate);
       }
@@ -453,7 +454,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
 
     @Override
     protected void updateWithMap(int inputId,
-                                 @NotNull UpdateData<Integer, SerializedStubTree> updateData) throws StorageException {
+                                 @Nonnull UpdateData<Integer, SerializedStubTree> updateData) throws StorageException {
       checkNameStorage();
       StubUpdatingData stubUpdatingData = (StubUpdatingData)updateData;
       final Map<StubIndexKey, Map<Object, StubIdList>> newStubIndicesValueMap = stubUpdatingData.getNewStubIndicesValueMap();
@@ -546,7 +547,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     private static final FileAttribute VERSION_STAMP = new FileAttribute("stubIndex.versionStamp", 2, true);
 
     @Override
-    public void setIndexedStateForFile(int fileId, @NotNull VirtualFile file) {
+    public void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
       super.setIndexedStateForFile(fileId, file);
 
       try {
@@ -560,7 +561,7 @@ public class StubUpdatingIndex extends CustomImplementationFileBasedIndexExtensi
     }
 
     @Override
-    public boolean isIndexedStateForFile(int fileId, @NotNull VirtualFile file) {
+    public boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
       boolean indexedStateForFile = super.isIndexedStateForFile(fileId, file);
       if (!indexedStateForFile) return false;
 

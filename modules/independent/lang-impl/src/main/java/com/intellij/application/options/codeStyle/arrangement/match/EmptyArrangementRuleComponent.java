@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepr
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class EmptyArrangementRuleComponent extends JPanel implements Arrangement
     setBackground(UIUtil.getDecoratedRowColor());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return this;

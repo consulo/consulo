@@ -18,13 +18,13 @@ package com.intellij.openapi.components.store;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface ComponentSaveSession {
-  @NotNull
-  ComponentSaveSession save(@NotNull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
+  @Nonnull
+  ComponentSaveSession save(@Nonnull List<Pair<StateStorage.SaveSession, VirtualFile>> readonlyFiles);
 
   void finishSave();
 }

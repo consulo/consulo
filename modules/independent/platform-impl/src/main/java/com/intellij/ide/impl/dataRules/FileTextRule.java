@@ -25,20 +25,20 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public class FileTextRule implements GetDataRule<String> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<String> getKey() {
     return PlatformDataKeys.FILE_TEXT;
   }
 
   @Override
-  public String getData(@NotNull DataProvider dataProvider) {
+  public String getData(@Nonnull DataProvider dataProvider) {
     final VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
     if (virtualFile == null) {
       return null;

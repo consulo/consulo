@@ -21,8 +21,8 @@ package com.intellij.openapi.util;
 
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 

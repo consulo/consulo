@@ -23,8 +23,8 @@ import com.intellij.openapi.Forceable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 
@@ -34,12 +34,12 @@ public class ResizeableMappedFile implements Forceable {
   private long myLogicalSize;
   private final PagedFileStorage myStorage;
 
-  public ResizeableMappedFile(@NotNull File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize,
+  public ResizeableMappedFile(@Nonnull File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int pageSize,
                               boolean valuesAreBufferAligned) throws IOException {
     this(file, initialSize, lockContext, pageSize, valuesAreBufferAligned, false);
   }
 
-  public ResizeableMappedFile(@NotNull File file,
+  public ResizeableMappedFile(@Nonnull File file,
                               int initialSize,
                               @Nullable PagedFileStorage.StorageLockContext lockContext,
                               int pageSize,
@@ -230,7 +230,7 @@ public class ResizeableMappedFile implements Forceable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public PagedFileStorage getPagedFileStorage() {
     return myStorage;
   }

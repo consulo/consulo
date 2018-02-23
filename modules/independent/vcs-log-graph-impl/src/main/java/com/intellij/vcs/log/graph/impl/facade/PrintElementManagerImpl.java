@@ -26,28 +26,32 @@ import com.intellij.vcs.log.graph.api.printer.PrintElementManager;
 import com.intellij.vcs.log.graph.impl.print.ColorGetterByLayoutIndex;
 import com.intellij.vcs.log.graph.impl.print.GraphElementComparatorByLayoutIndex;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
 class PrintElementManagerImpl implements PrintElementManager {
-  @NotNull private final Comparator<GraphElement> myGraphElementComparator;
-  @NotNull private final ColorGetterByLayoutIndex myColorGetter;
-  @NotNull private final LinearGraph myLinearGraph;
-  @NotNull private Set<Integer> mySelectedNodeIds = Collections.emptySet();
-  @Nullable private PrintElementWithGraphElement mySelectedPrintElement = null;
+  @Nonnull
+  private final Comparator<GraphElement> myGraphElementComparator;
+  @Nonnull
+  private final ColorGetterByLayoutIndex myColorGetter;
+  @Nonnull
+  private final LinearGraph myLinearGraph;
+  @Nonnull
+  private Set<Integer> mySelectedNodeIds = Collections.emptySet();
+  @javax.annotation.Nullable
+  private PrintElementWithGraphElement mySelectedPrintElement = null;
 
   @SuppressWarnings("unchecked")
-  PrintElementManagerImpl(@NotNull final LinearGraph linearGraph,
-                          @NotNull final PermanentGraphInfo myPermanentGraph,
-                          @NotNull GraphColorManager colorManager) {
+  PrintElementManagerImpl(@Nonnull final LinearGraph linearGraph,
+                          @Nonnull final PermanentGraphInfo myPermanentGraph,
+                          @Nonnull GraphColorManager colorManager) {
     myLinearGraph = linearGraph;
     myColorGetter = new ColorGetterByLayoutIndex(linearGraph, myPermanentGraph, colorManager);
     myGraphElementComparator = new GraphElementComparatorByLayoutIndex(new NotNullFunction<Integer, Integer>() {
-      @NotNull
+      @Nonnull
       @Override
       public Integer fun(Integer nodeIndex) {
         int nodeId = linearGraph.getNodeId(nodeIndex);
@@ -58,7 +62,7 @@ class PrintElementManagerImpl implements PrintElementManager {
   }
 
   @Override
-  public boolean isSelected(@NotNull PrintElementWithGraphElement printElement) {
+  public boolean isSelected(@Nonnull PrintElementWithGraphElement printElement) {
     if (printElement.equals(mySelectedPrintElement)) return true;
 
     GraphElement graphElement = printElement.getGraphElement();
@@ -77,22 +81,22 @@ class PrintElementManagerImpl implements PrintElementManager {
     return false;
   }
 
-  void setSelectedElement(@NotNull PrintElementWithGraphElement printElement) {
+  void setSelectedElement(@Nonnull PrintElementWithGraphElement printElement) {
     mySelectedNodeIds = Collections.emptySet();
     mySelectedPrintElement = printElement;
   }
 
-  void setSelectedElements(@NotNull Set<Integer> selectedNodeId) {
+  void setSelectedElements(@Nonnull Set<Integer> selectedNodeId) {
     mySelectedPrintElement = null;
     mySelectedNodeIds = selectedNodeId;
   }
 
   @Override
-  public int getColorId(@NotNull GraphElement element) {
+  public int getColorId(@Nonnull GraphElement element) {
     return myColorGetter.getColorId(element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Comparator<GraphElement> getGraphElementComparator() {
     return myGraphElementComparator;

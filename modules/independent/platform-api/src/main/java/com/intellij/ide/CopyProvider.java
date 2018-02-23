@@ -16,10 +16,10 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface CopyProvider {
-  void performCopy(@NotNull DataContext dataContext);
-  boolean isCopyEnabled(@NotNull DataContext dataContext);
-  boolean isCopyVisible(@NotNull DataContext dataContext);
+  void performCopy(@Nonnull DataContext dataContext);
+  boolean isCopyEnabled(@Nonnull DataContext dataContext);
+  boolean isCopyVisible(@Nonnull DataContext dataContext);
 }

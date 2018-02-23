@@ -23,8 +23,7 @@ import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTr
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -35,7 +34,7 @@ import java.util.Collection;
 public abstract class AbstractToolWindowService<T extends ExternalEntityData> implements ProjectDataService<T, Void> {
   
   @Override
-  public void importData(@NotNull final Collection<DataNode<T>> toImport, @NotNull final Project project, boolean synchronous) {
+  public void importData(@Nonnull final Collection<DataNode<T>> toImport, @Nonnull final Project project, boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
@@ -51,11 +50,11 @@ public abstract class AbstractToolWindowService<T extends ExternalEntityData> im
     });
   }
 
-  protected abstract void processData(@NotNull Collection<DataNode<T>> nodes,
-                                      @NotNull Project project,
-                                      @Nullable ExternalSystemTasksTreeModel model);
+  protected abstract void processData(@Nonnull Collection<DataNode<T>> nodes,
+                                      @Nonnull Project project,
+                                      @javax.annotation.Nullable ExternalSystemTasksTreeModel model);
 
   @Override
-  public void removeData(@NotNull Collection<? extends Void> toRemove, @NotNull Project project, boolean synchronous) {
+  public void removeData(@Nonnull Collection<? extends Void> toRemove, @Nonnull Project project, boolean synchronous) {
   }
 }

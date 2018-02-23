@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -35,11 +35,11 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   }
 
   @Override
-  public VirtualFile findFileByPath(@NotNull String path) {
+  public VirtualFile findFileByPath(@Nonnull String path) {
     return findFileByPath(path, false);
   }
 
-  public VirtualFile findFileByPath(@NotNull String path, boolean isDirectory) {
+  public VirtualFile findFileByPath(@Nonnull String path, boolean isDirectory) {
     try {
       String url = VirtualFileManager.constructUrl(myProtocol, path);
       return getRemoteFileManager().getOrCreateFile(url, path, isDirectory);
@@ -50,22 +50,22 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   }
 
   @Override
-  public void addFileListener(@NotNull HttpVirtualFileListener listener) {
+  public void addFileListener(@Nonnull HttpVirtualFileListener listener) {
     getRemoteFileManager().addFileListener(listener);
   }
 
   @Override
-  public void addFileListener(@NotNull HttpVirtualFileListener listener, @NotNull Disposable parentDisposable) {
+  public void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable) {
     getRemoteFileManager().addFileListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeFileListener(@NotNull HttpVirtualFileListener listener) {
+  public void removeFileListener(@Nonnull HttpVirtualFileListener listener) {
     getRemoteFileManager().removeFileListener(listener);
   }
 
   @Override
-  public boolean isFileDownloaded(@NotNull final VirtualFile file) {
+  public boolean isFileDownloaded(@Nonnull final VirtualFile file) {
     return file instanceof HttpVirtualFile && ((HttpVirtualFile)file).getFileInfo().getState() == RemoteFileState.DOWNLOADED;
   }
 
@@ -77,44 +77,44 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   public void initComponent() { }
 
   @Override
-  @NotNull
-  public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException {
+  @Nonnull
+  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException {
+  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException {
+  public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent, @NotNull final String copyName) throws IOException {
+  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException {
+  public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String extractPresentableUrl(@NotNull String path) {
+  public String extractPresentableUrl(@Nonnull String path) {
     return VirtualFileManager.constructUrl(myProtocol, path);
   }
 
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return findFileByPath(path);
   }
 
@@ -122,7 +122,7 @@ public abstract class HttpFileSystemBase extends HttpFileSystem {
   public void refresh(boolean asynchronous) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProtocol() {
     return myProtocol;

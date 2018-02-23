@@ -23,8 +23,8 @@ import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.PlaceProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -32,15 +32,16 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public interface VcsContext extends PlaceProvider<String> {
-  @Nullable Project getProject();
+  @javax.annotation.Nullable
+  Project getProject();
 
   @Nullable
   VirtualFile getSelectedFile();
 
-  @NotNull
+  @Nonnull
   VirtualFile[] getSelectedFiles();
 
-  @NotNull
+  @Nonnull
   default Stream<VirtualFile> getSelectedFilesStream() {
     return Arrays.stream(getSelectedFiles());
   }
@@ -57,21 +58,21 @@ public interface VcsContext extends PlaceProvider<String> {
 
   File getSelectedIOFile();
 
-  @NotNull
+  @Nonnull
   FilePath[] getSelectedFilePaths();
 
-  @NotNull
+  @Nonnull
   default Stream<FilePath> getSelectedFilePathsStream() {
     return Arrays.stream(getSelectedFilePaths());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   FilePath getSelectedFilePath();
 
-  @Nullable
+  @javax.annotation.Nullable
   ChangeList[] getSelectedChangeLists();
 
-  @Nullable
+  @javax.annotation.Nullable
   Change[] getSelectedChanges();
 
   String getActionName();

@@ -19,8 +19,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokenType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -34,15 +34,15 @@ import java.util.Set;
  */
 public class StdArrangementMatchRule extends ArrangementMatchRule implements Cloneable, Comparable<StdArrangementMatchRule> {
 
-  public StdArrangementMatchRule(@NotNull StdArrangementEntryMatcher matcher) {
+  public StdArrangementMatchRule(@Nonnull StdArrangementEntryMatcher matcher) {
     super(matcher);
   }
 
-  public StdArrangementMatchRule(@NotNull StdArrangementEntryMatcher matcher, @NotNull ArrangementSettingsToken orderType) {
+  public StdArrangementMatchRule(@Nonnull StdArrangementEntryMatcher matcher, @Nonnull ArrangementSettingsToken orderType) {
     super(matcher, orderType);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StdArrangementEntryMatcher getMatcher() {
     return (StdArrangementEntryMatcher)super.getMatcher();
@@ -54,7 +54,7 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
   }
 
   @Override
-  public int compareTo(@NotNull StdArrangementMatchRule o) {
+  public int compareTo(@Nonnull StdArrangementMatchRule o) {
     final Set<ArrangementSettingsToken> tokens = ArrangementUtil.extractTokens(getMatcher().getCondition()).keySet();
     final Set<ArrangementSettingsToken> tokens1 = ArrangementUtil.extractTokens(o.getMatcher().getCondition()).keySet();
     if (tokens1.containsAll(tokens)) {
@@ -76,7 +76,7 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
   }
 
   @Nullable
-  private static String getEntryType(@NotNull Set<ArrangementSettingsToken> tokens) {
+  private static String getEntryType(@Nonnull Set<ArrangementSettingsToken> tokens) {
     for (ArrangementSettingsToken token : tokens) {
       if (StdArrangementTokenType.ENTRY_TYPE.is(token)) {
         return token.getId();

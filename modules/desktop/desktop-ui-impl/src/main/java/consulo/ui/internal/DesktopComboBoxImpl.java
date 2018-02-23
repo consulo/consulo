@@ -23,8 +23,8 @@ import consulo.ui.ListItemRenders;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -42,21 +42,21 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
     setModel(myModel);
     setRenderer(new ColoredListCellRenderer<E>() {
       @Override
-      protected void customizeCellRenderer(@NotNull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+      protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
         DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<E>(this);
         myRender.render(render, index, value);
       }
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ListModel<E> getListModel() {
     return myModel;
   }
 
   @Override
-  public void setRender(@NotNull ListItemRender<E> render) {
+  public void setRender(@Nonnull ListItemRender<E> render) {
     myRender = render;
   }
 
@@ -72,12 +72,12 @@ public class DesktopComboBoxImpl<E> extends ComboBoxWithWidePopup implements Com
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+  public void addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     addItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     removeItemListener(new DesktopValueListenerAsItemListenerImpl<E>(valueListener, true));
   }
 

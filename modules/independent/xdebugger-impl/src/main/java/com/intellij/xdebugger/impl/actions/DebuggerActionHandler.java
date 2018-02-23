@@ -17,18 +17,18 @@ package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class DebuggerActionHandler {
 
-  public abstract void perform(@NotNull Project project, AnActionEvent event);
+  public abstract void perform(@Nonnull Project project, AnActionEvent event);
 
-  public abstract boolean isEnabled(@NotNull Project project, AnActionEvent event);
+  public abstract boolean isEnabled(@Nonnull Project project, AnActionEvent event);
 
-  public boolean isHidden(@NotNull Project project, AnActionEvent event) {
+  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
     return false;
   }
 }

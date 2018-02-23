@@ -20,9 +20,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.NonFocusableCheckBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,8 +32,8 @@ import java.awt.*;
 public abstract class RenameWithOptionalReferencesDialog extends RenameDialog {
   private JCheckBox myCbSearchForReferences;
 
-  public RenameWithOptionalReferencesDialog(@NotNull Project project,
-                                            @NotNull PsiElement psiElement,
+  public RenameWithOptionalReferencesDialog(@Nonnull Project project,
+                                            @Nonnull PsiElement psiElement,
                                             @Nullable PsiElement nameSuggestionContext,
                                             Editor editor) {
     super(project, psiElement, nameSuggestionContext, editor);

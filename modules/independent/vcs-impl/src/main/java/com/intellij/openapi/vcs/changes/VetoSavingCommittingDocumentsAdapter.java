@@ -36,7 +36,7 @@ import com.intellij.openapi.vcs.changes.ui.CommitHelper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public class VetoSavingCommittingDocumentsAdapter implements ApplicationComponen
     myFileDocumentManager = fileDocumentManager;
   }
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public String getComponentName() {
     return "VetoSavingComittingDocumentsAdapter";
   }

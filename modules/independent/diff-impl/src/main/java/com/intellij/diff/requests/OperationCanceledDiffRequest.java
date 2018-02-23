@@ -15,10 +15,8 @@
  */
 package com.intellij.diff.requests;
 
-import org.jetbrains.annotations.Nullable;
-
 public class OperationCanceledDiffRequest extends MessageDiffRequest {
-  public OperationCanceledDiffRequest(@Nullable String title) {
+  public OperationCanceledDiffRequest(@javax.annotation.Nullable String title) {
     super(title, "Operation canceled");
   }
 

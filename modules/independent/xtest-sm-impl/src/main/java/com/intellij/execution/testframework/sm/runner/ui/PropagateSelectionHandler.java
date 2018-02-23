@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 
 /**
@@ -27,6 +27,6 @@ import com.intellij.execution.testframework.sm.runner.SMTestProxy;
  */
 public interface PropagateSelectionHandler {
   void handlePropagateSelectionRequest(@Nullable SMTestProxy selectedTestProxy,
-                                       @NotNull Object sender,
+                                       @Nonnull Object sender,
                                        boolean requestFocus);
 }

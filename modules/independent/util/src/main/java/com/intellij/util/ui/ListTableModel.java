@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -30,19 +30,19 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
   private boolean myIsSortable = false;
   private SortOrder mySortOrder = SortOrder.ASCENDING;
 
-  public ListTableModel(@NotNull ColumnInfo... columnInfos) {
+  public ListTableModel(@Nonnull ColumnInfo... columnInfos) {
     this(columnInfos, new ArrayList<Item>(), 0, SortOrder.ASCENDING);
   }
 
-  public ListTableModel(@NotNull ColumnInfo[] columnNames, @NotNull List<Item> items, int selectedColumn) {
+  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items, int selectedColumn) {
     this(columnNames, items, selectedColumn, SortOrder.ASCENDING);
   }
 
-  public ListTableModel(@NotNull ColumnInfo[] columnNames, @NotNull List<Item> items) {
+  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items) {
     this(columnNames, items, 0);
   }
 
-  public ListTableModel(@NotNull ColumnInfo[] columnNames, @NotNull List<Item> items, int selectedColumn, @NotNull SortOrder order) {
+  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items, int selectedColumn, @Nonnull SortOrder order) {
     myColumnInfos = columnNames;
     myItems = items;
     mySortByColumn = selectedColumn;
@@ -101,7 +101,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
   }
 
   @Override
-  public void setItems(@NotNull List<Item> items) {
+  public void setItems(@Nonnull List<Item> items) {
     myItems = items;
     fireTableDataChanged();
   }
@@ -132,7 +132,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Item> getItems() {
     return Collections.unmodifiableList(myItems);
@@ -192,7 +192,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
     fireTableRowsInserted(index, index);
   }
 
-  public void addRows(@NotNull Collection<Item> items) {
+  public void addRows(@Nonnull Collection<Item> items) {
     myItems.addAll(items);
     if (!myItems.isEmpty()) {
       fireTableRowsInserted(myItems.size() - items.size(), myItems.size() - 1);

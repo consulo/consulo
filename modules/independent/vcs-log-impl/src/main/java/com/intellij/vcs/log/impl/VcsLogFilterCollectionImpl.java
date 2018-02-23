@@ -17,22 +17,29 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
-  @NotNull public static final VcsLogFilterCollection EMPTY = new VcsLogFilterCollectionBuilder().build();
+  @Nonnull
+  public static final VcsLogFilterCollection EMPTY = new VcsLogFilterCollectionBuilder().build();
 
-  @Nullable private final VcsLogBranchFilter myBranchFilter;
-  @Nullable private final VcsLogUserFilter myUserFilter;
+  @Nullable
+  private final VcsLogBranchFilter myBranchFilter;
+  @Nullable
+  private final VcsLogUserFilter myUserFilter;
   @Nullable private final VcsLogHashFilter myHashFilter;
-  @Nullable private final VcsLogDateFilter myDateFilter;
-  @Nullable private final VcsLogTextFilter myTextFilter;
-  @Nullable private final VcsLogStructureFilter myStructureFilter;
-  @Nullable private final VcsLogRootFilter myRootFilter;
+  @Nullable
+  private final VcsLogDateFilter myDateFilter;
+  @Nullable
+  private final VcsLogTextFilter myTextFilter;
+  @Nullable
+  private final VcsLogStructureFilter myStructureFilter;
+  @Nullable
+  private final VcsLogRootFilter myRootFilter;
 
   public VcsLogFilterCollectionImpl(@Nullable VcsLogBranchFilter branchFilter,
                                     @Nullable VcsLogUserFilter userFilter,
@@ -98,7 +105,7 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
     return myBranchFilter == null && getDetailsFilters().isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsLogDetailsFilter> getDetailsFilters() {
     return ContainerUtil.skipNulls(Arrays.asList(myUserFilter, myDateFilter, myTextFilter, myStructureFilter));
@@ -117,18 +124,25 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
   }
 
   public static class VcsLogFilterCollectionBuilder {
-    @Nullable private VcsLogBranchFilter myBranchFilter;
-    @Nullable private VcsLogUserFilter myUserFilter;
-    @Nullable private VcsLogHashFilter myHashFilter;
-    @Nullable private VcsLogDateFilter myDateFilter;
-    @Nullable private VcsLogTextFilter myTextFilter;
-    @Nullable private VcsLogStructureFilter myStructureFilter;
-    @Nullable private VcsLogRootFilter myRootFilter;
+    @Nullable
+    private VcsLogBranchFilter myBranchFilter;
+    @Nullable
+    private VcsLogUserFilter myUserFilter;
+    @Nullable
+    private VcsLogHashFilter myHashFilter;
+    @Nullable
+    private VcsLogDateFilter myDateFilter;
+    @Nullable
+    private VcsLogTextFilter myTextFilter;
+    @Nullable
+    private VcsLogStructureFilter myStructureFilter;
+    @Nullable
+    private VcsLogRootFilter myRootFilter;
 
     public VcsLogFilterCollectionBuilder() {
     }
 
-    public VcsLogFilterCollectionBuilder(@NotNull VcsLogFilterCollection filterCollection) {
+    public VcsLogFilterCollectionBuilder(@Nonnull VcsLogFilterCollection filterCollection) {
       myBranchFilter = filterCollection.getBranchFilter();
       myUserFilter = filterCollection.getUserFilter();
       myHashFilter = filterCollection.getHashFilter();
@@ -138,49 +152,49 @@ public class VcsLogFilterCollectionImpl implements VcsLogFilterCollection {
       myRootFilter = filterCollection.getRootFilter();
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogBranchFilter filter) {
       myBranchFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogUserFilter filter) {
       myUserFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogHashFilter filter) {
       myHashFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogDateFilter filter) {
       myDateFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogTextFilter filter) {
       myTextFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogStructureFilter filter) {
       myStructureFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollectionBuilder with(@Nullable VcsLogRootFilter filter) {
       myRootFilter = filter;
       return this;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterCollection build() {
       return new VcsLogFilterCollectionImpl(myBranchFilter, myUserFilter, myHashFilter, myDateFilter, myTextFilter, myStructureFilter,
                                             myRootFilter);

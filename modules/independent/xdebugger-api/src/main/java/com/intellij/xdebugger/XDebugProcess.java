@@ -29,8 +29,8 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkListener;
 
@@ -51,7 +51,7 @@ public abstract class XDebugProcess {
   /**
    * @param session pass <code>session</code> parameter of {@link consulo.xdebugger.XDebugProcessStarter#start} method to this constructor
    */
-  protected XDebugProcess(@NotNull XDebugSession session) {
+  protected XDebugProcess(@Nonnull XDebugSession session) {
     mySession = session;
   }
 
@@ -62,7 +62,7 @@ public abstract class XDebugProcess {
   /**
    * @return breakpoint handlers which will be used to set/clear breakpoints in the underlying debugging process
    */
-  @NotNull
+  @Nonnull
   public XBreakpointHandler<?>[] getBreakpointHandlers() {
     return XBreakpointHandler.EMPTY_ARRAY;
   }
@@ -70,7 +70,7 @@ public abstract class XDebugProcess {
   /**
    * @return editor provider which will be used to produce editors for "Evaluate" and "Set Value" actions
    */
-  @NotNull
+  @Nonnull
   public abstract XDebuggerEditorsProvider getEditorsProvider();
 
   /**
@@ -157,7 +157,7 @@ public abstract class XDebugProcess {
    * after returning from current method/function.
    * Do not call this method directly. Use {@link XDebugSession#stepOut} instead
    */
-  public void startStepOut(@Nullable XSuspendContext context) {
+  public void startStepOut(@javax.annotation.Nullable XSuspendContext context) {
     //noinspection deprecation
     startStepOut();
   }
@@ -179,7 +179,7 @@ public abstract class XDebugProcess {
     throw new AbstractMethodError();
   }
 
-  @NotNull
+  @Nonnull
   public AsyncResult<Void> stopAsync() {
     stop();
     return AsyncResult.done(null);
@@ -206,7 +206,7 @@ public abstract class XDebugProcess {
    * @deprecated Use {@link #runToPosition(XSourcePosition, XSuspendContext)} instead
    */
   @Deprecated
-  public void runToPosition(@NotNull XSourcePosition position) {
+  public void runToPosition(@Nonnull XSourcePosition position) {
     throw new AbstractMethodError();
   }
 
@@ -217,7 +217,7 @@ public abstract class XDebugProcess {
    *
    * @param position position in source code
    */
-  public void runToPosition(@NotNull XSourcePosition position, @Nullable XSuspendContext context) {
+  public void runToPosition(@Nonnull XSourcePosition position, @Nullable XSuspendContext context) {
     //noinspection deprecation
     runToPosition(position);
   }
@@ -242,7 +242,7 @@ public abstract class XDebugProcess {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public final ProcessHandler getProcessHandler() {
     if (myProcessHandler == null) {
       myProcessHandler = doGetProcessHandler();
@@ -253,7 +253,7 @@ public abstract class XDebugProcess {
     return myProcessHandler;
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionConsole createConsole() {
     return TextConsoleBuilderFactory.getInstance().createBuilder(getSession().getProject()).getConsole();
   }
@@ -262,7 +262,7 @@ public abstract class XDebugProcess {
    * Override this method to enable 'Mark Object' action
    * @return new instance of {@link XValueMarkerProvider}'s implementation or {@code null} if 'Mark Object' feature isn't supported
    */
-  @Nullable
+  @javax.annotation.Nullable
   public XValueMarkerProvider<?,?> createValueMarkerProvider() {
     return null;
   }
@@ -270,7 +270,7 @@ public abstract class XDebugProcess {
   /**
    * Override this method to provide additional actions in 'Debug' tool window
    */
-  public void registerAdditionalActions(@NotNull DefaultActionGroup leftToolbar, @NotNull DefaultActionGroup topToolbar, @NotNull DefaultActionGroup settings) {
+  public void registerAdditionalActions(@Nonnull DefaultActionGroup leftToolbar, @Nonnull DefaultActionGroup topToolbar, @Nonnull DefaultActionGroup settings) {
   }
 
   /**
@@ -288,7 +288,7 @@ public abstract class XDebugProcess {
   /**
    * Override this method to customize content of tab in 'Debug' tool window
    */
-  @NotNull
+  @Nonnull
   public XDebugTabLayouter createTabLayouter() {
     return new XDebugTabLayouter() {
     };

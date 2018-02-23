@@ -19,7 +19,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -77,7 +77,7 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
   @Nullable @Nls
   String getChangelistTitle();
 
-  boolean isChangeLocallyAvailable(FilePath filePath, @Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
+  boolean isChangeLocallyAvailable(FilePath filePath, @javax.annotation.Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
 
   /**
    * Returns true if a timer-based refresh of committed changes should be followed by refresh of incoming changes, so that,

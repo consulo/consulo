@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,14 +30,14 @@ public class DesktopMenuImpl extends JMenu implements Menu, SwingWrapper {
     super(text);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Menu add(@NotNull MenuItem menuItem) {
+  public Menu add(@Nonnull MenuItem menuItem) {
     add((JMenuItem)menuItem);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Menu separate() {
     addSeparator();

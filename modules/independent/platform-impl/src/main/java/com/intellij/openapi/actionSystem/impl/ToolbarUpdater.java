@@ -28,7 +28,7 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,11 +48,11 @@ public abstract class ToolbarUpdater implements Activatable {
 
   private boolean myListenersArmed;
 
-  public ToolbarUpdater(@NotNull JComponent component) {
+  public ToolbarUpdater(@Nonnull JComponent component) {
     this(ActionManagerEx.getInstanceEx(), KeymapManagerEx.getInstanceEx(), component);
   }
 
-  public ToolbarUpdater(@NotNull ActionManagerEx actionManager, @NotNull KeymapManagerEx keymapManager, @NotNull JComponent component) {
+  public ToolbarUpdater(@Nonnull ActionManagerEx actionManager, @Nonnull KeymapManagerEx keymapManager, @Nonnull JComponent component) {
     myActionManager = actionManager;
     myKeymapManager = keymapManager;
     myComponent = component;
@@ -79,12 +79,12 @@ public abstract class ToolbarUpdater implements Activatable {
     myKeymapManager.removeWeakListener(myKeymapManagerListener);
   }
 
-  @NotNull
+  @Nonnull
   public KeymapManagerEx getKeymapManager() {
     return myKeymapManager;
   }
 
-  @NotNull
+  @Nonnull
   public ActionManagerEx getActionManager() {
     return myActionManager;
   }
@@ -168,10 +168,11 @@ public abstract class ToolbarUpdater implements Activatable {
     private final boolean myTransparentOnly;
     private final boolean myForced;
 
-    @NotNull private final WeakReference<ToolbarUpdater> myUpdaterRef;
+    @Nonnull
+    private final WeakReference<ToolbarUpdater> myUpdaterRef;
     private final int myHash;
 
-    public MyUpdateRunnable(@NotNull ToolbarUpdater updater, boolean transparentOnly, boolean forced) {
+    public MyUpdateRunnable(@Nonnull ToolbarUpdater updater, boolean transparentOnly, boolean forced) {
       myTransparentOnly = transparentOnly;
       myForced = forced;
       myHash = updater.hashCode();

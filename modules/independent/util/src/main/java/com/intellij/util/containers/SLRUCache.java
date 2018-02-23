@@ -20,8 +20,8 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.containers.hash.EqualityPolicy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
   protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize) {
@@ -32,11 +32,11 @@ public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
     super(protectedQueueSize, probationalQueueSize, hashingStrategy);
   }
 
-  @NotNull
+  @Nonnull
   public abstract V createValue(K key);
 
   @Override
-  @NotNull
+  @Nonnull
   public V get(K key) {
     V value = super.get(key);
     if (value != null) {

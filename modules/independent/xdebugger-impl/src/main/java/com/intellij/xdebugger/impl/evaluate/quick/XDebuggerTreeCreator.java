@@ -27,15 +27,16 @@ import com.intellij.xdebugger.impl.evaluate.quick.common.DebuggerTreeCreator;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,String>> {
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final XDebuggerEditorsProvider myProvider;
   private final XSourcePosition myPosition;
   private final XValueMarkers<?, ?> myMarkers;
 
-  public XDebuggerTreeCreator(@NotNull Project project, XDebuggerEditorsProvider editorsProvider, XSourcePosition sourcePosition,
+  public XDebuggerTreeCreator(@Nonnull Project project, XDebuggerEditorsProvider editorsProvider, XSourcePosition sourcePosition,
                               XValueMarkers<?, ?> markers) {
     myProject = project;
     myProvider = editorsProvider;
@@ -43,17 +44,17 @@ public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,Str
     myMarkers = markers;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Tree createTree(@NotNull Pair<XValue, String> descriptor) {
+  public Tree createTree(@Nonnull Pair<XValue, String> descriptor) {
     XDebuggerTree tree = new XDebuggerTree(myProject, myProvider, myPosition, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, myMarkers);
     tree.setRoot(new XValueNodeImpl(tree, null, descriptor.getSecond(), descriptor.getFirst()), true);
     return tree;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getTitle(@NotNull Pair<XValue, String> descriptor) {
+  public String getTitle(@Nonnull Pair<XValue, String> descriptor) {
     return descriptor.getSecond();
   }
 

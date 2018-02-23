@@ -29,8 +29,8 @@ import com.intellij.util.EventDispatcher;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ContentFolderPropertiesDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,15 +51,15 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   private final ContentEntry myContentEntry;
 
   public interface ContentEntryEditorListener extends EventListener {
-    void editingStarted(@NotNull ContentEntryEditor editor);
+    void editingStarted(@Nonnull ContentEntryEditor editor);
 
-    void beforeEntryDeleted(@NotNull ContentEntryEditor editor);
+    void beforeEntryDeleted(@Nonnull ContentEntryEditor editor);
 
-    void folderAdded(@NotNull ContentEntryEditor editor, ContentFolder contentFolder);
+    void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder);
 
-    void folderRemoved(@NotNull ContentEntryEditor editor, ContentFolder contentFolder);
+    void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder);
 
-    void navigationRequested(@NotNull ContentEntryEditor editor, VirtualFile file);
+    void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file);
   }
 
   public ContentEntryEditor(final ContentEntry contentEntry) {
@@ -94,7 +94,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
     update();
   }
 
-  @NotNull
+  @Nonnull
   protected ContentEntry getContentEntry() {
     return myContentEntry;
   }
@@ -177,7 +177,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
 
   protected ContentRootPanel createContentRootPane() {
     return new ContentRootPanel(this) {
-      @NotNull
+      @Nonnull
       @Override
       protected ContentEntry getContentEntry() {
         return ContentEntryEditor.this.getContentEntry();
@@ -186,7 +186,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public ContentFolder addFolder(@NotNull final VirtualFile file, ContentFolderTypeProvider contentFolderType) {
+  public ContentFolder addFolder(@Nonnull final VirtualFile file, ContentFolderTypeProvider contentFolderType) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry != null) {
       final ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
@@ -203,7 +203,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
 
-  public void removeFolder(@NotNull final ContentFolder contentFolder) {
+  public void removeFolder(@Nonnull final ContentFolder contentFolder) {
     try {
       if (contentFolder.isSynthetic()) {
         return;
@@ -220,7 +220,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   }
 
   @Nullable
-  public ContentFolder getFolder(@NotNull final VirtualFile file) {
+  public ContentFolder getFolder(@Nonnull final VirtualFile file) {
     final ContentEntry contentEntry = getContentEntry();
     if (contentEntry == null) {
       return null;

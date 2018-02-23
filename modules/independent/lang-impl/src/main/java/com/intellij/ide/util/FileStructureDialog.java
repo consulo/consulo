@@ -53,9 +53,9 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -85,7 +85,7 @@ public class FileStructureDialog extends DialogWrapper {
                              @Nullable Editor editor,
                              Project project,
                              Navigatable navigatable,
-                             @NotNull final Disposable auxDisposable,
+                             @Nonnull final Disposable auxDisposable,
                              final boolean applySortAndFilter) {
     super(project, true);
     myProject = project;
@@ -413,7 +413,7 @@ public class FileStructureDialog extends DialogWrapper {
     }
 
     @Override
-    public Object getData(@NotNull Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
       Object selectedElement = myCommanderPanel.getSelectedValue();
 
       if (selectedElement instanceof TreeElement) selectedElement = ((StructureViewTreeElement)selectedElement).getValue();

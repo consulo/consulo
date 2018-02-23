@@ -16,16 +16,16 @@
 package com.intellij.find;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SearchSession {
   Key<SearchSession> KEY = Key.create("search.replace.session");
   String INCORRECT_REGEX_MESSAGE = "Incorrect regular expression";
 
-  @NotNull
+  @Nonnull
   FindModel getFindModel();
 
-  @NotNull
+  @Nonnull
   SearchReplaceComponent getComponent();
 
   boolean hasMatches();

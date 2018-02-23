@@ -21,8 +21,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -38,20 +38,20 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   private Consumer<Task.Backgroundable> myRunner;
   private int myCnt;
 
-  public ModalityIgnorantBackgroundableTask(@Nullable Project project,
-                                            @NotNull String title,
+  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
+                                            @Nonnull String title,
                                             boolean canBeCancelled,
                                             @Nullable PerformInBackgroundOption backgroundOption) {
     super(project, title, canBeCancelled, backgroundOption);
   }
 
-  public ModalityIgnorantBackgroundableTask(@Nullable Project project,
-                                            @NotNull String title,
+  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
+                                            @Nonnull String title,
                                             boolean canBeCancelled) {
     super(project, title, canBeCancelled);
   }
 
-  public ModalityIgnorantBackgroundableTask(@Nullable Project project, @NotNull String title) {
+  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project, @Nonnull String title) {
     super(project, title);
   }
 
@@ -61,7 +61,7 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   protected abstract void doInAwtIfCancel();
   @RequiredDispatchThread
   protected abstract void doInAwtIfSuccess();
-  protected abstract void runImpl(@NotNull ProgressIndicator indicator);
+  protected abstract void runImpl(@Nonnull ProgressIndicator indicator);
 
   public void runSteadily(final Consumer<Backgroundable> consumer) {
     myRunner = consumer;
@@ -70,7 +70,7 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   }
 
   @Override
-  public void run(@NotNull final ProgressIndicator indicator) {
+  public void run(@Nonnull final ProgressIndicator indicator) {
     try {
       runImpl(indicator);
     } catch (final ToBeRepeatedException tbre) {

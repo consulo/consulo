@@ -33,8 +33,8 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +78,7 @@ class ExternalStorageQueue {
     return myLoadedBytes.remove(ExternalStorage.buildFileSpec(roamingType, fileSpec));
   }
 
-  void wantLoad(@NotNull String fileSpec, @NotNull RoamingType roamingType, int mod, @NotNull StateStorageManager stateStorageManager) {
+  void wantLoad(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, int mod, @Nonnull StateStorageManager stateStorageManager) {
     myLoadTask.cancel(false);
 
     myLoadItems.add(new LoadItem(fileSpec, roamingType, mod, stateStorageManager));
@@ -179,7 +179,7 @@ class ExternalStorageQueue {
     } */
   }
 
-  void wantSave(@NotNull File proxyDirectory, @NotNull String fileSpec, RoamingType roamingType, byte[] content) throws IOException {
+  void wantSave(@Nonnull File proxyDirectory, @Nonnull String fileSpec, RoamingType roamingType, byte[] content) throws IOException {
     File file = new File(proxyDirectory, ExternalStorage.buildFileSpec(roamingType, fileSpec));
     FileUtil.createParentDirs(file);
     FileUtil.writeToFile(file, content);

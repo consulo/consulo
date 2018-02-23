@@ -19,8 +19,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -29,9 +29,9 @@ import java.awt.*;
  */
 public abstract class MacMessages {
   @Messages.YesNoCancelResult
-  public abstract int showYesNoCancelDialog(@NotNull String title,
+  public abstract int showYesNoCancelDialog(@Nonnull String title,
                                             String message,
-                                            @NotNull String defaultButton,
+                                            @Nonnull String defaultButton,
                                             String alternateButton,
                                             String otherButton,
                                             @Nullable Window window,
@@ -59,26 +59,26 @@ public abstract class MacMessages {
    *
    * @return number of button pressed: from 0 up to buttons.length-1 inclusive, or -1 for Cancel
    */
-  public abstract int showMessageDialog(@NotNull String title, String message, @NotNull String[] buttons, boolean errorStyle,
+  public abstract int showMessageDialog(@Nonnull String title, String message, @Nonnull String[] buttons, boolean errorStyle,
                                         @Nullable Window window, int defaultOptionIndex, int focusedOptionIndex,
                                         @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
 
-  public abstract void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText, @Nullable Window window);
+  public abstract void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window);
 
-  public abstract void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText);
-
-  /**
-   * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
-   */
-  @Messages.YesNoResult
-  public abstract int showYesNoDialog(@NotNull String title, String message, @NotNull String yesButton, @NotNull String noButton, @Nullable Window window);
+  public abstract void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText);
 
   /**
    * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
    */
   @Messages.YesNoResult
-  public abstract int showYesNoDialog(@NotNull String title, String message, @NotNull String yesButton, @NotNull String noButton, @Nullable Window window,
+  public abstract int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window);
+
+  /**
+   * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
+   */
+  @Messages.YesNoResult
+  public abstract int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window,
                                       @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
 
-  public abstract void showErrorDialog(@NotNull String title, String message, @NotNull String okButton, @Nullable Window window);
+  public abstract void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window);
 }

@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DescriptiveNameUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lang.findUsages.DescriptiveNameUtil");
@@ -31,7 +31,7 @@ public class DescriptiveNameUtil {
     return StringUtil.isEmpty(name) ? "''" : name;
   }
 
-  public static String getDescriptiveName(@NotNull PsiElement psiElement) {
+  public static String getDescriptiveName(@Nonnull PsiElement psiElement) {
     LOG.assertTrue(psiElement.isValid());
 
     if (psiElement instanceof PsiMetaOwner) {

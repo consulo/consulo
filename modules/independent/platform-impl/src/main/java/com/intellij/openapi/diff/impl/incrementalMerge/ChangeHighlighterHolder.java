@@ -23,8 +23,8 @@ import com.intellij.openapi.diff.impl.util.TextDiffType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,8 +67,8 @@ class ChangeHighlighterHolder {
     myHighlighters.add(highlighter);
   }
 
-  @NotNull
-  private static Color makeColorForApplied(@NotNull Color color) {
+  @Nonnull
+  private static Color makeColorForApplied(@Nonnull Color color) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), APPLIED_CHANGE_TRANSPARENCY);
   }
 
@@ -140,7 +140,7 @@ class ChangeHighlighterHolder {
     }
   }
 
-  private RangeHighlighter cloneMainHighlighter(@NotNull RangeHighlighter mainHighlighter) {
+  private RangeHighlighter cloneMainHighlighter(@Nonnull RangeHighlighter mainHighlighter) {
     return myEditor.getMarkupModel().addRangeHighlighter(mainHighlighter.getStartOffset(), mainHighlighter.getEndOffset(), mainHighlighter.getLayer(),
                                                                                  null, mainHighlighter.getTargetArea());
   }

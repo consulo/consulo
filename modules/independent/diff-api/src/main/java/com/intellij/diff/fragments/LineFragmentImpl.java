@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.fragments;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class LineFragmentImpl implements LineFragment {
          null);
   }
 
-  public LineFragmentImpl(@NotNull LineFragment fragment, @Nullable List<DiffFragment> fragments) {
+  public LineFragmentImpl(@Nonnull LineFragment fragment, @Nullable List<DiffFragment> fragments) {
     this(fragment.getStartLine1(), fragment.getEndLine1(), fragment.getStartLine2(), fragment.getEndLine2(),
          fragment.getStartOffset1(), fragment.getEndOffset1(), fragment.getStartOffset2(), fragment.getEndOffset2(),
          fragments);
@@ -101,12 +101,12 @@ public class LineFragmentImpl implements LineFragment {
     return myEndOffset2;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<DiffFragment> getInnerFragments() {
     return myInnerFragments;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static List<DiffFragment> dropWholeChangedFragments(@Nullable List<DiffFragment> fragments, int length1, int length2) {
     if (fragments != null && fragments.size() == 1) {
       DiffFragment diffFragment = fragments.get(0);

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.settings;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -27,19 +27,19 @@ import java.util.Set;
 public abstract class ExternalSystemSettingsListenerAdapter<S extends ExternalProjectSettings> implements ExternalSystemSettingsListener<S> {
 
   @Override
-  public void onProjectRenamed(@NotNull String oldName, @NotNull String newName) {
+  public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
   }
 
   @Override
-  public void onProjectsLinked(@NotNull Collection<S> settings) {
+  public void onProjectsLinked(@Nonnull Collection<S> settings) {
   }
 
   @Override
-  public void onProjectsUnlinked(@NotNull Set<String> linkedProjectPaths) {
+  public void onProjectsUnlinked(@Nonnull Set<String> linkedProjectPaths) {
   }
 
   @Override
-  public void onUseAutoImportChange(boolean currentValue, @NotNull String linkedProjectPath) {
+  public void onUseAutoImportChange(boolean currentValue, @Nonnull String linkedProjectPath) {
   }
 
   @Override

@@ -25,9 +25,9 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -189,13 +189,13 @@ public class CommonActionsPanel extends JPanel {
     new AnAction("Delete Hook") {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         removeButton.actionPerformed(e);
       }
 
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         final JComponent contextComponent = removeButton.getContextComponent();
         if (contextComponent instanceof JTable && ((JTable)contextComponent).isEditing()) {
           e.getPresentation().setEnabled(false);
@@ -230,7 +230,7 @@ public class CommonActionsPanel extends JPanel {
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myButton.performAction(myListener);
     }
 

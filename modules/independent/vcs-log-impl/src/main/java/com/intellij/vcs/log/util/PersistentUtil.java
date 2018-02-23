@@ -24,7 +24,7 @@ import com.intellij.util.PathUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.*;
 import com.intellij.vcs.log.VcsLogProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,22 +33,24 @@ import java.util.List;
 import java.util.Map;
 
 public class PersistentUtil {
-  @NotNull public static final File LOG_CACHE = new File(PathManager.getSystemPath(), "vcs-log");
-  @NotNull private static final String CORRUPTION_MARKER = "corruption.marker";
+  @Nonnull
+  public static final File LOG_CACHE = new File(PathManager.getSystemPath(), "vcs-log");
+  @Nonnull
+  private static final String CORRUPTION_MARKER = "corruption.marker";
 
-  @NotNull
-  public static String calcLogId(@NotNull Project project, @NotNull Map<VirtualFile, VcsLogProvider> logProviders) {
+  @Nonnull
+  public static String calcLogId(@Nonnull Project project, @Nonnull Map<VirtualFile, VcsLogProvider> logProviders) {
     int hashcode = calcLogProvidersHash(logProviders);
     return project.getLocationHash() + "." + Integer.toHexString(hashcode);
   }
 
-  private static int calcLogProvidersHash(@NotNull final Map<VirtualFile, VcsLogProvider> logProviders) {
+  private static int calcLogProvidersHash(@Nonnull final Map<VirtualFile, VcsLogProvider> logProviders) {
     List<VirtualFile> sortedRoots = ContainerUtil.sorted(logProviders.keySet(), Comparator.comparing(VirtualFile::getPath));
     return StringUtil.join(sortedRoots, root -> root.getPath() + "." + logProviders.get(root).getSupportedVcs().getName(), ".").hashCode();
   }
 
-  @NotNull
-  public static File getStorageFile(@NotNull String storageKind, @NotNull String logId, int version) {
+  @Nonnull
+  public static File getStorageFile(@Nonnull String storageKind, @Nonnull String logId, int version) {
     File subdir = new File(LOG_CACHE, storageKind);
     String safeLogId = PathUtilRt.suggestFileName(logId, true, true);
     final File mapFile = new File(subdir, safeLogId + "." + version);
@@ -58,7 +60,7 @@ public class PersistentUtil {
     return mapFile;
   }
 
-  public static void cleanupOldStorageFile(@NotNull String storageKind, @NotNull String logId) {
+  public static void cleanupOldStorageFile(@Nonnull String storageKind, @Nonnull String logId) {
     File subdir = new File(LOG_CACHE, storageKind);
     String safeLogId = PathUtilRt.suggestFileName(logId, true, true);
     IOUtil.deleteAllFilesStartingWith(new File(subdir, safeLogId));
@@ -69,10 +71,10 @@ public class PersistentUtil {
     }
   }
 
-  @NotNull
-  public static <T> PersistentEnumeratorBase<T> createPersistentEnumerator(@NotNull KeyDescriptor<T> keyDescriptor,
-                                                                           @NotNull String storageKind,
-                                                                           @NotNull String logId,
+  @Nonnull
+  public static <T> PersistentEnumeratorBase<T> createPersistentEnumerator(@Nonnull KeyDescriptor<T> keyDescriptor,
+                                                                           @Nonnull String storageKind,
+                                                                           @Nonnull String logId,
                                                                            int version) throws IOException {
     File storageFile = getStorageFile(storageKind, logId, version);
 
@@ -81,7 +83,7 @@ public class PersistentUtil {
                                          storageFile);
   }
 
-  public static boolean deleteWithRenamingAllFilesStartingWith(@NotNull File baseFile) {
+  public static boolean deleteWithRenamingAllFilesStartingWith(@Nonnull File baseFile) {
     File parentFile = baseFile.getParentFile();
     if (parentFile == null) return false;
 
@@ -99,17 +101,17 @@ public class PersistentUtil {
   // it assumes that these storage files all start with "safeLogId."
   // as method getStorageFile creates them
   // so these two methods should be changed in sync
-  public static boolean cleanupStorageFiles(@NotNull String subdirName, @NotNull String id) {
+  public static boolean cleanupStorageFiles(@Nonnull String subdirName, @Nonnull String id) {
     File subdir = new File(LOG_CACHE, subdirName);
     String safeLogId = PathUtilRt.suggestFileName(id, true, true);
     return deleteWithRenamingAllFilesStartingWith(new File(subdir, safeLogId + "."));
   }
 
   // do not forget to change cleanupStorageFiles method when editing this one
-  @NotNull
-  public static File getStorageFile(@NotNull String subdirName,
-                                    @NotNull String kind,
-                                    @NotNull String id,
+  @Nonnull
+  public static File getStorageFile(@Nonnull String subdirName,
+                                    @Nonnull String kind,
+                                    @Nonnull String id,
                                     int version,
                                     boolean cleanupOldVersions) {
     File subdir = new File(LOG_CACHE, subdirName);
@@ -121,7 +123,7 @@ public class PersistentUtil {
     return file;
   }
 
-  @NotNull
+  @Nonnull
   public static File getCorruptionMarkerFile() {
     return new File(LOG_CACHE, CORRUPTION_MARKER);
   }

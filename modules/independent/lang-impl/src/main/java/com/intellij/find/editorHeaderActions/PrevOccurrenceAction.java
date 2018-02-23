@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -43,13 +43,13 @@ public final class PrevOccurrenceAction extends PrevNextOccurrenceAction {
     if (session.hasMatches()) session.searchBackward();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<Shortcut> getDefaultShortcuts() {
     return Utils.shortcutsOf(IdeActions.ACTION_FIND_PREVIOUS);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<Shortcut> getSingleLineShortcuts() {
     if (mySearch) {

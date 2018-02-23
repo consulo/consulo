@@ -16,8 +16,8 @@
 package com.intellij.util.io.socketConnection;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -25,25 +25,25 @@ import java.io.IOException;
  * @author nik
  */
 public interface SocketConnection<Request extends AbstractRequest, Response extends AbstractResponse> extends Disposable {
-  @NotNull
+  @Nonnull
   ConnectionState getState();
 
   void open() throws IOException;
 
-  void addListener(@NotNull SocketConnectionListener listener, @Nullable Disposable parentDisposable);
+  void addListener(@Nonnull SocketConnectionListener listener, @Nullable Disposable parentDisposable);
 
   int getPort();
 
-  void sendRequest(@NotNull Request request);
+  void sendRequest(@Nonnull Request request);
 
-  void sendRequest(@NotNull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler);
+  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler);
 
-  <R extends Response> void registerHandler(@NotNull Class<R> responseClass, @NotNull AbstractResponseHandler<R> handler);
+  <R extends Response> void registerHandler(@Nonnull Class<R> responseClass, @Nonnull AbstractResponseHandler<R> handler);
 
   void close();
 
-  void sendRequest(@NotNull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
-                   int timeout, @NotNull Runnable onTimeout);
+  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
+                   int timeout, @Nonnull Runnable onTimeout);
 
   boolean isStopping();
 }

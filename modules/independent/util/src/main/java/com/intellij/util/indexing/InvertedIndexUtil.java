@@ -19,15 +19,15 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.EmptyIntHashSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
 public class InvertedIndexUtil {
-  @NotNull
-  public static <K, V, I> TIntHashSet collectInputIdsContainingAllKeys(@NotNull InvertedIndex<K, V, I> index,
-                                                                       @NotNull Collection<K> dataKeys,
+  @Nonnull
+  public static <K, V, I> TIntHashSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<K, V, I> index,
+                                                                       @Nonnull Collection<K> dataKeys,
                                                                        @Nullable Condition<K> keyChecker,
                                                                        @Nullable Condition<V> valueChecker,
                                                                        @Nullable ValueContainer.IntPredicate idChecker)

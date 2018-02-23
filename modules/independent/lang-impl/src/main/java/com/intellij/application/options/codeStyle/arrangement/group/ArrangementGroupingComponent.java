@@ -26,9 +26,9 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -40,10 +40,13 @@ import java.util.List;
  */
 public class ArrangementGroupingComponent extends JPanel implements ArrangementRepresentationAware, ArrangementEditorAware {
 
-  @NotNull private final ArrangementUiComponent      myGroupingTypeToken;
-  @NotNull private final ArrangementRuleIndexControl myRowIndexControl;
+  @Nonnull
+  private final ArrangementUiComponent      myGroupingTypeToken;
+  @Nonnull
+  private final ArrangementRuleIndexControl myRowIndexControl;
 
-  @Nullable private final ArrangementUiComponent myOrderTypeToken;
+  @Nullable
+  private final ArrangementUiComponent myOrderTypeToken;
 
   /**
    * Assumes that given token {@link CompositeArrangementSettingsToken#getChildren() has no children} or all its children have
@@ -56,9 +59,9 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
    *                                    
    * @throws IllegalArgumentException   if invariant described above is not satisfied
    */
-  public ArrangementGroupingComponent(@NotNull CompositeArrangementSettingsToken token,
-                                      @NotNull ArrangementColorsProvider colorsProvider,
-                                      @NotNull ArrangementStandardSettingsManager settingsManager)
+  public ArrangementGroupingComponent(@Nonnull CompositeArrangementSettingsToken token,
+                                      @Nonnull ArrangementColorsProvider colorsProvider,
+                                      @Nonnull ArrangementStandardSettingsManager settingsManager)
     throws IllegalArgumentException
   {
     List<ArrangementSettingsToken> children = ContainerUtilRt.newArrayList();
@@ -138,7 +141,7 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
     super.paintComponent(g);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return this;
@@ -160,14 +163,14 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
     }
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementSettingsToken getGroupingType() {
     ArrangementSettingsToken token = myGroupingTypeToken.getToken();
     assert token != null;
     return token;
   }
 
-  public void setOrderType(@NotNull ArrangementSettingsToken type) {
+  public void setOrderType(@Nonnull ArrangementSettingsToken type) {
     if (myOrderTypeToken != null) {
       myOrderTypeToken.chooseToken(type);
     }

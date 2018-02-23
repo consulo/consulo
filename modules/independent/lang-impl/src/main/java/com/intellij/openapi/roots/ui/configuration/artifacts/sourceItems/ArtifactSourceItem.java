@@ -28,7 +28,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,12 +39,12 @@ import java.util.List;
 public class ArtifactSourceItem extends PackagingSourceItem {
   private final Artifact myArtifact;
 
-  public ArtifactSourceItem(@NotNull Artifact artifact) {
+  public ArtifactSourceItem(@Nonnull Artifact artifact) {
     myArtifact = artifact;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(context.getProject()).create(myArtifact, context.getArtifactModel());
     return new DelegatedSourceItemPresentation(new ArtifactElementPresentation(pointer, context)) {
       @Override
@@ -55,8 +55,8 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  @NotNull
-  public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     final Project project = context.getProject();
     final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(project).create(myArtifact, context.getArtifactModel());
     return Collections.singletonList(PackagingElementFactory.getInstance().createArtifactElement(pointer, project));
@@ -66,7 +66,7 @@ public class ArtifactSourceItem extends PackagingSourceItem {
     return obj instanceof ArtifactSourceItem && myArtifact.equals(((ArtifactSourceItem)obj).myArtifact);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return myArtifact.getArtifactType() instanceof ZipArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;

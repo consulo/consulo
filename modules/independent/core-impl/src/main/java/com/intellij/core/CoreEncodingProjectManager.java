@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.nio.charset.Charset;
@@ -31,11 +31,11 @@ import java.util.Map;
 
 public class CoreEncodingProjectManager extends EncodingProjectManager {
   @Override
-  public boolean isNative2Ascii(@NotNull VirtualFile virtualFile) {
+  public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Charset getDefaultCharset() {
     return CharsetToolkit.getDefaultSystemCharset();
@@ -60,7 +60,7 @@ public class CoreEncodingProjectManager extends EncodingProjectManager {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Charset> getFavorites() {
     return Collections.singletonList(CharsetToolkit.UTF8_CHARSET);
@@ -71,7 +71,7 @@ public class CoreEncodingProjectManager extends EncodingProjectManager {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDefaultCharsetName() {
     return getDefaultCharset().name();
@@ -89,29 +89,29 @@ public class CoreEncodingProjectManager extends EncodingProjectManager {
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
 
   }
 
   @Nullable
   @Override
-  public Charset getCachedCharsetFromContent(@NotNull Document document) {
+  public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<VirtualFile, Charset> getAllMappings() {
     return Collections.emptyMap();
   }
 
   @Override
-  public void setMapping(@NotNull Map<VirtualFile, Charset> result) {
+  public void setMapping(@Nonnull Map<VirtualFile, Charset> result) {
 
   }
 
   @Override
-  public void setDefaultCharsetName(@NotNull String name) {
+  public void setDefaultCharsetName(@Nonnull String name) {
 
   }
 }

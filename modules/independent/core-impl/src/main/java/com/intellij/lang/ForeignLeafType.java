@@ -22,7 +22,7 @@ package com.intellij.lang;
 import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILeafElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ForeignLeafType extends TokenWrapper implements ILeafElementType {
   public ForeignLeafType(IElementType delegate, CharSequence value) {
@@ -30,7 +30,7 @@ public class ForeignLeafType extends TokenWrapper implements ILeafElementType {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ASTNode createLeafNode(CharSequence leafText) {
     return new ForeignLeafPsiElement(this, getValue());
   }

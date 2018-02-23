@@ -24,8 +24,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.*;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   }
 
   @Override
-  public void addElement(@NotNull LookupElement added, @NotNull ProcessingContext context) {
+  public void addElement(@Nonnull LookupElement added, @Nonnull ProcessingContext context) {
     myCount++;
 
     for (String string : CompletionUtil.iterateLookupStrings(added)) {
@@ -96,9 +96,9 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Iterable<LookupElement> classify(@NotNull Iterable<LookupElement> source, @NotNull ProcessingContext context) {
+  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
     return liftShorterElements(source, null, context);
   }
 
@@ -114,9 +114,9 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     return new LiftingIterable(srcSet, context, source, lifted);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Pair<LookupElement, Object>> getSortingWeights(@NotNull Iterable<LookupElement> items, @NotNull ProcessingContext context) {
+  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
     final THashSet<LookupElement> lifted = newIdentityTroveSet();
     Iterable<LookupElement> iterable = liftShorterElements(ContainerUtil.newArrayList(items), lifted, context);
     return ContainerUtil.map(iterable, new Function<LookupElement, Pair<LookupElement, Object>>() {
@@ -128,7 +128,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   }
 
   @Override
-  public void removeElement(@NotNull LookupElement element, @NotNull ProcessingContext context) {
+  public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
     for (String s : CompletionUtil.iterateLookupStrings(element)) {
       myElements.remove(s, element);
       if (myElements.get(s).isEmpty()) {
@@ -227,10 +227,10 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static <K, V> MultiMap<K, V> createMultiMap(final boolean identityKeys) {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         if (identityKeys) return newIdentityHashMap();

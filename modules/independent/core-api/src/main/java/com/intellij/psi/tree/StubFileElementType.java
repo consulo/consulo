@@ -19,8 +19,8 @@ import com.intellij.lang.Language;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.StubSerializer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin.Ulitin
@@ -30,7 +30,7 @@ public abstract class StubFileElementType<T extends PsiFileStub> extends IFileEl
     super(language);
   }
 
-  public StubFileElementType(@NonNls @NotNull String debugName, @Nullable Language language) {
+  public StubFileElementType(@NonNls @Nonnull String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 

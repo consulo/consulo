@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -40,7 +40,7 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
   }
 
   @Override
-  public void save(@NotNull DataOutput out, @NotNull Collection<K> value) throws IOException {
+  public void save(@Nonnull DataOutput out, @Nonnull Collection<K> value) throws IOException {
     try {
       DataInputOutputUtil.writeINT(out, value.size());
       for (K key : value) {
@@ -52,9 +52,9 @@ public class InputIndexDataExternalizer<K> implements DataExternalizer<Collectio
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<K> read(@NotNull DataInput in) throws IOException {
+  public Collection<K> read(@Nonnull DataInput in) throws IOException {
     try {
       final int size = DataInputOutputUtil.readINT(in);
       final List<K> list = new ArrayList<K>(size);

@@ -37,8 +37,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -74,7 +74,7 @@ public class SelectionModelImpl implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionStart();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getSelectionStartPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionStartPosition();
@@ -85,7 +85,7 @@ public class SelectionModelImpl implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionEnd();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getSelectionEndPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getSelectionEndPosition();
@@ -168,13 +168,13 @@ public class SelectionModelImpl implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@NotNull LogicalPosition blockStart, @NotNull LogicalPosition blockEnd) {
+  public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
     List<CaretState> caretStates = EditorModificationUtil.calcBlockSelectionState(myEditor, blockStart, blockEnd);
     myEditor.getCaretModel().setCaretsAndSelections(caretStates);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionStarts() {
     Collection<Caret> carets = myEditor.getCaretModel().getAllCarets();
     int[] result = new int[carets.size()];
@@ -186,7 +186,7 @@ public class SelectionModelImpl implements SelectionModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionEnds() {
     Collection<Caret> carets = myEditor.getCaretModel().getAllCarets();
     int[] result = new int[carets.size()];
@@ -270,7 +270,7 @@ public class SelectionModelImpl implements SelectionModel {
     return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionOffset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VisualPosition getLeadSelectionPosition() {
     return myEditor.getCaretModel().getCurrentCaret().getLeadSelectionPosition();

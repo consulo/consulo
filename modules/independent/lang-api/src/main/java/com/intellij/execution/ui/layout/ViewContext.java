@@ -26,8 +26,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public interface ViewContext extends Disposable {
   Key<Content[]> CONTENT_KEY = Key.create("runnerContents");
@@ -41,10 +40,10 @@ public interface ViewContext extends Disposable {
 
   CellTransform.Facade getCellTransform();
 
-  @Nullable
+  @javax.annotation.Nullable
   Tab getTabFor(final Grid grid);
 
-  View getStateFor(@NotNull Content content);
+  View getStateFor(@Nonnull Content content);
 
   void saveUiState();
 
@@ -58,9 +57,9 @@ public interface ViewContext extends Disposable {
 
   RunnerLayoutUi getRunnerLayoutUi();
 
-  GridCell findCellFor(@NotNull final Content content);
+  GridCell findCellFor(@Nonnull final Content content);
 
-  Grid findGridFor(@NotNull Content content);
+  Grid findGridFor(@Nonnull Content content);
 
   ActionCallback select(Content content, boolean requestFocus);
 

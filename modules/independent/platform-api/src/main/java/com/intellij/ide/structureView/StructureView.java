@@ -17,7 +17,7 @@ package com.intellij.ide.structureView;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileEditor.FileEditor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +74,7 @@ public interface StructureView extends Disposable {
    */
   void storeState();
 
-  @NotNull
+  @Nonnull
   StructureViewModel getTreeModel();
 
   interface Scrollable extends StructureView {

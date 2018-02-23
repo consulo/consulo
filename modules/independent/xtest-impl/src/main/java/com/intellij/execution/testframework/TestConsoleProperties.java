@@ -36,8 +36,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
@@ -72,7 +71,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
 
   protected final Map<AbstractProperty, List<TestFrameworkPropertyListener>> myListeners = ContainerUtil.newHashMap();
 
-  public TestConsoleProperties(@NotNull Storage storage, Project project, Executor executor) {
+  public TestConsoleProperties(@Nonnull Storage storage, Project project, Executor executor) {
     super(storage);
     myProject = project;
     myExecutor = executor;
@@ -82,7 +81,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getScope() {
     if (myScope == null) {
       myScope = initScope();
@@ -90,7 +89,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return myScope;
   }
 
-  @NotNull
+  @Nonnull
   protected GlobalSearchScope initScope() {
     RunProfile configuration = getConfiguration();
     if (!(configuration instanceof ModuleRunProfile)) {
@@ -109,7 +108,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return scope;
   }
 
-  public <T> void addListener(@NotNull AbstractProperty<T> property, @NotNull TestFrameworkPropertyListener<T> listener) {
+  public <T> void addListener(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener<T> listener) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners == null) {
       myListeners.put(property, (listeners = ContainerUtil.newArrayList()));
@@ -117,12 +116,12 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     listeners.add(listener);
   }
 
-  public <T> void addListenerAndSendValue(@NotNull AbstractProperty<T> property, @NotNull TestFrameworkPropertyListener<T> listener) {
+  public <T> void addListenerAndSendValue(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener<T> listener) {
     addListener(property, listener);
     listener.onChanged(property.get(this));
   }
 
-  public <T> void removeListener(@NotNull AbstractProperty<T> property, @NotNull TestFrameworkPropertyListener listener) {
+  public <T> void removeListener(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener listener) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners != null) {
       listeners.remove(listener);
@@ -143,7 +142,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
   }
 
   @Override
-  protected <T> void onPropertyChanged(@NotNull AbstractProperty<T> property, T value) {
+  protected <T> void onPropertyChanged(@Nonnull AbstractProperty<T> property, T value) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners != null) {
       for (Object o : listeners.toArray()) {
@@ -195,18 +194,18 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
 
   public void appendAdditionalActions(DefaultActionGroup actionGroup, JComponent parent, TestConsoleProperties target) { }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected AnAction createImportAction() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected ToggleBooleanProperty createIncludeNonStartedInRerun(TestConsoleProperties target) {
     String text = ExecutionBundle.message("junit.runing.info.include.non.started.in.rerun.failed.action.name");
     return new DumbAwareToggleBooleanProperty(text, null, null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
   }
 
-  @NotNull
+  @Nonnull
   protected ToggleBooleanProperty createHideSuccessfulConfig(TestConsoleProperties target) {
     String text = ExecutionBundle.message("junit.runing.info.hide.successful.config.action.name");
     setIfUndefined(HIDE_SUCCESSFUL_CONFIG, true);
@@ -218,7 +217,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return TreeSelectionModel.SINGLE_TREE_SELECTION;
   }
 
-  @NotNull
+  @Nonnull
   public ExecutionTarget getExecutionTarget() {
     return DefaultExecutionTarget.INSTANCE;
   }

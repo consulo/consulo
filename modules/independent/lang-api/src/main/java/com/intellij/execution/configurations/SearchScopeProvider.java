@@ -18,15 +18,15 @@ package com.intellij.execution.configurations;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Vojtech Krasa
  */
 public class SearchScopeProvider {
-  @NotNull
-  public static GlobalSearchScope createSearchScope(@NotNull Project project, @Nullable RunProfile runProfile) {
+  @Nonnull
+  public static GlobalSearchScope createSearchScope(@Nonnull Project project, @Nullable RunProfile runProfile) {
     Module[] modules = null;
     if (runProfile instanceof SearchScopeProvidingRunProfile) {
       modules = ((SearchScopeProvidingRunProfile)runProfile).getModules();

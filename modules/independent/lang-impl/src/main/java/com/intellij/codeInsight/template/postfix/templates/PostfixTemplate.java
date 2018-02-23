@@ -20,21 +20,25 @@ import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettin
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
 public abstract class PostfixTemplate {
-  @NotNull private final String myPresentableName;
-  @NotNull private final String myKey;
-  @NotNull private final String myDescription;
-  @NotNull private final String myExample;
+  @Nonnull
+  private final String myPresentableName;
+  @Nonnull
+  private final String myKey;
+  @Nonnull
+  private final String myDescription;
+  @Nonnull
+  private final String myExample;
 
-  protected PostfixTemplate(@NotNull String name, @NotNull String example) {
+  protected PostfixTemplate(@Nonnull String name, @Nonnull String example) {
     this(name, "." + name, example);
   }
 
-  protected PostfixTemplate(@NotNull String name, @NotNull String key, @NotNull String example) {
+  protected PostfixTemplate(@Nonnull String name, @Nonnull String key, @Nonnull String example) {
     String tempDescription;
     myPresentableName = name;
     myKey = key;
@@ -49,22 +53,22 @@ public abstract class PostfixTemplate {
     myDescription = tempDescription;
   }
 
-  @NotNull
+  @Nonnull
   public final String getKey() {
     return myKey;
   }
 
-  @NotNull
+  @Nonnull
   public String getPresentableName() {
     return myPresentableName;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return myDescription;
   }
 
-  @NotNull
+  @Nonnull
   public String getExample() {
     return myExample;
   }
@@ -78,7 +82,7 @@ public abstract class PostfixTemplate {
     return settings != null && settings.isPostfixTemplatesEnabled() && settings.isTemplateEnabled(this, provider);
   }
 
-  public abstract boolean isApplicable(@NotNull PsiElement context, @NotNull Document copyDocument, int newOffset);
+  public abstract boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset);
 
-  public abstract void expand(@NotNull PsiElement context, @NotNull Editor editor);
+  public abstract void expand(@Nonnull PsiElement context, @Nonnull Editor editor);
 }

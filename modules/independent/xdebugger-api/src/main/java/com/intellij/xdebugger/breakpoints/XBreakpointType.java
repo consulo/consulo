@@ -25,8 +25,8 @@ import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -49,15 +49,17 @@ import java.util.List;
  */
 public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreakpointProperties> {
   public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.xdebugger.breakpointType");
-  private final @NonNls @NotNull String myId;
-  private final @Nls @NotNull String myTitle;
+  private final @NonNls @Nonnull
+  String myId;
+  private final @Nls @Nonnull
+  String myTitle;
   private final boolean mySuspendThreadSupported;
 
   /**
    * @param id    an unique id of breakpoint type
    * @param title title of tab in the breakpoints dialog
    */
-  protected XBreakpointType(@NonNls @NotNull final String id, @Nls @NotNull final String title) {
+  protected XBreakpointType(@NonNls @Nonnull final String id, @Nls @Nonnull final String title) {
     this(id, title, false);
   }
 
@@ -66,7 +68,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    * @param title                  title of tab in the breakpoints dialog
    * @param suspendThreadSupported <code>true</code> if suspending only one thread is supported for this type of breakpoints
    */
-  protected XBreakpointType(@NonNls @NotNull final String id, @Nls @NotNull final String title, boolean suspendThreadSupported) {
+  protected XBreakpointType(@NonNls @Nonnull final String id, @Nls @Nonnull final String title, boolean suspendThreadSupported) {
     myId = id;
     myTitle = title;
     mySuspendThreadSupported = suspendThreadSupported;
@@ -94,32 +96,32 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return EnumSet.allOf(StandardPanels.class);
   }
 
-  @NotNull
+  @Nonnull
   public final String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public String getTitle() {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getEnabledIcon() {
     return AllIcons.Debugger.Db_set_breakpoint;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getDisabledIcon() {
     return AllIcons.Debugger.Db_disabled_breakpoint;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getMutedEnabledIcon() {
     return AllIcons.Debugger.Db_muted_breakpoint;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getMutedDisabledIcon() {
     return AllIcons.Debugger.Db_muted_disabled_breakpoint;
   }
@@ -127,7 +129,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   /**
    * @return the icon which is shown for a dependent breakpoint until its master breakpoint is reached
    */
-  @NotNull
+  @Nonnull
   public Icon getInactiveDependentIcon() {
     return getDisabledDependentIcon();
   }
@@ -135,7 +137,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   /**
    * @deprecated override {@link #getInactiveDependentIcon()} instead
    */
-  @NotNull
+  @Nonnull
   public Icon getDisabledDependentIcon() {
     return AllIcons.Debugger.Db_dep_line_breakpoint;
   }
@@ -148,7 +150,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   @Nullable
-  public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(@NotNull Project project) {
+  public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(@Nonnull Project project) {
     return createCustomPropertiesPanel();
   }
 
@@ -160,26 +162,26 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return null;
   }
 
-  @Nullable
-  public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(@NotNull Project project) {
+  @javax.annotation.Nullable
+  public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(@Nonnull Project project) {
     return null;
   }
 
   @Nullable
-  public XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(@NotNull Project project) {
+  public XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(@Nonnull Project project) {
     return null;
   }
 
   /**
    * @deprecated override {@link #getEditorsProvider(B, Project)} instead
    */
-  @Nullable
+  @javax.annotation.Nullable
   public XDebuggerEditorsProvider getEditorsProvider() {
     return null;
   }
 
   @Nullable
-  public XDebuggerEditorsProvider getEditorsProvider(@NotNull B breakpoint, @NotNull Project project) {
+  public XDebuggerEditorsProvider getEditorsProvider(@Nonnull B breakpoint, @Nonnull Project project) {
     return getEditorsProvider();
   }
 
@@ -187,7 +189,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public Comparator<B> getBreakpointComparator() {
     return (b, b1) -> (int)(b1.getTimeStamp() - b.getTimeStamp());
     //return XDebuggerUtil.getInstance().getDefaultBreakpointComparator(this);
@@ -222,15 +224,15 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    * @return a default breakpoint or {@code null} if default breakpoint isn't supported
    */
   @Nullable
-  public XBreakpoint<P> createDefaultBreakpoint(@NotNull XBreakpointCreator<P> creator) {
+  public XBreakpoint<P> createDefaultBreakpoint(@Nonnull XBreakpointCreator<P> creator) {
     return null;
   }
 
-  public boolean shouldShowInBreakpointsDialog(@NotNull Project project) {
+  public boolean shouldShowInBreakpointsDialog(@Nonnull Project project) {
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   public String getBreakpointsDialogHelpTopic() {
     return null;
@@ -240,7 +242,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
    * Override this method to define source position for a breakpoint. It will be used e.g. by 'Go To' and 'View Source' buttons in 'Breakpoints' dialog
    */
   @Nullable
-  public XSourcePosition getSourcePosition(@NotNull XBreakpoint<P> breakpoint) {
+  public XSourcePosition getSourcePosition(@Nonnull XBreakpoint<P> breakpoint) {
     return null;
   }
 
@@ -249,7 +251,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
   }
 
   public interface XBreakpointCreator<P extends XBreakpointProperties> {
-    @NotNull
+    @Nonnull
     XBreakpoint<P> createBreakpoint(@Nullable P properties);
   }
 }

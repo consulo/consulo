@@ -41,8 +41,8 @@ import consulo.ide.impl.DataValidators;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +65,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  private <T> T getData(@NotNull Key<T> dataId, final Component focusedComponent) {
+  private <T> T getData(@Nonnull Key<T> dataId, final Component focusedComponent) {
     try (AccessToken ignored = ProhibitAWTEvents.start("getData")) {
       for (Component c = focusedComponent; c != null; c = c.getParent()) {
         final DataProvider dataProvider = getDataProviderEx(c);
@@ -78,7 +78,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  private <T> T getData(@NotNull Key<T> dataId, final consulo.ui.Component focusedComponent) {
+  private <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
     for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParentComponent()) {
       final DataProvider dataProvider = c::getUserData;
       T data = getDataFromProvider(dataProvider, dataId, null);
@@ -88,7 +88,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  private <T> T getDataFromProvider(@NotNull final DataProvider provider, @NotNull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+  private <T> T getDataFromProvider(@Nonnull final DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
     if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
       return null;
     }
@@ -129,7 +129,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  public <T> GetDataRule<T> getDataRule(@NotNull Key<T> dataId) {
+  public <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId) {
     GetDataRule<T> rule = getRuleFromMap(dataId);
     if (rule != null) {
       return rule;
@@ -138,7 +138,7 @@ public class DataManagerImpl extends DataManager {
     final GetDataRule<T> plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
     if (plainRule != null) {
       return new GetDataRule<T>() {
-        @NotNull
+        @Nonnull
         @Override
         public Key<T> getKey() {
           return plainRule.getKey();
@@ -146,7 +146,7 @@ public class DataManagerImpl extends DataManager {
 
         @Nullable
         @Override
-        public T getData(@NotNull DataProvider dataProvider) {
+        public T getData(@Nonnull DataProvider dataProvider) {
           return plainRule.getData(key -> dataProvider.getData(AnActionEvent.injectedId(key)));
         }
       };
@@ -157,7 +157,7 @@ public class DataManagerImpl extends DataManager {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  private <T> GetDataRule<T> getRuleFromMap(@NotNull Key<T> dataId) {
+  private <T> GetDataRule<T> getRuleFromMap(@Nonnull Key<T> dataId) {
     GetDataRule rule = myDataConstantToRuleMap.get(dataId);
     if (rule == null && !myDataConstantToRuleMap.containsKey(dataId)) {
       final GetDataRule[] eps = Extensions.getExtensions(GetDataRule.EP_NAME);
@@ -174,7 +174,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Nullable
-  private static <T> T validated(@NotNull T data, @NotNull Key<T> dataId, @NotNull Object dataSource) {
+  private static <T> T validated(@Nonnull T data, @Nonnull Key<T> dataId, @Nonnull Object dataSource) {
     T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
     if (invalidData != null) {
       return null;
@@ -187,14 +187,14 @@ public class DataManagerImpl extends DataManager {
     return new MyDataContext(component);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataContext getDataContext(@Nullable consulo.ui.Component component) {
     return new MyDataContext2(component);
   }
 
   @Override
-  public DataContext getDataContext(@NotNull Component component, int x, int y) {
+  public DataContext getDataContext(@Nonnull Component component, int x, int y) {
     if (x < 0 || x >= component.getWidth() || y < 0 || y >= component.getHeight()) {
       throw new IllegalArgumentException("wrong point: x=" + x + "; y=" + y);
     }
@@ -216,12 +216,12 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DataContext getDataContext() {
     return getDataContext(getFocusedComponent());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AsyncResult<DataContext> getDataContextFromFocus() {
     AsyncResult<DataContext> context = new AsyncResult<>();
@@ -317,7 +317,7 @@ public class DataManagerImpl extends DataManager {
   }
 
   @Override
-  public <T> void saveInDataContext(DataContext dataContext, @NotNull Key<T> dataKey, @Nullable T data) {
+  public <T> void saveInDataContext(DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data) {
     if (dataContext instanceof UserDataHolder) {
       ((UserDataHolder)dataContext).putUserData(dataKey, data);
     }
@@ -325,7 +325,7 @@ public class DataManagerImpl extends DataManager {
 
   @Override
   @Nullable
-  public <T> T loadFromDataContext(@NotNull DataContext dataContext, @NotNull Key<T> dataKey) {
+  public <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey) {
     return dataContext instanceof UserDataHolder ? ((UserDataHolder)dataContext).getUserData(dataKey) : null;
   }
 
@@ -365,7 +365,7 @@ public class DataManagerImpl extends DataManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getData(@NotNull Key<T> dataId) {
+    public <T> T getData(@Nonnull Key<T> dataId) {
       int currentEventCount = IdeEventQueue.getInstance().getEventCount();
       if (myEventCount != -1 && myEventCount != currentEventCount) {
         LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
@@ -387,7 +387,7 @@ public class DataManagerImpl extends DataManager {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T> T doGetData(@NotNull Key<T> dataId) {
+    private <T> T doGetData(@Nonnull Key<T> dataId) {
       Component component = SoftReference.dereference(myRef);
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -414,17 +414,17 @@ public class DataManagerImpl extends DataManager {
     }
 
     @Override
-    public <T> T getUserData(@NotNull Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
       //noinspection unchecked
       return (T)getOrCreateMap().get(key);
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
       getOrCreateMap().put(key, value);
     }
 
-    @NotNull
+    @Nonnull
     private Map<Key, Object> getOrCreateMap() {
       Map<Key, Object> userData = myUserData;
       if (userData == null) {
@@ -446,7 +446,7 @@ public class DataManagerImpl extends DataManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getData(@NotNull Key<T> dataId) {
+    public <T> T getData(@Nonnull Key<T> dataId) {
       if (ourSafeKeys.contains(dataId)) {
         Object answer = myCachedData.get(dataId);
         if (answer == null) {
@@ -462,7 +462,7 @@ public class DataManagerImpl extends DataManager {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T> T doGetData(@NotNull Key<T> dataId) {
+    private <T> T doGetData(@Nonnull Key<T> dataId) {
       consulo.ui.Component component = SoftReference.dereference(myRef);
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {
@@ -490,17 +490,17 @@ public class DataManagerImpl extends DataManager {
     }
 
     @Override
-    public <T> T getUserData(@NotNull Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
       //noinspection unchecked
       return (T)getOrCreateMap().get(key);
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
       getOrCreateMap().put(key, value);
     }
 
-    @NotNull
+    @Nonnull
     private Map<Key, Object> getOrCreateMap() {
       Map<Key, Object> userData = myUserData;
       if (userData == null) {

@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -69,12 +69,12 @@ public abstract class HighlightManager {
    * @param hideByTextChange if true, the highlighting is removed automatically if the editor text is changed.
    * @param outHighlighters  if not null, the created {@link RangeHighlighter} object is added to this collection.
    */
-  public abstract void addRangeHighlight(@NotNull Editor editor,
+  public abstract void addRangeHighlight(@Nonnull Editor editor,
                                          int startOffset,
                                          int endOffset,
-                                         @NotNull TextAttributes attributes,
+                                         @Nonnull TextAttributes attributes,
                                          boolean hideByTextChange,
-                                         @Nullable Collection<RangeHighlighter> outHighlighters);
+                                         @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights a specified range of text in an editor. The highlighting is removed when the user presses the Esc key or (optionally)
@@ -89,10 +89,10 @@ public abstract class HighlightManager {
    * @param hideByAnyKey     if true, the highlighting is removed automatically when the user presses any key.
    * @param highlighters     if not null, the created {@link RangeHighlighter} object is added to this collection.
    */
-  public abstract void addRangeHighlight(@NotNull Editor editor,
+  public abstract void addRangeHighlight(@Nonnull Editor editor,
                                          int startOffset,
                                          int endOffset,
-                                         @NotNull TextAttributes attributes,
+                                         @Nonnull TextAttributes attributes,
                                          boolean hideByTextChange,
                                          boolean hideByAnyKey,
                                          @Nullable Collection<RangeHighlighter> highlighters);
@@ -104,7 +104,7 @@ public abstract class HighlightManager {
    * @param highlighter the highlighter to remove.
    * @return true if the remove was successful, false if the highlighter was not found in the editor.
    */
-  public abstract boolean removeSegmentHighlighter(@NotNull Editor editor, @NotNull RangeHighlighter highlighter);
+  public abstract boolean removeSegmentHighlighter(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter);
 
   /**
    * Highlights the text ranges of the specified references in the specified editor. The highlighting is removed when the user presses
@@ -116,11 +116,11 @@ public abstract class HighlightManager {
    * @param hideByTextChange if true, the highlighting is removed automatically if the editor text is changed.
    * @param outHighlighters  if not null, the created {@link RangeHighlighter} objects are added to this collection.
    */
-  public abstract void addOccurrenceHighlights(@NotNull Editor editor,
-                                               @NotNull PsiReference[] occurrences,
-                                               @NotNull TextAttributes attributes,
+  public abstract void addOccurrenceHighlights(@Nonnull Editor editor,
+                                               @Nonnull PsiReference[] occurrences,
+                                               @Nonnull TextAttributes attributes,
                                                boolean hideByTextChange,
-                                               @Nullable Collection<RangeHighlighter> outHighlighters);
+                                               @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights the text ranges of the specified elements in the specified editor. The highlighting is removed when the user presses
@@ -132,11 +132,11 @@ public abstract class HighlightManager {
    * @param hideByTextChange if true, the highlighting is removed automatically if the editor text is changed.
    * @param outHighlighters  if not null, the created {@link RangeHighlighter} objects are added to this collection.
    */
-  public abstract void addOccurrenceHighlights(@NotNull Editor editor,
-                                               @NotNull PsiElement[] elements,
-                                               @NotNull TextAttributes attributes,
+  public abstract void addOccurrenceHighlights(@Nonnull Editor editor,
+                                               @Nonnull PsiElement[] elements,
+                                               @Nonnull TextAttributes attributes,
                                                boolean hideByTextChange,
-                                               @Nullable Collection<RangeHighlighter> outHighlighters);
+                                               @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights a specified range of text in an editor and optionally adds a mark on the gutter. The highlighting is optionally removed
@@ -152,20 +152,20 @@ public abstract class HighlightManager {
    * @param outHighlighters  if not null, the created {@link RangeHighlighter} object is added to this collection.
    * @param scrollmarkColor  if not null, a gutter mark with the specified color is added in addition to the editor highlight.
    */
-  public abstract void addOccurrenceHighlight(@NotNull Editor editor,
+  public abstract void addOccurrenceHighlight(@Nonnull Editor editor,
                                               int start,
                                               int end,
                                               TextAttributes attributes,
                                               @HideFlags int flags,
-                                              @Nullable Collection<RangeHighlighter> outHighlighters,
-                                              @Nullable Color scrollmarkColor);
+                                              @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters,
+                                              @javax.annotation.Nullable Color scrollmarkColor);
 
   /**
    * @deprecated Use {@link #addOccurrenceHighlights(com.intellij.openapi.editor.Editor, com.intellij.psi.PsiElement[], com.intellij.openapi.editor.markup.TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
    */
-  public abstract void addElementsOccurrenceHighlights(@NotNull Editor editor,
-                                                       @NotNull PsiElement[] elements,
-                                                       @NotNull TextAttributes attributes,
+  public abstract void addElementsOccurrenceHighlights(@Nonnull Editor editor,
+                                                       @Nonnull PsiElement[] elements,
+                                                       @Nonnull TextAttributes attributes,
                                                        boolean hideByTextChange,
-                                                       @Nullable Collection<RangeHighlighter> outHighlighters);
+                                                       @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
 }

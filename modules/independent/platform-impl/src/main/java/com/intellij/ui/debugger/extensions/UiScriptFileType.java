@@ -18,7 +18,7 @@ package com.intellij.ui.debugger.extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -42,13 +42,13 @@ public class UiScriptFileType implements FileType {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "UI Script";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "UI test scripts.";
   }
@@ -56,7 +56,7 @@ public class UiScriptFileType implements FileType {
   public static final String myExtension = "ijs";
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return myExtension;
   }
@@ -77,7 +77,7 @@ public class UiScriptFileType implements FileType {
   }
 
   @Override
-  public String getCharset(@NotNull VirtualFile file, byte[] content) {
+  public String getCharset(@Nonnull VirtualFile file, byte[] content) {
     return CharsetToolkit.UTF8;
   }
 }

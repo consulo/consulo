@@ -37,8 +37,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,12 +51,12 @@ public interface EditorEx extends Editor {
   @NonNls String PROP_FONT_SIZE = "fontSize";
   Key<TextRange> LAST_PASTED_REGION = Key.create("LAST_PASTED_REGION");
 
-  @NotNull
+  @Nonnull
   @Override
   DocumentEx getDocument();
 
   @Override
-  @NotNull
+  @Nonnull
   MarkupModelEx getMarkupModel();
 
   /**
@@ -71,13 +71,13 @@ public interface EditorEx extends Editor {
    * @see com.intellij.openapi.editor.impl.EditorImpl#setHighlightingFilter(Condition<RangeHighlighter>)
    * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
    */
-  @NotNull
+  @Nonnull
   MarkupModelEx getFilteredDocumentMarkupModel();
 
-  @NotNull
+  @Nonnull
   EditorGutterComponentEx getGutterComponentEx();
 
-  @NotNull
+  @Nonnull
   EditorHighlighter getHighlighter();
 
   JComponent getPermanentHeaderComponent();
@@ -89,9 +89,9 @@ public interface EditorEx extends Editor {
 
   void setPermanentHeaderComponent(JComponent component);
 
-  void setHighlighter(@NotNull EditorHighlighter highlighter);
+  void setHighlighter(@Nonnull EditorHighlighter highlighter);
 
-  void setColorsScheme(@NotNull EditorColorsScheme scheme);
+  void setColorsScheme(@Nonnull EditorColorsScheme scheme);
 
   void setInsertMode(boolean val);
 
@@ -121,10 +121,10 @@ public interface EditorEx extends Editor {
 
   void reinitSettings();
 
-  void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable parentDisposable);
-  void addPropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable);
+  void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
-  void removePropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   int getMaxWidthInRange(int startOffset, int endOffset);
 
@@ -132,13 +132,13 @@ public interface EditorEx extends Editor {
 
   boolean setCaretEnabled(boolean enabled);
 
-  void addFocusListener(@NotNull FocusChangeListener listener);
+  void addFocusListener(@Nonnull FocusChangeListener listener);
 
-  void addFocusListener(@NotNull FocusChangeListener listener, @NotNull Disposable parentDisposable);
+  void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable);
 
   void setOneLineMode(boolean b);
 
-  @NotNull
+  @Nonnull
   JScrollPane getScrollPane();
 
   boolean isRendererMode();
@@ -147,10 +147,10 @@ public interface EditorEx extends Editor {
 
   void setFile(VirtualFile vFile);
 
-  @NotNull
+  @Nonnull
   DataContext getDataContext();
 
-  boolean processKeyTyped(@NotNull KeyEvent e);
+  boolean processKeyTyped(@Nonnull KeyEvent e);
 
   void setFontSize(int fontSize);
 
@@ -169,7 +169,7 @@ public interface EditorEx extends Editor {
    * @deprecated Use {@link #offsetToLogicalPosition(int)}
    * or {@link EditorUtil#calcColumnNumber(Editor, CharSequence, int, int, int)} instead. To be removed in IDEA 2017.2.
    */
-  int calcColumnNumber(@NotNull CharSequence text, int start, int offset, int tabSize);
+  int calcColumnNumber(@Nonnull CharSequence text, int start, int offset, int tabSize);
 
   /**
    * @deprecated Use {@link #offsetToLogicalPosition(int)}
@@ -179,22 +179,22 @@ public interface EditorEx extends Editor {
 
   TextDrawingCallback getTextDrawingCallback();
 
-  @NotNull
+  @Nonnull
   @Override
   FoldingModelEx getFoldingModel();
 
-  @NotNull
+  @Nonnull
   @Override
   SoftWrapModelEx getSoftWrapModel();
 
-  @NotNull
+  @Nonnull
   @Override
   ScrollingModelEx getScrollingModel();
 
   /**
    * Creates color scheme delegate which is bound to current editor. E.g. all schema changes will update editor state.
    */
-  @NotNull
+  @Nonnull
   EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme);
 
   /**
@@ -204,7 +204,7 @@ public interface EditorEx extends Editor {
    *
    * @param place   soft wraps appliance appliance use-case
    */
-  void setSoftWrapAppliancePlace(@NotNull SoftWrapAppliancePlaces place);
+  void setSoftWrapAppliancePlace(@Nonnull SoftWrapAppliancePlaces place);
 
   /**
    * Allows to define <code>'placeholder text'</code> for the current editor, i.e. virtual text that will be represented until

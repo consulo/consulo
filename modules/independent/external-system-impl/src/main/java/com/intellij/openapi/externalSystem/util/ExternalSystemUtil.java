@@ -95,8 +95,8 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.wm.impl.ToolWindowBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,7 +112,7 @@ public class ExternalSystemUtil {
 
   private static final Logger LOG = Logger.getInstance("#" + ExternalSystemUtil.class.getName());
 
-  @NotNull
+  @Nonnull
   private static final Map<String, String> RUNNER_IDS = ContainerUtilRt.newHashMap();
 
   static {
@@ -123,7 +123,7 @@ public class ExternalSystemUtil {
   private ExternalSystemUtil() {
   }
 
-  public static void ensureToolWindowInitialized(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  public static void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
     if (!(manager instanceof ToolWindowManagerEx)) {
       return;
@@ -144,10 +144,10 @@ public class ExternalSystemUtil {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> T getToolWindowElement(@NotNull Class<T> clazz,
-                                           @NotNull Project project,
-                                           @NotNull com.intellij.openapi.util.Key<T> key,
-                                           @NotNull ProjectSystemId externalSystemId) {
+  public static <T> T getToolWindowElement(@Nonnull Class<T> clazz,
+                                           @Nonnull Project project,
+                                           @Nonnull com.intellij.openapi.util.Key<T> key,
+                                           @Nonnull ProjectSystemId externalSystemId) {
     if (project.isDisposed() || !project.isOpen()) {
       return null;
     }
@@ -177,8 +177,8 @@ public class ExternalSystemUtil {
     return null;
   }
 
-  @Nullable
-  public static ToolWindow ensureToolWindowContentInitialized(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  @javax.annotation.Nullable
+  public static ToolWindow ensureToolWindowContentInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) return null;
 
@@ -202,7 +202,7 @@ public class ExternalSystemUtil {
    * @deprecated use {@link  ExternalSystemUtil#refreshProjects(com.intellij.openapi.externalSystem.importing.ImportSpecBuilder)}
    */
   @Deprecated
-  public static void refreshProjects(@NotNull final Project project, @NotNull final ProjectSystemId externalSystemId, boolean force) {
+  public static void refreshProjects(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId, boolean force) {
     refreshProjects(project, externalSystemId, force, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
   }
 
@@ -217,10 +217,10 @@ public class ExternalSystemUtil {
    * @deprecated use {@link  ExternalSystemUtil#refreshProjects(com.intellij.openapi.externalSystem.importing.ImportSpecBuilder)}
    */
   @Deprecated
-  public static void refreshProjects(@NotNull final Project project,
-                                     @NotNull final ProjectSystemId externalSystemId,
+  public static void refreshProjects(@Nonnull final Project project,
+                                     @Nonnull final ProjectSystemId externalSystemId,
                                      boolean force,
-                                     @NotNull final ProgressExecutionMode progressExecutionMode) {
+                                     @Nonnull final ProgressExecutionMode progressExecutionMode) {
     refreshProjects(new ImportSpecBuilder(project, externalSystemId).forceWhenUptodate(force).use(progressExecutionMode));
   }
 
@@ -229,7 +229,7 @@ public class ExternalSystemUtil {
    *
    * @param specBuilder import specification builder
    */
-  public static void refreshProjects(@NotNull final ImportSpecBuilder specBuilder) {
+  public static void refreshProjects(@Nonnull final ImportSpecBuilder specBuilder) {
     ImportSpec spec = specBuilder.build();
 
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(spec.getExternalSystemId());
@@ -277,7 +277,7 @@ public class ExternalSystemUtil {
     }
   }
 
-  private static long getTimeStamp(@NotNull ExternalProjectSettings externalProjectSettings, @NotNull ProjectSystemId externalSystemId) {
+  private static long getTimeStamp(@Nonnull ExternalProjectSettings externalProjectSettings, @Nonnull ProjectSystemId externalSystemId) {
     long timeStamp = 0;
     for (ExternalSystemConfigLocator locator : ExternalSystemConfigLocator.EP_NAME.getExtensions()) {
       if (!externalSystemId.equals(locator.getTargetExternalSystemId())) {
@@ -305,9 +305,9 @@ public class ExternalSystemUtil {
    * @param project          current ide project
    * @param externalSystemId id of the external system which project has been un-linked from ide project
    */
-  public static void ruleOrphanModules(@NotNull final List<Module> orphanModules,
-                                       @NotNull final Project project,
-                                       @NotNull final ProjectSystemId externalSystemId) {
+  public static void ruleOrphanModules(@Nonnull final List<Module> orphanModules,
+                                       @Nonnull final Project project,
+                                       @Nonnull final ProjectSystemId externalSystemId) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -338,7 +338,7 @@ public class ExternalSystemUtil {
             init();
           }
 
-          @Nullable
+          @javax.annotation.Nullable
           @Override
           protected JComponent createCenterPanel() {
             return new JBScrollPane(content);
@@ -368,8 +368,8 @@ public class ExternalSystemUtil {
   }
 
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-  @Nullable
-  private static String extractDetails(@NotNull Throwable e) {
+  @javax.annotation.Nullable
+  private static String extractDetails(@Nonnull Throwable e) {
     final Throwable unwrapped = RemoteUtil.unwrap(e);
     if (unwrapped instanceof ExternalSystemException) {
       return ((ExternalSystemException)unwrapped).getOriginalReason();
@@ -388,12 +388,12 @@ public class ExternalSystemUtil {
    * @param isPreviewMode       flag that identifies whether gradle libraries should be resolved during the refresh
    * @return the most up-to-date gradle project (if any)
    */
-  public static void refreshProject(@NotNull final Project project,
-                                    @NotNull final ProjectSystemId externalSystemId,
-                                    @NotNull final String externalProjectPath,
-                                    @NotNull final ExternalProjectRefreshCallback callback,
+  public static void refreshProject(@Nonnull final Project project,
+                                    @Nonnull final ProjectSystemId externalSystemId,
+                                    @Nonnull final String externalProjectPath,
+                                    @Nonnull final ExternalProjectRefreshCallback callback,
                                     final boolean isPreviewMode,
-                                    @NotNull final ProgressExecutionMode progressExecutionMode) {
+                                    @Nonnull final ProgressExecutionMode progressExecutionMode) {
     refreshProject(project, externalSystemId, externalProjectPath, callback, isPreviewMode, progressExecutionMode, true);
   }
 
@@ -409,12 +409,12 @@ public class ExternalSystemUtil {
    * @param reportRefreshError  prevent to show annoying error notification, e.g. if auto-import mode used
    * @return the most up-to-date gradle project (if any)
    */
-  public static void refreshProject(@NotNull final Project project,
-                                    @NotNull final ProjectSystemId externalSystemId,
-                                    @NotNull final String externalProjectPath,
-                                    @NotNull final ExternalProjectRefreshCallback callback,
+  public static void refreshProject(@Nonnull final Project project,
+                                    @Nonnull final ProjectSystemId externalSystemId,
+                                    @Nonnull final String externalProjectPath,
+                                    @Nonnull final ExternalProjectRefreshCallback callback,
                                     final boolean isPreviewMode,
-                                    @NotNull final ProgressExecutionMode progressExecutionMode,
+                                    @Nonnull final ProgressExecutionMode progressExecutionMode,
                                     final boolean reportRefreshError) {
     File projectFile = new File(externalProjectPath);
     final String projectName;
@@ -427,7 +427,7 @@ public class ExternalSystemUtil {
     final TaskUnderProgress refreshProjectStructureTask = new TaskUnderProgress() {
       @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
       @Override
-      public void execute(@NotNull ProgressIndicator indicator) {
+      public void execute(@Nonnull ProgressIndicator indicator) {
         if (project.isDisposed()) return;
 
         ExternalSystemProcessingManager processingManager = ServiceManager.getService(ExternalSystemProcessingManager.class);
@@ -507,7 +507,7 @@ public class ExternalSystemUtil {
             title = ExternalSystemBundle.message("progress.import.text", projectName, externalSystemId.getReadableName());
             new Task.Modal(project, title, true) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 refreshProjectStructureTask.execute(indicator);
               }
             }.queue();
@@ -516,7 +516,7 @@ public class ExternalSystemUtil {
             title = ExternalSystemBundle.message("progress.refresh.text", projectName, externalSystemId.getReadableName());
             new Task.Backgroundable(project, title) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 refreshProjectStructureTask.execute(indicator);
               }
             }.queue();
@@ -525,7 +525,7 @@ public class ExternalSystemUtil {
             title = ExternalSystemBundle.message("progress.refresh.text", projectName, externalSystemId.getReadableName());
             new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 refreshProjectStructureTask.execute(indicator);
               }
             }.queue();
@@ -534,19 +534,19 @@ public class ExternalSystemUtil {
     });
   }
 
-  public static void runTask(@NotNull ExternalSystemTaskExecutionSettings taskSettings,
-                             @NotNull String executorId,
-                             @NotNull Project project,
-                             @NotNull ProjectSystemId externalSystemId) {
+  public static void runTask(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+                             @Nonnull String executorId,
+                             @Nonnull Project project,
+                             @Nonnull ProjectSystemId externalSystemId) {
     runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
   }
 
-  public static void runTask(@NotNull final ExternalSystemTaskExecutionSettings taskSettings,
-                             @NotNull final String executorId,
-                             @NotNull final Project project,
-                             @NotNull final ProjectSystemId externalSystemId,
-                             @Nullable final TaskCallback callback,
-                             @NotNull final ProgressExecutionMode progressExecutionMode) {
+  public static void runTask(@Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
+                             @Nonnull final String executorId,
+                             @Nonnull final Project project,
+                             @Nonnull final ProjectSystemId externalSystemId,
+                             @javax.annotation.Nullable final TaskCallback callback,
+                             @Nonnull final ProgressExecutionMode progressExecutionMode) {
     final Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
     if (pair == null) return;
 
@@ -555,7 +555,7 @@ public class ExternalSystemUtil {
 
     final TaskUnderProgress task = new TaskUnderProgress() {
       @Override
-      public void execute(@NotNull ProgressIndicator indicator) {
+      public void execute(@Nonnull ProgressIndicator indicator) {
         final Semaphore targetDone = new Semaphore();
         final Ref<Boolean> result = new Ref<Boolean>(false);
         final Disposable disposable = Disposer.newDisposable();
@@ -567,15 +567,15 @@ public class ExternalSystemUtil {
             }
           }
 
-          public void processNotStarted(final String executorIdLocal, @NotNull final ExecutionEnvironment environmentLocal) {
+          public void processNotStarted(final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
             if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
               targetDone.up();
             }
           }
 
           public void processStarted(final String executorIdLocal,
-                                     @NotNull final ExecutionEnvironment environmentLocal,
-                                     @NotNull final ProcessHandler handler) {
+                                     @Nonnull final ExecutionEnvironment environmentLocal,
+                                     @Nonnull final ProcessHandler handler) {
             if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
               handler.addProcessListener(new ProcessAdapter() {
                 public void processTerminated(ProcessEvent event) {
@@ -629,7 +629,7 @@ public class ExternalSystemUtil {
           case MODAL_SYNC:
             new Task.Modal(project, title, true) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 task.execute(indicator);
               }
             }.queue();
@@ -637,7 +637,7 @@ public class ExternalSystemUtil {
           case IN_BACKGROUND_ASYNC:
             new Task.Backgroundable(project, title) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 task.execute(indicator);
               }
             }.queue();
@@ -645,7 +645,7 @@ public class ExternalSystemUtil {
           case START_IN_FOREGROUND_ASYNC:
             new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 task.execute(indicator);
               }
             }.queue();
@@ -654,11 +654,11 @@ public class ExternalSystemUtil {
     });
   }
 
-  @Nullable
-  public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@NotNull ExternalSystemTaskExecutionSettings taskSettings,
-                                                                       @NotNull String executorId,
-                                                                       @NotNull Project project,
-                                                                       @NotNull ProjectSystemId externalSystemId) {
+  @javax.annotation.Nullable
+  public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+                                                                       @Nonnull String executorId,
+                                                                       @Nonnull Project project,
+                                                                       @Nonnull ProjectSystemId externalSystemId) {
     Executor executor = ExecutorRegistry.getInstance().getExecutorById(executorId);
     if (executor == null) return null;
 
@@ -684,8 +684,8 @@ public class ExternalSystemUtil {
     return Pair.create(runner, new ExecutionEnvironment(executor, runner, settings, project));
   }
 
-  @Nullable
-  public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@NotNull ProjectSystemId externalSystemId) {
+  @javax.annotation.Nullable
+  public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
     for (ConfigurationType type : Extensions.getExtensions(ConfigurationType.CONFIGURATION_TYPE_EP)) {
       if (type instanceof AbstractExternalSystemTaskConfigurationType) {
         AbstractExternalSystemTaskConfigurationType candidate = (AbstractExternalSystemTaskConfigurationType)type;
@@ -706,7 +706,7 @@ public class ExternalSystemUtil {
    * @param taskInfo task which is about to be executed
    * @param project  target project
    */
-  public static void updateRecentTasks(@NotNull ExternalTaskExecutionInfo taskInfo, @NotNull Project project) {
+  public static void updateRecentTasks(@Nonnull ExternalTaskExecutionInfo taskInfo, @Nonnull Project project) {
     ProjectSystemId externalSystemId = taskInfo.getSettings().getExternalSystemId();
     ExternalSystemRecentTasksList recentTasksList =
             getToolWindowElement(ExternalSystemRecentTasksList.class, project, ExternalSystemDataKeys.RECENT_TASKS_LIST, externalSystemId);
@@ -721,8 +721,8 @@ public class ExternalSystemUtil {
     settings.setRecentTasks(recentTasksList.getModel().getTasks());
   }
 
-  @Nullable
-  public static String getRunnerId(@NotNull String executorId) {
+  @javax.annotation.Nullable
+  public static String getRunnerId(@Nonnull String executorId) {
     return RUNNER_IDS.get(executorId);
   }
 
@@ -738,7 +738,7 @@ public class ExternalSystemUtil {
    * @return <code>true</code> if given ide project has 1-1 mapping to the given external project;
    * <code>false</code> otherwise
    */
-  public static boolean isOneToOneMapping(@NotNull Project ideProject, @NotNull DataNode<ProjectData> externalProject) {
+  public static boolean isOneToOneMapping(@Nonnull Project ideProject, @Nonnull DataNode<ProjectData> externalProject) {
     String linkedExternalProjectPath = null;
     for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
       ProjectSystemId externalSystemId = manager.getSystemId();
@@ -796,16 +796,16 @@ public class ExternalSystemUtil {
    * @param progressExecutionMode   identifies how progress bar will be represented for the current processing
    */
   @SuppressWarnings("UnusedDeclaration")
-  public static void linkExternalProject(@NotNull final ProjectSystemId externalSystemId,
-                                         @NotNull final ExternalProjectSettings projectSettings,
-                                         @NotNull final Project project,
-                                         @Nullable final Consumer<Boolean> executionResultCallback,
+  public static void linkExternalProject(@Nonnull final ProjectSystemId externalSystemId,
+                                         @Nonnull final ExternalProjectSettings projectSettings,
+                                         @Nonnull final Project project,
+                                         @javax.annotation.Nullable final Consumer<Boolean> executionResultCallback,
                                          boolean isPreviewMode,
-                                         @NotNull final ProgressExecutionMode progressExecutionMode) {
+                                         @Nonnull final ProgressExecutionMode progressExecutionMode) {
     ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
       @SuppressWarnings("unchecked")
       @Override
-      public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+      public void onSuccess(@javax.annotation.Nullable final DataNode<ProjectData> externalProject) {
         if (externalProject == null) {
           if (executionResultCallback != null) {
             executionResultCallback.consume(false);
@@ -836,7 +836,7 @@ public class ExternalSystemUtil {
       }
 
       @Override
-      public void onFailure(@NotNull String errorMessage, @Nullable String errorDetails) {
+      public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
         if (executionResultCallback != null) {
           executionResultCallback.consume(false);
         }
@@ -845,8 +845,8 @@ public class ExternalSystemUtil {
     refreshProject(project, externalSystemId, projectSettings.getExternalProjectPath(), callback, isPreviewMode, progressExecutionMode);
   }
 
-  @Nullable
-  public static VirtualFile waitForTheFile(@Nullable final String path) {
+  @javax.annotation.Nullable
+  public static VirtualFile waitForTheFile(@javax.annotation.Nullable final String path) {
     if (path == null) return null;
 
     final VirtualFile[] file = new VirtualFile[1];
@@ -870,12 +870,12 @@ public class ExternalSystemUtil {
   }
 
   private interface TaskUnderProgress {
-    void execute(@NotNull ProgressIndicator indicator);
+    void execute(@Nonnull ProgressIndicator indicator);
   }
 
   private static class MyMultiExternalProjectRefreshCallback implements ExternalProjectRefreshCallback {
 
-    @NotNull
+    @Nonnull
     private final Set<String> myExternalModulePaths;
     private final Project myProject;
     private final ProjectDataManager myProjectDataManager;
@@ -891,7 +891,7 @@ public class ExternalSystemUtil {
     }
 
     @Override
-    public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
+    public void onSuccess(@javax.annotation.Nullable final DataNode<ProjectData> externalProject) {
       if (externalProject == null) {
         return;
       }
@@ -919,7 +919,7 @@ public class ExternalSystemUtil {
     }
 
     @Override
-    public void onFailure(@NotNull String errorMessage, @Nullable String errorDetails) {
+    public void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails) {
       myCounter[0] = Integer.MAX_VALUE; // Don't process orphan modules if there was an error on refresh.
     }
 

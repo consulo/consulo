@@ -28,7 +28,7 @@ import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import consulo.web.application.impl.VaadinWebSessionImpl;
 import consulo.web.servlet.ui.UIBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
-  public void build(@NotNull Window window) {
+  public void build(@Nonnull Window window) {
     Disposer.register(window, () -> {
       WebApplication application = WebApplication.getInstance();
       if (application == null || !((ApplicationEx)application).isLoaded()) {

@@ -80,8 +80,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -97,13 +97,15 @@ public class DaemonListeners implements Disposable {
 
   private final Project myProject;
   private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
-  @NotNull private final PsiDocumentManager myPsiDocumentManager;
+  @Nonnull
+  private final PsiDocumentManager myPsiDocumentManager;
   private final FileEditorManager myFileEditorManager;
   private final UndoManager myUndoManager;
   private final ProjectLevelVcsManager myProjectLevelVcsManager;
   private final VcsDirtyScopeManager myVcsDirtyScopeManager;
   private final FileStatusManager myFileStatusManager;
-  @NotNull private final ActionManager myActionManager;
+  @Nonnull
+  private final ActionManager myActionManager;
   private final TooltipController myTooltipController;
 
   private boolean myEscPressed;
@@ -117,31 +119,31 @@ public class DaemonListeners implements Disposable {
     return project.getComponent(DaemonListeners.class);
   }
 
-  public DaemonListeners(@NotNull final Project project,
-                         @NotNull DaemonCodeAnalyzerImpl daemonCodeAnalyzer,
-                         @NotNull final EditorTracker editorTracker,
-                         @NotNull EditorFactory editorFactory,
-                         @NotNull PsiDocumentManager psiDocumentManager,
-                         @NotNull CommandProcessor commandProcessor,
-                         @NotNull EditorColorsManager editorColorsManager,
-                         @NotNull final Application application,
-                         @NotNull InspectionProfileManager inspectionProfileManager,
-                         @NotNull InspectionProjectProfileManager inspectionProjectProfileManager,
-                         @NotNull TodoConfiguration todoConfiguration,
-                         @NotNull ActionManagerEx actionManagerEx,
-                         @NotNull VirtualFileManager virtualFileManager,
+  public DaemonListeners(@Nonnull final Project project,
+                         @Nonnull DaemonCodeAnalyzerImpl daemonCodeAnalyzer,
+                         @Nonnull final EditorTracker editorTracker,
+                         @Nonnull EditorFactory editorFactory,
+                         @Nonnull PsiDocumentManager psiDocumentManager,
+                         @Nonnull CommandProcessor commandProcessor,
+                         @Nonnull EditorColorsManager editorColorsManager,
+                         @Nonnull final Application application,
+                         @Nonnull InspectionProfileManager inspectionProfileManager,
+                         @Nonnull InspectionProjectProfileManager inspectionProjectProfileManager,
+                         @Nonnull TodoConfiguration todoConfiguration,
+                         @Nonnull ActionManagerEx actionManagerEx,
+                         @Nonnull VirtualFileManager virtualFileManager,
                          @SuppressWarnings("UnusedParameters") // for dependency order
-                         @NotNull final NamedScopeManager namedScopeManager,
+                         @Nonnull final NamedScopeManager namedScopeManager,
                          @SuppressWarnings("UnusedParameters") // for dependency order
-                         @NotNull final DependencyValidationManager dependencyValidationManager,
-                         @NotNull final FileDocumentManager fileDocumentManager,
-                         @NotNull final PsiManager psiManager,
-                         @NotNull final FileEditorManager fileEditorManager,
-                         @NotNull TooltipController tooltipController,
-                         @NotNull UndoManager undoManager,
-                         @NotNull ProjectLevelVcsManager projectLevelVcsManager,
-                         @NotNull VcsDirtyScopeManager vcsDirtyScopeManager,
-                         @NotNull FileStatusManager fileStatusManager) {
+                         @Nonnull final DependencyValidationManager dependencyValidationManager,
+                         @Nonnull final FileDocumentManager fileDocumentManager,
+                         @Nonnull final PsiManager psiManager,
+                         @Nonnull final FileEditorManager fileEditorManager,
+                         @Nonnull TooltipController tooltipController,
+                         @Nonnull UndoManager undoManager,
+                         @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
+                         @Nonnull VcsDirtyScopeManager vcsDirtyScopeManager,
+                         @Nonnull FileStatusManager fileStatusManager) {
     myProject = project;
     myDaemonCodeAnalyzer = daemonCodeAnalyzer;
     myPsiDocumentManager = psiDocumentManager;
@@ -208,7 +210,7 @@ public class DaemonListeners implements Disposable {
     EditorTrackerListener editorTrackerListener = new EditorTrackerListener() {
       private List<Editor> myActiveEditors = Collections.emptyList();
       @Override
-      public void activeEditorsChanged(@NotNull List<Editor> editors) {
+      public void activeEditorsChanged(@Nonnull List<Editor> editors) {
         List<Editor> activeEditors = editorTracker.getActiveEditors();
         if (myActiveEditors.equals(activeEditors)) {
           return;
@@ -228,7 +230,7 @@ public class DaemonListeners implements Disposable {
 
     EditorFactoryListener editorFactoryListener = new EditorFactoryListener() {
       @Override
-      public void editorCreated(@NotNull EditorFactoryEvent event) {
+      public void editorCreated(@Nonnull EditorFactoryEvent event) {
         Editor editor = event.getEditor();
         Document document = editor.getDocument();
         Project editorProject = editor.getProject();
@@ -245,7 +247,7 @@ public class DaemonListeners implements Disposable {
       }
 
       @Override
-      public void editorReleased(@NotNull EditorFactoryEvent event) {
+      public void editorReleased(@Nonnull EditorFactoryEvent event) {
         // mem leak after closing last editor otherwise
         UIUtil.invokeLaterIfNeeded(myDaemonCodeAnalyzer::hideLastIntentionHint);
       }
@@ -288,7 +290,7 @@ public class DaemonListeners implements Disposable {
     actionManagerEx.addAnActionListener(new MyAnActionListener(), this);
     virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
         String propertyName = event.getPropertyName();
         if (VirtualFile.PROP_NAME.equals(propertyName)) {
           stopDaemonAndRestartAllFiles("Virtual file name changed");
@@ -356,7 +358,7 @@ public class DaemonListeners implements Disposable {
     LOG.assertTrue(replaced, "Daemon listeners already disposed for the project "+myProject);
   }
 
-  public static boolean canChangeFileSilently(@NotNull PsiFileSystemItem file) {
+  public static boolean canChangeFileSilently(@Nonnull PsiFileSystemItem file) {
     Project project = file.getProject();
     DaemonListeners listeners = getInstance(project);
     if (listeners == null) return true;
@@ -373,7 +375,7 @@ public class DaemonListeners implements Disposable {
     return listeners.canUndo(virtualFile);
   }
 
-  private boolean canUndo(@NotNull VirtualFile virtualFile) {
+  private boolean canUndo(@Nonnull VirtualFile virtualFile) {
     for (FileEditor editor : myFileEditorManager.getEditors(virtualFile)) {
       if (myUndoManager.isUndoAvailable(editor)) return true;
     }
@@ -401,14 +403,14 @@ public class DaemonListeners implements Disposable {
     private boolean myDaemonWasRunning;
 
     @Override
-    public void beforeWriteActionStart(@NotNull Object action) {
+    public void beforeWriteActionStart(@Nonnull Object action) {
       myDaemonWasRunning = myDaemonCodeAnalyzer.isRunning();
       if (!myDaemonWasRunning) return; // we'll restart in writeActionFinished()
       stopDaemon(true, "Write action start");
     }
 
     @Override
-    public void writeActionFinished(@NotNull Object action) {
+    public void writeActionFinished(@Nonnull Object action) {
       stopDaemon(true, "Write action finish");
     }
   }
@@ -466,7 +468,7 @@ public class DaemonListeners implements Disposable {
 
   private class MyTodoListener implements PropertyChangeListener {
     @Override
-    public void propertyChange(@NotNull PropertyChangeEvent evt) {
+    public void propertyChange(@Nonnull PropertyChangeEvent evt) {
       if (TodoConfiguration.PROP_TODO_PATTERNS.equals(evt.getPropertyName())) {
         stopDaemonAndRestartAllFiles("Todo patterns changed");
       }
@@ -533,10 +535,10 @@ public class DaemonListeners implements Disposable {
   }
 
   private static class MyEditorMouseListener extends EditorMouseAdapter {
-    @NotNull
+    @Nonnull
     private final TooltipController myTooltipController;
 
-    MyEditorMouseListener(@NotNull TooltipController tooltipController) {
+    MyEditorMouseListener(@Nonnull TooltipController tooltipController) {
       myTooltipController = tooltipController;
     }
 
@@ -589,19 +591,19 @@ public class DaemonListeners implements Disposable {
     }
   }
 
-  private void stopDaemon(boolean toRestartAlarm, @NonNls @NotNull String reason) {
+  private void stopDaemon(boolean toRestartAlarm, @NonNls @Nonnull String reason) {
     if (myDaemonCodeAnalyzer.stopProcess(toRestartAlarm, reason)) {
       myDaemonEventPublisher.daemonCancelEventOccurred(reason);
     }
   }
 
-  private void stopDaemonAndRestartAllFiles(@NotNull String reason) {
+  private void stopDaemonAndRestartAllFiles(@Nonnull String reason) {
     if (myDaemonCodeAnalyzer.doRestart()) {
       myDaemonEventPublisher.daemonCancelEventOccurred(reason);
     }
   }
 
-  static void repaintErrorStripeRenderer(@NotNull Editor editor, @NotNull Project project) {
+  static void repaintErrorStripeRenderer(@Nonnull Editor editor, @Nonnull Project project) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!project.isInitialized()) return;
     final Document document = editor.getDocument();

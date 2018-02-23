@@ -18,7 +18,7 @@ package com.intellij.openapi.wm.ex;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.IdeFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IdeFrameEx extends IdeFrame {
   public static final Key<Boolean> SHOULD_OPEN_IN_FULL_SCREEN = Key.create("should.open.in.full.screen");
@@ -27,7 +27,7 @@ public interface IdeFrameEx extends IdeFrame {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   default ActionCallback toggleFullScreen(boolean state) {
     return ActionCallback.REJECTED;
   }

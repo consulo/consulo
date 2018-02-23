@@ -19,8 +19,8 @@ import com.intellij.extapi.psi.ASTDelegatePsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SourceTreeToPsiMap {
   private SourceTreeToPsiMap() { }
@@ -30,8 +30,8 @@ public class SourceTreeToPsiMap {
     return element == null ? null : element.getPsi();
   }
 
-  @NotNull
-  public static <T extends PsiElement> T treeToPsiNotNull(@NotNull final ASTNode element) {
+  @Nonnull
+  public static <T extends PsiElement> T treeToPsiNotNull(@Nonnull final ASTNode element) {
     final PsiElement psi = element.getPsi();
     assert psi != null : element;
     //noinspection unchecked
@@ -43,8 +43,8 @@ public class SourceTreeToPsiMap {
     return psiElement == null ? null : psiElement.getNode();
   }
 
-  @NotNull
-  public static TreeElement psiToTreeNotNull(@NotNull final PsiElement psiElement) {
+  @Nonnull
+  public static TreeElement psiToTreeNotNull(@Nonnull final PsiElement psiElement) {
     final ASTNode node = psiElement.getNode();
     assert node instanceof TreeElement : psiElement + ", " + node;
     return (TreeElement)node;

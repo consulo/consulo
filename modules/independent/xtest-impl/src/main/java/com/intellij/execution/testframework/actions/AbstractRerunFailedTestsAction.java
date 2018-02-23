@@ -46,8 +46,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -70,7 +70,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   private Getter<TestFrameworkRunningModel> myModelProvider;
   protected TestConsoleProperties myConsoleProperties;
 
-  protected AbstractRerunFailedTestsAction(@NotNull ComponentContainer componentContainer) {
+  protected AbstractRerunFailedTestsAction(@Nonnull ComponentContainer componentContainer) {
     copyFrom(ActionManager.getInstance().getAction("RerunFailedTests"));
     registerCustomShortcutSet(getShortcutSet(), componentContainer.getComponent());
   }
@@ -89,7 +89,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
 
   @RequiredDispatchThread
   @Override
-  public final void update(@NotNull AnActionEvent e) {
+  public final void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isActive(e));
   }
 
@@ -113,16 +113,16 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     return false;
   }
 
-  @NotNull
-  protected List<AbstractTestProxy> getFailedTests(@NotNull Project project) {
+  @Nonnull
+  protected List<AbstractTestProxy> getFailedTests(@Nonnull Project project) {
     TestFrameworkRunningModel model = getModel();
     if (model == null) return Collections.emptyList();
     //noinspection unchecked
     return getFilter(project, model.getProperties().getScope()).select(model.getRoot().getAllTests());
   }
 
-  @NotNull
-  protected Filter getFilter(@NotNull Project project, @NotNull GlobalSearchScope searchScope) {
+  @Nonnull
+  protected Filter getFilter(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
     return getFailuresFilter();
   }
 
@@ -140,7 +140,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ExecutionEnvironment environment = e.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       return;
@@ -149,7 +149,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     execute(e, environment);
   }
 
-  void execute(@NotNull AnActionEvent e, @NotNull ExecutionEnvironment environment) {
+  void execute(@Nonnull AnActionEvent e, @Nonnull ExecutionEnvironment environment) {
     MyRunProfile profile = getRunProfile(environment);
     if (profile == null) {
       return;
@@ -183,9 +183,9 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       list.setSelectedValue(environment.getExecutor(), true);
       list.setCellRenderer(new DefaultListCellRenderer() {
-        @NotNull
+        @Nonnull
         @Override
-        public Component getListCellRendererComponent(@NotNull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(@Nonnull JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
           final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
           if (value instanceof Executor) {
             setText(UIUtil.removeMnemonic(((Executor)value).getStartActionText()));
@@ -209,7 +209,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     }
   }
 
-  private static void performAction(@NotNull ExecutionEnvironmentBuilder builder) {
+  private static void performAction(@Nonnull ExecutionEnvironmentBuilder builder) {
     ExecutionEnvironment environment = builder.build();
     try {
       environment.getRunner().execute(environment);
@@ -228,12 +228,12 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   }
 
   @Nullable
-  protected MyRunProfile getRunProfile(@NotNull ExecutionEnvironment environment) {
+  protected MyRunProfile getRunProfile(@Nonnull ExecutionEnvironment environment) {
     //noinspection deprecation
     return getRunProfile();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TestFrameworkRunningModel getModel() {
     if (myModel != null) {
       return myModel;
@@ -281,13 +281,13 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
       return myConfiguration.getConfigurationEditor();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ConfigurationType getType() {
       return myConfiguration.getType();
     }
@@ -322,7 +322,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
       return myConfiguration.getPredefinedLogFiles();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ArrayList<LogFileOptions> getAllLogFiles() {
       return myConfiguration.getAllLogFiles();

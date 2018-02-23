@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,8 +27,8 @@ public class ToggleTemporaryLineBreakpointAction extends XDebuggerActionBase imp
     super(true);
   }
 
-  @NotNull
-  protected DebuggerActionHandler getHandler(@NotNull final DebuggerSupport debuggerSupport) {
+  @Nonnull
+  protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
     return debuggerSupport.getToggleTemporaryLineBreakpointHandler();
   }
 }

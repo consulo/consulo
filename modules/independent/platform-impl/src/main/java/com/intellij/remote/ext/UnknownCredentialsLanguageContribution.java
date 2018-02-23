@@ -15,17 +15,17 @@
  */
 package com.intellij.remote.ext;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Irina.Chernushina on 8/30/2016.
  */
 public class UnknownCredentialsLanguageContribution extends CredentialsLanguageContribution<UnknownCredentialsLanguageContributionMarker>
                                                             implements UnknownCredentialsLanguageContributionMarker {
-  @NotNull
+  @Nonnull
   private final CredentialsTypeEx myCredentialsType;
 
-  public UnknownCredentialsLanguageContribution(@NotNull CredentialsTypeEx type) {
+  public UnknownCredentialsLanguageContribution(@Nonnull CredentialsTypeEx type) {
     myCredentialsType = type;
   }
 

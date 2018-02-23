@@ -20,7 +20,7 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,12 +31,12 @@ import java.awt.*;
 public interface ConfigurationErrors {
   Topic<ConfigurationErrors> TOPIC = Topic.create("Configuration Error", ConfigurationErrors.class, Topic.BroadcastDirection.NONE);
 
-  void addError(@NotNull ConfigurationError error);
-  void removeError(@NotNull ConfigurationError error);
+  void addError(@Nonnull ConfigurationError error);
+  void removeError(@Nonnull ConfigurationError error);
 
   @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
   class Bus {
-    public static void addError(@NotNull final ConfigurationError error, @NotNull final Project project) {
+    public static void addError(@Nonnull final ConfigurationError error, @Nonnull final Project project) {
       _do(error, project, new PairProcessor<ConfigurationErrors, ConfigurationError>() {
         @Override
         public boolean process(final ConfigurationErrors configurationErrors, final ConfigurationError configurationError) {
@@ -46,7 +46,7 @@ public interface ConfigurationErrors {
       });
     }
 
-    public static void removeError(@NotNull final ConfigurationError error, @NotNull final Project project) {
+    public static void removeError(@Nonnull final ConfigurationError error, @Nonnull final Project project) {
       _do(error, project, new PairProcessor<ConfigurationErrors, ConfigurationError>() {
         @Override
         public boolean process(final ConfigurationErrors configurationErrors, final ConfigurationError configurationError) {
@@ -56,8 +56,8 @@ public interface ConfigurationErrors {
       });
     }
 
-    public static void _do(@NotNull final ConfigurationError error, @NotNull final Project project,
-                           @NotNull final PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
+    public static void _do(@Nonnull final ConfigurationError error, @Nonnull final Project project,
+                           @Nonnull final PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
       if (!project.isInitialized()) {
         StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
            @Override

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.patch;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class StaticPathDescription implements PathDescription {
   private final String myPath;
@@ -28,7 +28,7 @@ class StaticPathDescription implements PathDescription {
     myPath = path;
   }
 
-  @NotNull
+  @Nonnull
   public String getPath() {
     return myPath;
   }

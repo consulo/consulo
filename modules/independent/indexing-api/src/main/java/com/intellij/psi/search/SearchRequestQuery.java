@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.AbstractQuery;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * @author peter
@@ -20,12 +20,12 @@ public class SearchRequestQuery extends AbstractQuery<PsiReference> {
   }
 
   @Override
-  protected AsyncFuture<Boolean> processResultsAsync(@NotNull Processor<PsiReference> consumer) {
+  protected AsyncFuture<Boolean> processResultsAsync(@Nonnull Processor<PsiReference> consumer) {
     return PsiSearchHelper.SERVICE.getInstance(myProject).processRequestsAsync(myRequests, consumer);
   }
 
   @Override
-  protected boolean processResults(@NotNull Processor<PsiReference> consumer) {
+  protected boolean processResults(@Nonnull Processor<PsiReference> consumer) {
     return PsiSearchHelper.SERVICE.getInstance(myProject).processRequests(myRequests, consumer);
   }
 }

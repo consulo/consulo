@@ -17,8 +17,8 @@ package com.intellij.openapi.extensions;
 
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,21 +32,21 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
   private ExtensionPoint<Extension> myExtensionPoint;
   private List<V> myCache;
 
-  protected SmartExtensionPoint(@NotNull final Collection<V> explicitExtensions) {
+  protected SmartExtensionPoint(@Nonnull final Collection<V> explicitExtensions) {
     myExplicitExtensions = explicitExtensions;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ExtensionPoint<Extension> getExtensionPoint();
 
-  public final void addExplicitExtension(@NotNull V extension) {
+  public final void addExplicitExtension(@Nonnull V extension) {
     synchronized (myExplicitExtensions) {
       myExplicitExtensions.add(extension);
       myCache = null;
     }
   }
 
-  public final void removeExplicitExtension(@NotNull V extension) {
+  public final void removeExplicitExtension(@Nonnull V extension) {
     synchronized (myExplicitExtensions) {
       myExplicitExtensions.remove(extension);
       myCache = null;
@@ -54,9 +54,9 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
   }
 
   @Nullable
-  protected abstract V getExtension(@NotNull final Extension extension);
+  protected abstract V getExtension(@Nonnull final Extension extension);
 
-  @NotNull
+  @Nonnull
   public final List<V> getExtensions() {
     synchronized (myExplicitExtensions) {
       if (myCache == null) {
@@ -76,7 +76,7 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
   }
 
   @Override
-  public final void extensionAdded(@NotNull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
+  public final void extensionAdded(@Nonnull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
     dropCache();
   }
 
@@ -91,7 +91,7 @@ public abstract class SmartExtensionPoint<Extension,V> implements ExtensionPoint
   }
 
   @Override
-  public final void extensionRemoved(@NotNull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
+  public final void extensionRemoved(@Nonnull final Extension extension, @Nullable final PluginDescriptor pluginDescriptor) {
     dropCache();
   }
 

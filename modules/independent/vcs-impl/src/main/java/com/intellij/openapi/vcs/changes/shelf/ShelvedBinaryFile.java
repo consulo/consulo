@@ -30,8 +30,7 @@ import com.intellij.openapi.vcs.changes.CurrentBinaryContentRevision;
 import com.intellij.openapi.vcs.changes.TextRevisionNumber;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -41,12 +40,13 @@ import java.io.File;
 public class ShelvedBinaryFile implements JDOMExternalizable {
   public String BEFORE_PATH;
   public String AFTER_PATH;
-  @Nullable public String SHELVED_PATH;         // null if binary file was deleted
+  @javax.annotation.Nullable
+  public String SHELVED_PATH;         // null if binary file was deleted
 
   public ShelvedBinaryFile() {
   }
 
-  public ShelvedBinaryFile(final String beforePath, final String afterPath, @Nullable final String shelvedPath) {
+  public ShelvedBinaryFile(final String beforePath, final String afterPath, @javax.annotation.Nullable final String shelvedPath) {
     assert beforePath != null || afterPath != null;
     BEFORE_PATH = beforePath;
     AFTER_PATH = afterPath;
@@ -79,7 +79,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
       final FilePathImpl file = new FilePathImpl(new File(baseDir, BEFORE_PATH), false);
       file.refresh();
       before = new CurrentBinaryContentRevision(file) {
-        @NotNull
+        @Nonnull
         @Override
         public VcsRevisionNumber getRevisionNumber() {
           return new TextRevisionNumber(VcsBundle.message("local.version.title"));

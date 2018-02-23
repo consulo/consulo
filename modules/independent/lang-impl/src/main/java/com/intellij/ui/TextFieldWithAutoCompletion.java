@@ -29,8 +29,8 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -57,7 +57,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
 
 
   public TextFieldWithAutoCompletion(final Project project,
-                                     @NotNull final TextFieldWithAutoCompletionListProvider<T> provider,
+                                     @Nonnull final TextFieldWithAutoCompletionListProvider<T> provider,
                                      final boolean showAutocompletionIsAvailableHint, @Nullable final String text) {
     super(PlainTextLanguage.INSTANCE, project, text == null ? "" : text);
 
@@ -68,14 +68,14 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   }
 
   public static TextFieldWithAutoCompletion<String> create(final Project project,
-                                                           @NotNull final Collection<String> items,
+                                                           @Nonnull final Collection<String> items,
                                                            final boolean showAutocompletionIsAvailableHint,
                                                            @Nullable final String text) {
     return create(project, items, null, showAutocompletionIsAvailableHint, text);
   }
 
   public static TextFieldWithAutoCompletion<String> create(final Project project,
-                                                           @NotNull final Collection<String> items,
+                                                           @Nonnull final Collection<String> items,
                                                            @Nullable final Icon icon,
                                                            final boolean showAutocompletionIsAvailableHint,
                                                            @Nullable final String text) {
@@ -83,11 +83,11 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
                                                    text);
   }
 
-  public void setVariants(@NotNull Collection<T> variants) {
+  public void setVariants(@Nonnull Collection<T> variants) {
     myProvider.setItems(variants);
   }
 
-  public <T> void installProvider(@NotNull TextFieldWithAutoCompletionListProvider<T> provider) {
+  public <T> void installProvider(@Nonnull TextFieldWithAutoCompletionListProvider<T> provider) {
     TextFieldWithAutoCompletionContributor.installCompletion(getDocument(), getProject(), provider, true);
   }
 
@@ -149,23 +149,23 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
     }
 
     @Override
-    protected Icon getIcon(@NotNull final String item) {
+    protected Icon getIcon(@Nonnull final String item) {
       return myIcon;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected String getLookupString(@NotNull final String item) {
+    protected String getLookupString(@Nonnull final String item) {
       return item;
     }
 
     @Override
-    protected String getTailText(@NotNull final String item) {
+    protected String getTailText(@Nonnull final String item) {
       return null;
     }
 
     @Override
-    protected String getTypeText(@NotNull final String item) {
+    protected String getTypeText(@Nonnull final String item) {
       return null;
     }
   }

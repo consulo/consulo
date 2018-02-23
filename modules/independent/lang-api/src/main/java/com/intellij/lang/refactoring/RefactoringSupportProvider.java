@@ -18,8 +18,8 @@ package com.intellij.lang.refactoring;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows a custom language plugin to control the operation of refactorings for
@@ -34,7 +34,7 @@ public abstract class RefactoringSupportProvider {
    * @param context refactoring context
    * @return true if refactoring support is available in given context
    */
-  public boolean isAvailable(@NotNull PsiElement context) { return true; }
+  public boolean isAvailable(@Nonnull PsiElement context) { return true; }
 
   /**
    * Checks if the Safe Delete refactoring can be applied to the specified element
@@ -85,7 +85,7 @@ public abstract class RefactoringSupportProvider {
    * @return  handler for pulling up members in this language
    * @see com.intellij.refactoring.RefactoringActionHandler
    */
-  @Nullable
+  @javax.annotation.Nullable
   public RefactoringActionHandler getPullUpHandler() { return null; }
 
   /**
@@ -99,7 +99,7 @@ public abstract class RefactoringSupportProvider {
    * @return  handler for extracting members to an interface in this language
    * @see com.intellij.refactoring.RefactoringActionHandler
    */
-  @Nullable
+  @javax.annotation.Nullable
   public RefactoringActionHandler getExtractInterfaceHandler() { return null; }
 
   /**

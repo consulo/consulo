@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 
@@ -24,10 +24,10 @@ import java.lang.reflect.Constructor;
  * @author peter
  */
 public abstract class LazyInstance<T> extends NotNullLazyValue<T> {
-  @NotNull
-  public static <T> LazyInstance<T> createInstance(@NotNull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {
+  @Nonnull
+  public static <T> LazyInstance<T> createInstance(@Nonnull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {
     return new LazyInstance<T>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Class<T> getInstanceClass() throws ClassNotFoundException {
         return value.compute();
@@ -35,11 +35,11 @@ public abstract class LazyInstance<T> extends NotNullLazyValue<T> {
     };
   }
 
-  @NotNull
+  @Nonnull
   protected abstract Class<T> getInstanceClass() throws ClassNotFoundException;
 
   @Override
-  @NotNull
+  @Nonnull
   protected final T compute() {
     try {
       Class<T> tClass = getInstanceClass();

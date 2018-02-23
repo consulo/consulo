@@ -16,7 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.ide.scratch.RootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author gregsh
@@ -27,7 +27,7 @@ public final class HistoryRootType extends RootType {
     super("consoles/.history", null);
   }
 
-  @NotNull
+  @Nonnull
   public static HistoryRootType getInstance() {
     return findByClass(HistoryRootType.class);
   }

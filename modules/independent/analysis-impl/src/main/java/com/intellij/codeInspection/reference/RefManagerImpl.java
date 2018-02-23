@@ -50,8 +50,8 @@ import com.intellij.psi.impl.light.LightElement;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -61,7 +61,7 @@ public class RefManagerImpl extends RefManager {
 
   private int myLastUsedMask = 256 * 256 * 256 * 4;
 
-  @NotNull
+  @Nonnull
   private final Project myProject;
   private AnalysisScope myScope;
   private RefProject myRefProject;
@@ -82,7 +82,7 @@ public class RefManagerImpl extends RefManager {
 
   private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
 
-  public RefManagerImpl(@NotNull Project project, AnalysisScope scope, @NotNull GlobalInspectionContext context) {
+  public RefManagerImpl(@Nonnull Project project, AnalysisScope scope, @Nonnull GlobalInspectionContext context) {
     myDeclarationsFound = false;
     myProject = project;
     myScope = scope;
@@ -99,13 +99,13 @@ public class RefManagerImpl extends RefManager {
     }
   }
 
-  @NotNull
+  @Nonnull
   public GlobalInspectionContext getContext() {
     return myContext;
   }
 
   @Override
-  public void iterate(@NotNull RefVisitor visitor) {
+  public void iterate(@Nonnull RefVisitor visitor) {
     myLock.readLock().lock();
     try {
       for (RefElement refElement : getSortedElements()) {
@@ -177,7 +177,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   @Override
-  public <T> T getExtension(@NotNull final Key<T> key) {
+  public <T> T getExtension(@Nonnull final Key<T> key) {
     return (T)myExtensions.get(key);
   }
 
@@ -203,9 +203,9 @@ public class RefManagerImpl extends RefManager {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RefEntity getRefinedElement(@NotNull RefEntity ref) {
+  public RefEntity getRefinedElement(@Nonnull RefEntity ref) {
     for (RefManagerExtension extension : myExtensions.values()) {
       ref = extension.getRefinedElement(ref);
     }
@@ -213,7 +213,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   @Override
-  public Element export(@NotNull RefEntity refEntity, @NotNull final Element element, final int actualLine) {
+  public Element export(@Nonnull RefEntity refEntity, @Nonnull final Element element, final int actualLine) {
     refEntity = getRefinedElement(refEntity);
 
     Element problem = new Element("problem");
@@ -308,24 +308,24 @@ public class RefManagerImpl extends RefManager {
     return myIsInProcess;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RefProject getRefProject() {
     return myRefProject;
   }
 
-  @NotNull
+  @Nonnull
   public Map<PsiAnchor, RefElement> getRefTable() {
     return myRefTable;
   }
 
-  @NotNull
+  @Nonnull
   public List<RefElement> getSortedElements() {
     LOG.assertTrue(myRefTable != null);
     List<RefElement> answer = new ArrayList<RefElement>(myRefTable.values());
@@ -342,13 +342,13 @@ public class RefManagerImpl extends RefManager {
     return answer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiManager getPsiManager() {
     return myPsiManager;
   }
 
-  public void removeReference(@NotNull RefElement refElem) {
+  public void removeReference(@Nonnull RefElement refElem) {
     myLock.writeLock().lock();
     try {
       final Map<PsiAnchor, RefElement> refTable = getRefTable();
@@ -421,7 +421,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public RefElement getReference(final PsiElement elem) {
     return getReference(elem, false);
   }
@@ -442,7 +442,7 @@ public class RefManagerImpl extends RefManager {
 
     final RefElementImpl refElement = ApplicationManager.getApplication().runReadAction(new Computable<RefElementImpl>() {
       @Override
-      @Nullable
+      @javax.annotation.Nullable
       public RefElementImpl compute() {
         final RefManagerExtension extension = getExtension(elem.getLanguage());
         if (extension != null) {
@@ -597,7 +597,7 @@ public class RefManagerImpl extends RefManager {
   }
 
   @Override
-  public void removeRefElement(@NotNull RefElement refElement, @NotNull List<RefElement> deletedRefs) {
+  public void removeRefElement(@Nonnull RefElement refElement, @Nonnull List<RefElement> deletedRefs) {
     List<RefEntity> children = refElement.getChildren();
     if (children != null) {
       RefElement[] refElements = children.toArray(new RefElement[children.size()]);

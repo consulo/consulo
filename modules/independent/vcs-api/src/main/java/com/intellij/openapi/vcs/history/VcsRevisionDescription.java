@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.history;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Date;
 

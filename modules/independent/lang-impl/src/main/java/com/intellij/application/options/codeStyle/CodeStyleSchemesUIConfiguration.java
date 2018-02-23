@@ -19,8 +19,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,7 +69,7 @@ public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent
       return null;
     }
 
-    public static void setRecentImportFile(@NotNull VirtualFile recentFile) {
+    public static void setRecentImportFile(@Nonnull VirtualFile recentFile) {
       CodeStyleSchemesUIConfiguration configuration = getInstance();
       if (configuration != null) {
         URL url = VfsUtil.convertToURL(recentFile.getUrl());

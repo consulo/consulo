@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class JBInsets extends Insets {
     return top + bottom;
   }
 
-  public static JBInsets create(@NotNull Insets insets) {
+  public static JBInsets create(@Nonnull Insets insets) {
     if (insets instanceof JBInsets) {
       JBInsets copy = new JBInsets(0, 0, 0, 0);
       copy.top = insets.top;
@@ -77,7 +77,7 @@ public class JBInsets extends Insets {
    * @param dimension the size to increase
    * @param insets    the insets to add
    */
-  public static void addTo(@NotNull Dimension dimension, Insets insets) {
+  public static void addTo(@Nonnull Dimension dimension, Insets insets) {
     if (insets != null) {
       dimension.width += insets.left + insets.right;
       dimension.height += insets.top + insets.bottom;
@@ -88,7 +88,7 @@ public class JBInsets extends Insets {
    * @param dimension the size to decrease
    * @param insets    the insets to remove
    */
-  public static void removeFrom(@NotNull Dimension dimension, Insets insets) {
+  public static void removeFrom(@Nonnull Dimension dimension, Insets insets) {
     if (insets != null) {
       dimension.width -= insets.left + insets.right;
       dimension.height -= insets.top + insets.bottom;
@@ -99,7 +99,7 @@ public class JBInsets extends Insets {
    * @param rectangle the size to increase and the location to move
    * @param insets    the insets to add
    */
-  public static void addTo(@NotNull Rectangle rectangle, Insets insets) {
+  public static void addTo(@Nonnull Rectangle rectangle, Insets insets) {
     if (insets != null) {
       rectangle.x -= insets.left;
       rectangle.y -= insets.top;
@@ -112,7 +112,7 @@ public class JBInsets extends Insets {
    * @param rectangle the size to decrease and the location to move
    * @param insets    the insets to remove
    */
-  public static void removeFrom(@NotNull Rectangle rectangle, Insets insets) {
+  public static void removeFrom(@Nonnull Rectangle rectangle, Insets insets) {
     if (insets != null) {
       rectangle.x += insets.left;
       rectangle.y += insets.top;

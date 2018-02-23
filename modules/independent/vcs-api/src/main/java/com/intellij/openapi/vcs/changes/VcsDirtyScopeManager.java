@@ -20,8 +20,8 @@ import com.intellij.lifecycle.PeriodicalTasksCloser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -32,8 +32,8 @@ import java.util.Collection;
  * @since 6.0
  */
 public abstract class VcsDirtyScopeManager {
-  @NotNull
-  public static VcsDirtyScopeManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {
     return PeriodicalTasksCloser.getInstance().safeGetComponent(project, VcsDirtyScopeManager.class);
   }
 
@@ -47,14 +47,14 @@ public abstract class VcsDirtyScopeManager {
    *
    * @param file the file for which the status update is requested.
    */
-  public abstract void fileDirty(@NotNull VirtualFile file);
+  public abstract void fileDirty(@Nonnull VirtualFile file);
 
   /**
    * Requests an asynchronous file status update for the specified file path. Must be called from a read action.
    *
    * @param file the file path for which the status update is requested.
    */
-  public abstract void fileDirty(@NotNull FilePath file);
+  public abstract void fileDirty(@Nonnull FilePath file);
 
   /**
    * Requests an asynchronous file status update for all files under the specified directory.
@@ -77,8 +77,8 @@ public abstract class VcsDirtyScopeManager {
 
   public abstract void changesProcessed();
 
-  @NotNull
-  public abstract Collection<FilePath> whatFilesDirty(@NotNull Collection<FilePath> files);
+  @Nonnull
+  public abstract Collection<FilePath> whatFilesDirty(@Nonnull Collection<FilePath> files);
 
   /**
    * Requests an asynchronous file status update for all files specified and under the specified directories

@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -24,8 +24,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ExternalProjectPojo implements Comparable<ExternalProjectPojo> {
 
-  @NotNull private String myName;
-  @NotNull private String myPath;
+  @Nonnull
+  private String myName;
+  @Nonnull
+  private String myPath;
 
   @SuppressWarnings("UnusedDeclaration")
   public ExternalProjectPojo() {
@@ -33,37 +35,37 @@ public class ExternalProjectPojo implements Comparable<ExternalProjectPojo> {
     this("___DUMMY___", "___DUMMY___");
   }
 
-  public ExternalProjectPojo(@NotNull String name, @NotNull String path) {
+  public ExternalProjectPojo(@Nonnull String name, @Nonnull String path) {
     myName = name;
     myPath = path;
   }
 
-  @NotNull
-  public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(@NotNull T data) {
+  @Nonnull
+  public static <T extends Named & ExternalConfigPathAware & Identifiable> ExternalProjectPojo from(@Nonnull T data) {
     String projectUniqueName = StringUtil.isEmpty(data.getId()) ? data.getExternalName() : data.getId();
     return new ExternalProjectPojo(projectUniqueName, data.getLinkedExternalProjectPath());
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   public String getPath() {
     return myPath;
   }
 
-  public void setPath(@NotNull String path) {
+  public void setPath(@Nonnull String path) {
     myPath = path;
   }
 
   @Override
-  public int compareTo(@NotNull ExternalProjectPojo that) {
+  public int compareTo(@Nonnull ExternalProjectPojo that) {
     return myName.compareTo(that.myName);
   }
 

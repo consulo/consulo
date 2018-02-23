@@ -22,8 +22,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,12 +35,13 @@ public class UnifiedDiffPanel extends DiffPanelBase {
   private static final String OPERATION_CANCELED_CONTENT = "OperationCanceledContent";
   private static final String ERROR_CONTENT = "ErrorContent";
 
-  @NotNull private final AsyncProcessIcon.Big myBusyIcon;
+  @Nonnull
+  private final AsyncProcessIcon.Big myBusyIcon;
 
-  public UnifiedDiffPanel(@Nullable Project project,
-                          @NotNull UnifiedContentPanel content,
-                          @NotNull DataProvider provider,
-                          @NotNull DiffContext context) {
+  public UnifiedDiffPanel(@javax.annotation.Nullable Project project,
+                          @Nonnull UnifiedContentPanel content,
+                          @Nonnull DataProvider provider,
+                          @Nonnull DiffContext context) {
     super(project, provider, context);
     myBusyIcon = new AsyncProcessIcon.Big("UnifiedDiff");
     JPanel centerPanel = JBUI.Panels.simplePanel(content).addToTop(myNotificationsPanel);
@@ -79,7 +79,7 @@ public class UnifiedDiffPanel extends DiffPanelBase {
   }
 
   @Override
-  protected void setCurrentCard(@NotNull String card) {
+  protected void setCurrentCard(@Nonnull String card) {
     if (card == LOADING_CONTENT) {
       myBusyIcon.resume();
     }

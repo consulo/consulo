@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.bidi;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines boundaries between regions for which bidi layout should be performed independently. This is required e.g. to make sure that
@@ -36,5 +36,5 @@ public abstract class BidiRegionsSeparator {
    * @see HighlighterIterator
    * @see EditorHighlighter
    */
-  public abstract boolean createBorderBetweenTokens(@NotNull IElementType previousTokenType, @NotNull IElementType tokenType);
+  public abstract boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType);
 }

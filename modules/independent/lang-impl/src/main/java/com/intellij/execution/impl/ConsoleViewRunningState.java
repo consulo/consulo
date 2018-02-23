@@ -23,7 +23,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,7 +82,7 @@ public class ConsoleViewRunningState extends ConsoleState {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ConsoleState dispose() {
     if (myProcessHandler != null) {
       myProcessHandler.removeProcessListener(myProcessListener);

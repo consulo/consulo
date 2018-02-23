@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.InputStream;
 
@@ -25,7 +25,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   private int myCount;
   private int myMarkedPosition;
 
-  public UnsyncByteArrayInputStream(@NotNull byte[] buf) {
+  public UnsyncByteArrayInputStream(@Nonnull byte[] buf) {
     this(buf, 0, buf.length);
   }
 
@@ -45,7 +45,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   }
 
   @Override
-  public int read(@NotNull byte[] b, int off, int len) {
+  public int read(@Nonnull byte[] b, int off, int len) {
     if (off < 0 || len < 0 || len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }

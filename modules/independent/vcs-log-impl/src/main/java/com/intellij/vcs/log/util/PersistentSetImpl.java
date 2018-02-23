@@ -18,28 +18,28 @@ package com.intellij.vcs.log.util;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PagedFileStorage;
 import com.intellij.util.io.PersistentBTreeEnumerator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PersistentSetImpl<T> extends PersistentBTreeEnumerator<T> implements PersistentSet<T> {
 
-  public PersistentSetImpl(@NotNull File file,
-                           @NotNull KeyDescriptor<T> dataDescriptor,
+  public PersistentSetImpl(@Nonnull File file,
+                           @Nonnull KeyDescriptor<T> dataDescriptor,
                            int initialSize,
                            @Nullable PagedFileStorage.StorageLockContext lockContext, int version) throws IOException {
     super(file, dataDescriptor, initialSize, lockContext, version);
   }
 
   @Override
-  public boolean contains(@NotNull T element) throws IOException {
+  public boolean contains(@Nonnull T element) throws IOException {
     return tryEnumerate(element) != NULL_ID;
   }
 
   @Override
-  public void put(@NotNull T element) throws IOException {
+  public void put(@Nonnull T element) throws IOException {
     enumerate(element);
   }
 

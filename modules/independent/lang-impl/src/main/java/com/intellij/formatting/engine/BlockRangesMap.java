@@ -18,7 +18,7 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.LeafBlockWrapper;
 import com.intellij.openapi.util.TextRange;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class BlockRangesMap {
   private final LeafBlockWrapper myLastBlock;

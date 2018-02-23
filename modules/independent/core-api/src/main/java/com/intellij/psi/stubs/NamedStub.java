@@ -21,7 +21,7 @@ package com.intellij.psi.stubs;
 
 import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface NamedStub<T extends PsiNamedElement> extends StubElement<T> {
   @NonNls

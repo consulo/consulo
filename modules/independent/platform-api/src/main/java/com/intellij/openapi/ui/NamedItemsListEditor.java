@@ -31,7 +31,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.Equality;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

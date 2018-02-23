@@ -41,8 +41,8 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,21 +51,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ApplyPatchChange {
-  @NotNull private final ApplyPatchViewer myViewer;
+  @Nonnull
+  private final ApplyPatchViewer myViewer;
   private final int myIndex; // index in myModelChanges
 
-  @NotNull private final LineRange myPatchDeletionRange;
-  @NotNull private final LineRange myPatchInsertionRange;
-  @NotNull private final HunkStatus myStatus;
+  @Nonnull
+  private final LineRange myPatchDeletionRange;
+  @Nonnull
+  private final LineRange myPatchInsertionRange;
+  @Nonnull
+  private final HunkStatus myStatus;
 
-  @Nullable private final List<DiffFragment> myPatchInnerDifferences;
-  @NotNull private final List<MyGutterOperation> myOperations = new ArrayList<>();
+  @javax.annotation.Nullable
+  private final List<DiffFragment> myPatchInnerDifferences;
+  @Nonnull
+  private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
-  @NotNull private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
+  @Nonnull
+  private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
   private boolean myResolved;
 
-  public ApplyPatchChange(@NotNull PatchChangeBuilder.Hunk hunk, int index, @NotNull ApplyPatchViewer viewer) {
+  public ApplyPatchChange(@Nonnull PatchChangeBuilder.Hunk hunk, int index, @Nonnull ApplyPatchViewer viewer) {
     myIndex = index;
     myViewer = viewer;
     myPatchDeletionRange = hunk.getPatchDeletionRange();
@@ -75,9 +82,9 @@ class ApplyPatchChange {
     myPatchInnerDifferences = calcPatchInnerDifferences(hunk, viewer);
   }
 
-  @Nullable
-  private static List<DiffFragment> calcPatchInnerDifferences(@NotNull PatchChangeBuilder.Hunk hunk,
-                                                              @NotNull ApplyPatchViewer viewer) {
+  @javax.annotation.Nullable
+  private static List<DiffFragment> calcPatchInnerDifferences(@Nonnull PatchChangeBuilder.Hunk hunk,
+                                                              @Nonnull ApplyPatchViewer viewer) {
     LineRange deletionRange = hunk.getPatchDeletionRange();
     LineRange insertionRange = hunk.getPatchInsertionRange();
 
@@ -176,27 +183,27 @@ class ApplyPatchChange {
     return myIndex;
   }
 
-  @NotNull
+  @Nonnull
   public HunkStatus getStatus() {
     return myStatus;
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getPatchRange() {
     return new LineRange(myPatchDeletionRange.start, myPatchInsertionRange.end);
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getPatchAffectedRange() {
     return isRangeApplied() ? myPatchInsertionRange : myPatchDeletionRange;
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getPatchDeletionRange() {
     return myPatchDeletionRange;
   }
 
-  @NotNull
+  @Nonnull
   public LineRange getPatchInsertionRange() {
     return myPatchInsertionRange;
   }
@@ -219,7 +226,7 @@ class ApplyPatchChange {
     myResolved = resolved;
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffType getDiffType() {
     return DiffUtil.getDiffType(!myPatchDeletionRange.isEmpty(), !myPatchInsertionRange.isEmpty());
   }
@@ -228,7 +235,7 @@ class ApplyPatchChange {
     return myResolved || getStatus() == HunkStatus.ALREADY_APPLIED;
   }
 
-  @NotNull
+  @Nonnull
   private String getStatusText() {
     switch (myStatus) {
       case ALREADY_APPLIED:
@@ -242,7 +249,7 @@ class ApplyPatchChange {
     }
   }
 
-  @NotNull
+  @Nonnull
   private Color getStatusColor() {
     switch (myStatus) {
       case ALREADY_APPLIED:
@@ -270,8 +277,8 @@ class ApplyPatchChange {
     ContainerUtil.addIfNotNull(myOperations, createOperation(OperationType.IGNORE));
   }
 
-  @Nullable
-  private MyGutterOperation createOperation(@NotNull OperationType type) {
+  @javax.annotation.Nullable
+  private MyGutterOperation createOperation(@Nonnull OperationType type) {
     if (isResolved()) return null;
 
     EditorEx editor = myViewer.getPatchEditor();
@@ -288,10 +295,12 @@ class ApplyPatchChange {
   }
 
   private class MyGutterOperation {
-    @NotNull private final RangeHighlighter myHighlighter;
-    @NotNull private final OperationType myType;
+    @Nonnull
+    private final RangeHighlighter myHighlighter;
+    @Nonnull
+    private final OperationType myType;
 
-    private MyGutterOperation(@NotNull RangeHighlighter highlighter, @NotNull OperationType type) {
+    private MyGutterOperation(@Nonnull RangeHighlighter highlighter, @Nonnull OperationType type) {
       myHighlighter = highlighter;
       myType = type;
 
@@ -302,7 +311,7 @@ class ApplyPatchChange {
       myHighlighter.dispose();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public GutterIconRenderer createRenderer() {
       switch (myType) {
         case APPLY:
@@ -324,7 +333,7 @@ class ApplyPatchChange {
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private GutterIconRenderer createIgnoreRenderer() {
     return createIconRenderer(DiffBundle.message("merge.dialog.ignore.change.action.name"), AllIcons.Diff.Remove, () -> {
       myViewer.executeCommand("Ignore change", () -> {
@@ -333,10 +342,10 @@ class ApplyPatchChange {
     });
   }
 
-  @Nullable
-  private static GutterIconRenderer createIconRenderer(@NotNull final String text,
-                                                       @NotNull final Icon icon,
-                                                       @NotNull final Runnable perform) {
+  @javax.annotation.Nullable
+  private static GutterIconRenderer createIconRenderer(@Nonnull final String text,
+                                                       @Nonnull final Icon icon,
+                                                       @Nonnull final Runnable perform) {
     final String tooltipText = DiffUtil.createTooltipText(text, null);
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
@@ -354,7 +363,7 @@ class ApplyPatchChange {
   // State
   //
 
-  @NotNull
+  @Nonnull
   public State storeState() {
     LineRange resultRange = getResultRange();
     return new State(
@@ -364,7 +373,7 @@ class ApplyPatchChange {
             myResolved);
   }
 
-  public void restoreState(@NotNull State state) {
+  public void restoreState(@Nonnull State state) {
     myResolved = state.myResolved;
   }
 

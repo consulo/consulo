@@ -26,8 +26,8 @@ import com.intellij.openapi.diff.impl.highlighting.Util;
 import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,19 +35,22 @@ import java.util.List;
 
 public class TextCompareProcessor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.Processor");
-  @NotNull private final ComparisonPolicy myComparisonPolicy;
-  @NotNull private final DiffPolicy myDiffPolicy;
-  @NotNull private final HighlightMode myHighlightMode;
+  @Nonnull
+  private final ComparisonPolicy myComparisonPolicy;
+  @Nonnull
+  private final DiffPolicy myDiffPolicy;
+  @Nonnull
+  private final HighlightMode myHighlightMode;
 
-  public TextCompareProcessor(@NotNull ComparisonPolicy comparisonPolicy,
-                              @NotNull DiffPolicy diffPolicy,
-                              @NotNull HighlightMode highlightMode) {
+  public TextCompareProcessor(@Nonnull ComparisonPolicy comparisonPolicy,
+                              @Nonnull DiffPolicy diffPolicy,
+                              @Nonnull HighlightMode highlightMode) {
     myComparisonPolicy = comparisonPolicy;
     myDiffPolicy = diffPolicy;
     myHighlightMode = highlightMode;
   }
 
-  public TextCompareProcessor(@NotNull ComparisonPolicy comparisonPolicy) {
+  public TextCompareProcessor(@Nonnull ComparisonPolicy comparisonPolicy) {
     this(comparisonPolicy, DiffPolicy.LINES_WO_FORMATTING, HighlightMode.BY_WORD);
   }
 
@@ -90,7 +93,7 @@ public class TextCompareProcessor {
     return lineBlocks;
   }
 
-  private ArrayList<LineFragment> findSubFragments(@NotNull DiffString text1, @NotNull DiffString text2) throws FilesTooBigForDiffException {
+  private ArrayList<LineFragment> findSubFragments(@Nonnull DiffString text1, @Nonnull DiffString text2) throws FilesTooBigForDiffException {
     DiffFragment[] fragments = new ByWord(myComparisonPolicy).buildFragments(text1, text2);
     fragments = DiffCorrection.ConnectSingleSideToChange.INSTANCE.correct(fragments);
     fragments = UniteSameType.INSTANCE.correct(fragments);

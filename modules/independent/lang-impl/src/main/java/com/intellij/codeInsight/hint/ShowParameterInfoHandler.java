@@ -34,8 +34,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Set;
@@ -53,7 +53,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     invoke(project, editor, file, -1, null, myRequestFocus);
   }
 
@@ -64,7 +64,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
 
   @Nullable
   @RequiredDispatchThread
-  private static PsiElement findAnyElementAt(@NotNull PsiFile file, int offset) {
+  private static PsiElement findAnyElementAt(@Nonnull PsiFile file, int offset) {
     PsiElement element = file.findElementAt(offset);
     if (element == null && offset > 0) element = file.findElementAt(offset - 1);
     return element;
@@ -162,7 +162,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   }
 
   interface BestLocationPointProvider {
-    @NotNull
+    @Nonnull
     Pair<Point, Short> getBestPointPosition(LightweightHint hint, final PsiElement list, int offset, final boolean awtTooltip, short preferredPosition);
   }
 

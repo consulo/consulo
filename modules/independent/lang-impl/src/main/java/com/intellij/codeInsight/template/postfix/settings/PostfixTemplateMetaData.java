@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.lang.UrlClassLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,7 +39,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.template.postfix.settings.PostfixTemplateMetaData");
   private static final String DESCRIPTION_FOLDER = "postfixTemplates";
 
-  @NotNull
+  @Nonnull
   public static PostfixTemplateMetaData createMetaData(@Nullable PostfixTemplate template) {
     if (template == null) return EMPTY_METADATA;
 
@@ -58,14 +58,14 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
     super(EMPTY_DESCRIPTION, EMPTY_EXAMPLE, EMPTY_EXAMPLE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextDescriptor[] getExampleUsagesBefore() {
 
     return decorateTextDescriptor(super.getExampleUsagesBefore());
   }
 
-  @NotNull
+  @Nonnull
   private TextDescriptor[] decorateTextDescriptor(TextDescriptor[] before) {
     List<TextDescriptor> list = ContainerUtil.newArrayList();
     for (final TextDescriptor descriptor : before) {
@@ -84,7 +84,7 @@ public final class PostfixTemplateMetaData extends BeforeAfterActionMetaData {
     return list.toArray(new TextDescriptor[list.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextDescriptor[] getExampleUsagesAfter() {
     return decorateTextDescriptor(super.getExampleUsagesAfter());

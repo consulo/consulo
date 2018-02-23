@@ -15,16 +15,18 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ExpandedItemListCellRendererWrapper<E> implements ListCellRenderer<E> {
-  @NotNull private final ListCellRenderer<E> myWrappee;
-  @NotNull private final ExpandableItemsHandler<Integer> myHandler;
+  @Nonnull
+  private final ListCellRenderer<E> myWrappee;
+  @Nonnull
+  private final ExpandableItemsHandler<Integer> myHandler;
 
-  public ExpandedItemListCellRendererWrapper(@NotNull ListCellRenderer<E> wrappee, @NotNull ExpandableItemsHandler<Integer> handler) {
+  public ExpandedItemListCellRendererWrapper(@Nonnull ListCellRenderer<E> wrappee, @Nonnull ExpandableItemsHandler<Integer> handler) {
     myWrappee = wrappee;
     myHandler = handler;
   }
@@ -38,7 +40,7 @@ public class ExpandedItemListCellRendererWrapper<E> implements ListCellRenderer<
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public ListCellRenderer getWrappee() {
     return myWrappee;
   }

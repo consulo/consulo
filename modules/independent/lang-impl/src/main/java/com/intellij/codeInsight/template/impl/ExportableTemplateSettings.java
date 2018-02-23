@@ -17,8 +17,8 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

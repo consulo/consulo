@@ -16,7 +16,8 @@
 package com.intellij.psi;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -37,6 +38,7 @@ public interface PsiQualifiedReference extends PsiReference {
    * @return the non-qualified text of the reference, or null if the reference
    * element is incomplete.
    */
-  @Nullable @NonNls
+  @Nullable
+  @NonNls
   String getReferenceName();
 }

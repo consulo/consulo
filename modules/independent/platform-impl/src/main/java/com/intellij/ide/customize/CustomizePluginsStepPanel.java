@@ -24,9 +24,9 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.customize.CustomizeSelectTemplateStepPanel;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -161,7 +161,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Set<IdeaPluginDescriptor> getPluginsForDownload() {
     Set<IdeaPluginDescriptor> set = new THashSet<IdeaPluginDescriptor>();
     collect(myRoot, set);

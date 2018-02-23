@@ -28,7 +28,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class ConfigurationErrorsComponent extends JPanel {
   private final JBList myErrorList;
   private final CollectionListModel<ConfigurationError> myModel;
 
-  public ConfigurationErrorsComponent(@NotNull final Project project) {
+  public ConfigurationErrorsComponent(@Nonnull final Project project) {
     super(new BorderLayout());
     myModel = new CollectionListModel<ConfigurationError>();
     final JLabel label = new JLabel("<html><body><b>Problems:</b></body></html>");
@@ -54,7 +54,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     add(label, BorderLayout.NORTH);
     project.getMessageBus().connect().subscribe(ConfigurationErrors.TOPIC, new ConfigurationErrors() {
       @Override
-      public void addError(@NotNull ConfigurationError error) {
+      public void addError(@Nonnull ConfigurationError error) {
         int elementIndex = myModel.getElementIndex(error);
         if (elementIndex != -1) {
           return;
@@ -65,7 +65,7 @@ public class ConfigurationErrorsComponent extends JPanel {
       }
 
       @Override
-      public void removeError(@NotNull ConfigurationError error) {
+      public void removeError(@Nonnull ConfigurationError error) {
         myModel.remove(error);
         label.setVisible(myModel.getSize() != 0);
       }
@@ -101,12 +101,12 @@ public class ConfigurationErrorsComponent extends JPanel {
     private Icon myIcon;
     private String myName;
 
-    ToolbarAlikeButton(@NotNull final Icon icon, @NotNull final String name) {
+    ToolbarAlikeButton(@Nonnull final Icon icon, @Nonnull final String name) {
       this(icon);
       myName = name;
     }
 
-    ToolbarAlikeButton(@NotNull final Icon icon) {
+    ToolbarAlikeButton(@Nonnull final Icon icon) {
       myIcon = icon;
 
       myBehavior = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
@@ -214,7 +214,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     myErrorList.setToolTipText(null);
   }
 
-  private void onClickFix(@NotNull final ConfigurationError error, JComponent component, MouseEvent e) {
+  private void onClickFix(@Nonnull final ConfigurationError error, JComponent component, MouseEvent e) {
     error.fix(component, new RelativePoint(e));
   }
 
@@ -227,7 +227,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     private JPanel myButtonsPanel;
     private JPanel myFixGroup;
 
-    private ErrorListRenderer(@NotNull final JList list) {
+    private ErrorListRenderer(@Nonnull final JList list) {
       setLayout(new BorderLayout());
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
       setOpaque(false);

@@ -39,8 +39,8 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.util.pointers.NamedPointer;
 import consulo.util.pointers.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -76,10 +76,10 @@ public class ModuleOutputPackagingElementImpl
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
+                                                     @Nonnull ArtifactType artifactType) {
     final Module module = findModule(resolvingContext);
     if (module != null) {
       final VirtualFile output = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(myContentFolderType);
@@ -89,7 +89,7 @@ public class ModuleOutputPackagingElementImpl
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getSourceRoots(PackagingElementResolvingContext context) {
     Module module = NamedPointerUtil.get(myModulePointer);
@@ -113,14 +113,14 @@ public class ModuleOutputPackagingElementImpl
     return "module:" + getModuleName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PackagingElementOutputKind getFilesKind(PackagingElementResolvingContext context) {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element.getClass() == getClass() &&
            myModulePointer != null &&
            myModulePointer.equals(((ModuleOutputPackagingElementImpl)element).myModulePointer) &&
@@ -143,24 +143,24 @@ public class ModuleOutputPackagingElementImpl
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getModuleName() {
     return NamedPointerUtil.getName(myModulePointer);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ContentFolderTypeProvider getContentFolderType() {
     return myContentFolderType;
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new DelegatedPackagingElementPresentation(new ModuleElementPresentation(myModulePointer, context, myContentFolderType));
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Module findModule(PackagingElementResolvingContext context) {
     final Module module = NamedPointerUtil.get(myModulePointer);
     final ModulesProvider modulesProvider = context.getModulesProvider();

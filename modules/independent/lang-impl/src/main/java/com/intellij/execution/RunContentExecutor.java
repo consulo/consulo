@@ -21,9 +21,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class RunContentExecutor implements Disposable {
    */
   private ConsoleView myUserProvidedConsole;
 
-  public RunContentExecutor(@NotNull Project project, @NotNull ProcessHandler process) {
+  public RunContentExecutor(@Nonnull Project project, @Nonnull ProcessHandler process) {
     myProject = project;
     myProcess = process;
   }
@@ -70,7 +70,7 @@ public class RunContentExecutor implements Disposable {
     return this;
   }
 
-  public RunContentExecutor withStop(@NotNull Runnable stop, @NotNull Computable<Boolean> stopEnabled) {
+  public RunContentExecutor withStop(@Nonnull Runnable stop, @Nonnull Computable<Boolean> stopEnabled) {
     myStopAction = stop;
     myStopEnabled = stopEnabled;
     return this;
@@ -91,7 +91,7 @@ public class RunContentExecutor implements Disposable {
     return this;
   }
 
-  private ConsoleView createConsole(@NotNull Project project) {
+  private ConsoleView createConsole(@Nonnull Project project) {
     TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
     consoleBuilder.filters(myFilterList);
     final ConsoleView console = consoleBuilder.getConsole();
@@ -163,7 +163,7 @@ public class RunContentExecutor implements Disposable {
   /**
    * @param console console to use instead of new one. Pass null to always create new
    */
-  @NotNull
+  @Nonnull
   public RunContentExecutor withConsole(@Nullable ConsoleView console) {
     myUserProvidedConsole = console;
     return this;

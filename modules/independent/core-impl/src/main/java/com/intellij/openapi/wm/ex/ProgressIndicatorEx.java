@@ -17,16 +17,16 @@ package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorStacked;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ProgressIndicatorEx extends ProgressIndicatorStacked {
-  void addStateDelegate(@NotNull ProgressIndicatorEx delegate);
+  void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
 
   boolean isModalityEntered();
 
-  void finish(@NotNull TaskInfo task);
+  void finish(@Nonnull TaskInfo task);
 
-  boolean isFinished(@NotNull TaskInfo task);
+  boolean isFinished(@Nonnull TaskInfo task);
 
   boolean wasStarted();
 

@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -23,7 +23,7 @@ import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
  * To change this template use File | Settings | File Templates.
  */
 public class SwitchToFind extends AnAction implements DumbAware {
-  public SwitchToFind(@NotNull JComponent shortcutHolder) {
+  public SwitchToFind(@Nonnull JComponent shortcutHolder) {
     AnAction findAction = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND);
     if (findAction != null) {
       registerCustomShortcutSet(findAction.getShortcutSet(), shortcutHolder);

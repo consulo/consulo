@@ -25,8 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.awt.RelativePoint;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,16 +49,16 @@ public interface JBPopup extends Disposable, LightweightWindow {
    *
    * @param componentUnder the component near which the popup should be displayed.
    */
-  void showUnderneathOf(@NotNull Component componentUnder);
+  void showUnderneathOf(@Nonnull Component componentUnder);
 
   /**
    * Shows the popup at the specified point.
    *
    * @param point the relative point where the popup should be displayed.
    */
-  void show(@NotNull RelativePoint point);
+  void show(@Nonnull RelativePoint point);
 
-  void showInScreenCoordinates(@NotNull Component owner, @NotNull Point point);
+  void showInScreenCoordinates(@Nonnull Component owner, @Nonnull Point point);
 
   /**
    * Shows the popup in the position most appropriate for the specified data context.
@@ -66,7 +66,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * @param dataContext the data context to which the popup is related.
    * @see com.intellij.openapi.ui.popup.JBPopupFactory#guessBestPopupLocation(com.intellij.openapi.actionSystem.DataContext)
    */
-  void showInBestPositionFor(@NotNull DataContext dataContext);
+  void showInBestPositionFor(@Nonnull DataContext dataContext);
 
 
 
@@ -76,14 +76,14 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * @param editor the editor relative to which the popup should be displayed.
    * @see com.intellij.openapi.ui.popup.JBPopupFactory#guessBestPopupLocation(com.intellij.openapi.editor.Editor)
    */
-  void showInBestPositionFor(@NotNull Editor editor);
+  void showInBestPositionFor(@Nonnull Editor editor);
 
   /**
    * Shows the popup in the center of the specified component.
    *
    * @param component the component at which the popup should be centered.
    */
-  void showInCenterOf(@NotNull Component component);
+  void showInCenterOf(@Nonnull Component component);
 
 
   /**
@@ -101,7 +101,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
    *
    * @param project the project in which the popup should be displayed.
    */
-  void showCenteredInCurrentWindow(@NotNull Project project);
+  void showCenteredInCurrentWindow(@Nonnull Project project);
 
   /**
    * Hides popup as if Enter was pressed or or any other "accept" action
@@ -151,9 +151,9 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * Moves popup to the given point. Does nothing if popup is invisible.
    * @param screenPoint Point to move to.
    */
-  void setLocation(@NotNull Point screenPoint);
+  void setLocation(@Nonnull Point screenPoint);
 
-  void setSize(@NotNull Dimension size);
+  void setSize(@Nonnull Dimension size);
   Dimension getSize();
 
   boolean isPersistent();
@@ -190,7 +190,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
 
   void setAdText(String s, @JdkConstants.HorizontalAlignment int alignment);
 
-  void setDataProvider(@NotNull DataProvider dataProvider);
+  void setDataProvider(@Nonnull DataProvider dataProvider);
 
   /**
    * This callback is called when new key event from the event queue is being processed.
@@ -201,5 +201,5 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * @return   <code>true</code> if the event is completely dispatched, i.e. no further processing is necessary;
    *           <code>false</code> otherwise
    */
-  boolean dispatchKeyEvent(@NotNull KeyEvent e);
+  boolean dispatchKeyEvent(@Nonnull KeyEvent e);
 }

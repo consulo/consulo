@@ -17,14 +17,16 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class BackgroundableActionLock {
-  @NotNull private final Project myProject;
-  @NotNull private final Object[] myKeys;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final Object[] myKeys;
 
-  BackgroundableActionLock(@NotNull Project project, @NotNull final Object[] keys) {
+  BackgroundableActionLock(@Nonnull Project project, @Nonnull final Object[] keys) {
     myProject = project;
     myKeys = keys;
   }
@@ -45,28 +47,28 @@ public class BackgroundableActionLock {
   }
 
 
-  @NotNull
-  public static BackgroundableActionLock getLock(@NotNull Project project, @NotNull Object... keys) {
+  @Nonnull
+  public static BackgroundableActionLock getLock(@Nonnull Project project, @Nonnull Object... keys) {
     return new BackgroundableActionLock(project, keys);
   }
 
   @RequiredDispatchThread
-  public static boolean isLocked(@NotNull Project project, @NotNull Object... keys) {
+  public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
     return getManager(project).isBackgroundTaskRunning(keys);
   }
 
   @RequiredDispatchThread
-  public static void lock(@NotNull Project project, @NotNull Object... keys) {
+  public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).startBackgroundTask(keys);
   }
 
   @RequiredDispatchThread
-  public static void unlock(@NotNull Project project, @NotNull Object... keys) {
+  public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
     getManager(project).stopBackgroundTask(keys);
   }
 
-  @NotNull
-  private static ProjectLevelVcsManagerImpl getManager(@NotNull Project project) {
+  @Nonnull
+  private static ProjectLevelVcsManagerImpl getManager(@Nonnull Project project) {
     return (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
   }
 }

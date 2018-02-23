@@ -15,8 +15,7 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,7 +34,7 @@ public interface GutterMark {
    *
    * @return the gutter icon.
    */
-  @NotNull
+  @Nonnull
   Icon getIcon();
 
   /**
@@ -43,6 +42,6 @@ public interface GutterMark {
    *
    * @return the tooltip text, or null if no tooltip is required.
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getTooltipText();
 }

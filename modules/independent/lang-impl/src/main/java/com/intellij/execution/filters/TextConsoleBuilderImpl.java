@@ -20,7 +20,7 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     this(project, GlobalSearchScope.allScope(project));
   }
 
-  public TextConsoleBuilderImpl(@NotNull final Project project, @NotNull GlobalSearchScope scope) {
+  public TextConsoleBuilderImpl(@Nonnull final Project project, @Nonnull GlobalSearchScope scope) {
     myProject = project;
     myScope = scope;
   }

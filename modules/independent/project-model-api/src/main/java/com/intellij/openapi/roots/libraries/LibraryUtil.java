@@ -35,8 +35,8 @@ import com.intellij.util.text.StringTokenizer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,7 +85,7 @@ public class LibraryUtil {
     return child != null && findInFile(child, tokenizer);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Library findInTable(LibraryTable table, String fqn) {
     for (Library library : table.getLibraries()) {
       if (isClassAvailableInLibrary(library, fqn)) {
@@ -141,7 +141,7 @@ public class LibraryUtil {
   }
 
   @Nullable
-  public static Library findLibrary(@NotNull Module module, @NotNull final String name) {
+  public static Library findLibrary(@Nonnull Module module, @Nonnull final String name) {
     final Ref<Library> result = Ref.create(null);
     OrderEnumerator.orderEntries(module).forEachLibrary(new Processor<Library>() {
       @Override
@@ -167,8 +167,8 @@ public class LibraryUtil {
     return null;
   }
 
-  @NotNull
-  public static String getPresentableName(@NotNull Library library) {
+  @Nonnull
+  public static String getPresentableName(@Nonnull Library library) {
     final String name = library.getName();
     if (name != null) {
       return name;

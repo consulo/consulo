@@ -48,9 +48,9 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.text.DateFormatUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -156,7 +156,7 @@ public class TodoCheckinHandler extends CheckinHandler {
     Ref<Boolean> completed = Ref.create(Boolean.FALSE);
     ProgressManager.getInstance().run(new Task.Modal(myProject, "Looking for New and Edited TODO Items...", true) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         worker.execute();
       }
@@ -188,11 +188,11 @@ public class TodoCheckinHandler extends CheckinHandler {
     return ReturnResult.CANCEL;
   }
 
-  @NotNull
-  private ReturnResult askReviewOrCommit(@NotNull TodoCheckinHandlerWorker worker,
-                                         @NotNull String commitButton,
-                                         @NotNull String text,
-                                         @NotNull String title) {
+  @Nonnull
+  private ReturnResult askReviewOrCommit(@Nonnull TodoCheckinHandlerWorker worker,
+                                         @Nonnull String commitButton,
+                                         @Nonnull String text,
+                                         @Nonnull String title) {
     String yesButton = VcsBundle.message("todo.in.new.review.button");
     switch (showYesNoCancelDialog(myProject, text, title, yesButton, commitButton, getCancelButtonText(), getWarningIcon())) {
       case YES:

@@ -27,8 +27,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: cdr
@@ -36,15 +36,15 @@ import org.jetbrains.annotations.Nullable;
 class AnchorElementInfo extends SelfElementInfo {
   private volatile long myStubElementTypeAndId; // stubId in the lower 32 bits; stubElementTypeIndex in the high 32 bits packed together for atomicity
 
-  AnchorElementInfo(@NotNull PsiElement anchor, @NotNull PsiFile containingFile, Identikit.ByAnchor identikit) {
+  AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFile containingFile, Identikit.ByAnchor identikit) {
     super(containingFile.getProject(), ProperTextRange.create(anchor.getTextRange()), identikit, containingFile, false);
     myStubElementTypeAndId = pack(-1, null);
   }
   // will restore by stub index until file tree get loaded
-  AnchorElementInfo(@NotNull PsiElement anchor,
-                    @NotNull PsiFileWithStubSupport containingFile,
+  AnchorElementInfo(@Nonnull PsiElement anchor,
+                    @Nonnull PsiFileWithStubSupport containingFile,
                     int stubId,
-                    @NotNull IStubElementType stubElementType) {
+                    @Nonnull IStubElementType stubElementType) {
     super(containingFile.getProject(), null,
           Identikit.fromTypes(anchor.getClass(), stubElementType, LanguageUtil.getRootLanguage(containingFile)),
           containingFile, false);
@@ -79,7 +79,7 @@ class AnchorElementInfo extends SelfElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull final SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull final SmartPointerElementInfo other) {
     if (other instanceof AnchorElementInfo) {
       if (!getVirtualFile().equals(other.getVirtualFile())) return false;
 
@@ -112,7 +112,7 @@ class AnchorElementInfo extends SelfElementInfo {
     }
   }
 
-  void switchToTreeRange(@NotNull PsiElement element) {
+  void switchToTreeRange(@Nonnull PsiElement element) {
     switchToAnchor(element);
     myStubElementTypeAndId = pack(-1, null);
   }

@@ -22,7 +22,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -34,12 +34,15 @@ import javax.swing.event.DocumentListener;
  */
 public class ArrangementTextFieldUiComponent extends AbstractArrangementUiComponent {
 
-  @NotNull private final JBTextField myTextField = new JBTextField(20);
-  @NotNull private final Alarm       myAlarm     = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+  @Nonnull
+  private final JBTextField myTextField = new JBTextField(20);
+  @Nonnull
+  private final Alarm       myAlarm     = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  @NotNull private final ArrangementSettingsToken myToken;
+  @Nonnull
+  private final ArrangementSettingsToken myToken;
 
-  public ArrangementTextFieldUiComponent(@NotNull ArrangementSettingsToken token) {
+  public ArrangementTextFieldUiComponent(@Nonnull ArrangementSettingsToken token) {
     super(token);
     myToken = token;
     myTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -70,18 +73,18 @@ public class ArrangementTextFieldUiComponent extends AbstractArrangementUiCompon
     }, ArrangementConstants.TEXT_UPDATE_DELAY_MILLIS);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementSettingsToken getToken() {
     return myToken;
   }
 
   @Override
-  public void chooseToken(@NotNull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     String text = myTextField.getText();
@@ -113,7 +116,7 @@ public class ArrangementTextFieldUiComponent extends AbstractArrangementUiCompon
   }
 
   @Override
-  public void setData(@NotNull Object data) {
+  public void setData(@Nonnull Object data) {
     if (data instanceof String) {
       myTextField.setText(data.toString());
     }

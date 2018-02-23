@@ -23,7 +23,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SLRUMap;
 import gnu.trove.TLongArrayList;
 import org.iq80.snappy.CorruptionException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.Arrays;
@@ -92,7 +92,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   public synchronized DataInputStream getStream(final long addr) throws IOException {
     initChunkLengthTable();
     loadAppendBuffer();
@@ -209,7 +209,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   private DataInputStream getChunkStream(final File appendFile, int pageNumber) throws IOException {
     assert myFileLength != 0;
     int limit;
@@ -240,7 +240,7 @@ public class CompressedAppendableFile {
     return offset;
   }
 
-  @NotNull
+  @Nonnull
   protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) throws IOException {
     FileInputStream in = new FileInputStream(appendFile);
     if (offset > 0) {
@@ -391,7 +391,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected File getChunksFile() {
     return new File(myBaseFile.getPath() + ".a");
   }
@@ -423,7 +423,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   private File getIncompleteChunkFile() {
     return new File(myBaseFile.getPath() + ".at");
   }
@@ -469,7 +469,7 @@ public class CompressedAppendableFile {
       super(64, 64);
     }
 
-    @NotNull
+    @Nonnull
     public byte[] get(CompressedAppendableFile file, int page) throws IOException {
       byte[] bytes;
       synchronized (this) {

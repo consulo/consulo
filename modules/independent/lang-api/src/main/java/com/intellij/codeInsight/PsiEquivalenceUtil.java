@@ -28,8 +28,8 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,18 +41,18 @@ import java.util.List;
 public class PsiEquivalenceUtil {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.PsiEquivalenceUtil");
 
-  public static boolean areElementsEquivalent(@NotNull PsiElement element1,
-                                              @NotNull PsiElement element2,
+  public static boolean areElementsEquivalent(@Nonnull PsiElement element1,
+                                              @Nonnull PsiElement element2,
                                               @Nullable Comparator<PsiElement> resolvedElementsComparator,
                                               boolean areCommentsSignificant) {
     return areElementsEquivalent(element1, element2, resolvedElementsComparator, null, null, areCommentsSignificant);
   }
 
-  public static boolean areElementsEquivalent(@NotNull PsiElement element1,
-                                              @NotNull PsiElement element2,
+  public static boolean areElementsEquivalent(@Nonnull PsiElement element1,
+                                              @Nonnull PsiElement element2,
                                               @Nullable Comparator<PsiElement> resolvedElementsComparator,
                                               @Nullable Comparator<PsiElement> leafElementsComparator,
-                                              @Nullable Condition<PsiElement> isElementSignificantCondition,
+                                              @javax.annotation.Nullable Condition<PsiElement> isElementSignificantCondition,
                                               boolean areCommentsSignificant) {
     if(element1 == element2) return true;
     ASTNode node1 = element1.getNode();
@@ -93,11 +93,11 @@ public class PsiEquivalenceUtil {
 
   }
 
-  public static boolean areElementsEquivalent(@NotNull PsiElement element1, @NotNull PsiElement element2) {
+  public static boolean areElementsEquivalent(@Nonnull PsiElement element1, @Nonnull PsiElement element2) {
     return areElementsEquivalent(element1, element2, null, false);
   }
 
-  public static PsiElement[] getFilteredChildren(@NotNull final PsiElement element,
+  public static PsiElement[] getFilteredChildren(@Nonnull final PsiElement element,
                                                  @Nullable Condition<PsiElement> isElementSignificantCondition,
                                                  boolean areCommentsSignificant) {
     ASTNode[] children1 = element.getNode().getChildren(null);

@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 package com.intellij.openapi.externalSystem.test
-
-import com.intellij.execution.ExecutionException
-import com.intellij.execution.configurations.SimpleJavaParameters
-import com.intellij.openapi.externalSystem.ExternalSystemManager
-import com.intellij.openapi.externalSystem.model.ProjectSystemId
-import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
-import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Pair
-import com.intellij.util.Function
-import org.jetbrains.annotations.NotNull
 /**
  * @author Denis Zhdanov
  * @since 8/8/13 5:20 PM

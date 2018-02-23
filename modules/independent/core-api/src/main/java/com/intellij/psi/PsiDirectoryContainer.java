@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -29,7 +29,7 @@ public interface PsiDirectoryContainer extends PsiNamedElement {
    *
    * @return the array of directories.
    */
-  @NotNull
+  @Nonnull
   PsiDirectory[] getDirectories();
 
   /**
@@ -38,6 +38,6 @@ public interface PsiDirectoryContainer extends PsiNamedElement {
    * @param scope the scope in which directories are searched.
    * @return the array of directories.
    */
-  @NotNull
-  PsiDirectory[] getDirectories(@NotNull GlobalSearchScope scope);
+  @Nonnull
+  PsiDirectory[] getDirectories(@Nonnull GlobalSearchScope scope);
 }

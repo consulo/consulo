@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,11 +73,11 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
   }
 
 
-  public static void showDialog(@NotNull Project project,
-                                @NotNull String title,
+  public static void showDialog(@Nonnull Project project,
+                                @Nonnull String title,
                                 ConfigurationErrorType type,
-                                @NotNull String invalidElements,
-                                @NotNull List<ConfigurationErrorDescription> errors) {
+                                @Nonnull String invalidElements,
+                                @Nonnull List<ConfigurationErrorDescription> errors) {
     if (errors.isEmpty()) {
       return;
     }

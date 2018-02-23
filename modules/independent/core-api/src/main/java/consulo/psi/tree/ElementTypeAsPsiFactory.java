@@ -23,8 +23,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Constructor;
 
@@ -37,14 +37,14 @@ public class ElementTypeAsPsiFactory extends IElementType implements IElementTyp
 
   private Constructor<? extends PsiElement> myConstructor;
 
-  public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName, @Nullable Language language, @NotNull Class<? extends PsiElement> clazz) {
+  public ElementTypeAsPsiFactory(@Nonnull @NonNls String debugName, @Nullable Language language, @Nonnull Class<? extends PsiElement> clazz) {
     this(debugName, language, true, clazz);
   }
 
-  public ElementTypeAsPsiFactory(@NotNull @NonNls String debugName,
+  public ElementTypeAsPsiFactory(@Nonnull @NonNls String debugName,
                                  @Nullable Language language,
                                  boolean register,
-                                 @NotNull Class<? extends PsiElement> clazz) {
+                                 @Nonnull Class<? extends PsiElement> clazz) {
     super(debugName, language, register);
 
     try {
@@ -57,8 +57,8 @@ public class ElementTypeAsPsiFactory extends IElementType implements IElementTyp
   }
 
   @Override
-  @NotNull
-  public PsiElement createElement(@NotNull ASTNode astNode) {
+  @Nonnull
+  public PsiElement createElement(@Nonnull ASTNode astNode) {
     if (myConstructor == null) {
       return PsiUtilCore.NULL_PSI_ELEMENT;
     }

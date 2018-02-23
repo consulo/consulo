@@ -17,7 +17,7 @@ package com.intellij.mock;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockProgressIndicator implements ProgressIndicator {
   private boolean myIsRunning = false;
@@ -81,7 +81,7 @@ public class MockProgressIndicator implements ProgressIndicator {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public ModalityState getModalityState() {
     return ModalityState.NON_MODAL;
   }

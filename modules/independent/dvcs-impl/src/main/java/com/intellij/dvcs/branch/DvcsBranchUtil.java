@@ -18,8 +18,8 @@ package com.intellij.dvcs.branch;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -28,19 +28,19 @@ public class DvcsBranchUtil {
 
   @Nullable
   public static <T extends DvcsBranchInfo> T find(@Nullable final Collection<T> branches,
-                                                  @Nullable Repository repository,
-                                                  @NotNull String sourceBranch) {
+                                                  @javax.annotation.Nullable Repository repository,
+                                                  @Nonnull String sourceBranch) {
     if (branches == null) return null;
     return ContainerUtil.find(branches, targetInfo -> repoAndSourceAreEqual(repository, sourceBranch, targetInfo));
   }
 
-  private static boolean repoAndSourceAreEqual(@Nullable Repository repository,
-                                               @NotNull String sourceBranch,
-                                               @NotNull DvcsBranchInfo targetInfo) {
+  private static boolean repoAndSourceAreEqual(@javax.annotation.Nullable Repository repository,
+                                               @Nonnull String sourceBranch,
+                                               @Nonnull DvcsBranchInfo targetInfo) {
     return getPathFor(repository).equals(targetInfo.repoPath) && StringUtil.equals(targetInfo.sourceName, sourceBranch);
   }
 
-  @NotNull
+  @Nonnull
   public static String getPathFor(@Nullable Repository repository) {
     return repository == null ? "" : repository.getRoot().getPath();
   }

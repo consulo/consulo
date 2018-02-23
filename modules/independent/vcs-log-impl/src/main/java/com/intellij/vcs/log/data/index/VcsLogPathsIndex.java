@@ -36,7 +36,7 @@ import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
 import gnu.trove.THashMap;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -54,12 +54,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   public static final String PATHS = "paths";
   public static final String INDEX_PATHS_IDS = "paths-ids";
 
-  @NotNull private final PathsIndexer myPathsIndexer;
+  @Nonnull
+  private final PathsIndexer myPathsIndexer;
 
-  public VcsLogPathsIndex(@NotNull String logId,
-                          @NotNull Set<VirtualFile> roots,
-                          @NotNull FatalErrorHandler fatalErrorHandler,
-                          @NotNull Disposable disposableParent) throws IOException {
+  public VcsLogPathsIndex(@Nonnull String logId,
+                          @Nonnull Set<VirtualFile> roots,
+                          @Nonnull FatalErrorHandler fatalErrorHandler,
+                          @Nonnull Disposable disposableParent) throws IOException {
     super(logId, PATHS, getVersion(), new PathsIndexer(createPathsEnumerator(logId), roots),
           new NullableIntKeyDescriptor(), fatalErrorHandler, disposableParent);
 
@@ -67,8 +68,8 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     myPathsIndexer.setFatalErrorConsumer(e -> fatalErrorHandler.consume(this, e));
   }
 
-  @NotNull
-  private static PersistentEnumeratorBase<String> createPathsEnumerator(@NotNull String logId) throws IOException {
+  @Nonnull
+  private static PersistentEnumeratorBase<String> createPathsEnumerator(@Nonnull String logId) throws IOException {
     File storageFile = PersistentUtil.getStorageFile(INDEX, INDEX_PATHS_IDS, logId, getVersion(), true);
     return new PersistentBTreeEnumerator<>(storageFile, SystemInfo.isFileSystemCaseSensitive ? EnumeratorStringDescriptor.INSTANCE
                                                                                              : new ToLowerCaseStringDescriptor(),
@@ -81,7 +82,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     myPathsIndexer.getPathsEnumerator().force();
   }
 
-  public TIntHashSet getCommitsForPaths(@NotNull Collection<FilePath> paths) throws IOException, StorageException {
+  public TIntHashSet getCommitsForPaths(@Nonnull Collection<FilePath> paths) throws IOException, StorageException {
     Set<Integer> allPathIds = ContainerUtil.newHashSet();
     for (FilePath path : paths) {
       allPathIds.add(myPathsIndexer.myPathsEnumerator.enumerate(path.getPath()));
@@ -97,10 +98,10 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     return result;
   }
 
-  @NotNull
-  public Set<Integer> addCommitsAndGetRenames(@NotNull Set<Integer> newPathIds,
-                                              @NotNull Set<Integer> allPathIds,
-                                              @NotNull TIntHashSet commits)
+  @Nonnull
+  public Set<Integer> addCommitsAndGetRenames(@Nonnull Set<Integer> newPathIds,
+                                              @Nonnull Set<Integer> allPathIds,
+                                              @Nonnull TIntHashSet commits)
           throws StorageException {
     Set<Integer> renames = ContainerUtil.newHashSet();
     for (Integer key : newPathIds) {
@@ -126,11 +127,14 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   }
 
   private static class PathsIndexer implements DataIndexer<Integer, Integer, VcsFullCommitDetails> {
-    @NotNull private final PersistentEnumeratorBase<String> myPathsEnumerator;
-    @NotNull private final Set<String> myRoots;
-    @NotNull private Consumer<Exception> myFatalErrorConsumer = LOG::error;
+    @Nonnull
+    private final PersistentEnumeratorBase<String> myPathsEnumerator;
+    @Nonnull
+    private final Set<String> myRoots;
+    @Nonnull
+    private Consumer<Exception> myFatalErrorConsumer = LOG::error;
 
-    private PathsIndexer(@NotNull PersistentEnumeratorBase<String> enumerator, @NotNull Set<VirtualFile> roots) {
+    private PathsIndexer(@Nonnull PersistentEnumeratorBase<String> enumerator, @Nonnull Set<VirtualFile> roots) {
       myPathsEnumerator = enumerator;
       myRoots = newTroveSet(FileUtil.PATH_HASHING_STRATEGY);
       for (VirtualFile root : roots) {
@@ -138,13 +142,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       }
     }
 
-    public void setFatalErrorConsumer(@NotNull Consumer<Exception> fatalErrorConsumer) {
+    public void setFatalErrorConsumer(@Nonnull Consumer<Exception> fatalErrorConsumer) {
       myFatalErrorConsumer = fatalErrorConsumer;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Map<Integer, Integer> map(@NotNull VcsFullCommitDetails inputData) {
+    public Map<Integer, Integer> map(@Nonnull VcsFullCommitDetails inputData) {
       Map<Integer, Integer> result = new THashMap<>();
 
 
@@ -190,8 +194,8 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       return result;
     }
 
-    @NotNull
-    private Collection<String> getParentPaths(@NotNull Collection<String> paths) {
+    @Nonnull
+    private Collection<String> getParentPaths(@Nonnull Collection<String> paths) {
       Set<String> result = ContainerUtil.newHashSet();
       for (String path : paths) {
         while (!path.isEmpty() && !result.contains(path)) {
@@ -204,7 +208,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
       return result;
     }
 
-    @NotNull
+    @Nonnull
     public PersistentEnumeratorBase<String> getPathsEnumerator() {
       return myPathsEnumerator;
     }
@@ -212,7 +216,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
   private static class NullableIntKeyDescriptor implements DataExternalizer<Integer> {
     @Override
-    public void save(@NotNull DataOutput out, Integer value) throws IOException {
+    public void save(@Nonnull DataOutput out, Integer value) throws IOException {
       if (value == null) {
         out.writeBoolean(false);
       }
@@ -223,7 +227,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     }
 
     @Override
-    public Integer read(@NotNull DataInput in) throws IOException {
+    public Integer read(@Nonnull DataInput in) throws IOException {
       if (in.readBoolean()) {
         return in.readInt();
       }
@@ -243,12 +247,12 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     }
 
     @Override
-    public void save(@NotNull DataOutput out, String value) throws IOException {
+    public void save(@Nonnull DataOutput out, String value) throws IOException {
       IOUtil.writeUTF(out, value.toLowerCase());
     }
 
     @Override
-    public String read(@NotNull DataInput in) throws IOException {
+    public String read(@Nonnull DataInput in) throws IOException {
       return IOUtil.readUTF(in);
     }
   }

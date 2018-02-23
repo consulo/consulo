@@ -1,8 +1,6 @@
 package com.intellij.openapi.externalSystem.model.project;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Comparator;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -12,7 +10,7 @@ public class ModuleDependencyData extends AbstractDependencyData<ModuleData> {
 
   private static final long serialVersionUID = 1L;
 
-  public ModuleDependencyData(@NotNull ModuleData ownerModule, @NotNull ModuleData module) {
+  public ModuleDependencyData(@Nonnull ModuleData ownerModule, @Nonnull ModuleData module) {
     super(ownerModule, module);
   }
 }

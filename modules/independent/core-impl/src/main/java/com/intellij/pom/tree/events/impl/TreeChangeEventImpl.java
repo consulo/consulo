@@ -29,7 +29,7 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -44,19 +44,19 @@ public class TreeChangeEventImpl implements TreeChangeEvent{
   private final PomModelAspect myAspect;
   private final FileElement myFileElement;
 
-  public TreeChangeEventImpl(@NotNull PomModelAspect aspect, @NotNull FileElement treeElement) {
+  public TreeChangeEventImpl(@Nonnull PomModelAspect aspect, @Nonnull FileElement treeElement) {
     myAspect = aspect;
     myFileElement = treeElement;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileElement getRootElement() {
     return myFileElement;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ASTNode[] getChangedElements() {
     if (myChangedInOrder == null) {
       myChangedInOrder = new ArrayList<>(myChangedElements.keySet());
@@ -79,7 +79,7 @@ public class TreeChangeEventImpl implements TreeChangeEvent{
   }
 
   @Override
-  public TreeChange getChangesByElement(@NotNull ASTNode element) {
+  public TreeChange getChangesByElement(@Nonnull ASTNode element) {
     LOG.assertTrue(isAncestor(element, myFileElement), element);
     return myChangedElements.get(element);
   }
@@ -92,7 +92,7 @@ public class TreeChangeEventImpl implements TreeChangeEvent{
   }
 
   @Override
-  public void addElementaryChange(@NotNull ASTNode element, @NotNull ChangeInfo change) {
+  public void addElementaryChange(@Nonnull ASTNode element, @Nonnull ChangeInfo change) {
     LOG.assertTrue(isAncestor(element, myFileElement), element);
     final ASTNode parent = element.getTreeParent();
     if (parent == null) return;
@@ -215,7 +215,7 @@ public class TreeChangeEventImpl implements TreeChangeEvent{
     }
   }
 
-  @NotNull
+  @Nonnull
   private static int[] getRoute(ASTNode node, TObjectIntHashMap<ASTNode> index){
     final List<ASTNode> parents = new ArrayList<>(20);
     while(node != null){
@@ -259,13 +259,13 @@ public class TreeChangeEventImpl implements TreeChangeEvent{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PomModelAspect getAspect() {
     return myAspect;
   }
 
   @Override
-  public void merge(@NotNull PomChangeSet blocked) {
+  public void merge(@Nonnull PomChangeSet blocked) {
     if(!(blocked instanceof TreeChangeEventImpl)) return;
     final TreeChangeEventImpl blockedTreeChange = (TreeChangeEventImpl)blocked;
     final Map<ASTNode, TreeChange> changedElements = new HashMap<>(blockedTreeChange.myChangedElements);

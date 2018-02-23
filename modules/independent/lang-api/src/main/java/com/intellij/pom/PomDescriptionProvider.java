@@ -18,8 +18,8 @@ package com.intellij.pom;
 import com.intellij.psi.ElementDescriptionProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ElementDescriptionLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class PomDescriptionProvider implements ElementDescriptionProvider{
   @Override
   @Nullable
-  public String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
     if (element instanceof PomTargetPsiElement) {
       return getElementDescription(((PomTargetPsiElement)element).getTarget(), location);
     }
@@ -35,5 +35,5 @@ public abstract class PomDescriptionProvider implements ElementDescriptionProvid
   }
 
   @Nullable
-  public abstract String getElementDescription(@NotNull PomTarget element, @NotNull ElementDescriptionLocation location);
+  public abstract String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location);
 }

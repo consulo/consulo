@@ -18,26 +18,26 @@ package com.intellij.execution.testframework.sm.runner.events;
 import com.intellij.execution.testframework.sm.SMTestsRunnerBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestIgnored;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TestIgnoredEvent extends TreeNodeEvent {
   private final String myIgnoreComment;
   private final String myStacktrace;
 
-  public TestIgnoredEvent(@NotNull String testName, @NotNull String ignoreComment, @Nullable String stacktrace) {
+  public TestIgnoredEvent(@Nonnull String testName, @Nonnull String ignoreComment, @Nullable String stacktrace) {
     super(testName, null);
     myIgnoreComment = ignoreComment;
     myStacktrace = stacktrace;
   }
 
-  public TestIgnoredEvent(@NotNull TestIgnored testIgnored, @Nullable String stacktrace) {
+  public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @javax.annotation.Nullable String stacktrace) {
     super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
     myIgnoreComment = testIgnored.getIgnoreComment();
     myStacktrace = stacktrace;
   }
 
-  @NotNull
+  @Nonnull
   public String getIgnoreComment() {
     if (StringUtil.isEmpty(myIgnoreComment)) {
       return SMTestsRunnerBundle.message("sm.test.runner.states.test.is.ignored");
@@ -51,7 +51,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
   }
 
   @Override
-  protected void appendToStringInfo(@NotNull StringBuilder buf) {
+  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
     append(buf, "ignoreComment", myIgnoreComment);
     append(buf, "stacktrace", myStacktrace);
   }

@@ -17,8 +17,7 @@ package com.intellij.lang.annotation;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Implemented by a custom language plugin to process the files in a language by an
@@ -36,8 +35,8 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param file file to annotate
    * @return see {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    */
-  @Nullable
-  public InitialInfoType collectInformation(@NotNull PsiFile file) {
+  @javax.annotation.Nullable
+  public InitialInfoType collectInformation(@Nonnull PsiFile file) {
     return null;
   }
 
@@ -50,8 +49,8 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param hasErrors indicates if file has errors detected by preceding analyses
    * @return information to pass to {@link ExternalAnnotator#doAnnotate(InitialInfoType)} or {@code null} if annotation should be skipped
    */
-  @Nullable
-  public InitialInfoType collectInformation(@NotNull PsiFile file, @NotNull Editor editor, boolean hasErrors) {
+  @javax.annotation.Nullable
+  public InitialInfoType collectInformation(@Nonnull PsiFile file, @Nonnull Editor editor, boolean hasErrors) {
     return hasErrors ? null : collectInformation(file);
   }
 
@@ -61,7 +60,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param collectedInfo initial information gathered by {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    * @return annotation result to pass to {@link ExternalAnnotator#apply(PsiFile, AnnotationResultType, AnnotationHolder)}
    */
-  @Nullable
+  @javax.annotation.Nullable
   public AnnotationResultType doAnnotate(InitialInfoType collectedInfo) {
     return null;
   }
@@ -72,6 +71,6 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param annotationResult annotation result acquired through {@link ExternalAnnotator#doAnnotate(InitialInfoType)}
    * @param holder container which receives annotations
    */
-  public void apply(@NotNull PsiFile file, AnnotationResultType annotationResult, @NotNull AnnotationHolder holder) {
+  public void apply(@Nonnull PsiFile file, AnnotationResultType annotationResult, @Nonnull AnnotationHolder holder) {
   }
 }

@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.runtime.deployment;
 
 import com.intellij.remoteServer.runtime.RemoteOperationCallback;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -11,7 +11,7 @@ public abstract class DeploymentRuntime {
     return true;
   }
 
-  public abstract void undeploy(@NotNull UndeploymentTaskCallback callback);
+  public abstract void undeploy(@Nonnull UndeploymentTaskCallback callback);
 
   public interface UndeploymentTaskCallback extends RemoteOperationCallback {
     void succeeded();

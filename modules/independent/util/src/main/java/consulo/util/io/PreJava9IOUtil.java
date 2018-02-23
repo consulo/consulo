@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -102,7 +102,7 @@ public class PreJava9IOUtil {
 
   private static Processor<ByteBuffer> ourCleaner = SystemInfo.IS_AT_LEAST_JAVA9 ? new Java9Cleaner() : new Java8Cleaner();
 
-  public static boolean invokeCleaner(@NotNull ByteBuffer buffer) {
+  public static boolean invokeCleaner(@Nonnull ByteBuffer buffer) {
     return ourCleaner.process(buffer);
   }
 }

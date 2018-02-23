@@ -20,11 +20,11 @@ import com.intellij.lang.LighterAST;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ILightStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IStubElementType<StubT, PsiT> {
-  public ILightStubElementType(@NotNull @NonNls final String debugName, @Nullable final Language language) {
+  public ILightStubElementType(@Nonnull @NonNls final String debugName, @Nullable final Language language) {
     super(debugName, language);
   }
 

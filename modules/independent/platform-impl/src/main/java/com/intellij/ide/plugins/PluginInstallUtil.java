@@ -19,8 +19,8 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.ide.plugins.InstalledPluginsState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class PluginInstallUtil {
   private PluginInstallUtil() {
   }
 
-  @NotNull
+  @Nonnull
   public static Set<IdeaPluginDescriptor> getPluginsForInstall(List<IdeaPluginDescriptor> pluginsToInstall, List<IdeaPluginDescriptor> allPlugins) {
     final List<PluginId> pluginIds = new ArrayList<>();
     for (IdeaPluginDescriptor pluginNode : pluginsToInstall) {
@@ -59,10 +59,10 @@ public class PluginInstallUtil {
     return toInstallAll;
   }
 
-  private static void collectDepends(@NotNull IdeaPluginDescriptor toInstall,
-                                     @NotNull List<PluginId> toInstallOthers,
-                                     @NotNull Set<PluginNode> depends,
-                                     @NotNull List<IdeaPluginDescriptor> repoPlugins) {
+  private static void collectDepends(@Nonnull IdeaPluginDescriptor toInstall,
+                                     @Nonnull List<PluginId> toInstallOthers,
+                                     @Nonnull Set<PluginNode> depends,
+                                     @Nonnull List<IdeaPluginDescriptor> repoPlugins) {
     PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
     InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
 

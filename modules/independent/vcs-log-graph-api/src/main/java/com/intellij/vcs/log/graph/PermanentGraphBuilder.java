@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ import java.util.List;
  */
 public interface PermanentGraphBuilder<Id> {
 
-  @NotNull
-  PermanentGraph<Id> build(@NotNull List<GraphCommit<Id>> commits);
+  @Nonnull
+  PermanentGraph<Id> build(@Nonnull List<GraphCommit<Id>> commits);
 }

@@ -7,7 +7,7 @@ import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

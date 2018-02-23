@@ -23,8 +23,8 @@ import consulo.psi.tree.PsiElementFactory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import consulo.psi.tree.IElementTypeAsPsiFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -34,7 +34,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   @RequiredReadAction
   @Nullable
   @Override
-  public PsiElement createElement(@NotNull ASTNode node) {
+  public PsiElement createElement(@Nonnull ASTNode node) {
     IElementType elementType = node.getElementType();
     if(elementType instanceof IElementTypeAsPsiFactory) {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
@@ -49,7 +49,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
   }
 
   @Override
-  public boolean apply(@NotNull IElementType type) {
+  public boolean apply(@Nonnull IElementType type) {
     return true;
   }
 }

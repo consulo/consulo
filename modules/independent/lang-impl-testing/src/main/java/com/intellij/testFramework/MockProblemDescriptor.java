@@ -7,15 +7,15 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ex.ProblemDescriptorImpl;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
 */
 public class MockProblemDescriptor extends ProblemDescriptorImpl {
-  public MockProblemDescriptor(@NotNull final PsiElement psiElement,
+  public MockProblemDescriptor(@Nonnull final PsiElement psiElement,
                                final String descriptionTemplate,
-                               @NotNull ProblemHighlightType highlightType,
+                               @Nonnull ProblemHighlightType highlightType,
                                final LocalQuickFix... fixes) {
     super(psiElement, psiElement, descriptionTemplate, fixes, highlightType, false, null, true);
   }

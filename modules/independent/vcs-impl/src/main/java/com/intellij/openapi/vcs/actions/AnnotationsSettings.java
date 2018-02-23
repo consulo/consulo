@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.codeHighlighting.ColorGenerator;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class AnnotationsSettings {
 
   static final List<ColorKey> ANCHOR_COLOR_KEYS = createColorKeys(ANCHORS_COUNT);
 
-  @NotNull
+  @Nonnull
   private static List<ColorKey> createColorKeys(int count) {
     List<ColorKey> keys = new ArrayList<>();
     for (int i = 0; i < count; i++) {
@@ -48,7 +48,7 @@ public class AnnotationsSettings {
     return ServiceManager.getService(AnnotationsSettings.class);
   }
 
-  @NotNull
+  @Nonnull
   public List<Color> getAuthorsColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
     List<Color> colors = getOrderedColors(scheme);
@@ -64,7 +64,7 @@ public class AnnotationsSettings {
     return authorColors;
   }
 
-  @NotNull
+  @Nonnull
   public List<Color> getOrderedColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
 
@@ -76,7 +76,7 @@ public class AnnotationsSettings {
     return ColorGenerator.generateLinearColorSequence(anchorColors, COLORS_BETWEEN_ANCHORS);
   }
 
-  @NotNull
+  @Nonnull
   List<Integer> getAnchorIndexes(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
 

@@ -18,8 +18,7 @@ package com.intellij.vcs.log.graph.impl.facade.bek;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.vcs.log.graph.api.LinearGraph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getDownNodes;
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getUpNodes;
@@ -27,15 +26,15 @@ import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getUpNodes;
 public class BekChecker {
   private final static Logger LOG = Logger.getInstance("#com.intellij.vcs.log.graph.impl.facade.bek.BekChecker");
 
-  public static void checkLinearGraph(@NotNull LinearGraph linearGraph) {
+  public static void checkLinearGraph(@Nonnull LinearGraph linearGraph) {
     Pair<Integer, Integer> reversedEdge = findReversedEdge(linearGraph);
     if (reversedEdge != null) {
       LOG.error("Illegal edge: up node " + reversedEdge.first + ", downNode " + reversedEdge.second);
     }
   }
 
-  @Nullable
-  public static Pair<Integer, Integer> findReversedEdge(@NotNull LinearGraph linearGraph) {
+  @javax.annotation.Nullable
+  public static Pair<Integer, Integer> findReversedEdge(@Nonnull LinearGraph linearGraph) {
     for (int i = 0; i < linearGraph.nodesCount(); i++) {
       for (int downNode : getDownNodes(linearGraph, i)) {
         if (downNode <= i) {

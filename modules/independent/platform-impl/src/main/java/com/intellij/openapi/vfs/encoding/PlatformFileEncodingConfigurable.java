@@ -7,7 +7,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.nio.charset.Charset;
@@ -23,7 +23,7 @@ public class PlatformFileEncodingConfigurable implements SearchableConfigurable 
   private PlatformEncodingOptionsPanel myPanel;
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "GeneralEncodingOptions";
   }

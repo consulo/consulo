@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions.emacs;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DefaultEmacsProcessingHandler implements EmacsProcessingHandler {
 
-  @NotNull
+  @Nonnull
   @Override
-  public Result changeIndent(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  public Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return Result.CONTINUE;
   }
 }

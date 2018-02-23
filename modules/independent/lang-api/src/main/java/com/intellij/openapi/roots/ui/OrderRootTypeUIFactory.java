@@ -27,7 +27,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.KeyedExtensionFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,7 +38,7 @@ public interface OrderRootTypeUIFactory {
           new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME,
                                                                            ApplicationManager.getApplication().getPicoContainer()) {
             @Override
-            public String getKey(@NotNull final OrderRootType key) {
+            public String getKey(@Nonnull final OrderRootType key) {
               return key.getName();
             }
           };

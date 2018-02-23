@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -81,7 +81,7 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return HELP_ID;
   }

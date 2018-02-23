@@ -20,14 +20,14 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.PlatformFrameTitleBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class IdeaFrameTitleBuilder extends PlatformFrameTitleBuilder {
   @Override
-  public String getFileTitle(@NotNull final Project project, @NotNull final VirtualFile file) {
+  public String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     return ProjectUtil.calcRelativeToProjectPath(file, project, !SystemInfo.isMac, true, false);
   }
 }

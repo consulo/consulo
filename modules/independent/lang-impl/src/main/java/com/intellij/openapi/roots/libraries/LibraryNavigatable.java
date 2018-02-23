@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,7 +30,7 @@ public class LibraryNavigatable implements Navigatable {
   private final Module module;
   private OrderEntry element;
 
-  public LibraryNavigatable(@NotNull Library library, @NotNull Module module) {
+  public LibraryNavigatable(@Nonnull Library library, @Nonnull Module module) {
     this.module = module;
     for (OrderEntry entry : ModuleRootManager.getInstance(module).getOrderEntries()) {
       if (entry instanceof LibraryOrderEntry) {

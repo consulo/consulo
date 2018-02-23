@@ -46,8 +46,8 @@ import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.psi.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.datatransfer.DataFlavor;
@@ -98,7 +98,7 @@ public class CopyReferenceAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -134,7 +134,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<PsiElement> getElementsToCopy(@Nullable final Editor editor, final DataContext dataContext) {
     List<PsiElement> elements = ContainerUtil.newArrayList();
     if (editor != null) {
@@ -277,13 +277,13 @@ public class CopyReferenceAction extends DumbAwareAction {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static String getFileFqn(final PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
     return virtualFile == null ? file.getName() : getVirtualFileFqn(virtualFile, file.getProject());
   }
 
-  private static String getVirtualFileFqn(@NotNull VirtualFile virtualFile, @NotNull Project project) {
+  private static String getVirtualFileFqn(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
     final LogicalRoot logicalRoot = LogicalRootsManager.getLogicalRootsManager(project).findLogicalRoot(virtualFile);
     VirtualFile logicalRootFile = logicalRoot != null ? logicalRoot.getVirtualFile() : null;
     if (logicalRootFile != null && !virtualFile.equals(logicalRootFile)) {

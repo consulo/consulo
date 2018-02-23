@@ -27,8 +27,8 @@ import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ import java.util.Map;
  * @author Dennis.Ushakov
  */
 public class JBRunnerTabs extends JBEditorTabs {
-  public JBRunnerTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
+  public JBRunnerTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nonnull Disposable parent) {
     super(project, actionManager, focusManager, parent);
   }
 

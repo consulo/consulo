@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Internal interface for creating indent instances.
@@ -32,7 +32,7 @@ interface IndentFactory {
   Indent getContinuationIndent(boolean relativeToDirectParent);
   Indent getContinuationWithoutFirstIndent(boolean relativeToDirectParent);
   Indent getSpaceIndent(final int spaces, boolean relativeToDirectParent);
-  Indent getIndent(@NotNull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
-  Indent getIndent(@NotNull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
-  Indent getSmartIndent(@NotNull Indent.Type type);
+  Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+  Indent getIndent(@Nonnull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+  Indent getSmartIndent(@Nonnull Indent.Type type);
 }

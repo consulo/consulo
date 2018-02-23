@@ -16,8 +16,8 @@
 package org.jetbrains.ide.script;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -26,17 +26,17 @@ public abstract class IdeScriptEngineManager {
     return ServiceManager.getService(IdeScriptEngineManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<String> getLanguages();
 
-  @NotNull
+  @Nonnull
   public abstract List<String> getFileExtensions(@Nullable String language);
 
   @Nullable
-  public abstract IdeScriptEngine getEngineForLanguage(@NotNull String language, @Nullable ClassLoader loader);
+  public abstract IdeScriptEngine getEngineForLanguage(@Nonnull String language, @Nullable ClassLoader loader);
 
   @Nullable
-  public abstract IdeScriptEngine getEngineForFileExtension(@NotNull String extension, @Nullable ClassLoader loader);
+  public abstract IdeScriptEngine getEngineForFileExtension(@Nonnull String extension, @Nullable ClassLoader loader);
 
   public abstract boolean isInitialized();
 }

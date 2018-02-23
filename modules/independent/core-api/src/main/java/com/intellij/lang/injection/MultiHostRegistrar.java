@@ -27,18 +27,18 @@ import consulo.lang.LanguageVersion;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface MultiHostRegistrar {
-  @NotNull
-  MultiHostRegistrar startInjecting(@NotNull Language language);
+  @Nonnull
+  MultiHostRegistrar startInjecting(@Nonnull Language language);
 
-  @NotNull
-  MultiHostRegistrar startInjecting(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  MultiHostRegistrar startInjecting(@Nonnull LanguageVersion languageVersion);
 
-  @NotNull
-  MultiHostRegistrar addPlace(@NonNls @Nullable String prefix, @NonNls @Nullable String suffix, @NotNull PsiLanguageInjectionHost host, @NotNull TextRange rangeInsideHost);
+  @Nonnull
+  MultiHostRegistrar addPlace(@NonNls @Nullable String prefix, @NonNls @Nullable String suffix, @Nonnull PsiLanguageInjectionHost host, @Nonnull TextRange rangeInsideHost);
 
   void doneInjecting();
 }

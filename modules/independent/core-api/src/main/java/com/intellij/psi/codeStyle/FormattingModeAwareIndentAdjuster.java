@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.formatting.FormattingMode;
 import com.intellij.openapi.editor.Document;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Used to differentiate between line indent adjustment on a new line after Enter and explicit indent adjustment action.
@@ -35,7 +35,7 @@ public interface FormattingModeAwareIndentAdjuster {
    * @param mode     The mode: {@link FormattingMode#ADJUST_INDENT} or {@link FormattingMode#ADJUST_INDENT_ON_ENTER}
    * @return Adjusted offset.
    */
-  int adjustLineIndent(@NotNull final Document document, final int offset, FormattingMode mode);
+  int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode);
 
   FormattingMode getCurrentFormattingMode();
 }

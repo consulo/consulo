@@ -19,8 +19,8 @@ package com.intellij.util.containers;
 import com.intellij.util.SmartList;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -42,12 +42,12 @@ public class MultiMap<K, V> implements Serializable {
     myMap = createMap();
   }
 
-  public MultiMap(@NotNull MultiMap<? extends K, ? extends V> toCopy) {
+  public MultiMap(@Nonnull MultiMap<? extends K, ? extends V> toCopy) {
     this();
     putAllValues(toCopy);
   }
 
-  @NotNull
+  @Nonnull
   public MultiMap<K, V> copy() {
     return new MultiMap<K, V>(this);
   }
@@ -56,33 +56,33 @@ public class MultiMap<K, V> implements Serializable {
     myMap = createMap(initialCapacity, loadFactor);
   }
 
-  @NotNull
+  @Nonnull
   protected Map<K, Collection<V>> createMap() {
     return new HashMap<K, Collection<V>>();
   }
 
-  @NotNull
+  @Nonnull
   protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
     return new HashMap<K, Collection<V>>(initialCapacity, loadFactor);
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<V> createCollection() {
     return new SmartList<V>();
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<V> createEmptyCollection() {
     return Collections.emptyList();
   }
 
-  public <Kk extends K, Vv extends V> void putAllValues(@NotNull MultiMap<Kk, Vv> from) {
+  public <Kk extends K, Vv extends V> void putAllValues(@Nonnull MultiMap<Kk, Vv> from) {
     for (Map.Entry<Kk, Collection<Vv>> entry : from.entrySet()) {
       putValues(entry.getKey(), entry.getValue());
     }
   }
 
-  public void putValues(K key, @NotNull Collection<? extends V> values) {
+  public void putValues(K key, @Nonnull Collection<? extends V> values) {
     Collection<V> list = myMap.get(key);
     if (list == null) {
       list = createCollection();
@@ -100,7 +100,7 @@ public class MultiMap<K, V> implements Serializable {
     list.add(value);
   }
 
-  @NotNull
+  @Nonnull
   public Set<Map.Entry<K, Collection<V>>> entrySet() {
     return myMap.entrySet();
   }
@@ -129,13 +129,13 @@ public class MultiMap<K, V> implements Serializable {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<V> get(final K key) {
     final Collection<V> collection = myMap.get(key);
     return collection == null ? createEmptyCollection() : collection;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<V> getModifiable(final K key) {
     Collection<V> collection = myMap.get(key);
     if (collection == null) {
@@ -144,7 +144,7 @@ public class MultiMap<K, V> implements Serializable {
     return collection;
   }
 
-  @NotNull
+  @Nonnull
   public Set<K> keySet() {
     return myMap.keySet();
   }
@@ -176,11 +176,11 @@ public class MultiMap<K, V> implements Serializable {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<? extends V> values() {
     if (values == null) {
       values = new AbstractCollection<V>() {
-        @NotNull
+        @Nonnull
         @Override
         public Iterator<V> iterator() {
           return new Iterator<V>() {
@@ -248,7 +248,7 @@ public class MultiMap<K, V> implements Serializable {
     return myMap.remove(key);
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> emptyInstance() {
     @SuppressWarnings("unchecked") final MultiMap<K, V> empty = EMPTY;
     return empty;
@@ -257,15 +257,15 @@ public class MultiMap<K, V> implements Serializable {
   /**
    * Null keys supported.
    */
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> create() {
     return new MultiMap<K, V>();
   }
 
-  @NotNull
-  public static <K, V> MultiMap<K, V> create(@NotNull final TObjectHashingStrategy<K> strategy) {
+  @Nonnull
+  public static <K, V> MultiMap<K, V> create(@Nonnull final TObjectHashingStrategy<K> strategy) {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         return new THashMap<K, Collection<V>>(strategy);
@@ -273,15 +273,15 @@ public class MultiMap<K, V> implements Serializable {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createLinked() {
     return new LinkedMultiMap<K, V>();
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createLinkedSet() {
     return new LinkedMultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createCollection() {
         return ContainerUtil.newLinkedHashSet();
@@ -289,10 +289,10 @@ public class MultiMap<K, V> implements Serializable {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createOrderedSet() {
     return new LinkedMultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createCollection() {
         return new OrderedSet<V>();
@@ -304,15 +304,15 @@ public class MultiMap<K, V> implements Serializable {
    * @deprecated Use {@link #createSmart()}
    */
   @Deprecated
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createSmartList() {
     return createSmart();
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createSmart() {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         return new THashMap<K, Collection<V>>();
@@ -320,22 +320,22 @@ public class MultiMap<K, V> implements Serializable {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createConcurrentSet() {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createCollection() {
         return ContainerUtil.newConcurrentSet();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         return ContainerUtil.newConcurrentMap();
@@ -343,27 +343,27 @@ public class MultiMap<K, V> implements Serializable {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createSet() {
     return createSet(TObjectHashingStrategy.CANONICAL);
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createSet(final TObjectHashingStrategy strategy) {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createCollection() {
         return new SmartHashSet<V>();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Collection<V> createEmptyCollection() {
         return Collections.emptySet();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         return new THashMap<K, Collection<V>>(strategy);
@@ -371,10 +371,10 @@ public class MultiMap<K, V> implements Serializable {
     };
   }
 
-  @NotNull
+  @Nonnull
   public static <K, V> MultiMap<K, V> createWeakKey() {
     return new MultiMap<K, V>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
         return new WeakHashMap<K, Collection<V>>();
@@ -409,7 +409,7 @@ public class MultiMap<K, V> implements Serializable {
   }
 
   private static class EmptyMap extends MultiMap {
-    @NotNull
+    @Nonnull
     @Override
     protected Map createMap() {
       return Collections.emptyMap();

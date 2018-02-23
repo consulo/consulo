@@ -20,8 +20,8 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -126,7 +126,7 @@ public class FileUtilRt {
             return Result_Continue;
           }
 
-          private boolean performDelete(@NotNull final Object fileObject) {
+          private boolean performDelete(@Nonnull final Object fileObject) {
             Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
               @Override
               public Boolean execute(boolean lastAttempt) {
@@ -179,21 +179,21 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static String getExtension(@NotNull String fileName) {
+  @Nonnull
+  public static String getExtension(@Nonnull String fileName) {
     int index = fileName.lastIndexOf('.');
     if (index < 0) return "";
     return fileName.substring(index + 1);
   }
 
-  @NotNull
-  public static CharSequence getExtension(@NotNull CharSequence fileName) {
+  @Nonnull
+  public static CharSequence getExtension(@Nonnull CharSequence fileName) {
     int index = StringUtilRt.lastIndexOf(fileName, '.', 0, fileName.length());
     if (index < 0) return "";
     return fileName.subSequence(index + 1, fileName.length());
   }
 
-  public static boolean extensionEquals(@NotNull String filePath, @NotNull String extension) {
+  public static boolean extensionEquals(@Nonnull String filePath, @Nonnull String extension) {
     int extLen = extension.length();
     if (extLen == 0) {
       int lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
@@ -205,18 +205,18 @@ public class FileUtilRt {
            filePath.regionMatches(!SystemInfoRt.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
   }
 
-  @NotNull
-  public static String toSystemDependentName(@NonNls @NotNull String fileName) {
+  @Nonnull
+  public static String toSystemDependentName(@NonNls @Nonnull String fileName) {
     return toSystemDependentName(fileName, File.separatorChar);
   }
 
-  @NotNull
-  public static String toSystemDependentName(@NonNls @NotNull String fileName, final char separatorChar) {
+  @Nonnull
+  public static String toSystemDependentName(@NonNls @Nonnull String fileName, final char separatorChar) {
     return fileName.replace('/', separatorChar).replace('\\', separatorChar);
   }
 
-  @NotNull
-  public static String toSystemIndependentName(@NonNls @NotNull String fileName) {
+  @Nonnull
+  public static String toSystemIndependentName(@NonNls @Nonnull String fileName) {
     return fileName.replace('\\', '/');
   }
 
@@ -238,12 +238,12 @@ public class FileUtilRt {
   }
 
   @Nullable
-  public static String getRelativePath(@NotNull String basePath, @NotNull String filePath, char separator) {
+  public static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath, char separator) {
     return getRelativePath(basePath, filePath, separator, SystemInfoRt.isFileSystemCaseSensitive);
   }
 
   @Nullable
-  public static String getRelativePath(@NotNull String basePath, @NotNull String filePath, char separator, boolean caseSensitive) {
+  public static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath, char separator, boolean caseSensitive) {
     basePath = ensureEnds(basePath, separator);
 
     if (caseSensitive ? basePath.equals(ensureEnds(filePath, separator)) : basePath.equalsIgnoreCase(ensureEnds(filePath, separator))) {
@@ -274,12 +274,12 @@ public class FileUtilRt {
     return relativePath.toString();
   }
 
-  private static String ensureEnds(@NotNull String s, final char endsWith) {
+  private static String ensureEnds(@Nonnull String s, final char endsWith) {
     return StringUtilRt.endsWithChar(s, endsWith) ? s : s + endsWith;
   }
 
-  @NotNull
-  public static String getNameWithoutExtension(@NotNull String name) {
+  @Nonnull
+  public static String getNameWithoutExtension(@Nonnull String name) {
     int i = name.lastIndexOf('.');
     if (i != -1) {
       name = name.substring(0, i);
@@ -287,24 +287,24 @@ public class FileUtilRt {
     return name;
   }
 
-  @NotNull
-  public static File createTempDirectory(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  @Nonnull
+  public static File createTempDirectory(@Nonnull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempDirectory(prefix, suffix, true);
   }
 
-  @NotNull
-  public static File createTempDirectory(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
+  @Nonnull
+  public static File createTempDirectory(@Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
     final File dir = new File(getTempDirectory());
     return createTempDirectory(dir, prefix, suffix, deleteOnExit);
   }
 
-  @NotNull
-  public static File createTempDirectory(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  @Nonnull
+  public static File createTempDirectory(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempDirectory(dir, prefix, suffix, true);
   }
 
-  @NotNull
-  public static File createTempDirectory(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit)
+  @Nonnull
+  public static File createTempDirectory(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit)
           throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, true);
     if (deleteOnExit) {
@@ -337,29 +337,29 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static File createTempFile(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  @Nonnull
+  public static File createTempFile(@Nonnull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempFile(prefix, suffix, false); //false until TeamCity fixes its plugin
   }
 
-  @NotNull
-  public static File createTempFile(@NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
+  @Nonnull
+  public static File createTempFile(@Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean deleteOnExit) throws IOException {
     final File dir = new File(getTempDirectory());
     return createTempFile(dir, prefix, suffix, true, deleteOnExit);
   }
 
-  @NotNull
-  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
+  @Nonnull
+  public static File createTempFile(@NonNls File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix) throws IOException {
     return createTempFile(dir, prefix, suffix, true, true);
   }
 
-  @NotNull
-  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create) throws IOException {
+  @Nonnull
+  public static File createTempFile(@NonNls File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create) throws IOException {
     return createTempFile(dir, prefix, suffix, create, true);
   }
 
-  @NotNull
-  public static File createTempFile(@NonNls File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create, boolean deleteOnExit)
+  @Nonnull
+  public static File createTempFile(@NonNls File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean create, boolean deleteOnExit)
           throws IOException {
     File file = doCreateTempFile(dir, prefix, suffix, false);
     if (deleteOnExit) {
@@ -376,8 +376,8 @@ public class FileUtilRt {
 
   private static final Random RANDOM = new Random();
 
-  @NotNull
-  private static File doCreateTempFile(@NotNull File dir, @NotNull @NonNls String prefix, @Nullable @NonNls String suffix, boolean isDirectory)
+  @Nonnull
+  private static File doCreateTempFile(@Nonnull File dir, @Nonnull @NonNls String prefix, @Nullable @NonNls String suffix, boolean isDirectory)
           throws IOException {
     //noinspection ResultOfMethodCallIgnored
     dir.mkdirs();
@@ -420,8 +420,8 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  private static File calcName(@NotNull File dir, @NotNull String prefix, @NotNull String suffix, int i) throws IOException {
+  @Nonnull
+  private static File calcName(@Nonnull File dir, @Nonnull String prefix, @Nonnull String suffix, int i) throws IOException {
     prefix += i == 0 ? "" : i;
     if (prefix.endsWith(".") && suffix.startsWith(".")) {
       prefix = prefix.substring(0, prefix.length() - 1);
@@ -434,13 +434,13 @@ public class FileUtilRt {
     return f;
   }
 
-  @NotNull
-  private static File normalizeFile(@NotNull File temp) throws IOException {
+  @Nonnull
+  private static File normalizeFile(@Nonnull File temp) throws IOException {
     final File canonical = temp.getCanonicalFile();
     return SystemInfoRt.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
-  @NotNull
+  @Nonnull
   public static String getTempDirectory() {
     if (ourCanonicalTempPathCache == null) {
       ourCanonicalTempPathCache = calcCanonicalTempPath();
@@ -448,7 +448,7 @@ public class FileUtilRt {
     return ourCanonicalTempPathCache;
   }
 
-  @NotNull
+  @Nonnull
   private static String calcCanonicalTempPath() {
     final File file = new File(System.getProperty("java.io.tmpdir"));
     try {
@@ -467,7 +467,7 @@ public class FileUtilRt {
     ourCanonicalTempPathCache = tempPath;
   }
 
-  @NotNull
+  @Nonnull
   public static File generateRandomTemporaryPath() throws IOException {
     File file = new File(getTempDirectory(), UUID.randomUUID().toString());
     int i = 0;
@@ -488,7 +488,7 @@ public class FileUtilRt {
    * @param executableFlag new value of executable attribute
    * @throws IOException if there is a problem with setting the flag
    */
-  public static void setExecutableAttribute(@NotNull String path, boolean executableFlag) throws IOException {
+  public static void setExecutableAttribute(@Nonnull String path, boolean executableFlag) throws IOException {
     try {
       File file = new File(path);
       //noinspection Since15
@@ -500,34 +500,34 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static String loadFile(@NotNull File file) throws IOException {
+  @Nonnull
+  public static String loadFile(@Nonnull File file) throws IOException {
     return loadFile(file, null, false);
   }
 
-  @NotNull
-  public static String loadFile(@NotNull File file, boolean convertLineSeparators) throws IOException {
+  @Nonnull
+  public static String loadFile(@Nonnull File file, boolean convertLineSeparators) throws IOException {
     return loadFile(file, null, convertLineSeparators);
   }
 
-  @NotNull
-  public static String loadFile(@NotNull File file, @Nullable @NonNls String encoding) throws IOException {
+  @Nonnull
+  public static String loadFile(@Nonnull File file, @Nullable @NonNls String encoding) throws IOException {
     return loadFile(file, encoding, false);
   }
 
-  @NotNull
-  public static String loadFile(@NotNull File file, @Nullable @NonNls String encoding, boolean convertLineSeparators) throws IOException {
+  @Nonnull
+  public static String loadFile(@Nonnull File file, @Nullable @NonNls String encoding, boolean convertLineSeparators) throws IOException {
     final String s = new String(loadFileText(file, encoding));
     return convertLineSeparators ? StringUtilRt.convertLineSeparators(s) : s;
   }
 
-  @NotNull
-  public static char[] loadFileText(@NotNull File file) throws IOException {
+  @Nonnull
+  public static char[] loadFileText(@Nonnull File file) throws IOException {
     return loadFileText(file, (String)null);
   }
 
-  @NotNull
-  public static char[] loadFileText(@NotNull File file, @Nullable @NonNls String encoding) throws IOException {
+  @Nonnull
+  public static char[] loadFileText(@Nonnull File file, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(file);
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") Reader reader =
             encoding == null ? new InputStreamReader(stream) : new InputStreamReader(stream, encoding);
@@ -539,8 +539,8 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static char[] loadFileText(@NotNull File file, @NotNull @NonNls Charset encoding) throws IOException {
+  @Nonnull
+  public static char[] loadFileText(@Nonnull File file, @Nonnull @NonNls Charset encoding) throws IOException {
     Reader reader = new InputStreamReader(new FileInputStream(file), encoding);
     try {
       return loadText(reader, (int)file.length());
@@ -550,8 +550,8 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static char[] loadText(@NotNull Reader reader, int length) throws IOException {
+  @Nonnull
+  public static char[] loadText(@Nonnull Reader reader, int length) throws IOException {
     char[] chars = new char[length];
     int count = 0;
     while (count < chars.length) {
@@ -569,23 +569,23 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static List<String> loadLines(@NotNull File file) throws IOException {
+  @Nonnull
+  public static List<String> loadLines(@Nonnull File file) throws IOException {
     return loadLines(file.getPath());
   }
 
-  @NotNull
-  public static List<String> loadLines(@NotNull File file, @Nullable @NonNls String encoding) throws IOException {
+  @Nonnull
+  public static List<String> loadLines(@Nonnull File file, @Nullable @NonNls String encoding) throws IOException {
     return loadLines(file.getPath(), encoding);
   }
 
-  @NotNull
-  public static List<String> loadLines(@NotNull String path) throws IOException {
+  @Nonnull
+  public static List<String> loadLines(@Nonnull String path) throws IOException {
     return loadLines(path, null);
   }
 
-  @NotNull
-  public static List<String> loadLines(@NotNull String path, @Nullable @NonNls String encoding) throws IOException {
+  @Nonnull
+  public static List<String> loadLines(@Nonnull String path, @Nullable @NonNls String encoding) throws IOException {
     InputStream stream = new FileInputStream(path);
     try {
       @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStreamReader in =
@@ -603,8 +603,8 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
-  public static List<String> loadLines(@NotNull BufferedReader reader) throws IOException {
+  @Nonnull
+  public static List<String> loadLines(@Nonnull BufferedReader reader) throws IOException {
     List<String> lines = new ArrayList<String>();
     String line;
     while ((line = reader.readLine()) != null) {
@@ -613,8 +613,8 @@ public class FileUtilRt {
     return lines;
   }
 
-  @NotNull
-  public static byte[] loadBytes(@NotNull InputStream stream) throws IOException {
+  @Nonnull
+  public static byte[] loadBytes(@Nonnull InputStream stream) throws IOException {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     copy(stream, buffer);
     return buffer.toByteArray();
@@ -624,8 +624,8 @@ public class FileUtilRt {
     return len > LARGE_FOR_CONTENT_LOADING;
   }
 
-  @NotNull
-  public static byte[] loadBytes(@NotNull InputStream stream, int length) throws IOException {
+  @Nonnull
+  public static byte[] loadBytes(@Nonnull InputStream stream, int length) throws IOException {
     if (length == 0) {
       return ArrayUtilRt.EMPTY_BYTE_ARRAY;
     }
@@ -648,7 +648,7 @@ public class FileUtilRt {
    * @return a parent or the null if the file has no parent.
    */
   @Nullable
-  public static File getParentFile(@NotNull File file) {
+  public static File getParentFile(@Nonnull File file) {
     int skipCount = 0;
     File parentFile = file;
     while (true) {
@@ -677,7 +677,7 @@ public class FileUtilRt {
    * @param file file or directory to delete
    * @return true if the file did not exist or was successfully deleted
    */
-  public static boolean delete(@NotNull File file) {
+  public static boolean delete(@Nonnull File file) {
     if (NIOReflect.IS_AVAILABLE) {
       return deleteRecursivelyNIO(file);
     }
@@ -718,7 +718,7 @@ public class FileUtilRt {
     return true;
   }
 
-  private static boolean deleteRecursively(@NotNull File file) {
+  private static boolean deleteRecursively(@Nonnull File file) {
     File[] files = file.listFiles();
     if (files != null) {
       for (File child : files) {
@@ -735,7 +735,7 @@ public class FileUtilRt {
   }
 
   @Nullable
-  public static <T, E extends Throwable> T doIOOperation(@NotNull RepeatableIOOperation<T, E> ioTask) throws E {
+  public static <T, E extends Throwable> T doIOOperation(@Nonnull RepeatableIOOperation<T, E> ioTask) throws E {
     for (int i = MAX_FILE_IO_ATTEMPTS; i > 0; i--) {
       T result = ioTask.execute(i == 1);
       if (result != null) return result;
@@ -750,7 +750,7 @@ public class FileUtilRt {
     return null;
   }
 
-  protected static boolean deleteFile(@NotNull final File file) {
+  protected static boolean deleteFile(@Nonnull final File file) {
     Boolean result = doIOOperation(new RepeatableIOOperation<Boolean, RuntimeException>() {
       @Override
       public Boolean execute(boolean lastAttempt) {
@@ -768,13 +768,13 @@ public class FileUtilRt {
     return Boolean.TRUE.equals(result);
   }
 
-  public static boolean ensureCanCreateFile(@NotNull File file) {
+  public static boolean ensureCanCreateFile(@Nonnull File file) {
     if (file.exists()) return file.canWrite();
     if (!createIfNotExists(file)) return false;
     return delete(file);
   }
 
-  public static boolean createIfNotExists(@NotNull File file) {
+  public static boolean createIfNotExists(@Nonnull File file) {
     if (file.exists()) return true;
     try {
       if (!createParentDirs(file)) return false;
@@ -789,7 +789,7 @@ public class FileUtilRt {
     }
   }
 
-  public static boolean createParentDirs(@NotNull File file) {
+  public static boolean createParentDirs(@Nonnull File file) {
     if (!file.exists()) {
       final File parentFile = file.getParentFile();
       if (parentFile != null) {
@@ -799,12 +799,12 @@ public class FileUtilRt {
     return true;
   }
 
-  public static boolean createDirectory(@NotNull File path) {
+  public static boolean createDirectory(@Nonnull File path) {
     return path.isDirectory() || path.mkdirs();
   }
 
   @SuppressWarnings("Duplicates")
-  public static void copy(@NotNull File fromFile, @NotNull File toFile) throws IOException {
+  public static void copy(@Nonnull File fromFile, @Nonnull File toFile) throws IOException {
     if (!ensureCanCreateFile(toFile)) {
       return;
     }
@@ -832,7 +832,7 @@ public class FileUtilRt {
     }
   }
 
-  public static void copy(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) throws IOException {
+  public static void copy(@Nonnull InputStream inputStream, @Nonnull OutputStream outputStream) throws IOException {
     if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
       final FileChannel fromChannel = ((FileInputStream)inputStream).getChannel();
       try {
@@ -858,7 +858,7 @@ public class FileUtilRt {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static byte[] getThreadLocalBuffer() {
     return BUFFER.get();
   }

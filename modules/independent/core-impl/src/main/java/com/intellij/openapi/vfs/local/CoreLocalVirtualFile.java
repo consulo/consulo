@@ -19,7 +19,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -34,25 +34,25 @@ public class CoreLocalVirtualFile extends VirtualFile {
   private VirtualFile[] myChildren;
   private final boolean isDirectory;
 
-  public CoreLocalVirtualFile(@NotNull VirtualFileSystem fileSystem, @NotNull File ioFile) {
+  public CoreLocalVirtualFile(@Nonnull VirtualFileSystem fileSystem, @Nonnull File ioFile) {
     myFileSystem = fileSystem;
     myIoFile = ioFile;
     isDirectory = ioFile.isDirectory();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myIoFile.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return FileUtil.toSystemIndependentName(myIoFile.getAbsolutePath());
@@ -104,13 +104,13 @@ public class CoreLocalVirtualFile extends VirtualFile {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     return new FileOutputStream(myIoFile);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public byte[] contentsToByteArray() throws IOException {
     return FileUtil.loadFileBytes(myIoFile);

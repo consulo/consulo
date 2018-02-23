@@ -20,8 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -33,18 +32,18 @@ public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFact
 
   private VcsKey myKey;
 
-  protected VcsCheckinHandlerFactory(@NotNull final VcsKey key) {
+  protected VcsCheckinHandlerFactory(@Nonnull final VcsKey key) {
     myKey = key;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     if (! panel.vcsIsAffected(myKey.getName())) return null;
     return createVcsHandler(panel);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract CheckinHandler createVcsHandler(CheckinProjectPanel panel);
 
   public VcsKey getKey() {

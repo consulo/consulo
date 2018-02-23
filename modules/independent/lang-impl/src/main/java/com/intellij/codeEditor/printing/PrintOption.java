@@ -24,8 +24,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,6 +36,6 @@ public abstract class PrintOption {
   @Nullable
   public abstract TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);
 
-  @NotNull
+  @Nonnull
   public abstract UnnamedConfigurable createConfigurable();
 }

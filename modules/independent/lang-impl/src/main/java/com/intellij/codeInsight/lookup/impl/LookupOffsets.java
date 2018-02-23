@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.psi.impl.DebugUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -34,7 +34,8 @@ public class LookupOffsets extends DocumentAdapter {
 
   private boolean myStableStart;
   private String myStartDisposeTrace;
-  @NotNull private RangeMarker myLookupStartMarker;
+  @Nonnull
+  private RangeMarker myLookupStartMarker;
   private int myRemovedPrefix;
   private final RangeMarker myLookupOriginalStartMarker;
   private final Editor myEditor;

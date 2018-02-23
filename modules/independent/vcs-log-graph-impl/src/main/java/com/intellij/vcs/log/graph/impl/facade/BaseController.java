@@ -17,27 +17,27 @@ package com.intellij.vcs.log.graph.impl.facade;
 
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BaseController extends CascadeController {
-  public BaseController(@NotNull PermanentGraphInfo permanentGraphInfo) {
+  public BaseController(@Nonnull PermanentGraphInfo permanentGraphInfo) {
     super(null, permanentGraphInfo);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@NotNull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
     throw new IllegalStateException();
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@NotNull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LinearGraph getCompiledGraph() {
     return myPermanentGraphInfo.getLinearGraph();

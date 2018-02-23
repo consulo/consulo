@@ -25,18 +25,20 @@ import com.intellij.vcs.log.graph.api.elements.GraphNodeType;
 import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import com.intellij.vcs.log.graph.impl.facade.bek.BekChecker;
 import com.intellij.vcs.log.graph.impl.facade.bek.BekIntMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 import static com.intellij.util.containers.ContainerUtil.map;
 
 public class BekBaseController extends CascadeController {
-  @NotNull private final BekIntMap myBekIntMap;
-  @NotNull private final LinearGraph myBekGraph;
+  @Nonnull
+  private final BekIntMap myBekIntMap;
+  @Nonnull
+  private final LinearGraph myBekGraph;
 
-  public BekBaseController(@NotNull PermanentGraphInfo permanentGraphInfo, @NotNull BekIntMap bekIntMap) {
+  public BekBaseController(@Nonnull PermanentGraphInfo permanentGraphInfo, @Nonnull BekIntMap bekIntMap) {
     super(null, permanentGraphInfo);
     myBekIntMap = bekIntMap;
     myBekGraph = new BekLinearGraph(myBekIntMap, myPermanentGraphInfo.getLinearGraph());
@@ -44,26 +46,26 @@ public class BekBaseController extends CascadeController {
     BekChecker.checkLinearGraph(myBekGraph);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@NotNull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
     throw new IllegalStateException();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected LinearGraphAnswer performAction(@NotNull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public BekIntMap getBekIntMap() {
     return myBekIntMap;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected GraphElement convertToDelegate(@NotNull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     if (graphElement instanceof GraphEdge) {
       Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();
       Integer downIndex = ((GraphEdge)graphElement).getDownNodeIndex();
@@ -79,17 +81,19 @@ public class BekBaseController extends CascadeController {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LinearGraph getCompiledGraph() {
     return myBekGraph;
   }
 
   public static class BekLinearGraph implements LinearGraph {
-    @NotNull private final LinearGraph myLinearGraph;
-    @NotNull private final BekIntMap myBekIntMap;
+    @Nonnull
+    private final LinearGraph myLinearGraph;
+    @Nonnull
+    private final BekIntMap myBekIntMap;
 
-    public BekLinearGraph(@NotNull BekIntMap bekIntMap, @NotNull LinearGraph linearGraph) {
+    public BekLinearGraph(@Nonnull BekIntMap bekIntMap, @Nonnull LinearGraph linearGraph) {
       myLinearGraph = linearGraph;
       myBekIntMap = bekIntMap;
     }
@@ -106,9 +110,9 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getBekIndex(nodeId);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter) {
+    public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
       return map(myLinearGraph.getAdjacentEdges(myBekIntMap.getUsualIndex(nodeIndex), filter), new Function<GraphEdge, GraphEdge>() {
         @Override
         public GraphEdge fun(GraphEdge edge) {
@@ -118,7 +122,7 @@ public class BekBaseController extends CascadeController {
       });
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public GraphNode getGraphNode(int nodeIndex) {
       assert inRanges(nodeIndex);
@@ -132,7 +136,7 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getUsualIndex(nodeIndex);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Integer getNodeIndex(int nodeId) {
       if (!inRanges(nodeId)) return null;

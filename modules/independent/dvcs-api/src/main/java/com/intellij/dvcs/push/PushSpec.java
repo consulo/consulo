@@ -15,27 +15,29 @@
  */
 package com.intellij.dvcs.push;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * For a single repository, specifies what is pushed and where.
  */
 public class PushSpec<S extends PushSource, T extends PushTarget> {
 
-  @NotNull private S mySource;
-  @NotNull private T myTarget;
+  @Nonnull
+  private S mySource;
+  @Nonnull
+  private T myTarget;
 
-  public PushSpec(@NotNull S source, @NotNull T target) {
+  public PushSpec(@Nonnull S source, @Nonnull T target) {
     mySource = source;
     myTarget = target;
   }
 
-  @NotNull
+  @Nonnull
   public S getSource() {
     return mySource;
   }
 
-  @NotNull
+  @Nonnull
   public T getTarget() {
     return myTarget;
   }

@@ -26,8 +26,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CodeStyleFacade {
   public static CodeStyleFacade getInstance() {
@@ -51,7 +51,7 @@ public abstract class CodeStyleFacade {
    */
   @Nullable
   @Deprecated
-  public abstract String getLineIndent(@NotNull Document document, int offset);
+  public abstract String getLineIndent(@Nonnull Document document, int offset);
 
   /**
    * Calculates the indent that should be used for the line at specified offset in the specified
@@ -63,7 +63,7 @@ public abstract class CodeStyleFacade {
    * @return the indent string (containing of tabs and/or white spaces), or null if it
    *         was not possible to calculate the indent.
    */
-  public String getLineIndent(@NotNull Editor editor, @Nullable Language language, int offset) {
+  public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset) {
     //noinspection deprecation
     return getLineIndent(editor.getDocument(), offset);
   }

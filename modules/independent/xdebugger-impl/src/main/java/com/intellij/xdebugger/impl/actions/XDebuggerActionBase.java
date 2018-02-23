@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -67,8 +67,8 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
     return false;
   }
 
-  @NotNull
-  protected abstract DebuggerActionHandler getHandler(@NotNull DebuggerSupport debuggerSupport);
+  @Nonnull
+  protected abstract DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport);
 
   private boolean isEnabled(final Project project, final AnActionEvent event, final DebuggerSupport support) {
     return getHandler(support).isEnabled(project, event);

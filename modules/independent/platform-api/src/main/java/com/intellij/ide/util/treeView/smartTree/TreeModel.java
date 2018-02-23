@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Model of a generic tree control displayed in the IDEA user interface, with a set
@@ -29,7 +29,8 @@ public interface TreeModel {
    *
    * @return the tree root.
    */
-  @NotNull TreeElement getRoot();
+  @Nonnull
+  TreeElement getRoot();
 
   /**
    * Returns the list of actions for grouping items in the tree.
@@ -37,7 +38,8 @@ public interface TreeModel {
    * @return the array of grouping actions.
    * @see Grouper#EMPTY_ARRAY
    */
-  @NotNull Grouper[] getGroupers();
+  @Nonnull
+  Grouper[] getGroupers();
 
   /**
    * Returns the array of actions for sorting items in the tree.
@@ -45,7 +47,8 @@ public interface TreeModel {
    * @return the array of sorting actions.
    * @see Sorter#EMPTY_ARRAY
    */
-  @NotNull Sorter[] getSorters();
+  @Nonnull
+  Sorter[] getSorters();
 
   /**
    * Returns the array of actions for filtering items in the tree.
@@ -53,5 +56,6 @@ public interface TreeModel {
    * @return the array of filtering actions.
    * @see Filter#EMPTY_ARRAY
    */
-  @NotNull Filter[] getFilters();
+  @Nonnull
+  Filter[] getFilters();
 }

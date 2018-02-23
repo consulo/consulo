@@ -21,9 +21,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class CodeStyleSchemesPanel {
     myBoldComboFont = myDefaultComboFont.deriveFont(Font.BOLD);
     myCombo.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         if (!myIsReset) {
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
@@ -76,7 +76,7 @@ public class CodeStyleSchemesPanel {
 
     myManageButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(@NotNull ActionEvent e) {
+      public void actionPerformed(@Nonnull ActionEvent e) {
         showManageSchemesDialog();
       }
     });

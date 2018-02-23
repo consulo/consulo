@@ -67,10 +67,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.codeInsight.TargetElementUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -91,7 +92,7 @@ import java.util.concurrent.TimeUnit;
 public class CompletionProgressIndicator extends ProgressIndicatorBase implements CompletionProcess, Disposable {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.completion.CompletionProgressIndicator");
   private final Editor myEditor;
-  @NotNull
+  @Nonnull
   private final Caret myCaret;
   private final CompletionParameters myParameters;
   private final CodeCompletionHandlerBase myHandler;
@@ -134,7 +135,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   private CompletionThreadingBase myStrategy;
 
   public CompletionProgressIndicator(final Editor editor,
-                                     @NotNull Caret caret,
+                                     @Nonnull Caret caret,
                                      CompletionParameters parameters,
                                      CodeCompletionHandlerBase handler,
                                      final OffsetMap offsetMap,
@@ -623,7 +624,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     final Boolean aBoolean = new WriteCommandAction<Boolean>(getProject()) {
       @Override
-      protected void run(@NotNull Result<Boolean> result) throws Throwable {
+      protected void run(@Nonnull Result<Boolean> result) throws Throwable {
         if (!explicit) {
           setMergeCommand();
         }
@@ -638,10 +639,10 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return aBoolean.booleanValue();
   }
 
-  public void restorePrefix(@NotNull final Runnable customRestore) {
+  public void restorePrefix(@Nonnull final Runnable customRestore) {
     new WriteCommandAction(getProject()) {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         setMergeCommand();
 
         customRestore.run();
@@ -657,7 +658,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   public Caret getCaret() {
     return myCaret;
   }
@@ -679,7 +680,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return myParameters.getInvocationCount() == 0;
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return ObjectUtils.assertNotNull(myEditor.getProject());
   }
@@ -839,7 +840,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     return myStrategy;
   }
 
-  public void addAdvertisement(@NotNull final String text, @Nullable final Color bgColor) {
+  public void addAdvertisement(@Nonnull final String text, @Nullable final Color bgColor) {
     myAdvertiserChanges.offer(() -> myLookup.addAdvertisement(text, bgColor));
 
     myQueue.queue(myUpdate);

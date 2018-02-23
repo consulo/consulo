@@ -28,7 +28,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharSequenceSubSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,25 +37,25 @@ import java.util.List;
 public class ComparisonManagerImpl extends ComparisonManager {
   public static final Logger LOG = Logger.getInstance(ComparisonManagerImpl.class);
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LineFragment> compareLines(@NotNull CharSequence text1,
-                                         @NotNull CharSequence text2,
-                                         @NotNull ComparisonPolicy policy,
-                                         @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<LineFragment> compareLines(@Nonnull CharSequence text1,
+                                         @Nonnull CharSequence text2,
+                                         @Nonnull ComparisonPolicy policy,
+                                         @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     List<Line> lines1 = getLines(text1);
     List<Line> lines2 = getLines(text2);
     FairDiffIterable iterable = ByLine.compare(lines1, lines2, policy, indicator);
     return convertIntoLineFragments(lines1, lines2, iterable);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<MergeLineFragment> compareLines(@NotNull CharSequence text1,
-                                              @NotNull CharSequence text2,
-                                              @NotNull CharSequence text3,
-                                              @NotNull ComparisonPolicy policy,
-                                              @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<MergeLineFragment> compareLines(@Nonnull CharSequence text1,
+                                              @Nonnull CharSequence text2,
+                                              @Nonnull CharSequence text3,
+                                              @Nonnull ComparisonPolicy policy,
+                                              @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     List<Line> lines1 = getLines(text1);
     List<Line> lines2 = getLines(text2);
     List<Line> lines3 = getLines(text3);
@@ -63,12 +63,12 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return convertIntoMergeLineFragments(ranges);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LineFragment> compareLinesInner(@NotNull CharSequence text1,
-                                              @NotNull CharSequence text2,
-                                              @NotNull ComparisonPolicy policy,
-                                              @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
+                                              @Nonnull CharSequence text2,
+                                              @Nonnull ComparisonPolicy policy,
+                                              @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     List<LineFragment> lineFragments = compareLines(text1, text2, policy, indicator);
 
     List<LineFragment> fineFragments = new ArrayList<>(lineFragments.size());
@@ -129,32 +129,32 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return fineFragments;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @Deprecated
-  public List<LineFragment> compareLinesInner(@NotNull CharSequence text1,
-                                              @NotNull CharSequence text2,
-                                              @NotNull List<LineFragment> lineFragments,
-                                              @NotNull ComparisonPolicy policy,
-                                              @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
+                                              @Nonnull CharSequence text2,
+                                              @Nonnull List<LineFragment> lineFragments,
+                                              @Nonnull ComparisonPolicy policy,
+                                              @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     return compareLinesInner(text1, text2, policy, indicator);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<DiffFragment> compareWords(@NotNull CharSequence text1,
-                                         @NotNull CharSequence text2,
-                                         @NotNull ComparisonPolicy policy,
-                                         @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<DiffFragment> compareWords(@Nonnull CharSequence text1,
+                                         @Nonnull CharSequence text2,
+                                         @Nonnull ComparisonPolicy policy,
+                                         @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     return ByWord.compare(text1, text2, policy, indicator);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<DiffFragment> compareChars(@NotNull CharSequence text1,
-                                         @NotNull CharSequence text2,
-                                         @NotNull ComparisonPolicy policy,
-                                         @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  public List<DiffFragment> compareChars(@Nonnull CharSequence text1,
+                                         @Nonnull CharSequence text2,
+                                         @Nonnull ComparisonPolicy policy,
+                                         @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     if (policy == ComparisonPolicy.IGNORE_WHITESPACES) {
       return convertIntoDiffFragments(ByChar.compareIgnoreWhitespaces(text1, text2, indicator));
     }
@@ -165,17 +165,17 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return convertIntoDiffFragments(ByChar.compareTwoStep(text1, text2, indicator));
   }
 
-  @NotNull
-  public List<Range> compareLines(@NotNull List<? extends CharSequence> lines1,
-                                  @NotNull List<? extends CharSequence> lines2,
-                                  @NotNull ComparisonPolicy policy,
-                                  @NotNull ProgressIndicator indicator) throws DiffTooBigException {
+  @Nonnull
+  public List<Range> compareLines(@Nonnull List<? extends CharSequence> lines1,
+                                  @Nonnull List<? extends CharSequence> lines2,
+                                  @Nonnull ComparisonPolicy policy,
+                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException {
     FairDiffIterable iterable = ByLine.compare(lines1, lines2, policy, indicator);
     return ContainerUtil.newArrayList(iterable.iterateChanges());
   }
 
   @Override
-  public boolean isEquals(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull ComparisonPolicy policy) {
+  public boolean isEquals(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull ComparisonPolicy policy) {
     return ComparisonUtil.isEquals(text1, text2, policy);
   }
 
@@ -183,8 +183,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
   // Fragments
   //
 
-  @NotNull
-  public static List<DiffFragment> convertIntoDiffFragments(@NotNull DiffIterable changes) {
+  @Nonnull
+  public static List<DiffFragment> convertIntoDiffFragments(@Nonnull DiffIterable changes) {
     final List<DiffFragment> fragments = new ArrayList<>();
     for (Range ch : changes.iterateChanges()) {
       fragments.add(new DiffFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2));
@@ -192,10 +192,10 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return fragments;
   }
 
-  @NotNull
-  public static List<LineFragment> convertIntoLineFragments(@NotNull List<Line> lines1,
-                                                            @NotNull List<Line> lines2,
-                                                            @NotNull FairDiffIterable changes) {
+  @Nonnull
+  public static List<LineFragment> convertIntoLineFragments(@Nonnull List<Line> lines1,
+                                                            @Nonnull List<Line> lines2,
+                                                            @Nonnull FairDiffIterable changes) {
     List<LineFragment> fragments = new ArrayList<>();
     for (Range ch : changes.iterateChanges()) {
       IntPair offsets1 = getOffsets(lines1, ch.start1, ch.end1);
@@ -207,8 +207,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return fragments;
   }
 
-  @NotNull
-  private static IntPair getOffsets(@NotNull List<Line> lines, int startIndex, int endIndex) {
+  @Nonnull
+  private static IntPair getOffsets(@Nonnull List<Line> lines, int startIndex, int endIndex) {
     if (startIndex == endIndex) {
       int offset;
       if (startIndex < lines.size()) {
@@ -226,13 +226,13 @@ public class ComparisonManagerImpl extends ComparisonManager {
     }
   }
 
-  @NotNull
-  public static List<MergeLineFragment> convertIntoMergeLineFragments(@NotNull List<MergeRange> conflicts) {
+  @Nonnull
+  public static List<MergeLineFragment> convertIntoMergeLineFragments(@Nonnull List<MergeRange> conflicts) {
     return ContainerUtil.map(conflicts, ch -> new MergeLineFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2, ch.start3, ch.end3));
   }
 
-  @NotNull
-  public static List<MergeWordFragment> convertIntoMergeWordFragments(@NotNull List<MergeRange> conflicts) {
+  @Nonnull
+  public static List<MergeWordFragment> convertIntoMergeWordFragments(@Nonnull List<MergeRange> conflicts) {
     return ContainerUtil.map(conflicts, ch -> new MergeWordFragmentImpl(ch.start1, ch.end1, ch.start2, ch.end2, ch.start3, ch.end3));
   }
 
@@ -240,9 +240,9 @@ public class ComparisonManagerImpl extends ComparisonManager {
   // Post process line fragments
   //
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LineFragment> squash(@NotNull List<LineFragment> oldFragments) {
+  public List<LineFragment> squash(@Nonnull List<LineFragment> oldFragments) {
     if (oldFragments.isEmpty()) return oldFragments;
 
     final List<LineFragment> newFragments = new ArrayList<>();
@@ -250,11 +250,11 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return newFragments;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LineFragment> processBlocks(@NotNull List<LineFragment> oldFragments,
-                                          @NotNull final CharSequence text1, @NotNull final CharSequence text2,
-                                          @NotNull final ComparisonPolicy policy,
+  public List<LineFragment> processBlocks(@Nonnull List<LineFragment> oldFragments,
+                                          @Nonnull final CharSequence text1, @Nonnull final CharSequence text2,
+                                          @Nonnull final ComparisonPolicy policy,
                                           final boolean squash, final boolean trim) {
     if (!squash && !trim) return oldFragments;
     if (oldFragments.isEmpty()) return oldFragments;
@@ -264,8 +264,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return newFragments;
   }
 
-  private static void processAdjoining(@NotNull List<LineFragment> oldFragments,
-                                       @NotNull Consumer<List<LineFragment>> consumer) {
+  private static void processAdjoining(@Nonnull List<LineFragment> oldFragments,
+                                       @Nonnull Consumer<List<LineFragment>> consumer) {
     int startIndex = 0;
     for (int i = 1; i < oldFragments.size(); i++) {
       if (!isAdjoining(oldFragments.get(i - 1), oldFragments.get(i))) {
@@ -278,10 +278,10 @@ public class ComparisonManagerImpl extends ComparisonManager {
     }
   }
 
-  @NotNull
-  private static List<LineFragment> processAdjoining(@NotNull List<LineFragment> fragments,
-                                                     @NotNull CharSequence text1, @NotNull CharSequence text2,
-                                                     @NotNull ComparisonPolicy policy, boolean squash, boolean trim) {
+  @Nonnull
+  private static List<LineFragment> processAdjoining(@Nonnull List<LineFragment> fragments,
+                                                     @Nonnull CharSequence text1, @Nonnull CharSequence text2,
+                                                     @Nonnull ComparisonPolicy policy, boolean squash, boolean trim) {
     int start = 0;
     int end = fragments.size();
 
@@ -318,8 +318,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return fragments.subList(start, end);
   }
 
-  @NotNull
-  private static LineFragment doSquash(@NotNull List<LineFragment> oldFragments) {
+  @Nonnull
+  private static LineFragment doSquash(@Nonnull List<LineFragment> oldFragments) {
     assert !oldFragments.isEmpty();
     if (oldFragments.size() == 1) return oldFragments.get(0);
 
@@ -352,7 +352,7 @@ public class ComparisonManagerImpl extends ComparisonManager {
                                 newInnerFragments);
   }
 
-  private static boolean isAdjoining(@NotNull LineFragment beforeFragment, @NotNull LineFragment afterFragment) {
+  private static boolean isAdjoining(@Nonnull LineFragment beforeFragment, @Nonnull LineFragment afterFragment) {
     if (beforeFragment.getEndLine1() != afterFragment.getStartLine1() ||
         beforeFragment.getEndLine2() != afterFragment.getStartLine2() ||
         beforeFragment.getEndOffset1() != afterFragment.getStartOffset1() ||
@@ -363,7 +363,7 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return true;
   }
 
-  private static boolean isAdjoiningInner(@NotNull DiffFragment beforeFragment, @NotNull DiffFragment afterFragment,
+  private static boolean isAdjoiningInner(@Nonnull DiffFragment beforeFragment, @Nonnull DiffFragment afterFragment,
                                           int shift1, int shift2) {
     if (beforeFragment.getEndOffset1() != afterFragment.getStartOffset1() + shift1 ||
         beforeFragment.getEndOffset2() != afterFragment.getStartOffset2() + shift2) {
@@ -373,8 +373,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return true;
   }
 
-  @NotNull
-  private static List<? extends DiffFragment> extractInnerFragments(@NotNull LineFragment lineFragment) {
+  @Nonnull
+  private static List<? extends DiffFragment> extractInnerFragments(@Nonnull LineFragment lineFragment) {
     if (lineFragment.getInnerFragments() != null) return lineFragment.getInnerFragments();
 
     int length1 = lineFragment.getEndOffset1() - lineFragment.getStartOffset1();
@@ -382,8 +382,8 @@ public class ComparisonManagerImpl extends ComparisonManager {
     return Collections.singletonList(new DiffFragmentImpl(0, length1, 0, length2));
   }
 
-  @NotNull
-  private static List<Line> getLines(@NotNull CharSequence text) {
+  @Nonnull
+  private static List<Line> getLines(@Nonnull CharSequence text) {
     List<Line> lines = new ArrayList<>();
 
     int offset = 0;
@@ -407,7 +407,7 @@ public class ComparisonManagerImpl extends ComparisonManager {
     private final int myOffset2;
     private final boolean myNewline;
 
-    public Line(@NotNull CharSequence chars, int offset1, int offset2, boolean newline) {
+    public Line(@Nonnull CharSequence chars, int offset1, int offset2, boolean newline) {
       super(chars, offset1, offset2);
       myOffset1 = offset1;
       myOffset2 = offset2;

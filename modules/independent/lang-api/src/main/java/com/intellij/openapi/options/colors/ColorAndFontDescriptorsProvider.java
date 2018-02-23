@@ -17,7 +17,7 @@ package com.intellij.openapi.options.colors;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines interface for extending set of text/color descriptors operated by color schemes. 
@@ -37,7 +37,7 @@ public interface ColorAndFontDescriptorsProvider {
    *
    * @return the list of attribute descriptors.
    */
-  @NotNull
+  @Nonnull
   AttributesDescriptor[] getAttributeDescriptors();
 
   /**
@@ -47,7 +47,7 @@ public interface ColorAndFontDescriptorsProvider {
    *
    * @return the list of color descriptors.
    */
-  @NotNull
+  @Nonnull
   ColorDescriptor[] getColorDescriptors();
 
   /**
@@ -55,6 +55,6 @@ public interface ColorAndFontDescriptorsProvider {
    *
    * @return the title of the custom page.
    */
-  @NotNull
+  @Nonnull
   String getDisplayName();
 }

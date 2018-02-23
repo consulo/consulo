@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class FileHolderComposite implements FileHolder {
     }
   }
 
-  public FileHolder add(@NotNull final FileHolder fileHolder, final boolean copy) {
+  public FileHolder add(@Nonnull final FileHolder fileHolder, final boolean copy) {
     final FileHolder added = copy ? fileHolder.copy() : fileHolder;
     myHolders.put(fileHolder.getType(), added);
     return added;

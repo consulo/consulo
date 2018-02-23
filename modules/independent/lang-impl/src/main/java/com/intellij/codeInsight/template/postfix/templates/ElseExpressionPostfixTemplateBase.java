@@ -17,17 +17,17 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixTemplateBase
 {
-  protected ElseExpressionPostfixTemplateBase(@NotNull PostfixTemplatePsiInfo psiInfo,
-                                              @NotNull Condition<PsiElement> typeChecker) {
+  protected ElseExpressionPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo,
+                                              @Nonnull Condition<PsiElement> typeChecker) {
     super("else", "if (!exp)", psiInfo, typeChecker);
   }
 
   @SuppressWarnings("unchecked")
-  protected ElseExpressionPostfixTemplateBase(@NotNull PostfixTemplatePsiInfo psiInfo) {
+  protected ElseExpressionPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo) {
     super("else", "if (!exp)", psiInfo, Condition.TRUE);
   }
 

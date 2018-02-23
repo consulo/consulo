@@ -15,7 +15,7 @@
  */
 package consulo.util.pointers;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -16,13 +16,13 @@
 package com.intellij.util.xmlb;
 
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class AttributeBinding extends BasePrimitiveBinding {
   private final Class<?> valueClass;
 
-  public AttributeBinding(@NotNull MutableAccessor accessor, @NotNull Attribute attribute) {
+  public AttributeBinding(@Nonnull MutableAccessor accessor, @Nonnull Attribute attribute) {
     super(accessor, attribute.value(), attribute.converter());
 
     valueClass = XmlSerializerImpl.typeToClass(accessor.getGenericType());
@@ -30,7 +30,7 @@ class AttributeBinding extends BasePrimitiveBinding {
 
   @Override
   @Nullable
-  public Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -46,7 +46,7 @@ class AttributeBinding extends BasePrimitiveBinding {
     return new org.jdom.Attribute(myName, stringValue);
   }
 
-  void set(@NotNull Object host, @NotNull String value) {
+  void set(@Nonnull Object host, @Nonnull String value) {
     if (myConverter == null) {
       XmlSerializerImpl.doSet(host, value, myAccessor, valueClass);
     }

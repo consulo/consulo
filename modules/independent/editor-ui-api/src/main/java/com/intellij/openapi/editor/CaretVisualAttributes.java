@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -26,22 +26,22 @@ import java.awt.*;
 public final class CaretVisualAttributes {
   public static final CaretVisualAttributes DEFAULT = new CaretVisualAttributes(null, Weight.NORMAL);
 
-  @Nullable
+  @javax.annotation.Nullable
   private final Color myColor;
-  @NotNull
+  @Nonnull
   private final Weight myWeight;
 
-  public CaretVisualAttributes(@Nullable Color color, @NotNull Weight weight) {
+  public CaretVisualAttributes(@Nullable Color color, @Nonnull Weight weight) {
     myColor = color;
     myWeight = weight;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Color getColor() {
     return myColor;
   }
 
-  @NotNull
+  @Nonnull
   public Weight getWeight() {
     return myWeight;
   }

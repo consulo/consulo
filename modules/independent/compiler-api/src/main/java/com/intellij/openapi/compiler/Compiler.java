@@ -16,7 +16,7 @@
 package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
 import java.util.function.Consumer;
@@ -35,7 +35,7 @@ public interface Compiler {
    *
    * @return the description string.
    */
-  @NotNull
+  @Nonnull
   String getDescription();
 
   /**
@@ -46,6 +46,6 @@ public interface Compiler {
    */
   boolean validateConfiguration(CompileScope scope);
 
-  default void registerCompilableFileTypes(@NotNull Consumer<FileType> fileTypeConsumer) {
+  default void registerCompilableFileTypes(@Nonnull Consumer<FileType> fileTypeConsumer) {
   }
 }

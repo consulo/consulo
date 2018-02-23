@@ -34,7 +34,7 @@ import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -79,7 +79,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
           return aValue.getIcon();
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getTextFor(CompositePackagingElementType value) {
           return value.getPresentableName();

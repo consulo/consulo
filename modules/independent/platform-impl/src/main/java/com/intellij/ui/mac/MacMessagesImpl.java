@@ -29,8 +29,8 @@ import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -256,38 +256,38 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   @Override
-  public void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText, @Nullable Window window) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window) {
     showAlertDialog(title, okText, null, null, message, window);
   }
 
   @Override
-  public void showOkMessageDialog(@NotNull String title, String message, @NotNull String okText) {
+  public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText) {
     showAlertDialog(title, okText, null, null, message, null);
   }
 
   @Override
   @Messages.YesNoResult
-  public int showYesNoDialog(@NotNull String title, String message, @NotNull String yesButton, @NotNull String noButton, @Nullable Window window) {
+  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window) {
     return showAlertDialog(title, yesButton, null, noButton, message, window) == Messages.YES ? Messages.YES : Messages.NO;
   }
 
   @Override
   @Messages.YesNoResult
-  public int showYesNoDialog(@NotNull String title, String message, @NotNull String yesButton, @NotNull String noButton, @Nullable Window window,
+  public int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window,
                              @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption) {
     return showAlertDialog(title, yesButton, null, noButton, message, window, false, doNotAskDialogOption) == Messages.YES ? Messages.YES : Messages.NO;
   }
 
   @Override
-  public void showErrorDialog(@NotNull String title, String message, @NotNull String okButton, @Nullable Window window) {
+  public void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window) {
     showAlertDialog(title, okButton, null, null, message, window, true, null);
   }
 
   @Override
   @Messages.YesNoCancelResult
-  public int showYesNoCancelDialog(@NotNull String title,
+  public int showYesNoCancelDialog(@Nonnull String title,
                                    String message,
-                                   @NotNull String defaultButton,
+                                   @Nonnull String defaultButton,
                                    String alternateButton,
                                    String otherButton,
                                    Window window,
@@ -417,7 +417,7 @@ public class MacMessagesImpl extends MacMessages {
       message
     }
 
-    private DialogParamsWrapper(@NotNull DialogType t, @NotNull Map<Enum, Object> p) {
+    private DialogParamsWrapper(@Nonnull DialogType t, @Nonnull Map<Enum, Object> p) {
       dialogType = t;
       params = p;
     }
@@ -446,7 +446,7 @@ public class MacMessagesImpl extends MacMessages {
     }
 
 
-    private static ID getParamsForAlertDialog(@NotNull Map<Enum, Object> params) {
+    private static ID getParamsForAlertDialog(@Nonnull Map<Enum, Object> params) {
       return invoke("NSArray", "arrayWithObjects:",
                     params.get(COMMON_DIALOG_PARAM_TYPE.title),
                     params.get(ALERT_DIALOG_PARAM_TYPE.defaultText),
@@ -461,7 +461,7 @@ public class MacMessagesImpl extends MacMessages {
                     null);
     }
 
-    private static ID getParamsForMessageDialog(@NotNull Map<Enum, Object> params) {
+    private static ID getParamsForMessageDialog(@Nonnull Map<Enum, Object> params) {
       return invoke("NSArray", "arrayWithObjects:",
                     params.get(COMMON_DIALOG_PARAM_TYPE.title),
                     params.get(COMMON_DIALOG_PARAM_TYPE.message),
@@ -478,8 +478,8 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   @Messages.YesNoCancelResult
-  public static int showAlertDialog(@NotNull String title,
-                                    @NotNull String defaultText,
+  public static int showAlertDialog(@Nonnull String title,
+                                    @Nonnull String defaultText,
                                     @Nullable final String alternateText,
                                     @Nullable final String otherText,
                                     final String message,
@@ -524,9 +524,9 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   @Override
-  public int showMessageDialog(@NotNull final String title,
+  public int showMessageDialog(@Nonnull final String title,
                                final String message,
-                               @NotNull final String[] buttons,
+                               @Nonnull final String[] buttons,
                                final boolean errorStyle,
                                @Nullable Window window,
                                final int defaultOptionIndex,
@@ -754,8 +754,8 @@ public class MacMessagesImpl extends MacMessages {
   }
 
   @Messages.YesNoCancelResult
-  private static int showAlertDialog(@NotNull String title,
-                                     @NotNull String okText,
+  private static int showAlertDialog(@Nonnull String title,
+                                     @Nonnull String okText,
                                      @Nullable String alternateText,
                                      @Nullable String cancelText,
                                      String message,

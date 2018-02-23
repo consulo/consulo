@@ -39,8 +39,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.util.ParameterizedRunnable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -138,7 +138,7 @@ public class LibraryEditingUtil {
     }
   }
 
-  public static LibraryTablePresentation getLibraryTablePresentation(@NotNull Project project, @NotNull String level) {
+  public static LibraryTablePresentation getLibraryTablePresentation(@Nonnull Project project, @Nonnull String level) {
     if (level.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
       return ModuleLibraryTable.MODULE_LIBRARY_TABLE_PRESENTATION;
     }
@@ -165,7 +165,7 @@ public class LibraryEditingUtil {
   public static BaseListPopupStep<LibraryType> createChooseTypeStep(final ClasspathPanel classpathPanel,
                                                                     final ParameterizedRunnable<LibraryType> action) {
     return new BaseListPopupStep<LibraryType>(IdeBundle.message("popup.title.select.library.type"), getSuitableTypes(classpathPanel)) {
-          @NotNull
+          @Nonnull
           @Override
           public String getTextFor(LibraryType value) {
             String createActionName = value != null ? value.getCreateActionName() : null;
@@ -189,7 +189,7 @@ public class LibraryEditingUtil {
         };
   }
 
-  public static List<Module> getSuitableModules(@NotNull ModuleStructureConfigurable rootConfigurable,
+  public static List<Module> getSuitableModules(@Nonnull ModuleStructureConfigurable rootConfigurable,
                                                 final @Nullable LibraryKind kind, @Nullable Library library) {
     final List<Module> modules = new ArrayList<Module>();
     LibraryType type = kind == null ? null : LibraryType.findByKind(kind);
@@ -211,8 +211,8 @@ public class LibraryEditingUtil {
     return modules;
   }
 
-  public static void showDialogAndAddLibraryToDependencies(@NotNull Library library,
-                                                           @NotNull Project project,
+  public static void showDialogAndAddLibraryToDependencies(@Nonnull Library library,
+                                                           @Nonnull Project project,
                                                            boolean allowEmptySelection) {
     ProjectStructureValidator.showDialogAndAddLibraryToDependencies(library, project, allowEmptySelection);
   }

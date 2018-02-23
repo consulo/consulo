@@ -39,9 +39,9 @@ import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.Callback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
@@ -109,7 +109,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "MACOSApplicationProvider";
@@ -154,7 +154,7 @@ public class MacOSApplicationProvider implements ApplicationComponent {
           applicationEvent.setHandled(true);
         }
 
-        @NotNull
+        @Nonnull
         private Project getNotNullProject() {
           Project project = getProject();
           return project == null ? ProjectManager.getInstance().getDefaultProject() : project;

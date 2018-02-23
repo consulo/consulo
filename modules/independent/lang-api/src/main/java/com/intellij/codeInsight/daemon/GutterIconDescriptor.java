@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.daemon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -67,7 +67,7 @@ public abstract class GutterIconDescriptor {
     private final String myName;
     private final Icon myIcon;
 
-    public Option(@NotNull String id, @NotNull String name, Icon icon) {
+    public Option(@Nonnull String id, @Nonnull String name, Icon icon) {
       myId = id;
       myName = name;
       myIcon = icon;
@@ -83,7 +83,7 @@ public abstract class GutterIconDescriptor {
       return myIcon;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
       return myName;

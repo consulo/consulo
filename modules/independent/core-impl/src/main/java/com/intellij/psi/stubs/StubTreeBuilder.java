@@ -34,8 +34,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.indexing.IndexingDataKeys;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -123,8 +124,8 @@ public class StubTreeBuilder {
   }
 
   /** Order is deterministic. First element matches {@link FileViewProvider#getStubBindingRoot()} */
-  @NotNull
-  public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(@NotNull FileViewProvider viewProvider) {
+  @Nonnull
+  public static List<Pair<IStubFileElementType, PsiFile>> getStubbedRoots(@Nonnull FileViewProvider viewProvider) {
     final List<Trinity<Language, IStubFileElementType, PsiFile>> roots =
             new SmartList<Trinity<Language, IStubFileElementType, PsiFile>>();
     final PsiFile stubBindingRoot = viewProvider.getStubBindingRoot();

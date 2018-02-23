@@ -30,7 +30,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -45,29 +45,29 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocument;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeHighlighter addRangeHighlighter(final int startOffset,
                                               final int endOffset,
                                               final int layer,
                                               final TextAttributes textAttributes,
-                                              @NotNull final HighlighterTargetArea targetArea) {
+                                              @Nonnull final HighlighterTargetArea targetArea) {
     TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
     return myHostModel.addRangeHighlighter(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                                    int endOffset,
                                                                    int layer,
                                                                    TextAttributes textAttributes,
-                                                                   @NotNull HighlighterTargetArea targetArea,
+                                                                   @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
                                                                    Consumer<RangeHighlighterEx> changeAttributesAction) {
     TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
@@ -76,20 +76,20 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   }
 
   @Override
-  public void changeAttributesInBatch(@NotNull RangeHighlighterEx highlighter,
-                                      @NotNull Consumer<RangeHighlighterEx> changeAttributesAction) {
+  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
+                                      @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction) {
     myHostModel.changeAttributesInBatch(highlighter, changeAttributesAction);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeHighlighter addLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
     int hostLine = myDocument.injectedToHostLine(line);
     return myHostModel.addLineHighlighter(hostLine, layer, textAttributes);
   }
 
   @Override
-  public void removeHighlighter(@NotNull final RangeHighlighter rangeHighlighter) {
+  public void removeHighlighter(@Nonnull final RangeHighlighter rangeHighlighter) {
     myHostModel.removeHighlighter(rangeHighlighter);
   }
 
@@ -99,7 +99,7 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeHighlighter[] getAllHighlighters() {
     return myHostModel.getAllHighlighters();
   }
@@ -117,33 +117,33 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
 
 
   @Override
-  public boolean containsHighlighter(@NotNull final RangeHighlighter highlighter) {
+  public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
     return myHostModel.containsHighlighter(highlighter);
   }
 
   @Override
-  public void addMarkupModelListener(@NotNull Disposable parentDisposable, @NotNull MarkupModelListener listener) {
+  public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
     myHostModel.addMarkupModelListener(parentDisposable, listener);
   }
 
   @Override
-  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, @NotNull final TextAttributes textAttributes) {
+  public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
     myHostModel.setRangeHighlighterAttributes(highlighter, textAttributes);
   }
 
   @Override
-  public boolean processRangeHighlightersOverlappingWith(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor) {
+  public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
     //todo
     return false;
   }
 
   @Override
-  public boolean processRangeHighlightersOutside(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor) {
+  public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
     //todo
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
     // todo convert
@@ -151,22 +151,22 @@ public class MarkupModelWindow extends UserDataHolderBase implements MarkupModel
   }
 
   @Override
-  public void fireAttributesChanged(@NotNull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
+  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
 
   }
 
   @Override
-  public void fireAfterAdded(@NotNull RangeHighlighterEx segmentHighlighter) {
+  public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
   }
 
   @Override
-  public void fireBeforeRemoved(@NotNull RangeHighlighterEx segmentHighlighter) {
+  public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
   }
 
   @Override
-  public void addRangeHighlighter(@NotNull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
 
   }
 }

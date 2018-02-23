@@ -37,8 +37,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.PsiErrorElementUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -60,10 +59,10 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
   private int myModificationStamp = 0;
   private Disposable myListenerDisposable;
 
-  public DelayedDocumentWatcher(@NotNull Project project,
+  public DelayedDocumentWatcher(@Nonnull Project project,
                                 int delayMillis,
-                                @NotNull Consumer<Integer> modificationStampConsumer,
-                                @Nullable Condition<VirtualFile> changedFileFilter) {
+                                @Nonnull Consumer<Integer> modificationStampConsumer,
+                                @javax.annotation.Nullable Condition<VirtualFile> changedFileFilter) {
     myProject = project;
     myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
     myDelayMillis = delayMillis;
@@ -73,7 +72,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
     myAlarmRunnable = new MyRunnable();
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -162,8 +161,8 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
     }
   }
 
-  private void asyncCheckErrors(@NotNull final Collection<VirtualFile> files,
-                                @NotNull final Consumer<Boolean> errorsFoundConsumer) {
+  private void asyncCheckErrors(@Nonnull final Collection<VirtualFile> files,
+                                @Nonnull final Consumer<Boolean> errorsFoundConsumer) {
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       final boolean errorsFound = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
         @Override

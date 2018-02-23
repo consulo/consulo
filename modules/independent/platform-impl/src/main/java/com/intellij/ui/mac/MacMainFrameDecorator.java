@@ -36,7 +36,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Function;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -199,7 +199,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private boolean myInFullScreen;
 
-  public MacMainFrameDecorator(@NotNull final IdeFrameImpl frame, final boolean navBar) {
+  public MacMainFrameDecorator(@Nonnull final IdeFrameImpl frame, final boolean navBar) {
     super(frame);
 
     if (CURRENT_SETTER == null) {

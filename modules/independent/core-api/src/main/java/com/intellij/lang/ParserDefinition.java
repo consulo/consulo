@@ -23,7 +23,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines the implementation of a parser for a custom language.
@@ -38,23 +38,23 @@ public interface ParserDefinition {
    * @param languageVersion version of language
    * @return the lexer instance.
    */
-  @NotNull
-  Lexer createLexer(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  Lexer createLexer(@Nonnull LanguageVersion languageVersion);
 
   /**
    * Returns the parser for parsing files in the specified project.
    * @param languageVersion version of language
    * @return the parser instance.
    */
-  @NotNull
-  PsiParser createParser(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  PsiParser createParser(@Nonnull LanguageVersion languageVersion);
 
   /**
    * Returns the element type of the node describing a file in the specified language.
    *
    * @return the file node element type.
    */
-  @NotNull
+  @Nonnull
   IFileElementType getFileNodeType();
 
   /**
@@ -68,8 +68,8 @@ public interface ParserDefinition {
    * @return the set of whitespace token types.
    * @param languageVersion version of language
    */
-  @NotNull
-  TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion);
 
   /**
    * Returns the set of token types which are treated as comments by the PSI builder.
@@ -79,8 +79,8 @@ public interface ParserDefinition {
    * @return the set of comment token types.
    * @param languageVersion version of language
    */
-  @NotNull
-  TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion);
 
   /**
    * Returns the set of element types which are treated as string literals. "Search in strings"
@@ -89,8 +89,8 @@ public interface ParserDefinition {
    * @return the set of string literal element types.
    * @param languageVersion version of language
    */
-  @NotNull
-  TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion);
+  @Nonnull
+  TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion);
 
   /**
    * Creates a PSI element for the specified AST node. The AST tree is a simple, semantic-free
@@ -100,9 +100,9 @@ public interface ParserDefinition {
    * @param node the node for which the PSI element should be returned.
    * @return the PSI element matching the element type of the AST node.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  default PsiElement createElement(@NotNull ASTNode node) {
+  default PsiElement createElement(@Nonnull ASTNode node) {
     throw new UnsupportedOperationException("#createElement() is not implemented for elementType: " + node.getElementType());
   }
 
@@ -112,7 +112,7 @@ public interface ParserDefinition {
    * @param viewProvider virtual file.
    * @return the PSI file element.
    */
-  PsiFile createFile(@NotNull FileViewProvider viewProvider);
+  PsiFile createFile(@Nonnull FileViewProvider viewProvider);
 
   /**
    * Checks if the specified two token types need to be separated by a space according to the language grammar.
@@ -124,7 +124,7 @@ public interface ParserDefinition {
    * @return the spacing requirements.
    * @since 6.0
    */
-  @NotNull
+  @Nonnull
   SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right);
 
   /**

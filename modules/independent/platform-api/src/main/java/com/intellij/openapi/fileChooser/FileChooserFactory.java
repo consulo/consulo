@@ -18,8 +18,8 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,13 +29,13 @@ public abstract class FileChooserFactory {
     return ServiceManager.getService(FileChooserFactory.class);
   }
 
-  @NotNull
-  public abstract FileChooserDialog createFileChooser(@NotNull FileChooserDescriptor descriptor,
+  @Nonnull
+  public abstract FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor,
                                                       @Nullable Project project,
                                                       @Nullable Component parent);
 
-  @NotNull
-  public abstract PathChooserDialog createPathChooser(@NotNull FileChooserDescriptor descriptor,
+  @Nonnull
+  public abstract PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor,
                                                       @Nullable Project project,
                                                       @Nullable Component parent);
 
@@ -47,17 +47,17 @@ public abstract class FileChooserFactory {
    * @return Save File dialog
    * @since 9.0
    */
-  @NotNull
-  public abstract FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @Nullable Project project);
+  @Nonnull
+  public abstract FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project);
 
-  @NotNull
-  public abstract FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @NotNull Component parent);
+  @Nonnull
+  public abstract FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent);
 
-  @NotNull
-  public abstract FileTextField createFileTextField(@NotNull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent);
+  @Nonnull
+  public abstract FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent);
 
-  @NotNull
-  public FileTextField createFileTextField(@NotNull FileChooserDescriptor descriptor, @Nullable Disposable parent) {
+  @Nonnull
+  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, @Nullable Disposable parent) {
     return createFileTextField(descriptor, true, parent);
   }
 
@@ -69,8 +69,8 @@ public abstract class FileChooserFactory {
    * @param showHidden include hidden files into completion variants
    * @param parent     if null then will be registered with {@link com.intellij.openapi.actionSystem.PlatformDataKeys#UI_DISPOSABLE}
    */
-  public abstract void installFileCompletion(@NotNull JTextField field,
-                                             @NotNull FileChooserDescriptor descriptor,
+  public abstract void installFileCompletion(@Nonnull JTextField field,
+                                             @Nonnull FileChooserDescriptor descriptor,
                                              boolean showHidden,
                                              @Nullable Disposable parent);
 }

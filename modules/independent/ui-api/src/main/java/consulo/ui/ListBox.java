@@ -17,7 +17,7 @@ package consulo.ui;
 
 import consulo.ui.model.ImmutableListModel;
 import consulo.ui.model.ListModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,20 +25,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ListBox<E> extends ValueComponent<E> {
   @SafeVarargs
-  @NotNull
-  static <E> ListBox<E> create(@NotNull E... elements) {
+  @Nonnull
+  static <E> ListBox<E> create(@Nonnull E... elements) {
     return UIInternal.get()._Components_listBox(new ImmutableListModel<>(elements));
   }
 
-  @NotNull
-  static <E> ListBox<E> create(@NotNull ListModel<E> model) {
+  @Nonnull
+  static <E> ListBox<E> create(@Nonnull ListModel<E> model) {
     return UIInternal.get()._Components_listBox(model);
   }
 
-  @NotNull
+  @Nonnull
   ListModel<E> getListModel();
 
-  void setRender(@NotNull ListItemRender<E> render);
+  void setRender(@Nonnull ListItemRender<E> render);
 
   void setValueByIndex(int index);
 }

@@ -25,8 +25,8 @@ import com.intellij.psi.impl.source.tree.AstPath;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -49,7 +49,7 @@ class AstPathPsiMap {
   private static final Key<MyReferenceQueue> STUB_PSI_REFS = Key.create("STUB_PSI_REFS");
   private final MyReferenceQueue myQueue;
 
-  AstPathPsiMap(@NotNull Project project) {
+  AstPathPsiMap(@Nonnull Project project) {
     MyReferenceQueue queue = project.getUserData(STUB_PSI_REFS);
     myQueue = queue != null ? queue : ((UserDataHolderEx)project).putUserDataIfAbsent(STUB_PSI_REFS, new MyReferenceQueue(project));
   }
@@ -80,12 +80,12 @@ class AstPathPsiMap {
   }
 
   @Nullable
-  StubBasedPsiElementBase<?> getCachedPsi(@NotNull AstPath ref) {
+  StubBasedPsiElementBase<?> getCachedPsi(@Nonnull AstPath ref) {
     return SoftReference.dereference(myMap.get(ref));
   }
 
-  @NotNull
-  StubBasedPsiElementBase<?> cachePsi(@NotNull AstPath key, @NotNull StubBasedPsiElementBase psi) {
+  @Nonnull
+  StubBasedPsiElementBase<?> cachePsi(@Nonnull AstPath key, @Nonnull StubBasedPsiElementBase psi) {
     myQueue.cleanupStaleReferences();
     // ensure PSI will use AST path before making it available to other threads
     // otherwise another thread could invoke StubRef.getNode and fail since file's AST isn't set yet

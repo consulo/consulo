@@ -21,7 +21,7 @@ import com.intellij.util.keyFMap.ArrayBackedFMap;
 import com.intellij.util.keyFMap.KeyFMap;
 import com.intellij.util.keyFMap.OneElementFMap;
 import com.intellij.util.keyFMap.PairElementsFMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ class UserDataInterner {
     }
   };
 
-  static KeyFMap internUserData(@NotNull KeyFMap map) {
+  static KeyFMap internUserData(@Nonnull KeyFMap map) {
     if (shouldIntern(map)) {
       MapReference key = new MapReference(map);
       synchronized (ourCache) {
@@ -52,7 +52,7 @@ class UserDataInterner {
     return map;
   }
 
-  private static boolean shouldIntern(@NotNull KeyFMap map) {
+  private static boolean shouldIntern(@Nonnull KeyFMap map) {
     return map instanceof OneElementFMap ||
            map instanceof PairElementsFMap ||
            map instanceof ArrayBackedFMap && ((ArrayBackedFMap)map).getKeyIds().length <= 5;

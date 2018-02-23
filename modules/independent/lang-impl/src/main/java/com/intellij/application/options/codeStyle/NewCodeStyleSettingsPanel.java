@@ -23,9 +23,9 @@ import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
@@ -112,7 +112,7 @@ public class NewCodeStyleSettingsPanel extends JPanel implements TabbedLanguageC
   }
 
   @Override
-  public void tabChanged(@NotNull TabbedLanguageCodeStylePanel source, @NotNull String tabTitle) {
+  public void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle) {
     CodeStyleAbstractPanel panel = getSelectedPanel();
     if (panel instanceof TabbedLanguageCodeStylePanel && panel != source) {
       ((TabbedLanguageCodeStylePanel)panel).changeTab(tabTitle);

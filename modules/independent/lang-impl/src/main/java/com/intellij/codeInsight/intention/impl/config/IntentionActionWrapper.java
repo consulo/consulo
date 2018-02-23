@@ -28,8 +28,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IntentionActionWrapper implements IntentionAction, ShortcutProvider, IntentionActionDelegate {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.intention.impl.config.IntentionActionWrapper");
@@ -39,30 +39,30 @@ public class IntentionActionWrapper implements IntentionAction, ShortcutProvider
   private final IntentionActionBean myExtension;
   private String myFullFamilyName;
 
-  IntentionActionWrapper(@NotNull IntentionActionBean extension, String[] categories) {
+  IntentionActionWrapper(@Nonnull IntentionActionBean extension, String[] categories) {
     myExtension = extension;
     myCategories = categories;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getDelegate().getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return getDelegate().getFamilyName();
   }
 
   @Override
-  public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file) {
+  public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
     return getDelegate().isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
     getDelegate().invoke(project, editor, file);
   }
 
@@ -73,11 +73,11 @@ public class IntentionActionWrapper implements IntentionAction, ShortcutProvider
 
   @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@NotNull PsiFile file) {
+  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
     return getDelegate().getElementToMakeWritable(file);
   }
 
-  @NotNull
+  @Nonnull
   public String getFullFamilyName(){
     String result = myFullFamilyName;
     if (result == null) {
@@ -86,7 +86,7 @@ public class IntentionActionWrapper implements IntentionAction, ShortcutProvider
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public synchronized IntentionAction getDelegate() {
     if (myDelegate == null) {
@@ -104,7 +104,7 @@ public class IntentionActionWrapper implements IntentionAction, ShortcutProvider
     return myExtension.className;
   }
 
-  @NotNull
+  @Nonnull
   ClassLoader getImplementationClassLoader() {
     return myExtension.getLoaderForClass();
   }

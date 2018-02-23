@@ -21,7 +21,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,20 +34,20 @@ public class ZipArtifactType extends ArtifactType {
     super("zip", "Zip");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public String getDefaultPathFor(@NotNull PackagingElementOutputKind kind) {
+  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
     return "/";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CompositePackagingElement<?> createRootElement(@NotNull String artifactName) {
+  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
     return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
   }
 }

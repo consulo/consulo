@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DoubleArrayList implements Cloneable {
   private double[] myData;
@@ -25,7 +25,7 @@ public class DoubleArrayList implements Cloneable {
     myData = new double[initialCapacity];
   }
 
-  public DoubleArrayList(@NotNull DoubleArrayList init) {
+  public DoubleArrayList(@Nonnull DoubleArrayList init) {
     myData = new double[init.myData.length];
     System.arraycopy(init.myData, 0, myData, 0, init.myData.length);
     mySize = init.mySize;

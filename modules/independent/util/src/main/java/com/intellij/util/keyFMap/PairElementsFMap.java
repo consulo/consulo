@@ -16,7 +16,7 @@
 package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PairElementsFMap implements KeyFMap {
   private final Key key1;
@@ -24,7 +24,7 @@ public class PairElementsFMap implements KeyFMap {
   private final Object value1;
   private final Object value2;
 
-  PairElementsFMap(@NotNull Key key1, @NotNull Object value1, @NotNull Key key2, @NotNull Object value2) {
+  PairElementsFMap(@Nonnull Key key1, @Nonnull Object value1, @Nonnull Key key2, @Nonnull Object value2) {
     this.key1 = key1;
     this.value1 = value1;
     this.key2 = key2;
@@ -32,29 +32,29 @@ public class PairElementsFMap implements KeyFMap {
     assert key1 != key2;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value) {
+  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     if (key == key1) return new PairElementsFMap(key, value, key2, value2);
     if (key == key2) return new PairElementsFMap(key, value, key1, value1);
     return new ArrayBackedFMap(new int[]{key1.hashCode(), key2.hashCode(), key.hashCode()}, new Object[]{value1, value2, value});
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public KeyFMap minus(@NotNull Key<?> key) {
+  public KeyFMap minus(@Nonnull Key<?> key) {
     if (key == key1) return new OneElementFMap<Object>(key2, value2);
     if (key == key2) return new OneElementFMap<Object>(key1, value1);
     return this;
   }
 
   @Override
-  public <V> V get(@NotNull Key<V> key) {
+  public <V> V get(@Nonnull Key<V> key) {
     //noinspection unchecked
     return key == key1 ? (V)value1 : key == key2 ? (V)value2 : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key[] getKeys() {
     return new Key[] { key1, key2 };

@@ -36,7 +36,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +73,7 @@ public class EditorTracker extends AbstractProjectComponent {
     myIdeFrame = myWindowManager.getFrame(myProject);
     myProject.getMessageBus().connect(myProject).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (myIdeFrame == null || myIdeFrame.getFocusOwner() == null) return;
         setActiveWindow(myIdeFrame);
       }
@@ -91,7 +91,7 @@ public class EditorTracker extends AbstractProjectComponent {
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "EditorTracker";
   }
@@ -197,7 +197,7 @@ public class EditorTracker extends AbstractProjectComponent {
     return window;
   }
 
-  @NotNull
+  @Nonnull
   List<Editor> getActiveEditors() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return myActiveEditors;
@@ -209,7 +209,7 @@ public class EditorTracker extends AbstractProjectComponent {
     setActiveEditors(editors);
   }
 
-  @NotNull
+  @Nonnull
   private List<Editor> editorsByWindow(Window window) {
     List<Editor> list = myWindowToEditorsMap.get(window);
     if (list == null) return Collections.emptyList();
@@ -222,7 +222,7 @@ public class EditorTracker extends AbstractProjectComponent {
     return filtered;
   }
 
-  void setActiveEditors(@NotNull List<Editor> editors) {
+  void setActiveEditors(@Nonnull List<Editor> editors) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myActiveEditors = editors;
 
@@ -237,7 +237,7 @@ public class EditorTracker extends AbstractProjectComponent {
     myDispatcher.getMulticaster().activeEditorsChanged(editors);
   }
 
-  void addEditorTrackerListener(@NotNull EditorTrackerListener listener, @NotNull Disposable parentDisposable) {
+  void addEditorTrackerListener(@Nonnull EditorTrackerListener listener, @Nonnull Disposable parentDisposable) {
     myDispatcher.addListener(listener,parentDisposable);
   }
 
@@ -245,7 +245,7 @@ public class EditorTracker extends AbstractProjectComponent {
     private final Map<Editor, Runnable> myExecuteOnEditorRelease = new HashMap<>();
 
     @Override
-    public void editorCreated(@NotNull EditorFactoryEvent event) {
+    public void editorCreated(@Nonnull EditorFactoryEvent event) {
       final Editor editor = event.getEditor();
       if (editor.getProject() != null && editor.getProject() != myProject || myProject.isDisposed()) return;
       final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
@@ -256,7 +256,7 @@ public class EditorTracker extends AbstractProjectComponent {
 
       final HierarchyListener hierarchyListener = new HierarchyListener() {
         @Override
-        public void hierarchyChanged(@NotNull HierarchyEvent e) {
+        public void hierarchyChanged(@Nonnull HierarchyEvent e) {
           registerEditor(editor);
         }
       };
@@ -264,12 +264,12 @@ public class EditorTracker extends AbstractProjectComponent {
 
       final FocusListener focusListener = new FocusListener() {
         @Override
-        public void focusGained(@NotNull FocusEvent e) {
+        public void focusGained(@Nonnull FocusEvent e) {
           editorFocused(editor);
         }
 
         @Override
-        public void focusLost(@NotNull FocusEvent e) {
+        public void focusLost(@Nonnull FocusEvent e) {
         }
       };
       contentComponent.addFocusListener(focusListener);
@@ -281,7 +281,7 @@ public class EditorTracker extends AbstractProjectComponent {
     }
 
     @Override
-    public void editorReleased(@NotNull EditorFactoryEvent event) {
+    public void editorReleased(@Nonnull EditorFactoryEvent event) {
       final Editor editor = event.getEditor();
       if (editor.getProject() != null && editor.getProject() != myProject) return;
       unregisterEditor(editor);

@@ -17,12 +17,12 @@ package com.intellij.diagnostic.logging;
 
 import com.intellij.execution.configurations.AdditionalTabComponentManager;
 import com.intellij.execution.configurations.RunConfigurationBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 
 public interface LogConsoleManager extends AdditionalTabComponentManager {
-  void addLogConsole(@NotNull String name, @NotNull String path, @NotNull Charset charset, long skippedContent, @NotNull RunConfigurationBase runConfiguration);
+  void addLogConsole(@Nonnull String name, @Nonnull String path, @Nonnull Charset charset, long skippedContent, @Nonnull RunConfigurationBase runConfiguration);
 
-  void removeLogConsole(@NotNull String pathOrId);
+  void removeLogConsole(@Nonnull String pathOrId);
 }

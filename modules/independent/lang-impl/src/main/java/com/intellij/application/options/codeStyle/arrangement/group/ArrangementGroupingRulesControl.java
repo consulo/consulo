@@ -27,8 +27,8 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.AbstractTableCellEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -45,16 +45,19 @@ import java.util.Map;
  */
 public class ArrangementGroupingRulesControl extends JBTable {
 
-  @NotNull public static final Key<ArrangementGroupingRulesControl> KEY = Key.create("Arrangement.Rule.Group.Control");
+  @Nonnull
+  public static final Key<ArrangementGroupingRulesControl> KEY = Key.create("Arrangement.Rule.Group.Control");
 
-  @NotNull private final Map<ArrangementSettingsToken, ArrangementGroupingComponent> myComponents = ContainerUtilRt.newHashMap();
+  @Nonnull
+  private final Map<ArrangementSettingsToken, ArrangementGroupingComponent> myComponents = ContainerUtilRt.newHashMap();
 
-  @NotNull private final ArrangementStandardSettingsManager mySettingsManager;
+  @Nonnull
+  private final ArrangementStandardSettingsManager mySettingsManager;
 
   private int myRowUnderMouse = -1;
 
-  public ArrangementGroupingRulesControl(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                         @NotNull ArrangementColorsProvider colorsProvider)
+  public ArrangementGroupingRulesControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                         @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new DefaultTableModel(0, 1));
     mySettingsManager = settingsManager;
@@ -108,7 +111,7 @@ public class ArrangementGroupingRulesControl extends JBTable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<ArrangementGroupingRule> getRules() {
     List<ArrangementGroupingRule> result = new ArrayList<ArrangementGroupingRule>();
     DefaultTableModel model = getModel();

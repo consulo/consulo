@@ -6,8 +6,8 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -148,10 +148,10 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
   }
 
   @Override
-  public void nodeLoaded(@NotNull RestorableStateNode node, String name) {
+  public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
   }
 
   @Override
-  public void childrenLoaded(@NotNull XDebuggerTreeNode node, @NotNull List<XValueContainerNode<?>> children, boolean last) {
+  public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
   }
 }

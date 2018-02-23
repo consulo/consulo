@@ -17,9 +17,9 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -33,26 +33,26 @@ public class SimpleColoredText implements ColoredTextContainer {
     myAttributes = new ArrayList<SimpleTextAttributes>(3);
   }
 
-  public SimpleColoredText(@NotNull String fragment, @NotNull SimpleTextAttributes attributes) {
+  public SimpleColoredText(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
     this();
     append(fragment, attributes);
   }
 
   @Override
-  public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes){
+  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes){
     myTexts.add(fragment);
     myCachedToString = null;
     myAttributes.add(attributes);
   }
 
-  public void insert(int index, @NotNull String fragment, @NotNull SimpleTextAttributes attributes) {
+  public void insert(int index, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
     myTexts.add(index, fragment);
     myCachedToString = null;
     myAttributes.add(index, attributes);
   }
 
   @Override
-  public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, Object tag) {
+  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
     append(fragment, attributes);
   }
 
@@ -70,7 +70,7 @@ public class SimpleColoredText implements ColoredTextContainer {
     myAttributes.clear();
   }
 
-  public void appendToComponent(@NotNull ColoredTextContainer component) {
+  public void appendToComponent(@Nonnull ColoredTextContainer component) {
     int size = myTexts.size();
     for (int i = 0; i < size; i++) {
       String text = myTexts.get(i);

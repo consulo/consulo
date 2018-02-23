@@ -20,21 +20,23 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class CommitLegendPanel {
 
-  @NotNull private final SimpleColoredComponent myRootPanel;
-  @NotNull private final InfoCalculator myInfoCalculator;
+  @Nonnull
+  private final SimpleColoredComponent myRootPanel;
+  @Nonnull
+  private final InfoCalculator myInfoCalculator;
 
-  public CommitLegendPanel(@NotNull InfoCalculator infoCalculator) {
+  public CommitLegendPanel(@Nonnull InfoCalculator infoCalculator) {
     myInfoCalculator = infoCalculator;
     myRootPanel = new SimpleColoredComponent();
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myRootPanel;
   }
@@ -48,7 +50,7 @@ public class CommitLegendPanel {
                VcsBundle.message("commit.legend.unversioned"));
   }
 
-  protected void appendText(int total, int included, @NotNull FileStatus fileStatus, @NotNull String labelName) {
+  protected void appendText(int total, int included, @Nonnull FileStatus fileStatus, @Nonnull String labelName) {
     if (total > 0) {
       if (!isPanelEmpty()) {
         appendSpace();

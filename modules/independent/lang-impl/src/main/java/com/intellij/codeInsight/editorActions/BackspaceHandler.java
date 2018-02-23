@@ -37,8 +37,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredWriteAction;
 
 import java.util.List;
@@ -187,7 +187,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     return new LogicalPosition(caretPos.line, column);
   }
 
-  public static void deleteToTargetPosition(@NotNull Editor editor, @NotNull LogicalPosition pos) {
+  public static void deleteToTargetPosition(@Nonnull Editor editor, @Nonnull LogicalPosition pos) {
     final int offset = editor.getCaretModel().getOffset();
     final int targetOffset = editor.logicalPositionToOffset(pos);
     editor.getSelectionModel().setSelection(targetOffset, offset);

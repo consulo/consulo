@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -48,7 +48,7 @@ public class GwtThreeComponentSplitLayout extends SimplePanel {
     mySplitLayoutPanel.setWidgetHidden(myCenterPanel, true);
   }
 
-  public void rebuild(@Nullable Widget leftWidget, @Nullable Widget rightWidget, @Nullable Widget centerWidget) {
+  public void rebuild(@Nullable Widget leftWidget, @Nullable Widget rightWidget, @javax.annotation.Nullable Widget centerWidget) {
     myLeftPanel.setWidget(leftWidget);
     myRightPanel.setWidget(rightWidget);
     myCenterPanel.setWidget(centerWidget);

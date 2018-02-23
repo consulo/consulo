@@ -18,7 +18,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Defines support for "Enter within comments" actions in a custom language.
@@ -65,7 +65,8 @@ public interface CodeDocumentationAwareCommenter extends Commenter {
    * does not support documentation comments.
    * @return the line comment text, or null.
    */
-  @Nullable String getDocumentationCommentLinePrefix();
+  @Nullable
+  String getDocumentationCommentLinePrefix();
 
   /**
    * Returns the string which ends documentation comment in the language, or null if the language

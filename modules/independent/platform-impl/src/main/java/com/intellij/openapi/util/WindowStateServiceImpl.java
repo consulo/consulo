@@ -24,7 +24,7 @@ import com.intellij.ui.FrameState;
 import com.intellij.ui.ScreenUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;
@@ -46,13 +46,13 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   private static final Logger LOG = Logger.getInstance(WindowStateService.class);
   private final Map<String, WindowState> myStateMap = new TreeMap<String, WindowState>();
 
-  abstract Point getDefaultLocationFor(Object object, @NotNull String key);
+  abstract Point getDefaultLocationFor(Object object, @Nonnull String key);
 
-  abstract Dimension getDefaultSizeFor(Object object, @NotNull String key);
+  abstract Dimension getDefaultSizeFor(Object object, @Nonnull String key);
 
-  abstract Rectangle getDefaultBoundsFor(Object object, @NotNull String key);
+  abstract Rectangle getDefaultBoundsFor(Object object, @Nonnull String key);
 
-  abstract boolean getDefaultMaximizedFor(Object object, @NotNull String key);
+  abstract boolean getDefaultMaximizedFor(Object object, @Nonnull String key);
 
   @Override
   public final Element getState() {
@@ -124,7 +124,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @Override
-  public boolean loadStateFor(Object object, @NotNull String key, @NotNull Component component) {
+  public boolean loadStateFor(Object object, @Nonnull String key, @Nonnull Component component) {
     Point location = null;
     Dimension size = null;
     boolean maximized = false;
@@ -163,13 +163,13 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @Override
-  public void saveStateFor(Object object, @NotNull String key, @NotNull Component component) {
+  public void saveStateFor(Object object, @Nonnull String key, @Nonnull Component component) {
     FrameState state = FrameState.getFrameState(component);
     putFor(object, key, state.getLocation(), true, state.getSize(), true, state.isMaximized(), true, state.isFullScreen(), true);
   }
 
   @Override
-  public Point getLocationFor(Object object, @NotNull String key) {
+  public Point getLocationFor(Object object, @Nonnull String key) {
     Point location;
     synchronized (myStateMap) {
       location = getFor(object, key, Point.class);
@@ -178,12 +178,12 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @Override
-  public void putLocationFor(Object object, @NotNull String key, Point location) {
+  public void putLocationFor(Object object, @Nonnull String key, Point location) {
     putFor(object, key, location, true, null, false, false, false, false, false);
   }
 
   @Override
-  public Dimension getSizeFor(Object object, @NotNull String key) {
+  public Dimension getSizeFor(Object object, @Nonnull String key) {
     Dimension size;
     synchronized (myStateMap) {
       size = getFor(object, key, Dimension.class);
@@ -192,12 +192,12 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @Override
-  public void putSizeFor(Object object, @NotNull String key, Dimension size) {
+  public void putSizeFor(Object object, @Nonnull String key, Dimension size) {
     putFor(object, key, null, false, size, true, false, false, false, false);
   }
 
   @Override
-  public Rectangle getBoundsFor(Object object, @NotNull String key) {
+  public Rectangle getBoundsFor(Object object, @Nonnull String key) {
     Rectangle bounds;
     synchronized (myStateMap) {
       bounds = getFor(object, key, Rectangle.class);
@@ -206,13 +206,13 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @Override
-  public void putBoundsFor(Object object, @NotNull String key, Rectangle bounds) {
+  public void putBoundsFor(Object object, @Nonnull String key, Rectangle bounds) {
     Point location = bounds == null ? null : bounds.getLocation();
     Dimension size = bounds == null ? null : bounds.getSize();
     putFor(object, key, location, true, size, true, false, false, false, false);
   }
 
-  private <T> T getFor(Object object, @NotNull String key, @NotNull Class<T> type) {
+  private <T> T getFor(Object object, @Nonnull String key, @Nonnull Class<T> type) {
     GraphicsDevice screen = getScreen(object);
     T state = get(getKey(screen, key), type);
     if (state != null) {
@@ -228,7 +228,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T get(@NotNull String key, @NotNull Class<T> type) {
+  private <T> T get(@Nonnull String key, @Nonnull Class<T> type) {
     WindowState state = myStateMap.get(key);
     if (isVisible(state)) {
       if (type == WindowState.class) {
@@ -247,7 +247,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
     return null;
   }
 
-  private void putFor(Object object, @NotNull String key,
+  private void putFor(Object object, @Nonnull String key,
                       Point location, boolean locationSet,
                       Dimension size, boolean sizeSet,
                       boolean maximized, boolean maximizedSet,
@@ -262,7 +262,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
     }
   }
 
-  private void putImpl(@NotNull String key,
+  private void putImpl(@Nonnull String key,
                        Point location, boolean locationSet,
                        Dimension size, boolean sizeSet,
                        boolean maximized, boolean maximizedSet,
@@ -281,7 +281,7 @@ abstract class WindowStateServiceImpl extends WindowStateService implements Pers
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String getKey(GraphicsDevice screen, String key) {
     GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
     if (environment.isHeadlessInstance()) {

@@ -21,8 +21,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -33,19 +33,19 @@ public class DisposeAwareRunnable extends WeakReference<Object> implements Runna
 
   protected final Runnable myDelegate;
 
-  public static Runnable create(@NotNull Runnable delegate, @Nullable PsiElement disposable) {
+  public static Runnable create(@Nonnull Runnable delegate, @Nullable PsiElement disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  public static Runnable create(@NotNull Runnable delegate, @Nullable Project disposable) {
+  public static Runnable create(@Nonnull Runnable delegate, @Nullable Project disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  public static Runnable create(@NotNull Runnable delegate, @Nullable Module disposable) {
+  public static Runnable create(@Nonnull Runnable delegate, @Nullable Module disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  private static Runnable create(@NotNull Runnable delegate, @Nullable Object disposable) {
+  private static Runnable create(@Nonnull Runnable delegate, @Nullable Object disposable) {
     if (disposable == null) {
       return delegate;
     }
@@ -61,7 +61,7 @@ public class DisposeAwareRunnable extends WeakReference<Object> implements Runna
     return new DisposeAwareRunnable(delegate, disposable);
   }
 
-  private DisposeAwareRunnable(@NotNull Runnable delegate, @NotNull Object disposable) {
+  private DisposeAwareRunnable(@Nonnull Runnable delegate, @Nonnull Object disposable) {
     super(disposable);
     myDelegate = delegate;
     assert disposable instanceof PsiElement || disposable instanceof ComponentManager : "Unknown type of "+disposable;

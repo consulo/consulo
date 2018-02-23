@@ -22,8 +22,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -33,11 +33,12 @@ import java.util.*;
 abstract class FoldRegionsTree {
   private static final Key<Boolean> VISIBLE = Key.create("visible.fold.region");
 
-  @NotNull private volatile CachedData myCachedData = new CachedData();
+  @Nonnull
+  private volatile CachedData myCachedData = new CachedData();
 
   //sorted using RangeMarker.BY_START_OFFSET comparator
   //i.e., first by start offset, then, if start offsets are equal, by end offset
-  @NotNull
+  @Nonnull
   private List<FoldRegion> myRegions = ContainerUtil.newArrayList();
 
   private static final Comparator<FoldRegion> BY_END_OFFSET = (r1, r2) -> {
@@ -151,8 +152,8 @@ abstract class FoldRegionsTree {
     }
   }
 
-  @NotNull
-  private static FoldRegion[] toFoldArray(@NotNull List<FoldRegion> topLevels) {
+  @Nonnull
+  private static FoldRegion[] toFoldArray(@Nonnull List<FoldRegion> topLevels) {
     return topLevels.isEmpty() ? FoldRegion.EMPTY_ARRAY : topLevels.toArray(new FoldRegion[topLevels.size()]);
   }
 
@@ -197,7 +198,7 @@ abstract class FoldRegionsTree {
     myCachedData = new CachedData(visibleRegions, topLevelRegions, startOffsets, endOffsets, foldedLines);
   }
 
-  boolean addRegion(@NotNull FoldRegion range) {
+  boolean addRegion(@Nonnull FoldRegion range) {
     int start = range.getStartOffset();
     int end = range.getEndOffset();
     int insertionIndex = myRegions.size();
@@ -281,7 +282,7 @@ abstract class FoldRegionsTree {
     return region.getStartOffset() < offset && region.getEndOffset() > offset;
   }
 
-  @NotNull
+  @Nonnull
   FoldRegion[] fetchCollapsedAt(int offset) {
     if (myCachedData.isUnavailable()) return FoldRegion.EMPTY_ARRAY;
     ArrayList<FoldRegion> allCollapsed = new ArrayList<>();
@@ -312,7 +313,7 @@ abstract class FoldRegionsTree {
     return toFoldArray(myRegions);
   }
 
-  void removeRegion(@NotNull FoldRegion range) {
+  void removeRegion(@Nonnull FoldRegion range) {
     myRegions.remove(range);
   }
 
@@ -386,11 +387,11 @@ abstract class FoldRegionsTree {
       foldedLines = null;
     }
 
-    private CachedData(@NotNull FoldRegion[] visibleRegions,
-                       @NotNull FoldRegion[] topLevelRegions,
-                       @NotNull int[] startOffsets,
-                       @NotNull int[] endOffsets,
-                       @NotNull int[] foldedLines) {
+    private CachedData(@Nonnull FoldRegion[] visibleRegions,
+                       @Nonnull FoldRegion[] topLevelRegions,
+                       @Nonnull int[] startOffsets,
+                       @Nonnull int[] endOffsets,
+                       @Nonnull int[] foldedLines) {
       this.visibleRegions = visibleRegions;
       this.topLevelRegions = topLevelRegions;
       this.startOffsets = startOffsets;
@@ -422,7 +423,7 @@ abstract class FoldRegionsTree {
       throw new UnsupportedOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getPlaceholderText() {
       throw new UnsupportedOperationException();
@@ -444,7 +445,7 @@ abstract class FoldRegionsTree {
       throw new UnsupportedOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Document getDocument() {
       throw new UnsupportedOperationException();
@@ -492,12 +493,12 @@ abstract class FoldRegionsTree {
 
     @Nullable
     @Override
-    public <T> T getUserData(@NotNull Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
       throw new UnsupportedOperationException();
     }
   }

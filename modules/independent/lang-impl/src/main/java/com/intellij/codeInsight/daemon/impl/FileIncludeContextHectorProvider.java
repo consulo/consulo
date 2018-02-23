@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.include.FileIncludeManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author mike
@@ -36,7 +36,7 @@ public class FileIncludeContextHectorProvider implements HectorComponentPanelsPr
 
   @Override
   @Nullable
-  public HectorComponentPanel createConfigurable(@NotNull final PsiFile file) {
+  public HectorComponentPanel createConfigurable(@Nonnull final PsiFile file) {
     if (DumbService.getInstance(file.getProject()).isDumb()) {
       return null;
     }

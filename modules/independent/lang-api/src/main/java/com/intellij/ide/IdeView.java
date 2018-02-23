@@ -18,7 +18,7 @@ package com.intellij.ide;
 
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,

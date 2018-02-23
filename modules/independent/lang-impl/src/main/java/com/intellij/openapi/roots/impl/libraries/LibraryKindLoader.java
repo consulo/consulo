@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.roots.libraries.LibraryType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -34,7 +34,7 @@ public class LibraryKindLoader implements ApplicationComponent {
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "LibraryKindLoader";

@@ -24,8 +24,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.DeprecationInfo;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a module in an Consulo project.
@@ -67,7 +67,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return the project instance.
    */
-  @NotNull
+  @Nonnull
   Project getProject();
 
   /**
@@ -76,7 +76,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    * @return the module name.
    */
   @Override
-  @NotNull
+  @Nonnull
   String getName();
 
   /**
@@ -97,7 +97,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    */
   @Deprecated
   @DeprecationInfo("Use ModuleExtension for store your variables")
-  default void setOption(@NotNull String optionName, @NotNull String optionValue) {
+  default void setOption(@Nonnull String optionName, @Nonnull String optionValue) {
     throw new UnsupportedOperationException();
   }
 
@@ -108,7 +108,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    */
   @Deprecated
   @DeprecationInfo("Use ModuleExtension for store your variables")
-  default void clearOption(@NotNull String optionName) {
+  default void clearOption(@Nonnull String optionName) {
     throw new UnsupportedOperationException();
   }
 
@@ -121,7 +121,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
   @Nullable
   @Deprecated
   @DeprecationInfo("Use ModuleExtension for store your variables")
-  default String getOptionValue(@NotNull String optionName) {
+  default String getOptionValue(@Nonnull String optionName) {
     throw new UnsupportedOperationException();
   }
 
@@ -130,10 +130,10 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleScope(boolean includeTests);
 
   /**
@@ -141,7 +141,7 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithLibrariesScope();
 
   /**
@@ -149,24 +149,24 @@ public interface Module extends ComponentManager, AreaInstance, Disposable, Name
    *
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependenciesScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleContentScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleContentWithDependenciesScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependentsScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleTestsWithDependentsScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
 }

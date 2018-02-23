@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.Serializable;
@@ -27,20 +27,20 @@ import java.util.Set;
  * @since 7/14/2014
  */
 public interface ExternalSourceDirectorySet extends Serializable {
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   Set<File> getSrcDirs();
 
-  @NotNull
+  @Nonnull
   File getOutputDir();
 
-  @NotNull
+  @Nonnull
   Set<String> getExcludes();
-  @NotNull
+  @Nonnull
   Set<String> getIncludes();
 
-  @NotNull
+  @Nonnull
   List<ExternalFilter> getFilters();
 }

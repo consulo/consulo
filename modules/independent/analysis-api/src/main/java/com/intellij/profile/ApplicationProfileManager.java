@@ -18,7 +18,6 @@ package com.intellij.profile;
 import com.intellij.openapi.Disposable;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * User: anna
@@ -35,7 +34,7 @@ public abstract class ApplicationProfileManager implements ProfileManager{
 
   public abstract void fireProfileChanged(Profile profile);
 
-  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @Nullable NamedScope scope);
+  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @javax.annotation.Nullable NamedScope scope);
 
   public abstract void setRootProfile(String rootProfile);
 

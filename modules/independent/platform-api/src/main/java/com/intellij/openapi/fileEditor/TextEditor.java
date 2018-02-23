@@ -16,8 +16,9 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface TextEditor extends NavigatableFileEditor {
-  @NotNull Editor getEditor();
+  @Nonnull
+  Editor getEditor();
 }

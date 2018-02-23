@@ -19,20 +19,20 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public abstract class UniqueVFilePathBuilder {
   private static final UniqueVFilePathBuilder DUMMY_BUILDER = new UniqueVFilePathBuilder() {
-    @NotNull
+    @Nonnull
     @Override
     public String getUniqueVirtualFilePath(Project project, VirtualFile vFile) {
       return vFile.getPresentableName();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile) {
       return vFile.getPresentableName();
@@ -47,13 +47,13 @@ public abstract class UniqueVFilePathBuilder {
     return service;
   }
 
-  @NotNull
-  public String getUniqueVirtualFilePath(@NotNull Project project, @NotNull VirtualFile vFile, @NotNull GlobalSearchScope scope) {
+  @Nonnull
+  public String getUniqueVirtualFilePath(@Nonnull Project project, @Nonnull VirtualFile vFile, @Nonnull GlobalSearchScope scope) {
     return getUniqueVirtualFilePath(project, vFile);
   }
 
   public abstract String getUniqueVirtualFilePath(Project project, VirtualFile vFile);
 
-  @NotNull
+  @Nonnull
   public abstract String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile);
 }

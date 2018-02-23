@@ -31,8 +31,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -112,7 +112,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     return myReplaceDenied;
   }
 
-  public LivePreviewController(SearchResults searchResults, @Nullable EditorSearchSession component, @NotNull Disposable parentDisposable) {
+  public LivePreviewController(SearchResults searchResults, @Nullable EditorSearchSession component, @Nonnull Disposable parentDisposable) {
     mySearchResults = searchResults;
     myComponent = component;
     getEditor().getDocument().addDocumentListener(myDocumentListener);
@@ -149,7 +149,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   }
 
   @Override
-  public String getStringToReplace(@NotNull Editor editor, @Nullable FindResult findResult) {
+  public String getStringToReplace(@Nonnull Editor editor, @Nullable FindResult findResult) {
     if (findResult == null) {
       return null;
     }

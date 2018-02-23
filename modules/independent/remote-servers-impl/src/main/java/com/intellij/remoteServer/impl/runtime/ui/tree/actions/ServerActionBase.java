@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Set;
@@ -19,7 +19,7 @@ public abstract class ServerActionBase extends ServersTreeActionBase {
   }
 
   @Override
-  protected final boolean isEnabled(@NotNull ServersToolWindowContent content, AnActionEvent e) {
+  protected final boolean isEnabled(@Nonnull ServersToolWindowContent content, AnActionEvent e) {
     Set<ServerNode> selectedServerNodes = content.getSelectedServerNodes();
     Set<?> selectedElements = content.getBuilder().getSelectedElements();
     if (selectedElements.size() != selectedServerNodes.size() || selectedElements.isEmpty()) {
@@ -35,13 +35,13 @@ public abstract class ServerActionBase extends ServersTreeActionBase {
   }
 
   @Override
-  protected void doActionPerformed(@NotNull ServersToolWindowContent content) {
+  protected void doActionPerformed(@Nonnull ServersToolWindowContent content) {
     for (ServerNode node : content.getSelectedServerNodes()) {
       performAction(node);
     }
   }
 
-  protected abstract void performAction(@NotNull ServerNode serverNode);
+  protected abstract void performAction(@Nonnull ServerNode serverNode);
 
-  protected abstract boolean isEnabledForServer(@NotNull ServerNode serverNode);
+  protected abstract boolean isEnabledForServer(@Nonnull ServerNode serverNode);
 }

@@ -25,7 +25,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author oleg
@@ -62,7 +62,7 @@ public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFi
     super.tearDown();
   }
 
-  private void doTest(final char c, @NotNull String before, @NotNull String expected) {
+  private void doTest(final char c, @Nonnull String before, @Nonnull String expected) {
     myFixture.configureByText(PlainTextFileType.INSTANCE, before);
     final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
     performAction(myFixture.getProject(), new Runnable() {
@@ -116,7 +116,7 @@ public class SelectionQuotingTypedHandlerTest extends LightPlatformCodeInsightFi
   }
 
 
-  private void doTest(@NotNull final String cs, @NotNull String before, @NotNull String expected) {
+  private void doTest(@Nonnull final String cs, @Nonnull String before, @Nonnull String expected) {
     final boolean smarterSelection = Registry.is("editor.smarterSelectionQuoting");
     Registry.get("editor.smarterSelectionQuoting").setValue(true);
     try {

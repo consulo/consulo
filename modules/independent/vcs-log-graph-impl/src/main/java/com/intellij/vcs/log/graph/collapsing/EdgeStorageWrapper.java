@@ -23,8 +23,8 @@ import com.intellij.vcs.log.graph.api.EdgeFilter;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -32,11 +32,14 @@ import java.util.Set;
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.intEqual;
 
 public class EdgeStorageWrapper {
-  @NotNull private final EdgeStorage myEdgeStorage;
-  @NotNull private final Function<Integer, Integer> myGetNodeIndexById;
-  @NotNull private final Function<Integer, Integer> myGetNodeIdByIndex;
+  @Nonnull
+  private final EdgeStorage myEdgeStorage;
+  @Nonnull
+  private final Function<Integer, Integer> myGetNodeIndexById;
+  @Nonnull
+  private final Function<Integer, Integer> myGetNodeIdByIndex;
 
-  public EdgeStorageWrapper(@NotNull EdgeStorage edgeStorage, @NotNull final LinearGraph graph) {
+  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull final LinearGraph graph) {
     this(edgeStorage, new Function<Integer, Integer>() {
       @Override
       public Integer fun(Integer nodeId) {
@@ -50,20 +53,20 @@ public class EdgeStorageWrapper {
     });
   }
 
-  public EdgeStorageWrapper(@NotNull EdgeStorage edgeStorage,
-                            @NotNull Function<Integer, Integer> getNodeIndexById,
-                            @NotNull Function<Integer, Integer> getNodeIdByIndex) {
+  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage,
+                            @Nonnull Function<Integer, Integer> getNodeIndexById,
+                            @Nonnull Function<Integer, Integer> getNodeIdByIndex) {
     myEdgeStorage = edgeStorage;
     myGetNodeIndexById = getNodeIndexById;
     myGetNodeIdByIndex = getNodeIdByIndex;
   }
 
-  public void removeEdge(@NotNull GraphEdge graphEdge) {
+  public void removeEdge(@Nonnull GraphEdge graphEdge) {
     Pair<Integer, Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.removeEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
 
-  public void createEdge(@NotNull GraphEdge graphEdge) {
+  public void createEdge(@Nonnull GraphEdge graphEdge) {
     Pair<Integer, Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.createEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
@@ -76,8 +79,8 @@ public class EdgeStorageWrapper {
     return false;
   }
 
-  @NotNull
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter) {
+  @Nonnull
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
     List<GraphEdge> result = ContainerUtil.newSmartList();
     for (Pair<Integer, GraphEdgeType> retrievedEdge : myEdgeStorage.getEdges(myGetNodeIdByIndex.fun(nodeIndex))) {
       GraphEdge edge = decompressEdge(nodeIndex, retrievedEdge.first, retrievedEdge.second);
@@ -86,7 +89,7 @@ public class EdgeStorageWrapper {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Set<GraphEdge> getEdges() {
     Set<GraphEdge> result = ContainerUtil.newHashSet();
     for (int id : myEdgeStorage.getKnownIds()) {
@@ -95,8 +98,8 @@ public class EdgeStorageWrapper {
     return result;
   }
 
-  @NotNull
-  private Pair<Integer, Integer> getNodeIds(@NotNull GraphEdge graphEdge) {
+  @Nonnull
+  private Pair<Integer, Integer> getNodeIds(@Nonnull GraphEdge graphEdge) {
     if (graphEdge.getUpNodeIndex() != null) {
       Integer mainId = myGetNodeIdByIndex.fun(graphEdge.getUpNodeIndex());
       if (graphEdge.getDownNodeIndex() != null) {
@@ -113,7 +116,7 @@ public class EdgeStorageWrapper {
   }
 
   @Nullable
-  private GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, @NotNull GraphEdgeType edgeType) {
+  private GraphEdge decompressEdge(int nodeIndex, @javax.annotation.Nullable Integer targetId, @Nonnull GraphEdgeType edgeType) {
     if (edgeType.isNormalEdge()) {
       assert targetId != null;
       Integer anotherNodeIndex = myGetNodeIndexById.fun(targetId);
@@ -126,7 +129,7 @@ public class EdgeStorageWrapper {
     }
   }
 
-  private static boolean matchedEdge(int startNodeIndex, @Nullable GraphEdge edge, @NotNull EdgeFilter filter) {
+  private static boolean matchedEdge(int startNodeIndex, @Nullable GraphEdge edge, @Nonnull EdgeFilter filter) {
     if (edge == null) return false;
     if (edge.getType().isNormalEdge()) {
       return (startNodeIndex == convertToInt(edge.getDownNodeIndex()) && filter.upNormal) ||

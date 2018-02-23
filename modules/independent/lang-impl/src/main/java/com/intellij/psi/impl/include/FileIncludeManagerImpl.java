@@ -35,8 +35,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -134,7 +134,7 @@ public class FileIncludeManagerImpl extends FileIncludeManager {
   }
 
   @Override
-  public VirtualFile[] getIncludedFiles(@NotNull VirtualFile file, boolean compileTimeOnly) {
+  public VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
     if (file instanceof VirtualFileWithId) {
       return myIncludedHolder.getAllFiles(file, compileTimeOnly);
     }
@@ -144,7 +144,7 @@ public class FileIncludeManagerImpl extends FileIncludeManager {
   }
 
   @Override
-  public VirtualFile[] getIncludingFiles(@NotNull VirtualFile file, boolean compileTimeOnly) {
+  public VirtualFile[] getIncludingFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
     return myIncludingHolder.getAllFiles(file, compileTimeOnly);
   }
 
@@ -202,13 +202,13 @@ public class FileIncludeManagerImpl extends FileIncludeManager {
       RUNTIME_KEY = Key.create(runtimeKey);
     }
 
-    private VirtualFile[] getAllFiles(@NotNull VirtualFile file, boolean compileTimeOnly) {
+    private VirtualFile[] getAllFiles(@Nonnull VirtualFile file, boolean compileTimeOnly) {
       Set<VirtualFile> result = new HashSet<VirtualFile>();
       getFilesRecursively(file, compileTimeOnly, result);
       return VfsUtilCore.toVirtualFileArray(result);
     }
 
-    private void getFilesRecursively(@NotNull VirtualFile file, boolean compileTimeOnly, Set<VirtualFile> result) {
+    private void getFilesRecursively(@Nonnull VirtualFile file, boolean compileTimeOnly, Set<VirtualFile> result) {
       if (result.contains(file)) return;
       PsiFile psiFile = myPsiManager.findFile(file);
       if (psiFile == null) return;

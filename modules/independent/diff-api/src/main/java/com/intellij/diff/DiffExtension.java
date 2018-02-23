@@ -17,14 +17,14 @@ package com.intellij.diff;
 
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class DiffExtension {
   public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create("com.intellij.diff.DiffExtension");
 
   @RequiredDispatchThread
-  public abstract void onViewerCreated(@NotNull FrameDiffTool.DiffViewer viewer,
-                                       @NotNull DiffContext context,
-                                       @NotNull DiffRequest request);
+  public abstract void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer viewer,
+                                       @Nonnull DiffContext context,
+                                       @Nonnull DiffRequest request);
 }

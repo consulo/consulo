@@ -17,7 +17,7 @@ package consulo.ide.ui.laf.modernWhite;
 
 import com.intellij.ide.IdeBundle;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -40,7 +40,7 @@ public class ModernWhiteLookAndFeelInfo extends UIManager.LookAndFeelInfo implem
     return getName().hashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getColorSchemeName() {
     return getName();

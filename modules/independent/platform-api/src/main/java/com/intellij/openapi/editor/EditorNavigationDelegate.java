@@ -2,7 +2,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines contract for extending editor navigation functionality. 
@@ -26,6 +26,6 @@ public interface EditorNavigationDelegate {
     CONTINUE
   }
 
-  @NotNull
-  Result navigateToLineEnd(@NotNull Editor editor, @NotNull DataContext dataContext);
+  @Nonnull
+  Result navigateToLineEnd(@Nonnull Editor editor, @Nonnull DataContext dataContext);
 }

@@ -20,7 +20,7 @@ import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
 import com.intellij.openapi.progress.ProgressIndicator;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +30,10 @@ import static com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
 import static com.intellij.openapi.util.text.StringUtil.isWhiteSpace;
 
 public class ByChar {
-  @NotNull
-  public static FairDiffIterable compare(@NotNull CharSequence text1,
-                                         @NotNull CharSequence text2,
-                                         @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static FairDiffIterable compare(@Nonnull CharSequence text1,
+                                         @Nonnull CharSequence text2,
+                                         @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     int[] chars1 = getAllChars(text1);
@@ -42,10 +42,10 @@ public class ByChar {
     return diff(chars1, chars2, indicator);
   }
 
-  @NotNull
-  public static FairDiffIterable compareTwoStep(@NotNull CharSequence text1,
-                                                @NotNull CharSequence text2,
-                                                @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static FairDiffIterable compareTwoStep(@Nonnull CharSequence text1,
+                                                @Nonnull CharSequence text2,
+                                                @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     CharOffsets chars1 = getNonSpaceChars(text1);
@@ -55,10 +55,10 @@ public class ByChar {
     return matchAdjustmentSpaces(chars1, chars2, text1, text2, nonSpaceChanges, indicator);
   }
 
-  @NotNull
-  public static DiffIterable compareIgnoreWhitespaces(@NotNull CharSequence text1,
-                                                      @NotNull CharSequence text2,
-                                                      @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static DiffIterable compareIgnoreWhitespaces(@Nonnull CharSequence text1,
+                                                      @Nonnull CharSequence text2,
+                                                      @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     CharOffsets chars1 = getNonSpaceChars(text1);
@@ -71,10 +71,10 @@ public class ByChar {
   /*
    * Compare punctuation chars only, all other characters are left unmatched
    */
-  @NotNull
-  public static FairDiffIterable comparePunctuation(@NotNull CharSequence text1,
-                                                    @NotNull CharSequence text2,
-                                                    @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static FairDiffIterable comparePunctuation(@Nonnull CharSequence text1,
+                                                    @Nonnull CharSequence text2,
+                                                    @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     CharOffsets chars1 = getPunctuationChars(text1);
@@ -88,13 +88,13 @@ public class ByChar {
   // Impl
   //
 
-  @NotNull
-  private static FairDiffIterable transfer(@NotNull final CharOffsets chars1,
-                                           @NotNull final CharOffsets chars2,
-                                           @NotNull final CharSequence text1,
-                                           @NotNull final CharSequence text2,
-                                           @NotNull final FairDiffIterable changes,
-                                           @NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable transfer(@Nonnull final CharOffsets chars1,
+                                           @Nonnull final CharOffsets chars2,
+                                           @Nonnull final CharSequence text1,
+                                           @Nonnull final CharSequence text2,
+                                           @Nonnull final FairDiffIterable changes,
+                                           @Nonnull final ProgressIndicator indicator) {
     ChangeBuilder builder = new ChangeBuilder(text1.length(), text2.length());
 
     for (Range range : changes.iterateUnchanged()) {
@@ -115,13 +115,13 @@ public class ByChar {
    * Idea: run fair diff on all gaps between matched characters
    * (inside these pairs could met non-space characters, but they will be unique and can't be matched)
    */
-  @NotNull
-  private static FairDiffIterable matchAdjustmentSpaces(@NotNull final CharOffsets chars1,
-                                                        @NotNull final CharOffsets chars2,
-                                                        @NotNull final CharSequence text1,
-                                                        @NotNull final CharSequence text2,
-                                                        @NotNull final FairDiffIterable changes,
-                                                        @NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable matchAdjustmentSpaces(@Nonnull final CharOffsets chars1,
+                                                        @Nonnull final CharOffsets chars2,
+                                                        @Nonnull final CharSequence text1,
+                                                        @Nonnull final CharSequence text2,
+                                                        @Nonnull final FairDiffIterable changes,
+                                                        @Nonnull final ProgressIndicator indicator) {
     return new ChangeCorrector.DefaultCharChangeCorrector(chars1, chars2, text1, text2, changes, indicator).build();
   }
 
@@ -130,12 +130,12 @@ public class ByChar {
    *
    * matched characters: matched non-space characters + all adjustment whitespaces
    */
-  @NotNull
-  private static DiffIterable matchAdjustmentSpacesIW(@NotNull CharOffsets chars1,
-                                                      @NotNull CharOffsets chars2,
-                                                      @NotNull CharSequence text1,
-                                                      @NotNull CharSequence text2,
-                                                      @NotNull FairDiffIterable changes) {
+  @Nonnull
+  private static DiffIterable matchAdjustmentSpacesIW(@Nonnull CharOffsets chars1,
+                                                      @Nonnull CharOffsets chars2,
+                                                      @Nonnull CharSequence text1,
+                                                      @Nonnull CharSequence text2,
+                                                      @Nonnull FairDiffIterable changes) {
     final List<Range> ranges = new ArrayList<Range>();
 
     for (Range ch : changes.iterateChanges()) {
@@ -169,11 +169,11 @@ public class ByChar {
    *
    * sample: "x y" -> "x zy", space should be matched instead of being ignored.
    */
-  private static int expandForwardW(@NotNull CharOffsets chars1,
-                                    @NotNull CharOffsets chars2,
-                                    @NotNull CharSequence text1,
-                                    @NotNull CharSequence text2,
-                                    @NotNull Range ch,
+  private static int expandForwardW(@Nonnull CharOffsets chars1,
+                                    @Nonnull CharOffsets chars2,
+                                    @Nonnull CharSequence text1,
+                                    @Nonnull CharSequence text2,
+                                    @Nonnull Range ch,
                                     boolean left) {
     int offset1 = ch.start1 == 0 ? 0 : chars1.offsets[ch.start1 - 1] + 1;
     int offset2 = ch.start2 == 0 ? 0 : chars2.offsets[ch.start2 - 1] + 1;
@@ -187,8 +187,8 @@ public class ByChar {
   // Misc
   //
 
-  @NotNull
-  private static int[] getAllChars(@NotNull CharSequence text) {
+  @Nonnull
+  private static int[] getAllChars(@Nonnull CharSequence text) {
     int[] chars = new int[text.length()];
     for (int i = 0; i < text.length(); i++) {
       chars[i] = text.charAt(i);
@@ -196,8 +196,8 @@ public class ByChar {
     return chars;
   }
 
-  @NotNull
-  private static CharOffsets getNonSpaceChars(@NotNull CharSequence text) {
+  @Nonnull
+  private static CharOffsets getNonSpaceChars(@Nonnull CharSequence text) {
     TIntArrayList chars = new TIntArrayList(text.length());
     TIntArrayList offsets = new TIntArrayList(text.length());
 
@@ -212,8 +212,8 @@ public class ByChar {
     return new CharOffsets(chars.toNativeArray(), offsets.toNativeArray());
   }
 
-  @NotNull
-  private static CharOffsets getPunctuationChars(@NotNull CharSequence text) {
+  @Nonnull
+  private static CharOffsets getPunctuationChars(@Nonnull CharSequence text) {
     TIntArrayList chars = new TIntArrayList(text.length());
     TIntArrayList offsets = new TIntArrayList(text.length());
 

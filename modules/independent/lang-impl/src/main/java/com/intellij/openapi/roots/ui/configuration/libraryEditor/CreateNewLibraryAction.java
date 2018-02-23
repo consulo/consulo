@@ -36,8 +36,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureCo
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -54,11 +54,11 @@ public class CreateNewLibraryAction extends DumbAwareAction {
   private final BaseLibrariesConfigurable myLibrariesConfigurable;
   private final Project myProject;
 
-  private CreateNewLibraryAction(@NotNull String text,
+  private CreateNewLibraryAction(@Nonnull String text,
                                  @Nullable Icon icon,
                                  @Nullable LibraryType type,
-                                 @NotNull BaseLibrariesConfigurable librariesConfigurable,
-                                 final @NotNull Project project) {
+                                 @Nonnull BaseLibrariesConfigurable librariesConfigurable,
+                                 final @Nonnull Project project) {
     super(text, null, icon);
     myType = type;
     myLibrariesConfigurable = librariesConfigurable;
@@ -81,9 +81,9 @@ public class CreateNewLibraryAction extends DumbAwareAction {
 
   @Nullable
   public static Library createLibrary(@Nullable final LibraryType type,
-                                      @NotNull final JComponent parentComponent,
-                                      @NotNull final Project project,
-                                      @NotNull final LibrariesModifiableModel modifiableModel) {
+                                      @Nonnull final JComponent parentComponent,
+                                      @Nonnull final Project project,
+                                      @Nonnull final LibrariesModifiableModel modifiableModel) {
     final NewLibraryConfiguration configuration = createNewLibraryConfiguration(type, parentComponent, project);
     if (configuration == null) return null;
     final LibraryType<?> libraryType = configuration.getLibraryType();
@@ -107,8 +107,8 @@ public class CreateNewLibraryAction extends DumbAwareAction {
 
   @Nullable
   public static NewLibraryConfiguration createNewLibraryConfiguration(@Nullable LibraryType type,
-                                                                      @NotNull JComponent parentComponent,
-                                                                      @NotNull Project project) {
+                                                                      @Nonnull JComponent parentComponent,
+                                                                      @Nonnull Project project) {
     final NewLibraryConfiguration configuration;
     final VirtualFile baseDir = project.getBaseDir();
     if (type != null) {
@@ -122,9 +122,9 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     return configuration;
   }
 
-  public static AnAction[] createActionOrGroup(@NotNull String text,
-                                               @NotNull BaseLibrariesConfigurable librariesConfigurable,
-                                               final @NotNull Project project) {
+  public static AnAction[] createActionOrGroup(@Nonnull String text,
+                                               @Nonnull BaseLibrariesConfigurable librariesConfigurable,
+                                               final @Nonnull Project project) {
     final LibraryType<?>[] extensions = LibraryType.EP_NAME.getExtensions();
     List<LibraryType<?>> suitableTypes = new ArrayList<LibraryType<?>>();
     if (librariesConfigurable instanceof ProjectLibrariesConfigurable) {

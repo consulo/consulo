@@ -26,7 +26,7 @@ import com.intellij.util.EventDispatcher;
 import consulo.ui.*;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.wm.impl.UnifiedToolWindowImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -49,23 +49,23 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
     myLayout.center(toolWindow.getUIComponent());
   }
 
-  @NotNull
+  @Nonnull
   public Component getComponent() {
     return myLayout;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public WindowInfo getWindowInfo() {
     return myWindowInfo;
   }
 
   @Override
-  public void apply(@NotNull WindowInfo windowInfo) {
+  public void apply(@Nonnull WindowInfo windowInfo) {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ToolWindow getToolWindow() {
     return myToolWindow;
@@ -96,7 +96,7 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
     myDispatcher.getMulticaster().hiddenSide(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionGroup createPopupGroup() {
     return new DefaultActionGroup();

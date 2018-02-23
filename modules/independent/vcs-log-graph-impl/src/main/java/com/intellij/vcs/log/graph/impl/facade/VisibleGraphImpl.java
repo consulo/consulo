@@ -27,8 +27,8 @@ import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import com.intellij.vcs.log.graph.impl.facade.LinearGraphController.LinearGraphAction;
 import com.intellij.vcs.log.graph.impl.print.PrintElementGeneratorImpl;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -37,17 +37,20 @@ import java.util.Collections;
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getCursor;
 
 public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
-  @NotNull private final LinearGraphController myGraphController;
-  @NotNull private final PermanentGraphInfo<CommitId> myPermanentGraph;
-  @NotNull private final GraphColorManager<CommitId> myColorManager;
+  @Nonnull
+  private final LinearGraphController myGraphController;
+  @Nonnull
+  private final PermanentGraphInfo<CommitId> myPermanentGraph;
+  @Nonnull
+  private final GraphColorManager<CommitId> myColorManager;
 
   private PrintElementManagerImpl myPrintElementManager;
   private PrintElementGeneratorImpl myPrintElementGenerator;
   private boolean myShowLongEdges = false;
 
-  public VisibleGraphImpl(@NotNull LinearGraphController graphController,
-                          @NotNull PermanentGraphInfo<CommitId> permanentGraph,
-                          @NotNull GraphColorManager<CommitId> colorManager) {
+  public VisibleGraphImpl(@Nonnull LinearGraphController graphController,
+                          @Nonnull PermanentGraphInfo<CommitId> permanentGraph,
+                          @Nonnull GraphColorManager<CommitId> colorManager) {
     myGraphController = graphController;
     myPermanentGraph = permanentGraph;
     myColorManager = colorManager;
@@ -59,7 +62,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
     return myGraphController.getCompiledGraph().nodesCount();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RowInfo<CommitId> getRowInfo(final int visibleRow) {
     final int nodeId = myGraphController.getCompiledGraph().getNodeId(visibleRow);
@@ -68,13 +71,13 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   @Override
-  @Nullable
-  public Integer getVisibleRowIndex(@NotNull CommitId commitId) {
+  @javax.annotation.Nullable
+  public Integer getVisibleRowIndex(@Nonnull CommitId commitId) {
     int nodeId = myPermanentGraph.getPermanentCommitsInfo().getNodeId(commitId);
     return myGraphController.getCompiledGraph().getNodeIndex(nodeId);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionController<CommitId> getActionController() {
     return new ActionControllerImpl();
@@ -85,7 +88,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
     myPrintElementGenerator = new PrintElementGeneratorImpl(myGraphController.getCompiledGraph(), myPrintElementManager, myShowLongEdges);
   }
 
-  @NotNull
+  @Nonnull
   public SimpleGraphInfo<CommitId> buildSimpleGraphInfo() {
     return SimpleGraphInfo
       .build(myGraphController.getCompiledGraph(), myPermanentGraph.getPermanentGraphLayout(), myPermanentGraph.getPermanentCommitsInfo(),
@@ -99,14 +102,14 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
 
   private class ActionControllerImpl implements ActionController<CommitId> {
 
-    @Nullable
+    @javax.annotation.Nullable
     private Integer convertToNodeId(@Nullable Integer nodeIndex) {
       if (nodeIndex == null) return null;
       return myGraphController.getCompiledGraph().getNodeId(nodeIndex);
     }
 
     @Nullable
-    private GraphAnswer<CommitId> performArrowAction(@NotNull LinearGraphAction action) {
+    private GraphAnswer<CommitId> performArrowAction(@Nonnull LinearGraphAction action) {
       PrintElementWithGraphElement affectedElement = action.getAffectedElement();
       if (!(affectedElement instanceof EdgePrintElement)) return null;
       EdgePrintElement edgePrintElement = (EdgePrintElement)affectedElement;
@@ -145,9 +148,9 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public GraphAnswer<CommitId> performAction(@NotNull GraphAction graphAction) {
+    public GraphAnswer<CommitId> performAction(@Nonnull GraphAction graphAction) {
       myPrintElementManager.setSelectedElements(Collections.<Integer>emptySet());
 
       LinearGraphAction action = convert(graphAction);
@@ -172,7 +175,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       updatePrintElementGenerator();
     }
 
-    private LinearGraphAction convert(@NotNull GraphAction graphAction) {
+    private LinearGraphAction convert(@Nonnull GraphAction graphAction) {
       PrintElementWithGraphElement printElement = null;
       if (graphAction.getAffectedElement() != null) {
         printElement = myPrintElementGenerator.withGraphElement(graphAction.getAffectedElement());
@@ -180,7 +183,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       return new LinearGraphActionImpl(printElement, graphAction.getType());
     }
 
-    private GraphAnswer<CommitId> convert(@NotNull final LinearGraphController.LinearGraphAnswer answer) {
+    private GraphAnswer<CommitId> convert(@Nonnull final LinearGraphController.LinearGraphAnswer answer) {
       final Runnable graphUpdater = answer.getGraphUpdater();
       return new GraphAnswerImpl<>(answer.getCursorToSet(), null, graphUpdater == null ? null : new Runnable() {
         @Override
@@ -193,19 +196,21 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   private static class GraphAnswerImpl<CommitId> implements GraphAnswer<CommitId> {
-    @Nullable private final Cursor myCursor;
+    @javax.annotation.Nullable
+    private final Cursor myCursor;
     @Nullable private final CommitId myCommitToJump;
-    @Nullable private final Runnable myUpdater;
+    @javax.annotation.Nullable
+    private final Runnable myUpdater;
     private final boolean myDoJump;
 
-    private GraphAnswerImpl(@Nullable Cursor cursor, @Nullable CommitId commitToJump, @Nullable Runnable updater, boolean doJump) {
+    private GraphAnswerImpl(@Nullable Cursor cursor, @javax.annotation.Nullable CommitId commitToJump, @javax.annotation.Nullable Runnable updater, boolean doJump) {
       myCursor = cursor;
       myCommitToJump = commitToJump;
       myUpdater = updater;
       myDoJump = doJump;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Cursor getCursorToSet() {
       return myCursor;
@@ -230,10 +235,12 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   public static class LinearGraphActionImpl implements LinearGraphAction {
-    @Nullable private final PrintElementWithGraphElement myAffectedElement;
-    @NotNull private final Type myType;
+    @javax.annotation.Nullable
+    private final PrintElementWithGraphElement myAffectedElement;
+    @Nonnull
+    private final Type myType;
 
-    public LinearGraphActionImpl(@Nullable PrintElementWithGraphElement affectedElement, @NotNull Type type) {
+    public LinearGraphActionImpl(@Nullable PrintElementWithGraphElement affectedElement, @Nonnull Type type) {
       myAffectedElement = affectedElement;
       myType = type;
     }
@@ -244,7 +251,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       return myAffectedElement;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Type getType() {
       return myType;
@@ -260,26 +267,26 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
       myVisibleRow = visibleRow;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CommitId getCommit() {
       return myPermanentGraph.getPermanentCommitsInfo().getCommitId(myNodeId);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CommitId getOneOfHeads() {
       int headNodeId = myPermanentGraph.getPermanentGraphLayout().getOneOfHeadNodeIndex(myNodeId);
       return myPermanentGraph.getPermanentCommitsInfo().getCommitId(headNodeId);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<? extends PrintElement> getPrintElements() {
       return myPrintElementGenerator.getPrintElements(myVisibleRow);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RowType getRowType() {
       GraphNodeType nodeType = myGraphController.getCompiledGraph().getGraphNode(myVisibleRow).getType();

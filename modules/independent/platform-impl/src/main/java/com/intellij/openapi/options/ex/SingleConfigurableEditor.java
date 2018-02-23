@@ -33,8 +33,8 @@ import com.intellij.util.Alarm;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.options.ConfigurableUIMigrationUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +156,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     List<Action> actions = new ArrayList<>();
     actions.add(getOKAction());

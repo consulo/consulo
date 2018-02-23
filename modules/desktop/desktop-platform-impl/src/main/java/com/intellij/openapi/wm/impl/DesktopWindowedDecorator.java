@@ -18,12 +18,12 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import consulo.ui.ex.ToolWindowWindowedDecorator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class DesktopWindowedDecorator extends FrameWrapper implements ToolWindowWindowedDecorator {
   private final Project myProject;
 
-  DesktopWindowedDecorator(@NotNull Project project, @NotNull WindowInfoImpl info, @NotNull DesktopInternalDecorator internalDecorator) {
+  DesktopWindowedDecorator(@Nonnull Project project, @Nonnull WindowInfoImpl info, @Nonnull DesktopInternalDecorator internalDecorator) {
     super(project);
     myProject = project;
     setTitle(info.getId() + " - " + myProject.getName());

@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.EditorLastActionTracker;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements ApplicationComponent,
                                                                                     AnActionListener,
@@ -57,7 +57,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
     myActionManager.removeAnActionListener(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "EditorLastActionTracker";

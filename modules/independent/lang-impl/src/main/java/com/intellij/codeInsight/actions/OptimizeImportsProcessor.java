@@ -26,8 +26,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +74,8 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   }
 
   @Override
-  @NotNull
-  protected FutureTask<Boolean> prepareTask(@NotNull PsiFile file, boolean processChangedTextOnly) {
+  @Nonnull
+  protected FutureTask<Boolean> prepareTask(@Nonnull PsiFile file, boolean processChangedTextOnly) {
     final Set<ImportOptimizer> optimizers = LanguageImportStatements.INSTANCE.forFile(file);
     final List<Runnable> runnables = new ArrayList<Runnable>();
     List<PsiFile> files = file.getViewProvider().getAllFiles();
@@ -106,7 +106,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     return new FutureTask<Boolean>(runnable, true);
   }
 
-  private void retrieveAndStoreNotificationInfo(@NotNull Runnable runnable) {
+  private void retrieveAndStoreNotificationInfo(@Nonnull Runnable runnable) {
     if (runnable instanceof ImportOptimizer.CollectingInfoRunnable) {
       String optimizerMessage = ((ImportOptimizer.CollectingInfoRunnable)runnable).getUserNotificationInfo();
       myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
@@ -144,7 +144,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     private final boolean mySomethingChanged;
     private final String myMessage;
 
-    NotificationInfo(@NotNull String message) {
+    NotificationInfo(@Nonnull String message) {
       this(true, message);
     }
 

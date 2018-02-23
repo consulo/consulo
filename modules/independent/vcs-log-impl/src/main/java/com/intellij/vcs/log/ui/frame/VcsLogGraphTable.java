@@ -59,8 +59,8 @@ import com.intellij.vcs.log.ui.render.GraphCommitCellRenderer;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -88,20 +88,28 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   private static final int MAX_DEFAULT_AUTHOR_COLUMN_WIDTH = 200;
   private static final int MAX_ROWS_TO_CALC_WIDTH = 1000;
 
-  @NotNull private final VcsLogUiImpl myUi;
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final MyDummyTableCellEditor myDummyEditor = new MyDummyTableCellEditor();
-  @NotNull private final TableCellRenderer myDummyRenderer = new DefaultTableCellRenderer();
-  @NotNull private final GraphCommitCellRenderer myGraphCommitCellRenderer;
-  @NotNull private final GraphTableController myController;
-  @NotNull private final StringCellRenderer myStringCellRenderer;
+  @Nonnull
+  private final VcsLogUiImpl myUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final MyDummyTableCellEditor myDummyEditor = new MyDummyTableCellEditor();
+  @Nonnull
+  private final TableCellRenderer myDummyRenderer = new DefaultTableCellRenderer();
+  @Nonnull
+  private final GraphCommitCellRenderer myGraphCommitCellRenderer;
+  @Nonnull
+  private final GraphTableController myController;
+  @Nonnull
+  private final StringCellRenderer myStringCellRenderer;
   private boolean myColumnsSizeInitialized = false;
 
   @Nullable private Selection mySelection = null;
 
-  @NotNull private final Collection<VcsLogHighlighter> myHighlighters = ContainerUtil.newArrayList();
+  @Nonnull
+  private final Collection<VcsLogHighlighter> myHighlighters = ContainerUtil.newArrayList();
 
-  public VcsLogGraphTable(@NotNull VcsLogUiImpl ui, @NotNull VcsLogData logData, @NotNull VisiblePack initialDataPack) {
+  public VcsLogGraphTable(@Nonnull VcsLogUiImpl ui, @Nonnull VcsLogData logData, @Nonnull VisiblePack initialDataPack) {
     super(new GraphTableModel(initialDataPack, logData, ui));
     getEmptyText().setText("Changes Log");
 
@@ -154,7 +162,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     return Registry.is("vcs.log.speedsearch");
   }
 
-  public void updateDataPack(@NotNull VisiblePack visiblePack, boolean permGraphChanged) {
+  public void updateDataPack(@Nonnull VisiblePack visiblePack, boolean permGraphChanged) {
     VcsLogGraphTable.Selection previousSelection = getSelection();
     getModel().setVisiblePack(visiblePack);
     previousSelection.restore(visiblePack.getVisibleGraph(), true, permGraphChanged);
@@ -234,7 +242,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     commitColumn.setPreferredWidth(size);
   }
 
-  private void setRootColumnSize(@NotNull TableColumn column) {
+  private void setRootColumnSize(@Nonnull TableColumn column) {
     int rootWidth;
     if (!myUi.isMultipleRoots()) {
       rootWidth = 0;
@@ -262,7 +270,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  public String getToolTipText(@NotNull MouseEvent event) {
+  public String getToolTipText(@Nonnull MouseEvent event) {
     int row = rowAtPoint(event.getPoint());
     int column = columnAtPoint(event.getPoint());
     if (column < 0 || row < 0) {
@@ -291,7 +299,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
@@ -299,7 +307,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     StringBuilder sb = new StringBuilder();
 
     int[] selectedRows = getSelectedRows();
@@ -315,20 +323,20 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     return getSelectedRowCount() > 0;
   }
 
   @Override
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 
-  public void addHighlighter(@NotNull VcsLogHighlighter highlighter) {
+  public void addHighlighter(@Nonnull VcsLogHighlighter highlighter) {
     myHighlighters.add(highlighter);
   }
 
-  public void removeHighlighter(@NotNull VcsLogHighlighter highlighter) {
+  public void removeHighlighter(@Nonnull VcsLogHighlighter highlighter) {
     myHighlighters.remove(highlighter);
   }
 
@@ -336,8 +344,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     myHighlighters.clear();
   }
 
-  @NotNull
-  public SimpleTextAttributes applyHighlighters(@NotNull Component rendererComponent,
+  @Nonnull
+  public SimpleTextAttributes applyHighlighters(@Nonnull Component rendererComponent,
                                                 int row,
                                                 int column,
                                                 boolean hasFocus,
@@ -401,7 +409,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     updateCommitColumnWidth();
   }
 
-  public static JBColor getRootBackgroundColor(@NotNull VirtualFile root, @NotNull VcsLogColorManager colorManager) {
+  public static JBColor getRootBackgroundColor(@Nonnull VirtualFile root, @Nonnull VcsLogColorManager colorManager) {
     return VcsLogColorManagerImpl.getBackgroundColor(colorManager.getRootColor(root));
   }
 
@@ -415,12 +423,12 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GraphTableModel getModel() {
     return (GraphTableModel)super.getModel();
   }
 
-  @NotNull
+  @Nonnull
   public Selection getSelection() {
     if (mySelection == null) mySelection = new Selection(this);
     return mySelection;
@@ -445,14 +453,16 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   static class Selection {
-    @NotNull private final VcsLogGraphTable myTable;
-    @NotNull private final TIntHashSet mySelectedCommits;
+    @Nonnull
+    private final VcsLogGraphTable myTable;
+    @Nonnull
+    private final TIntHashSet mySelectedCommits;
     @Nullable private final Integer myVisibleSelectedCommit;
     @Nullable private final Integer myDelta;
     private final boolean myIsOnTop;
 
 
-    public Selection(@NotNull VcsLogGraphTable table) {
+    public Selection(@Nonnull VcsLogGraphTable table) {
       myTable = table;
       List<Integer> selectedRows = ContainerUtil.sorted(Ints.asList(myTable.getSelectedRows()));
       Couple<Integer> visibleRows = ScrollingUtil.getVisibleRows(myTable);
@@ -483,7 +493,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
       myDelta = delta;
     }
 
-    public void restore(@NotNull VisibleGraph<Integer> newVisibleGraph, boolean scrollToSelection, boolean permGraphChanged) {
+    public void restore(@Nonnull VisibleGraph<Integer> newVisibleGraph, boolean scrollToSelection, boolean permGraphChanged) {
       Pair<TIntHashSet, Integer> toSelectAndScroll = findRowsToSelectAndScroll(myTable.getModel(), newVisibleGraph);
       if (!toSelectAndScroll.first.isEmpty()) {
         myTable.getSelectionModel().setValueIsAdjusting(true);
@@ -514,9 +524,9 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
               new Rectangle(startRect.x, Math.max(startRect.y - delta, 0), startRect.width, myTable.getVisibleRect().height));
     }
 
-    @NotNull
-    private Pair<TIntHashSet, Integer> findRowsToSelectAndScroll(@NotNull GraphTableModel model,
-                                                                 @NotNull VisibleGraph<Integer> visibleGraph) {
+    @Nonnull
+    private Pair<TIntHashSet, Integer> findRowsToSelectAndScroll(@Nonnull GraphTableModel model,
+                                                                 @Nonnull VisibleGraph<Integer> visibleGraph) {
       TIntHashSet rowsToSelect = new TIntHashSet();
 
       if (model.getRowCount() == 0) {
@@ -542,7 +552,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     }
   }
 
-  @NotNull
+  @Nonnull
   public VisibleGraph<Integer> getVisibleGraph() {
     return getModel().getVisiblePack().getVisibleGraph();
   }
@@ -560,7 +570,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Override
-  protected void paintFooter(@NotNull Graphics g, int x, int y, int width, int height) {
+  protected void paintFooter(@Nonnull Graphics g, int x, int y, int width, int height) {
     int lastRow = getRowCount() - 1;
     if (lastRow >= 0) {
       g.setColor(getStyle(lastRow, GraphTableModel.COMMIT_COLUMN, hasFocus(), false).getBackground());
@@ -585,12 +595,15 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private static class RootCellRenderer extends JBLabel implements TableCellRenderer {
-    @NotNull private final VcsLogUiImpl myUi;
-    @NotNull private Color myColor = UIUtil.getTableBackground();
-    @NotNull private Color myBorderColor = UIUtil.getTableBackground();
+    @Nonnull
+    private final VcsLogUiImpl myUi;
+    @Nonnull
+    private Color myColor = UIUtil.getTableBackground();
+    @Nonnull
+    private Color myBorderColor = UIUtil.getTableBackground();
     private boolean isNarrow = true;
 
-    RootCellRenderer(@NotNull VcsLogUiImpl ui) {
+    RootCellRenderer(@Nonnull VcsLogUiImpl ui) {
       super("", CENTER);
       myUi = ui;
     }
@@ -726,7 +739,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private class InvisibleResizableHeader extends JBTable.JBTableHeader {
-    @NotNull private final MyBasicTableHeaderUI myHeaderUI;
+    @Nonnull
+    private final MyBasicTableHeaderUI myHeaderUI;
     @Nullable private Cursor myCursor = null;
 
     public InvisibleResizableHeader() {
@@ -778,7 +792,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
       return myCursor;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Rectangle getHeaderRect(int column) {
       // if a header has zero height, mouse pointer can never be inside it, so we pretend it is one pixel high
@@ -788,7 +802,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private static class EmptyTableCellRenderer implements TableCellRenderer {
-    @NotNull
+    @Nonnull
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JPanel panel = new JPanel(new BorderLayout());
@@ -799,55 +813,55 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
 
   // this class redirects events from the table to BasicTableHeaderUI.MouseInputHandler
   private static class MyBasicTableHeaderUI extends BasicTableHeaderUI implements MouseInputListener {
-    public MyBasicTableHeaderUI(@NotNull JTableHeader tableHeader) {
+    public MyBasicTableHeaderUI(@Nonnull JTableHeader tableHeader) {
       header = tableHeader;
       mouseInputListener = createMouseInputListener();
     }
 
-    @NotNull
-    private MouseEvent convertMouseEvent(@NotNull MouseEvent e) {
+    @Nonnull
+    private MouseEvent convertMouseEvent(@Nonnull MouseEvent e) {
       // create a new event, almost exactly the same, but in the header
       return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX(), 0, e.getXOnScreen(), header.getY(),
                             e.getClickCount(), e.isPopupTrigger(), e.getButton());
     }
 
     @Override
-    public void mouseClicked(@NotNull MouseEvent e) {
+    public void mouseClicked(@Nonnull MouseEvent e) {
     }
 
     @Override
-    public void mousePressed(@NotNull MouseEvent e) {
+    public void mousePressed(@Nonnull MouseEvent e) {
       if (isOnBorder(e)) return;
       mouseInputListener.mousePressed(convertMouseEvent(e));
     }
 
     @Override
-    public void mouseReleased(@NotNull MouseEvent e) {
+    public void mouseReleased(@Nonnull MouseEvent e) {
       if (isOnBorder(e)) return;
       mouseInputListener.mouseReleased(convertMouseEvent(e));
     }
 
     @Override
-    public void mouseEntered(@NotNull MouseEvent e) {
+    public void mouseEntered(@Nonnull MouseEvent e) {
     }
 
     @Override
-    public void mouseExited(@NotNull MouseEvent e) {
+    public void mouseExited(@Nonnull MouseEvent e) {
     }
 
     @Override
-    public void mouseDragged(@NotNull MouseEvent e) {
+    public void mouseDragged(@Nonnull MouseEvent e) {
       if (isOnBorder(e)) return;
       mouseInputListener.mouseDragged(convertMouseEvent(e));
     }
 
     @Override
-    public void mouseMoved(@NotNull MouseEvent e) {
+    public void mouseMoved(@Nonnull MouseEvent e) {
       if (isOnBorder(e)) return;
       mouseInputListener.mouseMoved(convertMouseEvent(e));
     }
 
-    public boolean isOnBorder(@NotNull MouseEvent e) {
+    public boolean isOnBorder(@Nonnull MouseEvent e) {
       return Math.abs(header.getTable().getWidth() - e.getPoint().x) <= JBUI.scale(3);
     }
   }
@@ -860,7 +874,8 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   private class MyProgressListener implements VcsLogProgress.ProgressListener {
-    @NotNull private String myText = "";
+    @Nonnull
+    private String myText = "";
 
     @Override
     public void progressStarted() {

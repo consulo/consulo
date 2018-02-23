@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,14 +32,14 @@ public class WGwtCheckBoxImpl extends WGwtBooleanValueComponentImpl implements C
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getState().caption;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@NotNull final String text) {
+  public void setText(@Nonnull final String text) {
     UIAccess.assertIsUIThread();
 
     if (Comparing.equal(getState().caption, text)) {

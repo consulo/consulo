@@ -18,8 +18,8 @@ package com.intellij.codeInsight.intention;
 import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An interface that {@link IntentionAction} and {@link com.intellij.codeInspection.LocalQuickFix} share.
@@ -42,7 +42,7 @@ public interface FileModifier extends WriteActionAware {
    * @param currentFile the same file where intention would be invoked (for {@link com.intellij.codeInspection.LocalQuickFix} it would be the containing file of {@link com.intellij.codeInspection.ProblemDescriptor#getPsiElement})
    */
   @Nullable
-  default PsiElement getElementToMakeWritable(@NotNull PsiFile currentFile) {
+  default PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {
     return startInWriteAction() ? currentFile : null;
   }
 }

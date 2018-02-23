@@ -25,8 +25,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -40,8 +40,8 @@ public class EditorFoldingInfo {
 
   private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new THashMap<>();
 
-  @NotNull
-  public static EditorFoldingInfo get(@NotNull Editor editor) {
+  @Nonnull
+  public static EditorFoldingInfo get(@Nonnull Editor editor) {
     EditorFoldingInfo info = editor.getUserData(KEY);
     if (info == null){
       info = new EditorFoldingInfo();
@@ -51,7 +51,7 @@ public class EditorFoldingInfo {
   }
 
   @Nullable
-  public PsiElement getPsiElement(@NotNull FoldRegion region) {
+  public PsiElement getPsiElement(@Nonnull FoldRegion region) {
     final SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
     if (pointer == null) {
       return null;
@@ -61,7 +61,7 @@ public class EditorFoldingInfo {
   }
 
   @Nullable
-  TextRange getPsiElementRange(@NotNull FoldRegion region) {
+  TextRange getPsiElementRange(@Nonnull FoldRegion region) {
     PsiElement element = getPsiElement(region);
     if (element == null) return null;
     PsiFile containingFile = element.getContainingFile();
@@ -74,15 +74,15 @@ public class EditorFoldingInfo {
     return range;
   }
 
-  boolean isLightRegion(@NotNull FoldRegion region) {
+  boolean isLightRegion(@Nonnull FoldRegion region) {
     return myFoldRegionToSmartPointerMap.get(region) == null;
   }
 
-  void addRegion(@NotNull FoldRegion region, @NotNull SmartPsiElementPointer<?> pointer){
+  void addRegion(@Nonnull FoldRegion region, @Nonnull SmartPsiElementPointer<?> pointer){
     myFoldRegionToSmartPointerMap.put(region, pointer);
   }
 
-  public void removeRegion(@NotNull FoldRegion region){
+  public void removeRegion(@Nonnull FoldRegion region){
     myFoldRegionToSmartPointerMap.remove(region);
   }
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +72,7 @@ public class FixedSizeButton extends JButton {
    * <code>component.getPreferredSize().height</code>. It is very convenient
    * way to create "browse" like button near the text fields.
    */
-  public FixedSizeButton(@NotNull JComponent component) {
+  public FixedSizeButton(@Nonnull JComponent component) {
     this(-1, component);
   }
 

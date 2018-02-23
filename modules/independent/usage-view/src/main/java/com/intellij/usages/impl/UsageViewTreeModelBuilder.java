@@ -21,7 +21,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewPresentation;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -34,7 +34,7 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
   private UsageTargetNode[] myTargetNodes;
   private final String myTargetsNodeText;
 
-  public UsageViewTreeModelBuilder(@NotNull UsageViewPresentation presentation, @NotNull UsageTarget[] targets) {
+  public UsageViewTreeModelBuilder(@Nonnull UsageViewPresentation presentation, @Nonnull UsageTarget[] targets) {
     super(new RootGroupNode());
     myRootNode = (RootGroupNode)root;
     myTargetsNodeText = presentation.getTargetsNodeText();
@@ -75,7 +75,7 @@ public class UsageViewTreeModelBuilder extends DefaultTreeModel {
     }
 
     @Override
-    protected String getText(@NotNull UsageView view) {
+    protected String getText(@Nonnull UsageView view) {
       return getUserObject().toString();
     }
   }

@@ -44,7 +44,7 @@ import com.intellij.util.Function;
 import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -197,7 +197,7 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     return "";
   }
 
-  private int getStartOffset(@NotNull final M method) {
+  private int getStartOffset(@Nonnull final M method) {
     final PsiFile file = method.getContainingFile();
     Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
     return document.getLineStartOffset(document.getLineNumber(method.getTextRange().getStartOffset()));

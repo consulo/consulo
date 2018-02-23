@@ -32,8 +32,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.HashMap;
@@ -45,9 +45,9 @@ public class BraceMatchingUtil {
   private BraceMatchingUtil() {
   }
 
-  public static boolean isPairedBracesAllowedBeforeTypeInFileType(@NotNull IElementType lbraceType,
+  public static boolean isPairedBracesAllowedBeforeTypeInFileType(@Nonnull IElementType lbraceType,
                                                                   final IElementType tokenType,
-                                                                  @NotNull FileType fileType) {
+                                                                  @Nonnull FileType fileType) {
     try {
       return getBraceMatcher(fileType, lbraceType).isPairedBracesAllowedBeforeType(lbraceType, tokenType);
     }
@@ -59,12 +59,12 @@ public class BraceMatchingUtil {
 
   private static final Map<FileType, BraceMatcher> BRACE_MATCHERS = new HashMap<FileType, BraceMatcher>();
 
-  public static void registerBraceMatcher(@NotNull FileType fileType, @NotNull BraceMatcher braceMatcher) {
+  public static void registerBraceMatcher(@Nonnull FileType fileType, @Nonnull BraceMatcher braceMatcher) {
     BRACE_MATCHERS.put(fileType, braceMatcher);
   }
 
   @TestOnly
-  public static int getMatchedBraceOffset(@NotNull Editor editor, boolean forward, @NotNull PsiFile file) {
+  public static int getMatchedBraceOffset(@Nonnull Editor editor, boolean forward, @Nonnull PsiFile file) {
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
     EditorHighlighter editorHighlighter = ((EditorEx)editor).getHighlighter();
@@ -85,17 +85,17 @@ public class BraceMatchingUtil {
     private final String brace1TagName;
     private final boolean isStrict;
     private final boolean isCaseSensitive;
-    @NotNull
+    @Nonnull
     private final BraceMatcher myMatcher;
 
     private final Stack<IElementType> myBraceStack = new Stack<IElementType>();
     private final Stack<String> myTagNameStack = new Stack<String>();
 
-    MatchBraceContext(@NotNull CharSequence fileText, @NotNull FileType fileType, @NotNull HighlighterIterator iterator, boolean forward) {
+    MatchBraceContext(@Nonnull CharSequence fileText, @Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, boolean forward) {
       this(fileText, fileType, iterator, forward,isStrictTagMatching(getBraceMatcher(fileType, iterator), fileType, getTokenGroup(iterator.getTokenType(), fileType)));
     }
 
-    MatchBraceContext(@NotNull CharSequence fileText, @NotNull FileType fileType, @NotNull HighlighterIterator iterator, boolean forward, boolean strict) {
+    MatchBraceContext(@Nonnull CharSequence fileText, @Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, boolean forward, boolean strict) {
       this.fileText = fileText;
       this.fileType = fileType;
       this.iterator = iterator;
@@ -180,23 +180,23 @@ public class BraceMatchingUtil {
     }
   }
 
-  public static synchronized boolean matchBrace(@NotNull CharSequence fileText,
-                                                @NotNull FileType fileType,
-                                                @NotNull HighlighterIterator iterator,
+  public static synchronized boolean matchBrace(@Nonnull CharSequence fileText,
+                                                @Nonnull FileType fileType,
+                                                @Nonnull HighlighterIterator iterator,
                                                 boolean forward) {
     return new MatchBraceContext(fileText, fileType, iterator, forward).doBraceMatch();
   }
 
 
-  public static synchronized boolean matchBrace(@NotNull CharSequence fileText,
-                                                @NotNull FileType fileType,
-                                                @NotNull HighlighterIterator iterator,
+  public static synchronized boolean matchBrace(@Nonnull CharSequence fileText,
+                                                @Nonnull FileType fileType,
+                                                @Nonnull HighlighterIterator iterator,
                                                 boolean forward,
                                                 boolean isStrict) {
     return new MatchBraceContext(fileText, fileType, iterator, forward, isStrict).doBraceMatch();
   }
 
-  public static boolean findStructuralLeftBrace(@NotNull FileType fileType, @NotNull HighlighterIterator iterator, @NotNull CharSequence fileText) {
+  public static boolean findStructuralLeftBrace(@Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText) {
     final Stack<IElementType> braceStack = new Stack<IElementType>();
     final Stack<String> tagNameStack = new Stack<String>();
 
@@ -239,24 +239,24 @@ public class BraceMatchingUtil {
     return false;
   }
 
-  public static boolean isStructuralBraceToken(@NotNull FileType fileType, @NotNull HighlighterIterator iterator, @NotNull CharSequence text) {
+  public static boolean isStructuralBraceToken(@Nonnull FileType fileType, @Nonnull HighlighterIterator iterator, @Nonnull CharSequence text) {
     BraceMatcher matcher = getBraceMatcher(fileType, iterator);
     return matcher.isStructuralBrace(iterator, text, fileType);
   }
 
-  public static boolean isLBraceToken(@NotNull HighlighterIterator iterator, @NotNull CharSequence fileText, @NotNull FileType fileType) {
+  public static boolean isLBraceToken(@Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText, @Nonnull FileType fileType) {
     final BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
 
     return braceMatcher.isLBraceToken(iterator, fileText, fileType);
   }
 
-  public static boolean isRBraceToken(@NotNull HighlighterIterator iterator, @NotNull CharSequence fileText, @NotNull FileType fileType) {
+  public static boolean isRBraceToken(@Nonnull HighlighterIterator iterator, @Nonnull CharSequence fileText, @Nonnull FileType fileType) {
     final BraceMatcher braceMatcher = getBraceMatcher(fileType, iterator);
 
     return braceMatcher.isRBraceToken(iterator, fileText, fileType);
   }
 
-  public static boolean isPairBraces(@NotNull IElementType tokenType1, @NotNull IElementType tokenType2, @NotNull FileType fileType) {
+  public static boolean isPairBraces(@Nonnull IElementType tokenType1, @Nonnull IElementType tokenType2, @Nonnull FileType fileType) {
     BraceMatcher matcher = getBraceMatcher(fileType, tokenType1);
     return matcher.isPairBraces(tokenType1, tokenType2);
   }
@@ -374,18 +374,18 @@ public class BraceMatchingUtil {
     private static final BraceMatcher ourDefaultBraceMatcher = new DefaultBraceMatcher();
   }
 
-  @NotNull
-  public static BraceMatcher getBraceMatcher(@NotNull FileType fileType, @NotNull HighlighterIterator iterator) {
+  @Nonnull
+  public static BraceMatcher getBraceMatcher(@Nonnull FileType fileType, @Nonnull HighlighterIterator iterator) {
     return getBraceMatcher(fileType, iterator.getTokenType());
   }
 
-  @NotNull
-  public static BraceMatcher getBraceMatcher(@NotNull FileType fileType, @NotNull IElementType type) {
+  @Nonnull
+  public static BraceMatcher getBraceMatcher(@Nonnull FileType fileType, @Nonnull IElementType type) {
     return getBraceMatcher(fileType, type.getLanguage());
   }
 
-  @NotNull
-  public static BraceMatcher getBraceMatcher(@NotNull FileType fileType, @NotNull Language lang) {
+  @Nonnull
+  public static BraceMatcher getBraceMatcher(@Nonnull FileType fileType, @Nonnull Language lang) {
     PairedBraceMatcher matcher = LanguageBraceMatching.INSTANCE.forLanguage(lang);
     if (matcher != null) {
       if (matcher instanceof XmlAwareBraceMatcher) {
@@ -421,7 +421,7 @@ public class BraceMatchingUtil {
   }
 
   @Nullable
-  private static BraceMatcher getBraceMatcherByFileType(@NotNull FileType fileType) {
+  private static BraceMatcher getBraceMatcherByFileType(@Nonnull FileType fileType) {
     BraceMatcher braceMatcher = BRACE_MATCHERS.get(fileType);
     if (braceMatcher != null) return braceMatcher;
 
@@ -435,16 +435,16 @@ public class BraceMatchingUtil {
     return null;
   }
 
-  private static boolean isStrictTagMatching(@NotNull BraceMatcher matcher, @NotNull FileType fileType, final int group) {
+  private static boolean isStrictTagMatching(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, final int group) {
     return matcher instanceof XmlAwareBraceMatcher && ((XmlAwareBraceMatcher)matcher).isStrictTagMatching(fileType, group);
   }
 
-  private static boolean areTagsCaseSensitive(@NotNull BraceMatcher matcher, @NotNull FileType fileType, final int tokenGroup) {
+  private static boolean areTagsCaseSensitive(@Nonnull BraceMatcher matcher, @Nonnull FileType fileType, final int tokenGroup) {
     return matcher instanceof XmlAwareBraceMatcher && ((XmlAwareBraceMatcher)matcher).areTagsCaseSensitive(fileType, tokenGroup);
   }
 
   @Nullable
-  private static String getTagName(@NotNull BraceMatcher matcher, @NotNull CharSequence fileText, @NotNull HighlighterIterator iterator) {
+  private static String getTagName(@Nonnull BraceMatcher matcher, @Nonnull CharSequence fileText, @Nonnull HighlighterIterator iterator) {
     if (matcher instanceof XmlAwareBraceMatcher) return ((XmlAwareBraceMatcher)matcher).getTagName(fileText, iterator);
     return null;
   }
@@ -476,12 +476,12 @@ public class BraceMatchingUtil {
     }
 
     @Override
-    public IElementType getOppositeBraceTokenType(@NotNull final IElementType type) {
+    public IElementType getOppositeBraceTokenType(@Nonnull final IElementType type) {
       return null;
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType contextType) {
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType contextType) {
       return true;
     }
 

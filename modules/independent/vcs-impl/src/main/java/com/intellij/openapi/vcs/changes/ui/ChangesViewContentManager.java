@@ -41,8 +41,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -70,9 +70,10 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
   private final VcsListener myVcsListener = new MyVcsListener();
   private final Alarm myVcsChangeAlarm;
   private final List<Content> myAddedContents = new ArrayList<>();
-  @NotNull private final CountDownLatch myInitializationWaiter = new CountDownLatch(1);
+  @Nonnull
+  private final CountDownLatch myInitializationWaiter = new CountDownLatch(1);
 
-  public ChangesViewContentManager(@NotNull Project project, final ProjectLevelVcsManager vcsManager) {
+  public ChangesViewContentManager(@Nonnull Project project, final ProjectLevelVcsManager vcsManager) {
     super(project);
     myVcsManager = vcsManager;
     myVcsChangeAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
@@ -122,7 +123,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
    * Makes the current thread wait until the ChangesViewContentManager is initialized.
    * When it initializes, executes the given runnable.
    */
-  public void executeWhenInitialized(@NotNull final Runnable runnable) {
+  public void executeWhenInitialized(@Nonnull final Runnable runnable) {
     try {
       myInitializationWaiter.await();
       runnable.run();
@@ -170,7 +171,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Content findEPContent(final ChangesViewContentEP ep) {
     final Content[] contents = myContentManager.getContents();
     for(Content content: contents) {
@@ -194,7 +195,7 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     myVcsChangeAlarm.cancelAllRequests();
   }
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public String getComponentName() {
     return "ChangesViewContentManager";
   }
@@ -228,17 +229,17 @@ public class ChangesViewContentManager extends AbstractProjectComponent implemen
     return null;
   }
 
-  public boolean isContentSelected(@NotNull String contentName) {
+  public boolean isContentSelected(@Nonnull String contentName) {
     Content selectedContent = myContentManager.getSelectedContent();
     if (selectedContent == null) return false;
     return Comparing.equal(contentName, selectedContent.getTabName());
   }
 
-  public void selectContent(@NotNull String tabName) {
+  public void selectContent(@Nonnull String tabName) {
     selectContent(tabName, false);
   }
 
-  public void selectContent(@NotNull String tabName, boolean requestFocus) {
+  public void selectContent(@Nonnull String tabName, boolean requestFocus) {
     for(Content content: myContentManager.getContents()) {
       if (content.getDisplayName().equals(tabName)) {
         myContentManager.setSelectedContent(content, requestFocus);

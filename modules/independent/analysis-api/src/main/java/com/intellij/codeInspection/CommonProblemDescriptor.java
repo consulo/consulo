@@ -16,8 +16,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Base class for problems returned by local and global inspection tools.
@@ -29,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public interface CommonProblemDescriptor {
   CommonProblemDescriptor[] EMPTY_ARRAY = new CommonProblemDescriptor[0];
   ArrayFactory<CommonProblemDescriptor> ARRAY_FACTORY = new ArrayFactory<CommonProblemDescriptor>() {
-    @NotNull
+    @Nonnull
     @Override
     public CommonProblemDescriptor[] create(final int count) {
       return count == 0 ? EMPTY_ARRAY : new CommonProblemDescriptor[count];
@@ -44,7 +43,7 @@ public interface CommonProblemDescriptor {
    *
    * @return the template for the problem description.
    */
-  @NotNull
+  @Nonnull
   String getDescriptionTemplate();
 
   /**
@@ -52,6 +51,6 @@ public interface CommonProblemDescriptor {
    *
    * @return the list of quickfixes registered for the problem.
    */
-  @Nullable
+  @javax.annotation.Nullable
   QuickFix[] getFixes();
 }

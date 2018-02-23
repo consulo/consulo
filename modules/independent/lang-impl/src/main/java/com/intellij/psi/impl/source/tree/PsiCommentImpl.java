@@ -20,7 +20,7 @@ import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.CommentLiteralEscaper;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInjectionHost {
   public PsiCommentImpl(IElementType type, CharSequence text) {
@@ -33,12 +33,12 @@ public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInj
   }
 
   @Override
-  public PsiLanguageInjectionHost updateText(@NotNull final String text) {
+  public PsiLanguageInjectionHost updateText(@Nonnull final String text) {
     return (PsiCommentImpl)replaceWithText(text);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LiteralTextEscaper<PsiCommentImpl> createLiteralTextEscaper() {
     return new CommentLiteralEscaper(this);
   }

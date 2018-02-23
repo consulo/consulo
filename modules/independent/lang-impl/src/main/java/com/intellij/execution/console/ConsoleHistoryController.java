@@ -63,8 +63,8 @@ import com.intellij.util.io.SafeFileOutputStream;
 import com.intellij.xml.util.XmlStringUtil;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.XppReader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -108,19 +108,19 @@ public class ConsoleHistoryController {
   private long myLastSaveStamp;
 
   @Deprecated
-  public ConsoleHistoryController(@NotNull String type, @Nullable String persistenceId, @NotNull LanguageConsoleView console) {
+  public ConsoleHistoryController(@Nonnull String type, @Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
     this(new ConsoleRootType(type, null) {
     }, persistenceId, console);
   }
 
-  public ConsoleHistoryController(@NotNull ConsoleRootType rootType, @Nullable String persistenceId, @NotNull LanguageConsoleView console) {
+  public ConsoleHistoryController(@Nonnull ConsoleRootType rootType, @Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
     this(rootType, persistenceId, console, ourModels.get(getHistoryName(rootType, fixNullPersistenceId(persistenceId, console))));
   }
 
-  private ConsoleHistoryController(@NotNull ConsoleRootType rootType,
+  private ConsoleHistoryController(@Nonnull ConsoleRootType rootType,
                                    @Nullable String persistenceId,
-                                   @NotNull LanguageConsoleView console,
-                                   @NotNull ConsoleHistoryModel model) {
+                                   @Nonnull LanguageConsoleView console,
+                                   @Nonnull ConsoleHistoryModel model) {
     myHelper = new ModelHelper(rootType, fixNullPersistenceId(persistenceId, console), model.copy());
     myConsole = console;
   }
@@ -129,7 +129,7 @@ public class ConsoleHistoryController {
     return console.getVirtualFile().getUserData(CONTROLLER_KEY);
   }
 
-  public static void addToHistory(@NotNull LanguageConsoleView consoleView, @Nullable String command) {
+  public static void addToHistory(@Nonnull LanguageConsoleView consoleView, @Nullable String command) {
     ConsoleHistoryController controller = getController(consoleView);
     if (controller != null) {
       controller.addToHistory(command);
@@ -144,8 +144,8 @@ public class ConsoleHistoryController {
     return !getModel().isEmpty();
   }
 
-  @NotNull
-  private static String fixNullPersistenceId(@Nullable String persistenceId, @NotNull LanguageConsoleView console) {
+  @Nonnull
+  private static String fixNullPersistenceId(@Nullable String persistenceId, @Nonnull LanguageConsoleView console) {
     if (StringUtil.isNotEmpty(persistenceId)) return persistenceId;
     String url = console.getProject().getPresentableUrl();
     return StringUtil.isNotEmpty(url) ? url : "default";
@@ -167,14 +167,14 @@ public class ConsoleHistoryController {
   public void install() {
     class Listener extends FileDocumentManagerAdapter implements ProjectEx.ProjectSaved {
       @Override
-      public void beforeDocumentSaving(@NotNull Document document) {
+      public void beforeDocumentSaving(@Nonnull Document document) {
         if (document == myConsole.getEditorDocument()) {
           saveHistory();
         }
       }
 
       @Override
-      public void saved(@NotNull Project project) {
+      public void saved(@Nonnull Project project) {
         saveHistory();
       }
     }
@@ -302,10 +302,10 @@ public class ConsoleHistoryController {
   private class MyAction extends DumbAwareAction {
     private final boolean myNext;
 
-    @NotNull
+    @Nonnull
     private final Collection<KeyStroke> myUpDownKeystrokes;
 
-    public MyAction(final boolean next, @NotNull Collection<KeyStroke> upDownKeystrokes) {
+    public MyAction(final boolean next, @Nonnull Collection<KeyStroke> upDownKeystrokes) {
       myNext = next;
       myUpDownKeystrokes = upDownKeystrokes;
       getTemplatePresentation().setVisible(false);
@@ -453,7 +453,7 @@ public class ConsoleHistoryController {
       return myContent;
     }
 
-    @NotNull
+    @Nonnull
     private String getOldHistoryFilePath(final String id) {
       String pathName = myRootType.getConsoleTypeId() + Long.toHexString(StringHash.calc(id));
       return PathManager.getSystemPath() + File.separator + "userHistory" + File.separator + pathName + ".hist.xml";
@@ -620,7 +620,7 @@ public class ConsoleHistoryController {
     }
   }
 
-  private static void textTag(@NotNull XmlSerializer out, @NotNull String tag, @NotNull String text) throws IOException {
+  private static void textTag(@Nonnull XmlSerializer out, @Nonnull String tag, @Nonnull String text) throws IOException {
     out.startTag(null, tag);
     try {
       out.ignorableWhitespace(XmlStringUtil.wrapInCDATA(text));
@@ -631,14 +631,14 @@ public class ConsoleHistoryController {
   }
 
 
-  @NotNull
-  private static String getHistoryName(@NotNull ConsoleRootType rootType, @NotNull String id) {
+  @Nonnull
+  private static String getHistoryName(@Nonnull ConsoleRootType rootType, @Nonnull String id) {
     return rootType.getConsoleTypeId() + "/" +
            PathUtil.makeFileName(rootType.getHistoryPathName(id), rootType.getDefaultFileExtension());
   }
 
   @Nullable
-  public static VirtualFile getContentFile(@NotNull final ConsoleRootType rootType, @NotNull String id, ScratchFileService.Option option) {
+  public static VirtualFile getContentFile(@Nonnull final ConsoleRootType rootType, @Nonnull String id, ScratchFileService.Option option) {
     final String pathName = PathUtil.makeFileName(rootType.getContentPathName(id), rootType.getDefaultFileExtension());
     try {
       return rootType.findFile(null, pathName, option);
@@ -661,7 +661,7 @@ public class ConsoleHistoryController {
     return new CustomShortcutSet(KeyStroke.getKeyStroke(isUp ? KeyEvent.VK_UP : KeyEvent.VK_DOWN, 0));
   }
 
-  private static void addShortcuts(@NotNull AnAction action, @NotNull ShortcutSet newShortcuts) {
+  private static void addShortcuts(@Nonnull AnAction action, @Nonnull ShortcutSet newShortcuts) {
     if (action.getShortcutSet().getShortcuts().length == 0) {
       action.registerCustomShortcutSet(newShortcuts, null);
     }

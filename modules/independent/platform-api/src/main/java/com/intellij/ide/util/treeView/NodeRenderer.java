@@ -27,9 +27,9 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -38,7 +38,7 @@ import java.util.List;
 public class NodeRenderer extends ColoredTreeCellRenderer {
   @RequiredDispatchThread
   @Override
-  public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     Color color = null;
     NodeDescriptor descriptor = null;
     if (value instanceof DefaultMutableTreeNode) {
@@ -109,7 +109,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected EditorColorsScheme getColorsScheme() {
     return EditorColorsManager.getInstance().getGlobalScheme();
   }
@@ -134,7 +134,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
   }
 
   public static SimpleTextAttributes getSimpleTextAttributes(@Nullable final ItemPresentation presentation,
-                                                             @NotNull EditorColorsScheme colorsScheme)
+                                                             @Nonnull EditorColorsScheme colorsScheme)
   {
     if (presentation instanceof ColoredItemPresentation) {
       final TextAttributesKey textAttributesKey = ((ColoredItemPresentation) presentation).getTextAttributesKey();

@@ -20,7 +20,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.tree.IElementType;
 import consulo.fileTypes.LanguageVersionableSyntaxHighlighter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 
 /**
@@ -38,7 +38,7 @@ public class SandHighlighter extends LanguageVersionableSyntaxHighlighter {
     return sandLanguageVersion.createLexer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextAttributesKey[] getTokenHighlights(LanguageVersion languageVersion, IElementType tokenType) {
     BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;

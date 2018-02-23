@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.search.TodoItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -30,7 +30,7 @@ public final class SmartTodoItemPointer {
   private final Document myDocument;
   private final RangeMarker myRangeMarker;
 
-  public SmartTodoItemPointer(@NotNull TodoItem todoItem,@NotNull Document document){
+  public SmartTodoItemPointer(@Nonnull TodoItem todoItem, @Nonnull Document document){
     myTodoItem=todoItem;
     myDocument=document;
     TextRange textRange=myTodoItem.getTextRange();

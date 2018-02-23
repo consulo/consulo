@@ -20,7 +20,8 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class DelegateLexer extends LexerBase {
   protected final Lexer myDelegate;

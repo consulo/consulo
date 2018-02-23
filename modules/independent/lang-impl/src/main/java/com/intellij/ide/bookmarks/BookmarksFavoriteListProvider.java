@@ -26,8 +26,8 @@ import com.intellij.ui.CommonActionsPanel;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -51,17 +51,17 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   }
 
   @Override
-  public void bookmarkAdded(@NotNull Bookmark b) {
+  public void bookmarkAdded(@Nonnull Bookmark b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkRemoved(@NotNull Bookmark b) {
+  public void bookmarkRemoved(@Nonnull Bookmark b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkChanged(@NotNull Bookmark b) {
+  public void bookmarkChanged(@Nonnull Bookmark b) {
     updateChildren();
   }
 
@@ -76,7 +76,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
     for (final Bookmark bookmark : bookmarks) {
       AbstractTreeNode<Bookmark> child = new AbstractTreeNode<Bookmark>(myProject, bookmark) {
-        @NotNull
+        @Nonnull
         @Override
         public Collection<? extends AbstractTreeNode> getChildren() {
           return Collections.emptyList();
@@ -111,7 +111,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
 
   @Nullable
   @Override
-  public String getCustomName(@NotNull CommonActionsPanel.Buttons type) {
+  public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
     switch (type) {
       case EDIT:
         return IdeBundle.message("action.bookmark.edit.description");
@@ -123,7 +123,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   }
 
   @Override
-  public boolean willHandle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects) {
+  public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
     switch (type) {
       case EDIT:
         if (selectedObjects.size() != 1) {
@@ -144,7 +144,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   }
 
   @Override
-  public void handle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects, JComponent component) {
+  public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
     switch (type) {
       case EDIT:
 
@@ -179,7 +179,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   @Override
   public void customizeRenderer(ColoredTreeCellRenderer renderer,
                                 JTree tree,
-                                @NotNull Object value,
+                                @Nonnull Object value,
                                 boolean selected,
                                 boolean expanded,
                                 boolean leaf,

@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs.newvfs.events;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -40,7 +40,7 @@ public abstract class VFileEvent {
     return myRequestor;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getPath();
 
   /**
@@ -53,7 +53,7 @@ public abstract class VFileEvent {
   @Nullable
   public abstract VirtualFile getFile();
 
-  @NotNull
+  @Nonnull
   public abstract VirtualFileSystem getFileSystem();
 
   public abstract boolean isValid();

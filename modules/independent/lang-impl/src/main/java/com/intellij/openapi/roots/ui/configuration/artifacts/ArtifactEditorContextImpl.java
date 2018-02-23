@@ -37,7 +37,7 @@ import com.intellij.packaging.impl.ui.ChooseArtifactsDialog;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.ui.classpath.ChooseLibrariesFromTablesDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +55,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
     return myParent.getOrCreateModifiableArtifactModel();
   }
@@ -66,24 +66,24 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   }
 
   @Override
-  @NotNull
-  public ModifiableRootModel getOrCreateModifiableRootModel(@NotNull Module module) {
+  @Nonnull
+  public ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module) {
     return myParent.getOrCreateModifiableRootModel(module);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myParent.getProject();
   }
 
   @Override
-  public CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact) {
+  public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
     return myParent.getRootElement(artifact);
   }
 
   @Override
-  public void editLayout(@NotNull Artifact artifact, Runnable runnable) {
+  public void editLayout(@Nonnull Artifact artifact, Runnable runnable) {
     myParent.editLayout(artifact, runnable);
   }
 
@@ -98,17 +98,17 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   }
 
   @Override
-  public void selectArtifact(@NotNull Artifact artifact) {
+  public void selectArtifact(@Nonnull Artifact artifact) {
     ProjectStructureConfigurable.getInstance(getProject()).select(artifact, true);
   }
 
   @Override
-  public void selectModule(@NotNull Module module) {
+  public void selectModule(@Nonnull Module module) {
     ProjectStructureConfigurable.getInstance(getProject()).select(module.getName(), null, true);
   }
 
   @Override
-  public void selectLibrary(@NotNull Library library) {
+  public void selectLibrary(@Nonnull Library library) {
     final LibraryTable table = library.getTable();
     if (table != null) {
       ProjectStructureConfigurable.getInstance(getProject()).selectProjectOrGlobalLibrary(library, true);
@@ -141,19 +141,19 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
 
   @Override
-  @NotNull
+  @Nonnull
   public ArtifactModel getArtifactModel() {
     return myParent.getArtifactModel();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModulesProvider getModulesProvider() {
     return myParent.getModulesProvider();
   }
 
   @Override
-  public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
+  public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
     return myParent.findLibrary(level, libraryName);
   }
 
@@ -163,7 +163,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ArtifactType getArtifactType() {
     return myEditor.getArtifact().getArtifactType();
   }

@@ -20,14 +20,14 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ModuleConfigurationStateImpl extends UserDataHolderBase implements ModuleConfigurationState {
   private final ModulesProvider myProvider;
   private final Project myProject;
 
-  public ModuleConfigurationStateImpl(@NotNull Project project, @NotNull ModulesProvider provider) {
+  public ModuleConfigurationStateImpl(@Nonnull Project project, @Nonnull ModulesProvider provider) {
     myProvider = provider;
     myProject = project;
   }

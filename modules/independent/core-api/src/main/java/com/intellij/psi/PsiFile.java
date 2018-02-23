@@ -19,9 +19,9 @@ import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
-import consulo.psi.PsiElementWithSubtreeChangeNotifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A PSI element representing a file.
@@ -38,7 +38,7 @@ public interface PsiFile extends PsiFileSystemItem {
   public static final PsiFile[] EMPTY_ARRAY = new PsiFile[0];
 
   public static ArrayFactory<PsiFile> ARRAY_FACTORY = new ArrayFactory<PsiFile>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiFile[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiFile[count];
@@ -51,14 +51,16 @@ public interface PsiFile extends PsiFileSystemItem {
    * @return the virtual file, or null if the file exists only in memory.
    */
   @Override
-  @Nullable VirtualFile getVirtualFile();
+  @Nullable
+  VirtualFile getVirtualFile();
 
   /**
    * Returns the directory containing the file.
    *
    * @return the containing directory, or null if the file exists only in memory.
    */
-  @Nullable PsiDirectory getContainingDirectory();
+  @Nullable
+  PsiDirectory getContainingDirectory();
 
   @Override
   @Nullable PsiDirectory getParent();
@@ -78,14 +80,16 @@ public interface PsiFile extends PsiFileSystemItem {
    *
    * @return the original file of a copy, or the same file if the file is not a copy.
    */
-  @NotNull PsiFile getOriginalFile();
+  @Nonnull
+  PsiFile getOriginalFile();
 
   /**
    * Returns the file type for the file.
    *
    * @return the file type instance.
    */
-  @NotNull FileType getFileType();
+  @Nonnull
+  FileType getFileType();
 
   /**
    * If the file contains multiple interspersed languages, returns the roots for
@@ -96,9 +100,11 @@ public interface PsiFile extends PsiFileSystemItem {
    * if the file has only a single language.
    * @deprecated Use {@link FileViewProvider#getAllFiles()} instead.
    */
-  @NotNull PsiFile[] getPsiRoots();
+  @Nonnull
+  PsiFile[] getPsiRoots();
 
-  @NotNull FileViewProvider getViewProvider();
+  @Nonnull
+  FileViewProvider getViewProvider();
 
   @Override
   FileASTNode getNode();

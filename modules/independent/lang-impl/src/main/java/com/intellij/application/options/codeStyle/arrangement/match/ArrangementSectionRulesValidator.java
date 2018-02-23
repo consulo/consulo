@@ -19,8 +19,8 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public class ArrangementSectionRulesValidator extends ArrangementMatchingRulesVa
   }
 
   @Nullable
-  private String validateSectionRule(@NotNull ArrangementSectionRuleManager.ArrangementSectionRuleData data, int index) {
+  private String validateSectionRule(@Nonnull ArrangementSectionRuleManager.ArrangementSectionRuleData data, int index) {
     int startSectionIndex = -1;
     final Set<String> sectionRules = ContainerUtil.newHashSet();
     for (int i = 0; i < index; i++) {

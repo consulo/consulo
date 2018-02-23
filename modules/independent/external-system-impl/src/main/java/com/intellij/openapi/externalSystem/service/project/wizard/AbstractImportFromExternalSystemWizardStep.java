@@ -2,7 +2,7 @@ package com.intellij.openapi.externalSystem.service.project.wizard;
 
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.projectImport.ProjectImportWizardStep;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Just a holder for the common useful functionality.
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractImportFromExternalSystemWizardStep extends ProjectImportWizardStep {
 
-  protected AbstractImportFromExternalSystemWizardStep(@NotNull WizardContext context) {
+  protected AbstractImportFromExternalSystemWizardStep(@Nonnull WizardContext context) {
     super(context);
   }
 }

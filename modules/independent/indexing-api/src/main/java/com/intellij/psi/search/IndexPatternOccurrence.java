@@ -17,7 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Represents the occurrence of an index pattern in the comments of a source code file.
@@ -33,19 +33,22 @@ public interface IndexPatternOccurrence {
    *
    * @return the file in which the occurrence was found.
    */
-  @NotNull PsiFile getFile();
+  @Nonnull
+  PsiFile getFile();
 
   /**
    * Returns the text range which was matched by the pattern.
    *
    * @return the text range which was matched by the pattern.
    */
-  @NotNull TextRange getTextRange();
+  @Nonnull
+  TextRange getTextRange();
 
   /**
    * Returns the instance of the pattern which was matched.
    *
    * @return the instance of the pattern which was matched.
    */
-  @NotNull IndexPattern getPattern();
+  @Nonnull
+  IndexPattern getPattern();
 }

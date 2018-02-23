@@ -21,8 +21,8 @@ import com.intellij.openapi.diff.impl.fragments.LineFragment;
 import com.intellij.openapi.diff.impl.util.TextDiffTypeEnum;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ class LineFragmentsCollector {
   private int myOffset1 = 0;
   private int myOffset2 = 0;
 
-  @NotNull
+  @Nonnull
   private LineFragment addFragment(@Nullable TextDiffTypeEnum type, @Nullable DiffString text1, @Nullable DiffString text2) {
     int lines1 = countLines(text1);
     int lines2 = countLines(text2);
@@ -49,8 +49,8 @@ class LineFragmentsCollector {
     return lineFragment;
   }
 
-  @NotNull
-  public LineFragment addDiffFragment(@NotNull DiffFragment fragment) {
+  @Nonnull
+  public LineFragment addDiffFragment(@Nonnull DiffFragment fragment) {
     return addFragment(getType(fragment), fragment.getText1(), fragment.getText2());
   }
 
@@ -70,7 +70,7 @@ class LineFragmentsCollector {
   }
 
   @Nullable
-  static TextDiffTypeEnum getType(@NotNull DiffFragment fragment) {
+  static TextDiffTypeEnum getType(@Nonnull DiffFragment fragment) {
     TextDiffTypeEnum type;
     if (fragment.getText1() == null) type = TextDiffTypeEnum.INSERT;
     else if (fragment.getText2() == null) type = TextDiffTypeEnum.DELETED;

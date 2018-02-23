@@ -23,7 +23,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiPlainTextFile;
 import com.intellij.psi.AbstractElementManipulator;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTextFile> {
   @Override
-  public PsiPlainTextFile handleContentChange(@NotNull PsiPlainTextFile file, @NotNull TextRange range, String newContent)
+  public PsiPlainTextFile handleContentChange(@Nonnull PsiPlainTextFile file, @Nonnull TextRange range, String newContent)
           throws IncorrectOperationException {
     final Document document = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
     document.replaceString(range.getStartOffset(), range.getEndOffset(), newContent);

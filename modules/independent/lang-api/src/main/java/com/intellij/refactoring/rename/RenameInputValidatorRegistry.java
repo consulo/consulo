@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class RenameInputValidatorRegistry {
   private RenameInputValidatorRegistry() {
@@ -46,7 +46,7 @@ public class RenameInputValidatorRegistry {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static Function<String, String> getInputErrorValidator(final PsiElement element) {
     for(final RenameInputValidator validator: Extensions.getExtensions(RenameInputValidator.EP_NAME)) {
       if (!(validator instanceof RenameInputValidatorEx)) continue;

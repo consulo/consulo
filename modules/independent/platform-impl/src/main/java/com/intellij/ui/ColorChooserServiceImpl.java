@@ -15,8 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 

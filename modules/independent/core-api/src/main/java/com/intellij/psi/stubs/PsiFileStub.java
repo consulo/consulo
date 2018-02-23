@@ -22,15 +22,15 @@ package com.intellij.psi.stubs;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.StubFileElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface PsiFileStub<T extends PsiFile> extends StubElement<T>, UserDataHolder {
   PsiFileStub[] EMPTY_ARRAY = new PsiFileStub[0];
 
   StubFileElementType getType();
 
-  @NotNull
+  @Nonnull
   PsiFileStub[] getStubRoots();
 
   @Nullable

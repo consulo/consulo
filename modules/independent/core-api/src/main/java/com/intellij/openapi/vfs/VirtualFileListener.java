@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -32,7 +32,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+  default void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
   }
 
   /**
@@ -40,7 +40,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void contentsChanged(@NotNull VirtualFileEvent event) {
+  default void contentsChanged(@Nonnull VirtualFileEvent event) {
   }
 
   /**
@@ -48,7 +48,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileCreated(@NotNull VirtualFileEvent event) {
+  default void fileCreated(@Nonnull VirtualFileEvent event) {
   }
 
   /**
@@ -56,7 +56,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileDeleted(@NotNull VirtualFileEvent event) {
+  default void fileDeleted(@Nonnull VirtualFileEvent event) {
   }
 
   /**
@@ -64,7 +64,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileMoved(@NotNull VirtualFileMoveEvent event) {
+  default void fileMoved(@Nonnull VirtualFileMoveEvent event) {
   }
 
   /**
@@ -72,7 +72,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void fileCopied(@NotNull VirtualFileCopyEvent event) {
+  default void fileCopied(@Nonnull VirtualFileCopyEvent event) {
     fileCreated(event);
   }
 
@@ -81,7 +81,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforePropertyChange(@NotNull VirtualFilePropertyEvent event) {
+  default void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event) {
   }
 
   /**
@@ -89,7 +89,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeContentsChange(@NotNull VirtualFileEvent event) {
+  default void beforeContentsChange(@Nonnull VirtualFileEvent event) {
   }
 
   /**
@@ -97,7 +97,7 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeFileDeletion(@NotNull VirtualFileEvent event) {
+  default void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
   }
 
   /**
@@ -105,6 +105,6 @@ public interface VirtualFileListener extends EventListener {
    *
    * @param event the event object containing information about the change.
    */
-  default void beforeFileMovement(@NotNull VirtualFileMoveEvent event) {
+  default void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
   }
 }

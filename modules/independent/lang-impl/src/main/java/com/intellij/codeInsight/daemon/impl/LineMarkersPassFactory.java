@@ -29,8 +29,8 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author cdr
@@ -43,14 +43,14 @@ public class LineMarkersPassFactory extends AbstractProjectComponent implements 
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "LineMarkersPassFactory";
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange restrictRange = FileStatusMap.getDirtyTextRange(editor, Pass.LINE_MARKERS);
     Document document = editor.getDocument();
     if (restrictRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(myProject, document);
@@ -58,7 +58,7 @@ public class LineMarkersPassFactory extends AbstractProjectComponent implements 
     return new LineMarkersPass(myProject, file, document, expandRangeToCoverWholeLines(document, visibleRange), expandRangeToCoverWholeLines(document, restrictRange));
   }
 
-  private static TextRange expandRangeToCoverWholeLines(@NotNull Document document, TextRange textRange) {
+  private static TextRange expandRangeToCoverWholeLines(@Nonnull Document document, TextRange textRange) {
     if (textRange == null) return null;
     return MarkupModelImpl.roundToLineBoundaries(document, textRange.getStartOffset(), textRange.getEndOffset());
   }

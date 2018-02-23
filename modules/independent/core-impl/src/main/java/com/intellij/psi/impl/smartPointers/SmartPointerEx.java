@@ -17,7 +17,7 @@ package com.intellij.psi.impl.smartPointers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 interface SmartPointerEx<E extends PsiElement> extends SmartPsiElementPointer<E> {
 

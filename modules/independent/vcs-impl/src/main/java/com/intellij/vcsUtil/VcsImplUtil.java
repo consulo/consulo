@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -47,8 +47,8 @@ public class VcsImplUtil {
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
   }
 
-  @NotNull
-  public static String getShortVcsRootName(@NotNull Project project, @NotNull VirtualFile root) {
+  @Nonnull
+  public static String getShortVcsRootName(@Nonnull Project project, @Nonnull VirtualFile root) {
     VirtualFile projectDir = project.getBaseDir();
 
     String repositoryPath = root.getPresentableUrl();

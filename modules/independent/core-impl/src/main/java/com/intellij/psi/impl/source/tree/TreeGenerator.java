@@ -23,7 +23,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public interface TreeGenerator {
   ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create("com.intellij.treeGenerator");

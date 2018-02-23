@@ -23,13 +23,13 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.PathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
 public abstract class ModuleSdkPathMacro extends Macro {
-  @NotNull
+  @Nonnull
   public abstract Class<? extends ModuleExtensionWithSdk<?>> getExtensionClass();
 
   @Override

@@ -20,18 +20,20 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.textCompletion.TextCompletionProvider;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.ui.AsyncProcessIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public abstract class TextFieldWithProgress extends JPanel {
-  @NotNull private final TextFieldWithCompletion myTextField;
-  @NotNull private final AsyncProcessIcon myProgressIcon;
+  @Nonnull
+  private final TextFieldWithCompletion myTextField;
+  @Nonnull
+  private final AsyncProcessIcon myProgressIcon;
 
-  public TextFieldWithProgress(@NotNull Project project,
-                               @NotNull TextCompletionProvider completionProvider) {
+  public TextFieldWithProgress(@Nonnull Project project,
+                               @Nonnull TextCompletionProvider completionProvider) {
     super(new BorderLayout());
     setBorder(IdeBorderFactory.createEmptyBorder(3));
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.push;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Destination for push action. (Remote  for git or push-path for mercurial).
@@ -30,6 +30,6 @@ public interface PushTarget {
    */
   boolean hasSomethingToPush();
 
-  @NotNull
+  @Nonnull
   String getPresentation();
 }

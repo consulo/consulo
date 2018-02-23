@@ -17,7 +17,6 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -41,7 +40,7 @@ public abstract class PsiPolyVariantReferenceBase<T extends PsiElement> extends 
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement resolve() {
     ResolveResult[] resolveResults = multiResolve(false);
     return resolveResults.length == 1 ? resolveResults[0].getElement() : null;

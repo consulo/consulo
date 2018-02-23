@@ -17,7 +17,7 @@ package com.intellij.remote.ext;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class UnknownCredentialsHolder {
   private String myInterpreterPath;
-  @NotNull
+  @Nonnull
   private final Map<String, String> myAttributes = new HashMap<>();
 
   public UnknownCredentialsHolder(String interpreterPath) {
@@ -46,18 +46,18 @@ public class UnknownCredentialsHolder {
     myInterpreterPath = interpreterPath;
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, String> getAttributes() {
     return myAttributes;
   }
 
-  public void save(@NotNull Element element) {
+  public void save(@Nonnull Element element) {
     for (Map.Entry<String, String> entry : myAttributes.entrySet()) {
       element.setAttribute(entry.getKey(), entry.getValue());
     }
   }
 
-  public void load(@NotNull Element element) {
+  public void load(@Nonnull Element element) {
     myAttributes.clear();
     for (Attribute attribute : element.getAttributes()) {
       myAttributes.put(attribute.getName(), attribute.getValue());

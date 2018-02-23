@@ -20,8 +20,8 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A PSI element which has a name and can be renamed (for example, a class or a method).
@@ -30,7 +30,7 @@ public interface PsiNamedElement extends PsiElement {
   public static final PsiNamedElement[] EMPTY_ARRAY = new PsiNamedElement[0];
 
   public static ArrayFactory<PsiNamedElement> ARRAY_FACTORY = new ArrayFactory<PsiNamedElement>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiNamedElement[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiNamedElement[count];
@@ -56,5 +56,5 @@ public interface PsiNamedElement extends PsiElement {
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
   @RequiredWriteAction
-  PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException;
+  PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException;
 }

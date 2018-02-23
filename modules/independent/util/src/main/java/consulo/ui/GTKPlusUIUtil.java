@@ -17,7 +17,7 @@ package consulo.ui;
 
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  */
 public class GTKPlusUIUtil {
   private static final ClearableLazyValue<Boolean> ourValue = new ClearableLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       if (!UIUtil.isUnderGTKLookAndFeel()) {

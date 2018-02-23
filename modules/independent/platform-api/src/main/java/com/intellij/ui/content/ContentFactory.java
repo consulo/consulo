@@ -19,32 +19,32 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.DeprecationInfo;
 import consulo.ui.Component;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ContentFactory {
-  @NotNull
+  @Nonnull
   static ContentFactory getInstance() {
     return ServiceManager.getService(ContentFactory.class);
   }
 
-  @NotNull
-  ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project);
+  @Nonnull
+  ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project);
 
-  @NotNull
-  ContentManager createContentManager(boolean canCloseContents, @NotNull Project project);
+  @Nonnull
+  ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project);
 
   /**
    * do not rename due it will be conflicted with deprecated method
    */
-  @NotNull
+  @Nonnull
   default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     throw new AbstractMethodError();
   }
 
   // TODO [VISTALL] AWT & Swing dependency
   // region AWT & Swing dependency
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("")
   default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
@@ -58,7 +58,7 @@ public interface ContentFactory {
     private SERVICE() {
     }
 
-    @NotNull
+    @Nonnull
     @Deprecated
     public static ContentFactory getInstance() {
       return ServiceManager.getService(ContentFactory.class);

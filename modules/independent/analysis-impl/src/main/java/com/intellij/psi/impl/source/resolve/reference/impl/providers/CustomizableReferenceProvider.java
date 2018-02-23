@@ -20,8 +20,8 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -60,6 +60,6 @@ public interface CustomizableReferenceProvider {
   void setOptions(@Nullable Map<CustomizationKey,Object> options);
   @Nullable Map<CustomizationKey,Object> getOptions();
 
-  @NotNull
-  public abstract PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull final ProcessingContext matchingContext);
+  @Nonnull
+  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull final ProcessingContext matchingContext);
 }

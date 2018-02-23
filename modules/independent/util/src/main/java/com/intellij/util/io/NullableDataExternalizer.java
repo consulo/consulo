@@ -15,8 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.DataInput;

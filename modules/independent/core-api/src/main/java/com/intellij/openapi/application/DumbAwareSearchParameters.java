@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A marker interface for {@link QueryExecutorBase} parameters which indicates that searches should only be executed when indexing is complete.
@@ -25,6 +25,6 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public interface DumbAwareSearchParameters {
-  @NotNull
+  @Nonnull
   Project getProject();
 }

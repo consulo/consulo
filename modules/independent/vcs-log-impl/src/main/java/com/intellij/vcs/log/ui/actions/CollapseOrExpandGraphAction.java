@@ -26,7 +26,7 @@ import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import consulo.wm.impl.ToolWindowContentUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,12 +36,12 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   private static final String MERGES = "Merges";
   private static final String MERGES_DESCRIPTION = "merges";
 
-  public CollapseOrExpandGraphAction(@NotNull String action) {
+  public CollapseOrExpandGraphAction(@Nonnull String action) {
     super(action + " " + LINEAR_BRANCHES, action + " " + LINEAR_BRANCHES_DESCRIPTION, null);
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VcsLogUtil.triggerUsage(e);
 
     VcsLogUi ui = e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI);
@@ -49,7 +49,7 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
@@ -85,18 +85,18 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
     }
   }
 
-  protected abstract void executeAction(@NotNull VcsLogUiImpl vcsLogUi);
+  protected abstract void executeAction(@Nonnull VcsLogUiImpl vcsLogUi);
 
-  @NotNull
+  @Nonnull
   protected abstract Icon getMergesIcon();
 
-  @NotNull
+  @Nonnull
   protected abstract Icon getBranchesIcon();
 
-  @NotNull
+  @Nonnull
   protected abstract String getPrefix();
 
-  private static boolean isIconHidden(@NotNull AnActionEvent e) {
+  private static boolean isIconHidden(@Nonnull AnActionEvent e) {
     return e.getPlace().equals(ToolWindowContentUI.POPUP_PLACE);
   }
 }

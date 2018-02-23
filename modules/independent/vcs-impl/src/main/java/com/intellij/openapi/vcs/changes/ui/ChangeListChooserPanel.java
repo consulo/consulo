@@ -35,8 +35,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableConsumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -58,14 +58,14 @@ public class ChangeListChooserPanel extends JPanel {
   private String myLastTypedDescription;
   private boolean myNewNameSuggested = false;
 
-  public ChangeListChooserPanel(final Project project, @NotNull final NullableConsumer<String> okEnabledListener) {
+  public ChangeListChooserPanel(final Project project, @Nonnull final NullableConsumer<String> okEnabledListener) {
     super(new BorderLayout());
     myProject = project;
     myExistingListsCombo = new MyEditorComboBox(project);
     myExistingListsCombo.setEditable(true);
     myExistingListsCombo.setRenderer(new ColoredListCellRenderer<String>() {
       @Override
-      protected void customizeCellRenderer(@NotNull JList<? extends String> list,
+      protected void customizeCellRenderer(@Nonnull JList<? extends String> list,
                                            String value,
                                            int index,
                                            boolean selected,
@@ -97,7 +97,7 @@ public class ChangeListChooserPanel extends JPanel {
       @Override
       protected NewEditChangelistPanel.ComponentWithTextFieldWrapper createComponentWithTextField(Project project) {
         return new ComponentWithTextFieldWrapper(myExistingListsCombo) {
-          @NotNull
+          @Nonnull
           @Override
           public EditorTextField getEditorTextField() {
             return myExistingListsCombo.getEditorTextField();
@@ -146,7 +146,7 @@ public class ChangeListChooserPanel extends JPanel {
     myExistingListsCombo.setModel(new DefaultComboBoxModel<>(ArrayUtil.toStringArray(changelistNames)));
   }
 
-  public void setSuggestedName(@NotNull String name) {
+  public void setSuggestedName(@Nonnull String name) {
     if (StringUtil.isEmptyOrSpaces(name)) return;
     if (getExistingChangelistByName(name) != null) {
       myExistingListsCombo.setSelectedItem(name);
@@ -198,7 +198,7 @@ public class ChangeListChooserPanel extends JPanel {
     return localChangeList;
   }
 
-  private void rememberSettings(@NotNull Project project, boolean activeListSelected, boolean setActive) {
+  private void rememberSettings(@Nonnull Project project, boolean activeListSelected, boolean setActive) {
     if (myNewNameSuggested) {
       VcsConfiguration.getInstance(project).PRESELECT_EXISTING_CHANGELIST = activeListSelected;
     }
@@ -224,7 +224,7 @@ public class ChangeListChooserPanel extends JPanel {
     }
   }
 
-  private LocalChangeList getExistingChangelistByName(@NotNull String changeListName) {
+  private LocalChangeList getExistingChangelistByName(@Nonnull String changeListName) {
     ChangeListManager manager = ChangeListManager.getInstance(myProject);
     return manager.findChangeList(changeListName);
   }
@@ -248,7 +248,7 @@ public class ChangeListChooserPanel extends JPanel {
       });
     }
 
-    @NotNull
+    @Nonnull
     private EditorTextField getEditorTextField() {
       return ObjectUtils.assertNotNull((EditorTextField)getEditor().getEditorComponent());
     }

@@ -36,20 +36,20 @@ import com.intellij.usages.UsageDataUtil;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<VirtualFile[]> getKey() {
     return CommonDataKeys.VIRTUAL_FILE_ARRAY;
   }
 
   @Override
-  public VirtualFile[] getData(@NotNull final DataProvider dataProvider) {
+  public VirtualFile[] getData(@Nonnull final DataProvider dataProvider) {
     // Try to detect multiselection.
 
     Project project = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_CONTEXT);

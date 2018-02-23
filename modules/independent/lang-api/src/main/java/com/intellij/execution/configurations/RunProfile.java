@@ -18,8 +18,8 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ public interface RunProfile {
    * @return the RunProfileState describing the process which is about to be started, or null if it's impossible to start the process.
    */
   @Nullable
-  RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) throws ExecutionException;
+  RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException;
 
   /**
    * Returns the name of the run configuration.
@@ -54,6 +54,6 @@ public interface RunProfile {
    *
    * @return the icon for the run configuration, or null if the default executor icon should be used.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Icon getIcon();
 }

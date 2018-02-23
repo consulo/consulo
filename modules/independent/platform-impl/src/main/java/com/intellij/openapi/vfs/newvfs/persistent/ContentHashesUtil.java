@@ -20,7 +20,7 @@ import com.intellij.util.io.DifferentSerializableBytesImplyNonEqualityPolicy;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PagedFileStorage;
 import com.intellij.util.io.PersistentBTreeEnumerator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -93,12 +93,12 @@ public class ContentHashesUtil {
 
   private static class ContentHashesDescriptor implements KeyDescriptor<byte[]>, DifferentSerializableBytesImplyNonEqualityPolicy {
     @Override
-    public void save(@NotNull DataOutput out, byte[] value) throws IOException {
+    public void save(@Nonnull DataOutput out, byte[] value) throws IOException {
       out.write(value);
     }
 
     @Override
-    public byte[] read(@NotNull DataInput in) throws IOException {
+    public byte[] read(@Nonnull DataInput in) throws IOException {
       byte[] b = new byte[SIGNATURE_LENGTH];
       in.readFully(b);
       return b;

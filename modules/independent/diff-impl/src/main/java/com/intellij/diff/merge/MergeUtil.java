@@ -36,19 +36,18 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.merge.MergeData;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class MergeUtil {
-  @NotNull
-  public static Action createSimpleResolveAction(@NotNull MergeResult result,
-                                                 @NotNull MergeRequest request,
-                                                 @NotNull MergeContext context,
-                                                 @NotNull MergeViewer viewer) {
+  @Nonnull
+  public static Action createSimpleResolveAction(@Nonnull MergeResult result,
+                                                 @Nonnull MergeRequest request,
+                                                 @Nonnull MergeContext context,
+                                                 @Nonnull MergeViewer viewer) {
     String caption = getResolveActionTitle(result, request, context);
     return new AbstractAction(caption) {
       @Override
@@ -61,8 +60,8 @@ public class MergeUtil {
     };
   }
 
-  @NotNull
-  public static String getResolveActionTitle(@NotNull MergeResult result, @NotNull MergeRequest request, @NotNull MergeContext context) {
+  @Nonnull
+  public static String getResolveActionTitle(@Nonnull MergeResult result, @Nonnull MergeRequest request, @Nonnull MergeContext context) {
     Function<MergeResult, String> getter = DiffUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS);
     String message = getter != null ? getter.fun(result) : null;
     if (message != null) return message;
@@ -81,8 +80,8 @@ public class MergeUtil {
     }
   }
 
-  @NotNull
-  public static List<String> notNullizeContentTitles(@NotNull List<String> mergeContentTitles) {
+  @Nonnull
+  public static List<String> notNullizeContentTitles(@Nonnull List<String> mergeContentTitles) {
     String left = StringUtil.notNullize(ThreeSide.LEFT.select(mergeContentTitles), "Your Version");
     String base = StringUtil.notNullize(ThreeSide.BASE.select(mergeContentTitles), "Base Version");
     String right = StringUtil.notNullize(ThreeSide.RIGHT.select(mergeContentTitles), "Server Version");
@@ -90,13 +89,14 @@ public class MergeUtil {
   }
 
   public static class ProxyDiffContext extends DiffContext {
-    @NotNull private final MergeContext myMergeContext;
+    @Nonnull
+    private final MergeContext myMergeContext;
 
-    public ProxyDiffContext(@NotNull MergeContext mergeContext) {
+    public ProxyDiffContext(@Nonnull MergeContext mergeContext) {
       myMergeContext = mergeContext;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Project getProject() {
       return myMergeContext.getProject();
@@ -117,21 +117,21 @@ public class MergeUtil {
       myMergeContext.requestFocus();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    public <T> T getUserData(@NotNull Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
       return myMergeContext.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
       myMergeContext.putUserData(key, value);
     }
   }
 
-  public static boolean showExitWithoutApplyingChangesDialog(@NotNull MergeViewer viewer,
-                                                             @NotNull MergeRequest request,
-                                                             @NotNull MergeContext context) {
+  public static boolean showExitWithoutApplyingChangesDialog(@Nonnull MergeViewer viewer,
+                                                             @Nonnull MergeRequest request,
+                                                             @Nonnull MergeContext context) {
     Condition<MergeViewer> customHandler = DiffUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_CANCEL_HANDLER);
     if (customHandler != null) {
       return customHandler.value(viewer);
@@ -140,9 +140,9 @@ public class MergeUtil {
     return showExitWithoutApplyingChangesDialog(viewer.getComponent(), request, context);
   }
 
-  public static boolean showExitWithoutApplyingChangesDialog(@NotNull JComponent component,
-                                                             @NotNull MergeRequest request,
-                                                             @NotNull MergeContext context) {
+  public static boolean showExitWithoutApplyingChangesDialog(@Nonnull JComponent component,
+                                                             @Nonnull MergeRequest request,
+                                                             @Nonnull MergeContext context) {
     String message = DiffBundle.message("merge.dialog.exit.without.applying.changes.confirmation.message");
     String title = DiffBundle.message("cancel.visual.merge.dialog.title");
     Couple<String> customMessage = DiffUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_CANCEL_MESSAGE);
@@ -154,14 +154,14 @@ public class MergeUtil {
     return Messages.showYesNoDialog(component.getRootPane(), message, title, Messages.getQuestionIcon()) == Messages.YES;
   }
 
-  public static void putRevisionInfos(@NotNull MergeRequest request, @NotNull MergeData data) {
+  public static void putRevisionInfos(@Nonnull MergeRequest request, @Nonnull MergeData data) {
     if (request instanceof ThreesideMergeRequest) {
       List<? extends DiffContent> contents = ((ThreesideMergeRequest)request).getContents();
       putRevisionInfo(contents, data);
     }
   }
 
-  public static void putRevisionInfos(@NotNull DiffRequest request, @NotNull MergeData data) {
+  public static void putRevisionInfos(@Nonnull DiffRequest request, @Nonnull MergeData data) {
     if (request instanceof ContentDiffRequest) {
       List<? extends DiffContent> contents = ((ContentDiffRequest)request).getContents();
       if (contents.size() == 3) {
@@ -170,7 +170,7 @@ public class MergeUtil {
     }
   }
 
-  private static void putRevisionInfo(@NotNull List<? extends DiffContent> contents, @NotNull MergeData data) {
+  private static void putRevisionInfo(@Nonnull List<? extends DiffContent> contents, @Nonnull MergeData data) {
     for (ThreeSide side : ThreeSide.values()) {
       DiffContent content = side.select(contents);
       FilePath filePath = side.select(data.CURRENT_FILE_PATH, data.ORIGINAL_FILE_PATH, data.LAST_FILE_PATH);

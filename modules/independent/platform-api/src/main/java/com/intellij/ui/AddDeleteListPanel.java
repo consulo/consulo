@@ -20,8 +20,8 @@ import com.intellij.CommonBundle;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +83,7 @@ public abstract class AddDeleteListPanel<T> extends PanelWithButtons implements 
   protected void customizeDecorator(ToolbarDecorator decorator) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();

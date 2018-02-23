@@ -15,11 +15,11 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class InvalidRequestException extends RuntimeException {
 
-  public InvalidRequestException(@NotNull String message) {
+  public InvalidRequestException(@Nonnull String message) {
     super(message);
   }
 }

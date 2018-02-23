@@ -20,8 +20,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -34,25 +34,26 @@ public class BranchStorage {
 
   @Property(surroundWithTag = false)
   @MapAnnotation(keyAttributeName = "type")
-  @NotNull public Map<String, List<DvcsBranchInfo>> myBranches = ContainerUtil.newHashMap();
+  @Nonnull
+  public Map<String, List<DvcsBranchInfo>> myBranches = ContainerUtil.newHashMap();
 
   public BranchStorage() {
   }
 
-  public boolean contains(@NotNull String typeName, @Nullable Repository repository, @NotNull String branchName) {
+  public boolean contains(@Nonnull String typeName, @javax.annotation.Nullable Repository repository, @Nonnull String branchName) {
     List<DvcsBranchInfo> branches = myBranches.get(typeName);
     return branches != null && find(branches, repository, branchName) != null;
   }
 
-  public void add(@NotNull String typeName, @Nullable Repository repository,
-                  @NotNull String branchName) {
+  public void add(@Nonnull String typeName, @javax.annotation.Nullable Repository repository,
+                  @Nonnull String branchName) {
     if (contains(typeName, repository, branchName)) return;
     List<DvcsBranchInfo> branchInfos = myBranches.computeIfAbsent(typeName, name -> newArrayList());
     branchInfos.add(new DvcsBranchInfo(DvcsBranchUtil.getPathFor(repository), branchName));
   }
 
-  public void remove(@NotNull String typeName, @Nullable Repository repository,
-                     @NotNull String branchName) {
+  public void remove(@Nonnull String typeName, @Nullable Repository repository,
+                     @Nonnull String branchName) {
 
     List<DvcsBranchInfo> branches = myBranches.get(typeName);
     DvcsBranchInfo toDelete = find(branches, repository, branchName);

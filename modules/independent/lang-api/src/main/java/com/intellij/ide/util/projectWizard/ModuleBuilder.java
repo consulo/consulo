@@ -39,8 +39,8 @@ import com.intellij.util.EventDispatcher;
 import consulo.ide.util.DefaultModuleBuilder;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -58,7 +58,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   private final EventDispatcher<ModuleBuilderListener> myDispatcher = EventDispatcher.create(ModuleBuilderListener.class);
   private Map<String, Boolean> myAvailableFrameworks;
 
-  @Nullable
+  @javax.annotation.Nullable
   protected final String acceptParameter(String param) {
     return param != null && param.length() > 0 ? param : null;
   }
@@ -130,7 +130,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     moduleDirPath = acceptParameter(path);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getContentEntryPath() {
     if (myContentEntryPath == null) {
       final String directory = getModuleDirPath();
@@ -162,7 +162,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getModuleDirPath() {
     if (moduleDirPath == null) {
       return null;
@@ -171,8 +171,8 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
     return moduleDirPath.replace(File.separatorChar, '/');
   }
 
-  @NotNull
-  public Module createModule(@NotNull ModifiableModuleModel moduleModel)
+  @Nonnull
+  public Module createModule(@Nonnull ModifiableModuleModel moduleModel)
     throws InvalidDataException, IOException, ModuleWithNameAlreadyExistsException, JDOMException, ConfigurationException {
     LOG.assertTrue(myName != null);
     LOG.assertTrue(moduleDirPath != null);
@@ -200,8 +200,8 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
 
   public abstract void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException;
 
-  @NotNull
-  public Module createAndCommitIfNeeded(@NotNull Project project, @Nullable ModifiableModuleModel model, boolean runFromProjectWizard)
+  @Nonnull
+  public Module createAndCommitIfNeeded(@Nonnull Project project, @Nullable ModifiableModuleModel model, boolean runFromProjectWizard)
     throws InvalidDataException, ConfigurationException, IOException, JDOMException, ModuleWithNameAlreadyExistsException {
     final ModifiableModuleModel moduleModel = model != null ? model : ModuleManager.getInstance(project).getModifiableModel();
     final Module module = createModule(moduleModel);
@@ -240,14 +240,14 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public List<Module> commit(final Project project, final ModifiableModuleModel model, final ModulesProvider modulesProvider) {
     final Module module = commitModule(project, model);
     return module != null ? Collections.singletonList(module) : null;
   }
 
-  @Nullable
-  public Module commitModule(@NotNull final Project project, @Nullable final ModifiableModuleModel model) {
+  @javax.annotation.Nullable
+  public Module commitModule(@Nonnull final Project project, @Nullable final ModifiableModuleModel model) {
     if (canCreateModule()) {
       if (myName == null) {
         myName = project.getName();
@@ -311,7 +311,7 @@ public abstract class ModuleBuilder extends AbstractModuleBuilder {
 
   public static abstract class ModuleConfigurationUpdater {
 
-    public abstract void update(@NotNull Module module, @NotNull ModifiableRootModel rootModel);
+    public abstract void update(@Nonnull Module module, @Nonnull ModifiableRootModel rootModel);
 
   }
 }

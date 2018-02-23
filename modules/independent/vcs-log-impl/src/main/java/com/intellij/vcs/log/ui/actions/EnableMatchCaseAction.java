@@ -25,13 +25,13 @@ import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
 public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
-  @NotNull
+  @Nonnull
   private static final String MATCH_CASE = "Match Case";
 
   @Override
@@ -40,7 +40,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);

@@ -16,7 +16,8 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.Segment;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * pointer to a PsiFile + range inside the file.

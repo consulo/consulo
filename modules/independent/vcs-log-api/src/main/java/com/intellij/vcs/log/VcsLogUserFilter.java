@@ -1,7 +1,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -18,6 +18,6 @@ public interface VcsLogUserFilter extends VcsLogDetailsFilter {
    *             Since current user name can be defined differently for different roots, we pass the root for which this value is
    *             requested.
    */
-  @NotNull
-  Collection<VcsUser> getUsers(@NotNull VirtualFile root);
+  @Nonnull
+  Collection<VcsUser> getUsers(@Nonnull VirtualFile root);
 }

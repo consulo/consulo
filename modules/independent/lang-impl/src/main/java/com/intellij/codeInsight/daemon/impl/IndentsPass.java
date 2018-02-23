@@ -50,7 +50,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.IntStack;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.lang.util.LanguageVersionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -191,14 +191,14 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     }
   };
 
-  IndentsPass(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  IndentsPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     super(project, editor.getDocument(), false);
     myEditor = (EditorEx)editor;
     myFile = file;
   }
 
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     assert myDocument != null;
     final Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
     if (stamp != null && stamp.longValue() == nowStamp()) return;
@@ -332,23 +332,26 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     return new IndentGuideDescriptor(level, startLine, endLine);
   }
 
-  @NotNull
+  @Nonnull
   private static RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
     final RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     highlighter.setCustomRenderer(RENDERER);
     return highlighter;
   }
 
-  private static int compare(@NotNull TextRange r, @NotNull RangeHighlighter h) {
+  private static int compare(@Nonnull TextRange r, @Nonnull RangeHighlighter h) {
     int answer = r.getStartOffset() - h.getStartOffset();
     return answer != 0 ? answer : r.getEndOffset() - h.getEndOffset();
   }
 
   private class IndentsCalculator {
-    @NotNull final Map<Language, TokenSet> myComments = ContainerUtilRt.newHashMap();
-    @NotNull final int[] lineIndents; // negative value means the line is empty (or contains a comment) and indent
+    @Nonnull
+    final Map<Language, TokenSet> myComments = ContainerUtilRt.newHashMap();
+    @Nonnull
+    final int[] lineIndents; // negative value means the line is empty (or contains a comment) and indent
     // (denoted by absolute value) was deduced from enclosing non-empty lines
-    @NotNull final CharSequence myChars;
+    @Nonnull
+    final CharSequence myChars;
 
     IndentsCalculator() {
       assert myDocument != null;

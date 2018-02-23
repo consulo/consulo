@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -49,8 +49,8 @@ public interface CreateFromTemplateHandler {
 
   void prepareProperties(Map<String, Object> props);
 
-  @NotNull
-  default String commandName(@NotNull FileTemplate template) {
+  @Nonnull
+  default String commandName(@Nonnull FileTemplate template) {
     return IdeBundle.message("command.create.file.from.template");
   }
 }

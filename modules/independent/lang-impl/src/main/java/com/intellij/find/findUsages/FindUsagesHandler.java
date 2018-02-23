@@ -33,8 +33,8 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,38 +45,38 @@ import java.util.Collections;
  */
 public abstract class FindUsagesHandler {
   // return this handler if you want to cancel the search
-  @NotNull
+  @Nonnull
   public static final FindUsagesHandler NULL_HANDLER = new NullFindUsagesHandler();
 
-  @NotNull
+  @Nonnull
   private final PsiElement myPsiElement;
 
-  protected FindUsagesHandler(@NotNull PsiElement psiElement) {
+  protected FindUsagesHandler(@Nonnull PsiElement psiElement) {
     myPsiElement = psiElement;
   }
 
-  @NotNull
+  @Nonnull
   public AbstractFindUsagesDialog getFindUsagesDialog(boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
     @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
     return new CommonFindUsagesDialog(myPsiElement, getProject(), getFindUsagesOptions(ctx), toShowInNewTab, mustOpenInNewTab, isSingleFile, this);
   }
 
-  @NotNull
+  @Nonnull
   public final PsiElement getPsiElement() {
     return myPsiElement;
   }
 
-  @NotNull
+  @Nonnull
   public final Project getProject() {
     return myPsiElement.getProject();
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement[] getPrimaryElements() {
     return new PsiElement[]{myPsiElement};
   }
 
-  @NotNull
+  @Nonnull
   public PsiElement[] getSecondaryElements() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -86,29 +86,29 @@ public abstract class FindUsagesHandler {
     return FindUsagesManager.getHelpID(myPsiElement);
   }
 
-  @NotNull
-  public static FindUsagesOptions createFindUsagesOptions(@NotNull Project project, @Nullable final DataContext dataContext) {
+  @Nonnull
+  public static FindUsagesOptions createFindUsagesOptions(@Nonnull Project project, @Nullable final DataContext dataContext) {
     FindUsagesOptions findUsagesOptions = new FindUsagesOptions(project, dataContext);
     findUsagesOptions.isUsages = true;
     findUsagesOptions.isSearchForTextOccurrences = true;
     return findUsagesOptions;
   }
 
-  @NotNull
+  @Nonnull
   public FindUsagesOptions getFindUsagesOptions() {
     return getFindUsagesOptions(null);
   }
 
-  @NotNull
+  @Nonnull
   public FindUsagesOptions getFindUsagesOptions(@Nullable final DataContext dataContext) {
     FindUsagesOptions options = createFindUsagesOptions(getProject(), dataContext);
     options.isSearchForTextOccurrences &= isSearchForTextOccurrencesAvailable(getPsiElement(), false);
     return options;
   }
 
-  public boolean processElementUsages(@NotNull final PsiElement element,
-                                      @NotNull final Processor<UsageInfo> processor,
-                                      @NotNull final FindUsagesOptions options) {
+  public boolean processElementUsages(@Nonnull final PsiElement element,
+                                      @Nonnull final Processor<UsageInfo> processor,
+                                      @Nonnull final FindUsagesOptions options) {
     final ReadActionProcessor<PsiReference> refProcessor = new ReadActionProcessor<PsiReference>() {
       @Override
       public boolean processInReadAction(final PsiReference ref) {
@@ -138,9 +138,9 @@ public abstract class FindUsagesHandler {
     return true;
   }
 
-  public boolean processUsagesInText(@NotNull final PsiElement element,
-                                     @NotNull Processor<UsageInfo> processor,
-                                     @NotNull GlobalSearchScope searchScope) {
+  public boolean processUsagesInText(@Nonnull final PsiElement element,
+                                     @Nonnull Processor<UsageInfo> processor,
+                                     @Nonnull GlobalSearchScope searchScope) {
     Collection<String> stringToSearch = ApplicationManager.getApplication().runReadAction(new NullableComputable<Collection<String>>() {
       @Override
       public Collection<String> compute() {
@@ -152,7 +152,7 @@ public abstract class FindUsagesHandler {
   }
 
   @Nullable
-  protected Collection<String> getStringsToSearch(@NotNull final PsiElement element) {
+  protected Collection<String> getStringsToSearch(@Nonnull final PsiElement element) {
     if (element instanceof PsiNamedElement) {
       return ContainerUtil.createMaybeSingletonList(((PsiNamedElement)element).getName());
     }
@@ -161,18 +161,18 @@ public abstract class FindUsagesHandler {
   }
 
   @SuppressWarnings("deprecation")
-  protected boolean isSearchForTextOccurrencesAvailable(@NotNull PsiElement psiElement, boolean isSingleFile) {
+  protected boolean isSearchForTextOccurrencesAvailable(@Nonnull PsiElement psiElement, boolean isSingleFile) {
     return isSearchForTextOccurencesAvailable(psiElement, isSingleFile);
   }
 
   /** @deprecated use/override {@link #isSearchForTextOccurrencesAvailable(PsiElement, boolean)} instead (to be removed in IDEA 18) */
   @SuppressWarnings({"SpellCheckingInspection", "UnusedParameters"})
-  protected boolean isSearchForTextOccurencesAvailable(@NotNull PsiElement psiElement, boolean isSingleFile) {
+  protected boolean isSearchForTextOccurencesAvailable(@Nonnull PsiElement psiElement, boolean isSingleFile) {
     return false;
   }
 
-  @NotNull
-  public Collection<PsiReference> findReferencesToHighlight(@NotNull PsiElement target, @NotNull SearchScope searchScope) {
+  @Nonnull
+  public Collection<PsiReference> findReferencesToHighlight(@Nonnull PsiElement target, @Nonnull SearchScope searchScope) {
     return ReferencesSearch.search(target, searchScope, false).findAll();
   }
 
@@ -181,19 +181,19 @@ public abstract class FindUsagesHandler {
       super(PsiUtilCore.NULL_PSI_ELEMENT);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AbstractFindUsagesDialog getFindUsagesDialog(boolean isSingleFile, boolean toShowInNewTab, boolean mustOpenInNewTab) {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiElement[] getPrimaryElements() {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiElement[] getSecondaryElements() {
       throw new IncorrectOperationException();
@@ -205,46 +205,46 @@ public abstract class FindUsagesHandler {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public FindUsagesOptions getFindUsagesOptions() {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public FindUsagesOptions getFindUsagesOptions(@Nullable DataContext dataContext) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public boolean processElementUsages(@NotNull PsiElement element,
-                                        @NotNull Processor<UsageInfo> processor,
-                                        @NotNull FindUsagesOptions options) {
+    public boolean processElementUsages(@Nonnull PsiElement element,
+                                        @Nonnull Processor<UsageInfo> processor,
+                                        @Nonnull FindUsagesOptions options) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    public boolean processUsagesInText(@NotNull PsiElement element,
-                                       @NotNull Processor<UsageInfo> processor,
-                                       @NotNull GlobalSearchScope searchScope) {
+    public boolean processUsagesInText(@Nonnull PsiElement element,
+                                       @Nonnull Processor<UsageInfo> processor,
+                                       @Nonnull GlobalSearchScope searchScope) {
       throw new IncorrectOperationException();
     }
 
     @Nullable
     @Override
-    protected Collection<String> getStringsToSearch(@NotNull PsiElement element) {
+    protected Collection<String> getStringsToSearch(@Nonnull PsiElement element) {
       throw new IncorrectOperationException();
     }
 
     @Override
-    protected boolean isSearchForTextOccurrencesAvailable(@NotNull PsiElement psiElement, boolean isSingleFile) {
+    protected boolean isSearchForTextOccurrencesAvailable(@Nonnull PsiElement psiElement, boolean isSingleFile) {
       throw new IncorrectOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Collection<PsiReference> findReferencesToHighlight(@NotNull PsiElement target, @NotNull SearchScope searchScope) {
+    public Collection<PsiReference> findReferencesToHighlight(@Nonnull PsiElement target, @Nonnull SearchScope searchScope) {
       throw new IncorrectOperationException();
     }
   }

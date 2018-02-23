@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestTreeViewStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class SMTRunnerTreeStructure extends TestTreeViewStructure<SMTestProxy>
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SMTRunnerNodeDescriptor createDescriptor(final Object element,
                                                   final NodeDescriptor parentDesc) {

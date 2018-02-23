@@ -17,12 +17,12 @@ package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.openapi.editor.Editor;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implementations of this interface are expected to provide correct {@link #equals(Object)} & {@link #hashCode()} implementations.
  */
 public interface CodeFoldingState {
   @RequiredDispatchThread
-  void setToEditor(@NotNull Editor editor);
+  void setToEditor(@Nonnull Editor editor);
 }

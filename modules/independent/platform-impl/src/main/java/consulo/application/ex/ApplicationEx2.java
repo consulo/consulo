@@ -18,14 +18,14 @@ package consulo.application.ex;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.components.impl.stores.IApplicationStore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12:05/12.08.13
  */
 public interface ApplicationEx2 extends ApplicationEx {
-  @NotNull
+  @Nonnull
   IApplicationStore getStateStore();
 
   void init();

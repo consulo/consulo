@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -34,16 +34,18 @@ import static com.intellij.openapi.util.text.StringUtil.pluralize;
 
 public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
 
-  protected final @NotNull Project myProject;
-  protected final @NotNull VcsT myVcs;
+  protected final @Nonnull
+  Project myProject;
+  protected final @Nonnull
+  VcsT myVcs;
 
 
-  protected VcsIntegrationEnabler(@NotNull VcsT vcs) {
+  protected VcsIntegrationEnabler(@Nonnull VcsT vcs) {
     myProject = vcs.getProject();
     myVcs = vcs;
   }
 
-  public void enable(@NotNull Collection<VcsRoot> vcsRoots) {
+  public void enable(@Nonnull Collection<VcsRoot> vcsRoots) {
     Collection<VcsRoot> vcsFilterRoots = ContainerUtil.filter(vcsRoots, new Condition<VcsRoot>() {
       @Override
       public boolean value(VcsRoot root) {
@@ -70,7 +72,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     }
   }
 
-  private boolean isProjectBelowVcs(@NotNull Collection<VirtualFile> vcsRoots) {
+  private boolean isProjectBelowVcs(@Nonnull Collection<VirtualFile> vcsRoots) {
     //check if there are vcs roots strictly above the project dir
     VirtualFile baseDir = myProject.getBaseDir();
     for (VirtualFile root : vcsRoots) {
@@ -81,8 +83,8 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     return false;
   }
 
-  @NotNull
-  public static String joinRootsPaths(@NotNull Collection<VirtualFile> roots) {
+  @Nonnull
+  public static String joinRootsPaths(@Nonnull Collection<VirtualFile> roots) {
     return StringUtil.join(roots, new Function<VirtualFile, String>() {
       @Override
       public String fun(VirtualFile virtualFile) {
@@ -91,7 +93,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     }, ", ");
   }
 
-  protected abstract boolean initOrNotifyError(@NotNull final VirtualFile projectDir);
+  protected abstract boolean initOrNotifyError(@Nonnull final VirtualFile projectDir);
 
   protected void notifyAddedRoots(Collection<VirtualFile> roots) {
     VcsNotifier notifier = VcsNotifier.getInstance(myProject);
@@ -99,7 +101,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
             .notifySuccess("", String.format("Added %s %s: %s", myVcs.getName(), pluralize("root", roots.size()), joinRootsPaths(roots)));
   }
 
-  private void addVcsRoots(@NotNull Collection<VirtualFile> roots) {
+  private void addVcsRoots(@Nonnull Collection<VirtualFile> roots) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     List<VirtualFile> currentVcsRoots = Arrays.asList(vcsManager.getRootsUnderVcs(myVcs));
 
@@ -113,7 +115,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     vcsManager.setDirectoryMappings(mappings);
   }
 
-  protected static void refreshVcsDir(@NotNull final VirtualFile projectDir, @NotNull final String vcsDirName) {
+  protected static void refreshVcsDir(@Nonnull final VirtualFile projectDir, @Nonnull final String vcsDirName) {
     UIUtil.invokeAndWaitIfNeeded(new Runnable() {
       @Override
       public void run() {

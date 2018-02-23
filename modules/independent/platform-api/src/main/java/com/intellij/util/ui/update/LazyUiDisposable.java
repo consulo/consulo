@@ -25,9 +25,9 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class LazyUiDisposable<T extends Disposable> implements Activatable {
@@ -39,7 +39,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private final Disposable myParent;
   private final T myChild;
 
-  public LazyUiDisposable(@Nullable Disposable parent, @NotNull JComponent ui, @NotNull T child) {
+  public LazyUiDisposable(@Nullable Disposable parent, @Nonnull JComponent ui, @Nonnull T child) {
     if (ApplicationProperties.isInSandbox()) {
       myAllocation = new Exception();
     }
@@ -73,9 +73,9 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   public final void hideNotify() {
   }
 
-  protected abstract void initialize(@NotNull Disposable parent, @NotNull T child, @Nullable Project project);
+  protected abstract void initialize(@Nonnull Disposable parent, @Nonnull T child, @Nullable Project project);
 
-  @NotNull
+  @Nonnull
   private AsyncResult<Disposable> findParentDisposable() {
     return findDisposable(myParent, PlatformDataKeys.UI_DISPOSABLE);
   }

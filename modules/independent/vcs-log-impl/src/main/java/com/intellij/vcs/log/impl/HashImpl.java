@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.vcs.log.Hash;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -32,19 +32,19 @@ public class HashImpl implements Hash {
   private static final int BASE = 16;
   private static final int SHORT_HASH_LENGTH = 7;
 
-  @NotNull
+  @Nonnull
   private final byte[] myData;
   private final int myHashCode;
 
-  @NotNull
-  public static Hash build(@NotNull String inputStr) {
+  @Nonnull
+  public static Hash build(@Nonnull String inputStr) {
     byte[] data = buildData(inputStr);
     assert data.length > 0 : "Can not build hash for string " + inputStr;
     return new HashImpl(data);
   }
 
-  @NotNull
-  public static Hash read(@NotNull DataInput in) throws IOException {
+  @Nonnull
+  public static Hash read(@Nonnull DataInput in) throws IOException {
     int length = DataInputOutputUtil.readINT(in);
     if (length == 0) throw new IOException("Can not read hash: data length is zero");
     byte[] buf = new byte[length];
@@ -52,13 +52,13 @@ public class HashImpl implements Hash {
     return new HashImpl(buf);
   }
 
-  public void write(@NotNull DataOutput out) throws IOException {
+  public void write(@Nonnull DataOutput out) throws IOException {
     DataInputOutputUtil.writeINT(out, myData.length);
     out.write(myData);
   }
 
-  @NotNull
-  private static byte[] buildData(@NotNull String inputStr) {
+  @Nonnull
+  private static byte[] buildData(@Nonnull String inputStr) {
     // if length == 5, need 3 byte + 1 signal byte
     int length = inputStr.length();
     byte even = (byte)(length % 2);
@@ -75,7 +75,7 @@ public class HashImpl implements Hash {
     return data;
   }
 
-  private static int parseChar(@NotNull String inputString, int index) {
+  private static int parseChar(@Nonnull String inputString, int index) {
     int k = Character.digit(inputString.charAt(index), BASE);
     if (k < 0) {
       throw new IllegalArgumentException("bad hash string: " + inputString);
@@ -83,12 +83,12 @@ public class HashImpl implements Hash {
     return k;
   }
 
-  private HashImpl(@NotNull byte[] hash) {
+  private HashImpl(@Nonnull byte[] hash) {
     myData = hash;
     myHashCode = Arrays.hashCode(hash);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String asString() {
     assert myData.length > 0 : "bad length Hash.data";
@@ -127,7 +127,7 @@ public class HashImpl implements Hash {
     return asString();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String toShortString() {
     String s = asString();

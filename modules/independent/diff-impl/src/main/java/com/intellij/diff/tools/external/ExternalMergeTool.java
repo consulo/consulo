@@ -26,8 +26,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,8 +42,8 @@ public class ExternalMergeTool {
     return ExternalDiffSettings.getInstance().isMergeEnabled();
   }
 
-  public static void show(@Nullable final Project project,
-                          @NotNull final MergeRequest request) {
+  public static void show(@javax.annotation.Nullable final Project project,
+                          @Nonnull final MergeRequest request) {
     try {
       if (canShow(request)) {
         showRequest(project, request);
@@ -61,14 +60,14 @@ public class ExternalMergeTool {
     }
   }
 
-  public static void showRequest(@Nullable Project project, @NotNull MergeRequest request)
+  public static void showRequest(@javax.annotation.Nullable Project project, @Nonnull MergeRequest request)
           throws ExecutionException, IOException {
     ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
 
     ExternalDiffToolUtil.executeMerge(project, settings, (ThreesideMergeRequest)request);
   }
 
-  public static boolean canShow(@NotNull MergeRequest request) {
+  public static boolean canShow(@Nonnull MergeRequest request) {
     if (request instanceof ThreesideMergeRequest) {
       DiffContent outputContent = ((ThreesideMergeRequest)request).getOutputContent();
       if (!canProcessOutputContent(outputContent)) return false;
@@ -83,7 +82,7 @@ public class ExternalMergeTool {
     return false;
   }
 
-  private static boolean canProcessOutputContent(@NotNull DiffContent content) {
+  private static boolean canProcessOutputContent(@Nonnull DiffContent content) {
     if (content instanceof DocumentContent) return true;
     if (content instanceof FileContent && ((FileContent)content).getFile().isInLocalFileSystem()) return true;
     return false;

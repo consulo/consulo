@@ -20,7 +20,7 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.externalSystem.service.RemoteExternalSystemService;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -34,34 +34,35 @@ public abstract class AbstractRemoteExternalSystemServiceWrapper<S extends Exter
   implements RemoteExternalSystemService<S>
 {
 
-  @NotNull private final T myDelegate;
+  @Nonnull
+  private final T myDelegate;
 
-  public AbstractRemoteExternalSystemServiceWrapper(@NotNull T delegate) {
+  public AbstractRemoteExternalSystemServiceWrapper(@Nonnull T delegate) {
     myDelegate = delegate;
   }
 
   @Override
-  public void setSettings(@NotNull S settings) throws RemoteException {
+  public void setSettings(@Nonnull S settings) throws RemoteException {
     myDelegate.setSettings(settings);
   }
 
   @Override
-  public void setNotificationListener(@NotNull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+  public void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
     myDelegate.setNotificationListener(notificationListener);
   }
 
   @Override
-  public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.isTaskInProgress(id);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     return myDelegate.getTasksInProgress();
   }
 
-  @NotNull
+  @Nonnull
   public T getDelegate() {
     return myDelegate;
   }

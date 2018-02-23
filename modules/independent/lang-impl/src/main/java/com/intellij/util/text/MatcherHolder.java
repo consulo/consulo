@@ -15,9 +15,9 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -30,12 +30,12 @@ public interface MatcherHolder {
   @Deprecated
   void setPatternMatcher(Matcher matcher);
 
-  static void associateMatcher(@NotNull JComponent component, @Nullable Matcher matcher) {
+  static void associateMatcher(@Nonnull JComponent component, @Nullable Matcher matcher) {
     component.putClientProperty(MatcherHolder.class, matcher);
   }
 
   @Nullable
-  static Matcher getAssociatedMatcher(@NotNull JComponent component) {
+  static Matcher getAssociatedMatcher(@Nonnull JComponent component) {
     return (Matcher)component.getClientProperty(MatcherHolder.class);
   }
 }

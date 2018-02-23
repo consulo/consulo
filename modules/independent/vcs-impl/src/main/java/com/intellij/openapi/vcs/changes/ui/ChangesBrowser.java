@@ -20,8 +20,8 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
@@ -43,19 +43,19 @@ public class ChangesBrowser extends ChangesBrowserBase<Change> {
     rebuildList();
   }
 
-  @NotNull
+  @Nonnull
   protected DefaultTreeModel buildTreeModel(final List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
     return builder.buildModel(changes, changeNodeDecorator);
   }
 
-  @NotNull
-  protected List<Change> getSelectedObjects(@NotNull final ChangesBrowserNode<Change> node) {
+  @Nonnull
+  protected List<Change> getSelectedObjects(@Nonnull final ChangesBrowserNode<Change> node) {
     return node.getAllChangesUnder();
   }
 
   @Nullable
-  protected Change getLeadSelectedObject(@NotNull final ChangesBrowserNode node) {
+  protected Change getLeadSelectedObject(@Nonnull final ChangesBrowserNode node) {
     final Object o = node.getUserObject();
     if (o instanceof Change) {
       return (Change)o;
@@ -63,31 +63,31 @@ public class ChangesBrowser extends ChangesBrowserBase<Change> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getSelectedChanges() {
     return myViewer.getSelectedChanges();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getAllChanges() {
     return myViewer.getChanges();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getCurrentDisplayedChanges() {
     return myChangesToDisplay != null ? myChangesToDisplay : super.getCurrentDisplayedChanges();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getCurrentIncludedChanges() {
     return ContainerUtil.newArrayList(myViewer.getIncludedChanges());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Change> getCurrentDisplayedObjects() {
     return getCurrentDisplayedChanges();

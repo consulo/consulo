@@ -18,8 +18,8 @@ package consulo.backgroundTaskByVfsChange;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -75,11 +75,11 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void setEnvs(@NotNull Map<String, String> envs) {
+  public void setEnvs(@Nonnull Map<String, String> envs) {
     myEnvs = envs;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, String> getEnvs() {
     return myEnvs;
@@ -96,11 +96,11 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void setExePath(@NotNull String path) {
+  public void setExePath(@Nonnull String path) {
     myExePath = path;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExePath() {
     return myExePath;
@@ -118,7 +118,7 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void set(@NotNull BackgroundTaskByVfsParameters parameters) {
+  public void set(@Nonnull BackgroundTaskByVfsParameters parameters) {
     setEnvs(parameters.getEnvs());
     setExePath(parameters.getExePath());
     setOutPath(parameters.getOutPath());

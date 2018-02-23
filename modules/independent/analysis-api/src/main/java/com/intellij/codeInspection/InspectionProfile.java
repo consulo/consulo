@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.profile.Profile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -36,24 +36,24 @@ import java.util.List;
  */
 public interface InspectionProfile extends Profile {
 
-  HighlightDisplayLevel getErrorLevel(@NotNull HighlightDisplayKey inspectionToolKey, PsiElement element);
+  HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey inspectionToolKey, PsiElement element);
 
   /**
    * If you need to modify tool's settings, please use {@link #modifyToolSettings}
    */
-  InspectionToolWrapper getInspectionTool(@NotNull String shortName, @NotNull PsiElement element);
+  InspectionToolWrapper getInspectionTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   @Nullable
-  InspectionToolWrapper getInspectionTool(@NotNull String shortName, Project project);
+  InspectionToolWrapper getInspectionTool(@Nonnull String shortName, Project project);
 
   /** Returns (unwrapped) inspection */
-  InspectionProfileEntry getUnwrappedTool(@NotNull String shortName, @NotNull PsiElement element);
+  InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   /** Returns (unwrapped) inspection */
   <T extends InspectionProfileEntry>
-  T getUnwrappedTool(@NotNull Key<T> shortNameKey, @NotNull PsiElement element);
+  T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
 
-  void modifyProfile(@NotNull Consumer<ModifiableModel> modelConsumer);
+  void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
 
   /**
    * Allows a plugin to modify the settings of the inspection tool with the specified ID programmatically, without going through
@@ -65,21 +65,21 @@ public interface InspectionProfile extends Profile {
    * @since 12.1
    */
   <T extends InspectionProfileEntry>
-  void modifyToolSettings(@NotNull Key<T> shortNameKey, @NotNull PsiElement psiElement, @NotNull Consumer<T> toolConsumer);
+  void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
 
   /**
    * @param element context element
    * @return all (both enabled and disabled) tools
    */
-  @NotNull
+  @Nonnull
   InspectionToolWrapper[] getInspectionTools(@Nullable PsiElement element);
 
-  void cleanup(@NotNull Project project);
+  void cleanup(@Nonnull Project project);
 
   /**
    * @see #modifyProfile(com.intellij.util.Consumer)
    */
-  @NotNull
+  @Nonnull
   ModifiableModel getModifiableModel();
 
   boolean isToolEnabled(HighlightDisplayKey key, PsiElement element);
@@ -90,11 +90,11 @@ public interface InspectionProfile extends Profile {
 
   boolean isEditable();
 
-  @NotNull
+  @Nonnull
   String getDisplayName();
 
   void scopesChanged();
 
-  @NotNull
+  @Nonnull
   List<Tools> getAllEnabledInspectionTools(Project project);
 }

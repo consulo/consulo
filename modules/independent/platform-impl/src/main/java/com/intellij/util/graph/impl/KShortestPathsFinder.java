@@ -22,7 +22,7 @@ import com.intellij.util.containers.FList;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.graph.Graph;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class KShortestPathsFinder<Node> {
   private Map<Node, HeapNode<Node>> myOutRoots;
   private Map<Node,Heap<Node>> myHeaps;
 
-  public KShortestPathsFinder(@NotNull Graph<Node> graph, @NotNull Node start, @NotNull Node finish, @NotNull ProgressIndicator progressIndicator) {
+  public KShortestPathsFinder(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, @Nonnull ProgressIndicator progressIndicator) {
     myGraph = graph;
     myStart = start;
     myFinish = finish;

@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,6 +29,6 @@ import org.jetbrains.annotations.NotNull;
 public class WGwtLoadingPanelImpl extends AbstractComponent implements Component, VaadinWrapper {
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

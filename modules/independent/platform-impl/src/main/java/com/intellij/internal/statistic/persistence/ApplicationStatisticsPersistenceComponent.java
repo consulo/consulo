@@ -34,7 +34,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -148,7 +148,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
     return null;
   }
 
-  private static String joinUsages(@NotNull Set<UsageDescriptor> usages) {
+  private static String joinUsages(@Nonnull Set<UsageDescriptor> usages) {
     // for instance, usage can be: "_foo"(equals "_foo=1") or "_foo=2"
     return StringUtil.join(usages, new Function<UsageDescriptor, String>() {
       @Override
@@ -163,7 +163,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ApplicationStatisticsPersistenceComponent";
   }
@@ -200,7 +200,7 @@ public class ApplicationStatisticsPersistenceComponent extends ApplicationStatis
     });
   }
 
-  private static void doPersistProjectUsages(@NotNull Project project) {
+  private static void doPersistProjectUsages(@Nonnull Project project) {
     if (DumbService.isDumb(project)) return;
     for (UsagesCollector usagesCollector : Extensions.getExtensions(UsagesCollector.EP_NAME)) {
       if (usagesCollector instanceof AbstractApplicationUsagesCollector) {

@@ -21,8 +21,8 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.externalSystem.service.RemoteExternalSystemService;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -41,49 +41,49 @@ public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecuti
     new RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings>() {
 
       @Override
-      public void executeTasks(@NotNull ExternalSystemTaskId id,
-                               @NotNull List<String> taskNames,
-                               @NotNull String projectPath,
-                               @Nullable ExternalSystemExecutionSettings settings,
-                               @NotNull List<String> vmOptions,
-                               @NotNull List<String> scriptParameters,
-                               @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+      public void executeTasks(@Nonnull ExternalSystemTaskId id,
+                               @Nonnull List<String> taskNames,
+                               @Nonnull String projectPath,
+                               @javax.annotation.Nullable ExternalSystemExecutionSettings settings,
+                               @Nonnull List<String> vmOptions,
+                               @Nonnull List<String> scriptParameters,
+                               @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
       {
       }
 
       @Override
-      public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+      public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
       {
         return false;
       }
 
       @Override
-      public void setSettings(@NotNull ExternalSystemExecutionSettings settings) throws RemoteException {
+      public void setSettings(@Nonnull ExternalSystemExecutionSettings settings) throws RemoteException {
       }
 
       @Override
-      public void setNotificationListener(@NotNull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+      public void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
       }
 
       @Override
-      public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+      public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
         return Collections.emptyMap();
       }
     };
 
-  void executeTasks(@NotNull ExternalSystemTaskId id,
-                    @NotNull List<String> taskNames,
-                    @NotNull String projectPath,
+  void executeTasks(@Nonnull ExternalSystemTaskId id,
+                    @Nonnull List<String> taskNames,
+                    @Nonnull String projectPath,
                     @Nullable S settings,
-                    @NotNull List<String> vmOptions,
-                    @NotNull List<String> scriptParameters,
-                    @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException;
+                    @Nonnull List<String> vmOptions,
+                    @Nonnull List<String> scriptParameters,
+                    @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException;
 
-  boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException;
+  boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException;
 }

@@ -16,7 +16,7 @@
 
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A char sequence base on a char array, Gives access to that array. May be used for performance optimizations
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
  * @see com.intellij.util.text.CharArrayUtil#fromSequenceWithoutCopying(CharSequence)
  */
 public interface CharSequenceBackedByArray extends CharSequence {
-  @NotNull
+  @Nonnull
   char[] getChars();
 
-  void getChars(@NotNull char[] dst, int dstOffset);
+  void getChars(@Nonnull char[] dst, int dstOffset);
 }

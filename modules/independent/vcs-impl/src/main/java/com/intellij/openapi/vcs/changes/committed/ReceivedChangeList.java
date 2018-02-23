@@ -19,7 +19,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeListImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -27,11 +27,12 @@ import java.util.Collections;
  * @author yole
  */
 public class ReceivedChangeList extends CommittedChangeListImpl {
-  @NotNull private final CommittedChangeList myBaseList;
+  @Nonnull
+  private final CommittedChangeList myBaseList;
   private final int myBaseCount;
   private boolean myForcePartial;
 
-  public ReceivedChangeList(@NotNull CommittedChangeList baseList) {
+  public ReceivedChangeList(@Nonnull CommittedChangeList baseList) {
     super(baseList.getName(), baseList.getComment(), baseList.getCommitterName(),
           baseList.getNumber(), baseList.getCommitDate(), Collections.<Change>emptyList());
     myBaseList = baseList;
@@ -56,7 +57,7 @@ public class ReceivedChangeList extends CommittedChangeListImpl {
     return myBaseList.getVcs();
   }
 
-  @NotNull
+  @Nonnull
   public CommittedChangeList getBaseList() {
     return myBaseList;
   }

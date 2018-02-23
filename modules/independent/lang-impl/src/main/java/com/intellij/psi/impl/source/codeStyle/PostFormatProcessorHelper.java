@@ -18,8 +18,8 @@ package com.intellij.psi.impl.source.codeStyle;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author lesya
@@ -43,7 +43,7 @@ public class PostFormatProcessorHelper {
                                       myResultTextRange.getEndOffset()  - oldTextLength + newTextLength);
   }
 
-  public boolean isElementPartlyInRange(@NotNull final PsiElement element) {
+  public boolean isElementPartlyInRange(@Nonnull final PsiElement element) {
     if (myResultTextRange == null) return true;
 
     final TextRange elementRange = element.getTextRange();

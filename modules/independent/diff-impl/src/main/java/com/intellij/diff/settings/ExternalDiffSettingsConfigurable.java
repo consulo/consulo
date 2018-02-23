@@ -27,8 +27,7 @@ import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.StringProperty;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -105,7 +104,7 @@ public class ExternalDiffSettingsConfigurable implements SearchableConfigurable,
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }
@@ -120,11 +119,13 @@ public class ExternalDiffSettingsConfigurable implements SearchableConfigurable,
     private final TextFieldWithBrowseButton myTextField;
     private final StringProperty myPathProperty;
     private final BooleanProperty myEnabledProperty;
-    @Nullable private final JTextField myParameters;
-    @Nullable private final StringProperty myParametersProperty;
+    @javax.annotation.Nullable
+    private final JTextField myParameters;
+    @javax.annotation.Nullable
+    private final StringProperty myParametersProperty;
 
-    public ToolPath(JCheckBox checkBox, TextFieldWithBrowseButton textField, @Nullable JTextField parameters,
-                    StringProperty pathProperty, BooleanProperty enabledProperty, @Nullable StringProperty parametersProperty) {
+    public ToolPath(JCheckBox checkBox, TextFieldWithBrowseButton textField, @javax.annotation.Nullable JTextField parameters,
+                    StringProperty pathProperty, BooleanProperty enabledProperty, @javax.annotation.Nullable StringProperty parametersProperty) {
       myCheckBox = checkBox;
       myTextField = textField;
       myPathProperty = pathProperty;

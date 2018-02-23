@@ -18,7 +18,7 @@ package com.intellij.psi.util.proximity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.Weigher;
 import com.intellij.psi.util.ProximityLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -26,5 +26,5 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLocation> {
 
   @Override
-  public abstract Comparable weigh(@NotNull final PsiElement element, @NotNull final ProximityLocation location);
+  public abstract Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location);
 }

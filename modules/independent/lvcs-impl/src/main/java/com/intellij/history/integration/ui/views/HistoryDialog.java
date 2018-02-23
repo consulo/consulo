@@ -60,8 +60,8 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -90,7 +90,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   private MergingUpdateQueue myUpdateQueue;
   private boolean isUpdating;
 
-  protected HistoryDialog(@NotNull Project project, IdeaGateway gw, VirtualFile f, boolean doInit) {
+  protected HistoryDialog(@Nonnull Project project, IdeaGateway gw, VirtualFile f, boolean doInit) {
     super(project);
     myProject = project;
     myGateway = gw;
@@ -239,7 +239,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return m.createActionPopupMenu(ActionPlaces.UNKNOWN, ag);
   }
 
-  private void scheduleDiffUpdate(@Nullable final Couple<Integer> toSelect) {
+  private void scheduleDiffUpdate(@javax.annotation.Nullable final Couple<Integer> toSelect) {
     doScheduleUpdate(UPDATE_DIFFS, () -> {
       synchronized (myModel) {
         if (toSelect == null) {
@@ -328,7 +328,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     final Ref<ContentDiffRequest> requestRef = new Ref<>();
 
     new Task.Modal(myProject, message("message.processing.revisions"), false) {
-      public void run(@NotNull final ProgressIndicator i) {
+      public void run(@Nonnull final ProgressIndicator i) {
         ApplicationManager.getApplication().runReadAction(() -> {
           RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
           p.processingLeftRevision();
@@ -630,9 +630,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   }
 
   private static class MyDialogWrapper extends DialogWrapper {
-    @NotNull private final CreatePatchConfigurationPanel myPanel;
+    @Nonnull
+    private final CreatePatchConfigurationPanel myPanel;
 
-    protected MyDialogWrapper(@Nullable Project project, @NotNull CreatePatchConfigurationPanel centralPanel) {
+    protected MyDialogWrapper(@javax.annotation.Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
       super(project, true);
       myPanel = centralPanel;
       init();

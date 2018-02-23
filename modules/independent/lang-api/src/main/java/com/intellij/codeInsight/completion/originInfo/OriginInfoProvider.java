@@ -17,8 +17,8 @@ package com.intellij.codeInsight.completion.originInfo;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides info for magic method or properties about their origin:
@@ -40,7 +40,7 @@ public abstract class OriginInfoProvider {
   }
 
   @Nullable
-  private static String _getOriginInfo(@NotNull PsiElement element) {
+  private static String _getOriginInfo(@Nonnull PsiElement element) {
     if (element instanceof OriginInfoAwareElement) {
       String info = ((OriginInfoAwareElement)element).getOriginInfo();
       if (info != null) return info;
@@ -60,5 +60,5 @@ public abstract class OriginInfoProvider {
    * @return info to show in completion tail text
    */
   @Nullable
-  protected abstract String provideOriginInfo(@NotNull PsiElement element);
+  protected abstract String provideOriginInfo(@Nonnull PsiElement element);
 }

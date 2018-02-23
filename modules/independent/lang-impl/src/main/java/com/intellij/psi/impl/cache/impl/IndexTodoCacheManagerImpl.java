@@ -32,7 +32,7 @@ import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,7 +53,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiFile[] getFilesWithTodoItems() {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
@@ -80,7 +80,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  public int getTodoCount(@NotNull final VirtualFile file, @NotNull final IndexPatternProvider patternProvider) {
+  public int getTodoCount(@Nonnull final VirtualFile file, @Nonnull final IndexPatternProvider patternProvider) {
     if (myProject.isDefault()) {
       return 0;
     }
@@ -90,7 +90,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   }
 
   @Override
-  public int getTodoCount(@NotNull final VirtualFile file, @NotNull final IndexPattern pattern) {
+  public int getTodoCount(@Nonnull final VirtualFile file, @Nonnull final IndexPattern pattern) {
     if (myProject.isDefault()) {
       return 0;
     }
@@ -98,7 +98,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     return fetchCount(FileBasedIndex.getInstance(), file, pattern);
   }
 
-  private int fetchCount(@NotNull FileBasedIndex fileBasedIndex, @NotNull VirtualFile file, @NotNull IndexPattern indexPattern) {
+  private int fetchCount(@Nonnull FileBasedIndex fileBasedIndex, @Nonnull VirtualFile file, @Nonnull IndexPattern indexPattern) {
     final int[] count = {0};
     fileBasedIndex.processValues(
             TodoIndex.NAME, new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), file,

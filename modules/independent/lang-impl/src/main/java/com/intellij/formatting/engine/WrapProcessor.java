@@ -16,7 +16,7 @@
 package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 

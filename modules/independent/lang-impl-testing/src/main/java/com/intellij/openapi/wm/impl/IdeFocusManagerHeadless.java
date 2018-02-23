@@ -24,7 +24,7 @@ import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,34 +35,34 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
   public static final IdeFocusManagerHeadless INSTANCE = new IdeFocusManagerHeadless();
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull final Component c, final boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull final Component c, final boolean forced) {
     return ActionCallback.DONE;
   }
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull final FocusCommand command, final boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     return ActionCallback.DONE;
   }
 
   @Override
-  public JComponent getFocusTargetFor(@NotNull final JComponent comp) {
+  public JComponent getFocusTargetFor(@Nonnull final JComponent comp) {
     return null;
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull final Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
     if (!runnable.isExpired()) {
       runnable.run();
     }
@@ -74,7 +74,7 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
   }
 
   @Override
-  public boolean dispatch(@NotNull KeyEvent e) {
+  public boolean dispatch(@Nonnull KeyEvent e) {
     return false;
   }
 
@@ -88,7 +88,7 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ActionCallback requestDefaultFocus(boolean forced) {
     return ActionCallback.DONE;
   }
@@ -98,7 +98,7 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return new Expirable() {
@@ -109,14 +109,14 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FocusRequestor getFurtherRequestor() {
     return this;
   }
 
   @Override
-  public void revalidateFocus(@NotNull ExpirableRunnable runnable) {
+  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
   }
 
   @Override
@@ -129,7 +129,7 @@ public class IdeFocusManagerHeadless extends IdeFocusManager {
   }
 
   @Override
-  public void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable) {
+  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
     runnable.run();
   }
 

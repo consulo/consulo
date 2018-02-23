@@ -16,7 +16,7 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ public class ListWrappingTableModel extends AbstractTableModel {
   private final List<List<String>> list;
   private final List<String> columnNames = new ArrayList<String>();
 
-  public ListWrappingTableModel(@NotNull List<List<String>> list,
-                                @NotNull String... columnNames) {
+  public ListWrappingTableModel(@Nonnull List<List<String>> list,
+                                @Nonnull String... columnNames) {
     this.list = list;
     ContainerUtil.addAll(this.columnNames, columnNames);
   }
@@ -40,7 +40,7 @@ public class ListWrappingTableModel extends AbstractTableModel {
    * @param list       the rows of the table
    * @param columnName the name in the column header
    */
-  public ListWrappingTableModel(@NotNull List<String> list, @NotNull String columnName) {
+  public ListWrappingTableModel(@Nonnull List<String> list, @Nonnull String columnName) {
     this.list = new ArrayList<List<String>>();
     this.list.add(list);
     columnNames.add(columnName);

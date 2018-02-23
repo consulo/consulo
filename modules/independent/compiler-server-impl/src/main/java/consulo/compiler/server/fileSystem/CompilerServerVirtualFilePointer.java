@@ -18,7 +18,7 @@ package consulo.compiler.server.fileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,12 +27,12 @@ import org.jetbrains.annotations.NotNull;
 public class CompilerServerVirtualFilePointer implements VirtualFilePointer {
   private final String myUrl;
 
-  CompilerServerVirtualFilePointer(@NotNull String url) {
+  CompilerServerVirtualFilePointer(@Nonnull String url) {
     myUrl = url;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFileName() {
     return getUrl();
   }
@@ -43,13 +43,13 @@ public class CompilerServerVirtualFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableUrl() {
     return getUrl();
   }

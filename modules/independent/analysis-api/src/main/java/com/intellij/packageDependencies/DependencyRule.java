@@ -21,7 +21,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.ComplementPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class DependencyRule {
   private NamedScope myFromScope;

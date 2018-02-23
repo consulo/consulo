@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ final class ProgressMonitorInputStream extends InputStream {
   private double available;
   private long count;
 
-  public ProgressMonitorInputStream(@NotNull ProgressIndicator indicator, @NotNull InputStream in, int length) {
+  public ProgressMonitorInputStream(@Nonnull ProgressIndicator indicator, @Nonnull InputStream in, int length) {
     this.indicator = indicator;
     this.in = in;
     available = length;

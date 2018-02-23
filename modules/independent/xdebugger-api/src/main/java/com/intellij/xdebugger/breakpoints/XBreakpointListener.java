@@ -16,7 +16,7 @@
 
 package com.intellij.xdebugger.breakpoints;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,12 +24,12 @@ import java.util.EventListener;
  * @author nik
  */
 public interface XBreakpointListener<B extends XBreakpoint<?>> extends EventListener {
-  default void breakpointAdded(@NotNull B breakpoint) {
+  default void breakpointAdded(@Nonnull B breakpoint) {
   }
 
-  default void breakpointRemoved(@NotNull B breakpoint) {
+  default void breakpointRemoved(@Nonnull B breakpoint) {
   }
 
-  default void breakpointChanged(@NotNull B breakpoint) {
+  default void breakpointChanged(@Nonnull B breakpoint) {
   }
 }

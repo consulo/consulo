@@ -18,10 +18,10 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ReadAction<T> extends BaseActionRunnable<T> {
-  @NotNull
+  @Nonnull
   @Override
   public RunResult<T> execute() {
     final RunResult<T> result = new RunResult<T>(this);
@@ -37,7 +37,7 @@ public abstract class ReadAction<T> extends BaseActionRunnable<T> {
     return ApplicationManager.getApplication().acquireReadActionLock();
   }
 
-  public static <E extends Throwable> void run(@NotNull ThrowableRunnable<E> action) throws E {
+  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
     AccessToken token = start();
     try {
       action.run();
@@ -46,7 +46,7 @@ public abstract class ReadAction<T> extends BaseActionRunnable<T> {
     }
   }
 
-  public static <T, E extends Throwable> T compute(@NotNull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
     AccessToken token = start();
     try {
       return action.compute();

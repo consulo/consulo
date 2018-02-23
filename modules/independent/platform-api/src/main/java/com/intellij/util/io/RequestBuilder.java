@@ -17,8 +17,8 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
@@ -39,7 +39,7 @@ public abstract class RequestBuilder {
   public abstract RequestBuilder accept(@Nullable String mimeType);
   public abstract RequestBuilder tuner(@Nullable HttpRequests.ConnectionTuner tuner);
 
-  public abstract <T> T connect(@NotNull HttpRequests.RequestProcessor<T> processor) throws IOException;
+  public abstract <T> T connect(@Nonnull HttpRequests.RequestProcessor<T> processor) throws IOException;
 
   public int tryConnect() throws IOException {
     return connect((request) -> {
@@ -48,7 +48,7 @@ public abstract class RequestBuilder {
     });
   }
 
-  public <T> T connect(@NotNull HttpRequests.RequestProcessor<T> processor, T errorValue, @Nullable Logger logger) {
+  public <T> T connect(@Nonnull HttpRequests.RequestProcessor<T> processor, T errorValue, @Nullable Logger logger) {
     try {
       return connect(processor);
     }
@@ -60,16 +60,16 @@ public abstract class RequestBuilder {
     }
   }
 
-  public void saveToFile(@NotNull File file, @Nullable ProgressIndicator indicator) throws IOException {
+  public void saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
     connect((request) -> request.saveToFile(file, indicator));
   }
 
-  @NotNull
+  @Nonnull
   public byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
     return connect((request) -> request.readBytes(indicator));
   }
 
-  @NotNull
+  @Nonnull
   public String readString(@Nullable ProgressIndicator indicator) throws IOException {
     return connect((request) -> request.readString(indicator));
   }

@@ -21,21 +21,21 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public interface RunContentManager {
   Topic<RunContentWithExecutorListener> TOPIC = Topic.create("Run Content", RunContentWithExecutorListener.class);
 
-  @Nullable
+  @javax.annotation.Nullable
   RunContentDescriptor getSelectedContent();
 
   @Nullable
   RunContentDescriptor getSelectedContent(Executor runnerInfo);
 
-  @NotNull
+  @Nonnull
   List<RunContentDescriptor> getAllDescriptors();
 
   @Nullable
@@ -43,34 +43,34 @@ public interface RunContentManager {
    * To reduce number of open contents RunContentManager reuses
    * some of them during showRunContent (for ex. if a process was stopped)
    */
-  RunContentDescriptor getReuseContent(@NotNull ExecutionEnvironment executionEnvironment);
+  RunContentDescriptor getReuseContent(@Nonnull ExecutionEnvironment executionEnvironment);
 
   @Nullable
   RunContentDescriptor findContentDescriptor(Executor requestor, ProcessHandler handler);
 
-  void showRunContent(@NotNull Executor executor, @NotNull RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse);
+  void showRunContent(@Nonnull Executor executor, @Nonnull RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse);
 
-  void showRunContent(@NotNull Executor executor, @NotNull RunContentDescriptor descriptor);
+  void showRunContent(@Nonnull Executor executor, @Nonnull RunContentDescriptor descriptor);
 
-  void hideRunContent(@NotNull Executor executor, RunContentDescriptor descriptor);
+  void hideRunContent(@Nonnull Executor executor, RunContentDescriptor descriptor);
 
-  boolean removeRunContent(@NotNull Executor executor, RunContentDescriptor descriptor);
+  boolean removeRunContent(@Nonnull Executor executor, RunContentDescriptor descriptor);
 
   void toFrontRunContent(Executor requestor, RunContentDescriptor descriptor);
 
   void toFrontRunContent(Executor requestor, ProcessHandler handler);
 
   @Nullable
-  ToolWindow getToolWindowByDescriptor(@NotNull RunContentDescriptor descriptor);
+  ToolWindow getToolWindowByDescriptor(@Nonnull RunContentDescriptor descriptor);
 
-  void selectRunContent(@NotNull RunContentDescriptor descriptor);
+  void selectRunContent(@Nonnull RunContentDescriptor descriptor);
 
   /**
    * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getContentDescriptorToolWindowId(@Nullable RunnerAndConfigurationSettings settings);
 
-  @NotNull
-  String getToolWindowIdByEnvironment(@NotNull ExecutionEnvironment executionEnvironment);
+  @Nonnull
+  String getToolWindowIdByEnvironment(@Nonnull ExecutionEnvironment executionEnvironment);
 }

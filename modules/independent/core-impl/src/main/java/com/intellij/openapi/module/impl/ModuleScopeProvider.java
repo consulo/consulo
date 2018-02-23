@@ -17,7 +17,7 @@ package com.intellij.openapi.module.impl;
 
 
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Author: dmitrylomov
@@ -28,10 +28,10 @@ public interface ModuleScopeProvider {
    *
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleScope(boolean includeTests);
 
   /**
@@ -39,7 +39,7 @@ public interface ModuleScopeProvider {
    *
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithLibrariesScope();
 
   /**
@@ -47,21 +47,21 @@ public interface ModuleScopeProvider {
    *
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependenciesScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleContentScope();
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleContentWithDependenciesScope();
 
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleWithDependentsScope();
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleTestsWithDependentsScope();
-  @NotNull
+  @Nonnull
   GlobalSearchScope getModuleRuntimeScope(boolean includeTests);
 
   void clearCache();

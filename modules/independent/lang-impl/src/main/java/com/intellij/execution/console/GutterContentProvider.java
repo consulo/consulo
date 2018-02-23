@@ -1,40 +1,40 @@
 package com.intellij.execution.console;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
 public abstract class GutterContentProvider {
   protected static final int MAX_LINE_END_GUTTER_WIDTH_IN_CHAR = 2;
 
-  public void beforeUiComponentUpdate(@NotNull Editor editor) {
+  public void beforeUiComponentUpdate(@Nonnull Editor editor) {
   }
 
-  public void documentCleared(@NotNull Editor editor) {
+  public void documentCleared(@Nonnull Editor editor) {
   }
 
-  public void beforeEvaluate(@NotNull Editor editor) {
+  public void beforeEvaluate(@Nonnull Editor editor) {
   }
 
   public abstract boolean hasText();
 
   @Nullable
-  public abstract String getText(int line, @NotNull Editor editor);
+  public abstract String getText(int line, @Nonnull Editor editor);
 
   @Nullable
-  public abstract String getToolTip(int line, @NotNull Editor editor);
+  public abstract String getToolTip(int line, @Nonnull Editor editor);
 
-  public abstract void doAction(int line, @NotNull Editor editor);
+  public abstract void doAction(int line, @Nonnull Editor editor);
 
-  public abstract boolean drawIcon(int line, @NotNull Graphics g, int y, @NotNull Editor editor);
+  public abstract boolean drawIcon(int line, @Nonnull Graphics g, int y, @Nonnull Editor editor);
 
-  public boolean isShowSeparatorLine(int line, @NotNull Editor editor) {
+  public boolean isShowSeparatorLine(int line, @Nonnull Editor editor) {
     return true;
   }
 
-  public int getLineStartGutterOverlap(@NotNull Editor editor) {
+  public int getLineStartGutterOverlap(@Nonnull Editor editor) {
     return 0;
   }
 }

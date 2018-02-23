@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,12 +38,12 @@ public abstract class ConfigurationError implements Comparable<ConfigurationErro
     myIgnored = ignored;
   }
 
-  @NotNull
+  @Nonnull
   public String getPlainTextTitle() {
     return myPlainTextTitle;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return myDescription;
   }

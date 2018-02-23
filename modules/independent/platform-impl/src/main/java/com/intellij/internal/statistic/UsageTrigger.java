@@ -24,8 +24,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
 
   private State myState = new State();
 
-  public static void trigger(@NotNull String feature) {
+  public static void trigger(@Nonnull String feature) {
     getInstance().doTrigger(feature);
   }
 
@@ -78,7 +78,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
 
     private static final GroupDescriptor GROUP = GroupDescriptor.create("features counts", GroupDescriptor.HIGHER_PRIORITY);
 
-    @NotNull
+    @Nonnull
     public Set<UsageDescriptor> getUsages(@Nullable final Project project) {
       final State state = UsageTrigger.getInstance().getState();
       return ContainerUtil.map2Set(state.myValues.entrySet(), new Function<Map.Entry<String, Integer>, UsageDescriptor>() {
@@ -88,7 +88,7 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
       });
     }
 
-    @NotNull
+    @Nonnull
     public GroupDescriptor getGroupId() {
       return GROUP;
     }

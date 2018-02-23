@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
     private static final AppScheduledExecutorService INSTANCE = new AppScheduledExecutorService();
   }
 
-  @NotNull
+  @Nonnull
   static ScheduledExecutorService getInstance() {
     return Holder.INSTANCE;
   }
@@ -49,9 +49,9 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
   AppScheduledExecutorService() {
     super(new BackendThreadPoolExecutor(), new AppDelayQueue());
     ((BackendThreadPoolExecutor)backendExecutorService).doSetThreadFactory(new ThreadFactory() {
-      @NotNull
+      @Nonnull
       @Override
-      public Thread newThread(@NotNull final Runnable r) {
+      public Thread newThread(@Nonnull final Runnable r) {
         Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
 
         thread.setPriority(Thread.NORM_PRIORITY - 1);
@@ -65,12 +65,12 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
     });
   }
 
-  public void setNewThreadListener(@NotNull Consumer<Thread> threadListener) {
+  public void setNewThreadListener(@Nonnull Consumer<Thread> threadListener) {
     if (newThreadListener != null) throw new IllegalStateException("Listener was already set: "+newThreadListener);
     newThreadListener = threadListener;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Runnable> shutdownNow() {
     return error();
@@ -91,7 +91,7 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
     ((BackendThreadPoolExecutor)backendExecutorService).doShutdown();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   List<Runnable> doShutdownNow() {
     return ContainerUtil.concat(super.doShutdownNow(), ((BackendThreadPoolExecutor)backendExecutorService).doShutdownNow());
@@ -102,7 +102,7 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
     doShutdown();
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
   public String statistics() {
     return "app threads created counter = " + counter;
@@ -118,7 +118,7 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
     return ((BackendThreadPoolExecutor)backendExecutorService).getCorePoolSize();
   }
 
-  @NotNull
+  @Nonnull
   public Thread getPeriodicTasksThread() {
     return delayQueue.getThread();
   }
@@ -146,12 +146,12 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
       super.shutdown();
     }
 
-    @NotNull
+    @Nonnull
     private List<Runnable> doShutdownNow() {
       return super.shutdownNow();
     }
 
-    private void doSetThreadFactory(@NotNull ThreadFactory threadFactory) {
+    private void doSetThreadFactory(@Nonnull ThreadFactory threadFactory) {
       super.setThreadFactory(threadFactory);
     }
 
@@ -161,7 +161,7 @@ public class AppScheduledExecutorService extends SchedulingWrapper {
       error();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<Runnable> shutdownNow() {
       return error();

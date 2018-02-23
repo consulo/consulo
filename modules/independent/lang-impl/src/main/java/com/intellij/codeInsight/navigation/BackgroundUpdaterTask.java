@@ -29,8 +29,8 @@ import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
     super(project, title, canBeCancelled, backgroundOption);
   }
 
-  public void init(@NotNull AbstractPopup popup, @NotNull T component, @NotNull Ref<UsageView> usageView) {
+  public void init(@Nonnull AbstractPopup popup, @Nonnull T component, @Nonnull Ref<UsageView> usageView) {
     myPopup = popup;
     myComponent = component;
     myUsageView = usageView;
@@ -77,7 +77,7 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
   }
 
   public abstract String getCaption(int size);
-  protected abstract void replaceModel(@NotNull List<PsiElement> data);
+  protected abstract void replaceModel(@Nonnull List<PsiElement> data);
   protected abstract void paintBusy(boolean paintBusy);
 
   public boolean setCanceled() {
@@ -131,7 +131,7 @@ public abstract class BackgroundUpdaterTask<T> extends Task.Backgroundable {
   }
 
   @Override
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     paintBusy(true);
     myIndicator = indicator;
   }

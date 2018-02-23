@@ -25,7 +25,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,9 +35,10 @@ import javax.swing.*;
 public class CompileStepBeforeRunNoErrorCheck
   extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
   public static final Key<MakeBeforeRunTaskNoErrorCheck> ID = Key.create("MakeNoErrorCheck");
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
 
-  public CompileStepBeforeRunNoErrorCheck(@NotNull Project project) {
+  public CompileStepBeforeRunNoErrorCheck(@Nonnull Project project) {
     myProject = project;
   }
 

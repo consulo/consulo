@@ -18,8 +18,8 @@ package consulo.ide.webService;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @State(name = "WebServicesConfiguration", storages = @Storage(value = "webServices.xml", roamingType = RoamingType.DISABLED))
 public class WebServicesConfiguration implements PersistentStateComponent<WebServicesConfiguration.State> {
-  @NotNull
+  @Nonnull
   public static WebServicesConfiguration getInstance() {
     return ServiceManager.getService(WebServicesConfiguration.class);
   }

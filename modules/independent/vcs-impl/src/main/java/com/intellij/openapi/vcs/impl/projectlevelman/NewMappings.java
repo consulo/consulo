@@ -36,8 +36,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -148,7 +148,7 @@ public class NewMappings {
     mappingsChanged();
   }
 
-  private void keepActiveVcs(@NotNull Runnable runnable) {
+  private void keepActiveVcs(@Nonnull Runnable runnable) {
     final MyVcsActivator activator;
     synchronized (myLock) {
       if (!myActivated) {
@@ -216,8 +216,8 @@ public class NewMappings {
     mappingsChanged();
   }
 
-  @Nullable
-  public VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file) {
+  @javax.annotation.Nullable
+  public VcsDirectoryMapping getMappingFor(@javax.annotation.Nullable VirtualFile file) {
     if (file == null) return null;
     if (!file.isInLocalFileSystem()) {
       return null;
@@ -249,8 +249,8 @@ public class NewMappings {
     return null;
   }
 
-  @Nullable
-  public String getVcsFor(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  public String getVcsFor(@Nonnull VirtualFile file) {
     VcsDirectoryMapping mapping = getMappingFor(file);
     if (mapping == null) {
       return null;
@@ -258,7 +258,7 @@ public class NewMappings {
     return mapping.getVcs();
   }
 
-  private boolean fileMatchesMapping(@NotNull VirtualFile file,
+  private boolean fileMatchesMapping(@Nonnull VirtualFile file,
                                      final Object matchContext,
                                      final String systemIndependentPath,
                                      final VcsDirectoryMapping mapping) {
@@ -268,8 +268,8 @@ public class NewMappings {
     return FileUtil.startsWith(systemIndependentPath, mapping.systemIndependentPath());
   }
 
-  @NotNull
-  public List<VirtualFile> getMappingsAsFilesUnderVcs(@NotNull AbstractVcs vcs) {
+  @Nonnull
+  public List<VirtualFile> getMappingsAsFilesUnderVcs(@Nonnull AbstractVcs vcs) {
     final List<VirtualFile> result = new ArrayList<>();
     final String vcsName = vcs.getName();
 
@@ -339,7 +339,7 @@ public class NewMappings {
     myFileWatchRequestsManager.ping();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String haveDefaultMapping() {
     synchronized (myLock) {
       // empty mapping MUST be first
@@ -489,7 +489,7 @@ public class NewMappings {
       }
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private static Set<String> notInBottom(final Set<String> top, final Set<String> bottom) {
       Set<String> notInBottom = null;
       for (String topItem : top) {
@@ -524,7 +524,7 @@ public class NewMappings {
     mappingsChanged();
   }
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getDefaultRoots() {
     synchronized (myLock) {
       final String defaultVcs = haveDefaultMapping();

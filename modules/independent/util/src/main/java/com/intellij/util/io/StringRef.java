@@ -15,8 +15,8 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -32,13 +32,13 @@ public class StringRef {
   private String name;
   private final AbstractStringEnumerator store;
 
-  private StringRef(@NotNull String name) {
+  private StringRef(@Nonnull String name) {
     this.name = name;
     id = -1;
     store = null;
   }
 
-  private StringRef(final int id, @NotNull AbstractStringEnumerator store) {
+  private StringRef(final int id, @Nonnull AbstractStringEnumerator store) {
     this.id = id;
     this.store = store;
     name = null;
@@ -58,13 +58,13 @@ public class StringRef {
     return name;
   }
 
-  public void writeTo(@NotNull DataOutput out, @NotNull AbstractStringEnumerator store) throws IOException {
+  public void writeTo(@Nonnull DataOutput out, @Nonnull AbstractStringEnumerator store) throws IOException {
     int nameId = getId(store);
     out.writeByte(nameId & 0xFF);
     DataInputOutputUtil.writeINT(out, nameId >> 8);
   }
 
-  public int getId(@NotNull AbstractStringEnumerator store) {
+  public int getId(@Nonnull AbstractStringEnumerator store) {
     if (id == -1) {
       try {
         id = store.enumerate(name);
@@ -105,19 +105,19 @@ public class StringRef {
     return source == null ? null : new StringRef(source);
   }
 
-  @NotNull
+  @Nonnull
   public static StringRef fromNullableString(@Nullable String source) {
     return new StringRef(source == null ? "" : source);
   }
 
   @Nullable
-  public static StringRef fromStream(@NotNull DataInput in, @NotNull AbstractStringEnumerator store) throws IOException {
+  public static StringRef fromStream(@Nonnull DataInput in, @Nonnull AbstractStringEnumerator store) throws IOException {
     final int nameId = DataInputOutputUtil.readINT(in);
 
     return nameId != 0 ? new StringRef(nameId, store) : null;
   }
 
-  @NotNull
+  @Nonnull
   public static StringRef[] createArray(int count) {
     return count == 0 ? EMPTY_ARRAY : new StringRef[count];
   }

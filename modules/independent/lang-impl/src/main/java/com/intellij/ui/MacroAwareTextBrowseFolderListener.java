@@ -6,18 +6,18 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class MacroAwareTextBrowseFolderListener extends TextBrowseFolderListener {
-  public MacroAwareTextBrowseFolderListener(@NotNull FileChooserDescriptor fileChooserDescriptor,
+  public MacroAwareTextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor,
                                             @Nullable Project project) {
     super(fileChooserDescriptor, project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String expandPath(@NotNull String path) {
+  protected String expandPath(@Nonnull String path) {
     Project project = getProject();
     if (project != null) {
       path = PathMacroManager.getInstance(project).expandPath(path);

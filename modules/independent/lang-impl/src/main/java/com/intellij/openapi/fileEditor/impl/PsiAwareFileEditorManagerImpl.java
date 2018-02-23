@@ -37,7 +37,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -81,7 +81,7 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   }
 
   @Override
-  protected void projectOpened(@NotNull MessageBusConnection connection) {
+  protected void projectOpened(@Nonnull MessageBusConnection connection) {
     super.projectOpened(connection);
 
     myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
@@ -89,13 +89,13 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   }
 
   @Override
-  public boolean isProblem(@NotNull final VirtualFile file) {
+  public boolean isProblem(@Nonnull final VirtualFile file) {
     return myProblemSolver.isProblemFile(file);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getFileTooltipText(@NotNull final VirtualFile file) {
+  public String getFileTooltipText(@Nonnull final VirtualFile file) {
     final StringBuilder tooltipText = new StringBuilder();
     final Module module = ModuleUtilCore.findModuleForFile(file, getProject());
     if (module != null) {
@@ -108,7 +108,7 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   }
 
   @Override
-  protected Editor getOpenedEditor(@NotNull final Editor editor, final boolean focusEditor) {
+  protected Editor getOpenedEditor(@Nonnull final Editor editor, final boolean focusEditor) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getProject());
     Document document = editor.getDocument();
     PsiFile psiFile = documentManager.getPsiFile(document);
@@ -124,7 +124,7 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
    */
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
-    public void propertyChanged(@NotNull final PsiTreeChangeEvent e) {
+    public void propertyChanged(@Nonnull final PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final VirtualFile[] openFiles = getOpenFiles();
@@ -137,27 +137,27 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
     }
 
     @Override
-    public void childAdded(@NotNull PsiTreeChangeEvent event) {
+    public void childAdded(@Nonnull PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+    public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+    public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childMoved(@NotNull PsiTreeChangeEvent event) {
+    public void childMoved(@Nonnull PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+    public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
       doChange(event);
     }
 
@@ -178,21 +178,21 @@ public class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
 
   private class MyProblemListener extends WolfTheProblemSolver.ProblemListener {
     @Override
-    public void problemsAppeared(@NotNull final VirtualFile file) {
+    public void problemsAppeared(@Nonnull final VirtualFile file) {
       updateFile(file);
     }
 
     @Override
-    public void problemsDisappeared(@NotNull VirtualFile file) {
+    public void problemsDisappeared(@Nonnull VirtualFile file) {
       updateFile(file);
     }
 
     @Override
-    public void problemsChanged(@NotNull VirtualFile file) {
+    public void problemsChanged(@Nonnull VirtualFile file) {
       updateFile(file);
     }
 
-    private void updateFile(@NotNull VirtualFile file) {
+    private void updateFile(@Nonnull VirtualFile file) {
       queueUpdateFile(file);
     }
   }

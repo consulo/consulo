@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -38,6 +38,6 @@ public interface ExpandableItemsHandler<T> {
 
   boolean isEnabled();
 
-  @NotNull
+  @Nonnull
   Collection<T> getExpandedItems();
 }

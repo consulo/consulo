@@ -22,8 +22,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -31,17 +31,17 @@ import org.jetbrains.annotations.Nullable;
 public class AstBufferUtil {
   private AstBufferUtil() { }
 
-  public static int toBuffer(@NotNull ASTNode element, @Nullable char[] buffer, int offset) {
+  public static int toBuffer(@Nonnull ASTNode element, @Nullable char[] buffer, int offset) {
     return toBuffer(element, buffer, offset, false);
   }
 
-  public static int toBuffer(@NotNull ASTNode element, @Nullable char[] buffer, int offset, boolean skipWhitespaceAndComments) {
+  public static int toBuffer(@Nonnull ASTNode element, @Nullable char[] buffer, int offset, boolean skipWhitespaceAndComments) {
     BufferVisitor visitor = new BufferVisitor(skipWhitespaceAndComments, skipWhitespaceAndComments, offset, buffer);
     ((TreeElement)element).acceptTree(visitor);
     return visitor.end;
   }
 
-  public static String getTextSkippingWhitespaceComments(@NotNull ASTNode element) {
+  public static String getTextSkippingWhitespaceComments(@Nonnull ASTNode element) {
     int length = toBuffer(element, null, 0, true);
     char[] buffer = new char[length];
     toBuffer(element, buffer, 0, true);

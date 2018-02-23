@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public class MultiHostInjectorExtensionPoint extends AbstractExtensionPointBean 
   private MultiHostInjector myInstance;
 
   private final NotNullLazyValue<Class<PsiElement>> myForClassHandler = new NotNullLazyValue<Class<PsiElement>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Class<PsiElement> compute() {
       assert psiElementClass != null : getPluginDescriptor().getPluginId().getIdString();
@@ -48,7 +48,7 @@ public class MultiHostInjectorExtensionPoint extends AbstractExtensionPointBean 
   };
 
   private final NotNullLazyValue<Class<MultiHostInjector>> myImplementationClassHandler = new NotNullLazyValue<Class<MultiHostInjector>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Class<MultiHostInjector> compute() {
       assert implementationClass != null : getPluginDescriptor().getPluginId().getIdString();
@@ -58,13 +58,13 @@ public class MultiHostInjectorExtensionPoint extends AbstractExtensionPointBean 
     }
   };
 
-  @NotNull
+  @Nonnull
   public Class<PsiElement> getKey() {
     return myForClassHandler.getValue();
   }
 
-  @NotNull
-  public MultiHostInjector getInstance(@NotNull ComponentManager componentManager) {
+  @Nonnull
+  public MultiHostInjector getInstance(@Nonnull ComponentManager componentManager) {
     if(myInstance == null) {
       myInstance = instantiate(myImplementationClassHandler.getValue(), componentManager.getPicoContainer());
     }

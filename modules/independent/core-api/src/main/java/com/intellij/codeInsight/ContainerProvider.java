@@ -17,8 +17,8 @@ package com.intellij.codeInsight;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Max Medvedev
@@ -27,5 +27,5 @@ public interface ContainerProvider {
   ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create("com.intellij.codeInsight.containerProvider");
 
   @Nullable
-  PsiElement getContainer(@NotNull PsiElement item);
+  PsiElement getContainer(@Nonnull PsiElement item);
 }

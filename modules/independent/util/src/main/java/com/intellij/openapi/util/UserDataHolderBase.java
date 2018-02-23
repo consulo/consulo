@@ -18,8 +18,8 @@ package com.intellij.openapi.util;
 
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.keyFMap.KeyFMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
@@ -28,7 +28,8 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   /**
    * Concurrent writes to this field are via CASes only, using the {@link #updater}
    */
-  @NotNull private volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
+  @Nonnull
+  private volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
 
   @Override
   protected Object clone() {
@@ -55,18 +56,18 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     //noinspection unchecked
     return getUserMap().get(key);
   }
 
-  @NotNull
+  @Nonnull
   protected KeyFMap getUserMap() {
     return myUserMap;
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     while (true) {
       KeyFMap map = getUserMap();
       KeyFMap newMap = value == null ? map.minus(key) : map.plus(key, value);
@@ -102,7 +103,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   }
 
   @Override
-  public <T> boolean replace(@NotNull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+  public <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
     while (true) {
       KeyFMap map = getUserMap();
       if (map.get(key) != oldValue) {
@@ -116,8 +117,8 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   }
 
   @Override
-  @NotNull
-  public <T> T putUserDataIfAbsent(@NotNull final Key<T> key, @NotNull final T value) {
+  @Nonnull
+  public <T> T putUserDataIfAbsent(@Nonnull final Key<T> key, @Nonnull final T value) {
     while (true) {
       KeyFMap map = getUserMap();
       T oldValue = map.get(key);
@@ -131,7 +132,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
     }
   }
 
-  public void copyCopyableDataTo(@NotNull UserDataHolderBase clone) {
+  public void copyCopyableDataTo(@Nonnull UserDataHolderBase clone) {
     clone.putUserData(COPYABLE_USER_MAP_KEY, getUserData(COPYABLE_USER_MAP_KEY));
   }
 
@@ -139,7 +140,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
     setUserMap(KeyFMap.EMPTY_MAP);
   }
 
-  protected void setUserMap(@NotNull KeyFMap map) {
+  protected void setUserMap(@Nonnull KeyFMap map) {
     myUserMap = map;
   }
 

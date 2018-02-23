@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.AbstractBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -37,8 +37,8 @@ public class PsiBundle extends AbstractBundle{
     return ourInstance.getMessage(key, params);
   }
 
-  @NotNull
-  public static String visibilityPresentation(@NotNull String modifier) {
+  @Nonnull
+  public static String visibilityPresentation(@Nonnull String modifier) {
     return message(modifier + ".visibility.presentation");
   }
 }

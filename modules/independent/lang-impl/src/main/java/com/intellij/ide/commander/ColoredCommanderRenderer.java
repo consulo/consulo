@@ -27,7 +27,7 @@ import com.intellij.ui.GroupedElementsRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ import java.awt.*;
 final class ColoredCommanderRenderer extends ColoredListCellRenderer {
   private final CommanderPanel myCommanderPanel;
 
-  public ColoredCommanderRenderer(@NotNull final CommanderPanel commanderPanel) {
+  public ColoredCommanderRenderer(@Nonnull final CommanderPanel commanderPanel) {
     myCommanderPanel = commanderPanel;
   }
 

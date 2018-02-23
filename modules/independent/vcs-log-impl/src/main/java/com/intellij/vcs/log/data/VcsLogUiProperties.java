@@ -15,22 +15,23 @@
  */
 package com.intellij.vcs.log.data;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Objects;
 
 public interface VcsLogUiProperties {
-  @NotNull
-  <T> T get(@NotNull VcsLogUiProperty<T> property);
+  @Nonnull
+  <T> T get(@Nonnull VcsLogUiProperty<T> property);
 
-  <T> void set(@NotNull VcsLogUiProperty<T> property, @NotNull T value);
+  <T> void set(@Nonnull VcsLogUiProperty<T> property, @Nonnull T value);
 
-  <T> boolean exists(@NotNull VcsLogUiProperty<T> property);
+  <T> boolean exists(@Nonnull VcsLogUiProperty<T> property);
 
   class VcsLogUiProperty<T> {
-    @NotNull private final String myName;
+    @Nonnull
+    private final String myName;
 
-    public VcsLogUiProperty(@NotNull String name) {
+    public VcsLogUiProperty(@Nonnull String name) {
       myName = name;
     }
 

@@ -19,8 +19,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Allows to initiate 3-way merge operations for multiple versions of content of a particular virtual file.
@@ -45,24 +45,24 @@ public abstract class DiffRequestFactory {
    *                                 executed when the button is pressed.
    * @return The merge operation request.
    */
-  public abstract MergeRequest createMergeRequest(@NotNull String leftText,
-                                                  @NotNull String rightText,
-                                                  @NotNull String originalContent,
-                                                  @NotNull VirtualFile file,
+  public abstract MergeRequest createMergeRequest(@Nonnull String leftText,
+                                                  @Nonnull String rightText,
+                                                  @Nonnull String originalContent,
+                                                  @Nonnull VirtualFile file,
                                                   @Nullable Project project,
                                                   @Nullable ActionButtonPresentation okButtonPresentation,
                                                   @Nullable ActionButtonPresentation cancelButtonPresentation);
 
-  public abstract MergeRequest create3WayDiffRequest(@NotNull String leftText,
-                                                     @NotNull String rightText,
-                                                     @NotNull String originalContent,
+  public abstract MergeRequest create3WayDiffRequest(@Nonnull String leftText,
+                                                     @Nonnull String rightText,
+                                                     @Nonnull String originalContent,
                                                      @Nullable Project project,
                                                      @Nullable ActionButtonPresentation okButtonPresentation,
                                                      @Nullable ActionButtonPresentation cancelButtonPresentation);
 
-  public abstract MergeRequest create3WayDiffRequest(@NotNull String leftText,
-                                                     @NotNull String rightText,
-                                                     @NotNull String originalContent,
+  public abstract MergeRequest create3WayDiffRequest(@Nonnull String leftText,
+                                                     @Nonnull String rightText,
+                                                     @Nonnull String originalContent,
                                                      @Nullable FileType type,
                                                      @Nullable Project project,
                                                      @Nullable ActionButtonPresentation okButtonPresentation,

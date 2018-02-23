@@ -24,7 +24,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.Stack;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,9 +40,10 @@ public class ProjectDataManager {
 
   private static final Logger LOG = Logger.getInstance("#" + ProjectDataManager.class.getName());
 
-  @NotNull private final NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>> myServices =
+  @Nonnull
+  private final NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>> myServices =
     new NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>>() {
-      @NotNull
+      @Nonnull
       @Override
       protected Map<Key<?>, List<ProjectDataService<?, ?>>> compute() {
         Map<Key<?>, List<ProjectDataService<?, ?>>> result = ContainerUtilRt.newHashMap();
@@ -63,7 +64,7 @@ public class ProjectDataManager {
     };
 
   @SuppressWarnings("unchecked")
-  public <T> void importData(@NotNull Collection<DataNode<?>> nodes, @NotNull Project project, boolean synchronous) {
+  public <T> void importData(@Nonnull Collection<DataNode<?>> nodes, @Nonnull Project project, boolean synchronous) {
     Map<Key<?>, List<DataNode<?>>> grouped = ExternalSystemApiUtil.group(nodes);
     for (Map.Entry<Key<?>, List<DataNode<?>>> entry : grouped.entrySet()) {
       // Simple class cast makes ide happy but compiler fails.
@@ -76,7 +77,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> void importData(@NotNull Key<T> key, @NotNull Collection<DataNode<T>> nodes, @NotNull Project project, boolean synchronous) {
+  public <T> void importData(@Nonnull Key<T> key, @Nonnull Collection<DataNode<T>> nodes, @Nonnull Project project, boolean synchronous) {
     ensureTheDataIsReadyToUse(nodes);
     List<ProjectDataService<?, ?>> services = myServices.getValue().get(key);
     if (services == null) {
@@ -99,7 +100,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> void ensureTheDataIsReadyToUse(@NotNull Collection<DataNode<T>> nodes) {
+  private <T> void ensureTheDataIsReadyToUse(@Nonnull Collection<DataNode<T>> nodes) {
     Map<Key<?>, List<ProjectDataService<?, ?>>> servicesByKey = myServices.getValue();
     Stack<DataNode<T>> toProcess = ContainerUtil.newStack(nodes);
     while (!toProcess.isEmpty()) {
@@ -118,7 +119,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> void removeData(@NotNull Key<?> key, @NotNull Collection<T> toRemove, @NotNull Project project, boolean synchronous) {
+  public <T> void removeData(@Nonnull Key<?> key, @Nonnull Collection<T> toRemove, @Nonnull Project project, boolean synchronous) {
     List<ProjectDataService<?, ?>> services = myServices.getValue().get(key);
     for (ProjectDataService<?, ?> service : services) {
       ((ProjectDataService<?, T>)service).removeData(toRemove, project, synchronous);

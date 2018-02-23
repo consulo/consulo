@@ -23,8 +23,8 @@ import com.intellij.util.containers.BidirectionalMap;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -86,7 +86,7 @@ public class CheckBoxList<T> extends JBList {
     });
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         if (isEnabled()) {
           int index = locationToIndex(e.getPoint());
           if (index != -1) {
@@ -110,8 +110,8 @@ public class CheckBoxList<T> extends JBList {
     }.installOn(this);
   }
 
-  @NotNull
-  private static Dimension getCheckBoxDimension(@NotNull JCheckBox checkBox) {
+  @Nonnull
+  private static Dimension getCheckBoxDimension(@Nonnull JCheckBox checkBox) {
     Icon icon = null;
     BasicRadioButtonUI ui = ObjectUtils.tryCast(checkBox.getUI(), BasicRadioButtonUI.class);
     if (ui != null) {
@@ -135,7 +135,7 @@ public class CheckBoxList<T> extends JBList {
    * @return A point relative to the checkbox or null, if it's outside of the checkbox.
    */
   @Nullable
-  protected Point findPointRelativeToCheckBox(int x, int y, @NotNull JCheckBox checkBox, int index) {
+  protected Point findPointRelativeToCheckBox(int x, int y, @Nonnull JCheckBox checkBox, int index) {
     int cx = x - myCellRenderer.getBorderInsets().left;
     int cy = y - myCellRenderer.getBorderInsets().top;
     return cx >= 0 && cy >= 0 ? new Point(cx, cy) : null;
@@ -152,7 +152,7 @@ public class CheckBoxList<T> extends JBList {
    * @return A point relative to the checkbox or null, if it's outside of the checkbox.
    */
   @Nullable
-  protected Point findPointRelativeToCheckBoxWithAdjustedRendering(int x, int y, @NotNull JCheckBox checkBox, int index) {
+  protected Point findPointRelativeToCheckBoxWithAdjustedRendering(int x, int y, @Nonnull JCheckBox checkBox, int index) {
     boolean selected = isSelectedIndex(index);
     boolean hasFocus = hasFocus();
     Component component = myCellRenderer.getListCellRendererComponent(this, checkBox, index, selected, hasFocus);
@@ -174,7 +174,7 @@ public class CheckBoxList<T> extends JBList {
   }
 
   @Nullable
-  private static Point getChildLocationRelativeToAncestor(@NotNull Component ancestor, @NotNull Component child) {
+  private static Point getChildLocationRelativeToAncestor(@Nonnull Component ancestor, @Nonnull Component child) {
     int dx = 0, dy = 0;
     Component c = child;
     while (c != null && c != ancestor) {
@@ -187,7 +187,7 @@ public class CheckBoxList<T> extends JBList {
   }
 
 
-  @NotNull
+  @Nonnull
   private JCheckBox getCheckBoxAt(int index) {
     return (JCheckBox)getModel().getElementAt(index);
   }
@@ -220,7 +220,7 @@ public class CheckBoxList<T> extends JBList {
     ((DefaultListModel)getModel()).addElement(checkBox);
   }
 
-  public void updateItem(@NotNull T oldItem, @NotNull T newItem, @NotNull String newText) {
+  public void updateItem(@Nonnull T oldItem, @Nonnull T newItem, @Nonnull String newText) {
     JCheckBox checkBox = myItemMap.remove(oldItem);
     myItemMap.put(newItem, checkBox);
     checkBox.setText(newText);
@@ -354,7 +354,7 @@ public class CheckBoxList<T> extends JBList {
       return rootComponent;
     }
 
-    @NotNull
+    @Nonnull
     private Insets getBorderInsets() {
       return myBorderInsets;
     }

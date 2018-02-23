@@ -22,13 +22,13 @@ import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TipOfTheDayManager implements StartupActivity, DumbAware {
   private boolean myVeryFirstProjectOpening = true;
 
   @Override
-  public void runActivity(@NotNull UIAccess uiAccess, @NotNull Project project) {
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     if (!myVeryFirstProjectOpening || !GeneralSettings.getInstance().isShowTipsOnStartup()) {
       return;
     }

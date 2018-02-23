@@ -31,7 +31,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -47,7 +47,7 @@ public class ListWithFilter<T> extends JPanel implements DataProvider {
   private final MySpeedSearch mySpeedSearch;
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
       return mySearchField.getText();
     }

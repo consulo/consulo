@@ -19,8 +19,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +28,11 @@ public abstract class TaskDescriptor {
   // this also means that it would be called in case of chain cancel()
   private boolean myHaveMagicCure;
   private final String myName;
-  @NotNull
+  @Nonnull
   private final Where myWhere;
   private final Map<Object, Object> mySurviveKit;
 
-  public TaskDescriptor(final String name, @NotNull final Where where) {
+  public TaskDescriptor(final String name, @Nonnull final Where where) {
     myName = name;
     myWhere = where;
     mySurviveKit = new HashMap<Object, Object>();
@@ -44,7 +43,7 @@ public abstract class TaskDescriptor {
   public final void addCure(final Object disaster, final Object cure) {
     mySurviveKit.put(disaster, cure);
   }
-  @Nullable
+  @javax.annotation.Nullable
   public final Object hasCure(final Object disaster) {
     return mySurviveKit.get(disaster);
   }
@@ -53,7 +52,7 @@ public abstract class TaskDescriptor {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public Where getWhere() {
     return myWhere;
   }
@@ -69,7 +68,7 @@ public abstract class TaskDescriptor {
   public void canceled() {
   }
 
-  public static TaskDescriptor createForBackgroundableTask(@NotNull final Task.Backgroundable backgroundable) {
+  public static TaskDescriptor createForBackgroundableTask(@Nonnull final Task.Backgroundable backgroundable) {
     return new TaskDescriptor(backgroundable.getTitle(), Where.POOLED) {
       @Override
       public void run(ContinuationContext context) {

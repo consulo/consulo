@@ -25,8 +25,8 @@ import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     public String iconBytes;
   }
 
-  @NotNull
+  @Nonnull
   public static ServiceAuthConfiguration getInstance() {
     return ServiceManager.getService(ServiceAuthConfiguration.class);
   }
@@ -102,7 +102,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     XmlSerializerUtil.copyBean(state, myState);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getEmail() {
     return myState.email;
   }

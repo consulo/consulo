@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log.data;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VisiblePackChangeListener {
-  void onVisiblePackChange(@NotNull VisiblePack visiblePack);
+  void onVisiblePackChange(@Nonnull VisiblePack visiblePack);
 }

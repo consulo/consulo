@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 import com.intellij.ui.IdeBorderFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -59,7 +59,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     getTemplatePresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
     e.getPresentation().setText(mySettings.compareMode.getPresentableName(mySettings));
@@ -77,7 +77,7 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DefaultActionGroup createPopupActionGroup(JComponent button) {
     return myGroup;

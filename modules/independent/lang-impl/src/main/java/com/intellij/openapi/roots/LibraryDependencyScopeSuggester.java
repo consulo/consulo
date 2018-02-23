@@ -17,8 +17,8 @@ package com.intellij.openapi.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -27,5 +27,5 @@ public abstract class LibraryDependencyScopeSuggester {
   public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create("com.intellij.library.dependencyScopeSuggester");
 
   @Nullable
-  public abstract DependencyScope getDefaultDependencyScope(@NotNull Library library);
+  public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);
 }

@@ -18,8 +18,8 @@ package com.intellij.ui;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -62,12 +62,12 @@ public class BalloonLayoutData {
   public Color fillColor;
   public Color borderColor;
 
-  @NotNull
+  @Nonnull
   public MergeInfo merge() {
     return new MergeInfo(mergeData, id);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getMergeIds() {
     List<String> ids = new ArrayList<String>(mergeData.linkIds);
     ids.add(id);
@@ -78,7 +78,7 @@ public class BalloonLayoutData {
     public List<String> linkIds;
     public int count;
 
-    public MergeInfo(@Nullable MergeInfo info, @NotNull String linkId) {
+    public MergeInfo(@Nullable MergeInfo info, @Nonnull String linkId) {
       if (info == null) {
         linkIds = new ArrayList<String>();
         count = 1;

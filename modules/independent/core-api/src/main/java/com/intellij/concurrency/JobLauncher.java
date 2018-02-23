@@ -21,8 +21,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -50,33 +50,33 @@ public abstract class JobLauncher {
    *         or we were unable to start read action in at least one thread
    * @throws ProcessCanceledException if at least one task has thrown ProcessCanceledException
    */
-  public <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<T> things,
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<T> things,
                                                      ProgressIndicator progress,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @NotNull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
     return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(),
                                            failFastOnAcquireReadAction, thingProcessor);
   }
 
 
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(@NotNull List<T> things,
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<T> things,
                                                               ProgressIndicator progress,
                                                               boolean runInReadAction,
                                                               boolean failFastOnAcquireReadAction,
-                                                              @NotNull Processor<? super T> thingProcessor) throws ProcessCanceledException;
+                                                              @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException;
 
-  @NotNull
+  @Nonnull
   @Deprecated // use invokeConcurrentlyUnderProgress() instead
-  public abstract <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@NotNull List<T> things,
+  public abstract <T> AsyncFuture<Boolean> invokeConcurrentlyUnderProgressAsync(@Nonnull List<T> things,
                                                                                 ProgressIndicator progress,
                                                                                 boolean failFastOnAcquireReadAction,
-                                                                                @NotNull Processor<? super T> thingProcessor);
+                                                                                @Nonnull Processor<? super T> thingProcessor);
 
   /**
    * NEVER EVER submit runnable which can lock itself for indeterminate amount of time.
    * This will cause deadlock since this thread pool is an easily exhaustible resource.
    * Use {@link com.intellij.openapi.application.Application#executeOnPooledThread(java.lang.Runnable)} instead
    */
-  @NotNull
-  public abstract Job<Void> submitToJobThread(@NotNull final Runnable action, @Nullable Consumer<Future> onDoneCallback);
+  @Nonnull
+  public abstract Job<Void> submitToJobThread(@Nonnull final Runnable action, @Nullable Consumer<Future> onDoneCallback);
 }

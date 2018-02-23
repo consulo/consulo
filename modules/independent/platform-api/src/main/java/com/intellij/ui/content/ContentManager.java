@@ -22,56 +22,56 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.BusyObject;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public interface ContentManager extends Disposable, BusyObject {
   boolean canCloseContents();
 
-  void addContent(@NotNull Content content);
+  void addContent(@Nonnull Content content);
 
-  void addContent(@NotNull Content content, final int order);
+  void addContent(@Nonnull Content content, final int order);
 
-  void addContent(@NotNull Content content, Object constraints);
+  void addContent(@Nonnull Content content, Object constraints);
 
-  boolean removeContent(@NotNull Content content, final boolean dispose);
+  boolean removeContent(@Nonnull Content content, final boolean dispose);
 
-  @NotNull
-  ActionCallback removeContent(@NotNull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
+  @Nonnull
+  ActionCallback removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
 
-  void setSelectedContent(@NotNull Content content);
+  void setSelectedContent(@Nonnull Content content);
 
-  @NotNull
-  ActionCallback setSelectedContentCB(@NotNull Content content);
+  @Nonnull
+  ActionCallback setSelectedContentCB(@Nonnull Content content);
 
-  void setSelectedContent(@NotNull Content content, boolean requestFocus);
+  void setSelectedContent(@Nonnull Content content, boolean requestFocus);
 
-  @NotNull
-  ActionCallback setSelectedContentCB(@NotNull Content content, boolean requestFocus);
+  @Nonnull
+  ActionCallback setSelectedContentCB(@Nonnull Content content, boolean requestFocus);
 
-  void setSelectedContent(@NotNull Content content, boolean requestFocus, boolean forcedFocus);
+  void setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
-  @NotNull
-  ActionCallback setSelectedContentCB(@NotNull Content content, boolean requestFocus, boolean forcedFocus);
+  @Nonnull
+  ActionCallback setSelectedContentCB(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
-  @NotNull
-  ActionCallback setSelectedContent(@NotNull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
+  @Nonnull
+  ActionCallback setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
 
-  void addSelectedContent(@NotNull Content content);
+  void addSelectedContent(@Nonnull Content content);
 
   @Nullable
   Content getSelectedContent();
 
-  @NotNull
+  @Nonnull
   Content[] getSelectedContents();
 
   void removeAllContents(final boolean dispose);
 
   int getContentCount();
 
-  @NotNull
+  @Nonnull
   Content[] getContents();
 
   //TODO[anton,vova] is this method needed?
@@ -82,7 +82,7 @@ public interface ContentManager extends Disposable, BusyObject {
 
   int getIndexOfContent(Content content);
 
-  @NotNull
+  @Nonnull
   String getCloseActionName();
 
   boolean canCloseAllContents();
@@ -91,9 +91,9 @@ public interface ContentManager extends Disposable, BusyObject {
 
   ActionCallback selectNextContent();
 
-  void addContentManagerListener(@NotNull ContentManagerListener l);
+  void addContentManagerListener(@Nonnull ContentManagerListener l);
 
-  void removeContentManagerListener(@NotNull ContentManagerListener l);
+  void removeContentManagerListener(@Nonnull ContentManagerListener l);
 
   /**
    * Returns the localized name of the "Close All but This" action.
@@ -101,27 +101,27 @@ public interface ContentManager extends Disposable, BusyObject {
    * @return the action name.
    * @since 5.1
    */
-  @NotNull
+  @Nonnull
   String getCloseAllButThisActionName();
 
-  @NotNull
+  @Nonnull
   String getPreviousContentActionName();
 
-  @NotNull
+  @Nonnull
   String getNextContentActionName();
 
-  List<AnAction> getAdditionalPopupActions(@NotNull Content content);
+  List<AnAction> getAdditionalPopupActions(@Nonnull Content content);
 
-  void removeFromSelection(@NotNull Content content);
+  void removeFromSelection(@Nonnull Content content);
 
-  boolean isSelected(@NotNull Content content);
+  boolean isSelected(@Nonnull Content content);
 
-  @NotNull
+  @Nonnull
   ActionCallback requestFocus(@Nullable Content content, boolean forced);
 
-  void addDataProvider(@NotNull DataProvider provider);
+  void addDataProvider(@Nonnull DataProvider provider);
 
-  @NotNull
+  @Nonnull
   default ContentFactory getFactory() {
     return ContentFactory.getInstance();
   }
@@ -130,11 +130,11 @@ public interface ContentManager extends Disposable, BusyObject {
 
   boolean isSingleSelection();
 
-  default Content getContent(@NotNull Component component) {
+  default Content getContent(@Nonnull Component component) {
     throw new AbstractMethodError();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   default Component getUIComponent() {
     throw new AbstractMethodError();
@@ -142,7 +142,7 @@ public interface ContentManager extends Disposable, BusyObject {
 
   // TODO [VISTALL] awt & swing dependency
   // region awt & swing dependency
-  @NotNull
+  @Nonnull
   default javax.swing.JComponent getComponent() {
     throw new AbstractMethodError();
   }

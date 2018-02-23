@@ -36,8 +36,8 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -75,7 +75,7 @@ public class XFramesView extends XDebugView {
   private final TransferToEDTQueue<Runnable> myLaterInvocator = TransferToEDTQueue.createRunnableMerger("XFramesView later invocator", 50);
   private boolean myRefresh = false;
 
-  public XFramesView(@NotNull Project project) {
+  public XFramesView(@Nonnull Project project) {
     myMainPanel = new JPanel(new BorderLayout());
 
     myFramesList = new XDebuggerFramesList(project);
@@ -143,7 +143,7 @@ public class XFramesView extends XDebugView {
           myThreadComboBox.addItem(null); // rendered as "Loading..."
           context.computeExecutionStacks(new XSuspendContext.XExecutionStackContainer() {
             @Override
-            public void addExecutionStack(@NotNull final List<? extends XExecutionStack> executionStacks, boolean last) {
+            public void addExecutionStack(@Nonnull final List<? extends XExecutionStack> executionStacks, boolean last) {
               ApplicationManager.getApplication().invokeLater(() -> {
                 addExecutionStacks(executionStacks);
                 if (last) {
@@ -158,7 +158,7 @@ public class XFramesView extends XDebugView {
             }
 
             @Override
-            public void errorOccurred(@NotNull String errorMessage) {
+            public void errorOccurred(@Nonnull String errorMessage) {
             }
           });
         }
@@ -208,7 +208,7 @@ public class XFramesView extends XDebugView {
   }
 
   @Override
-  public void processSessionEvent(@NotNull SessionEvent event, @NotNull XDebugSession session) {
+  public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
     myRefresh = event == SessionEvent.SETTINGS_CHANGED;
 
     if (event == SessionEvent.BEFORE_RESUME) {
@@ -290,7 +290,7 @@ public class XFramesView extends XDebugView {
     }
   }
 
-  private void updateFrames(XExecutionStack executionStack, @NotNull XDebugSession session, @Nullable XStackFrame frameToSelect) {
+  private void updateFrames(XExecutionStack executionStack, @Nonnull XDebugSession session, @Nullable XStackFrame frameToSelect) {
     if (mySelectedStack != null) {
       getOrCreateBuilder(mySelectedStack, session).stop();
     }
@@ -349,12 +349,12 @@ public class XFramesView extends XDebugView {
     }
 
     @Override
-    public void addStackFrames(@NotNull final List<? extends XStackFrame> stackFrames, final boolean last) {
+    public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, final boolean last) {
       addStackFrames(stackFrames, null, last);
     }
 
     @Override
-    public void addStackFrames(@NotNull final List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, final boolean last) {
+    public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, final boolean last) {
       if (isObsolete()) return;
       myLaterInvocator.offer(() -> {
         if (isObsolete()) return;
@@ -381,7 +381,7 @@ public class XFramesView extends XDebugView {
     }
 
     @Override
-    public void errorOccurred(@NotNull final String errorMessage) {
+    public void errorOccurred(@Nonnull final String errorMessage) {
       if (isObsolete()) return;
       myLaterInvocator.offer(() -> {
         if (isObsolete()) return;

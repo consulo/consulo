@@ -20,7 +20,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -56,7 +56,7 @@ abstract class AutoMatchStrategy {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected Collection<VirtualFile> suggestFolderForCreation(final TextFilePatch creation) {
     final String newFileParentPath = extractPathWithoutName(creation.getAfterName());
     if (newFileParentPath != null) {
@@ -90,7 +90,7 @@ abstract class AutoMatchStrategy {
     return result;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected String extractPathWithoutName(final String path) {
     final String replaced = path.replace("\\", "/");
     final int idx = replaced.lastIndexOf('/');

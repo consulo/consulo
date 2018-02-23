@@ -25,7 +25,7 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,18 +38,18 @@ import java.util.List;
 public abstract class ProgressStripeIcon implements Icon {
   private static final int TRANSLATE = 1;
   private static final int HEIGHT = 3;
-  @NotNull
+  @Nonnull
   private final JComponent myReferenceComponent;
   private final int myShift;
 
-  private ProgressStripeIcon(@NotNull JComponent component, int shift) {
+  private ProgressStripeIcon(@Nonnull JComponent component, int shift) {
     myReferenceComponent = component;
     myShift = shift;
   }
 
   public abstract int getChunkWidth();
 
-  protected abstract void paint(@NotNull Graphics2D g2, int x, int y, int shift);
+  protected abstract void paint(@Nonnull Graphics2D g2, int x, int y, int shift);
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -84,7 +84,7 @@ public abstract class ProgressStripeIcon implements Icon {
     private static final JBColor BG_COLOR = new JBColor(ColorUtil.withAlpha(Gray._165, ALPHA), ColorUtil.withAlpha(Gray._110, ALPHA));
     private static final int WIDTH = 16;
 
-    private StripeIcon(@NotNull JComponent component, int shift) {
+    private StripeIcon(@Nonnull JComponent component, int shift) {
       super(component, shift);
     }
 
@@ -94,7 +94,7 @@ public abstract class ProgressStripeIcon implements Icon {
     }
 
     @Override
-    protected void paint(@NotNull Graphics2D g2, int x, int y, int shift) {
+    protected void paint(@Nonnull Graphics2D g2, int x, int y, int shift) {
       g2.setColor(BG_COLOR);
 
       Path2D.Double path = new Path2D.Double();
@@ -124,7 +124,7 @@ public abstract class ProgressStripeIcon implements Icon {
     private static final int GRADIENT = 128;
     private static final int GRADIENT_HEIGHT = 2;
 
-    private GradientIcon(@NotNull JComponent component, int shift) {
+    private GradientIcon(@Nonnull JComponent component, int shift) {
       super(component, shift);
     }
 
@@ -132,7 +132,7 @@ public abstract class ProgressStripeIcon implements Icon {
       return 2 * JBUI.scale(GRADIENT);
     }
 
-    public void paint(@NotNull Graphics2D g2, int x, int y, int shift) {
+    public void paint(@Nonnull Graphics2D g2, int x, int y, int shift) {
       Color dark;
       Color light;
       if (IntelliJLaf.isGraphite()) {
@@ -155,8 +155,8 @@ public abstract class ProgressStripeIcon implements Icon {
     }
   }
 
-  @NotNull
-  public static AsyncProcessIcon generateIcon(@NotNull JComponent component) {
+  @Nonnull
+  public static AsyncProcessIcon generateIcon(@Nonnull JComponent component) {
     List<Icon> result = ContainerUtil.newArrayList();
     if (UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderDarcula()) {
       for (int i = 0; i < 2 * JBUI.scale(GradientIcon.GRADIENT); i += JBUI.scale(TRANSLATE)) {

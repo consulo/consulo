@@ -32,8 +32,7 @@ import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -46,7 +45,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.history.VcsAnnotationCachedProxy");
   private final AnnotationProvider myAnnotationProvider;
 
-  public VcsAnnotationCachedProxy(@NotNull AbstractVcs vcs, @NotNull AnnotationProvider provider) {
+  public VcsAnnotationCachedProxy(@Nonnull AbstractVcs vcs, @Nonnull AnnotationProvider provider) {
     assert provider instanceof VcsCacheableAnnotationProvider;
     myVcs = vcs;
     myCache = ProjectLevelVcsManager.getInstance(vcs.getProject()).getVcsHistoryCache();
@@ -144,7 +143,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
-                                               @Nullable final VcsRevisionNumber firstRevision) throws VcsException {
+                                               @javax.annotation.Nullable final VcsRevisionNumber firstRevision) throws VcsException {
     final boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
     if (historyCacheSupported) {
       final VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
@@ -173,11 +172,11 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   @Override
-  public boolean isAnnotationValid(@NotNull VcsFileRevision rev) {
+  public boolean isAnnotationValid(@Nonnull VcsFileRevision rev) {
     return myAnnotationProvider.isAnnotationValid(rev);
   }
 
-  private VcsAbstractHistorySession limitedHistory(final FilePath filePath, @NotNull final VcsRevisionNumber firstNumber) throws VcsException {
+  private VcsAbstractHistorySession limitedHistory(final FilePath filePath, @Nonnull final VcsRevisionNumber firstNumber) throws VcsException {
     final VcsAbstractHistorySession[] result = new VcsAbstractHistorySession[1];
     final VcsException[] exc = new VcsException[1];
 

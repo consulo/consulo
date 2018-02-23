@@ -36,8 +36,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,17 +55,17 @@ public class XBreakpointUtil {
     return getType(breakpoint).getShortText(breakpoint);
   }
 
-  public static <B extends XBreakpoint<?>> String getDisplayText(@NotNull B breakpoint) {
+  public static <B extends XBreakpoint<?>> String getDisplayText(@Nonnull B breakpoint) {
     return getType(breakpoint).getDisplayText(breakpoint);
   }
 
-  public static <B extends XBreakpoint<?>> XBreakpointType<B, ?> getType(@NotNull B breakpoint) {
+  public static <B extends XBreakpoint<?>> XBreakpointType<B, ?> getType(@Nonnull B breakpoint) {
     //noinspection unchecked
     return (XBreakpointType<B,?>)breakpoint.getType();
   }
 
   @Nullable
-  public static XBreakpointType<?,?> findType(@NotNull @NonNls String id) {
+  public static XBreakpointType<?,?> findType(@Nonnull @NonNls String id) {
     for (XBreakpointType breakpointType : getBreakpointTypes()) {
       if (id.equals(breakpointType.getId())) {
         return breakpointType;
@@ -78,8 +78,8 @@ public class XBreakpointUtil {
     return XBreakpointType.EXTENSION_POINT_NAME.getExtensions();
   }
 
-  @NotNull
-  public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(@NotNull final Project project, @NotNull final Editor editor) {
+  @Nonnull
+  public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(@Nonnull final Project project, @Nonnull final Editor editor) {
     int offset = editor.getCaretModel().getOffset();
     Document editorDocument = editor.getDocument();
 
@@ -133,9 +133,9 @@ public class XBreakpointUtil {
    * - unfolds folded block on the line
    * - if folded, checks if line breakpoints could be toggled inside folded text
    */
-  @NotNull
-  public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(@NotNull Project project,
-                                                                  @NotNull XSourcePosition position,
+  @Nonnull
+  public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(@Nonnull Project project,
+                                                                  @Nonnull XSourcePosition position,
                                                                   @Nullable Editor editor,
                                                                   boolean temporary,
                                                                   boolean moveCaret) {

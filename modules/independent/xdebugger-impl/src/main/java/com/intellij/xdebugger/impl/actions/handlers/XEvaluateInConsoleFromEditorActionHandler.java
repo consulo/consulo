@@ -15,19 +15,19 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.evaluation.ExpressionInfo;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFromEditorActionHandler {
   @Override
-  protected boolean isEnabled(@NotNull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && getConsoleExecuteAction(session) != null;
   }
 
   @Nullable
-  private static ConsoleExecuteAction getConsoleExecuteAction(@NotNull XDebugSession session) {
+  private static ConsoleExecuteAction getConsoleExecuteAction(@Nonnull XDebugSession session) {
     return getConsoleExecuteAction(session.getConsoleView());
   }
 
@@ -43,7 +43,7 @@ public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFrom
   }
 
   @Override
-  protected void perform(@NotNull XDebugSession session, DataContext dataContext) {
+  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor == null || !(editor instanceof EditorEx)) {
       return;

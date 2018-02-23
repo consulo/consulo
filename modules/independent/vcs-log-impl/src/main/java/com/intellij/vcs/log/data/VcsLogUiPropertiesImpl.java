@@ -18,8 +18,8 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.PermanentGraph;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -52,14 +52,14 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
     public TextFilterSettings TEXT_FILTER_SETTINGS = new TextFilterSettings();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public abstract State getState();
 
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T get(@NotNull VcsLogUiProperty<T> property) {
+  public <T> T get(@Nonnull VcsLogUiProperty<T> property) {
     if (SHOW_DETAILS.equals(property)) {
       return (T)Boolean.valueOf(getState().SHOW_DETAILS_IN_CHANGES);
     }
@@ -93,7 +93,7 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
   }
 
   @Override
-  public <T> void set(@NotNull VcsLogUiProperty<T> property, @NotNull T value) {
+  public <T> void set(@Nonnull VcsLogUiProperty<T> property, @Nonnull T value) {
     if (SHOW_DETAILS.equals(property)) {
       getState().SHOW_DETAILS_IN_CHANGES = (Boolean)value;
     }
@@ -128,14 +128,14 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
   }
 
   @Override
-  public <T> boolean exists(@NotNull VcsLogUiProperty<T> property) {
+  public <T> boolean exists(@Nonnull VcsLogUiProperty<T> property) {
     if (SUPPORTED_PROPERTIES.contains(property) || property instanceof VcsLogHighlighterProperty) {
       return true;
     }
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private TextFilterSettings getTextFilterSettings() {
     TextFilterSettings settings = getState().TEXT_FILTER_SETTINGS;
     if (settings == null) {
@@ -146,16 +146,16 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
   }
 
   @Override
-  public void addRecentlyFilteredUserGroup(@NotNull List<String> usersInGroup) {
+  public void addRecentlyFilteredUserGroup(@Nonnull List<String> usersInGroup) {
     addRecentGroup(usersInGroup, getState().RECENTLY_FILTERED_USER_GROUPS);
   }
 
   @Override
-  public void addRecentlyFilteredBranchGroup(@NotNull List<String> valuesInGroup) {
+  public void addRecentlyFilteredBranchGroup(@Nonnull List<String> valuesInGroup) {
     addRecentGroup(valuesInGroup, getState().RECENTLY_FILTERED_BRANCH_GROUPS);
   }
 
-  private static void addRecentGroup(@NotNull List<String> valuesInGroup, @NotNull Deque<UserGroup> stateField) {
+  private static void addRecentGroup(@Nonnull List<String> valuesInGroup, @Nonnull Deque<UserGroup> stateField) {
     UserGroup group = new UserGroup();
     group.users = valuesInGroup;
     if (stateField.contains(group)) {
@@ -168,24 +168,24 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<List<String>> getRecentlyFilteredUserGroups() {
     return getRecentGroup(getState().RECENTLY_FILTERED_USER_GROUPS);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<List<String>> getRecentlyFilteredBranchGroups() {
     return getRecentGroup(getState().RECENTLY_FILTERED_BRANCH_GROUPS);
   }
 
-  @NotNull
+  @Nonnull
   private static List<List<String>> getRecentGroup(Deque<UserGroup> stateField) {
     return ContainerUtil.map2List(stateField, group -> group.users);
   }
 
   @Override
-  public void saveFilterValues(@NotNull String filterName, @Nullable List<String> values) {
+  public void saveFilterValues(@Nonnull String filterName, @Nullable List<String> values) {
     if (values != null) {
       getState().FILTERS.put(filterName, values);
     }
@@ -196,17 +196,17 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
 
   @Nullable
   @Override
-  public List<String> getFilterValues(@NotNull String filterName) {
+  public List<String> getFilterValues(@Nonnull String filterName) {
     return getState().FILTERS.get(filterName);
   }
 
   @Override
-  public void addChangeListener(@NotNull VcsLogUiPropertiesListener listener) {
+  public void addChangeListener(@Nonnull VcsLogUiPropertiesListener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void removeChangeListener(@NotNull VcsLogUiPropertiesListener listener) {
+  public void removeChangeListener(@Nonnull VcsLogUiPropertiesListener listener) {
     myListeners.remove(listener);
   }
 
@@ -251,7 +251,7 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
     public abstract void onHighlighterChanged();
 
     @Override
-    public <T> void onPropertyChanged(@NotNull VcsLogUiProperty<T> property) {
+    public <T> void onPropertyChanged(@Nonnull VcsLogUiProperty<T> property) {
       if (SHOW_DETAILS.equals(property)) {
         onShowDetailsChanged();
       }

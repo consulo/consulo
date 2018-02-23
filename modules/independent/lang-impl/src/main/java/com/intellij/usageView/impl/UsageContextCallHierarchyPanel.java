@@ -30,8 +30,8 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageContextPanelBase;
 import com.intellij.usages.impl.UsageViewImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,14 +41,14 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   private HierarchyBrowser myBrowser;
 
   public static class Provider implements UsageContextPanel.Provider {
-    @NotNull
+    @Nonnull
     @Override
-    public UsageContextPanel create(@NotNull UsageView usageView) {
+    public UsageContextPanel create(@Nonnull UsageView usageView) {
       return new UsageContextCallHierarchyPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation());
     }
 
     @Override
-    public boolean isAvailableFor(@NotNull UsageView usageView) {
+    public boolean isAvailableFor(@Nonnull UsageView usageView) {
       UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
       if (targets.length == 0) return false;
       UsageTarget target = targets[0];
@@ -64,14 +64,14 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
       PsiElement providerTarget = provider.getTarget(context);
       return providerTarget != null;
     }
-    @NotNull
+    @Nonnull
     @Override
     public String getTabTitle() {
       return "Call Hierarchy";
     }
   }
 
-  public UsageContextCallHierarchyPanel(@NotNull Project project, @NotNull UsageViewPresentation presentation) {
+  public UsageContextCallHierarchyPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
     super(project, presentation);
   }
 
@@ -112,7 +112,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   }
 
   @Nullable
-  private static HierarchyBrowser createCallHierarchyPanel(@NotNull PsiElement element) {
+  private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
     DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(element.getProject()));
     HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
     if (provider == null) return null;
@@ -127,7 +127,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     return browser;
   }
 
-  private static PsiElement getElementToSliceOn(@NotNull List<UsageInfo> infos) {
+  private static PsiElement getElementToSliceOn(@Nonnull List<UsageInfo> infos) {
     UsageInfo info = infos.get(0);
     return info.getElement();
   }

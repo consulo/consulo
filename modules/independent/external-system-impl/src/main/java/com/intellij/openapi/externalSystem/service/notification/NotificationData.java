@@ -19,8 +19,8 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
@@ -32,11 +32,16 @@ import java.util.Map;
  */
 public class NotificationData {
 
-  @NotNull private String myTitle;
-  @NotNull private String myMessage;
-  @NotNull private NotificationCategory myNotificationCategory;
-  @NotNull private final NotificationSource myNotificationSource;
-  @NotNull private NotificationListener myListener;
+  @Nonnull
+  private String myTitle;
+  @Nonnull
+  private String myMessage;
+  @Nonnull
+  private NotificationCategory myNotificationCategory;
+  @Nonnull
+  private final NotificationSource myNotificationSource;
+  @Nonnull
+  private NotificationListener myListener;
   @Nullable private String myFilePath;
   @Nullable private Navigatable navigatable;
   private int myLine;
@@ -45,17 +50,17 @@ public class NotificationData {
 
   private final Map<String, NotificationListener> myListenerMap;
 
-  public NotificationData(@NotNull String title,
-                          @NotNull String message,
-                          @NotNull NotificationCategory notificationCategory,
-                          @NotNull NotificationSource notificationSource) {
+  public NotificationData(@Nonnull String title,
+                          @Nonnull String message,
+                          @Nonnull NotificationCategory notificationCategory,
+                          @Nonnull NotificationSource notificationSource) {
     this(title, message, notificationCategory, notificationSource, null, -1, -1, false);
   }
 
-  public NotificationData(@NotNull String title,
-                          @NotNull String message,
-                          @NotNull NotificationCategory notificationCategory,
-                          @NotNull NotificationSource notificationSource,
+  public NotificationData(@Nonnull String title,
+                          @Nonnull String message,
+                          @Nonnull NotificationCategory notificationCategory,
+                          @Nonnull NotificationSource notificationSource,
                           @Nullable String filePath,
                           int line,
                           int column,
@@ -67,7 +72,7 @@ public class NotificationData {
     myListenerMap = ContainerUtil.newHashMap();
     myListener = new NotificationListener.Adapter() {
       @Override
-      protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+      protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
 
         final NotificationListener notificationListener = myListenerMap.get(event.getDescription());
@@ -82,39 +87,39 @@ public class NotificationData {
     myBalloonNotification = balloonNotification;
   }
 
-  @NotNull
+  @Nonnull
   public String getTitle() {
     return myTitle;
   }
 
-  public void setTitle(@NotNull String title) {
+  public void setTitle(@Nonnull String title) {
     myTitle = title;
   }
 
-  @NotNull
+  @Nonnull
   public String getMessage() {
     return myMessage;
   }
 
-  public void setMessage(@NotNull String message) {
+  public void setMessage(@Nonnull String message) {
     myMessage = message;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationCategory getNotificationCategory() {
     return myNotificationCategory;
   }
 
-  public void setNotificationCategory(@NotNull NotificationCategory notificationCategory) {
+  public void setNotificationCategory(@Nonnull NotificationCategory notificationCategory) {
     myNotificationCategory = notificationCategory;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationSource getNotificationSource() {
     return myNotificationSource;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationListener getListener() {
     return myListener;
   }
@@ -128,7 +133,7 @@ public class NotificationData {
     myFilePath = filePath;
   }
 
-  @NotNull
+  @Nonnull
   public Integer getLine() {
     return myLine;
   }
@@ -153,7 +158,7 @@ public class NotificationData {
     myBalloonNotification = balloonNotification;
   }
 
-  public void setListener(@NotNull String listenerId, @NotNull NotificationListener listener) {
+  public void setListener(@Nonnull String listenerId, @Nonnull NotificationListener listener) {
     myListenerMap.put(listenerId, listener);
   }
 

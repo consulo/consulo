@@ -21,14 +21,14 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFilePathWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
   @Override
-  public String getProjectTitle(@NotNull final Project project) {
+  public String getProjectTitle(@Nonnull final Project project) {
     final String basePath = project.getBasePath();
     if (basePath == null) return project.getName();
 
@@ -41,7 +41,7 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
   }
 
   @Override
-  public String getFileTitle(@NotNull final Project project, @NotNull final VirtualFile file) {
+  public String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     if (SystemInfo.isMac) {
       return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
     }

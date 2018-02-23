@@ -31,8 +31,8 @@ import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -171,7 +171,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static String getStartName() {
     boolean supported = Restarter.isSupported();
     if(supported) {

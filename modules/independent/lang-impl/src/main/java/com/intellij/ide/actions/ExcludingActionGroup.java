@@ -18,8 +18,8 @@ package com.intellij.ide.actions;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class ExcludingActionGroup extends ActionGroup {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     List<AnAction> result = new ArrayList<AnAction>();
     for (AnAction action : myDelegate.getChildren(e)) {

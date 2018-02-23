@@ -20,7 +20,6 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -32,7 +31,7 @@ public class VcsHandleTypeFactory implements HandleTypeFactory {
     myProject = project;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public HandleType createHandleType(final VirtualFile file) {
     if (! myProject.isInitialized()) return null;
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(file);

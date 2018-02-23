@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.Arrays;
@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class PsiReferenceServiceImpl extends PsiReferenceService {
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   @Override
-  public List<PsiReference> getReferences(@NotNull PsiElement element, @NotNull Hints hints) {
+  public List<PsiReference> getReferences(@Nonnull PsiElement element, @Nonnull Hints hints) {
     if (element instanceof ContributedReferenceHost) {
       return Arrays.asList(ReferenceProvidersRegistry.getReferencesFromProviders(element, hints));
     }

@@ -1,28 +1,28 @@
 package com.intellij.ide.browsers;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.UUID;
 
 public abstract class WebBrowser {
-  @NotNull
+  @Nonnull
   public abstract String getName();
 
-  @NotNull
+  @Nonnull
   public abstract UUID getId();
 
-  @NotNull
+  @Nonnull
   public abstract BrowserFamily getFamily();
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
   @Nullable
   public abstract String getPath();
 
-  @NotNull
+  @Nonnull
   public abstract String getBrowserNotFoundMessage();
 
   @Nullable

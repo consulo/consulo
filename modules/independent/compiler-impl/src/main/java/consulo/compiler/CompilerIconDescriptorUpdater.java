@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -34,7 +34,7 @@ import consulo.annotations.RequiredReadAction;
 public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     Project project = element.getProject();
     final PsiFile containingFile = element.getContainingFile();
     VirtualFile vFile = containingFile == null ? null : containingFile.getVirtualFile();

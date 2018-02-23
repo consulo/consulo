@@ -22,8 +22,7 @@ import com.intellij.util.ObjectUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.ide.IconDescriptor;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,20 +31,20 @@ import javax.swing.*;
  * @since 21.08.14
  */
 public class SdkUtil {
-  @NotNull
+  @Nonnull
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
-  public static NamedPointer<Sdk> createPointer(@NotNull Sdk sdk) {
+  public static NamedPointer<Sdk> createPointer(@Nonnull Sdk sdk) {
     return SdkPointerManager.getInstance().create(sdk);
   }
 
-  @NotNull
+  @Nonnull
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()", until = "2.0")
-  public static NamedPointer<Sdk> createPointer(@NotNull String name) {
+  public static NamedPointer<Sdk> createPointer(@Nonnull String name) {
     return SdkPointerManager.getInstance().create(name);
   }
 
-  @NotNull
-  public static Icon getIcon(@Nullable Sdk sdk) {
+  @Nonnull
+  public static Icon getIcon(@javax.annotation.Nullable Sdk sdk) {
     if (sdk == null) {
       return AllIcons.Toolbar.Unknown;
     }

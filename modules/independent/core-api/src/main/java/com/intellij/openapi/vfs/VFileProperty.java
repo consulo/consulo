@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Locale;
 
 public enum VFileProperty {
   HIDDEN, SPECIAL, SYMLINK;
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return toString().toLowerCase(Locale.ENGLISH);
   }

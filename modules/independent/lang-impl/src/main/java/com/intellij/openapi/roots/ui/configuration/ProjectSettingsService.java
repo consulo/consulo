@@ -22,8 +22,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -36,7 +36,7 @@ public class ProjectSettingsService {
   public void openProjectSettings() {
   }
 
-  public void openLibrary(@NotNull Library library) {
+  public void openLibrary(@Nonnull Library library) {
   }
 
   public void openModuleSettings(final Module module) {
@@ -60,14 +60,14 @@ public class ProjectSettingsService {
     return false;
   }
 
-  public void openModuleDependenciesSettings(@NotNull Module module, @Nullable OrderEntry orderEntry) {
+  public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
   }
 
   public boolean canOpenModuleDependenciesSettings() {
     return false;
   }
 
-  public void openLibraryOrSdkSettings(final @NotNull OrderEntry orderEntry) {
+  public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
   }
 
   public boolean processModulesMoved(final Module[] modules, @Nullable final ModuleGroup targetGroup) {

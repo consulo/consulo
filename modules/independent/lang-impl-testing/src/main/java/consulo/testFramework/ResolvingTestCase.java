@@ -28,8 +28,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
   @NonNls
   protected final String myFullDataPath;
 
-  public ResolvingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+  public ResolvingTestCase(@NonNls @Nonnull String dataPath, @Nonnull String ext) {
     myFullDataPath = TestPathUtil.getTestDataPath(dataPath);
     if (!StringUtil.endsWithChar(dataPath, '/')) {
       throw new IllegalArgumentException("directory required endWiths '/'");
@@ -56,7 +56,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
     myExtension = ext;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getTestDataPath() {
     return myFullDataPath;
@@ -71,7 +71,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
   }
 
   @RequiredReadAction
-  private void checkResult(@NotNull String filePath) throws Exception {
+  private void checkResult(@Nonnull String filePath) throws Exception {
     configureByFile(filePath);
 
     PsiFile file = myFile;
@@ -88,7 +88,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
           }
           else {
             resolveResults = new ResolveResult[]{new ResolveResult() {
-              @Nullable
+              @javax.annotation.Nullable
               @Override
               public PsiElement getElement() {
                 return reference.resolve();
@@ -156,9 +156,9 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
     return text;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  private String buildReferenceResultText(@NotNull ResolveResult resolveResult) {
+  private String buildReferenceResultText(@Nonnull ResolveResult resolveResult) {
     PsiElement element = resolveResult.getElement();
     if (element == null) {
       return "null-element";
@@ -166,7 +166,7 @@ public class ResolvingTestCase extends LightPlatformCodeInsightTestCase {
     return createReferenceResultBuilder().fun(resolveResult);
   }
 
-  @NotNull
+  @Nonnull
   protected Function<ResolveResult, String> createReferenceResultBuilder() {
     return new Function<ResolveResult, String>() {
       @Override

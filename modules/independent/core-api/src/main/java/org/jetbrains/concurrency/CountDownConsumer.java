@@ -16,8 +16,8 @@
 package org.jetbrains.concurrency;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Deprecated
 public class CountDownConsumer<T> implements Consumer<T> {
@@ -25,7 +25,7 @@ public class CountDownConsumer<T> implements Consumer<T> {
   private final AsyncPromise<T> promise;
   private final T totalResult;
 
-  public CountDownConsumer(int countDown, @NotNull AsyncPromise<T> promise, @Nullable T totalResult) {
+  public CountDownConsumer(int countDown, @Nonnull AsyncPromise<T> promise, @Nullable T totalResult) {
     this.countDown = countDown;
     this.promise = promise;
     this.totalResult = totalResult;

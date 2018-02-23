@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
   private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
   
   @Override
-  public boolean processProperties(@NotNull List<VirtualFile> files, @NotNull LibraryPropertiesProcessor processor) {
+  public boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor) {
     for (Pair<LibraryKind, LibraryProperties> pair : getOrComputeKinds(files)) {
       //noinspection unchecked
       if (!processor.processProperties(pair.getFirst(), pair.getSecond())) {
@@ -46,7 +46,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
 
   @Nullable
   @Override
-  public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@NotNull List<VirtualFile> files) {
+  public Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files) {
     Pair<LibraryType<?>, LibraryProperties<?>> result = null;
     for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
       final LibraryProperties<?> properties = type.detect(files);

@@ -22,12 +22,12 @@
  */
 package com.intellij.usages.impl.rules;
 
-import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
 public interface UsageTypeProvider {
   ExtensionPointName<UsageTypeProvider> EP_NAME = new ExtensionPointName<UsageTypeProvider>("com.intellij.usageTypeProvider");
 
-  @Nullable UsageType getUsageType(PsiElement element);
+  @javax.annotation.Nullable
+  UsageType getUsageType(PsiElement element);
 }

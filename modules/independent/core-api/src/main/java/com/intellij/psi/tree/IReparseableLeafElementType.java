@@ -16,8 +16,8 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An interface to be implemented by {@link IElementType} instances for leaf AST nodes, providing a possibility for quick reparse.
@@ -37,6 +37,6 @@ public interface IReparseableLeafElementType<T extends ASTNode> {
    * @return a replacement leaf with newText text, if it's correct to do such replacement, or null otherwise
    */
   @Nullable
-  T reparseLeaf(@NotNull T leaf, @NotNull CharSequence newText);
+  T reparseLeaf(@Nonnull T leaf, @Nonnull CharSequence newText);
 
 }

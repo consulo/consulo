@@ -77,8 +77,8 @@ import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.swing.*;
@@ -110,7 +110,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
      * tool window depending on decoration type.
      */
     @Override
-    public void resized(@NotNull final ToolWindowInternalDecorator s) {
+    public void resized(@Nonnull final ToolWindowInternalDecorator s) {
       DesktopInternalDecorator source = (DesktopInternalDecorator)s;
 
       if (!source.isShowing()) {
@@ -227,7 +227,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
       @Override
-      public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+      public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         getFocusManagerImpl(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
           @Override
           public void run() {
@@ -249,33 +249,33 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     Disposer.register(this, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(focusListener));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CommandProcessorBase createCommandProcessor() {
     return new DesktopCommandProcessorImpl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected InternalDecoratorListener createInternalDecoratorListener() {
     return new MyInternalDecoratorListener();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
     return new DesktopStripeButton((DesktopInternalDecorator)internalDecorator, (DesktopToolWindowPanelImpl)myToolWindowPanel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ToolWindowEx createToolWindow(String id, boolean canCloseContent, @Nullable Object component) {
     return new DesktopToolWindowImpl(this, id, canCloseContent, (JComponent)component);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @NotNull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
+  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
     return new DesktopInternalDecorator(project, info, (DesktopToolWindowImpl)toolWindow, dumbAware);
   }
 
@@ -383,7 +383,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return getModifiersVKs(baseModifiers);
   }
 
-  @NotNull
+  @Nonnull
   private static Set<Integer> getModifiersVKs(int mask) {
     Set<Integer> codes = new THashSet<>();
     if ((mask & InputEvent.SHIFT_MASK) > 0) {
@@ -441,7 +441,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     myWaiterForSecondPress.addRequest(mySecondPressRunnable, Registry.intValue("actionSystem.keyGestureDblClickTime"));
   }
 
-  @NotNull
+  @Nonnull
   public DesktopToolWindowPanelImpl getToolWindowPanel() {
     return (DesktopToolWindowPanelImpl)myToolWindowPanel;
   }
@@ -509,7 +509,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return FileEditorManagerEx.getInstanceEx(project).getComponent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JLabel createInitializingLabel() {
     JLabel label = new JLabel("Initializing...", SwingConstants.CENTER);
@@ -588,7 +588,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         @Override
         public void run() {
           requestor.requestFocus(new FocusCommand() {
-            @NotNull
+            @Nonnull
             @Override
             public ActionCallback run() {
               runnable.run();
@@ -617,7 +617,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }).doWhenRejected(() -> {
       if (forced) {
         getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
-          @NotNull
+          @Nonnull
           @Override
           public ActionCallback run() {
             final ArrayList<FinalizableCommand> cmds = new ArrayList<>();
@@ -681,7 +681,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    * @return internal decorator for the tool window with specified <code>ID</code>.
    */
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   protected DesktopInternalDecorator getInternalDecorator(final String id) {
     return (DesktopInternalDecorator)super.getInternalDecorator(id);
   }
@@ -690,13 +690,13 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    * @return tool button for the window with specified <code>ID</code>.
    */
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   protected DesktopStripeButton getStripeButton(final String id) {
     return (DesktopStripeButton)super.getStripeButton(id);
   }
 
   @Override
-  public boolean canShowNotification(@NotNull final String toolWindowId) {
+  public boolean canShowNotification(@Nonnull final String toolWindowId) {
     if (!Arrays.asList(getToolWindowIds()).contains(toolWindowId)) {
       return false;
     }
@@ -705,12 +705,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public void notifyByBalloon(@NotNull final String toolWindowId, @NotNull final MessageType type, @NotNull final String htmlBody) {
+  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String htmlBody) {
     notifyByBalloon(toolWindowId, type, htmlBody, null, null);
   }
 
   @Override
-  public void notifyByBalloon(@NotNull final String toolWindowId, @NotNull final MessageType type, @NotNull final String text, @Nullable final Icon icon, @Nullable final HyperlinkListener listener) {
+  public void notifyByBalloon(@Nonnull final String toolWindowId, @Nonnull final MessageType type, @Nonnull final String text, @Nullable final Icon icon, @Nullable final HyperlinkListener listener) {
     checkId(toolWindowId);
 
 
@@ -878,7 +878,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   /**
    * @see DesktopToolWindowPanelImpl#createSetEditorComponentCmd
    */
-  public void appendSetEditorComponentCmd(@Nullable final JComponent component, final List<FinalizableCommand> commandsList) {
+  public void appendSetEditorComponentCmd(@javax.annotation.Nullable final JComponent component, final List<FinalizableCommand> commandsList) {
     final CommandProcessorBase commandProcessor = myCommandProcessor;
     final FinalizableCommand command = getToolWindowPanel().createSetEditorComponentCmd(component, commandProcessor);
     commandsList.add(command);
@@ -942,7 +942,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @RequiredUIAccess
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public String getLastActiveToolWindowId(@Nullable Condition<JComponent> condition) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     String lastActiveToolWindowId = null;
@@ -1015,12 +1015,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  public boolean isMaximized(@NotNull ToolWindow wnd) {
+  public boolean isMaximized(@Nonnull ToolWindow wnd) {
     return getToolWindowPanel().isMaximized(wnd);
   }
 
   @Override
-  public void setMaximized(@NotNull ToolWindow wnd, boolean maximized) {
+  public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
     getToolWindowPanel().setMaximized(wnd, maximized);
   }
 
@@ -1095,7 +1095,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     /**
      * Creates floating decorator for specified floating decorator.
      */
-    private AddWindowedDecoratorCmd(@NotNull DesktopInternalDecorator decorator, @NotNull WindowInfoImpl info) {
+    private AddWindowedDecoratorCmd(@Nonnull DesktopInternalDecorator decorator, @Nonnull WindowInfoImpl info) {
       super(myCommandProcessor);
       myWindowedDecorator = new DesktopWindowedDecorator(myProject, info.copy(), decorator);
       Window window = myWindowedDecorator.getFrame();
@@ -1168,7 +1168,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public Condition getExpireCondition() {
       return ApplicationManager.getApplication().getDisposed();
     }
@@ -1210,7 +1210,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     private final String myId;
     private final DesktopToolWindowImpl myToolWindow;
 
-    private ToolWindowFocusWatcher(@NotNull DesktopToolWindowImpl toolWindow) {
+    private ToolWindowFocusWatcher(@Nonnull DesktopToolWindowImpl toolWindow) {
       myId = toolWindow.getId();
       install(toolWindow.getComponent());
       myToolWindow = toolWindow;
@@ -1271,10 +1271,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback requestDefaultFocus(final boolean forced) {
     return getFocusManagerImpl(myProject).requestFocus(new FocusCommand() {
-      @NotNull
+      @Nonnull
       @Override
       public ActionCallback run() {
         return processDefaultFocusRequest(forced);
@@ -1283,7 +1283,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
 
-  private void focusToolWindowByDefault(@Nullable String idToIgnore) {
+  private void focusToolWindowByDefault(@javax.annotation.Nullable String idToIgnore) {
     String toFocus = null;
 
     for (String each : myActiveStack.getStack()) {
@@ -1350,21 +1350,21 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   /**
    * Delegate method for compatibility with older versions of IDEA
    */
-  @NotNull
-  public ActionCallback requestFocus(@NotNull Component c, boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull Component c, boolean forced) {
     return IdeFocusManager.getInstance(myProject).requestFocus(c, forced);
   }
 
-  @NotNull
-  public ActionCallback requestFocus(@NotNull FocusCommand command, boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull FocusCommand command, boolean forced) {
     return IdeFocusManager.getInstance(myProject).requestFocus(command, forced);
   }
 
-  public void doWhenFocusSettlesDown(@NotNull Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
     IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
   }
 
-  public boolean dispatch(@NotNull KeyEvent e) {
+  public boolean dispatch(@Nonnull KeyEvent e) {
     return IdeFocusManager.getInstance(myProject).dispatch(e);
   }
 
@@ -1372,7 +1372,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     return IdeFocusManager.getInstance(myProject).getTimestamp(trackOnlyForcedCommands);
   }
 
-  @NotNull
+  @Nonnull
   private static Rectangle2D getRootBounds(JFrame frame) {
     JRootPane rootPane = frame.getRootPane();
     Rectangle bounds = rootPane.getBounds();

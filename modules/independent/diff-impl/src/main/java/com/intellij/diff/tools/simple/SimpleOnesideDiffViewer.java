@@ -38,8 +38,8 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
@@ -50,11 +50,13 @@ import static com.intellij.diff.util.DiffUtil.getLineCount;
 public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   public static final Logger LOG = Logger.getInstance(SimpleOnesideDiffViewer.class);
 
-  @NotNull private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
+  @Nonnull
+  private final MyInitialScrollHelper myInitialScrollHelper = new MyInitialScrollHelper();
 
-  @NotNull private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
+  @Nonnull
+  private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
 
-  public SimpleOnesideDiffViewer(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public SimpleOnesideDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     super(context, (ContentDiffRequest)request);
   }
 
@@ -68,7 +70,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     super.onDispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<AnAction> createToolbarActions() {
     List<AnAction> group = new ArrayList<>();
@@ -84,7 +86,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     return group;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<AnAction> createPopupActions() {
     List<AnAction> group = new ArrayList<>();
@@ -119,8 +121,8 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   //
 
   @Override
-  @NotNull
-  protected Runnable performRediff(@NotNull final ProgressIndicator indicator) {
+  @Nonnull
+  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
     return () -> {
       clearDiffPresentation();
 
@@ -157,7 +159,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     DiffUtil.scrollEditor(getEditor(), 0, animated);
   }
 
-  protected boolean doScrollToContext(@NotNull DiffNavigationContext context) {
+  protected boolean doScrollToContext(@Nonnull DiffNavigationContext context) {
     if (getSide().isLeft()) return false;
 
     AllLinesIterator allLinesIterator = new AllLinesIterator(getEditor().getDocument());
@@ -173,7 +175,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   //
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static boolean canShowRequest(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return OnesideTextDiffViewer.canShowRequest(context, request);
   }
 
@@ -217,9 +219,9 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   // Helpers
   //
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
       int lineCount = getLineCount(getEditor().getDocument());
       return new LineRange(0, lineCount);
@@ -263,7 +265,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
       return true;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected LogicalPosition[] getCaretPositions() {
       int index = getSide().getIndex();

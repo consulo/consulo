@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface PropertyOwner {
-  @NotNull
+  @Nonnull
   String getPropertyName();
 }

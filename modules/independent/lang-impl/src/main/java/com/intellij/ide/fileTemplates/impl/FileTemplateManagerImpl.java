@@ -40,8 +40,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.net.URL;
@@ -62,11 +62,11 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   private FileTemplatesScheme myScheme = FileTemplatesScheme.DEFAULT;
   private boolean myInitialized;
 
-  public static FileTemplateManagerImpl getInstanceImpl(@NotNull Project project) {
+  public static FileTemplateManagerImpl getInstanceImpl(@Nonnull Project project) {
     return (FileTemplateManagerImpl)getInstance(project);
   }
 
-  public FileTemplateManagerImpl(@NotNull FileTypeManagerEx typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
+  public FileTemplateManagerImpl(@Nonnull FileTypeManagerEx typeManager, FileTemplateSettings projectSettings, ExportableFileTemplateSettings defaultSettings,
                                  /*need this to ensure disposal of the service _after_ project manager*/
                                  @SuppressWarnings("UnusedParameters") ProjectManager pm, final Project project) {
     myTypeManager = typeManager;
@@ -75,13 +75,13 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     myProject = project;
 
     myProjectScheme = project.isDefault() ? null : new FileTemplatesScheme("Project") {
-      @NotNull
+      @Nonnull
       @Override
       public String getTemplatesDir() {
         return FileUtilRt.toSystemDependentName(StorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Project getProject() {
         return project;
@@ -93,21 +93,21 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     return myScheme == FileTemplatesScheme.DEFAULT ? myDefaultSettings : myProjectSettings;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileTemplatesScheme getCurrentScheme() {
     return myScheme;
   }
 
   @Override
-  public void setCurrentScheme(@NotNull FileTemplatesScheme scheme) {
+  public void setCurrentScheme(@Nonnull FileTemplatesScheme scheme) {
     for (FTManager child : getAllManagers()) {
       child.saveTemplates();
     }
     setScheme(scheme);
   }
 
-  private void setScheme(@NotNull FileTemplatesScheme scheme) {
+  private void setScheme(@Nonnull FileTemplatesScheme scheme) {
     myScheme = scheme;
     myInitialized = true;
   }
@@ -137,25 +137,25 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getAllTemplates() {
     final Collection<FileTemplateBase> templates = getSettings().getDefaultTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 
   @Override
-  public FileTemplate getTemplate(@NotNull String templateName) {
+  public FileTemplate getTemplate(@Nonnull String templateName) {
     return getSettings().getDefaultTemplatesManager().findTemplateByName(templateName);
   }
 
   @Override
-  @NotNull
-  public FileTemplate addTemplate(@NotNull String name, @NotNull String extension) {
+  @Nonnull
+  public FileTemplate addTemplate(@Nonnull String name, @Nonnull String extension) {
     return getSettings().getDefaultTemplatesManager().addTemplate(name, extension);
   }
 
   @Override
-  public void removeTemplate(@NotNull FileTemplate template) {
+  public void removeTemplate(@Nonnull FileTemplate template) {
     final String qName = ((FileTemplateBase)template).getQualifiedName();
     for (FTManager manager : getAllManagers()) {
       manager.removeTemplate(qName);
@@ -163,7 +163,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Properties getDefaultProperties() {
     Properties props = new Properties();
     for (Map.Entry<String, Object> entry : getDefaultVariables().entrySet()) {
@@ -173,7 +173,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  public void fillDefaultVariables(@NotNull Map<String, Object> map) {
+  public void fillDefaultVariables(@Nonnull Map<String, Object> map) {
     Calendar calendar = Calendar.getInstance();
     Date date = myTestDate == null ? calendar.getTime() : myTestDate;
     SimpleDateFormat sdfMonthNameShort = new SimpleDateFormat("MMM");
@@ -203,7 +203,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     map.put(PROJECT_NAME_VARIABLE, myProject.getName());
   }
 
-  @NotNull
+  @Nonnull
   private static String getCalendarValue(final Calendar calendar, final int field) {
     int val = calendar.get(field);
     if (field == Calendar.MONTH) val++;
@@ -215,14 +215,14 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<String> getRecentNames() {
     validateRecentNames(); // todo: no need to do it lazily
     return myState.getRecentNames(RECENT_TEMPLATES_SIZE);
   }
 
   @Override
-  public void addRecentName(@NotNull @NonNls String name) {
+  public void addRecentName(@Nonnull @NonNls String name) {
     myState.addName(name);
   }
 
@@ -236,7 +236,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getInternalTemplates() {
     InternalTemplateBean[] internalTemplateBeans = Extensions.getExtensions(InternalTemplateBean.EP_NAME);
     FileTemplate[] result = new FileTemplate[internalTemplateBeans.length];
@@ -247,7 +247,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  public FileTemplate getInternalTemplate(@NotNull @NonNls String templateName) {
+  public FileTemplate getInternalTemplate(@Nonnull @NonNls String templateName) {
     FileTemplateBase template = (FileTemplateBase)findInternalTemplate(templateName);
 
     if (template == null) {
@@ -265,7 +265,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  public FileTemplate findInternalTemplate(@NotNull @NonNls String templateName) {
+  public FileTemplate findInternalTemplate(@Nonnull @NonNls String templateName) {
     FileTemplateBase template = getSettings().getInternalTemplatesManager().findTemplateByName(templateName);
 
     if (template == null) {
@@ -275,8 +275,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     return template;
   }
 
-  @NotNull
-  public static String normalizeText(@NotNull String text) {
+  @Nonnull
+  public static String normalizeText(@Nonnull String text) {
     text = StringUtil.convertLineSeparators(text);
     text = StringUtil.replace(text, "$NAME$", "${NAME}");
     text = StringUtil.replace(text, "$PACKAGE_NAME$", "${PACKAGE_NAME}");
@@ -287,8 +287,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
-  public String internalTemplateToSubject(@NotNull @NonNls String templateName) {
+  @Nonnull
+  public String internalTemplateToSubject(@Nonnull @NonNls String templateName) {
     //noinspection HardCodedStringLiteral
     for (InternalTemplateBean bean : Extensions.getExtensions(InternalTemplateBean.EP_NAME)) {
       if (bean.name.equals(templateName) && bean.subject != null) {
@@ -299,14 +299,14 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
-  public String localizeInternalTemplateName(@NotNull final FileTemplate template) {
+  @Nonnull
+  public String localizeInternalTemplateName(@Nonnull final FileTemplate template) {
     return template.getName();
   }
 
   @NonNls
-  @NotNull
-  private String getDefaultClassTemplateText(@NotNull @NonNls String templateName) {
+  @Nonnull
+  private String getDefaultClassTemplateText(@Nonnull @NonNls String templateName) {
     return IdeBundle.message("template.default.class.comment", ApplicationNamesInfo.getInstance().getFullProductName()) +
            "package $PACKAGE_NAME$;\n" +
            "public " +
@@ -315,17 +315,17 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  public FileTemplate getCodeTemplate(@NotNull @NonNls String templateName) {
+  public FileTemplate getCodeTemplate(@Nonnull @NonNls String templateName) {
     return getTemplateFromManager(templateName, getSettings().getCodeTemplatesManager());
   }
 
   @Override
-  public FileTemplate getJ2eeTemplate(@NotNull @NonNls String templateName) {
+  public FileTemplate getJ2eeTemplate(@Nonnull @NonNls String templateName) {
     return getTemplateFromManager(templateName, getSettings().getJ2eeTemplatesManager());
   }
 
   @Nullable
-  private static FileTemplate getTemplateFromManager(@NotNull final String templateName, @NotNull final FTManager ftManager) {
+  private static FileTemplate getTemplateFromManager(@Nonnull final String templateName, @Nonnull final FTManager ftManager) {
     FileTemplateBase template = ftManager.getTemplate(templateName);
     if (template != null) {
       return template;
@@ -344,8 +344,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
-  public FileTemplate getDefaultTemplate(@NotNull final String name) {
+  @Nonnull
+  public FileTemplate getDefaultTemplate(@Nonnull final String name) {
     final String templateQName = myTypeManager.getExtension(name).isEmpty() ? FileTemplateBase.getQualifiedName(name, "java") : name;
 
     for (FTManager manager : getAllManagers()) {
@@ -363,33 +363,33 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getAllPatterns() {
     final Collection<FileTemplateBase> allTemplates = getSettings().getPatternsManager().getAllTemplates(false);
     return allTemplates.toArray(new FileTemplate[allTemplates.size()]);
   }
 
   @Override
-  public FileTemplate getPattern(@NotNull String name) {
+  public FileTemplate getPattern(@Nonnull String name) {
     return getSettings().getPatternsManager().findTemplateByName(name);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getAllCodeTemplates() {
     final Collection<FileTemplateBase> templates = getSettings().getCodeTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileTemplate[] getAllJ2eeTemplates() {
     final Collection<FileTemplateBase> templates = getSettings().getJ2eeTemplatesManager().getAllTemplates(false);
     return templates.toArray(new FileTemplate[templates.size()]);
   }
 
   @Override
-  public void setTemplates(@NotNull String templatesCategory, @NotNull Collection<FileTemplate> templates) {
+  public void setTemplates(@Nonnull String templatesCategory, @Nonnull Collection<FileTemplate> templates) {
     for (FTManager manager : getAllManagers()) {
       if (templatesCategory.equals(manager.getName())) {
         manager.updateTemplates(templates);
@@ -442,12 +442,12 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     public List<String> RECENT_TEMPLATES = new ArrayList<>();
     public String SCHEME = FileTemplatesScheme.DEFAULT.getName();
 
-    public void addName(@NotNull @NonNls String name) {
+    public void addName(@Nonnull @NonNls String name) {
       RECENT_TEMPLATES.remove(name);
       RECENT_TEMPLATES.add(name);
     }
 
-    @NotNull
+    @Nonnull
     public Collection<String> getRecentNames(int max) {
       int size = RECENT_TEMPLATES.size();
       int resultSize = Math.min(max, size);

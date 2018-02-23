@@ -20,7 +20,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +33,7 @@ public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlig
     myLanguageVersion = languageVersion;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Lexer getHighlightingLexer() {
     return getHighlightingLexer(myLanguageVersion);
@@ -41,13 +41,13 @@ public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlig
 
   public abstract Lexer getHighlightingLexer(LanguageVersion languageVersion);
 
-  @NotNull
+  @Nonnull
   @Override
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return getTokenHighlights(myLanguageVersion, tokenType);
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributesKey[] getTokenHighlights(LanguageVersion languageVersion, IElementType tokenType) {
     return EMPTY;
   }

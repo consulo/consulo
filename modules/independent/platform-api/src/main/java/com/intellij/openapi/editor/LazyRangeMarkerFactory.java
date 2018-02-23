@@ -18,16 +18,16 @@ package com.intellij.openapi.editor;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LazyRangeMarkerFactory {
   public static LazyRangeMarkerFactory getInstance(Project project) {
     return ServiceManager.getService(project, LazyRangeMarkerFactory.class);
   }
 
-  @NotNull
-  public abstract RangeMarker createRangeMarker(@NotNull final VirtualFile file, final int offset);
+  @Nonnull
+  public abstract RangeMarker createRangeMarker(@Nonnull final VirtualFile file, final int offset);
 
-  @NotNull
-  public abstract RangeMarker createRangeMarker(@NotNull final VirtualFile file, final int line, final int column, final boolean persistent);
+  @Nonnull
+  public abstract RangeMarker createRangeMarker(@Nonnull final VirtualFile file, final int line, final int column, final boolean persistent);
 }

@@ -20,8 +20,8 @@ import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModuleRootLayer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,13 +34,13 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionImpl<Exter
         implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
   protected final Map<String, String> myOptions = new LinkedHashMap<>();
 
-  public ExternalSystemModuleExtensionImpl(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+  public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 
   @RequiredReadAction
   @Override
-  public void commit(@NotNull ExternalSystemModuleExtensionImpl mutableModuleExtension) {
+  public void commit(@Nonnull ExternalSystemModuleExtensionImpl mutableModuleExtension) {
     super.commit(mutableModuleExtension);
     myOptions.clear();
     myOptions.putAll(mutableModuleExtension.myOptions);
@@ -48,7 +48,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionImpl<Exter
 
   @RequiredReadAction
   @Override
-  protected void loadStateImpl(@NotNull Element element) {
+  protected void loadStateImpl(@Nonnull Element element) {
     for (Element option : element.getChildren("option")) {
       String name = option.getAttributeValue("name");
       if (name == null) {
@@ -59,7 +59,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionImpl<Exter
   }
 
   @Override
-  protected void getStateImpl(@NotNull Element element) {
+  protected void getStateImpl(@Nonnull Element element) {
     for (Map.Entry<String, String> entry : myOptions.entrySet()) {
       Element option = new Element("option");
       option.setAttribute("name", entry.getKey());
@@ -71,7 +71,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionImpl<Exter
 
   @Nullable
   @Override
-  public String getOption(@NotNull String key) {
+  public String getOption(@Nonnull String key) {
     return myOptions.get(key);
   }
 }

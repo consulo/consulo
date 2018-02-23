@@ -22,10 +22,10 @@ package com.intellij.usages;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface UsageTargetProvider {
-  @Nullable
+  @javax.annotation.Nullable
   UsageTarget[] getTargets(Editor editor, PsiFile file);
 
   @Nullable

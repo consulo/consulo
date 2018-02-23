@@ -16,10 +16,9 @@
 package com.intellij.openapi.diff.impl.patch;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author irengrig
@@ -28,24 +27,24 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface PatchEP {
   ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create("com.intellij.patch.extension");
-  @NotNull
+  @Nonnull
   String getName();
   /**
    * @param path - before path, if exist, otherwise after path
    * @param commitContext
    */
   @Nullable
-  CharSequence provideContent(@NotNull final String path, CommitContext commitContext);
+  CharSequence provideContent(@Nonnull final String path, CommitContext commitContext);
   /**
    * @param path - before path, if exist, otherwise after path
    * @param commitContext
    */
-  void consumeContent(@NotNull final String path, @NotNull final CharSequence content, CommitContext commitContext);
+  void consumeContent(@Nonnull final String path, @Nonnull final CharSequence content, CommitContext commitContext);
   /**
    * @param path - before path, if exist, otherwise after path
    * @param commitContext
    */
-  void consumeContentBeforePatchApplied(@NotNull final String path,
-                                        @NotNull final CharSequence content,
+  void consumeContentBeforePatchApplied(@Nonnull final String path,
+                                        @Nonnull final CharSequence content,
                                         CommitContext commitContext);
 }

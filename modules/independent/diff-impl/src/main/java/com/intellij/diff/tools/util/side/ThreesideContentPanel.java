@@ -23,8 +23,8 @@ import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -33,10 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThreesideContentPanel extends JPanel {
-  @NotNull private final ThreeDiffSplitter mySplitter;
-  @Nullable private final EditorEx myBaseEditor;
+  @Nonnull
+  private final ThreeDiffSplitter mySplitter;
+  @javax.annotation.Nullable
+  private final EditorEx myBaseEditor;
 
-  public ThreesideContentPanel(@NotNull List<? extends EditorHolder> holders, @NotNull List<JComponent> titleComponents) {
+  public ThreesideContentPanel(@Nonnull List<? extends EditorHolder> holders, @Nonnull List<JComponent> titleComponents) {
     super(new BorderLayout());
     assert holders.size() == 3;
     assert titleComponents.size() == 3;
@@ -54,7 +56,7 @@ public class ThreesideContentPanel extends JPanel {
   }
 
   @RequiredDispatchThread
-  public void setPainter(@Nullable DiffSplitter.Painter painter, @NotNull Side side) {
+  public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
     mySplitter.setPainter(painter, side);
   }
 
@@ -63,12 +65,12 @@ public class ThreesideContentPanel extends JPanel {
     mySplitter.repaintDividers();
   }
 
-  public void repaintDivider(@NotNull Side side) {
+  public void repaintDivider(@Nonnull Side side) {
     if (side == Side.RIGHT && myBaseEditor != null) myBaseEditor.getScrollPane().getVerticalScrollBar().repaint();
     mySplitter.repaintDivider(side);
   }
 
-  public void setScrollbarPainter(@NotNull Consumer<Graphics> painter) {
+  public void setScrollbarPainter(@Nonnull Consumer<Graphics> painter) {
     if (myBaseEditor != null) myBaseEditor.registerScrollBarRepaintCallback(painter);
   }
 }

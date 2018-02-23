@@ -54,8 +54,8 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.fileEditor.impl.EditorWindow;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -385,7 +385,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   }
 
   @Nullable
-  private FileEditor createTempFileEditor(@NotNull VirtualFile file) {
+  private FileEditor createTempFileEditor(@Nonnull VirtualFile file) {
     if (file.getLength() > PersistentFSConstants.getMaxIntellisenseFileSize()) return null;
 
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
@@ -407,7 +407,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     @Override
-    public Object getData(@NotNull @NonNls Key dataId) {
+    public Object getData(@Nonnull @NonNls Key dataId) {
       if (dataId == ourDataSelectorKey) return StructureViewWrapperImpl.this;
       return null;
     }

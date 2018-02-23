@@ -15,8 +15,8 @@
  */
 package com.intellij.remote;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author traff
@@ -47,7 +47,7 @@ public class RemoteSdkCredentialsBuilder {
   }
 
 
-  public static void copyRemoteSdkCredentials(@NotNull RemoteSdkCredentials data, @NotNull RemoteSdkCredentials copyTo) {
+  public static void copyRemoteSdkCredentials(@Nonnull RemoteSdkCredentials data, @Nonnull RemoteSdkCredentials copyTo) {
     copyCredentials(data, copyTo);
 
     copyTo.setInterpreterPath(data.getInterpreterPath());
@@ -57,7 +57,7 @@ public class RemoteSdkCredentialsBuilder {
     copyTo.setRemoteRoots(data.getRemoteRoots());
   }
 
-  public static void copyCredentials(@NotNull RemoteCredentials data, @NotNull MutableRemoteCredentials copyTo) {
+  public static void copyCredentials(@Nonnull RemoteCredentials data, @Nonnull MutableRemoteCredentials copyTo) {
     copyTo.setHost(data.getHost());
     copyTo.setLiteralPort(data.getLiteralPort());//then port is copied
     copyTo.setAnonymous(data.isAnonymous());

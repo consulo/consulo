@@ -15,8 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -24,11 +23,11 @@ import org.jetbrains.annotations.Nullable;
 public class ConstantFunction<Param, Result> implements NotNullFunction<Param, Result> {
   private final Result value;
 
-  public ConstantFunction(@NotNull Result value) {
+  public ConstantFunction(@Nonnull Result value) {
     this.value = value;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Result fun(Param param) {
     return value;

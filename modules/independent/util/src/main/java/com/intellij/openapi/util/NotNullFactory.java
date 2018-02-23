@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface NotNullFactory<T> extends Factory<T>{
-  @NotNull
+  @Nonnull
   T create();
 }

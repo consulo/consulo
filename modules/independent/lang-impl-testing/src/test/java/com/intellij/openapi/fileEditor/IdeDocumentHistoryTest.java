@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.testFramework.PlatformLangTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IdeDocumentHistoryTest extends PlatformLangTestCase {
   private IdeDocumentHistoryImpl myHistory;
@@ -42,13 +42,13 @@ public class IdeDocumentHistoryTest extends PlatformLangTestCase {
 
     mySelectedEditor = new Mock.MyFileEditor() {
       @Override
-      @NotNull
-      public FileEditorState getState(@NotNull FileEditorStateLevel level) {
+      @Nonnull
+      public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
         return myEditorState;
       }
 
       @Override
-      public void setState(@NotNull FileEditorState state) {
+      public void setState(@Nonnull FileEditorState state) {
         myEditorState = state;
       }
     };
@@ -56,7 +56,7 @@ public class IdeDocumentHistoryTest extends PlatformLangTestCase {
     myEditorState = new MyState(false, "start");
     myProvider = new Mock.MyFileEditorProvider() {
       @Override
-      @NotNull
+      @Nonnull
       public String getEditorTypeId() {
         return "EditorType";
       }
@@ -169,13 +169,13 @@ public class IdeDocumentHistoryTest extends PlatformLangTestCase {
   private class EditorManager extends Mock.MyFileEditorManager {
 
     @Override
-    public VirtualFile getFile(@NotNull FileEditor editor) {
+    public VirtualFile getFile(@Nonnull FileEditor editor) {
       return mySelectedFile;
     }
 
     @Override
-    @NotNull
-    public Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file,
+    @Nonnull
+    public Pair<FileEditor[],FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
                                                                          boolean focusEditor,
                                                                          boolean searchForSplitter) {
       return Pair.create (new FileEditor[] {mySelectedEditor}, new FileEditorProvider[] {myProvider});

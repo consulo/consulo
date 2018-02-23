@@ -17,7 +17,7 @@ package com.intellij.openapi.command;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventObject;
 
@@ -30,24 +30,24 @@ public class CommandEvent extends EventObject {
   private final boolean myShouldRecordActionForActiveDocument;
   private final Document myDocument;
 
-  public CommandEvent(@NotNull CommandProcessor processor, @NotNull Runnable command, Project project, @NotNull UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Runnable command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, null, null, project, undoConfirmationPolicy);
   }
 
-  public CommandEvent(@NotNull CommandProcessor processor,
-                      @NotNull Runnable command,
+  public CommandEvent(@Nonnull CommandProcessor processor,
+                      @Nonnull Runnable command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
-                      @NotNull UndoConfirmationPolicy undoConfirmationPolicy) {
+                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, commandName, commandGroupId, project, undoConfirmationPolicy, true, null);
   }
-  public CommandEvent(@NotNull CommandProcessor processor,
-                      @NotNull Runnable command,
+  public CommandEvent(@Nonnull CommandProcessor processor,
+                      @Nonnull Runnable command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
-                      @NotNull UndoConfirmationPolicy undoConfirmationPolicy,
+                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
                       boolean shouldRecordActionForActiveDocument,
                       Document document) {
     super(processor);
@@ -60,12 +60,12 @@ public class CommandEvent extends EventObject {
     myDocument = document;
   }
 
-  @NotNull
+  @Nonnull
   public CommandProcessor getCommandProcessor() {
     return (CommandProcessor)getSource();
   }
 
-  @NotNull
+  @Nonnull
   public Runnable getCommand() {
     return myCommand;
   }
@@ -82,7 +82,7 @@ public class CommandEvent extends EventObject {
     return myCommandGroupId;
   }
 
-  @NotNull
+  @Nonnull
   public UndoConfirmationPolicy getUndoConfirmationPolicy() {
     return myUndoConfirmationPolicy;
   }

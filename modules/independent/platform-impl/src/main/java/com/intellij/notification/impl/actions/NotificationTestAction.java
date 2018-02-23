@@ -26,7 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 
@@ -55,7 +55,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
     }
 
     final NotificationListener listener = new NotificationListener() {
-      public void hyperlinkUpdate(@NotNull Notification n, @NotNull HyperlinkEvent e) {
+      public void hyperlinkUpdate(@Nonnull Notification n, @Nonnull HyperlinkEvent e) {
         n.expire();
       }
     };

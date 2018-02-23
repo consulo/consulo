@@ -18,8 +18,8 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -36,7 +36,7 @@ class SharedMapBasedForwardIndex<Key, Value> extends AbstractForwardIndex<Key,Va
     assert myUnderlying != null || (SharedIndicesData.ourFileSharedIndicesEnabled && !SharedIndicesData.DO_CHECKS);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId) throws IOException {
     if (SharedIndicesData.ourFileSharedIndicesEnabled) {
@@ -62,7 +62,7 @@ class SharedMapBasedForwardIndex<Key, Value> extends AbstractForwardIndex<Key,Va
   }
 
   @Override
-  public void putInputData(int inputId, @NotNull Map<Key, Value> data)
+  public void putInputData(int inputId, @Nonnull Map<Key, Value> data)
           throws IOException {
     Collection<Key> keySeq = data.keySet();
     if (myUnderlying != null) myUnderlying.putData(inputId, keySeq);

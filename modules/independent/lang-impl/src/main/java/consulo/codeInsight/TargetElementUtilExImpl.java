@@ -15,7 +15,7 @@
  */
 package consulo.codeInsight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -25,21 +25,21 @@ import java.util.Set;
  */
 public class TargetElementUtilExImpl extends TargetElementUtilEx.Adapter {
   @Override
-  public void collectAllAccepted(@NotNull Set<String> set) {
+  public void collectAllAccepted(@Nonnull Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);
   }
 
   @Override
-  public void collectDefinitionSearchFlags(@NotNull Set<String> set) {
+  public void collectDefinitionSearchFlags(@Nonnull Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);
   }
 
   @Override
-  public void collectReferenceSearchFlags(@NotNull Set<String> set) {
+  public void collectReferenceSearchFlags(@Nonnull Set<String> set) {
     set.add(REFERENCED_ELEMENT_ACCEPTED);
     set.add(ELEMENT_NAME_ACCEPTED);
     set.add(LOOKUP_ITEM_ACCEPTED);

@@ -16,14 +16,14 @@
 package com.intellij.util.xmlb;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 interface MultiNodeBinding {
   @Nullable
-  Object deserializeList(Object context, @NotNull List<Element> elements);
+  Object deserializeList(Object context, @Nonnull List<Element> elements);
 
   boolean isMulti();
 }

@@ -18,7 +18,7 @@ package com.intellij.openapi.module.impl;
 import com.intellij.openapi.module.LoadedModuleDescription;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModuleRootManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,23 +29,23 @@ import java.util.List;
 public class LoadedModuleDescriptionImpl implements LoadedModuleDescription {
   private final Module myModule;
 
-  public LoadedModuleDescriptionImpl(@NotNull Module module) {
+  public LoadedModuleDescriptionImpl(@Nonnull Module module) {
     myModule = module;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Module getModule() {
     return myModule;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myModule.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getDependencyModuleNames() {
     return Arrays.asList(ModuleRootManager.getInstance(myModule).getDependencyModuleNames());

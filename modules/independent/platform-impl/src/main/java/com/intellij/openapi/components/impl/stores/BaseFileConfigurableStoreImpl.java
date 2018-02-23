@@ -18,7 +18,7 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.StateStorageException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -29,11 +29,11 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   private StateStorageManager myStateStorageManager;
   protected final PathMacroManager myPathMacroManager;
 
-  protected BaseFileConfigurableStoreImpl(@NotNull PathMacroManager pathMacroManager) {
+  protected BaseFileConfigurableStoreImpl(@Nonnull PathMacroManager pathMacroManager) {
     myPathMacroManager = pathMacroManager;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract XmlElementStorage getMainStorage();
 
   @Override
@@ -45,13 +45,13 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     return getMainStorage().getStorageData();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected final PathMacroManager getPathMacroManagerForDefaults() {
     return myPathMacroManager;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final StateStorageManager getStateStorageManager() {
     if (myStateStorageManager == null) {
@@ -60,6 +60,6 @@ abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
     return myStateStorageManager;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract StateStorageManager createStateStorageManager();
 }

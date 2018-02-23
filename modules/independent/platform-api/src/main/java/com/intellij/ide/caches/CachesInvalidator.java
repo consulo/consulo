@@ -16,7 +16,7 @@
 package com.intellij.ide.caches;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class CachesInvalidator {
   public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create("com.intellij.cachesInvalidator");

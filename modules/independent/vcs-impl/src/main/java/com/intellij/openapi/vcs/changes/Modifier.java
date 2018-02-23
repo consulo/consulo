@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.changes.local.*;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Modifier implements ChangeListsWriteOperations {
     myCommandQueue = new LinkedList<ChangeListCommand>();
   }
 
-  public LocalChangeList addChangeList(@NotNull final String name, @Nullable final String comment, @Nullable Object data) {
+  public LocalChangeList addChangeList(@Nonnull final String name, @javax.annotation.Nullable final String comment, @Nullable Object data) {
     final AddList command = new AddList(name, comment, data);
     impl(command);
     return command.getNewListCopy();
@@ -51,7 +51,7 @@ public class Modifier implements ChangeListsWriteOperations {
     return command.getPrevious();
   }
 
-  public boolean removeChangeList(@NotNull final String name) {
+  public boolean removeChangeList(@Nonnull final String name) {
     final RemoveList command = new RemoveList(name);
     impl(command);
     return command.isRemoved();
@@ -80,13 +80,13 @@ public class Modifier implements ChangeListsWriteOperations {
     return command.isResult();
   }
 
-  public boolean editName(@NotNull final String fromName, @NotNull final String toName) {
+  public boolean editName(@Nonnull final String fromName, @Nonnull final String toName) {
     final EditName command = new EditName(fromName, toName);
     impl(command);
     return command.isResult();
   }
 
-  public String editComment(@NotNull final String fromName, final String newComment) {
+  public String editComment(@Nonnull final String fromName, final String newComment) {
     final EditComment command = new EditComment(fromName, newComment);
     impl(command);
     return command.getOldComment();

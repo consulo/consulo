@@ -23,9 +23,9 @@ import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,7 +37,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
   private final JBTabsImpl myTabs;
   private final CopyOnWriteArraySet<ChangeListener> myListeners = new CopyOnWriteArraySet<ChangeListener>();
 
-  public JBTabsPaneImpl(@Nullable Project project, int tabPlacement, @NotNull Disposable parent) {
+  public JBTabsPaneImpl(@Nullable Project project, int tabPlacement, @Nonnull Disposable parent) {
     myTabs = new JBEditorTabs(project, ActionManager.getInstance(), project == null ? null : IdeFocusManager.getInstance(project), parent) {
       @Override
       public boolean isAlphabeticalMode() {

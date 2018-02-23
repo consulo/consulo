@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This will work only in presence of IntelliLang plugin.
@@ -42,8 +42,8 @@ public abstract class ReferenceInjector extends Injectable {
   /**
    * Generated references should be soft ({@link com.intellij.psi.PsiReference#isSoft()})
    */
-  @NotNull
-  public abstract PsiReference[] getReferences(@NotNull PsiElement element, @NotNull final ProcessingContext context, @NotNull TextRange range);
+  @Nonnull
+  public abstract PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull final ProcessingContext context, @Nonnull TextRange range);
 
   public static ReferenceInjector findById(final String id) {
     return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensions(), injector -> id.equals(injector.getId()));

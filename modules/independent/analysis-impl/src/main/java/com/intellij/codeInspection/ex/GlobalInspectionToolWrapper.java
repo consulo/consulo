@@ -22,38 +22,37 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.reference.RefGraphAnnotator;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
  * Date: 28-Dec-2005
  */
 public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool, InspectionEP> {
-  public GlobalInspectionToolWrapper(@NotNull GlobalInspectionTool globalInspectionTool) {
+  public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool) {
     super(globalInspectionTool);
   }
 
-  public GlobalInspectionToolWrapper(@NotNull GlobalInspectionTool tool, @NotNull InspectionEP ep) {
+  public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool tool, @Nonnull InspectionEP ep) {
     super(tool, ep);
   }
 
-  public GlobalInspectionToolWrapper(@NotNull InspectionEP ep) {
+  public GlobalInspectionToolWrapper(@Nonnull InspectionEP ep) {
     super(ep);
   }
 
-  private GlobalInspectionToolWrapper(@NotNull GlobalInspectionToolWrapper other) {
+  private GlobalInspectionToolWrapper(@Nonnull GlobalInspectionToolWrapper other) {
     super(other);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalInspectionToolWrapper createCopy() {
     return new GlobalInspectionToolWrapper(this);
   }
 
   @Override
-  public void initialize(@NotNull GlobalInspectionContext context) {
+  public void initialize(@Nonnull GlobalInspectionContext context) {
     super.initialize(context);
     RefManagerImpl refManager = (RefManagerImpl)context.getRefManager();
     final RefGraphAnnotator annotator = getTool().getAnnotator(refManager);
@@ -64,8 +63,8 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
   }
 
   @Override
-  @NotNull
-  public JobDescriptor[] getJobDescriptors(@NotNull GlobalInspectionContext context) {
+  @Nonnull
+  public JobDescriptor[] getJobDescriptors(@Nonnull GlobalInspectionContext context) {
     final JobDescriptor[] additionalJobs = getTool().getAdditionalJobs();
     if (additionalJobs == null) {
       return getTool().isGraphNeeded() ? context.getStdJobDescriptors().BUILD_GRAPH_ONLY : JobDescriptor.EMPTY_ARRAY;
@@ -79,7 +78,7 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
     return getTool().worksInBatchModeOnly();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public LocalInspectionToolWrapper getSharedLocalInspectionToolWrapper() {
     final LocalInspectionTool sharedTool = getTool().getSharedLocalInspectionTool();
     if (sharedTool == null) {

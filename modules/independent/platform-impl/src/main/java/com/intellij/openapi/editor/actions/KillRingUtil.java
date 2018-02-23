@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ide.KillRingTransferable;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Holds utility methods for {@link KillRingTransferable kill ring}-aware processing.
@@ -38,7 +38,7 @@ public class KillRingUtil {
    * @param start         start offset of the target text region within the given editor (inclusive)
    * @param end           end offset of the target text region within the given editor (exclusive)
    */
-  public static void cut(@NotNull Editor editor, int start, int end) {
+  public static void cut(@Nonnull Editor editor, int start, int end) {
     copyToKillRing(editor, start, end, true);
     editor.getDocument().deleteString(start, end);
   }
@@ -52,7 +52,7 @@ public class KillRingUtil {
    * @param endOffset   end offset of the target region within the given editor
    * @param cut         flag that identifies if target text region will be cut from the given editor
    */
-  public static void copyToKillRing(@NotNull final Editor editor, int startOffset, int endOffset, boolean cut) {
+  public static void copyToKillRing(@Nonnull final Editor editor, int startOffset, int endOffset, boolean cut) {
     Document document = editor.getDocument();
     String s = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
     s = StringUtil.convertLineSeparators(s);

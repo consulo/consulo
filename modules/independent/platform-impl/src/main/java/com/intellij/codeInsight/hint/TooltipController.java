@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -42,7 +42,7 @@ public class TooltipController {
     hideCurrentTooltip();
   }
 
-  public void cancelTooltip(@NotNull TooltipGroup groupId, MouseEvent mouseEvent, boolean forced) {
+  public void cancelTooltip(@Nonnull TooltipGroup groupId, MouseEvent mouseEvent, boolean forced) {
     if (groupId.equals(myCurrentTooltipGroup)) {
       if (!forced && myCurrentTooltip != null && myCurrentTooltip.canControlAutoHide()) return;
 
@@ -50,12 +50,12 @@ public class TooltipController {
     }
   }
 
-  public void showTooltipByMouseMove(@NotNull final Editor editor,
-                                     @NotNull final RelativePoint point,
+  public void showTooltipByMouseMove(@Nonnull final Editor editor,
+                                     @Nonnull final RelativePoint point,
                                      final TooltipRenderer tooltipObject,
                                      final boolean alignToRight,
-                                     @NotNull final TooltipGroup group,
-                                     @NotNull HintHint hintHint) {
+                                     @Nonnull final TooltipGroup group,
+                                     @Nonnull HintHint hintHint) {
     LightweightHint currentTooltip = myCurrentTooltip;
     if (currentTooltip == null || !currentTooltip.isVisible()) {
       if (currentTooltip != null) {
@@ -98,31 +98,31 @@ public class TooltipController {
     }
   }
 
-  public void showTooltip(@NotNull Editor editor, @NotNull Point p, @NotNull String text, boolean alignToRight, @NotNull TooltipGroup group) {
+  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, boolean alignToRight, @Nonnull TooltipGroup group) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group);
   }
 
-  public void showTooltip(@NotNull Editor editor, @NotNull Point p, @NotNull String text, int currentWidth, boolean alignToRight, @NotNull TooltipGroup group) {
+  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, int currentWidth, boolean alignToRight, @Nonnull TooltipGroup group) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text, currentWidth);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group);
   }
 
-  public void showTooltip(@NotNull Editor editor, @NotNull Point p, @NotNull String text, int currentWidth, boolean alignToRight, @NotNull TooltipGroup group, @NotNull HintHint hintHint) {
+  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull String text, int currentWidth, boolean alignToRight, @Nonnull TooltipGroup group, @Nonnull HintHint hintHint) {
     TooltipRenderer tooltipRenderer = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(text, currentWidth);
     showTooltip(editor, p, tooltipRenderer, alignToRight, group, hintHint);
   }
 
-  public void showTooltip(@NotNull Editor editor, @NotNull Point p, @NotNull TooltipRenderer tooltipRenderer, boolean alignToRight, @NotNull TooltipGroup group) {
+  public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull TooltipRenderer tooltipRenderer, boolean alignToRight, @Nonnull TooltipGroup group) {
     showTooltip(editor, p, tooltipRenderer, alignToRight, group, new HintHint(editor, p));
   }
 
-  public void showTooltip(@NotNull Editor editor,
-                          @NotNull Point p,
-                          @NotNull TooltipRenderer tooltipRenderer,
+  public void showTooltip(@Nonnull Editor editor,
+                          @Nonnull Point p,
+                          @Nonnull TooltipRenderer tooltipRenderer,
                           boolean alignToRight,
-                          @NotNull TooltipGroup group,
-                          @NotNull HintHint hintInfo) {
+                          @Nonnull TooltipGroup group,
+                          @Nonnull HintHint hintInfo) {
     if (myCurrentTooltip == null || !myCurrentTooltip.isVisible()) {
       myCurrentTooltipObject = null;
     }

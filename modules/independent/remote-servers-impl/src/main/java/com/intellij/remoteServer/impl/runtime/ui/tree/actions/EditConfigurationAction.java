@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.DeploymentNode;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class EditConfigurationAction extends ServersTreeActionBase {
   }
 
   @Override
-  protected void doActionPerformed(@NotNull ServersToolWindowContent content) {
+  protected void doActionPerformed(@Nonnull ServersToolWindowContent content) {
     Set<DeploymentNode> deploymentNodes = content.getSelectedDeploymentNodes();
     Set<ServerNode> serverNodes = content.getSelectedServerNodes();
     if (deploymentNodes.size() == 1) {
@@ -31,7 +31,7 @@ public class EditConfigurationAction extends ServersTreeActionBase {
   }
 
   @Override
-  protected boolean isEnabled(@NotNull ServersToolWindowContent content, AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull ServersToolWindowContent content, AnActionEvent e) {
     Set<DeploymentNode> deploymentNodes = content.getSelectedDeploymentNodes();
     Set<ServerNode> serverNodes = content.getSelectedServerNodes();
     if (deploymentNodes.size() + serverNodes.size() != 1) return false;

@@ -22,8 +22,8 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.impl.elements.ArtifactElementType;
 import com.intellij.packaging.ui.*;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,9 +35,9 @@ import java.util.List;
  */
 public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
   @Override
-  @NotNull
-  public Collection<? extends PackagingSourceItem> getSourceItems(@NotNull ArtifactEditorContext editorContext,
-                                                                  @NotNull Artifact artifact,
+  @Nonnull
+  public Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext,
+                                                                  @Nonnull Artifact artifact,
                                                                   @Nullable PackagingSourceItem parent) {
     if (parent == null) {
       if (!ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true).isEmpty()) {
@@ -68,13 +68,13 @@ public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
     }
 
     @Override
-    public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+    public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
       return new ArtifactsGroupPresentation();
     }
 
     @Override
-    @NotNull
-    public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+    @Nonnull
+    public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
       return Collections.emptyList();
     }
 
@@ -85,7 +85,7 @@ public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
       }
 
       @Override
-      public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+      public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                          SimpleTextAttributes commentAttributes) {
         presentationData.setIcon(AllIcons.Nodes.Artifact);
         presentationData.addText("Artifacts", mainAttributes);

@@ -31,8 +31,8 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -42,7 +42,7 @@ import java.util.Collection;
 public class GotoFileModel extends FilteringGotoByModel<FileType> {
   private final int myMaxSize;
 
-  public GotoFileModel(@NotNull Project project) {
+  public GotoFileModel(@Nonnull Project project) {
     super(project, Extensions.getExtensions(ChooseByNameContributor.FILE_EP_NAME));
     myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstance().getFrame(project).getSize().width;
   }
@@ -135,7 +135,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSeparators() {
     return new String[] {"/", "\\"};
   }
@@ -150,9 +150,9 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String removeModelSpecificMarkup(@NotNull String pattern) {
+  public String removeModelSpecificMarkup(@Nonnull String pattern) {
     if ((pattern.endsWith("/") || pattern.endsWith("\\"))) {
       return pattern.substring(0, pattern.length() - 1);
     }

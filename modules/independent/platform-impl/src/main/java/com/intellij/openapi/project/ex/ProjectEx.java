@@ -18,15 +18,15 @@ package com.intellij.openapi.project.ex;
 import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ProjectEx extends Project {
   interface ProjectSaved {
     Topic<ProjectSaved> TOPIC = Topic.create("SaveProjectTopic", ProjectSaved.class, Topic.BroadcastDirection.NONE);
-    void saved(@NotNull final Project project);
+    void saved(@Nonnull final Project project);
   }
 
-  @NotNull
+  @Nonnull
   IProjectStore getStateStore();
 
   void init();
@@ -37,5 +37,5 @@ public interface ProjectEx extends Project {
 
   void checkUnknownMacros(final boolean showDialog);
 
-  void setProjectName(@NotNull String name);
+  void setProjectName(@Nonnull String name);
 }

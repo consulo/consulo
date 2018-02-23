@@ -29,17 +29,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class SmartElementDescriptor extends NodeDescriptor{
   private final SmartPsiElementPointer mySmartPointer;
 
-  public SmartElementDescriptor(@NotNull Project project, NodeDescriptor parentDescriptor, @NotNull PsiElement element) {
+  public SmartElementDescriptor(@Nonnull Project project, NodeDescriptor parentDescriptor, @Nonnull PsiElement element) {
     super(project, parentDescriptor);
     mySmartPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
   }

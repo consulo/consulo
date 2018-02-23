@@ -20,24 +20,26 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public interface LanguageChangeSignatureDetector<C extends ChangeInfo> {
 
-  @NotNull  C createInitialChangeInfo(final @NotNull PsiElement element);
+  @Nonnull
+  C createInitialChangeInfo(final @Nonnull PsiElement element);
   boolean ignoreChanges(PsiElement element);
-  @Nullable C createNextChangeInfo(String signature, @NotNull C currentInfo, boolean delegate);
+  @Nullable C createNextChangeInfo(String signature, @Nonnull C currentInfo, boolean delegate);
 
-  void performChange(C changeInfo, Editor editor, @NotNull String oldText);
+  void performChange(C changeInfo, Editor editor, @Nonnull String oldText);
 
-  boolean isChangeSignatureAvailableOnElement(@NotNull PsiElement element, C currentInfo);
+  boolean isChangeSignatureAvailableOnElement(@Nonnull PsiElement element, C currentInfo);
 
-  TextRange getHighlightingRange(@NotNull C changeInfo);
+  TextRange getHighlightingRange(@Nonnull C changeInfo);
 
-  default @NotNull String extractSignature(@NotNull C initialChangeInfo) {
+  default @Nonnull
+  String extractSignature(@Nonnull C initialChangeInfo) {
     final TextRange signatureRange = getHighlightingRange(initialChangeInfo);
     return signatureRange.shiftRight(-signatureRange.getStartOffset()).substring(initialChangeInfo.getMethod().getText());
   }

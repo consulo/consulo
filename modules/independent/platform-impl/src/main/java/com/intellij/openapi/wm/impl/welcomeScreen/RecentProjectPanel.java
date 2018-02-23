@@ -48,9 +48,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -112,7 +112,7 @@ public class RecentProjectPanel extends JPanel {
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         int selectedIndex = myList.getSelectedIndex();
         if (selectedIndex >= 0) {
           Rectangle cellBounds = myList.getCellBounds(selectedIndex, selectedIndex);
@@ -169,7 +169,7 @@ public class RecentProjectPanel extends JPanel {
       }
 
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(!ListWithFilter.isSearchActive(myList));
       }
     };
@@ -317,7 +317,7 @@ public class RecentProjectPanel extends JPanel {
     private final Dimension mySize;
     private Point myMousePoint;
 
-    private MyList(Dimension size, @NotNull Object... listData) {
+    private MyList(Dimension size, @Nonnull Object... listData) {
       super(listData);
       mySize = size;
       setEmptyText("  No Project Open Yet  ");
@@ -490,7 +490,7 @@ public class RecentProjectPanel extends JPanel {
       return new Dimension(Math.min(size.width, JBUI.scale(245)), size.height);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Dimension getSize() {
       return getPreferredSize();

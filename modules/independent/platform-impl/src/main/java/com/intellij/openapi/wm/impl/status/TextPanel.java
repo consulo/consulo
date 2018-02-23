@@ -21,8 +21,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -32,7 +32,8 @@ import java.awt.*;
 
 public class TextPanel extends JComponent implements Accessible {
   @Nullable private String  myText;
-  @Nullable private Color myCustomColor;
+  @Nullable
+  private Color myCustomColor;
 
   private Integer   myPrefHeight;
   private Dimension myExplicitSize;
@@ -198,7 +199,7 @@ public class TextPanel extends JComponent implements Accessible {
     @Nullable private Icon myIcon;
 
     @Override
-    protected void paintComponent(@NotNull final Graphics g) {
+    protected void paintComponent(@Nonnull final Graphics g) {
       super.paintComponent(g);
       if (getText() != null) {
         Rectangle r = getBounds();
@@ -212,7 +213,7 @@ public class TextPanel extends JComponent implements Accessible {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Insets getInsets() {
       Insets insets = super.getInsets();

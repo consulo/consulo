@@ -18,7 +18,7 @@ package com.intellij.ide.todo;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -42,7 +42,8 @@ public class TodoIndexPatternProvider implements IndexPatternProvider {
   }
 
   @Override
-  @NotNull public IndexPattern[] getIndexPatterns() {
+  @Nonnull
+  public IndexPattern[] getIndexPatterns() {
     return myConfiguration.getIndexPatterns();
   }
 }

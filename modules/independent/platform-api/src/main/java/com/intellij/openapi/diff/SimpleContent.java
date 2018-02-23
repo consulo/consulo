@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -56,11 +56,11 @@ public class SimpleContent extends DiffContent {
     this(text, null);
   }
 
-  public SimpleContent(@NotNull String text, @Nullable FileType type) {
+  public SimpleContent(@Nonnull String text, @Nullable FileType type) {
     this(text, type, EditorFactory.getInstance());
   }
 
-  public SimpleContent(@NotNull String text, FileType type, EditorFactory f) {
+  public SimpleContent(@Nonnull String text, FileType type, EditorFactory f) {
     myOriginalBytes = text.getBytes();
     myOriginalText = myLineSeparators.correctText(text);
     myDocument = f.createDocument(myOriginalText);
@@ -137,7 +137,7 @@ public class SimpleContent extends DiffContent {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineSeparator getLineSeparator() {
     return LineSeparator.fromString(myLineSeparators.mySeparator);

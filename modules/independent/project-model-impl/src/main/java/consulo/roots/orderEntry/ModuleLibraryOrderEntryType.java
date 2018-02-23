@@ -26,7 +26,7 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
   public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryType.class);
 
-  @NotNull
+  @Nonnull
   public static ModuleLibraryOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleLibraryOrderEntryType.class);
   }
@@ -43,15 +43,15 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
   @NonNls
   public static final String EXPORTED_ATTR = "exported";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "module-library";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleLibraryOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public ModuleLibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     boolean exported = element.getAttributeValue(EXPORTED_ATTR) != null;
     DependencyScope scope = DependencyScope.readExternal(element);
     Library library = LibraryTableImplUtil.loadLibrary(element, (ModuleRootLayerImpl)moduleRootLayer);
@@ -59,7 +59,7 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull ModuleLibraryOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
     if (orderEntry.isExported()) {
       element.setAttribute(EXPORTED_ATTR, "");
     }

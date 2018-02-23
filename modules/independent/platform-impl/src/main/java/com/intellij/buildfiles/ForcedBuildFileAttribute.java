@@ -22,8 +22,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.io.IOUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -45,7 +45,7 @@ public class ForcedBuildFileAttribute {
   private ForcedBuildFileAttribute() {
   }
 
-  public static boolean belongsToFramework(VirtualFile file, @NotNull String frameworkId) {
+  public static boolean belongsToFramework(VirtualFile file, @Nonnull String frameworkId) {
     return frameworkId.equals(getFrameworkIdOfBuildFile(file));
   }
 

@@ -36,9 +36,9 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -51,7 +51,7 @@ import java.util.Set;
 public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
-  public void gotoActionPerformed(@NotNull final AnActionEvent e) {
+  public void gotoActionPerformed(@Nonnull final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     Editor editor = e.getData(CommonDataKeys.EDITOR);
@@ -61,7 +61,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     GotoActionModel model = new GotoActionModel(project, component, editor, file);
     GotoActionCallback<Object> callback = new GotoActionCallback<Object>() {
       @Override
-      public void elementChosen(@NotNull ChooseByNamePopup popup, @NotNull Object element) {
+      public void elementChosen(@Nonnull ChooseByNamePopup popup, @Nonnull Object element) {
         String enteredText = popup.getEnteredText();
         openOptionOrPerformAction(((GotoActionModel.MatchedValue)element).value, enteredText, project, component, e);
       }
@@ -73,7 +73,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Nullable
   private static ChooseByNamePopup createPopup(@Nullable Project project,
-                                               @NotNull final GotoActionModel model,
+                                               @Nonnull final GotoActionModel model,
                                                String initialText,
                                                int initialIndex,
                                                final Component component,
@@ -110,9 +110,9 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
         });
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      protected Set<Object> filter(@NotNull Set<Object> elements) {
+      protected Set<Object> filter(@Nonnull Set<Object> elements) {
         return super.filter(model.sort(elements));
       }
 
@@ -130,7 +130,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     }
     popup.addMouseClickListener(new MouseAdapter() {
       @Override
-      public void mouseClicked(@NotNull MouseEvent me) {
+      public void mouseClicked(@Nonnull MouseEvent me) {
         Object element = popup.getSelectionByPoint(me.getPoint());
         if (element instanceof GotoActionModel.MatchedValue) {
           if (processOptionInplace(((GotoActionModel.MatchedValue)element).value, popup, component, e)) {
@@ -166,7 +166,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     }
   }
 
-  public static void openOptionOrPerformAction(@NotNull Object element,
+  public static void openOptionOrPerformAction(@Nonnull Object element,
                                                final String enteredText,
                                                @Nullable final Project project,
                                                Component component,

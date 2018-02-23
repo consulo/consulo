@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.elements;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,5 +25,5 @@ public interface RenameablePackagingElement {
 
   boolean canBeRenamed();
 
-  void rename(@NotNull String newName);
+  void rename(@Nonnull String newName);
 }

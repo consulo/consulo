@@ -19,7 +19,7 @@ package com.intellij.history.core.tree;
 import com.intellij.history.core.LocalHistoryTestCase;
 import com.intellij.history.core.Paths;
 import com.intellij.history.core.revisions.Difference;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class EntryTest extends LocalHistoryTestCase {
       throw new UnsupportedOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Entry copy() {
       throw new UnsupportedOperationException();

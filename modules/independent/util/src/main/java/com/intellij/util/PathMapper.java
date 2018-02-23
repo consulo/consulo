@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,16 +27,16 @@ public interface PathMapper {
 
   boolean isEmpty();
 
-  boolean canReplaceLocal(@NotNull String localPath);
+  boolean canReplaceLocal(@Nonnull String localPath);
 
-  @NotNull
-  String convertToLocal(@NotNull String remotePath);
+  @Nonnull
+  String convertToLocal(@Nonnull String remotePath);
 
-  boolean canReplaceRemote(@NotNull String remotePath);
+  boolean canReplaceRemote(@Nonnull String remotePath);
 
-  @NotNull
-  String convertToRemote(@NotNull String localPath);
+  @Nonnull
+  String convertToRemote(@Nonnull String localPath);
 
-  @NotNull
-  List<String> convertToRemote(@NotNull Collection<String> paths);
+  @Nonnull
+  List<String> convertToRemote(@Nonnull Collection<String> paths);
 }

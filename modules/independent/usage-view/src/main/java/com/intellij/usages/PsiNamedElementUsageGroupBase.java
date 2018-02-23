@@ -17,7 +17,7 @@ package com.intellij.usages;
 
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,11 +26,11 @@ import javax.swing.*;
  */
 public class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> extends PsiElementUsageGroupBase<T> {
 
-  public PsiNamedElementUsageGroupBase(@NotNull T element, Icon icon) {
+  public PsiNamedElementUsageGroupBase(@Nonnull T element, Icon icon) {
     super(element, icon);
   }
 
-  public PsiNamedElementUsageGroupBase(@NotNull T element) {
+  public PsiNamedElementUsageGroupBase(@Nonnull T element) {
     super(element);
   }
 }

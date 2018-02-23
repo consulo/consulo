@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.merge;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public interface MergeProvider2 extends MergeProvider {
    * @param files the list of files to be merged.
    * @return the merge session instance.
    */
-  @NotNull
+  @Nonnull
   MergeSession createMergeSession(List<VirtualFile> files);
 
 }

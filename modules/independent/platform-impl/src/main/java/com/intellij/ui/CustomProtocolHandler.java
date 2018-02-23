@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -34,13 +34,13 @@ public class CustomProtocolHandler {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.ui.CustomProtocolHandler");
 
-  public boolean openLink(@NotNull URI uri) {
+  public boolean openLink(@Nonnull URI uri) {
     LOG.info("CustomProtocolHandler.openLink");
     final List<String> args = getOpenArgs(uri);
     return !args.isEmpty() && CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null) != null;
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getOpenArgs(URI uri) {
     final List<String> args = new ArrayList<String>();
     final String query = uri.getQuery();

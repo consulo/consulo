@@ -19,17 +19,16 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface ElementPreviewProvider {
   ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create("com.intellij.elementPreviewProvider");
 
-  boolean isSupportedFile(@NotNull PsiFile psiFile);
+  boolean isSupportedFile(@Nonnull PsiFile psiFile);
 
-  void show(@NotNull PsiElement element, @NotNull Editor editor, @NotNull Point point, boolean keyTriggered);
+  void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered);
 
-  void hide(@Nullable("if disposed") PsiElement element, @NotNull Editor editor);
+  void hide(@javax.annotation.Nullable("if disposed") PsiElement element, @Nonnull Editor editor);
 }

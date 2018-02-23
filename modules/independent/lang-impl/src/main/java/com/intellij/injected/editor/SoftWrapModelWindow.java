@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
 import com.intellij.openapi.editor.ex.SoftWrapModelEx;
 import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -42,17 +42,17 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
   }
 
   @Override
-  public int paint(@NotNull Graphics g, @NotNull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return 0;
   }
 
   @Override
-  public int getMinDrawingWidthInPixels(@NotNull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidthInPixels(@Nonnull SoftWrapDrawingType drawingType) {
     return 0;
   }
 
   @Override
-  public boolean addSoftWrapChangeListener(@NotNull SoftWrapChangeListener listener) {
+  public boolean addSoftWrapChangeListener(@Nonnull SoftWrapChangeListener listener) {
     return false;
   }
 
@@ -81,13 +81,13 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
     return Collections.emptyList();
@@ -103,12 +103,12 @@ class SoftWrapModelWindow implements SoftWrapModelEx {
   }
 
   @Override
-  public boolean isInsideSoftWrap(@NotNull VisualPosition position) {
+  public boolean isInsideSoftWrap(@Nonnull VisualPosition position) {
     return false;
   }
 
   @Override
-  public boolean isInsideOrBeforeSoftWrap(@NotNull VisualPosition visual) {
+  public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
     return false;
   }
 

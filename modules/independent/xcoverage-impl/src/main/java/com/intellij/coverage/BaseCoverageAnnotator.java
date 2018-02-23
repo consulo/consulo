@@ -6,8 +6,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -18,7 +18,7 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
   private final Project myProject;
 
   @Nullable
-  protected abstract Runnable createRenewRequest(@NotNull final CoverageSuitesBundle suite, @NotNull final CoverageDataManager dataManager);
+  protected abstract Runnable createRenewRequest(@Nonnull final CoverageSuitesBundle suite, @Nonnull final CoverageDataManager dataManager);
 
   public BaseCoverageAnnotator(final Project project) {
     myProject = project;
@@ -27,13 +27,13 @@ public abstract class BaseCoverageAnnotator implements CoverageAnnotator {
   public void onSuiteChosen(CoverageSuitesBundle newSuite) {
   }
 
-  public void renewCoverageData(@NotNull final CoverageSuitesBundle suite, @NotNull final CoverageDataManager dataManager) {
+  public void renewCoverageData(@Nonnull final CoverageSuitesBundle suite, @Nonnull final CoverageDataManager dataManager) {
     final Runnable request = createRenewRequest(suite, dataManager);
     if (request != null) {
       if (myProject.isDisposed()) return;
       ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading coverage data...", false) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           request.run();
         }
 

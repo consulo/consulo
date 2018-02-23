@@ -21,7 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public abstract class NewBranchAction<T extends Repository> extends DumbAwareAct
   protected final List<T> myRepositories;
   protected final Project myProject;
 
-  public NewBranchAction(@NotNull Project project, @NotNull List<T> repositories) {
+  public NewBranchAction(@Nonnull Project project, @Nonnull List<T> repositories) {
     super("New Branch", "Create and checkout new branch", AllIcons.General.Add);
     myRepositories = repositories;
     myProject = project;

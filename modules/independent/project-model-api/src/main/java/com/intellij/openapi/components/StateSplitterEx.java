@@ -21,21 +21,21 @@ import com.intellij.util.SmartList;
 import com.intellij.util.text.UniqueNameGenerator;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
 public abstract class StateSplitterEx {
-  public abstract List<Pair<Element, String>> splitState(@NotNull Element state);
+  public abstract List<Pair<Element, String>> splitState(@Nonnull Element state);
 
-  public void mergeStateInto(@NotNull Element target, @NotNull Element subState) {
+  public void mergeStateInto(@Nonnull Element target, @Nonnull Element subState) {
     target.addContent(subState);
   }
 
-  @NotNull
-  protected static List<Pair<Element, String>> splitState(@NotNull Element state, @NotNull String attributeName) {
+  @Nonnull
+  protected static List<Pair<Element, String>> splitState(@Nonnull Element state, @Nonnull String attributeName) {
     UniqueNameGenerator generator = new UniqueNameGenerator();
     List<Pair<Element, String>> result = new SmartList<Pair<Element, String>>();
     for (Element subState : state.getChildren()) {
@@ -44,17 +44,17 @@ public abstract class StateSplitterEx {
     return result;
   }
 
-  @NotNull
-  protected static Pair<Element, String> createItem(@NotNull UniqueNameGenerator generator, @NotNull Element element, @NotNull String attributeName) {
+  @Nonnull
+  protected static Pair<Element, String> createItem(@Nonnull UniqueNameGenerator generator, @Nonnull Element element, @Nonnull String attributeName) {
     return createItem(element.getAttributeValue(attributeName), generator, element);
   }
 
-  @NotNull
-  protected static Pair<Element, String> createItem(@NotNull String fileName, @NotNull UniqueNameGenerator generator, @NotNull Element element) {
+  @Nonnull
+  protected static Pair<Element, String> createItem(@Nonnull String fileName, @Nonnull UniqueNameGenerator generator, @Nonnull Element element) {
     return Pair.create(element, generator.generateUniqueName(FileUtil.sanitizeFileName(fileName)) + ".xml");
   }
 
-  protected static void mergeStateInto(@NotNull Element target, @NotNull Element subState, @NotNull String subStateName) {
+  protected static void mergeStateInto(@Nonnull Element target, @Nonnull Element subState, @Nonnull String subStateName) {
     if (subState.getName().equals(subStateName)) {
       target.addContent(subState);
     }

@@ -41,8 +41,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -105,7 +105,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   private Boolean mySkipped;
   private List<String> myModules = null;
 
-  public IdeaPluginDescriptorImpl(@NotNull File pluginPath) {
+  public IdeaPluginDescriptorImpl(@Nonnull File pluginPath) {
     myPath = pluginPath;
   }
 
@@ -145,7 +145,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return myPath;
   }
 
-  public void setPath(@NotNull File path) {
+  public void setPath(@Nonnull File path) {
     myPath = path;
   }
 
@@ -153,19 +153,19 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     myName = name;
   }
 
-  public void readExternal(@NotNull Document document, @NotNull URL url) throws InvalidDataException, FileNotFoundException {
+  public void readExternal(@Nonnull Document document, @Nonnull URL url) throws InvalidDataException, FileNotFoundException {
     Application application = ApplicationManager.getApplication();
     readExternal(document, url, application != null && application.isUnitTestMode());
   }
 
-  public void readExternal(@NotNull Document document, @NotNull URL url, boolean ignoreMissingInclude) throws InvalidDataException, FileNotFoundException {
+  public void readExternal(@Nonnull Document document, @Nonnull URL url, boolean ignoreMissingInclude) throws InvalidDataException, FileNotFoundException {
     document = JDOMXIncluder.resolve(document, url.toExternalForm(), ignoreMissingInclude);
     Element rootElement = document.getRootElement();
     JDOMUtil.internStringsInElement(rootElement, new StringInterner());
     readExternal(document.getRootElement());
   }
 
-  public void readExternal(@NotNull URL url) throws InvalidDataException, FileNotFoundException {
+  public void readExternal(@Nonnull URL url) throws InvalidDataException, FileNotFoundException {
     try {
       Document document = JDOMUtil.loadDocument(url);
       readExternal(document, url);
@@ -178,7 +178,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
   }
 
-  private void readExternal(@NotNull Element element) {
+  private void readExternal(@Nonnull Element element) {
     final PluginBean pluginBean = XmlSerializer.deserialize(element, PluginBean.class);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -299,7 +299,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     return epName;
   }
 
-  public void registerExtensionPoints(@NotNull ExtensionsArea area) {
+  public void registerExtensionPoints(@Nonnull ExtensionsArea area) {
     if (myExtensionsPoints != null) {
       for (Element element : myExtensionsPoints.get(StringUtil.notNullize(area.getAreaClass()))) {
         area.registerExtensionPoint(this, element);
@@ -307,7 +307,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
     }
   }
 
-  void registerExtensions(@NotNull ExtensionsArea area, @NotNull String epName) {
+  void registerExtensions(@Nonnull ExtensionsArea area, @Nonnull String epName) {
     if (myExtensions != null) {
       for (Element element : myExtensions.get(epName)) {
         area.registerExtension(this, element);
@@ -331,13 +331,13 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PluginId[] getDependentPluginIds() {
     return myDependencies;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies;
   }
@@ -395,7 +395,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
-  @NotNull
+  @Nonnull
   public List<File> getClassPath() {
     // special hack for unit test loader
     if (PluginManagerCore.UNIT_TEST_PLUGIN.equals(getPluginId())) {
@@ -447,19 +447,19 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ComponentConfig[] getAppComponents() {
     return myAppComponents;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ComponentConfig[] getProjectComponents() {
     return myProjectComponents;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ComponentConfig[] getModuleComponents() {
     return myModuleComponents;
   }
@@ -525,7 +525,7 @@ public class IdeaPluginDescriptorImpl implements IdeaPluginDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public HelpSetPath[] getHelpSets() {
     return myHelpSets;
   }

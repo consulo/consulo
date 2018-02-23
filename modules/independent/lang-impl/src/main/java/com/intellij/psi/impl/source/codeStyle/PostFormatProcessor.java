@@ -20,11 +20,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface PostFormatProcessor {
   ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create("com.intellij.postFormatProcessor");
 
-  PsiElement processElement(@NotNull PsiElement source, @NotNull CodeStyleSettings settings);
-  TextRange processText(@NotNull PsiFile source, @NotNull TextRange rangeToReformat, @NotNull CodeStyleSettings settings);
+  PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
+  TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);
 }

@@ -17,8 +17,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -35,7 +34,7 @@ public class VcsDirectoryMapping {
   public VcsDirectoryMapping() {
   }
 
-  public VcsDirectoryMapping(@NotNull final String directory, final String vcs) {
+  public VcsDirectoryMapping(@Nonnull final String directory, final String vcs) {
     setDirectory(directory);
     myVcs = vcs;
   }
@@ -46,7 +45,7 @@ public class VcsDirectoryMapping {
     myRootSettings = rootSettings;
   }
 
-  @NotNull
+  @Nonnull
   public String getDirectory() {
     return myDirectory;
   }
@@ -67,7 +66,7 @@ public class VcsDirectoryMapping {
     myVcs = vcs;
   }
 
-  public void setDirectory(@NotNull final String directory) {
+  public void setDirectory(@Nonnull final String directory) {
     myDirectory = directory;
     initSystemIndependentPath();
   }
@@ -78,7 +77,7 @@ public class VcsDirectoryMapping {
    * @return VCS-specific settings, or null if none have been defined.
    * @see AbstractVcs#getRootConfigurable(VcsDirectoryMapping)
    */
-  @Nullable
+  @javax.annotation.Nullable
   public VcsRootSettings getRootSettings() {
     return myRootSettings;
   }

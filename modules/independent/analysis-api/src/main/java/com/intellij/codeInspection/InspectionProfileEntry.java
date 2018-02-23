@@ -31,8 +31,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -64,7 +64,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
   }
 
   @Override
-  public boolean isSuppressedFor(@NotNull PsiElement element) {
+  public boolean isSuppressedFor(@Nonnull PsiElement element) {
     InspectionSuppressor suppressor = LanguageInspectionSuppressors.INSTANCE.forLanguage(element.getLanguage());
     if (suppressor != null) {
       String toolId = getSuppressId();
@@ -81,7 +81,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
     return getShortName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element) {
     if (element != null) {
@@ -111,7 +111,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @see com.intellij.codeInspection.InspectionEP#groupBundle
    */
   @Nls
-  @NotNull
+  @Nonnull
   public String getGroupDisplayName() {
     if (myNameProvider != null) {
       final String name = myNameProvider.getDefaultGroupDisplayName();
@@ -126,7 +126,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
   /**
    * @see com.intellij.codeInspection.InspectionEP#groupPath
    */
-  @NotNull
+  @Nonnull
   public String[] getGroupPath() {
     String groupDisplayName = getGroupDisplayName();
     if (groupDisplayName.isEmpty()) {
@@ -141,7 +141,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @see com.intellij.codeInspection.InspectionEP#bundle
    */
   @Nls
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     if (myNameProvider != null) {
       final String name = myNameProvider.getDefaultDisplayName();
@@ -159,7 +159,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @see com.intellij.codeInspection.InspectionEP#shortName
    */
   @NonNls
-  @NotNull
+  @Nonnull
   public String getShortName() {
     if (myNameProvider != null) {
       final String name = myNameProvider.getDefaultShortName();
@@ -170,8 +170,8 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
     return getShortName(getClass().getSimpleName());
   }
 
-  @NotNull
-  public static String getShortName(@NotNull String className) {
+  @Nonnull
+  public static String getShortName(@Nonnull String className) {
     return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"),"InspectionBase");
   }
 
@@ -180,7 +180,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    *
    * @see com.intellij.codeInspection.InspectionEP#level
    */
-  @NotNull
+  @Nonnull
   public HighlightDisplayLevel getDefaultLevel() {
     return HighlightDisplayLevel.WARNING;
   }
@@ -212,7 +212,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @throws InvalidDataException if the loaded data was not valid.
    */
   @SuppressWarnings("deprecation")
-  public void readSettings(@NotNull Element node) throws InvalidDataException {
+  public void readSettings(@Nonnull Element node) throws InvalidDataException {
     if (useNewSerializer()) {
       try {
         XmlSerializer.deserializeInto(this, node);
@@ -236,7 +236,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @throws WriteExternalException if no data should be saved for this component.
    */
   @SuppressWarnings("deprecation")
-  public void writeSettings(@NotNull Element node) throws WriteExternalException {
+  public void writeSettings(@Nonnull Element node) throws WriteExternalException {
     if (useNewSerializer()) {
       XmlSerializer.serializeInto(this, node, getSerializationFilter());
     }
@@ -280,7 +280,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<String> getBlackList() {
     synchronized (BLACK_LIST_LOCK) {
       if (ourBlackList == null) {
@@ -308,7 +308,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @param project to be associated with this entry
    * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
    */
-  public void projectOpened(@NotNull Project project) {
+  public void projectOpened(@Nonnull Project project) {
   }
 
   /**
@@ -317,7 +317,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
    * @param project to be disassociated from this entry
    * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
    */
-  public void projectClosed(@NotNull Project project) {
+  public void projectClosed(@Nonnull Project project) {
   }
 
   /**
@@ -342,7 +342,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
     return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
   }
 
-  @NotNull
+  @Nonnull
   protected Class<? extends InspectionProfileEntry> getDescriptionContextClass() {
     return getClass();
   }
@@ -354,7 +354,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
   /**
    * @return short name of tool whose results will be used
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getMainToolId() {
     return null;
   }

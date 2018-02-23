@@ -20,7 +20,7 @@ import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,18 +29,19 @@ public class UsedColors {
 
   public static final AtomicInteger counter = new AtomicInteger();
   private static class UsedColor {
-    @NotNull final String name;
+    @Nonnull
+    final String name;
     final int index;
 
-    UsedColor(@NotNull String name, int index) {
+    UsedColor(@Nonnull String name, int index) {
       this.name = name;
       this.index = index;
       counter.incrementAndGet();
     }
   }
 
-  public static int getOrAddColorIndex(@NotNull final UserDataHolderEx context,
-                                       @NotNull final String name,
+  public static int getOrAddColorIndex(@Nonnull final UserDataHolderEx context,
+                                       @Nonnull final String name,
                                        int colorsCount) {
     int colorIndex;
     while (true) {
@@ -96,12 +97,12 @@ public class UsedColors {
     return colorIndex;
   }
 
-  private static int hashColor(@NotNull String name, int colorsCount) {
+  private static int hashColor(@Nonnull String name, int colorsCount) {
     return Math.abs(StringHash.murmur(name, 0x55AA)) % colorsCount;
   }
 
   @Contract(pure = true)
-  private static int indexOfMin(@NotNull int[] values, int start, int end) {
+  private static int indexOfMin(@Nonnull int[] values, int start, int end) {
     int min = Integer.MAX_VALUE;
     int minIndex = start;
     for (int i = start; i < end; i++) {

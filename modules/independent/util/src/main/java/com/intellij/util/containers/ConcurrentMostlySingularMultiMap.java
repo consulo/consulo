@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ConcurrencyUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,14 +24,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiMap<K, V> {
-  @NotNull
+  @Nonnull
   @Override
   protected Map<K, Object> createMap() {
     return ContainerUtil.newConcurrentMap();
   }
 
   @Override
-  public void add(@NotNull K key, @NotNull V value) {
+  public void add(@Nonnull K key, @Nonnull V value) {
     ConcurrentMap<K, Object> map = (ConcurrentMap<K, Object>)myMap;
     while (true) {
       Object current = map.get(key);
@@ -59,7 +59,7 @@ public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiM
     // not implemented
   }
 
-  public boolean replace(@NotNull K key, @NotNull Collection<V> expectedValue, @NotNull Collection<V> newValue) {
+  public boolean replace(@Nonnull K key, @Nonnull Collection<V> expectedValue, @Nonnull Collection<V> newValue) {
     ConcurrentMap<K, Object> map = (ConcurrentMap<K, Object>)myMap;
     Object newValueToPut = newValue.isEmpty() ? null : newValue.size() == 1 ? newValue.iterator().next() : new ValueList<Object>(newValue);
 
@@ -82,7 +82,7 @@ public class ConcurrentMostlySingularMultiMap<K, V> extends MostlySingularMultiM
   }
 
   @Override
-  public boolean remove(@NotNull K key, @NotNull V value) {
+  public boolean remove(@Nonnull K key, @Nonnull V value) {
     throw new AbstractMethodError("Not yet re-implemented for concurrency");
   }
 }

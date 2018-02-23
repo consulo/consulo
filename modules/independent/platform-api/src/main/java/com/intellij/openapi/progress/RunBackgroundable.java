@@ -17,14 +17,14 @@ package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RunBackgroundable {
   private RunBackgroundable() {
   }
 
-  public static void run(@NotNull final Task task) {
+  public static void run(@Nonnull final Task task) {
     final ProgressManager pm = ProgressManager.getInstance();
     if (ApplicationManager.getApplication().isDispatchThread()) {
       pm.run(task);

@@ -30,8 +30,8 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.MultiRowFlowPanel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,32 +50,38 @@ import java.util.List;
  */
 public class ArrangementMatchingRuleEditor extends JPanel implements ArrangementUiComponent.Listener {
 
-  @NotNull private final Map<ArrangementSettingsToken, ArrangementUiComponent> myComponents = ContainerUtilRt.newHashMap();
-  @NotNull private final List<MultiRowFlowPanel>                               myRows       = ContainerUtilRt.newArrayList();
+  @Nonnull
+  private final Map<ArrangementSettingsToken, ArrangementUiComponent> myComponents = ContainerUtilRt.newHashMap();
+  @Nonnull
+  private final List<MultiRowFlowPanel>                               myRows       = ContainerUtilRt.newArrayList();
 
-  @NotNull private final ArrangementMatchingRulesControl    myControl;
-  @NotNull private final ArrangementStandardSettingsManager mySettingsManager;
-  @NotNull private final ArrangementColorsProvider          myColorsProvider;
+  @Nonnull
+  private final ArrangementMatchingRulesControl    myControl;
+  @Nonnull
+  private final ArrangementStandardSettingsManager mySettingsManager;
+  @Nonnull
+  private final ArrangementColorsProvider          myColorsProvider;
 
   private int myRow = -1;
   private int        myLabelWidth;
 
   @Nullable private JComponent myDefaultFocusRequestor;
-  @Nullable private JComponent myFocusRequestor;
+  @Nullable
+  private JComponent myFocusRequestor;
 
   private boolean mySkipStateChange;
 
-  public ArrangementMatchingRuleEditor(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                       @NotNull ArrangementColorsProvider colorsProvider,
-                                       @NotNull ArrangementMatchingRulesControl control)
+  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                       @Nonnull ArrangementColorsProvider colorsProvider,
+                                       @Nonnull ArrangementMatchingRulesControl control)
   {
     this(settingsManager, settingsManager.getSupportedMatchingTokens(), colorsProvider, control);
   }
 
-  public ArrangementMatchingRuleEditor(@NotNull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
                                        @Nullable List<CompositeArrangementSettingsToken> tokens,
-                                       @NotNull ArrangementColorsProvider colorsProvider,
-                                       @NotNull ArrangementMatchingRulesControl control)
+                                       @Nonnull ArrangementColorsProvider colorsProvider,
+                                       @Nonnull ArrangementMatchingRulesControl control)
   {
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
@@ -102,7 +108,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     applyBackground(UIUtil.getListBackground());
   }
 
-  private void addToken(@NotNull CompositeArrangementSettingsToken rowToken) {
+  private void addToken(@Nonnull CompositeArrangementSettingsToken rowToken) {
     List<CompositeArrangementSettingsToken> tokens = ArrangementUtil.flatten(rowToken);
     GridBag labelConstraints = new GridBag().anchor(GridBagConstraints.NORTHWEST).insets(ArrangementConstants.VERTICAL_PADDING, 0, 0, 0);
     MultiRowFlowPanel panel = new MultiRowFlowPanel(
@@ -182,8 +188,8 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     addRowIfNecessary(panel);
   }
 
-  @NotNull
-  private MultiRowFlowPanel addRowIfNecessary(@NotNull MultiRowFlowPanel panel) {
+  @Nonnull
+  private MultiRowFlowPanel addRowIfNecessary(@Nonnull MultiRowFlowPanel panel) {
     if (panel.getComponentCount() <= 0) {
       return panel;
     }
@@ -331,7 +337,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private boolean isEnabled(@Nullable ArrangementMatchCondition condition, @NotNull ArrangementSettingsToken token) {
+  private boolean isEnabled(@Nullable ArrangementMatchCondition condition, @Nonnull ArrangementSettingsToken token) {
     return ArrangementSectionRuleManager.isEnabled(token) || mySettingsManager.isEnabled(token, condition);
   }
 
@@ -355,14 +361,14 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     validate();
   }
 
-  private void applyBackground(@NotNull Color color) {
+  private void applyBackground(@Nonnull Color color) {
     setBackground(color);
     for (JComponent component : myRows) {
       component.setBackground(color);
     }
   }
 
-  private void onMouseClicked(@NotNull MouseEvent e) {
+  private void onMouseClicked(@Nonnull MouseEvent e) {
     if (myRow < 0) {
       return;
     }
@@ -390,7 +396,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void addCondition(@NotNull ArrangementUiComponent component) {
+  private void addCondition(@Nonnull ArrangementUiComponent component) {
     mySkipStateChange = true;
     try {
       component.setSelected(true);
@@ -408,7 +414,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void updateMutexConditions(@NotNull ArrangementUiComponent component, @NotNull Set<ArrangementSettingsToken> mutex) {
+  private void updateMutexConditions(@Nonnull ArrangementUiComponent component, @Nonnull Set<ArrangementSettingsToken> mutex) {
     if (!mutex.contains(component.getToken())) {
       return;
     }
@@ -423,7 +429,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void removeCondition(@NotNull ArrangementUiComponent component) {
+  private void removeCondition(@Nonnull ArrangementUiComponent component) {
     component.setSelected(false);
     refreshConditions();
   }

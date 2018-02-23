@@ -25,7 +25,7 @@ import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -82,7 +82,7 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
     return (ScrollPanel)super.getWidget();
   }
 
-  @NotNull
+  @Nonnull
   private GwtTreeImpl getTree() {
     ScrollPanel widget = getWidget();
     return (GwtTreeImpl)widget.getWidget();

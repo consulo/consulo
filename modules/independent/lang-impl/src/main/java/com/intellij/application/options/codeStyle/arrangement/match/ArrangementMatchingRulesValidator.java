@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya

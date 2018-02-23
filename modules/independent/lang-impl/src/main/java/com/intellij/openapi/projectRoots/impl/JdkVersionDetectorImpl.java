@@ -18,8 +18,8 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.concurrent.Future;
 

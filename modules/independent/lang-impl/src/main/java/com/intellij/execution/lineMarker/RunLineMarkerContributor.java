@@ -22,8 +22,8 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -35,13 +35,13 @@ public abstract class RunLineMarkerContributor {
     public final AnAction[] actions;
     public final Function<PsiElement, String> tooltipProvider;
 
-    public Info(Icon icon, @Nullable Function<PsiElement, String> tooltipProvider, @NotNull AnAction... actions) {
+    public Info(Icon icon, @Nullable Function<PsiElement, String> tooltipProvider, @Nonnull AnAction... actions) {
       this.icon = icon;
       this.actions = actions;
       this.tooltipProvider = tooltipProvider;
     }
 
-    public Info(@NotNull final AnAction action) {
+    public Info(@Nonnull final AnAction action) {
       this(action.getTemplatePresentation().getIcon(), element -> getText(action, element), action);
     }
   }
@@ -51,7 +51,7 @@ public abstract class RunLineMarkerContributor {
   public abstract Info getInfo(PsiElement element);
 
   @Nullable("null means disabled")
-  protected static String getText(@NotNull AnAction action, @NotNull PsiElement element) {
+  protected static String getText(@Nonnull AnAction action, @Nonnull PsiElement element) {
     DataContext parent = DataManager.getInstance().getDataContext();
     DataContext dataContext = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, parent);
     AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.STATUS_BAR_PLACE, dataContext);

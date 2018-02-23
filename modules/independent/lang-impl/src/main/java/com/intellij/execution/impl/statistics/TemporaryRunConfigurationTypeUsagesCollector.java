@@ -18,7 +18,7 @@ package com.intellij.execution.impl.statistics;
 import com.intellij.execution.RunManager;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.internal.statistic.beans.GroupDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
@@ -27,14 +27,14 @@ public class TemporaryRunConfigurationTypeUsagesCollector extends AbstractRunCon
 
   private static final GroupDescriptor GROUP_ID = GroupDescriptor.create("run-configuration-type-temp");
 
-  @NotNull
+  @Nonnull
   @Override
   public GroupDescriptor getGroupId() {
     return GROUP_ID;
   }
 
   @Override
-  protected boolean isApplicable(@NotNull RunManager runManager, @NotNull RunConfiguration runConfiguration) {
+  protected boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration) {
     return runManager.isTemporary(runConfiguration);
   }
 }

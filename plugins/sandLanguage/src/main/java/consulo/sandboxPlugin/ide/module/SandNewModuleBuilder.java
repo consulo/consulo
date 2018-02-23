@@ -25,7 +25,7 @@ import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,18 +35,18 @@ import javax.swing.*;
  */
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
-  public void setupContext(@NotNull NewModuleContext context) {
+  public void setupContext(@Nonnull NewModuleContext context) {
     NewModuleContext.Group group = context.createGroup("sand", "Sand");
 
     group.add("Sand Example", AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor("/moduleTemplates/Hello.zip") {
-      @NotNull
+      @Nonnull
       @Override
       public JComponent createConfigurationPanel() {
         return new JBLabel("Hello World !!!");
       }
 
       @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
+      public void setupModule(@Nonnull JComponent panel, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);
@@ -58,14 +58,14 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
     });
 
     group.add("Sand Hello", AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor() {
-      @NotNull
+      @Nonnull
       @Override
       public JComponent createConfigurationPanel() {
         return new JBLabel("Sand Example!");
       }
 
       @Override
-      public void setupModule(@NotNull JComponent panel, @NotNull ContentEntry contentEntry, @NotNull ModifiableRootModel modifiableRootModel) {
+      public void setupModule(@Nonnull JComponent panel, @Nonnull ContentEntry contentEntry, @Nonnull ModifiableRootModel modifiableRootModel) {
         SandMutableModuleExtension extension = modifiableRootModel.getExtensionWithoutCheck(SandMutableModuleExtension.class);
         assert extension != null;
         extension.setEnabled(true);

@@ -24,7 +24,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IFileElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -33,10 +33,12 @@ import java.util.Set;
  * @author max
  */
 public abstract class PsiFileBase extends PsiFileImpl {
-  @NotNull private final Language myLanguage;
-  @NotNull private final ParserDefinition myParserDefinition;
+  @Nonnull
+  private final Language myLanguage;
+  @Nonnull
+  private final ParserDefinition myParserDefinition;
 
-  protected PsiFileBase(@NotNull FileViewProvider viewProvider, @NotNull Language language) {
+  protected PsiFileBase(@Nonnull FileViewProvider viewProvider, @Nonnull Language language) {
     super(viewProvider);
     myLanguage = findLanguage(language, viewProvider);
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(myLanguage);
@@ -60,24 +62,24 @@ public abstract class PsiFileBase extends PsiFileImpl {
         "Language " + baseLanguage + " doesn't participate in view provider " + viewProvider + ": " + new ArrayList<Language>(languages));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     return getViewProvider().getFileType();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final Language getLanguage() {
     return myLanguage;
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitFile(this);
   }
 
-  @NotNull
+  @Nonnull
   public ParserDefinition getParserDefinition() {
     return myParserDefinition;
   }

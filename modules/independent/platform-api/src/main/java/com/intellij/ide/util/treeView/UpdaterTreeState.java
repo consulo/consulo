@@ -21,8 +21,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -106,17 +106,17 @@ public class UpdaterTreeState {
     return target;
   }
 
-  @NotNull
+  @Nonnull
   public Object[] getToSelect() {
     return myToSelect.keySet().toArray(new Object[myToSelect.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public Object[] getToExpand() {
     return myToExpand.keySet().toArray(new Object[myToExpand.size()]);
   }
 
-  public boolean process(@NotNull Runnable runnable) {
+  public boolean process(@Nonnull Runnable runnable) {
     try {
       setProcessingNow(true);
       runnable.run();
@@ -137,7 +137,7 @@ public class UpdaterTreeState {
     return myProcessingCount > 0;
   }
 
-  public void addAll(@NotNull UpdaterTreeState state) {
+  public void addAll(@Nonnull UpdaterTreeState state) {
     myToExpand.putAll(state.myToExpand);
 
     Object[] toSelect = state.getToSelect();

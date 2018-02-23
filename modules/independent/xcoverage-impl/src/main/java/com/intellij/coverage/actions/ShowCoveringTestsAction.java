@@ -30,7 +30,6 @@ import com.intellij.ui.popup.NotLookupOrSearchCondition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -161,7 +160,7 @@ public class ShowCoveringTestsAction extends AnAction {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static File[] getTraceFiles(Project project) {
     final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
     if (currentSuite == null) return null;

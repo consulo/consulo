@@ -18,7 +18,7 @@ package com.intellij.vcs.log.ui.filter;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.VcsLogRootFilter;
 import com.intellij.vcs.log.VcsLogStructureFilter;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /*package private*/ class VcsLogFileFilter implements VcsLogFilter {
   @Nullable private final VcsLogStructureFilter myStructureFilter;

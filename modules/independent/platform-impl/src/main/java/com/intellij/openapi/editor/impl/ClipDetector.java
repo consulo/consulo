@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ public class ClipDetector {
   private int myVisualLineClipStartOffset;
   private int myVisualLineClipEndOffset;
 
-  public ClipDetector(@NotNull EditorImpl editor, Rectangle clipRectangle) {
+  public ClipDetector(@Nonnull EditorImpl editor, Rectangle clipRectangle) {
     myEditor = editor;
     myClipRectangle = clipRectangle;
   }

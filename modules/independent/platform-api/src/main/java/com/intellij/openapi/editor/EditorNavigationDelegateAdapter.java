@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EditorNavigationDelegateAdapter implements EditorNavigationDelegate {
 
-  @NotNull
+  @Nonnull
   @Override
-  public Result navigateToLineEnd(@NotNull Editor editor, @NotNull DataContext dataContext) {
+  public Result navigateToLineEnd(@Nonnull Editor editor, @Nonnull DataContext dataContext) {
     return Result.CONTINUE;
   }
 }

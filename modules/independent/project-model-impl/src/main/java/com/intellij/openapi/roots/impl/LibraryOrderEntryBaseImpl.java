@@ -27,8 +27,7 @@ import com.intellij.util.ArrayUtil;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -39,13 +38,13 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
   public static final Logger LOGGER = Logger.getInstance(LibraryOrderEntryBaseImpl.class);
 
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
-  @NotNull
+  @Nonnull
   protected DependencyScope myScope = DependencyScope.COMPILE;
-  @Nullable
+  @javax.annotation.Nullable
   private RootProvider myCurrentlySubscribedRootProvider = null;
 
-  public LibraryOrderEntryBaseImpl(@NotNull OrderEntryType<?> provider, @NotNull ModuleRootLayerImpl rootModel,
-                                   @NotNull ProjectRootManagerImpl instanceImpl) {
+  public LibraryOrderEntryBaseImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootModel,
+                                   @Nonnull ProjectRootManagerImpl instanceImpl) {
     super(provider, rootModel);
     myProjectRootManagerImpl = instanceImpl;
   }
@@ -54,38 +53,38 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     updateFromRootProviderAndSubscribe();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Object getEqualObject() {
     return null;
   }
 
   @Override
-  @NotNull
-  public VirtualFile[] getFiles(@NotNull OrderRootType type) {
+  @Nonnull
+  public VirtualFile[] getFiles(@Nonnull OrderRootType type) {
     RootProvider rootProvider = getRootProvider();
     return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;  }
 
   @Override
-  @NotNull
-  public String[] getUrls(@NotNull OrderRootType type) {
+  @Nonnull
+  public String[] getUrls(@Nonnull OrderRootType type) {
     LOGGER.assertTrue(!getRootModel().getModule().isDisposed());
     RootProvider rootProvider = getRootProvider();
     return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
 
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract RootProvider getRootProvider();
 
   @Override
-  @NotNull
+  @Nonnull
   public final Module getOwnerModule() {
     return getRootModel().getModule();
   }
 
   @Override
-  public boolean isEquivalentTo(@NotNull OrderEntry other) {
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
     LOGGER.assertTrue(this instanceof LibraryOrderEntry);
 
     LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)this;
@@ -126,7 +125,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     subscribe(wrapper);
   }
 
-  private void subscribe(@Nullable RootProvider wrapper) {
+  private void subscribe(@javax.annotation.Nullable RootProvider wrapper) {
     if (wrapper != null) {
       myProjectRootManagerImpl.subscribeToRootProvider(this, wrapper);
     }

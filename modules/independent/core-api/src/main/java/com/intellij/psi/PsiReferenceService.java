@@ -18,8 +18,8 @@ package com.intellij.psi;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
@@ -47,11 +47,11 @@ public abstract class PsiReferenceService {
    * @return the references
    */
   @RequiredReadAction
-  public abstract List<PsiReference> getReferences(@NotNull final PsiElement element, @NotNull final Hints hints);
+  public abstract List<PsiReference> getReferences(@Nonnull final PsiElement element, @Nonnull final Hints hints);
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public PsiReference[] getContributedReferences(@NotNull final PsiElement element) {
+  public PsiReference[] getContributedReferences(@Nonnull final PsiElement element) {
     final List<PsiReference> list = getReferences(element, Hints.NO_HINTS);
     return ContainerUtil.toArray(list, PsiReference.ARRAY_FACTORY);
   }

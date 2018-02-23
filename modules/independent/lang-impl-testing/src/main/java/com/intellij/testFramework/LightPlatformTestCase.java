@@ -95,7 +95,7 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
@@ -199,7 +199,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     return creationPlace != null && StringUtil.startsWith(creationPlace, LIGHT_PROJECT_MARK);
   }
 
-  private static void initProject(@NotNull final TestModuleDescriptor descriptor) throws Exception {
+  private static void initProject(@Nonnull final TestModuleDescriptor descriptor) throws Exception {
     ourProjectDescriptor = descriptor;
     final File projectDirectory = FileUtil.createTempDirectory("light_temp_", "consulo_project");
 
@@ -243,7 +243,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
         FileBasedIndex.getInstance().registerIndexableSet(new IndexableFileSet() {
           @Override
-          public boolean isInSet(@NotNull final VirtualFile file) {
+          public boolean isInSet(@Nonnull final VirtualFile file) {
             return ourSourceRoot != null &&
                    file.getFileSystem() == ourSourceRoot.getFileSystem() &&
                    ourProject != null &&
@@ -251,10 +251,10 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
           }
 
           @Override
-          public void iterateIndexableFilesIn(@NotNull final VirtualFile file, @NotNull final ContentIterator iterator) {
+          public void iterateIndexableFilesIn(@Nonnull final VirtualFile file, @Nonnull final ContentIterator iterator) {
             VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
               @Override
-              public boolean visitFile(@NotNull VirtualFile file) {
+              public boolean visitFile(@Nonnull VirtualFile file) {
                 if (!file.isDirectory()) {
                   iterator.processFile(file);
                 }
@@ -347,15 +347,15 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     filePointerManager.storePointers();
   }
 
-  @NotNull
+  @Nonnull
   protected TestModuleDescriptor createTestModuleDescriptor() {
     return TestModuleDescriptor.EMPTY;
   }
 
   @RequiredDispatchThread
-  public static void doSetup(@NotNull TestModuleDescriptor descriptor,
-                             @NotNull LocalInspectionTool[] localInspectionTools,
-                             @NotNull final Map<String, InspectionToolWrapper> availableInspectionTools) throws Exception {
+  public static void doSetup(@Nonnull TestModuleDescriptor descriptor,
+                             @Nonnull LocalInspectionTool[] localInspectionTools,
+                             @Nonnull final Map<String, InspectionToolWrapper> availableInspectionTools) throws Exception {
     assertNull("Previous test " + ourTestCase + " hasn't called tearDown(). Probably overridden without super call.", ourTestCase);
     IdeaLogger.ourErrorsOccurred = null;
 
@@ -377,13 +377,13 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
 
     final InspectionProfileImpl profile = new InspectionProfileImpl(PROFILE) {
       @Override
-      @NotNull
+      @Nonnull
       public InspectionToolWrapper[] getInspectionTools(PsiElement element) {
         final Collection<InspectionToolWrapper> tools = availableInspectionTools.values();
         return tools.toArray(new InspectionToolWrapper[tools.size()]);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public List<Tools> getAllEnabledInspectionTools(Project project) {
         List<Tools> result = new ArrayList<Tools>();
@@ -399,13 +399,13 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
       }
 
       @Override
-      public HighlightDisplayLevel getErrorLevel(@NotNull HighlightDisplayKey key, PsiElement element) {
+      public HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey key, PsiElement element) {
         InspectionToolWrapper localInspectionTool = availableInspectionTools.get(key.toString());
         return localInspectionTool != null ? localInspectionTool.getDefaultLevel() : HighlightDisplayLevel.WARNING;
       }
 
       @Override
-      public InspectionToolWrapper getInspectionTool(@NotNull String shortName, @NotNull PsiElement element) {
+      public InspectionToolWrapper getInspectionTool(@Nonnull String shortName, @Nonnull PsiElement element) {
         if (availableInspectionTools.containsKey(shortName)) {
           return availableInspectionTools.get(shortName);
         }
@@ -413,7 +413,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
       }
 
       @Override
-      public InspectionToolWrapper getToolById(@NotNull String id, @NotNull PsiElement element) {
+      public InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element) {
         if (availableInspectionTools.containsKey(id)) {
           return availableInspectionTools.get(id);
         }
@@ -457,7 +457,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   }
 
   // todo: use Class<? extends InspectionProfileEntry> once on Java 7
-  protected void enableInspectionTools(@NotNull Class<?>... classes) {
+  protected void enableInspectionTools(@Nonnull Class<?>... classes) {
     final InspectionProfileEntry[] tools = new InspectionProfileEntry[classes.length];
 
     final List<InspectionEP> eps = ContainerUtil.newArrayList();
@@ -478,22 +478,22 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     enableInspectionTools(tools);
   }
 
-  protected void enableInspectionTools(@NotNull InspectionProfileEntry... tools) {
+  protected void enableInspectionTools(@Nonnull InspectionProfileEntry... tools) {
     for (InspectionProfileEntry tool : tools) {
       enableInspectionTool(tool);
     }
   }
 
-  protected void enableInspectionTool(@NotNull InspectionToolWrapper toolWrapper) {
+  protected void enableInspectionTool(@Nonnull InspectionToolWrapper toolWrapper) {
     enableInspectionTool(myAvailableInspectionTools, toolWrapper);
   }
 
-  protected void enableInspectionTool(@NotNull InspectionProfileEntry tool) {
+  protected void enableInspectionTool(@Nonnull InspectionProfileEntry tool) {
     InspectionToolWrapper toolWrapper = InspectionToolRegistrar.wrapTool(tool);
     enableInspectionTool(myAvailableInspectionTools, toolWrapper);
   }
 
-  public static void enableInspectionTool(@NotNull Map<String, InspectionToolWrapper> availableLocalTools, @NotNull InspectionToolWrapper toolWrapper) {
+  public static void enableInspectionTool(@Nonnull Map<String, InspectionToolWrapper> availableLocalTools, @Nonnull InspectionToolWrapper toolWrapper) {
     final String shortName = toolWrapper.getShortName();
     final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
     if (key == null) {
@@ -503,7 +503,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     availableLocalTools.put(shortName, toolWrapper);
   }
 
-  @NotNull
+  @Nonnull
   protected LocalInspectionTool[] configureLocalInspectionTools() {
     return LocalInspectionTool.EMPTY_ARRAY;
   }
@@ -526,7 +526,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     }
   }
 
-  public static void doTearDown(@NotNull final Project project, ApplicationStarter application, boolean checkForEditors) throws Exception {
+  public static void doTearDown(@Nonnull final Project project, ApplicationStarter application, boolean checkForEditors) throws Exception {
     DocumentCommitThread.getInstance().clearQueue();
     CodeStyleSettingsManager.getInstance(project).dropTemporarySettings();
     checkAllTimersAreDisposed();
@@ -608,7 +608,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
     }
   }
 
-  public static PsiDocumentManagerImpl clearUncommittedDocuments(@NotNull Project project) {
+  public static PsiDocumentManagerImpl clearUncommittedDocuments(@Nonnull Project project) {
     PsiDocumentManagerImpl documentManager = (PsiDocumentManagerImpl)PsiDocumentManager.getInstance(project);
     documentManager.clearUncommittedDocuments();
 
@@ -710,7 +710,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return ourProject;
     }

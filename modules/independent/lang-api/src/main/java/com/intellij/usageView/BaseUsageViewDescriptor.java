@@ -17,8 +17,7 @@ package com.intellij.usageView;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +30,7 @@ public class BaseUsageViewDescriptor implements UsageViewDescriptor {
     myElements = elements;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement[] getElements() {
     return myElements;
@@ -47,7 +46,7 @@ public class BaseUsageViewDescriptor implements UsageViewDescriptor {
     return RefactoringBundle.message("references.to.be.changed", UsageViewBundle.getReferencesString(usagesCount, filesCount));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
     return null;

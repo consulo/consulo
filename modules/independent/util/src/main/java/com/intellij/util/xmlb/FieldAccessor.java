@@ -16,8 +16,8 @@
 package com.intellij.util.xmlb;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -27,13 +27,13 @@ import java.lang.reflect.Type;
 class FieldAccessor implements MutableAccessor {
   private final Field myField;
 
-  public FieldAccessor(@NotNull Field field) {
+  public FieldAccessor(@Nonnull Field field) {
     myField = field;
     field.setAccessible(true);
   }
 
   @Override
-  public Object read(@NotNull Object o) {
+  public Object read(@Nonnull Object o) {
     assert myField.getDeclaringClass().isInstance(o) : "Wrong class: " + o.getClass() + "; should be: " + myField.getDeclaringClass();
     try {
       return myField.get(o);
@@ -44,7 +44,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void set(@NotNull Object host, @Nullable Object value) {
+  public void set(@Nonnull Object host, @Nullable Object value) {
     try {
       myField.set(host, value);
     }
@@ -54,7 +54,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setBoolean(@NotNull Object host, boolean value) {
+  public void setBoolean(@Nonnull Object host, boolean value) {
     try {
       myField.setBoolean(host, value);
     }
@@ -64,7 +64,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setInt(@NotNull Object host, int value) {
+  public void setInt(@Nonnull Object host, int value) {
     try {
       myField.setInt(host, value);
     }
@@ -74,7 +74,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setShort(@NotNull Object host, short value) {
+  public void setShort(@Nonnull Object host, short value) {
     try {
       myField.setShort(host, value);
     }
@@ -84,7 +84,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setLong(@NotNull Object host, long value) {
+  public void setLong(@Nonnull Object host, long value) {
     try {
       myField.setLong(host, value);
     }
@@ -94,7 +94,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setFloat(@NotNull Object host, float value) {
+  public void setFloat(@Nonnull Object host, float value) {
     try {
       myField.setFloat(host, value);
     }
@@ -104,7 +104,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public void setDouble(@NotNull Object host, double value) {
+  public void setDouble(@Nonnull Object host, double value) {
     try {
       myField.setDouble(host, value);
     }
@@ -114,7 +114,7 @@ class FieldAccessor implements MutableAccessor {
   }
 
   @Override
-  public <T extends Annotation> T getAnnotation(@NotNull Class<T> annotationClass) {
+  public <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass) {
     return myField.getAnnotation(annotationClass);
   }
 

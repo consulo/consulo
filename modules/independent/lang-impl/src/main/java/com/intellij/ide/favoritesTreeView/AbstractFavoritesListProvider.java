@@ -19,9 +19,9 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,15 +40,15 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
   protected final List<AbstractTreeNode<T>> myChildren = new ArrayList<AbstractTreeNode<T>>();
   protected final FavoritesListNode myNode;
 
-  protected AbstractFavoritesListProvider(@NotNull Project project, final String listName) {
+  protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName) {
     this(project, listName, null);
   }
 
-  protected AbstractFavoritesListProvider(@NotNull Project project, final String listName, @Nullable String description) {
+  protected AbstractFavoritesListProvider(@Nonnull Project project, final String listName, @Nullable String description) {
     myProject = project;
     myListName = listName;
     myNode = new FavoritesListNode(project, listName, description) {
-      @NotNull
+      @Nonnull
       @Override
       public Collection<? extends AbstractTreeNode> getChildren() {
         return myChildren;
@@ -79,17 +79,17 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
 
   @Nullable
   @Override
-  public String getCustomName(@NotNull CommonActionsPanel.Buttons type) {
+  public String getCustomName(@Nonnull CommonActionsPanel.Buttons type) {
     return null;
   }
 
   @Override
-  public boolean willHandle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects) {
+  public boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects) {
     return false;
   }
 
   @Override
-  public void handle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects, JComponent component) {
+  public void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component) {
   }
 
   @Override
@@ -102,7 +102,7 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
   @Override
   public void customizeRenderer(ColoredTreeCellRenderer renderer,
                                 JTree tree,
-                                @NotNull Object value,
+                                @Nonnull Object value,
                                 boolean selected,
                                 boolean expanded,
                                 boolean leaf,

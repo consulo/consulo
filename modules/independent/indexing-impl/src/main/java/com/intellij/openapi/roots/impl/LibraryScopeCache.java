@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -56,13 +56,13 @@ public class LibraryScopeCache {
     mySdkScopes.clear();
   }
 
-  @NotNull
+  @Nonnull
   public GlobalSearchScope getLibrariesOnlyScope() {
     return myLibrariesOnlyScope;
   }
 
-  @NotNull
-  public GlobalSearchScope getScopeForLibraryUsedIn(@NotNull List<Module> modulesLibraryIsUsedIn) {
+  @Nonnull
+  public GlobalSearchScope getScopeForLibraryUsedIn(@Nonnull List<Module> modulesLibraryIsUsedIn) {
     GlobalSearchScope scope = myLibraryScopes.get(modulesLibraryIsUsedIn);
     if (scope != null) {
       return scope;
@@ -73,8 +73,8 @@ public class LibraryScopeCache {
     return ConcurrencyUtil.cacheOrGet(myLibraryScopes, modulesLibraryIsUsedIn, newScope);
   }
 
-  @NotNull
-  public GlobalSearchScope getScopeForSdk(@NotNull final ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+  @Nonnull
+  public GlobalSearchScope getScopeForSdk(@Nonnull final ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
     final String jdkName = sdkOrderEntry.getSdkName();
     if (jdkName == null) return GlobalSearchScope.allScope(myProject);
     GlobalSearchScope scope = mySdkScopes.get(jdkName);
@@ -89,24 +89,24 @@ public class LibraryScopeCache {
     private final GlobalSearchScope myOriginal;
     private final ProjectFileIndex myIndex;
 
-    private LibrariesOnlyScope(@NotNull GlobalSearchScope original, @NotNull Project project) {
+    private LibrariesOnlyScope(@Nonnull GlobalSearchScope original, @Nonnull Project project) {
       super(project);
       myIndex = ProjectRootManager.getInstance(project).getFileIndex();
       myOriginal = original;
     }
 
     @Override
-    public boolean contains(@NotNull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       return myOriginal.contains(file) && (myIndex.isInLibraryClasses(file) || myIndex.isInLibrarySource(file));
     }
 
     @Override
-    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
       return myOriginal.compare(file1, file2);
     }
 
     @Override
-    public boolean isSearchInModuleContent(@NotNull Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return false;
     }
 

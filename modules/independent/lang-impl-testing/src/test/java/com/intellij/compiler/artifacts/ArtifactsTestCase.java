@@ -21,8 +21,8 @@ import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.testFramework.IdeaTestCase;
 import com.intellij.testFramework.PsiTestUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -119,7 +119,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     //   new HashMap<CompositePackagingElement<?>, ManifestFileConfiguration>();
 
     @Override
-    @NotNull
+    @Nonnull
     public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
       if (myModifiableModel == null) {
         myModifiableModel = ArtifactManager.getInstance(myProject).createModifiableModel();
@@ -133,8 +133,8 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }
 
     @Override
-    @NotNull
-    public ModifiableRootModel getOrCreateModifiableRootModel(@NotNull Module module) {
+    @Nonnull
+    public ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module) {
       ModifiableRootModel model = myModifiableRootModels.get(module);
       if (model == null) {
         model = ModuleRootManager.getInstance(module).getModifiableModel();
@@ -149,13 +149,13 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Project getProject() {
       return myProject;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ArtifactModel getArtifactModel() {
       if (myModifiableModel != null) {
         return myModifiableModel;
@@ -170,13 +170,13 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ModulesProvider getModulesProvider() {
       return new DefaultModulesProvider(myProject);
     }
 
     @Override
-    public Library findLibrary(@NotNull String level, @NotNull String libraryName) {
+    public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
       return ArtifactManager.getInstance(myProject).getResolvingContext().findLibrary(level, libraryName);
     }
    /*
@@ -196,12 +196,12 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }     */
 
     @Override
-    public CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact) {
+    public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
       return artifact.getRootElement();
     }
 
     @Override
-    public void editLayout(@NotNull Artifact artifact, Runnable action) {
+    public void editLayout(@Nonnull Artifact artifact, Runnable action) {
       final ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(artifact);
       modifiableArtifact.setRootElement(artifact.getRootElement());
       action.run();
@@ -213,8 +213,8 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }
 
     @Override
-    @NotNull
-    public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
+    @Nonnull
+    public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
       if (myModifiableModel != null) {
         return myModifiableModel.getOriginalArtifact(artifact);
       }
@@ -226,8 +226,8 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     }
 
     @Override
-    @NotNull
-    public ArtifactProjectStructureElement getOrCreateArtifactElement(@NotNull Artifact artifact) {
+    @Nonnull
+    public ArtifactProjectStructureElement getOrCreateArtifactElement(@Nonnull Artifact artifact) {
       throw new UnsupportedOperationException("'getOrCreateArtifactElement' not implemented in " + getClass().getName());
     }
   }

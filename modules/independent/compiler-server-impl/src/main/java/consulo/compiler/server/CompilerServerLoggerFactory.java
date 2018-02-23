@@ -17,7 +17,6 @@ package consulo.compiler.server;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,17 +37,17 @@ public class CompilerServerLoggerFactory implements Logger.Factory {
       }
 
       @Override
-      public void debug(@Nullable Throwable t) {
+      public void debug(@javax.annotation.Nullable Throwable t) {
 
       }
 
       @Override
-      public void debug(@NonNls String message, @Nullable Throwable t) {
+      public void debug(@NonNls String message, @javax.annotation.Nullable Throwable t) {
 
       }
 
       @Override
-      public void error(@NonNls String message, @Nullable Throwable t, @NonNls String... details) {
+      public void error(@NonNls String message, @javax.annotation.Nullable Throwable t, @NonNls String... details) {
         System.out.println(message);
         if (t != null) {
           t.printStackTrace();
@@ -61,7 +60,7 @@ public class CompilerServerLoggerFactory implements Logger.Factory {
       }
 
       @Override
-      public void info(@NonNls String message, @Nullable Throwable t) {
+      public void info(@NonNls String message, @javax.annotation.Nullable Throwable t) {
         System.out.println(message);
         if (t != null) {
           t.printStackTrace();
@@ -69,7 +68,7 @@ public class CompilerServerLoggerFactory implements Logger.Factory {
       }
 
       @Override
-      public void warn(@NonNls String message, @Nullable Throwable t) {
+      public void warn(@NonNls String message, @javax.annotation.Nullable Throwable t) {
         System.out.println(message);
         if (t != null) {
           t.printStackTrace();

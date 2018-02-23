@@ -17,8 +17,8 @@ package com.intellij.designer.propertyTable;
 
 import com.intellij.designer.model.PropertiesContainer;
 import com.intellij.designer.model.PropertyContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -29,7 +29,7 @@ import javax.swing.event.EventListenerList;
 public abstract class PropertyEditor {
   private final EventListenerList myListenerList = new EventListenerList();
 
-  @NotNull
+  @Nonnull
   public abstract JComponent getComponent(@Nullable PropertiesContainer container,
                                           @Nullable PropertyContext context,
                                           Object value,

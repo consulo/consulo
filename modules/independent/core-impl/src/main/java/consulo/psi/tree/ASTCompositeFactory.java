@@ -18,7 +18,7 @@ package consulo.psi.tree;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.Predicate;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,6 +27,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ASTCompositeFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.compositeFactory");
 
-  @NotNull
+  @Nonnull
   CompositeElement createComposite(final IElementType type);
 }

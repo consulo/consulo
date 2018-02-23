@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.lang.LanguageVersion;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 public class CommentUtilCore {
@@ -52,7 +52,7 @@ public class CommentUtilCore {
     return isComment(element);
   }
 
-  public static boolean isCommentToken(@NotNull  IElementType tokenType, @NotNull LanguageVersion languageVersion) {
+  public static boolean isCommentToken(@Nonnull IElementType tokenType, @Nonnull LanguageVersion languageVersion) {
     final Language language = tokenType.getLanguage();
     if(language != languageVersion.getLanguage()) {
       return false;

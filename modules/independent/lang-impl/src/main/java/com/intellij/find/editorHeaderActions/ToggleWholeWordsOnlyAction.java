@@ -3,7 +3,7 @@ package com.intellij.find.editorHeaderActions;
 import com.intellij.find.FindSettings;
 import com.intellij.find.SearchSession;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction {
   public ToggleWholeWordsOnlyAction() {
@@ -20,12 +20,12 @@ public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction {
   }
 
   @Override
-  protected boolean isSelected(@NotNull SearchSession session) {
+  protected boolean isSelected(@Nonnull SearchSession session) {
     return session.getFindModel().isWholeWordsOnly();
   }
 
   @Override
-  protected void setSelected(@NotNull SearchSession session, boolean selected) {
+  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
     FindSettings.getInstance().setLocalWholeWordsOnly(selected);
     session.getFindModel().setWholeWordsOnly(selected);
   }

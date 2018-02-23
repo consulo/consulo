@@ -21,8 +21,8 @@ import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public final class ToDoRootNode extends BaseToDoNode{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     return new ArrayList<AbstractTreeNode>(Collections.singleton(mySummaryNode));
   }

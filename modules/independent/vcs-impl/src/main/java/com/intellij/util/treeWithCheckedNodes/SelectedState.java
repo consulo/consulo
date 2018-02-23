@@ -18,8 +18,7 @@ package com.intellij.util.treeWithCheckedNodes;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUMap;
 import com.intellij.util.containers.hash.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +46,7 @@ public class SelectedState<T> {
     myCache = new SLRUMap<>(queueSize, queueSize);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TreeNodeState get(final T node) {
     if (mySelected.contains(node)) return TreeNodeState.SELECTED;
     return myCache.get(node);
@@ -72,8 +71,8 @@ public class SelectedState<T> {
     myCache.remove(node);
   }
 
-  @NotNull
-  public TreeNodeState putAndPass(final T node, @NotNull final TreeNodeState state) {
+  @Nonnull
+  public TreeNodeState putAndPass(final T node, @Nonnull final TreeNodeState state) {
     if (TreeNodeState.SELECTED.equals(state)) {
       mySelected.add(node);
       myCache.remove(node);

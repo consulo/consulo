@@ -29,7 +29,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.FileContentUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -83,18 +83,18 @@ public class FileUndoProvider implements UndoProvider, VirtualFileListener {
   }
 
   @Override
-  public void fileCreated(@NotNull VirtualFileEvent e) {
+  public void fileCreated(@Nonnull VirtualFileEvent e) {
     processEvent(e);
   }
 
   @Override
-  public void propertyChanged(@NotNull VirtualFilePropertyEvent e) {
+  public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
     if (!e.getPropertyName().equals(VirtualFile.PROP_NAME)) return;
     processEvent(e);
   }
 
   @Override
-  public void fileMoved(@NotNull VirtualFileMoveEvent e) {
+  public void fileMoved(@Nonnull VirtualFileMoveEvent e) {
     processEvent(e);
   }
 
@@ -109,14 +109,14 @@ public class FileUndoProvider implements UndoProvider, VirtualFileListener {
   }
 
   @Override
-  public void beforeContentsChange(@NotNull VirtualFileEvent e) {
+  public void beforeContentsChange(@Nonnull VirtualFileEvent e) {
     if (!shouldProcess(e)) return;
     if (isUndoable(e)) return;
     registerNonUndoableAction(e);
   }
 
   @Override
-  public void beforeFileDeletion(@NotNull VirtualFileEvent e) {
+  public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
     if (!shouldProcess(e)) {
       invalidateActionsFor(e);
       return;
@@ -131,7 +131,7 @@ public class FileUndoProvider implements UndoProvider, VirtualFileListener {
   }
 
   @Override
-  public void fileDeleted(@NotNull VirtualFileEvent e) {
+  public void fileDeleted(@Nonnull VirtualFileEvent e) {
     if (!shouldProcess(e)) return;
     VirtualFile f = e.getFile();
 

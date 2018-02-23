@@ -23,8 +23,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +88,7 @@ public class TemplateContext {
     }
   }
 
-  void setDefaultContext(@NotNull TemplateContext defContext) {
+  void setDefaultContext(@Nonnull TemplateContext defContext) {
     HashMap<String, Boolean> copy = new HashMap<String, Boolean>(myContextStates);
     myContextStates.clear();
     myContextStates.putAll(defContext.myContextStates);

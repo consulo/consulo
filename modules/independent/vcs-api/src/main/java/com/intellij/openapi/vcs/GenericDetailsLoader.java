@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,7 +46,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
   }
 
   @RequiredDispatchThread
-  public void updateSelection(@Nullable final Id id, boolean force) {
+  public void updateSelection(@javax.annotation.Nullable final Id id, boolean force) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myIsDisposed) return;
     myValueConsumer.setId(id);

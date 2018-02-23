@@ -25,8 +25,8 @@ import com.intellij.openapi.wm.FocusCommand;
 import com.intellij.openapi.wm.FocusRequestor;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,60 +40,60 @@ public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
   }
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull final Component c, final boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull final Component c, final boolean forced) {
     return getGlobalInstance().requestFocus(c, forced);
   }
 
   @Override
-  @NotNull
-  public ActionCallback requestFocus(@NotNull final FocusCommand command, final boolean forced) {
+  @Nonnull
+  public ActionCallback requestFocus(@Nonnull final FocusCommand command, final boolean forced) {
     return getGlobalInstance().requestFocus(command, forced);
   }
 
   @Override
-  public ActionCallback requestFocusInProject(@NotNull Component c, @Nullable Project project) {
+  public ActionCallback requestFocusInProject(@Nonnull Component c, @javax.annotation.Nullable Project project) {
     return getGlobalInstance().requestFocusInProject(c, project);
   }
 
   @Override
-  public JComponent getFocusTargetFor(@NotNull final JComponent comp) {
+  public JComponent getFocusTargetFor(@Nonnull final JComponent comp) {
     return getGlobalInstance().getFocusTargetFor(comp);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull final Runnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
     getGlobalInstance().doWhenFocusSettlesDown(runnable);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality) {
+  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
     getGlobalInstance().doWhenFocusSettlesDown(runnable, modality);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@NotNull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
     getGlobalInstance().doWhenFocusSettlesDown(runnable);
   }
 
   @Override
   @Nullable
-  public Component getFocusedDescendantFor(@NotNull final Component comp) {
+  public Component getFocusedDescendantFor(@Nonnull final Component comp) {
     return getGlobalInstance().getFocusedDescendantFor(comp);
   }
 
   @Override
-  public boolean dispatch(@NotNull KeyEvent e) {
+  public boolean dispatch(@Nonnull KeyEvent e) {
     return getGlobalInstance().dispatch(e);
   }
 
   @Override
-  public void typeAheadUntil(@NotNull ActionCallback callback, @NotNull String cause) {
+  public void typeAheadUntil(@Nonnull ActionCallback callback, @Nonnull String cause) {
     getGlobalInstance().typeAheadUntil(callback, cause);
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback requestDefaultFocus(boolean forced) {
     return myToolWindowManager.requestDefaultFocus(forced);
@@ -104,20 +104,20 @@ public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
     return getGlobalInstance().isFocusTransferEnabled();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Expirable getTimestamp(boolean trackOnlyForcedCommands) {
     return getGlobalInstance().getTimestamp(trackOnlyForcedCommands);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FocusRequestor getFurtherRequestor() {
     return getGlobalInstance().getFurtherRequestor();
   }
 
   @Override
-  public void revalidateFocus(@NotNull ExpirableRunnable runnable) {
+  public void revalidateFocus(@Nonnull ExpirableRunnable runnable) {
     getGlobalInstance().revalidateFocus(runnable);
   }
 
@@ -132,7 +132,7 @@ public class DesktopIdeFocusManagerImpl extends IdeFocusManager {
   }
 
   @Override
-  public void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable) {
+  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
     getGlobalInstance().runOnOwnContext(context, runnable);
   }
 

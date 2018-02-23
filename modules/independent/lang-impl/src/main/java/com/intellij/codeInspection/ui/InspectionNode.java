@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.util.IconUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Enumeration;
@@ -32,7 +32,7 @@ public class InspectionNode extends InspectionTreeNode {
   public static final Icon TOOL = LayeredIcon.create(AllIcons.Toolwindows.ToolWindowInspection, IconUtil.getEmptyIcon(false));
   private boolean myTooBigForOnlineRefresh = false;
 
-  public InspectionNode(@NotNull InspectionToolWrapper toolWrapper) {
+  public InspectionNode(@Nonnull InspectionToolWrapper toolWrapper) {
     super(toolWrapper);
   }
 
@@ -40,7 +40,7 @@ public class InspectionNode extends InspectionTreeNode {
     return getToolWrapper().getDisplayName();
   }
 
-  @NotNull
+  @Nonnull
   public InspectionToolWrapper getToolWrapper() {
     return (InspectionToolWrapper)getUserObject();
   }

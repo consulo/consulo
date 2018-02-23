@@ -53,9 +53,9 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.util.*;
@@ -65,7 +65,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
   protected final LinkedHashMap<PsiElement, String> myAllRenames = new LinkedHashMap<>();
 
-  private @NotNull PsiElement myPrimaryElement;
+  private @Nonnull
+  PsiElement myPrimaryElement;
   private String myNewName = null;
 
   private boolean mySearchInComments;
@@ -80,8 +81,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
   private final List<UnresolvableCollisionUsageInfo> mySkippedUsages = new ArrayList<>();
 
   public RenameProcessor(Project project,
-                         @NotNull PsiElement element,
-                         @NotNull @NonNls String newName,
+                         @Nonnull PsiElement element,
+                         @Nonnull @NonNls String newName,
                          boolean isSearchInComments,
                          boolean isSearchTextOccurrences) {
     super(project);
@@ -122,7 +123,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     super.doRun();
   }
 
-  public void prepareRenaming(@NotNull final PsiElement element, final String newName, final LinkedHashMap<PsiElement, String> allRenames) {
+  public void prepareRenaming(@Nonnull final PsiElement element, final String newName, final LinkedHashMap<PsiElement, String> allRenames) {
     final List<RenamePsiElementProcessor> processors = RenamePsiElementProcessor.allForElement(element);
     myForceShowPreview = false;
     for (RenamePsiElementProcessor processor : processors) {
@@ -139,7 +140,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  public boolean preprocessUsages(@NotNull final Ref<UsageInfo[]> refUsages) {
+  public boolean preprocessUsages(@Nonnull final Ref<UsageInfo[]> refUsages) {
     UsageInfo[] usagesIn = refUsages.get();
     MultiMap<PsiElement, String> conflicts = new MultiMap<>();
 
@@ -266,12 +267,12 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     return dialog.showAndGet();
   }
 
-  public void addElement(@NotNull PsiElement element, @NotNull String newName) {
+  public void addElement(@Nonnull PsiElement element, @Nonnull String newName) {
     assertNonCompileElement(element);
     myAllRenames.put(element, newName);
   }
 
-  private void setNewName(@NotNull String newName) {
+  private void setNewName(@Nonnull String newName) {
     myNewName = newName;
     myAllRenames.put(myPrimaryElement, newName);
     myCommandName = RefactoringBundle
@@ -279,13 +280,13 @@ public class RenameProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  @NotNull
-  protected UsageViewDescriptor createUsageViewDescriptor(@NotNull UsageInfo[] usages) {
+  @Nonnull
+  protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
     return new RenameViewDescriptor(myAllRenames);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public UsageInfo[] findUsages() {
     myRenamers.clear();
     ArrayList<UsageInfo> result = new ArrayList<>();
@@ -321,7 +322,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected void refreshElements(@NotNull PsiElement[] elements) {
+  protected void refreshElements(@Nonnull PsiElement[] elements) {
     LOG.assertTrue(elements.length > 0);
     myPrimaryElement = elements[0];
 
@@ -335,7 +336,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected boolean isPreviewUsages(@NotNull UsageInfo[] usages) {
+  protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
     if (myForceShowPreview) return true;
     if (super.isPreviewUsages(usages)) return true;
     if (UsageViewUtil.reportNonRegularUsages(usages, myProject)) return true;
@@ -358,14 +359,14 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
   @Nullable
   @Override
-  protected RefactoringEventData getAfterData(@NotNull UsageInfo[] usages) {
+  protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
     final RefactoringEventData data = new RefactoringEventData();
     data.addElement(myPrimaryElement);
     return data;
   }
 
   @Override
-  public void performRefactoring(@NotNull UsageInfo[] usages) {
+  public void performRefactoring(@Nonnull UsageInfo[] usages) {
     List<Runnable> postRenameCallbacks = new ArrayList<>();
 
     final MultiMap<PsiElement, UsageInfo> classified = classifyUsages(myAllRenames.keySet(), usages);

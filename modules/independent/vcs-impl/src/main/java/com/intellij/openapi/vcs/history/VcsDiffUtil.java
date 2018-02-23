@@ -31,8 +31,8 @@ import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashMap;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,11 +45,11 @@ import static com.intellij.diff.util.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_T
 public class VcsDiffUtil {
 
   @RequiredDispatchThread
-  public static void showDiffFor(@NotNull Project project,
-                                 @NotNull final Collection<Change> changes,
-                                 @NotNull final String revNumTitle1,
-                                 @NotNull final String revNumTitle2,
-                                 @NotNull final FilePath filePath) {
+  public static void showDiffFor(@Nonnull Project project,
+                                 @Nonnull final Collection<Change> changes,
+                                 @Nonnull final String revNumTitle1,
+                                 @Nonnull final String revNumTitle2,
+                                 @Nonnull final FilePath filePath) {
     if (filePath.isDirectory()) {
       showChangesDialog(project, getDialogTitle(filePath, revNumTitle1, revNumTitle2), ContainerUtil.newArrayList(changes));
     }
@@ -62,9 +62,9 @@ public class VcsDiffUtil {
         revTitlesMap.put(VCS_DIFF_LEFT_CONTENT_TITLE, revNumTitle1);
         revTitlesMap.put(VCS_DIFF_RIGHT_CONTENT_TITLE, revNumTitle2);
         ShowDiffContext showDiffContext = new ShowDiffContext() {
-          @NotNull
+          @Nonnull
           @Override
-          public Map<Key, Object> getChangeContext(@NotNull Change change) {
+          public Map<Key, Object> getChangeContext(@Nonnull Change change) {
             return revTitlesMap;
           }
         };
@@ -73,20 +73,20 @@ public class VcsDiffUtil {
     }
   }
 
-  @NotNull
-  private static String getDialogTitle(@NotNull final FilePath filePath, @NotNull final String revNumTitle1,
-                                       @NotNull final String revNumTitle2) {
+  @Nonnull
+  private static String getDialogTitle(@Nonnull final FilePath filePath, @Nonnull final String revNumTitle1,
+                                       @Nonnull final String revNumTitle2) {
     return String.format("Difference between %s and %s versions in %s", revNumTitle1, revNumTitle2, filePath.getName());
   }
 
-  @NotNull
-  public static String getRevisionTitle(@NotNull String revision, boolean localMark) {
+  @Nonnull
+  public static String getRevisionTitle(@Nonnull String revision, boolean localMark) {
     return revision +
            (localMark ? " (" + VcsBundle.message("diff.title.local") + ")" : "");
   }
 
   @RequiredDispatchThread
-  public static void showChangesDialog(@NotNull Project project, @NotNull String title, @NotNull List<Change> changes) {
+  public static void showChangesDialog(@Nonnull Project project, @Nonnull String title, @Nonnull List<Change> changes) {
     DialogBuilder dialogBuilder = new DialogBuilder(project);
 
     dialogBuilder.setTitle(title);
@@ -99,8 +99,8 @@ public class VcsDiffUtil {
     dialogBuilder.showNotModal();
   }
 
-  @NotNull
-  public static List<Change> createChangesWithCurrentContentForFile(@NotNull FilePath filePath,
+  @Nonnull
+  public static List<Change> createChangesWithCurrentContentForFile(@Nonnull FilePath filePath,
                                                                     @Nullable ContentRevision beforeContentRevision) {
     return Collections.singletonList(new Change(beforeContentRevision, CurrentContentRevision.create(filePath)));
   }

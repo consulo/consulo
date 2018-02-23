@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.EventListener;
@@ -39,7 +39,7 @@ public abstract class PsiDocumentManager {
    * @param document the document to check.
    * @return true if the PSI tree for the document is up to date, false otherwise.
    */
-  public abstract boolean isCommitted(@NotNull Document document);
+  public abstract boolean isCommitted(@Nonnull Document document);
 
   /**
    * Returns the document manager instance for the specified project.
@@ -47,7 +47,7 @@ public abstract class PsiDocumentManager {
    * @param project the project for which the document manager is requested.
    * @return the document manager instance.
    */
-  public static PsiDocumentManager getInstance(@NotNull Project project) {
+  public static PsiDocumentManager getInstance(@Nonnull Project project) {
     return project.getComponent(PsiDocumentManager.class);
   }
 
@@ -59,7 +59,7 @@ public abstract class PsiDocumentManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract PsiFile getPsiFile(@NotNull Document document);
+  public abstract PsiFile getPsiFile(@Nonnull Document document);
 
   /**
    * Returns the cached PSI file for the specified document.
@@ -69,7 +69,7 @@ public abstract class PsiDocumentManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract PsiFile getCachedPsiFile(@NotNull Document document);
+  public abstract PsiFile getCachedPsiFile(@Nonnull Document document);
 
   /**
    * Returns the document for the specified PSI file.
@@ -78,7 +78,7 @@ public abstract class PsiDocumentManager {
    * @return the document instance, or <code>null</code> if the file is binary or has no associated document.
    */
   @Nullable
-  public abstract Document getDocument(@NotNull PsiFile file);
+  public abstract Document getDocument(@Nonnull PsiFile file);
 
   /**
    * Returns the cached document for the specified PSI file.
@@ -87,7 +87,7 @@ public abstract class PsiDocumentManager {
    * @return the document instance, or <code>null</code> if there is currently no cached document for the file.
    */
   @Nullable
-  public abstract Document getCachedDocument(@NotNull PsiFile file);
+  public abstract Document getCachedDocument(@Nonnull PsiFile file);
 
   /**
    * Commits (updates the PSI tree for) all modified but not committed documents.
@@ -100,7 +100,7 @@ public abstract class PsiDocumentManager {
   /**
    * If the document is committed, runs action synchronously, otherwise schedules to execute it right after it has been committed.
    */
-  public abstract void performForCommittedDocument(@NotNull Document document, @NotNull Runnable action);
+  public abstract void performForCommittedDocument(@Nonnull Document document, @Nonnull Runnable action);
 
   /**
    * Updates the PSI tree for the specified document.
@@ -109,15 +109,15 @@ public abstract class PsiDocumentManager {
    *
    * @param document the document to commit.
    */
-  public abstract void commitDocument(@NotNull Document document);
+  public abstract void commitDocument(@Nonnull Document document);
 
   /**
    * @return the document text that PSI should be based upon. For changed documents, it's their old text until the document is committed.
    * This sequence is immutable.
    * @see com.intellij.util.text.ImmutableCharSequence
    */
-  @NotNull
-  public abstract CharSequence getLastCommittedText(@NotNull Document document);
+  @Nonnull
+  public abstract CharSequence getLastCommittedText(@Nonnull Document document);
 
   /**
    * @return for uncommitted documents, the last stamp before the document change: the same stamp that current PSI should have.
@@ -126,7 +126,7 @@ public abstract class PsiDocumentManager {
    * @see Document#getModificationStamp()
    * @see FileViewProvider#getModificationStamp()
    */
-  public abstract long getLastCommittedStamp(@NotNull Document document);
+  public abstract long getLastCommittedStamp(@Nonnull Document document);
 
   /**
    * Returns the document for specified PsiFile intended to be used when working with committed PSI, e.g. outside dispatch thread.
@@ -137,7 +137,7 @@ public abstract class PsiDocumentManager {
    * @since 143.* builds
    */
   @Nullable
-  public abstract Document getLastCommittedDocument(@NotNull PsiFile file);
+  public abstract Document getLastCommittedDocument(@Nonnull PsiFile file);
 
   /**
    * Returns the list of documents which have been modified but not committed.
@@ -145,7 +145,7 @@ public abstract class PsiDocumentManager {
    * @return the list of uncommitted documents.
    * @see #commitDocument(Document)
    */
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   public abstract Document[] getUncommittedDocuments();
 
@@ -156,7 +156,7 @@ public abstract class PsiDocumentManager {
    * @return true if the document was modified but not committed, false otherwise
    * @see #commitDocument(Document)
    */
-  public abstract boolean isUncommited(@NotNull Document document);
+  public abstract boolean isUncommited(@Nonnull Document document);
 
   /**
    * Checks if any modified documents have not been committed.
@@ -171,7 +171,7 @@ public abstract class PsiDocumentManager {
    *
    * @param runnable the operation to execute.
    */
-  public abstract void commitAndRunReadAction(@NotNull Runnable runnable);
+  public abstract void commitAndRunReadAction(@Nonnull Runnable runnable);
 
   /**
    * Commits the documents and runs the specified operation, which returns a value, in a read action.
@@ -180,7 +180,7 @@ public abstract class PsiDocumentManager {
    * @param computation the operation to execute.
    * @return the value returned by the operation.
    */
-  public abstract <T> T commitAndRunReadAction(@NotNull Computable<T> computation);
+  public abstract <T> T commitAndRunReadAction(@Nonnull Computable<T> computation);
 
   /**
    * Reparses the specified set of files after an external configuration change that would cause them to be parsed differently
@@ -189,7 +189,7 @@ public abstract class PsiDocumentManager {
    * @param files the files to reparse.
    * @param includeOpenFiles if true, the files opened in editor tabs will also be reparsed.
    */
-  public abstract void reparseFiles(@NotNull final Collection<VirtualFile> files, final boolean includeOpenFiles);
+  public abstract void reparseFiles(@Nonnull final Collection<VirtualFile> files, final boolean includeOpenFiles);
 
   /**
    * Listener for receiving notifications about creation of {@link Document} and {@link PsiFile} instances.
@@ -202,7 +202,7 @@ public abstract class PsiDocumentManager {
      * @param psiFile the file for which the document was created.
      * @see PsiDocumentManager#getDocument(PsiFile)
      */
-    void documentCreated(@NotNull Document document, PsiFile psiFile);
+    void documentCreated(@Nonnull Document document, PsiFile psiFile);
 
     /**
      * Called when a file instance is created for a document.
@@ -211,7 +211,7 @@ public abstract class PsiDocumentManager {
      * @param document the document for which the file was created.
      * @see PsiDocumentManager#getDocument(PsiFile)
      */
-    void fileCreated(@NotNull PsiFile file, @NotNull Document document);
+    void fileCreated(@Nonnull PsiFile file, @Nonnull Document document);
   }
 
   /**
@@ -219,14 +219,14 @@ public abstract class PsiDocumentManager {
    *
    * @param listener the listener to add.
    */
-  public abstract void addListener(@NotNull Listener listener);
+  public abstract void addListener(@Nonnull Listener listener);
 
   /**
    * Removes a listener for receiving notifications about creation of {@link Document} and {@link PsiFile} instances.
    *
    * @param listener the listener to add.
    */
-  public abstract void removeListener(@NotNull Listener listener);
+  public abstract void removeListener(@Nonnull Listener listener);
 
   /**
    * Checks if the PSI tree corresponding to the specified document has been modified and the changes have not
@@ -237,14 +237,14 @@ public abstract class PsiDocumentManager {
    * @param doc the document to check.
    * @return true if the corresponding PSI has changes that haven't been applied to the document.
    */
-  public abstract boolean isDocumentBlockedByPsi(@NotNull Document doc);
+  public abstract boolean isDocumentBlockedByPsi(@Nonnull Document doc);
 
   /**
    * Applies pending changes made through the PSI to the specified document.
    *
    * @param doc the document to apply the changes to.
    */
-  public abstract void doPostponedOperationsAndUnblockDocument(@NotNull Document doc);
+  public abstract void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc);
 
   /**
    * Defer action until all documents are committed.
@@ -254,12 +254,12 @@ public abstract class PsiDocumentManager {
    * @return true if action was run immediately (i.e. all documents are already committed)
    */
   @RequiredDispatchThread
-  public abstract boolean performWhenAllCommitted(@NotNull Runnable action);
+  public abstract boolean performWhenAllCommitted(@Nonnull Runnable action);
 
   /**
    * Same as {@link #performLaterWhenAllCommitted(Runnable, ModalityState)} using {@link ModalityState#defaultModalityState()}
    */
-  public void performLaterWhenAllCommitted(@NotNull Runnable runnable) {
+  public void performLaterWhenAllCommitted(@Nonnull Runnable runnable) {
     performLaterWhenAllCommitted(runnable, ModalityState.defaultModalityState());
   }
 
@@ -268,5 +268,5 @@ public abstract class PsiDocumentManager {
    * The runnable is guaranteed to be invoked when no write action is running, and not immediately.
    * If the project is disposed before such moment, the runnable is not run.
    */
-  public abstract void performLaterWhenAllCommitted(@NotNull Runnable runnable, ModalityState modalityState);
+  public abstract void performLaterWhenAllCommitted(@Nonnull Runnable runnable, ModalityState modalityState);
 }

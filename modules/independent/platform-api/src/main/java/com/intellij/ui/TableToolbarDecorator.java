@@ -20,9 +20,9 @@ import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -35,9 +35,10 @@ import java.beans.PropertyChangeListener;
  */
 class TableToolbarDecorator extends ToolbarDecorator {
   private final JTable myTable;
-  @Nullable private final ElementProducer<?> myProducer;
+  @Nullable
+  private final ElementProducer<?> myProducer;
 
-  TableToolbarDecorator(@NotNull JTable table, @Nullable final ElementProducer<?> producer) {
+  TableToolbarDecorator(@Nonnull JTable table, @Nullable final ElementProducer<?> producer) {
     myTable = table;
     myProducer = producer;
     myAddActionEnabled = myRemoveActionEnabled = myUpActionEnabled = myDownActionEnabled = isModelEditable();

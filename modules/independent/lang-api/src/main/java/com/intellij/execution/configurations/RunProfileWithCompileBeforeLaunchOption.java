@@ -17,7 +17,7 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -26,6 +26,6 @@ public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
   /**
    * @return modules to compile before run. Empty list to make project
    */
-  @NotNull
+  @Nonnull
   Module[] getModules();
 }

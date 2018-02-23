@@ -21,8 +21,8 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,13 +31,17 @@ import java.util.List;
 
 @State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements ProjectComponent, PersistentStateComponent<Element> {
-  @NotNull private final Project myProject;
-  @NotNull private final Object myActiveTargetLock = new Object();
-  @Nullable private ExecutionTarget myActiveTarget;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final Object myActiveTargetLock = new Object();
+  @Nullable
+  private ExecutionTarget myActiveTarget;
 
-  @Nullable private String mySavedActiveTargetId;
+  @Nullable
+  private String mySavedActiveTargetId;
 
-  public ExecutionTargetManagerImpl(@NotNull Project project) {
+  public ExecutionTargetManagerImpl(@Nonnull Project project) {
     myProject = project;
   }
 
@@ -73,7 +77,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   public void initComponent() {
     myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
       @Override
-      public void runConfigurationChanged(@NotNull RunnerAndConfigurationSettings settings) {
+      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
         if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {
           updateActiveTarget(settings);
         }
@@ -90,13 +94,13 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return ExecutionTargetManager.class.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -109,7 +113,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   @Override
-  public void setActiveTarget(@NotNull ExecutionTarget target) {
+  public void setActiveTarget(@Nonnull ExecutionTarget target) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     synchronized (myActiveTargetLock) {
       updateActiveTarget(RunManager.getInstance(myProject).getSelectedConfiguration(), target);
@@ -153,7 +157,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   @Nullable
-  private ExecutionTarget doSetActiveTarget(@NotNull ExecutionTarget newTarget) {
+  private ExecutionTarget doSetActiveTarget(@Nonnull ExecutionTarget newTarget) {
     mySavedActiveTargetId = null;
 
     ExecutionTarget prev = myActiveTarget;
@@ -164,7 +168,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
     ApplicationManager.getApplication().assertReadAccessAllowed();

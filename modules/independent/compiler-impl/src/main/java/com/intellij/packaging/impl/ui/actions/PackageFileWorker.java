@@ -44,7 +44,7 @@ import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.zip.JBZipEntry;
 import com.intellij.util.io.zip.JBZipFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class PackageFileWorker {
     myRelativeOutputPath = relativeOutputPath;
   }
 
-  public static void startPackagingFiles(Project project, List<VirtualFile> files, Artifact[] artifacts, final @NotNull Runnable onFinishedInAwt) {
+  public static void startPackagingFiles(Project project, List<VirtualFile> files, Artifact[] artifacts, final @Nonnull Runnable onFinishedInAwt) {
     startPackagingFiles(project, files, artifacts).doWhenProcessed(new Runnable() {
       @Override
       public void run() {
@@ -79,7 +79,7 @@ public class PackageFileWorker {
     final ActionCallback callback = new ActionCallback();
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Packaging Files") {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           for (final VirtualFile file : files) {
             indicator.checkCanceled();
@@ -107,7 +107,7 @@ public class PackageFileWorker {
     return callback;
   }
 
-  public static void packageFile(@NotNull VirtualFile file, @NotNull Project project, final Artifact[] artifacts) throws IOException {
+  public static void packageFile(@Nonnull VirtualFile file, @Nonnull Project project, final Artifact[] artifacts) throws IOException {
     LOG.debug("Start packaging file: " + file.getPath());
     final Collection<Trinity<Artifact, PackagingElementPath, String>> items = ArtifactUtil.findContainingArtifactsWithOutputPaths(file, project, artifacts);
     File ioFile = VfsUtilCore.virtualToIoFile(file);

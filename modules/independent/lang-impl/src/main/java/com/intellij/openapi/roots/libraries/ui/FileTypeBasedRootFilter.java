@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@link RootDetector} which detects a root by presence of files of some specified type under it
@@ -33,14 +33,14 @@ import org.jetbrains.annotations.NotNull;
 public class FileTypeBasedRootFilter extends RootFilter {
   private final FileType myFileType;
 
-  public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, @NotNull FileType fileType,
+  public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, @Nonnull FileType fileType,
                                  final String presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
     myFileType = fileType;
   }
 
   @Override
-  public boolean isAccepted(@NotNull VirtualFile rootCandidate, @NotNull final ProgressIndicator progressIndicator) {
+  public boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull final ProgressIndicator progressIndicator) {
     if (isJarDirectory()) {
       if (!rootCandidate.isDirectory() || !rootCandidate.isInLocalFileSystem()) {
         return false;

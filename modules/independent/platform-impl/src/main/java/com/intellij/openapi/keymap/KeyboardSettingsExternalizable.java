@@ -19,8 +19,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.im.InputContext;
@@ -38,7 +38,7 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
 
   private static final String [] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
 
-  public static boolean isSupportedKeyboardLayout(@NotNull Component component) {
+  public static boolean isSupportedKeyboardLayout(@Nonnull Component component) {
     if (Registry.is("ide.keyboard.dvorak")) return true;
     if (SystemInfo.isMac) return false;
     String keyboardLayoutLanguage = getLanguageForComponent(component);
@@ -51,19 +51,19 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
   }
 
   @Nullable
-  public static String getLanguageForComponent(@NotNull Component component) {
+  public static String getLanguageForComponent(@Nonnull Component component) {
     final Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getLanguage();
   }
 
   @Nullable
-  protected static Locale getLocaleForComponent(@NotNull Component component) {
+  protected static Locale getLocaleForComponent(@Nonnull Component component) {
     final InputContext context = component.getInputContext();
     return context == null ? null : context.getLocale();
   }
 
   @Nullable
-  public static String getDisplayLanguageNameForComponent(@NotNull Component component) {
+  public static String getDisplayLanguageNameForComponent(@Nonnull Component component) {
     final Locale locale = getLocaleForComponent(component);
     return locale == null ? null : locale.getDisplayLanguage();
   }

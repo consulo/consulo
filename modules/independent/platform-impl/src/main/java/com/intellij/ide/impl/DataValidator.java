@@ -17,13 +17,13 @@ package com.intellij.ide.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface DataValidator<T> {
   ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create("com.intellij.dataValidator");
 
-  @NotNull
+  @Nonnull
   Key<T> getKey();
 
   @Nullable

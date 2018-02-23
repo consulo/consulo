@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.artifacts;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,10 +24,10 @@ import java.util.EventListener;
  */
 public interface ArtifactListener extends EventListener {
 
-  void artifactAdded(@NotNull Artifact artifact);
+  void artifactAdded(@Nonnull Artifact artifact);
 
-  void artifactRemoved(@NotNull Artifact artifact);
+  void artifactRemoved(@Nonnull Artifact artifact);
 
-  void artifactChanged(@NotNull Artifact artifact, @NotNull String oldName);
+  void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName);
 
 }

@@ -23,7 +23,7 @@ import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsLogRefManager;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.data.RefsModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -33,12 +33,14 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
   private static final Logger LOG = Logger.getInstance(GraphColorManagerImpl.class);
   static final int DEFAULT_COLOR = 0;
 
-  @NotNull private final HeadsComparator myHeadsComparator;
-  @NotNull private final RefsModel myRefsModel;
+  @Nonnull
+  private final HeadsComparator myHeadsComparator;
+  @Nonnull
+  private final RefsModel myRefsModel;
 
-  public GraphColorManagerImpl(@NotNull RefsModel refsModel,
-                               @NotNull Function<Integer, Hash> hashGetter,
-                               @NotNull Map<VirtualFile, VcsLogRefManager> refManagers) {
+  public GraphColorManagerImpl(@Nonnull RefsModel refsModel,
+                               @Nonnull Function<Integer, Hash> hashGetter,
+                               @Nonnull Map<VirtualFile, VcsLogRefManager> refManagers) {
     myRefsModel = refsModel;
 
     myHeadsComparator = new HeadsComparator(refsModel, refManagers, hashGetter);
@@ -65,20 +67,24 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
   }
 
   public static class HeadsComparator implements Comparator<Integer> {
-    @NotNull private final RefsModel myRefsModel;
-    @NotNull private final Map<VirtualFile, VcsLogRefManager> myRefManagers;
-    @NotNull private final Function<Integer, Hash> myHashGetter;
+    @Nonnull
+    private final RefsModel myRefsModel;
+    @Nonnull
+    private final Map<VirtualFile, VcsLogRefManager> myRefManagers;
+    @Nonnull
+    private final Function<Integer, Hash> myHashGetter;
 
-    @NotNull private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<Integer, Integer>(10) {
+    @Nonnull
+    private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<Integer, Integer>(10) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
         return size() > 100;
       }
     };
 
-    public HeadsComparator(@NotNull RefsModel refsModel,
-                           @NotNull Map<VirtualFile, VcsLogRefManager> refManagers,
-                           @NotNull Function<Integer, Hash> hashGetter) {
+    public HeadsComparator(@Nonnull RefsModel refsModel,
+                           @Nonnull Map<VirtualFile, VcsLogRefManager> refManagers,
+                           @Nonnull Function<Integer, Hash> hashGetter) {
       myRefsModel = refsModel;
       myRefManagers = refManagers;
       myHashGetter = hashGetter;

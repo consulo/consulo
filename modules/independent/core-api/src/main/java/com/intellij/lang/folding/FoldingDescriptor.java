@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
@@ -38,7 +38,8 @@ public class FoldingDescriptor {
 
   private final ASTNode myElement;
   private final TextRange myRange;
-  @Nullable private final FoldingGroup myGroup;
+  @Nullable
+  private final FoldingGroup myGroup;
   private final Set<Object> myDependencies;
   private final boolean myNeverExpands;
   private boolean myCanBeRemovedWhenCollapsed;
@@ -51,15 +52,15 @@ public class FoldingDescriptor {
    *              {@link FoldingBuilder#isCollapsedByDefault(com.intellij.lang.ASTNode)}.
    * @param range The folded text range.
    */
-  public FoldingDescriptor(@NotNull ASTNode node, @NotNull TextRange range) {
+  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range) {
     this(node, range, null);
   }
 
-  public FoldingDescriptor(@NotNull PsiElement element, @NotNull TextRange range) {
+  public FoldingDescriptor(@Nonnull PsiElement element, @Nonnull TextRange range) {
     this(ObjectUtils.assertNotNull(element.getNode()), range, null);
   }
 
-  public FoldingDescriptor(@NotNull ASTNode node, @NotNull TextRange range, @Nullable FoldingGroup group) {
+  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group) {
     this(node, range, group, Collections.<Object>emptySet());
   }
 
@@ -74,7 +75,7 @@ public class FoldingDescriptor {
    * @param dependencies folding dependencies: other files or elements that could change
    * folding description
    */
-  public FoldingDescriptor(@NotNull ASTNode node, @NotNull TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies) {
+  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies) {
     this(node, range, group, dependencies, false);
   }
 
@@ -89,8 +90,8 @@ public class FoldingDescriptor {
    * @param dependencies folding dependencies: other files or elements that could change
    * @param neverExpands shall be true for fold regions that must not be ever expanded.
    */
-  public FoldingDescriptor(@NotNull ASTNode node,
-                           @NotNull TextRange range,
+  public FoldingDescriptor(@Nonnull ASTNode node,
+                           @Nonnull TextRange range,
                            @Nullable FoldingGroup group,
                            Set<Object> dependencies,
                            boolean neverExpands) {
@@ -106,7 +107,7 @@ public class FoldingDescriptor {
   /**
    * @return the node to which the folding region is related.
    */
-  @NotNull
+  @Nonnull
   public ASTNode getElement() {
     return myElement;
   }
@@ -115,7 +116,7 @@ public class FoldingDescriptor {
    * Returns the folded text range.
    * @return the folded text range.
    */
-  @NotNull
+  @Nonnull
   public TextRange getRange() {
     return myRange;
   }
@@ -140,7 +141,7 @@ public class FoldingDescriptor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Set<Object> getDependencies() {
     return myDependencies;
   }

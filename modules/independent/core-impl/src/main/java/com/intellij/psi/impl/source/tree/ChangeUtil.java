@@ -36,8 +36,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.CharTable;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -98,8 +98,8 @@ public class ChangeUtil {
     return element;
   }
 
-  @NotNull
-  public static LeafElement copyLeafWithText(@NotNull LeafElement original, @NotNull String text) {
+  @Nonnull
+  public static LeafElement copyLeafWithText(@Nonnull LeafElement original, @Nonnull String text) {
     LeafElement element = ASTFactory.leaf(original.getElementType(), text);
     original.copyCopyableDataTo(element);
     encodeInformation(element, original);
@@ -108,7 +108,7 @@ public class ChangeUtil {
     return element;
   }
 
-  public static TreeElement copyElement(@NotNull TreeElement original, CharTable table) {
+  public static TreeElement copyElement(@Nonnull TreeElement original, CharTable table) {
     CompositeElement treeParent = original.getTreeParent();
     return copyElement(original, treeParent == null ? null : treeParent.getPsi(), table);
   }
@@ -144,7 +144,7 @@ public class ChangeUtil {
   }
 
   @Nullable
-  public static TreeElement generateTreeElement(@Nullable PsiElement original, @NotNull CharTable table, @NotNull final PsiManager manager) {
+  public static TreeElement generateTreeElement(@Nullable PsiElement original, @Nonnull CharTable table, @Nonnull final PsiManager manager) {
     if (original == null) return null;
     PsiUtilCore.ensureValid(original);
     if (SourceTreeToPsiMap.hasTreeElement(original)) {

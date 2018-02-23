@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.PopupHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Map;
@@ -52,12 +52,12 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   protected abstract boolean isInterface(PsiElement psiElement);
 
-  protected void createTreeAndSetupCommonActions(@NotNull Map<String, JTree> trees, String typeHierarchyActionGroupName) {
+  protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, String typeHierarchyActionGroupName) {
     ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(typeHierarchyActionGroupName);
     createTreeAndSetupCommonActions(trees, group);
   }
 
-  protected void createTreeAndSetupCommonActions(@NotNull Map<String, JTree> trees, ActionGroup group) {
+  protected void createTreeAndSetupCommonActions(@Nonnull Map<String, JTree> trees, ActionGroup group) {
     final BaseOnThisTypeAction baseOnThisTypeAction = createBaseOnThisAction();
     final JTree tree1 = createTree(true);
     PopupHandler.installPopupHandler(tree1, group, ActionPlaces.TYPE_HIERARCHY_VIEW_POPUP, ActionManager.getInstance());
@@ -78,7 +78,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     trees.put(SUBTYPES_HIERARCHY_TYPE, tree3);
   }
 
-  @NotNull
+  @Nonnull
   protected BaseOnThisTypeAction createBaseOnThisAction() {
     return new BaseOnThisTypeAction();
   }
@@ -92,7 +92,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  protected void setHierarchyBase(@NotNull PsiElement element) {
+  protected void setHierarchyBase(@Nonnull PsiElement element) {
     super.setHierarchyBase(element);
     myIsInterface = isInterface(element);
   }
@@ -106,19 +106,19 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Key getBrowserDataKey() {
     return DATA_KEY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getActionPlace() {
     return ActionPlaces.TYPE_HIERARCHY_VIEW_TOOLBAR;
   }
 
   @Override
-  public final Object getData(@NotNull Key<?> dataId) {
+  public final Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return myDeleteElementProvider;
     }
@@ -126,20 +126,20 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getPrevOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.type.prev.occurence.name");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getNextOccurenceActionNameImpl() {
     return IdeBundle.message("hierarchy.type.next.occurence.name");
   }
 
   private final class MyDeleteProvider implements DeleteProvider {
     @Override
-    public final void deleteElement(@NotNull final DataContext dataContext) {
+    public final void deleteElement(@Nonnull final DataContext dataContext) {
       final PsiElement aClass = getSelectedElement();
       if (!canBeDeleted(aClass)) return;
       LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting.class", getQualifiedName(aClass)));
@@ -153,7 +153,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    public final boolean canDeleteElement(@NotNull final DataContext dataContext) {
+    public final boolean canDeleteElement(@Nonnull final DataContext dataContext) {
       final PsiElement aClass = getSelectedElement();
       if (!canBeDeleted(aClass)) {
         return false;
@@ -177,7 +177,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
 
     @Override
-    protected String getNonDefaultText(@NotNull HierarchyBrowserBaseEx browser, @NotNull PsiElement element) {
+    protected String getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
       return ((TypeHierarchyBrowserBase)browser).isInterface(element)
              ? IdeBundle.message("action.base.on.this.interface")
              : IdeBundle.message("action.base.on.this.class");

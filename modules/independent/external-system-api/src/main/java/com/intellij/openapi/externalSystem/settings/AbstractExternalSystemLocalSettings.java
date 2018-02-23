@@ -29,8 +29,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -74,11 +74,13 @@ public abstract class AbstractExternalSystemLocalSettings {
                                                                                                              myExternalConfigModificationStamps =
     new AtomicReference<Map<String, Long>>(ContainerUtilRt.<String, Long>newHashMap());
 
-  @NotNull private final ProjectSystemId myExternalSystemId;
-  @NotNull private final Project         myProject;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final Project         myProject;
 
-  protected AbstractExternalSystemLocalSettings(@NotNull ProjectSystemId externalSystemId,
-                                                @NotNull Project project)
+  protected AbstractExternalSystemLocalSettings(@Nonnull ProjectSystemId externalSystemId,
+                                                @Nonnull Project project)
   {
     myExternalSystemId = externalSystemId;
     myProject = project;
@@ -89,7 +91,7 @@ public abstract class AbstractExternalSystemLocalSettings {
    *
    * @param linkedProjectPathsToForget  target root external project paths
    */
-  public void forgetExternalProjects(@NotNull Set<String> linkedProjectPathsToForget) {
+  public void forgetExternalProjects(@Nonnull Set<String> linkedProjectPathsToForget) {
     Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects = myAvailableProjects.get();
     for (Iterator<Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>>> it = projects.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry = it.next();
@@ -133,61 +135,61 @@ public abstract class AbstractExternalSystemLocalSettings {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  @NotNull
+  @Nonnull
   public Map<String, Boolean> getExpandStates() { // Necessary for the serialization.
     return myExpandStates.get();
   }
 
-  @NotNull
+  @Nonnull
   public Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> getAvailableProjects() {
     return myAvailableProjects.get();
   }
 
-  public void setAvailableProjects(@NotNull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects) {
+  public void setAvailableProjects(@Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects) {
     myAvailableProjects.set(projects);
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, Collection<ExternalTaskPojo>> getAvailableTasks() {
     return myAvailableTasks.get();
   }
 
-  public void setAvailableTasks(@NotNull Map<String, Collection<ExternalTaskPojo>> tasks) {
+  public void setAvailableTasks(@Nonnull Map<String, Collection<ExternalTaskPojo>> tasks) {
     myAvailableTasks.set(tasks);
   }
 
-  @NotNull
+  @Nonnull
   public List<ExternalTaskExecutionInfo> getRecentTasks() {
     return myRecentTasks.get();
   }
 
-  public void setRecentTasks(@NotNull List<ExternalTaskExecutionInfo> tasks) {
+  public void setRecentTasks(@Nonnull List<ExternalTaskExecutionInfo> tasks) {
     myRecentTasks.set(tasks);
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, Long> getExternalConfigModificationStamps() {
     return myExternalConfigModificationStamps.get();
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setExternalConfigModificationStamps(@NotNull Map<String, Long> modificationStamps) {
+  public void setExternalConfigModificationStamps(@Nonnull Map<String, Long> modificationStamps) {
     // Required for IJ serialization.
     myExternalConfigModificationStamps.set(modificationStamps);
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, ExternalProjectBuildClasspathPojo> getProjectBuildClasspath() {
     return myProjectBuildClasspath.get();
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setProjectBuildClasspath(@NotNull Map<String, ExternalProjectBuildClasspathPojo> projectsBuildClasspath) {
+  public void setProjectBuildClasspath(@Nonnull Map<String, ExternalProjectBuildClasspathPojo> projectsBuildClasspath) {
     // Required for IJ serialization.
     myProjectBuildClasspath.set(projectsBuildClasspath);
   }
 
-  public void fillState(@NotNull State state) {
+  public void fillState(@Nonnull State state) {
     if (PRESERVE_EXPAND_STATE) {
       state.tasksExpandState = myExpandStates.get();
     }
@@ -201,7 +203,7 @@ public abstract class AbstractExternalSystemLocalSettings {
     state.projectBuildClasspath = myProjectBuildClasspath.get();
   }
 
-  public void loadState(@NotNull State state) {
+  public void loadState(@Nonnull State state) {
     setIfNotNull(myExpandStates, state.tasksExpandState);
     setIfNotNull(myAvailableProjects, state.availableProjects);
     setIfNotNull(myAvailableTasks, state.availableTasks);
@@ -249,7 +251,7 @@ public abstract class AbstractExternalSystemLocalSettings {
     }
   }
 
-  private static <K, V> void setIfNotNull(@NotNull AtomicReference<Map<K, V>> ref, @Nullable Map<K, V> candidate) {
+  private static <K, V> void setIfNotNull(@Nonnull AtomicReference<Map<K, V>> ref, @Nullable Map<K, V> candidate) {
     if (candidate == null) {
       return;
     }

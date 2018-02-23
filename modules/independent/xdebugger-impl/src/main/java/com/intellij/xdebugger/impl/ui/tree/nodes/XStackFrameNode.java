@@ -17,13 +17,13 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class XStackFrameNode extends XValueContainerNode<XStackFrame> {
-  public XStackFrameNode(final @NotNull XDebuggerTree tree, final @NotNull XStackFrame xStackFrame) {
+  public XStackFrameNode(final @Nonnull XDebuggerTree tree, final @Nonnull XStackFrame xStackFrame) {
     super(tree, null, xStackFrame);
     setLeaf(false);
   }

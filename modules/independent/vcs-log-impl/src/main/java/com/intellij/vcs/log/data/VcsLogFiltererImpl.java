@@ -28,29 +28,38 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.VcsLogFilterCollection;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsLogFilterCollectionImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class VcsLogFiltererImpl implements VcsLogFilterer {
   private static final Logger LOG = Logger.getInstance(VcsLogFiltererImpl.class);
 
-  @NotNull private final SingleTaskController<Request, VisiblePack> myTaskController;
-  @NotNull private final VisiblePackBuilder myVisiblePackBuilder;
-  @NotNull private final VcsLogData myLogData;
+  @Nonnull
+  private final SingleTaskController<Request, VisiblePack> myTaskController;
+  @Nonnull
+  private final VisiblePackBuilder myVisiblePackBuilder;
+  @Nonnull
+  private final VcsLogData myLogData;
 
-  @NotNull private VcsLogFilterCollection myFilters;
-  @NotNull private PermanentGraph.SortType mySortType;
-  @NotNull private CommitCountStage myCommitCount = CommitCountStage.INITIAL;
-  @NotNull private List<MoreCommitsRequest> myRequestsToRun = ContainerUtil.newArrayList();
-  @NotNull private List<VisiblePackChangeListener> myVisiblePackChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  @NotNull private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
+  @Nonnull
+  private VcsLogFilterCollection myFilters;
+  @Nonnull
+  private PermanentGraph.SortType mySortType;
+  @Nonnull
+  private CommitCountStage myCommitCount = CommitCountStage.INITIAL;
+  @Nonnull
+  private List<MoreCommitsRequest> myRequestsToRun = ContainerUtil.newArrayList();
+  @Nonnull
+  private List<VisiblePackChangeListener> myVisiblePackChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
   private volatile boolean myIsValid = true;
 
-  public VcsLogFiltererImpl(@NotNull final Project project,
-                            @NotNull VcsLogData logData,
-                            @NotNull PermanentGraph.SortType initialSortType) {
+  public VcsLogFiltererImpl(@Nonnull final Project project,
+                            @Nonnull VcsLogData logData,
+                            @Nonnull PermanentGraph.SortType initialSortType) {
     myLogData = logData;
     myVisiblePackBuilder = myLogData.createVisiblePackBuilder();
     myFilters = new VcsLogFilterCollectionImpl(null, null, null, null, null, null, null);
@@ -74,12 +83,12 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   @Override
-  public void addVisiblePackChangeListener(@NotNull VisiblePackChangeListener listener) {
+  public void addVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener) {
     myVisiblePackChangeListeners.add(listener);
   }
 
   @Override
-  public void removeVisiblePackChangeListener(@NotNull VisiblePackChangeListener listener) {
+  public void removeVisiblePackChangeListener(@Nonnull VisiblePackChangeListener listener) {
     myVisiblePackChangeListeners.remove(listener);
   }
 
@@ -94,17 +103,17 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   @Override
-  public void onFiltersChange(@NotNull VcsLogFilterCollection newFilters) {
+  public void onFiltersChange(@Nonnull VcsLogFilterCollection newFilters) {
     myTaskController.request(new FilterRequest(newFilters));
   }
 
   @Override
-  public void onSortTypeChange(@NotNull PermanentGraph.SortType sortType) {
+  public void onSortTypeChange(@Nonnull PermanentGraph.SortType sortType) {
     myTaskController.request(new SortTypeRequest(sortType));
   }
 
   @Override
-  public void moreCommitsNeeded(@NotNull Runnable onLoaded) {
+  public void moreCommitsNeeded(@Nonnull Runnable onLoaded) {
     myTaskController.request(new MoreCommitsRequest(onLoaded));
   }
 
@@ -115,12 +124,12 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
 
   private class MyTask extends Task.Backgroundable {
 
-    public MyTask(@Nullable Project project, @NotNull String title) {
+    public MyTask(@Nullable Project project, @Nonnull String title) {
       super(project, title, false);
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       VisiblePack visiblePack = null;
       List<Request> requests;
       while (!(requests = myTaskController.popRequests()).isEmpty()) {
@@ -151,7 +160,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
     }
 
     @Nullable
-    private VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, @NotNull List<Request> requests) {
+    private VisiblePack getVisiblePack(@Nullable VisiblePack visiblePack, @Nonnull List<Request> requests) {
       ValidateRequest validateRequest = ContainerUtil.findLastInstance(requests, ValidateRequest.class);
       FilterRequest filterRequest = ContainerUtil.findLastInstance(requests, FilterRequest.class);
       SortTypeRequest sortTypeRequest = ContainerUtil.findLastInstance(requests, SortTypeRequest.class);
@@ -208,7 +217,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
 
     private VisiblePack refresh(@Nullable VisiblePack visiblePack,
                                 @Nullable FilterRequest filterRequest,
-                                @NotNull List<MoreCommitsRequest> moreCommitsRequests) {
+                                @Nonnull List<MoreCommitsRequest> moreCommitsRequests) {
       DataPack dataPack = myLogData.getDataPack();
 
       if (dataPack == DataPack.EMPTY) { // when filter is set during initialization, just remember filters
@@ -261,9 +270,10 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   }
 
   private static final class MoreCommitsRequest implements Request {
-    @NotNull private final Runnable onLoaded;
+    @Nonnull
+    private final Runnable onLoaded;
 
-    MoreCommitsRequest(@NotNull Runnable onLoaded) {
+    MoreCommitsRequest(@Nonnull Runnable onLoaded) {
       this.onLoaded = onLoaded;
     }
   }

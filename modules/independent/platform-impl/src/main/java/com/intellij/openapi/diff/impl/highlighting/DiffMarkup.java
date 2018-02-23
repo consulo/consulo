@@ -38,8 +38,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
   private final List<Disposable> myDisposables = new ArrayList<Disposable>();
   private boolean myDisposed = false;
 
-  protected DiffMarkup(@Nullable Project project, @NotNull Disposable parentDisposable) {
+  protected DiffMarkup(@Nullable Project project, @Nonnull Disposable parentDisposable) {
     myProject = project;
     Disposer.register(parentDisposable, this);
   }
@@ -68,7 +68,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     return editor == null ? null : editor.getMarkupModel();
   }
 
-  public void highlightText(@NotNull Fragment fragment, @Nullable GutterIconRenderer gutterIconRenderer) {
+  public void highlightText(@Nonnull Fragment fragment, @Nullable GutterIconRenderer gutterIconRenderer) {
     MarkupModel markupModel = getMarkupModel();
     EditorEx editor = getEditor();
     TextDiffTypeEnum diffTypeEnum = fragment.getType();
@@ -91,7 +91,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
                                                     attributes, HighlighterTargetArea.EXACT_RANGE);
       rangeMarker.setCustomRenderer(new CustomHighlighterRenderer() {
         @Override
-        public void paint(@NotNull Editor ed, @NotNull RangeHighlighter highlighter, @NotNull Graphics g) {
+        public void paint(@Nonnull Editor ed, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
           g.setColor(attributes.getBackgroundColor());
           Point point = ed.logicalPositionToXY(ed.offsetToLogicalPosition(highlighter.getStartOffset()));
           int endy = point.y + ed.getLineHeight() - 1;
@@ -113,7 +113,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     saveHighlighter(rangeMarker);
   }
 
-  private static void setErrorStripes(@NotNull RangeHighlighter rangeMarker, @NotNull Fragment fragment, @Nullable Color stripeBarColor) {
+  private static void setErrorStripes(@Nonnull RangeHighlighter rangeMarker, @Nonnull Fragment fragment, @Nullable Color stripeBarColor) {
     if (DiffUtil.isInlineWrapper(fragment)) {
       rangeMarker.setErrorStripeMarkColor(null);
     }
@@ -184,7 +184,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
   }
 
   @Nullable
-  private Color getLineSeparatorColorForType(@NotNull TextDiffType type) {
+  private Color getLineSeparatorColorForType(@Nonnull TextDiffType type) {
     EditorEx editor = getEditor();
     if (editor == null) {
       return null;
@@ -192,7 +192,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     return type.getPolygonColor(editor);
   }
 
-  private void saveHighlighter(@NotNull RangeHighlighter marker) {
+  private void saveHighlighter(@Nonnull RangeHighlighter marker) {
     myHighLighters.add(marker);
   }
 
@@ -232,7 +232,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     myExtraHighLighters.clear();
   }
 
-  private void removeHighlighters(@NotNull Collection<RangeHighlighter> highlighters) {
+  private void removeHighlighters(@Nonnull Collection<RangeHighlighter> highlighters) {
     MarkupModel markupModel = getMarkupModel();
     if (markupModel != null) {
       for (RangeHighlighter highlighter : highlighters) {
@@ -255,7 +255,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     myDisposables.clear();
   }
 
-  public void addDisposable(@NotNull Disposable disposable) {
+  public void addDisposable(@Nonnull Disposable disposable) {
     Disposer.register(this, disposable);
     myDisposables.add(disposable);
   }

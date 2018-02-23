@@ -20,13 +20,13 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class HighlightInfoFilterImpl implements HighlightInfoFilter {
   private static final boolean ourTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
   @Override
-  public boolean accept(@NotNull HighlightInfo info, PsiFile file) {
+  public boolean accept(@Nonnull HighlightInfo info, PsiFile file) {
     if (ourTestMode) return true; // Tests need to verify highlighting is applied no matter what attributes are defined for this kind of highlighting
 
     TextAttributes attributes = info.getTextAttributes(file, null);

@@ -12,8 +12,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -75,12 +74,12 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     return myRunnerId;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public CoverageRunner getCoverageRunner() {
     return myCoverageRunner;
   }
 
-  public void setCoverageRunner(@Nullable final CoverageRunner coverageRunner) {
+  public void setCoverageRunner(@javax.annotation.Nullable final CoverageRunner coverageRunner) {
     myCoverageRunner = coverageRunner;
     myRunnerId = coverageRunner != null ? coverageRunner.getId() : null;
     myCoverageFilePath = null;
@@ -124,7 +123,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
   }
 
 
-  public static boolean isApplicableTo(@NotNull final RunConfigurationBase runConfiguration) {
+  public static boolean isApplicableTo(@Nonnull final RunConfigurationBase runConfiguration) {
     final CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
     if (configuration != null) {
       return true;
@@ -139,8 +138,8 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     return false;
   }
 
-  @NotNull
-  public static CoverageEnabledConfiguration getOrCreate(@NotNull final RunConfigurationBase runConfiguration) {
+  @Nonnull
+  public static CoverageEnabledConfiguration getOrCreate(@Nonnull final RunConfigurationBase runConfiguration) {
     CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
     if (configuration == null) {
       for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensions()) {
@@ -157,7 +156,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     return configuration;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   public String getCoverageFilePath() {
     if (myCoverageFilePath == null) {
@@ -225,7 +224,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @NonNls
   protected String createCoverageFile() {
     if (myCoverageRunner == null) {

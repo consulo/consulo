@@ -17,7 +17,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -30,12 +30,12 @@ import java.io.InputStream;
 class ByteSequenceDataExternalizer implements DataExternalizer<ByteSequence> {
   static final ByteSequenceDataExternalizer INSTANCE = new ByteSequenceDataExternalizer();
   @Override
-  public void save(@NotNull DataOutput out, ByteSequence value) throws IOException {
+  public void save(@Nonnull DataOutput out, ByteSequence value) throws IOException {
     out.write(value.getBytes(), value.getOffset(), value.getLength()); // todo fix double copying
   }
 
   @Override
-  public ByteSequence read(@NotNull DataInput in) throws IOException {
+  public ByteSequence read(@Nonnull DataInput in) throws IOException {
     byte[] buf = new byte[((InputStream)in).available()]; // todo fix double copying
     in.readFully(buf);
     return new ByteSequence(buf);

@@ -42,8 +42,7 @@ import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.net.URI;
 import java.text.Normalizer;
@@ -65,9 +64,10 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   private final int myIndex;
   private TextRange myRange;
   private final String myText;
-  @NotNull private final FileReferenceSet myFileReferenceSet;
+  @Nonnull
+  private final FileReferenceSet myFileReferenceSet;
 
-  public FileReference(@NotNull final FileReferenceSet fileReferenceSet, TextRange range, int index, String text) {
+  public FileReference(@Nonnull final FileReferenceSet fileReferenceSet, TextRange range, int index, String text) {
     myFileReferenceSet = fileReferenceSet;
     myIndex = index;
     myRange = range;
@@ -78,8 +78,8 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     this(original.myFileReferenceSet, original.myRange, original.myIndex, original.myText);
   }
 
-  @Nullable
-  public static FileReference findFileReference(@NotNull final PsiReference original) {
+  @javax.annotation.Nullable
+  public static FileReference findFileReference(@Nonnull final PsiReference original) {
     if (original instanceof PsiMultiReference) {
       final PsiMultiReference multiReference = (PsiMultiReference)original;
       for (PsiReference reference : multiReference.getReferences()) {
@@ -98,7 +98,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<PsiFileSystemItem> getContexts() {
     final FileReference contextRef = getContextReference();
     ArrayList<PsiFileSystemItem> result = new ArrayList<>();
@@ -127,14 +127,14 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ResolveResult[] multiResolve(final boolean incompleteCode) {
     PsiFile file = getElement().getContainingFile();
     return ResolveCache.getInstance(file.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, false, false, file);
   }
 
-  @NotNull
-  protected ResolveResult[] innerResolve(boolean caseSensitive, @NotNull PsiFile containingFile) {
+  @Nonnull
+  protected ResolveResult[] innerResolve(boolean caseSensitive, @Nonnull PsiFile containingFile) {
     final String referenceText = getText();
     if (referenceText.isEmpty() && myIndex == 0) {
       return new ResolveResult[]{new PsiElementResolveResult(containingFile)};
@@ -151,8 +151,8 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return resultCount > 0 ? result.toArray(new ResolveResult[resultCount]) : ResolveResult.EMPTY_ARRAY;
   }
 
-  protected void innerResolveInContext(@NotNull final String text,
-                                       @NotNull PsiFileSystemItem context,
+  protected void innerResolveInContext(@Nonnull final String text,
+                                       @Nonnull PsiFileSystemItem context,
                                        final Collection<ResolveResult> result,
                                        final boolean caseSensitive) {
     if (isAllowedEmptyPath(text) || "".equals(text) || "/".equals(text)) {
@@ -217,7 +217,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
             }
 
             @Override
-            public boolean execute(@NotNull PsiFileSystemItem element) {
+            public boolean execute(@Nonnull PsiFileSystemItem element) {
               result.add(new PsiElementResolveResult(getOriginalFile(element)));
               return true;
             }
@@ -227,12 +227,12 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getFileNameToCreate() {
     return decode(getCanonicalText());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getNewFileTemplateName() {
     FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(myText);
     if (fileType != UnknownFileType.INSTANCE) {
@@ -252,8 +252,8 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
             !myFileReferenceSet.isEndingSlashNotAllowed() && myIndex > 0);
   }
 
-  @NotNull
-  public String decode(@NotNull String text) {
+  @Nonnull
+  public String decode(@Nonnull String text) {
     if (SystemInfo.isMac) {
       text = Normalizer.normalize(text, Normalizer.Form.NFC);
     }
@@ -278,7 +278,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Object[] getVariants() {
     FileReferenceCompletion completion = FileReferenceCompletion.getInstance();
     if (completion != null) {
@@ -315,7 +315,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return fileSystemItem;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected String encode(final String name, PsiElement psiElement) {
     try {
       return new URI(null, null, name, null).toString();
@@ -329,7 +329,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     context.processChildren(processor);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private FileReference getContextReference() {
     return myIndex > 0 ? myFileReferenceSet.getReference(myIndex - 1) : null;
   }
@@ -345,8 +345,8 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }
 
-  @Nullable
-  public PsiFileSystemItem innerSingleResolve(final boolean caseSensitive, @NotNull PsiFile containingFile) {
+  @javax.annotation.Nullable
+  public PsiFileSystemItem innerSingleResolve(final boolean caseSensitive, @Nonnull PsiFile containingFile) {
     final ResolveResult[] resolveResults = innerResolve(caseSensitive, containingFile);
     return resolveResults.length == 1 ? (PsiFileSystemItem)resolveResults[0].getElement() : null;
   }
@@ -365,7 +365,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getCanonicalText() {
     return myText;
   }
@@ -393,7 +393,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myFileReferenceSet.getElement();
   }
 
-  public PsiElement bindToElement(@NotNull final PsiElement element, final boolean absolute) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull final PsiElement element, final boolean absolute) throws IncorrectOperationException {
     if (!(element instanceof PsiFileSystemItem)) {
       throw new IncorrectOperationException("Cannot bind to element, should be instanceof PsiFileSystemItem: " + element);
     }
@@ -510,7 +510,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   /* Happens when it's been moved to another folder */
   @Override
-  public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException {
     return bindToElement(element, myFileReferenceSet.isAbsolutePathReference());
   }
 
@@ -526,7 +526,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     }
   }
 
-  @NotNull
+  @Nonnull
   protected static FileReferenceHelper[] getHelpers() {
     return FileReferenceHelperRegistrar.getHelpers();
   }
@@ -535,7 +535,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myIndex;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUnresolvedMessagePattern() {
     return LangBundle.message("error.cannot.resolve")
@@ -547,7 +547,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
     return myIndex == myFileReferenceSet.getAllReferences().length - 1;
   }
 
-  @NotNull
+  @Nonnull
   public FileReferenceSet getFileReferenceSet() {
     return myFileReferenceSet;
   }
@@ -569,9 +569,9 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
   static class MyResolver implements ResolveCache.PolyVariantContextResolver<FileReference> {
     static final MyResolver INSTANCE = new MyResolver();
 
-    @NotNull
+    @Nonnull
     @Override
-    public ResolveResult[] resolve(@NotNull FileReference ref, @NotNull PsiFile containingFile, boolean incompleteCode) {
+    public ResolveResult[] resolve(@Nonnull FileReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode) {
       return ref.innerResolve(ref.getFileReferenceSet().isCaseSensitive(), containingFile);
     }
   }

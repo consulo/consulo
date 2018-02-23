@@ -19,7 +19,7 @@ import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -43,13 +43,13 @@ public class JBPanelWithEmptyText extends JBPanel<JBPanelWithEmptyText> implemen
     super(layout);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
-  @NotNull
+  @Nonnull
   public JBPanelWithEmptyText withEmptyText(String str) {
     myEmptyText.setText(str);
     return this;

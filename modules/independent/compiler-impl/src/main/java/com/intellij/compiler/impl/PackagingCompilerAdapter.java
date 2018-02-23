@@ -18,7 +18,7 @@ package com.intellij.compiler.impl;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 

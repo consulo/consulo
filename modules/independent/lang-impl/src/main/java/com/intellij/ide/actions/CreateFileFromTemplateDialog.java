@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   private ElementCreator myCreator;
   private InputValidator myInputValidator;
 
-  protected CreateFileFromTemplateDialog(@NotNull Project project) {
+  protected CreateFileFromTemplateDialog(@Nonnull Project project) {
     super(project, true);
 
     myKindLabel.setLabelFor(myKindCombo);
@@ -125,7 +125,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     myUpDownHint.setVisible(flag);
   }
 
-  public static Builder createDialog(@NotNull final Project project) {
+  public static Builder createDialog(@Nonnull final Project project) {
     final CreateFileFromTemplateDialog dialog = new CreateFileFromTemplateDialog(project);
     return new BuilderImpl(dialog, project);
   }
@@ -146,7 +146,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
-    public Builder addKind(@NotNull String name, @Nullable Icon icon, @NotNull String templateName) {
+    public Builder addKind(@Nonnull String name, @Nullable Icon icon, @Nonnull String templateName) {
       myDialog.getKindCombo().addItem(name, icon, templateName);
       if (myDialog.getKindCombo().getComboBox().getItemCount() > 1) {
         myDialog.setTemplateKindComponentsVisible(true);
@@ -161,8 +161,8 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
-    public <T extends PsiElement> T show(@NotNull String errorTitle, @Nullable String selectedTemplateName,
-                                         @NotNull final FileCreator<T> creator) {
+    public <T extends PsiElement> T show(@Nonnull String errorTitle, @Nullable String selectedTemplateName,
+                                         @Nonnull final FileCreator<T> creator) {
       final Ref<T> created = Ref.create(null);
       myDialog.getKindCombo().setSelectedName(selectedTemplateName);
       myDialog.myCreator = new ElementCreator(myProject, errorTitle) {
@@ -200,18 +200,18 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
   public interface Builder {
     Builder setTitle(String title);
     Builder setValidator(InputValidator validator);
-    Builder addKind(@NotNull String kind, @Nullable Icon icon, @NotNull String templateName);
+    Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName);
     @Nullable
-    <T extends PsiElement> T show(@NotNull String errorTitle, @Nullable String selectedItem, @NotNull FileCreator<T> creator);
+    <T extends PsiElement> T show(@Nonnull String errorTitle, @Nullable String selectedItem, @Nonnull FileCreator<T> creator);
     @Nullable
     Map<String,String> getCustomProperties();
   }
 
   public interface FileCreator<T> {
     @Nullable
-    T createFile(@NotNull String name, @NotNull String templateName);
+    T createFile(@Nonnull String name, @Nonnull String templateName);
 
-    @NotNull
-    String getActionName(@NotNull String name, @NotNull String templateName);
+    @Nonnull
+    String getActionName(@Nonnull String name, @Nonnull String templateName);
   }
 }

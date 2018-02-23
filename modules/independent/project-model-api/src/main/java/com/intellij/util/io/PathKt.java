@@ -17,8 +17,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,13 +31,13 @@ import java.util.function.Function;
  * from kotlin
  */
 public class PathKt {
-  @NotNull
-  public static InputStream inputStream(@NotNull Path path) throws IOException {
+  @Nonnull
+  public static InputStream inputStream(@Nonnull Path path) throws IOException {
     return Files.newInputStream(path);
   }
 
-  @Nullable
-  public static InputStream inputStreamIfExists(@NotNull Path path) throws IOException {
+  @javax.annotation.Nullable
+  public static InputStream inputStreamIfExists(@Nonnull Path path) throws IOException {
     try {
       return inputStream(path);
     }
@@ -47,11 +46,11 @@ public class PathKt {
     }
   }
 
-  public static boolean exists(@NotNull Path path) {
+  public static boolean exists(@Nonnull Path path) {
     return Files.exists(path);
   }
 
-  public static Path createDirectories(@NotNull Path path) throws IOException {
+  public static Path createDirectories(@Nonnull Path path) throws IOException {
     if (!Files.isDirectory(path)) {
       doCreateDirectories(path.toAbsolutePath());
     }
@@ -125,7 +124,7 @@ public class PathKt {
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static BasicFileAttributes basicAttributesIfExists(Path path) throws IOException {
     try {
       return Files.readAttributes(path, BasicFileAttributes.class);

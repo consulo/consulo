@@ -18,7 +18,7 @@ package com.intellij.history.core.changes;
 
 import com.intellij.history.core.Content;
 import com.intellij.history.core.StreamUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,10 +28,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class PutLabelChange extends Change {
-  @NotNull private final String myName;
-  @NotNull private final String myProjectId;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private final String myProjectId;
 
-  public PutLabelChange(long id, @NotNull String name, @NotNull String projectId) {
+  public PutLabelChange(long id, @Nonnull String name, @Nonnull String projectId) {
     super(id);
     myName = name;
     myProjectId = projectId;
@@ -50,12 +52,12 @@ public class PutLabelChange extends Change {
     StreamUtil.writeString(out, myProjectId);
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public String getProjectId() {
     return myProjectId;
   }

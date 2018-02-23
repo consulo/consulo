@@ -17,8 +17,8 @@ package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class TreeNodeEvent {
   @NonNls public static final String ROOT_NODE_ID = "0";
@@ -26,16 +26,16 @@ public abstract class TreeNodeEvent {
   private final String myName;
   private final String myId;
 
-  public TreeNodeEvent(@Nullable String name, @Nullable String id) {
+  public TreeNodeEvent(@javax.annotation.Nullable String name, @Nullable String id) {
     myName = name;
     myId = id;
   }
 
-  protected void fail(@NotNull String message) {
+  protected void fail(@Nonnull String message) {
     throw new IllegalStateException(message + ", " + toString());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getName() {
     return myName;
   }
@@ -43,7 +43,7 @@ public abstract class TreeNodeEvent {
   /**
    * @return tree node id, or null if undefined
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getId() {
     return myId;
   }
@@ -60,10 +60,10 @@ public abstract class TreeNodeEvent {
     return buf.toString();
   }
 
-  protected abstract void appendToStringInfo(@NotNull StringBuilder buf);
+  protected abstract void appendToStringInfo(@Nonnull StringBuilder buf);
 
-  protected static void append(@NotNull StringBuilder buffer,
-                               @NotNull String key, @Nullable Object value) {
+  protected static void append(@Nonnull StringBuilder buffer,
+                               @Nonnull String key, @javax.annotation.Nullable Object value) {
     if (value != null) {
       buffer.append(key).append("=");
       if (value instanceof String) {
@@ -77,12 +77,12 @@ public abstract class TreeNodeEvent {
   }
 
   @Nullable
-  public static String getNodeId(@NotNull ServiceMessage message) {
+  public static String getNodeId(@Nonnull ServiceMessage message) {
     return getNodeId(message, "nodeId");
   }
 
-  @Nullable
-  public static String getNodeId(@NotNull ServiceMessage message, String key) {
+  @javax.annotation.Nullable
+  public static String getNodeId(@Nonnull ServiceMessage message, String key) {
     return message.getAttributes().get(key);
   }
 

@@ -26,16 +26,16 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 
 public class VcsPushAction extends DumbAwareAction {
 
-  @NotNull
-  private static Collection<Repository> collectRepositories(@NotNull VcsRepositoryManager vcsRepositoryManager, @Nullable VirtualFile[] files) {
+  @Nonnull
+  private static Collection<Repository> collectRepositories(@Nonnull VcsRepositoryManager vcsRepositoryManager, @Nullable VirtualFile[] files) {
     if (files == null) return Collections.emptyList();
     Collection<Repository> repositories = ContainerUtil.newHashSet();
     for (VirtualFile file : files) {
@@ -48,7 +48,7 @@ public class VcsPushAction extends DumbAwareAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     VcsRepositoryManager manager = ServiceManager.getService(project, VcsRepositoryManager.class);
     Collection<Repository> repositories = e.getData(CommonDataKeys.EDITOR) != null
@@ -59,7 +59,7 @@ public class VcsPushAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     Project project = e.getProject();
     e.getPresentation().setEnabledAndVisible(project != null && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty());

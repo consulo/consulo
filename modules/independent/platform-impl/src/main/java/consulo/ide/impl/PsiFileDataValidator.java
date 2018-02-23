@@ -19,15 +19,15 @@ import com.intellij.ide.impl.DataValidator;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 16-Oct-17
  */
 public class PsiFileDataValidator implements DataValidator<PsiFile> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiFile> getKey() {
     return CommonDataKeys.PSI_FILE;

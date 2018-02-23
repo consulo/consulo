@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -32,7 +32,7 @@ public class NavigationLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.hint.NavigationLinkHandler");
 
   @Override
-  public boolean handleLink(@NotNull final String refSuffix, @NotNull final Editor editor) {
+  public boolean handleLink(@Nonnull final String refSuffix, @Nonnull final Editor editor) {
     final int pos = refSuffix.lastIndexOf(':');
     if (pos <= 0 || pos == refSuffix.length() - 1) {
       LOG.error("Malformed suffix: " + refSuffix);

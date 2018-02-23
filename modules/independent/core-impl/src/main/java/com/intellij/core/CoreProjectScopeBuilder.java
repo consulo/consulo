@@ -23,7 +23,7 @@ import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScopeBuilder;
 import com.intellij.psi.search.ProjectScopeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -61,17 +61,17 @@ public class CoreProjectScopeBuilder extends ProjectScopeBuilder {
 
   private class CoreLibrariesScope extends GlobalSearchScope {
     @Override
-    public boolean contains(@NotNull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       return myFileIndexFacade.isInLibraryClasses(file) || myFileIndexFacade.isInLibrarySource(file);
     }
 
     @Override
-    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@NotNull Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return false;
     }
 
@@ -91,17 +91,17 @@ public class CoreProjectScopeBuilder extends ProjectScopeBuilder {
     }
 
     @Override
-    public boolean contains(@NotNull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       return myFileIndexFacade.isInContent(file);
     }
 
     @Override
-    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@NotNull Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return true;
     }
 

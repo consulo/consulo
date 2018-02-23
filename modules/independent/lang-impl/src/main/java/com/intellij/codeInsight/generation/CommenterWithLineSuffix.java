@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.lang.Commenter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines the support for line comments with suffix.
@@ -29,6 +29,6 @@ public interface CommenterWithLineSuffix extends Commenter {
    *
    * @return the line comment text
    */
-  @NotNull
+  @Nonnull
   String getLineCommentSuffix();
 }

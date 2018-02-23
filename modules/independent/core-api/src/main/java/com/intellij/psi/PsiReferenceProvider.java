@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to inject additional references into an element that supports reference contributors.
@@ -33,14 +33,14 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PsiReferenceProvider {
  public static final PsiReferenceProvider[] EMPTY_ARRAY = new PsiReferenceProvider[0];
 
-  @NotNull
-  public abstract PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull final ProcessingContext context);
+  @Nonnull
+  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull final ProcessingContext context);
 
-  public boolean acceptsHints(@NotNull final PsiElement element, @NotNull PsiReferenceService.Hints hints) {
+  public boolean acceptsHints(@Nonnull final PsiElement element, @Nonnull PsiReferenceService.Hints hints) {
     final PsiElement target = hints.target;
     return target == null || acceptsTarget(target);
   }
-  public boolean acceptsTarget(@NotNull PsiElement target) {
+  public boolean acceptsTarget(@Nonnull PsiElement target) {
     return true;
   }
 

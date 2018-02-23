@@ -25,8 +25,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -65,7 +65,7 @@ public class CodeDocumentationUtil {
    * @return
    */
   @Nullable
-  public static String getIndentInsideJavadoc(@NotNull Document document, int offset) {
+  public static String getIndentInsideJavadoc(@Nonnull Document document, int offset) {
     CharSequence text = document.getCharsSequence();
     if (offset >= text.length()) {
       return null;
@@ -94,14 +94,14 @@ public class CodeDocumentationUtil {
    * @param lineStartOffset   start offset of the line that contains given offset
    * @return                  object that encapsulates information about comments at the given offset at the given text
    */
-  @NotNull
-  public static CommentContext tryParseCommentContext(@NotNull PsiFile file, @NotNull CharSequence chars, int offset, int lineStartOffset) {
+  @Nonnull
+  public static CommentContext tryParseCommentContext(@Nonnull PsiFile file, @Nonnull CharSequence chars, int offset, int lineStartOffset) {
     Commenter langCommenter = LanguageCommenters.INSTANCE.forLanguage(PsiUtilCore.getLanguageAtOffset(file, offset));
     return tryParseCommentContext(langCommenter, chars, offset, lineStartOffset);
   }
 
   static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter,
-                                               @NotNull CharSequence chars,
+                                               @Nonnull CharSequence chars,
                                                int offset,
                                                int lineStartOffset) {
     final boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;

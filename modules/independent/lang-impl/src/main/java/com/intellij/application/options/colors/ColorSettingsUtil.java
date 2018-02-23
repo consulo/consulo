@@ -27,7 +27,7 @@ import com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,8 +89,8 @@ public class ColorSettingsUtil {
     }
   }
 
-  @NotNull
-  private static String toDisplayName(@NotNull TextAttributesKey attributesKey) {
+  @Nonnull
+  private static String toDisplayName(@Nonnull TextAttributesKey attributesKey) {
     return StringUtil.capitalize(attributesKey.getExternalName().toLowerCase().replaceAll("_", " "));
   }
 }

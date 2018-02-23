@@ -52,7 +52,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
     MessageBusConnection connect = bus.connect();
     connect.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override
-      public void beforeProjectLoaded(@NotNull final Project project) {
+      public void beforeProjectLoaded(@Nonnull final Project project) {
         // validate all editors are disposed after fireProjectClosed() was called, because it's the place where editor should be released
         Disposer.register(project, () -> {
           final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -113,7 +113,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @NonNls
-  public static void throwNotReleasedError(@NotNull Editor editor) {
+  public static void throwNotReleasedError(@Nonnull Editor editor) {
     if (editor instanceof EditorImpl) {
       ((EditorImpl)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
     }
@@ -124,28 +124,28 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @Override
-  @NotNull
-  public Document createDocument(@NotNull char[] text) {
+  @Nonnull
+  public Document createDocument(@Nonnull char[] text) {
     return createDocument(new CharArrayCharSequence(text));
   }
 
   @Override
-  @NotNull
-  public Document createDocument(@NotNull CharSequence text) {
+  @Nonnull
+  public Document createDocument(@Nonnull CharSequence text) {
     DocumentEx document = new DocumentImpl(text);
     myEditorEventMulticaster.registerDocument(document);
     return document;
   }
 
-  @NotNull
+  @Nonnull
   public Document createDocument(boolean allowUpdatesWithoutWriteAction) {
     DocumentEx document = new DocumentImpl("", allowUpdatesWithoutWriteAction);
     myEditorEventMulticaster.registerDocument(document);
     return document;
   }
 
-  @NotNull
-  public Document createDocument(@NotNull CharSequence text, boolean acceptsSlashR, boolean allowUpdatesWithoutWriteAction) {
+  @Nonnull
+  public Document createDocument(@Nonnull CharSequence text, boolean acceptsSlashR, boolean allowUpdatesWithoutWriteAction) {
     DocumentEx document = new DocumentImpl(text, acceptsSlashR, allowUpdatesWithoutWriteAction);
     myEditorEventMulticaster.registerDocument(document);
     return document;
@@ -159,40 +159,40 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document) {
+  public Editor createEditor(@Nonnull Document document) {
     return createEditor(document, false, null);
   }
 
   @Override
-  public Editor createViewer(@NotNull Document document) {
+  public Editor createViewer(@Nonnull Document document) {
     return createEditor(document, true, null);
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document, Project project) {
+  public Editor createEditor(@Nonnull Document document, Project project) {
     return createEditor(document, false, project);
   }
 
   @Override
-  public Editor createViewer(@NotNull Document document, Project project) {
+  public Editor createViewer(@Nonnull Document document, Project project) {
     return createEditor(document, true, project);
   }
 
   @Override
-  public Editor createEditor(@NotNull final Document document, final Project project, @NotNull final FileType fileType, final boolean isViewer) {
+  public Editor createEditor(@Nonnull final Document document, final Project project, @Nonnull final FileType fileType, final boolean isViewer) {
     Editor editor = createEditor(document, isViewer, project);
     ((EditorEx)editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, fileType));
     return editor;
   }
 
   @Override
-  public Editor createEditor(@NotNull Document document, Project project, @NotNull VirtualFile file, boolean isViewer) {
+  public Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer) {
     Editor editor = createEditor(document, isViewer, project);
     ((EditorEx)editor).setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file));
     return editor;
   }
 
-  private Editor createEditor(@NotNull Document document, boolean isViewer, Project project) {
+  private Editor createEditor(@Nonnull Document document, boolean isViewer, Project project) {
     Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     EditorImpl editor = new EditorImpl(hostDocument, isViewer, project);
     myEditors.add(editor);
@@ -207,7 +207,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @Override
-  public void releaseEditor(@NotNull Editor editor) {
+  public void releaseEditor(@Nonnull Editor editor) {
     try {
       myEditorFactoryEventDispatcher.getMulticaster().editorReleased(new EditorFactoryEvent(this, editor));
     }
@@ -225,8 +225,8 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @Override
-  @NotNull
-  public Editor[] getEditors(@NotNull Document document, Project project) {
+  @Nonnull
+  public Editor[] getEditors(@Nonnull Document document, Project project) {
     List<Editor> list = null;
     for (Editor editor : myEditors) {
       Project project1 = editor.getProject();
@@ -239,36 +239,36 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
   }
 
   @Override
-  @NotNull
-  public Editor[] getEditors(@NotNull Document document) {
+  @Nonnull
+  public Editor[] getEditors(@Nonnull Document document) {
     return getEditors(document, null);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor[] getAllEditors() {
     return ArrayUtil.stripTrailingNulls(myEditors.toArray(new Editor[myEditors.size()]));
   }
 
   @Override
   @Deprecated
-  public void addEditorFactoryListener(@NotNull EditorFactoryListener listener) {
+  public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
     myEditorFactoryEventDispatcher.addListener(listener);
   }
 
   @Override
-  public void addEditorFactoryListener(@NotNull EditorFactoryListener listener, @NotNull Disposable parentDisposable) {
+  public void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable) {
     myEditorFactoryEventDispatcher.addListener(listener,parentDisposable);
   }
 
   @Override
   @Deprecated
-  public void removeEditorFactoryListener(@NotNull EditorFactoryListener listener) {
+  public void removeEditorFactoryListener(@Nonnull EditorFactoryListener listener) {
     myEditorFactoryEventDispatcher.removeListener(listener);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public EditorEventMulticaster getEventMulticaster() {
     return myEditorEventMulticaster;
   }
@@ -281,7 +281,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
     }
 
     @Override
-    public void execute(@NotNull Editor editor, char charTyped, @NotNull DataContext dataContext) {
+    public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
       editor.putUserData(EditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
       try {
         myDelegate.execute(editor, charTyped, dataContext);
@@ -292,7 +292,7 @@ public class EditorFactoryImpl extends EditorFactory implements ApplicationCompo
     }
 
     @Override
-    public void beforeExecute(@NotNull Editor editor, char c, @NotNull DataContext context, @NotNull ActionPlan plan) {
+    public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
       if (myDelegate instanceof TypedActionHandlerEx) ((TypedActionHandlerEx)myDelegate).beforeExecute(editor, c, context, plan);
     }
   }

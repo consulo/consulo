@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.util.ReflectionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -35,7 +35,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
     return getPreferredFocusedComponent((JComponent)focusCycleRoot, this);
   }
 
-  public static JComponent getPreferredFocusedComponent(@NotNull final JComponent component) {
+  public static JComponent getPreferredFocusedComponent(@Nonnull final JComponent component) {
     return getPreferredFocusedComponent(component, null);
   }
 
@@ -44,7 +44,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
    * Method can return component itself if the <code>component</code> is legal
    * (JTextFiel)focusable
    */
-  public static JComponent getPreferredFocusedComponent(@NotNull final JComponent component, final FocusTraversalPolicy policyToIgnore) {
+  public static JComponent getPreferredFocusedComponent(@Nonnull final JComponent component, final FocusTraversalPolicy policyToIgnore) {
     if (!component.isVisible()) {
       return null;
     }

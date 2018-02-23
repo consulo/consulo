@@ -2,7 +2,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.util.io.FileUtil;
 import junit.framework.Assert;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,8 @@ public class TestFileSystemItem {
   private final boolean myDirectory;
   private final boolean myArchive;
   private final String myName;
-  @Nullable private final String myContent;
+  @javax.annotation.Nullable
+  private final String myContent;
   private final Map<String, TestFileSystemItem> myChildren = new HashMap<String, TestFileSystemItem>();
 
   TestFileSystemItem(String name, boolean archive, boolean directory, @Nullable String content) {

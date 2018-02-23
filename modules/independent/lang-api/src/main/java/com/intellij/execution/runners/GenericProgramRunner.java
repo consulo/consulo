@@ -22,22 +22,21 @@ import com.intellij.execution.RunProfileStarter;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public abstract class GenericProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
   @Override
-  protected void execute(@NotNull ExecutionEnvironment environment, @Nullable final Callback callback, @NotNull RunProfileState state) throws ExecutionException {
+  protected void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable final Callback callback, @Nonnull RunProfileState state) throws ExecutionException {
     ExecutionManager.getInstance(environment.getProject()).startRunProfile(new RunProfileStarter() {
       @Override
-      public RunContentDescriptor execute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+      public RunContentDescriptor execute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
         return postProcess(environment, doExecute(state, environment), callback);
       }
     }, state, environment);
   }
 
-  @Nullable
-  protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+  @javax.annotation.Nullable
+  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
     return null;
   }
 }

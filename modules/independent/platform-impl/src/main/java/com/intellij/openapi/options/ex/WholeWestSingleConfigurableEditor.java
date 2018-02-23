@@ -33,8 +33,8 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.WholeWestDialogWrapper;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +156,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     List<Action> actions = new ArrayList<Action>();
     actions.add(getOKAction());
@@ -268,7 +268,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
   @RequiredDispatchThread
   @Override
-  protected void initRootPanel(@NotNull JPanel rootPanel) {
+  protected void initRootPanel(@Nonnull JPanel rootPanel) {
     myRootPanel = rootPanel;
     super.initRootPanel(rootPanel);
   }

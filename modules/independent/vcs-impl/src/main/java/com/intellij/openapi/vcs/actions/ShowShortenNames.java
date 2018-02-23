@@ -21,8 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -41,9 +40,9 @@ public class ShowShortenNames extends ActionGroup {
     myChildren = kids.toArray(new AnAction[kids.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
     return myChildren;
   }
 

@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.checkout.CheckoutAction;
 import com.intellij.ui.UIBundle;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -52,7 +52,7 @@ public class GetFromVcsAction extends WelcomePopupAction{
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(Extensions.getExtensions(CheckoutProvider.EXTENSION_POINT_NAME).length > 0);
     if (WelcomeFrame.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.FromVCS);

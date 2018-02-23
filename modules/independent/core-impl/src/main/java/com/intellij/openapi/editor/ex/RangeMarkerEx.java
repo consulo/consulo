@@ -28,10 +28,10 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.impl.MutableInterval;
 import com.intellij.openapi.util.Segment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface RangeMarkerEx extends RangeMarker, MutableInterval, Segment {
-  void documentChanged(@NotNull DocumentEvent e);
+  void documentChanged(@Nonnull DocumentEvent e);
 
   long getId();
 }

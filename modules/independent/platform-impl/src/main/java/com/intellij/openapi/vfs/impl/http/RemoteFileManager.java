@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl.http;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,15 +28,15 @@ public abstract class RemoteFileManager {
     return ServiceManager.getService(RemoteFileManager.class);
   }
 
-  public abstract void addRemoteContentProvider(@NotNull RemoteContentProvider provider, @NotNull Disposable parentDisposable);
+  public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider, @Nonnull Disposable parentDisposable);
 
-  public abstract void addRemoteContentProvider(@NotNull RemoteContentProvider provider);
+  public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider);
 
-  public abstract void removeRemoteContentProvider(@NotNull RemoteContentProvider provider);
+  public abstract void removeRemoteContentProvider(@Nonnull RemoteContentProvider provider);
 
-  public abstract void addFileListener(@NotNull HttpVirtualFileListener listener);
+  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener);
 
-  public abstract void addFileListener(@NotNull HttpVirtualFileListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeFileListener(@NotNull HttpVirtualFileListener listener);
+  public abstract void removeFileListener(@Nonnull HttpVirtualFileListener listener);
 }

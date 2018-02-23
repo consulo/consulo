@@ -23,12 +23,12 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
@@ -48,7 +48,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {

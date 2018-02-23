@@ -24,7 +24,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -61,7 +61,7 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
     }
 
     @Override
-    public MyBreakpointProperties createBreakpointProperties(@NotNull final VirtualFile file, final int line) {
+    public MyBreakpointProperties createBreakpointProperties(@Nonnull final VirtualFile file, final int line) {
       return null;
     }
 
@@ -87,7 +87,7 @@ public abstract class XDebuggerTestCase extends PlatformTestCase {
     }
 
     @Override
-    public XBreakpoint<MyBreakpointProperties> createDefaultBreakpoint(@NotNull XBreakpointCreator<MyBreakpointProperties> creator) {
+    public XBreakpoint<MyBreakpointProperties> createDefaultBreakpoint(@Nonnull XBreakpointCreator<MyBreakpointProperties> creator) {
       final XBreakpoint<MyBreakpointProperties> breakpoint = creator.createBreakpoint(new MyBreakpointProperties("default"));
       breakpoint.setEnabled(true);
       return breakpoint;

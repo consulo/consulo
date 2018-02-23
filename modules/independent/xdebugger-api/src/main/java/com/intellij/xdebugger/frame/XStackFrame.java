@@ -22,7 +22,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Represents a frame of execution stack. The selected frame is shown in 'Variables' panel of 'Debug' tool window.
@@ -46,7 +46,7 @@ public abstract class XStackFrame extends XValueContainer {
    * Implement to support evaluation in debugger (conditional breakpoints, logging message on breakpoint, "Evaluate" action, watches)
    * @return evaluator instance
    */
-  @Nullable
+  @javax.annotation.Nullable
   public XDebuggerEvaluator getEvaluator() {
     return null;
   }

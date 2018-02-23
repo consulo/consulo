@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.progress;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface WrappedProgressIndicator extends ProgressIndicator {
-  @NotNull
+  @Nonnull
   ProgressIndicator getOriginalProgressIndicator();
 }

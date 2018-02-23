@@ -40,8 +40,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -70,17 +70,17 @@ public class LocalServerRunConfiguration<S extends ServerConfiguration, D extend
     myLocalRunner = localRunner;
   }
 
-  @NotNull
+  @Nonnull
   public ServerType<S> getServerType() {
     return myServerType;
   }
 
-  @NotNull
+  @Nonnull
   public DeploymentConfigurator<D> getDeploymentConfigurator() {
     return myDeploymentConfigurator;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SettingsEditor<LocalServerRunConfiguration> getConfigurationEditor() {
     return new LocalToServerSettingsEditor(myServerType, myDeploymentConfigurator, getProject());
@@ -88,7 +88,7 @@ public class LocalServerRunConfiguration<S extends ServerConfiguration, D extend
 
   @Nullable
   @Override
-  public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
     if (myDeploymentSource == null) {
       throw new ExecutionException("Deployment is not selected");
     }

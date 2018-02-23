@@ -18,7 +18,7 @@ package com.intellij.extapi.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class MetadataPsiElementBase extends PsiElementBase {
 
@@ -55,7 +55,7 @@ public abstract class MetadataPsiElementBase extends PsiElementBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return mySourceElement.textToCharArray();
   }

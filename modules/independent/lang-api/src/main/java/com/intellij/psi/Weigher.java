@@ -15,8 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to add custom logic to common comparators. Should be registered under "weigher" extension point with "key" parameter specified.
@@ -41,5 +40,6 @@ public abstract class Weigher<T, Location> {
     return myDebugName == null ? super.toString() : myDebugName;
   }
 
-  @Nullable public abstract Comparable weigh(@NotNull T element, @NotNull Location location);
+  @javax.annotation.Nullable
+  public abstract Comparable weigh(@Nonnull T element, @Nonnull Location location);
 }

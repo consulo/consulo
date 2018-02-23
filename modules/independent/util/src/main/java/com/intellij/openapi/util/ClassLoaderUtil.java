@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.lang.UrlClassLoader;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ClassLoaderUtil {
   private ClassLoaderUtil() {
@@ -69,7 +69,7 @@ public class ClassLoaderUtil {
     }
   }
 
-  public static void addPlatformLoaderParentIfOnJdk9(@NotNull UrlClassLoader.Builder builder) {
+  public static void addPlatformLoaderParentIfOnJdk9(@Nonnull UrlClassLoader.Builder builder) {
     if (SystemInfo.IS_AT_LEAST_JAVA9) {
       // on Java 8, 'tools.jar' is on a classpath; on Java 9, its classes are available via the platform loader
       try {

@@ -32,8 +32,8 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author yole
  */
 public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
-  @NotNull
+  @Nonnull
   @Override
   public String getUniqueVirtualFilePath(Project project, VirtualFile file, GlobalSearchScope scope) {
     return getUniqueVirtualFilePath(project, file, false, scope);
@@ -57,7 +57,7 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     return getUniqueVirtualFilePath(project, vFile, GlobalSearchScope.projectScope(project));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile) {
     return getUniqueVirtualFilePath(project, vFile, true, GlobalSearchScope.projectScope(project));

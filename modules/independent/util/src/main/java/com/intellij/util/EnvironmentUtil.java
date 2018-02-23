@@ -30,8 +30,8 @@ import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public class EnvironmentUtil {
   }
 
   private static final NotNullLazyValue<Map<String, String>> ourEnvironment = new AtomicNotNullLazyValue<Map<String, String>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Map<String, String> compute() {
       try {
@@ -116,7 +116,7 @@ public class EnvironmentUtil {
    *
    * @return unmodifiable map of the process environment.
    */
-  @NotNull
+  @Nonnull
   public static Map<String, String> getEnvironmentMap() {
     return ourEnvironment.getValue();
   }
@@ -128,7 +128,7 @@ public class EnvironmentUtil {
    * @see #getEnvironmentMap()
    */
   @Nullable
-  public static String getValue(@NotNull String name) {
+  public static String getValue(@Nonnull String name) {
     return getEnvironmentMap().get(name);
   }
 
@@ -142,7 +142,7 @@ public class EnvironmentUtil {
     return flattenEnvironment(getEnvironmentMap());
   }
 
-  public static String[] flattenEnvironment(@NotNull Map<String, String> environment) {
+  public static String[] flattenEnvironment(@Nonnull Map<String, String> environment) {
     String[] array = new String[environment.size()];
     int i = 0;
     for (Map.Entry<String, String> entry : environment.entrySet()) {
@@ -184,8 +184,8 @@ public class EnvironmentUtil {
       }
     }
 
-    @NotNull
-    protected static Map<String, String> runProcessAndReadEnvs(@NotNull List<String> command, @NotNull File envFile, String lineSeparator) throws Exception {
+    @Nonnull
+    protected static Map<String, String> runProcessAndReadEnvs(@Nonnull List<String> command, @Nonnull File envFile, String lineSeparator) throws Exception {
       ProcessBuilder builder = new ProcessBuilder(command).redirectErrorStream(true);
       builder.environment().put(DISABLE_OMZ_AUTO_UPDATE, "true");
       Process process = builder.start();
@@ -216,7 +216,7 @@ public class EnvironmentUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static Map<String, String> parseEnv(String text, String lineSeparator) throws Exception {
     Set<String> toIgnore = new HashSet<String>(Arrays.asList("_", "PWD", "SHLVL", DISABLE_OMZ_AUTO_UPDATE));
     Map<String, String> env = System.getenv();
@@ -241,7 +241,7 @@ public class EnvironmentUtil {
     return newEnv;
   }
 
-  private static int waitAndTerminateAfter(@NotNull Process process, int timeoutMillis) {
+  private static int waitAndTerminateAfter(@Nonnull Process process, int timeoutMillis) {
     Integer exitCode = waitFor(process, timeoutMillis);
     if (exitCode != null) {
       return exitCode;
@@ -263,7 +263,7 @@ public class EnvironmentUtil {
   }
 
   @Nullable
-  private static Integer waitFor(@NotNull Process process, int timeoutMillis) {
+  private static Integer waitFor(@Nonnull Process process, int timeoutMillis) {
     long stop = System.currentTimeMillis() + timeoutMillis;
     while (System.currentTimeMillis() < stop) {
       TimeoutUtil.sleep(100);
@@ -276,7 +276,7 @@ public class EnvironmentUtil {
     return null;
   }
 
-  private static Map<String, String> setCharsetVar(@NotNull Map<String, String> env) {
+  private static Map<String, String> setCharsetVar(@Nonnull Map<String, String> env) {
     if (!isCharsetVarDefined(env)) {
       Locale locale = Locale.getDefault();
       Charset charset = CharsetToolkit.getDefaultSystemCharset();
@@ -289,11 +289,11 @@ public class EnvironmentUtil {
     return env;
   }
 
-  private static boolean isCharsetVarDefined(@NotNull Map<String, String> env) {
+  private static boolean isCharsetVarDefined(@Nonnull Map<String, String> env) {
     return !env.isEmpty() && (env.containsKey(LANG) || env.containsKey(LC_ALL) || env.containsKey(LC_CTYPE));
   }
 
-  public static void inlineParentOccurrences(@NotNull Map<String, String> envs) {
+  public static void inlineParentOccurrences(@Nonnull Map<String, String> envs) {
     Map<String, String> parentParams = new HashMap<String, String>(System.getenv());
     for (Map.Entry<String, String> entry : envs.entrySet()) {
       String key = entry.getKey();
@@ -322,7 +322,7 @@ public class EnvironmentUtil {
   }
 
   @TestOnly
-  static Map<String, String> testParser(@NotNull String lines) {
+  static Map<String, String> testParser(@Nonnull String lines) {
     try {
       return parseEnv(lines, "\0");
     }
@@ -346,24 +346,24 @@ public class EnvironmentUtil {
 
     private final StringBuffer myBuffer;
 
-    public StreamGobbler(@NotNull InputStream stream) {
+    public StreamGobbler(@Nonnull InputStream stream) {
       super(stream, CharsetToolkit.getDefaultSystemCharset(), OPTIONS);
       myBuffer = new StringBuffer();
       start("stdout/stderr streams of shell env loading process");
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
+    protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
       return AppExecutorUtil.getAppExecutorService().submit(runnable);
     }
 
     @Override
-    protected void onTextAvailable(@NotNull String text) {
+    protected void onTextAvailable(@Nonnull String text) {
       myBuffer.append(text);
     }
 
-    @NotNull
+    @Nonnull
     public String getText() {
       return myBuffer.toString();
     }

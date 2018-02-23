@@ -31,8 +31,8 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.EditorComboBox;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -70,18 +70,23 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
   private JTextField myDirectoryName;
   private JLabel myRepositoryUrlLabel;
 
-  @NotNull private String myTestURL; // the repository URL at the time of the last test
-  @Nullable private Boolean myTestResult; // the test result of the last test or null if not tested
-  @NotNull private String myDefaultDirectoryName = "";
-  @NotNull protected final Project myProject;
-  @NotNull protected final String myVcsDirectoryName;
+  @Nonnull
+  private String myTestURL; // the repository URL at the time of the last test
+  @javax.annotation.Nullable
+  private Boolean myTestResult; // the test result of the last test or null if not tested
+  @Nonnull
+  private String myDefaultDirectoryName = "";
+  @Nonnull
+  protected final Project myProject;
+  @Nonnull
+  protected final String myVcsDirectoryName;
   @Nullable private final String myDefaultRepoUrl;
 
-  public CloneDvcsDialog(@NotNull Project project, @NotNull String displayName, @NotNull String vcsDirectoryName) {
+  public CloneDvcsDialog(@Nonnull Project project, @Nonnull String displayName, @Nonnull String vcsDirectoryName) {
     this(project, displayName, vcsDirectoryName, null);
   }
 
-  public CloneDvcsDialog(@NotNull Project project, @NotNull String displayName, @NotNull String vcsDirectoryName, @Nullable String defaultUrl) {
+  public CloneDvcsDialog(@Nonnull Project project, @Nonnull String displayName, @Nonnull String vcsDirectoryName, @javax.annotation.Nullable String defaultUrl) {
     super(project, true);
     myDefaultRepoUrl = defaultUrl;
     myProject = project;
@@ -112,7 +117,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     setOKActionEnabled(false);
   }
 
-  @NotNull
+  @Nonnull
   public String getSourceRepositoryURL() {
     return getCurrentUrlText();
   }
@@ -193,10 +198,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     updateButtons();
   }
 
-  @NotNull
-  protected abstract TestResult test(@NotNull String url);
+  @Nonnull
+  protected abstract TestResult test(@Nonnull String url);
 
-  @NotNull
+  @Nonnull
   protected abstract DvcsRememberedInputs getRememberedInputs();
 
   /**
@@ -285,7 +290,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private String getCurrentUrlText() {
     return FileUtil.expandUserHome(myRepositoryURL.getText().trim());
   }
@@ -314,7 +319,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     });
   }
 
-  public void prependToHistory(@NotNull final String item) {
+  public void prependToHistory(@Nonnull final String item) {
     myRepositoryURL.prependItem(item);
   }
 
@@ -330,8 +335,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
    * @param url an URL to checkout
    * @return a default repository name
    */
-  @NotNull
-  private static String defaultDirectoryName(@NotNull final String url, @NotNull final String vcsDirName) {
+  @Nonnull
+  private static String defaultDirectoryName(@Nonnull final String url, @Nonnull final String vcsDirName) {
     String nonSystemName;
     if (url.endsWith("/" + vcsDirName) || url.endsWith(File.separator + vcsDirName)) {
       nonSystemName = url.substring(0, url.length() - vcsDirName.length() - 1);
@@ -362,8 +367,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
   }
 
   protected static class TestResult {
-    @NotNull public static final TestResult SUCCESS = new TestResult(null);
-    @Nullable private final String myErrorMessage;
+    @Nonnull
+    public static final TestResult SUCCESS = new TestResult(null);
+    @javax.annotation.Nullable
+    private final String myErrorMessage;
 
     public TestResult(@Nullable String errorMessage) {
       myErrorMessage = errorMessage;
@@ -373,7 +380,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
       return myErrorMessage == null;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public String getError() {
       return myErrorMessage;
     }

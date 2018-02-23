@@ -37,8 +37,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.ProjectKt;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,8 +62,8 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   }
 
   @Override
-  @NotNull
-  public Collection<VirtualFile> getDefaultVcsRoots(@NotNull NewMappings mappingList, @NotNull String vcsName) {
+  @Nonnull
+  public Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName) {
     Set<VirtualFile> result = newHashSet();
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (myBaseDir != null && vcsName.equals(mappingList.getVcsFor(myBaseDir))) {
@@ -100,7 +99,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   }
 
   @Override
-  public boolean matchesDefaultMapping(@NotNull final VirtualFile file, final Object matchContext) {
+  public boolean matchesDefaultMapping(@Nonnull final VirtualFile file, final Object matchContext) {
     if (matchContext != null) {
       return true;
     }
@@ -108,14 +107,14 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public Object getMatchContext(final VirtualFile file) {
     return ModuleUtilCore.findModuleForFile(file, myProject);
   }
 
   @Override
-  @Nullable
-  public VirtualFile getVcsRootFor(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  public VirtualFile getVcsRootFor(@Nonnull VirtualFile file) {
     FileIndexFacade indexFacade = PeriodicalTasksCloser.getInstance().safeGetService(myProject, FileIndexFacade.class);
     if (myBaseDir != null && indexFacade.isValidAncestor(myBaseDir, file)) {
       LOG.debug("File " + file + " is under project base dir " + myBaseDir);
@@ -142,7 +141,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getDirtyRoots() {
     Collection<VirtualFile> dirtyRoots = newHashSet();
@@ -167,7 +166,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     return dirtyRoots;
   }
 
-  @NotNull
+  @Nonnull
   private Collection<VirtualFile> getContentRoots() {
     Module[] modules = ReadAction.compute(myModuleManager::getModules);
     return Arrays.stream(modules)

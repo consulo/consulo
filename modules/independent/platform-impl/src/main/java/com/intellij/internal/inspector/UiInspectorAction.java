@@ -49,8 +49,8 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotations.RequiredDispatchThread;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -132,7 +132,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     private HierarchyTree myHierarchyTree;
     private final JPanel myWrapperPanel;
 
-    private InspectorWindow(@NotNull Component component) throws HeadlessException {
+    private InspectorWindow(@Nonnull Component component) throws HeadlessException {
       super(findWindow(component));
       Window window = findWindow(component);
       setModal(window instanceof JDialog && ((JDialog)window).isModal());
@@ -252,7 +252,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       myWrapperPanel.repaint();
     }
 
-    private void switchInfo(@NotNull List<PropertyBean> clickInfo) {
+    private void switchInfo(@Nonnull List<PropertyBean> clickInfo) {
       myComponent = null;
       myInfo = clickInfo;
       setTitle("Click Info");
@@ -332,7 +332,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
 
     @Nullable
-    private static JComponent getGlassPane(@NotNull Component component) {
+    private static JComponent getGlassPane(@Nonnull Component component) {
       JRootPane rootPane = SwingUtilities.getRootPane(component);
       return rootPane == null ? null : (JComponent)rootPane.getGlassPane();
     }
@@ -349,7 +349,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
     @RequiredDispatchThread
     @Override
-    public void customizeCellRenderer(@NotNull JTree tree,
+    public void customizeCellRenderer(@Nonnull JTree tree,
                                       Object value,
                                       boolean selected,
                                       boolean expanded,
@@ -402,7 +402,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String getComponentName(Component component) {
     String name = getClassName(component);
 
@@ -477,7 +477,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       private final Component myComponent;
       String myText;
 
-      private ComponentNode(@NotNull Component component) {
+      private ComponentNode(@Nonnull Component component) {
         super(component);
         myComponent = component;
         children = prepareChildren(myComponent);
@@ -554,7 +554,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   private static class HighlightComponent extends JComponent {
     Color myColor;
 
-    private HighlightComponent(@NotNull final Color c) {
+    private HighlightComponent(@Nonnull final Color c) {
       myColor = c;
     }
 
@@ -583,11 +583,11 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     InspectorTableModel myModel;
     DimensionsComponent myDimensionComponent;
 
-    private InspectorTable(@NotNull final List<PropertyBean> clickInfo) {
+    private InspectorTable(@Nonnull final List<PropertyBean> clickInfo) {
       myModel = new InspectorTableModel(clickInfo);
       init(null);
     }
-    private InspectorTable(@NotNull final Component component) {
+    private InspectorTable(@Nonnull final Component component) {
 
       myModel = new InspectorTableModel(component);
       init(component);
@@ -673,7 +673,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     Border myBorder;
     Insets myInsets;
 
-    private DimensionsComponent(@NotNull final Component component) {
+    private DimensionsComponent(@Nonnull final Component component) {
       myComponent = component;
       setOpaque(true);
       setBackground(JBColor.WHITE);
@@ -844,12 +844,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   }
 
   private interface Renderer<T> {
-    JComponent setValue(@NotNull T value);
+    JComponent setValue(@Nonnull T value);
   }
 
   private static class PointRenderer extends JLabel implements Renderer<Point> {
     @Override
-    public JComponent setValue(@NotNull final Point value) {
+    public JComponent setValue(@Nonnull final Point value) {
       setText(String.valueOf(value.x) + ':' + value.y);
       return this;
     }
@@ -857,7 +857,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class DimensionRenderer extends JLabel implements Renderer<Dimension> {
     @Override
-    public JComponent setValue(@NotNull final Dimension value) {
+    public JComponent setValue(@Nonnull final Dimension value) {
       setText(String.valueOf(value.width) + "x" + value.height);
       return this;
     }
@@ -865,7 +865,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class InsetsRenderer extends JLabel implements Renderer<Insets> {
     @Override
-    public JComponent setValue(@NotNull final Insets value) {
+    public JComponent setValue(@Nonnull final Insets value) {
       setText("top: " + value.top + " left:" + value.left + " bottom:" + value.bottom + " right:" + value.right);
       return this;
     }
@@ -873,20 +873,20 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class RectangleRenderer extends JLabel implements Renderer<Rectangle> {
     @Override
-    public JComponent setValue(@NotNull final Rectangle value) {
+    public JComponent setValue(@Nonnull final Rectangle value) {
       setText(toString(value));
       return this;
     }
 
-    @NotNull
-    static String toString(@NotNull Rectangle r) {
+    @Nonnull
+    static String toString(@Nonnull Rectangle r) {
       return r.width + "x" + r.height + " @ " + r.x + ":" + r.y;
     }
   }
 
   private static class ColorRenderer extends JLabel implements Renderer<Color> {
     @Override
-    public JComponent setValue(@NotNull final Color value) {
+    public JComponent setValue(@Nonnull final Color value) {
       StringBuilder sb = new StringBuilder();
       sb.append(" r:").append(value.getRed());
       sb.append(" g:").append(value.getGreen());
@@ -907,7 +907,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class FontRenderer extends JLabel implements Renderer<Font> {
     @Override
-    public JComponent setValue(@NotNull final Font value) {
+    public JComponent setValue(@Nonnull final Font value) {
       StringBuilder sb = new StringBuilder();
       sb.append(value.getFontName()).append(" (").append(value.getFamily()).append("), ").append(value.getSize()).append("px");
       if (Font.BOLD == (Font.BOLD & value.getStyle())) sb.append(" bold");
@@ -920,7 +920,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class BooleanRenderer extends JLabel implements Renderer<Boolean> {
     @Override
-    public JComponent setValue(@NotNull final Boolean value) {
+    public JComponent setValue(@Nonnull final Boolean value) {
       setText(value ? "Yes" : "No");
       return this;
     }
@@ -928,7 +928,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class IconRenderer extends JLabel implements Renderer<Icon> {
     @Override
-    public JComponent setValue(@NotNull final Icon value) {
+    public JComponent setValue(@Nonnull final Icon value) {
       setIcon(value);
       setText(getToStringValue(value));
       return this;
@@ -937,7 +937,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class BorderRenderer extends JLabel implements Renderer<Border> {
     @Override
-    public JComponent setValue(@NotNull final Border value) {
+    public JComponent setValue(@Nonnull final Border value) {
       setText(getTextDescription(value));
 
       if (value instanceof CompoundBorder) {
@@ -964,7 +964,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
 
     @Nullable
-    private static Color getBorderColor(@NotNull Border value) {
+    private static Color getBorderColor(@Nonnull Border value) {
       if (value instanceof LineBorder) {
         return ((LineBorder)value).getLineColor();
       }
@@ -979,8 +979,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       return null;
     }
 
-    @NotNull
-    private static String getTextDescription(@NotNull Border value) {
+    @Nonnull
+    private static String getTextDescription(@Nonnull Border value) {
       StringBuilder sb = new StringBuilder();
       sb.append(getClassName(value));
 
@@ -1010,19 +1010,19 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       putClientProperty("html.disable", Boolean.TRUE);
     }
     @Override
-    public JComponent setValue(@NotNull final Object value) {
+    public JComponent setValue(@Nonnull final Object value) {
       setText(getToStringValue(value));
       return this;
     }
   }
 
-  @NotNull
-  private static String getToStringValue(@NotNull Object value) {
+  @Nonnull
+  private static String getToStringValue(@Nonnull Object value) {
     String toString = StringUtil.notNullize(String.valueOf(value), "toString()==null");
     return toString.replace('\n', ' ');
   }
 
-  @NotNull
+  @Nonnull
   private static String getClassName(Object value) {
     Class<?> clazz0 = value.getClass();
     Class<?> clazz = clazz0.isAnonymousClass() ? clazz0.getSuperclass() : clazz0;
@@ -1088,12 +1088,12 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     final Component myComponent;
     final List<PropertyBean> myProperties = ContainerUtil.newArrayList();
 
-    InspectorTableModel(@NotNull List<PropertyBean> clickInfo) {
+    InspectorTableModel(@Nonnull List<PropertyBean> clickInfo) {
       myComponent = null;
       myProperties.addAll(clickInfo);
     }
 
-    InspectorTableModel(@NotNull Component c) {
+    InspectorTableModel(@Nonnull Component c) {
       myComponent = c;
 
       fillTable();
@@ -1119,7 +1119,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
     }
 
-    private void addProperties(@NotNull String prefix, @NotNull Object component, @NotNull List<String> methodNames) {
+    private void addProperties(@Nonnull String prefix, @Nonnull Object component, @Nonnull List<String> methodNames) {
       Class<?> clazz0 = component.getClass();
       Class<?> clazz = clazz0.isAnonymousClass() ? clazz0.getSuperclass() : clazz0;
       myProperties.add(new PropertyBean(prefix + "class", clazz.getName()));
@@ -1158,7 +1158,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
     }
 
-    private void addLayoutProperties(@NotNull Container component) {
+    private void addLayoutProperties(@Nonnull Container component) {
       String prefix = "  ";
 
       LayoutManager layout = component.getLayout();
@@ -1221,7 +1221,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
     }
 
-    @NotNull
+    @Nonnull
     private static String toString(@Nullable GridBagConstraints constraints) {
       if (constraints == null) return "null";
 
@@ -1240,9 +1240,9 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       return h.toString();
     }
 
-    private static void appendFieldValue(@NotNull MoreObjects.ToStringHelper h,
-                                         @NotNull GridBagConstraints constraints,
-                                         @NotNull String field) {
+    private static void appendFieldValue(@Nonnull MoreObjects.ToStringHelper h,
+                                         @Nonnull GridBagConstraints constraints,
+                                         @Nonnull String field) {
       Object value = ReflectionUtil.getField(GridBagConstraints.class, constraints, null, field);
       Object defaultValue = ReflectionUtil.getField(GridBagConstraints.class, new GridBagConstraints(), null, field);
       if (!Comparing.equal(value, defaultValue)) h.add(field, value);
@@ -1369,7 +1369,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
     }
 
-    public void showInspector(@NotNull Component c) {
+    public void showInspector(@Nonnull Component c) {
       Window window = new InspectorWindow(c);
       window.pack();
       window.setVisible(true);

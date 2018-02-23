@@ -30,7 +30,7 @@ import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class MoveCaretDownWithSelectionAction extends EditorAction {
   public MoveCaretDownWithSelectionAction() {

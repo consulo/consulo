@@ -29,8 +29,8 @@ import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -44,34 +44,34 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
   private static final Logger LOG = Logger.getInstance(RearrangeCodeProcessor.class);
   private SelectionModel mySelectionModel;
 
-  public RearrangeCodeProcessor(@NotNull AbstractLayoutCodeProcessor previousProcessor) {
+  public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor) {
     super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
   }
 
-  public RearrangeCodeProcessor(@NotNull AbstractLayoutCodeProcessor previousProcessor, @NotNull SelectionModel selectionModel) {
+  public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor, @Nonnull SelectionModel selectionModel) {
     super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
     mySelectionModel = selectionModel;
   }
 
-  public RearrangeCodeProcessor(@NotNull PsiFile file, @NotNull SelectionModel selectionModel) {
+  public RearrangeCodeProcessor(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
     mySelectionModel = selectionModel;
   }
 
-  public RearrangeCodeProcessor(@NotNull PsiFile file) {
+  public RearrangeCodeProcessor(@Nonnull PsiFile file) {
     super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
   }
 
-  public RearrangeCodeProcessor(@NotNull Project project,
-                                @NotNull PsiFile[] files,
-                                @NotNull String commandName,
+  public RearrangeCodeProcessor(@Nonnull Project project,
+                                @Nonnull PsiFile[] files,
+                                @Nonnull String commandName,
                                 @Nullable Runnable postRunnable) {
     super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected FutureTask<Boolean> prepareTask(@NotNull final PsiFile file, final boolean processChangedTextOnly) {
+  protected FutureTask<Boolean> prepareTask(@Nonnull final PsiFile file, final boolean processChangedTextOnly) {
     return new FutureTask<Boolean>(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
@@ -101,8 +101,8 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     });
   }
 
-  @NotNull
-  private Runnable prepareRearrangeCommand(@NotNull final PsiFile file, @NotNull final Collection<TextRange> ranges) {
+  @Nonnull
+  private Runnable prepareRearrangeCommand(@Nonnull final PsiFile file, @Nonnull final Collection<TextRange> ranges) {
     final ArrangementEngine engine = ServiceManager.getService(myProject, ArrangementEngine.class);
     return new Runnable() {
       @Override
@@ -116,7 +116,7 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     };
   }
 
-  public Collection<TextRange> getRangesToFormat(@NotNull PsiFile file, boolean processChangedTextOnly) throws FilesTooBigForDiffException {
+  public Collection<TextRange> getRangesToFormat(@Nonnull PsiFile file, boolean processChangedTextOnly) throws FilesTooBigForDiffException {
     if (mySelectionModel != null) {
       return getSelectedRanges(mySelectionModel);
     }

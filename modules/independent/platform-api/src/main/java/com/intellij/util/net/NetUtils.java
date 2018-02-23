@@ -21,8 +21,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +73,7 @@ public class NetUtils {
     }
   }
 
-  public static boolean isLocalhost(@NotNull String host) {
+  public static boolean isLocalhost(@Nonnull String host) {
     return host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("::1");
   }
 
@@ -200,8 +200,8 @@ public class NetUtils {
    * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
    */
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
-                                      @NotNull InputStream inputStream,
-                                      @NotNull OutputStream outputStream,
+                                      @Nonnull InputStream inputStream,
+                                      @Nonnull OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
     if (indicator != null) {
       indicator.checkCanceled();

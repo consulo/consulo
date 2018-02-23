@@ -16,7 +16,7 @@
 package com.intellij.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
   private IElementType myTokenType;
@@ -30,7 +30,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
   public abstract MergeFunction getMergeFunction();
 
   @Override
-  public void start(@NotNull final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+  public void start(@Nonnull final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
     super.start(buffer, startOffset, endOffset, initialState);
     myTokenType = null;
   }
@@ -82,7 +82,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
   }
 
   @Override
-  public void restore(@NotNull LexerPosition position) {
+  public void restore(@Nonnull LexerPosition position) {
     MyLexerPosition pos = (MyLexerPosition)position;
 
     getDelegate().restore(pos.getOriginalPosition());
@@ -91,7 +91,7 @@ public abstract class MergingLexerAdapterBase extends DelegateLexer {
     myState = pos.getOldState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LexerPosition getCurrentPosition() {
     return new MyLexerPosition(myTokenStart, myTokenType, getDelegate().getCurrentPosition(), myState);

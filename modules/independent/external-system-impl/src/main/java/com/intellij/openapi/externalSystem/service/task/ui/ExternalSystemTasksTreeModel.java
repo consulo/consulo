@@ -25,8 +25,8 @@ import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -40,7 +40,8 @@ import java.util.*;
  */
 public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
 
-  @NotNull private static final Comparator<TreeNode> NODE_COMPARATOR = new Comparator<TreeNode>() {
+  @Nonnull
+  private static final Comparator<TreeNode> NODE_COMPARATOR = new Comparator<TreeNode>() {
     @Override
     public int compare(TreeNode t1, TreeNode t2) {
       Object e1 = ((ExternalSystemNode<?>)t1).getDescriptor().getElement();
@@ -64,16 +65,18 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   };
 
-  @NotNull private final ExternalSystemUiAware myUiAware;
-  @NotNull private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final ExternalSystemUiAware myUiAware;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
 
-  public ExternalSystemTasksTreeModel(@NotNull ProjectSystemId externalSystemId) {
+  public ExternalSystemTasksTreeModel(@Nonnull ProjectSystemId externalSystemId) {
     super(new ExternalSystemNode<String>(new ExternalSystemNodeDescriptor<String>("", "", "", null)));
     myExternalSystemId = externalSystemId;
     myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
   }
 
-  private static String getTaskName(@NotNull ExternalTaskExecutionInfo taskInfo) {
+  private static String getTaskName(@Nonnull ExternalTaskExecutionInfo taskInfo) {
     return taskInfo.getSettings().getTaskNames().get(0);
   }
 
@@ -83,8 +86,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
    * @param project target external project info holder
    */
   @SuppressWarnings("unchecked")
-  @NotNull
-  public ExternalSystemNode<ExternalProjectPojo> ensureProjectNodeExists(@NotNull ExternalProjectPojo project) {
+  @Nonnull
+  public ExternalSystemNode<ExternalProjectPojo> ensureProjectNodeExists(@Nonnull ExternalProjectPojo project) {
     ExternalSystemNode<?> root = getRoot();
 
     // Remove outdated projects.
@@ -116,7 +119,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
    *
    * @param payload target payload
    */
-  public void pruneNodes(@NotNull Object payload) {
+  public void pruneNodes(@Nonnull Object payload) {
     Deque<ExternalSystemNode<?>> toProcess = new ArrayDeque<ExternalSystemNode<?>>();
     toProcess.addFirst(getRoot());
     while (!toProcess.isEmpty()) {
@@ -132,8 +135,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  public void ensureSubProjectsStructure(@NotNull ExternalProjectPojo topLevelProject,
-                                         @NotNull Collection<ExternalProjectPojo> subProjects) {
+  public void ensureSubProjectsStructure(@Nonnull ExternalProjectPojo topLevelProject,
+                                         @Nonnull Collection<ExternalProjectPojo> subProjects) {
     ExternalSystemNode<ExternalProjectPojo> topLevelProjectNode = ensureProjectNodeExists(topLevelProject);
     Map<String/*config path*/, ExternalProjectPojo> toAdd = ContainerUtilRt.newHashMap();
     for (ExternalProjectPojo subProject : subProjects) {
@@ -165,7 +168,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  public void ensureTasks(@NotNull String externalProjectConfigPath, @NotNull Collection<ExternalTaskPojo> tasks) {
+  public void ensureTasks(@Nonnull String externalProjectConfigPath, @Nonnull Collection<ExternalTaskPojo> tasks) {
     if (tasks.isEmpty()) {
       return;
     }
@@ -202,8 +205,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  @NotNull
-  private ExternalTaskExecutionInfo buildTaskInfo(@NotNull ExternalTaskPojo task) {
+  @Nonnull
+  private ExternalTaskExecutionInfo buildTaskInfo(@Nonnull ExternalTaskPojo task) {
     ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
     settings.setExternalProjectPath(task.getLinkedExternalProjectPath());
     settings.setTaskNames(Collections.singletonList(task.getName()));
@@ -213,8 +216,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  private ExternalSystemNode<ExternalProjectPojo> findProjectNode(@NotNull String configPath) {
+  @javax.annotation.Nullable
+  private ExternalSystemNode<ExternalProjectPojo> findProjectNode(@Nonnull String configPath) {
     for (int i = getRoot().getChildCount() - 1; i >= 0; i--) {
       ExternalSystemNode<?> child = getRoot().getChildAt(i);
       Object childElement = child.getDescriptor().getElement();
@@ -233,17 +236,17 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     return null;
   }
 
-  @NotNull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@NotNull T element, @Nullable Icon icon) {
+  @Nonnull
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nullable Icon icon) {
     return descriptor(element, "", icon);
   }
 
-  @NotNull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@NotNull T element, @NotNull String description, @Nullable Icon icon) {
+  @Nonnull
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nonnull String description, @javax.annotation.Nullable Icon icon) {
     return new ExternalSystemNodeDescriptor<T>(element, element.toString(), description, icon);
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemNode<?> getRoot() {
     return (ExternalSystemNode<?>)super.getRoot();
   }

@@ -34,7 +34,7 @@ import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.usages.PsiElementUsageTarget;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FindUsagesAction extends AnAction {
   public FindUsagesAction() {
@@ -59,7 +59,7 @@ public class FindUsagesAction extends AnAction {
       final Editor editor = e.getData(CommonDataKeys.EDITOR);
       chooseAmbiguousTargetAndPerform(project, editor, new PsiElementProcessor<PsiElement>() {
         @Override
-        public boolean execute(@NotNull final PsiElement element) {
+        public boolean execute(@Nonnull final PsiElement element) {
           startFindUsages(element);
           return false;
         }
@@ -76,7 +76,7 @@ public class FindUsagesAction extends AnAction {
     }
   }
 
-  protected void startFindUsages(@NotNull PsiElement element) {
+  protected void startFindUsages(@Nonnull PsiElement element) {
     FindManager.getInstance(element.getProject()).findUsages(element);
   }
 
@@ -85,7 +85,7 @@ public class FindUsagesAction extends AnAction {
     FindUsagesInFileAction.updateFindUsagesAction(event);
   }
 
-  static void chooseAmbiguousTargetAndPerform(@NotNull final Project project, final Editor editor, @NotNull PsiElementProcessor<PsiElement> processor) {
+  static void chooseAmbiguousTargetAndPerform(@Nonnull final Project project, final Editor editor, @Nonnull PsiElementProcessor<PsiElement> processor) {
     if (editor == null) {
       Messages.showMessageDialog(project, FindBundle.message("find.no.usages.at.cursor.error"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
     }
@@ -106,7 +106,7 @@ public class FindUsagesAction extends AnAction {
 
   public static class ShowSettingsAndFindUsages extends FindUsagesAction {
     @Override
-    protected void startFindUsages(@NotNull PsiElement element) {
+    protected void startFindUsages(@Nonnull PsiElement element) {
       FindManager.getInstance(element.getProject()).findUsages(element, true);
     }
   }

@@ -37,8 +37,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -86,7 +86,8 @@ public class PopupChooserBuilder {
   private boolean myCloseOnEnter = true;
   private boolean myCancelOnWindowDeactivation = true;
   private boolean myUseForXYLocation;
-  @Nullable private Processor<JBPopup> myCouldPin;
+  @Nullable
+  private Processor<JBPopup> myCouldPin;
 
   public PopupChooserBuilder setCancelOnClickOutside(boolean cancelOnClickOutside) {
     myCancelOnClickOutside = cancelOnClickOutside;
@@ -103,25 +104,25 @@ public class PopupChooserBuilder {
 
   private JScrollPane myScrollPane;
 
-  public PopupChooserBuilder(@NotNull JList list) {
+  public PopupChooserBuilder(@Nonnull JList list) {
     myChooserComponent = list;
   }
 
-  public PopupChooserBuilder(@NotNull JTable table) {
+  public PopupChooserBuilder(@Nonnull JTable table) {
     myChooserComponent = table;
   }
 
-  public PopupChooserBuilder(@NotNull JTree tree) {
+  public PopupChooserBuilder(@Nonnull JTree tree) {
     myChooserComponent = tree;
   }
 
-  @NotNull
-  public PopupChooserBuilder setTitle(@NotNull @Nls String title) {
+  @Nonnull
+  public PopupChooserBuilder setTitle(@Nonnull @Nls String title) {
     myTitle = title;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public PopupChooserBuilder addAdditionalChooseKeystroke(@Nullable KeyStroke keyStroke) {
     if (keyStroke != null) {
       myAdditionalKeystrokes.add(keyStroke);
@@ -129,26 +130,26 @@ public class PopupChooserBuilder {
     return this;
   }
 
-  @NotNull
-  public PopupChooserBuilder setItemChoosenCallback(@NotNull Runnable runnable) {
+  @Nonnull
+  public PopupChooserBuilder setItemChoosenCallback(@Nonnull Runnable runnable) {
     myItemChosenRunnable = runnable;
     return this;
   }
 
-  @NotNull
-  public PopupChooserBuilder setSouthComponent(@NotNull JComponent cmp) {
+  @Nonnull
+  public PopupChooserBuilder setSouthComponent(@Nonnull JComponent cmp) {
     mySouthComponent = cmp;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public PopupChooserBuilder setCouldPin(@Nullable Processor<JBPopup> callback){
     myCouldPin = callback;
     return this;
   }
 
-  @NotNull
-  public PopupChooserBuilder setEastComponent(@NotNull JComponent cmp) {
+  @Nonnull
+  public PopupChooserBuilder setEastComponent(@Nonnull JComponent cmp) {
     myEastComponent = cmp;
     return this;
   }
@@ -185,7 +186,7 @@ public class PopupChooserBuilder {
     return this;
   }
 
-  public PopupChooserBuilder setCommandButton(@NotNull ActiveComponent commandButton) {
+  public PopupChooserBuilder setCommandButton(@Nonnull ActiveComponent commandButton) {
     myCommandButton = commandButton;
     return this;
   }
@@ -210,7 +211,7 @@ public class PopupChooserBuilder {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public JBPopup createPopup() {
     final JList list;
     BooleanFunction<KeyEvent> keyEventHandler = null;
@@ -397,7 +398,7 @@ public class PopupChooserBuilder {
     }
   }
 
-  @NotNull
+  @Nonnull
   private JScrollPane createScrollPane(final JTable table) {
     if (table instanceof TreeTable) {
       TreeUtil.expandAll(((TreeTable)table).getTree());
@@ -436,7 +437,7 @@ public class PopupChooserBuilder {
     return scrollPane;
   }
 
-  @NotNull
+  @Nonnull
   private JScrollPane createScrollPane(final JTree tree) {
     TreeUtil.expandAll(tree);
 
@@ -548,7 +549,7 @@ public class PopupChooserBuilder {
     }
 
     @Nullable
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (PlatformDataKeys.SELECTED_ITEM == dataId){
         return myList.getSelectedValue();
       }
@@ -573,13 +574,13 @@ public class PopupChooserBuilder {
     }
   }
 
-  @NotNull
-  public PopupChooserBuilder setFocusOwners(@NotNull Component[] focusOwners) {
+  @Nonnull
+  public PopupChooserBuilder setFocusOwners(@Nonnull Component[] focusOwners) {
     myFocusOwners = focusOwners;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public PopupChooserBuilder setAdText(String ad) {
     setAdText(ad, SwingUtilities.LEFT);
     return this;

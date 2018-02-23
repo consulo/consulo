@@ -21,7 +21,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -69,44 +69,44 @@ public class FindInProjectSettingsBase implements PersistentStateComponent<FindI
     return this;
   }
 
-  public void addDirectory(@NotNull String s) {
+  public void addDirectory(@Nonnull String s) {
     if (s.isEmpty()){
       return;
     }
     addRecentStringToList(s, dirStrings);
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getRecentDirectories() {
     return new ArrayList<String>(dirStrings);
   }
 
-  public void addStringToFind(@NotNull String s){
+  public void addStringToFind(@Nonnull String s){
     if (s.indexOf('\r') >= 0 || s.indexOf('\n') >= 0){
       return;
     }
     addRecentStringToList(s, findStrings);
   }
 
-  public void addStringToReplace(@NotNull String s) {
+  public void addStringToReplace(@Nonnull String s) {
     if (s.indexOf('\r') >= 0 || s.indexOf('\n') >= 0){
       return;
     }
     addRecentStringToList(s, replaceStrings);
   }
 
-  @NotNull
+  @Nonnull
   public String[] getRecentFindStrings(){
     return ArrayUtil.toStringArray(findStrings);
   }
 
-  @NotNull
+  @Nonnull
   public String[] getRecentReplaceStrings(){
     return ArrayUtil.toStringArray(replaceStrings);
   }
 
 
-  static void addRecentStringToList(@NotNull String str, @NotNull List<String> list) {
+  static void addRecentStringToList(@Nonnull String str, @Nonnull List<String> list) {
     if (list.contains(str)) {
       list.remove(str);
     }

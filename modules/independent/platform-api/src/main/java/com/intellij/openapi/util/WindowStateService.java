@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ public abstract class WindowStateService {
    * @param project the project to use by the service
    * @return an instance of the service for the specified project
    */
-  public static WindowStateService getInstance(@NotNull Project project) {
+  public static WindowStateService getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, WindowStateService.class);
   }
 
@@ -47,7 +47,7 @@ public abstract class WindowStateService {
    * @param component a component which state should be changed
    * @return {@code true} if a state is loaded successfully, {@code false} otherwise
    */
-  public final boolean loadState(@NotNull String key, @NotNull Component component) {
+  public final boolean loadState(@Nonnull String key, @Nonnull Component component) {
     return loadStateFor(null, key, component);
   }
 
@@ -60,7 +60,7 @@ public abstract class WindowStateService {
    * @param component a component which state should be changed
    * @return {@code true} if a state is loaded successfully, {@code false} otherwise
    */
-  public abstract boolean loadStateFor(Object object, @NotNull String key, @NotNull Component component);
+  public abstract boolean loadStateFor(Object object, @Nonnull String key, @Nonnull Component component);
 
   /**
    * Stores the specified location that corresponds to the specified key.
@@ -69,7 +69,7 @@ public abstract class WindowStateService {
    * @param key       an unique string key
    * @param component a component which state should be saved
    */
-  public final void saveState(@NotNull String key, @NotNull Component component) {
+  public final void saveState(@Nonnull String key, @Nonnull Component component) {
     saveStateFor(null, key, component);
   }
 
@@ -83,7 +83,7 @@ public abstract class WindowStateService {
    * @param key       an unique string key
    * @param component a component which state should be saved
    */
-  public abstract void saveStateFor(Object object, @NotNull String key, @NotNull Component component);
+  public abstract void saveStateFor(Object object, @Nonnull String key, @Nonnull Component component);
 
   /**
    * Returns a location that corresponds to the specified key or {@code null}
@@ -92,7 +92,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding location
    */
-  public final Point getLocation(@NotNull String key) {
+  public final Point getLocation(@Nonnull String key) {
     return getLocationFor(null, key);
   }
 
@@ -105,7 +105,7 @@ public abstract class WindowStateService {
    * @param key    an unique string key
    * @return a corresponding location
    */
-  public abstract Point getLocationFor(Object object, @NotNull String key);
+  public abstract Point getLocationFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified location that corresponds to the specified key.
@@ -113,7 +113,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putLocation(@NotNull String key, Point location) {
+  public final void putLocation(@Nonnull String key, Point location) {
     putLocationFor(null, key, location);
   }
 
@@ -126,7 +126,7 @@ public abstract class WindowStateService {
    * @param object an object that specifies a screen to which a location belongs
    * @param key    an unique string key
    */
-  public abstract void putLocationFor(Object object, @NotNull String key, Point location);
+  public abstract void putLocationFor(Object object, @Nonnull String key, Point location);
 
   /**
    * Returns a size that corresponds to the specified key or {@code null}
@@ -135,7 +135,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding size
    */
-  public final Dimension getSize(@NotNull String key) {
+  public final Dimension getSize(@Nonnull String key) {
     return getSizeFor(null, key);
   }
 
@@ -148,7 +148,7 @@ public abstract class WindowStateService {
    * @param key    an unique string key
    * @return a corresponding size
    */
-  public abstract Dimension getSizeFor(Object object, @NotNull String key);
+  public abstract Dimension getSizeFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified size that corresponds to the specified key.
@@ -156,7 +156,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putSize(@NotNull String key, Dimension size) {
+  public final void putSize(@Nonnull String key, Dimension size) {
     putSizeFor(null, key, size);
   }
 
@@ -169,7 +169,7 @@ public abstract class WindowStateService {
    * @param object an object that specifies a screen to which a size belongs
    * @param key    an unique string key
    */
-  public abstract void putSizeFor(Object object, @NotNull String key, Dimension size);
+  public abstract void putSizeFor(Object object, @Nonnull String key, Dimension size);
 
   /**
    * Returns a bounds that corresponds to the specified key or {@code null}
@@ -178,7 +178,7 @@ public abstract class WindowStateService {
    * @param key an unique string key
    * @return a corresponding bounds
    */
-  public final Rectangle getBounds(@NotNull String key) {
+  public final Rectangle getBounds(@Nonnull String key) {
     return getBoundsFor(null, key);
   }
 
@@ -191,7 +191,7 @@ public abstract class WindowStateService {
    * @param key    an unique string key
    * @return a corresponding bounds
    */
-  public abstract Rectangle getBoundsFor(Object object, @NotNull String key);
+  public abstract Rectangle getBoundsFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified bounds that corresponds to the specified key.
@@ -199,7 +199,7 @@ public abstract class WindowStateService {
    *
    * @param key an unique string key
    */
-  public final void putBounds(@NotNull String key, Rectangle bounds) {
+  public final void putBounds(@Nonnull String key, Rectangle bounds) {
     putBoundsFor(null, key, bounds);
   }
 
@@ -212,5 +212,5 @@ public abstract class WindowStateService {
    * @param object an object that specifies a screen to which a bounds belongs
    * @param key    an unique string key
    */
-  public abstract void putBoundsFor(Object object, @NotNull String key, Rectangle bounds);
+  public abstract void putBoundsFor(Object object, @Nonnull String key, Rectangle bounds);
 }

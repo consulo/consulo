@@ -17,8 +17,8 @@ package com.intellij.formatting;
 
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -32,8 +32,8 @@ class InitialInfoBuilderState {
 
   private final List<AbstractBlockWrapper> myWrappedChildren = ContainerUtil.newArrayList();
 
-  InitialInfoBuilderState(@NotNull Block parentBlock,
-                          @NotNull CompositeBlockWrapper wrappedBlock,
+  InitialInfoBuilderState(@Nonnull Block parentBlock,
+                          @Nonnull CompositeBlockWrapper wrappedBlock,
                           @Nullable WrapImpl parentBlockWrap,
                           boolean readOnly) {
     this.parentBlock = parentBlock;
@@ -46,8 +46,8 @@ class InitialInfoBuilderState {
     return myWrappedChildren.size();
   }
 
-  public boolean childBlockProcessed(@NotNull Block child,
-                                     @NotNull AbstractBlockWrapper wrappedChild,
+  public boolean childBlockProcessed(@Nonnull Block child,
+                                     @Nonnull AbstractBlockWrapper wrappedChild,
                                      CommonCodeStyleSettings.IndentOptions options) {
     myWrappedChildren.add(wrappedChild);
     previousBlock = child;

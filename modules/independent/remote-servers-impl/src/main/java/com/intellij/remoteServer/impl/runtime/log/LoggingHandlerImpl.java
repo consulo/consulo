@@ -6,7 +6,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import com.intellij.remoteServer.runtime.log.LoggingHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -23,16 +23,16 @@ public class LoggingHandlerImpl implements LoggingHandler {
   }
 
   @Override
-  public void print(@NotNull String s) {
+  public void print(@Nonnull String s) {
     myConsole.print(s, ConsoleViewContentType.NORMAL_OUTPUT);
   }
 
-  public void printlnSystemMessage(@NotNull String s) {
+  public void printlnSystemMessage(@Nonnull String s) {
     myConsole.print(s + "\n", ConsoleViewContentType.SYSTEM_OUTPUT);
   }
 
   @Override
-  public void attachToProcess(@NotNull ProcessHandler handler) {
+  public void attachToProcess(@Nonnull ProcessHandler handler) {
     myConsole.attachToProcess(handler);
   }
 }

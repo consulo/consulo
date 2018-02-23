@@ -45,7 +45,7 @@ import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.webService.WebServiceApi;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -155,7 +155,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         notification.setImportant(false);
         notification.addAction(new NotificationAction(ActionsBundle.actionText("CheckForUpdate")) {
           @Override
-          public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+          public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
             CheckForUpdateAction.actionPerformed(e.getData(CommonDataKeys.PROJECT), UpdateSettings.getInstance());
           }
         });

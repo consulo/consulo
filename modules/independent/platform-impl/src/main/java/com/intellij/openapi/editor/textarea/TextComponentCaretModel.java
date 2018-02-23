@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -35,7 +35,7 @@ public class TextComponentCaretModel implements CaretModel {
   private final TextComponentEditorImpl myEditor;
   private final Caret myCaret;
 
-  public TextComponentCaretModel(@NotNull JTextComponent textComponent, @NotNull TextComponentEditorImpl editor) {
+  public TextComponentCaretModel(@Nonnull JTextComponent textComponent, @Nonnull TextComponentEditorImpl editor) {
     myTextComponent = textComponent;
     myEditor = editor;
     myCaret = new TextComponentCaret(editor);
@@ -49,12 +49,12 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  public void moveToLogicalPosition(@NotNull final LogicalPosition pos) {
+  public void moveToLogicalPosition(@Nonnull final LogicalPosition pos) {
     moveToOffset(myEditor.logicalPositionToOffset(pos), false);
   }
 
   @Override
-  public void moveToVisualPosition(@NotNull final VisualPosition pos) {
+  public void moveToVisualPosition(@Nonnull final VisualPosition pos) {
     moveToLogicalPosition(myEditor.visualToLogicalPosition(pos));
   }
 
@@ -86,7 +86,7 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LogicalPosition getLogicalPosition() {
     int caretPos = myTextComponent.getCaretPosition();
     int line;
@@ -109,7 +109,7 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VisualPosition getVisualPosition() {
     LogicalPosition pos = getLogicalPosition();
     return new VisualPosition(pos.line, pos.column);
@@ -121,12 +121,12 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  public void addCaretListener(@NotNull final CaretListener listener) {
+  public void addCaretListener(@Nonnull final CaretListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  public void removeCaretListener(@NotNull final CaretListener listener) {
+  public void removeCaretListener(@Nonnull final CaretListener listener) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
@@ -150,13 +150,13 @@ public class TextComponentCaretModel implements CaretModel {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Caret getCurrentCaret() {
     return myCaret;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Caret getPrimaryCaret() {
     return myCaret;
@@ -167,7 +167,7 @@ public class TextComponentCaretModel implements CaretModel {
     return 1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Caret> getAllCarets() {
     return Collections.singletonList(myCaret);
@@ -175,24 +175,24 @@ public class TextComponentCaretModel implements CaretModel {
 
   @Nullable
   @Override
-  public Caret getCaretAt(@NotNull VisualPosition pos) {
+  public Caret getCaretAt(@Nonnull VisualPosition pos) {
     return myCaret.getVisualPosition().equals(pos) ? myCaret : null;
   }
 
   @Nullable
   @Override
-  public Caret addCaret(@NotNull VisualPosition pos) {
+  public Caret addCaret(@Nonnull VisualPosition pos) {
     return null;
   }
 
   @Nullable
   @Override
-  public Caret addCaret(@NotNull VisualPosition pos, boolean makePrimary) {
+  public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
     return null;
   }
 
   @Override
-  public boolean removeCaret(@NotNull Caret caret) {
+  public boolean removeCaret(@Nonnull Caret caret) {
     return false;
   }
 
@@ -201,33 +201,33 @@ public class TextComponentCaretModel implements CaretModel {
   }
 
   @Override
-  public void setCaretsAndSelections(@NotNull List<CaretState> caretStates) {
+  public void setCaretsAndSelections(@Nonnull List<CaretState> caretStates) {
     throw new UnsupportedOperationException("Multiple carets are not supported");
   }
 
   @Override
-  public void setCaretsAndSelections(@NotNull List<CaretState> caretStates, boolean updateSystemSelection) {
+  public void setCaretsAndSelections(@Nonnull List<CaretState> caretStates, boolean updateSystemSelection) {
     throw new UnsupportedOperationException("Multiple carets are not supported");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<CaretState> getCaretsAndSelections() {
     throw new UnsupportedOperationException("Multiple carets are not supported");
   }
 
   @Override
-  public void runForEachCaret(@NotNull CaretAction action) {
+  public void runForEachCaret(@Nonnull CaretAction action) {
     action.perform(myCaret);
   }
 
   @Override
-  public void runForEachCaret(@NotNull CaretAction action, boolean reverseOrder) {
+  public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
     action.perform(myCaret);
   }
 
   @Override
-  public void runBatchCaretOperation(@NotNull Runnable runnable) {
+  public void runBatchCaretOperation(@Nonnull Runnable runnable) {
     runnable.run();
   }
 }

@@ -21,25 +21,28 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Waiter extends Task.Modal {
   private static final Logger LOG = Logger.getInstance(Waiter.class);
 
-  @NotNull private final Runnable myRunnable;
-  @NotNull private final AtomicBoolean myStarted = new AtomicBoolean();
-  @NotNull private final Semaphore mySemaphore = new Semaphore();
+  @Nonnull
+  private final Runnable myRunnable;
+  @Nonnull
+  private final AtomicBoolean myStarted = new AtomicBoolean();
+  @Nonnull
+  private final Semaphore mySemaphore = new Semaphore();
 
-  public Waiter(@NotNull Project project, @NotNull Runnable runnable, String title, boolean cancellable) {
+  public Waiter(@Nonnull Project project, @Nonnull Runnable runnable, String title, boolean cancellable) {
     super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
     myRunnable = runnable;
     mySemaphore.down();
     setCancelText("Skip");
   }
 
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     indicator.setIndeterminate(true);
     indicator.setText2(VcsBundle.message("commit.wait.util.synched.text"));
 

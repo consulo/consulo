@@ -18,15 +18,15 @@ package com.intellij.execution.filters;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ConsoleDependentFilterProvider implements ConsoleFilterProvider {
-  @NotNull
-  public abstract Filter[] getDefaultFilters(@NotNull ConsoleView consoleView, @NotNull Project project, @NotNull GlobalSearchScope scope);
+  @Nonnull
+  public abstract Filter[] getDefaultFilters(@Nonnull ConsoleView consoleView, @Nonnull Project project, @Nonnull GlobalSearchScope scope);
 
-  @NotNull
+  @Nonnull
   @Override
-  public Filter[] getDefaultFilters(@NotNull Project project) {
+  public Filter[] getDefaultFilters(@Nonnull Project project) {
     return Filter.EMPTY_ARRAY;
   }
 }

@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.actions.handlers;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebuggerManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -27,17 +27,17 @@ import com.intellij.openapi.actionSystem.DataContext;
  * @author nik
 */
 public class XDebuggerPauseActionHandler extends XDebuggerActionHandler {
-  protected void perform(@NotNull final XDebugSession session, final DataContext dataContext) {
+  protected void perform(@Nonnull final XDebugSession session, final DataContext dataContext) {
     session.pause();
   }
 
   @Override
-  public boolean isHidden(@NotNull Project project, AnActionEvent event) {
+  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
     final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session == null || !((XDebugSessionImpl)session).isPauseActionSupported();
   }
 
-  protected boolean isEnabled(@NotNull final XDebugSession session, final DataContext dataContext) {
+  protected boolean isEnabled(@Nonnull final XDebugSession session, final DataContext dataContext) {
     return !session.isPaused();
   }
 }

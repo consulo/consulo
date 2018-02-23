@@ -16,7 +16,7 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

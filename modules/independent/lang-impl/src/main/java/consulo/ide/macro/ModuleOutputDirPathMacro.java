@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -29,7 +29,7 @@ import consulo.roots.ContentFolderTypeProvider;
  * @since 18.08.14
  */
 public abstract class ModuleOutputDirPathMacro extends Macro {
-  @NotNull
+  @Nonnull
   public abstract ContentFolderTypeProvider getContentFolderTypeProvider();
 
   @Override

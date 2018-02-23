@@ -30,7 +30,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
@@ -43,13 +43,13 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     setInjectedContext(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new CodeInsightActionHandler() {
       @RequiredDispatchThread
       @Override
-      public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+      public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
       }
 
@@ -123,7 +123,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
     final PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);

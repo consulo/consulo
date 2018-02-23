@@ -30,7 +30,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +75,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
               }
 
               @Override
-              @NotNull
+              @Nonnull
               public String getTextFor(final ConfigurableUsageTarget data) {
                 if (data == null) {
                   return FindBundle.message("recent.find.usages.action.nothing");

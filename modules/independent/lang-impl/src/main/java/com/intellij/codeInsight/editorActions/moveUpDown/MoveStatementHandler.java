@@ -22,7 +22,7 @@ package com.intellij.codeInsight.editorActions.moveUpDown;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 class MoveStatementHandler extends BaseMoveHandler {
 

@@ -26,8 +26,8 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +40,8 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
   private final JPanel myMainPanel;
   private final String mySplitterProportionKey;
 
-  public CodeFragmentInputComponent(final @NotNull Project project,
-                                    @NotNull XDebuggerEditorsProvider editorsProvider,
+  public CodeFragmentInputComponent(final @Nonnull Project project,
+                                    @Nonnull XDebuggerEditorsProvider editorsProvider,
                                     final @Nullable XSourcePosition sourcePosition,
                                     @Nullable XExpression statements,
                                     String splitterProportionKey,
@@ -65,7 +65,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public XDebuggerEditorBase getInputEditor() {
     return myMultilineEditor;
   }

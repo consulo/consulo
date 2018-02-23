@@ -15,7 +15,7 @@
  */
 package com.intellij.util.concurrency;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +48,7 @@ public class FixedFuture<T> implements Future<T> {
   }
 
   @Override
-  public T get(long timeout, @NotNull TimeUnit unit) {
+  public T get(long timeout, @Nonnull TimeUnit unit) {
     return myValue;
   }
 }

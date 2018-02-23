@@ -20,8 +20,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.HashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -58,18 +58,18 @@ public class AttributesDefaults {
     return myDefaultRange;
   }
 
-  public void add(@NonNls @NotNull final String attributeKey,
-                  @NonNls @NotNull final String value,
+  public void add(@NonNls @Nonnull final String attributeKey,
+                  @NonNls @Nonnull final String value,
                   @Nullable final TextRange selectionRange) {
     myNamesToValueAndRangeMap.put(attributeKey, new Pair<String, TextRange>(value, selectionRange));
   }
 
-  public void add(@NonNls @NotNull final String attributeKey,
-                  @NonNls @NotNull final String value) {
+  public void add(@NonNls @Nonnull final String attributeKey,
+                  @NonNls @Nonnull final String value) {
     add(attributeKey, value, null);
   }
 
-  public void addPredefined(@NotNull String key, @NotNull String value) {
+  public void addPredefined(@Nonnull String key, @Nonnull String value) {
     if (myDefaultProperties == null) {
       myDefaultProperties = new HashMap<>();
     }
@@ -82,13 +82,13 @@ public class AttributesDefaults {
   }
 
   @Nullable
-  public TextRange getRangeFor(@NonNls @NotNull final String attributeKey) {
+  public TextRange getRangeFor(@NonNls @Nonnull final String attributeKey) {
     final Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.second;
   }
 
   @Nullable
-  public String getDefaultValueFor(@NonNls @NotNull final String attributeKey) {
+  public String getDefaultValueFor(@NonNls @Nonnull final String attributeKey) {
     final Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.first;
   }

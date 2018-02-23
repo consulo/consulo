@@ -18,8 +18,8 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FindSymbolParameters {
   private final String myCompletePattern;
@@ -27,7 +27,7 @@ public class FindSymbolParameters {
   private final GlobalSearchScope mySearchScope;
   private volatile IdFilter myIdFilter;
 
-  public FindSymbolParameters(@NotNull String pattern, @NotNull String name, @NotNull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
+  public FindSymbolParameters(@Nonnull String pattern, @Nonnull String name, @Nonnull GlobalSearchScope scope, @javax.annotation.Nullable IdFilter idFilter) {
     myCompletePattern = pattern;
     myLocalPatternName = name;
     mySearchScope = scope;
@@ -42,7 +42,8 @@ public class FindSymbolParameters {
     return myLocalPatternName;
   }
 
-  public @NotNull GlobalSearchScope getSearchScope() {
+  public @Nonnull
+  GlobalSearchScope getSearchScope() {
     return mySearchScope;
   }
 
@@ -54,7 +55,7 @@ public class FindSymbolParameters {
     myIdFilter = idFilter;
   }
 
-  public static FindSymbolParameters wrap(@NotNull String pattern, @NotNull Project project, boolean searchInLibraries) {
+  public static FindSymbolParameters wrap(@Nonnull String pattern, @Nonnull Project project, boolean searchInLibraries) {
     return new FindSymbolParameters(
       pattern,
       pattern,

@@ -15,16 +15,16 @@
  */
 package com.intellij.profile.codeInspection.ui.header;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Batkovich
  */
 public interface SaveInputComponentValidator {
 
-  void doSave(@NotNull String text);
+  void doSave(@Nonnull String text);
 
-  boolean checkValid(@NotNull String text);
+  boolean checkValid(@Nonnull String text);
 
   void cancel();
 
@@ -38,7 +38,7 @@ public interface SaveInputComponentValidator {
     }
 
     @Override
-    public void doSave(@NotNull String text) {
+    public void doSave(@Nonnull String text) {
       text = text.trim();
       if (myActive && myDelegate != null) {
         myDelegate.doSave(text);
@@ -47,7 +47,7 @@ public interface SaveInputComponentValidator {
     }
 
     @Override
-    public boolean checkValid(@NotNull String text) {
+    public boolean checkValid(@Nonnull String text) {
       return myActive && myDelegate != null && myDelegate.checkValid(text.trim());
     }
 

@@ -15,12 +15,12 @@
  */
 package com.intellij.usages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
  */
 public interface NamedPresentably {
-  @NotNull
+  @Nonnull
   String getPresentableName();
 }

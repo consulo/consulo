@@ -21,14 +21,14 @@ import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<ModuleExtensionWithSdkOrderEntryImpl> {
-  @NotNull
+  @Nonnull
   public static ModuleExtensionWithSdkOrderEntryType getInstance() {
     return EP_NAME.findExtension(ModuleExtensionWithSdkOrderEntryType.class);
   }
@@ -36,15 +36,15 @@ public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<Modu
   @NonNls
   public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "module-extension-sdk";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModuleExtensionWithSdkOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
+  public ModuleExtensionWithSdkOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     String moduleExtensionId = element.getAttributeValue(EXTENSION_ID_ATTRIBUTE);
     if (moduleExtensionId == null) {
       throw new InvalidDataException();
@@ -53,7 +53,7 @@ public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<Modu
   }
 
   @Override
-  public void storeOrderEntry(@NotNull Element element, @NotNull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     element.setAttribute(EXTENSION_ID_ATTRIBUTE, orderEntry.getModuleExtensionId());
   }
 }

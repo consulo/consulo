@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -26,7 +26,7 @@ import java.awt.image.*;
  * @author Konstantin Bulenkov
  */
 public class ImageUtil {
-  public static BufferedImage toBufferedImage(@NotNull Image image) {
+  public static BufferedImage toBufferedImage(@Nonnull Image image) {
     if (image instanceof JBHiDPIScaledImage) {
       Image img = ((JBHiDPIScaledImage)image).getDelegate();
       if (img != null) {
@@ -45,7 +45,7 @@ public class ImageUtil {
     return bufferedImage;
   }
 
-  public static int getRealWidth(@NotNull Image image) {
+  public static int getRealWidth(@Nonnull Image image) {
     if (image instanceof JBHiDPIScaledImage) {
       Image img = ((JBHiDPIScaledImage)image).getDelegate();
       if (img != null) image = img;
@@ -53,7 +53,7 @@ public class ImageUtil {
     return image.getWidth(null);
   }
 
-  public static int getRealHeight(@NotNull Image image) {
+  public static int getRealHeight(@Nonnull Image image) {
     if (image instanceof JBHiDPIScaledImage) {
       Image img = ((JBHiDPIScaledImage)image).getDelegate();
       if (img != null) image = img;
@@ -61,14 +61,14 @@ public class ImageUtil {
     return image.getHeight(null);
   }
 
-  public static int getUserWidth(@NotNull Image image) {
+  public static int getUserWidth(@Nonnull Image image) {
     if (image instanceof JBHiDPIScaledImage) {
       return ((JBHiDPIScaledImage)image).getUserWidth(null);
     }
     return image.getWidth(null);
   }
 
-  public static int getUserHeight(@NotNull Image image) {
+  public static int getUserHeight(@Nonnull Image image) {
     if (image instanceof JBHiDPIScaledImage) {
       return ((JBHiDPIScaledImage)image).getUserHeight(null);
     }

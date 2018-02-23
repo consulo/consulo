@@ -23,8 +23,8 @@ import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
 import com.intellij.vcs.log.graph.collapsing.EdgeStorageWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,11 +32,14 @@ import java.util.List;
 import java.util.Set;
 
 public class LinearBekGraph implements LinearGraph {
-  @NotNull protected final LinearGraph myGraph;
-  @NotNull protected final EdgeStorageWrapper myHiddenEdges;
-  @NotNull protected final EdgeStorageWrapper myDottedEdges;
+  @Nonnull
+  protected final LinearGraph myGraph;
+  @Nonnull
+  protected final EdgeStorageWrapper myHiddenEdges;
+  @Nonnull
+  protected final EdgeStorageWrapper myDottedEdges;
 
-  public LinearBekGraph(@NotNull LinearGraph graph) {
+  public LinearBekGraph(@Nonnull LinearGraph graph) {
     myGraph = graph;
     myHiddenEdges = EdgeStorageWrapper.createSimpleEdgeStorage();
     myDottedEdges = EdgeStorageWrapper.createSimpleEdgeStorage();
@@ -47,9 +50,9 @@ public class LinearBekGraph implements LinearGraph {
     return myGraph.nodesCount();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter) {
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
     List<GraphEdge> result = new ArrayList<>();
     result.addAll(myDottedEdges.getAdjacentEdges(nodeIndex, filter));
     result.addAll(myGraph.getAdjacentEdges(nodeIndex, filter));
@@ -57,7 +60,7 @@ public class LinearBekGraph implements LinearGraph {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GraphNode getGraphNode(int nodeIndex) {
     return myGraph.getGraphNode(nodeIndex);
@@ -74,7 +77,7 @@ public class LinearBekGraph implements LinearGraph {
     return myGraph.getNodeIndex(nodeId);
   }
 
-  public Collection<GraphEdge> expandEdge(@NotNull final GraphEdge edge) {
+  public Collection<GraphEdge> expandEdge(@Nonnull final GraphEdge edge) {
     Set<GraphEdge> result = ContainerUtil.newHashSet();
 
     assert edge.getType() == GraphEdgeType.DOTTED;
@@ -103,7 +106,7 @@ public class LinearBekGraph implements LinearGraph {
   public static class WorkingLinearBekGraph extends LinearBekGraph {
     private final LinearBekGraph myLinearGraph;
 
-    public WorkingLinearBekGraph(@NotNull LinearBekGraph graph) {
+    public WorkingLinearBekGraph(@Nonnull LinearBekGraph graph) {
       super(graph.myGraph);
       myLinearGraph = graph;
     }

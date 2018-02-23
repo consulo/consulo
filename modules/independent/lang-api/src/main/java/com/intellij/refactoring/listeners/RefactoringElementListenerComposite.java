@@ -18,7 +18,7 @@ package com.intellij.refactoring.listeners;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,21 +30,21 @@ public class RefactoringElementListenerComposite implements RefactoringElementLi
   }
 
   @Override
-  public void elementMoved(@NotNull final PsiElement newElement){
+  public void elementMoved(@Nonnull final PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementMoved(newElement);
     }
   }
 
   @Override
-  public void elementRenamed(@NotNull final PsiElement newElement){
+  public void elementRenamed(@Nonnull final PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementRenamed(newElement);
     }
   }
 
   @Override
-  public void undoElementMovedOrRenamed(@NotNull PsiElement newElement, @NotNull String oldQualifiedName) {
+  public void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
     for (RefactoringElementListener listener : myListeners) {
       if (listener instanceof UndoRefactoringElementListener) {
         ((UndoRefactoringElementListener)listener).undoElementMovedOrRenamed(newElement, oldQualifiedName);

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -29,13 +29,13 @@ import java.io.File;
 public abstract class FileTemplatesScheme implements Named {
 
   public final static FileTemplatesScheme DEFAULT = new FileTemplatesScheme("Default") {
-    @NotNull
+    @Nonnull
     @Override
     public String getTemplatesDir() {
       return new File(PathManager.getConfigPath(), TEMPLATES_DIR).getPath();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Project getProject() {
       return ProjectManager.getInstance().getDefaultProject();
@@ -46,19 +46,19 @@ public abstract class FileTemplatesScheme implements Named {
 
   private final String myName;
 
-  public FileTemplatesScheme(@NotNull String name) {
+  public FileTemplatesScheme(@Nonnull String name) {
     myName = name;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getTemplatesDir();
 
-  @NotNull
+  @Nonnull
   public abstract Project getProject();
 }

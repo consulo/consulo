@@ -21,8 +21,8 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,7 +39,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   // create map at once, no need to optimize here
   private final Map<K, V> myMap = createMap();
 
-  @NotNull
+  @Nonnull
   protected Map<K, V> createMap() {
     return new THashMap<K, V>();
   }
@@ -97,7 +97,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return v == FAKE_NULL() ? null : v;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     final Set<K> ts = myMap.keySet();
@@ -111,7 +111,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
     return ts;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<V> notNullValues() {
     final Collection<V> values = ContainerUtil.newArrayList(myMap.values());
     for (Iterator<V> iterator = values.iterator(); iterator.hasNext(); ) {
@@ -149,26 +149,26 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public void putAll(@NotNull final Map<? extends K, ? extends V> m) {
+  public void putAll(@Nonnull final Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     return myMap.values();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     return myMap.entrySet();
   }
 
-  @NotNull
-  public static <K, V> FactoryMap<K, V> createMap(@NotNull final Function<K, V> computeValue) {
+  @Nonnull
+  public static <K, V> FactoryMap<K, V> createMap(@Nonnull final Function<K, V> computeValue) {
     return new FactoryMap<K, V>() {
       @Nullable
       @Override

@@ -31,7 +31,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -136,7 +136,7 @@ public class TriggerAdditionOrDeletion {
     }
   }
 
-  private void notifyAndLogFiles(@NotNull String topic, @NotNull List<FilePath> incorrectFilePath) {
+  private void notifyAndLogFiles(@Nonnull String topic, @Nonnull List<FilePath> incorrectFilePath) {
     String message = "The following " + StringUtil.pluralize("file", incorrectFilePath.size()) + " may be processed incorrectly by VCS.\n" +
                      "Please check it manually: " + incorrectFilePath;
     LOG.warn(message);
@@ -214,7 +214,7 @@ public class TriggerAdditionOrDeletion {
     }
   }
 
-  private void askUserIfNeeded(final AbstractVcs vcs, @NotNull  final List<FilePath> filePaths, @NotNull VcsConfiguration.StandardConfirmation type) {
+  private void askUserIfNeeded(final AbstractVcs vcs, @Nonnull  final List<FilePath> filePaths, @Nonnull VcsConfiguration.StandardConfirmation type) {
     if (mySilentAddDelete) return;
     final VcsShowConfirmationOption confirmationOption = myVcsManager.getStandardConfirmation(type, vcs);
     if (VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY.equals(confirmationOption.getValue())) {

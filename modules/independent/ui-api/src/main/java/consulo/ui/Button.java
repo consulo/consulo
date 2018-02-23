@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,13 +24,13 @@ import java.util.EventListener;
  * @since 13-Sep-17
  */
 public interface Button extends Component {
-  @NotNull
-  static Button create(@NotNull String text) {
+  @Nonnull
+  static Button create(@Nonnull String text) {
     return UIInternal.get()._Components_button(text);
   }
 
-  @NotNull
-  static Button create(@NotNull String text, @NotNull @RequiredUIAccess Button.ClickHandler clickHandler) {
+  @Nonnull
+  static Button create(@Nonnull String text, @Nonnull @RequiredUIAccess Button.ClickHandler clickHandler) {
     Button button = UIInternal.get()._Components_button(text);
     button.addListener(ClickHandler.class, clickHandler);
     return button;
@@ -41,11 +41,11 @@ public interface Button extends Component {
     void onClick();
   }
 
-  @NotNull
+  @Nonnull
   String getText();
 
   @RequiredUIAccess
-  void setText(@NotNull String text);
+  void setText(@Nonnull String text);
 
   default void addClickListener(@RequiredUIAccess ClickHandler listener) {
     addListener(ClickHandler.class, listener);

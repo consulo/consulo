@@ -18,20 +18,20 @@ package com.intellij.util.indexing.impl;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.indexing.IndexExtension;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class AbstractForwardIndex<Key, Value> implements ForwardIndex<Key,Value> {
   protected final ID<Key, Value> myIndexId;
   protected final KeyDescriptor<Key> myKeyDescriptor;
   protected final IndexExtension<Key, Value, ?> myIndexExtension;
 
-  protected AbstractForwardIndex(@NotNull IndexExtension<Key, Value, ?> extension) {
+  protected AbstractForwardIndex(@Nonnull IndexExtension<Key, Value, ?> extension) {
     myIndexId = extension.getName();
     myKeyDescriptor = extension.getKeyDescriptor();
     myIndexExtension = extension;
   }
 
-  @NotNull
+  @Nonnull
   public IndexExtension<Key, Value, ?> getIndexExtension() {
     return myIndexExtension;
   }

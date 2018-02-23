@@ -27,8 +27,8 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -44,24 +44,24 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
   private boolean myContentLoadFailed = false;
   private Charset myCharset;
 
-  public VcsVirtualFile(@NotNull String path,
+  public VcsVirtualFile(@Nonnull String path,
                         @Nullable VcsFileRevision revision,
-                        @NotNull VirtualFileSystem fileSystem) {
+                        @Nonnull VirtualFileSystem fileSystem) {
     super(path, fileSystem);
     myFileRevision = revision;
   }
 
-  public VcsVirtualFile(@NotNull String path,
-                        @NotNull byte[] content,
-                        @Nullable String revision,
-                        @NotNull VirtualFileSystem fileSystem) {
+  public VcsVirtualFile(@Nonnull String path,
+                        @Nonnull byte[] content,
+                        @javax.annotation.Nullable String revision,
+                        @Nonnull VirtualFileSystem fileSystem) {
     this(path, null, fileSystem);
     myContent = content;
     setRevision(revision);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
       return ArrayUtil.EMPTY_BYTE_ARRAY;
@@ -135,7 +135,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
     return myFileRevision;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Charset getCharset() {
     if (myCharset != null) return myCharset;

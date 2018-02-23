@@ -24,8 +24,8 @@ import com.intellij.openapi.diff.DiffTool;
 import com.intellij.openapi.diff.DiffViewer;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.UIBasedFileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,11 +36,11 @@ class CompositeDiffTool implements DiffTool {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.external.CompositeDiffTool");
   private final List<DiffTool> myTools;
 
-  public CompositeDiffTool(@NotNull List<DiffTool> tools) {
+  public CompositeDiffTool(@Nonnull List<DiffTool> tools) {
     myTools = new ArrayList<DiffTool>(tools);
   }
 
-  public CompositeDiffTool(@NotNull DiffTool[] tools) {
+  public CompositeDiffTool(@Nonnull DiffTool[] tools) {
     myTools = Arrays.asList(tools);
   }
 
@@ -57,7 +57,7 @@ class CompositeDiffTool implements DiffTool {
   }
 
   @Override
-  public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+  public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
     // should not be called for it
     throw new IllegalStateException();
   }
@@ -85,7 +85,7 @@ class CompositeDiffTool implements DiffTool {
     return null;
   }
 
-  private static void checkDiffData(@NotNull DiffRequest data) {
+  private static void checkDiffData(@Nonnull DiffRequest data) {
     DiffContent[] contents = data.getContents();
     for (DiffContent content : contents) {
       LOG.assertTrue(content != null, "Null content in diff request");

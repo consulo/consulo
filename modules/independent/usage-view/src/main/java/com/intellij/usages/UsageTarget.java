@@ -20,8 +20,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -37,9 +36,9 @@ public interface UsageTarget extends NavigationItem {
    * Should look for usages in one specific editor. This typicaly shows other kind of dialog and doesn't
    * result in usage view display.
    */
-  void findUsagesInEditor(@NotNull FileEditor editor);
+  void findUsagesInEditor(@Nonnull FileEditor editor);
 
-  void highlightUsages(@NotNull PsiFile file, @NotNull Editor editor, boolean clearHighlights);
+  void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights);
 
   boolean isValid();
   boolean isReadOnly();
@@ -47,7 +46,7 @@ public interface UsageTarget extends NavigationItem {
   /**
    * @return the files this usage target is in. Might be null if usage target is not file-based
    */
-  @Nullable
+  @javax.annotation.Nullable
   VirtualFile[] getFiles();
 
   void update();

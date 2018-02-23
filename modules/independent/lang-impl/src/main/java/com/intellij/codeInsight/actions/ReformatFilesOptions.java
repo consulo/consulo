@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.actions;
 
 import com.intellij.psi.search.SearchScope;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface ReformatFilesOptions extends LayoutCodeOptions {
 

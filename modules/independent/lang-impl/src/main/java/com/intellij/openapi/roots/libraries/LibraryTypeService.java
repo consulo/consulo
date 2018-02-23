@@ -19,8 +19,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -33,8 +33,8 @@ public abstract class LibraryTypeService {
   }
 
   @Nullable
-  public abstract NewLibraryConfiguration createLibraryFromFiles(@NotNull LibraryRootsComponentDescriptor descriptor,
-                                                                 @NotNull JComponent parentComponent,
+  public abstract NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
+                                                                 @Nonnull JComponent parentComponent,
                                                                  @Nullable VirtualFile contextDirectory,
                                                                  @Nullable LibraryType<?> type,
                                                                  final @Nullable Project project);

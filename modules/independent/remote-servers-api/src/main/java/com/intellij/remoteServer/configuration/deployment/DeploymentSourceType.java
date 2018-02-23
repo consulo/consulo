@@ -19,7 +19,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,7 +30,7 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
   public static final ExtensionPointName<DeploymentSourceType<?>> EP_NAME = ExtensionPointName.create("com.intellij.remoteServer.deploymentSource.type");
   private final String myId;
 
-  protected DeploymentSourceType(@NotNull String id) {
+  protected DeploymentSourceType(@Nonnull String id) {
     myId = id;
   }
 
@@ -38,15 +38,15 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
     return myId;
   }
 
-  @NotNull
-  public abstract S load(@NotNull Element tag, @NotNull Project project);
+  @Nonnull
+  public abstract S load(@Nonnull Element tag, @Nonnull Project project);
 
-  public abstract void save(@NotNull S s, @NotNull Element tag);
+  public abstract void save(@Nonnull S s, @Nonnull Element tag);
 
 
-  public void setBuildBeforeRunTask(@NotNull RunConfiguration configuration, @NotNull S source) {
+  public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull S source) {
   }
 
-  public void updateBuildBeforeRunOption(@NotNull JComponent runConfigurationEditorComponent, @NotNull Project project, @NotNull S source, boolean select) {
+  public void updateBuildBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, @Nonnull Project project, @Nonnull S source, boolean select) {
   }
 }

@@ -29,8 +29,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ParameterizedRunnable;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +55,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private final BalloonPanel myBalloonPanel = new BalloonPanel();
   private boolean myVisible;
 
-  public WelcomeDesktopBalloonLayoutImpl(@NotNull JRootPane parent, @NotNull Insets insets, @NotNull ParameterizedRunnable<List<NotificationType>> listener, @NotNull Computable<Point> buttonLocation) {
+  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent, @Nonnull Insets insets, @Nonnull ParameterizedRunnable<List<NotificationType>> listener, @Nonnull Computable<Point> buttonLocation) {
     super(parent, insets);
     myListener = listener;
     myButtonLocation = buttonLocation;
@@ -76,7 +76,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   }
 
   @Override
-  public void add(@NotNull Balloon balloon, @Nullable Object layoutData) {
+  public void add(@Nonnull Balloon balloon, @Nullable Object layoutData) {
     if (layoutData instanceof BalloonLayoutData && ((BalloonLayoutData)layoutData).welcomeScreen) {
       addToPopup((BalloonImpl)balloon, (BalloonLayoutData)layoutData);
     }
@@ -85,7 +85,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
     }
   }
 
-  private void addToPopup(@NotNull BalloonImpl balloon, @NotNull BalloonLayoutData layoutData) {
+  private void addToPopup(@Nonnull BalloonImpl balloon, @Nonnull BalloonLayoutData layoutData) {
     balloon.traceDispose(false);
 
     layoutData.doLayout = this::layoutPopup;
@@ -118,7 +118,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
       myPopupBalloon.setActionProvider(new BalloonImpl.ActionProvider() {
         private BalloonImpl.ActionButton myAction;
 
-        @NotNull
+        @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
           myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, Consumer.EMPTY_CONSUMER);
@@ -126,7 +126,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         }
 
         @Override
-        public void layout(@NotNull Rectangle bounds) {
+        public void layout(@Nonnull Rectangle bounds) {
           myAction.setBounds(0, 0, 0, 0);
         }
       });

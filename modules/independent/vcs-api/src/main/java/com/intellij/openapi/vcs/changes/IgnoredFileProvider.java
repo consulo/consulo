@@ -18,10 +18,10 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IgnoredFileProvider {
   ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create("com.intellij.vcs.ignoredFileProvider");
 
-  boolean isIgnoredFile(@NotNull Project project, @NotNull FilePath filePath);
+  boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath);
 }

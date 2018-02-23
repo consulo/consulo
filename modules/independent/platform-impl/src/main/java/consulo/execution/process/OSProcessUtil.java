@@ -22,7 +22,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jezhumble.javasysmon.JavaSysMon;
 import com.pty4j.windows.WinPtyProcess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  * @since 31-Jan-17
  */
 public class OSProcessUtil {
-  public static int getProcessID(@NotNull Process process) {
+  public static int getProcessID(@Nonnull Process process) {
     if (SystemInfo.isWindows) {
       try {
         if (process instanceof WinPtyProcess) {
@@ -49,7 +49,7 @@ public class OSProcessUtil {
     throw new IllegalStateException("Unknown OS: " + SystemInfo.OS_NAME);
   }
 
-  @NotNull
+  @Nonnull
   public static ProcessInfo[] getProcessList() {
     JavaSysMon javaSysMon = new JavaSysMon();
     com.jezhumble.javasysmon.ProcessInfo[] processInfos = javaSysMon.processTable();

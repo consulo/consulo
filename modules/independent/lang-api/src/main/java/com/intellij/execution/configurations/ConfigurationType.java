@@ -17,7 +17,7 @@ package com.intellij.execution.configurations;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -57,7 +57,7 @@ public interface ConfigurationType {
    *
    * @return the configuration type ID.
    */
-  @NonNls @NotNull
+  @NonNls @Nonnull
   String getId();
 
   /**

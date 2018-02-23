@@ -31,13 +31,13 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
 
 public class XDebuggerInlayUtil {
-  public static void createInlay(@NotNull Project project, @NotNull VirtualFile file, int offset, String inlayText) {
+  public static void createInlay(@Nonnull Project project, @Nonnull VirtualFile file, int offset, String inlayText) {
     UIUtil.invokeLaterIfNeeded(() -> {
       FileEditor editor = FileEditorManager.getInstance(project).getSelectedEditor(file);
       if (editor instanceof TextEditor) {
@@ -59,7 +59,7 @@ public class XDebuggerInlayUtil {
     });
   }
 
-  public static void clearInlays(@NotNull Project project) {
+  public static void clearInlays(@Nonnull Project project) {
     UIUtil.invokeLaterIfNeeded(() -> {
       FileEditor[] editors = FileEditorManager.getInstance(project).getAllEditors();
       for (FileEditor editor : editors) {
@@ -83,7 +83,7 @@ public class XDebuggerInlayUtil {
       myText = "(" + text + ")";
     }
 
-    private static FontInfo getFontInfo(@NotNull Editor editor) {
+    private static FontInfo getFontInfo(@Nonnull Editor editor) {
       EditorColorsScheme colorsScheme = editor.getColorsScheme();
       FontPreferences fontPreferences = colorsScheme.getFontPreferences();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
@@ -93,13 +93,13 @@ public class XDebuggerInlayUtil {
     }
 
     @Override
-    public int calcWidthInPixels(@NotNull Editor editor) {
+    public int calcWidthInPixels(@Nonnull Editor editor) {
       FontInfo fontInfo = getFontInfo(editor);
       return fontInfo.fontMetrics().stringWidth(myText);
     }
 
     @Override
-    public void paint(@NotNull Editor editor, @NotNull Graphics g, @NotNull Rectangle r) {
+    public void paint(@Nonnull Editor editor, @Nonnull Graphics g, @Nonnull Rectangle r) {
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
       if (attributes == null) return;
       Color fgColor = attributes.getForegroundColor();

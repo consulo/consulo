@@ -17,17 +17,17 @@
 package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.IntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CompressedIntList implements IntList {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @NotNull
+  @Nonnull
   public static IntList newInstance(final int[] delegateArray) {
     return newInstance(delegateArray, DEFAULT_BLOCK_SIZE);
   }
 
-  @NotNull
+  @Nonnull
   public static IntList newInstance(final int[] delegateArray, int blockSize) {
     return newInstance(new IntList() {
       @Override
@@ -42,7 +42,7 @@ public class CompressedIntList implements IntList {
     }, blockSize);
   }
 
-  @NotNull
+  @Nonnull
   public static IntList newInstance(final IntList delegateList, final int blockSize) {
     if (blockSize < 1) throw new IllegalArgumentException("Unsupported blockSize:" + blockSize);
 
@@ -70,11 +70,13 @@ public class CompressedIntList implements IntList {
 
   private final int myBlockSize;
 
-  @NotNull private final int[] myStrongValues;
+  @Nonnull
+  private final int[] myStrongValues;
 
-  @NotNull private final IntList myCompressedDeltas;
+  @Nonnull
+  private final IntList myCompressedDeltas;
 
-  private CompressedIntList(int blockSize, @NotNull int[] strongValues, @NotNull final IntList compressedDeltas) {
+  private CompressedIntList(int blockSize, @Nonnull int[] strongValues, @Nonnull final IntList compressedDeltas) {
     myBlockSize = blockSize;
     myStrongValues = strongValues;
     myCompressedDeltas = compressedDeltas;

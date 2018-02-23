@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.libraries.ui;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,21 +30,21 @@ public class DetectedLibraryRoot {
   private final VirtualFile myFile;
   private final List<LibraryRootType> myTypes;
 
-  public DetectedLibraryRoot(@NotNull VirtualFile file, @NotNull OrderRootType rootType, boolean jarDirectory) {
+  public DetectedLibraryRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType rootType, boolean jarDirectory) {
     this(file, Collections.singletonList(new LibraryRootType(rootType, jarDirectory)));
   }
 
-  public DetectedLibraryRoot(@NotNull VirtualFile file, @NotNull List<LibraryRootType> types) {
+  public DetectedLibraryRoot(@Nonnull VirtualFile file, @Nonnull List<LibraryRootType> types) {
     myFile = file;
     myTypes = types;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public List<LibraryRootType> getTypes() {
     return myTypes;
   }

@@ -28,8 +28,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ui.EdtInvocationManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.util.concurrent.CompletableFuture;
@@ -49,11 +49,11 @@ public class ProgressIndicatorUtils {
   private ProgressIndicatorUtils() {
   }
 
-  @NotNull
-  public static ProgressIndicator forceWriteActionPriority(@NotNull ProgressIndicator progress, @NotNull Disposable parentDisposable) {
+  @Nonnull
+  public static ProgressIndicator forceWriteActionPriority(@Nonnull ProgressIndicator progress, @Nonnull Disposable parentDisposable) {
     ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
       @Override
-      public void beforeWriteActionStart(@NotNull Object action) {
+      public void beforeWriteActionStart(@Nonnull Object action) {
         if (progress.isRunning()) {
           progress.cancel();
         }
@@ -62,22 +62,22 @@ public class ProgressIndicatorUtils {
     return progress;
   }
 
-  @NotNull
-  public static CompletableFuture<?> submitWithWriteActionPriority(@NotNull ReadTask task) {
+  @Nonnull
+  public static CompletableFuture<?> submitWithWriteActionPriority(@Nonnull ReadTask task) {
     return scheduleWithWriteActionPriority(new ProgressIndicatorBase(), task);
   }
 
-  public static void scheduleWithWriteActionPriority(@NotNull ReadTask task) {
+  public static void scheduleWithWriteActionPriority(@Nonnull ReadTask task) {
     submitWithWriteActionPriority(task);
   }
 
-  @NotNull
-  public static CompletableFuture<?> scheduleWithWriteActionPriority(@NotNull ProgressIndicator progressIndicator, @NotNull ReadTask readTask) {
+  @Nonnull
+  public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask readTask) {
     return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.INSTANCE, readTask);
   }
 
-  @NotNull
-  public static CompletableFuture<?> scheduleWithWriteActionPriority(@NotNull Executor executor, @NotNull ReadTask task) {
+  @Nonnull
+  public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull Executor executor, @Nonnull ReadTask task) {
     return scheduleWithWriteActionPriority(new ProgressIndicatorBase(), executor, task);
   }
 
@@ -85,7 +85,7 @@ public class ProgressIndicatorUtils {
    * Same as {@link #runInReadActionWithWriteActionPriority(Runnable)}, optionally allowing to pass a {@link ProgressIndicator}
    * instance, which can be used to cancel action externally.
    */
-  public static boolean runInReadActionWithWriteActionPriority(@NotNull final Runnable action,
+  public static boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action,
                                                                @Nullable ProgressIndicator progressIndicator) {
     final Ref<Boolean> result = new Ref<>(Boolean.FALSE);
     runWithWriteActionPriority(() -> result.set(ApplicationManagerEx.getApplicationEx().tryRunReadAction(action)),
@@ -108,11 +108,11 @@ public class ProgressIndicatorUtils {
    * If caller needs to retry the invocation of this method in a loop, it should consider pausing between attempts, to avoid potential
    * 100% CPU usage.
    */
-  public static boolean runInReadActionWithWriteActionPriority(@NotNull final Runnable action) {
+  public static boolean runInReadActionWithWriteActionPriority(@Nonnull final Runnable action) {
     return runInReadActionWithWriteActionPriority(action, null);
   }
 
-  public static boolean runWithWriteActionPriority(@NotNull Runnable action, @NotNull ProgressIndicator progressIndicator) {
+  public static boolean runWithWriteActionPriority(@Nonnull Runnable action, @Nonnull ProgressIndicator progressIndicator) {
     final ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       throw new IllegalStateException("Must not call from EDT");
@@ -126,7 +126,7 @@ public class ProgressIndicatorUtils {
 
     final ApplicationAdapter listener = new ApplicationAdapter() {
       @Override
-      public void beforeWriteActionStart(@NotNull Object action) {
+      public void beforeWriteActionStart(@Nonnull Object action) {
         if (!progressIndicator.isCanceled()) progressIndicator.cancel();
       }
     };
@@ -157,10 +157,10 @@ public class ProgressIndicatorUtils {
     return wasCancelled.get() != Boolean.TRUE;
   }
 
-  @NotNull
-  public static CompletableFuture<?> scheduleWithWriteActionPriority(@NotNull final ProgressIndicator progressIndicator,
-                                                                     @NotNull final Executor executor,
-                                                                     @NotNull final ReadTask readTask) {
+  @Nonnull
+  public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull final ProgressIndicator progressIndicator,
+                                                                     @Nonnull final Executor executor,
+                                                                     @Nonnull final ReadTask readTask) {
     // invoke later even if on EDT
     // to avoid tasks eagerly restarting immediately, allocating many pooled threads
     // which get cancelled too soon when a next write action arrives in the same EDT batch
@@ -178,7 +178,7 @@ public class ProgressIndicatorUtils {
       }
       final ApplicationAdapter listener = new ApplicationAdapter() {
         @Override
-        public void beforeWriteActionStart(@NotNull Object action) {
+        public void beforeWriteActionStart(@Nonnull Object action) {
           if (!progressIndicator.isCanceled()) {
             progressIndicator.cancel();
             readTask.onCanceled(progressIndicator);
@@ -239,7 +239,7 @@ public class ProgressIndicatorUtils {
     return future;
   }
 
-  private static ReadTask.Continuation runUnderProgress(@NotNull final ProgressIndicator progressIndicator, @NotNull final ReadTask task) {
+  private static ReadTask.Continuation runUnderProgress(@Nonnull final ProgressIndicator progressIndicator, @Nonnull final ReadTask task) {
     return ProgressManager.getInstance().runProcess(() -> {
       try {
         return task.runBackgroundProcess(progressIndicator);

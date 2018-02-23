@@ -26,8 +26,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -89,7 +88,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
     return myColumn.getTitle();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public JComponent getFilterUI() {
     return myScrollPane;
   }
@@ -137,7 +136,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     final Object[] selection = myValueList.getSelectedValues();
     if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {

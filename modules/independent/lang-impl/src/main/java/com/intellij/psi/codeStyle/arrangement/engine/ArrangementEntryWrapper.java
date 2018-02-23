@@ -19,8 +19,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,19 +44,22 @@ import java.util.List;
  */
 public class ArrangementEntryWrapper<E extends ArrangementEntry> {
 
-  @NotNull private final List<ArrangementEntryWrapper<E>> myChildren = new ArrayList<ArrangementEntryWrapper<E>>();
-  @NotNull private final E myEntry;
+  @Nonnull
+  private final List<ArrangementEntryWrapper<E>> myChildren = new ArrayList<ArrangementEntryWrapper<E>>();
+  @Nonnull
+  private final E myEntry;
 
   @Nullable private ArrangementEntryWrapper<E> myParent;
   @Nullable private ArrangementEntryWrapper<E> myPrevious;
-  @Nullable private ArrangementEntryWrapper<E> myNext;
+  @Nullable
+  private ArrangementEntryWrapper<E> myNext;
 
   private int myStartOffset;
   private int myEndOffset;
   private int myBlankLinesBefore;
 
   @SuppressWarnings("unchecked")
-  public ArrangementEntryWrapper(@NotNull E entry) {
+  public ArrangementEntryWrapper(@Nonnull E entry) {
     myEntry = entry;
     myStartOffset = entry.getStartOffset();
     myEndOffset = entry.getEndOffset();
@@ -73,7 +76,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public E getEntry() {
     return myEntry;
   }
@@ -118,7 +121,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
   }
 
   @SuppressWarnings("AssignmentToForLoopParameter")
-  public void updateBlankLines(@NotNull Document document) {
+  public void updateBlankLines(@Nonnull Document document) {
     int startLine = document.getLineNumber(getStartOffset());
     myBlankLinesBefore = 0;
     if (startLine <= 0) {
@@ -142,7 +145,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     myNext = next;
   }
 
-  @NotNull
+  @Nonnull
   public List<ArrangementEntryWrapper<E>> getChildren() {
     return myChildren;
   }

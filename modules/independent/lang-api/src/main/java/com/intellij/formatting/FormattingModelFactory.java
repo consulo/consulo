@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A factory for standard formatting model implementations. Not to be used directly
@@ -28,6 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 interface FormattingModelFactory {
   FormattingModel createFormattingModelForPsiFile(PsiFile file,
-                                                  @NotNull Block rootBlock,
+                                                  @Nonnull Block rootBlock,
                                                   CodeStyleSettings settings);
 }

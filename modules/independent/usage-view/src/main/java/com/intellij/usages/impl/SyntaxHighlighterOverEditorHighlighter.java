@@ -30,7 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by Maxim.Mossienko on 7/31/2014.
@@ -63,13 +63,13 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Lexer getHighlightingLexer() {
     return lexer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     final SyntaxHighlighter activeSyntaxHighlighter =
@@ -77,7 +77,7 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
     return activeSyntaxHighlighter.getTokenHighlights(tokenType);
   }
 
-  public void restart(@NotNull CharSequence text) {
+  public void restart(@Nonnull CharSequence text) {
     lexer.start(text);
 
     if (lexer instanceof LexerEditorHighlighterLexer) {

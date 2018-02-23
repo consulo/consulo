@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

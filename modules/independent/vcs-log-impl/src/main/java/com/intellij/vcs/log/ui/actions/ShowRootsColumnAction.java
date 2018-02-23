@@ -20,7 +20,7 @@ import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
 
@@ -34,7 +34,7 @@ public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     if (ui == null || !ui.isMultipleRoots()) e.getPresentation().setEnabledAndVisible(false);

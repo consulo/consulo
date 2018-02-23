@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,29 +31,29 @@ import javax.swing.*;
  */
 public abstract class ArchiveFileType implements FileType {
   private final NotNullLazyValue<ArchiveFileSystem> myFileSystemLazyValue = new NotNullLazyValue<ArchiveFileSystem>() {
-    @NotNull
+    @Nonnull
     @Override
     protected ArchiveFileSystem compute() {
       return (ArchiveFileSystem)VirtualFileManager.getInstance().getFileSystem(getProtocol());
     }
   };
 
-  @NotNull
+  @Nonnull
   public abstract String getProtocol();
 
-  @NotNull
+  @Nonnull
   public ArchiveFileSystem getFileSystem() {
     return myFileSystemLazyValue.getValue();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return IdeBundle.message("filetype.description.archive.files");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultExtension() {
     return "";
   }

@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.problems.Problem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -30,7 +30,7 @@ public class ProblemImpl implements Problem {
   private final HighlightInfo highlightInfo;
   private final boolean isSyntax;
 
-  public ProblemImpl(@NotNull VirtualFile virtualFile, @NotNull HighlightInfo highlightInfo, final boolean isSyntax) {
+  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfo highlightInfo, final boolean isSyntax) {
     this.isSyntax = isSyntax;
     this.virtualFile = virtualFile;
     this.highlightInfo = highlightInfo;

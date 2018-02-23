@@ -18,8 +18,8 @@ package com.intellij.openapi.roots.libraries.ui;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.libraries.LibraryRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -34,12 +34,12 @@ public abstract class LibraryRootsDetector {
    * @param progressIndicator can be used to show information about the progress and to abort searching if process is cancelled
    * @return suitable roots
    */
-  public abstract Collection<DetectedLibraryRoot> detectRoots(@NotNull VirtualFile rootCandidate,
-                                                              @NotNull ProgressIndicator progressIndicator);
+  public abstract Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate,
+                                                              @Nonnull ProgressIndicator progressIndicator);
 
   /**
    * @return presentable name for the root type or {@code null} if the root type isn't supported by this detector
    */
   @Nullable
-  public abstract String getRootTypeName(@NotNull LibraryRootType rootType);
+  public abstract String getRootTypeName(@Nonnull LibraryRootType rootType);
 }

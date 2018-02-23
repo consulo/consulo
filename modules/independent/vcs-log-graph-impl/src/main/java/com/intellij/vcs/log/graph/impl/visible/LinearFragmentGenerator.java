@@ -23,8 +23,8 @@ import com.intellij.vcs.log.graph.api.elements.GraphElement;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import com.intellij.vcs.log.graph.utils.NormalEdge;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,9 +37,11 @@ public class LinearFragmentGenerator {
   private static final int SHORT_FRAGMENT_MAX_SIZE = 10;
   private static final int MAX_SEARCH_SIZE = 10;
 
-  @NotNull private final LiteLinearGraph myLinearGraph;
+  @Nonnull
+  private final LiteLinearGraph myLinearGraph;
 
-  @NotNull private final Set<Integer> myPinnedNodes;
+  @Nonnull
+  private final Set<Integer> myPinnedNodes;
 
   private final Function<Integer, List<Integer>> upNodesFun = new Function<Integer, List<Integer>>() {
     @Override
@@ -55,13 +57,13 @@ public class LinearFragmentGenerator {
     }
   };
 
-  public LinearFragmentGenerator(@NotNull LiteLinearGraph linearGraph, @NotNull Set<Integer> pinnedNodes) {
+  public LinearFragmentGenerator(@Nonnull LiteLinearGraph linearGraph, @Nonnull Set<Integer> pinnedNodes) {
     myLinearGraph = linearGraph;
     myPinnedNodes = pinnedNodes;
   }
 
   @Nullable
-  public GraphFragment getRelativeFragment(@NotNull GraphElement element) {
+  public GraphFragment getRelativeFragment(@Nonnull GraphElement element) {
     int upNodeIndex;
     int downNodeIndex;
     if (element instanceof GraphNode) {
@@ -95,7 +97,7 @@ public class LinearFragmentGenerator {
     return getFragment(upperVisibleNodeIndex, downNodesFun, upNodesFun, myPinnedNodes, true);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public GraphFragment getUpFragment(int lowerNodeIndex) {
     return getFragment(lowerNodeIndex, upNodesFun, downNodesFun, myPinnedNodes, false);
   }
@@ -106,13 +108,13 @@ public class LinearFragmentGenerator {
   }
 
   @Nullable
-  public GraphFragment getLongFragment(@NotNull GraphElement element) {
+  public GraphFragment getLongFragment(@Nonnull GraphElement element) {
     return getLongFragment(getRelativeFragment(element), Integer.MAX_VALUE);
   }
 
   // for hover
   @Nullable
-  public GraphFragment getPartLongFragment(@NotNull GraphElement element) {
+  public GraphFragment getPartLongFragment(@Nonnull GraphElement element) {
     return getLongFragment(getRelativeFragment(element), 500);
   }
 

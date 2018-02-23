@@ -62,8 +62,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -165,7 +164,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   public void projectClosed() {
   }
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public String getComponentName() {
     return "ShelvedChangesViewManager";
   }
@@ -488,7 +487,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class MyChangeListDeleteProvider implements DeleteProvider {
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       //noinspection unchecked
       final List<ShelvedChangeList> shelvedChangeLists = getLists(dataContext);
       if (shelvedChangeLists.isEmpty()) return;
@@ -502,7 +501,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
     }
 
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       //noinspection unchecked
       return ! getLists(dataContext).isEmpty();
     }
@@ -524,7 +523,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
   }
 
   private class MyChangesDeleteProvider implements DeleteProvider {
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       final Project project = dataContext.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
       final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
@@ -571,7 +570,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       }
     }
 
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       final ShelvedChangeList[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
       if (shelved == null || (shelved.length != 1)) return false;
       final List<ShelvedChange> changes = dataContext.getData(SHELVED_CHANGE_KEY);
@@ -588,7 +587,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       myProviders = Arrays.asList(new MyChangesDeleteProvider(), new MyChangeListDeleteProvider());
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     private DeleteProvider selectDelegate(final DataContext dataContext) {
       for (DeleteProvider provider : myProviders) {
         if (provider.canDeleteElement(dataContext)) {
@@ -598,14 +597,14 @@ public class ShelvedChangesViewManager implements ProjectComponent {
       return null;
     }
 
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       final DeleteProvider delegate = selectDelegate(dataContext);
       if (delegate != null) {
         delegate.deleteElement(dataContext);
       }
     }
 
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       return selectDelegate(dataContext) != null;
     }
   }

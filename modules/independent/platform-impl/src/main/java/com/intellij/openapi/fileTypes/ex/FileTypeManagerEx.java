@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes.ex;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,13 +27,13 @@ public abstract class FileTypeManagerEx extends FileTypeManager{
     return (FileTypeManagerEx) getInstance();
   }
 
-  public abstract void registerFileType(@NotNull FileType fileType);
-  public abstract void unregisterFileType(@NotNull FileType fileType);
+  public abstract void registerFileType(@Nonnull FileType fileType);
+  public abstract void unregisterFileType(@Nonnull FileType fileType);
 
-  public abstract boolean isIgnoredFilesListEqualToCurrent(@NotNull String list);
+  public abstract boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list);
 
-  @NotNull
-  public abstract String getExtension(@NotNull String fileName);
+  @Nonnull
+  public abstract String getExtension(@Nonnull String fileName);
 
   public abstract void fireFileTypesChanged();
 

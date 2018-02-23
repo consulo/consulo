@@ -24,8 +24,8 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -37,7 +37,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
   private static final int MAX_ALLOWED_TIME = 500;
 
   @Override
-  public void runUnderPerformanceMonitor(@Nullable Project project, @NotNull Runnable action) {
+  public void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Runnable action) {
     if (!shouldReport() || isUnderDebug() || ApplicationManager.getApplication().isUnitTestMode()) {
       action.run();
       return;
@@ -59,7 +59,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
     return Registry.is("typing.freeze.report.dumps");
   }
 
-  private static void dumpThreads(@Nullable Project project, @NotNull ModalityState initialState) {
+  private static void dumpThreads(@Nullable Project project, @Nonnull ModalityState initialState) {
     final ThreadInfo[] infos = ThreadDumper.getThreadInfos();
     final String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
     if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {

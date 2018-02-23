@@ -19,7 +19,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public enum ThreeState {
   YES, NO, UNSURE;
@@ -35,7 +35,7 @@ public enum ThreeState {
    * @param other other value to combine with this value
    * @return a result of combination of two ThreeState values
    */
-  @NotNull
+  @Nonnull
   public ThreeState merge(ThreeState other) {
     return this == other ? this : UNSURE;
   }

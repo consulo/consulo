@@ -17,8 +17,8 @@ import com.intellij.vcs.log.paint.GraphCellPainter;
 import com.intellij.vcs.log.paint.PaintParameters;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,16 +29,21 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   private static final int MAX_GRAPH_WIDTH = 6;
   private static final int VERTICAL_PADDING = JBUI.scale(7);
 
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final VcsLogGraphTable myGraphTable;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogGraphTable myGraphTable;
 
-  @NotNull private final MyComponent myComponent;
-  @NotNull private final MyComponent myTemplateComponent;
-  @NotNull private final LabelPainter myTooltipPainter;
+  @Nonnull
+  private final MyComponent myComponent;
+  @Nonnull
+  private final MyComponent myTemplateComponent;
+  @Nonnull
+  private final LabelPainter myTooltipPainter;
 
-  public GraphCommitCellRenderer(@NotNull VcsLogData logData,
-                                 @NotNull GraphCellPainter painter,
-                                 @NotNull VcsLogGraphTable table,
+  public GraphCommitCellRenderer(@Nonnull VcsLogData logData,
+                                 @Nonnull GraphCellPainter painter,
+                                 @Nonnull VcsLogGraphTable table,
                                  boolean compact,
                                  boolean showTagNames) {
     myLogData = logData;
@@ -50,8 +55,8 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   }
 
   @Override
-  protected SimpleColoredComponent getTableCellRendererComponentImpl(@NotNull JTable table,
-                                                                     @NotNull GraphCommitCell value,
+  protected SimpleColoredComponent getTableCellRendererComponentImpl(@Nonnull JTable table,
+                                                                     @Nonnull GraphCommitCell value,
                                                                      boolean isSelected,
                                                                      boolean hasFocus,
                                                                      int row,
@@ -61,7 +66,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   }
 
   @Nullable
-  public JComponent getTooltip(@NotNull Object value, @NotNull Point point, int row) {
+  public JComponent getTooltip(@Nonnull Object value, @Nonnull Point point, int row) {
     GraphCommitCell cell = getValue(value);
     Collection<VcsRef> refs = cell.getRefsToThisCommit();
     if (!refs.isEmpty()) {
@@ -90,7 +95,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
     return getReferencesWidth(row, getValue(myGraphTable.getModel().getValueAt(row, GraphTableModel.COMMIT_COLUMN)));
   }
 
-  private int getReferencesWidth(int row, @NotNull GraphCommitCell cell) {
+  private int getReferencesWidth(int row, @Nonnull GraphCommitCell cell) {
     Collection<VcsRef> refs = cell.getRefsToThisCommit();
     if (!refs.isEmpty()) {
       myTemplateComponent.customize(cell, myGraphTable.isRowSelected(row), myGraphTable.hasFocus(),
@@ -131,19 +136,26 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
 
   private static class MyComponent extends SimpleColoredRenderer {
     private static final int FREE_SPACE = 20;
-    @NotNull private final VcsLogData myLogData;
-    @NotNull private final VcsLogGraphTable myGraphTable;
-    @NotNull private final GraphCellPainter myPainter;
-    @NotNull private final IssueLinkRenderer myIssueLinkRenderer;
-    @NotNull private final LabelPainter myReferencePainter;
+    @Nonnull
+    private final VcsLogData myLogData;
+    @Nonnull
+    private final VcsLogGraphTable myGraphTable;
+    @Nonnull
+    private final GraphCellPainter myPainter;
+    @Nonnull
+    private final IssueLinkRenderer myIssueLinkRenderer;
+    @Nonnull
+    private final LabelPainter myReferencePainter;
 
-    @NotNull protected GraphImage myGraphImage = new GraphImage(UIUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), 0);
-    @NotNull private Font myFont;
+    @Nonnull
+    protected GraphImage myGraphImage = new GraphImage(UIUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), 0);
+    @Nonnull
+    private Font myFont;
     private int myHeight;
 
-    public MyComponent(@NotNull VcsLogData data,
-                       @NotNull GraphCellPainter painter,
-                       @NotNull VcsLogGraphTable table,
+    public MyComponent(@Nonnull VcsLogData data,
+                       @Nonnull GraphCellPainter painter,
+                       @Nonnull VcsLogGraphTable table,
                        boolean compact,
                        boolean showTags) {
       myLogData = data;
@@ -157,7 +169,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       myHeight = calculateHeight();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Dimension getPreferredSize() {
       Dimension preferredSize = super.getPreferredSize();
@@ -182,7 +194,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       UIUtil.drawImage(g, myGraphImage.getImage(), 0, 0, null);
     }
 
-    public void customize(@NotNull GraphCommitCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
+    public void customize(@Nonnull GraphCommitCell cell, boolean isSelected, boolean hasFocus, int row, int column) {
       clear();
       setPaintFocusBorder(false);
       acquireState(myGraphTable, isSelected, hasFocus, row, column);
@@ -212,7 +224,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       }
     }
 
-    private void appendText(@NotNull GraphCommitCell cell, @NotNull SimpleTextAttributes style, boolean isSelected) {
+    private void appendText(@Nonnull GraphCommitCell cell, @Nonnull SimpleTextAttributes style, boolean isSelected) {
       myIssueLinkRenderer.appendTextWithLinks(StringUtil.replace(cell.getText(), "\t", " ").trim(), style);
       SpeedSearchUtil.applySpeedSearchHighlighting(myGraphTable, this, false, isSelected);
     }
@@ -241,8 +253,8 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       return myHeight;
     }
 
-    @NotNull
-    private GraphImage getGraphImage(@NotNull Collection<? extends PrintElement> printElements) {
+    @Nonnull
+    private GraphImage getGraphImage(@Nonnull Collection<? extends PrintElement> printElements) {
       double maxIndex = getMaxGraphElementIndex(printElements);
       BufferedImage image = UIUtil.createImage((int)(PaintParameters.getNodeWidth(myGraphTable.getRowHeight()) * (maxIndex + 2)),
                                                myGraphTable.getRowHeight(),
@@ -254,12 +266,12 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       return new GraphImage(image, width);
     }
 
-    private int getGraphWidth(@NotNull Collection<? extends PrintElement> printElements) {
+    private int getGraphWidth(@Nonnull Collection<? extends PrintElement> printElements) {
       double maxIndex = getMaxGraphElementIndex(printElements);
       return (int)(maxIndex * PaintParameters.getNodeWidth(myGraphTable.getRowHeight()));
     }
 
-    private double getMaxGraphElementIndex(@NotNull Collection<? extends PrintElement> printElements) {
+    private double getMaxGraphElementIndex(@Nonnull Collection<? extends PrintElement> printElements) {
       double maxIndex = 0;
       for (PrintElement printElement : printElements) {
         maxIndex = Math.max(maxIndex, printElement.getPositionInCurrentRow());
@@ -274,7 +286,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
       return maxIndex;
     }
 
-    @NotNull
+    @Nonnull
     public LabelPainter getReferencePainter() {
       return myReferencePainter;
     }
@@ -282,14 +294,15 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
 
   private static class GraphImage {
     private final int myWidth;
-    @NotNull private final Image myImage;
+    @Nonnull
+    private final Image myImage;
 
-    GraphImage(@NotNull Image image, int width) {
+    GraphImage(@Nonnull Image image, int width) {
       myImage = image;
       myWidth = width;
     }
 
-    @NotNull
+    @Nonnull
     Image getImage() {
       return myImage;
     }

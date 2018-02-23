@@ -24,7 +24,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
   private final RunManagerImpl myManager;
   private List<Element> myUnloadedElements;
 
-  public ProjectRunConfigurationManager(@NotNull RunManagerImpl manager) {
+  public ProjectRunConfigurationManager(@Nonnull RunManagerImpl manager) {
     myManager = manager;
   }
 
@@ -99,7 +99,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
 
   static class RunConfigurationStateSplitter extends StateSplitterEx {
     @Override
-    public List<Pair<Element, String>> splitState(@NotNull Element state) {
+    public List<Pair<Element, String>> splitState(@Nonnull Element state) {
       return splitState(state, RunManagerImpl.NAME_ATTR);
     }
   }

@@ -21,13 +21,13 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.FileHistoryDialogModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SelectionHistoryDialog extends FileHistoryDialog {
   private final int myFrom;
   private final int myTo;
 
-  public SelectionHistoryDialog(@NotNull Project p, IdeaGateway gw, VirtualFile f, int from, int to) {
+  public SelectionHistoryDialog(@Nonnull Project p, IdeaGateway gw, VirtualFile f, int from, int to) {
     super(p, gw, f, false);
     myFrom = from;
     myTo = to;

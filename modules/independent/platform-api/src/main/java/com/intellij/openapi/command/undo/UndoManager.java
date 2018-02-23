@@ -21,13 +21,13 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class UndoManager {
   public static final Key<Document> ORIGINAL_DOCUMENT = new Key<>("ORIGINAL_DOCUMENT");
 
-  public static UndoManager getInstance(@NotNull Project project) {
+  public static UndoManager getInstance(@Nonnull Project project) {
     return project.getComponent(UndoManager.class);
   }
 
@@ -35,8 +35,8 @@ public abstract class UndoManager {
     return ApplicationManager.getApplication().getComponent(UndoManager.class);
   }
 
-  public abstract void undoableActionPerformed(@NotNull UndoableAction action);
-  public abstract void nonundoableActionPerformed(@NotNull DocumentReference ref, boolean isGlobal);
+  public abstract void undoableActionPerformed(@Nonnull UndoableAction action);
+  public abstract void nonundoableActionPerformed(@Nonnull DocumentReference ref, boolean isGlobal);
 
   public abstract boolean isUndoInProgress();
   public abstract boolean isRedoInProgress();
@@ -46,8 +46,8 @@ public abstract class UndoManager {
   public abstract boolean isUndoAvailable(@Nullable FileEditor editor);
   public abstract boolean isRedoAvailable(@Nullable FileEditor editor);
 
-  @NotNull
+  @Nonnull
   public abstract Pair<String, String> getUndoActionNameAndDescription(FileEditor editor);
-  @NotNull
+  @Nonnull
   public abstract Pair<String, String> getRedoActionNameAndDescription(FileEditor editor);
 }

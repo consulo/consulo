@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -121,14 +121,14 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
   }
 
   @Nullable
-  private static VirtualFile findFileToPatchByName(@NotNull ApplyPatchContext context, final String fileName,
+  private static VirtualFile findFileToPatchByName(@Nonnull ApplyPatchContext context, final String fileName,
                                                    boolean isNewFile) {
     String[] pathNameComponents = fileName.split("/");
     int lastComponentToFind = isNewFile ? pathNameComponents.length-1 : pathNameComponents.length;
     return findFileToPatchByComponents(context, pathNameComponents, lastComponentToFind);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
                                                          final String[] pathNameComponents,
                                                          final int lastComponentToFind) {

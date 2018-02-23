@@ -52,8 +52,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -226,7 +226,7 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   @Override
-  public void closeFile(@NotNull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus) {
+  public void closeFile(@Nonnull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus) {
     final FileEditorManagerImpl editorManager = getManager();
     editorManager.runChange(splitters -> {
       final List<EditorWithProviderComposite> editors = splitters.findEditorComposites(file);
@@ -376,7 +376,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return -1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileEditorManagerImpl getManager() {
     return myOwner.getManager();
@@ -478,7 +478,7 @@ public class DesktopEditorWindow implements EditorWindow {
     myOwner.setCurrentWindow(this, requestFocus);
   }
 
-  void updateFileBackgroundColor(@NotNull VirtualFile file) {
+  void updateFileBackgroundColor(@Nonnull VirtualFile file) {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
       final Color color = EditorTabbedContainer.calcTabColor(getManager().getProject(), file);
@@ -527,11 +527,11 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder {
-    @NotNull
+    @Nonnull
     final EditorWithProviderComposite myEditor;
     protected final EditorWindow myWindow;
 
-    TComp(@NotNull DesktopEditorWindow window, @NotNull EditorWithProviderComposite editor) {
+    TComp(@Nonnull DesktopEditorWindow window, @Nonnull EditorWithProviderComposite editor) {
       super(new BorderLayout());
       myEditor = editor;
       myWindow = window;
@@ -550,14 +550,14 @@ public class DesktopEditorWindow implements EditorWindow {
       });
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public EditorWindow getEditorWindow() {
       return myWindow;
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (CommonDataKeys.VIRTUAL_FILE == dataId) {
         final VirtualFile virtualFile = myEditor.getFile();
         return virtualFile.isValid() ? virtualFile : null;
@@ -570,12 +570,12 @@ public class DesktopEditorWindow implements EditorWindow {
   }
 
   protected static class TCompForTablessMode extends TComp implements CloseAction.CloseTarget {
-    TCompForTablessMode(@NotNull DesktopEditorWindow window, @NotNull EditorWithProviderComposite editor) {
+    TCompForTablessMode(@Nonnull DesktopEditorWindow window, @Nonnull EditorWithProviderComposite editor) {
       super(window, editor);
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       // this is essential for ability to close opened file
       if (DATA_KEY == dataId) {
         return myWindow;
@@ -616,7 +616,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorWithProviderComposite[] getEditors() {
     final int tabCount = getTabCount();
@@ -627,7 +627,7 @@ public class DesktopEditorWindow implements EditorWindow {
     return res;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getFiles() {
     final int tabCount = getTabCount();
@@ -845,7 +845,7 @@ public class DesktopEditorWindow implements EditorWindow {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DesktopEditorWindow[] findSiblings() {
     checkConsistency();
@@ -888,7 +888,7 @@ public class DesktopEditorWindow implements EditorWindow {
   /**
    * @return icon which represents file's type and modification status
    */
-  private Icon getFileIcon(@NotNull final VirtualFile file) {
+  private Icon getFileIcon(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
       Icon fakeIcon = UnknownFileType.INSTANCE.getIcon();
       assert fakeIcon != null : "Can't find the icon for unknown file type";

@@ -46,8 +46,8 @@ import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -94,7 +94,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   private Set<String> myDuplicatesCache = null;
   private boolean isDuplicatesCacheUpdating = false;
 
-  protected RecentProjectsManagerBase(@NotNull MessageBus messageBus) {
+  protected RecentProjectsManagerBase(@Nonnull MessageBus messageBus) {
     MessageBusConnection connection = messageBus.connect();
     connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
@@ -207,8 +207,8 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
   }
 
-  @NotNull
-  protected String getProjectDisplayName(@NotNull Project project) {
+  @Nonnull
+  protected String getProjectDisplayName(@Nonnull Project project) {
     return "";
   }
 
@@ -382,7 +382,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   @Nullable
-  protected abstract String getProjectPath(@NotNull Project project);
+  protected abstract String getProjectPath(@Nonnull Project project);
 
   public static boolean isValidProjectPath(String projectPath) {
     final File file = new File(projectPath);
@@ -426,13 +426,13 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     }
   }
 
-  @NotNull
-  public String getProjectName(@NotNull String path) {
+  @Nonnull
+  public String getProjectName(@Nonnull String path) {
     return ProjectStoreImpl.readProjectName(new File(path));
   }
 
   @Override
-  public void updateProjectModuleExtensions(@NotNull Project project) {
+  public void updateProjectModuleExtensions(@Nonnull Project project) {
     String projectPath = getProjectPath(project);
     if (projectPath == null) {
       return;

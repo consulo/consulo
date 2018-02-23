@@ -22,7 +22,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ListOfElementsEP {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<String> getValuesOf(String name) {
     if (ourCache == null) {
       ourCache = new MultiMap<String, String>();

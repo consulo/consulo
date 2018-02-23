@@ -24,9 +24,9 @@ import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionComboBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,7 +51,7 @@ public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
   private JPanel myExpressionPanel;
   private XDebuggerExpressionComboBox myLogExpressionComboBox;
 
-  public void init(Project project, XBreakpointManager breakpointManager, @NotNull XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
+  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint, @Nullable XDebuggerEditorsProvider debuggerEditorsProvider) {
     init(project, breakpointManager, breakpoint);
     if (debuggerEditorsProvider != null) {
       ActionListener listener = new ActionListener() {

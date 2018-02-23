@@ -29,8 +29,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -41,18 +41,19 @@ import java.util.List;
  */
 public class FrozenDocument implements DocumentEx {
   private final ImmutableCharSequence myText;
-  @Nullable private volatile LineSet myLineSet;
+  @Nullable
+  private volatile LineSet myLineSet;
   private final long myStamp;
   private volatile SoftReference<String> myTextString;
 
-  FrozenDocument(@NotNull ImmutableCharSequence text, @Nullable LineSet lineSet, long stamp, @Nullable String textString) {
+  FrozenDocument(@Nonnull ImmutableCharSequence text, @Nullable LineSet lineSet, long stamp, @Nullable String textString) {
     myText = text;
     myLineSet = lineSet;
     myStamp = stamp;
     myTextString = textString == null ? null : new SoftReference<String>(textString);
   }
 
-  @NotNull
+  @Nonnull
   private LineSet getLineSet() {
     LineSet lineSet = myLineSet;
     if (lineSet == null) {
@@ -74,7 +75,7 @@ public class FrozenDocument implements DocumentEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineIterator createLineIterator() {
     return getLineSet().createIterator();
@@ -86,17 +87,17 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void replaceText(@NotNull CharSequence chars, long newModificationStamp) {
+  public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
     throw new UnsupportedOperationException();
   }
 
@@ -126,12 +127,12 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker) {
+  public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
                                   int start,
                                   int end,
                                   boolean greedyToLeft,
@@ -150,23 +151,23 @@ public class FrozenDocument implements DocumentEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<RangeMarker> getGuardedBlocks() {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
     return true;
   }
 
   @Override
-  public boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     String s = SoftReference.dereference(myTextString);
@@ -176,25 +177,25 @@ public class FrozenDocument implements DocumentEx {
     return s;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getText(@NotNull TextRange range) {
+  public String getText(@Nonnull TextRange range) {
     return myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getCharsSequence() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getImmutableCharSequence() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public char[] getChars() {
     return CharArrayUtil.fromSequence(myText);
@@ -230,7 +231,7 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void insertString(int offset, @NotNull CharSequence s) {
+  public void insertString(int offset, @Nonnull CharSequence s) {
     throw new UnsupportedOperationException();
   }
 
@@ -240,7 +241,7 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void replaceString(int startOffset, int endOffset, @NotNull CharSequence s) {
+  public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
     throw new UnsupportedOperationException();
   }
 
@@ -260,39 +261,39 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener) {
+  public void addDocumentListener(@Nonnull DocumentListener listener) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void removeDocumentListener(@NotNull DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull DocumentListener listener) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RangeMarker createRangeMarker(int startOffset, int endOffset) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     throw new UnsupportedOperationException();
   }
 
@@ -301,14 +302,14 @@ public class FrozenDocument implements DocumentEx {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void removeGuardedBlock(@NotNull RangeMarker block) {
+  public void removeGuardedBlock(@Nonnull RangeMarker block) {
     throw new UnsupportedOperationException();
   }
 
@@ -340,13 +341,13 @@ public class FrozenDocument implements DocumentEx {
   }
 
   @Override
-  public void setText(@NotNull CharSequence text) {
+  public void setText(@Nonnull CharSequence text) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RangeMarker createRangeMarker(@NotNull TextRange textRange) {
+  public RangeMarker createRangeMarker(@Nonnull TextRange textRange) {
     throw new UnsupportedOperationException();
   }
 
@@ -357,12 +358,12 @@ public class FrozenDocument implements DocumentEx {
 
   @Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     throw new UnsupportedOperationException();
   }
 

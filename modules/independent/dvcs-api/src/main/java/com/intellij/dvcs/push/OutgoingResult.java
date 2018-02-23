@@ -16,25 +16,27 @@
 package com.intellij.dvcs.push;
 
 import com.intellij.vcs.log.VcsFullCommitDetails;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class OutgoingResult {
-  @NotNull private final List<VcsError> myErrors;
-  @NotNull private final List<? extends VcsFullCommitDetails> myCommits;
+  @Nonnull
+  private final List<VcsError> myErrors;
+  @Nonnull
+  private final List<? extends VcsFullCommitDetails> myCommits;
 
-  public OutgoingResult(@NotNull List<? extends VcsFullCommitDetails> commits, @NotNull List<VcsError> errors) {
+  public OutgoingResult(@Nonnull List<? extends VcsFullCommitDetails> commits, @Nonnull List<VcsError> errors) {
     myCommits = commits;
     myErrors = errors;
   }
 
-  @NotNull
+  @Nonnull
   public List<VcsError> getErrors() {
     return myErrors;
   }
 
-  @NotNull
+  @Nonnull
   public List<? extends VcsFullCommitDetails> getCommits() {
     return myCommits;
   }

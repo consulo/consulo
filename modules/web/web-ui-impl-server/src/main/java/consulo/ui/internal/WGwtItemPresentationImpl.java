@@ -20,7 +20,7 @@ import consulo.ui.TextStyle;
 import consulo.ui.image.Image;
 import consulo.ui.internal.image.WGwtImageUrlCache;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,19 +30,19 @@ class WGwtItemPresentationImpl implements ItemPresentation {
   private ComboBoxState.Item myItem = new ComboBoxState.Item();
 
   @Override
-  public void setIcon(@NotNull Image image) {
+  public void setIcon(@Nonnull Image image) {
     myItem.myImageState = WGwtImageUrlCache.fixSwingImageRef(image).getState();
   }
 
   @Override
-  public void append(@NotNull String text) {
+  public void append(@Nonnull String text) {
     ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     myItem.myItemSegments.add(segment);
   }
 
   @Override
-  public void append(@NotNull String text, @NotNull TextStyle... styles) {
+  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
     ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
     segment.myText = text;
     //TODO [VISTALL] style!

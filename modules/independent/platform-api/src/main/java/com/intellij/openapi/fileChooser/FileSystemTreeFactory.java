@@ -18,17 +18,17 @@ package com.intellij.openapi.fileChooser;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class FileSystemTreeFactory {
-  @NotNull
+  @Nonnull
   public static FileSystemTreeFactory getInstance() {
     return ServiceManager.getService(FileSystemTreeFactory.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract FileSystemTree createFileSystemTree(Project project, FileChooserDescriptor fileChooserDescriptor);
 
-  @NotNull
+  @Nonnull
   public abstract DefaultActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree);
 }

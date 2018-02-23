@@ -55,8 +55,8 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.status.ModuleLayerWidget;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -189,7 +189,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     return new IdeRootPane(actionManager, dataManager, application, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Insets getInsets() {
     if (SystemInfo.isMac && isInFullScreen()) {
@@ -231,7 +231,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     addWindowListener(
             new WindowAdapter() {
               @Override
-              public void windowClosing(@NotNull final WindowEvent e) {
+              public void windowClosing(@Nonnull final WindowEvent e) {
                 if (isTemporaryDisposed())
                   return;
 
@@ -340,7 +340,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       if (myProject != null) {
         return myProject.isInitialized() ? myProject : null;
@@ -405,7 +405,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     }
   }
 
-  private void installDefaultProjectStatusBarWidgets(@NotNull final Project project) {
+  private void installDefaultProjectStatusBarWidgets(@Nonnull final Project project) {
     final StatusBar statusBar = getStatusBar();
 
     final PositionPanel positionPanel = new PositionPanel(project);
@@ -512,7 +512,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
 
 
   @Override
-  public void paint(@NotNull Graphics g) {
+  public void paint(@Nonnull Graphics g) {
     UISettings.setupAntialiasing(g);
     //noinspection Since15
     super.paint(g);
@@ -549,7 +549,7 @@ public class IdeFrameImpl extends JFrame implements IdeFrameEx, AccessibleContex
     return myFrameDecorator != null && myFrameDecorator.isInFullScreen();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback toggleFullScreen(boolean state) {
 

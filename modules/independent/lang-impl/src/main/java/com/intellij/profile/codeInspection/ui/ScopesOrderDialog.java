@@ -25,8 +25,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class ScopesOrderDialog extends DialogWrapper {
   private final Project myProject;
   private final JPanel myPanel;
 
-  public ScopesOrderDialog(final @NotNull Component parent,
+  public ScopesOrderDialog(final @Nonnull Component parent,
                            final InspectionProfileImpl inspectionProfile,
                            final Project project) {
     super(parent, true);

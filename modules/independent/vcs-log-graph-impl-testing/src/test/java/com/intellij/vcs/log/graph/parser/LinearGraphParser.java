@@ -25,8 +25,7 @@ import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ import static com.intellij.vcs.log.graph.parser.EdgeNodeCharConverter.parseGraph
 
 public class LinearGraphParser {
 
-  public static LinearGraph parse(@NotNull String in) {
+  public static LinearGraph parse(@Nonnull String in) {
     List<GraphNode> graphNodes = new ArrayList<>();
 
     Map<GraphNode, List<String>> edges = ContainerUtil.newHashMap();
@@ -91,7 +90,7 @@ public class LinearGraphParser {
    * Example input line:
    * 0_U|-1_U 2_D
    */
-  public static Pair<Pair<Integer, GraphNode>, List<String>> parseLine(@NotNull String line, int lineNumber) {
+  public static Pair<Pair<Integer, GraphNode>, List<String>> parseLine(@Nonnull String line, int lineNumber) {
     int separatorIndex = nextSeparatorIndex(line, 0);
     Pair<Integer, Character> pair = parseNumberWithChar(line.substring(0, separatorIndex));
 
@@ -99,7 +98,7 @@ public class LinearGraphParser {
 
     String[] edges = line.substring(separatorIndex + 2).split("\\s");
     List<String> normalEdges = ContainerUtil.mapNotNull(edges, new Function<String, String>() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public String fun(String s) {
         if (s.isEmpty()) return null;
@@ -109,7 +108,7 @@ public class LinearGraphParser {
     return Pair.create(Pair.create(pair.first, graphNode), normalEdges);
   }
 
-  private static Pair<Integer, Character> parseNumberWithChar(@NotNull String in) {
+  private static Pair<Integer, Character> parseNumberWithChar(@Nonnull String in) {
     return new Pair<>(Integer.decode(in.substring(0, in.length() - 2)), in.charAt(in.length() - 1));
   }
 
@@ -132,9 +131,9 @@ public class LinearGraphParser {
       return myGraphNodes.size();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter) {
+    public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
       List<GraphEdge> result = ContainerUtil.newArrayList();
 
       for (GraphEdge upEdge : myUpEdges.get(nodeIndex)) {
@@ -150,7 +149,7 @@ public class LinearGraphParser {
       return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public GraphNode getGraphNode(int nodeIndex) {
       return myGraphNodes.get(nodeIndex);
@@ -163,7 +162,7 @@ public class LinearGraphParser {
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public Integer getNodeIndex(int nodeId) {
       if (nodeId >= 0 && nodeId < nodesCount()) return nodeId;
       return null;

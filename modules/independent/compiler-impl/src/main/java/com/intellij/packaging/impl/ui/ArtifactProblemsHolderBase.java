@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.ui;
 
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactProblemsHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,12 +29,12 @@ public abstract class ArtifactProblemsHolderBase implements ArtifactProblemsHold
     myContext = context;
   }
 
-  @NotNull
+  @Nonnull
   public PackagingElementResolvingContext getContext() {
     return myContext;
   }
 
-  public void registerError(@NotNull String message, @NotNull String problemTypeId) {
+  public void registerError(@Nonnull String message, @Nonnull String problemTypeId) {
     registerError(message, problemTypeId, null);
   }
 }

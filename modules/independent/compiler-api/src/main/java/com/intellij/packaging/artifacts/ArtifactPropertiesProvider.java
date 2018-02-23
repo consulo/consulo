@@ -17,8 +17,8 @@ package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -28,7 +28,7 @@ public abstract class ArtifactPropertiesProvider {
   public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create("com.intellij.packaging.artifactPropertiesProvider");
   private final String myId;
 
-  protected ArtifactPropertiesProvider(@NotNull @NonNls String id) {
+  protected ArtifactPropertiesProvider(@Nonnull @NonNls String id) {
     myId = id;
   }
 
@@ -36,19 +36,19 @@ public abstract class ArtifactPropertiesProvider {
     return myId;
   }
 
-  public boolean isAvailableFor(@NotNull ArtifactType type) {
+  public boolean isAvailableFor(@Nonnull ArtifactType type) {
     return true;
   } 
 
-  @NotNull 
-  public abstract ArtifactProperties<?> createProperties(@NotNull ArtifactType artifactType);
+  @Nonnull
+  public abstract ArtifactProperties<?> createProperties(@Nonnull ArtifactType artifactType);
 
   public static ArtifactPropertiesProvider[] getProviders() {
     return Extensions.getExtensions(EP_NAME);
   }
 
   @Nullable
-  public static ArtifactPropertiesProvider findById(@NotNull @NonNls String id) {
+  public static ArtifactPropertiesProvider findById(@Nonnull @NonNls String id) {
     for (ArtifactPropertiesProvider provider : getProviders()) {
       if (provider.getId().equals(id)) {
         return provider;

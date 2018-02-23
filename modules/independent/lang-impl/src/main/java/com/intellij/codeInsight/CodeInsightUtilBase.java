@@ -31,9 +31,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,12 +72,12 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   }
 
   @Override
-  public boolean preparePsiElementsForWrite(@NotNull PsiElement... elements) {
+  public boolean preparePsiElementsForWrite(@Nonnull PsiElement... elements) {
     return preparePsiElementsForWrite(Arrays.asList(elements));
   }
 
   @Override
-  public boolean preparePsiElementsForWrite(@NotNull Collection<? extends PsiElement> elements) {
+  public boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements) {
     if (elements.isEmpty()) return true;
     Set<VirtualFile> files = new THashSet<VirtualFile>();
     Project project = null;
@@ -99,13 +99,13 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   }
 
   @Override
-  public boolean prepareVirtualFilesForWrite(@NotNull Project project, @NotNull Collection<VirtualFile> files) {
+  public boolean prepareVirtualFilesForWrite(@Nonnull Project project, @Nonnull Collection<VirtualFile> files) {
     ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(files);
     return !status.hasReadonlyFiles();
   }
 
   // returns true on success
-  public static boolean prepareEditorForWrite(@NotNull Editor editor) {
+  public static boolean prepareEditorForWrite(@Nonnull Editor editor) {
     if (!editor.isViewer()) return true;
     showReadOnlyViewWarning(editor);
     return false;

@@ -41,6 +41,8 @@ import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.*;
 
+import javax.annotation.*;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.basic.BasicHTML;
@@ -93,34 +95,34 @@ public class Messages {
     return oldValue;
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getErrorIcon() {
     return UIUtil.getErrorIcon();
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getInformationIcon() {
     return UIUtil.getInformationIcon();
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getWarningIcon() {
     return UIUtil.getWarningIcon();
   }
 
-  @NotNull
+  @Nonnull
   public static Icon getQuestionIcon() {
     return UIUtil.getQuestionIcon();
   }
 
-  @NotNull
+  @Nonnull
   public static Runnable createMessageDialogRemover(@Nullable Project project) {
     Window projectWindow = project == null ? null : WindowManager.getInstance().suggestParentWindow(project);
     return () -> UIUtil
             .invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? projectWindow.getOwnedWindows() : Window.getWindows()));
   }
 
-  private static void makeCurrentMessageDialogGoAway(@NotNull Window[] checkWindows) {
+  private static void makeCurrentMessageDialogGoAway(@Nonnull Window[] checkWindows) {
     for (Window w : checkWindows) {
       JDialog dialog = w instanceof JDialog ? (JDialog)w : null;
       if (dialog == null || !dialog.isModal()) continue;
@@ -138,7 +140,7 @@ public class Messages {
   public static int showDialog(@Nullable Project project,
                                String message,
                                String title,
-                               @NotNull String[] options,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                @Nullable Icon icon) {
     return showDialog(project, message, title, options, defaultOptionIndex, icon, null);
@@ -151,8 +153,8 @@ public class Messages {
    */
   public static int showDialog(@Nullable Project project,
                                String message,
-                               @NotNull String title,
-                               @NotNull String[] options,
+                               @Nonnull String title,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                @Nullable Icon icon,
                                @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
@@ -180,7 +182,7 @@ public class Messages {
   public static int showIdeaMessageDialog(@Nullable Project project,
                                           String message,
                                           String title,
-                                          @NotNull String[] options,
+                                          @Nonnull String[] options,
                                           int defaultOptionIndex,
                                           @Nullable Icon icon,
                                           @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
@@ -203,9 +205,9 @@ public class Messages {
    */
   public static int showDialog(Project project,
                                String message,
-                               @NotNull String title,
+                               @Nonnull String title,
                                @Nullable String moreInfo,
-                               @NotNull String[] options,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                int focusedOptionIndex,
                                Icon icon) {
@@ -237,10 +239,10 @@ public class Messages {
   /**
    * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
    */
-  public static int showDialog(@NotNull Component parent,
+  public static int showDialog(@Nonnull Component parent,
                                String message,
-                               @NotNull String title,
-                               @NotNull String[] options,
+                               @Nonnull String title,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                @Nullable Icon icon) {
     if (isApplicationInUnitTestOrHeadless()) {
@@ -271,8 +273,8 @@ public class Messages {
    * @see #showDialog(Component, String, String, String[], int, Icon)
    */
   public static int showDialog(String message,
-                               @NotNull String title,
-                               @NotNull String[] options,
+                               @Nonnull String title,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                int focusedOptionIndex,
                                @Nullable Icon icon,
@@ -304,7 +306,7 @@ public class Messages {
    */
   public static int showDialog(String message,
                                String title,
-                               @NotNull String[] options,
+                               @Nonnull String[] options,
                                int defaultOptionIndex,
                                @Nullable Icon icon,
                                @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
@@ -318,14 +320,14 @@ public class Messages {
    * @see #showDialog(Project, String, String, String[], int, Icon)
    * @see #showDialog(Component, String, String, String[], int, Icon)
    */
-  public static int showDialog(String message, String title, @NotNull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
+  public static int showDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
     return showDialog(message, title, options, defaultOptionIndex, icon, null);
   }
 
   /**
    * @see com.intellij.openapi.ui.DialogWrapper#DialogWrapper(Project, boolean)
    */
-  public static void showMessageDialog(@Nullable Project project, String message, @NotNull String title, @Nullable Icon icon) {
+  public static void showMessageDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
@@ -339,7 +341,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, icon);
   }
 
-  public static void showMessageDialog(@NotNull Component parent, String message, @NotNull String title, @Nullable Icon icon) {
+  public static void showMessageDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, SwingUtilities.getWindowAncestor(parent));
@@ -359,7 +361,7 @@ public class Messages {
    * @see #showMessageDialog(Project, String, String, Icon)
    * @see #showMessageDialog(Component, String, String, Icon)
    */
-  public static void showMessageDialog(String message, @NotNull String title, @Nullable Icon icon) {
+  public static void showMessageDialog(String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON);
@@ -382,9 +384,9 @@ public class Messages {
   @YesNoResult
   public static int showYesNoDialog(@Nullable Project project,
                                     String message,
-                                    @NotNull String title,
-                                    @NotNull String yesText,
-                                    @NotNull String noText,
+                                    @Nonnull String title,
+                                    @Nonnull String yesText,
+                                    @Nonnull String noText,
                                     @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -405,7 +407,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
    */
   @YesNoResult
-  public static int showYesNoDialog(@Nullable Project project, String message, @NotNull String title, @Nullable Icon icon) {
+  public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         return MacMessages.getInstance().showYesNoDialog(title, message, YES_BUTTON, NO_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
@@ -426,7 +428,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
    */
   @YesNoResult
-  public static int showYesNoDialog(@NotNull Component parent, String message, @NotNull String title, @Nullable Icon icon) {
+  public static int showYesNoDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         return MacMessages.getInstance().showYesNoDialog(title, message, YES_BUTTON, NO_BUTTON, SwingUtilities.getWindowAncestor(parent));
@@ -451,9 +453,9 @@ public class Messages {
    */
   @YesNoResult
   public static int showYesNoDialog(String message,
-                                    @NotNull String title,
-                                    @NotNull String yesText,
-                                    @NotNull String noText,
+                                    @Nonnull String title,
+                                    @Nonnull String yesText,
+                                    @Nonnull String noText,
                                     @Nullable Icon icon,
                                     @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     try {
@@ -491,7 +493,7 @@ public class Messages {
    * @see #showYesNoDialog(Component, String, String, Icon)
    */
   @YesNoResult
-  public static int showYesNoDialog(String message, @NotNull String title, @Nullable Icon icon) {
+  public static int showYesNoDialog(String message, @Nonnull String title, @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
         return MacMessages.getInstance().showYesNoDialog(title, message, YES_BUTTON, NO_BUTTON, null);
@@ -516,9 +518,9 @@ public class Messages {
   @OkCancelResult
   public static int showOkCancelDialog(Project project,
                                        String message,
-                                       @NotNull String title,
-                                       @NotNull String okText,
-                                       @NotNull String cancelText,
+                                       @Nonnull String title,
+                                       @Nonnull String okText,
+                                       @Nonnull String cancelText,
                                        Icon icon,
                                        DialogWrapper.DoNotAskOption doNotAskOption) {
     try {
@@ -539,7 +541,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
-  public static int showOkCancelDialog(Project project, String message, @NotNull String title, @NotNull String okText, @NotNull String cancelText, Icon icon) {
+  public static int showOkCancelDialog(Project project, String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Icon icon) {
     return showOkCancelDialog(project, message, title, okText, cancelText, icon, null);
   }
 
@@ -555,11 +557,11 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
-  public static int showOkCancelDialog(@NotNull Component parent,
+  public static int showOkCancelDialog(@Nonnull Component parent,
                                        String message,
-                                       @NotNull String title,
-                                       @NotNull String okText,
-                                       @NotNull String cancelText,
+                                       @Nonnull String title,
+                                       @Nonnull String okText,
+                                       @Nonnull String cancelText,
                                        Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -578,7 +580,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
-  public static int showOkCancelDialog(@NotNull Component parent, String message, String title, Icon icon) {
+  public static int showOkCancelDialog(@Nonnull Component parent, String message, String title, Icon icon) {
     return showOkCancelDialog(parent, message, title, OK_BUTTON, CANCEL_BUTTON, icon);
   }
 
@@ -615,9 +617,9 @@ public class Messages {
    */
   @OkCancelResult
   public static int showOkCancelDialog(String message,
-                                       @NotNull String title,
-                                       @NotNull String okText,
-                                       @NotNull String cancelText,
+                                       @Nonnull String title,
+                                       @Nonnull String okText,
+                                       @Nonnull String cancelText,
                                        Icon icon,
                                        @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     try {
@@ -651,7 +653,7 @@ public class Messages {
 
   public static int showCheckboxMessageDialog(String message,
                                               String title,
-                                              @NotNull String[] options,
+                                              @Nonnull String[] options,
                                               String checkboxText,
                                               final boolean checked,
                                               final int defaultOptionIndex,
@@ -674,7 +676,7 @@ public class Messages {
     return showCheckboxMessageDialog(message, title, new String[]{OK_BUTTON}, checkboxText, true, -1, -1, icon, null);
   }
 
-  public static void showErrorDialog(@Nullable Project project, @Nls String message, @Nls @NotNull String title) {
+  public static void showErrorDialog(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
@@ -687,7 +689,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
-  public static void showErrorDialog(@NotNull Component component, String message, @Nls @NotNull String title) {
+  public static void showErrorDialog(@Nonnull Component component, String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, SwingUtilities.getWindowAncestor(component));
@@ -700,7 +702,7 @@ public class Messages {
     showDialog(component, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
-  public static void showErrorDialog(@NotNull Component component, String message) {
+  public static void showErrorDialog(@Nonnull Component component, String message) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(CommonBundle.getErrorTitle(), message, OK_BUTTON, SwingUtilities.getWindowAncestor(component));
@@ -719,7 +721,7 @@ public class Messages {
    * @see #showErrorDialog(Project, String, String)
    * @see #showErrorDialog(Component, String, String)
    */
-  public static void showErrorDialog(String message, @NotNull String title) {
+  public static void showErrorDialog(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, null);
@@ -732,7 +734,7 @@ public class Messages {
     showDialog(message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
-  public static void showWarningDialog(@Nullable Project project, String message, @NotNull String title) {
+  public static void showWarningDialog(@Nullable Project project, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
@@ -745,7 +747,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getWarningIcon());
   }
 
-  public static void showWarningDialog(@NotNull Component component, String message, @NotNull String title) {
+  public static void showWarningDialog(@Nonnull Component component, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, SwingUtilities.getWindowAncestor(component));
@@ -764,7 +766,7 @@ public class Messages {
    * @see #showWarningDialog(Project, String, String)
    * @see #showWarningDialog(Component, String, String)
    */
-  public static void showWarningDialog(String message, @NotNull String title) {
+  public static void showWarningDialog(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showErrorDialog(title, message, OK_BUTTON, null);
@@ -788,10 +790,10 @@ public class Messages {
   @YesNoCancelResult
   public static int showYesNoCancelDialog(Project project,
                                           String message,
-                                          @NotNull String title,
-                                          @NotNull String yes,
-                                          @NotNull String no,
-                                          @NotNull String cancel,
+                                          @Nonnull String title,
+                                          @Nonnull String yes,
+                                          @Nonnull String no,
+                                          @Nonnull String cancel,
                                           @Nullable Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -817,12 +819,12 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
-  public static int showYesNoCancelDialog(@NotNull Component parent,
+  public static int showYesNoCancelDialog(@Nonnull Component parent,
                                           String message,
-                                          @NotNull String title,
-                                          @NotNull String yes,
-                                          @NotNull String no,
-                                          @NotNull String cancel,
+                                          @Nonnull String title,
+                                          @Nonnull String yes,
+                                          @Nonnull String no,
+                                          @Nonnull String cancel,
                                           Icon icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -840,7 +842,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
-  public static int showYesNoCancelDialog(@NotNull Component parent, String message, String title, Icon icon) {
+  public static int showYesNoCancelDialog(@Nonnull Component parent, String message, String title, Icon icon) {
     return showYesNoCancelDialog(parent, message, title, YES_BUTTON, NO_BUTTON, CANCEL_BUTTON, icon);
   }
 
@@ -854,10 +856,10 @@ public class Messages {
    */
   @YesNoCancelResult
   public static int showYesNoCancelDialog(String message,
-                                          @NotNull String title,
-                                          @NotNull String yes,
-                                          @NotNull String no,
-                                          @NotNull String cancel,
+                                          @Nonnull String title,
+                                          @Nonnull String yes,
+                                          @Nonnull String no,
+                                          @Nonnull String cancel,
                                           Icon icon,
                                           @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     try {
@@ -943,7 +945,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
-  public static String showInputDialog(@NotNull Component parent, String message, String title, @Nullable Icon icon) {
+  public static String showInputDialog(@Nonnull Component parent, String message, String title, @Nullable Icon icon) {
     return showInputDialog(parent, message, title, icon, null, null);
   }
 
@@ -1007,7 +1009,7 @@ public class Messages {
   }
 
   @Nullable
-  public static String showInputDialog(@NotNull Component parent,
+  public static String showInputDialog(@Nonnull Component parent,
                                        String message,
                                        String title,
                                        @Nullable Icon icon,
@@ -1057,7 +1059,7 @@ public class Messages {
     return dialog.getInputString();
   }
 
-  @NotNull
+  @Nonnull
   public static Pair<String, Boolean> showInputDialogWithCheckBox(String message,
                                                                   String title,
                                                                   String checkboxText,
@@ -1116,7 +1118,7 @@ public class Messages {
    * @deprecated It looks awful!
    */
   @Deprecated
-  public static int showChooseDialog(@NotNull Component parent, String message, String title, String[] values, String initialValue, Icon icon) {
+  public static int showChooseDialog(@Nonnull Component parent, String message, String title, String[] values, String initialValue, Icon icon) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
     }
@@ -1146,7 +1148,7 @@ public class Messages {
   /**
    * Shows dialog with given message and title, information icon {@link #getInformationIcon()} and OK button
    */
-  public static void showInfoMessage(Component component, String message, @NotNull String title) {
+  public static void showInfoMessage(Component component, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, SwingUtilities.getWindowAncestor(component));
@@ -1162,7 +1164,7 @@ public class Messages {
   /**
    * Shows dialog with given message and title, information icon {@link #getInformationIcon()} and OK button
    */
-  public static void showInfoMessage(@Nullable Project project, @Nls String message, @Nls @NotNull String title) {
+  public static void showInfoMessage(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, WindowManager.getInstance().suggestParentWindow(project));
@@ -1183,7 +1185,7 @@ public class Messages {
    * @see #showInputDialog(Project, String, String, Icon, String, InputValidator)
    * @see #showInputDialog(Component, String, String, Icon, String, InputValidator)
    */
-  public static void showInfoMessage(String message, @NotNull String title) {
+  public static void showInfoMessage(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
         MacMessages.getInstance().showOkMessageDialog(title, message, OK_BUTTON, null);
@@ -1249,7 +1251,7 @@ public class Messages {
                                  String message,
                                  String title,
                                  @Nullable String moreInfo,
-                                 @NotNull String[] options,
+                                 @Nonnull String[] options,
                                  int defaultOptionIndex,
                                  int focusedOptionIndex,
                                  Icon icon) {
@@ -1298,7 +1300,7 @@ public class Messages {
     public MessageDialog(@Nullable Project project,
                          String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          @Nullable Icon icon,
                          boolean canBeParent) {
@@ -1308,7 +1310,7 @@ public class Messages {
     public MessageDialog(@Nullable Project project,
                          String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          int focusedOptionIndex,
                          @Nullable Icon icon,
@@ -1321,7 +1323,7 @@ public class Messages {
     public MessageDialog(@Nullable Project project,
                          String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          int focusedOptionIndex,
                          @Nullable Icon icon,
@@ -1330,24 +1332,24 @@ public class Messages {
       _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, null);
     }
 
-    public MessageDialog(@NotNull Component parent, String message, String title, @NotNull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
+    public MessageDialog(@Nonnull Component parent, String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
       this(parent, message, title, options, defaultOptionIndex, icon, false);
     }
 
-    public MessageDialog(@NotNull Component parent,
+    public MessageDialog(@Nonnull Component parent,
                          String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          @Nullable Icon icon,
                          boolean canBeParent) {
       this(parent, message, title, options, defaultOptionIndex, -1, icon, canBeParent);
     }
 
-    public MessageDialog(@NotNull Component parent,
+    public MessageDialog(@Nonnull Component parent,
                          String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          int focusedOptionIndex,
                          @Nullable Icon icon,
@@ -1356,18 +1358,18 @@ public class Messages {
       _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, null);
     }
 
-    public MessageDialog(String message, String title, @NotNull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
+    public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Icon icon) {
       this(message, title, options, defaultOptionIndex, icon, false);
     }
 
-    public MessageDialog(String message, String title, @NotNull String[] options, int defaultOptionIndex, @Nullable Icon icon, boolean canBeParent) {
+    public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Icon icon, boolean canBeParent) {
       super(canBeParent);
       _init(title, message, options, defaultOptionIndex, -1, icon, null);
     }
 
     public MessageDialog(String message,
                          String title,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          int focusedOptionIndex,
                          @Nullable Icon icon,
@@ -1376,7 +1378,7 @@ public class Messages {
       _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, doNotAskOption);
     }
 
-    public MessageDialog(String message, String title, @NotNull String[] options, int defaultOptionIndex, Icon icon, DoNotAskOption doNotAskOption) {
+    public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, Icon icon, DoNotAskOption doNotAskOption) {
       this(message, title, options, defaultOptionIndex, -1, icon, doNotAskOption);
     }
 
@@ -1390,7 +1392,7 @@ public class Messages {
 
     protected void _init(String title,
                          String message,
-                         @NotNull String[] options,
+                         @Nonnull String[] options,
                          int defaultOptionIndex,
                          int focusedOptionIndex,
                          @Nullable Icon icon,
@@ -1412,7 +1414,7 @@ public class Messages {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       Action[] actions = new Action[myOptions.length];
@@ -1609,7 +1611,7 @@ public class Messages {
     configureMessagePaneUi(messageComponent, "<html></html>");
   }
 
-  @NotNull
+  @Nonnull
   public static JTextPane configureMessagePaneUi(JTextPane messageComponent, String message) {
     JTextPane pane = configureMessagePaneUi(messageComponent, message, null);
     if (UIUtil.HTML_MIME.equals(pane.getContentType())) {
@@ -1618,8 +1620,8 @@ public class Messages {
     return pane;
   }
 
-  @NotNull
-  public static JTextPane configureMessagePaneUi(@NotNull JTextPane messageComponent, @Nullable String message, @Nullable UIUtil.FontSize fontSize) {
+  @Nonnull
+  public static JTextPane configureMessagePaneUi(@Nonnull JTextPane messageComponent, @Nullable String message, @Nullable UIUtil.FontSize fontSize) {
     UIUtil.FontSize fixedFontSize = fontSize == null ? UIUtil.FontSize.NORMAL : fontSize;
     messageComponent.setFont(UIUtil.getLabelFont(fixedFontSize));
     if (BasicHTML.isHTMLString(message)) {
@@ -1655,7 +1657,7 @@ public class Messages {
 
     public TwoStepConfirmationDialog(String message,
                                      String title,
-                                     @NotNull String[] options,
+                                     @Nonnull String[] options,
                                      String checkboxText,
                                      boolean checked,
                                      final int defaultOptionIndexed,
@@ -1730,7 +1732,7 @@ public class Messages {
                        @Nullable Icon icon,
                        @Nullable String initialValue,
                        @Nullable InputValidator validator,
-                       @NotNull String[] options,
+                       @Nonnull String[] options,
                        int defaultOption) {
       super(project, message, title, options, defaultOption, icon, true);
       myValidator = validator;
@@ -1746,7 +1748,7 @@ public class Messages {
       this(project, message, title, icon, initialValue, validator, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0);
     }
 
-    public InputDialog(@NotNull Component parent,
+    public InputDialog(@Nonnull Component parent,
                        String message,
                        String title,
                        @Nullable Icon icon,
@@ -1763,7 +1765,7 @@ public class Messages {
       myField.setText(initialValue);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       final Action[] actions = new Action[myOptions.length];
@@ -1882,7 +1884,7 @@ public class Messages {
                                 @Nullable Icon icon,
                                 @Nullable String initialValue,
                                 @Nullable InputValidator validator,
-                                @NotNull String[] options,
+                                @Nonnull String[] options,
                                 int defaultOption) {
       super(project, message, title, icon, initialValue, validator, options, defaultOption);
     }
@@ -1961,7 +1963,7 @@ public class Messages {
                         @Nullable Icon icon,
                         String[] values,
                         String initialValue,
-                        @NotNull String[] options,
+                        @Nonnull String[] options,
                         int defaultOption) {
       super(project, message, title, options, defaultOption, icon, true);
       myComboBox.setModel(new DefaultComboBoxModel(values));
@@ -1972,7 +1974,7 @@ public class Messages {
       this(project, message, title, icon, values, initialValue, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0);
     }
 
-    public ChooseDialog(@NotNull Component parent, String message, String title, @Nullable Icon icon, String[] values, String initialValue) {
+    public ChooseDialog(@Nonnull Component parent, String message, String title, @Nullable Icon icon, String[] values, String initialValue) {
       super(parent, message, title, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0, icon);
       myComboBox.setModel(new DefaultComboBoxModel(values));
       myComboBox.setSelectedItem(initialValue);
@@ -1984,7 +1986,7 @@ public class Messages {
       myComboBox.setSelectedItem(initialValue);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       final Action[] actions = new Action[myOptions.length];

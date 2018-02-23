@@ -17,24 +17,24 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface PostfixTemplatePsiInfo {
 
-  @NotNull
-  PsiElement createStatement(@NotNull PsiElement context,
-                             @NotNull String prefix,
-                             @NotNull String suffix);
+  @Nonnull
+  PsiElement createStatement(@Nonnull PsiElement context,
+                             @Nonnull String prefix,
+                             @Nonnull String suffix);
 
-  @NotNull
-  PsiElement createExpression(@NotNull PsiElement context,
-                              @NotNull String prefix,
-                              @NotNull String suffix);
+  @Nonnull
+  PsiElement createExpression(@Nonnull PsiElement context,
+                              @Nonnull String prefix,
+                              @Nonnull String suffix);
 
   @Nullable
-  PsiElement getTopmostExpression(@NotNull PsiElement element);
+  PsiElement getTopmostExpression(@Nonnull PsiElement element);
 
-  @NotNull
-  PsiElement getNegatedExpression(@NotNull PsiElement element);
+  @Nonnull
+  PsiElement getNegatedExpression(@Nonnull PsiElement element);
 }

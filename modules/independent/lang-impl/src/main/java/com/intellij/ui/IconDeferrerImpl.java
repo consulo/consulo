@@ -26,7 +26,7 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Function;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
@@ -49,7 +49,7 @@ public class IconDeferrerImpl extends IconDeferrer {
     connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
     connection.subscribe(ProjectLifecycleListener.TOPIC, new ProjectLifecycleListener() {
       @Override
-      public void afterProjectClosed(@NotNull Project project) {
+      public void afterProjectClosed(@Nonnull Project project) {
         clear();
       }
     });
@@ -64,16 +64,16 @@ public class IconDeferrerImpl extends IconDeferrer {
   }
 
   @Override
-  public <T> Icon defer(final Icon base, final T param, @NotNull final Function<T, Icon> evaluator) {
+  public <T> Icon defer(final Icon base, final T param, @Nonnull final Function<T, Icon> evaluator) {
     return deferImpl(base, param, evaluator, false);
   }
 
   @Override
-  public <T> Icon deferAutoUpdatable(Icon base, T param, @NotNull Function<T, Icon> evaluator) {
+  public <T> Icon deferAutoUpdatable(Icon base, T param, @Nonnull Function<T, Icon> evaluator) {
     return deferImpl(base, param, evaluator, true);
   }
 
-  private <T> Icon deferImpl(Icon base, T param, @NotNull Function<T, Icon> evaluator, final boolean autoUpdatable) {
+  private <T> Icon deferImpl(Icon base, T param, @Nonnull Function<T, Icon> evaluator, final boolean autoUpdatable) {
     if (myEvaluationIsInProgress.get().booleanValue()) {
       return evaluator.fun(param);
     }
@@ -105,7 +105,7 @@ public class IconDeferrerImpl extends IconDeferrer {
 
   private static final ThreadLocal<Boolean> myEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
-  static void evaluateDeferred(@NotNull Runnable runnable) {
+  static void evaluateDeferred(@Nonnull Runnable runnable) {
     try {
       myEvaluationIsInProgress.set(Boolean.TRUE);
       runnable.run();

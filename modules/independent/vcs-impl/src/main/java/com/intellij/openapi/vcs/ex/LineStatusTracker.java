@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -49,17 +49,21 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
   private static final Key<JPanel> PANEL_KEY = new Key<>("LineStatusTracker.CanNotCalculateDiffPanel");
 
-  @NotNull private final VirtualFile myVirtualFile;
+  @Nonnull
+  private final VirtualFile myVirtualFile;
 
-  @NotNull private final FileEditorManager myFileEditorManager;
-  @NotNull private final VcsDirtyScopeManager myVcsDirtyScopeManager;
+  @Nonnull
+  private final FileEditorManager myFileEditorManager;
+  @Nonnull
+  private final VcsDirtyScopeManager myVcsDirtyScopeManager;
 
-  @NotNull private Mode myMode;
+  @Nonnull
+  private Mode myMode;
 
-  private LineStatusTracker(@NotNull final Project project,
-                            @NotNull final Document document,
-                            @NotNull final VirtualFile virtualFile,
-                            @NotNull final Mode mode) {
+  private LineStatusTracker(@Nonnull final Project project,
+                            @Nonnull final Document document,
+                            @Nonnull final VirtualFile virtualFile,
+                            @Nonnull final Mode mode) {
     super(project, document);
     myVirtualFile = virtualFile;
     myMode = mode;
@@ -68,26 +72,26 @@ public class LineStatusTracker extends LineStatusTrackerBase {
     myVcsDirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
   }
 
-  public static LineStatusTracker createOn(@NotNull VirtualFile virtualFile,
-                                           @NotNull Document document,
-                                           @NotNull Project project,
-                                           @NotNull Mode mode) {
+  public static LineStatusTracker createOn(@Nonnull VirtualFile virtualFile,
+                                           @Nonnull Document document,
+                                           @Nonnull Project project,
+                                           @Nonnull Mode mode) {
     return new LineStatusTracker(project, document, virtualFile, mode);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     //noinspection ConstantConditions
     return super.getProject();
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   public Mode getMode() {
     return myMode;
@@ -99,7 +103,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @RequiredDispatchThread
-  public void setMode(@NotNull Mode mode) {
+  public void setMode(@Nonnull Mode mode) {
     if (myMode == mode) return;
     myMode = mode;
 
@@ -114,7 +118,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
   @Override
   @RequiredDispatchThread
-  protected void installNotification(@NotNull String text) {
+  protected void installNotification(@Nonnull String text) {
     final FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
     for (FileEditor editor : editors) {
       JPanel panel = editor.getUserData(PANEL_KEY);
@@ -141,7 +145,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
   @Override
   @RequiredDispatchThread
-  protected void createHighlighter(@NotNull Range range) {
+  protected void createHighlighter(@Nonnull Range range) {
     myApplication.assertIsDispatchThread();
 
     if (range.getHighlighter() != null) {
@@ -183,7 +187,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   }
 
   @Override
-  protected void doRollbackRange(@NotNull Range range) {
+  protected void doRollbackRange(@Nonnull Range range) {
     super.doRollbackRange(range);
     markLinesUnchanged(range.getLine1(), range.getLine1() + range.getVcsLine2() - range.getVcsLine1());
   }

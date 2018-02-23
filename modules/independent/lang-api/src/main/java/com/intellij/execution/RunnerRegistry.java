@@ -19,21 +19,21 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class RunnerRegistry implements ApplicationComponent {
   public static RunnerRegistry getInstance() {
     return ApplicationManager.getApplication().getComponent(RunnerRegistry.class);
   }
 
-  public abstract boolean hasRunner(@NotNull final String executorId, @NotNull final RunProfile settings);
+  public abstract boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings);
 
   @Nullable
   public abstract ProgramRunner getRunner(final String executorId, final RunProfile settings);
 
   public abstract ProgramRunner[] getRegisteredRunners();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract ProgramRunner findRunnerById(String id);
 }

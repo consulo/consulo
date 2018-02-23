@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,16 +27,17 @@ import java.util.Iterator;
 public abstract class LazyQuery<T> implements Query<T> {
   private final NotNullLazyValue<Query<T>> myQuery = new NotNullLazyValue<Query<T>>() {
     @Override
-    @NotNull
+    @Nonnull
     protected Query<T> compute() {
       return computeQuery();
     }
   };
 
-  @NotNull protected abstract Query<T> computeQuery();
+  @Nonnull
+  protected abstract Query<T> computeQuery();
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<T> findAll() {
     return myQuery.getValue().findAll();
   }
@@ -47,13 +48,13 @@ public abstract class LazyQuery<T> implements Query<T> {
   }
 
   @Override
-  public boolean forEach(@NotNull final Processor<T> consumer) {
+  public boolean forEach(@Nonnull final Processor<T> consumer) {
     return myQuery.getValue().forEach(consumer);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public T[] toArray(@NotNull final T[] a) {
+  public T[] toArray(@Nonnull final T[] a) {
     return myQuery.getValue().toArray(a);
   }
 

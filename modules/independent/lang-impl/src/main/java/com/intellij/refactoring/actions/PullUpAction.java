@@ -18,7 +18,7 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.refactoring.RefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PullUpAction extends BasePlatformRefactoringAction {
   public PullUpAction() {
@@ -31,7 +31,7 @@ public class PullUpAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return provider.getPullUpHandler();
   }
 }

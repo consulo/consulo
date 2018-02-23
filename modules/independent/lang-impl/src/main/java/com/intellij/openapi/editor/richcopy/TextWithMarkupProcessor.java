@@ -52,8 +52,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -70,7 +70,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
 
   private List<RawTextWithMarkup> myResult;
 
-  @NotNull
+  @Nonnull
   @Override
   public List<RawTextWithMarkup> collectTransferableData(PsiFile file, Editor editor, int[] startOffsets, int[] endOffsets) {
     if (!RichCopySettings.getInstance().isEnabled()) {
@@ -177,9 +177,9 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     myResult = null;
   }
 
-  private static void logInitial(@NotNull Editor editor,
-                                 @NotNull int[] startOffsets,
-                                 @NotNull int[] endOffsets,
+  private static void logInitial(@Nonnull Editor editor,
+                                 @Nonnull int[] startOffsets,
+                                 @Nonnull int[] endOffsets,
                                  int indentSymbolsToStrip,
                                  int firstLineStartOffset)
   {
@@ -207,14 +207,14 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     ));
   }
 
-  private static void logSyntaxInfo(@NotNull SyntaxInfo info) {
+  private static void logSyntaxInfo(@Nonnull SyntaxInfo info) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Constructed syntax info: " + info);
     }
   }
 
   private static Pair<Integer/* start offset to use */, Integer /* indent symbols to strip */> calcIndentSymbolsToStrip(
-          @NotNull Document document, int startOffset, int endOffset)
+          @Nonnull Document document, int startOffset, int endOffset)
   {
     int startLine = document.getLineNumber(startOffset);
     int endLine = document.getLineNumber(endOffset);
@@ -254,11 +254,15 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
 
     private final SyntaxInfo.Builder builder;
 
-    @NotNull private final CharSequence myText;
-    @NotNull private final Color        myDefaultForeground;
-    @NotNull private final Color        myDefaultBackground;
+    @Nonnull
+    private final CharSequence myText;
+    @Nonnull
+    private final Color        myDefaultForeground;
+    @Nonnull
+    private final Color        myDefaultBackground;
 
-    @Nullable private Color  myBackground;
+    @Nullable
+    private Color  myBackground;
     @Nullable private Color  myForeground;
     @Nullable private String myFontFamilyName;
 
@@ -270,7 +274,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
 
     private int myIndentSymbolsToStripAtCurrentLine;
 
-    Context(@NotNull CharSequence charSequence, @NotNull EditorColorsScheme scheme, int indentSymbolsToStrip) {
+    Context(@Nonnull CharSequence charSequence, @Nonnull EditorColorsScheme scheme, int indentSymbolsToStrip) {
       myText = charSequence;
       myDefaultForeground = scheme.getDefaultForeground();
       myDefaultBackground = scheme.getDefaultBackground();
@@ -412,7 +416,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       builder.addText(position + myOffsetShift, position + myOffsetShift + 1);
     }
 
-    @NotNull
+    @Nonnull
     public SyntaxInfo finish() {
       return builder.build();
     }
@@ -425,7 +429,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     private Color myCurrentForegroundColor;
     private Color myCurrentBackgroundColor;
 
-    private MyMarkupIterator(@NotNull CharSequence charSequence, @NotNull RangeIterator rangeIterator, @NotNull EditorColorsScheme colorsScheme) {
+    private MyMarkupIterator(@Nonnull CharSequence charSequence, @Nonnull RangeIterator rangeIterator, @Nonnull EditorColorsScheme colorsScheme) {
       myRangeIterator = rangeIterator;
       mySegmentIterator = new SegmentIterator(charSequence, colorsScheme.getFontPreferences());
     }
@@ -458,7 +462,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       return myCurrentFontStyle;
     }
 
-    @NotNull
+    @Nonnull
     public String getFontFamilyName() {
       return mySegmentIterator.getCurrentFontFamilyName();
     }
@@ -479,8 +483,10 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
   }
 
   private static class CompositeRangeIterator implements RangeIterator {
-    private final @NotNull Color myDefaultForeground;
-    private final @NotNull Color myDefaultBackground;
+    private final @Nonnull
+    Color myDefaultForeground;
+    private final @Nonnull
+    Color myDefaultBackground;
     private final IteratorWrapper[] myIterators;
     private final TextAttributes myMergedAttributes = new TextAttributes();
     private int overlappingRangesCount;
@@ -488,7 +494,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     private int myCurrentEnd;
 
     // iterators have priority corresponding to their order in the parameter list - rightmost having the largest priority
-    public CompositeRangeIterator(@NotNull EditorColorsScheme colorsScheme, RangeIterator... iterators) {
+    public CompositeRangeIterator(@Nonnull EditorColorsScheme colorsScheme, RangeIterator... iterators) {
       myDefaultForeground = colorsScheme.getDefaultForeground();
       myDefaultBackground = colorsScheme.getDefaultBackground();
       myIterators = new IteratorWrapper[iterators.length];
@@ -648,7 +654,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     private TextAttributes myNextAttributes;
 
     private MarkupModelRangeIterator(@Nullable MarkupModel markupModel,
-                                     @NotNull EditorColorsScheme colorsScheme,
+                                     @Nonnull EditorColorsScheme colorsScheme,
                                      int startOffset,
                                      int endOffset) {
       myStartOffset = startOffset;
@@ -773,7 +779,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     private int myCurrentEnd;
     private TextAttributes myCurrentAttributes;
 
-    public HighlighterRangeIterator(@NotNull EditorHighlighter highlighter, int startOffset, int endOffset) {
+    public HighlighterRangeIterator(@Nonnull EditorHighlighter highlighter, int startOffset, int endOffset) {
       myStartOffset = startOffset;
       myEndOffset = endOffset;
       myIterator = highlighter.createIterator(startOffset);
@@ -901,7 +907,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
       return text;

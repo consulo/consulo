@@ -21,8 +21,8 @@ import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.util.containers.FList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -39,7 +39,7 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     myMinMatchingDegree = minMatchingDegree;
   }
 
-  @NotNull
+  @Nonnull
   public BetterPrefixMatcher improve(CompletionResult result) {
     int degree = RealPrefixMatchingWeigher.getBestMatchingDegree(result.getLookupElement(), result.getPrefixMatcher());
     if (degree <= myMinMatchingDegree) return this;
@@ -47,13 +47,13 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     return createCopy(myOriginal, degree);
   }
 
-  @NotNull
+  @Nonnull
   protected BetterPrefixMatcher createCopy(PrefixMatcher original, int degree) {
     return new BetterPrefixMatcher(original, degree);
   }
 
   @Override
-  public boolean prefixMatches(@NotNull String name) {
+  public boolean prefixMatches(@Nonnull String name) {
     return prefixMatchesEx(name) == MatchingOutcome.BETTER_MATCH;
   }
 
@@ -88,16 +88,16 @@ public class BetterPrefixMatcher extends PrefixMatcher {
     return myOriginal.matchingDegree(string);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PrefixMatcher cloneWithPrefix(@NotNull String prefix) {
+  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
     return createCopy(myOriginal.cloneWithPrefix(prefix), myMinMatchingDegree);
   }
 
   public static class AutoRestarting extends BetterPrefixMatcher {
     private final CompletionResultSet myResult;
 
-    public AutoRestarting(@NotNull CompletionResultSet result) {
+    public AutoRestarting(@Nonnull CompletionResultSet result) {
       this(result, result.getPrefixMatcher(), Integer.MIN_VALUE);
     }
 
@@ -106,7 +106,7 @@ public class BetterPrefixMatcher extends PrefixMatcher {
       myResult = result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected BetterPrefixMatcher createCopy(PrefixMatcher original, int degree) {
       return new AutoRestarting(myResult, original, degree);

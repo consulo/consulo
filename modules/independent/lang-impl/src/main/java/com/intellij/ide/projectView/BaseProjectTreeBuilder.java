@@ -35,9 +35,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -51,16 +51,16 @@ import java.util.List;
 public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
   protected final Project myProject;
 
-  public BaseProjectTreeBuilder(@NotNull Project project,
-                                @NotNull JTree tree,
-                                @NotNull DefaultTreeModel treeModel,
-                                @NotNull AbstractTreeStructure treeStructure,
+  public BaseProjectTreeBuilder(@Nonnull Project project,
+                                @Nonnull JTree tree,
+                                @Nonnull DefaultTreeModel treeModel,
+                                @Nonnull AbstractTreeStructure treeStructure,
                                 @Nullable Comparator<NodeDescriptor> comparator) {
     init(tree, treeModel, treeStructure, comparator, DEFAULT_UPDATE_INACTIVE);
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AsyncResult<Object> revalidateElement(Object element) {
     final AsyncResult<Object> result = new AsyncResult<Object>();
@@ -84,7 +84,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
       final FocusRequestor focusRequestor = IdeFocusManager.getInstance(myProject).getFurtherRequestor();
       batch(new Progressive() {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           final Ref<Object> target = new Ref<Object>();
           _select(value, finalVFile, false, Conditions.<AbstractTreeNode>alwaysTrue(), cb, indicator, target, focusRequestor, false);
           cb.doWhenDone(new Runnable() {
@@ -119,7 +119,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  protected final void expandNodeChildren(@NotNull final DefaultMutableTreeNode node) {
+  protected final void expandNodeChildren(@Nonnull final DefaultMutableTreeNode node) {
     final NodeDescriptor userObject = (NodeDescriptor)node.getUserObject();
     if (userObject == null) return;
     Object element = userObject.getElement();
@@ -141,8 +141,8 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
            : object instanceof PsiFile ? ((PsiFile)object).getVirtualFile() : null;
   }
 
-  @NotNull
-  private static List<AbstractTreeNode> collectChildren(@NotNull DefaultMutableTreeNode node) {
+  @Nonnull
+  private static List<AbstractTreeNode> collectChildren(@Nonnull DefaultMutableTreeNode node) {
     int childCount = node.getChildCount();
     List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>(childCount);
     for (int i = 0; i < childCount; i++) {
@@ -160,7 +160,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback select(Object element, VirtualFile file, final boolean requestFocus) {
     return _select(element, file, requestFocus, Conditions.<AbstractTreeNode>alwaysTrue());
   }
@@ -171,7 +171,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     return _select(element, null, requestFocus, nonStopCondition);
   }
 
-  @NotNull
+  @Nonnull
   private ActionCallback _select(final Object element,
                                  final VirtualFile file,
                                  final boolean requestFocus,
@@ -187,7 +187,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
       public void run() {
         batch(new Progressive() {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             _select(element, file, requestFocus, nonStopCondition, result, indicator, null, requestor, false);
             UiActivityMonitor.getInstance().removeActivity(myProject, new UiActivity.AsyncBgOperation("projectViewSelect"));
           }
@@ -205,7 +205,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
                        final boolean requestFocus,
                        final Condition<AbstractTreeNode> nonStopCondition,
                        final ActionCallback result,
-                       @NotNull final ProgressIndicator indicator,
+                       @Nonnull final ProgressIndicator indicator,
                        @Nullable final Ref<Object> virtualSelectTarget,
                        final FocusRequestor focusRequestor,
                        final boolean isSecondAttempt) {
@@ -282,12 +282,12 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   private AsyncResult<AbstractTreeNode> expandPathTo(final VirtualFile file,
-                                                     @NotNull final AbstractTreeNode root,
+                                                     @Nonnull final AbstractTreeNode root,
                                                      final Object element,
-                                                     @NotNull final Condition<AbstractTreeNode> nonStopCondition,
-                                                     @NotNull final ProgressIndicator indicator,
+                                                     @Nonnull final Condition<AbstractTreeNode> nonStopCondition,
+                                                     @Nonnull final ProgressIndicator indicator,
                                                      @Nullable final Ref<Object> target) {
     final AsyncResult<AbstractTreeNode> async = new AsyncResult<AbstractTreeNode>();
 
@@ -360,13 +360,13 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     return async;
   }
 
-  private void expandChild(@NotNull final List<AbstractTreeNode> kids,
+  private void expandChild(@Nonnull final List<AbstractTreeNode> kids,
                            final int i,
-                           @NotNull final Condition<AbstractTreeNode> nonStopCondition,
+                           @Nonnull final Condition<AbstractTreeNode> nonStopCondition,
                            final VirtualFile file,
                            final Object element,
-                           @NotNull final AsyncResult<AbstractTreeNode> async,
-                           @NotNull final ProgressIndicator indicator,
+                           @Nonnull final AsyncResult<AbstractTreeNode> async,
+                           @Nonnull final ProgressIndicator indicator,
                            final Ref<Object> virtualSelectTarget) {
     if (i >= kids.size()) {
       async.setRejected();
@@ -414,7 +414,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected ProgressIndicator createProgressIndicator() {
     return new StatusBarProgress();
   }

@@ -30,7 +30,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -50,7 +50,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
   protected abstract ModuleGroupNode createModuleGroupNode(ModuleGroup moduleGroup);
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final Collection<ModuleGroup> childGroups = getValue().childGroups(getProject());
     final List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
@@ -84,7 +84,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return someChildContainsFile(file, false);
   }
 

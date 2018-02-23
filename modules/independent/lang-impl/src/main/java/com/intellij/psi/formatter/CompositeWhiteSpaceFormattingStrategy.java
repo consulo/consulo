@@ -19,7 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.LeafElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<WhiteSpaceFormattingStrategy>();
   private boolean myReplaceDefaultStrategy;
 
-  public CompositeWhiteSpaceFormattingStrategy(@NotNull Collection<WhiteSpaceFormattingStrategy> strategies)
+  public CompositeWhiteSpaceFormattingStrategy(@Nonnull Collection<WhiteSpaceFormattingStrategy> strategies)
           throws IllegalArgumentException
   {
     for (WhiteSpaceFormattingStrategy strategy : strategies) {
@@ -47,7 +47,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public int check(@NotNull CharSequence text, int start, int end) {
+  public int check(@Nonnull CharSequence text, int start, int end) {
     int offset = start;
     while (offset < end) {
       int oldOffset = offset;
@@ -69,7 +69,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
     return myReplaceDefaultStrategy;
   }
 
-  public void addStrategy(@NotNull WhiteSpaceFormattingStrategy strategy) throws IllegalArgumentException {
+  public void addStrategy(@Nonnull WhiteSpaceFormattingStrategy strategy) throws IllegalArgumentException {
     if (myReplaceDefaultStrategy && strategy.replaceDefaultStrategy()) {
       throw new IllegalArgumentException(String.format(
               "Can't combine strategy '%s' with already registered strategies (%s). Reason: given strategy is marked to replace "
@@ -80,10 +80,10 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
     myReplaceDefaultStrategy |= strategy.replaceDefaultStrategy();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull CharSequence text,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull CharSequence text,
                                                   int startOffset,
                                                   int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter)
   {
@@ -95,8 +95,8 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull PsiElement startElement,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull PsiElement startElement,
                                                   int startOffset,
                                                   int endOffset, CodeStyleSettings codeStyleSettings)
   {
@@ -108,7 +108,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public boolean containsWhitespacesOnly(@NotNull ASTNode node) {
+  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
     for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
       if (strategy.containsWhitespacesOnly(node)) {
         return true;
@@ -118,7 +118,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public boolean addWhitespace(@NotNull ASTNode treePrev, @NotNull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
     return false;
   }
 }

@@ -23,7 +23,7 @@ import com.intellij.openapi.components.impl.stores.StorageData;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.testFramework.LightPlatformLangTestCase;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -40,14 +40,14 @@ public class StateStorageManagerImplTest extends LightPlatformLangTestCase {
   public final void setUp() throws Exception {
     super.setUp();
     myStateStorageManager = new StateStorageManagerImpl(null, "foo", null, ApplicationManager.getApplication().getPicoContainer()) {
-      @NotNull
+      @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
         throw new UnsupportedOperationException();
       }
 
       @Override
-      protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
+      protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
         throw new UnsupportedOperationException("Method createStorageData not implemented in " + getClass());
       }
     };

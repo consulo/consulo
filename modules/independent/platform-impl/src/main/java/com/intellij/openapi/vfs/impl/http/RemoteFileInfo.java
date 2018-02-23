@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.VfsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,16 +50,16 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   private final AtomicBoolean myCancelled = new AtomicBoolean();
   private final List<FileDownloadingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public RemoteFileInfo(final @NotNull String url, final @NotNull RemoteFileManagerImpl manager) {
+  public RemoteFileInfo(final @Nonnull String url, final @Nonnull RemoteFileManagerImpl manager) {
     myUrl = url;
     myManager = manager;
   }
 
-  public void addDownloadingListener(@NotNull FileDownloadingListener listener) {
+  public void addDownloadingListener(@Nonnull FileDownloadingListener listener) {
     myListeners.add(listener);
   }
 
-  public void removeDownloadingListener(final @NotNull FileDownloadingListener listener) {
+  public void removeDownloadingListener(final @Nonnull FileDownloadingListener listener) {
     myListeners.remove(listener);
   }
 
@@ -171,7 +171,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   }
 
   @Override
-  public void errorOccurred(@NotNull final String errorMessage, boolean cancelled) {
+  public void errorOccurred(@Nonnull final String errorMessage, boolean cancelled) {
     LOG.debug("Error: " + errorMessage);
     synchronized (myLock) {
       myLocalVirtualFile = null;
@@ -194,7 +194,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   }
 
   @Override
-  public void setProgressText(@NotNull final String text, final boolean indeterminate) {
+  public void setProgressText(@Nonnull final String text, final boolean indeterminate) {
     for (FileDownloadingListener listener : myListeners) {
       listener.progressMessageChanged(indeterminate, text);
     }
@@ -276,7 +276,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
     }
 
     @Override
-    public void errorOccurred(@NotNull final String errorMessage) {
+    public void errorOccurred(@Nonnull final String errorMessage) {
       removeDownloadingListener(this);
       if (myPostRunnable != null) {
         myPostRunnable.run();

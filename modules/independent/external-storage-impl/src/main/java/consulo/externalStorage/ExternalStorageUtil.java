@@ -1,6 +1,6 @@
 package consulo.externalStorage;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -9,8 +9,8 @@ import java.io.File;
  * @since 20-Feb-17
  */
 public class ExternalStorageUtil {
-  @NotNull
-  public static File getModCountFile(@NotNull File baseFile) {
+  @Nonnull
+  public static File getModCountFile(@Nonnull File baseFile) {
     return new File(baseFile.getParentFile(), baseFile.getName() + ".mod");
   }
 }

@@ -23,8 +23,9 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.ide.HttpRequestHandler;
 import org.jetbrains.io.Responses;
 
@@ -51,7 +52,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
       return response;
     }
 
-    public static JsonResponse asError(@NotNull String message) {
+    public static JsonResponse asError(@Nonnull String message) {
       JsonResponse response = new JsonResponse();
       response.success = false;
       response.message = message;
@@ -61,7 +62,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
 
   private String myApiUrl;
 
-  protected JsonBaseRequestHandler(@NotNull String apiUrl) {
+  protected JsonBaseRequestHandler(@Nonnull String apiUrl) {
     myApiUrl = "/api/" + apiUrl;
   }
 
@@ -70,7 +71,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
     return getMethod() == request.method() && myApiUrl.equals(request.uri());
   }
 
-  protected boolean writeResponse(@NotNull Object responseObject, HttpRequest request, ChannelHandlerContext context) throws IOException {
+  protected boolean writeResponse(@Nonnull Object responseObject, HttpRequest request, ChannelHandlerContext context) throws IOException {
     FullHttpResponse response = Responses.response("application/json; charset=utf-8", null);
 
     String jsonResponse = new GsonBuilder().setPrettyPrinting().create().toJson(responseObject);
@@ -81,6 +82,6 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract HttpMethod getMethod();
 }

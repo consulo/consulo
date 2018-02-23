@@ -25,15 +25,17 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implements ProblemDescriptor {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.ex.ProblemDescriptorImpl");
 
-  @NotNull private final SmartPsiElementPointer myStartSmartPointer;
-  @Nullable private final SmartPsiElementPointer myEndSmartPointer;
+  @Nonnull
+  private final SmartPsiElementPointer myStartSmartPointer;
+  @javax.annotation.Nullable
+  private final SmartPsiElementPointer myEndSmartPointer;
 
   private final ProblemHighlightType myHighlightType;
   private Navigatable myNavigatable;
@@ -44,11 +46,11 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
   private int myLineNumber = -1;
   private ProblemGroup myProblemGroup;
 
-  public ProblemDescriptorBase(@NotNull PsiElement startElement,
-                               @NotNull PsiElement endElement,
-                               @NotNull String descriptionTemplate,
+  public ProblemDescriptorBase(@Nonnull PsiElement startElement,
+                               @Nonnull PsiElement endElement,
+                               @Nonnull String descriptionTemplate,
                                LocalQuickFix[] fixes,
-                               @NotNull ProblemHighlightType highlightType,
+                               @Nonnull ProblemHighlightType highlightType,
                                boolean isAfterEndOfLine,
                                @Nullable TextRange rangeInElement,
                                final boolean tooltip,
@@ -144,7 +146,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
     return myLineNumber;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProblemHighlightType getHighlightType() {
     return myHighlightType;
@@ -199,13 +201,13 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public ProblemGroup getProblemGroup() {
     return myProblemGroup;
   }
 
   @Override
-  public void setProblemGroup(@Nullable ProblemGroup problemGroup) {
+  public void setProblemGroup(@javax.annotation.Nullable ProblemGroup problemGroup) {
     myProblemGroup = problemGroup;
   }
 

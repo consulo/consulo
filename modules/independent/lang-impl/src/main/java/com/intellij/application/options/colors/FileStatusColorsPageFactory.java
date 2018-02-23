@@ -18,20 +18,20 @@ package com.intellij.application.options.colors;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.ArrayList;
 
 class FileStatusColorsPageFactory implements ColorAndFontPanelFactory {
   @Override
-  @NotNull
-  public NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options) {
+  @Nonnull
+  public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
     return NewColorAndFontPanel.create(new PreviewPanel.Empty(), ColorAndFontOptions.FILE_STATUS_GROUP, options, collectFileTypes(), null);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPanelDisplayName() {
     return ColorAndFontOptions.FILE_STATUS_GROUP;
   }

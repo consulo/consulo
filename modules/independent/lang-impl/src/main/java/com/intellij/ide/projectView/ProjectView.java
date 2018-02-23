@@ -24,13 +24,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
 public interface ProjectView {
-  @NotNull
+  @Nonnull
   static ProjectView getInstance(Project project) {
     return ServiceManager.getService(project, ProjectView.class);
   }
@@ -42,7 +42,7 @@ public interface ProjectView {
     }
   }
 
-  @NotNull
+  @Nonnull
   default ActionCallback selectCB(Object element, VirtualFile file, boolean requestFocus){
     final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane != null && viewPane instanceof AbstractProjectViewPSIPane) {
@@ -52,8 +52,8 @@ public interface ProjectView {
     return ActionCallback.DONE;
   }
 
-  @NotNull
-  ActionCallback changeViewCB(@NotNull String viewId, String subId);
+  @Nonnull
+  ActionCallback changeViewCB(@Nonnull String viewId, String subId);
 
   @Nullable
   PsiElement getParentOfCurrentSelection();
@@ -106,7 +106,7 @@ public interface ProjectView {
 
   boolean isManualOrder(String paneId);
 
-  void setManualOrder(@NotNull String paneId, final boolean enabled);
+  void setManualOrder(@Nonnull String paneId, final boolean enabled);
 
   void selectPsiElement(PsiElement element, boolean requestFocus);
 
@@ -118,6 +118,6 @@ public interface ProjectView {
 
   Collection<String> getPaneIds();
 
-  @NotNull
+  @Nonnull
   Collection<SelectInTarget> getSelectInTargets();
 }

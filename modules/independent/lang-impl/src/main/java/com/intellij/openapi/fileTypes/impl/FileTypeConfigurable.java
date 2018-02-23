@@ -39,8 +39,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.PairConvertor;
 import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -700,7 +700,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

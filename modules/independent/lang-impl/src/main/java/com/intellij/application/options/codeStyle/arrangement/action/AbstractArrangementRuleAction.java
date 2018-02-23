@@ -19,8 +19,8 @@ import com.intellij.application.options.codeStyle.arrangement.match.ArrangementM
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementSectionRulesControl;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya
@@ -32,7 +32,7 @@ public abstract class AbstractArrangementRuleAction extends AnAction {
     return e.getData(ArrangementSectionRulesControl.KEY);
   }
 
-  protected void scrollRowToVisible(@NotNull ArrangementMatchingRulesControl control, int row) {
+  protected void scrollRowToVisible(@Nonnull ArrangementMatchingRulesControl control, int row) {
     control.scrollRowToVisible(row);
   }
 }

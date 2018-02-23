@@ -20,11 +20,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ServiceDescriptor {
   private static NotNullLazyValue<Boolean> ourCompilerServerMode = new NotNullLazyValue<Boolean>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Boolean compute() {
       return ApplicationManager.getApplication().isCompilerServerMode();

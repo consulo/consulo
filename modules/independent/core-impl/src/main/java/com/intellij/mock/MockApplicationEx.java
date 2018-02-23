@@ -20,15 +20,15 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
 import java.io.IOException;
 
 public class MockApplicationEx extends MockApplication implements ApplicationEx {
-  public MockApplicationEx(@NotNull Disposable parentDisposable) {
+  public MockApplicationEx(@Nonnull Disposable parentDisposable) {
     super(parentDisposable);
   }
 
@@ -69,15 +69,15 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull final Runnable process, @NotNull final String progressTitle, final boolean canBeCanceled, @Nullable final Project project,
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull final String progressTitle, final boolean canBeCanceled, @Nullable final Project project,
                                                      final JComponent parentComponent) {
     return false;
   }
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
                                                      @Nullable Project project,
                                                      JComponent parentComponent,
@@ -87,16 +87,16 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
                                                      Project project) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] getExtensions(@NotNull final ExtensionPointName<T> extensionPointName) {
+  public <T> T[] getExtensions(@Nonnull final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();
   }
 
@@ -110,7 +110,7 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public boolean tryRunReadAction(@NotNull Runnable runnable) {
+  public boolean tryRunReadAction(@Nonnull Runnable runnable) {
     runReadAction(runnable);
     return true;
   }

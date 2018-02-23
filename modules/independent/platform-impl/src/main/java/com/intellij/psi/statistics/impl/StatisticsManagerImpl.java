@@ -30,7 +30,7 @@ import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.*;
@@ -48,7 +48,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
   private boolean myTestingStatistics;
 
-  public int getUseCount(@NotNull final StatisticsInfo info) {
+  public int getUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
     int useCount = 0;
@@ -70,7 +70,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   }
 
   @Override
-  public int getLastUseRecency(@NotNull StatisticsInfo info) {
+  public int getLastUseRecency(@Nonnull StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
     int recency = Integer.MAX_VALUE;
@@ -89,7 +89,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
-  public void incUseCount(@NotNull final StatisticsInfo info) {
+  public void incUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
     if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
       return;
@@ -204,7 +204,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
   }
 
   @TestOnly
-  public void enableStatistics(@NotNull Disposable parentDisposable) {
+  public void enableStatistics(@Nonnull Disposable parentDisposable) {
     myTestingStatistics = true;
     Disposer.register(parentDisposable, new Disposable() {
       @Override

@@ -25,14 +25,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageViewNodeTextLocation;
 import com.intellij.usageView.UsageViewTypeLocation;
 import com.intellij.codeInsight.highlighting.HighlightUsagesDescriptionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class DefaultPomTargetDescriptionProvider extends PomDescriptionProvider {
   @Override
-  public String getElementDescription(@NotNull PomTarget element, @NotNull ElementDescriptionLocation location) {
+  public String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location) {
     if (element instanceof PsiElement) return null;
 
     if (location == UsageViewTypeLocation.INSTANCE) {

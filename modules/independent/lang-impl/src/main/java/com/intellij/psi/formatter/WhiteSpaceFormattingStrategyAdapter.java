@@ -19,7 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.impl.source.tree.LeafElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -30,12 +30,12 @@ public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormatting
   private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n');
 
   @Override
-  public int check(@NotNull CharSequence text, int start, int end) {
+  public int check(@Nonnull CharSequence text, int start, int end) {
     return DELEGATE.check(text, start, end);
   }
 
   @Override
-  public boolean containsWhitespacesOnly(@NotNull ASTNode node) {
+  public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
     return false;
   }
 
@@ -44,25 +44,25 @@ public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormatting
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull CharSequence text,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull CharSequence text,
                                                   int startOffset,
                                                   int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter) {
     return whiteSpaceText;
   }
 
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,
-                                                  @NotNull PsiElement startElement,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
+                                                  @Nonnull PsiElement startElement,
                                                   int startOffset,
                                                   int endOffset, CodeStyleSettings codeStyleSettings) {
     return whiteSpaceText;
   }
 
   @Override
-  public boolean addWhitespace(@NotNull ASTNode treePrev, @NotNull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
     return false;
   }
 }

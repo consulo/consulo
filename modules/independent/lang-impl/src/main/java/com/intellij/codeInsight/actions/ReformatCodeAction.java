@@ -39,8 +39,8 @@ import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent event) {
+  public void actionPerformed(@Nonnull AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {
@@ -155,7 +155,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
 
   @Nullable
-  private static DirectoryFormattingOptions getDirectoryFormattingOptions(@NotNull Project project, @NotNull PsiDirectory dir) {
+  private static DirectoryFormattingOptions getDirectoryFormattingOptions(@Nonnull Project project, @Nonnull PsiDirectory dir) {
     LayoutDirectoryDialog dialog = new LayoutDirectoryDialog(
             project,
             CodeInsightBundle.message("process.reformat.code"),
@@ -173,9 +173,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return null;
   }
 
-  private static void reformatDirectory(@NotNull Project project,
-                                        @NotNull PsiDirectory dir,
-                                        @NotNull DirectoryFormattingOptions options)
+  private static void reformatDirectory(@Nonnull Project project,
+                                        @Nonnull PsiDirectory dir,
+                                        @Nonnull DirectoryFormattingOptions options)
   {
     AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(
             project, dir, options.isIncludeSubdirectories(), options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
@@ -194,9 +194,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.run();
   }
 
-  private static void reformatModule(@NotNull Project project,
+  private static void reformatModule(@Nonnull Project project,
                                      @Nullable Module moduleContext,
-                                     @NotNull ReformatFilesOptions selectedFlags)
+                                     @Nonnull ReformatFilesOptions selectedFlags)
   {
     boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
     boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
@@ -221,7 +221,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.run();
   }
 
-  public static void registerScopeFilter(@NotNull AbstractLayoutCodeProcessor processor, @Nullable final SearchScope scope) {
+  public static void registerScopeFilter(@Nonnull AbstractLayoutCodeProcessor processor, @Nullable final SearchScope scope) {
     if (scope == null) {
       return;
     }
@@ -229,7 +229,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.addFileFilter(scope::contains);
   }
 
-  public static void registerFileMaskFilter(@NotNull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
+  public static void registerFileMaskFilter(@Nonnull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
     if (fileTypeMask == null)
       return;
 
@@ -259,7 +259,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -330,7 +330,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  private static ReformatFilesOptions getReformatFilesOptions(@NotNull Project project, @NotNull VirtualFile[] files) {
+  private static ReformatFilesOptions getReformatFilesOptions(@Nonnull Project project, @Nonnull VirtualFile[] files) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myTestOptions;
     }
@@ -342,7 +342,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   }
 
   @Nullable
-  private static ReformatFilesOptions getLayoutProjectOptions(@NotNull Project project, @Nullable Module module) {
+  private static ReformatFilesOptions getLayoutProjectOptions(@Nonnull Project project, @Nullable Module module) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myTestOptions;
     }

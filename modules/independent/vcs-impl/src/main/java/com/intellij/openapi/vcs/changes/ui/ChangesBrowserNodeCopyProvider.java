@@ -23,7 +23,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -33,21 +33,22 @@ import java.util.List;
 
 class ChangesBrowserNodeCopyProvider implements CopyProvider {
 
-  @NotNull private final JTree myTree;
+  @Nonnull
+  private final JTree myTree;
 
-  ChangesBrowserNodeCopyProvider(@NotNull JTree tree) {
+  ChangesBrowserNodeCopyProvider(@Nonnull JTree tree) {
     myTree = tree;
   }
 
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     return myTree.getSelectionPaths() != null;
   }
 
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtils.assertNotNull(myTree.getSelectionPaths())),
                                                 TreeUtil.getDisplayOrderComparator(myTree));
     CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, new Function<TreePath, String>() {

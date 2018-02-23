@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.XExpression;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,21 +26,21 @@ import org.jetbrains.annotations.NotNull;
 public class XDebugSessionData extends UserDataHolderBase {
   public static final Key<XDebugSessionData> DATA_KEY = Key.create("XDebugSessionData");
 
-  @NotNull
+  @Nonnull
   private XExpression[] myWatchExpressions;
   private final String myConfigurationName;
   private boolean myBreakpointsMuted = false;
 
-  public XDebugSessionData(@NotNull XExpression[] watchExpressions, @NotNull String configurationName) {
+  public XDebugSessionData(@Nonnull XExpression[] watchExpressions, @Nonnull String configurationName) {
     myWatchExpressions = watchExpressions;
     myConfigurationName = configurationName;
   }
 
-  public void setWatchExpressions(@NotNull XExpression[] watchExpressions) {
+  public void setWatchExpressions(@Nonnull XExpression[] watchExpressions) {
     myWatchExpressions = watchExpressions;
   }
 
-  @NotNull
+  @Nonnull
   public XExpression[] getWatchExpressions() {
     return myWatchExpressions;
   }
@@ -53,7 +53,7 @@ public class XDebugSessionData extends UserDataHolderBase {
     myBreakpointsMuted = breakpointsMuted;
   }
 
-  @NotNull
+  @Nonnull
   public String getConfigurationName() {
     return myConfigurationName;
   }

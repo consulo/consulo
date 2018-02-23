@@ -25,7 +25,7 @@ import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,9 +37,9 @@ import java.util.List;
 public class DesktopStyleManagerImpl extends StyleManagerImpl {
   public DesktopStyleManagerImpl() {
     setCurrentStyle(new StyleImpl() {
-      @NotNull
+      @Nonnull
       @Override
-      public ColorValue getColor(@NotNull ColorKey colorKey) {
+      public ColorValue getColor(@Nonnull ColorKey colorKey) {
         if (colorKey == ComponentColors.TEXT) {
           return TargetAWT.from(UIUtil.getLabelForeground());
         }
@@ -66,7 +66,7 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Style> getStyles() {
     return Collections.emptyList();

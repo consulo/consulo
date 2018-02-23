@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ex.CheckboxAction;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -45,7 +45,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     return createCustomComponent(getTemplatePresentation());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DefaultActionGroup createPopupActionGroup(JComponent button) {
     DefaultActionGroup group = new DefaultActionGroup();
@@ -135,7 +135,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myBuilder.canEditDescription());
     }
   }

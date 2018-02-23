@@ -25,8 +25,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.ScrollPaneFactory;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -193,7 +193,7 @@ public class CreateFromTemplatePanel {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, Object> getVariables(Map<String, Object> predefinedProperties) {
     Map<String, Object> result = new HashMap<>(predefinedProperties);
     for (Pair<String, JTextField> pair : myAttributes) {

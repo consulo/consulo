@@ -27,8 +27,8 @@ import com.intellij.vcs.log.VcsLogRefManager;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.paint.PaintParameters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RectangleReferencePainter implements ReferencePainter {
-  @NotNull
+  @Nonnull
   private List<Pair<String, Color>> myLabels = ContainerUtil.newArrayList();
   private int myHeight = JBUI.scale(22);
   private int myWidth = 0;
@@ -50,11 +50,11 @@ public class RectangleReferencePainter implements ReferencePainter {
   };
 
   @Override
-  public void customizePainter(@NotNull JComponent component,
-                               @NotNull Collection<VcsRef> references,
+  public void customizePainter(@Nonnull JComponent component,
+                               @Nonnull Collection<VcsRef> references,
                                @Nullable VcsLogRefManager manager,
-                               @NotNull Color background,
-                               @NotNull Color foreground) {
+                               @Nonnull Color background,
+                               @Nonnull Color foreground) {
     FontMetrics metrics = component.getFontMetrics(getReferenceFont());
     myHeight = metrics.getHeight() + RectanglePainter.TOP_TEXT_PADDING + RectanglePainter.BOTTOM_TEXT_PADDING;
     myWidth = 2 * PaintParameters.LABEL_PADDING;
@@ -73,7 +73,7 @@ public class RectangleReferencePainter implements ReferencePainter {
     }
   }
 
-  public void paint(@NotNull Graphics2D g2, int x, int y, int height) {
+  public void paint(@Nonnull Graphics2D g2, int x, int y, int height) {
     if (myLabels.isEmpty()) return;
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
@@ -93,8 +93,8 @@ public class RectangleReferencePainter implements ReferencePainter {
     config.restore();
   }
 
-  @NotNull
-  public static Color getLabelColor(@NotNull Color color) {
+  @Nonnull
+  public static Color getLabelColor(@Nonnull Color color) {
     if (UIUtil.isUnderDarcula()) {
       color = ColorUtil.darker(color, 6);
     }

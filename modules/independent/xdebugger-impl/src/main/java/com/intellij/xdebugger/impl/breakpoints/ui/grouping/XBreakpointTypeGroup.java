@@ -19,7 +19,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,7 +31,7 @@ public class XBreakpointTypeGroup extends XBreakpointGroup {
     myBreakpointType = type;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myBreakpointType.getTitle();

@@ -17,31 +17,31 @@ package com.intellij.psi.codeStyle.arrangement.std;
 
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public class CompositeArrangementToken extends StdArrangementSettingsToken {
   private final Set<ArrangementSettingsToken> myParentTokenTypes;
 
-  private CompositeArrangementToken(@NotNull String id,
-                                    @NotNull String uiName,
-                                    @NotNull StdArrangementTokenType tokenType,
-                                    @NotNull ArrangementSettingsToken... tokens)
+  private CompositeArrangementToken(@Nonnull String id,
+                                    @Nonnull String uiName,
+                                    @Nonnull StdArrangementTokenType tokenType,
+                                    @Nonnull ArrangementSettingsToken... tokens)
   {
     super(id, uiName, tokenType);
     myParentTokenTypes = ContainerUtil.newHashSet(tokens);
   }
 
-  @NotNull
-  public static CompositeArrangementToken create(@NonNls @NotNull String id,
-                                                 @NotNull StdArrangementTokenType tokenType,
-                                                 @NotNull ArrangementSettingsToken... tokens)
+  @Nonnull
+  public static CompositeArrangementToken create(@NonNls @Nonnull String id,
+                                                 @Nonnull StdArrangementTokenType tokenType,
+                                                 @Nonnull ArrangementSettingsToken... tokens)
   {
     return new CompositeArrangementToken(id, id.toLowerCase().replace("_", " "), tokenType, tokens);
   }
 
-  @NotNull
+  @Nonnull
   public Set<ArrangementSettingsToken> getAdditionalTokens() {
     return myParentTokenTypes;
   }

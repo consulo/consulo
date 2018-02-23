@@ -21,11 +21,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class DataManager {
-  @NotNull
+  @Nonnull
   public static DataManager getInstance() {
     return ApplicationManager.getApplication().getComponent(DataManager.class);
   }
@@ -34,16 +34,16 @@ public abstract class DataManager {
    * @return {@link DataContext} constructed by the current focused component
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
-  @NotNull
+  @Nonnull
   public abstract DataContext getDataContext();
 
-  @NotNull
+  @Nonnull
   public abstract AsyncResult<DataContext> getDataContextFromFocus();
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
-  @NotNull
+  @Nonnull
   public abstract DataContext getDataContext(@Nullable consulo.ui.Component component);
 
   /**
@@ -51,7 +51,7 @@ public abstract class DataManager {
    * @param dataKey     key to store value
    * @param data        value to store
    */
-  public abstract <T> void saveInDataContext(@Nullable DataContext dataContext, @NotNull Key<T> dataKey, @Nullable T data);
+  public abstract <T> void saveInDataContext(@Nullable DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data);
 
   /**
    * @param dataContext find by key if instance of {@link com.intellij.openapi.util.UserDataHolder}
@@ -59,7 +59,7 @@ public abstract class DataManager {
    * @return value stored by {@link #saveInDataContext(com.intellij.openapi.actionSystem.DataContext, com.intellij.openapi.util.Key, Object)}
    */
   @Nullable
-  public abstract <T> T loadFromDataContext(@NotNull DataContext dataContext, @NotNull Key<T> dataKey);
+  public abstract <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);
 
   // TODO [VISTALL] region AWT & Swing dependency
 
@@ -72,12 +72,12 @@ public abstract class DataManager {
    * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
    *                                            component's bounds
    */
-  public abstract DataContext getDataContext(@NotNull java.awt.Component component, int x, int y);
+  public abstract DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y);
 
   @NonNls
   public static final String CLIENT_PROPERTY_DATA_PROVIDER = "DataProvider";
 
-  public static void registerDataProvider(@NotNull javax.swing.JComponent component, @NotNull DataProvider provider) {
+  public static void registerDataProvider(@Nonnull javax.swing.JComponent component, @Nonnull DataProvider provider) {
     component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, provider);
   }
 
@@ -87,11 +87,11 @@ public abstract class DataManager {
   public abstract DataContext getDataContext(@Nullable java.awt.Component component);
 
   @Nullable
-  public static DataProvider getDataProvider(@NotNull javax.swing.JComponent component) {
+  public static DataProvider getDataProvider(@Nonnull javax.swing.JComponent component) {
     return (DataProvider)component.getClientProperty(CLIENT_PROPERTY_DATA_PROVIDER);
   }
 
-  public static void removeDataProvider(@NotNull javax.swing.JComponent component) {
+  public static void removeDataProvider(@Nonnull javax.swing.JComponent component) {
     component.putClientProperty(CLIENT_PROPERTY_DATA_PROVIDER, null);
   }
   // endregion

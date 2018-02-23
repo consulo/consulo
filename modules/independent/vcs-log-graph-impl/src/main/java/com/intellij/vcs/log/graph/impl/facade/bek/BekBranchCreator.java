@@ -22,7 +22,7 @@ import com.intellij.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import com.intellij.vcs.log.graph.utils.DfsUtil;
 import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.impl.BitSetFlags;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,20 +30,25 @@ import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getDownNodes;
 import static com.intellij.vcs.log.graph.utils.LinearGraphUtils.getUpNodes;
 
 class BekBranchCreator {
-  @NotNull private final LinearGraph myPermanentGraph;
-  @NotNull private final GraphLayoutImpl myGraphLayout;
-  @NotNull private final Flags myDoneNodes;
+  @Nonnull
+  private final LinearGraph myPermanentGraph;
+  @Nonnull
+  private final GraphLayoutImpl myGraphLayout;
+  @Nonnull
+  private final Flags myDoneNodes;
 
-  @NotNull private final DfsUtil myDfsUtil = new DfsUtil();
-  @NotNull private final BekEdgeRestrictions myEdgeRestrictions = new BekEdgeRestrictions();
+  @Nonnull
+  private final DfsUtil myDfsUtil = new DfsUtil();
+  @Nonnull
+  private final BekEdgeRestrictions myEdgeRestrictions = new BekEdgeRestrictions();
 
-  public BekBranchCreator(@NotNull LinearGraph permanentGraph, @NotNull GraphLayoutImpl graphLayout) {
+  public BekBranchCreator(@Nonnull LinearGraph permanentGraph, @Nonnull GraphLayoutImpl graphLayout) {
     myPermanentGraph = permanentGraph;
     myGraphLayout = graphLayout;
     myDoneNodes = new BitSetFlags(permanentGraph.nodesCount(), false);
   }
 
-  @NotNull
+  @Nonnull
   public Pair<List<BekBranch>, BekEdgeRestrictions> getResult() {
     List<BekBranch> bekBranches = ContainerUtil.newArrayList();
 

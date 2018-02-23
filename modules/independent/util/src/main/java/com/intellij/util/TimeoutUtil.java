@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Konstantin Bulenkov
  */
 public final class TimeoutUtil {
-  public static void executeWithTimeout(long timeout, long sleep, @NotNull final Runnable run) {
+  public static void executeWithTimeout(long timeout, long sleep, @Nonnull final Runnable run) {
     final long start = System.currentTimeMillis();
     final AtomicBoolean done = new AtomicBoolean(false);
     final Thread thread = new Thread("Fast Function Thread@" + run.hashCode()) {
@@ -49,7 +49,7 @@ public final class TimeoutUtil {
     }
   }
 
-  public static void executeWithTimeout(long timeout, @NotNull final Runnable run) {
+  public static void executeWithTimeout(long timeout, @Nonnull final Runnable run) {
     executeWithTimeout(timeout, 50, run);
   }
 

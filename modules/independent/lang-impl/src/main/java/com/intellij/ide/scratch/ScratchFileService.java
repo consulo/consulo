@@ -19,8 +19,8 @@ import com.intellij.lang.Language;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -36,15 +36,15 @@ public abstract class ScratchFileService {
     static final ScratchFileService instance = ServiceManager.getService(ScratchFileService.class);
   }
 
-  @NotNull
-  public abstract String getRootPath(@NotNull RootType rootId);
+  @Nonnull
+  public abstract String getRootPath(@Nonnull RootType rootId);
 
   @Nullable
   public abstract RootType getRootType(@Nullable VirtualFile file);
 
-  public abstract VirtualFile findFile(@NotNull RootType rootType, @NotNull String pathName, @NotNull Option option) throws IOException;
+  public abstract VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException;
 
-  @NotNull
+  @Nonnull
   public abstract PerFileMappings<Language> getScratchesMapping();
 
   public static boolean isInScratchRoot(@Nullable VirtualFile file) {

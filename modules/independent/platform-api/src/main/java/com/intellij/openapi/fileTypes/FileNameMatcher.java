@@ -17,14 +17,14 @@
 package com.intellij.openapi.fileTypes;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface FileNameMatcher {
-  boolean accept(@NonNls @NotNull CharSequence fileName);
+  boolean accept(@NonNls @Nonnull CharSequence fileName);
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   String getPresentableString();
 }

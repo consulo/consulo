@@ -18,7 +18,7 @@ package com.intellij.patterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -34,7 +34,7 @@ public class PsiNamePatternCondition<T extends PsiElement> extends PropertyPatte
   }
 
   @Override
-  public String getPropertyValue(@NotNull final Object o) {
+  public String getPropertyValue(@Nonnull final Object o) {
     return o instanceof PsiNamedElement ? ((PsiNamedElement)o).getName() : null;
   }
 

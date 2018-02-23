@@ -21,8 +21,8 @@ import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -30,7 +30,7 @@ import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
 public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<LocallyDeletedChange>
         implements TreeLinkMouseListener.HaveTooltip {
-  public ChangesBrowserLocallyDeletedNode(@NotNull LocallyDeletedChange userObject) {
+  public ChangesBrowserLocallyDeletedNode(@Nonnull LocallyDeletedChange userObject) {
     super(userObject);
   }
 
@@ -45,7 +45,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
   }
 
   @Override
-  public void render(@NotNull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     // todo would be good to have render code in one place
     FilePath filePath = getUserObject().getPath();
     renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), FileStatus.NOT_CHANGED.getColor());
@@ -68,7 +68,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
     return getUserObject().getDescription();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Icon getIcon() {
     Icon result = getUserObject().getAddIcon();
 

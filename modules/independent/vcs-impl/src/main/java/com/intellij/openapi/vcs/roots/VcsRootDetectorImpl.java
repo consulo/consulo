@@ -23,8 +23,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.VcsRootChecker;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -34,27 +33,31 @@ import java.util.*;
 public class VcsRootDetectorImpl implements VcsRootDetector {
   private static final int MAXIMUM_SCAN_DEPTH = 2;
 
-  @NotNull private final Project myProject;
-  @NotNull private final ProjectRootManager myProjectManager;
-  @NotNull private final ProjectLevelVcsManager myVcsManager;
-  @NotNull private final VcsRootChecker[] myCheckers;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final ProjectRootManager myProjectManager;
+  @Nonnull
+  private final ProjectLevelVcsManager myVcsManager;
+  @Nonnull
+  private final VcsRootChecker[] myCheckers;
 
-  public VcsRootDetectorImpl(@NotNull Project project,
-                             @NotNull ProjectRootManager projectRootManager,
-                             @NotNull ProjectLevelVcsManager projectLevelVcsManager) {
+  public VcsRootDetectorImpl(@Nonnull Project project,
+                             @Nonnull ProjectRootManager projectRootManager,
+                             @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
     myProject = project;
     myProjectManager = projectRootManager;
     myVcsManager = projectLevelVcsManager;
     myCheckers = Extensions.getExtensions(VcsRootChecker.EXTENSION_POINT_NAME);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VcsRoot> detect() {
     return detect(myProject.getBaseDir());
   }
 
-  @NotNull
-  public Collection<VcsRoot> detect(@Nullable VirtualFile startDir) {
+  @Nonnull
+  public Collection<VcsRoot> detect(@javax.annotation.Nullable VirtualFile startDir) {
     if (startDir == null || myCheckers.length == 0) {
       return Collections.emptyList();
     }
@@ -71,7 +74,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @NotNull
+  @Nonnull
   private Set<VcsRoot> scanForRootsInContentRoots() {
     Set<VcsRoot> vcsRoots = new HashSet<VcsRoot>();
     VirtualFile[] roots = myProjectManager.getContentRoots();
@@ -93,8 +96,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return vcsRoots;
   }
 
-  @NotNull
-  private Set<VcsRoot> scanForRootsInsideDir(@NotNull final VirtualFile dir, final int depth) {
+  @Nonnull
+  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull final VirtualFile dir, final int depth) {
     final Set<VcsRoot> roots = new HashSet<VcsRoot>();
     if (depth > MAXIMUM_SCAN_DEPTH) {
       // performance optimization via limitation: don't scan deep though the whole VFS, 2 levels under a content root is enough
@@ -114,13 +117,13 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @NotNull
-  private Set<VcsRoot> scanForRootsInsideDir(@NotNull VirtualFile dir) {
+  @Nonnull
+  private Set<VcsRoot> scanForRootsInsideDir(@Nonnull VirtualFile dir) {
     return scanForRootsInsideDir(dir, 0);
   }
 
-  @NotNull
-  private List<VcsRoot> scanForSingleRootAboveDir(@NotNull final VirtualFile dir) {
+  @Nonnull
+  private List<VcsRoot> scanForSingleRootAboveDir(@Nonnull final VirtualFile dir) {
     List<VcsRoot> roots = new ArrayList<VcsRoot>();
     if (myProject.isDisposed()) {
       return roots;
@@ -140,8 +143,8 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
     return roots;
   }
 
-  @NotNull
-  private List<AbstractVcs> getVcsListFor(@NotNull VirtualFile dir) {
+  @Nonnull
+  private List<AbstractVcs> getVcsListFor(@Nonnull VirtualFile dir) {
     List<AbstractVcs> vcsList = new ArrayList<AbstractVcs>();
     for (VcsRootChecker checker : myCheckers) {
       if (checker.isRoot(dir.getPath())) {

@@ -16,7 +16,7 @@
 package com.intellij.ui.border;
 
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -28,16 +28,16 @@ public class CustomLineBorder implements Border {
   private final Color myColor;
   private final Insets myInsets;
 
-  public CustomLineBorder(@NotNull Color color, @NotNull Insets insets) {
+  public CustomLineBorder(@Nonnull Color color, @Nonnull Insets insets) {
     myColor = color;
     myInsets = insets;
   }
 
-  public CustomLineBorder(@NotNull Color color, int top, int left, int bottom, int right) {
+  public CustomLineBorder(@Nonnull Color color, int top, int left, int bottom, int right) {
     this(color, new Insets(top, left, bottom, right));
   }
 
-  public CustomLineBorder(@NotNull Insets insets) {
+  public CustomLineBorder(@Nonnull Insets insets) {
     this(UIUtil.getBorderColor(), insets);
   }
 

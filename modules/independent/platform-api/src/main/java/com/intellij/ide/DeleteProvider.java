@@ -16,9 +16,9 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface DeleteProvider {
-  void deleteElement(@NotNull DataContext dataContext);
-  boolean canDeleteElement(@NotNull DataContext dataContext);
+  void deleteElement(@Nonnull DataContext dataContext);
+  boolean canDeleteElement(@Nonnull DataContext dataContext);
 }

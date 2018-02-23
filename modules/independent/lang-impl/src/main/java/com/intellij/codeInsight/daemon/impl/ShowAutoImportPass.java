@@ -43,7 +43,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
   private final int myStartOffset;
   private final int myEndOffset;
 
-  public ShowAutoImportPass(@NotNull Project project, @NotNull final PsiFile file, @NotNull Editor editor) {
+  public ShowAutoImportPass(@Nonnull Project project, @Nonnull final PsiFile file, @Nonnull Editor editor) {
     super(project, editor.getDocument(), false);
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -71,7 +71,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
   }
 
   @Override
@@ -124,7 +124,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<HighlightInfo> getVisibleHighlights(final int startOffset, final int endOffset, Project project, final Editor editor) {
     final List<HighlightInfo> highlights = new ArrayList<>();
     DaemonCodeAnalyzerEx.processHighlights(editor.getDocument(), project, null, startOffset, endOffset, info -> {

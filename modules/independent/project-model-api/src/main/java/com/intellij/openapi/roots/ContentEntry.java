@@ -17,8 +17,8 @@ package com.intellij.openapi.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -46,23 +46,23 @@ public interface ContentEntry extends Synthetic {
    *
    * @return URL of content root, that should never be null.
    */
-  @NotNull
+  @Nonnull
   String getUrl();
 
-  @NotNull
-  ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+  @Nonnull
+  ContentFolder[] getFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
 
-  @NotNull
-  VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+  @Nonnull
+  VirtualFile[] getFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
 
-  @NotNull
-  String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate);
+  @Nonnull
+  String[] getFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
 
-  @NotNull
-  ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType);
+  @Nonnull
+  ContentFolder addFolder(@Nonnull VirtualFile file, @Nonnull ContentFolderTypeProvider contentFolderType);
 
-  @NotNull
-  ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType);
+  @Nonnull
+  ContentFolder addFolder(@Nonnull String url, @Nonnull ContentFolderTypeProvider contentFolderType);
 
-  void removeFolder(@NotNull ContentFolder contentFolder);
+  void removeFolder(@Nonnull ContentFolder contentFolder);
 }

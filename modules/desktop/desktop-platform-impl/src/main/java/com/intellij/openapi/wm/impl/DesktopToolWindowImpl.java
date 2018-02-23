@@ -28,8 +28,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.ToolWindowBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -50,13 +49,13 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     }
   };
 
-  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @Nullable JComponent component) {
+  protected DesktopToolWindowImpl(DesktopToolWindowManagerImpl toolWindowManager, String id, boolean canCloseContent, @javax.annotation.Nullable JComponent component) {
     super(toolWindowManager, id, canCloseContent, component);
   }
 
   @RequiredUIAccess
   @Override
-  protected void init(boolean canCloseContent, @Nullable Object component) {
+  protected void init(boolean canCloseContent, @javax.annotation.Nullable Object component) {
     final ContentFactory contentFactory = ContentFactory.getInstance();
     myContentUI = new DesktopToolWindowContentUi(this);
     ContentManager contentManager = myContentManager = contentFactory.createContentManager(myContentUI, canCloseContent, myToolWindowManager.getProject());
@@ -82,9 +81,9 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myContentUI;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull final Object requestor) {
+  public ActionCallback getReady(@Nonnull final Object requestor) {
     final ActionCallback result = new ActionCallback();
     myShowing.getReady(this).doWhenDone(() -> {
       ArrayList<FinalizableCommand> cmd = new ArrayList<>();
@@ -112,7 +111,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
     return myAvailable && myComponent != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public final JComponent getComponent() {
     return myComponent;

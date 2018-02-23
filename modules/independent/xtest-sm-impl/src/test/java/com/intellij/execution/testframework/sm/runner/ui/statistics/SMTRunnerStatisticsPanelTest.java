@@ -24,8 +24,8 @@ import com.intellij.execution.testframework.sm.runner.ui.PropagateSelectionHandl
 import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Ref;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -169,7 +169,7 @@ public class SMTRunnerStatisticsPanelTest extends BaseSMTRunnerTestCase {
 
     myStatisticsPanel.addPropagateSelectionListener(new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender, final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
         onSelectedHappend.set();
         proxyRef.set(selectedTestProxy);
         focusRequestedRef.set(requestFocus);

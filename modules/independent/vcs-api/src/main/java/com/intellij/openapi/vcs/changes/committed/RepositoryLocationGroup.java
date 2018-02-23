@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class RepositoryLocationGroup implements RepositoryLocation {
     return myPresentableString;
   }
 
-  public void add(@NotNull final RepositoryLocation location) {
+  public void add(@Nonnull final RepositoryLocation location) {
     for (int i = 0; i < myLocations.size(); i++) {
       final RepositoryLocation t = myLocations.get(i);
       if (t.getKey().compareTo(location.getKey()) >= 0) {

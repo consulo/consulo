@@ -23,8 +23,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,44 +31,44 @@ import org.jetbrains.annotations.Nullable;
 public interface MarkupModelEx extends MarkupModel {
   void dispose();
 
-  @Nullable
+  @javax.annotation.Nullable
   RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes);
 
-  void fireAttributesChanged(@NotNull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged);
+  void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged);
 
-  void fireAfterAdded(@NotNull RangeHighlighterEx segmentHighlighter);
+  void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter);
 
-  void fireBeforeRemoved(@NotNull RangeHighlighterEx segmentHighlighter);
+  void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter);
 
-  boolean containsHighlighter(@NotNull RangeHighlighter highlighter);
+  boolean containsHighlighter(@Nonnull RangeHighlighter highlighter);
 
-  void addRangeHighlighter(@NotNull RangeHighlighterEx marker,
+  void addRangeHighlighter(@Nonnull RangeHighlighterEx marker,
                            int start,
                            int end,
                            boolean greedyToLeft,
                            boolean greedyToRight,
                            int layer);
 
-  void addMarkupModelListener(@NotNull Disposable parentDisposable, @NotNull MarkupModelListener listener);
+  void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener);
 
-  void setRangeHighlighterAttributes(@NotNull RangeHighlighter highlighter, @NotNull TextAttributes textAttributes);
+  void setRangeHighlighterAttributes(@Nonnull RangeHighlighter highlighter, @Nonnull TextAttributes textAttributes);
 
-  boolean processRangeHighlightersOverlappingWith(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor);
-  boolean processRangeHighlightersOutside(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor);
+  boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
+  boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor);
 
-  @NotNull
+  @Nonnull
   MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
 
   // optimization: creates highlighter and fires only one event: highlighterCreated
-  @NotNull
+  @Nonnull
   RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                             int endOffset,
                                                             int layer,
                                                             TextAttributes textAttributes,
-                                                            @NotNull HighlighterTargetArea targetArea,
+                                                            @Nonnull HighlighterTargetArea targetArea,
                                                             boolean isPersistent,
                                                             Consumer<RangeHighlighterEx> changeAttributesAction);
 
   // runs change attributes action and fires highlighterChanged event if there were changes
-  void changeAttributesInBatch(@NotNull RangeHighlighterEx highlighter, @NotNull Consumer<RangeHighlighterEx> changeAttributesAction);
+  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction);
 }

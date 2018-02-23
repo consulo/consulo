@@ -26,18 +26,18 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 class WolfHighlightingPass extends ProgressableTextEditorHighlightingPass implements DumbAware {
-  WolfHighlightingPass(@NotNull Project project, @NotNull Document document, @NotNull PsiFile file) {
+  WolfHighlightingPass(@Nonnull Project project, @Nonnull Document document, @Nonnull PsiFile file) {
     super(project, document, DaemonBundle.message("pass.wolf"), file, null, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty());
   }
 
   @Override
-  protected void collectInformationWithProgress(@NotNull final ProgressIndicator progress) {
+  protected void collectInformationWithProgress(@Nonnull final ProgressIndicator progress) {
     if (!Registry.is("wolf.the.problem.solver", true)) return;
     final WolfTheProblemSolver solver = WolfTheProblemSolver.getInstance(myProject);
     if (solver instanceof WolfTheProblemSolverImpl) {

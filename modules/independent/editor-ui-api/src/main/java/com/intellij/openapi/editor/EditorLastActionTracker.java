@@ -16,7 +16,6 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.application.ApplicationManager;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This component provides the notion of last editor action.
@@ -33,6 +32,6 @@ public abstract class EditorLastActionTracker {
    * Returns the id of the previously invoked action or <code>null</code>, if no history exists yet, or last user activity was of
    * non-action type, like mouse clicking in editor or text typing, or previous action was invoked for a different editor.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getLastActionId();
 }

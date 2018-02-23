@@ -15,8 +15,8 @@
  */
 package com.intellij.remoteServer.configuration.deployment;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -25,22 +25,22 @@ import java.io.File;
  * @author nik
  */
 public interface DeploymentSource {
-  @Nullable
+  @javax.annotation.Nullable
   File getFile();
 
   @Nullable
   String getFilePath();
 
-  @NotNull
+  @Nonnull
   String getPresentableName();
 
-  @Nullable
+  @javax.annotation.Nullable
   Icon getIcon();
 
   boolean isValid();
 
   boolean isArchive();
 
-  @NotNull
+  @Nonnull
   DeploymentSourceType<?> getType();
 }

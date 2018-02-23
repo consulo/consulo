@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.compiler.ModuleCompilerPathsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
@@ -52,7 +52,7 @@ public class DummyCompileContext implements CompileContext {
   @Override
   public void addMessage(CompilerMessageCategory category,
                          String message,
-                         @Nullable String url,
+                         @javax.annotation.Nullable String url,
                          int lineNum,
                          int columnNum,
                          Navigatable navigatable) {
@@ -118,19 +118,19 @@ public class DummyCompileContext implements CompileContext {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
     return null;
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return null;
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
   }
 
   @Override

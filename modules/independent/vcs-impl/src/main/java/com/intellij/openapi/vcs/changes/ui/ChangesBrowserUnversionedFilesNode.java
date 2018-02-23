@@ -17,11 +17,11 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.UnversionedViewDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ChangesBrowserUnversionedFilesNode extends ChangesBrowserSpecificFilesNode {
 
-  public ChangesBrowserUnversionedFilesNode(@NotNull Project project,
+  public ChangesBrowserUnversionedFilesNode(@Nonnull Project project,
                                             int unversionedSize,
                                             int unversionedDirsSize,
                                             boolean manyUnversioned) {

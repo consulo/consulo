@@ -32,8 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -48,12 +47,15 @@ public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSet
 
   private static final Logger LOG = Logger.getInstance("#" + AbstractExternalModuleBuilder.class.getName());
 
-  @NotNull private final Icon                          myIcon;
-  @NotNull private final ProjectSystemId               myExternalSystemId;
-  @NotNull private final S                             myExternalProjectSettings;
+  @Nonnull
+  private final Icon                          myIcon;
+  @Nonnull
+  private final ProjectSystemId               myExternalSystemId;
+  @Nonnull
+  private final S                             myExternalProjectSettings;
 
-  protected AbstractExternalModuleBuilder(@NotNull final ProjectSystemId externalSystemId,
-                                          @NotNull final S externalProjectSettings)
+  protected AbstractExternalModuleBuilder(@Nonnull final ProjectSystemId externalSystemId,
+                                          @Nonnull final S externalProjectSettings)
   {
     myExternalSystemId = externalSystemId;
     myExternalProjectSettings = externalProjectSettings;
@@ -115,7 +117,7 @@ public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSet
     settings.linkProject(myExternalProjectSettings);
   }
 
-  @NotNull
+  @Nonnull
   public S getExternalProjectSettings() {
     return myExternalProjectSettings;
   }
@@ -127,9 +129,9 @@ public abstract class AbstractExternalModuleBuilder<S extends ExternalProjectSet
    * @return                external system config file created by the external system-specific implementation (if any);
    *                        <code>null</code> as an indication that no external system config file has been created
    */
-  @Nullable
-  protected abstract VirtualFile getExternalProjectConfigFile(@NotNull VirtualFile contentRootDir);
+  @javax.annotation.Nullable
+  protected abstract VirtualFile getExternalProjectConfigFile(@Nonnull VirtualFile contentRootDir);
 
-  @Nullable
-  protected abstract String getTemplateConfigName(@NotNull S settings);
+  @javax.annotation.Nullable
+  protected abstract String getTemplateConfigName(@Nonnull S settings);
 }

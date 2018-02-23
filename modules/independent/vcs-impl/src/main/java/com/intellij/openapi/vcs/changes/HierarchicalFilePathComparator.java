@@ -19,7 +19,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -39,7 +39,7 @@ public class HierarchicalFilePathComparator implements Comparator<FilePath> {
   }
 
   @Override
-  public int compare(@NotNull FilePath filePath1, @NotNull FilePath filePath2) {
+  public int compare(@Nonnull FilePath filePath1, @Nonnull FilePath filePath2) {
     final String path1 = FileUtilRt.toSystemIndependentName(filePath1.getPath());
     final String path2 = FileUtilRt.toSystemIndependentName(filePath2.getPath());
 

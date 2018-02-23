@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
   public void resetEditorFrom(T t) {}
   public void applyEditorTo(T t) throws ConfigurationException {}
 
-  @NotNull
+  @Nonnull
   public JComponent createEditor() {
     throw new UnsupportedOperationException("This method should never be called!");
   }

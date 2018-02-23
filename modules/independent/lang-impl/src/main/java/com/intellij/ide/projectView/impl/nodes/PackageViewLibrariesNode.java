@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement>{
   }
 
   @Override
-  public boolean contains(@NotNull final VirtualFile file) {
+  public boolean contains(@Nonnull final VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
     if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) return false;
 
@@ -49,7 +49,7 @@ public class PackageViewLibrariesNode extends ProjectViewNode<LibrariesElement>{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final ArrayList<VirtualFile> roots = new ArrayList<VirtualFile>();
     Module myModule = getValue().getModule();

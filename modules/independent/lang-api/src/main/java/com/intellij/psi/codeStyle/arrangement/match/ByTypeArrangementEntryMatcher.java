@@ -20,7 +20,7 @@ import com.intellij.psi.codeStyle.arrangement.TypeAwareArrangementEntry;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -37,18 +37,19 @@ import java.util.Set;
  */
 public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @NotNull private final Set<ArrangementAtomMatchCondition> myTypes = ContainerUtilRt.newHashSet();
+  @Nonnull
+  private final Set<ArrangementAtomMatchCondition> myTypes = ContainerUtilRt.newHashSet();
 
-  public ByTypeArrangementEntryMatcher(@NotNull ArrangementAtomMatchCondition interestedType) {
+  public ByTypeArrangementEntryMatcher(@Nonnull ArrangementAtomMatchCondition interestedType) {
     myTypes.add(interestedType);
   }
 
-  public ByTypeArrangementEntryMatcher(@NotNull Collection<ArrangementAtomMatchCondition> interestedTypes) {
+  public ByTypeArrangementEntryMatcher(@Nonnull Collection<ArrangementAtomMatchCondition> interestedTypes) {
     myTypes.addAll(interestedTypes);
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     if (entry instanceof TypeAwareArrangementEntry) {
       final Set<ArrangementSettingsToken> types = ((TypeAwareArrangementEntry)entry).getTypes();
       for (ArrangementAtomMatchCondition condition : myTypes) {
@@ -63,7 +64,7 @@ public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public Set<ArrangementAtomMatchCondition> getTypes() {
     return myTypes;
   }

@@ -31,8 +31,8 @@ import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -132,7 +132,7 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
   public static final class SplitterProportionsConverter extends Converter<SplitterProportionsDataImpl> {
     @Nullable
     @Override
-    public SplitterProportionsDataImpl fromString(@NotNull String value) {
+    public SplitterProportionsDataImpl fromString(@Nonnull String value) {
       SplitterProportionsDataImpl data = new SplitterProportionsDataImpl();
       StringTokenizer tokenizer = new StringTokenizer(value, ",");
       while (tokenizer.hasMoreTokens()) {
@@ -141,9 +141,9 @@ public class SplitterProportionsDataImpl implements SplitterProportionsData {
       return data;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public String toString(@NotNull SplitterProportionsDataImpl data) {
+    public String toString(@Nonnull SplitterProportionsDataImpl data) {
       StringBuilder result = new StringBuilder();
       String sep = "";
       for (Float proportion : data.proportions) {

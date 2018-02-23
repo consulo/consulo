@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.history.ShowDiffWithLocalAction;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
     myUseCase = useCase;
   }
 
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommittedChangesBrowserUseCase.DATA_KEY == dataId) {
       return myUseCase;
     }

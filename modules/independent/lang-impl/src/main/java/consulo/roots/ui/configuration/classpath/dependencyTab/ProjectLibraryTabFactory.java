@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.ModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,15 +27,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProjectLibraryTabFactory implements AddModuleDependencyTabFactory {
   @Override
-  public boolean isAvailable(@NotNull ModuleRootLayer layer) {
+  public boolean isAvailable(@Nonnull ModuleRootLayer layer) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AddModuleDependencyTabContext createTabContext(@NotNull Disposable parent,
-                                                        @NotNull ClasspathPanel panel,
-                                                        @NotNull StructureConfigurableContext context) {
+  public AddModuleDependencyTabContext createTabContext(@Nonnull Disposable parent,
+                                                        @Nonnull ClasspathPanel panel,
+                                                        @Nonnull StructureConfigurableContext context) {
     return new ProjectLibraryTabContext(panel, context);
   }
 }

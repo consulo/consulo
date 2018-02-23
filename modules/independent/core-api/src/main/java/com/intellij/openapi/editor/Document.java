@@ -21,8 +21,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 
@@ -50,13 +50,13 @@ public interface Document extends UserDataHolder {
    *
    * @return document content.
    */
-  @NotNull
+  @Nonnull
   @Contract(pure=true)
   String getText();
 
-  @NotNull
+  @Nonnull
   @Contract(pure=true)
-  String getText(@NotNull TextRange range);
+  String getText(@Nonnull TextRange range);
 
   /**
    * Use this method instead of {@link #getText()} if you do not need to create a copy of the content.
@@ -68,14 +68,14 @@ public interface Document extends UserDataHolder {
    * @see #getTextLength()
    */
   @Contract(pure=true)
-  @NotNull
+  @Nonnull
   CharSequence getCharsSequence();
 
   /**
    * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
    * @see com.intellij.util.text.ImmutableCharSequence
    */
-  @NotNull
+  @Nonnull
   @Contract(pure=true)
   CharSequence getImmutableCharSequence();
 
@@ -83,7 +83,8 @@ public interface Document extends UserDataHolder {
    * @deprecated Use {@link #getCharsSequence()} or {@link #getText()} instead.
    */
   @Deprecated
-  @NotNull char[] getChars();
+  @Nonnull
+  char[] getChars();
 
   /**
    * Returns the length of the document text.
@@ -139,7 +140,7 @@ public interface Document extends UserDataHolder {
    * @throws ReadOnlyModificationException if the document is read-only.
    * @throws ReadOnlyFragmentModificationException if the fragment to be modified is covered by a guarded block.
    */
-  void insertString(int offset, @NotNull CharSequence s);
+  void insertString(int offset, @Nonnull CharSequence s);
 
   /**
    * Deletes the specified range of text from the document.
@@ -161,7 +162,7 @@ public interface Document extends UserDataHolder {
    * @throws ReadOnlyModificationException if the document is read-only.
    * @throws ReadOnlyFragmentModificationException if the fragment to be modified is covered by a guarded block.
    */
-  void replaceString(int startOffset, int endOffset, @NotNull CharSequence s);
+  void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s);
 
   /**
    * Checks if the document text is read-only.
@@ -195,16 +196,16 @@ public interface Document extends UserDataHolder {
    *
    * @param listener the listener instance.
    */
-  void addDocumentListener(@NotNull DocumentListener listener);
+  void addDocumentListener(@Nonnull DocumentListener listener);
 
-  void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable);
+  void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Removes a listener for receiving notifications about changes in the document content.
    *
    * @param listener the listener instance.
    */
-  void removeDocumentListener(@NotNull DocumentListener listener);
+  void removeDocumentListener(@Nonnull DocumentListener listener);
 
   /**
    * Creates a range marker which points to the specified range of text in the document and
@@ -215,7 +216,8 @@ public interface Document extends UserDataHolder {
    * @param endOffset the end offset for the range of text covered by the marker.
    * @return the marker instance.
    */
-  @NotNull RangeMarker createRangeMarker(int startOffset, int endOffset);
+  @Nonnull
+  RangeMarker createRangeMarker(int startOffset, int endOffset);
 
   /**
    * Creates a range marker which points to the specified range of text in the document and
@@ -227,7 +229,8 @@ public interface Document extends UserDataHolder {
    * @param surviveOnExternalChange if true, the marker is not invalidated by external changes.
    * @return the marker instance.
    */
-  @NotNull RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange);
+  @Nonnull
+  RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange);
 
   /**
    * Adds a listener for receiving notifications about changes in the properties of the document
@@ -235,7 +238,7 @@ public interface Document extends UserDataHolder {
    *
    * @param listener the listener instance.
    */
-  void addPropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * Removes a listener for receiving notifications about changes in the properties of the document
@@ -243,7 +246,7 @@ public interface Document extends UserDataHolder {
    *
    * @param listener the listener instance.
    */
-  void removePropertyChangeListener(@NotNull PropertyChangeListener listener);
+  void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * Marks the document as read-only or read/write. This method only modifies the flag stored
@@ -266,7 +269,7 @@ public interface Document extends UserDataHolder {
    * @see #startGuardedBlockChecking()
    * @see com.intellij.openapi.editor.actionSystem.EditorActionManager#setReadonlyFragmentModificationHandler(com.intellij.openapi.editor.actionSystem.ReadonlyFragmentModificationHandler)
    */
-  @NotNull
+  @Nonnull
   RangeMarker createGuardedBlock(int startOffset, int endOffset);
 
   /**
@@ -275,7 +278,7 @@ public interface Document extends UserDataHolder {
    * @param block the marker to remove.
    * @see #createGuardedBlock(int, int)
    */
-  void removeGuardedBlock(@NotNull RangeMarker block);
+  void removeGuardedBlock(@Nonnull RangeMarker block);
 
   /**
    * Returns the read-only marker covering the specified offset in the document.
@@ -321,10 +324,10 @@ public interface Document extends UserDataHolder {
    */
   void setCyclicBufferSize(int bufferSize);
 
-  void setText(@NotNull final CharSequence text);
+  void setText(@Nonnull final CharSequence text);
 
-  @NotNull
-  RangeMarker createRangeMarker(@NotNull TextRange textRange);
+  @Nonnull
+  RangeMarker createRangeMarker(@Nonnull TextRange textRange);
 
   @Contract(pure=true)
   int getLineSeparatorLength(int line);

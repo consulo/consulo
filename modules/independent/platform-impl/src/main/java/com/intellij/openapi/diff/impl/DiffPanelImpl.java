@@ -71,8 +71,8 @@ import com.intellij.util.containers.CacheOneStepIterator;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.PlatformColors;
 import gnu.trove.TIntFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +118,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
         toolbar.addAction(new DiffMergeSettingsAction(Arrays.asList(getEditor1(), getEditor2()), ServiceManager.getService(myProject, DiffToolSettings.class)));
       }
 
-      @NotNull
+      @Nonnull
       private AnAction getEditSourceAction() {
         AnAction editSourceAction = new EditSourceAction();
         editSourceAction.getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
@@ -132,7 +132,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
 
   private boolean myDisposed = false;
   private final GenericDataProvider myDataProvider;
-  @NotNull
+  @Nonnull
   private final Project myProject;
   private final boolean myIsHorizontal;
   private final DiffTool myParentTool;
@@ -140,7 +140,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
   private final VisibleAreaListener myVisibleAreaListener;
   private final int myDiffDividerPolygonsOffset;
 
-  public DiffPanelImpl(final Window owner, @NotNull Project project, boolean enableToolbar, boolean horizontal, int diffDividerPolygonsOffset, DiffTool parentTool) {
+  public DiffPanelImpl(final Window owner, @Nonnull Project project, boolean enableToolbar, boolean horizontal, int diffDividerPolygonsOffset, DiffTool parentTool) {
     myProject = project;
     myIsHorizontal = horizontal;
     myParentTool = parentTool;
@@ -202,7 +202,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     //control+tab switches editors
     new AnAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         if (getEditor1() != null && getEditor2() != null) {
           Editor focus = getEditor1().getContentComponent().hasFocus() ? getEditor2() : getEditor1();
           IdeFocusManager.getGlobalInstance().requestFocus(focus.getContentComponent(), true);
@@ -212,7 +212,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     }.registerCustomShortcutSet(CustomShortcutSet.fromString("control TAB"), myPanel, this);
   }
 
-  protected DiffPanelState createDiffPanelState(@NotNull Disposable parentDisposable) {
+  protected DiffPanelState createDiffPanelState(@Nonnull Disposable parentDisposable) {
     return new DiffPanelState(this, myProject, getDiffDividerPolygonsOffset(), parentDisposable);
   }
 
@@ -323,7 +323,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     myPanel.disableToolbar(!value);
   }
 
-  public void setLineNumberConvertors(@NotNull TIntFunction old, @NotNull TIntFunction newConvertor) {
+  public void setLineNumberConvertors(@Nonnull TIntFunction old, @Nonnull TIntFunction newConvertor) {
     if (getEditor1() != null) {
       ((EditorGutterComponentEx)getEditor1().getGutter()).setLineNumberConvertor(old);
     }
@@ -420,7 +420,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     setTitle(title, false);
   }
 
-  private void setLineBlocks(@NotNull LineBlocks blocks) {
+  private void setLineBlocks(@Nonnull LineBlocks blocks) {
     myLineBlocks = blocks;
     mySplitter.redrawDiffs();
     updateStatusBar();
@@ -505,16 +505,16 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     }
   }
 
-  @NotNull
+  @Nonnull
   public HighlightMode getHighlightMode() {
     return myData.getHighlightMode();
   }
 
-  public void setHighlightMode(@NotNull HighlightMode mode) {
+  public void setHighlightMode(@Nonnull HighlightMode mode) {
     setHighlightMode(mode, true);
   }
 
-  public void setHighlightMode(@NotNull HighlightMode mode, boolean notifyManager) {
+  public void setHighlightMode(@Nonnull HighlightMode mode, boolean notifyManager) {
     myData.setHighlightMode(mode);
     rediff();
 
@@ -587,7 +587,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     });
   }
 
-  public void setCurrentSide(@NotNull DiffSideView viewSide) {
+  public void setCurrentSide(@Nonnull DiffSideView viewSide) {
     LOG.assertTrue(viewSide != myCurrentSide);
     if (myCurrentSide != null) myCurrentSide.beSlave();
     myCurrentSide = viewSide;
@@ -705,7 +705,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     ((EditorEx)editor).getGutterComponentEx().setShowDefaultGutterPopup(false);
   }
 
-  private void setTitles(@NotNull DiffRequest data) {
+  private void setTitles(@Nonnull DiffRequest data) {
     LineSeparator sep1 = data.getContents()[0].getLineSeparator();
     LineSeparator sep2 = data.getContents()[1].getLineSeparator();
 
@@ -929,7 +929,7 @@ public class DiffPanelImpl implements DiffPanelEx, ContentChangeListener, TwoSid
     };
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (PlatformDataKeys.DIFF_VIEWER == dataId) {
         return myDiffPanel;
       }

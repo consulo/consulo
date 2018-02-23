@@ -21,8 +21,8 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -30,72 +30,72 @@ import consulo.roots.ContentFolderTypeProvider;
  */
 public abstract class RootModelBase implements ModuleRootModel {
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getContentRoots() {
     return getCurrentLayer().getContentRoots();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getContentRootUrls() {
     return getCurrentLayer().getContentRootUrls();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getExcludeRootUrls() {
     return getCurrentLayer().getExcludeRootUrls();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getExcludeRoots() {
     return getCurrentLayer().getExcludeRoots();
   }
 
   @Override
-  public boolean iterateContentEntries(@NotNull Processor<ContentEntry> processor) {
+  public boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor) {
     return getCurrentLayer().iterateContentEntries(processor);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] getContentFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     return getCurrentLayer().getContentFolderUrls(predicate);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] getContentFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     return getCurrentLayer().getContentFolderFiles(predicate);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentFolder[] getContentFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     return getCurrentLayer().getContentFolders(predicate);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSourceRootUrls() {
     return getCurrentLayer().getSourceRootUrls();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSourceRootUrls(boolean includingTests) {
     return getCurrentLayer().getSourceRootUrls(includingTests);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSourceRoots() {
     return getCurrentLayer().getSourceRoots();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
     return getCurrentLayer().getSourceRoots(includingTests);
   }
@@ -105,7 +105,7 @@ public abstract class RootModelBase implements ModuleRootModel {
     return getCurrentLayer().getContentEntries();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderEnumerator orderEntries() {
     return getCurrentLayer().orderEntries();
@@ -117,42 +117,42 @@ public abstract class RootModelBase implements ModuleRootModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getDependencyModuleNames() {
     return getCurrentLayer().getDependencyModuleNames();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModuleDependencies() {
    return getCurrentLayer().getModuleDependencies();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModuleDependencies(boolean includeTests) {
     return getCurrentLayer().getModuleDependencies(includeTests);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OrderEntry[] getOrderEntries() {
     return getCurrentLayer().getOrderEntries();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     return getCurrentLayer().getExtension(clazz);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <T extends ModuleExtension> T getExtension(@NotNull String key) {
+  public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
     return getCurrentLayer().getExtension(key);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
     return getCurrentLayer().getExtensionWithoutCheck(clazz);
@@ -160,11 +160,11 @@ public abstract class RootModelBase implements ModuleRootModel {
 
   @Nullable
   @Override
-  public <T extends ModuleExtension> T getExtensionWithoutCheck(@NotNull String key) {
+  public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
     return getCurrentLayer().getExtensionWithoutCheck(key);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModuleExtension[] getExtensions() {
     return getCurrentLayer().getExtensions();

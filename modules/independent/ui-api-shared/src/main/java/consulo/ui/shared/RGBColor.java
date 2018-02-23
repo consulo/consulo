@@ -15,7 +15,7 @@
  */
 package consulo.ui.shared;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -45,7 +45,7 @@ public final class RGBColor implements Serializable, ColorValue {
     myAlpha = alpha;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RGBColor toRGB() {
     return this;

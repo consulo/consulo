@@ -16,15 +16,16 @@
 package com.intellij.dvcs.branch;
 
 import com.intellij.dvcs.repo.Repository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
 public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
-  @NotNull protected final Collection<Repo> myRepositories;
+  @Nonnull
+  protected final Collection<Repo> myRepositories;
 
-  public DvcsMultiRootBranchConfig(@NotNull Collection<Repo> repositories) {
+  public DvcsMultiRootBranchConfig(@Nonnull Collection<Repo> repositories) {
     myRepositories = repositories;
   }
 
@@ -66,6 +67,6 @@ public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
     return commonState;
   }
 
-  @NotNull
+  @Nonnull
   public abstract Collection<String> getLocalBranchNames();
 }

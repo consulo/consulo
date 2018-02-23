@@ -31,9 +31,9 @@ import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -48,24 +48,24 @@ public class RootDetectionUtil {
   private RootDetectionUtil() {
   }
 
-  @NotNull
-  public static List<OrderRoot> detectRoots(@NotNull final Collection<VirtualFile> rootCandidates,
+  @Nonnull
+  public static List<OrderRoot> detectRoots(@Nonnull final Collection<VirtualFile> rootCandidates,
                                             @Nullable Component parentComponent,
                                             @Nullable Project project,
-                                            @NotNull final LibraryRootsComponentDescriptor rootsComponentDescriptor) {
+                                            @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor) {
     return detectRoots(rootCandidates, parentComponent, project, rootsComponentDescriptor.getRootsDetector(),
                        rootsComponentDescriptor.getRootTypes());
   }
 
-  @NotNull
-  public static List<OrderRoot> detectRoots(@NotNull final Collection<VirtualFile> rootCandidates, @Nullable Component parentComponent,
-                                            @Nullable Project project, @NotNull final LibraryRootsDetector detector,
-                                            @NotNull OrderRootType[] rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
+  @Nonnull
+  public static List<OrderRoot> detectRoots(@Nonnull final Collection<VirtualFile> rootCandidates, @Nullable Component parentComponent,
+                                            @Nullable Project project, @Nonnull final LibraryRootsDetector detector,
+                                            @Nonnull OrderRootType[] rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
     final List<OrderRoot> result = new ArrayList<OrderRoot>();
     final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<SuggestedChildRootInfo>();
     new Task.Modal(project, "Scanning for Roots", true) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         try {
           for (VirtualFile rootCandidate : rootCandidates) {
             final Collection<DetectedLibraryRoot> roots = detector.detectRoots(rootCandidate, indicator);

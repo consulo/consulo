@@ -17,8 +17,8 @@ package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This filters can be used to prevent error highlighting (invalid code, unresolved references etc.) in files outside of project scope.
@@ -33,9 +33,9 @@ public abstract class ProblemHighlightFilter {
    * @param psiFile file to decide about
    * @return false if this filter disables highlighting for given file, true if filter enables highlighting or can't decide
    */
-  public abstract boolean shouldHighlight(@NotNull PsiFile psiFile);
+  public abstract boolean shouldHighlight(@Nonnull PsiFile psiFile);
 
-  public boolean shouldProcessInBatch(@NotNull PsiFile psiFile) {
+  public boolean shouldProcessInBatch(@Nonnull PsiFile psiFile) {
     return shouldHighlight(psiFile);
   }
 

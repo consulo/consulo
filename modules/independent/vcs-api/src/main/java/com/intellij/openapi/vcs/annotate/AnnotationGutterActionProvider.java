@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implement this to add additional custom actions to the popup invoked by right-clicking on the annotation gutter.
@@ -33,7 +33,7 @@ public interface AnnotationGutterActionProvider {
    * @param annotation annotation which is currently shown on the gutter.
    * @return new action that can be invoked from the annotation gutter popup.
    */
-  @NotNull
+  @Nonnull
   AnAction createAction(FileAnnotation annotation);
 
 }

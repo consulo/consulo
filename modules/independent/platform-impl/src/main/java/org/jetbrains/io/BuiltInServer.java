@@ -25,8 +25,8 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.oio.OioEventLoopGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -53,15 +53,15 @@ public class BuiltInServer implements Disposable {
     }
   }
 
-  private BuiltInServer(@NotNull EventLoopGroup eventLoopGroup,
+  private BuiltInServer(@Nonnull EventLoopGroup eventLoopGroup,
                         int port,
-                        @NotNull ChannelRegistrar channelRegistrar) {
+                        @Nonnull ChannelRegistrar channelRegistrar) {
     this.eventLoopGroup = eventLoopGroup;
     this.port = port;
     this.channelRegistrar = channelRegistrar;
   }
 
-  @NotNull
+  @Nonnull
   public EventLoopGroup getEventLoopGroup() {
     return eventLoopGroup;
   }
@@ -80,7 +80,7 @@ public class BuiltInServer implements Disposable {
     Logger.getInstance(BuiltInServer.class).info("web server stopped");
   }
 
-  @NotNull
+  @Nonnull
   public static BuiltInServer start(int workerCount,
                                     int firstPort,
                                     int portsCount,
@@ -89,7 +89,7 @@ public class BuiltInServer implements Disposable {
     return start(new NioEventLoopGroup(workerCount, new BuiltInServerThreadFactory()), true, firstPort, portsCount, tryAnyPort, handler);
   }
 
-  @NotNull
+  @Nonnull
   public static BuiltInServer startNioOrOio(int workerCount,
                                             int firstPort,
                                             int portsCount,
@@ -107,8 +107,8 @@ public class BuiltInServer implements Disposable {
     return start(nioEventLoopGroup, true, firstPort, portsCount, tryAnyPort, handler);
   }
 
-  @NotNull
-  public static BuiltInServer start(@NotNull EventLoopGroup eventLoopGroup,
+  @Nonnull
+  public static BuiltInServer start(@Nonnull EventLoopGroup eventLoopGroup,
                                     boolean isEventLoopGroupOwner,
                                     int firstPort,
                                     int portsCount,
@@ -121,13 +121,13 @@ public class BuiltInServer implements Disposable {
     return new BuiltInServer(eventLoopGroup, port, channelRegistrar);
   }
 
-  static void configureChildHandler(@NotNull ServerBootstrap bootstrap,
-                                    @NotNull final ChannelRegistrar channelRegistrar,
+  static void configureChildHandler(@Nonnull ServerBootstrap bootstrap,
+                                    @Nonnull final ChannelRegistrar channelRegistrar,
                                     @Nullable final NotNullProducer<ChannelHandler> channelHandler) {
     final PortUnificationServerHandler portUnificationServerHandler = channelHandler == null ? new PortUnificationServerHandler() : null;
     bootstrap.childHandler(new ChannelInitializer() {
       @Override
-      protected void initChannel(@NotNull Channel channel) throws Exception {
+      protected void initChannel(@Nonnull Channel channel) throws Exception {
         channel.pipeline().addLast(channelRegistrar, channelHandler == null ? portUnificationServerHandler : channelHandler.produce());
       }
     });
@@ -136,8 +136,8 @@ public class BuiltInServer implements Disposable {
   private static int bind(int firstPort,
                           int portsCount,
                           boolean tryAnyPort,
-                          @NotNull ServerBootstrap bootstrap,
-                          @NotNull ChannelRegistrar channelRegistrar,
+                          @Nonnull ServerBootstrap bootstrap,
+                          @Nonnull ChannelRegistrar channelRegistrar,
                           boolean isEventLoopGroupOwner) throws Exception {
     InetAddress address = InetAddress.getLoopbackAddress();
 
@@ -169,7 +169,7 @@ public class BuiltInServer implements Disposable {
     return -1;  // unreachable
   }
 
-  public static void replaceDefaultHandler(@NotNull ChannelHandlerContext context, @NotNull ChannelHandler channelHandler) {
+  public static void replaceDefaultHandler(@Nonnull ChannelHandlerContext context, @Nonnull ChannelHandler channelHandler) {
     context.pipeline().replace(DelegatingHttpRequestHandler.class, "replacedDefaultHandler", channelHandler);
   }
 

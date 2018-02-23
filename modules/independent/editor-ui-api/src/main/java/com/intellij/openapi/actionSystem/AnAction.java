@@ -27,8 +27,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -118,7 +118,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *                    the status bar when presentation has focus
    * @param icon        Action's icon
    */
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public AnAction(@javax.annotation.Nullable String text, @Nullable String description, @javax.annotation.Nullable Icon icon) {
     myShortcutSet = CustomShortcutSet.EMPTY;
     myEnabledInModalContext = false;
     Presentation presentation = getTemplatePresentation();
@@ -144,7 +144,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param shortcutSet the shortcuts for the action.
    * @param component   the component for which the shortcuts will be active.
    */
-  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component) {
+  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component) {
     registerCustomShortcutSet(shortcutSet, component, null);
   }
 
@@ -152,7 +152,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@NotNull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @javax.annotation.Nullable JComponent component, @javax.annotation.Nullable Disposable parentDisposable) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
   }
@@ -189,7 +189,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param sourceAction cannot be <code>null</code>
    */
-  public final void copyFrom(@NotNull AnAction sourceAction) {
+  public final void copyFrom(@Nonnull AnAction sourceAction) {
     Presentation sourcePresentation = sourceAction.getTemplatePresentation();
     Presentation presentation = getTemplatePresentation();
     presentation.setIcon(sourcePresentation.getIcon());
@@ -198,7 +198,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     copyShortcutFrom(sourceAction);
   }
 
-  public final void copyShortcutFrom(@NotNull AnAction sourceAction) {
+  public final void copyShortcutFrom(@Nonnull AnAction sourceAction) {
     myShortcutSet = sourceAction.myShortcutSet;
   }
 
@@ -234,7 +234,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param e Carries information on the invocation place and data available
    */
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
   }
 
   /**
@@ -244,7 +244,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param e Carries information on the invocation place and data available
    */
   @RequiredDispatchThread
-  public void beforeActionPerformedUpdate(@NotNull AnActionEvent e) {
+  public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
     boolean worksInInjected = isInInjectedContext();
     e.setInjectedContext(worksInInjected);
     update(e);
@@ -260,7 +260,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @return template presentation
    */
-  @NotNull
+  @Nonnull
   public final Presentation getTemplatePresentation() {
     Presentation presentation = myTemplatePresentation;
     if (presentation == null) {
@@ -275,7 +275,7 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param e Carries information on the invocation place
    */
   @RequiredDispatchThread
-  public abstract void actionPerformed(@NotNull AnActionEvent e);
+  public abstract void actionPerformed(@Nonnull AnActionEvent e);
 
   protected void setShortcutSet(ShortcutSet shortcutSet) {
     myShortcutSet = shortcutSet;
@@ -334,19 +334,19 @@ public abstract class AnAction implements PossiblyDumbAware {
     myCanUseProjectAsDefault = canUseProjectAsDefault;
   }
 
-  @NotNull
+  @Nonnull
   public String[] getModuleExtensionIds() {
     return myModuleExtensionIds;
   }
 
-  public void setModuleExtensionIds(@NotNull String[] moduleExtensionIds) {
+  public void setModuleExtensionIds(@Nonnull String[] moduleExtensionIds) {
     myModuleExtensionIds = moduleExtensionIds;
   }
 
   public interface TransparentUpdate {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static Project getEventProject(AnActionEvent e) {
     return e == null ? null : e.getData(CommonDataKeys.PROJECT);
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class FunctionWithTimeout<T> {
   protected abstract void updateValue(T initialValue);
 
-  @NotNull
-  public T calculate(long timeout, @NotNull final T initialValue) {
+  @Nonnull
+  public T calculate(long timeout, @Nonnull final T initialValue) {
     TimeoutUtil.executeWithTimeout(timeout, new Runnable() {
       @Override
       public void run() {

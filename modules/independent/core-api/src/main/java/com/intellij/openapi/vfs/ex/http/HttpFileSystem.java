@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class HttpFileSystem extends DeprecatedVirtualFileSystem implements ApplicationComponent {
   @NonNls public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
@@ -31,12 +31,12 @@ public abstract class HttpFileSystem extends DeprecatedVirtualFileSystem impleme
     return (HttpFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
   }
 
-  public abstract boolean isFileDownloaded(@NotNull VirtualFile file);
+  public abstract boolean isFileDownloaded(@Nonnull VirtualFile file);
 
-  public abstract void addFileListener(@NotNull HttpVirtualFileListener listener);
+  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener);
 
-  public abstract void addFileListener(@NotNull HttpVirtualFileListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeFileListener(@NotNull HttpVirtualFileListener listener);
+  public abstract void removeFileListener(@Nonnull HttpVirtualFileListener listener);
 
 }

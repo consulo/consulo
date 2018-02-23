@@ -34,8 +34,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +48,7 @@ import java.util.Map;
 @Order(ExternalSystemConstants.BUILTIN_TOOL_WINDOW_SERVICE_ORDER)
 public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
 
-  @NotNull
+  @Nonnull
   public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = new Function<DataNode<TaskData>, ExternalTaskPojo>() {
     @Override
     public ExternalTaskPojo fun(DataNode<TaskData> node) {
@@ -66,15 +66,15 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
       }
     };
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<TaskData> getTargetDataKey() {
     return ProjectKeys.TASK;
   }
 
   @Override
-  protected void processData(@NotNull Collection<DataNode<TaskData>> nodes,
-                             @NotNull Project project,
+  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes,
+                             @Nonnull Project project,
                              @Nullable final ExternalSystemTasksTreeModel model)
   {
     if (nodes.isEmpty()) {

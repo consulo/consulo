@@ -19,15 +19,15 @@ import com.intellij.find.SearchSession;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class PrevNextOccurrenceAction extends DumbAwareAction implements ContextAwareShortcutProvider {
   protected final boolean mySearch;
 
-  PrevNextOccurrenceAction(@NotNull String templateActionId, boolean search) {
+  PrevNextOccurrenceAction(@Nonnull String templateActionId, boolean search) {
     mySearch = search;
     copyFrom(ActionManager.getInstance().getAction(templateActionId));
   }
@@ -41,15 +41,15 @@ public abstract class PrevNextOccurrenceAction extends DumbAwareAction implement
 
   @Nullable
   @Override
-  public final ShortcutSet getShortcut(@NotNull DataContext context) {
+  public final ShortcutSet getShortcut(@Nonnull DataContext context) {
     SearchSession search = context.getData(SearchSession.KEY);
     boolean singleLine = search != null && !search.getFindModel().isMultiline();
     return Utils.shortcutSetOf(singleLine ? ContainerUtil.concat(getDefaultShortcuts(), getSingleLineShortcuts()) : getDefaultShortcuts());
   }
 
-  @NotNull
+  @Nonnull
   protected abstract List<Shortcut> getDefaultShortcuts();
 
-  @NotNull
+  @Nonnull
   protected abstract List<Shortcut> getSingleLineShortcuts();
 }

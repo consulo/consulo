@@ -76,10 +76,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -195,7 +196,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return myHelper.getModel().isReplaceState() ? "replaceTextDialog" : "findTextDialog";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     FindModel myModel = myHelper.getModel();
@@ -205,7 +206,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }
 
-  @NotNull
+  @Nonnull
   private Action getFindAllAction() {
     return myFindAllAction = new AbstractAction(FindBundle.message("find.all.button")) {
       @Override
@@ -251,13 +252,13 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return panel;
   }
 
-  private void revealWhitespaces(@NotNull ComboBox comboBox) {
+  private void revealWhitespaces(@Nonnull ComboBox comboBox) {
     ComboBoxEditor comboBoxEditor = new RevealingSpaceComboboxEditor(myProject, comboBox);
     comboBox.setEditor(comboBoxEditor);
     comboBox.setRenderer(new EditorComboBoxRenderer(comboBoxEditor));
   }
 
-  private void initCombobox(@NotNull final ComboBox comboBox) {
+  private void initCombobox(@Nonnull final ComboBox comboBox) {
     comboBox.setEditable(true);
     comboBox.setMaximumRowCount(8);
 
@@ -360,7 +361,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     });
   }
 
-  private void handleComboBoxValueChanged(@NotNull ComboBox comboBox) {
+  private void handleComboBoxValueChanged(@Nonnull ComboBox comboBox) {
     Object item = comboBox.getEditor().getItem();
     if (item != null && !item.equals(comboBox.getSelectedItem())) {
       comboBox.setSelectedItem(item);
@@ -369,7 +370,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     handleAnyComboBoxValueChanged(comboBox);
   }
 
-  private void handleAnyComboBoxValueChanged(@NotNull ComboBox comboBox) {
+  private void handleAnyComboBoxValueChanged(@Nonnull ComboBox comboBox) {
     if (comboBox != myReplaceComboBox) scheduleResultsUpdate();
     validateFindButton();
   }
@@ -444,7 +445,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
 
         @Nullable
         @Override
-        public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+        public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
           final UsageViewPresentation presentation = FindInProjectUtil.setupViewPresentation(FindSettings.getInstance().isShowResultsInSeparateView(), findModel);
           final boolean showPanelIfOnlyOneUsage = !FindSettings.getInstance().isSkipResultsWithOneUsage();
 
@@ -500,7 +501,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
         }
 
         @Override
-        public void onCanceled(@NotNull ProgressIndicator indicator) {
+        public void onCanceled(@Nonnull ProgressIndicator indicator) {
           if (isShowing() && progressIndicatorWhenSearchStarted == myResultsPreviewSearchProgress) {
             scheduleResultsUpdate();
           }
@@ -665,7 +666,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return resultsOptionPanel;
   }
 
-  @NotNull
+  @Nonnull
   private JComponent createFilterPanel() {
     JPanel filterPanel = new JPanel();
     filterPanel.setLayout(new BorderLayout());
@@ -683,7 +684,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return filterPanel;
   }
 
-  public static void initFileFilter(@NotNull final JComboBox fileFilter, @NotNull final JCheckBox useFileFilter) {
+  public static void initFileFilter(@Nonnull final JComboBox fileFilter, @Nonnull final JCheckBox useFileFilter) {
     fileFilter.setEditable(true);
     String[] fileMasks = FindSettings.getInstance().getRecentFileMasks();
     for (int i = fileMasks.length - 1; i >= 0; i--) {
@@ -729,7 +730,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
   }
 
   @Nullable("null means OK")
-  private ValidationInfo getValidationInfo(@NotNull FindModel model) {
+  private ValidationInfo getValidationInfo(@Nonnull FindModel model) {
     if (myRbDirectory != null && myRbDirectory.isEnabled() && myRbDirectory.isSelected()) {
       VirtualFile directory = FindInProjectUtil.getDirectory(model);
       if (directory == null) {
@@ -797,7 +798,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     HelpManager.getInstance().invokeHelp(id);
   }
 
-  @NotNull
+  @Nonnull
   private JPanel createFindOptionsPanel() {
     JPanel findOptionsPanel = new JPanel();
     findOptionsPanel.setBorder(IdeBorderFactory.createTitledBorder(FindBundle.message("find.options.group"), true));
@@ -860,7 +861,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return findOptionsPanel;
   }
 
-  public static String getPresentableName(@NotNull FindModel.SearchContext searchContext) {
+  public static String getPresentableName(@Nonnull FindModel.SearchContext searchContext) {
     @PropertyKey(resourceBundle = "messages.FindBundle") String messageKey = null;
     if (searchContext == FindModel.SearchContext.ANY) {
       messageKey = "find.context.anywhere.scope.label";
@@ -883,7 +884,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return messageKey != null ? FindBundle.message(messageKey) : searchContext.toString();
   }
 
-  @NotNull
+  @Nonnull
   static FindModel.SearchContext parseSearchContext(String presentableName) {
     FindModel.SearchContext searchContext = FindModel.SearchContext.ANY;
     if (FindBundle.message("find.context.in.literals.scope.label").equals(presentableName)) {
@@ -904,7 +905,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return searchContext;
   }
 
-  @NotNull
+  @Nonnull
   static String getSearchContextName(FindModel model) {
     String searchContext = FindBundle.message("find.context.anywhere.scope.label");
     if (model.isInCommentsOnly()) {
@@ -928,7 +929,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     if (myReplaceComboBox != null) updateFileTypeForEditorComponent(myReplaceComboBox);
   }
 
-  private void updateFileTypeForEditorComponent(@NotNull ComboBox inputComboBox) {
+  private void updateFileTypeForEditorComponent(@Nonnull ComboBox inputComboBox) {
     final Component editorComponent = inputComboBox.getEditor().getEditorComponent();
 
     if (editorComponent instanceof EditorTextField) {
@@ -981,7 +982,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
   }
 
-  @NotNull
+  @Nonnull
   private JPanel createDirectionPanel() {
     JPanel directionPanel = new JPanel();
     directionPanel.setBorder(IdeBorderFactory.createTitledBorder(FindBundle.message("find.direction.group"), true));
@@ -998,7 +999,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return directionPanel;
   }
 
-  @NotNull
+  @Nonnull
   private JComponent createGlobalScopePanel() {
     JPanel scopePanel = new JPanel();
     scopePanel.setLayout(new GridBagLayout());
@@ -1153,15 +1154,15 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return scopePanel;
   }
 
-  @NotNull
-  private static StateRestoringCheckBox createCheckbox(@NotNull String message) {
+  @Nonnull
+  private static StateRestoringCheckBox createCheckbox(@Nonnull String message) {
     final StateRestoringCheckBox cb = new StateRestoringCheckBox(message);
     cb.setFocusable(false);
     return cb;
   }
 
-  @NotNull
-  private static StateRestoringCheckBox createCheckbox(boolean selected, @NotNull String message) {
+  @Nonnull
+  private static StateRestoringCheckBox createCheckbox(boolean selected, @Nonnull String message) {
     final StateRestoringCheckBox cb = new StateRestoringCheckBox(message, selected);
     cb.setFocusable(false);
     return cb;
@@ -1181,7 +1182,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     myScopeCombo.setEnabled(myRbCustomScope.isSelected());
   }
 
-  @NotNull
+  @Nonnull
   private JPanel createScopePanel() {
     JPanel scopePanel = new JPanel();
     scopePanel.setBorder(IdeBorderFactory.createTitledBorder(FindBundle.message("find.scope.group"), true));
@@ -1202,7 +1203,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return scopePanel;
   }
 
-  @NotNull
+  @Nonnull
   private JPanel createOriginPanel() {
     JPanel originPanel = new JPanel();
     originPanel.setBorder(IdeBorderFactory.createTitledBorder(FindBundle.message("find.origin.group"), true));
@@ -1220,13 +1221,13 @@ public class FindDialog extends DialogWrapper implements FindUI {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getStringToFind() {
     String string = (String)myInputComboBox.getEditor().getItem();
     return string == null ? "" : string;
   }
 
-  @NotNull
+  @Nonnull
   private String getStringToReplace() {
     String item = (String)myReplaceComboBox.getEditor().getItem();
     return item == null ? "" : item;
@@ -1236,7 +1237,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     return (String)myDirectoryComboBox.getEditor().getItem();
   }
 
-  private static void setStringsToComboBox(@NotNull String[] strings, @NotNull ComboBox<String> combo, String selected) {
+  private static void setStringsToComboBox(@Nonnull String[] strings, @Nonnull ComboBox<String> combo, String selected) {
     if (combo.getItemCount() > 0) {
       combo.removeAllItems();
     }
@@ -1250,7 +1251,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
   }
 
-  private void setDirectories(@NotNull List<String> strings, String directoryName) {
+  private void setDirectories(@Nonnull List<String> strings, String directoryName) {
     if (myDirectoryComboBox.getItemCount() > 0) {
       myReplaceComboBox.removeAllItems();
     }
@@ -1268,7 +1269,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
   }
 
-  private void applyTo(@NotNull FindModel model, boolean findAll) {
+  private void applyTo(@Nonnull FindModel model, boolean findAll) {
     model.setCaseSensitive(myCbCaseSensitive.isSelected());
 
     if (model.isReplaceState()) {
@@ -1499,8 +1500,8 @@ public class FindDialog extends DialogWrapper implements FindUI {
         setBorder(null);
       }
 
-      @NotNull
-      private SimpleTextAttributes getAttributes(@NotNull TextChunk textChunk) {
+      @Nonnull
+      private SimpleTextAttributes getAttributes(@Nonnull TextChunk textChunk) {
         SimpleTextAttributes at = textChunk.getSimpleAttributesIgnoreBackground();
         if (myUseBold) return at;
         boolean highlighted = textChunk.getType() != null || at.getFontStyle() == Font.BOLD;
@@ -1527,14 +1528,14 @@ public class FindDialog extends DialogWrapper implements FindUI {
         setBorder(null);
       }
 
-      @NotNull
-      private String getFilePath(@NotNull UsageInfo2UsageAdapter ua) {
+      @Nonnull
+      private String getFilePath(@Nonnull UsageInfo2UsageAdapter ua) {
         String uniquePath = UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(ua.getUsageInfo().getProject(), ua.getFile(), myScope);
         return myOmitFileExtension ? FileUtilRt.getNameWithoutExtension(uniquePath) : uniquePath;
       }
 
       @Nullable
-      private VirtualFile findPrevFile(@NotNull JTable table, int row, int column) {
+      private VirtualFile findPrevFile(@Nonnull JTable table, int row, int column) {
         if (row <= 0) return null;
         Object prev = table.getValueAt(row - 1, column);
         return prev instanceof UsageInfo2UsageAdapter ? ((UsageInfo2UsageAdapter)prev).getFile() : null;
@@ -1583,7 +1584,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
 
     @Override
-    public void installOn(@NotNull final Component c) {
+    public void installOn(@Nonnull final Component c) {
       super.installOn(c);
 
       if (c instanceof JBTable) {
@@ -1602,7 +1603,7 @@ public class FindDialog extends DialogWrapper implements FindUI {
     }
   }
 
-  protected void registerNavigateToSourceShortcutOnComponent(@NotNull final JBTable c, JComponent component) {
+  protected void registerNavigateToSourceShortcutOnComponent(@Nonnull final JBTable c, JComponent component) {
     AnAction anAction = new AnAction() {
       @Override
       public void actionPerformed(AnActionEvent e) {

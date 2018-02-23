@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.AbstractList;
 import java.util.Iterator;
@@ -81,7 +81,7 @@ public class FList<E> extends AbstractList<E> {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<E> iterator() {
     return new Iterator<E>() {

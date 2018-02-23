@@ -22,8 +22,8 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A reference to a PSI element. For example, the variable name used in an expression.
@@ -42,7 +42,7 @@ public interface PsiReference {
   public static final PsiReference[] EMPTY_ARRAY = new PsiReference[0];
 
   public static ArrayFactory<PsiReference> ARRAY_FACTORY = new ArrayFactory<PsiReference>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiReference[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiReference[count];
@@ -63,7 +63,7 @@ public interface PsiReference {
    *
    * @return Relative range in element
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   TextRange getRangeInElement();
 
@@ -83,7 +83,7 @@ public interface PsiReference {
    *
    * @return the canonical text of the reference.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   String getCanonicalText();
 
@@ -108,7 +108,7 @@ public interface PsiReference {
    * @throws IncorrectOperationException if the rebind cannot be handled for some reason.
    */
   @RequiredWriteAction
-  PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException;
+  PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException;
 
   /**
    * Checks if the reference targets the specified element.
@@ -128,7 +128,7 @@ public interface PsiReference {
    *
    * @return the array of available identifiers.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   @Deprecated
   @DeprecationInfo(value = "Use com.intellij.codeInsight.completion.CompletionContributor", until = "3.0")

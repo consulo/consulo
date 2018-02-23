@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -27,7 +27,7 @@ public interface PostfixTemplateProvider {
   /**
    * Return all templates registered in the provider
    */
-  @NotNull
+  @Nonnull
   Set<PostfixTemplate> getTemplates();
 
   /**
@@ -44,13 +44,13 @@ public interface PostfixTemplateProvider {
    * Note that while postfix template is checking its availability the file parameter is a _COPY_ of the real file,
    * so you can do with it anything that you want, but in the same time it doesn't recommended to modify editor state because it's real.
    */
-  void preExpand(@NotNull PsiFile file, @NotNull Editor editor);
+  void preExpand(@Nonnull PsiFile file, @Nonnull Editor editor);
 
   /**
    * Invoked after template finished (doesn't matter if it finished successfully or not).
    * E.g. java postfix template use this method for deleting inserted semicolon.
    */
-  void afterExpand(@NotNull PsiFile file, @NotNull Editor editor);
+  void afterExpand(@Nonnull PsiFile file, @Nonnull Editor editor);
 
   /**
    * Prepare file for checking availability of templates.
@@ -64,6 +64,6 @@ public interface PostfixTemplateProvider {
    * NOTE: editor is real (not copy) and it doesn't represents the copyFile. 
    * So it's safer to use currentOffset parameter instead of offset from editor. Do not modify text via editor.
    */
-  @NotNull
-  PsiFile preCheck(@NotNull PsiFile copyFile, @NotNull Editor realEditor, int currentOffset);
+  @Nonnull
+  PsiFile preCheck(@Nonnull PsiFile copyFile, @Nonnull Editor realEditor, int currentOffset);
 }

@@ -16,12 +16,12 @@
 package com.intellij.execution.ui;
 
 import com.intellij.execution.Executor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface RunContentWithExecutorListener {
-  void contentSelected(RunContentDescriptor descriptor, @NotNull Executor executor);
-  void contentRemoved(RunContentDescriptor descriptor, @NotNull Executor executor);
+  void contentSelected(RunContentDescriptor descriptor, @Nonnull Executor executor);
+  void contentRemoved(RunContentDescriptor descriptor, @Nonnull Executor executor);
 }

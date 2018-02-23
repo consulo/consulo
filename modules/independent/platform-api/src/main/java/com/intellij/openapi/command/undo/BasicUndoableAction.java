@@ -18,8 +18,8 @@ package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BasicUndoableAction implements UndoableAction {
   private final DocumentReference[] myRefs;
@@ -32,14 +32,14 @@ public abstract class BasicUndoableAction implements UndoableAction {
     myRefs = refs;
   }
 
-  public BasicUndoableAction(@NotNull Document... docs) {
+  public BasicUndoableAction(@Nonnull Document... docs) {
     myRefs = new DocumentReference[docs.length];
     for (int i = 0; i < docs.length; i++) {
       myRefs[i] = DocumentReferenceManager.getInstance().create(docs[i]);
     }
   }
 
-  public BasicUndoableAction(@NotNull VirtualFile... files) {
+  public BasicUndoableAction(@Nonnull VirtualFile... files) {
     myRefs = new DocumentReference[files.length];
     for (int i = 0; i < files.length; i++) {
       myRefs[i] = DocumentReferenceManager.getInstance().create(files[i]);

@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class EditorPosition implements Cloneable {
 
@@ -26,11 +26,11 @@ class EditorPosition implements Cloneable {
 
   private final Editor myEditor;
 
-  EditorPosition(@NotNull Editor editor) {
+  EditorPosition(@Nonnull Editor editor) {
     myEditor = editor;
   }
 
-  EditorPosition(@NotNull LogicalPosition logical, int offset, @NotNull Editor editor) {
+  EditorPosition(@Nonnull LogicalPosition logical, int offset, @Nonnull Editor editor) {
     myEditor = editor;
     logicalLine = logical.line;
     this.offset = offset;
@@ -47,7 +47,7 @@ class EditorPosition implements Cloneable {
    *
    * @param foldRegion                        fold region which end offset should be pointed by the current position
    */
-  public void advance(@NotNull FoldRegion foldRegion) {
+  public void advance(@Nonnull FoldRegion foldRegion) {
     offset = foldRegion.getEndOffset();
 
     Document document = myEditor.getDocument();
@@ -58,7 +58,7 @@ class EditorPosition implements Cloneable {
     }
   }
 
-  public void from(@NotNull EditorPosition position) {
+  public void from(@Nonnull EditorPosition position) {
     logicalLine = position.logicalLine;
     offset = position.offset;
     x = position.x;

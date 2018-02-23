@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.notification.NotificationType;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,20 +37,21 @@ public class MessageType {
 
   private final Icon myDefaultIcon;
   private final Color myPopupBackground;
-  @NotNull private final Color myForeground;
+  @Nonnull
+  private final Color myForeground;
 
-  private MessageType(@NotNull Icon defaultIcon, @NotNull Color popupBackground, @NotNull Color foreground) {
+  private MessageType(@Nonnull Icon defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground) {
     myDefaultIcon = defaultIcon;
     myPopupBackground = popupBackground;
     myForeground = foreground;
   }
 
-  @NotNull
+  @Nonnull
   public Icon getDefaultIcon() {
     return myDefaultIcon;
   }
 
-  @NotNull
+  @Nonnull
   public Color getPopupBackground() {
     return myPopupBackground;
   }
@@ -59,7 +60,7 @@ public class MessageType {
     return myForeground;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationType toNotificationType() {
     return this == ERROR ? NotificationType.ERROR : this == WARNING ? NotificationType.WARNING : NotificationType.INFORMATION;
   }

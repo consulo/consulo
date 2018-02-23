@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -29,7 +29,7 @@ import javax.swing.*;
  */
 public class PowerSaveHectorProvider implements HectorComponentPanelsProvider {
   @Override
-  public HectorComponentPanel createConfigurable(@NotNull PsiFile file) {
+  public HectorComponentPanel createConfigurable(@Nonnull PsiFile file) {
     return new HectorComponentPanel() {
       private JCheckBox myCheckBox = new JCheckBox("Power Save Mode");
 

@@ -23,13 +23,13 @@ import consulo.psi.tree.ASTLeafFactory;
 import consulo.lang.LanguageVersion;
 import com.intellij.psi.PlainTextTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PlainTextASTLeafFactory implements ASTLeafFactory {
-  @NotNull
+  @Nonnull
   @Override
-  public LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
+  public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
     return new PsiPlainTextImpl(text);
   }
 

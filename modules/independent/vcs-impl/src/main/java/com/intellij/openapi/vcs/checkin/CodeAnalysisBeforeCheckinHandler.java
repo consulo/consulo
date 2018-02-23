@@ -34,7 +34,7 @@ import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
     final JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.standard.options.check.smells"));
     return new RefreshableOnComponent() {

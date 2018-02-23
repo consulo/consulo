@@ -19,7 +19,7 @@ import com.intellij.BundleBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageViewPresentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class UsageType {
   public static final UsageType CLASS_INSTANCE_OF = new UsageType(UsageViewBundle.message("usage.type.instanceof"));
@@ -61,8 +61,8 @@ public final class UsageType {
     myName = name;
   }
 
-  @NotNull
-  public String toString(@NotNull UsageViewPresentation presentation) {
+  @Nonnull
+  public String toString(@Nonnull UsageViewPresentation presentation) {
     String word = presentation.getUsagesWord();
     String usageWord = StringUtil.startsWithChar(myName, '{') ? StringUtil.capitalize(word) : word;
     return BundleBase.format(myName, usageWord);

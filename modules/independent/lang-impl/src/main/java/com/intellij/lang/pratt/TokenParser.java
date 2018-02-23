@@ -16,8 +16,8 @@
 package com.intellij.lang.pratt;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -26,11 +26,11 @@ public abstract class TokenParser {
 
   public abstract boolean parseToken(PrattBuilder builder);
 
-  public static TokenParser infix(final int rightPriority, @NotNull final IElementType compositeType) {
+  public static TokenParser infix(final int rightPriority, @Nonnull final IElementType compositeType) {
     return infix(rightPriority, compositeType, null);
   }
 
-  public static TokenParser infix(final int rightPriority, @NotNull final IElementType compositeType, @Nullable final String errorMessage) {
+  public static TokenParser infix(final int rightPriority, @Nonnull final IElementType compositeType, @Nullable final String errorMessage) {
     return new ReducingParser() {
       @Override
       @Nullable
@@ -41,7 +41,7 @@ public abstract class TokenParser {
     };
   }
 
-  public static TokenParser postfix(@NotNull final IElementType compositeType) {
+  public static TokenParser postfix(@Nonnull final IElementType compositeType) {
     return new ReducingParser() {
       @Override
       @Nullable

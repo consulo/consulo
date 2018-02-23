@@ -1,8 +1,8 @@
 package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SMRootTestProxyFormatter {
-  void format(@NotNull SMTestProxy.SMRootTestProxy testProxy, @NotNull TestTreeRenderer renderer);
+  void format(@Nonnull SMTestProxy.SMRootTestProxy testProxy, @Nonnull TestTreeRenderer renderer);
 }

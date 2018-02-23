@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.model.execution;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Essentially this class is {@link ExternalSystemTaskExecutionSettings} plus auxiliary information like execution type (run/debug etc).
@@ -26,37 +26,39 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ExternalTaskExecutionInfo {
   
-  @NotNull private ExternalSystemTaskExecutionSettings mySettings;
-  @NotNull private String myExecutorId;
+  @Nonnull
+  private ExternalSystemTaskExecutionSettings mySettings;
+  @Nonnull
+  private String myExecutorId;
 
   @SuppressWarnings("UnusedDeclaration")
   public ExternalTaskExecutionInfo() {
     this(new ExternalSystemTaskExecutionSettings(), "___DUMMY___");
   }
 
-  public ExternalTaskExecutionInfo(@NotNull ExternalSystemTaskExecutionSettings settings, @NotNull String executorId) {
+  public ExternalTaskExecutionInfo(@Nonnull ExternalSystemTaskExecutionSettings settings, @Nonnull String executorId) {
     mySettings = settings;
     myExecutorId = executorId;
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemTaskExecutionSettings getSettings() {
     return mySettings;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setSettings(@NotNull ExternalSystemTaskExecutionSettings settings) {
+  public void setSettings(@Nonnull ExternalSystemTaskExecutionSettings settings) {
     // Required by IJ serialization.
     mySettings = settings;
   }
 
-  @NotNull
+  @Nonnull
   public String getExecutorId() {
     return myExecutorId;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setExecutorId(@NotNull String executorId) {
+  public void setExecutorId(@Nonnull String executorId) {
     // Required by IJ serialization.
     myExecutorId = executorId;
   }

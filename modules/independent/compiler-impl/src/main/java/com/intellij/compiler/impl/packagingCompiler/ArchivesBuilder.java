@@ -34,8 +34,8 @@ import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
 import consulo.packaging.elements.ArchivePackageWriter;
 import consulo.packaging.impl.util.DeploymentUtilImpl;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -51,7 +51,7 @@ public class ArchivesBuilder {
   private final CompileContext myContext;
   private Map<ArchivePackageInfo, File> myBuiltArchives;
 
-  public ArchivesBuilder(@NotNull Set<ArchivePackageInfo> archivesToBuild, @NotNull FileFilter fileFilter, @NotNull CompileContext context) {
+  public ArchivesBuilder(@Nonnull Set<ArchivePackageInfo> archivesToBuild, @Nonnull FileFilter fileFilter, @Nonnull CompileContext context) {
     DependentArchivesEvaluator evaluator = new DependentArchivesEvaluator();
     for (ArchivePackageInfo archivePackageInfo : archivesToBuild) {
       evaluator.addArchiveWithDependencies(archivePackageInfo);
@@ -199,8 +199,8 @@ public class ArchivesBuilder {
     }
   }
 
-  private <T> void extractFileAndAddToArchive(@NotNull T archiveObject,
-                                              @NotNull ArchivePackageWriter<T> writer,
+  private <T> void extractFileAndAddToArchive(@Nonnull T archiveObject,
+                                              @Nonnull ArchivePackageWriter<T> writer,
                                               VirtualFile sourceFile,
                                               String relativePath,
                                               THashSet<String> writtenPaths) throws IOException {
@@ -222,11 +222,11 @@ public class ArchivesBuilder {
     }
   }
 
-  private <T> void addFileToArchive(@NotNull T archiveObject,
-                                    @NotNull ArchivePackageWriter<T> writer,
-                                    @NotNull File file,
-                                    @NotNull String relativePath,
-                                    @NotNull THashSet<String> writtenPaths) throws IOException {
+  private <T> void addFileToArchive(@Nonnull T archiveObject,
+                                    @Nonnull ArchivePackageWriter<T> writer,
+                                    @Nonnull File file,
+                                    @Nonnull String relativePath,
+                                    @Nonnull THashSet<String> writtenPaths) throws IOException {
     if (!file.exists()) {
       return;
     }
@@ -248,8 +248,8 @@ public class ArchivesBuilder {
     }
   }
 
-  private static <T> String addParentDirectories(@NotNull T archiveObject,
-                                                 @NotNull ArchivePackageWriter<T> writer,
+  private static <T> String addParentDirectories(@Nonnull T archiveObject,
+                                                 @Nonnull ArchivePackageWriter<T> writer,
                                                  THashSet<String> writtenPaths,
                                                  String relativePath) throws IOException {
     while (StringUtil.startsWithChar(relativePath, '/')) {

@@ -39,7 +39,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
 import consulo.testFramework.util.TestPathUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     private final ArrayList<String> myLog = new ArrayList<String>();
 
     @Override
-    public void beforeValidityChanged(@NotNull VirtualFilePointer[] pointers) {
+    public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
       verifyPointersInCorrectState(pointers);
       myLog.add(buildMessage("before", pointers));
     }
@@ -103,7 +103,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     }
 
     @Override
-    public void validityChanged(@NotNull VirtualFilePointer[] pointers) {
+    public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
       verifyPointersInCorrectState(pointers);
       myLog.add(buildMessage("after", pointers));
     }
@@ -245,12 +245,12 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     final VirtualFilePointer[] pointersToWatch = new VirtualFilePointer[2];
     final VirtualFilePointerListener listener = new VirtualFilePointerListener() {
       @Override
-      public void beforeValidityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
         verifyPointersInCorrectState(pointersToWatch);
       }
 
       @Override
-      public void validityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
         verifyPointersInCorrectState(pointersToWatch);
       }
     };
@@ -309,12 +309,12 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     final VirtualFilePointer[] pointersToWatch = new VirtualFilePointer[1];
     final VirtualFilePointerListener listener = new VirtualFilePointerListener() {
       @Override
-      public void beforeValidityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
         verifyPointersInCorrectState(pointersToWatch);
       }
 
       @Override
-      public void validityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
         verifyPointersInCorrectState(pointersToWatch);
       }
     };
@@ -434,11 +434,11 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     Disposable disposable = Disposer.newDisposable();
     final VirtualFilePointer pointer = myVirtualFilePointerManager.create(vFile, disposable, new VirtualFilePointerListener() {
       @Override
-      public void beforeValidityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
       }
 
       @Override
-      public void validityChanged(@NotNull VirtualFilePointer[] pointers) {
+      public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
       }
     });
 
@@ -449,7 +449,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     assertFalse(pointer.isValid());
   }
 
-  private static VirtualFile refreshAndFind(@NotNull final String url) {
+  private static VirtualFile refreshAndFind(@Nonnull final String url) {
     return ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
       @Override
       public VirtualFile compute() {
@@ -478,12 +478,12 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
 
     VirtualFileAdapter listener = new VirtualFileAdapter() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         stressRead(pointer);
       }
 
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent event) {
+      public void fileDeleted(@Nonnull VirtualFileEvent event) {
         stressRead(pointer);
       }
     };
@@ -519,7 +519,7 @@ public class VirtualFilePointerTest extends PlatformLangTestCase {
     Disposer.dispose(disposable); // unregister listener early
   }
 
-  private static void stressRead(@NotNull final VirtualFilePointer pointer) {
+  private static void stressRead(@Nonnull final VirtualFilePointer pointer) {
     boolean b = JobLauncher.getInstance().invokeConcurrentlyUnderProgress(Collections.nCopies(10, null), null, false, new Processor<Object>() {
       @Override
       public boolean process(Object o) {

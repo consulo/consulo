@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.VoidDataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * A specialization of FileBasedIndexExtension allowing to create a mapping [DataObject -> List of files containing this object]
@@ -32,7 +32,7 @@ public abstract class ScalarIndexExtension<K> extends FileBasedIndexExtension<K,
   @Deprecated
   public static final DataExternalizer<Void> VOID_DATA_EXTERNALIZER = VoidDataExternalizer.INSTANCE;
 
-  @NotNull
+  @Nonnull
   @Override
   public final DataExternalizer<Void> getValueExternalizer() {
     return VoidDataExternalizer.INSTANCE;

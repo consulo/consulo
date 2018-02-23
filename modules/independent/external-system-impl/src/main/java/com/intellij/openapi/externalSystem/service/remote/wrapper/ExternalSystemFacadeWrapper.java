@@ -7,7 +7,7 @@ import com.intellij.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
 import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -25,56 +25,58 @@ import java.util.Set;
  */
 public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettings> implements RemoteExternalSystemFacade<S> {
 
-  @NotNull private final RemoteExternalSystemFacade<S>                   myDelegate;
-  @NotNull private final RemoteExternalSystemProgressNotificationManager myProgressManager;
+  @Nonnull
+  private final RemoteExternalSystemFacade<S>                   myDelegate;
+  @Nonnull
+  private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemFacadeWrapper(@NotNull RemoteExternalSystemFacade<S> delegate,
-                                     @NotNull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemFacadeWrapper(@Nonnull RemoteExternalSystemFacade<S> delegate,
+                                     @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
   {
     myDelegate = delegate;
     myProgressManager = progressManager;
   }
 
-  @NotNull
+  @Nonnull
   public RemoteExternalSystemFacade<S> getDelegate() {
     return myDelegate;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException {
     return new ExternalSystemProjectResolverWrapper<S>(myDelegate.getResolver(), myProgressManager);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException {
     return new ExternalSystemTaskManagerWrapper<S>(myDelegate.getTaskManager(), myProgressManager);
   }
 
   @Override
-  public void applySettings(@NotNull S settings) throws RemoteException {
+  public void applySettings(@Nonnull S settings) throws RemoteException {
     myDelegate.applySettings(settings);
   }
 
   @Override
-  public void applyProgressManager(@NotNull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+  public void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
     myDelegate.applyProgressManager(progressManager);
   }
 
   @Override
-  public boolean isTaskInProgress(@NotNull ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.isTaskInProgress(id);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     return myDelegate.getTasksInProgress();
   }
 
   @Override
-  public boolean cancelTask(@NotNull ExternalSystemTaskId id) throws RemoteException {
+  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.cancelTask(id);
   }
 }

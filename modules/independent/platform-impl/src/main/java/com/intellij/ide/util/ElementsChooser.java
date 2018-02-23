@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,7 +86,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     markElements(elements, Boolean.TRUE);
   }
 
-  @NotNull
+  @Nonnull
   public List<T> getMarkedElements() {
     Map<T, Boolean> elementMarkStates = getElementMarkStates();
     List<T> elements = new ArrayList<T>();
@@ -120,21 +120,21 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
   }
 
   private static class BooleanMarkStateDescriptor<T> implements MarkStateDescriptor<T, Boolean> {
-    @NotNull
+    @Nonnull
     @Override
-    public Boolean getDefaultState(@NotNull T element) {
+    public Boolean getDefaultState(@Nonnull T element) {
       return Boolean.FALSE;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Boolean getNextState(@NotNull T element, @NotNull Boolean state) {
+    public Boolean getNextState(@Nonnull T element, @Nonnull Boolean state) {
       return !state;
     }
 
     @Nullable
     @Override
-    public Boolean getNextState(@NotNull Map<T, Boolean> elementsWithStates) {
+    public Boolean getNextState(@Nonnull Map<T, Boolean> elementsWithStates) {
       boolean currentlyMarked = true;
       for (Boolean state : elementsWithStates.values()) {
         currentlyMarked = state;
@@ -146,7 +146,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     }
 
     @Override
-    public boolean isMarked(@NotNull Boolean state) {
+    public boolean isMarked(@Nonnull Boolean state) {
       return state;
     }
 

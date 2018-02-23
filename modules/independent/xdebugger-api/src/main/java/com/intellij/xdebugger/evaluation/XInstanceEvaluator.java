@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.evaluation;
 
 import com.intellij.xdebugger.frame.XStackFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Subclass to allow to recalculate instance value in a different context
@@ -28,5 +28,5 @@ public interface XInstanceEvaluator {
    * Recalculates instance value in the context of the provided stack frame
    * @see XDebuggerEvaluator
    */
-  void evaluate(@NotNull XDebuggerEvaluator.XEvaluationCallback callback, @NotNull XStackFrame frame);
+  void evaluate(@Nonnull XDebuggerEvaluator.XEvaluationCallback callback, @Nonnull XStackFrame frame);
 }

@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface WhitespacesAndCommentsBinder {
    * Provides an ability for the processor to get a text of any of given tokens.
    */
   interface TokenTextGetter {
-    @NotNull
+    @Nonnull
     CharSequence get(int i);
   }
 

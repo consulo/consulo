@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IncrementalSearchAction extends AnAction implements DumbAware {
   public IncrementalSearchAction() {
@@ -31,7 +31,7 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
@@ -42,7 +42,7 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);

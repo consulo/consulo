@@ -19,7 +19,7 @@ package com.intellij.execution.ui.layout.impl;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RunnerLayoutUiFactoryImpl extends RunnerLayoutUi.Factory {
   private final Project myProject;
@@ -28,9 +28,9 @@ public class RunnerLayoutUiFactoryImpl extends RunnerLayoutUi.Factory {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RunnerLayoutUi create(@NotNull final String runnerId, @NotNull final String runnerTitle, @NotNull final String sessionName, @NotNull final Disposable parent) {
+  public RunnerLayoutUi create(@Nonnull final String runnerId, @Nonnull final String runnerTitle, @Nonnull final String sessionName, @Nonnull final Disposable parent) {
     return new RunnerLayoutUiImpl(myProject, parent, runnerId, runnerTitle, sessionName);
   }
 }

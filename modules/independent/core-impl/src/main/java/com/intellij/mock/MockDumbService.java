@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.util.SimpleModificationTracker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -49,7 +49,7 @@ public class MockDumbService extends DumbService {
   }
 
   @Override
-  public void runWhenSmart(@NotNull Runnable runnable) {
+  public void runWhenSmart(@Nonnull Runnable runnable) {
     runnable.run();
   }
 
@@ -58,13 +58,13 @@ public class MockDumbService extends DumbService {
   }
 
   @Override
-  public void queueTask(@NotNull DumbModeTask task) {
+  public void queueTask(@Nonnull DumbModeTask task) {
     task.performInDumbMode(new EmptyProgressIndicator());
     Disposer.dispose(task);
   }
 
   @Override
-  public void cancelTask(@NotNull DumbModeTask task) {
+  public void cancelTask(@Nonnull DumbModeTask task) {
   }
 
   @Override
@@ -72,12 +72,12 @@ public class MockDumbService extends DumbService {
   }
 
   @Override
-  public JComponent wrapGently(@NotNull JComponent dumbUnawareContent, @NotNull Disposable parentDisposable) {
+  public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void showDumbModeNotification(@NotNull String message) {
+  public void showDumbModeNotification(@Nonnull String message) {
     throw new UnsupportedOperationException();
   }
 
@@ -95,11 +95,11 @@ public class MockDumbService extends DumbService {
     return false;
   }
 
-  public void smartInvokeLater(@NotNull final Runnable runnable) {
+  public void smartInvokeLater(@Nonnull final Runnable runnable) {
     runnable.run();
   }
 
-  public void smartInvokeLater(@NotNull final Runnable runnable, @NotNull ModalityState modalityState) {
+  public void smartInvokeLater(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     runnable.run();
   }
 }

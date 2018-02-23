@@ -19,7 +19,7 @@ import com.intellij.diff.util.LineRange;
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import com.intellij.util.BeforeAfter;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -29,11 +29,12 @@ import static com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus
 
 
 public class AppliedTextPatch {
-  @NotNull private final List<AppliedSplitPatchHunk> mySplitPatchHunkList;
+  @Nonnull
+  private final List<AppliedSplitPatchHunk> mySplitPatchHunkList;
 
   public enum HunkStatus {ALREADY_APPLIED, EXACTLY_APPLIED, NOT_APPLIED}
 
-  public static AppliedTextPatch create(@NotNull List<AppliedSplitPatchHunk> splitPatchHunkList) {
+  public static AppliedTextPatch create(@Nonnull List<AppliedSplitPatchHunk> splitPatchHunkList) {
     List<AppliedSplitPatchHunk> hunks = new ArrayList<>(splitPatchHunkList);
 
     // ensure, that `appliedTo` ranges do not overlap
@@ -57,23 +58,28 @@ public class AppliedTextPatch {
     return new AppliedTextPatch(hunks);
   }
 
-  private AppliedTextPatch(@NotNull List<AppliedSplitPatchHunk> hunks) {
+  private AppliedTextPatch(@Nonnull List<AppliedSplitPatchHunk> hunks) {
     mySplitPatchHunkList = hunks;
   }
 
-  @NotNull
+  @Nonnull
   public List<AppliedSplitPatchHunk> getHunks() {
     return mySplitPatchHunkList;
   }
 
   public static class AppliedSplitPatchHunk {
-    @NotNull private final HunkStatus myStatus;
+    @Nonnull
+    private final HunkStatus myStatus;
 
-    @NotNull private final List<String> myContextBefore;
-    @NotNull private final List<String> myContextAfter;
+    @Nonnull
+    private final List<String> myContextBefore;
+    @Nonnull
+    private final List<String> myContextAfter;
 
-    @NotNull private final List<String> myDeletedLines;
-    @NotNull private final List<String> myInsertedLines;
+    @Nonnull
+    private final List<String> myDeletedLines;
+    @Nonnull
+    private final List<String> myInsertedLines;
 
     private final int myAppliedToLinesStart;
     private final int myAppliedToLinesEnd;
@@ -81,10 +87,10 @@ public class AppliedTextPatch {
     private final int myStartLineBefore;
     private final int myStartLineAfter;
 
-    public AppliedSplitPatchHunk(@NotNull GenericPatchApplier.SplitHunk splitHunk,
+    public AppliedSplitPatchHunk(@Nonnull GenericPatchApplier.SplitHunk splitHunk,
                                  int startLineApplied,
                                  int endLineApplied,
-                                 @NotNull HunkStatus status) {
+                                 @Nonnull HunkStatus status) {
       myStatus = status;
       myAppliedToLinesStart = startLineApplied;
       myAppliedToLinesEnd = endLineApplied;
@@ -103,10 +109,10 @@ public class AppliedTextPatch {
       }
     }
 
-    private AppliedSplitPatchHunk(@NotNull AppliedSplitPatchHunk hunk,
+    private AppliedSplitPatchHunk(@Nonnull AppliedSplitPatchHunk hunk,
                                   int appliedToLinesStart,
                                   int appliedToLinesEnd,
-                                  @NotNull HunkStatus status) {
+                                  @Nonnull HunkStatus status) {
       myStatus = status;
       myAppliedToLinesStart = appliedToLinesStart;
       myAppliedToLinesEnd = appliedToLinesEnd;
@@ -130,7 +136,7 @@ public class AppliedTextPatch {
     /*
      * Hunk lines (including context) in base document
      */
-    @NotNull
+    @Nonnull
     public LineRange getLineRangeBefore() {
       int start = myStartLineBefore;
       return new LineRange(start, start + myContextBefore.size() + myDeletedLines.size() + myContextAfter.size());
@@ -139,33 +145,33 @@ public class AppliedTextPatch {
     /*
      * Hunk lines (including context) in originally patched document
      */
-    @NotNull
+    @Nonnull
     public LineRange getLineRangeAfter() {
       int start = myStartLineAfter;
       return new LineRange(start, start + myContextBefore.size() + myInsertedLines.size() + myContextAfter.size());
     }
 
-    @NotNull
+    @Nonnull
     public HunkStatus getStatus() {
       return myStatus;
     }
 
-    @NotNull
+    @Nonnull
     public List<String> getContextBefore() {
       return myContextBefore;
     }
 
-    @NotNull
+    @Nonnull
     public List<String> getContextAfter() {
       return myContextAfter;
     }
 
-    @NotNull
+    @Nonnull
     public List<String> getDeletedLines() {
       return myDeletedLines;
     }
 
-    @NotNull
+    @Nonnull
     public List<String> getInsertedLines() {
       return myInsertedLines;
     }

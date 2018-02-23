@@ -11,7 +11,7 @@ import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import icons.RemoteServersIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,12 +35,12 @@ public class ServersToolWindow {
     }
     myProject.getMessageBus().connect().subscribe(RemoteServerListener.TOPIC, new RemoteServerListener() {
       @Override
-      public void serverAdded(@NotNull RemoteServer<?> server) {
+      public void serverAdded(@Nonnull RemoteServer<?> server) {
         updateWindowAvailable(true);
       }
 
       @Override
-      public void serverRemoved(@NotNull RemoteServer<?> server) {
+      public void serverRemoved(@Nonnull RemoteServer<?> server) {
         updateWindowAvailable(false);
       }
     });

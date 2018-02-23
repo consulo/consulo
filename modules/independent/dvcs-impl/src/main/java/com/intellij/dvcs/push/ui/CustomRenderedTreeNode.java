@@ -16,9 +16,9 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 interface CustomRenderedTreeNode {
 
-  void render(@NotNull ColoredTreeCellRenderer renderer);
+  void render(@Nonnull ColoredTreeCellRenderer renderer);
 }

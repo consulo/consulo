@@ -23,9 +23,9 @@ import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,11 +44,11 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
   private ArtifactType myArtifactType;
   private Map<ArtifactPropertiesProvider, ArtifactProperties<?>> myProperties;
 
-  public ArtifactImpl(@NotNull String name, @NotNull ArtifactType artifactType, boolean buildOnMake, @NotNull CompositePackagingElement<?> rootElement,
+  public ArtifactImpl(@Nonnull String name, @Nonnull ArtifactType artifactType, boolean buildOnMake, @Nonnull CompositePackagingElement<?> rootElement,
                       String outputPath) {
     this(name, artifactType, buildOnMake, rootElement, outputPath, null);
   }
-  public ArtifactImpl(@NotNull String name, @NotNull ArtifactType artifactType, boolean buildOnMake, @NotNull CompositePackagingElement<?> rootElement,
+  public ArtifactImpl(@Nonnull String name, @Nonnull ArtifactType artifactType, boolean buildOnMake, @Nonnull CompositePackagingElement<?> rootElement,
                       String outputPath,
                       EventDispatcher<ArtifactListener> dispatcher) {
     myName = name;
@@ -70,12 +70,12 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
   }
 
-  @NotNull
+  @Nonnull
   public ArtifactType getArtifactType() {
     return myArtifactType;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
@@ -84,7 +84,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     return myBuildOnMake;
   }
 
-  @NotNull
+  @Nonnull
   public CompositePackagingElement<?> getRootElement() {
     return myRootElement;
   }
@@ -107,7 +107,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     return artifact;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     String oldName = myName;
     myName = name;
     if (myDispatcher != null) {
@@ -133,7 +133,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
   }
 
-  public void setArtifactType(@NotNull ArtifactType selected) {
+  public void setArtifactType(@Nonnull ArtifactType selected) {
     myArtifactType = selected;
     resetProperties();
   }
@@ -146,7 +146,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     myOutputPath = outputPath;
   }
 
-  public ArtifactProperties<?> getProperties(@NotNull ArtifactPropertiesProvider provider) {
+  public ArtifactProperties<?> getProperties(@Nonnull ArtifactPropertiesProvider provider) {
     return myProperties.get(provider);
   }
 

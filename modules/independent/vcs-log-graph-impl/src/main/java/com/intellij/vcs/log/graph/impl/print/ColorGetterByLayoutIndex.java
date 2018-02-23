@@ -23,22 +23,25 @@ import com.intellij.vcs.log.graph.api.elements.GraphNode;
 import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import com.intellij.vcs.log.graph.utils.NormalEdge;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ColorGetterByLayoutIndex<CommitId> {
-  @NotNull private final LinearGraph myLinearGraph;
-  @NotNull private final PermanentGraphInfo<CommitId> myPermanentGraphInfo;
-  @NotNull private final GraphColorManager<CommitId> myColorManager;
+  @Nonnull
+  private final LinearGraph myLinearGraph;
+  @Nonnull
+  private final PermanentGraphInfo<CommitId> myPermanentGraphInfo;
+  @Nonnull
+  private final GraphColorManager<CommitId> myColorManager;
 
-  public ColorGetterByLayoutIndex(@NotNull LinearGraph linearGraph,
-                                  @NotNull PermanentGraphInfo<CommitId> permanentGraphInfo,
-                                  @NotNull GraphColorManager<CommitId> colorManager) {
+  public ColorGetterByLayoutIndex(@Nonnull LinearGraph linearGraph,
+                                  @Nonnull PermanentGraphInfo<CommitId> permanentGraphInfo,
+                                  @Nonnull GraphColorManager<CommitId> colorManager) {
     myLinearGraph = linearGraph;
     myPermanentGraphInfo = permanentGraphInfo;
     myColorManager = colorManager;
   }
 
-  public int getColorId(@NotNull GraphElement element) {
+  public int getColorId(@Nonnull GraphElement element) {
     int upNodeIndex, downNodeIndex;
     if (element instanceof GraphNode) {
       upNodeIndex = ((GraphNode)element).getNodeIndex();

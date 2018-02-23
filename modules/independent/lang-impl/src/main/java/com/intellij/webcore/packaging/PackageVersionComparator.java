@@ -1,8 +1,8 @@
 package com.intellij.webcore.packaging;
 
 import com.google.common.collect.ImmutableMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -29,7 +29,7 @@ public class PackageVersionComparator implements Comparator<String> {
   }
 
   @Nullable
-  private static String replace(@NotNull String s) {
+  private static String replace(@Nonnull String s) {
     final Map<String, String> sub = ImmutableMap.of("pre", "c",
                                                     "preview", "c",
                                                     "rc", "c",
@@ -53,7 +53,7 @@ public class PackageVersionComparator implements Comparator<String> {
     return "*" + s;
   }
 
-  @NotNull
+  @Nonnull
   private List<String> parse(@Nullable String s) {
     // Version parsing from pkg_resources ensures that all the "pre", "alpha", "rc", etc. are sorted correctly
     if (s == null) {

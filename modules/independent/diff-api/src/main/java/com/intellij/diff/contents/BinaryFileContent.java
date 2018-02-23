@@ -16,7 +16,7 @@
 package com.intellij.diff.contents;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -26,6 +26,6 @@ public interface BinaryFileContent extends FileContent {
   /**
    * @return Binary representation of content.
    */
-  @NotNull
+  @Nonnull
   byte[] getBytes() throws IOException;
 }

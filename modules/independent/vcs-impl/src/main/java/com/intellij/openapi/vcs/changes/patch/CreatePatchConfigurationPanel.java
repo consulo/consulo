@@ -42,8 +42,8 @@ import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -63,7 +63,7 @@ public class CreatePatchConfigurationPanel {
   private final Project myProject;
   @Nullable private File myCommonParentDir;
 
-  public CreatePatchConfigurationPanel(@NotNull final Project project) {
+  public CreatePatchConfigurationPanel(@Nonnull final Project project) {
     myProject = project;
     initMainPanel();
 
@@ -93,7 +93,7 @@ public class CreatePatchConfigurationPanel {
     initEncodingCombo();
   }
 
-  public void selectBasePath(@NotNull VirtualFile baseDir) {
+  public void selectBasePath(@Nonnull VirtualFile baseDir) {
     myBasePathField.setText(baseDir.getPresentableUrl());
   }
 
@@ -104,7 +104,7 @@ public class CreatePatchConfigurationPanel {
     myEncoding.setSelectedItem(projectCharset);
   }
 
-  @NotNull
+  @Nonnull
   public Charset getEncoding() {
     return (Charset)myEncoding.getSelectedItem();
   }
@@ -125,7 +125,7 @@ public class CreatePatchConfigurationPanel {
             .getPanel();
   }
 
-  public void setCommonParentPath(@Nullable File commonParentPath) {
+  public void setCommonParentPath(@javax.annotation.Nullable File commonParentPath) {
     myCommonParentDir = commonParentPath == null || commonParentPath.isDirectory() ? commonParentPath : commonParentPath.getParentFile();
   }
 
@@ -141,7 +141,7 @@ public class CreatePatchConfigurationPanel {
     return FileUtil.expandUserHome(myFileNameField.getText().trim());
   }
 
-  @NotNull
+  @Nonnull
   public String getBaseDirName() {
     return FileUtil.expandUserHome(myBasePathField.getText().trim());
   }
@@ -162,7 +162,7 @@ public class CreatePatchConfigurationPanel {
     return validateFields() == null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private ValidationInfo verifyBaseDirPath() {
     String baseDirName = getBaseDirName();
     if (StringUtil.isEmptyOrSpaces(baseDirName)) return new ValidationInfo("Base path can't be empty!", myBasePathField);

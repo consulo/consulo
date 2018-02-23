@@ -28,7 +28,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class MoveCaretUpWithSelectionAction extends EditorAction {
   public MoveCaretUpWithSelectionAction() {

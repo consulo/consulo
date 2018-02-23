@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.textarea;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.SoftWrapModel;
 import com.intellij.openapi.editor.VisualPosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,13 +41,13 @@ public class TextComponentSoftWrapModel implements SoftWrapModel {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
     return Collections.emptyList();
@@ -63,12 +63,12 @@ public class TextComponentSoftWrapModel implements SoftWrapModel {
   }
 
   @Override
-  public boolean isInsideSoftWrap(@NotNull VisualPosition position) {
+  public boolean isInsideSoftWrap(@Nonnull VisualPosition position) {
     return false;
   }
 
   @Override
-  public boolean isInsideOrBeforeSoftWrap(@NotNull VisualPosition visual) {
+  public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
     return false;
   }
 

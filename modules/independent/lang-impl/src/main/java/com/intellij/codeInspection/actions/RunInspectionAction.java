@@ -40,9 +40,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.*;
 import com.intellij.psi.search.SearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -72,7 +72,7 @@ public class RunInspectionAction extends GotoActionBase {
     final GotoInspectionModel model = new GotoInspectionModel(project);
     showNavigationPopup(e, model, new GotoActionCallback<Object>() {
       @Override
-      protected ChooseByNameFilter<Object> createFilter(@NotNull ChooseByNamePopup popup) {
+      protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
         popup.setSearchInAnyPlace(true);
         return super.createFilter(popup);
       }
@@ -89,8 +89,8 @@ public class RunInspectionAction extends GotoActionBase {
     }, false);
   }
 
-  private static void runInspection(@NotNull Project project,
-                                    @NotNull String shortName,
+  private static void runInspection(@Nonnull Project project,
+                                    @Nonnull String shortName,
                                     @Nullable VirtualFile virtualFile,
                                     PsiElement psiElement,
                                     PsiFile psiFile) {
@@ -130,11 +130,11 @@ public class RunInspectionAction extends GotoActionBase {
         return fileFilterPanel.getPanel();
       }
 
-      @NotNull
+      @Nonnull
       @Override
-      public AnalysisScope getScope(@NotNull AnalysisUIOptions uiOptions,
-                                    @NotNull AnalysisScope defaultScope,
-                                    @NotNull Project project,
+      public AnalysisScope getScope(@Nonnull AnalysisUIOptions uiOptions,
+                                    @Nonnull AnalysisScope defaultScope,
+                                    @Nonnull Project project,
                                     Module module) {
         final AnalysisScope scope = super.getScope(uiOptions, defaultScope, project, module);
         final SearchScope filterScope = fileFilterPanel.getSearchScope();

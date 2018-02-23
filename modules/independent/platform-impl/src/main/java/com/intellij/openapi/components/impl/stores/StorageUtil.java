@@ -46,8 +46,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -67,12 +67,12 @@ public class StorageUtil {
 
   private StorageUtil() { }
 
-  public static boolean isChangedByStorageOrSaveSession(@NotNull VirtualFileEvent event) {
+  public static boolean isChangedByStorageOrSaveSession(@Nonnull VirtualFileEvent event) {
     return event.getRequestor() instanceof StateStorage.SaveSession || event.getRequestor() instanceof StateStorage;
   }
 
-  public static void notifyUnknownMacros(@NotNull TrackingPathMacroSubstitutor substitutor,
-                                         @NotNull final Project project,
+  public static void notifyUnknownMacros(@Nonnull TrackingPathMacroSubstitutor substitutor,
+                                         @Nonnull final Project project,
                                          @Nullable final String componentName) {
     final LinkedHashSet<String> macros = new LinkedHashSet<String>(substitutor.getUnknownMacros(componentName));
     if (macros.isEmpty()) {
@@ -124,8 +124,8 @@ public class StorageUtil {
     }
   }
 
-  @NotNull
-  public static VirtualFile writeFile(@Nullable File file, @NotNull Object requestor, @Nullable VirtualFile virtualFile, @NotNull BufferExposingByteArrayOutputStream content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+  @Nonnull
+  public static VirtualFile writeFile(@Nullable File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile, @Nonnull BufferExposingByteArrayOutputStream content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       if (file != null && (virtualFile == null || !virtualFile.isValid())) {
@@ -158,7 +158,7 @@ public class StorageUtil {
     }
   }
 
-  public static void deleteFile(@NotNull File file, @NotNull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
+  public static void deleteFile(@Nonnull File file, @Nonnull Object requestor, @Nullable VirtualFile virtualFile) throws IOException {
     if (virtualFile == null) {
       LOG.warn("Cannot find virtual file " + file.getAbsolutePath());
     }
@@ -173,7 +173,7 @@ public class StorageUtil {
     }
   }
 
-  public static void deleteFile(@NotNull Object requestor, @NotNull VirtualFile virtualFile) throws IOException {
+  public static void deleteFile(@Nonnull Object requestor, @Nonnull VirtualFile virtualFile) throws IOException {
     AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
       virtualFile.delete(requestor);
@@ -186,15 +186,15 @@ public class StorageUtil {
     }
   }
 
-  @NotNull
-  public static BufferExposingByteArrayOutputStream writeToBytes(@NotNull Parent element, @NotNull String lineSeparator) throws IOException {
+  @Nonnull
+  public static BufferExposingByteArrayOutputStream writeToBytes(@Nonnull Parent element, @Nonnull String lineSeparator) throws IOException {
     BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream(512);
     JDOMUtil.writeParent(element, out, lineSeparator);
     return out;
   }
 
-  @NotNull
-  private static VirtualFile getOrCreateVirtualFile(@Nullable Object requestor, @NotNull File ioFile) throws IOException {
+  @Nonnull
+  private static VirtualFile getOrCreateVirtualFile(@Nullable Object requestor, @Nonnull File ioFile) throws IOException {
     VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(ioFile);
     if (virtualFile == null) {
       File parentFile = ioFile.getParentFile();
@@ -211,7 +211,7 @@ public class StorageUtil {
   /**
    * @return pair.first - file contents (null if file does not exist), pair.second - file line separators
    */
-  @NotNull
+  @Nonnull
   public static Pair<byte[], String> loadFile(@Nullable final VirtualFile file) throws IOException {
     if (file == null || !file.exists()) {
       return NON_EXISTENT_FILE_DATA;
@@ -225,8 +225,8 @@ public class StorageUtil {
     return Pair.create(bytes, lineSeparator);
   }
 
-  @NotNull
-  public static LineSeparator detectLineSeparators(@NotNull CharSequence chars, @Nullable LineSeparator defaultSeparator) {
+  @Nonnull
+  public static LineSeparator detectLineSeparators(@Nonnull CharSequence chars, @Nullable LineSeparator defaultSeparator) {
     for (int i = 0, n = chars.length(); i < n; i++) {
       char c = chars.charAt(i);
       if (c == '\r') {
@@ -241,7 +241,7 @@ public class StorageUtil {
   }
 
   @Nullable
-  public static BufferExposingByteArrayOutputStream newContentIfDiffers(@NotNull Parent element, @Nullable VirtualFile file) {
+  public static BufferExposingByteArrayOutputStream newContentIfDiffers(@Nonnull Parent element, @Nullable VirtualFile file) {
     try {
       Pair<byte[], String> pair = loadFile(file);
       BufferExposingByteArrayOutputStream out = writeToBytes(element, pair.second);
@@ -253,7 +253,7 @@ public class StorageUtil {
     }
   }
 
-  public static boolean equal(byte[] a1, @NotNull BufferExposingByteArrayOutputStream out) {
+  public static boolean equal(byte[] a1, @Nonnull BufferExposingByteArrayOutputStream out) {
     int length = out.size();
     if (a1.length != length) {
       return false;
@@ -303,12 +303,12 @@ public class StorageUtil {
     }
   }
 
-  @NotNull
-  public static BufferExposingByteArrayOutputStream elementToBytes(@NotNull Parent element, boolean useSystemLineSeparator) throws IOException {
+  @Nonnull
+  public static BufferExposingByteArrayOutputStream elementToBytes(@Nonnull Parent element, boolean useSystemLineSeparator) throws IOException {
     return writeToBytes(element, useSystemLineSeparator ? SystemProperties.getLineSeparator() : "\n");
   }
 
-  public static void sendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type) {
+  public static void sendContent(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull Parent element, @Nonnull RoamingType type) {
     if (!provider.isApplicable(fileSpec, type)) {
       return;
     }
@@ -321,7 +321,7 @@ public class StorageUtil {
     }
   }
 
-  public static void delete(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull RoamingType type) {
+  public static void delete(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull RoamingType type) {
     if (provider.isApplicable(fileSpec, type)) {
       provider.delete(fileSpec, type);
     }
@@ -330,18 +330,18 @@ public class StorageUtil {
   /**
    * You must call {@link StreamProvider#isApplicable(String, com.intellij.openapi.components.RoamingType)} before
    */
-  public static void doSendContent(@NotNull StreamProvider provider, @NotNull String fileSpec, @NotNull Parent element, @NotNull RoamingType type) throws IOException {
+  public static void doSendContent(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull Parent element, @Nonnull RoamingType type) throws IOException {
     // we should use standard line-separator (\n) - stream provider can share file content on any OS
     BufferExposingByteArrayOutputStream content = elementToBytes(element, false);
     provider.saveContent(fileSpec, content.getInternalBuffer(), content.size(), type);
   }
 
-  public static boolean isProjectOrModuleFile(@NotNull String fileSpec) {
+  public static boolean isProjectOrModuleFile(@Nonnull String fileSpec) {
     return fileSpec.startsWith(StoragePathMacros.PROJECT_CONFIG_DIR);
   }
 
-  @NotNull
-  public static String getStoreDir(@NotNull Project project) {
+  @Nonnull
+  public static String getStoreDir(@Nonnull Project project) {
     return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
   }
 }

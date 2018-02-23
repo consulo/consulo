@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -52,14 +52,14 @@ public class OffsetsInFile {
     return file;
   }
 
-  @NotNull
+  @Nonnull
   public OffsetsInFile toFileCopy(PsiFile copyFile) {
     CompletionAssertions.assertCorrectOriginalFile("Given ", file, copyFile);
     assert copyFile.getViewProvider().getDocument().getTextLength() == file.getViewProvider().getDocument().getTextLength();
     return mapOffsets(copyFile, it -> it);
   }
 
-  @NotNull
+  @Nonnull
   public OffsetsInFile toInjectedIfAny(int offset) {
     PsiFile injected = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
     if (injected == null) {
@@ -70,7 +70,7 @@ public class OffsetsInFile {
     return mapOffsets(injected, documentWindow::hostToInjected);
   }
 
-  @NotNull
+  @Nonnull
   public OffsetsInFile toTopLevelFile() {
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
     PsiFile hostFile = manager.getTopLevelFile(file);
@@ -82,7 +82,7 @@ public class OffsetsInFile {
     }
   }
 
-  @NotNull
+  @Nonnull
   public OffsetsInFile copyWithReplacement(int startOffset, int endOffset, String replacement) {
     PsiFile fileCopy = (PsiFile)file.copy();
     Document document = fileCopy.getViewProvider().getDocument();
@@ -97,7 +97,7 @@ public class OffsetsInFile {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private OffsetsInFile mapOffsets(PsiFile newFile, Function<Integer, Integer> offsetFun) {
     OffsetMap map = new OffsetMap(newFile.getViewProvider().getDocument());
     for (OffsetKey key : offsets.getAllOffsets()) {

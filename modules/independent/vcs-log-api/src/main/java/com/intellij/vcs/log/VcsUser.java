@@ -15,16 +15,16 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Encapsulates information about a VcsUser - author or committer to the VCS.
  */
 public interface VcsUser {
 
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   String getEmail();
 }

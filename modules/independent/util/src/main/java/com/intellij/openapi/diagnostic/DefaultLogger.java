@@ -16,7 +16,7 @@
 package com.intellij.openapi.diagnostic;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class DefaultLogger extends Logger {
   public DefaultLogger(String category) {

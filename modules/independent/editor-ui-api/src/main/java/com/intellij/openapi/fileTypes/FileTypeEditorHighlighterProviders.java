@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,9 +43,9 @@ public class FileTypeEditorHighlighterProviders extends FileTypeExtension<Editor
       EditorHighlighterProvider defaultProvider = new EditorHighlighterProvider() {
         @Override
         public EditorHighlighter getEditorHighlighter(@Nullable Project project,
-                                                      @NotNull FileType fileType,
+                                                      @Nonnull FileType fileType,
                                                       @Nullable VirtualFile virtualFile,
-                                                      @NotNull EditorColorsScheme colors) {
+                                                      @Nonnull EditorColorsScheme colors) {
           return EditorHighlighterFactory.getInstance().createEditorHighlighter(
             SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, virtualFile), colors);
         }

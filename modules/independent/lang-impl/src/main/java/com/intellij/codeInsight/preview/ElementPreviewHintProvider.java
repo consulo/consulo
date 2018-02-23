@@ -8,8 +8,8 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
   private LightweightHint hint;
 
   @Override
-  public boolean isSupportedFile(@NotNull PsiFile psiFile) {
+  public boolean isSupportedFile(@Nonnull PsiFile psiFile) {
     for (PreviewHintProvider hintProvider : Extensions.getExtensions(PreviewHintProvider.EP_NAME)) {
       if (hintProvider.isSupportedFile(psiFile)) {
         return true;
@@ -38,7 +38,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
   }
 
   @Override
-  public void show(@NotNull PsiElement element, @NotNull Editor editor, @NotNull Point point, boolean keyTriggered) {
+  public void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered) {
     LightweightHint newHint = getHint(element);
     hideCurrentHintIfAny();
     if (newHint == null) {
@@ -59,12 +59,12 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
   }
 
   @Override
-  public void hide(@Nullable PsiElement element, @NotNull Editor editor) {
+  public void hide(@Nullable PsiElement element, @Nonnull Editor editor) {
     hideCurrentHintIfAny();
   }
 
   @Nullable
-  private static LightweightHint getHint(@NotNull PsiElement element) {
+  private static LightweightHint getHint(@Nonnull PsiElement element) {
     for (PreviewHintProvider hintProvider : Extensions.getExtensions(PreviewHintProvider.EP_NAME)) {
       JComponent preview;
       try {

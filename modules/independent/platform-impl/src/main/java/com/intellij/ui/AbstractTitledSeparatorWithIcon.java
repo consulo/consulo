@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,9 +40,9 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   protected final Icon myIconOpen;
   protected final JSeparator mySeparator;
 
-  public AbstractTitledSeparatorWithIcon(@NotNull final Icon icon,
-                                         @NotNull final Icon iconOpen,
-                                         @NotNull final String text) {
+  public AbstractTitledSeparatorWithIcon(@Nonnull final Icon icon,
+                                         @Nonnull final Icon iconOpen,
+                                         @Nonnull final String text) {
     myIcon = icon;
     myIconOpen = iconOpen;
     setLayout(new GridBagLayout());

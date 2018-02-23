@@ -18,13 +18,13 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface NontrivialBraceMatcher extends BraceMatcher {
-  @NotNull
-  List<IElementType> getOppositeBraceTokenTypes(@NotNull IElementType type);
+  @Nonnull
+  List<IElementType> getOppositeBraceTokenTypes(@Nonnull IElementType type);
 
-  boolean shouldStopMatch(boolean forward, @NotNull IElementType braceType, @NotNull HighlighterIterator iterator);
+  boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator);
 }

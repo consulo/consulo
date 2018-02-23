@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.*;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -58,8 +58,8 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   protected TestStatusLine myStatusLine;
   private JBSplitter mySplitter;
 
-  protected TestResultsPanel(@NotNull JComponent console, AnAction[] consoleActions, TestConsoleProperties properties,
-                             @NotNull String splitterProportionProperty, float splitterDefaultProportion) {
+  protected TestResultsPanel(@Nonnull JComponent console, AnAction[] consoleActions, TestConsoleProperties properties,
+                             @Nonnull String splitterProportionProperty, float splitterDefaultProportion) {
     super(new BorderLayout(0,1));
     myConsole = console;
     myConsoleActions = consoleActions;
@@ -69,7 +69,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     myStatisticsSplitterProportionProperty = mySplitterProportionProperty + "_Statistics";
     final ToolWindowManagerListener listener = new ToolWindowManagerListener() {
       @Override
-      public void toolWindowRegistered(@NotNull String id) {
+      public void toolWindowRegistered(@Nonnull String id) {
       }
 
       @Override
@@ -100,7 +100,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
                                 splitVertically);
     if (mySplitter instanceof OnePixelSplitter) {
       ((OnePixelSplitter)mySplitter).setBlindZone(new Producer<Insets>() {
-        @Nullable
+        @javax.annotation.Nullable
         @Override
         public Insets produce() {
           return new Insets(myToolbarPanel.getHeight(), 0, 0, 0);
@@ -174,14 +174,14 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
 
   protected abstract JComponent createTestTreeView();
 
-  @Nullable
+  @javax.annotation.Nullable
   protected TestTreeView getTreeView() {
     return null;
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     final TestTreeView view = getTreeView();
     if (view != null) {
       return view.getData(dataId);
@@ -206,8 +206,8 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
   public void dispose() {
   }
 
-  @NotNull
-  protected static JBSplitter createSplitter(@NotNull String proportionProperty, float defaultProportion, boolean splitVertically) {
+  @Nonnull
+  protected static JBSplitter createSplitter(@Nonnull String proportionProperty, float defaultProportion, boolean splitVertically) {
     JBSplitter splitter = new OnePixelSplitter(splitVertically, proportionProperty, defaultProportion);
     splitter.setHonorComponentsMinimumSize(true);
     return splitter;

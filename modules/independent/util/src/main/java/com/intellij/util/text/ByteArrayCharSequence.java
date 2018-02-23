@@ -17,13 +17,13 @@ package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ByteArrayCharSequence implements CharSequenceWithStringHash {
   private int hash;
   private final byte[] myChars;
 
-  private ByteArrayCharSequence(@NotNull byte[] chars) {
+  private ByteArrayCharSequence(@Nonnull byte[] chars) {
     myChars = chars;
   }
 
@@ -46,25 +46,25 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
     return (char)myChars[index];
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence subSequence(int start, int end) {
     return start == 0 && end == length() ? this : new CharSequenceSubSequence(this, start, end);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String toString() {
     return StringFactory.createShared(CharArrayUtil.fromSequence(this, 0, length()));
   }
 
-  @NotNull
-  public static CharSequence convertToBytesIfAsciiString(@NotNull String name) {
+  @Nonnull
+  public static CharSequence convertToBytesIfAsciiString(@Nonnull String name) {
     return convertToBytesIfAsciiString((CharSequence)name);
   }
 
-  @NotNull
-  public static CharSequence convertToBytesIfAsciiString(@NotNull CharSequence name) {
+  @Nonnull
+  public static CharSequence convertToBytesIfAsciiString(@Nonnull CharSequence name) {
     int length = name.length();
     if (length == 0) return "";
 

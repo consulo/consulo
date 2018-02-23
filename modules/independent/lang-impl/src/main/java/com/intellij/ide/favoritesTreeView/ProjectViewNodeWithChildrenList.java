@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode
     myChildren = new ArrayList<AbstractTreeNode>();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return myChildren;

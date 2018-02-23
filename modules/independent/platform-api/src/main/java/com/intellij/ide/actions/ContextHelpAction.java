@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.DumbAware;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ContextHelpAction extends AnAction implements DumbAware {
   private final String myHelpID;

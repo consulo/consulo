@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -66,6 +66,6 @@ public abstract class AbstractCollectionComboBoxModel<T> extends AbstractListMod
     return getItems().contains(item);
   }
 
-  @NotNull
+  @Nonnull
   abstract protected List<T> getItems();
 }

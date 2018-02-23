@@ -21,7 +21,7 @@ import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class XSuspendPolicyPanel extends XBreakpointPropertiesSubPanel {
   private Delegate myDelegate;
 
   @Override
-  public void init(Project project, final XBreakpointManager breakpointManager, @NotNull XBreakpointBase breakpoint) {
+  public void init(Project project, final XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
     super.init(project, breakpointManager, breakpoint);
 
     mySuspendCheckBox.addActionListener(new ActionListener() {

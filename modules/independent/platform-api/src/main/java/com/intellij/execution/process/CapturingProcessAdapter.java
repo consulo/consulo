@@ -16,7 +16,7 @@
 package com.intellij.execution.process;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -28,7 +28,7 @@ public class CapturingProcessAdapter extends ProcessAdapter {
     this(new ProcessOutput());
   }
 
-  public CapturingProcessAdapter(@NotNull ProcessOutput output) {
+  public CapturingProcessAdapter(@Nonnull ProcessOutput output) {
     myOutput = output;
   }
 
@@ -47,7 +47,7 @@ public class CapturingProcessAdapter extends ProcessAdapter {
   }
 
   @Override
-  public void processTerminated(@NotNull ProcessEvent event) {
+  public void processTerminated(@Nonnull ProcessEvent event) {
     myOutput.setExitCode(event.getExitCode());
   }
 

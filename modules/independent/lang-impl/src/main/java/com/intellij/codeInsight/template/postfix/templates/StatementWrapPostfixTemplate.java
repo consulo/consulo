@@ -19,27 +19,27 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 public abstract class StatementWrapPostfixTemplate extends TypedPostfixTemplate {
 
   @SuppressWarnings("unchecked")
-  protected StatementWrapPostfixTemplate(@NotNull String name,
-                                         @NotNull String descr,
-                                         @NotNull PostfixTemplatePsiInfo psiInfo) {
+  protected StatementWrapPostfixTemplate(@Nonnull String name,
+                                         @Nonnull String descr,
+                                         @Nonnull PostfixTemplatePsiInfo psiInfo) {
     super(name, descr, psiInfo, Condition.TRUE);
   }
 
-  protected StatementWrapPostfixTemplate(@NotNull String name,
-                                         @NotNull String descr,
-                                         @NotNull PostfixTemplatePsiInfo psiInfo,
-                                         @NotNull Condition<PsiElement> typeChecker) {
+  protected StatementWrapPostfixTemplate(@Nonnull String name,
+                                         @Nonnull String descr,
+                                         @Nonnull PostfixTemplatePsiInfo psiInfo,
+                                         @Nonnull Condition<PsiElement> typeChecker) {
     super(name, descr, psiInfo, typeChecker);
   }
 
   @Override
-  public void expand(@NotNull PsiElement context, @NotNull Editor editor) {
+  public void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
     PsiElement topmostExpression = myPsiInfo.getTopmostExpression(context);
     assert topmostExpression != null;
     PsiElement parent = topmostExpression.getParent();
@@ -62,16 +62,16 @@ public abstract class StatementWrapPostfixTemplate extends TypedPostfixTemplate 
     return myPsiInfo.createExpression(expression, getHead(), getTail());
   }
 
-  protected void afterExpand(@NotNull PsiElement newElement, @NotNull Editor editor) {
+  protected void afterExpand(@Nonnull PsiElement newElement, @Nonnull Editor editor) {
     editor.getCaretModel().moveToOffset(newElement.getTextRange().getEndOffset());
   }
 
-  @NotNull
+  @Nonnull
   protected String getHead() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   protected String getTail() {
     return "";
   }

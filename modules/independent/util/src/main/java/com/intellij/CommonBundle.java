@@ -18,8 +18,8 @@ package com.intellij;
 
 import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -38,8 +38,8 @@ public class CommonBundle extends BundleBase {
 
   private CommonBundle() {}
 
-  @NotNull
-  public static String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, @NotNull Object... params) {
+  @Nonnull
+  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
     return message(getCommonBundle(), key, params);
   }
 
@@ -60,12 +60,12 @@ public class CommonBundle extends BundleBase {
     return BundleBase.messageOrDefault(bundle, key, defaultValue, params);
   }
 
-  @NotNull
-  public static String message(@NotNull ResourceBundle bundle, @NotNull String key, @NotNull Object... params) {
+  @Nonnull
+  public static String message(@Nonnull ResourceBundle bundle, @Nonnull String key, @Nonnull Object... params) {
     return BundleBase.message(bundle, key, params);
   }
 
-  @NotNull
+  @Nonnull
   public static String getCancelButtonText() {
     return message("button.cancel");
   }

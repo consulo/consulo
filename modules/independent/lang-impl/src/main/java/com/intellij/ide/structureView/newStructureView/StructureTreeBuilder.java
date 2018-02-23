@@ -31,7 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -128,7 +128,7 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected final ProgressIndicator createProgressIndicator() {
     return new StatusBarProgress();
   }
@@ -143,7 +143,7 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+    public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
       PsiElement child = event.getOldChild();
       if (child instanceof PsiWhiteSpace) return; //optimization
 
@@ -151,14 +151,14 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childAdded(@NotNull PsiTreeChangeEvent event) {
+    public void childAdded(@Nonnull PsiTreeChangeEvent event) {
       PsiElement child = event.getNewChild();
       if (child instanceof PsiWhiteSpace) return; //optimization
       childrenChanged();
     }
 
     @Override
-    public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+    public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
       /** Test comment */
       PsiElement oldChild = event.getOldChild();
       PsiElement newChild = event.getNewChild();
@@ -167,12 +167,12 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void childMoved(@NotNull PsiTreeChangeEvent event) {
+    public void childMoved(@Nonnull PsiTreeChangeEvent event) {
       childrenChanged();
     }
 
     @Override
-    public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+    public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
       childrenChanged();
     }
 
@@ -184,7 +184,7 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
     }
 
     @Override
-    public void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+    public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
       childrenChanged();
     }
   }
@@ -213,7 +213,7 @@ public class StructureTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected final AbstractTreeNode createSearchingTreeNodeWrapper() {
     return new StructureViewComponent.StructureViewTreeElementWrapper(null,null, null);
   }

@@ -18,11 +18,11 @@ package com.intellij.execution.process;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RunnerWinProcess extends ProcessWrapper {
 
-  private RunnerWinProcess(@NotNull Process originalProcess) {
+  private RunnerWinProcess(@Nonnull Process originalProcess) {
     super(originalProcess);
   }
 
@@ -34,8 +34,8 @@ public class RunnerWinProcess extends ProcessWrapper {
     RunnerMediator.destroyProcess(this, softKill);
   }
 
-  @NotNull
-  public static RunnerWinProcess create(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+  @Nonnull
+  public static RunnerWinProcess create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     if (!SystemInfo.isWindows) {
       throw new RuntimeException(RunnerWinProcess.class.getSimpleName() + " works on Windows only!");
     }

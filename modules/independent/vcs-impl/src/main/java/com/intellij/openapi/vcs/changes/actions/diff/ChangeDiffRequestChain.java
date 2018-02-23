@@ -8,20 +8,21 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-  @NotNull private final List<ChangeDiffRequestProducer> myRequests;
+  @Nonnull
+  private final List<ChangeDiffRequestProducer> myRequests;
   private int myIndex;
 
-  public ChangeDiffRequestChain(@NotNull List<ChangeDiffRequestProducer> requests) {
+  public ChangeDiffRequestChain(@Nonnull List<ChangeDiffRequestProducer> requests) {
     myRequests = requests;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends ChangeDiffRequestProducer> getRequests() {
     return myRequests;
@@ -38,9 +39,9 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
     myIndex = index;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AnAction createGoToChangeAction(@NotNull Consumer<Integer> onSelected) {
+  public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
     return new ChangeGoToChangePopupAction<ChangeDiffRequestChain>(this, onSelected) {
       @Override
       protected int findSelectedStep(@Nullable Change change) {
@@ -52,7 +53,7 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
         return -1;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected List<Change> getChanges() {
         return ContainerUtil.mapNotNull(myChain.getRequests(), new Function<ChangeDiffRequestProducer, Change>() {
@@ -63,7 +64,7 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
         });
       }
 
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       protected Change getCurrentSelection() {
         return myChain.getRequests().get(myChain.getIndex()).getChange();

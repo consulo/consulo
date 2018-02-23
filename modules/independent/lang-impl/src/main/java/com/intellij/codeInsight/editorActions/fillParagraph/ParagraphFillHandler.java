@@ -12,8 +12,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.codeStyle.CodeFormatterFacade;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class ParagraphFillHandler {
 
-  protected void performOnElement(@NotNull final PsiElement element, @NotNull final Editor editor) {
+  protected void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     final Document document = editor.getDocument();
 
     final TextRange textRange = getTextRange(element, editor);
@@ -68,29 +68,29 @@ public class ParagraphFillHandler {
 
   }
 
-  protected void appendPostfix(@NotNull final PsiElement element,
-                               @NotNull final String text,
-                               @NotNull final StringBuilder stringBuilder) {
+  protected void appendPostfix(@Nonnull final PsiElement element,
+                               @Nonnull final String text,
+                               @Nonnull final StringBuilder stringBuilder) {
     final String postfix = getPostfix(element);
     if (text.endsWith(postfix.trim()))
       stringBuilder.append(postfix);
   }
 
-  protected void appendPrefix(@NotNull final PsiElement element,
-                              @NotNull final String text,
-                              @NotNull final StringBuilder stringBuilder) {
+  protected void appendPrefix(@Nonnull final PsiElement element,
+                              @Nonnull final String text,
+                              @Nonnull final StringBuilder stringBuilder) {
     final String prefix = getPrefix(element);
     if (text.startsWith(prefix.trim()))
       stringBuilder.append(prefix);
   }
 
-  private TextRange getTextRange(@NotNull final PsiElement element, @NotNull final Editor editor) {
+  private TextRange getTextRange(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     int startOffset = getStartOffset(element, editor);
     int endOffset = getEndOffset(element, editor);
     return new UnfairTextRange(startOffset, endOffset);
   }
 
-  private int getStartOffset(@NotNull final PsiElement element, @NotNull final Editor editor) {
+  private int getStartOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     if (isBunchOfElement(element)) {
       final PsiElement firstElement = getFirstElement(element);
       return firstElement != null? firstElement.getTextRange().getStartOffset()
@@ -122,7 +122,7 @@ public class ParagraphFillHandler {
     return element instanceof PsiComment;
   }
 
-  private int getEndOffset(@NotNull final PsiElement element, @NotNull final Editor editor) {
+  private int getEndOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     if (isBunchOfElement(element)) {
       final PsiElement next = getLastElement(element);
       return next != null? next.getTextRange().getEndOffset()
@@ -146,7 +146,7 @@ public class ParagraphFillHandler {
   }
 
   @Nullable
-  private PsiElement getFirstElement(@NotNull final PsiElement element) {
+  private PsiElement getFirstElement(@Nonnull final PsiElement element) {
     final IElementType elementType = element.getNode().getElementType();
     PsiElement prevSibling = element.getPrevSibling();
     PsiElement result = element;
@@ -171,7 +171,7 @@ public class ParagraphFillHandler {
   }
 
   @Nullable
-  private PsiElement getLastElement(@NotNull final PsiElement element) {
+  private PsiElement getLastElement(@Nonnull final PsiElement element) {
     final IElementType elementType = element.getNode().getElementType();
     PsiElement nextSibling = element.getNextSibling();
     PsiElement result = element;
@@ -207,13 +207,13 @@ public class ParagraphFillHandler {
     return psiFile instanceof PsiPlainTextFile;
   }
 
-  @NotNull
-  protected String getPrefix(@NotNull final PsiElement element) {
+  @Nonnull
+  protected String getPrefix(@Nonnull final PsiElement element) {
     return "";
   }
 
-  @NotNull
-  protected String getPostfix(@NotNull final PsiElement element) {
+  @Nonnull
+  protected String getPostfix(@Nonnull final PsiElement element) {
     return "";
   }
 

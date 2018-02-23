@@ -16,7 +16,7 @@
 package com.intellij.remote.ext;
 
 import com.intellij.icons.AllIcons;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -24,8 +24,10 @@ public class PathMappingType {
   public static final PathMappingType REPLICATED_FOLDER = new PathMappingType(AllIcons.Ide.Readonly, "Shared folders from Vagrantfile:");
   public static final PathMappingType DEPLOYMENT = new PathMappingType(AllIcons.Ide.Readonly, "From deployment configuration:");
 
-  @Nullable private final Icon myIcon;
-  @Nullable private final String myTooltip;
+  @Nullable
+  private final Icon myIcon;
+  @Nullable
+  private final String myTooltip;
 
   public PathMappingType() {
     myIcon = null;

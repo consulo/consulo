@@ -36,8 +36,7 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.annotations.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ import static com.intellij.util.ui.UIUtil.isValidFont;
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
   private volatile static UISettings ourInstance;
 
-  @NotNull
+  @Nonnull
   public static UISettings getInstance() {
     if (ourInstance != null) {
       return ourInstance;
@@ -65,13 +64,13 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    *
    * @return persisted UISettings instance or default values.
    */
-  @NotNull
+  @Nonnull
   public static UISettings getShadowInstance() {
     UISettings settings = getInstanceOrNull();
     return settings == null ? new UISettings() : settings;
   }
 
-  @Nullable("null if application is not initialized")
+  @javax.annotation.Nullable("null if application is not initialized")
   public static UISettings getInstanceOrNull() {
     if (ourInstance != null) {
       return ourInstance;
@@ -168,7 +167,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   @Deprecated
   @DeprecationInfo("Use UISettingsListener#TOPIC")
-  public void addUISettingsListener(@NotNull final UISettingsListener listener, @NotNull Disposable parentDisposable) {
+  public void addUISettingsListener(@Nonnull final UISettingsListener listener, @Nonnull Disposable parentDisposable) {
     ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.TOPIC, listener);
   }
 
@@ -200,7 +199,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public static class FontFilter implements SerializationFilter {
     @Override
-    public boolean accepts(@NotNull Accessor accessor, Object bean) {
+    public boolean accepts(@Nonnull Accessor accessor, Object bean) {
       UISettings settings = (UISettings)bean;
       return !hasDefaultFontSetting(settings);
     }

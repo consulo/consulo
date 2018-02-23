@@ -18,8 +18,8 @@ package com.intellij.formatting;
 
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IndentInside {
   public int whiteSpaces = 0;
@@ -59,13 +59,13 @@ public class IndentInside {
     return whiteSpaces + tabs * options.TAB_SIZE;
   }
 
-  @NotNull
-  static IndentInside getLastLineIndent(@NotNull final CharSequence text) {
+  @Nonnull
+  static IndentInside getLastLineIndent(@Nonnull final CharSequence text) {
     CharSequence lastLine = getLastLine(text);
     return createIndentOn(lastLine);
   }
 
-  @NotNull
+  @Nonnull
   public static IndentInside createIndentOn(@Nullable final CharSequence lastLine) {
     final IndentInside result = new IndentInside();
     if (lastLine == null) {
@@ -78,8 +78,8 @@ public class IndentInside {
     return result;
   }
 
-  @NotNull
-  public static CharSequence getLastLine(@NotNull final CharSequence text) {
+  @Nonnull
+  public static CharSequence getLastLine(@Nonnull final CharSequence text) {
     int i = CharArrayUtil.shiftBackwardUntil(text, text.length() - 1, "\n");
     if (i < 0) {
       return text;

@@ -25,8 +25,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,12 +36,13 @@ import java.awt.*;
  * @since 20:47/12.06.13
  */
 public class ResourceCompilerConfigurable implements Configurable, Configurable.NoScroll {
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private ResourceCompilerConfiguration myResourceCompilerConfiguration;
 
   private CollectionListModel<String> myModel;
 
-  public ResourceCompilerConfigurable(@NotNull Project project) {
+  public ResourceCompilerConfigurable(@Nonnull Project project) {
     myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
 
@@ -54,7 +55,7 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     return "Resource";
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getHelpTopic() {
     return null;
@@ -109,7 +110,7 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
         return true;
       }
 
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public String getErrorText(String inputString) {
         try {

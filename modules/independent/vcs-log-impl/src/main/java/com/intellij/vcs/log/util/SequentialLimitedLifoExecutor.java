@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.concurrency.QueueProcessor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Queue with a limited number of tasks, and with higher priority for new tasks, than for older ones.
@@ -28,11 +28,13 @@ import org.jetbrains.annotations.NotNull;
 public class SequentialLimitedLifoExecutor<Task> implements Disposable {
 
   private final int myMaxTasks;
-  @NotNull private final ThrowableConsumer<Task, ? extends Throwable> myLoadProcess;
-  @NotNull private final QueueProcessor<Task> myLoader;
+  @Nonnull
+  private final ThrowableConsumer<Task, ? extends Throwable> myLoadProcess;
+  @Nonnull
+  private final QueueProcessor<Task> myLoader;
 
   public SequentialLimitedLifoExecutor(Disposable parentDisposable, int maxTasks,
-                                       @NotNull ThrowableConsumer<Task, ? extends Throwable> loadProcess) {
+                                       @Nonnull ThrowableConsumer<Task, ? extends Throwable> loadProcess) {
     myMaxTasks = maxTasks;
     myLoadProcess = loadProcess;
     myLoader = new QueueProcessor<>(new DetailsLoadingTask());

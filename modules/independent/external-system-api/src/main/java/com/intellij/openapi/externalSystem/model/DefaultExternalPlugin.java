@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class DefaultExternalPlugin implements ExternalPlugin {
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myId;
 
   public DefaultExternalPlugin() {
@@ -34,13 +34,13 @@ public class DefaultExternalPlugin implements ExternalPlugin {
     myId = plugin.getId();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myId;
   }
 
-  public void setId(@NotNull String id) {
+  public void setId(@Nonnull String id) {
     myId = id;
   }
 }

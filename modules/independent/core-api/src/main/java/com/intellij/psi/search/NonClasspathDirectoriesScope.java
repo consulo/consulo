@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.Exported;
 
 import java.util.Collection;
@@ -35,7 +35,7 @@ import java.util.Set;
 public class NonClasspathDirectoriesScope extends GlobalSearchScope {
   private final Set<VirtualFile> myRoots;
 
-  public NonClasspathDirectoriesScope(@NotNull Collection<VirtualFile> roots) {
+  public NonClasspathDirectoriesScope(@Nonnull Collection<VirtualFile> roots) {
     myRoots = ContainerUtil.newHashSet(roots);
   }
 
@@ -44,9 +44,9 @@ public class NonClasspathDirectoriesScope extends GlobalSearchScope {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
-  public static GlobalSearchScope compose(@NotNull List<VirtualFile> roots) {
+  public static GlobalSearchScope compose(@Nonnull List<VirtualFile> roots) {
     if (roots.isEmpty()) {
       return EMPTY_SCOPE;
     }
@@ -55,17 +55,17 @@ public class NonClasspathDirectoriesScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return VfsUtilCore.isUnder(file, myRoots);
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return false;
   }
 
@@ -93,7 +93,7 @@ public class NonClasspathDirectoriesScope extends GlobalSearchScope {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     if (myRoots.size() == 1) {

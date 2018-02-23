@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,7 +33,7 @@ public class CapitalizeMacro extends MacroBase {
   }
 
   @Override
-  protected Result calculateResult(@NotNull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
     String text = getTextResult(params, context);
     if (text != null) {
       if (text.length() > 0) {

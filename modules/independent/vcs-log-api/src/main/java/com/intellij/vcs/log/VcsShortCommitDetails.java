@@ -1,7 +1,7 @@
 package com.intellij.vcs.log;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -21,16 +21,16 @@ import java.util.List;
  */
 public interface VcsShortCommitDetails extends TimedVcsCommit {
 
-  @NotNull
+  @Nonnull
   VirtualFile getRoot();
 
-  @NotNull
+  @Nonnull
   String getSubject();
 
-  @NotNull
+  @Nonnull
   VcsUser getAuthor();
 
-  @NotNull
+  @Nonnull
   VcsUser getCommitter();
 
   long getAuthorTime();

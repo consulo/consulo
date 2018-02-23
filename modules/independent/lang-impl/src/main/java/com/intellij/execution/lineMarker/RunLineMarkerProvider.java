@@ -27,8 +27,8 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   @RequiredReadAction
   @Nullable
   @Override
-  public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+  public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.EXTENSION.allForLanguage(element.getLanguage());
     DefaultActionGroup actionGroup = null;
     Icon icon = null;
@@ -109,7 +109,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Run line marker";

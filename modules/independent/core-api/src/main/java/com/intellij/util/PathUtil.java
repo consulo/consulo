@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.vfs.ArchiveFileSystem;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PathUtil {
   private PathUtil() {
@@ -43,13 +43,13 @@ public class PathUtil {
     return getLocalPath(file.getPath());
   }
 
-  @NotNull
-  public static String getLocalPath(@NotNull String path) {
+  @Nonnull
+  public static String getLocalPath(@Nonnull String path) {
     return FileUtil.toSystemDependentName(StringUtil.trimEnd(path, ArchiveFileSystem.ARCHIVE_SEPARATOR));
   }
 
-  @NotNull
-  public static VirtualFile getLocalFile(@NotNull VirtualFile file) {
+  @Nonnull
+  public static VirtualFile getLocalFile(@Nonnull VirtualFile file) {
     if (!file.isValid()) {
       return file;
     }
@@ -62,15 +62,15 @@ public class PathUtil {
     return file;
   }
 
-  @NotNull
-  public static String getJarPathForClass(@NotNull Class aClass) {
+  @Nonnull
+  public static String getJarPathForClass(@Nonnull Class aClass) {
     final String pathForClass = PathManager.getJarPathForClass(aClass);
     assert pathForClass != null : aClass;
     return pathForClass;
   }
 
-  @NotNull
-  public static String toPresentableUrl(@NotNull String url) {
+  @Nonnull
+  public static String toPresentableUrl(@Nonnull String url) {
     return getLocalPath(VirtualFileManager.extractPath(url));
   }
 
@@ -78,38 +78,38 @@ public class PathUtil {
     return FileUtil.toCanonicalPath(path);
   }
 
-  @NotNull
-  public static String getFileName(@NotNull String path) {
+  @Nonnull
+  public static String getFileName(@Nonnull String path) {
     return PathUtilRt.getFileName(path);
   }
 
   @Nullable
-  public static String getFileExtension(@NotNull String name) {
+  public static String getFileExtension(@Nonnull String name) {
     int index = name.lastIndexOf('.');
     if (index < 0) return null;
     return name.substring(index + 1);
   }
 
-  @NotNull
-  public static String getParentPath(@NotNull String path) {
+  @Nonnull
+  public static String getParentPath(@Nonnull String path) {
     return PathUtilRt.getParentPath(path);
   }
 
-  @NotNull
-  public static String suggestFileName(@NotNull String text) {
+  @Nonnull
+  public static String suggestFileName(@Nonnull String text) {
     return PathUtilRt.suggestFileName(text);
   }
 
-  @NotNull
-  public static String suggestFileName(@NotNull String text, final boolean allowDots, final boolean allowSpaces) {
+  @Nonnull
+  public static String suggestFileName(@Nonnull String text, final boolean allowDots, final boolean allowSpaces) {
     return PathUtilRt.suggestFileName(text, allowDots, allowSpaces);
   }
 
-  public static boolean isValidFileName(@NotNull String fileName) {
+  public static boolean isValidFileName(@Nonnull String fileName) {
     return PathUtilRt.isValidFileName(fileName, true);
   }
 
-  public static boolean isValidFileName(@NotNull String fileName, boolean strict) {
+  public static boolean isValidFileName(@Nonnull String fileName, boolean strict) {
     return PathUtilRt.isValidFileName(fileName, strict);
   }
 
@@ -124,8 +124,8 @@ public class PathUtil {
     return path == null ? null : FileUtilRt.toSystemDependentName(path);
   }
 
-  @NotNull
-  public static String makeFileName(@NotNull String name, @Nullable String extension) {
+  @Nonnull
+  public static String makeFileName(@Nonnull String name, @Nullable String extension) {
     return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
   }
 }

@@ -16,8 +16,8 @@
 package com.intellij.execution.process;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,15 +28,19 @@ public class ProcessInfo {
   public static ProcessInfo[] EMPTY_ARRAY = new ProcessInfo[0];
 
   private final int myPid;
-  @NotNull private final String myCommandLine;
-  @NotNull private final Optional<String> myExecutablePath;
-  @NotNull private final String myExecutableName;
-  @NotNull private final String myArgs;
+  @Nonnull
+  private final String myCommandLine;
+  @Nonnull
+  private final Optional<String> myExecutablePath;
+  @Nonnull
+  private final String myExecutableName;
+  @Nonnull
+  private final String myArgs;
 
   public ProcessInfo(int pid,
-                     @NotNull String commandLine,
-                     @NotNull String executableName,
-                     @NotNull String args) {
+                     @Nonnull String commandLine,
+                     @Nonnull String executableName,
+                     @Nonnull String args) {
     myPid = pid;
     myCommandLine = commandLine;
     myExecutablePath = Optional.empty();
@@ -45,9 +49,9 @@ public class ProcessInfo {
   }
 
   public ProcessInfo(int pid,
-                     @NotNull String commandLine,
-                     @NotNull String executableName,
-                     @NotNull String args,
+                     @Nonnull String commandLine,
+                     @Nonnull String executableName,
+                     @Nonnull String args,
                      @Nullable String executablePath) {
     myPid = pid;
     myCommandLine = commandLine;
@@ -60,17 +64,17 @@ public class ProcessInfo {
     return myPid;
   }
 
-  @NotNull
+  @Nonnull
   public String getCommandLine() {
     return myCommandLine;
   }
 
-  @NotNull
+  @Nonnull
   public String getExecutableName() {
     return myExecutableName;
   }
 
-  @NotNull
+  @Nonnull
   public Optional<String> getExecutableCannonicalPath() {
     return myExecutablePath.map(s -> {
       try {
@@ -82,12 +86,12 @@ public class ProcessInfo {
     });
   }
 
-  @NotNull
+  @Nonnull
   public String getExecutableDisplayName() {
     return StringUtil.trimEnd(myExecutableName, ".exe", true);
   }
 
-  @NotNull
+  @Nonnull
   public String getArgs() {
     return myArgs;
   }

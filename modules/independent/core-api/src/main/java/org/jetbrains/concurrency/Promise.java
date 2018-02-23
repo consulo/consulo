@@ -21,7 +21,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.ThreeState;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Watch AsyncResult")
@@ -33,13 +33,13 @@ public abstract class Promise<T> {
   @DeprecationInfo("Use Promises.rejectedPromise()")
   public static final Promise<Void> REJECTED = new RejectedPromise<>(createError("rejected"));
 
-  @NotNull
-  public static RuntimeException createError(@NotNull String error, boolean log) {
+  @Nonnull
+  public static RuntimeException createError(@Nonnull String error, boolean log) {
     return new MessageError(error, log);
   }
 
-  @NotNull
-  public static RuntimeException createError(@NotNull String error) {
+  @Nonnull
+  public static RuntimeException createError(@Nonnull String error) {
     return createError(error, false);
   }
 
@@ -49,37 +49,37 @@ public abstract class Promise<T> {
     REJECTED
   }
 
-  @NotNull
-  public abstract Promise<T> done(@NotNull Consumer<T> done);
+  @Nonnull
+  public abstract Promise<T> done(@Nonnull Consumer<T> done);
 
-  @NotNull
-  public abstract Promise<T> processed(@NotNull AsyncPromise<T> fulfilled);
+  @Nonnull
+  public abstract Promise<T> processed(@Nonnull AsyncPromise<T> fulfilled);
 
-  @NotNull
-  public abstract Promise<T> rejected(@NotNull Consumer<Throwable> rejected);
+  @Nonnull
+  public abstract Promise<T> rejected(@Nonnull Consumer<Throwable> rejected);
 
-  public abstract Promise<T> processed(@NotNull Consumer<T> processed);
+  public abstract Promise<T> processed(@Nonnull Consumer<T> processed);
 
-  @NotNull
-  public abstract <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull Function<T, SUB_RESULT> done);
+  @Nonnull
+  public abstract <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<T, SUB_RESULT> done);
 
-  @NotNull
+  @Nonnull
   public abstract State getState();
 
   public static class MessageError extends RuntimeException {
     private boolean myLog;
 
-    public MessageError(@NotNull String error, boolean log) {
+    public MessageError(@Nonnull String error, boolean log) {
       super(error);
       myLog = log;
     }
 
-    @NotNull
+    @Nonnull
     public ThreeState getLog() {
       return ThreeState.fromBoolean(myLog);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public final synchronized Throwable fillInStackTrace() {
       return this;
@@ -89,11 +89,11 @@ public abstract class Promise<T> {
   /**
    * Log error if not message error
    */
-  public static void logError(@NotNull Logger logger, @NotNull Throwable e) {
+  public static void logError(@Nonnull Logger logger, @Nonnull Throwable e) {
     if (!(e instanceof MessageError) || ApplicationManager.getApplication().isUnitTestMode()) {
       logger.error(e);
     }
   }
 
-  public abstract void notify(@NotNull AsyncPromise<T> child);
+  public abstract void notify(@Nonnull AsyncPromise<T> child);
 }

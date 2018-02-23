@@ -19,7 +19,7 @@ package com.intellij.openapi.options.ex;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

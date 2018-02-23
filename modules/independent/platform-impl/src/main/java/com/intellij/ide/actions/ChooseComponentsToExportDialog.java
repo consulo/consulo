@@ -34,8 +34,8 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,7 +104,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     setOKActionEnabled(!StringUtil.isEmptyOrSpaces(myPathPanel.getText()));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createLeftSideActions() {
     AbstractAction selectAll = new AbstractAction("Select &All") {
@@ -157,7 +157,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     return file != null;
   }
 
-  @NotNull
+  @Nonnull
   public static AsyncResult<String> chooseSettingsFile(String oldPath, Component parent, final String title, final String description) {
     FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     chooserDescriptor.setDescription(description);

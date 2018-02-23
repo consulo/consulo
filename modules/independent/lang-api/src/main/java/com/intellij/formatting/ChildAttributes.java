@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Defines the indent and alignment settings which are applied to a new child block
@@ -37,7 +37,7 @@ public class ChildAttributes {
    * @param childIndent the indent for the child block.
    * @param alignment   the alignment for the child block.
    */
-  public ChildAttributes(@Nullable final Indent childIndent, @Nullable final Alignment alignment) {
+  public ChildAttributes(@javax.annotation.Nullable final Indent childIndent, @Nullable final Alignment alignment) {
     myChildIndent = childIndent;
     myAlignment = alignment;
   }
@@ -47,7 +47,7 @@ public class ChildAttributes {
    *
    * @return the indent setting.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public Indent getChildIndent() {
     return myChildIndent;
   }

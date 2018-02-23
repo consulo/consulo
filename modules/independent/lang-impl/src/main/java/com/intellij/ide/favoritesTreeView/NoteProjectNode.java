@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +34,7 @@ public class NoteProjectNode extends ProjectViewNodeWithChildrenList<NoteNode> {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return false;
   }
 

@@ -23,7 +23,7 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -61,13 +61,13 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     myPanel.stopEditing();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent createComponentImpl() {
     return myPanel = new ClasspathPanelImpl(getState());
   }
 
-  public void selectOrderEntry(@NotNull final OrderEntry entry) {
+  public void selectOrderEntry(@Nonnull final OrderEntry entry) {
     myPanel.selectOrderEntry(entry);
   }
 

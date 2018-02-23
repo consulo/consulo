@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -36,9 +36,11 @@ import java.util.List;
 
 
 public class DiffSplitter extends Splitter {
-  @Nullable private Painter myPainter;
+  @javax.annotation.Nullable
+  private Painter myPainter;
   @Nullable private AnAction myTopAction;
-  @Nullable private AnAction myBottomAction;
+  @javax.annotation.Nullable
+  private AnAction myBottomAction;
 
   public DiffSplitter() {
     setDividerWidth(JBUI.scale(30));
@@ -89,7 +91,7 @@ public class DiffSplitter extends Splitter {
     setOrientation(false);
   }
 
-  public void setBottomAction(@Nullable AnAction value) {
+  public void setBottomAction(@javax.annotation.Nullable AnAction value) {
     myBottomAction = value;
     setOrientation(false);
   }
@@ -104,10 +106,10 @@ public class DiffSplitter extends Splitter {
   }
 
   public interface Painter {
-    void paint(@NotNull Graphics g, @NotNull JComponent divider);
+    void paint(@Nonnull Graphics g, @Nonnull JComponent divider);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static JComponent createActionComponent(@Nullable final AnAction action) {
     if (action == null) return null;
 

@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 abstract class SmartPointerElementInfo {
@@ -42,13 +42,13 @@ abstract class SmartPointerElementInfo {
   public abstract PsiFile restoreFile();
 
   public abstract int elementHashCode(); // must be immutable
-  public abstract boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other);
+  public abstract boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other);
 
   public abstract VirtualFile getVirtualFile();
 
   @Nullable
   public abstract Segment getRange();
-  @NotNull
+  @Nonnull
   public abstract Project getProject();
 
   public void cleanup() {

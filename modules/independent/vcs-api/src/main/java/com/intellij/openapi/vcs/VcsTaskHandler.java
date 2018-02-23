@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -99,18 +99,18 @@ public abstract class VcsTaskHandler {
 
   public abstract boolean isEnabled();
 
-  public abstract TaskInfo startNewTask(@NotNull String taskName);
+  public abstract TaskInfo startNewTask(@Nonnull String taskName);
 
   public abstract void switchToTask(TaskInfo taskInfo, @Nullable Runnable invokeAfter);
 
-  public abstract void closeTask(@NotNull TaskInfo taskInfo, @NotNull TaskInfo original);
+  public abstract void closeTask(@Nonnull TaskInfo taskInfo, @Nonnull TaskInfo original);
 
   public abstract boolean isSyncEnabled();
 
   /**
    * @return currently active (checked out) tasks (branches)
    */
-  @NotNull
+  @Nonnull
   public abstract TaskInfo[] getCurrentTasks();
 
   /**
@@ -124,7 +124,7 @@ public abstract class VcsTaskHandler {
    * @param branchName to check
    * @return true if valid
    */
-  public boolean isBranchNameValid(@NotNull String branchName) {
+  public boolean isBranchNameValid(@Nonnull String branchName) {
     return !branchName.contains(DEFAULT_PROHIBITED_SYMBOLS);
   }
 
@@ -134,8 +134,8 @@ public abstract class VcsTaskHandler {
    * @param suggestedName suggested name
    * @return new valid branchName
    */
-  @NotNull
-  public String cleanUpBranchName(@NotNull String suggestedName) {
+  @Nonnull
+  public String cleanUpBranchName(@Nonnull String suggestedName) {
     return suggestedName.replaceAll(DEFAULT_PROHIBITED_SYMBOLS, "-");
   }
 }

@@ -30,7 +30,8 @@ import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class CopyAction extends TextComponentEditorAction {
 

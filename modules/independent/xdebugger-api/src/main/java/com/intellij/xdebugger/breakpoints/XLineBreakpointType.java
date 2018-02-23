@@ -29,8 +29,8 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
 
@@ -51,7 +51,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class XLineBreakpointType<P extends XBreakpointProperties> extends XBreakpointType<XLineBreakpoint<P>,P> {
-  protected XLineBreakpointType(@NonNls @NotNull final String id, @Nls @NotNull final String title) {
+  protected XLineBreakpointType(@NonNls @Nonnull final String id, @Nls @Nonnull final String title) {
     super(id, title);
   }
 
@@ -59,8 +59,8 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * return non-null value if a breakpoint should have specific properties besides containing file and line. These properties will be stored in
    * {@link XBreakpoint} instance and can be obtained by using {@link XBreakpoint#getProperties()} method
    */
-  @Nullable
-  public abstract P createBreakpointProperties(@NotNull VirtualFile file, int line);
+  @javax.annotation.Nullable
+  public abstract P createBreakpointProperties(@Nonnull VirtualFile file, int line);
 
   @Override
   public String getDisplayText(final XLineBreakpoint<P> breakpoint) {
@@ -75,7 +75,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * Source position for line breakpoint is determined by its file and line
    */
   @Override
-  public XSourcePosition getSourcePosition(@NotNull XBreakpoint<P> breakpoint) {
+  public XSourcePosition getSourcePosition(@Nonnull XBreakpoint<P> breakpoint) {
     return null;
   }
 
@@ -88,11 +88,11 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * Default line breakpoints aren't supported
    */
   @Override
-  public final XLineBreakpoint<P> createDefaultBreakpoint(@NotNull XBreakpointCreator<P> creator) {
+  public final XLineBreakpoint<P> createDefaultBreakpoint(@Nonnull XBreakpointCreator<P> creator) {
     return null;
   }
 
-  public List<? extends AnAction> getAdditionalPopupMenuActions(@NotNull XLineBreakpoint<P> breakpoint, @Nullable XDebugSession currentSession) {
+  public List<? extends AnAction> getAdditionalPopupMenuActions(@Nonnull XLineBreakpoint<P> breakpoint, @javax.annotation.Nullable XDebugSession currentSession) {
     return Collections.emptyList();
   }
 
@@ -111,7 +111,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * @return range to highlight on the line, null to highlight the whole line
    */
-  @Nullable
+  @javax.annotation.Nullable
   public TextRange getHighlightRange(XLineBreakpoint<P> breakpoint) {
     return null;
   }
@@ -119,36 +119,36 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * Return a list of variants if there can be more than one breakpoint on the line
    */
-  @NotNull
-  public List<? extends XLineBreakpointVariant> computeVariants(@NotNull Project project, @NotNull XSourcePosition position) {
+  @Nonnull
+  public List<? extends XLineBreakpointVariant> computeVariants(@Nonnull Project project, @Nonnull XSourcePosition position) {
     return Collections.emptyList();
   }
 
   public abstract class XLineBreakpointVariant {
     @RequiredReadAction
-    @NotNull
+    @Nonnull
     public abstract String getText();
 
-    @Nullable
+    @javax.annotation.Nullable
     @RequiredReadAction
     public abstract Icon getIcon();
 
-    @Nullable
+    @javax.annotation.Nullable
     @RequiredReadAction
     public abstract TextRange getHighlightRange();
 
-    @Nullable
+    @javax.annotation.Nullable
     public abstract P createProperties();
   }
 
   public class XLineBreakpointAllVariant extends XLineBreakpointVariant {
     protected final XSourcePosition mySourcePosition;
 
-    public XLineBreakpointAllVariant(@NotNull XSourcePosition position) {
+    public XLineBreakpointAllVariant(@Nonnull XSourcePosition position) {
       mySourcePosition = position;
     }
 
-    @NotNull
+    @Nonnull
     @RequiredReadAction
     @Override
     public String getText() {
@@ -156,21 +156,21 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     }
 
     @RequiredReadAction
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public Icon getIcon() {
       return null;
     }
 
     @RequiredReadAction
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public TextRange getHighlightRange() {
       return null;
     }
 
     @Override
-    @Nullable
+    @javax.annotation.Nullable
     public P createProperties() {
       return createBreakpointProperties(mySourcePosition.getFile(),
                                         mySourcePosition.getLine());
@@ -181,7 +181,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   public class XLinePsiElementBreakpointVariant extends XLineBreakpointAllVariant {
     private final PsiElement myElement;
 
-    public XLinePsiElementBreakpointVariant(@NotNull XSourcePosition position, PsiElement element) {
+    public XLinePsiElementBreakpointVariant(@Nonnull XSourcePosition position, PsiElement element) {
       super(position);
 
       myElement = element;
@@ -193,7 +193,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
       return IconDescriptorUpdaters.getIcon(myElement, 0);
     }
 
-    @NotNull
+    @Nonnull
     @RequiredReadAction
     @Override
     public String getText() {

@@ -16,13 +16,13 @@
 package com.intellij.ide.ui;
 
 import com.intellij.ui.ColoredListCellRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class LafComboBoxRenderer extends ColoredListCellRenderer<UIManager.LookAndFeelInfo> {
   @Override
-  protected void customizeCellRenderer(@NotNull JList<? extends UIManager.LookAndFeelInfo> list,
+  protected void customizeCellRenderer(@Nonnull JList<? extends UIManager.LookAndFeelInfo> list,
                                        UIManager.LookAndFeelInfo value,
                                        int index,
                                        boolean selected,

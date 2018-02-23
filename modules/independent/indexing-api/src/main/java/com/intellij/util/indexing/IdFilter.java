@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.BitSet;
 
@@ -46,7 +46,7 @@ public abstract class IdFilter {
                     VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS), false);
   }
 
-  @NotNull
+  @Nonnull
   private static IdFilter buildProjectIdFilter(Project project, boolean includeNonProjectItems) {
     long started = System.currentTimeMillis();
     final BitSet idSet = new BitSet();

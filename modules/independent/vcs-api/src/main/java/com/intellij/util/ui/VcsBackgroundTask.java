@@ -22,7 +22,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
@@ -36,18 +36,18 @@ public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
   private final Collection<T> myItems;
   private final List<VcsException> myExceptions = new ArrayList<VcsException>();
 
-  public VcsBackgroundTask(final Project project, @NotNull final String title, @NotNull final PerformInBackgroundOption backgroundOption,
+  public VcsBackgroundTask(final Project project, @Nonnull final String title, @Nonnull final PerformInBackgroundOption backgroundOption,
                            final Collection<T> itemsToProcess, final boolean canBeCanceled) {
     super(project, title, canBeCanceled, backgroundOption);
     myItems = itemsToProcess;
   }
 
-  public VcsBackgroundTask(final Project project, @NotNull final String title, @NotNull final PerformInBackgroundOption backgroundOption,
+  public VcsBackgroundTask(final Project project, @Nonnull final String title, @Nonnull final PerformInBackgroundOption backgroundOption,
                            final Collection<T> itemsToProcess) {
     this(project, title, backgroundOption, itemsToProcess, false);
   }
 
-  public void run(@NotNull ProgressIndicator indicator) {
+  public void run(@Nonnull ProgressIndicator indicator) {
     for(T item: myItems) {
       try {
         process(item);

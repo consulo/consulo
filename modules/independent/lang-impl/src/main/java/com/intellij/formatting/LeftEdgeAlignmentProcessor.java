@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class LeftEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor {
 
   @Override
-  protected IndentData calculateAlignmentAnchorIndent(@NotNull Context context) {
+  protected IndentData calculateAlignmentAnchorIndent(@Nonnull Context context) {
     LeafBlockWrapper offsetResponsibleBlock = context.alignment.getOffsetRespBlockBefore(context.targetBlock);
     if (offsetResponsibleBlock == null) {
       return null;
@@ -56,14 +56,14 @@ public class LeftEdgeAlignmentProcessor extends AbstractBlockAlignmentProcessor 
   }
 
   @Override
-  protected boolean applyIndentToTheFirstBlockOnLine(@NotNull IndentData alignmentAnchorIndent, @NotNull Context context) {
+  protected boolean applyIndentToTheFirstBlockOnLine(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
     WhiteSpace whiteSpace = context.targetBlock.getWhiteSpace();
     whiteSpace.setSpaces(alignmentAnchorIndent.getSpaces(), alignmentAnchorIndent.getIndentSpaces());
     return true;
   }
 
   @Override
-  protected int getAlignmentIndentDiff(@NotNull IndentData alignmentAnchorIndent, @NotNull Context context) {
+  protected int getAlignmentIndentDiff(@Nonnull IndentData alignmentAnchorIndent, @Nonnull Context context) {
     IndentData indentBeforeBlock = context.targetBlock.getNumberOfSymbolsBeforeBlock();
     return alignmentAnchorIndent.getTotalSpaces() - indentBeforeBlock.getTotalSpaces();
   }

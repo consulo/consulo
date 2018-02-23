@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +34,7 @@ public abstract class EvaluationInputComponent {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract XDebuggerEditorBase getInputEditor();
 
   public abstract void addComponent(JPanel contentPanel, JPanel resultPanel);

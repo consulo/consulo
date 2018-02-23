@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.rmi;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.naming.Context;
 import javax.naming.NamingException;

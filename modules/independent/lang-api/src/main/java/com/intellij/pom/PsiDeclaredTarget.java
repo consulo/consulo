@@ -17,7 +17,6 @@ package com.intellij.pom;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiTarget;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author peter
@@ -27,7 +26,7 @@ public interface PsiDeclaredTarget extends PsiTarget {
   /**
    * @return the range containing name. Range should be relative to {@link #getNavigationElement()} result
    */
-  @Nullable  
+  @javax.annotation.Nullable
   TextRange getNameIdentifierRange();
 
 }

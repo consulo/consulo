@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -26,14 +26,15 @@ import java.util.*;
  */
 public class CompositeArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @NotNull private final Set<ArrangementEntryMatcher> myMatchers = new HashSet<ArrangementEntryMatcher>();
+  @Nonnull
+  private final Set<ArrangementEntryMatcher> myMatchers = new HashSet<ArrangementEntryMatcher>();
 
-  public CompositeArrangementEntryMatcher(@NotNull ArrangementEntryMatcher... matchers) {
+  public CompositeArrangementEntryMatcher(@Nonnull ArrangementEntryMatcher... matchers) {
     myMatchers.addAll(Arrays.asList(matchers));
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     for (ArrangementEntryMatcher matcher : myMatchers) {
       if (!matcher.isMatched(entry)) {
         return false;
@@ -42,7 +43,7 @@ public class CompositeArrangementEntryMatcher implements ArrangementEntryMatcher
     return true;
   }
 
-  public void addMatcher(@NotNull ArrangementEntryMatcher rule) {
+  public void addMatcher(@Nonnull ArrangementEntryMatcher rule) {
     myMatchers.add(rule);
   }
 

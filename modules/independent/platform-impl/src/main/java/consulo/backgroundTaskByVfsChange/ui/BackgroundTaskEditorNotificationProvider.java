@@ -29,8 +29,8 @@ import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 import consulo.editor.notifications.EditorNotificationProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -55,7 +55,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor) {
     List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(myProject, file);
     if (providers.isEmpty()) {
       return null;

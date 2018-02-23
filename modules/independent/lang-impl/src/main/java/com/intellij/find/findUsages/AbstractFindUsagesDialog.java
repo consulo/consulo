@@ -28,8 +28,8 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.usageView.UsageViewManager;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,8 +60,8 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
   private ScopeChooserCombo myScopeCombo;
 
-  protected AbstractFindUsagesDialog(@NotNull Project project,
-                                     @NotNull FindUsagesOptions findUsagesOptions,
+  protected AbstractFindUsagesDialog(@Nonnull Project project,
+                                     @Nonnull FindUsagesOptions findUsagesOptions,
                                      boolean toShowInNewTab,
                                      boolean mustOpenInNewTab,
                                      boolean isSingleFile,
@@ -89,7 +89,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     setTitle(isSingleFile ? FindBundle.message("find.usages.in.file.dialog.title") : FindBundle.message("find.usages.dialog.title"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -118,7 +118,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     return panel;
   }
 
-  public abstract void configureLabelComponent(@NotNull SimpleColoredComponent coloredComponent);
+  public abstract void configureLabelComponent(@Nonnull SimpleColoredComponent coloredComponent);
 
   @Override
   protected JComponent createCenterPanel() {

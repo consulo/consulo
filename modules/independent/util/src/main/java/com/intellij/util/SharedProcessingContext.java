@@ -4,8 +4,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -15,11 +15,11 @@ import java.util.Map;
 public class SharedProcessingContext {
   private final Map<Object, Object> myMap = ContainerUtil.newConcurrentMap();
 
-  public Object get(@NotNull @NonNls final String key) {
+  public Object get(@Nonnull @NonNls final String key) {
     return myMap.get(key);
   }
 
-  public void put(@NotNull @NonNls final String key, @NotNull final Object value) {
+  public void put(@Nonnull @NonNls final String key, @Nonnull final Object value) {
     myMap.put(key, value);
   }
 
@@ -32,7 +32,7 @@ public class SharedProcessingContext {
   }
 
   @Nullable
-  public <T> T get(@NotNull Key<T> key, Object element) {
+  public <T> T get(@Nonnull Key<T> key, Object element) {
     Map map = (Map)myMap.get(key);
     if (map == null) {
       return null;
@@ -42,7 +42,7 @@ public class SharedProcessingContext {
     }
   }
 
-  public <T> void put(@NotNull Key<T> key, Object element, T value) {
+  public <T> void put(@Nonnull Key<T> key, Object element, T value) {
     Map map = (Map)myMap.get(key);
     if (map == null) {
       map = new THashMap();

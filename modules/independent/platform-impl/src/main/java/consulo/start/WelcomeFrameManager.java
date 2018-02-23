@@ -19,24 +19,24 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.Window;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 23-Sep-17
  */
 public interface WelcomeFrameManager {
-  @NotNull
+  @Nonnull
   public static Size getDefaultWindowSize() {
     return new Size(777, 460);
   }
 
-  @NotNull
+  @Nonnull
   static WelcomeFrameManager getInstance() {
     return ServiceManager.getService(WelcomeFrameManager.class);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   Window openFrame();
 }

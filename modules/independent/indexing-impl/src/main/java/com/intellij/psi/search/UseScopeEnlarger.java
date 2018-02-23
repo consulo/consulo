@@ -17,8 +17,7 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,6 +25,6 @@ import org.jetbrains.annotations.Nullable;
 public abstract class UseScopeEnlarger {
   public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create("com.intellij.useScopeEnlarger");
 
-  @Nullable
-  public abstract SearchScope getAdditionalUseScope(@NotNull PsiElement element);
+  @javax.annotation.Nullable
+  public abstract SearchScope getAdditionalUseScope(@Nonnull PsiElement element);
 }

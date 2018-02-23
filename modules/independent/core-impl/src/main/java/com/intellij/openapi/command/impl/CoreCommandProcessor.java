@@ -30,29 +30,29 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
   private static class CommandDescriptor {
-    @NotNull
+    @Nonnull
     public final Runnable myCommand;
     public final Project myProject;
     public String myName;
     public Object myGroupId;
     public final Document myDocument;
-    @NotNull
+    @Nonnull
     public final UndoConfirmationPolicy myUndoConfirmationPolicy;
     public final boolean myShouldRecordActionForActiveDocument;
 
-    CommandDescriptor(@NotNull Runnable command,
+    CommandDescriptor(@Nonnull Runnable command,
                       Project project,
                       String name,
                       Object groupId,
-                      @NotNull UndoConfirmationPolicy undoConfirmationPolicy,
+                      @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
                       boolean shouldRecordActionForActiveDocument,
                       Document document) {
       myCommand = command;
@@ -76,54 +76,54 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   private int myUndoTransparentCount;
 
   @Override
-  public void executeCommand(@NotNull Runnable runnable, String name, Object groupId) {
+  public void executeCommand(@Nonnull Runnable runnable, String name, Object groupId) {
     executeCommand(null, runnable, name, groupId);
   }
 
   @Override
-  public void executeCommand(Project project, @NotNull Runnable runnable, String name, Object groupId) {
+  public void executeCommand(Project project, @Nonnull Runnable runnable, String name, Object groupId) {
     executeCommand(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
   }
 
   @Override
-  public void executeCommand(Project project, @NotNull Runnable runnable, String name, Object groupId, Document document) {
+  public void executeCommand(Project project, @Nonnull Runnable runnable, String name, Object groupId, Document document) {
     executeCommand(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
   }
 
   @Override
   public void executeCommand(Project project,
-                             @NotNull final Runnable command,
+                             @Nonnull final Runnable command,
                              final String name,
                              final Object groupId,
-                             @NotNull UndoConfirmationPolicy confirmationPolicy) {
+                             @Nonnull UndoConfirmationPolicy confirmationPolicy) {
     executeCommand(project, command, name, groupId, confirmationPolicy, null);
   }
 
   @Override
   public void executeCommand(Project project,
-                             @NotNull final Runnable command,
+                             @Nonnull final Runnable command,
                              final String name,
                              final Object groupId,
-                             @NotNull UndoConfirmationPolicy confirmationPolicy,
+                             @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              Document document) {
     executeCommand(project, command, name, groupId, confirmationPolicy, true, document);
   }
 
   @Override
   public void executeCommand(@Nullable Project project,
-                             @NotNull Runnable command,
+                             @Nonnull Runnable command,
                              @Nullable String name,
                              @Nullable Object groupId,
-                             @NotNull UndoConfirmationPolicy confirmationPolicy,
+                             @Nonnull UndoConfirmationPolicy confirmationPolicy,
                              boolean shouldRecordCommandForActiveDocument) {
     executeCommand(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
   private void executeCommand(@Nullable Project project,
-                              @NotNull Runnable command,
+                              @Nonnull Runnable command,
                               @Nullable String name,
                               @Nullable Object groupId,
-                              @NotNull UndoConfirmationPolicy confirmationPolicy,
+                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
                               boolean shouldRecordCommandForActiveDocument,
                               @Nullable Document document) {
     Application application = ApplicationManager.getApplication();
@@ -159,10 +159,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   @Nullable
-  public Object startCommand(@NotNull final Project project,
+  public Object startCommand(@Nonnull final Project project,
                              @Nls final String name,
                              final Object groupId,
-                             @NotNull final UndoConfirmationPolicy undoConfirmationPolicy) {
+                             @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (project.isDisposed()) return null;
 
@@ -296,12 +296,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  public void addCommandListener(@NotNull CommandListener listener) {
+  public void addCommandListener(@Nonnull CommandListener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void addCommandListener(@NotNull final CommandListener listener, @NotNull Disposable parentDisposable) {
+  public void addCommandListener(@Nonnull final CommandListener listener, @Nonnull Disposable parentDisposable) {
     addCommandListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -312,12 +312,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
-  public void removeCommandListener(@NotNull CommandListener listener) {
+  public void removeCommandListener(@Nonnull CommandListener listener) {
     myListeners.remove(listener);
   }
 
   @Override
-  public void runUndoTransparentAction(@NotNull Runnable action) {
+  public void runUndoTransparentAction(@Nonnull Runnable action) {
     if (myUndoTransparentCount++ == 0) fireUndoTransparentStarted();
     try {
       action.run();
@@ -338,11 +338,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
 
   @Override
-  public void addAffectedDocuments(Project project, @NotNull Document... docs) {
+  public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
   }
 
   @Override
-  public void addAffectedFiles(Project project, @NotNull VirtualFile... files) {
+  public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
   }
 
   private void fireCommandStarted() {

@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -65,7 +65,7 @@ public abstract class TypedHandlerDelegate {
    * @param editor
    * @param file
    */
-  public Result charTyped(char c, final Project project, final Editor editor, @NotNull final PsiFile file) {
+  public Result charTyped(char c, final Project project, final Editor editor, @Nonnull final PsiFile file) {
     return Result.CONTINUE;
   }
 

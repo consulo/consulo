@@ -31,7 +31,7 @@ import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,7 +162,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
   protected ComponentWithTextFieldWrapper createComponentWithTextField(Project project) {
     final EditorTextField editorTextField = createEditorField(project, 1);
     return new ComponentWithTextFieldWrapper(editorTextField) {
-      @NotNull
+      @Nonnull
       @Override
       public EditorTextField getEditorTextField() {
         return editorTextField;
@@ -193,13 +193,14 @@ public abstract class NewEditChangelistPanel extends JPanel {
   }
 
   protected abstract static class ComponentWithTextFieldWrapper {
-    @NotNull private final Component myComponent;
+    @Nonnull
+    private final Component myComponent;
 
-    public ComponentWithTextFieldWrapper(@NotNull Component component) {
+    public ComponentWithTextFieldWrapper(@Nonnull Component component) {
       myComponent = component;
     }
 
-    @NotNull
+    @Nonnull
     abstract EditorTextField getEditorTextField();
   }
 }

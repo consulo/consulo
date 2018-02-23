@@ -23,8 +23,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +135,7 @@ public class ControlFlowBuilder {
    *
    * @param instruction target instruction for pending edges
    */
-  public void checkPending(@NotNull final Instruction instruction) {
+  public void checkPending(@Nonnull final Instruction instruction) {
     final PsiElement element = instruction.getElement();
     if (element == null) {
       // if element is null (fake element, we just process all pending)

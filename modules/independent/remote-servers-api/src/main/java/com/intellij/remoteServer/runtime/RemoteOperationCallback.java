@@ -1,10 +1,10 @@
 package com.intellij.remoteServer.runtime;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface RemoteOperationCallback {
-  void errorOccurred(@NotNull String errorMessage);
+  void errorOccurred(@Nonnull String errorMessage);
 }

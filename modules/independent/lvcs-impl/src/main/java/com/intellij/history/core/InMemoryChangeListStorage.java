@@ -18,7 +18,7 @@ package com.intellij.history.core;
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.util.Consumer;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

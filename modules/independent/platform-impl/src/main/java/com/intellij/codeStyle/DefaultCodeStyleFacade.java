@@ -23,8 +23,8 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.options.Configurable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DefaultCodeStyleFacade extends CodeStyleFacade {
   @Override
@@ -34,7 +34,7 @@ public class DefaultCodeStyleFacade extends CodeStyleFacade {
 
   @Override
   @Nullable
-  public String getLineIndent(@NotNull final Document document, int offset) {
+  public String getLineIndent(@Nonnull final Document document, int offset) {
     return null;
   }
 

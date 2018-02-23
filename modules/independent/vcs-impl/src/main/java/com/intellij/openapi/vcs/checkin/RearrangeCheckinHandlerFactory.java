@@ -18,12 +18,12 @@ package com.intellij.openapi.vcs.checkin;
 
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RearrangeCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
-  @NotNull
-  public CheckinHandler createHandler(@NotNull final CheckinProjectPanel panel, @NotNull CommitContext commitContext) {
+  @Nonnull
+  public CheckinHandler createHandler(@Nonnull final CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
     return new RearrangeBeforeCheckinHandler(panel.getProject(), panel);
   }
 }

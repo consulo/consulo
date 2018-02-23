@@ -18,9 +18,9 @@ package com.intellij.util.indexing;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.impl.IndexStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface VfsAwareIndexStorage<Key, Value> extends IndexStorage<Key, Value> {
-  boolean processKeys(@NotNull Processor<Key> processor, GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processKeys(@Nonnull Processor<Key> processor, GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 }

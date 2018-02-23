@@ -20,8 +20,8 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -48,16 +48,16 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   public interface MarkStateDescriptor<T, S> {
-    @NotNull
-    S getDefaultState(@NotNull T element);
+    @Nonnull
+    S getDefaultState(@Nonnull T element);
 
-    @NotNull
-    S getNextState(@NotNull T element, @NotNull S state);
+    @Nonnull
+    S getNextState(@Nonnull T element, @Nonnull S state);
 
     @Nullable
-    S getNextState(@NotNull Map<T, S> elementsWithStates);
+    S getNextState(@Nonnull Map<T, S> elementsWithStates);
 
-    boolean isMarked(@NotNull S state);
+    boolean isMarked(@Nonnull S state);
 
     @Nullable
     S getMarkState(@Nullable Object value);
@@ -169,13 +169,13 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.SHIFT_DOWN_MASK), "selectLastRowExtendSelection");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myTable.getEmptyText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ExpandableItemsHandler<TableCell> getExpandableItemsHandler() {
     return myTable.getExpandableItemsHandler();
@@ -343,7 +343,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     return myTable.getSelectedRow();
   }
 
-  @NotNull
+  @Nonnull
   public List<T> getSelectedElements() {
     final List<T> elements = new ArrayList<T>();
     final int[] selectedRows = myTable.getSelectedRows();
@@ -380,7 +380,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTableModel.setMarkState(getElementsRows(elements), markState);
   }
 
-  @NotNull
+  @Nonnull
   public Map<T, S> getElementMarkStates() {
     final int count = myTableModel.getRowCount();
     Map<T, S> elements = new LinkedHashMap<T, S>();
@@ -596,7 +596,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       fireTableRowsUpdated(firstRow, lastRow);
     }
 
-    @NotNull
+    @Nonnull
     private S notNullMarkState(T element, S markState) {
       return markState != null ? markState : myMarkStateDescriptor.getDefaultState(element);
     }
@@ -625,12 +625,12 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
   }
 
-  protected String getItemText(@NotNull T value) {
+  protected String getItemText(@Nonnull T value) {
     return value.toString();
   }
 
   @Nullable
-  protected Icon getItemIcon(@NotNull T value) {
+  protected Icon getItemIcon(@Nonnull T value) {
     return null;
   }
 

@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.containers.SLRUMap;
 import org.apache.log4j.Level;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class RareLogger extends Logger {
       }
 
       @Override
-      public void put(Object key, @NotNull Long value) {
+      public void put(Object key, @Nonnull Long value) {
         if (fairSynch) {
           synchronized (lock) {
             super.put(key, value);
@@ -73,13 +73,13 @@ public class RareLogger extends Logger {
     // just passes to parent logger
     myProxy = new LogFilter() {
       @Override
-      @NotNull
+      @Nonnull
       public Integer getAllowedLoggingInterval(Level level, String message, Throwable t, String[] details) {
         return -1;
       }
 
       @Override
-      public Object getKey(@NotNull Level level, @NonNls String message, @Nullable Throwable t, @NonNls String... details) {
+      public Object getKey(@Nonnull Level level, @NonNls String message, @Nullable Throwable t, @NonNls String... details) {
         if (Level.DEBUG.equals(level)) {
           logger.debug(message, t);
         }
@@ -153,7 +153,7 @@ public class RareLogger extends Logger {
     process(Level.WARN, message, t);
   }
 
-  private void process(@NotNull final Level level, @NonNls @Nullable final String message, @Nullable final Throwable t, @NonNls final String... details) {
+  private void process(@Nonnull final Level level, @NonNls @Nullable final String message, @Nullable final Throwable t, @NonNls final String... details) {
     if (!Level.ERROR.equals(level)) {
       for (LogFilter convertor : myConvertors) {
         final Object key = convertor.getKey(level, message, t, details);
@@ -176,9 +176,9 @@ public class RareLogger extends Logger {
 
   public interface LogFilter {
     @Nullable
-    Object getKey(@NotNull final Level level, @NonNls final String message, @Nullable final Throwable t, @NonNls final String... details);
+    Object getKey(@Nonnull final Level level, @NonNls final String message, @Nullable final Throwable t, @NonNls final String... details);
 
-    @NotNull
+    @Nonnull
     Integer getAllowedLoggingInterval(Level level, String message, Throwable t, String[] details);
   }
 }

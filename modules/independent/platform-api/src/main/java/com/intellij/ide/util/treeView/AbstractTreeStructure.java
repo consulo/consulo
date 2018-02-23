@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.psi.PsiDocumentManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractTreeStructure {
   public abstract Object getRootElement();
@@ -29,14 +29,14 @@ public abstract class AbstractTreeStructure {
   @Nullable
   public abstract Object getParentElement(Object element);
 
-  @NotNull
+  @Nonnull
   public abstract NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor);
 
   public abstract void commit();
   public abstract boolean hasSomethingToCommit();
 
-  @NotNull
-  public static ActionCallback asyncCommitDocuments(@NotNull Project project) {
+  @Nonnull
+  public static ActionCallback asyncCommitDocuments(@Nonnull Project project) {
     if (project.isDisposed()) return new ActionCallback.Done();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     if (!documentManager.hasUncommitedDocuments()) {
@@ -54,7 +54,7 @@ public abstract class AbstractTreeStructure {
    * E.g. when you should commit all documents during the {@link #commit()},
    * you can use {@link #asyncCommitDocuments(Project)} to do it asynchronously.
    */
-  @NotNull
+  @Nonnull
   public ActionCallback asyncCommit() {
     if (hasSomethingToCommit()) commit();
     return new ActionCallback.Done();

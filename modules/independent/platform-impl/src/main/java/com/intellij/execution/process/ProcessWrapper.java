@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.process;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,9 +25,10 @@ import java.io.OutputStream;
  */
 public class ProcessWrapper extends Process {
 
-  @NotNull private final Process myOriginalProcess;
+  @Nonnull
+  private final Process myOriginalProcess;
 
-  public ProcessWrapper(@NotNull Process originalProcess) {
+  public ProcessWrapper(@Nonnull Process originalProcess) {
     myOriginalProcess = originalProcess;
   }
 
@@ -61,7 +62,7 @@ public class ProcessWrapper extends Process {
     myOriginalProcess.destroy();
   }
 
-  @NotNull
+  @Nonnull
   public Process getOriginalProcess() {
     return myOriginalProcess;
   }

@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.ex.ErrorStripeAdapter;
 import com.intellij.openapi.editor.ex.ErrorStripeEvent;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ErrorStripeHandler extends ErrorStripeAdapter {
   private final Project myProject;
@@ -30,7 +30,7 @@ public class ErrorStripeHandler extends ErrorStripeAdapter {
   }
 
   @Override
-  public void errorMarkerClicked(@NotNull ErrorStripeEvent e) {
+  public void errorMarkerClicked(@Nonnull ErrorStripeEvent e) {
     RangeHighlighter highlighter = e.getHighlighter();
     if (!highlighter.isValid()) return;
     HighlightInfo info = findInfo(highlighter);

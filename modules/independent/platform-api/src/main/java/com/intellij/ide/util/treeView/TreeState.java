@@ -33,8 +33,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -123,18 +123,18 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static TreeState createOn(JTree tree, final DefaultMutableTreeNode treeNode) {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree, new TreePath(treeNode.getPath()))),
                          createPaths(tree, TreeUtil.collectSelectedPaths(tree, new TreePath(treeNode.getPath()))));
   }
 
-  @NotNull
-  public static TreeState createOn(@NotNull JTree tree) {
+  @Nonnull
+  public static TreeState createOn(@Nonnull JTree tree) {
     return new TreeState(createPaths(tree, TreeUtil.collectExpandedPaths(tree)), new ArrayList<>());
   }
 
-  @NotNull
+  @Nonnull
   public static TreeState createFrom(@Nullable Element element) {
     TreeState state = new TreeState(new ArrayList<>(), new ArrayList<>());
     try {
@@ -174,8 +174,8 @@ public class TreeState implements JDOMExternalizable {
     return result;
   }
 
-  @NotNull
-  private static List<PathElement> createPath(@NotNull TreeModel model, @NotNull TreePath treePath) {
+  @Nonnull
+  private static List<PathElement> createPath(@Nonnull TreeModel model, @Nonnull TreePath treePath) {
     ArrayList<PathElement> result = new ArrayList<>();
     Object prev = null;
     for (int i = 0; i < treePath.getPathCount(); i++) {
@@ -210,11 +210,11 @@ public class TreeState implements JDOMExternalizable {
     return Integer.toHexString(StringHash.murmur(name, 31)) + ":" + StringUtil.getShortName(name);
   }
 
-  public void applyTo(@NotNull JTree tree) {
+  public void applyTo(@Nonnull JTree tree) {
     applyTo(tree, tree.getModel().getRoot());
   }
 
-  public void applyTo(@NotNull JTree tree, @Nullable Object root) {
+  public void applyTo(@Nonnull JTree tree, @Nullable Object root) {
     if (root == null) return;
     TreeFacade facade = TreeFacade.getFacade(tree);
     ActionCallback callback = facade.getInitialized().doWhenDone(new TreeRunnable("TreeState.applyTo: on done facade init") {
@@ -235,7 +235,7 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  private void applyExpandedTo(@NotNull TreeFacade tree, @NotNull TreePath rootPath, @NotNull ProgressIndicator indicator) {
+  private void applyExpandedTo(@Nonnull TreeFacade tree, @Nonnull TreePath rootPath, @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
     if (rootPath.getPathCount() <= 0) return;
 
@@ -247,7 +247,7 @@ public class TreeState implements JDOMExternalizable {
     }
   }
 
-  private void applySelectedTo(@NotNull JTree tree) {
+  private void applySelectedTo(@Nonnull JTree tree) {
     List<TreePath> selection = new ArrayList<>();
     for (List<PathElement> path : mySelectedPaths) {
       TreeModel model = tree.getModel();
@@ -268,7 +268,7 @@ public class TreeState implements JDOMExternalizable {
 
 
   @Nullable
-  private static TreePath findMatchedChild(@NotNull TreeModel model, @NotNull TreePath treePath, @NotNull PathElement pathElement) {
+  private static TreePath findMatchedChild(@Nonnull TreeModel model, @Nonnull TreePath treePath, @Nonnull PathElement pathElement) {
     Object parent = treePath.getLastPathComponent();
     int childCount = model.getChildCount(parent);
     for (int j = 0; j < childCount; j++) {
@@ -287,7 +287,7 @@ public class TreeState implements JDOMExternalizable {
     return null;
   }
 
-  private static boolean pathMatches(@NotNull PathElement pe, Object child) {
+  private static boolean pathMatches(@Nonnull PathElement pe, Object child) {
     Object userObject = TreeUtil.getUserObject(child);
     if (pe.userObject != null && pe.userObject.equals(userObject)) return true;
     return Comparing.equal(pe.id, calcId(userObject)) &&
@@ -325,7 +325,7 @@ public class TreeState implements JDOMExternalizable {
 
     final JTree tree;
 
-    TreeFacade(@NotNull JTree tree) {this.tree = tree;}
+    TreeFacade(@Nonnull JTree tree) { this.tree = tree;}
 
     abstract ActionCallback getInitialized();
 
@@ -347,7 +347,7 @@ public class TreeState implements JDOMExternalizable {
     }
 
     @Override
-    public ActionCallback expand(@NotNull TreePath treePath) {
+    public ActionCallback expand(@Nonnull TreePath treePath) {
       tree.expandPath(treePath);
       return ActionCallback.DONE;
     }

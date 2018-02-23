@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -40,7 +40,7 @@ public class ArrowPainter {
    * @param widthProvider defines character width, it is used to calculate an inset for the arrow's tip
    * @param heightProvider defines character height, it's used to calculate an arrow's width and height
    */
-  public ArrowPainter(@NotNull ColorProvider colorHolder, @NotNull Computable<Integer> widthProvider, @NotNull Computable<Integer> heightProvider) {
+  public ArrowPainter(@Nonnull ColorProvider colorHolder, @Nonnull Computable<Integer> widthProvider, @Nonnull Computable<Integer> heightProvider) {
     myColorHolder = colorHolder;
     myWidthProvider = widthProvider;
     myHeightProvider = heightProvider;

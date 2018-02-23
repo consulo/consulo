@@ -17,8 +17,8 @@ package com.intellij.notification.impl;
 
 import com.intellij.notification.NotificationDisplayType;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -36,12 +36,12 @@ public final class NotificationSettings {
     myShouldReadAloud = shouldReadAloud;
   }
 
-  @NotNull
+  @Nonnull
   public String getGroupId() {
     return myGroupId;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationDisplayType getDisplayType() {
     return myDisplayType;
   }
@@ -67,7 +67,7 @@ public final class NotificationSettings {
   }
 
   @Nullable
-  public static NotificationSettings load(@NotNull final Element element) {
+  public static NotificationSettings load(@Nonnull final Element element) {
     final String displayTypeString = element.getAttributeValue("displayType");
     NotificationDisplayType displayType = NotificationDisplayType.BALLOON;
     boolean shouldLog = !"false".equals(element.getAttributeValue("shouldLog"));
@@ -88,7 +88,7 @@ public final class NotificationSettings {
     return groupId != null ? new NotificationSettings(groupId, displayType, shouldLog, shouldReadAloud) : null;
   }
 
-  @NotNull
+  @Nonnull
   public Element save() {
     final Element result = new Element("notification");
 

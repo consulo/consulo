@@ -16,14 +16,14 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.util.indexing.ValueContainer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by Maxim.Mossienko on 11/22/2016.
  */
 public interface InvertedIndexValueIterator<Value> extends ValueContainer.ValueIterator<Value> {
   @Override
-  @NotNull
+  @Nonnull
   ValueContainer.IntPredicate getValueAssociationPredicate();
 
   Object getFileSetObject();

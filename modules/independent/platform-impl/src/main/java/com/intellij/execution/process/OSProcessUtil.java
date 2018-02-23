@@ -15,16 +15,16 @@
  */
 package com.intellij.execution.process;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Deprecated
 public class OSProcessUtil {
   @Deprecated
-  public static int getProcessID(@NotNull Process process) {
+  public static int getProcessID(@Nonnull Process process) {
     return consulo.execution.process.OSProcessUtil.getProcessID(process);
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   public static ProcessInfo[] getProcessList() {
     return consulo.execution.process.OSProcessUtil.getProcessList();

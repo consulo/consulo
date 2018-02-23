@@ -33,8 +33,8 @@ import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class PackageNodeUtil {
    * @param strictlyEmpty if true, the package is considered empty if it has only 1 child and this child  is a directory
    *                      otherwise the package is considered as empty if all direct children that it has are directories
    */
-  public static boolean isEmptyMiddlePackage(@NotNull PsiDirectory dir,
+  public static boolean isEmptyMiddlePackage(@Nonnull PsiDirectory dir,
                                              @Nullable Class<? extends ModuleExtension> moduleExtensionClass,
                                              boolean strictlyEmpty) {
     final VirtualFile[] files = dir.getVirtualFile().getChildren();
@@ -81,25 +81,25 @@ public class PackageNodeUtil {
   private static class ModuleLibrariesSearchScope extends GlobalSearchScope {
     private final Module myModule;
 
-    public ModuleLibrariesSearchScope(@NotNull Module module) {
+    public ModuleLibrariesSearchScope(@Nonnull Module module) {
       super(module.getProject());
       myModule = module;
     }
 
     @Override
-    public boolean contains(@NotNull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       final OrderEntry orderEntry = ModuleRootManager.getInstance(myModule).getFileIndex().getOrderEntryForFile(file);
       return orderEntry instanceof ModuleExtensionWithSdkOrderEntry || orderEntry instanceof LibraryOrderEntry;
     }
 
     @Override
-    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
       final ModuleFileIndex fileIndex = ModuleRootManager.getInstance(myModule).getFileIndex();
       return Comparing.compare(fileIndex.getOrderEntryForFile(file2), fileIndex.getOrderEntryForFile(file1));
     }
 
     @Override
-    public boolean isSearchInModuleContent(@NotNull Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return false;
     }
 
@@ -112,13 +112,13 @@ public class PackageNodeUtil {
   private static class ProjectLibrariesSearchScope extends GlobalSearchScope {
     private final DirectoryIndex myDirectoryIndex;
 
-    public ProjectLibrariesSearchScope(@NotNull Project project) {
+    public ProjectLibrariesSearchScope(@Nonnull Project project) {
       super(project);
       myDirectoryIndex = DirectoryIndex.getInstance(project);
     }
 
     @Override
-    public boolean contains(@NotNull VirtualFile file) {
+    public boolean contains(@Nonnull VirtualFile file) {
       VirtualFile dir = file.isDirectory() ? file : file.getParent();
       if (dir == null) return false;
 
@@ -127,12 +127,12 @@ public class PackageNodeUtil {
     }
 
     @Override
-    public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
       throw new IncorrectOperationException("not implemented");
     }
 
     @Override
-    public boolean isSearchInModuleContent(@NotNull Module aModule) {
+    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
       return false;
     }
 
@@ -142,7 +142,7 @@ public class PackageNodeUtil {
     }
   }
 
-  public static boolean isPackageEmpty(@NotNull PsiPackage aPackage,
+  public static boolean isPackageEmpty(@Nonnull PsiPackage aPackage,
                                        @Nullable Module module,
                                        boolean strictlyEmpty,
                                        final boolean inLibrary) {
@@ -156,10 +156,10 @@ public class PackageNodeUtil {
     return true;
   }
 
-  @NotNull
-  public static Collection<AbstractTreeNode> createPackageViewChildrenOnFiles(@NotNull List<VirtualFile> sourceRoots,
-                                                                              @NotNull Project project,
-                                                                              @NotNull ViewSettings settings,
+  @Nonnull
+  public static Collection<AbstractTreeNode> createPackageViewChildrenOnFiles(@Nonnull List<VirtualFile> sourceRoots,
+                                                                              @Nonnull Project project,
+                                                                              @Nonnull ViewSettings settings,
                                                                               @Nullable Module module,
                                                                               final boolean inLibrary) {
     final PsiManager psiManager = PsiManager.getInstance(project);
@@ -197,15 +197,15 @@ public class PackageNodeUtil {
     return children;
   }
 
-  public static boolean isPackageDefault(@NotNull PsiPackage directoryPackage) {
+  public static boolean isPackageDefault(@Nonnull PsiPackage directoryPackage) {
     final String qName = directoryPackage.getQualifiedName();
     return qName.isEmpty();
   }
 
-  public static void addPackageAsChild(@NotNull Collection<AbstractTreeNode> children,
-                                       @NotNull PsiPackage aPackage,
+  public static void addPackageAsChild(@Nonnull Collection<AbstractTreeNode> children,
+                                       @Nonnull PsiPackage aPackage,
                                        @Nullable Module module,
-                                       @NotNull ViewSettings settings,
+                                       @Nonnull ViewSettings settings,
                                        final boolean inLibrary) {
     final boolean shouldSkipPackage = settings.isHideEmptyMiddlePackages() && isPackageEmpty(aPackage, module, !settings.isFlattenPackages(), inLibrary);
     final Project project = aPackage.getProject();
@@ -220,10 +220,10 @@ public class PackageNodeUtil {
     }
   }
 
-  @NotNull
-  public static PsiPackage[] getSubpackages(@NotNull PsiPackage aPackage,
+  @Nonnull
+  public static PsiPackage[] getSubpackages(@Nonnull PsiPackage aPackage,
                                                 @Nullable Module module,
-                                                @NotNull Project project,
+                                                @Nonnull Project project,
                                                 final boolean searchInLibraries) {
     final PsiDirectory[] dirs = getDirectories(aPackage, project, module, searchInLibraries);
     final Set<PsiPackage> subpackages = new HashSet<PsiPackage>();
@@ -244,17 +244,17 @@ public class PackageNodeUtil {
     return subpackages.toArray(new PsiPackage[subpackages.size()]);
   }
 
-  @NotNull
-  public static PsiDirectory[] getDirectories(@NotNull PsiPackage aPackage,
-                                              @NotNull Project project,
+  @Nonnull
+  public static PsiDirectory[] getDirectories(@Nonnull PsiPackage aPackage,
+                                              @Nonnull Project project,
                                               @Nullable Module module,
                                               boolean inLibrary) {
     final GlobalSearchScope scopeToShow = getScopeToShow(project, module, inLibrary);
     return aPackage.getDirectories(scopeToShow);
   }
 
-  @NotNull
-  private static GlobalSearchScope getScopeToShow(@NotNull Project project, @Nullable Module module, boolean forLibraries) {
+  @Nonnull
+  private static GlobalSearchScope getScopeToShow(@Nonnull Project project, @Nullable Module module, boolean forLibraries) {
     if (module == null) {
       if (forLibraries) {
         return new ProjectLibrariesSearchScope(project);

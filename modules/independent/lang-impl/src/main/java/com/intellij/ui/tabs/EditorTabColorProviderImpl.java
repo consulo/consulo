@@ -22,8 +22,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.FileColorManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**

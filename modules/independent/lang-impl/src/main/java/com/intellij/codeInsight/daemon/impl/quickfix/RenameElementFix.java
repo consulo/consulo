@@ -28,8 +28,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.RenameProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ven
@@ -40,7 +40,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   private final String myNewName;
   private final String myText;
 
-  public RenameElementFix(@NotNull PsiNamedElement element) {
+  public RenameElementFix(@Nonnull PsiNamedElement element) {
     super(element);
     final VirtualFile vFile = element.getContainingFile().getVirtualFile();
     assert vFile != null : element;
@@ -48,30 +48,30 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
     myText =  CodeInsightBundle.message("rename.public.class.text", element.getName(), myNewName);
   }
 
-  public RenameElementFix(@NotNull PsiNamedElement element, @NotNull String newName) {
+  public RenameElementFix(@Nonnull PsiNamedElement element, @Nonnull String newName) {
     super(element);
     myNewName = newName;
     myText = CodeInsightBundle.message("rename.named.element.text", element.getName(), myNewName);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return CodeInsightBundle.message("rename.element.family");
   }
 
   @Override
-  public void invoke(@NotNull final Project project,
-                     @NotNull final PsiFile file,
+  public void invoke(@Nonnull final Project project,
+                     @Nonnull final PsiFile file,
                      @Nullable("is null when called from inspection") Editor editor,
-                     @NotNull final PsiElement startElement,
-                     @NotNull PsiElement endElement) {
+                     @Nonnull final PsiElement startElement,
+                     @Nonnull PsiElement endElement) {
     if (isAvailable(project, null, file)) {
       LOG.assertTrue(file == startElement.getContainingFile());
       if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
@@ -81,10 +81,10 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project,
-                             @NotNull PsiFile file,
-                             @NotNull PsiElement startElement,
-                             @NotNull PsiElement endElement) {
+  public boolean isAvailable(@Nonnull Project project,
+                             @Nonnull PsiFile file,
+                             @Nonnull PsiElement startElement,
+                             @Nonnull PsiElement endElement) {
     if (!startElement.isValid()) {
       return false;
     }

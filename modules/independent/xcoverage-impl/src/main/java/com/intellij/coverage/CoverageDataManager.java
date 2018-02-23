@@ -25,8 +25,8 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.JDOMExternalizable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -108,7 +108,7 @@ public abstract class CoverageDataManager implements ProjectComponent, JDOMExter
     chooseSuitesBundle(suite != null ? new CoverageSuitesBundle(suite) : null);
   }
 
-  public abstract void coverageGathered(@NotNull CoverageSuite suite);
+  public abstract void coverageGathered(@Nonnull CoverageSuite suite);
 
   /**
    * Remove suite
@@ -128,9 +128,9 @@ public abstract class CoverageDataManager implements ProjectComponent, JDOMExter
 
   public abstract boolean isSubCoverageActive();
 
-  public abstract void selectSubCoverage(@NotNull final CoverageSuitesBundle suite, final List<String> methodNames);
+  public abstract void selectSubCoverage(@Nonnull final CoverageSuitesBundle suite, final List<String> methodNames);
 
-  public abstract void restoreMergedCoverage(@NotNull final CoverageSuitesBundle suite);
+  public abstract void restoreMergedCoverage(@Nonnull final CoverageSuitesBundle suite);
 
   public abstract void addSuiteListener(CoverageSuiteListener listener, Disposable parentDisposable);
 
@@ -142,9 +142,9 @@ public abstract class CoverageDataManager implements ProjectComponent, JDOMExter
    * @param configuration
    * @param runnerSettings
    */
-  public abstract void attachToProcess(@NotNull final ProcessHandler handler,
-                                       @NotNull final RunConfigurationBase configuration, RunnerSettings runnerSettings);
+  public abstract void attachToProcess(@Nonnull final ProcessHandler handler,
+                                       @Nonnull final RunConfigurationBase configuration, RunnerSettings runnerSettings);
 
-  public abstract void processGatheredCoverage(@NotNull RunConfigurationBase configuration, RunnerSettings runnerSettings);
+  public abstract void processGatheredCoverage(@Nonnull RunConfigurationBase configuration, RunnerSettings runnerSettings);
 
 }

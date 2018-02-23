@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -53,14 +53,14 @@ public class BaseRevisionTextPatchEP implements PatchEP {
     myChangeListManager = ChangeListManager.getInstance(myProject);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP";
   }
 
   @Override
-  public CharSequence provideContent(@NotNull String path, CommitContext commitContext) {
+  public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
     if (commitContext == null) return null;
     if (Boolean.TRUE.equals(commitContext.getUserData(ourPutBaseRevisionTextKey))) {
       final File file = new File(myBaseDir, path);
@@ -87,12 +87,12 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   }
 
   @Override
-  public void consumeContent(@NotNull String path, @NotNull CharSequence content, CommitContext commitContext) {
+  public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
   }
 
   @Override
-  public void consumeContentBeforePatchApplied(@NotNull String path,
-                                               @NotNull CharSequence content,
+  public void consumeContentBeforePatchApplied(@Nonnull String path,
+                                               @Nonnull CharSequence content,
                                                CommitContext commitContext) {
     if (commitContext == null) return;
     Map<String, String> map = commitContext.getUserData(ourStoredTexts);

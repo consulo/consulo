@@ -18,7 +18,7 @@ package com.intellij.patterns;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Gregory.Shrago
@@ -37,7 +37,7 @@ public abstract class PatternConditionPlus<Target, Value> extends PatternConditi
 
   public abstract boolean processValues(final Target t, final ProcessingContext context, final PairProcessor<Value, ProcessingContext> processor);
 
-  public boolean accepts(@NotNull final Target t, final ProcessingContext context) {
+  public boolean accepts(@Nonnull final Target t, final ProcessingContext context) {
     return !processValues(t, context, this);
   }
 

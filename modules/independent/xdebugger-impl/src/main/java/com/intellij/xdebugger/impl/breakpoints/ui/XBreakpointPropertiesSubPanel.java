@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class XBreakpointPropertiesSubPanel {
   protected Project myProject;
@@ -27,7 +27,7 @@ public abstract class XBreakpointPropertiesSubPanel {
   protected XBreakpointBase myBreakpoint;
   protected XBreakpointType myBreakpointType;
 
-  public void init(Project project, final XBreakpointManager breakpointManager, @NotNull XBreakpointBase breakpoint) {
+  public void init(Project project, final XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
     myProject = project;
     myBreakpointManager = breakpointManager;
     myBreakpoint = breakpoint;

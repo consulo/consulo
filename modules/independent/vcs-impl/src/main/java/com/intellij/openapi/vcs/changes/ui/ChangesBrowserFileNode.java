@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PlatformIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.util.FontUtil.spaceAndThinSpace;
 
@@ -36,7 +36,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
   private final Project myProject;
   private final String myName;
 
-  public ChangesBrowserFileNode(Project project, @NotNull VirtualFile userObject) {
+  public ChangesBrowserFileNode(Project project, @Nonnull VirtualFile userObject) {
     super(userObject);
     myName = StringUtil.toLowerCase(userObject.getName());
     myProject = project;

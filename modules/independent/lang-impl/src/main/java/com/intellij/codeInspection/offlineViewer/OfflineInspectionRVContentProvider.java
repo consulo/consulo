@@ -34,9 +34,9 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -45,22 +45,22 @@ import java.util.*;
 public class OfflineInspectionRVContentProvider extends InspectionRVContentProvider {
   private final Map<String, Map<String, Set<OfflineProblemDescriptor>>> myContent;
 
-  public OfflineInspectionRVContentProvider(@NotNull Map<String, Map<String, Set<OfflineProblemDescriptor>>> content,
-                                            @NotNull Project project) {
+  public OfflineInspectionRVContentProvider(@Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> content,
+                                            @Nonnull Project project) {
     super(project);
     myContent = content;
   }
 
   @Override
-  public boolean checkReportedProblems(@NotNull GlobalInspectionContextImpl context,
-                                       @NotNull final InspectionToolWrapper toolWrapper) {
+  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context,
+                                       @Nonnull final InspectionToolWrapper toolWrapper) {
     final Map<String, Set<OfflineProblemDescriptor>> content = getFilteredContent(context, toolWrapper);
     return content != null && !content.values().isEmpty();
   }
 
   @Override
   @Nullable
-  public QuickFixAction[] getQuickFixes(@NotNull final InspectionToolWrapper toolWrapper, @NotNull final InspectionTree tree) {
+  public QuickFixAction[] getQuickFixes(@Nonnull final InspectionToolWrapper toolWrapper, @Nonnull final InspectionTree tree) {
     final TreePath[] treePaths = tree.getSelectionPaths();
     final List<RefEntity> selectedElements = new ArrayList<RefEntity>();
     final Map<RefEntity, Set<QuickFix>> actions = new HashMap<RefEntity, Set<QuickFix>>();
@@ -109,12 +109,12 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   }
 
   @Override
-  public void appendToolNodeContent(@NotNull GlobalInspectionContextImpl context,
-                                    @NotNull final InspectionNode toolNode,
-                                    @NotNull final InspectionTreeNode parentNode,
+  public void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
+                                    @Nonnull final InspectionNode toolNode,
+                                    @Nonnull final InspectionTreeNode parentNode,
                                     final boolean showStructure,
-                                    @NotNull final Map<String, Set<RefEntity>> contents,
-                                    @NotNull final Map<RefEntity, CommonProblemDescriptor[]> problems,
+                                    @Nonnull final Map<String, Set<RefEntity>> contents,
+                                    @Nonnull final Map<RefEntity, CommonProblemDescriptor[]> problems,
                                     final DefaultTreeModel model) {
     InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
     final Map<String, Set<OfflineProblemDescriptor>> filteredContent = getFilteredContent(context, toolWrapper);
@@ -136,8 +136,8 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
   @Nullable
   @SuppressWarnings({"UnusedAssignment"})
-  private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(@NotNull GlobalInspectionContextImpl context,
-                                                                        @NotNull InspectionToolWrapper toolWrapper) {
+  private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(@Nonnull GlobalInspectionContextImpl context,
+                                                                        @Nonnull InspectionToolWrapper toolWrapper) {
     Map<String, Set<OfflineProblemDescriptor>> content = myContent.get(toolWrapper.getShortName());
     if (content == null) return null;
     if (context.getUIOptions().FILTER_RESOLVED_ITEMS) {
@@ -173,10 +173,10 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   }
 
   @Override
-  protected void appendDescriptor(@NotNull GlobalInspectionContextImpl context,
-                                  @NotNull final InspectionToolWrapper toolWrapper,
-                                  @NotNull final UserObjectContainer container,
-                                  @NotNull final InspectionPackageNode packageNode,
+  protected void appendDescriptor(@Nonnull GlobalInspectionContextImpl context,
+                                  @Nonnull final InspectionToolWrapper toolWrapper,
+                                  @Nonnull final UserObjectContainer container,
+                                  @Nonnull final InspectionPackageNode packageNode,
                                   final boolean canPackageRepeat) {
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
     final RefElementNode elemNode = addNodeToParent(container, presentation, packageNode);
@@ -188,10 +188,10 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
 
   private static class OfflineProblemDescriptorContainer implements UserObjectContainer<OfflineProblemDescriptor> {
-    @NotNull
+    @Nonnull
     private final OfflineProblemDescriptor myDescriptor;
 
-    public OfflineProblemDescriptorContainer(@NotNull OfflineProblemDescriptor descriptor) {
+    public OfflineProblemDescriptorContainer(@Nonnull OfflineProblemDescriptor descriptor) {
       myDescriptor = descriptor;
     }
 
@@ -206,14 +206,14 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RefElementNode createNode(@NotNull InspectionToolPresentation presentation) {
+    public RefElementNode createNode(@Nonnull InspectionToolPresentation presentation) {
       return new OfflineRefElementNode(myDescriptor, presentation);
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public OfflineProblemDescriptor getUserObject() {
       return myDescriptor;
     }

@@ -30,7 +30,7 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.pico.AssignableToComponentAdapter;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.*;
 
 import java.util.Arrays;
@@ -63,12 +63,12 @@ public class ServiceManagerImpl implements BaseComponent {
 
     myExtensionPointListener = new ExtensionPointListener<ServiceDescriptor>() {
       @Override
-      public void extensionAdded(@NotNull final ServiceDescriptor descriptor, final PluginDescriptor pluginDescriptor) {
+      public void extensionAdded(@Nonnull final ServiceDescriptor descriptor, final PluginDescriptor pluginDescriptor) {
         picoContainer.registerComponent(new MyComponentAdapter(descriptor, pluginDescriptor, (ComponentManagerEx)componentManager));
       }
 
       @Override
-      public void extensionRemoved(@NotNull final ServiceDescriptor extension, final PluginDescriptor pluginDescriptor) {
+      public void extensionRemoved(@Nonnull final ServiceDescriptor extension, final PluginDescriptor pluginDescriptor) {
         picoContainer.unregisterComponent(extension.getInterface());
       }
     };
@@ -80,8 +80,8 @@ public class ServiceManagerImpl implements BaseComponent {
     return Arrays.asList(extensions);
   }
 
-  public static void processAllImplementationClasses(@NotNull ComponentManagerImpl componentManager,
-                                                     @NotNull PairProcessor<Class<?>, PluginDescriptor> processor) {
+  public static void processAllImplementationClasses(@Nonnull ComponentManagerImpl componentManager,
+                                                     @Nonnull PairProcessor<Class<?>, PluginDescriptor> processor) {
     Collection adapters = componentManager.getPicoContainer().getComponentAdapters();
     if (adapters.isEmpty()) {
       return;
@@ -131,7 +131,7 @@ public class ServiceManagerImpl implements BaseComponent {
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return getClass().getName();
   }
@@ -182,7 +182,7 @@ public class ServiceManagerImpl implements BaseComponent {
     }
 
     @Override
-    public Object getComponentInstance(@NotNull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+    public Object getComponentInstance(@Nonnull PicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
       Object instance = myInitializedComponentInstance;
       if (instance != null) {
         return instance;
@@ -224,7 +224,7 @@ public class ServiceManagerImpl implements BaseComponent {
       }
     }
 
-    @NotNull
+    @Nonnull
     private synchronized ComponentAdapter getDelegate() {
       if (myDelegate == null) {
         Class<?> implClass;

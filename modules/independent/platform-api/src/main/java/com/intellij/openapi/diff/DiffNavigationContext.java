@@ -17,7 +17,7 @@ package com.intellij.openapi.diff;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -25,7 +25,7 @@ public class DiffNavigationContext {
   private final String myTargetString;
   private final Iterable<String> myPreviousLinesIterable;
 
-  public DiffNavigationContext(@NotNull Iterable<String> previousLinesIterable, @NotNull String targetString) {
+  public DiffNavigationContext(@Nonnull Iterable<String> previousLinesIterable, @Nonnull String targetString) {
     myPreviousLinesIterable = previousLinesIterable;
     myTargetString = targetString;
   }
@@ -39,7 +39,7 @@ public class DiffNavigationContext {
   }
 
 
-  public int contextMatchCheck(@NotNull Iterator<Pair<Integer, CharSequence>> changedLinesIterator) {
+  public int contextMatchCheck(@Nonnull Iterator<Pair<Integer, CharSequence>> changedLinesIterator) {
     // we ignore spaces.. at least at start/end, since some version controls could ignore their changes when doing annotate
     Iterator<? extends CharSequence> iterator = getPreviousLinesIterable().iterator();
 

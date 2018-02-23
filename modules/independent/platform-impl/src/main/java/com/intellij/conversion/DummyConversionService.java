@@ -16,7 +16,7 @@
 package com.intellij.conversion;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -38,31 +38,31 @@ public class DummyConversionService extends ConversionService {
     }
 
     @Override
-    public void postStartupActivity(@NotNull Project project) {
+    public void postStartupActivity(@Nonnull Project project) {
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
-  public ConversionResult convertSilently(@NotNull String projectPath) {
+  public ConversionResult convertSilently(@Nonnull String projectPath) {
     return CONVERSION_RESULT;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ConversionResult convertSilently(@NotNull String projectPath, @NotNull ConversionListener conversionListener) {
+  public ConversionResult convertSilently(@Nonnull String projectPath, @Nonnull ConversionListener conversionListener) {
     return CONVERSION_RESULT;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ConversionResult convert(@NotNull String projectPath) {
+  public ConversionResult convert(@Nonnull String projectPath) {
     return CONVERSION_RESULT;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ConversionResult convertModule(@NotNull Project project, @NotNull File moduleFile) {
+  public ConversionResult convertModule(@Nonnull Project project, @Nonnull File moduleFile) {
     return CONVERSION_RESULT;
   }
 }

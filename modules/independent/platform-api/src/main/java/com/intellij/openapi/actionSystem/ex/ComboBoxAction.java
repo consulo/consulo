@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CUSTOM_COMPONENT_PROPERTY);
     if (button == null) {
       Component contextComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
@@ -49,7 +49,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     button.showPopup();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent createCustomComponent(Presentation presentation) {
     JPanel panel = new JPanel(new GridBagLayout());
@@ -80,14 +80,14 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
   }
 
   protected boolean shouldShowDisabledActions() {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract DefaultActionGroup createPopupActionGroup(JComponent button);
 
   protected int getMaxRows() {

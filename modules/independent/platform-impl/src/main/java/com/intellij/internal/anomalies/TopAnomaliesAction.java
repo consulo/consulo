@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -195,7 +195,7 @@ public class TopAnomaliesAction extends ActionGroup {
     e.getPresentation().setText("Top " + LIMIT);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return CHILDREN;

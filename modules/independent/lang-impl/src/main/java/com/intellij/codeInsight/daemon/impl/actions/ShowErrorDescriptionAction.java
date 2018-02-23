@@ -30,7 +30,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements DumbAware {
   private static int width;
@@ -41,14 +41,14 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
     setEnabledInModalContext(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler() {
     return new ShowErrorDescriptionHandler(shouldShowDescription ? width : 0);
   }
 
   @Override
-  protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file) && isEnabledForFile(project, editor, file);
   }
 
@@ -60,7 +60,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
   }
 
   @Override
-  public void beforeActionPerformedUpdate(@NotNull final AnActionEvent e) {
+  public void beforeActionPerformedUpdate(@Nonnull final AnActionEvent e) {
     super.beforeActionPerformedUpdate(e);
     changeState();
   }

@@ -3,8 +3,8 @@ package com.intellij.openapi.externalSystem.model.task;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,28 +17,32 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ExternalSystemTaskId implements Serializable {
 
-  @NotNull private static final AtomicLong COUNTER          = new AtomicLong();
+  @Nonnull
+  private static final AtomicLong COUNTER          = new AtomicLong();
   private static final          long       serialVersionUID = 1L;
 
-  @NotNull private final ExternalSystemTaskType myType;
-  @NotNull private final String                 myProjectId;
-  @NotNull private final ProjectSystemId        myProjectSystemId;
+  @Nonnull
+  private final ExternalSystemTaskType myType;
+  @Nonnull
+  private final String                 myProjectId;
+  @Nonnull
+  private final ProjectSystemId        myProjectSystemId;
 
   private final long myId;
 
-  private ExternalSystemTaskId(@NotNull ProjectSystemId projectSystemId, @NotNull ExternalSystemTaskType type, @NotNull String projectId, long taskId) {
+  private ExternalSystemTaskId(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull String projectId, long taskId) {
     myType = type;
     myProjectId = projectId;
     myProjectSystemId = projectSystemId;
     myId = taskId;
   }
 
-  @NotNull
+  @Nonnull
   public String getIdeProjectId() {
     return myProjectId;
   }
 
-  @NotNull
+  @Nonnull
   public ProjectSystemId getProjectSystemId() {
     return myProjectSystemId;
   }
@@ -50,18 +54,18 @@ public class ExternalSystemTaskId implements Serializable {
    * @param project  target ide project
    * @return         distinct task id object of the given type
    */
-  @NotNull
-  public static ExternalSystemTaskId create(@NotNull ProjectSystemId projectSystemId, @NotNull ExternalSystemTaskType type, @NotNull Project project) {
+  @Nonnull
+  public static ExternalSystemTaskId create(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull Project project) {
     return create(projectSystemId, type, getProjectId(project));
   }
 
-  @NotNull
-  public static ExternalSystemTaskId create(@NotNull ProjectSystemId projectSystemId, @NotNull ExternalSystemTaskType type, @NotNull String ideProjectId) {
+  @Nonnull
+  public static ExternalSystemTaskId create(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull String ideProjectId) {
     return new ExternalSystemTaskId(projectSystemId, type, ideProjectId, COUNTER.getAndIncrement());
   }
 
-  @NotNull
-  public static String getProjectId(@NotNull Project project) {
+  @Nonnull
+  public static String getProjectId(@Nonnull Project project) {
     return project.isDisposed() ? project.getName() : project.getName() + ":" + project.getLocationHash();
   }
 
@@ -74,7 +78,7 @@ public class ExternalSystemTaskId implements Serializable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemTaskType getType() {
     return myType;
   }

@@ -17,7 +17,7 @@ package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public abstract class CachingSimpleNode extends SimpleNode {
 

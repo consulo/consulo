@@ -16,14 +16,14 @@
 package com.intellij.vcs.log.ui.frame;
 
 import com.intellij.ui.SpeedSearchBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.AbstractList;
 import java.util.ListIterator;
 
 public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
-  public VcsLogSpeedSearch(@NotNull VcsLogGraphTable component) {
+  public VcsLogSpeedSearch(@Nonnull VcsLogGraphTable component) {
     super(component);
   }
 
@@ -32,7 +32,7 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
     return myComponent.getRowCount();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ListIterator<Object> getElementIterator(int startingIndex) {
     return new MyRowsList().listIterator(startingIndex);
@@ -43,7 +43,7 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
     return myComponent.getSelectedRow();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Object[] getAllElements() {
     throw new UnsupportedOperationException("Getting all elements in a Log in an array is unsupported.");
@@ -51,12 +51,12 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
 
   @Nullable
   @Override
-  protected String getElementText(@NotNull Object row) {
+  protected String getElementText(@Nonnull Object row) {
     return myComponent.getModel().getShortDetails((Integer)row).getSubject();
   }
 
   @Override
-  protected void selectElement(@NotNull Object row, @NotNull String selectedText) {
+  protected void selectElement(@Nonnull Object row, @Nonnull String selectedText) {
     myComponent.jumpToRow((Integer)row);
   }
 

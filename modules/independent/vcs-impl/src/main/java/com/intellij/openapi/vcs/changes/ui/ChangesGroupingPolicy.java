@@ -15,10 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import org.jetbrains.annotations.Nullable;
-
 public interface ChangesGroupingPolicy {
-  @Nullable
+  @javax.annotation.Nullable
   ChangesBrowserNode getParentNodeFor(final StaticFilePath node, final ChangesBrowserNode rootNode);
 
   void clear();

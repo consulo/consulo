@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -28,19 +28,19 @@ public class PlainTextDescriptor implements TextDescriptor {
   private final String myText;
   private final String myFileName;
 
-  public PlainTextDescriptor(@NotNull String text, @NonNls @NotNull String fileName) {
+  public PlainTextDescriptor(@Nonnull String text, @NonNls @Nonnull String fileName) {
     myText = text;
     myFileName = fileName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() throws IOException {
     return myText;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFileName() {
     return myFileName;
   }

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -38,15 +38,15 @@ public class FocusOppositePaneAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     throw new UnsupportedOperationException();
   }
 
-  public void install(@NotNull JComponent component) {
+  public void install(@Nonnull JComponent component) {
     registerCustomShortcutSet(getShortcutSet(), component);
   }
 
-  @NotNull
+  @Nonnull
   private String getActionId() {
     return myScrollToPosition ? "Diff.FocusOppositePaneAndScroll" : "Diff.FocusOppositePane";
   }

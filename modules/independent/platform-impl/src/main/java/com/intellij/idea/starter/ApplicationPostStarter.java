@@ -20,7 +20,7 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.util.Ref;
 import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Internal
 public abstract class ApplicationPostStarter {
@@ -33,10 +33,10 @@ public abstract class ApplicationPostStarter {
 
   public abstract void createApplication(boolean isHeadlessMode, CommandLineArgs args);
 
-  public void premain(@NotNull CommandLineArgs args) {
+  public void premain(@Nonnull CommandLineArgs args) {
   }
 
-  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
   }
 
   public boolean needStartInTransaction() {

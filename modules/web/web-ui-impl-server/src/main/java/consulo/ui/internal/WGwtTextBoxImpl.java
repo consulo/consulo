@@ -20,8 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.TextBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class WGwtTextBoxImpl extends AbstractComponent implements TextBox, Vaadi
     getState().caption = text;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
@@ -40,17 +39,17 @@ public class WGwtTextBoxImpl extends AbstractComponent implements TextBox, Vaadi
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<String> valueListener) {
+  public void addValueListener(@Nonnull ValueListener<String> valueListener) {
 
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueListener<String> valueListener) {
+  public void removeValueListener(@Nonnull ValueListener<String> valueListener) {
 
   }
 

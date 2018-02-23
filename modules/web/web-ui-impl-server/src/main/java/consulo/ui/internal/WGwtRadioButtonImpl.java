@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.RadioButton;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,14 +31,14 @@ public class WGwtRadioButtonImpl extends WGwtBooleanValueComponentImpl implement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return getState().caption;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@NotNull final String text) {
+  public void setText(@Nonnull final String text) {
     if (Comparing.equal(getState().caption, text)) {
       return;
     }

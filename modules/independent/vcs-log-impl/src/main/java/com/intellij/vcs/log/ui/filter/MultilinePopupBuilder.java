@@ -35,8 +35,8 @@ import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.intellij.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -47,20 +47,21 @@ import java.util.List;
 class MultilinePopupBuilder {
   private static final char[] SEPARATORS = {'|', '\n'};
 
-  @NotNull private final EditorTextField myTextField;
+  @Nonnull
+  private final EditorTextField myTextField;
 
-  MultilinePopupBuilder(@NotNull Project project,
-                        @NotNull final Collection<String> values,
-                        @NotNull String initialValue,
+  MultilinePopupBuilder(@Nonnull Project project,
+                        @Nonnull final Collection<String> values,
+                        @Nonnull String initialValue,
                         boolean supportsNegativeValues) {
     myTextField = createTextField(project, values, supportsNegativeValues, initialValue);
   }
 
-  @NotNull
-  private static EditorTextField createTextField(@NotNull Project project,
+  @Nonnull
+  private static EditorTextField createTextField(@Nonnull Project project,
                                                  Collection<String> values,
                                                  boolean supportsNegativeValues,
-                                                 @NotNull String initialValue) {
+                                                 @Nonnull String initialValue) {
     TextFieldWithCompletion textField =
             new TextFieldWithCompletion(project, new MyCompletionProvider(values, supportsNegativeValues), initialValue, false, true, false) {
               @Override
@@ -74,7 +75,7 @@ class MultilinePopupBuilder {
     return textField;
   }
 
-  @NotNull
+  @Nonnull
   JBPopup createPopup() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(myTextField, BorderLayout.CENTER);
@@ -89,7 +90,7 @@ class MultilinePopupBuilder {
     popup.setMinimumSize(new JBDimension(200, 90));
     AnAction okAction = new DumbAwareAction() {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         unregisterCustomShortcutSet(popup.getContent());
         popup.closeOk(e.getInputEvent());
       }
@@ -98,7 +99,7 @@ class MultilinePopupBuilder {
     return popup;
   }
 
-  @NotNull
+  @Nonnull
   List<String> getSelectedValues() {
     return ContainerUtil.mapNotNull(StringUtil.tokenize(myTextField.getText(), new String(SEPARATORS)), value -> {
       String trimmed = value.trim();
@@ -107,7 +108,7 @@ class MultilinePopupBuilder {
   }
 
   private static class MyCompletionProvider extends ValuesCompletionProviderDumbAware<String> {
-    MyCompletionProvider(@NotNull Collection<String> values, boolean supportsNegativeValues) {
+    MyCompletionProvider(@Nonnull Collection<String> values, boolean supportsNegativeValues) {
       super(new DefaultTextCompletionValueDescriptor.StringValueDescriptor(),
             supportsNegativeValues ? ContainerUtil.append(Chars.asList(SEPARATORS), '-') : Chars.asList(SEPARATORS), values, false);
     }

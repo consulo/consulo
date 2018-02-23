@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,12 +81,12 @@ public class ParametersListUtil {
    * @param parameters a list of parameters to join.
    * @return a string with parameters.
    */
-  @NotNull
-  public static String join(@NotNull final List<String> parameters) {
+  @Nonnull
+  public static String join(@Nonnull final List<String> parameters) {
     return encode(parameters);
   }
 
-  @NotNull
+  @Nonnull
   public static String join(final String... parameters) {
     return encode(Arrays.asList(parameters));
   }
@@ -94,8 +94,8 @@ public class ParametersListUtil {
   /**
    * @see #parse(String)
    */
-  @NotNull
-  public static String[] parseToArray(@NotNull final String string) {
+  @Nonnull
+  public static String[] parseToArray(@Nonnull final String string) {
     final List<String> params = parse(string);
     return ArrayUtil.toStringArray(params);
   }
@@ -124,13 +124,13 @@ public class ParametersListUtil {
    * @param parameterString parameter string to split.
    * @return array of parameters.
    */
-  @NotNull
-  public static List<String> parse(@NotNull String parameterString) {
+  @Nonnull
+  public static List<String> parse(@Nonnull String parameterString) {
     return parse(parameterString, false);
   }
 
-  @NotNull
-  public static List<String> parse(@NotNull String parameterString, boolean keepQuotes) {
+  @Nonnull
+  public static List<String> parse(@Nonnull String parameterString, boolean keepQuotes) {
     parameterString = parameterString.trim();
 
     final ArrayList<String> params = ContainerUtilRt.newArrayList();
@@ -181,8 +181,8 @@ public class ParametersListUtil {
     return params;
   }
 
-  @NotNull
-  private static String encode(@NotNull final List<String> parameters) {
+  @Nonnull
+  private static String encode(@Nonnull final List<String> parameters) {
     final StringBuilder buffer = new StringBuilder();
     for (final String parameter : parameters) {
       if (buffer.length() > 0) {
@@ -193,8 +193,8 @@ public class ParametersListUtil {
     return buffer.toString();
   }
 
-  @NotNull
-  private static String encode(@NotNull String parameter) {
+  @Nonnull
+  private static String encode(@Nonnull String parameter) {
     final StringBuilder builder = new StringBuilder();
     builder.append(parameter);
     StringUtil.escapeQuotes(builder);

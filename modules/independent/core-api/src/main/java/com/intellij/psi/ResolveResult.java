@@ -16,8 +16,8 @@
 package com.intellij.psi;
 
 import com.intellij.util.ArrayFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents the result of resolving a {@link com.intellij.psi.PsiPolyVariantReference}.
@@ -28,7 +28,7 @@ public interface ResolveResult {
   public static final ResolveResult[] EMPTY_ARRAY = new ResolveResult[0];
 
   public static ArrayFactory<ResolveResult> ARRAY_FACTORY = new ArrayFactory<ResolveResult>() {
-    @NotNull
+    @Nonnull
     @Override
     public ResolveResult[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new ResolveResult[count];

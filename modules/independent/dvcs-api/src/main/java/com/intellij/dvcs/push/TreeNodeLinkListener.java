@@ -15,10 +15,10 @@
  */
 package com.intellij.dvcs.push;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public interface TreeNodeLinkListener {
-  void onClick(@NotNull DefaultMutableTreeNode source);
+  void onClick(@Nonnull DefaultMutableTreeNode source);
 }

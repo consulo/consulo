@@ -16,7 +16,6 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -82,6 +81,6 @@ public interface RefEntity extends UserDataHolder {
    */
   RefManager getRefManager();
 
-  @Nullable
+  @javax.annotation.Nullable
   Icon getIcon(boolean expanded);
 }

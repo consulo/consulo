@@ -16,11 +16,11 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConfigurableUsageTarget extends UsageTarget {
   void showSettings();
   KeyboardShortcut getShortcut();
-  @NotNull
+  @Nonnull
   String getLongDescriptiveName();
 }

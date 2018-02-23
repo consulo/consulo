@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -28,7 +28,7 @@ public class IgnoredPathPresentation {
     myProject = project;
   }
 
-  public String alwaysRelative(@NotNull final String path) {
+  public String alwaysRelative(@Nonnull final String path) {
     final File file = new File(path);
     String relativePath = path;
     if (file.isAbsolute()) {

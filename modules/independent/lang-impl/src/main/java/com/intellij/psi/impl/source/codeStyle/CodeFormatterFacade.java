@@ -56,8 +56,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -104,7 +104,7 @@ public class CodeFormatterFacade {
   /**
    * rangeMarker will be disposed
    */
-  public ASTNode processRange(@NotNull ASTNode element, @NotNull RangeMarker rangeMarker) {
+  public ASTNode processRange(@Nonnull ASTNode element, @Nonnull RangeMarker rangeMarker) {
     return doProcessRange(element, rangeMarker.getStartOffset(), rangeMarker.getEndOffset(), rangeMarker);
   }
 
@@ -259,7 +259,7 @@ public class CodeFormatterFacade {
     }
   }
 
-  private TextRange preprocess(@NotNull final ASTNode node, @NotNull TextRange range) {
+  private TextRange preprocess(@Nonnull final ASTNode node, @Nonnull TextRange range) {
     TextRange result = range;
     PsiElement psi = node.getPsi();
     if (!psi.isValid()) {
@@ -339,7 +339,7 @@ public class CodeFormatterFacade {
     return result;
   }
 
-  private TextRange preprocessEnabledRanges(@NotNull final ASTNode node, @NotNull TextRange range) {
+  private TextRange preprocessEnabledRanges(@Nonnull final ASTNode node, @Nonnull TextRange range) {
     TextRange result = TextRange.create(range.getStartOffset(), range.getEndOffset());
     List<TextRange> enabledRanges = myTagHandler.getEnabledRanges(node, result);
     int delta = 0;
@@ -354,8 +354,8 @@ public class CodeFormatterFacade {
     return result;
   }
 
-  @NotNull
-  private static Collection<PsiLanguageInjectionHost> collectInjectionHosts(@NotNull PsiFile file, @NotNull TextRange range) {
+  @Nonnull
+  private static Collection<PsiLanguageInjectionHost> collectInjectionHosts(@Nonnull PsiFile file, @Nonnull TextRange range) {
     Stack<PsiElement> toProcess = new Stack<>();
     for (PsiElement e = file.findElementAt(range.getStartOffset()); e != null; e = e.getNextSibling()) {
       if (e.getTextRange().getStartOffset() >= range.getEndOffset()) {
@@ -414,7 +414,7 @@ public class CodeFormatterFacade {
    * @param startOffset start offset of the first line to check for wrapping (inclusive)
    * @param endOffset   end offset of the first line to check for wrapping (exclusive)
    */
-  private void wrapLongLinesIfNecessary(@NotNull final PsiFile file, @Nullable final Document document, final int startOffset,
+  private void wrapLongLinesIfNecessary(@Nonnull final PsiFile file, @Nullable final Document document, final int startOffset,
                                         final int endOffset)
   {
     if (!mySettings.getCommonSettings(file.getLanguage()).WRAP_LONG_LINES ||
@@ -463,7 +463,7 @@ public class CodeFormatterFacade {
     }
   }
 
-  public void doWrapLongLinesIfNecessary(@NotNull final Editor editor, @NotNull final Project project, @NotNull Document document,
+  public void doWrapLongLinesIfNecessary(@Nonnull final Editor editor, @Nonnull final Project project, @Nonnull Document document,
                                          int startOffset, int endOffset, List<TextRange> enabledRanges) {
     // Normalization.
     int startOffsetToUse = Math.min(document.getTextLength(), Math.max(0, startOffset));
@@ -536,7 +536,7 @@ public class CodeFormatterFacade {
     }
   }
 
-  private static boolean canWrapLine(int startOffset, int endOffset, int offsetShift, @NotNull List<TextRange> enabledRanges) {
+  private static boolean canWrapLine(int startOffset, int endOffset, int offsetShift, @Nonnull List<TextRange> enabledRanges) {
     for (TextRange range : enabledRanges)  {
       if (range.containsOffset(startOffset - offsetShift) && range.containsOffset(endOffset - offsetShift)) return true;
     }
@@ -552,7 +552,7 @@ public class CodeFormatterFacade {
    *                       1. The first element holds added lines number;
    *                       2. The second element holds added symbols number;
    */
-  private static void emulateEnter(@NotNull final Editor editor, @NotNull Project project, int[] shifts) {
+  private static void emulateEnter(@Nonnull final Editor editor, @Nonnull Project project, int[] shifts) {
     final DataContext dataContext = prepareContext(editor.getComponent(), project);
     int caretOffset = editor.getCaretModel().getOffset();
     Document document = editor.getDocument();
@@ -612,8 +612,8 @@ public class CodeFormatterFacade {
    * @return                      negative value if no wrapping should be performed for the target line;
    *                              preferred wrap position otherwise
    */
-  private int calculatePreferredWrapPosition(@NotNull Editor editor,
-                                             @NotNull CharSequence text,
+  private int calculatePreferredWrapPosition(@Nonnull Editor editor,
+                                             @Nonnull CharSequence text,
                                              int tabSize,
                                              int spaceSize,
                                              int startLineOffset,
@@ -660,7 +660,7 @@ public class CodeFormatterFacade {
     return -1;
   }
 
-  private int wrapPositionForTabbedTextWithOptimization(@NotNull CharSequence text,
+  private int wrapPositionForTabbedTextWithOptimization(@Nonnull CharSequence text,
                                                         int tabSize,
                                                         int startLineOffset,
                                                         int endLineOffset,
@@ -692,8 +692,8 @@ public class CodeFormatterFacade {
     return wrapLine ? result : -1;
   }
 
-  private int wrapPositionForTabbedTextWithoutOptimization(@NotNull Editor editor,
-                                                           @NotNull CharSequence text,
+  private int wrapPositionForTabbedTextWithoutOptimization(@Nonnull Editor editor,
+                                                           @Nonnull CharSequence text,
                                                            int spaceSize,
                                                            int startLineOffset,
                                                            int endLineOffset,
@@ -734,8 +734,8 @@ public class CodeFormatterFacade {
     return wrapLine ? result : -1;
   }
 
-  @NotNull
-  private static DataContext prepareContext(@NotNull Component component, @NotNull final Project project) {
+  @Nonnull
+  private static DataContext prepareContext(@Nonnull Component component, @Nonnull final Project project) {
     // There is a possible case that formatting is performed from project view and editor is not opened yet. The problem is that
     // its data context doesn't contain information about project then. So, we explicitly support that here (see IDEA-72791).
     final DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
@@ -772,12 +772,12 @@ public class CodeFormatterFacade {
     }
 
     @Override
-    public <T> T getUserData(@NotNull Key<T> key) {
+    public <T> T getUserData(@Nonnull Key<T> key) {
       return myDataHolderDelegate == null ? null : myDataHolderDelegate.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
       if (myDataHolderDelegate != null) {
         myDataHolderDelegate.putUserData(key, value);
       }

@@ -16,7 +16,7 @@
 package com.intellij.util.proxy;
 
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -49,15 +49,15 @@ public class PropertiesEncryptionSupport {
     return new SecretKeySpec(bytes, "AES");
   }
 
-  @NotNull
-  public Properties load(@NotNull File file) throws Exception {
+  @Nonnull
+  public Properties load(@Nonnull File file) throws Exception {
     final byte[] bytes = decrypt(FileUtil.loadFileBytes(file));
     final Properties props = new Properties();
     props.load(new ByteArrayInputStream(bytes));
     return props;
   }
 
-  public void store(@NotNull Properties props, @NotNull String comments, @NotNull File file) throws Exception {
+  public void store(@Nonnull Properties props, @Nonnull String comments, @Nonnull File file) throws Exception {
     if (props.isEmpty()) {
       FileUtil.delete(file);
       return;

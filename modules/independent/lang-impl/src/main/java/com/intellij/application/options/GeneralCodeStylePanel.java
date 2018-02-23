@@ -44,8 +44,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.GradientViewport;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -172,7 +172,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected FileType getFileType() {
     return PlainTextFileType.INSTANCE;
   }

@@ -29,8 +29,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.PsiDocumentManagerBase;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: cdr
@@ -41,7 +41,7 @@ class FileElementInfo extends SmartPointerElementInfo {
   private final Language myLanguage;
   private final Class<? extends PsiFile> myFileClass;
 
-  public FileElementInfo(@NotNull final PsiFile file) {
+  public FileElementInfo(@Nonnull final PsiFile file) {
     myVirtualFile = file.getVirtualFile();
     myProject = file.getProject();
     myLanguage = LanguageUtil.getRootLanguage(file);
@@ -67,7 +67,7 @@ class FileElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@NotNull SmartPointerElementInfo other) {
+  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other) {
     return other instanceof FileElementInfo && Comparing.equal(myVirtualFile, ((FileElementInfo)other).myVirtualFile);
   }
 
@@ -81,7 +81,7 @@ class FileElementInfo extends SmartPointerElementInfo {
     return new TextRange(0, (int)myVirtualFile.getLength());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Project getProject() {
     return myProject;

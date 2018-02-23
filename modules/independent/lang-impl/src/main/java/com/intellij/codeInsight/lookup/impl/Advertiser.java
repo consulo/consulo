@@ -24,9 +24,9 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -138,7 +138,7 @@ public class Advertiser {
     return font.deriveFont((float)(font.getSize() - 2));
   }
 
-  public void addAdvertisement(@NotNull String text, @Nullable Color bgColor) {
+  public void addAdvertisement(@Nonnull String text, @Nullable Color bgColor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myTexts.add(Pair.create(text, bgColor));
     updateAdvertisements();

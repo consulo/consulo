@@ -23,7 +23,7 @@ import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.EditableTreeModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

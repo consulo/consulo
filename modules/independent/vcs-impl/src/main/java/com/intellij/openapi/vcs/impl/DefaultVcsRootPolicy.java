@@ -21,8 +21,8 @@ import com.intellij.openapi.vcs.impl.projectlevelman.NewMappings;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.ProjectKt;
 import com.intellij.util.PathUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -34,21 +34,21 @@ public abstract class DefaultVcsRootPolicy {
     return PeriodicalTasksCloser.getInstance().safeGetService(project, DefaultVcsRootPolicy.class);
   }
 
-  @NotNull
-  public abstract Collection<VirtualFile> getDefaultVcsRoots(@NotNull NewMappings mappingList, @NotNull String vcsName);
+  @Nonnull
+  public abstract Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName);
 
-  public abstract boolean matchesDefaultMapping(@NotNull VirtualFile file, final Object matchContext);
+  public abstract boolean matchesDefaultMapping(@Nonnull VirtualFile file, final Object matchContext);
 
   @Nullable
   public abstract Object getMatchContext(final VirtualFile file);
 
-  @Nullable
-  public abstract VirtualFile getVcsRootFor(@NotNull VirtualFile file);
+  @javax.annotation.Nullable
+  public abstract VirtualFile getVcsRootFor(@Nonnull VirtualFile file);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<VirtualFile> getDirtyRoots();
 
-  public String getProjectConfigurationMessage(@NotNull Project project) {
+  public String getProjectConfigurationMessage(@Nonnull Project project) {
     boolean isDirectoryBased = ProjectKt.isDirectoryBased(project);
     final StringBuilder sb = new StringBuilder("Content roots of all modules");
     if (isDirectoryBased) {

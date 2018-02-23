@@ -31,8 +31,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
 
 import java.io.File;
@@ -87,12 +87,12 @@ public class ProgramParametersConfigurator {
   }
 
   @Nullable
-  protected String getDefaultWorkingDir(@NotNull Project project) {
+  protected String getDefaultWorkingDir(@Nonnull Project project) {
     return PathUtil.getLocalPath(project.getBaseDir());
   }
 
   @Nullable
-  protected String getDefaultWorkingDir(@NotNull Module module) {
+  protected String getDefaultWorkingDir(@Nonnull Module module) {
     for (WorkingDirectoryProvider provider : WORKING_DIRECTORY_PROVIDER_EP_NAME.getExtensions()) {
       @SystemIndependent String path = provider.getWorkingDirectoryPath(module);
       if (path != null) return path;

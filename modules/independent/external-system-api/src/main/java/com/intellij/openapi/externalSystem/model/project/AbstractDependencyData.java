@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.roots.DependencyScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,31 +16,33 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final ModuleData myOwnerModule;
-  @NotNull private final T          myTarget;
+  @Nonnull
+  private final ModuleData myOwnerModule;
+  @Nonnull
+  private final T          myTarget;
 
   private DependencyScope myScope = DependencyScope.COMPILE;
 
   private boolean myExported;
 
-  protected AbstractDependencyData(@NotNull ModuleData ownerModule, @NotNull T dependency) {
+  protected AbstractDependencyData(@Nonnull ModuleData ownerModule, @Nonnull T dependency) {
     super(ownerModule.getOwner());
     myOwnerModule = ownerModule;
     myTarget = dependency;
   }
 
-  @NotNull
+  @Nonnull
   public ModuleData getOwnerModule() {
     return myOwnerModule;
   }
 
-  @NotNull
+  @Nonnull
   public T getTarget() {
     return myTarget;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DependencyScope getScope() {
     return myScope;
   }
@@ -61,7 +63,7 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   @Override
   public String getName() {
@@ -73,29 +75,29 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
    */
   @Deprecated
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myTarget.setName(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getExternalName() {
     return myTarget.getExternalName();
   }
 
   @Override
-  public void setExternalName(@NotNull String name) {
+  public void setExternalName(@Nonnull String name) {
     myTarget.setExternalName(name);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getInternalName() {
     return myTarget.getInternalName();
   }
 
   @Override
-  public void setInternalName(@NotNull String name) {
+  public void setInternalName(@Nonnull String name) {
     myTarget.setInternalName(name);
   }
 

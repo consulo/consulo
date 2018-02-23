@@ -16,7 +16,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class CoverageViewManager implements PersistentStateComponent<CoverageVie
     }
   }
 
-  public static CoverageViewManager getInstance(@NotNull Project project) {
+  public static CoverageViewManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CoverageViewManager.class);
   }
 

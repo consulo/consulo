@@ -19,7 +19,7 @@ import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.util.containers.Predicate;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,6 +28,6 @@ import org.jetbrains.annotations.NotNull;
 public interface ASTLazyFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.lazyFactory");
 
-  @NotNull
+  @Nonnull
   LazyParseableElement createLazy(final ILazyParseableElementType type, final CharSequence text);
 }

@@ -16,28 +16,28 @@
 package com.intellij.pom.tree.events;
 
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author ik
  */
 public interface TreeChange {
-  void addChange(ASTNode child, @NotNull ChangeInfo changeInfo);
+  void addChange(ASTNode child, @Nonnull ChangeInfo changeInfo);
 
-  @NotNull
+  @Nonnull
   ASTNode[] getAffectedChildren();
 
   ChangeInfo getChangeByChild(ASTNode child);
 
-  int getChildOffsetInNewTree(@NotNull ASTNode child);
+  int getChildOffsetInNewTree(@Nonnull ASTNode child);
 
-  void composite(@NotNull TreeChange treeChange);
+  void composite(@Nonnull TreeChange treeChange);
 
   boolean isEmpty();
 
   void removeChange(ASTNode beforeEqualDepth);
 
-  void add(@NotNull TreeChange value);
+  void add(@Nonnull TreeChange value);
 
   int getOldLength();
 }

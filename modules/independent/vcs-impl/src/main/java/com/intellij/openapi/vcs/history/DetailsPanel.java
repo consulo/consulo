@@ -27,8 +27,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.ui.HtmlPanel;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -38,11 +38,14 @@ import static com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer.
 import static com.intellij.openapi.vcs.ui.FontUtil.getHtmlWithFonts;
 
 class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
-  @NotNull private final Project myProject;
-  @NotNull private final StatusText myStatusText;
-  @NotNull private String myText = "";
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final StatusText myStatusText;
+  @Nonnull
+  private String myText = "";
 
-  public DetailsPanel(@NotNull Project project) {
+  public DetailsPanel(@Nonnull Project project) {
     myProject = project;
     myStatusText = new StatusText() {
       @Override
@@ -62,7 +65,7 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
     myStatusText.paint(this, g);
   }
 
-  public void update(@NotNull List<TreeNodeOnVcsRevision> selection) {
+  public void update(@Nonnull List<TreeNodeOnVcsRevision> selection) {
     if (selection.isEmpty()) {
       setText("");
       return;
@@ -102,25 +105,25 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
   }
 
   @Override
-  public void performCopy(@NotNull DataContext dataContext) {
+  public void performCopy(@Nonnull DataContext dataContext) {
     String selectedText = getSelectedText();
     if (selectedText == null || selectedText.isEmpty()) selectedText = StringUtil.removeHtmlTags(getText());
     CopyPasteManager.getInstance().setContents(new StringSelection(selectedText));
   }
 
   @Override
-  public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
     return true;
   }
 
   @Override
-  public boolean isCopyVisible(@NotNull DataContext dataContext) {
+  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
     return true;
   }
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key dataId) {
+  public Object getData(@Nonnull Key dataId) {
     if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }

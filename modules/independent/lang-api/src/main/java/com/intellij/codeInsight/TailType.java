@@ -27,7 +27,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -111,7 +111,7 @@ public abstract class TailType {
     return psiFile.getFileType();
   }
 
-  @NotNull
+  @Nonnull
   private static PsiFile getFile(Editor editor) {
     Project project = editor.getProject();
     assert project != null;
@@ -134,7 +134,7 @@ public abstract class TailType {
   public static final TailType HUMBLE_SPACE_BEFORE_WORD = new CharTailType(' ', false) {
 
     @Override
-    public boolean isApplicable(@NotNull InsertionContext context) {
+    public boolean isApplicable(@Nonnull InsertionContext context) {
       CharSequence text = context.getDocument().getCharsSequence();
       int tail = context.getTailOffset();
       if (text.length() > tail + 1 && text.charAt(tail) == ' ' && Character.isLetter(text.charAt(tail + 1))) {
@@ -213,7 +213,7 @@ public abstract class TailType {
     return new CharTailType(c);
   }
 
-  public boolean isApplicable(@NotNull final InsertionContext context) {
+  public boolean isApplicable(@Nonnull final InsertionContext context) {
     return true;
   }
 }

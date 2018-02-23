@@ -18,7 +18,7 @@ package com.intellij.testFramework;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.lang.annotation.HighlightSeverity;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -142,20 +142,20 @@ public class ExpectedHighlightingDataTest {
     assertEquals(expected, text);
   }
 
-  private static HighlightInfo error(int start, int end, @NotNull String description) {
+  private static HighlightInfo error(int start, int end, @Nonnull String description) {
     HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR);
     builder.range(start, end);
     builder.descriptionAndTooltip(description);
     return builder.createUnconditionally();
   }
-  private static HighlightInfo warning(int start, int end, @NotNull String description) {
+  private static HighlightInfo warning(int start, int end, @Nonnull String description) {
     HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.WARNING);
     builder.range(start, end);
     builder.descriptionAndTooltip(description);
     return builder.createUnconditionally();
   }
 
-  private static HighlightInfo eolError(int start, int end, @NotNull String description) {
+  private static HighlightInfo eolError(int start, int end, @Nonnull String description) {
     HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR);
     builder.range(start, end);
     builder.description(description);

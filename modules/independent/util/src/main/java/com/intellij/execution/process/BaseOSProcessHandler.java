@@ -26,8 +26,8 @@ import com.intellij.util.io.BaseDataReader;
 import com.intellij.util.io.BaseInputStreamReader;
 import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.io.BaseOutputReader.Options;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public BaseOSProcessHandler(@NotNull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public BaseOSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myCharset = charset;
@@ -72,18 +72,18 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
    *
    * @param task a task to run
    */
-  @NotNull
-  protected Future<?> executeOnPooledThread(@NotNull final Runnable task) {
+  @Nonnull
+  protected Future<?> executeOnPooledThread(@Nonnull final Runnable task) {
     return ProcessIOExecutorService.INSTANCE.submit(task);
   }
 
   @Override
-  @NotNull
-  public Future<?> executeTask(@NotNull Runnable task) {
+  @Nonnull
+  public Future<?> executeTask(@Nonnull Runnable task) {
     return executeOnPooledThread(task);
   }
 
-  @NotNull
+  @Nonnull
   public Process getProcess() {
     return myProcess;
   }
@@ -101,7 +101,7 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
   /**
    * Override this method to fine-tune {@link BaseOutputReader} behavior.
    */
-  @NotNull
+  @Nonnull
   @SuppressWarnings("deprecation")
   protected Options readerOptions() {
     if (!useNonBlockingRead()) {
@@ -172,12 +172,12 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     return createOutputDataReader();
   }
 
-  @NotNull
+  @Nonnull
   protected BaseDataReader createErrorDataReader() {
     return new SimpleOutputReader(createProcessErrReader(), ProcessOutputTypes.STDERR, readerOptions(), "error stream of " + myPresentableName);
   }
 
-  @NotNull
+  @Nonnull
   protected BaseDataReader createOutputDataReader() {
     return new SimpleOutputReader(createProcessOutReader(), ProcessOutputTypes.STDOUT, readerOptions(), "output stream of " + myPresentableName);
   }
@@ -186,18 +186,18 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
     notifyProcessTerminated(exitCode);
   }
 
-  @NotNull
+  @Nonnull
   protected Reader createProcessOutReader() {
     return createInputStreamReader(myProcess.getInputStream());
   }
 
-  @NotNull
+  @Nonnull
   protected Reader createProcessErrReader() {
     return createInputStreamReader(myProcess.getErrorStream());
   }
 
-  @NotNull
-  private Reader createInputStreamReader(@NotNull InputStream streamToRead) {
+  @Nonnull
+  private Reader createInputStreamReader(@Nonnull InputStream streamToRead) {
     Charset charset = getCharset();
     if (charset == null) charset = Charset.defaultCharset();
     return new BaseInputStreamReader(streamToRead, charset);
@@ -264,7 +264,7 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
   @SuppressWarnings("unused")
   public static class ExecutorServiceHolder {
     /** @deprecated use {@link BaseOSProcessHandler#executeTask(Runnable)} instead (to be removed in IDEA 17) */
-    public static Future<?> submit(@NotNull Runnable task) {
+    public static Future<?> submit(@Nonnull Runnable task) {
       LOG.warn("Deprecated method. Please use com.intellij.execution.process.BaseOSProcessHandler.executeTask() instead", new Throwable());
       return AppExecutorUtil.getAppExecutorService().submit(task);
     }
@@ -273,20 +273,20 @@ public class BaseOSProcessHandler extends ProcessHandler implements TaskExecutor
   private class SimpleOutputReader extends BaseOutputReader {
     private final Key myProcessOutputType;
 
-    private SimpleOutputReader(Reader reader, Key outputType, Options options, @NotNull String presentableName) {
+    private SimpleOutputReader(Reader reader, Key outputType, Options options, @Nonnull String presentableName) {
       super(reader, options);
       myProcessOutputType = outputType;
       start(presentableName);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Future<?> executeOnPooledThread(@NotNull Runnable runnable) {
+    protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
       return BaseOSProcessHandler.this.executeOnPooledThread(runnable);
     }
 
     @Override
-    protected void onTextAvailable(@NotNull String text) {
+    protected void onTextAvailable(@Nonnull String text) {
       notifyTextAvailable(text, myProcessOutputType);
     }
   }

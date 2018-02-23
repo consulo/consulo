@@ -32,26 +32,26 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
 public class PackageElementNode extends ProjectViewNode<PackageElement> {
-  public PackageElementNode(@NotNull Project project,
+  public PackageElementNode(@Nonnull Project project,
                             final PackageElement value,
                             final ViewSettings viewSettings) {
     super(project, value, viewSettings);
   }
 
-  public PackageElementNode(@NotNull Project project,
+  public PackageElementNode(@Nonnull Project project,
                             final Object value,
                             final ViewSettings viewSettings) {
     this(project, (PackageElement)value, viewSettings);
   }
 
   @Override
-  public boolean contains(@NotNull final VirtualFile file) {
+  public boolean contains(@Nonnull final VirtualFile file) {
     if (!isUnderContent(file) || getValue() == null) {
       return false;
     }
@@ -79,7 +79,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final PackageElement value = getValue();
     if (value == null) return Collections.emptyList();
@@ -159,7 +159,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     return getValue() != null && CopyPasteManager.getInstance().isCutElement(getValue().getPackage());
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile[] getVirtualFiles() {
     final PackageElement value = getValue();
     if (value == null) {

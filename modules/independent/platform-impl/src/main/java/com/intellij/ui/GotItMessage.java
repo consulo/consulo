@@ -23,7 +23,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -33,13 +33,15 @@ import java.awt.event.MouseEvent;
  * @author Konstantin Bulenkov
  */
 public class GotItMessage {
-  @NotNull private final String myTitle;
-  @NotNull private final String myMessage;
+  @Nonnull
+  private final String myTitle;
+  @Nonnull
+  private final String myMessage;
   private Runnable myCallback;
   private Disposable myDisposable;
   private boolean myShowCallout = true;
 
-  private GotItMessage(@NotNull String title, @NotNull String message) {
+  private GotItMessage(@Nonnull String title, @Nonnull String message) {
     myTitle = title;
 
     StringBuilder builder = new StringBuilder();
@@ -54,7 +56,7 @@ public class GotItMessage {
     myMessage = builder.toString();
   }
 
-  public static GotItMessage createMessage(@NotNull String title, @NotNull String message) {
+  public static GotItMessage createMessage(@Nonnull String title, @Nonnull String message) {
     return new GotItMessage(title, message);
   }
 

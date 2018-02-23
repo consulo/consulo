@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.util.Pair;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -41,14 +41,14 @@ public abstract class AbstractRegionToKillRingTest extends LightPlatformCodeInsi
     );
   }
   
-  protected abstract void doTest(@NotNull String text) throws Exception;
+  protected abstract void doTest(@Nonnull String text) throws Exception;
 
   /**
    * Checks current editor and returns tuple of <code>(selected text; text over than selected)</code>.
    * 
    * @return    tuple of <code>(selected text; text over than selected)</code>.
    */
-  @NotNull
+  @Nonnull
   protected static Pair<String, String> parse() {
     SelectionModel selectionModel = myEditor.getSelectionModel();
     if (!selectionModel.hasSelection()) {

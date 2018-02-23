@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -26,15 +26,15 @@ import java.awt.*;
  * @see Editor#getScrollingModel()
  */
 public interface ScrollingModel {
-  @NotNull
+  @Nonnull
   Rectangle getVisibleArea();
-  @NotNull
+  @Nonnull
   Rectangle getVisibleAreaOnScrollingFinished();
 
-  void scrollToCaret(@NotNull ScrollType scrollType);
-  void scrollTo(@NotNull LogicalPosition pos, @NotNull ScrollType scrollType);
+  void scrollToCaret(@Nonnull ScrollType scrollType);
+  void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType);
 
-  void runActionOnScrollingFinished(@NotNull Runnable action);
+  void runActionOnScrollingFinished(@Nonnull Runnable action);
   void disableAnimation();
   void enableAnimation();
 
@@ -45,6 +45,6 @@ public interface ScrollingModel {
   void scrollHorizontally(int scrollOffset);
   void scroll(int horizontalOffset, int verticalOffset);
 
-  void addVisibleAreaListener(@NotNull VisibleAreaListener listener);
-  void removeVisibleAreaListener(@NotNull VisibleAreaListener listener);
+  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener);
 }

@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class RangeMarkerWindow implements RangeMarkerEx {
   private final DocumentWindow myDocumentWindow;
@@ -50,7 +50,7 @@ class RangeMarkerWindow implements RangeMarkerEx {
    * @param endShift        similar to the 'startShift' argument but specifies difference between the target injected host end offset
    *                        and end offset of the given host range marker at the injected text
    */
-  RangeMarkerWindow(@NotNull DocumentWindow documentWindow, RangeMarkerEx hostMarker, int startShift, int endShift) {
+  RangeMarkerWindow(@Nonnull DocumentWindow documentWindow, RangeMarkerEx hostMarker, int startShift, int endShift) {
     myDocumentWindow = documentWindow;
     myHostMarker = hostMarker;
     myStartShift = startShift;
@@ -58,7 +58,7 @@ class RangeMarkerWindow implements RangeMarkerEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocumentWindow;
   }
@@ -100,17 +100,17 @@ class RangeMarkerWindow implements RangeMarkerEx {
   }
 
   @Override
-  public <T> T getUserData(@NotNull final Key<T> key) {
+  public <T> T getUserData(@Nonnull final Key<T> key) {
     return myHostMarker.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull final Key<T> key, final T value) {
+  public <T> void putUserData(@Nonnull final Key<T> key, final T value) {
     myHostMarker.putUserData(key, value);
   }
 
   @Override
-  public void documentChanged(@NotNull final DocumentEvent e) {
+  public void documentChanged(@Nonnull final DocumentEvent e) {
     myHostMarker.documentChanged(e);
   }
   @Override

@@ -16,23 +16,22 @@
 package com.intellij.xdebugger.evaluation;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class ExpressionInfo {
   private final TextRange textRange;
   private final String expressionText;
   private final String displayText;
 
-  public ExpressionInfo(@NotNull TextRange textRange) {
+  public ExpressionInfo(@Nonnull TextRange textRange) {
     this(textRange, null);
   }
 
-  public ExpressionInfo(@NotNull TextRange textRange, @Nullable String expressionText) {
+  public ExpressionInfo(@Nonnull TextRange textRange, @javax.annotation.Nullable String expressionText) {
     this(textRange, expressionText, expressionText);
   }
 
-  public ExpressionInfo(@NotNull TextRange textRange, @Nullable String expressionText, @Nullable String displayText) {
+  public ExpressionInfo(@Nonnull TextRange textRange, @javax.annotation.Nullable String expressionText, @javax.annotation.Nullable String displayText) {
     this.textRange = textRange;
     this.expressionText = expressionText;
     this.displayText = displayText;
@@ -42,7 +41,7 @@ public class ExpressionInfo {
    * Text range to highlight as link,
    * will be used to compute evaluation and display text if these values not specified.
    */
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return textRange;
   }
@@ -50,12 +49,12 @@ public class ExpressionInfo {
   /**
    * Expression to evaluate
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getExpressionText() {
     return expressionText;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getDisplayText() {
     return displayText;
   }

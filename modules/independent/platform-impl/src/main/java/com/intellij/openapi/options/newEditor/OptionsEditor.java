@@ -62,8 +62,8 @@ import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.util.ui.tree.TreeDecorationUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -84,7 +84,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
       return myConfigurable.getClass().getName();
     }
@@ -145,7 +145,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       myErrorLabel.setBackground(LightColors.RED);
     }
 
-    void setContent(final JComponent component, ConfigurationException e, @NotNull Configurable configurable) {
+    void setContent(final JComponent component, ConfigurationException e, @Nonnull Configurable configurable) {
       if (component != null && mySimpleContent == component && myException == e) {
         return;
       }
@@ -682,7 +682,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     return myLoadingDecorator.getComponent();
   }
 
-  @NotNull
+  @Nonnull
   public ActionCallback select(Class<? extends Configurable> configurableClass) {
     final Configurable configurable = findConfigurable(configurableClass);
     if (configurable == null) {
@@ -697,7 +697,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   @Nullable
-  public SearchableConfigurable findConfigurableById(@NotNull String configurableId) {
+  public SearchableConfigurable findConfigurableById(@Nonnull String configurableId) {
     return myTree.findConfigurableById(configurableId);
   }
 
@@ -819,7 +819,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   @RequiredDispatchThread
-  private ActionCallback initConfigurable(@NotNull final Configurable configurable) {
+  private ActionCallback initConfigurable(@Nonnull final Configurable configurable) {
     final ActionCallback result = new ActionCallback();
 
     final ConfigurableContext content = new ConfigurableContext(configurable);
@@ -1013,7 +1013,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (KEY == dataId) {
       return this;
     }
@@ -1037,7 +1037,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     final Configurable current = getContext().getCurrentConfigurable();
     place.putPath("configurable", current);
     place.putPath("filter", getFilterText());

@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author lesya
@@ -43,7 +43,8 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
   private final Block                   myRootBlock;
   private final FormattingDocumentModel myDocumentModel;
   @Nullable private final FormattingModel myOriginalFormattingModel;
-  @NotNull private final Document       myDocument;
+  @Nonnull
+  private final Document       myDocument;
   private final Project                 myProject;
   private final CodeStyleSettings       mySettings;
   private final FileType                myFileType;
@@ -51,7 +52,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
 
   @Deprecated
   public DocumentBasedFormattingModel(final Block rootBlock,
-                                      @NotNull final Document document,
+                                      @Nonnull final Document document,
                                       final Project project,
                                       final CodeStyleSettings settings,
                                       final FileType fileType,
@@ -81,8 +82,8 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     myOriginalFormattingModel = null;
   }
 
-  public DocumentBasedFormattingModel(@NotNull final FormattingModel originalModel,
-                                      @NotNull final Document document,
+  public DocumentBasedFormattingModel(@Nonnull final FormattingModel originalModel,
+                                      @Nonnull final Document document,
                                       final Project project,
                                       final CodeStyleSettings settings,
                                       final FileType fileType,
@@ -98,13 +99,13 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Block getRootBlock() {
     return myRootBlock;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FormattingDocumentModel getDocumentModel() {
     return myDocumentModel;
   }
@@ -263,7 +264,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     return mySettings.getIndentOptions(myFileType);
   }
 
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocument;
   }

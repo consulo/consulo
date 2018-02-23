@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -26,10 +26,10 @@ public abstract class PersistentLibraryKind<P extends LibraryProperties> extends
    * @param kindId must be unique among all {@link com.intellij.openapi.roots.libraries.LibraryType} and
    *               {@link com.intellij.openapi.roots.libraries.LibraryPresentationProvider} implementations.
    */
-  public PersistentLibraryKind(@NotNull @NonNls String kindId) {
+  public PersistentLibraryKind(@Nonnull @NonNls String kindId) {
     super(kindId);
   }
 
-  @NotNull
+  @Nonnull
   public abstract P createDefaultProperties();
 }

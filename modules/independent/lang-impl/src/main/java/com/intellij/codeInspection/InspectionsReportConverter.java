@@ -2,8 +2,8 @@ package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.ex.Tools;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -31,10 +31,10 @@ public interface InspectionsReportConverter {
    * @param tools Inspections data
    * @param inspectionsResults Files with inspection results
    */
-  void convert(@NotNull String rawDataDirectoryPath,
+  void convert(@Nonnull String rawDataDirectoryPath,
                @Nullable String outputPath,
-               @NotNull Map<String, Tools> tools,
-               @NotNull List<File> inspectionsResults) throws ConversionException;
+               @Nonnull Map<String, Tools> tools,
+               @Nonnull List<File> inspectionsResults) throws ConversionException;
 
   class ConversionException extends Exception {
     public ConversionException(String message) {

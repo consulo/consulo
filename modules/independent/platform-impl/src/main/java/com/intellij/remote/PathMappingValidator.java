@@ -18,7 +18,7 @@ package com.intellij.remote;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class PathMappingValidator {
-  public static String validatePathMappings(@NotNull Project project, @NotNull RemoteSdkAdditionalData data) {
+  public static String validatePathMappings(@Nonnull Project project, @Nonnull RemoteSdkAdditionalData data) {
     boolean found = false;
     final List<String> locations = new SmartList<>();
     for (PathMappingProvider mappingProvider : PathMappingProvider.getSuitableMappingProviders(data)) {

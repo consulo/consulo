@@ -47,8 +47,8 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
@@ -73,18 +73,18 @@ public class DirectoryChooser extends DialogWrapper {
   private final TabbedPaneWrapper myTabbedPaneWrapper;
   private final ChooseByNamePanel myChooseByNamePanel;
 
-  public DirectoryChooser(@NotNull Project project){
+  public DirectoryChooser(@Nonnull Project project){
     this(project, new DirectoryChooserModuleTreeView(project));
   }
 
-  public DirectoryChooser(@NotNull Project project, @NotNull DirectoryChooserView view){
+  public DirectoryChooser(@Nonnull Project project, @Nonnull DirectoryChooserView view){
     super(project, true);
     myView = view;
     final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
     myFilterExisting = propertiesComponent.isValueSet(FILTER_NON_EXISTING) && propertiesComponent.isTrueValue(FILTER_NON_EXISTING);
     myTabbedPaneWrapper = new TabbedPaneWrapper(getDisposable());
     myChooseByNamePanel = new ChooseByNamePanel(project, new GotoClassModel2(project){
-      @NotNull
+      @Nonnull
       @Override
       public String[] getNames(boolean checkBoxState) {
         return super.getNames(false);
@@ -330,15 +330,15 @@ public class DirectoryChooser extends DialogWrapper {
     }
 
     @RequiredDispatchThread
-    @NotNull
+    @Nonnull
     @Deprecated
     @DeprecationInfo(value = "Use #getIcon()")
-    public Icon getIcon(@NotNull ProjectFileIndex fileIndex) {
+    public Icon getIcon(@Nonnull ProjectFileIndex fileIndex) {
       return getIcon();
     }
 
     @RequiredDispatchThread
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       if (myDirectory != null) {
         VirtualFile virtualFile = myDirectory.getVirtualFile();

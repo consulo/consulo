@@ -27,8 +27,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,11 +42,11 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
   private static final Context NOT_MATCHED_CONTEXT = new Context();
 
   @Override
-  public Result preprocessEnter(@NotNull PsiFile file,
-                                @NotNull Editor editor,
-                                @NotNull Ref<Integer> caretOffset,
-                                @NotNull Ref<Integer> caretAdvance,
-                                @NotNull DataContext dataContext,
+  public Result preprocessEnter(@Nonnull PsiFile file,
+                                @Nonnull Editor editor,
+                                @Nonnull Ref<Integer> caretOffset,
+                                @Nonnull Ref<Integer> caretAdvance,
+                                @Nonnull DataContext dataContext,
                                 EditorActionHandler originalHandler) {
     if (!CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
       return Result.Continue;
@@ -114,8 +114,8 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
    * @param offset      interested offset
    * @return object that encapsulates information about javadoc tags within the given text and offset
    */
-  @NotNull
-  static Context parse(@NotNull CharSequence text, int startOffset, int endOffset, int offset) {
+  @Nonnull
+  static Context parse(@Nonnull CharSequence text, int startOffset, int endOffset, int offset) {
     int asteriskOffset = StringUtil.indexOf(text, '*', startOffset, endOffset);
     if (asteriskOffset < 0) {
       return NOT_MATCHED_CONTEXT;

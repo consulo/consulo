@@ -21,23 +21,25 @@ import com.intellij.diff.util.MergeConflictType;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.List;
 
 public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
-  @NotNull private final List<? extends EditorEx> myEditors;
-  @Nullable private final MergeInnerDifferences myInnerFragments;
+  @Nonnull
+  private final List<? extends EditorEx> myEditors;
+  @javax.annotation.Nullable
+  private final MergeInnerDifferences myInnerFragments;
 
   private int[] myLineStarts = new int[3];
   private int[] myLineEnds = new int[3];
 
-  public SimpleThreesideDiffChange(@NotNull MergeLineFragment fragment,
-                                   @NotNull MergeConflictType conflictType,
+  public SimpleThreesideDiffChange(@Nonnull MergeLineFragment fragment,
+                                   @Nonnull MergeConflictType conflictType,
                                    @Nullable MergeInnerDifferences innerFragments,
-                                   @NotNull SimpleThreesideDiffViewer viewer) {
+                                   @Nonnull SimpleThreesideDiffViewer viewer) {
     super(conflictType);
     myEditors = viewer.getEditors();
     myInnerFragments = innerFragments;
@@ -70,27 +72,27 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
   //
 
   @Override
-  public int getStartLine(@NotNull ThreeSide side) {
+  public int getStartLine(@Nonnull ThreeSide side) {
     return side.select(myLineStarts);
   }
 
   @Override
-  public int getEndLine(@NotNull ThreeSide side) {
+  public int getEndLine(@Nonnull ThreeSide side) {
     return side.select(myLineEnds);
   }
 
   @Override
-  public boolean isResolved(@NotNull ThreeSide side) {
+  public boolean isResolved(@Nonnull ThreeSide side) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected Editor getEditor(@NotNull ThreeSide side) {
+  protected Editor getEditor(@Nonnull ThreeSide side) {
     return side.select(myEditors);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   protected MergeInnerDifferences getInnerFragments() {
     return myInnerFragments;
@@ -100,7 +102,7 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
   // Shift
   //
 
-  public boolean processChange(int oldLine1, int oldLine2, int shift, @NotNull ThreeSide side) {
+  public boolean processChange(int oldLine1, int oldLine2, int shift, @Nonnull ThreeSide side) {
     int line1 = getStartLine(side);
     int line2 = getEndLine(side);
     int sideIndex = side.getIndex();

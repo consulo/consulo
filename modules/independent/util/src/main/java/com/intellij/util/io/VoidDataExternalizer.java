@@ -15,8 +15,8 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -26,12 +26,12 @@ public class VoidDataExternalizer implements DataExternalizer<Void> {
   public static final VoidDataExternalizer INSTANCE = new VoidDataExternalizer();
 
   @Override
-  public void save(@NotNull final DataOutput out, final Void value) throws IOException {
+  public void save(@Nonnull final DataOutput out, final Void value) throws IOException {
   }
 
   @Override
   @Nullable
-  public Void read(@NotNull final DataInput in) throws IOException {
+  public Void read(@Nonnull final DataInput in) throws IOException {
     return null;
   }
 }

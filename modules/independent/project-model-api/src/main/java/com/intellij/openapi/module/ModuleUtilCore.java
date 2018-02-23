@@ -34,8 +34,8 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -58,7 +58,7 @@ public class ModuleUtilCore {
     }
   }
 
-  public static String getModuleNameInReadAction(@NotNull final Module module) {
+  public static String getModuleNameInReadAction(@Nonnull final Module module) {
     return new ReadAction<String>() {
       @Override
       protected void run(final Result<String> result) throws Throwable {
@@ -79,15 +79,15 @@ public class ModuleUtilCore {
     return module == null ? !projectFileIndex.isInLibraryClasses(vFile) : module.isDisposed();
   }
 
-  @Nullable
-  public static Module findModuleForFile(@NotNull VirtualFile file, @NotNull Project project) {
+  @javax.annotation.Nullable
+  public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
   }
 
   @Nullable
   @RequiredReadAction
-  public static Module findModuleForPsiElement(@NotNull PsiElement element) {
+  public static Module findModuleForPsiElement(@Nonnull PsiElement element) {
     if (!element.isValid()) return null;
 
     Project project = element.getProject();
@@ -149,7 +149,7 @@ public class ModuleUtilCore {
   }
 
   //ignores export flag
-  public static void getDependencies(@NotNull Module module, Set<Module> modules) {
+  public static void getDependencies(@Nonnull Module module, Set<Module> modules) {
     if (modules.contains(module)) return;
     modules.add(module);
     Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
@@ -165,7 +165,7 @@ public class ModuleUtilCore {
    * @param result resulted set
    */
   @RequiredReadAction
-  public static void collectModulesDependsOn(@NotNull final Module module, final Set<Module> result) {
+  public static void collectModulesDependsOn(@Nonnull final Module module, final Set<Module> result) {
     if (result.contains(module)) return;
     result.add(module);
     final ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
@@ -189,9 +189,9 @@ public class ModuleUtilCore {
     }
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static List<Module> getAllDependentModules(@NotNull Module module) {
+  public static List<Module> getAllDependentModules(@Nonnull Module module) {
     final ArrayList<Module> list = new ArrayList<Module>();
     final Graph<Module> graph = ModuleManager.getInstance(module.getProject()).moduleGraph();
     for (Iterator<Module> i = graph.getOut(module); i.hasNext(); ) {
@@ -201,7 +201,7 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  public static boolean visitMeAndDependentModules(@NotNull final Module module, final Processor<Module> visitor) {
+  public static boolean visitMeAndDependentModules(@Nonnull final Module module, final Processor<Module> visitor) {
     if (!visitor.process(module)) {
       return false;
     }
@@ -214,7 +214,7 @@ public class ModuleUtilCore {
     return true;
   }
 
-  public static boolean moduleContainsFile(@NotNull final Module module, VirtualFile file, boolean isLibraryElement) {
+  public static boolean moduleContainsFile(@Nonnull final Module module, VirtualFile file, boolean isLibraryElement) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     if (isLibraryElement) {
       OrderEntry orderEntry = moduleRootManager.getFileIndex().getOrderEntryForFile(file);
@@ -226,8 +226,8 @@ public class ModuleUtilCore {
   }
 
   @RequiredReadAction
-  @NotNull
-  public static List<ContentFolder> getContentFolders(@NotNull Project project) {
+  @Nonnull
+  public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
     ModuleManager moduleManager = ModuleManager.getInstance(project);
     final List<ContentFolder> contentFolders = new ArrayList<ContentFolder>();
     for (Module module : moduleManager.getModules()) {
@@ -243,21 +243,21 @@ public class ModuleUtilCore {
     return contentFolders;
   }
 
-  @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Module module, @NotNull Class<E> extensionClass) {
+  @javax.annotation.Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     return moduleRootManager.getExtension(extensionClass);
   }
 
   @Nullable
-  public static ModuleExtension<?> getExtension(@NotNull Module module, @NotNull String key) {
+  public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     return moduleRootManager.getExtension(key);
   }
 
   @Nullable
   @RequiredReadAction
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull PsiElement element, @NotNull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull PsiElement element, @Nonnull Class<E> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;
@@ -266,7 +266,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<E> extensionClass) {
+  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
@@ -274,8 +274,8 @@ public class ModuleUtilCore {
     return getExtension(moduleForFile, extensionClass);
   }
 
-  @Nullable
-  public static Sdk getSdk(@NotNull Module module, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  @javax.annotation.Nullable
+  public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
     final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
@@ -289,7 +289,7 @@ public class ModuleUtilCore {
 
   @Nullable
   @RequiredReadAction
-  public static Sdk getSdk(@NotNull PsiElement element, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(@Nonnull PsiElement element, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForPsiElement(element);
     if (moduleForPsiElement == null) {
       return null;
@@ -298,7 +298,7 @@ public class ModuleUtilCore {
   }
 
   @Nullable
-  public static Sdk getSdk(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+  public static Sdk getSdk(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
     Module moduleForPsiElement = findModuleForFile(virtualFile, project);
     if (moduleForPsiElement == null) {
       return null;
@@ -306,15 +306,15 @@ public class ModuleUtilCore {
     return getSdk(moduleForPsiElement, extensionClass);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static NamedPointer<Module> createPointer(@NotNull Module module) {
+  public static NamedPointer<Module> createPointer(@Nonnull Module module) {
     return ModulePointerManager.getInstance(module.getProject()).create(module);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static NamedPointer<Module> createPointer(@NotNull Project project, @NotNull String name) {
+  public static NamedPointer<Module> createPointer(@Nonnull Project project, @Nonnull String name) {
     return ModulePointerManager.getInstance(project).create(name);
   }
 }

@@ -26,7 +26,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.util.ui.BuildInLookAndFeel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -242,7 +242,7 @@ public class ModernDarkLaf extends BasicLookAndFeel implements BuildInLookAndFee
     }
   }
 
-  protected Object parseValue(String key, @NotNull String value) {
+  protected Object parseValue(String key, @Nonnull String value) {
     if (key.endsWith("Insets")) {
       final List<String> numbers = StringUtil.split(value, ",");
       return new InsetsUIResource(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)),

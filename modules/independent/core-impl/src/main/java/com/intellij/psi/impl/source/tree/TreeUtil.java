@@ -37,8 +37,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStrongWhitespaceHolderElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -57,12 +57,12 @@ public class TreeUtil {
     }
   }
 
-  public static void ensureParsedRecursively(@NotNull ASTNode node) {
+  public static void ensureParsedRecursively(@Nonnull ASTNode node) {
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
     });
   }
 
-  public static void ensureParsedRecursivelyCheckingProgress(@NotNull ASTNode node, @NotNull final ProgressIndicator indicator) {
+  public static void ensureParsedRecursivelyCheckingProgress(@Nonnull ASTNode node, @Nonnull final ProgressIndicator indicator) {
     ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
       @Override
       public void visitLeaf(LeafElement leaf) {
@@ -271,7 +271,7 @@ public class TreeUtil {
     return Couple.of(one, two);
   }
 
-  public static void clearCaches(@NotNull final TreeElement tree) {
+  public static void clearCaches(@Nonnull final TreeElement tree) {
     tree.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
       @Override
       protected void visitNode(final TreeElement element) {
@@ -282,7 +282,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode nextLeaf(@NotNull final ASTNode node) {
+  public static ASTNode nextLeaf(@Nonnull final ASTNode node) {
     return nextLeaf((TreeElement)node, null);
   }
 
@@ -313,12 +313,12 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static LeafElement nextLeaf(@NotNull TreeElement start, CommonParentState commonParent) {
+  public static LeafElement nextLeaf(@Nonnull TreeElement start, CommonParentState commonParent) {
     return (LeafElement)nextLeaf(start, commonParent, null, true);
   }
 
   @Nullable
-  public static TreeElement nextLeaf(@NotNull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
+  public static TreeElement nextLeaf(@Nonnull TreeElement start, CommonParentState commonParent, IElementType searchedType, boolean expandChameleons) {
     TreeElement element = start;
     while (element != null) {
       if (commonParent != null) {
@@ -351,7 +351,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  private static TreeElement findFirstLeafOrType(@NotNull TreeElement element,
+  private static TreeElement findFirstLeafOrType(@Nonnull TreeElement element,
                                                  final IElementType searchedType,
                                                  final CommonParentState commonParent,
                                                  final boolean expandChameleons) {
@@ -453,7 +453,7 @@ public class TreeUtil {
     }
   }
 
-  public static void bindStubsToTree(@NotNull PsiFileImpl file, @NotNull StubTree stubTree, @NotNull FileElement tree) throws StubBindingException {
+  public static void bindStubsToTree(@Nonnull PsiFileImpl file, @Nonnull StubTree stubTree, @Nonnull FileElement tree) throws StubBindingException {
     final ListIterator<StubElement<?>> stubs = stubTree.getPlainList().listIterator();
     stubs.next();  // skip file root stub
 
@@ -492,7 +492,7 @@ public class TreeUtil {
   }
 
   @Nullable
-  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, @NotNull TokenSet alsoSkip, boolean forward) {
+  public static ASTNode skipWhitespaceCommentsAndTokens(final ASTNode node, @Nonnull TokenSet alsoSkip, boolean forward) {
     ASTNode element = node;
     while (true) {
       if (element == null) return null;

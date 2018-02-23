@@ -28,8 +28,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public abstract class HighlightUsagesHandlerBase<T extends PsiElement> {
   public abstract void computeUsages(List<T> targets);
 
   @RequiredReadAction
-  public void addOccurrence(@NotNull PsiElement element) {
+  public void addOccurrence(@Nonnull PsiElement element) {
     TextRange range = element.getTextRange();
     if (range != null) {
       range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);

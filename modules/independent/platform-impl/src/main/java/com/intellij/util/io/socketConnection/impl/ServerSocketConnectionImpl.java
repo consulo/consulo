@@ -21,7 +21,7 @@ import com.intellij.util.io.socketConnection.AbstractRequest;
 import com.intellij.util.io.socketConnection.AbstractResponse;
 import com.intellij.util.io.socketConnection.ConnectionStatus;
 import com.intellij.util.io.socketConnection.RequestResponseExternalizerFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,7 +38,7 @@ public class ServerSocketConnectionImpl<Request extends AbstractRequest, Respons
 
   public ServerSocketConnectionImpl(int defaultPort,
                                     int connectionAttempts,
-                                    @NotNull RequestResponseExternalizerFactory<Request, Response> factory) {
+                                    @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
     super(factory);
     myDefaultPort = defaultPort;
     myConnectionAttempts = connectionAttempts;
@@ -60,7 +60,7 @@ public class ServerSocketConnectionImpl<Request extends AbstractRequest, Respons
     });
   }
 
-  @NotNull
+  @Nonnull
   private ServerSocket createSocket() throws IOException {
     IOException exc = null;
     for (int i = 0; i < myConnectionAttempts; i++) {

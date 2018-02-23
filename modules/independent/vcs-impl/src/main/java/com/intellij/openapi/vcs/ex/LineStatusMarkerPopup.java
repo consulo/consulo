@@ -44,8 +44,8 @@ import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -60,20 +60,23 @@ import static com.intellij.diff.util.DiffUtil.getDiffType;
 import static com.intellij.diff.util.DiffUtil.getLineCount;
 
 public abstract class LineStatusMarkerPopup {
-  @NotNull public final LineStatusTracker myTracker;
-  @NotNull public final Editor myEditor;
-  @NotNull public final Range myRange;
+  @Nonnull
+  public final LineStatusTracker myTracker;
+  @Nonnull
+  public final Editor myEditor;
+  @Nonnull
+  public final Range myRange;
 
-  public LineStatusMarkerPopup(@NotNull LineStatusTracker tracker, @NotNull Editor editor, @NotNull Range range) {
+  public LineStatusMarkerPopup(@Nonnull LineStatusTracker tracker, @Nonnull Editor editor, @Nonnull Range range) {
     myTracker = tracker;
     myEditor = editor;
     myRange = range;
   }
 
-  @NotNull
-  protected abstract ActionToolbar buildToolbar(@Nullable Point mousePosition, @NotNull Disposable parentDisposable);
+  @Nonnull
+  protected abstract ActionToolbar buildToolbar(@javax.annotation.Nullable Point mousePosition, @Nonnull Disposable parentDisposable);
 
-  @NotNull
+  @Nonnull
   protected FileType getFileType() {
     return PlainTextFileType.INSTANCE;
   }
@@ -102,7 +105,7 @@ public abstract class LineStatusMarkerPopup {
     });
   }
 
-  public void showHint(@NotNull MouseEvent e) {
+  public void showHint(@Nonnull MouseEvent e) {
     final JComponent comp = (JComponent)e.getComponent(); // shall be EditorGutterComponent, cast is safe.
     final JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
     final Point point = SwingUtilities.convertPoint(comp, ((EditorEx)myEditor).getGutterComponentEx().getWidth(), e.getY(), layeredPane);
@@ -110,7 +113,7 @@ public abstract class LineStatusMarkerPopup {
     e.consume();
   }
 
-  public void showHintAt(@Nullable Point mousePosition) {
+  public void showHintAt(@javax.annotation.Nullable Point mousePosition) {
     if (!myTracker.isValid()) return;
     final Disposable disposable = Disposer.newDisposable();
 
@@ -152,7 +155,7 @@ public abstract class LineStatusMarkerPopup {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private List<DiffFragment> computeWordDiff() {
     if (!isShowInnerDifferences()) return null;
     if (myRange.getType() != Range.MODIFIED) return null;
@@ -168,7 +171,7 @@ public abstract class LineStatusMarkerPopup {
     }, Registry.intValue("diff.status.tracker.byword.delay"));
   }
 
-  private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @NotNull Disposable parentDisposable) {
+  private void installMasterEditorHighlighters(@javax.annotation.Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
     if (wordDiff == null) return;
     final List<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
 
@@ -192,7 +195,7 @@ public abstract class LineStatusMarkerPopup {
   }
 
   @Nullable
-  private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
+  private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @javax.annotation.Nullable List<DiffFragment> wordDiff) {
     if (myRange.getType() == Range.INSERTED) return null;
 
     EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
@@ -222,7 +225,7 @@ public abstract class LineStatusMarkerPopup {
     return fragmentComponent;
   }
 
-  private static String getFileName(@NotNull Document document) {
+  private static String getFileName(@Nonnull Document document) {
     final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null) return "";
     return file.getName();
@@ -231,9 +234,9 @@ public abstract class LineStatusMarkerPopup {
   private static class PopupPanel extends JPanel {
     @Nullable private final JComponent myEditorComponent;
 
-    public PopupPanel(@NotNull final Editor editor,
-                      @NotNull ActionToolbar toolbar,
-                      @Nullable JComponent editorComponent) {
+    public PopupPanel(@Nonnull final Editor editor,
+                      @Nonnull ActionToolbar toolbar,
+                      @javax.annotation.Nullable JComponent editorComponent) {
       super(new BorderLayout());
       setOpaque(false);
 

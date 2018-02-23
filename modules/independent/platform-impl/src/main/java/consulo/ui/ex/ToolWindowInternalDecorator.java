@@ -22,8 +22,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -48,12 +48,12 @@ public interface ToolWindowInternalDecorator extends Disposable {
   @NonNls
   String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
 
-  @NotNull
+  @Nonnull
   WindowInfo getWindowInfo();
 
-  void apply(@NotNull WindowInfo windowInfo);
+  void apply(@Nonnull WindowInfo windowInfo);
 
-  @NotNull
+  @Nonnull
   ToolWindow getToolWindow();
 
   void addInternalDecoratorListener(InternalDecoratorListener l);
@@ -66,7 +66,7 @@ public interface ToolWindowInternalDecorator extends Disposable {
 
   void fireHiddenSide();
 
-  @NotNull
+  @Nonnull
   ActionGroup createPopupGroup();
 
   boolean isFocused();

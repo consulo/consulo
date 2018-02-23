@@ -24,8 +24,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,21 +56,21 @@ public abstract class LanguageCodeStyleSettingsProvider {
     }
   };
 
-  @NotNull
+  @Nonnull
   public abstract Language getLanguage();
 
-  @NotNull
-  public String getNotNullCodeSample(@NotNull SettingsType settingsType) {
+  @Nonnull
+  public String getNotNullCodeSample(@Nonnull SettingsType settingsType) {
     return myCodeSampleCache.get(settingsType);
   }
 
-  protected abstract String getCodeSample(@NotNull SettingsType settingsType);
+  protected abstract String getCodeSample(@Nonnull SettingsType settingsType);
 
-  public int getRightMargin(@NotNull SettingsType settingsType) {
+  public int getRightMargin(@Nonnull SettingsType settingsType) {
     return settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS ? 30 : -1;
   }
 
-  public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
+  public void customizeSettings(@Nonnull CodeStyleSettingsCustomizable consumer, @Nonnull SettingsType settingsType) {
   }
 
   /**
@@ -88,7 +88,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    *
    * @return The language name to show in preview tab (null by default).
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getLanguageName() {
     return null;
   }
@@ -112,7 +112,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    * @return Created instance of <code>CommonCodeStyleSettings</code> or null if associated language doesn't
    * use its own language-specific common settings (the settings are shared with other languages).
    */
-  @Nullable
+  @javax.annotation.Nullable
   public CommonCodeStyleSettings getDefaultCommonSettings() {
     return null;
   }
@@ -120,13 +120,13 @@ public abstract class LanguageCodeStyleSettingsProvider {
   /**
    * @deprecated use PredefinedCodeStyle extension point instead
    */
-  @NotNull
+  @Nonnull
   @Deprecated
   public PredefinedCodeStyle[] getPredefinedCodeStyles() {
     return PredefinedCodeStyle.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   public static Language[] getLanguagesWithCodeStyleSettings() {
     final ArrayList<Language> languages = new ArrayList<Language>();
     for (LanguageCodeStyleSettingsProvider provider : Extensions.getExtensions(EP_NAME)) {
@@ -136,12 +136,12 @@ public abstract class LanguageCodeStyleSettingsProvider {
   }
 
   @Nullable
-  public static String getNotNullCodeSample(Language lang, @NotNull SettingsType settingsType) {
+  public static String getNotNullCodeSample(Language lang, @Nonnull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getNotNullCodeSample(settingsType) : "";
   }
 
-  public static int getRightMargin(Language lang, @NotNull SettingsType settingsType) {
+  public static int getRightMargin(Language lang, @Nonnull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getRightMargin(settingsType) : -1;
   }
@@ -164,7 +164,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
     return provider != null ? provider.getDefaultCommonSettings() : null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String getFileExt(Language lang) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getFileExt() : null;
@@ -178,7 +178,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
    * @return Alternative UI name defined by provider.getLanguageName() method or (if the method returns null)
    * language's own display name.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public static String getLanguageName(Language lang) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     String providerLangName = provider != null ? provider.getLanguageName() : null;
@@ -271,7 +271,7 @@ public abstract class LanguageCodeStyleSettingsProvider {
                                  String title,
                                  @Nullable String groupName,
                                  @Nullable OptionAnchor anchor,
-                                 @Nullable String anchorFieldName,
+                                 @javax.annotation.Nullable String anchorFieldName,
                                  Object... options) {
       myCollectedFields.add(fieldName);
     }

@@ -16,7 +16,7 @@
 package com.intellij.ide.util.treeView;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.HashSet;
@@ -36,7 +36,7 @@ public class TreeUpdatePass {
   private boolean myUpdateStructure = true;
   private final Set<NodeDescriptor> myUpdatedDescriptors = new HashSet<NodeDescriptor>();
 
-  public TreeUpdatePass(@NotNull final DefaultMutableTreeNode node) {
+  public TreeUpdatePass(@Nonnull final DefaultMutableTreeNode node) {
     myNode = node;
     myAllocation = System.currentTimeMillis();
   }
@@ -50,7 +50,7 @@ public class TreeUpdatePass {
     return myUpdateChildren;
   }
 
-  @NotNull
+  @Nonnull
   public DefaultMutableTreeNode getNode() {
     return myNode;
   }
@@ -86,8 +86,8 @@ public class TreeUpdatePass {
     return "TreUpdatePass node=" + myNode + " structure=" + myUpdateStructure + " stamp=" + myUpdateStamp + " expired=" + myExpired + " currentNode=" + myCurrentNode + " allocation=" + myAllocation;
   }
 
-  public boolean willUpdate(@NotNull DefaultMutableTreeNode node) {
-    @NotNull DefaultMutableTreeNode currentNode = myCurrentNode != null ? myCurrentNode : myNode;
+  public boolean willUpdate(@Nonnull DefaultMutableTreeNode node) {
+    @Nonnull DefaultMutableTreeNode currentNode = myCurrentNode != null ? myCurrentNode : myNode;
     return node.isNodeAncestor(currentNode);
   }
 

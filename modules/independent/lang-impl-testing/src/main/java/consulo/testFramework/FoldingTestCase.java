@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.Exported;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class FoldingTestCase extends OneFileAtProjectTestCase {
 
   private boolean myDoCheckCollapseStatus;
 
-  public FoldingTestCase(@NonNls @NotNull String dataPath, @NotNull String ext) {
+  public FoldingTestCase(@NonNls @Nonnull String dataPath, @Nonnull String ext) {
     super(dataPath, ext);
   }
 
@@ -114,8 +114,8 @@ public class FoldingTestCase extends OneFileAtProjectTestCase {
     Assert.assertEquals(expectedContent, actual);
   }
 
-  @NotNull
-  private String getFoldingDescription(@NotNull String content, @NotNull String fileName, boolean doCheckCollapseStatus) {
+  @Nonnull
+  private String getFoldingDescription(@Nonnull String content, @Nonnull String fileName, boolean doCheckCollapseStatus) {
     FileType fileTypeByFileName = FileTypeManager.getInstance().getFileTypeByFileName(fileName);
 
     PsiFile file = createFile(fileName, fileTypeByFileName, content);

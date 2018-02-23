@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,13 +31,13 @@ public class DelegatingFormattingModel implements FormattingModelEx {
     myRootBlock = block;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Block getRootBlock() {
     return myRootBlock;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FormattingDocumentModel getDocumentModel() {
     return myBaseModel.getDocumentModel();

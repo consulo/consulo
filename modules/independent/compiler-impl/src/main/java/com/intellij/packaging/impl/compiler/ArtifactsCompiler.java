@@ -27,8 +27,8 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -43,8 +43,8 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
     super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
   }
 
-  @Nullable
-  public static ArtifactsCompiler getInstance(@NotNull Project project) {
+  @javax.annotation.Nullable
+  public static ArtifactsCompiler getInstance(@Nonnull Project project) {
     final ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
     return compilers.length == 1 ? compilers[0] : null;
   }
@@ -67,32 +67,32 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
     paths.addAll(writtenPaths);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<String> getItemKeyDescriptor() {
     return STRING_KEY_DESCRIPTOR;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<VirtualFilePersistentState> getSourceStateExternalizer() {
     return VirtualFilePersistentState.EXTERNALIZER;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<ArtifactPackagingItemOutputState> getOutputStateExternalizer() {
     return new ArtifactPackagingItemExternalizer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GenericCompilerInstance<ArtifactBuildTarget, ? extends CompileItem<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>, String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> createInstance(
-    @NotNull CompileContext context) {
+    @Nonnull CompileContext context) {
     return new ArtifactsCompilerInstance(context);
   }
 
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return "Artifacts Packaging Compiler";
   }
@@ -103,7 +103,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
   }
 
   @Nullable
-  public static Set<String> getWrittenPaths(@NotNull CompileContext context) {
+  public static Set<String> getWrittenPaths(@Nonnull CompileContext context) {
     return context.getUserData(WRITTEN_PATHS_KEY);
   }
 }

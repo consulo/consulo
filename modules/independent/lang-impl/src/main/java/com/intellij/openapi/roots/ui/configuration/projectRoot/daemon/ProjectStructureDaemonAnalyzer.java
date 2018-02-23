@@ -10,9 +10,9 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -123,11 +123,11 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     SwingUtilities.invokeLater(runnable);
   }
 
-  public void queueUpdate(@NotNull final ProjectStructureElement element) {
+  public void queueUpdate(@Nonnull final ProjectStructureElement element) {
     queueUpdate(element, true, true);
   }
 
-  private void queueUpdate(@NotNull final ProjectStructureElement element, final boolean check, final boolean collectUsages) {
+  private void queueUpdate(@Nonnull final ProjectStructureElement element, final boolean check, final boolean collectUsages) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("start " + (check ? "checking " : "") + (collectUsages ? "collecting usages " : "") + "for " + element);
     }
@@ -196,7 +196,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     }
   }
 
-  private void addUsage(@NotNull ProjectStructureElementUsage usage) {
+  private void addUsage(@Nonnull ProjectStructureElementUsage usage) {
     mySourceElement2Usages.put(usage.getSourceElement(), usage);
     myContainingElement2Usages.put(usage.getContainingElement(), usage);
   }
@@ -296,7 +296,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       return myElement.equals(other.myElement) && (!other.myCheck || myCheck) && (!other.myCollectUsages || myCollectUsages);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Object[] getEqualityObjects() {
       return myEqualityObjects;

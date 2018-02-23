@@ -11,8 +11,7 @@ import com.intellij.openapi.externalSystem.service.remote.RemoteExternalSystemPr
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,12 +25,13 @@ public class ExternalSystemResolveProjectTask extends AbstractExternalSystemTask
 
   private final AtomicReference<DataNode<ProjectData>> myExternalProject = new AtomicReference<DataNode<ProjectData>>();
 
-  @NotNull private final String myProjectPath;
+  @Nonnull
+  private final String myProjectPath;
   private final boolean myIsPreviewMode;
 
-  public ExternalSystemResolveProjectTask(@NotNull ProjectSystemId externalSystemId,
-                                          @NotNull Project project,
-                                          @NotNull String projectPath,
+  public ExternalSystemResolveProjectTask(@Nonnull ProjectSystemId externalSystemId,
+                                          @Nonnull Project project,
+                                          @Nonnull String projectPath,
                                           boolean isPreviewMode) {
     super(externalSystemId, ExternalSystemTaskType.RESOLVE_PROJECT, project, projectPath);
     myProjectPath = projectPath;
@@ -61,14 +61,14 @@ public class ExternalSystemResolveProjectTask extends AbstractExternalSystemTask
     return resolver.cancelTask(getId());
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public DataNode<ProjectData> getExternalProject() {
     return myExternalProject.get();
   }
 
   @Override
-  @NotNull
-  protected String wrapProgressText(@NotNull String text) {
+  @Nonnull
+  protected String wrapProgressText(@Nonnull String text) {
     return ExternalSystemBundle.message("progress.update.text", getExternalSystemId().getReadableName(), text);
   }
 }

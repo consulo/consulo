@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.settings;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * <p>
@@ -31,28 +31,28 @@ import org.jetbrains.annotations.NotNull;
 public enum DiffMergeEditorSetting {
   WHITESPACES(false) {
     @Override
-    public void apply(@NotNull Editor editor, boolean state) {
+    public void apply(@Nonnull Editor editor, boolean state) {
       editor.getSettings().setWhitespacesShown(state);
       editor.getComponent().repaint();
     }
   },
   LINE_NUMBERS(false) {
     @Override
-    public void apply(@NotNull Editor editor, boolean state) {
+    public void apply(@Nonnull Editor editor, boolean state) {
       editor.getSettings().setLineNumbersShown(state);
       editor.getComponent().repaint();
     }
   },
   INDENT_LINES(false) {
     @Override
-    public void apply(@NotNull Editor editor, boolean state) {
+    public void apply(@Nonnull Editor editor, boolean state) {
       editor.getSettings().setIndentGuidesShown(state);
       editor.getComponent().repaint();
     }
   },
   SOFT_WRAPS(false) {
     @Override
-    public void apply(@NotNull Editor editor, boolean state) {
+    public void apply(@Nonnull Editor editor, boolean state) {
       editor.getSettings().setUseSoftWraps(state);
       if (editor instanceof EditorEx) {
         ((EditorEx)editor).reinitSettings();
@@ -66,7 +66,7 @@ public enum DiffMergeEditorSetting {
     myDefault = aDefault;
   }
 
-  public abstract void apply(@NotNull Editor editor, boolean state);
+  public abstract void apply(@Nonnull Editor editor, boolean state);
 
   public boolean getDefault() {
     return myDefault;

@@ -37,8 +37,8 @@ import com.intellij.util.io.*;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.io.DataOutputStream;
@@ -61,17 +61,17 @@ public class JarHandler extends ZipHandler {
   private final ArchiveFileSystemBase myFileSystem;
   private volatile File myFileWithMirrorResolved;
 
-  public JarHandler(@NotNull String path, @NotNull ArchiveFileSystemBase fileSystem) {
+  public JarHandler(@Nonnull String path, @Nonnull ArchiveFileSystemBase fileSystem) {
     super(path);
     myFileSystem = fileSystem;
   }
 
   @Override
-  public ArchiveFile createArchiveFile(@NotNull String path) throws IOException {
+  public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException {
     return myFileSystem.createArchiveFile(path);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected File getFileToUse() {
     File fileWithMirrorResolved = myFileWithMirrorResolved;
@@ -86,7 +86,7 @@ public class JarHandler extends ZipHandler {
     return fileWithMirrorResolved;
   }
 
-  private File getMirrorFile(@NotNull File originalFile) {
+  private File getMirrorFile(@Nonnull File originalFile) {
     if (!myFileSystem.isMakeCopyOfJar(originalFile)) return originalFile;
 
     final FileAttributes originalAttributes = FileSystemUtil.getAttributes(originalFile);
@@ -213,14 +213,14 @@ public class JarHandler extends ZipHandler {
     return builder.toString();
   }
 
-  @NotNull
+  @Nonnull
   private static String getJarsDir() {
     String dir = System.getProperty("jars_dir");
     return dir == null ? PathManager.getSystemPath() + File.separatorChar + JARS_FOLDER : dir;
   }
 
-  @NotNull
-  private File copyToMirror(@NotNull File original, @NotNull File mirror) {
+  @Nonnull
+  private File copyToMirror(@Nonnull File original, @Nonnull File mirror) {
     ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     if (progress != null) {
       progress.pushState();
@@ -292,14 +292,14 @@ public class JarHandler extends ZipHandler {
                                                                  new DataExternalizer<CacheLibraryInfo>() {
 
                                                                    @Override
-                                                                   public void save(@NotNull DataOutput out, CacheLibraryInfo value) throws IOException {
+                                                                   public void save(@Nonnull DataOutput out, CacheLibraryInfo value) throws IOException {
                                                                      IOUtil.writeUTF(out, value.mySnapshotPath);
                                                                      DataInputOutputUtil.writeTIME(out, value.myModificationTime);
                                                                      DataInputOutputUtil.writeLONG(out, value.myFileLength);
                                                                    }
 
                                                                    @Override
-                                                                   public CacheLibraryInfo read(@NotNull DataInput in) throws IOException {
+                                                                   public CacheLibraryInfo read(@Nonnull DataInput in) throws IOException {
                                                                      return new CacheLibraryInfo(IOUtil.readUTF(in), DataInputOutputUtil.readTIME(in),
                                                                                                  DataInputOutputUtil.readLONG(in));
                                                                    }
@@ -321,7 +321,7 @@ public class JarHandler extends ZipHandler {
       ShutDownTracker.getInstance().registerShutdownTask(() -> flushCachedLibraryInfos());
     }
 
-    @NotNull
+    @Nonnull
     private static File getVersionFile(File file) {
       return new File(file.getParentFile(), file.getName() + ".version");
     }
@@ -416,7 +416,7 @@ public class JarHandler extends ZipHandler {
       if (ourCachedLibraryInfo.isDirty()) ourCachedLibraryInfo.force();
     }
 
-    private CacheLibraryInfo(@NotNull String path, long time, long length) {
+    private CacheLibraryInfo(@Nonnull String path, long time, long length) {
       mySnapshotPath = path;
       myModificationTime = time;
       myFileLength = length;
@@ -446,7 +446,7 @@ public class JarHandler extends ZipHandler {
   }
 
   private static final NotNullLazyValue<NotificationGroup> ERROR_COPY_NOTIFICATION = new NotNullLazyValue<NotificationGroup>() {
-    @NotNull
+    @Nonnull
     @Override
     protected NotificationGroup compute() {
       return NotificationGroup.balloonGroup(VfsBundle.message("jar.copy.error.title"));

@@ -29,13 +29,13 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DefaultFileNavigationContributor implements ChooseByNameContributorEx, DumbAware {
   public static final Logger LOGGER = Logger.getInstance(DefaultFileNavigationContributor.class);
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getNames(Project project, boolean includeNonProjectItems) {
     if (FileBasedIndex.ourEnableTracingOfKeyHashToVirtualFileMapping) {
       final THashSet<String> names = new THashSet<String>(1000);
@@ -57,7 +57,7 @@ public class DefaultFileNavigationContributor implements ChooseByNameContributor
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems) {
     CommonProcessors.CollectProcessor<NavigationItem> processor = new CommonProcessors.CollectProcessor<NavigationItem>();
     processElementsWithName(name, processor, FindSymbolParameters.wrap(pattern, project, includeNonProjectItems));
@@ -66,7 +66,7 @@ public class DefaultFileNavigationContributor implements ChooseByNameContributor
   }
 
   @Override
-  public void processNames(@NotNull final Processor<String> processor, @NotNull GlobalSearchScope scope, IdFilter filter) {
+  public void processNames(@Nonnull final Processor<String> processor, @Nonnull GlobalSearchScope scope, IdFilter filter) {
     long started = System.currentTimeMillis();
     FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>() {
       @Override
@@ -80,9 +80,9 @@ public class DefaultFileNavigationContributor implements ChooseByNameContributor
   }
 
   @Override
-  public void processElementsWithName(@NotNull String name,
-                                      @NotNull Processor<NavigationItem> processor,
-                                      @NotNull FindSymbolParameters parameters) {
+  public void processElementsWithName(@Nonnull String name,
+                                      @Nonnull Processor<NavigationItem> processor,
+                                      @Nonnull FindSymbolParameters parameters) {
     String completePattern = parameters.getCompletePattern();
     final boolean includeDirs = completePattern.endsWith("/") || completePattern.endsWith("\\") ||
                                 completePattern.startsWith("/") || completePattern.startsWith("\\");

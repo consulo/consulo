@@ -32,8 +32,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -143,7 +142,7 @@ public class DiffHyperlink implements Printable {
 
   public class DiffHyperlinkInfo extends HyperlinkInfoBase {
     @Override
-    public void navigate(@NotNull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+    public void navigate(@Nonnull Project project, @javax.annotation.Nullable RelativePoint hyperlinkLocationPoint) {
       final DataManager dataManager = DataManager.getInstance();
       final DataContext dataContext = hyperlinkLocationPoint != null ?
                                       dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();

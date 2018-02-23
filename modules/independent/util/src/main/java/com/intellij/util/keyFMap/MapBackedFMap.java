@@ -19,12 +19,12 @@ import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.util.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
 class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
-  private MapBackedFMap(@NotNull MapBackedFMap oldMap, final int exclude) {
+  private MapBackedFMap(@Nonnull MapBackedFMap oldMap, final int exclude) {
     super(oldMap.size());
     oldMap.forEachEntry(new TIntObjectProcedure<Object>() {
       @Override
@@ -37,7 +37,7 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
     assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
   }
 
-  MapBackedFMap(@NotNull int[] keys, int newKey, @NotNull Object[] values, @NotNull Object newValue) {
+  MapBackedFMap(@Nonnull int[] keys, int newKey, @Nonnull Object[] values, @Nonnull Object newValue) {
     super(keys.length + 1);
     for (int i = 0; i < keys.length; i++) {
       int key = keys[i];
@@ -50,9 +50,9 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
     assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value) {
+  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     int keyCode = key.hashCode();
     assert keyCode >= 0 : key;
     @SuppressWarnings("unchecked")
@@ -63,9 +63,9 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
     return newMap;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public KeyFMap minus(@NotNull Key<?> key) {
+  public KeyFMap minus(@Nonnull Key<?> key) {
     int oldSize = size();
     int keyCode = key.hashCode();
     if (!containsKey(keyCode)) {
@@ -83,12 +83,12 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   }
 
   @Override
-  public <V> V get(@NotNull Key<V> key) {
+  public <V> V get(@Nonnull Key<V> key) {
     //noinspection unchecked
     return (V)get(key.hashCode());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key[] getKeys() {
     return getKeysByIndices(keys());

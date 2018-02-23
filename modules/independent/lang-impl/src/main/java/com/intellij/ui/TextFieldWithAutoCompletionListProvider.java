@@ -21,8 +21,8 @@ import com.intellij.codeInsight.completion.PlainPrefixMatcher;
 import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -31,22 +31,22 @@ import java.util.*;
  * @author Roman.Chernyatchik
  */
 public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comparator<T> {
-  @NotNull
+  @Nonnull
   private Collection<T> myVariants;
   @Nullable
   private String myCompletionAdvertisement;
 
   @Nullable
-  protected abstract Icon getIcon(@NotNull final T item);
+  protected abstract Icon getIcon(@Nonnull final T item);
 
-  @NotNull
-  protected abstract String getLookupString(@NotNull final T item);
-
-  @Nullable
-  protected abstract String getTailText(@NotNull final T item);
+  @Nonnull
+  protected abstract String getLookupString(@Nonnull final T item);
 
   @Nullable
-  protected abstract String getTypeText(@NotNull final T item);
+  protected abstract String getTailText(@Nonnull final T item);
+
+  @Nullable
+  protected abstract String getTypeText(@Nonnull final T item);
 
   @Override
   public abstract int compare(T item1, T item2);
@@ -60,7 +60,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     myVariants = (variants != null) ? variants : Collections.<T>emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public Collection<T> getItems(String prefix, boolean cached, CompletionParameters parameters) {
     if (prefix == null) {
       return Collections.emptyList();
@@ -79,7 +79,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
    * @return text
    */
   @Nullable
-  public String getQuickDocHotKeyAdvertisement(@NotNull final String shortcut) {
+  public String getQuickDocHotKeyAdvertisement(@Nonnull final String shortcut) {
     final String advertisementTail = getQuickDocHotKeyAdvertisementTail(shortcut);
     if (advertisementTail == null) {
       return null;
@@ -103,11 +103,11 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  public PrefixMatcher createPrefixMatcher(@NotNull final String prefix) {
+  public PrefixMatcher createPrefixMatcher(@Nonnull final String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 
-  public LookupElementBuilder createLookupBuilder(@NotNull final T item) {
+  public LookupElementBuilder createLookupBuilder(@Nonnull final T item) {
     LookupElementBuilder builder = LookupElementBuilder.create(item, getLookupString(item))
       .withIcon(getIcon(item));
 
@@ -129,7 +129,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  public String getPrefix(@NotNull final CompletionParameters parameters) {
+  public String getPrefix(@Nonnull final CompletionParameters parameters) {
     return getCompletionPrefix(parameters);
   }
 
@@ -140,12 +140,12 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  protected String getQuickDocHotKeyAdvertisementTail(@NotNull final String shortcut) {
+  protected String getQuickDocHotKeyAdvertisementTail(@Nonnull final String shortcut) {
     return null;
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@NotNull final T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull final T item) {
     return null;
   }
 }

@@ -16,12 +16,14 @@
 package com.intellij.vcs.log.graph.impl.facade.bek;
 
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class BekEdgeRestrictions {
-  @NotNull private final MultiMap<Integer, Integer> myUpToEdge = new MultiMap<>();
+  @Nonnull
+  private final MultiMap<Integer, Integer> myUpToEdge = new MultiMap<>();
 
-  @NotNull private final MultiMap<Integer, Integer> myDownToEdge = new MultiMap<>();
+  @Nonnull
+  private final MultiMap<Integer, Integer> myDownToEdge = new MultiMap<>();
 
   void addRestriction(int upNode, int downNode) {
     myUpToEdge.putValue(upNode, downNode);

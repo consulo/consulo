@@ -49,7 +49,7 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.*;
@@ -67,13 +67,13 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     super(context);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<ArtifactBuildTarget> getAllTargets() {
     return getArtifactTargets(false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<ArtifactBuildTarget> getSelectedTargets() {
     return getArtifactTargets(true);
@@ -108,14 +108,14 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
   }
 
   @Override
-  public void processObsoleteTarget(@NotNull String targetId,
-                                    @NotNull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems) {
+  public void processObsoleteTarget(@Nonnull String targetId,
+                                    @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems) {
     deleteFiles(obsoleteItems, Collections.<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>>emptyList());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<ArtifactCompilerCompileItem> getItems(@NotNull ArtifactBuildTarget target) {
+  public List<ArtifactCompilerCompileItem> getItems(@Nonnull ArtifactBuildTarget target) {
     myBuilderContext = new ArtifactsProcessingItemsBuilderContext(myContext);
     final Artifact artifact = target.getArtifact();
 
@@ -149,7 +149,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     return new ArrayList<ArtifactCompilerCompileItem>(myBuilderContext.getProcessingItems());
   }
 
-  private void collectItems(@NotNull Artifact artifact, @NotNull String outputPath) {
+  private void collectItems(@Nonnull Artifact artifact, @Nonnull String outputPath) {
     final CompositePackagingElement<?> rootElement = artifact.getRootElement();
     final VirtualFile outputFile = LocalFileSystem.getInstance().findFileByPath(outputPath);
     final CopyToDirectoryInstructionCreator instructionCreator = new CopyToDirectoryInstructionCreator(myBuilderContext, outputPath, outputFile);
@@ -158,10 +158,10 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     rootElement.computeIncrementalCompilerInstructions(instructionCreator, resolvingContext, myBuilderContext, artifact.getArtifactType());
   }
 
-  private boolean doBuild(@NotNull Artifact artifact,
+  private boolean doBuild(@Nonnull Artifact artifact,
                           final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems,
                           final Set<ArtifactCompilerCompileItem> processedItems,
-                          final @NotNull Set<String> writtenPaths,
+                          final @Nonnull Set<String> writtenPaths,
                           final Set<String> deletedJars) {
     FULL_LOG.debug("Building " + artifact.getName());
     final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
@@ -284,7 +284,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     }
   }
 
-  private void onBuildStartedOrFinished(@NotNull Artifact artifact, final boolean finished) throws Exception {
+  private void onBuildStartedOrFinished(@Nonnull Artifact artifact, final boolean finished) throws Exception {
     for (ArtifactPropertiesProvider provider : artifact.getPropertiesProviders()) {
       final ArtifactProperties<?> properties = artifact.getProperties(provider);
       if (finished) {
@@ -301,10 +301,10 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
   }
 
   @Override
-  public void processItems(@NotNull final ArtifactBuildTarget target,
-                           @NotNull final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem,VirtualFilePersistentState,ArtifactPackagingItemOutputState>> changedItems,
-                           @NotNull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
-                           @NotNull OutputConsumer<ArtifactCompilerCompileItem> consumer) {
+  public void processItems(@Nonnull final ArtifactBuildTarget target,
+                           @Nonnull final List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem,VirtualFilePersistentState,ArtifactPackagingItemOutputState>> changedItems,
+                           @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
+                           @Nonnull OutputConsumer<ArtifactCompilerCompileItem> consumer) {
 
     final THashSet<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
 

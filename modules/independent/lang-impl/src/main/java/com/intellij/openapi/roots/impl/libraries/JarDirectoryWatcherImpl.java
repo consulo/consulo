@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class JarDirectoryWatcherImpl implements JarDirectoryWatcher {
         myBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
         myBusConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
           @Override
-          public void after(@NotNull final List<? extends VFileEvent> events) {
+          public void after(@Nonnull final List<? extends VFileEvent> events) {
             boolean changesDetected = false;
             for (VFileEvent event : events) {
               if (event instanceof VFileCopyEvent) {

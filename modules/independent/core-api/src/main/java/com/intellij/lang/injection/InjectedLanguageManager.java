@@ -32,8 +32,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -46,55 +46,55 @@ public abstract class InjectedLanguageManager {
   }
 
   @Nullable
-  public abstract PsiLanguageInjectionHost getInjectionHost(@NotNull PsiElement element);
+  public abstract PsiLanguageInjectionHost getInjectionHost(@Nonnull PsiElement element);
 
-  @NotNull
-  public abstract TextRange injectedToHost(@NotNull PsiElement injectedContext, @NotNull TextRange injectedTextRange);
-  public abstract int injectedToHost(@NotNull PsiElement injectedContext, int injectedOffset);
-
-  /**
-   * Test-only method.
-   * @see com.intellij.lang.injection.MultiHostInjector#EP_NAME
-   */
-  @TestOnly
-  public abstract void registerMultiHostInjector(@NotNull MultiHostInjector injector, @NotNull Class<? extends PsiElement>... elements);
+  @Nonnull
+  public abstract TextRange injectedToHost(@Nonnull PsiElement injectedContext, @Nonnull TextRange injectedTextRange);
+  public abstract int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset);
 
   /**
    * Test-only method.
    * @see com.intellij.lang.injection.MultiHostInjector#EP_NAME
    */
   @TestOnly
-  public abstract boolean unregisterMultiHostInjector(@NotNull MultiHostInjector injector);
+  public abstract void registerMultiHostInjector(@Nonnull MultiHostInjector injector, @Nonnull Class<? extends PsiElement>... elements);
 
-  public abstract String getUnescapedText(@NotNull PsiElement injectedNode);
+  /**
+   * Test-only method.
+   * @see com.intellij.lang.injection.MultiHostInjector#EP_NAME
+   */
+  @TestOnly
+  public abstract boolean unregisterMultiHostInjector(@Nonnull MultiHostInjector injector);
 
-  @NotNull
-  public abstract List<TextRange> intersectWithAllEditableFragments(@NotNull PsiFile injectedPsi, @NotNull TextRange rangeToEdit);
+  public abstract String getUnescapedText(@Nonnull PsiElement injectedNode);
+
+  @Nonnull
+  public abstract List<TextRange> intersectWithAllEditableFragments(@Nonnull PsiFile injectedPsi, @Nonnull TextRange rangeToEdit);
 
   public abstract boolean isInjectedFragment(PsiFile file);
 
   @Nullable
-  public abstract PsiElement findInjectedElementAt(@NotNull PsiFile hostFile, int hostDocumentOffset);
+  public abstract PsiElement findInjectedElementAt(@Nonnull PsiFile hostFile, int hostDocumentOffset);
 
   @Nullable
-  public abstract List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(@NotNull PsiElement host);
+  public abstract List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(@Nonnull PsiElement host);
 
-  public abstract void dropFileCaches(@NotNull PsiFile file);
+  public abstract void dropFileCaches(@Nonnull PsiFile file);
 
-  public abstract PsiFile getTopLevelFile(@NotNull PsiElement element);
+  public abstract PsiFile getTopLevelFile(@Nonnull PsiElement element);
 
-  @NotNull
-  public abstract List<DocumentWindow> getCachedInjectedDocuments(@NotNull PsiFile hostPsiFile);
+  @Nonnull
+  public abstract List<DocumentWindow> getCachedInjectedDocuments(@Nonnull PsiFile hostPsiFile);
 
-  public abstract void startRunInjectors(@NotNull Document hostDocument, boolean synchronously);
+  public abstract void startRunInjectors(@Nonnull Document hostDocument, boolean synchronously);
 
-  public abstract void enumerate(@NotNull PsiElement host, @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+  public abstract void enumerate(@Nonnull PsiElement host, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
-  public abstract void enumerateEx(@NotNull PsiElement host, @NotNull PsiFile containingFile, boolean probeUp, @NotNull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+  public abstract void enumerateEx(@Nonnull PsiElement host, @Nonnull PsiFile containingFile, boolean probeUp, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
   /**
    * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
    */
-  @NotNull
-  public abstract List<TextRange> getNonEditableFragments(@NotNull DocumentWindow window);
+  @Nonnull
+  public abstract List<TextRange> getNonEditableFragments(@Nonnull DocumentWindow window);
 }

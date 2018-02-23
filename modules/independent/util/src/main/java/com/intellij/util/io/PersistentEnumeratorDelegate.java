@@ -16,8 +16,8 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.File;
@@ -25,22 +25,23 @@ import java.io.IOException;
 import java.util.Collection;
 
 public class PersistentEnumeratorDelegate<Data> implements Closeable, Forceable {
-  @NotNull protected final PersistentEnumeratorBase<Data> myEnumerator;
+  @Nonnull
+  protected final PersistentEnumeratorBase<Data> myEnumerator;
 
-  public PersistentEnumeratorDelegate(@NotNull final File file, @NotNull KeyDescriptor<Data> dataDescriptor, final int initialSize) throws IOException {
+  public PersistentEnumeratorDelegate(@Nonnull final File file, @Nonnull KeyDescriptor<Data> dataDescriptor, final int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentEnumeratorDelegate(@NotNull final File file,
-                                      @NotNull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumeratorDelegate(@Nonnull final File file,
+                                      @Nonnull KeyDescriptor<Data> dataDescriptor,
                                       final int initialSize,
                                       @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
     myEnumerator = useBtree() ? new PersistentBTreeEnumerator<Data>(file, dataDescriptor, initialSize, lockContext) :
                    new PersistentEnumerator<Data>(file, dataDescriptor, initialSize);
   }
 
-  public PersistentEnumeratorDelegate(@NotNull final File file,
-                                      @NotNull KeyDescriptor<Data> dataDescriptor,
+  public PersistentEnumeratorDelegate(@Nonnull final File file,
+                                      @Nonnull KeyDescriptor<Data> dataDescriptor,
                                       final int initialSize,
                                       @Nullable PagedFileStorage.StorageLockContext lockContext,
                                       int version) throws IOException {

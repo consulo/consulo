@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.psi.statistics.StatisticsInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,7 +25,7 @@ public class StatisticsComparable implements Comparable<StatisticsComparable> {
   private final int myScalar;
   private final StatisticsInfo myStatisticsInfo;
 
-  public StatisticsComparable(int scalar, @NotNull StatisticsInfo statisticsInfo) {
+  public StatisticsComparable(int scalar, @Nonnull StatisticsInfo statisticsInfo) {
     myScalar = scalar;
     myStatisticsInfo = statisticsInfo;
   }
@@ -34,7 +34,7 @@ public class StatisticsComparable implements Comparable<StatisticsComparable> {
     return myScalar;
   }
 
-  @NotNull
+  @Nonnull
   public StatisticsInfo getStatisticsInfo() {
     return myStatisticsInfo;
   }

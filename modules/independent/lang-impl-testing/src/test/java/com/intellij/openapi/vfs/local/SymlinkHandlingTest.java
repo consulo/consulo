@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -331,7 +331,7 @@ public class SymlinkHandlingTest extends SymlinkTestCase {
     return myFileSystem.findFileByPath(ioFile.getPath());
   }
 
-  private static void assertBrokenLink(@NotNull VirtualFile link) {
+  private static void assertBrokenLink(@Nonnull VirtualFile link) {
     assertTrue(link.is(VFileProperty.SYMLINK));
     assertEquals(0, link.getLength());
     assertNull(link.getCanonicalPath(), link.getCanonicalPath());
@@ -353,7 +353,7 @@ public class SymlinkHandlingTest extends SymlinkTestCase {
     final Set<String> actualSet = new HashSet<String>();
     VfsUtilCore.visitChildrenRecursively(vDir, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         actualSet.add(file.getPath());
         return true;
       }

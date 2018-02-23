@@ -22,17 +22,18 @@ import com.intellij.openapi.editor.StripTrailingSpacesFilterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.openapi.editor.StripTrailingSpacesFilter.ALL_LINES;
 
 public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSpacesFilterFactory {
 
   private static class KeepTrailingSpacesOnEmptyLinesFilter extends SmartStripTrailingSpacesFilter {
-    private @NotNull Document myDocument;
+    private @Nonnull
+    Document myDocument;
 
-    public KeepTrailingSpacesOnEmptyLinesFilter(@NotNull Document document) {
+    public KeepTrailingSpacesOnEmptyLinesFilter(@Nonnull Document document) {
       myDocument = document;
     }
 
@@ -44,7 +45,7 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
     }
 
 
-    private static boolean containsWhitespacesOnly(@NotNull CharSequence chars, int start, int end) {
+    private static boolean containsWhitespacesOnly(@Nonnull CharSequence chars, int start, int end) {
       for (int i = start; i < end; i++) {
         final char c = chars.charAt(i);
         if (c == ' ' || c == '\t' || c == '\n' || c == '\r') continue;
@@ -99,9 +100,9 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
-  public StripTrailingSpacesFilter createFilter(@Nullable Project project, @NotNull Document document) {
+  public StripTrailingSpacesFilter createFilter(@Nullable Project project, @Nonnull Document document) {
     if (project != null && shouldKeepTrailingSpacesOnEmptyLines(project, document)) {
       return new KeepTrailingSpacesOnEmptyLinesFilter(document);
     }
@@ -109,7 +110,7 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
   }
 
 
-  private static boolean shouldKeepTrailingSpacesOnEmptyLines(@NotNull Project project, @NotNull Document document) {
+  private static boolean shouldKeepTrailingSpacesOnEmptyLines(@Nonnull Project project, @Nonnull Document document) {
     PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
     if (file != null) {
       CommonCodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project).getCommonSettings(file.getLanguage());

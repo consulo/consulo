@@ -37,8 +37,8 @@ import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.usages.UsageView;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.datatransfer.Transferable;
@@ -98,12 +98,12 @@ public class PsiElementListNavigator {
    * listUpdaterTask should be started after alarm is initialized so one-item popup won't blink
    */
   @Nullable
-  public static JBPopup navigateOrCreatePopup(@NotNull final NavigatablePsiElement[] targets,
+  public static JBPopup navigateOrCreatePopup(@Nonnull final NavigatablePsiElement[] targets,
                                               final String title,
                                               final String findUsagesTitle,
                                               final ListCellRenderer listRenderer,
                                               @Nullable final ListBackgroundUpdaterTask listUpdaterTask,
-                                              @NotNull final Consumer<Object[]> consumer) {
+                                              @Nonnull final Consumer<Object[]> consumer) {
     if (targets.length == 0) return null;
     if (targets.length == 1 && (listUpdaterTask == null || listUpdaterTask.isFinished())) {
       consumer.consume(targets);

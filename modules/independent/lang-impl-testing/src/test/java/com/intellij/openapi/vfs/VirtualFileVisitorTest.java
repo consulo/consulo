@@ -23,8 +23,8 @@ import com.intellij.testFramework.PlatformUltraLiteTestFixture;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -337,9 +337,9 @@ public class VirtualFileVisitorTest {
   private static class AbortException extends RuntimeException { }
 
   private static void doTest(@Nullable final Function<VirtualFile, Object> condition,
-                             @Nullable final Function<VirtualFile, Iterable<VirtualFile>> iterable,
-                             @NonNls @NotNull String expected,
-                             @NotNull VirtualFileVisitor.Option... options) {
+                             @javax.annotation.Nullable final Function<VirtualFile, Iterable<VirtualFile>> iterable,
+                             @NonNls @Nonnull String expected,
+                             @Nonnull VirtualFileVisitor.Option... options) {
     final StringBuilder sb = new StringBuilder();
 
     try {
@@ -348,9 +348,9 @@ public class VirtualFileVisitorTest {
 
         private int level = 0;
 
-        @NotNull
+        @Nonnull
         @Override
-        public Result visitFileEx(@NotNull VirtualFile file) {
+        public Result visitFileEx(@Nonnull VirtualFile file) {
           sb.append(StringUtil.repeat("  ", level++))
             .append("-> ").append(file.getName()).append(" [").append(getCurrentValue()).append("]\n");
 
@@ -365,14 +365,14 @@ public class VirtualFileVisitorTest {
         }
 
         @Override
-        public void afterChildrenVisited(@NotNull VirtualFile file) {
+        public void afterChildrenVisited(@Nonnull VirtualFile file) {
           sb.append(StringUtil.repeat("  ", --level))
             .append("<- ").append(file.getName()).append(" [").append(getCurrentValue()).append("]\n");
         }
 
         @Nullable
         @Override
-        public Iterable<VirtualFile> getChildrenIterable(@NotNull VirtualFile file) {
+        public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
           return iterable != null ? iterable.fun(file) : super.getChildrenIterable(file);
         }
       });
@@ -382,7 +382,7 @@ public class VirtualFileVisitorTest {
     assertEquals(expected, sb.toString());
   }
 
-  private static MockVirtualFile dir(@NonNls @NotNull String name, MockVirtualFile... children) {
+  private static MockVirtualFile dir(@NonNls @Nonnull String name, MockVirtualFile... children) {
     final MockVirtualFile root = new MockVirtualFile(true, name);
     for (MockVirtualFile child : children) {
       root.addChild(child);
@@ -390,11 +390,11 @@ public class VirtualFileVisitorTest {
     return root;
   }
 
-  private static MockVirtualFile file(@NonNls @NotNull String name) {
+  private static MockVirtualFile file(@NonNls @Nonnull String name) {
     return new MockVirtualFile(name);
   }
 
-  private static void link(@NonNls @NotNull String targetPath, @NotNull @NonNls String linkPath) {
+  private static void link(@NonNls @Nonnull String targetPath, @Nonnull @NonNls String linkPath) {
     final VirtualFile target = myRoot.findFileByRelativePath(targetPath);
     assertNotNull(targetPath, target);
     final int pos = linkPath.lastIndexOf('/');

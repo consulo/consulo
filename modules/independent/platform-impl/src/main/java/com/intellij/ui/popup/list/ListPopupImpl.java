@@ -37,9 +37,9 @@ import com.intellij.ui.popup.ClosableByLeftArrow;
 import com.intellij.ui.popup.WizardPopup;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
@@ -62,22 +62,22 @@ public class ListPopupImpl extends WizardPopup implements ListPopup {
   private int myMaxRowCount = 20;
   private boolean myAutoHandleBeforeShow;
 
-  public ListPopupImpl(@NotNull ListPopupStep aStep, int maxRowCount) {
+  public ListPopupImpl(@Nonnull ListPopupStep aStep, int maxRowCount) {
     super(aStep);
     if (maxRowCount != -1){
       myMaxRowCount = maxRowCount;
     }
   }
 
-  public ListPopupImpl(@NotNull ListPopupStep aStep) {
+  public ListPopupImpl(@Nonnull ListPopupStep aStep) {
     this(aStep, -1);
   }
 
-  public ListPopupImpl(WizardPopup aParent, @NotNull ListPopupStep aStep, Object parentValue) {
+  public ListPopupImpl(WizardPopup aParent, @Nonnull ListPopupStep aStep, Object parentValue) {
     this(aParent, aStep, parentValue, -1);
   }
 
-  public ListPopupImpl(WizardPopup aParent, @NotNull ListPopupStep aStep, Object parentValue, int maxRowCount) {
+  public ListPopupImpl(WizardPopup aParent, @Nonnull ListPopupStep aStep, Object parentValue, int maxRowCount) {
     super(aParent, aStep);
     setParentValue(parentValue);
     if (maxRowCount != -1){
@@ -85,7 +85,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup {
     }
   }
 
-  public void showUnderneathOfLabel(@NotNull JLabel label) {
+  public void showUnderneathOfLabel(@Nonnull JLabel label) {
     int offset = -UIUtil.getListCellHPadding() - UIUtil.getListViewportPadding().left;
     if (label.getIcon() != null) {
       offset += label.getIcon().getIconWidth() + label.getIconTextGap();
@@ -579,7 +579,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup {
     }
 
     @Override
-    public Object getData(@NotNull Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
       if (PlatformDataKeys.SELECTED_ITEM == dataId){
         return myList.getSelectedValue();
       }
@@ -639,7 +639,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup {
   }
 
   @Override
-  public void showInBestPositionFor(@NotNull Editor editor) {
+  public void showInBestPositionFor(@Nonnull Editor editor) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       handleSelect(true);
     }

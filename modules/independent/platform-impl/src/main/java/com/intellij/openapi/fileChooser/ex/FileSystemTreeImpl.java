@@ -51,8 +51,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -270,7 +270,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   }
 
   @Nullable
-  private static FileElement getFileElementFor(@NotNull VirtualFile file) {
+  private static FileElement getFileElementFor(@Nonnull VirtualFile file) {
     VirtualFile selectFile;
 
     if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
@@ -371,7 +371,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSelectedFiles() {
     final List<VirtualFile> files = collectSelectedElements(new NullableFunction<FileElement, VirtualFile>() {
       @Override
@@ -408,7 +408,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   }
 
   @Override
-  public boolean isUnderRoots(@NotNull VirtualFile file) {
+  public boolean isUnderRoots(@Nonnull VirtualFile file) {
     final List<VirtualFile> roots = myDescriptor.getRoots();
     if (roots.size() == 0) return true;
 

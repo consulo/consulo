@@ -17,8 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +36,12 @@ public class CommitContext implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return (T)myMap.get(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     myMap.put(key, value);
   }
 }

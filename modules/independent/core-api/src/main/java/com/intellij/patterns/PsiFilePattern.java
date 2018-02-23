@@ -21,14 +21,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
  */
 public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Self>> extends PsiElementPattern<T, Self> {
 
-  protected PsiFilePattern(@NotNull final InitialPatternCondition<T> condition) {
+  protected PsiFilePattern(@Nonnull final InitialPatternCondition<T> condition) {
     super(condition);
   }
 
@@ -39,7 +39,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withParentDirectoryName(final StringPattern namePattern) {
     return with(new PatternCondition<T>("withParentDirectoryName") {
       @Override
-      public boolean accepts(@NotNull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
         PsiDirectory directory = t.getContainingDirectory();
         return directory != null && namePattern.getCondition().accepts(directory.getName(), context);
       }
@@ -49,7 +49,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withOriginalFile(final ElementPattern<? extends T> filePattern) {
     return with(new PatternCondition<T>("withOriginalFile") {
       @Override
-      public boolean accepts(@NotNull T file, ProcessingContext context) {
+      public boolean accepts(@Nonnull T file, ProcessingContext context) {
         return filePattern.accepts(file.getOriginalFile());
       }
     });
@@ -58,7 +58,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withVirtualFile(final ElementPattern<? extends VirtualFile> vFilePattern) {
     return with(new PatternCondition<T>("withVirtualFile") {
       @Override
-      public boolean accepts(@NotNull T file, ProcessingContext context) {
+      public boolean accepts(@Nonnull T file, ProcessingContext context) {
         return vFilePattern.accepts(file.getVirtualFile(), context);
       }
     });
@@ -67,7 +67,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
   public Self withFileType(final ElementPattern<? extends FileType> fileTypePattern) {
     return with(new PatternCondition<T>("withFileType") {
       @Override
-      public boolean accepts(@NotNull T file, ProcessingContext context) {
+      public boolean accepts(@Nonnull T file, ProcessingContext context) {
         return fileTypePattern.accepts(file.getFileType(), context);
       }
     });
@@ -79,7 +79,7 @@ public class PsiFilePattern<T extends PsiFile, Self extends PsiFilePattern<T, Se
       super(aClass);
     }
 
-    public Capture(@NotNull final InitialPatternCondition<T> condition) {
+    public Capture(@Nonnull final InitialPatternCondition<T> condition) {
       super(condition);
     }
   }

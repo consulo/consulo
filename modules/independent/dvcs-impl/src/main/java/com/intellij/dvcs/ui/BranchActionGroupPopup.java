@@ -40,8 +40,8 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,8 +56,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private static final Key<ListPopupModel> POPUP_MODEL = Key.create("VcsPopupModel");
   private MyPopupListElementRenderer myListElementRenderer;
 
-  public BranchActionGroupPopup(@NotNull String title, @NotNull Project project,
-                                @NotNull Condition<AnAction> preselectActionCondition, @NotNull ActionGroup actions) {
+  public BranchActionGroupPopup(@Nonnull String title, @Nonnull Project project,
+                                @Nonnull Condition<AnAction> preselectActionCondition, @Nonnull ActionGroup actions) {
     super(title, new DefaultActionGroup(actions, createBranchSpeedSearchActionGroup(actions)), SimpleDataContext.getProjectContext(project),
           preselectActionCondition, true);
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
@@ -65,14 +65,14 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   }
 
   //for child popups only
-  private BranchActionGroupPopup(@Nullable WizardPopup aParent, @NotNull ListPopupStep aStep, @Nullable Object parentValue) {
+  private BranchActionGroupPopup(@Nullable WizardPopup aParent, @Nonnull ListPopupStep aStep, @Nullable Object parentValue) {
     super(aParent, aStep, DataContext.EMPTY_CONTEXT, parentValue);
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     installOnHoverIconsSupport(getListElementRenderer());
   }
 
-  @NotNull
-  public static ActionGroup createBranchSpeedSearchActionGroup(@NotNull ActionGroup actionGroup) {
+  @Nonnull
+  public static ActionGroup createBranchSpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
     DefaultActionGroup speedSearchActions = new DefaultActionGroup();
     createSpeedSearchActions(actionGroup, speedSearchActions, true);
     return speedSearchActions;
@@ -83,8 +83,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     return true;
   }
 
-  private static void createSpeedSearchActions(@NotNull ActionGroup actionGroup,
-                                               @NotNull DefaultActionGroup speedSearchActions,
+  private static void createSpeedSearchActions(@Nonnull ActionGroup actionGroup,
+                                               @Nonnull DefaultActionGroup speedSearchActions,
                                                boolean isFirstLevel) {
     // add per repository branches into the model as Speed Search elements and show them only if regular items were not found by mask;
     if (!isFirstLevel) speedSearchActions.addSeparator(actionGroup.getTemplatePresentation().getText());
@@ -147,7 +147,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     ScrollingUtil.ensureSelectionExists(getList());
   }
 
-  protected boolean shouldBeShowing(@NotNull AnAction action) {
+  protected boolean shouldBeShowing(@Nonnull AnAction action) {
     if (!super.shouldBeShowing(action)) return false;
     if (getSpeedSearch().isHoldingFilter()) return !(action instanceof MoreAction);
     if (action instanceof MoreAction) return !((MoreAction)action).myIsExpanded;
@@ -177,7 +177,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     return getSpecificAction(value, RootAction.class);
   }
 
-  private static <T> T getSpecificAction(Object value, @NotNull Class<T> clazz) {
+  private static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
     if (value instanceof PopupFactoryImpl.ActionItem) {
       AnAction action = ((PopupFactoryImpl.ActionItem)value).getAction();
       if (clazz.isInstance(action)) {
@@ -214,7 +214,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     }
 
     @Override
-    public boolean isIconAt(@NotNull Point point) {
+    public boolean isIconAt(@Nonnull Point point) {
       JList list = getList();
       int index = getList().locationToIndex(point);
       Rectangle bounds = getList().getCellBounds(index, index);
@@ -320,9 +320,10 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   }
 
   private static class HideableActionGroup extends EmptyAction.MyDelegatingActionGroup implements MoreHideableActionGroup {
-    @NotNull private final MoreAction myMoreAction;
+    @Nonnull
+    private final MoreAction myMoreAction;
 
-    private HideableActionGroup(@NotNull ActionGroup actionGroup, @NotNull MoreAction moreAction) {
+    private HideableActionGroup(@Nonnull ActionGroup actionGroup, @Nonnull MoreAction moreAction) {
       super(actionGroup);
       myMoreAction = moreAction;
     }
@@ -333,8 +334,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     }
   }
 
-  public static void wrapWithMoreActionIfNeeded(@NotNull DefaultActionGroup parentGroup,
-                                                @NotNull List<? extends ActionGroup> actionList,
+  public static void wrapWithMoreActionIfNeeded(@Nonnull DefaultActionGroup parentGroup,
+                                                @Nonnull List<? extends ActionGroup> actionList,
                                                 int maxIndex) {
     if (actionList.size() > maxIndex) {
       MoreAction moreAction = new MoreAction(actionList.size() - maxIndex);

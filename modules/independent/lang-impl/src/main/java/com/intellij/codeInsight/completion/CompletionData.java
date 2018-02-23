@@ -36,8 +36,8 @@ import com.intellij.psi.impl.source.resolve.reference.impl.PsiMultiReference;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -73,7 +73,7 @@ public class CompletionData {
     myCompletionVariants.add(variant);
   }
 
-  public void completeReference(final PsiReference reference, final Set<LookupElement> set, @NotNull final PsiElement position, final PsiFile file) {
+  public void completeReference(final PsiReference reference, final Set<LookupElement> set, @Nonnull final PsiElement position, final PsiFile file) {
     final CompletionVariant[] variants = findVariants(position, file);
     boolean hasApplicableVariants = false;
     for (CompletionVariant variant : variants) {
@@ -138,7 +138,7 @@ public class CompletionData {
   };
 
   @Nullable
-  public static String getReferencePrefix(@NotNull PsiElement insertedElement, int offsetInFile) {
+  public static String getReferencePrefix(@Nonnull PsiElement insertedElement, int offsetInFile) {
     try {
       final PsiReference ref = insertedElement.getContainingFile().findReferenceAt(offsetInFile);
       if(ref != null) {
@@ -187,7 +187,7 @@ public class CompletionData {
     return findPrefixStatic(insertedElement, offsetInFile, NOT_JAVA_ID);
   }
 
-  public static String findPrefixDefault(final PsiElement insertedElement, final int offset, @NotNull final ElementPattern trimStart) {
+  public static String findPrefixDefault(final PsiElement insertedElement, final int offset, @Nonnull final ElementPattern trimStart) {
     String substr = insertedElement.getText().substring(0, offset - insertedElement.getTextRange().getStartOffset());
     if (substr.length() == 0 || Character.isWhitespace(substr.charAt(substr.length() - 1))) return "";
 
@@ -198,7 +198,7 @@ public class CompletionData {
     return substr.substring(i).trim();
   }
 
-  public static LookupElement objectToLookupItem(final @NotNull Object object) {
+  public static LookupElement objectToLookupItem(final @Nonnull Object object) {
     if (object instanceof LookupElement) return (LookupElement)object;
 
     String s = null;
@@ -232,7 +232,7 @@ public class CompletionData {
   }
 
 
-  protected void addLookupItem(Set<LookupElement> set, TailType tailType, @NotNull Object completion, final CompletionVariant variant) {
+  protected void addLookupItem(Set<LookupElement> set, TailType tailType, @Nonnull Object completion, final CompletionVariant variant) {
     LookupElement ret = objectToLookupItem(completion);
     if (ret == null) return;
     if (!(ret instanceof LookupItem)) {

@@ -23,7 +23,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.util.containers.ConcurrentWeakValueHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 
@@ -47,24 +47,24 @@ class EmptyFileManager implements FileManager {
 
   @RequiredReadAction
   @Override
-  public PsiFile findFile(@NotNull VirtualFile vFile) {
+  public PsiFile findFile(@Nonnull VirtualFile vFile) {
     return null;
   }
 
   @RequiredReadAction
   @Override
-  public PsiDirectory findDirectory(@NotNull VirtualFile vFile) {
+  public PsiDirectory findDirectory(@Nonnull VirtualFile vFile) {
     return null;
   }
 
   @RequiredWriteAction
   @Override
-  public void reloadFromDisk(@NotNull PsiFile file) {
+  public void reloadFromDisk(@Nonnull PsiFile file) {
   }
 
   @RequiredReadAction
   @Override
-  public PsiFile getCachedPsiFile(@NotNull VirtualFile vFile) {
+  public PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile) {
     return null;
   }
 
@@ -74,25 +74,25 @@ class EmptyFileManager implements FileManager {
 
   @RequiredReadAction
   @Override
-  public FileViewProvider findViewProvider(@NotNull VirtualFile file) {
+  public FileViewProvider findViewProvider(@Nonnull VirtualFile file) {
     return myVFileToViewProviderMap.get(file);
   }
 
   @RequiredReadAction
   @Override
-  public FileViewProvider findCachedViewProvider(@NotNull VirtualFile file) {
+  public FileViewProvider findCachedViewProvider(@Nonnull VirtualFile file) {
     return myVFileToViewProviderMap.get(file);
   }
 
   @Override
-  @NotNull
-  public FileViewProvider createFileViewProvider(@NotNull final VirtualFile file, final boolean physical) {
+  @Nonnull
+  public FileViewProvider createFileViewProvider(@Nonnull final VirtualFile file, final boolean physical) {
     return new SingleRootFileViewProvider(myManager, file, physical);
   }
 
   @RequiredReadAction
   @Override
-  public void setViewProvider(@NotNull final VirtualFile virtualFile, final FileViewProvider singleRootFileViewProvider) {
+  public void setViewProvider(@Nonnull final VirtualFile virtualFile, final FileViewProvider singleRootFileViewProvider) {
     if (!(virtualFile instanceof VirtualFileWindow)) {
       if (singleRootFileViewProvider == null) {
         myVFileToViewProviderMap.remove(virtualFile);
@@ -103,7 +103,7 @@ class EmptyFileManager implements FileManager {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<PsiFile> getAllCachedFiles() {
     return Collections.emptyList();

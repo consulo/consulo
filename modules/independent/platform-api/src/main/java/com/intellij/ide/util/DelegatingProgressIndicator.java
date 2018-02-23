@@ -17,7 +17,7 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class DelegatingProgressIndicator implements WrappedProgressIndicator, StandardProgressIndicator {
   private final ProgressIndicator myIndicator;
 
-  public DelegatingProgressIndicator(@NotNull ProgressIndicator indicator) {
+  public DelegatingProgressIndicator(@Nonnull ProgressIndicator indicator) {
     myIndicator = indicator;
   }
 
@@ -116,7 +116,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ModalityState getModalityState() {
     return myIndicator.getModalityState();
   }
@@ -145,7 +145,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
     return myIndicator;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ProgressIndicator getOriginalProgressIndicator() {
     return myIndicator;

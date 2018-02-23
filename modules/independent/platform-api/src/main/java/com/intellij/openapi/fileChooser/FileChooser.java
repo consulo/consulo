@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -40,15 +40,15 @@ public class FileChooser {
 
   private FileChooser() { }
 
-  @NotNull
-  public static VirtualFile[] chooseFiles(@NotNull final FileChooserDescriptor descriptor,
+  @Nonnull
+  public static VirtualFile[] chooseFiles(@Nonnull final FileChooserDescriptor descriptor,
                                           @Nullable final Project project,
                                           @Nullable final VirtualFile toSelect) {
     return chooseFiles(descriptor, null, project, toSelect);
   }
 
-  @NotNull
-  public static VirtualFile[] chooseFiles(@NotNull final FileChooserDescriptor descriptor,
+  @Nonnull
+  public static VirtualFile[] chooseFiles(@Nonnull final FileChooserDescriptor descriptor,
                                           @Nullable final Component parent,
                                           @Nullable final Project project,
                                           @Nullable final VirtualFile toSelect) {
@@ -57,14 +57,14 @@ public class FileChooser {
   }
 
   @Nullable
-  public static VirtualFile chooseFile(@NotNull final FileChooserDescriptor descriptor,
+  public static VirtualFile chooseFile(@Nonnull final FileChooserDescriptor descriptor,
                                        @Nullable final Project project,
                                        @Nullable final VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
   @Nullable
-  public static VirtualFile chooseFile(@NotNull final FileChooserDescriptor descriptor,
+  public static VirtualFile chooseFile(@Nonnull final FileChooserDescriptor descriptor,
                                        @Nullable final Component parent,
                                        @Nullable final Project project,
                                        @Nullable final VirtualFile toSelect) {
@@ -83,10 +83,10 @@ public class FileChooser {
    * @see FileChooserConsumer
    * @since 11.1
    */
-  public static void chooseFiles(@NotNull final FileChooserDescriptor descriptor,
+  public static void chooseFiles(@Nonnull final FileChooserDescriptor descriptor,
                                  @Nullable final Project project,
                                  @Nullable final VirtualFile toSelect,
-                                 @RequiredUIAccess @NotNull final Consumer<List<VirtualFile>> callback) {
+                                 @RequiredUIAccess @Nonnull final Consumer<List<VirtualFile>> callback) {
     chooseFiles(descriptor, project, null, toSelect, callback);
   }
 
@@ -102,11 +102,11 @@ public class FileChooser {
    * @see FileChooserConsumer
    * @since 11.1
    */
-  public static void chooseFiles(@NotNull final FileChooserDescriptor descriptor,
+  public static void chooseFiles(@Nonnull final FileChooserDescriptor descriptor,
                                  @Nullable final Project project,
                                  @Nullable final Component parent,
                                  @Nullable final VirtualFile toSelect,
-                                 @NotNull final Consumer<List<VirtualFile>> callback) {
+                                 @Nonnull final Consumer<List<VirtualFile>> callback) {
     final FileChooserFactory factory = FileChooserFactory.getInstance();
     final PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
     pathChooser.choose(toSelect, callback);
@@ -122,10 +122,10 @@ public class FileChooser {
    * @param callback   callback will be invoked after user have closed dialog and only if there is file selected
    * @since 13
    */
-  public static void chooseFile(@NotNull final FileChooserDescriptor descriptor,
+  public static void chooseFile(@Nonnull final FileChooserDescriptor descriptor,
                                 @Nullable final Project project,
                                 @Nullable final VirtualFile toSelect,
-                                @NotNull final Consumer<VirtualFile> callback) {
+                                @Nonnull final Consumer<VirtualFile> callback) {
     chooseFile(descriptor, project, null, toSelect, callback);
   }
 
@@ -140,11 +140,11 @@ public class FileChooser {
    * @param callback   callback will be invoked after user have closed dialog and only if there is file selected
    * @since 13
    */
-  public static void chooseFile(@NotNull final FileChooserDescriptor descriptor,
+  public static void chooseFile(@Nonnull final FileChooserDescriptor descriptor,
                                 @Nullable final Project project,
                                 @Nullable final Component parent,
                                 @Nullable final VirtualFile toSelect,
-                                @NotNull final Consumer<VirtualFile> callback) {
+                                @Nonnull final Consumer<VirtualFile> callback) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     chooseFiles(descriptor, project, parent, toSelect, new Consumer<List<VirtualFile>>() {
       @Override

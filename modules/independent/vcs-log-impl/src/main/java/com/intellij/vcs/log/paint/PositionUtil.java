@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.paint;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -48,11 +48,11 @@ public class PositionUtil {
     return distance(x0, y0, x, y) <= circleRadius;
   }
 
-  public static int getYInsideRow(@NotNull Point point, int rowHeight) {
+  public static int getYInsideRow(@Nonnull Point point, int rowHeight) {
     return point.y - getRowIndex(point, rowHeight) * rowHeight;
   }
 
-  public static int getRowIndex(@NotNull Point point, int rowHeight) {
+  public static int getRowIndex(@Nonnull Point point, int rowHeight) {
     return point.y / rowHeight;
   }
 }

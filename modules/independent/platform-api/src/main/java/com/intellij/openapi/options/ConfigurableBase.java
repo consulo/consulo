@@ -16,8 +16,8 @@
 package com.intellij.openapi.options;
 
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -28,13 +28,13 @@ public abstract class ConfigurableBase<UI extends ConfigurableUi<S>, S> implemen
 
   private UI ui;
 
-  protected ConfigurableBase(@NotNull String id, @NotNull String displayName, @Nullable String helpTopic) {
+  protected ConfigurableBase(@Nonnull String id, @Nonnull String displayName, @Nullable String helpTopic) {
     this.id = id;
     this.displayName = displayName;
     this.helpTopic = helpTopic;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final String getId() {
     return id;
@@ -58,7 +58,7 @@ public abstract class ConfigurableBase<UI extends ConfigurableUi<S>, S> implemen
     return null;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract S getSettings();
 
   @Override

@@ -17,13 +17,13 @@ package consulo.psi.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24.08.14
  */
 public interface IElementTypeAsPsiFactory {
-  @NotNull
-  PsiElement createElement(@NotNull ASTNode astNode);
+  @Nonnull
+  PsiElement createElement(@Nonnull ASTNode astNode);
 }

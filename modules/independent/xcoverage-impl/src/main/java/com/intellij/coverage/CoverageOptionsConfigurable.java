@@ -7,7 +7,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "coverage";

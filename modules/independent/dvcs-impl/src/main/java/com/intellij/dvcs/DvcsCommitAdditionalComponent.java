@@ -32,8 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.NonFocusableCheckBox;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,12 +48,16 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   protected final JPanel myPanel;
   protected final JCheckBox myAmend;
-  @Nullable private String myPreviousMessage;
-  @Nullable private String myAmendedMessage;
-  @NotNull protected final CheckinProjectPanel myCheckinPanel;
-  @Nullable  private  Map<VirtualFile, String> myMessagesForRoots;
+  @javax.annotation.Nullable
+  private String myPreviousMessage;
+  @javax.annotation.Nullable
+  private String myAmendedMessage;
+  @Nonnull
+  protected final CheckinProjectPanel myCheckinPanel;
+  @javax.annotation.Nullable
+  private  Map<VirtualFile, String> myMessagesForRoots;
 
-  public DvcsCommitAdditionalComponent(@NotNull final Project project, @NotNull CheckinProjectPanel panel) {
+  public DvcsCommitAdditionalComponent(@Nonnull final Project project, @Nonnull CheckinProjectPanel panel) {
     myCheckinPanel = panel;
     myPanel = new JPanel(new GridBagLayout());
     final Insets insets = new Insets(2, 2, 2, 2);
@@ -122,7 +125,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     myAmend.setSelected(false);
   }
 
-  private void loadMessagesInModalTask(@NotNull Project project) {
+  private void loadMessagesInModalTask(@Nonnull Project project) {
     try {
       myMessagesForRoots =
         ProgressManager.getInstance().runProcessWithProgressSynchronously(new ThrowableComputable<Map<VirtualFile,String>, VcsException>() {
@@ -139,14 +142,14 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     }
   }
 
-  private void substituteCommitMessage(@NotNull String newMessage) {
+  private void substituteCommitMessage(@Nonnull String newMessage) {
     myPreviousMessage = myCheckinPanel.getCommitMessage();
     if (!myPreviousMessage.trim().equals(newMessage.trim())) {
       myCheckinPanel.setCommitMessage(newMessage);
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<VirtualFile, String>();
     Collection<VirtualFile> roots = myCheckinPanel.getRoots(); //all committed vcs roots, not only selected
@@ -161,7 +164,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     return messagesForRoots;
   }
 
-  @NotNull
+  @Nonnull
   private List<FilePath> getSelectedFilePaths() {
     return ContainerUtil.map(myCheckinPanel.getFiles(), new Function<File, FilePath>() {
       @Override
@@ -171,11 +174,11 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     });
   }
 
-  @NotNull
-  protected abstract Set<VirtualFile> getVcsRoots(@NotNull Collection<FilePath> files);
+  @Nonnull
+  protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
 
-  @Nullable
-  protected abstract String getLastCommitMessage(@NotNull VirtualFile repo) throws VcsException;
+  @javax.annotation.Nullable
+  protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
 
   public boolean isAmend() {
     return myAmend.isSelected();

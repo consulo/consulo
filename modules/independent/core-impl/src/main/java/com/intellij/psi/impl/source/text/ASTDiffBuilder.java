@@ -29,18 +29,18 @@ import com.intellij.pom.tree.events.impl.TreeChangeEventImpl;
 import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ASTDiffBuilder implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
   private final TreeChangeEventImpl myEvent;
 
-  public ASTDiffBuilder(@NotNull PsiFileImpl fileImpl) {
+  public ASTDiffBuilder(@Nonnull PsiFileImpl fileImpl) {
     TreeAspect modelAspect = PomManager.getModel(fileImpl.getProject()).getModelAspect(TreeAspect.class);
     myEvent = new TreeChangeEventImpl(modelAspect, fileImpl.getTreeElement());
   }
 
   @Override
-  public void nodeReplaced(@NotNull ASTNode oldNode, @NotNull ASTNode newNode) {
+  public void nodeReplaced(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
     if (oldNode instanceof FileElement && newNode instanceof FileElement) {
     }
     else {
@@ -52,16 +52,16 @@ public class ASTDiffBuilder implements DiffTreeChangeBuilder<ASTNode, ASTNode> {
   }
 
   @Override
-  public void nodeDeleted(@NotNull ASTNode parent, @NotNull final ASTNode child) {
+  public void nodeDeleted(@Nonnull ASTNode parent, @Nonnull final ASTNode child) {
     myEvent.addElementaryChange(child, ChangeInfoImpl.create(ChangeInfo.REMOVED, child));
   }
 
   @Override
-  public void nodeInserted(@NotNull final ASTNode oldParent, @NotNull ASTNode newNode, final int pos) {
+  public void nodeInserted(@Nonnull final ASTNode oldParent, @Nonnull ASTNode newNode, final int pos) {
     myEvent.addElementaryChange(newNode, ChangeInfoImpl.create(ChangeInfo.ADD, newNode));
   }
 
-  @NotNull
+  @Nonnull
   public TreeChangeEventImpl getEvent() {
     return myEvent;
   }

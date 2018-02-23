@@ -26,12 +26,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
   @Override
-  public Result preprocessEnter(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull final Ref<Integer> caretOffsetRef, @NotNull final Ref<Integer> caretAdvance,
-                                @NotNull final DataContext dataContext, final EditorActionHandler originalHandler) {
+  public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Ref<Integer> caretOffsetRef, @Nonnull final Ref<Integer> caretAdvance,
+                                @Nonnull final DataContext dataContext, final EditorActionHandler originalHandler) {
     int caretOffset = caretOffsetRef.get().intValue();
     PsiElement psiAtOffset = file.findElementAt(caretOffset);
     if (psiAtOffset != null && psiAtOffset.getTextOffset() < caretOffset) {

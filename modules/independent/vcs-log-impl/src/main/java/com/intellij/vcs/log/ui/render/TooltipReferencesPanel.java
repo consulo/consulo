@@ -27,8 +27,8 @@ import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.ui.frame.ReferencesPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,12 +37,13 @@ import java.util.Map;
 
 class TooltipReferencesPanel extends ReferencesPanel {
   private static final int REFS_LIMIT = 10;
-  @NotNull private final LabelPainter myReferencePainter;
+  @Nonnull
+  private final LabelPainter myReferencePainter;
   private boolean myHasGroupWithMultipleRefs;
 
-  public TooltipReferencesPanel(@NotNull VcsLogData logData,
-                                @NotNull LabelPainter referencePainter,
-                                @NotNull Collection<VcsRef> refs) {
+  public TooltipReferencesPanel(@Nonnull VcsLogData logData,
+                                @Nonnull LabelPainter referencePainter,
+                                @Nonnull Collection<VcsRef> refs) {
     super(new VerticalFlowLayout(JBUI.scale(H_GAP), JBUI.scale(V_GAP)), REFS_LIMIT);
     myReferencePainter = referencePainter;
 
@@ -61,7 +62,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
     super.update();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Font getLabelsFont() {
     return myReferencePainter.getReferenceFont();
@@ -69,7 +70,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
 
   @Nullable
   @Override
-  protected Icon createIcon(@NotNull VcsRefType type, @NotNull Collection<VcsRef> refs, int refIndex, int height) {
+  protected Icon createIcon(@Nonnull VcsRefType type, @Nonnull Collection<VcsRef> refs, int refIndex, int height) {
     if (refIndex == 0) {
       Color color = type.getBackgroundColor();
       return new LabelIcon(height, getBackground(),
@@ -83,12 +84,12 @@ class TooltipReferencesPanel extends ReferencesPanel {
     return createEmptyIcon(height);
   }
 
-  @NotNull
+  @Nonnull
   private static Icon createEmptyIcon(int height) {
     return EmptyIcon.create(LabelIcon.getWidth(height, 2), height);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JBLabel createRestLabel(int restSize) {
     String gray = ColorUtil.toHex(UIManager.getColor("Button.disabledText"));

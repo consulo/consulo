@@ -26,8 +26,8 @@ import com.intellij.util.ui.JBRectangle;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -69,7 +69,7 @@ public class LinkLabel<T> extends JLabel {
     this(text, icon, aListener, null, null);
   }
 
-  @NotNull
+  @Nonnull
   public static LinkLabel<?> create(@Nullable String text, @Nullable Runnable action) {
     return new LinkLabel<>(text, null, action == null ? null : new LinkListener<Object>() {
       @Override
@@ -196,7 +196,7 @@ public class LinkLabel<T> extends JLabel {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Rectangle getTextBounds() {
     final Dimension size = getPreferredSize();
     Icon icon = getIcon();

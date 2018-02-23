@@ -27,8 +27,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,7 +37,7 @@ import java.util.Set;
 public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
-  public GotoClassModel2(@NotNull Project project) {
+  public GotoClassModel2(@Nonnull Project project) {
     super(project, ChooseByNameRegistry.getInstance().getClassModelContributors());
   }
 
@@ -117,7 +117,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSeparators() {
     if (mySeparators == null) {
       mySeparators = getSeparatorsFromContributors(getContributors());
@@ -141,9 +141,9 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     return "procedures.navigating.goto.class";
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String removeModelSpecificMarkup(@NotNull String pattern) {
+  public String removeModelSpecificMarkup(@Nonnull String pattern) {
     if (pattern.startsWith("@")) return pattern.substring(1);
     return pattern;
   }

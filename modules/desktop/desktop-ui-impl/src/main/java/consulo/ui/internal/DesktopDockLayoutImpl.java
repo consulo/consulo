@@ -19,7 +19,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.DockLayout;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,41 +34,41 @@ public class DesktopDockLayoutImpl extends JPanel implements DockLayout, SwingWr
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout top(@NotNull Component component) {
+  public DockLayout top(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.NORTH);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout bottom(@NotNull Component component) {
+  public DockLayout bottom(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.SOUTH);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout center(@NotNull Component component) {
+  public DockLayout center(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.CENTER);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout left(@NotNull Component component) {
+  public DockLayout left(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.WEST);
     return this;
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public DockLayout right(@NotNull Component component) {
+  public DockLayout right(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.EAST);
     return this;
   }

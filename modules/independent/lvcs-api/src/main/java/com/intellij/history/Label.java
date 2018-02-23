@@ -18,13 +18,13 @@ package com.intellij.history;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface Label {
   Label NULL_INSTANCE = new Label() {
 
     @Override
-    public void revert(@NotNull Project project, @NotNull VirtualFile file) {
+    public void revert(@Nonnull Project project, @Nonnull VirtualFile file) {
     }
 
     public ByteContent getByteContent(String path) {
@@ -38,7 +38,7 @@ public interface Label {
    * @param file file or directory that should be reverted
    * @throws LocalHistoryException
    */
-  void revert(@NotNull Project project, @NotNull VirtualFile file) throws LocalHistoryException;
+  void revert(@Nonnull Project project, @Nonnull VirtualFile file) throws LocalHistoryException;
 
   ByteContent getByteContent(String path);
 }

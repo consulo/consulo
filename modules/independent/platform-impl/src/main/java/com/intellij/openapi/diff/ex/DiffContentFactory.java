@@ -20,7 +20,8 @@ import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class DiffContentFactory {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.ex.DiffContentFactory");

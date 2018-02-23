@@ -24,8 +24,8 @@ import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -78,26 +78,26 @@ public class DnDAwareTree extends Tree implements DnDAware {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final JComponent getComponent() {
     return this;
   }
 
-  @NotNull
-  public static Pair<Image, Point> getDragImage(@NotNull Tree dndAwareTree, @NotNull TreePath path, @NotNull Point dragOrigin) {
+  @Nonnull
+  public static Pair<Image, Point> getDragImage(@Nonnull Tree dndAwareTree, @Nonnull TreePath path, @Nonnull Point dragOrigin) {
     int row = dndAwareTree.getRowForPath(path);
     Component comp = dndAwareTree.getCellRenderer().getTreeCellRendererComponent(dndAwareTree, path.getLastPathComponent(), false, true, true, row, false);
     return createDragImage(dndAwareTree, comp, dragOrigin, true);
   }
 
-  @NotNull
-  public static Pair<Image, Point> getDragImage(@NotNull Tree dndAwareTree, @NotNull String text, @Nullable Point dragOrigin) {
+  @Nonnull
+  public static Pair<Image, Point> getDragImage(@Nonnull Tree dndAwareTree, @Nonnull String text, @Nullable Point dragOrigin) {
     return createDragImage(dndAwareTree, new JLabel(text), dragOrigin, false);
   }
 
-  @NotNull
-  private static Pair<Image, Point> createDragImage(@NotNull Tree tree,
-                                                    @NotNull Component c,
+  @Nonnull
+  private static Pair<Image, Point> createDragImage(@Nonnull Tree tree,
+                                                    @Nonnull Component c,
                                                     @Nullable Point dragOrigin,
                                                     boolean adjustToPathUnderDragOrigin) {
     if (c instanceof JComponent) {

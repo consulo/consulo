@@ -19,8 +19,8 @@ package com.intellij.ide.util;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -33,21 +33,21 @@ public class TreeFileChooserFactoryImpl extends TreeFileChooserFactory {
   }
 
   @Override
-  @NotNull
-  public TreeFileChooser createFileChooser(@NotNull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter) {
+  @Nonnull
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, false, false);
   }
 
   @Override
-  @NotNull
-  public TreeFileChooser createFileChooser(@NotNull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
+  @Nonnull
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
                                            boolean disableStructureProviders) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, disableStructureProviders, false);
   }
 
   @Override
-  @NotNull
-  public TreeFileChooser createFileChooser(@NotNull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
+  @Nonnull
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
                                            boolean disableStructureProviders,
                                            boolean showLibraryContents) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, disableStructureProviders, showLibraryContents);

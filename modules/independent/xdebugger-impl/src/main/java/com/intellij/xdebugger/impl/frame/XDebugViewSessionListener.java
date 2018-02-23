@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.frame;
 
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebugSessionListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,12 +26,12 @@ public class XDebugViewSessionListener implements XDebugSessionListener {
   private final XDebugView myDebugView;
   private final XDebugSession mySession;
 
-  public XDebugViewSessionListener(@NotNull XDebugView debugView, @NotNull XDebugSession session) {
+  public XDebugViewSessionListener(@Nonnull XDebugView debugView, @Nonnull XDebugSession session) {
     myDebugView = debugView;
     mySession = session;
   }
 
-  private void onSessionEvent(@NotNull XDebugView.SessionEvent event) {
+  private void onSessionEvent(@Nonnull XDebugView.SessionEvent event) {
     myDebugView.processSessionEvent(event, mySession);
   }
 

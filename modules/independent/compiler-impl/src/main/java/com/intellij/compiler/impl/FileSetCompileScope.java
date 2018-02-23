@@ -24,7 +24,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
     );
   }
 
-  @NotNull
+  @Nonnull
   public Module[] getAffectedModules() {
     return myAffectedModules;
   }
@@ -61,7 +61,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
     return Collections.unmodifiableCollection(myRootFiles);
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile[] getFiles(final FileType fileType, boolean inSourceOnly) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>();
     for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext();) {
@@ -117,7 +117,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
   private static void addRecursively(final Collection<VirtualFile> container, VirtualFile fromDirectory, final FileType fileType) {
     VfsUtilCore.visitChildrenRecursively(fromDirectory, new VirtualFileVisitor(VirtualFileVisitor.SKIP_ROOT) {
       @Override
-      public boolean visitFile(@NotNull VirtualFile child) {
+      public boolean visitFile(@Nonnull VirtualFile child) {
         if (!child.isDirectory() && (fileType == null || fileType.equals(child.getFileType()))) {
           container.add(child);
         }

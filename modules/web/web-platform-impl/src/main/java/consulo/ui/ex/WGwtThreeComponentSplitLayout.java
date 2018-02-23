@@ -25,8 +25,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.internal.VaadinWrapper;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +36,7 @@ import java.util.List;
  * @since 19-Oct-17
  */
 public class WGwtThreeComponentSplitLayout extends AbstractComponent implements HasComponents, Layout, VaadinWrapper {
-  public void setLeftComponent(@Nullable Component component) {
+  public void setLeftComponent(@javax.annotation.Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myLeftComponent);
@@ -49,7 +48,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myLeftComponent = vaadin;
   }
 
-  public void setRightComponent(@Nullable Component component) {
+  public void setRightComponent(@javax.annotation.Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myRightComponent);
@@ -61,7 +60,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myRightComponent = vaadin;
   }
 
-  public void setCenterComponent(@Nullable Component component) {
+  public void setCenterComponent(@javax.annotation.Nullable Component component) {
     com.vaadin.ui.Component vaadin = (com.vaadin.ui.Component)component;
 
     reset(getState().myCenterComponent);
@@ -73,7 +72,7 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
     getState().myCenterComponent = vaadin;
   }
 
-  private void reset(@Nullable Connector connector) {
+  private void reset(@javax.annotation.Nullable Connector connector) {
     if (connector != null) {
       com.vaadin.ui.Component component = (com.vaadin.ui.Component)connector;
 
@@ -101,6 +100,6 @@ public class WGwtThreeComponentSplitLayout extends AbstractComponent implements 
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

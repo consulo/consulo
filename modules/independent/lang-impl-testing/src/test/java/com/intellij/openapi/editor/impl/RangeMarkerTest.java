@@ -45,7 +45,7 @@ import com.intellij.testFramework.Timings;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
@@ -528,7 +528,7 @@ public class RangeMarkerTest extends LightPlatformTestCase {
     assertValidMarker(marker, 3, 8);
   }
 
-  private static void assertValidMarker(@NotNull RangeMarker marker, int start, int end) {
+  private static void assertValidMarker(@Nonnull RangeMarker marker, int start, int end) {
     assertTrue(marker.isValid());
     assertEquals(start, marker.getStartOffset());
     assertEquals(end, marker.getEndOffset());

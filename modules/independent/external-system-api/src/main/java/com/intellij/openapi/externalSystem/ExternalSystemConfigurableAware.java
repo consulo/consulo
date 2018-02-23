@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -25,6 +25,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ExternalSystemConfigurableAware {
 
-  @NotNull
-  Configurable getConfigurable(@NotNull Project project);
+  @Nonnull
+  Configurable getConfigurable(@Nonnull Project project);
 }

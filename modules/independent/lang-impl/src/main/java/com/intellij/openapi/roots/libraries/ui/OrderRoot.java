@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.libraries.ui;
 
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,22 +27,22 @@ public class OrderRoot {
   private final OrderRootType myType;
   private final boolean myJarDirectory;
 
-  public OrderRoot(@NotNull VirtualFile file, @NotNull OrderRootType type) {
+  public OrderRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType type) {
     this(file, type, false);
   }
 
-  public OrderRoot(@NotNull VirtualFile file, @NotNull OrderRootType type, boolean jarDirectory) {
+  public OrderRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType type, boolean jarDirectory) {
     myFile = file;
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public OrderRootType getType() {
     return myType;
   }

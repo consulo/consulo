@@ -16,12 +16,12 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.diagnostic.ControlFlowException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ProcessCanceledException extends RuntimeException implements ControlFlowException {
   public ProcessCanceledException() { }
 
-  public ProcessCanceledException(@NotNull Throwable cause) {
+  public ProcessCanceledException(@Nonnull Throwable cause) {
     super(cause);
   }
 }

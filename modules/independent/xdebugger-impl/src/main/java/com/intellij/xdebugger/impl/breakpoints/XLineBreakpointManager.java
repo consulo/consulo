@@ -57,7 +57,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -74,7 +74,7 @@ public class XLineBreakpointManager {
   private final XDependentBreakpointManager myDependentBreakpointManager;
   private final StartupManagerEx myStartupManager;
 
-  public XLineBreakpointManager(@NotNull Project project, final XDependentBreakpointManager dependentBreakpointManager, final StartupManager startupManager) {
+  public XLineBreakpointManager(@Nonnull Project project, final XDependentBreakpointManager dependentBreakpointManager, final StartupManager startupManager) {
     myProject = project;
     myDependentBreakpointManager = dependentBreakpointManager;
     myStartupManager = (StartupManagerEx)startupManager;
@@ -100,7 +100,7 @@ public class XLineBreakpointManager {
         }
 
         @Override
-        public void fileDeleted(@NotNull VirtualFileEvent event) {
+        public void fileDeleted(@Nonnull VirtualFileEvent event) {
           List<XBreakpoint<?>> toRemove = new SmartList<>();
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
             if (breakpoint.getFileUrl().equals(event.getFile().getUrl())) {
@@ -151,7 +151,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Collection<XLineBreakpointImpl> getDocumentBreakpoints(Document document) {
     Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
     if (breakpoints == null) {
@@ -160,7 +160,7 @@ public class XLineBreakpointManager {
     return breakpoints;
   }
 
-  private void updateBreakpoints(@NotNull Document document) {
+  private void updateBreakpoints(@Nonnull Document document) {
     Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
     if (breakpoints == null) {
       return;
@@ -205,7 +205,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  public void queueBreakpointUpdate(@NotNull final XLineBreakpointImpl<?> breakpoint) {
+  public void queueBreakpointUpdate(@Nonnull final XLineBreakpointImpl<?> breakpoint) {
     myBreakpointsUpdateQueue.queue(new Update(breakpoint) {
       @Override
       public void run() {
@@ -306,7 +306,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  private boolean isFromMyProject(@NotNull Editor editor) {
+  private boolean isFromMyProject(@Nonnull Editor editor) {
     if (myProject == editor.getProject()) {
       return true;
     }

@@ -6,7 +6,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vcs.CommitMessageI;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.ui.Refreshable;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Allows to toggle <code>'check commit message spelling errors'</code> processing.
@@ -34,8 +33,8 @@ public class CheckCommitMessageSpellingAction extends ToggleAction implements Du
     }
   }
 
-  @Nullable
-  private static CommitMessageI getCheckinPanel(@Nullable AnActionEvent e) {
+  @javax.annotation.Nullable
+  private static CommitMessageI getCheckinPanel(@javax.annotation.Nullable AnActionEvent e) {
     if (e == null) {
       return null;
     }

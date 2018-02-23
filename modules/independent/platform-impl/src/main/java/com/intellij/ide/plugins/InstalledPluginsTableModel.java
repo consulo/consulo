@@ -24,7 +24,7 @@ import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.ColumnInfo;
 import consulo.ide.plugins.InstalledPluginsState;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

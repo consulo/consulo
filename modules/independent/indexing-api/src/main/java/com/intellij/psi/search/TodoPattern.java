@@ -22,7 +22,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
@@ -42,11 +42,11 @@ public class TodoPattern implements Cloneable {
   @NonNls private static final String CASE_SENS_ATT = "case-sensitive";
   @NonNls private static final String PATTERN_ATT = "pattern";
 
-  public TodoPattern(@NotNull TodoAttributes attributes){
+  public TodoPattern(@Nonnull TodoAttributes attributes){
     this("", attributes, false);
   }
 
-  public TodoPattern(@NotNull @NonNls String patternString, @NotNull TodoAttributes attributes, boolean caseSensitive) {
+  public TodoPattern(@Nonnull @NonNls String patternString, @Nonnull TodoAttributes attributes, boolean caseSensitive) {
     myIndexPattern = new IndexPattern(patternString, caseSensitive);
     myAttributes = attributes;
   }
@@ -67,21 +67,21 @@ public class TodoPattern implements Cloneable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getPatternString(){
     return myIndexPattern.getPatternString();
   }
 
-  public void setPatternString(@NotNull String patternString){
+  public void setPatternString(@Nonnull String patternString){
     myIndexPattern.setPatternString(patternString);
   }
 
-  @NotNull
+  @Nonnull
   public TodoAttributes getAttributes(){
     return myAttributes;
   }
 
-  public void setAttributes(@NotNull TodoAttributes attributes){
+  public void setAttributes(@Nonnull TodoAttributes attributes){
     myAttributes = attributes;
   }
 
@@ -97,7 +97,7 @@ public class TodoPattern implements Cloneable {
     return myIndexPattern.getPattern();
   }
 
-  public void readExternal(Element element, @NotNull TextAttributes defaultTodoAttributes) throws InvalidDataException {
+  public void readExternal(Element element, @Nonnull TextAttributes defaultTodoAttributes) throws InvalidDataException {
     myAttributes = new TodoAttributes(element,defaultTodoAttributes);
     myIndexPattern.setCaseSensitive(Boolean.valueOf(element.getAttributeValue(CASE_SENS_ATT)).booleanValue());
     String attributeValue = element.getAttributeValue(PATTERN_ATT);

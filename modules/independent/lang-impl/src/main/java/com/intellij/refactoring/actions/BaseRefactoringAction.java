@@ -42,8 +42,8 @@ import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,16 +60,16 @@ public abstract class BaseRefactoringAction extends AnAction {
 
   protected abstract boolean isAvailableInEditorOnly();
 
-  protected abstract boolean isEnabledOnElements(@NotNull PsiElement[] elements);
+  protected abstract boolean isEnabledOnElements(@Nonnull PsiElement[] elements);
 
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element,
-                                                        @NotNull Editor editor,
-                                                        @NotNull PsiFile file,
-                                                        @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element,
+                                                        @Nonnull Editor editor,
+                                                        @Nonnull PsiFile file,
+                                                        @Nonnull DataContext context) {
     return true;
   }
 
-  protected boolean hasAvailableHandler(@NotNull DataContext dataContext) {
+  protected boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
     final RefactoringActionHandler handler = getHandler(dataContext);
     if (handler != null) {
       if (handler instanceof ContextAwareActionHandler) {
@@ -85,11 +85,11 @@ public abstract class BaseRefactoringAction extends AnAction {
   }
 
   @Nullable
-  protected abstract RefactoringActionHandler getHandler(@NotNull DataContext dataContext);
+  protected abstract RefactoringActionHandler getHandler(@Nonnull DataContext dataContext);
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull AnActionEvent e) {
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
@@ -151,7 +151,7 @@ public abstract class BaseRefactoringAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setVisible(true);
     presentation.setEnabled(true);
@@ -256,7 +256,7 @@ public abstract class BaseRefactoringAction extends AnAction {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public static PsiElement[] getPsiElementArray(DataContext dataContext) {
     PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements == null || psiElements.length == 0) {

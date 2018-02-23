@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.changeSignature;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Represents a parameter of a method affected by the "Change Signature" refactoring.

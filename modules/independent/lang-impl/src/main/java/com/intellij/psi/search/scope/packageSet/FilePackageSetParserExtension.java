@@ -23,7 +23,7 @@ package com.intellij.psi.search.scope.packageSet;
 import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class FilePackageSetParserExtension implements PackageSetParserExtension {
 

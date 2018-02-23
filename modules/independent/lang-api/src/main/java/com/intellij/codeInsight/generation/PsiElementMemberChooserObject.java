@@ -17,20 +17,19 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
   private final PsiElement myPsiElement;
 
-  public PsiElementMemberChooserObject(@NotNull final PsiElement psiElement, final String text) {
+  public PsiElementMemberChooserObject(@Nonnull final PsiElement psiElement, final String text) {
     super(text);
     myPsiElement = psiElement;
   }
 
-  public PsiElementMemberChooserObject(final PsiElement psiElement, final String text, @Nullable final Icon icon) {
+  public PsiElementMemberChooserObject(final PsiElement psiElement, final String text, @javax.annotation.Nullable final Icon icon) {
     super(text, icon);
     myPsiElement = psiElement;
   }

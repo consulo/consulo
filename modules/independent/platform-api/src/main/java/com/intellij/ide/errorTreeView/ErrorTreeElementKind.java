@@ -18,7 +18,7 @@ package com.intellij.ide.errorTreeView;
 import com.intellij.util.ui.MessageCategory;
 import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -47,7 +47,7 @@ public enum ErrorTreeElementKind {
     return myPresentableText;
   }
 
-  @NotNull
+  @Nonnull
   public static ErrorTreeElementKind convertMessageFromCompilerErrorType(int type) {
     switch(type) {
       case MessageCategory.ERROR : return ERROR;

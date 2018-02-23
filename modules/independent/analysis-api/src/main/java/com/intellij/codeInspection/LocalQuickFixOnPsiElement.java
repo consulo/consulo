@@ -21,14 +21,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
   protected static final Logger LOG = Logger.getInstance("#com.intellij.codeInspection.LocalQuickFixAndIntentionAction");
   protected final SmartPsiElementPointer<PsiElement> myStartElement;
   protected final SmartPsiElementPointer<PsiElement> myEndElement;
 
-  protected LocalQuickFixOnPsiElement(@NotNull PsiElement element) {
+  protected LocalQuickFixOnPsiElement(@Nonnull PsiElement element) {
     this(element, element);
   }
 
@@ -49,16 +49,16 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     myEndElement = endElement == startElement ? null : SmartPointerManager.getInstance(project).createSmartPsiElementPointer(endElement, endContainingFile);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final String getName() {
     return getText();
   }
 
-  public boolean isAvailable(@NotNull Project project,
-                             @NotNull PsiFile file,
-                             @NotNull PsiElement startElement,
-                             @NotNull PsiElement endElement) {
+  public boolean isAvailable(@Nonnull Project project,
+                             @Nonnull PsiFile file,
+                             @Nonnull PsiElement startElement,
+                             @Nonnull PsiElement endElement) {
     return true;
   }
 
@@ -84,11 +84,11 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     return myEndElement == null ? null : myEndElement.getElement();
   }
 
-  @NotNull
+  @Nonnull
   public abstract String getText();
 
   @Override
-  public final void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+  public final void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
     applyFix();
   }
 
@@ -102,9 +102,9 @@ public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
     invoke(file.getProject(), file, startElement, endElement);
   }
 
-  public abstract void invoke(@NotNull Project project,
-                              @NotNull PsiFile file,
-                              @NotNull PsiElement startElement,
-                              @NotNull PsiElement endElement);
+  public abstract void invoke(@Nonnull Project project,
+                              @Nonnull PsiFile file,
+                              @Nonnull PsiElement startElement,
+                              @Nonnull PsiElement endElement);
 
 }

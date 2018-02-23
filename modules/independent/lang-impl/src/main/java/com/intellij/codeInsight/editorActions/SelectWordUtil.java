@@ -31,8 +31,8 @@ import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -73,18 +73,18 @@ public class SelectWordUtil {
     }
   };
 
-  public static void addWordSelection(boolean camel, CharSequence editorText, int cursorOffset, @NotNull List<TextRange> ranges) {
+  public static void addWordSelection(boolean camel, CharSequence editorText, int cursorOffset, @Nonnull List<TextRange> ranges) {
     addWordSelection(camel, editorText, cursorOffset, ranges, JAVA_IDENTIFIER_PART_CONDITION);
   }
 
-  public static void addWordOrLexemeSelection(boolean camel, @NotNull Editor editor, int cursorOffset, @NotNull List<TextRange> ranges) {
+  public static void addWordOrLexemeSelection(boolean camel, @Nonnull Editor editor, int cursorOffset, @Nonnull List<TextRange> ranges) {
     addWordOrLexemeSelection(camel, editor, cursorOffset, ranges, JAVA_IDENTIFIER_PART_CONDITION);
   }
 
   public static void addWordSelection(boolean camel,
                                       CharSequence editorText,
                                       int cursorOffset,
-                                      @NotNull List<TextRange> ranges,
+                                      @Nonnull List<TextRange> ranges,
                                       CharCondition isWordPartCondition) {
     TextRange camelRange = camel ? getCamelSelectionRange(editorText, cursorOffset, isWordPartCondition) : null;
     if (camelRange != null) {
@@ -98,9 +98,9 @@ public class SelectWordUtil {
   }
 
   public static void addWordOrLexemeSelection(boolean camel,
-                                              @NotNull Editor editor,
+                                              @Nonnull Editor editor,
                                               int cursorOffset,
-                                              @NotNull List<TextRange> ranges,
+                                              @Nonnull List<TextRange> ranges,
                                               CharCondition isWordPartCondition) {
     TextRange camelRange = camel ? getCamelSelectionRange(editor.getDocument().getImmutableCharSequence(),
                                                           cursorOffset, isWordPartCondition) : null;
@@ -146,20 +146,20 @@ public class SelectWordUtil {
   }
 
   @Nullable
-  public static TextRange getWordOrLexemeSelectionRange(@NotNull Editor editor, int cursorOffset,
-                                                        @NotNull CharCondition isWordPartCondition) {
+  public static TextRange getWordOrLexemeSelectionRange(@Nonnull Editor editor, int cursorOffset,
+                                                        @Nonnull CharCondition isWordPartCondition) {
     return getWordOrLexemeSelectionRange(editor, editor.getDocument().getImmutableCharSequence(), cursorOffset, isWordPartCondition);
   }
 
   @Nullable
-  public static TextRange getWordSelectionRange(@NotNull CharSequence editorText, int cursorOffset,
-                                                @NotNull CharCondition isWordPartCondition) {
+  public static TextRange getWordSelectionRange(@Nonnull CharSequence editorText, int cursorOffset,
+                                                @Nonnull CharCondition isWordPartCondition) {
     return getWordOrLexemeSelectionRange(null, editorText, cursorOffset, isWordPartCondition);
   }
 
   @Nullable
-  private static TextRange getWordOrLexemeSelectionRange(@Nullable Editor editor, @NotNull CharSequence editorText, int cursorOffset,
-                                                         @NotNull CharCondition isWordPartCondition) {
+  private static TextRange getWordOrLexemeSelectionRange(@Nullable Editor editor, @Nonnull CharSequence editorText, int cursorOffset,
+                                                         @Nonnull CharCondition isWordPartCondition) {
     int length = editorText.length();
     if (length == 0) return null;
     if (cursorOffset == length ||
@@ -224,7 +224,7 @@ public class SelectWordUtil {
     }
   }
 
-  private static void processInFile(@NotNull final PsiElement element,
+  private static void processInFile(@Nonnull final PsiElement element,
                                     final Processor<TextRange> consumer,
                                     final CharSequence text,
                                     final int cursorOffset,
@@ -238,7 +238,7 @@ public class SelectWordUtil {
     });
   }
 
-  private static boolean processElement(@NotNull PsiElement element,
+  private static boolean processElement(@Nonnull PsiElement element,
                                         Processor<TextRange> processor,
                                         CharSequence text,
                                         int cursorOffset,

@@ -17,7 +17,7 @@ package consulo.ui.style;
 
 import consulo.annotations.Immutable;
 import consulo.ui.UIInternal;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,20 +26,20 @@ import java.util.List;
  * @since 22-Jun-16
  */
 public interface StyleManager {
-  @NotNull
+  @Nonnull
   static StyleManager get() {
     return UIInternal.get()._StyleManager_get();
   }
 
-  @NotNull
+  @Nonnull
   @Immutable
   List<Style> getStyles();
 
-  @NotNull
+  @Nonnull
   Style getCurrentStyle();
 
-  void setCurrentStyle(@NotNull Style style);
+  void setCurrentStyle(@Nonnull Style style);
 
-  @NotNull
-  Runnable addChangeListener(@NotNull StyleChangeListener listener);
+  @Nonnull
+  Runnable addChangeListener(@Nonnull StyleChangeListener listener);
 }

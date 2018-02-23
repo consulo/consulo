@@ -20,8 +20,8 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -48,7 +48,7 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
     return jdk;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return ProjectBundle.message("sdk.java.name");
@@ -74,7 +74,7 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
   }
 
   @Override
-  public void setupCommandLine(@NotNull GeneralCommandLine commandLine, @NotNull Sdk sdk) {
+  public void setupCommandLine(@Nonnull GeneralCommandLine commandLine, @Nonnull Sdk sdk) {
     commandLine.setExePath(getBinPath(sdk) + File.separator + VM_EXE_NAME);
   }
 

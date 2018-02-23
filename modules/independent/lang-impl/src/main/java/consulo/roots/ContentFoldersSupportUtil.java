@@ -16,7 +16,7 @@
 package consulo.roots;
 
 import com.intellij.openapi.roots.ModifiableRootModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
 import java.util.LinkedHashSet;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @since 13:25/07.11.13
  */
 public class ContentFoldersSupportUtil {
-  @NotNull
+  @Nonnull
   public static Set<ContentFolderTypeProvider> getSupportedFolders(ModifiableRootModel moduleRootManager) {
     Set<ContentFolderTypeProvider> providers = new LinkedHashSet<ContentFolderTypeProvider>();
     for (ContentFolderSupportPatcher patcher : ContentFolderSupportPatcher.EP_NAME.getExtensions()) {

@@ -28,7 +28,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -62,9 +62,9 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProvider {
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
-  public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
+  public PsiReference[] getReferencesByElement(@Nonnull final PsiElement element, @Nonnull ProcessingContext context) {
     return ourRefsCache.get(element, null).getValue();
   }
 }

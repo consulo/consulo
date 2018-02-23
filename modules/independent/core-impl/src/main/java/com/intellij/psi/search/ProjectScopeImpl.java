@@ -21,18 +21,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ProjectScopeImpl extends GlobalSearchScope {
   private final FileIndexFacade myFileIndex;
 
-  public ProjectScopeImpl(@NotNull Project project, @NotNull FileIndexFacade fileIndex) {
+  public ProjectScopeImpl(@Nonnull Project project, @Nonnull FileIndexFacade fileIndex) {
     super(project);
     myFileIndex = fileIndex;
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     if (file instanceof VirtualFileWindow) return true;
 
     if (myFileIndex.isInLibraryClasses(file) && !myFileIndex.isInSourceContent(file)) return false;
@@ -41,12 +41,12 @@ public class ProjectScopeImpl extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return true;
   }
 
@@ -55,7 +55,7 @@ public class ProjectScopeImpl extends GlobalSearchScope {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDisplayName() {
     return PsiBundle.message("psi.search.scope.project");
@@ -66,16 +66,16 @@ public class ProjectScopeImpl extends GlobalSearchScope {
     return getDisplayName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlobalSearchScope uniteWith(@NotNull GlobalSearchScope scope) {
+  public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
     if (scope == this || !scope.isSearchInLibraries() || !scope.isSearchOutsideRootModel()) return this;
     return super.uniteWith(scope);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlobalSearchScope intersectWith(@NotNull GlobalSearchScope scope) {
+  public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
     if (scope == this) return this;
     if (!scope.isSearchInLibraries()) return scope;
     return super.intersectWith(scope);

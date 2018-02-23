@@ -26,25 +26,26 @@ package com.intellij.openapi.projectRoots.ex;
 
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SdkRootContainer {
-  @NotNull
-  VirtualFile[] getRootFiles(@NotNull OrderRootType type);
-  @NotNull SdkRoot[] getRoots(@NotNull OrderRootType type);
+  @Nonnull
+  VirtualFile[] getRootFiles(@Nonnull OrderRootType type);
+  @Nonnull
+  SdkRoot[] getRoots(@Nonnull OrderRootType type);
 
   void startChange();
   void finishChange();
 
-  @NotNull
-  SdkRoot addRoot(@NotNull VirtualFile virtualFile, @NotNull OrderRootType type);
-  void addRoot(@NotNull SdkRoot root, @NotNull OrderRootType type);
-  void removeRoot(@NotNull SdkRoot root, @NotNull OrderRootType type);
-  void removeAllRoots(@NotNull OrderRootType type);
+  @Nonnull
+  SdkRoot addRoot(@Nonnull VirtualFile virtualFile, @Nonnull OrderRootType type);
+  void addRoot(@Nonnull SdkRoot root, @Nonnull OrderRootType type);
+  void removeRoot(@Nonnull SdkRoot root, @Nonnull OrderRootType type);
+  void removeAllRoots(@Nonnull OrderRootType type);
 
   void removeAllRoots();
 
-  void removeRoot(@NotNull VirtualFile root, @NotNull OrderRootType type);
+  void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType type);
 
   void update();
 }

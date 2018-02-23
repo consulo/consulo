@@ -39,8 +39,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -290,7 +290,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getHelpTopic() {
     return PROJECT_SCOPES;  //todo help id
@@ -364,7 +364,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return getHelpTopic();
@@ -399,7 +399,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
       if (myChildren == null) {
         myChildren = new AnAction[2];

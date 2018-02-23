@@ -19,11 +19,11 @@ package com.intellij.ide.impl;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PsiElementDataValidator implements DataValidator<PsiElement> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiElement> getKey() {
     return CommonDataKeys.PSI_ELEMENT;

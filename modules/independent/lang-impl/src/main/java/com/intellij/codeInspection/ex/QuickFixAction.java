@@ -44,7 +44,7 @@ import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -59,11 +59,11 @@ public class QuickFixAction extends AnAction {
     return e.getData(InspectionResultsView.DATA_KEY);
   }
 
-  protected QuickFixAction(String text, @NotNull InspectionToolWrapper toolWrapper) {
+  protected QuickFixAction(String text, @Nonnull InspectionToolWrapper toolWrapper) {
     this(text, AllIcons.Actions.CreateFromUsage, null, toolWrapper);
   }
 
-  protected QuickFixAction(String text, Icon icon, KeyStroke keyStroke, @NotNull InspectionToolWrapper toolWrapper) {
+  protected QuickFixAction(String text, Icon icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {
     super(text, null, icon);
     myToolWrapper = toolWrapper;
     if (keyStroke != null) {
@@ -119,15 +119,15 @@ public class QuickFixAction extends AnAction {
   }
 
 
-  protected void applyFix(@NotNull Project project,
-                          @NotNull GlobalInspectionContextImpl context,
-                          @NotNull CommonProblemDescriptor[] descriptors,
-                          @NotNull Set<PsiElement> ignoredElements) {
+  protected void applyFix(@Nonnull Project project,
+                          @Nonnull GlobalInspectionContextImpl context,
+                          @Nonnull CommonProblemDescriptor[] descriptors,
+                          @Nonnull Set<PsiElement> ignoredElements) {
   }
 
-  private void doApplyFix(@NotNull final Project project,
-                          @NotNull final CommonProblemDescriptor[] descriptors,
-                          @NotNull final GlobalInspectionContextImpl context) {
+  private void doApplyFix(@Nonnull final Project project,
+                          @Nonnull final CommonProblemDescriptor[] descriptors,
+                          @Nonnull final GlobalInspectionContextImpl context) {
     final Set<VirtualFile> readOnlyFiles = new THashSet<VirtualFile>();
     for (CommonProblemDescriptor descriptor : descriptors) {
       final PsiElement psiElement = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : null;
@@ -171,7 +171,7 @@ public class QuickFixAction extends AnAction {
     }
   }
 
-  public void doApplyFix(@NotNull final RefEntity[] refElements, @NotNull InspectionResultsView view) {
+  public void doApplyFix(@Nonnull final RefEntity[] refElements, @Nonnull InspectionResultsView view) {
     final RefManagerImpl refManager = (RefManagerImpl)view.getGlobalInspectionContext().getRefManager();
 
     final boolean initial = refManager.isInProcess();
@@ -204,7 +204,7 @@ public class QuickFixAction extends AnAction {
     }
   }
 
-  public static void removeElements(@NotNull RefEntity[] refElements, @NotNull Project project, @NotNull InspectionToolWrapper toolWrapper) {
+  public static void removeElements(@Nonnull RefEntity[] refElements, @Nonnull Project project, @Nonnull InspectionToolWrapper toolWrapper) {
     refreshViews(project, refElements, toolWrapper);
     final ArrayList<RefElement> deletedRefs = new ArrayList<RefElement>(1);
     for (RefEntity refElement : refElements) {
@@ -213,7 +213,7 @@ public class QuickFixAction extends AnAction {
     }
   }
 
-  private static Set<VirtualFile> getReadOnlyFiles(@NotNull RefEntity[] refElements) {
+  private static Set<VirtualFile> getReadOnlyFiles(@Nonnull RefEntity[] refElements) {
     Set<VirtualFile> readOnlyFiles = new THashSet<VirtualFile>();
     for (RefEntity refElement : refElements) {
       PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getElement() : null;
@@ -263,7 +263,7 @@ public class QuickFixAction extends AnAction {
     return selection.toArray(new RefEntity[selection.size()]);
   }
 
-  private static void refreshViews(@NotNull Project project, @NotNull Set<PsiElement> selectedElements, @NotNull InspectionToolWrapper toolWrapper) {
+  private static void refreshViews(@Nonnull Project project, @Nonnull Set<PsiElement> selectedElements, @Nonnull InspectionToolWrapper toolWrapper) {
     InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
     final Set<GlobalInspectionContextImpl> runningContexts = managerEx.getRunningContexts();
     for (GlobalInspectionContextImpl context : runningContexts) {
@@ -274,7 +274,7 @@ public class QuickFixAction extends AnAction {
     }
   }
 
-  private static void refreshViews(@NotNull Project project, @NotNull RefEntity[] refElements, @NotNull InspectionToolWrapper toolWrapper) {
+  private static void refreshViews(@Nonnull Project project, @Nonnull RefEntity[] refElements, @Nonnull InspectionToolWrapper toolWrapper) {
     final Set<PsiElement> ignoredElements = new HashSet<PsiElement>();
     for (RefEntity element : refElements) {
       final PsiElement psiElement = element instanceof RefElement ? ((RefElement)element).getElement() : null;
@@ -288,7 +288,7 @@ public class QuickFixAction extends AnAction {
   /**
    * @return true if immediate UI update needed.
    */
-  protected boolean applyFix(@NotNull RefEntity[] refElements) {
+  protected boolean applyFix(@Nonnull RefEntity[] refElements) {
     Set<VirtualFile> readOnlyFiles = getReadOnlyFiles(refElements);
     if (!readOnlyFiles.isEmpty()) {
       final Project project = refElements[0].getRefManager().getProject();
@@ -300,20 +300,21 @@ public class QuickFixAction extends AnAction {
   }
 
   private class PerformFixesTask implements SequentialTask {
-    @NotNull
+    @Nonnull
     private final Project myProject;
     private final CommonProblemDescriptor[] myDescriptors;
-    @NotNull
+    @Nonnull
     private final Set<PsiElement> myIgnoredElements;
     private final SequentialModalProgressTask myTask;
-    @NotNull private final GlobalInspectionContextImpl myContext;
+    @Nonnull
+    private final GlobalInspectionContextImpl myContext;
     private int myCount = 0;
 
-    public PerformFixesTask(@NotNull Project project,
-                            @NotNull CommonProblemDescriptor[] descriptors,
-                            @NotNull Set<PsiElement> ignoredElements,
-                            @NotNull SequentialModalProgressTask task,
-                            @NotNull GlobalInspectionContextImpl context) {
+    public PerformFixesTask(@Nonnull Project project,
+                            @Nonnull CommonProblemDescriptor[] descriptors,
+                            @Nonnull Set<PsiElement> ignoredElements,
+                            @Nonnull SequentialModalProgressTask task,
+                            @Nonnull GlobalInspectionContextImpl context) {
       myProject = project;
       myDescriptors = descriptors;
       myIgnoredElements = ignoredElements;

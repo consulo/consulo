@@ -18,8 +18,8 @@ package com.intellij.openapi.options.colors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -36,7 +36,8 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the icon for the page, or null if the page does not have a custom icon.
    */
-  @Nullable Icon getIcon();
+  @javax.annotation.Nullable
+  Icon getIcon();
 
   /**
    * Returns the syntax highlighter which is used to highlight the text shown in the preview
@@ -44,7 +45,8 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the syntax highlighter instance.
    */
-  @NotNull SyntaxHighlighter getHighlighter();
+  @Nonnull
+  SyntaxHighlighter getHighlighter();
 
   /**
    * Returns the text shown in the preview pane. If some elements need to be highlighted in
@@ -55,7 +57,8 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the text to show in the preview pane.
    */
-  @NonNls @NotNull String getDemoText();
+  @NonNls @Nonnull
+  String getDemoText();
 
   /**
    * Returns the mapping from special tag names surrounding the regions to be highlighted

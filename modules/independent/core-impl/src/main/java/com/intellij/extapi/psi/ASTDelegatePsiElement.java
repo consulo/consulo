@@ -42,8 +42,8 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public PsiElement[] getChildren() {
     PsiElement psiChild = getFirstChild();
@@ -121,7 +121,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Override
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return getNode().getTextRange();
   }
@@ -158,7 +158,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public char[] textToCharArray() {
     return getNode().getText().toCharArray();
@@ -181,7 +181,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public abstract ASTNode getNode();
 
@@ -190,7 +190,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public Language getLanguage() {
     return getNode().getElementType().getLanguage();
@@ -218,7 +218,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
 
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected PsiElement findNotNullChildByType(IElementType type) {
     return notNullChild(findChildByType(type));
@@ -231,7 +231,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return node == null ? null : node.getPsi();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected PsiElement findNotNullChildByType(TokenSet type) {
     return notNullChild(findChildByType(type));
@@ -244,13 +244,13 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return nodes == null || nodes.length == 0 ? null : nodes[0].getPsi();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected PsiElement findNotNullChildByFilter(TokenSet tokenSet) {
     return notNullChild(findChildByFilter(tokenSet));
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected <T extends PsiElement> T[] findChildrenByType(IElementType elementType, Class<T> arrayClass) {
     return ContainerUtil.map2Array(SharedImplUtil.getChildrenOfType(getNode(), elementType), arrayClass, new Function<ASTNode, T>() {
@@ -262,7 +262,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   protected <T extends PsiElement> List<T> findChildrenByType(TokenSet elementType) {
     List<T> result = EMPTY;
     ASTNode child = getNode().getFirstChildNode();
@@ -279,7 +279,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected <T extends PsiElement> List<T> findChildrenByType(IElementType elementType) {
     List<T> result = EMPTY;
@@ -296,7 +296,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   protected <T extends PsiElement> T[] findChildrenByType(TokenSet elementType, Class<T> arrayClass) {
     return ContainerUtil.map2Array(getNode().getChildren(elementType), arrayClass, new Function<ASTNode, T>() {
@@ -314,12 +314,12 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     return addInnerBefore(element, null);
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     return addInnerBefore(element, anchor);
   }
 
@@ -337,7 +337,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(element);
     ASTNode treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
@@ -348,7 +348,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public void checkAdd(@NotNull final PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull final PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
   }
 
@@ -363,7 +363,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement addRangeBefore(@NotNull final PsiElement first, @NotNull final PsiElement last, final PsiElement anchor)
+  public PsiElement addRangeBefore(@Nonnull final PsiElement first, @Nonnull final PsiElement last, final PsiElement anchor)
     throws IncorrectOperationException {
     return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
   }
@@ -393,7 +393,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     }
   }
 
-  public void deleteChildInternal(@NotNull ASTNode child) {
+  public void deleteChildInternal(@Nonnull ASTNode child) {
     CodeEditUtil.removeChild(getNode(), child);
   }
 
@@ -414,7 +414,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   }
 
   @Override
-  public PsiElement replace(@NotNull final PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull final PsiElement newElement) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
     TreeElement elementCopy = ChangeUtil.copyToElement(newElement);
     if (getParent() instanceof ASTDelegatePsiElement) {

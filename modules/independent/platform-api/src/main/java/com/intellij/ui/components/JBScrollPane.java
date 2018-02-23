@@ -21,9 +21,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.ButtonlessScrollBarUI;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ScrollBarUI;
@@ -89,7 +89,7 @@ public class JBScrollPane extends JScrollPane {
    * @param event a mouse wheel event to check for validity
    * @return {@code true} if the specified event is valid, {@code false} otherwise
    */
-  public static boolean isScrollEvent(@NotNull MouseWheelEvent event) {
+  public static boolean isScrollEvent(@Nonnull MouseWheelEvent event) {
     if (event.isConsumed()) return false; // event should not be consumed already
     if (event.getWheelRotation() == 0) return false; // any rotation expected (forward or backward)
     return 0 == (SCROLL_MODIFIERS & event.getModifiers());
@@ -186,7 +186,7 @@ public class JBScrollPane extends JScrollPane {
     return new MyScrollBar(Adjustable.VERTICAL);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JScrollBar createHorizontalScrollBar() {
     return new MyScrollBar(Adjustable.HORIZONTAL);
@@ -217,7 +217,7 @@ public class JBScrollPane extends JScrollPane {
     }
   }
 
-  private boolean relayoutScrollbars(@NotNull JComponent container, @NotNull ScrollPaneLayout layout, boolean forceRelayout) {
+  private boolean relayoutScrollbars(@Nonnull JComponent container, @Nonnull ScrollPaneLayout layout, boolean forceRelayout) {
     JViewport viewport = layout.getViewport();
     if (viewport == null) return false;
 

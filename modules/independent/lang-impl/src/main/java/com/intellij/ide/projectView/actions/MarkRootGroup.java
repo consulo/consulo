@@ -18,8 +18,8 @@ package com.intellij.ide.projectView.actions;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class MarkRootGroup extends ActionGroup implements DumbAware {
     e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if(e == null) {

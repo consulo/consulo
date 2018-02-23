@@ -1,19 +1,19 @@
 package com.intellij.remoteServer.configuration;
 
 import com.intellij.remoteServer.ServerType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface RemoteServer<C extends ServerConfiguration> {
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   ServerType<C> getType();
 
-  @NotNull
+  @Nonnull
   C getConfiguration();
 
   void setName(String name);

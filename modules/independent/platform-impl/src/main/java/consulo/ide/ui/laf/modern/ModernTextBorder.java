@@ -17,7 +17,7 @@ package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,7 +35,7 @@ public class ModernTextBorder implements Border, UIResource {
   public static interface ModernTextUI {
     boolean isFocused();
 
-    @NotNull
+    @Nonnull
     MouseEnterHandler getMouseEnterHandler();
   }
 

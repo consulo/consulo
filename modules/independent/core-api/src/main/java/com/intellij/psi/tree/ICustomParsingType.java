@@ -17,7 +17,7 @@ package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which are more convenient to parse separately.
@@ -36,6 +36,6 @@ public interface ICustomParsingType {
    * @param table {@link CharTable} object used for interning string in the file
    * @return a tree element of this type with a given text.
    */
-  @NotNull
-  ASTNode parse(@NotNull CharSequence text, @NotNull CharTable table);
+  @Nonnull
+  ASTNode parse(@Nonnull CharSequence text, @Nonnull CharTable table);
 }

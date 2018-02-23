@@ -1,7 +1,7 @@
 package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.roots.DependencyScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implementations of this interface are not obliged to be thread-safe.
@@ -13,12 +13,12 @@ public interface DependencyData<T extends ExternalEntityData> extends ExternalEn
   
   boolean isExported();
 
-  @NotNull
+  @Nonnull
   DependencyScope getScope();
 
-  @NotNull
+  @Nonnull
   ModuleData getOwnerModule();
   
-  @NotNull
+  @Nonnull
   T getTarget();
 }

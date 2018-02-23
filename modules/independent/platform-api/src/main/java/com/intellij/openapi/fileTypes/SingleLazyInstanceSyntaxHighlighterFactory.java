@@ -21,12 +21,12 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   private SyntaxHighlighter myValue;
 
-  @NotNull
+  @Nonnull
   public final SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
     if (myValue == null) {
       myValue = createHighlighter();
@@ -34,5 +34,6 @@ public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxH
     return myValue;
   }
 
-  protected abstract @NotNull SyntaxHighlighter createHighlighter();
+  protected abstract @Nonnull
+  SyntaxHighlighter createHighlighter();
 }

@@ -18,7 +18,7 @@ package com.intellij.execution.actions;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines contract for the {@link ConsoleView#createConsoleActions() console actions} customization.
@@ -39,13 +39,13 @@ public abstract class ConsoleActionsPostProcessor {
    * @param actions     console actions that will be used by default
    * @return            actions to use within the given console instance (given actions may be returned by default)
    */
-  @NotNull
-  public AnAction[] postProcess(@NotNull ConsoleView console, @NotNull AnAction[] actions) {
+  @Nonnull
+  public AnAction[] postProcess(@Nonnull ConsoleView console, @Nonnull AnAction[] actions) {
     return actions;
   }
 
-  @NotNull
-  public AnAction[] postProcessPopupActions(@NotNull ConsoleView console, @NotNull AnAction[] actions) {
+  @Nonnull
+  public AnAction[] postProcessPopupActions(@Nonnull ConsoleView console, @Nonnull AnAction[] actions) {
     return actions;
   }
 }

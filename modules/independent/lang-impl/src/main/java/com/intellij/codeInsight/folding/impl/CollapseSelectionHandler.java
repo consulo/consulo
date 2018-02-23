@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -36,7 +36,7 @@ public class CollapseSelectionHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     editor.getFoldingModel().runBatchFoldingOperation(
             new Runnable() {
               @Override

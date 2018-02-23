@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +38,7 @@ public class CollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<
   }
 
   @Override
-  @NotNull
+  @Nonnull
   final protected List<T> getItems() {
     return myItems;
   }

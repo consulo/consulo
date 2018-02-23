@@ -19,8 +19,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class XBreakpointCustomGroupingRule<B> extends XBreakpointGroupingRule<B,
   }
 
   @Override
-  public XBreakpointCustomGroup getGroup(@NotNull final B breakpoint, @NotNull final Collection<XBreakpointCustomGroup> groups) {
+  public XBreakpointCustomGroup getGroup(@Nonnull final B breakpoint, @Nonnull final Collection<XBreakpointCustomGroup> groups) {
     if (!(breakpoint instanceof XBreakpointBase)) {
       return null;
     }

@@ -16,13 +16,13 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class LineMarkerSettings {
-  @NotNull
+  @Nonnull
   public static LineMarkerSettings getInstance() {
     return ServiceManager.getService(LineMarkerSettings.class);
   }

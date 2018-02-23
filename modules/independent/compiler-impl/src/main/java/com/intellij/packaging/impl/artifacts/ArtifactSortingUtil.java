@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.artifacts;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author nik
  */
 public abstract class ArtifactSortingUtil {
-  public static ArtifactSortingUtil getInstance(@NotNull Project project) {
+  public static ArtifactSortingUtil getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactSortingUtil.class);
   }
 

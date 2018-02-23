@@ -18,8 +18,8 @@ package com.intellij.psi.codeStyle.arrangement.std;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +45,7 @@ public interface ArrangementStandardSettingsAware {
    * @return    ordered collection of grouping tokens eligible to use with the current rearranger.
    *            <b>Note:</b> platform code which uses this method caches returned results
    */
-  @Nullable
+  @javax.annotation.Nullable
   List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
 
   /**
@@ -66,7 +66,7 @@ public interface ArrangementStandardSettingsAware {
    * @param current  an object which represents currently chosen tokens; <code>null</code> if no other token is selected
    * @return         <code>true</code> if given token is enabled with the given condition; <code>false</code> otherwise
    */
-  boolean isEnabled(@NotNull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
+  boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
 
   /**
    * This method is assumed to be used only by third-party developers. All built-in IJ conditions are supposed
@@ -76,14 +76,14 @@ public interface ArrangementStandardSettingsAware {
    * @return           a matcher for the given condition
    * @throws IllegalArgumentException   if current rearranger doesn't know how to build a matcher from the given condition
    */
-  @NotNull
-  ArrangementEntryMatcher buildMatcher(@NotNull ArrangementMatchCondition condition) throws IllegalArgumentException;
+  @Nonnull
+  ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException;
 
   /**
    * @return    collections of mutual exclusion settings. It's is used by standard arrangement settings UI to automatically
    *            deselect elements on selection change. Example: 'private' modifier was selected. When any other modifier is selected
    *            'public' modifier is deselected if returned collection contains set of all supported visibility modifiers
    */
-  @NotNull
+  @Nonnull
   Collection<Set<ArrangementSettingsToken>> getMutexes();
 }

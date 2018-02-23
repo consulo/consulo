@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +35,7 @@ public interface UIAccess {
    * @return ui access - or throw exception
    */
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   static UIAccess get() {
     assertIsUIThread();
 
@@ -51,7 +51,7 @@ public interface UIAccess {
 
   boolean isValid();
 
-  void give(@RequiredUIAccess @NotNull Runnable runnable);
+  void give(@RequiredUIAccess @Nonnull Runnable runnable);
 
-  void giveAndWait(@RequiredUIAccess @NotNull Runnable runnable);
+  void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable);
 }

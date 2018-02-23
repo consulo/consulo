@@ -34,9 +34,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -91,7 +91,7 @@ public abstract class BaseAnalysisAction extends AnAction {
         HelpManager.getInstance().invokeHelp(getHelpTopic());
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -121,10 +121,10 @@ public abstract class BaseAnalysisAction extends AnAction {
   protected void canceled() {
   }
 
-  protected abstract void analyze(@NotNull Project project, @NotNull AnalysisScope scope);
+  protected abstract void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope);
 
   @Nullable
-  private AnalysisScope getInspectionScope(@NotNull DataContext dataContext) {
+  private AnalysisScope getInspectionScope(@Nonnull DataContext dataContext) {
     if (dataContext.getData(CommonDataKeys.PROJECT) == null) return null;
 
     AnalysisScope scope = getInspectionScopeImpl(dataContext);
@@ -133,7 +133,7 @@ public abstract class BaseAnalysisAction extends AnAction {
   }
 
   @Nullable
-  private AnalysisScope getInspectionScopeImpl(@NotNull DataContext dataContext) {
+  private AnalysisScope getInspectionScopeImpl(@Nonnull DataContext dataContext) {
     //Possible scopes: file, directory, package, project, module.
     Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
     if (projectContext != null) {

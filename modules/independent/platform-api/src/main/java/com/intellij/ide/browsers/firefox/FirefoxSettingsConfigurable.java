@@ -29,8 +29,8 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.io.File;

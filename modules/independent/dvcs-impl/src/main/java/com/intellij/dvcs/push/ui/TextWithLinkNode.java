@@ -18,21 +18,22 @@ package com.intellij.dvcs.push.ui;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class TextWithLinkNode extends DefaultMutableTreeNode implements CustomRenderedTreeNode {
 
-  @NotNull protected VcsLinkedTextComponent myLinkedText;
+  @Nonnull
+  protected VcsLinkedTextComponent myLinkedText;
 
-  public TextWithLinkNode(@NotNull VcsLinkedTextComponent linkedText) {
+  public TextWithLinkNode(@Nonnull VcsLinkedTextComponent linkedText) {
     myLinkedText = linkedText;
   }
 
   @Override
-  public void render(@NotNull ColoredTreeCellRenderer renderer) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
     renderer.append("   ");
     myLinkedText.setSelected(renderer.getTree().isPathSelected(TreeUtil.getPathFromRoot(this)));
     TreeNode parent = getParent();

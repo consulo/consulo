@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.local.CoreLocalVirtualFile;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,59 +48,59 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Nullable
   @Override
-  public VirtualFile findFileByIoFile(@NotNull File file) {
+  public VirtualFile findFileByIoFile(@Nonnull File file) {
     return file.exists() ? new CoreLocalVirtualFile(this, file) : null;
   }
 
   @Nullable
   @Override
-  public VirtualFile refreshAndFindFileByIoFile(@NotNull File file) {
+  public VirtualFile refreshAndFindFileByIoFile(@Nonnull File file) {
     return findFileByIoFile(file);
   }
 
   @Override
-  public void refreshIoFiles(@NotNull Iterable<File> files) {
+  public void refreshIoFiles(@Nonnull Iterable<File> files) {
   }
 
   @Override
-  public void refreshIoFiles(@NotNull Iterable<File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
+  public void refreshIoFiles(@Nonnull Iterable<File> files, boolean async, boolean recursive, @javax.annotation.Nullable Runnable onFinish) {
   }
 
   @Override
-  public void refreshFiles(@NotNull Iterable<VirtualFile> files) {
+  public void refreshFiles(@Nonnull Iterable<VirtualFile> files) {
   }
 
   @Override
-  public void refreshFiles(@NotNull Iterable<VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
+  public void refreshFiles(@Nonnull Iterable<VirtualFile> files, boolean async, boolean recursive, @javax.annotation.Nullable Runnable onFinish) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<WatchRequest> addRootsToWatch(@NotNull Collection<String> rootPaths, boolean watchRecursively) {
+  public Set<WatchRequest> addRootsToWatch(@Nonnull Collection<String> rootPaths, boolean watchRecursively) {
     return Collections.emptySet();
   }
 
   @Override
-  public void removeWatchedRoots(@NotNull Collection<WatchRequest> watchRequests) {
+  public void removeWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests) {
   }
 
   @Override
-  public Set<WatchRequest> replaceWatchedRoots(@NotNull Collection<WatchRequest> watchRequests,
-                                               @Nullable Collection<String> recursiveRoots,
+  public Set<WatchRequest> replaceWatchedRoots(@Nonnull Collection<WatchRequest> watchRequests,
+                                               @javax.annotation.Nullable Collection<String> recursiveRoots,
                                                @Nullable Collection<String> flatRoots) {
     return Collections.emptySet();
   }
 
   @Override
-  public void registerAuxiliaryFileOperationsHandler(@NotNull LocalFileOperationsHandler handler) {
+  public void registerAuxiliaryFileOperationsHandler(@Nonnull LocalFileOperationsHandler handler) {
   }
 
   @Override
-  public void unregisterAuxiliaryFileOperationsHandler(@NotNull LocalFileOperationsHandler handler) {
+  public void unregisterAuxiliaryFileOperationsHandler(@Nonnull LocalFileOperationsHandler handler) {
   }
 
   @Override
-  public boolean processCachedFilesInSubtree(@NotNull VirtualFile file, @NotNull Processor<VirtualFile> processor) {
+  public boolean processCachedFilesInSubtree(@Nonnull VirtualFile file, @Nonnull Processor<VirtualFile> processor) {
     throw new UnsupportedOperationException();
   }
 
@@ -111,13 +111,13 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Nullable
   @Override
-  public VirtualFile findFileByPathIfCached(@NotNull @NonNls String path) {
+  public VirtualFile findFileByPathIfCached(@Nonnull @NonNls String path) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String extractRootPath(@NotNull String path) {
+  protected String extractRootPath(@Nonnull String path) {
     if (path.isEmpty()) {
       try {
         return extractRootPath(new File("").getCanonicalPath());
@@ -162,101 +162,101 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent, @NotNull String copyName)
+  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName)
     throws IOException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public byte[] contentsToByteArray(@NotNull VirtualFile file) throws IOException {
+  public byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public InputStream getInputStream(@NotNull VirtualFile file) throws IOException {
+  public InputStream getInputStream(@Nonnull VirtualFile file) throws IOException {
     return file.getInputStream();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OutputStream getOutputStream(@NotNull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
+  public OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public long getLength(@NotNull VirtualFile file) {
+  public long getLength(@Nonnull VirtualFile file) {
     return 0;
   }
 
   @Override
-  public boolean exists(@NotNull VirtualFile file) {
+  public boolean exists(@Nonnull VirtualFile file) {
     return file.exists();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] list(@NotNull VirtualFile file) {
+  public String[] list(@Nonnull VirtualFile file) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isDirectory(@NotNull VirtualFile file) {
+  public boolean isDirectory(@Nonnull VirtualFile file) {
     return file.isDirectory();
   }
 
   @Override
-  public long getTimeStamp(@NotNull VirtualFile file) {
+  public long getTimeStamp(@Nonnull VirtualFile file) {
     return 0;
   }
 
   @Override
-  public void setTimeStamp(@NotNull VirtualFile file, long timeStamp) throws IOException {
+  public void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException {
   }
 
   @Override
-  public boolean isWritable(@NotNull VirtualFile file) {
+  public boolean isWritable(@Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  public void setWritable(@NotNull VirtualFile file, boolean writableFlag) throws IOException {
+  public void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException {
+  public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException {
     File file = new File(parent.getPath(), dir);
     FileUtil.createDirectory(file);
     return findFileByIoFile(file);
   }
 
   @Override
-  public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile parent, @NotNull String file) throws IOException {
+  public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void deleteFile(Object requestor, @NotNull VirtualFile file) throws IOException {
+  public void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException {
     assert file instanceof CoreLocalVirtualFile;
 
     FileUtil.delete(new File(file.getPath()));
   }
 
   @Override
-  public void moveFile(Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent) throws IOException {
+  public void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void renameFile(Object requestor, @NotNull VirtualFile file, @NotNull String newName) throws IOException {
+  public void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public FileAttributes getAttributes(@NotNull VirtualFile file) {
+  public FileAttributes getAttributes(@Nonnull VirtualFile file) {
     String path = normalize(file.getPath());
     if (path == null) return null;
     if (file.getParent() == null && path.startsWith("//")) {
@@ -267,7 +267,7 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Override
   @Nullable
-  protected String normalize(@NotNull String path) {
+  protected String normalize(@Nonnull String path) {
     if (path.isEmpty()) {
       try {
         path = new File("").getCanonicalPath();
@@ -309,15 +309,15 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
     return file.isAbsolute();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProtocol() {
     return PROTOCOL;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public VirtualFile findFileByPath(@NotNull @NonNls String path) {
+  public VirtualFile findFileByPath(@Nonnull @NonNls String path) {
     return findFileByIoFile(new File(path));
   }
 
@@ -327,7 +327,7 @@ public class CompilerServerLocalFileSystemImpl extends LocalFileSystem {
 
   @Nullable
   @Override
-  public VirtualFile refreshAndFindFileByPath(@NotNull String path) {
+  public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
     return findFileByPath(path);
   }
 }

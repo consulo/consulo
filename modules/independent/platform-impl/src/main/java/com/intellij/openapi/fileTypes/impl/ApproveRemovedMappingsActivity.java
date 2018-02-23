@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.Iterator;
@@ -58,7 +58,7 @@ public class ApproveRemovedMappingsActivity implements StartupActivity {
                                                          " was reassigned to " + fileType.getName() + " <a href='revert'>Revert</a>",
                                                          NotificationType.WARNING, new NotificationListener.Adapter() {
               @Override
-              protected void hyperlinkActivated(@NotNull Notification notification, @NotNull HyperlinkEvent e) {
+              protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
                 ApplicationManager.getApplication().runWriteAction(new Runnable() {
                   public void run() {
                     FileTypeManager.getInstance().associate(PlainTextFileType.INSTANCE, matcher);

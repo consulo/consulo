@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines a single template which can be used in Surround With.
@@ -43,7 +43,7 @@ public interface Surrounder {
    * @param elements the elements to be surrounded
    * @return true if the template is applicable to the elements, false otherwise.
    */
-  boolean isApplicable(@NotNull PsiElement[] elements);
+  boolean isApplicable(@Nonnull PsiElement[] elements);
 
   /**
    * Performs the Surround With action on the specified range of elements.
@@ -54,7 +54,7 @@ public interface Surrounder {
    * @return range to select/to position the caret
    */
   @Nullable
-  TextRange surroundElements(@NotNull Project project,
-                             @NotNull Editor editor,
-                             @NotNull PsiElement[] elements) throws IncorrectOperationException;
+  TextRange surroundElements(@Nonnull Project project,
+                             @Nonnull Editor editor,
+                             @Nonnull PsiElement[] elements) throws IncorrectOperationException;
 }

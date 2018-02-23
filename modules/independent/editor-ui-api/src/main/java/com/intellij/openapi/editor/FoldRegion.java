@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a region of text in the editor which can be folded.
@@ -46,7 +46,7 @@ public interface FoldRegion extends RangeMarker {
    *
    * @return the placeholder text.
    */
-  @NotNull
+  @Nonnull
   String getPlaceholderText();
 
   Editor getEditor();

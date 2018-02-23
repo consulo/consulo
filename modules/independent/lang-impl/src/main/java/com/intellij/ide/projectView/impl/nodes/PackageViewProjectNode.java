@@ -29,7 +29,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +41,7 @@ public class PackageViewProjectNode extends AbstractProjectNode {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     if (getSettings().isShowModules()) {
       final List<Module> allModules = new ArrayList<Module>(Arrays.asList(ModuleManager.getInstance(getProject()).getModules()));

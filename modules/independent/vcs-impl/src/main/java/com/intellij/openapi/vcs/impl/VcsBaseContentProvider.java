@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author irengrig
@@ -30,12 +30,12 @@ public interface VcsBaseContentProvider {
   ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcs.baseContentProvider");
 
   @Nullable
-  BaseContent getBaseRevision(@NotNull VirtualFile file);
+  BaseContent getBaseRevision(@Nonnull VirtualFile file);
 
-  boolean isSupported(@NotNull VirtualFile file);
+  boolean isSupported(@Nonnull VirtualFile file);
 
   interface BaseContent {
-    @NotNull
+    @Nonnull
     VcsRevisionNumber getRevisionNumber();
 
     @Nullable

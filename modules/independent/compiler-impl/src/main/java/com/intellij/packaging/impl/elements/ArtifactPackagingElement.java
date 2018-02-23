@@ -30,8 +30,8 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingElementPresentation;
 import com.intellij.util.xmlb.annotations.Attribute;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +45,18 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   private ArtifactPointer myArtifactPointer;
   @NonNls public static final String ARTIFACT_NAME_ATTRIBUTE = "artifact-name";
 
-  public ArtifactPackagingElement(@NotNull Project project) {
+  public ArtifactPackagingElement(@Nonnull Project project) {
     super(ArtifactElementType.getInstance());
     myProject = project;
   }
 
-  public ArtifactPackagingElement(@NotNull Project project, @NotNull ArtifactPointer artifactPointer) {
+  public ArtifactPackagingElement(@Nonnull Project project, @Nonnull ArtifactPointer artifactPointer) {
     this(project);
     myArtifactPointer = artifactPointer;
   }
 
   @Override
-  public List<? extends PackagingElement<?>> getSubstitution(@NotNull PackagingElementResolvingContext context, @NotNull ArtifactType artifactType) {
+  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType) {
     final Artifact artifact = findArtifact(context);
     if (artifact != null) {
       final ArtifactType type = artifact.getArtifactType();
@@ -79,10 +79,10 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
+                                                     @Nonnull ArtifactType artifactType) {
     Artifact artifact = findArtifact(resolvingContext);
     if (artifact == null) return;
 
@@ -120,7 +120,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new DelegatedPackagingElementPresentation(new ArtifactElementPresentation(myArtifactPointer, context));
   }
 
@@ -145,13 +145,13 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public boolean isEqualTo(@NotNull PackagingElement<?> element) {
+  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
     return element instanceof ArtifactPackagingElement && myArtifactPointer != null
            && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
   }
 
-  @Nullable
-  public Artifact findArtifact(@NotNull PackagingElementResolvingContext context) {
+  @javax.annotation.Nullable
+  public Artifact findArtifact(@Nonnull PackagingElementResolvingContext context) {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(context.getArtifactModel()) : null;
   }
 
@@ -161,7 +161,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @SuppressWarnings("unused")
-  public void setArtifactPointer(@Nullable ArtifactPointer artifactPointer) {
+  public void setArtifactPointer(@javax.annotation.Nullable ArtifactPointer artifactPointer) {
     myArtifactPointer = artifactPointer;
   }
 

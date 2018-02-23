@@ -27,15 +27,15 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class OrderEntryUtil {
   private OrderEntryUtil() {
   }
 
   @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(@NotNull ModuleRootModel model, @Nullable Library library) {
+  public static LibraryOrderEntry findLibraryOrderEntry(@Nonnull ModuleRootModel model, @Nullable Library library) {
     if (library == null) return null;
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry)orderEntry).getLibrary())) {
@@ -47,7 +47,7 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(@NotNull ModuleRootModel model, @NotNull String libraryName) {
+  public static LibraryOrderEntry findLibraryOrderEntry(@Nonnull ModuleRootModel model, @Nonnull String libraryName) {
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry) {
         final String libName = ((LibraryOrderEntry)orderEntry).getLibraryName();
@@ -60,7 +60,7 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static ModuleOrderEntry findModuleOrderEntry(@NotNull ModuleRootModel model, @Nullable Module module) {
+  public static ModuleOrderEntry findModuleOrderEntry(@Nonnull ModuleRootModel model, @Nullable Module module) {
     if (module == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
@@ -73,12 +73,12 @@ public class OrderEntryUtil {
 
   @Nullable
   @Deprecated
-  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
+  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(@Nonnull ModuleRootModel model, @Nullable Sdk sdk) {
     return findModuleExtensionWithSdkOrderEntry(model, sdk);
   }
 
   @Nullable
-  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(@NotNull ModuleRootModel model, @Nullable Sdk sdk) {
+  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(@Nonnull ModuleRootModel model, @Nullable Sdk sdk) {
     if (sdk == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
@@ -140,7 +140,7 @@ public class OrderEntryUtil {
     addLibraryToRoots(module, library);
   }
 
-  public static void addLibraryToRoots(@NotNull Module module, @NotNull Library library) {
+  public static void addLibraryToRoots(@Nonnull Module module, @Nonnull Library library) {
     final ModuleRootManager manager = ModuleRootManager.getInstance(module);
     final ModifiableRootModel rootModel = manager.getModifiableModel();
 
@@ -161,7 +161,7 @@ public class OrderEntryUtil {
     rootModel.commit();
   }
 
-  public static void replaceLibrary(@NotNull ModifiableRootModel model, @NotNull Library oldLibrary, @NotNull Library newLibrary) {
+  public static void replaceLibrary(@Nonnull ModifiableRootModel model, @Nonnull Library oldLibrary, @Nonnull Library newLibrary) {
     OrderEntry[] entries = model.getOrderEntries();
     for (int i = 0; i < entries.length; i++) {
       OrderEntry orderEntry = entries[i];
@@ -178,7 +178,7 @@ public class OrderEntryUtil {
     }
   }
 
-  public static <T extends OrderEntry> void processOrderEntries(@NotNull Module module, @NotNull Class<T> orderEntryClass, @NotNull Processor<T> processor) {
+  public static <T extends OrderEntry> void processOrderEntries(@Nonnull Module module, @Nonnull Class<T> orderEntryClass, @Nonnull Processor<T> processor) {
     OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
     for (OrderEntry orderEntry : orderEntries) {
       if (orderEntryClass.isInstance(orderEntry)) {

@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -30,14 +30,15 @@ import java.awt.*;
  */
 public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
 
-  @NotNull private final TextDiffType myDiffType;
+  @Nonnull
+  private final TextDiffType myDiffType;
 
-  @NotNull
-  public static DiffLineMarkerRenderer createInstance(@NotNull TextDiffType diffType) {
+  @Nonnull
+  public static DiffLineMarkerRenderer createInstance(@Nonnull TextDiffType diffType) {
     return new DiffLineMarkerRenderer(diffType);
   }
 
-  private DiffLineMarkerRenderer(@NotNull TextDiffType diffType) {
+  private DiffLineMarkerRenderer(@Nonnull TextDiffType diffType) {
     myDiffType = diffType;
   }
 
@@ -72,7 +73,7 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineMarkerRendererEx.Position getPosition() {
     return LineMarkerRendererEx.Position.CUSTOM;

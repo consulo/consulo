@@ -34,8 +34,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.*;
@@ -53,7 +54,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
 
   @RequiredDispatchThread
   @Override
-  public void invoke(@NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
 
     LookupManager.getInstance(project).hideActiveLookup();
@@ -198,7 +199,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     return false;
   }
 
-  private static List<CompletionVariant> computeVariants(@NotNull final Editor editor, CamelHumpMatcher matcher, PsiFile file) {
+  private static List<CompletionVariant> computeVariants(@Nonnull final Editor editor, CamelHumpMatcher matcher, PsiFile file) {
 
     final CharSequence chars = editor.getDocument().getCharsSequence();
 

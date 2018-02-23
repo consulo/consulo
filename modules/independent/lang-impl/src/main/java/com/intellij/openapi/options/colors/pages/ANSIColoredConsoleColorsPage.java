@@ -11,9 +11,9 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Weighted;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,37 +93,37 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Weighted
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDisplayName() {
     return OptionsBundle.message("color.settings.console.name");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     return PlainTextFileType.INSTANCE.getIcon();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATTRS;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ColorDescriptor[] getColorDescriptors() {
     return COLORS;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public SyntaxHighlighter getHighlighter() {
      return new PlainSyntaxHighlighter();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDemoText() {
     return DEMO_TEXT;
   }

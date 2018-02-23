@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author maxim
@@ -51,11 +51,11 @@ public class Base64Converter {
     -1,
   };
 
-  public static String encode(@NotNull String s) {
+  public static String encode(@Nonnull String s) {
     return encode(s.getBytes());
   }
 
-  public static String encode(@NotNull byte[] octetString) {
+  public static String encode(@Nonnull byte[] octetString) {
     int bits24;
     int bits6;
 
@@ -113,11 +113,11 @@ public class Base64Converter {
     return StringFactory.createShared(out);
   }
 
-  public static String decode(@NotNull String s) {
+  public static String decode(@Nonnull String s) {
     return new String(decode(s.getBytes()));
   }
 
-  public static byte[] decode(@NotNull byte[] bytes) {
+  public static byte[] decode(@Nonnull byte[] bytes) {
     int paddingCount = 0;
     int realLength = 0;
 

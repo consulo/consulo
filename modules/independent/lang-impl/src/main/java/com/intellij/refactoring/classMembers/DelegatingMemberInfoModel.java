@@ -25,8 +25,8 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DelegatingMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {
   private MemberInfoModel<T, M> myDelegatingTarget;
@@ -64,7 +64,7 @@ public class DelegatingMemberInfoModel<T extends PsiElement, M extends MemberInf
   }
 
   @Override
-  public int checkForProblems(@NotNull M member) {
+  public int checkForProblems(@Nonnull M member) {
     return myDelegatingTarget.checkForProblems(member);
   }
 

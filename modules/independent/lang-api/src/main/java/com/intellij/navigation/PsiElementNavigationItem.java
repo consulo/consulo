@@ -16,12 +16,11 @@
 package com.intellij.navigation;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
 public interface PsiElementNavigationItem extends NavigationItem {
-  @Nullable
+  @javax.annotation.Nullable
   PsiElement getTargetElement();
 }

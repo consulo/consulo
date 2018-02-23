@@ -28,7 +28,7 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.util.NotNullPairFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 
@@ -40,7 +40,7 @@ import java.util.*;
 public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   private static final NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]> ourSourcesToFileFunc =
     new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
-      @NotNull
+      @Nonnull
       @Override
       public VirtualFile[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
         return t.getFolderFiles(v);
@@ -49,7 +49,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
   private static final NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]> ourSourcesToUrlFunc =
     new NotNullPairFunction<ContentEntry, Predicate<ContentFolderTypeProvider>, String[]>() {
-      @NotNull
+      @Nonnull
       @Override
       public String[] fun(ContentEntry t, Predicate<ContentFolderTypeProvider> v) {
         return t.getFolderUrls(v);
@@ -58,7 +58,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
   private static final NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> ourRuntimeToFileFunc =
     new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]>() {
-      @NotNull
+      @Nonnull
       @Override
       public VirtualFile[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
         List<VirtualFile> files = new ArrayList<VirtualFile>(5);
@@ -74,7 +74,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
   private static final NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> ourRuntimeToUrlFunc =
     new NotNullPairFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]>() {
-      @NotNull
+      @Nonnull
       @Override
       public String[] fun(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
         List<String> urls = new ArrayList<String>(5);
@@ -96,20 +96,20 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   private NotNullFunction<OrderEntry, VirtualFile[]> myCustomRootProvider;
   private boolean myWithoutSelfModuleOutput;
 
-  public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @NotNull OrderRootType rootType) {
+  public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @Nonnull OrderRootType rootType) {
     myOrderEnumerator = orderEnumerator;
     myRootType = rootType;
     myRootTypeProvider = null;
   }
 
   public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator,
-                                  @NotNull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
+                                  @Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider) {
     myOrderEnumerator = orderEnumerator;
     myRootTypeProvider = rootTypeProvider;
     myRootType = null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile[] getRoots() {
     if (myUsingCache) {
@@ -129,7 +129,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     return VfsUtilCore.toVirtualFileArray(computeRoots());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String[] getUrls() {
     if (myUsingCache) {
@@ -195,7 +195,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private Collection<String> computeRootsUrls() {
     final Collection<String> result = new LinkedHashSet<String>();
     myOrderEnumerator.forEach(new Processor<OrderEntry>() {
@@ -232,7 +232,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PathsList getPathsList() {
     final PathsList list = new PathsList();
@@ -241,27 +241,27 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
   }
 
   @Override
-  public void collectPaths(@NotNull PathsList list) {
+  public void collectPaths(@Nonnull PathsList list) {
     list.addVirtualFiles(getRoots());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderRootsEnumerator usingCache() {
     myUsingCache = true;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OrderRootsEnumerator withoutSelfModuleOutput() {
     myWithoutSelfModuleOutput = true;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderRootsEnumerator usingCustomRootProvider(@NotNull NotNullFunction<OrderEntry, VirtualFile[]> provider) {
+  public OrderRootsEnumerator usingCustomRootProvider(@Nonnull NotNullFunction<OrderEntry, VirtualFile[]> provider) {
     myCustomRootProvider = provider;
     return this;
   }

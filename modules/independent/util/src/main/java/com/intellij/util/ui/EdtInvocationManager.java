@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -31,21 +31,22 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class EdtInvocationManager {
 
-  @NotNull private static volatile EdtInvocationManager ourInstance = new SwingEdtInvocationManager();
+  @Nonnull
+  private static volatile EdtInvocationManager ourInstance = new SwingEdtInvocationManager();
 
   public abstract boolean isEventDispatchThread();
 
-  public abstract void invokeLater(@NotNull Runnable task);
+  public abstract void invokeLater(@Nonnull Runnable task);
 
-  public abstract void invokeAndWait(@NotNull Runnable task) throws InvocationTargetException, InterruptedException;
+  public abstract void invokeAndWait(@Nonnull Runnable task) throws InvocationTargetException, InterruptedException;
 
-  @NotNull
+  @Nonnull
   public static EdtInvocationManager getInstance() {
     return ourInstance;
   }
 
   @SuppressWarnings("unused") // Used in upsource
-  public static void setEdtInvocationManager(@NotNull EdtInvocationManager edtInvocationManager) {
+  public static void setEdtInvocationManager(@Nonnull EdtInvocationManager edtInvocationManager) {
     ourInstance = edtInvocationManager;
   }
 
@@ -59,13 +60,13 @@ public abstract class EdtInvocationManager {
     }
 
     @Override
-    public void invokeLater(@NotNull Runnable task) {
+    public void invokeLater(@Nonnull Runnable task) {
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(task);
     }
 
     @Override
-    public void invokeAndWait(@NotNull Runnable task) throws InvocationTargetException, InterruptedException {
+    public void invokeAndWait(@Nonnull Runnable task) throws InvocationTargetException, InterruptedException {
       //noinspection SSBasedInspection
       SwingUtilities.invokeAndWait(task);
     }

@@ -18,8 +18,8 @@ package consulo.roots.impl.property;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderPropertyProvider;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ import javax.swing.*;
 public class GeneratedContentFolderPropertyProvider extends ContentFolderPropertyProvider<Boolean> {
   public static final Key<Boolean> IS_GENERATED = Key.create("is-generated-root");
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<Boolean> getKey() {
     return IS_GENERATED;
@@ -39,21 +39,21 @@ public class GeneratedContentFolderPropertyProvider extends ContentFolderPropert
 
   @Nullable
   @Override
-  public Icon getLayerIcon(@NotNull Boolean value) {
+  public Icon getLayerIcon(@Nonnull Boolean value) {
     return Comparing.equal(value, Boolean.TRUE) ? AllIcons.Modules.GeneratedMark : null;
   }
 
   @Override
-  public Boolean fromString(@NotNull String value) {
+  public Boolean fromString(@Nonnull String value) {
     return Boolean.valueOf(value);
   }
 
   @Override
-  public String toString(@NotNull Boolean value) {
+  public String toString(@Nonnull Boolean value) {
     return value.toString();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Boolean[] getValues() {
     return new Boolean[]{Boolean.TRUE, Boolean.FALSE};

@@ -18,8 +18,8 @@ package com.intellij.util.xmlb;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 class JDOMElementBinding extends Binding implements MultiNodeBinding {
   private final String myTagName;
 
-  public JDOMElementBinding(@NotNull MutableAccessor accessor) {
+  public JDOMElementBinding(@Nonnull MutableAccessor accessor) {
     super(accessor);
 
     Tag tag = myAccessor.getAnnotation(Tag.class);
@@ -41,7 +41,7 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
   }
 
   @Override
-  public Object serialize(@NotNull Object o, Object context, @NotNull SerializationFilter filter) {
+  public Object serialize(@Nonnull Object o, Object context, @Nonnull SerializationFilter filter) {
     Object value = myAccessor.read(o);
     if (value == null) {
       return null;
@@ -65,7 +65,7 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
 
   @Nullable
   @Override
-  public Object deserializeList(Object context, @NotNull List<Element> elements) {
+  public Object deserializeList(Object context, @Nonnull List<Element> elements) {
     if (myAccessor.getValueClass().isArray()) {
       myAccessor.set(context, elements.toArray(new Element[elements.size()]));
     }
@@ -82,13 +82,13 @@ class JDOMElementBinding extends Binding implements MultiNodeBinding {
 
   @Override
   @Nullable
-  public Object deserialize(Object context, @NotNull Element element) {
+  public Object deserialize(Object context, @Nonnull Element element) {
     myAccessor.set(context, element);
     return context;
   }
 
   @Override
-  public boolean isBoundTo(@NotNull Element element) {
+  public boolean isBoundTo(@Nonnull Element element) {
     return element.getName().equals(myTagName);
   }
 }

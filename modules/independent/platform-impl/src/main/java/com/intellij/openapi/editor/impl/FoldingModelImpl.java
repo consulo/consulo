@@ -42,8 +42,8 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -72,7 +72,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   private boolean myDocumentChangeProcessed = true;
   private final AtomicLong myExpansionCounter = new AtomicLong();
 
-  public FoldingModelImpl(@NotNull EditorImpl editor) {
+  public FoldingModelImpl(@Nonnull EditorImpl editor) {
     myEditor = editor;
     myIsFoldingEnabled = true;
     myIsBatchFoldingProcessing = false;
@@ -88,8 +88,8 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  @NotNull
-  public List<FoldRegion> getGroupedRegions(@NotNull FoldingGroup group) {
+  @Nonnull
+  public List<FoldRegion> getGroupedRegions(@Nonnull FoldingGroup group) {
     return (List<FoldRegion>)myGroups.get(group);
   }
 
@@ -100,13 +100,13 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public boolean hasDocumentRegionChangedFor(@NotNull FoldRegion region) {
+  public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
     assertReadAccess();
     return region instanceof FoldRegionImpl && ((FoldRegionImpl)region).hasDocumentRegionChanged();
   }
 
-  @NotNull
-  FoldRegion getFirstRegion(@NotNull FoldingGroup group, @NotNull FoldRegion child) {
+  @Nonnull
+  FoldRegion getFirstRegion(@Nonnull FoldingGroup group, @Nonnull FoldRegion child) {
     final List<FoldRegion> regions = getGroupedRegions(group);
     if (regions.isEmpty()) {
       final boolean inAll = Arrays.asList(getAllFoldRegions()).contains(child);
@@ -123,7 +123,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     return main;
   }
 
-  public int getEndOffset(@NotNull FoldingGroup group) {
+  public int getEndOffset(@Nonnull FoldingGroup group) {
     final List<FoldRegion> regions = getGroupedRegions(group);
     int endOffset = 0;
     for (FoldRegion region : regions) {
@@ -169,7 +169,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public FoldRegion addFoldRegion(int startOffset, int endOffset, @NotNull String placeholderText) {
+  public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
     FoldRegion region = createFoldRegion(startOffset, endOffset, placeholderText, null, false);
     if (region == null) return null;
     if (!addFoldRegion(region)) {
@@ -181,7 +181,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public boolean addFoldRegion(@NotNull final FoldRegion region) {
+  public boolean addFoldRegion(@Nonnull final FoldRegion region) {
     assertIsDispatchThreadForEditor();
     if (!isFoldingEnabled()) {
       return false;
@@ -211,16 +211,16 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public void runBatchFoldingOperation(@NotNull Runnable operation) {
+  public void runBatchFoldingOperation(@Nonnull Runnable operation) {
     runBatchFoldingOperation(operation, false, true);
   }
 
   @Override
-  public void runBatchFoldingOperation(@NotNull Runnable operation, boolean moveCaret) {
+  public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaret) {
     runBatchFoldingOperation(operation, false, moveCaret);
   }
 
-  private void runBatchFoldingOperation(@NotNull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
+  private void runBatchFoldingOperation(@Nonnull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
     assertIsDispatchThreadForEditor();
     boolean oldDontCollapseCaret = myDoNotCollapseCaret;
     myDoNotCollapseCaret |= dontCollapseCaret;
@@ -247,7 +247,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public void runBatchFoldingOperationDoNotCollapseCaret(@NotNull final Runnable operation) {
+  public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull final Runnable operation) {
     runBatchFoldingOperation(operation, true, true);
   }
 
@@ -260,7 +260,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FoldRegion[] getAllFoldRegions() {
     assertReadAccess();
     return myFoldTree.fetchAllRegions();
@@ -281,7 +281,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
 
   @Override
   @Nullable
-  public FoldRegion getFoldingPlaceholderAt(@NotNull Point p) {
+  public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
     assertReadAccess();
     LogicalPosition pos = myEditor.xyToLogicalPosition(p);
     int line = pos.line;
@@ -294,7 +294,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public void removeFoldRegion(@NotNull final FoldRegion region) {
+  public void removeFoldRegion(@Nonnull final FoldRegion region) {
     assertIsDispatchThreadForEditor();
 
     if (!myIsBatchFoldingProcessing) {
@@ -337,7 +337,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     myFoldTree.clear();
   }
 
-  void expandFoldRegion(@NotNull FoldRegion region) {
+  void expandFoldRegion(@Nonnull FoldRegion region) {
     assertIsDispatchThreadForEditor();
     if (region.isExpanded() || region.shouldNeverExpand()) return;
 
@@ -363,7 +363,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     notifyListenersOnFoldRegionStateChange(region);
   }
 
-  void collapseFoldRegion(@NotNull FoldRegion region) {
+  void collapseFoldRegion(@Nonnull FoldRegion region) {
     assertIsDispatchThreadForEditor();
     if (!region.isExpanded()) return;
 
@@ -508,7 +508,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     return myFoldTree.fetchTopLevel();
   }
 
-  @NotNull
+  @Nonnull
   public FoldRegion[] fetchCollapsedAt(int offset) {
     return myFoldTree.fetchCollapsedAt(offset);
   }
@@ -532,7 +532,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
     return myFoldTextAttributes;
   }
 
-  void flushCaretPosition(@NotNull Caret caret) {
+  void flushCaretPosition(@Nonnull Caret caret) {
     caret.putUserData(SAVED_CARET_POSITION, null);
   }
 
@@ -576,7 +576,7 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   @Override
   public FoldRegion createFoldRegion(int startOffset,
                                      int endOffset,
-                                     @NotNull String placeholder,
+                                     @Nonnull String placeholder,
                                      @Nullable FoldingGroup group,
                                      boolean neverExpands) {
     FoldRegionImpl region = new FoldRegionImpl(myEditor, startOffset, endOffset, placeholder, group, neverExpands);
@@ -585,18 +585,18 @@ public class FoldingModelImpl implements FoldingModelEx, PrioritizedInternalDocu
   }
 
   @Override
-  public void addListener(@NotNull final FoldingListener listener, @NotNull Disposable parentDisposable) {
+  public void addListener(@Nonnull final FoldingListener listener, @Nonnull Disposable parentDisposable) {
     myListeners.add(listener);
     Disposer.register(parentDisposable, () -> myListeners.remove(listener));
   }
 
-  private void notifyListenersOnFoldRegionStateChange(@NotNull FoldRegion foldRegion) {
+  private void notifyListenersOnFoldRegionStateChange(@Nonnull FoldRegion foldRegion) {
     for (FoldingListener listener : myListeners) {
       listener.onFoldRegionStateChange(foldRegion);
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return Arrays.toString(myFoldTree.fetchTopLevel());

@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -39,26 +39,26 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @RequiredReadAction
-  public PsiLocation(@NotNull final Project project, @NotNull final E psiElement) {
+  public PsiLocation(@Nonnull final Project project, @Nonnull final E psiElement) {
     myPsiElement = psiElement;
     myProject = project;
     myModule = ModuleUtilCore.findModuleForPsiElement(psiElement);
   }
 
-  public PsiLocation(@NotNull Project project, Module module, @NotNull E psiElement) {
+  public PsiLocation(@Nonnull Project project, Module module, @Nonnull E psiElement) {
     myPsiElement = psiElement;
     myProject = project;
     myModule = module;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public E getPsiElement() {
     return myPsiElement;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -69,8 +69,8 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @Override
-  @NotNull
-  public <T extends PsiElement> Iterator<Location<T>> getAncestors(@NotNull final Class<T> ancestorClass, final boolean strict) {
+  @Nonnull
+  public <T extends PsiElement> Iterator<Location<T>> getAncestors(@Nonnull final Class<T> ancestorClass, final boolean strict) {
     final T first = strict || !ancestorClass.isInstance(myPsiElement) ? findNext(myPsiElement, ancestorClass) : (T)myPsiElement;
     return new Iterator<Location<T>>() {
       private T myCurrent = first;
@@ -95,7 +95,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiLocation<E> toPsiLocation() {
     return this;
   }
@@ -109,7 +109,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
     return null;
   }
 
-  public static <T extends PsiElement> Location<T> fromPsiElement(@NotNull Project project, final T element) {
+  public static <T extends PsiElement> Location<T> fromPsiElement(@Nonnull Project project, final T element) {
     if (element == null) return null;
     return new PsiLocation<>(project, element);
   }

@@ -15,20 +15,21 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class ChangesSelection {
-  @NotNull private final List<Change> myChanges;
+  @Nonnull
+  private final List<Change> myChanges;
   private final int myIndex;
 
-  public ChangesSelection(@NotNull List<Change> changes, int index) {
+  public ChangesSelection(@Nonnull List<Change> changes, int index) {
     myChanges = changes;
     myIndex = index;
   }
 
-  @NotNull
+  @Nonnull
   public List<Change> getChanges() {
     return myChanges;
   }

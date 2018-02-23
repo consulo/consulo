@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vcs.VcsApplicationSettings;
 import com.intellij.openapi.vcs.actions.ShowNextChangeMarkerAction;
 import com.intellij.openapi.vcs.actions.ShowPrevChangeMarkerAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,11 +47,12 @@ public class LineStatusTrackerDrawing {
   }
 
   public static class MyLineStatusMarkerPopup extends LineStatusMarkerPopup {
-    @NotNull private final LineStatusTracker myTracker;
+    @Nonnull
+    private final LineStatusTracker myTracker;
 
-    public MyLineStatusMarkerPopup(@NotNull LineStatusTracker tracker,
-                                   @NotNull Editor editor,
-                                   @NotNull Range range) {
+    public MyLineStatusMarkerPopup(@Nonnull LineStatusTracker tracker,
+                                   @Nonnull Editor editor,
+                                   @Nonnull Range range) {
       super(tracker, editor, range);
       myTracker = tracker;
     }
@@ -61,9 +62,9 @@ public class LineStatusTrackerDrawing {
       return VcsApplicationSettings.getInstance().SHOW_LST_WORD_DIFFERENCES;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected ActionToolbar buildToolbar(@Nullable Point mousePosition, @NotNull Disposable parentDisposable) {
+    protected ActionToolbar buildToolbar(@javax.annotation.Nullable Point mousePosition, @Nonnull Disposable parentDisposable) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
       final ShowPrevChangeMarkerAction localShowPrevAction = new ShowPrevChangeMarkerAction(myTracker.getPrevRange(myRange), myTracker, myEditor);
@@ -102,7 +103,7 @@ public class LineStatusTrackerDrawing {
       return ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected FileType getFileType() {
       return myTracker.getVirtualFile().getFileType();
@@ -110,14 +111,17 @@ public class LineStatusTrackerDrawing {
   }
 
   private static class ToggleByWordDiffAction extends ToggleAction implements DumbAware {
-    @NotNull private final Range myRange;
-    @NotNull private final Editor myEditor;
-    @NotNull private final LineStatusTracker myTracker;
+    @Nonnull
+    private final Range myRange;
+    @Nonnull
+    private final Editor myEditor;
+    @Nonnull
+    private final LineStatusTracker myTracker;
     @Nullable private final Point myMousePosition;
 
-    public ToggleByWordDiffAction(@NotNull Range range,
-                                  @NotNull Editor editor,
-                                  @NotNull LineStatusTracker tracker,
+    public ToggleByWordDiffAction(@Nonnull Range range,
+                                  @Nonnull Editor editor,
+                                  @Nonnull LineStatusTracker tracker,
                                   @Nullable Point mousePosition) {
       super("Show Detailed Differences", null, AllIcons.Actions.PreviewDetails);
       myRange = range;

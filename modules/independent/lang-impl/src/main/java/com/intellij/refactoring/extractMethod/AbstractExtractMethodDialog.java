@@ -26,7 +26,7 @@ import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -126,7 +126,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
     return map;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

@@ -21,28 +21,28 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.RequiredWriteAction;
 import consulo.bundle.SdkTableListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class SdkTable {
-  @NotNull
+  @Nonnull
   public static SdkTable getInstance() {
     return ServiceManager.getService(SdkTable.class);
   }
 
   public static Topic<SdkTableListener> SDK_TABLE_TOPIC = Topic.create("Sdk table", SdkTableListener.class);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Sdk findSdk(String name);
 
-  @NotNull
+  @Nonnull
   public abstract Sdk[] getAllSdks();
 
   public abstract List<Sdk> getSdksOfType(SdkTypeId type);
 
-  @Nullable
+  @javax.annotation.Nullable
   public Sdk findMostRecentSdkOfType(final SdkTypeId type) {
     return findMostRecentSdk(new Condition<Sdk>() {
       @Override
@@ -53,7 +53,7 @@ public abstract class SdkTable {
   }
 
   @Nullable
-  public Sdk findMostRecentSdk(@NotNull Condition<Sdk> condition) {
+  public Sdk findMostRecentSdk(@Nonnull Condition<Sdk> condition) {
     Sdk found = null;
     for (Sdk each : getAllSdks()) {
       if (!condition.value(each)) continue;
@@ -67,21 +67,21 @@ public abstract class SdkTable {
   }
 
   @RequiredWriteAction
-  public abstract void addSdk(@NotNull Sdk sdk);
+  public abstract void addSdk(@Nonnull Sdk sdk);
 
   @RequiredWriteAction
-  public abstract void removeSdk(@NotNull Sdk sdk);
+  public abstract void removeSdk(@Nonnull Sdk sdk);
 
   @RequiredWriteAction
-  public abstract void updateSdk(@NotNull Sdk originalSdk, @NotNull Sdk modifiedSdk);
+  public abstract void updateSdk(@Nonnull Sdk originalSdk, @Nonnull Sdk modifiedSdk);
 
   public abstract SdkTypeId getDefaultSdkType();
 
   public abstract SdkTypeId getSdkTypeByName(String name);
 
   @Nullable
-  public abstract Sdk findPredefinedSdkByType(@NotNull SdkTypeId sdkType);
+  public abstract Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType);
 
-  @NotNull
+  @Nonnull
   public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
 }

@@ -21,25 +21,27 @@ import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.impl.VcsLogUserFilterImpl;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
 public class MyCommitsHighlighter implements VcsLogHighlighter {
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final VcsLogUi myLogUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogUi myLogUi;
   private boolean myShouldHighlightUser = false;
 
-  public MyCommitsHighlighter(@NotNull VcsLogData logData, @NotNull VcsLogUi logUi) {
+  public MyCommitsHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
     myLogData = logData;
     myLogUi = logUi;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VcsCommitStyle getStyle(@NotNull VcsShortCommitDetails details, boolean isSelected) {
+  public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
     if (!myLogUi.isHighlighterEnabled(Factory.ID)) return VcsCommitStyle.DEFAULT;
     if (myShouldHighlightUser) {
       VcsUser currentUser = myLogData.getCurrentUser().get(details.getRoot());
@@ -51,7 +53,7 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   }
 
   @Override
-  public void update(@NotNull VcsLogDataPack dataPack, boolean refreshHappened) {
+  public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
     myShouldHighlightUser = !isSingleUser() && !isFilteredByCurrentUser(dataPack.getFilters());
   }
 
@@ -64,7 +66,7 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   }
 
   // returns true if filtered by "me"
-  private static boolean isFilteredByCurrentUser(@NotNull VcsLogFilterCollection filters) {
+  private static boolean isFilteredByCurrentUser(@Nonnull VcsLogFilterCollection filters) {
     VcsLogUserFilter userFilter = filters.getUserFilter();
     if (userFilter == null) return false;
     Collection<String> filterByName = ((VcsLogUserFilterImpl)userFilter).getUserNamesForPresentation();
@@ -73,21 +75,22 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   }
 
   public static class Factory implements VcsLogHighlighterFactory {
-    @NotNull private static final String ID = "MY_COMMITS";
+    @Nonnull
+    private static final String ID = "MY_COMMITS";
 
-    @NotNull
+    @Nonnull
     @Override
-    public VcsLogHighlighter createHighlighter(@NotNull VcsLogData logData, @NotNull VcsLogUi logUi) {
+    public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
       return new MyCommitsHighlighter(logData, logUi);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
       return ID;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTitle() {
       return "My Commits";

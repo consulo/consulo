@@ -25,8 +25,8 @@ import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.TIntStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -213,7 +213,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     }
   }
 
-  public static HyperlinkEvent createHyperlinkEvent(@Nullable String href, @NotNull Object source) {
+  public static HyperlinkEvent createHyperlinkEvent(@Nullable String href, @Nonnull Object source) {
     URL url = null;
     try {
       url = new URL(href);

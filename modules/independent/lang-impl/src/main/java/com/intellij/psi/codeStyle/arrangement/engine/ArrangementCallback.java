@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.engine;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,5 +30,5 @@ public interface ArrangementCallback {
    * 
    * @param moveInfos  information about the changes performed during arrangement
    */
-  void afterArrangement(@NotNull List<ArrangementMoveInfo> moveInfos);
+  void afterArrangement(@Nonnull List<ArrangementMoveInfo> moveInfos);
 }

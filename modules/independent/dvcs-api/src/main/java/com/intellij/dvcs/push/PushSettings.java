@@ -24,8 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
     public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = ContainerUtil.newArrayList();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public State getState() {
     return myState;
@@ -55,17 +54,17 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
     myState = state;
   }
 
-  @NotNull
+  @Nonnull
   public Set<String> getExcludedRepoRoots() {
     return myState.EXCLUDED_ROOTS;
   }
 
-  public void saveExcludedRepoRoots(@NotNull Set<String> roots) {
+  public void saveExcludedRepoRoots(@Nonnull Set<String> roots) {
     myState.EXCLUDED_ROOTS = roots;
   }
 
 
-  public boolean containsForcePushTarget(@NotNull final String remote, @NotNull final String branch) {
+  public boolean containsForcePushTarget(@Nonnull final String remote, @Nonnull final String branch) {
     return ContainerUtil.exists(myState.FORCE_PUSH_TARGETS, new Condition<ForcePushTargetInfo>() {
       @Override
       public boolean value(ForcePushTargetInfo info) {
@@ -74,7 +73,7 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
     });
   }
 
-  public void addForcePushTarget(@NotNull String targetRemote, @NotNull String targetBranch) {
+  public void addForcePushTarget(@Nonnull String targetRemote, @Nonnull String targetBranch) {
     List<ForcePushTargetInfo> targets = myState.FORCE_PUSH_TARGETS;
     if (!containsForcePushTarget(targetRemote, targetBranch)) {
       targets.add(new ForcePushTargetInfo(targetRemote, targetBranch));
@@ -93,7 +92,7 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
       this("", "");
     }
 
-    ForcePushTargetInfo(@NotNull String targetRemote, @NotNull String targetBranch) {
+    ForcePushTargetInfo(@Nonnull String targetRemote, @Nonnull String targetBranch) {
       targetRemoteName = targetRemote;
       targetBranchName = targetBranch;
     }

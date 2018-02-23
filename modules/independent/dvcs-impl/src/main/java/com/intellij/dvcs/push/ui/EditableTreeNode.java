@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.dvcs.push.OutgoingResult;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
@@ -32,7 +32,7 @@ public interface EditableTreeNode extends CustomRenderedTreeNode {
 
   void cancelLoading();
 
-  void startLoading(@NotNull JTree tree, @NotNull Future<AtomicReference<OutgoingResult>> future, boolean initial);
+  void startLoading(@Nonnull JTree tree, @Nonnull Future<AtomicReference<OutgoingResult>> future, boolean initial);
 
   boolean isEditableNow();
 }

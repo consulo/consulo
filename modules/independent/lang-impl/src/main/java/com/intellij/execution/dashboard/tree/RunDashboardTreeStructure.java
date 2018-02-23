@@ -23,8 +23,8 @@ import com.intellij.ide.projectView.TreeStructureProvider;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +37,7 @@ public class RunDashboardTreeStructure extends AbstractTreeStructureBase {
   private final List<DashboardGrouper> myGroupers;
   private final RunConfigurationsTreeRootNode myRootElement;
 
-  public RunDashboardTreeStructure(@NotNull Project project, @NotNull List<DashboardGrouper> groupers) {
+  public RunDashboardTreeStructure(@Nonnull Project project, @Nonnull List<DashboardGrouper> groupers) {
     super(project);
     myProject = project;
     myGroupers = groupers;
@@ -69,7 +69,7 @@ public class RunDashboardTreeStructure extends AbstractTreeStructureBase {
       super(RunDashboardTreeStructure.this.myProject, new Object());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
       List<RunConfigurationNode> nodes = RunDashboardManager.getInstance(myProject).getRunConfigurations().stream()

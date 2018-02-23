@@ -19,8 +19,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.URL;
@@ -35,13 +35,13 @@ import static org.junit.Assert.*;
 public class IoTestUtil {
   private IoTestUtil() { }
 
-  @NotNull
-  public static File createSymLink(@NotNull String target, @NotNull String link) throws InterruptedException, IOException {
+  @Nonnull
+  public static File createSymLink(@Nonnull String target, @Nonnull String link) throws InterruptedException, IOException {
     return createSymLink(target, link, true);
   }
 
-  @NotNull
-  public static File createSymLink(@NotNull String target, @NotNull String link, boolean shouldExist) throws InterruptedException, IOException {
+  @Nonnull
+  public static File createSymLink(@Nonnull String target, @Nonnull String link, boolean shouldExist) throws InterruptedException, IOException {
     assertTrue(SystemInfo.isWindows || SystemInfo.isUnix);
 
     final File targetFile = new File(FileUtil.toSystemDependentName(target));
@@ -64,8 +64,8 @@ public class IoTestUtil {
     return linkFile;
   }
 
-  @NotNull
-  public static File createHardLink(@NotNull String target, @NotNull String link) throws InterruptedException, IOException {
+  @Nonnull
+  public static File createHardLink(@Nonnull String target, @Nonnull String link) throws InterruptedException, IOException {
     assertTrue(SystemInfo.isWindows || SystemInfo.isUnix);
 
     final File targetFile = new File(FileUtil.toSystemDependentName(target));
@@ -85,8 +85,8 @@ public class IoTestUtil {
     return linkFile;
   }
 
-  @NotNull
-  public static File createJunction(@NotNull String target, @NotNull String junction) throws InterruptedException, IOException {
+  @Nonnull
+  public static File createJunction(@Nonnull String target, @Nonnull String junction) throws InterruptedException, IOException {
     assertTrue(SystemInfo.isWindows);
 
     final File targetFile = new File(FileUtil.toSystemDependentName(target));
@@ -104,8 +104,8 @@ public class IoTestUtil {
     return junctionFile;
   }
 
-  @NotNull
-  public static File createSubst(@NotNull String target) throws InterruptedException, IOException {
+  @Nonnull
+  public static File createSubst(@Nonnull String target) throws InterruptedException, IOException {
     assertTrue(SystemInfo.isWindows);
 
     final File targetFile = new File(FileUtil.toSystemDependentName(target));
@@ -122,7 +122,7 @@ public class IoTestUtil {
     return rootFile;
   }
 
-  public static void deleteSubst(@NotNull String substRoot) throws InterruptedException, IOException {
+  public static void deleteSubst(@Nonnull String substRoot) throws InterruptedException, IOException {
     runCommand(new ProcessBuilder("subst", StringUtil.trimEnd(substRoot, "\\"), "/d"));
   }
 
@@ -209,19 +209,19 @@ public class IoTestUtil {
                roundedExpected != roundedActual);
   }
 
-  @NotNull
+  @Nonnull
   public static File createTestJar() throws IOException {
     File jarFile = FileUtil.createTempFile("test.", ".jar");
     return createTestJar(jarFile);
   }
 
-  @NotNull
+  @Nonnull
   public static File createTestJar(File jarFile) throws IOException {
     writeEntry(jarFile, JarFile.MANIFEST_NAME, "");
     return jarFile;
   }
 
-  public static void writeEntry(@NotNull File jarFile, @NotNull String name, @NotNull String content) throws IOException {
+  public static void writeEntry(@Nonnull File jarFile, @Nonnull String name, @Nonnull String content) throws IOException {
     JarOutputStream stream = new JarOutputStream(new FileOutputStream(jarFile));
     try {
       stream.putNextEntry(new JarEntry(name));
@@ -233,35 +233,35 @@ public class IoTestUtil {
     }
   }
 
-  @NotNull
-  public static File createTestDir(@NotNull String name) {
+  @Nonnull
+  public static File createTestDir(@Nonnull String name) {
     return createTestDir(new File(FileUtil.getTempDirectory()), name);
   }
 
-  @NotNull
-  public static File createTestDir(@NotNull File parent, @NotNull String name) {
+  @Nonnull
+  public static File createTestDir(@Nonnull File parent, @Nonnull String name) {
     File dir = new File(parent, name);
     assertTrue(dir.getPath(), dir.mkdirs());
     return dir;
   }
 
-  @NotNull
-  public static File createTestFile(@NotNull String name) throws IOException {
+  @Nonnull
+  public static File createTestFile(@Nonnull String name) throws IOException {
     return createTestFile(name, null);
   }
 
-  @NotNull
-  public static File createTestFile(@NotNull String name, @Nullable String content) throws IOException {
+  @Nonnull
+  public static File createTestFile(@Nonnull String name, @Nullable String content) throws IOException {
     return createTestFile(new File(FileUtil.getTempDirectory()), name, content);
   }
 
-  @NotNull
-  public static File createTestFile(@NotNull File parent, @NotNull String name) throws IOException {
+  @Nonnull
+  public static File createTestFile(@Nonnull File parent, @Nonnull String name) throws IOException {
     return createTestFile(parent, name, null);
   }
 
-  @NotNull
-  public static File createTestFile(@NotNull File parent, @NotNull String name, @Nullable String content) throws IOException {
+  @Nonnull
+  public static File createTestFile(@Nonnull File parent, @Nonnull String name, @javax.annotation.Nullable String content) throws IOException {
     assertTrue(parent.getPath(), parent.isDirectory() || parent.mkdirs());
     File file = new File(parent, name);
     assertTrue(file.getPath(), file.createNewFile());
@@ -279,7 +279,7 @@ public class IoTestUtil {
     }
   }
 
-  public static void setHidden(@NotNull String path, boolean hidden) throws IOException, InterruptedException {
+  public static void setHidden(@Nonnull String path, boolean hidden) throws IOException, InterruptedException {
     assertTrue(SystemInfo.isWindows);
 
     ProcessBuilder command = new ProcessBuilder("attrib", hidden ? "+H" : "-H", path);

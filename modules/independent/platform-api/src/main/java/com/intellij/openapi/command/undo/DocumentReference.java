@@ -17,7 +17,7 @@ package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Do not implement this directly. Use DocumentReferenceManager instead.

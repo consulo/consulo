@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.navigation.History;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -99,6 +99,6 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     myDisposables.add(disposable);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract JComponent createComponentImpl();
 }

@@ -41,8 +41,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -160,7 +160,7 @@ public class FileTreeModelBuilder {
       final Task.Backgroundable backgroundable =
         new Task.Backgroundable(project, AnalysisScopeBundle.message("package.dependencies.build.process.title")) {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             buildingRunnable.run();
           }
 
@@ -258,13 +258,14 @@ public class FileTreeModelBuilder {
     return null;
   }
 
-  public @NotNull PackageDependenciesNode getFileParentNode(VirtualFile file) {
+  public @Nonnull
+  PackageDependenciesNode getFileParentNode(VirtualFile file) {
     LOG.assertTrue(file != null);
     final VirtualFile containingDirectory = file.getParent();
     return getModuleDirNode(containingDirectory, myFileIndex.getModuleForFile(file), null);
   }
 
-  public boolean hasFileNode(@NotNull VirtualFile file) {
+  public boolean hasFileNode(@Nonnull VirtualFile file) {
     return myModuleDirNodes.containsKey(file);
   }
 

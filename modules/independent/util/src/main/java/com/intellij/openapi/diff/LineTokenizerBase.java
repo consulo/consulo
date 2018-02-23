@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.diff;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public abstract class LineTokenizerBase<T> {
 
   protected abstract int length();
 
-  @NotNull
+  @Nonnull
   protected abstract String substring(int start, int end);
 
   public void doExecute(List<T> lines) {

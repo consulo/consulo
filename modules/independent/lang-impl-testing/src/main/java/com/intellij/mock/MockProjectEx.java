@@ -19,15 +19,15 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.ex.ProjectEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MockProjectEx  extends MockProject implements ProjectEx {
-  public MockProjectEx(@NotNull Disposable parentDisposable) {
+  public MockProjectEx(@Nonnull Disposable parentDisposable) {
     super(ApplicationManager.getApplication() != null ? ApplicationManager.getApplication().getPicoContainer() : null, parentDisposable);
   }
 
   @Override
-  public void setProjectName(@NotNull String name) {
+  public void setProjectName(@Nonnull String name) {
   }
 
   @Override
@@ -35,7 +35,7 @@ public class MockProjectEx  extends MockProject implements ProjectEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IProjectStore getStateStore() {
     return new MockProjectStore();
   }

@@ -1,6 +1,6 @@
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -21,18 +21,18 @@ public interface RefGroup {
   /**
    * Returns the name of the reference group. This reference will be displayed on the branches panel.
    */
-  @NotNull
+  @Nonnull
   String getName();
 
   /**
    * Returns references inside this group.
    */
-  @NotNull
+  @Nonnull
   List<VcsRef> getRefs();
 
   /**
    * Returns the colors of this ref group, which will be used to paint it in the table.
    */
-  @NotNull
+  @Nonnull
   List<Color> getColors();
 }

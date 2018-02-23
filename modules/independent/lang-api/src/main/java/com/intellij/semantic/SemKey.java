@@ -18,7 +18,7 @@ package com.intellij.semantic;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,12 +34,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SemKey<T extends SemElement> {
   private static final AtomicInteger counter = new AtomicInteger(0);
   private final String myDebugName;
-  @NotNull private final SemKey<? super T>[] mySupers;
+  @Nonnull
+  private final SemKey<? super T>[] mySupers;
   private final List<SemKey> myInheritors = ContainerUtil.createEmptyCOWList();
   private final int myUniqueId;
 
   @SafeVarargs
-  private SemKey(String debugName, @NotNull SemKey<? super T>... supers) {
+  private SemKey(String debugName, @Nonnull SemKey<? super T>... supers) {
     myDebugName = debugName;
     mySupers = supers;
     myUniqueId = counter.getAndIncrement();
@@ -54,7 +55,7 @@ public class SemKey<T extends SemElement> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public SemKey<? super T>[] getSupers() {
     return mySupers;
   }
@@ -79,7 +80,7 @@ public class SemKey<T extends SemElement> {
   }
 
   @SafeVarargs
-  public static <T extends SemElement> SemKey<T> createKey(String debugName, @NotNull SemKey<? super T>... supers) {
+  public static <T extends SemElement> SemKey<T> createKey(String debugName, @Nonnull SemKey<? super T>... supers) {
     return new SemKey<>(debugName, supers);
   }
 
@@ -93,7 +94,7 @@ public class SemKey<T extends SemElement> {
   }
 
   @SafeVarargs
-  public final <K extends T> SemKey<K> subKey(@NonNls String debugName, @NotNull SemKey<? super T>... otherSupers) {
+  public final <K extends T> SemKey<K> subKey(@NonNls String debugName, @Nonnull SemKey<? super T>... otherSupers) {
     if (otherSupers.length == 0) {
       return new SemKey<>(debugName, this);
     }

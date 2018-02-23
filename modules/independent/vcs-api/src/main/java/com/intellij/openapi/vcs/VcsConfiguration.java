@@ -29,7 +29,7 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -161,7 +161,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  public static VcsConfiguration getInstance(@NotNull Project project) {
+  public static VcsConfiguration getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsConfiguration.class);
   }
 
@@ -184,7 +184,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     }
   }
 
-  @NotNull
+  @Nonnull
   public ArrayList<String> getRecentMessages() {
     return new ArrayList<>(myLastCommitMessages);
   }
@@ -293,7 +293,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     return CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND;
   }
 
-  public void addIgnoredUnregisteredRoots(@NotNull Collection<String> roots) {
+  public void addIgnoredUnregisteredRoots(@Nonnull Collection<String> roots) {
     List<String> unregisteredRoots = new ArrayList<>(IGNORED_UNREGISTERED_ROOTS);
     for (String root : roots) {
       if (!unregisteredRoots.contains(root)) {

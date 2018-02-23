@@ -40,21 +40,21 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.copyright.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> implements Configurable.NoScroll {
   public static class PreviewDialog extends DialogWrapper {
-    @NotNull
+    @Nonnull
     private final String myText;
     private final Dimension mySize;
 
     private Editor myEditor;
 
-    public PreviewDialog(@Nullable Project project, @NotNull String text, @NotNull Dimension size) {
+    public PreviewDialog(@Nullable Project project, @Nonnull String text, @Nonnull Dimension size) {
       super(project);
       myText = text;
       mySize = size;
@@ -62,7 +62,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
       init();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Action[] createActions() {
       return new Action[]{getOKAction()};
@@ -120,7 +120,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     group.add(new AnAction("Preview", null, AllIcons.Actions.Preview) {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         try {
           String evaluate = VelocityHelper.evaluate(null, project, null, myCopyrightEditor.getDocument().getText());
 
@@ -136,13 +136,13 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
       group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
         @RequiredDispatchThread
         @Override
-        public void actionPerformed(@NotNull AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           DefaultActionGroup actionGroup = new DefaultActionGroup();
           for (PredefinedCopyrightTextEP extension : extensions) {
             actionGroup.add(new AnAction(extension.name) {
               @RequiredDispatchThread
               @Override
-              public void actionPerformed(@NotNull AnActionEvent e) {
+              public void actionPerformed(@Nonnull AnActionEvent e) {
                 String text = extension.getText();
                 WriteAction.run(() -> myCopyrightDocument.setText(text));
               }

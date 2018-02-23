@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.VcsShowOptionsSettingImpl;
 import com.intellij.openapi.vcs.changes.RemoteRevisionsCache;
 import com.intellij.openapi.vcs.changes.committed.CacheSettingsPanel;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -160,7 +160,7 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     return "project.propVCSSupport.Background";
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return getHelpTopic();
   }

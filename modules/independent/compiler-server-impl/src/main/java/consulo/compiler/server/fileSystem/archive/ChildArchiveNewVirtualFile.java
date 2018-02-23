@@ -22,8 +22,8 @@ import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,10 +42,10 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
   private final ArchiveFile myArchiveFile;
   private final ArchiveEntry myArchiveEntry;
 
-  public ChildArchiveNewVirtualFile(@NotNull ArchiveNewVirtualFile parentFile,
+  public ChildArchiveNewVirtualFile(@Nonnull ArchiveNewVirtualFile parentFile,
                                     @Nullable ChildArchiveNewVirtualDirectory parentDir,
-                                    @NotNull String name,
-                                    @NotNull ArchiveFileSystem archiveFileSystem,
+                                    @Nonnull String name,
+                                    @Nonnull ArchiveFileSystem archiveFileSystem,
                                     ArchiveFile archiveFile,
                                     ArchiveEntry archiveEntry) {
     myParentFile = parentFile;
@@ -65,13 +65,13 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public NewVirtualFileSystem getFileSystem() {
     return (NewVirtualFileSystem)myArchiveFileSystem;
@@ -111,7 +111,7 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
     return new NewVirtualFile[0];
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public NewVirtualFile getCanonicalFile() {
     return null;
@@ -119,11 +119,11 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
 
   @Nullable
   @Override
-  public NewVirtualFile findChild(@NotNull @NonNls String name) {
+  public NewVirtualFile findChild(@Nonnull @NonNls String name) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     return null;
@@ -144,15 +144,15 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
     return myArchiveFile.getInputStream(myArchiveEntry);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public NewVirtualFile refreshAndFindChild(@NotNull String name) {
+  public NewVirtualFile refreshAndFindChild(@Nonnull String name) {
     return null;
   }
 
   @Nullable
   @Override
-  public NewVirtualFile findChildIfCached(@NotNull String name) {
+  public NewVirtualFile findChildIfCached(@Nonnull String name) {
     return null;
   }
 
@@ -160,7 +160,7 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
   public void setTimeStamp(long time) throws IOException {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getNameSequence() {
     return myName;
@@ -192,13 +192,13 @@ public class ChildArchiveNewVirtualFile extends NewVirtualFile {
   public void markClean() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getCachedChildren() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<VirtualFile> iterInDbChildren() {
     return null;

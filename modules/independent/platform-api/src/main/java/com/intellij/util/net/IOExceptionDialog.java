@@ -22,9 +22,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.ObjectUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -53,13 +53,13 @@ public class IOExceptionDialog extends DialogWrapper {
     return myErrorLabel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createLeftSideActions() {
     return new Action[] {
       new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
         @Override
-        public void actionPerformed(@NotNull ActionEvent e) {
+        public void actionPerformed(@Nonnull ActionEvent e) {
           HttpConfigurable.editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class));
         }
       }

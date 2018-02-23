@@ -15,18 +15,16 @@
  */
 package consulo.util.pointers;
 
-import consulo.util.pointers.Named;
-import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17:19/15.06.13
  */
 public interface NamedPointerManager<T extends Named> {
-  @NotNull
-  NamedPointer<T> create(@NotNull String name);
+  @Nonnull
+  NamedPointer<T> create(@Nonnull String name);
 
-  @NotNull
-  NamedPointer<T> create(@NotNull T value);
+  @Nonnull
+  NamedPointer<T> create(@Nonnull T value);
 }

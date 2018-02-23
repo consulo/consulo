@@ -20,8 +20,8 @@ import consulo.annotations.DeprecationInfo;
 import consulo.util.KeyRegistry;
 import consulo.util.ServiceLoaderUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class Key<T> {
 
   @Deprecated
   @DeprecationInfo("Use #create(name)")
-  public Key(@NotNull @NonNls String name) {
+  public Key(@Nonnull @NonNls String name) {
     myName = name;
     myIndex = ourRegistry.register(this);
   }
@@ -61,9 +61,9 @@ public class Key<T> {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("deprecation")
-  public static <T> Key<T> create(@NotNull @NonNls String name) {
+  public static <T> Key<T> create(@Nonnull @NonNls String name) {
     return new Key<T>(name);
   }
 
@@ -71,12 +71,12 @@ public class Key<T> {
     return holder == null ? null : holder.getUserData(this);
   }
 
-  public T get(@Nullable Map<Key, ?> holder) {
+  public T get(@javax.annotation.Nullable Map<Key, ?> holder) {
     //noinspection unchecked
     return holder == null ? null : (T)holder.get(this);
   }
 
-  public T get(@Nullable UserDataHolder holder, T defaultValue) {
+  public T get(@javax.annotation.Nullable UserDataHolder holder, T defaultValue) {
     final T t = get(holder);
     return t == null ? defaultValue : t;
   }
@@ -93,7 +93,7 @@ public class Key<T> {
     return get(holder) != null;
   }
 
-  public void set(@Nullable UserDataHolder holder, @Nullable T value) {
+  public void set(@javax.annotation.Nullable UserDataHolder holder, @Nullable T value) {
     if (holder != null) {
       holder.putUserData(this, value);
     }
@@ -113,7 +113,7 @@ public class Key<T> {
   /**
    * @deprecated access to Key via its name is a kind of hack, use Key instance directly instead
    */
-  @Nullable
+  @javax.annotation.Nullable
   public static Key<?> findKeyByName(String name) {
     return ourRegistry.findKeyByName(name, new Function<Key<?>, String>() {
       @Override

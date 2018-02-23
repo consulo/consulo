@@ -42,7 +42,7 @@ import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -131,9 +131,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     return result.get();
   }
 
-  public static void setBuildArtifactBeforeRunOption(@NotNull JComponent runConfigurationEditorComponent,
+  public static void setBuildArtifactBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent,
                                                      Project project,
-                                                     @NotNull Artifact artifact,
+                                                     @Nonnull Artifact artifact,
                                                      final boolean enable) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(runConfigurationEditorComponent);
     final ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
@@ -168,9 +168,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     }
   }
 
-  public static void setBuildArtifactBeforeRun(@NotNull Project project,
-                                               @NotNull RunConfiguration configuration,
-                                               @NotNull Artifact artifact) {
+  public static void setBuildArtifactBeforeRun(@Nonnull Project project,
+                                               @Nonnull RunConfiguration configuration,
+                                               @Nonnull Artifact artifact) {
     RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
     final List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
     if (buildArtifactsTasks.isEmpty()) { //Add new task if absent

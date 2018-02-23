@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.Nullable;
 
 
 public class RefFileImpl extends RefElementImpl implements RefFile {
@@ -67,7 +66,7 @@ public class RefFileImpl extends RefElementImpl implements RefFile {
   protected void initialize() {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static RefElement fileFromExternalName(final RefManager manager, final String fqName) {
     final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(PathMacroManager.getInstance(manager.getProject()).expandPath(fqName));
     if (virtualFile != null) {

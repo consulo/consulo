@@ -37,7 +37,7 @@ import com.intellij.util.ui.AbstractTableCellEditor;
 import com.intellij.util.ui.CellEditorComponentWithBrowseButton;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -281,7 +281,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected JComponent createEditor() {
     return myWholePanel;
   }
@@ -290,7 +290,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
   protected void disposeEditor() {
   }
 
-  private static boolean showEditorDialog(@NotNull LogFileOptions options) {
+  private static boolean showEditorDialog(@Nonnull LogFileOptions options) {
     EditLogPatternDialog dialog = new EditLogPatternDialog();
     dialog.init(options.getName(), options.getPathPattern(), options.isShowAll());
     dialog.show();

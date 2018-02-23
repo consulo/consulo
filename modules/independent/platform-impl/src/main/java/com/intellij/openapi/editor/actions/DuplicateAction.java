@@ -31,8 +31,9 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredWriteAction;
+
+import javax.annotation.Nullable;
 
 public class DuplicateAction extends EditorAction {
   public DuplicateAction() {

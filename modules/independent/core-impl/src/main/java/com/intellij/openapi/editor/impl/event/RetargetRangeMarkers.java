@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.event;
 
 import com.intellij.openapi.editor.Document;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -26,7 +26,7 @@ public class RetargetRangeMarkers extends DocumentEventImpl {
   private final int myEndOffset;
   private final int myMoveDestinationOffset;
 
-  public RetargetRangeMarkers(@NotNull Document document,
+  public RetargetRangeMarkers(@Nonnull Document document,
                               int startOffset, int endOffset, int moveDestinationOffset) {
     super(document, startOffset, "", "", 0, false);
     myStartOffset = startOffset;

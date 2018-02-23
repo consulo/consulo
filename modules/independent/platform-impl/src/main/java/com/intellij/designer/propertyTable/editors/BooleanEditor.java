@@ -20,8 +20,8 @@ import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.InplaceContext;
 import com.intellij.designer.propertyTable.PropertyEditor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +59,7 @@ public class BooleanEditor extends PropertyEditor {
     return myCheckBox;
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  @Nullable PropertyContext context, Object value,
                                  @Nullable InplaceContext inplaceContext) {

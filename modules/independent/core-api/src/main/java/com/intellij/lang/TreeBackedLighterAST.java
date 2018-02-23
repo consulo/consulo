@@ -17,7 +17,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,26 +25,26 @@ import java.util.List;
 public class TreeBackedLighterAST extends LighterAST {
   private final FileASTNode myRoot;
 
-  public TreeBackedLighterAST(@NotNull FileASTNode root) {
+  public TreeBackedLighterAST(@Nonnull FileASTNode root) {
     super(root.getCharTable());
     myRoot = root;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LighterASTNode getRoot() {
     return wrap(myRoot);
   }
 
   @Override
-  public LighterASTNode getParent(@NotNull final LighterASTNode node) {
+  public LighterASTNode getParent(@Nonnull final LighterASTNode node) {
     ASTNode parent = ((NodeWrapper)node).myNode.getTreeParent();
     return parent == null ? null : wrap(parent);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<LighterASTNode> getChildren(@NotNull final LighterASTNode parent) {
+  public List<LighterASTNode> getChildren(@Nonnull final LighterASTNode parent) {
     final ASTNode[] children = ((NodeWrapper)parent).myNode.getChildren(null);
     if (children.length == 0) return ContainerUtil.emptyList();
 
@@ -55,13 +55,13 @@ public class TreeBackedLighterAST extends LighterAST {
     return result;
   }
 
-  @NotNull
-  public static LighterASTNode wrap(@NotNull ASTNode node) {
+  @Nonnull
+  public static LighterASTNode wrap(@Nonnull ASTNode node) {
     return node.getFirstChildNode() == null && node.getTextLength() > 0 ? new TokenNodeWrapper(node) : new NodeWrapper(node);
   }
 
-  @NotNull
-  public ASTNode unwrap(@NotNull LighterASTNode node) {
+  @Nonnull
+  public ASTNode unwrap(@Nonnull LighterASTNode node) {
     return ((NodeWrapper)node).myNode;
   }
 
@@ -72,7 +72,7 @@ public class TreeBackedLighterAST extends LighterAST {
       myNode = node;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public IElementType getTokenType() {
       return myNode.getElementType();

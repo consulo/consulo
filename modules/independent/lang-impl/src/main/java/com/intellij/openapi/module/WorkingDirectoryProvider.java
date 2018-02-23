@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
 
 public interface WorkingDirectoryProvider {

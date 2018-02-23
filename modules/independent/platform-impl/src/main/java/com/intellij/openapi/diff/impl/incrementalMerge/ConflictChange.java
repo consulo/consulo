@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.incrementalMerge;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * One of two conflicting changes.
@@ -31,10 +31,10 @@ class ConflictChange extends TwoSideChange.SideChange<MergeConflict> {
 
   private boolean mySemiApplied;
 
-  public ConflictChange(@NotNull MergeConflict conflict,
-                        @NotNull FragmentSide mergeSide,
-                        @NotNull TextRange versionRange,
-                        @NotNull ChangeList changeList) {
+  public ConflictChange(@Nonnull MergeConflict conflict,
+                        @Nonnull FragmentSide mergeSide,
+                        @Nonnull TextRange versionRange,
+                        @Nonnull ChangeList changeList) {
     super(conflict, changeList, ChangeType.CONFLICT, mergeSide, versionRange);
   }
 

@@ -28,8 +28,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.CharTable;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 //TODO: rename/regroup?
 
@@ -79,7 +79,7 @@ public class SharedImplUtil {
     return file == null || file.isWritable();
   }
 
-  public static FileASTNode findFileElement(@NotNull ASTNode element) {
+  public static FileASTNode findFileElement(@Nonnull ASTNode element) {
     ASTNode parent = element.getTreeParent();
     while (parent != null) {
       element = parent;
@@ -163,7 +163,7 @@ public class SharedImplUtil {
     return result;
   }
 
-  private static int countChildrenOfType(@NotNull ASTNode node, @NotNull IElementType elementType) {
+  private static int countChildrenOfType(@Nonnull ASTNode node, @Nonnull IElementType elementType) {
     // no lock is needed because all chameleons are expanded already
     int count = 0;
     for (ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext()) {

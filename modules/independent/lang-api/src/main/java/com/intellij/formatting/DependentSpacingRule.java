@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Holds settings that should be used if
@@ -42,13 +42,14 @@ public class DependentSpacingRule {
 
   private final TObjectIntHashMap<Anchor> myData = new TObjectIntHashMap<Anchor>();
 
-  @NotNull private final Trigger myTrigger;
+  @Nonnull
+  private final Trigger myTrigger;
 
-  public DependentSpacingRule(@NotNull Trigger trigger) {
+  public DependentSpacingRule(@Nonnull Trigger trigger) {
     myTrigger = trigger;
   }
 
-  @NotNull
+  @Nonnull
   public Trigger getTrigger() {
     return myTrigger;
   }
@@ -61,7 +62,7 @@ public class DependentSpacingRule {
    * @param <T>     data's type
    * @see #getData(Anchor)
    */
-  public DependentSpacingRule registerData(@NotNull Anchor anchor, int data) {
+  public DependentSpacingRule registerData(@Nonnull Anchor anchor, int data) {
     myData.put(anchor, data);
     return this;
   }
@@ -71,7 +72,7 @@ public class DependentSpacingRule {
    * @return        <code>true</code> if there is a data registered for the given anchor within the current rule;
    *                <code>false</code> otherwise
    */
-  public boolean hasData(@NotNull Anchor anchor) {
+  public boolean hasData(@Nonnull Anchor anchor) {
     return myData.containsKey(anchor);
   }
 
@@ -84,7 +85,7 @@ public class DependentSpacingRule {
    * @throws IllegalArgumentException   if no data is registered for the given anchor
    *                                    (use {@link #hasData(Anchor)} for the preliminary examination)
    */
-  public int getData(@NotNull Anchor anchor) throws IllegalArgumentException {
+  public int getData(@Nonnull Anchor anchor) throws IllegalArgumentException {
     if (!myData.containsKey(anchor)) {
       throw new IllegalArgumentException(String.format(
         "No data is registered for the dependent spacing rule %s. Registered: %s", anchor, myData

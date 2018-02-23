@@ -18,8 +18,7 @@ package com.intellij.xdebugger.breakpoints;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -30,58 +29,58 @@ import java.util.Collection;
  * @author nik
  */
 public interface XBreakpointManager {
-  @NotNull
-  <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @Nullable T properties);
+  @Nonnull
+  <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(XBreakpointType<XBreakpoint<T>, T> type, @javax.annotation.Nullable T properties);
 
-  @NotNull
+  @Nonnull
   <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                         @NotNull String fileUrl,
+                                                                         @Nonnull String fileUrl,
                                                                          int line,
-                                                                         @Nullable T properties,
+                                                                         @javax.annotation.Nullable T properties,
                                                                          boolean temporary);
 
-  @NotNull
+  @Nonnull
   <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(XLineBreakpointType<T> type,
-                                                                         @NotNull String fileUrl,
+                                                                         @Nonnull String fileUrl,
                                                                          int line,
-                                                                         @Nullable T properties);
+                                                                         @javax.annotation.Nullable T properties);
 
-  void removeBreakpoint(@NotNull XBreakpoint<?> breakpoint);
+  void removeBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
-  @NotNull
+  @Nonnull
   XBreakpoint<?>[] getAllBreakpoints();
 
-  @NotNull
-  <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@NotNull XBreakpointType<B, ?> type);
+  @Nonnull
+  <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull XBreakpointType<B, ?> type);
 
-  @NotNull
-  <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@NotNull Class<? extends XBreakpointType<B, ?>> typeClass);
+  @Nonnull
+  <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass);
 
-  @Nullable
-  <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@NotNull XLineBreakpointType<P> type,
-                                                                            @NotNull VirtualFile file,
+  @javax.annotation.Nullable
+  <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull XLineBreakpointType<P> type,
+                                                                            @Nonnull VirtualFile file,
                                                                             int line);
 
-  boolean isDefaultBreakpoint(@NotNull XBreakpoint<?> breakpoint);
+  boolean isDefaultBreakpoint(@Nonnull XBreakpoint<?> breakpoint);
 
-  @Nullable
-  <B extends XBreakpoint<?>> B getDefaultBreakpoint(@NotNull XBreakpointType<B, ?> type);
+  @javax.annotation.Nullable
+  <B extends XBreakpoint<?>> B getDefaultBreakpoint(@Nonnull XBreakpointType<B, ?> type);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@NotNull XBreakpointType<B, P> type,
-                                                                                         @NotNull XBreakpointListener<B> listener);
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
+                                                                                         @Nonnull XBreakpointListener<B> listener);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@NotNull XBreakpointType<B, P> type,
-                                                                                            @NotNull XBreakpointListener<B> listener);
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@Nonnull XBreakpointType<B, P> type,
+                                                                                            @Nonnull XBreakpointListener<B> listener);
 
-  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@NotNull XBreakpointType<B, P> type,
-                                                                                         @NotNull XBreakpointListener<B> listener,
+  <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
+                                                                                         @Nonnull XBreakpointListener<B> listener,
                                                                                          Disposable parentDisposable);
 
-  void addBreakpointListener(@NotNull XBreakpointListener<XBreakpoint<?>> listener);
+  void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
 
-  void removeBreakpointListener(@NotNull XBreakpointListener<XBreakpoint<?>> listener);
+  void removeBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
 
-  void addBreakpointListener(@NotNull XBreakpointListener<XBreakpoint<?>> listener, @NotNull Disposable parentDisposable);
+  void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener, @Nonnull Disposable parentDisposable);
 
-  void updateBreakpointPresentation(@NotNull XLineBreakpoint<?> breakpoint, @Nullable Icon icon, @Nullable String errorMessage);
+  void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @javax.annotation.Nullable Icon icon, @javax.annotation.Nullable String errorMessage);
 }

@@ -16,14 +16,15 @@
 package com.intellij.diff.actions;
 
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BufferedLineIterator implements Iterator<Pair<Integer, CharSequence>> {
-  @NotNull private final List<Pair<Integer, CharSequence>> myBuffer;
+  @Nonnull
+  private final List<Pair<Integer, CharSequence>> myBuffer;
 
   public BufferedLineIterator() {
     myBuffer = new LinkedList<Pair<Integer, CharSequence>>();
@@ -39,7 +40,7 @@ public abstract class BufferedLineIterator implements Iterator<Pair<Integer, Cha
     }
   }
 
-  protected void addLine(int line, @NotNull CharSequence text) {
+  protected void addLine(int line, @Nonnull CharSequence text) {
     myBuffer.add(Pair.create(line, text));
   }
 

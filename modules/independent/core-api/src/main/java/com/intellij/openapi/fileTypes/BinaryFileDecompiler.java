@@ -20,9 +20,9 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface BinaryFileDecompiler {
-  @NotNull
+  @Nonnull
   CharSequence decompile(VirtualFile file);
 }

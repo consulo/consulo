@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import gnu.trove.TLongObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
 
-  public void execute(@NotNull RefreshSessionImpl session) {
+  public void execute(@Nonnull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
       queueSession(session, session.getTransaction());
     }
@@ -67,7 +67,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void queueSession(@NotNull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  private void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
     myQueue.submit(() -> {
       myRefreshIndicator.start();
       try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Doing file refresh. " + session)) {
@@ -116,14 +116,14 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @NotNull ModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, ((TransactionGuardImpl)TransactionGuard.getInstance()).getModalityTransaction(state));
   }
 
   @Override
-  public void processSingleEvent(@NotNull VFileEvent event) {
+  public void processSingleEvent(@Nonnull VFileEvent event) {
     new RefreshSessionImpl(Collections.singletonList(event)).launch();
   }
 

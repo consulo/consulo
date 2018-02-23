@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -34,7 +34,7 @@ public class RevealFileAction extends DumbAwareAction {
     presentation.setEnabled(file != null);
   }
 
-  @NotNull
+  @Nonnull
   public static String getActionName() {
     return SystemInfo.isMac ? "Reveal in Finder" : "Show in " + ShowFilePathAction.getFileManagerName();
   }

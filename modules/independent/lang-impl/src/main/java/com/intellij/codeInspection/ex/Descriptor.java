@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
@@ -47,7 +47,7 @@ public class Descriptor {
   private final InspectionProfileImpl myInspectionProfile;
   private final String myScopeName;
 
-  public Descriptor(@NotNull ScopeToolState state, @NotNull InspectionProfileImpl inspectionProfile, @NotNull Project project) {
+  public Descriptor(@Nonnull ScopeToolState state, @Nonnull InspectionProfileImpl inspectionProfile, @Nonnull Project project) {
     myState = state;
     myInspectionProfile = inspectionProfile;
     InspectionToolWrapper tool = state.getTool();
@@ -88,7 +88,7 @@ public class Descriptor {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   public HighlightDisplayKey getKey() {
     return myKey;
   }
@@ -109,7 +109,7 @@ public class Descriptor {
     }
   }
 
-  @NotNull
+  @Nonnull
   public InspectionToolWrapper getToolWrapper() {
     return myToolWrapper;
   }
@@ -139,7 +139,7 @@ public class Descriptor {
     return myGroup;
   }
 
-  @NotNull
+  @Nonnull
   public String getScopeName() {
     return myScopeName;
   }

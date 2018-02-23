@@ -23,8 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -51,12 +50,12 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     myProviders = providers;
   }
 
-  @NotNull
+  @Nonnull
   public List<DocumentationProvider> getAllProviders() {
     return ContainerUtil.concat(getProviders(), Arrays.asList(Extensions.getExtensions(EP_NAME)));
   }
 
-  @NotNull
+  @Nonnull
   public List<DocumentationProvider> getProviders() {
     return myProviders;
   }
@@ -96,9 +95,9 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String fetchExternalDocumentation(@NotNull String link, @Nullable PsiElement element) {
+  public String fetchExternalDocumentation(@Nonnull String link, @javax.annotation.Nullable PsiElement element) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof ExternalDocumentationHandler && ((ExternalDocumentationHandler)provider).canFetchDocumentationLink(link)) {
         return ((ExternalDocumentationHandler)provider).fetchExternalDocumentation(link, element);
@@ -160,7 +159,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   }
 
 
-  @Nullable
+  @javax.annotation.Nullable
   public CodeDocumentationProvider getFirstCodeDocumentationProvider() {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof CodeDocumentationProvider) {
@@ -224,11 +223,11 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public PsiElement getCustomDocumentationElement(@NotNull Editor editor,
-                                                  @NotNull PsiFile file,
-                                                  @Nullable PsiElement contextElement) {
+  public PsiElement getCustomDocumentationElement(@Nonnull Editor editor,
+                                                  @Nonnull PsiFile file,
+                                                  @javax.annotation.Nullable PsiElement contextElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof DocumentationProviderEx) {
         PsiElement element = ((DocumentationProviderEx)provider).getCustomDocumentationElement(editor, file, contextElement);

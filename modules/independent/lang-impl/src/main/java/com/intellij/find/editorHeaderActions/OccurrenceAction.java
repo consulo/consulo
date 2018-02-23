@@ -21,13 +21,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.project.DumbAwareAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class OccurrenceAction extends DumbAwareAction implements ShortcutProvider {
-  protected OccurrenceAction(@NotNull String baseActionId, @NotNull Icon icon) {
+  protected OccurrenceAction(@Nonnull String baseActionId, @Nonnull Icon icon) {
     copyFrom(ActionManager.getInstance().getAction(baseActionId));
     getTemplatePresentation().setIcon(icon);
   }

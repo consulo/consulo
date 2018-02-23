@@ -57,8 +57,8 @@ import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -118,7 +118,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     return myModuleModel.getModules();
   }
@@ -144,7 +144,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   @Override
-  public ModuleRootModel getRootModel(@NotNull Module module) {
+  public ModuleRootModel getRootModel(@Nonnull Module module) {
     return getOrCreateModuleEditor(module).getRootModel();
   }
 
@@ -474,7 +474,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
 
-  private boolean doRemoveModule(@NotNull ModuleEditor selectedEditor) {
+  private boolean doRemoveModule(@Nonnull ModuleEditor selectedEditor) {
 
     String question;
     if (myModuleEditors.size() == 1) {
@@ -532,7 +532,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return myModified;
   }
 
-  public static boolean showArtifactSettings(@NotNull Project project, @Nullable final Artifact artifact) {
+  public static boolean showArtifactSettings(@Nonnull Project project, @Nullable final Artifact artifact) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
     return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
@@ -542,7 +542,7 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     });
   }
 
-  public static boolean showSdkSettings(@NotNull Project project, @NotNull final Sdk sdk) {
+  public static boolean showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
     return ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override

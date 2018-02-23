@@ -21,8 +21,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * The element of the branch popup which allows to show branches of the selected repository.
@@ -33,16 +32,19 @@ import org.jetbrains.annotations.Nullable;
  */
 public class RootAction<T extends Repository> extends ActionGroup {
 
-  @NotNull protected final T myRepository;
-  @NotNull private final ActionGroup myGroup;
-  @NotNull private final String myBranchText;
+  @Nonnull
+  protected final T myRepository;
+  @Nonnull
+  private final ActionGroup myGroup;
+  @Nonnull
+  private final String myBranchText;
 
   /**
    * @param currentRepository Pass null in the case of common repositories - none repository will be highlighted then.
    * @param actionsGroup
    * @param branchText
    */
-  public RootAction(@NotNull T repository, @Nullable T currentRepository, @NotNull ActionGroup actionsGroup, @NotNull String branchText) {
+  public RootAction(@Nonnull T repository, @javax.annotation.Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
     super("", true);
     myRepository = repository;
     myGroup = actionsGroup;
@@ -53,19 +55,19 @@ public class RootAction<T extends Repository> extends ActionGroup {
     getTemplatePresentation().setText(DvcsUtil.getShortRepositoryName(repository), false);
   }
 
-  @NotNull
+  @Nonnull
   public String getCaption() {
     return "Current branch in " + DvcsUtil.getShortRepositoryName(myRepository) + ": " + getDisplayableBranchText();
   }
 
-  @NotNull
+  @Nonnull
   public String getDisplayableBranchText() {
     return myBranchText;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
     return myGroup.getChildren(e);
   }
 }

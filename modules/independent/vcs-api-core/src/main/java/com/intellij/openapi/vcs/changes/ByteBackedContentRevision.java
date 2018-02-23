@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface ByteBackedContentRevision extends ContentRevision {
   /**

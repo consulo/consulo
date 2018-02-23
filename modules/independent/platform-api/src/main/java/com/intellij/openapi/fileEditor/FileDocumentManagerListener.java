@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -46,16 +46,16 @@ public interface FileDocumentManagerListener extends EventListener {
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  void beforeDocumentSaving(@NotNull Document document);
+  void beforeDocumentSaving(@Nonnull Document document);
 
   /**
    * NOTE: Vetoing facility is deprecated in this listener implement {@link FileDocumentSynchronizationVetoer} instead.
    */
-  void beforeFileContentReload(VirtualFile file, @NotNull Document document);
+  void beforeFileContentReload(VirtualFile file, @Nonnull Document document);
 
-  void fileWithNoDocumentChanged(@NotNull VirtualFile file);
-  void fileContentReloaded(VirtualFile file, @NotNull Document document);
-  void fileContentLoaded(@NotNull VirtualFile file, @NotNull Document document);
+  void fileWithNoDocumentChanged(@Nonnull VirtualFile file);
+  void fileContentReloaded(VirtualFile file, @Nonnull Document document);
+  void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document);
 
   void unsavedDocumentsDropped();
 }

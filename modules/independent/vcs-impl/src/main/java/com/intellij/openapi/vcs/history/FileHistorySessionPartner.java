@@ -28,8 +28,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.BufferedListConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.ContentUtilEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -38,22 +38,29 @@ import static com.intellij.openapi.vcs.history.FileHistoryPanelImpl.sameHistorie
 
 public class FileHistorySessionPartner implements VcsAppendableHistorySessionPartner {
 
-  @NotNull private final AbstractVcs myVcs;
-  @NotNull private final VcsHistoryProvider myVcsHistoryProvider;
-  @NotNull private final FilePath myPath;
-  @Nullable private final VcsRevisionNumber myStartingRevisionNumber;
-  @NotNull private final LimitHistoryCheck myLimitHistoryCheck;
-  @NotNull private final FileHistoryRefresherI myRefresherI;
-  @NotNull private final BufferedListConsumer<VcsFileRevision> myBuffer;
+  @Nonnull
+  private final AbstractVcs myVcs;
+  @Nonnull
+  private final VcsHistoryProvider myVcsHistoryProvider;
+  @Nonnull
+  private final FilePath myPath;
+  @javax.annotation.Nullable
+  private final VcsRevisionNumber myStartingRevisionNumber;
+  @Nonnull
+  private final LimitHistoryCheck myLimitHistoryCheck;
+  @Nonnull
+  private final FileHistoryRefresherI myRefresherI;
+  @Nonnull
+  private final BufferedListConsumer<VcsFileRevision> myBuffer;
 
   private FileHistoryPanelImpl myFileHistoryPanel;
   private volatile VcsAbstractHistorySession mySession;
 
-  public FileHistorySessionPartner(@NotNull VcsHistoryProvider vcsHistoryProvider,
-                                   @NotNull FilePath path,
-                                   @Nullable VcsRevisionNumber startingRevisionNumber,
-                                   @NotNull AbstractVcs vcs,
-                                   @NotNull FileHistoryRefresherI refresherI) {
+  public FileHistorySessionPartner(@Nonnull VcsHistoryProvider vcsHistoryProvider,
+                                   @Nonnull FilePath path,
+                                   @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
+                                   @Nonnull AbstractVcs vcs,
+                                   @Nonnull FileHistoryRefresherI refresherI) {
     myVcsHistoryProvider = vcsHistoryProvider;
     myPath = path;
     myStartingRevisionNumber = startingRevisionNumber;
@@ -68,7 +75,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     };
     myBuffer = new BufferedListConsumer<VcsFileRevision>(5, sessionRefresher, 1000) {
       @Override
-      protected void invokeConsumer(@NotNull Runnable consumerRunnable) {
+      protected void invokeConsumer(@Nonnull Runnable consumerRunnable) {
         // Do not invoke in arbitrary background thread as due to parallel execution this could lead to cases when invokeLater() (from
         // sessionRefresher) is scheduled at first for history session with (as an example) 10 revisions (new buffered list) and then with
         // 5 revisions (previous buffered list). And so incorrect UI is shown to the user.
@@ -78,9 +85,9 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   }
 
   @Nullable
-  static FileHistoryRefresherI findExistingHistoryRefresher(@NotNull Project project,
-                                                            @NotNull FilePath path,
-                                                            @Nullable VcsRevisionNumber startingRevisionNumber) {
+  static FileHistoryRefresherI findExistingHistoryRefresher(@Nonnull Project project,
+                                                            @Nonnull FilePath path,
+                                                            @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber) {
     JComponent component = ContentUtilEx.findContentComponent(getToolWindow(project).getContentManager(), comp ->
             comp instanceof FileHistoryPanelImpl &&
             sameHistories((FileHistoryPanelImpl)comp, path, startingRevisionNumber));
@@ -93,7 +100,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   }
 
   @CalledInAwt
-  @NotNull
+  @Nonnull
   private FileHistoryPanelImpl ensureHistoryPanelCreated() {
     if (myFileHistoryPanel == null) {
       myFileHistoryPanel = createFileHistoryPanel(mySession.copyWithCachedRevision());
@@ -101,8 +108,8 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     return myFileHistoryPanel;
   }
 
-  @NotNull
-  private FileHistoryPanelImpl createFileHistoryPanel(@NotNull VcsHistorySession copy) {
+  @Nonnull
+  private FileHistoryPanelImpl createFileHistoryPanel(@Nonnull VcsHistorySession copy) {
     ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(myVcs.getProject()).getContentManager();
     return new FileHistoryPanelImpl(myVcs, myPath, myStartingRevisionNumber, copy, myVcsHistoryProvider, contentManager, myRefresherI, false);
   }
@@ -126,8 +133,8 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
     });
   }
 
-  @NotNull
-  private static ToolWindow getToolWindow(@NotNull Project project) {
+  @Nonnull
+  private static ToolWindow getToolWindow(@Nonnull Project project) {
     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
     assert toolWindow != null : "VCS ToolWindow should be available at this point.";
     return toolWindow;

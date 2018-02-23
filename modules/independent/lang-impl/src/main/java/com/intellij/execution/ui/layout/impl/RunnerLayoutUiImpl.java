@@ -39,8 +39,8 @@ import com.intellij.ui.content.ContentManagerListener;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.switcher.SwitchProvider;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,11 +52,11 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   private final ContentManager myViewsContentManager;
   public static final Key<String> CONTENT_TYPE = Key.create("ContentType");
 
-  public RunnerLayoutUiImpl(@NotNull Project project,
-                            @NotNull Disposable parent,
-                            @NotNull String runnerId,
-                            @NotNull String runnerTitle,
-                            @NotNull String sessionName) {
+  public RunnerLayoutUiImpl(@Nonnull Project project,
+                            @Nonnull Disposable parent,
+                            @Nonnull String runnerId,
+                            @Nonnull String runnerTitle,
+                            @Nonnull String sessionName) {
     myLayout = RunnerLayoutSettings.getInstance().getLayout(runnerId);
     Disposer.register(parent, this);
 
@@ -70,45 +70,45 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
-  public LayoutViewOptions setTopToolbar(@NotNull ActionGroup actions, @NotNull String place) {
+  @Nonnull
+  public LayoutViewOptions setTopToolbar(@Nonnull ActionGroup actions, @Nonnull String place) {
     myContentUI.setTopActions(actions, place);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LayoutStateDefaults initTabDefaults(int id, String text, Icon icon) {
     getLayout().setDefault(id, text, icon);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutStateDefaults initFocusContent(@NotNull final String id, @NotNull final String condition) {
+  public LayoutStateDefaults initFocusContent(@Nonnull final String id, @Nonnull final String condition) {
     return initFocusContent(id, condition, new LayoutAttractionPolicy.FocusOnce());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutStateDefaults initFocusContent(@NotNull final String id, @NotNull final String condition, @NotNull final LayoutAttractionPolicy policy) {
+  public LayoutStateDefaults initFocusContent(@Nonnull final String id, @Nonnull final String condition, @Nonnull final LayoutAttractionPolicy policy) {
     getLayout().setDefaultToFocus(id, condition, policy);
     return this;
   }
 
   @Override
-  @NotNull
-  public Content addContent(@NotNull Content content) {
+  @Nonnull
+  public Content addContent(@Nonnull Content content) {
     return addContent(content, false, -1, PlaceInGrid.center, false);
   }
 
   @Override
-  @NotNull
-  public Content addContent(@NotNull Content content, int defaultTabId, @NotNull PlaceInGrid defaultPlace, boolean defaultIsMinimized) {
+  @Nonnull
+  public Content addContent(@Nonnull Content content, int defaultTabId, @Nonnull PlaceInGrid defaultPlace, boolean defaultIsMinimized) {
     return addContent(content, true, defaultTabId, defaultPlace, defaultIsMinimized);
   }
 
-  public Content addContent(@NotNull Content content, boolean applyDefaults, int defaultTabId, @NotNull PlaceInGrid defaultPlace, boolean defaultIsMinimized) {
+  public Content addContent(@Nonnull Content content, boolean applyDefaults, int defaultTabId, @Nonnull PlaceInGrid defaultPlace, boolean defaultIsMinimized) {
     final String id = content.getUserData(CONTENT_TYPE);
 
     assert id != null : "Content id is missing, use RunnerLayoutUi to create content instances";
@@ -122,14 +122,14 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
-  public Content createContent(@NotNull String id, @NotNull JComponent component, @NotNull String displayName, @Nullable Icon icon, @Nullable JComponent focusable) {
+  @Nonnull
+  public Content createContent(@Nonnull String id, @Nonnull JComponent component, @Nonnull String displayName, @Nullable Icon icon, @Nullable JComponent focusable) {
     return createContent(id, new ComponentWithActions.Impl(component), displayName, icon, focusable);
   }
 
   @Override
-  @NotNull
-  public Content createContent(@NotNull final String contentId, @NotNull final ComponentWithActions withActions, @NotNull final String displayName,
+  @Nonnull
+  public Content createContent(@Nonnull final String contentId, @Nonnull final ComponentWithActions withActions, @Nonnull final String displayName,
                                @Nullable final Icon icon,
                                @Nullable final JComponent toFocus) {
     final Content content = getContentFactory().createContent(withActions.getComponent(), displayName, false);
@@ -149,7 +149,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myViewsContentManager.getComponent();
   }
@@ -177,25 +177,25 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ContentManager getContentManager() {
     return myViewsContentManager;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback selectAndFocus(@Nullable final Content content, boolean requestFocus, final boolean forced) {
     return selectAndFocus(content, requestFocus, forced, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback selectAndFocus(@Nullable final Content content, boolean requestFocus, final boolean forced, boolean implicit) {
     if (content == null) return ActionCallback.REJECTED;
     return getContentManager(content).setSelectedContent(content, requestFocus || shouldRequestFocus(), forced, implicit);
   }
 
-  private ContentManager getContentManager(@NotNull Content content) {
+  private ContentManager getContentManager(@Nonnull Content content) {
     return myContentUI.getContentManager(content);
   }
 
@@ -210,29 +210,29 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  public boolean isToFocus(@NotNull final Content content, @NotNull final String condition) {
+  public boolean isToFocus(@Nonnull final Content content, @Nonnull final String condition) {
     final String id = content.getUserData(ViewImpl.ID);
     return getLayout().isToFocus(id, condition);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutViewOptions setToFocus(@Nullable final Content content, @NotNull final String condition) {
+  public LayoutViewOptions setToFocus(@Nullable final Content content, @Nonnull final String condition) {
     getLayout().setToFocus(content != null ? content.getUserData(ViewImpl.ID) : null, condition);
     return this;
   }
 
   @Override
-  public void attractBy(@NotNull final String condition) {
+  public void attractBy(@Nonnull final String condition) {
     myContentUI.attractByCondition(condition, true);
   }
 
   @Override
-  public void clearAttractionBy(@NotNull final String condition) {
+  public void clearAttractionBy(@Nonnull final String condition) {
     myContentUI.clearAttractionByCondition(condition, true);
   }
 
-  public void removeContent(@NotNull String id, final boolean dispose) {
+  public void removeContent(@Nonnull String id, final boolean dispose) {
     final Content content = findContent(id);
     if (content != null) {
       getContentManager().removeContent(content, dispose);
@@ -244,36 +244,36 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
     return myContentUI.getLayoutActions();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getLayoutActionsList() {
     final ActionGroup group = (ActionGroup)getLayoutActions();
     return group.getChildren(null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutViewOptions setTabPopupActions(@NotNull ActionGroup group) {
+  public LayoutViewOptions setTabPopupActions(@Nonnull ActionGroup group) {
     myContentUI.setTabPopupActions(group);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutViewOptions setLeftToolbar(@NotNull final ActionGroup leftToolbar, @NotNull final String place) {
+  public LayoutViewOptions setLeftToolbar(@Nonnull final ActionGroup leftToolbar, @Nonnull final String place) {
     myContentUI.setLeftToolbar(leftToolbar, place);
     return this;
   }
 
   @Override
   @Nullable
-  public Content findContent(@NotNull final String key) {
+  public Content findContent(@Nonnull final String key) {
     return myContentUI.findContent(key);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public RunnerLayoutUi addListener(@NotNull final ContentManagerListener listener, @NotNull final Disposable parent) {
+  public RunnerLayoutUi addListener(@Nonnull final ContentManagerListener listener, @Nonnull final Disposable parent) {
     final ContentManager mgr = getContentManager();
     mgr.addContentManagerListener(listener);
     Disposer.register(parent, new Disposable() {
@@ -286,12 +286,12 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  public void removeListener(@NotNull final ContentManagerListener listener) {
+  public void removeListener(@Nonnull final ContentManagerListener listener) {
     getContentManager().removeContentManagerListener(listener);
   }
 
   @Override
-  public void setBouncing(@NotNull final Content content, final boolean activate) {
+  public void setBouncing(@Nonnull final Content content, final boolean activate) {
     myContentUI.processBounce(content, activate);
   }
 
@@ -302,7 +302,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LayoutViewOptions setMinimizeActionEnabled(final boolean enabled) {
     myContentUI.setMinimizeActionEnabled(enabled);
     return this;
@@ -314,41 +314,41 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LayoutViewOptions setMoveToGridActionEnabled(final boolean enabled) {
     myContentUI.setMovetoGridActionEnabled(enabled);
     return this;
   }
 
   @Override
-  @NotNull
-  public LayoutViewOptions setAttractionPolicy(@NotNull final String contentId, final LayoutAttractionPolicy policy) {
+  @Nonnull
+  public LayoutViewOptions setAttractionPolicy(@Nonnull final String contentId, final LayoutAttractionPolicy policy) {
     myContentUI.setPolicy(contentId, policy);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutViewOptions setConditionAttractionPolicy(@NotNull final String condition, final LayoutAttractionPolicy policy) {
+  public LayoutViewOptions setConditionAttractionPolicy(@Nonnull final String condition, final LayoutAttractionPolicy policy) {
     myContentUI.setConditionPolicy(condition, policy);
     return this;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LayoutStateDefaults getDefaults() {
     return this;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LayoutViewOptions getOptions() {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LayoutViewOptions setAdditionalFocusActions(@NotNull final ActionGroup group) {
+  public LayoutViewOptions setAdditionalFocusActions(@Nonnull final ActionGroup group) {
     myContentUI.setAdditionalFocusActions(group);
     return this;
   }
@@ -358,14 +358,14 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
     return myContentUI.getSettingsActions();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getSettingsActionsList() {
     final ActionGroup group = (ActionGroup)getSettingsActions();
     return group.getChildren(null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Content[] getContents() {
     Content[] contents = new Content[getContentManager().getContentCount()];
@@ -377,7 +377,7 @@ public class RunnerLayoutUiImpl implements Disposable.Parent, RunnerLayoutUi, La
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (SwitchProvider.KEY == dataId || QuickActionProvider.KEY == dataId || RunnerContentUi.KEY == dataId) {
       return myContentUI;
     }

@@ -64,8 +64,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -97,7 +97,7 @@ class FindInProjectTask {
   private final AtomicLong myTotalFilesSize = new AtomicLong();
   private final String myStringToFindInIndices;
 
-  FindInProjectTask(@NotNull final FindModel findModel, @NotNull final Project project, @NotNull Set<VirtualFile> filesToScanInitially) {
+  FindInProjectTask(@Nonnull final FindModel findModel, @Nonnull final Project project, @Nonnull Set<VirtualFile> filesToScanInitially) {
     myFindModel = findModel;
     myProject = project;
     myFilesToScanInitially = filesToScanInitially;
@@ -125,7 +125,7 @@ class FindInProjectTask {
     myStringToFindInIndices = stringToFind;
   }
 
-  public void findUsages(@NotNull Processor<UsageInfo> consumer, @NotNull FindUsagesProcessPresentation processPresentation) {
+  public void findUsages(@Nonnull Processor<UsageInfo> consumer, @Nonnull FindUsagesProcessPresentation processPresentation) {
     try {
       myProgress.setIndeterminate(true);
       myProgress.setText("Scanning indexed files...");
@@ -170,7 +170,7 @@ class FindInProjectTask {
     }
   }
 
-  private static void logStats(@NotNull Collection<VirtualFile> otherFiles, long time) {
+  private static void logStats(@Nonnull Collection<VirtualFile> otherFiles, long time) {
 
     final Multiset<String> stats = HashMultiset.create();
     for (VirtualFile file : otherFiles) {
@@ -195,9 +195,9 @@ class FindInProjectTask {
     LOG.info(message);
   }
 
-  private void searchInFiles(@NotNull Collection<VirtualFile> virtualFiles,
-                             @NotNull FindUsagesProcessPresentation processPresentation,
-                             @NotNull final Processor<UsageInfo> consumer) {
+  private void searchInFiles(@Nonnull Collection<VirtualFile> virtualFiles,
+                             @Nonnull FindUsagesProcessPresentation processPresentation,
+                             @Nonnull final Processor<UsageInfo> consumer) {
     AtomicInteger occurrenceCount = new AtomicInteger();
     AtomicInteger processedFileCount = new AtomicInteger();
 
@@ -253,8 +253,8 @@ class FindInProjectTask {
   }
 
   // must return non-binary files
-  @NotNull
-  private Collection<VirtualFile> collectFilesInScope(@NotNull final Set<VirtualFile> alreadySearched, final boolean skipIndexed) {
+  @Nonnull
+  private Collection<VirtualFile> collectFilesInScope(@Nonnull final Set<VirtualFile> alreadySearched, final boolean skipIndexed) {
     SearchScope customScope = myFindModel.isCustomScope() ? myFindModel.getCustomScope() : null;
     final GlobalSearchScope globalCustomScope = customScope == null ? null : GlobalSearchScopeUtil.toGlobalSearchScope(customScope, myProject);
 
@@ -265,7 +265,7 @@ class FindInProjectTask {
       private final Set<VirtualFile> myFiles = new LinkedHashSet<>();
 
       @Override
-      public boolean processFile(@NotNull final VirtualFile virtualFile) {
+      public boolean processFile(@Nonnull final VirtualFile virtualFile) {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
           @Override
           public void run() {
@@ -310,7 +310,7 @@ class FindInProjectTask {
         return true;
       }
 
-      @NotNull
+      @Nonnull
       private Collection<VirtualFile> getFiles() {
         return myFiles;
       }
@@ -333,7 +333,7 @@ class FindInProjectTask {
       VirtualFileVisitor.Option limit = VirtualFileVisitor.limit(myFindModel.isWithSubdirectories() ? -1 : 1);
       VfsUtilCore.visitChildrenRecursively(myDirectory, new VirtualFileVisitor(limit) {
         @Override
-        public boolean visitFile(@NotNull VirtualFile file) {
+        public boolean visitFile(@Nonnull VirtualFile file) {
           iterator.processFile(file);
           return true;
         }
@@ -352,7 +352,7 @@ class FindInProjectTask {
     return iterator.getFiles();
   }
 
-  private static boolean iterateAll(@NotNull VirtualFile[] files, @NotNull final GlobalSearchScope searchScope, @NotNull final ContentIterator iterator) {
+  private static boolean iterateAll(@Nonnull VirtualFile[] files, @Nonnull final GlobalSearchScope searchScope, @Nonnull final ContentIterator iterator) {
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     final VirtualFileFilter contentFilter =
             file -> file.isDirectory() || !fileTypeManager.isFileIgnored(file) && !file.getFileType().isBinary() && searchScope.contains(file);
@@ -379,7 +379,7 @@ class FindInProjectTask {
     return myFindModel.isWholeWordsOnly() && text.indexOf('$') < 0 && !StringUtil.getWordsInStringLongestFirst(text).isEmpty();
   }
 
-  private static boolean hasTrigrams(@NotNull String text) {
+  private static boolean hasTrigrams(@Nonnull String text) {
     return TrigramIndex.ENABLED && !TrigramBuilder.processTrigrams(text, new TrigramBuilder.TrigramProcessor() {
       @Override
       public boolean execute(int value) {
@@ -389,7 +389,7 @@ class FindInProjectTask {
   }
 
 
-  @NotNull
+  @Nonnull
   private Set<VirtualFile> getFilesForFastWordSearch() {
     String stringToFind = myStringToFindInIndices;
 
@@ -454,7 +454,7 @@ class FindInProjectTask {
   }
 
   @RequiredReadAction
-  private Pair.NonNull<PsiFile, VirtualFile> findFile(@NotNull final VirtualFile virtualFile) {
+  private Pair.NonNull<PsiFile, VirtualFile> findFile(@Nonnull final VirtualFile virtualFile) {
     PsiFile psiFile = myPsiManager.findFile(virtualFile);
     if (psiFile != null && !(psiFile instanceof PsiBinaryFile)) {
       PsiFile sourceFile = (PsiFile)psiFile.getNavigationElement();

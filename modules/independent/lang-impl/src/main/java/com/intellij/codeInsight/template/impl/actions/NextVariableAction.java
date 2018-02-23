@@ -33,8 +33,8 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class NextVariableAction extends EditorAction {
   public NextVariableAction() {
@@ -53,7 +53,7 @@ public class NextVariableAction extends EditorAction {
     }
 
     @Override
-    protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+    protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
       return templateState != null && !templateState.isFinished() && templateState.isToProcessTab();
     }

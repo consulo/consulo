@@ -24,8 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Base super-class for {@link LineWrapPositionStrategy} implementations that want to restrict wrap positions
@@ -47,7 +46,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
    * @param nonVirtualOnly  defines if current PSI-aware logic should be exploited only for 'real wrap' position requests
    * @param enabledTypes    target element/token types where line wrapping is allowed
    */
-  public PsiAwareLineWrapPositionStrategy(boolean nonVirtualOnly, @NotNull IElementType ... enabledTypes) {
+  public PsiAwareLineWrapPositionStrategy(boolean nonVirtualOnly, @Nonnull IElementType ... enabledTypes) {
     myEnabledTypes = TokenSet.create(enabledTypes);
     myNonVirtualOnly = nonVirtualOnly;
     if (enabledTypes.length <= 0) {
@@ -57,8 +56,8 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
   }
 
   @Override
-  public int calculateWrapPosition(@NotNull Document document,
-                                   @Nullable Project project,
+  public int calculateWrapPosition(@Nonnull Document document,
+                                   @javax.annotation.Nullable Project project,
                                    int startOffset,
                                    int endOffset,
                                    int maxPreferredOffset,
@@ -133,8 +132,8 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
    *                                          target line should be wrapped OR <code>-1</code> if no wrapping should be performed
    */
   protected abstract int doCalculateWrapPosition(
-    @NotNull Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
-    boolean allowToBeyondMaxPreferredOffset, boolean virtual
+          @Nonnull Document document, @javax.annotation.Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
+          boolean allowToBeyondMaxPreferredOffset, boolean virtual
   );
 
   /**
@@ -144,7 +143,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
    * @return            <code>true</code> if wrapping at the text range defined by the given element is allowed;
    *                    <code>false</code> otherwise
    */
-  private boolean allowToWrapInside(@NotNull PsiElement element) {
+  private boolean allowToWrapInside(@Nonnull PsiElement element) {
     TextRange textRange = element.getTextRange();
     if (textRange == null) {
       return false;
@@ -158,8 +157,8 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
     return false;
   }
   
-  @Nullable
-  private static PsiElement getPrevious(@NotNull PsiElement element) {
+  @javax.annotation.Nullable
+  private static PsiElement getPrevious(@Nonnull PsiElement element) {
     PsiElement result = element.getPrevSibling();
     if (result != null) {
       return result;

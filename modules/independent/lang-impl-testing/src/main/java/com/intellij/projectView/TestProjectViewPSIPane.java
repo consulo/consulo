@@ -14,7 +14,7 @@ import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -47,7 +47,7 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
     return new ProjectTreeBuilder(myProject, myTree, treeModel, AlphaComparator.INSTANCE,
                                   (ProjectAbstractTreeStructureBase)myTreeStructure) {
@@ -84,7 +84,7 @@ class TestProjectViewPSIPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "";
   }

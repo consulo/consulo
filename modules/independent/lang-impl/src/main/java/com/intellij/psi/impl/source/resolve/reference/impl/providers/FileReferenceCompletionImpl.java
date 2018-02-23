@@ -29,7 +29,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class FileReferenceCompletionImpl extends FileReferenceCompletion {
             new CommonProcessors.CollectUniquesProcessor<PsiFileSystemItem>();
     final PsiElementProcessor<PsiFileSystemItem> processor = new PsiElementProcessor<PsiFileSystemItem>() {
       @Override
-      public boolean execute(@NotNull PsiFileSystemItem fileSystemItem) {
+      public boolean execute(@Nonnull PsiFileSystemItem fileSystemItem) {
         return new FilteringProcessor<PsiFileSystemItem>(reference.getFileReferenceSet().getReferenceCompletionFilter(), collector).process(
                 FileReference.getOriginalFile(fileSystemItem));
       }

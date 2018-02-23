@@ -24,7 +24,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
@@ -34,7 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -106,7 +105,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
     return FilenameIndex.getVirtualFilesByName(project, fileName, GlobalSearchScope.allScope(project));
   }
 
-  private static void navigateToFile(Project project, @NotNull VirtualFile file) {
+  private static void navigateToFile(Project project, @Nonnull VirtualFile file) {
     new OpenFileDescriptor(project, file).navigate(true);
   }
 }

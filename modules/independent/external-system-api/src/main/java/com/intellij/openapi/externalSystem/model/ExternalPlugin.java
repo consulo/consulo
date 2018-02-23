@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -24,6 +24,6 @@ import java.io.Serializable;
  * @since 7/14/2014
  */
 public interface ExternalPlugin extends Serializable {
-  @NotNull
+  @Nonnull
   String getId();
 }

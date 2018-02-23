@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -23,17 +23,17 @@ import org.jetbrains.annotations.NotNull;
 public class ImmediateFullValueEvaluator extends XFullValueEvaluator {
   private String myFullValue;
 
-  public ImmediateFullValueEvaluator(@NotNull String fullValue) {
+  public ImmediateFullValueEvaluator(@Nonnull String fullValue) {
     myFullValue = fullValue;
   }
 
-  public ImmediateFullValueEvaluator(@NotNull String linkText, @NotNull String fullValue) {
+  public ImmediateFullValueEvaluator(@Nonnull String linkText, @Nonnull String fullValue) {
     super(linkText);
     myFullValue = fullValue;
   }
 
   @Override
-  public void startEvaluation(@NotNull XFullValueEvaluationCallback callback) {
+  public void startEvaluation(@Nonnull XFullValueEvaluationCallback callback) {
     callback.evaluated(myFullValue);
   }
 }

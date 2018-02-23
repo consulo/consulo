@@ -23,7 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -177,7 +177,7 @@ public abstract class AbstractFieldPanel extends JPanel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected Action[] createActions() {
       return new Action[]{getOKAction(), getCancelAction()};
     }

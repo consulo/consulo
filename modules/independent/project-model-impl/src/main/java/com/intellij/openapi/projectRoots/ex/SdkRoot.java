@@ -17,20 +17,20 @@
 package com.intellij.openapi.projectRoots.ex;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public interface SdkRoot {
   boolean isValid();
-  @NotNull
+  @Nonnull
   VirtualFile[] getVirtualFiles();
 
-  @NotNull
+  @Nonnull
   String[] getUrls();
 
-  @NotNull
+  @Nonnull
   String getPresentableString();
 
   void update();

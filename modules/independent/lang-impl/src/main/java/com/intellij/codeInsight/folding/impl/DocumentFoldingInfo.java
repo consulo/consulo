@@ -41,7 +41,7 @@ import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -49,20 +49,24 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.folding.impl.DocumentFoldingInfo");
   private static final Key<FoldingInfo> FOLDING_INFO_KEY = Key.create("FOLDING_INFO");
 
-  @NotNull private final Project myProject;
+  @Nonnull
+  private final Project myProject;
   private final VirtualFile myFile;
 
   private static class SerializedPsiElement {
     private final String mySerializedElement;
     private final FoldingInfo myFoldingInfo;
-    public SerializedPsiElement(@NotNull String serialized, @NotNull FoldingInfo foldingInfo) {
+    public SerializedPsiElement(@Nonnull String serialized, @Nonnull FoldingInfo foldingInfo) {
       mySerializedElement = serialized;
       myFoldingInfo = foldingInfo;
     }
   }
-  @NotNull private final List<SmartPsiElementPointer<PsiElement>> myPsiElements = ContainerUtil.createLockFreeCopyOnWriteList();
-  @NotNull private final List<SerializedPsiElement> mySerializedElements = ContainerUtil.createLockFreeCopyOnWriteList();
-  @NotNull private final List<RangeMarker> myRangeMarkers = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final List<SmartPsiElementPointer<PsiElement>> myPsiElements = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final List<SerializedPsiElement> mySerializedElements = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final List<RangeMarker> myRangeMarkers = ContainerUtil.createLockFreeCopyOnWriteList();
   private static final String DEFAULT_PLACEHOLDER = "...";
   @NonNls private static final String ELEMENT_TAG = "element";
   @NonNls private static final String SIGNATURE_ATT = "signature";
@@ -71,12 +75,12 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
   @NonNls private static final String DATE_ATT = "date";
   @NonNls private static final String PLACEHOLDER_ATT = "placeholder";
 
-  DocumentFoldingInfo(@NotNull Project project, @NotNull Document document) {
+  DocumentFoldingInfo(@Nonnull Project project, @Nonnull Document document) {
     myProject = project;
     myFile = FileDocumentManager.getInstance().getFile(document);
   }
 
-  void loadFromEditor(@NotNull Editor editor) {
+  void loadFromEditor(@Nonnull Editor editor) {
     assertDispatchThread();
     LOG.assertTrue(!editor.isDisposed());
     clear();
@@ -117,7 +121,7 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
 
   @RequiredDispatchThread
   @Override
-  public void setToEditor(@NotNull final Editor editor) {
+  public void setToEditor(@Nonnull final Editor editor) {
     assertDispatchThread();
     final PsiManager psiManager = PsiManager.getInstance(myProject);
     if (psiManager.isDisposed()) return;
@@ -182,9 +186,9 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
     }
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  private static Map<PsiElement, FoldingDescriptor> buildRanges(@NotNull Editor editor, @NotNull PsiFile psiFile) {
+  private static Map<PsiElement, FoldingDescriptor> buildRanges(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
     final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(psiFile.getLanguage());
     final ASTNode node = psiFile.getNode();
     if (node == null) return Collections.emptyMap();
@@ -408,7 +412,7 @@ class DocumentFoldingInfo implements JDOMExternalizable, CodeFoldingState {
     private final String placeHolder;
     private final boolean expanded;
 
-    private FoldingInfo(@NotNull String placeHolder, boolean expanded) {
+    private FoldingInfo(@Nonnull String placeHolder, boolean expanded) {
       this.placeHolder = placeHolder;
       this.expanded = expanded;
     }

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 
@@ -28,17 +28,17 @@ public abstract class StripedLockHolder<T> {
   private int ourLockAllocationCounter = 0;
 
   @SuppressWarnings("unchecked")
-  protected StripedLockHolder(@NotNull Class<T> aClass) {
+  protected StripedLockHolder(@Nonnull Class<T> aClass) {
     ourLocks = (T[])Array.newInstance(aClass, NUM_LOCKS);
     for (int i = 0; i < ourLocks.length; i++) {
       ourLocks[i] = create();
     }
   }
 
-  @NotNull
+  @Nonnull
   protected abstract T create();
 
-  @NotNull
+  @Nonnull
   public T allocateLock() {
     return ourLocks[allocateLockIndex()];
   }

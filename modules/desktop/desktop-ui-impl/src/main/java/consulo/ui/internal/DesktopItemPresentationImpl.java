@@ -19,7 +19,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextStyle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -37,17 +37,17 @@ public class DesktopItemPresentationImpl<E> implements ItemPresentation {
   }
 
   @Override
-  public void setIcon(@NotNull consulo.ui.image.Image icon) {
+  public void setIcon(@Nonnull consulo.ui.image.Image icon) {
     myRenderer.setIcon((Icon)icon);
   }
 
   @Override
-  public void append(@NotNull String text) {
+  public void append(@Nonnull String text) {
     myRenderer.append(text);
   }
 
   @Override
-  public void append(@NotNull String text, @NotNull TextStyle... styles) {
+  public void append(@Nonnull String text, @Nonnull TextStyle... styles) {
     if (styles[0] == TextStyle.BOLD) {
       myRenderer.append(text, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
     }

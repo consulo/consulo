@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Some base methods for scopes
@@ -30,14 +30,14 @@ import org.jetbrains.annotations.Nullable;
 public class PsiScopesUtilCore {
   public static final Logger LOGGER = Logger.getInstance(PsiScopesUtilCore.class);
 
-  public static boolean treeWalkUp(@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @Nullable PsiElement maxScope) {
+  public static boolean treeWalkUp(@Nonnull PsiScopeProcessor processor, @Nonnull PsiElement entrance, @Nullable PsiElement maxScope) {
     return treeWalkUp(processor, entrance, maxScope, ResolveState.initial());
   }
 
-  public static boolean treeWalkUp(@NotNull final PsiScopeProcessor processor,
-                                   @NotNull final PsiElement entrance,
+  public static boolean treeWalkUp(@Nonnull final PsiScopeProcessor processor,
+                                   @Nonnull final PsiElement entrance,
                                    @Nullable final PsiElement maxScope,
-                                   @NotNull final ResolveState state) {
+                                   @Nonnull final ResolveState state) {
     if (!entrance.isValid()) {
       LOGGER.error(new PsiInvalidElementAccessException(entrance));
     }
@@ -64,9 +64,9 @@ public class PsiScopesUtilCore {
     return true;
   }
 
-  public static boolean walkChildrenScopes(@NotNull PsiElement thisElement,
-                                           @NotNull PsiScopeProcessor processor,
-                                           @NotNull ResolveState state,
+  public static boolean walkChildrenScopes(@Nonnull PsiElement thisElement,
+                                           @Nonnull PsiScopeProcessor processor,
+                                           @Nonnull ResolveState state,
                                            PsiElement lastParent,
                                            PsiElement place) {
     PsiElement child = null;

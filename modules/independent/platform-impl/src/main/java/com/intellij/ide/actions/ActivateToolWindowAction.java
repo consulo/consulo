@@ -28,7 +28,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.SizedIcon;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -42,16 +42,16 @@ import java.awt.event.KeyEvent;
 public class ActivateToolWindowAction extends DumbAwareAction {
   private final String myToolWindowId;
 
-  private ActivateToolWindowAction(@NotNull String toolWindowId) {
+  private ActivateToolWindowAction(@Nonnull String toolWindowId) {
     myToolWindowId = toolWindowId;
   }
 
-  @NotNull
+  @Nonnull
   public String getToolWindowId() {
     return myToolWindowId;
   }
 
-  public static void ensureToolWindowActionRegistered(@NotNull ToolWindow toolWindow) {
+  public static void ensureToolWindowActionRegistered(@Nonnull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
@@ -62,7 +62,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  public static void updateToolWindowActionPresentation(@NotNull ToolWindow toolWindow) {
+  public static void updateToolWindowActionPresentation(@Nonnull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
@@ -73,7 +73,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = getEventProject(e);
     Presentation presentation = e.getPresentation();
     if (project == null || project.isDisposed()) {
@@ -91,7 +91,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
-  private void updatePresentation(@NotNull Presentation presentation, @NotNull ToolWindow toolWindow) {
+  private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
     String title = toolWindow.getStripeTitle();
     presentation.setText(title);
     presentation.setDescription(IdeBundle.message("action.activate.tool.window", title));
@@ -104,7 +104,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = getEventProject(e);
     if (project == null) return;
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);

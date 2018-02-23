@@ -15,13 +15,13 @@
  */
 package com.intellij.profile;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface ProfileChangeAdapter {
   default void profileChanged(@Nullable Profile profile) {
   }
 
-  default void profileActivated(@Nullable Profile oldProfile, @Nullable Profile profile) {
+  default void profileActivated(@Nullable Profile oldProfile, @javax.annotation.Nullable Profile profile) {
   }
 
   default void profilesInitialized() {

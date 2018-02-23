@@ -37,7 +37,7 @@ import consulo.externalSystem.service.module.wizard.AbstractExternalModuleImport
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
 import consulo.moduleImport.LegacyModuleImportProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -54,7 +54,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId != null) {
       String name = externalSystemId.getReadableName();
@@ -67,7 +67,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId == null) {
       return;

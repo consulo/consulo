@@ -17,7 +17,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.OpenTHashSet;
 import com.intellij.util.containers.StringInterner;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -119,8 +119,8 @@ public class JDOMInterner {
     return object.getValue().hashCode();
   }
 
-  @NotNull
-  public synchronized Element internElement(@NotNull final Element element) {
+  @Nonnull
+  public synchronized Element internElement(@Nonnull final Element element) {
     if (element instanceof ImmutableElement) return element;
     Element interned = myElements.get(element);
     if (interned == null) {
@@ -130,12 +130,12 @@ public class JDOMInterner {
     return interned;
   }
 
-  public static boolean isInterned(@NotNull Element element) {
+  public static boolean isInterned(@Nonnull Element element) {
     return element instanceof ImmutableElement;
   }
 
-  @NotNull
-  synchronized Text internText(@NotNull Text text) {
+  @Nonnull
+  synchronized Text internText(@Nonnull Text text) {
     if (text instanceof ImmutableText || text instanceof ImmutableCDATA) return text;
     Text interned = myTexts.get(text);
     if (interned == null) {

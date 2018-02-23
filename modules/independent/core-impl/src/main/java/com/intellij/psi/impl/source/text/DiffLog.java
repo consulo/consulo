@@ -31,7 +31,7 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import consulo.psi.PsiElementWithSubtreeChangeNotifier;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +46,13 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     protected LogEntry() {
       ProgressIndicatorProvider.checkCanceled();
     }
-    abstract void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder);
+    abstract void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder);
   }
 
   private final List<LogEntry> myEntries = new ArrayList<>();
 
-  @NotNull
-  public TreeChangeEventImpl performActualPsiChange(@NotNull PsiFile file) {
+  @Nonnull
+  public TreeChangeEventImpl performActualPsiChange(@Nonnull PsiFile file) {
     final ASTDiffBuilder astDiffBuilder = new ASTDiffBuilder((PsiFileImpl) file);
     for (LogEntry entry : myEntries) {
       entry.doActualPsiChange(file, astDiffBuilder);
@@ -62,7 +62,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   }
 
   @Override
-  public void nodeReplaced(@NotNull ASTNode oldNode, @NotNull ASTNode newNode) {
+  public void nodeReplaced(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
     if (oldNode instanceof FileElement && newNode instanceof FileElement) {
       appendReplaceFileElement((FileElement)oldNode, (FileElement)newNode);
     }
@@ -71,21 +71,21 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     }
   }
 
-  void appendReplaceElementWithEvents(@NotNull CompositeElement oldRoot, @NotNull CompositeElement newRoot) {
+  void appendReplaceElementWithEvents(@Nonnull CompositeElement oldRoot, @Nonnull CompositeElement newRoot) {
     myEntries.add(new ReplaceElementWithEvents(oldRoot, newRoot));
   }
 
-  void appendReplaceFileElement(@NotNull FileElement oldNode, @NotNull FileElement newNode) {
+  void appendReplaceFileElement(@Nonnull FileElement oldNode, @Nonnull FileElement newNode) {
     myEntries.add(new ReplaceFileElement(oldNode, newNode));
   }
 
   @Override
-  public void nodeDeleted(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
+  public void nodeDeleted(@Nonnull ASTNode oldParent, @Nonnull ASTNode oldNode) {
     myEntries.add(new DeleteEntry(oldParent, oldNode));
   }
 
   @Override
-  public void nodeInserted(@NotNull ASTNode oldParent, @NotNull ASTNode newNode, int pos) {
+  public void nodeInserted(@Nonnull ASTNode oldParent, @Nonnull ASTNode newNode, int pos) {
     myEntries.add(new InsertEntry(oldParent, newNode, pos));
   }
 
@@ -93,7 +93,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     private final ASTNode myOldChild;
     private final ASTNode myNewChild;
 
-    private ReplaceEntry(@NotNull ASTNode oldNode, @NotNull ASTNode newNode) {
+    private ReplaceEntry(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
       myOldChild = oldNode;
       myNewChild = newNode;
       ASTNode parent = oldNode.getTreeParent();
@@ -101,7 +101,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     }
 
     @Override
-    void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder) {
+    void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder) {
       ASTNode oldNode = myOldChild;
       ASTNode newNode = myNewChild;
       ASTNode parent = oldNode.getTreeParent();
@@ -134,16 +134,18 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   }
 
   private static class DeleteEntry extends LogEntry {
-    @NotNull private final ASTNode myOldParent;
-    @NotNull private final ASTNode myOldNode;
+    @Nonnull
+    private final ASTNode myOldParent;
+    @Nonnull
+    private final ASTNode myOldNode;
 
-    private DeleteEntry(@NotNull ASTNode oldParent, @NotNull ASTNode oldNode) {
+    private DeleteEntry(@Nonnull ASTNode oldParent, @Nonnull ASTNode oldNode) {
       myOldParent = oldParent;
       myOldNode = oldNode;
     }
 
     @Override
-    void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder) {
+    void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder) {
       ASTNode child = myOldNode;
       ASTNode parent = myOldParent;
 
@@ -168,11 +170,13 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   }
 
   private static class InsertEntry extends LogEntry {
-    @NotNull private final ASTNode myOldParent;
-    @NotNull private final ASTNode myNewNode;
+    @Nonnull
+    private final ASTNode myOldParent;
+    @Nonnull
+    private final ASTNode myNewNode;
     private final int myPos;
 
-    private InsertEntry(@NotNull ASTNode oldParent, @NotNull ASTNode newNode, int pos) {
+    private InsertEntry(@Nonnull ASTNode oldParent, @Nonnull ASTNode newNode, int pos) {
       assert oldParent instanceof CompositeElement : oldParent;
       assert pos>=0 : pos;
       //assert pos<=oldParent.getChildren(null).length : pos + " "+ Arrays.toString(oldParent.getChildren(null));
@@ -182,7 +186,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     }
 
     @Override
-    void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder) {
+    void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder) {
       ASTNode anchor = null;
       ASTNode firstChildNode = myOldParent.getFirstChildNode();
       for (int i = 0; i < myPos; i++) {
@@ -229,16 +233,18 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   }
 
   private static class ReplaceFileElement extends LogEntry {
-    @NotNull private final FileElement myOldNode;
-    @NotNull private final FileElement myNewNode;
+    @Nonnull
+    private final FileElement myOldNode;
+    @Nonnull
+    private final FileElement myNewNode;
 
-    private ReplaceFileElement(@NotNull FileElement oldNode, @NotNull FileElement newNode) {
+    private ReplaceFileElement(@Nonnull FileElement oldNode, @Nonnull FileElement newNode) {
       myOldNode = oldNode;
       myNewNode = newNode;
     }
 
     @Override
-    void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder) {
+    void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder) {
       PsiFileImpl fileImpl = (PsiFileImpl)file;
       final int oldLength = myOldNode.getTextLength();
       PsiManagerImpl manager = (PsiManagerImpl)fileImpl.getManager();
@@ -253,10 +259,12 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
   }
 
   private static class ReplaceElementWithEvents extends LogEntry {
-    @NotNull private final CompositeElement myOldRoot;
-    @NotNull private final CompositeElement myNewRoot;
+    @Nonnull
+    private final CompositeElement myOldRoot;
+    @Nonnull
+    private final CompositeElement myNewRoot;
 
-    private ReplaceElementWithEvents(@NotNull CompositeElement oldRoot, @NotNull CompositeElement newRoot) {
+    private ReplaceElementWithEvents(@Nonnull CompositeElement oldRoot, @Nonnull CompositeElement newRoot) {
       myOldRoot = oldRoot;
       myNewRoot = newRoot;
       // parse in background to reduce time spent in EDT and to ensure the newRoot light containing file is still valid
@@ -265,7 +273,7 @@ public class DiffLog implements DiffTreeChangeBuilder<ASTNode,ASTNode> {
     }
 
     @Override
-    void doActualPsiChange(@NotNull PsiFile file, @NotNull ASTDiffBuilder astDiffBuilder) {
+    void doActualPsiChange(@Nonnull PsiFile file, @Nonnull ASTDiffBuilder astDiffBuilder) {
       myOldRoot.replaceAllChildrenToChildrenOf(myNewRoot);
     }
   }

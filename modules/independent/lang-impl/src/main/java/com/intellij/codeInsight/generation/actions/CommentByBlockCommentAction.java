@@ -28,21 +28,21 @@ import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
   public CommentByBlockCommentAction() {
     setEnabledInModalContext(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected MultiCaretCodeInsightActionHandler getHandler() {
     return new CommentByBlockCommentHandler();
   }
 
   @Override
-  protected boolean isValidFor(@NotNull Project project, @NotNull Editor editor, @NotNull Caret caret, @NotNull final PsiFile file) {
+  protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull final PsiFile file) {
     final FileType fileType = file.getFileType();
     if (fileType instanceof AbstractFileType) {
       return ((AbstractFileType)fileType).getCommenter() != null;

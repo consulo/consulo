@@ -22,8 +22,8 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.XNamedTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -38,7 +38,7 @@ public class XDebuggerTreeState {
   private final NodeInfo myRootInfo;
   private Rectangle myLastVisibleNodeRect;
 
-  private XDebuggerTreeState(@NotNull XDebuggerTree tree) {
+  private XDebuggerTreeState(@Nonnull XDebuggerTree tree) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     XDebuggerTreeNode root = tree.getRoot();
     myRootInfo = root != null ? new NodeInfo("", "", tree.isPathSelected(root.getPath())) : null;
@@ -47,7 +47,7 @@ public class XDebuggerTreeState {
     }
   }
 
-  public XDebuggerTreeRestorer restoreState(@NotNull XDebuggerTree tree) {
+  public XDebuggerTreeRestorer restoreState(@Nonnull XDebuggerTree tree) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     XDebuggerTreeRestorer restorer = null;
     if (myRootInfo != null) {
@@ -57,7 +57,7 @@ public class XDebuggerTreeState {
     return restorer;
   }
 
-  public static XDebuggerTreeState saveState(@NotNull XDebuggerTree tree) {
+  public static XDebuggerTreeState saveState(@Nonnull XDebuggerTree tree) {
     return new XDebuggerTreeState(tree);
   }
 
@@ -108,7 +108,7 @@ public class XDebuggerTreeState {
       mySelected = selected;
     }
 
-    public void addChild(@NotNull NodeInfo child) {
+    public void addChild(@Nonnull NodeInfo child) {
       if (myChildren == null) {
         myChildren = new MultiMap<>();
       }

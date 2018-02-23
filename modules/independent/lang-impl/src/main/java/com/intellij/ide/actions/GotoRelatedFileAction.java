@@ -37,8 +37,8 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -264,8 +264,8 @@ public class GotoRelatedFileAction extends AnAction {
     return popup;
   }
 
-  @NotNull
-  public static List<GotoRelatedItem> getItems(@NotNull PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
+  @Nonnull
+  public static List<GotoRelatedItem> getItems(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
     PsiElement contextElement = psiFile;
     if (editor != null) {
       PsiElement element = psiFile.findElementAt(editor.getCaretModel().getOffset());

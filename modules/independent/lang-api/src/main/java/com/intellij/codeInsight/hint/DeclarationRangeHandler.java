@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.MixinEP;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Returns the subset of the text range of the specified element which is considered its declaration.
@@ -35,6 +35,6 @@ public interface DeclarationRangeHandler<T extends PsiElement>{
    * @param container the container
    * @return the declaration range for it.
    */
-  @NotNull
-  TextRange getDeclarationRange(@NotNull T container);
+  @Nonnull
+  TextRange getDeclarationRange(@Nonnull T container);
 }

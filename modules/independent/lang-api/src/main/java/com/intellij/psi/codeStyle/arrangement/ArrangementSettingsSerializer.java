@@ -16,8 +16,8 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Identifies a strategy that can tweak default {@link ArrangementSettings arrangement settings} (de)serialization mechanism.
@@ -40,7 +40,7 @@ public interface ArrangementSettingsSerializer {
    * @return         settings de-serialized from the given element
    */
   @Nullable
-  ArrangementSettings deserialize(@NotNull Element element);
+  ArrangementSettings deserialize(@Nonnull Element element);
 
   /**
    * Allows to provide custom settings serialization logic. This method is expected to be consistent with {@link #deserialize(Element)}.
@@ -51,5 +51,5 @@ public interface ArrangementSettingsSerializer {
    * @param settings  settings to serialize
    * @param holder    element to hold serialized settings
    */
-  void serialize(@NotNull ArrangementSettings settings, @NotNull Element holder);
+  void serialize(@Nonnull ArrangementSettings settings, @Nonnull Element holder);
 }

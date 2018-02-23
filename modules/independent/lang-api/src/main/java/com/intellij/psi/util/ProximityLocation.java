@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -32,7 +32,7 @@ public class ProximityLocation implements UserDataHolder {
   private final Module myPositionModule;
   private final ProcessingContext myContext;
 
-  public ProximityLocation(@Nullable final PsiElement position, final Module positionModule) {
+  public ProximityLocation(@javax.annotation.Nullable final PsiElement position, final Module positionModule) {
     this(position, positionModule, new ProcessingContext());
   }
 
@@ -42,28 +42,28 @@ public class ProximityLocation implements UserDataHolder {
     myContext = context;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Module getPositionModule() {
     return myPositionModule;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getPosition() {
     return myPosition;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Project getProject() {
     return myPosition != null ? myPosition.getProject() : null;
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myContext.get(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myContext.put(key, value);
   }
 }

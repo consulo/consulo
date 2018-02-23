@@ -18,8 +18,8 @@ package com.intellij.psi;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -27,5 +27,5 @@ import org.jetbrains.annotations.Nullable;
 public abstract class LanguageSubstitutor {
 
   @Nullable
-  public abstract Language getLanguage(@NotNull VirtualFile file, @NotNull Project project);
+  public abstract Language getLanguage(@Nonnull VirtualFile file, @Nonnull Project project);
 }

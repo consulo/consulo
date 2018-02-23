@@ -23,7 +23,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   public MaximizeToolWindowAction() {
@@ -31,7 +31,7 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project == null || project.isDisposed()) return;
     ToolWindow toolWindow = e.getData(PlatformDataKeys.TOOL_WINDOW);
@@ -41,7 +41,7 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(true);
     Project project = e.getProject();
     if (project == null || project.isDisposed()) {

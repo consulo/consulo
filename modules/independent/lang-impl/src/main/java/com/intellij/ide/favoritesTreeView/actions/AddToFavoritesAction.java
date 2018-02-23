@@ -37,7 +37,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,7 +132,7 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   public static
-  @NotNull
+  @Nonnull
   Collection<AbstractTreeNode> createNodes(Project project,
                                            Module moduleContext,
                                            Object object,

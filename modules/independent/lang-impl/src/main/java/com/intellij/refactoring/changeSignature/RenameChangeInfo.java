@@ -16,8 +16,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.rename.RenameProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
 * User: anna
@@ -34,7 +34,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
     myOffset = namedElement.getTextOffset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ParameterInfo[] getNewParameters() {
     return new ParameterInfo[0];

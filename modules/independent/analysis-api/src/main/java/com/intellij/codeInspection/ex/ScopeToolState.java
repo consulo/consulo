@@ -29,14 +29,13 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class ScopeToolState {
   private NamedScope myScope;
-  @NotNull
+  @Nonnull
   private final String myScopeName;
   private InspectionToolWrapper myToolWrapper;
   private boolean myEnabled;
@@ -45,19 +44,19 @@ public class ScopeToolState {
   private JComponent myAdditionalConfigPanel;
   private static final Logger LOG = Logger.getInstance("#" + ScopeToolState.class.getName());
 
-  public ScopeToolState(@NotNull NamedScope scope, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  public ScopeToolState(@Nonnull NamedScope scope, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     this(scope.getName(), toolWrapper, enabled, level);
     myScope = scope;
   }
 
-  public ScopeToolState(@NotNull String scopeName, @NotNull InspectionToolWrapper toolWrapper, boolean enabled, @NotNull HighlightDisplayLevel level) {
+  public ScopeToolState(@Nonnull String scopeName, @Nonnull InspectionToolWrapper toolWrapper, boolean enabled, @Nonnull HighlightDisplayLevel level) {
     myScopeName = scopeName;
     myToolWrapper = toolWrapper;
     myEnabled = enabled;
     myLevel = level;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public NamedScope getScope(Project project) {
     if (myScope == null) {
       if (project != null) {
@@ -67,12 +66,12 @@ public class ScopeToolState {
     return myScope;
   }
 
-  @NotNull
+  @Nonnull
   public String getScopeName() {
     return myScopeName;
   }
 
-  @NotNull
+  @Nonnull
   public InspectionToolWrapper getTool() {
     return myToolWrapper;
   }
@@ -81,7 +80,7 @@ public class ScopeToolState {
     return myEnabled;
   }
 
-  @NotNull
+  @Nonnull
   public HighlightDisplayLevel getLevel() {
     return myLevel;
   }
@@ -90,11 +89,11 @@ public class ScopeToolState {
     myEnabled = enabled;
   }
 
-  public void setLevel(@NotNull HighlightDisplayLevel level) {
+  public void setLevel(@Nonnull HighlightDisplayLevel level) {
     myLevel = level;
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getAdditionalConfigPanel() {
     if (myAdditionalConfigPanel == null) {
       myAdditionalConfigPanel = myToolWrapper.getTool().createOptionsPanel();
@@ -109,11 +108,11 @@ public class ScopeToolState {
     myAdditionalConfigPanel = null;
   }
 
-  public void setTool(@NotNull InspectionToolWrapper tool) {
+  public void setTool(@Nonnull InspectionToolWrapper tool) {
     myToolWrapper = tool;
   }
 
-  public boolean equalTo(@NotNull ScopeToolState state2) {
+  public boolean equalTo(@Nonnull ScopeToolState state2) {
     if (isEnabled() != state2.isEnabled()) return false;
     if (getLevel() != state2.getLevel()) return false;
     InspectionToolWrapper toolWrapper = getTool();

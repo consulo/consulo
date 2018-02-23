@@ -24,9 +24,8 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.ExceptionUtil;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -82,7 +81,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   }
 
   @Override
-  public void treeChanged(@NotNull PsiTreeChangeEventImpl event) {
+  public void treeChanged(@Nonnull PsiTreeChangeEventImpl event) {
     if (!canAffectPsi(event)) {
       return;
     }
@@ -101,7 +100,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     fireEvent();
   }
 
-  public static boolean canAffectPsi(@NotNull PsiTreeChangeEventImpl event) {
+  public static boolean canAffectPsi(@Nonnull PsiTreeChangeEventImpl event) {
     return !PsiTreeChangeEvent.PROP_WRITABLE.equals(event.getPropertyName());
   }
 
@@ -122,7 +121,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
   public ModificationTracker getOutOfCodeBlockModificationTracker() {
     return myOutOfCodeBlockModificationTracker;
@@ -139,7 +138,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
       return getJavaStructureModificationCount();
     }
   };
-  @NotNull
+  @Nonnull
   @Override
   public ModificationTracker getJavaStructureModificationTracker() {
     return myJavaStructureModificationTracker;

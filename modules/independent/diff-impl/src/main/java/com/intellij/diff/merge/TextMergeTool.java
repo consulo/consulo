@@ -16,8 +16,9 @@
 package com.intellij.diff.merge;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.*;
 import consulo.annotations.RequiredDispatchThread;
+
+import javax.annotation.Nonnull;
 
 public class TextMergeTool implements MergeTool {
   public static final TextMergeTool INSTANCE = new TextMergeTool();
@@ -25,14 +26,14 @@ public class TextMergeTool implements MergeTool {
   public static final Logger LOG = Logger.getInstance(TextMergeTool.class);
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
-  public MergeViewer createComponent(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return new TextMergeViewer(context, ((TextMergeRequest)request));
   }
 
   @Override
-  public boolean canShow(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return request instanceof TextMergeRequest;
   }
 }

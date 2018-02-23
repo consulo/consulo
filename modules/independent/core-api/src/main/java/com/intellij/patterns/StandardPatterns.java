@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
         builder.append("save(").append(key).append(")");
       }
     });
@@ -66,7 +66,7 @@ public class StandardPatterns {
     return instanceOf(Object.class);
   }
 
-  public static <T> ObjectPattern.Capture<T> object(@NotNull T value) {
+  public static <T> ObjectPattern.Capture<T> object(@Nonnull T value) {
     return instanceOf((Class<T>)value.getClass()).equalTo(value);
   }
 
@@ -75,7 +75,7 @@ public class StandardPatterns {
     return new CollectionPattern<T>();
   }
 
-  public static ElementPattern get(@NotNull @NonNls final String key) {
+  public static ElementPattern get(@Nonnull @NonNls final String key) {
     return new ObjectPattern.Capture(new InitialPatternCondition(Object.class) {
       @Override
       public boolean accepts(@Nullable final Object o, final ProcessingContext context) {
@@ -83,7 +83,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
         builder.append("get(").append(key).append(")");
       }
     });
@@ -104,7 +104,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
         boolean first = true;
         for (final ElementPattern pattern : patterns) {
           if (!first) {
@@ -133,7 +133,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
         boolean first = true;
         for (final ElementPattern pattern : patterns) {
           if (!first) {
@@ -159,7 +159,7 @@ public class StandardPatterns {
       }
 
       @Override
-      public void append(@NotNull @NonNls final StringBuilder builder, final String indent) {
+      public void append(@Nonnull @NonNls final StringBuilder builder, final String indent) {
         pattern.getCondition().append(builder.append("not("), indent + "  ");
         builder.append(")");
       }
@@ -206,7 +206,7 @@ public class StandardPatterns {
     });
   }
 
-  @NotNull
+  @Nonnull
   public static <E> ElementPattern<E> alwaysFalse() {
     return FALSE_PATTERN;
   }

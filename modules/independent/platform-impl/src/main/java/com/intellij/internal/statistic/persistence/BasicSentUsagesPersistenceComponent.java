@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.hash.HashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +53,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
     }
 
     @Override
-    public void persistPatch(@NotNull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptorMap) {
+    public void persistPatch(@Nonnull Map<GroupDescriptor, Set<PatchedUsage>> patchedDescriptorMap) {
         for (Map.Entry<GroupDescriptor, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
             final GroupDescriptor groupDescriptor = entry.getKey();
             for (PatchedUsage patchedUsage : entry.getValue()) {
@@ -74,7 +74,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
 
 
     @Override
-    @NotNull
+    @Nonnull
     public Map<GroupDescriptor, Set<UsageDescriptor>> getSentUsages () {
         return mySentDescriptors;
     }

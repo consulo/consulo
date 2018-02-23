@@ -32,9 +32,9 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.ListCellRendererWithRightAlignedComponent;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -90,7 +90,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
           return FINAL_CHOICE;
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getTextFor(ProjectStructureElementUsage value) {
           return value.getPresentableName();

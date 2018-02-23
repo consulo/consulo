@@ -18,7 +18,7 @@ package com.intellij.codeInsight.actions;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LastRunReformatCodeOptionsProvider {
 
@@ -28,11 +28,11 @@ public class LastRunReformatCodeOptionsProvider {
 
   private final PropertiesComponent myPropertiesComponent;
 
-  public LastRunReformatCodeOptionsProvider(@NotNull PropertiesComponent propertiesComponent) {
+  public LastRunReformatCodeOptionsProvider(@Nonnull PropertiesComponent propertiesComponent) {
     myPropertiesComponent = propertiesComponent;
   }
 
-  public ReformatCodeRunOptions getLastRunOptions(@NotNull PsiFile file) {
+  public ReformatCodeRunOptions getLastRunOptions(@Nonnull PsiFile file) {
     Language language = file.getLanguage();
 
     ReformatCodeRunOptions settings = new ReformatCodeRunOptions(getLastTextRangeType());
@@ -42,7 +42,7 @@ public class LastRunReformatCodeOptionsProvider {
     return settings;
   }
 
-  public void saveRearrangeState(@NotNull Language language, boolean value) {
+  public void saveRearrangeState(@Nonnull Language language, boolean value) {
     String key = getRearrangeCodeKeyFor(language);
     myPropertiesComponent.setValue(key, Boolean.toString(value));
   }
@@ -73,12 +73,12 @@ public class LastRunReformatCodeOptionsProvider {
     return myPropertiesComponent.getBoolean(REARRANGE_ENTRIES_KEY);
   }
 
-  public boolean isRearrangeCode(@NotNull Language language) {
+  public boolean isRearrangeCode(@Nonnull Language language) {
     String key = getRearrangeCodeKeyFor(language);
     return myPropertiesComponent.getBoolean(key);
   }
 
-  private static String getRearrangeCodeKeyFor(@NotNull Language language) {
+  private static String getRearrangeCodeKeyFor(@Nonnull Language language) {
     return REARRANGE_ENTRIES_KEY + language.getDisplayName();
   }
 

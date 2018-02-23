@@ -27,7 +27,7 @@ import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.ui.*;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -40,13 +40,13 @@ import java.util.Set;
 public class ModuleSourceItemGroup extends PackagingSourceItem {
   private final Module myModule;
 
-  public ModuleSourceItemGroup(@NotNull Module module) {
+  public ModuleSourceItemGroup(@Nonnull Module module) {
     super(true);
     myModule = module;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new ModuleSourceItemPresentation(myModule, context);
   }
 
@@ -59,8 +59,8 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
   }
 
   @Override
-  @NotNull
-  public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     final Set<Module> modules = new LinkedHashSet<Module>();
     collectDependentModules(myModule, modules, context);
 
@@ -112,7 +112,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     private final Module myModule;
     private final ArtifactEditorContext myContext;
 
-    public ModuleSourceItemPresentation(@NotNull Module module, ArtifactEditorContext context) {
+    public ModuleSourceItemPresentation(@Nonnull Module module, ArtifactEditorContext context) {
       myModule = module;
       myContext = context;
     }
@@ -123,7 +123,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       presentationData.setIcon(AllIcons.Nodes.Module);
       presentationData.addText(myModule.getName(), mainAttributes);

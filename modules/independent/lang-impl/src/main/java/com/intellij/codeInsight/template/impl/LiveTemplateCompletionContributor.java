@@ -31,8 +31,9 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.Consumer;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
 
@@ -60,9 +61,9 @@ public class LiveTemplateCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      public void addCompletions(@NotNull final CompletionParameters parameters,
+      public void addCompletions(@Nonnull final CompletionParameters parameters,
                                     ProcessingContext context,
-                                    @NotNull CompletionResultSet result) {
+                                    @Nonnull CompletionResultSet result) {
         final PsiFile file = parameters.getPosition().getContainingFile();
         if (file instanceof PsiPlainTextFile && parameters.getEditor().getComponent().getParent() instanceof EditorTextField) {
           return;
@@ -109,7 +110,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor {
     });
   }
 
-  public static boolean customTemplateAvailableAndHasCompletionItem(@Nullable Character shortcutChar, @NotNull Editor editor, @NotNull PsiFile file, int offset) {
+  public static boolean customTemplateAvailableAndHasCompletionItem(@Nullable Character shortcutChar, @Nonnull Editor editor, @Nonnull PsiFile file, int offset) {
     CustomTemplateCallback callback = new CustomTemplateCallback(editor, file);
     for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(editor, file, false)) {
       if (customLiveTemplate instanceof CustomLiveTemplateBase) {
@@ -146,9 +147,9 @@ public class LiveTemplateCompletionContributor extends CompletionContributor {
   }
 
   @Nullable
-  public static TemplateImpl findFullMatchedApplicableTemplate(@NotNull Editor editor,
+  public static TemplateImpl findFullMatchedApplicableTemplate(@Nonnull Editor editor,
                                                                int offset,
-                                                               @NotNull Collection<TemplateImpl> availableTemplates) {
+                                                               @Nonnull Collection<TemplateImpl> availableTemplates) {
     Map<TemplateImpl, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, true, false);
     if (templates.size() == 1) {
       TemplateImpl template = ContainerUtil.getFirstItem(templates.keySet());

@@ -26,7 +26,7 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.win32.StdCallLibrary;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,96 +75,96 @@ public class DateFormatUtil {
 
   private DateFormatUtil() { }
 
-  public static long getDifferenceInDays(@NotNull Date startDate, @NotNull Date endDate) {
+  public static long getDifferenceInDays(@Nonnull Date startDate, @Nonnull Date endDate) {
     return (endDate.getTime() - startDate.getTime() + DAY_FACTOR - 1000) / DAY_FACTOR;
   }
 
-  @NotNull
+  @Nonnull
   public static SyncDateFormat getDateFormat() {
     return DATE_FORMAT;
   }
 
-  @NotNull
+  @Nonnull
   public static SyncDateFormat getTimeFormat() {
     return TIME_FORMAT;
   }
 
-  @NotNull
+  @Nonnull
   public static SyncDateFormat getTimeWithSecondsFormat() {
     return TIME_WITH_SECONDS_FORMAT;
   }
 
-  @NotNull
+  @Nonnull
   public static SyncDateFormat getDateTimeFormat() {
     return DATE_TIME_FORMAT;
   }
 
-  @NotNull
+  @Nonnull
   public static SyncDateFormat getIso8601Format() {
     return ISO8601_FORMAT;
   }
 
-  @NotNull
-  public static String formatTime(@NotNull Date time) {
+  @Nonnull
+  public static String formatTime(@Nonnull Date time) {
     return formatTime(time.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatTime(long time) {
     return getTimeFormat().format(time);
   }
 
-  @NotNull
-  public static String formatTimeWithSeconds(@NotNull Date time) {
+  @Nonnull
+  public static String formatTimeWithSeconds(@Nonnull Date time) {
     return formatTimeWithSeconds(time.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatTimeWithSeconds(long time) {
     return getTimeWithSecondsFormat().format(time);
   }
 
-  @NotNull
-  public static String formatDate(@NotNull Date time) {
+  @Nonnull
+  public static String formatDate(@Nonnull Date time) {
     return formatDate(time.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatDate(long time) {
     return getDateFormat().format(time);
   }
 
-  @NotNull
-  public static String formatPrettyDate(@NotNull Date date) {
+  @Nonnull
+  public static String formatPrettyDate(@Nonnull Date date) {
     return formatPrettyDate(date.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatPrettyDate(long time) {
     return doFormatPretty(time, false);
   }
 
-  @NotNull
+  @Nonnull
   public static String formatDateTime(Date date) {
     return formatDateTime(date.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatDateTime(long time) {
     return getDateTimeFormat().format(time);
   }
 
-  @NotNull
-  public static String formatPrettyDateTime(@NotNull Date date) {
+  @Nonnull
+  public static String formatPrettyDateTime(@Nonnull Date date) {
     return formatPrettyDateTime(date.getTime());
   }
 
-  @NotNull
+  @Nonnull
   public static String formatPrettyDateTime(long time) {
     return doFormatPretty(time, true);
   }
 
-  @NotNull
+  @Nonnull
   private static String doFormatPretty(long time, boolean formatTime) {
     long currentTime = Clock.getTime();
 
@@ -204,7 +204,7 @@ public class DateFormatUtil {
     return formatTime ? DATE_TIME_FORMAT.format(time) : DATE_FORMAT.format(time);
   }
 
-  @NotNull
+  @Nonnull
   public static String formatDuration(long delta) {
     StringBuilder buf = new StringBuilder();
     for (int i = 0; i < DENOMINATORS.length; i++) {
@@ -239,12 +239,12 @@ public class DateFormatUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String formatFrequency(long time) {
     return CommonBundle.message("date.frequency", formatBetweenDates(time, 0));
   }
 
-  @NotNull
+  @Nonnull
   public static String formatBetweenDates(long d1, long d2) {
     long delta = Math.abs(d1 - d2);
     if (delta == 0) return CommonBundle.message("date.format.right.now");
@@ -279,8 +279,8 @@ public class DateFormatUtil {
     return "";
   }
 
-  @NotNull
-  public static String formatAboutDialogDate(@NotNull Date date) {
+  @Nonnull
+  public static String formatAboutDialogDate(@Nonnull Date date) {
     return ABOUT_DATE_FORMAT.format(date);
   }
 

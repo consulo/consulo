@@ -23,8 +23,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -34,7 +34,7 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
   public static final PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];
 
   public static ArrayFactory<PsiPackage> ARRAY_FACTORY = new ArrayFactory<PsiPackage>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiPackage[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiPackage[count];
@@ -49,7 +49,7 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
    *
    * @return the array of subpackages.
    */
-  @NotNull
+  @Nonnull
   PsiPackage[] getSubPackages();
 
   /**
@@ -58,8 +58,8 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
    * @param scope the scope in which packages are searched.
    * @return the array of subpackages.
    */
-  @NotNull
-  PsiPackage[] getSubPackages(@NotNull GlobalSearchScope scope);
+  @Nonnull
+  PsiPackage[] getSubPackages(@Nonnull GlobalSearchScope scope);
 
   @RequiredReadAction
   @Override
@@ -73,5 +73,5 @@ public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElem
    *
    * @param newQualifiedName the new qualified name of the package.
    */
-  void handleQualifiedNameChange(@NotNull String newQualifiedName);
+  void handleQualifiedNameChange(@Nonnull String newQualifiedName);
 }

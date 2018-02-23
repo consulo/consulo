@@ -34,10 +34,11 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.Charset;
@@ -55,7 +56,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       update();
     }
 
@@ -66,12 +67,12 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
     }
 
     @Override
-    protected void chosen(final VirtualFile virtualFile, @NotNull final Charset charset) {
+    protected void chosen(final VirtualFile virtualFile, @Nonnull final Charset charset) {
       mySelected.set(charset == NO_ENCODING ? null : charset);
       update();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       return createCharsetsActionGroup("<System Default>", mySelected.get(), new Function<Charset, String>() {
@@ -99,7 +100,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   private MyChooseFileEncodingAction myIdeEncodingAction;
   private MyChooseFileEncodingAction myProjectEncodingAction;
 
-  public FileEncodingConfigurable(@NotNull Project project) {
+  public FileEncodingConfigurable(@Nonnull Project project) {
     myProject = project;
     myTitleLabel.setText(myTitleLabel.getText().replace("$productName", ApplicationNamesInfo.getInstance().getFullProductName()));
   }
@@ -118,7 +119,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "File.Encoding";
   }
@@ -128,8 +129,8 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
     return null;
   }
 
-  @NotNull
-  private static MyChooseFileEncodingAction installChooseEncodingCombo(@NotNull JPanel parentPanel, @NotNull final Ref<Charset> selected) {
+  @Nonnull
+  private static MyChooseFileEncodingAction installChooseEncodingCombo(@Nonnull JPanel parentPanel, @Nonnull final Ref<Charset> selected) {
     MyChooseFileEncodingAction action = new MyChooseFileEncodingAction(selected);
     parentPanel.removeAll();
     Presentation templatePresentation = action.getTemplatePresentation();
@@ -173,8 +174,8 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
     return !charsetName.equals(EncodingProjectManager.getInstance(myProject).getDefaultCharsetName());
   }
 
-  @NotNull // charset name or empty for System Default
-  private static String getSelectedCharsetName(@NotNull Ref<Charset> selectedCharset) {
+  @Nonnull // charset name or empty for System Default
+  private static String getSelectedCharsetName(@Nonnull Ref<Charset> selectedCharset) {
     Charset charset = selectedCharset.get();
     return charset == null ? "" : charset.name();
   }
@@ -212,7 +213,7 @@ public class FileEncodingConfigurable implements SearchableConfigurable, Configu
   public void disposeUIResources() {
   }
 
-  public void selectFile(@NotNull VirtualFile virtualFile) {
+  public void selectFile(@Nonnull VirtualFile virtualFile) {
     myTreeView.select(virtualFile);
   }
 

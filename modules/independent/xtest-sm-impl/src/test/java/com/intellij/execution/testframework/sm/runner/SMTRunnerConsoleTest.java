@@ -29,7 +29,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
@@ -539,7 +539,7 @@ public class SMTRunnerConsoleTest extends BaseSMTRunnerTestCase {
     assertAllOutputs(myMockResettablePrinter, "preved", "","Empty test suite.\n");
   }
 
-  @NotNull
+  @Nonnull
   private SMTestProxy startTestWithPrinter(final String testName) {
     myEventsProcessor.onTestStarted(new TestStartedEvent(testName, null));
     final SMTestProxy proxy =

@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,13 +61,13 @@ public class AlienChangeListBrowser extends ChangesBrowser {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<AbstractVcs> getAffectedVcses() {
     return ContainerUtil.immutableSet(myVcs);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Change> getCurrentIncludedChanges() {
     return ContainerUtil.newArrayList(myChanges);
   }

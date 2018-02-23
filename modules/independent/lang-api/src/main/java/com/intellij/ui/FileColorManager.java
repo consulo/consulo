@@ -20,8 +20,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import java.util.Collection;
  * @author spleaner
  */
 public abstract class FileColorManager {
-  public static FileColorManager getInstance(@NotNull final Project project) {
+  public static FileColorManager getInstance(@Nonnull final Project project) {
     return ServiceManager.getService(project, FileColorManager.class);
   }
 
@@ -46,26 +46,26 @@ public abstract class FileColorManager {
 
   @SuppressWarnings({"MethodMayBeStatic"})
   @Nullable
-  public abstract Color getColor(@NotNull String name);
+  public abstract Color getColor(@Nonnull String name);
 
   @SuppressWarnings({"MethodMayBeStatic"})
   public abstract Collection<String> getColorNames();
 
   @Nullable
-  public abstract Color getFileColor(@NotNull final PsiFile file);
+  public abstract Color getFileColor(@Nonnull final PsiFile file);
 
-  public abstract Color getFileColor(@NotNull final VirtualFile file);
-
-  @Nullable
-  public abstract Color getScopeColor(@NotNull String scopeName);
-
-  public abstract boolean isShared(@NotNull final String scopeName);
-
-  public abstract boolean isColored(@NotNull String scopeName, final boolean shared);
+  public abstract Color getFileColor(@Nonnull final VirtualFile file);
 
   @Nullable
+  public abstract Color getScopeColor(@Nonnull String scopeName);
+
+  public abstract boolean isShared(@Nonnull final String scopeName);
+
+  public abstract boolean isColored(@Nonnull String scopeName, final boolean shared);
+
+  @javax.annotation.Nullable
   public abstract Color getRendererBackground(VirtualFile file);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Color getRendererBackground(PsiFile file);
 }

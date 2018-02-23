@@ -23,9 +23,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
@@ -39,10 +39,10 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
   private boolean myModified;
 
   public ArrangementRuleAliasDialog(@Nullable Project project,
-                                    @NotNull ArrangementStandardSettingsManager settingsManager,
-                                    @NotNull ArrangementColorsProvider colorsProvider,
-                                    @NotNull Collection<StdArrangementRuleAliasToken> tokens,
-                                    @NotNull Set<String> tokensInUse) {
+                                    @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                    @Nonnull ArrangementColorsProvider colorsProvider,
+                                    @Nonnull Collection<StdArrangementRuleAliasToken> tokens,
+                                    @Nonnull Set<String> tokensInUse) {
     super(project, false);
 
     final List<StdArrangementRuleAliasToken> tokenList = ContainerUtil.newArrayList(tokens);

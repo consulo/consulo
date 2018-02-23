@@ -18,14 +18,15 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class DefaultCustomComponentAction extends AnAction implements CustomComponentAction {
-  @NotNull private final JComponent myComponent;
+  @Nonnull
+  private final JComponent myComponent;
 
-  public DefaultCustomComponentAction(@NotNull final JComponent component) {
+  public DefaultCustomComponentAction(@Nonnull final JComponent component) {
     myComponent = component;
   }
 

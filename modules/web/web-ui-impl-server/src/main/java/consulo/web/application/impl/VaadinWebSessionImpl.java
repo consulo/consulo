@@ -17,8 +17,7 @@ package consulo.web.application.impl;
 
 import consulo.ui.*;
 import consulo.web.application.WebSession;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class VaadinWebSessionImpl implements WebSession {
     myAccess = UIAccess.get();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public UIAccess getAccess() {
     return myAccess.isValid() ? myAccess : null;
@@ -53,7 +52,7 @@ public class VaadinWebSessionImpl implements WebSession {
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public WebSession copy() {
     // copy state

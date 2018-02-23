@@ -21,19 +21,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQuickFixOnPsiElement implements IntentionAction {
   protected LocalQuickFixAndIntentionActionOnPsiElement(@Nullable PsiElement element) {
     this(element, element);
   }
-  protected LocalQuickFixAndIntentionActionOnPsiElement(@Nullable PsiElement startElement, @Nullable PsiElement endElement) {
+  protected LocalQuickFixAndIntentionActionOnPsiElement(@javax.annotation.Nullable PsiElement startElement, @javax.annotation.Nullable PsiElement endElement) {
     super(startElement, endElement);
   }
 
   @Override
-  public final void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (file == null||myStartElement==null) return;
     final PsiElement startElement = myStartElement.getElement();
     final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
@@ -42,7 +42,7 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
   }
 
   @Override
-  public final boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (myStartElement == null) return false;
     final PsiElement startElement = myStartElement.getElement();
     final PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
@@ -54,14 +54,14 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
            isAvailable(project, file, startElement, endElement);
   }
 
-  public abstract void invoke(@NotNull Project project,
-                              @NotNull PsiFile file,
+  public abstract void invoke(@Nonnull Project project,
+                              @Nonnull PsiFile file,
                               @Nullable("is null when called from inspection") Editor editor,
-                              @NotNull PsiElement startElement,
-                              @NotNull PsiElement endElement);
+                              @Nonnull PsiElement startElement,
+                              @Nonnull PsiElement endElement);
 
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
     invoke(project, file, null, startElement, endElement);
   }
 

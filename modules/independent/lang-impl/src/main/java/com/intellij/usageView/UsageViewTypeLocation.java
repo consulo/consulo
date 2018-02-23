@@ -26,7 +26,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.findUsages.LanguageFindUsages;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -44,7 +44,7 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
 
   private static final ElementDescriptionProvider DEFAULT_PROVIDER = new ElementDescriptionProvider() {
     @Override
-    public String getElementDescription(@NotNull final PsiElement psiElement, @NotNull final ElementDescriptionLocation location) {
+    public String getElementDescription(@Nonnull final PsiElement psiElement, @Nonnull final ElementDescriptionLocation location) {
       if (!(location instanceof UsageViewTypeLocation)) return null;
 
       if (psiElement instanceof PsiMetaOwner) {

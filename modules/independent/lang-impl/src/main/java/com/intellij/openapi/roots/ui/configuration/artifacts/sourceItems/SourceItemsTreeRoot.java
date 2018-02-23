@@ -21,7 +21,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.TreeNodePresentation;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +36,7 @@ public class SourceItemsTreeRoot extends SourceItemNodeBase {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{"root"};
@@ -54,7 +54,7 @@ public class SourceItemsTreeRoot extends SourceItemNodeBase {
     }
 
     @Override
-    public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
     }
 

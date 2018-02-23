@@ -27,7 +27,7 @@ import com.intellij.vcs.log.graph.impl.facade.ReachableNodes;
 import com.intellij.vcs.log.graph.impl.print.EdgesInRowGenerator;
 import com.intellij.vcs.log.graph.impl.print.GraphElementComparatorByLayoutIndex;
 import com.intellij.vcs.log.graph.parser.CommitParser;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ public class GraphStrUtils {
 
   public static final Comparator<GraphElement> GRAPH_ELEMENT_COMPARATOR =
           new GraphElementComparatorByLayoutIndex(new NotNullFunction<Integer, Integer>() {
-            @NotNull
+            @Nonnull
             @Override
             public Integer fun(Integer nodeIndex) {
               return 0;
@@ -97,7 +97,7 @@ public class GraphStrUtils {
     return s.toString();
   }
 
-  public static String edgesInRowToStr(@NotNull EdgesInRowGenerator edgesInRowGenerator, int nodesCount) {
+  public static String edgesInRowToStr(@Nonnull EdgesInRowGenerator edgesInRowGenerator, int nodesCount) {
     StringBuilder s = new StringBuilder();
     for (int i = 0; i < nodesCount; i++) {
       if (i > 0) s.append("\n");
@@ -107,7 +107,7 @@ public class GraphStrUtils {
     return s.toString();
   }
 
-  public static String edgesToStr(@NotNull Set<GraphEdge> edges) {
+  public static String edgesToStr(@Nonnull Set<GraphEdge> edges) {
     if (edges.isEmpty()) return "none";
 
     List<GraphEdge> sortedEdges = new ArrayList<>(edges);

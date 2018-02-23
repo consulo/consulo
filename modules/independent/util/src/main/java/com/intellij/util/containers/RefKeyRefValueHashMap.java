@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
@@ -24,12 +24,12 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
   private final RefHashMap<K, ValueReference<K,V>> myWeakKeyMap;
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<V>();
 
-  public RefKeyRefValueHashMap(@NotNull RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
+  public RefKeyRefValueHashMap(@Nonnull RefHashMap<K, ValueReference<K, V>> weakKeyMap) {
     myWeakKeyMap = weakKeyMap;
   }
 
   protected interface ValueReference<K, V> {
-    @NotNull
+    @Nonnull
     RefHashMap.Key<K> getKey();
 
     V get();
@@ -38,7 +38,7 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
     return reference == null ? null : reference.get();
   }
 
-  protected abstract ValueReference<K,V> createValueReference(@NotNull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
+  protected abstract ValueReference<K,V> createValueReference(@Nonnull RefHashMap.Key<K> key, V referent, ReferenceQueue<? super V> q);
 
   // returns true if some refs were tossed
   boolean processQueue() {
@@ -76,7 +76,7 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
   }
 
   @Override
-  public void putAll(@NotNull Map<? extends K, ? extends V> t) {
+  public void putAll(@Nonnull Map<? extends K, ? extends V> t) {
     throw new RuntimeException("method not implemented");
   }
 
@@ -106,13 +106,13 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
     throw new RuntimeException("method not implemented");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     return myWeakKeyMap.keySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<V>();
@@ -126,7 +126,7 @@ abstract class RefKeyRefValueHashMap<K,V> implements Map<K,V>{
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     throw new RuntimeException("method not implemented");

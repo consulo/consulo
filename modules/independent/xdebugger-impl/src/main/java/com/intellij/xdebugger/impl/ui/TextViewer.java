@@ -7,21 +7,21 @@ import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class TextViewer extends EditorTextField {
   private final boolean myEmbeddedIntoDialogWrapper;
   private final boolean myUseSoftWraps;
 
-  public TextViewer(@NotNull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
+  public TextViewer(@Nonnull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
     this(createDocument(""), project, embeddedIntoDialogWrapper, useSoftWraps);
   }
 
-  public TextViewer(@NotNull String initialText, @NotNull Project project) {
+  public TextViewer(@Nonnull String initialText, @Nonnull Project project) {
     this(createDocument(initialText), project, false, false);
   }
 
-  public TextViewer(@NotNull Document document, @NotNull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
+  public TextViewer(@Nonnull Document document, @Nonnull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
     super(document, project, PlainTextFileType.INSTANCE, true, false);
 
     myEmbeddedIntoDialogWrapper = embeddedIntoDialogWrapper;
@@ -29,7 +29,7 @@ public final class TextViewer extends EditorTextField {
     setFontInheritedFromLAF(false);
   }
 
-  private static Document createDocument(@NotNull String initialText) {
+  private static Document createDocument(@Nonnull String initialText) {
     final Document document = EditorFactory.getInstance().createDocument(initialText);
     if (document instanceof DocumentImpl) {
       ((DocumentImpl)document).setAcceptSlashR(true);

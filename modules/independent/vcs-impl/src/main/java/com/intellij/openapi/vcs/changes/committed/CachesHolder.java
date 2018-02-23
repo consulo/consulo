@@ -24,7 +24,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ConcurrentHashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -106,7 +106,7 @@ public class CachesHolder {
   public List<ChangesCacheFile> getAllCaches() {
     final List<ChangesCacheFile> result = new ArrayList<ChangesCacheFile>();
     iterateAllCaches(new NotNullFunction<ChangesCacheFile, Boolean>() {
-      @NotNull
+      @Nonnull
       public Boolean fun(final ChangesCacheFile changesCacheFile) {
         result.add(changesCacheFile);
         return false;

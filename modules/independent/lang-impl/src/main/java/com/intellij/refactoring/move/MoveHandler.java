@@ -36,8 +36,8 @@ import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class MoveHandler implements RefactoringActionHandler {
    * called by an Action in AtomicAction when refactoring is invoked from Editor
    */
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     int offset = editor.getCaretModel().getOffset();
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     PsiElement element = file.findElementAt(offset);
@@ -92,7 +92,7 @@ public class MoveHandler implements RefactoringActionHandler {
    * called by an Action in AtomicAction
    */
   @Override
-  public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext) {
+  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     final PsiElement targetContainer = dataContext == null ? null : dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
     final Set<PsiElement> filesOrDirs = new HashSet<PsiElement>();
     for(MoveHandlerDelegate delegate: Extensions.getExtensions(MoveHandlerDelegate.EP_NAME)) {
@@ -122,7 +122,7 @@ public class MoveHandler implements RefactoringActionHandler {
   /**
    * must be invoked in AtomicAction
    */
-  public static void doMove(Project project, @NotNull PsiElement[] elements, PsiElement targetContainer, DataContext dataContext, MoveCallback callback) {
+  public static void doMove(Project project, @Nonnull PsiElement[] elements, PsiElement targetContainer, DataContext dataContext, MoveCallback callback) {
     if (elements.length == 0) return;
 
     for(MoveHandlerDelegate delegate: Extensions.getExtensions(MoveHandlerDelegate.EP_NAME)) {
@@ -151,7 +151,7 @@ public class MoveHandler implements RefactoringActionHandler {
    * Must be invoked in AtomicAction
    * target container can be null => means that container is not determined yet and must be spacify by the user
    */
-  public static boolean canMove(@NotNull PsiElement[] elements, PsiElement targetContainer) {
+  public static boolean canMove(@Nonnull PsiElement[] elements, PsiElement targetContainer) {
     for(MoveHandlerDelegate delegate: Extensions.getExtensions(MoveHandlerDelegate.EP_NAME)) {
       if (delegate.canMove(elements, targetContainer)) return true;
     }

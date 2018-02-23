@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,7 +39,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
   private boolean myCbPreviewResults;
   protected final Project myProject;
 
-  protected RefactoringDialog(@NotNull Project project, boolean canBeParent) {
+  protected RefactoringDialog(@Nonnull Project project, boolean canBeParent) {
     super (project, canBeParent);
     myCbPreviewResults = true;
     myProject = project;
@@ -122,7 +122,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     List<Action> actions = new ArrayList<Action>();
     actions.add(getRefactorAction());

@@ -1,7 +1,7 @@
 package com.intellij.openapi.vcs.roots;
 
 import com.intellij.openapi.vcs.VcsRoot;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +11,8 @@ import java.util.Collection;
  */
 public class VcsRootDetectInfo {
 
-  private final @NotNull Collection<VcsRoot> myRoots;
+  private final @Nonnull
+  Collection<VcsRoot> myRoots;
   private final boolean myFull;
   private final boolean myBelow;
 
@@ -21,7 +22,7 @@ public class VcsRootDetectInfo {
    * @param below Pass true to indicate that the project dir is below Vcs dir,
    *              i.e. .git is above the project dir, and there is no DOT dir directly under the project dir.
    */
-  public VcsRootDetectInfo(@NotNull Collection<VcsRoot> roots, boolean full, boolean below) {
+  public VcsRootDetectInfo(@Nonnull Collection<VcsRoot> roots, boolean full, boolean below) {
     myRoots = new ArrayList<VcsRoot>(roots);
     myFull = full;
     myBelow = below;
@@ -39,7 +40,7 @@ public class VcsRootDetectInfo {
     return myRoots.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VcsRoot> getRoots() {
     return new ArrayList<VcsRoot>(myRoots);
   }

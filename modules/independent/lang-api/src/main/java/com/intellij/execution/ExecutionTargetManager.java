@@ -19,8 +19,8 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,50 +28,50 @@ import java.util.List;
 public abstract class ExecutionTargetManager {
   public static final Topic<ExecutionTargetListener> TOPIC = Topic.create("ExecutionTarget topic", ExecutionTargetListener.class);
 
-  @NotNull
-  public static ExecutionTargetManager getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ExecutionTargetManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ExecutionTargetManager.class);
   }
 
-  @NotNull
-  public static ExecutionTarget getActiveTarget(@NotNull Project project) {
+  @Nonnull
+  public static ExecutionTarget getActiveTarget(@Nonnull Project project) {
     return getInstance(project).getActiveTarget();
   }
 
-  public static void setActiveTarget(@NotNull Project project, @NotNull ExecutionTarget target) {
+  public static void setActiveTarget(@Nonnull Project project, @Nonnull ExecutionTarget target) {
     getInstance(project).setActiveTarget(target);
   }
 
-  @NotNull
-  public static List<ExecutionTarget> getTargetsFor(@NotNull Project project, @Nullable RunnerAndConfigurationSettings settings) {
+  @Nonnull
+  public static List<ExecutionTarget> getTargetsFor(@Nonnull Project project, @Nullable RunnerAndConfigurationSettings settings) {
     return getInstance(project).getTargetsFor(settings);
   }
 
-  @NotNull
-  public static List<ExecutionTarget> getTargetsToChooseFor(@NotNull Project project, @Nullable RunnerAndConfigurationSettings settings) {
+  @Nonnull
+  public static List<ExecutionTarget> getTargetsToChooseFor(@Nonnull Project project, @Nullable RunnerAndConfigurationSettings settings) {
     List<ExecutionTarget> result = getInstance(project).getTargetsFor(settings);
     if (result.size() == 1 && DefaultExecutionTarget.INSTANCE.equals(result.get(0))) return Collections.emptyList();
     return result;
   }
 
-  public static boolean canRun(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget target) {
+  public static boolean canRun(@javax.annotation.Nullable RunnerAndConfigurationSettings settings, @javax.annotation.Nullable ExecutionTarget target) {
     return settings != null && target != null && settings.canRunOn(target) && target.canRun(settings);
   }
 
-  public static boolean canRun(@NotNull ExecutionEnvironment environment) {
+  public static boolean canRun(@Nonnull ExecutionEnvironment environment) {
     return canRun(environment.getRunnerAndConfigurationSettings(), environment.getExecutionTarget());
   }
 
-  public static void update(@NotNull Project project) {
+  public static void update(@Nonnull Project project) {
     getInstance(project).update();
   }
 
-  @NotNull
+  @Nonnull
   public abstract ExecutionTarget getActiveTarget();
 
-  public abstract void setActiveTarget(@NotNull ExecutionTarget target);
+  public abstract void setActiveTarget(@Nonnull ExecutionTarget target);
 
-  @NotNull
+  @Nonnull
   public abstract List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings);
 
   public abstract void update();

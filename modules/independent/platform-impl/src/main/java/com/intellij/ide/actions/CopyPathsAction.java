@@ -21,7 +21,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class CopyPathsAction extends AnAction implements DumbAware {
                          : IdeBundle.message("action.copy.paths"));
   }
 
-  @NotNull
+  @Nonnull
   private static Collection<VirtualFile> getFiles(AnActionEvent e) {
     final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (files == null || files.length == 0) return Collections.emptyList();

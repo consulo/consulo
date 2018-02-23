@@ -15,15 +15,15 @@
  */
 package com.intellij.util.xmlb;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 public interface Accessor {
-  Object read(@NotNull Object o);
+  Object read(@Nonnull Object o);
 
-  <T extends Annotation> T getAnnotation(@NotNull Class<T> annotationClass);
+  <T extends Annotation> T getAnnotation(@Nonnull Class<T> annotationClass);
 
   String getName();
 

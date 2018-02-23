@@ -19,7 +19,7 @@ package com.intellij.refactoring.safeDelete.usageInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -29,7 +29,7 @@ public class SafeDeleteUsageInfo extends UsageInfo {
     "#com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo");
   private final PsiElement myReferencedElement;
 
-  public SafeDeleteUsageInfo(@NotNull PsiElement element, PsiElement referencedElement) {
+  public SafeDeleteUsageInfo(@Nonnull PsiElement element, PsiElement referencedElement) {
     super(element);
     myReferencedElement = referencedElement;
   }

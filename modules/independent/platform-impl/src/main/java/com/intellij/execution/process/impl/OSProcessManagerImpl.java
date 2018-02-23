@@ -21,7 +21,7 @@ import com.intellij.execution.process.UnixProcessManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jvnet.winp.WinProcess;
 import org.jvnet.winp.WinpException;
 
@@ -40,7 +40,7 @@ public class OSProcessManagerImpl extends OSProcessManager {
   private static final Logger LOG = Logger.getInstance("#com.intellij.execution.process.impl.OSProcessManagerImpl");
 
   @Override
-  public boolean killProcessTree(@NotNull Process process) {
+  public boolean killProcessTree(@Nonnull Process process) {
     if (SystemInfo.isWindows) {
       try {
         WinProcess winProcess = createWinProcess(process);
@@ -57,8 +57,8 @@ public class OSProcessManagerImpl extends OSProcessManager {
     return false;
   }
 
-  @NotNull
-  private static WinProcess createWinProcess(@NotNull Process process) {
+  @Nonnull
+  private static WinProcess createWinProcess(@Nonnull Process process) {
     if (process instanceof RunnerWinProcess) {
       RunnerWinProcess runnerWinProcess = (RunnerWinProcess) process;
       return new WinProcess(runnerWinProcess.getOriginalProcess());
@@ -101,7 +101,7 @@ public class OSProcessManagerImpl extends OSProcessManager {
     }
   }
 
-  private static List<String> readLines(@NotNull InputStream inputStream, boolean includeEmpty) throws IOException {
+  private static List<String> readLines(@Nonnull InputStream inputStream, boolean includeEmpty) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
     try {
       List<String> lines = new ArrayList<String>();

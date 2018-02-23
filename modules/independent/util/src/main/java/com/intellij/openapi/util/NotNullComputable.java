@@ -15,19 +15,19 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
  */
 public interface NotNullComputable<T> extends Computable<T> {
 
-  @NotNull
+  @Nonnull
   T compute();
 
   NotNullComputable<Boolean> TRUE = new NotNullComputable<Boolean>() {
 
-    @NotNull
+    @Nonnull
     @Override
     public Boolean compute() {
       return Boolean.TRUE;

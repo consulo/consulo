@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -23,25 +23,25 @@ import org.jetbrains.annotations.NotNull;
 public class FunctionUtil {
   private FunctionUtil() { }
 
-  @NotNull
+  @Nonnull
   public static <T> Function<T, T> id() {
     @SuppressWarnings("unchecked") Function<T, T> id = Function.ID;
     return id;
   }
 
-  @NotNull
+  @Nonnull
   public static <A, B> NullableFunction<A, B> nullConstant() {
     @SuppressWarnings("unchecked") NullableFunction<A, B> function = NullableFunction.NULL;
     return function;
   }
 
-  @NotNull
+  @Nonnull
   public static <T> Function<T, String> string() {
     @SuppressWarnings("unchecked") Function<T, String> function = Function.TO_STRING;
     return function;
   }
 
-  @NotNull
+  @Nonnull
   public static <A, B> Function<A, B> constant(final B b) {
     return new Function<A, B>() {
       @Override
@@ -51,11 +51,11 @@ public class FunctionUtil {
     };
   }
 
-  @NotNull
-  public static <A, B, C> NotNullFunction<A, C> composition(@NotNull final NotNullFunction<B, C> f, @NotNull final NotNullFunction<A, B> g) {
+  @Nonnull
+  public static <A, B, C> NotNullFunction<A, C> composition(@Nonnull final NotNullFunction<B, C> f, @Nonnull final NotNullFunction<A, B> g) {
     return new NotNullFunction<A, C>() {
       @Override
-      @NotNull
+      @Nonnull
       public C fun(A a) {
         return f.fun(g.fun(a));
       }

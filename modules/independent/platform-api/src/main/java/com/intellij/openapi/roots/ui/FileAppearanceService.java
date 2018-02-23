@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -26,15 +26,15 @@ public abstract class FileAppearanceService {
     return ServiceManager.getService(FileAppearanceService.class);
   }
 
-  @NotNull
+  @Nonnull
   public abstract CellAppearanceEx empty();
 
-  @NotNull
-  public abstract CellAppearanceEx forVirtualFile(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract CellAppearanceEx forVirtualFile(@Nonnull VirtualFile file);
 
-  @NotNull
-  public abstract CellAppearanceEx forIoFile(@NotNull File file);
+  @Nonnull
+  public abstract CellAppearanceEx forIoFile(@Nonnull File file);
 
-  @NotNull
-  public abstract CellAppearanceEx forInvalidUrl(@NotNull String url);
+  @Nonnull
+  public abstract CellAppearanceEx forInvalidUrl(@Nonnull String url);
 }

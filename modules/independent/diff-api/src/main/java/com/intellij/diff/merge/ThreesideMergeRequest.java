@@ -16,7 +16,7 @@
 package com.intellij.diff.merge;
 
 import com.intellij.diff.contents.DiffContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -24,16 +24,16 @@ public abstract class ThreesideMergeRequest extends MergeRequest {
   /**
    * 3 contents: left - middle - right (local - base - server)
    */
-  @NotNull
+  @Nonnull
   public abstract List<? extends DiffContent> getContents();
 
-  @NotNull
+  @Nonnull
   public abstract DiffContent getOutputContent();
 
   /**
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  @NotNull
+  @Nonnull
   public abstract List<String> getContentTitles();
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner.states;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class SuiteInProgressState extends TestInProgressState {
   private final SMTestProxy mySuiteProxy;
   private Boolean isDefectWasReallyFound = null; // null - is unset
 
-  public SuiteInProgressState(@NotNull final SMTestProxy suiteProxy) {
+  public SuiteInProgressState(@Nonnull final SMTestProxy suiteProxy) {
     mySuiteProxy = suiteProxy;
   }
   

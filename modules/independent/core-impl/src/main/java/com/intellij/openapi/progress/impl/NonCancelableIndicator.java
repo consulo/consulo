@@ -20,7 +20,7 @@ import com.intellij.openapi.progress.NonCancelableSection;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.StandardProgressIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
   static final NonCancelableIndicator INSTANCE = new NonCancelableIndicator() {
@@ -126,7 +126,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getModalityState() {
     return ModalityState.NON_MODAL;

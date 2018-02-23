@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class ObjectsConvertor {
   };
 
   public static final NotNullFunction<Object, Boolean> NOT_NULL = new NotNullFunction<Object, Boolean>() {
-    @NotNull
+    @Nonnull
     public Boolean fun(final Object o) {
       return o != null;
     }
@@ -74,23 +74,23 @@ public class ObjectsConvertor {
   private ObjectsConvertor() {
   }
 
-  public static List<VirtualFile> fp2vf(@NotNull final Collection<FilePath> in) {
+  public static List<VirtualFile> fp2vf(@Nonnull final Collection<FilePath> in) {
     return convert(in, FILEPATH_TO_VIRTUAL);
   }
 
-  public static List<FilePath> vf2fp(@NotNull final List<VirtualFile> in) {
+  public static List<FilePath> vf2fp(@Nonnull final List<VirtualFile> in) {
     return convert(in, VIRTUAL_FILEPATH);
   }
 
-  public static List<File> fp2jiof(@NotNull final Collection<FilePath> in) {
+  public static List<File> fp2jiof(@Nonnull final Collection<FilePath> in) {
     return convert(in, FILEPATH_FILE);
   }
 
-  public static <T,S> List<S> convert(@NotNull final Collection<T> in, final Convertor<T,S> convertor) {
+  public static <T,S> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T,S> convertor) {
     return convert(in, convertor, null);
   }
 
-  public static <T,U, S extends U> List<S> convert(@NotNull final Collection<T> in, final Convertor<T,S> convertor,
+  public static <T,U, S extends U> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T,S> convertor,
                                                    @Nullable final NotNullFunction<U, Boolean> outFilter) {
     final List<S> out = new ArrayList<S>();
     for (T t : in) {

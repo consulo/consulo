@@ -1,7 +1,7 @@
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Sergey Simonchik
@@ -32,18 +32,18 @@ public class Outcome<V> {
     return myException;
   }
 
-  @NotNull
+  @Nonnull
   public static <V> Outcome<V> createAsCancelled() {
     return new Outcome<V>(null, true, null);
   }
 
-  @NotNull
-  public static <V> Outcome<V> createAsException(@NotNull Exception ex) {
+  @Nonnull
+  public static <V> Outcome<V> createAsException(@Nonnull Exception ex) {
     return new Outcome<V>(null, false, ex);
   }
 
-  @NotNull
-  public static <V> Outcome<V> createNormal(@NotNull V data) {
+  @Nonnull
+  public static <V> Outcome<V> createNormal(@Nonnull V data) {
     return new Outcome<V>(data, false, null);
   }
 

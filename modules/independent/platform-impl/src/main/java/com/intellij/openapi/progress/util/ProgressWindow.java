@@ -29,8 +29,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.FocusTrackback;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,8 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   private boolean myStarted;
   protected boolean myBackgrounded;
   private String myProcessId = "<unknown>";
-  @Nullable private volatile Runnable myBackgroundHandler;
+  @Nullable
+  private volatile Runnable myBackgroundHandler;
   protected int myDelayInMillis = DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS;
 
   @FunctionalInterface
@@ -186,7 +187,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     startBlocking(EmptyRunnable.getInstance());
   }
 
-  public void startBlocking(@NotNull Runnable init) {
+  public void startBlocking(@Nonnull Runnable init) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     synchronized (this) {
       LOG.assertTrue(!isRunning());
@@ -214,12 +215,12 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
            ((KeyEvent)event).getModifiers() == 0;
   }
 
-  @NotNull
+  @Nonnull
   public String getProcessId() {
     return myProcessId;
   }
 
-  public void setProcessId(@NotNull String processId) {
+  public void setProcessId(@Nonnull String processId) {
     myProcessId = processId;
   }
 

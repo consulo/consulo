@@ -35,8 +35,8 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -44,9 +44,9 @@ import java.util.List;
 import java.util.Set;
 
 public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
-  public OfflineProblemDescriptorNode(@NotNull OfflineProblemDescriptor descriptor,
-                                      @NotNull LocalInspectionToolWrapper toolWrapper,
-                                      @NotNull InspectionToolPresentation presentation) {
+  public OfflineProblemDescriptorNode(@Nonnull OfflineProblemDescriptor descriptor,
+                                      @Nonnull LocalInspectionToolWrapper toolWrapper,
+                                      @Nonnull InspectionToolPresentation presentation) {
     super(descriptor, toolWrapper, presentation);
   }
 
@@ -151,7 +151,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
   }
 
   @Nullable
-  private LocalQuickFix[] getFixes(@NotNull CommonProblemDescriptor descriptor, List<String> hints) {
+  private LocalQuickFix[] getFixes(@Nonnull CommonProblemDescriptor descriptor, List<String> hints) {
     final List<LocalQuickFix> fixes = new ArrayList<LocalQuickFix>(hints == null ? 1 : hints.size());
     if (hints == null) {
       addFix(descriptor, fixes, null);
@@ -164,7 +164,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
     return fixes.isEmpty() ? null : fixes.toArray(new LocalQuickFix[fixes.size()]);
   }
 
-  private void addFix(@NotNull CommonProblemDescriptor descriptor, final List<LocalQuickFix> fixes, String hint) {
+  private void addFix(@Nonnull CommonProblemDescriptor descriptor, final List<LocalQuickFix> fixes, String hint) {
     final IntentionAction intentionAction = myPresentation.findQuickFixes(descriptor, hint);
     if (intentionAction instanceof QuickFixWrapper) {
       fixes.add(((QuickFixWrapper)intentionAction).getFix());

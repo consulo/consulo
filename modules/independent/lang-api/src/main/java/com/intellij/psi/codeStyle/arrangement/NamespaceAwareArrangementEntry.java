@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov

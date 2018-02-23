@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.function.BiConsumer;
 

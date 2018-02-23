@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +54,7 @@ public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
     }
   });
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText.getValue();
   }

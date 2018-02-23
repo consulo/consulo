@@ -22,8 +22,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,12 +32,12 @@ public class CompositeInputFilter implements InputFilter {
   private final List<Pair<InputFilter, Boolean /* is dumb aware */>> myFilters = ContainerUtilRt.newArrayList();
   private final DumbService myDumbService;
 
-  public CompositeInputFilter(@NotNull Project project) {
+  public CompositeInputFilter(@Nonnull Project project) {
     myDumbService = DumbService.getInstance(project);
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public List<Pair<String, ConsoleViewContentType>> applyFilter(final String text, final ConsoleViewContentType contentType) {
     boolean dumb = myDumbService.isDumb();
     for (Pair<InputFilter, Boolean> pair : myFilters) {
@@ -58,7 +57,7 @@ public class CompositeInputFilter implements InputFilter {
     return null;
   }
 
-  public void addFilter(@NotNull final InputFilter filter) {
+  public void addFilter(@Nonnull final InputFilter filter) {
     myFilters.add(Pair.create(filter, DumbService.isDumbAware(filter)));
   }
 }

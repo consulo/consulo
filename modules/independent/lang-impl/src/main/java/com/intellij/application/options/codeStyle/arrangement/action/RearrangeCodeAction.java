@@ -26,7 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -39,7 +39,7 @@ public class RearrangeCodeAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     PsiFile file = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
     boolean enabled = file != null && Rearranger.EXTENSION.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
@@ -47,7 +47,7 @@ public class RearrangeCodeAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getProject();
     if (project == null) {
       return;

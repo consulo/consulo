@@ -18,42 +18,42 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public abstract class XValueTextRendererBase implements XValuePresentation.XValueTextRenderer {
   @Override
-  public void renderStringValue(@NotNull String value) {
+  public void renderStringValue(@Nonnull String value) {
     renderStringValue(value, null, '"', -1);
   }
 
   @Override
-  public void renderCharValue(@NotNull String value) {
+  public void renderCharValue(@Nonnull String value) {
     renderStringValue(value, null, '\'', -1);
   }
 
   @Override
-  public void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+  public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
     renderStringValue(value, additionalSpecialCharsToHighlight, '"', maxLength);
   }
 
   @Override
-  public void renderNumericValue(@NotNull String value) {
+  public void renderNumericValue(@Nonnull String value) {
     renderRawValue(value, DefaultLanguageHighlighterColors.NUMBER);
   }
 
   @Override
-  public void renderKeywordValue(@NotNull String value) {
+  public void renderKeywordValue(@Nonnull String value) {
     renderRawValue(value, DefaultLanguageHighlighterColors.KEYWORD);
   }
 
   @Override
-  public final void renderValue(@NotNull String value, @NotNull TextAttributesKey key) {
+  public final void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
     renderRawValue(value, key);
   }
 
-  protected abstract void renderRawValue(@NotNull String value, @NotNull TextAttributesKey key);
+  protected abstract void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key);
 }

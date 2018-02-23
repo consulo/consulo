@@ -22,8 +22,8 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
@@ -39,14 +39,14 @@ import java.util.Set;
 public abstract class LookupElement extends UserDataHolderBase {
   public static final LookupElement[] EMPTY_ARRAY = new LookupElement[0];
 
-  @NotNull
+  @Nonnull
   public abstract String getLookupString();
 
   public Set<String> getAllLookupStrings() {
     return Collections.singleton(getLookupString());
   }
 
-  @NotNull
+  @Nonnull
   public Object getObject() {
     return this;
   }
@@ -97,12 +97,12 @@ public abstract class LookupElement extends UserDataHolderBase {
    * use {@link #as(com.intellij.openapi.util.ClassConditionKey)} instead
    */
   @Deprecated
-  @Nullable
+  @javax.annotation.Nullable
   public final <T> T as(Class<T> aClass) {
     return as(ClassConditionKey.create(aClass));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public <T> T as(ClassConditionKey<T> conditionKey) {
     return conditionKey.isInstance(this) ? (T) this : null;
   }

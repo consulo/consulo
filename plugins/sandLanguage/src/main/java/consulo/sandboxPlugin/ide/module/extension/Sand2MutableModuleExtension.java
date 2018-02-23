@@ -21,8 +21,8 @@ import consulo.roots.ModuleRootLayer;
 import consulo.ui.CheckBox;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -31,14 +31,14 @@ import javax.swing.*;
  * @since 30.08.14
  */
 public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements MutableModuleExtension<Sand2ModuleExtension> {
-  public Sand2MutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+  public Sand2MutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 
   @RequiredDispatchThread
   @Nullable
   @Override
-  public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     throw new UnsupportedOperationException("This should never called. See #createConfigurablePanel2()");
   }
 
@@ -48,14 +48,14 @@ public class Sand2MutableModuleExtension extends Sand2ModuleExtension implements
   }
 
   @Override
-  public boolean isModified(@NotNull Sand2ModuleExtension originalExtension) {
+  public boolean isModified(@Nonnull Sand2ModuleExtension originalExtension) {
     return myIsEnabled != originalExtension.isEnabled();
   }
 
   @RequiredUIAccess
   @Nullable
   @Override
-  public consulo.ui.Component createConfigurationComponent(@NotNull Runnable updateOnCheck) {
+  public consulo.ui.Component createConfigurationComponent(@Nonnull Runnable updateOnCheck) {
     final VerticalLayout vertical = VerticalLayout.create();
     vertical.add(CheckBox.create("Omg new UI?"));
     return vertical;

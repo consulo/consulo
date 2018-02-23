@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +25,6 @@ import org.jetbrains.annotations.NotNull;
  * Time: 6:27 PM
  */
 public abstract class VirtualFileFilter {
-  public abstract boolean shouldGoIntoDirectory(@NotNull final VirtualFile file);
-  public void afterChildrenVisited(@NotNull VirtualFile file) {}
+  public abstract boolean shouldGoIntoDirectory(@Nonnull final VirtualFile file);
+  public void afterChildrenVisited(@Nonnull VirtualFile file) {}
 }

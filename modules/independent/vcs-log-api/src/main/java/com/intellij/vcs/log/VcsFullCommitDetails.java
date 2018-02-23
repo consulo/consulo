@@ -18,7 +18,7 @@ package com.intellij.vcs.log;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +36,6 @@ import java.util.List;
  */
 public interface VcsFullCommitDetails extends VcsCommitMetadata {
 
-  @NotNull
+  @Nonnull
   Collection<Change> getChanges();
 }

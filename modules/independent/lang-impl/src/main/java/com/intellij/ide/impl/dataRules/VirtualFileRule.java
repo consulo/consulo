@@ -25,17 +25,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VirtualFileRule implements GetDataRule<VirtualFile> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<VirtualFile> getKey() {
     return CommonDataKeys.VIRTUAL_FILE;
   }
 
   @Override
-  public VirtualFile getData(@NotNull final DataProvider dataProvider) {
+  public VirtualFile getData(@Nonnull final DataProvider dataProvider) {
     // Try to detect multiselection.
     PsiElement[] psiElements = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements != null) {

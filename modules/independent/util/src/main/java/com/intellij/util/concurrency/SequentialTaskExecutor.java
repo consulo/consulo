@@ -16,18 +16,18 @@
 
 package com.intellij.util.concurrency;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 public class SequentialTaskExecutor extends BoundedTaskExecutor {
-  public SequentialTaskExecutor(@NotNull String name, @NotNull Executor executor) {
+  public SequentialTaskExecutor(@Nonnull String name, @Nonnull Executor executor) {
     super(name, executor, 1);
   }
 
-  @NotNull
-  public static ExecutorService createSequentialApplicationPoolExecutor(@NotNull String name) {
+  @Nonnull
+  public static ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name) {
     return AppExecutorUtil.createBoundedApplicationPoolExecutor(name, 1);
   }
 }

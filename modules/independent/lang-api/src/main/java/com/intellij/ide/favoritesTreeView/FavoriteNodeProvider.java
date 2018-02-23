@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -42,7 +42,7 @@ public abstract class FavoriteNodeProvider {
   @Nullable
   public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);
 
-  @Nullable
+  @javax.annotation.Nullable
   public AbstractTreeNode createNode(final Project project, final Object element, final ViewSettings viewSettings) {
     return null;
   }
@@ -88,7 +88,8 @@ public abstract class FavoriteNodeProvider {
    *
    * @return the string identifier.
    */
-  @NotNull @NonNls
+  @Nonnull
+  @NonNls
   public abstract String getFavoriteTypeId();
 
   /**
@@ -97,7 +98,8 @@ public abstract class FavoriteNodeProvider {
    * @param element
    * @return the URL, or null if the element is not supported by this provider.
    */
-  @Nullable @NonNls
+  @javax.annotation.Nullable
+  @NonNls
   public abstract String getElementUrl(final Object element);
 
   /**
@@ -121,7 +123,7 @@ public abstract class FavoriteNodeProvider {
   @Nullable
   public abstract Object[] createPathFromUrl(final Project project, final String url, final String moduleName);
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getPsiElement(final Object element) {
     if (element instanceof PsiElement) {
       return (PsiElement)element;

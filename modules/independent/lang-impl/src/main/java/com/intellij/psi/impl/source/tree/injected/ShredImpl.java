@@ -19,8 +19,8 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class ShredImpl implements PsiLanguageInjectionHost.Shred {
   private final SmartPsiFileRange relevantRangeInHost;
@@ -30,11 +30,11 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
   private final String suffix;
   private final boolean usePsiRange;
 
-  ShredImpl(@NotNull SmartPsiFileRange relevantRangeInHost,
-            @NotNull SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
-            @NotNull String prefix,
-            @NotNull String suffix,
-            @NotNull TextRange range,
+  ShredImpl(@Nonnull SmartPsiFileRange relevantRangeInHost,
+            @Nonnull SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
+            @Nonnull String prefix,
+            @Nonnull String suffix,
+            @Nonnull TextRange range,
             boolean usePsiRange) {
     this.hostElementPointer = hostElementPointer;
     this.relevantRangeInHost = relevantRangeInHost;
@@ -58,7 +58,7 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
     return new ShredImpl(relevantRangeInHost, hostElementPointer, prefix, suffix, range, true);
   }
 
-  @NotNull
+  @Nonnull
   public SmartPsiElementPointer<PsiLanguageInjectionHost> getSmartPointer() {
     return hostElementPointer;
   }
@@ -70,7 +70,7 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextRange getRangeInsideHost() {
     PsiLanguageInjectionHost host = getHost();
     Segment psiRange = relevantRangeInHost.getPsiRange();
@@ -138,19 +138,19 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
     return hostElementPointer.getElement();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TextRange getRange() {
     return range;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPrefix() {
     return prefix;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSuffix() {
     return suffix;

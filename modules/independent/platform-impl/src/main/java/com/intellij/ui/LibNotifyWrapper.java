@@ -23,7 +23,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Fokin
@@ -75,7 +75,7 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@NotNull String name, @NotNull String title, @NotNull String description) {
+  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
     synchronized (myLock) {
       if (!myDisposed) {
         Pointer notification = myLibNotify.notify_notification_new(title, description, myIcon);

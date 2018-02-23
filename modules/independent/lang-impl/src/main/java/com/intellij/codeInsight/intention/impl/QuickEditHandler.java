@@ -68,8 +68,8 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -103,7 +103,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
   private final RangeMarker myAltFullRange;
   private static final Key<String> REPLACEMENT_KEY = Key.create("REPLACEMENT_KEY");
 
-  QuickEditHandler(Project project, @NotNull PsiFile injectedFile, final PsiFile origFile, Editor editor, QuickEditAction action) {
+  QuickEditHandler(Project project, @Nonnull PsiFile injectedFile, final PsiFile origFile, Editor editor, QuickEditAction action) {
     myProject = project;
     myEditor = editor;
     myAction = action;
@@ -145,7 +145,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       int myEditorCount;
 
       @Override
-      public void editorCreated(@NotNull EditorFactoryEvent event) {
+      public void editorCreated(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor().getDocument() != myNewDocument) return;
         myEditorCount ++;
         final EditorActionHandler editorEscape = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
@@ -171,7 +171,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       }
 
       @Override
-      public void editorReleased(@NotNull EditorFactoryEvent event) {
+      public void editorReleased(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor().getDocument() != myNewDocument) return;
         if (-- myEditorCount > 0) return;
 
@@ -446,7 +446,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     }
   }
 
-  private void altCommitToOriginal(@NotNull DocumentEvent e) {
+  private void altCommitToOriginal(@Nonnull DocumentEvent e) {
     final PsiFile origPsiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myOrigDocument);
     String newText = myNewDocument.getText();
     // prepare guarded blocks

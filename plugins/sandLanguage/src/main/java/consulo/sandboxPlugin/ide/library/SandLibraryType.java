@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
 import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
 import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ import javax.swing.*;
 public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
   protected SandLibraryType() {
     super(new PersistentLibraryKind<DummyLibraryProperties>("sand") {
-      @NotNull
+      @Nonnull
       @Override
       public DummyLibraryProperties createDefaultProperties() {
         return new DummyLibraryProperties();
@@ -47,11 +47,11 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
   }
 
   @Override
-  public boolean isAvailable(@NotNull ModuleRootModel moduleRootModel) {
+  public boolean isAvailable(@Nonnull ModuleRootModel moduleRootModel) {
     return moduleRootModel.getExtension(SandModuleExtension.class) != null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getCreateActionName() {
     return "test";
@@ -59,13 +59,13 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
 
   @Nullable
   @Override
-  public NewLibraryConfiguration createNewLibrary(@NotNull JComponent parentComponent, @Nullable VirtualFile contextDirectory, @NotNull Project project) {
+  public NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory, @Nonnull Project project) {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
+  public LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
     return null;
   }
 

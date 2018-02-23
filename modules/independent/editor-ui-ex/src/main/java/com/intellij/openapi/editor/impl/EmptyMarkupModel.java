@@ -28,8 +28,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * This is mock implementation to be used in null-object pattern where necessary.
@@ -43,46 +42,46 @@ public class EmptyMarkupModel implements MarkupModelEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocument;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeHighlighter addRangeHighlighter(int startOffset,
                                               int endOffset,
                                               int layer,
-                                              @Nullable TextAttributes textAttributes,
-                                              @NotNull HighlighterTargetArea targetArea) {
+                                              @javax.annotation.Nullable TextAttributes textAttributes,
+                                              @Nonnull HighlighterTargetArea targetArea) {
     throw new ProcessCanceledException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RangeHighlighterEx addRangeHighlighterAndChangeAttributes(int startOffset,
                                                                    int endOffset,
                                                                    int layer,
                                                                    TextAttributes textAttributes,
-                                                                   @NotNull HighlighterTargetArea targetArea,
+                                                                   @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
                                                                    Consumer<RangeHighlighterEx> changeAttributesAction) {
     throw new ProcessCanceledException();
   }
 
   @Override
-  public void changeAttributesInBatch(@NotNull RangeHighlighterEx highlighter,
-                                      @NotNull Consumer<RangeHighlighterEx> changeAttributesAction) {
+  public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
+                                      @Nonnull Consumer<RangeHighlighterEx> changeAttributesAction) {
   }
 
   @Override
-  @NotNull
-  public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
+  @Nonnull
+  public RangeHighlighter addLineHighlighter(int line, int layer, @javax.annotation.Nullable TextAttributes textAttributes) {
     throw new ProcessCanceledException();
   }
 
   @Override
-  public void removeHighlighter(@NotNull RangeHighlighter rangeHighlighter) {
+  public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
   }
 
   @Override
@@ -90,18 +89,18 @@ public class EmptyMarkupModel implements MarkupModelEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeHighlighter[] getAllHighlighters() {
     return RangeHighlighter.EMPTY_ARRAY;
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return null;
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, T value) {
   }
 
   @Override
@@ -114,52 +113,52 @@ public class EmptyMarkupModel implements MarkupModelEx {
   }
 
   @Override
-  public boolean containsHighlighter(@NotNull RangeHighlighter highlighter) {
+  public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
     return false;
   }
 
   @Override
-  public void addMarkupModelListener(@NotNull Disposable parentDisposable, @NotNull MarkupModelListener listener) {
+  public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
   }
 
   @Override
-  public void setRangeHighlighterAttributes(@NotNull final RangeHighlighter highlighter, @NotNull final TextAttributes textAttributes) {
+  public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
 
   }
 
   @Override
-  public boolean processRangeHighlightersOverlappingWith(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor) {
+  public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
     return false;
   }
 
   @Override
-  public boolean processRangeHighlightersOutside(int start, int end, @NotNull Processor<? super RangeHighlighterEx> processor) {
+  public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
     return MarkupIterator.EMPTY;
   }
 
   @Override
-  public void fireAttributesChanged(@NotNull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
+  public void fireAttributesChanged(@Nonnull RangeHighlighterEx segmentHighlighter, boolean renderersChanged, boolean fontStyleChanged) {
 
   }
 
   @Override
-  public void fireAfterAdded(@NotNull RangeHighlighterEx segmentHighlighter) {
+  public void fireAfterAdded(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
   }
 
   @Override
-  public void fireBeforeRemoved(@NotNull RangeHighlighterEx segmentHighlighter) {
+  public void fireBeforeRemoved(@Nonnull RangeHighlighterEx segmentHighlighter) {
 
   }
 
   @Override
-  public void addRangeHighlighter(@NotNull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+  public void addRangeHighlighter(@Nonnull RangeHighlighterEx marker, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
 
   }
 }

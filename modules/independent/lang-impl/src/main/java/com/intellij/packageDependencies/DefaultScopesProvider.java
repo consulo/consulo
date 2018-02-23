@@ -23,8 +23,8 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.ProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<NamedScope> getCustomScopes() {
     return myScopes;
   }

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -29,20 +29,20 @@ public class VFileMoveEvent extends VFileEvent {
   private final VirtualFile myOldParent;
   private final VirtualFile myNewParent;
 
-  public VFileMoveEvent(final Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent) {
+  public VFileMoveEvent(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) {
     super(requestor, false);
     myFile = file;
     myNewParent = newParent;
     myOldParent = file.getParent();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getNewParent() {
     return myNewParent;
   }
@@ -57,13 +57,13 @@ public class VFileMoveEvent extends VFileEvent {
     return "VfsEvent[move " + myFile.getName() +" from " + myOldParent + " to " + myNewParent + "]";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return myFile.getPath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

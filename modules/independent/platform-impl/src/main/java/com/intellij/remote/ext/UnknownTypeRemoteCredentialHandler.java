@@ -16,8 +16,8 @@
 package com.intellij.remote.ext;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Irina.Chernushina on 7/29/2016.
@@ -33,7 +33,7 @@ public class UnknownTypeRemoteCredentialHandler extends RemoteCredentialsHandler
   }
 
   @Override
-  public void save(@NotNull Element rootElement) {
+  public void save(@Nonnull Element rootElement) {
     getCredentials().save(rootElement);
   }
 

@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -37,25 +37,25 @@ public abstract class LibraryPresentationManager {
     return ServiceManager.getService(LibraryPresentationManager.class);
   }
 
-  @NotNull
-  public abstract Icon getNamedLibraryIcon(@NotNull Library library, @Nullable StructureConfigurableContext context);
+  @Nonnull
+  public abstract Icon getNamedLibraryIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
   @Nullable
-  public abstract Icon getCustomIcon(@NotNull Library library, @Nullable StructureConfigurableContext context);
+  public abstract Icon getCustomIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
-  @NotNull
-  public abstract List<Icon> getCustomIcons(@NotNull Library library, @Nullable StructureConfigurableContext context);
+  @Nonnull
+  public abstract List<Icon> getCustomIcons(@Nonnull Library library, @Nullable StructureConfigurableContext context);
 
-  @NotNull
-  public abstract List<String> getDescriptions(@NotNull Library library, StructureConfigurableContext context);
+  @Nonnull
+  public abstract List<String> getDescriptions(@Nonnull Library library, StructureConfigurableContext context);
 
-  @NotNull
-  public abstract List<String> getDescriptions(@NotNull VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
+  @Nonnull
+  public abstract List<String> getDescriptions(@Nonnull VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
 
-  public abstract List<Library> getLibraries(@NotNull Set<LibraryKind> kinds, @NotNull Project project, @Nullable StructureConfigurableContext context);
+  public abstract List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable StructureConfigurableContext context);
 
-  public abstract boolean isLibraryOfKind(@NotNull List<VirtualFile> files, @NotNull LibraryKind kind);
+  public abstract boolean isLibraryOfKind(@Nonnull List<VirtualFile> files, @Nonnull LibraryKind kind);
 
-  public abstract boolean isLibraryOfKind(@NotNull Library library, @NotNull LibrariesContainer librariesContainer,
-                                          @NotNull Set<? extends LibraryKind> acceptedKinds);
+  public abstract boolean isLibraryOfKind(@Nonnull Library library, @Nonnull LibrariesContainer librariesContainer,
+                                          @Nonnull Set<? extends LibraryKind> acceptedKinds);
 }

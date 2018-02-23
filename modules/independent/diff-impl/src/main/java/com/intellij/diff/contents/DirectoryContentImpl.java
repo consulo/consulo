@@ -20,33 +20,34 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DirectoryContentImpl extends DiffContentBase implements DirectoryContent {
-  @NotNull private final VirtualFile myFile;
+  @Nonnull
+  private final VirtualFile myFile;
   @Nullable private final Project myProject;
 
-  public DirectoryContentImpl(@Nullable Project project, @NotNull VirtualFile file) {
+  public DirectoryContentImpl(@Nullable Project project, @Nonnull VirtualFile file) {
     assert file.isValid() && file.isDirectory();
     myProject = project;
     myFile = file;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault() || !myFile.isValid()) return null;
     return new OpenFileDescriptor(myProject, myFile);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public FileType getContentType() {
     return null;

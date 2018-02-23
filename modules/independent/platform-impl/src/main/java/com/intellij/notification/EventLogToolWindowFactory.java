@@ -37,7 +37,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.AncestorEvent;
 
@@ -46,7 +46,7 @@ import javax.swing.event.AncestorEvent;
  */
 public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Override
-  public void createToolWindowContent(@NotNull final Project project, @NotNull ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
     EventLog.getProjectComponent(project).initDefaultContent();
   }
 
@@ -62,7 +62,7 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         return PlatformDataKeys.HELP_ID == dataId ? EventLog.HELP_ID : super.getData(dataId);
       }
     };

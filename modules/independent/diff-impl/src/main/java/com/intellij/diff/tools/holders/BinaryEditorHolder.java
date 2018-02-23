@@ -35,22 +35,24 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class BinaryEditorHolder extends EditorHolder {
-  @NotNull protected final FileEditor myEditor;
-  @NotNull protected final FileEditorProvider myEditorProvider;
+  @Nonnull
+  protected final FileEditor myEditor;
+  @Nonnull
+  protected final FileEditorProvider myEditorProvider;
 
-  public BinaryEditorHolder(@NotNull FileEditor editor, @NotNull FileEditorProvider editorProvider) {
+  public BinaryEditorHolder(@Nonnull FileEditor editor, @Nonnull FileEditorProvider editorProvider) {
     myEditor = editor;
     myEditorProvider = editorProvider;
   }
 
-  @NotNull
+  @Nonnull
   public FileEditor getEditor() {
     return myEditor;
   }
@@ -60,14 +62,14 @@ public class BinaryEditorHolder extends EditorHolder {
     myEditorProvider.disposeEditor(myEditor);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myEditor.getComponent();
   }
 
   @Override
-  public void installFocusListener(@NotNull FocusListener listener) {
+  public void installFocusListener(@Nonnull FocusListener listener) {
     myEditor.getComponent().addFocusListener(listener);
   }
 
@@ -85,8 +87,8 @@ public class BinaryEditorHolder extends EditorHolder {
     public static BinaryEditorHolderFactory INSTANCE = new BinaryEditorHolderFactory();
 
     @Override
-    @NotNull
-    public BinaryEditorHolder create(@NotNull DiffContent content, @NotNull DiffContext context) {
+    @Nonnull
+    public BinaryEditorHolder create(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       Project project = context.getProject();
       if (content instanceof FileContent) {
         if (project == null) project = ProjectManager.getInstance().getDefaultProject();
@@ -123,7 +125,7 @@ public class BinaryEditorHolder extends EditorHolder {
     }
 
     @Override
-    public boolean canShowContent(@NotNull DiffContent content, @NotNull DiffContext context) {
+    public boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       if (content instanceof DocumentContent) return true;
       if (content instanceof FileContent) {
         Project project = context.getProject();
@@ -136,7 +138,7 @@ public class BinaryEditorHolder extends EditorHolder {
     }
 
     @Override
-    public boolean wantShowContent(@NotNull DiffContent content, @NotNull DiffContext context) {
+    public boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       if (content instanceof FileContent) {
         if (content.getContentType() == null) return false;
         if (content.getContentType().isBinary()) return true;

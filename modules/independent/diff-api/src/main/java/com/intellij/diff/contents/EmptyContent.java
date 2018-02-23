@@ -16,7 +16,7 @@
 package com.intellij.diff.contents;
 
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Represents empty content

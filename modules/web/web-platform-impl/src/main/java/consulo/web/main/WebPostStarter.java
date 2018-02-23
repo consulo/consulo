@@ -26,7 +26,7 @@ import consulo.annotations.Internal;
 import consulo.start.CommandLineArgs;
 import consulo.web.application.impl.WebApplicationImpl;
 import consulo.web.application.impl.WebStartupProgressImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +51,7 @@ public class WebPostStarter extends ApplicationPostStarter {
   }
 
   @Override
-  public void main(boolean newConfigFolder, @NotNull CommandLineArgs args) {
+  public void main(boolean newConfigFolder, @Nonnull CommandLineArgs args) {
     StartupProgress startupProgress = mySplashRef.get();
     if (startupProgress != null) {
       startupProgress.dispose();

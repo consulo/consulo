@@ -29,14 +29,14 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.HeadlessValueEvaluationCallback
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class XFetchValueActionBase extends AnAction {
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     for (XValueNodeImpl node : XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext())) {
       if (isEnabled(e, node)) {
         return;
@@ -45,7 +45,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     e.getPresentation().setEnabled(false);
   }
 
-  protected boolean isEnabled(@NotNull AnActionEvent event, @NotNull XValueNodeImpl node) {
+  protected boolean isEnabled(@Nonnull AnActionEvent event, @Nonnull XValueNodeImpl node) {
     if (node instanceof WatchNodeImpl || node.isComputed()) {
       event.getPresentation().setEnabled(true);
       return true;
@@ -55,7 +55,7 @@ public abstract class XFetchValueActionBase extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     List<XValueNodeImpl> nodes = XDebuggerTreeActionBase.getSelectedNodes(e.getDataContext());
     if (nodes.isEmpty()) {
       return;
@@ -69,7 +69,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     valueCollector.finish();
   }
 
-  protected void addToCollector(@NotNull List<XValueNodeImpl> paths, @NotNull XValueNodeImpl valueNode, @NotNull ValueCollector valueCollector) {
+  protected void addToCollector(@Nonnull List<XValueNodeImpl> paths, @Nonnull XValueNodeImpl valueNode, @Nonnull ValueCollector valueCollector) {
     if (paths.size() > 1) { // multiselection - copy the whole node text, see IDEA-136722
       valueCollector.add(valueNode.getText().toString(), valueNode.getPath().getPathCount());
     }
@@ -84,8 +84,8 @@ public abstract class XFetchValueActionBase extends AnAction {
     }
   }
 
-  @NotNull
-  protected ValueCollector createCollector(@NotNull AnActionEvent e) {
+  @Nonnull
+  protected ValueCollector createCollector(@Nonnull AnActionEvent e) {
     return new ValueCollector(XDebuggerTree.getTree(e.getDataContext()));
   }
 
@@ -99,11 +99,11 @@ public abstract class XFetchValueActionBase extends AnAction {
       myTree = tree;
     }
 
-    public void add(@NotNull String value) {
+    public void add(@Nonnull String value) {
       values.add(value);
     }
 
-    public void add(@NotNull String value, int indent) {
+    public void add(@Nonnull String value, int indent) {
       values.add(value);
       indents.put(values.size() - 1, indent);
     }
@@ -140,7 +140,7 @@ public abstract class XFetchValueActionBase extends AnAction {
       return index;
     }
 
-    public void evaluationComplete(final int index, @NotNull final String value) {
+    public void evaluationComplete(final int index, @Nonnull final String value) {
       AppUIUtil.invokeOnEdt(() -> {
         values.set(index, value);
         finish();
@@ -154,7 +154,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     private final int myValueIndex;
     private final ValueCollector myValueCollector;
 
-    public CopyValueEvaluationCallback(@NotNull XValueNodeImpl node, @NotNull ValueCollector valueCollector) {
+    public CopyValueEvaluationCallback(@Nonnull XValueNodeImpl node, @Nonnull ValueCollector valueCollector) {
       super(node);
 
       myValueCollector = valueCollector;
@@ -162,7 +162,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     }
 
     @Override
-    protected void evaluationComplete(@NotNull String value, @NotNull Project project) {
+    protected void evaluationComplete(@Nonnull String value, @Nonnull Project project) {
       myValueCollector.evaluationComplete(myValueIndex, value);
     }
   }

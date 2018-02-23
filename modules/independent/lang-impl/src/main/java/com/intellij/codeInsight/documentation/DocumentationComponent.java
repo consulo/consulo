@@ -67,8 +67,8 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.BuiltInServerManager;
 
 import javax.swing.*;
@@ -260,7 +260,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     };
     DataProvider helpDataProvider = new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         return PlatformDataKeys.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
       }
     };
@@ -472,7 +472,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (DocumentationManager.SELECTED_QUICK_DOC_TEXT == dataId) {
       // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
       // with raw white spaces. See IDEA-86633 for more details.
@@ -515,7 +515,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public static FontSize getQuickDocFontSize() {
     String strValue = PropertiesComponent.getInstance().getValue(QUICK_DOC_FONT_SIZE_PROPERTY);
     if (strValue != null) {
@@ -529,7 +529,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     return FontSize.SMALL;
   }
 
-  public void setQuickDocFontSize(@NotNull FontSize fontSize) {
+  public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
     PropertiesComponent.getInstance().setValue(QUICK_DOC_FONT_SIZE_PROPERTY, fontSize.toString());
   }
 
@@ -1010,7 +1010,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       this(new MyShowSettingsAction(), new Presentation(), ActionPlaces.JAVADOC_INPLACE_SETTINGS, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     }
 
-    private MyShowSettingsButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
+    private MyShowSettingsButton(AnAction action, Presentation presentation, String place, @Nonnull Dimension minimumSize) {
       super(action, presentation, place, minimumSize);
       myPresentation.setIcon(AllIcons.General.SecondaryGroup);
     }

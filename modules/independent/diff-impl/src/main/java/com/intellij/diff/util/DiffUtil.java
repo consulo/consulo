@@ -102,8 +102,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -117,36 +117,37 @@ import java.util.List;
 public class DiffUtil {
   private static final Logger LOG = Logger.getInstance(DiffUtil.class);
 
-  @NotNull public static final String DIFF_CONFIG = StoragePathMacros.APP_CONFIG + "/diff.xml";
+  @Nonnull
+  public static final String DIFF_CONFIG = StoragePathMacros.APP_CONFIG + "/diff.xml";
   public static final int TITLE_GAP = JBUI.scale(2);
 
   //
   // Editor
   //
 
-  public static boolean isDiffEditor(@NotNull Editor editor) {
+  public static boolean isDiffEditor(@Nonnull Editor editor) {
     return editor.getUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY) != null;
   }
 
-  @Nullable
-  public static EditorHighlighter initEditorHighlighter(@Nullable Project project,
-                                                        @NotNull DocumentContent content,
-                                                        @NotNull CharSequence text) {
+  @javax.annotation.Nullable
+  public static EditorHighlighter initEditorHighlighter(@javax.annotation.Nullable Project project,
+                                                        @Nonnull DocumentContent content,
+                                                        @Nonnull CharSequence text) {
     EditorHighlighter highlighter = createEditorHighlighter(project, content);
     if (highlighter == null) return null;
     highlighter.setText(text);
     return highlighter;
   }
 
-  @NotNull
-  public static EditorHighlighter initEmptyEditorHighlighter(@NotNull CharSequence text) {
+  @Nonnull
+  public static EditorHighlighter initEmptyEditorHighlighter(@Nonnull CharSequence text) {
     EditorHighlighter highlighter = createEmptyEditorHighlighter();
     highlighter.setText(text);
     return highlighter;
   }
 
-  @Nullable
-  private static EditorHighlighter createEditorHighlighter(@Nullable Project project, @NotNull DocumentContent content) {
+  @javax.annotation.Nullable
+  private static EditorHighlighter createEditorHighlighter(@javax.annotation.Nullable Project project, @Nonnull DocumentContent content) {
     FileType type = content.getContentType();
     VirtualFile file = content.getHighlightFile();
     Language language = content.getUserData(DiffUserDataKeys.LANGUAGE);
@@ -167,17 +168,17 @@ public class DiffUtil {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static EditorHighlighter createEmptyEditorHighlighter() {
     return new EmptyEditorHighlighter(EditorColorsManager.getInstance().getGlobalScheme().getAttributes(HighlighterColors.TEXT));
   }
 
-  public static void setEditorHighlighter(@Nullable Project project, @NotNull EditorEx editor, @NotNull DocumentContent content) {
+  public static void setEditorHighlighter(@Nullable Project project, @Nonnull EditorEx editor, @Nonnull DocumentContent content) {
     EditorHighlighter highlighter = createEditorHighlighter(project, content);
     if (highlighter != null) editor.setHighlighter(highlighter);
   }
 
-  public static void setEditorCodeStyle(@Nullable Project project, @NotNull EditorEx editor, @Nullable FileType fileType) {
+  public static void setEditorCodeStyle(@Nullable Project project, @Nonnull EditorEx editor, @javax.annotation.Nullable FileType fileType) {
     if (project != null && fileType != null) {
       CodeStyleFacade codeStyleFacade = CodeStyleFacade.getInstance(project);
       editor.getSettings().setTabSize(codeStyleFacade.getTabSize(fileType));
@@ -187,19 +188,19 @@ public class DiffUtil {
     editor.reinitSettings();
   }
 
-  public static void setFoldingModelSupport(@NotNull EditorEx editor) {
+  public static void setFoldingModelSupport(@Nonnull EditorEx editor) {
     editor.getSettings().setFoldingOutlineShown(true);
     editor.getSettings().setAutoCodeFoldingEnabled(false);
     editor.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
   }
 
-  @NotNull
-  public static EditorEx createEditor(@NotNull Document document, @Nullable Project project, boolean isViewer) {
+  @Nonnull
+  public static EditorEx createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project, boolean isViewer) {
     return createEditor(document, project, isViewer, false);
   }
 
-  @NotNull
-  public static EditorEx createEditor(@NotNull Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
+  @Nonnull
+  public static EditorEx createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project, boolean isViewer, boolean enableFolding) {
     EditorFactory factory = EditorFactory.getInstance();
     EditorEx editor = (EditorEx)(isViewer ? factory.createViewer(document, project) : factory.createEditor(document, project));
 
@@ -221,13 +222,13 @@ public class DiffUtil {
     return editor;
   }
 
-  public static void configureEditor(@NotNull EditorEx editor, @NotNull DocumentContent content, @Nullable Project project) {
+  public static void configureEditor(@Nonnull EditorEx editor, @Nonnull DocumentContent content, @javax.annotation.Nullable Project project) {
     setEditorHighlighter(project, editor, content);
     setEditorCodeStyle(project, editor, content.getContentType());
     editor.reinitSettings();
   }
 
-  public static boolean isMirrored(@NotNull Editor editor) {
+  public static boolean isMirrored(@Nonnull Editor editor) {
     if (editor instanceof EditorEx) {
       return ((EditorEx)editor).getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT;
     }
@@ -238,30 +239,30 @@ public class DiffUtil {
   // Scrolling
   //
 
-  public static void disableBlitting(@NotNull EditorEx editor) {
+  public static void disableBlitting(@Nonnull EditorEx editor) {
     if (Registry.is("diff.divider.repainting.disable.blitting")) {
       editor.getScrollPane().getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
     }
   }
 
-  public static void moveCaret(@Nullable final Editor editor, int line) {
+  public static void moveCaret(@javax.annotation.Nullable final Editor editor, int line) {
     if (editor == null) return;
     editor.getCaretModel().removeSecondaryCarets();
     editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(line, 0));
   }
 
-  public static void scrollEditor(@Nullable final Editor editor, int line, boolean animated) {
+  public static void scrollEditor(@javax.annotation.Nullable final Editor editor, int line, boolean animated) {
     scrollEditor(editor, line, 0, animated);
   }
 
-  public static void scrollEditor(@Nullable final Editor editor, int line, int column, boolean animated) {
+  public static void scrollEditor(@javax.annotation.Nullable final Editor editor, int line, int column, boolean animated) {
     if (editor == null) return;
     editor.getCaretModel().removeSecondaryCarets();
     editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(line, column));
     scrollToCaret(editor, animated);
   }
 
-  public static void scrollToPoint(@Nullable Editor editor, @NotNull Point point, boolean animated) {
+  public static void scrollToPoint(@javax.annotation.Nullable Editor editor, @Nonnull Point point, boolean animated) {
     if (editor == null) return;
     if (!animated) editor.getScrollingModel().disableAnimation();
     editor.getScrollingModel().scrollHorizontally(point.x);
@@ -269,22 +270,22 @@ public class DiffUtil {
     if (!animated) editor.getScrollingModel().enableAnimation();
   }
 
-  public static void scrollToCaret(@Nullable Editor editor, boolean animated) {
+  public static void scrollToCaret(@javax.annotation.Nullable Editor editor, boolean animated) {
     if (editor == null) return;
     if (!animated) editor.getScrollingModel().disableAnimation();
     editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
     if (!animated) editor.getScrollingModel().enableAnimation();
   }
 
-  @NotNull
-  public static Point getScrollingPosition(@Nullable Editor editor) {
+  @Nonnull
+  public static Point getScrollingPosition(@javax.annotation.Nullable Editor editor) {
     if (editor == null) return new Point(0, 0);
     ScrollingModel model = editor.getScrollingModel();
     return new Point(model.getHorizontalScrollOffset(), model.getVerticalScrollOffset());
   }
 
-  @NotNull
-  public static LogicalPosition getCaretPosition(@Nullable Editor editor) {
+  @Nonnull
+  public static LogicalPosition getCaretPosition(@javax.annotation.Nullable Editor editor) {
     return editor != null ? editor.getCaretModel().getLogicalPosition() : new LogicalPosition(0, 0);
   }
 
@@ -292,13 +293,13 @@ public class DiffUtil {
   // Icons
   //
 
-  @NotNull
-  public static Icon getArrowIcon(@NotNull Side sourceSide) {
+  @Nonnull
+  public static Icon getArrowIcon(@Nonnull Side sourceSide) {
     return sourceSide.select(AllIcons.Diff.ArrowRight, AllIcons.Diff.Arrow);
   }
 
-  @NotNull
-  public static Icon getArrowDownIcon(@NotNull Side sourceSide) {
+  @Nonnull
+  public static Icon getArrowDownIcon(@Nonnull Side sourceSide) {
     return sourceSide.select(AllIcons.Diff.ArrowRightDown, AllIcons.Diff.ArrowLeftDown);
   }
 
@@ -306,12 +307,12 @@ public class DiffUtil {
   // UI
   //
 
-  public static void registerAction(@NotNull AnAction action, @NotNull JComponent component) {
+  public static void registerAction(@Nonnull AnAction action, @Nonnull JComponent component) {
     action.registerCustomShortcutSet(action.getShortcutSet(), component);
   }
 
-  @NotNull
-  public static JPanel createMessagePanel(@NotNull String message) {
+  @Nonnull
+  public static JPanel createMessagePanel(@Nonnull String message) {
     String text = StringUtil.replace(message, "\n", "<br>");
     JLabel label = new JBLabel(text) {
       @Override
@@ -327,11 +328,11 @@ public class DiffUtil {
     return new CenteredPanel(label, JBUI.Borders.empty(5));
   }
 
-  public static void addActionBlock(@NotNull DefaultActionGroup group, AnAction... actions) {
+  public static void addActionBlock(@Nonnull DefaultActionGroup group, AnAction... actions) {
     addActionBlock(group, Arrays.asList(actions));
   }
 
-  public static void addActionBlock(@NotNull DefaultActionGroup group, @Nullable List<? extends AnAction> actions) {
+  public static void addActionBlock(@Nonnull DefaultActionGroup group, @javax.annotation.Nullable List<? extends AnAction> actions) {
     if (actions == null || actions.isEmpty()) return;
     group.addSeparator();
 
@@ -343,13 +344,13 @@ public class DiffUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static String getSettingsConfigurablePath() {
     return "Settings | Tools | Diff";
   }
 
-  @NotNull
-  public static String createTooltipText(@NotNull String text, @Nullable String appendix) {
+  @Nonnull
+  public static String createTooltipText(@Nonnull String text, @javax.annotation.Nullable String appendix) {
     StringBuilder result = new StringBuilder();
     result.append("<html><body>");
     result.append(text);
@@ -362,8 +363,8 @@ public class DiffUtil {
     return result.toString();
   }
 
-  @NotNull
-  public static String createNotificationText(@NotNull String text, @Nullable String appendix) {
+  @Nonnull
+  public static String createNotificationText(@Nonnull String text, @javax.annotation.Nullable String appendix) {
     StringBuilder result = new StringBuilder();
     result.append("<html><body>");
     result.append(text);
@@ -376,10 +377,10 @@ public class DiffUtil {
     return result.toString();
   }
 
-  public static void showSuccessPopup(@NotNull String message,
-                                      @NotNull RelativePoint point,
-                                      @NotNull Disposable disposable,
-                                      @Nullable Runnable hyperlinkHandler) {
+  public static void showSuccessPopup(@Nonnull String message,
+                                      @Nonnull RelativePoint point,
+                                      @Nonnull Disposable disposable,
+                                      @javax.annotation.Nullable Runnable hyperlinkHandler) {
     HyperlinkListener listener = null;
     if (hyperlinkHandler != null) {
       listener = new HyperlinkAdapter() {
@@ -404,8 +405,8 @@ public class DiffUtil {
   // Titles
   //
 
-  @NotNull
-  public static List<JComponent> createSimpleTitles(@NotNull ContentDiffRequest request) {
+  @Nonnull
+  public static List<JComponent> createSimpleTitles(@Nonnull ContentDiffRequest request) {
     List<DiffContent> contents = request.getContents();
     List<String> titles = request.getContentTitles();
 
@@ -423,8 +424,8 @@ public class DiffUtil {
     return components;
   }
 
-  @NotNull
-  public static List<JComponent> createTextTitles(@NotNull ContentDiffRequest request, @NotNull List<? extends Editor> editors) {
+  @Nonnull
+  public static List<JComponent> createTextTitles(@Nonnull ContentDiffRequest request, @Nonnull List<? extends Editor> editors) {
     List<DiffContent> contents = request.getContents();
     List<String> titles = request.getContentTitles();
 
@@ -446,9 +447,9 @@ public class DiffUtil {
     return result;
   }
 
-  @Nullable
-  private static JComponent createTitleWithNotifications(@Nullable JComponent title,
-                                                         @NotNull DiffContent content) {
+  @javax.annotation.Nullable
+  private static JComponent createTitleWithNotifications(@javax.annotation.Nullable JComponent title,
+                                                         @Nonnull DiffContent content) {
     List<JComponent> notifications = getCustomNotifications(content);
     if (notifications.isEmpty()) return title;
 
@@ -458,12 +459,12 @@ public class DiffUtil {
     return createStackedComponents(components, TITLE_GAP);
   }
 
-  @Nullable
-  private static JComponent createTitle(@NotNull String title,
-                                        @NotNull DiffContent content,
+  @javax.annotation.Nullable
+  private static JComponent createTitle(@Nonnull String title,
+                                        @Nonnull DiffContent content,
                                         boolean equalCharsets,
                                         boolean equalSeparators,
-                                        @Nullable Editor editor) {
+                                        @javax.annotation.Nullable Editor editor) {
     if (content instanceof EmptyContent) return null;
 
     Charset charset = equalCharsets ? null : ((DocumentContent)content).getCharset();
@@ -473,15 +474,15 @@ public class DiffUtil {
     return createTitle(title, charset, separator, isReadOnly);
   }
 
-  @NotNull
-  public static JComponent createTitle(@NotNull String title) {
+  @Nonnull
+  public static JComponent createTitle(@Nonnull String title) {
     return createTitle(title, null, null, false);
   }
 
-  @NotNull
-  public static JComponent createTitle(@NotNull String title,
-                                       @Nullable Charset charset,
-                                       @Nullable LineSeparator separator,
+  @Nonnull
+  public static JComponent createTitle(@Nonnull String title,
+                                       @javax.annotation.Nullable Charset charset,
+                                       @javax.annotation.Nullable LineSeparator separator,
                                        boolean readOnly) {
     if (readOnly) title += " " + DiffBundle.message("diff.content.read.only.content.title.suffix");
 
@@ -505,8 +506,8 @@ public class DiffUtil {
     return panel;
   }
 
-  @NotNull
-  private static JComponent createCharsetPanel(@NotNull Charset charset) {
+  @Nonnull
+  private static JComponent createCharsetPanel(@Nonnull Charset charset) {
     JLabel label = new JLabel(charset.displayName());
     // TODO: specific colors for other charsets
     if (charset.equals(Charset.forName("UTF-8"))) {
@@ -521,8 +522,8 @@ public class DiffUtil {
     return label;
   }
 
-  @NotNull
-  private static JComponent createSeparatorPanel(@NotNull LineSeparator separator) {
+  @Nonnull
+  private static JComponent createSeparatorPanel(@Nonnull LineSeparator separator) {
     JLabel label = new JLabel(separator.name());
     Color color;
     if (separator == LineSeparator.CRLF) {
@@ -541,8 +542,8 @@ public class DiffUtil {
     return label;
   }
 
-  @NotNull
-  public static List<JComponent> createSyncHeightComponents(@NotNull final List<JComponent> components) {
+  @Nonnull
+  public static List<JComponent> createSyncHeightComponents(@Nonnull final List<JComponent> components) {
     if (!ContainerUtil.exists(components, Condition.NOT_NULL)) return components;
     List<JComponent> result = new ArrayList<>();
     for (int i = 0; i < components.size(); i++) {
@@ -551,8 +552,8 @@ public class DiffUtil {
     return result;
   }
 
-  @NotNull
-  public static JComponent createStackedComponents(@NotNull List<JComponent> components, int gap) {
+  @Nonnull
+  public static JComponent createStackedComponents(@Nonnull List<JComponent> components, int gap) {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -568,16 +569,16 @@ public class DiffUtil {
   // Focus
   //
 
-  public static boolean isFocusedComponent(@Nullable Component component) {
+  public static boolean isFocusedComponent(@javax.annotation.Nullable Component component) {
     return isFocusedComponent(null, component);
   }
 
-  public static boolean isFocusedComponent(@Nullable Project project, @Nullable Component component) {
+  public static boolean isFocusedComponent(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Component component) {
     if (component == null) return false;
     return IdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
   }
 
-  public static void requestFocus(@Nullable Project project, @Nullable Component component) {
+  public static void requestFocus(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Component component) {
     if (component == null) return;
     IdeFocusManager.getInstance(project).requestFocus(component, true);
   }
@@ -586,12 +587,12 @@ public class DiffUtil {
   // Compare
   //
 
-  @NotNull
-  public static List<LineFragment> compare(@NotNull DiffRequest request,
-                                           @NotNull CharSequence text1,
-                                           @NotNull CharSequence text2,
-                                           @NotNull DiffConfig config,
-                                           @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<LineFragment> compare(@Nonnull DiffRequest request,
+                                           @Nonnull CharSequence text1,
+                                           @Nonnull CharSequence text2,
+                                           @Nonnull DiffConfig config,
+                                           @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     DiffUserDataKeysEx.DiffComputer diffComputer = request.getUserData(DiffUserDataKeysEx.CUSTOM_DIFF_COMPUTER);
@@ -614,10 +615,10 @@ public class DiffUtil {
                                                          config.policy, config.squashFragments, config.trimFragments);
   }
 
-  @Nullable
-  public static MergeInnerDifferences compareThreesideInner(@NotNull List<CharSequence> chunks,
-                                                            @NotNull ComparisonPolicy comparisonPolicy,
-                                                            @NotNull ProgressIndicator indicator) {
+  @javax.annotation.Nullable
+  public static MergeInnerDifferences compareThreesideInner(@Nonnull List<CharSequence> chunks,
+                                                            @Nonnull ComparisonPolicy comparisonPolicy,
+                                                            @Nonnull ProgressIndicator indicator) {
     if (chunks.get(0) == null && chunks.get(1) == null && chunks.get(2) == null) return null; // ---
 
     if (comparisonPolicy == ComparisonPolicy.IGNORE_WHITESPACES) {
@@ -676,16 +677,16 @@ public class DiffUtil {
     return new MergeInnerDifferences(textRanges.get(0), textRanges.get(1), textRanges.get(2));
   }
 
-  private static boolean isChunksEquals(@Nullable CharSequence chunk1,
-                                        @Nullable CharSequence chunk2,
-                                        @NotNull ComparisonPolicy comparisonPolicy) {
+  private static boolean isChunksEquals(@javax.annotation.Nullable CharSequence chunk1,
+                                        @javax.annotation.Nullable CharSequence chunk2,
+                                        @Nonnull ComparisonPolicy comparisonPolicy) {
     if (chunk1 == null) chunk1 = "";
     if (chunk2 == null) chunk2 = "";
     return ComparisonManager.getInstance().isEquals(chunk1, chunk2, comparisonPolicy);
   }
 
-  @NotNull
-  public static <T> int[] getSortedIndexes(@NotNull List<T> values, @NotNull Comparator<T> comparator) {
+  @Nonnull
+  public static <T> int[] getSortedIndexes(@Nonnull List<T> values, @Nonnull Comparator<T> comparator) {
     final List<Integer> indexes = new ArrayList<>(values.size());
     for (int i = 0; i < values.size(); i++) {
       indexes.add(i);
@@ -700,8 +701,8 @@ public class DiffUtil {
     return ArrayUtil.toIntArray(indexes);
   }
 
-  @NotNull
-  public static int[] invertIndexes(@NotNull int[] indexes) {
+  @Nonnull
+  public static int[] invertIndexes(@Nonnull int[] indexes) {
     int[] inverted = new int[indexes.length];
     for (int i = 0; i < indexes.length; i++) {
       inverted[indexes[i]] = i;
@@ -713,8 +714,8 @@ public class DiffUtil {
   // Document modification
   //
 
-  @NotNull
-  public static BitSet getSelectedLines(@NotNull Editor editor) {
+  @Nonnull
+  public static BitSet getSelectedLines(@Nonnull Editor editor) {
     Document document = editor.getDocument();
     int totalLines = getLineCount(document);
     BitSet lines = new BitSet(totalLines + 1);
@@ -745,7 +746,7 @@ public class DiffUtil {
     return false;
   }
 
-  public static boolean isSelectedByLine(@NotNull BitSet selected, int line1, int line2) {
+  public static boolean isSelectedByLine(@Nonnull BitSet selected, int line1, int line2) {
     if (line1 == line2) {
       return selected.get(line1);
     }
@@ -755,7 +756,7 @@ public class DiffUtil {
     }
   }
 
-  private static void deleteLines(@NotNull Document document, int line1, int line2) {
+  private static void deleteLines(@Nonnull Document document, int line1, int line2) {
     TextRange range = getLinesRange(document, line1, line2);
     int offset1 = range.getStartOffset();
     int offset2 = range.getEndOffset();
@@ -769,7 +770,7 @@ public class DiffUtil {
     document.deleteString(offset1, offset2);
   }
 
-  private static void insertLines(@NotNull Document document, int line, @NotNull CharSequence text) {
+  private static void insertLines(@Nonnull Document document, int line, @Nonnull CharSequence text) {
     if (line == getLineCount(document)) {
       document.insertString(document.getTextLength(), "\n" + text);
     }
@@ -778,7 +779,7 @@ public class DiffUtil {
     }
   }
 
-  private static void replaceLines(@NotNull Document document, int line1, int line2, @NotNull CharSequence text) {
+  private static void replaceLines(@Nonnull Document document, int line1, int line2, @Nonnull CharSequence text) {
     TextRange currentTextRange = getLinesRange(document, line1, line2);
     int offset1 = currentTextRange.getStartOffset();
     int offset2 = currentTextRange.getEndOffset();
@@ -786,10 +787,10 @@ public class DiffUtil {
     document.replaceString(offset1, offset2, text);
   }
 
-  public static void applyModification(@NotNull Document document,
+  public static void applyModification(@Nonnull Document document,
                                        int line1,
                                        int line2,
-                                       @NotNull List<? extends CharSequence> newLines) {
+                                       @Nonnull List<? extends CharSequence> newLines) {
     if (line1 == line2 && newLines.isEmpty()) return;
     if (line1 == line2) {
       insertLines(document, line1, StringUtil.join(newLines, "\n"));
@@ -802,10 +803,10 @@ public class DiffUtil {
     }
   }
 
-  public static void applyModification(@NotNull Document document1,
+  public static void applyModification(@Nonnull Document document1,
                                        int line1,
                                        int line2,
-                                       @NotNull Document document2,
+                                       @Nonnull Document document2,
                                        int oLine1,
                                        int oLine2) {
     if (line1 == line2 && oLine1 == oLine2) return;
@@ -820,8 +821,8 @@ public class DiffUtil {
     }
   }
 
-  @NotNull
-  public static CharSequence getLinesContent(@NotNull Document document, int line1, int line2) {
+  @Nonnull
+  public static CharSequence getLinesContent(@Nonnull Document document, int line1, int line2) {
     TextRange otherRange = getLinesRange(document, line1, line2);
     return document.getImmutableCharSequence().subSequence(otherRange.getStartOffset(), otherRange.getEndOffset());
   }
@@ -832,12 +833,12 @@ public class DiffUtil {
    * we consider '\n' not as a part of line, but a separator between lines
    * ex: if last line is not empty, the last symbol will not be '\n'
    */
-  public static TextRange getLinesRange(@NotNull Document document, int line1, int line2) {
+  public static TextRange getLinesRange(@Nonnull Document document, int line1, int line2) {
     return getLinesRange(document, line1, line2, false);
   }
 
-  @NotNull
-  public static TextRange getLinesRange(@NotNull Document document, int line1, int line2, boolean includeNewline) {
+  @Nonnull
+  public static TextRange getLinesRange(@Nonnull Document document, int line1, int line2, boolean includeNewline) {
     if (line1 == line2) {
       int lineStartOffset = line1 < getLineCount(document) ? document.getLineStartOffset(line1) : document.getTextLength();
       return new TextRange(lineStartOffset, lineStartOffset);
@@ -850,7 +851,7 @@ public class DiffUtil {
     }
   }
 
-  public static int getOffset(@NotNull Document document, int line, int column) {
+  public static int getOffset(@Nonnull Document document, int line, int column) {
     if (line < 0) return 0;
     if (line >= getLineCount(document)) return document.getTextLength();
 
@@ -859,17 +860,17 @@ public class DiffUtil {
     return Math.min(start + column, end);
   }
 
-  public static int getLineCount(@NotNull Document document) {
+  public static int getLineCount(@Nonnull Document document) {
     return Math.max(document.getLineCount(), 1);
   }
 
-  @NotNull
-  public static List<String> getLines(@NotNull Document document) {
+  @Nonnull
+  public static List<String> getLines(@Nonnull Document document) {
     return getLines(document, 0, getLineCount(document));
   }
 
-  @NotNull
-  public static List<String> getLines(@NotNull Document document, int startLine, int endLine) {
+  @Nonnull
+  public static List<String> getLines(@Nonnull Document document, int startLine, int endLine) {
     if (startLine < 0 || startLine > endLine || endLine > getLineCount(document)) {
       throw new IndexOutOfBoundsException(String.format("Wrong line range: [%d, %d); lineCount: '%d'",
                                                         startLine, endLine, document.getLineCount()));
@@ -888,23 +889,23 @@ public class DiffUtil {
   // Updating ranges on change
   //
 
-  @NotNull
-  public static LineRange getAffectedLineRange(@NotNull DocumentEvent e) {
+  @Nonnull
+  public static LineRange getAffectedLineRange(@Nonnull DocumentEvent e) {
     int line1 = e.getDocument().getLineNumber(e.getOffset());
     int line2 = e.getDocument().getLineNumber(e.getOffset() + e.getOldLength()) + 1;
     return new LineRange(line1, line2);
   }
 
-  public static int countLinesShift(@NotNull DocumentEvent e) {
+  public static int countLinesShift(@Nonnull DocumentEvent e) {
     return StringUtil.countNewLines(e.getNewFragment()) - StringUtil.countNewLines(e.getOldFragment());
   }
 
-  @NotNull
+  @Nonnull
   public static UpdatedLineRange updateRangeOnModification(int start, int end, int changeStart, int changeEnd, int shift) {
     return updateRangeOnModification(start, end, changeStart, changeEnd, shift, false);
   }
 
-  @NotNull
+  @Nonnull
   public static UpdatedLineRange updateRangeOnModification(int start, int end, int changeStart, int changeEnd, int shift, boolean greedy) {
     if (end <= changeStart) { // change before
       return new UpdatedLineRange(start, end, false);
@@ -951,21 +952,21 @@ public class DiffUtil {
   // Types
   //
 
-  @NotNull
-  public static TextDiffType getLineDiffType(@NotNull LineFragment fragment) {
+  @Nonnull
+  public static TextDiffType getLineDiffType(@Nonnull LineFragment fragment) {
     boolean left = fragment.getStartLine1() != fragment.getEndLine1();
     boolean right = fragment.getStartLine2() != fragment.getEndLine2();
     return getDiffType(left, right);
   }
 
-  @NotNull
-  public static TextDiffType getDiffType(@NotNull DiffFragment fragment) {
+  @Nonnull
+  public static TextDiffType getDiffType(@Nonnull DiffFragment fragment) {
     boolean left = fragment.getEndOffset1() != fragment.getStartOffset1();
     boolean right = fragment.getEndOffset2() != fragment.getStartOffset2();
     return getDiffType(left, right);
   }
 
-  @NotNull
+  @Nonnull
   public static TextDiffType getDiffType(boolean hasDeleted, boolean hasInserted) {
     if (hasDeleted && hasInserted) {
       return TextDiffType.MODIFIED;
@@ -982,9 +983,9 @@ public class DiffUtil {
     }
   }
 
-  @NotNull
-  public static MergeConflictType getMergeType(@NotNull Condition<ThreeSide> emptiness,
-                                               @NotNull Equality<ThreeSide> equality) {
+  @Nonnull
+  public static MergeConflictType getMergeType(@Nonnull Condition<ThreeSide> emptiness,
+                                               @Nonnull Equality<ThreeSide> equality) {
     boolean isLeftEmpty = emptiness.value(ThreeSide.LEFT);
     boolean isBaseEmpty = emptiness.value(ThreeSide.BASE);
     boolean isRightEmpty = emptiness.value(ThreeSide.RIGHT);
@@ -1020,19 +1021,19 @@ public class DiffUtil {
     }
   }
 
-  @NotNull
-  public static MergeConflictType getLineMergeType(@NotNull MergeLineFragment fragment,
-                                                   @NotNull List<? extends Document> documents,
-                                                   @NotNull ComparisonPolicy policy) {
+  @Nonnull
+  public static MergeConflictType getLineMergeType(@Nonnull MergeLineFragment fragment,
+                                                   @Nonnull List<? extends Document> documents,
+                                                   @Nonnull ComparisonPolicy policy) {
     return getMergeType((side) -> isLineMergeIntervalEmpty(fragment, side),
                         (side1, side2) -> compareLineMergeContents(fragment, documents, policy, side1, side2));
   }
 
-  private static boolean compareLineMergeContents(@NotNull MergeLineFragment fragment,
-                                                  @NotNull List<? extends Document> documents,
-                                                  @NotNull ComparisonPolicy policy,
-                                                  @NotNull ThreeSide side1,
-                                                  @NotNull ThreeSide side2) {
+  private static boolean compareLineMergeContents(@Nonnull MergeLineFragment fragment,
+                                                  @Nonnull List<? extends Document> documents,
+                                                  @Nonnull ComparisonPolicy policy,
+                                                  @Nonnull ThreeSide side1,
+                                                  @Nonnull ThreeSide side2) {
     int start1 = fragment.getStartLine(side1);
     int end1 = fragment.getEndLine(side1);
     int start2 = fragment.getStartLine(side2);
@@ -1055,7 +1056,7 @@ public class DiffUtil {
     return true;
   }
 
-  private static boolean isLineMergeIntervalEmpty(@NotNull MergeLineFragment fragment, @NotNull ThreeSide side) {
+  private static boolean isLineMergeIntervalEmpty(@Nonnull MergeLineFragment fragment, @Nonnull ThreeSide side) {
     return fragment.getStartLine(side) == fragment.getEndLine(side);
   }
 
@@ -1064,13 +1065,13 @@ public class DiffUtil {
   //
 
   @RequiredDispatchThread
-  public static void executeWriteCommand(@Nullable Project project,
-                                         @NotNull Document document,
-                                         @Nullable String commandName,
-                                         @Nullable String commandGroupId,
-                                         @NotNull UndoConfirmationPolicy confirmationPolicy,
+  public static void executeWriteCommand(@javax.annotation.Nullable Project project,
+                                         @Nonnull Document document,
+                                         @javax.annotation.Nullable String commandName,
+                                         @javax.annotation.Nullable String commandGroupId,
+                                         @Nonnull UndoConfirmationPolicy confirmationPolicy,
                                          boolean underBulkUpdate,
-                                         @NotNull Runnable task) {
+                                         @Nonnull Runnable task) {
     if (!makeWritable(project, document)) {
       VirtualFile file = FileDocumentManager.getInstance().getFile(document);
       LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
@@ -1090,18 +1091,18 @@ public class DiffUtil {
   }
 
   @RequiredDispatchThread
-  public static void executeWriteCommand(@NotNull final Document document,
-                                         @Nullable final Project project,
-                                         @Nullable final String commandName,
-                                         @NotNull final Runnable task) {
+  public static void executeWriteCommand(@Nonnull final Document document,
+                                         @javax.annotation.Nullable final Project project,
+                                         @javax.annotation.Nullable final String commandName,
+                                         @Nonnull final Runnable task) {
     executeWriteCommand(project, document, commandName, null, UndoConfirmationPolicy.DEFAULT, false, task);
   }
 
-  public static boolean isEditable(@NotNull Editor editor) {
+  public static boolean isEditable(@Nonnull Editor editor) {
     return !editor.isViewer() && canMakeWritable(editor.getDocument());
   }
 
-  public static boolean canMakeWritable(@NotNull Document document) {
+  public static boolean canMakeWritable(@Nonnull Document document) {
     if (document.isWritable()) {
       return true;
     }
@@ -1114,19 +1115,19 @@ public class DiffUtil {
   }
 
   @RequiredDispatchThread
-  public static boolean makeWritable(@Nullable Project project, @NotNull Document document) {
+  public static boolean makeWritable(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null || !file.isValid()) return document.isWritable();
     return makeWritable(project, file) && document.isWritable();
   }
 
   @RequiredDispatchThread
-  public static boolean makeWritable(@Nullable Project project, @NotNull VirtualFile file) {
+  public static boolean makeWritable(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file) {
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
     return !ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles();
   }
 
-  public static void putNonundoableOperation(@Nullable Project project, @NotNull Document document) {
+  public static void putNonundoableOperation(@javax.annotation.Nullable Project project, @Nonnull Document document) {
     UndoManager undoManager = project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance();
     if (undoManager != null) {
       DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
@@ -1137,7 +1138,7 @@ public class DiffUtil {
   /**
    * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
    */
-  public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @NotNull VirtualFile... files) {
+  public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
     ModalityState modalityState = ApplicationManager.getApplication().getDefaultModalityState();
     VfsUtil.markDirty(recursive, reloadChildren, files);
     RefreshQueue.getInstance().refresh(async, recursive, null, modalityState, files);
@@ -1147,12 +1148,12 @@ public class DiffUtil {
   // Windows
   //
 
-  @NotNull
+  @Nonnull
   public static Dimension getDefaultDiffPanelSize() {
     return new Dimension(400, 200);
   }
 
-  @NotNull
+  @Nonnull
   public static Dimension getDefaultDiffWindowSize() {
     Rectangle screenBounds = ScreenUtil.getMainScreenBounds();
     int width = (int)(screenBounds.width * 0.8);
@@ -1160,8 +1161,8 @@ public class DiffUtil {
     return new Dimension(width, height);
   }
 
-  @NotNull
-  public static WindowWrapper.Mode getWindowMode(@NotNull DiffDialogHints hints) {
+  @Nonnull
+  public static WindowWrapper.Mode getWindowMode(@Nonnull DiffDialogHints hints) {
     WindowWrapper.Mode mode = hints.getMode();
     if (mode == null) {
       boolean isUnderDialog = LaterInvocator.isInModalContext();
@@ -1170,7 +1171,7 @@ public class DiffUtil {
     return mode;
   }
 
-  public static void closeWindow(@Nullable Window window, boolean modalOnly, boolean recursive) {
+  public static void closeWindow(@javax.annotation.Nullable Window window, boolean modalOnly, boolean recursive) {
     if (window == null) return;
 
     Component component = window;
@@ -1181,7 +1182,7 @@ public class DiffUtil {
     }
   }
 
-  public static void closeWindow(@NotNull Window window, boolean modalOnly) {
+  public static void closeWindow(@Nonnull Window window, boolean modalOnly) {
     if (window instanceof IdeFrameImpl) return;
     if (modalOnly && window instanceof Frame) return;
 
@@ -1198,13 +1199,13 @@ public class DiffUtil {
   // UserData
   //
 
-  public static <T> UserDataHolderBase createUserDataHolder(@NotNull Key<T> key, @Nullable T value) {
+  public static <T> UserDataHolderBase createUserDataHolder(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     UserDataHolderBase holder = new UserDataHolderBase();
     holder.putUserData(key, value);
     return holder;
   }
 
-  public static boolean isUserDataFlagSet(@NotNull Key<Boolean> key, UserDataHolder... holders) {
+  public static boolean isUserDataFlagSet(@Nonnull Key<Boolean> key, UserDataHolder... holders) {
     for (UserDataHolder holder : holders) {
       if (holder == null) continue;
       Boolean data = holder.getUserData(key);
@@ -1213,7 +1214,7 @@ public class DiffUtil {
     return false;
   }
 
-  public static <T> T getUserData(@Nullable UserDataHolder first, @Nullable UserDataHolder second, @NotNull Key<T> key) {
+  public static <T> T getUserData(@javax.annotation.Nullable UserDataHolder first, @javax.annotation.Nullable UserDataHolder second, @Nonnull Key<T> key) {
     if (first != null) {
       T data = first.getUserData(key);
       if (data != null) return data;
@@ -1225,21 +1226,21 @@ public class DiffUtil {
     return null;
   }
 
-  public static void addNotification(@Nullable JComponent component, @NotNull UserDataHolder holder) {
+  public static void addNotification(@Nullable JComponent component, @Nonnull UserDataHolder holder) {
     if (component == null) return;
     List<JComponent> oldComponents = ContainerUtil.notNullize(holder.getUserData(DiffUserDataKeys.NOTIFICATIONS));
     holder.putUserData(DiffUserDataKeys.NOTIFICATIONS, ContainerUtil.append(oldComponents, component));
   }
 
-  @NotNull
-  public static List<JComponent> getCustomNotifications(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  @Nonnull
+  public static List<JComponent> getCustomNotifications(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     List<JComponent> requestComponents = request.getUserData(DiffUserDataKeys.NOTIFICATIONS);
     List<JComponent> contextComponents = context.getUserData(DiffUserDataKeys.NOTIFICATIONS);
     return ContainerUtil.concat(ContainerUtil.notNullize(contextComponents), ContainerUtil.notNullize(requestComponents));
   }
 
-  @NotNull
-  public static List<JComponent> getCustomNotifications(@NotNull DiffContent content) {
+  @Nonnull
+  public static List<JComponent> getCustomNotifications(@Nonnull DiffContent content) {
     return ContainerUtil.notNullize(content.getUserData(DiffUserDataKeys.NOTIFICATIONS));
   }
 
@@ -1247,8 +1248,8 @@ public class DiffUtil {
   // DataProvider
   //
 
-  @Nullable
-  public static VirtualFile getVirtualFile(@NotNull ContentDiffRequest request, @NotNull Side currentSide) {
+  @javax.annotation.Nullable
+  public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull Side currentSide) {
     List<DiffContent> contents = request.getContents();
     DiffContent content1 = currentSide.select(contents);
     DiffContent content2 = currentSide.other().select(contents);
@@ -1258,8 +1259,8 @@ public class DiffUtil {
     return null;
   }
 
-  @Nullable
-  public static VirtualFile getVirtualFile(@NotNull ContentDiffRequest request, @NotNull ThreeSide currentSide) {
+  @javax.annotation.Nullable
+  public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull ThreeSide currentSide) {
     List<DiffContent> contents = request.getContents();
     DiffContent content1 = currentSide.select(contents);
     DiffContent content2 = ThreeSide.BASE.select(contents);
@@ -1269,8 +1270,8 @@ public class DiffUtil {
     return null;
   }
 
-  @Nullable
-  public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
+  @javax.annotation.Nullable
+  public static Object getData(@javax.annotation.Nullable DataProvider provider, @javax.annotation.Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
     if (provider != null) {
       Object data = provider.getData(dataId);
       if (data != null) return data;
@@ -1282,7 +1283,7 @@ public class DiffUtil {
     return null;
   }
 
-  public static <T> void putDataKey(@NotNull UserDataHolder holder, @NotNull Key<T> key, @Nullable T value) {
+  public static <T> void putDataKey(@Nonnull UserDataHolder holder, @Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     DataProvider dataProvider = holder.getUserData(DiffUserDataKeys.DATA_PROVIDER);
     if (!(dataProvider instanceof GenericDataProvider)) {
       dataProvider = new GenericDataProvider(dataProvider);
@@ -1291,8 +1292,8 @@ public class DiffUtil {
     ((GenericDataProvider)dataProvider).putData(key, value);
   }
 
-  @NotNull
-  public static DiffSettings getDiffSettings(@NotNull DiffContext context) {
+  @Nonnull
+  public static DiffSettings getDiffSettings(@Nonnull DiffContext context) {
     DiffSettings settings = context.getUserData(DiffSettingsHolder.KEY);
     if (settings == null) {
       settings = DiffSettings.getSettings(context.getUserData(DiffUserDataKeys.PLACE));
@@ -1305,8 +1306,8 @@ public class DiffUtil {
   // Tools
   //
 
-  @NotNull
-  public static <T extends DiffTool> List<T> filterSuppressedTools(@NotNull List<T> tools) {
+  @Nonnull
+  public static <T extends DiffTool> List<T> filterSuppressedTools(@Nonnull List<T> tools) {
     if (tools.size() < 2) return tools;
 
     final List<Class<? extends DiffTool>> suppressedTools = new ArrayList<>();
@@ -1330,28 +1331,30 @@ public class DiffUtil {
   //
 
   public static class DiffConfig {
-    @NotNull public final ComparisonPolicy policy;
+    @Nonnull
+    public final ComparisonPolicy policy;
     public final boolean innerFragments;
     public final boolean squashFragments;
     public final boolean trimFragments;
 
-    public DiffConfig(@NotNull ComparisonPolicy policy, boolean innerFragments, boolean squashFragments, boolean trimFragments) {
+    public DiffConfig(@Nonnull ComparisonPolicy policy, boolean innerFragments, boolean squashFragments, boolean trimFragments) {
       this.policy = policy;
       this.innerFragments = innerFragments;
       this.squashFragments = squashFragments;
       this.trimFragments = trimFragments;
     }
 
-    public DiffConfig(@NotNull IgnorePolicy ignorePolicy, @NotNull HighlightPolicy highlightPolicy) {
+    public DiffConfig(@Nonnull IgnorePolicy ignorePolicy, @Nonnull HighlightPolicy highlightPolicy) {
       this(ignorePolicy.getComparisonPolicy(), highlightPolicy.isFineFragments(), highlightPolicy.isShouldSquash(),
            ignorePolicy.isShouldTrimChunks());
     }
   }
 
   private static class SyncHeightComponent extends JPanel {
-    @NotNull private final List<JComponent> myComponents;
+    @Nonnull
+    private final List<JComponent> myComponents;
 
-    public SyncHeightComponent(@NotNull List<JComponent> components, int index) {
+    public SyncHeightComponent(@Nonnull List<JComponent> components, int index) {
       super(new BorderLayout());
       myComponents = components;
       JComponent delegate = components.get(index);
@@ -1378,12 +1381,12 @@ public class DiffUtil {
   public static class CenteredPanel extends JPanel {
     private final JComponent myComponent;
 
-    public CenteredPanel(@NotNull JComponent component) {
+    public CenteredPanel(@Nonnull JComponent component) {
       myComponent = component;
       add(component);
     }
 
-    public CenteredPanel(@NotNull JComponent component, @NotNull Border border) {
+    public CenteredPanel(@Nonnull JComponent component, @Nonnull Border border) {
       this(component);
       setBorder(border);
     }

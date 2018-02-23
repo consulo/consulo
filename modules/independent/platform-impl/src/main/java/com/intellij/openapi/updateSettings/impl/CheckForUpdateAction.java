@@ -27,12 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CheckForUpdateAction extends AnAction implements DumbAware {
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     String place = e.getPlace();
     if (ActionPlaces.WELCOME_SCREEN.equals(place)) {
       e.getPresentation().setEnabledAndVisible(true);
@@ -44,7 +44,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredDispatchThread
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
     actionPerformed(project, consulo.ide.updateSettings.UpdateSettings.getInstance());
@@ -53,7 +53,7 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   public static void actionPerformed(Project project, final consulo.ide.updateSettings.UpdateSettings updateSettings) {
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
 
         PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator)

@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElem
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public abstract class PackagingElementDraggingObject {
   public void beforeDrop() {
   }
 
-  public boolean canDropInto(@NotNull PackagingElementNode node) {
+  public boolean canDropInto(@Nonnull PackagingElementNode node) {
     return true;
   }
 }

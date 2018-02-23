@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,22 +27,23 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class ProjectGroup {
-  private @NotNull String myName = "";
+  private @Nonnull
+  String myName = "";
   private String myProjectPaths = "";
   private boolean myExpanded = false;
 
-  public ProjectGroup(@NotNull String name) {
+  public ProjectGroup(@Nonnull String name) {
     myName = name;
   }
 
   public ProjectGroup() {}
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 

@@ -22,8 +22,8 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.JBViewport;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ public abstract class StatusText {
   public StatusText() {
     myClickListener = new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         if (e.getButton() == MouseEvent.BUTTON1 && clickCount == 1) {
           ActionListener actionListener = findActionListenerAt(e.getPoint());
           if (actionListener != null) {
@@ -151,7 +151,7 @@ public abstract class StatusText {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
@@ -233,7 +233,7 @@ public abstract class StatusText {
     g2.dispose();
   }
 
-  @NotNull
+  @Nonnull
   public SimpleColoredComponent getComponent() {
     return myComponent;
   }

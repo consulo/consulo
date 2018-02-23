@@ -16,8 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.util.PairProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -113,12 +112,12 @@ public class AreaMap<Key, Val> {
     return Collections.unmodifiableCollection(myKeys);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Val getExact(final Key key) {
     return myMap.get(key);
   }
 
-  public void removeByValue(@NotNull final Val val) {
+  public void removeByValue(@Nonnull final Val val) {
     for (Iterator<Key> iterator = myKeys.iterator(); iterator.hasNext();) {
       final Key key = iterator.next();
       final Val current = myMap.get(key);

@@ -15,8 +15,8 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,19 +54,19 @@ public abstract class BaseOutputReader extends BaseDataReader {
   private final StringBuilder myLineBuffer = new StringBuilder();
   private boolean myCarry;
 
-  public BaseOutputReader(@NotNull InputStream inputStream, @Nullable Charset charset) {
+  public BaseOutputReader(@Nonnull InputStream inputStream, @Nullable Charset charset) {
     this(createInputStreamReader(inputStream, charset));
   }
 
-  public BaseOutputReader(@NotNull InputStream inputStream, @Nullable Charset charset, @NotNull Options options) {
+  public BaseOutputReader(@Nonnull InputStream inputStream, @Nullable Charset charset, @Nonnull Options options) {
     this(createInputStreamReader(inputStream, charset), options);
   }
 
-  public BaseOutputReader(@NotNull Reader reader) {
+  public BaseOutputReader(@Nonnull Reader reader) {
     this(reader, new Options());
   }
 
-  public BaseOutputReader(@NotNull Reader reader, @NotNull Options options) {
+  public BaseOutputReader(@Nonnull Reader reader, @Nonnull Options options) {
     super(options.policy());
 
     if (options.policy() == SleepingPolicy.BLOCKING && !(reader instanceof BaseInputStreamReader)) {
@@ -81,7 +81,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
     myOptions = options;
   }
 
-  private static Reader createInputStreamReader(@NotNull InputStream stream, @Nullable Charset charset) {
+  private static Reader createInputStreamReader(@Nonnull InputStream stream, @Nullable Charset charset) {
     return charset == null ? new BaseInputStreamReader(stream) : new BaseInputStreamReader(stream, charset);
   }
 
@@ -196,7 +196,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
     }
   }
 
-  private void sendText(@NotNull StringBuilder line) {
+  private void sendText(@Nonnull StringBuilder line) {
     onTextAvailable(line.toString());
     line.setLength(0);
   }
@@ -210,18 +210,18 @@ public abstract class BaseOutputReader extends BaseDataReader {
   protected void onBufferExhaustion() {
   }
 
-  protected abstract void onTextAvailable(@NotNull String text);
+  protected abstract void onTextAvailable(@Nonnull String text);
 
   //<editor-fold desc="Deprecated stuff.">
   /** @deprecated use {@link #BaseOutputReader(InputStream, Charset, Options)} (to be removed in IDEA 2018.1) */
   @SuppressWarnings("unused")
-  public BaseOutputReader(@NotNull InputStream inputStream, @Nullable Charset charset, @Nullable SleepingPolicy policy) {
+  public BaseOutputReader(@Nonnull InputStream inputStream, @Nullable Charset charset, @Nullable SleepingPolicy policy) {
     this(inputStream, charset, Options.withPolicy(policy));
   }
 
   /** @deprecated use {@link #BaseOutputReader(Reader, Options)} (to be removed in IDEA 2018.1) */
   @SuppressWarnings("unused")
-  public BaseOutputReader(@NotNull Reader reader, @Nullable SleepingPolicy policy) {
+  public BaseOutputReader(@Nonnull Reader reader, @Nullable SleepingPolicy policy) {
     this(reader, Options.withPolicy(policy));
   }
   //</editor-fold>

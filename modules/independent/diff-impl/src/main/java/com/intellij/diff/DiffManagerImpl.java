@@ -30,8 +30,8 @@ import com.intellij.diff.tools.simple.SimpleDiffTool;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
@@ -42,20 +42,20 @@ import java.util.List;
 public class DiffManagerImpl extends DiffManagerEx {
   @RequiredDispatchThread
   @Override
-  public void showDiff(@Nullable Project project, @NotNull DiffRequest request) {
+  public void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request) {
     showDiff(project, request, DiffDialogHints.DEFAULT);
   }
 
   @RequiredDispatchThread
   @Override
-  public void showDiff(@Nullable Project project, @NotNull DiffRequest request, @NotNull DiffDialogHints hints) {
+  public void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
     DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
     showDiff(project, requestChain, hints);
   }
 
   @RequiredDispatchThread
   @Override
-  public void showDiff(@Nullable Project project, @NotNull DiffRequestChain requests, @NotNull DiffDialogHints hints) {
+  public void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
     if (ExternalDiffTool.isDefault()) {
       ExternalDiffTool.show(project, requests, hints);
       return;
@@ -66,32 +66,32 @@ public class DiffManagerImpl extends DiffManagerEx {
 
   @RequiredDispatchThread
   @Override
-  public void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequest request) {
+  public void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request) {
     showDiffBuiltin(project, request, DiffDialogHints.DEFAULT);
   }
 
   @RequiredDispatchThread
   @Override
-  public void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequest request, @NotNull DiffDialogHints hints) {
+  public void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints) {
     DiffRequestChain requestChain = new SimpleDiffRequestChain(request);
     showDiffBuiltin(project, requestChain, hints);
   }
 
   @RequiredDispatchThread
   @Override
-  public void showDiffBuiltin(@Nullable Project project, @NotNull DiffRequestChain requests, @NotNull DiffDialogHints hints) {
+  public void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints) {
     new DiffWindow(project, requests, hints).show();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DiffRequestPanel createRequestPanel(@Nullable Project project, @NotNull Disposable parent, @Nullable Window window) {
+  public DiffRequestPanel createRequestPanel(@javax.annotation.Nullable Project project, @Nonnull Disposable parent, @Nullable Window window) {
     DiffRequestPanelImpl panel = new DiffRequestPanelImpl(project, window);
     Disposer.register(parent, panel);
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DiffTool> getDiffTools() {
     List<DiffTool> result = new ArrayList<DiffTool>();
@@ -103,7 +103,7 @@ public class DiffManagerImpl extends DiffManagerEx {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<MergeTool> getMergeTools() {
     List<MergeTool> result = new ArrayList<MergeTool>();
@@ -115,7 +115,7 @@ public class DiffManagerImpl extends DiffManagerEx {
 
   @Override
   @RequiredDispatchThread
-  public void showMerge(@Nullable Project project, @NotNull MergeRequest request) {
+  public void showMerge(@Nullable Project project, @Nonnull MergeRequest request) {
     if (ExternalMergeTool.isDefault()) {
       ExternalMergeTool.show(project, request);
       return;
@@ -126,7 +126,7 @@ public class DiffManagerImpl extends DiffManagerEx {
 
   @Override
   @RequiredDispatchThread
-  public void showMergeBuiltin(@Nullable Project project, @NotNull MergeRequest request) {
+  public void showMergeBuiltin(@javax.annotation.Nullable Project project, @Nonnull MergeRequest request) {
     new MergeWindow(project, request).show();
   }
 }

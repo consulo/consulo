@@ -22,8 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -46,10 +45,10 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     myShowDoNotAskOption = showDoNotAskOption;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ChangesTreeList getFileList();
 
-  @Nullable
+  @javax.annotation.Nullable
   private JLabel createPromptLabel() {
     if (myPrompt != null) {
       final JLabel label = new JLabel(myPrompt);
@@ -85,7 +84,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     return getFileList();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createToolbar(), BorderLayout.NORTH);
@@ -105,7 +104,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     return toolbar.getComponent();
   }
 
-  @NotNull
+  @Nonnull
   protected DefaultActionGroup createToolbarActions() {
     DefaultActionGroup group = new DefaultActionGroup();
     final AnAction[] actions = getFileList().getTreeActions();

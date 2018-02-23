@@ -43,8 +43,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -357,7 +357,7 @@ public class ScopeEditorPanel {
   }
 
   @Nullable
-  static PackageSet processComplementaryScope(@NotNull PackageSet current, PackageSet added, boolean checkComplementSet, boolean[] append) {
+  static PackageSet processComplementaryScope(@Nonnull PackageSet current, PackageSet added, boolean checkComplementSet, boolean[] append) {
     final String text = added.getText();
     if (current instanceof ComplementPackageSet &&
         Comparing.strEqual(((ComplementPackageSet)current).getComplementarySet().getText(), text)) {
@@ -692,7 +692,7 @@ public class ScopeEditorPanel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected DefaultActionGroup createPopupActionGroup(final JComponent button) {
       final DefaultActionGroup group = new DefaultActionGroup();
       for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
@@ -709,7 +709,7 @@ public class ScopeEditorPanel {
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       final PatternDialectProvider provider = PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE);
       e.getPresentation().setText(provider.getDisplayName());

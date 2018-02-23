@@ -18,13 +18,13 @@ package com.intellij.find;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author ven
  */
 public class FindProgressIndicator extends BackgroundableProcessIndicator {
-  public FindProgressIndicator(@NotNull Project project, String scopeString) {
+  public FindProgressIndicator(@Nonnull Project project, String scopeString) {
     super(project,
           FindBundle.message("find.progress.searching.message", scopeString),
           new SearchInBackgroundOption(),

@@ -19,8 +19,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author dmitrylomov
@@ -32,11 +32,11 @@ public class ProjectCoreUtil {
   @SuppressWarnings("unused")
   public static final String DIRECTORY_BASED_PROJECT_DIR = Project.DIRECTORY_STORE_FOLDER;
 
-  public static boolean isProjectOrWorkspaceFile(@NotNull VirtualFile file) {
+  public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file) {
     return isProjectOrWorkspaceFile(file, file.getFileType());
   }
 
-  public static boolean isProjectOrWorkspaceFile(@NotNull VirtualFile file, @Nullable FileType fileType) {
+  public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file, @Nullable FileType fileType) {
     VirtualFile parent = file.isDirectory() ? file : file.getParent();
     while (parent != null) {
       if (Comparing.equal(parent.getNameSequence(), Project.DIRECTORY_STORE_FOLDER, SystemInfoRt.isFileSystemCaseSensitive)) return true;

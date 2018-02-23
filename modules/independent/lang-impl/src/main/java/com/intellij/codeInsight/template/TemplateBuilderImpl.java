@@ -33,7 +33,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   private final PsiFile myFile;
   private static final Logger LOG = Logger.getInstance("#" + TemplateBuilderImpl.class.getName());
 
-  public TemplateBuilderImpl(@NotNull PsiElement element) {
+  public TemplateBuilderImpl(@Nonnull PsiElement element) {
     myFile = InjectedLanguageManager.getInstance(element.getProject()).getTopLevelFile(element);
     myDocument = myFile.getViewProvider().getDocument();
     myContainerElement = wrapElement(element);
@@ -123,13 +123,13 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   @Override
-  public void replaceElement(@NotNull PsiElement element, Expression expression) {
+  public void replaceElement(@Nonnull PsiElement element, Expression expression) {
     final RangeMarker key = wrapElement(element);
     replaceElement(key, expression);
   }
 
   @Override
-  public void replaceElement(@NotNull PsiElement element, TextRange rangeWithinElement, Expression expression) {
+  public void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, Expression expression) {
     final RangeMarker key = myDocument.createRangeMarker(rangeWithinElement.shiftRight(element.getTextRange().getStartOffset()));
     replaceElement(key, expression);
   }
@@ -263,12 +263,12 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   @Override
-  public void replaceElement(@NotNull PsiElement element, String replacementText) {
+  public void replaceElement(@Nonnull PsiElement element, String replacementText) {
     replaceElement(element, new ConstantNode(replacementText));
   }
 
   @Override
-  public void replaceElement(@NotNull PsiElement element, TextRange rangeWithinElement, String replacementText) {
+  public void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, String replacementText) {
     final RangeMarker key = myDocument.createRangeMarker(rangeWithinElement.shiftRight(element.getTextRange().getStartOffset()));
     ConstantNode value = new ConstantNode(replacementText);
     replaceElement(key, value);
@@ -287,7 +287,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   @Override
-  public void run(@NotNull final Editor editor, final boolean inline) {
+  public void run(@Nonnull final Editor editor, final boolean inline) {
     final Template template = inline ? buildInlineTemplate() : buildTemplate();
 
     editor.getDocument().replaceString(myContainerElement.getStartOffset(), myContainerElement.getEndOffset(), "");

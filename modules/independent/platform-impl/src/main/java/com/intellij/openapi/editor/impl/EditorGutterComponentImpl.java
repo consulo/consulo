@@ -68,8 +68,8 @@ import gnu.trove.TIntFunction;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -135,7 +135,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private ArrayList<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
   private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
   private String myLastGutterToolTip;
-  @NotNull
+  @Nonnull
   private TIntFunction myLineNumberConvertor = value -> value;
   @Nullable
   private TIntFunction myAdditionalLineNumberConvertor;
@@ -151,7 +151,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private int myLastNonDumbModeIconAreaWidth;
   boolean myDnDInProgress;
 
-  EditorGutterComponentImpl(@NotNull EditorImpl editor) {
+  EditorGutterComponentImpl(@Nonnull EditorImpl editor) {
     myEditor = editor;
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
       installDnD();
@@ -518,7 +518,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return getFontMetrics(getFontForLineNumbers()).stringWidth(Integer.toString(maxLineNumber + 1));
   }
 
-  private void doPaintLineNumbers(Graphics2D g, int startVisualLine, int endVisualLine, int offset, @NotNull TIntFunction convertor) {
+  private void doPaintLineNumbers(Graphics2D g, int startVisualLine, int endVisualLine, int offset, @Nonnull TIntFunction convertor) {
     int lastLine = myEditor.logicalToVisualPosition(new LogicalPosition(endLineNumber(), 0)).line;
     endVisualLine = Math.min(endVisualLine, lastLine);
     if (startVisualLine > endVisualLine) {
@@ -564,7 +564,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (myEditor.isDisposed()) return null;
 
     if (EditorGutter.KEY == dataId) {
@@ -578,10 +578,10 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @FunctionalInterface
   private interface RangeHighlighterProcessor {
-    void process(@NotNull RangeHighlighter highlighter);
+    void process(@Nonnull RangeHighlighter highlighter);
   }
 
-  private void processRangeHighlighters(int startOffset, int endOffset, @NotNull RangeHighlighterProcessor processor) {
+  private void processRangeHighlighters(int startOffset, int endOffset, @Nonnull RangeHighlighterProcessor processor) {
     Document document = myEditor.getDocument();
     // we limit highlighters to process to between line starting at startOffset and line ending at endOffset
     MarkupIterator<RangeHighlighterEx> docHighlighters = myEditor.getFilteredDocumentMarkupModel().overlappingIterator(startOffset, endOffset);
@@ -644,7 +644,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private static boolean isValidLine(@NotNull Document document, int line) {
+  private static boolean isValidLine(@Nonnull Document document, int line) {
     if (line < 0) return false;
     int lineCount = document.getLineCount();
     return lineCount == 0 ? line == 0 : line < lineCount;
@@ -828,7 +828,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return myLineToGutterRenderers.get(line);
   }
 
-  private void processGutterRenderers(@NotNull TIntObjectProcedure<List<GutterMark>> processor) {
+  private void processGutterRenderers(@Nonnull TIntObjectProcedure<List<GutterMark>> processor) {
     if (myLineToGutterRenderers == null) {
       buildGutterRenderersCache();
     }
@@ -955,7 +955,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @FunctionalInterface
   private interface LineGutterIconRendererProcessor {
-    void process(int x, int y, @NotNull GutterMark renderer);
+    void process(int x, int y, @Nonnull GutterMark renderer);
   }
 
   private Icon scaleIcon(Icon icon) {
@@ -968,7 +968,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return icon;
   }
 
-  private void processIconsRow(int line, @NotNull List<GutterMark> row, @NotNull LineGutterIconRendererProcessor processor) {
+  private void processIconsRow(int line, @Nonnull List<GutterMark> row, @Nonnull LineGutterIconRendererProcessor processor) {
     if (!areIconsShown()) return;
 
     int middleCount = 0;
@@ -1032,14 +1032,14 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   @Override
-  public void registerTextAnnotation(@NotNull TextAnnotationGutterProvider provider) {
+  public void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider) {
     myTextAnnotationGutters.add(provider);
     myTextAnnotationGutterSizes.add(0);
     updateSize();
   }
 
   @Override
-  public void registerTextAnnotation(@NotNull TextAnnotationGutterProvider provider, @NotNull EditorGutterAction action) {
+  public void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider, @Nonnull EditorGutterAction action) {
     myTextAnnotationGutters.add(provider);
     myProviderToListener.put(provider, action);
     myTextAnnotationGutterSizes.add(0);
@@ -1265,7 +1265,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private int getMaxLineNumber(@NotNull TIntFunction convertor) {
+  private int getMaxLineNumber(@Nonnull TIntFunction convertor) {
     for (int i = endLineNumber(); i >= 0; i--) {
       int number = convertor.execute(i);
       if (number >= 0) {
@@ -1471,7 +1471,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  void validateMousePointer(@NotNull MouseEvent e) {
+  void validateMousePointer(@Nonnull MouseEvent e) {
     if (IdeGlassPaneImpl.hasPreProcessedCursor(this)) return;
 
     FoldRegion foldingAtCursor = findFoldingAnchorAt(e.getX(), e.getY());
@@ -1599,7 +1599,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return project != null && DumbService.isDumb(project);
   }
 
-  private boolean checkDumbAware(@NotNull Object possiblyDumbAware) {
+  private boolean checkDumbAware(@Nonnull Object possiblyDumbAware) {
     return !isDumbMode() || DumbService.isDumbAware(possiblyDumbAware);
   }
 
@@ -1610,7 +1610,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private void performAction(@NotNull AnAction action, @NotNull InputEvent e, @NotNull String place, @NotNull DataContext context) {
+  private void performAction(@Nonnull AnAction action, @Nonnull InputEvent e, @Nonnull String place, @Nonnull DataContext context) {
     if (!checkDumbAware(action)) {
       notifyNotDumbAware();
       return;
@@ -1681,7 +1681,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       closeAllAnnotations();
     }
   }
@@ -1715,12 +1715,12 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   @Override
-  public void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor) {
+  public void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor) {
     setLineNumberConvertor(lineNumberConvertor, null);
   }
 
   @Override
-  public void setLineNumberConvertor(@NotNull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2) {
+  public void setLineNumberConvertor(@Nonnull TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2) {
     myLineNumberConvertor = lineNumberConvertor1;
     myAdditionalLineNumberConvertor = lineNumberConvertor2;
   }
@@ -1862,8 +1862,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return (GutterIconRenderer)getGutterRenderer(e.getPoint());
   }
 
-  @NotNull
-  private static LineMarkerRendererEx.Position getLineMarkerPosition(@NotNull LineMarkerRenderer renderer) {
+  @Nonnull
+  private static LineMarkerRendererEx.Position getLineMarkerPosition(@Nonnull LineMarkerRenderer renderer) {
     if (renderer instanceof LineMarkerRendererEx) {
       return ((LineMarkerRendererEx)renderer).getPosition();
     }

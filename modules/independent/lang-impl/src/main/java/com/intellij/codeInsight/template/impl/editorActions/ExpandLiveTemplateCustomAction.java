@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -46,7 +46,7 @@ public class ExpandLiveTemplateCustomAction extends EditorAction {
       }
 
       @Override
-      protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+      protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
         Project project = editor.getProject();
         return project != null &&
                ((TemplateManagerImpl)TemplateManager.getInstance(project)).prepareTemplate(editor, shortcutChar, null) != null;

@@ -21,8 +21,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ModuleRootModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -40,7 +40,7 @@ public class DefaultModulesProvider implements ModulesProvider {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Module[] getModules() {
     return ModuleManager.getInstance(myProject).getModules();
   }
@@ -51,7 +51,7 @@ public class DefaultModulesProvider implements ModulesProvider {
   }
 
   @Override
-  public ModuleRootModel getRootModel(@NotNull Module module) {
+  public ModuleRootModel getRootModel(@Nonnull Module module) {
     return ModuleRootManager.getInstance(module);
   }
 }

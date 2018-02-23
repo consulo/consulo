@@ -15,10 +15,10 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface NotNullProducer<T> extends Producer<T> {
   @Override
-  @NotNull
+  @Nonnull
   T produce();
 }

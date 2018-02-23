@@ -18,8 +18,8 @@ package com.intellij.lang.pratt;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -29,15 +29,15 @@ import java.util.Collection;
 public class PrattRegistry {
   private final MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>> myMap = new MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>>();
 
-  public void registerParser(@NotNull final IElementType type, final int priority, final TokenParser parser) {
+  public void registerParser(@Nonnull final IElementType type, final int priority, final TokenParser parser) {
     registerParser(type, priority, PathPattern.path(), parser);
   }
 
-  public void registerParser(@NotNull final IElementType type, final int priority, final PathPattern pattern, final TokenParser parser) {
+  public void registerParser(@Nonnull final IElementType type, final int priority, final PathPattern pattern, final TokenParser parser) {
     myMap.putValue(type, new Trinity<Integer, PathPattern, TokenParser>(priority, pattern, parser));
   }
 
-  @NotNull
+  @Nonnull
   public Collection<Trinity<Integer, PathPattern, TokenParser>> getParsers(@Nullable final IElementType type) {
     return myMap.get(type);
   }

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.history;
 
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsKey;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * Created by IntelliJ IDEA.
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class HistoryCacheWithRevisionKey extends HistoryCacheBaseKey {
   private final VcsRevisionNumber myRevisionNumber;
 
-  public HistoryCacheWithRevisionKey(FilePath filePath, VcsKey vcsKey, @NotNull VcsRevisionNumber revisionNumber) {
+  public HistoryCacheWithRevisionKey(FilePath filePath, VcsKey vcsKey, @Nonnull VcsRevisionNumber revisionNumber) {
     super(filePath, vcsKey);
     myRevisionNumber = revisionNumber;
   }

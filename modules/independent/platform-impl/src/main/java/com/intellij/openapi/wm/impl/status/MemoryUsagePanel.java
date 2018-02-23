@@ -28,8 +28,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,16 +102,16 @@ public class MemoryUsagePanel extends JButton implements CustomStatusBarWidget {
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) { }
+  public void install(@Nonnull StatusBar statusBar) { }
 
   @Override
   @Nullable
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return null;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return WIDGET_ID;
   }

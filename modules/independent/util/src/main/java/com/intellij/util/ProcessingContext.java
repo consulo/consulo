@@ -2,7 +2,7 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class ProcessingContext {
     mySharedContext = sharedContext;
   }
 
-  @NotNull
+  @Nonnull
   public SharedProcessingContext getSharedContext() {
     if (mySharedContext == null) {
       return mySharedContext = new SharedProcessingContext();
@@ -30,11 +30,11 @@ public class ProcessingContext {
   }
 
   @SuppressWarnings({"ConstantConditions"})
-  public Object get(@NotNull @NonNls final Object key) {
+  public Object get(@Nonnull @NonNls final Object key) {
     return myMap == null? null : myMap.get(key);
   }
 
-  public void put(@NotNull @NonNls final Object key, @NotNull final Object value) {
+  public void put(@Nonnull @NonNls final Object key, @Nonnull final Object value) {
     checkMapInitialized();
     myMap.put(key, value);
   }

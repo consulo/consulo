@@ -29,8 +29,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.keyFMap.KeyFMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -47,24 +47,24 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
   @Override
   @Nullable
-  public NewVirtualFile findChild(@NotNull @NonNls final String name) {
+  public NewVirtualFile findChild(@Nonnull @NonNls final String name) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<VirtualFile> getCachedChildren() {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterable<VirtualFile> iterInDbChildren() {
     return ContainerUtil.emptyIterable();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NewVirtualFileSystem getFileSystem() {
     final VirtualFileSystemEntry parent = getParent();
     assert parent != null;
@@ -73,13 +73,13 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
   @Override
   @Nullable
-  public NewVirtualFile refreshAndFindChild(@NotNull final String name) {
+  public NewVirtualFile refreshAndFindChild(@Nonnull final String name) {
     return null;
   }
 
   @Override
   @Nullable
-  public NewVirtualFile findChildIfCached(@NotNull final String name) {
+  public NewVirtualFile findChildIfCached(@Nonnull final String name) {
     return null;
   }
 
@@ -101,7 +101,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public InputStream getInputStream() throws IOException {
     final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
 
@@ -114,12 +114,12 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public byte[] contentsToByteArray() throws IOException {
     return contentsToByteArray(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public byte[] contentsToByteArray(boolean cacheContent) throws IOException {
     final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
@@ -128,7 +128,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(final Object requestor, final long modStamp, final long timeStamp) throws IOException {
     return VfsUtilCore.outputStreamAddingBOM(ourPersistence.getOutputStream(this, requestor, modStamp, timeStamp), this);
   }
@@ -149,11 +149,11 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   }
 
   @Override
-  protected void setUserMap(@NotNull KeyFMap map) {
+  protected void setUserMap(@Nonnull KeyFMap map) {
     mySegment.setUserMap(myId, map);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected KeyFMap getUserMap() {
     return mySegment.getUserMap(this, myId);

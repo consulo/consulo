@@ -16,13 +16,14 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FormatTextRange {
-  private @NotNull TextRange formattingRange;
+  private @Nonnull
+  TextRange formattingRange;
   private final boolean processHeadingWhitespace;
 
-  public FormatTextRange(@NotNull TextRange range, boolean processHeadingSpace) {
+  public FormatTextRange(@Nonnull TextRange range, boolean processHeadingSpace) {
     formattingRange = range;
     processHeadingWhitespace = processHeadingSpace;
   }
@@ -31,7 +32,7 @@ public class FormatTextRange {
     return processHeadingWhitespace;
   }
 
-  public boolean isWhitespaceReadOnly(@NotNull TextRange range) {
+  public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
     if (range.getStartOffset() >= formattingRange.getEndOffset()) return true;
 
     if (processHeadingWhitespace && range.getEndOffset() == formattingRange.getStartOffset()) {
@@ -45,16 +46,16 @@ public class FormatTextRange {
     return formattingRange.getStartOffset();
   }
 
-  public boolean isReadOnly(@NotNull TextRange range) {
+  public boolean isReadOnly(@Nonnull TextRange range) {
     return range.getStartOffset() > formattingRange.getEndOffset() || range.getEndOffset() < formattingRange.getStartOffset();
   }
 
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return formattingRange;
   }
 
-  public void setTextRange(@NotNull TextRange range) {
+  public void setTextRange(@Nonnull TextRange range) {
     formattingRange = range;
   }
 

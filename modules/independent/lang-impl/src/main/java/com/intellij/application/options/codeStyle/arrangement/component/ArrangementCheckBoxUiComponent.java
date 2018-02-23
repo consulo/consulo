@@ -21,7 +21,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,13 +36,17 @@ import java.awt.event.MouseEvent;
  */
 public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiComponent {
 
-  @NotNull private final JPanel myComponent = new JPanel(new GridBagLayout());
+  @Nonnull
+  private final JPanel myComponent = new JPanel(new GridBagLayout());
 
-  @NotNull private final ArrangementAtomMatchCondition myCondition;
-  @NotNull private final JBCheckBox                    myCheckBox;
-  @NotNull private final JLabel                        myTextLabel;
+  @Nonnull
+  private final ArrangementAtomMatchCondition myCondition;
+  @Nonnull
+  private final JBCheckBox                    myCheckBox;
+  @Nonnull
+  private final JLabel                        myTextLabel;
 
-  public ArrangementCheckBoxUiComponent(@NotNull ArrangementSettingsToken token) {
+  public ArrangementCheckBoxUiComponent(@Nonnull ArrangementSettingsToken token) {
     super(token);
     myComponent.setOpaque(false);
     myCondition = new ArrangementAtomMatchCondition(token);
@@ -68,14 +72,14 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
     myComponent.add(myTextLabel, new GridBag().anchor(GridBagConstraints.WEST).insets(0, 0, 0, ArrangementConstants.HORIZONTAL_GAP));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementSettingsToken getToken() {
     return myCondition.getType();
   }
 
   @Override
-  public void chooseToken(@NotNull ArrangementSettingsToken data) throws UnsupportedOperationException {
+  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws UnsupportedOperationException {
     if (!getToken().equals(data)) {
       throw new UnsupportedOperationException(String.format(
               "Can't choose '%s' data at the check box token with data '%s'", data, getToken()
@@ -83,7 +87,7 @@ public class ArrangementCheckBoxUiComponent extends AbstractArrangementUiCompone
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return myCondition;

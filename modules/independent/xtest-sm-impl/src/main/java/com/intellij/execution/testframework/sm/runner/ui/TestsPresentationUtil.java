@@ -32,8 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredTableCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +76,7 @@ public class TestsPresentationUtil {
                                               final int testsTotal,
                                               final int testsCount,
                                               final int failuresCount,
-                                              @Nullable final Set<String> allCategories,
+                                              @javax.annotation.Nullable final Set<String> allCategories,
                                               final boolean isFinished) {
     final StringBuilder sb = new StringBuilder();
     if (endTime == 0) {
@@ -134,7 +133,7 @@ public class TestsPresentationUtil {
     return sb.toString();
   }
 
-  public static boolean hasNonDefaultCategories(@Nullable Set<String> allCategories) {
+  public static boolean hasNonDefaultCategories(@javax.annotation.Nullable Set<String> allCategories) {
     if (allCategories == null) {
       return false;
     }
@@ -214,7 +213,7 @@ public class TestsPresentationUtil {
     renderer.append(testProxy.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  @NotNull
+  @Nonnull
   public static String getPresentableName(final SMTestProxy testProxy) {
     final SMTestProxy parent = testProxy.getParent();
     final String name = testProxy.getName();
@@ -257,8 +256,8 @@ public class TestsPresentationUtil {
     return presentationCandidate;
   }
 
-  @NotNull
-  public static String getPresentableNameTrimmedOnly(@NotNull SMTestProxy testProxy) {
+  @Nonnull
+  public static String getPresentableNameTrimmedOnly(@Nonnull SMTestProxy testProxy) {
     String name = testProxy.getName();
     if (name != null) {
       name = name.trim();
@@ -269,7 +268,7 @@ public class TestsPresentationUtil {
     return name;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Icon getIcon(final SMTestProxy testProxy,
                               final TestConsoleProperties consoleProperties) {
     final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
@@ -304,7 +303,7 @@ public class TestsPresentationUtil {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String getTestStatusPresentation(final SMTestProxy proxy) {
     return proxy.getMagnitudeInfo().getTitle();
   }
@@ -387,7 +386,7 @@ public class TestsPresentationUtil {
    * @param proxy Test or Suite
    * @return Duration presentation for given proxy
    */
-  @Nullable
+  @javax.annotation.Nullable
   public static String getDurationPresentation(final SMTestProxy proxy) {
     switch (proxy.getMagnitudeInfo()) {
       case COMPLETE_INDEX:
@@ -465,7 +464,7 @@ public class TestsPresentationUtil {
     }
   }
 
-  public static void printWithAnsiColoring(@NotNull final Printer printer, @NotNull String text, @NotNull final Key processOutputType) {
+  public static void printWithAnsiColoring(@Nonnull final Printer printer, @Nonnull String text, @Nonnull final Key processOutputType) {
     AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
     decoder.escapeText(text, ProcessOutputTypes.STDOUT, new AnsiEscapeDecoder.ColoredTextAcceptor() {
       @Override

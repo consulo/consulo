@@ -22,8 +22,8 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,11 +34,13 @@ import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementSectionRule implements Cloneable {
-  @Nullable private final String myStartComment;
-  @Nullable private final String myEndComment;
+  @javax.annotation.Nullable
+  private final String myStartComment;
+  @javax.annotation.Nullable
+  private final String myEndComment;
   private final List<StdArrangementMatchRule> myMatchRules;
 
-  private ArrangementSectionRule(@Nullable String start, @Nullable String end, @NotNull List<StdArrangementMatchRule> rules) {
+  private ArrangementSectionRule(@javax.annotation.Nullable String start, @javax.annotation.Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
     myStartComment = start;
     myEndComment = end;
     myMatchRules = rules;
@@ -48,15 +50,15 @@ public class ArrangementSectionRule implements Cloneable {
     return myMatchRules;
   }
 
-  public static ArrangementSectionRule create(@NotNull StdArrangementMatchRule... rules) {
+  public static ArrangementSectionRule create(@Nonnull StdArrangementMatchRule... rules) {
     return create(null, null, rules);
   }
 
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @NotNull StdArrangementMatchRule... rules) {
+  public static ArrangementSectionRule create(@javax.annotation.Nullable String start, @javax.annotation.Nullable String end, @Nonnull StdArrangementMatchRule... rules) {
     return create(start, end, ContainerUtil.newArrayList(rules));
   }
 
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @NotNull List<StdArrangementMatchRule> rules) {
+  public static ArrangementSectionRule create(@javax.annotation.Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
     final List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
     if (StringUtil.isNotEmpty(start)) {
       matchRules.add(createSectionRule(start, START_SECTION));
@@ -68,8 +70,8 @@ public class ArrangementSectionRule implements Cloneable {
     return new ArrangementSectionRule(start, end, matchRules);
   }
 
-  @Nullable
-  private static StdArrangementMatchRule createSectionRule(@Nullable String comment, @NotNull ArrangementSettingsToken token) {
+  @javax.annotation.Nullable
+  private static StdArrangementMatchRule createSectionRule(@javax.annotation.Nullable String comment, @Nonnull ArrangementSettingsToken token) {
     if (StringUtil.isEmpty(comment)) {
       return null;
     }
@@ -79,12 +81,12 @@ public class ArrangementSectionRule implements Cloneable {
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getStartComment() {
     return myStartComment;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getEndComment() {
     return myEndComment;
   }

@@ -17,18 +17,18 @@ package com.intellij.vcs.log.graph.api;
 
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;
 import com.intellij.vcs.log.graph.api.elements.GraphNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public interface LinearGraph {
   int nodesCount();
 
-  @NotNull
-  List<GraphEdge> getAdjacentEdges(int nodeIndex, @NotNull EdgeFilter filter);
+  @Nonnull
+  List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter);
 
-  @NotNull
+  @Nonnull
   GraphNode getGraphNode(int nodeIndex);
 
   int getNodeId(int nodeIndex);

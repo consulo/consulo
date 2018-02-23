@@ -27,7 +27,7 @@ import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.util.ui.BuildInLookAndFeel;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import sun.awt.AppContext;
 
 import javax.swing.*;
@@ -271,7 +271,7 @@ public class DarculaLaf extends BasicLookAndFeel implements BuildInLookAndFeel {
     catch (IOException e) {log(e);}
   }
 
-  protected Object parseValue(String key, @NotNull String value) {
+  protected Object parseValue(String key, @Nonnull String value) {
     if (key.endsWith("Insets")) {
       final List<String> numbers = StringUtil.split(value, ",");
       return new InsetsUIResource(Integer.parseInt(numbers.get(0)),

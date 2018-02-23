@@ -18,7 +18,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiErrorElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -26,5 +26,5 @@ import org.jetbrains.annotations.NotNull;
 public abstract class HighlightErrorFilter {
   public static final ExtensionPointName<HighlightErrorFilter> EP_NAME = ExtensionPointName.create("com.intellij.highlightErrorFilter");
 
-  public abstract boolean shouldHighlightErrorElement(@NotNull final PsiErrorElement element);
+  public abstract boolean shouldHighlightErrorElement(@Nonnull final PsiErrorElement element);
 }

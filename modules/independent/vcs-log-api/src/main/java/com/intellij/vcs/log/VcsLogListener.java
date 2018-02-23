@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Listens to changes in the log, both in Permanent and Visible parts.
@@ -30,5 +30,5 @@ public interface VcsLogListener {
    * @param dataPack        new VcsLogDataPack which was just applied to the UI.
    * @param refreshHappened true if a refresh initiated this log change, i.e. PermanentGraph changed.
    */
-  void onChange(@NotNull VcsLogDataPack dataPack, boolean refreshHappened);
+  void onChange(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened);
 }

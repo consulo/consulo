@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.registry.Registry;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

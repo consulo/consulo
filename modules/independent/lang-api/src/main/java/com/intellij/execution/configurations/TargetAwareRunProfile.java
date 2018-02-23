@@ -16,12 +16,12 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.execution.ExecutionTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface TargetAwareRunProfile extends RunProfile {
   /**
    * Checks if this configuration supports running on the provided target (see {@link ExecutionTarget} for details).
    * @param target target provided by {@link com.intellij.execution.ExecutionTargetProvider}
    */
-  boolean canRunOn(@NotNull ExecutionTarget target);
+  boolean canRunOn(@Nonnull ExecutionTarget target);
 }

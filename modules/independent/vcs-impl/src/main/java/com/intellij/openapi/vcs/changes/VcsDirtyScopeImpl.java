@@ -39,8 +39,7 @@ import com.intellij.vcsUtil.VcsUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -51,12 +50,12 @@ import java.util.*;
 public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
   private static final TObjectHashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY = new TObjectHashingStrategy<FilePath>() {
     @Override
-    public int computeHashCode(@NotNull FilePath path) {
+    public int computeHashCode(@Nonnull FilePath path) {
       return Objects.hash(path.getPath(), path.isDirectory(), path.isNonLocal());
     }
 
     @Override
-    public boolean equals(@NotNull FilePath path1, @NotNull FilePath path2) {
+    public boolean equals(@Nonnull FilePath path1, @Nonnull FilePath path2) {
       return path1.isDirectory() == path2.isDirectory() &&
              path1.isNonLocal() == path2.isNonLocal() &&
              path1.getPath().equals(path2.getPath());
@@ -94,7 +93,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
         return ContainerUtil.concatIterators(iteratorList);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Iterator<FilePath> getDirtyDirectoriesIterator(final VirtualFile root) {
         final THashSet<FilePath> filePaths = myDirtyDirectoriesRecursively.get(root);
@@ -217,7 +216,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  public void addDirtyData(@NotNull Collection<FilePath> dirs, @NotNull Collection<FilePath> files) {
+  public void addDirtyData(@Nonnull Collection<FilePath> dirs, @Nonnull Collection<FilePath> files) {
     final HashSet<FilePath> newFiles = new HashSet<>(files);
     newFiles.removeAll(dirs); // if the same dir is added recursively and not recursively, prefer recursive mark
 
@@ -292,7 +291,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  @NotNull
+  @Nonnull
   private THashSet<FilePath> newFilePathsSet() {
     return new THashSet<>(CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY);
   }
@@ -469,7 +468,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static VirtualFile obtainVirtualFile(FilePath file) {
     VirtualFile vFile = file.getVirtualFile();
     return vFile == null ? VfsUtil.findFileByIoFile(file.getIOFile(), false) : vFile;

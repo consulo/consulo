@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * @author gregsh
@@ -33,7 +33,7 @@ public class MockUpdateParameterInfoContext implements UpdateParameterInfoContex
   private Object myHighlightedParameter;
   private int myCurrentParameter;
 
-  public MockUpdateParameterInfoContext(@NotNull Editor editor, @NotNull PsiFile file) {
+  public MockUpdateParameterInfoContext(@Nonnull Editor editor, @Nonnull PsiFile file) {
     myEditor = editor;
     myFile = file;
   }
@@ -82,7 +82,7 @@ public class MockUpdateParameterInfoContext implements UpdateParameterInfoContex
     return myEditor.getCaretModel().getOffset();
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return myEditor;
   }

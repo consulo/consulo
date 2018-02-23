@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.richcopy.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -29,8 +29,10 @@ import java.io.IOException;
 public class SyntaxInfo {
   private final int myOutputInfoCount;
   private final byte[] myOutputInfosSerialized;
-  @NotNull private final ColorRegistry    myColorRegistry;
-  @NotNull private final FontNameRegistry myFontNameRegistry;
+  @Nonnull
+  private final ColorRegistry    myColorRegistry;
+  @Nonnull
+  private final FontNameRegistry myFontNameRegistry;
 
   private final int myDefaultForeground;
   private final int myDefaultBackground;
@@ -41,8 +43,8 @@ public class SyntaxInfo {
                      int defaultForeground,
                      int defaultBackground,
                      float fontSize,
-                     @NotNull FontNameRegistry fontNameRegistry,
-                     @NotNull ColorRegistry colorRegistry)
+                     @Nonnull FontNameRegistry fontNameRegistry,
+                     @Nonnull ColorRegistry colorRegistry)
   {
     myOutputInfoCount = outputInfoCount;
     myOutputInfosSerialized = outputInfosSerialized;
@@ -53,12 +55,12 @@ public class SyntaxInfo {
     myColorRegistry = colorRegistry;
   }
 
-  @NotNull
+  @Nonnull
   public ColorRegistry getColorRegistry() {
     return myColorRegistry;
   }
 
-  @NotNull
+  @Nonnull
   public FontNameRegistry getFontNameRegistry() {
     return myFontNameRegistry;
   }

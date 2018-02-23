@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -40,9 +40,9 @@ public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTyp
     assert LibraryPathType.values().length == MAPPINGS.size();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public OrderRootType map(@NotNull LibraryPathType type) {
+  public OrderRootType map(@Nonnull LibraryPathType type) {
     return MAPPINGS.get(type);
   }
 }

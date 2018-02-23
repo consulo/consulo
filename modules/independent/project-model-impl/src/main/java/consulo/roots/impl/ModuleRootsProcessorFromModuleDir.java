@@ -23,7 +23,7 @@ import com.intellij.util.ArrayUtil;
 import consulo.roots.ContentFolderTypeProvider;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 @Deprecated
 public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProcessor {
   @Override
-  public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull final VirtualFile virtualFile) {
+  public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile) {
     return !roots.forEachKey(new TObjectProcedure<VirtualFile>() {
       @Override
       public boolean execute(VirtualFile object) {
@@ -41,9 +41,9 @@ public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProce
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
       VirtualFile moduleDir = moduleRootModel.getModule().getModuleDir();
       if (moduleDir == null) {
@@ -54,9 +54,9 @@ public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProce
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     if (predicate.apply(ProductionContentFolderTypeProvider.getInstance())) {
       return new String[]{moduleRootModel.getModule().getModuleDirUrl()};
     }

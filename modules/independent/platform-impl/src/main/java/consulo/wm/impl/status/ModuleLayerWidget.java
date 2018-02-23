@@ -46,8 +46,8 @@ import com.intellij.util.ListWithSelection;
 import com.intellij.util.ui.UIUtil;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ModuleRootLayerListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,17 +59,17 @@ import java.util.Map;
  * @since 30.07.14
  */
 public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatusBarWidget {
-  @NotNull
+  @Nonnull
   private final TextPanel myComponent;
 
   private boolean myActionEnabled;
 
-  public ModuleLayerWidget(@NotNull Project project) {
+  public ModuleLayerWidget(@Nonnull Project project) {
     super(project);
 
     myComponent = new TextPanel() {
       @Override
-      protected void paintComponent(@NotNull final Graphics g) {
+      protected void paintComponent(@Nonnull final Graphics g) {
         super.paintComponent(g);
         if (myActionEnabled && getText() != null) {
           final Rectangle r = getBounds();
@@ -92,26 +92,26 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
 
     myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter() {
       @Override
-      public void layerRemove(@NotNull Module module, @NotNull ModuleRootLayer removed) {
+      public void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
         update();
       }
 
       @Override
-      public void layerAdded(@NotNull Module module, @NotNull ModuleRootLayer added) {
+      public void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer added) {
         update();
       }
 
       @Override
-      public void currentLayerChanged(@NotNull Module module,
-                                      @NotNull String oldName,
-                                      @NotNull ModuleRootLayer oldLayer,
-                                      @NotNull String newName,
-                                      @NotNull ModuleRootLayer newLayer) {
+      public void currentLayerChanged(@Nonnull Module module,
+                                      @Nonnull String oldName,
+                                      @Nonnull ModuleRootLayer oldLayer,
+                                      @Nonnull String newName,
+                                      @Nonnull ModuleRootLayer newLayer) {
         update();
       }
     });
@@ -165,7 +165,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
     Disposer.register(this, popup); // destroy popup on unexpected project close
   }
 
-  @NotNull
+  @Nonnull
   private DataContext getContext() {
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
@@ -243,7 +243,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return;
     }
@@ -251,11 +251,11 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
   }
 
   @Override
-  public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+  public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     update();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String ID() {
     return "ModuleLayerWidget";
@@ -263,7 +263,7 @@ public class ModuleLayerWidget extends EditorBasedWidget implements CustomStatus
 
   @Nullable
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType platformType) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType platformType) {
     return null;
   }
 

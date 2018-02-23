@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
@@ -100,7 +100,7 @@ public abstract class JobScheduler {
     return ServiceManager.getService(JobScheduler.class);
   }
 
-  @NotNull
+  @Nonnull
   public static ScheduledExecutorService getScheduler() {
     return ourScheduledExecutorService;
   }

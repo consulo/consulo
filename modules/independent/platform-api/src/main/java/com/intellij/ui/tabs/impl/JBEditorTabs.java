@@ -25,8 +25,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.tabs.impl.singleRow.CompressibleSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ import java.awt.*;
 public class JBEditorTabs extends JBTabsImpl {
   public static final String TABS_ALPHABETICAL_KEY = "tabs.alphabetical";
 
-  public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @NotNull Disposable parent) {
+  public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nonnull Disposable parent) {
     super(project, actionManager, focusManager, parent, true);
   }
 

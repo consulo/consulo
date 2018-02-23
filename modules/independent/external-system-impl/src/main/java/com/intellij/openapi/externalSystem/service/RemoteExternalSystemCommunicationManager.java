@@ -54,8 +54,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
@@ -77,12 +77,15 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
   private final AtomicReference<RemoteExternalSystemProgressNotificationManager> myExportedNotificationManager
     = new AtomicReference<RemoteExternalSystemProgressNotificationManager>();
 
-  @NotNull private final ThreadLocal<ProjectSystemId> myTargetExternalSystemId = new ThreadLocal<ProjectSystemId>();
+  @Nonnull
+  private final ThreadLocal<ProjectSystemId> myTargetExternalSystemId = new ThreadLocal<ProjectSystemId>();
 
-  @NotNull private final ExternalSystemProgressNotificationManagerImpl                    myProgressManager;
-  @NotNull private final RemoteProcessSupport<Object, RemoteExternalSystemFacade, String> mySupport;
+  @Nonnull
+  private final ExternalSystemProgressNotificationManagerImpl                    myProgressManager;
+  @Nonnull
+  private final RemoteProcessSupport<Object, RemoteExternalSystemFacade, String> mySupport;
 
-  public RemoteExternalSystemCommunicationManager(@NotNull ExternalSystemProgressNotificationManager notificationManager) {
+  public RemoteExternalSystemCommunicationManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager) {
     myProgressManager = (ExternalSystemProgressNotificationManagerImpl)notificationManager;
     mySupport = new RemoteProcessSupport<Object, RemoteExternalSystemFacade, String>(RemoteExternalSystemFacade.class) {
       @Override
@@ -163,13 +166,13 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
       }
 
       @Override
-      @NotNull
-      public ExecutionResult execute(@NotNull Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+      @Nonnull
+      public ExecutionResult execute(@Nonnull Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
         ProcessHandler processHandler = startProcess();
         return new DefaultExecutionResult(null, processHandler, AnAction.EMPTY_ARRAY);
       }
 
-      @NotNull
+      @Nonnull
       protected OSProcessHandler startProcess() throws ExecutionException {
         SimpleJavaParameters params = createJavaParameters();
         Sdk sdk = params.getJdk();
@@ -192,7 +195,7 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
 
   @Nullable
   @Override
-  public RemoteExternalSystemFacade acquire(@NotNull String id, @NotNull ProjectSystemId externalSystemId)
+  public RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId)
     throws Exception
   {
     myTargetExternalSystemId.set(externalSystemId);
@@ -227,12 +230,12 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
   }
 
   @Override
-  public void release(@NotNull String id, @NotNull ProjectSystemId externalSystemId) throws Exception {
+  public void release(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
     mySupport.release(this, id);
   }
 
   @Override
-  public boolean isAlive(@NotNull RemoteExternalSystemFacade facade) {
+  public boolean isAlive(@Nonnull RemoteExternalSystemFacade facade) {
     RemoteExternalSystemFacade toCheck = facade;
     if (facade instanceof ExternalSystemFacadeWrapper) {
       toCheck = ((ExternalSystemFacadeWrapper)facade).getDelegate();

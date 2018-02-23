@@ -57,8 +57,8 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -162,7 +162,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
       }.registerCustomShortcutSet(CustomShortcutSet.fromString("SPACE"), myTable);
       new ClickListener() {
         @Override
-        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           if (e.getButton() == MouseEvent.BUTTON3) return false;
           if (myTable.getRowCount() > 0) {
             final int row = myTable.rowAtPoint(e.getPoint());
@@ -498,7 +498,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return myModel.getProject();
     }
@@ -556,13 +556,13 @@ public class DirDiffPanel implements Disposable, DataProvider {
   }
 
   private class MyDiffRequestProcessor extends CacheDiffRequestProcessor<ElementWrapper> {
-    public MyDiffRequestProcessor(@Nullable Project project) {
+    public MyDiffRequestProcessor(@javax.annotation.Nullable Project project) {
       super(project, DiffPlaces.DIR_DIFF);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    protected String getRequestName(@NotNull ElementWrapper element) {
+    protected String getRequestName(@Nonnull ElementWrapper element) {
       return null;
     }
 
@@ -572,9 +572,9 @@ public class DirDiffPanel implements Disposable, DataProvider {
       return element != null ? new ElementWrapper(element) : null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected DiffRequest loadRequest(@NotNull ElementWrapper element, @NotNull ProgressIndicator indicator)
+    protected DiffRequest loadRequest(@Nonnull ElementWrapper element, @Nonnull ProgressIndicator indicator)
             throws ProcessCanceledException, DiffRequestProducerException {
       final Project project = myModel.getProject();
       DiffElement sourceElement = element.sourceElement;
@@ -624,7 +624,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
     @Nullable public final DiffElement sourceElement;
     @Nullable public final DiffElement targetElement;
 
-    public ElementWrapper(@NotNull DirDiffElementImpl element) {
+    public ElementWrapper(@Nonnull DirDiffElementImpl element) {
       sourceElement = element.getSource();
       targetElement = element.getTarget();
     }

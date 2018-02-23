@@ -25,8 +25,8 @@ import com.intellij.ui.LoadingNode;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -43,10 +43,12 @@ public class NotificationMessageElement extends NavigatableMessageElement {
   public static final String MSG_STYLE = "messageStyle";
   public static final String LINK_STYLE = "linkStyle";
 
-  @NotNull private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
-  @NotNull private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
+  @Nonnull
+  private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
+  @Nonnull
+  private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
 
-  public NotificationMessageElement(@NotNull final ErrorTreeElementKind kind,
+  public NotificationMessageElement(@Nonnull final ErrorTreeElementKind kind,
                                     @Nullable GroupingElement parent,
                                     String[] message,
                                     Navigatable navigatable,
@@ -67,8 +69,8 @@ public class NotificationMessageElement extends NavigatableMessageElement {
         renderer.append(NewErrorTreeRenderer.calcPrefix(NotificationMessageElement.this));
       }
 
-      @NotNull
-      private Icon getIcon(@NotNull ErrorTreeElementKind kind) {
+      @Nonnull
+      private Icon getIcon(@Nonnull ErrorTreeElementKind kind) {
         Icon icon = AllIcons.General.Mdot_empty;
         switch (kind) {
           case INFO:
@@ -94,7 +96,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     myRightTreeCellRenderer = new MyCustomizeColoredTreeCellRendererReplacement();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public CustomizeColoredTreeCellRenderer getRightSelfRenderer() {
     return myRightTreeCellRenderer;
@@ -106,7 +108,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     return myLeftTreeCellRenderer;
   }
 
-  protected JEditorPane installJep(@NotNull JEditorPane myEditorPane) {
+  protected JEditorPane installJep(@Nonnull JEditorPane myEditorPane) {
     String message = StringUtil.join(this.getText(), "<br>");
     myEditorPane.setEditable(false);
     myEditorPane.setOpaque(false);
@@ -121,7 +123,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     return myEditorPane;
   }
 
-  protected void updateStyle(@NotNull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
     final Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
     if (value instanceof LoadingNode) {
@@ -149,7 +151,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
   }
 
   private class MyCustomizeColoredTreeCellRendererReplacement extends CustomizeColoredTreeCellRendererReplacement {
-    @NotNull
+    @Nonnull
     private final JEditorPane myEditorPane;
 
     private MyCustomizeColoredTreeCellRendererReplacement() {

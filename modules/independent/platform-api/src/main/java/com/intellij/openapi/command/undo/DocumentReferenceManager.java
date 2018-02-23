@@ -18,16 +18,16 @@ package com.intellij.openapi.command.undo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class DocumentReferenceManager {
   public static DocumentReferenceManager getInstance() {
     return ApplicationManager.getApplication().getComponent(DocumentReferenceManager.class);
   }
 
-  @NotNull
-  public abstract DocumentReference create(@NotNull Document document);
+  @Nonnull
+  public abstract DocumentReference create(@Nonnull Document document);
 
-  @NotNull
-  public abstract DocumentReference create(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract DocumentReference create(@Nonnull VirtualFile file);
 }

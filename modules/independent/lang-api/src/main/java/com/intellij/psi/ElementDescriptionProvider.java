@@ -16,8 +16,7 @@
 
 package com.intellij.psi;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
@@ -28,6 +27,6 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 public interface ElementDescriptionProvider {
   ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create("com.intellij.elementDescriptionProvider");
   
-  @Nullable
-  String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location);
+  @javax.annotation.Nullable
+  String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);
 }

@@ -30,8 +30,8 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.ui.StripeTabPanel;
 
@@ -53,11 +53,11 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   private StripeTabPanel myStripeTabPanel;
   private ProjectStructureConfigurable myStructureConfigurable;
 
-  public static boolean show(@NotNull Project project) {
+  public static boolean show(@Nonnull Project project) {
     return show(project, EmptyConsumer.<ProjectStructureConfigurable>getInstance());
   }
 
-  public static boolean show(@NotNull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
+  public static boolean show(@Nonnull Project project, final Consumer<ProjectStructureConfigurable> configurableConsumer) {
     final ProjectStructureConfigurable configurable = ProjectStructureConfigurable.getInstance(project);
     ProjectStructureDialog dialog =
             new ProjectStructureDialog(project, configurable, OptionsEditorDialog.DIMENSION_KEY, true, IdeModalityType.PROJECT, configurable);
@@ -72,7 +72,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     return dialog.showAndGet();
   }
 
-  public ProjectStructureDialog(@NotNull Project project,
+  public ProjectStructureDialog(@Nonnull Project project,
                                 Configurable configurable,
                                 @NonNls String dimensionKey,
                                 boolean showApplyButton,
@@ -118,7 +118,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     return OptionsEditorDialog.DIMENSION_KEY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSplitterKey() {
     return "ProjectStructureDialog.Splitter";
@@ -148,7 +148,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredDispatchThread
   public Couple<JComponent> createSplitterComponents(final JPanel rootPanel) {
@@ -158,7 +158,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     myStripeTabPanel.addSelectListener(new StripeTabPanel.SelectListener() {
       @RequiredDispatchThread
       @Override
-      public void selected(@NotNull StripeTabPanel.TabInfo tabInfo) {
+      public void selected(@Nonnull StripeTabPanel.TabInfo tabInfo) {
         Configurable configurable = tabInfo.getUserData(CONFIGURABLE_KEY);
         CardLayout right = (CardLayout)myRightPanel.getLayout();
 
@@ -189,7 +189,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
   }
 
   @RequiredDispatchThread
-  public void select(@NotNull Configurable configurable) {
+  public void select(@Nonnull Configurable configurable) {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {
       Configurable other = tab.getUserData(CONFIGURABLE_KEY);
@@ -200,7 +200,7 @@ public class ProjectStructureDialog extends WholeWestSingleConfigurableEditor {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Configurable getSelectedConfigurable() {
     List<StripeTabPanel.TabInfo> tabs = myStripeTabPanel.getTabs();
     for (StripeTabPanel.TabInfo tab : tabs) {

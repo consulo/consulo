@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.event.RetargetRangeMarkers;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UnfairTextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,7 +52,7 @@ class MarkerCache {
     myPointers = pointers;
   }
 
-  private UpdatedRanges getUpdatedMarkers(@NotNull FrozenDocument frozen, @NotNull List<DocumentEvent> events) {
+  private UpdatedRanges getUpdatedMarkers(@Nonnull FrozenDocument frozen, @Nonnull List<DocumentEvent> events) {
     int eventCount = events.size();
     assert eventCount > 0;
 
@@ -74,7 +74,7 @@ class MarkerCache {
     return answer;
   }
 
-  @NotNull
+  @Nonnull
   private static ManualRangeMarker[] createMarkers(List<SelfElementInfo> infos) {
     ManualRangeMarker[] markers = new ManualRangeMarker[infos.size()];
     int i = 0;
@@ -98,7 +98,7 @@ class MarkerCache {
     return start == info.getPsiStartOffset() && end == info.getPsiEndOffset() && greedy == info.isGreedy();
   }
 
-  private static UpdatedRanges applyEvents(@NotNull List<DocumentEvent> events, final UpdatedRanges struct) {
+  private static UpdatedRanges applyEvents(@Nonnull List<DocumentEvent> events, final UpdatedRanges struct) {
     FrozenDocument frozen = struct.myResultDocument;
     ManualRangeMarker[] resultMarkers = struct.myMarkers.clone();
     for (DocumentEvent event : events) {
@@ -134,7 +134,7 @@ class MarkerCache {
     return new UpdatedRanges(struct.myEventCount + events.size(), frozen, struct.mySortedInfos, resultMarkers);
   }
 
-  boolean updateMarkers(@NotNull FrozenDocument frozen, @NotNull List<DocumentEvent> events) {
+  boolean updateMarkers(@Nonnull FrozenDocument frozen, @Nonnull List<DocumentEvent> events) {
     UpdatedRanges updated = getUpdatedMarkers(frozen, events);
 
     boolean sorted = true;
@@ -151,7 +151,7 @@ class MarkerCache {
   }
 
   @Nullable
-  TextRange getUpdatedRange(@NotNull SelfElementInfo info, @NotNull FrozenDocument frozen, @NotNull List<DocumentEvent> events) {
+  TextRange getUpdatedRange(@Nonnull SelfElementInfo info, @Nonnull FrozenDocument frozen, @Nonnull List<DocumentEvent> events) {
     UpdatedRanges struct = getUpdatedMarkers(frozen, events);
     int i = Collections.binarySearch(struct.mySortedInfos, info, INFO_COMPARATOR);
     ManualRangeMarker updated = i >= 0 ? struct.myMarkers[i] : null;

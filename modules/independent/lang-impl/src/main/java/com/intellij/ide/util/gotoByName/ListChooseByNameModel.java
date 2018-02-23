@@ -9,9 +9,9 @@ import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
   private final List<T> myItems;
   private final String myNotInMessage;
 
-  public ListChooseByNameModel(@NotNull final Project project,
+  public ListChooseByNameModel(@Nonnull final Project project,
                                final String prompt,
                                final String notInMessage,
                                List<T> items) {
@@ -138,7 +138,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
     return ((ChooseByNameItem)element).getName();
   }
 
-  public boolean matches(@NotNull final String name, @NotNull final String pattern) {
+  public boolean matches(@Nonnull final String name, @Nonnull final String pattern) {
     final Pattern compiledPattern = getTaskPattern(pattern);
     if (compiledPattern == null) {
       return false;

@@ -20,7 +20,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Is intended to hold utility methods to use during {@link Document} processing.
@@ -37,7 +37,7 @@ public final class DocumentUtil {
    *                       {@code false} to force given document to be <b>not</b> in bulk mode when given task is executed
    * @param task           task to execute
    */
-  public static void executeInBulk(@NotNull Document document, final boolean executeInBulk, @NotNull Runnable task) {
+  public static void executeInBulk(@Nonnull Document document, final boolean executeInBulk, @Nonnull Runnable task) {
     if (!(document instanceof DocumentEx)) {
       task.run();
       return;
@@ -58,7 +58,7 @@ public final class DocumentUtil {
     }
   }
 
-  public static void writeInRunUndoTransparentAction(@NotNull final Runnable runnable) {
+  public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
     CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
       @Override
       public void run() {
@@ -67,13 +67,13 @@ public final class DocumentUtil {
     });
   }
 
-  public static int getFirstNonSpaceCharOffset(@NotNull Document document, int line) {
+  public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int line) {
     int startOffset = document.getLineStartOffset(line);
     int endOffset = document.getLineEndOffset(line);
     return getFirstNonSpaceCharOffset(document, startOffset, endOffset);
   }
 
-  public static int getFirstNonSpaceCharOffset(@NotNull Document document, int startOffset, int endOffset) {
+  public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int startOffset, int endOffset) {
     CharSequence text = document.getImmutableCharSequence();
     for (int i = startOffset; i < endOffset; i++) {
       char c = text.charAt(i);
@@ -84,11 +84,11 @@ public final class DocumentUtil {
     return startOffset;
   }
 
-  public static boolean isValidOffset(int offset, @NotNull Document document) {
+  public static boolean isValidOffset(int offset, @Nonnull Document document) {
     return offset >= 0 && offset <= document.getTextLength();
   }
 
-  public static int getLineStartOffset(int offset, @NotNull Document document) {
+  public static int getLineStartOffset(int offset, @Nonnull Document document) {
     if (offset < 0 || offset > document.getTextLength()) {
       return offset;
     }
@@ -96,7 +96,7 @@ public final class DocumentUtil {
     return document.getLineStartOffset(lineNumber);
   }
 
-  public static int getLineEndOffset(int offset, @NotNull Document document) {
+  public static int getLineEndOffset(int offset, @Nonnull Document document) {
     if (offset < 0 || offset > document.getTextLength()) {
       return offset;
     }
@@ -104,38 +104,38 @@ public final class DocumentUtil {
     return document.getLineEndOffset(lineNumber);
   }
 
-  @NotNull
-  public static TextRange getLineTextRange(@NotNull Document document, int line) {
+  @Nonnull
+  public static TextRange getLineTextRange(@Nonnull Document document, int line) {
     return TextRange.create(document.getLineStartOffset(line), document.getLineEndOffset(line));
   }
 
-  public static boolean isAtLineStart(int offset, @NotNull Document document) {
+  public static boolean isAtLineStart(int offset, @Nonnull Document document) {
     return offset >= 0 && offset <= document.getTextLength() && offset == document.getLineStartOffset(document.getLineNumber(offset));
   }
 
-  public static boolean isAtLineEnd(int offset, @NotNull Document document) {
+  public static boolean isAtLineEnd(int offset, @Nonnull Document document) {
     return offset >= 0 && offset <= document.getTextLength() && offset == document.getLineEndOffset(document.getLineNumber(offset));
   }
 
-  public static int alignToCodePointBoundary(@NotNull Document document, int offset) {
+  public static int alignToCodePointBoundary(@Nonnull Document document, int offset) {
     return isInsideSurrogatePair(document, offset) ? offset - 1 : offset;
   }
 
-  public static boolean isSurrogatePair(@NotNull Document document, int offset) {
+  public static boolean isSurrogatePair(@Nonnull Document document, int offset) {
     CharSequence text = document.getImmutableCharSequence();
     if (offset < 0 || (offset + 1) >= text.length()) return false;
     return Character.isSurrogatePair(text.charAt(offset), text.charAt(offset + 1));
   }
 
-  public static boolean isInsideSurrogatePair(@NotNull Document document, int offset) {
+  public static boolean isInsideSurrogatePair(@Nonnull Document document, int offset) {
     return isSurrogatePair(document, offset - 1);
   }
 
-  public static int getPreviousCodePointOffset(@NotNull Document document, int offset) {
+  public static int getPreviousCodePointOffset(@Nonnull Document document, int offset) {
     return offset - (isSurrogatePair(document, offset - 2) ? 2 : 1);
   }
 
-  public static int getNextCodePointOffset(@NotNull Document document, int offset) {
+  public static int getNextCodePointOffset(@Nonnull Document document, int offset) {
     return offset + (isSurrogatePair(document, offset) ? 2 : 1);
   }
 }

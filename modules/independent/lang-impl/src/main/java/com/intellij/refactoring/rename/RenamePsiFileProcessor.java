@@ -22,7 +22,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiReference;
 import com.intellij.refactoring.RefactoringSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import java.util.Collections;
  */
 public class RenamePsiFileProcessor extends RenamePsiElementProcessor {
   @Override
-  public boolean canProcessElement(@NotNull PsiElement element) {
+  public boolean canProcessElement(@Nonnull PsiElement element) {
     return element instanceof PsiFileSystemItem;
   }
 
@@ -47,7 +47,7 @@ public class RenamePsiFileProcessor extends RenamePsiElementProcessor {
       : RefactoringSettings.getInstance().RENAME_SEARCH_FOR_REFERENCES_FOR_DIRECTORY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<PsiReference> findReferences(PsiElement element) {
     if (!getSearchForReferences(element)) {

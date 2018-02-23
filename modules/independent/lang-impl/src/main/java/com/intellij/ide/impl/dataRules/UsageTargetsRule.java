@@ -21,14 +21,14 @@ import com.intellij.openapi.util.Key;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
 import com.intellij.usages.UsageView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
  */
 public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<UsageTarget[]> getKey() {
     return UsageView.USAGE_TARGETS_KEY;
@@ -36,7 +36,7 @@ public class UsageTargetsRule implements GetDataRule<UsageTarget[]> {
 
   @Override
   @Nullable
-  public UsageTarget[] getData(@NotNull DataProvider dataProvider) {
+  public UsageTarget[] getData(@Nonnull DataProvider dataProvider) {
     return UsageTargetUtil.findUsageTargets(dataProvider);
   }
 }

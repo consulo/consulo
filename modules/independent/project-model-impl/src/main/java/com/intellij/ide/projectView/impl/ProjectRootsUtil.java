@@ -23,8 +23,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderScopes;
 
 /**
@@ -68,13 +68,13 @@ public class ProjectRootsUtil {
     return projectFileIndex.isInTestResource(directoryFile);
   }
 
-  public static boolean isSourceOrTestRoot(@NotNull VirtualFile virtualFile, final Project project) {
+  public static boolean isSourceOrTestRoot(@Nonnull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInSource(virtualFile);
   }
 
   @Nullable
-  public static ContentFolder getContentFolderIfIs(@NotNull VirtualFile virtualFile, final Project project) {
+  public static ContentFolder getContentFolderIfIs(@Nonnull VirtualFile virtualFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {
@@ -104,7 +104,7 @@ public class ProjectRootsUtil {
     return isModuleContentRoot(directory.getVirtualFile(), directory.getProject());
   }
 
-  public static boolean isModuleContentRoot(@NotNull final VirtualFile directoryFile, final Project project) {
+  public static boolean isModuleContentRoot(@Nonnull final VirtualFile directoryFile, final Project project) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final VirtualFile contentRootForFile = projectFileIndex.getContentRootForFile(directoryFile);
     return directoryFile.equals(contentRootForFile);
@@ -114,7 +114,7 @@ public class ProjectRootsUtil {
     return psiDirectory.getVirtualFile().equals(psiDirectory.getProject().getBaseDir());
   }
 
-  public static boolean isOutsideSourceRoot(@Nullable PsiFile psiFile) {
+  public static boolean isOutsideSourceRoot(@javax.annotation.Nullable PsiFile psiFile) {
     if (psiFile == null) return false;
     if (psiFile instanceof PsiCodeFragment) return false;
     final VirtualFile file = psiFile.getVirtualFile();

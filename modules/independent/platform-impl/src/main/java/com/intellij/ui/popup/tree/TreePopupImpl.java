@@ -30,7 +30,7 @@ import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.Range;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -55,12 +55,12 @@ public class TreePopupImpl extends WizardPopup implements TreePopup {
   private TreePath myPendingChildPath;
   private FilteringTreeBuilder myBuilder;
 
-  public TreePopupImpl(JBPopup parent, @NotNull TreePopupStep aStep, Object parentValue) {
+  public TreePopupImpl(JBPopup parent, @Nonnull TreePopupStep aStep, Object parentValue) {
     super(parent, aStep);
     setParentValue(parentValue);
   }
 
-  public TreePopupImpl(@NotNull TreePopupStep aStep) {
+  public TreePopupImpl(@Nonnull TreePopupStep aStep) {
     this(null, aStep, null);
   }
 

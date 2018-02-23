@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.ui.NonFocusableCheckBox;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class RearrangeBeforeCheckinHandler extends CheckinHandler implements Che
   private final Project myProject;
   private final CheckinProjectPanel myPanel;
 
-  public RearrangeBeforeCheckinHandler(@NotNull Project project, @NotNull CheckinProjectPanel panel) {
+  public RearrangeBeforeCheckinHandler(@Nonnull Project project, @Nonnull CheckinProjectPanel panel) {
     myProject = project;
     myPanel = panel;
   }

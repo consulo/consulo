@@ -18,62 +18,64 @@ package com.intellij.vcs.log.graph.impl.facade;
 import com.intellij.vcs.log.graph.actions.GraphAction;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Set;
 
 public interface LinearGraphController {
 
-  @NotNull
+  @Nonnull
   LinearGraph getCompiledGraph();
 
-  @NotNull
-  LinearGraphAnswer performLinearGraphAction(@NotNull LinearGraphAction action);
+  @Nonnull
+  LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action);
 
   interface LinearGraphAction extends GraphAction {
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     PrintElementWithGraphElement getAffectedElement();
   }
 
   // Integer = nodeId
   class LinearGraphAnswer {
-    @Nullable private final GraphChanges<Integer> myGraphChanges;
-    @Nullable private final Cursor myCursor;
-    @Nullable private final Set<Integer> mySelectedNodeIds;
+    @javax.annotation.Nullable
+    private final GraphChanges<Integer> myGraphChanges;
+    @javax.annotation.Nullable
+    private final Cursor myCursor;
+    @javax.annotation.Nullable
+    private final Set<Integer> mySelectedNodeIds;
 
-    public LinearGraphAnswer(@Nullable GraphChanges<Integer> changes, @Nullable Cursor cursor, @Nullable Set<Integer> selectedNodeIds) {
+    public LinearGraphAnswer(@javax.annotation.Nullable GraphChanges<Integer> changes, @javax.annotation.Nullable Cursor cursor, @javax.annotation.Nullable Set<Integer> selectedNodeIds) {
       myGraphChanges = changes;
       myCursor = cursor;
       mySelectedNodeIds = selectedNodeIds;
     }
 
-    public LinearGraphAnswer(@Nullable Cursor cursor, @Nullable Set<Integer> selectedNodeIds) {
+    public LinearGraphAnswer(@javax.annotation.Nullable Cursor cursor, @javax.annotation.Nullable Set<Integer> selectedNodeIds) {
       this(null, cursor, selectedNodeIds);
     }
 
-    public LinearGraphAnswer(@Nullable GraphChanges<Integer> changes) {
+    public LinearGraphAnswer(@javax.annotation.Nullable GraphChanges<Integer> changes) {
       this(changes, null, null);
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public GraphChanges<Integer> getGraphChanges() {
       return myGraphChanges;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Runnable getGraphUpdater() {
       return null;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Cursor getCursorToSet() {
       return myCursor;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Set<Integer> getSelectedNodeIds() {
       return mySelectedNodeIds;
     }

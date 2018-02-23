@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.PairConvertor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.List;
 public abstract class MultipleTraitsSpeedSearch<Comp extends JComponent> extends SpeedSearchBase<Comp> {
   protected final List<PairConvertor<Object, String, Boolean>> myOrderedConvertors;
 
-  public MultipleTraitsSpeedSearch(Comp component, @NotNull List<PairConvertor<Object, String, Boolean>> convertors) {
+  public MultipleTraitsSpeedSearch(Comp component, @Nonnull List<PairConvertor<Object, String, Boolean>> convertors) {
     super(component);
     myOrderedConvertors = convertors;
   }

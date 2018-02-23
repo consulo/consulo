@@ -1,6 +1,6 @@
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Filter which needs {@link VcsCommitMetadata} to work.
@@ -9,5 +9,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface VcsLogDetailsFilter extends VcsLogFilter {
 
-  boolean matches(@NotNull VcsCommitMetadata details);
+  boolean matches(@Nonnull VcsCommitMetadata details);
 }

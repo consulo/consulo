@@ -24,8 +24,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.TabbedPaneContentUI;
 import consulo.wm.impl.ToolWindowContentUI;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -42,7 +42,7 @@ public class PinToolwindowTabAction extends ToggleAction implements DumbAware {
   }
 
   @Nullable
-  private static Content getContextContent(@NotNull AnActionEvent event) {
+  private static Content getContextContent(@Nonnull AnActionEvent event) {
     final ToolWindow window = event.getData(PlatformDataKeys.TOOL_WINDOW);
     if (window != null) {
       final ContentManager contentManager = window.getContentManager();

@@ -21,8 +21,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -33,11 +33,11 @@ public class XDebuggerHistoryManager {
   public static final int MAX_RECENT_EXPRESSIONS = 10;
   private final Map<String, LinkedList<XExpression>> myRecentExpressions = new HashMap<String, LinkedList<XExpression>>();
 
-  public static XDebuggerHistoryManager getInstance(@NotNull Project project) {
+  public static XDebuggerHistoryManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, XDebuggerHistoryManager.class);
   }
 
-  public boolean addRecentExpression(@NotNull @NonNls String id, @Nullable XExpression expression) {
+  public boolean addRecentExpression(@Nonnull @NonNls String id, @Nullable XExpression expression) {
     if (expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression())) {
       return false;
     }

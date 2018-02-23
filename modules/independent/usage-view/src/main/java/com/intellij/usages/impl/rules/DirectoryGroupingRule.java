@@ -32,8 +32,7 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.usages.rules.UsageInFile;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -48,8 +47,8 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
   }
 
   @Override
-  @Nullable
-  public UsageGroup groupUsage(@NotNull Usage usage) {
+  @javax.annotation.Nullable
+  public UsageGroup groupUsage(@Nonnull Usage usage) {
     if (usage instanceof UsageInFile) {
       UsageInFile usageInFile = (UsageInFile)usage;
       VirtualFile file = usageInFile.getFile();
@@ -93,7 +92,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       String url = myDir.getPresentableUrl();
       return url != null ? url : "<invalid>";
@@ -180,7 +179,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return myPackage.getQualifiedName();
     }

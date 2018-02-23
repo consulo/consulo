@@ -3,8 +3,7 @@ package com.intellij.codeInspection;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -14,7 +13,7 @@ public class CommonProblemDescriptorImpl implements CommonProblemDescriptor {
   private final QuickFix[] myFixes;
   private final String myDescriptionTemplate;
 
-  public CommonProblemDescriptorImpl(final QuickFix[] fixes, @NotNull final String descriptionTemplate) {
+  public CommonProblemDescriptorImpl(final QuickFix[] fixes, @Nonnull final String descriptionTemplate) {
     if (fixes == null) {
       myFixes = null;
     }
@@ -29,13 +28,13 @@ public class CommonProblemDescriptorImpl implements CommonProblemDescriptor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescriptionTemplate() {
     return myDescriptionTemplate;
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public QuickFix[] getFixes() {
     return myFixes;
   }

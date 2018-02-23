@@ -17,8 +17,8 @@ package com.intellij.openapi.components;
 
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -30,9 +30,9 @@ public interface StateStorage {
   Topic<Listener> PROJECT_STORAGE_TOPIC = new Topic<Listener>("PROJECT_STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
 
   @Nullable
-  <T> T getState(@Nullable Object component, @NotNull String componentName, @NotNull Class<T> stateClass, @Nullable T mergeInto) throws StateStorageException;
+  <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass, @Nullable T mergeInto) throws StateStorageException;
 
-  boolean hasState(@Nullable Object component, @NotNull String componentName, final Class<?> aClass, final boolean reloadData);
+  boolean hasState(@Nullable Object component, @Nonnull String componentName, final Class<?> aClass, final boolean reloadData);
 
   @Nullable
   ExternalizationSession startExternalization();
@@ -40,10 +40,10 @@ public interface StateStorage {
   /**
    * Get changed component names
    */
-  void analyzeExternalChangesAndUpdateIfNeed(@NotNull Set<String> result);
+  void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result);
 
   interface ExternalizationSession {
-    void setState(@NotNull Object component, @NotNull String componentName, @NotNull Object state, @Nullable Storage storageSpec);
+    void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, @Nullable Storage storageSpec);
 
     /**
      * return null if nothing to save
@@ -57,6 +57,6 @@ public interface StateStorage {
   }
 
   interface Listener {
-    void storageFileChanged(@NotNull VirtualFileEvent event, @NotNull StateStorage storage);
+    void storageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage);
   }
 }

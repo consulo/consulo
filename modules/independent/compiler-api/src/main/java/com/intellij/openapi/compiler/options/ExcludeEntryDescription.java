@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ExcludeEntryDescription implements Disposable {
   private boolean myIsFile;

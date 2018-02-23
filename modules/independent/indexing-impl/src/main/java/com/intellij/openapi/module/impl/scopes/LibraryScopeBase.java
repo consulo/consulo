@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -43,7 +43,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     Collections.addAll(myEntries, sources);
   }
 
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
 
@@ -58,7 +58,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     return null;
   }
 
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     final VirtualFile r1 = getFileRoot(file1);
     final VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {
@@ -68,7 +68,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
     return 0;
   }
 
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return false;
   }
 

@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -38,25 +38,25 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     }
 
     @Override
-    public boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+    public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
       return virtualFile.getFileType() == myFileType;
     }
   }
 
   public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create("com.intellij.taskByVfsChange");
 
-  public boolean validate(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+  public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return true;
   }
 
-  public abstract void setDefaultParameters(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull BackgroundTaskByVfsParameters parameters);
+  public abstract void setDefaultParameters(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull BackgroundTaskByVfsParameters parameters);
 
-  @NotNull
+  @Nonnull
   public abstract String getTemplateName();
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public String[] getGeneratedFiles(@NotNull Project project, @NotNull VirtualFile virtualFile) {
+  public String[] getGeneratedFiles(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     PsiManager psiManager = PsiManager.getInstance(project);
     PsiFile file = psiManager.findFile(virtualFile);
     if (file != null) {
@@ -65,8 +65,8 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @NotNull
-  public String[] getGeneratedFiles(@NotNull PsiFile psiFile) {
+  @Nonnull
+  public String[] getGeneratedFiles(@Nonnull PsiFile psiFile) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 }

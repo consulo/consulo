@@ -19,16 +19,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.impl.ModuleOrderEntryImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
 public class ModuleOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleOrderEntryImpl> {
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@NotNull ModuleOrderEntryImpl orderEntry) {
+  public CellAppearanceEx getCellAppearance(@Nonnull ModuleOrderEntryImpl orderEntry) {
     return SimpleTextCellAppearance.regular(orderEntry.getPresentableName(), AllIcons.Nodes.Module);
   }
 }

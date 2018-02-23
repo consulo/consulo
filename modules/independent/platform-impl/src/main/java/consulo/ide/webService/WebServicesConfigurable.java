@@ -20,7 +20,7 @@ import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WebServicesConfigurable extends SimpleConfigurableByProperties implements Configurable {
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();

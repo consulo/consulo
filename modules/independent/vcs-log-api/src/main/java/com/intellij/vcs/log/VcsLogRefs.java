@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -28,9 +28,9 @@ public interface VcsLogRefs {
   /**
    * Returns all branches.
    */
-  @NotNull
+  @Nonnull
   Collection<VcsRef> getBranches();
 
-  @NotNull
+  @Nonnull
   Stream<VcsRef> stream();
 }

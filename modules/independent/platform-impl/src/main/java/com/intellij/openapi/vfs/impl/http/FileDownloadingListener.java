@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
@@ -25,13 +25,13 @@ public interface FileDownloadingListener {
 
   void fileDownloaded(final VirtualFile localFile);
 
-  void errorOccurred(@NotNull String errorMessage);
+  void errorOccurred(@Nonnull String errorMessage);
 
   void downloadingStarted();
 
   void downloadingCancelled();
 
-  void progressMessageChanged(final boolean indeterminate, @NotNull String message);
+  void progressMessageChanged(final boolean indeterminate, @Nonnull String message);
 
   void progressFractionChanged(double fraction);
 }

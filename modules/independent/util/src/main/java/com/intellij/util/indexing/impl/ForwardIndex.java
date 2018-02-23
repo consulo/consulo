@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -28,13 +28,13 @@ public interface ForwardIndex<Key, Value> {
   /**
    * Creates a diff builder for given inputId.
    */
-  @NotNull
+  @Nonnull
   InputDataDiffBuilder<Key, Value> getDiffBuilder(int inputId) throws IOException;
 
   /**
    * Update data for inputId.
    */
-  void putInputData(int inputId, @NotNull Map<Key, Value> data) throws IOException;
+  void putInputData(int inputId, @Nonnull Map<Key, Value> data) throws IOException;
 
   void flush();
 

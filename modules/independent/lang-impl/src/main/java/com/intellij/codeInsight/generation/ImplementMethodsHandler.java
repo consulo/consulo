@@ -26,13 +26,13 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class ImplementMethodsHandler implements CodeInsightActionHandler{
   @RequiredDispatchThread
   @Override
-  public final void invoke(@NotNull final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+  public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
     if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)){
       return;

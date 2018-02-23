@@ -20,8 +20,7 @@ import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.annotate.VcsAnnotation;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.SLRUMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -47,10 +46,10 @@ public class VcsHistoryCache {
   }
 
   public <C extends Serializable, T extends VcsAbstractHistorySession> void put(final FilePath filePath,
-                                                                                @Nullable final FilePath correctedPath,
+                                                                                @javax.annotation.Nullable final FilePath correctedPath,
                                                                                 final VcsKey vcsKey,
                                                                                 final T session,
-                                                                                @NotNull final VcsCacheableHistorySessionFactory<C, T> factory,
+                                                                                @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory,
                                                                                 boolean isFull) {
     synchronized (myLock) {
       myHistoryCache.put(new HistoryCacheBaseKey(filePath, vcsKey),
@@ -68,9 +67,9 @@ public class VcsHistoryCache {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public <C extends Serializable, T extends VcsAbstractHistorySession> T getFull(final FilePath filePath, final VcsKey vcsKey,
-                                                                                 @NotNull final VcsCacheableHistorySessionFactory<C, T> factory) {
+                                                                                 @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       final CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null || ! cachedHistory.isIsFull()) {
@@ -81,9 +80,9 @@ public class VcsHistoryCache {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public <C extends Serializable, T extends VcsAbstractHistorySession> T getMaybePartial(final FilePath filePath, final VcsKey vcsKey,
-                                                                                         @NotNull final VcsCacheableHistorySessionFactory<C, T> factory) {
+                                                                                         @Nonnull final VcsCacheableHistorySessionFactory<C, T> factory) {
     synchronized (myLock) {
       final CachedHistory cachedHistory = myHistoryCache.get(new HistoryCacheBaseKey(filePath, vcsKey));
       if (cachedHistory == null) {
@@ -106,14 +105,14 @@ public class VcsHistoryCache {
     }
   }
 
-  public void put(@NotNull final FilePath filePath, @NotNull final VcsKey vcsKey, @NotNull final VcsRevisionNumber number,
-                  @NotNull final VcsAnnotation vcsAnnotation) {
+  public void put(@Nonnull final FilePath filePath, @Nonnull final VcsKey vcsKey, @Nonnull final VcsRevisionNumber number,
+                  @Nonnull final VcsAnnotation vcsAnnotation) {
     synchronized (myLock) {
       myAnnotationCache.put(new HistoryCacheWithRevisionKey(filePath, vcsKey, number), vcsAnnotation);
     }
   }
 
-  public VcsAnnotation get(@NotNull final FilePath filePath, @NotNull final VcsKey vcsKey, @NotNull final VcsRevisionNumber number) {
+  public VcsAnnotation get(@Nonnull final FilePath filePath, @Nonnull final VcsKey vcsKey, @Nonnull final VcsRevisionNumber number) {
     synchronized (myLock) {
       return myAnnotationCache.get(new HistoryCacheWithRevisionKey(filePath, vcsKey, number));
     }

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ContentUtilEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
-  public void addContent(@NotNull JComponent content, @NotNull String name, boolean selectTab) {
+  public void addContent(@Nonnull JComponent content, @Nonnull String name, boolean selectTab) {
     Pair<String, JComponent> tab = Pair.create(name, content);
     if (!myTabs.contains(tab)) {
       myTabs.add(tab);
@@ -65,7 +65,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
-  public void removeContent(@NotNull JComponent content) {
+  public void removeContent(@Nonnull JComponent content) {
     Pair<String, JComponent> toRemove = null;
     for (Pair<String, JComponent> tab : myTabs) {
       if (tab.second == content) {
@@ -95,7 +95,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
     setComponent(tab.second);
   }
 
-  public boolean findAndSelectContent(@NotNull JComponent contentComponent) {
+  public boolean findAndSelectContent(@Nonnull JComponent contentComponent) {
     String tabName = findTabNameByComponent(contentComponent);
     if (tabName != null) {
       setDisplayName(tabName);

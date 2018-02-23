@@ -19,9 +19,8 @@ import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
 import com.intellij.codeInsight.controlflow.Instruction;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

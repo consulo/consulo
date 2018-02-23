@@ -57,8 +57,8 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -163,11 +163,11 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   }
 
   @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
-  public static InspectionResultsView showOfflineView(@NotNull Project project,
+  public static InspectionResultsView showOfflineView(@Nonnull Project project,
                                                       @Nullable
                                                       final String profileName,
-                                                      @NotNull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-                                                      @NotNull String title) {
+                                                      @Nonnull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+                                                      @Nonnull String title) {
     Profile profile;
     if (profileName != null) {
       profile = InspectionProjectProfileManager.getInstance(project).getProfile(profileName, false);
@@ -190,7 +190,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         }
 
         @Override
-        public HighlightDisplayLevel getErrorLevel(@NotNull final HighlightDisplayKey key, PsiElement element) {
+        public HighlightDisplayLevel getErrorLevel(@Nonnull final HighlightDisplayKey key, PsiElement element) {
           return ((InspectionProfile)InspectionProfileManager.getInstance().getRootProfile()).getErrorLevel(key, element);
         }
 
@@ -199,7 +199,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
           return false;
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getDisplayName() {
           return getName();
@@ -209,11 +209,11 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     return showOfflineView(project, resMap, inspectionProfile, title);
   }
 
-  @NotNull
-  public static InspectionResultsView showOfflineView(@NotNull Project project,
-                                                      @NotNull Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-                                                      @NotNull InspectionProfile inspectionProfile,
-                                                      @NotNull String title) {
+  @Nonnull
+  public static InspectionResultsView showOfflineView(@Nonnull Project project,
+                                                      @Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+                                                      @Nonnull InspectionProfile inspectionProfile,
+                                                      @Nonnull String title) {
     final AnalysisScope scope = new AnalysisScope(project);
     final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
     final GlobalInspectionContextImpl context = managerEx.createNewGlobalContext(false);

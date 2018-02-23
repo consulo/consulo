@@ -16,12 +16,12 @@
 package com.intellij.diff.contents;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface FileContent extends DiffContent {
   /**
    * @return VirtualFile from which this content gets data.
    */
-  @NotNull
+  @Nonnull
   VirtualFile getFile();
 }

@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.changes.issueLinks;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ui.ClickListener;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -41,7 +40,7 @@ public abstract class AbstractBaseTagMouseListener extends ClickListener impleme
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected abstract Object getTagAt(final MouseEvent e);
   public void mouseDragged(MouseEvent e) {
   }

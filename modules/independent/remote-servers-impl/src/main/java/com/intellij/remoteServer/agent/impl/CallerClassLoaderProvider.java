@@ -1,7 +1,5 @@
 package com.intellij.remoteServer.agent.impl;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author michael.golubev
  */
@@ -9,7 +7,7 @@ public class CallerClassLoaderProvider {
 
   private ClassLoader myCallerClassLoader;
 
-  public CallerClassLoaderProvider(@Nullable ClassLoader callerClassLoader) {
+  public CallerClassLoaderProvider(@javax.annotation.Nullable ClassLoader callerClassLoader) {
     myCallerClassLoader = callerClassLoader;
   }
 

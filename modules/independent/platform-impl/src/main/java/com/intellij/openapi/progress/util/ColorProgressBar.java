@@ -23,7 +23,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +40,7 @@ public class ColorProgressBar extends JComponent {
   private static final Dimension PREFERRED_SIZE = new Dimension(146, 17);
 
   public static final Color GREEN = new JBColor(new NotNullProducer<Color>() {
-    @NotNull
+    @Nonnull
     @Override
     public Color produce() {
       UISettings settings = UISettings.getInstanceOrNull();
@@ -50,7 +50,7 @@ public class ColorProgressBar extends JComponent {
     }
   });
   public static final Color RED = new JBColor(new NotNullProducer<Color>() {
-    @NotNull
+    @Nonnull
     @Override
     public Color produce() {
       UISettings settings = UISettings.getInstanceOrNull();

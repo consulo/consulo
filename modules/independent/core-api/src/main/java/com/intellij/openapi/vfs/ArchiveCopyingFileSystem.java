@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.DeprecationInfo;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public interface ArchiveCopyingFileSystem {
   @DeprecationInfo(value = "Use #addNoCopyArchiveForPath(String)", until = "2.0")
   void setNoCopyJarForPath(String pathInJar);
 
-  default void addNoCopyArchiveForPath(@NotNull String path) {
+  default void addNoCopyArchiveForPath(@Nonnull String path) {
     setNoCopyJarForPath(path);
   }
 
@@ -36,7 +36,7 @@ public interface ArchiveCopyingFileSystem {
   @DeprecationInfo(value = "Use #isMakeCopyForArchive(File)", until = "2.0")
   boolean isMakeCopyOfJar(File originalFile);
 
-  default boolean isMakeCopyForArchive(@NotNull File originalFile) {
+  default boolean isMakeCopyForArchive(@Nonnull File originalFile) {
     return isMakeCopyOfJar(originalFile);
   }
 }

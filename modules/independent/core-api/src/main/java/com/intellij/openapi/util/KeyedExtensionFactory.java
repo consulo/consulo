@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.picocontainer.PicoContainer;
 
 import java.lang.reflect.InvocationHandler;
@@ -35,14 +35,14 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
   private final ExtensionPointName<KeyedFactoryEPBean> myEpName;
   private final PicoContainer myPicoContainer;
 
-  public KeyedExtensionFactory(@NotNull final Class<T> interfaceClass, @NonNls @NotNull final ExtensionPointName<KeyedFactoryEPBean> epName,
-                               @NotNull PicoContainer picoContainer) {
+  public KeyedExtensionFactory(@Nonnull final Class<T> interfaceClass, @NonNls @Nonnull final ExtensionPointName<KeyedFactoryEPBean> epName,
+                               @Nonnull PicoContainer picoContainer) {
     myInterfaceClass = interfaceClass;
     myEpName = epName;
     myPicoContainer = picoContainer;
   }
 
-  @NotNull
+  @Nonnull
   public T get() {
     final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
     InvocationHandler handler = new InvocationHandler() {
@@ -62,7 +62,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
     return (T)Proxy.newProxyInstance(myInterfaceClass.getClassLoader(), new Class<?>[] { myInterfaceClass }, handler );
   }
 
-  public T getByKey(@NotNull KeyT key) {
+  public T getByKey(@Nonnull KeyT key) {
     final KeyedFactoryEPBean[] epBeans = Extensions.getExtensions(myEpName);
     for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
@@ -113,5 +113,5 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
     return (T)result;
   }
 
-  public abstract String getKey(@NotNull KeyT key);
+  public abstract String getKey(@Nonnull KeyT key);
 }

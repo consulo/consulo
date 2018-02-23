@@ -49,9 +49,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
 import consulo.codeInsight.completion.CompletionProvider;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
   public FilePathCompletionContributor() {
     extend(CompletionType.BASIC, psiElement(), new CompletionProvider() {
       @Override
-      public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+      public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result) {
         final PsiReference psiReference = parameters.getPosition().getContainingFile().findReferenceAt(parameters.getOffset());
         if (getReference(psiReference) != null && parameters.getInvocationCount() == 1) {
           final String shortcut = getActionShortcut(IdeActions.ACTION_CODE_COMPLETION);
@@ -77,12 +77,12 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
     CompletionProvider provider = new CompletionProvider() {
       @Override
-      public void addCompletions(@NotNull final CompletionParameters parameters, ProcessingContext context, @NotNull final CompletionResultSet _result) {
+      public void addCompletions(@Nonnull final CompletionParameters parameters, ProcessingContext context, @Nonnull final CompletionResultSet _result) {
         if (!parameters.isExtendedCompletion()) {
           return;
         }
 
-        @NotNull final CompletionResultSet result = _result.caseInsensitive();
+        @Nonnull final CompletionResultSet result = _result.caseInsensitive();
         final PsiElement e = parameters.getPosition();
         final Project project = e.getProject();
 
@@ -189,7 +189,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     return false;
   }
 
-  private static boolean fileMatchesPathPrefix(@Nullable final PsiFileSystemItem file, @NotNull final List<String> pathPrefix) {
+  private static boolean fileMatchesPathPrefix(@Nullable final PsiFileSystemItem file, @Nonnull final List<String> pathPrefix) {
     if (file == null) return false;
 
     final List<String> contextParts = new ArrayList<>();
@@ -210,7 +210,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     return true;
   }
 
-  private static String[] getAllNames(@NotNull final Project project) {
+  private static String[] getAllNames(@Nonnull final Project project) {
     Set<String> names = new HashSet<>();
     final ChooseByNameContributor[] nameContributors = ChooseByNameContributor.FILE_EP_NAME.getExtensions();
     for (final ChooseByNameContributor contributor : nameContributors) {
@@ -264,7 +264,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     private final PsiFile myFile;
     private final List<FileReferenceHelper> myHelpers;
 
-    public FilePathLookupItem(@NotNull final PsiFile file, @NotNull final List<FileReferenceHelper> helpers) {
+    public FilePathLookupItem(@Nonnull final PsiFile file, @Nonnull final List<FileReferenceHelper> helpers) {
       myName = file.getName();
       myPath = file.getVirtualFile().getPath();
 
@@ -282,14 +282,14 @@ public class FilePathCompletionContributor extends CompletionContributor {
       return String.format("%s%s", myName, myInfo == null ? "" : " (" + myInfo + ")");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Object getObject() {
       return myFile;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getLookupString() {
       return myName;
     }

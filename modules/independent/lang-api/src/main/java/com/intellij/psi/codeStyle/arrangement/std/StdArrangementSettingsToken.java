@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.std;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -26,35 +26,37 @@ import org.jetbrains.annotations.PropertyKey;
  */
 public class StdArrangementSettingsToken extends ArrangementSettingsToken {
 
-  @NotNull private final StdArrangementTokenType myTokenType;
+  @Nonnull
+  private final StdArrangementTokenType myTokenType;
 
-  @NotNull
-  public static StdArrangementSettingsToken tokenById(@NotNull String id,
-                                                      @NotNull StdArrangementTokenType tokenType) {
+  @Nonnull
+  public static StdArrangementSettingsToken tokenById(@Nonnull String id,
+                                                      @Nonnull StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, id.toLowerCase().replace("_", " "), tokenType);
   }
 
-  @NotNull
-  public static StdArrangementSettingsToken token(@NotNull String id,
-                                                  @NotNull String name,
-                                                  @NotNull StdArrangementTokenType tokenType) {
+  @Nonnull
+  public static StdArrangementSettingsToken token(@Nonnull String id,
+                                                  @Nonnull String name,
+                                                  @Nonnull StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, name, tokenType);
   }
 
-  @NotNull
-  public static StdArrangementSettingsToken tokenByBundle(@NotNull String id,
-                                                          @NotNull @PropertyKey(resourceBundle = ApplicationBundle.BUNDLE) String key,
-                                                          @NotNull StdArrangementTokenType tokenType) {
+  @Nonnull
+  public static StdArrangementSettingsToken tokenByBundle(@Nonnull String id,
+                                                          @Nonnull @PropertyKey(resourceBundle = ApplicationBundle.BUNDLE) String key,
+                                                          @Nonnull StdArrangementTokenType tokenType) {
     return new StdArrangementSettingsToken(id, ApplicationBundle.message(key), tokenType);
   }
 
-  @NotNull public StdArrangementTokenType getTokenType() {
+  @Nonnull
+  public StdArrangementTokenType getTokenType() {
     return myTokenType;
   }
 
-  protected StdArrangementSettingsToken(@NotNull String id,
-                                        @NotNull String uiName,
-                                        @NotNull StdArrangementTokenType tokenType) {
+  protected StdArrangementSettingsToken(@Nonnull String id,
+                                        @Nonnull String uiName,
+                                        @Nonnull StdArrangementTokenType tokenType) {
     super(id, uiName);
     myTokenType = tokenType;
   }

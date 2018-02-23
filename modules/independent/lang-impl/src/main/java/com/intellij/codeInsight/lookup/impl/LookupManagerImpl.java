@@ -41,7 +41,7 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
 import com.intellij.util.messages.MessageBus;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.beans.PropertyChangeListener;
@@ -99,7 +99,7 @@ public class LookupManagerImpl extends LookupManager {
 
     final EditorFactoryAdapter myEditorFactoryListener = new EditorFactoryAdapter() {
       @Override
-      public void editorReleased(@NotNull EditorFactoryEvent event) {
+      public void editorReleased(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor() == myActiveLookupEditor) {
           hideActiveLookup();
         }
@@ -109,10 +109,10 @@ public class LookupManagerImpl extends LookupManager {
   }
 
   @Override
-  public LookupEx showLookup(@NotNull final Editor editor,
-                             @NotNull LookupElement[] items,
-                             @NotNull final String prefix,
-                             @NotNull final LookupArranger arranger) {
+  public LookupEx showLookup(@Nonnull final Editor editor,
+                             @Nonnull LookupElement[] items,
+                             @Nonnull final String prefix,
+                             @Nonnull final LookupArranger arranger) {
     for (LookupElement item : items) {
       assert item != null;
     }
@@ -121,12 +121,12 @@ public class LookupManagerImpl extends LookupManager {
     return lookup.showLookup() ? lookup : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public LookupImpl createLookup(@NotNull final Editor editor,
-                                 @NotNull LookupElement[] items,
-                                 @NotNull final String prefix,
-                                 @NotNull final LookupArranger arranger) {
+  public LookupImpl createLookup(@Nonnull final Editor editor,
+                                 @Nonnull LookupElement[] items,
+                                 @Nonnull final String prefix,
+                                 @Nonnull final LookupArranger arranger) {
     hideActiveLookup();
 
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
@@ -212,8 +212,8 @@ public class LookupManagerImpl extends LookupManager {
     return true;
   }
 
-  @NotNull
-  protected LookupImpl createLookup(@NotNull Editor editor, @NotNull LookupArranger arranger, Project project) {
+  @Nonnull
+  protected LookupImpl createLookup(@Nonnull Editor editor, @Nonnull LookupArranger arranger, Project project) {
     return new LookupImpl(project, editor, arranger);
   }
 
@@ -239,12 +239,12 @@ public class LookupManagerImpl extends LookupManager {
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener, @NotNull Disposable disposable) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener, @Nonnull Disposable disposable) {
     addPropertyChangeListener(listener);
     Disposer.register(disposable, new Disposable() {
       @Override
@@ -255,7 +255,7 @@ public class LookupManagerImpl extends LookupManager {
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 

@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import com.intellij.util.ConcurrencyUtil;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -34,12 +34,12 @@ public class WeakInterner<T> {
   public WeakInterner() {
     myMap = ContainerUtil.createConcurrentWeakKeyWeakValueMap();
   }
-  public WeakInterner(@NotNull TObjectHashingStrategy<T> strategy) {
+  public WeakInterner(@Nonnull TObjectHashingStrategy<T> strategy) {
     myMap = ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy);
   }
 
-  @NotNull
-  public T intern(@NotNull T name) {
+  @Nonnull
+  public T intern(@Nonnull T name) {
     return ConcurrencyUtil.cacheOrGet(myMap, name, name);
   }
 
@@ -47,7 +47,7 @@ public class WeakInterner<T> {
     myMap.clear();
   }
 
-  @NotNull
+  @Nonnull
   public Set<T> getValues() {
     return ContainerUtil.newTroveSet(myMap.values());
   }

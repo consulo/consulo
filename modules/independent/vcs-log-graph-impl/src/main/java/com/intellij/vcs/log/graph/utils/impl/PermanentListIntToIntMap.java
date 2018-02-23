@@ -17,18 +17,18 @@ package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.IntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PermanentListIntToIntMap extends AbstractIntToIntMap implements IntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @NotNull
-  public static IntToIntMap newInstance(@NotNull Flags visibleIndexes, int shortSize) {
+  @Nonnull
+  public static IntToIntMap newInstance(@Nonnull Flags visibleIndexes, int shortSize) {
     return newInstance(visibleIndexes, shortSize, DEFAULT_BLOCK_SIZE);
   }
 
-  @NotNull
-  public static IntToIntMap newInstance(@NotNull final Flags visibleIndexes, int shortSize, int blockSize) {
+  @Nonnull
+  public static IntToIntMap newInstance(@Nonnull final Flags visibleIndexes, int shortSize, int blockSize) {
     if (shortSize < 0) throw new NegativeArraySizeException("shortSize < 0: " + shortSize);
     if (shortSize == 0) return createEmptyIntToIntMap(visibleIndexes);
 
@@ -46,8 +46,8 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
     return new PermanentListIntToIntMap(visibleIndexes, shortSize, blockSize, strongShortIndexes);
   }
 
-  @NotNull
-  private static IntToIntMap createEmptyIntToIntMap(@NotNull final Flags visibleIndexes) {
+  @Nonnull
+  private static IntToIntMap createEmptyIntToIntMap(@Nonnull final Flags visibleIndexes) {
     return new IntToIntMap() {
       @Override
       public int shortSize() {
@@ -71,15 +71,17 @@ public class PermanentListIntToIntMap extends AbstractIntToIntMap implements Int
     };
   }
 
-  @NotNull private final Flags myVisibleIndexes;
+  @Nonnull
+  private final Flags myVisibleIndexes;
 
   private final int myLongSize;
   private final int myShortSize;
 
   private final int myBlockSize;
-  @NotNull private final int[] myStrongShortIndexes;
+  @Nonnull
+  private final int[] myStrongShortIndexes;
 
-  private PermanentListIntToIntMap(@NotNull Flags visibleIndexes, int shortSize, int blockSize, @NotNull int[] strongShortIndexes) {
+  private PermanentListIntToIntMap(@Nonnull Flags visibleIndexes, int shortSize, int blockSize, @Nonnull int[] strongShortIndexes) {
     myVisibleIndexes = visibleIndexes;
     myLongSize = visibleIndexes.size();
     myShortSize = shortSize;

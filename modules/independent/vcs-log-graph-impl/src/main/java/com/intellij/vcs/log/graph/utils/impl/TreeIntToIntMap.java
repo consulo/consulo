@@ -18,11 +18,11 @@ package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.util.BooleanFunction;
 import com.intellij.vcs.log.graph.utils.UpdatableIntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
 
-  public static UpdatableIntToIntMap newInstance(@NotNull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
+  public static UpdatableIntToIntMap newInstance(@Nonnull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;
@@ -50,13 +50,14 @@ public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
     return count;
   }
 
-  @NotNull private final BooleanFunction<Integer> myThisIsVisible;
+  @Nonnull
+  private final BooleanFunction<Integer> myThisIsVisible;
 
   private final int myLongSize;
   private final int myCountLevels;
   private final int[] myTree;
 
-  private TreeIntToIntMap(@NotNull BooleanFunction<Integer> thisIsVisible, int longSize, int countLevels, int[] tree) {
+  private TreeIntToIntMap(@Nonnull BooleanFunction<Integer> thisIsVisible, int longSize, int countLevels, int[] tree) {
     myThisIsVisible = thisIsVisible;
     myLongSize = longSize;
     myCountLevels = countLevels;

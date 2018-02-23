@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.module;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface LoadedModuleDescription extends ModuleDescription {
-  @NotNull
+  @Nonnull
   Module getModule();
 }

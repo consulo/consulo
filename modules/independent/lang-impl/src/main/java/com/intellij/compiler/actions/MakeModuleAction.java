@@ -21,7 +21,7 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class MakeModuleAction extends CompileActionBase {
@@ -47,7 +47,7 @@ public class MakeModuleAction extends CompileActionBase {
   }
 
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent event){
+  public void update(@Nonnull AnActionEvent event){
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

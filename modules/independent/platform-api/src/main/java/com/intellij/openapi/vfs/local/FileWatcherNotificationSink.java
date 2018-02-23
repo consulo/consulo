@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs.local;
 
 import com.intellij.notification.NotificationListener;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -26,19 +26,19 @@ import java.util.Collection;
  * @author dslomov
  */
 public interface FileWatcherNotificationSink {
-  void notifyManualWatchRoots(@NotNull Collection<String> roots);
+  void notifyManualWatchRoots(@Nonnull Collection<String> roots);
 
-  void notifyMapping(@NotNull Collection<Pair<String, String>> mapping);
+  void notifyMapping(@Nonnull Collection<Pair<String, String>> mapping);
 
-  void notifyDirtyPath(@NotNull String path);
+  void notifyDirtyPath(@Nonnull String path);
 
-  void notifyPathCreatedOrDeleted(@NotNull String path);
+  void notifyPathCreatedOrDeleted(@Nonnull String path);
 
-  void notifyDirtyDirectory(@NotNull String path);
+  void notifyDirtyDirectory(@Nonnull String path);
 
-  void notifyDirtyPathRecursive(@NotNull String path);
+  void notifyDirtyPathRecursive(@Nonnull String path);
 
   void notifyReset(@Nullable String path);
 
-  void notifyUserOnFailure(@NotNull String cause, @Nullable NotificationListener listener);
+  void notifyUserOnFailure(@Nonnull String cause, @Nullable NotificationListener listener);
 }

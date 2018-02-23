@@ -30,8 +30,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -45,14 +45,14 @@ public abstract class SelectInContextImpl implements SelectInContext {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myPsiFile.getProject();
   }
 
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getVirtualFile() {
     final VirtualFile vFile = myPsiFile.getVirtualFile();
     assert vFile != null;
@@ -247,13 +247,13 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Project getProject() {
       return myProject;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public VirtualFile getVirtualFile() {
       return myVirtualFile;
     }

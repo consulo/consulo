@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -26,21 +26,23 @@ import java.util.Objects;
  */
 public class VcsUserImpl implements VcsUser {
 
-  @NotNull private final String myName;
-  @NotNull private final String myEmail;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private final String myEmail;
 
-  public VcsUserImpl(@NotNull String name, @NotNull String email) {
+  public VcsUserImpl(@Nonnull String name, @Nonnull String email) {
     myName = name;
     myEmail = VcsUserUtil.emailToLowerCase(email);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getEmail() {
     return myEmail;

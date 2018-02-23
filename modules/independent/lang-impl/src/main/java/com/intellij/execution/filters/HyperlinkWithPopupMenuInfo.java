@@ -16,8 +16,8 @@
 package com.intellij.execution.filters;
 
 import com.intellij.openapi.actionSystem.ActionGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.event.MouseEvent;
 
@@ -26,5 +26,5 @@ import java.awt.event.MouseEvent;
  */
 public interface HyperlinkWithPopupMenuInfo extends HyperlinkInfo {
   @Nullable
-  ActionGroup getPopupMenuGroup(@NotNull MouseEvent event);
+  ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event);
 }

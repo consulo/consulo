@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,7 +27,7 @@ public class FileDownloadingAdapter implements FileDownloadingListener {
   }
 
   @Override
-  public void errorOccurred(@NotNull final String errorMessage) {
+  public void errorOccurred(@Nonnull final String errorMessage) {
   }
 
   @Override
@@ -39,7 +39,7 @@ public class FileDownloadingAdapter implements FileDownloadingListener {
   }
 
   @Override
-  public void progressMessageChanged(final boolean indeterminate, @NotNull final String message) {
+  public void progressMessageChanged(final boolean indeterminate, @Nonnull final String message) {
   }
 
   @Override

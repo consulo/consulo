@@ -18,14 +18,14 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class PriorityWeigher extends CompletionWeigher {
   @Override
-  public Double weigh(@NotNull LookupElement element, @NotNull CompletionLocation location) {
+  public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
     final PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     if (prioritized != null) {
       return prioritized.getPriority();
@@ -40,7 +40,7 @@ public class PriorityWeigher extends CompletionWeigher {
 
   public static class Negative extends PriorityWeigher {
     @Override
-    public Double weigh(@NotNull LookupElement element, @NotNull CompletionLocation location) {
+    public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
       return -super.weigh(element, location);
     }
   }

@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -43,7 +43,7 @@ public abstract class BreakpointPanelProvider<B> {
   public abstract int getPriority();
 
   @Nullable
-  public abstract B findBreakpoint(@NotNull Project project, @NotNull Document document, int offset);
+  public abstract B findBreakpoint(@Nonnull Project project, @Nonnull Document document, int offset);
 
   @Nullable
   public abstract GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint);

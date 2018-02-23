@@ -20,7 +20,7 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -70,12 +70,12 @@ public class DesktopTextBoxImpl extends JBTextField implements TextBox, SwingWra
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<String> valueListener) {
+  public void addValueListener(@Nonnull ValueListener<String> valueListener) {
     myEventDispatcher.addListener(valueListener);
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueListener<String> valueListener) {
+  public void removeValueListener(@Nonnull ValueListener<String> valueListener) {
     myEventDispatcher.removeListener(valueListener);
   }
 

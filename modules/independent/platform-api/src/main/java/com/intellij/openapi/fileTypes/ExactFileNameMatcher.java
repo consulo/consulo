@@ -21,30 +21,30 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.util.Comparing;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ExactFileNameMatcher implements FileNameMatcher {
   private final String myFileName;
   private final boolean myIgnoreCase;
 
-  public ExactFileNameMatcher(@NotNull @NonNls final String fileName) {
+  public ExactFileNameMatcher(@Nonnull @NonNls final String fileName) {
     myFileName = fileName;
     myIgnoreCase = false;
   }
 
-  public ExactFileNameMatcher(@NotNull @NonNls final String fileName, final boolean ignoreCase) {
+  public ExactFileNameMatcher(@Nonnull @NonNls final String fileName, final boolean ignoreCase) {
     myFileName = fileName;
     myIgnoreCase = ignoreCase;
   }
 
   @Override
-  public boolean accept(@NonNls @NotNull final CharSequence fileName) {
+  public boolean accept(@NonNls @Nonnull final CharSequence fileName) {
     return Comparing.equal(fileName, myFileName, !myIgnoreCase);
   }
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getPresentableString() {
     return myFileName;
   }

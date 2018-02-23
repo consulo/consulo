@@ -22,7 +22,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -57,6 +57,6 @@ public abstract class HttpRequestHandler {
     return host != null && NettyKt.isLocalOrigin(request) && NettyKt.parseAndCheckIsLocalHost("http://" + host);
   }
 
-  public abstract boolean process(@NotNull QueryStringDecoder urlDecoder, @NotNull FullHttpRequest request, @NotNull ChannelHandlerContext context)
+  public abstract boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context)
           throws IOException;
 }

@@ -40,8 +40,8 @@ import com.intellij.vcs.log.ui.render.GraphCommitCellRenderer;
 import com.intellij.vcs.log.ui.render.SimpleColoredComponentLinkMouseListener;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -55,17 +55,22 @@ import java.util.Collections;
  * Processes mouse clicks and moves on the table
  */
 public class GraphTableController {
-  @NotNull private final VcsLogGraphTable myTable;
-  @NotNull private final VcsLogUiImpl myUi;
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final GraphCellPainter myGraphCellPainter;
-  @NotNull private final GraphCommitCellRenderer myCommitRenderer;
+  @Nonnull
+  private final VcsLogGraphTable myTable;
+  @Nonnull
+  private final VcsLogUiImpl myUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final GraphCellPainter myGraphCellPainter;
+  @Nonnull
+  private final GraphCommitCellRenderer myCommitRenderer;
 
-  public GraphTableController(@NotNull VcsLogGraphTable table,
-                              @NotNull VcsLogUiImpl ui,
-                              @NotNull VcsLogData logData,
-                              @NotNull GraphCellPainter graphCellPainter,
-                              @NotNull GraphCommitCellRenderer commitRenderer) {
+  public GraphTableController(@Nonnull VcsLogGraphTable table,
+                              @Nonnull VcsLogUiImpl ui,
+                              @Nonnull VcsLogData logData,
+                              @Nonnull GraphCellPainter graphCellPainter,
+                              @Nonnull GraphCommitCellRenderer commitRenderer) {
     myTable = table;
     myUi = ui;
     myLogData = logData;
@@ -78,7 +83,7 @@ public class GraphTableController {
   }
 
   @Nullable
-  PrintElement findPrintElement(@NotNull MouseEvent e) {
+  PrintElement findPrintElement(@Nonnull MouseEvent e) {
     int row = myTable.rowAtPoint(e.getPoint());
     if (row >= 0 && row < myTable.getRowCount()) {
       return findPrintElement(row, e);
@@ -87,13 +92,13 @@ public class GraphTableController {
   }
 
   @Nullable
-  private PrintElement findPrintElement(int row, @NotNull MouseEvent e) {
+  private PrintElement findPrintElement(int row, @Nonnull MouseEvent e) {
     Point point = calcPoint4Graph(e.getPoint());
     Collection<? extends PrintElement> printElements = myTable.getVisibleGraph().getRowInfo(row).getPrintElements();
     return myGraphCellPainter.getElementUnderCursor(printElements, point.x, point.y);
   }
 
-  private void performGraphAction(@Nullable PrintElement printElement, @NotNull MouseEvent e, @NotNull GraphAction.Type actionType) {
+  private void performGraphAction(@Nullable PrintElement printElement, @Nonnull MouseEvent e, @Nonnull GraphAction.Type actionType) {
     boolean isClickOnGraphElement = actionType == GraphAction.Type.MOUSE_CLICK && printElement != null;
     if (isClickOnGraphElement) {
       triggerElementClick(printElement);
@@ -139,14 +144,14 @@ public class GraphTableController {
     }
   }
 
-  @NotNull
-  private Point calcPoint4Graph(@NotNull Point clickPoint) {
+  @Nonnull
+  private Point calcPoint4Graph(@Nonnull Point clickPoint) {
     TableColumn rootColumn = myTable.getColumnModel().getColumn(GraphTableModel.ROOT_COLUMN);
     return new Point(clickPoint.x - (myUi.isMultipleRoots() ? rootColumn.getWidth() : 0),
                      PositionUtil.getYInsideRow(clickPoint, myTable.getRowHeight()));
   }
 
-  @NotNull
+  @Nonnull
   private String getArrowTooltipText(int commit, @Nullable Integer row) {
     VcsShortCommitDetails details;
     if (row != null && row >= 0) {
@@ -176,7 +181,7 @@ public class GraphTableController {
     return balloonText;
   }
 
-  private void showToolTip(@NotNull String text, @NotNull MouseEvent e) {
+  private void showToolTip(@Nonnull String text, @Nonnull MouseEvent e) {
     // standard tooltip does not allow to customize its location, and locating tooltip above can obscure some important info
     Point point = new Point(e.getX() + 5, e.getY());
 
@@ -185,7 +190,7 @@ public class GraphTableController {
     IdeTooltipManager.getInstance().show(tooltip, false);
   }
 
-  private void showOrHideCommitTooltip(int row, int column, @NotNull MouseEvent e) {
+  private void showOrHideCommitTooltip(int row, int column, @Nonnull MouseEvent e) {
     if (!showTooltip(row, column, e.getPoint(), false)) {
       if (IdeTooltipManager.getInstance().hasCurrent()) {
         IdeTooltipManager.getInstance().hideCurrent(e);
@@ -193,7 +198,7 @@ public class GraphTableController {
     }
   }
 
-  private boolean showTooltip(int row, int column, @NotNull Point point, boolean now) {
+  private boolean showTooltip(int row, int column, @Nonnull Point point, boolean now) {
     JComponent tipComponent = myCommitRenderer.getTooltip(myTable.getValueAt(row, column), calcPoint4Graph(point), row);
 
     if (tipComponent != null) {
@@ -221,7 +226,7 @@ public class GraphTableController {
     }
   }
 
-  private static void triggerElementClick(@NotNull PrintElement printElement) {
+  private static void triggerElementClick(@Nonnull PrintElement printElement) {
     if (printElement instanceof NodePrintElement) {
       VcsLogUtil.triggerUsage("GraphNodeClick");
     }
@@ -233,7 +238,8 @@ public class GraphTableController {
   }
 
   private class MyMouseAdapter extends MouseAdapter {
-    @NotNull private final TableLinkMouseListener myLinkListener = new SimpleColoredComponentLinkMouseListener();
+    @Nonnull
+    private final TableLinkMouseListener myLinkListener = new SimpleColoredComponentLinkMouseListener();
 
     @Override
     public void mouseClicked(MouseEvent e) {

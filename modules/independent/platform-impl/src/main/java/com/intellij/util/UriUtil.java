@@ -20,7 +20,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.io.URLUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,8 +33,8 @@ public final class UriUtil {
   private UriUtil() {
   }
 
-  @NotNull
-  public static String encode(@NotNull String url) {
+  @Nonnull
+  public static String encode(@Nonnull String url) {
     try {
       return URLEncoder.encode(url, "UTF-8");
     }
@@ -43,17 +43,17 @@ public final class UriUtil {
     }
   }
 
-  @NotNull
-  public static String trimTrailingSlashes(@NotNull String url) {
+  @Nonnull
+  public static String trimTrailingSlashes(@Nonnull String url) {
     return SLASH_MATCHER.trimTrailingFrom(url);
   }
 
-  @NotNull
-  public static String trimLeadingSlashes(@NotNull String url) {
+  @Nonnull
+  public static String trimLeadingSlashes(@Nonnull String url) {
     return SLASH_MATCHER.trimLeadingFrom(url);
   }
 
-  public static String trimParameters(@NotNull String url) {
+  public static String trimParameters(@Nonnull String url) {
     int end = PARAM_CHAR_MATCHER.indexIn(url);
     return end != -1 ? url.substring(0, end) : url;
   }
@@ -63,8 +63,8 @@ public final class UriUtil {
    * Scheme separator is not included neither to the scheme part, nor to the url part. <br/>
    * The scheme can be absent, in which case empty string is written to the first item of the Pair.
    */
-  @NotNull
-  public static Couple<String> splitScheme(@NotNull String url) {
+  @Nonnull
+  public static Couple<String> splitScheme(@Nonnull String url) {
     ArrayList<String> list = Lists.newArrayList(Splitter.on(URLUtil.SCHEME_SEPARATOR).limit(2).split(url));
     if (list.size() == 1) {
       return Couple.of("", list.get(0));

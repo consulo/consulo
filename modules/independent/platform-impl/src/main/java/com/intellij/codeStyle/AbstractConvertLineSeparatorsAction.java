@@ -30,8 +30,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import java.io.IOException;
@@ -42,21 +43,21 @@ import java.io.IOException;
 public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeStyle.AbstractConvertLineSeparatorsAction");
 
-  @NotNull
+  @Nonnull
   private final String mySeparator;
 
-  protected AbstractConvertLineSeparatorsAction(@Nullable String text, @NotNull LineSeparator separator) {
+  protected AbstractConvertLineSeparatorsAction(@Nullable String text, @Nonnull LineSeparator separator) {
     this(separator + " - " + text, separator.getSeparatorString());
   }
 
-  protected AbstractConvertLineSeparatorsAction(@Nullable String text, @NotNull String separator) {
+  protected AbstractConvertLineSeparatorsAction(@Nullable String text, @Nonnull String separator) {
     super(text);
     mySeparator = separator;
   }
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
       final VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
@@ -77,7 +78,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent event) {
+  public void actionPerformed(@Nonnull AnActionEvent event) {
     final Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
@@ -118,7 +119,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     }
   }
 
-  public static boolean shouldProcess(@NotNull VirtualFile file, @NotNull Project project) {
+  public static boolean shouldProcess(@Nonnull VirtualFile file, @Nonnull Project project) {
     if (file.isDirectory() ||
         !file.isWritable() ||
         FileTypeRegistry.getInstance().isFileIgnored(file) ||
@@ -130,9 +131,9 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     return true;
   }
 
-  public static void changeLineSeparators(@NotNull final Project project,
-                                          @NotNull final VirtualFile virtualFile,
-                                          @NotNull final String newSeparator) {
+  public static void changeLineSeparators(@Nonnull final Project project,
+                                          @Nonnull final VirtualFile virtualFile,
+                                          @Nonnull final String newSeparator) {
     FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
     Document document = fileDocumentManager.getCachedDocument(virtualFile);
     if (document != null) {
@@ -151,7 +152,7 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
 
     new WriteCommandAction(project, commandText) {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         try {
           LoadTextUtil.changeLineSeparators(project, virtualFile, newSeparator, this);
         }

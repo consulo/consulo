@@ -16,49 +16,49 @@
 package com.intellij.openapi.vfs;
 
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use VirtualFileListener instead")
 public abstract class VirtualFileAdapter implements VirtualFileListener {
   @Override
-  public void propertyChanged(@NotNull VirtualFilePropertyEvent event){
+  public void propertyChanged(@Nonnull VirtualFilePropertyEvent event){
   }
 
   @Override
-  public void contentsChanged(@NotNull VirtualFileEvent event){
+  public void contentsChanged(@Nonnull VirtualFileEvent event){
   }
 
   @Override
-  public void fileCreated(@NotNull VirtualFileEvent event){
+  public void fileCreated(@Nonnull VirtualFileEvent event){
   }
 
   @Override
-  public void fileDeleted(@NotNull VirtualFileEvent event){
+  public void fileDeleted(@Nonnull VirtualFileEvent event){
   }
 
   @Override
-  public void fileMoved(@NotNull VirtualFileMoveEvent event){
+  public void fileMoved(@Nonnull VirtualFileMoveEvent event){
   }
 
   @Override
-  public void fileCopied(@NotNull VirtualFileCopyEvent event) {
+  public void fileCopied(@Nonnull VirtualFileCopyEvent event) {
     fileCreated(event);
   }
 
   @Override
-  public void beforePropertyChange(@NotNull VirtualFilePropertyEvent event){
+  public void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event){
   }
 
   @Override
-  public void beforeContentsChange(@NotNull VirtualFileEvent event){
+  public void beforeContentsChange(@Nonnull VirtualFileEvent event){
   }
 
   @Override
-  public void beforeFileDeletion(@NotNull VirtualFileEvent event){
+  public void beforeFileDeletion(@Nonnull VirtualFileEvent event){
   }
 
   @Override
-  public void beforeFileMovement(@NotNull VirtualFileMoveEvent event){
+  public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event){
   }
 }

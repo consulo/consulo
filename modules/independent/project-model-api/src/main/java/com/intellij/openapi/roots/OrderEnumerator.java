@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.PathsList;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Interface for convenient processing dependencies of a module or a project. Allows to process {@link OrderEntry}s and collect classes
@@ -115,7 +115,7 @@ public abstract class OrderEnumerator {
    * @param provider provider
    * @return this instance
    */
-  public abstract OrderEnumerator using(@NotNull RootModelProvider provider);
+  public abstract OrderEnumerator using(@Nonnull RootModelProvider provider);
 
   /**
    * @return {@link OrderRootsEnumerator} instance for processing classes roots
@@ -131,13 +131,13 @@ public abstract class OrderEnumerator {
    * @param rootType root type
    * @return {@link OrderRootsEnumerator} instance for processing roots of the specified type
    */
-  public abstract OrderRootsEnumerator roots(@NotNull OrderRootType rootType);
+  public abstract OrderRootsEnumerator roots(@Nonnull OrderRootType rootType);
 
   /**
    * @param rootTypeProvider custom root type provider
    * @return {@link OrderRootsEnumerator} instance for processing roots of the provided type
    */
-  public abstract OrderRootsEnumerator roots(@NotNull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider);
+  public abstract OrderRootsEnumerator roots(@Nonnull NotNullFunction<OrderEntry, OrderRootType> rootTypeProvider);
 
   /**
    * @return classes roots for all entries processed by this enumerator
@@ -172,21 +172,21 @@ public abstract class OrderEnumerator {
    *
    * @param processor processor
    */
-  public abstract void forEach(@NotNull Processor<OrderEntry> processor);
+  public abstract void forEach(@Nonnull Processor<OrderEntry> processor);
 
   /**
    * Runs <code>processor.process()</code> for each library processed by this enumerator.
    *
    * @param processor processor
    */
-  public abstract void forEachLibrary(@NotNull Processor<Library> processor);
+  public abstract void forEachLibrary(@Nonnull Processor<Library> processor);
 
   /**
    * Runs <code>processor.process()</code> for each module processed by this enumerator.
    *
    * @param processor processor
    */
-  public abstract void forEachModule(@NotNull Processor<Module> processor);
+  public abstract void forEachModule(@Nonnull Processor<Module> processor);
 
   /**
    * Passes order entries to the specified visitor.
@@ -196,7 +196,7 @@ public abstract class OrderEnumerator {
    * @return the value returned by the visitor.
    * @see OrderEntry#accept(RootPolicy, Object)
    */
-  public abstract <R> R process(@NotNull RootPolicy<R> policy, R initialValue);
+  public abstract <R> R process(@Nonnull RootPolicy<R> policy, R initialValue);
 
   /**
    * Creates new enumerator instance to process dependencies of <code>module</code>
@@ -204,8 +204,8 @@ public abstract class OrderEnumerator {
    * @param module module
    * @return new enumerator instance
    */
-  @NotNull
-  public static OrderEnumerator orderEntries(@NotNull Module module) {
+  @Nonnull
+  public static OrderEnumerator orderEntries(@Nonnull Module module) {
     return ModuleRootManager.getInstance(module).orderEntries();
   }
 
@@ -216,8 +216,8 @@ public abstract class OrderEnumerator {
    * @param project project
    * @return new enumerator instance
    */
-  @NotNull
-  public static OrderEnumerator orderEntries(@NotNull Project project) {
+  @Nonnull
+  public static OrderEnumerator orderEntries(@Nonnull Project project) {
     return ProjectRootManager.getInstance(project).orderEntries();
   }
 }

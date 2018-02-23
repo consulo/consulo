@@ -18,7 +18,7 @@ package com.intellij.util.concurrency;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedList;
 
@@ -52,7 +52,7 @@ public class WorkerThread implements Runnable, Disposable {
     }
   }
 
-  public boolean addTaskFirst(@NotNull Runnable action) {
+  public boolean addTaskFirst(@Nonnull Runnable action) {
     synchronized(myTasks){
       if(myDisposed) return false;
 

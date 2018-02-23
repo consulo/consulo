@@ -18,14 +18,14 @@ package com.intellij.openapi.components.impl.stores;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @see com.intellij.openapi.project.ex.ProjectEx#getStateStore()
  */
 public interface IProjectStore extends IComponentStore.Reloadable {
-  void setProjectFilePath(@NotNull String filePath);
+  void setProjectFilePath(@Nonnull String filePath);
 
   @Nullable
   VirtualFile getProjectBaseDir();
@@ -33,7 +33,7 @@ public interface IProjectStore extends IComponentStore.Reloadable {
   @Nullable
   String getProjectBasePath();
 
-  @NotNull
+  @Nonnull
   String getProjectName();
 
   TrackingPathMacroSubstitutor[] getSubstitutors();
@@ -47,8 +47,8 @@ public interface IProjectStore extends IComponentStore.Reloadable {
   @Nullable
   VirtualFile getWorkspaceFile();
 
-  void loadProjectFromTemplate(@NotNull ProjectImpl project);
+  void loadProjectFromTemplate(@Nonnull ProjectImpl project);
 
-  @NotNull
+  @Nonnull
   String getProjectFilePath();
 }

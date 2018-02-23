@@ -19,8 +19,8 @@ package com.intellij.xml.util;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Verifier;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.xml.CommonXmlStrings.*;
 /**
@@ -31,8 +31,8 @@ public class XmlStringUtil {
   private XmlStringUtil() {
   }
 
-  @NotNull
-  public static String wrapInCDATA(@NotNull String str) {
+  @Nonnull
+  public static String wrapInCDATA(@Nonnull String str) {
     StringBuilder sb = new StringBuilder();
     int cur = 0, len = str.length();
     while (cur < len) {
@@ -113,18 +113,18 @@ public class XmlStringUtil {
     return buffer == null ? str : buffer.toString();
   }
 
-  @NotNull
-  public static String wrapInHtml(@NotNull CharSequence result) {
+  @Nonnull
+  public static String wrapInHtml(@Nonnull CharSequence result) {
     return HTML_START + result + HTML_END;
   }
 
-  public static boolean isWrappedInHtml(@NotNull String tooltip) {
+  public static boolean isWrappedInHtml(@Nonnull String tooltip) {
     return StringUtil.startsWithIgnoreCase(tooltip, HTML_START) &&
            StringUtil.endsWithIgnoreCase(tooltip, HTML_END);
   }
 
-  @NotNull
-  public static String stripHtml(@NotNull String toolTip) {
+  @Nonnull
+  public static String stripHtml(@Nonnull String toolTip) {
     toolTip = StringUtil.trimStart(toolTip, HTML_START);
     toolTip = StringUtil.trimStart(toolTip, BODY_START);
     toolTip = StringUtil.trimEnd(toolTip, HTML_END);
@@ -136,8 +136,8 @@ public class XmlStringUtil {
    * Converts {@code text} to a string which can be used inside an HTML document: if it's already an HTML text the root html/body tags will
    * be stripped, if it's a plain text special characters will be escaped
    */
-  @NotNull
-  public static String convertToHtmlContent(@NotNull String text) {
+  @Nonnull
+  public static String convertToHtmlContent(@Nonnull String text) {
     return isWrappedInHtml(text) ? stripHtml(text) : escapeString(text);
   }
 
@@ -149,8 +149,8 @@ public class XmlStringUtil {
    * @see <a href="https://www.w3.org/International/questions/qa-controls">https://www.w3.org/International/questions/qa-controls</a>
    * @see Verifier#isXMLCharacter(int)
    */
-  @NotNull
-  public static String escapeIllegalXmlChars(@NotNull String text) {
+  @Nonnull
+  public static String escapeIllegalXmlChars(@Nonnull String text) {
     StringBuilder b = null;
     int lastPos = 0;
     for (int i = 0; i < text.length(); i++) {
@@ -173,8 +173,8 @@ public class XmlStringUtil {
   /**
    * @see XmlStringUtil#escapeIllegalXmlChars(String)
    */
-  @NotNull
-  public static String unescapeIllegalXmlChars(@NotNull String text) {
+  @Nonnull
+  public static String unescapeIllegalXmlChars(@Nonnull String text) {
     StringBuilder b = null;
     int lastPos = 0;
     for (int i = 0; i < text.length(); i++) {

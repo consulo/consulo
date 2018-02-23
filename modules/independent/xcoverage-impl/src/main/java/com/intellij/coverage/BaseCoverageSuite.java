@@ -13,8 +13,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
@@ -117,13 +117,13 @@ public abstract class BaseCoverageSuite  implements CoverageSuite, JDOMExternali
     return myCoverageDataFileProvider.isValid();
   }
 
-  @NotNull
+  @Nonnull
   public String getCoverageDataFileName() {
     return myCoverageDataFileProvider.getCoverageDataFilePath();
   }
 
   public
-  @NotNull
+  @Nonnull
   CoverageFileProvider getCoverageDataFileProvider() {
     return myCoverageDataFileProvider;
   }

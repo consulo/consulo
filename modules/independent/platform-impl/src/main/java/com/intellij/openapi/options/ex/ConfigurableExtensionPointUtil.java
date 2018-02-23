@@ -23,8 +23,8 @@ import com.intellij.openapi.options.OptionalConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -146,17 +146,17 @@ public class ConfigurableExtensionPointUtil {
   /**
    * @deprecated create a new instance of configurable instead
    */
-  @NotNull
-  public static <T extends Configurable> T findProjectConfigurable(@NotNull Project project, @NotNull Class<T> configurableClass) {
+  @Nonnull
+  public static <T extends Configurable> T findProjectConfigurable(@Nonnull Project project, @Nonnull Class<T> configurableClass) {
     return findConfigurable(project.getExtensions(Configurable.PROJECT_CONFIGURABLE), configurableClass);
   }
 
-  @NotNull
-  public static <T extends Configurable> T findApplicationConfigurable(@NotNull Class<T> configurableClass) {
+  @Nonnull
+  public static <T extends Configurable> T findApplicationConfigurable(@Nonnull Class<T> configurableClass) {
     return findConfigurable(Configurable.APPLICATION_CONFIGURABLE.getExtensions(), configurableClass);
   }
 
-  @NotNull
+  @Nonnull
   private static <T extends Configurable> T findConfigurable(ConfigurableEP<Configurable>[] extensions, Class<T> configurableClass) {
     for (ConfigurableEP<Configurable> extension : extensions) {
       if (extension.providerClass != null || extension.instanceClass != null || extension.implementationClass != null) {
@@ -170,7 +170,7 @@ public class ConfigurableExtensionPointUtil {
   }
 
   @Nullable
-  public static Configurable createProjectConfigurableForProvider(@NotNull Project project, Class<? extends ConfigurableProvider> providerClass) {
+  public static Configurable createProjectConfigurableForProvider(@Nonnull Project project, Class<? extends ConfigurableProvider> providerClass) {
     return createConfigurableForProvider(project.getExtensions(Configurable.PROJECT_CONFIGURABLE), providerClass);
   }
 

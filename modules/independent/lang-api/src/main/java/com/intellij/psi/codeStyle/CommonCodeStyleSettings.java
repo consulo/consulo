@@ -29,8 +29,8 @@ import com.intellij.util.xmlb.XmlSerializer;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.Set;
@@ -70,7 +70,7 @@ public class CommonCodeStyleSettings {
     this(language, language == null ? null : language.getAssociatedFileType());
   }
 
-  void setRootSettings(@NotNull CodeStyleSettings rootSettings) {
+  void setRootSettings(@Nonnull CodeStyleSettings rootSettings) {
     myRootSettings = rootSettings;
   }
 
@@ -78,7 +78,7 @@ public class CommonCodeStyleSettings {
     return myLanguage;
   }
 
-  @NotNull
+  @Nonnull
   public IndentOptions initIndentOptions() {
     myIndentOptions = new IndentOptions();
     return myIndentOptions;
@@ -89,7 +89,7 @@ public class CommonCodeStyleSettings {
     return myFileType;
   }
 
-  @NotNull
+  @Nonnull
   public CodeStyleSettings getRootSettings() {
     return myRootSettings;
   }
@@ -104,7 +104,7 @@ public class CommonCodeStyleSettings {
     return myArrangementSettings;
   }
 
-  public void setArrangementSettings(@NotNull ArrangementSettings settings) {
+  public void setArrangementSettings(@Nonnull ArrangementSettings settings) {
     myArrangementSettings = settings;
   }
 
@@ -117,7 +117,7 @@ public class CommonCodeStyleSettings {
   }
 
   @SuppressWarnings("unchecked")
-  public CommonCodeStyleSettings clone(@NotNull CodeStyleSettings rootSettings) {
+  public CommonCodeStyleSettings clone(@Nonnull CodeStyleSettings rootSettings) {
     CommonCodeStyleSettings commonSettings = new CommonCodeStyleSettings(myLanguage, getFileType());
     copyPublicFields(this, commonSettings);
     commonSettings.setRootSettings(rootSettings);
@@ -142,7 +142,7 @@ public class CommonCodeStyleSettings {
     PARENT_SETTINGS_INSTALLED =
             ReflectionUtil.copyFields(getClass().getFields(), from, this, new SupportedFieldsDiffFilter(from, getSupportedFields(), defaultSettings) {
               @Override
-              public boolean isAccept(@NotNull Field field) {
+              public boolean isAccept(@Nonnull Field field) {
                 if ("RIGHT_MARGIN".equals(field.getName())) return false; // Never copy RIGHT_MARGIN, it is inherited automatically if -1
                 return super.isAccept(field);
               }
@@ -209,7 +209,7 @@ public class CommonCodeStyleSettings {
     }
 
     @Override
-    public boolean isAccept(@NotNull Field field) {
+    public boolean isAccept(@Nonnull Field field) {
       if (mySupportedFieldNames == null || mySupportedFieldNames.contains(field.getName())) {
         return super.isAccept(field);
       }
@@ -944,7 +944,7 @@ public class CommonCodeStyleSettings {
     public void writeExternal(Element element) throws WriteExternalException {
       DefaultJDOMExternalizer.writeExternal(this, element, new DefaultJDOMExternalizer.JDOMFilter() {
         @Override
-        public boolean isAccept(@NotNull Field field) {
+        public boolean isAccept(@Nonnull Field field) {
           if ("KEEP_INDENTS_ON_EMPTY_LINES".equals(field.getName())) {
             return KEEP_INDENTS_ON_EMPTY_LINES;
           }
@@ -956,7 +956,7 @@ public class CommonCodeStyleSettings {
     public void serialize(Element indentOptionsElement, final IndentOptions defaultOptions) {
       XmlSerializer.serializeInto(this, indentOptionsElement, new SkipDefaultValuesSerializationFilters() {
         @Override
-        protected void configure(@NotNull Object o) {
+        protected void configure(@Nonnull Object o) {
           if (o instanceof IndentOptions && defaultOptions != null) {
             ((IndentOptions)o).copyFrom(defaultOptions);
           }
@@ -1020,16 +1020,16 @@ public class CommonCodeStyleSettings {
       return myFileIndentOptionsProvider;
     }
 
-    void setFileIndentOptionsProvider(@NotNull FileIndentOptionsProvider provider) {
+    void setFileIndentOptionsProvider(@Nonnull FileIndentOptionsProvider provider) {
       myFileIndentOptionsProvider = provider;
     }
 
-    void associateWithDocument(@NotNull Document document) {
+    void associateWithDocument(@Nonnull Document document) {
       document.putUserData(INDENT_OPTIONS_KEY, this);
     }
 
     @Nullable
-    static IndentOptions retrieveFromAssociatedDocument(@NotNull PsiFile file) {
+    static IndentOptions retrieveFromAssociatedDocument(@Nonnull PsiFile file) {
       Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
       return document != null ? document.getUserData(INDENT_OPTIONS_KEY) : null;
     }

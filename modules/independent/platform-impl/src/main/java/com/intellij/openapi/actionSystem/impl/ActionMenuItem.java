@@ -39,7 +39,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;
@@ -71,8 +71,8 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
 
   public ActionMenuItem(final AnAction action,
                         final Presentation presentation,
-                        @NotNull final String place,
-                        @NotNull DataContext context,
+                        @Nonnull final String place,
+                        @Nonnull DataContext context,
                         final boolean enableMnemonics,
                         final boolean prepareNow,
                         final boolean insideCheckedGroup) {
@@ -214,7 +214,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     return KeymapUtil.getFirstKeyboardShortcutText(myAction.getAction());
   }
 
-  public void updateContext(@NotNull DataContext context) {
+  public void updateContext(@Nonnull DataContext context) {
     myContext = context;
     myEvent = new AnActionEvent(null, context, myPlace, myPresentation, ActionManager.getInstance(), 0, true, false);
   }

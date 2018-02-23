@@ -45,8 +45,8 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.xml.sax.SAXException;
 
 import javax.swing.event.HyperlinkEvent;
@@ -138,7 +138,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
               }
             }) {
               @Override
-              public void run(@NotNull ProgressIndicator indicator) {
+              public void run(@Nonnull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
 
                 final File outputFile = getOutputFile(config, project, filename_);
@@ -236,11 +236,11 @@ public class ExportTestResultsAction extends DumbAwareAction {
             });
   }
 
-  @NotNull
+  @Nonnull
   private static File getOutputFile(
-          final @NotNull ExportTestResultsConfiguration config,
-          final @NotNull Project project,
-          final @NotNull String filename)
+          final @Nonnull ExportTestResultsConfiguration config,
+          final @Nonnull Project project,
+          final @Nonnull String filename)
   {
     final File outputFolder;
     final String outputFolderPath = config.getOutputFolder();
@@ -273,7 +273,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private String getOutputText(ExportTestResultsConfiguration config) throws IOException, TransformerException, SAXException {
     ExportTestResultsConfiguration.ExportFormat exportFormat = config.getExportFormat();
 

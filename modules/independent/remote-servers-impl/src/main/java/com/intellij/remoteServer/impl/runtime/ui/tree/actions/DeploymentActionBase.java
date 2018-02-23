@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.remoteServer.impl.runtime.ui.tree.DeploymentNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Set;
@@ -21,7 +21,7 @@ public abstract class DeploymentActionBase extends ServersTreeActionBase {
   protected abstract boolean isApplicable(DeploymentNode node);
 
   @Override
-  public void doActionPerformed(@NotNull ServersToolWindowContent content) {
+  public void doActionPerformed(@Nonnull ServersToolWindowContent content) {
     for (DeploymentNode node : content.getSelectedDeploymentNodes()) {
       if (isApplicable(node)) {
         perform(node);
@@ -30,7 +30,7 @@ public abstract class DeploymentActionBase extends ServersTreeActionBase {
   }
 
   @Override
-  protected boolean isEnabled(@NotNull ServersToolWindowContent content, AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull ServersToolWindowContent content, AnActionEvent e) {
     Set<?> selectedElements = content.getBuilder().getSelectedElements();
     if (selectedElements.isEmpty() || selectedElements.size() != content.getSelectedDeploymentNodes().size()) {
       return false;

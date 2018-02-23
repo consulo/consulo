@@ -39,8 +39,8 @@ import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
 import consulo.copyright.config.CopyrightFileConfig;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -50,9 +50,9 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   public static final Logger LOGGER = Logger.getInstance(UpdatePsiFileCopyright.class);
 
   private final T myFileConfig;
-  @NotNull
+  @Nonnull
   private final PsiFile myPsiFile;
-  @NotNull
+  @Nonnull
   private final CopyrightProfile myCopyrightProfile;
   private final Set<CommentAction> myActions = new TreeSet<CommentAction>();
 
@@ -61,7 +61,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   private FileType myFileType;
 
   @SuppressWarnings("unchecked")
-  protected UpdatePsiFileCopyright(@NotNull PsiFile psiFile, @NotNull CopyrightProfile copyrightProfile) {
+  protected UpdatePsiFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile) {
     myPsiFile = psiFile;
     myCopyrightProfile = copyrightProfile;
 
@@ -289,17 +289,17 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     }
   }
 
-  @NotNull
+  @Nonnull
   public PsiFile getFile() {
     return myPsiFile;
   }
 
-  @NotNull
+  @Nonnull
   public CopyrightFileConfig getFileConfig() {
     return myFileConfig;
   }
 
-  @NotNull
+  @Nonnull
   public FileType getFileType() {
     return myFileType;
   }
@@ -309,7 +309,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     return ModuleUtilCore.findModuleForPsiElement(myPsiFile);
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myPsiFile.getProject();
   }

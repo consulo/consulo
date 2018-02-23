@@ -19,12 +19,12 @@ package com.intellij.util;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValue<T> {
   private final CachedValueProvider<T> myProvider;
 
-  public CachedValueImpl(@NotNull CachedValueProvider<T> provider) {
+  public CachedValueImpl(@Nonnull CachedValueProvider<T> provider) {
     myProvider = provider;
   }
 
@@ -33,7 +33,7 @@ public class CachedValueImpl<T> extends CachedValueBase<T> implements CachedValu
     return myProvider.compute();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CachedValueProvider<T> getValueProvider() {
     return myProvider;

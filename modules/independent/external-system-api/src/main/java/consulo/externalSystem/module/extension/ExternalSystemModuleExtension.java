@@ -16,14 +16,13 @@
 package consulo.externalSystem.module.extension;
 
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
 public interface ExternalSystemModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ModuleExtension<T> {
-  @Nullable
-  String getOption(@NotNull String key);
+  @javax.annotation.Nullable
+  String getOption(@Nonnull String key);
 }

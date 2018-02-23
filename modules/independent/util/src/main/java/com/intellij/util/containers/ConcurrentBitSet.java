@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TLongFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicLongArray;
@@ -106,7 +106,7 @@ public class ConcurrentBitSet {
     return (prevWord & (1L << bitIndex)) != 0;
   }
 
-  long changeWord(int bitIndex, @NotNull TLongFunction change) {
+  long changeWord(int bitIndex, @Nonnull TLongFunction change) {
     if (bitIndex < 0) {
       throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
     }
@@ -157,7 +157,7 @@ public class ConcurrentBitSet {
     return (prevWord & (1L << bitIndex)) != 0;
   }
 
-  @NotNull
+  @Nonnull
   private AtomicLongArray getOrCreateArray(int bitIndex) {
     int arrayIndex = arrayIndex(bitIndex);
     AtomicLongArray array;
@@ -425,7 +425,7 @@ public class ConcurrentBitSet {
     return b.toString();
   }
 
-  @NotNull
+  @Nonnull
   public long[] toLongArray() {
     int bits = size();
     long[] result = new long[bits/BITS_PER_WORD];
@@ -438,7 +438,7 @@ public class ConcurrentBitSet {
     return result;
   }
 
-  public void writeTo(@NotNull File file) throws IOException {
+  public void writeTo(@Nonnull File file) throws IOException {
     DataOutputStream bitSetStorage = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
     try {
       long[] words = toLongArray();
@@ -451,8 +451,8 @@ public class ConcurrentBitSet {
     }
   }
 
-  @NotNull
-  public static ConcurrentBitSet readFrom(@NotNull File file) throws IOException {
+  @Nonnull
+  public static ConcurrentBitSet readFrom(@Nonnull File file) throws IOException {
     if (!file.exists()) {
       return new ConcurrentBitSet();
     }
@@ -470,7 +470,7 @@ public class ConcurrentBitSet {
     }
   }
 
-  private ConcurrentBitSet(@NotNull long[] words) {
+  private ConcurrentBitSet(@Nonnull long[] words) {
     for (int i = 0; i < words.length; i++) {
       long word = words[i];
       for (int b=0;b<BITS_PER_WORD;b++) {

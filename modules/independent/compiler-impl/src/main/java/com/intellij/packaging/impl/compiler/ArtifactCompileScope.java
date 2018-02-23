@@ -32,8 +32,8 @@ import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
 import com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -49,30 +49,30 @@ public class ArtifactCompileScope {
   private ArtifactCompileScope() {
   }
 
-  public static ModuleCompileScope createScopeForModulesInArtifacts(@NotNull Project project, @NotNull Collection<? extends Artifact> artifacts) {
+  public static ModuleCompileScope createScopeForModulesInArtifacts(@Nonnull Project project, @Nonnull Collection<? extends Artifact> artifacts) {
     final Set<Module> modules = ArtifactUtil.getModulesIncludedInArtifacts(artifacts, project);
     return new ModuleCompileScope(project, modules.toArray(new Module[modules.size()]), true);
   }
 
-  public static CompileScope createArtifactsScope(@NotNull Project project,
-                                                  @NotNull Collection<Artifact> artifacts) {
+  public static CompileScope createArtifactsScope(@Nonnull Project project,
+                                                  @Nonnull Collection<Artifact> artifacts) {
     return createArtifactsScope(project, artifacts, false);
   }
 
-  public static CompileScope createArtifactsScope(@NotNull Project project,
-                                                  @NotNull Collection<Artifact> artifacts,
+  public static CompileScope createArtifactsScope(@Nonnull Project project,
+                                                  @Nonnull Collection<Artifact> artifacts,
                                                   final boolean forceArtifactBuild) {
     return createScopeWithArtifacts(createScopeForModulesInArtifacts(project, artifacts), artifacts, true, forceArtifactBuild);
   }
 
   public static CompileScope createScopeWithArtifacts(final CompileScope baseScope,
-                                                      @NotNull Collection<Artifact> artifacts,
+                                                      @Nonnull Collection<Artifact> artifacts,
                                                       boolean useCustomContentId) {
     return createScopeWithArtifacts(baseScope, artifacts, useCustomContentId, false);
   }
 
   public static CompileScope createScopeWithArtifacts(final CompileScope baseScope,
-                                                      @NotNull Collection<Artifact> artifacts,
+                                                      @Nonnull Collection<Artifact> artifacts,
                                                       boolean useCustomContentId,
                                                       final boolean forceArtifactBuild) {
     baseScope.putUserData(ARTIFACTS_KEY, artifacts.toArray(new Artifact[artifacts.size()]));
@@ -121,7 +121,7 @@ public class ArtifactCompileScope {
     return compileScope.getUserData(ARTIFACTS_KEY);
   }
 
-  public static boolean isArtifactRebuildForced(@NotNull CompileScope scope) {
+  public static boolean isArtifactRebuildForced(@Nonnull CompileScope scope) {
     return Boolean.TRUE.equals(scope.getUserData(FORCE_ARTIFACT_BUILD));
   }
 
@@ -135,9 +135,9 @@ public class ArtifactCompileScope {
                                                   }, context, true);
   }
 
-  @NotNull
-  private static Set<Artifact> addIncludedArtifacts(@NotNull Collection<Artifact> artifacts,
-                                                    @NotNull PackagingElementResolvingContext context,
+  @Nonnull
+  private static Set<Artifact> addIncludedArtifacts(@Nonnull Collection<Artifact> artifacts,
+                                                    @Nonnull PackagingElementResolvingContext context,
                                                     final boolean withOutputPathOnly) {
     Set<Artifact> result = new HashSet<Artifact>();
     for (Artifact artifact : artifacts) {

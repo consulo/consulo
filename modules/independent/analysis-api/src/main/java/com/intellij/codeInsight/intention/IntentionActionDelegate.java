@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.intention;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface IntentionActionDelegate {
-  @NotNull
+  @Nonnull
   IntentionAction getDelegate();
 }

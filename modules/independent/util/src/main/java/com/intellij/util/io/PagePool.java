@@ -21,8 +21,8 @@ package com.intellij.util.io;
 
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -86,7 +86,7 @@ public class PagePool {
   private Page lastHit = null;
 
   @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})
-  @NotNull
+  @Nonnull
   public Page alloc(RandomAccessDataFile owner, long offset) {
     synchronized (lock) {
       offset -= offset % Page.PAGE_SIZE;

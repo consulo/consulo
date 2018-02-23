@@ -15,8 +15,9 @@ import com.intellij.psi.search.PsiFileSystemItemProcessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredWriteAction;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
@@ -65,7 +66,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  public PsiElement replace(@NotNull final PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull final PsiElement newElement) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be changed");
   }
 
@@ -80,12 +81,12 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  public void accept(@NotNull final PsiElementVisitor visitor) {
+  public void accept(@Nonnull final PsiElementVisitor visitor) {
     // TODO
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     final PsiElementProcessor.CollectElements<PsiFileSystemItem> collector = new PsiElementProcessor.CollectElements<PsiFileSystemItem>();
     processChildren(collector);
@@ -98,7 +99,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return Language.ANY;
   }
@@ -110,7 +111,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException {
+  public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException {
     throw new IncorrectOperationException("Frameworks cannot be renamed");
   }
 
@@ -153,18 +154,18 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO throw new InsupportedOperationException()
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return false;
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return false;
   }
 
@@ -175,22 +176,22 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException();
   }
 }

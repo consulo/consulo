@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
 * User: anna
@@ -44,7 +44,7 @@ public class CustomisedActionGroup extends ActionGroup {
     myForceUpdate = true;
   }
 
-  @NotNull
+  @Nonnull
   public AnAction[] getChildren(@Nullable final AnActionEvent e) {
     if (myForceUpdate){
       myChildren = CustomizationUtil.getReordableChildren(myGroup, mySchema, myDefaultGroupName, e);

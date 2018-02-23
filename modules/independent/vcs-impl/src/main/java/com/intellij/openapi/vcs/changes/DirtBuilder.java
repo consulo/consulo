@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DirtBuilder implements DirtBuilderReader {
   private final VcsGuess myGuess;
@@ -54,12 +54,12 @@ public class DirtBuilder implements DirtBuilderReader {
     myEverythingDirty = true;
   }
 
-  public void addDirtyFile(@NotNull AbstractVcs vcs, @NotNull FilePath file) {
+  public void addDirtyFile(@Nonnull AbstractVcs vcs, @Nonnull FilePath file) {
     if (myFileTypeManager.isFileIgnored(file.getName())) return;
     myFiles.putValue(vcs, file);
   }
 
-  public void addDirtyDirRecursively(@NotNull AbstractVcs vcs, @NotNull FilePath dir) {
+  public void addDirtyDirRecursively(@Nonnull AbstractVcs vcs, @Nonnull FilePath dir) {
     if (myFileTypeManager.isFileIgnored(dir.getName())) return;
     myDirs.putValue(vcs, dir);
   }
@@ -68,12 +68,12 @@ public class DirtBuilder implements DirtBuilderReader {
     return myEverythingDirty;
   }
 
-  @NotNull
+  @Nonnull
   public MultiMap<AbstractVcs, FilePath> getFilesForVcs() {
     return myFiles;
   }
 
-  @NotNull
+  @Nonnull
   public MultiMap<AbstractVcs, FilePath> getDirsForVcs() {
     return myDirs;
   }

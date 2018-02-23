@@ -17,11 +17,11 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.List;
 
 public interface EditorTrackerListener extends EventListener{
-  void activeEditorsChanged(@NotNull List<Editor> activeEditors);
+  void activeEditorsChanged(@Nonnull List<Editor> activeEditors);
 }

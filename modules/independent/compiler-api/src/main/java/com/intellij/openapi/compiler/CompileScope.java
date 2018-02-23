@@ -18,8 +18,7 @@ package com.intellij.openapi.compiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Interface describing the current compilation scope.
@@ -37,8 +36,8 @@ public interface CompileScope extends ExportableUserDataHolder {
    *                     Otherwise files are searched in all directories that belong to the scope.
    * @return a list of files of given type that belong to this scope.
    */
-  @NotNull
-  VirtualFile[] getFiles(@Nullable FileType fileType, boolean inSourceOnly);
+  @Nonnull
+  VirtualFile[] getFiles(@javax.annotation.Nullable FileType fileType, boolean inSourceOnly);
 
   /**
    * Checks if the file with the specified URL belongs to the scope.
@@ -54,6 +53,6 @@ public interface CompileScope extends ExportableUserDataHolder {
    *
    * @return a list of modules this scope affects.
    */
-  @NotNull
+  @Nonnull
   Module[] getAffectedModules();
 }

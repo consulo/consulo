@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.util.EventDispatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.beans.PropertyChangeListener;
@@ -42,12 +42,12 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
   private final EventDispatcher<PropertyChangeListener> myPropertyChangeMulticaster = EventDispatcher.create(PropertyChangeListener.class);
   private final EventDispatcher<FocusChangeListener> myFocusChangeListenerMulticaster = EventDispatcher.create(FocusChangeListener.class);
 
-  public void registerDocument(@NotNull DocumentEx document) {
+  public void registerDocument(@Nonnull DocumentEx document) {
     document.addDocumentListener(myDocumentMulticaster.getMulticaster());
     document.addEditReadOnlyListener(myEditReadOnlyMulticaster.getMulticaster());
   }
 
-  public void registerEditor(@NotNull EditorEx editor) {
+  public void registerEditor(@Nonnull EditorEx editor) {
     editor.addEditorMouseListener(myEditorMouseMulticaster.getMulticaster());
     editor.addEditorMouseMotionListener(myEditorMouseMotionMulticaster.getMulticaster());
     ((EditorMarkupModel) editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((EditorImpl)editor).getDisposable());
@@ -59,137 +59,137 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener) {
+  public void addDocumentListener(@Nonnull DocumentListener listener) {
     myDocumentMulticaster.addListener(listener);
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
     myDocumentMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeDocumentListener(@NotNull DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull DocumentListener listener) {
     myDocumentMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addEditorMouseListener(@NotNull EditorMouseListener listener) {
+  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
     myEditorMouseMulticaster.addListener(listener);
   }
 
   @Override
-  public void addEditorMouseListener(@NotNull EditorMouseListener listener, @NotNull Disposable parentDisposable) {
+  public void addEditorMouseListener(@Nonnull EditorMouseListener listener, @Nonnull Disposable parentDisposable) {
     myEditorMouseMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeEditorMouseListener(@NotNull EditorMouseListener listener) {
+  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
     myEditorMouseMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     myEditorMouseMotionMulticaster.addListener(listener);
   }
 
   @Override
-  public void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener, @NotNull Disposable parentDisposable) {
+  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener, @Nonnull Disposable parentDisposable) {
     myEditorMouseMotionMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
     myEditorMouseMotionMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addCaretListener(@NotNull CaretListener listener) {
+  public void addCaretListener(@Nonnull CaretListener listener) {
     myCaretMulticaster.addListener(listener);
   }
 
   @Override
-  public void addCaretListener(@NotNull CaretListener listener, @NotNull Disposable parentDisposable) {
+  public void addCaretListener(@Nonnull CaretListener listener, @Nonnull Disposable parentDisposable) {
     myCaretMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeCaretListener(@NotNull CaretListener listener) {
+  public void removeCaretListener(@Nonnull CaretListener listener) {
     myCaretMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addSelectionListener(@NotNull SelectionListener listener) {
+  public void addSelectionListener(@Nonnull SelectionListener listener) {
     mySelectionMulticaster.addListener(listener);
   }
 
   @Override
-  public void addSelectionListener(@NotNull SelectionListener listener, @NotNull Disposable parentDisposable) {
+  public void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable) {
     mySelectionMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeSelectionListener(@NotNull SelectionListener listener) {
+  public void removeSelectionListener(@Nonnull SelectionListener listener) {
     mySelectionMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addErrorStripeListener(@NotNull ErrorStripeListener listener) {
+  public void addErrorStripeListener(@Nonnull ErrorStripeListener listener) {
     myErrorStripeMulticaster.addListener(listener);
   }
 
   @Override
-  public void addErrorStripeListener(@NotNull ErrorStripeListener listener, @NotNull Disposable parentDisposable) {
+  public void addErrorStripeListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parentDisposable) {
     myErrorStripeMulticaster.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void removeErrorStripeListener(@NotNull ErrorStripeListener listener) {
+  public void removeErrorStripeListener(@Nonnull ErrorStripeListener listener) {
     myErrorStripeMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
     myVisibleAreaMulticaster.addListener(listener);
   }
 
   @Override
-  public void removeVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
     myVisibleAreaMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     myEditReadOnlyMulticaster.addListener(listener);
   }
 
   @Override
-  public void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     myEditReadOnlyMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.addListener(listener);
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeMulticaster.removeListener(listener);
   }
 
   @Override
-  public void addFocusChangeListner(@NotNull FocusChangeListener listener) {
+  public void addFocusChangeListner(@Nonnull FocusChangeListener listener) {
     myFocusChangeListenerMulticaster.addListener(listener);
   }
 
   @Override
-  public void addFocusChangeListner(@NotNull FocusChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addFocusChangeListner(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
     myFocusChangeListenerMulticaster.addListener(listener,parentDisposable);
   }
 
   @Override
-  public void removeFocusChangeListner(@NotNull FocusChangeListener listener) {
+  public void removeFocusChangeListner(@Nonnull FocusChangeListener listener) {
     myFocusChangeListenerMulticaster.removeListener(listener);
   }
 

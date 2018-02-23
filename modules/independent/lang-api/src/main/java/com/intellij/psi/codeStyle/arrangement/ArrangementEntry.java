@@ -16,8 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public interface ArrangementEntry {
    * @return    parent entry, e.g. it would be a class entry for a method entry
    * @see #getChildren()
    */
-  @Nullable
+  @javax.annotation.Nullable
   ArrangementEntry getParent();
 
   /**
@@ -53,7 +52,7 @@ public interface ArrangementEntry {
    * @return    current entry's children. Empty collection if there are no children
    * @see #getParent() 
    */
-  @NotNull
+  @Nonnull
   List<? extends ArrangementEntry> getChildren();
 
   /**
@@ -67,7 +66,7 @@ public interface ArrangementEntry {
    * 
    * @return    current entry's dependencies (if any)
    */
-  @Nullable
+  @javax.annotation.Nullable
   List<? extends ArrangementEntry> getDependencies();
 
   /**

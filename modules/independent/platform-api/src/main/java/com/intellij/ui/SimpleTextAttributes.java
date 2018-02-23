@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -173,7 +173,7 @@ public final class SimpleTextAttributes {
     return (myStyle & STYLE_OPAQUE) != 0;
   }
 
-  @NotNull
+  @Nonnull
   public static SimpleTextAttributes fromTextAttributes(TextAttributes attributes) {
     if (attributes == null) return REGULAR_ATTRIBUTES;
 

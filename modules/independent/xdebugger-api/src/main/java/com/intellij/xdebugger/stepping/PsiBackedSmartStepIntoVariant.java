@@ -19,7 +19,7 @@ package com.intellij.xdebugger.stepping;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,7 +30,7 @@ public class PsiBackedSmartStepIntoVariant<T extends PsiNamedElement & Navigatio
   private final T myElement;
   private final ItemPresentation myPresentation;
 
-  public PsiBackedSmartStepIntoVariant(@NotNull T element) {
+  public PsiBackedSmartStepIntoVariant(@Nonnull T element) {
     myElement = element;
     myPresentation = element.getPresentation();
     assert myPresentation != null: "Invalid presentation:" + myElement;

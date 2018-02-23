@@ -37,7 +37,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -131,7 +131,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
                        !StringUtil.containsAnyChar(fileName, "*?><\":;|") && fileName.indexOf(".") != 0);
   }
 
-  private static boolean isFileExist(@NotNull final String directory, @NotNull final String fileName) {
+  private static boolean isFileExist(@Nonnull final String directory, @Nonnull final String fileName) {
     return LocalFileSystem.getInstance().findFileByIoFile(new File(directory, fileName)) != null;
   }
 
@@ -186,7 +186,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }

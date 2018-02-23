@@ -19,8 +19,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class LogUtil {
   /**
    * Format string syntax as in {@linkplain String#format(String, Object...)}.
    */
-  public static void debug(@NotNull Logger logger, @NonNls @NotNull String format, @Nullable Object... args) {
+  public static void debug(@Nonnull Logger logger, @NonNls @Nonnull String format, @Nullable Object... args) {
     if (logger.isDebugEnabled()) {
       logger.debug(String.format(format, args));
     }

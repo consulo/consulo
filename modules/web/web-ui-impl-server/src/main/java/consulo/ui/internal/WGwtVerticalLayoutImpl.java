@@ -20,8 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.ui.VerticalLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,10 +34,10 @@ import java.util.List;
 public class WGwtVerticalLayoutImpl extends AbstractLayout implements VerticalLayout, VaadinWrapper {
   private final List<com.vaadin.ui.Component> myChildren = new LinkedList<>();
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredUIAccess
-  public VerticalLayout add(@NotNull Component component) {
+  public VerticalLayout add(@Nonnull Component component) {
     addComponent((com.vaadin.ui.Component)component);
     myChildren.add((com.vaadin.ui.Component)component);
 
@@ -76,7 +76,7 @@ public class WGwtVerticalLayoutImpl extends AbstractLayout implements VerticalLa
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

@@ -16,7 +16,7 @@
 package com.intellij.openapi.util.text;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -43,7 +43,7 @@ public class NaturalComparator implements Comparator<String> {
   }
 
   @Contract(pure = true)
-  private static int naturalCompare(@NotNull String s1, @NotNull String s2, int length1, int length2, boolean ignoreCase) {
+  private static int naturalCompare(@Nonnull String s1, @Nonnull String s2, int length1, int length2, boolean ignoreCase) {
     int i = 0;
     int j = 0;
     for (; i < length1 && j < length2; i++, j++) {
@@ -91,7 +91,7 @@ public class NaturalComparator implements Comparator<String> {
     return ignoreCase ? naturalCompare(s1, s2, length1, length2, false) : 0;
   }
 
-  private static int compareCharRange(@NotNull String s1, @NotNull String s2, int offset1, int offset2, int end1) {
+  private static int compareCharRange(@Nonnull String s1, @Nonnull String s2, int offset1, int offset2, int end1) {
     for (int i = offset1, j = offset2; i < end1; i++, j++) {
       final int diff = s1.charAt(i) - s2.charAt(j);
       if (diff != 0) return diff;

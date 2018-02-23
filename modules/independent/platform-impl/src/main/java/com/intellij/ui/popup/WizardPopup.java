@@ -33,9 +33,9 @@ import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -66,11 +66,11 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   private final ActionMap myActionMap = new ActionMap();
   private final InputMap myInputMap = new InputMap();
 
-  public WizardPopup(@NotNull PopupStep<Object> aStep) {
+  public WizardPopup(@Nonnull PopupStep<Object> aStep) {
     this(null, aStep);
   }
 
-  public WizardPopup(@Nullable JBPopup aParent, @NotNull PopupStep<Object> aStep) {
+  public WizardPopup(@Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
     myParent = (WizardPopup) aParent;
     myStep = aStep;
 
@@ -286,7 +286,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected MyContentPanel createContentPanel(final boolean resizable, final PopupBorder border, final boolean isToDrawMacCorner) {
     return new MyContainer(resizable, border, isToDrawMacCorner);
   }

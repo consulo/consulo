@@ -23,7 +23,7 @@ import com.intellij.usages.UsageTarget;
 import com.intellij.usages.rules.UsageFilteringRule;
 import com.intellij.usages.rules.UsageGroupingRule;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,11 +38,11 @@ class UsageNodeTreeBuilder {
   private UsageGroupingRule[] myGroupingRules;
   private UsageFilteringRule[] myFilteringRules;
 
-  UsageNodeTreeBuilder(@NotNull UsageTarget[] targets,
-                       @NotNull UsageGroupingRule[] groupingRules,
-                       @NotNull UsageFilteringRule[] filteringRules,
-                       @NotNull GroupNode root,
-                       @NotNull Project project) {
+  UsageNodeTreeBuilder(@Nonnull UsageTarget[] targets,
+                       @Nonnull UsageGroupingRule[] groupingRules,
+                       @Nonnull UsageFilteringRule[] filteringRules,
+                       @Nonnull GroupNode root,
+                       @Nonnull Project project) {
     myTargets = targets;
     myGroupingRules = groupingRules;
     myFilteringRules = filteringRules;
@@ -50,19 +50,19 @@ class UsageNodeTreeBuilder {
     myProject = project;
   }
 
-  public void setGroupingRules(@NotNull UsageGroupingRule[] rules) {
+  public void setGroupingRules(@Nonnull UsageGroupingRule[] rules) {
     myGroupingRules = rules;
   }
 
-  void setFilteringRules(@NotNull UsageFilteringRule[] rules) {
+  void setFilteringRules(@Nonnull UsageFilteringRule[] rules) {
     myFilteringRules = rules;
   }
 
-  public boolean isVisible(@NotNull Usage usage) {
+  public boolean isVisible(@Nonnull Usage usage) {
     return Arrays.stream(myFilteringRules).allMatch(rule -> rule.isVisible(usage, myTargets));
   }
 
-  UsageNode appendUsage(@NotNull Usage usage, @NotNull Consumer<Node> edtInsertedUnderQueue, boolean filterDuplicateLines) {
+  UsageNode appendUsage(@Nonnull Usage usage, @Nonnull Consumer<Node> edtInsertedUnderQueue, boolean filterDuplicateLines) {
     if (!isVisible(usage)) return null;
 
     final boolean dumb = DumbService.isDumb(myProject);

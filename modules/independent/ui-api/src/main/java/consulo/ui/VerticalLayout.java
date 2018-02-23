@@ -15,25 +15,25 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
 public interface VerticalLayout extends Layout {
-  @NotNull
+  @Nonnull
   static VerticalLayout create() {
     return UIInternal.get()._Layouts_vertical();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default VerticalLayout add(@NotNull PseudoComponent component) {
+  default VerticalLayout add(@Nonnull PseudoComponent component) {
     return add(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  VerticalLayout add(@NotNull Component component);
+  VerticalLayout add(@Nonnull Component component);
 }

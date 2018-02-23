@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class WeakList<T> extends UnsafeWeakList<T> {
   }
 
   // For testing only
-  WeakList(@NotNull WeakReferenceArray<T> array) {
+  WeakList(@Nonnull WeakReferenceArray<T> array) {
     super(array);
   }
 
@@ -132,7 +132,7 @@ public class WeakList<T> extends UnsafeWeakList<T> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<T> iterator() {
     return new MySyncIterator();
   }

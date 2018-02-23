@@ -17,8 +17,8 @@ package com.intellij.ide.browsers;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.net.URI;
@@ -28,19 +28,19 @@ public abstract class BrowserLauncher {
     return ServiceManager.getService(BrowserLauncher.class);
   }
 
-  public abstract void open(@NotNull String url);
+  public abstract void open(@Nonnull String url);
 
-  public abstract void browse(@NotNull URI uri);
+  public abstract void browse(@Nonnull URI uri);
 
-  public abstract void browse(@NotNull File file);
+  public abstract void browse(@Nonnull File file);
 
-  public abstract void browse(@NotNull String url, @Nullable WebBrowser browser);
+  public abstract void browse(@Nonnull String url, @Nullable WebBrowser browser);
 
-  public abstract void browse(@NotNull String url, @Nullable WebBrowser browser, @Nullable Project project);
+  public abstract void browse(@Nonnull String url, @Nullable WebBrowser browser, @Nullable Project project);
 
   public abstract boolean browseUsingPath(@Nullable String url,
                                           @Nullable String browserPath,
                                           @Nullable WebBrowser browser,
                                           @Nullable Project project,
-                                          @NotNull String[] additionalParameters);
+                                          @Nonnull String[] additionalParameters);
 }

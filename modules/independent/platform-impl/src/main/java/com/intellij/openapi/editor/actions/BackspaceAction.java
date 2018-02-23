@@ -31,7 +31,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.util.ui.MacUIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredWriteAction;
 
 public class BackspaceAction extends EditorAction {
@@ -58,7 +58,7 @@ public class BackspaceAction extends EditorAction {
     }
   }
 
-  private static void doBackSpaceAtCaret(@NotNull Editor editor) {
+  private static void doBackSpaceAtCaret(@Nonnull Editor editor) {
     if(editor.getSelectionModel().hasSelection()) {
       EditorModificationUtil.deleteSelectedText(editor);
       return;

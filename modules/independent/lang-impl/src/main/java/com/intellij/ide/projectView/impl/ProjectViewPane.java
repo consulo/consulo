@@ -33,7 +33,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,7 +53,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }
@@ -93,7 +93,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     };
   }
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ProjectPane";
   }
@@ -145,9 +145,9 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
       return new ProjectViewProjectNode(project, settings);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
       T value = ProjectViewPane.this.getUserData(option);
       assert value != null;
       return value;

@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui.render;
 
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import com.intellij.ui.SimpleColoredComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -26,7 +26,7 @@ import java.awt.event.MouseEvent;
 
 public class SimpleColoredComponentLinkMouseListener extends TableLinkMouseListener {
   @Override
-  protected Object tryGetTag(@NotNull MouseEvent e, @NotNull JTable table, int row, int column) {
+  protected Object tryGetTag(@Nonnull MouseEvent e, @Nonnull JTable table, int row, int column) {
     TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
     Component component = cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
     if (component instanceof SimpleColoredComponent) {

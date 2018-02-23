@@ -22,12 +22,12 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LineMover extends StatementUpDownMover {
 
   @Override
-  public boolean checkAvailable(@NotNull final Editor editor, @NotNull final PsiFile file, @NotNull final MoveInfo info, final boolean down) {
+  public boolean checkAvailable(@Nonnull final Editor editor, @Nonnull final PsiFile file, @Nonnull final MoveInfo info, final boolean down) {
     LineRange range = StatementUpDownMover.getLineRangeFromSelection(editor);
 
     LogicalPosition maxLinePos = editor.offsetToLogicalPosition(editor.getDocument().getTextLength());

@@ -19,7 +19,7 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.testFramework.UsefulTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class CompletionTester {
 
   private final CodeInsightTestFixture myFixture;
 
-  public CompletionTester(@NotNull final CodeInsightTestFixture fixture) {
+  public CompletionTester(@Nonnull final CodeInsightTestFixture fixture) {
     myFixture = fixture;
   }
 

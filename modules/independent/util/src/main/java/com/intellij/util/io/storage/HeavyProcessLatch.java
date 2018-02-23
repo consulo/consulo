@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.EventDispatcher;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -59,8 +59,8 @@ public class HeavyProcessLatch {
     processStarted("");
   }
 
-  @NotNull
-  public AccessToken processStarted(@NotNull final String operationName) {
+  @Nonnull
+  public AccessToken processStarted(@Nonnull final String operationName) {
     synchronized (myHeavyProcesses) {
       myHeavyProcesses.add(operationName);
     }
@@ -73,7 +73,7 @@ public class HeavyProcessLatch {
     };
   }
 
-  private void processFinished(@NotNull String operationName) {
+  private void processFinished(@Nonnull String operationName) {
     synchronized (myHeavyProcesses) {
       myHeavyProcesses.remove(operationName);
     }
@@ -116,17 +116,17 @@ public class HeavyProcessLatch {
     void processFinished();
   }
 
-  public void addListener(@NotNull HeavyProcessListener listener,
-                          @NotNull Disposable parentDisposable) {
+  public void addListener(@Nonnull HeavyProcessListener listener,
+                          @Nonnull Disposable parentDisposable) {
     myEventDispatcher.addListener(listener, parentDisposable);
   }
 
-  public void addUIActivityListener(@NotNull HeavyProcessListener listener,
-                                    @NotNull Disposable parentDisposable) {
+  public void addUIActivityListener(@Nonnull HeavyProcessListener listener,
+                                    @Nonnull Disposable parentDisposable) {
     myUIProcessDispatcher.addListener(listener, parentDisposable);
   }
 
-  public void executeOutOfHeavyProcess(@NotNull Runnable runnable) {
+  public void executeOutOfHeavyProcess(@Nonnull Runnable runnable) {
     boolean runNow;
     synchronized (myHeavyProcesses) {
       if (isRunning()) {

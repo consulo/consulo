@@ -33,8 +33,8 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -198,12 +198,12 @@ class StubVersionMap {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static File allIndexedFilesRegistryFile() {
     return new File(new File(IndexInfrastructure.getIndexRootDir(StubUpdatingIndex.INDEX_ID), ".fileTypes"), INDEXED_FILETYPES);
   }
 
-  @NotNull
+  @Nonnull
   private static String typeAndVersion(Object owner) {
     return info(owner) + "," + version(owner);
   }
@@ -228,7 +228,8 @@ class StubVersionMap {
     return (int)(myStubIndexStamp - fileTypeToVersion.get(type));
   }
 
-  public @Nullable FileType getFileTypeByIndexingTimestampDiff(int diff) {
+  public @Nullable
+  FileType getFileTypeByIndexingTimestampDiff(int diff) {
     return versionToFileType.get(myStubIndexStamp - diff);
   }
 }

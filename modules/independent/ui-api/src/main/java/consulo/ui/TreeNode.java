@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.function.BiConsumer;
 
@@ -25,12 +24,12 @@ import java.util.function.BiConsumer;
  * @since 13-Sep-17
  */
 public interface TreeNode<T> {
-  void setRender(@NotNull BiConsumer<T, ItemPresentation> render);
+  void setRender(@Nonnull BiConsumer<T, ItemPresentation> render);
 
   void setLeaf(boolean leaf);
 
   boolean isLeaf();
 
-  @Nullable("if rootValue is null and treeNode wrap it")
+  @javax.annotation.Nullable("if rootValue is null and treeNode wrap it")
   T getValue();
 }

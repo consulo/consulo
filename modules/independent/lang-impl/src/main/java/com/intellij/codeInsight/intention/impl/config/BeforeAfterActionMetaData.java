@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,8 +68,8 @@ public abstract class BeforeAfterActionMetaData {
     myDescription = description;
   }
 
-  @NotNull
-  private static TextDescriptor[] retrieveURLs(@NotNull URL descriptionDirectory, @NotNull String prefix, @NotNull String suffix)
+  @Nonnull
+  private static TextDescriptor[] retrieveURLs(@Nonnull URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix)
           throws MalformedURLException {
     List<TextDescriptor> urls = new ArrayList<TextDescriptor>();
     final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
@@ -120,7 +120,7 @@ public abstract class BeforeAfterActionMetaData {
     return urls.toArray(new TextDescriptor[urls.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor[] getExampleUsagesBefore() {
     if (myExampleUsagesBefore == null) {
       try {
@@ -134,7 +134,7 @@ public abstract class BeforeAfterActionMetaData {
     return myExampleUsagesBefore;
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor[] getExampleUsagesAfter() {
     if (myExampleUsagesAfter == null) {
       try {
@@ -148,7 +148,7 @@ public abstract class BeforeAfterActionMetaData {
     return myExampleUsagesAfter;
   }
 
-  @NotNull
+  @Nonnull
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {

@@ -15,8 +15,8 @@ import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,13 +36,13 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   private final String id;
   private final String displayName;
 
-  public MergedCompositeConfigurable(@NotNull String id, @NotNull String displayName, @NotNull Configurable[] children) {
+  public MergedCompositeConfigurable(@Nonnull String id, @Nonnull String displayName, @Nonnull Configurable[] children) {
     this.children = children;
     this.id = id;
     this.displayName = displayName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return id;
@@ -126,7 +126,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return myRootPanel;
   }
 
-  @NotNull
+  @Nonnull
   static JPanel createPanel(boolean isUseTitledBorder) {
     int verticalGap = TitledSeparator.TOP_INSET;
     JPanel panel = new JPanel(new VerticalFlowLayout(0, isUseTitledBorder ? 0 : verticalGap));

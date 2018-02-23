@@ -16,15 +16,15 @@
 package com.intellij.execution;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class DefaultExecutionTargetProvider extends ExecutionTargetProvider {
-  @NotNull
+  @Nonnull
   @Override
-  public List<ExecutionTarget> getTargets(@NotNull Project project, @NotNull RunnerAndConfigurationSettings configuration) {
+  public List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration) {
     return Collections.singletonList(DefaultExecutionTarget.INSTANCE);
   }
 }

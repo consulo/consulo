@@ -54,8 +54,8 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +74,7 @@ public class TypedHandler extends TypedActionHandlerBase {
   }
 
   @Nullable
-  public static QuoteHandler getQuoteHandler(@NotNull PsiFile file, @NotNull Editor editor) {
+  public static QuoteHandler getQuoteHandler(@Nonnull PsiFile file, @Nonnull Editor editor) {
     FileType fileType = getFileType(file, editor);
     QuoteHandler quoteHandler = getQuoteHandlerForType(fileType);
     if (quoteHandler == null) {
@@ -98,7 +98,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return LanguageQuoteHandling.INSTANCE.forLanguage(baseLanguage);
   }
 
-  private static FileType getFileType(@NotNull PsiFile file, @NotNull Editor editor) {
+  private static FileType getFileType(@Nonnull PsiFile file, @Nonnull Editor editor) {
     FileType fileType = file.getFileType();
     Language language = PsiUtilBase.getLanguageInEditor(editor, file.getProject());
     if (language != null && language != PlainTextLanguage.INSTANCE) {
@@ -108,11 +108,11 @@ public class TypedHandler extends TypedActionHandlerBase {
     return fileType;
   }
 
-  public static void registerBaseLanguageQuoteHandler(@NotNull Class<? extends Language> languageClass, @NotNull QuoteHandler quoteHandler) {
+  public static void registerBaseLanguageQuoteHandler(@Nonnull Class<? extends Language> languageClass, @Nonnull QuoteHandler quoteHandler) {
     ourBaseLanguageQuoteHandlers.put(languageClass, quoteHandler);
   }
 
-  public static QuoteHandler getQuoteHandlerForType(@NotNull FileType fileType) {
+  public static QuoteHandler getQuoteHandlerForType(@Nonnull FileType fileType) {
     if (!quoteHandlers.containsKey(fileType)) {
       QuoteHandler handler = null;
       final QuoteHandlerEP[] handlerEPs = Extensions.getExtensions(QuoteHandlerEP.EP_NAME);
@@ -131,12 +131,12 @@ public class TypedHandler extends TypedActionHandlerBase {
    * @see QuoteHandlerEP
    */
   @Deprecated
-  public static void registerQuoteHandler(@NotNull FileType fileType, @NotNull QuoteHandler quoteHandler) {
+  public static void registerQuoteHandler(@Nonnull FileType fileType, @Nonnull QuoteHandler quoteHandler) {
     quoteHandlers.put(fileType, quoteHandler);
   }
 
   @Override
-  public void execute(@NotNull final Editor originalEditor, final char charTyped, @NotNull final DataContext dataContext) {
+  public void execute(@Nonnull final Editor originalEditor, final char charTyped, @Nonnull final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     final PsiFile originalFile;
 
@@ -246,25 +246,25 @@ public class TypedHandler extends TypedActionHandlerBase {
     EditorModificationUtil.insertStringAtCaret(editor, String.valueOf(charTyped), true, true);
   }
 
-  private static void autoPopupParameterInfo(@NotNull Editor editor, char charTyped, @NotNull Project project, @NotNull PsiFile file) {
+  private static void autoPopupParameterInfo(@Nonnull Editor editor, char charTyped, @Nonnull Project project, @Nonnull PsiFile file) {
     if ((charTyped == '(' || charTyped == ',') && !isInsideStringLiteral(editor, file)) {
       AutoPopupController.getInstance(project).autoPopupParameterInfo(editor, null);
     }
   }
 
-  public static void autoPopupCompletion(@NotNull Editor editor, char charTyped, @NotNull Project project, @NotNull PsiFile file) {
+  public static void autoPopupCompletion(@Nonnull Editor editor, char charTyped, @Nonnull Project project, @Nonnull PsiFile file) {
     if (charTyped == '.' || isAutoPopup(editor, file, charTyped)) {
       AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null);
     }
   }
 
-  public static void commitDocumentIfCurrentCaretIsNotTheFirstOne(@NotNull Editor editor, @NotNull Project project) {
+  public static void commitDocumentIfCurrentCaretIsNotTheFirstOne(@Nonnull Editor editor, @Nonnull Project project) {
     if (ContainerUtil.getFirstItem(editor.getCaretModel().getAllCarets()) != editor.getCaretModel().getCurrentCaret()) {
       PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
     }
   }
 
-  private static boolean isAutoPopup(@NotNull Editor editor, @NotNull PsiFile file, char charTyped) {
+  private static boolean isAutoPopup(@Nonnull Editor editor, @Nonnull PsiFile file, char charTyped) {
     final int offset = editor.getCaretModel().getOffset() - 1;
     if (offset >= 0) {
       final PsiElement element = file.findElementAt(offset);
@@ -278,7 +278,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return false;
   }
 
-  private static boolean isInsideStringLiteral(@NotNull Editor editor, @NotNull PsiFile file) {
+  private static boolean isInsideStringLiteral(@Nonnull Editor editor, @Nonnull PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
     PsiElement element = file.findElementAt(offset);
     if (element == null) return false;
@@ -302,8 +302,8 @@ public class TypedHandler extends TypedActionHandlerBase {
     return false;
   }
 
-  @NotNull
-  public static Editor injectedEditorIfCharTypedIsSignificant(final char charTyped, @NotNull Editor editor, @NotNull PsiFile oldFile) {
+  @Nonnull
+  public static Editor injectedEditorIfCharTypedIsSignificant(final char charTyped, @Nonnull Editor editor, @Nonnull PsiFile oldFile) {
     int offset = editor.getCaretModel().getOffset();
     // even for uncommitted document try to retrieve injected fragment that has been there recently
     // we are assuming here that when user is (even furiously) typing, injected language would not change
@@ -326,7 +326,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return editor;
   }
 
-  private static void handleAfterLParen(@NotNull Editor editor, @NotNull FileType fileType, char lparenChar) {
+  private static void handleAfterLParen(@Nonnull Editor editor, @Nonnull FileType fileType, char lparenChar) {
     int offset = editor.getCaretModel().getOffset();
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     boolean atEndOfDocument = offset == editor.getDocument().getTextLength();
@@ -376,7 +376,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     }
   }
 
-  public static boolean handleRParen(@NotNull Editor editor, @NotNull FileType fileType, char charTyped) {
+  public static boolean handleRParen(@Nonnull Editor editor, @Nonnull FileType fileType, char charTyped) {
     if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET) return false;
 
     int offset = editor.getCaretModel().getOffset();
@@ -423,7 +423,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return true;
   }
 
-  private static boolean handleQuote(@NotNull Editor editor, char quote, @NotNull PsiFile file) {
+  private static boolean handleQuote(@Nonnull Editor editor, char quote, @Nonnull PsiFile file) {
     if (!CodeInsightSettings.getInstance().AUTOINSERT_PAIR_QUOTE) return false;
     final QuoteHandler quoteHandler = getQuoteHandler(file, editor);
     if (quoteHandler == null) return false;
@@ -480,7 +480,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return true;
   }
 
-  private static boolean isClosingQuote(@NotNull Editor editor, @NotNull QuoteHandler quoteHandler, int offset) {
+  private static boolean isClosingQuote(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
@@ -491,7 +491,7 @@ public class TypedHandler extends TypedActionHandlerBase {
   }
 
   @Nullable
-  private static CharSequence getClosingQuote(@NotNull Editor editor, @NotNull MultiCharQuoteHandler quoteHandler, int offset) {
+  private static CharSequence getClosingQuote(@Nonnull Editor editor, @Nonnull MultiCharQuoteHandler quoteHandler, int offset) {
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
@@ -501,7 +501,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return quoteHandler.getClosingQuote(iterator, offset);
   }
 
-  private static boolean isOpeningQuote(@NotNull Editor editor, @NotNull QuoteHandler quoteHandler, int offset) {
+  private static boolean isOpeningQuote(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
@@ -511,7 +511,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return quoteHandler.isOpeningQuote(iterator, offset);
   }
 
-  private static boolean hasNonClosedLiterals(@NotNull Editor editor, @NotNull QuoteHandler quoteHandler, int offset) {
+  private static boolean hasNonClosedLiterals(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
@@ -521,7 +521,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return quoteHandler.hasNonClosedLiteral(editor, iterator, offset);
   }
 
-  private static boolean isTypingEscapeQuote(@NotNull Editor editor, @NotNull QuoteHandler quoteHandler, int offset) {
+  private static boolean isTypingEscapeQuote(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     if (offset == 0) return false;
     CharSequence chars = editor.getDocument().getCharsSequence();
     int offset1 = CharArrayUtil.shiftBackward(chars, offset - 1, "\\");
@@ -529,7 +529,7 @@ public class TypedHandler extends TypedActionHandlerBase {
     return slashCount % 2 != 0 && isInsideLiteral(editor, quoteHandler, offset);
   }
 
-  private static boolean isInsideLiteral(@NotNull Editor editor, @NotNull QuoteHandler quoteHandler, int offset) {
+  private static boolean isInsideLiteral(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     if (offset == 0) return false;
 
     HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset - 1);
@@ -541,23 +541,23 @@ public class TypedHandler extends TypedActionHandlerBase {
     return quoteHandler.isInsideLiteral(iterator);
   }
 
-  private static void indentClosingBrace(@NotNull Project project, @NotNull Editor editor) {
+  private static void indentClosingBrace(@Nonnull Project project, @Nonnull Editor editor) {
     indentBrace(project, editor, '}');
   }
 
-  public static void indentOpenedBrace(@NotNull Project project, @NotNull Editor editor) {
+  public static void indentOpenedBrace(@Nonnull Project project, @Nonnull Editor editor) {
     indentBrace(project, editor, '{');
   }
 
-  private static void indentOpenedParenth(@NotNull Project project, @NotNull Editor editor) {
+  private static void indentOpenedParenth(@Nonnull Project project, @Nonnull Editor editor) {
     indentBrace(project, editor, '(');
   }
 
-  private static void indentClosingParenth(@NotNull Project project, @NotNull Editor editor) {
+  private static void indentClosingParenth(@Nonnull Project project, @Nonnull Editor editor) {
     indentBrace(project, editor, ')');
   }
 
-  private static void indentBrace(@NotNull final Project project, @NotNull final Editor editor, final char braceChar) {
+  private static void indentBrace(@Nonnull final Project project, @Nonnull final Editor editor, final char braceChar) {
     final int offset = editor.getCaretModel().getOffset() - 1;
     final Document document = editor.getDocument();
     CharSequence chars = document.getCharsSequence();

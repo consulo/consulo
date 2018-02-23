@@ -25,18 +25,21 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogRefresher;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.data.VcsLogFilterer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PostponableLogRefresher implements VcsLogRefresher {
-  @NotNull protected final VcsLogData myLogData;
-  @NotNull private final Set<VirtualFile> myRootsToRefresh = ContainerUtil.newHashSet();
-  @NotNull private final Set<VcsLogWindow> myLogWindows = ContainerUtil.newHashSet();
+  @Nonnull
+  protected final VcsLogData myLogData;
+  @Nonnull
+  private final Set<VirtualFile> myRootsToRefresh = ContainerUtil.newHashSet();
+  @Nonnull
+  private final Set<VcsLogWindow> myLogWindows = ContainerUtil.newHashSet();
 
-  public PostponableLogRefresher(@NotNull VcsLogData logData) {
+  public PostponableLogRefresher(@Nonnull VcsLogData logData) {
     myLogData = logData;
     myLogData.addDataPackChangeListener(dataPack -> {
       for (VcsLogWindow window : myLogWindows) {
@@ -45,15 +48,15 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     });
   }
 
-  @NotNull
-  public Disposable addLogWindow(@NotNull VcsLogWindow window) {
+  @Nonnull
+  public Disposable addLogWindow(@Nonnull VcsLogWindow window) {
     myLogWindows.add(window);
     filtererActivated(window.getFilterer(), true);
     return () -> myLogWindows.remove(window);
   }
 
-  @NotNull
-  public Disposable addLogWindow(@NotNull VcsLogFilterer filterer) {
+  @Nonnull
+  public Disposable addLogWindow(@Nonnull VcsLogFilterer filterer) {
     return addLogWindow(new VcsLogWindow(filterer));
   }
 
@@ -73,7 +76,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     return false;
   }
 
-  public void filtererActivated(@NotNull VcsLogFilterer filterer, boolean firstTime) {
+  public void filtererActivated(@Nonnull VcsLogFilterer filterer, boolean firstTime) {
     if (!myRootsToRefresh.isEmpty()) {
       refreshPostponedRoots();
     }
@@ -85,14 +88,14 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     }
   }
 
-  private static void dataPackArrived(@NotNull VcsLogFilterer filterer, boolean visible) {
+  private static void dataPackArrived(@Nonnull VcsLogFilterer filterer, boolean visible) {
     if (!visible) {
       filterer.setValid(false);
     }
     filterer.onRefresh();
   }
 
-  public void refresh(@NotNull final VirtualFile root) {
+  public void refresh(@Nonnull final VirtualFile root) {
     ApplicationManager.getApplication().invokeLater(() -> {
       if (canRefreshNow()) {
         myLogData.refresh(Collections.singleton(root));
@@ -109,19 +112,20 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     myLogData.refresh(toRefresh);
   }
 
-  @NotNull
+  @Nonnull
   public Set<VcsLogWindow> getLogWindows() {
     return myLogWindows;
   }
 
   public static class VcsLogWindow {
-    @NotNull private final VcsLogFilterer myFilterer;
+    @Nonnull
+    private final VcsLogFilterer myFilterer;
 
-    public VcsLogWindow(@NotNull VcsLogFilterer filterer) {
+    public VcsLogWindow(@Nonnull VcsLogFilterer filterer) {
       myFilterer = filterer;
     }
 
-    @NotNull
+    @Nonnull
     public VcsLogFilterer getFilterer() {
       return myFilterer;
     }

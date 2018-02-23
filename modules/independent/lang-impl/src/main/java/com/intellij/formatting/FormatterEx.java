@@ -23,8 +23,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class FormatterEx{
 
@@ -123,7 +123,7 @@ public abstract class FormatterEx{
                                        CommonCodeStyleSettings.IndentOptions indentOptions,
                                        TextRange affectedRange);
 
-  public abstract void setProgressTask(@NotNull FormattingProgressTask progressIndicator);
+  public abstract void setProgressTask(@Nonnull FormattingProgressTask progressIndicator);
 
   /**
    * Calculates minimum spacing, allowed by formatting model (in columns) for a block starting at given offset,

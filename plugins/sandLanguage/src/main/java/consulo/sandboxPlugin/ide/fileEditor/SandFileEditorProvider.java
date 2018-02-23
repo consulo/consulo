@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 
 /**
@@ -31,39 +31,39 @@ import consulo.sandboxPlugin.lang.SandFileType;
  */
 public class SandFileEditorProvider implements FileEditorProvider {
   @Override
-  public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return file.getFileType() == SandFileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return new SandFileEditor();
   }
 
   @Override
-  public void disposeEditor(@NotNull FileEditor editor) {
+  public void disposeEditor(@Nonnull FileEditor editor) {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileEditorState readState(@NotNull Element sourceElement, @NotNull Project project, @NotNull VirtualFile file) {
+  public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
     return FileEditorState.INSTANCE;
   }
 
   @Override
-  public void writeState(@NotNull FileEditorState state, @NotNull Project project, @NotNull Element targetElement) {
+  public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getEditorTypeId() {
     return "sand-editor";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR;

@@ -27,8 +27,8 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor impl
     setValue(value);
   }
 
-  @NotNull
+  @Nonnull
   public abstract Collection<? extends AbstractTreeNode> getChildren();
 
 
@@ -171,7 +171,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor impl
   }
 
   @Override
-  public void apply(@NotNull Map<String, String> info) {
+  public void apply(@Nonnull Map<String, String> info) {
   }
 
   /**

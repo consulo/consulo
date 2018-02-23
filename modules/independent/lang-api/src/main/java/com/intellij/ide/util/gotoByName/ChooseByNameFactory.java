@@ -17,7 +17,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -28,5 +28,5 @@ public abstract class ChooseByNameFactory {
     return ServiceManager.getService(project, ChooseByNameFactory.class);
   }
 
-  public abstract ChooseByNamePopupComponent createChooseByNamePopupComponent(@NotNull ChooseByNameModel model);
+  public abstract ChooseByNamePopupComponent createChooseByNamePopupComponent(@Nonnull ChooseByNameModel model);
 }

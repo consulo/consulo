@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public enum ShortNameType {
   }
 
   @Nullable
-  public static String shorten(@Nullable String name, @NotNull ShortNameType type) {
+  public static String shorten(@Nullable String name, @Nonnull ShortNameType type) {
     if (name == null) return null;
     if (type == NONE) return name;
 

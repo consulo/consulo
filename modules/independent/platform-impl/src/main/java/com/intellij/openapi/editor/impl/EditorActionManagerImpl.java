@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.injected.editor.DocumentWindow;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class EditorActionManagerImpl extends EditorActionManager {
   private final TypedAction myTypedAction = new TypedAction();
@@ -34,18 +34,18 @@ public class EditorActionManagerImpl extends EditorActionManager {
   }
 
   @Override
-  public EditorActionHandler getActionHandler(@NotNull String actionId) {
+  public EditorActionHandler getActionHandler(@Nonnull String actionId) {
     return ((EditorAction) myActionManager.getAction(actionId)).getHandler();
   }
 
   @Override
-  public EditorActionHandler setActionHandler(@NotNull String actionId, @NotNull EditorActionHandler handler) {
+  public EditorActionHandler setActionHandler(@Nonnull String actionId, @Nonnull EditorActionHandler handler) {
     EditorAction action = (EditorAction)myActionManager.getAction(actionId);
     return action.setupHandler(handler);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TypedAction getTypedAction() {
     return myTypedAction;
   }
@@ -56,7 +56,7 @@ public class EditorActionManagerImpl extends EditorActionManager {
   }
 
   @Override
-  public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@NotNull final Document document) {
+  public ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull final Document document) {
     final Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     final ReadonlyFragmentModificationHandler docHandler =
             doc instanceof DocumentImpl ? ((DocumentImpl)doc).getReadonlyFragmentModificationHandler() : null;
@@ -64,7 +64,7 @@ public class EditorActionManagerImpl extends EditorActionManager {
   }
 
   @Override
-  public void setReadonlyFragmentModificationHandler(@NotNull final Document document, final ReadonlyFragmentModificationHandler handler) {
+  public void setReadonlyFragmentModificationHandler(@Nonnull final Document document, final ReadonlyFragmentModificationHandler handler) {
     final Document doc = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
     if (doc instanceof DocumentImpl) {
       ((DocumentImpl)document).setReadonlyFragmentModificationHandler(handler);
@@ -72,7 +72,7 @@ public class EditorActionManagerImpl extends EditorActionManager {
   }
 
   @Override
-  public ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@NotNull ReadonlyFragmentModificationHandler handler) {
+  public ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@Nonnull ReadonlyFragmentModificationHandler handler) {
     ReadonlyFragmentModificationHandler oldHandler = myReadonlyFragmentsHandler;
     myReadonlyFragmentsHandler = handler;
     return oldHandler;

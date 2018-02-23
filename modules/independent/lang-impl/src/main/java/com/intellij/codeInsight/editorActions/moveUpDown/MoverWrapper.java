@@ -26,15 +26,15 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class MoverWrapper {
   protected final boolean myIsDown;
   private final StatementUpDownMover myMover;
   private final StatementUpDownMover.MoveInfo myInfo;
 
-  protected MoverWrapper(@NotNull final StatementUpDownMover mover, @NotNull final StatementUpDownMover.MoveInfo info, final boolean isDown) {
+  protected MoverWrapper(@Nonnull final StatementUpDownMover mover, @Nonnull final StatementUpDownMover.MoveInfo info, final boolean isDown) {
     myMover = mover;
     myIsDown = isDown;
 
@@ -161,7 +161,7 @@ class MoverWrapper {
    * @return              <code>true</code> if text range defined by the given range marker completely contains text range
    *                      of the given fold region; <code>false</code> otherwise
    */
-  private static boolean contains(@NotNull RangeMarker rangeMarker, @NotNull FoldRegion foldRegion) {
+  private static boolean contains(@Nonnull RangeMarker rangeMarker, @Nonnull FoldRegion foldRegion) {
     return rangeMarker.getStartOffset() <= foldRegion.getStartOffset() && rangeMarker.getEndOffset() >= foldRegion.getEndOffset();
   }
 
@@ -172,7 +172,7 @@ class MoverWrapper {
    * @param region2   'inner' region candidate
    * @return          <code>true</code> if 'region2' is nested to 'region1'; <code>false</code> otherwise
    */
-  private static boolean contains(@Nullable FoldRegion region1, @NotNull FoldRegion region2) {
+  private static boolean contains(@Nullable FoldRegion region1, @Nonnull FoldRegion region2) {
     if (region1 == null) {
       return false;
     }

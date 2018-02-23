@@ -34,10 +34,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.inline.InlineRefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 public class InlineAction extends BasePlatformRefactoringAction {
@@ -52,12 +51,12 @@ public class InlineAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element, @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext context) {
     return hasInlineActionHandler(element, PsiUtilBase.getLanguageInEditor(editor, element.getProject()), editor);
   }
 
   @Override
-  public boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     return elements.length == 1 && hasInlineActionHandler(elements [0], null, null);
   }
 
@@ -73,12 +72,12 @@ public class InlineAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return new InlineRefactoringActionHandler();
   }
 
   @Override
-  protected RefactoringActionHandler getHandler(@NotNull Language language, PsiElement element) {
+  protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
     RefactoringActionHandler handler = super.getHandler(language, element);
     if (handler != null) return handler;
     List<InlineHandler> handlers = InlineHandlers.getInlineHandlers(language);

@@ -19,8 +19,7 @@ import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.AsyncResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Internal use only. Please use {@link com.intellij.execution.runners.GenericProgramRunner} or {@link com.intellij.execution.runners.AsyncProgramRunner}.
@@ -29,9 +28,9 @@ import org.jetbrains.annotations.Nullable;
  * @author nik
  */
 public abstract class RunProfileStarter {
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
-  public RunContentDescriptor execute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+  public RunContentDescriptor execute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
     throw new AbstractMethodError();
   }
 
@@ -39,7 +38,7 @@ public abstract class RunProfileStarter {
    * You should NOT throw exceptions in this method.
    * Instead return {@link AsyncResult#done(Object)} (Throwable)} or call {@link AsyncResult#rejectWithThrowable(Throwable)} 
    */
-  public AsyncResult<RunContentDescriptor> executeAsync(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+  public AsyncResult<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
     return AsyncResult.done(execute(state, environment));
   }
 }

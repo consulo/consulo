@@ -18,8 +18,8 @@ package com.intellij.openapi.externalSystem;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * External system integration provides 'auto-import' feature, i.e. it listens for external system config files changes
@@ -51,5 +51,5 @@ public interface ExternalSystemAutoImportAware {
    *                              path to config file of an external project which should be refreshed
    */
   @Nullable
-  String getAffectedExternalProjectPath(@NotNull String changedFileOrDirPath, @NotNull Project project);
+  String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project);
 }

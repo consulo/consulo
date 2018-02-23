@@ -37,12 +37,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SettingsImpl implements EditorSettings {
   @Nullable private final EditorEx myEditor;
-  @Nullable private final Language myLanguage;
+  @Nullable
+  private final Language myLanguage;
   private Boolean myIsCamelWords;
 
   // This group of settings does not have UI
@@ -217,7 +218,7 @@ public class SettingsImpl implements EditorSettings {
   }
 
   @Nullable
-  private static Language getDocumentLanguage(@Nullable Project project, @NotNull Document document) {
+  private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
     if (project != null) {
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
       PsiFile file = documentManager.getPsiFile(document);

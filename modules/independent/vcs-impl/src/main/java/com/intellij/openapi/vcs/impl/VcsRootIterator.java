@@ -27,8 +27,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.util.Processor;
 import com.intellij.util.StringLenComparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -130,7 +130,7 @@ public class VcsRootIterator {
   public static void iterateVcsRoot(final Project project,
                                        final VirtualFile root,
                                        final Processor<FilePath> processor,
-                                       @Nullable VirtualFileFilter directoryFilter) {
+                                       @javax.annotation.Nullable VirtualFileFilter directoryFilter) {
     final MyRootIterator rootIterator = new MyRootIterator(project, root, processor, null, directoryFilter);
     rootIterator.iterate();
   }
@@ -139,7 +139,8 @@ public class VcsRootIterator {
     private final Project myProject;
     private final Processor<FilePath> myPathProcessor;
     private final Processor<VirtualFile> myFileProcessor;
-    @Nullable private final VirtualFileFilter myDirectoryFilter;
+    @javax.annotation.Nullable
+    private final VirtualFileFilter myDirectoryFilter;
     private final VirtualFile myRoot;
     private final MyRootFilter myRootPresentFilter;
     private final FileIndexFacade myExcludedFileIndex;
@@ -147,7 +148,7 @@ public class VcsRootIterator {
     private MyRootIterator(final Project project,
                            final VirtualFile root,
                            @Nullable final Processor<FilePath> pathProcessor,
-                           @Nullable final Processor<VirtualFile> fileProcessor,
+                           @javax.annotation.Nullable final Processor<VirtualFile> fileProcessor,
                            @Nullable VirtualFileFilter directoryFilter) {
       myProject = project;
       myPathProcessor = pathProcessor;
@@ -167,15 +168,15 @@ public class VcsRootIterator {
     public void iterate() {
       VfsUtilCore.visitChildrenRecursively(myRoot, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
         @Override
-        public void afterChildrenVisited(@NotNull VirtualFile file) {
+        public void afterChildrenVisited(@Nonnull VirtualFile file) {
           if (myDirectoryFilter != null) {
             myDirectoryFilter.afterChildrenVisited(file);
           }
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public Result visitFileEx(@NotNull VirtualFile file) {
+        public Result visitFileEx(@Nonnull VirtualFile file) {
           if (isExcluded(myExcludedFileIndex, file)) return SKIP_CHILDREN;
           if (myRootPresentFilter != null && ! myRootPresentFilter.accept(file)) return SKIP_CHILDREN;
           if (myProject.isDisposed() || ! process(file)) return skipTo(myRoot);

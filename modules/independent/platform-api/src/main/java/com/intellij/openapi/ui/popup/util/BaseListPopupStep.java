@@ -18,8 +18,8 @@ package com.intellij.openapi.ui.popup.util;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.ListSeparator;
 import com.intellij.openapi.ui.popup.PopupStep;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
     this(title, Arrays.asList(values), Arrays.asList(icons));
   }
 
-  public BaseListPopupStep(@Nullable String aTitle, @NotNull List<? extends T> aValues, Icon aSameIcon) {
+  public BaseListPopupStep(@Nullable String aTitle, @Nonnull List<? extends T> aValues, Icon aSameIcon) {
     List<Icon> icons = new ArrayList<>();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < aValues.size(); i++) {
@@ -54,13 +54,13 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
     init(aTitle, aValues, icons);
   }
 
-  public BaseListPopupStep(@Nullable String title, @NotNull List<? extends T> values, List<Icon> icons) {
+  public BaseListPopupStep(@Nullable String title, @Nonnull List<? extends T> values, List<Icon> icons) {
     init(title, values, icons);
   }
 
   protected BaseListPopupStep() { }
 
-  protected final void init(@Nullable String title, @NotNull List<? extends T> values, @Nullable List<Icon> icons) {
+  protected final void init(@Nullable String title, @Nonnull List<? extends T> values, @Nullable List<Icon> icons) {
     myTitle = title;
     myValues = new ArrayList<>(values);
     myIcons = icons;
@@ -73,7 +73,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final List<T> getValues() {
     return myValues;
   }
@@ -105,7 +105,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getTextFor(T value) {
     return value.toString();
   }

@@ -54,8 +54,8 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -151,7 +151,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     return ApplicationManager.getApplication().getComponent(ActionMacroManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ActionMacroManager";
   }
@@ -263,7 +263,7 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
       return myIcon;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String ID() {
       return "MacroRecording";
@@ -274,12 +274,12 @@ public class ActionMacroManager implements ApplicationComponent, JDOMExternaliza
     }
 
     @Override
-    public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+    public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
       return myPresentation;
     }
 
     @Override
-    public void install(@NotNull StatusBar statusBar) {
+    public void install(@Nonnull StatusBar statusBar) {
       showBalloon();
     }
 

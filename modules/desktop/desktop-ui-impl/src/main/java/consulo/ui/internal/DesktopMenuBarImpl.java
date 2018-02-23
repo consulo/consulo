@@ -17,7 +17,7 @@ package consulo.ui.internal;
 
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,9 +31,9 @@ public class DesktopMenuBarImpl extends JMenuBar implements MenuBar, SwingWrappe
     removeAll();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public MenuBar add(@NotNull MenuItem menuItem) {
+  public MenuBar add(@Nonnull MenuItem menuItem) {
     if(menuItem instanceof JMenu) {
       add((JMenu)menuItem);
     }

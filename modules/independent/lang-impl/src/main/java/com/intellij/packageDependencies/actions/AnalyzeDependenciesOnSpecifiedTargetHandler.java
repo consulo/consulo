@@ -27,7 +27,7 @@ import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.ForwardDependenciesBuilder;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ import java.util.*;
 public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHandlerBase {
   private final GlobalSearchScope myTargetScope;
 
-  public AnalyzeDependenciesOnSpecifiedTargetHandler(@NotNull Project project, @NotNull AnalysisScope scope, @NotNull GlobalSearchScope targetScope) {
+  public AnalyzeDependenciesOnSpecifiedTargetHandler(@Nonnull Project project, @Nonnull AnalysisScope scope, @Nonnull GlobalSearchScope targetScope) {
     super(project, Collections.singletonList(scope), Collections.<PsiFile>emptySet());
     myTargetScope = targetScope;
   }

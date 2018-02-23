@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -111,13 +111,13 @@ public class UnsignedShortArrayList implements Cloneable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public int[] toArray() {
     return toArray(0,mySize);
   }
 
-  @NotNull
-  public int[] toArray(@NotNull int[] a) {
+  @Nonnull
+  public int[] toArray(@Nonnull int[] a) {
     if (a.length < mySize){
       a = new int[mySize];
     }
@@ -129,7 +129,7 @@ public class UnsignedShortArrayList implements Cloneable {
     return a;
   }
 
-  @NotNull
+  @Nonnull
   public int[] toArray(int startIndex, int length) {
     int[] result = new int[length];
     for (int i = startIndex; i < length; i++) {

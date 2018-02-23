@@ -30,8 +30,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -78,19 +78,19 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Library[] getLibraries() {
     return myModel.getLibraries();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Iterator<Library> getLibraryIterator() {
     return myModel.getLibraryIterator();
   }
 
   @Override
-  public Library getLibraryByName(@NotNull String name) {
+  public Library getLibraryByName(@Nonnull String name) {
     return myModel.getLibraryByName(name);
   }
 
@@ -136,7 +136,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     return createLibrary(null);
   }
 
-  public void fireLibraryRenamed(@NotNull LibraryImpl library) {
+  public void fireLibraryRenamed(@Nonnull LibraryImpl library) {
     myDispatcher.getMulticaster().afterLibraryRenamed(library);
   }
 
@@ -149,7 +149,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
   }
 
   @Override
-  public void removeLibrary(@NotNull Library library) {
+  public void removeLibrary(@Nonnull Library library) {
     final ModifiableModel modifiableModel = getModifiableModel();
     modifiableModel.removeLibrary(library);
     modifiableModel.commit();
@@ -214,14 +214,14 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Iterator<Library> getLibraryIterator() {
       return Collections.unmodifiableList(myLibraries).iterator();
     }
 
     @Override
     @Nullable
-    public Library getLibraryByName(@NotNull String name) {
+    public Library getLibraryByName(@Nonnull String name) {
       for (Library myLibrary : myLibraries) {
         LibraryImpl library = (LibraryImpl)myLibrary;
         if (Comparing.equal(name, library.getName())) return library;
@@ -238,7 +238,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
 
 
     @Override
-    @NotNull
+    @Nonnull
     public Library[] getLibraries() {
       return myLibraries.toArray(new Library[myLibraries.size()]);
     }
@@ -253,7 +253,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
+    public Library createLibrary(String name, @javax.annotation.Nullable PersistentLibraryKind kind) {
       assertWritable();
       final LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, null);
       myLibraries.add(library);
@@ -261,7 +261,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    public void removeLibrary(@NotNull Library library) {
+    public void removeLibrary(@Nonnull Library library) {
       assertWritable();
       myLibraries.remove(library);
     }

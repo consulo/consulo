@@ -56,9 +56,9 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -105,11 +105,11 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     return "#com.intellij.util.ui.classpath.ChooseLibrariesDialog";
   }
 
-  protected int getLibraryTableWeight(@NotNull LibraryTable libraryTable) {
+  protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
     return 0;
   }
 
-  protected boolean isAutoExpandLibraryTable(@NotNull LibraryTable libraryTable) {
+  protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
     return false;
   }
 
@@ -128,12 +128,12 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     return myTree;
   }
 
-  @NotNull
+  @Nonnull
   public List<Library> getSelectedLibraries() {
     return myResult == null? Collections.<Library>emptyList() : myResult;
   }
 
-  protected void queueUpdateAndSelect(@NotNull final Library library) {
+  protected void queueUpdateAndSelect(@Nonnull final Library library) {
     myBuilder.queueUpdate().doWhenDone(new Runnable() {
       @Override
       public void run() {
@@ -205,7 +205,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
     return pane;
   }
 
-  @NotNull
+  @Nonnull
   protected Project getProject() {
     return ProjectManager.getInstance().getDefaultProject();
   }
@@ -270,7 +270,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
       return 0;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Object[] getEqualityObjects() {
       return new Object[] {myElement};
@@ -393,7 +393,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
       throw new AssertionError();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
       if (element instanceof Application) return new RootDescriptor(myProject);

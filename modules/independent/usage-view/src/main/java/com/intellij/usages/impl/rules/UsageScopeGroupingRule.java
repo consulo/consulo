@@ -27,7 +27,7 @@ import com.intellij.usages.UsageGroup;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,7 +36,7 @@ import javax.swing.*;
  */
 public class UsageScopeGroupingRule implements UsageGroupingRule {
   @Override
-  public UsageGroup groupUsage(@NotNull Usage usage) {
+  public UsageGroup groupUsage(@Nonnull Usage usage) {
     if (!(usage instanceof PsiElementUsage)) {
       return null;
     }
@@ -62,7 +62,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return "Test";
     }
@@ -74,7 +74,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return "Production";
     }
@@ -86,7 +86,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getText(UsageView view) {
       return "Library";
     }

@@ -17,7 +17,6 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.ui.ValidationInfo;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -55,10 +54,10 @@ public interface CommitSession {
   /**
    * @deprecated Since version 7.0, {@link #getAdditionalConfigurationUI(java.util.Collection, String)} is called instead
    */
-  @Nullable
+  @javax.annotation.Nullable
   JComponent getAdditionalConfigurationUI();
 
-  @Nullable
+  @javax.annotation.Nullable
   JComponent getAdditionalConfigurationUI(Collection<Change> changes, String commitMessage);
 
   boolean canExecute(Collection<Change> changes, String commitMessage);

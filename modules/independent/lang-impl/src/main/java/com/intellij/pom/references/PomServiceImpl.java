@@ -15,7 +15,7 @@
  */
 package com.intellij.pom.references;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.PomTargetPsiElementImpl;
 import com.intellij.pom.PomTarget;
@@ -31,9 +31,9 @@ public class PomServiceImpl extends PomService {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PsiElement convertToPsi(@NotNull PomTarget target) {
+  public PsiElement convertToPsi(@Nonnull PomTarget target) {
     if (target instanceof PsiElement) {
       return (PsiElement)target;
     }

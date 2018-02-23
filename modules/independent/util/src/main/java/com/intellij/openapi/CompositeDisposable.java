@@ -16,7 +16,7 @@
 package com.intellij.openapi;
 
 import com.intellij.openapi.util.Disposer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class CompositeDisposable implements Disposable {
   private final List<Disposable> myDisposables = new ArrayList<Disposable>();
   private boolean disposed;
 
-  public void add(@NotNull Disposable disposable) {
+  public void add(@Nonnull Disposable disposable) {
     assert !disposed : "Already disposed";
     myDisposables.add(disposable);
   }

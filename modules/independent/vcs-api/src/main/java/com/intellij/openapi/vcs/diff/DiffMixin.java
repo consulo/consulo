@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.diff;
 
 import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,6 +26,6 @@ import org.jetbrains.annotations.Nullable;
  * To change this template use File | Settings | File Templates.
  */
 public interface DiffMixin {
-  @Nullable
+  @javax.annotation.Nullable
   VcsRevisionDescription getCurrentRevisionDescription(final VirtualFile file);
 }

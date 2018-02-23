@@ -16,10 +16,10 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface CutProvider {
-  void performCut(@NotNull DataContext dataContext);
-  boolean isCutEnabled(@NotNull DataContext dataContext);
-  boolean isCutVisible(@NotNull DataContext dataContext);
+  void performCut(@Nonnull DataContext dataContext);
+  boolean isCutEnabled(@Nonnull DataContext dataContext);
+  boolean isCutVisible(@Nonnull DataContext dataContext);
 }

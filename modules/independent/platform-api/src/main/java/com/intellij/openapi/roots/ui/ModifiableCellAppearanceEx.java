@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.roots.ui;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public interface ModifiableCellAppearanceEx extends CellAppearanceEx {

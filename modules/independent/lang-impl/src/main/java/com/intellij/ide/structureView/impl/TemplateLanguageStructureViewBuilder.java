@@ -37,8 +37,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,28 +62,28 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
 
     myPsiTreeChangeAdapter = new PsiTreeChangeAdapter() {
       @Override
-      public void childAdded(@NotNull PsiTreeChangeEvent event) {
+      public void childAdded(@Nonnull PsiTreeChangeEvent event) {
         childrenChanged(event);
       }
 
       @Override
-      public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+      public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
         childrenChanged(event);
       }
 
       @Override
-      public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+      public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
         childrenChanged(event);
       }
 
       @Override
-      public void childMoved(@NotNull PsiTreeChangeEvent event) {
+      public void childMoved(@Nonnull PsiTreeChangeEvent event) {
         childrenChanged(event);
       }
 
       final Alarm myAlarm = new Alarm();
       @Override
-      public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+      public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
         myAlarm.cancelAllRequests();
         myAlarm.addRequest(new Runnable(){
           @Override
@@ -121,7 +121,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
     PsiManager.getInstance(myProject).addPsiTreeChangeListener(myPsiTreeChangeAdapter);
   }
 
-  private static boolean isPsiValid(@NotNull StructureViewComposite.StructureViewDescriptor baseStructureViewDescriptor) {
+  private static boolean isPsiValid(@Nonnull StructureViewComposite.StructureViewDescriptor baseStructureViewDescriptor) {
     final StructureViewComponent view = (StructureViewComponent)baseStructureViewDescriptor.structureView;
     if (view.isDisposed()) return false;
 
@@ -187,7 +187,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureView createStructureView(FileEditor fileEditor, Project project) {
     myFileEditor = fileEditor;
     List<StructureViewComposite.StructureViewDescriptor> viewDescriptors = new ArrayList<StructureViewComposite.StructureViewDescriptor>();
@@ -267,7 +267,7 @@ public abstract class TemplateLanguageStructureViewBuilder implements StructureV
     }
   }
 
-  @NotNull
+  @Nonnull
   private static FileType findFileType(final Language language) {
     FileType[] registeredFileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
     for (FileType fileType : registeredFileTypes) {

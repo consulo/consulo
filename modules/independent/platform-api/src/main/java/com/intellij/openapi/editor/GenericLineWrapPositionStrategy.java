@@ -17,8 +17,8 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 
@@ -43,7 +43,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
   private final Storage myOffset2weight = new Storage();
 
   @Override
-  public int calculateWrapPosition(@NotNull Document document,
+  public int calculateWrapPosition(@Nonnull Document document,
                                    @Nullable Project project,
                                    int startOffset,
                                    int endOffset,
@@ -140,7 +140,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
     return -1;
   }
 
-  protected boolean canUseOffset(@NotNull Document document, int offset, boolean virtual) {
+  protected boolean canUseOffset(@Nonnull Document document, int offset, boolean virtual) {
     return true;
   }
 
@@ -150,7 +150,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
    * @param rule    rule to register
    * @throws IllegalArgumentException     if another rule for the same symbol is already registered within the current strategy
    */
-  public void addRule(@NotNull Rule rule) throws IllegalArgumentException {
+  public void addRule(@Nonnull Rule rule) throws IllegalArgumentException {
     Rule existing = myRules.get(rule.symbol);
     if (existing != null) {
       throw new IllegalArgumentException(String.format(

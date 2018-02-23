@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.model;
 
 import com.intellij.openapi.externalSystem.model.project.ExternalSystemSourceType;
 import com.intellij.openapi.externalSystem.model.project.IExternalSystemSourceType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class DefaultExternalSourceSet implements ExternalSourceSet {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
@@ -54,7 +54,7 @@ public class DefaultExternalSourceSet implements ExternalSourceSet {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<IExternalSystemSourceType, ExternalSourceDirectorySet> getSources() {
     return mySources;

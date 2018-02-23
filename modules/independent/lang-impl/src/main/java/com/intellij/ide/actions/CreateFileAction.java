@@ -37,8 +37,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -61,7 +61,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected PsiElement[] invokeDialog(final Project project, PsiDirectory directory) {
     MyInputValidator validator = new MyValidator(project, directory);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
@@ -80,13 +80,13 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
   @RequiredDispatchThread
   @Override
-  @NotNull
+  @Nonnull
   protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
     MkDirs mkdirs = new MkDirs(newName, directory);
     return new PsiElement[]{WriteAction.compute(() -> mkdirs.directory.createFile(getFileName(mkdirs.newName)))};
   }
 
-  public static PsiDirectory findOrCreateSubdirectory(@NotNull PsiDirectory parent, @NotNull String subdirName) {
+  public static PsiDirectory findOrCreateSubdirectory(@Nonnull PsiDirectory parent, @Nonnull String subdirName) {
     final PsiDirectory sub = parent.findSubdirectory(subdirName);
     return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
   }
@@ -96,7 +96,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     public final PsiDirectory directory;
 
     @RequiredReadAction
-    public MkDirs(@NotNull String newName, @NotNull PsiDirectory directory) {
+    public MkDirs(@Nonnull String newName, @Nonnull PsiDirectory directory) {
       if (SystemInfo.isWindows) {
         newName = newName.replace('\\', '/');
       }

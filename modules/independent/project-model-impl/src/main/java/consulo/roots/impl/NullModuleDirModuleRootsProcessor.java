@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import consulo.roots.ContentFolderTypeProvider;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,19 +30,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   @Override
-  public boolean canHandle(@NotNull ModuleRootModel moduleRootModel) {
+  public boolean canHandle(@Nonnull ModuleRootModel moduleRootModel) {
     return moduleRootModel.getModule().getModuleDirUrl() == null;
   }
 
   @Override
-  public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull VirtualFile virtualFile) {
+  public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile) {
     return roots.contains(virtualFile);
   }
 
   @Override
-  public void processFiles(@NotNull final ModuleRootModel moduleRootModel,
-                           @NotNull final Predicate<ContentFolderTypeProvider> predicate,
-                           @NotNull final Processor<VirtualFile> processor) {
+  public void processFiles(@Nonnull final ModuleRootModel moduleRootModel,
+                           @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
+                           @Nonnull final Processor<VirtualFile> processor) {
     moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
       @Override
       public boolean process(ContentEntry contentEntry) {
@@ -53,9 +53,9 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFileUrls(@NotNull final ModuleRootModel moduleRootModel,
-                              @NotNull final Predicate<ContentFolderTypeProvider> predicate,
-                              @NotNull final Processor<String> processor) {
+  public void processFileUrls(@Nonnull final ModuleRootModel moduleRootModel,
+                              @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
+                              @Nonnull final Processor<String> processor) {
     moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
       @Override
       public boolean process(ContentEntry contentEntry) {

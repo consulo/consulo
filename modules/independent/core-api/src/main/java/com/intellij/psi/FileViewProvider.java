@@ -21,8 +21,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -43,7 +43,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	/**
 	 * @return this project's PsiManager
 	 */
-	@NotNull
+	@Nonnull
 	PsiManager getManager();
 
 	/**
@@ -64,13 +64,13 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * @see #getDocument()
 	 * @see PsiDocumentManager#isUncommited(Document)
 	 */
-	@NotNull
+	@Nonnull
 	CharSequence getContents();
 
 	/**
 	 * @return the virtual file corresponding to this view provider. Physical or an instance of {@link LightVirtualFile} for most non-physical files.
 	 */
-	@NotNull
+	@Nonnull
 	VirtualFile getVirtualFile();
 
 	/**
@@ -78,7 +78,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * {@link PsiManager#findFile(VirtualFile)},
 	 * {@link PsiDocumentManager#getPsiFile(Document)} etc.
 	 */
-	@NotNull
+	@Nonnull
 	Language getBaseLanguage();
 
 	/**
@@ -86,21 +86,21 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 *
 	 * @see #getPsi(com.intellij.lang.Language)
 	 */
-	@NotNull
+	@Nonnull
 	Set<Language> getLanguages();
 
 	/**
 	 * @param target target language
 	 * @return PsiFile for given language, or <code>null</code> if the language not present
 	 */
-	PsiFile getPsi(@NotNull Language target);
+	PsiFile getPsi(@Nonnull Language target);
 
 	/**
 	 * @return all PSI files for this view provider. In most cases, just one main file. For multi-root languages, several files. The files' languages
 	 * should be the same as {@link #getLanguages()}. The main file which corresponds to {@link #getBaseLanguage()}, should be the first one. Otherwise
 	 * the order is non-deterministic and should not be relied upon.
 	 */
-	@NotNull
+	@Nonnull
 	List<PsiFile> getAllFiles();
 
 	/**
@@ -136,13 +136,13 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 *
 	 * @see #getLanguages()
 	 */
-	boolean supportsIncrementalReparse(@NotNull Language rootLanguage);
+	boolean supportsIncrementalReparse(@Nonnull Language rootLanguage);
 
 	/**
 	 * Invoked when any PSI change happens in any of the PSI files corresponding to this view provider.
 	 * @param psiFile the file where PSI has just been changed.
 	 */
-	void rootChanged(@NotNull PsiFile psiFile);
+	void rootChanged(@Nonnull PsiFile psiFile);
 
 	/**
 	 * Invoked before document or VFS changes are processed that affect PSI inside the corresponding file.
@@ -199,7 +199,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * @see #findElementAt(int)
 	 */
 	@Nullable
-	PsiElement findElementAt(int offset, @NotNull Language language);
+	PsiElement findElementAt(int offset, @Nonnull Language language);
 
 	/**
 	 * @param offset an offset in the file
@@ -209,7 +209,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * @see #findElementAt(int)
 	 */
 	@Nullable
-	PsiElement findElementAt(int offset, @NotNull Class<? extends Language> lang);
+	PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang);
 
 	/**
 	 * @param offsetInElement an offset in the file
@@ -220,7 +220,7 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * @see #findReferenceAt(int)
 	 */
 	@Nullable
-	PsiReference findReferenceAt(int offsetInElement, @NotNull Language language);
+	PsiReference findReferenceAt(int offsetInElement, @Nonnull Language language);
 
 	/**
 	 * Creates a copy of this view provider linked with the give (typically light) file.
@@ -229,20 +229,20 @@ public interface FileViewProvider extends Cloneable, UserDataHolder {
 	 * @see LightVirtualFile
 	 * @see #isEventSystemEnabled()
 	 */
-	@NotNull
-	FileViewProvider createCopy(@NotNull VirtualFile copy);
+	@Nonnull
+	FileViewProvider createCopy(@Nonnull VirtualFile copy);
 
 	/**
 	 * @return the PSI root for which stubs are to be built if supported. By default it's the main root.
 	 *
 	 * @see #getBaseLanguage()
 	 */
-	@NotNull
+	@Nonnull
 	PsiFile getStubBindingRoot();
 
 	/**
 	 * @return the same as {@code getVirtualFile().getFileType()}, but cached.
 	 */
-	@NotNull
+	@Nonnull
 	FileType getFileType();
 }

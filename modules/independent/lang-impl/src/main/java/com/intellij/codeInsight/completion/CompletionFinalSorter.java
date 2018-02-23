@@ -18,7 +18,7 @@ package com.intellij.codeInsight.completion;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,23 +31,23 @@ import java.util.Map;
  */
 public abstract class CompletionFinalSorter {
 
-  @NotNull
-  public abstract Iterable<LookupElement> sort(@NotNull Iterable<LookupElement> initial, @NotNull CompletionParameters parameters);
+  @Nonnull
+  public abstract Iterable<LookupElement> sort(@Nonnull Iterable<LookupElement> initial, @Nonnull CompletionParameters parameters);
 
   /**
    * For debugging purposes, provide weights by which completion will be sorted
    */
-  @NotNull
-  public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@NotNull Iterable<LookupElement> elements);
+  @Nonnull
+  public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements);
 
 
   @Deprecated
   public interface Factory {
-    @NotNull
+    @Nonnull
     CompletionFinalSorter newSorter();
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("deprecation")
   public static CompletionFinalSorter newSorter() {
     Factory factory = ServiceManager.getService(Factory.class);
@@ -56,15 +56,15 @@ public abstract class CompletionFinalSorter {
 
 
   private static final CompletionFinalSorter EMPTY_SORTER = new CompletionFinalSorter() {
-    @NotNull
+    @Nonnull
     @Override
-    public Iterable<LookupElement> sort(@NotNull Iterable<LookupElement> initial, @NotNull CompletionParameters parameters) {
+    public Iterable<LookupElement> sort(@Nonnull Iterable<LookupElement> initial, @Nonnull CompletionParameters parameters) {
       return initial;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@NotNull Iterable<LookupElement> elements) {
+    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements) {
       return Collections.emptyMap();
     }
   };

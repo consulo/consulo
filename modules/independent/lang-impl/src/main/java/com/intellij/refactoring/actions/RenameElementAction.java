@@ -25,7 +25,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SyntheticElement;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.RenameHandlerRegistry;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RenameElementAction extends BaseRefactoringAction {
 
@@ -39,7 +39,7 @@ public class RenameElementAction extends BaseRefactoringAction {
   }
 
   @Override
-  public boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     if (elements.length != 1) return false;
 
     PsiElement element = elements[0];
@@ -47,12 +47,12 @@ public class RenameElementAction extends BaseRefactoringAction {
   }
 
   @Override
-  public RefactoringActionHandler getHandler(@NotNull DataContext dataContext) {
+  public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
     return RenameHandlerRegistry.getInstance().getRenameHandler(dataContext);
   }
 
   @Override
-  protected boolean hasAvailableHandler(@NotNull DataContext dataContext) {
+  protected boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
     return isEnabledOnDataContext(dataContext);
   }
 
@@ -67,7 +67,7 @@ public class RenameElementAction extends BaseRefactoringAction {
   }
 
   @Override
-  protected boolean isAvailableOnElementInEditorAndFile(@NotNull PsiElement element, @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext context) {
     return RenameHandlerRegistry.getInstance().hasAvailableHandler(context);
   }
 }

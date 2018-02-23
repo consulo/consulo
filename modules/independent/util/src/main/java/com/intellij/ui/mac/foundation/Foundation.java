@@ -18,8 +18,8 @@ package com.intellij.ui.mac.foundation;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashMap;
 import com.sun.jna.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -144,19 +144,19 @@ public class Foundation {
     return myFoundationLibrary.objc_getMetaClass(className);
   }
 
-  public static boolean isPackageAtPath(@NotNull final String path) {
+  public static boolean isPackageAtPath(@Nonnull final String path) {
     final ID workspace = invoke("NSWorkspace", "sharedWorkspace");
     final ID result = invoke(workspace, createSelector("isFilePackageAtPath:"), nsString(path));
 
     return result.intValue() == 1;
   }
 
-  public static boolean isPackageAtPath(@NotNull final File file) {
+  public static boolean isPackageAtPath(@Nonnull final File file) {
     if (!file.isDirectory()) return false;
     return isPackageAtPath(file.getPath());
   }
 
-  public static ID nsString(@NotNull String s) {
+  public static ID nsString(@Nonnull String s) {
     // Use a byte[] rather than letting jna do the String -> char* marshalling itself.
     // Turns out about 10% quicker for long strings.
     try {
@@ -461,13 +461,13 @@ public class Foundation {
     return result;
   }
 
-  public static ID createDict(@NotNull final String[] keys, @NotNull final Object[] values) {
+  public static ID createDict(@Nonnull final String[] keys, @Nonnull final Object[] values) {
     final ID nsKeys = invoke("NSArray", "arrayWithObjects:", convertTypes(keys));
     final ID nsData = invoke("NSArray", "arrayWithObjects:", convertTypes(values));
     return invoke("NSDictionary", "dictionaryWithObjects:forKeys:", nsData, nsKeys);
   }
 
-  private static Object[] convertTypes(@NotNull Object[] v) {
+  private static Object[] convertTypes(@Nonnull Object[] v) {
     final Object[] result = new Object[v.length];
     for (int i = 0; i < v.length; i++) {
       result[i] = convertType(v[i]);
@@ -475,7 +475,7 @@ public class Foundation {
     return result;
   }
 
-  private static Object convertType(@NotNull Object o) {
+  private static Object convertType(@Nonnull Object o) {
     if (o instanceof Pointer || o instanceof ID) {
       return o;
     }

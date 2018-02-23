@@ -19,14 +19,14 @@ package com.intellij.execution.configurations;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author oleg
  */
 
 public class MockCommandLineState extends CommandLineState {
-  public MockCommandLineState(@NotNull final ExecutionEnvironment env) {
+  public MockCommandLineState(@Nonnull final ExecutionEnvironment env) {
     super(env);
   }
 

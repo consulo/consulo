@@ -19,8 +19,8 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.KeyWithDefaultValue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,9 +30,9 @@ public interface ProjectViewPaneOptionProvider<T> {
   ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create("com.intellij.projectViewOptionProvider");
 
   abstract class BoolValue implements ProjectViewPaneOptionProvider<Boolean> {
-    @NotNull
+    @Nonnull
     @Override
-    public Boolean parseValue(@NotNull String value) {
+    public Boolean parseValue(@Nonnull String value) {
       return Boolean.parseBoolean(value);
     }
 
@@ -46,13 +46,13 @@ public interface ProjectViewPaneOptionProvider<T> {
     }
   }
 
-  @NotNull
+  @Nonnull
   KeyWithDefaultValue<T> getKey();
 
-  void addToolbarActions(@NotNull AbstractProjectViewPane pane, @NotNull DefaultActionGroup actionGroup);
+  void addToolbarActions(@Nonnull AbstractProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup);
 
-  @NotNull
-  T parseValue(@NotNull String value);
+  @Nonnull
+  T parseValue(@Nonnull String value);
 
   @Nullable
   String toString(@Nullable T value);

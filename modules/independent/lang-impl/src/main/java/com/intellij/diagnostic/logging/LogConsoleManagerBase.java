@@ -29,8 +29,8 @@ import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -42,17 +42,17 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   private final Map<AdditionalTabComponent, Content> myAdditionalContent = new THashMap<AdditionalTabComponent, Content>();
   private final GlobalSearchScope mySearchScope;
 
-  protected LogConsoleManagerBase(@NotNull Project project, @NotNull GlobalSearchScope searchScope) {
+  protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
     myProject = project;
     mySearchScope = searchScope;
   }
 
   @Override
-  public void addLogConsole(@NotNull String name, @NotNull String path, @NotNull Charset charset, long skippedContent, @NotNull RunConfigurationBase runConfiguration) {
+  public void addLogConsole(@Nonnull String name, @Nonnull String path, @Nonnull Charset charset, long skippedContent, @Nonnull RunConfigurationBase runConfiguration) {
     addLogConsole(name, path, charset, skippedContent, getDefaultIcon(), runConfiguration);
   }
 
-  public void addLogConsole(final String name, final String path, @NotNull Charset charset, final long skippedContent, Icon icon, @Nullable RunProfile runProfile) {
+  public void addLogConsole(final String name, final String path, @Nonnull Charset charset, final long skippedContent, Icon icon, @Nullable RunProfile runProfile) {
     doAddLogConsole(new LogConsoleImpl(myProject, new File(path), charset, skippedContent, name, false, mySearchScope) {
       @Override
       public boolean isActive() {
@@ -61,7 +61,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
     }, path, icon, runProfile);
   }
 
-  private void doAddLogConsole(@NotNull final LogConsoleBase log, String id,  Icon icon, @Nullable RunProfile runProfile) {
+  private void doAddLogConsole(@Nonnull final LogConsoleBase log, String id, Icon icon, @Nullable RunProfile runProfile) {
     if (runProfile instanceof RunConfigurationBase) {
       ((RunConfigurationBase)runProfile).customizeLogConsole(log);
     }
@@ -82,7 +82,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void removeLogConsole(@NotNull String path) {
+  public void removeLogConsole(@Nonnull String path) {
     Content content = getUi().findContent(path);
     if (content != null) {
       removeAdditionalTabComponent((LogConsoleBase)content.getComponent());
@@ -90,11 +90,11 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void addAdditionalTabComponent(@NotNull AdditionalTabComponent tabComponent, @NotNull String id) {
+  public void addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id) {
     addAdditionalTabComponent(tabComponent, id, getDefaultIcon());
   }
 
-  public Content addAdditionalTabComponent(@NotNull AdditionalTabComponent tabComponent, @NotNull String id, @Nullable Icon icon) {
+  public Content addAdditionalTabComponent(@Nonnull AdditionalTabComponent tabComponent, @Nonnull String id, @Nullable Icon icon) {
     Content logContent = getUi().createContent(id, (ComponentWithActions)tabComponent, tabComponent.getTabTitle(), icon,
                                                tabComponent.getPreferredFocusableComponent());
     myAdditionalContent.put(tabComponent, logContent);
@@ -103,7 +103,7 @@ public abstract class LogConsoleManagerBase implements LogConsoleManager, Dispos
   }
 
   @Override
-  public void removeAdditionalTabComponent(@NotNull AdditionalTabComponent component) {
+  public void removeAdditionalTabComponent(@Nonnull AdditionalTabComponent component) {
     Disposer.dispose(component);
     final Content content = myAdditionalContent.remove(component);
     if (!getUi().isDisposed()) {

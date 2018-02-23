@@ -18,18 +18,18 @@ package com.intellij.openapi.command.impl;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DocumentReferenceByDocument implements DocumentReference {
   private final Document myDocument;
 
-  DocumentReferenceByDocument(@NotNull Document document) {
+  DocumentReferenceByDocument(@Nonnull Document document) {
     myDocument = document;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Document getDocument() {
     return myDocument;
   }

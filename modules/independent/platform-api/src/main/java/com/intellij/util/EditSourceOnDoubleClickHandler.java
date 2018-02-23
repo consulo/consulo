@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.treeStructure.treetable.TreeTable;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -93,7 +93,8 @@ public class EditSourceOnDoubleClickHandler {
 
   public static class TreeMouseListener extends DoubleClickListener {
     private final JTree myTree;
-    @Nullable private final Runnable myWhenPerformed;
+    @Nullable
+    private final Runnable myWhenPerformed;
 
     public TreeMouseListener(final JTree tree) {
       this(tree, null);

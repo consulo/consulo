@@ -15,7 +15,7 @@
  */
 package com.intellij.util.concurrency;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +34,7 @@ public class AppExecutorUtil {
    * </ul>
    * </ul>
    */
-  @NotNull
+  @Nonnull
   public static ScheduledExecutorService getAppScheduledExecutorService() {
     return AppScheduledExecutorService.getInstance();
   }
@@ -48,7 +48,7 @@ public class AppExecutorUtil {
    * You can use this pool for long-running and/or IO-bound tasks.
    * @see com.intellij.openapi.application.Application#executeOnPooledThread(Runnable)
    */
-  @NotNull
+  @Nonnull
   public static ExecutorService getAppExecutorService() {
     return ((AppScheduledExecutorService)getAppScheduledExecutorService()).backendExecutorService;
   }
@@ -57,8 +57,8 @@ public class AppExecutorUtil {
    * Returns {@link ScheduledExecutorService} which allows to {@link ScheduledExecutorService#schedule(Callable, long, TimeUnit)} tasks later
    * and execute them in parallel in the application pool (see {@link #getAppExecutorService()} not more than at {@code maxSimultaneousTasks} at a time.
    */
-  @NotNull
-  public static ScheduledExecutorService createBoundedScheduledExecutorService(@NotNull String name, int maxSimultaneousTasks) {
+  @Nonnull
+  public static ScheduledExecutorService createBoundedScheduledExecutorService(@Nonnull String name, int maxSimultaneousTasks) {
     return new BoundedScheduledExecutorService(name, getAppExecutorService(), maxSimultaneousTasks);
   }
 
@@ -67,8 +67,8 @@ public class AppExecutorUtil {
    *         (i.e. all tasks are run in the {@link #getAppExecutorService()} global thread pool).
    * @see #getAppExecutorService()
    */
-  @NotNull
-  public static ExecutorService createBoundedApplicationPoolExecutor(@NotNull String name, int maxThreads) {
+  @Nonnull
+  public static ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name, int maxThreads) {
     return new BoundedTaskExecutor(name, getAppExecutorService(), maxThreads);
   }
 }

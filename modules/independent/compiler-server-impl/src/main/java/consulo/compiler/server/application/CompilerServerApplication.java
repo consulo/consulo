@@ -41,8 +41,8 @@ import consulo.annotations.RequiredReadAction;
 import consulo.annotations.RequiredWriteAction;
 import consulo.application.ex.ApplicationEx2;
 import consulo.ui.migration.SwingImageRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.picocontainer.MutablePicoContainer;
 
 import javax.swing.*;
@@ -62,10 +62,10 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
     private static ThreadPoolExecutor createServiceImpl() {
       return new ThreadPoolExecutor(10, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadFactory() {
-        @NotNull
+        @Nonnull
         @Override
         @SuppressWarnings({"HardCodedStringLiteral"})
-        public Thread newThread(@NotNull Runnable r) {
+        public Thread newThread(@Nonnull Runnable r) {
           return new Thread(r, "CompilerServerApplication pooled thread");
         }
       });
@@ -110,7 +110,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  protected void bootstrapPicoContainer(@NotNull String name) {
+  protected void bootstrapPicoContainer(@Nonnull String name) {
     super.bootstrapPicoContainer(name);
     getPicoContainer().registerComponentImplementation(IComponentStore.class, ApplicationStoreImpl.class);
     getPicoContainer().registerComponentImplementation(ApplicationPathMacroManager.class);
@@ -121,13 +121,13 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     getStateStore().initComponent(component);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IApplicationStore getStateStore() {
     return (IApplicationStore)getPicoContainer().getComponentInstance(IComponentStore.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected MutablePicoContainer createPicoContainer() {
     return Extensions.getRootArea().getPicoContainer();
@@ -206,7 +206,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void runReadAction(@NotNull Runnable action) {
+  public void runReadAction(@Nonnull Runnable action) {
     try {
       action.run();
     }
@@ -216,7 +216,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public <T> T runReadAction(@NotNull Computable<T> computation) {
+  public <T> T runReadAction(@Nonnull Computable<T> computation) {
     try {
       return computation.compute();
     }
@@ -227,13 +227,13 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
   }
 
   @RequiredDispatchThread
   @Override
-  public void runWriteAction(@NotNull Runnable action) {
+  public void runWriteAction(@Nonnull Runnable action) {
     try {
       action.run();
     }
@@ -244,7 +244,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public <T> T runWriteAction(@NotNull Computable<T> computation) {
+  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
     try {
       return computation.compute();
     }
@@ -256,13 +256,13 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public <T, E extends Throwable> T runWriteAction(@NotNull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
     return computation.compute();
   }
 
   @RequiredDispatchThread
   @Override
-  public boolean hasWriteAction(@Nullable Class<?> actionClass) {
+  public boolean hasWriteAction(@javax.annotation.Nullable Class<?> actionClass) {
     return true;
   }
 
@@ -282,15 +282,15 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener listener) {
+  public void addApplicationListener(@Nonnull ApplicationListener listener) {
   }
 
   @Override
-  public void addApplicationListener(@NotNull ApplicationListener listener, @NotNull Disposable parent) {
+  public void addApplicationListener(@Nonnull ApplicationListener listener, @Nonnull Disposable parent) {
   }
 
   @Override
-  public void removeApplicationListener(@NotNull ApplicationListener listener) {
+  public void removeApplicationListener(@Nonnull ApplicationListener listener) {
   }
 
   @RequiredDispatchThread
@@ -327,18 +327,18 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void runInWriteThreadAndWait(@NotNull Runnable runnable) {
+  public void runInWriteThreadAndWait(@Nonnull Runnable runnable) {
     runnable.run();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityInvokator getInvokator() {
     return null;
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable) {
+  public void invokeLater(@Nonnull Runnable runnable) {
     try {
       runnable.run();
     }
@@ -348,7 +348,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable, @NotNull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
     try {
       runnable.run();
     }
@@ -358,7 +358,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     try {
       runnable.run();
     }
@@ -368,7 +368,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void invokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
     try {
       runnable.run();
     }
@@ -378,7 +378,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     try {
       runnable.run();
     }
@@ -387,31 +387,31 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getCurrentModalityState() {
     return ModalityState.NON_MODAL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@NotNull Component c) {
+  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
     return ModalityState.NON_MODAL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getDefaultModalityState() {
     return ModalityState.NON_MODAL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getNoneModalityState() {
     return ModalityState.NON_MODAL;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ModalityState getAnyModalityState() {
     return ModalityState.NON_MODAL;
@@ -443,15 +443,15 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Future<?> executeOnPooledThread(@NotNull Runnable action) {
+  public Future<?> executeOnPooledThread(@Nonnull Runnable action) {
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(action);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> Future<T> executeOnPooledThread(@NotNull Callable<T> action) {
+  public <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action) {
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(action);
   }
 
@@ -474,22 +474,22 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SwingImageRef getIcon() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AccessToken acquireReadActionLock() {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   @RequiredDispatchThread
-  @NotNull
+  @Nonnull
   @Override
-  public AccessToken acquireWriteActionLock(@NotNull Class marker) {
+  public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
     return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
@@ -555,8 +555,8 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
                                                      Project project) {
     process.run();
@@ -565,10 +565,10 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
-                                                     @Nullable Project project,
+                                                     @javax.annotation.Nullable Project project,
                                                      JComponent parentComponent) {
     process.run();
     return true;
@@ -576,8 +576,8 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public boolean runProcessWithProgressSynchronously(@NotNull Runnable process,
-                                                     @NotNull String progressTitle,
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
                                                      @Nullable Project project,
                                                      JComponent parentComponent,
@@ -588,7 +588,7 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
 
   @RequiredDispatchThread
   @Override
-  public void assertIsDispatchThread(@Nullable JComponent component) {
+  public void assertIsDispatchThread(@javax.annotation.Nullable JComponent component) {
   }
 
   @Override
@@ -596,12 +596,12 @@ public class CompilerServerApplication extends ComponentManagerImpl implements A
   }
 
   @Override
-  public boolean tryRunReadAction(@NotNull Runnable action) {
+  public boolean tryRunReadAction(@Nonnull Runnable action) {
     action.run();
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public <T> T[] getExtensions(final ExtensionPointName<T> extensionPointName) {
     return Extensions.getRootArea().getExtensionPoint(extensionPointName).getExtensions();

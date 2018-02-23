@@ -55,8 +55,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -309,7 +309,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
   }
 
   @Override
-  public void selectFile(@NotNull final PsiFile file) {
+  public void selectFile(@Nonnull final PsiFile file) {
     // Select element in the tree
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
@@ -369,7 +369,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
   private final class MyGotoFileModel implements ChooseByNameModel {
     private final int myMaxSize = WindowManagerEx.getInstance().getFrame(myProject).getSize().width;
     @Override
-    @NotNull
+    @Nonnull
     public Object[] getElementsByName(final String name, final boolean checkBoxState, final String pattern) {
       GlobalSearchScope scope = myShowLibraryContents ? GlobalSearchScope.allScope(myProject) : GlobalSearchScope.projectScope(myProject);
       final PsiFile[] psiFiles = FilenameIndex.getFilesByName(myProject, name, scope);
@@ -416,7 +416,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String[] getNames(final boolean checkBoxState) {
       final String[] fileNames;
       if (myFileType != null && myProject != null) {
@@ -472,7 +472,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String[] getSeparators() {
       return new String[] {"/", "\\"};
     }

@@ -45,7 +45,7 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -83,11 +83,11 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     this(new JTextArea(), searchMode, false);
   }
 
-  public SearchTextArea(@NotNull JTextArea textArea, boolean searchMode, boolean infoMode) {
+  public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode) {
     this(textArea, searchMode, infoMode, false);
   }
 
-  public SearchTextArea(@NotNull JTextArea textArea, boolean searchMode, boolean infoMode, boolean allowInsertTabInMultiline) {
+  public SearchTextArea(@Nonnull JTextArea textArea, boolean searchMode, boolean infoMode, boolean allowInsertTabInMultiline) {
     myTextArea = textArea;
     mySearchMode = searchMode;
     myInfoMode = infoMode;
@@ -257,7 +257,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     updateIconsLayout();
   }
 
-  @NotNull
+  @Nonnull
   public JTextArea getTextArea() {
     return myTextArea;
   }
@@ -381,7 +381,7 @@ public class SearchTextArea extends NonOpaquePanel implements PropertyChangeList
     }
   }
 
-  @NotNull
+  @Nonnull
   private LafHelper createHelper() {
     return SystemInfo.isMac && !UIUtil.isUnderDarcula() ? new MacLafHelper() : new DefaultLafHelper();
   }

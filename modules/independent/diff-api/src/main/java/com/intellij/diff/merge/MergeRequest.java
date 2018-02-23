@@ -18,8 +18,8 @@ package com.intellij.diff.merge;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -28,7 +28,7 @@ import consulo.annotations.RequiredDispatchThread;
 public abstract class MergeRequest implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String getTitle();
 
   /**
@@ -37,16 +37,16 @@ public abstract class MergeRequest implements UserDataHolder {
    * MergeRequest should keep initial state of its content and restore it on {@link MergeResult.CANCEL}
    */
   @RequiredDispatchThread
-  public abstract void applyResult(@NotNull MergeResult result);
+  public abstract void applyResult(@Nonnull MergeResult result);
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 }

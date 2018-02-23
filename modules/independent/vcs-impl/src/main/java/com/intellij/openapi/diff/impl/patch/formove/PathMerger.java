@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,12 +37,12 @@ public class PathMerger {
     return getFile(new VirtualFilePathMerger(base), path);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getFile(final VirtualFile base, final String path, final List<String> tail) {
     return getFile(new VirtualFilePathMerger(base), path, tail);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static File getFile(final File base, final String path) {
     return getFile(new IoFilePathMerger(base), path);
   }
@@ -105,7 +105,7 @@ public class PathMerger {
     return merger.getResult();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static VirtualFile getBase(final VirtualFile base, final String path) {
     return getBase(new VirtualFilePathMerger(base), path);
   }
@@ -201,7 +201,7 @@ public class PathMerger {
       return new File(myBase, sb.toString());
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public String getCurrentName() {
       if (! myChildPathElements.isEmpty()) {
         return myChildPathElements.get(myChildPathElements.size() - 1);

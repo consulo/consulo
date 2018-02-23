@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vcs.checkin.VcsCheckinHandlerFactory;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +66,7 @@ public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
   }
 
   @Override
-  public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@NotNull List<AbstractVcs> vcsList) {
+  public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> vcsList) {
     final SmartList<VcsCheckinHandlerFactory> result = new SmartList<VcsCheckinHandlerFactory>();
     for (AbstractVcs vcs : vcsList) {
       final Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());

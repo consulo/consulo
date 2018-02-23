@@ -11,7 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -194,7 +194,7 @@ public class StatisticsUploadAssistantTest extends TestCase {
         assertEquals(allUsages.size(), usagesPersistence.getSentUsages().size());
     }
 
-    private static <T extends UsageDescriptor> void  assertMapEquals(@NotNull Map<GroupDescriptor, Set<T>> expected, @NotNull Map<GroupDescriptor, Set<UsageDescriptor>> actual) {
+    private static <T extends UsageDescriptor> void  assertMapEquals(@Nonnull Map<GroupDescriptor, Set<T>> expected, @Nonnull Map<GroupDescriptor, Set<UsageDescriptor>> actual) {
         assertEquals(expected.size(), actual.size());
 
         for (Map.Entry<GroupDescriptor, Set<T>> expectedEntry : expected.entrySet()) {
@@ -206,7 +206,7 @@ public class StatisticsUploadAssistantTest extends TestCase {
         }
     }
 
-    private static void assertSetEquals(@NotNull Set<? extends UsageDescriptor> expected, @NotNull Set<? extends UsageDescriptor> actual) {
+    private static void assertSetEquals(@Nonnull Set<? extends UsageDescriptor> expected, @Nonnull Set<? extends UsageDescriptor> actual) {
         assertEquals(expected.size(), actual.size());
         for (UsageDescriptor usageDescriptor : expected) {
             boolean exists = false;

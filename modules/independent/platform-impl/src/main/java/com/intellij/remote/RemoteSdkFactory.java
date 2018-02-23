@@ -17,8 +17,8 @@ package com.intellij.remote;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -27,19 +27,19 @@ import java.util.Collection;
  * @author traff
  */
 public interface RemoteSdkFactory<T extends RemoteSdkAdditionalData> {
-  Sdk createRemoteSdk(@Nullable Project project, @NotNull T data, @Nullable String sdkName, Collection<Sdk> existingSdks)
+  Sdk createRemoteSdk(@Nullable Project project, @Nonnull T data, @Nullable String sdkName, Collection<Sdk> existingSdks)
     throws RemoteSdkException;
 
-  String generateSdkHomePath(@NotNull T data);
+  String generateSdkHomePath(@Nonnull T data);
 
   Sdk createUnfinished(T data, Collection<Sdk> existingSdks);
 
   String getDefaultUnfinishedName();
 
-  @NotNull
+  @Nonnull
   String sdkName();
 
   boolean canSaveUnfinished();
 
-  void initSdk(@NotNull Sdk sdk, @Nullable Project project, @Nullable Component ownerComponent);
+  void initSdk(@Nonnull Sdk sdk, @Nullable Project project, @Nullable Component ownerComponent);
 }

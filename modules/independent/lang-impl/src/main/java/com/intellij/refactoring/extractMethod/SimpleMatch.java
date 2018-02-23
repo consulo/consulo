@@ -1,7 +1,7 @@
 package com.intellij.refactoring.extractMethod;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class SimpleMatch {
   private final Map<String, String> myChangedParameters;
   private String myChangedOutput;
 
-  public SimpleMatch(@NotNull final PsiElement start, @NotNull final PsiElement endElement) {
+  public SimpleMatch(@Nonnull final PsiElement start, @Nonnull final PsiElement endElement) {
     myStartElement = start;
     myEndElement = endElement;
     myChangedParameters = new HashMap<String, String>();
@@ -33,11 +33,11 @@ public class SimpleMatch {
     return myChangedParameters;
   }
 
-  public void changeParameter(@NotNull final String from, @NotNull final String to) {
+  public void changeParameter(@Nonnull final String from, @Nonnull final String to) {
     myChangedParameters.put(from, to);
   }
 
-  public void changeOutput(@NotNull final String to) {
+  public void changeOutput(@Nonnull final String to) {
     myChangedOutput = to;
   }
 

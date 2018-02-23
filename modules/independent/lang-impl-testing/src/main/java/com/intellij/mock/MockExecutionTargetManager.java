@@ -19,8 +19,8 @@ import com.intellij.execution.DefaultExecutionTarget;
 import com.intellij.execution.ExecutionTarget;
 import com.intellij.execution.ExecutionTargetManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,18 +28,18 @@ import java.util.List;
 public class MockExecutionTargetManager extends ExecutionTargetManager {
   private ExecutionTarget myTarget = DefaultExecutionTarget.INSTANCE;
 
-  @NotNull
+  @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
     return myTarget;
   }
 
   @Override
-  public void setActiveTarget(@NotNull ExecutionTarget target) {
+  public void setActiveTarget(@Nonnull ExecutionTarget target) {
     myTarget = target;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
     return Collections.singletonList(DefaultExecutionTarget.INSTANCE);

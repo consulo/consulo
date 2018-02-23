@@ -15,8 +15,9 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ComponentWithEmptyText {
-  @NotNull StatusText getEmptyText();
+  @Nonnull
+  StatusText getEmptyText();
 }

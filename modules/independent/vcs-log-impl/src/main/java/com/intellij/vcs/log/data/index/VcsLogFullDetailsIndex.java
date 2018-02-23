@@ -28,7 +28,7 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.util.PersistentUtil;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,20 +41,26 @@ import static com.intellij.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
 
 public class VcsLogFullDetailsIndex<T> implements Disposable {
   protected static final String INDEX = "index";
-  @NotNull protected final MyMapReduceIndex myMapReduceIndex;
-  @NotNull private final ID<Integer, T> myID;
-  @NotNull private final String myLogId;
-  @NotNull private final String myName;
-  @NotNull protected final DataIndexer<Integer, T, VcsFullCommitDetails> myIndexer;
-  @NotNull private final FatalErrorHandler myFatalErrorHandler;
+  @Nonnull
+  protected final MyMapReduceIndex myMapReduceIndex;
+  @Nonnull
+  private final ID<Integer, T> myID;
+  @Nonnull
+  private final String myLogId;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  protected final DataIndexer<Integer, T, VcsFullCommitDetails> myIndexer;
+  @Nonnull
+  private final FatalErrorHandler myFatalErrorHandler;
 
-  public VcsLogFullDetailsIndex(@NotNull String logId,
-                                @NotNull String name,
+  public VcsLogFullDetailsIndex(@Nonnull String logId,
+                                @Nonnull String name,
                                 final int version,
-                                @NotNull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
-                                @NotNull DataExternalizer<T> externalizer,
-                                @NotNull FatalErrorHandler fatalErrorHandler,
-                                @NotNull Disposable disposableParent)
+                                @Nonnull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
+                                @Nonnull DataExternalizer<T> externalizer,
+                                @Nonnull FatalErrorHandler fatalErrorHandler,
+                                @Nonnull Disposable disposableParent)
           throws IOException {
     myID = ID.create(name);
     myName = name;
@@ -67,8 +73,8 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     Disposer.register(disposableParent, this);
   }
 
-  @NotNull
-  public TIntHashSet getCommitsWithAnyKey(@NotNull Set<Integer> keys) throws StorageException {
+  @Nonnull
+  public TIntHashSet getCommitsWithAnyKey(@Nonnull Set<Integer> keys) throws StorageException {
     TIntHashSet result = new TIntHashSet();
 
     for (Integer key : keys) {
@@ -78,15 +84,15 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     return result;
   }
 
-  @NotNull
-  public TIntHashSet getCommitsWithAllKeys(@NotNull Collection<Integer> keys) throws StorageException {
+  @Nonnull
+  public TIntHashSet getCommitsWithAllKeys(@Nonnull Collection<Integer> keys) throws StorageException {
     return InvertedIndexUtil.collectInputIdsContainingAllKeys(myMapReduceIndex, keys, (k) -> {
       ProgressManager.checkCanceled();
       return true;
     }, null, null);
   }
 
-  private void iterateCommitIds(int key, @NotNull Consumer<Integer> consumer) throws StorageException {
+  private void iterateCommitIds(int key, @Nonnull Consumer<Integer> consumer) throws StorageException {
     ValueContainer<T> data = myMapReduceIndex.getData(key);
     data.forEach((id, value) -> {
       consumer.consume(id);
@@ -94,14 +100,14 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     });
   }
 
-  protected void iterateCommitIdsAndValues(int key, @NotNull ObjIntConsumer<T> consumer) throws StorageException {
+  protected void iterateCommitIdsAndValues(int key, @Nonnull ObjIntConsumer<T> consumer) throws StorageException {
     myMapReduceIndex.getData(key).forEach((id, value) -> {
       consumer.accept(value, id);
       return true;
     });
   }
 
-  public void update(int commitId, @NotNull VcsFullCommitDetails details) throws IOException {
+  public void update(int commitId, @Nonnull VcsFullCommitDetails details) throws IOException {
     myMapReduceIndex.update(commitId, details).compute();
   }
 
@@ -114,14 +120,14 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     myMapReduceIndex.dispose();
   }
 
-  @NotNull
-  public static File getStorageFile(@NotNull String kind, @NotNull String id) {
+  @Nonnull
+  public static File getStorageFile(@Nonnull String kind, @Nonnull String id) {
     return PersistentUtil.getStorageFile(INDEX, kind, id, getVersion(), false);
   }
 
   private class MyMapReduceIndex extends MapReduceIndex<Integer, T, VcsFullCommitDetails> {
-    public MyMapReduceIndex(@NotNull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
-                            @NotNull DataExternalizer<T> externalizer,
+    public MyMapReduceIndex(@Nonnull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
+                            @Nonnull DataExternalizer<T> externalizer,
                             int version) throws IOException {
       super(new MyIndexExtension(indexer, externalizer, version),
             new MapIndexStorage<Integer, T>(getStorageFile(myName, myLogId),
@@ -140,43 +146,45 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
     }
 
     @Override
-    public void requestRebuild(@NotNull Exception ex) {
+    public void requestRebuild(@Nonnull Exception ex) {
       myFatalErrorHandler.consume(this, ex);
     }
   }
 
   private class MyIndexExtension extends IndexExtension<Integer, T, VcsFullCommitDetails> {
-    @NotNull private final DataIndexer<Integer, T, VcsFullCommitDetails> myIndexer;
-    @NotNull private final DataExternalizer<T> myExternalizer;
+    @Nonnull
+    private final DataIndexer<Integer, T, VcsFullCommitDetails> myIndexer;
+    @Nonnull
+    private final DataExternalizer<T> myExternalizer;
     private final int myVersion;
 
-    public MyIndexExtension(@NotNull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
-                            @NotNull DataExternalizer<T> externalizer,
+    public MyIndexExtension(@Nonnull DataIndexer<Integer, T, VcsFullCommitDetails> indexer,
+                            @Nonnull DataExternalizer<T> externalizer,
                             int version) {
       myIndexer = indexer;
       myExternalizer = externalizer;
       myVersion = version;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ID<Integer, T> getName() {
       return myID;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public DataIndexer<Integer, T, VcsFullCommitDetails> getIndexer() {
       return myIndexer;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public KeyDescriptor<Integer> getKeyDescriptor() {
       return EnumeratorIntegerDescriptor.INSTANCE;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public DataExternalizer<T> getValueExternalizer() {
       return myExternalizer;
@@ -189,14 +197,14 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
   }
 
   private static class EmptyForwardIndex<T> implements ForwardIndex<Integer, T> {
-    @NotNull
+    @Nonnull
     @Override
     public InputDataDiffBuilder<Integer, T> getDiffBuilder(int inputId) {
       return new EmptyInputDataDiffBuilder<>(inputId);
     }
 
     @Override
-    public void putInputData(int inputId, @NotNull Map<Integer, T> data) throws IOException {
+    public void putInputData(int inputId, @Nonnull Map<Integer, T> data) throws IOException {
     }
 
     @Override

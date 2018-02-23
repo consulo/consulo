@@ -27,7 +27,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Query;
 import consulo.roots.ContentFolderScopes;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class ResourceFileUtil {
   public static final Logger LOGGER = Logger.getInstance(ResourceFileUtil.class);

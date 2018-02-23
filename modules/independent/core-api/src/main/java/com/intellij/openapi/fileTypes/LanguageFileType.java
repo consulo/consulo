@@ -18,8 +18,8 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -33,7 +33,7 @@ public abstract class LanguageFileType implements FileType{
    * Creates a language file type for the specified language.
    * @param language The language used in the files of the type.
    */
-  protected LanguageFileType(@NotNull final Language language) {
+  protected LanguageFileType(@Nonnull final Language language) {
     myLanguage = language;
   }
 
@@ -42,7 +42,7 @@ public abstract class LanguageFileType implements FileType{
    * @return The language instance.
    */
 
-  @NotNull
+  @Nonnull
   public final Language getLanguage() {
     return myLanguage;
   }
@@ -52,7 +52,7 @@ public abstract class LanguageFileType implements FileType{
     return false;
   }
 
-  public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @NotNull CharSequence content) {
+  public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @Nonnull CharSequence content) {
     return null;
   }
 }

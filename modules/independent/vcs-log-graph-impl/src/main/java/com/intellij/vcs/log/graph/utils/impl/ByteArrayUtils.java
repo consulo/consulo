@@ -16,13 +16,13 @@
 package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.IntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class ByteArrayUtils {
   private static final int BYTE_OFFSET = 8;
   private static final int BYTE_MASK = 0xff;
 
-  public static int countBytesAfterCompression(@NotNull IntList deltaList) {
+  public static int countBytesAfterCompression(@Nonnull IntList deltaList) {
     int count = 0;
     for (int i = 0; i < deltaList.size(); i++) {
       count += sizeOf(deltaList.get(i));

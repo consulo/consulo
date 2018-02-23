@@ -19,7 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.Predicate;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -28,14 +28,14 @@ import java.util.Map;
  * @since 1:53/02.04.13
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
-  @NotNull
-  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@NotNull String epName) {
+  @Nonnull
+  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@Nonnull String epName) {
     return new ElementTypeEntryExtensionCollector<>(epName);
   }
 
   private ExtensionPointName<E> myExtensionPointName;
 
-  private ElementTypeEntryExtensionCollector(@NotNull String epName) {
+  private ElementTypeEntryExtensionCollector(@Nonnull String epName) {
     myExtensionPointName = ExtensionPointName.create(epName);
   }
 
@@ -53,12 +53,12 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
     return factory;
   });
 
-  @NotNull
-  public E getValue(@NotNull IElementType elementType) {
+  @Nonnull
+  public E getValue(@Nonnull IElementType elementType) {
     return myMap.get(elementType);
   }
 
-  @NotNull
+  @Nonnull
   public ExtensionPointName<E> getExtensionPointName() {
     return myExtensionPointName;
   }

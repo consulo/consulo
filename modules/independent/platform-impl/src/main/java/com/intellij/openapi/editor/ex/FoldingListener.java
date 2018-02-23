@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.FoldRegion;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines common contract for clients interested in folding processing.
@@ -34,7 +34,7 @@ public interface FoldingListener {
    *
    * @param region    fold region that is just collapsed or expanded
    */
-  void onFoldRegionStateChange(@NotNull FoldRegion region);
+  void onFoldRegionStateChange(@Nonnull FoldRegion region);
 
   /**
    * Informs that fold processing is done.

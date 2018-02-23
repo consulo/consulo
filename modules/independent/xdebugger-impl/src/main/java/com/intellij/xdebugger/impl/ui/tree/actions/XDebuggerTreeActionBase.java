@@ -22,9 +22,9 @@ import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     }
   }
 
-  protected abstract void perform(final XValueNodeImpl node, @NotNull String nodeName, final AnActionEvent e);
+  protected abstract void perform(final XValueNodeImpl node, @Nonnull String nodeName, final AnActionEvent e);
 
   @RequiredDispatchThread
   @Override
@@ -55,11 +55,11 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     e.getPresentation().setEnabled(node != null && isEnabled(node, e));
   }
 
-  protected boolean isEnabled(final @NotNull XValueNodeImpl node, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(final @Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return node.getName() != null;
   }
 
-  @NotNull
+  @Nonnull
   public static List<XValueNodeImpl> getSelectedNodes(DataContext dataContext) {
     XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
     if (tree == null) return Collections.emptyList();
@@ -91,7 +91,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
   }
 
   @Nullable
-  public static XValue getSelectedValue(@NotNull DataContext dataContext) {
+  public static XValue getSelectedValue(@Nonnull DataContext dataContext) {
     XValueNodeImpl node = getSelectedNode(dataContext);
     return node != null ? node.getValueContainer() : null;
   }

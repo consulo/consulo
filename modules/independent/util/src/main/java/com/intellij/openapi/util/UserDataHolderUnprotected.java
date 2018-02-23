@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Like UserDataHolder, but stores data in non-thread-safe way.
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface UserDataHolderUnprotected {
   @Nullable
-  <T> T getUserDataUnprotected(@NotNull Key<T> key);
+  <T> T getUserDataUnprotected(@Nonnull Key<T> key);
 
-  <T> void putUserDataUnprotected(@NotNull Key<T> key, @Nullable T value);
+  <T> void putUserDataUnprotected(@Nonnull Key<T> key, @Nullable T value);
 }

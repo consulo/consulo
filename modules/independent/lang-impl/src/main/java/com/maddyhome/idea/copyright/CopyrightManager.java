@@ -47,8 +47,8 @@ import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -78,13 +78,13 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
   @Nullable
   private CopyrightProfile myDefaultCopyright = null;
 
-  public CopyrightManager(@NotNull Project project,
-                          @NotNull final EditorFactory editorFactory,
-                          @NotNull final Application application,
-                          @NotNull final FileDocumentManager fileDocumentManager,
-                          @NotNull final ProjectRootManager projectRootManager,
-                          @NotNull final PsiManager psiManager,
-                          @NotNull StartupManager startupManager) {
+  public CopyrightManager(@Nonnull Project project,
+                          @Nonnull final EditorFactory editorFactory,
+                          @Nonnull final Application application,
+                          @Nonnull final FileDocumentManager fileDocumentManager,
+                          @Nonnull final ProjectRootManager projectRootManager,
+                          @Nonnull final PsiManager psiManager,
+                          @Nonnull StartupManager startupManager) {
     super(project);
     if (!myProject.isDefault()) {
       final NewFileTracker newFileTracker = NewFileTracker.getInstance();
@@ -130,7 +130,7 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "CopyrightManager";
   }
@@ -245,7 +245,7 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
   }
 
   @Nullable
-  public CopyrightProfile getCopyrightOptions(@NotNull PsiFile file) {
+  public CopyrightProfile getCopyrightOptions(@Nonnull PsiFile file) {
     final VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
@@ -281,9 +281,9 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
   }
 
   static final class CopyrightStateSplitter extends MainConfigurationStateSplitter {
-    @NotNull
+    @Nonnull
     @Override
-    protected String getSubStateFileName(@NotNull Element element) {
+    protected String getSubStateFileName(@Nonnull Element element) {
       for (Element option : element.getChildren("option")) {
         if (option.getAttributeValue("name").equals("myName")) {
           return option.getAttributeValue("value");
@@ -292,13 +292,13 @@ public class CopyrightManager extends AbstractProjectComponent implements Persis
       throw new IllegalStateException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getComponentStateFileName() {
       return "profiles_settings";
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getSubStateTagName() {
       return "copyright";

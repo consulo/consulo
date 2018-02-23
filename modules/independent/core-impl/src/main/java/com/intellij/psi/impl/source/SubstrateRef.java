@@ -29,8 +29,8 @@ import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.stubs.Stub;
 import com.intellij.psi.stubs.StubElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class SubstrateRef {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.impl.source.SubstrateRef");
 
-  @NotNull
+  @Nonnull
   public abstract ASTNode getNode();
 
   @Nullable
@@ -53,13 +53,13 @@ public abstract class SubstrateRef {
 
   public abstract boolean isValid();
 
-  @NotNull
+  @Nonnull
   public abstract PsiFile getContainingFile();
 
-  @NotNull
-  static SubstrateRef createInvalidRef(@NotNull final StubBasedPsiElementBase<?> psi) {
+  @Nonnull
+  static SubstrateRef createInvalidRef(@Nonnull final StubBasedPsiElementBase<?> psi) {
     return new SubstrateRef() {
-      @NotNull
+      @Nonnull
       @Override
       public ASTNode getNode() {
         throw new PsiInvalidElementAccessException(psi);
@@ -70,7 +70,7 @@ public abstract class SubstrateRef {
         return false;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public PsiFile getContainingFile() {
         throw new PsiInvalidElementAccessException(psi);
@@ -78,10 +78,10 @@ public abstract class SubstrateRef {
     };
   }
 
-  public static SubstrateRef createAstStrongRef(@NotNull final ASTNode node) {
+  public static SubstrateRef createAstStrongRef(@Nonnull final ASTNode node) {
     return new SubstrateRef() {
 
-      @NotNull
+      @Nonnull
       @Override
       public ASTNode getNode() {
         return node;
@@ -94,7 +94,7 @@ public abstract class SubstrateRef {
         return file != null && file.isValid();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public PsiFile getContainingFile() {
         PsiFile file = SharedImplUtil.getContainingFile(node);
@@ -107,17 +107,17 @@ public abstract class SubstrateRef {
   public static class StubRef extends SubstrateRef {
     private final StubElement myStub;
 
-    public StubRef(@NotNull StubElement stub) {
+    public StubRef(@Nonnull StubElement stub) {
       myStub = stub;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ASTNode getNode() {
       throw new UnsupportedOperationException();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Stub getStub(int stubIndex) {
       return myStub;
@@ -134,7 +134,7 @@ public abstract class SubstrateRef {
       return psi != null && psi.isValid();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiFile getContainingFile() {
       StubElement stub = myStub;

@@ -22,7 +22,7 @@ import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanel {
@@ -38,7 +38,7 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
     group.add(new CloseTabToolbarAction() {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         ProblemsView.getInstance(myProject).showOrHide(true);
       }
     });

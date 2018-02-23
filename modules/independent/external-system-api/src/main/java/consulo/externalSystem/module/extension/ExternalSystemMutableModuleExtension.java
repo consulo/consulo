@@ -16,8 +16,7 @@
 package consulo.externalSystem.module.extension;
 
 import consulo.module.extension.MutableModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ExternalSystemMutableModuleExtension<T extends ExternalSystemModuleExtension<T>>
         extends ExternalSystemModuleExtension<T>, MutableModuleExtension<T> {
-  void setOption(@NotNull String key, @Nullable String value);
+  void setOption(@Nonnull String key, @javax.annotation.Nullable String value);
 
-  void removeOption(@NotNull String key);
+  void removeOption(@Nonnull String key);
 
   void removeAllOptions();
 }

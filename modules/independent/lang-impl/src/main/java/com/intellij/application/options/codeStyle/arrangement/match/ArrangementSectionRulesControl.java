@@ -33,8 +33,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -48,26 +48,32 @@ import static com.intellij.application.options.codeStyle.arrangement.match.Arran
  * @since 10/31/12 1:23 PM
  */
 public class ArrangementSectionRulesControl extends ArrangementMatchingRulesControl {
-  @NotNull public static final Key<ArrangementSectionRulesControl> KEY = Key.create("Arrangement.Rule.Match.Control");
-  @NotNull private static final Logger LOG = Logger.getInstance("#" + ArrangementSectionRulesControl.class.getName());
-  @NotNull private final ArrangementColorsProvider myColorsProvider;
-  @NotNull private final ArrangementStandardSettingsManager mySettingsManager;
+  @Nonnull
+  public static final Key<ArrangementSectionRulesControl> KEY = Key.create("Arrangement.Rule.Match.Control");
+  @Nonnull
+  private static final Logger LOG = Logger.getInstance("#" + ArrangementSectionRulesControl.class.getName());
+  @Nonnull
+  private final ArrangementColorsProvider myColorsProvider;
+  @Nonnull
+  private final ArrangementStandardSettingsManager mySettingsManager;
 
-  @Nullable private final ArrangementSectionRuleManager mySectionRuleManager;
-  @Nullable private ArrangementStandardSettingsManager myExtendedSettingsManager;
+  @Nullable
+  private final ArrangementSectionRuleManager mySectionRuleManager;
+  @Nullable
+  private ArrangementStandardSettingsManager myExtendedSettingsManager;
 
-  public ArrangementSectionRulesControl(@NotNull Language language,
-                                        @NotNull ArrangementStandardSettingsManager settingsManager,
-                                        @NotNull ArrangementColorsProvider colorsProvider,
-                                        @NotNull RepresentationCallback callback) {
+  public ArrangementSectionRulesControl(@Nonnull Language language,
+                                        @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                        @Nonnull ArrangementColorsProvider colorsProvider,
+                                        @Nonnull RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);
     mySectionRuleManager = ArrangementSectionRuleManager.getInstance(language, settingsManager, colorsProvider, this);
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
   }
 
-  private static void appendBufferedSectionRules(@NotNull List<ArrangementSectionRule> result,
-                                                 @NotNull List<StdArrangementMatchRule> buffer,
+  private static void appendBufferedSectionRules(@Nonnull List<ArrangementSectionRule> result,
+                                                 @Nonnull List<StdArrangementMatchRule> buffer,
                                                  @Nullable String currentSectionStart) {
     if (currentSectionStart == null) {
       return;
@@ -90,7 +96,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     return new MatchingRulesRenderer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ArrangementMatchingRulesValidator createValidator() {
     return new ArrangementSectionRulesValidator(getModel(), mySectionRuleManager);
@@ -182,7 +188,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
     }
   }
 
-  @NotNull
+  @Nonnull
   public ArrangementRuleAliasDialog createRuleAliasEditDialog() {
     final Set<String> tokenIds = new THashSet<String>();
     final List<ArrangementSectionRule> sections = getSections();
@@ -190,14 +196,14 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
       for (StdArrangementMatchRule rule : section.getMatchRules()) {
         rule.getMatcher().getCondition().invite(new ArrangementMatchConditionVisitor() {
           @Override
-          public void visit(@NotNull ArrangementAtomMatchCondition condition) {
+          public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
             if (ArrangementUtil.isAliasedCondition(condition)) {
               tokenIds.add(condition.getType().getId());
             }
           }
 
           @Override
-          public void visit(@NotNull ArrangementCompositeMatchCondition condition) {
+          public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
             for (ArrangementMatchCondition operand : condition.getOperands()) {
               operand.invite(this);
             }

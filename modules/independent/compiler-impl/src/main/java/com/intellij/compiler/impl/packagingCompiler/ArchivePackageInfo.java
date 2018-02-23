@@ -19,7 +19,7 @@ package com.intellij.compiler.impl.packagingCompiler;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -61,7 +61,7 @@ public class ArchivePackageInfo {
     return myPackedArchives;
   }
 
-  @NotNull
+  @Nonnull
   public ArchivePackageWriter<?> getPackageWriter() {
     return myPackageWriter;
   }

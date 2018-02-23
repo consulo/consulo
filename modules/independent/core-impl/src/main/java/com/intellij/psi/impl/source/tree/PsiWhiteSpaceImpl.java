@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.TokenType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   public PsiWhiteSpaceImpl(CharSequence text) {
@@ -29,7 +29,7 @@ public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor){
     visitor.visitWhiteSpace(this);
   }
 
@@ -38,7 +38,7 @@ public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     final PsiElement master = getParent();
     return master != null ?  master.getLanguage() : Language.ANY;

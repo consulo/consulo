@@ -25,7 +25,7 @@ import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -65,7 +65,7 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewTreeElement getRoot() {
     return new StructureViewElementWrapper<PsiElement>(myStructureViewModel.getRoot(), myMainFile);
   }
@@ -81,19 +81,19 @@ public class StructureViewModelWrapper implements StructureViewModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Grouper[] getGroupers() {
     return myStructureViewModel.getGroupers();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Sorter[] getSorters() {
     return myStructureViewModel.getSorters();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Filter[] getFilters() {
     return myStructureViewModel.getFilters();
   }

@@ -36,7 +36,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     final GotoFileModel gotoFileModel = new GotoFileModel(project);
     GotoActionCallback<FileType> callback = new GotoActionCallback<FileType>() {
       @Override
-      protected ChooseByNameFilter<FileType> createFilter(@NotNull ChooseByNamePopup popup) {
+      protected ChooseByNameFilter<FileType> createFilter(@Nonnull ChooseByNamePopup popup) {
         return new GotoFileFilter(popup, gotoFileModel, project);
       }
 
@@ -95,7 +95,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected List<FileType> getAllFilterValues() {
       List<FileType> elements = new ArrayList<FileType>();
       ContainerUtil.addAll(elements, FileTypeManager.getInstance().getRegisteredFileTypes());
@@ -104,12 +104,12 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    protected String textForFilterValue(@NotNull FileType value) {
+    protected String textForFilterValue(@Nonnull FileType value) {
       return value.getName();
     }
 
     @Override
-    protected Icon iconForFilterValue(@NotNull FileType value) {
+    protected Icon iconForFilterValue(@Nonnull FileType value) {
       return value.getIcon();
     }
   }

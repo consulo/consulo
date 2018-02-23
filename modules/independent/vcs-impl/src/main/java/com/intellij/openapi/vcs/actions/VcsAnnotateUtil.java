@@ -25,13 +25,13 @@ import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 class VcsAnnotateUtil {
-  @NotNull
-  public static List<Editor> getEditors(@NotNull Project project, @NotNull VirtualFile file) {
+  @Nonnull
+  public static List<Editor> getEditors(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(file);
     return ContainerUtil.mapNotNull(editors, new Function<FileEditor, Editor>() {
       @Override
@@ -41,8 +41,8 @@ class VcsAnnotateUtil {
     });
   }
 
-  @NotNull
-  public static BackgroundableActionLock getBackgroundableLock(@NotNull Project project, @NotNull VirtualFile file) {
+  @Nonnull
+  public static BackgroundableActionLock getBackgroundableLock(@Nonnull Project project, @Nonnull VirtualFile file) {
     return BackgroundableActionLock.getLock(project, VcsBackgroundableActions.ANNOTATE, file.getPath());
   }
 }

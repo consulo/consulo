@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.configuration;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -11,6 +11,6 @@ import java.util.EventListener;
 public interface RemoteServerListener extends EventListener {
   Topic<RemoteServerListener> TOPIC = Topic.create("remote servers", RemoteServerListener.class);
 
-  void serverAdded(@NotNull RemoteServer<?> server);
-  void serverRemoved(@NotNull RemoteServer<?> server);
+  void serverAdded(@Nonnull RemoteServer<?> server);
+  void serverRemoved(@Nonnull RemoteServer<?> server);
 }

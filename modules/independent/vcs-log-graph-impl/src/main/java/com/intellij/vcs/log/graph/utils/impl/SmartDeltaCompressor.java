@@ -16,14 +16,14 @@
 package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.IntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.intellij.vcs.log.graph.utils.impl.ByteArrayUtils.*;
 
 public class SmartDeltaCompressor implements IntList {
 
-  @NotNull
-  public static SmartDeltaCompressor newInstance(@NotNull IntList deltaList) {
+  @Nonnull
+  public static SmartDeltaCompressor newInstance(@Nonnull IntList deltaList) {
     if (deltaList.size() < 0) throw new NegativeArraySizeException("size < 0: " + deltaList.size());
 
     int bytesAfterCompression = countBytesAfterCompression(deltaList);

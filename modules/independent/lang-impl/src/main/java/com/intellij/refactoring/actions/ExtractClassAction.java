@@ -15,18 +15,15 @@
  */
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.lang.ElementsHandler;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class ExtractClassAction extends BasePlatformRefactoringAction {
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return provider.getExtractClassHandler();
   }
 

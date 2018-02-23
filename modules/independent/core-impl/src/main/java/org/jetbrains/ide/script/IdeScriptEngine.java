@@ -15,37 +15,37 @@
  */
 package org.jetbrains.ide.script;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
 public interface IdeScriptEngine {
-  Object getBinding(@NotNull String name);
+  Object getBinding(@Nonnull String name);
 
-  void setBinding(@NotNull String name, Object value);
+  void setBinding(@Nonnull String name, Object value);
 
-  @NotNull
+  @Nonnull
   Writer getStdOut();
 
-  void setStdOut(@NotNull Writer writer);
+  void setStdOut(@Nonnull Writer writer);
 
-  @NotNull
+  @Nonnull
   Writer getStdErr();
 
-  void setStdErr(@NotNull Writer writer);
+  void setStdErr(@Nonnull Writer writer);
 
-  @NotNull
+  @Nonnull
   Reader getStdIn();
 
-  void setStdIn(@NotNull Reader reader);
+  void setStdIn(@Nonnull Reader reader);
 
-  @NotNull
+  @Nonnull
   String getLanguage();
 
-  @NotNull
+  @Nonnull
   List<String> getFileExtensions();
 
-  Object eval(@NotNull String script) throws IdeScriptException;
+  Object eval(@Nonnull String script) throws IdeScriptException;
 }

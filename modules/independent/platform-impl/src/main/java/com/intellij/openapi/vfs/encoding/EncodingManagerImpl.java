@@ -46,8 +46,8 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import gnu.trove.Equality;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.beans.PropertyChangeEvent;
@@ -74,16 +74,16 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
   static class State {
-    @NotNull
+    @Nonnull
     private Charset myDefaultEncoding = CharsetToolkit.UTF8_CHARSET;
 
     @Attribute("default_encoding")
-    @NotNull
+    @Nonnull
     public String getDefaultCharsetName() {
       return myDefaultEncoding == ChooseFileEncodingAction.NO_ENCODING ? "" : myDefaultEncoding.name();
     }
 
-    public void setDefaultCharsetName(@NotNull String name) {
+    public void setDefaultCharsetName(@Nonnull String name) {
       myDefaultEncoding = name.isEmpty()
                           ? ChooseFileEncodingAction.NO_ENCODING
                           : ObjectUtils.notNull(CharsetToolkit.forName(name), CharsetToolkit.getDefaultSystemCharset());
@@ -97,7 +97,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final BoundedTaskExecutor changedDocumentExecutor =
           new BoundedTaskExecutor("EncodingManagerImpl document pool", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.CORES_COUNT, this);
 
-  public EncodingManagerImpl(@NotNull EditorFactory editorFactory) {
+  public EncodingManagerImpl(@Nonnull EditorFactory editorFactory) {
     editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
       @Override
       public void documentChanged(DocumentEvent e) {
@@ -109,7 +109,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }, this);
     editorFactory.addEditorFactoryListener(new EditorFactoryAdapter() {
       @Override
-      public void editorCreated(@NotNull EditorFactoryEvent event) {
+      public void editorCreated(@Nonnull EditorFactoryEvent event) {
         queueUpdateEncodingFromContent(event.getEditor().getDocument());
       }
     }, this);
@@ -126,7 +126,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   private static final Key<String> DETECTING_ENCODING_KEY = Key.create("DETECTING_ENCODING_KEY");
 
-  private void handleDocument(@NotNull final Document document) {
+  private void handleDocument(@Nonnull final Document document) {
     if (document.getUserData(DETECTING_ENCODING_KEY) == null) return;
     try {
       VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
@@ -144,13 +144,13 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }
   }
 
-  private void setCachedCharsetFromContent(Charset charset, Charset oldCached, @NotNull Document document) {
+  private void setCachedCharsetFromContent(Charset charset, Charset oldCached, @Nonnull Document document) {
     document.putUserData(CACHED_CHARSET_FROM_CONTENT, charset);
     firePropertyChange(document, PROP_CACHED_ENCODING_CHANGED, oldCached, charset);
   }
 
   @Nullable("returns null if charset set cannot be determined from content")
-  Charset computeCharsetFromContent(@NotNull final VirtualFile virtualFile) {
+  Charset computeCharsetFromContent(@Nonnull final VirtualFile virtualFile) {
     final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
     if (document == null) {
       return null;
@@ -175,7 +175,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     clearDocumentQueue();
   }
 
-  private void queueUpdateEncodingFromContent(@NotNull Document document) {
+  private void queueUpdateEncodingFromContent(@Nonnull Document document) {
     document.putUserData(DETECTING_ENCODING_KEY, "");
     changedDocumentExecutor.execute(new DocumentEncodingDetectRequest(document));
   }
@@ -183,7 +183,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private static class DocumentEncodingDetectRequest implements Runnable {
     private final Reference<Document> ref;
 
-    private DocumentEncodingDetectRequest(@NotNull Document document) {
+    private DocumentEncodingDetectRequest(@Nonnull Document document) {
       ref = new WeakReference<>(document);
     }
 
@@ -197,7 +197,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   @Override
   @Nullable
-  public Charset getCachedCharsetFromContent(@NotNull Document document) {
+  public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return document.getUserData(CACHED_CHARSET_FROM_CONTENT);
   }
 
@@ -212,7 +212,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<Charset> getFavorites() {
     Collection<Charset> result = new THashSet<>();
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
@@ -254,7 +254,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  public boolean isNative2Ascii(@NotNull final VirtualFile virtualFile) {
+  public boolean isNative2Ascii(@Nonnull final VirtualFile virtualFile) {
     Project project = guessProject(virtualFile);
     return project != null && EncodingProjectManager.getInstance(project).isNative2Ascii(virtualFile);
   }
@@ -273,19 +273,19 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Charset getDefaultCharset() {
     return myState.myDefaultEncoding == ChooseFileEncodingAction.NO_ENCODING ? CharsetToolkit.getDefaultSystemCharset() : myState.myDefaultEncoding;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultCharsetName() {
     return myState.getDefaultCharsetName();
   }
 
   @Override
-  public void setDefaultCharsetName(@NotNull String name) {
+  public void setDefaultCharsetName(@Nonnull String name) {
     myState.setDefaultCharsetName(name);
   }
 
@@ -305,16 +305,16 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener, @NotNull Disposable parentDisposable) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
     Disposer.register(parentDisposable, () -> removePropertyChangeListener(listener));
   }
 
-  private void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  private void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
-  void firePropertyChange(@Nullable Document document, @NotNull String propertyName, final Object oldValue, final Object newValue) {
+  void firePropertyChange(@Nullable Document document, @Nonnull String propertyName, final Object oldValue, final Object newValue) {
     Object source = document == null ? this : document;
     myPropertyChangeSupport.firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
   }

@@ -46,8 +46,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -73,10 +72,10 @@ public class ChunkExtractor {
   private abstract static class WeakFactory<T> {
     private WeakReference<T> myRef;
 
-    @NotNull
+    @Nonnull
     protected abstract T create();
 
-    @NotNull
+    @Nonnull
     public T getValue() {
       final T cur = SoftReference.dereference(myRef);
       if (cur != null) return cur;
@@ -90,7 +89,7 @@ public class ChunkExtractor {
     @Override
     protected WeakFactory<Map<PsiFile, ChunkExtractor>> initialValue() {
       return new WeakFactory<Map<PsiFile, ChunkExtractor>>() {
-        @NotNull
+        @Nonnull
         @Override
         protected Map<PsiFile, ChunkExtractor> create() {
           return new FactoryMap<PsiFile, ChunkExtractor>() {
@@ -104,17 +103,17 @@ public class ChunkExtractor {
     }
   };
 
-  @NotNull
-  public static TextChunk[] extractChunks(@NotNull PsiFile file, @NotNull UsageInfo2UsageAdapter usageAdapter) {
+  @Nonnull
+  public static TextChunk[] extractChunks(@Nonnull PsiFile file, @Nonnull UsageInfo2UsageAdapter usageAdapter) {
     return getExtractor(file).extractChunks(usageAdapter, file);
   }
 
-  @NotNull
-  public static ChunkExtractor getExtractor(@NotNull PsiFile file) {
+  @Nonnull
+  public static ChunkExtractor getExtractor(@Nonnull PsiFile file) {
     return ourExtractors.get().getValue().get(file);
   }
 
-  private ChunkExtractor(@NotNull PsiFile file) {
+  private ChunkExtractor(@Nonnull PsiFile file) {
     myColorsScheme = UsageTreeColorsScheme.getInstance().getScheme();
 
     Project project = file.getProject();
@@ -138,8 +137,8 @@ public class ChunkExtractor {
     return minStart == Integer.MAX_VALUE ? -1 : minStart;
   }
 
-  @NotNull
-  private TextChunk[] extractChunks(@NotNull UsageInfo2UsageAdapter usageInfo2UsageAdapter, @NotNull PsiFile file) {
+  @Nonnull
+  private TextChunk[] extractChunks(@Nonnull UsageInfo2UsageAdapter usageInfo2UsageAdapter, @Nonnull PsiFile file) {
     int absoluteStartOffset = usageInfo2UsageAdapter.getNavigationOffset();
     if (absoluteStartOffset == -1) return TextChunk.EMPTY_ARRAY;
 
@@ -185,13 +184,13 @@ public class ChunkExtractor {
     return createTextChunks(usageInfo2UsageAdapter, chars, fragmentToShowStart, fragmentToShowEnd, true, result);
   }
 
-  @NotNull
-  public TextChunk[] createTextChunks(@NotNull UsageInfo2UsageAdapter usageInfo2UsageAdapter,
-                                      @NotNull CharSequence chars,
+  @Nonnull
+  public TextChunk[] createTextChunks(@Nonnull UsageInfo2UsageAdapter usageInfo2UsageAdapter,
+                                      @Nonnull CharSequence chars,
                                       int start,
                                       int end,
                                       boolean selectUsageWithBold,
-                                      @NotNull List<TextChunk> result) {
+                                      @Nonnull List<TextChunk> result) {
     final Lexer lexer = myHighlighter.getHighlightingLexer();
     final SyntaxHighlighterOverEditorHighlighter highlighter = myHighlighter;
 
@@ -236,13 +235,13 @@ public class ChunkExtractor {
     return result.toArray(new TextChunk[result.size()]);
   }
 
-  private void processIntersectingRange(@NotNull UsageInfo2UsageAdapter usageInfo2UsageAdapter,
-                                        @NotNull final CharSequence chars,
+  private void processIntersectingRange(@Nonnull UsageInfo2UsageAdapter usageInfo2UsageAdapter,
+                                        @Nonnull final CharSequence chars,
                                         int hiStart,
                                         final int hiEnd,
-                                        @NotNull final TextAttributesKey[] tokenHighlights,
+                                        @Nonnull final TextAttributesKey[] tokenHighlights,
                                         final boolean selectUsageWithBold,
-                                        @NotNull final List<TextChunk> result) {
+                                        @Nonnull final List<TextChunk> result) {
     final TextAttributes originalAttrs = convertAttributes(tokenHighlights);
     if (selectUsageWithBold) {
       originalAttrs.setFontType(Font.PLAIN);
@@ -300,7 +299,7 @@ public class ChunkExtractor {
     return false;
   }
 
-  private static void addChunk(@NotNull CharSequence chars, int start, int end, @NotNull TextAttributes originalAttrs, boolean bold, @Nullable UsageType usageType, @NotNull List<TextChunk> result) {
+  private static void addChunk(@Nonnull CharSequence chars, int start, int end, @Nonnull TextAttributes originalAttrs, boolean bold, @javax.annotation.Nullable UsageType usageType, @Nonnull List<TextChunk> result) {
     if (start >= end) return;
 
     TextAttributes attrs = bold ? TextAttributes.merge(originalAttrs, new TextAttributes(null, null, null, null, Font.BOLD)) : originalAttrs;
@@ -311,8 +310,8 @@ public class ChunkExtractor {
     return s2 < s1 && s1 < e2 || s2 < e1 && e1 < e2 || s1 < s2 && s2 < e1 || s1 < e2 && e2 < e1 || s1 == s2 && e1 == e2;
   }
 
-  @NotNull
-  private TextAttributes convertAttributes(@NotNull TextAttributesKey[] keys) {
+  @Nonnull
+  private TextAttributes convertAttributes(@Nonnull TextAttributesKey[] keys) {
     TextAttributes attrs = myColorsScheme.getAttributes(HighlighterColors.TEXT);
 
     for (TextAttributesKey key : keys) {
@@ -326,7 +325,7 @@ public class ChunkExtractor {
     return attrs;
   }
 
-  private void appendPrefix(@NotNull List<TextChunk> result, int lineNumber, int columnNumber) {
+  private void appendPrefix(@Nonnull List<TextChunk> result, int lineNumber, int columnNumber) {
     String prefix = "(" + (lineNumber + 1) + ": " + (columnNumber + 1) + ") ";
     TextChunk prefixChunk = new TextChunk(myColorsScheme.getAttributes(UsageTreeColors.USAGE_LOCATION), prefix);
     result.add(prefixChunk);

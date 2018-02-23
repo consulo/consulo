@@ -50,8 +50,8 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.ide.script.IdeScriptEngine;
 import org.jetbrains.ide.script.IdeScriptEngineManager;
 
@@ -89,7 +89,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     DefaultActionGroup actions =
             new DefaultActionGroup(ContainerUtil.map(languages, (NotNullFunction<String, AnAction>)language -> new DumbAwareAction(language) {
               @Override
-              public void actionPerformed(@NotNull AnActionEvent e1) {
+              public void actionPerformed(@Nonnull AnActionEvent e1) {
                 runConsole(e1, language);
               }
             }));
@@ -97,7 +97,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
             showInBestPositionFor(e.getDataContext());
   }
 
-  protected void runConsole(@NotNull AnActionEvent e, @NotNull String language) {
+  protected void runConsole(@Nonnull AnActionEvent e, @Nonnull String language) {
     Project project = e.getProject();
     if (project == null) return;
 
@@ -114,7 +114,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
   }
 
-  public static void configureConsole(@NotNull VirtualFile file, @NotNull FileEditorManager source) {
+  public static void configureConsole(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
     MyRunAction runAction = new MyRunAction();
     for (FileEditor fileEditor : source.getEditors(file)) {
       if (!(fileEditor instanceof TextEditor)) continue;
@@ -123,7 +123,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
   }
 
-  private static void executeQuery(@NotNull Project project, @NotNull VirtualFile file, @NotNull Editor editor, @NotNull IdeScriptEngine engine) {
+  private static void executeQuery(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Editor editor, @Nonnull IdeScriptEngine engine) {
     String command = getCommandText(project, editor);
     if (StringUtil.isEmptyOrSpaces(command)) return;
     String profile = getProfileText(file);
@@ -151,13 +151,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     selectContent(descriptor);
   }
 
-  private static void prepareEngine(@NotNull Project project, @NotNull IdeScriptEngine engine, @NotNull RunContentDescriptor descriptor) {
+  private static void prepareEngine(@Nonnull Project project, @Nonnull IdeScriptEngine engine, @Nonnull RunContentDescriptor descriptor) {
     IdeScriptBindings.ensureIdeIsBound(project, engine);
     ensureOutputIsRedirected(engine, descriptor);
   }
 
   @Nullable
-  private static String getProfileText(@NotNull VirtualFile file) {
+  private static String getProfileText(@Nonnull VirtualFile file) {
     try {
       VirtualFile folder = file.getParent();
       VirtualFile profileChild = folder == null ? null : folder.findChild(".profile." + file.getExtension());
@@ -168,8 +168,8 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     return null;
   }
 
-  @NotNull
-  private static String getCommandText(@NotNull Project project, @NotNull Editor editor) {
+  @Nonnull
+  private static String getCommandText(@Nonnull Project project, @Nonnull Editor editor) {
     TextRange selectedRange = EditorUtil.getSelectionInAnyMode(editor);
     Document document = editor.getDocument();
     if (selectedRange.isEmpty()) {
@@ -204,8 +204,8 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     ExecutionManager.getInstance(consoleView.getProject()).getContentManager().toFrontRunContent(executor, descriptor);
   }
 
-  @NotNull
-  private static RunContentDescriptor getConsoleView(@NotNull Project project, @NotNull VirtualFile file) {
+  @Nonnull
+  private static RunContentDescriptor getConsoleView(@Nonnull Project project, @Nonnull VirtualFile file) {
     PsiFile psiFile = ObjectUtils.assertNotNull(PsiManager.getInstance(project).findFile(file));
     WeakReference<RunContentDescriptor> ref = psiFile.getCopyableUserData(DESCRIPTOR_KEY);
     RunContentDescriptor descriptor = ref == null ? null : ref.get();
@@ -216,8 +216,8 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     return descriptor;
   }
 
-  @NotNull
-  private static RunContentDescriptor createConsoleView(@NotNull Project project, @NotNull PsiFile psiFile) {
+  @Nonnull
+  private static RunContentDescriptor createConsoleView(@Nonnull Project project, @Nonnull PsiFile psiFile) {
     ConsoleView consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
 
     DefaultActionGroup toolbarActions = new DefaultActionGroup();
@@ -274,7 +274,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     }
   }
 
-  private static void ensureOutputIsRedirected(@NotNull IdeScriptEngine engine, @NotNull RunContentDescriptor descriptor) {
+  private static void ensureOutputIsRedirected(@Nonnull IdeScriptEngine engine, @Nonnull RunContentDescriptor descriptor) {
     ConsoleWriter stdOutWriter = ObjectUtils.tryCast(engine.getStdOut(), ConsoleWriter.class);
     ConsoleWriter stdErrWriter = ObjectUtils.tryCast(engine.getStdErr(), ConsoleWriter.class);
     if (stdOutWriter != null && stdOutWriter.getDescriptor() == descriptor &&
@@ -291,7 +291,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     private final WeakReference<RunContentDescriptor> myDescriptor;
     private final ConsoleViewContentType myOutputType;
 
-    private ConsoleWriter(@NotNull WeakReference<RunContentDescriptor> descriptor, @NotNull ConsoleViewContentType outputType) {
+    private ConsoleWriter(@Nonnull WeakReference<RunContentDescriptor> descriptor, @Nonnull ConsoleViewContentType outputType) {
       myDescriptor = descriptor;
       myOutputType = outputType;
     }

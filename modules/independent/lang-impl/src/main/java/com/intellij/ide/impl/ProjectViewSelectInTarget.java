@@ -36,8 +36,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,8 +55,8 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     select(myProject, selector, getMinorViewId(), mySubId, virtualFile, requestFocus);
   }
 
-  @NotNull
-  public static ActionCallback select(@NotNull Project project,
+  @Nonnull
+  public static ActionCallback select(@Nonnull Project project,
                                       final Object toSelect,
                                       @Nullable final String viewId,
                                       @Nullable final String subviewId,
@@ -89,8 +89,8 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
   }
 
   @Override
-  @NotNull
-  public Collection<SelectInTarget> getSubTargets(@NotNull SelectInContext context) {
+  @Nonnull
+  public Collection<SelectInTarget> getSubTargets(@Nonnull SelectInContext context) {
     List<SelectInTarget> result = new ArrayList<>();
     AbstractProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
     int index = 0;

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.openapi.util.ClassConditionKey;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -44,7 +44,7 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getLookupString() {
     return myDelegate.getLookupString();
   }
@@ -54,7 +54,7 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     return myDelegate.getAllLookupStrings();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object getObject() {
     return myDelegate.getObject();
@@ -97,15 +97,15 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     return myDelegate.hashCode();
   }
 
-  @NotNull
-  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@NotNull T element,
-                                                                                      @NotNull final InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
+  @Nonnull
+  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@Nonnull T element,
+                                                                                      @Nonnull final InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
     return new InsertingDecorator<T>(element, insertHandler);
   }
 
-  @NotNull
-  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(@NotNull final T element,
-                                                                                 @NotNull final LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
+  @Nonnull
+  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(@Nonnull final T element,
+                                                                                 @Nonnull final LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
     return new VisagisteDecorator<T>(element, visagiste);
   }
 

@@ -18,8 +18,8 @@ package com.intellij.patterns;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -36,5 +36,5 @@ public abstract class PropertyPatternCondition<T,P> extends PatternConditionPlus
   }
 
   @Nullable
-  public abstract P getPropertyValue(@NotNull Object o);
+  public abstract P getPropertyValue(@Nonnull Object o);
 }

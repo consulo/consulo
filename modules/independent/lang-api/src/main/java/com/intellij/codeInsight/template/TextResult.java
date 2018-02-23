@@ -19,16 +19,16 @@ package com.intellij.codeInsight.template;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TextResult implements Result{
   private final String myText;
 
-  public TextResult(@NotNull String text) {
+  public TextResult(@Nonnull String text) {
     myText = text;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }

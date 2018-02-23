@@ -21,8 +21,8 @@ import com.intellij.util.containers.BiDirectionalEnumerator;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsRef;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.util.containers.ContainerUtil.canonicalStrategy;
 
@@ -31,15 +31,15 @@ public class InMemoryStorage implements VcsLogStorage {
   private final BiDirectionalEnumerator<VcsRef> myRefsEnumerator = new BiDirectionalEnumerator<>(1, canonicalStrategy());
 
   @Override
-  public int getCommitIndex(@NotNull Hash hash, @NotNull VirtualFile root) {
+  public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
     return getOrPut(hash, root);
   }
 
-  private int getOrPut(@NotNull Hash hash, @NotNull VirtualFile root) {
+  private int getOrPut(@Nonnull Hash hash, @Nonnull VirtualFile root) {
     return myCommitIdEnumerator.enumerate(new CommitId(hash, root));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CommitId getCommitId(int commitIndex) {
     return myCommitIdEnumerator.getValue(commitIndex);
@@ -47,7 +47,7 @@ public class InMemoryStorage implements VcsLogStorage {
 
   @Nullable
   @Override
-  public CommitId findCommitId(@NotNull final Condition<CommitId> condition) {
+  public CommitId findCommitId(@Nonnull final Condition<CommitId> condition) {
     final CommitId[] result = new CommitId[]{null};
     myCommitIdEnumerator.forEachValue(commitId -> {
       if (condition.value(commitId)) {
@@ -60,7 +60,7 @@ public class InMemoryStorage implements VcsLogStorage {
   }
 
   @Override
-  public int getRefIndex(@NotNull VcsRef ref) {
+  public int getRefIndex(@Nonnull VcsRef ref) {
     return myRefsEnumerator.enumerate(ref);
   }
 

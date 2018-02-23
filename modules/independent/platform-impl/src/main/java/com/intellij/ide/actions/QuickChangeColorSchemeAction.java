@@ -22,15 +22,15 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
  */
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
   @Override
-  protected void fillActions(Project project, @NotNull DefaultActionGroup group, @NotNull DataContext dataContext) {
+  protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
     for (EditorColorsScheme scheme : EditorColorsManager.getInstance().getAllSchemes()) {
       addScheme(group, current, scheme, false);

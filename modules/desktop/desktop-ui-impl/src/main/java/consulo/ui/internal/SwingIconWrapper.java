@@ -15,7 +15,7 @@
  */
 package consulo.ui.internal;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -24,6 +24,6 @@ import javax.swing.*;
  * @since 11-Sep-17
  */
 public interface SwingIconWrapper {
-  @NotNull
+  @Nonnull
   Icon toSwingIcon();
 }

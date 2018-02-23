@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.HashMap;
@@ -35,27 +35,27 @@ import java.util.Map;
 public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspectionTool, LocalInspectionEP> {
   /** This should be used in tests primarily */
   @TestOnly
-  public LocalInspectionToolWrapper(@NotNull LocalInspectionTool tool) {
+  public LocalInspectionToolWrapper(@Nonnull LocalInspectionTool tool) {
     super(tool, ourEPMap.getValue().get(tool.getShortName()));
   }
 
-  public LocalInspectionToolWrapper(@NotNull LocalInspectionEP ep) {
+  public LocalInspectionToolWrapper(@Nonnull LocalInspectionEP ep) {
     super(ep);
   }
 
-  private LocalInspectionToolWrapper(@NotNull LocalInspectionToolWrapper other) {
+  private LocalInspectionToolWrapper(@Nonnull LocalInspectionToolWrapper other) {
     super(other);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LocalInspectionToolWrapper createCopy() {
     return new LocalInspectionToolWrapper(this);
   }
 
   @Override
-  @NotNull
-  public JobDescriptor[] getJobDescriptors(@NotNull GlobalInspectionContext context) {
+  @Nonnull
+  public JobDescriptor[] getJobDescriptors(@Nonnull GlobalInspectionContext context) {
     return context.getStdJobDescriptors().LOCAL_ANALYSIS_ARRAY;
   }
 
@@ -78,7 +78,7 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
   }
 
   private static final NotNullLazyValue<Map<String, LocalInspectionEP>> ourEPMap = new NotNullLazyValue<Map<String, LocalInspectionEP>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Map<String, LocalInspectionEP> compute() {
       HashMap<String, LocalInspectionEP> map = new HashMap<String, LocalInspectionEP>();
@@ -89,7 +89,7 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
     }
   };
 
-  public static InspectionToolWrapper findTool2RunInBatch(@NotNull Project project, @Nullable PsiElement element, @NotNull String name) {
+  public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @javax.annotation.Nullable PsiElement element, @Nonnull String name) {
     final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
     final InspectionToolWrapper toolWrapper = element == null
                                               ? inspectionProfile.getInspectionTool(name, project)

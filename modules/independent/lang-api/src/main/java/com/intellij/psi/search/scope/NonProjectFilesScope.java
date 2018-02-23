@@ -25,8 +25,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.Colored;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -43,7 +42,7 @@ public class NonProjectFilesScope extends NamedScope {
       }
 
       @Override
-      public boolean contains(VirtualFile file, @NotNull Project project, @Nullable NamedScopesHolder holder) {
+      public boolean contains(VirtualFile file, @Nonnull Project project, @javax.annotation.Nullable NamedScopesHolder holder) {
         // do not include fake-files e.g. fragment-editors, database consoles, etc.
         if (file == null || file.getFileSystem() instanceof NonPhysicalFileSystem) return false;
         if (!file.isInLocalFileSystem()) return true;
@@ -53,7 +52,7 @@ public class NonProjectFilesScope extends NamedScope {
     });
   }
 
-  private static boolean isInsideProjectContent(@NotNull Project project, @NotNull VirtualFile file) {
+  private static boolean isInsideProjectContent(@Nonnull Project project, @Nonnull VirtualFile file) {
     if (!file.isInLocalFileSystem()) {
       final String projectBaseDir = project.getBasePath();
       if (projectBaseDir != null) {
@@ -63,8 +62,8 @@ public class NonProjectFilesScope extends NamedScope {
     return false;
   }
 
-  @NotNull
-  public static NamedScope[] removeFromList(@NotNull NamedScope[] scopes) {
+  @Nonnull
+  public static NamedScope[] removeFromList(@Nonnull NamedScope[] scopes) {
     int nonProjectIdx = -1;
     for (int i = 0, length = scopes.length; i < length; i++) {
       NamedScope scope = scopes[i];

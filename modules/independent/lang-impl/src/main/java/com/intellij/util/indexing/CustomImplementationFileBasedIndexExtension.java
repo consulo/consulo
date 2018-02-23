@@ -20,13 +20,13 @@
 package com.intellij.util.indexing;
 
 import com.intellij.util.indexing.impl.IndexStorage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
 public abstract class CustomImplementationFileBasedIndexExtension<K, V, I> extends FileBasedIndexExtension<K, V> {
-  @NotNull
-  public abstract UpdatableIndex<K, V, I> createIndexImplementation(@NotNull FileBasedIndexExtension<K, V> extension,
-                                                                    @NotNull IndexStorage<K, V> storage)
+  @Nonnull
+  public abstract UpdatableIndex<K, V, I> createIndexImplementation(@Nonnull FileBasedIndexExtension<K, V> extension,
+                                                                    @Nonnull IndexStorage<K, V> storage)
           throws StorageException, IOException;
 }

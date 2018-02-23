@@ -23,8 +23,8 @@ import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.ui.AppIcon;
 import consulo.ui.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,14 +54,14 @@ public abstract class WindowManagerEx extends WindowManager {
   public abstract IdeFrameEx getIdeFrame(@Nullable Project project);
 
   @Override
-  public void requestUserAttention(@NotNull IdeFrame frame, boolean critical) {
+  public void requestUserAttention(@Nonnull IdeFrame frame, boolean critical) {
     Project project = frame.getProject();
     if (project != null) AppIcon.getInstance().requestAttention(project, critical);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  public abstract IdeFrameEx allocateFrame(@NotNull Project project);
+  public abstract IdeFrameEx allocateFrame(@Nonnull Project project);
 
   public abstract void releaseFrame(IdeFrameEx frame);
 
@@ -69,7 +69,7 @@ public abstract class WindowManagerEx extends WindowManager {
    * @return focus owner of the specified window.
    * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.
    */
-  public abstract Component getFocusedComponent(@NotNull Window window);
+  public abstract Component getFocusedComponent(@Nonnull Window window);
 
   /**
    * @param project may be <code>null</code> when no project is opened.
@@ -113,7 +113,7 @@ public abstract class WindowManagerEx extends WindowManager {
   /**
    * @return bounds for the screen device for the given project frame
    */
-  public abstract Rectangle getScreenBounds(@NotNull final Project project);
+  public abstract Rectangle getScreenBounds(@Nonnull final Project project);
 
   public abstract void setWindowMask(Window window, Shape mask);
 

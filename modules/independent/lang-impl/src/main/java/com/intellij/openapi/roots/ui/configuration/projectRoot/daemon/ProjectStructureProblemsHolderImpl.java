@@ -3,8 +3,8 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 import com.intellij.util.SmartList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,16 +16,16 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
   private List<ProjectStructureProblemDescription> myProblemDescriptions;
 
   @Override
-  public void registerProblem(@NotNull String message, @Nullable String description,
-                              @NotNull ProjectStructureProblemType problemType,
-                              @NotNull PlaceInProjectStructure place,
+  public void registerProblem(@Nonnull String message, @Nullable String description,
+                              @Nonnull ProjectStructureProblemType problemType,
+                              @Nonnull PlaceInProjectStructure place,
                               @Nullable ConfigurationErrorQuickFix fix) {
     final List<ConfigurationErrorQuickFix> fixes = fix != null ? Collections.singletonList(fix) : Collections.<ConfigurationErrorQuickFix>emptyList();
     registerProblem(new ProjectStructureProblemDescription(message, description, place, problemType, fixes));
   }
 
   @Override
-  public void registerProblem(final @NotNull ProjectStructureProblemDescription description) {
+  public void registerProblem(final @Nonnull ProjectStructureProblemDescription description) {
     if (myProblemDescriptions == null) {
       myProblemDescriptions = new SmartList<ProjectStructureProblemDescription>();
     }
@@ -70,7 +70,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
     return false;
   }
 
-  public void removeProblem(@NotNull ProjectStructureProblemDescription description) {
+  public void removeProblem(@Nonnull ProjectStructureProblemDescription description) {
     if (myProblemDescriptions != null) {
       myProblemDescriptions.remove(description);
     }

@@ -17,8 +17,8 @@ package com.intellij.xdebugger.stepping;
 
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XSuspendContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,19 +34,19 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
    * @param position current position
    * @return list of function/method calls containing in the current line
    */
-  @NotNull
-  public abstract List<Variant> computeSmartStepVariants(@NotNull XSourcePosition position);
+  @Nonnull
+  public abstract List<Variant> computeSmartStepVariants(@Nonnull XSourcePosition position);
 
   /**
    * Resume execution and call {@link com.intellij.xdebugger.XDebugSession#positionReached(XSuspendContext)}
    * when {@code variant} function/method is reached
    * @param variant selected variant
    */
-  public void startStepInto(@NotNull Variant variant) {
+  public void startStepInto(@Nonnull Variant variant) {
     throw new AbstractMethodError();
   }
 
-  public void startStepInto(@NotNull Variant variant, @Nullable XSuspendContext context) {
+  public void startStepInto(@Nonnull Variant variant, @Nullable XSuspendContext context) {
     startStepInto(variant);
   }
 
@@ -54,5 +54,5 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
    * @return title for popup which will be shown to select method/function
    * @param position current position
    */
-  public abstract String getPopupTitle(@NotNull XSourcePosition position);
+  public abstract String getPopupTitle(@Nonnull XSourcePosition position);
 }

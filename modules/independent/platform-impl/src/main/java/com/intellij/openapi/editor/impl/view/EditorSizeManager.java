@@ -35,8 +35,9 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -80,7 +81,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
 
   private final SoftWrapAwareDocumentParsingListenerAdapter mySoftWrapChangeListener = new SoftWrapAwareDocumentParsingListenerAdapter() {
     @Override
-    public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event) {
+    public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
       onSoftWrapRecalculationEnd(event);
     }
   };
@@ -120,7 +121,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   }
 
   @Override
-  public void onFoldRegionStateChange(@NotNull FoldRegion region) {
+  public void onFoldRegionStateChange(@Nonnull FoldRegion region) {
     if (myDocument.isInBulkUpdate()) return;
     if (region.isValid()) {
       myFoldingChangeStartOffset = Math.min(myFoldingChangeStartOffset, region.getStartOffset());
@@ -145,7 +146,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
   }
 
   @Override
-  public void onUpdated(@NotNull Inlay inlay) {
+  public void onUpdated(@Nonnull Inlay inlay) {
     if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) return;
     doInvalidateRange(inlay.getOffset(), inlay.getOffset());
   }
@@ -432,7 +433,7 @@ class EditorSizeManager extends InlayModel.SimpleAdapter implements PrioritizedD
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return "[cached width: " + myWidthInPixels +

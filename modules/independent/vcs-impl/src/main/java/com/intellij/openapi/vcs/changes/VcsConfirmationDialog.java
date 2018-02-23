@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.util.ui.OptionsDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,19 +30,21 @@ import java.awt.event.ActionEvent;
  * @author Dmitry Avdeev
  */
 class VcsConfirmationDialog extends OptionsDialog {
-  @NotNull private final String myOkText;
-  @NotNull private final String myCancelText;
+  @Nonnull
+  private final String myOkText;
+  @Nonnull
+  private final String myCancelText;
   private final VcsShowConfirmationOption myOption;
   private final String myMessage;
   private final String myDoNotShowMessage;
 
-  VcsConfirmationDialog(@NotNull Project project,
-                        @NotNull String title,
-                        @NotNull String okText,
-                        @NotNull String cancelText,
-                        @NotNull VcsShowConfirmationOption option,
-                        @NotNull String message,
-                        @NotNull String doNotShowMessage) {
+  VcsConfirmationDialog(@Nonnull Project project,
+                        @Nonnull String title,
+                        @Nonnull String okText,
+                        @Nonnull String cancelText,
+                        @Nonnull VcsShowConfirmationOption option,
+                        @Nonnull String message,
+                        @Nonnull String doNotShowMessage) {
     super(project);
     myOkText = okText;
     myCancelText = cancelText;
@@ -76,13 +78,13 @@ class VcsConfirmationDialog extends OptionsDialog {
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected String getDoNotShowMessage() {
     return myDoNotShowMessage;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     final AbstractAction okAction = new AbstractAction(myOkText) {

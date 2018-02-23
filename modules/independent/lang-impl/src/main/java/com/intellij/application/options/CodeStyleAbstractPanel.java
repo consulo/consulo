@@ -50,8 +50,8 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -89,13 +89,13 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   private final CodeStyleSettings myCurrentSettings;
   private final Language myDefaultLanguage;
 
-  protected CodeStyleAbstractPanel(@NotNull CodeStyleSettings settings) {
+  protected CodeStyleAbstractPanel(@Nonnull CodeStyleSettings settings) {
     this(null, null, settings);
   }
 
   protected CodeStyleAbstractPanel(@Nullable Language defaultLanguage,
                                    @Nullable CodeStyleSettings currentSettings,
-                                   @NotNull CodeStyleSettings settings)
+                                   @Nonnull CodeStyleSettings settings)
   {
     Disposer.register(this, myDiffCalculator);
     myCurrentSettings = currentSettings;
@@ -381,7 +381,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   @Nullable
   protected abstract EditorHighlighter createHighlighter(final EditorColorsScheme scheme);
 
-  @NotNull
+  @Nonnull
   protected abstract FileType getFileType();
 
   @NonNls
@@ -431,7 +431,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     wrapCombo.addItem(ApplicationBundle.message("wrapping.wrap.always"));
   }
 
-  @NotNull
+  @Nonnull
   public static String readFromFile(final Class resourceContainerClass, @NonNls final String fileName) {
     try {
       final InputStream stream = resourceContainerClass.getClassLoader().getResourceAsStream("codeStyle/preview/" + fileName);
@@ -565,7 +565,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   protected CodeStyleSettings getSettings() {
     return mySettings;
   }
@@ -574,7 +574,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     return Collections.emptySet();
   }
 
-  public final void applyPredefinedSettings(@NotNull PredefinedCodeStyle codeStyle) {
+  public final void applyPredefinedSettings(@Nonnull PredefinedCodeStyle codeStyle) {
     CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(ProjectUtil.guessCurrentProject(getPanel())).clone();
     codeStyle.apply(settings);
     reset(settings);

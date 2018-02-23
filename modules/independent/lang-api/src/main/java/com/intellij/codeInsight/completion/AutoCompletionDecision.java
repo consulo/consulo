@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -26,7 +26,7 @@ public class AutoCompletionDecision {
   public static final AutoCompletionDecision SHOW_LOOKUP = new AutoCompletionDecision();
   public static final AutoCompletionDecision CLOSE_LOOKUP = new AutoCompletionDecision();
 
-  public static AutoCompletionDecision insertItem(@NotNull LookupElement element) {
+  public static AutoCompletionDecision insertItem(@Nonnull LookupElement element) {
     return new InsertItem(element);
   }
 

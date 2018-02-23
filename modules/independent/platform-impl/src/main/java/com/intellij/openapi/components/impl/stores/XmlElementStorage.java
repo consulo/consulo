@@ -27,8 +27,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -36,7 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
-  @NotNull protected final String myRootElementName;
+  @Nonnull
+  protected final String myRootElementName;
   protected StorageData myLoadedData;
   protected final StreamProvider myStreamProvider;
   protected final String myFileSpec;
@@ -44,10 +45,10 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
   protected final RoamingType myRoamingType;
 
-  protected XmlElementStorage(@NotNull String fileSpec,
+  protected XmlElementStorage(@Nonnull String fileSpec,
                               @Nullable RoamingType roamingType,
                               @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                              @NotNull String rootElementName,
+                              @Nonnull String rootElementName,
                               @Nullable StreamProvider streamProvider) {
     super(pathMacroSubstitutor);
 
@@ -63,12 +64,12 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
   @Nullable
   @Override
-  protected Element getStateAndArchive(@NotNull StorageData storageData, @NotNull String componentName) {
+  protected Element getStateAndArchive(@Nonnull StorageData storageData, @Nonnull String componentName) {
     return storageData.getStateAndArchive(componentName);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected StorageData getStorageData(boolean reloadData) {
     if (myLoadedData != null && !reloadData) {
       return myLoadedData;
@@ -78,7 +79,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     return myLoadedData;
   }
 
-  @NotNull
+  @Nonnull
   protected StorageData loadData(boolean useProvidersData) {
     StorageData result = createStorageData();
 
@@ -111,16 +112,16 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     return JDOMUtil.load(myStreamProvider.loadContent(myFileSpec, myRoamingType));
   }
 
-  protected final void loadState(@NotNull StorageData result, @NotNull Element element) {
+  protected final void loadState(@Nonnull StorageData result, @Nonnull Element element) {
     result.load(element, myPathMacroSubstitutor, true);
   }
 
-  @NotNull
+  @Nonnull
   protected StorageData createStorageData() {
     return new StorageData(myRootElementName);
   }
 
-  public void setDefaultState(@NotNull Element element) {
+  public void setDefaultState(@Nonnull Element element) {
     myLoadedData = createStorageData();
     loadState(myLoadedData, element);
   }
@@ -131,10 +132,10 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     return checkIsSavingDisabled() ? null : createSaveSession(getStorageData());
   }
 
-  protected abstract XmlElementStorageSaveSession createSaveSession(@NotNull StorageData storageData);
+  protected abstract XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData);
 
   @Nullable
-  protected final Element getElement(@NotNull StorageData data, boolean collapsePaths, @NotNull Map<String, Element> newLiveStates) {
+  protected final Element getElement(@Nonnull StorageData data, boolean collapsePaths, @Nonnull Map<String, Element> newLiveStates) {
     Element element = data.save(newLiveStates);
     if (element == null || JDOMUtil.isEmpty(element)) {
       return null;
@@ -153,7 +154,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
   }
 
   @Override
-  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Set<String> result) {
+  public void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result) {
     StorageData oldData = myLoadedData;
     StorageData newData = getStorageData(true);
     if (oldData == null) {
@@ -179,7 +180,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
     private final Map<String, Element> myNewLiveStates = new THashMap<String, Element>();
 
-    public XmlElementStorageSaveSession(@NotNull StorageData storageData) {
+    public XmlElementStorageSaveSession(@Nonnull StorageData storageData) {
       myOriginalStorageData = storageData;
     }
 
@@ -190,7 +191,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     }
 
     @Override
-    public final void setState(@NotNull Object component, @NotNull String componentName, @NotNull Object state, @Nullable Storage storageSpec) {
+    public final void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, @Nullable Storage storageSpec) {
       Element element;
       try {
         element = DefaultStateSerializer.serializeState(state, storageSpec);
@@ -262,7 +263,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
     }
 
-    private void doSaveForProvider(@NotNull Element element, @NotNull RoamingType roamingType, @Nullable BufferExposingByteArrayOutputStream content) throws IOException {
+    private void doSaveForProvider(@Nonnull Element element, @Nonnull RoamingType roamingType, @Nullable BufferExposingByteArrayOutputStream content) throws IOException {
       if (content == null) {
         StorageUtil.sendContent(myStreamProvider, myFileSpec, element, roamingType);
       }

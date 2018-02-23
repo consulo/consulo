@@ -34,8 +34,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.PlatformIcons;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -50,7 +50,7 @@ import java.util.concurrent.Callable;
 public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   private final VirtualFile myFile;
 
-  public VirtualFileDiffElement(@NotNull VirtualFile file) {
+  public VirtualFileDiffElement(@Nonnull VirtualFile file) {
     myFile = file;
   }
 
@@ -59,7 +59,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
     return myFile.getPresentableUrl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myFile.getName();
@@ -197,7 +197,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
       if (!docsToSave.isEmpty()) {
         new WriteAction() {
           @Override
-          protected void run(@NotNull Result result) throws Throwable {
+          protected void run(@Nonnull Result result) throws Throwable {
             for (Document document : docsToSave) {
               manager.saveDocument(document);
             }

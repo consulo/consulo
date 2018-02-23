@@ -15,7 +15,7 @@
  */
 package com.intellij.util.io;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ import java.util.zip.GZIPInputStream;
 public class CountingGZIPInputStream extends GZIPInputStream {
   private final CountingInputStream myInputStream;
 
-  private CountingGZIPInputStream(@NotNull CountingInputStream inputStream) throws IOException {
+  private CountingGZIPInputStream(@Nonnull CountingInputStream inputStream) throws IOException {
     super(inputStream);
     myInputStream = inputStream;
   }
@@ -39,8 +39,8 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     return myInputStream.myBytesRead;
   }
 
-  @NotNull
-  public static CountingGZIPInputStream create(@NotNull InputStream inputStream) throws IOException {
+  @Nonnull
+  public static CountingGZIPInputStream create(@Nonnull InputStream inputStream) throws IOException {
     return new CountingGZIPInputStream(new CountingInputStream(inputStream));
   }
 
@@ -48,7 +48,7 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     private final InputStream myInputStream;
     private long myBytesRead = 0;
 
-    public CountingInputStream(@NotNull InputStream inputStream) {
+    public CountingInputStream(@Nonnull InputStream inputStream) {
       myInputStream = inputStream;
     }
 
@@ -59,14 +59,14 @@ public class CountingGZIPInputStream extends GZIPInputStream {
     }
 
     @Override
-    public int read(@NotNull byte[] b) throws IOException {
+    public int read(@Nonnull byte[] b) throws IOException {
       int bytesRead = myInputStream.read(b);
       myBytesRead += bytesRead;
       return bytesRead;
     }
 
     @Override
-    public int read(@NotNull byte[] b, int off, int len) throws IOException {
+    public int read(@Nonnull byte[] b, int off, int len) throws IOException {
       int bytesRead = myInputStream.read(b, off, len);
       myBytesRead += bytesRead;
       return bytesRead;

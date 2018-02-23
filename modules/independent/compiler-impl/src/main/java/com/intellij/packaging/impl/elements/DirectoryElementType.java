@@ -25,7 +25,7 @@ import com.intellij.packaging.elements.CompositePackagingElementType;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,15 +41,15 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
     super("directory", CompilerBundle.message("element.type.name.directory"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Actions.NewFolder;
   }
 
   @Override
-  @NotNull
-  public DirectoryPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public DirectoryPackagingElement createEmpty(@Nonnull Project project) {
     return new DirectoryPackagingElement();
   }
 
@@ -65,7 +65,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       String baseName,
-                                                      @NotNull ArtifactEditorContext context) {
+                                                      @Nonnull ArtifactEditorContext context) {
     final String initialValue = PackagingElementFactoryImpl.suggestFileName(parent, baseName != null ? baseName : "folder", "");
     String path = Messages
       .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());

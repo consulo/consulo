@@ -21,8 +21,8 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class ModuleExtensionProviders {
   private static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
 
   private static final NotNullLazyValue<ModuleExtensionProviderEP[]> ourExtensions = new NotNullLazyValue<ModuleExtensionProviderEP[]>() {
-    @NotNull
+    @Nonnull
     @Override
     protected ModuleExtensionProviderEP[] compute() {
       ModuleExtensionProviderEP[] extensions = EP_NAME.getExtensions();
@@ -54,7 +54,7 @@ public class ModuleExtensionProviders {
   };
 
   private static NotNullLazyValue<Map<String, ModuleExtensionProviderEP>> ourAllExtensionsValue = new NotNullLazyValue<Map<String, ModuleExtensionProviderEP>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Map<String, ModuleExtensionProviderEP> compute() {
       Map<String, ModuleExtensionProviderEP> map = new THashMap<>();
@@ -65,18 +65,18 @@ public class ModuleExtensionProviders {
     }
   };
 
-  @NotNull
+  @Nonnull
   public static String getEpName() {
     return EP_NAME.getName();
   }
 
-  @NotNull
+  @Nonnull
   public static ModuleExtensionProviderEP[] getProviders() {
     return ourExtensions.getValue();
   }
 
   @Nullable
-  public static ModuleExtensionProviderEP findProvider(@NotNull String id) {
+  public static ModuleExtensionProviderEP findProvider(@Nonnull String id) {
     return ourAllExtensionsValue.getValue().get(id);
   }
 }

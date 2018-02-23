@@ -17,8 +17,8 @@ package com.intellij.pom.event;
 
 import com.intellij.pom.PomModel;
 import com.intellij.pom.PomModelAspect;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class PomModelEvent extends EventObject {
     super(source);
   }
 
-  @NotNull
+  @Nonnull
   public Set<PomModelAspect> getChangedAspects() {
     if (myChangeSets != null) {
       return myChangeSets.keySet();
@@ -51,7 +51,7 @@ public class PomModelEvent extends EventObject {
     }
   }
 
-  public <T extends PomChangeSet> T registerChangeSetIfAbsent(PomModelAspect aspect, @NotNull T set) {
+  public <T extends PomChangeSet> T registerChangeSetIfAbsent(PomModelAspect aspect, @Nonnull T set) {
     final PomChangeSet oldSet = getChangeSet(aspect);
     if (oldSet != null) return (T)oldSet;
 

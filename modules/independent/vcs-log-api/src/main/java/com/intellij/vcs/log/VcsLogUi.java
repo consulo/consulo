@@ -15,23 +15,23 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VcsLogUi {
 
-  @NotNull
+  @Nonnull
   VcsLogFilterUi getFilterUi();
 
-  @NotNull
+  @Nonnull
   VcsLogDataPack getDataPack();
 
-  void addLogListener(@NotNull VcsLogListener listener);
+  void addLogListener(@Nonnull VcsLogListener listener);
 
-  void removeLogListener(@NotNull VcsLogListener listener);
+  void removeLogListener(@Nonnull VcsLogListener listener);
 
   boolean areGraphActionsEnabled();
 
   boolean isMultipleRoots();
 
-  boolean isHighlighterEnabled(@NotNull String id);
+  boolean isHighlighterEnabled(@Nonnull String id);
 }

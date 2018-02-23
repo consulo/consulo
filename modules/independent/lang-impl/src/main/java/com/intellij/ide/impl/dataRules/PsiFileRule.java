@@ -26,17 +26,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiFileRule implements GetDataRule<PsiFile> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<PsiFile> getKey() {
     return CommonDataKeys.PSI_FILE;
   }
 
   @Override
-  public PsiFile getData(@NotNull DataProvider dataProvider) {
+  public PsiFile getData(@Nonnull DataProvider dataProvider) {
     final PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
     if (element != null) {
       return element.getContainingFile();

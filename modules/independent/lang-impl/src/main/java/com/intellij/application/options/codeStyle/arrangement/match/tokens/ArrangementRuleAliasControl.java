@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.arrangement.match.ArrangementM
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,11 +30,12 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementRuleAliasControl extends ArrangementMatchingRulesControl {
-  @NotNull public static final Key<ArrangementRuleAliasControl> KEY = Key.create("Arrangement.Alias.Rule.Control");
+  @Nonnull
+  public static final Key<ArrangementRuleAliasControl> KEY = Key.create("Arrangement.Alias.Rule.Control");
 
-  public ArrangementRuleAliasControl(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                     @NotNull ArrangementColorsProvider colorsProvider,
-                                     @NotNull RepresentationCallback callback) {
+  public ArrangementRuleAliasControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                     @Nonnull ArrangementColorsProvider colorsProvider,
+                                     @Nonnull RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);
   }
 

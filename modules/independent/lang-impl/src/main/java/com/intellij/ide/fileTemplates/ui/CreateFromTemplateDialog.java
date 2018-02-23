@@ -36,8 +36,8 @@ import com.intellij.psi.PsiElement;
 import consulo.annotations.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,29 +46,29 @@ import java.util.Properties;
 
 public class CreateFromTemplateDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance("#com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog");
-  @NotNull
+  @Nonnull
   private final PsiDirectory myDirectory;
-  @NotNull
+  @Nonnull
   private final Project myProject;
   private PsiElement myCreatedElement;
   private final CreateFromTemplatePanel myAttrPanel;
   private final JComponent myAttrComponent;
-  @NotNull
+  @Nonnull
   private final FileTemplate myTemplate;
   private final Map<String, Object> myDefaultProperties;
 
   @Deprecated
   @DeprecationInfo("Use constructor with Map parameter instead of Properties")
-  public CreateFromTemplateDialog(@NotNull Project project,
-                                  @NotNull PsiDirectory directory,
-                                  @NotNull FileTemplate template,
+  public CreateFromTemplateDialog(@Nonnull Project project,
+                                  @Nonnull PsiDirectory directory,
+                                  @Nonnull FileTemplate template,
                                   @Nullable final AttributesDefaults attributesDefaults,
                                   @Nullable final Properties defaultProperties) {
     this(directory, template, attributesDefaults, defaultProperties == null ? null : FileTemplateUtil.convert2Map(defaultProperties));
   }
 
-  public CreateFromTemplateDialog(@NotNull PsiDirectory directory,
-                                  @NotNull FileTemplate template,
+  public CreateFromTemplateDialog(@Nonnull PsiDirectory directory,
+                                  @Nonnull FileTemplate template,
                                   @Nullable final AttributesDefaults attributesDefaults,
                                   @Nullable final Map<String, Object> defaultProperties) {
     super(directory.getProject(), true);

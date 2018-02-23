@@ -34,8 +34,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,11 +48,12 @@ import java.util.List;
  */
 public class ExternalSystemRecentTasksList extends JBList implements Producer<ExternalTaskExecutionInfo> {
 
-  @NotNull private static final JLabel EMPTY_RENDERER = new JLabel(" ");
+  @Nonnull
+  private static final JLabel EMPTY_RENDERER = new JLabel(" ");
   
-  public ExternalSystemRecentTasksList(@NotNull ExternalSystemRecentTaskListModel model,
-                                       @NotNull final ProjectSystemId externalSystemId,
-                                       @NotNull final Project project)
+  public ExternalSystemRecentTasksList(@Nonnull ExternalSystemRecentTaskListModel model,
+                                       @Nonnull final ProjectSystemId externalSystemId,
+                                       @Nonnull final Project project)
   {
     super(model);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -100,7 +101,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
     return (ExternalSystemRecentTaskListModel)super.getModel();
   }
 
-  public void setFirst(@NotNull ExternalTaskExecutionInfo task) {
+  public void setFirst(@Nonnull ExternalTaskExecutionInfo task) {
     ExternalTaskExecutionInfo selected = produce();
     ExternalSystemRecentTaskListModel model = getModel();
     model.setFirst(task);
@@ -130,11 +131,14 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
 
   private static class MyRenderer extends DefaultListCellRenderer {
 
-    @NotNull private final Icon myGenericTaskIcon;
-    @NotNull private final Project myProject;
-    @Nullable private ConfigurationType myConfigurationType;
+    @Nonnull
+    private final Icon myGenericTaskIcon;
+    @Nonnull
+    private final Project myProject;
+    @javax.annotation.Nullable
+    private ConfigurationType myConfigurationType;
 
-    MyRenderer(@NotNull Project project, @NotNull Icon genericTaskIcon, @Nullable ConfigurationType configurationType) {
+    MyRenderer(@Nonnull Project project, @Nonnull Icon genericTaskIcon, @Nullable ConfigurationType configurationType) {
       myProject = project;
       myGenericTaskIcon = genericTaskIcon;
       myConfigurationType = configurationType;

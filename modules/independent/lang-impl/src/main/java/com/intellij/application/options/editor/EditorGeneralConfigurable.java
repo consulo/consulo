@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ public class EditorGeneralConfigurable implements SearchableConfigurable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }

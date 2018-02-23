@@ -38,9 +38,9 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.Semaphore;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -66,7 +66,7 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
 
   private final Project myProject;
 
-  public CompileStepBeforeRun(@NotNull final Project project) {
+  public CompileStepBeforeRun(@Nonnull final Project project) {
     myProject = project;
   }
 

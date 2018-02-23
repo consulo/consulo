@@ -25,8 +25,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.picocontainer.PicoContainer;
 
 /**
@@ -38,7 +39,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
     private static final DummyProject ourInstance = new DummyProject();
   }
 
-  @NotNull
+  @Nonnull
   public static Project getInstance() {
     return DummyProjectHolder.ourInstance;
   }
@@ -52,7 +53,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "";
   }
@@ -65,14 +66,14 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getLocationHash() {
     return "dummy";
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getProjectFilePath() {
     return "";
   }
@@ -108,18 +109,18 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public boolean hasComponent(@NotNull Class interfaceClass) {
+  public boolean hasComponent(@Nonnull Class interfaceClass) {
     return false;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public <T> T[] getComponents(Class<T> baseClass) {
     return (T[]) ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PicoContainer getPicoContainer() {
     throw new UnsupportedOperationException("getPicoContainer is not implement in : " + getClass());
   }
@@ -135,7 +136,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Condition getDisposed() {
     return new Condition() {
       @Override
@@ -145,7 +146,7 @@ public class DummyProject extends UserDataHolderBase implements Project {
     };
   }
 
-  @NotNull
+  @Nonnull
   public ComponentConfig[] getComponentConfigurations() {
     return new ComponentConfig[0];
   }

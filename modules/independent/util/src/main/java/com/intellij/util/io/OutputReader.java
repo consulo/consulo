@@ -17,7 +17,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -28,7 +28,7 @@ public abstract class OutputReader extends BaseOutputReader {
   private final Semaphore myReadFullySemaphore = new Semaphore();
 
 
-  public OutputReader(@NotNull Reader reader) {
+  public OutputReader(@Nonnull Reader reader) {
     super(reader);
     start();
   }

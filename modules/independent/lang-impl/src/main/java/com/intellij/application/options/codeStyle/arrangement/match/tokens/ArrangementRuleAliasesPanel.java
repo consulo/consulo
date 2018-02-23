@@ -28,8 +28,8 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,17 +40,18 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider {
-  @NotNull protected final ArrangementRuleAliasControl myControl;
+  @Nonnull
+  protected final ArrangementRuleAliasControl myControl;
 
-  public ArrangementRuleAliasesPanel(@NotNull ArrangementStandardSettingsManager settingsManager,
-                                     @NotNull ArrangementColorsProvider colorsProvider) {
+  public ArrangementRuleAliasesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager,
+                                     @Nonnull ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
     setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
     JBScrollPane scrollPane = new JBScrollPane();
     final JViewport viewport = scrollPane.getViewport();
     ArrangementMatchingRulesControl.RepresentationCallback callback = new ArrangementMatchingRulesControl.RepresentationCallback() {
       @Override
-      public void ensureVisible(@NotNull Rectangle r) {
+      public void ensureVisible(@Nonnull Rectangle r) {
         Rectangle visibleRect = viewport.getViewRect();
         if (r.y <= visibleRect.y) {
           return;
@@ -83,7 +84,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  @NotNull
+  @Nonnull
   public List<StdArrangementMatchRule> getRuleSequences() {
     return myControl.getRuleSequences();
   }
@@ -94,7 +95,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (ArrangementRuleAliasControl.KEY == dataId) {
       return myControl;
     }

@@ -26,8 +26,8 @@ import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -173,7 +173,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     myDependencyState = dependencyState;
   }
 
-  public XBreakpointBase<B,P,?> createBreakpoint(@NotNull T type, @NotNull XBreakpointManagerImpl breakpointManager) {
+  public XBreakpointBase<B,P,?> createBreakpoint(@Nonnull T type, @Nonnull XBreakpointManagerImpl breakpointManager) {
     return new XBreakpointBase<B, P, BreakpointState<B,P,?>>(type, breakpointManager, this);
   }
 

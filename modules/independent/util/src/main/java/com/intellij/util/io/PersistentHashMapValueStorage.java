@@ -23,8 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.util.SystemProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.Comparator;
@@ -693,7 +693,7 @@ public class PersistentHashMapValueStorage {
       super(PersistentHashMapValueStorage.this.myFile);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) throws IOException {
       forceAppender(myPath);
@@ -725,7 +725,7 @@ public class PersistentHashMapValueStorage {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected File getChunksFile() {
       return myFile;

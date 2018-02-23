@@ -16,7 +16,7 @@
 package consulo.compiler.server.rmi;
 
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -26,10 +26,10 @@ import java.rmi.RemoteException;
  * @since 11:14/13.08.13
  */
 public interface CompilerClientInterface extends Remote {
-  void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) throws RemoteException;
+  void addMessage(@Nonnull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) throws RemoteException;
 
   void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException;
 
-  @NotNull
+  @Nonnull
   String getProjectDir() throws RemoteException;
 }

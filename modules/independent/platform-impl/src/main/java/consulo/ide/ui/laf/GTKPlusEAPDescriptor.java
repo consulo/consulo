@@ -17,14 +17,14 @@ package consulo.ide.ui.laf;
 
 import com.intellij.openapi.util.SystemInfo;
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 6/7/17
  */
 public class GTKPlusEAPDescriptor extends EarlyAccessProgramDescriptor {
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Enabled GTK+ theme";

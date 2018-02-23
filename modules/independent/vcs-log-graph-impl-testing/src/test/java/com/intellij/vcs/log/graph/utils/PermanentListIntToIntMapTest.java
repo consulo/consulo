@@ -17,11 +17,11 @@ package com.intellij.vcs.log.graph.utils;
 
 import com.intellij.util.BooleanFunction;
 import com.intellij.vcs.log.graph.utils.impl.PermanentListIntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PermanentListIntToIntMapTest extends UpdatableIntToIntMapTest {
   @Override
-  protected UpdatableIntToIntMap createUpdatableIntToIntMap(@NotNull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
+  protected UpdatableIntToIntMap createUpdatableIntToIntMap(@Nonnull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
     return new UpdatableIntToIntMapWrapper(new Flags() {
       @Override
       public int size() {
@@ -46,12 +46,12 @@ public class PermanentListIntToIntMapTest extends UpdatableIntToIntMapTest {
   }
 
   private static class UpdatableIntToIntMapWrapper implements UpdatableIntToIntMap {
-    @NotNull
+    @Nonnull
     private final Flags myFlags;
-    @NotNull
+    @Nonnull
     private IntToIntMap myIntToIntMap;
 
-    private UpdatableIntToIntMapWrapper(@NotNull Flags flags) {
+    private UpdatableIntToIntMapWrapper(@Nonnull Flags flags) {
       myFlags = flags;
       createIntToIntMap();
     }

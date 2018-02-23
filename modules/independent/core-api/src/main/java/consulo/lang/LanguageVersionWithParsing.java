@@ -18,25 +18,25 @@ package consulo.lang;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19:51/24.06.13
  */
 public interface LanguageVersionWithParsing {
-  @NotNull
+  @Nonnull
   Lexer createLexer();
 
-  @NotNull
+  @Nonnull
   PsiParser createParser();
 
-  @NotNull
+  @Nonnull
   TokenSet getWhitespaceTokens();
 
-  @NotNull
+  @Nonnull
   TokenSet getCommentTokens();
 
-  @NotNull
+  @Nonnull
   TokenSet getStringLiteralElements();
 }

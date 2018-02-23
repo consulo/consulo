@@ -16,8 +16,8 @@
 package com.intellij.openapi.ui.popup;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -26,79 +26,79 @@ import java.awt.event.ActionListener;
  * @see JBPopupFactory#createBalloonBuilder(javax.swing.JComponent)
  */
 public interface BalloonBuilder {
-  @NotNull
-  BalloonBuilder setBorderColor(@NotNull Color color);
+  @Nonnull
+  BalloonBuilder setBorderColor(@Nonnull Color color);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setBorderInsets(@Nullable Insets insets);
 
-  @NotNull
-  BalloonBuilder setFillColor(@NotNull Color color);
+  @Nonnull
+  BalloonBuilder setFillColor(@Nonnull Color color);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setHideOnClickOutside(boolean hide);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setHideOnKeyOutside(boolean hide);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setShowCallout(boolean show);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setCloseButtonEnabled(boolean enabled);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setFadeoutTime(long fadeoutTime);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setAnimationCycle(int time);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setHideOnFrameResize(boolean hide);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setHideOnLinkClick(boolean hide);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setClickHandler(ActionListener listener, boolean closeOnClick);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setCalloutShift(int length);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setPositionChangeXShift(int positionChangeXShift);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setPositionChangeYShift(int positionChangeYShift);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setHideOnAction(boolean hideOnAction);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setDialogMode(boolean dialogMode);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setTitle(@Nullable String title);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setContentInsets(Insets insets);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setShadow(boolean shadow);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setSmallVariant(boolean smallVariant);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setLayer(Balloon.Layer layer);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setBlockClicksThroughBalloon(boolean block);
 
-  @NotNull
+  @Nonnull
   BalloonBuilder setRequestFocus(boolean requestFocus);
 
-  @NotNull
+  @Nonnull
   default BalloonBuilder setPointerSize(Dimension size) {
     return this;
   }
@@ -118,9 +118,9 @@ public interface BalloonBuilder {
    * @param anchor target anchor to link to
    * @return balloon builder which produces balloon linked to the given object life cycle
    */
-  @NotNull
-  BalloonBuilder setDisposable(@NotNull Disposable anchor);
+  @Nonnull
+  BalloonBuilder setDisposable(@Nonnull Disposable anchor);
 
-  @NotNull
+  @Nonnull
   Balloon createBalloon();
 }

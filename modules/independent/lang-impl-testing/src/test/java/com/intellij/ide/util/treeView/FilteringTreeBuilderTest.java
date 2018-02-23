@@ -8,7 +8,6 @@ import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 
@@ -170,7 +169,7 @@ public class FilteringTreeBuilderTest extends BaseTreeTestCase  {
      update(text, null);
    }
 
-  private void update(final String text, @Nullable final Object selection) throws Exception {
+  private void update(final String text, @javax.annotation.Nullable final Object selection) throws Exception {
     myFilter.update(text, selection);
   }
 

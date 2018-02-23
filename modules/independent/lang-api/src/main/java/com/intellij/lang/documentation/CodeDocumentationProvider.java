@@ -19,8 +19,8 @@ package com.intellij.lang.documentation;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines support for JavaDoc-like documentation stub generation when invoked on "Enter within comment" actions in a custom language.
@@ -56,7 +56,7 @@ public interface CodeDocumentationProvider extends DocumentationProvider {
    *                    returned pair must have non-null PSI element and nullable existing comment references then
    */
   @Nullable
-  Pair<PsiElement, PsiComment> parseContext(@NotNull PsiElement startPoint);
+  Pair<PsiElement, PsiComment> parseContext(@Nonnull PsiElement startPoint);
 
   /**
    * Generate documentation comment content for given context.

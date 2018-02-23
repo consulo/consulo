@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.OptionsDialog;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,7 +110,7 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     return myMainPanel;
   }
 
-  @NotNull
+  @Nonnull
   protected Action[] createActions() {
     for(Configurable conf: myEnvToConfMap.values()) {
       if (conf.getHelpTopic() != null) {

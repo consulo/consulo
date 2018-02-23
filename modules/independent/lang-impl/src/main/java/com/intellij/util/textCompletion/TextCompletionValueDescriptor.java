@@ -16,7 +16,7 @@
 package com.intellij.util.textCompletion;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -29,6 +29,6 @@ import java.util.Comparator;
  * @param <T> completion element type.
  */
 public interface TextCompletionValueDescriptor<T> extends Comparator<T> {
-  @NotNull
-  LookupElementBuilder createLookupBuilder(@NotNull T item);
+  @Nonnull
+  LookupElementBuilder createLookupBuilder(@Nonnull T item);
 }

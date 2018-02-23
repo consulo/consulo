@@ -27,7 +27,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class StubProcessingHelperBase {
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.stubs.StubProcessingHelperBase");
 
-  private static IElementType stubType(@NotNull final StubElement<?> stub) {
+  private static IElementType stubType(@Nonnull final StubElement<?> stub) {
     if (stub instanceof PsiFileStub) {
       return ((PsiFileStub)stub).getType();
     }
@@ -45,19 +45,19 @@ public abstract class StubProcessingHelperBase {
     return stub.getStubType();
   }
 
-  public <Psi extends PsiElement> boolean processStubsInFile(@NotNull final Project project,
-                                                             @NotNull final VirtualFile file,
-                                                             @NotNull StubIdList value,
-                                                             @NotNull final Processor<? super Psi> processor,
-                                                             @NotNull Class<Psi> requiredClass) {
+  public <Psi extends PsiElement> boolean processStubsInFile(@Nonnull final Project project,
+                                                             @Nonnull final VirtualFile file,
+                                                             @Nonnull StubIdList value,
+                                                             @Nonnull final Processor<? super Psi> processor,
+                                                             @Nonnull Class<Psi> requiredClass) {
     return processStubsInFile(project, file, value, processor, requiredClass, false);
   }
 
-  public <Psi extends PsiElement> boolean processStubsInFile(@NotNull final Project project,
-                                                             @NotNull final VirtualFile file,
-                                                             @NotNull StubIdList value,
-                                                             @NotNull final Processor<? super Psi> processor,
-                                                             @NotNull Class<Psi> requiredClass,
+  public <Psi extends PsiElement> boolean processStubsInFile(@Nonnull final Project project,
+                                                             @Nonnull final VirtualFile file,
+                                                             @Nonnull StubIdList value,
+                                                             @Nonnull final Processor<? super Psi> processor,
+                                                             @Nonnull Class<Psi> requiredClass,
                                                              final boolean skipOnErrors) {
     StubTree stubTree = null;
 
@@ -174,7 +174,7 @@ public abstract class StubProcessingHelperBase {
     return true;
   }
 
-  private void inconsistencyDetected(@NotNull ObjectStubTree stubTree, @NotNull PsiFileWithStubSupport psiFile) {
+  private void inconsistencyDetected(@Nonnull ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile) {
     LOG.error(StubTreeLoader.getInstance().stubTreeAndIndexDoNotMatch("PSI and index do not match.", stubTree, psiFile));
     onInternalError(psiFile.getVirtualFile());
   }

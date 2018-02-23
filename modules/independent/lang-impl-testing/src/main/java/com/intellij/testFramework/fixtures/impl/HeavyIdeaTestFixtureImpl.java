@@ -59,8 +59,8 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -84,7 +84,7 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
   private ThreadTracker myThreadTracker;
   private final String myName;
 
-  public HeavyIdeaTestFixtureImpl(@NotNull String name) {
+  public HeavyIdeaTestFixtureImpl(@Nonnull String name) {
     myName = name;
   }
 
@@ -188,7 +188,7 @@ class HeavyIdeaTestFixtureImpl extends BaseFixture implements HeavyIdeaTestFixtu
   private class MyDataProvider implements DataProvider {
     @Override
     @Nullable
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (CommonDataKeys.PROJECT == dataId) {
         return myProject;
       }

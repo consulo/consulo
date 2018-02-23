@@ -17,8 +17,8 @@ import com.intellij.util.xmlb.annotations.Transient;
 import consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,17 +31,17 @@ public class RunConfigurationModule implements JDOMExternalizable {
   @NonNls
   private static final String ATTRIBUTE = "name";
 
-  @Nullable
+  @javax.annotation.Nullable
   private NamedPointer<Module> myModulePointer;
 
   private final Project myProject;
 
-  public RunConfigurationModule(@NotNull Project project) {
+  public RunConfigurationModule(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  public void readExternal(@NotNull Element element) {
+  public void readExternal(@Nonnull Element element) {
     List<Element> modules = element.getChildren(ELEMENT);
     if (!modules.isEmpty()) {
       if (modules.size() > 1) {
@@ -56,7 +56,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Override
-  public void writeExternal(@NotNull Element parent) {
+  public void writeExternal(@Nonnull Element parent) {
     Element prev = parent.getChild(ELEMENT);
     if (prev == null) {
       prev = new Element(ELEMENT);
@@ -74,19 +74,19 @@ public class RunConfigurationModule implements JDOMExternalizable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Transient
   public Module getModule() {
     return myModulePointer != null ? myModulePointer.get() : null;
   }
 
-  @Nullable
-  public Module findModule(@NotNull String moduleName) {
+  @javax.annotation.Nullable
+  public Module findModule(@Nonnull String moduleName) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -104,7 +104,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Attribute("name")
-  @NotNull
+  @Nonnull
   public String getModuleName() {
     return myModulePointer != null ? myModulePointer.getName() : "";
   }

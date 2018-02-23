@@ -18,15 +18,15 @@ package com.intellij.util.indexing;
 
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Dec 24, 2007
  */
 public interface AbstractIndex<Key, Value> {
-  @NotNull
+  @Nonnull
   ValueContainer<Value> getData(Key key) throws StorageException;
 
   boolean processAllKeys(Processor<Key> processor, GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;

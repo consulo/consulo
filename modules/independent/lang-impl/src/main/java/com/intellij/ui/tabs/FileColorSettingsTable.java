@@ -21,7 +21,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -44,9 +44,10 @@ public abstract class FileColorSettingsTable extends JBTable {
   private static final int COLOR_COLUMN = 1;
 
   private final List<FileColorConfiguration> myOriginal;
-  @NotNull private final FileColorManager myManager;
+  @Nonnull
+  private final FileColorManager myManager;
 
-  public FileColorSettingsTable(@NotNull final FileColorManager manager, @NotNull final List<FileColorConfiguration> configurations) {
+  public FileColorSettingsTable(@Nonnull final FileColorManager manager, @Nonnull final List<FileColorConfiguration> configurations) {
     super(new ModelAdapter(manager, copy(configurations)));
     myManager = manager;
     setStriped(true);
@@ -62,7 +63,7 @@ public abstract class FileColorSettingsTable extends JBTable {
     colorColumn.setCellRenderer(new ColorCellRenderer(manager));
   }
 
-  private static List<FileColorConfiguration> copy(@NotNull final List<FileColorConfiguration> configurations) {
+  private static List<FileColorConfiguration> copy(@Nonnull final List<FileColorConfiguration> configurations) {
     final List<FileColorConfiguration> result = new ArrayList<FileColorConfiguration>();
     for (FileColorConfiguration c : configurations) {
       try {
@@ -76,7 +77,7 @@ public abstract class FileColorSettingsTable extends JBTable {
     return result;
   }
 
-  protected abstract void apply(@NotNull final List<FileColorConfiguration> configurations);
+  protected abstract void apply(@Nonnull final List<FileColorConfiguration> configurations);
 
   @Override
   public ModelAdapter getModel() {
@@ -164,7 +165,7 @@ public abstract class FileColorSettingsTable extends JBTable {
     return removed;
   }
 
-  public void addConfiguration(@NotNull final FileColorConfiguration configuration) {
+  public void addConfiguration(@Nonnull final FileColorConfiguration configuration) {
     getModel().add(configuration);
   }
 
@@ -197,7 +198,7 @@ public abstract class FileColorSettingsTable extends JBTable {
       return myConfigurations.get(rowIndex);
     }
 
-    @NotNull
+    @Nonnull
     public List<FileColorConfiguration> getConfigurations() {
       return myConfigurations;
     }
@@ -208,7 +209,7 @@ public abstract class FileColorSettingsTable extends JBTable {
       return removed;
     }
 
-    public void add(@NotNull final FileColorConfiguration configuration) {
+    public void add(@Nonnull final FileColorConfiguration configuration) {
       myConfigurations.add(configuration);
       fireTableRowsInserted(myConfigurations.size() - 1, myConfigurations.size() - 1);
     }

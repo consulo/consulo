@@ -24,8 +24,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
     return (CheckBoxState)super.getState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Boolean getValue() {
     return getState().myChecked;
@@ -85,16 +85,16 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
   }
 
   @Override
-  public void addValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
+  public void addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.add(valueListener);
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<Boolean> valueListener) {
+  public void removeValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
     myValueListeners.remove(valueListener);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
@@ -102,7 +102,7 @@ public class WGwtBooleanValueComponentImpl extends AbstractComponent implements 
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

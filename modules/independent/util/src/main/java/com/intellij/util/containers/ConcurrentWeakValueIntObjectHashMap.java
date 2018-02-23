@@ -18,7 +18,7 @@ package com.intellij.util.containers;
 
 
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -33,7 +33,7 @@ class ConcurrentWeakValueIntObjectHashMap<V> extends ConcurrentRefValueIntObject
     private final int hash;
     private final int key;
 
-    MyRef(int key, @NotNull V referent, ReferenceQueue<V> queue) {
+    MyRef(int key, @Nonnull V referent, ReferenceQueue<V> queue) {
       super(referent, queue);
       this.key = key;
       hash = referent.hashCode();
@@ -61,7 +61,7 @@ class ConcurrentWeakValueIntObjectHashMap<V> extends ConcurrentRefValueIntObject
   }
 
   @Override
-  protected IntReference<V> createReference(int key, @NotNull V value, ReferenceQueue<V> queue) {
+  protected IntReference<V> createReference(int key, @Nonnull V value, ReferenceQueue<V> queue) {
     return new MyRef<V>(key, value, queue);
   }
 }

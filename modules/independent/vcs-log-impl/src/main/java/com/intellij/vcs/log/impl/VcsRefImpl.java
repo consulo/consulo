@@ -5,19 +5,23 @@ import com.intellij.util.containers.WeakStringInterner;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author erokhins
  */
 public final class VcsRefImpl implements VcsRef {
   private static final WeakStringInterner ourNames = new WeakStringInterner();
-  @NotNull private final Hash myCommitHash;
-  @NotNull private final String myName;
-  @NotNull private final VcsRefType myType;
-  @NotNull private final VirtualFile myRoot;
+  @Nonnull
+  private final Hash myCommitHash;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private final VcsRefType myType;
+  @Nonnull
+  private final VirtualFile myRoot;
 
-  public VcsRefImpl(@NotNull Hash commitHash, @NotNull String name, @NotNull VcsRefType type, @NotNull VirtualFile root) {
+  public VcsRefImpl(@Nonnull Hash commitHash, @Nonnull String name, @Nonnull VcsRefType type, @Nonnull VirtualFile root) {
     myCommitHash = commitHash;
     myType = type;
     myRoot = root;
@@ -27,25 +31,25 @@ public final class VcsRefImpl implements VcsRef {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsRefType getType() {
     return myType;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Hash getCommitHash() {
     return myCommitHash;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getRoot() {
     return myRoot;
   }

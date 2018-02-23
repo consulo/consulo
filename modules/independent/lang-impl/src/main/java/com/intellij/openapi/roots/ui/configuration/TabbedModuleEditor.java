@@ -7,8 +7,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.Place;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -22,7 +22,7 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
 
   private TabbedPaneWrapper myTabbedPane;
 
-  public TabbedModuleEditor(Project project, ModulesProvider modulesProvider, @NotNull Module module) {
+  public TabbedModuleEditor(Project project, ModulesProvider modulesProvider, @Nonnull Module module) {
     super(project, modulesProvider, module);
   }
 
@@ -74,7 +74,7 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     place.putPath(SELECTED_EDITOR_NAME, getSavedSelectedEditor());
   }
 
@@ -109,7 +109,7 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
 
   @Override
   @Nullable
-  public ModuleConfigurationEditor getEditor(@NotNull String displayName) {
+  public ModuleConfigurationEditor getEditor(@Nonnull String displayName) {
     int index = getEditorTabIndex(displayName);
     if (0 <= index && index < myEditors.size()) {
       return myEditors.get(index);

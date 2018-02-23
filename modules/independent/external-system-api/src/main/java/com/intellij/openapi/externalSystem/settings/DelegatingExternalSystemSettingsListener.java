@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.settings;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -26,29 +26,30 @@ import java.util.Set;
  */
 public class DelegatingExternalSystemSettingsListener<S extends ExternalProjectSettings> implements ExternalSystemSettingsListener<S> {
   
-  @NotNull private final ExternalSystemSettingsListener<S> myDelegate;
+  @Nonnull
+  private final ExternalSystemSettingsListener<S> myDelegate;
 
-  public DelegatingExternalSystemSettingsListener(@NotNull ExternalSystemSettingsListener<S> delegate) {
+  public DelegatingExternalSystemSettingsListener(@Nonnull ExternalSystemSettingsListener<S> delegate) {
     myDelegate = delegate;
   }
 
   @Override
-  public void onProjectRenamed(@NotNull String oldName, @NotNull String newName) {
+  public void onProjectRenamed(@Nonnull String oldName, @Nonnull String newName) {
     myDelegate.onProjectRenamed(oldName, newName);
   }
 
   @Override
-  public void onProjectsLinked(@NotNull Collection<S> settings) {
+  public void onProjectsLinked(@Nonnull Collection<S> settings) {
     myDelegate.onProjectsLinked(settings); 
   }
 
   @Override
-  public void onProjectsUnlinked(@NotNull Set<String> linkedProjectPaths) {
+  public void onProjectsUnlinked(@Nonnull Set<String> linkedProjectPaths) {
     myDelegate.onProjectsUnlinked(linkedProjectPaths); 
   }
 
   @Override
-  public void onUseAutoImportChange(boolean currentValue, @NotNull String linkedProjectPath) {
+  public void onUseAutoImportChange(boolean currentValue, @Nonnull String linkedProjectPath) {
     myDelegate.onUseAutoImportChange(currentValue, linkedProjectPath); 
   }
 

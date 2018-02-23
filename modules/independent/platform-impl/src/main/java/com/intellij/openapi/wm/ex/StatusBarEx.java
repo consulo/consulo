@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.StatusBar;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -37,10 +37,10 @@ public interface StatusBarEx extends StatusBar, Disposable {
   void startRefreshIndication(String tooltipText);
   void stopRefreshIndication();
 
-  BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody);
-  BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener);
+  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody);
+  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener);
 
-  void addProgress(@NotNull ProgressIndicatorEx indicator, @NotNull TaskInfo info);
+  void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info);
   List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
 
   void updateWidgets();

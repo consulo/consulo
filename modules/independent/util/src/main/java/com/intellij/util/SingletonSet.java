@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.util.containers.SingletonIterator;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -45,21 +45,21 @@ public class SingletonSet<E> implements Set<E> {
     return getStrategy().equals(theElement, (E)elem);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<E> iterator() {
     return new SingletonIterator<E>(theElement);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] toArray() {
     return new Object[]{theElement};
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] toArray(@NotNull T[] a) {
+  public <T> T[] toArray(@Nonnull T[] a) {
     if (a.length == 0) {
       //noinspection unchecked
       a = (T[]) Array.newInstance(a.getClass().getComponentType(), 1);
@@ -83,7 +83,7 @@ public class SingletonSet<E> implements Set<E> {
   }
 
   @Override
-  public boolean containsAll(@NotNull Collection<?> c) {
+  public boolean containsAll(@Nonnull Collection<?> c) {
     for (Object e : c) {
       if (!contains(e)) {
         return false;
@@ -93,17 +93,17 @@ public class SingletonSet<E> implements Set<E> {
   }
 
   @Override
-  public boolean addAll(@NotNull Collection<? extends E> c) {
+  public boolean addAll(@Nonnull Collection<? extends E> c) {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public boolean retainAll(@NotNull Collection<?> c) {
+  public boolean retainAll(@Nonnull Collection<?> c) {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public boolean removeAll(@NotNull Collection<?> c) {
+  public boolean removeAll(@Nonnull Collection<?> c) {
     throw new IncorrectOperationException();
   }
 
@@ -117,28 +117,29 @@ public class SingletonSet<E> implements Set<E> {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   protected TObjectHashingStrategy<E> getStrategy() {
     //noinspection unchecked
     return TObjectHashingStrategy.CANONICAL;
   }
 
-  @NotNull
-  public static <T> Set<T> withCustomStrategy(T o, @NotNull TObjectHashingStrategy<T> strategy) {
+  @Nonnull
+  public static <T> Set<T> withCustomStrategy(T o, @Nonnull TObjectHashingStrategy<T> strategy) {
     return new CustomStrategySingletonSet<T>(o, strategy);
   }
 
   private static class CustomStrategySingletonSet<E> extends SingletonSet<E> {
-    @NotNull private final TObjectHashingStrategy<E> strategy;
+    @Nonnull
+    private final TObjectHashingStrategy<E> strategy;
 
-    private CustomStrategySingletonSet(E e, @NotNull final TObjectHashingStrategy<E> strategy) {
+    private CustomStrategySingletonSet(E e, @Nonnull final TObjectHashingStrategy<E> strategy) {
       super(e);
       this.strategy = strategy;
     }
 
 
     @Override
-    @NotNull
+    @Nonnull
     protected TObjectHashingStrategy<E> getStrategy() {
       return strategy;
     }

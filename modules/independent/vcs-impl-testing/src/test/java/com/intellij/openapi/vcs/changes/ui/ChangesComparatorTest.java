@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.testFramework.vcs.MockContentRevision;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.io.File;
@@ -76,8 +76,8 @@ public class ChangesComparatorTest {
     return 0;
   }
 
-  @NotNull
-  private static Change change(@NotNull String path) throws Exception {
+  @Nonnull
+  private static Change change(@Nonnull String path) throws Exception {
     ContentRevision before = new MockContentRevision(new FilePathImpl(new File(path), false), VcsRevisionNumber.NULL);
     ContentRevision after = new MockContentRevision(new FilePathImpl(new File(path), false), VcsRevisionNumber.NULL);
     return new Change(before, after);

@@ -38,8 +38,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.net.MalformedURLException;
@@ -124,12 +124,12 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getElement() {
     return myID.getElement();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiFile getContainingFile() {
     return myID.getContainingFile();
   }
@@ -165,7 +165,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<RefElement> getOutReferences() {
     if (myOutReferences == null){
       return EMPTY_REFERNCES_LIST;
@@ -174,7 +174,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<RefElement> getInReferences() {
     if (myInReferences == null){
       return EMPTY_REFERNCES_LIST;
@@ -216,7 +216,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
 
   @Override
-  @NotNull
+  @Nonnull
   public RefElement getContainingEntry() {
     return this;
   }
@@ -244,7 +244,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public URL getURL() {
     try {
       final PsiElement element = getElement();

@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ import java.awt.*;
 public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
 
-  @NotNull
+  @Nonnull
   public static TestContentFolderTypeProvider getInstance() {
     return EP_NAME.findExtension(TestContentFolderTypeProvider.class);
   }
@@ -45,7 +45,7 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
     return 150;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Modules.TestRoot;
@@ -56,13 +56,13 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
     return AllIcons.Nodes.TestPackage;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ProjectBundle.message("module.toggle.test.sources.action");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return TESTS_COLOR;

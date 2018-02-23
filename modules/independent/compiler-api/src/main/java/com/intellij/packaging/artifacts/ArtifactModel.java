@@ -15,8 +15,8 @@
  */
 package com.intellij.packaging.artifacts;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,20 +25,20 @@ import java.util.List;
  * @author nik
  */
 public interface ArtifactModel {
-  @NotNull
+  @Nonnull
   Artifact[] getArtifacts();
 
   @Nullable
-  Artifact findArtifact(@NotNull String name);
+  Artifact findArtifact(@Nonnull String name);
 
-  @NotNull
-  Artifact getArtifactByOriginal(@NotNull Artifact artifact);
+  @Nonnull
+  Artifact getArtifactByOriginal(@Nonnull Artifact artifact);
 
-  @NotNull
-  Artifact getOriginalArtifact(@NotNull Artifact artifact);
+  @Nonnull
+  Artifact getOriginalArtifact(@Nonnull Artifact artifact);
 
-  @NotNull
-  Collection<? extends Artifact> getArtifactsByType(@NotNull ArtifactType type);
+  @Nonnull
+  Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type);
 
   List<? extends Artifact> getAllArtifactsIncludingInvalid();
 }

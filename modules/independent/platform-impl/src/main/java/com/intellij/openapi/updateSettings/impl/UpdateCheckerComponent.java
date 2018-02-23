@@ -20,7 +20,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -54,7 +54,7 @@ public class UpdateCheckerComponent implements ApplicationComponent {
     myCheckFuture.cancel(false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "UpdateCheckerComponent";

@@ -17,24 +17,24 @@ package com.intellij.packaging.elements;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.packaging.elements.ArchivePackageWriter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface IncrementalCompilerInstructionCreator {
 
-  void addFileCopyInstruction(@NotNull VirtualFile file, @NotNull String outputFileName);
+  void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName);
 
-  void addDirectoryCopyInstructions(@NotNull VirtualFile directory);
+  void addDirectoryCopyInstructions(@Nonnull VirtualFile directory);
 
-  void addDirectoryCopyInstructions(@NotNull VirtualFile directory, @Nullable PackagingFileFilter filter);
+  void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @Nullable PackagingFileFilter filter);
 
-  IncrementalCompilerInstructionCreator subFolder(@NotNull String directoryName);
+  IncrementalCompilerInstructionCreator subFolder(@Nonnull String directoryName);
 
-  @NotNull
-  IncrementalCompilerInstructionCreator archive(@NotNull String archiveFileName, @NotNull ArchivePackageWriter<?> packageWriter);
+  @Nonnull
+  IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter);
 
-  IncrementalCompilerInstructionCreator subFolderByRelativePath(@NotNull String relativeDirectoryPath);
+  IncrementalCompilerInstructionCreator subFolderByRelativePath(@Nonnull String relativeDirectoryPath);
 }

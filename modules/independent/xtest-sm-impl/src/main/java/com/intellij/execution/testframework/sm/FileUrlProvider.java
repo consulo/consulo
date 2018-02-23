@@ -27,8 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.io.URLUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,9 +40,9 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
 
   public static final FileUrlProvider INSTANCE = new FileUrlProvider();
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Location> getLocation(@NotNull String protocol, @NotNull String path, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+  public List<Location> getLocation(@Nonnull String protocol, @Nonnull String path, @Nonnull Project project, @Nonnull GlobalSearchScope scope) {
     if (!URLUtil.FILE_PROTOCOL.equals(protocol)) {
       return Collections.emptyList();
     }
@@ -88,8 +87,8 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
     return locations;
   }
 
-  @Nullable
-  public static Location createLocationFor(@NotNull Project project, @NotNull VirtualFile virtualFile, int lineNum) {
+  @javax.annotation.Nullable
+  public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum) {
     return createLocationFor(project, virtualFile, lineNum, -1);
   }
 
@@ -102,8 +101,8 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
    *                    a non-positive column number doesn't change text caret position inside the file
    * @return Location instance, or null if not found
    */
-  @Nullable
-  public static Location createLocationFor(@NotNull Project project, @NotNull VirtualFile virtualFile, int lineNum, int columnNum) {
+  @javax.annotation.Nullable
+  public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum, int columnNum) {
     final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
     if (psiFile == null) {
       return null;

@@ -16,7 +16,7 @@
 package com.intellij.diff.requests;
 
 import com.intellij.diff.contents.DiffContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -25,13 +25,13 @@ import java.util.List;
  * 3 contents: left - middle - right (local - base - server)
  */
 public abstract class ContentDiffRequest extends DiffRequest {
-  @NotNull
+  @Nonnull
   public abstract List<DiffContent> getContents();
 
   /**
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  @NotNull
+  @Nonnull
   public abstract List<String> getContentTitles();
 }

@@ -27,8 +27,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class LogModel implements Disposable {
   private final Project myProject;
   final Map<Notification, Runnable> removeHandlers = new THashMap<Notification, Runnable>();
 
-  LogModel(@Nullable Project project, @NotNull Disposable parentDisposable) {
+  LogModel(@Nullable Project project, @Nonnull Disposable parentDisposable) {
     myProject = project;
     Disposer.register(parentDisposable, this);
   }
@@ -86,7 +86,7 @@ public class LogModel implements Disposable {
     StatusBar.Info.set("", myProject, EventLog.LOG_REQUESTOR);
   }
 
-  @Nullable 
+  @Nullable
   Trinity<Notification, String, Long> getStatusMessage() {
     synchronized (myNotifications) {
       return myStatusMessage;

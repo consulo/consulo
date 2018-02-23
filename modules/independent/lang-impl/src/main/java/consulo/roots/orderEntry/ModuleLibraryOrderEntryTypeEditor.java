@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
   @Override
-  public void navigate(@NotNull final ModuleLibraryOrderEntryImpl orderEntry) {
+  public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ProjectStructureDialog.show(project, new Consumer<ProjectStructureConfigurable>() {
       @Override
@@ -47,15 +47,15 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@NotNull ModuleLibraryOrderEntryImpl orderEntry, @NotNull StructureConfigurableContext context) {
+  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@Nonnull ModuleLibraryOrderEntryImpl orderEntry, @Nonnull StructureConfigurableContext context) {
     return new LibraryClasspathTableItem<ModuleLibraryOrderEntryImpl>(orderEntry, context);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@NotNull ModuleLibraryOrderEntryImpl orderEntry) {
+  public CellAppearanceEx getCellAppearance(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) { //library can be removed
       return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
     }

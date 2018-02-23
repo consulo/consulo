@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.application.ex.ApplicationEx2;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -49,19 +49,19 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
             new StateStorageManagerImpl(pathMacroManager.createTrackingSubstitutor(), ROOT_ELEMENT_NAME, application, application.getPicoContainer()) {
               private boolean myConfigDirectoryRefreshed;
 
-              @NotNull
+              @Nonnull
               @Override
               protected String getConfigurationMacro(boolean directorySpec) {
                 return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
               }
 
               @Override
-              protected StorageData createStorageData(@NotNull String fileSpec, @NotNull String filePath) {
+              protected StorageData createStorageData(@Nonnull String fileSpec, @Nonnull String filePath) {
                 return new StorageData(ROOT_ELEMENT_NAME);
               }
 
               @Override
-              protected TrackingPathMacroSubstitutor getMacroSubstitutor(@NotNull final String fileSpec) {
+              protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
                 if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
                 return super.getMacroSubstitutor(fileSpec);
               }
@@ -97,19 +97,19 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  public void setOptionsPath(@NotNull String path) {
+  public void setOptionsPath(@Nonnull String path) {
     myStateStorageManager.addMacro(StoragePathMacros.APP_CONFIG, path);
     myStateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, path + "/other" + DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Override
-  public void setConfigPath(@NotNull final String configPath) {
+  public void setConfigPath(@Nonnull final String configPath) {
     myStateStorageManager.addMacro(StoragePathMacros.ROOT_CONFIG, configPath);
     myConfigPath = configPath;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getConfigPath() {
     String configPath = myConfigPath;
     if (configPath == null) {
@@ -120,12 +120,12 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected MessageBus getMessageBus() {
     return myApplication.getMessageBus();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StateStorageManager getStateStorageManager() {
     return myStateStorageManager;

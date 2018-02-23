@@ -33,7 +33,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileTypes.UIBasedFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class EditorPlaceHolder extends DiffMarkup implements DiffVersionComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.highlighting.EditorWrapper");
@@ -44,7 +44,7 @@ class EditorPlaceHolder extends DiffMarkup implements DiffVersionComponent {
   private FileEditor myFileEditor;
   private FileEditorProvider myFileEditorProvider;
 
-  public EditorPlaceHolder(FragmentSide side, Project project, @NotNull Disposable parentDisposable) {
+  public EditorPlaceHolder(FragmentSide side, Project project, @Nonnull Disposable parentDisposable) {
     super(project, parentDisposable);
     mySide = side;
     resetHighlighters();

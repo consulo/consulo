@@ -17,7 +17,7 @@
 package com.intellij.compiler.impl.packagingCompiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author nik

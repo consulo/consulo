@@ -22,11 +22,11 @@ package com.intellij.execution.filters;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ConsoleFilterProvider {
   ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create("com.intellij.consoleFilterProvider");
 
-  @NotNull
-  Filter[] getDefaultFilters(@NotNull Project project);
+  @Nonnull
+  Filter[] getDefaultFilters(@Nonnull Project project);
 }

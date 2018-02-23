@@ -17,21 +17,21 @@ package com.intellij.util.keyFMap;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ArrayBackedFMap implements KeyFMap {
   static final int ARRAY_THRESHOLD = 8;
   private final int[] keys;
   private final Object[] values;
 
-  ArrayBackedFMap(@NotNull int[] keys, @NotNull Object[] values) {
+  ArrayBackedFMap(@Nonnull int[] keys, @Nonnull Object[] values) {
     this.keys = keys;
     this.values = values;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <V> KeyFMap plus(@NotNull Key<V> key, @NotNull V value) {
+  public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     int oldSize = size();
     int keyCode = key.hashCode();
     int[] newKeys = null;
@@ -63,9 +63,9 @@ public class ArrayBackedFMap implements KeyFMap {
     return keys.length;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public KeyFMap minus(@NotNull Key<?> key) {
+  public KeyFMap minus(@Nonnull Key<?> key) {
     int oldSize = size();
     int keyCode = key.hashCode();
     for (int i = 0; i< oldSize; i++) {
@@ -90,7 +90,7 @@ public class ArrayBackedFMap implements KeyFMap {
   }
 
   @Override
-  public <V> V get(@NotNull Key<V> key) {
+  public <V> V get(@Nonnull Key<V> key) {
     int oldSize = size();
     int keyCode = key.hashCode();
     for (int i = 0; i < oldSize; i++) {
@@ -119,23 +119,23 @@ public class ArrayBackedFMap implements KeyFMap {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public int[] getKeyIds() {
     return keys;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key[] getKeys() {
     return getKeysByIndices(keys);
   }
 
-  @NotNull
+  @Nonnull
   public Object[] getValues() {
     return values;
   }
 
-  @NotNull
+  @Nonnull
   static Key[] getKeysByIndices(int[] indexes) {
     Key[] result = new Key[indexes.length];
 

@@ -17,8 +17,7 @@ package com.intellij.execution.testframework.sm;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -26,6 +25,6 @@ import org.jetbrains.annotations.Nullable;
  */
 @Deprecated
 public interface SMStacktraceParser {
-  @Nullable
-  Navigatable getErrorNavigatable(@NotNull Project project, @NotNull String stacktrace);
+  @javax.annotation.Nullable
+  Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace);
 }

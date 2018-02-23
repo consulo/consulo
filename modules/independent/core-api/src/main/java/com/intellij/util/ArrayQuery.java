@@ -20,7 +20,7 @@ import com.intellij.concurrency.AsyncFuture;
 import com.intellij.concurrency.AsyncFutureFactory;
 import com.intellij.concurrency.AsyncFutureResult;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,12 +32,12 @@ import java.util.Iterator;
 public class ArrayQuery<T> implements Query<T> {
   private final T[] myArray;
 
-  public ArrayQuery(@NotNull T... array) {
+  public ArrayQuery(@Nonnull T... array) {
     myArray = array;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<T> findAll() {
     return Arrays.asList(myArray);
   }
@@ -48,13 +48,13 @@ public class ArrayQuery<T> implements Query<T> {
   }
 
   @Override
-  public boolean forEach(@NotNull final Processor<T> consumer) {
+  public boolean forEach(@Nonnull final Processor<T> consumer) {
     return ContainerUtil.process(myArray, consumer);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AsyncFuture<Boolean> forEachAsync(@NotNull final Processor<T> consumer) {
+  public AsyncFuture<Boolean> forEachAsync(@Nonnull final Processor<T> consumer) {
     final AsyncFutureResult<Boolean> result = AsyncFutureFactory.getInstance().createAsyncFutureResult();
     try {
       result.set(forEach(consumer));
@@ -65,9 +65,9 @@ public class ArrayQuery<T> implements Query<T> {
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
-  public T[] toArray(@NotNull final T[] a) {
+  public T[] toArray(@Nonnull final T[] a) {
     return myArray;
   }
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,11 +25,11 @@ public class SequenceIterator<T> implements Iterator<T> {
   private final Iterator<T>[] myIterators;
   private int myCurrentIndex;
 
-  public SequenceIterator(@NotNull Iterator<T>... iterators){
+  public SequenceIterator(@Nonnull Iterator<T>... iterators){
     myIterators = new Iterator[iterators.length];
     System.arraycopy(iterators, 0, myIterators, 0, iterators.length);
   }
-  public SequenceIterator(@NotNull Collection<Iterator<T>> iterators) {
+  public SequenceIterator(@Nonnull Collection<Iterator<T>> iterators) {
     this(iterators.toArray(new Iterator[iterators.size()]));
   }
 

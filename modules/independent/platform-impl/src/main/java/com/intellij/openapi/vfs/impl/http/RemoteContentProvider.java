@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.fileTypes.FileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -27,19 +27,19 @@ import java.io.File;
  */
 public abstract class RemoteContentProvider {
 
-  public abstract boolean canProvideContent(@NotNull String url);
+  public abstract boolean canProvideContent(@Nonnull String url);
 
-  public abstract void saveContent(final String url, @NotNull File targetFile, @NotNull DownloadingCallback callback);
+  public abstract void saveContent(final String url, @Nonnull File targetFile, @Nonnull DownloadingCallback callback);
 
-  public abstract boolean isUpToDate(@NotNull String url, @NotNull VirtualFile local);
+  public abstract boolean isUpToDate(@Nonnull String url, @Nonnull VirtualFile local);
 
 
   public interface DownloadingCallback {
     void finished(@Nullable FileType fileType);
 
-    void errorOccurred(@NotNull String errorMessage, boolean cancelled);
+    void errorOccurred(@Nonnull String errorMessage, boolean cancelled);
 
-    void setProgressText(@NotNull String text, boolean indeterminate);
+    void setProgressText(@Nonnull String text, boolean indeterminate);
 
     void setProgressFraction(double fraction);
 

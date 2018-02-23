@@ -56,9 +56,9 @@ import com.intellij.ui.NonFocusableCheckBox;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.PositionTracker;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class InplaceChangeSignature implements DocumentListener {
   private boolean myDelegate;
   private EditorEx myPreview;
 
-  public InplaceChangeSignature(Project project, Editor editor, @NotNull PsiElement element) {
+  public InplaceChangeSignature(Project project, Editor editor, @Nonnull PsiElement element) {
     myDocumentManager = PsiDocumentManager.getInstance(project);
     myProject = project;
     try {
@@ -117,7 +117,7 @@ public class InplaceChangeSignature implements DocumentListener {
   }
 
   @Nullable
-  public static InplaceChangeSignature getCurrentRefactoring(@NotNull Editor editor) {
+  public static InplaceChangeSignature getCurrentRefactoring(@Nonnull Editor editor) {
     return editor.getUserData(INPLACE_CHANGE_SIGNATURE);
   }
 
@@ -133,7 +133,7 @@ public class InplaceChangeSignature implements DocumentListener {
     return myInitialSignature;
   }
 
-  @NotNull
+  @Nonnull
   public ChangeInfo getStableChange() {
     return myStableChange;
   }
@@ -200,7 +200,7 @@ public class InplaceChangeSignature implements DocumentListener {
     myPreview.getMarkupModel().removeAllHighlighters();
     new WriteCommandAction(null) {
       @Override
-      protected void run(@NotNull Result result) throws Throwable {
+      protected void run(@Nonnull Result result) throws Throwable {
         myPreview.getDocument().replaceString(0, myPreview.getDocument().getTextLength(), methodSignature);
       }
     }.execute();

@@ -16,8 +16,8 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public interface Block {
    *
    * @return the text range.
    */
-  @NotNull
+  @Nonnull
   TextRange getTextRange();
 
   /**
@@ -44,7 +44,7 @@ public interface Block {
    * @return the child block list.
    * @see #isLeaf()
    */
-  @NotNull
+  @Nonnull
   List<Block> getSubBlocks();
 
   /**
@@ -56,7 +56,7 @@ public interface Block {
    * @see Wrap#createWrap(WrapType, boolean)
    * @see Wrap#createChildWrap(Wrap, WrapType, boolean)
    */
-  @Nullable
+  @javax.annotation.Nullable
   Wrap getWrap();
 
   /**
@@ -76,7 +76,7 @@ public interface Block {
    *
    * @return the alignment object instance, or null if no alignment is required for the block.
    */
-  @Nullable
+  @javax.annotation.Nullable
   Alignment getAlignment();
 
   /**
@@ -93,7 +93,7 @@ public interface Block {
    * @see Spacing#getReadOnlySpacing()
    */
   @Nullable
-  Spacing getSpacing(@Nullable Block child1, @NotNull Block child2);
+  Spacing getSpacing(@Nullable Block child1, @Nonnull Block child2);
 
   /**
    * Returns the alignment and indent attributes which are applied to a new block inserted at
@@ -103,7 +103,7 @@ public interface Block {
    * @param newChildIndex the index where a new child is inserted.
    * @return the object containing the indent and alignment settings for the new child.
    */
-  @NotNull
+  @Nonnull
   ChildAttributes getChildAttributes(final int newChildIndex);
 
   /**

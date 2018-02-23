@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInspection;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ActionClassHolder {
-  @NotNull
+  @Nonnull
   Class getActionClass();
 }

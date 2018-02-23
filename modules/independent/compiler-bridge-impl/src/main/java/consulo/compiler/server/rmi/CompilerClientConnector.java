@@ -18,22 +18,21 @@ package consulo.compiler.server.rmi;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15:50/19.08.13
  */
 public abstract class CompilerClientConnector {
-  @NotNull
-  public static CompilerClientConnector getInstance(@NotNull Project project) {
+  @Nonnull
+  public static CompilerClientConnector getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, CompilerClientConnector.class);
   }
 
-  public abstract void setClientConnection(@Nullable CompilerClientInterface clientConnection);
+  public abstract void setClientConnection(@javax.annotation.Nullable CompilerClientInterface clientConnection);
 
-  public abstract void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum);
+  public abstract void addMessage(@Nonnull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum);
 
   public void showOrHide(boolean hide) {
     // ignored

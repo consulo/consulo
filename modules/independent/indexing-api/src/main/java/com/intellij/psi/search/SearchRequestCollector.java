@@ -24,7 +24,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,16 +41,16 @@ public class SearchRequestCollector {
   private final List<Processor<Processor<PsiReference>>> myCustomSearchActions = ContainerUtil.newArrayList();
   private final SearchSession mySession;
 
-  public SearchRequestCollector(@NotNull SearchSession session) {
+  public SearchRequestCollector(@Nonnull SearchSession session) {
     mySession = session;
   }
 
-  @NotNull
+  @Nonnull
   public SearchSession getSearchSession() {
     return mySession;
   }
 
-  public void searchWord(@NotNull String word, @NotNull SearchScope searchScope, boolean caseSensitive, @NotNull PsiElement searchTarget) {
+  public void searchWord(@Nonnull String word, @Nonnull SearchScope searchScope, boolean caseSensitive, @Nonnull PsiElement searchTarget) {
     final short searchContext = (short)(UsageSearchContext.IN_CODE |
                                         UsageSearchContext.IN_FOREIGN_LANGUAGES |
                                         UsageSearchContext.IN_COMMENTS |
@@ -58,17 +58,17 @@ public class SearchRequestCollector {
     searchWord(word, searchScope, searchContext, caseSensitive, searchTarget);
   }
 
-  public void searchWord(@NotNull String word, @NotNull SearchScope searchScope, short searchContext, boolean caseSensitive, @NotNull PsiElement searchTarget) {
+  public void searchWord(@Nonnull String word, @Nonnull SearchScope searchScope, short searchContext, boolean caseSensitive, @Nonnull PsiElement searchTarget) {
     searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), new SingleTargetRequestResultProcessor(searchTarget),
                searchTarget);
   }
 
-  private void searchWord(@NotNull String word,
-                          @NotNull SearchScope searchScope,
+  private void searchWord(@Nonnull String word,
+                          @Nonnull SearchScope searchScope,
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          @NotNull RequestResultProcessor processor,
+                          @Nonnull RequestResultProcessor processor,
                           PsiElement searchTarget) {
     if (!makesSenseToSearch(word, searchScope)) return;
 
@@ -79,23 +79,23 @@ public class SearchRequestCollector {
     }
   }
 
-  public void searchWord(@NotNull String word,
-                         @NotNull SearchScope searchScope,
+  public void searchWord(@Nonnull String word,
+                         @Nonnull SearchScope searchScope,
                          short searchContext,
                          boolean caseSensitive,
-                         @NotNull PsiElement searchTarget,
-                         @NotNull RequestResultProcessor processor) {
+                         @Nonnull PsiElement searchTarget,
+                         @Nonnull RequestResultProcessor processor) {
     searchWord(word, searchScope, searchContext, caseSensitive, getContainerName(searchTarget), processor, searchTarget);
   }
 
-  private static String getContainerName(@NotNull final PsiElement target) {
+  private static String getContainerName(@Nonnull final PsiElement target) {
     return ReadAction.compute(() -> {
       PsiElement container = getContainer(target);
       return container instanceof PsiNamedElement ? ((PsiNamedElement)container).getName() : null;
     });
   }
 
-  private static PsiElement getContainer(@NotNull PsiElement refElement) {
+  private static PsiElement getContainer(@Nonnull PsiElement refElement) {
     for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensions()) {
       final PsiElement container = provider.getContainer(refElement);
       if (container != null) return container;
@@ -111,22 +111,22 @@ public class SearchRequestCollector {
    * instead
    */
   @Deprecated
-  public void searchWord(@NotNull String word,
-                         @NotNull SearchScope searchScope,
+  public void searchWord(@Nonnull String word,
+                         @Nonnull SearchScope searchScope,
                          short searchContext,
                          boolean caseSensitive,
-                         @NotNull RequestResultProcessor processor) {
+                         @Nonnull RequestResultProcessor processor) {
     searchWord(word, searchScope, searchContext, caseSensitive, null, processor, null);
   }
 
-  private static boolean makesSenseToSearch(@NotNull String word, @NotNull SearchScope searchScope) {
+  private static boolean makesSenseToSearch(@Nonnull String word, @Nonnull SearchScope searchScope) {
     if (searchScope instanceof LocalSearchScope && ((LocalSearchScope)searchScope).getScope().length == 0) {
       return false;
     }
     return searchScope != GlobalSearchScope.EMPTY_SCOPE && !StringUtil.isEmpty(word);
   }
 
-  public void searchQuery(@NotNull QuerySearchRequest request) {
+  public void searchQuery(@Nonnull QuerySearchRequest request) {
     assert request.collector != this;
     assert request.collector.getSearchSession() == mySession;
     synchronized (lock) {
@@ -134,19 +134,19 @@ public class SearchRequestCollector {
     }
   }
 
-  public void searchCustom(@NotNull Processor<Processor<PsiReference>> searchAction) {
+  public void searchCustom(@Nonnull Processor<Processor<PsiReference>> searchAction) {
     synchronized (lock) {
       myCustomSearchActions.add(searchAction);
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<QuerySearchRequest> takeQueryRequests() {
     return takeRequests(myQueryRequests);
   }
 
-  @NotNull
-  private <T> List<T> takeRequests(@NotNull List<T> list) {
+  @Nonnull
+  private <T> List<T> takeRequests(@Nonnull List<T> list) {
     synchronized (lock) {
       final List<T> requests = new ArrayList<>(list);
       list.clear();
@@ -154,12 +154,12 @@ public class SearchRequestCollector {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<PsiSearchRequest> takeSearchRequests() {
     return takeRequests(myWordRequests);
   }
 
-  @NotNull
+  @Nonnull
   public List<Processor<Processor<PsiReference>>> takeCustomSearchActions() {
     return takeRequests(myCustomSearchActions);
   }

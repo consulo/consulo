@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Works like a usual backspace except the situation when the caret is located after white space - all white space symbols
@@ -47,7 +47,7 @@ public class HungryBackspaceAction extends TextComponentEditorAction {
     }
 
     @Override
-    public void executeWriteAction(@NotNull Editor editor, Caret caret, DataContext dataContext) {
+    public void executeWriteAction(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
       final Document document = editor.getDocument();
       final int caretOffset = editor.getCaretModel().getOffset();
       if (caretOffset < 1) {

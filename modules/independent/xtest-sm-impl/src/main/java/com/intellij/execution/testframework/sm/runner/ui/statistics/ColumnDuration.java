@@ -20,7 +20,6 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.TestsPresentationUtil;
 import com.intellij.execution.testframework.sm.SMTestsRunnerBundle;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -38,7 +37,7 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     return TestsPresentationUtil.getDurationPresentation(testProxy);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Comparator<SMTestProxy> getComparator(){
     return this;
   }

@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.GridBag;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,10 +32,10 @@ import java.awt.*;
  */
 public class TitleWithToolbar extends JPanel {
 
-  public TitleWithToolbar(@NotNull String title,
-                          @NotNull String actionGroupId,
-                          @NotNull String place,
-                          @NotNull JComponent targetComponent)
+  public TitleWithToolbar(@Nonnull String title,
+                          @Nonnull String actionGroupId,
+                          @Nonnull String place,
+                          @Nonnull JComponent targetComponent)
   {
     super(new GridBagLayout());
     ActionManager actionManager = ActionManager.getInstance();
@@ -51,9 +51,10 @@ public class TitleWithToolbar extends JPanel {
   private class MyTitleComponent extends JComponent {
 
     private final Dimension myMinimumSize;
-    @NotNull private final Border myBorder;
+    @Nonnull
+    private final Border myBorder;
 
-    MyTitleComponent(@NotNull String title) {
+    MyTitleComponent(@Nonnull String title) {
       myBorder = IdeBorderFactory.createTitledBorder(title);
       Insets insets = myBorder.getBorderInsets(TitleWithToolbar.this);
       myMinimumSize = new Dimension(1, insets.top);

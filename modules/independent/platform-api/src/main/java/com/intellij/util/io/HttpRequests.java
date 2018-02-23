@@ -32,8 +32,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
 import com.intellij.util.net.ssl.CertificateManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -63,47 +63,47 @@ public final class HttpRequests {
 
 
   public interface Request {
-    @NotNull
+    @Nonnull
     String getURL();
 
-    @NotNull
+    @Nonnull
     URLConnection getConnection() throws IOException;
 
-    @NotNull
+    @Nonnull
     InputStream getInputStream() throws IOException;
 
-    @NotNull
+    @Nonnull
     BufferedReader getReader() throws IOException;
 
-    @NotNull
+    @Nonnull
     BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException;
 
     /** @deprecated Called automatically on open connection. Use {@link RequestBuilder#tryConnect()} to get response code */
     boolean isSuccessful() throws IOException;
 
-    @NotNull
-    File saveToFile(@NotNull File file, @Nullable ProgressIndicator indicator) throws IOException;
+    @Nonnull
+    File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException;
 
-    @NotNull
+    @Nonnull
     byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException;
 
-    @NotNull
+    @Nonnull
     String readString(@Nullable ProgressIndicator indicator) throws IOException;
   }
 
   public interface RequestProcessor<T> {
-    T process(@NotNull Request request) throws IOException;
+    T process(@Nonnull Request request) throws IOException;
   }
 
   public interface ConnectionTuner {
-    void tune(@NotNull URLConnection connection) throws IOException;
+    void tune(@Nonnull URLConnection connection) throws IOException;
   }
 
   public static class HttpStatusException extends IOException {
     private int myStatusCode;
     private String myUrl;
 
-    public HttpStatusException(@NotNull String message, int statusCode, @NotNull String url) {
+    public HttpStatusException(@Nonnull String message, int statusCode, @Nonnull String url) {
       super(message);
       myStatusCode = statusCode;
       myUrl = url;
@@ -113,7 +113,7 @@ public final class HttpRequests {
       return myStatusCode;
     }
 
-    @NotNull
+    @Nonnull
     public String getUrl() {
       return myUrl;
     }
@@ -130,13 +130,13 @@ public final class HttpRequests {
   }
 
 
-  @NotNull
-  public static RequestBuilder request(@NotNull String url) {
+  @Nonnull
+  public static RequestBuilder request(@Nonnull String url) {
     return new RequestBuilderImpl(url);
   }
 
-  @NotNull
-  public static String createErrorMessage(@NotNull IOException e, @NotNull Request request, boolean includeHeaders) {
+  @Nonnull
+  public static String createErrorMessage(@Nonnull IOException e, @Nonnull Request request, boolean includeHeaders) {
     StringBuilder builder = new StringBuilder();
 
     builder.append("Cannot download '").append(request.getURL()).append("': ").append(e.getMessage());
@@ -170,7 +170,7 @@ public final class HttpRequests {
     private String myAccept;
     private ConnectionTuner myTuner;
 
-    private RequestBuilderImpl(@NotNull String url) {
+    private RequestBuilderImpl(@Nonnull String url) {
       myUrl = url;
     }
 
@@ -247,7 +247,7 @@ public final class HttpRequests {
     }
 
     @Override
-    public <T> T connect(@NotNull HttpRequests.RequestProcessor<T> processor) throws IOException {
+    public <T> T connect(@Nonnull HttpRequests.RequestProcessor<T> processor) throws IOException {
       return process(this, processor);
     }
   }
@@ -262,13 +262,13 @@ public final class HttpRequests {
       myBuilder = builder;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getURL() {
       return myBuilder.myUrl;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public URLConnection getConnection() throws IOException {
       if (myConnection == null) {
@@ -277,7 +277,7 @@ public final class HttpRequests {
       return myConnection;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public InputStream getInputStream() throws IOException {
       if (myInputStream == null) {
@@ -289,13 +289,13 @@ public final class HttpRequests {
       return myInputStream;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public BufferedReader getReader() throws IOException {
       return getReader(null);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException {
       if (myReader == null) {
@@ -319,7 +319,7 @@ public final class HttpRequests {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
       int contentLength = getConnection().getContentLength();
       BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream(contentLength > 0 ? contentLength : BLOCK_SIZE);
@@ -327,7 +327,7 @@ public final class HttpRequests {
       return ArrayUtil.realloc(out.getInternalBuffer(), out.size());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String readString(@Nullable ProgressIndicator indicator) throws IOException {
       Charset cs = getCharset(this);
@@ -336,8 +336,8 @@ public final class HttpRequests {
     }
 
     @Override
-    @NotNull
-    public File saveToFile(@NotNull File file, @Nullable ProgressIndicator indicator) throws IOException {
+    @Nonnull
+    public File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
       FileUtilRt.createParentDirs(file);
 
       boolean deleteFile = true;

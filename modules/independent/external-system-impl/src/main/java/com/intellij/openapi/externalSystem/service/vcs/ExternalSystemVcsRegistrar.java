@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,12 +52,12 @@ import java.util.List;
 public class ExternalSystemVcsRegistrar {
 
   @SuppressWarnings("unchecked")
-  public static void handle(@NotNull final Project project) {
+  public static void handle(@Nonnull final Project project) {
     for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
       final AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override
-        public void onProjectsLinked(@NotNull final Collection linked) {
+        public void onProjectsLinked(@Nonnull final Collection linked) {
           List<VcsDirectoryMapping> newMappings = ContainerUtilRt.newArrayList();
           final LocalFileSystem fileSystem = LocalFileSystem.getInstance();
           ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);

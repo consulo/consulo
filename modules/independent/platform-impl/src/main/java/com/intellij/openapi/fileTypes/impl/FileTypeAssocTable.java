@@ -25,8 +25,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -164,7 +164,7 @@ public class FileTypeAssocTable<T> {
   }
 
   @Nullable
-  public T findAssociatedFileType(@NotNull @NonNls CharSequence fileName) {
+  public T findAssociatedFileType(@Nonnull @NonNls CharSequence fileName) {
     T t = myExactFileNameMappings.get(fileName);
     if (t != null) return t;
 
@@ -206,7 +206,7 @@ public class FileTypeAssocTable<T> {
   }
 
   @Deprecated
-  @NotNull
+  @Nonnull
   public String[] getAssociatedExtensions(T type) {
     Map<CharSequence, T> extMap = myExtensionMappings;
 
@@ -219,12 +219,12 @@ public class FileTypeAssocTable<T> {
     return ArrayUtil.toStringArray(exts);
   }
 
-  @NotNull
+  @Nonnull
   public FileTypeAssocTable<T> copy() {
     return new FileTypeAssocTable<T>(myExtensionMappings, myExactFileNameMappings, myExactFileNameAnyCaseMappings, myMatchingMappings);
   }
 
-  @NotNull
+  @Nonnull
   public List<FileNameMatcher> getAssociations(final T type) {
     List<FileNameMatcher> result = new ArrayList<FileNameMatcher>();
     for (Pair<FileNameMatcher, T> mapping : myMatchingMappings) {

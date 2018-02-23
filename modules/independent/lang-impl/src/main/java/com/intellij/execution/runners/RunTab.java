@@ -32,13 +32,13 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public abstract class RunTab implements DataProvider, Disposable {
-  @NotNull
+  @Nonnull
   protected final RunnerLayoutUi myUi;
   private LogFilesManager myManager;
   protected RunContentDescriptor myRunContentDescriptor;
@@ -49,7 +49,7 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   private LogConsoleManagerBase logConsoleManager;
 
-  protected RunTab(@NotNull ExecutionEnvironment environment, @NotNull String runnerType) {
+  protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
     this(environment.getProject(),
          SearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
          runnerType,
@@ -66,7 +66,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     logConsoleManager = null;
   }
 
-  protected RunTab(@NotNull Project project, @NotNull GlobalSearchScope searchScope, @NotNull String runnerType, @NotNull String runnerTitle, @NotNull String sessionName) {
+  protected RunTab(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope, @Nonnull String runnerType, @Nonnull String runnerTitle, @Nonnull String sessionName) {
     myProject = project;
     mySearchScope = searchScope;
 
@@ -76,7 +76,7 @@ public abstract class RunTab implements DataProvider, Disposable {
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (LangDataKeys.RUN_PROFILE == dataId) {
       return myEnvironment == null ? null : myEnvironment.getRunProfile();
     }
@@ -89,7 +89,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public LogConsoleManagerBase getLogConsoleManager() {
     if (logConsoleManager == null) {
       logConsoleManager = new LogConsoleManagerBase(myProject, mySearchScope) {
@@ -112,7 +112,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     return logConsoleManager;
   }
 
-  protected final void initLogConsoles(@NotNull RunProfile runConfiguration, @NotNull RunContentDescriptor contentDescriptor, @Nullable ExecutionConsole console) {
+  protected final void initLogConsoles(@Nonnull RunProfile runConfiguration, @Nonnull RunContentDescriptor contentDescriptor, @Nullable ExecutionConsole console) {
     ProcessHandler processHandler = contentDescriptor.getProcessHandler();
     if (runConfiguration instanceof RunConfigurationBase) {
       RunConfigurationBase configuration = (RunConfigurationBase)runConfiguration;

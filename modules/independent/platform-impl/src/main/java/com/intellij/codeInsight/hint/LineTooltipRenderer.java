@@ -32,7 +32,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -62,11 +62,11 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
   }
 
   @Override
-  public LightweightHint show(@NotNull final Editor editor,
-                              @NotNull final Point p,
+  public LightweightHint show(@Nonnull final Editor editor,
+                              @Nonnull final Point p,
                               final boolean alignToRight,
-                              @NotNull final TooltipGroup group,
-                              @NotNull final HintHint hintHint) {
+                              @Nonnull final TooltipGroup group,
+                              @Nonnull final HintHint hintHint) {
     if (myText == null) return null;
 
     //setup text
@@ -188,18 +188,18 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     return hint;
   }
 
-  private static boolean handle(@NotNull final String ref, @NotNull final Editor editor) {
+  private static boolean handle(@Nonnull final String ref, @Nonnull final Editor editor) {
     // @kirillk please don't remove this call anymore
     return TooltipLinkHandlerEP.handleLink(ref, editor);
   }
 
-  private void expand(@NotNull LightweightHint hint,
-                      @NotNull Editor editor,
-                      @NotNull Point p,
-                      @NotNull JEditorPane pane,
+  private void expand(@Nonnull LightweightHint hint,
+                      @Nonnull Editor editor,
+                      @Nonnull Point p,
+                      @Nonnull JEditorPane pane,
                       boolean alignToRight,
-                      @NotNull TooltipGroup group,
-                      @NotNull HintHint hintHint) {
+                      @Nonnull TooltipGroup group,
+                      @Nonnull HintHint hintHint) {
     hint.hide();
     if (myCurrentWidth > 0) {
       stripDescription();
@@ -303,7 +303,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     return new LineTooltipRenderer(text, width, getEqualityObjects());
   }
 
-  protected boolean dressDescription(@NotNull final Editor editor) {
+  protected boolean dressDescription(@Nonnull final Editor editor) {
     return false;
   }
 

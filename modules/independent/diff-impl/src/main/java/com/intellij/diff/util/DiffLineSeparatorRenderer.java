@@ -29,27 +29,29 @@ import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 
 public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSeparatorRenderer {
-  @NotNull private final Editor myEditor;
-  @NotNull private final BooleanGetter myCondition;
+  @Nonnull
+  private final Editor myEditor;
+  @Nonnull
+  private final BooleanGetter myCondition;
 
-  public DiffLineSeparatorRenderer(@NotNull Editor editor) {
+  public DiffLineSeparatorRenderer(@Nonnull Editor editor) {
     this(editor, BooleanGetter.TRUE);
   }
 
-  public DiffLineSeparatorRenderer(@NotNull Editor editor, @NotNull BooleanGetter condition) {
+  public DiffLineSeparatorRenderer(@Nonnull Editor editor, @Nonnull BooleanGetter condition) {
     myEditor = editor;
     myCondition = condition;
   }
 
-  public static void drawConnectorLine(@NotNull Graphics2D g,
+  public static void drawConnectorLine(@Nonnull Graphics2D g,
                                        int x1, int x2,
                                        int start1, int end1,
                                        int start2, int end2) {
@@ -59,7 +61,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
   /*
    * Divider
    */
-  public static void drawConnectorLine(@NotNull Graphics2D g,
+  public static void drawConnectorLine(@Nonnull Graphics2D g,
                                        int x1, int x2,
                                        int y1, int y2,
                                        int lineHeight,
@@ -142,13 +144,13 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     draw(g, shiftX, y, lineHeight, myEditor.getColorsScheme());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LineMarkerRendererEx.Position getPosition() {
     return LineMarkerRendererEx.Position.CUSTOM;
   }
 
-  private static void draw(@NotNull Graphics g,
+  private static void draw(@Nonnull Graphics g,
                            int shiftX,
                            int shiftY,
                            int lineHeight,
@@ -195,8 +197,8 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     }
   }
 
-  private static void paintLine(@NotNull Graphics g,
-                                @NotNull int[] xPoints, @NotNull int[] yPoints,
+  private static void paintLine(@Nonnull Graphics g,
+                                @Nonnull int[] xPoints, @Nonnull int[] yPoints,
                                 int lineHeight,
                                 @Nullable EditorColorsScheme scheme) {
     int height = getHeight(lineHeight);
@@ -217,8 +219,8 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     gg.setTransform(oldTransform);
   }
 
-  private static void paintConnectorLine(@NotNull Graphics g,
-                                         @NotNull int[] xPoints, @NotNull int[] yPoints,
+  private static void paintConnectorLine(@Nonnull Graphics g,
+                                         @Nonnull int[] xPoints, @Nonnull int[] yPoints,
                                          int lineHeight,
                                          @Nullable EditorColorsScheme scheme) {
     // TODO: shadow looks bad with big lineHeight and slope
@@ -284,14 +286,14 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     return Math.max(lineHeight / 6, 1);
   }
 
-  @NotNull
-  private static Color getBackgroundColor(@NotNull EditorColorsScheme scheme) {
+  @Nonnull
+  private static Color getBackgroundColor(@Nonnull EditorColorsScheme scheme) {
     Color color = scheme.getColor(BACKGROUND);
     return color != null ? color : Gray._128;
   }
 
   @Nullable
-  private static Color getTopBorderColor(int i, int lineHeight, @NotNull EditorColorsScheme scheme) {
+  private static Color getTopBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
     int border = Math.max(lineHeight / 4, 1);
     double ratio = (double)i / border;
     if (ratio > 1) return null;
@@ -304,7 +306,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
   }
 
   @Nullable
-  private static Color getBottomBorderColor(int i, int lineHeight, @NotNull EditorColorsScheme scheme) {
+  private static Color getBottomBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
     int height = getHeight(lineHeight);
     int border = Math.max(lineHeight / 12, 1);
 

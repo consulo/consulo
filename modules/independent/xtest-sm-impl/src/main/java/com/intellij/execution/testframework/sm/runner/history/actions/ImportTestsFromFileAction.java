@@ -21,17 +21,16 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
   public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
     super(properties, (properties == null ? "" : "Import ") + "From File ...", "Import tests from file", null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public VirtualFile getFile(@NotNull Project project) {
+  public VirtualFile getFile(@Nonnull Project project) {
     final FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
     xmlDescriptor.setTitle("Choose a File with Tests Result");
     return FileChooser.chooseFile(xmlDescriptor, project, null);

@@ -18,8 +18,7 @@ package com.intellij.openapi.diff.impl.dir.actions;
 import com.intellij.ide.diff.DirDiffModelHolder;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -68,9 +67,9 @@ public class DirDiffToolbarActions extends ActionGroup {
     myActions = actions.toArray(new AnAction[actions.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public AnAction[] getChildren(@Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
     return myActions;
   }
 }

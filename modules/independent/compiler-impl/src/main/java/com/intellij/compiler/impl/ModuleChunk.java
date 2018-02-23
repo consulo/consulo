@@ -35,7 +35,7 @@ import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -89,12 +89,12 @@ public class ModuleChunk extends Chunk<Module> {
     return original != null? original : file;
   }
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getFilesToCompile(Module forModule) {
     return myModuleToFilesMap.get(forModule);
   }
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getFilesToCompile() {
     if (getModuleCount() == 0) {
       return Collections.emptyList();

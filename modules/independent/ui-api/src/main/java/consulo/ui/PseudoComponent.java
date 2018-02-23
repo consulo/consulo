@@ -15,14 +15,14 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05-Feb-17
  */
 public interface PseudoComponent {
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   Component getComponent();
 }

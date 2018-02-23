@@ -26,11 +26,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EditorHelper {
-  public static <T extends PsiElement> void openFilesInEditor(@NotNull T[] elements) {
+  public static <T extends PsiElement> void openFilesInEditor(@Nonnull T[] elements) {
     final int limit = UISettings.getInstance().getEditorTabLimit();
     final int max = Math.min(limit, elements.length);
     for (int i = 0; i < max; i++) {
@@ -38,13 +38,13 @@ public class EditorHelper {
     }
   }
 
-  public static Editor openInEditor(@NotNull PsiElement element) {
+  public static Editor openInEditor(@Nonnull PsiElement element) {
     FileEditor editor = openInEditor(element, true);
     return editor instanceof TextEditor ? ((TextEditor)editor).getEditor() : null;
   }
 
   @Nullable
-  public static FileEditor openInEditor(@NotNull PsiElement element, boolean switchToText) {
+  public static FileEditor openInEditor(@Nonnull PsiElement element, boolean switchToText) {
     PsiFile file;
     int offset;
     if (element instanceof PsiFile){

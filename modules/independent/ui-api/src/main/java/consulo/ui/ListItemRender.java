@@ -15,13 +15,13 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface ListItemRender<E> {
-  void render(@NotNull ItemPresentation render, int index, @Nullable E item);
+  void render(@Nonnull ItemPresentation render, int index, @Nullable E item);
 }

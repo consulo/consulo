@@ -60,8 +60,8 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.lang.CompoundRuntimeException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -78,13 +78,13 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Override
-  public <T extends PomModelAspect> T getModelAspect(@NotNull Class<T> aClass) {
+  public <T extends PomModelAspect> T getModelAspect(@Nonnull Class<T> aClass) {
     //noinspection unchecked
     return (T)myAspects.get(aClass);
   }
 
   @Override
-  public void registerAspect(@NotNull Class<? extends PomModelAspect> aClass, @NotNull PomModelAspect aspect, @NotNull Set<PomModelAspect> dependencies) {
+  public void registerAspect(@Nonnull Class<? extends PomModelAspect> aClass, @Nonnull PomModelAspect aspect, @Nonnull Set<PomModelAspect> dependencies) {
     myAspects.put(aClass, aspect);
     final Iterator<PomModelAspect> iterator = dependencies.iterator();
     final List<PomModelAspect> deps = new ArrayList<>();
@@ -118,12 +118,12 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Override
-  public void addModelListener(@NotNull PomModelListener listener) {
+  public void addModelListener(@Nonnull PomModelListener listener) {
     myListeners.add(listener);
   }
 
   @Override
-  public void addModelListener(@NotNull final PomModelListener listener, @NotNull Disposable parentDisposable) {
+  public void addModelListener(@Nonnull final PomModelListener listener, @Nonnull Disposable parentDisposable) {
     addModelListener(listener);
     Disposer.register(parentDisposable, new Disposable() {
       @Override
@@ -134,7 +134,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Override
-  public void removeModelListener(@NotNull PomModelListener listener) {
+  public void removeModelListener(@Nonnull PomModelListener listener) {
     myListeners.remove(listener);
   }
 
@@ -142,7 +142,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   private final ThreadLocal<Stack<Pair<PomModelAspect, PomTransaction>>> myBlockedAspects = ThreadLocal.withInitial(Stack::new);
 
   @Override
-  public void runTransaction(@NotNull PomTransaction transaction) throws IncorrectOperationException {
+  public void runTransaction(@Nonnull PomTransaction transaction) throws IncorrectOperationException {
     if (!isAllowPsiModification()) {
       throw new IncorrectOperationException("Must not modify PSI inside save listener");
     }
@@ -292,7 +292,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Nullable
-  private Runnable reparseFile(@NotNull final PsiFile file, @NotNull FileElement treeElement, @NotNull CharSequence newText) {
+  private Runnable reparseFile(@Nonnull final PsiFile file, @Nonnull FileElement treeElement, @Nonnull CharSequence newText) {
     TextRange changedPsiRange = DocumentCommitThread.getChangedPsiRange(file, treeElement, newText);
     if (changedPsiRange == null) return null;
 
@@ -310,7 +310,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Nullable
-  private static Runnable tryReparseOneLeaf(@NotNull FileElement treeElement, @NotNull CharSequence newText, @NotNull TextRange changedPsiRange) {
+  private static Runnable tryReparseOneLeaf(@Nonnull FileElement treeElement, @Nonnull CharSequence newText, @Nonnull TextRange changedPsiRange) {
     final LeafElement leaf = treeElement.findLeafElementAt(changedPsiRange.getStartOffset());
     IElementType leafType = leaf == null ? null : leaf.getElementType();
     if (!(leafType instanceof IReparseableLeafElementType)) return null;
@@ -332,7 +332,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     return null;
   }
 
-  private void startTransaction(@NotNull PomTransaction transaction) {
+  private void startTransaction(@Nonnull PomTransaction transaction) {
     final ProgressIndicator progressIndicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     if (progressIndicator != null) progressIndicator.startNonCancelableSection();
     final PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
@@ -383,7 +383,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Nullable
-  private static PsiFile getContainingFileByTree(@NotNull final PsiElement changeScope) {
+  private static PsiFile getContainingFileByTree(@Nonnull final PsiElement changeScope) {
     // there could be pseudo physical trees (JSPX/JSP/etc.) which must not translate
     // any changes to document and not to fire any PSI events
     final PsiFile psiFile;
@@ -404,7 +404,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
   private static volatile boolean allowPsiModification = true;
 
-  public static <T extends Throwable> void guardPsiModificationsIn(@NotNull ThrowableRunnable<T> runnable) throws T {
+  public static <T extends Throwable> void guardPsiModificationsIn(@Nonnull ThrowableRunnable<T> runnable) throws T {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     boolean old = allowPsiModification;
     try {

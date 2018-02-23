@@ -32,8 +32,8 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -48,11 +48,11 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract Language getBaseLanguage();
 
   @Override
-  @NotNull
+  @Nonnull
   public List<PsiFile> getAllFiles() {
     final List<PsiFile> roots = new ArrayList<>();
     for (Language language : getLanguages()) {
@@ -75,7 +75,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
   }
 
   @Override
-  protected PsiFile getPsiInner(@NotNull final Language target) {
+  protected PsiFile getPsiInner(@Nonnull final Language target) {
     PsiFileImpl file = myRoots.get(target);
     if (file == null) {
       if (isPhysical()) {
@@ -104,7 +104,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
 
 
   @Override
-  public PsiFile getCachedPsi(@NotNull Language target) {
+  public PsiFile getCachedPsi(@Nonnull Language target) {
     return myRoots.get(target);
   }
 
@@ -113,7 +113,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
     return ContainerUtil.mapNotNull(myRoots.keySet(), (NullableFunction<Language, PsiFile>)language -> getCachedPsi(language));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<FileElement> getKnownTreeRoots() {
     List<FileElement> files = new ArrayList<>(myRoots.size());
@@ -139,9 +139,9 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public final MultiplePsiFilesPerDocumentFileViewProvider createCopy(@NotNull final VirtualFile fileCopy) {
+  public final MultiplePsiFilesPerDocumentFileViewProvider createCopy(@Nonnull final VirtualFile fileCopy) {
     final MultiplePsiFilesPerDocumentFileViewProvider copy = cloneInner(fileCopy);
     copy.myOriginal = myOriginal == null ? this : myOriginal;
     return copy;
@@ -151,7 +151,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Single
 
   @Override
   @Nullable
-  public PsiElement findElementAt(int offset, @NotNull Class<? extends Language> lang) {
+  public PsiElement findElementAt(int offset, @Nonnull Class<? extends Language> lang) {
     final PsiFile mainRoot = getPsi(getBaseLanguage());
     PsiElement ret = null;
     for (final Language language : getLanguages()) {

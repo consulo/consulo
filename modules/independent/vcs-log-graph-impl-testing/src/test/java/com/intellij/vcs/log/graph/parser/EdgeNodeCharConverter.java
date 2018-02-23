@@ -18,7 +18,7 @@ package com.intellij.vcs.log.graph.parser;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.api.elements.GraphNodeType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -44,25 +44,25 @@ public class EdgeNodeCharConverter {
     REVERSE_GRAPH_EDGE_TYPE_MAP = ContainerUtil.reverseMap(GRAPH_EDGE_TYPE_MAP);
   }
 
-  @NotNull
+  @Nonnull
   public static GraphNodeType parseGraphNodeType(char type) {
     GraphNodeType nodeType = GRAPH_NODE_TYPE_MAP.get(type);
     if (nodeType == null) throw new IllegalStateException("Illegal char for graph node type: " + type);
     return nodeType;
   }
 
-  @NotNull
+  @Nonnull
   public static GraphEdgeType parseGraphEdgeType(char type) {
     GraphEdgeType nodeType = GRAPH_EDGE_TYPE_MAP.get(type);
     if (nodeType == null) throw new IllegalStateException("Illegal char for graph edge type: " + type);
     return nodeType;
   }
 
-  public static char toChar(@NotNull GraphEdgeType type) {
+  public static char toChar(@Nonnull GraphEdgeType type) {
     return REVERSE_GRAPH_EDGE_TYPE_MAP.get(type);
   }
 
-  public static char toChar(@NotNull GraphNodeType type) {
+  public static char toChar(@Nonnull GraphNodeType type) {
     return REVERSE_GRAPH_NODE_TYPE_MAP.get(type);
   }
 

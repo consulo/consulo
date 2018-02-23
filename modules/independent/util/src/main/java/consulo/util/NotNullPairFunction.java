@@ -16,14 +16,14 @@
 package consulo.util;
 
 import com.intellij.util.PairFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 0:42/09.10.13
  */
 public interface NotNullPairFunction<Arg1, Arg2, ResultType> extends PairFunction<Arg1, Arg2, ResultType> {
-  @NotNull
+  @Nonnull
   @Override
   ResultType fun(Arg1 t, Arg2 v);
 }

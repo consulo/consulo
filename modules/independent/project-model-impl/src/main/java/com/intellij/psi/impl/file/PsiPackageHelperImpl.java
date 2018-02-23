@@ -21,7 +21,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.impl.PsiManagerImpl;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -34,8 +34,8 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   }
 
   @Override
-  @NotNull
-  public String getQualifiedName(@NotNull final PsiDirectory directory, final boolean presentable) {
+  @Nonnull
+  public String getQualifiedName(@Nonnull final PsiDirectory directory, final boolean presentable) {
     if (presentable) {
       return FileUtil.getLocationRelativeToUserHome(directory.getVirtualFile().getPresentableUrl());
     }
@@ -43,7 +43,7 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   }
 
   @Override
-  public PsiDirectoryContainer getDirectoryContainer(@NotNull PsiDirectory directory) {
+  public PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory) {
     return PsiPackageManager.getInstance(myManager.getProject()).findAnyPackage(directory);
   }
 

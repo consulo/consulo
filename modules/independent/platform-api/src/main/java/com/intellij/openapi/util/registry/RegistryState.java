@@ -17,7 +17,7 @@ package com.intellij.openapi.util.registry;
 
 import com.intellij.openapi.components.*;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @State(
     name = "Registry",
@@ -38,7 +38,7 @@ public class RegistryState implements BaseComponent, PersistentStateComponent<El
     Registry.getInstance().loadState(state);
   }
 
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "Registry";
   }

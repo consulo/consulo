@@ -16,7 +16,7 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

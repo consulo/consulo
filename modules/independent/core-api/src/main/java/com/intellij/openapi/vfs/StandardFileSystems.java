@@ -20,7 +20,7 @@ import com.intellij.util.io.URLUtil;
 import consulo.annotations.DeprecationInfo;
 import consulo.fileTypes.ZipArchiveFileType;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -46,14 +46,14 @@ public class StandardFileSystems {
   public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
   private static final NotNullLazyValue<VirtualFileSystem> ourLocal = new NotNullLazyValue<VirtualFileSystem>() {
-    @NotNull
+    @Nonnull
     @Override
     protected VirtualFileSystem compute() {
       return VirtualFileManager.getInstance().getFileSystem(FILE_PROTOCOL);
     }
   };
 
-  @NotNull
+  @Nonnull
   public static VirtualFileSystem local() {
     return ourLocal.getValue();
   }
@@ -67,7 +67,7 @@ public class StandardFileSystems {
     return zip();
   }
 
-  @NotNull
+  @Nonnull
   public static ArchiveFileSystem zip() {
     return ZipArchiveFileType.INSTANCE.getFileSystem();
   }

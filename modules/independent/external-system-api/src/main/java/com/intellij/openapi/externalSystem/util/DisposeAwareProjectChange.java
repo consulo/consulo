@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.components.ComponentManager;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class DisposeAwareProjectChange implements Runnable {
   private final ComponentManager myComponentManager;
 
-  protected DisposeAwareProjectChange(@NotNull ComponentManager componentManager) {
+  protected DisposeAwareProjectChange(@Nonnull ComponentManager componentManager) {
     myComponentManager = componentManager;
   }
 

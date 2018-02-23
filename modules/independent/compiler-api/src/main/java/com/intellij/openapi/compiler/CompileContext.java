@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.roots.ContentFolderTypeProvider;
 
 /**
@@ -77,7 +77,7 @@ public interface CompileContext extends UserDataHolder {
    *
    * @return the progress indicator instance.
    */
-  @NotNull
+  @Nonnull
   ProgressIndicator getProgressIndicator();
 
   /**
@@ -122,7 +122,7 @@ public interface CompileContext extends UserDataHolder {
    * @param module the module to check.
    * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
    */
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   VirtualFile getModuleOutputDirectory(Module module);
 

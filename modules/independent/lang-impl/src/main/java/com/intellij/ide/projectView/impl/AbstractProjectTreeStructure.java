@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiDocumentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeStructureBase implements ViewSettings {
   private final AbstractTreeNode myRoot;
@@ -38,9 +38,9 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
     return new ProjectViewProjectNode(myProject, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T getViewOption(@NotNull KeyWithDefaultValue<T> option) {
+  public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
     return option.getDefaultValue();
   }
 
@@ -57,7 +57,7 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback asyncCommit() {
     return asyncCommitDocuments(myProject);

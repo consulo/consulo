@@ -38,8 +38,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.WeakHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.lang.ref.Reference;
@@ -56,26 +56,34 @@ import java.util.Map;
  */
 public class QuickDocOnMouseOverManager {
 
-  @NotNull private final MyEditorMouseListener     myMouseListener       = new MyEditorMouseListener();
-  @NotNull private final VisibleAreaListener       myVisibleAreaListener = new MyVisibleAreaListener();
-  @NotNull private final CaretListener             myCaretListener       = new MyCaretListener();
-  @NotNull private final DocumentListener          myDocumentListener    = new MyDocumentListener();
-  @NotNull private final Alarm                     myAlarm;
-  @NotNull private final Runnable                  myHintCloseCallback   = new MyCloseDocCallback();
-  @NotNull private final Map<Document, Boolean>    myMonitoredDocuments  = new WeakHashMap<>();
+  @Nonnull
+  private final MyEditorMouseListener     myMouseListener       = new MyEditorMouseListener();
+  @Nonnull
+  private final VisibleAreaListener       myVisibleAreaListener = new MyVisibleAreaListener();
+  @Nonnull
+  private final CaretListener             myCaretListener       = new MyCaretListener();
+  @Nonnull
+  private final DocumentListener          myDocumentListener    = new MyDocumentListener();
+  @Nonnull
+  private final Alarm                     myAlarm;
+  @Nonnull
+  private final Runnable                  myHintCloseCallback   = new MyCloseDocCallback();
+  @Nonnull
+  private final Map<Document, Boolean>    myMonitoredDocuments  = new WeakHashMap<>();
 
   private final Map<Editor, Reference<PsiElement> /* PSI element which is located under the current mouse position */> myActiveElements
           = new WeakHashMap<>();
 
   /** Holds a reference (if any) to the documentation manager used last time to show an 'auto quick doc' popup. */
-  @Nullable private WeakReference<DocumentationManager> myDocumentationManager;
+  @Nullable
+  private WeakReference<DocumentationManager> myDocumentationManager;
 
   private           boolean             myEnabled;
   private           boolean             myApplicationActive;
 
   private MyShowQuickDocRequest myCurrentRequest; // accessed only in EDT
 
-  public QuickDocOnMouseOverManager(@NotNull Application application) {
+  public QuickDocOnMouseOverManager(@Nonnull Application application) {
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, application);
 
     EditorFactory factory = EditorFactory.getInstance();
@@ -125,7 +133,7 @@ public class QuickDocOnMouseOverManager {
     }
   }
 
-  private void registerListeners(@NotNull Editor editor) {
+  private void registerListeners(@Nonnull Editor editor) {
     editor.addEditorMouseListener(myMouseListener);
     editor.addEditorMouseMotionListener(myMouseListener);
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaListener);
@@ -137,7 +145,7 @@ public class QuickDocOnMouseOverManager {
     }
   }
 
-  private void unRegisterListeners(@NotNull Editor editor) {
+  private void unRegisterListeners(@Nonnull Editor editor) {
     editor.removeEditorMouseListener(myMouseListener);
     editor.removeEditorMouseMotionListener(myMouseListener);
     editor.getScrollingModel().removeVisibleAreaListener(myVisibleAreaListener);
@@ -154,7 +162,7 @@ public class QuickDocOnMouseOverManager {
     myAlarm.cancelAllRequests();
   }
 
-  private void processMouseMove(@NotNull EditorMouseEvent e) {
+  private void processMouseMove(@Nonnull EditorMouseEvent e) {
     if (!myApplicationActive || !myEnabled || e.getArea() != EditorMouseEventArea.EDITING_AREA) {
       // Skip if the mouse is not at the editing area.
       closeQuickDocIfPossible();
@@ -280,15 +288,19 @@ public class QuickDocOnMouseOverManager {
   }
 
   private class MyShowQuickDocRequest implements Runnable {
-    @NotNull private final DocumentationManager docManager;
-    @NotNull private final Editor editor;
+    @Nonnull
+    private final DocumentationManager docManager;
+    @Nonnull
+    private final Editor editor;
     private final int offset;
-    @NotNull private final PsiElement originalElement;
-    @NotNull private final ProgressIndicator myProgressIndicator = new ProgressIndicatorBase();
+    @Nonnull
+    private final PsiElement originalElement;
+    @Nonnull
+    private final ProgressIndicator myProgressIndicator = new ProgressIndicatorBase();
     private final HintManager myHintManager = HintManager.getInstance();
 
-    private MyShowQuickDocRequest(@NotNull DocumentationManager docManager, @NotNull Editor editor, int offset,
-                                  @NotNull PsiElement originalElement) {
+    private MyShowQuickDocRequest(@Nonnull DocumentationManager docManager, @Nonnull Editor editor, int offset,
+                                  @Nonnull PsiElement originalElement) {
       this.docManager = docManager;
       this.editor = editor;
       this.offset = offset;
@@ -354,14 +366,14 @@ public class QuickDocOnMouseOverManager {
 
   private class MyEditorFactoryListener implements EditorFactoryListener {
     @Override
-    public void editorCreated(@NotNull EditorFactoryEvent event) {
+    public void editorCreated(@Nonnull EditorFactoryEvent event) {
       if (myEnabled) {
         registerListeners(event.getEditor());
       }
     }
 
     @Override
-    public void editorReleased(@NotNull EditorFactoryEvent event) {
+    public void editorReleased(@Nonnull EditorFactoryEvent event) {
       if (myEnabled) {
         // We do this in the 'if' block because editor logs an error on attempt to remove already released listener.
         unRegisterListeners(event.getEditor());

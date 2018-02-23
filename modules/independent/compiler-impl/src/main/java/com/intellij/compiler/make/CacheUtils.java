@@ -28,8 +28,7 @@ import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import consulo.compiler.make.DependencyCache;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -74,7 +73,7 @@ public class CacheUtils {
   public static Collection<VirtualFile> findDependentFiles(
     final CompileContextEx context,
     final Set<VirtualFile> compiledWithErrors,
-    final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
+    final @javax.annotation.Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)
     throws CacheCorruptedException, ExitException {
 
     context.getProgressIndicator().setText(CompilerBundle.message("progress.checking.dependencies"));
@@ -91,7 +90,7 @@ public class CacheUtils {
     return dependentFiles;
   }
 
-  @NotNull
+  @Nonnull
   public static Set<VirtualFile> getFilesCompiledWithErrors(final CompileContextEx context) {
     CompilerMessage[] messages = context.getMessages(CompilerMessageCategory.ERROR);
     Set<VirtualFile> compiledWithErrors = Collections.emptySet();

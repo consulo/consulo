@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,14 +96,14 @@ public class DialogBuilder implements Disposable {
     myCenterPanel = centerPanel;
   }
 
-  @NotNull
-  public DialogBuilder centerPanel(@NotNull JComponent centerPanel) {
+  @Nonnull
+  public DialogBuilder centerPanel(@Nonnull JComponent centerPanel) {
     myCenterPanel = centerPanel;
     return this;
   }
 
-  @NotNull
-  public DialogBuilder setNorthPanel(@NotNull JComponent northPanel) {
+  @Nonnull
+  public DialogBuilder setNorthPanel(@Nonnull JComponent northPanel) {
     myNorthPanel = northPanel;
     return this;
   }
@@ -112,8 +112,8 @@ public class DialogBuilder implements Disposable {
     myTitle = title;
   }
 
-  @NotNull
-  public DialogBuilder title(@NotNull String title) {
+  @Nonnull
+  public DialogBuilder title(@Nonnull String title) {
     myTitle = title;
     return this;
   }
@@ -126,7 +126,7 @@ public class DialogBuilder implements Disposable {
     myDimensionServiceKey = dimensionServiceKey;
   }
 
-  public DialogBuilder dimensionKey(@NotNull String dimensionServiceKey) {
+  public DialogBuilder dimensionKey(@Nonnull String dimensionServiceKey) {
     myDimensionServiceKey = dimensionServiceKey;
     return this;
   }
@@ -172,7 +172,7 @@ public class DialogBuilder implements Disposable {
     return closeAction;
   }
 
-  public void addDisposable(@NotNull Disposable disposable) {
+  public void addDisposable(@Nonnull Disposable disposable) {
     Disposer.register(this, disposable);
   }
 
@@ -209,13 +209,13 @@ public class DialogBuilder implements Disposable {
     myDialogWrapper.setOKActionEnabled(isEnabled);
   }
 
-  @NotNull
+  @Nonnull
   public DialogBuilder okActionEnabled(boolean isEnabled) {
     myDialogWrapper.setOKActionEnabled(isEnabled);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public DialogBuilder resizable(boolean resizable) {
     myDialogWrapper.setResizable(resizable);
     return this;
@@ -292,7 +292,7 @@ public class DialogBuilder implements Disposable {
     protected Action createAction(final DialogWrapper dialogWrapper) {
       return new AbstractAction(){
         @Override
-        public void actionPerformed(@NotNull ActionEvent e) {
+        public void actionPerformed(@Nonnull ActionEvent e) {
           dialogWrapper.close(myExitCode);
         }
       };
@@ -371,10 +371,10 @@ public class DialogBuilder implements Disposable {
     @Override
     public void init() { super.init(); }
     @Override
-    @NotNull
+    @Nonnull
     public Action getOKAction() { return super.getOKAction(); } // Make it public
     @Override
-    @NotNull
+    @Nonnull
     public Action getCancelAction() { return super.getCancelAction(); } // Make it public
 
     @Override
@@ -450,7 +450,7 @@ public class DialogBuilder implements Disposable {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     protected Action[] createActions() {
       if (myActions == null) return super.createActions();
       ArrayList<Action> actions = new ArrayList<>(myActions.size());

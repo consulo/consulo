@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.patch;
 
 import com.google.common.collect.Ordering;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +40,8 @@ public enum ApplyPatchStatus {
   static final Set<ApplyPatchStatus> PARTIAL_ADDITIONAL_SET = ContainerUtil.newHashSet(SUCCESS, ALREADY_APPLIED);
   private static final Ordering<ApplyPatchStatus> ORDERING = Ordering.explicit(ORDERED_TYPES).nullsFirst();
 
-  @Nullable
-  public static ApplyPatchStatus and(@Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
+  @javax.annotation.Nullable
+  public static ApplyPatchStatus and(@javax.annotation.Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
     Set<ApplyPatchStatus> statuses = ContainerUtil.newHashSet(lhs, rhs);
     if (PARTIAL_ADDITIONAL_SET.equals(statuses)) return PARTIAL;
     return ORDERING.max(lhs, rhs);

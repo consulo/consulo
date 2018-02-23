@@ -21,7 +21,7 @@ import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,8 +51,8 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
 
   private volatile boolean myStdOutputConfigured;
 
-  public RemoteExternalSystemFacadeImpl(@NotNull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                        @NotNull Class<ExternalSystemTaskManager<S>> buildManagerClass) throws IllegalAccessException, InstantiationException {
+  public RemoteExternalSystemFacadeImpl(@Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
+                                        @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass) throws IllegalAccessException, InstantiationException {
     super(projectResolverClass, buildManagerClass);
     updateAutoShutdownTime();
   }
@@ -92,7 +92,7 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
 
   @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed", "unchecked", "UseOfSystemOutOrSystemErr"})
   @Override
-  protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(@NotNull Class<I> interfaceClass, @NotNull final C impl)
+  protected <I extends RemoteExternalSystemService<S>, C extends I> I createService(@Nonnull Class<I> interfaceClass, @Nonnull final C impl)
           throws ClassNotFoundException, IllegalAccessException, InstantiationException, RemoteException {
     if (!myStdOutputConfigured) {
       myStdOutputConfigured = true;
@@ -117,7 +117,7 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
   }
 
   @Override
-  public void applySettings(@NotNull S settings) throws RemoteException {
+  public void applySettings(@Nonnull S settings) throws RemoteException {
     super.applySettings(settings);
     long ttl = settings.getRemoteProcessIdleTtlInMs();
     if (ttl > 0) {
@@ -144,10 +144,11 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
   private static class LineAwarePrintStream extends PrintStream {
-    private LineAwarePrintStream(@NotNull final PrintStream delegate) {
+    private LineAwarePrintStream(@Nonnull final PrintStream delegate) {
       super(new OutputStream() {
 
-        @NotNull private final StringBuilder myBuffer = new StringBuilder();
+        @Nonnull
+        private final StringBuilder myBuffer = new StringBuilder();
 
         @Override
         public void write(int b) throws IOException {

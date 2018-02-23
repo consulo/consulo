@@ -26,7 +26,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -35,11 +35,11 @@ import java.util.Set;
  */
 public abstract class AbstractRunConfigurationTypeUsagesCollector extends AbstractApplicationUsagesCollector {
 
-  protected abstract boolean isApplicable(@NotNull RunManager runManager, @NotNull RunConfiguration runConfiguration);
+  protected abstract boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration);
 
-  @NotNull
+  @Nonnull
   @Override
-  public final Set<UsageDescriptor> getProjectUsages(@NotNull final Project project) {
+  public final Set<UsageDescriptor> getProjectUsages(@Nonnull final Project project) {
     final Set<String> runConfigurationTypes = new HashSet<String>();
     UIUtil.invokeAndWaitIfNeeded(new Runnable() {
       @Override

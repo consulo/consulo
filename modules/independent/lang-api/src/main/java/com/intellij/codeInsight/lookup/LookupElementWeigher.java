@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -49,13 +49,13 @@ public abstract class LookupElementWeigher {
     return myId;
   }
 
-  @Nullable
-  public Comparable weigh(@NotNull LookupElement element, @NotNull WeighingContext context) {
+  @javax.annotation.Nullable
+  public Comparable weigh(@Nonnull LookupElement element, @Nonnull WeighingContext context) {
     return weigh(element);
   }
 
   @Nullable
-  public Comparable weigh(@NotNull LookupElement element) {
+  public Comparable weigh(@Nonnull LookupElement element) {
     throw new UnsupportedOperationException("weigh not implemented in " + getClass());
   }
 

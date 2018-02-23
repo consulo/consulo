@@ -18,7 +18,7 @@ package consulo.editor.notifications;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.Exported;
 
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ public class EditorNotificationProviders {
   private static final List<NotNullFunction<Project, EditorNotificationProvider<?>>> ourAdditionalEditorProviderFactories =
           new ArrayList<NotNullFunction<Project, EditorNotificationProvider<?>>>();
 
-  @NotNull
-  public static List<EditorNotificationProvider<?>> createProviders(@NotNull Project project) {
+  @Nonnull
+  public static List<EditorNotificationProvider<?>> createProviders(@Nonnull Project project) {
     EditorNotificationProvider<?>[] extensions = EditorNotificationProvider.EP_NAME.getExtensions(project);
     List<EditorNotificationProvider<?>> providers =
             new ArrayList<EditorNotificationProvider<?>>(extensions.length + ourAdditionalEditorProviderFactories.size());
@@ -45,7 +45,7 @@ public class EditorNotificationProviders {
   }
 
   @Exported
-  public static void registerProvider(@NotNull NotNullFunction<Project, EditorNotificationProvider<?>> function) {
+  public static void registerProvider(@Nonnull NotNullFunction<Project, EditorNotificationProvider<?>> function) {
     ourAdditionalEditorProviderFactories.add(function);
   }
 }

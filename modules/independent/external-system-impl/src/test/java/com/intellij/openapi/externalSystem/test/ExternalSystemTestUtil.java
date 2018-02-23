@@ -18,7 +18,7 @@ package com.intellij.openapi.externalSystem.test;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Assert;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class ExternalSystemTestUtil {
   private ExternalSystemTestUtil() {
   }
 
-  public static void assertMapsEqual(@NotNull Map<?, ?> expected, @NotNull Map<?, ?> actual) {
+  public static void assertMapsEqual(@Nonnull Map<?, ?> expected, @Nonnull Map<?, ?> actual) {
     Map<?, ?> local = ContainerUtilRt.newHashMap(expected);
     for (Map.Entry<?, ?> entry : actual.entrySet()) {
       Object expectedValue = local.remove(entry.getKey());

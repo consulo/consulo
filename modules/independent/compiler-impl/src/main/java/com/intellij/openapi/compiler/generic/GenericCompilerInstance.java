@@ -17,7 +17,7 @@ package com.intellij.openapi.compiler.generic;
 
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -36,26 +36,26 @@ public abstract class GenericCompilerInstance<T extends BuildTarget, Item extend
     return myContext.getProject();
   }
 
-  @NotNull
+  @Nonnull
   public abstract List<T> getAllTargets();
 
-  @NotNull
+  @Nonnull
   public abstract List<T> getSelectedTargets();
 
-  public abstract void processObsoleteTarget(@NotNull String targetId, @NotNull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems);
+  public abstract void processObsoleteTarget(@Nonnull String targetId, @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems);
 
 
-  @NotNull
-  public abstract List<Item> getItems(@NotNull T target);
+  @Nonnull
+  public abstract List<Item> getItems(@Nonnull T target);
 
-  public abstract void processItems(@NotNull T target, @NotNull List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems, @NotNull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
-                                    @NotNull OutputConsumer<Item> consumer);
+  public abstract void processItems(@Nonnull T target, @Nonnull List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> changedItems, @Nonnull List<GenericCompilerCacheState<Key, SourceState, OutputState>> obsoleteItems,
+                                    @Nonnull OutputConsumer<Item> consumer);
 
   public interface OutputConsumer<Item extends CompileItem<?,?,?>> {
-    void addFileToRefresh(@NotNull File file);
+    void addFileToRefresh(@Nonnull File file);
 
-    void addDirectoryToRefresh(@NotNull File dir);
+    void addDirectoryToRefresh(@Nonnull File dir);
 
-    void addProcessedItem(@NotNull Item sourceItem);
+    void addProcessedItem(@Nonnull Item sourceItem);
   }
 }

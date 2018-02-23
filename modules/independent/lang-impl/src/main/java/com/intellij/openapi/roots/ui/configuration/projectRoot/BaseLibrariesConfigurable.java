@@ -43,8 +43,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -53,11 +53,11 @@ import java.util.*;
 public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurable  {
   protected String myLevel;
 
-  protected BaseLibrariesConfigurable(final @NotNull Project project) {
+  protected BaseLibrariesConfigurable(final @Nonnull Project project) {
     super(project);
   }
 
-  public static BaseLibrariesConfigurable getInstance(@NotNull Project project, @NotNull String tableLevel) {
+  public static BaseLibrariesConfigurable getInstance(@Nonnull Project project, @Nonnull String tableLevel) {
     if (tableLevel.equals(LibraryTablesRegistrar.PROJECT_LEVEL)) {
       return ProjectLibrariesConfigurable.getInstance(project);
     }
@@ -121,7 +121,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     createLibrariesNode(myContext.createModifiableModelProvider(myLevel));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<ProjectStructureElement>();
@@ -203,7 +203,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
     final ArrayList<AnAction> actions = new ArrayList<AnAction>();
     actions.add(new CopyLibraryAction());
@@ -218,7 +218,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   protected AbstractAddGroup createAddAction() {
     return new AbstractAddGroup(getAddText()) {
       @Override
-      @NotNull
+      @Nonnull
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
         return CreateNewLibraryAction.createActionOrGroup(getAddText(), BaseLibrariesConfigurable.this, myProject);
       }
@@ -255,7 +255,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     }
   }
 
-  public void removeLibrary(@NotNull LibraryProjectStructureElement element) {
+  public void removeLibrary(@Nonnull LibraryProjectStructureElement element) {
     getModelProvider().getModifiableModel().removeLibrary(element.getLibrary());
     myContext.getDaemonAnalyzer().removeElement(element);
     final MyNode node = findNodeByObject(myRoot, element.getLibrary());

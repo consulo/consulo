@@ -16,8 +16,7 @@
 package com.intellij.xdebugger.frame.presentation;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Determines how a value is shown in debugger trees. Use one of the standard implementations (for {@link com.intellij.xdebugger.frame.presentation.XStringValuePresentation strings},
@@ -33,12 +32,12 @@ public abstract class XValuePresentation {
    * Renders value text by delegating to {@code renderer} methods
    * @param renderer {@link XValueTextRenderer} instance which provides methods to
    */
-  public abstract void renderValue(@NotNull XValueTextRenderer renderer);
+  public abstract void renderValue(@Nonnull XValueTextRenderer renderer);
 
   /**
    * @return separator between name and value in a debugger tree
    */
-  @NotNull
+  @Nonnull
   public String getSeparator() {
     return DEFAULT_SEPARATOR;
   }
@@ -46,7 +45,7 @@ public abstract class XValuePresentation {
   /**
    * @return optional type of the value, it is shown in gray color and surrounded by braces
    */
-  @Nullable
+  @javax.annotation.Nullable
   public String getType() {
     return null;
   }
@@ -55,37 +54,29 @@ public abstract class XValuePresentation {
     /**
      * Appends {@code value} with to the node text. Invisible characters are shown in escaped form.
      */
-    void renderValue(@NotNull String value);
+    void renderValue(@Nonnull String value);
 
     /**
      * Appends {@code value} surrounded by quotes to the node text colored as a string
      */
-    void renderStringValue(@NotNull String value);
+    void renderStringValue(@Nonnull String value);
 
     /**
      * Appends {@code value} highlighted as a number
      */
-    void renderNumericValue(@NotNull String value);
+    void renderNumericValue(@Nonnull String value);
 
     /**
      * Appends {@code value} surrounded by single quotes to the node text colored as a string
      */
-    void renderCharValue(@NotNull String value);
+    void renderCharValue(@Nonnull String value);
 
     /**
      * Appends {@code value} highlighted as a keyword
      */
-    void renderKeywordValue(@NotNull String value);
+    void renderKeywordValue(@Nonnull String value);
 
-    void renderValue(@NotNull String value, @NotNull TextAttributesKey key);
-
-    /**
-     * Appends {@code value} surrounded by quotes to the node text colored as a string
-     * @param value value to be shown
-     * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
-     * @param maxLength maximum number of characters to show
-     */
-    void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength);
+    void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key);
 
     /**
      * Appends {@code value} surrounded by quotes to the node text colored as a string
@@ -93,21 +84,29 @@ public abstract class XValuePresentation {
      * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
      * @param maxLength maximum number of characters to show
      */
-    void renderStringValue(@NotNull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
+    void renderStringValue(@Nonnull String value, @javax.annotation.Nullable String additionalSpecialCharsToHighlight, int maxLength);
+
+    /**
+     * Appends {@code value} surrounded by quotes to the node text colored as a string
+     * @param value value to be shown
+     * @param additionalSpecialCharsToHighlight characters which should be highlighted in a special color
+     * @param maxLength maximum number of characters to show
+     */
+    void renderStringValue(@Nonnull String value, @javax.annotation.Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength);
 
     /**
      * Appends gray colored {@code comment}
      */
-    void renderComment(@NotNull String comment);
+    void renderComment(@Nonnull String comment);
 
     /**
      * Appends {@code symbol} which is not part of the value
      */
-    void renderSpecialSymbol(@NotNull String symbol);
+    void renderSpecialSymbol(@Nonnull String symbol);
 
     /**
      * Appends red colored {@code error}
      */
-    void renderError(@NotNull String error);
+    void renderError(@Nonnull String error);
   }
 }

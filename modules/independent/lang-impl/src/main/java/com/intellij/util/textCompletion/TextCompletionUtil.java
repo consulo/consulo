@@ -32,20 +32,20 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LanguageTextField;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TextCompletionUtil {
   public static final Key<TextCompletionProvider> COMPLETING_TEXT_FIELD_KEY = Key.create("COMPLETING_TEXT_FIELD_KEY");
   public static final Key<Boolean> AUTO_POPUP_KEY = Key.create("AUTOPOPUP_TEXT_FIELD_KEY");
 
-  public static void installProvider(@NotNull PsiFile psiFile, @NotNull TextCompletionProvider provider, boolean autoPopup) {
+  public static void installProvider(@Nonnull PsiFile psiFile, @Nonnull TextCompletionProvider provider, boolean autoPopup) {
     psiFile.putUserData(COMPLETING_TEXT_FIELD_KEY, provider);
     psiFile.putUserData(AUTO_POPUP_KEY, autoPopup);
   }
 
   @Nullable
-  public static TextCompletionProvider getProvider(@NotNull PsiFile file) {
+  public static TextCompletionProvider getProvider(@Nonnull PsiFile file) {
     TextCompletionProvider provider = file.getUserData(COMPLETING_TEXT_FIELD_KEY);
 
     if (provider == null || (DumbService.isDumb(file.getProject()) && !DumbService.isDumbAware(provider))) {
@@ -54,7 +54,7 @@ public class TextCompletionUtil {
     return provider;
   }
 
-  public static void installCompletionHint(@NotNull EditorEx editor) {
+  public static void installCompletionHint(@Nonnull EditorEx editor) {
     String completionShortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
     if (!StringUtil.isEmpty(completionShortcutText)) {
 
@@ -88,17 +88,17 @@ public class TextCompletionUtil {
   }
 
   public static class DocumentWithCompletionCreator extends LanguageTextField.SimpleDocumentCreator {
-    @NotNull
+    @Nonnull
     private final TextCompletionProvider myProvider;
     private final boolean myAutoPopup;
 
-    public DocumentWithCompletionCreator(@NotNull TextCompletionProvider provider, boolean autoPopup) {
+    public DocumentWithCompletionCreator(@Nonnull TextCompletionProvider provider, boolean autoPopup) {
       myProvider = provider;
       myAutoPopup = autoPopup;
     }
 
     @Override
-    public void customizePsiFile(@NotNull PsiFile file) {
+    public void customizePsiFile(@Nonnull PsiFile file) {
       installProvider(file, myProvider, myAutoPopup);
     }
   }

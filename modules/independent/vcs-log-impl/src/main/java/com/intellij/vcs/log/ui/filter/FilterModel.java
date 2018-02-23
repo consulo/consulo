@@ -20,21 +20,25 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogDataPack;
 import com.intellij.vcs.log.VcsLogFilter;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
 abstract class FilterModel<Filter extends VcsLogFilter> {
-  @NotNull private final String myName;
-  @NotNull protected final MainVcsLogUiProperties myUiProperties;
-  @NotNull private final Computable<VcsLogDataPack> myDataPackProvider;
-  @NotNull private final Collection<Runnable> mySetFilterListeners = ContainerUtil.newArrayList();
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  protected final MainVcsLogUiProperties myUiProperties;
+  @Nonnull
+  private final Computable<VcsLogDataPack> myDataPackProvider;
+  @Nonnull
+  private final Collection<Runnable> mySetFilterListeners = ContainerUtil.newArrayList();
 
   @Nullable private Filter myFilter;
 
-  FilterModel(@NotNull String name, @NotNull Computable<VcsLogDataPack> provider, @NotNull MainVcsLogUiProperties uiProperties) {
+  FilterModel(@Nonnull String name, @Nonnull Computable<VcsLogDataPack> provider, @Nonnull MainVcsLogUiProperties uiProperties) {
     myName = name;
     myUiProperties = uiProperties;
     myDataPackProvider = provider;
@@ -61,10 +65,10 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
   }
 
   @Nullable
-  protected abstract Filter createFilter(@NotNull List<String> values);
+  protected abstract Filter createFilter(@Nonnull List<String> values);
 
-  @NotNull
-  protected abstract List<String> getFilterValues(@NotNull Filter filter);
+  @Nonnull
+  protected abstract List<String> getFilterValues(@Nonnull Filter filter);
 
   @Nullable
   protected Filter getLastFilter() {
@@ -75,12 +79,12 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   VcsLogDataPack getDataPack() {
     return myDataPackProvider.compute();
   }
 
-  void addSetFilterListener(@NotNull Runnable runnable) {
+  void addSetFilterListener(@Nonnull Runnable runnable) {
     mySetFilterListeners.add(runnable);
   }
 }

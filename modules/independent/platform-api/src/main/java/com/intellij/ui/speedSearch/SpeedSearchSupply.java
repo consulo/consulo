@@ -17,8 +17,8 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -37,12 +37,12 @@ public abstract class SpeedSearchSupply {
   public static final Key<String> SPEED_SEARCH_CURRENT_QUERY = Key.create("SPEED_SEARCH_CURRENT_QUERY");
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@NotNull final JComponent component) {
+  public static SpeedSearchSupply getSupply(@Nonnull final JComponent component) {
     return getSupply(component, false);
   }
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@NotNull final JComponent component, boolean evenIfInactive) {
+  public static SpeedSearchSupply getSupply(@Nonnull final JComponent component, boolean evenIfInactive) {
     SpeedSearchSupply speedSearch = (SpeedSearchSupply)component.getClientProperty(SPEED_SEARCH_COMPONENT_MARKER);
 
     if (evenIfInactive) {
@@ -53,7 +53,7 @@ public abstract class SpeedSearchSupply {
   }
 
   @Nullable
-  public abstract Iterable<TextRange> matchingFragments(@NotNull final String text);
+  public abstract Iterable<TextRange> matchingFragments(@Nonnull final String text);
 
   /**
    * Selects element according to search criteria changes
@@ -77,12 +77,12 @@ public abstract class SpeedSearchSupply {
     });
   }
 
-  public abstract void addChangeListener(@NotNull PropertyChangeListener listener);
-  public abstract void removeChangeListener(@NotNull PropertyChangeListener listener);
+  public abstract void addChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void removeChangeListener(@Nonnull PropertyChangeListener listener);
 
   /**
    * Find an element matching the searching query in the underlying component and select it there. Speed-search popup is not affected.
    * @param searchQuery text that the selected element should match
    */
-  public abstract void findAndSelectElement(@NotNull String searchQuery);
+  public abstract void findAndSelectElement(@Nonnull String searchQuery);
 }

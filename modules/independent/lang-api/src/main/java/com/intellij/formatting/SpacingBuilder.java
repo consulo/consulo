@@ -6,8 +6,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class SpacingBuilder {
     protected final boolean myKeepLineBreaks;
     protected final int myKeepBlankLines;
 
-    private SpacingRule(@NotNull RuleCondition condition, int minSpaces, int maxSpaces, int minLF, boolean keepLineBreaks, int keepBlankLines) {
+    private SpacingRule(@Nonnull RuleCondition condition, int minSpaces, int maxSpaces, int minLF, boolean keepLineBreaks, int keepBlankLines) {
       myRuleCondition = condition;
       myMinSpaces = minSpaces;
       myMaxSpaces = maxSpaces;
@@ -33,19 +32,19 @@ public class SpacingBuilder {
       myKeepBlankLines = keepBlankLines;
     }
 
-    public boolean matches(@NotNull ASTBlock parentBlock, @NotNull ASTBlock childBlock1, @NotNull ASTBlock childBlock2) {
+    public boolean matches(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
       return myRuleCondition.matches(parentBlock.getNode().getElementType(),
                                      childBlock1.getNode().getElementType(),
                                      childBlock2.getNode().getElementType());
     }
 
-    public Spacing createSpacing(@NotNull ASTBlock parentBlock, @NotNull ASTBlock childBlock1, @NotNull ASTBlock childBlock2) {
+    public Spacing createSpacing(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
       return Spacing.createSpacing(myMinSpaces, myMaxSpaces, myMinLF, myKeepLineBreaks, myKeepBlankLines);
     }
   }
 
   private static class DependentLFSpacingRule extends SpacingRule {
-    public DependentLFSpacingRule(@NotNull RuleCondition condition,
+    public DependentLFSpacingRule(@Nonnull RuleCondition condition,
                                   int minSpaces,
                                   int maxSpaces,
                                   boolean keepLineBreaks,
@@ -54,7 +53,7 @@ public class SpacingBuilder {
     }
 
     @Override
-    public Spacing createSpacing(@NotNull ASTBlock parentBlock, @NotNull ASTBlock childBlock1, @NotNull ASTBlock childBlock2) {
+    public Spacing createSpacing(@Nonnull ASTBlock parentBlock, @Nonnull ASTBlock childBlock1, @Nonnull ASTBlock childBlock2) {
       final TextRange range = parentBlock.getNode().getTextRange();
       return Spacing.createDependentLFSpacing(myMinSpaces, myMaxSpaces, range, myKeepLineBreaks, myKeepBlankLines);
     }
@@ -71,7 +70,7 @@ public class SpacingBuilder {
       myChild2Type = child2Type;
     }
 
-    private boolean matches(@NotNull IElementType parentType, @NotNull IElementType firstChildType, @NotNull IElementType secondChildType) {
+    private boolean matches(@Nonnull IElementType parentType, @Nonnull IElementType firstChildType, @Nonnull IElementType secondChildType) {
       return ((myParentType == null || myParentType.contains(parentType)) &&
               (myChild1Type == null || myChild1Type.contains(firstChildType)) &&
               (myChild2Type == null || myChild2Type.contains(secondChildType)));
@@ -190,7 +189,7 @@ public class SpacingBuilder {
    * @param codeStyleSettings The root code style settings.
    * @param language          The language to obtain settings for.
    */
-  public SpacingBuilder(@NotNull CodeStyleSettings codeStyleSettings, @NotNull Language language) {
+  public SpacingBuilder(@Nonnull CodeStyleSettings codeStyleSettings, @Nonnull Language language) {
     myCodeStyleSettings = codeStyleSettings.getCommonSettings(language);
   }
 
@@ -199,7 +198,7 @@ public class SpacingBuilder {
    * @param languageCodeStyleSettings The language code style settings. Note that <code>getLanguage()</code> method must not
    *                                  return null!
    */
-  public SpacingBuilder(@NotNull CommonCodeStyleSettings languageCodeStyleSettings) {
+  public SpacingBuilder(@Nonnull CommonCodeStyleSettings languageCodeStyleSettings) {
     assert languageCodeStyleSettings.getLanguage() != null : "Only language code style settings are accepted (getLanguage() != null)";
     myCodeStyleSettings = languageCodeStyleSettings;
   }
@@ -318,7 +317,7 @@ public class SpacingBuilder {
     return this;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Spacing getSpacing(Block parent, Block child1, Block child2) {
     if (!(parent instanceof ASTBlock) || !(child1 instanceof ASTBlock) || !(child2 instanceof ASTBlock)) {
       return null;

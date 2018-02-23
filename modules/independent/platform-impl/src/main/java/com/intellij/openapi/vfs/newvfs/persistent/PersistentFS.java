@@ -24,8 +24,9 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredWriteAction;
 
 import java.io.IOException;
@@ -55,19 +56,19 @@ public abstract class PersistentFS extends ManagingFS {
 
   public abstract void clearIdCache();
 
-  @NotNull
-  public abstract String[] listPersisted(@NotNull VirtualFile parent);
+  @Nonnull
+  public abstract String[] listPersisted(@Nonnull VirtualFile parent);
 
-  @NotNull
-  public abstract FSRecords.NameId[] listAll(@NotNull VirtualFile parent);
+  @Nonnull
+  public abstract FSRecords.NameId[] listAll(@Nonnull VirtualFile parent);
 
-  public abstract int getId(@NotNull VirtualFile parent, @NotNull String childName, @NotNull NewVirtualFileSystem delegate);
+  public abstract int getId(@Nonnull VirtualFile parent, @Nonnull String childName, @Nonnull NewVirtualFileSystem delegate);
 
   public abstract String getName(int id);
 
-  public abstract long getLastRecordedLength(@NotNull VirtualFile file);
+  public abstract long getLastRecordedLength(@Nonnull VirtualFile file);
 
-  public abstract boolean isHidden(@NotNull VirtualFile file);
+  public abstract boolean isHidden(@Nonnull VirtualFile file);
 
   @Attributes
   public abstract int getFileAttributes(int id);
@@ -81,25 +82,25 @@ public abstract class PersistentFS extends ManagingFS {
   @Nullable
   public abstract NewVirtualFile findFileByIdIfCached(int id);
 
-  public abstract int storeUnlinkedContent(@NotNull byte[] bytes);
+  public abstract int storeUnlinkedContent(@Nonnull byte[] bytes);
 
-  @NotNull
+  @Nonnull
   public abstract byte[] contentsToByteArray(int contentId) throws IOException;
 
-  @NotNull
-  public abstract byte[] contentsToByteArray(@NotNull VirtualFile file, boolean cacheContent) throws IOException;
+  @Nonnull
+  public abstract byte[] contentsToByteArray(@Nonnull VirtualFile file, boolean cacheContent) throws IOException;
 
-  public abstract int acquireContent(@NotNull VirtualFile file);
+  public abstract int acquireContent(@Nonnull VirtualFile file);
 
   public abstract void releaseContent(int contentId);
 
-  public abstract int getCurrentContentId(@NotNull VirtualFile file);
+  public abstract int getCurrentContentId(@Nonnull VirtualFile file);
 
   @RequiredWriteAction
-  public abstract void processEvents(@NotNull List<VFileEvent> events);
+  public abstract void processEvents(@Nonnull List<VFileEvent> events);
 
-  @NotNull
-  public static NewVirtualFileSystem replaceWithNativeFS(@NotNull final NewVirtualFileSystem fs) {
+  @Nonnull
+  public static NewVirtualFileSystem replaceWithNativeFS(@Nonnull final NewVirtualFileSystem fs) {
     if (SystemInfo.isWindows &&
         !(fs instanceof Win32LocalFileSystem) &&
         fs.getProtocol().equals(LocalFileSystem.PROTOCOL) &&

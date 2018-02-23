@@ -19,7 +19,7 @@ import com.intellij.util.containers.ConcurrentWeakFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -52,11 +52,11 @@ public abstract class AbstractBundle {
     myPathToBundle = "messages." + getClass().getName();
   }
 
-  protected AbstractBundle(@NonNls @NotNull String pathToBundle) {
+  protected AbstractBundle(@NonNls @Nonnull String pathToBundle) {
     myPathToBundle = pathToBundle;
   }
 
-  public String getMessage(@NotNull String key, Object... params) {
+  public String getMessage(@Nonnull String key, Object... params) {
     return CommonBundle.message(getBundle(), key, params);
   }
 
@@ -79,7 +79,7 @@ public abstract class AbstractBundle {
             }
           };
 
-  public static ResourceBundle getResourceBundle(@NotNull String pathToBundle, @NotNull ClassLoader loader) {
+  public static ResourceBundle getResourceBundle(@Nonnull String pathToBundle, @Nonnull ClassLoader loader) {
     Map<String, SoftReference<ResourceBundle>> map = ourCache.get(loader);
     SoftReference<ResourceBundle> reference = map.get(pathToBundle);
     ResourceBundle result = reference == null ? null : reference.get();

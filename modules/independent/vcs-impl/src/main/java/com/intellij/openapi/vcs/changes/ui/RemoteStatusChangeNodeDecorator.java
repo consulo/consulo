@@ -20,19 +20,19 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.RemoteRevisionsCache;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RemoteStatusChangeNodeDecorator implements ChangeNodeDecorator {
   private final RemoteRevisionsCache myRemoteRevisionsCache;
   private final ChangeListRemoteState myListState;
   private final int myIdx;
 
-  public RemoteStatusChangeNodeDecorator(@NotNull RemoteRevisionsCache remoteRevisionsCache) {
+  public RemoteStatusChangeNodeDecorator(@Nonnull RemoteRevisionsCache remoteRevisionsCache) {
     this(remoteRevisionsCache, null, -1);
   }
 
-  public RemoteStatusChangeNodeDecorator(@NotNull RemoteRevisionsCache remoteRevisionsCache,
+  public RemoteStatusChangeNodeDecorator(@Nonnull RemoteRevisionsCache remoteRevisionsCache,
                                          @Nullable ChangeListRemoteState listRemoteState,
                                          int idx) {
     myRemoteRevisionsCache = remoteRevisionsCache;

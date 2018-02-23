@@ -1,12 +1,12 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface DeploymentNode {
-  @NotNull
+  @Nonnull
   ServerNode getServerNode();
 
   boolean isUndeployActionEnabled();

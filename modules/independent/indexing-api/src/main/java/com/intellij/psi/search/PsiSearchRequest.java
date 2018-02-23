@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -28,19 +28,19 @@ public class PsiSearchRequest {
   public final RequestResultProcessor processor;
   public final String containerName;
 
-  public PsiSearchRequest(@NotNull SearchScope searchScope,
-                          @NotNull String word,
+  public PsiSearchRequest(@Nonnull SearchScope searchScope,
+                          @Nonnull String word,
                           short searchContext,
                           boolean caseSensitive,
-                          @NotNull RequestResultProcessor processor) {
+                          @Nonnull RequestResultProcessor processor) {
     this(searchScope, word, searchContext, caseSensitive, null, processor);
   }
-  public PsiSearchRequest(@NotNull SearchScope searchScope,
-                          @NotNull String word,
+  public PsiSearchRequest(@Nonnull SearchScope searchScope,
+                          @Nonnull String word,
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          @NotNull RequestResultProcessor processor) {
+                          @Nonnull RequestResultProcessor processor) {
     this.containerName = containerName;
     if (word.isEmpty()) {
       throw new IllegalArgumentException("Cannot search for elements with empty text");

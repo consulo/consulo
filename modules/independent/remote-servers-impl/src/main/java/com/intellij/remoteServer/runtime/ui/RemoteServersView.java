@@ -18,18 +18,18 @@ package com.intellij.remoteServer.runtime.ui;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.remoteServer.runtime.ServerConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class RemoteServersView {
-  @NotNull
-  public static RemoteServersView getInstance(@NotNull Project project) {
+  @Nonnull
+  public static RemoteServersView getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, RemoteServersView.class);
   }
 
-  public abstract void showServerConnection(@NotNull ServerConnection<?> connection);
+  public abstract void showServerConnection(@Nonnull ServerConnection<?> connection);
 
-  public abstract void showDeployment(@NotNull ServerConnection<?> connection, @NotNull String deploymentName);
+  public abstract void showDeployment(@Nonnull ServerConnection<?> connection, @Nonnull String deploymentName);
 }

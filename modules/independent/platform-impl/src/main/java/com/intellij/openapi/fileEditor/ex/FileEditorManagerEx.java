@@ -29,8 +29,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,20 +59,20 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   @Nullable
   public abstract JComponent getPreferredFocusedComponent();
 
-  @NotNull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract VirtualFile getFile(@NotNull FileEditor editor);
+  public abstract VirtualFile getFile(@Nonnull FileEditor editor);
 
-  public abstract void updateFilePresentation(@NotNull VirtualFile file);
+  public abstract void updateFilePresentation(@Nonnull VirtualFile file);
 
   /**
    * @return current window in splitters
    */
   public abstract EditorWindow getCurrentWindow();
 
-  @NotNull
+  @Nonnull
   public abstract AsyncResult<EditorWindow> getActiveWindow();
 
   public abstract void setCurrentWindow(EditorWindow window);
@@ -82,7 +82,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
    *
    * @param file file to be closed. Cannot be null.
    */
-  public abstract void closeFile(@NotNull VirtualFile file, @NotNull EditorWindow window);
+  public abstract void closeFile(@Nonnull VirtualFile file, @Nonnull EditorWindow window);
 
   public abstract void unsplitWindow();
 
@@ -92,7 +92,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
 
   public abstract boolean hasSplitOrUndockedWindows();
 
-  @NotNull
+  @Nonnull
   public abstract EditorWindow[] getWindows();
 
   /**
@@ -101,8 +101,8 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
    * is not open. The returned files have the same order as they have in the
    * tabbed container.
    */
-  @NotNull
-  public abstract VirtualFile[] getSiblings(@NotNull VirtualFile file);
+  @Nonnull
+  public abstract VirtualFile[] getSiblings(@Nonnull VirtualFile file);
 
   public abstract void createSplitter(int orientation, @Nullable EditorWindow window);
 
@@ -120,7 +120,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   public abstract VirtualFile getCurrentFile();
 
   @Nullable
-  public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@NotNull VirtualFile file);
+  public abstract Pair<FileEditor, FileEditorProvider> getSelectedEditorWithProvider(@Nonnull VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
@@ -130,38 +130,38 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
    */
   public abstract void closeAllFiles();
 
-  @NotNull
+  @Nonnull
   public abstract EditorSplitters getSplitters();
 
   @Override
-  @NotNull
-  public FileEditor[] openFile(@NotNull final VirtualFile file, final boolean focusEditor) {
+  @Nonnull
+  public FileEditor[] openFile(@Nonnull final VirtualFile file, final boolean focusEditor) {
     return openFileWithProviders(file, focusEditor, false).getFirst();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileEditor[] openFile(@NotNull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
+  public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
     return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
   }
 
-  @NotNull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
+  @Nonnull
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
-  @NotNull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@NotNull VirtualFile file, boolean focusEditor, @NotNull EditorWindow window);
+  @Nonnull
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull EditorWindow window);
 
-  public abstract boolean isChanged(@NotNull EditorComposite editor);
+  public abstract boolean isChanged(@Nonnull EditorComposite editor);
 
-  public abstract EditorWindow getNextWindow(@NotNull final EditorWindow window);
+  public abstract EditorWindow getNextWindow(@Nonnull final EditorWindow window);
 
-  public abstract EditorWindow getPrevWindow(@NotNull final EditorWindow window);
+  public abstract EditorWindow getPrevWindow(@Nonnull final EditorWindow window);
 
   public abstract boolean isInsideChange();
 
   @Override
   @Nullable
-  public final Object getData(@NotNull Key dataId, @NotNull Editor editor, @NotNull Caret caret) {
+  public final Object getData(@Nonnull Key dataId, @Nonnull Editor editor, @Nonnull Caret caret) {
     for (final EditorDataProvider dataProvider : myDataProviders) {
       final Object o = dataProvider.getData(dataId, editor, caret);
       if (o != null) return o;
@@ -170,7 +170,7 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
   }
 
   @Override
-  public void registerExtraEditorDataProvider(@NotNull final EditorDataProvider provider, Disposable parentDisposable) {
+  public void registerExtraEditorDataProvider(@Nonnull final EditorDataProvider provider, Disposable parentDisposable) {
     myDataProviders.add(provider);
     if (parentDisposable != null) {
       Disposer.register(parentDisposable, () -> myDataProviders.remove(provider));
@@ -191,6 +191,6 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
 
   public abstract EditorSplitters getSplittersFor(Component c);
 
-  @NotNull
-  public abstract ActionCallback notifyPublisher(@NotNull Runnable runnable);
+  @Nonnull
+  public abstract ActionCallback notifyPublisher(@Nonnull Runnable runnable);
 }

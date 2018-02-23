@@ -17,7 +17,7 @@
 package com.intellij.vcs.log.graph.utils.impl;
 
 import com.intellij.vcs.log.graph.utils.Flags;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.BitSet;
 
@@ -25,7 +25,8 @@ public class BitSetFlags implements Flags {
 
   private final int mySize;
 
-  @NotNull private final BitSet myBitSet;
+  @Nonnull
+  private final BitSet myBitSet;
 
   // default value is false
   public BitSetFlags(int size) {

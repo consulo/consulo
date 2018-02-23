@@ -21,9 +21,9 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -34,7 +34,8 @@ public abstract class DiffRequest {
   @NonNls private static final String COMMON_DIFF_GROUP_KEY = "DiffWindow";
 
   private String myGroupKey = COMMON_DIFF_GROUP_KEY;
-  @Nullable private final Project myProject;
+  @Nullable
+  private final Project myProject;
   private ToolbarAddons myToolbarAddons = ToolbarAddons.NOTHING;
   private Factory<JComponent> myBottomComponentFactory = null;
   private final HashSet myHints = new HashSet();
@@ -48,7 +49,7 @@ public abstract class DiffRequest {
     myAdditional = new ArrayList<>(0);
   }
 
-  public void setToolbarAddons(@NotNull ToolbarAddons toolbarAddons) {
+  public void setToolbarAddons(@Nonnull ToolbarAddons toolbarAddons) {
     myToolbarAddons = toolbarAddons;
     if (haveMultipleLayers()) {
       for (Pair<String, DiffRequest> pair : myAdditional) {
@@ -77,7 +78,7 @@ public abstract class DiffRequest {
   /**
    * @return contents to compare
    */
-  @NotNull
+  @Nonnull
   public abstract DiffContent[] getContents();
 
   public DiffViewerType getType() {

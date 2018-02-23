@@ -16,12 +16,10 @@
 
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringActionHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IntroduceVariableAction extends BasePlatformRefactoringAction {
   public IntroduceVariableAction() {
@@ -34,12 +32,12 @@ public class IntroduceVariableAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  protected boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     return false;
   }
 
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return provider.getIntroduceVariableHandler();
   }
 }

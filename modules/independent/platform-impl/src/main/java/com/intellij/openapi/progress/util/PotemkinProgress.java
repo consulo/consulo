@@ -21,8 +21,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.Semaphore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import sun.awt.SunToolkit;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   private long myLastUiUpdate = System.currentTimeMillis();
   private final LinkedBlockingQueue<InputEvent> myEventQueue = new LinkedBlockingQueue<>();
 
-  public PotemkinProgress(@NotNull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nullable String cancelText) {
+  public PotemkinProgress(@Nonnull String title, @Nullable Project project, @Nullable JComponent parentComponent, @Nullable String cancelText) {
     super(cancelText != null,false, project, parentComponent, cancelText);
     setTitle(title);
     ApplicationManager.getApplication().assertIsDispatchThread();
@@ -59,7 +59,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ProgressDialog getDialog() {
     return Objects.requireNonNull(super.getDialog());
@@ -165,7 +165,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   /** Executes the action in EDT, paints itself inside checkCanceled calls. */
-  public void runInSwingThread(@NotNull Runnable action) {
+  public void runInSwingThread(@Nonnull Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     try {
       ProgressManager.getInstance().runProcess(action, this);
@@ -177,7 +177,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   /** Executes the action in a background thread, block Swing thread, handles selected input events and paints itself periodically. */
-  public void runInBackground(@NotNull Runnable action) {
+  public void runInBackground(@Nonnull Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     enterModality();
 
@@ -195,7 +195,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
     }
   }
 
-  private void ensureBackgroundThreadStarted(@NotNull Runnable action) {
+  private void ensureBackgroundThreadStarted(@Nonnull Runnable action) {
     Semaphore started = new Semaphore();
     started.down();
     ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().runProcess(() -> {

@@ -17,7 +17,7 @@ package consulo.ui.impl;
 
 import consulo.ide.eap.EarlyAccessProgramDescriptor;
 import consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ public class ModalityPerProjectEAPDescriptor extends EarlyAccessProgramDescripto
     return EarlyAccessProgramManager.is(ModalityPerProjectEAPDescriptor.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Modality per project";

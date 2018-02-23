@@ -36,8 +36,8 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class EncodingUtil {
 
   // check if file can be loaded in the encoding correctly:
   // returns true if bytes on disk, converted to text with the charset, converted back to bytes matched
-  static Magic8 isSafeToReloadIn(@NotNull VirtualFile virtualFile, @NotNull String text, @NotNull byte[] bytes, @NotNull Charset charset) {
+  static Magic8 isSafeToReloadIn(@Nonnull VirtualFile virtualFile, @Nonnull String text, @Nonnull byte[] bytes, @Nonnull Charset charset) {
     // file has BOM but the charset hasn't
     byte[] bom = virtualFile.getBOM();
     if (bom != null && !CharsetToolkit.canHaveBom(charset, bom)) return Magic8.NO_WAY;
@@ -86,7 +86,7 @@ public class EncodingUtil {
     return !Arrays.equals(bytesToSave, bytes) ? Magic8.NO_WAY : loaded.equals(text) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
   }
 
-  static Magic8 isSafeToConvertTo(@NotNull VirtualFile virtualFile, @NotNull String text, @NotNull byte[] bytesOnDisk, @NotNull Charset charset) {
+  static Magic8 isSafeToConvertTo(@Nonnull VirtualFile virtualFile, @Nonnull String text, @Nonnull byte[] bytesOnDisk, @Nonnull Charset charset) {
     try {
       String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
       String textToSave = lineSeparator.equals("\n") ? text : StringUtil.convertLineSeparators(text, lineSeparator);
@@ -105,7 +105,7 @@ public class EncodingUtil {
   }
 
   @RequiredDispatchThread
-  public static void saveIn(@NotNull final Document document, final Editor editor, @NotNull final VirtualFile virtualFile, @NotNull final Charset charset) {
+  public static void saveIn(@Nonnull final Document document, final Editor editor, @Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     documentManager.saveDocument(document);
     final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
@@ -138,7 +138,7 @@ public class EncodingUtil {
     });
   }
 
-  static void reloadIn(@NotNull final VirtualFile virtualFile, @NotNull final Charset charset) {
+  static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull final Charset charset) {
     final FileDocumentManager documentManager = FileDocumentManager.getInstance();
     //Project project = ProjectLocator.getInstance().guessProjectForFile(myFile);
     //if (documentManager.isFileModified(myFile)) {
@@ -156,7 +156,7 @@ public class EncodingUtil {
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(disposable);
     connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
       @Override
-      public void beforeFileContentReload(VirtualFile file, @NotNull Document document) {
+      public void beforeFileContentReload(VirtualFile file, @Nonnull Document document) {
         if (!file.equals(virtualFile)) return;
         Disposer.dispose(disposable); // disconnect
 
@@ -182,8 +182,8 @@ public class EncodingUtil {
   }
 
   // returns (hardcoded charset from the file type, explanation) or (null, null) if file type does not restrict encoding
-  @NotNull
-  static Pair<Charset, String> checkHardcodedCharsetFileType(@NotNull VirtualFile virtualFile) {
+  @Nonnull
+  static Pair<Charset, String> checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
     FileType fileType = virtualFile.getFileType();
     if (fileType.isBinary()) return Pair.create(null, "binary file");
     if(fileType instanceof FileTypeWithPredefinedCharset) {
@@ -192,9 +192,9 @@ public class EncodingUtil {
     return Pair.create(null, null);
   }
 
-  @NotNull
+  @Nonnull
   // returns pair (existing charset (null means N/A); failReason: null means enabled, notnull means disabled and contains error message)
-  public static Pair<Charset, String> checkCanReload(@NotNull VirtualFile virtualFile) {
+  public static Pair<Charset, String> checkCanReload(@Nonnull VirtualFile virtualFile) {
     if (virtualFile.isDirectory()) {
       return Pair.create(null, "file is a directory");
     }
@@ -225,7 +225,7 @@ public class EncodingUtil {
   }
 
   @Nullable("null means enabled, notnull means disabled and contains error message")
-  public static String checkCanConvert(@NotNull VirtualFile virtualFile) {
+  public static String checkCanConvert(@Nonnull VirtualFile virtualFile) {
     if (virtualFile.isDirectory()) {
       return "file is a directory";
     }
@@ -250,7 +250,7 @@ public class EncodingUtil {
 
   // null means enabled, (current charset, error description) otherwise
   @Nullable
-  public static Pair<Charset, String> checkSomeActionEnabled(@NotNull VirtualFile selectedFile) {
+  public static Pair<Charset, String> checkSomeActionEnabled(@Nonnull VirtualFile selectedFile) {
     String saveError = checkCanConvert(selectedFile);
     if (saveError == null) return null;
     Pair<Charset, String> reloadError = checkCanReload(selectedFile);

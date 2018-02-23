@@ -23,7 +23,7 @@ import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +85,7 @@ public class IssueNavigationConfiguration extends SimpleModificationTracker impl
     }
 
     @Override
-    public int compareTo(@NotNull Object o) {
+    public int compareTo(@Nonnull Object o) {
       if (!(o instanceof LinkMatch)) {
         return 0;
       }

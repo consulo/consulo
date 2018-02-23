@@ -15,18 +15,18 @@
  */
 package com.intellij.openapi.vcs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class VcsKey {
-  @NotNull
+  @Nonnull
   private final String myName;
 
   // to forbid creation outside AbstractVcs
-  VcsKey(@NotNull final String name) {
+  VcsKey(@Nonnull final String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }

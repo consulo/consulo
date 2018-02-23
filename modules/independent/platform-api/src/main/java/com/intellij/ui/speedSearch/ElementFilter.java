@@ -18,7 +18,7 @@ package com.intellij.ui.speedSearch;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ActionCallback;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;

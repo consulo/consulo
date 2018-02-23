@@ -28,7 +28,7 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.configuration.localServer.LocalRunner;
 import com.intellij.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -60,12 +60,12 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
-    public boolean isApplicable(@NotNull Project project) {
+    public boolean isApplicable(@Nonnull Project project) {
       return  myServerType.isConfigurationTypeIsAvailable(project);
     }
 
     @Override
-    public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
+    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
       DeployToServerRunConfiguration deployConfiguration = (DeployToServerRunConfiguration)configuration;
       if (deployConfiguration.getServerName() == null) {
         RemoteServer<?> server = ContainerUtil.getFirstItem(RemoteServersManager.getInstance().getServers(myServerType));
@@ -106,7 +106,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
-    public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
+    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
       LocalServerRunConfiguration deployConfiguration = (LocalServerRunConfiguration)configuration;
 
       if (deployConfiguration.getDeploymentSource() == null) {
@@ -121,7 +121,7 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
-    public boolean isApplicable(@NotNull Project project) {
+    public boolean isApplicable(@Nonnull Project project) {
       return  myServerType.isConfigurationTypeIsAvailable(project);
     }
 

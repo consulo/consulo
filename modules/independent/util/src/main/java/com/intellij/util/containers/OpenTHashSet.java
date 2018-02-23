@@ -17,7 +17,7 @@ package com.intellij.util.containers;
 
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;

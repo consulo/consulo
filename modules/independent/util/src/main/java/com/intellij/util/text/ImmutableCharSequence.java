@@ -15,15 +15,15 @@
  */
 package com.intellij.util.text;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ImmutableCharSequence implements CharSequence {
 
-  public static CharSequence asImmutable(@NotNull final CharSequence cs) {
+  public static CharSequence asImmutable(@Nonnull final CharSequence cs) {
     return isImmutable(cs) ? cs : cs.toString();
   }
 
-  public static boolean isImmutable(@NotNull final CharSequence cs) {
+  public static boolean isImmutable(@Nonnull final CharSequence cs) {
     if (cs instanceof ImmutableCharSequence) return true;
     return cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence)cs).getBaseSequence());
   }

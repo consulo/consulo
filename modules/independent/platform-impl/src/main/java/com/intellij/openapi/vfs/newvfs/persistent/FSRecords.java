@@ -39,8 +39,8 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.storage.*;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,7 +129,7 @@ public class FSRecords implements Forceable {
     w = lock.writeLock();
   }
 
-  static void writeAttributesToRecord(int id, int parentId, @NotNull FileAttributes attributes, @NotNull String name) {
+  static void writeAttributesToRecord(int id, int parentId, @Nonnull FileAttributes attributes, @Nonnull String name) {
     w.lock();
     try {
       setName(id, name);
@@ -278,7 +278,7 @@ public class FSRecords implements Forceable {
           }
         };
         myContents = new RefCountingStorage(contentsFile.getPath(), CapacityAllocationPolicy.FIVE_PERCENT_FOR_GROWTH, useSnappyForCompression) {
-          @NotNull
+          @Nonnull
           @Override
           protected ExecutorService createExecutor() {
             return AppExecutorUtil.createBoundedApplicationPoolExecutor("FSRecords pool",1);
@@ -519,7 +519,7 @@ public class FSRecords implements Forceable {
     private static final int RESERVED_ATTR_ID = bulkAttrReadSupport ? 1 : 0;
     private static final int FIRST_ATTR_ID_OFFSET = bulkAttrReadSupport ? RESERVED_ATTR_ID : 0;
 
-    private static int getAttributeId(@NotNull String attId) throws IOException {
+    private static int getAttributeId(@Nonnull String attId) throws IOException {
       if (persistentAttributesList) {
         return myAttributesList.getId(attId) + FIRST_ATTR_ID_OFFSET;
       }
@@ -788,7 +788,7 @@ public class FSRecords implements Forceable {
     }
   }
 
-  public static int findRootRecord(@NotNull String rootUrl) {
+  public static int findRootRecord(@Nonnull String rootUrl) {
     w.lock();
 
     try {
@@ -927,7 +927,7 @@ public class FSRecords implements Forceable {
     public final CharSequence name;
     public final int nameId;
 
-    public NameId(int id, int nameId, @NotNull CharSequence name) {
+    public NameId(int id, int nameId, @Nonnull CharSequence name) {
       this.id = id;
       this.nameId = nameId;
       this.name = name;
@@ -939,7 +939,7 @@ public class FSRecords implements Forceable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static NameId[] listAll(int parentId) {
     try {
       r.lock();
@@ -982,7 +982,7 @@ public class FSRecords implements Forceable {
     }
   }
 
-  public static void updateList(int id, @NotNull int[] children) {
+  public static void updateList(int id, @Nonnull int[] children) {
     w.lock();
     try {
       DbConnection.markDirty();
@@ -1065,8 +1065,8 @@ public class FSRecords implements Forceable {
   }
 
   // returns id, parent(id), parent(parent(id)), ...  (already cached id or rootId)
-  @NotNull
-  public static TIntArrayList getParents(int id, @NotNull ConcurrentIntObjectMap<?> idCache) {
+  @Nonnull
+  public static TIntArrayList getParents(int id, @Nonnull ConcurrentIntObjectMap<?> idCache) {
     TIntArrayList result = new TIntArrayList(10);
     r.lock();
     try {
@@ -1177,7 +1177,7 @@ public class FSRecords implements Forceable {
     }
   }
 
-  public static void setName(int id, @NotNull String name) {
+  public static void setName(int id, @Nonnull String name) {
     w.lock();
     try {
       incModCount(id);
@@ -1567,7 +1567,7 @@ public class FSRecords implements Forceable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static DataOutputStream writeContent(int fileId, boolean readOnly) {
     return new ContentOutputStream(fileId, readOnly);
   }
@@ -1606,8 +1606,8 @@ public class FSRecords implements Forceable {
     }
   }
 
-  @NotNull
-  public static DataOutputStream writeAttribute(final int fileId, @NotNull FileAttribute att) {
+  @Nonnull
+  public static DataOutputStream writeAttribute(final int fileId, @Nonnull FileAttribute att) {
     DataOutputStream stream = new AttributeOutputStream(fileId, att);
     if (att.isVersioned()) {
       try {
@@ -1765,7 +1765,7 @@ public class FSRecords implements Forceable {
     private final FileAttribute myAttribute;
     private final int myFileId;
 
-    private AttributeOutputStream(final int fileId, @NotNull FileAttribute attribute) {
+    private AttributeOutputStream(final int fileId, @Nonnull FileAttribute attribute) {
       super(new BufferExposingByteArrayOutputStream());
       myFileId = fileId;
       myAttribute = attribute;

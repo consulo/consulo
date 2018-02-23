@@ -15,14 +15,12 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author peter
  */
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
-  @Nullable
+  @javax.annotation.Nullable
   Result fun(final Param param);
 
   /**

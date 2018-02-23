@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vfs.VfsUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -29,8 +29,8 @@ public class DescindingFilesFilter {
   private DescindingFilesFilter() {
   }
 
-  @NotNull
-  public static FilePath[] filterDescindingFiles(@NotNull FilePath[] roots, Project project) {
+  @Nonnull
+  public static FilePath[] filterDescindingFiles(@Nonnull FilePath[] roots, Project project) {
     final List<FilePath> result = new LinkedList<FilePath>();
     ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 

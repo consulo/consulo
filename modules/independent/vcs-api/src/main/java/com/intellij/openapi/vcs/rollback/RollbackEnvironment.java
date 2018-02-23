@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public interface RollbackEnvironment extends VcsProviderMarker {
    * @param listener
    * @return list of errors occurred, or an empty list if no errors occurred.
    */
-  void rollbackChanges(List<Change> changes, final List<VcsException> vcsExceptions, @NotNull final RollbackProgressListener listener);
+  void rollbackChanges(List<Change> changes, final List<VcsException> vcsExceptions, @Nonnull final RollbackProgressListener listener);
 
   /**
    * Rolls back the deletion of files which have been deleted locally but not scheduled for deletion

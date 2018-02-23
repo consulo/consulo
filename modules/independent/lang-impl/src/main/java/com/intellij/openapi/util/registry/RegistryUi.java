@@ -30,9 +30,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -272,7 +272,7 @@ public class RegistryUi implements Disposable {
         return myTable;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Action[] createActions() {
         return new Action[]{myRestoreDefaultsAction, new AbstractAction("Close") {

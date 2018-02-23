@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 
@@ -46,20 +46,20 @@ public abstract class LookupManager {
   }
 
   @Nullable
-  public LookupEx showLookup(@NotNull Editor editor, @NotNull LookupElement... items) {
+  public LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement... items) {
     return showLookup(editor, items, "", new LookupArranger.DefaultArranger());
   }
 
   @Nullable
-  public LookupEx showLookup(@NotNull Editor editor, @NotNull LookupElement[] items, @NotNull String prefix) {
+  public LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix) {
     return showLookup(editor, items, prefix, new LookupArranger.DefaultArranger());
   }
 
   @Nullable
-  public abstract LookupEx showLookup(@NotNull Editor editor,
-                                      @NotNull LookupElement[] items,
-                                      @NotNull String prefix,
-                                      @NotNull LookupArranger arranger);
+  public abstract LookupEx showLookup(@Nonnull Editor editor,
+                                      @Nonnull LookupElement[] items,
+                                      @Nonnull String prefix,
+                                      @Nonnull LookupArranger arranger);
 
   public abstract void hideActiveLookup();
 
@@ -68,11 +68,11 @@ public abstract class LookupManager {
 
   @NonNls public static final String PROP_ACTIVE_LOOKUP = "activeLookup";
 
-  public abstract void addPropertyChangeListener(@NotNull PropertyChangeListener listener);
-  public abstract void addPropertyChangeListener(@NotNull PropertyChangeListener listener, @NotNull Disposable disposable);
-  public abstract void removePropertyChangeListener(@NotNull PropertyChangeListener listener);
+  public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable disposable);
+  public abstract void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
 
-  @NotNull
-  public abstract Lookup createLookup(@NotNull Editor editor, @NotNull LookupElement[] items, @NotNull final String prefix, @NotNull LookupArranger arranger);
+  @Nonnull
+  public abstract Lookup createLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull LookupArranger arranger);
 
 }

@@ -26,20 +26,20 @@ import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.ui.UIAccess;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 
 public abstract class ProjectOpenProcessor {
-  @NotNull
+  @Nonnull
   @Language("HTML")
   public String getFileSample() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   public abstract Icon getIcon();
 
   @Nullable
@@ -47,19 +47,19 @@ public abstract class ProjectOpenProcessor {
     return getIcon();
   }
 
-  public abstract boolean canOpenProject(@NotNull File file);
+  public abstract boolean canOpenProject(@Nonnull File file);
 
   @Nullable
   @RequiredDispatchThread
   @Deprecated
   @DeprecationInfo("Use #doOpenProjectAsync()")
-  public abstract Project doOpenProject(@NotNull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
+  public abstract Project doOpenProject(@Nonnull VirtualFile virtualFile, @Nullable Project projectToClose, boolean forceOpenInNewFrame);
 
-  public void doOpenProjectAsync(@NotNull AsyncResult<Project> asyncResult,
-                                 @NotNull VirtualFile virtualFile,
+  public void doOpenProjectAsync(@Nonnull AsyncResult<Project> asyncResult,
+                                 @Nonnull VirtualFile virtualFile,
                                  @Nullable Project projectToClose,
                                  boolean forceOpenInNewFrame,
-                                 @NotNull UIAccess uiAccess) {
+                                 @Nonnull UIAccess uiAccess) {
     Project project = doOpenProject(virtualFile, projectToClose, forceOpenInNewFrame);
     if (project != null) {
       asyncResult.setDone(project);

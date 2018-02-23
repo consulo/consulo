@@ -23,7 +23,7 @@ import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.diff.impl.highlighting.Util;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -33,9 +33,10 @@ public interface DiffCorrection {
   class TrueLineBlocks implements DiffCorrection, FragmentProcessor<FragmentsCollector> {
     private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.processing.DiffCorrection.TrueLineBlocks");
     private final DiffPolicy myDiffPolicy;
-    @NotNull private final ComparisonPolicy myComparisonPolicy;
+    @Nonnull
+    private final ComparisonPolicy myComparisonPolicy;
 
-    public TrueLineBlocks(@NotNull ComparisonPolicy comparisonPolicy) {
+    public TrueLineBlocks(@Nonnull ComparisonPolicy comparisonPolicy) {
       myDiffPolicy = new DiffPolicy.LineBlocks(comparisonPolicy);
       myComparisonPolicy = comparisonPolicy;
     }
@@ -48,7 +49,7 @@ public interface DiffCorrection {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull FragmentsCollector collector) throws FilesTooBigForDiffException {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull FragmentsCollector collector) throws FilesTooBigForDiffException {
       DiffString text1 = fragment.getText1();
       DiffString text2 = fragment.getText2();
       if (!fragment.isEqual()) {
@@ -81,7 +82,7 @@ public interface DiffCorrection {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull FragmentsCollector collector) throws FilesTooBigForDiffException {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull FragmentsCollector collector) throws FilesTooBigForDiffException {
       if (!fragment.isChange()) {
         collector.add(fragment);
         return;
@@ -123,7 +124,7 @@ public interface DiffCorrection {
   }
 
   interface FragmentProcessor<Collector> {
-    void process(@NotNull DiffFragment fragment, @NotNull Collector collector) throws FilesTooBigForDiffException;
+    void process(@Nonnull DiffFragment fragment, @Nonnull Collector collector) throws FilesTooBigForDiffException;
   }
 
   class BaseFragmentRunner<ActualRunner extends BaseFragmentRunner> {
@@ -221,7 +222,7 @@ public interface DiffCorrection {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull FragmentBuffer buffer) {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull FragmentBuffer buffer) {
       if (fragment.isOneSide()) buffer.markIfNone(DEFAULT_MODE);
       else buffer.add(fragment);
     }
@@ -240,7 +241,7 @@ public interface DiffCorrection {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull FragmentBuffer buffer) {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull FragmentBuffer buffer) {
       if (fragment.isEqual()) buffer.markIfNone(EQUAL_MODE);
       else if (ComparisonPolicy.TRIM_SPACE.isEqual(fragment)) buffer.markIfNone(FORMATTING_MODE);
       else  buffer.add(fragment);
@@ -270,7 +271,7 @@ public interface DiffCorrection {
     }
 
     @Override
-    public void process(@NotNull DiffFragment fragment, @NotNull FragmentBuffer buffer) {
+    public void process(@Nonnull DiffFragment fragment, @Nonnull FragmentBuffer buffer) {
       if (fragment.isEqual()) buffer.add(fragment);
       else if (fragment.isOneSide()) {
         DiffString text = FragmentSide.chooseSide(fragment).getText(fragment);

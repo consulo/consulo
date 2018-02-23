@@ -45,8 +45,8 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.beans.PropertyChangeListener;
@@ -106,7 +106,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       return myText.subSequence(start, end);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String toString() {
       return doGetText();
@@ -114,11 +114,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   };
   private final AtomicInteger sequence = new AtomicInteger();
 
-  public DocumentImpl(@NotNull String text) {
+  public DocumentImpl(@Nonnull String text) {
     this(text, false);
   }
 
-  public DocumentImpl(@NotNull CharSequence chars) {
+  public DocumentImpl(@Nonnull CharSequence chars) {
     this(chars, false);
   }
 
@@ -127,11 +127,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
    * The noticeable peculiarity of DocumentImpl behavior in this mode is that DocumentImpl won't suppress ProcessCancelledException
    * thrown from listeners during changedUpdate event, so the exception will be rethrown and rest of the listeners WON'T be notified.
    */
-  public DocumentImpl(@NotNull CharSequence chars, boolean forUseInNonAWTThread) {
+  public DocumentImpl(@Nonnull CharSequence chars, boolean forUseInNonAWTThread) {
     this(chars, false, forUseInNonAWTThread);
   }
 
-  public DocumentImpl(@NotNull CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
+  public DocumentImpl(@Nonnull CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
     setAcceptSlashR(acceptSlashR);
     assertValidSeparators(chars);
     myText = CharArrayUtil.createImmutableCharSequence(chars);
@@ -169,7 +169,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] getChars() {
     return CharArrayUtil.fromSequence(myText);
   }
@@ -195,7 +195,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   boolean stripTrailingSpaces(@Nullable final Project project,
                               boolean inChangedLinesOnly,
                               boolean skipCaretLines,
-                              @NotNull int[] caretOffsets) {
+                              @Nonnull int[] caretOffsets) {
     if (!isStripTrailingSpacesEnabled) {
       return true;
     }
@@ -293,7 +293,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return markAsNeedsStrippingLater;
   }
 
-  private static int getMaxSpacesToLeave(int line, @NotNull List<StripTrailingSpacesFilter> filters) {
+  private static int getMaxSpacesToLeave(int line, @Nonnull List<StripTrailingSpacesFilter> filters) {
     for (StripTrailingSpacesFilter filter :  filters) {
       if (filter instanceof SmartStripTrailingSpacesFilter) {
         return ((SmartStripTrailingSpacesFilter)filter).getTrailingSpacesToLeave(line);
@@ -326,16 +326,16 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return !myIsReadOnly;
   }
 
-  private RangeMarkerTree<RangeMarkerEx> treeFor(@NotNull RangeMarkerEx rangeMarker) {
+  private RangeMarkerTree<RangeMarkerEx> treeFor(@Nonnull RangeMarkerEx rangeMarker) {
     return rangeMarker instanceof PersistentRangeMarker ? myPersistentRangeMarkers : myRangeMarkers;
   }
   @Override
-  public boolean removeRangeMarker(@NotNull RangeMarkerEx rangeMarker) {
+  public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
     return treeFor(rangeMarker).removeInterval(rangeMarker);
   }
 
   @Override
-  public void registerRangeMarker(@NotNull RangeMarkerEx rangeMarker,
+  public void registerRangeMarker(@Nonnull RangeMarkerEx rangeMarker,
                                   int start,
                                   int end,
                                   boolean greedyToLeft,
@@ -355,7 +355,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
     LOG.assertTrue(startOffset <= endOffset, "Should be startOffset <= endOffset");
     RangeMarker block = createRangeMarker(startOffset, endOffset, true);
@@ -364,12 +364,12 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void removeGuardedBlock(@NotNull RangeMarker block) {
+  public void removeGuardedBlock(@Nonnull RangeMarker block) {
     myGuardedBlocks.remove(block);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<RangeMarker> getGuardedBlocks() {
     return myGuardedBlocks;
   }
@@ -423,13 +423,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(int startOffset, int endOffset) {
     return createRangeMarker(startOffset, endOffset, false);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
     if (!(0 <= startOffset && startOffset <= endOffset && endOffset <= getTextLength())) {
       LOG.error("Incorrect offsets: startOffset=" + startOffset + ", endOffset=" + endOffset + ", text length=" + getTextLength());
@@ -450,13 +450,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void replaceText(@NotNull CharSequence chars, long newModificationStamp) {
+  public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
     replaceString(0, getTextLength(), chars, newModificationStamp, true); //TODO: optimization!!!
     clearLineModificationFlags();
   }
 
   @Override
-  public void insertString(int offset, @NotNull CharSequence s) {
+  public void insertString(int offset, @Nonnull CharSequence s) {
     if (offset < 0) throw new IndexOutOfBoundsException("Wrong offset: " + offset);
     if (offset > getTextLength()) {
       throw new IndexOutOfBoundsException(
@@ -532,11 +532,11 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void replaceString(int startOffset, int endOffset, @NotNull CharSequence s) {
+  public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
     replaceString(startOffset, endOffset, s, LocalTimeCounter.currentTime(), false);
   }
 
-  private void replaceString(int startOffset, int endOffset, @NotNull CharSequence s, final long newModificationStamp, boolean wholeTextReplaced) {
+  private void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s, final long newModificationStamp, boolean wholeTextReplaced) {
     assertBounds(startOffset, endOffset);
 
     assertWriteAccess();
@@ -616,7 +616,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  private void assertValidSeparators(@NotNull CharSequence s) {
+  private void assertValidSeparators(@Nonnull CharSequence s) {
     if (myAcceptSlashR) return;
     StringUtil.assertValidSeparators(s);
   }
@@ -652,7 +652,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  private void throwGuardedFragment(@NotNull RangeMarker guard, int offset, @NotNull CharSequence oldString, @NotNull CharSequence newString) {
+  private void throwGuardedFragment(@Nonnull RangeMarker guard, int offset, @Nonnull CharSequence oldString, @Nonnull CharSequence newString) {
     if (myCheckGuardedBlocks > 0 && !myGuardsSuppressed) {
       DocumentEvent event = new DocumentEventImpl(this, offset, oldString, newString, myModificationStamp, false);
       throw new ReadOnlyFragmentModificationException(event, guard);
@@ -685,7 +685,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     myFrozen = null;
   }
 
-  void clearLineModificationFlagsExcept(@NotNull int[] caretLines) {
+  void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
     IntArrayList modifiedLines = new IntArrayList(caretLines.length);
     LineSet lineSet = getLineSet();
     for (int line : caretLines) {
@@ -701,10 +701,10 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     myFrozen = null;
   }
 
-  private void updateText(@NotNull ImmutableCharSequence newText,
+  private void updateText(@Nonnull ImmutableCharSequence newText,
                           int offset,
-                          @NotNull CharSequence oldString,
-                          @NotNull CharSequence newString,
+                          @Nonnull CharSequence oldString,
+                          @Nonnull CharSequence newString,
                           boolean wholeTextReplaced,
                           long newModificationStamp,
                           int initialStartOffset,
@@ -767,7 +767,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  private void changedUpdate(@NotNull DocumentEvent event, long newModificationStamp, @NotNull CharSequence prevText) {
+  private void changedUpdate(@Nonnull DocumentEvent event, long newModificationStamp, @Nonnull CharSequence prevText) {
     try {
       if (LOG.isDebugEnabled()) LOG.debug(event.toString());
 
@@ -806,13 +806,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return ApplicationManager.getApplication().runReadAction((Computable<String>)() -> doGetText());
   }
 
-  @NotNull
+  @Nonnull
   private String doGetText() {
     String s = SoftReference.dereference(myTextString);
     if (s == null) {
@@ -821,9 +821,9 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return s;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String getText(@NotNull final TextRange range) {
+  public String getText(@Nonnull final TextRange range) {
     return ApplicationManager.getApplication().runReadAction(
             (Computable<String>)() -> myText.subSequence(range.getStartOffset(), range.getEndOffset()).toString());
   }
@@ -834,19 +834,19 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public CharSequence getCharsSequence() {
     return myMutableCharSequence;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getImmutableCharSequence() {
     return myText;
   }
 
   @Override
-  public void addDocumentListener(@NotNull DocumentListener listener) {
+  public void addDocumentListener(@Nonnull DocumentListener listener) {
     if (ArrayUtil.contains(listener, getListeners())) {
       LOG.error("Already registered: " + listener);
     }
@@ -854,17 +854,19 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void addDocumentListener(@NotNull final DocumentListener listener, @NotNull Disposable parentDisposable) {
+  public void addDocumentListener(@Nonnull final DocumentListener listener, @Nonnull Disposable parentDisposable) {
     addDocumentListener(listener);
     Disposer.register(parentDisposable, new DocumentListenerDisposable(myDocumentListeners, listener));
   }
 
   // this contortion is for avoiding document leak when the listener is leaked
   private static class DocumentListenerDisposable implements Disposable {
-    @NotNull private final LockFreeCOWSortedArray<DocumentListener> myList;
-    @NotNull private final DocumentListener myListener;
+    @Nonnull
+    private final LockFreeCOWSortedArray<DocumentListener> myList;
+    @Nonnull
+    private final DocumentListener myListener;
 
-    DocumentListenerDisposable(@NotNull LockFreeCOWSortedArray<DocumentListener> list, @NotNull DocumentListener listener) {
+    DocumentListenerDisposable(@Nonnull LockFreeCOWSortedArray<DocumentListener> list, @Nonnull DocumentListener listener) {
       myList = list;
       myListener = listener;
     }
@@ -876,18 +878,18 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void removeDocumentListener(@NotNull DocumentListener listener) {
+  public void removeDocumentListener(@Nonnull DocumentListener listener) {
     boolean success = myDocumentListeners.remove(listener);
     if (!success) {
       LOG.error("Can't remove document listener (" + listener + "). Registered listeners: " + Arrays.toString(getListeners()));
     }
   }
 
-  void addInternalBulkModeListener(@NotNull DocumentBulkUpdateListener listener) {
+  void addInternalBulkModeListener(@Nonnull DocumentBulkUpdateListener listener) {
     myBulkDocumentInternalListeners.add(listener);
   }
 
-  void removeInternalBulkModeListener(@NotNull DocumentBulkUpdateListener listener) {
+  void removeInternalBulkModeListener(@Nonnull DocumentBulkUpdateListener listener) {
     myBulkDocumentInternalListeners.remove(listener);
   }
 
@@ -897,7 +899,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LineIterator createLineIterator() {
     return getLineSet().createIterator();
   }
@@ -930,7 +932,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return lineCount;
   }
 
-  @NotNull
+  @Nonnull
   private DocumentListener[] getListeners() {
     return myDocumentListeners.getArray();
   }
@@ -943,23 +945,23 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void addEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     myReadOnlyListeners.add(listener);
   }
 
   @Override
-  public void removeEditReadOnlyListener(@NotNull EditReadOnlyListener listener) {
+  public void removeEditReadOnlyListener(@Nonnull EditReadOnlyListener listener) {
     myReadOnlyListeners.remove(listener);
   }
 
 
   @Override
-  public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -970,7 +972,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  public void setText(@NotNull final CharSequence text) {
+  public void setText(@Nonnull final CharSequence text) {
     Runnable runnable = () -> replaceString(0, getTextLength(), text, LocalTimeCounter.currentTime(), true);
     if (CommandProcessor.getInstance().isUndoTransparentActionInProgress()) {
       runnable.run();
@@ -983,8 +985,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Override
-  @NotNull
-  public RangeMarker createRangeMarker(@NotNull final TextRange textRange) {
+  @Nonnull
+  public RangeMarker createRangeMarker(@Nonnull final TextRange textRange) {
     return createRangeMarker(textRange.getStartOffset(), textRange.getEndOffset());
   }
 
@@ -1041,18 +1043,18 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.TOPIC);
   }
 
-  @NotNull
+  @Nonnull
   private static DocumentBulkUpdateListener getPublisher() {
     return DocumentBulkUpdateListenerHolder.ourBulkChangePublisher;
   }
 
   @Override
-  public boolean processRangeMarkers(@NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
     return processRangeMarkersOverlappingWith(0, getTextLength(), processor);
   }
 
   @Override
-  public boolean processRangeMarkersOverlappingWith(int start, int end, @NotNull Processor<? super RangeMarker> processor) {
+  public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
     TextRangeInterval interval = new TextRangeInterval(start, end);
     MarkupIterator<RangeMarkerEx> iterator = IntervalTreeImpl
             .mergingOverlappingIterator(myRangeMarkers, interval, myPersistentRangeMarkers, interval, RangeMarker.BY_START_OFFSET);
@@ -1064,7 +1066,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
   }
 
-  @NotNull
+  @Nonnull
   public String dumpState() {
     @NonNls StringBuilder result = new StringBuilder();
     result.append(", intervals:\n");
@@ -1083,7 +1085,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     return "DocumentImpl[" + FileDocumentManager.getInstance().getFile(this) + "]";
   }
 
-  @NotNull
+  @Nonnull
   public FrozenDocument freeze() {
     FrozenDocument frozen = myFrozen;
     if (frozen == null) {
@@ -1109,7 +1111,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
                                             : new Attachment[] {new Attachment("enteringTrace.txt", enteringTrace)};
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Attachment[] getAttachments() {
       return myAttachments;

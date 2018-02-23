@@ -4,8 +4,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -33,28 +33,28 @@ public class BasicGutterContentProvider extends GutterContentProvider {
 
   @Nullable
   @Override
-  public String getText(int line, @NotNull Editor editor) {
+  public String getText(int line, @Nonnull Editor editor) {
     return null;
   }
 
   @Nullable
   @Override
-  public String getToolTip(int line, @NotNull Editor editor) {
+  public String getToolTip(int line, @Nonnull Editor editor) {
     return null;
   }
 
   @Override
-  public void doAction(int line, @NotNull Editor editor) {
+  public void doAction(int line, @Nonnull Editor editor) {
   }
 
   @Override
-  public void beforeEvaluate(@NotNull Editor editor) {
+  public void beforeEvaluate(@Nonnull Editor editor) {
     Document document = editor.getDocument();
     document.insertString(document.getTextLength(), EVAL_IN_MARKER);
   }
 
   @Override
-  public boolean drawIcon(int line, @NotNull Graphics g, int y, @NotNull Editor editor) {
+  public boolean drawIcon(int line, @Nonnull Graphics g, int y, @Nonnull Editor editor) {
     int markerCount = getMarkerCount(line, editor.getDocument());
     if (markerCount == EVAL_OUT_MARKER.length() || markerCount == EVAL_IN_MARKER.length()) {
       g.setColor(JBColor.GRAY);
@@ -65,7 +65,7 @@ public class BasicGutterContentProvider extends GutterContentProvider {
   }
 
   @Override
-  public final boolean isShowSeparatorLine(int line, @NotNull Editor editor) {
+  public final boolean isShowSeparatorLine(int line, @Nonnull Editor editor) {
     Document document = editor.getDocument();
     if ((line + 1) >= document.getLineCount()) {
       return true;
@@ -86,11 +86,11 @@ public class BasicGutterContentProvider extends GutterContentProvider {
     }
   }
 
-  protected boolean doIsShowSeparatorLine(int line, @NotNull Editor editor, @NotNull Document document) {
+  protected boolean doIsShowSeparatorLine(int line, @Nonnull Editor editor, @Nonnull Document document) {
     return isLineRelationshipComputable;
   }
 
-  private static int getMarkerCount(int line, @NotNull Document document) {
+  private static int getMarkerCount(int line, @Nonnull Document document) {
     return StringUtil.countChars(document.getImmutableCharSequence(), EVAL_IN_MARKER.charAt(0), document.getLineStartOffset(line), true);
   }
 }

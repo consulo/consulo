@@ -18,32 +18,32 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.DiffRequest;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ApplyPatchDiffTool implements FrameDiffTool {
-  @NotNull
+  @Nonnull
   @Override
-  public DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return new MyApplyPatchViewer(context, (ApplyPatchDiffRequest)request);
   }
 
   @Override
-  public boolean canShow(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return request instanceof ApplyPatchDiffRequest;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Apply patch somehow";
   }
 
   private static class MyApplyPatchViewer extends ApplyPatchViewer implements DiffViewer {
-    public MyApplyPatchViewer(@NotNull DiffContext context, @NotNull ApplyPatchDiffRequest request) {
+    public MyApplyPatchViewer(@Nonnull DiffContext context, @Nonnull ApplyPatchDiffRequest request) {
       super(context, request);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ToolbarComponents init() {
       initPatchViewer();

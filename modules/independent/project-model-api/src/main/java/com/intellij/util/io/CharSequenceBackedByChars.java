@@ -17,7 +17,7 @@ package com.intellij.util.io;
 
 import com.google.common.base.Charsets;
 import com.intellij.util.text.CharArrayCharSequence;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -37,11 +37,11 @@ public class CharSequenceBackedByChars extends CharArrayCharSequence {
     super(charBuffer.array(), charBuffer.arrayOffset(), charBuffer.position());
   }
 
-  public CharSequenceBackedByChars(@NotNull char... chars) {
+  public CharSequenceBackedByChars(@Nonnull char... chars) {
     super(chars);
   }
 
-  public CharSequenceBackedByChars(@NotNull char[] chars, int start, int end) {
+  public CharSequenceBackedByChars(@Nonnull char[] chars, int start, int end) {
     super(chars, start, end);
   }
 

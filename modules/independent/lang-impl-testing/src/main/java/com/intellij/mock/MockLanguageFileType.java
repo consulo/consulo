@@ -2,7 +2,7 @@ package com.intellij.mock;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -13,24 +13,24 @@ public class MockLanguageFileType extends LanguageFileType{
 
   private final String myExtension;
 
-  public MockLanguageFileType(@NotNull Language language, String extension) {
+  public MockLanguageFileType(@Nonnull Language language, String extension) {
     super(language);
     myExtension = extension;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return getLanguage().getID();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDescription() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getDefaultExtension() {
     return myExtension;

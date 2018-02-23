@@ -28,7 +28,7 @@ import com.intellij.psi.search.PsiTodoSearchHelper;
 import com.intellij.psi.search.TodoPattern;
 import consulo.annotations.RequiredReadAction;
 import consulo.psi.PsiPackageSupportProviders;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -139,7 +139,7 @@ public abstract class TodoTreeStructure extends AbstractTreeStructureBase implem
     return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback asyncCommit() {
     return asyncCommitDocuments(myProject);

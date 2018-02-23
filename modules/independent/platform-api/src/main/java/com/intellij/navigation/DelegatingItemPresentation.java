@@ -16,7 +16,7 @@
 package com.intellij.navigation;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

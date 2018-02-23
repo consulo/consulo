@@ -32,8 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -91,7 +90,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   }
 
 
-  public boolean isApplicable(@NotNull String text, String prevType, boolean checkStandartFilters) {
+  public boolean isApplicable(@Nonnull String text, String prevType, boolean checkStandartFilters) {
     for (LogFilter filter : myRegisteredLogFilters.keySet()) {
       if (myRegisteredLogFilters.get(filter).booleanValue() && !filter.isAcceptable(text)) return false;
     }
@@ -128,8 +127,8 @@ public class LogConsolePreferences extends LogFilterRegistrar {
     return ConsoleViewContentType.NORMAL_OUTPUT;
   }
 
-  @Nullable
-  public static String getType(@NotNull String text) {
+  @javax.annotation.Nullable
+  public static String getType(@Nonnull String text) {
     String upcased = StringUtil.toUpperCase(text);
     if (ERROR_PATTERN.matcher(upcased).matches()) return ERROR;
     if (WARNING_PATTERN.matcher(upcased).matches() || WARN_PATTERN.matcher(upcased).matches()) return WARNING;

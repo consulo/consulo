@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
@@ -56,7 +56,8 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   private final ProcessListener myEventMulticaster;
   private final TasksRunner myAfterStartNotifiedRunner;
 
-  @Nullable private volatile Integer myExitCode = null;
+  @Nullable
+  private volatile Integer myExitCode = null;
 
   protected ProcessHandler() {
     myEventMulticaster = createEventMulticaster();
@@ -255,7 +256,7 @@ public abstract class ProcessHandler extends UserDataHolderBase {
       runPendingTasks();
     }
 
-    public void execute(@NotNull Runnable task) {
+    public void execute(@Nonnull Runnable task) {
       if (isStartNotified()) {
         task.run();
       }

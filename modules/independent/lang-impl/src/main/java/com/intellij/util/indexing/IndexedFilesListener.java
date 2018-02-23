@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,37 +42,37 @@ public abstract class IndexedFilesListener extends VirtualFileAdapter implements
   }
 
   @Override
-  public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+  public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
     buildIndicesForFileRecursively(event.getFile(), false);
   }
 
   @Override
-  public void fileCreated(@NotNull final VirtualFileEvent event) {
+  public void fileCreated(@Nonnull final VirtualFileEvent event) {
     buildIndicesForFileRecursively(event.getFile(), false);
   }
 
   @Override
-  public void fileCopied(@NotNull final VirtualFileCopyEvent event) {
+  public void fileCopied(@Nonnull final VirtualFileCopyEvent event) {
     buildIndicesForFileRecursively(event.getFile(), false);
   }
 
   @Override
-  public void beforeFileDeletion(@NotNull final VirtualFileEvent event) {
+  public void beforeFileDeletion(@Nonnull final VirtualFileEvent event) {
     invalidateIndicesRecursively(event.getFile(), false);
   }
 
   @Override
-  public void beforeContentsChange(@NotNull final VirtualFileEvent event) {
+  public void beforeContentsChange(@Nonnull final VirtualFileEvent event) {
     invalidateIndicesRecursively(event.getFile(), true);
   }
 
   @Override
-  public void contentsChanged(@NotNull final VirtualFileEvent event) {
+  public void contentsChanged(@Nonnull final VirtualFileEvent event) {
     buildIndicesForFileRecursively(event.getFile(), true);
   }
 
   @Override
-  public void beforePropertyChange(@NotNull final VirtualFilePropertyEvent event) {
+  public void beforePropertyChange(@Nonnull final VirtualFilePropertyEvent event) {
     String propertyName = event.getPropertyName();
 
     if (propertyName.equals(VirtualFile.PROP_NAME)) {
@@ -86,7 +86,7 @@ public abstract class IndexedFilesListener extends VirtualFileAdapter implements
   }
 
   @Override
-  public void propertyChanged(@NotNull final VirtualFilePropertyEvent event) {
+  public void propertyChanged(@Nonnull final VirtualFilePropertyEvent event) {
     String propertyName = event.getPropertyName();
     if (propertyName.equals(VirtualFile.PROP_NAME)) {
       // indexes may depend on file name
@@ -96,7 +96,7 @@ public abstract class IndexedFilesListener extends VirtualFileAdapter implements
     }
   }
 
-  protected void buildIndicesForFileRecursively(@NotNull final VirtualFile file, final boolean contentChange) {
+  protected void buildIndicesForFileRecursively(@Nonnull final VirtualFile file, final boolean contentChange) {
     if (file.isDirectory()) {
       final ContentIterator iterator = fileOrDir -> {
         buildIndicesForFile(fileOrDir, contentChange);
@@ -130,36 +130,36 @@ public abstract class IndexedFilesListener extends VirtualFileAdapter implements
   protected abstract void buildIndicesForFile(VirtualFile file, boolean contentChange);
   protected abstract void doInvalidateIndicesForFile(VirtualFile file, boolean contentChange);
 
-  protected void invalidateIndicesRecursively(@NotNull final VirtualFile file, final boolean contentChange) {
+  protected void invalidateIndicesRecursively(@Nonnull final VirtualFile file, final boolean contentChange) {
     VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@NotNull VirtualFile file) {
+      public boolean visitFile(@Nonnull VirtualFile file) {
         return invalidateIndicesForFile(file, contentChange);
       }
 
       @Override
-      public Iterable<VirtualFile> getChildrenIterable(@NotNull VirtualFile file) {
+      public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
         return file instanceof NewVirtualFile ? ((NewVirtualFile)file).iterInDbChildren() : null;
       }
     });
   }
 
   @Override
-  public void before(@NotNull List<? extends VFileEvent> events) {
+  public void before(@Nonnull List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       BulkVirtualFileListenerAdapter.fireBefore(this, event);
     }
   }
 
   @Override
-  public void after(@NotNull List<? extends VFileEvent> events) {
+  public void after(@Nonnull List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       BulkVirtualFileListenerAdapter.fireAfter(this, event);
     }
   }
 
   @Nullable
-  private static String calcConfigPath(@NotNull String path) {
+  private static String calcConfigPath(@Nonnull String path) {
     try {
       final String _path = FileUtil.toSystemIndependentName(new File(path).getCanonicalPath());
       return _path.endsWith("/") ? _path : _path + "/";
@@ -170,7 +170,7 @@ public abstract class IndexedFilesListener extends VirtualFileAdapter implements
     }
   }
 
-  private boolean isUnderConfigOrSystem(@NotNull VirtualFile file) {
+  private boolean isUnderConfigOrSystem(@Nonnull VirtualFile file) {
     final String filePath = file.getPath();
     return myConfigPath != null && FileUtil.startsWith(filePath, myConfigPath) ||
            myLogPath != null && FileUtil.startsWith(filePath, myLogPath);

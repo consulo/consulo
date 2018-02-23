@@ -20,7 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.VerticalLayout;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,9 +34,9 @@ public class DesktopVerticalLayoutImpl extends JPanel implements VerticalLayout,
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public VerticalLayout add(@NotNull Component component) {
+  public VerticalLayout add(@Nonnull Component component) {
     add(TargetAWT.to(component));
     return this;
   }

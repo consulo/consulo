@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DocumentUtil {
 
@@ -25,7 +25,7 @@ public class DocumentUtil {
     return range.getDocument().getText().substring(range.getStartOffset(), range.getEndOffset());
   }
 
-  public static boolean isEmpty(@NotNull RangeMarker rangeMarker) {
+  public static boolean isEmpty(@Nonnull RangeMarker rangeMarker) {
     return rangeMarker.getStartOffset() == rangeMarker.getEndOffset();
   }
 

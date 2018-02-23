@@ -1,8 +1,8 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class LocalFileUrl implements Url {
   private final String path;
@@ -10,11 +10,11 @@ public final class LocalFileUrl implements Url {
   /**
    * Use {@link Urls#newLocalFileUrl(String)} instead
    */
-  public LocalFileUrl(@NotNull String path) {
+  public LocalFileUrl(@Nonnull String path) {
     this.path = path;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return path;
@@ -30,7 +30,7 @@ public final class LocalFileUrl implements Url {
     return path;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String toExternalForm() {
     return path;
@@ -54,7 +54,7 @@ public final class LocalFileUrl implements Url {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Url trimParameters() {
     return this;

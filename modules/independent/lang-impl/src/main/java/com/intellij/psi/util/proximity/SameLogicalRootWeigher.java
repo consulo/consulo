@@ -23,8 +23,8 @@ import com.intellij.psi.util.ProximityLocation;
 import com.intellij.util.LogicalRoot;
 import com.intellij.util.LogicalRootsManager;
 import com.intellij.util.NullableFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -38,7 +38,7 @@ public class SameLogicalRootWeigher extends ProximityWeigher {
   });
 
   @Override
-  public Comparable weigh(@NotNull final PsiElement element, @NotNull final ProximityLocation location) {
+  public Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location) {
     if (location.getPosition() == null){
       return null;
     }

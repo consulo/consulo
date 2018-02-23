@@ -20,7 +20,7 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.impl.KeymapImpl;
 import com.intellij.openapi.options.SchemesManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public abstract class KeymapManagerEx extends KeymapManager {
 
   public abstract SchemesManager<Keymap, KeymapImpl> getSchemesManager();
 
-  public abstract void addWeakListener(@NotNull KeymapManagerListener listener);
+  public abstract void addWeakListener(@Nonnull KeymapManagerListener listener);
 
-  public abstract void removeWeakListener(@NotNull KeymapManagerListener listenerToRemove);
+  public abstract void removeWeakListener(@Nonnull KeymapManagerListener listenerToRemove);
 }

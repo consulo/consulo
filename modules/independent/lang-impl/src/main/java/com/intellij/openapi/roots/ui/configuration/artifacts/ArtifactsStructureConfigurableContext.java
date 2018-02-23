@@ -23,32 +23,32 @@ import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
 import com.intellij.packaging.ui.ArtifactEditor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactsStructureConfigurableContext extends PackagingElementResolvingContext {
-  @NotNull
+  @Nonnull
   ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-  CompositePackagingElement<?> getRootElement(@NotNull Artifact artifact);
+  CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
 
-  void editLayout(@NotNull Artifact artifact, Runnable action);
+  void editLayout(@Nonnull Artifact artifact, Runnable action);
 
   ArtifactEditor getOrCreateEditor(Artifact artifact);
 
-  @NotNull
-  Artifact getOriginalArtifact(@NotNull Artifact artifact);
+  @Nonnull
+  Artifact getOriginalArtifact(@Nonnull Artifact artifact);
 
   @Nullable
   ModifiableModuleModel getModifiableModuleModel();
 
   void queueValidation(Artifact artifact);
 
-  @NotNull
-  ArtifactProjectStructureElement getOrCreateArtifactElement(@NotNull Artifact artifact);
+  @Nonnull
+  ArtifactProjectStructureElement getOrCreateArtifactElement(@Nonnull Artifact artifact);
 
   ModifiableRootModel getOrCreateModifiableRootModel(Module module);
 

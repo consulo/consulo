@@ -22,7 +22,7 @@ import consulo.ui.model.ListModel;
 import consulo.ui.shared.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.util.ServiceLoaderUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.net.URL;
 
@@ -34,12 +34,12 @@ import java.net.URL;
 public abstract class UIInternal {
   private static UIInternal ourInstance = ServiceLoaderUtil.loadSingleOrError(UIInternal.class);
 
-  @NotNull
+  @Nonnull
   public static UIInternal get() {
     return ourInstance;
   }
 
-  abstract CheckBox _Components_checkBox(@NotNull String text, boolean selected);
+  abstract CheckBox _Components_checkBox(@Nonnull String text, boolean selected);
 
   abstract DockLayout _Layouts_dock();
 
@@ -89,16 +89,16 @@ public abstract class UIInternal {
 
   abstract MenuBar _MenuItems_menuBar();
 
-  @NotNull
+  @Nonnull
   public abstract StyleManager _StyleManager_get();
 
-  @NotNull
+  @Nonnull
   public abstract Window _Windows_modalWindow(String title);
 
   public abstract AlertBuilder _Alerts_builder();
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   abstract UIAccess _UIAccess_get();
 
   abstract boolean _UIAccess_isUIThread();

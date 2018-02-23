@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public final class CompilerMessageImpl implements CompilerMessage {
 

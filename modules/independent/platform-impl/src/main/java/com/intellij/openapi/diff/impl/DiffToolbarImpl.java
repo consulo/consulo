@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diff.DiffRequest;
 import com.intellij.openapi.diff.DiffToolbar;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -63,7 +63,7 @@ public class DiffToolbarImpl implements DiffToolbar {
     return myActionToolbar.getComponent();
   }
 
-  public void addAction(@NotNull AnAction action) {
+  public void addAction(@Nonnull AnAction action) {
     myActionGroup.add(action);
     updateToolbar();
   }
@@ -77,7 +77,7 @@ public class DiffToolbarImpl implements DiffToolbar {
     updateToolbar();
   }
 
-  public void reset(@NotNull DiffRequest.ToolbarAddons toolBar) {
+  public void reset(@Nonnull DiffRequest.ToolbarAddons toolBar) {
     myActionGroup.removeAll();
     toolBar.customize(this);
   }

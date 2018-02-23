@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.continuation.ModalityIgnorantBackgroundableTask;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +86,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     return myPanel;
   }
 
-  public void setMapping(@NotNull VcsDirectoryMapping mapping) {
+  public void setMapping(@Nonnull VcsDirectoryMapping mapping) {
     myMappingCopy = new VcsDirectoryMapping(mapping.getDirectory(), mapping.getVcs(), mapping.getRootSettings());
     myProjectRadioButton.setSelected(myMappingCopy.isDefaultMapping());
     myDirectoryRadioButton.setSelected(! myProjectRadioButton.isSelected());
@@ -103,7 +103,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     initProjectMessage();
   }
 
-  @NotNull
+  @Nonnull
   public VcsDirectoryMapping getMapping() {
     VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
     String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getName();
@@ -132,7 +132,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     pack();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createLeftSideActions() {
     return new Action[] { new ConfigureVcsAction() };
@@ -192,7 +192,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     }
 
     @Override
-    protected void onFileChosen(@NotNull final VirtualFile chosenFile) {
+    protected void onFileChosen(@Nonnull final VirtualFile chosenFile) {
       String oldText = myDirectoryTextField.getText();
       super.onFileChosen(chosenFile);
       final VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
@@ -218,7 +218,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
                   }
 
                   @Override
-                  protected void runImpl(@NotNull ProgressIndicator indicator) {
+                  protected void runImpl(@Nonnull ProgressIndicator indicator) {
                     for (VcsDescriptor vcs : myVcses.values()) {
                       if (vcs.probablyUnderVcs(chosenFile)) {
                         if (probableVcs != null) {

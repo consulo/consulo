@@ -16,8 +16,7 @@
 package com.intellij.packaging.elements;
 
 import com.intellij.packaging.artifacts.ArtifactType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,9 +29,9 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                                     @NotNull PackagingElementResolvingContext resolvingContext,
-                                                     @NotNull ArtifactIncrementalCompilerContext compilerContext, @NotNull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
+                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
     final List<? extends PackagingElement<?>> substitution = getSubstitution(resolvingContext, artifactType);
     if (substitution == null) return;
 
@@ -47,7 +46,7 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
 
-  @Nullable
-  public abstract List<? extends PackagingElement<?>> getSubstitution(@NotNull PackagingElementResolvingContext context, @NotNull ArtifactType artifactType);
+  @javax.annotation.Nullable
+  public abstract List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType);
 
 }

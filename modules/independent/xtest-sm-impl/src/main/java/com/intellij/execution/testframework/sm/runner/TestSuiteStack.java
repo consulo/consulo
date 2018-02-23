@@ -20,8 +20,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -44,11 +44,11 @@ public class TestSuiteStack {
     this("<unspecified>");
   }
 
-  public TestSuiteStack(@NotNull String testFrameworkName) {
+  public TestSuiteStack(@Nonnull String testFrameworkName) {
     myTestFrameworkName = testFrameworkName;
   }
 
-  public void pushSuite(@NotNull final SMTestProxy suite) {
+  public void pushSuite(@Nonnull final SMTestProxy suite) {
     myStack.push(suite);
   }
 

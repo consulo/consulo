@@ -20,7 +20,6 @@ import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.util.containers.MultiMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,7 +120,7 @@ public class JarDirectories {
     }
   }
 
-  private static OrderRootType getJarDirectoryRootType(@Nullable String type) {
+  private static OrderRootType getJarDirectoryRootType(@javax.annotation.Nullable String type) {
     if(type == null) {
       return DEFAULT_JAR_DIRECTORY_TYPE;
     }

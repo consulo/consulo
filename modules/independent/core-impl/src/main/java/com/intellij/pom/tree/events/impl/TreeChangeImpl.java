@@ -25,7 +25,7 @@ import com.intellij.pom.tree.events.TreeChange;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class TreeChangeImpl implements TreeChange {
   }
 
   @Override
-  public void addChange(ASTNode child, @NotNull ChangeInfo changeInfo) {
+  public void addChange(ASTNode child, @Nonnull ChangeInfo changeInfo) {
     LOG.assertTrue(child.getTreeParent() == myParent);
 
     final ChangeInfo current = myChanges.get(child);
@@ -170,7 +170,7 @@ public class TreeChangeImpl implements TreeChange {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TreeElement[] getAffectedChildren() {
     final TreeElement[] treeElements = new TreeElement[myChanges.size()];
     int index = 0;
@@ -186,13 +186,13 @@ public class TreeChangeImpl implements TreeChange {
   }
 
   @Override
-  public int getChildOffsetInNewTree(@NotNull ASTNode child) {
+  public int getChildOffsetInNewTree(@Nonnull ASTNode child) {
     return myParent.getStartOffset() + getNewOffset(child);
   }
 
 
   @Override
-  public void composite(@NotNull TreeChange treeChange) {
+  public void composite(@Nonnull TreeChange treeChange) {
     final TreeChangeImpl change = (TreeChangeImpl)treeChange;
     final Set<Map.Entry<ASTNode,ChangeInfo>> entries = change.myChanges.entrySet();
     for (final Map.Entry<ASTNode, ChangeInfo> entry : entries) {
@@ -211,7 +211,7 @@ public class TreeChangeImpl implements TreeChange {
   }
 
   @Override
-  public void add(@NotNull final TreeChange value) {
+  public void add(@Nonnull final TreeChange value) {
     final TreeChangeImpl impl = (TreeChangeImpl)value;
     LOG.assertTrue(impl.myParent == myParent);
 

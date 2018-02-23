@@ -18,8 +18,8 @@ package com.intellij.xdebugger.frame;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.xdebugger.Obsolescent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -46,12 +46,12 @@ public abstract class XExecutionStack {
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    * @param icon icon to be shown in the combobox in 'Frames' tab
    */
-  protected XExecutionStack(final @NotNull String displayName, final @Nullable Icon icon) {
+  protected XExecutionStack(final @Nonnull String displayName, final @Nullable Icon icon) {
     myDisplayName = displayName;
     myIcon = icon;
   }
 
-  @NotNull
+  @Nonnull
   public final String getDisplayName() {
     return myDisplayName;
   }
@@ -91,6 +91,6 @@ public abstract class XExecutionStack {
      * @param stackFrames stack frames to add
      * @param last <code>true</code> if all frames are added
      */
-    void addStackFrames(@NotNull List<? extends XStackFrame> stackFrames, final boolean last);
+    void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, final boolean last);
   }
 }

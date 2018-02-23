@@ -16,7 +16,7 @@
 package consulo.ide.ui.laf.modern;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
  */
 class ModernUIUtil {
   private static NotNullLazyValue<Field> ourUiField = new NotNullLazyValue<Field>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Field compute() {
       try {
@@ -42,7 +42,7 @@ class ModernUIUtil {
     }
   };
 
-  @NotNull
+  @Nonnull
   public static <T> T getUI(Component component) {
     Field value = ourUiField.getValue();
     try {
@@ -53,22 +53,22 @@ class ModernUIUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Color getSelectionBackground() {
     return UIManager.getColor("Color.SelectionBackground");
   }
 
-  @NotNull
-  public static Color getBorderColor(@NotNull Component component) {
+  @Nonnull
+  public static Color getBorderColor(@Nonnull Component component) {
     return component.isEnabled() ? getActiveBorderColor() : getDisabledBorderColor();
   }
 
-  @NotNull
+  @Nonnull
   public static Color getActiveBorderColor() {
     return UIManager.getColor("Color.ActiveBorder");
   }
 
-  @NotNull
+  @Nonnull
   public static Color getDisabledBorderColor() {
     return UIManager.getColor("Color.DisabledBorder");
   }

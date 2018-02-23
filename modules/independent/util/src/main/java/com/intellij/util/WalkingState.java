@@ -16,34 +16,34 @@
 
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 public class WalkingState<T> {
   public interface TreeGuide<T> {
-    T getNextSibling(@NotNull T element);
-    T getPrevSibling(@NotNull T element);
-    T getFirstChild(@NotNull T element);
-    T getParent(@NotNull T element);
+    T getNextSibling(@Nonnull T element);
+    T getPrevSibling(@Nonnull T element);
+    T getFirstChild(@Nonnull T element);
+    T getParent(@Nonnull T element);
   }
   private boolean isDown;
   protected boolean startedWalking;
   private final TreeGuide<T> myWalker;
   private boolean stopped;
 
-  public void elementFinished(@NotNull T element) {}
+  public void elementFinished(@Nonnull T element) {}
 
-  public WalkingState(@NotNull TreeGuide<T> delegate) {
+  public WalkingState(@Nonnull TreeGuide<T> delegate) {
     myWalker = delegate;
   }
 
-  public void visit(@NotNull T element) {
+  public void visit(@Nonnull T element) {
     elementStarted(element);
   }
 
-  public void elementStarted(@NotNull T element){
+  public void elementStarted(@Nonnull T element){
     isDown = true;
     if (!startedWalking) {
       stopped = false;
@@ -57,7 +57,7 @@ public class WalkingState<T> {
     }
   }
 
-  private void walkChildren(@NotNull T root) {
+  private void walkChildren(@Nonnull T root) {
     for (T element = next(root, root, isDown); element != null && !stopped; element = next(element, root, isDown)) {
       isDown = false; // if client visitor did not call default visitElement it means skip subtree
       T parent = myWalker.getParent(element);
@@ -68,7 +68,7 @@ public class WalkingState<T> {
     }
   }
 
-  public T next(T element, @NotNull T root, boolean isDown) {
+  public T next(T element, @Nonnull T root, boolean isDown) {
     if (isDown) {
       T child = myWalker.getFirstChild(element);
       if (child != null) return child;
@@ -110,11 +110,11 @@ public class WalkingState<T> {
   /**
    * process in the in-order fashion
    */
-  public static <T> boolean processAll(@NotNull T root, @NotNull TreeGuide<T> treeGuide, @NotNull final Processor<T> processor) {
+  public static <T> boolean processAll(@Nonnull T root, @Nonnull TreeGuide<T> treeGuide, @Nonnull final Processor<T> processor) {
     final boolean[] result = {true};
     new WalkingState<T>(treeGuide){
       @Override
-      public void visit(@NotNull T element) {
+      public void visit(@Nonnull T element) {
         if (!processor.process(element)) {
           stopWalking();
           result[0] = false;

@@ -19,12 +19,13 @@ import com.intellij.find.FindResult;
 import com.intellij.find.FindUtil;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SelectionManager {
-  @NotNull private final SearchResults mySearchResults;
+  @Nonnull
+  private final SearchResults mySearchResults;
 
-  public SelectionManager(@NotNull SearchResults results) {
+  public SelectionManager(@Nonnull SearchResults results) {
     mySearchResults = results;
   }
 
@@ -83,7 +84,7 @@ public class SelectionManager {
     }
   }
 
-  public boolean isSelected(@NotNull FindResult result) {
+  public boolean isSelected(@Nonnull FindResult result) {
     Editor editor = mySearchResults.getEditor();
     return editor.getCaretModel().getCaretAt(editor.offsetToVisualPosition(result.getEndOffset())) != null;
   }

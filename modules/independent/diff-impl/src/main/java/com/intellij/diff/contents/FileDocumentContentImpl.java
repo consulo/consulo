@@ -25,35 +25,36 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.LineSeparator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FileDocumentContentImpl extends DocumentContentImpl implements FileContent {
-  @NotNull private final VirtualFile myFile;
+  @Nonnull
+  private final VirtualFile myFile;
 
   public FileDocumentContentImpl(@Nullable Project project,
-                                 @NotNull Document document,
-                                 @NotNull VirtualFile file) {
+                                 @Nonnull Document document,
+                                 @Nonnull VirtualFile file) {
     super(project, document, file.getFileType(), file, getSeparator(file), file.getCharset(), file.getBOM() != null);
     myFile = file;
   }
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@NotNull LineCol position) {
+  public Navigatable getNavigatable(@Nonnull LineCol position) {
     Project project = getProject();
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
     return new OpenFileDescriptor(project, myFile, position.line, position.column);
   }
 
-  @Nullable
-  private static LineSeparator getSeparator(@NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private static LineSeparator getSeparator(@Nonnull VirtualFile file) {
     String s = LoadTextUtil.detectLineSeparator(file, true);
     if (s == null) return null;
     return LineSeparator.fromString(s);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getFile() {
     return myFile;

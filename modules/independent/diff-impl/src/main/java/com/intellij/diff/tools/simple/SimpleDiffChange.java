@@ -28,28 +28,32 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleDiffChange {
-  @NotNull private final SimpleDiffViewer myViewer;
+  @Nonnull
+  private final SimpleDiffViewer myViewer;
 
-  @NotNull private final LineFragment myFragment;
+  @Nonnull
+  private final LineFragment myFragment;
   @Nullable private final List<DiffFragment> myInnerFragments;
 
-  @NotNull private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
-  @NotNull private final List<MyGutterOperation> myOperations = new ArrayList<>();
+  @Nonnull
+  private final List<RangeHighlighter> myHighlighters = new ArrayList<>();
+  @Nonnull
+  private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
   private boolean myIsValid = true;
   private int[] myLineStartShifts = new int[2];
   private int[] myLineEndShifts = new int[2];
 
-  public SimpleDiffChange(@NotNull SimpleDiffViewer viewer,
-                          @NotNull LineFragment fragment,
+  public SimpleDiffChange(@Nonnull SimpleDiffViewer viewer,
+                          @Nonnull LineFragment fragment,
                           @Nullable LineFragment previousFragment) {
     myViewer = viewer;
 
@@ -59,7 +63,7 @@ public class SimpleDiffChange {
     installHighlighter(previousFragment);
   }
 
-  public void installHighlighter(@Nullable LineFragment previousFragment) {
+  public void installHighlighter(@javax.annotation.Nullable LineFragment previousFragment) {
     assert myHighlighters.isEmpty();
 
     if (myInnerFragments != null) {
@@ -102,7 +106,7 @@ public class SimpleDiffChange {
     }
   }
 
-  private void doInstallNonSquashedChangesSeparator(@Nullable LineFragment previousFragment) {
+  private void doInstallNonSquashedChangesSeparator(@javax.annotation.Nullable LineFragment previousFragment) {
     createNonSquashedChangesSeparator(previousFragment, Side.LEFT);
     createNonSquashedChangesSeparator(previousFragment, Side.RIGHT);
   }
@@ -112,7 +116,7 @@ public class SimpleDiffChange {
     myOperations.add(createOperation(Side.RIGHT));
   }
 
-  private void createHighlighter(@NotNull Side side, boolean ignored) {
+  private void createHighlighter(@Nonnull Side side, boolean ignored) {
     Editor editor = myViewer.getEditor(side);
 
     TextDiffType type = DiffUtil.getLineDiffType(myFragment);
@@ -122,7 +126,7 @@ public class SimpleDiffChange {
     myHighlighters.addAll(DiffDrawUtil.createHighlighter(editor, startLine, endLine, type, ignored));
   }
 
-  private void createInlineHighlighter(@NotNull DiffFragment fragment, @NotNull Side side) {
+  private void createInlineHighlighter(@Nonnull DiffFragment fragment, @Nonnull Side side) {
     int start = side.getStartOffset(fragment);
     int end = side.getEndOffset(fragment);
     TextDiffType type = DiffUtil.getDiffType(fragment);
@@ -135,7 +139,7 @@ public class SimpleDiffChange {
     myHighlighters.addAll(DiffDrawUtil.createInlineHighlighter(editor, start, end, type));
   }
 
-  private void createNonSquashedChangesSeparator(@Nullable LineFragment previousFragment, @NotNull Side side) {
+  private void createNonSquashedChangesSeparator(@Nullable LineFragment previousFragment, @Nonnull Side side) {
     if (previousFragment == null) return;
 
     int startLine = side.getStartLine(myFragment);
@@ -161,15 +165,15 @@ public class SimpleDiffChange {
   // Getters
   //
 
-  public int getStartLine(@NotNull Side side) {
+  public int getStartLine(@Nonnull Side side) {
     return side.getStartLine(myFragment) + side.select(myLineStartShifts);
   }
 
-  public int getEndLine(@NotNull Side side) {
+  public int getEndLine(@Nonnull Side side) {
     return side.getEndLine(myFragment) + side.select(myLineEndShifts);
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffType getDiffType() {
     return DiffUtil.getLineDiffType(myFragment);
   }
@@ -182,7 +186,7 @@ public class SimpleDiffChange {
   // Shift
   //
 
-  public boolean processChange(int oldLine1, int oldLine2, int shift, @NotNull Side side) {
+  public boolean processChange(int oldLine1, int oldLine2, int shift, @Nonnull Side side) {
     int line1 = getStartLine(side);
     int line2 = getEndLine(side);
     int sideIndex = side.getIndex();
@@ -207,7 +211,7 @@ public class SimpleDiffChange {
   // Change applying
   //
 
-  public boolean isSelectedByLine(int line, @NotNull Side side) {
+  public boolean isSelectedByLine(int line, @Nonnull Side side) {
     int line1 = getStartLine(side);
     int line2 = getEndLine(side);
 
@@ -218,8 +222,8 @@ public class SimpleDiffChange {
   // Helpers
   //
 
-  @NotNull
-  private MyGutterOperation createOperation(@NotNull Side side) {
+  @Nonnull
+  private MyGutterOperation createOperation(@Nonnull Side side) {
     int offset = side.getStartOffset(myFragment);
     EditorEx editor = myViewer.getEditor(side);
     RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(offset, offset,
@@ -230,12 +234,14 @@ public class SimpleDiffChange {
   }
 
   private class MyGutterOperation {
-    @NotNull private final Side mySide;
-    @NotNull private final RangeHighlighter myHighlighter;
+    @Nonnull
+    private final Side mySide;
+    @Nonnull
+    private final RangeHighlighter myHighlighter;
 
     private boolean myCtrlPressed;
 
-    private MyGutterOperation(@NotNull Side side, @NotNull RangeHighlighter highlighter) {
+    private MyGutterOperation(@Nonnull Side side, @Nonnull RangeHighlighter highlighter) {
       mySide = side;
       myHighlighter = highlighter;
 
@@ -257,7 +263,7 @@ public class SimpleDiffChange {
       return myCtrlPressed != myViewer.getModifierProvider().isCtrlPressed();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public GutterIconRenderer createRenderer() {
       myCtrlPressed = myViewer.getModifierProvider().isCtrlPressed();
 
@@ -277,15 +283,15 @@ public class SimpleDiffChange {
     }
   }
 
-  @Nullable
-  private GutterIconRenderer createApplyRenderer(@NotNull final Side side) {
+  @javax.annotation.Nullable
+  private GutterIconRenderer createApplyRenderer(@Nonnull final Side side) {
     return createIconRenderer(side, "Accept", DiffUtil.getArrowIcon(side), () -> {
       myViewer.replaceChange(this, side);
     });
   }
 
-  @Nullable
-  private GutterIconRenderer createAppendRenderer(@NotNull final Side side) {
+  @javax.annotation.Nullable
+  private GutterIconRenderer createAppendRenderer(@Nonnull final Side side) {
     return createIconRenderer(side, "Append", DiffUtil.getArrowDownIcon(side), () -> {
       UsageTrigger.trigger("diff.SimpleDiffChange.Append");
       myViewer.appendChange(this, side);
@@ -293,10 +299,10 @@ public class SimpleDiffChange {
   }
 
   @Nullable
-  private GutterIconRenderer createIconRenderer(@NotNull final Side sourceSide,
-                                                @NotNull final String tooltipText,
-                                                @NotNull final Icon icon,
-                                                @NotNull final Runnable perform) {
+  private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
+                                                @Nonnull final String tooltipText,
+                                                @Nonnull final Icon icon,
+                                                @Nonnull final Runnable perform) {
     if (!DiffUtil.isEditable(myViewer.getEditor(sourceSide.other()))) return null;
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override

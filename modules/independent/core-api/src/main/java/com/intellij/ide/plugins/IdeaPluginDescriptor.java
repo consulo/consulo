@@ -20,8 +20,8 @@ import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.extensions.PluginId;
 import consulo.ide.plugins.SimpleExtension;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -41,10 +41,10 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
 
   String getName();
 
-  @NotNull
+  @Nonnull
   PluginId[] getDependentPluginIds();
 
-  @NotNull
+  @Nonnull
   PluginId[] getOptionalDependentPluginIds();
 
   String getVendor();
@@ -62,13 +62,13 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
   @Nullable
   List<Element> getActionsDescriptionElements();
 
-  @NotNull
+  @Nonnull
   ComponentConfig[] getAppComponents();
 
-  @NotNull
+  @Nonnull
   ComponentConfig[] getProjectComponents();
 
-  @NotNull
+  @Nonnull
   ComponentConfig[] getModuleComponents();
 
   String getVendorEmail();
@@ -77,12 +77,12 @@ public interface IdeaPluginDescriptor extends PluginDescriptor {
 
   String getUrl();
 
-  @NotNull
+  @Nonnull
   HelpSetPath[] getHelpSets();
 
   String getDownloads();
 
-  @NotNull
+  @Nonnull
   default List<SimpleExtension> getSimpleExtensions() {
     return Collections.emptyList();
   }

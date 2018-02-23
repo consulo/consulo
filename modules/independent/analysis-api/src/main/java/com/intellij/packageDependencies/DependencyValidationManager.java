@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -43,10 +43,10 @@ public abstract class DependencyValidationManager extends NamedScopesHolder {
   @Nullable
   public abstract DependencyRule getViolatorDependencyRule(PsiFile from, PsiFile to);
 
-  @NotNull
+  @Nonnull
   public abstract DependencyRule[] getViolatorDependencyRules(PsiFile from, PsiFile to);
 
-  @NotNull
+  @Nonnull
   public abstract DependencyRule[] getApplicableRules(PsiFile file);
 
   public abstract DependencyRule[] getAllRules();

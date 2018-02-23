@@ -29,7 +29,7 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PsiErrorElementUtil {
 
@@ -38,7 +38,7 @@ public class PsiErrorElementUtil {
   private PsiErrorElementUtil() {
   }
 
-  public static boolean hasErrors(@NotNull final Project project, @NotNull final VirtualFile virtualFile) {
+  public static boolean hasErrors(@Nonnull final Project project, @Nonnull final VirtualFile virtualFile) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
@@ -52,7 +52,7 @@ public class PsiErrorElementUtil {
     });
   }
 
-  private static boolean hasErrors(@NotNull final PsiFile psiFile) {
+  private static boolean hasErrors(@Nonnull final PsiFile psiFile) {
     CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(psiFile.getProject());
     return cachedValuesManager.getCachedValue(psiFile, CONTAINS_ERROR_ELEMENT, () -> {
       boolean error = hasErrorElements(psiFile);
@@ -60,7 +60,7 @@ public class PsiErrorElementUtil {
     }, false);
   }
 
-  private static boolean hasErrorElements(@NotNull final PsiElement element) {
+  private static boolean hasErrorElements(@Nonnull final PsiElement element) {
     if (element instanceof PsiErrorElement) {
       HighlightErrorFilter[] errorFilters = Extensions.getExtensions(HighlightErrorFilter.EP_NAME, element.getProject());
       for (HighlightErrorFilter errorFilter : errorFilters) {

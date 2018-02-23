@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 package com.intellij.openapi.externalSystem.test
-
-import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings
-import com.intellij.openapi.externalSystem.settings.ExternalSystemSettingsListener
-import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.NotNull
 /**
  * @author Denis Zhdanov
  * @since 8/8/13 4:04 PM

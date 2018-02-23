@@ -55,8 +55,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.*;
 import javax.swing.*;
@@ -76,7 +76,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
   private final EditorImpl myEditor;
   private final ApplicationImpl myApplication;
 
-  public EditorComponentImpl(@NotNull EditorImpl editor) {
+  public EditorComponentImpl(@Nonnull EditorImpl editor) {
     myEditor = editor;
     enableEvents(AWTEvent.KEY_EVENT_MASK | AWTEvent.INPUT_METHOD_EVENT_MASK);
     enableInputMethods(true);
@@ -115,20 +115,20 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
   }
 
   @Override
-  public void paint(@NotNull Graphics g) {
+  public void paint(@Nonnull Graphics g) {
     if (!isEnabled()) {
       g = new Grayer((Graphics2D)g, getBackground());
     }
     super.paint(g);
   }
 
-  @NotNull
+  @Nonnull
   public EditorImpl getEditor() {
     return myEditor;
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (myEditor.isDisposed() || myEditor.isRendererMode()) return null;
 
     if (CommonDataKeys.EDITOR == dataId) {
@@ -289,7 +289,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     myEditor.putInfo(info);
   }
 

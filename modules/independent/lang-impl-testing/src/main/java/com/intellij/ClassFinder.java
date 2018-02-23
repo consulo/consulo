@@ -25,7 +25,7 @@
 package com.intellij;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;

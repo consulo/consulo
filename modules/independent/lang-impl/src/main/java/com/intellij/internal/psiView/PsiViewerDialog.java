@@ -75,8 +75,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -661,7 +661,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     AbstractAction copyPsi = new AbstractAction("Cop&y PSI") {
@@ -771,7 +771,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
   }
 
   @Nullable
-  private static Block buildBlocks(@NotNull PsiElement rootElement) {
+  private static Block buildBlocks(@Nonnull PsiElement rootElement) {
     FormattingModelBuilder formattingModelBuilder = LanguageFormatting.INSTANCE.forContext(rootElement);
     CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(rootElement.getProject());
     if (formattingModelBuilder != null) {
@@ -812,7 +812,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
   }
 
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (PlatformDataKeys.NAVIGATABLE == dataId) {
       String fqn = null;
       if (myPsiTree.hasFocus()) {

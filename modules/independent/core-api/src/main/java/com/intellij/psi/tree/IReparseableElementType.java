@@ -23,19 +23,19 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IReparseableElementType extends ILazyParseableElementType {
-  public IReparseableElementType(@NotNull @NonNls String debugName) {
+  public IReparseableElementType(@Nonnull @NonNls String debugName) {
     super(debugName);
   }
 
-  public IReparseableElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
+  public IReparseableElementType(@Nonnull @NonNls String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public IReparseableElementType(@NotNull @NonNls String debugName,
+  public IReparseableElementType(@Nonnull @NonNls String debugName,
                                  @Nullable Language language,
                                  boolean register) {
     super(debugName, language, register);
@@ -51,7 +51,7 @@ public class IReparseableElementType extends ILazyParseableElementType {
    * @param project the project containing the content.  @return true if the content is valid, false if not
    */
 
-  public boolean isParsable(@NotNull PsiFile psiFile, CharSequence buffer, Language fileLanguage, final Project project) {
+  public boolean isParsable(@Nonnull PsiFile psiFile, CharSequence buffer, Language fileLanguage, final Project project) {
     return false;
   }
 }

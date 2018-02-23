@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -77,14 +77,14 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
   @Nullable
   protected abstract DataViewsConfigurableUi createRootUi();
 
-  @NotNull
+  @Nonnull
   protected abstract DebuggerSettingsCategory getCategory();
 
   private boolean isChildrenMerged() {
     return children != null && children.length == 1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public final Configurable[] getConfigurables() {
     if (children == null) {

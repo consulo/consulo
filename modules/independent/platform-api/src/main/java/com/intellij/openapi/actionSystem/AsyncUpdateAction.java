@@ -18,7 +18,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.ExecutorService;
@@ -62,7 +62,7 @@ public abstract class AsyncUpdateAction<T> extends AnAction {
 
   // Sync update
   @Override
-  public final void beforeActionPerformedUpdate(@NotNull AnActionEvent e) {
+  public final void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
     performUpdate(e.getPresentation(), prepareDataFromContext(e));
   }
 

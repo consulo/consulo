@@ -25,8 +25,8 @@ import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -35,7 +35,7 @@ import consulo.annotations.RequiredDispatchThread;
 public abstract class CodeInsightAction extends AnAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project != null) {
       Editor editor = getEditor(e.getDataContext(), project);
@@ -45,12 +45,12 @@ public abstract class CodeInsightAction extends AnAction {
 
   @Nullable
   @RequiredDispatchThread
-  protected Editor getEditor(@NotNull DataContext dataContext, @NotNull Project project) {
+  protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project) {
     return dataContext.getData(CommonDataKeys.EDITOR);
   }
 
   @RequiredDispatchThread
-  public void actionPerformedImpl(@NotNull final Project project, final Editor editor) {
+  public void actionPerformedImpl(@Nonnull final Project project, final Editor editor) {
     if (editor == null) return;
     //final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
@@ -78,7 +78,7 @@ public abstract class CodeInsightAction extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
     Project project = e.getProject();
@@ -103,20 +103,20 @@ public abstract class CodeInsightAction extends AnAction {
     update(presentation, project, editor, file, dataContext, e.getPlace());
   }
 
-  protected void update(@NotNull Presentation presentation, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  protected void update(@Nonnull Presentation presentation, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     presentation.setEnabled(isValidForFile(project, editor, file));
   }
 
-  protected void update(@NotNull Presentation presentation, @NotNull Project project,
-                        @NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext dataContext, @Nullable String actionPlace) {
+  protected void update(@Nonnull Presentation presentation, @Nonnull Project project,
+                        @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext, @Nullable String actionPlace) {
     update(presentation, project, editor, file);
   }
 
-  protected boolean isValidForFile(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+  protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract CodeInsightActionHandler getHandler();
 
   protected String getCommandName() {

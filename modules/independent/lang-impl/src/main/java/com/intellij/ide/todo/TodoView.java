@@ -47,7 +47,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.annotations.RequiredReadAction;
 import consulo.psi.PsiPackageSupportProviders;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -72,7 +72,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   private final MyVcsListener myVcsListener = new MyVcsListener();
 
   @RequiredReadAction
-  public TodoView(@NotNull Project project) {
+  public TodoView(@Nonnull Project project) {
     myProject = project;
 
     state.all.isAutoScrollToSource = true;
@@ -145,7 +145,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   public void dispose() {
   }
 
-  public void initToolWindow(@NotNull ToolWindow toolWindow) {
+  public void initToolWindow(@Nonnull ToolWindow toolWindow) {
     // Create panels
     ContentFactory contentFactory = ContentFactory.getInstance();
     Content allTodosContent = contentFactory.createContent(null, IdeBundle.message("title.project"), false);
@@ -217,7 +217,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     myPanels.add(scopeBasedTodos);
   }
 
-  @NotNull
+  @Nonnull
   protected AllTodosTreeBuilder createAllTodoBuilder(JTree tree, DefaultTreeModel treeModel, Project project) {
     return new AllTodosTreeBuilder(tree, treeModel, project);
   }
@@ -275,7 +275,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
-    public void fileTypesChanged(@NotNull FileTypeEvent e) {
+    public void fileTypesChanged(@Nonnull FileTypeEvent e) {
       // this invokeLater guaranties that this code will be invoked after
       // PSI gets the same event.
       DumbService.getInstance(myProject).smartInvokeLater(() -> ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {

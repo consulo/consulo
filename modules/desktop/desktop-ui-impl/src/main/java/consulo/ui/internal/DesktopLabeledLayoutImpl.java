@@ -20,7 +20,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +37,9 @@ public class DesktopLabeledLayoutImpl extends JPanel implements SwingWrapper, La
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public LabeledLayout set(@NotNull Component component) {
+  public LabeledLayout set(@Nonnull Component component) {
     add(TargetAWT.to(component), BorderLayout.CENTER);
     return this;
   }

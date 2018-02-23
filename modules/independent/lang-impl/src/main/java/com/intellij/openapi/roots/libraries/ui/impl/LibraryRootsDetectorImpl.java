@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.libraries.ui.DetectedLibraryRoot;
 import com.intellij.openapi.roots.libraries.ui.LibraryRootsDetector;
 import com.intellij.openapi.roots.libraries.ui.RootDetector;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class LibraryRootsDetectorImpl extends LibraryRootsDetector {
   }
 
   @Override
-  public Collection<DetectedLibraryRoot> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator) {
+  public Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
     List<DetectedLibraryRoot> result = new ArrayList<DetectedLibraryRoot>();
     for (RootDetector detector : myDetectors) {
       final Collection<VirtualFile> files = detector.detectRoots(rootCandidate, progressIndicator);
@@ -50,7 +50,7 @@ public class LibraryRootsDetectorImpl extends LibraryRootsDetector {
   }
 
   @Override
-  public String getRootTypeName(@NotNull LibraryRootType rootType) {
+  public String getRootTypeName(@Nonnull LibraryRootType rootType) {
     for (RootDetector detector : myDetectors) {
       if (detector.getRootType().equals(rootType.getType()) && detector.isJarDirectory() == rootType.isJarDirectory()) {
         return detector.getPresentableRootTypeName();

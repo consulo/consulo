@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -24,5 +24,5 @@ import java.util.EventListener;
  * @author nik
  */
 public interface LibraryEditorListener extends EventListener {
-  void libraryRenamed(@NotNull Library library, String oldName, String newName);
+  void libraryRenamed(@Nonnull Library library, String oldName, String newName);
 }

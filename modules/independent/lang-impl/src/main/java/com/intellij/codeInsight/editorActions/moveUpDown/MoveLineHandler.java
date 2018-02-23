@@ -17,7 +17,8 @@ package com.intellij.codeInsight.editorActions.moveUpDown;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Dennis.Ushakov

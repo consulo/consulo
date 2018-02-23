@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.*;
 import java.util.concurrent.Future;
@@ -31,7 +31,7 @@ import java.util.concurrent.Future;
 public class ShowSplashAction extends AnAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final DesktopSplash splash = new DesktopSplash(true);
 
     Future<?> task = ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {

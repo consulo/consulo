@@ -18,7 +18,7 @@ package consulo.ui.internal;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.ValueGroup;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,7 +33,7 @@ public class DesktopBoolValueGroup extends ButtonGroup implements ValueGroup<Boo
     clearSelection();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
     add((AbstractButton)component);

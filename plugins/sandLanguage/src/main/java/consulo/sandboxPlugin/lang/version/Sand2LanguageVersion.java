@@ -25,7 +25,7 @@ import consulo.sandboxPlugin.lang.lexer.Sand2Lexer;
 import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
 import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,25 +52,25 @@ public class Sand2LanguageVersion extends BaseSandLanguageVersion {
     return Sand2FileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Lexer createLexer() {
     return new Sand2Lexer();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getWhitespaceTokens() {
     return TokenSet.create(SandTokens.WHITE_SPACE);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getCommentTokens() {
     return TokenSet.create(SandTokens.LINE_COMMENT);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public TokenSet getStringLiteralElements() {
     return TokenSet.EMPTY;

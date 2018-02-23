@@ -13,10 +13,10 @@
 // limitations under the License.
 package org.jdom;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ImmutableText extends Text {
-  ImmutableText(@NotNull String str) {
+  ImmutableText(@Nonnull String str) {
     super.setText(str);
   }
 

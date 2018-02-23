@@ -44,8 +44,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.Immutable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -54,7 +54,7 @@ import java.util.*;
  * @since 20.04.2015
  */
 public class TargetElementUtil {
-  @NotNull
+  @Nonnull
   @Immutable
   public static Set<String> getAllAccepted() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -62,7 +62,7 @@ public class TargetElementUtil {
     return flags;
   }
 
-  @NotNull
+  @Nonnull
   @Immutable
   public static Set<String> getDefinitionSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -70,7 +70,7 @@ public class TargetElementUtil {
     return flags;
   }
 
-  @NotNull
+  @Nonnull
   @Immutable
   public static Set<String> getReferenceSearchFlags() {
     Set<String> flags = new LinkedHashSet<String>();
@@ -116,7 +116,7 @@ public class TargetElementUtil {
   }
 
   @Nullable
-  public static PsiElement adjustReference(@NotNull PsiReference ref) {
+  public static PsiElement adjustReference(@Nonnull PsiReference ref) {
     return TargetElementUtilEx.EP_NAME.composite().adjustReference(ref);
   }
 
@@ -144,7 +144,7 @@ public class TargetElementUtil {
 
   @Nullable
   @RequiredDispatchThread
-  public static PsiElement findTargetElement(Editor editor, @NotNull Set<String> flags) {
+  public static PsiElement findTargetElement(Editor editor, @Nonnull Set<String> flags) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     int offset = editor.getCaretModel().getOffset();
@@ -159,7 +159,7 @@ public class TargetElementUtil {
   }
 
   @Nullable
-  public static PsiElement findTargetElement(@NotNull Editor editor, @NotNull Set<String> flags, int offset) {
+  public static PsiElement findTargetElement(@Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
     PsiElement targetElement = findTargetElementImpl(editor, flags, offset);
     if (targetElement == null) {
       return null;
@@ -172,7 +172,7 @@ public class TargetElementUtil {
   }
 
   @Nullable
-  private static PsiElement findTargetElementImpl(@NotNull Editor editor, @NotNull Set<String> flags, int offset) {
+  private static PsiElement findTargetElementImpl(@Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
     Project project = editor.getProject();
     if (project == null) return null;
 
@@ -334,7 +334,7 @@ public class TargetElementUtil {
     return TargetElementUtilEx.EP_NAME.composite().adjustElement(editor, flags, element, contextElement);
   }
 
-  public static boolean inVirtualSpace(@NotNull Editor editor, int offset) {
+  public static boolean inVirtualSpace(@Nonnull Editor editor, int offset) {
     if (offset == editor.getCaretModel().getOffset()) {
       return EditorUtil.inVirtualSpace(editor, editor.getCaretModel().getLogicalPosition());
     }
@@ -355,7 +355,7 @@ public class TargetElementUtil {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<PsiElement> getTargetCandidates(PsiReference reference) {
     if (reference instanceof PsiPolyVariantReference) {
       final ResolveResult[] results = ((PsiPolyVariantReference)reference).multiResolve(false);

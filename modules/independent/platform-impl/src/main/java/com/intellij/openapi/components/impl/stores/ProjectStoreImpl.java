@@ -35,8 +35,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBus;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   protected ProjectImpl myProject;
   private String myPresentableUrl;
 
-  ProjectStoreImpl(@NotNull ProjectImpl project, @NotNull PathMacroManager pathMacroManager) {
+  ProjectStoreImpl(@Nonnull ProjectImpl project, @Nonnull PathMacroManager pathMacroManager) {
     super(pathMacroManager);
     myProject = project;
   }
@@ -70,7 +70,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  public void setProjectFilePath(@NotNull final String filePath) {
+  public void setProjectFilePath(@Nonnull final String filePath) {
     final StateStorageManager stateStorageManager = getStateStorageManager();
     final LocalFileSystem fs = LocalFileSystem.getInstance();
 
@@ -121,7 +121,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return getBasePath(((FileBasedStorage)storage).getFile());
   }
 
-  private String getBasePath(@NotNull File file) {
+  private String getBasePath(@Nonnull File file) {
     if (myProject.isDefault()) {
       return file.getParent();
     }
@@ -131,7 +131,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProjectName() {
     final String path = getProjectBasePath();
@@ -139,7 +139,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return readProjectName(new File(path));
   }
 
-  public static String readProjectName(@NotNull File file) {
+  public static String readProjectName(@Nonnull File file) {
     if (file.isDirectory()) {
       final File nameFile = new File(new File(file, Project.DIRECTORY_STORE_FOLDER), ProjectImpl.NAME_FILE);
       if (nameFile.exists()) {
@@ -172,7 +172,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return myProject.isDefault() ? null : ((FileBasedStorage)getDefaultFileStorage()).getVirtualFile();
   }
 
-  @NotNull
+  @Nonnull
   private XmlElementStorage getDefaultFileStorage() {
     // XmlElementStorage if default project, otherwise FileBasedStorage
     XmlElementStorage storage = (XmlElementStorage)getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
@@ -189,7 +189,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  public void loadProjectFromTemplate(@NotNull ProjectImpl defaultProject) {
+  public void loadProjectFromTemplate(@Nonnull ProjectImpl defaultProject) {
     defaultProject.save();
 
     Element element = ((DefaultProjectStoreImpl)defaultProject.getStateStore()).getStateCopy();
@@ -198,29 +198,29 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getProjectFilePath() {
     return myProject.isDefault() ? "" : ((FileBasedStorage)getDefaultFileStorage()).getFilePath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected XmlElementStorage getMainStorage() {
     return getDefaultFileStorage();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
     return new ProjectStateStorageManager(myPathMacroManager.createTrackingSubstitutor(), myProject);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected <T> Storage[] getComponentStorageSpecs(@NotNull PersistentStateComponent<T> persistentStateComponent,
-                                                   @NotNull State stateSpec,
-                                                   @NotNull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent,
+                                                   @Nonnull State stateSpec,
+                                                   @Nonnull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -270,7 +270,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected final void doSave(@Nullable List<SaveSession> saveSessions, @NotNull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected final void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
     ProjectImpl.UnableToSaveProjectNotification[] notifications =
             NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectImpl.UnableToSaveProjectNotification.class, myProject);
     if (notifications.length > 0) {
@@ -310,10 +310,10 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
   }
 
-  protected void beforeSave(@NotNull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
+  protected void beforeSave(@Nonnull List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
   }
 
-  @NotNull
+  @Nonnull
   private static VirtualFile[] getFilesList(List<Pair<SaveSession, VirtualFile>> readonlyFiles) {
     final VirtualFile[] files = new VirtualFile[readonlyFiles.size()];
     for (int i = 0, size = readonlyFiles.size(); i < size; i++) {
@@ -322,7 +322,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     return files;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected MessageBus getMessageBus() {
     return myProject.getMessageBus();

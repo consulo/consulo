@@ -37,8 +37,8 @@ import com.intellij.ui.table.TableView;
 import com.intellij.util.config.Storage;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -109,28 +109,28 @@ public class StatisticsPanel implements DataProvider {
   public SMTRunnerEventsListener createTestEventsListener() {
     return new SMTRunnerEventsAdapter() {
       @Override
-      public void onSuiteStarted(@NotNull final SMTestProxy suite) {
+      public void onSuiteStarted(@Nonnull final SMTestProxy suite) {
         if (myTableModel.shouldUpdateModelBySuite(suite)) {
           updateAndRestoreSelection();
         }
       }
 
       @Override
-      public void onSuiteFinished(@NotNull final SMTestProxy suite) {
+      public void onSuiteFinished(@Nonnull final SMTestProxy suite) {
         if (myTableModel.shouldUpdateModelBySuite(suite)) {
           updateAndRestoreSelection();
         }
       }
 
       @Override
-      public void onTestStarted(@NotNull final SMTestProxy test) {
+      public void onTestStarted(@Nonnull final SMTestProxy test) {
         if (myTableModel.shouldUpdateModelByTest(test)) {
           updateAndRestoreSelection();
         }
       }
 
       @Override
-      public void onTestFinished(@NotNull final SMTestProxy test) {
+      public void onTestFinished(@Nonnull final SMTestProxy test) {
         if (myTableModel.shouldUpdateModelByTest(test)) {
           updateAndRestoreSelection();
         }
@@ -159,7 +159,7 @@ public class StatisticsPanel implements DataProvider {
     };
   }
 
-  public Object getData(@NotNull @NonNls final Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls final Key<?> dataId) {
     if (SM_TEST_RUNNER_STATISTICS == dataId) {
       return this;
     }
@@ -173,8 +173,8 @@ public class StatisticsPanel implements DataProvider {
    */
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
-      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy,
-                                    @NotNull final Object sender,
+      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy,
+                                    @Nonnull final Object sender,
                                     final boolean requestFocus) {
         selectProxy(selectedTestProxy, sender, requestFocus);
       }
@@ -182,7 +182,7 @@ public class StatisticsPanel implements DataProvider {
   }
 
   public void selectProxy(@Nullable final SMTestProxy selectedTestProxy,
-                          @NotNull final Object sender,
+                          @Nonnull final Object sender,
                           final boolean requestFocus) {
     SMRunnerUtil.addToInvokeLater(new Runnable() {
       public void run() {
@@ -237,7 +237,7 @@ public class StatisticsPanel implements DataProvider {
     };
   }
 
-  protected void selectProxy(@Nullable final SMTestProxy selectedTestProxy) {
+  protected void selectProxy(@javax.annotation.Nullable final SMTestProxy selectedTestProxy) {
     // Send event to model
     myTableModel.updateModelOnProxySelected(selectedTestProxy);
 
@@ -276,7 +276,7 @@ public class StatisticsPanel implements DataProvider {
     });
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected SMTestProxy getSelectedItem() {
     return myStatisticsTableView.getSelectedObject();
   }

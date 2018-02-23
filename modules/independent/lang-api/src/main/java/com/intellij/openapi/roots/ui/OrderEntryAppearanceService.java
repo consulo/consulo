@@ -22,8 +22,8 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 
 public abstract class OrderEntryAppearanceService {
@@ -31,25 +31,25 @@ public abstract class OrderEntryAppearanceService {
     return ServiceManager.getService(OrderEntryAppearanceService.class);
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #forOrderEntry(@ OrderEntry)")
-  public CellAppearanceEx forOrderEntry(@Deprecated Project project, @NotNull OrderEntry orderEntry, @Deprecated boolean selected) {
+  public CellAppearanceEx forOrderEntry(@Deprecated Project project, @Nonnull OrderEntry orderEntry, @Deprecated boolean selected) {
     return forOrderEntry(orderEntry);
   }
 
-  @NotNull
-  public abstract CellAppearanceEx forOrderEntry(@NotNull OrderEntry orderEntry);
+  @Nonnull
+  public abstract CellAppearanceEx forOrderEntry(@Nonnull OrderEntry orderEntry);
 
-  @NotNull
-  public abstract CellAppearanceEx forLibrary(Project project, @NotNull Library library, boolean hasInvalidRoots);
+  @Nonnull
+  public abstract CellAppearanceEx forLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots);
 
-  @NotNull
+  @Nonnull
   public abstract CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion);
 
-  @NotNull
-  public abstract CellAppearanceEx forContentFolder(@NotNull ContentFolder folder);
+  @Nonnull
+  public abstract CellAppearanceEx forContentFolder(@Nonnull ContentFolder folder);
 
-  @NotNull
-  public abstract CellAppearanceEx forModule(@NotNull Module module);
+  @Nonnull
+  public abstract CellAppearanceEx forModule(@Nonnull Module module);
 }

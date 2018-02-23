@@ -17,7 +17,7 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,7 +97,7 @@ public class ConsoleUtilTest {
     myTokens.add(t(contentType, startOffset, endOffset));
   }
   
-  private static ConsoleViewImpl.TokenInfo t(@NotNull ConsoleViewContentType contentType, int start, int end) {
+  private static ConsoleViewImpl.TokenInfo t(@Nonnull ConsoleViewContentType contentType, int start, int end) {
     return new ConsoleViewImpl.TokenInfo(contentType, start, end);
   }
 }

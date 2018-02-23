@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.usageView.UsageInfo;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class MoveRenameUsageInfo extends UsageInfo{
   private SmartPsiElementPointer myReferencedElementPointer = null;
@@ -71,7 +71,7 @@ public class MoveRenameUsageInfo extends UsageInfo{
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getUpToDateReferencedElement() {
     return myReferencedElementPointer == null ? null : myReferencedElementPointer.getElement();
   }

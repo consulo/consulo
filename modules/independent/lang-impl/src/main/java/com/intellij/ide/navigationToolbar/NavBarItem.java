@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +95,7 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
     return myUI == null ? super.getFont() : myUI.getElementFont(this);
   }
 
-  @NotNull
+  @Nonnull
   public Icon getNodeIcon() {
     return myNodeIcon;
   }
@@ -156,7 +156,7 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
     super.setOpaque(false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getPreferredSize() {
     final Dimension size = super.getPreferredSize();
@@ -164,7 +164,7 @@ public class NavBarItem extends SimpleColoredComponent implements Disposable {
     return new Dimension(size.width + offsets.width, size.height + offsets.height);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getMinimumSize() {
     return getPreferredSize();

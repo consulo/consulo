@@ -21,13 +21,13 @@ import com.intellij.pom.tree.events.ReplaceChangeInfo;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.util.CharTable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ReplaceChangeInfoImpl extends ChangeInfoImpl implements ReplaceChangeInfo {
   private ASTNode myOldNode;
   private final ASTNode myNewNode;
 
-  public ReplaceChangeInfoImpl(@NotNull ASTNode newNode) {
+  public ReplaceChangeInfoImpl(@Nonnull ASTNode newNode) {
     super(REPLACE, newNode);
     myNewNode = newNode;
   }
@@ -37,7 +37,7 @@ public class ReplaceChangeInfoImpl extends ChangeInfoImpl implements ReplaceChan
     return myOldNode;
   }
 
-  public void setReplaced(@NotNull ASTNode replaced) {
+  public void setReplaced(@Nonnull ASTNode replaced) {
     CharTable charTableByTree = myNewNode.getTreeParent() == null ? null : SharedImplUtil.findCharTableByTree(myNewNode);
     setOldLength(((TreeElement)replaced).getNotCachedLength());
     myOldNode = replaced;

@@ -27,8 +27,7 @@ import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import consulo.externalStorage.ExternalStorageUtil;
 import org.iq80.snappy.SnappyInputStream;
 import org.iq80.snappy.SnappyOutputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +52,7 @@ public class ExternalStorage {
     myProxyDirectory = new File(PathManager.getSystemPath(), "externalStorage");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public InputStream loadContent(String fileSpec, RoamingType roamingType, StateStorageManager stateStorageManager) throws IOException {
     Ref<byte[]> ref = myQueue.getContent(fileSpec, roamingType);
     if (ref != null) {
@@ -81,7 +80,7 @@ public class ExternalStorage {
     return stream;
   }
 
-  public void saveContent(@NotNull String fileSpec, @NotNull RoamingType roamingType, byte[] content, int size) throws IOException {
+  public void saveContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType, byte[] content, int size) throws IOException {
     UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(size);
     try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(out)) {
       snappyOutputStream.write(content, 0, size);
@@ -92,8 +91,8 @@ public class ExternalStorage {
     myQueue.wantSave(myProxyDirectory, fileSpec, roamingType, compressedContent);
   }
 
-  @NotNull
-  public Collection<String> listSubFiles(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  @Nonnull
+  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     fileSpec = buildFileSpec(roamingType, fileSpec);
 
     File proxy = new File(myProxyDirectory, fileSpec);
@@ -103,15 +102,15 @@ public class ExternalStorage {
     return Collections.emptyList();
   }
 
-  public void delete(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  public void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     fileSpec = buildFileSpec(roamingType, fileSpec);
 
     File file = new File(myProxyDirectory, fileSpec);
     file.delete();
   }
 
-  @NotNull
-  public static String buildFileSpec(@NotNull RoamingType roamingType, @NotNull String fileSpec) {
+  @Nonnull
+  public static String buildFileSpec(@Nonnull RoamingType roamingType, @Nonnull String fileSpec) {
     switch (roamingType) {
       case PER_PLATFORM:
         return "$OS$/" + getOsPrefix() + "/" + fileSpec;
@@ -122,7 +121,7 @@ public class ExternalStorage {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String getOsPrefix() {
     if (SystemInfo.isWindows) {
       return "win";

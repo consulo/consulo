@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.notification;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.util.ui.MessageCategory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -39,7 +39,7 @@ public enum NotificationCategory {
     return myValue;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationType getNotificationType() {
     return convert(this);
   }

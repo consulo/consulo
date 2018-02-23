@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -42,7 +42,7 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return myBaseScope.contains(file) || myFileSet.isInSet(file);
   }
 
@@ -52,12 +52,12 @@ public class AdditionalIndexedRootsScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     return myBaseScope.compare(file1, file2);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return myBaseScope.isSearchInModuleContent(aModule);
   }
 

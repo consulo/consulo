@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -14,7 +14,7 @@ public abstract class PrefixMatcher {
     myPrefix = prefix;
   }
 
-  public boolean prefixMatches(@NotNull LookupElement element) {
+  public boolean prefixMatches(@Nonnull LookupElement element) {
     for (String s : element.getAllLookupStrings()) {
       if (prefixMatches(s)) {
         return true;
@@ -36,14 +36,15 @@ public abstract class PrefixMatcher {
     return prefixMatches(name);
   }
 
-  public abstract boolean prefixMatches(@NotNull String name);
+  public abstract boolean prefixMatches(@Nonnull String name);
 
-  @NotNull
+  @Nonnull
   public final String getPrefix() {
     return myPrefix;
   }
 
-  @NotNull public abstract PrefixMatcher cloneWithPrefix(@NotNull String prefix);
+  @Nonnull
+  public abstract PrefixMatcher cloneWithPrefix(@Nonnull String prefix);
 
   public int matchingDegree(String string) {
     return 0;

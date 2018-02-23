@@ -35,7 +35,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.indexing.FileContentImpl;
 import com.intellij.util.io.DataExternalizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -46,10 +46,10 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   private final VirtualFileGist.GistCalculator<Data> myCalculator;
   private final Key<CachedValue<Data>> myCacheKey;
 
-  PsiFileGistImpl(@NotNull String id,
+  PsiFileGistImpl(@Nonnull String id,
                   int version,
-                  @NotNull DataExternalizer<Data> externalizer,
-                  @NotNull NullableFunction<PsiFile, Data> calculator) {
+                  @Nonnull DataExternalizer<Data> externalizer,
+                  @Nonnull NullableFunction<PsiFile, Data> calculator) {
     myCalculator = (project, file) -> {
       PsiFile psiFile = getPsiFile(project, file);
       return psiFile == null ? null : calculator.fun(psiFile);
@@ -59,7 +59,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   }
 
   @Override
-  public Data getFileData(@NotNull PsiFile file) {
+  public Data getFileData(@Nonnull PsiFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     if (shouldUseMemoryStorage(file)) {
@@ -82,7 +82,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
     return document != null && (pdm.isUncommited(document) || FileDocumentManager.getInstance().isDocumentUnsaved(document));
   }
 
-  private static PsiFile getPsiFile(@NotNull Project project, @NotNull VirtualFile file) {
+  private static PsiFile getPsiFile(@Nonnull Project project, @Nonnull VirtualFile file) {
     PsiFile psi = PsiManager.getInstance(project).findFile(file);
     if (psi == null || !(psi instanceof PsiFileImpl) || ((PsiFileImpl)psi).isContentsLoaded()) {
       return psi;

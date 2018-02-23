@@ -23,16 +23,16 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
 * @author nik
 */
 public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootButtonDescriptor {
-  public ChooserBasedAttachRootButtonDescriptor(@NotNull OrderRootType rootType, @NotNull String buttonText) {
+  public ChooserBasedAttachRootButtonDescriptor(@Nonnull OrderRootType rootType, @Nonnull String buttonText) {
     super(rootType, buttonText);
   }
 
@@ -44,8 +44,8 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
   public abstract String getChooserDescription();
 
   @Override
-  public VirtualFile[] selectFiles(final @NotNull JComponent parent, @Nullable VirtualFile initialSelection,
-                                   final @Nullable Module contextModule, @NotNull LibraryEditor libraryEditor) {
+  public VirtualFile[] selectFiles(final @Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
+                                   final @Nullable Module contextModule, @Nonnull LibraryEditor libraryEditor) {
     final FileChooserDescriptor chooserDescriptor = createChooserDescriptor();
     chooserDescriptor.setTitle(getChooserTitle(libraryEditor.getName()));
     chooserDescriptor.setDescription(getChooserDescription());

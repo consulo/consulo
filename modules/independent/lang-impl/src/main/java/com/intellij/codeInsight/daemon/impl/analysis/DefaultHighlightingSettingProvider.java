@@ -19,8 +19,8 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ksafonov
@@ -37,5 +37,5 @@ public abstract class DefaultHighlightingSettingProvider {
   public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create("com.intellij.defaultHighlightingSettingProvider");
 
   @Nullable
-  public abstract FileHighlightingSetting getDefaultSetting(@NotNull Project project, @NotNull VirtualFile file);
+  public abstract FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file);
 }

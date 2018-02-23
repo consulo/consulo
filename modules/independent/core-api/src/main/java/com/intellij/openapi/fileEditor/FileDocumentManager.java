@@ -20,8 +20,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.SavingRequestor;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -32,35 +32,35 @@ public abstract class FileDocumentManager implements SavingRequestor {
 
   @Nullable
   @RequiredReadAction
-  public abstract Document getDocument(@NotNull VirtualFile file);
+  public abstract Document getDocument(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract Document getCachedDocument(@NotNull VirtualFile file);
+  public abstract Document getCachedDocument(@Nonnull VirtualFile file);
 
   @Nullable
-  public abstract VirtualFile getFile(@NotNull Document document);
+  public abstract VirtualFile getFile(@Nonnull Document document);
 
   @RequiredDispatchThread
   public abstract void saveAllDocuments();
   @RequiredDispatchThread
-  public abstract void saveDocument(@NotNull Document document);
+  public abstract void saveDocument(@Nonnull Document document);
 
   /**
    * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.
    * @param document the document to save.
    */
   @RequiredDispatchThread
-  public abstract void saveDocumentAsIs(@NotNull Document document);
+  public abstract void saveDocumentAsIs(@Nonnull Document document);
   
-  @NotNull
+  @Nonnull
   public abstract Document[] getUnsavedDocuments();
-  public abstract boolean isDocumentUnsaved(@NotNull Document document);
-  public abstract boolean isFileModified(@NotNull VirtualFile file);
+  public abstract boolean isDocumentUnsaved(@Nonnull Document document);
+  public abstract boolean isFileModified(@Nonnull VirtualFile file);
 
   @RequiredDispatchThread
-  public abstract void reloadFromDisk(@NotNull Document document);
+  public abstract void reloadFromDisk(@Nonnull Document document);
 
-  @NotNull
+  @Nonnull
   public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable Project project);
 
   /**
@@ -71,9 +71,9 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * @return true if writing access allowed
    * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(com.intellij.openapi.project.Project, com.intellij.openapi.vfs.VirtualFile...)
    */
-  public abstract boolean requestWriting(@NotNull Document document, @Nullable Project project);
+  public abstract boolean requestWriting(@Nonnull Document document, @Nullable Project project);
 
-  public static boolean fileForDocumentCheckedOutSuccessfully(@NotNull Document document, @NotNull Project project) {
+  public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull Project project) {
     return getInstance().requestWriting(document, project);
   }
 

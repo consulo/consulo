@@ -16,15 +16,15 @@
 package com.intellij.remote.ext;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 // TODO: (next) rename to wrapper?
 public interface RemoteCredentialsHandler {
 
   String getId();
 
-  void save(@NotNull Element rootElement);
+  void save(@Nonnull Element rootElement);
 
   String getPresentableDetails(String interpreterPath);
 

@@ -34,9 +34,9 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
@@ -90,7 +90,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     }
   }
 
-  public List<Parameters> getActiveConfigurations(@NotNull Target target) {
+  public List<Parameters> getActiveConfigurations(@Nonnull Target target) {
     ArrayList<Parameters> result = new ArrayList<Parameters>();
     synchronized (myProcMap) {
       for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
@@ -102,7 +102,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     return result;
   }
 
-  public EntryPoint acquire(@NotNull Target target, @NotNull Parameters configuration) throws Exception {
+  public EntryPoint acquire(@Nonnull Target target, @Nonnull Parameters configuration) throws Exception {
     ApplicationManagerEx.getApplicationEx().assertTimeConsuming();
 
     Ref<RunningInfo> ref = Ref.create(null);
@@ -136,7 +136,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     return acquire(info);
   }
 
-  public void release(@NotNull Target target, @Nullable Parameters configuration) {
+  public void release(@Nonnull Target target, @Nullable Parameters configuration) {
     ArrayList<ProcessHandler> handlers = new ArrayList<ProcessHandler>();
     synchronized (myProcMap) {
       for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
@@ -154,13 +154,13 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   private void startProcess(Target target, Parameters configuration, Pair<Target, Parameters> key) {
     ProgramRunner runner = new DefaultProgramRunner() {
       @Override
-      @NotNull
+      @Nonnull
       public String getRunnerId() {
         return "MyRunner";
       }
 
       @Override
-      public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
+      public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
         return true;
       }
     };

@@ -18,8 +18,7 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -30,9 +29,9 @@ import java.util.List;
  */
 public interface FilterMixin {
   boolean shouldRunHeavy();
-  void applyHeavyFilter(@NotNull Document copiedFragment, int startOffset, int startLineNumber, @NotNull Consumer<AdditionalHighlight> consumer);
+  void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<AdditionalHighlight> consumer);
 
-  @NotNull
+  @Nonnull
   String getUpdateMessage();
 
   class AdditionalHighlight extends Filter.Result {
@@ -41,7 +40,7 @@ public interface FilterMixin {
     }
 
     @SuppressWarnings("unused")
-    public AdditionalHighlight(@NotNull List<Filter.ResultItem> resultItems) {
+    public AdditionalHighlight(@Nonnull List<Filter.ResultItem> resultItems) {
       super(resultItems);
     }
 
@@ -55,8 +54,8 @@ public interface FilterMixin {
       return getHighlightEndOffset();
     }
 
-    @Nullable
-    public TextAttributes getTextAttributes(@Nullable final TextAttributes source) {
+    @javax.annotation.Nullable
+    public TextAttributes getTextAttributes(@javax.annotation.Nullable final TextAttributes source) {
       return null;
     }
   }

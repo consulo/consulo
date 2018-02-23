@@ -24,17 +24,17 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DiffRequestFactoryImpl extends DiffRequestFactory {
   private static final Logger LOG = Logger.getInstance(DiffRequestFactoryImpl.class);
 
   @Override
-  public MergeRequest createMergeRequest(@NotNull String leftText,
-                                         @NotNull String rightText,
-                                         @NotNull String originalContent,
-                                         @NotNull VirtualFile file,
+  public MergeRequest createMergeRequest(@Nonnull String leftText,
+                                         @Nonnull String rightText,
+                                         @Nonnull String originalContent,
+                                         @Nonnull VirtualFile file,
                                          @Nullable Project project,
                                          @Nullable ActionButtonPresentation okButtonPresentation,
                                          @Nullable ActionButtonPresentation cancelButtonPresentation) {
@@ -51,9 +51,9 @@ public class DiffRequestFactoryImpl extends DiffRequestFactory {
   }
 
   @Override
-  public MergeRequest create3WayDiffRequest(@NotNull String leftText,
-                                            @NotNull String rightText,
-                                            @NotNull String originalContent,
+  public MergeRequest create3WayDiffRequest(@Nonnull String leftText,
+                                            @Nonnull String rightText,
+                                            @Nonnull String originalContent,
                                             @Nullable FileType type,
                                             @Nullable Project project,
                                             @Nullable ActionButtonPresentation okButtonPresentation,
@@ -62,9 +62,9 @@ public class DiffRequestFactoryImpl extends DiffRequestFactory {
   }
 
   @Override
-  public MergeRequest create3WayDiffRequest(@NotNull String leftText,
-                                            @NotNull String rightText,
-                                            @NotNull String originalContent,
+  public MergeRequest create3WayDiffRequest(@Nonnull String leftText,
+                                            @Nonnull String rightText,
+                                            @Nonnull String originalContent,
                                             @Nullable Project project,
                                             @Nullable ActionButtonPresentation okButtonPresentation,
                                             @Nullable ActionButtonPresentation cancelButtonPresentation) {

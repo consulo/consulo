@@ -20,8 +20,8 @@ import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Implement this interface to provide hierarchy browsing actions (Type Hierarchy, Method Hierarchy,
@@ -40,7 +40,7 @@ public interface HierarchyProvider {
    * @return the target element, or null if the action is not applicable in this context.
    */
   @Nullable
-  PsiElement getTarget(@NotNull DataContext dataContext);
+  PsiElement getTarget(@Nonnull DataContext dataContext);
 
   /**
    * Creates a browser for viewing the hierarchy of the specified element.
@@ -48,7 +48,7 @@ public interface HierarchyProvider {
    * @param target the element to view the hierarchy for.
    * @return the browser instance.
    */
-  @NotNull
+  @Nonnull
   HierarchyBrowser createHierarchyBrowser(final PsiElement target);
 
   /**
@@ -56,5 +56,5 @@ public interface HierarchyProvider {
    *
    * @param hierarchyBrowser the browser instance created by {@link #createHierarchyBrowser(com.intellij.psi.PsiElement)}.
    */
-  void browserActivated(@NotNull HierarchyBrowser hierarchyBrowser);
+  void browserActivated(@Nonnull HierarchyBrowser hierarchyBrowser);
 }

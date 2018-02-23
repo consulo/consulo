@@ -25,7 +25,7 @@ import com.intellij.openapi.project.DumbModeTask;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.TimeoutUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -45,7 +45,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
       DumbServiceImpl.getInstance(project).queueTask(new DumbModeTask() {
         @Override
-        public void performInDumbMode(@NotNull ProgressIndicator indicator) {
+        public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
           while (myDumb) {
             indicator.checkCanceled();
             TimeoutUtil.sleep(100);

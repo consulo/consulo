@@ -17,8 +17,7 @@ package com.intellij.openapi.editor.markup;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Provides services for highlighting ranges of text in a document, painting markers on the
@@ -33,7 +32,7 @@ public interface MarkupModel extends UserDataHolder {
    *
    * @return the document instance.
    */
-  @NotNull
+  @Nonnull
   Document getDocument();
 
   /**
@@ -53,12 +52,12 @@ public interface MarkupModel extends UserDataHolder {
    * @param targetArea     type of highlighting (specific range or all full lines covered by the range).
    * @return the highlighter instance.
    */
-  @NotNull
+  @Nonnull
   RangeHighlighter addRangeHighlighter(int startOffset,
                                        int endOffset,
                                        int layer,
-                                       @Nullable TextAttributes textAttributes,
-                                       @NotNull HighlighterTargetArea targetArea);
+                                       @javax.annotation.Nullable TextAttributes textAttributes,
+                                       @Nonnull HighlighterTargetArea targetArea);
 
   /**
    * Adds a highlighter covering the specified line in the document.
@@ -72,15 +71,15 @@ public interface MarkupModel extends UserDataHolder {
    *                       does not modify the text attributes.
    * @return the highlighter instance.
    */
-  @NotNull
-  RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes);
+  @Nonnull
+  RangeHighlighter addLineHighlighter(int line, int layer, @javax.annotation.Nullable TextAttributes textAttributes);
 
   /**
    * Removes the specified highlighter instance.
    *
    * @param rangeHighlighter the highlighter to remove.
    */
-  void removeHighlighter(@NotNull RangeHighlighter rangeHighlighter);
+  void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter);
 
   /**
    * Removes all highlighter instances.
@@ -92,6 +91,6 @@ public interface MarkupModel extends UserDataHolder {
    *
    * @return the array of highlighter instances.
    */
-  @NotNull
+  @Nonnull
   RangeHighlighter[] getAllHighlighters();
 }

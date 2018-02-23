@@ -18,8 +18,8 @@ package com.intellij.packaging.elements;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,21 +28,21 @@ import java.util.List;
  * @author nik
  */
 public abstract class CompositePackagingElementType<E extends CompositePackagingElement<?>> extends PackagingElementType<E> {
-  protected CompositePackagingElementType(@NotNull @NonNls String id, @NotNull String presentableName) {
+  protected CompositePackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
     super(id, presentableName);
   }
 
   @Override
-  public boolean isAvailableForAdd(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact) {
+  public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
     return true;
   }
 
 
   @Nullable
-  public abstract CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, @NotNull ArtifactEditorContext context);
+  public abstract CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent, @Nullable String baseName, @Nonnull ArtifactEditorContext context);
 
-  @NotNull
-  public List<? extends PackagingElement<?>> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact, @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
     final PackagingElement<?> composite = createComposite(parent, null, context);
     return composite != null ? Collections.singletonList(composite) : Collections.<E>emptyList();
   }

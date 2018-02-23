@@ -21,8 +21,8 @@ import com.intellij.util.InstanceofCheckerGenerator;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ import java.util.*;
 public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> implements Cloneable, ElementPattern<T> {
   private ElementPatternCondition<T> myCondition;
 
-  protected ObjectPattern(@NotNull final InitialPatternCondition<T> condition) {
+  protected ObjectPattern(@Nonnull final InitialPatternCondition<T> condition) {
     myCondition = new ElementPatternCondition<T>(condition);
   }
 
@@ -74,9 +74,9 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     });
   }
 
-  public Self equalTo(@NotNull final T o) {
+  public Self equalTo(@Nonnull final T o) {
     return with(new ValuePatternCondition<T>("equalTo") {
-      public boolean accepts(@NotNull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
         return t.equals(o);
       }
 
@@ -87,7 +87,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
     });
   }
 
-  @NotNull
+  @Nonnull
   public Self oneOf(final T... values) {
     final Collection<T> list;
 
@@ -106,13 +106,13 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       }
 
       @Override
-      public boolean accepts(@NotNull T t, ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         return list.contains(t);
       }
     });
   }
 
-  @NotNull
+  @Nonnull
   public Self oneOf(final Collection<T> set) {
     return with(new ValuePatternCondition<T>("oneOf") {
 
@@ -122,7 +122,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       }
 
       @Override
-      public boolean accepts(@NotNull T t, ProcessingContext context) {
+      public boolean accepts(@Nonnull T t, ProcessingContext context) {
         return set.contains(t);
       }
     });
@@ -146,7 +146,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self save(final Key<? super T> key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@NotNull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
         context.put((Key)key, t);
         return true;
       }
@@ -155,7 +155,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self save(@NonNls final String key) {
     return with(new PatternCondition<T>("save") {
-      public boolean accepts(@NotNull final T t, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final T t, final ProcessingContext context) {
         context.put(key, t);
         return true;
       }
@@ -180,7 +180,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
 
   public Self without(final PatternCondition<? super T> pattern) {
     return with(new PatternCondition<T>("without") {
-      public boolean accepts(@NotNull final T o, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final T o, final ProcessingContext context) {
         return !pattern.accepts(o, context);
       }
     });
@@ -196,7 +196,7 @@ public abstract class ObjectPattern<T, Self extends ObjectPattern<T, Self>> impl
       super(aClass);
     }
 
-    public Capture(@NotNull final InitialPatternCondition<T> condition) {
+    public Capture(@Nonnull final InitialPatternCondition<T> condition) {
       super(condition);
     }
   }

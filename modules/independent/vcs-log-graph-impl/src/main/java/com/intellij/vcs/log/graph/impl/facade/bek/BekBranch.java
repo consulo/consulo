@@ -17,8 +17,8 @@ package com.intellij.vcs.log.graph.impl.facade.bek;
 
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,20 +31,22 @@ class BekBranch {
   private static final int SMALL_DELTA_TIME = 60 * 60 * 4 * 1000;
 
 
-  @NotNull private final LinearGraph myPermanentGraph;
-  @NotNull private final List<Integer> myNodeIndexes;
+  @Nonnull
+  private final LinearGraph myPermanentGraph;
+  @Nonnull
+  private final List<Integer> myNodeIndexes;
 
   private int myNoInsertSize;
 
   @Nullable private List<Integer> myPrepareForInsertPart = null;
 
-  public BekBranch(@NotNull LinearGraph permanentGraph, @NotNull List<Integer> nodeIndexes) {
+  public BekBranch(@Nonnull LinearGraph permanentGraph, @Nonnull List<Integer> nodeIndexes) {
     myPermanentGraph = permanentGraph;
     myNodeIndexes = nodeIndexes;
     myNoInsertSize = myNodeIndexes.size();
   }
 
-  public void updatePrepareForInsertPart(@NotNull TimestampGetter timestampGetter, @NotNull BekEdgeRestrictions edgeRestrictions) {
+  public void updatePrepareForInsertPart(@Nonnull TimestampGetter timestampGetter, @Nonnull BekEdgeRestrictions edgeRestrictions) {
     assert myPrepareForInsertPart == null;
     int currentNode = myNodeIndexes.get(myNoInsertSize - 1);
 
@@ -77,7 +79,7 @@ class BekBranch {
     myPrepareForInsertPart = myNodeIndexes.subList(prevIndex, myNoInsertSize);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public List<Integer> getPrepareForInsertPart() {
     return myPrepareForInsertPart;
   }

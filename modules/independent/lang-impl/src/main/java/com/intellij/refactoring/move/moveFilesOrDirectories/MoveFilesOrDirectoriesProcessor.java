@@ -41,8 +41,8 @@ import com.intellij.refactoring.util.NonCodeUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,13 +90,13 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  @NotNull
-  protected UsageViewDescriptor createUsageViewDescriptor(@NotNull UsageInfo[] usages) {
+  @Nonnull
+  protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
     return new MoveFilesOrDirectoriesViewDescriptor(myElementsToMove, myNewParent);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected UsageInfo[] findUsages() {
     ArrayList<UsageInfo> result = new ArrayList<>();
     for (int i = 0; i < myElementsToMove.length; i++) {
@@ -132,7 +132,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected void refreshElements(@NotNull PsiElement[] elements) {
+  protected void refreshElements(@Nonnull PsiElement[] elements) {
     LOG.assertTrue(elements.length == myElementsToMove.length);
     System.arraycopy(elements, 0, myElementsToMove, 0, elements.length);
   }
@@ -145,7 +145,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   }
 
   @Override
-  protected void performRefactoring(@NotNull UsageInfo[] usages) {
+  protected void performRefactoring(@Nonnull UsageInfo[] usages) {
     // If files are being moved then I need to collect some information to delete these
     // files from CVS. I need to know all common parents of the moved files and relative
     // paths.
@@ -234,7 +234,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
 
   @Nullable
   @Override
-  protected RefactoringEventData getAfterData(@NotNull UsageInfo[] usages) {
+  protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
     RefactoringEventData data = new RefactoringEventData();
     data.addElement(myNewParent);
     return data;

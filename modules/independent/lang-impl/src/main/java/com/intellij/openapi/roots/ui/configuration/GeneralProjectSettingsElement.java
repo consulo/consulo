@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.Graph;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ import java.util.*;
  * @author nik
  */
 public class GeneralProjectSettingsElement extends ProjectStructureElement {
-  public GeneralProjectSettingsElement(@NotNull StructureConfigurableContext context) {
+  public GeneralProjectSettingsElement(@Nonnull StructureConfigurableContext context) {
     super(context);
   }
 

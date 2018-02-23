@@ -27,16 +27,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
  */
 public abstract class SmartEnterProcessor {
-  public abstract boolean process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile psiFile);
+  public abstract boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile);
 
-  public boolean processAfterCompletion(@NotNull final Editor editor, @NotNull final PsiFile psiFile) {
+  public boolean processAfterCompletion(@Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
     return process(psiFile.getProject(), editor, psiFile);
   }
 
@@ -68,11 +68,11 @@ public abstract class SmartEnterProcessor {
     return psiFile.findElementAt(offset);
   }
 
-  protected static boolean isUncommited(@NotNull final Project project) {
+  protected static boolean isUncommited(@Nonnull final Project project) {
     return PsiDocumentManager.getInstance(project).hasUncommitedDocuments();
   }
 
-  protected void commit(@NotNull final Editor editor) {
+  protected void commit(@Nonnull final Editor editor) {
     final Project project = editor.getProject();
     PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
 

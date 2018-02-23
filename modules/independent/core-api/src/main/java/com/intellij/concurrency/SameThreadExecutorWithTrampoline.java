@@ -16,7 +16,7 @@
 package com.intellij.concurrency;
 
 import com.intellij.util.containers.Queue;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
 
@@ -31,7 +31,7 @@ public class SameThreadExecutorWithTrampoline implements Executor {
 
 
   @Override
-  public void execute(@NotNull Runnable command) {
+  public void execute(@Nonnull Runnable command) {
     if (myExecutionTrampoline.get() != null) {
       myExecutionTrampoline.get().addLast(command);
       return;

@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

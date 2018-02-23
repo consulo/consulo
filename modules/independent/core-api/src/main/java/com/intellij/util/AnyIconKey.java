@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,7 +26,7 @@ public class AnyIconKey<T> {
   private final Project myProject;
   private final int myFlags;
 
-  public AnyIconKey(@NotNull T object, final Project project, int flags) {
+  public AnyIconKey(@Nonnull T object, final Project project, int flags) {
     myObject = object;
     myProject = project;
     myFlags = flags;

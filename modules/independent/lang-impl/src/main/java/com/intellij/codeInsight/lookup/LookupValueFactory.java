@@ -17,9 +17,9 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.Iconable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -32,13 +32,13 @@ public class LookupValueFactory {
   private LookupValueFactory() {
   }
 
-  @NotNull
-  public static Object createLookupValue(@NotNull String name, @Nullable Icon icon) {
+  @Nonnull
+  public static Object createLookupValue(@Nonnull String name, @Nullable Icon icon) {
     return icon == null ? name : new LookupValueWithIcon(name, icon);
   }
 
-  @NotNull
-  public static Object createLookupValueWithHint(@NotNull String name, @Nullable Icon icon, String hint) {
+  @Nonnull
+  public static Object createLookupValueWithHint(@Nonnull String name, @Nullable Icon icon, String hint) {
     return new LookupValueWithIconAndHint(name, icon, hint);
   }
 
@@ -46,7 +46,7 @@ public class LookupValueFactory {
     private final String myName;
     private final Icon myIcon;
 
-    protected LookupValueWithIcon(@NotNull String name, @Nullable Icon icon) {
+    protected LookupValueWithIcon(@Nonnull String name, @Nullable Icon icon) {
       myName = name;
       myIcon = icon;
     }

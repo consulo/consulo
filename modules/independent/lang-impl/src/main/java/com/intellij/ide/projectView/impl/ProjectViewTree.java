@@ -34,8 +34,8 @@ import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -126,7 +126,7 @@ public abstract class ProjectViewTree extends DnDAwareTree {
   }
 
   @Nullable
-  public static <T> Color getColorForObject(T object, Project project, @NotNull Function<T, PsiElement> converter) {
+  public static <T> Color getColorForObject(T object, Project project, @Nonnull Function<T, PsiElement> converter) {
     Color color = null;
     final PsiElement psi = converter.fun(object);
     if (psi != null) {

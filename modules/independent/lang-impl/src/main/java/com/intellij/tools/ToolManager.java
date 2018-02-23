@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -61,7 +61,7 @@ public class ToolManager extends BaseToolManager<Tool> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ToolManager";
   }

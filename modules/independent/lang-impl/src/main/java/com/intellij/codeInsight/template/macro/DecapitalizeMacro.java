@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -32,7 +32,7 @@ public class DecapitalizeMacro extends MacroBase {
   }
 
   @Override
-  protected Result calculateResult(@NotNull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
     String text = getTextResult(params, context);
     if (text != null && text.length() > 0) {
       text = text.substring(0, 1).toLowerCase() + text.substring(1, text.length());

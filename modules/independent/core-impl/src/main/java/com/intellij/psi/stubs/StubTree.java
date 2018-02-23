@@ -20,21 +20,21 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class StubTree extends ObjectStubTree<StubElement<?>> {
 
-  public StubTree(@NotNull final PsiFileStub root) {
+  public StubTree(@Nonnull final PsiFileStub root) {
     this(root, true);
   }
 
-  public StubTree(@NotNull final PsiFileStub root, final boolean withBackReference) {
+  public StubTree(@Nonnull final PsiFileStub root, final boolean withBackReference) {
     super((ObjectStubBase)root, withBackReference);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<StubElement<?>> getPlainListFromAllRoots() {
     final PsiFileStub[] roots = getRoot().getStubRoots();
@@ -47,7 +47,7 @@ public class StubTree extends ObjectStubTree<StubElement<?>> {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiFileStub getRoot() {
     return (PsiFileStub)myRoot;

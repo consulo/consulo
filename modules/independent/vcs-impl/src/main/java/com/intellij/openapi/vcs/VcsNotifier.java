@@ -20,8 +20,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 public class VcsNotifier {
 
@@ -31,23 +30,24 @@ public class VcsNotifier {
   public static final NotificationGroup STANDARD_NOTIFICATION = new NotificationGroup("Vcs Notifications", NotificationDisplayType.BALLOON, true);
   public static final NotificationGroup SILENT_NOTIFICATION = new NotificationGroup("Vcs Silent Notifications", NotificationDisplayType.NONE, true);
 
-  private final @NotNull Project myProject;
+  private final @Nonnull
+  Project myProject;
 
 
-  public static VcsNotifier getInstance(@NotNull Project project) {
+  public static VcsNotifier getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, VcsNotifier.class);
   }
 
-  public VcsNotifier(@NotNull Project project) {
+  public VcsNotifier(@Nonnull Project project) {
     myProject = project;
   }
 
-  @NotNull
-  public static Notification createNotification(@NotNull NotificationGroup notificationGroup,
-                                                @NotNull String title,
-                                                @NotNull String message,
-                                                @NotNull NotificationType type,
-                                                @Nullable NotificationListener listener) {
+  @Nonnull
+  public static Notification createNotification(@Nonnull NotificationGroup notificationGroup,
+                                                @Nonnull String title,
+                                                @Nonnull String message,
+                                                @Nonnull NotificationType type,
+                                                @javax.annotation.Nullable NotificationListener listener) {
     // title can be empty; message can't be neither null, nor empty
     if (StringUtil.isEmptyOrSpaces(message)) {
       message = title;
@@ -57,119 +57,119 @@ public class VcsNotifier {
     return notificationGroup.createNotification(title, message, type, listener);
   }
 
-  @NotNull
-  public Notification notify(@NotNull NotificationGroup notificationGroup,
-                             @NotNull String title,
-                             @NotNull String message,
-                             @NotNull NotificationType type,
-                             @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notify(@Nonnull NotificationGroup notificationGroup,
+                             @Nonnull String title,
+                             @Nonnull String message,
+                             @Nonnull NotificationType type,
+                             @javax.annotation.Nullable NotificationListener listener) {
     Notification notification = createNotification(notificationGroup, title, message, type, listener);
     notification.notify(myProject);
     return notification;
   }
 
-  @NotNull
-  public Notification notify(@NotNull Notification notification) {
+  @Nonnull
+  public Notification notify(@Nonnull Notification notification) {
     notification.notify(myProject);
     return notification;
   }
 
-  @NotNull
-  public Notification notifyError(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyError(@Nonnull String title, @Nonnull String message) {
     return notifyError(title, message, null);
   }
 
-  @NotNull
-  public Notification notifyError(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyError(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.ERROR, listener);
   }
 
-  @NotNull
-  public Notification notifyWeakError(@NotNull String message) {
+  @Nonnull
+  public Notification notifyWeakError(@Nonnull String message) {
     return notify(NOTIFICATION_GROUP_ID, "", message, NotificationType.ERROR, null);
   }
 
-  @NotNull
-  public Notification notifySuccess(@NotNull String message) {
+  @Nonnull
+  public Notification notifySuccess(@Nonnull String message) {
     return notifySuccess("", message);
   }
 
-  @NotNull
-  public Notification notifySuccess(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifySuccess(@Nonnull String title, @Nonnull String message) {
     return notifySuccess(title, message, null);
   }
 
-  @NotNull
-  public Notification notifySuccess(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifySuccess(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
   }
 
-  @NotNull
-  public Notification notifyImportantInfo(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.INFORMATION, null);
   }
 
-  @NotNull
-  public Notification notifyImportantInfo(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
   }
 
-  @NotNull
-  public Notification notifyInfo(@NotNull String message) {
+  @Nonnull
+  public Notification notifyInfo(@Nonnull String message) {
     return notifyInfo("", message);
   }
 
-  @NotNull
-  public Notification notifyInfo(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyInfo(@Nonnull String title, @Nonnull String message) {
     return notifyInfo(title, message, null);
   }
 
-  @NotNull
-  public Notification notifyInfo(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
   }
 
-  @NotNull
-  public Notification notifyMinorWarning(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message) {
     return notifyMinorWarning(title, message, null);
   }
 
-  @NotNull
-  public Notification notifyMinorWarning(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(STANDARD_NOTIFICATION, title, message, NotificationType.WARNING, listener);
   }
 
-  @NotNull
-  public Notification notifyWarning(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyWarning(@Nonnull String title, @Nonnull String message) {
     return notifyWarning(title, message, null);
   }
 
-  @NotNull
-  public Notification notifyWarning(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.WARNING, listener);
   }
 
-  @NotNull
-  public Notification notifyImportantWarning(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.WARNING, null);
   }
 
-  @NotNull
-  public Notification notifyImportantWarning(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.WARNING, listener);
   }
 
-  @NotNull
-  public Notification notifyMinorInfo(@NotNull String title, @NotNull String message) {
+  @Nonnull
+  public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message) {
     return notifyMinorInfo(title, message, null);
   }
 
-  @NotNull
-  public Notification notifyMinorInfo(@NotNull String title, @NotNull String message, @Nullable NotificationListener listener) {
+  @Nonnull
+  public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
     return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
   }
 
-  public Notification logInfo(@NotNull String title, @NotNull String message) {
+  public Notification logInfo(@Nonnull String title, @Nonnull String message) {
     return notify(SILENT_NOTIFICATION, title, message, NotificationType.INFORMATION, null);
   }
 }

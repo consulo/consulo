@@ -27,8 +27,9 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.TestOnly;
 
 import static com.intellij.util.concurrency.QueueProcessor.ThreadToUse;
@@ -40,13 +41,16 @@ import static com.intellij.util.concurrency.QueueProcessor.ThreadToUse;
  */
 @SomeQueue
 public class BackgroundTaskQueue {
-  @NotNull protected final String myTitle;
-  @NotNull protected final QueueProcessor<TaskData> myProcessor;
+  @Nonnull
+  protected final String myTitle;
+  @Nonnull
+  protected final QueueProcessor<TaskData> myProcessor;
 
-  @NotNull private final Object TEST_TASK_LOCK = new Object();
+  @Nonnull
+  private final Object TEST_TASK_LOCK = new Object();
   private volatile boolean myForceAsyncInTests = false;
 
-  public BackgroundTaskQueue(@Nullable Project project, @NotNull String title) {
+  public BackgroundTaskQueue(@Nullable Project project, @Nonnull String title) {
     myTitle = title;
 
     Condition disposeCondition = project != null ? project.getDisposed() : ApplicationManager.getApplication().getDisposed();
@@ -65,11 +69,11 @@ public class BackgroundTaskQueue {
     myProcessor.waitFor();
   }
 
-  public void run(@NotNull Task.Backgroundable task) {
+  public void run(@Nonnull Task.Backgroundable task) {
     run(task, null, null);
   }
 
-  public void run(@NotNull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
     BackgroundableTaskData taskData = new BackgroundableTaskData(task, modalityState, indicator);
     if (!myForceAsyncInTests && ApplicationManager.getApplication().isUnitTestMode()) {
       runTaskInCurrentThread(taskData);
@@ -93,7 +97,7 @@ public class BackgroundTaskQueue {
     }
   }
 
-  private void runTaskInCurrentThread(@NotNull BackgroundableTaskData data) {
+  private void runTaskInCurrentThread(@Nonnull BackgroundableTaskData data) {
     Task.Backgroundable task = data.myTask;
 
     ProgressIndicator indicator = data.myIndicator;
@@ -114,11 +118,14 @@ public class BackgroundTaskQueue {
   }
 
   protected class BackgroundableTaskData implements TaskData {
-    @NotNull private final Task.Backgroundable myTask;
-    @Nullable private final ModalityState myModalityState;
-    @Nullable private final ProgressIndicator myIndicator;
+    @Nonnull
+    private final Task.Backgroundable myTask;
+    @Nullable
+    private final ModalityState myModalityState;
+    @Nullable
+    private final ProgressIndicator myIndicator;
 
-    public BackgroundableTaskData(@NotNull Task.Backgroundable task,
+    public BackgroundableTaskData(@Nonnull Task.Backgroundable task,
                                   @Nullable ModalityState modalityState,
                                   @Nullable ProgressIndicator indicator) {
       myTask = task;
@@ -127,7 +134,7 @@ public class BackgroundTaskQueue {
     }
 
     @Override
-    public void consume(@NotNull Runnable continuation) {
+    public void consume(@Nonnull Runnable continuation) {
       Task.Backgroundable task = myTask;
       ProgressIndicator indicator = myIndicator;
       if (indicator == null) {

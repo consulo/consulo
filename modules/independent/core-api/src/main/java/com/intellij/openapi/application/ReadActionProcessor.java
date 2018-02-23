@@ -19,7 +19,7 @@ package com.intellij.openapi.application;
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -33,8 +33,8 @@ public abstract class ReadActionProcessor<T> implements Processor<T> {
   @RequiredReadAction
   public abstract boolean processInReadAction(T t);
 
-  @NotNull
-  public static <T> Processor<T> wrapInReadAction(@NotNull final Processor<T> processor) {
+  @Nonnull
+  public static <T> Processor<T> wrapInReadAction(@Nonnull final Processor<T> processor) {
     return t -> ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> processor.process(t));
   }
 }

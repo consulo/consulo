@@ -25,7 +25,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TIntArrayList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,21 +37,21 @@ import static com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
 import static com.intellij.openapi.util.text.StringUtil.isWhiteSpace;
 
 public class ByLine {
-  @NotNull
-  public static FairDiffIterable compare(@NotNull List<? extends CharSequence> lines1,
-                                         @NotNull List<? extends CharSequence> lines2,
-                                         @NotNull ComparisonPolicy policy,
-                                         @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static FairDiffIterable compare(@Nonnull List<? extends CharSequence> lines1,
+                                         @Nonnull List<? extends CharSequence> lines2,
+                                         @Nonnull ComparisonPolicy policy,
+                                         @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
     return doCompare(getLines(lines1, policy), getLines(lines2, policy), policy, indicator);
   }
 
-  @NotNull
-  public static List<MergeRange> compare(@NotNull List<? extends CharSequence> lines1,
-                                         @NotNull List<? extends CharSequence> lines2,
-                                         @NotNull List<? extends CharSequence> lines3,
-                                         @NotNull ComparisonPolicy policy,
-                                         @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  public static List<MergeRange> compare(@Nonnull List<? extends CharSequence> lines1,
+                                         @Nonnull List<? extends CharSequence> lines2,
+                                         @Nonnull List<? extends CharSequence> lines3,
+                                         @Nonnull ComparisonPolicy policy,
+                                         @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
     return doCompare(getLines(lines1, policy), getLines(lines2, policy), getLines(lines3, policy), policy, indicator);
   }
@@ -60,11 +60,11 @@ public class ByLine {
   // Impl
   //
 
-  @NotNull
-  static FairDiffIterable doCompare(@NotNull List<Line> lines1,
-                                    @NotNull List<Line> lines2,
-                                    @NotNull ComparisonPolicy policy,
-                                    @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  static FairDiffIterable doCompare(@Nonnull List<Line> lines1,
+                                    @Nonnull List<Line> lines2,
+                                    @Nonnull ComparisonPolicy policy,
+                                    @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     if (policy == IGNORE_WHITESPACES) {
@@ -82,12 +82,12 @@ public class ByLine {
     }
   }
 
-  @NotNull
-  static List<MergeRange> doCompare(@NotNull List<Line> lines1,
-                                    @NotNull List<Line> lines2,
-                                    @NotNull List<Line> lines3,
-                                    @NotNull ComparisonPolicy policy,
-                                    @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  static List<MergeRange> doCompare(@Nonnull List<Line> lines1,
+                                    @Nonnull List<Line> lines2,
+                                    @Nonnull List<Line> lines3,
+                                    @Nonnull ComparisonPolicy policy,
+                                    @Nonnull ProgressIndicator indicator) {
     indicator.checkCanceled();
 
     List<Line> iwLines1 = convertMode(lines1, IGNORE_WHITESPACES);
@@ -105,10 +105,10 @@ public class ByLine {
     return ComparisonMergeUtil.buildFair(iterable1, iterable2, indicator);
   }
 
-  @NotNull
-  private static FairDiffIterable correctChangesSecondStep(@NotNull final List<Line> lines1,
-                                                           @NotNull final List<Line> lines2,
-                                                           @NotNull final FairDiffIterable changes) {
+  @Nonnull
+  private static FairDiffIterable correctChangesSecondStep(@Nonnull final List<Line> lines1,
+                                                           @Nonnull final List<Line> lines2,
+                                                           @Nonnull final FairDiffIterable changes) {
     /*
      * We want to fix invalid matching here:
      *
@@ -237,11 +237,11 @@ public class ByLine {
     return fair(builder.finish());
   }
 
-  @NotNull
-  private static int[] getBestMatchingAlignment(@NotNull final TIntArrayList subLines1,
-                                                @NotNull final TIntArrayList subLines2,
-                                                @NotNull final List<Line> lines1,
-                                                @NotNull final List<Line> lines2) {
+  @Nonnull
+  private static int[] getBestMatchingAlignment(@Nonnull final TIntArrayList subLines1,
+                                                @Nonnull final TIntArrayList subLines2,
+                                                @Nonnull final List<Line> lines1,
+                                                @Nonnull final List<Line> lines2) {
     assert subLines1.size() < subLines2.size();
     final int size = subLines1.size();
 
@@ -289,11 +289,11 @@ public class ByLine {
     return best;
   }
 
-  @NotNull
-  private static FairDiffIterable optimizeLineChunks(@NotNull List<Line> lines1,
-                                                     @NotNull List<Line> lines2,
-                                                     @NotNull FairDiffIterable iterable,
-                                                     @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable optimizeLineChunks(@Nonnull List<Line> lines1,
+                                                     @Nonnull List<Line> lines2,
+                                                     @Nonnull FairDiffIterable iterable,
+                                                     @Nonnull ProgressIndicator indicator) {
     return new ChunkOptimizer.LineChunkOptimizer(lines1, lines2, iterable, indicator).build();
   }
 
@@ -302,10 +302,10 @@ public class ByLine {
    *  - compare ignoring "unimportant" lines
    *  - correct changes (compare all lines gaps between matched chunks)
    */
-  @NotNull
-  private static FairDiffIterable compareSmart(@NotNull List<Line> lines1,
-                                               @NotNull List<Line> lines2,
-                                               @NotNull ProgressIndicator indicator) {
+  @Nonnull
+  private static FairDiffIterable compareSmart(@Nonnull List<Line> lines1,
+                                               @Nonnull List<Line> lines2,
+                                               @Nonnull ProgressIndicator indicator) {
     int threshold = Registry.intValue("diff.unimportant.line.char.count");
     if (threshold == 0) return diff(lines1, lines2, indicator);
 
@@ -316,8 +316,8 @@ public class ByLine {
     return new ChangeCorrector.SmartLineChangeCorrector(bigLines1.second, bigLines2.second, lines1, lines2, changes, indicator).build();
   }
 
-  @NotNull
-  private static Pair<List<Line>, TIntArrayList> getBigLines(@NotNull List<Line> lines, int threshold) {
+  @Nonnull
+  private static Pair<List<Line>, TIntArrayList> getBigLines(@Nonnull List<Line> lines, int threshold) {
     List<Line> bigLines = new ArrayList<>(lines.size());
     TIntArrayList indexes = new TIntArrayList(lines.size());
 
@@ -331,10 +331,10 @@ public class ByLine {
     return Pair.create(bigLines, indexes);
   }
 
-  @NotNull
-  private static FairDiffIterable expandRanges(@NotNull List<Line> lines1,
-                                               @NotNull List<Line> lines2,
-                                               @NotNull FairDiffIterable iterable) {
+  @Nonnull
+  private static FairDiffIterable expandRanges(@Nonnull List<Line> lines1,
+                                               @Nonnull List<Line> lines2,
+                                               @Nonnull FairDiffIterable iterable) {
     List<Range> changes = new ArrayList<>();
 
     for (Range ch : iterable.iterateChanges()) {
@@ -349,13 +349,13 @@ public class ByLine {
   // Lines
   //
 
-  @NotNull
-  private static List<Line> getLines(@NotNull List<? extends CharSequence> text, @NotNull ComparisonPolicy policy) {
+  @Nonnull
+  private static List<Line> getLines(@Nonnull List<? extends CharSequence> text, @Nonnull ComparisonPolicy policy) {
     return ContainerUtil.map(text, (line) -> new Line(line, policy));
   }
 
-  @NotNull
-  private static List<Line> convertMode(@NotNull List<Line> original, @NotNull ComparisonPolicy policy) {
+  @Nonnull
+  private static List<Line> convertMode(@Nonnull List<Line> original, @Nonnull ComparisonPolicy policy) {
     List<Line> result = new ArrayList<>(original.size());
     for (Line line : original) {
       result.add(new Line(line.getContent(), policy));
@@ -364,19 +364,21 @@ public class ByLine {
   }
 
   static class Line {
-    @NotNull private final CharSequence myText;
-    @NotNull private final ComparisonPolicy myPolicy;
+    @Nonnull
+    private final CharSequence myText;
+    @Nonnull
+    private final ComparisonPolicy myPolicy;
     private final int myHash;
     private final int myNonSpaceChars;
 
-    public Line(@NotNull CharSequence text, @NotNull ComparisonPolicy policy) {
+    public Line(@Nonnull CharSequence text, @Nonnull ComparisonPolicy policy) {
       myText = text;
       myPolicy = policy;
       myHash = hashCode(text, policy);
       myNonSpaceChars = countNonSpaceChars(text);
     }
 
-    @NotNull
+    @Nonnull
     public CharSequence getContent() {
       return myText;
     }
@@ -403,7 +405,7 @@ public class ByLine {
       return myHash;
     }
 
-    private static int countNonSpaceChars(@NotNull CharSequence text) {
+    private static int countNonSpaceChars(@Nonnull CharSequence text) {
       int nonSpace = 0;
 
       int len = text.length();
@@ -418,7 +420,7 @@ public class ByLine {
       return nonSpace;
     }
 
-    private static boolean equals(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull ComparisonPolicy policy) {
+    private static boolean equals(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull ComparisonPolicy policy) {
       switch (policy) {
         case DEFAULT:
           return StringUtil.equals(text1, text2);
@@ -431,7 +433,7 @@ public class ByLine {
       }
     }
 
-    private static int hashCode(@NotNull CharSequence text, @NotNull ComparisonPolicy policy) {
+    private static int hashCode(@Nonnull CharSequence text, @Nonnull ComparisonPolicy policy) {
       switch (policy) {
         case DEFAULT:
           return StringUtil.stringHashCode(text);

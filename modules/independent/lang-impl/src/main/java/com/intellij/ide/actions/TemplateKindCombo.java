@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;

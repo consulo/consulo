@@ -25,8 +25,8 @@ import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -50,7 +50,7 @@ public class ParametersList implements Cloneable {
   }
 
   @Nullable
-  public String getPropertyValue(@NotNull @NonNls final String name) {
+  public String getPropertyValue(@Nonnull @NonNls final String name) {
     final String prefix = "-D" + name + "=";
     for (String parameter : myParameters) {
       if (parameter.startsWith(prefix)) {
@@ -60,7 +60,7 @@ public class ParametersList implements Cloneable {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, String> getProperties() {
     Map<String, String> result = new THashMap<String, String>();
     for (String parameter : myParameters) {
@@ -72,17 +72,17 @@ public class ParametersList implements Cloneable {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public String getParametersString() {
     return join(getList());
   }
 
-  @NotNull
+  @Nonnull
   public String[] getArray() {
     return ArrayUtil.toStringArray(getList());
   }
 
-  @NotNull
+  @Nonnull
   public List<String> getList() {
     if (myGroups.isEmpty()) {
       return Collections.unmodifiableList(myParameters);
@@ -123,21 +123,21 @@ public class ParametersList implements Cloneable {
     myParameters.add(expandMacros(parameter));
   }
 
-  public ParamsGroup addParamsGroup(@NotNull final String groupId) {
+  public ParamsGroup addParamsGroup(@Nonnull final String groupId) {
     return addParamsGroup(new ParamsGroup(groupId));
   }
 
-  public ParamsGroup addParamsGroup(@NotNull final ParamsGroup group) {
+  public ParamsGroup addParamsGroup(@Nonnull final ParamsGroup group) {
     myGroups.add(group);
     return group;
   }
 
-  public ParamsGroup addParamsGroupAt(final int index, @NotNull final ParamsGroup group) {
+  public ParamsGroup addParamsGroupAt(final int index, @Nonnull final ParamsGroup group) {
     myGroups.add(index, group);
     return group;
   }
 
-  public ParamsGroup addParamsGroupAt(final int index, @NotNull final String groupId) {
+  public ParamsGroup addParamsGroupAt(final int index, @Nonnull final String groupId) {
     final ParamsGroup group = new ParamsGroup(groupId);
     myGroups.add(index, group);
     return group;
@@ -160,7 +160,7 @@ public class ParametersList implements Cloneable {
   }
 
   @Nullable
-  public ParamsGroup getParamsGroup(@NotNull final String name) {
+  public ParamsGroup getParamsGroup(@Nonnull final String name) {
     for (ParamsGroup group : myGroups) {
       if (name.equals(group.getId())) return group;
     }
@@ -171,7 +171,7 @@ public class ParametersList implements Cloneable {
     return myGroups.remove(index);
   }
 
-  public void addAt(final int index, @NotNull final String parameter) {
+  public void addAt(final int index, @Nonnull final String parameter) {
     myParameters.add(index, expandMacros(parameter));
   }
 
@@ -254,15 +254,15 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  @NotNull
-  public static String join(@NotNull final List<String> parameters) {
+  @Nonnull
+  public static String join(@Nonnull final List<String> parameters) {
     return ParametersListUtil.join(parameters);
   }
 
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  @NotNull
+  @Nonnull
   public static String join(final String... parameters) {
     return ParametersListUtil.join(parameters);
   }
@@ -270,8 +270,8 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#parseToArray(String)
    */
-  @NotNull
-  public static String[] parse(@NotNull final String string) {
+  @Nonnull
+  public static String[] parse(@Nonnull final String string) {
     return ParametersListUtil.parseToArray(string);
   }
 

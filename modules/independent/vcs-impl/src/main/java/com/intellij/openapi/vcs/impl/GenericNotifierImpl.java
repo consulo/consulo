@@ -22,8 +22,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -31,18 +30,18 @@ import java.util.*;
 public abstract class GenericNotifierImpl<T, Key> {
   private final static Logger LOG = Logger.getInstance("#com.intellij.openapi.vcs.impl.GenericNotifier");
   protected final Project myProject;
-  @NotNull
+  @Nonnull
   private final String myGroupId; //+- here
-  @NotNull
+  @Nonnull
   private final String myTitle;
-  @NotNull
+  @Nonnull
   private final NotificationType myType;
-  @NotNull
+  @Nonnull
   private final Map<Key, MyNotification> myState;
   private final MyListener myListener;
   private final Object myLock;
 
-  protected GenericNotifierImpl(final Project project, @NotNull String groupId, @NotNull String title, final @NotNull NotificationType type) {
+  protected GenericNotifierImpl(final Project project, @Nonnull String groupId, @Nonnull String title, final @Nonnull NotificationType type) {
     myGroupId = groupId;
     myTitle = title;
     myType = type;
@@ -53,9 +52,9 @@ public abstract class GenericNotifierImpl<T, Key> {
   }
 
   protected abstract boolean ask(final T obj, String description);
-  @NotNull
+  @Nonnull
   protected abstract Key getKey(final T obj);
-  @NotNull
+  @Nonnull
   protected abstract String getNotificationContent(final T obj);
 
   protected Collection<Key> getAllCurrentKeys() {
@@ -150,7 +149,7 @@ public abstract class GenericNotifierImpl<T, Key> {
   }
 
   private class MyListener implements NotificationListener {
-    public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       final MyNotification concreteNotification = (MyNotification) notification;
       final T obj = concreteNotification.getObj();
       final boolean state = ask(obj, event.getDescription());
@@ -164,7 +163,7 @@ public abstract class GenericNotifierImpl<T, Key> {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected T getObj(final Key key) {
     synchronized (myLock) {
       final MyNotification notification = myState.get(key);
@@ -175,12 +174,12 @@ public abstract class GenericNotifierImpl<T, Key> {
   protected class MyNotification extends Notification {
     private final T myObj;
 
-    protected MyNotification(@NotNull String groupId,
-                             @NotNull String title,
-                             @NotNull String content,
-                             @NotNull NotificationType type,
-                             @Nullable NotificationListener listener,
-                             @NotNull final T obj) {
+    protected MyNotification(@Nonnull String groupId,
+                             @Nonnull String title,
+                             @Nonnull String content,
+                             @Nonnull NotificationType type,
+                             @javax.annotation.Nullable NotificationListener listener,
+                             @Nonnull final T obj) {
       super(groupId, title, content, type, listener);
       myObj = obj;
     }

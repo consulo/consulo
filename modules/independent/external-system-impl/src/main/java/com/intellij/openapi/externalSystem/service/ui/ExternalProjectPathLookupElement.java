@@ -17,14 +17,13 @@ package com.intellij.openapi.externalSystem.service.ui;
 
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -32,15 +31,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ExternalProjectPathLookupElement extends LookupElement {
   
-  @NotNull private final String myProjectName;
-  @NotNull private final String myProjectPath;
+  @Nonnull
+  private final String myProjectName;
+  @Nonnull
+  private final String myProjectPath;
 
-  public ExternalProjectPathLookupElement(@NotNull String projectName, @NotNull String projectPath) {
+  public ExternalProjectPathLookupElement(@Nonnull String projectName, @Nonnull String projectPath) {
     myProjectName = projectName;
     myProjectPath = projectPath;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLookupString() {
     return myProjectName;

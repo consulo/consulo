@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -98,13 +98,13 @@ public final class WeakKeyWeakValueHashMap<K,V> implements Map<K,V>{
     throw new RuntimeException("method not implemented");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     return myWeakKeyMap.keySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     List<V> result = new ArrayList<V>();
@@ -118,7 +118,7 @@ public final class WeakKeyWeakValueHashMap<K,V> implements Map<K,V>{
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Entry<K, V>> entrySet() {
     throw new RuntimeException("method not implemented");

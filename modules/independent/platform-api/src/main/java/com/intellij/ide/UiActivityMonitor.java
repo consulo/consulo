@@ -19,25 +19,25 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BusyObject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class UiActivityMonitor {
 
-  public abstract BusyObject getBusy(@NotNull Project project, UiActivity ... toWatch);
+  public abstract BusyObject getBusy(@Nonnull Project project, UiActivity ... toWatch);
 
   public abstract BusyObject getBusy(UiActivity ... toWatch);
 
-  public abstract void addActivity(@NotNull Project project, @NotNull UiActivity activity);
+  public abstract void addActivity(@Nonnull Project project, @Nonnull UiActivity activity);
 
-  public abstract void addActivity(@NotNull Project project, @NotNull UiActivity activity, @NotNull ModalityState effectiveModalityState);
+  public abstract void addActivity(@Nonnull Project project, @Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState);
 
-  public abstract void addActivity(@NotNull UiActivity activity);
+  public abstract void addActivity(@Nonnull UiActivity activity);
 
-  public abstract void addActivity(@NotNull UiActivity activity, @NotNull ModalityState effectiveModalityState);
+  public abstract void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState);
 
-  public abstract void removeActivity(@NotNull Project project, @NotNull UiActivity activity);
+  public abstract void removeActivity(@Nonnull Project project, @Nonnull UiActivity activity);
 
-  public abstract void removeActivity(@NotNull UiActivity activity);
+  public abstract void removeActivity(@Nonnull UiActivity activity);
 
   public abstract void clear();
 

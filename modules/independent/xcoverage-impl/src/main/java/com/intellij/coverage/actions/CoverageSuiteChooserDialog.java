@@ -18,8 +18,8 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -104,7 +104,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
     super.doOKAction();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), new NoCoverageAction(), getCancelAction()};
@@ -375,7 +375,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
   }
 
   private class SwitchEngineAction extends ComboBoxAction {
-    @NotNull
+    @Nonnull
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
       final DefaultActionGroup engChooser = new DefaultActionGroup();
@@ -394,7 +394,7 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(collectEngines().size() > 1);
     }

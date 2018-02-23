@@ -17,8 +17,8 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Aggregates 'generic' (language-agnostic) {@link ElementSignatureProvider signature providers}.
@@ -35,7 +35,7 @@ public class GenericElementSignatureProvider implements ElementSignatureProvider
   };
   
   @Override
-  public String getSignature(@NotNull PsiElement element) {
+  public String getSignature(@Nonnull PsiElement element) {
     for (ElementSignatureProvider provider : PROVIDERS) {
       String result = provider.getSignature(element);
       if (result != null) {
@@ -46,7 +46,7 @@ public class GenericElementSignatureProvider implements ElementSignatureProvider
   }
 
   @Override
-  public PsiElement restoreBySignature(@NotNull PsiFile file, @NotNull String signature, @Nullable StringBuilder processingInfoStorage) {
+  public PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage) {
     for (ElementSignatureProvider provider : PROVIDERS) {
       PsiElement result = provider.restoreBySignature(file, signature, processingInfoStorage);
       if (result != null) {

@@ -43,8 +43,8 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.roots.ui.configuration.ProjectStructureDialog;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "project.structure";
@@ -240,7 +240,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
   }
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     place.putPath(CATEGORY, mySelectedConfigurable);
     Place.queryFurther(mySelectedConfigurable, place);
   }
@@ -264,17 +264,17 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return createPlaceFor(myModulesConfig);
   }
 
-  public Place createModulePlace(@NotNull Module module) {
+  public Place createModulePlace(@Nonnull Module module) {
     return createModulesPlace().putPath(ModuleStructureConfigurable.TREE_OBJECT, module);
   }
 
-  public ActionCallback select(@NotNull Sdk sdk, final boolean requestFocus) {
+  public ActionCallback select(@Nonnull Sdk sdk, final boolean requestFocus) {
     Place place = createPlaceFor(mySdkListConfigurable);
     place.putPath(BaseStructureConfigurable.TREE_NAME, sdk.getName());
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback selectProjectOrGlobalLibrary(@NotNull Library library, boolean requestFocus) {
+  public ActionCallback selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
     Place place = createProjectOrGlobalLibraryPlace(library);
     return navigateTo(place, requestFocus);
   }
@@ -298,7 +298,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return place;
   }
 
-  public ActionCallback select(@NotNull LibraryOrderEntry libraryOrderEntry, final boolean requestFocus) {
+  public ActionCallback select(@Nonnull LibraryOrderEntry libraryOrderEntry, final boolean requestFocus) {
     final Library lib = libraryOrderEntry.getLibrary();
     if (lib == null || lib.getTable() == null) {
       return selectOrderEntry(libraryOrderEntry.getOwnerModule(), libraryOrderEntry);
@@ -308,7 +308,7 @@ public class ProjectStructureConfigurable implements SearchableConfigurable, Con
     return navigateTo(place, requestFocus);
   }
 
-  public ActionCallback selectOrderEntry(@NotNull final Module module, @Nullable final OrderEntry orderEntry) {
+  public ActionCallback selectOrderEntry(@Nonnull final Module module, @Nullable final OrderEntry orderEntry) {
     return ModuleStructureConfigurable.getInstance(myProject).selectOrderEntry(module, orderEntry);
   }
 

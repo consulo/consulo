@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -52,20 +52,21 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
 
   private static final Logger LOG = Logger.getInstance("#" + ModuleDependencyDataService.class.getName());
 
-  @NotNull private final ModuleDataService      myModuleDataManager;
+  @Nonnull
+  private final ModuleDataService      myModuleDataManager;
 
-  public ModuleDependencyDataService(@NotNull ModuleDataService manager) {
+  public ModuleDependencyDataService(@Nonnull ModuleDataService manager) {
     myModuleDataManager = manager;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<ModuleDependencyData> getTargetDataKey() {
     return ProjectKeys.MODULE_DEPENDENCY;
   }
 
   @Override
-  public void importData(@NotNull Collection<DataNode<ModuleDependencyData>> toImport, @NotNull Project project, boolean synchronous) {
+  public void importData(@Nonnull Collection<DataNode<ModuleDependencyData>> toImport, @Nonnull Project project, boolean synchronous) {
     Map<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> byModule= ExternalSystemApiUtil.groupBy(toImport, MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> entry : byModule.entrySet()) {
       Module ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
@@ -84,8 +85,8 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
     }
   }
 
-  public void importData(@NotNull final Collection<DataNode<ModuleDependencyData>> toImport,
-                         @NotNull final Module module,
+  public void importData(@Nonnull final Collection<DataNode<ModuleDependencyData>> toImport,
+                         @Nonnull final Module module,
                          final boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {

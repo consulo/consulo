@@ -17,7 +17,7 @@ package com.intellij.execution.actions;
 
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,7 +33,7 @@ public class ConfigurationFromContextImpl extends ConfigurationFromContext {
     mySourceElement = element;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     return myConfigurationSettings;
@@ -44,7 +44,7 @@ public class ConfigurationFromContextImpl extends ConfigurationFromContext {
     myConfigurationSettings = configurationSettings;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement getSourceElement() {
     return mySourceElement;

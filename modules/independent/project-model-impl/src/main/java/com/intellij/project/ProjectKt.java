@@ -17,8 +17,8 @@ package com.intellij.project;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * from kotlin platform\projectModel-impl\src\com\intellij\project\project.kt
  */
 public class ProjectKt {
-  public static boolean isDirectoryBased(@NotNull Project project) {
+  public static boolean isDirectoryBased(@Nonnull Project project) {
     if(project.isDefault()) {
       return false;
     }

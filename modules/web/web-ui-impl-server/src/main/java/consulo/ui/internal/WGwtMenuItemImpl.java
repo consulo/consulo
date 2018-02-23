@@ -20,8 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +32,7 @@ public class WGwtMenuItemImpl extends AbstractComponent implements MenuItem, Vaa
     getState().caption = text;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return getState().caption;
@@ -46,6 +46,6 @@ public class WGwtMenuItemImpl extends AbstractComponent implements MenuItem, Vaa
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 }

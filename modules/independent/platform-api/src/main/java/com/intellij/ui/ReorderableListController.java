@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;

@@ -20,22 +20,22 @@ import com.intellij.openapi.vcs.VcsProviderMarker;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface DiffProvider extends VcsProviderMarker {
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsRevisionNumber getCurrentRevision(VirtualFile file);
 
   @Nullable
   ItemLatestState getLastRevision(VirtualFile virtualFile);
 
-  @Nullable
+  @javax.annotation.Nullable
   ItemLatestState getLastRevision(final FilePath filePath);
 
-  @Nullable
+  @javax.annotation.Nullable
   ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile selectedFile);
 
-  @Nullable
+  @javax.annotation.Nullable
   VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
 }

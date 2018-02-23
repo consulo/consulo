@@ -27,7 +27,7 @@ import com.intellij.ui.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -233,7 +233,7 @@ public class DiffOptionsPanel implements OptionsPanel {
     return myDescriptions.get(selection.getAttributesKey().getExternalName());
   }
 
-  public static void addSchemeDescriptions(@NotNull List<EditorSchemeAttributeDescriptor> descriptions, @NotNull EditorColorsScheme scheme) {
+  public static void addSchemeDescriptions(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull EditorColorsScheme scheme) {
     for (TextDiffType diffType : TextDiffType.MERGE_TYPES) {
       descriptions.add(new MyColorAndFontDescription(diffType, scheme));
     }
@@ -256,7 +256,7 @@ public class DiffOptionsPanel implements OptionsPanel {
     private final EditorColorsScheme myScheme;
     private final TextDiffType myDiffType;
 
-    public MyColorAndFontDescription(@NotNull TextDiffType diffType, @NotNull EditorColorsScheme scheme) {
+    public MyColorAndFontDescription(@Nonnull TextDiffType diffType, @Nonnull EditorColorsScheme scheme) {
       myScheme = scheme;
       myDiffType = diffType;
       TextAttributes attrs = diffType.getTextAttributes(myScheme);

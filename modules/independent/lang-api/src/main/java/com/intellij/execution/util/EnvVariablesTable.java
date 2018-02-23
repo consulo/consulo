@@ -26,8 +26,8 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.table.TableCellEditor;
 import java.awt.datatransfer.DataFlavor;
@@ -94,7 +94,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         return environmentVariable.getDescription();
       }
 
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public TableCellEditor getEditor(EnvironmentVariable variable) {
         StringWithNewLinesCellEditor editor = new StringWithNewLinesCellEditor();
@@ -135,12 +135,12 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     return element.getName().isEmpty() && element.getValue().isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected AnActionButton[] createExtraActions() {
     AnActionButton copyButton = new AnActionButton(ActionsBundle.message("action.EditorCopy.text"), AllIcons.Actions.Copy) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         stopEditing();
         StringBuilder sb = new StringBuilder();
         List<EnvironmentVariable> variables = getSelection();
@@ -160,7 +160,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
     };
     AnActionButton pasteButton = new AnActionButton(ActionsBundle.message("action.EditorPaste.text"), AllIcons.Actions.Menu_paste) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         removeSelected();
         stopEditing();
         String content = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);

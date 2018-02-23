@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides services for drawing custom text annotations in the editor gutter.
@@ -34,7 +34,7 @@ public interface EditorGutter {
    *
    * @param provider the provider instance.
    */
-  void registerTextAnnotation(@NotNull TextAnnotationGutterProvider provider);
+  void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider);
 
   /**
    * Adds a provider for drawing custom text annotations in the editor gutter, with the
@@ -44,7 +44,7 @@ public interface EditorGutter {
    * @param action the action to execute when the annotation is clicked.
    * @since 5.1
    */
-  void registerTextAnnotation(@NotNull TextAnnotationGutterProvider provider, @NotNull EditorGutterAction action);
+  void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider, @Nonnull EditorGutterAction action);
 
   boolean isAnnotationsShown();
 

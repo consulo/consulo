@@ -22,8 +22,8 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Locale;
 
@@ -44,7 +44,7 @@ public class FileTemplateSettings extends FileTemplatesLoader implements Persist
   private static final String ATTRIBUTE_LIVE_TEMPLATE = "live-template-enabled";
   private static final String ATTRIBUTE_ENABLED = "enabled";
 
-  public FileTemplateSettings(@NotNull FileTypeManagerEx typeManager, @Nullable Project project) {
+  public FileTemplateSettings(@Nonnull FileTypeManagerEx typeManager, @Nullable Project project) {
     super(typeManager, project);
   }
 

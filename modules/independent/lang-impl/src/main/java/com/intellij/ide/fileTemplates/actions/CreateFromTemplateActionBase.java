@@ -34,8 +34,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -49,7 +49,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull  AnActionEvent e) {
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
     if (view == null) return;
@@ -81,11 +81,11 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
     }
   }
 
-  public static void startLiveTemplate(@NotNull PsiFile file) {
+  public static void startLiveTemplate(@Nonnull PsiFile file) {
     startLiveTemplate(file, Collections.emptyMap());
   }
 
-  public static void startLiveTemplate(@NotNull PsiFile file, @NotNull Map<String, String> defaultValues) {
+  public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
     Editor editor = EditorHelper.openInEditor(file);
     if (editor == null) return;
 
@@ -131,7 +131,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
   protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) { }
 
   @Nullable
-  protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @NotNull PsiFile file) {
+  protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @Nonnull PsiFile file) {
     return null;
   }
 }

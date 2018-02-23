@@ -16,16 +16,16 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.openapi.options.Configurable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class BrowserSpecificSettings implements Cloneable {
-  @NotNull
+  @Nonnull
   public abstract Configurable createConfigurable();
 
-  @NotNull
+  @Nonnull
   public List<String> getAdditionalParameters() {
     return Collections.emptyList();
   }

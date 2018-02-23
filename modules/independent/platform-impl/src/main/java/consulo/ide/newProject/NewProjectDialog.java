@@ -21,8 +21,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.awt.TargetAWT;
 import consulo.start.WelcomeFrameManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +65,7 @@ public class NewProjectDialog extends DialogWrapper {
   }
 
   @Override
-  protected void initRootPanel(@NotNull JPanel root) {
+  protected void initRootPanel(@Nonnull JPanel root) {
     root.add(myProjectPanel, BorderLayout.CENTER);
   }
 

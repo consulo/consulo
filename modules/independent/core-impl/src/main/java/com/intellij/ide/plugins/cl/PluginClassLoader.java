@@ -22,8 +22,8 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.lang.UrlClassLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class PluginClassLoader extends UrlClassLoader {
   private final String myPluginVersion;
   private final List<String> myLibDirectories;
 
-  public PluginClassLoader(@NotNull List<URL> urls, @NotNull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
+  public PluginClassLoader(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(build().urls(urls).allowLock().useCache());
     myParents = parents;
     myPluginId = pluginId;
@@ -55,7 +55,7 @@ public class PluginClassLoader extends UrlClassLoader {
   }
 
   @Override
-  public Class loadClass(@NotNull String name, final boolean resolve) throws ClassNotFoundException {
+  public Class loadClass(@Nonnull String name, final boolean resolve) throws ClassNotFoundException {
     Class c = tryLoadingClass(name, resolve, null);
     if (c == null) {
       throw new ClassNotFoundException(name + " " + this);
@@ -66,7 +66,7 @@ public class PluginClassLoader extends UrlClassLoader {
   // Changed sequence in which classes are searched, this is essential if plugin uses library,
   // a different version of which is used in IDEA.
   @Nullable
-  private Class tryLoadingClass(@NotNull String name, final boolean resolve, @Nullable Set<ClassLoader> visited) {
+  private Class tryLoadingClass(@Nonnull String name, final boolean resolve, @Nullable Set<ClassLoader> visited) {
     Class c = loadClassInsideSelf(name);
 
     if (c == null) {
@@ -111,7 +111,7 @@ public class PluginClassLoader extends UrlClassLoader {
   }
 
   @Nullable
-  private synchronized Class loadClassInsideSelf(@NotNull String name) {
+  private synchronized Class loadClassInsideSelf(@Nonnull String name) {
     Class c = findLoadedClass(name);
     if (c != null) {
       return c;
@@ -168,7 +168,7 @@ public class PluginClassLoader extends UrlClassLoader {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void addLibDirectories(@NotNull Collection<String> libDirectories) {
+  public void addLibDirectories(@Nonnull Collection<String> libDirectories) {
     myLibDirectories.addAll(libDirectories);
   }
 
@@ -239,7 +239,7 @@ public class PluginClassLoader extends UrlClassLoader {
     private final Enumeration<URL>[] myEnumerations;
     private int myIndex;
 
-    DeepEnumeration(@NotNull Enumeration<URL>[] enumerations) {
+    DeepEnumeration(@Nonnull Enumeration<URL>[] enumerations) {
       myEnumerations = enumerations;
     }
 

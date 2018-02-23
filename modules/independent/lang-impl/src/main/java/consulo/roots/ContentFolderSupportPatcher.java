@@ -17,7 +17,7 @@ package consulo.roots;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -28,5 +28,5 @@ import java.util.Set;
 public interface ContentFolderSupportPatcher {
   ExtensionPointName<ContentFolderSupportPatcher> EP_NAME = ExtensionPointName.create("com.intellij.contentFolderSupportPatcher");
 
-  void patch(@NotNull ModifiableRootModel model, @NotNull Set<ContentFolderTypeProvider> set);
+  void patch(@Nonnull ModifiableRootModel model, @Nonnull Set<ContentFolderTypeProvider> set);
 }

@@ -36,9 +36,9 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     myActionManager = actionManager;
   }
 
-  synchronized void initExecutor(@NotNull final Executor executor) {
+  synchronized void initExecutor(@Nonnull final Executor executor) {
     if (myId2Executor.get(executor.getId()) != null) {
       LOG.error("Executor with id: \"" + executor.getId() + "\" was already registered!");
     }
@@ -79,7 +79,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     registerAction(executor.getContextActionId(), new RunContextAction(executor), RUN_CONTEXT_GROUP, myContextActionId2Action);
   }
 
-  private void registerAction(@NotNull final String actionId, @NotNull final AnAction anAction, @NotNull final String groupId, @NotNull final Map<String, AnAction> map) {
+  private void registerAction(@Nonnull final String actionId, @Nonnull final AnAction anAction, @Nonnull final String groupId, @Nonnull final Map<String, AnAction> map) {
     AnAction action = myActionManager.getAction(actionId);
     if (action == null) {
       myActionManager.registerAction(actionId, anAction);
@@ -90,7 +90,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action);
   }
 
-  synchronized void deinitExecutor(@NotNull final Executor executor) {
+  synchronized void deinitExecutor(@Nonnull final Executor executor) {
     myExecutors.remove(executor);
     myId2Executor.remove(executor.getId());
     myContextActionIdSet.remove(executor.getContextActionId());
@@ -99,7 +99,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     unregisterAction(executor.getContextActionId(), RUN_CONTEXT_GROUP, myContextActionId2Action);
   }
 
-  private void unregisterAction(@NotNull final String actionId, @NotNull final String groupId, @NotNull final Map<String, AnAction> map) {
+  private void unregisterAction(@Nonnull final String actionId, @Nonnull final String groupId, @Nonnull final Map<String, AnAction> map) {
     final DefaultActionGroup group = (DefaultActionGroup)myActionManager.getAction(groupId);
     if (group != null) {
       group.remove(myActionManager.getAction(actionId));
@@ -112,7 +112,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public synchronized Executor[] getRegisteredExecutors() {
     return myExecutors.toArray(new Executor[myExecutors.size()]);
   }
@@ -124,7 +124,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "ExecutorRegistyImpl";
   }
@@ -142,12 +142,12 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
           }
 
           @Override
-          public void processNotStarted(String executorId, @NotNull ExecutionEnvironment environment) {
+          public void processNotStarted(String executorId, @Nonnull ExecutionEnvironment environment) {
             myInProgress.remove(createExecutionId(executorId, environment));
           }
 
           @Override
-          public void processStarted(String executorId, @NotNull ExecutionEnvironment environment, @NotNull ProcessHandler handler) {
+          public void processStarted(String executorId, @Nonnull ExecutionEnvironment environment, @Nonnull ProcessHandler handler) {
             myInProgress.remove(createExecutionId(executorId, environment));
           }
         });
@@ -173,8 +173,8 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     }
   }
 
-  @NotNull
-  private static Trinity<Project, String, String> createExecutionId(String executorId, @NotNull ExecutionEnvironment environment) {
+  @Nonnull
+  private static Trinity<Project, String, String> createExecutionId(String executorId, @Nonnull ExecutionEnvironment environment) {
     return Trinity.create(environment.getProject(), executorId, environment.getRunner().getRunnerId());
   }
 
@@ -184,7 +184,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   }
 
   @Override
-  public boolean isStarting(@NotNull ExecutionEnvironment environment) {
+  public boolean isStarting(@Nonnull ExecutionEnvironment environment) {
     return isStarting(environment.getProject(), environment.getExecutor().getId(), environment.getRunner().getRunnerId());
   }
 
@@ -202,7 +202,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
   private class ExecutorAction extends AnAction implements DumbAware {
     private final Executor myExecutor;
 
-    private ExecutorAction(@NotNull final Executor executor) {
+    private ExecutorAction(@Nonnull final Executor executor) {
       super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
       getTemplatePresentation().setVisible(false);
       myExecutor = executor;
@@ -210,7 +210,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
 
     @RequiredDispatchThread
     @Override
-    public void update(@NotNull final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       final Project project = e.getProject();
 
@@ -280,13 +280,13 @@ public class ExecutorRegistryImpl extends ExecutorRegistry {
     }
 
     @Nullable
-    private RunnerAndConfigurationSettings getConfiguration(@NotNull final Project project) {
+    private RunnerAndConfigurationSettings getConfiguration(@Nonnull final Project project) {
       return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 
     @RequiredDispatchThread
     @Override
-    public void actionPerformed(@NotNull final AnActionEvent e) {
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
       final Project project = e.getProject();
       if (project == null || project.isDisposed()) {
         return;

@@ -33,7 +33,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -54,7 +54,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     }
 
     @Override
-    public void setText(EditorComboBox component, @NotNull String text) {
+    public void setText(EditorComboBox component, @Nonnull String text) {
       component.setText(text);
     }
   };

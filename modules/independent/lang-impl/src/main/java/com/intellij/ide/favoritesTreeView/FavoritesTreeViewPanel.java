@@ -66,9 +66,9 @@ import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -194,7 +194,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     EditSourceOnEnterKeyHandler.install(myTree);
     myCopyPasteDelegator = new CopyPasteDelegator(myProject, this) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         return getSelectedPsiElements();
       }
@@ -365,7 +365,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     return myTree;
   }
 
-  @NotNull
+  @Nonnull
   private PsiElement[] getSelectedPsiElements() {
     final Object[] elements = getSelectedNodeElements();
     if (elements == null) {
@@ -400,7 +400,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
   }
 
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (CommonDataKeys.PROJECT == dataId) {
       return myProject;
     }
@@ -658,13 +658,13 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
   private final class MyDeletePSIElementProvider implements DeleteProvider {
     @Override
-    public boolean canDeleteElement(@NotNull DataContext dataContext) {
+    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
       final PsiElement[] elements = getElementsToDelete();
       return DeleteHandler.shouldEnableDeleteAction(elements);
     }
 
     @Override
-    public void deleteElement(@NotNull DataContext dataContext) {
+    public void deleteElement(@Nonnull DataContext dataContext) {
       List<PsiElement> allElements = Arrays.asList(getElementsToDelete());
       List<PsiElement> validElements = new ArrayList<>();
       for (PsiElement psiElement : allElements) {
@@ -792,9 +792,9 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     return getAcceptArea();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentResponse getContentResponse(@NotNull DockableContent content, RelativePoint point) {
+  public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
     if (content.getKey() instanceof VirtualFile) {
       return ContentResponse.ACCEPT_COPY;
     }
@@ -807,7 +807,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
   }
 
   @Override
-  public void add(@NotNull DockableContent content, RelativePoint dropTarget) {
+  public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
     if (content.getKey() instanceof VirtualFile) {
       VirtualFile vFile = (VirtualFile)content.getKey();
       final PsiFileSystemItem psiFile = vFile.isDirectory()
@@ -838,13 +838,13 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
   @Nullable
   @Override
-  public Image startDropOver(@NotNull DockableContent content, RelativePoint point) {
+  public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
     return null;
   }
 
   @Nullable
   @Override
-  public Image processDropOver(@NotNull DockableContent content, RelativePoint point) {
+  public Image processDropOver(@Nonnull DockableContent content, RelativePoint point) {
     Point p = point.getScreenPoint();
     SwingUtilities.convertPointFromScreen(p, myTree);
     TreePath treePath = myTree.getClosestPathForLocation(p.x, p.y);
@@ -857,7 +857,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
   }
 
   @Override
-  public void resetDropOver(@NotNull DockableContent content) {
+  public void resetDropOver(@Nonnull DockableContent content) {
   }
 
   @Override

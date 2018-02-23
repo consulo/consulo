@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.roots.impl.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
@@ -49,14 +49,14 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
 
   private static final Logger LOG = Logger.getInstance("#" + ContentRootDataService.class.getName());
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<ContentRootData> getTargetDataKey() {
     return ProjectKeys.CONTENT_ROOT;
   }
 
   @Override
-  public void importData(@NotNull final Collection<DataNode<ContentRootData>> toImport, @NotNull final Project project, boolean synchronous) {
+  public void importData(@Nonnull final Collection<DataNode<ContentRootData>> toImport, @Nonnull final Project project, boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
@@ -73,7 +73,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     }
   }
 
-  private static void importData(@NotNull final Collection<DataNode<ContentRootData>> datas, @NotNull final Module module, boolean synchronous) {
+  private static void importData(@Nonnull final Collection<DataNode<ContentRootData>> datas, @Nonnull final Module module, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
       @RequiredDispatchThread
       @Override
@@ -151,8 +151,8 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     });
   }
 
-  @NotNull
-  private static ContentEntry findOrCreateContentRoot(@NotNull ModifiableRootModel model, @NotNull String path) {
+  @Nonnull
+  private static ContentEntry findOrCreateContentRoot(@Nonnull ModifiableRootModel model, @Nonnull String path) {
     ContentEntry[] entries = model.getContentEntries();
 
     for (ContentEntry entry : entries) {
@@ -167,10 +167,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     return model.addContentEntry(toVfsUrl(path));
   }
 
-  private static void createSourceRootIfAbsent(@NotNull ContentEntry entry,
-                                               @NotNull ContentRootData.SourceRoot root,
-                                               @NotNull String moduleName,
-                                               @NotNull ContentFolderTypeProvider folderTypeProvider,
+  private static void createSourceRootIfAbsent(@Nonnull ContentEntry entry,
+                                               @Nonnull ContentRootData.SourceRoot root,
+                                               @Nonnull String moduleName,
+                                               @Nonnull ContentFolderTypeProvider folderTypeProvider,
                                                boolean generated,
                                                boolean createEmptyContentRootDirectories) {
     ContentFolder[] folders = entry.getFolders(ContentFolderScopes.of(folderTypeProvider));
@@ -201,10 +201,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     }
   }
 
-  private static void createExcludedRootIfAbsent(@NotNull ContentEntry entry,
-                                                 @NotNull ContentRootData.SourceRoot root,
-                                                 @NotNull String moduleName,
-                                                 @NotNull Project project) {
+  private static void createExcludedRootIfAbsent(@Nonnull ContentEntry entry,
+                                                 @Nonnull ContentRootData.SourceRoot root,
+                                                 @Nonnull String moduleName,
+                                                 @Nonnull Project project) {
     String rootPath = root.getPath();
     for (VirtualFile file : entry.getFolderFiles(ContentFolderScopes.excluded())) {
       if (ExternalSystemApiUtil.getLocalFileSystemPath(file).equals(rootPath)) {
@@ -217,10 +217,10 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   @Override
-  public void removeData(@NotNull Collection<? extends ContentEntry> toRemove, @NotNull Project project, boolean synchronous) {
+  public void removeData(@Nonnull Collection<? extends ContentEntry> toRemove, @Nonnull Project project, boolean synchronous) {
   }
 
-  private static String toVfsUrl(@NotNull String path) {
+  private static String toVfsUrl(@Nonnull String path) {
     return LocalFileSystem.PROTOCOL_PREFIX + path;
   }
 }

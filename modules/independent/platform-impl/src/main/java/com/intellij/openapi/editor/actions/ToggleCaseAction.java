@@ -36,9 +36,9 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredWriteAction;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 import static com.intellij.psi.StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;

@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
-import org.jetbrains.annotations.Nullable;
 
 public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
   public void update(AnActionEvent e) {
@@ -94,7 +93,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     RefreshQueue.getInstance().refresh(true, true, postRefreshAction, files);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static VirtualFile[] getFiles(AnActionEvent e) {
     return e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
   }

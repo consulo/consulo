@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,5 +40,5 @@ public interface ConcurrentList<E> extends List<E> {
    * @throws NullPointerException if the specified collection is null
    * @see #addIfAbsent(Object)
    */
-  int addAllAbsent(@NotNull Collection<? extends E> c);
+  int addAllAbsent(@Nonnull Collection<? extends E> c);
 }

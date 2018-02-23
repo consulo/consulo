@@ -39,8 +39,8 @@ import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.LimitedPool;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -419,7 +419,7 @@ public class GeneratedParserUtilBase {
     }
   }
 
-  private static void addCompletionVariant(@NotNull PsiBuilder builder, @NotNull CompletionState completionState, Object o) {
+  private static void addCompletionVariant(@Nonnull PsiBuilder builder, @Nonnull CompletionState completionState, Object o) {
     int offset = builder.getCurrentOffset();
     if (!builder.eof() && offset == builder.rawTokenTypeStart(1)) return; // suppress for zero-length tokens
     String text = completionState.convertItem(o);
@@ -432,11 +432,11 @@ public class GeneratedParserUtilBase {
     }
   }
 
-  public static boolean isWhitespaceOrComment(@NotNull PsiBuilder builder, @Nullable IElementType type) {
+  public static boolean isWhitespaceOrComment(@Nonnull PsiBuilder builder, @Nullable IElementType type) {
     return ((PsiBuilderImpl)((Builder)builder).getDelegate()).whitespaceOrComment(type);
   }
 
-  private static boolean wasAutoSkipped(@NotNull PsiBuilder builder, int steps) {
+  private static boolean wasAutoSkipped(@Nonnull PsiBuilder builder, int steps) {
     for (int i = -1; i >= -steps; i--) {
       if (!isWhitespaceOrComment(builder, builder.rawLookup(i))) return false;
     }
@@ -847,11 +847,11 @@ public class GeneratedParserUtilBase {
       return convertItem(o);
     }
 
-    public void addItem(@NotNull PsiBuilder builder, @NotNull String text) {
+    public void addItem(@Nonnull PsiBuilder builder, @Nonnull String text) {
       items.add(text);
     }
 
-    public boolean prefixMatches(@NotNull PsiBuilder builder, @NotNull String text) {
+    public boolean prefixMatches(@Nonnull PsiBuilder builder, @Nonnull String text) {
       int builderOffset = builder.getCurrentOffset();
       int diff = offset - builderOffset;
       int length = text.length();
@@ -883,7 +883,7 @@ public class GeneratedParserUtilBase {
       return false;
     }
 
-    public boolean prefixMatches(@NotNull String prefix, @NotNull String variant) {
+    public boolean prefixMatches(@Nonnull String prefix, @Nonnull String variant) {
       boolean matches = new CamelHumpMatcher(prefix, false).prefixMatches(variant.replace(' ', '_'));
       if (matches && isWhiteSpace(prefix.charAt(prefix.length() - 1))) {
         return startsWithIgnoreCase(variant, prefix);
@@ -938,25 +938,25 @@ public class GeneratedParserUtilBase {
     MyList<Variant> unexpected = new MyList<>(INITIAL_VARIANTS_SIZE / 10);
 
     final LimitedPool<Variant> VARIANTS = new LimitedPool<>(VARIANTS_POOL_SIZE, new LimitedPool.ObjectFactory<Variant>() {
-      @NotNull
+      @Nonnull
       @Override
       public Variant create() {
         return new Variant();
       }
 
       @Override
-      public void cleanup(@NotNull Variant o) {
+      public void cleanup(@Nonnull Variant o) {
       }
     });
     final LimitedPool<Frame> FRAMES = new LimitedPool<>(FRAMES_POOL_SIZE, new LimitedPool.ObjectFactory<Frame>() {
-      @NotNull
+      @Nonnull
       @Override
       public Frame create() {
         return new Frame();
       }
 
       @Override
-      public void cleanup(@NotNull Frame o) {
+      public void cleanup(@Nonnull Frame o) {
       }
     });
 
@@ -1260,7 +1260,7 @@ public class GeneratedParserUtilBase {
       super("DUMMY_BLOCK", Language.ANY);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ASTNode createCompositeNode() {
       return new DummyBlock();
@@ -1272,13 +1272,13 @@ public class GeneratedParserUtilBase {
       super(DUMMY_BLOCK);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public PsiReference[] getReferences() {
       return PsiReference.EMPTY_ARRAY;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Language getLanguage() {
       return getParent().getLanguage();

@@ -16,15 +16,17 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
-  @NotNull private final LineStatusTracker myTracker;
+  @Nonnull
+  private final LineStatusTracker myTracker;
   @Nullable private final Editor myEditor;
-  @NotNull private final Range myRange;
+  @Nonnull
+  private final Range myRange;
 
-  public RollbackLineStatusRangeAction(@NotNull LineStatusTracker tracker, @NotNull Range range, @Nullable Editor editor) {
+  public RollbackLineStatusRangeAction(@Nonnull LineStatusTracker tracker, @Nonnull Range range, @javax.annotation.Nullable Editor editor) {
     ActionUtil.copyFrom(this, IdeActions.SELECTED_CHANGES_ROLLBACK);
 
     myTracker = tracker;

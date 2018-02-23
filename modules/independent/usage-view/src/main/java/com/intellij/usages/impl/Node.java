@@ -19,7 +19,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Vector;
@@ -70,7 +70,7 @@ public abstract class Node extends DefaultMutableTreeNode {
   protected abstract boolean isDataExcluded();
 
 
-  protected abstract String getText(@NotNull UsageView view);
+  protected abstract String getText(@Nonnull UsageView view);
 
   public final boolean isValid() {
     return !isFlagSet(CACHED_INVALID_MASK);
@@ -94,7 +94,7 @@ public abstract class Node extends DefaultMutableTreeNode {
     return isFlagSet(EXCLUDED_MASK);
   }
 
-  final synchronized void update(@NotNull UsageView view, @NotNull Consumer<Node> edtNodeChangedQueue) {
+  final synchronized void update(@Nonnull UsageView view, @Nonnull Consumer<Node> edtNodeChangedQueue) {
     boolean isDataValid = isDataValid();
     boolean isReadOnly = isDataReadOnly();
     String text = getText(view);
@@ -128,14 +128,14 @@ public abstract class Node extends DefaultMutableTreeNode {
   }
 
   // same as DefaultMutableTreeNode.insert() except it doesn't try to remove the newChild from its parent since we know it's new
-  void insertNewNode(@NotNull Node newChild, int childIndex) {
+  void insertNewNode(@Nonnull Node newChild, int childIndex) {
     if (children == null) {
       children = new Vector();
     }
     children.insertElementAt(newChild, childIndex);
   }
 
-  void setExcluded(boolean excluded, @NotNull Consumer<Node> edtNodeChangedQueue) {
+  void setExcluded(boolean excluded, @Nonnull Consumer<Node> edtNodeChangedQueue) {
     setFlag(EXCLUDED_MASK, excluded);
     edtNodeChangedQueue.consume(this);
   }

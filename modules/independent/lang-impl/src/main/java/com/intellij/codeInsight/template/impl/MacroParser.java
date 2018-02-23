@@ -24,8 +24,8 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import java.util.List;
 public class MacroParser {
   private static final Logger LOG = Logger.getInstance("#com.intellij.codeInsight.template.impl.MacroParser");
 
-  @NotNull
+  @Nonnull
   public static Expression parse(@Nullable String expression) {
     if (StringUtil.isEmpty(expression)) {
       return new ConstantNode("");

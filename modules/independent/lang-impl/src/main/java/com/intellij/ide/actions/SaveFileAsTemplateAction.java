@@ -24,12 +24,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SaveFileAsTemplateAction extends AnAction{
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e){
+  public void actionPerformed(@Nonnull AnActionEvent e){
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
@@ -51,7 +51,7 @@ public class SaveFileAsTemplateAction extends AnAction{
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
     String fileText = e.getData(PlatformDataKeys.FILE_TEXT);
     e.getPresentation().setEnabled((fileText != null) && (file != null));

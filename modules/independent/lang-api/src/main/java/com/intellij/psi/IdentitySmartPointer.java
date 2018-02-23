@@ -22,8 +22,8 @@ package com.intellij.psi;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
 @Deprecated
@@ -31,17 +31,17 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
   private final T myElement;
   private final PsiFile myFile;
 
-  public IdentitySmartPointer(@NotNull T element, @NotNull PsiFile file) {
+  public IdentitySmartPointer(@Nonnull T element, @Nonnull PsiFile file) {
     myElement = element;
     myFile = file;
   }
 
-  public IdentitySmartPointer(@NotNull T element) {
+  public IdentitySmartPointer(@Nonnull T element) {
     this(element, element.getContainingFile());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myFile.getProject();
   }
@@ -79,7 +79,7 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
     return getPsiRange();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Segment getPsiRange() {
     return myElement.getTextRange();

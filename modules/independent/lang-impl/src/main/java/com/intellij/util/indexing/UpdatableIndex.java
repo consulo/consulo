@@ -19,8 +19,8 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.locks.Lock;
 
@@ -30,16 +30,16 @@ import java.util.concurrent.locks.Lock;
  */
 public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key,Value, Input> {
 
-  boolean processAllKeys(@NotNull Processor<Key> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processAllKeys(@Nonnull Processor<Key> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
-  @NotNull
+  @Nonnull
   Lock getReadLock();
 
-  @NotNull
+  @Nonnull
   Lock getWriteLock();
 
-  void setIndexedStateForFile(int fileId, @NotNull VirtualFile file);
+  void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
   void resetIndexedStateForFile(int fileId);
 
-  boolean isIndexedStateForFile(int fileId, @NotNull VirtualFile file);
+  boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
 }

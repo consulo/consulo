@@ -24,7 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The context for a global inspection run. Provides access to the reference graph
@@ -41,7 +41,8 @@ public interface GlobalInspectionContext extends UserDataHolder {
    *
    * @return the reference graph instance.
    */
-  @NotNull RefManager getRefManager();
+  @Nonnull
+  RefManager getRefManager();
 
   /**
    * Checks if the inspection with the specified ID is suppressed for the
@@ -71,16 +72,16 @@ public interface GlobalInspectionContext extends UserDataHolder {
    * @param inspectionToolId the ID of the inspection to check.
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressed(@NotNull PsiElement element, String inspectionToolId);
+  boolean isSuppressed(@Nonnull PsiElement element, String inspectionToolId);
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
   <T> T getExtension(Key<T> key);
 
   void incrementJobDoneAmount(JobDescriptor job, String message);
 
-  @NotNull
+  @Nonnull
   StdJobDescriptors getStdJobDescriptors();
 
   void cleanup();

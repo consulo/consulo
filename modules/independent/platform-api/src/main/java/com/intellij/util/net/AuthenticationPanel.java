@@ -15,7 +15,7 @@
  */
 package com.intellij.util.net;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 

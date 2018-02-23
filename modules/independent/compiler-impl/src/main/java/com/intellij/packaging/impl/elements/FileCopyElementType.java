@@ -24,7 +24,7 @@ import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementType;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,15 +42,15 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
     super("file-copy", "File");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.FileTypes.Text;
   }
 
-  @NotNull
-  public List<? extends FileCopyPackagingElement> chooseAndCreate(@NotNull ArtifactEditorContext context, @NotNull Artifact artifact,
-                                                                   @NotNull CompositePackagingElement<?> parent) {
+  @Nonnull
+  public List<? extends FileCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
+                                                                  @Nonnull CompositePackagingElement<?> parent) {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
     final VirtualFile[] files = FileChooser.chooseFiles(descriptor, context.getProject(), null);
     final List<FileCopyPackagingElement> list = new ArrayList<FileCopyPackagingElement>();
@@ -60,8 +60,8 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
     return list;
   }
 
-  @NotNull
-  public FileCopyPackagingElement createEmpty(@NotNull Project project) {
+  @Nonnull
+  public FileCopyPackagingElement createEmpty(@Nonnull Project project) {
     return new FileCopyPackagingElement();
   }
 }

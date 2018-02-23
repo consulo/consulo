@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class SelectNextOccurrenceAction extends EditorAction {
   protected SelectNextOccurrenceAction() {

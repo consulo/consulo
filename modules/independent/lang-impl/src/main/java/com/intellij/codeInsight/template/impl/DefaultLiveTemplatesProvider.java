@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.annotations.DeprecationInfo;
 
 /**

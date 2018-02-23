@@ -20,7 +20,7 @@
 package com.intellij.util.messages.impl;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;
 
@@ -29,19 +29,19 @@ public final class Message {
   private final Method myListenerMethod;
   private final Object[] myArgs;
 
-  public Message(@NotNull Topic topic, @NotNull Method listenerMethod, Object[] args) {
+  public Message(@Nonnull Topic topic, @Nonnull Method listenerMethod, Object[] args) {
     myTopic = topic;
     listenerMethod.setAccessible(true);
     myListenerMethod = listenerMethod;
     myArgs = args;
   }
 
-  @NotNull
+  @Nonnull
   public Topic getTopic() {
     return myTopic;
   }
 
-  @NotNull
+  @Nonnull
   public Method getListenerMethod() {
     return myListenerMethod;
   }

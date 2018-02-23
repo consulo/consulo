@@ -15,7 +15,7 @@
  */
 package consulo.localize;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Locale;
 
@@ -24,9 +24,9 @@ import java.util.Locale;
  * @since 09-Nov-17
  */
 public interface LocalizeValue {
-  @NotNull
+  @Nonnull
   String getValue();
 
-  @NotNull
-  String getValue(@NotNull Locale locale);
+  @Nonnull
+  String getValue(@Nonnull Locale locale);
 }

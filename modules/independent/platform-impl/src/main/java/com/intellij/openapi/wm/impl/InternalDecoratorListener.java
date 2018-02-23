@@ -19,7 +19,7 @@ import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowContentUiType;
 import com.intellij.openapi.wm.ToolWindowType;
 import consulo.ui.ex.ToolWindowInternalDecorator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -27,23 +27,23 @@ import java.util.EventListener;
  * @author Vladimir Kondratyev
  */
 public interface InternalDecoratorListener extends EventListener {
-  void anchorChanged(@NotNull ToolWindowInternalDecorator source, @NotNull ToolWindowAnchor anchor);
+  void anchorChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowAnchor anchor);
 
-  void autoHideChanged(@NotNull ToolWindowInternalDecorator source, boolean autoHide);
+  void autoHideChanged(@Nonnull ToolWindowInternalDecorator source, boolean autoHide);
 
-  void hidden(@NotNull ToolWindowInternalDecorator source);
+  void hidden(@Nonnull ToolWindowInternalDecorator source);
 
-  void hiddenSide(@NotNull ToolWindowInternalDecorator source);
+  void hiddenSide(@Nonnull ToolWindowInternalDecorator source);
 
-  void resized(@NotNull ToolWindowInternalDecorator source);
+  void resized(@Nonnull ToolWindowInternalDecorator source);
 
-  void activated(@NotNull ToolWindowInternalDecorator source);
+  void activated(@Nonnull ToolWindowInternalDecorator source);
 
-  void typeChanged(@NotNull ToolWindowInternalDecorator source, @NotNull ToolWindowType type);
+  void typeChanged(@Nonnull ToolWindowInternalDecorator source, @Nonnull ToolWindowType type);
 
-  void sideStatusChanged(@NotNull ToolWindowInternalDecorator source, boolean isSideTool);
+  void sideStatusChanged(@Nonnull ToolWindowInternalDecorator source, boolean isSideTool);
 
-  void contentUiTypeChanges(@NotNull ToolWindowInternalDecorator sources, @NotNull ToolWindowContentUiType type);
+  void contentUiTypeChanges(@Nonnull ToolWindowInternalDecorator sources, @Nonnull ToolWindowContentUiType type);
 
-  void visibleStripeButtonChanged(@NotNull ToolWindowInternalDecorator source, boolean visible);
+  void visibleStripeButtonChanged(@Nonnull ToolWindowInternalDecorator source, boolean visible);
 }

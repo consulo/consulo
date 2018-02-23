@@ -16,8 +16,8 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 public abstract class AbstractPathMapper implements PathMapper {
 
   @Nullable
-  public static String convertToLocal(@NotNull String remotePath, @NotNull Iterable<PathMappingSettings.PathMapping> mappings) {
+  public static String convertToLocal(@Nonnull String remotePath, @Nonnull Iterable<PathMappingSettings.PathMapping> mappings) {
     PathMappingSettings.BestMappingSelector selector = new PathMappingSettings.BestMappingSelector();
     for (PathMappingSettings.PathMapping mapping : mappings) {
       if (mapping.canReplaceRemote(remotePath)) {
@@ -43,7 +43,7 @@ public abstract class AbstractPathMapper implements PathMapper {
   }
 
   @Nullable
-  public static String convertToRemote(@NotNull String localPath, @NotNull Collection<PathMappingSettings.PathMapping> pathMappings) {
+  public static String convertToRemote(@Nonnull String localPath, @Nonnull Collection<PathMappingSettings.PathMapping> pathMappings) {
     PathMappingSettings.BestMappingSelector selector = new PathMappingSettings.BestMappingSelector();
     for (PathMappingSettings.PathMapping mapping : pathMappings) {
       if (mapping.canReplaceLocal(localPath)) {
@@ -58,9 +58,9 @@ public abstract class AbstractPathMapper implements PathMapper {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public final List<String> convertToRemote(@NotNull Collection<String> paths) {
+  public final List<String> convertToRemote(@Nonnull Collection<String> paths) {
     List<String> result = ContainerUtil.newArrayList();
     for (String p : paths) {
       result.add(convertToRemote(p));
@@ -69,7 +69,7 @@ public abstract class AbstractPathMapper implements PathMapper {
   }
 
   @Override
-  public final boolean canReplaceRemote(@NotNull String remotePath) {
+  public final boolean canReplaceRemote(@Nonnull String remotePath) {
     for (PathMappingSettings.PathMapping mapping : getAvailablePathMappings()) {
       if (mapping.canReplaceRemote(remotePath)) {
         return true;
@@ -79,7 +79,7 @@ public abstract class AbstractPathMapper implements PathMapper {
   }
 
   @Override
-  public final boolean canReplaceLocal(@NotNull String localPath) {
+  public final boolean canReplaceLocal(@Nonnull String localPath) {
     for (PathMappingSettings.PathMapping mapping : getAvailablePathMappings()) {
       if (mapping.canReplaceLocal(localPath)) {
         return true;
@@ -88,6 +88,6 @@ public abstract class AbstractPathMapper implements PathMapper {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract Collection<PathMappingSettings.PathMapping> getAvailablePathMappings();
 }

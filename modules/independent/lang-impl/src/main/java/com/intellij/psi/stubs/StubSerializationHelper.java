@@ -25,8 +25,8 @@ import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.IOUtil;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,11 +44,11 @@ public class StubSerializationHelper {
   protected final TIntObjectHashMap<ObjectStubSerializer> myIdToSerializer = new TIntObjectHashMap<>();
   protected final TObjectIntHashMap<ObjectStubSerializer> mySerializerToId = new TObjectIntHashMap<>();
 
-  public StubSerializationHelper(@NotNull AbstractStringEnumerator nameStorage) {
+  public StubSerializationHelper(@Nonnull AbstractStringEnumerator nameStorage) {
     myNameStorage = nameStorage;
   }
 
-  public void assignId(@NotNull final ObjectStubSerializer serializer) throws IOException {
+  public void assignId(@Nonnull final ObjectStubSerializer serializer) throws IOException {
     final int id = persistentId(serializer);
     final ObjectStubSerializer old = myIdToSerializer.put(id, serializer);
     assert old == null : "ID: " + serializer.getExternalId() + " is not unique; Already registered serializer with this ID: " + old.getClass().getName();
@@ -57,11 +57,11 @@ public class StubSerializationHelper {
     assert oldId == 0 : "Serializer " + serializer + " is already registered; Old ID:" + oldId;
   }
 
-  private int persistentId(@NotNull final ObjectStubSerializer serializer) throws IOException {
+  private int persistentId(@Nonnull final ObjectStubSerializer serializer) throws IOException {
     return myNameStorage.enumerate(serializer.getExternalId());
   }
 
-  private void doSerialize(@NotNull Stub rootStub, @NotNull StubOutputStream stream) throws IOException {
+  private void doSerialize(@Nonnull Stub rootStub, @Nonnull StubOutputStream stream) throws IOException {
     final ObjectStubSerializer serializer = StubSerializationUtil.getSerializer(rootStub);
 
     if (((ObjectStubBase)rootStub).isDangling()) {
@@ -78,7 +78,7 @@ public class StubSerializationHelper {
     }
   }
 
-  public void serialize(@NotNull Stub rootStub, @NotNull OutputStream stream) throws IOException {
+  public void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream) throws IOException {
     BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream();
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(true);
     StubOutputStream stubOutputStream = new StubOutputStream(out, storage);
@@ -118,8 +118,8 @@ public class StubSerializationHelper {
 
   private final RecentStringInterner myStringInterner = new RecentStringInterner();
 
-  @NotNull
-  public Stub deserialize(@NotNull InputStream stream) throws IOException, SerializerNotFoundException {
+  @Nonnull
+  public Stub deserialize(@Nonnull InputStream stream) throws IOException, SerializerNotFoundException {
     FileLocalStringEnumerator storage = new FileLocalStringEnumerator(false);
     StubInputStream inputStream = new StubInputStream(stream, storage);
     final int numberOfStrings = DataInputOutputUtil.readINT(inputStream);
@@ -163,8 +163,8 @@ public class StubSerializationHelper {
     return myStringInterner.get(str);
   }
 
-  @NotNull
-  private Stub deserialize(@NotNull StubInputStream stream, @Nullable Stub parentStub) throws IOException, SerializerNotFoundException {
+  @Nonnull
+  private Stub deserialize(@Nonnull StubInputStream stream, @Nullable Stub parentStub) throws IOException, SerializerNotFoundException {
     boolean dangling = false;
     int id = DataInputOutputUtil.readINT(stream);
     if (id == 0) {

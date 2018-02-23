@@ -1,14 +1,14 @@
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
 public interface ColoredTextContainer {
-  void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes);
+  void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes);
 
-  void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, Object tag);
+  void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag);
 
   void setIcon(@Nullable Icon icon);
 

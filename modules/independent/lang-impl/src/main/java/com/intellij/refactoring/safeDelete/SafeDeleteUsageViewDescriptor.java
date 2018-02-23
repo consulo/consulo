@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.UsageViewDescriptorAdapter;
 import com.intellij.usageView.UsageViewBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -33,7 +33,7 @@ public class SafeDeleteUsageViewDescriptor extends UsageViewDescriptorAdapter {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getElements() {
     return myElementsToDelete;
   }

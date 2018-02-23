@@ -17,7 +17,6 @@ package com.intellij.history.core;
 
 import com.intellij.history.core.changes.*;
 import com.intellij.psi.codeStyle.NameUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -33,7 +32,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   private boolean myDoNotAddAnythingElseFromCurrentChangeSet = false;
   private final LinkedHashSet<ChangeSet> myResult = new LinkedHashSet<ChangeSet>();
 
-  public ChangeCollectingVisitor(String path, String projectId, @Nullable String pattern) {
+  public ChangeCollectingVisitor(String path, String projectId, @javax.annotation.Nullable String pattern) {
     myPath = path;
     myProjectId = projectId;
     myPattern = pattern == null ? null : Pattern.compile(NameUtil.buildRegexp(pattern, 0, true, true), Pattern.CASE_INSENSITIVE);

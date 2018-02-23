@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.util.Ref;
 import com.intellij.testFramework.PlatformLangTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class VirtualFileListenerTest extends PlatformLangTestCase {
     final Ref<Boolean> eventFired = Ref.create(false);
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileAdapter() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent event) {
+      public void fileCreated(@Nonnull VirtualFileEvent event) {
         eventFired.set(true);
       }
     }, myTestRootDisposable);

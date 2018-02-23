@@ -16,14 +16,14 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SwingHelper {
-  @NotNull
+  @Nonnull
   public static JEditorPane createHtmlViewer(boolean lineWrap, @Nullable Font font, @Nullable Color background, @Nullable Color foreground) {
     final JEditorPane textPane;
     if (lineWrap) {

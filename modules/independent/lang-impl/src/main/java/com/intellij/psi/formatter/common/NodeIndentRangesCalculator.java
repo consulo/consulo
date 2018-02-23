@@ -22,7 +22,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.formatter.IndentRangesCalculator;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

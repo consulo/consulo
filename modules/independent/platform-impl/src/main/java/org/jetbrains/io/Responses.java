@@ -28,7 +28,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.nio.CharBuffer;
 import java.util.Calendar;

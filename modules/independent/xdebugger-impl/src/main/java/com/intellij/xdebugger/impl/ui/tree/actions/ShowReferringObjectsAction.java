@@ -21,7 +21,7 @@ import com.intellij.xdebugger.frame.XReferrersProvider;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XInspectDialog;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author egor
@@ -29,12 +29,12 @@ import org.jetbrains.annotations.NotNull;
 public class ShowReferringObjectsAction extends XDebuggerTreeActionBase {
 
   @Override
-  protected boolean isEnabled(@NotNull XValueNodeImpl node, @NotNull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
     return node.getValueContainer().getReferrersProvider() != null;
   }
 
   @Override
-  protected void perform(XValueNodeImpl node, @NotNull String nodeName, AnActionEvent e) {
+  protected void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e) {
     XReferrersProvider referrersProvider = node.getValueContainer().getReferrersProvider();
     if (referrersProvider != null) {
       XDebuggerTree tree = XDebuggerTree.getTree(e.getDataContext());

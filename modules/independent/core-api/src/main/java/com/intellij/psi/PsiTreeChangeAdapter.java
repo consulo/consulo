@@ -15,57 +15,57 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Default empty implementation of {@link PsiTreeChangeListener}.
  */
 public abstract class PsiTreeChangeAdapter implements PsiTreeChangeListener {
   @Override
-  public void beforeChildAddition(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildAddition(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildRemoval(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildReplacement(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildReplacement(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildMovement(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildrenChange(@NotNull PsiTreeChangeEvent event) {
+  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforePropertyChange(@NotNull PsiTreeChangeEvent event) {
+  public void beforePropertyChange(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childAdded(@NotNull PsiTreeChangeEvent event) {
+  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childMoved(@NotNull PsiTreeChangeEvent event) {
+  public void childMoved(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
+  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void propertyChanged(@NotNull PsiTreeChangeEvent event) {
+  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
   }
 }

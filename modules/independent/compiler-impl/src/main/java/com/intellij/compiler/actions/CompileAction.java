@@ -35,7 +35,7 @@ import com.intellij.psi.PsiManager;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class CompileAction extends CompileActionBase {
   }
 
   @RequiredDispatchThread
-  public void update(@NotNull AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
     if (!presentation.isEnabled()) {

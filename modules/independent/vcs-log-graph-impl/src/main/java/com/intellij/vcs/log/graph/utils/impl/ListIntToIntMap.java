@@ -19,17 +19,17 @@ package com.intellij.vcs.log.graph.utils.impl;
 import com.intellij.util.BooleanFunction;
 import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.UpdatableIntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @NotNull
-  public static UpdatableIntToIntMap newInstance(@NotNull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
+  @Nonnull
+  public static UpdatableIntToIntMap newInstance(@Nonnull final BooleanFunction<Integer> thisIsVisible, final int longSize) {
     return newInstance(thisIsVisible, longSize, DEFAULT_BLOCK_SIZE);
   }
 
-  @NotNull
+  @Nonnull
   public static UpdatableIntToIntMap newInstance(final Flags visibleNodes) {
     return newInstance(new BooleanFunction<Integer>() {
       @Override
@@ -44,8 +44,8 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
    *                  getLongIndex access need: log(longSize) + blockSize
    *                  getShortIndex access need: blockSize
    */
-  @NotNull
-  public static UpdatableIntToIntMap newInstance(@NotNull final BooleanFunction<Integer> thisIsVisible, final int longSize, int blockSize) {
+  @Nonnull
+  public static UpdatableIntToIntMap newInstance(@Nonnull final BooleanFunction<Integer> thisIsVisible, final int longSize, int blockSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;
@@ -56,14 +56,15 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
     return listIntToIntMap;
   }
 
-  @NotNull final BooleanFunction<Integer> myThisIsVisible;
+  @Nonnull
+  final BooleanFunction<Integer> myThisIsVisible;
 
   private final int myLongSize;
 
   private final int myBlockSize;
   private final int[] mySubSumOfBlocks;
 
-  private ListIntToIntMap(@NotNull BooleanFunction<Integer> thisIsVisible, int longSize, int blockSize, int[] subSumOfBlocks) {
+  private ListIntToIntMap(@Nonnull BooleanFunction<Integer> thisIsVisible, int longSize, int blockSize, int[] subSumOfBlocks) {
     myLongSize = longSize;
     myThisIsVisible = thisIsVisible;
     myBlockSize = blockSize;

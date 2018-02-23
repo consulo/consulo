@@ -16,8 +16,7 @@
 package com.intellij.usages;
 
 import com.intellij.usageView.UsageViewBundle;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -59,21 +58,21 @@ public class UsageViewPresentation {
     myTabText = tabText;
   }
 
-  @NotNull
+  @Nonnull
   public String getScopeText() {
     return myScopeText;
   }
 
-  public void setScopeText(@NotNull String scopeText) {
+  public void setScopeText(@Nonnull String scopeText) {
     myScopeText = scopeText;
   }
 
-  @NotNull
+  @Nonnull
   public String getContextText() {
     return myContextText;
   }
 
-  public void setContextText(@NotNull String contextText) {
+  public void setContextText(@Nonnull String contextText) {
     myContextText = contextText;
   }
 
@@ -93,7 +92,7 @@ public class UsageViewPresentation {
     myUsagesString = usagesString;
   }
 
-  @Nullable("null means the targets node must not be visible")
+  @javax.annotation.Nullable("null means the targets node must not be visible")
   public String getTargetsNodeText() {
     return myTargetsNodeText;
   }
@@ -110,21 +109,21 @@ public class UsageViewPresentation {
     myShowCancelButton = showCancelButton;
   }
 
-  @NotNull
+  @Nonnull
   public String getNonCodeUsagesString() {
     return myNonCodeUsagesString;
   }
 
-  public void setNonCodeUsagesString(@NotNull String nonCodeUsagesString) {
+  public void setNonCodeUsagesString(@Nonnull String nonCodeUsagesString) {
     myNonCodeUsagesString = nonCodeUsagesString;
   }
 
-  @NotNull
+  @Nonnull
   public String getCodeUsagesString() {
     return myCodeUsagesString;
   }
 
-  public void setCodeUsagesString(@NotNull String codeUsagesString) {
+  public void setCodeUsagesString(@Nonnull String codeUsagesString) {
     myCodeUsagesString = codeUsagesString;
   }
 
@@ -153,12 +152,12 @@ public class UsageViewPresentation {
     return myNotFoundActions;
   }
 
-  @NotNull
+  @Nonnull
   public String getUsagesWord() {
     return myUsagesWord;
   }
 
-  public void setUsagesWord(@NotNull String usagesWord) {
+  public void setUsagesWord(@Nonnull String usagesWord) {
     myUsagesWord = usagesWord;
   }
 
@@ -194,12 +193,12 @@ public class UsageViewPresentation {
     return myDynamicCodeUsagesString;
   }
 
-  @NotNull
+  @Nonnull
   public String getUsagesInGeneratedCodeString() {
     return myUsagesInGeneratedCodeString;
   }
 
-  public void setUsagesInGeneratedCodeString(@NotNull String usagesInGeneratedCodeString) {
+  public void setUsagesInGeneratedCodeString(@Nonnull String usagesInGeneratedCodeString) {
     myUsagesInGeneratedCodeString = usagesInGeneratedCodeString;
   }
 

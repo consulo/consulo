@@ -17,7 +17,7 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderTypeProvider;
 
 import javax.swing.*;
@@ -32,19 +32,19 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
     super(id);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Toolbar.Unknown;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Unknown";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getGroupColor() {
     return JBColor.DARK_GRAY;

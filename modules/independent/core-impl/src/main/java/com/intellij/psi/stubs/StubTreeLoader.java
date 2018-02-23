@@ -31,8 +31,8 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -59,17 +59,17 @@ public abstract class StubTreeLoader {
 
   public abstract boolean canHaveStub(VirtualFile file);
 
-  protected boolean hasPsiInManyProjects(@NotNull VirtualFile virtualFile) {
+  protected boolean hasPsiInManyProjects(@Nonnull VirtualFile virtualFile) {
     return false;
   }
 
   @Nullable
-  protected IndexingStampInfo getIndexingStampInfo(@NotNull VirtualFile file) {
+  protected IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
     return null;
   }
 
-  @NotNull
-  public RuntimeException stubTreeAndIndexDoNotMatch(@NotNull String _message, @NotNull ObjectStubTree stubTree, @NotNull PsiFileWithStubSupport psiFile) {
+  @Nonnull
+  public RuntimeException stubTreeAndIndexDoNotMatch(@Nonnull String _message, @Nonnull ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile) {
     VirtualFile file = psiFile.getViewProvider().getVirtualFile();
     StubTree stubTreeFromIndex = (StubTree)readFromVFile(psiFile.getProject(), file);
     Document document = FileDocumentManager.getInstance().getDocument(file);
@@ -131,13 +131,13 @@ public abstract class StubTreeLoader {
     return upToDate ? handleUpToDateMismatch(msg, attachments) : new RuntimeExceptionWithAttachments(msg, attachments);
   }
 
-  private static UpToDateStubIndexMismatch handleUpToDateMismatch(@NotNull String message, Attachment[] attachments) {
+  private static UpToDateStubIndexMismatch handleUpToDateMismatch(@Nonnull String message, Attachment[] attachments) {
     return new UpToDateStubIndexMismatch(message, attachments);
   }
 
-  @NotNull
-  private static Attachment[] createAttachments(@NotNull ObjectStubTree stubTree,
-                                                @NotNull PsiFileWithStubSupport psiFile,
+  @Nonnull
+  private static Attachment[] createAttachments(@Nonnull ObjectStubTree stubTree,
+                                                @Nonnull PsiFileWithStubSupport psiFile,
                                                 VirtualFile file,
                                                 @Nullable StubTree stubTreeFromIndex) {
     List<Attachment> attachments = ContainerUtil.newArrayList();
@@ -149,7 +149,7 @@ public abstract class StubTreeLoader {
     return attachments.toArray(Attachment.EMPTY_ARRAY);
   }
 
-  public static String getFileViewProviderMismatchDiagnostics(@NotNull FileViewProvider provider) {
+  public static String getFileViewProviderMismatchDiagnostics(@Nonnull FileViewProvider provider) {
     Function<PsiFile, String> fileClassName = file -> file.getClass().getSimpleName();
     Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString =
             pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.fun(pair.second) + ")";

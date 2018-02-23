@@ -38,7 +38,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 
@@ -53,14 +53,14 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
     if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) return false;
 
     return someChildContainsFile(file, false);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   @RequiredDispatchThread
   public Collection<? extends AbstractTreeNode> getChildren() {

@@ -16,8 +16,8 @@
 
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
    *                  {@code null} otherwise
    */
   @Nullable
-  public AbstractBlockWrapper getPrevIndentedSibling(@NotNull final AbstractBlockWrapper current) {
+  public AbstractBlockWrapper getPrevIndentedSibling(@Nonnull final AbstractBlockWrapper current) {
     if (myChildren.size() > 10) {
       return getPrevIndentedSiblingFast(current);
     }
@@ -108,7 +108,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper{
   }
 
   @Nullable
-  private AbstractBlockWrapper getPrevIndentedSiblingFast(@NotNull final AbstractBlockWrapper current) {
+  private AbstractBlockWrapper getPrevIndentedSiblingFast(@Nonnull final AbstractBlockWrapper current) {
     if (myPrevBlockCalculator == null) {
       myPrevBlockCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myChildren);
     }

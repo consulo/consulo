@@ -27,8 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
@@ -39,12 +39,12 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     return (DaemonCodeAnalyzerEx)project.getComponent(DaemonCodeAnalyzer.class);
   }
 
-  public static boolean processHighlights(@NotNull Document document,
-                                          @NotNull Project project,
-                                          @Nullable("null means all") final HighlightSeverity minSeverity,
+  public static boolean processHighlights(@Nonnull Document document,
+                                          @Nonnull Project project,
+                                          @javax.annotation.Nullable("null means all") final HighlightSeverity minSeverity,
                                           final int startOffset,
                                           final int endOffset,
-                                          @NotNull final Processor<HighlightInfo> processor) {
+                                          @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
@@ -59,12 +59,12 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     });
   }
 
-  static boolean processHighlightsOverlappingOutside(@NotNull Document document,
-                                                     @NotNull Project project,
+  static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
+                                                     @Nonnull Project project,
                                                      @Nullable("null means all") final HighlightSeverity minSeverity,
                                                      final int startOffset,
                                                      final int endOffset,
-                                                     @NotNull final Processor<HighlightInfo> processor) {
+                                                     @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
@@ -79,29 +79,29 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     });
   }
 
-  static boolean hasErrors(@NotNull Project project, @NotNull Document document) {
+  static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
     return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(),
                               CommonProcessors.<HighlightInfo>alwaysFalse());
   }
 
-  @NotNull
-  public abstract List<HighlightInfo> runMainPasses(@NotNull PsiFile psiFile,
-                                                    @NotNull Document document,
-                                                    @NotNull ProgressIndicator progress);
+  @Nonnull
+  public abstract List<HighlightInfo> runMainPasses(@Nonnull PsiFile psiFile,
+                                                    @Nonnull Document document,
+                                                    @Nonnull ProgressIndicator progress);
 
-  public abstract boolean isErrorAnalyzingFinished(@NotNull PsiFile file);
+  public abstract boolean isErrorAnalyzingFinished(@Nonnull PsiFile file);
 
-  @NotNull
+  @Nonnull
   public abstract FileStatusMap getFileStatusMap();
 
-  @NotNull
+  @Nonnull
   @TestOnly
-  public abstract List<HighlightInfo> getFileLevelHighlights(@NotNull Project project, @NotNull PsiFile file);
+  public abstract List<HighlightInfo> getFileLevelHighlights(@Nonnull Project project, @Nonnull PsiFile file);
 
-  public abstract void cleanFileLevelHighlights(@NotNull Project project, int group, PsiFile psiFile);
+  public abstract void cleanFileLevelHighlights(@Nonnull Project project, int group, PsiFile psiFile);
 
-  public abstract void addFileLevelHighlight(@NotNull final Project project,
+  public abstract void addFileLevelHighlight(@Nonnull final Project project,
                                              final int group,
-                                             @NotNull final HighlightInfo info,
-                                             @NotNull final PsiFile psiFile);
+                                             @Nonnull final HighlightInfo info,
+                                             @Nonnull final PsiFile psiFile);
 }

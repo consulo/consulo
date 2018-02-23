@@ -16,7 +16,7 @@
 
 package com.intellij.ide;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -24,6 +24,6 @@ import java.util.Collection;
  * @author Gregory.Shrago
  */
 public interface CompositeSelectInTarget extends SelectInTarget{
-  @NotNull
+  @Nonnull
   Collection<SelectInTarget> getSubTargets(SelectInContext context);
 }

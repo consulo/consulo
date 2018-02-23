@@ -35,8 +35,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.DateFormatUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -102,7 +102,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "OutdatedVersionNotifier";
   }
@@ -160,7 +160,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
   }
 
   private class MyFileEditorManagerListener implements FileEditorManagerListener {
-    public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
       if (myCache.getCachedIncomingChanges() == null) {
         requestLoadIncomingChanges();
       }
@@ -175,10 +175,10 @@ public class OutdatedVersionNotifier implements ProjectComponent {
       }
     }
 
-    public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
     }
 
-    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     }
   }
 
@@ -212,7 +212,7 @@ public class OutdatedVersionNotifier implements ProjectComponent {
     }
   }
 
-  private static boolean isIncomingChangesSupported(@NotNull CommittedChangeList list) {
+  private static boolean isIncomingChangesSupported(@Nonnull CommittedChangeList list) {
     CachingCommittedChangesProvider provider = list.getVcs().getCachingCommittedChangesProvider();
     return provider != null && provider.supportsIncomingChanges();
   }

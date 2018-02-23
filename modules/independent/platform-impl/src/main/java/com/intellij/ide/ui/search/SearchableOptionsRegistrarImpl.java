@@ -40,9 +40,9 @@ import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -64,8 +64,8 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
   private final StringInterner myIdentifierTable = new StringInterner() {
     @Override
-    @NotNull
-    public synchronized String intern(@NotNull final String name) {
+    @Nonnull
+    public synchronized String intern(@Nonnull final String name) {
       return super.intern(name);
     }
   };
@@ -208,7 +208,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ConfigurableHit getConfigurables(Configurable[] allConfigurables,
                                             final DocumentEvent.EventType type,
                                             Set<Configurable> configurables,
@@ -366,13 +366,13 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   }
 
   @Override
-  public Set<String> getSynonym(final String option, @NotNull final SearchableConfigurable configurable) {
+  public Set<String> getSynonym(final String option, @Nonnull final SearchableConfigurable configurable) {
     loadHugeFilesIfNecessary();
     return myHighlightOption2Synonym.get(Pair.create(option, configurable.getId()));
   }
 
   @Override
-  public Map<String, Set<String>> findPossibleExtension(@NotNull String prefix, final Project project) {
+  public Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, final Project project) {
     loadHugeFilesIfNecessary();
     final boolean perProject = CodeStyleFacade.getInstance(project).projectUsesOwnSettings();
     final Map<String, Set<String>> result = new THashMap<>();
@@ -414,7 +414,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   }
 
   @Override
-  public Set<String> getProcessedWordsWithoutStemming(@NotNull String text) {
+  public Set<String> getProcessedWordsWithoutStemming(@Nonnull String text) {
     Set<String> result = new HashSet<>();
     @NonNls final String toLowerCase = text.toLowerCase();
     final String[] options = REG_EXP.split(toLowerCase);
@@ -428,7 +428,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   }
 
   @Override
-  public Set<String> getProcessedWords(@NotNull String text) {
+  public Set<String> getProcessedWords(@Nonnull String text) {
     Set<String> result = new HashSet<>();
     @NonNls final String toLowerCase = text.toLowerCase();
     final String[] options = REG_EXP.split(toLowerCase);

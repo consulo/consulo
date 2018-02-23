@@ -18,8 +18,8 @@ package com.intellij.openapi.keymap;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class KeymapManager {
   @NonNls public static final String DEFAULT_IDEA_KEYMAP = "$default";
@@ -30,7 +30,7 @@ public abstract class KeymapManager {
   public abstract Keymap getActiveKeymap();
 
   @Nullable
-  public abstract Keymap getKeymap(@NotNull String name);
+  public abstract Keymap getKeymap(@Nonnull String name);
 
   public static KeymapManager getInstance(){
     return ApplicationManager.getApplication().getComponent(KeymapManager.class);
@@ -39,8 +39,8 @@ public abstract class KeymapManager {
   /**
    * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
    */
-  public abstract void addKeymapManagerListener(@NotNull KeymapManagerListener listener);
-  public abstract void addKeymapManagerListener(@NotNull KeymapManagerListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener);
+  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeKeymapManagerListener(@NotNull KeymapManagerListener listener);
+  public abstract void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener);
 }

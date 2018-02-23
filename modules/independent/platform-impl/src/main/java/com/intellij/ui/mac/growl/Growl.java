@@ -18,7 +18,7 @@ package com.intellij.ui.mac.growl;
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
 import com.sun.jna.Pointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -38,7 +38,7 @@ public class Growl {
   private String[] myAllNotifications;
   private String[] myDefaultNotification;
 
-  public Growl(@NotNull final String productName) {
+  public Growl(@Nonnull final String productName) {
     myProductName = productName;
   }
 
@@ -87,15 +87,15 @@ public class Growl {
     return invoke(nsImage, "TIFFRepresentation");
   }
 
-  private static ID invoke(@NotNull final String className, @NotNull final String selector, Object... args) {
+  private static ID invoke(@Nonnull final String className, @Nonnull final String selector, Object... args) {
     return invoke(Foundation.getObjcClass(className), selector, args);
   }
 
-  private static ID invoke(@NotNull final ID id, @NotNull final String selector, Object... args) {
+  private static ID invoke(@Nonnull final ID id, @Nonnull final String selector, Object... args) {
     return invoke(id, Foundation.createSelector(selector), args);
   }
 
-  private static ID invoke(@NotNull final ID id, @NotNull final Pointer selector, Object... args) {
+  private static ID invoke(@Nonnull final ID id, @Nonnull final Pointer selector, Object... args) {
     return Foundation.invoke(id, selector, args);
   }
 }

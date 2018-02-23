@@ -17,8 +17,8 @@
 package com.intellij.util;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
@@ -43,7 +43,7 @@ public class VirtualFileLogicalRoot extends LogicalRoot {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public LogicalRootType getType() {
     return myType;
   }

@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.patch.formove;
 
 import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.vcs.changes.CommitContext;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -28,25 +28,25 @@ public class TestPatchEP implements PatchEP {
   private final static String ourName = "com.intellij.openapi.diff.impl.patch.formove.TestPatchEP";
   private final static String ourContent = "ourContent\nseveral\nlines\twith\u0142\u0001 different symbols";
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return ourName;
   }
 
   @Override
-  public CharSequence provideContent(@NotNull String path, CommitContext commitContext) {
+  public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
     return ourContent + path;
   }
 
   @Override
-  public void consumeContent(@NotNull String path, @NotNull CharSequence content, CommitContext commitContext) {
+  public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
     assert (ourContent + path).equals(content.toString());
   }
 
   @Override
-  public void consumeContentBeforePatchApplied(@NotNull String path,
-                                               @NotNull CharSequence content,
+  public void consumeContentBeforePatchApplied(@Nonnull String path,
+                                               @Nonnull CharSequence content,
                                                CommitContext commitContext) {
   }
 }

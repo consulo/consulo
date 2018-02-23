@@ -32,8 +32,8 @@ import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -46,10 +46,10 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
   private XExpression myExpression;
 
   public XDebuggerExpressionEditor(Project project,
-                                   @NotNull XDebuggerEditorsProvider debuggerEditorsProvider,
+                                   @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
                                    @Nullable @NonNls String historyId,
                                    @Nullable XSourcePosition sourcePosition,
-                                   @NotNull XExpression text,
+                                   @Nonnull XExpression text,
                                    final boolean multiline,
                                    boolean editorFont,
                                    boolean showEditor) {
@@ -67,7 +67,7 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
               }
 
               @Override
-              public Object getData(@NotNull Key dataId) {
+              public Object getData(@Nonnull Key dataId) {
                 if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
                   return new Language[]{myExpression.getLanguage()};
                 } else if (CommonDataKeys.PSI_FILE == dataId) {

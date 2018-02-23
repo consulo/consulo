@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -37,20 +37,20 @@ public interface ApplicationListener extends EventListener {
   /**
    * Is called before action start.
    */
-  void beforeWriteActionStart(@NotNull Object action);
+  void beforeWriteActionStart(@Nonnull Object action);
 
   /**
    * Is called on action start.
    */
-  void writeActionStarted(@NotNull Object action);
+  void writeActionStarted(@Nonnull Object action);
 
   /**
    *  Is called on before action finish, while while lock is still being hold
    */
-  void writeActionFinished(@NotNull Object action);
+  void writeActionFinished(@Nonnull Object action);
 
   /**
    *  Is called after action finish and lock is released
    */
-  void afterWriteActionFinished(@NotNull Object action);
+  void afterWriteActionFinished(@Nonnull Object action);
 }

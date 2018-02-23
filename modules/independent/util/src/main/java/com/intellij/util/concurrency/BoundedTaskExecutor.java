@@ -23,7 +23,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +38,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class BoundedTaskExecutor extends AbstractExecutorService {
   private volatile boolean myShutdown;
-  @NotNull private final String myName;
+  @Nonnull
+  private final String myName;
   private final Executor myBackendExecutor;
   private final int myMaxTasks;
   // low  32 bits: number of tasks running (or trying to run)
@@ -46,7 +47,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
   private final AtomicLong myStatus = new AtomicLong();
   private final BlockingQueue<Runnable> myTaskQueue = new LinkedBlockingQueue<Runnable>();
 
-  public BoundedTaskExecutor(@NotNull String name, @NotNull Executor backendExecutor, int maxSimultaneousTasks) {
+  public BoundedTaskExecutor(@Nonnull String name, @Nonnull Executor backendExecutor, int maxSimultaneousTasks) {
     myName = name;
     myBackendExecutor = backendExecutor;
     if (maxSimultaneousTasks < 1) {
@@ -61,14 +62,14 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
   /**
    * @deprecated use {@link #BoundedTaskExecutor(String, Executor, int)} instead
    */
-  public BoundedTaskExecutor(@NotNull Executor backendExecutor, int maxSimultaneousTasks) {
+  public BoundedTaskExecutor(@Nonnull Executor backendExecutor, int maxSimultaneousTasks) {
     this(ExceptionUtil.getThrowableText(new Throwable("Creation point:")), backendExecutor, maxSimultaneousTasks);
   }
 
   /**
    * Constructor which automatically shuts down this executor when {@code parent} is disposed.
    */
-  public BoundedTaskExecutor(@NotNull String name, @NotNull Executor backendExecutor, int maxSimultaneousTasks, @NotNull Disposable parent) {
+  public BoundedTaskExecutor(@Nonnull String name, @Nonnull Executor backendExecutor, int maxSimultaneousTasks, @Nonnull Disposable parent) {
     this(name, backendExecutor, maxSimultaneousTasks);
     Disposer.register(parent, new Disposable() {
       @Override
@@ -98,7 +99,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
     myShutdown = true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Runnable> shutdownNow() {
     shutdown();
@@ -117,13 +118,13 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
 
   // can be executed even after shutdown
   private static class LastTask extends FutureTask<Void> {
-    LastTask(@NotNull Runnable runnable) {
+    LastTask(@Nonnull Runnable runnable) {
       super(runnable, null);
     }
   }
 
   @Override
-  public boolean awaitTermination(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+  public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
     if (!isShutdown()) throw new IllegalStateException("you must call shutdown() or shutdownNow() first");
     try {
       waitAllTasksExecuted(timeout, unit);
@@ -138,7 +139,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
   }
 
   @Override
-  public void execute(@NotNull Runnable task) {
+  public void execute(@Nonnull Runnable task) {
     if (isShutdown() && !(task instanceof LastTask)) {
       throw new RejectedExecutionException("Already shutdown");
     }
@@ -196,7 +197,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
     return null;
   }
 
-  private void wrapAndExecute(@NotNull final Runnable firstTask, final long status) {
+  private void wrapAndExecute(@Nonnull final Runnable firstTask, final long status) {
     try {
       final AtomicReference<Runnable> currentTask = new AtomicReference<Runnable>(firstTask);
       myBackendExecutor.execute(new Runnable() {
@@ -236,7 +237,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
     }
   }
 
-  public void waitAllTasksExecuted(long timeout, @NotNull TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
+  public void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
     final CountDownLatch started = new CountDownLatch(myMaxTasks);
     final CountDownLatch readyToFinish = new CountDownLatch(1);
     // start myMaxTasks runnables which will spread to all available executor threads
@@ -276,7 +277,7 @@ public class BoundedTaskExecutor extends AbstractExecutorService {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<Runnable> clearAndCancelAll() {
     List<Runnable> queued = new ArrayList<Runnable>();
     myTaskQueue.drainTo(queued);

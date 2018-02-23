@@ -25,8 +25,8 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.testFramework.UsefulTestCase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author kirillk
@@ -43,7 +43,7 @@ public class ActivityMonitorTest extends UsefulTestCase {
     final ModalityStateEx any = new ModalityStateEx();
     Extensions.registerAreaClass("CONSULO_PROJECT", null);
     ApplicationManager.setApplication(new MockApplication(getTestRootDisposable()) {
-      @NotNull
+      @Nonnull
       @Override
       public ModalityState getCurrentModalityState() {
         return myCurrentState;
@@ -180,7 +180,7 @@ public class ActivityMonitorTest extends UsefulTestCase {
     assertFalse(new UiActivity("root", "folder2").isSameOrGeneralFor(new UiActivity("anotherRoot")));
   }
   
-  private void assertReady(@Nullable Project key, UiActivity ... activities) {
+  private void assertReady(@javax.annotation.Nullable Project key, UiActivity ... activities) {
     BusyObject.Impl busy = (BusyObject.Impl)(key != null ? myMonitor.getBusy(key, activities) : myMonitor.getBusy(activities));
     assertTrue("Must be READY, but was: BUSY", busy.isReady());
     

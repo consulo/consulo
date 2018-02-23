@@ -18,9 +18,9 @@ package com.intellij.openapi.util;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public interface Iconable {
@@ -41,12 +41,12 @@ public interface Iconable {
     private static final Key<ConcurrentIntObjectMap<Icon>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
 
     @Nullable
-    public static Icon get(@NotNull UserDataHolder holder, int flags) {
+    public static Icon get(@Nonnull UserDataHolder holder, int flags) {
       ConcurrentIntObjectMap<Icon> map = holder.getUserData(LAST_COMPUTED_ICON);
       return map == null ? null : map.get(flags);
     }
 
-    public static void put(@NotNull UserDataHolder holder, Icon icon, int flags) {
+    public static void put(@Nonnull UserDataHolder holder, Icon icon, int flags) {
       ConcurrentIntObjectMap<Icon> map = holder.getUserData(LAST_COMPUTED_ICON);
       if (icon == null) {
         if (map != null) {

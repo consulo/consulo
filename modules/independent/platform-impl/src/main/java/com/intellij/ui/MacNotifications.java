@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -23,5 +23,5 @@ import java.util.Set;
  * @author Dennis.Ushakov
  */
 public interface MacNotifications {
-  void notify(Set<String> allNotifications, @NotNull String notificationName, String title, String description);
+  void notify(Set<String> allNotifications, @Nonnull String notificationName, String title, String description);
 }

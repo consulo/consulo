@@ -26,7 +26,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,13 +47,13 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
   /**
    * @return created elements. Never null.
    */
-  @NotNull
+  @Nonnull
   protected abstract PsiElement[] invokeDialog(Project project, PsiDirectory directory);
 
   /**
    * @return created elements. Never null.
    */
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 
@@ -65,7 +65,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
   @RequiredDispatchThread
   @Override
-  public final void actionPerformed(@NotNull final AnActionEvent e) {
+  public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
     if (view == null) {
       return;

@@ -28,8 +28,7 @@ import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -42,25 +41,25 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
   private final MyInputFilter myInputFilter = new MyInputFilter();
   private final EnumeratorStringDescriptor myKeyDescriptor = new EnumeratorStringDescriptor();
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<String,Void> getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<String, Void, FileContent> getIndexer() {
     return myDataIndexer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<String> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;
@@ -94,11 +93,11 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
     return (PsiFile[])getFilesByName(project, name, scope, false);
   }
 
-  public static boolean processFilesByName(final @NotNull String name,
+  public static boolean processFilesByName(final @Nonnull String name,
                                            boolean includeDirs,
-                                           @NotNull Processor<? super PsiFileSystemItem> processor,
-                                           @NotNull GlobalSearchScope scope,
-                                           @Nullable IdFilter idFilter
+                                           @Nonnull Processor<? super PsiFileSystemItem> processor,
+                                           @Nonnull GlobalSearchScope scope,
+                                           @javax.annotation.Nullable IdFilter idFilter
   ) {
     final Set<VirtualFile> files = new THashSet<VirtualFile>();
 
@@ -135,7 +134,7 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
 
   public static PsiFileSystemItem[] getFilesByName(final Project project,
                                                    final String name,
-                                                   final @NotNull GlobalSearchScope scope,
+                                                   final @Nonnull GlobalSearchScope scope,
                                                    boolean includeDirs) {
     SmartList<PsiFileSystemItem> result = new SmartList<PsiFileSystemItem>();
     processFilesByName(name, includeDirs, new CommonProcessors.CollectProcessor<PsiFileSystemItem>(result), scope, null);
@@ -149,7 +148,7 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
 
   private static class MyDataIndexer implements DataIndexer<String, Void, FileContent> {
     @Override
-    @NotNull
+    @Nonnull
     public Map<String, Void> map(final FileContent inputData) {
       return Collections.singletonMap(inputData.getFileName(), null);
     }
@@ -157,7 +156,7 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
 
   private static class MyInputFilter implements FileBasedIndex.InputFilter {
     @Override
-    public boolean acceptInput(Project project, @NotNull final VirtualFile file) {
+    public boolean acceptInput(Project project, @Nonnull final VirtualFile file) {
       return true;
     }
   }
@@ -170,13 +169,13 @@ public class FilenameIndex extends ScalarIndexExtension<String> {
    * @param ext file extension without leading dot e.q. "txt", "wsdl"
    * @return all files with provided extension
    */
-  @NotNull
-  public static Collection<VirtualFile> getAllFilesByExt(@NotNull Project project, @NotNull String ext) {
+  @Nonnull
+  public static Collection<VirtualFile> getAllFilesByExt(@Nonnull Project project, @Nonnull String ext) {
     return getAllFilesByExt(project, ext, GlobalSearchScope.allScope(project));
   }
 
-  @NotNull
-  public static Collection<VirtualFile> getAllFilesByExt(@NotNull Project project, @NotNull String ext, @NotNull GlobalSearchScope searchScope) {
+  @Nonnull
+  public static Collection<VirtualFile> getAllFilesByExt(@Nonnull Project project, @Nonnull String ext, @Nonnull GlobalSearchScope searchScope) {
     int len = ext.length();
 
     if (len == 0) return Collections.emptyList();

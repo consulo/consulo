@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -156,7 +156,7 @@ public class CommonShortcuts {
     return shortcutsById(IdeActions.ACTION_DELETE);
   }
 
-  @NotNull
+  @Nonnull
   private static CustomShortcutSet shortcutsById(String actionId) {
     Application application = ApplicationManager.getApplication();
     KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);

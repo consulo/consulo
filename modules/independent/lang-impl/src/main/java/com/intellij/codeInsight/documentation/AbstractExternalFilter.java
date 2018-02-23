@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.io.HttpRequests;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.URL;
@@ -65,16 +65,16 @@ public abstract class AbstractExternalFilter {
   private static final String CLASS_SUMMARY = "<div class=\"summary\">";
 
   protected static abstract class RefConvertor {
-    @NotNull
+    @Nonnull
     private final Pattern mySelector;
 
-    public RefConvertor(@NotNull Pattern selector) {
+    public RefConvertor(@Nonnull Pattern selector) {
       mySelector = selector;
     }
 
     protected abstract String convertReference(String root, String href);
 
-    public CharSequence refFilter(final String root, @NotNull CharSequence read) {
+    public CharSequence refFilter(final String root, @Nonnull CharSequence read) {
       CharSequence toMatch = StringUtilRt.toUpperCase(read);
       StringBuilder ready = new StringBuilder();
       int prev = 0;
@@ -159,8 +159,8 @@ public abstract class AbstractExternalFilter {
     return correctDocText(url, fetcher.data);
   }
 
-  @NotNull
-  protected String correctDocText(@NotNull String url, @NotNull CharSequence data) {
+  @Nonnull
+  protected String correctDocText(@Nonnull String url, @Nonnull CharSequence data) {
     CharSequence docText = correctRefs(ourAnchorSuffix.matcher(url).replaceAll(""), data);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Filtered JavaDoc: " + docText + "\n");
@@ -298,8 +298,8 @@ public abstract class AbstractExternalFilter {
     data.append(HTML_CLOSE);
   }
 
-  @NotNull
-  protected ParseSettings getParseSettings(@NotNull String url) {
+  @Nonnull
+  protected ParseSettings getParseSettings(@Nonnull String url) {
     Pattern startSection = ourClassDataStartPattern;
     Pattern endSection = ourClassDataEndPattern;
     boolean anchorPresent = false;
@@ -324,7 +324,7 @@ public abstract class AbstractExternalFilter {
   }
 
   @Nullable
-  static String parseContentEncoding(@NotNull String htmlLine) {
+  static String parseContentEncoding(@Nonnull String htmlLine) {
     if (!htmlLine.contains("charset")) {
       return null;
     }
@@ -374,7 +374,7 @@ public abstract class AbstractExternalFilter {
           if (parsedUrl != null) {
             HttpRequests.request(parsedUrl.toString()).gzip(false).connect(new HttpRequests.RequestProcessor<Void>() {
               @Override
-              public Void process(@NotNull HttpRequests.Request request) throws IOException {
+              public Void process(@Nonnull HttpRequests.Request request) throws IOException {
                 byte[] bytes = request.readBytes(null);
                 String contentEncoding = null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
@@ -438,12 +438,12 @@ public abstract class AbstractExternalFilter {
    * Settings used for parsing of external documentation
    */
   protected static class ParseSettings {
-    @NotNull
+    @Nonnull
     /**
      * Pattern defining the start of target fragment
      */
     private final Pattern startPattern;
-    @NotNull
+    @Nonnull
     /**
      * Pattern defining the end of target fragment
      */
@@ -457,7 +457,7 @@ public abstract class AbstractExternalFilter {
      */
     private final boolean useDt;
 
-    public ParseSettings(@NotNull Pattern startPattern, @NotNull Pattern endPattern, boolean useDt, boolean forcePatternSearch) {
+    public ParseSettings(@Nonnull Pattern startPattern, @Nonnull Pattern endPattern, boolean useDt, boolean forcePatternSearch) {
       this.startPattern = startPattern;
       this.endPattern = endPattern;
       this.useDt = useDt;

@@ -51,9 +51,9 @@ import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBSwingUtilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -65,7 +65,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.fileEditor.impl.text.TextEditorComponent");
 
   private final Project myProject;
-  @NotNull
+  @Nonnull
   private final VirtualFile myFile;
   private final TextEditorImpl myTextEditor;
   /**
@@ -73,7 +73,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private final Document myDocument;
 
-  @NotNull
+  @Nonnull
   private final Editor myEditor;
 
   /**
@@ -85,7 +85,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private boolean myValid;
 
-  TextEditorComponent(@NotNull final Project project, @NotNull final VirtualFile file, @NotNull final TextEditorImpl textEditor) {
+  TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final TextEditorImpl textEditor) {
     super(new BorderLayout(), textEditor);
 
     myProject = project;
@@ -160,12 +160,12 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
   /**
    * @return most recently used editor. This method never returns {@code null}.
    */
-  @NotNull
+  @Nonnull
   Editor getEditor() {
     return myEditor;
   }
 
-  @NotNull
+  @Nonnull
   private Editor createEditor() {
     Editor editor = EditorFactory.getInstance().createEditor(myDocument, myProject);
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
@@ -263,7 +263,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
   }
 
   @Override
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     final Editor e = validateCurrentEditor();
     if (e == null || e.isDisposed()) return null;
 
@@ -315,7 +315,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
-    public void fileTypesChanged(@NotNull final FileTypeEvent event) {
+    public void fileTypesChanged(@Nonnull final FileTypeEvent event) {
       assertThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
@@ -329,7 +329,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
    */
   private final class MyVirtualFileListener implements VirtualFileListener {
     @Override
-    public void propertyChanged(@NotNull final VirtualFilePropertyEvent e) {
+    public void propertyChanged(@Nonnull final VirtualFilePropertyEvent e) {
       if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
         // File can be invalidated after file changes name (extension also
         // can changes). The editor should be removed if it's invalid.
@@ -342,7 +342,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
     }
 
     @Override
-    public void contentsChanged(@NotNull VirtualFileEvent event) {
+    public void contentsChanged(@Nonnull VirtualFileEvent event) {
       if (event.isFromSave()) { // commit
         assertThread();
         VirtualFile file = event.getFile();
@@ -354,7 +354,7 @@ class TextEditorComponent extends JBLoadingPanel implements DataProvider, Dispos
     }
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }

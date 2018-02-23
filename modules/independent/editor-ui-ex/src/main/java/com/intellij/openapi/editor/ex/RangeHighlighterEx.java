@@ -26,7 +26,7 @@ package com.intellij.openapi.editor.ex;
 
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -39,7 +39,7 @@ public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
 
   int getAffectedAreaEndOffset();
 
-  void setTextAttributes(@NotNull TextAttributes textAttributes);
+  void setTextAttributes(@Nonnull TextAttributes textAttributes);
 
   Comparator<RangeHighlighterEx> BY_AFFECTED_START_OFFSET = new Comparator<RangeHighlighterEx>() {
     @Override

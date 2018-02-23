@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -49,7 +49,7 @@ public class HighlightData {
     myHighlightType = highlightType;
   }
 
-  public void addToCollection(@NotNull Collection<HighlightData> list, boolean highlighted) {
+  public void addToCollection(@Nonnull Collection<HighlightData> list, boolean highlighted) {
     list.add(this);
     if (highlighted) list.add(new HighlightData(getStartOffset(), getEndOffset(), BLINKING_HIGHLIGHTS_ATTRIBUTES));
   }

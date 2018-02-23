@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.project.ProjectOpenProcessors;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {

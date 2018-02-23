@@ -26,8 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,41 +38,41 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   private final IntentionAction myAction;
   private final PsiFile myFile;
 
-  public IntentionWrapper(@NotNull IntentionAction action, @NotNull PsiFile file) {
+  public IntentionWrapper(@Nonnull IntentionAction action, @Nonnull PsiFile file) {
     myAction = action;
     myFile = file;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myAction.getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return myAction.getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return myAction.getFamilyName();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return myAction.isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myAction.invoke(project, editor, file);
   }
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@NotNull PsiFile file) {
+  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
     return myAction.getElementToMakeWritable(file);
   }
 
@@ -82,13 +81,13 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
     return myAction.startInWriteAction();
   }
 
-  @NotNull
+  @Nonnull
   public IntentionAction getAction() {
     return myAction;
   }
 
   @Override
-  public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+  public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
     VirtualFile virtualFile = myFile.getVirtualFile();
 
     if (virtualFile != null) {
@@ -97,13 +96,13 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Class getActionClass() {
     return getAction().getClass();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public IntentionAction getDelegate() {
     return myAction;

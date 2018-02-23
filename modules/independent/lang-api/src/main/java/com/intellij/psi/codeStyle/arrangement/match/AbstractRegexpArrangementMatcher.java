@@ -16,8 +16,8 @@
 package com.intellij.psi.codeStyle.arrangement.match;
 
 import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Pattern;
 
@@ -27,11 +27,12 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractRegexpArrangementMatcher implements ArrangementEntryMatcher {
   
-  @NotNull private final String myPattern;
+  @Nonnull
+  private final String myPattern;
 
   @Nullable private final Pattern myCompiledPattern;
 
-  public AbstractRegexpArrangementMatcher(@NotNull String pattern) {
+  public AbstractRegexpArrangementMatcher(@Nonnull String pattern) {
     myPattern = pattern;
     Pattern p = null;
     try {
@@ -44,7 +45,7 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     if (myCompiledPattern == null) {
       return false;
     }
@@ -53,9 +54,9 @@ public abstract class AbstractRegexpArrangementMatcher implements ArrangementEnt
   }
   
   @Nullable
-  protected abstract String getTextToMatch(@NotNull ArrangementEntry entry);
+  protected abstract String getTextToMatch(@Nonnull ArrangementEntry entry);
 
-  @NotNull
+  @Nonnull
   public String getPattern() {
     return myPattern;
   }

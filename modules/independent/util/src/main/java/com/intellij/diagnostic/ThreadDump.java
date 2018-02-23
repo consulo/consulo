@@ -15,8 +15,8 @@
  */
 package com.intellij.diagnostic;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents thread dump of the IDE captured by its performance diagnostic tool.
@@ -25,7 +25,7 @@ public class ThreadDump {
   private final String myRawDump;
   private final StackTraceElement[] myEdtStack;
 
-  ThreadDump(@NotNull String rawDump, @Nullable StackTraceElement[] edtStack) {
+  ThreadDump(@Nonnull String rawDump, @Nullable StackTraceElement[] edtStack) {
     myRawDump = rawDump;
     myEdtStack = edtStack;
   }
@@ -33,7 +33,7 @@ public class ThreadDump {
   /**
    * @return full thread dump as a string
    */
-  @NotNull
+  @Nonnull
   public String getRawDump() {
     return myRawDump;
   }

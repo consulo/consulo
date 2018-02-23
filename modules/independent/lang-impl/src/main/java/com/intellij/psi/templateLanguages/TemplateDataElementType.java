@@ -38,8 +38,8 @@ import com.intellij.util.LocalTimeCounter;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -51,15 +51,15 @@ import java.util.List;
 public class TemplateDataElementType extends IFileElementType implements ITemplateDataElementType {
   public static final LanguageExtension<TreePatcher> TREE_PATCHER = new LanguageExtension<>("com.intellij.lang.treePatcher", new SimpleTreePatcher());
 
-  @NotNull
+  @Nonnull
   private final IElementType myTemplateElementType;
-  @NotNull
+  @Nonnull
   private final IElementType myOuterElementType;
 
   public TemplateDataElementType(@NonNls String debugName,
                                  Language language,
-                                 @NotNull IElementType templateElementType,
-                                 @NotNull IElementType outerElementType) {
+                                 @Nonnull IElementType templateElementType,
+                                 @Nonnull IElementType outerElementType) {
     super(debugName, language);
     myTemplateElementType = templateElementType;
     myOuterElementType = outerElementType;
@@ -114,7 +114,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
   }
 
-  protected void prepareParsedTemplateFile(@NotNull FileElement root) {
+  protected void prepareParsedTemplateFile(@Nonnull FileElement root) {
   }
 
   protected Language getTemplateFileLanguage(TemplateLanguageFileViewProvider viewProvider) {
@@ -136,7 +136,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
                                        final Language templateLanguage,
                                        final CharSequence sourceCode,
                                        final TemplateLanguageFileViewProvider viewProvider,
-                                       @NotNull RangesCollector outerRangesCollector) {
+                                       @Nonnull RangesCollector outerRangesCollector) {
     final CharSequence templateSourceCode = createTemplateText(sourceCode, createBaseLexer(psiFile, viewProvider), outerRangesCollector);
     return createPsiFileFromSource(templateLanguage, templateSourceCode, psiFile.getManager());
   }
@@ -149,7 +149,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @param outerRangesCollector collector for non-template elements ranges
    * @return template source code
    */
-  protected CharSequence createTemplateText(@NotNull CharSequence sourceCode, @NotNull Lexer baseLexer, @NotNull RangesCollector outerRangesCollector) {
+  protected CharSequence createTemplateText(@Nonnull CharSequence sourceCode, @Nonnull Lexer baseLexer, @Nonnull RangesCollector outerRangesCollector) {
     StringBuilder result = new StringBuilder(sourceCode.length());
     baseLexer.start(sourceCode);
 
@@ -175,8 +175,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return result;
   }
 
-  @NotNull
-  private static String getRangeDump(@NotNull TextRange range, @NotNull CharSequence sequence) {
+  @Nonnull
+  private static String getRangeDump(@Nonnull TextRange range, @Nonnull CharSequence sequence) {
     return "'" + StringUtil.escapeLineBreak(range.subSequence(sequence).toString()) + "' " + range;
   }
 
@@ -185,8 +185,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   }
 
   private void insertOuters(TreeElement templateFileElement,
-                            @NotNull CharSequence sourceCode,
-                            @NotNull List<TextRange> outerElementsRanges,
+                            @Nonnull CharSequence sourceCode,
+                            @Nonnull List<TextRange> outerElementsRanges,
                             final CharTable charTable) {
     TreePatcher templateTreePatcher = TREE_PATCHER.forLanguage(templateFileElement.getPsi().getLanguage());
 
@@ -222,7 +222,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
   }
 
-  protected OuterLanguageElementImpl createOuterLanguageElement(@NotNull CharSequence internedTokenText, @NotNull IElementType outerElementType) {
+  protected OuterLanguageElementImpl createOuterLanguageElement(@Nonnull CharSequence internedTokenText, @Nonnull IElementType outerElementType) {
     return new OuterLanguageElementImpl(outerElementType, internedTokenText);
   }
 
@@ -231,7 +231,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
     FileViewProvider viewProvider = new SingleRootFileViewProvider(manager, virtualFile, false) {
       @Override
-      @NotNull
+      @Nonnull
       public Language getBaseLanguage() {
         return language;
       }
@@ -253,13 +253,13 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getDefaultExtension() {
       return "";
     }
 
     @Override
-    @NotNull
+    @Nonnull
     @NonNls
     public String getDescription() {
       return "fake for language" + myLanguage.getID();
@@ -272,7 +272,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
 
     @Override
-    @NotNull
+    @Nonnull
     @NonNls
     public String getName() {
       return myLanguage.getID();
@@ -282,7 +282,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   protected static class RangesCollector {
     private final List<TextRange> myRanges = new ArrayList<>();
 
-    public void addRange(@NotNull TextRange newRange) {
+    public void addRange(@Nonnull TextRange newRange) {
       if (newRange.isEmpty()) {
         return;
       }

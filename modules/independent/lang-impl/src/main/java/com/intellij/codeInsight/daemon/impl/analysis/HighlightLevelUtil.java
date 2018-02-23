@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.search.ProjectScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class HighlightLevelUtil {
   private HighlightLevelUtil() {
@@ -34,12 +34,12 @@ public class HighlightLevelUtil {
   public enum AnalysisLevel {
     HIGHLIGHT, HIGHLIGHT_AND_INSPECT
   }
-  public static boolean shouldAnalyse(@NotNull PsiFile root, @NotNull AnalysisLevel analysisLevel) {
+  public static boolean shouldAnalyse(@Nonnull PsiFile root, @Nonnull AnalysisLevel analysisLevel) {
     return analysisLevel == AnalysisLevel.HIGHLIGHT_AND_INSPECT ? shouldInspect(root) : shouldHighlight(root);
   }
 
 
-  public static boolean shouldHighlight(@NotNull PsiElement psiRoot) {
+  public static boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
     final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());
     if (component == null) return true;
 
@@ -47,7 +47,7 @@ public class HighlightLevelUtil {
     return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
   }
 
-  public static boolean shouldInspect(@NotNull PsiElement psiRoot) {
+  public static boolean shouldInspect(@Nonnull PsiElement psiRoot) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return true;
 
     if (!shouldHighlight(psiRoot)) return false;
@@ -69,7 +69,7 @@ public class HighlightLevelUtil {
     return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
   }
 
-  public static void forceRootHighlighting(@NotNull PsiElement root, @NotNull FileHighlightingSetting level) {
+  public static void forceRootHighlighting(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting level) {
     final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(root.getProject());
     if (component == null) return;
 

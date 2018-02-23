@@ -23,8 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.shared.border.BorderPosition;
 import consulo.ui.shared.border.BorderStyle;
 import consulo.ui.style.ColorKey;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,15 +54,15 @@ public class UIDataObject extends UserDataHolderBase {
     return (T)myListeners.computeIfAbsent(clazz, EventDispatcher::create).getMulticaster();
   }
 
-  @NotNull
-  public <T> Runnable addUserDataProvider(@NotNull Function<Key<?>, Object> function) {
+  @Nonnull
+  public <T> Runnable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
     myUserDataProviders.getValue().add(function);
     return () -> myUserDataProviders.getValue().remove(function);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     List<Function<Key<?>, Object>> value = myUserDataProviders.getValue();
     for (Function<Key<?>, Object> function : value) {
       Object funcValue = function.apply(key);
@@ -90,7 +90,7 @@ public class UIDataObject extends UserDataHolderBase {
     myBorders.remove(borderPosition);
   }
 
-  @NotNull
+  @Nonnull
   public Collection<BorderInfo> getBorders() {
     if (myBorders == null) {
       return Collections.emptyList();

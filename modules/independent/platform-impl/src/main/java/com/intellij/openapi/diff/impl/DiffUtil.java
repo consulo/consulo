@@ -37,8 +37,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class DiffUtil {
   private DiffUtil() {
   }
 
-  public static void initDiffFrame(Project project, @NotNull FrameWrapper frameWrapper, @NotNull final DiffViewer diffPanel, final JComponent mainComponent) {
+  public static void initDiffFrame(Project project, @Nonnull FrameWrapper frameWrapper, @Nonnull final DiffViewer diffPanel, final JComponent mainComponent) {
     frameWrapper.setComponent(mainComponent);
     frameWrapper.setProject(project);
     frameWrapper.setImage(ImageLoader.loadFromResource("/diff/Diff.png"));
@@ -56,17 +56,17 @@ public class DiffUtil {
   }
 
   @Nullable
-  public static FocusDiffSide getFocusDiffSide(@NotNull DataContext dataContext) {
+  public static FocusDiffSide getFocusDiffSide(@Nonnull DataContext dataContext) {
     return dataContext.getData(FocusDiffSide.DATA_KEY);
   }
 
-  @NotNull
-  public static DiffString[] convertToLines(@NotNull String text) {
+  @Nonnull
+  public static DiffString[] convertToLines(@Nonnull String text) {
     return DiffString.create(text).tokenize();
   }
 
-  @NotNull
-  public static FileType[] chooseContentTypes(@NotNull DiffContent[] contents) {
+  @Nonnull
+  public static FileType[] chooseContentTypes(@Nonnull DiffContent[] contents) {
     FileType commonType = PlainTextFileType.INSTANCE;
     for (DiffContent content : contents) {
       FileType contentType = content.getContentType();
@@ -80,7 +80,7 @@ public class DiffUtil {
     return result;
   }
 
-  public static boolean isWritable(@NotNull DiffContent content) {
+  public static boolean isWritable(@Nonnull DiffContent content) {
     Document document = content.getDocument();
     return document != null && document.isWritable();
   }
@@ -104,12 +104,12 @@ public class DiffUtil {
     return editor;
   }
 
-  public static void drawBoldDottedFramingLines(@NotNull Graphics2D g, int startX, int endX, int startY, int bottomY, @NotNull Color color) {
+  public static void drawBoldDottedFramingLines(@Nonnull Graphics2D g, int startX, int endX, int startY, int bottomY, @Nonnull Color color) {
     UIUtil.drawBoldDottedLine(g, startX, endX, startY, null, color, false);
     UIUtil.drawBoldDottedLine(g, startX, endX, bottomY, null, color, false);
   }
 
-  public static void drawDoubleShadowedLine(@NotNull Graphics2D g, int startX, int endX, int y, @NotNull Color color) {
+  public static void drawDoubleShadowedLine(@Nonnull Graphics2D g, int startX, int endX, int y, @Nonnull Color color) {
     UIUtil.drawLine(g, startX, y, endX, y, null, getFramingColor(color));
     UIUtil.drawLine(g, startX, y + 1, endX, y + 1, null, color);
   }
@@ -119,8 +119,8 @@ public class DiffUtil {
     return backgroundColor != null ? backgroundColor.darker() : null;
   }
 
-  @NotNull
-  public static TextDiffType makeTextDiffType(@NotNull LineFragment fragment) {
+  @Nonnull
+  public static TextDiffType makeTextDiffType(@Nonnull LineFragment fragment) {
     TextDiffType type = TextDiffType.create(fragment.getType());
     if (isInlineWrapper(fragment)) {
       return TextDiffType.deriveInstanceForInlineWrapperFragment(type);
@@ -128,15 +128,15 @@ public class DiffUtil {
     return type;
   }
 
-  public static boolean isInlineWrapper(@NotNull Fragment fragment) {
+  public static boolean isInlineWrapper(@Nonnull Fragment fragment) {
     return fragment instanceof LineFragment && ((LineFragment)fragment).getChildrenIterator() != null;
   }
 
-  private static boolean isUnknownFileType(@NotNull DiffContent diffContent) {
+  private static boolean isUnknownFileType(@Nonnull DiffContent diffContent) {
     return UnknownFileType.INSTANCE.equals(diffContent.getContentType());
   }
 
-  private static boolean isEmptyFileType(@NotNull DiffContent diffContent) {
+  private static boolean isEmptyFileType(@Nonnull DiffContent diffContent) {
     return diffContent.getContentType() == null;
   }
 
@@ -153,7 +153,7 @@ public class DiffUtil {
     }
   }
 
-  public static boolean isDiffEditor(@NotNull Editor editor) {
+  public static boolean isDiffEditor(@Nonnull Editor editor) {
     return editor.getUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY) != null;
   }
 }

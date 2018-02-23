@@ -15,8 +15,8 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
@@ -138,7 +138,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
    *
    * @return instance of SSLContext with described behavior or default SSL context in case of error
    */
-  @NotNull
+  @Nonnull
   public synchronized SSLContext getSslContext() {
     if (mySslContext == null) {
       SSLContext context = getSystemSslContext();
@@ -167,7 +167,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
     return mySslContext;
   }
 
-  @NotNull
+  @Nonnull
   public static SSLContext getSystemSslContext() {
     // NOTE: SSLContext.getDefault() should not be called because it automatically creates
     // default context which can't be initialized twice
@@ -187,7 +187,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
     }
   }
 
-  @NotNull
+  @Nonnull
   private static SSLContext getDefaultSslContext() {
     try {
       return SSLContext.getDefault();
@@ -252,27 +252,27 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public String getCacertsPath() {
     return myCacertsPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getPassword() {
     return myPassword;
   }
 
-  @NotNull
+  @Nonnull
   public ConfirmingTrustManager getTrustManager() {
     return myTrustManager;
   }
 
-  @NotNull
+  @Nonnull
   public ConfirmingTrustManager.MutableTrustManager getCustomTrustManager() {
     return myTrustManager.getCustomManager();
   }
 
-  public static boolean showAcceptDialog(final @NotNull Callable<? extends DialogWrapper> dialogFactory) {
+  public static boolean showAcceptDialog(final @Nonnull Callable<? extends DialogWrapper> dialogFactory) {
     Application app = ApplicationManager.getApplication();
     final CountDownLatch proceeded = new CountDownLatch(1);
     final AtomicBoolean accepted = new AtomicBoolean();
@@ -326,7 +326,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
     return accepted.get();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Config getState() {
     return myConfig;

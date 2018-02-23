@@ -17,10 +17,10 @@ package com.intellij.find.editorHeaderActions;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ShortcutSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ContextAwareShortcutProvider {
   @Nullable
-  ShortcutSet getShortcut(@NotNull DataContext context);
+  ShortcutSet getShortcut(@Nonnull DataContext context);
 }

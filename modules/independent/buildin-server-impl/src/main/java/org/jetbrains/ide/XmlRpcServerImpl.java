@@ -29,8 +29,8 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.apache.xmlrpc.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.io.Responses;
 import org.xml.sax.SAXParseException;
 
@@ -49,12 +49,12 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
   static final class XmlRpcRequestHandler extends HttpRequestHandler {
     @Override
-    public boolean isSupported(@NotNull FullHttpRequest request) {
+    public boolean isSupported(@Nonnull FullHttpRequest request) {
       return request.method() == HttpMethod.POST || request.method() == HttpMethod.OPTIONS;
     }
 
     @Override
-    public boolean process(@NotNull QueryStringDecoder urlDecoder, @NotNull FullHttpRequest request, @NotNull ChannelHandlerContext context) throws IOException {
+    public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
       return SERVICE.getInstance().process(urlDecoder.path(), request, context, null);
     }
   }
@@ -75,7 +75,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
   }
 
   @Override
-  public boolean process(@NotNull String path, @NotNull FullHttpRequest request, @NotNull ChannelHandlerContext context, @Nullable Map<String, Object> handlers) {
+  public boolean process(@Nonnull String path, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context, @javax.annotation.Nullable Map<String, Object> handlers) {
     if (!(path.isEmpty() || (path.length() == 1 && path.charAt(0) == '/') || path.equalsIgnoreCase("/rpc2"))) {
       return false;
     }
@@ -116,7 +116,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     return true;
   }
 
-  private static Object getHandler(@NotNull String methodName, @NotNull Map<String, Object> handlers) {
+  private static Object getHandler(@Nonnull String methodName, @Nonnull Map<String, Object> handlers) {
     Object handler = null;
     String handlerName = null;
     int dot = methodName.lastIndexOf('.');
@@ -137,7 +137,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     }
   }
 
-  private static Object invokeHandler(@NotNull Object handler, XmlRpcServerRequest request) throws Throwable {
+  private static Object invokeHandler(@Nonnull Object handler, XmlRpcServerRequest request) throws Throwable {
     return handler instanceof XmlRpcHandler ? (XmlRpcHandler)handler : invoke(handler, request.getMethodName(), request.getParameters());
   }
 

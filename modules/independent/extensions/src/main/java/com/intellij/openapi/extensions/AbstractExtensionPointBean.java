@@ -17,8 +17,8 @@ package com.intellij.openapi.extensions;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.picocontainer.PicoContainer;
 
 /**
@@ -37,7 +37,7 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
     return myPluginDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   public final <T> Class<T> findClass(final String className) throws ClassNotFoundException {
     return (Class<T>)Class.forName(className, true, getLoaderForClass());
   }
@@ -53,23 +53,23 @@ public abstract class AbstractExtensionPointBean implements PluginAware {
     }
   }
 
-  @NotNull
+  @Nonnull
   public ClassLoader getLoaderForClass() {
     return myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader();
   }
 
-  @NotNull
-  public final <T> T instantiate(final String className, @NotNull final PicoContainer container) throws ClassNotFoundException {
+  @Nonnull
+  public final <T> T instantiate(final String className, @Nonnull final PicoContainer container) throws ClassNotFoundException {
     return instantiate(this.<T>findClass(className), container);
   }
 
-  @NotNull
-  public static <T> T instantiate(@NotNull final Class<T> aClass, @NotNull final PicoContainer container) {
+  @Nonnull
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final PicoContainer container) {
     return instantiate(aClass, container, false);
   }
 
-  @NotNull
-  public static <T> T instantiate(@NotNull final Class<T> aClass, @NotNull final PicoContainer container, final boolean allowNonPublicClasses) {
+  @Nonnull
+  public static <T> T instantiate(@Nonnull final Class<T> aClass, @Nonnull final PicoContainer container, final boolean allowNonPublicClasses) {
     return (T)new CachingConstructorInjectionComponentAdapter(aClass.getName(), aClass, null, allowNonPublicClasses).getComponentInstance(container);
   }
 

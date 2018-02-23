@@ -16,7 +16,7 @@
 package com.intellij.ide.dnd;
 
 import com.intellij.Patches;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -56,7 +56,7 @@ abstract public class TransferableList<T> implements Transferable {
     myList = Collections.unmodifiableList(list);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataFlavor[] getTransferDataFlavors() {
     return new DataFlavor[]{

@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,7 +27,7 @@ public abstract class LookupElementAction {
   private final Icon myIcon;
   private final String myText;
 
-  protected LookupElementAction(@Nullable Icon icon, @NotNull String text) {
+  protected LookupElementAction(@Nullable Icon icon, @Nonnull String text) {
     myIcon = icon;
     myText = text;
   }

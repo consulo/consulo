@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.changes.issueLinks;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.ColoredTreeCellRenderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -48,7 +48,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
 
   @Nullable
   @Override
-  protected Object getTagAt(@NotNull final MouseEvent e) {
+  protected Object getTagAt(@Nonnull final MouseEvent e) {
     JTree tree = (JTree)e.getSource();
     Object tag = null;
     HaveTooltip haveTooltip = null;
@@ -71,7 +71,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
     return tag;
   }
 
-  protected int getRendererRelativeX(@NotNull MouseEvent e, @NotNull JTree tree, @NotNull TreePath path) {
+  protected int getRendererRelativeX(@Nonnull MouseEvent e, @Nonnull JTree tree, @Nonnull TreePath path) {
     final Rectangle rectangle = tree.getPathBounds(path);
     assert rectangle != null;
     return e.getX() - rectangle.x;

@@ -18,8 +18,8 @@ package com.intellij.designer.model;
 import com.intellij.designer.propertyTable.PropertyEditor;
 import com.intellij.designer.propertyTable.PropertyRenderer;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class Property<T extends PropertiesContainer> {
   private boolean myExpert;
   private boolean myDeprecated;
 
-  public Property(@Nullable Property parent, @NotNull String name) {
+  public Property(@Nullable Property parent, @Nonnull String name) {
     myParent = parent;
     myName = name;
   }
@@ -45,7 +45,7 @@ public abstract class Property<T extends PropertiesContainer> {
   }
 
   @Nullable
-  public Property<T> createForNewPresentation(@Nullable Property parent, @NotNull String name) {
+  public Property<T> createForNewPresentation(@Nullable Property parent, @Nonnull String name) {
     return null;
   }
 
@@ -65,12 +65,12 @@ public abstract class Property<T extends PropertiesContainer> {
     return myParent;
   }
 
-  @NotNull
+  @Nonnull
   public List<? extends Property<T>> getChildren(@Nullable T container) {
     return Collections.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   public String getPath() {
     return myParent == null ? myName : myParent.getPath() + "/" + myName;
   }
@@ -82,18 +82,18 @@ public abstract class Property<T extends PropertiesContainer> {
   //////////////////////////////////////////////////////////////////////////////////////////
 
   @Nullable
-  public Object getValue(@NotNull T container) throws Exception {
+  public Object getValue(@Nonnull T container) throws Exception {
     return null;
   }
 
-  public void setValue(@NotNull T container, @Nullable Object value) throws Exception {
+  public void setValue(@Nonnull T container, @Nullable Object value) throws Exception {
   }
 
-  public boolean showAsDefault(@NotNull T container) throws Exception {
+  public boolean showAsDefault(@Nonnull T container) throws Exception {
     return isDefaultRecursively(container);
   }
 
-  public final boolean isDefaultRecursively(@NotNull T container) throws Exception {
+  public final boolean isDefaultRecursively(@Nonnull T container) throws Exception {
     if (!isDefaultValue(container)) return false;
     for (Property<T> child : getChildren(container)) {
       if (!child.isDefaultRecursively(container)) return false;
@@ -101,18 +101,18 @@ public abstract class Property<T extends PropertiesContainer> {
     return true;
   }
 
-  public boolean isDefaultValue(@NotNull T container) throws Exception {
+  public boolean isDefaultValue(@Nonnull T container) throws Exception {
     return true;
   }
 
-  public void setDefaultValue(@NotNull T container) throws Exception {
+  public void setDefaultValue(@Nonnull T container) throws Exception {
   }
 
   public boolean availableFor(List<PropertiesContainer> components) {
     return true;
   }
 
-  public boolean needRefreshPropertyList(@NotNull T container, @Nullable Object oldValue, @Nullable Object newValue) throws Exception {
+  public boolean needRefreshPropertyList(@Nonnull T container, @Nullable Object oldValue, @Nullable Object newValue) throws Exception {
     return false;
   }
 
@@ -126,7 +126,7 @@ public abstract class Property<T extends PropertiesContainer> {
   //
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  @NotNull
+  @Nonnull
   public final String getName() {
     return myName;
   }
@@ -160,7 +160,7 @@ public abstract class Property<T extends PropertiesContainer> {
     myDeprecated = deprecated;
   }
 
-  @NotNull
+  @Nonnull
   public abstract PropertyRenderer getRenderer();
 
   @Nullable

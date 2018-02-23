@@ -16,10 +16,10 @@
 package com.intellij.usageView;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface UsageInfoFactory {
   @Nullable
-  UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset);
+  UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset);
 }

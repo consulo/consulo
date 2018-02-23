@@ -18,27 +18,27 @@ package consulo.wm.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.*;
 import consulo.ui.Component;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
 public class UnifiedContentFactoryImpl implements ContentFactory {
-  @NotNull
+  @Nonnull
   @Override
-  public ContentManager createContentManager(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
     return new UnifiedContentManager(contentUI, canCloseContents, project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @NotNull Project project) {
+  public ContentManager createContentManager(boolean canCloseContents, @Nonnull Project project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     return new UnifiedContentImpl(component, displayName, isLockable);

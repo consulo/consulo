@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   private final EditorEx                           myEditor;
   private final SoftWrapsStorage                   myStorage;
 
-  public CachingSoftWrapDataMapper(@NotNull EditorEx editor, @NotNull SoftWrapsStorage storage)
+  public CachingSoftWrapDataMapper(@Nonnull EditorEx editor, @Nonnull SoftWrapsStorage storage)
   {
     myEditor = editor;
     myStorage = storage;
@@ -73,7 +73,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   }
 
   @Override
-  public void onCacheUpdateStart(@NotNull IncrementalCacheUpdateEvent event) {
+  public void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event) {
     int startOffset = event.getStartOffset();
 
     myAffectedByUpdateSoftWraps.clear();
@@ -81,7 +81,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   }
 
   @Override
-  public void onRecalculationEnd(@NotNull IncrementalCacheUpdateEvent event) {
+  public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
     advanceSoftWrapOffsets(event);
   }
 
@@ -95,7 +95,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
    *
    * @return Change in soft wraps count after recalculation
    */
-  private void advanceSoftWrapOffsets(@NotNull IncrementalCacheUpdateEvent event) {
+  private void advanceSoftWrapOffsets(@Nonnull IncrementalCacheUpdateEvent event) {
     int lengthDiff = event.getLengthDiff();
     int recalcEndOffsetTranslated = event.getActualEndOffset() - lengthDiff;
 
@@ -139,7 +139,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
     return softWraps.isEmpty() ? null : softWraps.get(softWraps.size() - 1);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String dumpState() {
     return "Soft wraps affected by current update: " + myAffectedByUpdateSoftWraps;

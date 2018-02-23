@@ -16,7 +16,7 @@
 package com.intellij.util.containers;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -39,12 +39,12 @@ public final class WeakValueHashMap<K,V> extends RefValueHashMap<K,V> {
   public WeakValueHashMap() {
   }
 
-  public WeakValueHashMap(@NotNull TObjectHashingStrategy<K> strategy) {
+  public WeakValueHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
   @Override
-  protected MyReference<K, V> createReference(@NotNull K key, V value, @NotNull ReferenceQueue<V> queue) {
+  protected MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<V> queue) {
     return new MyWeakReference<K, V>(key, value, queue);
   }
 }

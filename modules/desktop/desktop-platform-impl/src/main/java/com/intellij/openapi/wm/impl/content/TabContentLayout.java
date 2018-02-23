@@ -25,7 +25,6 @@ import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.content.TabbedContent;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -336,7 +335,7 @@ class TabContentLayout extends ContentLayout {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static BufferedImage drawToBuffer(Rectangle r, boolean selected, boolean last, boolean prevSelected, boolean active) {
     if (r.width <= 0 || r.height <= 0) return null;
     BufferedImage image = UIUtil.createImage(r.width, r.height, BufferedImage.TYPE_INT_ARGB);

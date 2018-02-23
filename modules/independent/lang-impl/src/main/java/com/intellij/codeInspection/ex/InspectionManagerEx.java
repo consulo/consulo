@@ -43,8 +43,8 @@ import com.intellij.ui.content.TabbedPaneContentUI;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -63,7 +63,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     super(project);
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
       myContentManager = new NotNullLazyValue<ContentManager>() {
-        @NotNull
+        @Nonnull
         @Override
         protected ContentManager compute() {
           ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
@@ -74,7 +74,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     }
     else {
       myContentManager = new NotNullLazyValue<ContentManager>() {
-        @NotNull
+        @Nonnull
         @Override
         protected ContentManager compute() {
           ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
@@ -90,7 +90,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
   }
 
   @Nullable
-  public static SuppressIntentionAction[] getSuppressActions(@NotNull InspectionToolWrapper toolWrapper) {
+  public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
     final InspectionProfileEntry tool = toolWrapper.getTool();
     if (tool instanceof CustomSuppressableInspectionTool) {
       return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
@@ -114,9 +114,9 @@ public class InspectionManagerEx extends InspectionManagerBase {
     });
   }
 
-  private static void processText(@NotNull @NonNls String descriptionText,
-                                  @NotNull InspectionToolWrapper tool,
-                                  @NotNull SearchableOptionsRegistrar myOptionsRegistrar) {
+  private static void processText(@Nonnull @NonNls String descriptionText,
+                                  @Nonnull InspectionToolWrapper tool,
+                                  @Nonnull SearchableOptionsRegistrar myOptionsRegistrar) {
     if (ApplicationManager.getApplication().isDisposed()) return;
     final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
     for (String word : words) {
@@ -124,10 +124,10 @@ public class InspectionManagerEx extends InspectionManagerBase {
     }
   }
 
-  @NotNull
-  public ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
-                                                   @NotNull final String descriptionTemplate,
-                                                   @NotNull final ProblemHighlightType highlightType,
+  @Nonnull
+  public ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
+                                                   @Nonnull final String descriptionTemplate,
+                                                   @Nonnull final ProblemHighlightType highlightType,
                                                    @Nullable final HintAction hintAction,
                                                    boolean onTheFly,
                                                    final LocalQuickFix... fixes) {
@@ -135,7 +135,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
     final GlobalInspectionContextImpl inspectionContext;
     if (reuse) {
@@ -161,16 +161,16 @@ public class InspectionManagerEx extends InspectionManagerBase {
     myRunningContexts.remove(globalInspectionContext);
   }
 
-  @NotNull
+  @Nonnull
   public Set<GlobalInspectionContextImpl> getRunningContexts() {
     return myRunningContexts;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public ProblemDescriptor createProblemDescriptor(@NotNull final PsiElement psiElement,
-                                                   @NotNull final String descriptionTemplate,
-                                                   @NotNull final ProblemHighlightType highlightType,
+  public ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
+                                                   @Nonnull final String descriptionTemplate,
+                                                   @Nonnull final ProblemHighlightType highlightType,
                                                    @Nullable final HintAction hintAction,
                                                    final LocalQuickFix... fixes) {
 

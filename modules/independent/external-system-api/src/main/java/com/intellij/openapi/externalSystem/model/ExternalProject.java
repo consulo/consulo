@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.Serializable;
@@ -28,37 +28,37 @@ import java.util.Map;
  */
 public interface ExternalProject extends Serializable {
 
-  @NotNull
+  @Nonnull
   String getExternalSystemId();
 
-  @NotNull
+  @Nonnull
   String getName();
 
-  @NotNull
+  @Nonnull
   String getQName();
 
-  @Nullable
+  @javax.annotation.Nullable
   String getDescription();
 
-  @NotNull
+  @Nonnull
   String getGroup();
 
-  @NotNull
+  @Nonnull
   String getVersion();
 
-  @NotNull
+  @Nonnull
   Map<String, ExternalProject> getChildProjects();
 
-  @NotNull
+  @Nonnull
   File getProjectDir();
 
-  @NotNull
+  @Nonnull
   File getBuildDir();
 
-  @Nullable
+  @javax.annotation.Nullable
   File getBuildFile();
 
-  @NotNull
+  @Nonnull
   Map<String, ExternalTask> getTasks();
 
   //@NotNull
@@ -70,18 +70,18 @@ public interface ExternalProject extends Serializable {
   //@NotNull
   //List<ExternalDependency> getDependencies();
 
-  @NotNull
+  @Nonnull
   Map<String, ExternalPlugin> getPlugins();
 
   //@NotNull
   //ExternalProjectBuild getBuild();
 
-  @NotNull
+  @Nonnull
   Map<String, ?> getProperties();
 
   @Nullable
   Object getProperty(String name);
 
-  @NotNull
+  @Nonnull
   Map<String, ExternalSourceSet> getSourceSets();
 }

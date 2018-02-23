@@ -48,8 +48,8 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -84,7 +84,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     myContext = context;
     myContext.getDaemonAnalyzer().addListener(new ProjectStructureDaemonAnalyzerListener() {
       @Override
-      public void problemsChanged(@NotNull ProjectStructureElement element) {
+      public void problemsChanged(@Nonnull ProjectStructureElement element) {
         if (!myTree.isShowing()) return;
 
         myTree.revalidate();
@@ -93,7 +93,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents() {
     reInitWholePanelIfNeeded();
@@ -153,7 +153,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
 
 
   @Override
-  public void queryPlace(@NotNull final Place place) {
+  public void queryPlace(@Nonnull final Place place) {
     if (myCurrentConfigurable != null) {
       place.putPath(TREE_OBJECT, myCurrentConfigurable.getEditableObject());
       Place.queryFurther(myCurrentConfigurable, place);
@@ -295,7 +295,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     super.reset();
   }
 
-  @NotNull
+  @Nonnull
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     return Collections.emptyList();
   }
@@ -304,7 +304,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
 
 
   @Override
-  @NotNull
+  @Nonnull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
     final ArrayList<AnAction> result = new ArrayList<AnAction>();
     AbstractAddGroup addAction = createAddAction();
@@ -323,7 +323,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     return result;
   }
 
-  @NotNull
+  @Nonnull
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
     return Collections.emptyList();
   }

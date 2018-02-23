@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -60,7 +60,7 @@ public class IntArrayList implements Cloneable {
       Arrays.fill(myData, fromIndex, toIndex, value);
   }
 
-  public void add(@NotNull int[] values) {
+  public void add(@Nonnull int[] values) {
     int length = values.length;
     ensureCapacity(mySize + length);
     System.arraycopy(values, 0, myData, mySize, length);
@@ -117,15 +117,15 @@ public class IntArrayList implements Cloneable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public int[] toArray() {
     int[] result = new int[mySize];
     System.arraycopy(myData, 0, result, 0, mySize);
     return result;
   }
 
-  @NotNull
-  public int[] toArray(@NotNull int[] a) {
+  @Nonnull
+  public int[] toArray(@Nonnull int[] a) {
     if (a.length < mySize){
       a = new int[mySize];
     }
@@ -135,7 +135,7 @@ public class IntArrayList implements Cloneable {
     return a;
   }
 
-  @NotNull
+  @Nonnull
   public int[] toArray(int startIndex, int length) {
     int[] result = new int[length];
     System.arraycopy(myData, startIndex, result, 0, length);

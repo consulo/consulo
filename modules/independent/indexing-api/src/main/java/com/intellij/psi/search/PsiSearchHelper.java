@@ -23,8 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Provides low-level search and find usages services for a project, like finding references
@@ -49,8 +48,8 @@ public interface PsiSearchHelper {
    * @param searchScope the scope in which occurrences are searched.
    * @return the array of found comments.
    */
-  @NotNull
-  PsiElement[] findCommentsContainingIdentifier(@NotNull String identifier, @NotNull SearchScope searchScope);
+  @Nonnull
+  PsiElement[] findCommentsContainingIdentifier(@Nonnull String identifier, @Nonnull SearchScope searchScope);
 
   /**
    * Processes the specified scope and hands comments containing the specified identifier over to the processor.
@@ -60,7 +59,7 @@ public interface PsiSearchHelper {
    * @param processor
    * @return false if processor returned false, true otherwise
    */
-  boolean processCommentsContainingIdentifier(@NotNull String identifier, @NotNull SearchScope searchScope, @NotNull Processor<PsiElement> processor);
+  boolean processCommentsContainingIdentifier(@Nonnull String identifier, @Nonnull SearchScope searchScope, @Nonnull Processor<PsiElement> processor);
 
   /**
    * Returns the list of files which contain the specified word in "plain text"
@@ -69,8 +68,8 @@ public interface PsiSearchHelper {
    * @param word the word to search.
    * @return the list of files containing the word.
    */
-  @NotNull
-  PsiFile[] findFilesWithPlainTextWords(@NotNull String word);
+  @Nonnull
+  PsiFile[] findFilesWithPlainTextWords(@Nonnull String word);
 
   /**
    * Passes all occurrences of the specified full-qualified class name in plain text context
@@ -80,9 +79,9 @@ public interface PsiSearchHelper {
    * @param processor   the processor which accepts the references.
    * @param searchScope the scope in which occurrences are searched.
    */
-  boolean processUsagesInNonJavaFiles(@NotNull String qName,
-                                      @NotNull PsiNonJavaFileReferenceProcessor processor,
-                                      @NotNull GlobalSearchScope searchScope);
+  boolean processUsagesInNonJavaFiles(@Nonnull String qName,
+                                      @Nonnull PsiNonJavaFileReferenceProcessor processor,
+                                      @Nonnull GlobalSearchScope searchScope);
 
   /**
    * Passes all occurrences of the specified full-qualified class name in plain text context in the
@@ -94,10 +93,10 @@ public interface PsiSearchHelper {
    * @param processor       the processor which accepts the references.
    * @param searchScope     the scope in which occurrences are searched.
    */
-  boolean processUsagesInNonJavaFiles(@Nullable PsiElement originalElement,
-                                      @NotNull String qName,
-                                      @NotNull PsiNonJavaFileReferenceProcessor processor,
-                                      @NotNull GlobalSearchScope searchScope);
+  boolean processUsagesInNonJavaFiles(@javax.annotation.Nullable PsiElement originalElement,
+                                      @Nonnull String qName,
+                                      @Nonnull PsiNonJavaFileReferenceProcessor processor,
+                                      @Nonnull GlobalSearchScope searchScope);
 
   /**
    * Returns the scope in which references to the specified element are searched. This scope includes the result of
@@ -107,8 +106,8 @@ public interface PsiSearchHelper {
    * @param element the element to return the use scope form.
    * @return the search scope instance.
    */
-  @NotNull
-  SearchScope getUseScope(@NotNull PsiElement element);
+  @Nonnull
+  SearchScope getUseScope(@Nonnull PsiElement element);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_CODE code}
@@ -119,9 +118,9 @@ public interface PsiSearchHelper {
    * @param processor the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWord(@NotNull String word,
-                                  @NotNull GlobalSearchScope scope,
-                                  @NotNull Processor<PsiFile> processor,
+  boolean processAllFilesWithWord(@Nonnull String word,
+                                  @Nonnull GlobalSearchScope scope,
+                                  @Nonnull Processor<PsiFile> processor,
                                   final boolean caseSensitively);
 
   /**
@@ -133,9 +132,9 @@ public interface PsiSearchHelper {
    * @param processor the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWordInText(@NotNull String word,
-                                        @NotNull GlobalSearchScope scope,
-                                        @NotNull Processor<PsiFile> processor,
+  boolean processAllFilesWithWordInText(@Nonnull String word,
+                                        @Nonnull GlobalSearchScope scope,
+                                        @Nonnull Processor<PsiFile> processor,
                                         final boolean caseSensitively);
 
   /**
@@ -146,7 +145,7 @@ public interface PsiSearchHelper {
    * @param scope     the scope in which occurrences are searched.
    * @param processor the processor which accepts the references.
    */
-  boolean processAllFilesWithWordInComments(@NotNull String word, @NotNull GlobalSearchScope scope, @NotNull Processor<PsiFile> processor);
+  boolean processAllFilesWithWordInComments(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_STRINGS string literal}
@@ -156,40 +155,40 @@ public interface PsiSearchHelper {
    * @param scope     the scope in which occurrences are searched.
    * @param processor the processor which accepts the references.
    */
-  boolean processAllFilesWithWordInLiterals(@NotNull String word, @NotNull GlobalSearchScope scope, @NotNull Processor<PsiFile> processor);
+  boolean processAllFilesWithWordInLiterals(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor);
 
-  boolean processRequests(@NotNull SearchRequestCollector request, @NotNull Processor<PsiReference> processor);
+  boolean processRequests(@Nonnull SearchRequestCollector request, @Nonnull Processor<PsiReference> processor);
 
-  @NotNull
-  AsyncFuture<Boolean> processRequestsAsync(@NotNull SearchRequestCollector request, @NotNull Processor<PsiReference> processor);
+  @Nonnull
+  AsyncFuture<Boolean> processRequestsAsync(@Nonnull SearchRequestCollector request, @Nonnull Processor<PsiReference> processor);
 
-  boolean processElementsWithWord(@NotNull TextOccurenceProcessor processor,
-                                  @NotNull SearchScope searchScope,
-                                  @NotNull String text,
+  boolean processElementsWithWord(@Nonnull TextOccurenceProcessor processor,
+                                  @Nonnull SearchScope searchScope,
+                                  @Nonnull String text,
                                   short searchContext,
                                   boolean caseSensitive);
 
-  boolean processElementsWithWord(@NotNull TextOccurenceProcessor processor,
-                                  @NotNull SearchScope searchScope,
-                                  @NotNull String text,
+  boolean processElementsWithWord(@Nonnull TextOccurenceProcessor processor,
+                                  @Nonnull SearchScope searchScope,
+                                  @Nonnull String text,
                                   short searchContext,
                                   boolean caseSensitive,
                                   boolean processInjectedPsi);
 
-  @NotNull
+  @Nonnull
   AsyncFuture<Boolean> processElementsWithWordAsync(
-    @NotNull TextOccurenceProcessor processor,
-    @NotNull SearchScope searchScope,
-    @NotNull String text,
+    @Nonnull TextOccurenceProcessor processor,
+    @Nonnull SearchScope searchScope,
+    @Nonnull String text,
     short searchContext,
     boolean caseSensitive);
 
 
-  @NotNull
-  SearchCostResult isCheapEnoughToSearch(@NotNull String name,
-                                         @NotNull GlobalSearchScope scope,
-                                         @Nullable PsiFile fileToIgnoreOccurencesIn,
-                                         @Nullable ProgressIndicator progress);
+  @Nonnull
+  SearchCostResult isCheapEnoughToSearch(@Nonnull String name,
+                                         @Nonnull GlobalSearchScope scope,
+                                         @javax.annotation.Nullable PsiFile fileToIgnoreOccurencesIn,
+                                         @javax.annotation.Nullable ProgressIndicator progress);
 
   enum SearchCostResult {
     ZERO_OCCURRENCES, FEW_OCCURRENCES, TOO_MANY_OCCURRENCES

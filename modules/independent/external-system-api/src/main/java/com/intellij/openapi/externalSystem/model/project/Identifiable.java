@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.model.project;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Identifiable {
 
-  @NotNull
+  @Nonnull
   String getId();
 }

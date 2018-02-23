@@ -16,8 +16,8 @@
 package com.intellij.vcs.log.paint;
 
 import com.intellij.vcs.log.graph.PrintElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -27,9 +27,9 @@ import java.util.Collection;
  */
 public interface GraphCellPainter {
 
-  void draw(@NotNull Graphics2D g2, @NotNull Collection<? extends PrintElement> printElements);
+  void draw(@Nonnull Graphics2D g2, @Nonnull Collection<? extends PrintElement> printElements);
 
   @Nullable
-  PrintElement getElementUnderCursor(@NotNull Collection<? extends PrintElement> printElements, int x, int y);
+  PrintElement getElementUnderCursor(@Nonnull Collection<? extends PrintElement> printElements, int x, int y);
 }
 

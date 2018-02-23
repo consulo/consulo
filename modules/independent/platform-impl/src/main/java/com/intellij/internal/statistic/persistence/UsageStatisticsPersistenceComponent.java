@@ -26,8 +26,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
 
   @NonNls
   private boolean myAllowed = true;
-  @NotNull
+  @Nonnull
   private SendPeriod myPeriod = SendPeriod.WEEKLY;
 
   @NonNls
@@ -64,7 +64,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     }
   }
 
-  @NotNull
+  @Nonnull
   public static UsageStatisticsPersistenceComponent getInstance() {
     return ApplicationManager.getApplication().getComponent(UsageStatisticsPersistenceComponent.class);
   }
@@ -119,16 +119,16 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     return element;
   }
 
-  @NotNull
+  @Nonnull
   public SendPeriod getPeriod() {
     return myPeriod;
   }
 
-  public void setPeriod(@NotNull SendPeriod period) {
+  public void setPeriod(@Nonnull SendPeriod period) {
     myPeriod = period;
   }
 
-  @NotNull
+  @Nonnull
   private static SendPeriod parsePeriod(@Nullable String periodAttrValue) {
     if (SendPeriod.DAILY.getName().equals(periodAttrValue)) return SendPeriod.DAILY;
     if (SendPeriod.MONTHLY.getName().equals(periodAttrValue)) return SendPeriod.MONTHLY;
@@ -153,7 +153,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "SentUsagesPersistenceComponent";
   }

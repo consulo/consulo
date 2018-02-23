@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.model;
 
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Generic data model for {@link ArrangementEntryMatcher arrangement entry matcher}.
@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ArrangementMatchCondition extends Cloneable {
 
-  void invite(@NotNull ArrangementMatchConditionVisitor visitor);
+  void invite(@Nonnull ArrangementMatchConditionVisitor visitor);
 
-  @NotNull
+  @Nonnull
   ArrangementMatchCondition clone();
 }

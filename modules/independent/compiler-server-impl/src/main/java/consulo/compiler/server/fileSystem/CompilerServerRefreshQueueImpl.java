@@ -19,8 +19,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,12 +27,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CompilerServerRefreshQueueImpl extends RefreshQueue {
   @Override
-  public RefreshSession createSession(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @NotNull ModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursive, @javax.annotation.Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
     return new CompilerServerRefreshSessionImpl();
   }
 
   @Override
-  public void processSingleEvent(@NotNull VFileEvent event) {
+  public void processSingleEvent(@Nonnull VFileEvent event) {
   }
 
   @Override

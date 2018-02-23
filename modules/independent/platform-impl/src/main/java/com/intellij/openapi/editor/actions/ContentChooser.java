@@ -36,9 +36,9 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -312,7 +312,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     updateViewerForSelection();
   }
 
-  @NotNull
+  @Nonnull
   public int[] getSelectedIndices() {
     Object[] values = myList.getSelectedValues();
     int[] result = new int[values.length];
@@ -326,7 +326,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     return myAllContents;
   }
 
-  @NotNull
+  @Nonnull
   public String getSelectedText() {
     StringBuilder sb = new StringBuilder();
     for (Object o : myList.getSelectedValues()) {

@@ -24,7 +24,7 @@ import com.intellij.packaging.artifacts.ArtifactPointerManager;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,11 +89,11 @@ public class AbstractArtifactsBeforeRunTask<T extends AbstractArtifactsBeforeRun
     }
   }
 
-  public void removeArtifact(@NotNull Artifact artifact) {
+  public void removeArtifact(@Nonnull Artifact artifact) {
     removeArtifact(ArtifactPointerUtil.getPointerManager(myProject).create(artifact));
   }
 
-  public void removeArtifact(final @NotNull ArtifactPointer pointer) {
+  public void removeArtifact(final @Nonnull ArtifactPointer pointer) {
     myArtifactPointers.remove(pointer);
   }
 

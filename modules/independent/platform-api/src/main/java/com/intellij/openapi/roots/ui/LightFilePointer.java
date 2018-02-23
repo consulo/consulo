@@ -19,8 +19,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -28,11 +28,11 @@ public class LightFilePointer implements VirtualFilePointer {
   private final String myUrl;
   private VirtualFile myFile;
 
-  public LightFilePointer(@NotNull String url) {
+  public LightFilePointer(@Nonnull String url) {
     myUrl = url;
   }
 
-  public LightFilePointer(@NotNull VirtualFile file) {
+  public LightFilePointer(@Nonnull VirtualFile file) {
     myUrl = file.getUrl();
     myFile = file;
   }
@@ -45,13 +45,13 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFileName() {
     if (myFile != null) {
       return myFile.getName();
@@ -61,7 +61,7 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableUrl() {
     VirtualFile file = getFile();
     if (file != null) return file.getPresentableUrl();

@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Base implementation for indices that produce single value per single file
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  *         Date: Feb 18, 2009
  */
 public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedIndexExtension<Integer, V>{
-  @NotNull
+  @Nonnull
   @Override
   public final KeyDescriptor<Integer> getKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
@@ -38,7 +38,7 @@ public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedInd
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public abstract SingleEntryIndexer<V> getIndexer();
 

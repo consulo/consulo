@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.EventDispatcher;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -64,11 +64,11 @@ public class FontEditorPreview implements PreviewPanel{
             "\n";
   }
 
-  static void installTrafficLights(@NotNull EditorEx editor) {
+  static void installTrafficLights(@Nonnull EditorEx editor) {
     TrafficLightRenderer renderer = new TrafficLightRenderer(null, null,null) {
-      @NotNull
+      @Nonnull
       @Override
-      protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@NotNull SeverityRegistrar severityRegistrar) {
+      protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {
         DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
         status.errorAnalyzingFinished = true;
         status.errorCount = new int[]{1, 2};
@@ -129,7 +129,7 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   @Override
-  public void addListener(@NotNull final ColorAndFontSettingsListener listener) {
+  public void addListener(@Nonnull final ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
   }
 

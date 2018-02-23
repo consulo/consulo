@@ -16,16 +16,16 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.xdebugger.impl.DebuggerSupport;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 final class EvaluateInConsoleAction extends XDebuggerActionBase {
   public EvaluateInConsoleAction() {
     super(true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected DebuggerActionHandler getHandler(@NotNull DebuggerSupport debuggerSupport) {
+  protected DebuggerActionHandler getHandler(@Nonnull DebuggerSupport debuggerSupport) {
     return debuggerSupport.getEvaluateInConsoleActionHandler();
   }
 }

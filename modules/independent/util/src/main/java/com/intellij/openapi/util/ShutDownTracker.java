@@ -18,7 +18,7 @@ package com.intellij.openapi.util;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ShutDownTracker implements Runnable {
     private static final ShutDownTracker ourInstance = new ShutDownTracker();
   }
 
-  @NotNull
+  @Nonnull
   public static ShutDownTracker getInstance() {
     return ShutDownTrackerHolder.ourInstance;
   }
@@ -97,44 +97,44 @@ public class ShutDownTracker implements Runnable {
     }
   }
 
-  private synchronized boolean isRegistered(@NotNull Thread thread) {
+  private synchronized boolean isRegistered(@Nonnull Thread thread) {
     return myThreads.contains(thread);
   }
 
-  @NotNull
+  @Nonnull
   private synchronized Thread[] getStopperThreads() {
     return myThreads.toArray(new Thread[myThreads.size()]);
   }
 
-  public synchronized void registerStopperThread(@NotNull Thread thread) {
+  public synchronized void registerStopperThread(@Nonnull Thread thread) {
     myThreads.add(thread);
   }
 
-  public synchronized void unregisterStopperThread(@NotNull Thread thread) {
+  public synchronized void unregisterStopperThread(@Nonnull Thread thread) {
     myThreads.remove(thread);
   }
 
-  public synchronized void registerShutdownThread(@NotNull Thread thread) {
+  public synchronized void registerShutdownThread(@Nonnull Thread thread) {
     myShutdownThreads.addLast(thread);
   }
 
-  public synchronized void registerShutdownThread(int index, @NotNull Thread thread) {
+  public synchronized void registerShutdownThread(int index, @Nonnull Thread thread) {
     myShutdownThreads.add(index, thread);
   }
 
-  public synchronized void registerShutdownTask(@NotNull Runnable task) {
+  public synchronized void registerShutdownTask(@Nonnull Runnable task) {
     myShutdownTasks.addLast(task);
   }
 
-  public synchronized void unregisterShutdownTask(@NotNull Runnable task) {
+  public synchronized void unregisterShutdownTask(@Nonnull Runnable task) {
     myShutdownTasks.remove(task);
   }
   
-  private synchronized <T> T removeLast(@NotNull LinkedList<T> list) {
+  private synchronized <T> T removeLast(@Nonnull LinkedList<T> list) {
     return list.isEmpty()? null : list.removeLast();
   }
 
-  public static void invokeAndWait(boolean returnOnTimeout, boolean runInEdt, @NotNull final Runnable runnable) {
+  public static void invokeAndWait(boolean returnOnTimeout, boolean runInEdt, @Nonnull final Runnable runnable) {
     if (!runInEdt) {
       if (returnOnTimeout) {
         final Semaphore semaphore = new Semaphore();

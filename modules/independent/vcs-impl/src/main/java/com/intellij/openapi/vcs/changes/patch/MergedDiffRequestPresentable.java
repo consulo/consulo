@@ -29,8 +29,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.actions.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -87,10 +86,10 @@ public class MergedDiffRequestPresentable implements DiffRequestPresentable {
     return Collections.emptyList();
   }
 
-  @NotNull
-  public static SimpleDiffRequest createBadDiffRequest(@Nullable final Project project,
-                                                       @NotNull final VirtualFile file,
-                                                       @NotNull ApplyPatchForBaseRevisionTexts texts,
+  @Nonnull
+  public static SimpleDiffRequest createBadDiffRequest(@javax.annotation.Nullable final Project project,
+                                                       @Nonnull final VirtualFile file,
+                                                       @Nonnull ApplyPatchForBaseRevisionTexts texts,
                                                        boolean readonly) {
     final String fullPath = file.getParent() == null ? file.getPath() : file.getParent().getPath();
     final String title = "Result Of Patch Apply To " + file.getName() + " (" + fullPath + ")";
@@ -139,7 +138,7 @@ public class MergedDiffRequestPresentable implements DiffRequestPresentable {
     return simpleRequest;
   }
 
-  private static void showIOException(@Nullable Project project, @NotNull String name, @NotNull IOException e) {
+  private static void showIOException(@javax.annotation.Nullable Project project, @Nonnull String name, @Nonnull IOException e) {
     Messages.showErrorDialog(project,
                              VcsBundle.message("patch.apply.error", name, e.getMessage()),
                              VcsBundle.message("patch.apply.dialog.title"));

@@ -24,43 +24,43 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author gregsh
  */
 public interface LanguageConsoleView extends ConsoleView, Disposable {
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   String getTitle();
 
   void setTitle(String title);
 
-  @NotNull
+  @Nonnull
   PsiFile getFile();
 
-  @NotNull
+  @Nonnull
   VirtualFile getVirtualFile();
 
-  @NotNull
+  @Nonnull
   EditorEx getCurrentEditor();
 
-  @NotNull
+  @Nonnull
   EditorEx getConsoleEditor();
 
-  @NotNull
+  @Nonnull
   Document getEditorDocument();
 
-  @NotNull
+  @Nonnull
   EditorEx getHistoryViewer();
 
-  @NotNull
+  @Nonnull
   Language getLanguage();
 
-  void setLanguage(@NotNull Language language);
+  void setLanguage(@Nonnull Language language);
 
   @Nullable
   String getPrompt();
@@ -70,9 +70,9 @@ public interface LanguageConsoleView extends ConsoleView, Disposable {
 
   void setPrompt(@Nullable String prompt);
 
-  void setPromptAttributes(@NotNull ConsoleViewContentType textAttributes);
+  void setPromptAttributes(@Nonnull ConsoleViewContentType textAttributes);
 
-  void setInputText(@NotNull String inputText);
+  void setInputText(@Nonnull String inputText);
 
   boolean isEditable();
 

@@ -33,8 +33,8 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -70,8 +70,10 @@ public class RainbowHighlighter {
   public final static TextAttributesKey RAINBOW_GRADIENT_DEMO = TextAttributesKey.createTextAttributesKey("rainbow_demo", new TextAttributes());
   public final static Boolean DEFAULT_RAINBOW_ON = Boolean.FALSE;
 
-  @NotNull private final TextAttributesScheme myColorsScheme;
-  @NotNull private final Color[] myRainbowColors;
+  @Nonnull
+  private final TextAttributesScheme myColorsScheme;
+  @Nonnull
+  private final Color[] myRainbowColors;
 
   public RainbowHighlighter(@Nullable TextAttributesScheme colorsScheme) {
     myColorsScheme = colorsScheme != null ? colorsScheme : EditorColorsManager.getInstance().getGlobalScheme();
@@ -82,7 +84,7 @@ public class RainbowHighlighter {
 
   @Nullable
   @Contract("_, null -> !null")
-  public static Boolean isRainbowEnabled(@Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
+  public static Boolean isRainbowEnabled(@javax.annotation.Nullable TextAttributesScheme colorsScheme, @Nullable Language language) {
     if (colorsScheme instanceof SchemeMetaInfo) {
       String value = ((SchemeMetaInfo)colorsScheme).getMetaProperties().getProperty(getKey(language), INHERITED);
       if (String.valueOf(true).equals(value)) return Boolean.TRUE;
@@ -97,7 +99,7 @@ public class RainbowHighlighter {
     return rainbowEnabled != null ? rainbowEnabled : isRainbowEnabled(colorsScheme, null);
   }
 
-  public static void setRainbowEnabled(@NotNull SchemeMetaInfo colorsScheme, @Nullable Language language, @Nullable Boolean enabled) {
+  public static void setRainbowEnabled(@Nonnull SchemeMetaInfo colorsScheme, @Nullable Language language, @Nullable Boolean enabled) {
     Properties properties = colorsScheme.getMetaProperties();
     String key = getKey(language);
     if (enabled == null || (language == null && enabled == DEFAULT_RAINBOW_ON)) {
@@ -108,12 +110,12 @@ public class RainbowHighlighter {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static String getKey(@Nullable Language language) {
     return RAINBOW_TYPE + " " + (language == null ? "Default language" : language.getID());
   }
 
-  @NotNull
+  @Nonnull
   public static String generatePaletteExample() {
     int stopCount = RAINBOW_COLOR_KEYS.length;
     StringBuilder sb = new StringBuilder();
@@ -129,7 +131,7 @@ public class RainbowHighlighter {
     return sb.toString();
   }
 
-  @NotNull
+  @Nonnull
   @Contract(pure = true)
   private Color calculateForeground(int colorIndex) {
     return myRainbowColors[colorIndex];
@@ -139,8 +141,8 @@ public class RainbowHighlighter {
     return myRainbowColors.length;
   }
 
-  @NotNull
-  private static Color[] generateColorSequence(@NotNull TextAttributesScheme colorsScheme) {
+  @Nonnull
+  private static Color[] generateColorSequence(@Nonnull TextAttributesScheme colorsScheme) {
     String colorDump = ApplicationManager.getApplication().isUnitTestMode()
                        ? UNIT_TEST_COLORS
                        : Registry.get("rainbow.highlighter.colors").asString();
@@ -155,7 +157,7 @@ public class RainbowHighlighter {
     return colors.toArray(new Color[colors.size()]);
   }
 
-  @NotNull
+  @Nonnull
   public TextAttributesKey[] getRainbowTempKeys() {
     TextAttributesKey[] keys = new TextAttributesKey[myRainbowColors.length];
     for (int i = 0; i < myRainbowColors.length; ++i) {
@@ -179,7 +181,7 @@ public class RainbowHighlighter {
     return getInfoBuilder(colorIndex, colorKey).range(start, end).create();
   }
 
-  @NotNull
+  @Nonnull
   protected HighlightInfo.Builder getInfoBuilder(int colorIndex, @Nullable TextAttributesKey colorKey) {
     if (colorKey == null) {
       colorKey = DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
@@ -195,7 +197,7 @@ public class RainbowHighlighter {
 
   private static final TextAttributesKey[] RAINBOW_TEMP_KEYS = new RainbowHighlighter(null).getRainbowTempKeys();
 
-  @NotNull
+  @Nonnull
   public static  TextAttributes createRainbowAttribute(@Nullable Color color) {
     TextAttributes ret = new TextAttributes();
     ret.setForegroundColor(color);

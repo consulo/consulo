@@ -18,7 +18,7 @@ package com.intellij.ide.dnd;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

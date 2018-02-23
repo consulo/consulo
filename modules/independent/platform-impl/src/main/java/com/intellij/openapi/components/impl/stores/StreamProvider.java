@@ -1,8 +1,8 @@
 package com.intellij.openapi.components.impl.stores;
 
 import com.intellij.openapi.components.RoamingType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ public abstract class StreamProvider {
   /**
    * fileSpec Only main fileSpec, not version
    */
-  public boolean isApplicable(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  public boolean isApplicable(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     return true;
   }
 
@@ -29,18 +29,18 @@ public abstract class StreamProvider {
    * @param size actual size of data
    * @param roamingType
    */
-  public abstract void saveContent(@NotNull String fileSpec, @NotNull byte[] content, int size, @NotNull RoamingType roamingType) throws IOException;
+  public abstract void saveContent(@Nonnull String fileSpec, @Nonnull byte[] content, int size, @Nonnull RoamingType roamingType) throws IOException;
 
   @Nullable
-  public abstract InputStream loadContent(@NotNull String fileSpec, @NotNull RoamingType roamingType) throws IOException;
+  public abstract InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException;
 
-  @NotNull
-  public Collection<String> listSubFiles(@NotNull String fileSpec, @NotNull RoamingType roamingType) {
+  @Nonnull
+  public Collection<String> listSubFiles(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
     return Collections.emptyList();
   }
 
   /**
    * Delete file or directory
    */
-  public abstract void delete(@NotNull String fileSpec, @NotNull RoamingType roamingType);
+  public abstract void delete(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
 }

@@ -19,8 +19,8 @@ import com.intellij.util.io.IOUtil;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -215,12 +215,12 @@ public class PathInterner {
     private final PathInterner myInterner = new PathInterner();
 
     @Nullable
-    public T get(@NotNull String path) {
+    public T get(@Nonnull String path) {
       PathInterner.SubstringWrapper[] seq = myInterner.internParts(path, false);
       return seq == null ? null : myMap.get(seq);
     }
 
-    public void put(@NotNull String path, @NotNull T value) {
+    public void put(@Nonnull String path, @Nonnull T value) {
       myMap.put(myInterner.internParts(path, true), value);
     }
 

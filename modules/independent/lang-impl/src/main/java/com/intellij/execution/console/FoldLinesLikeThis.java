@@ -13,8 +13,8 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class FoldLinesLikeThis extends DumbAwareAction {
 
   @Nullable
-  private static String getSingleLineSelection(@NotNull Editor editor) {
+  private static String getSingleLineSelection(@Nonnull Editor editor) {
     final SelectionModel model = editor.getSelectionModel();
     final Document document = editor.getDocument();
     if (!model.hasSelection()) {

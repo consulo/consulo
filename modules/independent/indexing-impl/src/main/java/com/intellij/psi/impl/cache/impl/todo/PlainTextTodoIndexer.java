@@ -20,7 +20,7 @@ import com.intellij.psi.impl.cache.impl.IndexPatternUtil;
 import com.intellij.psi.impl.cache.impl.OccurrenceConsumer;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.util.indexing.FileContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 
 public class PlainTextTodoIndexer implements VersionedTodoIndexer {
   @Override
-  @NotNull
-  public Map<TodoIndexEntry, Integer> map(@NotNull final FileContent inputData) {
+  @Nonnull
+  public Map<TodoIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
     String chars = inputData.getContentAsText().toString(); // matching strings is faster than HeapCharBuffer
 
     final IndexPattern[] indexPatterns = IndexPatternUtil.getIndexPatterns();

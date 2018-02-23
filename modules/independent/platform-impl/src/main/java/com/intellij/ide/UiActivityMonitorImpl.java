@@ -27,8 +27,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -99,7 +99,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public BusyObject getBusy(@NotNull Project project, UiActivity... toWatch) {
+  public BusyObject getBusy(@Nonnull Project project, UiActivity... toWatch) {
     if (!isActive()) return myEmptyBusy;
 
     return _getBusy(project, toWatch);
@@ -113,14 +113,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@NotNull final Project project, @NotNull final UiActivity activity) {
+  public void addActivity(@Nonnull final Project project, @Nonnull final UiActivity activity) {
     addActivity(project, activity, getDefaultModalityState());
   }
 
   @Override
-  public void addActivity(@NotNull final Project project,
-                          @NotNull final UiActivity activity,
-                          @NotNull final ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull final Project project,
+                          @Nonnull final UiActivity activity,
+                          @Nonnull final ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
 
@@ -128,14 +128,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void removeActivity(@NotNull final Project project, @NotNull final UiActivity activity) {
+  public void removeActivity(@Nonnull final Project project, @Nonnull final UiActivity activity) {
     if (!isActive()) return;
 
     invokeLaterIfNeeded(allocation -> _getBusy(project).removeActivity(activity));
   }
 
   @Override
-  public void addActivity(@NotNull final UiActivity activity) {
+  public void addActivity(@Nonnull final UiActivity activity) {
     addActivity(activity, getDefaultModalityState());
   }
 
@@ -144,14 +144,14 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@NotNull final UiActivity activity, @NotNull final ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull final UiActivity activity, @Nonnull final ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
     invokeLaterIfNeeded(allocation -> getBusyContainer(null).addActivity(activity, allocation, effectiveModalityState));
   }
 
   @Override
-  public void removeActivity(@NotNull final UiActivity activity) {
+  public void removeActivity(@Nonnull final UiActivity activity) {
     if (!isActive()) return;
 
     invokeLaterIfNeeded(allocation -> _getBusy(null).removeActivity(activity));
@@ -161,7 +161,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     return getBusyContainer(key).getOrCreateBusy(toWatch);
   }
 
-  @NotNull
+  @Nonnull
   private BusyContainer getBusyContainer(@Nullable Project key) {
     BusyContainer container = myObjects.get(key);
     return container != null ? container : getGlobalBusy();
@@ -205,7 +205,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     private final Throwable myAllocation;
     private final ModalityState myEffectiveState;
 
-    private ActivityInfo(@Nullable Throwable allocation, @NotNull ModalityState effectiveState) {
+    private ActivityInfo(@Nullable Throwable allocation, @Nonnull ModalityState effectiveState) {
       myAllocation = allocation;
       myEffectiveState = effectiveState;
     }
@@ -215,7 +215,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       return myAllocation;
     }
 
-    @NotNull
+    @Nonnull
     public ModalityState getEffectiveState() {
       return myEffectiveState;
     }

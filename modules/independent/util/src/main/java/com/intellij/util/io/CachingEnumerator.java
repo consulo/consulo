@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import com.intellij.util.containers.SLRUMap;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Lock;

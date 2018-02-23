@@ -1,7 +1,7 @@
 package consulo.util.io2;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -24,7 +24,7 @@ public class PathUtil {
     return ourSupportPosixFilePermissions;
   }
 
-  public static void setPosixFilePermissions(@NotNull Path path, @NotNull Set<PosixFilePermission> posixFilePermissions) {
+  public static void setPosixFilePermissions(@Nonnull Path path, @Nonnull Set<PosixFilePermission> posixFilePermissions) {
     if (isSupportPosixFilePermissions()) {
       try {
         Files.setPosixFilePermissions(path, posixFilePermissions);
@@ -35,7 +35,7 @@ public class PathUtil {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static Set<PosixFilePermission> convertModeToFilePermissions(int mode) {
     int mask = 1;
     Set<PosixFilePermission> perms = EnumSet.noneOf(PosixFilePermission.class);

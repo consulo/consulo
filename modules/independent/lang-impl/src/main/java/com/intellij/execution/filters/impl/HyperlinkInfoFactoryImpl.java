@@ -18,7 +18,7 @@ package com.intellij.execution.filters.impl;
 import com.intellij.execution.filters.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,10 +27,10 @@ import java.util.List;
  */
 public class HyperlinkInfoFactoryImpl extends HyperlinkInfoFactory {
 
-  @NotNull
+  @Nonnull
   @Override
-  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@NotNull List<VirtualFile> files,
-                                                        int line, @NotNull Project project) {
+  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<VirtualFile> files,
+                                                        int line, @Nonnull Project project) {
     return new MultipleFilesHyperlinkInfo(files, line, project);
   }
 }

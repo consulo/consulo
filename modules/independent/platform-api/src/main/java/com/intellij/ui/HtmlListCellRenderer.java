@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -51,19 +51,19 @@ public abstract class HtmlListCellRenderer<T> extends ListCellRendererWrapper<T>
 
   protected abstract void doCustomize(final JList list, final T value, final int index, final boolean selected, final boolean hasFocus);
 
-  public void append(@NotNull final String fragment) {
+  public void append(@Nonnull final String fragment) {
     append(fragment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
-  public void append(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes) {
+  public void append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes) {
     formatText(myText, fragment, attributes);
   }
 
-  public void appendLink(@NotNull final String fragment, @NotNull final SimpleTextAttributes attributes, @NotNull final String url) {
+  public void appendLink(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes, @Nonnull final String url) {
     formatLink(myText, fragment, attributes, url);
   }
 
-  public void append(@NotNull final SimpleColoredText text) {
+  public void append(@Nonnull final SimpleColoredText text) {
     int length = text.getTexts().size();
     for (int i = 0; i < length; i++) {
       String fragment = text.getTexts().get(i);

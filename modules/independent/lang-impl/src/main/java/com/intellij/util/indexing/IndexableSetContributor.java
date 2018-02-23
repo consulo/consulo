@@ -20,7 +20,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -34,14 +34,14 @@ public abstract class IndexableSetContributor {
           new ExtensionPointName<IndexableSetContributor>("com.intellij.indexedRootsContributor");
   private static final Logger LOG = Logger.getInstance(IndexableSetContributor.class);
 
-  @NotNull
-  public static Set<VirtualFile> getProjectRootsToIndex(@NotNull IndexableSetContributor contributor, @NotNull Project project) {
+  @Nonnull
+  public static Set<VirtualFile> getProjectRootsToIndex(@Nonnull IndexableSetContributor contributor, @Nonnull Project project) {
     Set<VirtualFile> roots = contributor.getAdditionalProjectRootsToIndex(project);
     return filterOutNulls(contributor, "getAdditionalProjectRootsToIndex(Project)", roots);
   }
 
-  @NotNull
-  public static Set<VirtualFile> getRootsToIndex(@NotNull IndexableSetContributor contributor) {
+  @Nonnull
+  public static Set<VirtualFile> getRootsToIndex(@Nonnull IndexableSetContributor contributor) {
     Set<VirtualFile> roots = contributor.getAdditionalRootsToIndex();
     return filterOutNulls(contributor, "getAdditionalRootsToIndex()", roots);
   }
@@ -50,8 +50,8 @@ public abstract class IndexableSetContributor {
    * @return an additional project-dependent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  @NotNull
-  public Set<VirtualFile> getAdditionalProjectRootsToIndex(@NotNull Project project) {
+  @Nonnull
+  public Set<VirtualFile> getAdditionalProjectRootsToIndex(@Nonnull Project project) {
     return Collections.emptySet();
   }
 
@@ -59,11 +59,11 @@ public abstract class IndexableSetContributor {
    * @return an additional project-independent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  @NotNull
+  @Nonnull
   public abstract Set<VirtualFile> getAdditionalRootsToIndex();
 
-  @NotNull
-  private static Set<VirtualFile> filterOutNulls(@NotNull IndexableSetContributor contributor, @NotNull String methodInfo, @NotNull Set<VirtualFile> roots) {
+  @Nonnull
+  private static Set<VirtualFile> filterOutNulls(@Nonnull IndexableSetContributor contributor, @Nonnull String methodInfo, @Nonnull Set<VirtualFile> roots) {
     for (VirtualFile root : roots) {
       if (root == null || !root.isValid()) {
         LOG.error("Please fix " + contributor.getClass().getName() + "#" + methodInfo + ".\n" +

@@ -45,8 +45,8 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -71,7 +71,7 @@ public class PsiVFSListener implements VirtualFileListener {
     if (ourGlobalListenerInstalled.compareAndSet(false, true)) {
       ApplicationManager.getApplication().getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
         @Override
-        public void before(@NotNull List<? extends VFileEvent> events) {
+        public void before(@Nonnull List<? extends VFileEvent> events) {
           for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             PsiVFSListener listener = project.getComponent(PsiVFSListener.class);
             assert listener != null;
@@ -80,7 +80,7 @@ public class PsiVFSListener implements VirtualFileListener {
         }
 
         @Override
-        public void after(@NotNull List<? extends VFileEvent> events) {
+        public void after(@Nonnull List<? extends VFileEvent> events) {
           Project[] projects = ProjectManager.getInstance().getOpenProjects();
 
           // let PushedFilePropertiesUpdater process all pending vfs events and update file properties before we issue PSI events
@@ -117,7 +117,7 @@ public class PsiVFSListener implements VirtualFileListener {
       myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new MyModuleRootListener());
       myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
         @Override
-        public void fileTypesChanged(@NotNull FileTypeEvent e) {
+        public void fileTypesChanged(@Nonnull FileTypeEvent e) {
           myFileManager.processFileTypesChanged();
         }
       });
@@ -132,7 +132,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void fileCreated(@NotNull VirtualFileEvent event) {
+  public void fileCreated(@Nonnull VirtualFileEvent event) {
     final VirtualFile vFile = event.getFile();
 
     ApplicationManager.getApplication().runWriteAction(
@@ -173,7 +173,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void beforeFileDeletion(@NotNull VirtualFileEvent event) {
+  public void beforeFileDeletion(@Nonnull VirtualFileEvent event) {
     final VirtualFile vFile = event.getFile();
 
     VirtualFile parent = vFile.getParent();
@@ -208,7 +208,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void fileDeleted(@NotNull final VirtualFileEvent event) {
+  public void fileDeleted(@Nonnull final VirtualFileEvent event) {
     final VirtualFile vFile = event.getFile();
 
     VirtualFile parent = event.getParent();
@@ -255,7 +255,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void beforePropertyChange(@NotNull final VirtualFilePropertyEvent event) {
+  public void beforePropertyChange(@Nonnull final VirtualFilePropertyEvent event) {
     final VirtualFile vFile = event.getFile();
     final String propertyName = event.getPropertyName();
 
@@ -356,7 +356,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void propertyChanged(@NotNull final VirtualFilePropertyEvent event) {
+  public void propertyChanged(@Nonnull final VirtualFilePropertyEvent event) {
     final String propertyName = event.getPropertyName();
     final VirtualFile vFile = event.getFile();
 
@@ -485,7 +485,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void beforeFileMovement(@NotNull VirtualFileMoveEvent event) {
+  public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
     final VirtualFile vFile = event.getFile();
 
     final PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
@@ -539,7 +539,7 @@ public class PsiVFSListener implements VirtualFileListener {
   }
 
   @Override
-  public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+  public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
     final VirtualFile vFile = event.getFile();
 
     final PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
@@ -677,7 +677,7 @@ public class PsiVFSListener implements VirtualFileListener {
 
   private class MyFileDocumentManagerAdapter extends FileDocumentManagerAdapter {
     @Override
-    public void fileWithNoDocumentChanged(@NotNull final VirtualFile file) {
+    public void fileWithNoDocumentChanged(@Nonnull final VirtualFile file) {
       final PsiFile psiFile = myFileManager.getCachedPsiFileInner(file);
       if (psiFile != null) {
         ApplicationManager.getApplication().runWriteAction(
@@ -698,7 +698,7 @@ public class PsiVFSListener implements VirtualFileListener {
     }
   }
 
-  private void handleVfsChangeWithoutPsi(@NotNull VirtualFile vFile) {
+  private void handleVfsChangeWithoutPsi(@Nonnull VirtualFile vFile) {
     if (!myReportedUnloadedPsiChange && isInRootModel(vFile)) {
       PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(myManager);
       myFileManager.firePropertyChangedForUnloadedPsi(event, vFile);
@@ -706,7 +706,7 @@ public class PsiVFSListener implements VirtualFileListener {
     }
   }
 
-  private boolean isInRootModel(@NotNull VirtualFile file) {
+  private boolean isInRootModel(@Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(myProject);
     return index.isInContent(file) || index.isInLibraryClasses(file) || index.isInLibrarySource(file);
   }

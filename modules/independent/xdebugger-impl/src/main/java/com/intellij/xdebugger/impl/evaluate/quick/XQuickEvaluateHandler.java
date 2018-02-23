@@ -30,8 +30,8 @@ import com.intellij.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import com.intellij.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import com.intellij.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -42,13 +42,13 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
   private static final Logger LOG = Logger.getInstance("#com.intellij.xdebugger.impl.evaluate.quick.XQuickEvaluateHandler");
 
   @Override
-  public boolean isEnabled(@NotNull final Project project) {
+  public boolean isEnabled(@Nonnull final Project project) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null && session.getDebugProcess().getEvaluator() != null;
   }
 
   @Override
-  public AbstractValueHint createValueHint(@NotNull final Project project, @NotNull final Editor editor, @NotNull final Point point, final ValueHintType type) {
+  public AbstractValueHint createValueHint(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final Point point, final ValueHintType type) {
     final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session == null) {
       return null;
@@ -100,7 +100,7 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
   }
 
   @Override
-  public boolean canShowHint(@NotNull final Project project) {
+  public boolean canShowHint(@Nonnull final Project project) {
     return isEnabled(project);
   }
 

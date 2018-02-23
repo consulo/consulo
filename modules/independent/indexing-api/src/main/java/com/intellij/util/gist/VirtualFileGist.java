@@ -18,8 +18,7 @@ package com.intellij.util.gist;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.FileBasedIndexExtension;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Calculates some data based on {@link VirtualFile} content, persists it between IDE restarts,
@@ -47,7 +46,7 @@ public interface VirtualFileGist<Data> {
   /**
    * Calculate or get the cached data by the current virtual file content in the given project.
    */
-  Data getFileData(@NotNull Project project, @NotNull VirtualFile file);
+  Data getFileData(@Nonnull Project project, @Nonnull VirtualFile file);
 
   /**
    * Used by {@link VirtualFileGist} to calculate the data when it's needed and to recalculate it after file changes.
@@ -55,7 +54,7 @@ public interface VirtualFileGist<Data> {
   @FunctionalInterface
   interface GistCalculator<Data> {
 
-    @Nullable
-    Data calcData(@NotNull Project project, @NotNull VirtualFile file);
+    @javax.annotation.Nullable
+    Data calcData(@Nonnull Project project, @Nonnull VirtualFile file);
   }
 }

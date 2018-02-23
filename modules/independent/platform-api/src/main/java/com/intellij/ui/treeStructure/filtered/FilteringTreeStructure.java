@@ -23,7 +23,7 @@ import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -41,11 +41,11 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
   private final Map<Object, FilteringNode> myDescriptors2Nodes = new HashMap<Object, FilteringNode>();
 
-  public FilteringTreeStructure(@NotNull ElementFilter filter, @NotNull AbstractTreeStructure originalStructure) {
+  public FilteringTreeStructure(@Nonnull ElementFilter filter, @Nonnull AbstractTreeStructure originalStructure) {
     this(filter, originalStructure, true);
   }
 
-  public FilteringTreeStructure(@NotNull ElementFilter filter, @NotNull AbstractTreeStructure originalStructure, boolean initNow) {
+  public FilteringTreeStructure(@Nonnull ElementFilter filter, @Nonnull AbstractTreeStructure originalStructure, boolean initNow) {
     //noinspection unchecked
     myFilter = filter;
     myBaseStructure = originalStructure;
@@ -102,7 +102,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     }
   }
 
-  private State getState(@NotNull FilteringNode node) {
+  private State getState(@Nonnull FilteringNode node) {
     return myFilter.shouldBeShowing(node.getDelegate()) ? State.VISIBLE : State.HIDDEN;
   }
 
@@ -147,7 +147,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return element instanceof FilteringNode ? (FilteringNode)element : new FilteringNode((SimpleNode)parentDescriptor, element);
   }
@@ -162,7 +162,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     return myBaseStructure.hasSomethingToCommit();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback asyncCommit() {
     return myBaseStructure.asyncCommit();
@@ -265,7 +265,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Object[] getEqualityObjects() {
       return new Object[]{myDelegate};
     }

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author traff
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class XNamedValue extends XValue {
   protected final String myName;
 
-  protected XNamedValue(@NotNull String name) {
+  protected XNamedValue(@Nonnull String name) {
     myName = name;
   }
 

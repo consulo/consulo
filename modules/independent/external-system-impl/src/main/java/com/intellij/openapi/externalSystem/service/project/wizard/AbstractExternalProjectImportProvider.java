@@ -7,7 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectImportBuilder;
 import com.intellij.projectImport.ProjectImportProvider;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides 'import from external model' functionality.
@@ -19,14 +19,15 @@ import org.jetbrains.annotations.NotNull;
 @DeprecationInfo("Use consulo.externalSystem.service.module.wizard.AbstractExternalModuleImportProvider")
 public abstract class AbstractExternalProjectImportProvider extends ProjectImportProvider {
   
-  @NotNull private final ProjectSystemId myExternalSystemId;
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
   
-  public AbstractExternalProjectImportProvider(ProjectImportBuilder builder, @NotNull ProjectSystemId externalSystemId) {
+  public AbstractExternalProjectImportProvider(ProjectImportBuilder builder, @Nonnull ProjectSystemId externalSystemId) {
     super(builder);
     myExternalSystemId = externalSystemId;
   }
 
-  @NotNull
+  @Nonnull
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }

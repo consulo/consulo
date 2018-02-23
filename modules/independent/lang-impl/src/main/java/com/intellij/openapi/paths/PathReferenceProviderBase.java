@@ -7,7 +7,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public abstract class PathReferenceProviderBase implements PathReferenceProvider
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.paths.PathReferenceProviderBase");
 
   @Override
-  public boolean createReferences(@NotNull final PsiElement psiElement, final @NotNull List<PsiReference> references, final boolean soft) {
+  public boolean createReferences(@Nonnull final PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft) {
 
     final TextRange range = ElementManipulators.getValueTextRange(psiElement);
     int offset = range.getStartOffset();
@@ -47,13 +47,13 @@ public abstract class PathReferenceProviderBase implements PathReferenceProvider
     }
   }
 
-  public abstract boolean createReferences(@NotNull final PsiElement psiElement,
+  public abstract boolean createReferences(@Nonnull final PsiElement psiElement,
                                   final int offset,
                                   String text,
-                                  final @NotNull List<PsiReference> references,
+                                  final @Nonnull List<PsiReference> references,
                                   final boolean soft);
 
-  public static int getLastPosOfURL(final int offset, @NotNull String url) {
+  public static int getLastPosOfURL(final int offset, @Nonnull String url) {
     for (int i = offset; i < url.length(); i++) {
       switch (url.charAt(i)) {
         case '?':

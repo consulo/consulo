@@ -17,10 +17,10 @@ package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.FormattingRangesInfo;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface ExtraRangesProvider {
-  List<TextRange> getExtraRangesToFormat(@NotNull FormattingRangesInfo info);
+  List<TextRange> getExtraRangesToFormat(@Nonnull FormattingRangesInfo info);
 }

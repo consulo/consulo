@@ -29,7 +29,7 @@ import com.intellij.openapi.util.NullableComputable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -81,7 +81,7 @@ class AsyncFilterRunner {
     handleSynchronouslyIfQuick(handled, future, 5);
   }
 
-  @NotNull
+  @Nonnull
   private FilterResults computeWithWritePriority(Computable<FilterResults> bgComputation) {
     Ref<FilterResults> applyResults = Ref.create(FilterResults.EMPTY);
     Runnable computeInReadAction = () -> {
@@ -125,7 +125,7 @@ class AsyncFilterRunner {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   private Computable<FilterResults> highlightHyperlinksAsync(Filter filter, int startLine, int endLine) {
     Document document = myEditor.getDocument();
     int markerOffset = document.getLineEndOffset(endLine);
@@ -145,7 +145,7 @@ class AsyncFilterRunner {
     };
   }
 
-  @NotNull
+  @Nonnull
   private static LineHighlighter processLine(Document document, Filter filter, int line) {
     int lineEnd = document.getLineEndOffset(line);
     int endOffset = lineEnd + (lineEnd < document.getTextLength() ? 1 /* for \n */ : 0);

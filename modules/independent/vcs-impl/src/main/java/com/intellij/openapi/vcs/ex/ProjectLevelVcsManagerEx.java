@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.update.ActionInfo;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.ui.content.ContentManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,10 +33,10 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
   public abstract ContentManager getContentManager();
 
-  @NotNull
+  @Nonnull
   public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
 
-  @NotNull
+  @Nonnull
   public abstract VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option);
 
   public abstract List<VcsShowOptionsSettingImpl> getAllOptions();

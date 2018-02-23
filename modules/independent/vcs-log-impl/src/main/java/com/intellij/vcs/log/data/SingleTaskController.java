@@ -18,8 +18,8 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -39,13 +39,16 @@ public abstract class SingleTaskController<Request, Result> {
 
   private static final Logger LOG = Logger.getInstance(SingleTaskController.class);
 
-  @NotNull private final Consumer<Result> myResultHandler;
-  @NotNull private final Object LOCK = new Object();
+  @Nonnull
+  private final Consumer<Result> myResultHandler;
+  @Nonnull
+  private final Object LOCK = new Object();
 
-  @NotNull private List<Request> myAwaitingRequests;
+  @Nonnull
+  private List<Request> myAwaitingRequests;
   private boolean myActive;
 
-  public SingleTaskController(@NotNull Consumer<Result> handler) {
+  public SingleTaskController(@Nonnull Consumer<Result> handler) {
     myResultHandler = handler;
     myAwaitingRequests = ContainerUtil.newArrayList();
   }
@@ -55,7 +58,7 @@ public abstract class SingleTaskController<Request, Result> {
    * If there is no active task, starts a new one. <br/>
    * Otherwise just remembers the request in the queue. Later it can be achieved by {@link #popRequests()}.
    */
-  public final void request(@NotNull Request requests) {
+  public final void request(@Nonnull Request requests) {
     synchronized (LOCK) {
       myAwaitingRequests.add(requests);
       LOG.debug("Added requests: " + requests);
@@ -77,7 +80,7 @@ public abstract class SingleTaskController<Request, Result> {
    * Returns all awaiting requests and clears the queue. <br/>
    * I.e. the second call to this method will return an empty list (unless new requests came via {@link #request(Object)}.
    */
-  @NotNull
+  @Nonnull
   protected final List<Request> popRequests() {
     synchronized (LOCK) {
       List<Request> requests = myAwaitingRequests;

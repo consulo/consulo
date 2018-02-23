@@ -38,8 +38,8 @@ import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -69,7 +69,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   @NonNls public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
   @NonNls public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 
-  public ChangesListView(@NotNull Project project) {
+  public ChangesListView(@Nonnull Project project) {
     myProject = project;
 
     setModel(TreeModelBuilder.buildEmpty(project));
@@ -101,7 +101,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     myShowFlatten = showFlatten;
   }
 
-  public void updateModel(@NotNull DefaultTreeModel newModel) {
+  public void updateModel(@Nonnull DefaultTreeModel newModel) {
     TreeState state = TreeState.createOn(this, getRoot());
     state.setScrollToSelection(false);
     DefaultTreeModel oldModel = getModel();
@@ -206,48 +206,48 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     }
   }
 
-  @NotNull
+  @Nonnull
   private Stream<VirtualFile> getSelectedUnversionedFiles() {
     return getSelectedVirtualFiles(UNVERSIONED_FILES_TAG);
   }
 
-  @NotNull
+  @Nonnull
   private Stream<VirtualFile> getSelectedIgnoredFiles() {
     return getSelectedVirtualFiles(IGNORED_FILES_TAG);
   }
 
-  @NotNull
+  @Nonnull
   private Stream<VirtualFile> getSelectedModifiedWithoutEditing() {
     return getSelectedVirtualFiles(MODIFIED_WITHOUT_EDITING_TAG);
   }
 
-  @NotNull
-  private Stream<VirtualFile> getSelectedVirtualFiles(@Nullable Object tag) {
+  @Nonnull
+  private Stream<VirtualFile> getSelectedVirtualFiles(@javax.annotation.Nullable Object tag) {
     return getSelectionNodesStream(tag)
             .flatMap(ChangesBrowserNode::getFilesUnderStream)
             .distinct();
   }
 
-  @NotNull
+  @Nonnull
   private Stream<ChangesBrowserNode<?>> getSelectionNodesStream() {
     return getSelectionNodesStream(null);
   }
 
-  @NotNull
-  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
+  @Nonnull
+  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@javax.annotation.Nullable Object tag) {
     return stream(getSelectionPaths())
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
             .map(node -> ((ChangesBrowserNode<?>)node));
   }
 
-  @NotNull
+  @Nonnull
   private Stream<Object> getSelectionObjectsStream() {
     return getSelectionNodesStream().map(ChangesBrowserNode::getUserObject);
   }
 
-  @NotNull
-  static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
+  @Nonnull
+  static Stream<VirtualFile> getVirtualFiles(@javax.annotation.Nullable TreePath[] paths, @Nullable Object tag) {
     return stream(paths)
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
@@ -256,7 +256,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
             .distinct();
   }
 
-  static boolean isUnderTag(@NotNull TreePath path, @Nullable Object tag) {
+  static boolean isUnderTag(@Nonnull TreePath path, @javax.annotation.Nullable Object tag) {
     boolean result = true;
 
     if (tag != null) {
@@ -266,8 +266,8 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return result;
   }
 
-  @NotNull
-  static Stream<Change> getChanges(@NotNull Project project, @Nullable TreePath[] paths) {
+  @Nonnull
+  static Stream<Change> getChanges(@Nonnull Project project, @Nullable TreePath[] paths) {
     Stream<Change> changes = stream(paths)
             .map(TreePath::getLastPathComponent)
             .map(node -> ((ChangesBrowserNode<?>)node))
@@ -280,8 +280,8 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return Stream.concat(changes, hijackedChanges).distinct();
   }
 
-  @Nullable
-  private static Change toHijackedChange(@NotNull Project project, @NotNull VirtualFile file) {
+  @javax.annotation.Nullable
+  private static Change toHijackedChange(@Nonnull Project project, @Nonnull VirtualFile file) {
     VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
     if (before != null) {
       ContentRevision afterRevision = new CurrentContentRevision(VcsUtil.getFilePath(file));
@@ -290,19 +290,19 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private Stream<LocallyDeletedChange> getSelectedLocallyDeletedChanges() {
     return getSelectionNodesStream(LOCALLY_DELETED_NODE_TAG)
             .flatMap(node -> node.getObjectsUnderStream(LocallyDeletedChange.class))
             .distinct();
   }
 
-  @NotNull
+  @Nonnull
   private Stream<FilePath> getSelectedMissingFiles() {
     return getSelectedLocallyDeletedChanges().map(LocallyDeletedChange::getPath);
   }
 
-  @NotNull
+  @Nonnull
   protected Stream<VirtualFile> getSelectedFiles() {
     return Stream.concat(
             getAfterRevisionsFiles(getSelectedChanges()),
@@ -316,7 +316,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
             node -> node instanceof ChangesBrowserChangeNode || node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0);
   }
 
-  @NotNull
+  @Nonnull
   private Stream<Change> getLeadSelection() {
     return getSelectionNodesStream()
             .filter(node -> node instanceof ChangesBrowserChangeNode)
@@ -325,22 +325,22 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
             .distinct();
   }
 
-  @NotNull
+  @Nonnull
   public ChangesBrowserNode<?> getRoot() {
     return (ChangesBrowserNode<?>)getModel().getRoot();
   }
 
-  @NotNull
+  @Nonnull
   public Stream<Change> getChanges() {
     return getRoot().getObjectsUnderStream(Change.class);
   }
 
-  @NotNull
+  @Nonnull
   public Stream<Change> getSelectedChanges() {
     return getChanges(myProject, getSelectionPaths());
   }
 
-  @NotNull
+  @Nonnull
   private Stream<ChangeList> getSelectedChangeLists() {
     return getSelectionObjectsStream()
             .filter(userObject -> userObject instanceof ChangeList)
@@ -359,7 +359,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return this;
   }

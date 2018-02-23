@@ -41,7 +41,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.ReplacePromptDialog;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -49,12 +49,12 @@ import java.util.*;
  * @author Dennis.Ushakov
  */
 public class ExtractMethodHelper {
-  public static void processDuplicates(@NotNull final PsiElement callElement,
-                                       @NotNull final PsiElement generatedMethod,
-                                       @NotNull final List<PsiElement> scope,
-                                       @NotNull final SimpleDuplicatesFinder finder,
-                                       @NotNull final Editor editor,
-                                       @NotNull final Consumer<Pair<SimpleMatch, PsiElement>> replacer) {
+  public static void processDuplicates(@Nonnull final PsiElement callElement,
+                                       @Nonnull final PsiElement generatedMethod,
+                                       @Nonnull final List<PsiElement> scope,
+                                       @Nonnull final SimpleDuplicatesFinder finder,
+                                       @Nonnull final Editor editor,
+                                       @Nonnull final Consumer<Pair<SimpleMatch, PsiElement>> replacer) {
     finder.setReplacement(callElement);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       replaceDuplicates(callElement, editor, replacer, finder.findDuplicates(scope, generatedMethod));
@@ -62,7 +62,7 @@ public class ExtractMethodHelper {
     }
     final Project project = callElement.getProject();
     ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringBundle.message("searching.for.duplicates"), true) {
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         if (myProject == null || myProject.isDisposed()) return;
         final List<SimpleMatch> duplicates = ApplicationManager.getApplication().runReadAction(new Computable<List<SimpleMatch>>() {
           @Override
@@ -88,10 +88,10 @@ public class ExtractMethodHelper {
    * @return list of discovered duplicate code fragments or empty list if user interrupted the search
    * @see #replaceDuplicates(PsiElement, Editor, Consumer, List)
    */
-  @NotNull
-  public static List<SimpleMatch> collectDuplicates(@NotNull SimpleDuplicatesFinder finder,
-                                                    @NotNull List<PsiElement> searchScopes,
-                                                    @NotNull PsiElement generatedMethod) {
+  @Nonnull
+  public static List<SimpleMatch> collectDuplicates(@Nonnull SimpleDuplicatesFinder finder,
+                                                    @Nonnull List<PsiElement> searchScopes,
+                                                    @Nonnull PsiElement generatedMethod) {
     final Project project = generatedMethod.getProject();
     try {
       //noinspection RedundantCast
@@ -116,10 +116,10 @@ public class ExtractMethodHelper {
    * @param duplicates  discovered duplicates of extracted code fragment
    * @see #collectDuplicates(SimpleDuplicatesFinder, List, PsiElement)
    */
-  public static void replaceDuplicates(@NotNull PsiElement callElement,
-                                       @NotNull Editor editor,
-                                       @NotNull Consumer<Pair<SimpleMatch, PsiElement>> replacer,
-                                       @NotNull List<SimpleMatch> duplicates) {
+  public static void replaceDuplicates(@Nonnull PsiElement callElement,
+                                       @Nonnull Editor editor,
+                                       @Nonnull Consumer<Pair<SimpleMatch, PsiElement>> replacer,
+                                       @Nonnull List<SimpleMatch> duplicates) {
     if (!duplicates.isEmpty()) {
       final String message = RefactoringBundle
               .message("0.has.detected.1.code.fragments.in.this.file.that.can.be.replaced.with.a.call.to.extracted.method",
@@ -177,8 +177,8 @@ public class ExtractMethodHelper {
   }
 
 
-  private static void highlightInEditor(@NotNull final Project project, @NotNull final SimpleMatch match,
-                                        @NotNull final Editor editor, Map<SimpleMatch, RangeHighlighter> highlighterMap) {
+  private static void highlightInEditor(@Nonnull final Project project, @Nonnull final SimpleMatch match,
+                                        @Nonnull final Editor editor, Map<SimpleMatch, RangeHighlighter> highlighterMap) {
     final List<RangeHighlighter> highlighters = new ArrayList<>();
     final HighlightManager highlightManager = HighlightManager.getInstance(project);
     final EditorColorsManager colorsManager = EditorColorsManager.getInstance();

@@ -30,8 +30,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,12 +42,12 @@ import static com.intellij.openapi.progress.util.ProgressIndicatorUtils.runInRea
  */
 public class QuickDocUtil {
 
-  public static void updateQuickDocAsync(@NotNull final PsiElement element, @NotNull final Producer<String> docProducer) {
+  public static void updateQuickDocAsync(@Nonnull final PsiElement element, @Nonnull final Producer<String> docProducer) {
     final Project project = element.getProject();
     ApplicationManager.getApplication().executeOnPooledThread(() -> updateQuickDoc(project, element, docProducer.produce()));
   }
 
-  public static void updateQuickDoc(@NotNull final Project project, @NotNull final PsiElement element, @Nullable final String documentation) {
+  public static void updateQuickDoc(@Nonnull final Project project, @Nonnull final PsiElement element, @Nullable final String documentation) {
     if (StringUtil.isEmpty(documentation)) return;
     // modal dialogs with fragment editors fix: can't guess proper modality state here
     UIUtil.invokeLaterIfNeeded(() -> {
@@ -59,7 +59,7 @@ public class QuickDocUtil {
   }
 
   @Nullable
-  public static DocumentationComponent getActiveDocComponent(@NotNull Project project) {
+  public static DocumentationComponent getActiveDocComponent(@Nonnull Project project) {
     DocumentationManager documentationManager = DocumentationManager.getInstance(project);
     DocumentationComponent component;
     JBPopup hint = documentationManager.getDocInfoHint();
@@ -88,7 +88,7 @@ public class QuickDocUtil {
    * @param progressIndicator optional progress indicator, which can be used to cancel the action externally
    * @return {@code true} if the action succeeded to run without interruptions, {@code false} otherwise
    */
-  static boolean runInReadActionWithWriteActionPriorityWithRetries(@NotNull final Runnable action,
+  static boolean runInReadActionWithWriteActionPriorityWithRetries(@Nonnull final Runnable action,
                                                                    long timeout, long pauseBetweenRetries,
                                                                    @Nullable ProgressIndicator progressIndicator) {
     boolean result;

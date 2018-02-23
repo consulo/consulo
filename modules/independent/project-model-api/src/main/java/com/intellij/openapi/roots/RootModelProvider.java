@@ -1,14 +1,14 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface RootModelProvider {
-  @NotNull
+  @Nonnull
   Module[] getModules();
 
-  ModuleRootModel getRootModel(@NotNull Module module);
+  ModuleRootModel getRootModel(@Nonnull Module module);
 }

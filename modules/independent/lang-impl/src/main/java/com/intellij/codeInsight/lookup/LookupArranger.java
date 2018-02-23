@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.EqualityPolicy;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -58,19 +58,19 @@ public abstract class LookupArranger implements WeighingContext {
     }
   }
 
-  public void registerMatcher(@NotNull LookupElement item, @NotNull PrefixMatcher matcher) {
+  public void registerMatcher(@Nonnull LookupElement item, @Nonnull PrefixMatcher matcher) {
     myMatchers.put(item, matcher);
   }
 
-  @NotNull
-  public String itemPattern(@NotNull LookupElement element) {
+  @Nonnull
+  public String itemPattern(@Nonnull LookupElement element) {
     String prefix = itemMatcher(element).getPrefix();
     String additionalPrefix = myAdditionalPrefix;
     return additionalPrefix.isEmpty() ? prefix : prefix + additionalPrefix;
   }
 
-  @NotNull
-  public PrefixMatcher itemMatcher(@NotNull LookupElement item) {
+  @Nonnull
+  public PrefixMatcher itemMatcher(@Nonnull LookupElement item) {
     PrefixMatcher matcher = myMatchers.get(item);
     if (matcher == null) {
       throw new AssertionError("Item not in lookup: item=" + item + "; lookup items=" + myItems);
@@ -136,7 +136,7 @@ public abstract class LookupArranger implements WeighingContext {
     return removed;
   }
 
-  public abstract Pair<List<LookupElement>, Integer> arrangeItems(@NotNull Lookup lookup, boolean onExplicitAction);
+  public abstract Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction);
 
   public abstract LookupArranger createEmptyCopy();
 
@@ -170,15 +170,15 @@ public abstract class LookupArranger implements WeighingContext {
    * @return for each item, an (ordered) map of criteria used for lookup relevance sorting
    * along with the objects representing the weights in these criteria
    */
-  @NotNull
-  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@NotNull Iterable<LookupElement> items,
+  @Nonnull
+  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items,
                                                                             boolean hideSingleValued) {
     return Collections.emptyMap();
   }
 
   public static class DefaultArranger extends LookupArranger {
     @Override
-    public Pair<List<LookupElement>, Integer> arrangeItems(@NotNull Lookup lookup, boolean onExplicitAction) {
+    public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
       LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
       result.addAll(getPrefixItems(true));
       result.addAll(getPrefixItems(false));

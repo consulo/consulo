@@ -17,8 +17,8 @@ package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.concurrent.Future;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
  * @author nik
  */
 public abstract class JdkVersionDetector {
-  @NotNull
+  @Nonnull
   public static JdkVersionDetector getInstance() {
     return ServiceManager.getService(JdkVersionDetector.class);
   }
@@ -37,7 +37,7 @@ public abstract class JdkVersionDetector {
   @Nullable
   public abstract String detectJdkVersion(String homePath, NotNullFunction<Runnable, Future<?>> actionRunner);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract String readVersionFromProcessOutput(String homePath, String[] command, String versionLineMarker,
                                                       NotNullFunction<Runnable, Future<?>> actionRunner);
 }

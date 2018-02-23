@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEdito
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,31 +44,31 @@ public interface LibrariesContainer {
     }
   }
 
-  @NotNull
-  Library[] getLibraries(@NotNull LibraryLevel libraryLevel);
+  @Nonnull
+  Library[] getLibraries(@Nonnull LibraryLevel libraryLevel);
 
-  @NotNull
+  @Nonnull
   Library[] getAllLibraries();
 
-  @NotNull
-  VirtualFile[] getLibraryFiles(@NotNull Library library, @NotNull OrderRootType rootType);
+  @Nonnull
+  VirtualFile[] getLibraryFiles(@Nonnull Library library, @Nonnull OrderRootType rootType);
 
-  boolean canCreateLibrary(@NotNull LibraryLevel level);
+  boolean canCreateLibrary(@Nonnull LibraryLevel level);
 
-  @NotNull
+  @Nonnull
   List<LibraryLevel> getAvailableLevels();
 
-  Library createLibrary(@NotNull @NonNls String name, @NotNull LibraryLevel level,
-                        @NotNull VirtualFile[] classRoots, @NotNull VirtualFile[] sourceRoots);
+  Library createLibrary(@Nonnull @NonNls String name, @Nonnull LibraryLevel level,
+                        @Nonnull VirtualFile[] classRoots, @Nonnull VirtualFile[] sourceRoots);
 
-  Library createLibrary(@NotNull @NonNls String name, @NotNull LibraryLevel level,
-                        @NotNull Collection<? extends OrderRoot> roots);
+  Library createLibrary(@Nonnull @NonNls String name, @Nonnull LibraryLevel level,
+                        @Nonnull Collection<? extends OrderRoot> roots);
 
-  Library createLibrary(@NotNull NewLibraryEditor libraryEditor, @NotNull LibraryLevel level);
+  Library createLibrary(@Nonnull NewLibraryEditor libraryEditor, @Nonnull LibraryLevel level);
 
-  @NotNull
-  String suggestUniqueLibraryName(@NotNull String baseName);
+  @Nonnull
+  String suggestUniqueLibraryName(@Nonnull String baseName);
 
   @Nullable
-  ExistingLibraryEditor getLibraryEditor(@NotNull Library library);
+  ExistingLibraryEditor getLibraryEditor(@Nonnull Library library);
 }

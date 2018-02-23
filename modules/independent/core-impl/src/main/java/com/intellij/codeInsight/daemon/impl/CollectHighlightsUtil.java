@@ -27,8 +27,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Stack;
 import gnu.trove.TIntStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,13 @@ public class CollectHighlightsUtil {
 
   private CollectHighlightsUtil() { }
 
-  @NotNull
-  public static List<PsiElement> getElementsInRange(@NotNull PsiElement root, final int startOffset, final int endOffset) {
+  @Nonnull
+  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, final int startOffset, final int endOffset) {
     return getElementsInRange(root, startOffset, endOffset, false);
   }
 
-  @NotNull
-  public static List<PsiElement> getElementsInRange(@NotNull PsiElement root,
+  @Nonnull
+  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root,
                                                     final int startOffset,
                                                     final int endOffset,
                                                     boolean includeAllParents) {
@@ -67,8 +67,8 @@ public class CollectHighlightsUtil {
 
   private static final int STARTING_TREE_HEIGHT = 100;
 
-  @NotNull
-  private static List<PsiElement> getElementsToHighlight(@NotNull PsiElement commonParent, final int startOffset, final int endOffset) {
+  @Nonnull
+  private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, final int startOffset, final int endOffset) {
     final List<PsiElement> result = new ArrayList<PsiElement>();
     final int currentOffset = commonParent.getTextRange().getStartOffset();
     final Condition<PsiElement>[] filters = Extensions.getExtensions(EP_NAME);

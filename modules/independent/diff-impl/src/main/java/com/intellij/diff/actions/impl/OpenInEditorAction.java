@@ -28,21 +28,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
 
   @Nullable private final Runnable myAfterRunnable;
 
-  public OpenInEditorAction(@Nullable Runnable afterRunnable) {
+  public OpenInEditorAction(@javax.annotation.Nullable Runnable afterRunnable) {
     ActionUtil.copyFrom(this, "EditSource");
     myAfterRunnable = afterRunnable;
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
       e.getPresentation().setEnabledAndVisible(true);
       return;
@@ -73,7 +73,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     if (project == null) return;
 
@@ -83,11 +83,11 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     openEditor(project, navigatables);
   }
 
-  public void openEditor(@NotNull Project project, @NotNull Navigatable navigatable) {
+  public void openEditor(@Nonnull Project project, @Nonnull Navigatable navigatable) {
     openEditor(project, new Navigatable[]{navigatable});
   }
 
-  public void openEditor(@NotNull Project project, @NotNull Navigatable[] navigatables) {
+  public void openEditor(@Nonnull Project project, @Nonnull Navigatable[] navigatables) {
     boolean success = false;
     for (Navigatable navigatable : navigatables) {
       if (navigatable.canNavigate()) {

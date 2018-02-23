@@ -31,8 +31,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.rename.PsiElementRenameHandler;
 import com.intellij.refactoring.rename.RenameHandler;
 import com.intellij.refactoring.rename.RenameHandlerRegistry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class VariableInplaceRenameHandler implements RenameHandler {
   private static final ThreadLocal<String> ourPreventInlineRenameFlag = new ThreadLocal<String>();
@@ -67,7 +67,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
   }
 
   @Override
-  public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file, final DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file, final DataContext dataContext) {
     PsiElement element = PsiElementRenameHandler.getElement(dataContext);
     if (element == null) {
       if (LookupManager.getActiveLookup(editor) != null) {
@@ -92,7 +92,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
   }
 
   @Override
-  public void invoke(@NotNull final Project project, @NotNull final PsiElement[] elements, final DataContext dataContext) {
+  public void invoke(@Nonnull final Project project, @Nonnull final PsiElement[] elements, final DataContext dataContext) {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = PsiElementRenameHandler.getElement(dataContext);
     LOG.assertTrue(element != null);
@@ -116,7 +116,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
   }
 
   @Nullable
-  public InplaceRefactoring doRename(final @NotNull PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
+  public InplaceRefactoring doRename(final @Nonnull PsiElement elementToRename, final Editor editor, final DataContext dataContext) {
     VariableInplaceRenamer renamer = createRenamer(elementToRename, editor);
     boolean startedRename = renamer == null ? false : renamer.performInplaceRename();
 
@@ -152,7 +152,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
   }
 
   @Nullable
-  protected VariableInplaceRenamer createRenamer(@NotNull PsiElement elementToRename, Editor editor) {
+  protected VariableInplaceRenamer createRenamer(@Nonnull PsiElement elementToRename, Editor editor) {
     return new VariableInplaceRenamer((PsiNamedElement)elementToRename, editor);
   }
 }

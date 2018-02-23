@@ -16,36 +16,36 @@
 package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteStarted;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TestSuiteStartedEvent extends BaseStartedNodeEvent {
 
   public TestSuiteStartedEvent(@Nullable String name,
-                               @Nullable String id,
-                               @Nullable String parentId,
-                               @Nullable String locationUrl,
-                               @Nullable String metainfo,
-                               @Nullable String nodeType,
-                               @Nullable String nodeArgs,
+                               @javax.annotation.Nullable String id,
+                               @javax.annotation.Nullable String parentId,
+                               @javax.annotation.Nullable String locationUrl,
+                               @javax.annotation.Nullable String metainfo,
+                               @javax.annotation.Nullable String nodeType,
+                               @javax.annotation.Nullable String nodeArgs,
                                boolean running) {
     super(name, id, parentId, locationUrl, metainfo, nodeType, nodeArgs, running);
   }
 
-  public TestSuiteStartedEvent(@NotNull TestSuiteStarted suiteStarted, @Nullable String locationUrl) {
+  public TestSuiteStartedEvent(@Nonnull TestSuiteStarted suiteStarted, @javax.annotation.Nullable String locationUrl) {
     this(suiteStarted, locationUrl, BaseStartedNodeEvent.getMetainfo(suiteStarted));
   }
 
-  public TestSuiteStartedEvent(@NotNull TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
+  public TestSuiteStartedEvent(@Nonnull TestSuiteStarted suiteStarted, @Nullable String locationUrl, @Nullable String metainfo) {
     super(suiteStarted.getSuiteName(), TreeNodeEvent.getNodeId(suiteStarted), getParentNodeId(suiteStarted), locationUrl, metainfo, BaseStartedNodeEvent.getNodeType(suiteStarted),
           BaseStartedNodeEvent.getNodeArgs(suiteStarted), BaseStartedNodeEvent.isRunning(suiteStarted));
   }
 
-  public TestSuiteStartedEvent(@NotNull String name, @Nullable String locationUrl) {
+  public TestSuiteStartedEvent(@Nonnull String name, @javax.annotation.Nullable String locationUrl) {
     this(name, locationUrl, null);
   }
 
-  public TestSuiteStartedEvent(@NotNull String name, @Nullable String locationUrl, @Nullable String metainfo) {
+  public TestSuiteStartedEvent(@Nonnull String name, @javax.annotation.Nullable String locationUrl, @Nullable String metainfo) {
     super(name, null, null, locationUrl, metainfo, null, null, true);
   }
 

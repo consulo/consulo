@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
@@ -38,12 +38,12 @@ public class FileContentUtilCore {
   @NonNls public static final String FORCE_RELOAD_REQUESTOR = "FileContentUtilCore.saveOrReload";
 
   @RequiredDispatchThread
-  public static void reparseFiles(@NotNull VirtualFile... files) {
+  public static void reparseFiles(@Nonnull VirtualFile... files) {
     reparseFiles(Arrays.asList(files));
   }
 
   @RequiredDispatchThread
-  public static void reparseFiles(@NotNull final Collection<VirtualFile> files) {
+  public static void reparseFiles(@Nonnull final Collection<VirtualFile> files) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
@@ -62,7 +62,7 @@ public class FileContentUtilCore {
   }
 
   @RequiredWriteAction
-  private static void saveOrReload(VirtualFile file, @NotNull Collection<VFilePropertyChangeEvent> events) {
+  private static void saveOrReload(VirtualFile file, @Nonnull Collection<VFilePropertyChangeEvent> events) {
     if (file == null || file.isDirectory() || !file.isValid()) {
       return;
     }

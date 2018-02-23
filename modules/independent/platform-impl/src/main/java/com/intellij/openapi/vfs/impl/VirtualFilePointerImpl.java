@@ -26,7 +26,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFilePointer {
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.vfs.impl.VirtualFilePointerImpl");
@@ -36,13 +36,13 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
 
   volatile FilePointerPartNode myNode; // null means disposed
 
-  VirtualFilePointerImpl(VirtualFilePointerListener listener, @NotNull Disposable parentDisposable, Pair<VirtualFile, String> fileAndUrl) {
+  VirtualFilePointerImpl(VirtualFilePointerListener listener, @Nonnull Disposable parentDisposable, Pair<VirtualFile, String> fileAndUrl) {
     super(TRACE_CREATION);
     myListener = listener;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFileName() {
     if (!checkDisposed()) return "";
     Pair<VirtualFile, String> result = myNode.update();
@@ -63,20 +63,20 @@ class VirtualFilePointerImpl extends TraceableDisposable implements VirtualFileP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     if (isDisposed()) return "";
     Pair<VirtualFile, String> update = myNode.update();
     return update.second;
   }
 
-  @NotNull
+  @Nonnull
   String getUrlNoUpdate() {
     return isDisposed() ? "" : myNode.myFileAndUrl.second;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPresentableUrl() {
     if (!checkDisposed()) return "";
     return PathUtil.toPresentableUrl(getUrl());

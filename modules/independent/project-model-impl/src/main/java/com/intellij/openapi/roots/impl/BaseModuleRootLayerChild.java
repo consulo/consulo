@@ -19,7 +19,7 @@ package com.intellij.openapi.roots.impl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -29,18 +29,18 @@ public abstract class BaseModuleRootLayerChild implements Disposable {
   protected final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
 
-  BaseModuleRootLayerChild(@NotNull ModuleRootLayerImpl moduleRootLayer) {
+  BaseModuleRootLayerChild(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
     myModuleRootLayer = moduleRootLayer;
 
     Disposer.register(moduleRootLayer, this);
   }
 
-  @NotNull
+  @Nonnull
   public ModuleRootLayerImpl getModuleRootLayer() {
     return myModuleRootLayer;
   }
 
-  @NotNull
+  @Nonnull
   public RootModelImpl getRootModel() {
     return myModuleRootLayer.getRootModel();
   }

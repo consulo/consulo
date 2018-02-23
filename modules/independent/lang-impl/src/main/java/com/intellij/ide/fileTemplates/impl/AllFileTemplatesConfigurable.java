@@ -42,10 +42,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -110,7 +111,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     createTemplate(IdeBundle.message("template.unnamed"), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
   }
 
-  private FileTemplate createTemplate(final @NotNull String prefName, final @NotNull String extension, final @NotNull String content) {
+  private FileTemplate createTemplate(final @Nonnull String prefName, final @Nonnull String extension, final @Nonnull String content) {
     final FileTemplate[] templates = myCurrentTab.getTemplates();
     final FileTemplate newTemplate = FileTemplateUtil.createTemplate(prefName, extension, content, templates);
     myCurrentTab.addTemplate(newTemplate);
@@ -250,13 +251,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     AnAction removeAction = new AnAction(IdeBundle.message("action.remove.template"), null, AllIcons.General.Remove) {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         onRemove();
       }
 
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
         e.getPresentation().setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
@@ -265,13 +266,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     AnAction addAction = new AnAction(IdeBundle.message("action.create.template"), null, AllIcons.General.Add) {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         onAdd();
       }
 
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
       }
@@ -279,13 +280,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, AllIcons.Actions.Copy) {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         onClone();
       }
 
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation()
                 .setEnabled(myCurrentTab != myCodeTemplatesList && myCurrentTab != myOtherTemplatesList && myCurrentTab.getSelectedTemplate() != null);
@@ -294,13 +295,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.Actions.Reset) {
       @RequiredDispatchThread
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         onReset();
       }
 
       @RequiredDispatchThread
       @Override
-      public void update(@NotNull AnActionEvent e) {
+      public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         final FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
         e.getPresentation().setEnabled(selectedItem instanceof BundledFileTemplate && !selectedItem.isDefault());
@@ -633,17 +634,17 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     myOtherTemplatesList = null;
   }
 
-  public FileTemplate createNewTemplate(@NotNull String preferredName, @NotNull String extension, @NotNull String text) {
+  public FileTemplate createNewTemplate(@Nonnull String preferredName, @Nonnull String extension, @Nonnull String text) {
     return createTemplate(preferredName, extension, text);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "fileTemplates";
   }
 
-  public static void editCodeTemplate(@NotNull final String templateId, Project project) {
+  public static void editCodeTemplate(@Nonnull final String templateId, Project project) {
     final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
     final AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
     util.editConfigurable(project, configurable, () -> {

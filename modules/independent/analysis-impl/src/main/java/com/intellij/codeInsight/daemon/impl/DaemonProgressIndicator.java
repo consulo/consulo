@@ -21,7 +21,7 @@ import com.intellij.openapi.progress.StandardProgressIndicator;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TraceableDisposable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -54,7 +54,7 @@ public class DaemonProgressIndicator extends AbstractProgressIndicatorBase imple
     Disposer.dispose(this);
   }
 
-  public void cancel(@NotNull Throwable cause) {
+  public void cancel(@Nonnull Throwable cause) {
     myTraceableDisposable.killExceptionally(cause);
     super.cancel();
     Disposer.dispose(this);

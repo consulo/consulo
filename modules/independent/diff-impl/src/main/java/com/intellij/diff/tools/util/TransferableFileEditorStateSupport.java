@@ -33,8 +33,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.ToggleActionButton;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -43,20 +43,23 @@ import java.util.Map;
 import java.util.Set;
 
 public class TransferableFileEditorStateSupport {
-  @NotNull private static final Key<Map<String, Map<String, String>>> TRANSFERABLE_FILE_EDITOR_STATE =
+  @Nonnull
+  private static final Key<Map<String, Map<String, String>>> TRANSFERABLE_FILE_EDITOR_STATE =
           Key.create("Diff.TransferableFileEditorState");
 
   private static final Condition<BinaryEditorHolder> IS_SUPPORTED = holder -> {
     return getEditorState(holder.getEditor()) != null;
   };
 
-  @NotNull private final DiffSettingsHolder.DiffSettings mySettings;
-  @NotNull private final List<BinaryEditorHolder> myHolders;
+  @Nonnull
+  private final DiffSettingsHolder.DiffSettings mySettings;
+  @Nonnull
+  private final List<BinaryEditorHolder> myHolders;
   private final boolean mySupported;
 
-  public TransferableFileEditorStateSupport(@NotNull DiffSettingsHolder.DiffSettings settings,
-                                            @NotNull List<BinaryEditorHolder> holders,
-                                            @NotNull Disposable disposable) {
+  public TransferableFileEditorStateSupport(@Nonnull DiffSettingsHolder.DiffSettings settings,
+                                            @Nonnull List<BinaryEditorHolder> holders,
+                                            @Nonnull Disposable disposable) {
     mySettings = settings;
     myHolders = holders;
     mySupported = ContainerUtil.or(myHolders, IS_SUPPORTED);
@@ -75,7 +78,7 @@ public class TransferableFileEditorStateSupport {
     mySettings.setSyncBinaryEditorSettings(enabled);
   }
 
-  public void processContextHints(@NotNull DiffRequest request, @NotNull DiffContext context) {
+  public void processContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
     if (!isEnabled()) return;
 
     for (BinaryEditorHolder holder : myHolders) {
@@ -87,7 +90,7 @@ public class TransferableFileEditorStateSupport {
     }
   }
 
-  public void updateContextHints(@NotNull DiffRequest request, @NotNull DiffContext context) {
+  public void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
     if (!isEnabled()) return;
 
     Set<String> updated = ContainerUtil.newHashSet();
@@ -101,14 +104,14 @@ public class TransferableFileEditorStateSupport {
     }
   }
 
-  @NotNull
+  @Nonnull
   public AnAction createToggleAction() {
     return new ToggleSynchronousEditorStatesAction(this);
   }
 
-  private static void readContextData(@NotNull DiffContext context,
-                                      @NotNull FileEditor editor,
-                                      @NotNull TransferableFileEditorState state) {
+  private static void readContextData(@Nonnull DiffContext context,
+                                      @Nonnull FileEditor editor,
+                                      @Nonnull TransferableFileEditorState state) {
     Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
     Map<String, String> options = map != null ? map.get(state.getEditorId()) : null;
     if (options == null) return;
@@ -117,7 +120,7 @@ public class TransferableFileEditorStateSupport {
     editor.setState(state);
   }
 
-  private static void writeContextData(@NotNull DiffContext context, @NotNull TransferableFileEditorState state) {
+  private static void writeContextData(@Nonnull DiffContext context, @Nonnull TransferableFileEditorState state) {
     Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
     if (map == null) {
       map = ContainerUtil.newHashMap();
@@ -128,21 +131,22 @@ public class TransferableFileEditorStateSupport {
   }
 
   @Nullable
-  private static TransferableFileEditorState getEditorState(@NotNull FileEditor editor) {
+  private static TransferableFileEditorState getEditorState(@Nonnull FileEditor editor) {
     FileEditorState state = editor.getState(FileEditorStateLevel.FULL);
     return state instanceof TransferableFileEditorState ? (TransferableFileEditorState)state : null;
   }
 
   private class MySynchronizer implements PropertyChangeListener {
-    @NotNull private final List<? extends FileEditor> myEditors;
+    @Nonnull
+    private final List<? extends FileEditor> myEditors;
 
     private boolean myDuringUpdate = false;
 
-    public MySynchronizer(@NotNull List<BinaryEditorHolder> editors) {
+    public MySynchronizer(@Nonnull List<BinaryEditorHolder> editors) {
       myEditors = ContainerUtil.map(editors, holder -> holder.getEditor());
     }
 
-    public void install(@NotNull Disposable disposable) {
+    public void install(@Nonnull Disposable disposable) {
       if (myEditors.size() < 2) return;
 
       for (FileEditor editor : myEditors) {
@@ -177,7 +181,7 @@ public class TransferableFileEditorStateSupport {
       }
     }
 
-    private void updateEditor(@NotNull FileEditor editor, @NotNull String id, @NotNull Map<String, String> options) {
+    private void updateEditor(@Nonnull FileEditor editor, @Nonnull String id, @Nonnull Map<String, String> options) {
       try {
         myDuringUpdate = true;
         TransferableFileEditorState state = getEditorState(editor);
@@ -193,9 +197,10 @@ public class TransferableFileEditorStateSupport {
   }
 
   private class ToggleSynchronousEditorStatesAction extends ToggleActionButton implements DumbAware {
-    @NotNull private final TransferableFileEditorStateSupport mySupport;
+    @Nonnull
+    private final TransferableFileEditorStateSupport mySupport;
 
-    public ToggleSynchronousEditorStatesAction(@NotNull TransferableFileEditorStateSupport support) {
+    public ToggleSynchronousEditorStatesAction(@Nonnull TransferableFileEditorStateSupport support) {
       super("Synchronize Editors Settings", AllIcons.Actions.SyncPanels);
       mySupport = support;
     }

@@ -19,7 +19,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.HorizontalLayout;
 import consulo.ui.RequiredUIAccess;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,9 +33,9 @@ public class DesktopHorizontalLayoutImpl extends JPanel implements HorizontalLay
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public HorizontalLayout add(@NotNull Component component) {
+  public HorizontalLayout add(@Nonnull Component component) {
     add(TargetAWT.to(component));
     return this;
   }

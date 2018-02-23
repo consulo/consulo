@@ -26,15 +26,15 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import consulo.psi.tree.ASTLazyFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2:21/02.04.13
  */
 public class DefaultASTLazyFactory implements ASTLazyFactory {
-  @NotNull
+  @Nonnull
   @Override
   public LazyParseableElement createLazy(ILazyParseableElementType type, CharSequence text) {
     if (type instanceof IFileElementType) {

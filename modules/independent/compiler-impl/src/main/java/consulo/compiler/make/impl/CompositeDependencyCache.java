@@ -26,8 +26,8 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class CompositeDependencyCache implements DependencyCache {
 
   @Nullable
   @Override
-  public String relativePathToQName(@NotNull String path, char separator) {
+  public String relativePathToQName(@Nonnull String path, char separator) {
     for (DependencyCache ourDependencyExtension : myDependencyCaches) {
       String s = ourDependencyExtension.relativePathToQName(path, separator);
       if(s != null) {
@@ -116,7 +116,7 @@ public class CompositeDependencyCache implements DependencyCache {
     }
   }
 
-  @NotNull
+  @Nonnull
   public <T extends DependencyCache> T findChild(Class<T> clazz) {
     for (DependencyCache dependencyCach : myDependencyCaches) {
       if(dependencyCach.getClass() == clazz) {

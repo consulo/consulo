@@ -17,8 +17,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -112,7 +112,7 @@ public class CoverageSuitesBundle {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   public CoverageEngine getCoverageEngine() {
     return myEngine;
   }
@@ -157,7 +157,7 @@ public class CoverageSuitesBundle {
     myProcessedModules.add(module);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public RunConfigurationBase getRunConfiguration() {
     for (CoverageSuite suite : mySuites) {
       if (suite instanceof BaseCoverageSuite) {
@@ -173,7 +173,7 @@ public class CoverageSuitesBundle {
   public GlobalSearchScope getSearchScope(final Project project) {
     if (myCachedValue == null) {
       myCachedValue = CachedValuesManager.getManager(project).createCachedValue(new CachedValueProvider<GlobalSearchScope>() {
-        @Nullable
+        @javax.annotation.Nullable
         @Override
         public Result<GlobalSearchScope> compute() {
           return new Result<GlobalSearchScope>(getSearchScopeInner(project), ProjectRootModificationTracker.getInstance(project));

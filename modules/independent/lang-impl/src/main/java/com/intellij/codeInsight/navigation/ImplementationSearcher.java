@@ -34,8 +34,8 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -98,7 +98,7 @@ public class ImplementationSearcher {
     return true;
   }
 
-  private static void dumbModeNotification(@NotNull PsiElement element) {
+  private static void dumbModeNotification(@Nonnull PsiElement element) {
     Project project = ApplicationManager.getApplication().runReadAction((Computable<Project>)() -> element.getProject());
     DumbService.getInstance(project).showDumbModeNotification("Implementation information isn't available while indices are built");
   }
@@ -107,7 +107,7 @@ public class ImplementationSearcher {
     return targetElements;
   }
 
-  @NotNull
+  @Nonnull
   public static Set<String> getFlags() {
     return TargetElementUtil.getDefinitionSearchFlags();
   }

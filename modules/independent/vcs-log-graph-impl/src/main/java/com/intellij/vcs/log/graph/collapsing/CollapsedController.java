@@ -25,26 +25,26 @@ import com.intellij.vcs.log.graph.impl.facade.CascadeController;
 import com.intellij.vcs.log.graph.impl.facade.GraphChanges;
 import com.intellij.vcs.log.graph.impl.facade.ReachableNodes;
 import com.intellij.vcs.log.graph.utils.UnsignedBitSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 
 public class CollapsedController extends CascadeController {
-  @NotNull private CollapsedGraph myCollapsedGraph;
+  @Nonnull
+  private CollapsedGraph myCollapsedGraph;
 
-  public CollapsedController(@NotNull CascadeController delegateLinearGraphController,
-                             @NotNull final PermanentGraphInfo<?> permanentGraphInfo,
-                             @Nullable Set<Integer> idsOfVisibleBranches) {
+  public CollapsedController(@Nonnull CascadeController delegateLinearGraphController,
+                             @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
+                             @javax.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility =
       ReachableNodes.getReachableNodes(permanentGraphInfo.getLinearGraph(), idsOfVisibleBranches);
     myCollapsedGraph = CollapsedGraph.newInstance(getDelegateController().getCompiledGraph(), initVisibility);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@NotNull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
     if (delegateAnswer.getGraphChanges() != null) {
       LinearGraph delegateGraph = getDelegateController().getCompiledGraph();
       myCollapsedGraph = CollapsedGraph.updateInstance(myCollapsedGraph, delegateGraph);
@@ -89,31 +89,31 @@ public class CollapsedController extends CascadeController {
     CollapsedActionManager.expandNodes(myCollapsedGraph, nodesToShow);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected LinearGraphAnswer performAction(@NotNull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return CollapsedActionManager.performAction(this, action);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LinearGraph getCompiledGraph() {
     return myCollapsedGraph.getCompiledGraph();
   }
 
-  @NotNull
+  @Nonnull
   protected CollapsedGraph getCollapsedGraph() {
     return myCollapsedGraph;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  protected GraphElement convertToDelegate(@NotNull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 
-  @Nullable
-  public static GraphElement convertToDelegate(@NotNull GraphElement graphElement, CollapsedGraph collapsedGraph) {
+  @javax.annotation.Nullable
+  public static GraphElement convertToDelegate(@Nonnull GraphElement graphElement, CollapsedGraph collapsedGraph) {
     if (graphElement instanceof GraphEdge) {
       Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();
       Integer downIndex = ((GraphEdge)graphElement).getDownNodeIndex();

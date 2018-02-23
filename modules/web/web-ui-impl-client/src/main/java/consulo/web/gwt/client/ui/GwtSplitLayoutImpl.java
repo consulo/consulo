@@ -18,7 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -63,7 +63,7 @@ public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
     setWidgetToggleDisplayAllowed(myFirstWidget, widget != null);
   }
 
-  public void setSecondWidget(@Nullable Widget widget) {
+  public void setSecondWidget(@javax.annotation.Nullable Widget widget) {
     if (widget != null) {
       widget.setSize("100%", "100%");
     }

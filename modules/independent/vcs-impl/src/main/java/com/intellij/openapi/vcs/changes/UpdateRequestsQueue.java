@@ -27,8 +27,8 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -63,7 +63,7 @@ public class UpdateRequestsQueue {
   private final boolean myTrackHeavyLatch;
   private final Getter<Boolean> myIsStoppedGetter;
 
-  public UpdateRequestsQueue(final Project project, @NotNull ChangeListManagerImpl.Scheduler scheduler, final Runnable delegate) {
+  public UpdateRequestsQueue(final Project project, @Nonnull ChangeListManagerImpl.Scheduler scheduler, final Runnable delegate) {
     myProject = project;
     myScheduler = scheduler;
 
@@ -183,11 +183,11 @@ public class UpdateRequestsQueue {
     }
   }
 
-  public void invokeAfterUpdate(@NotNull Runnable afterUpdate,
-                                @NotNull InvokeAfterUpdateMode mode,
+  public void invokeAfterUpdate(@Nonnull Runnable afterUpdate,
+                                @Nonnull InvokeAfterUpdateMode mode,
                                 @Nullable String title,
                                 @Nullable Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                @Nullable ModalityState state) {
+                                @javax.annotation.Nullable ModalityState state) {
     LOG.debug("invokeAfterUpdate for project: " + myProject.getName());
     final CallbackData data = CallbackData.create(myProject, mode, afterUpdate, title, state);
 

@@ -16,19 +16,19 @@
 package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteFinished;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TestSuiteFinishedEvent extends TreeNodeEvent {
 
-  public TestSuiteFinishedEvent(@NotNull TestSuiteFinished suiteFinished) {
+  public TestSuiteFinishedEvent(@Nonnull TestSuiteFinished suiteFinished) {
     super(suiteFinished.getSuiteName(), TreeNodeEvent.getNodeId(suiteFinished));
   }
 
-  public TestSuiteFinishedEvent(@NotNull String name) {
+  public TestSuiteFinishedEvent(@Nonnull String name) {
     super(name, null);
   }
 
   @Override
-  protected void appendToStringInfo(@NotNull StringBuilder buf) {
+  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
   }
 }

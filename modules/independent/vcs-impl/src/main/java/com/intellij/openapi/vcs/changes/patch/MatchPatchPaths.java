@@ -34,8 +34,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class MatchPatchPaths {
     myBaseDir = myProject.getBaseDir();
   }
 
-  public List<AbstractFilePatchInProgress> execute(@NotNull final List<? extends FilePatch> list) {
+  public List<AbstractFilePatchInProgress> execute(@Nonnull final List<? extends FilePatch> list) {
     return execute(list, false);
   }
 
@@ -69,7 +69,7 @@ public class MatchPatchPaths {
    * @param useProjectRootAsPredefinedBase if true then we use project dir as default base despite context matching
    * @return
    */
-  public List<AbstractFilePatchInProgress> execute(@NotNull final List<? extends FilePatch> list, boolean useProjectRootAsPredefinedBase) {
+  public List<AbstractFilePatchInProgress> execute(@Nonnull final List<? extends FilePatch> list, boolean useProjectRootAsPredefinedBase) {
     final PatchBaseDirectoryDetector directoryDetector = PatchBaseDirectoryDetector.getInstance(myProject);
 
     myUseProjectRootAsPredefinedBase = useProjectRootAsPredefinedBase;
@@ -88,9 +88,9 @@ public class MatchPatchPaths {
     return new ArrayList<>(result.values());
   }
 
-  private void workWithNotExisting(@NotNull PatchBaseDirectoryDetector directoryDetector,
-                                   @NotNull List<FilePatch> newOrWithoutMatches,
-                                   @NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
+  private void workWithNotExisting(@Nonnull PatchBaseDirectoryDetector directoryDetector,
+                                   @Nonnull List<FilePatch> newOrWithoutMatches,
+                                   @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
     for (FilePatch patch : newOrWithoutMatches) {
       String afterName = patch.getAfterName();
       final String[] strings = afterName != null ? afterName.replace('\\', '/').split("/") : ArrayUtil.EMPTY_STRING_ARRAY;
@@ -124,20 +124,20 @@ public class MatchPatchPaths {
     }
   }
 
-  private boolean isGoodAndProjectBased(@NotNull Pair<VirtualFile, Integer> bestVariant,
-                                        @NotNull Pair<VirtualFile, Integer> currentVariant) {
+  private boolean isGoodAndProjectBased(@Nonnull Pair<VirtualFile, Integer> bestVariant,
+                                        @Nonnull Pair<VirtualFile, Integer> currentVariant) {
     return currentVariant.getSecond().equals(bestVariant.getSecond()) && myBaseDir.equals(currentVariant.getFirst());
   }
 
-  private static void selectByContextOrByStrip(@NotNull List<PatchAndVariants> candidates,
-                                               @NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
+  private static void selectByContextOrByStrip(@Nonnull List<PatchAndVariants> candidates,
+                                               @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
     for (final PatchAndVariants candidate : candidates) {
       candidate.findAndAddBestVariant(result);
     }
   }
 
-  private static void filterExactMatches(@NotNull List<PatchAndVariants> candidates,
-                                         @NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
+  private static void filterExactMatches(@Nonnull List<PatchAndVariants> candidates,
+                                         @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
     for (Iterator<PatchAndVariants> iterator = candidates.iterator(); iterator.hasNext(); ) {
       final PatchAndVariants candidate = iterator.next();
       if (candidate.getVariants().size() == 1) {
@@ -164,9 +164,9 @@ public class MatchPatchPaths {
     }
   }
 
-  private void findCandidates(@NotNull List<? extends FilePatch> list,
-                              @NotNull final PatchBaseDirectoryDetector directoryDetector,
-                              @NotNull List<PatchAndVariants> candidates, @NotNull List<FilePatch> newOrWithoutMatches) {
+  private void findCandidates(@Nonnull List<? extends FilePatch> list,
+                              @Nonnull final PatchBaseDirectoryDetector directoryDetector,
+                              @Nonnull List<PatchAndVariants> candidates, @Nonnull List<FilePatch> newOrWithoutMatches) {
     for (final FilePatch patch : list) {
       final String fileName = patch.getBeforeFileName();
       if (patch.isNewFile() || (patch.getBeforeName() == null)) {
@@ -203,8 +203,8 @@ public class MatchPatchPaths {
     }
   }
 
-  private Collection<VirtualFile> findFilesFromIndex(@NotNull final PatchBaseDirectoryDetector directoryDetector,
-                                                     @NotNull final String fileName) {
+  private Collection<VirtualFile> findFilesFromIndex(@Nonnull final PatchBaseDirectoryDetector directoryDetector,
+                                                     @Nonnull final String fileName) {
     Collection<VirtualFile> files = ApplicationManager.getApplication().runReadAction(new Computable<Collection<VirtualFile>>() {
       public Collection<VirtualFile> compute() {
         return directoryDetector.findFiles(fileName);
@@ -219,9 +219,9 @@ public class MatchPatchPaths {
     });
   }
 
-  private static void putSelected(@NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> result,
-                                  @NotNull final List<AbstractFilePatchInProgress> variants,
-                                  @NotNull AbstractFilePatchInProgress patchInProgress) {
+  private static void putSelected(@Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result,
+                                  @Nonnull final List<AbstractFilePatchInProgress> variants,
+                                  @Nonnull AbstractFilePatchInProgress patchInProgress) {
     patchInProgress.setAutoBases(ObjectsConvertor.convert(variants, new Convertor<AbstractFilePatchInProgress, VirtualFile>() {
       @Override
       public VirtualFile convert(AbstractFilePatchInProgress o) {
@@ -251,18 +251,19 @@ public class MatchPatchPaths {
   }
 
   private class PatchAndVariants {
-    @NotNull private final List<AbstractFilePatchInProgress> myVariants;
+    @Nonnull
+    private final List<AbstractFilePatchInProgress> myVariants;
 
-    private PatchAndVariants(@NotNull List<AbstractFilePatchInProgress> variants) {
+    private PatchAndVariants(@Nonnull List<AbstractFilePatchInProgress> variants) {
       myVariants = variants;
     }
 
-    @NotNull
+    @Nonnull
     public List<AbstractFilePatchInProgress> getVariants() {
       return myVariants;
     }
 
-    public void findAndAddBestVariant(@NotNull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
+    public void findAndAddBestVariant(@Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result) {
       AbstractFilePatchInProgress best = ContainerUtil.getFirstItem(myVariants);
       if (best == null) return;
       if (best instanceof TextFilePatchInProgress) {
@@ -301,7 +302,7 @@ public class MatchPatchPaths {
     }
   }
 
-  private boolean variantMatchedToProjectDir(@NotNull AbstractFilePatchInProgress variant) {
+  private boolean variantMatchedToProjectDir(@Nonnull AbstractFilePatchInProgress variant) {
     return variant.getCurrentStrip() == 0 && myProject.getBaseDir().equals(variant.getBase());
   }
 
@@ -322,7 +323,7 @@ public class MatchPatchPaths {
     return new Pair<>(parent, idx + 1);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static AbstractFilePatchInProgress processMatch(final FilePatch patch, final VirtualFile file) {
     final String beforeName = patch.getBeforeName();
     final Pair<VirtualFile, Integer> pair = compareNames(beforeName, file);
@@ -337,7 +338,7 @@ public class MatchPatchPaths {
   }
 
   @Nullable
-  private static AbstractFilePatchInProgress createPatchInProgress(@NotNull FilePatch patch, @NotNull VirtualFile dir) {
+  private static AbstractFilePatchInProgress createPatchInProgress(@Nonnull FilePatch patch, @Nonnull VirtualFile dir) {
     return patch instanceof TextFilePatch ? new TextFilePatchInProgress((TextFilePatch)patch, null, dir) :
            patch instanceof ShelvedBinaryFilePatch ? new BinaryFilePatchInProgress((ShelvedBinaryFilePatch)patch, null, dir)
                                                    : null;

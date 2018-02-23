@@ -60,8 +60,8 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
 import com.intellij.util.ImageLoader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +87,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
   private final CoverageSuitesBundle myCoverageSuite;
   private final boolean mySubCoverageActive;
 
-  protected CoverageLineMarkerRenderer(final TextAttributesKey textAttributesKey, @Nullable final String className, final TreeMap<Integer, LineData> lines,
+  protected CoverageLineMarkerRenderer(final TextAttributesKey textAttributesKey, @javax.annotation.Nullable final String className, final TreeMap<Integer, LineData> lines,
                                        final boolean coverageByTestApplicable,
                                        final Function<Integer, Integer> newToOldConverter,
                                        final Function<Integer, Integer> oldToNewConverter,
@@ -124,10 +124,10 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
   }
 
   public static CoverageLineMarkerRenderer getRenderer(int lineNumber,
-                                                       @Nullable final String className,
+                                                       @javax.annotation.Nullable final String className,
                                                        final TreeMap<Integer, LineData> lines,
                                                        final boolean coverageByTestApplicable,
-                                                       @NotNull final CoverageSuitesBundle coverageSuite,
+                                                       @Nonnull final CoverageSuitesBundle coverageSuite,
                                                        final Function<Integer, Integer> newToOldConverter,
                                                        final Function<Integer, Integer> oldToNewConverter, boolean subCoverageActive) {
     return new CoverageLineMarkerRenderer(getAttributesKey(lineNumber, lines), className, lines, coverageByTestApplicable, newToOldConverter,
@@ -162,7 +162,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getTooltipText() {
     return null;
@@ -359,7 +359,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     protected abstract boolean hasNext(int idx, List<Integer> list);
     protected abstract int next(int idx);
 
-    @Nullable
+    @javax.annotation.Nullable
     private Integer getLineEntry() {
       final ArrayList<Integer> list = new ArrayList<Integer>(myLines.keySet());
       Collections.sort(list);
@@ -383,7 +383,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
       return null;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     protected String getNextChange() {
       Integer entry = getLineEntry();
       if (entry != null) {
@@ -430,14 +430,14 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
         protected List<ColorAndFontPanelFactory> createPanelFactories() {
           final GeneralColorsPage colorsPage = new GeneralColorsPage();
           final ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
-            @NotNull
+            @Nonnull
             @Override
-            public NewColorAndFontPanel createPanel(@NotNull ColorAndFontOptions options) {
+            public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
               final SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
               return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public String getPanelDisplayName() {
               return "Editor | " + getDisplayName() + " | " + colorsPage.getDisplayName();

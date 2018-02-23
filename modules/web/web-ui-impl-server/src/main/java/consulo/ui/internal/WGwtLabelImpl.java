@@ -21,7 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.web.gwt.shared.ui.state.LabelState;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -36,39 +36,39 @@ public class WGwtLabelImpl extends AbstractComponent implements Label, VaadinWra
     getState().caption = text;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return getState().caption;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public Label setText(@NotNull String text) {
+  public Label setText(@Nonnull String text) {
     getState().caption = text;
     markAsDirty();
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Label setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
+  public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     myHorizontalAlignment = horizontalAlignment;
     getState().myHorizontalAlignment = horizontalAlignment;
     markAsDirty();
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Label setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
+  public Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier) {
     return this;
   }
 

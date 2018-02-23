@@ -19,7 +19,7 @@ package com.intellij.vcs.log.graph.impl.permanent;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.GraphCommit;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -40,22 +40,24 @@ public class DuplicateParentFixer {
   }
 
   private static class DelegateGraphCommit<CommitId> implements GraphCommit<CommitId> {
-    @NotNull private final GraphCommit<CommitId> myDelegate;
+    @Nonnull
+    private final GraphCommit<CommitId> myDelegate;
 
-    @NotNull private final List<CommitId> myParents;
+    @Nonnull
+    private final List<CommitId> myParents;
 
-    private DelegateGraphCommit(@NotNull GraphCommit<CommitId> delegate, @NotNull List<CommitId> parents) {
+    private DelegateGraphCommit(@Nonnull GraphCommit<CommitId> delegate, @Nonnull List<CommitId> parents) {
       myDelegate = delegate;
       myParents = parents;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public CommitId getId() {
       return myDelegate.getId();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<CommitId> getParents() {
       return myParents;
@@ -67,8 +69,8 @@ public class DuplicateParentFixer {
     }
   }
 
-  @NotNull
-  private static <CommitId> GraphCommit<CommitId> fixParentsDuplicate(@NotNull GraphCommit<CommitId> commit) {
+  @Nonnull
+  private static <CommitId> GraphCommit<CommitId> fixParentsDuplicate(@Nonnull GraphCommit<CommitId> commit) {
     List<CommitId> parents = commit.getParents();
     if (parents.size() <= 1) return commit;
 

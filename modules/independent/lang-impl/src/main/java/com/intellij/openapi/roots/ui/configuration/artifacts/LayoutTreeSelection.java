@@ -19,8 +19,8 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElem
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.ui.treeStructure.SimpleNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class LayoutTreeSelection {
   private final Map<PackagingElement<?>, PackagingElementNode<?>> myElement2Node = new HashMap<PackagingElement<?>, PackagingElementNode<?>>();
   private final Map<PackagingElementNode<?>, TreePath> myNode2Path = new HashMap<PackagingElementNode<?>, TreePath>();
 
-  public LayoutTreeSelection(@NotNull LayoutTree tree) {
+  public LayoutTreeSelection(@Nonnull LayoutTree tree) {
     final TreePath[] paths = tree.getSelectionPaths();
     if (paths == null) {
       return;
@@ -65,11 +65,11 @@ public class LayoutTreeSelection {
     return mySelectedElements;
   }
 
-  public PackagingElementNode<?> getNode(@NotNull PackagingElement<?> element) {
+  public PackagingElementNode<?> getNode(@Nonnull PackagingElement<?> element) {
     return myElement2Node.get(element);
   }
 
-  public TreePath getPath(@NotNull PackagingElementNode<?> node) {
+  public TreePath getPath(@Nonnull PackagingElementNode<?> node) {
     return myNode2Path.get(node);
   }
 

@@ -24,8 +24,8 @@ import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class QuickListPanel {
   private JPanel myListPanel;
   private final QuickList[] myAllQuickLists;
 
-  public QuickListPanel(@NotNull QuickList origin, @NotNull QuickList[] allQuickLists) {
+  public QuickListPanel(@Nonnull QuickList origin, @Nonnull QuickList[] allQuickLists) {
     myAllQuickLists = allQuickLists;
 
     myActionsList = new JBList(new DefaultListModel());
@@ -144,9 +144,9 @@ public class QuickListPanel {
   }
 
   private static class MyListCellRenderer extends DefaultListCellRenderer {
-    @NotNull
+    @Nonnull
     @Override
-    public Component getListCellRendererComponent(@NotNull JList list,
+    public Component getListCellRendererComponent(@Nonnull JList list,
                                                   Object value,
                                                   int index,
                                                   boolean isSelected,

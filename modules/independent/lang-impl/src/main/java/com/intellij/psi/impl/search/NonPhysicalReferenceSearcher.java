@@ -11,7 +11,7 @@ import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Gregory.Shrago
@@ -24,7 +24,7 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
     super(true);
   }
 
-  public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<PsiReference> consumer) {
+  public void processQuery(@Nonnull ReferencesSearch.SearchParameters queryParameters, @Nonnull Processor<PsiReference> consumer) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
     final SearchScope scope = queryParameters.getScope();
     final PsiElement element = queryParameters.getElementToSearch();

@@ -19,8 +19,8 @@ import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -29,15 +29,15 @@ import consulo.annotations.RequiredReadAction;
 public interface ProblemDescriptor extends CommonProblemDescriptor {
   ProblemDescriptor[] EMPTY_ARRAY = new ProblemDescriptor[0];
 
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
   PsiElement getPsiElement();
 
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
   PsiElement getStartElement();
 
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
   PsiElement getEndElement();
 
@@ -46,7 +46,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor {
 
   int getLineNumber();
 
-  @NotNull
+  @Nonnull
   ProblemHighlightType getHighlightType();
 
   boolean isAfterEndOfLine();
@@ -64,7 +64,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor {
    *
    * @return the problem group
    */
-  @Nullable
+  @javax.annotation.Nullable
   ProblemGroup getProblemGroup();
 
   /**
@@ -72,7 +72,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor {
    *
    * @param problemGroup the problemGroup
    */
-  void setProblemGroup(@Nullable ProblemGroup problemGroup);
+  void setProblemGroup(@javax.annotation.Nullable ProblemGroup problemGroup);
 
   boolean showTooltip();
 }

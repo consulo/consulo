@@ -1,13 +1,13 @@
 package com.intellij.remoteServer.runtime.log;
 
 import com.intellij.execution.process.ProcessHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface LoggingHandler {
-  void print(@NotNull String s);
+  void print(@Nonnull String s);
 
-  void attachToProcess(@NotNull ProcessHandler handler);
+  void attachToProcess(@Nonnull ProcessHandler handler);
 }

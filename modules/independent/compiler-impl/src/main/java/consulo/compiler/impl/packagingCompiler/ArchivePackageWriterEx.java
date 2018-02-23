@@ -17,7 +17,7 @@ package consulo.compiler.impl.packagingCompiler;
 
 import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import consulo.packaging.elements.ArchivePackageWriter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +27,12 @@ import java.io.IOException;
  * @since 13.04.2016
  */
 public abstract class ArchivePackageWriterEx<T> implements ArchivePackageWriter<T> {
-  @NotNull
+  @Nonnull
   @Override
-  public T createArchiveObject(@NotNull File tempFile) throws IOException {
+  public T createArchiveObject(@Nonnull File tempFile) throws IOException {
     throw new UnsupportedOperationException("Use createArchiveObject(@NotNull File tempFile, @NotNull ArchivePackageInfo archivePackageInfo)");
   }
 
-  @NotNull
-  public abstract T createArchiveObject(@NotNull File tempFile, @NotNull ArchivePackageInfo archivePackageInfo) throws IOException;
+  @Nonnull
+  public abstract T createArchiveObject(@Nonnull File tempFile, @Nonnull ArchivePackageInfo archivePackageInfo) throws IOException;
 }

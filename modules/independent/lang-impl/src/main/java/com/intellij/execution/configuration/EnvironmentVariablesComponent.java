@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.UserActivityProviderComponent;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.ChangeListener;
 import java.util.Map;
@@ -49,11 +49,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
     setText(ExecutionBundle.message("environment.variables.component.title"));
   }
 
-  public void setEnvs(@NotNull Map<String, String> envs) {
+  public void setEnvs(@Nonnull Map<String, String> envs) {
     myEnvVars.setEnvs(envs);
   }
 
-  @NotNull
+  @Nonnull
   public Map<String, String> getEnvs() {
     return myEnvVars.getEnvs();
   }
@@ -66,12 +66,12 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
     myEnvVars.setPassParentEnvs(passParentEnvs);
   }
 
-  @NotNull
+  @Nonnull
   public EnvironmentVariablesData getEnvData() {
     return myEnvVars.getData();
   }
 
-  public void setEnvData(@NotNull EnvironmentVariablesData envData) {
+  public void setEnvData(@Nonnull EnvironmentVariablesData envData) {
     myEnvVars.setData(envData);
   }
 
@@ -114,7 +114,7 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
   /**
    * Consider using {@link EnvironmentVariablesData#writeExternal(Element)} instead for simplicity and better performance.
    */
-  public static void writeExternal(@NotNull Element element, @NotNull Map<String, String> envs) {
+  public static void writeExternal(@Nonnull Element element, @Nonnull Map<String, String> envs) {
     final Element envsElement = new Element(ENVS);
     for (String envName : envs.keySet()) {
       final Element envElement = new Element(ENV);

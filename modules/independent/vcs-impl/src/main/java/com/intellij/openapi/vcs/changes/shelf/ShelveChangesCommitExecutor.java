@@ -31,8 +31,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.util.WaitForProgressToShow;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -51,7 +51,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
     return VcsBundle.message("shelve.changes.action");
   }
 
-  @NotNull
+  @Nonnull
   public CommitSession createCommitSession() {
     return new ShelveChangesCommitSession();
   }

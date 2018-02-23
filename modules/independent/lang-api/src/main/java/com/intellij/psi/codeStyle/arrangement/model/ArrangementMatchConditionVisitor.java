@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ArrangementMatchConditionVisitor {
 
-  void visit(@NotNull ArrangementAtomMatchCondition condition);
+  void visit(@Nonnull ArrangementAtomMatchCondition condition);
   
-  void visit(@NotNull ArrangementCompositeMatchCondition condition);
+  void visit(@Nonnull ArrangementCompositeMatchCondition condition);
 }

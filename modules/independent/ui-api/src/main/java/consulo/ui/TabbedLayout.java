@@ -15,14 +15,14 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface TabbedLayout extends Layout {
-  @NotNull
+  @Nonnull
   static TabbedLayout create() {
     return UIInternal.get()._Layouts_tabbed();
   }
@@ -31,26 +31,26 @@ public interface TabbedLayout extends Layout {
    * Create tab without adding to view
    * @return new tab
    */
-  @NotNull
+  @Nonnull
   Tab createTab();
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default Tab addTab(@NotNull Tab tab, @NotNull PseudoComponent component) {
+  default Tab addTab(@Nonnull Tab tab, @Nonnull PseudoComponent component) {
     return addTab(tab, component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default Tab addTab(@NotNull String tabName, @NotNull PseudoComponent component) {
+  default Tab addTab(@Nonnull String tabName, @Nonnull PseudoComponent component) {
     return addTab(tabName, component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  Tab addTab(@NotNull Tab tab, @NotNull Component component);
+  Tab addTab(@Nonnull Tab tab, @Nonnull Component component);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  Tab addTab(@NotNull String tabName, @NotNull Component component);
+  Tab addTab(@Nonnull String tabName, @Nonnull Component component);
 }

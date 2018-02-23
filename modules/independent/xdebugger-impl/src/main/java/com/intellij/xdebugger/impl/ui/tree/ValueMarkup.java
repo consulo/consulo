@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ public class ValueMarkup {
     myToolTipText = toolTipText;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }

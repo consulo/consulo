@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -33,7 +33,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
   protected final String myUrl;
   private final OrderRootType myRootType;
 
-  public ItemElement(@NotNull OrderRootTypeElement parent, @NotNull String url, @NotNull OrderRootType rootType, final boolean isJarDirectory,
+  public ItemElement(@Nonnull OrderRootTypeElement parent, @Nonnull String url, @Nonnull OrderRootType rootType, final boolean isJarDirectory,
                      boolean isValid) {
     super(parent);
     myUrl = url;
@@ -97,7 +97,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return (OrderRootTypeElement)getParentDescriptor();
   }
 
-  @NotNull
+  @Nonnull
   public OrderRootType getRootType() {
     return myRootType;
   }
@@ -116,7 +116,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myUrl;
   }

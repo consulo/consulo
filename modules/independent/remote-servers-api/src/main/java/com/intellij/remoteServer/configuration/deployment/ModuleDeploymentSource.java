@@ -18,19 +18,18 @@ package com.intellij.remoteServer.configuration.deployment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface ModuleDeploymentSource extends DeploymentSource {
-  @NotNull
+  @Nonnull
   NamedPointer<Module> getModulePointer();
 
-  @Nullable
+  @javax.annotation.Nullable
   Module getModule();
 
-  @Nullable
+  @javax.annotation.Nullable
   VirtualFile getContentRoot();
 }

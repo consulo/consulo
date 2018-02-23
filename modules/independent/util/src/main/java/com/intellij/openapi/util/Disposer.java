@@ -21,8 +21,8 @@ import com.intellij.openapi.util.objectTree.ObjectTreeAction;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Field;
@@ -43,13 +43,13 @@ public class Disposer {
 
   private static final ObjectTreeAction<Disposable> ourDisposeAction = new ObjectTreeAction<Disposable>() {
     @Override
-    public void execute(@NotNull final Disposable each) {
+    public void execute(@Nonnull final Disposable each) {
       //noinspection SSBasedInspection
       each.dispose();
     }
 
     @Override
-    public void beforeTreeExecution(@NotNull final Disposable parent) {
+    public void beforeTreeExecution(@Nonnull final Disposable parent) {
       if (parent instanceof Disposable.Parent) {
         ((Disposable.Parent)parent).beforeTreeDispose();
       }
@@ -66,12 +66,12 @@ public class Disposer {
   private Disposer() {
   }
 
-  @NotNull
+  @Nonnull
   public static Disposable newDisposable() {
     return newDisposable(null);
   }
 
-  @NotNull
+  @Nonnull
   public static Disposable newDisposable(@Nullable final String debugName) {
     return new Disposable() {
       @Override
@@ -87,11 +87,11 @@ public class Disposer {
 
   private static final Map<String, Disposable> ourKeyDisposables = ContainerUtil.createConcurrentWeakMap();
 
-  public static void register(@NotNull Disposable parent, @NotNull Disposable child) {
+  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
     register(parent, child, null);
   }
 
-  public static void register(@NotNull Disposable parent, @NotNull Disposable child, @NonNls @Nullable final String key) {
+  public static void register(@Nonnull Disposable parent, @Nonnull Disposable child, @NonNls @Nullable final String key) {
     ourTree.register(parent, child);
 
     if (key != null) {
@@ -107,27 +107,27 @@ public class Disposer {
     }
   }
 
-  public static boolean isDisposed(@NotNull Disposable disposable) {
+  public static boolean isDisposed(@Nonnull Disposable disposable) {
     return ourTree.getDisposalInfo(disposable) != null;
   }
 
-  public static Disposable get(@NotNull String key) {
+  public static Disposable get(@Nonnull String key) {
     return ourKeyDisposables.get(key);
   }
 
-  public static void dispose(@NotNull Disposable disposable) {
+  public static void dispose(@Nonnull Disposable disposable) {
     dispose(disposable, true);
   }
 
-  public static void dispose(@NotNull Disposable disposable, boolean processUnregistered) {
+  public static void dispose(@Nonnull Disposable disposable, boolean processUnregistered) {
     ourTree.executeAll(disposable, ourDisposeAction, processUnregistered);
   }
 
-  public static void disposeChildAndReplace(@NotNull Disposable toDispose, @NotNull Disposable toReplace) {
+  public static void disposeChildAndReplace(@Nonnull Disposable toDispose, @Nonnull Disposable toReplace) {
     ourTree.executeChildAndReplace(toDispose, toReplace, ourDisposeAction);
   }
 
-  @NotNull
+  @Nonnull
   public static ObjectTree<Disposable> getTree() {
     return ourTree;
   }
@@ -162,7 +162,7 @@ public class Disposer {
     return ourDebugMode;
   }
 
-  public static void clearOwnFields(@Nullable Object object, @NotNull Condition<? super Field> selectCondition) {
+  public static void clearOwnFields(@Nullable Object object, @Nonnull Condition<? super Field> selectCondition) {
     if (object == null) return;
     for (Field each : ReflectionUtil.collectFields(object.getClass())) {
       if ((each.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) > 0) continue;
@@ -179,7 +179,7 @@ public class Disposer {
    * @return object registered on parentDisposable which is equal to object, or null if not found
    */
   @Nullable
-  public static <T extends Disposable> T findRegisteredObject(@NotNull Disposable parentDisposable, @NotNull T object) {
+  public static <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
     return ourTree.findRegisteredObject(parentDisposable, object);
   }
 }

@@ -17,32 +17,32 @@ package org.jetbrains.concurrency;
 
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 @Deprecated
 public class RejectedPromise<T> extends Promise<T> {
   private final Throwable error;
 
-  public RejectedPromise(@NotNull Throwable error) {
+  public RejectedPromise(@Nonnull Throwable error) {
     this.error = error;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> done(@NotNull Consumer<T> done) {
+  public Promise<T> done(@Nonnull Consumer<T> done) {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> processed(@NotNull AsyncPromise<T> fulfilled) {
+  public Promise<T> processed(@Nonnull AsyncPromise<T> fulfilled) {
     fulfilled.setError(error);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Promise<T> rejected(@NotNull Consumer<Throwable> rejected) {
+  public Promise<T> rejected(@Nonnull Consumer<Throwable> rejected) {
     if (!AsyncPromise.isObsolete(rejected)) {
       rejected.consume(error);
     }
@@ -50,26 +50,26 @@ public class RejectedPromise<T> extends Promise<T> {
   }
 
   @Override
-  public RejectedPromise<T> processed(@NotNull Consumer<T> processed) {
+  public RejectedPromise<T> processed(@Nonnull Consumer<T> processed) {
     processed.consume(null);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <SUB_RESULT> Promise<SUB_RESULT> then(@NotNull Function<T, SUB_RESULT> done) {
+  public <SUB_RESULT> Promise<SUB_RESULT> then(@Nonnull Function<T, SUB_RESULT> done) {
     //noinspection unchecked
     return (Promise<SUB_RESULT>)this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public State getState() {
     return State.REJECTED;
   }
 
   @Override
-  public void notify(@NotNull AsyncPromise<T> child) {
+  public void notify(@Nonnull AsyncPromise<T> child) {
     child.setError(error);
   }
 }

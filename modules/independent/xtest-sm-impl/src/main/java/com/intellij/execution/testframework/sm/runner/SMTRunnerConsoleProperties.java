@@ -43,8 +43,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.config.Storage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -53,7 +53,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SMTRunnerConsoleProperties extends TestConsoleProperties implements SMStacktraceParserEx {
   private final RunProfile myConfiguration;
-  @NotNull private final String myTestFrameworkName;
+  @Nonnull
+  private final String myTestFrameworkName;
   private final CompositeFilter myCustomFilter;
   private boolean myIdBasedTestTree = false;
   private boolean myPrintTestingStartedTime = true;
@@ -63,21 +64,21 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
    * @param testFrameworkName Prefix for storage which keeps runner settings. E.g. "RubyTestUnit"
    * @param executor
    */
-  public SMTRunnerConsoleProperties(@NotNull RunConfiguration config, @NotNull String testFrameworkName, @NotNull Executor executor) {
+  public SMTRunnerConsoleProperties(@Nonnull RunConfiguration config, @Nonnull String testFrameworkName, @Nonnull Executor executor) {
     this(config.getProject(), config, testFrameworkName, executor);
   }
 
-  public SMTRunnerConsoleProperties(@NotNull Project project,
-                                    @NotNull RunProfile config,
-                                    @NotNull String testFrameworkName,
-                                    @NotNull Executor executor) {
+  public SMTRunnerConsoleProperties(@Nonnull Project project,
+                                    @Nonnull RunProfile config,
+                                    @Nonnull String testFrameworkName,
+                                    @Nonnull Executor executor) {
     super(getStorage(testFrameworkName), project, executor);
     myConfiguration = config;
     myTestFrameworkName = testFrameworkName;
     myCustomFilter = new CompositeFilter(project);
   }
 
-  @NotNull
+  @Nonnull
   private static Storage.PropertiesComponentStorage getStorage(String testFrameworkName) {
     return new Storage.PropertiesComponentStorage(testFrameworkName + "Support.", PropertiesComponent.getInstance());
   }
@@ -111,13 +112,13 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
 
   @Nullable
   @Override
-  public Navigatable getErrorNavigatable(@NotNull Location<?> location, @NotNull String stacktrace) {
+  public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
     return getErrorNavigatable(location.getProject(), stacktrace);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Navigatable getErrorNavigatable(@NotNull final Project project, final @NotNull String stacktrace) {
+  public Navigatable getErrorNavigatable(@Nonnull final Project project, final @Nonnull String stacktrace) {
     if (myCustomFilter.isEmpty()) {
       return null;
     }
@@ -168,9 +169,9 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     myCustomFilter.addFilter(filter);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
-  protected Navigatable findSuitableNavigatableForLine(@NotNull Project project, @NotNull VirtualFile file, int line) {
+  protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
     // lets find first non-ws psi element
 
     final Document doc = FileDocumentManager.getInstance().getDocument(file);
@@ -196,12 +197,12 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public SMTestLocator getTestLocator() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public TestProxyFilterProvider getFilterProvider() {
     return null;
   }
@@ -211,7 +212,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public String getTestFrameworkName() {
     return myTestFrameworkName;
   }

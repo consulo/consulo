@@ -22,15 +22,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.intellij.util.ObjectUtils.assertNotNull;
 
 public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     ToolWindow toolWindow = assertNotNull(getToolWindow(project));
     final ChangesViewContentManager changesViewContentManager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
@@ -52,17 +52,17 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
   }
 
   @Nullable
-  private static ToolWindow getToolWindow(@Nullable Project project) {
+  private static ToolWindow getToolWindow(@javax.annotation.Nullable Project project) {
     if (project == null) return null;
     return ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabledAndVisible(getToolWindow(e.getProject()) != null);
   }
 
-  @NotNull
+  @Nonnull
   protected abstract String getTabName();
 }

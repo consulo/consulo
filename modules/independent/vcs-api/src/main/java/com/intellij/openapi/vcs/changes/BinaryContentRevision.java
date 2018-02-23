@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.openapi.vcs.VcsException;
 
 /**

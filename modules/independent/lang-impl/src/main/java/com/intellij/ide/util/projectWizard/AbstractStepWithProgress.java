@@ -29,7 +29,7 @@ import com.intellij.util.concurrency.SwingWorker;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +109,7 @@ public abstract class AbstractStepWithProgress<Result> extends ModuleWizardStep 
   }
   
   
-  public void updateStep(@NotNull WizardContext wizardContext) {
+  public void updateStep(@Nonnull WizardContext wizardContext) {
     if (shouldRunProgress()) {
       runProgress();
     }
@@ -175,7 +175,7 @@ public abstract class AbstractStepWithProgress<Result> extends ModuleWizardStep 
     myPanel.revalidate();
   }
 
-  public boolean validate(@NotNull WizardContext wizardContext) throws ConfigurationException {
+  public boolean validate(@Nonnull WizardContext wizardContext) throws ConfigurationException {
     if (isProgressRunning()) {
       final int answer = Messages.showOkCancelDialog(getComponent(), myPromptStopSearch,
                                              IdeBundle.message("title.question"), IdeBundle.message("action.continue.searching"), IdeBundle.message("action.stop.searching"), Messages.getWarningIcon());
@@ -187,7 +187,7 @@ public abstract class AbstractStepWithProgress<Result> extends ModuleWizardStep 
     return true;
   }
 
-  public void onStepLeaving(@NotNull WizardContext wizardContext) {
+  public void onStepLeaving(@Nonnull WizardContext wizardContext) {
     if (isProgressRunning()) {
       cancelSearch();
     }

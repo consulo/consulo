@@ -16,12 +16,12 @@
 package com.intellij.diff.chains;
 
 import com.intellij.openapi.util.UserDataHolder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public interface DiffRequestChain extends UserDataHolder {
-  @NotNull
+  @Nonnull
   List<? extends DiffRequestProducer> getRequests();
 
   int getIndex();

@@ -18,7 +18,7 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import consulo.web.gwt.client.util.GwtUIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
  * @since 26-Oct-17
  */
 public class GwtWrappedLayout extends SimplePanel {
-  public void build(@NotNull List<Widget> widgets) {
+  public void build(@Nonnull List<Widget> widgets) {
     if(widgets.isEmpty()) {
       setWidget(null);
     }

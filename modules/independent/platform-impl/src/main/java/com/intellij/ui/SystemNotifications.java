@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author mike
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class SystemNotifications {
   private static final SystemNotifications NULL = new SystemNotifications() {
     @Override
-    public void notify(@NotNull String notificationName, @NotNull String title, @NotNull String text) { }
+    public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) { }
   };
 
   public static SystemNotifications getInstance() {
@@ -38,5 +38,5 @@ public abstract class SystemNotifications {
     return true;
   }
 
-  public abstract void notify(@NotNull String notificationName, @NotNull String title, @NotNull String text);
+  public abstract void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text);
 }

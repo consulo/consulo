@@ -15,7 +15,7 @@
  */
 package consulo.ide.ui.laf.modern;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -72,7 +72,7 @@ public class ModernTextAreaUI extends BasicTextAreaUI implements ModernTextBorde
     return myFocused;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MouseEnterHandler getMouseEnterHandler() {
     return myMouseEnterHandler;

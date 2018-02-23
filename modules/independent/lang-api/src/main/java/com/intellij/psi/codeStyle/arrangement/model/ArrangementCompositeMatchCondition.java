@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.model;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -32,36 +32,37 @@ import java.util.Set;
  */
 public class ArrangementCompositeMatchCondition implements ArrangementMatchCondition {
 
-  @NotNull private final Set<ArrangementMatchCondition> myOperands = new HashSet<ArrangementMatchCondition>();
+  @Nonnull
+  private final Set<ArrangementMatchCondition> myOperands = new HashSet<ArrangementMatchCondition>();
 
   public ArrangementCompositeMatchCondition() {
   }
 
-  public ArrangementCompositeMatchCondition(@NotNull Collection<? extends ArrangementMatchCondition> conditions) {
+  public ArrangementCompositeMatchCondition(@Nonnull Collection<? extends ArrangementMatchCondition> conditions) {
     myOperands.addAll(conditions);
   }
 
-  @NotNull
+  @Nonnull
   public Set<ArrangementMatchCondition> getOperands() {
     return myOperands;
   }
 
-  @NotNull
-  public ArrangementCompositeMatchCondition addOperand(@NotNull ArrangementMatchCondition condition) {
+  @Nonnull
+  public ArrangementCompositeMatchCondition addOperand(@Nonnull ArrangementMatchCondition condition) {
     myOperands.add(condition);
     return this;
   }
 
-  public void removeOperand(@NotNull ArrangementMatchCondition condition) {
+  public void removeOperand(@Nonnull ArrangementMatchCondition condition) {
     myOperands.remove(condition);
   }
   
   @Override
-  public void invite(@NotNull ArrangementMatchConditionVisitor visitor) {
+  public void invite(@Nonnull ArrangementMatchConditionVisitor visitor) {
     visitor.visit(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ArrangementCompositeMatchCondition clone() {
     ArrangementCompositeMatchCondition result = new ArrangementCompositeMatchCondition();

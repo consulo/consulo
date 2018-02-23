@@ -21,7 +21,7 @@ import com.intellij.ide.structureView.ModelListener;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,13 +37,13 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public StructureViewTreeElement getRoot() {
     return myModel.getRoot();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Grouper[] getGroupers() {
     ArrayList<TreeAction> filtered = filterActive(myModel.getGroupers());
     return filtered.toArray(new Grouper[filtered.size()]);
@@ -70,14 +70,14 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Sorter[] getSorters() {
     ArrayList<TreeAction> filtered = filterActive(myModel.getSorters());
     return filtered.toArray(new Sorter[filtered.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Filter[] getFilters() {
     ArrayList<TreeAction> filtered = filterActive(myModel.getFilters());
     return filtered.toArray(new Filter[filtered.size()]);
@@ -88,7 +88,7 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
     return myModel.getCurrentEditorElement();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     if (myModel instanceof ProvidingTreeModel) {
@@ -146,7 +146,7 @@ public class TreeModelWrapper implements StructureViewModel, ProvidingTreeModel 
   }
 
   @Override
-  public boolean isEnabled(@NotNull NodeProvider provider) {
+  public boolean isEnabled(@Nonnull NodeProvider provider) {
     return myStructureView.isActionActive(provider.getName());
   }
 }

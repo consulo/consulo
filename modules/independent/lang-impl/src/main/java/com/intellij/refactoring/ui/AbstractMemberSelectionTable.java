@@ -31,8 +31,8 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.ide.IconDescriptorUpdaters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -215,7 +215,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
 
     @Override
-    public int checkForProblems(@NotNull M member) {
+    public int checkForProblems(@Nonnull M member) {
       return OK;
     }
 

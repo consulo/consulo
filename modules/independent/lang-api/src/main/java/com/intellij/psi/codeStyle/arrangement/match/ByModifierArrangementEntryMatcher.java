@@ -20,7 +20,7 @@ import com.intellij.psi.codeStyle.arrangement.ModifierAwareArrangementEntry;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -31,18 +31,19 @@ import java.util.Set;
  */
 public class ByModifierArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @NotNull private final Set<ArrangementAtomMatchCondition> myModifiers = ContainerUtilRt.newHashSet();
+  @Nonnull
+  private final Set<ArrangementAtomMatchCondition> myModifiers = ContainerUtilRt.newHashSet();
 
-  public ByModifierArrangementEntryMatcher(@NotNull ArrangementAtomMatchCondition interestedModifier) {
+  public ByModifierArrangementEntryMatcher(@Nonnull ArrangementAtomMatchCondition interestedModifier) {
     myModifiers.add(interestedModifier);
   }
 
-  public ByModifierArrangementEntryMatcher(@NotNull Collection<ArrangementAtomMatchCondition> interestedModifiers) {
+  public ByModifierArrangementEntryMatcher(@Nonnull Collection<ArrangementAtomMatchCondition> interestedModifiers) {
     myModifiers.addAll(interestedModifiers);
   }
 
   @Override
-  public boolean isMatched(@NotNull ArrangementEntry entry) {
+  public boolean isMatched(@Nonnull ArrangementEntry entry) {
     if (entry instanceof ModifierAwareArrangementEntry) {
       final Set<ArrangementSettingsToken> modifiers = ((ModifierAwareArrangementEntry)entry).getModifiers();
       for (ArrangementAtomMatchCondition condition : myModifiers) {

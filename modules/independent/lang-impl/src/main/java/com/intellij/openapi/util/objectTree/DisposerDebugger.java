@@ -44,8 +44,8 @@ import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -258,13 +258,13 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
     }
 
     @Override
-    public void objectRegistered(@NotNull Object node) {
+    public void objectRegistered(@Nonnull Object node) {
       queueUpdate();
     }
 
 
     @Override
-    public void objectExecuted(@NotNull Object node) {
+    public void objectExecuted(@Nonnull Object node) {
       queueUpdate();
     }
 
@@ -354,7 +354,7 @@ public class DisposerDebugger implements UiDebuggerExtension, Disposable {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Collection<? extends AbstractTreeNode> getChildren() {
       final ObjectNode value = getValue();
       if (value != null) {

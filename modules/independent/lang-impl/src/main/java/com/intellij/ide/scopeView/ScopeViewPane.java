@@ -45,7 +45,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -108,7 +108,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return ID;
   }
@@ -135,7 +135,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String[] getSubIds() {
     NamedScope[] scopes = myDependencyValidationManager.getScopes();
     scopes = ArrayUtil.mergeArrays(scopes, myNamedScopeManager.getScopes());
@@ -149,8 +149,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  @NotNull
-  public String getPresentableSubIdName(@NotNull final String subId) {
+  @Nonnull
+  public String getPresentableSubIdName(@Nonnull final String subId) {
     return subId;
   }
 
@@ -241,7 +241,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   }
 
   @Override
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     final Object data = super.getData(dataId);
     if (data != null) {
       return data;
@@ -249,9 +249,9 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     return myViewPanel != null ? myViewPanel.getData(dataId) : null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ActionCallback getReady(@NotNull Object requestor) {
+  public ActionCallback getReady(@Nonnull Object requestor) {
     final ActionCallback callback = myViewPanel.getActionCallback();
     return myViewPanel == null ? new ActionCallback.Rejected() :
            callback != null ? callback : new ActionCallback.Done();

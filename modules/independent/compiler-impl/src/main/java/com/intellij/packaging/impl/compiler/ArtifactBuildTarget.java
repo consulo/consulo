@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.compiler;
 
 import com.intellij.openapi.compiler.generic.BuildTarget;
 import com.intellij.packaging.artifacts.Artifact;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -33,7 +33,7 @@ public class ArtifactBuildTarget extends BuildTarget {
     return myArtifact;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myArtifact.getName();

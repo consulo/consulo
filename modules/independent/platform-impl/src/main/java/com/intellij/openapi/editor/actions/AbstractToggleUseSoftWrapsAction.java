@@ -26,8 +26,8 @@ import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -49,13 +49,13 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
    * @param global            indicates if soft wraps should be changed for the current editor only or for the all editors
    *                          used at the target appliance place
    */
-  public AbstractToggleUseSoftWrapsAction(@NotNull SoftWrapAppliancePlaces appliancePlace, boolean global) {
+  public AbstractToggleUseSoftWrapsAction(@Nonnull SoftWrapAppliancePlaces appliancePlace, boolean global) {
     myAppliancePlace = appliancePlace;
     myGlobal = global;
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (myGlobal) {
       Editor editor = getEditor(e);
       if (editor != null) {
@@ -86,7 +86,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     toggleSoftWraps(editor, myGlobal ? myAppliancePlace : null, state);
   }
 
-  public static void toggleSoftWraps(@NotNull Editor editor, @Nullable SoftWrapAppliancePlaces places, boolean state) {
+  public static void toggleSoftWraps(@Nonnull Editor editor, @Nullable SoftWrapAppliancePlaces places, boolean state) {
     Point point = editor.getScrollingModel().getVisibleArea().getLocation();
     LogicalPosition anchorPosition = editor.xyToLogicalPosition(point);
     int intraLineShift = point.y - editor.logicalPositionToXY(anchorPosition).y;

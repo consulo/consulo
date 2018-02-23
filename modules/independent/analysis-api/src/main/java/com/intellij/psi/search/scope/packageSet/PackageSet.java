@@ -17,13 +17,13 @@ package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface PackageSet {
-  boolean contains(@NotNull PsiFile file, NamedScopesHolder holder);
-  @NotNull
+  boolean contains(@Nonnull PsiFile file, NamedScopesHolder holder);
+  @Nonnull
   PackageSet createCopy();
-  @NonNls @NotNull
+  @NonNls @Nonnull
   String getText();
   int getNodePriority();
 }

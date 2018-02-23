@@ -30,8 +30,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -69,7 +69,7 @@ public class SdkConfigurationUtil {
     return descriptor;
   }
 
-  public static void addSdk(@NotNull final Sdk sdk) {
+  public static void addSdk(@Nonnull final Sdk sdk) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
@@ -178,7 +178,7 @@ public class SdkConfigurationUtil {
     return newSdkName;
   }
 
-  public static void selectSdkHome(final SdkType sdkType, @NotNull final Consumer<String> consumer) {
+  public static void selectSdkHome(final SdkType sdkType, @Nonnull final Consumer<String> consumer) {
     final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       Sdk sdk = SdkTable.getInstance().findMostRecentSdkOfType(sdkType);

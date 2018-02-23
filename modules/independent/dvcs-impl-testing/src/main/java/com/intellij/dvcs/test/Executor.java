@@ -23,7 +23,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class Executor {
     log("cd " + shortenPath(absolutePath));
   }
 
-  public static void debug(@NotNull String msg) {
+  public static void debug(@Nonnull String msg) {
     if (!StringUtil.isEmptyOrSpaces(msg)) {
       LOG.info(msg);
     }
@@ -130,19 +130,19 @@ public class Executor {
     }
   }
 
-  public static void overwrite(@NotNull String fileName, @NotNull String content) throws IOException {
+  public static void overwrite(@Nonnull String fileName, @Nonnull String content) throws IOException {
     overwrite(child(fileName), content);
   }
 
-  public static void overwrite(@NotNull File file, @NotNull String content) throws IOException {
+  public static void overwrite(@Nonnull File file, @Nonnull String content) throws IOException {
     FileUtil.writeToFile(file, content.getBytes(), false);
   }
 
-  public static void append(@NotNull File file, @NotNull String content) throws IOException {
+  public static void append(@Nonnull File file, @Nonnull String content) throws IOException {
     FileUtil.writeToFile(file, content.getBytes(), true);
   }
 
-  public static void append(@NotNull String fileName, @NotNull String content) throws IOException {
+  public static void append(@Nonnull String fileName, @Nonnull String content) throws IOException {
     append(child(fileName), content);
   }
 

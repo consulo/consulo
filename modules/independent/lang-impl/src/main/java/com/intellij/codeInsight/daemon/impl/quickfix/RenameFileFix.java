@@ -35,7 +35,7 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -50,25 +50,25 @@ public class RenameFileFix implements IntentionAction, LocalQuickFix {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return CodeInsightBundle.message("rename.file.fix");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return getText();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return CodeInsightBundle.message("rename.file.fix");
   }
 
   @Override
-  public void applyFix(@NotNull final Project project, @NotNull ProblemDescriptor descriptor) {
+  public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
     final PsiFile file = descriptor.getPsiElement().getContainingFile();
     if (isAvailable(project, null, file)) {
       new WriteCommandAction(project) {
@@ -81,7 +81,7 @@ public class RenameFileFix implements IntentionAction, LocalQuickFix {
   }
 
   @Override
-  public final boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     if (!file.isValid()) return false;
     VirtualFile vFile = file.getVirtualFile();
     if (vFile == null) return false;
@@ -93,7 +93,7 @@ public class RenameFileFix implements IntentionAction, LocalQuickFix {
 
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) {
     VirtualFile vFile = file.getVirtualFile();
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     FileDocumentManager.getInstance().saveDocument(document);

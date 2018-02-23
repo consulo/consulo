@@ -38,8 +38,8 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueTextRendererImpl;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.*;
@@ -55,7 +55,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   private static final int LINE_EXTENSIONS_MAX_COUNT = 200;
 
   @Override
-  public Collection<LineExtensionInfo> getLineExtensions(@NotNull Project project, @NotNull VirtualFile file, int lineNumber) {
+  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
     if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowValuesInline()) {
       return null;
     }

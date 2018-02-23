@@ -17,13 +17,13 @@
 package com.intellij.execution.impl;
 
 import com.intellij.execution.process.ProcessHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
 public abstract class ConsoleState {
   public abstract ConsoleState attachTo(ConsoleViewImpl console, ProcessHandler processHandler);
-  @NotNull
+  @Nonnull
   public abstract ConsoleState dispose();
 
   public boolean isFinished() {
@@ -37,7 +37,7 @@ public abstract class ConsoleState {
   public void sendUserInput(final String input) throws IOException {}
 
   public abstract static class NotStartedStated extends ConsoleState {
-    @NotNull
+    @Nonnull
     @Override
     public ConsoleState dispose() {
       // not disposable

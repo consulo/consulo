@@ -20,8 +20,8 @@ import com.vaadin.ui.Component;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
 import consulo.web.gwt.shared.ui.state.RootPanelState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,11 +48,11 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
     markAsDirty();
   }
 
-  public void setCenterComponent(@Nullable consulo.ui.Component centerComponent) {
+  public void setCenterComponent(@javax.annotation.Nullable consulo.ui.Component centerComponent) {
     setCenterComponent((Component)centerComponent);
   }
 
-  private void setCenterComponent(@Nullable Component centerComponent) {
+  private void setCenterComponent(@javax.annotation.Nullable Component centerComponent) {
     if (myCenterComponent != null) {
       removeComponent(myCenterComponent);
     }
@@ -94,7 +94,7 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
     return list.iterator();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public consulo.ui.Component getParentComponent() {
     return (consulo.ui.Component)getParent();
@@ -102,7 +102,7 @@ public class WGwtRootPanelImpl extends AbstractComponentContainer implements con
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
   }
 
   @Override

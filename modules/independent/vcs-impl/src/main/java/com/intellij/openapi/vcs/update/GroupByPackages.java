@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -28,7 +28,7 @@ public class GroupByPackages {
   private final Map<File, Collection<File>> myParentToChildrenMap = new HashMap<File, Collection<File>>();
   private final Collection<File> myRoots = new HashSet<File>();
 
-  public GroupByPackages(@NotNull Collection<File> files) {
+  public GroupByPackages(@Nonnull Collection<File> files) {
     for (File file : files) {
       process(file);
     }
@@ -47,7 +47,7 @@ public class GroupByPackages {
     myRoots.add(newRoot);
   }
 
-  private File splitRoot(@NotNull File oldRoot) {
+  private File splitRoot(@Nonnull File oldRoot) {
     List<File> children = getChildren(oldRoot);
     if (children.size() == 1) {
       return splitRoot(children.get(0));
@@ -55,7 +55,7 @@ public class GroupByPackages {
     return oldRoot;
   }
 
-  private void process(@NotNull final File file) {
+  private void process(@Nonnull final File file) {
     File f;
     File parent = file.getParentFile();
     for (f = file; parent != null; f = parent, parent = parent.getParentFile()) {
@@ -68,12 +68,12 @@ public class GroupByPackages {
     myRoots.add(f);
   }
 
-  @NotNull
+  @Nonnull
   public List<File> getRoots() {
     return new ArrayList<File>(myRoots);
   }
 
-  @NotNull
+  @Nonnull
   public List<File> getChildren(File file) {
     Collection<File> collection = myParentToChildrenMap.get(file);
     if (collection == null) {

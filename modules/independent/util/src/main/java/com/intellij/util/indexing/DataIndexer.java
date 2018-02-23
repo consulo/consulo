@@ -16,7 +16,7 @@
 
 package com.intellij.util.indexing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -25,6 +25,6 @@ import java.util.Map;
  *         Date: Dec 10, 2007
  */
 public interface DataIndexer<Key, Value, Data> {
-  @NotNull
+  @Nonnull
   Map<Key,Value> map(Data inputData);
 }

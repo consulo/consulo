@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class BackgroundTaskByVfsGeneratedSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@NotNull VirtualFile file, @NotNull Project project) {
+  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
     BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(project);
     for (BackgroundTaskByVfsChangeTask o : vfsChangeManager.getTasks()) {
       for (VirtualFile virtualFile : o.getGeneratedFiles()) {

@@ -46,7 +46,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -440,11 +440,11 @@ public class EditorOptionsPanel {
     return isModified;
   }
 
-  private static boolean isModified(@NotNull JTextField textField, @NotNull String value) {
+  private static boolean isModified(@Nonnull JTextField textField, @Nonnull String value) {
     return !StringUtil.equals(textField.getText().trim(), value);
   }
 
-  private static boolean isModified(@NotNull JTextField textField, int value, @NotNull UINumericRange range) {
+  private static boolean isModified(@Nonnull JTextField textField, int value, @Nonnull UINumericRange range) {
     try {
       return range.fit(Integer.parseInt(textField.getText().trim())) != value;
     }
@@ -453,7 +453,7 @@ public class EditorOptionsPanel {
     }
   }
 
-  private static boolean isModified(@NotNull JToggleButton toggleButton, boolean value) {
+  private static boolean isModified(@Nonnull JToggleButton toggleButton, boolean value) {
     return toggleButton.isSelected() != value;
   }
 
@@ -519,7 +519,7 @@ public class EditorOptionsPanel {
 
   public class MyConfigurable implements SearchableConfigurable {
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
       return "Editor.Behavior";
     }

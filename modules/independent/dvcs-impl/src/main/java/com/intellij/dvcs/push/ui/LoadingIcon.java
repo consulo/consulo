@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -34,11 +34,11 @@ class LoadingIcon extends JBImageIcon {
   private static final String LOADING_ICON = "/icons/loading.gif";
   private static final Logger LOG = Logger.getInstance(LoadingIcon.class);
 
-  LoadingIcon(@NotNull Image image) {
+  LoadingIcon(@Nonnull Image image) {
     super(image);
   }
 
-  @NotNull
+  @Nonnull
   static LoadingIcon create(int width, int height) {
     Image image = ImageLoader.loadFromResource(LOADING_ICON);
     if (image == null) {
@@ -48,21 +48,24 @@ class LoadingIcon extends JBImageIcon {
     return new LoadingIcon(image);
   }
 
-  @NotNull
+  @Nonnull
   static LoadingIcon createEmpty(int width, int height) {
     return new LoadingIcon(UIUtil.createImage(width, height, Transparency.TRANSLUCENT));
   }
 
-  void setObserver(@NotNull JTree tree, @NotNull TreeNode treeNode) {
+  void setObserver(@Nonnull JTree tree, @Nonnull TreeNode treeNode) {
     setImageObserver(new NodeImageObserver(tree, treeNode));
   }
 
   private static class NodeImageObserver implements ImageObserver {
-    @NotNull private final JTree myTree;
-    @NotNull private final DefaultTreeModel myModel;
-    @NotNull private final TreeNode myNode;
+    @Nonnull
+    private final JTree myTree;
+    @Nonnull
+    private final DefaultTreeModel myModel;
+    @Nonnull
+    private final TreeNode myNode;
 
-    NodeImageObserver(@NotNull JTree tree, @NotNull TreeNode node) {
+    NodeImageObserver(@Nonnull JTree tree, @Nonnull TreeNode node) {
       myTree = tree;
       myModel = (DefaultTreeModel)tree.getModel();
       myNode = node;

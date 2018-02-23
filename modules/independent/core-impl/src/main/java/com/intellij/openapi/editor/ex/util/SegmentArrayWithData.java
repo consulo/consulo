@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Expands {@link SegmentArray} contract in providing ability to attach additional <code>'short'</code> variable to target segment,
@@ -49,7 +49,7 @@ public class SegmentArrayWithData extends SegmentArray {
     super.remove(startIndex, endIndex);
   }
 
-  public void replace(int startIndex, int endIndex, @NotNull SegmentArrayWithData newData) {
+  public void replace(int startIndex, int endIndex, @Nonnull SegmentArrayWithData newData) {
     int oldLen = endIndex - startIndex;
     int newLen = newData.getSegmentCount();
 
@@ -70,18 +70,18 @@ public class SegmentArrayWithData extends SegmentArray {
   }
 
 
-  protected void replace(int startOffset, @NotNull SegmentArrayWithData data, int len) {
+  protected void replace(int startOffset, @Nonnull SegmentArrayWithData data, int len) {
     System.arraycopy(data.myData, 0, myData, startOffset, len);
     super.replace(startOffset, data, len);
   }
 
-  public void insert(@NotNull SegmentArrayWithData segmentArray, int startIndex) {
+  public void insert(@Nonnull SegmentArrayWithData segmentArray, int startIndex) {
     myData = insert(myData, segmentArray.myData, startIndex, segmentArray.getSegmentCount());
     super.insert(segmentArray, startIndex);
   }
 
-  @NotNull
-  private short[] insert(@NotNull short[] array, @NotNull short[] insertArray, int startIndex, int insertLength) {
+  @Nonnull
+  private short[] insert(@Nonnull short[] array, @Nonnull short[] insertArray, int startIndex, int insertLength) {
     short[] newArray = reallocateArray(array, mySegmentCount + insertLength);
     if (startIndex < mySegmentCount) {
       System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);
@@ -90,8 +90,8 @@ public class SegmentArrayWithData extends SegmentArray {
     return newArray;
   }
 
-  @NotNull
-  private short[] remove(@NotNull short[] array, int startIndex, int endIndex) {
+  @Nonnull
+  private short[] remove(@Nonnull short[] array, int startIndex, int endIndex) {
     if (endIndex < mySegmentCount) {
       System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
     }
@@ -111,8 +111,8 @@ public class SegmentArrayWithData extends SegmentArray {
     myData[index] = (short)data;
   }
 
-  @NotNull
-  private static short[] reallocateArray(@NotNull short[] array, int index) {
+  @Nonnull
+  private static short[] reallocateArray(@Nonnull short[] array, int index) {
     if (index < array.length) return array;
 
     short[] newArray = new short[calcCapacity(array.length, index)];

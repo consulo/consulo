@@ -17,8 +17,8 @@ package com.intellij.psi.codeStyle.arrangement.std;
 
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -32,9 +32,9 @@ import java.awt.*;
  */
 public interface ArrangementColorsAware {
   
-  @Nullable
-  TextAttributes getTextAttributes(@NotNull EditorColorsScheme scheme, @NotNull ArrangementSettingsToken token, boolean selected);
+  @javax.annotation.Nullable
+  TextAttributes getTextAttributes(@Nonnull EditorColorsScheme scheme, @Nonnull ArrangementSettingsToken token, boolean selected);
   
   @Nullable
-  Color getBorderColor(@NotNull EditorColorsScheme scheme, boolean selected);
+  Color getBorderColor(@Nonnull EditorColorsScheme scheme, boolean selected);
 }

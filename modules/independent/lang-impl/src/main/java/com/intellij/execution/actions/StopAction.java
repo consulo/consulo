@@ -36,8 +36,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.IconUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -209,7 +209,7 @@ class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(@Nullable Project project) {
     return Collections.emptyList();//Don't confuse users with 'Stop Everything' toolbar button
     //IdeFrame frame = ((WindowManagerEx)WindowManager.getInstance()).findFrameFor(project);
@@ -260,7 +260,7 @@ class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
   }
 
   @Nullable
-  static RunContentDescriptor getRecentlyStartedContentDescriptor(@NotNull DataContext dataContext) {
+  static RunContentDescriptor getRecentlyStartedContentDescriptor(@Nonnull DataContext dataContext) {
     final RunContentDescriptor contentDescriptor = dataContext.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
     if (contentDescriptor != null) {
       // toolwindow case
@@ -273,7 +273,7 @@ class StopAction extends DumbAwareAction implements AnAction.TransparentUpdate {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static List<RunContentDescriptor> getActiveStoppableDescriptors(final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) {

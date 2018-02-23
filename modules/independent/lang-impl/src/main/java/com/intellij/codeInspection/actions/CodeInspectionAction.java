@@ -38,7 +38,7 @@ import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +59,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
   }
 
   @Override
-  protected void analyze(@NotNull Project project, @NotNull AnalysisScope scope) {
+  protected void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope) {
     try {
       runInspections(project, scope);
     }
@@ -99,7 +99,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
   }
 
   @Override
-  protected JComponent getAdditionalActionSettings(@NotNull final Project project, final BaseAnalysisActionDialog dialog) {
+  protected JComponent getAdditionalActionSettings(@Nonnull final Project project, final BaseAnalysisActionDialog dialog) {
     final AdditionalPanel panel = new AdditionalPanel();
     final InspectionManagerEx manager = (InspectionManagerEx)InspectionManager.getInstance(project);
     final JComboBox profiles = panel.myBrowseProfilesCombo.getComboBox();

@@ -22,8 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,13 +44,13 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getIgnoredFilesList() {
     throw new IncorrectOperationException();
   }
 
   @Override
-  public void setIgnoredFilesList(@NotNull String list) {
+  public void setIgnoredFilesList(@Nonnull String list) {
   }
 
   @Override
@@ -63,13 +62,13 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getExtension(String fileName) {
     return "";
   }
 
   @Override
-  public void registerFileType(@NotNull FileType type, @NotNull List<FileNameMatcher> defaultAssociations) {
+  public void registerFileType(@Nonnull FileType type, @Nonnull List<FileNameMatcher> defaultAssociations) {
   }
 
   @Override
@@ -77,42 +76,42 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  @NotNull
-  public FileType getFileTypeByFileName(@NotNull String fileName) {
+  @Nonnull
+  public FileType getFileTypeByFileName(@Nonnull String fileName) {
     return fileType;
   }
 
   @Override
-  @NotNull
-  public FileType getFileTypeByFile(@NotNull VirtualFile file) {
+  @Nonnull
+  public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
     return fileType;
   }
 
   @Override
-  @NotNull
-  public FileType getFileTypeByExtension(@NotNull String extension) {
+  @Nonnull
+  public FileType getFileTypeByExtension(@Nonnull String extension) {
     return fileType;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileType[] getRegisteredFileTypes() {
     return FileType.EMPTY_ARRAY;
   }
 
   @Override
-  public boolean isFileIgnored(@NotNull CharSequence name) {
+  public boolean isFileIgnored(@Nonnull CharSequence name) {
     return false;
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @NotNull VirtualFile file) {
+  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
   }
 
   @Override
-  @NotNull
-  public String[] getAssociatedExtensions(@NotNull FileType type) {
+  @Nonnull
+  public String[] getAssociatedExtensions(@Nonnull FileType type) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
@@ -121,40 +120,40 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  public void addFileTypeListener(@NotNull FileTypeListener listener) {
+  public void addFileTypeListener(@Nonnull FileTypeListener listener) {
   }
 
   @Override
-  public void removeFileTypeListener(@NotNull FileTypeListener listener) {
+  public void removeFileTypeListener(@Nonnull FileTypeListener listener) {
   }
 
   @Override
-  public FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file) {
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file) {
     return file.getFileType();
   }
 
   @Override
-  public FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @NotNull Project project) {
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project) {
     return getKnownFileTypeOrAssociate(file);
   }
 
   @Override
-  @NotNull
-  public List<FileNameMatcher> getAssociations(@NotNull FileType type) {
+  @Nonnull
+  public List<FileNameMatcher> getAssociations(@Nonnull FileType type) {
     return Collections.emptyList();
   }
 
   @Override
-  public void associate(@NotNull FileType type, @NotNull FileNameMatcher matcher) {
+  public void associate(@Nonnull FileType type, @Nonnull FileNameMatcher matcher) {
   }
 
   @Override
-  public void removeAssociation(@NotNull FileType type, @NotNull FileNameMatcher matcher) {
+  public void removeAssociation(@Nonnull FileType type, @Nonnull FileNameMatcher matcher) {
   }
 
   @Override
-  @NotNull
-  public FileType getStdFileType(@NotNull @NonNls final String fileTypeName) {
+  @Nonnull
+  public FileType getStdFileType(@Nonnull @NonNls final String fileTypeName) {
     if ("ARCHIVE".equals(fileTypeName) || "CLASS".equals(fileTypeName)) return UnknownFileType.INSTANCE;
     if ("PLAIN_TEXT".equals(fileTypeName)) return PlainTextFileType.INSTANCE;
     if ("JAVA".equals(fileTypeName)) return loadFileTypeSafe("com.intellij.ide.highlighter.JavaFileType", fileTypeName);
@@ -179,17 +178,17 @@ public class MockFileTypeManager extends FileTypeManagerEx {
   }
 
   @Override
-  public boolean isFileOfType(@NotNull VirtualFile file, @NotNull FileType type) {
+  public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType detectFileTypeFromContent(@NotNull VirtualFile file) {
+  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
     return UnknownFileType.INSTANCE;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public FileType findFileTypeByName(String fileTypeName) {
     return null;

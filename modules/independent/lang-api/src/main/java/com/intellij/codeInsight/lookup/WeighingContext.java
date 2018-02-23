@@ -16,16 +16,16 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.completion.PrefixMatcher;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface WeighingContext {
-  @NotNull
-  String itemPattern(@NotNull LookupElement element);
+  @Nonnull
+  String itemPattern(@Nonnull LookupElement element);
 
-  @NotNull
-  PrefixMatcher itemMatcher(@NotNull LookupElement item);
+  @Nonnull
+  PrefixMatcher itemMatcher(@Nonnull LookupElement item);
 
 }

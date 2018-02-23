@@ -27,8 +27,8 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class StatisticsWeigher extends CompletionWeigher {
   private static final Key<StatisticsInfo> BASE_STATISTICS_INFO = Key.create("Base statistics info");
 
   @Override
-  public Comparable weigh(@NotNull final LookupElement item, @NotNull final CompletionLocation location) {
+  public Comparable weigh(@Nonnull final LookupElement item, @Nonnull final CompletionLocation location) {
     throw new UnsupportedOperationException();
   }
 
@@ -56,7 +56,7 @@ public class StatisticsWeigher extends CompletionWeigher {
     }
 
     @Override
-    public void addElement(@NotNull LookupElement element, @NotNull ProcessingContext context) {
+    public void addElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
       StatisticsInfo baseInfo = getBaseStatisticsInfo(element, myLocation);
       int weight = weigh(baseInfo);
       if (weight != 0) {
@@ -69,9 +69,9 @@ public class StatisticsWeigher extends CompletionWeigher {
       super.addElement(element, context);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Iterable<LookupElement> classify(@NotNull Iterable<LookupElement> source, @NotNull final ProcessingContext context) {
+    public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull final ProcessingContext context) {
       List<LookupElement> initialList = getInitialNoStatElements(source, context);
       Iterable<LookupElement> rest = withoutInitial(source, initialList);
       Collection<List<LookupElement>> byWeight = buildMapByWeight(rest).descendingMap().values();
@@ -150,14 +150,14 @@ public class StatisticsWeigher extends CompletionWeigher {
       return minRecency == Integer.MAX_VALUE ? 0 : StatisticsManager.RECENCY_OBLIVION_THRESHOLD - minRecency;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<Pair<LookupElement, Object>> getSortingWeights(@NotNull Iterable<LookupElement> items, @NotNull final ProcessingContext context) {
+    public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull final ProcessingContext context) {
       return ContainerUtil.map(items, lookupElement -> new Pair<LookupElement, Object>(lookupElement, getWeight(lookupElement)));
     }
 
     @Override
-    public void removeElement(@NotNull LookupElement element, @NotNull ProcessingContext context) {
+    public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
       myWeights.remove(element);
       myNoStats.remove(element);
       super.removeElement(element, context);
@@ -168,7 +168,7 @@ public class StatisticsWeigher extends CompletionWeigher {
     item.putUserData(BASE_STATISTICS_INFO, null);
   }
 
-  @NotNull
+  @Nonnull
   public static StatisticsInfo getBaseStatisticsInfo(LookupElement item, @Nullable CompletionLocation location) {
     StatisticsInfo info = BASE_STATISTICS_INFO.get(item);
     if (info == null) {
@@ -180,8 +180,8 @@ public class StatisticsWeigher extends CompletionWeigher {
     return info;
   }
 
-  @NotNull
-  private static StatisticsInfo calcBaseInfo(LookupElement item, @NotNull CompletionLocation location) {
+  @Nonnull
+  private static StatisticsInfo calcBaseInfo(LookupElement item, @Nonnull CompletionLocation location) {
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread());
     }

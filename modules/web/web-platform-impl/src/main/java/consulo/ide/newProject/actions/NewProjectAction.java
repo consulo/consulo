@@ -18,7 +18,7 @@ package consulo.ide.newProject.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class NewProjectAction extends AnAction {
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     //TODO [VISTALL] stub until we not merge with desktop implementation
   }
 }

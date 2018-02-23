@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * @author irengrig
 */
 public class CommittedChangesFilterKey implements Comparable<CommittedChangesFilterKey> {
   private final CommittedChangesFilterPriority myPriority;
-  @NotNull
+  @Nonnull
   private final String myId;
 
-  public CommittedChangesFilterKey(@NotNull final String id, final CommittedChangesFilterPriority priority) {
+  public CommittedChangesFilterKey(@Nonnull final String id, final CommittedChangesFilterPriority priority) {
     myId = id;
     myPriority = priority;
   }

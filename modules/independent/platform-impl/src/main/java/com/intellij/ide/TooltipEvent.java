@@ -17,8 +17,8 @@ package com.intellij.ide;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.event.InputEvent;
 
 public class TooltipEvent {

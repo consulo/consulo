@@ -17,17 +17,18 @@ package com.intellij.diff.actions;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
 import static com.intellij.diff.util.DiffUtil.getLineCount;
 
 public class AllLinesIterator implements Iterator<Pair<Integer, CharSequence>> {
-  @NotNull private final Document myDocument;
+  @Nonnull
+  private final Document myDocument;
   private int myLine = 0;
 
-  public AllLinesIterator(@NotNull Document document) {
+  public AllLinesIterator(@Nonnull Document document) {
     myDocument = document;
   }
 

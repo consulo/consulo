@@ -16,15 +16,15 @@
 package com.intellij.util.xmlb;
 
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
 
 public class SkipEmptySerializationFilter extends SerializationFilterBase {
   @Override
-  protected boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue) {
+  protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {
     if (beanValue == null) {
       return false;
     }
@@ -44,7 +44,7 @@ public class SkipEmptySerializationFilter extends SerializationFilterBase {
     return true;
   }
 
-  protected ThreeState accepts(@NotNull String name, @NotNull Object beanValue) {
+  protected ThreeState accepts(@Nonnull String name, @Nonnull Object beanValue) {
     return ThreeState.UNSURE;
   }
 }

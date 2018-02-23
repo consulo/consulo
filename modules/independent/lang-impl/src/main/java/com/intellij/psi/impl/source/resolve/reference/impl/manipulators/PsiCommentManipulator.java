@@ -24,14 +24,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment> {
   @Override
-  public PsiComment handleContentChange(@NotNull PsiComment psiComment, @NotNull TextRange range, String newContent) throws IncorrectOperationException {
+  public PsiComment handleContentChange(@Nonnull PsiComment psiComment, @Nonnull TextRange range, String newContent) throws IncorrectOperationException {
     String oldText = psiComment.getText();
     String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
     FileType type = psiComment.getContainingFile().getFileType();
@@ -41,9 +41,9 @@ public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment
     return (PsiComment)psiComment.replace(newElement);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public TextRange getRangeInElement(@NotNull final PsiComment element) {
+  public TextRange getRangeInElement(@Nonnull final PsiComment element) {
     final String text = element.getText();
     if (text.startsWith("//")) return new TextRange(2, element.getTextLength());
     final int length = text.length();

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Max Medvedev
@@ -27,6 +27,6 @@ public interface PsiMirrorElement extends PsiElement, SyntheticElement {
   /**
    * @return prototype of this element
    */
-  @NotNull
+  @Nonnull
   PsiElement getPrototype();
 }

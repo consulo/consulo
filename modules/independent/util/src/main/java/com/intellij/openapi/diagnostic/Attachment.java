@@ -1,7 +1,7 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.UnsupportedEncodingException;
 
@@ -9,7 +9,7 @@ public class Attachment {
   public static Attachment[] EMPTY_ARRAY = new Attachment[0];
 
   public static ArrayFactory<Attachment> ARRAY_FACTORY = new ArrayFactory<Attachment>() {
-    @NotNull
+    @Nonnull
     @Override
     public Attachment[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new Attachment[count];
@@ -33,7 +33,7 @@ public class Attachment {
     myDisplayText = displayText;
   }
 
-  public Attachment(@NotNull String name, @NotNull Throwable throwable) {
+  public Attachment(@Nonnull String name, @Nonnull Throwable throwable) {
     this(name + ".trace", ExceptionUtil.getThrowableText(throwable));
   }
 

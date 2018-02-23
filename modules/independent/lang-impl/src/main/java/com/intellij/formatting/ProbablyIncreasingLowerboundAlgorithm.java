@@ -15,8 +15,8 @@
  */
 package com.intellij.formatting;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
   private int myLastCalculatedOffset = -1;
   private int myLastCalculatedAnswerIndex = -1;
 
-  public ProbablyIncreasingLowerboundAlgorithm(@NotNull List<T> blocks) {
+  public ProbablyIncreasingLowerboundAlgorithm(@Nonnull List<T> blocks) {
     myBlocks = blocks;
   }
 
@@ -45,7 +45,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
   }
 
   @Nullable
-  public AbstractBlockWrapper getLeftRespNeighbor(@NotNull AbstractBlockWrapper block) {
+  public AbstractBlockWrapper getLeftRespNeighbor(@Nonnull AbstractBlockWrapper block) {
     int index = getLeftRespNeighborIndex(block);
     if (index == -1) {
       return null;

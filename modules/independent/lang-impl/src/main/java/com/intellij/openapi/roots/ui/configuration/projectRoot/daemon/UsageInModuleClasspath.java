@@ -9,9 +9,9 @@ import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -20,12 +20,13 @@ import javax.swing.*;
 public class UsageInModuleClasspath extends ProjectStructureElementUsage {
   private final StructureConfigurableContext myContext;
   private final ModuleProjectStructureElement myContainingElement;
-  @Nullable private final DependencyScope myScope;
+  @Nullable
+  private final DependencyScope myScope;
   private final ProjectStructureElement mySourceElement;
   private final Module myModule;
 
-  public UsageInModuleClasspath(@NotNull StructureConfigurableContext context,
-                                @NotNull ModuleProjectStructureElement containingElement,
+  public UsageInModuleClasspath(@Nonnull StructureConfigurableContext context,
+                                @Nonnull ModuleProjectStructureElement containingElement,
                                 ProjectStructureElement sourceElement,
                                 @Nullable DependencyScope scope) {
     myContext = context;

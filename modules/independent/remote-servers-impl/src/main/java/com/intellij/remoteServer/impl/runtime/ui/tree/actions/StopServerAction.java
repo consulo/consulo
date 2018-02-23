@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServerNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,14 +14,14 @@ public class StopServerAction extends ServerActionBase {
     super("Stop/Disconnect", "Stop/disconnect from the selected server", AllIcons.Actions.Suspend);
   }
 
-  protected void performAction(@NotNull ServerNode serverNode) {
+  protected void performAction(@Nonnull ServerNode serverNode) {
     if (serverNode.isStopActionEnabled()) {
       serverNode.stopServer();
     }
   }
 
   @Override
-  protected boolean isEnabledForServer(@NotNull ServerNode serverNode) {
+  protected boolean isEnabledForServer(@Nonnull ServerNode serverNode) {
     return serverNode.isStopActionEnabled();
   }
 }

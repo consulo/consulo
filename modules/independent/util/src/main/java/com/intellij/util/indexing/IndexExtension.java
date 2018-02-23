@@ -18,7 +18,7 @@ package com.intellij.util.indexing;
 
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -26,16 +26,16 @@ import org.jetbrains.annotations.NotNull;
  * V class MUST have equals / hashcode properly defined!!!
  */
 public abstract class IndexExtension<K, V, I> {
-  @NotNull
+  @Nonnull
   public abstract ID<K, V> getName();
 
-  @NotNull
+  @Nonnull
   public abstract DataIndexer<K, V, I> getIndexer();
 
-  @NotNull
+  @Nonnull
   public abstract KeyDescriptor<K> getKeyDescriptor();
 
-  @NotNull
+  @Nonnull
   public abstract DataExternalizer<V> getValueExternalizer();
 
   public abstract int getVersion();

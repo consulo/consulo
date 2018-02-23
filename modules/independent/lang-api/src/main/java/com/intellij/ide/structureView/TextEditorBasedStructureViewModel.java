@@ -28,8 +28,8 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @param psiFile the file for which the structure view model is requested.
    */
-  protected TextEditorBasedStructureViewModel(@NotNull PsiFile psiFile) {
+  protected TextEditorBasedStructureViewModel(@Nonnull PsiFile psiFile) {
     this(PsiUtilBase.findEditor(psiFile), psiFile);
   }
 
@@ -86,7 +86,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public final void addEditorPositionListener(@NotNull FileEditorPositionListener listener) {
+  public final void addEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
     if (myEditor != null && myListeners.isEmpty()) {
       myEditorCaretListenerDisposable = Disposer.newDisposable();
       EditorFactory.getInstance().getEventMulticaster().addCaretListener(myEditorCaretListener, myEditorCaretListenerDisposable);
@@ -95,7 +95,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public final void removeEditorPositionListener(@NotNull FileEditorPositionListener listener) {
+  public final void removeEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
     myListeners.remove(listener);
     if (myEditor != null && myListeners.isEmpty()) {
       Disposer.dispose(myEditorCaretListenerDisposable);
@@ -154,12 +154,12 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public void addModelListener(@NotNull ModelListener modelListener) {
+  public void addModelListener(@Nonnull ModelListener modelListener) {
     myModelListeners.add(modelListener);
   }
 
   @Override
-  public void removeModelListener(@NotNull ModelListener modelListener) {
+  public void removeModelListener(@Nonnull ModelListener modelListener) {
     myModelListeners.remove(modelListener);
   }
 
@@ -170,7 +170,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @return the list of classes
    */
-  @NotNull
+  @Nonnull
   protected Class[] getSuitableClasses() {
     return ArrayUtil.EMPTY_CLASS_ARRAY;
   }
@@ -180,31 +180,31 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Grouper[] getGroupers() {
     return Grouper.EMPTY_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Sorter[] getSorters() {
     return Sorter.EMPTY_ARRAY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Filter[] getFilters() {
     return Filter.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean isEnabled(@NotNull NodeProvider provider) {
+  public boolean isEnabled(@Nonnull NodeProvider provider) {
     return false;
   }
 }

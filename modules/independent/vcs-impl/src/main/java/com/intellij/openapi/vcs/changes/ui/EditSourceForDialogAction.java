@@ -23,14 +23,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.pom.Navigatable;
 import com.intellij.util.OpenSourceUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public class EditSourceForDialogAction extends EditSourceAction {
-  @NotNull private final Component mySourceComponent;
+  @Nonnull
+  private final Component mySourceComponent;
 
-  public EditSourceForDialogAction(@NotNull Component component) {
+  public EditSourceForDialogAction(@Nonnull Component component) {
     super();
     Presentation presentation = getTemplatePresentation();
     presentation.setText(ActionsBundle.actionText("EditSource"));

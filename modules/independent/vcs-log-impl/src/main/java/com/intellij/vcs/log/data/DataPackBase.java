@@ -17,27 +17,29 @@ package com.intellij.vcs.log.data;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsLogProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
 class DataPackBase {
-  @NotNull protected final Map<VirtualFile, VcsLogProvider> myLogProviders;
-  @NotNull protected final RefsModel myRefsModel;
+  @Nonnull
+  protected final Map<VirtualFile, VcsLogProvider> myLogProviders;
+  @Nonnull
+  protected final RefsModel myRefsModel;
   protected final boolean myIsFull;
 
-  DataPackBase(@NotNull Map<VirtualFile, VcsLogProvider> providers, @NotNull RefsModel refsModel, boolean isFull) {
+  DataPackBase(@Nonnull Map<VirtualFile, VcsLogProvider> providers, @Nonnull RefsModel refsModel, boolean isFull) {
     myLogProviders = providers;
     myRefsModel = refsModel;
     myIsFull = isFull;
   }
 
-  @NotNull
+  @Nonnull
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myLogProviders;
   }
 
-  @NotNull
+  @Nonnull
   public RefsModel getRefsModel() {
     return myRefsModel;
   }

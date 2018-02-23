@@ -32,8 +32,8 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<NamedScope> getPredefinedScopes() {
     final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
     final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
@@ -90,7 +90,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  public NamedScope getPredefinedScope(@NotNull String name) {
+  public NamedScope getPredefinedScope(@Nonnull String name) {
     final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       final NamedScope scope = scopesProvider instanceof CustomScopesProviderEx
@@ -109,8 +109,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @Nullable
-  public DependencyRule getViolatorDependencyRule(@NotNull PsiFile from, @NotNull PsiFile to) {
+  @javax.annotation.Nullable
+  public DependencyRule getViolatorDependencyRule(@Nonnull PsiFile from, @Nonnull PsiFile to) {
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) return dependencyRule;
     }
@@ -119,8 +119,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @NotNull
-  public DependencyRule[] getViolatorDependencyRules(@NotNull PsiFile from, @NotNull PsiFile to) {
+  @Nonnull
+  public DependencyRule[] getViolatorDependencyRules(@Nonnull PsiFile from, @Nonnull PsiFile to) {
     ArrayList<DependencyRule> result = new ArrayList<DependencyRule>();
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) {
@@ -130,9 +130,9 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     return result.toArray(new DependencyRule[result.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public DependencyRule[] getApplicableRules(@NotNull PsiFile file) {
+  public DependencyRule[] getApplicableRules(@Nonnull PsiFile file) {
     ArrayList<DependencyRule> result = new ArrayList<DependencyRule>();
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isApplicable(file)) {
@@ -152,13 +152,13 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     mySkipImportStatements = skip;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<String, PackageSet> getUnnamedScopes() {
     return myUnnamedScopes;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DependencyRule[] getAllRules() {
     return myRules.toArray(new DependencyRule[myRules.size()]);
@@ -170,7 +170,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  public void addRule(@NotNull DependencyRule rule) {
+  public void addRule(@Nonnull DependencyRule rule) {
     appendUnnamedScope(rule.getFromScope());
     appendUnnamedScope(rule.getToScope());
     myRules.add(rule);
@@ -268,8 +268,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @Nullable
-  public NamedScope getScope(@Nullable final String name) {
+  @javax.annotation.Nullable
+  public NamedScope getScope(@javax.annotation.Nullable final String name) {
     final NamedScope scope = super.getScope(name);
     if (scope == null) {
       final PackageSet packageSet = myUnnamedScopes.get(name);
@@ -284,7 +284,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     return scope;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Element writeRule(DependencyRule rule) {
     NamedScope fromScope = rule.getFromScope();
     NamedScope toScope = rule.getToScope();
@@ -309,19 +309,19 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   static final class ScopesStateSplitter extends MainConfigurationStateSplitter {
-    @NotNull
+    @Nonnull
     @Override
-    protected String getSubStateFileName(@NotNull Element element) {
+    protected String getSubStateFileName(@Nonnull Element element) {
       return element.getAttributeValue("name");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getComponentStateFileName() {
       return "scope_settings";
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected String getSubStateTagName() {
       return "scope";
@@ -345,13 +345,13 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     });
   }
 
-  private static void addScopesToList(@NotNull final List<Pair<NamedScope, NamedScopesHolder>> scopeList, @NotNull final NamedScopesHolder holder) {
+  private static void addScopesToList(@Nonnull final List<Pair<NamedScope, NamedScopesHolder>> scopeList, @Nonnull final NamedScopesHolder holder) {
     for (NamedScope scope : holder.getScopes()) {
       scopeList.add(Pair.create(scope, holder));
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<Pair<NamedScope, NamedScopesHolder>> getScopeBasedHighlightingCachedScopes() {
     return myScopes;
   }

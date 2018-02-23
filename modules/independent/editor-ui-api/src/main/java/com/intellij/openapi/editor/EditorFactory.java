@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides services for creating document and editor instances.
@@ -36,7 +36,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    *
    * @return the editor factory instance.
    */
-  @NotNull
+  @Nonnull
   public static EditorFactory getInstance() {
     final Application application = ApplicationManager.getApplication();
     return application == null ? null : application.getComponent(EditorFactory.class);
@@ -48,8 +48,8 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param text the text to create the document from.
    * @return the document instance.
    */
-  @NotNull
-  public abstract Document createDocument(@NotNull CharSequence text);
+  @Nonnull
+  public abstract Document createDocument(@Nonnull CharSequence text);
 
   /**
    * Creates a document from the specified text specified as an array of characters.
@@ -57,8 +57,8 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param text the text to create the document from.
    * @return the document instance.
    */
-  @NotNull
-  public abstract Document createDocument(@NotNull char[] text);
+  @Nonnull
+  public abstract Document createDocument(@Nonnull char[] text);
 
   /**
    * Creates an editor for the specified document.
@@ -67,7 +67,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @return the editor instance.
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createEditor(@NotNull Document document);
+  public abstract Editor createEditor(@Nonnull Document document);
 
   /**
    * Creates a read-only editor for the specified document.
@@ -76,7 +76,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @return the editor instance.
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createViewer(@NotNull Document document);
+  public abstract Editor createViewer(@Nonnull Document document);
 
   /**
    * Creates an editor for the specified document associated with the specified project.
@@ -87,7 +87,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createEditor(@NotNull Document document, @Nullable Project project);
+  public abstract Editor createEditor(@Nonnull Document document, @javax.annotation.Nullable Project project);
 
   /**
    * Creates an editor for the specified document associated with the specified project.
@@ -100,7 +100,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createEditor(@NotNull Document document, Project project, @NotNull FileType fileType, boolean isViewer);
+  public abstract Editor createEditor(@Nonnull Document document, Project project, @Nonnull FileType fileType, boolean isViewer);
 
   /**
    * Creates an editor for the specified document associated with the specified project.
@@ -113,7 +113,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createEditor(@NotNull Document document, Project project, @NotNull VirtualFile file, boolean isViewer);
+  public abstract Editor createEditor(@Nonnull Document document, Project project, @Nonnull VirtualFile file, boolean isViewer);
 
   /**
    * Creates a read-only editor for the specified document associated with the specified project.
@@ -124,14 +124,14 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @see Editor#getProject()
    * @see #releaseEditor(Editor)
    */
-  public abstract Editor createViewer(@NotNull Document document, @Nullable Project project);
+  public abstract Editor createViewer(@Nonnull Document document, @javax.annotation.Nullable Project project);
 
   /**
    * Disposes of the specified editor instance.
    *
    * @param editor the editor instance to release.
    */
-  public abstract void releaseEditor(@NotNull Editor editor);
+  public abstract void releaseEditor(@Nonnull Editor editor);
 
   /**
    * Returns the list of editors for the specified document associated with the specified project.
@@ -141,8 +141,8 @@ public abstract class EditorFactory implements ApplicationComponent {
    *                 for this document should be returned.
    * @return the list of editors.
    */
-  @NotNull
-  public abstract Editor[] getEditors(@NotNull Document document, @Nullable Project project);
+  @Nonnull
+  public abstract Editor[] getEditors(@Nonnull Document document, @Nullable Project project);
 
   /**
    * Returns the list of all editors for the specified document.
@@ -150,15 +150,15 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param document the document for which editors are requested.
    * @return the list of editors.
    */
-  @NotNull
-  public abstract Editor[] getEditors(@NotNull Document document);
+  @Nonnull
+  public abstract Editor[] getEditors(@Nonnull Document document);
 
   /**
    * Returns the list of all currently open editors.
    *
    * @return the list of editors.
    */
-  @NotNull
+  @Nonnull
   public abstract Editor[] getAllEditors();
 
   /**
@@ -168,7 +168,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param listener the listener instance.
    * @deprecated use the {@link #addEditorFactoryListener(EditorFactoryListener, Disposable)} instead
    */
-  public abstract void addEditorFactoryListener(@NotNull EditorFactoryListener listener);
+  public abstract void addEditorFactoryListener(@Nonnull EditorFactoryListener listener);
 
   /**
    * Registers a listener for receiving notifications when editor instances are created and released
@@ -177,7 +177,7 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param listener         the listener instance.
    * @param parentDisposable the Disposable which triggers the removal of the listener
    */
-  public abstract void addEditorFactoryListener(@NotNull EditorFactoryListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addEditorFactoryListener(@Nonnull EditorFactoryListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Un-registers a listener for receiving notifications when editor instances are created
@@ -186,14 +186,14 @@ public abstract class EditorFactory implements ApplicationComponent {
    * @param listener the listener instance.
    * @deprecated you should have used the {@link #addEditorFactoryListener(EditorFactoryListener, Disposable)} instead
    */
-  public abstract void removeEditorFactoryListener(@NotNull EditorFactoryListener listener);
+  public abstract void removeEditorFactoryListener(@Nonnull EditorFactoryListener listener);
 
   /**
    * Returns the service for attaching event listeners to all editor instances.
    *
    * @return the event multicaster instance.
    */
-  @NotNull
+  @Nonnull
   public abstract EditorEventMulticaster getEventMulticaster();
 
   /**

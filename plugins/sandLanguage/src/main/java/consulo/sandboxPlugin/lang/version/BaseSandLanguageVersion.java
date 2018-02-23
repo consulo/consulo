@@ -30,8 +30,8 @@ import consulo.lang.LanguageVersionWithDefinition;
 import consulo.lang.LanguageVersionWithParsing;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.parser.SandParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +43,14 @@ import java.util.List;
 public abstract class BaseSandLanguageVersion extends LanguageVersion implements LanguageVersionWithDefinition, LanguageVersionWithParsing {
 
   private NotNullLazyValue<List<Pair<IElementType, IElementType>>> myValue = new NotNullLazyValue<List<Pair<IElementType, IElementType>>>() {
-    @NotNull
+    @Nonnull
     @Override
     protected List<Pair<IElementType, IElementType>> compute() {
       return createList();
     }
   };
   private NotNullLazyValue<TokenSet> myHighlightKeywords = new NotNullLazyValue<TokenSet>() {
-    @NotNull
+    @Nonnull
     @Override
     protected TokenSet compute() {
       List<Pair<IElementType, IElementType>> value = myValue.getValue();
@@ -66,7 +66,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
     super(name, name, SandLanguage.INSTANCE);
   }
 
-  @NotNull
+  @Nonnull
   public TokenSet getHighlightKeywords() {
     return myHighlightKeywords.getValue();
   }
@@ -75,7 +75,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
 
   public abstract FileType getFileType();
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiParser createParser() {
     return new SandParser(myValue.getValue());
@@ -98,7 +98,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
   }
 
   @Override
-  public boolean isMyFile(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+  public boolean isMyFile(@javax.annotation.Nullable Project project, @javax.annotation.Nullable VirtualFile virtualFile) {
     if (virtualFile == null) {
       return false;
     }

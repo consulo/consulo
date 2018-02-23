@@ -23,8 +23,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.ByteArrayCharSequence;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,11 +46,11 @@ public abstract class ArchiveHandler {
 
     /** @deprecated use {@link EntryInfo#EntryInfo(CharSequence, boolean, long, long, EntryInfo)} instead (to be removed in IDEA 16) */
     @SuppressWarnings("unused")
-    public EntryInfo(EntryInfo parent, @NotNull String shortName, boolean isDirectory, long length, long timestamp) {
+    public EntryInfo(EntryInfo parent, @Nonnull String shortName, boolean isDirectory, long length, long timestamp) {
       this(shortName, isDirectory, length, timestamp, parent);
     }
 
-    public EntryInfo(@NotNull CharSequence shortName, boolean isDirectory, long length, long timestamp, @Nullable EntryInfo parent) {
+    public EntryInfo(@Nonnull CharSequence shortName, boolean isDirectory, long length, long timestamp, @Nullable EntryInfo parent) {
       this.parent = parent;
       this.shortName = shortName;
       this.isDirectory = isDirectory;
@@ -64,17 +64,17 @@ public abstract class ArchiveHandler {
   private volatile Reference<Map<String, EntryInfo>> myEntries = new SoftReference<Map<String, EntryInfo>>(null);
   private boolean myCorrupted;
 
-  protected ArchiveHandler(@NotNull String path) {
+  protected ArchiveHandler(@Nonnull String path) {
     myPath = new File(path);
   }
 
-  @NotNull
+  @Nonnull
   public File getFile() {
     return myPath;
   }
 
   @Nullable
-  public FileAttributes getAttributes(@NotNull String relativePath) {
+  public FileAttributes getAttributes(@Nonnull String relativePath) {
     if (relativePath.isEmpty()) {
       FileAttributes attributes = FileSystemUtil.getAttributes(myPath);
       return attributes != null ? new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false) : null;
@@ -85,8 +85,8 @@ public abstract class ArchiveHandler {
     }
   }
 
-  @NotNull
-  public String[] list(@NotNull String relativePath) {
+  @Nonnull
+  public String[] list(@Nonnull String relativePath) {
     EntryInfo entry = getEntryInfo(relativePath);
     if (entry == null || !entry.isDirectory) return ArrayUtil.EMPTY_STRING_ARRAY;
 
@@ -104,11 +104,11 @@ public abstract class ArchiveHandler {
   }
 
   @Nullable
-  protected EntryInfo getEntryInfo(@NotNull String relativePath) {
+  protected EntryInfo getEntryInfo(@Nonnull String relativePath) {
     return getEntriesMap().get(relativePath);
   }
 
-  @NotNull
+  @Nonnull
   protected Map<String, EntryInfo> getEntriesMap() {
     Map<String, EntryInfo> map = SoftReference.dereference(myEntries);
     if (map == null) {
@@ -137,16 +137,16 @@ public abstract class ArchiveHandler {
     return map;
   }
 
-  @NotNull
+  @Nonnull
   protected abstract Map<String, EntryInfo> createEntriesMap() throws IOException;
 
-  @NotNull
+  @Nonnull
   protected EntryInfo createRootEntry() {
     return new EntryInfo("", true, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, null);
   }
 
-  @NotNull
-  protected EntryInfo getOrCreate(@NotNull Map<String, EntryInfo> map, @NotNull String entryName) {
+  @Nonnull
+  protected EntryInfo getOrCreate(@Nonnull Map<String, EntryInfo> map, @Nonnull String entryName) {
     EntryInfo entry = map.get(entryName);
     if (entry == null) {
       Pair<String, String> path = splitPath(entryName);
@@ -158,14 +158,14 @@ public abstract class ArchiveHandler {
     return entry;
   }
 
-  @NotNull
-  protected Pair<String, String> splitPath(@NotNull String entryName) {
+  @Nonnull
+  protected Pair<String, String> splitPath(@Nonnull String entryName) {
     int p = entryName.lastIndexOf('/');
     String parentName = p > 0 ? entryName.substring(0, p) : "";
     String shortName = p > 0 ? entryName.substring(p + 1) : entryName;
     return Pair.create(parentName, shortName);
   }
 
-  @NotNull
-  public abstract byte[] contentsToByteArray(@NotNull String relativePath) throws IOException;
+  @Nonnull
+  public abstract byte[] contentsToByteArray(@Nonnull String relativePath) throws IOException;
 }

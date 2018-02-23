@@ -27,7 +27,7 @@ import consulo.auth.ServiceAuthConfiguration;
 import consulo.auth.ServiceAuthEarlyAccessProgramDescriptor;
 import consulo.auth.ui.ServiceAuthDialog;
 import consulo.ide.eap.EarlyAccessProgramManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -42,7 +42,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (!EarlyAccessProgramManager.is(ServiceAuthEarlyAccessProgramDescriptor.class)) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
@@ -67,7 +67,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     ServiceAuthDialog dialog = new ServiceAuthDialog();
     dialog.show();
   }

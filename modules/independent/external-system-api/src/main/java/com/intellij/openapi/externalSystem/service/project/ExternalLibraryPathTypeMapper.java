@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.project;
 
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.roots.OrderRootType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Strategy for mapping {@link LibraryPathType external library path types} to {@link OrderRootType ide library path types}.
@@ -32,6 +32,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ExternalLibraryPathTypeMapper {
 
-  @NotNull
-  OrderRootType map(@NotNull LibraryPathType type);
+  @Nonnull
+  OrderRootType map(@Nonnull LibraryPathType type);
 }

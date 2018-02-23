@@ -32,9 +32,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import java.util.List;
 
 
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
-  @NotNull
+  @Nonnull
   public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
     return new CheckinHandler() {
       @Override

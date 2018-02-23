@@ -18,8 +18,8 @@ package com.intellij.lang.pratt;
 import com.intellij.lang.ITokenTypeRemapper;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -57,7 +57,7 @@ public abstract class PrattBuilder {
     return false;
   }
 
-  public boolean assertToken(IElementType type, @NotNull String errorMessage) {
+  public boolean assertToken(IElementType type, @Nonnull String errorMessage) {
     if (checkToken(type)) {
       return true;
     }
@@ -91,7 +91,7 @@ public abstract class PrattBuilder {
   @Nullable
   public abstract String getTokenText();
 
-  public abstract void reduce(@NotNull IElementType type);
+  public abstract void reduce(@Nonnull IElementType type);
 
   public ListIterator<IElementType> getBackResultIterator() {
     final List<IElementType> resultTypes = getResultTypes();

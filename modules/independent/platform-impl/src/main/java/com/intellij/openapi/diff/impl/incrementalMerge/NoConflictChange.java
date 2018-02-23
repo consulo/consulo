@@ -3,18 +3,18 @@ package com.intellij.openapi.diff.impl.incrementalMerge;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NoConflictChange extends TwoSideChange.SideChange<MergeNoConflict> {
   private static final Logger LOG = Logger.getInstance(NoConflictChange.class);
 
   private boolean myApplied;
 
-  public NoConflictChange(@NotNull MergeNoConflict twoSideChange,
-                          @NotNull FragmentSide mergeSide,
-                          @NotNull TextRange baseRange,
-                          @NotNull TextRange versionRange,
-                          @NotNull ChangeList changeList) {
+  public NoConflictChange(@Nonnull MergeNoConflict twoSideChange,
+                          @Nonnull FragmentSide mergeSide,
+                          @Nonnull TextRange baseRange,
+                          @Nonnull TextRange versionRange,
+                          @Nonnull ChangeList changeList) {
     super(twoSideChange, changeList, ChangeType.fromRanges(baseRange, versionRange), mergeSide, versionRange);
   }
 

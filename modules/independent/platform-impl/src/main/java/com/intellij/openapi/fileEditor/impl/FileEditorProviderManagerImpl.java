@@ -34,8 +34,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -49,16 +49,16 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   private final List<FileEditorProvider> myProviders = ContainerUtil.createConcurrentList();
 
-  public FileEditorProviderManagerImpl(@NotNull FileEditorProvider[] providers) {
+  public FileEditorProviderManagerImpl(@Nonnull FileEditorProvider[] providers) {
     Extensions.getRootArea().getExtensionPoint(FileEditorProvider.EP_FILE_EDITOR_PROVIDER)
             .addExtensionPointListener(new ExtensionPointListener<FileEditorProvider>() {
               @Override
-              public void extensionAdded(@NotNull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
+              public void extensionAdded(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
                 registerProvider(extension);
               }
 
               @Override
-              public void extensionRemoved(@NotNull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
+              public void extensionRemoved(@Nonnull final FileEditorProvider extension, @Nullable final PluginDescriptor pluginDescriptor) {
                 unregisterProvider(extension);
               }
             });
@@ -72,8 +72,8 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Override
-  @NotNull
-  public FileEditorProvider[] getProviders(@NotNull final Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public FileEditorProvider[] getProviders(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     // Collect all possible editors
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
@@ -102,7 +102,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   @Override
   @Nullable
-  public FileEditorProvider getProvider(@NotNull String editorTypeId) {
+  public FileEditorProvider getProvider(@Nonnull String editorTypeId) {
     for (FileEditorProvider provider : myProviders) {
       if (provider.getEditorTypeId().equals(editorTypeId)) {
         return provider;
@@ -111,7 +111,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return null;
   }
 
-  private void registerProvider(@NotNull FileEditorProvider provider) {
+  private void registerProvider(@Nonnull FileEditorProvider provider) {
     String editorTypeId = provider.getEditorTypeId();
     if (getProvider(editorTypeId) != null) {
       throw new IllegalArgumentException("attempt to register provider with non unique editorTypeId: " + editorTypeId);
@@ -119,7 +119,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     myProviders.add(provider);
   }
 
-  private void unregisterProvider(@NotNull FileEditorProvider provider) {
+  private void unregisterProvider(@Nonnull FileEditorProvider provider) {
     final boolean b = myProviders.remove(provider);
     assert b;
   }

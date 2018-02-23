@@ -19,7 +19,7 @@ import com.intellij.util.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,20 +30,20 @@ public abstract class StyleManagerImpl implements StyleManager {
 
   private EventDispatcher<StyleChangeListener> myEventDispatcher = EventDispatcher.create(StyleChangeListener.class);
 
-  @NotNull
+  @Nonnull
   @Override
   public Style getCurrentStyle() {
     return myCurrentStyle;
   }
 
   @Override
-  public void setCurrentStyle(@NotNull Style style) {
+  public void setCurrentStyle(@Nonnull Style style) {
     myCurrentStyle = (StyleImpl)style;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Runnable addChangeListener(@NotNull StyleChangeListener listener) {
+  public Runnable addChangeListener(@Nonnull StyleChangeListener listener) {
     myEventDispatcher.addListener(listener);
     return () -> myEventDispatcher.removeListener(listener);
   }

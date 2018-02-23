@@ -21,7 +21,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.concurrency.Semaphore;
 import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -79,13 +79,13 @@ public class TransferToEDTQueue<T> {
     }
   };
 
-  public TransferToEDTQueue(@NotNull @NonNls String name, @NotNull Processor<T> processor, @NotNull Condition<?> shutUpCondition) {
+  public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull Condition<?> shutUpCondition) {
     this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
   }
 
-  public TransferToEDTQueue(@NotNull @NonNls String name,
-                            @NotNull Processor<T> processor,
-                            @NotNull Condition<?> shutUpCondition,
+  public TransferToEDTQueue(@Nonnull @NonNls String name,
+                            @Nonnull Processor<T> processor,
+                            @Nonnull Condition<?> shutUpCondition,
                             int maxUnitOfWorkThresholdMs) {
     myName = name;
     myProcessor = processor;
@@ -93,11 +93,11 @@ public class TransferToEDTQueue<T> {
     myMaxUnitOfWorkThresholdMs = maxUnitOfWorkThresholdMs;
   }
 
-  public static TransferToEDTQueue<Runnable> createRunnableMerger(@NotNull @NonNls String name) {
+  public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name) {
     return createRunnableMerger(name, DEFAULT_THRESHOLD);
   }
 
-  public static TransferToEDTQueue<Runnable> createRunnableMerger(@NotNull @NonNls String name, int maxUnitOfWorkThresholdMs) {
+  public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name, int maxUnitOfWorkThresholdMs) {
     return new TransferToEDTQueue<Runnable>(name, new Processor<Runnable>() {
       @Override
       public boolean process(Runnable runnable) {
@@ -130,7 +130,7 @@ public class TransferToEDTQueue<T> {
     }
   }
 
-  public boolean offer(@NotNull T thing) {
+  public boolean offer(@Nonnull T thing) {
     synchronized (myQueue) {
       myQueue.addLast(thing);
     }
@@ -138,11 +138,11 @@ public class TransferToEDTQueue<T> {
     return true;
   }
 
-  public boolean offerIfAbsent(@NotNull T thing) {
+  public boolean offerIfAbsent(@Nonnull T thing) {
     return offerIfAbsent(thing, ContainerUtil.<T>canonicalStrategy());
   }
 
-  public boolean offerIfAbsent(@NotNull final T thing, @NotNull final Equality<T> equality) {
+  public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final Equality<T> equality) {
     synchronized (myQueue) {
       boolean absent = myQueue.process(new Processor<T>() {
         @Override
@@ -164,7 +164,7 @@ public class TransferToEDTQueue<T> {
     }
   }
 
-  protected void schedule(@NotNull Runnable updateRunnable) {
+  protected void schedule(@Nonnull Runnable updateRunnable) {
     //noinspection SSBasedInspection
     SwingUtilities.invokeLater(updateRunnable);
   }
@@ -183,7 +183,7 @@ public class TransferToEDTQueue<T> {
   }
 
   @TestOnly
-  @NotNull
+  @Nonnull
   public Collection<T> dump() {
     synchronized (myQueue) {
       return myQueue.toList();

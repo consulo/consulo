@@ -38,8 +38,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.ApplicationProperties;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -151,7 +151,7 @@ public class PluginManager extends PluginManagerCore {
         Notifications.Bus.notify(new Notification(message, message, pluginError, NotificationType.ERROR, new NotificationListener() {
           @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
           @Override
-          public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
             notification.expire();
 
             String description = event.getDescription();
@@ -205,7 +205,7 @@ public class PluginManager extends PluginManagerCore {
   }
 
   @Nullable
-  public static File getPluginPath(@NotNull Class<?> pluginClass) {
+  public static File getPluginPath(@Nonnull Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not plugin";
     PluginClassLoader classLoader = (PluginClassLoader)temp;
@@ -215,7 +215,7 @@ public class PluginManager extends PluginManagerCore {
     return plugin.getPath();
   }
 
-  public static void handleComponentError(@NotNull Throwable t, @Nullable String componentClassName, @Nullable ComponentConfig config) {
+  public static void handleComponentError(@Nonnull Throwable t, @Nullable String componentClassName, @Nullable ComponentConfig config) {
     if (t instanceof StartupAbortedException) {
       throw (StartupAbortedException)t;
     }

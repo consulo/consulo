@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.frame.presentation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Renders a value using default color. If you only need to show {@code value} and {@code type}
@@ -29,11 +29,11 @@ public class XRegularValuePresentation extends XValuePresentation {
   private final String myValue;
   private final String mySeparator;
 
-  public XRegularValuePresentation(@NotNull String value, @Nullable String type) {
+  public XRegularValuePresentation(@Nonnull String value, @Nullable String type) {
     this(value, type, DEFAULT_SEPARATOR);
   }
 
-  public XRegularValuePresentation(@NotNull String value, @Nullable String type, final @NotNull String separator) {
+  public XRegularValuePresentation(@Nonnull String value, @javax.annotation.Nullable String type, final @Nonnull String separator) {
     myValue = value;
     myType = type;
     mySeparator = separator;
@@ -43,14 +43,14 @@ public class XRegularValuePresentation extends XValuePresentation {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSeparator() {
     return mySeparator;
   }
 
   @Override
-  public void renderValue(@NotNull XValueTextRenderer renderer) {
+  public void renderValue(@Nonnull XValueTextRenderer renderer) {
     renderer.renderValue(myValue);
   }
 }

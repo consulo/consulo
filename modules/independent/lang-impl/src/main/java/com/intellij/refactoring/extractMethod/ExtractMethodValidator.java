@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.extractMethod;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author oleg

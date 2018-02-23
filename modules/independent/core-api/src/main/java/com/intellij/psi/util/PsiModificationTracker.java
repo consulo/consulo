@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * An interface used to support tracking of common PSI modifications. It has three main usage patterns:
@@ -100,7 +100,7 @@ public interface PsiModificationTracker extends ModificationTracker {
   /**
    * @return an object returning {@link #getOutOfCodeBlockModificationCount()}
    */
-  @NotNull
+  @Nonnull
   ModificationTracker getOutOfCodeBlockModificationTracker();
 
   /**
@@ -113,7 +113,7 @@ public interface PsiModificationTracker extends ModificationTracker {
   /**
    * @return an object returning {@link #getJavaStructureModificationCount()}
    */
-  @NotNull
+  @Nonnull
   ModificationTracker getJavaStructureModificationTracker();
 
   /**

@@ -18,8 +18,8 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -37,13 +37,13 @@ public class FakeRevision implements ContentRevision {
   public String getContent() { return null; }
 
   @Override
-  @NotNull
+  @Nonnull
   public FilePath getFile() {
     return myFile;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VcsRevisionNumber getRevisionNumber() {
     return VcsRevisionNumber.NULL;
   }

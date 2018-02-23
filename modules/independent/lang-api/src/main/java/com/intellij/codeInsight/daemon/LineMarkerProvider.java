@@ -19,8 +19,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.DeprecationInfo;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,13 +54,13 @@ public interface LineMarkerProvider {
    * </ul>
    * As a result, line marker icon would blink annoyingly.
    */
-  @Nullable
+  @javax.annotation.Nullable
   @RequiredReadAction
-  LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element);
+  LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element);
 
   @RequiredReadAction
   @Deprecated
   @DeprecationInfo(value = "Use #getLineMarkerInfo(PsiElement)")
-  default void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> result) {
+  default void collectSlowLineMarkers(@Nonnull List<PsiElement> elements, @Nonnull Collection<LineMarkerInfo> result) {
   }
 }

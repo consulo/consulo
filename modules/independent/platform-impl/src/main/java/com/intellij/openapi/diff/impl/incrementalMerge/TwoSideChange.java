@@ -5,30 +5,33 @@ import com.intellij.openapi.diff.impl.highlighting.FragmentSide;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends ChangeSide implements DiffRangeMarker.RangeInvalidListener {
-  @NotNull protected final MergeList myMergeList;
-  @NotNull protected DiffRangeMarker myBaseRangeMarker;
+  @Nonnull
+  protected final MergeList myMergeList;
+  @Nonnull
+  protected DiffRangeMarker myBaseRangeMarker;
   protected T myLeftChange;
   protected T myRightChange;
-  @NotNull protected final ChangeHighlighterHolder myCommonHighlighterHolder;
+  @Nonnull
+  protected final ChangeHighlighterHolder myCommonHighlighterHolder;
 
-  protected TwoSideChange(@NotNull TextRange baseRange,
-                          @NotNull MergeList mergeList,
-                          @NotNull ChangeHighlighterHolder highlighterHolder) {
+  protected TwoSideChange(@Nonnull TextRange baseRange,
+                          @Nonnull MergeList mergeList,
+                          @Nonnull ChangeHighlighterHolder highlighterHolder) {
     myBaseRangeMarker = new DiffRangeMarker((DocumentEx)mergeList.getBaseDocument(), baseRange, this);
     myMergeList = mergeList;
     myCommonHighlighterHolder = highlighterHolder;
   }
 
-  @NotNull
+  @Nonnull
   public ChangeHighlighterHolder getHighlighterHolder() {
     return myCommonHighlighterHolder;
   }
 
-  @NotNull
+  @Nonnull
   public DiffRangeMarker getRange() {
     return myBaseRangeMarker;
   }
@@ -43,12 +46,12 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
     return myRightChange;
   }
 
-  public void setRange(@NotNull DiffRangeMarker range) {
+  public void setRange(@Nonnull DiffRangeMarker range) {
     myBaseRangeMarker = range;
   }
 
   @Nullable
-  T getOtherChange(@NotNull T change) {
+  T getOtherChange(@Nonnull T change) {
     if (change == myLeftChange) {
       return myRightChange;
     }
@@ -60,7 +63,7 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
     }
   }
 
-  public void removeOtherChange(@NotNull T change) {
+  public void removeOtherChange(@Nonnull T change) {
     if (change == myLeftChange) {
       myRightChange = null;
     }
@@ -86,7 +89,7 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
     }
   }
 
-  @NotNull
+  @Nonnull
   public Document getOriginalDocument(FragmentSide mergeSide) {
     return myMergeList.getChanges(mergeSide).getDocument(MergeList.BRANCH_SIDE);
   }
@@ -95,23 +98,25 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
     conflictRemoved();
   }
 
-  @NotNull
+  @Nonnull
   public MergeList getMergeList() {
     return myMergeList;
   }
 
   protected static abstract class SideChange<V extends TwoSideChange> extends Change implements DiffRangeMarker.RangeInvalidListener {
     protected V myTwoSideChange;
-    @NotNull protected final ChangeList myChangeList;
+    @Nonnull
+    protected final ChangeList myChangeList;
 
     protected SimpleChangeSide myOriginalSide;
-    @NotNull protected ChangeType myType;
+    @Nonnull
+    protected ChangeType myType;
 
-    protected SideChange(@NotNull V twoSideChange,
-                         @NotNull ChangeList changeList,
-                         @NotNull ChangeType type,
-                         @NotNull FragmentSide mergeSide,
-                         @NotNull TextRange versionRange) {
+    protected SideChange(@Nonnull V twoSideChange,
+                         @Nonnull ChangeList changeList,
+                         @Nonnull ChangeType type,
+                         @Nonnull FragmentSide mergeSide,
+                         @Nonnull TextRange versionRange) {
       myTwoSideChange = twoSideChange;
       myChangeList = changeList;
       myOriginalSide =
@@ -119,7 +124,7 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
       myType = type;
     }
 
-    @NotNull
+    @Nonnull
     public ChangeType getType() {
       return myType;
     }
@@ -148,13 +153,13 @@ public abstract class TwoSideChange<T extends TwoSideChange.SideChange> extends 
       myTwoSideChange.setRange(newRange);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ChangeSide getChangeSide(@NotNull FragmentSide side) {
+    public ChangeSide getChangeSide(@Nonnull FragmentSide side) {
       return isBranch(side) ? myOriginalSide : myTwoSideChange;
     }
 
-    protected static boolean isBranch(@NotNull FragmentSide side) {
+    protected static boolean isBranch(@Nonnull FragmentSide side) {
       return MergeList.BRANCH_SIDE == side;
     }
 

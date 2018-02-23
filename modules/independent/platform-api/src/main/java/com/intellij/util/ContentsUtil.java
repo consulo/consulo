@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -55,7 +55,7 @@ public class ContentsUtil {
     }
   }
 
-  public static void closeContentTab(@NotNull ContentManager contentManager, @NotNull Content content) {
+  public static void closeContentTab(@Nonnull ContentManager contentManager, @Nonnull Content content) {
     if (content instanceof TabbedContent) {
       TabbedContent tabbedContent = (TabbedContent)content;
       if (tabbedContent.getTabs().size() > 1) {
@@ -69,7 +69,7 @@ public class ContentsUtil {
     contentManager.removeContent(content, true);
   }
 
-  private static void dispose(@NotNull JComponent component) {
+  private static void dispose(@Nonnull JComponent component) {
     Object disposable = component.getClientProperty(DISPOSABLE_KEY);
     if (disposable instanceof Disposable) {
       Disposer.dispose((Disposable)disposable);

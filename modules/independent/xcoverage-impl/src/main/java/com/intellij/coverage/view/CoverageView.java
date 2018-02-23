@@ -31,7 +31,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.StatusText;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -231,7 +231,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     myBuilder.select(file);
   }
 
-  public Object getData(@NotNull @NonNls Key dataId) {
+  public Object getData(@Nonnull @NonNls Key dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       return getSelectedValue();
     }
@@ -322,7 +322,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
     }
 
     @Override
-    protected void selectElementFromEditor(@NotNull FileEditor editor) {
+    protected void selectElementFromEditor(@Nonnull FileEditor editor) {
       if (myProject.isDisposed() || !CoverageView.this.isShowing()) return;
       if (myStateBean.myAutoScrollFromSource) {
         final VirtualFile file = FileEditorManagerEx.getInstanceEx(myProject).getFile(editor);

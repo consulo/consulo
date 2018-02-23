@@ -22,20 +22,20 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class TextEditorHolder extends EditorHolder {
-  @NotNull protected final EditorEx myEditor;
+  @Nonnull
+  protected final EditorEx myEditor;
 
-  public TextEditorHolder(@NotNull EditorEx editor) {
+  public TextEditorHolder(@Nonnull EditorEx editor) {
     myEditor = editor;
   }
 
-  @NotNull
+  @Nonnull
   public EditorEx getEditor() {
     return myEditor;
   }
@@ -45,18 +45,18 @@ public class TextEditorHolder extends EditorHolder {
     EditorFactory.getInstance().releaseEditor(myEditor);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myEditor.getComponent();
   }
 
   @Override
-  public void installFocusListener(@NotNull FocusListener listener) {
+  public void installFocusListener(@Nonnull FocusListener listener) {
     myEditor.getContentComponent().addFocusListener(listener);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myEditor.getContentComponent();
@@ -66,8 +66,8 @@ public class TextEditorHolder extends EditorHolder {
   // Build
   //
 
-  @NotNull
-  public static TextEditorHolder create(@Nullable Project project, @NotNull DocumentContent content) {
+  @Nonnull
+  public static TextEditorHolder create(@javax.annotation.Nullable Project project, @Nonnull DocumentContent content) {
     EditorEx editor = DiffUtil.createEditor(content.getDocument(), project, false, true);
     DiffUtil.configureEditor(editor, content, project);
     return new TextEditorHolder(editor);
@@ -77,19 +77,19 @@ public class TextEditorHolder extends EditorHolder {
     public static TextEditorHolderFactory INSTANCE = new TextEditorHolderFactory();
 
     @Override
-    @NotNull
-    public TextEditorHolder create(@NotNull DiffContent content, @NotNull DiffContext context) {
+    @Nonnull
+    public TextEditorHolder create(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       return TextEditorHolder.create(context.getProject(), (DocumentContent)content);
     }
 
     @Override
-    public boolean canShowContent(@NotNull DiffContent content, @NotNull DiffContext context) {
+    public boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       if (content instanceof DocumentContent) return true;
       return false;
     }
 
     @Override
-    public boolean wantShowContent(@NotNull DiffContent content, @NotNull DiffContext context) {
+    public boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
       if (content instanceof DocumentContent) return true;
       return false;
     }

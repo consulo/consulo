@@ -19,14 +19,14 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.frame.XValueGroup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
 public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implements RestorableStateNode {
-  public XValueGroupNodeImpl(XDebuggerTree tree, XDebuggerTreeNode parent, @NotNull XValueGroup group) {
+  public XValueGroupNodeImpl(XDebuggerTree tree, XDebuggerTreeNode parent, @Nonnull XValueGroup group) {
     super(tree, parent, group);
     setLeaf(false);
     setIcon(group.getIcon());

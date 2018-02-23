@@ -18,8 +18,8 @@ package com.intellij.remote.ext;
 import com.intellij.remote.RemoteCredentials;
 import com.intellij.remote.WebDeploymentCredentialsHolder;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class WebDeploymentCredentialsHandler extends RemoteCredentialsHandlerBase<WebDeploymentCredentialsHolder> {
 
@@ -35,7 +35,7 @@ public class WebDeploymentCredentialsHandler extends RemoteCredentialsHandlerBas
   }
 
   @Override
-  public void save(@NotNull Element rootElement) {
+  public void save(@Nonnull Element rootElement) {
     getCredentials().save(rootElement);
   }
 
@@ -56,7 +56,7 @@ public class WebDeploymentCredentialsHandler extends RemoteCredentialsHandlerBas
     }
   }
 
-  @NotNull
+  @Nonnull
   private String constructSftpCredentialsFullPath() {
     RemoteCredentials cred = getCredentials().getSshCredentials();
     return SFTP_DEPLOYMENT_PREFIX + cred.getUserName() + "@" + cred.getHost() + ":" + cred.getLiteralPort();

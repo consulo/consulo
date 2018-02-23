@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -43,7 +43,7 @@ public class FileTreeAccessFilter implements VirtualFileFilter {
     return (fileType == InternalStdFileTypes.JAVA || fileType == InternalStdFileTypes.CLASS) && !file.getName().equals("package-info.java");
   }
 
-  public void allowTreeAccessForFile(@NotNull VirtualFile file) {
+  public void allowTreeAccessForFile(@Nonnull VirtualFile file) {
     myAddedClasses.add(file);
   }
 

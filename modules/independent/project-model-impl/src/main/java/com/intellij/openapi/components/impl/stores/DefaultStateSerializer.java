@@ -26,8 +26,8 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SuppressWarnings({"deprecation"})
 public class DefaultStateSerializer {
@@ -36,8 +36,8 @@ public class DefaultStateSerializer {
   private DefaultStateSerializer() {
   }
 
-  @Nullable
-  static Element serializeState(@NotNull Object state, @Nullable final Storage storage) throws WriteExternalException {
+  @javax.annotation.Nullable
+  static Element serializeState(@Nonnull Object state, @javax.annotation.Nullable final Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }
@@ -52,7 +52,7 @@ public class DefaultStateSerializer {
   }
 
   @SuppressWarnings({"unchecked"})
-  @Nullable
+  @javax.annotation.Nullable
   public static <T> T deserializeState(@Nullable Element stateElement, Class <T> stateClass, @Nullable T mergeInto) throws StateStorageException {
     if (stateElement == null) return mergeInto;
 

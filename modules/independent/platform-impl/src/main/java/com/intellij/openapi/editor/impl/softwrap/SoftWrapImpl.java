@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl.softwrap;
 
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.
@@ -31,7 +31,7 @@ public class SoftWrapImpl implements SoftWrap {
   private final int myIndentInColumns;
   private final int myIndentInPixels;
 
-  public SoftWrapImpl(@NotNull TextChangeImpl change, int indentInColumns, int indentInPixels) {
+  public SoftWrapImpl(@Nonnull TextChangeImpl change, int indentInColumns, int indentInPixels) {
     myChange = change;
     myIndentInColumns = indentInColumns;
     myIndentInPixels = indentInPixels;
@@ -47,13 +47,13 @@ public class SoftWrapImpl implements SoftWrap {
     return myChange.getEnd();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getText() {
     return myChange.getText();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public char[] getChars() {
     return myChange.getChars();

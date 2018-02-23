@@ -16,12 +16,12 @@
 package com.intellij.execution.dashboard;
 
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
  */
 public interface DashboardRunConfigurationNode extends DashboardNode {
-  @NotNull
+  @Nonnull
   RunnerAndConfigurationSettings getConfigurationSettings();
 }

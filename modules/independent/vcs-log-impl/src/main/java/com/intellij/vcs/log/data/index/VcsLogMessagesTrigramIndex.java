@@ -24,8 +24,8 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import gnu.trove.THashMap;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -35,15 +35,15 @@ import static com.intellij.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
 public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
   public static final String TRIGRAMS = "trigrams";
 
-  public VcsLogMessagesTrigramIndex(@NotNull String logId,
-                                    @NotNull FatalErrorHandler fatalErrorHandler,
-                                    @NotNull Disposable disposableParent) throws IOException {
+  public VcsLogMessagesTrigramIndex(@Nonnull String logId,
+                                    @Nonnull FatalErrorHandler fatalErrorHandler,
+                                    @Nonnull Disposable disposableParent) throws IOException {
     super(logId, TRIGRAMS, getVersion(), new TrigramMessageIndexer(), VoidDataExternalizer.INSTANCE,
           fatalErrorHandler, disposableParent);
   }
 
   @Nullable
-  public TIntHashSet getCommitsForSubstring(@NotNull String string) throws StorageException {
+  public TIntHashSet getCommitsForSubstring(@Nonnull String string) throws StorageException {
     MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
     TrigramBuilder.processTrigrams(string, trigramProcessor);
 
@@ -53,9 +53,9 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
   }
 
   public static class TrigramMessageIndexer implements DataIndexer<Integer, Void, VcsFullCommitDetails> {
-    @NotNull
+    @Nonnull
     @Override
-    public Map<Integer, Void> map(@NotNull VcsFullCommitDetails inputData) {
+    public Map<Integer, Void> map(@Nonnull VcsFullCommitDetails inputData) {
       MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
       TrigramBuilder.processTrigrams(inputData.getFullMessage(), trigramProcessor);
 

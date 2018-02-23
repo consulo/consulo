@@ -25,15 +25,15 @@ import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.ui.VcsLogHighlighterFactory;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 import static com.intellij.vcs.log.data.MainVcsLogUiProperties.VcsLogHighlighterProperty;
 
 public class HighlightersActionGroup extends ActionGroup {
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     List<AnAction> actions = ContainerUtil.newArrayList();
@@ -53,9 +53,10 @@ public class HighlightersActionGroup extends ActionGroup {
   }
 
   private static class EnableHighlighterAction extends BooleanPropertyToggleAction {
-    @NotNull private final VcsLogHighlighterFactory myFactory;
+    @Nonnull
+    private final VcsLogHighlighterFactory myFactory;
 
-    private EnableHighlighterAction(@NotNull VcsLogHighlighterFactory factory) {
+    private EnableHighlighterAction(@Nonnull VcsLogHighlighterFactory factory) {
       super(factory.getTitle());
       myFactory = factory;
     }

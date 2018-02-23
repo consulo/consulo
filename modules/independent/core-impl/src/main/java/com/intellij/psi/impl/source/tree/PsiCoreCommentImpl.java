@@ -5,7 +5,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -21,7 +21,7 @@ public class PsiCoreCommentImpl extends LeafPsiElement implements PsiComment {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor){
     visitor.visitComment(this);
   }
 
@@ -31,7 +31,7 @@ public class PsiCoreCommentImpl extends LeafPsiElement implements PsiComment {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiReference[] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }

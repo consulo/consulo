@@ -17,7 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -78,7 +78,7 @@ public enum FormattingStateId {
   /**
    * @return    collection of formatting states that are assumed to be executed prior to the current one
    */
-  @NotNull
+  @Nonnull
   public Set<FormattingStateId> getPreviousStates() {
     Set<FormattingStateId> result = EnumSet.noneOf(FormattingStateId.class);
     for (FormattingStateId state : values()) {

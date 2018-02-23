@@ -17,7 +17,7 @@
 package com.intellij.psi.impl;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -25,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
 public interface PsiTreeChangePreprocessor {
   ExtensionPointName<PsiTreeChangePreprocessor> EP_NAME = ExtensionPointName.create("com.intellij.psi.treeChangePreprocessor");
 
-  void treeChanged(@NotNull PsiTreeChangeEventImpl event);
+  void treeChanged(@Nonnull PsiTreeChangeEventImpl event);
 }

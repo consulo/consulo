@@ -16,7 +16,6 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.vcs.VcsBundle;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents one part of a line annotation which is shown in the editor when the "Annotate"
@@ -44,7 +43,7 @@ public interface LineAnnotationAspect {
    * @param line the line number to query
    * @return the tooltip text for the line
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getTooltipText(int line);
 
   /**
@@ -53,7 +52,7 @@ public interface LineAnnotationAspect {
    *
    * @return unique id
    */
-  @Nullable
+  @javax.annotation.Nullable
   String getId();
 
   /**

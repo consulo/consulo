@@ -39,8 +39,8 @@ import consulo.ide.newProject.NewProjectDialog;
 import consulo.ide.newProject.NewProjectPanel;
 import consulo.ide.welcomeScreen.FlatWelcomeScreen;
 import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +54,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   static class SlideNewProjectPanel extends NewProjectPanel {
     private JButton myOkButton;
 
-    public SlideNewProjectPanel(@NotNull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+    public SlideNewProjectPanel(@Nonnull Disposable parentDisposable, @Nullable Project project, @Nullable VirtualFile virtualFile) {
       super(parentDisposable, project, virtualFile);
     }
 
@@ -95,7 +95,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @RequiredDispatchThread
   @Override
-  public void actionPerformed(@NotNull final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     Project project = e.getProject();
     NewProjectDialog dialog = new NewProjectDialog(project, null);
 
@@ -105,15 +105,15 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (WelcomeFrame.isFromWelcomeFrame(e)) {
       e.getPresentation().setIcon(AllIcons.Welcome.CreateNewProject);
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public JComponent createSlide(@NotNull Disposable parentDisposable, Consumer<String> titleChanger) {
+  public JComponent createSlide(@Nonnull Disposable parentDisposable, Consumer<String> titleChanger) {
     titleChanger.accept(IdeBundle.message("title.new.project"));
 
     return new SlideNewProjectPanel(parentDisposable, null, null);
@@ -121,7 +121,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @Nullable
   @RequiredDispatchThread
-  protected static Project generateProject(Project project, @NotNull final NewProjectPanel projectPanel) {
+  protected static Project generateProject(Project project, @Nonnull final NewProjectPanel projectPanel) {
     final File location = new File(projectPanel.getLocationText());
     final int childCount = location.exists() ? location.list().length : 0;
     if (!location.exists() && !location.mkdirs()) {

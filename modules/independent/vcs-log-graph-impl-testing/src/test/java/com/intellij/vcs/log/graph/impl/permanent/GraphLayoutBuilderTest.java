@@ -20,7 +20,7 @@ import com.intellij.vcs.log.graph.AbstractTestWithTwoTextFile;
 import com.intellij.vcs.log.graph.GraphCommit;
 import com.intellij.vcs.log.graph.api.GraphLayout;
 import com.intellij.vcs.log.graph.impl.CommitIdManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public abstract class GraphLayoutBuilderTest<CommitId> extends AbstractTestWithT
 
     GraphLayout graphLayout = GraphLayoutBuilder.build(graph, new Comparator<Integer>() {
       @Override
-      public int compare(@NotNull Integer o1, @NotNull Integer o2) {
+      public int compare(@Nonnull Integer o1, @Nonnull Integer o2) {
         CommitId id1 = commits.get(o1).getId();
         CommitId id2 = commits.get(o2).getId();
         return idManager.toStr(id1).compareTo(idManager.toStr(id2));

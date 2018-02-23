@@ -25,7 +25,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -78,8 +78,8 @@ public class InspectionToolRegistrar {
     }
   }
 
-  @NotNull
-  public static InspectionToolWrapper wrapTool(@NotNull InspectionProfileEntry profileEntry) {
+  @Nonnull
+  public static InspectionToolWrapper wrapTool(@Nonnull InspectionProfileEntry profileEntry) {
     if (profileEntry instanceof LocalInspectionTool) {
       return new LocalInspectionToolWrapper((LocalInspectionTool)profileEntry);
     }
@@ -89,7 +89,7 @@ public class InspectionToolRegistrar {
     throw new RuntimeException("unknown inspection class: " + profileEntry + "; "+profileEntry.getClass());
   }
 
-  public void registerTools(@NotNull InspectionToolProvider[] providers) {
+  public void registerTools(@Nonnull InspectionToolProvider[] providers) {
     for (InspectionToolProvider provider : providers) {
       Class[] classes = provider.getInspectionClasses();
       for (Class aClass : classes) {
@@ -98,8 +98,8 @@ public class InspectionToolRegistrar {
     }
   }
 
-  @NotNull
-  private Factory<InspectionToolWrapper> registerInspectionTool(@NotNull final Class aClass) {
+  @Nonnull
+  private Factory<InspectionToolWrapper> registerInspectionTool(@Nonnull final Class aClass) {
     if (LocalInspectionTool.class.isAssignableFrom(aClass)) {
       return registerLocalInspection(aClass, true);
     }
@@ -116,15 +116,15 @@ public class InspectionToolRegistrar {
   /**
    * make sure that it is not too late
    */
-  @NotNull
-  public Factory<InspectionToolWrapper> registerInspectionToolFactory(@NotNull Factory<InspectionToolWrapper> factory, boolean store) {
+  @Nonnull
+  public Factory<InspectionToolWrapper> registerInspectionToolFactory(@Nonnull Factory<InspectionToolWrapper> factory, boolean store) {
     if (store) {
       myInspectionToolFactories.add(factory);
     }
     return factory;
   }
 
-  @NotNull
+  @Nonnull
   private Factory<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
     return registerInspectionToolFactory(new Factory<InspectionToolWrapper>() {
       @Override
@@ -134,8 +134,8 @@ public class InspectionToolRegistrar {
     }, store);
   }
 
-  @NotNull
-  private Factory<InspectionToolWrapper> registerGlobalInspection(@NotNull final Class aClass, boolean store) {
+  @Nonnull
+  private Factory<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
     return registerInspectionToolFactory(new Factory<InspectionToolWrapper>() {
       @Override
       public InspectionToolWrapper create() {
@@ -144,7 +144,7 @@ public class InspectionToolRegistrar {
     }, store);
   }
 
-  @NotNull
+  @Nonnull
   @TestOnly
   public List<InspectionToolWrapper> createTools() {
     ensureInitialized();
@@ -166,7 +166,7 @@ public class InspectionToolRegistrar {
     return tools;
   }
 
-  private static String checkTool(@NotNull final InspectionToolWrapper toolWrapper) {
+  private static String checkTool(@Nonnull final InspectionToolWrapper toolWrapper) {
     if (!(toolWrapper instanceof LocalInspectionToolWrapper)) {
       return null;
     }

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceBackedByArray;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provides generic contract for object encapsulating information about single unit of text change.
@@ -44,7 +44,7 @@ public interface TextChange {
    *
    * @return    text related to the change encapsulated by the current object
    */
-  @NotNull
+  @Nonnull
   CharSequence getText();
 
   /**
@@ -57,6 +57,6 @@ public interface TextChange {
    *
    * @return    stored change text as a char array
    */
-  @NotNull
+  @Nonnull
   char[] getChars();
 }

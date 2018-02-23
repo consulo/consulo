@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.*;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.util.ArrayUtil;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class DiffManagerTest extends TestCase {
     }
 
     @Override
-    public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+    public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
       return null;
     }
 
@@ -86,7 +86,7 @@ public class DiffManagerTest extends TestCase {
       return ArrayUtil.toStringArray(myContentTitles);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public DiffContent[] getContents() {
       return myDiffContents.toArray(new DiffContent[myDiffContents.size()]);

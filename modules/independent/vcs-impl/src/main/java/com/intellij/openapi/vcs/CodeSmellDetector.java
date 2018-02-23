@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,8 +40,8 @@ public abstract class CodeSmellDetector {
    * @throws ProcessCanceledException if the analysis was cancelled by the user.
    * @since 5.1
    */
-  @NotNull
-  public abstract List<CodeSmellInfo> findCodeSmells(@NotNull List<VirtualFile> files) throws ProcessCanceledException;
+  @Nonnull
+  public abstract List<CodeSmellInfo> findCodeSmells(@Nonnull List<VirtualFile> files) throws ProcessCanceledException;
 
   /**
    * Shows the specified list of problems found during pre-checkin code analysis in a Messages pane.
@@ -49,6 +49,6 @@ public abstract class CodeSmellDetector {
    * @param smells the problems to show.
    * @since 5.1
    */
-  public abstract void showCodeSmellErrors(@NotNull List<CodeSmellInfo> smells);
+  public abstract void showCodeSmellErrors(@Nonnull List<CodeSmellInfo> smells);
 
 }

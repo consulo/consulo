@@ -20,7 +20,6 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -39,7 +38,7 @@ public interface DetailView extends UserDataHolder {
 
   JPanel getPropertiesPanel();
 
-  void setPropertiesPanel(@Nullable JPanel panel);
+  void setPropertiesPanel(@javax.annotation.Nullable JPanel panel);
 
   void clearEditor();
 
@@ -49,7 +48,7 @@ public interface DetailView extends UserDataHolder {
 
   boolean hasEditorOnly();
 
-  void setCurrentItem(@Nullable ItemWrapper item);
+  void setCurrentItem(@javax.annotation.Nullable ItemWrapper item);
 
   class PreviewEditorState {
 

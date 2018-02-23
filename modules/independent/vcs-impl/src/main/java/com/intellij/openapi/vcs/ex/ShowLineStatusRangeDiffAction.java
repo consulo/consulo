@@ -30,12 +30,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@NotNull LineStatusTracker lineStatusTracker, @NotNull Range range, @Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @javax.annotation.Nullable Editor editor) {
     super(lineStatusTracker, range);
     ActionUtil.copyFrom(this, "ChangesView.Diff");
   }
@@ -68,15 +68,15 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
     );
   }
 
-  @NotNull
-  private DiffContent createDiffContent(@NotNull Document document, @NotNull TextRange textRange, @Nullable VirtualFile file) {
+  @Nonnull
+  private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
     final Project project = myLineStatusTracker.getProject();
     DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
     return new DocumentFragmentContent(project, content, textRange);
   }
 
-  @NotNull
-  private static Range expand(@NotNull Range range, @NotNull Document document, @NotNull Document uDocument) {
+  @Nonnull
+  private static Range expand(@Nonnull Range range, @Nonnull Document document, @Nonnull Document uDocument) {
     boolean canExpandBefore = range.getLine1() != 0 && range.getVcsLine1() != 0;
     boolean canExpandAfter = range.getLine2() < document.getLineCount() && range.getVcsLine2() < uDocument.getLineCount();
     int offset1 = range.getLine1() - (canExpandBefore ? 1 : 0);

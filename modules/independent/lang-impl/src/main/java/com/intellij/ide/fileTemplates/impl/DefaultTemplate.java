@@ -17,8 +17,8 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,7 +38,7 @@ public class DefaultTemplate {
   private final String myText;
   private final String myDescriptionText;
 
-  public DefaultTemplate(@NotNull String name, @NotNull String extension, @NotNull URL templateURL, @Nullable URL descriptionURL) {
+  public DefaultTemplate(@Nonnull String name, @Nonnull String extension, @Nonnull URL templateURL, @Nullable URL descriptionURL) {
     myName = name;
     myExtension = extension;
     myTemplateURL = templateURL;
@@ -79,12 +79,12 @@ public class DefaultTemplate {
     return myDescriptionURL;
   }
   
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
 
-  @NotNull
+  @Nonnull
   public String getDescriptionText() {
     return myDescriptionText;
   }

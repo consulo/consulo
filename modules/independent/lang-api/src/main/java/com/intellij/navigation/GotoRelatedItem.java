@@ -17,8 +17,8 @@ package com.intellij.navigation;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.util.PsiNavigateUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,17 +35,17 @@ public class GotoRelatedItem {
   private final PsiElement myElement;
   public static final String DEFAULT_GROUP_NAME = "";
 
-  protected GotoRelatedItem(@Nullable PsiElement element, String group, final int mnemonic) {
+  protected GotoRelatedItem(@javax.annotation.Nullable PsiElement element, String group, final int mnemonic) {
     myElement = element;
     myGroup = group;
     myMnemonic = mnemonic;
   }
 
-  public GotoRelatedItem(@NotNull PsiElement element, String group) {
+  public GotoRelatedItem(@Nonnull PsiElement element, String group) {
     this(element, group, -1);
   }
 
-  public GotoRelatedItem(@NotNull PsiElement element) {
+  public GotoRelatedItem(@Nonnull PsiElement element) {
     this(element, DEFAULT_GROUP_NAME);
   }
 
@@ -58,7 +58,7 @@ public class GotoRelatedItem {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getCustomContainerName() {
     return null;
   }
@@ -68,7 +68,7 @@ public class GotoRelatedItem {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement getElement() {
     return myElement;
   }
@@ -76,11 +76,11 @@ public class GotoRelatedItem {
   public int getMnemonic() {
     return myMnemonic;
   }
-  public static List<GotoRelatedItem> createItems(@NotNull Collection<? extends PsiElement> elements) {
+  public static List<GotoRelatedItem> createItems(@Nonnull Collection<? extends PsiElement> elements) {
     return createItems(elements, DEFAULT_GROUP_NAME);
   }
 
-  public static List<GotoRelatedItem> createItems(@NotNull Collection<? extends PsiElement> elements, String group) {
+  public static List<GotoRelatedItem> createItems(@Nonnull Collection<? extends PsiElement> elements, String group) {
     List<GotoRelatedItem> items = new ArrayList<GotoRelatedItem>(elements.size());
     for (PsiElement element : elements) {
       items.add(new GotoRelatedItem(element, group));

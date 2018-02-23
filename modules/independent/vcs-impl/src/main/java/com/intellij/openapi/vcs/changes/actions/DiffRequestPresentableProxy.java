@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.vcs.VcsException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +27,10 @@ public abstract class DiffRequestPresentableProxy implements DiffRequestPresenta
   private List<? extends AnAction> myCachedActions;
   private MyResult myStepResult;
 
-  @NotNull
+  @Nonnull
   protected abstract DiffRequestPresentable init() throws VcsException;
 
-  @NotNull
+  @Nonnull
   private DiffRequestPresentable initRequest() throws VcsException {
     if (myDelegate == null) {
       myDelegate = init();

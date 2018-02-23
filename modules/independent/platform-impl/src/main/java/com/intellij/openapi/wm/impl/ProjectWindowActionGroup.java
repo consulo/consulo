@@ -18,8 +18,8 @@ package com.intellij.openapi.wm.impl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
 
   private ProjectWindowAction latest = null;
 
-  public void addProject(@NotNull Project project) {
+  public void addProject(@Nonnull Project project) {
     final String projectLocation = project.getPresentableUrl();
     if (projectLocation == null) {
       return;
@@ -50,7 +50,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
     latest = windowAction;
   }
 
-  public void removeProject(@NotNull Project project) {
+  public void removeProject(@Nonnull Project project) {
     final ProjectWindowAction windowAction = findWindowAction(project.getPresentableUrl());
     if (windowAction == null) {
       return;

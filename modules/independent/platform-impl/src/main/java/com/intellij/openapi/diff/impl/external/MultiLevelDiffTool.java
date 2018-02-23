@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.config.AbstractProperty;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;
@@ -111,7 +111,7 @@ public class MultiLevelDiffTool implements DiffTool, DiscloseMultiRequest {
     }
   }
 
-  private CompositeDiffPanel createPanel(final DiffRequest request, final Window window, @NotNull Disposable parentDisposable) {
+  private CompositeDiffPanel createPanel(final DiffRequest request, final Window window, @Nonnull Disposable parentDisposable) {
     final CompositeDiffPanel panel = new CompositeDiffPanel(request.getProject(), this, window, parentDisposable);
     request.getGenericData().put(PlatformDataKeys.COMPOSITE_DIFF_VIEWER, panel);
     final List<Pair<String, DiffRequest>> layers = request.getOtherLayers();
@@ -135,7 +135,7 @@ public class MultiLevelDiffTool implements DiffTool, DiscloseMultiRequest {
   }
 
   public DiffViewer viewerForRequest(Window window,
-                                     @NotNull Disposable parentDisposable,
+                                     @Nonnull Disposable parentDisposable,
                                       final String name, DiffRequest current) {
     DiffViewer viewer = null;
     for (DiffTool tool : myTools) {
@@ -199,7 +199,7 @@ public class MultiLevelDiffTool implements DiffTool, DiscloseMultiRequest {
   }
 
   @Override
-  public DiffViewer createComponent(String title, DiffRequest request, Window window, @NotNull Disposable parentDisposable) {
+  public DiffViewer createComponent(String title, DiffRequest request, Window window, @Nonnull Disposable parentDisposable) {
     // should not be called for it
     throw new IllegalStateException();
   }

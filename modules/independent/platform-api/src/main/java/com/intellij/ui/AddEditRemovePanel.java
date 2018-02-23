@@ -19,8 +19,8 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.ComponentWithEmptyText;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -105,7 +105,7 @@ public abstract class AddEditRemovePanel<T> extends PanelWithButtons implements 
     return myLabel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myTable.getEmptyText();

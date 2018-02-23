@@ -20,26 +20,29 @@ import com.google.common.collect.PeekingIterator;
 import com.intellij.util.containers.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsCommitMetadata;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class TopCommitsCache {
-  @NotNull private final VcsLogStorage myHashMap;
-  @NotNull private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = ContainerUtil.createConcurrentIntObjectMap();
-  @NotNull private List<VcsCommitMetadata> mySortedDetails = ContainerUtil.newArrayList();
+  @Nonnull
+  private final VcsLogStorage myHashMap;
+  @Nonnull
+  private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = ContainerUtil.createConcurrentIntObjectMap();
+  @Nonnull
+  private List<VcsCommitMetadata> mySortedDetails = ContainerUtil.newArrayList();
 
-  public TopCommitsCache(@NotNull VcsLogStorage hashMap) {
+  public TopCommitsCache(@Nonnull VcsLogStorage hashMap) {
     myHashMap = hashMap;
   }
 
-  private int getIndex(@NotNull VcsCommitMetadata metadata) {
+  private int getIndex(@Nonnull VcsCommitMetadata metadata) {
     return myHashMap.getCommitIndex(metadata.getId(), metadata.getRoot());
   }
 
-  public void storeDetails(@NotNull List<? extends VcsCommitMetadata> sortedDetails) {
+  public void storeDetails(@Nonnull List<? extends VcsCommitMetadata> sortedDetails) {
     List<VcsCommitMetadata> newDetails = ContainerUtil.filter(sortedDetails, metadata -> !myCache.containsValue(metadata));
     if (newDetails.isEmpty()) return;
     Iterator<VcsCommitMetadata> it = new MergingIterator(mySortedDetails, newDetails);
@@ -79,7 +82,7 @@ public class TopCommitsCache {
     private final PeekingIterator<VcsCommitMetadata> myFirst;
     private final PeekingIterator<VcsCommitMetadata> mySecond;
 
-    private MergingIterator(@NotNull List<VcsCommitMetadata> first, @NotNull List<VcsCommitMetadata> second) {
+    private MergingIterator(@Nonnull List<VcsCommitMetadata> first, @Nonnull List<VcsCommitMetadata> second) {
       myFirst = Iterators.peekingIterator(first.iterator());
       mySecond = Iterators.peekingIterator(second.iterator());
     }

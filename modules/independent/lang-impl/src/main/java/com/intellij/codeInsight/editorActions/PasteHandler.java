@@ -50,8 +50,8 @@ import com.intellij.util.Producer;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -141,7 +141,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
                               final Project project,
                               final PsiFile file,
                               final Document document,
-                              @NotNull final Transferable content) {
+                              @Nonnull final Transferable content) {
     CopyPasteManager.getInstance().stopKillRings();
 
     String text = null;

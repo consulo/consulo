@@ -19,8 +19,8 @@ import com.intellij.formatting.*;
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,10 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   private final           Block       myOriginal;
   private final           int         myOffset;
   private final           TextRange   myRange;
-  @Nullable private final Indent      myIndent;
-  @Nullable private final Language    myLanguage;
+  @Nullable
+  private final Indent      myIndent;
+  @Nullable
+  private final Language    myLanguage;
   private                 List<Block> myBlocks;
 
   /**
@@ -47,11 +49,11 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
    * @param range range of code inside injected document which is really placed in the main document
    * @param indent
    */
-  public InjectedLanguageBlockWrapper(@NotNull final Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent) {
+  public InjectedLanguageBlockWrapper(@Nonnull final Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent) {
     this(original, offset, range, indent, null);
   }
 
-  public InjectedLanguageBlockWrapper(@NotNull final Block original,
+  public InjectedLanguageBlockWrapper(@Nonnull final Block original,
                                       final int offset,
                                       @Nullable TextRange range,
                                       @Nullable Indent indent,
@@ -76,7 +78,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     TextRange range = myOriginal.getTextRange();
     if (myRange != null) {
@@ -94,7 +96,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Block> getSubBlocks() {
     if (myBlocks == null) {
       myBlocks = buildBlocks();
@@ -119,7 +121,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     return result;
   }
 
-  private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, @NotNull final TextRange range) {
+  private void collectBlocksIntersectingRange(final List<Block> list, final List<Block> result, @Nonnull final TextRange range) {
     for (Block block : list) {
       final TextRange textRange = block.getTextRange();
       if (block instanceof InjectedLanguageBlockWrapper && block.getTextRange().equals(range)) {
@@ -141,7 +143,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   }
 
   @Override
-  @Nullable public Spacing getSpacing(final Block child1, @NotNull final Block child2) {
+  @Nullable public Spacing getSpacing(final Block child1, @Nonnull final Block child2) {
     int shift = 0;
     Block child1ToUse = child1;
     Block child2ToUse = child2;
@@ -164,7 +166,7 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ChildAttributes getChildAttributes(final int newChildIndex) {
     return myOriginal.getChildAttributes(newChildIndex);
   }

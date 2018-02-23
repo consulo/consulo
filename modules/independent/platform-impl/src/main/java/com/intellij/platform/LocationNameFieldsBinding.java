@@ -24,9 +24,9 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
@@ -107,7 +107,7 @@ public class LocationNameFieldsBinding {
     });
   }
 
-  private boolean isProjectNameChanged(@NotNull String currentName) {
+  private boolean isProjectNameChanged(@Nonnull String currentName) {
     return !currentName.equals(mySuggestedProjectName);
   }
 

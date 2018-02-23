@@ -21,8 +21,8 @@ import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -83,7 +83,7 @@ public interface Filter {
       myResultItems = null;
     }
 
-    public Result(@NotNull List<ResultItem> resultItems) {
+    public Result(@Nonnull List<ResultItem> resultItems) {
       super(-1, -1, null, null, null);
       myResultItems = resultItems;
     }
@@ -158,7 +158,7 @@ public interface Filter {
     }
 
     @Nullable
-    private static TextAttributes getGrayedHyperlinkAttributes(@NotNull TextAttributesKey normalHyperlinkAttrsKey) {
+    private static TextAttributes getGrayedHyperlinkAttributes(@Nonnull TextAttributesKey normalHyperlinkAttrsKey) {
       EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
       TextAttributes grayedHyperlinkAttrs = GRAYED_BY_NORMAL_CACHE.get(normalHyperlinkAttrsKey);
       if (grayedHyperlinkAttrs == null) {

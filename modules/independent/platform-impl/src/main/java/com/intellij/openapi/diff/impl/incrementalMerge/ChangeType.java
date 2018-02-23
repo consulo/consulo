@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -52,7 +52,7 @@ public class ChangeType {
     return myApplied;
   }
 
-  @NotNull
+  @Nonnull
   public static ChangeType deriveApplied(ChangeType type) {
     return new ChangeType(type.myDiffType, true);
   }
@@ -68,12 +68,12 @@ public class ChangeType {
     }
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffType getTypeKey() {
     return myDiffType;
   }
 
-  @NotNull
+  @Nonnull
   public TextDiffType getTextDiffType() {
     return getTypeKey();
   }
@@ -154,7 +154,7 @@ public class ChangeType {
     return CHANGE;
   }
 
-  static ChangeType fromRanges(@NotNull TextRange left, @NotNull TextRange right) {
+  static ChangeType fromRanges(@Nonnull TextRange left, @Nonnull TextRange right) {
     if (left.getLength() == 0) return INSERT;
     if (right.getLength() == 0) return DELETED;
     return CHANGE;
@@ -164,7 +164,7 @@ public class ChangeType {
     return myDiffType.getDisplayName();
   }
 
-  @NotNull
+  @Nonnull
   public Color getSeparatorColor(@Nullable Color highlightColor) {
     if (myApplied) {
       return highlightColor == null ? Color.DARK_GRAY : highlightColor.darker();

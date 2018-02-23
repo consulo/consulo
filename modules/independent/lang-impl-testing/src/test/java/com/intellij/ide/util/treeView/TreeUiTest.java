@@ -26,8 +26,8 @@ import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestSuite;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -153,7 +153,7 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
       public void run() {
         getBuilder().batch(new Progressive() {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             indicatorRef.set(indicator);
             expandNext(toExpand, 0, indicator, done);
           }
@@ -419,7 +419,7 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
       public void run() {
         getBuilder().batch(new Progressive() {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             indicatorRef.set(indicator);
             expandNext(toExpand, 0, indicator, done);
           }
@@ -1521,7 +1521,7 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
                              final int start,
                              final int end,
                              @Nullable final Runnable eachRunnable,
-                             @Nullable final Runnable endRunnable) throws InvocationTargetException, InterruptedException {
+                             @javax.annotation.Nullable final Runnable endRunnable) throws InvocationTargetException, InterruptedException {
     UIUtil.invokeAndWaitIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -2114,7 +2114,7 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
     assertSame(myRoot.getElement(), myStructure.getParentElement(fabrique));
 
     myStructure.setReValidator(new ReValidator() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public AsyncResult<Object> revalidate(NodeElement element) {
         if (element == actionSystem) {
@@ -2157,7 +2157,7 @@ public class TreeUiTest extends AbstractTreeBuilderTest {
     };
     final Ref<Object> reValidatedElement = new Ref<Object>();
     myStructure.setReValidator(new ReValidator() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public AsyncResult<Object> revalidate(NodeElement element) {
         reValidatedElement.set(element);

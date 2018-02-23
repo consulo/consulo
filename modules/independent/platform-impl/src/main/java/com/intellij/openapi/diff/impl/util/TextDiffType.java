@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
     return myInlineWrapper;
   }
 
-  @NotNull
+  @Nonnull
   public static TextDiffType create(@Nullable final TextDiffTypeEnum type) {
     if (TextDiffTypeEnum.INSERT.equals(type)) {
       return INSERT;
@@ -83,12 +83,12 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
    * @param source
    * @return
    */
-  @NotNull
-  public static TextDiffType deriveApplied(@NotNull TextDiffType source) {
+  @Nonnull
+  public static TextDiffType deriveApplied(@Nonnull TextDiffType source) {
     return new TextDiffType(source.myType, source.myDisplayName, source.myAttributesKey, true, false);
   }
 
-  public static TextDiffType deriveInstanceForInlineWrapperFragment(@NotNull TextDiffType source) {
+  public static TextDiffType deriveInstanceForInlineWrapperFragment(@Nonnull TextDiffType source) {
     return new TextDiffType(source.myType, source.myDisplayName, source.myAttributesKey, source.myApplied, true);
   }
 
@@ -139,7 +139,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
   }
 
   @Nullable
-  public TextAttributes getTextAttributes(@NotNull Editor editor) {
+  public TextAttributes getTextAttributes(@Nonnull Editor editor) {
     TextAttributes originalAttrs = getTextAttributes(editor.getColorsScheme());
     if (originalAttrs == null) {
       return null;
@@ -169,7 +169,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
   }
 
   @Nullable
-  private Color getBgColorForFragmentContainingInlines(@NotNull EditorEx editor) {
+  private Color getBgColorForFragmentContainingInlines(@Nonnull EditorEx editor) {
     TextAttributes originalAttrs = getTextAttributes(editor.getColorsScheme());
     if (originalAttrs == null) {
       return null;
@@ -182,7 +182,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
     return getMiddleColor(fg, bg, MIDDLE_COLOR_FACTOR);
   }
 
-  @NotNull
+  @Nonnull
   private static Color getMiddleColor(Color fg, Color bg, double factor) {
     int red = avg(fg.getRed(), bg.getRed(), factor);
     int green = avg(fg.getGreen(), bg.getGreen(), factor);

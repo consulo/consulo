@@ -17,13 +17,13 @@ package consulo.ui.ex;
 
 import com.intellij.openapi.Disposable;
 import consulo.ui.shared.Rectangle2D;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
 public interface ToolWindowFloatingDecorator extends Disposable {
-  @NotNull
+  @Nonnull
   Rectangle2D getDecoratorBounds();
 }

@@ -19,21 +19,20 @@ package com.intellij.packaging.elements;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ComplexPackagingElementType<E extends ComplexPackagingElement<?>> extends PackagingElementType<E> {
-  protected ComplexPackagingElementType(@NotNull @NonNls String id, @NotNull String presentableName) {
+  protected ComplexPackagingElementType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
     super(id, presentableName);
   }
 
   public abstract String getShowContentActionText();
 
-  @Nullable
-  public ModificationTracker getAllSubstitutionsModificationTracker(@NotNull Project project) {
+  @javax.annotation.Nullable
+  public ModificationTracker getAllSubstitutionsModificationTracker(@Nonnull Project project) {
     return null;
   }
 }

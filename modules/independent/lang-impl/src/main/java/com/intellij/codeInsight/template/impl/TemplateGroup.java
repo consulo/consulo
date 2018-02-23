@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.options.CompoundScheme;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {
 

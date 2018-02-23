@@ -22,7 +22,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -37,7 +37,7 @@ public class PsiReferenceContributorEP extends CustomLoadingExtensionPointBean i
 
   private final NotNullLazyValue<PsiReferenceContributor> myHandler = new NotNullLazyValue<PsiReferenceContributor>() {
     @Override
-    @NotNull
+    @Nonnull
     protected PsiReferenceContributor compute() {
       try {
         return (PsiReferenceContributor)instantiateExtension(implementationClass, ApplicationManager.getApplication().getPicoContainer());

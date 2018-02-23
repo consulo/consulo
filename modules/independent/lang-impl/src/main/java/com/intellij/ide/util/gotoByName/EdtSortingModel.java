@@ -15,12 +15,12 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.SortedSet;
 
 public interface EdtSortingModel {
-  @NotNull
-  SortedSet<Object> sort(@NotNull Set<Object> elements);
+  @Nonnull
+  SortedSet<Object> sort(@Nonnull Set<Object> elements);
 }

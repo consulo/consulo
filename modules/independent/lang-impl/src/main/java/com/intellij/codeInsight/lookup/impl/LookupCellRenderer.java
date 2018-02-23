@@ -43,8 +43,8 @@ import com.intellij.util.containers.FList;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -222,7 +222,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return myPanel;
   }
 
-  private static int calcSpacing(@NotNull SimpleColoredComponent component, @Nullable Icon icon) {
+  private static int calcSpacing(@Nonnull SimpleColoredComponent component, @Nullable Icon icon) {
     Insets iPad = component.getIpad();
     int width = iPad.left + iPad.right;
     Border myBorder = component.getMyBorder();
@@ -432,7 +432,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return used;
   }
 
-  public static Icon augmentIcon(@Nullable Editor editor, @Nullable Icon icon, @NotNull Icon standard) {
+  public static Icon augmentIcon(@Nullable Editor editor, @Nullable Icon icon, @Nonnull Icon standard) {
     if (Registry.is("editor.scale.completion.icons")) {
       standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
       icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
@@ -496,7 +496,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
 
     @Override
-    protected void applyAdditionalHints(@NotNull Graphics2D g) {
+    protected void applyAdditionalHints(@Nonnull Graphics2D g) {
       EditorUIUtil.setupAntialiasing(g);
     }
   }

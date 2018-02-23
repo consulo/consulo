@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class HTMLExportUtil {
     }
   }
 
-  public static void runExport(final Project project, @NotNull ThrowableRunnable<IOException> runnable) {
+  public static void runExport(final Project project, @Nonnull ThrowableRunnable<IOException> runnable) {
     try {
       runnable.run();
     }

@@ -22,7 +22,7 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,13 +31,13 @@ import org.jetbrains.annotations.NotNull;
 public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamedPointerImpl<Sdk> {
   private final String myExtensionId;
 
-  public SdkModuleInheritableNamedPointerImpl(@NotNull ModuleRootLayer layer, @NotNull String id) {
+  public SdkModuleInheritableNamedPointerImpl(@Nonnull ModuleRootLayer layer, @Nonnull String id) {
     super(layer, "sdk");
     myExtensionId = id;
   }
 
   @Override
-  public String getItemNameFromModule(@NotNull Module module) {
+  public String getItemNameFromModule(@Nonnull Module module) {
     final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk) ModuleUtilCore.getExtension(module, myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().getName();
@@ -46,7 +46,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
   }
 
   @Override
-  public Sdk getItemFromModule(@NotNull Module module) {
+  public Sdk getItemFromModule(@Nonnull Module module) {
     final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)  ModuleUtilCore.getExtension(module, myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().get();
@@ -54,9 +54,9 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public NamedPointer<Sdk> getPointer(@NotNull ModuleRootLayer layer, @NotNull String name) {
+  public NamedPointer<Sdk> getPointer(@Nonnull ModuleRootLayer layer, @Nonnull String name) {
     return ((ModuleRootLayerImpl)layer).getRootModel().getConfigurationAccessor().getSdkPointer(name);
   }
 }

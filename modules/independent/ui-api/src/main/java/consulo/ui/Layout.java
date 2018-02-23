@@ -15,7 +15,7 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ public interface Layout extends Component {
     throw new AbstractMethodError();
   }
 
-  default void remove(@NotNull Component component) {
+  default void remove(@Nonnull Component component) {
     throw new AbstractMethodError();
   }
 }

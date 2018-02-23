@@ -19,14 +19,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.openapi.util.UserDataHolderBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 public abstract class MergeContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract Project getProject();
 
   public abstract boolean isFocused();
@@ -37,19 +37,19 @@ public abstract class MergeContext implements UserDataHolder {
    * Called by MergeTool on conflict resolve end. Should delegate to the {@link MergeRequest#applyResult(MergeResult)}
    */
   @RequiredDispatchThread
-  public abstract void finishMerge(@NotNull MergeResult result);
+  public abstract void finishMerge(@Nonnull MergeResult result);
 
   /**
    * @see com.intellij.diff.util.DiffUserDataKeys
    */
   @Nullable
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 }

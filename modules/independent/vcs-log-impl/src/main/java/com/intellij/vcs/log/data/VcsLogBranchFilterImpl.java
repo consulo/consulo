@@ -4,8 +4,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsLogBranchFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -14,16 +14,20 @@ import java.util.regex.PatternSyntaxException;
 public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
   private static final Logger LOG = Logger.getInstance(VcsLogBranchFilterImpl.class);
 
-  @NotNull private final List<String> myBranches;
-  @NotNull private final List<Pattern> myPatterns;
+  @Nonnull
+  private final List<String> myBranches;
+  @Nonnull
+  private final List<Pattern> myPatterns;
 
-  @NotNull private final List<String> myExcludedBranches;
-  @NotNull private final List<Pattern> myExcludedPatterns;
+  @Nonnull
+  private final List<String> myExcludedBranches;
+  @Nonnull
+  private final List<Pattern> myExcludedPatterns;
 
-  private VcsLogBranchFilterImpl(@NotNull List<String> branches,
-                                 @NotNull List<Pattern> patterns,
-                                 @NotNull List<String> excludedBranches,
-                                 @NotNull List<Pattern> excludedPatterns) {
+  private VcsLogBranchFilterImpl(@Nonnull List<String> branches,
+                                 @Nonnull List<Pattern> patterns,
+                                 @Nonnull List<String> excludedBranches,
+                                 @Nonnull List<Pattern> excludedPatterns) {
     myBranches = branches;
     myPatterns = patterns;
     myExcludedBranches = excludedBranches;
@@ -31,7 +35,7 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
   }
 
   @Deprecated
-  public VcsLogBranchFilterImpl(@NotNull Collection<String> branches, @NotNull Collection<String> excludedBranches) {
+  public VcsLogBranchFilterImpl(@Nonnull Collection<String> branches, @Nonnull Collection<String> excludedBranches) {
     myBranches = new ArrayList<>(branches);
     myPatterns = new ArrayList<>();
     myExcludedBranches = new ArrayList<>(excludedBranches);
@@ -39,13 +43,13 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
   }
 
   @Nullable
-  public static VcsLogBranchFilterImpl fromBranch(@NotNull final String branchName) {
+  public static VcsLogBranchFilterImpl fromBranch(@Nonnull final String branchName) {
     return new VcsLogBranchFilterImpl(Collections.singletonList(branchName), Collections.<Pattern>emptyList(),
                                       Collections.<String>emptyList(), Collections.<Pattern>emptyList());
   }
 
-  @NotNull
-  public static VcsLogBranchFilterImpl fromTextPresentation(@NotNull Collection<String> strings, @NotNull Set<String> existingBranches) {
+  @Nonnull
+  public static VcsLogBranchFilterImpl fromTextPresentation(@Nonnull Collection<String> strings, @Nonnull Set<String> existingBranches) {
     List<String> branchNames = new ArrayList<>();
     List<String> excludedBranches = new ArrayList<>();
     List<Pattern> patterns = new ArrayList<>();
@@ -89,7 +93,7 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
     return new VcsLogBranchFilterImpl(branchNames, patterns, excludedBranches, excludedPatterns);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<String> getTextPresentation() {
     List<String> result = new ArrayList<>();
@@ -125,11 +129,11 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
   }
 
   @Override
-  public boolean matches(@NotNull String name) {
+  public boolean matches(@Nonnull String name) {
     return isIncluded(name) && !isExcluded(name);
   }
 
-  private boolean isIncluded(@NotNull String name) {
+  private boolean isIncluded(@Nonnull String name) {
     if (myPatterns.isEmpty() && myBranches.isEmpty()) return true;
     if (myBranches.contains(name)) return true;
     for (Pattern regexp : myPatterns) {
@@ -138,7 +142,7 @@ public class VcsLogBranchFilterImpl implements VcsLogBranchFilter {
     return false;
   }
 
-  private boolean isExcluded(@NotNull String name) {
+  private boolean isExcluded(@Nonnull String name) {
     if (myExcludedBranches.contains(name)) return true;
     for (Pattern regexp : myExcludedPatterns) {
       if (regexp.matcher(name).matches()) return true;

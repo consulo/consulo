@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.vfs;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class VirtualFileWrapper {
    *
    * @param file java.io.File
    */
-  public VirtualFileWrapper(@NotNull File file) {
+  public VirtualFileWrapper(@Nonnull File file) {
     myFile = file;
   }
 
@@ -96,7 +96,7 @@ public class VirtualFileWrapper {
    *
    * @return original java.io.File
    */
-  @NotNull
+  @Nonnull
   public File getFile() {
     return myFile;
   }

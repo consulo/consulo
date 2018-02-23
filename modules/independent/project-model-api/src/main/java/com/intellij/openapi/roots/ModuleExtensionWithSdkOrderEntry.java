@@ -18,14 +18,14 @@ package com.intellij.openapi.roots;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author dsl
  */
 public interface ModuleExtensionWithSdkOrderEntry extends OrderEntry, OrderEntryWithTracking {
-  @NotNull
+  @Nonnull
   String getModuleExtensionId();
 
   @Nullable

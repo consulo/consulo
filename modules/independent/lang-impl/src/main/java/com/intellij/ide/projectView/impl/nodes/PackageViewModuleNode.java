@@ -22,7 +22,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class PackageViewModuleNode extends AbstractModuleNode{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     final Collection<AbstractTreeNode> result = PackageNodeUtil
       .createPackageViewChildrenOnFiles(Arrays.asList(ModuleRootManager.getInstance(getValue()).getContentFolderFiles(ContentFolderScopes.productionAndTest())), myProject, getSettings(),
@@ -51,7 +51,7 @@ public class PackageViewModuleNode extends AbstractModuleNode{
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     Module module = getValue();
     return module != null && !module.isDisposed() &&
            (ModuleUtilCore.moduleContainsFile(module, file, false) || ModuleUtilCore.moduleContainsFile(module, file, true));

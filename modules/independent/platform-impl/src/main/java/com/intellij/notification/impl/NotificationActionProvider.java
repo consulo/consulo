@@ -15,7 +15,7 @@
  */
 package com.intellij.notification.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
  * @author Sergey.Malenkov
  */
 public interface NotificationActionProvider {
-  @NotNull
+  @Nonnull
   Action[] getActions(HyperlinkListener listener);
 
   final class Action extends AbstractAction {

@@ -45,8 +45,8 @@ import com.intellij.psi.PsiManager;
 import consulo.annotations.Exported;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -71,7 +71,7 @@ public class ConfigurationContext {
 
   private List<ConfigurationFromContext> myConfigurationsFromContext;
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
   public static ConfigurationContext getFromContext(DataContext dataContext) {
     final ConfigurationContext context = new ConfigurationContext(dataContext);
@@ -138,7 +138,7 @@ public class ConfigurationContext {
    *
    * @return the configuration, or null if none of the producers were able to create a configuration from this context.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public synchronized RunnerAndConfigurationSettings getConfiguration() {
     if (myConfiguration == null && !myInitialized) {
       createConfiguration();
@@ -153,7 +153,7 @@ public class ConfigurationContext {
     myInitialized = true;
   }
 
-  public synchronized void setConfiguration(@NotNull RunnerAndConfigurationSettings configuration) {
+  public synchronized void setConfiguration(@Nonnull RunnerAndConfigurationSettings configuration) {
     myConfiguration = configuration;
     myInitialized = true;
   }
@@ -163,7 +163,7 @@ public class ConfigurationContext {
    *
    * @return the source code location, or null if no source code fragment is currently selected.
    */
-  @Nullable
+  @javax.annotation.Nullable
   public Location getLocation() {
     return myLocation;
   }
@@ -183,7 +183,7 @@ public class ConfigurationContext {
    *
    * @return an existing configuration, or null if none was found.
    */
-  @Nullable
+  @javax.annotation.Nullable
   @SuppressWarnings("deprecation")
   public RunnerAndConfigurationSettings findExisting() {
     if (myExistingConfiguration != null) return myExistingConfiguration.get();
@@ -283,7 +283,7 @@ public class ConfigurationContext {
    * @param type {@link ConfigurationType} instance to filter original runtime configuration by its type
    * @return {@link RunConfiguration} instance, it could be null
    */
-  @Nullable
+  @javax.annotation.Nullable
   public RunConfiguration getOriginalConfiguration(@Nullable ConfigurationType type) {
     if (type == null) {
       return myRuntimeConfiguration;
@@ -304,7 +304,7 @@ public class ConfigurationContext {
    * @param type {@link ConfigurationType} instance to match the original run configuration
    * @return true if the original run configuration is of the same type or it's undefined; false otherwise
    */
-  public boolean isCompatibleWithOriginalRunConfiguration(@NotNull ConfigurationType type) {
+  public boolean isCompatibleWithOriginalRunConfiguration(@Nonnull ConfigurationType type) {
     return myRuntimeConfiguration == null || ConfigurationTypeUtil.equals(myRuntimeConfiguration.getType(), type);
   }
 
@@ -321,7 +321,7 @@ public class ConfigurationContext {
   private List<com.intellij.execution.junit.RuntimeConfigurationProducer> myPreferredProducers;
 
   @Deprecated
-  @Nullable
+  @javax.annotation.Nullable
   @SuppressWarnings({"deprecation", "unused"})
   public RunnerAndConfigurationSettings updateConfiguration(final com.intellij.execution.junit.RuntimeConfigurationProducer producer) {
     myConfiguration = producer.getConfiguration();
@@ -329,7 +329,7 @@ public class ConfigurationContext {
   }
 
   @Deprecated
-  @Nullable
+  @javax.annotation.Nullable
   @SuppressWarnings("deprecation")
   public List<com.intellij.execution.junit.RuntimeConfigurationProducer> findPreferredProducers() {
     if (myPreferredProducers == null) {

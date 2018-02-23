@@ -21,8 +21,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.profile.Profile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -36,7 +36,7 @@ public interface ErrorsConfigurable extends Configurable {
 
   void selectInspectionTool(final String selectedToolShortName);
 
-  void setFilterLanguages(@NotNull Collection<Language> languages);
+  void setFilterLanguages(@Nonnull Collection<Language> languages);
 
   @Nullable
   Object getSelectedObject();
@@ -46,7 +46,7 @@ public interface ErrorsConfigurable extends Configurable {
     }
 
     @Nullable
-    public static ErrorsConfigurable createConfigurable(@NotNull Project project) {
+    public static ErrorsConfigurable createConfigurable(@Nonnull Project project) {
       Configurable configurable = ConfigurableExtensionPointUtil.createProjectConfigurableForProvider(project, ErrorsConfigurableProvider.class);
       if (configurable == null) {
         configurable = ConfigurableExtensionPointUtil.createApplicationConfigurableForProvider(ErrorsConfigurableProvider.class);

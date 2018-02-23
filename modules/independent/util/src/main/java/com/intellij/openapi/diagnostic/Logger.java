@@ -18,8 +18,8 @@ package com.intellij.openapi.diagnostic;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Constructor;
 
@@ -91,7 +91,7 @@ public abstract class Logger {
 
   public abstract void debug(@NonNls String message, @Nullable Throwable t);
 
-  public void debug(@NotNull String message, Object... details) {
+  public void debug(@Nonnull String message, Object... details) {
     if (isDebugEnabled()) {
       StringBuilder sb = new StringBuilder();
       sb.append(message);
@@ -102,7 +102,7 @@ public abstract class Logger {
     }
   }
 
-  public void info(@NotNull Throwable t) {
+  public void info(@Nonnull Throwable t) {
     info(t.getMessage(), t);
   }
 
@@ -114,7 +114,7 @@ public abstract class Logger {
     warn(message, null);
   }
 
-  public void warn(@NotNull Throwable t) {
+  public void warn(@Nonnull Throwable t) {
     warn(t.getMessage(), t);
   }
 
@@ -139,11 +139,11 @@ public abstract class Logger {
     error(message, e, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  public void error(@NotNull Throwable t) {
+  public void error(@Nonnull Throwable t) {
     error(t.getMessage(), t, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  public abstract void error(@NonNls String message, @Nullable Throwable t, @NonNls @NotNull String... details);
+  public abstract void error(@NonNls String message, @Nullable Throwable t, @NonNls @Nonnull String... details);
 
   public boolean assertTrue(boolean value, @Nullable @NonNls Object message) {
     if (!value) {

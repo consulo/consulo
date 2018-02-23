@@ -19,7 +19,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntIterator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   private static final Comparator<IndentUsageInfo> DECREASING_ORDER = new Comparator<IndentUsageInfo>() {
     @Override
-    public int compare(@NotNull IndentUsageInfo o1, @NotNull IndentUsageInfo o2) {
+    public int compare(@Nonnull IndentUsageInfo o1, @Nonnull IndentUsageInfo o2) {
       return o1.getTimesUsed() < o2.getTimesUsed() ? 1 : o1.getTimesUsed() == o2.getTimesUsed() ? 0 : -1;
     }
   };
@@ -44,15 +44,15 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   private List<IndentUsageInfo> myIndentUsages = ContainerUtil.newArrayList();
   private Stack<IndentData> myParentIndents = ContainerUtil.newStack(new IndentData(0, 0));
 
-  public IndentUsageStatisticsImpl(@NotNull List<LineIndentInfo> lineInfos) {
+  public IndentUsageStatisticsImpl(@Nonnull List<LineIndentInfo> lineInfos) {
     myLineInfos = lineInfos;
     buildIndentToUsagesMap();
     myIndentUsages = toIndentUsageList(myIndentToUsagesMap);
     ContainerUtil.sort(myIndentUsages, DECREASING_ORDER);
   }
 
-  @NotNull
-  private static List<IndentUsageInfo> toIndentUsageList(@NotNull TIntIntHashMap indentToUsages) {
+  @Nonnull
+  private static List<IndentUsageInfo> toIndentUsageList(@Nonnull TIntIntHashMap indentToUsages) {
     List<IndentUsageInfo> indentUsageInfos = ContainerUtil.newArrayList();
     TIntIntIterator it = indentToUsages.iterator();
     while (it.hasNext()) {
@@ -76,7 +76,7 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
     }
   }
 
-  @NotNull
+  @Nonnull
   private IndentData findParentIndent(int indent) {
     while (myParentIndents.size() != 1 && myParentIndents.peek().indent > indent) {
       myParentIndents.pop();

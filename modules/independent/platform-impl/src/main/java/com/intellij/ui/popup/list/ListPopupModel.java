@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.popup.ListSeparator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;

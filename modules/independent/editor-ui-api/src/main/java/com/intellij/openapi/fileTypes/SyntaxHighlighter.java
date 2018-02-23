@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Controls the syntax highlighting of a file.
@@ -44,7 +44,7 @@ public interface SyntaxHighlighter {
    *
    * @return The lexer implementation.
    */
-  @NotNull
+  @Nonnull
   Lexer getHighlightingLexer();
 
   /**
@@ -54,6 +54,6 @@ public interface SyntaxHighlighter {
    * @param tokenType The token type for which the highlighting is requested.
    * @return The array of text attribute keys.
    */
-  @NotNull
+  @Nonnull
   TextAttributesKey[] getTokenHighlights(IElementType tokenType);
 }

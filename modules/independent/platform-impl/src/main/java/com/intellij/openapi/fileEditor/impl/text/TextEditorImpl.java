@@ -30,8 +30,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -48,12 +48,14 @@ import java.util.concurrent.TimeoutException;
 public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   protected final Project myProject;
   private final PropertyChangeSupport myChangeSupport;
-  @NotNull private final TextEditorComponent myComponent;
-  @NotNull protected final VirtualFile myFile;
+  @Nonnull
+  private final TextEditorComponent myComponent;
+  @Nonnull
+  protected final VirtualFile myFile;
   private final AsyncEditorLoader myAsyncLoader;
   private final Future<?> myLoadingFinished;
 
-  TextEditorImpl(@NotNull final Project project, @NotNull final VirtualFile file, final TextEditorProvider provider) {
+  TextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProvider provider) {
     myProject = project;
     myFile = file;
     myChangeSupport = new PropertyChangeSupport(this);
@@ -63,7 +65,7 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
     myLoadingFinished = myAsyncLoader.start();
   }
 
-  @NotNull
+  @Nonnull
   protected Runnable loadEditorInBackground() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
@@ -72,7 +74,7 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
     return () -> editor.setHighlighter(highlighter);
   }
 
-  @NotNull
+  @Nonnull
   protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
     return new TextEditorComponent(project, file, this);
   }
@@ -82,19 +84,19 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextEditorComponent getComponent() {
     return myComponent;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getPreferredFocusedComponent(){
     return getActiveEditor().getContentComponent();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Editor getEditor(){
     return getActiveEditor();
   }
@@ -102,25 +104,25 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   /**
    * @see TextEditorComponent#getEditor()
    */
-  @NotNull
+  @Nonnull
   private Editor getActiveEditor() {
     return myComponent.getEditor();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "Text";
   }
 
   @Override
-  @NotNull
-  public FileEditorState getState(@NotNull FileEditorStateLevel level) {
+  @Nonnull
+  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
     return myAsyncLoader.getEditorState(level);
   }
 
   @Override
-  public void setState(@NotNull final FileEditorState state) {
+  public void setState(@Nonnull final FileEditorState state) {
     myAsyncLoader.setEditorState((TextEditorState)state);
   }
 
@@ -152,12 +154,12 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   }
 
   @Override
-  public void addPropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myChangeSupport.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void removePropertyChangeListener(@NotNull final PropertyChangeListener listener) {
+  public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myChangeSupport.removePropertyChangeListener(listener);
   }
 
@@ -186,13 +188,13 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   }
 
   @Override
-  public boolean canNavigateTo(@NotNull final Navigatable navigatable) {
+  public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
     return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor)navigatable).getLine() != -1 ||
                                                          ((OpenFileDescriptor)navigatable).getOffset() >= 0);
   }
 
   @Override
-  public void navigateTo(@NotNull final Navigatable navigatable) {
+  public void navigateTo(@Nonnull final Navigatable navigatable) {
     ((OpenFileDescriptor)navigatable).navigateIn(getEditor());
   }
 
@@ -202,7 +204,7 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   }
 
   @TestOnly
-  public void waitForLoaded(long timeout, @NotNull TimeUnit unit) throws TimeoutException {
+  public void waitForLoaded(long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
     try {
       myLoadingFinished.get(timeout, unit);
     }

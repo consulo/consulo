@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -34,9 +34,9 @@ public abstract class ShowSettingsUtil {
 
   public abstract void showSettingsDialog(@Nullable Project project, Class toSelect);
 
-  public abstract void showSettingsDialog(@Nullable Project project, @NotNull String nameToSelect);
+  public abstract void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
 
-  public abstract void showSettingsDialog(@NotNull final Project project, final Configurable toSelect);
+  public abstract void showSettingsDialog(@Nonnull final Project project, final Configurable toSelect);
 
   @RequiredDispatchThread
   public boolean editConfigurable(Project project, Configurable configurable) {
@@ -81,7 +81,7 @@ public abstract class ShowSettingsUtil {
    */
   public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
 
-  @NotNull
+  @Nonnull
   public static String getSettingsMenuName() {
     return SystemInfo.isMac ? "Preferences" : "Settings";
   }

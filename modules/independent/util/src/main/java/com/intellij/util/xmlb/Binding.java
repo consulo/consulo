@@ -17,8 +17,8 @@ package com.intellij.util.xmlb;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -32,30 +32,30 @@ abstract class Binding {
     myAccessor = accessor;
   }
 
-  @NotNull
+  @Nonnull
   public MutableAccessor getAccessor() {
     return myAccessor;
   }
 
   @Nullable
-  public abstract Object serialize(@NotNull Object o, @Nullable Object context, @NotNull SerializationFilter filter);
+  public abstract Object serialize(@Nonnull Object o, @Nullable Object context, @Nonnull SerializationFilter filter);
 
   @Nullable
-  public Object deserialize(Object context, @NotNull Element element) {
+  public Object deserialize(Object context, @Nonnull Element element) {
     return context;
   }
 
-  public boolean isBoundTo(@NotNull Element element) {
+  public boolean isBoundTo(@Nonnull Element element) {
     return false;
   }
 
-  void init(@NotNull Type originalType) {
+  void init(@Nonnull Type originalType) {
     // called (and make sense) only if MainBinding
   }
 
   @SuppressWarnings("CastToIncompatibleInterface")
   @Nullable
-  public static Object deserializeList(@NotNull Binding binding, Object context, @NotNull List<Element> nodes) {
+  public static Object deserializeList(@Nonnull Binding binding, Object context, @Nonnull List<Element> nodes) {
     if (binding instanceof MultiNodeBinding) {
       return ((MultiNodeBinding)binding).deserializeList(context, nodes);
     }

@@ -25,17 +25,18 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DiffRequestPanelImpl implements DiffRequestPanel {
-  @NotNull private final JPanel myPanel;
-  @NotNull private final MyDiffRequestProcessor myProcessor;
+  @Nonnull
+  private final JPanel myPanel;
+  @Nonnull
+  private final MyDiffRequestProcessor myProcessor;
 
-  public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
+  public DiffRequestPanelImpl(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Window window) {
     myProcessor = new MyDiffRequestProcessor(project, window);
     myProcessor.putContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE, true);
 
@@ -50,27 +51,27 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   }
 
   @Override
-  public void setRequest(@Nullable DiffRequest request) {
+  public void setRequest(@javax.annotation.Nullable DiffRequest request) {
     setRequest(request, null);
   }
 
   @Override
-  public void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+  public void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity) {
     myProcessor.setRequest(request, identity);
   }
 
   @Override
-  public <T> void putContextHints(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putContextHints(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
     myProcessor.putContextUserData(key, value);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myProcessor.getPreferredFocusedComponent();
@@ -82,17 +83,20 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   }
 
   private static class MyDiffRequestProcessor extends DiffRequestProcessor {
-    @Nullable private final Window myWindow;
+    @javax.annotation.Nullable
+    private final Window myWindow;
 
-    @NotNull private DiffRequest myRequest = NoDiffRequest.INSTANCE;
-    @Nullable private Object myRequestIdentity = null;
+    @Nonnull
+    private DiffRequest myRequest = NoDiffRequest.INSTANCE;
+    @javax.annotation.Nullable
+    private Object myRequestIdentity = null;
 
-    public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
+    public MyDiffRequestProcessor(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Window window) {
       super(project);
       myWindow = window;
     }
 
-    public synchronized void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
+    public synchronized void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity) {
       if (myRequestIdentity != null && identity != null && myRequestIdentity.equals(identity)) return;
 
       myRequest = request != null ? request : NoDiffRequest.INSTANCE;
@@ -103,12 +107,12 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
 
     @Override
     @RequiredDispatchThread
-    public synchronized void updateRequest(boolean force, @Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
+    public synchronized void updateRequest(boolean force, @javax.annotation.Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
       applyRequest(myRequest, force, scrollToChangePolicy);
     }
 
     @Override
-    protected void setWindowTitle(@NotNull String title) {
+    protected void setWindowTitle(@Nonnull String title) {
       if (myWindow == null) return;
       if (myWindow instanceof JDialog) ((JDialog)myWindow).setTitle(title);
       if (myWindow instanceof JFrame) ((JFrame)myWindow).setTitle(title);

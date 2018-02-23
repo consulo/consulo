@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.ex.http;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -25,6 +25,6 @@ import java.util.EventListener;
  */
 public interface HttpVirtualFileListener extends EventListener {
 
-  void fileDownloaded(@NotNull VirtualFile file);
+  void fileDownloaded(@Nonnull VirtualFile file);
 
 }

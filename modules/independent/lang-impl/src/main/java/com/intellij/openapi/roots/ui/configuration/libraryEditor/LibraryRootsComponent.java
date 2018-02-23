@@ -57,8 +57,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
 import com.intellij.util.containers.HashSet;
 import consulo.vfs.ArchiveFileSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -92,11 +92,11 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
   private Module myContextModule;
   private LibraryRootsComponent.AddExcludedRootActionButton myAddExcludedRootActionButton;
 
-  public LibraryRootsComponent(@Nullable Project project, @NotNull LibraryEditor libraryEditor) {
+  public LibraryRootsComponent(@Nullable Project project, @Nonnull LibraryEditor libraryEditor) {
     this(project, new Computable.PredefinedValueComputable<LibraryEditor>(libraryEditor));
   }
 
-  public LibraryRootsComponent(@Nullable Project project, @NotNull Computable<LibraryEditor> libraryEditorComputable) {
+  public LibraryRootsComponent(@Nullable Project project, @Nonnull Computable<LibraryEditor> libraryEditorComputable) {
     myProject = project;
     myLibraryEditorComputable = libraryEditorComputable;
     final LibraryEditor editor = getLibraryEditor();
@@ -121,7 +121,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     myAddExcludedRootActionButton.setEnabled(!getNotExcludedRoots().isEmpty());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LibraryProperties getProperties() {
     return getLibraryEditor().getProperties();
@@ -469,7 +469,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     return rootsToAttach;
   }
 
-  private List<OrderRoot> filterAlreadyAdded(@NotNull List<OrderRoot> roots) {
+  private List<OrderRoot> filterAlreadyAdded(@Nonnull List<OrderRoot> roots) {
     List<OrderRoot> result = new ArrayList<OrderRoot>();
     for (OrderRoot root : roots) {
       final VirtualFile[] libraryFiles = getLibraryEditor().getFiles(root.getType());

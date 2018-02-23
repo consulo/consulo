@@ -22,9 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.SearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 import static com.intellij.codeInsight.actions.TextRangeType.*;
@@ -37,7 +37,7 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
 
   private final LastRunReformatCodeOptionsProvider myLastRunSettings;
 
-  public ReformatFilesDialog(@NotNull Project project, @NotNull VirtualFile[] files) {
+  public ReformatFilesDialog(@Nonnull Project project, @Nonnull VirtualFile[] files) {
     super(project, true);
     myLastRunSettings = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
 

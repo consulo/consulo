@@ -18,8 +18,8 @@ package com.intellij.psi.codeStyle.lineIndent;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An interface for indentation calculation. Used in editor actions like Enter handling.
@@ -38,7 +38,7 @@ public interface LineIndentProvider {
    * LineIndentProvider can't calculate the indent (in this case no indent adjustment will be made).
    */
   @Nullable
-  String getLineIndent(@NotNull Project project, @NotNull Editor editor, Language language, int offset);
+  String getLineIndent(@Nonnull Project project, @Nonnull Editor editor, Language language, int offset);
 
-  boolean isSuitableFor(@Nullable Language language);
+  boolean isSuitableFor(@javax.annotation.Nullable Language language);
 }

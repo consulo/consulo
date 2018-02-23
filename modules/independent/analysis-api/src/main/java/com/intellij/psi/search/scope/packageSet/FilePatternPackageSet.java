@@ -31,8 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
@@ -149,7 +148,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PackageSet createCopy() {
     return new FilePatternPackageSet(myModulePatternText, myPathPattern);
   }
@@ -160,7 +159,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     @NonNls StringBuffer buf = new StringBuffer("file");
 
@@ -191,9 +190,9 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     return Comparing.strEqual(myPathPattern, oldQName);
   }
 
-  @Nullable
-  public static String getRelativePath(@NotNull VirtualFile virtualFile,
-                                       @NotNull ProjectFileIndex index,
+  @javax.annotation.Nullable
+  public static String getRelativePath(@Nonnull VirtualFile virtualFile,
+                                       @Nonnull ProjectFileIndex index,
                                        final boolean useFQName,
                                        VirtualFile projectBaseDir) {
     final VirtualFile contentRootForFile = index.getContentRootForFile(virtualFile);

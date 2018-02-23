@@ -6,21 +6,22 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import com.intellij.vcs.log.data.index.VcsLogIndex;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 public class MiniDetailsGetter extends AbstractDataGetter<VcsShortCommitDetails> {
 
-  @NotNull private final TopCommitsCache myTopCommitsDetailsCache;
+  @Nonnull
+  private final TopCommitsCache myTopCommitsDetailsCache;
 
-  MiniDetailsGetter(@NotNull VcsLogStorage hashMap,
-                    @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                    @NotNull TopCommitsCache topCommitsDetailsCache,
-                    @NotNull VcsLogIndex index,
-                    @NotNull Disposable parentDisposable) {
+  MiniDetailsGetter(@Nonnull VcsLogStorage hashMap,
+                    @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                    @Nonnull TopCommitsCache topCommitsDetailsCache,
+                    @Nonnull VcsLogIndex index,
+                    @Nonnull Disposable parentDisposable) {
     super(hashMap, logProviders, new VcsCommitCache<>(), index, parentDisposable);
     myTopCommitsDetailsCache = topCommitsDetailsCache;
   }
@@ -31,10 +32,10 @@ public class MiniDetailsGetter extends AbstractDataGetter<VcsShortCommitDetails>
     return myTopCommitsDetailsCache.get(commitId);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected List<? extends VcsShortCommitDetails> readDetails(@NotNull VcsLogProvider logProvider, @NotNull VirtualFile root,
-                                                              @NotNull List<String> hashes) throws VcsException {
+  protected List<? extends VcsShortCommitDetails> readDetails(@Nonnull VcsLogProvider logProvider, @Nonnull VirtualFile root,
+                                                              @Nonnull List<String> hashes) throws VcsException {
     return logProvider.readShortDetails(root, hashes);
   }
 }

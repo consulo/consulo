@@ -21,7 +21,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.meta.PsiMetaOwner;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,7 +32,7 @@ public class DefaultNonCodeSearchElementDescriptionProvider implements ElementDe
   public static final DefaultNonCodeSearchElementDescriptionProvider INSTANCE = new DefaultNonCodeSearchElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@NotNull final PsiElement element, @NotNull final ElementDescriptionLocation location) {
+  public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
     if (!(location instanceof NonCodeSearchDescriptionLocation)) return null;
     final NonCodeSearchDescriptionLocation ncdLocation = (NonCodeSearchDescriptionLocation)location;
 

@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class FavoritesRootNode extends AbstractTreeNode<String> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     if (myFavoritesRoots == null) {
       myFavoritesRoots = new ArrayList<AbstractTreeNode>(FavoritesManager.getInstance(myProject).createRootNodes());

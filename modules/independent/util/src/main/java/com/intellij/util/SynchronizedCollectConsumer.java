@@ -15,12 +15,12 @@
  */
 package com.intellij.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {
-  public SynchronizedCollectConsumer(@NotNull Collection<T> result) {
+  public SynchronizedCollectConsumer(@Nonnull Collection<T> result) {
     super(result);
   }
   public SynchronizedCollectConsumer() {
@@ -32,7 +32,7 @@ public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {
     super.consume(t);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public synchronized Collection<T> getResult() {
     return super.getResult();

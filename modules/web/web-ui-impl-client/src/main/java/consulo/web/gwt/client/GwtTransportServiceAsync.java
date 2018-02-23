@@ -18,8 +18,8 @@ package consulo.web.gwt.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import consulo.annotations.DeprecationInfo;
 import consulo.web.gwt.shared.transport.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -31,26 +31,26 @@ public interface GwtTransportServiceAsync {
 
   void getProjectInfo(String path, AsyncCallback<GwtProjectInfo> async);
 
-  @NotNull
+  @Nonnull
   void listChildren(String fileUrl, AsyncCallback<List<GwtVirtualFile>> async);
 
   void findFileByUrl(String fileUrl, AsyncCallback<GwtVirtualFile> async);
 
-  @Nullable
+  @javax.annotation.Nullable
   void getContent(String fileUrl, AsyncCallback<String> async);
 
-  @NotNull
+  @Nonnull
   void getLexerHighlight(String fileUrl, AsyncCallback<List<GwtHighlightInfo>> async);
 
-  @NotNull
+  @Nonnull
   void runHighlightPasses(String fileUrl, int offset, AsyncCallback<List<GwtHighlightInfo>> async);
 
   @Nullable
   void getNavigationInfo(String fileUrl, int offset, AsyncCallback<GwtNavigateInfo> async);
 
-  @NotNull
+  @Nonnull
   void serviceEditorColorScheme(String name, String[] colorKeys, String[] attributes, AsyncCallback<GwtEditorColorScheme> async);
 
-  @NotNull
+  @Nonnull
   void serviceEditorColorSchemeList(AsyncCallback<List<String>> async);
 }

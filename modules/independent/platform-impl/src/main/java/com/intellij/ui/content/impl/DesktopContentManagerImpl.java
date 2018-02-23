@@ -31,9 +31,9 @@ import com.intellij.ui.content.ContentUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.wm.impl.ContentManagerBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -45,7 +45,7 @@ import java.awt.*;
 public class DesktopContentManagerImpl extends ContentManagerBase {
   protected JComponent myComponent;
 
-  public DesktopContentManagerImpl(@NotNull ContentUI contentUI, boolean canCloseContents, @NotNull Project project) {
+  public DesktopContentManagerImpl(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
     super(contentUI, canCloseContents, project);
   }
 
@@ -54,7 +54,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     myUI.getComponent().updateUI();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ActionCallback requestFocusForComponent() {
     return getFocusManager().requestFocus(myComponent, true);
@@ -84,7 +84,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     if (myComponent == null) {
@@ -99,7 +99,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     return myComponent;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ActionCallback requestFocus(final Content content, final boolean forced) {
     final Content toSelect = content == null ? getSelectedContent() : content;
@@ -107,7 +107,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
     assert myContents.contains(toSelect);
 
     return getFocusManager().requestFocus(new FocusCommand(content, toSelect.getPreferredFocusableComponent()) {
-      @NotNull
+      @Nonnull
       @Override
       public ActionCallback run() {
         return doRequestFocus(toSelect);
@@ -142,7 +142,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
 
     @Override
     @Nullable
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (PlatformDataKeys.CONTENT_MANAGER == dataId || PlatformDataKeys.NONEMPTY_CONTENT_MANAGER == dataId && getContentCount() > 1) {
         return DesktopContentManagerImpl.this;
       }

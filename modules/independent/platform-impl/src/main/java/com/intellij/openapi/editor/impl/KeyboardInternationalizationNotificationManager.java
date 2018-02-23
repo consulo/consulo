@@ -22,8 +22,8 @@ import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class KeyboardInternationalizationNotificationManager {
     notificationHasBeenShown = true;
   }
 
-  public static Notification createNotification(@NotNull final String groupDisplayId, @Nullable NotificationListener listener) {
+  public static Notification createNotification(@Nonnull final String groupDisplayId, @Nullable NotificationListener listener) {
 
     final String productName = ApplicationNamesInfo.getInstance().getProductName();
 
@@ -74,7 +74,7 @@ public class KeyboardInternationalizationNotificationManager {
     }
 
     @Override
-    public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         final String description = event.getDescription();
         if ("enable".equals(description)) {

@@ -33,7 +33,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class ResourceCompiler implements TranslatingCompiler {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDescription() {
     return CompilerBundle.message("resource.compiler.description");
   }
@@ -166,13 +166,13 @@ public class ResourceCompiler implements TranslatingCompiler {
     context.getProgressIndicator().popState();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getInputFileTypes() {
     return FileType.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getOutputFileTypes() {
     return FileType.EMPTY_ARRAY;

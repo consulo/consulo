@@ -38,8 +38,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,9 +69,10 @@ public class SearchResults implements DocumentListener {
 
   private final List<SearchResultsListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private @Nullable FindResult myCursor;
+  private @Nullable
+  FindResult myCursor;
 
-  @NotNull
+  @Nonnull
   private List<FindResult> myOccurrences = new ArrayList<FindResult>();
 
   private final Set<RangeMarker> myExcluded = new HashSet<RangeMarker>();
@@ -177,7 +178,7 @@ public class SearchResults implements DocumentListener {
     return myCursor;
   }
 
-  @NotNull
+  @Nonnull
   public List<FindResult> getOccurrences() {
     return myOccurrences;
   }
@@ -325,7 +326,7 @@ public class SearchResults implements DocumentListener {
     myEditor.getDocument().removeDocumentListener(this);
   }
 
-  private void searchCompleted(@NotNull List<FindResult> occurrences, Editor editor, @Nullable FindModel findModel,
+  private void searchCompleted(@Nonnull List<FindResult> occurrences, Editor editor, @Nullable FindModel findModel,
                                boolean toChangeSelection, @Nullable TextRange next, int stamp) {
     if (stamp < myLastUpdatedStamp){
       return;

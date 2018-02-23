@@ -16,12 +16,12 @@
 package com.intellij.openapi.deployment;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
 public abstract class DeploymentUtil {
-  public static String trimForwardSlashes(@NotNull String path) {
+  public static String trimForwardSlashes(@Nonnull String path) {
     while (path.length() != 0 && (path.charAt(0) == '/' || path.charAt(0) == File.separatorChar)) {
       path = path.substring(1);
     }
@@ -42,7 +42,7 @@ public abstract class DeploymentUtil {
     return builder.toString();
   }
 
-  public static String appendToPath(@NotNull String basePath, @NotNull String relativePath) {
+  public static String appendToPath(@Nonnull String basePath, @Nonnull String relativePath) {
     final boolean endsWithSlash = StringUtil.endsWithChar(basePath, '/') || StringUtil.endsWithChar(basePath, '\\');
     final boolean startsWithSlash = StringUtil.startsWithChar(relativePath, '/') || StringUtil.startsWithChar(relativePath, '\\');
     String tail;

@@ -17,8 +17,8 @@ package com.intellij.vcs.log.data.index;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.VcsLogDetailsFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -28,14 +28,14 @@ public interface VcsLogIndex {
 
   boolean isIndexed(int commit);
 
-  boolean isIndexed(@NotNull VirtualFile root);
+  boolean isIndexed(@Nonnull VirtualFile root);
 
-  void markForIndexing(int commit, @NotNull VirtualFile root);
+  void markForIndexing(int commit, @Nonnull VirtualFile root);
 
-  boolean canFilter(@NotNull List<VcsLogDetailsFilter> filters);
+  boolean canFilter(@Nonnull List<VcsLogDetailsFilter> filters);
 
-  @NotNull
-  Set<Integer> filter(@NotNull List<VcsLogDetailsFilter> detailsFilters);
+  @Nonnull
+  Set<Integer> filter(@Nonnull List<VcsLogDetailsFilter> detailsFilters);
 
   @Nullable
   String getFullMessage(int index);

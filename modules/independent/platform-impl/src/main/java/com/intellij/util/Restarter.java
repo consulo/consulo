@@ -26,7 +26,7 @@ import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.ApplicationProperties;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class Restarter {
     return (getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac) && !ApplicationProperties.isInSandbox();
   }
 
-  public static int scheduleRestart(@NotNull String... beforeRestart) throws IOException {
+  public static int scheduleRestart(@Nonnull String... beforeRestart) throws IOException {
     try {
       int restartCode = getRestartCode();
       if (restartCode != 0) {
@@ -104,7 +104,7 @@ public class Restarter {
     }
   }
 
-  private static void restartOnWindows(@NotNull final String... beforeRestart) throws IOException {
+  private static void restartOnWindows(@Nonnull final String... beforeRestart) throws IOException {
     Kernel32 kernel32 = (Kernel32)Native.loadLibrary("kernel32", Kernel32.class);
     Shell32 shell32 = (Shell32)Native.loadLibrary("shell32", Shell32.class);
 
@@ -131,7 +131,7 @@ public class Restarter {
     }
   }
 
-  private static void restartOnMac(@NotNull final String... beforeRestart) throws IOException {
+  private static void restartOnMac(@Nonnull final String... beforeRestart) throws IOException {
     File distributionDirectory = PathManager.getAppHomeDirectory();
 
     File appDirectory = distributionDirectory.getParentFile();

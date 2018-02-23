@@ -23,7 +23,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,8 +33,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.fileEditor.impl.EditorSplitters;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -45,21 +44,21 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
   private Project myProject;
   private StatusBar myStatusBar;
 
-  public ToggleReadOnlyAttributePanel(@NotNull Project project) {
+  public ToggleReadOnlyAttributePanel(@Nonnull Project project) {
     myProject = project;
     MessageBusConnection connection = project.getMessageBus().connect(this);
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Icon getIcon() {
     VirtualFile virtualFile = getCurrentFile();
     return virtualFile == null || virtualFile.isWritable() ? AllIcons.Ide.Readwrite : AllIcons.Ide.Readonly;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String ID() {
     return "ReadOnlyAttribute";
   }
@@ -70,7 +69,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
   }
 
   @Override
-  public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+  public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
     return this;
   }
 
@@ -81,7 +80,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
   }
 
   @Override
-  public void install(@NotNull StatusBar statusBar) {
+  public void install(@Nonnull StatusBar statusBar) {
     myStatusBar = statusBar;
   }
 
@@ -132,7 +131,7 @@ public class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe,
   }
 
   @Override
-  public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
     if (myStatusBar != null) {
       myStatusBar.updateWidget(ID());
     }

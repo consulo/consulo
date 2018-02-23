@@ -27,7 +27,7 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.InlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -48,12 +48,12 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
-    public void save(@NotNull final DataOutput out, final Integer value) throws IOException {
+    public void save(@Nonnull final DataOutput out, final Integer value) throws IOException {
       out.write(value.intValue() & UsageSearchContext.ANY);
     }
 
     @Override
-    public Integer read(@NotNull final DataInput in) throws IOException {
+    public Integer read(@Nonnull final DataInput in) throws IOException {
       return Integer.valueOf(in.readByte() & UsageSearchContext.ANY);
     }
   };
@@ -72,8 +72,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
 
   private final DataIndexer<IdIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<IdIndexEntry, Integer, FileContent>() {
     @Override
-    @NotNull
-    public Map<IdIndexEntry, Integer> map(@NotNull final FileContent inputData) {
+    @Nonnull
+    public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
       final IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
@@ -93,31 +93,31 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ID<IdIndexEntry,Integer> getName() {
     return NAME;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataIndexer<IdIndexEntry, Integer, FileContent> getIndexer() {
     return myIndexer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DataExternalizer<Integer> getValueExternalizer() {
     return myValueExternalizer;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public KeyDescriptor<IdIndexEntry> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;

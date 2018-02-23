@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.BiConsumer;
 
 /**
@@ -24,5 +22,5 @@ import java.util.function.BiConsumer;
  * @since 14-Jun-16
  */
 public interface Tab extends ItemPresentation {
-  void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
+  void setCloseHandler(@javax.annotation.Nullable BiConsumer<Tab, Component> closeHandler);
 }

@@ -36,8 +36,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.io.BuiltInServer;
 import org.jetbrains.io.MessageDecoder;
 
@@ -78,7 +78,7 @@ public final class SocketLock {
   private String myToken;
   private BuiltInServer myServer;
 
-  public SocketLock(@NotNull String configPath, @NotNull String systemPath) {
+  public SocketLock(@Nonnull String configPath, @Nonnull String systemPath) {
     myConfigPath = canonicalPath(configPath);
     mySystemPath = canonicalPath(systemPath);
   }
@@ -116,13 +116,13 @@ public final class SocketLock {
     return myServer;
   }
 
-  @NotNull
+  @Nonnull
   public ActivateStatus lock() throws Exception {
     return lock(ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  @NotNull
-  public ActivateStatus lock(@NotNull String[] args) throws Exception {
+  @Nonnull
+  public ActivateStatus lock(@Nonnull String[] args) throws Exception {
     log("enter: lock(config=%s system=%s)", myConfigPath, mySystemPath);
 
     return underLocks(() -> {
@@ -173,7 +173,7 @@ public final class SocketLock {
     });
   }
 
-  private <V> V underLocks(@NotNull Callable<V> action) throws Exception {
+  private <V> V underLocks(@Nonnull Callable<V> action) throws Exception {
     FileUtilRt.createDirectory(new File(myConfigPath));
     try (@SuppressWarnings("unused") FileOutputStream lock1 = new FileOutputStream(new File(myConfigPath, PORT_LOCK_FILE), true)) {
       FileUtilRt.createDirectory(new File(mySystemPath));
@@ -183,7 +183,7 @@ public final class SocketLock {
     }
   }
 
-  private static void addExistingPort(@NotNull File portMarker, @NotNull String path, @NotNull MultiMap<Integer, String> portToPath) {
+  private static void addExistingPort(@Nonnull File portMarker, @Nonnull String path, @Nonnull MultiMap<Integer, String> portToPath) {
     if (portMarker.exists()) {
       try {
         portToPath.putValue(Integer.parseInt(FileUtilRt.loadFile(portMarker)), path);
@@ -195,8 +195,8 @@ public final class SocketLock {
     }
   }
 
-  @NotNull
-  private ActivateStatus tryActivate(int portNumber, @NotNull Collection<String> paths, @NotNull String[] args) {
+  @Nonnull
+  private ActivateStatus tryActivate(int portNumber, @Nonnull Collection<String> paths, @Nonnull String[] args) {
     log("trying: port=%s", portNumber);
     args = checkForJetBrainsProtocolCommand(args);
     try {
@@ -300,9 +300,9 @@ public final class SocketLock {
     private final String myToken;
     private State myState = State.HEADER;
 
-    public MyChannelInboundHandler(@NotNull String[] lockedPaths,
-                                   @NotNull AtomicReference<Consumer<CommandLineArgs>> activateListener,
-                                   @NotNull String token) {
+    public MyChannelInboundHandler(@Nonnull String[] lockedPaths,
+                                   @Nonnull AtomicReference<Consumer<CommandLineArgs>> activateListener,
+                                   @Nonnull String token) {
       myLockedPaths = lockedPaths;
       myActivateListener = activateListener;
       myToken = token;
@@ -328,7 +328,7 @@ public final class SocketLock {
     }
 
     @Override
-    protected void messageReceived(@NotNull ChannelHandlerContext context, @NotNull ByteBuf input) throws Exception {
+    protected void messageReceived(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf input) throws Exception {
       while (true) {
         switch (myState) {
           case HEADER: {
@@ -395,8 +395,8 @@ public final class SocketLock {
     }
   }
 
-  @NotNull
-  private static String canonicalPath(@NotNull String configPath) {
+  @Nonnull
+  private static String canonicalPath(@Nonnull String configPath) {
     try {
       return new File(configPath).getCanonicalPath();
     }

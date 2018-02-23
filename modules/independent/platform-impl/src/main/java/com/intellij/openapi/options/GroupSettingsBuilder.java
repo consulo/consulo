@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.TabbedPaneWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
     myGroup = group;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<SettingsEditor<T>> getEditors() {
     List<SettingsEditor<T>> result = new ArrayList<SettingsEditor<T>>();
@@ -45,17 +45,17 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public JComponent createCompoundEditor(@NotNull Disposable disposable) {
+  public JComponent createCompoundEditor(@Nonnull Disposable disposable) {
     if (myComponent == null) {
       myComponent = doCreateComponent(disposable);
     }
     return myComponent;
   }
 
-  @NotNull
-  private JComponent doCreateComponent(@NotNull Disposable disposable) {
+  @Nonnull
+  private JComponent doCreateComponent(@Nonnull Disposable disposable) {
     List<Pair<String,SettingsEditor<T>>> editors = myGroup.getEditors();
     if (editors.size() == 0) return new JPanel();
     if (editors.size() == 1) return editors.get(0).getSecond().getComponent();

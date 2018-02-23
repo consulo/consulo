@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class ChangeListsScopesProvider extends CustomScopesProviderEx {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<NamedScope> getCustomScopes() {
 
@@ -58,7 +58,7 @@ public class ChangeListsScopesProvider extends CustomScopesProviderEx {
     return result;
   }
 
-  private static NamedScope createChangeListScope(@NotNull ChangeList list) {
+  private static NamedScope createChangeListScope(@Nonnull ChangeList list) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>();
     final Collection<Change> changes = list.getChanges();
     for (Change change : changes) {
@@ -104,13 +104,13 @@ public class ChangeListsScopesProvider extends CustomScopesProviderEx {
         return files.contains(file);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public PackageSet createCopy() {
         return this;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getText() {
         return "file:*//*";

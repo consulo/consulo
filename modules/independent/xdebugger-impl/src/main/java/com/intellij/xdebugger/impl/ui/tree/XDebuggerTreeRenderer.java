@@ -28,9 +28,9 @@ import com.intellij.xdebugger.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreePath;
@@ -57,7 +57,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
   }
 
   @Override
-  public void customizeCellRenderer(@NotNull final JTree tree,
+  public void customizeCellRenderer(@Nonnull final JTree tree,
                                     final Object value,
                                     final boolean selected,
                                     final boolean expanded,
@@ -130,7 +130,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
   }
 
   @Override
-  public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, Object tag) {
+  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
     if (tag instanceof XDebuggerTreeNodeHyperlink && ((XDebuggerTreeNodeHyperlink)tag).alwaysOnScreen()) {
       myHaveLink = true;
       myLink.append(fragment, attributes, tag);
@@ -159,7 +159,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
@@ -182,7 +182,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     private int myHeight;
 
     @Override
-    public void customizeCellRenderer(@NotNull JTree tree,
+    public void customizeCellRenderer(@Nonnull JTree tree,
                                       Object value,
                                       boolean selected,
                                       boolean expanded,

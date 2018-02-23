@@ -57,8 +57,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.update.Update;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -121,11 +121,11 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   private Set<Update> myRequests = Collections.synchronizedSet(new HashSet<Update>());
   private boolean myDisposed = false;
 
-  public SMTestRunnerResultsForm(@NotNull final JComponent console, final TestConsoleProperties consoleProperties) {
+  public SMTestRunnerResultsForm(@Nonnull final JComponent console, final TestConsoleProperties consoleProperties) {
     this(console, AnAction.EMPTY_ARRAY, consoleProperties, null);
   }
 
-  public SMTestRunnerResultsForm(@NotNull final JComponent console,
+  public SMTestRunnerResultsForm(@Nonnull final JComponent console,
                                  AnAction[] consoleActions,
                                  final TestConsoleProperties consoleProperties,
                                  @Nullable String splitterPropertyName) {
@@ -270,7 +270,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
    * @return
    */
   @Override
-  public void onTestingStarted(@NotNull SMTestProxy.SMRootTestProxy testsRoot) {
+  public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
     myAnimator.setCurrentTestCase(myTestsRootNode);
     myTreeBuilder.updateFromRoot();
 
@@ -297,7 +297,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot) {
+  public void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
     myEndTime = System.currentTimeMillis();
 
     if (myTotalTestCount == 0) {
@@ -382,7 +382,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
    * @param testProxy Proxy
    */
   @Override
-  public void onTestStarted(@NotNull final SMTestProxy testProxy) {
+  public void onTestStarted(@Nonnull final SMTestProxy testProxy) {
     if (!testProxy.isConfig()) {
       updateOnTestStarted(false);
     }
@@ -400,7 +400,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void onTestFailed(@NotNull final SMTestProxy test) {
+  public void onTestFailed(@Nonnull final SMTestProxy test) {
     updateOnTestFailed(false);
     if (test.isConfig()) {
       myStartedTestCount++;
@@ -417,7 +417,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void onTestIgnored(@NotNull final SMTestProxy test) {
+  public void onTestIgnored(@Nonnull final SMTestProxy test) {
     updateOnTestIgnored();
   }
 
@@ -429,7 +429,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
    * @param newSuite Tests suite
    */
   @Override
-  public void onSuiteStarted(@NotNull final SMTestProxy newSuite) {
+  public void onSuiteStarted(@Nonnull final SMTestProxy newSuite) {
     _addTestOrSuite(newSuite);
   }
 
@@ -455,7 +455,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void onTestFinished(@NotNull final SMTestProxy test) {
+  public void onTestFinished(@Nonnull final SMTestProxy test) {
     if (!test.isConfig()) {
       updateOnTestFinished(false);
     }
@@ -463,7 +463,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void onSuiteFinished(@NotNull final SMTestProxy suite) {
+  public void onSuiteFinished(@Nonnull final SMTestProxy suite) {
     //Do nothing
   }
 
@@ -511,7 +511,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AbstractTestProxy getRoot() {
     return myTestsRootNode;
   }
@@ -616,7 +616,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     return myEndTime;
   }
 
-  private void _addTestOrSuite(@NotNull final SMTestProxy newTestOrSuite) {
+  private void _addTestOrSuite(@Nonnull final SMTestProxy newTestOrSuite) {
 
     final SMTestProxy parentSuite = newTestOrSuite.getParent();
     assert parentSuite != null;
@@ -734,7 +734,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@Nullable final SMTestProxy selectedTestProxy, @NotNull final Object sender, final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(new Runnable() {
           @Override
           public void run() {
@@ -830,7 +830,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     @Override
-    public void run(@NotNull ProgressIndicator indicator) {
+    public void run(@Nonnull ProgressIndicator indicator) {
       writeState();
       DaemonCodeAnalyzer.getInstance(getProject()).restart();
       try {

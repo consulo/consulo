@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.diff;
 
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for selecting a version number valid for a specified file placed under
@@ -35,5 +34,6 @@ public interface RevisionSelector {
    * @param file the file for which the version number is requested.
    * @return the version number or null.
    */
-  @Nullable VcsRevisionNumber selectNumber(VirtualFile file); 
+  @javax.annotation.Nullable
+  VcsRevisionNumber selectNumber(VirtualFile file);
 }

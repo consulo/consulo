@@ -30,7 +30,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.profile.codeInspection.SeverityProvider;
 import com.intellij.profile.codeInspection.ui.table.SeverityRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.SortedSet;
@@ -52,7 +52,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     mySeverityRegistrar = severityRegistrar;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DefaultActionGroup createPopupActionGroup(final JComponent anchor) {
     final DefaultActionGroup group = new DefaultActionGroup();
@@ -66,7 +66,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     group.addSeparator();
     group.add(new DumbAwareAction("Edit severities...") {
       @Override
-      public void actionPerformed(@NotNull final AnActionEvent e) {
+      public void actionPerformed(@Nonnull final AnActionEvent e) {
         final SeverityEditorDialog dlg = new SeverityEditorDialog(anchor, myChosen, mySeverityRegistrar);
         if (dlg.showAndGet()) {
           final HighlightInfoType type = dlg.getSelectedType();
@@ -117,7 +117,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     }
 
     @Override
-    public void actionPerformed(@NotNull final AnActionEvent e) {
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
       final HighlightSeverity severity = getSeverity();
       setChosen(severity);
       onChosen(severity);

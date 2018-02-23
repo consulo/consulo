@@ -20,8 +20,8 @@ import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.builders.EmptyModuleFixtureBuilder;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,12 +41,12 @@ public class IdeaTestFixtureFactoryImpl extends IdeaTestFixtureFactory {
   }
 
   @Override
-  public final <T extends ModuleFixtureBuilder> void registerFixtureBuilder(@NotNull Class<T> aClass, @NotNull Class<? extends T> implClass) {
+  public final <T extends ModuleFixtureBuilder> void registerFixtureBuilder(@Nonnull Class<T> aClass, @Nonnull Class<? extends T> implClass) {
     myFixtureBuilderProviders.put(aClass, implClass);
   }
 
   @Override
-  public void registerFixtureBuilder(@NotNull Class<? extends ModuleFixtureBuilder> aClass, @NotNull String implClassName) {
+  public void registerFixtureBuilder(@Nonnull Class<? extends ModuleFixtureBuilder> aClass, @Nonnull String implClassName) {
     try {
       final Class implClass = Class.forName(implClassName);
       assert aClass.isAssignableFrom(implClass);
@@ -58,7 +58,7 @@ public class IdeaTestFixtureFactoryImpl extends IdeaTestFixtureFactory {
   }
 
   @Override
-  public TestFixtureBuilder<IdeaProjectTestFixture> createFixtureBuilder(@NotNull String name) {
+  public TestFixtureBuilder<IdeaProjectTestFixture> createFixtureBuilder(@Nonnull String name) {
     return new HeavyTestFixtureBuilderImpl(new HeavyIdeaTestFixtureImpl(name), myFixtureBuilderProviders);
   }
 
@@ -77,12 +77,12 @@ public class IdeaTestFixtureFactoryImpl extends IdeaTestFixtureFactory {
   }
 
   @Override
-  public CodeInsightTestFixture createCodeInsightFixture(@NotNull IdeaProjectTestFixture projectFixture) {
+  public CodeInsightTestFixture createCodeInsightFixture(@Nonnull IdeaProjectTestFixture projectFixture) {
     return createCodeInsightFixture(projectFixture, new TempDirTestFixtureImpl());
   }
 
   @Override
-  public CodeInsightTestFixture createCodeInsightFixture(@NotNull IdeaProjectTestFixture projectFixture, @NotNull TempDirTestFixture tempDirFixture) {
+  public CodeInsightTestFixture createCodeInsightFixture(@Nonnull IdeaProjectTestFixture projectFixture, @Nonnull TempDirTestFixture tempDirFixture) {
     return new CodeInsightTestFixtureImpl(projectFixture, tempDirFixture);
   }
 

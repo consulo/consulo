@@ -23,29 +23,33 @@ import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class TextMergeRequestImpl extends TextMergeRequest {
   @Nullable private final Project myProject;
-  @NotNull private final DocumentContent myOutput;
-  @NotNull private final List<DocumentContent> myContents;
+  @Nonnull
+  private final DocumentContent myOutput;
+  @Nonnull
+  private final List<DocumentContent> myContents;
 
-  @NotNull private final CharSequence myOriginalContent;
+  @Nonnull
+  private final CharSequence myOriginalContent;
 
   @Nullable private final String myTitle;
-  @NotNull private final List<String> myTitles;
+  @Nonnull
+  private final List<String> myTitles;
 
   @Nullable private final Consumer<MergeResult> myApplyCallback;
 
   public TextMergeRequestImpl(@Nullable Project project,
-                              @NotNull DocumentContent output,
-                              @NotNull CharSequence originalContent,
-                              @NotNull List<DocumentContent> contents,
+                              @Nonnull DocumentContent output,
+                              @Nonnull CharSequence originalContent,
+                              @Nonnull List<DocumentContent> contents,
                               @Nullable String title,
-                              @NotNull List<String> contentTitles,
+                              @Nonnull List<String> contentTitles,
                               @Nullable Consumer<MergeResult> applyCallback) {
     assert contents.size() == 3;
     assert contentTitles.size() == 3;
@@ -61,13 +65,13 @@ public class TextMergeRequestImpl extends TextMergeRequest {
     myApplyCallback = applyCallback;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DocumentContent getOutputContent() {
     return myOutput;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<DocumentContent> getContents() {
     return myContents;
@@ -79,14 +83,14 @@ public class TextMergeRequestImpl extends TextMergeRequest {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<String> getContentTitles() {
     return myTitles;
   }
 
   @Override
-  public void applyResult(@NotNull MergeResult result) {
+  public void applyResult(@Nonnull MergeResult result) {
     final CharSequence applyContent;
     switch (result) {
       case CANCEL:

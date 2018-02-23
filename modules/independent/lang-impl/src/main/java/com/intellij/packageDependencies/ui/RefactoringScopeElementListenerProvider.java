@@ -24,7 +24,7 @@ import com.intellij.refactoring.listeners.RefactoringElementAdapter;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;
 import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -83,7 +83,7 @@ public class RefactoringScopeElementListenerProvider implements RefactoringEleme
       }
       composite.addListener(new RefactoringElementAdapter() {
         @Override
-        public void elementRenamedOrMoved(@NotNull PsiElement newElement) {
+        public void elementRenamedOrMoved(@Nonnull PsiElement newElement) {
           LOG.assertTrue(newElement instanceof PsiQualifiedNamedElement);
           try {
             final String newPattern = text.replace(descriptor.getOldQName(), ((PsiQualifiedNamedElement)newElement).getQualifiedName());
@@ -98,7 +98,7 @@ public class RefactoringScopeElementListenerProvider implements RefactoringEleme
         }
 
         @Override
-        public void undoElementMovedOrRenamed(@NotNull PsiElement newElement, @NotNull String oldQualifiedName) {
+        public void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
           LOG.assertTrue(newElement instanceof PsiQualifiedNamedElement);
           try {
             final NamedScope[] currentScopes = descriptor.getHolder().getEditableScopes();

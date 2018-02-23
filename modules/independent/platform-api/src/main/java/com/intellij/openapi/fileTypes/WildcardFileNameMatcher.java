@@ -19,7 +19,7 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PatternUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 
@@ -92,7 +92,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   /**
    * Use {@link org.jetbrains.jps.model.fileTypes.FileNameMatcherFactory#createMatcher(String)} instead of direct call to constructor
    */
-  public WildcardFileNameMatcher(@NotNull @NonNls String pattern) {
+  public WildcardFileNameMatcher(@Nonnull @NonNls String pattern) {
     myPattern = pattern;
     myMatcher = createMatcher(pattern);
   }
@@ -114,13 +114,13 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   }
 
   @Override
-  public boolean accept(@NotNull CharSequence fileName) {
+  public boolean accept(@Nonnull CharSequence fileName) {
     return myMatcher.matches(fileName);
   }
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getPresentableString() {
     return myPattern;
   }

@@ -69,8 +69,8 @@ import com.intellij.util.ui.tree.TreeUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -165,9 +165,9 @@ public class UsageViewImpl implements UsageView {
   private final UsageViewTreeCellRenderer myUsageViewTreeCellRenderer;
   private Usage myOriginUsage;
 
-  public UsageViewImpl(@NotNull final Project project,
-                       @NotNull UsageViewPresentation presentation,
-                       @NotNull UsageTarget[] targets,
+  public UsageViewImpl(@Nonnull final Project project,
+                       @Nonnull UsageViewPresentation presentation,
+                       @Nonnull UsageTarget[] targets,
                        Factory<UsageSearcher> usageSearcherFactory) {
     // fire events every 50 ms, not more often to batch requests
     myFireEventsFuture = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
@@ -292,17 +292,17 @@ public class UsageViewImpl implements UsageView {
     }
     myExclusionHandler = new ExclusionHandler<DefaultMutableTreeNode>() {
       @Override
-      public boolean isNodeExclusionAvailable(@NotNull DefaultMutableTreeNode node) {
+      public boolean isNodeExclusionAvailable(@Nonnull DefaultMutableTreeNode node) {
         return node instanceof UsageNode;
       }
 
       @Override
-      public boolean isNodeExcluded(@NotNull DefaultMutableTreeNode node) {
+      public boolean isNodeExcluded(@Nonnull DefaultMutableTreeNode node) {
         return ((UsageNode)node).isDataExcluded();
       }
 
       @Override
-      public void excludeNode(@NotNull DefaultMutableTreeNode node) {
+      public void excludeNode(@Nonnull DefaultMutableTreeNode node) {
         Set<Node> nodes = new HashSet<>();
         collectAllChildNodes(node, nodes);
         collectParentNodes(node, nodes, true);
@@ -322,7 +322,7 @@ public class UsageViewImpl implements UsageView {
         }
       }
 
-      private void setExcludeNodes(@NotNull Set<Node> nodes, boolean excluded) {
+      private void setExcludeNodes(@Nonnull Set<Node> nodes, boolean excluded) {
         for (Node node : nodes) {
           node.setExcluded(excluded, edtNodeChangedQueue);
         }
@@ -330,7 +330,7 @@ public class UsageViewImpl implements UsageView {
       }
 
       @Override
-      public void includeNode(@NotNull DefaultMutableTreeNode node) {
+      public void includeNode(@Nonnull DefaultMutableTreeNode node) {
         Set<Node> nodes = new HashSet<>();
         collectAllChildNodes(node, nodes);
         collectParentNodes(node, nodes, false);
@@ -367,7 +367,7 @@ public class UsageViewImpl implements UsageView {
   // has to be linked because events for child nodes should be fired after events for parent nodes
   private final Set<Node> nodesInsertedUnder = new LinkedHashSet<>(); // guarded by nodesInsertedUnder
 
-  private final Consumer<Node> edtNodeInsertedUnderQueue = (@NotNull Node parent) -> {
+  private final Consumer<Node> edtNodeInsertedUnderQueue = (@Nonnull Node parent) -> {
     if (!getPresentation().isDetachedMode()) {
       synchronized (nodesInsertedUnder) {
         nodesInsertedUnder.add(parent);
@@ -506,7 +506,7 @@ public class UsageViewImpl implements UsageView {
       myPreviewSplitter.setProportion(UsageViewSettings.getInstance().PREVIEW_USAGES_SPLITTER_PROPORTIONS);
       treePane.putClientProperty(UIUtil.KEEP_BORDER_SIDES, SideBorder.RIGHT);
       final JBTabbedPane tabbedPane = new JBTabbedPane(SwingConstants.BOTTOM){
-        @NotNull
+        @Nonnull
         @Override
         protected Insets getInsetsForTabComponent() {
           return new Insets(0,0,0,0);
@@ -551,7 +551,7 @@ public class UsageViewImpl implements UsageView {
     myRootPanel.repaint();
   }
 
-  private void tabSelected(@NotNull final UsageContextPanel.Provider provider) {
+  private void tabSelected(@Nonnull final UsageContextPanel.Provider provider) {
     myCurrentUsageContextProvider = provider;
     setupCentralPanel();
     updateOnSelectionChanged();
@@ -565,7 +565,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static UsageFilteringRule[] getActiveFilteringRules(final Project project) {
     final UsageFilteringRuleProvider[] providers = Extensions.getExtensions(UsageFilteringRuleProvider.EP_NAME);
     List<UsageFilteringRule> list = new ArrayList<>(providers.length);
@@ -575,8 +575,8 @@ public class UsageViewImpl implements UsageView {
     return list.toArray(new UsageFilteringRule[list.size()]);
   }
 
-  @NotNull
-  private static UsageGroupingRule[] getActiveGroupingRules(@NotNull final Project project) {
+  @Nonnull
+  private static UsageGroupingRule[] getActiveGroupingRules(@Nonnull final Project project) {
     final UsageGroupingRuleProvider[] providers = Extensions.getExtensions(UsageGroupingRuleProvider.EP_NAME);
     List<UsageGroupingRule> list = new ArrayList<>(providers.length);
     for (UsageGroupingRuleProvider provider : providers) {
@@ -651,7 +651,7 @@ public class UsageViewImpl implements UsageView {
     }, true);
   }
 
-  @NotNull
+  @Nonnull
   private JComponent createActionsToolbar() {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -677,8 +677,8 @@ public class UsageViewImpl implements UsageView {
     return toUsageViewToolbar(group);
   }
 
-  @NotNull
-  private JComponent toUsageViewToolbar(@NotNull DefaultActionGroup group) {
+  @Nonnull
+  private JComponent toUsageViewToolbar(@Nonnull DefaultActionGroup group) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.USAGE_VIEW_TOOLBAR, group, false);
     actionToolbar.setTargetComponent(myRootPanel);
@@ -690,7 +690,7 @@ public class UsageViewImpl implements UsageView {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   private JComponent createFiltersToolbar() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final DefaultActionGroup group = new DefaultActionGroup();
@@ -709,7 +709,7 @@ public class UsageViewImpl implements UsageView {
     return toUsageViewToolbar(group);
   }
 
-  public void addFilteringActions(@NotNull DefaultActionGroup group) {
+  public void addFilteringActions(@Nonnull DefaultActionGroup group) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (getPresentation().isMergeDupLinesAvailable()) {
       final MergeDupLines mergeDupLines = new MergeDupLines();
@@ -729,7 +729,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  @NotNull
+  @Nonnull
   protected AnAction[] createActions() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     final TreeExpander treeExpander = new TreeExpander() {
@@ -791,7 +791,7 @@ public class UsageViewImpl implements UsageView {
     return target instanceof ConfigurableUsageTarget;
   }
 
-  @NotNull
+  @Nonnull
   private AnAction showSettings() {
     final ConfigurableUsageTarget configurableUsageTarget = getConfigurableTarget(myTargets);
     String description = null;
@@ -823,7 +823,7 @@ public class UsageViewImpl implements UsageView {
     };
   }
 
-  private static ConfigurableUsageTarget getConfigurableTarget(@NotNull UsageTarget[] targets) {
+  private static ConfigurableUsageTarget getConfigurableTarget(@Nonnull UsageTarget[] targets) {
     ConfigurableUsageTarget configurableUsageTarget = null;
     if (targets.length != 0) {
       NavigationItem target = targets[0];
@@ -834,14 +834,14 @@ public class UsageViewImpl implements UsageView {
     return configurableUsageTarget;
   }
 
-  @NotNull
+  @Nonnull
   private AnAction createRecentFindUsagesAction() {
     AnAction action = ActionManager.getInstance().getAction(SHOW_RECENT_FIND_USAGES_ACTION_ID);
     action.registerCustomShortcutSet(action.getShortcutSet(), getComponent());
     return action;
   }
 
-  @NotNull
+  @Nonnull
   private AnAction[] createGroupingActions() {
     final UsageGroupingRuleProvider[] providers = Extensions.getExtensions(UsageGroupingRuleProvider.EP_NAME);
     List<AnAction> list = new ArrayList<>(providers.length);
@@ -901,7 +901,7 @@ public class UsageViewImpl implements UsageView {
     });
   }
 
-  private void captureUsagesExpandState(@NotNull TreePath pathFrom, @NotNull Collection<UsageState> states) {
+  private void captureUsagesExpandState(@Nonnull TreePath pathFrom, @Nonnull Collection<UsageState> states) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!myTree.isExpanded(pathFrom)) {
       return;
@@ -920,7 +920,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  private void restoreUsageExpandState(@NotNull Collection<UsageState> states) {
+  private void restoreUsageExpandState(@Nonnull Collection<UsageState> states) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     //always expand the last level group
     final DefaultMutableTreeNode root = (DefaultMutableTreeNode)myTree.getModel().getRoot();
@@ -964,7 +964,7 @@ public class UsageViewImpl implements UsageView {
     TreeUtil.expand(myTree, 1);
   }
 
-  @NotNull
+  @Nonnull
   DefaultMutableTreeNode getModelRoot() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return (DefaultMutableTreeNode)myTree.getModel().getRoot();
@@ -978,7 +978,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -988,12 +988,12 @@ public class UsageViewImpl implements UsageView {
     return ActionManager.getInstance().getKeyboardShortcut("ShowSettingsAndFindUsages");
   }
 
-  static KeyboardShortcut getShowUsagesWithSettingsShortcut(@NotNull UsageTarget[] targets) {
+  static KeyboardShortcut getShowUsagesWithSettingsShortcut(@Nonnull UsageTarget[] targets) {
     ConfigurableUsageTarget configurableTarget = getConfigurableTarget(targets);
     return configurableTarget == null ? getShowUsagesWithSettingsShortcut() : configurableTarget.getShortcut();
   }
 
-  void associateProgress(@NotNull ProgressIndicator indicator) {
+  void associateProgress(@Nonnull ProgressIndicator indicator) {
     associatedProgress = indicator;
   }
 
@@ -1061,11 +1061,11 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void appendUsage(@NotNull Usage usage) {
+  public void appendUsage(@Nonnull Usage usage) {
     doAppendUsage(usage);
   }
 
-  public UsageNode doAppendUsage(@NotNull Usage usage) {
+  public UsageNode doAppendUsage(@Nonnull Usage usage) {
     // invoke in ReadAction to be be sure that usages are not invalidated while the tree is being built
     ApplicationManager.getApplication().assertReadAccessAllowed();
     if (!usage.isValid()) {
@@ -1084,7 +1084,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void removeUsage(@NotNull Usage usage) {
+  public void removeUsage(@Nonnull Usage usage) {
     final UsageNode node = myUsageNodes.remove(usage);
     if (node != NULL_NODE && node != null && !myPresentation.isDetachedMode()) {
       UIUtil.invokeLaterIfNeeded(() -> {
@@ -1097,7 +1097,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void removeUsagesBulk(@NotNull Collection<Usage> usages) {
+  public void removeUsagesBulk(@Nonnull Collection<Usage> usages) {
     Set<UsageNode> nodes = usagesToNodes(usages.stream()).collect(Collectors.toSet());
     if (!nodes.isEmpty() && !myPresentation.isDetachedMode()) {
       UIUtil.invokeLaterIfNeeded(() -> {
@@ -1118,13 +1118,13 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void includeUsages(@NotNull Usage[] usages) {
+  public void includeUsages(@Nonnull Usage[] usages) {
     usagesToNodes(Arrays.stream(usages))
             .forEach(myExclusionHandler::includeNode);
   }
 
   @Override
-  public void excludeUsages(@NotNull Usage[] usages) {
+  public void excludeUsages(@Nonnull Usage[] usages) {
     usagesToNodes(Arrays.stream(usages))
             .forEach(myExclusionHandler::excludeNode);
   }
@@ -1136,7 +1136,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void selectUsages(@NotNull Usage[] usages) {
+  public void selectUsages(@Nonnull Usage[] usages) {
     TreePath[] paths = usagesToNodes(Arrays.stream(usages))
             .map(node -> new TreePath(node.getPath()))
             .toArray(TreePath[]::new);
@@ -1146,7 +1146,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     ApplicationManager.getApplication().assertIsDispatchThread();
     return myRootPanel == null ? new JLabel() : myRootPanel;
@@ -1157,7 +1157,7 @@ public class UsageViewImpl implements UsageView {
     return myUsageNodes.size();
   }
 
-  void setContent(@NotNull Content content) {
+  void setContent(@Nonnull Content content) {
     myContent = content;
     content.setDisposer(this);
   }
@@ -1170,7 +1170,7 @@ public class UsageViewImpl implements UsageView {
     updateOnSelectionChanged();
   }
 
-  private void updateImmediatelyNodesUpToRoot(@NotNull Collection<Node> nodes) {
+  private void updateImmediatelyNodesUpToRoot(@Nonnull Collection<Node> nodes) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myProject.isDisposed()) return;
     TreeNode root = (TreeNode)myTree.getModel().getRoot();
@@ -1203,7 +1203,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  private void checkNodeValidity(@NotNull TreeNode node, @NotNull TreePath path) {
+  private void checkNodeValidity(@Nonnull TreeNode node, @Nonnull TreePath path) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     boolean shouldCheckChildren = true;
     if (myTree.isCollapsed(path)) {
@@ -1308,7 +1308,7 @@ public class UsageViewImpl implements UsageView {
     return isDisposed;
   }
 
-  private void showNode(@NotNull final UsageNode node) {
+  private void showNode(@Nonnull final UsageNode node) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!isDisposed && !myPresentation.isDetachedMode()) {
       fireEvents();
@@ -1319,7 +1319,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void addButtonToLowerPane(@NotNull Runnable runnable, @NotNull String text) {
+  public void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text) {
     int index = myButtonPanel.getComponentCount();
     if (!SystemInfo.isMac && index > 0 && myPresentation.isShowCancelButton()) index--;
     myButtonPanel.addButtonRunnable(index, runnable, text);
@@ -1336,29 +1336,29 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  public void addButtonToLowerPane(@NotNull final Runnable runnable, @NotNull String text, char mnemonic) {
+  public void addButtonToLowerPane(@Nonnull final Runnable runnable, @Nonnull String text, char mnemonic) {
     // implemented method is deprecated, so, it just calls non-deprecated overloading one
     addButtonToLowerPane(runnable, text);
   }
 
   @Override
-  public void addPerformOperationAction(@NotNull final Runnable processRunnable,
+  public void addPerformOperationAction(@Nonnull final Runnable processRunnable,
                                         final String commandName,
                                         final String cannotMakeString,
-                                        @NotNull String shortDescription) {
+                                        @Nonnull String shortDescription) {
     addPerformOperationAction(processRunnable, commandName, cannotMakeString, shortDescription, true);
   }
 
   @Override
-  public void addPerformOperationAction(@NotNull Runnable processRunnable,
+  public void addPerformOperationAction(@Nonnull Runnable processRunnable,
                                         String commandName,
                                         String cannotMakeString,
-                                        @NotNull String shortDescription,
+                                        @Nonnull String shortDescription,
                                         boolean checkReadOnlyStatus) {
     addButtonToLowerPane(newPerformOperationRunnable(processRunnable, commandName, cannotMakeString, checkReadOnlyStatus), shortDescription);
   }
 
-  @NotNull
+  @Nonnull
   private MyPerformOperationRunnable newPerformOperationRunnable(Runnable processRunnable,
                                                                  String commandName,
                                                                  String cannotMakeString, boolean checkReadOnlyStatus) {
@@ -1375,7 +1375,7 @@ public class UsageViewImpl implements UsageView {
     return true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public UsageViewPresentation getPresentation() {
     return myPresentation;
@@ -1397,7 +1397,7 @@ public class UsageViewImpl implements UsageView {
            !ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(VfsUtilCore.toVirtualFileArray(readOnlyUsages)).hasReadonlyFiles();
   }
 
-  @NotNull
+  @Nonnull
   private Set<Usage> getReadOnlyUsages() {
     final Set<Usage> result = new THashSet<>();
     final Set<Map.Entry<Usage,UsageNode>> usages = myUsageNodes.entrySet();
@@ -1411,7 +1411,7 @@ public class UsageViewImpl implements UsageView {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   private Set<VirtualFile> getReadOnlyUsagesFiles() {
     Set<Usage> usages = getReadOnlyUsages();
     Set<VirtualFile> result = new THashSet<>();
@@ -1436,7 +1436,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<Usage> getExcludedUsages() {
     Set<Usage> result = new THashSet<>();
     for (Map.Entry<Usage, UsageNode> entry : myUsageNodes.entrySet()) {
@@ -1500,20 +1500,20 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Set<Usage> getUsages() {
     return myUsageNodes.keySet();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Usage> getSortedUsages() {
     List<Usage> usages = new ArrayList<>(getUsages());
     Collections.sort(usages, USAGE_COMPARATOR);
     return usages;
   }
 
-  private static void collectUsages(@NotNull DefaultMutableTreeNode node, @NotNull Set<Usage> usages) {
+  private static void collectUsages(@Nonnull DefaultMutableTreeNode node, @Nonnull Set<Usage> usages) {
     if (node instanceof UsageNode) {
       UsageNode usageNode = (UsageNode)node;
       final Usage usage = usageNode.getUsage();
@@ -1527,7 +1527,7 @@ public class UsageViewImpl implements UsageView {
     }
   }
 
-  private static void collectAllChildNodes(@NotNull DefaultMutableTreeNode node, @NotNull Set<Node> nodes) {
+  private static void collectAllChildNodes(@Nonnull DefaultMutableTreeNode node, @Nonnull Set<Node> nodes) {
     if (node instanceof Node) {
       nodes.add((Node)node);
     }
@@ -1561,7 +1561,7 @@ public class UsageViewImpl implements UsageView {
   }
 
   @Nullable
-  private static Navigatable getNavigatableForNode(@NotNull DefaultMutableTreeNode node) {
+  private static Navigatable getNavigatableForNode(@Nonnull DefaultMutableTreeNode node) {
     Object userObject = node.getUserObject();
     if (userObject instanceof Navigatable) {
       final Navigatable navigatable = (Navigatable)userObject;
@@ -1598,7 +1598,7 @@ public class UsageViewImpl implements UsageView {
     @Nullable private OccurenceNavigatorSupport mySupport;
     private final CopyProvider myCopyProvider;
 
-    private MyPanel(@NotNull JTree tree) {
+    private MyPanel(@Nonnull JTree tree) {
       mySupport = new OccurenceNavigatorSupport(tree) {
         @Override
         protected Navigatable createDescriptorForNode(DefaultMutableTreeNode node) {
@@ -1791,7 +1791,7 @@ public class UsageViewImpl implements UsageView {
     private final Usage myUsage;
     private final boolean mySelected;
 
-    private UsageState(@NotNull Usage usage, boolean isSelected) {
+    private UsageState(@Nonnull Usage usage, boolean isSelected) {
       myUsage = usage;
       mySelected = isSelected;
     }
@@ -1875,11 +1875,11 @@ public class UsageViewImpl implements UsageView {
     return myUsageViewTreeCellRenderer.getPlainTextForNode(node);
   }
 
-  public boolean isVisible(@NotNull Usage usage) {
+  public boolean isVisible(@Nonnull Usage usage) {
     return myBuilder != null && myBuilder.isVisible(usage);
   }
 
-  @NotNull
+  @Nonnull
   public UsageTarget[] getTargets() {
     return myTargets;
   }
@@ -1888,12 +1888,12 @@ public class UsageViewImpl implements UsageView {
    * The element the "find usages" action was invoked on.
    * E.g. if the "find usages" was invoked on the reference "getName(2)" pointing to the method "getName()" then the origin usage is this reference.
    */
-  public void setOriginUsage(@NotNull Usage usage) {
+  public void setOriginUsage(@Nonnull Usage usage) {
     myOriginUsage = usage;
   }
 
   /** true if the {@param usage} points to the element the "find usages" action was invoked on */
-  public boolean isOriginUsage(@NotNull Usage usage) {
+  public boolean isOriginUsage(@Nonnull Usage usage) {
     return
             myOriginUsage instanceof UsageInfo2UsageAdapter &&
             usage instanceof UsageInfo2UsageAdapter &&
@@ -1904,7 +1904,7 @@ public class UsageViewImpl implements UsageView {
     return myPresentation.isMergeDupLinesAvailable() && UsageViewSettings.getInstance().isFilterDuplicatedLine();
   }
 
-  public Usage getNextToSelect(@NotNull Usage toDelete) {
+  public Usage getNextToSelect(@Nonnull Usage toDelete) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     UsageNode usageNode = myUsageNodes.get(toDelete);
     if (usageNode == null) return null;

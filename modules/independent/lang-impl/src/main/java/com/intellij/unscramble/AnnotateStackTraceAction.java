@@ -50,7 +50,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import java.awt.*;
@@ -185,7 +185,7 @@ class AnnotateStackTraceAction extends AnAction {
       }
 
       @Override
-      public void run(@NotNull ProgressIndicator indicator) {
+      public void run(@Nonnull ProgressIndicator indicator) {
         Date newestDate = null;
 
         List<VirtualFile> files = new ArrayList<VirtualFile>();

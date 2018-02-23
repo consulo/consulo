@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -31,7 +31,7 @@ public class JBDefaultTreeCellRenderer extends DefaultTreeCellRenderer {
 
   private boolean myMacTreeUI;
 
-  public JBDefaultTreeCellRenderer(@NotNull final JTree tree) {
+  public JBDefaultTreeCellRenderer(@Nonnull final JTree tree) {
     MacUIUtil.doNotFillBackground(tree, this);
     myMacTreeUI = tree.getUI() instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)tree.getUI()).isWideSelection();
   }
@@ -41,7 +41,7 @@ public class JBDefaultTreeCellRenderer extends DefaultTreeCellRenderer {
     return myMacTreeUI ? null : super.getBorderSelectionColor();
   }
 
-  protected Color getSelectionForeground(@NotNull final JTree tree) {
+  protected Color getSelectionForeground(@Nonnull final JTree tree) {
     return myMacTreeUI && !tree.hasFocus() ? UIUtil.getTreeForeground() : UIUtil.getTreeSelectionForeground();
   }
 }

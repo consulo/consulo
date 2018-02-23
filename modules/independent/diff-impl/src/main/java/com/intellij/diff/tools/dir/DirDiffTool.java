@@ -19,23 +19,23 @@ import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.requests.ContentDiffRequest;
 import com.intellij.diff.requests.DiffRequest;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DirDiffTool implements FrameDiffTool {
   public static final DirDiffTool INSTANCE = new DirDiffTool();
 
-  @NotNull
+  @Nonnull
   @Override
-  public DiffViewer createComponent(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return new DirDiffViewer(context, (ContentDiffRequest)request);
   }
 
   @Override
-  public boolean canShow(@NotNull DiffContext context, @NotNull DiffRequest request) {
+  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     return DirDiffViewer.canShowRequest(context, request);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return "Directory viewer";

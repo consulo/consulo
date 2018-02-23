@@ -33,8 +33,8 @@ import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -49,11 +49,11 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
   }
 
   @Override
-  public boolean filterElements(@NotNull final ChooseByNameBase base,
-                                @NotNull final String pattern,
+  public boolean filterElements(@Nonnull final ChooseByNameBase base,
+                                @Nonnull final String pattern,
                                 boolean everywhere,
-                                @NotNull final ProgressIndicator indicator,
-                                @NotNull final Processor<Object> consumer) {
+                                @Nonnull final ProgressIndicator indicator,
+                                @Nonnull final Processor<Object> consumer) {
     String namePattern = getNamePattern(base, pattern);
     String qualifierPattern = getQualifierPattern(base, pattern);
 
@@ -175,20 +175,20 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return ContainerUtil.process(qualifierMiddleMatched, consumer);
   }
 
-  private static boolean startMiddleMatchVariants(@NotNull List<Object> qualifierMiddleMatched,
-                                                  @NotNull Processor<Object> consumer) {
+  private static boolean startMiddleMatchVariants(@Nonnull List<Object> qualifierMiddleMatched,
+                                                  @Nonnull Processor<Object> consumer) {
     if (!consumer.process(ChooseByNameBase.NON_PREFIX_SEPARATOR)) return false;
     if (!ContainerUtil.process(qualifierMiddleMatched, consumer)) return false;
     qualifierMiddleMatched.clear();
     return true;
   }
 
-  protected void sortNamesList(@NotNull String namePattern, @NotNull List<MatchResult> namesList) {
+  protected void sortNamesList(@Nonnull String namePattern, @Nonnull List<MatchResult> namesList) {
     Collections.sort(namesList);
   }
 
-  @NotNull
-  private static String getQualifierPattern(@NotNull ChooseByNameBase base, @NotNull String pattern) {
+  @Nonnull
+  private static String getQualifierPattern(@Nonnull ChooseByNameBase base, @Nonnull String pattern) {
     pattern = base.transformPattern(pattern);
     final String[] separators = base.getModel().getSeparators();
     int lastSeparatorOccurrence = 0;
@@ -202,8 +202,8 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return pattern.substring(0, lastSeparatorOccurrence);
   }
 
-  @NotNull
-  private static String getNamePattern(@NotNull ChooseByNameBase base, String pattern) {
+  @Nonnull
+  private static String getNamePattern(@Nonnull ChooseByNameBase base, String pattern) {
     String transformedPattern = base.transformPattern(pattern);
     return getNamePattern(base.getModel(), transformedPattern);
   }
@@ -222,8 +222,8 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return pattern.substring(lastSeparatorOccurrence);
   }
 
-  @NotNull
-  private static List<String> split(@NotNull String s, @NotNull ChooseByNameBase base) {
+  @Nonnull
+  private static List<String> split(@Nonnull String s, @Nonnull ChooseByNameBase base) {
     List<String> answer = new ArrayList<String>();
     for (String token : StringUtil.tokenize(s, StringUtil.join(base.getModel().getSeparators(), ""))) {
       if (!token.isEmpty()) {
@@ -234,9 +234,9 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return answer.isEmpty() ? Collections.singletonList(s) : answer;
   }
 
-  private static MatchResult matchQualifier(@NotNull Object element,
-                                            @NotNull final ChooseByNameBase base,
-                                            @NotNull List<Pair<String, MinusculeMatcher>> patternsAndMatchers) {
+  private static MatchResult matchQualifier(@Nonnull Object element,
+                                            @Nonnull final ChooseByNameBase base,
+                                            @Nonnull List<Pair<String, MinusculeMatcher>> patternsAndMatchers) {
     final String name = base.getModel().getFullName(element);
     if (name == null) return null;
 
@@ -277,10 +277,10 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return new MatchResult(name, matchingDegree, startMatch);
   }
 
-  @NotNull
-  private static List<Pair<String, MinusculeMatcher>> getPatternsAndMatchers(@NotNull String qualifierPattern, @NotNull final ChooseByNameBase base) {
+  @Nonnull
+  private static List<Pair<String, MinusculeMatcher>> getPatternsAndMatchers(@Nonnull String qualifierPattern, @Nonnull final ChooseByNameBase base) {
     return ContainerUtil.map2List(split(qualifierPattern, base), new Function<String, Pair<String, MinusculeMatcher>>() {
-      @NotNull
+      @Nonnull
       @Override
       public Pair<String, MinusculeMatcher> fun(String s) {
         String namePattern = addSearchAnywherePatternDecorationIfNeeded(base, getNamePattern(base, s));
@@ -289,9 +289,9 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<String> filterNames(@NotNull ChooseByNameBase base, @NotNull String[] names, @NotNull String pattern) {
+  public List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern) {
     final List<String> filtered = new ArrayList<String>();
     processNamesByPattern(base, names, convertToMatchingPattern(base, pattern), ProgressIndicatorProvider.getGlobalProgressIndicator(), new Consumer<MatchResult>() {
       @Override
@@ -306,11 +306,11 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     }
   }
 
-  private static void processNamesByPattern(@NotNull final ChooseByNameBase base,
-                                            @NotNull final String[] names,
-                                            @NotNull final String pattern,
+  private static void processNamesByPattern(@Nonnull final ChooseByNameBase base,
+                                            @Nonnull final String[] names,
+                                            @Nonnull final String pattern,
                                             final ProgressIndicator indicator,
-                                            @NotNull final Consumer<MatchResult> consumer) {
+                                            @Nonnull final Consumer<MatchResult> consumer) {
     final MinusculeMatcher matcher = buildPatternMatcher(pattern, NameUtil.MatchingCaseSensitivity.NONE);
     Processor<String> processor = new Processor<String>() {
       @Override
@@ -328,8 +328,8 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     }
   }
 
-  @NotNull
-  private static String convertToMatchingPattern(@NotNull ChooseByNameBase base, @NotNull String pattern) {
+  @Nonnull
+  private static String convertToMatchingPattern(@Nonnull ChooseByNameBase base, @Nonnull String pattern) {
     pattern = removeModelSpecificMarkup(base.getModel(), pattern);
 
     if (!base.canShowListForEmptyPattern()) {
@@ -339,8 +339,8 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return addSearchAnywherePatternDecorationIfNeeded(base, pattern);
   }
 
-  @NotNull
-  private static String addSearchAnywherePatternDecorationIfNeeded(@NotNull ChooseByNameBase base, @NotNull String pattern) {
+  @Nonnull
+  private static String addSearchAnywherePatternDecorationIfNeeded(@Nonnull ChooseByNameBase base, @Nonnull String pattern) {
     String trimmedPattern;
     if (base.isSearchInAnyPlace() && !(trimmedPattern = pattern.trim()).isEmpty() && trimmedPattern.length() > 1) {
       pattern = "*" + pattern;
@@ -348,8 +348,8 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return pattern;
   }
 
-  @NotNull
-  private static String removeModelSpecificMarkup(@NotNull ChooseByNameModel model, @NotNull String pattern) {
+  @Nonnull
+  private static String removeModelSpecificMarkup(@Nonnull ChooseByNameModel model, @Nonnull String pattern) {
     if (model instanceof ContributorsBasedGotoByModel) {
       pattern = ((ContributorsBasedGotoByModel)model).removeModelSpecificMarkup(pattern);
     }
@@ -357,9 +357,9 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
   }
 
   @Nullable
-  private static MatchResult matches(@NotNull ChooseByNameBase base,
-                                     @NotNull String pattern,
-                                     @NotNull MinusculeMatcher matcher,
+  private static MatchResult matches(@Nonnull ChooseByNameBase base,
+                                     @Nonnull String pattern,
+                                     @Nonnull MinusculeMatcher matcher,
                                      @Nullable String name) {
     if (name == null) {
       return null;
@@ -376,13 +376,14 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameItemProvider
     return matcher.matches(name) ? new MatchResult(name, matcher.matchingDegree(name), matcher.isStartMatch(name)) : null;
   }
 
-  @NotNull
-  private static MinusculeMatcher buildPatternMatcher(@NotNull String pattern, @NotNull NameUtil.MatchingCaseSensitivity caseSensitivity) {
+  @Nonnull
+  private static MinusculeMatcher buildPatternMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity caseSensitivity) {
     return NameUtil.buildMatcher(pattern, caseSensitivity);
   }
 
   private static class PathProximityComparator implements Comparator<Object> {
-    @NotNull private final PsiProximityComparator myProximityComparator;
+    @Nonnull
+    private final PsiProximityComparator myProximityComparator;
 
     private PathProximityComparator(@Nullable final PsiElement context) {
       myProximityComparator = new PsiProximityComparator(context);

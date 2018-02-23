@@ -20,8 +20,9 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -38,7 +39,7 @@ public abstract class ReadTask {
    * use {@link #performInReadAction(ProgressIndicator)} instead
    */
   @RequiredReadAction
-  public void computeInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+  public void computeInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
     throw new UnsupportedOperationException();
   }
 
@@ -49,7 +50,7 @@ public abstract class ReadTask {
    */
   @Nullable
   @RequiredReadAction
-  public Continuation performInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
+  public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
     computeInReadAction(indicator);
     return null;
   }
@@ -58,7 +59,7 @@ public abstract class ReadTask {
    * Is invoked on Swing thread whenever the computation is canceled by a write action.
    * A likely implementation is to restart the computation, maybe based on the new state of the system.
    */
-  public abstract void onCanceled(@NotNull ProgressIndicator indicator);
+  public abstract void onCanceled(@Nonnull ProgressIndicator indicator);
 
   /**
    * Is invoked on a background thread. The responsibility of this method is to start a read action and
@@ -66,7 +67,7 @@ public abstract class ReadTask {
    * For example, use {@link com.intellij.openapi.project.DumbService#runReadActionInSmartMode(Runnable)}.
    * @param indicator the progress indicator of the background thread
    */
-  public Continuation runBackgroundProcess(@NotNull final ProgressIndicator indicator) throws ProcessCanceledException {
+  public Continuation runBackgroundProcess(@Nonnull final ProgressIndicator indicator) throws ProcessCanceledException {
     return ApplicationManager.getApplication().runReadAction(new Computable<Continuation>() {
       @Override
       public Continuation compute() {
@@ -87,7 +88,7 @@ public abstract class ReadTask {
      * @param action code to be executed in Swing thread in default modality state
      * @see ModalityState#defaultModalityState()
      */
-    public Continuation(@NotNull Runnable action) {
+    public Continuation(@Nonnull Runnable action) {
       this(action, ModalityState.defaultModalityState());
     }
 
@@ -95,7 +96,7 @@ public abstract class ReadTask {
      * @param action code to be executed in Swing thread in default modality state
      * @param modalityState modality state when the action is to be executed
      */
-    public Continuation(@NotNull Runnable action, @NotNull ModalityState modalityState) {
+    public Continuation(@Nonnull Runnable action, @Nonnull ModalityState modalityState) {
       myAction = action;
       myModalityState = modalityState;
     }
@@ -103,7 +104,7 @@ public abstract class ReadTask {
     /**
      * @return modality state when {@link #getAction()} is to be executed
      */
-    @NotNull
+    @Nonnull
     public ModalityState getModalityState() {
       return myModalityState;
     }
@@ -111,7 +112,7 @@ public abstract class ReadTask {
     /**
      * @return runnable to be executed in Swing thread in default modality state
      */
-    @NotNull
+    @Nonnull
     public Runnable getAction() {
       return myAction;
     }

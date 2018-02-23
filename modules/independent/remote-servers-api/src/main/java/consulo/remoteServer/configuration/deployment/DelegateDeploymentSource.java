@@ -17,8 +17,7 @@ package consulo.remoteServer.configuration.deployment;
 
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -34,25 +33,25 @@ public class DelegateDeploymentSource implements DeploymentSource {
     myDelegate = delegate;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public File getFile() {
     return myDelegate.getFile();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getFilePath() {
     return myDelegate.getFilePath();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableName() {
     return myDelegate.getPresentableName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Icon getIcon() {
     return myDelegate.getIcon();
@@ -68,13 +67,13 @@ public class DelegateDeploymentSource implements DeploymentSource {
     return myDelegate.isArchive();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public DeploymentSourceType<?> getType() {
     return myDelegate.getType();
   }
 
-  @NotNull
+  @Nonnull
   public DeploymentSource getDelegate() {
     return myDelegate;
   }

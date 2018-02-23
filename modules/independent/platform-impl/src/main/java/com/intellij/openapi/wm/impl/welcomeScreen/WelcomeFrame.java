@@ -28,7 +28,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.start.WelcomeFrameManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class WelcomeFrame {
   static final String DIMENSION_KEY = "WELCOME_SCREEN";
@@ -59,7 +59,7 @@ public class WelcomeFrame {
     }, ModalityState.NON_MODAL);
   }
 
-  public static boolean isFromWelcomeFrame(@NotNull AnActionEvent e) {
+  public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {
     return e.getPlace().equals(ActionPlaces.WELCOME_SCREEN);
   }
 }

@@ -19,8 +19,8 @@ package com.intellij.formatting.templateLanguages;
 import com.intellij.formatting.*;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -33,19 +33,19 @@ public class DataLanguageBlockFragmentWrapper implements Block {
   private final Block myOwner;
   private final TextRange myRange;
 
-  public DataLanguageBlockFragmentWrapper(@NotNull final Block owner, @NotNull final TextRange range) {
+  public DataLanguageBlockFragmentWrapper(@Nonnull final Block owner, @Nonnull final TextRange range) {
     myOwner = owner;
     myRange = range;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return myRange;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Block> getSubBlocks() {
     return AbstractBlock.EMPTY;
   }
@@ -67,12 +67,12 @@ public class DataLanguageBlockFragmentWrapper implements Block {
 
   @Override
   @Nullable
-  public Spacing getSpacing(Block child1, @NotNull Block child2) {
+  public Spacing getSpacing(Block child1, @Nonnull Block child2) {
     return Spacing.getReadOnlySpacing();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ChildAttributes getChildAttributes(int newChildIndex) {
     return myOwner.getChildAttributes(newChildIndex);
   }

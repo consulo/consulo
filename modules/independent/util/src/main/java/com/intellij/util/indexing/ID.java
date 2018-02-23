@@ -22,8 +22,8 @@ import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 
@@ -140,14 +140,14 @@ public class ID<K, V> {
     }
   }
 
-  @NotNull
-  public static <K, V> ID<K, V> create(@NonNls @NotNull String name) {
+  @Nonnull
+  public static <K, V> ID<K, V> create(@NonNls @Nonnull String name) {
     final ID<K, V> found = findByName(name);
     return found != null ? found : new ID<K, V>(name);
   }
 
   @Nullable
-  public static <K, V> ID<K, V> findByName(@NotNull String name) {
+  public static <K, V> ID<K, V> findByName(@Nonnull String name) {
     return (ID<K, V>)findById(stringToId(name));
   }
 

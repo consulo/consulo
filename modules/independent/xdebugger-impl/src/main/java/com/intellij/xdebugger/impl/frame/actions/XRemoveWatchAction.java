@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.WatchNodeImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ import java.util.List;
 public class XRemoveWatchAction extends XWatchesTreeActionBase {
 
   @Override
-  protected boolean isEnabled(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree) {
+  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
     return !getSelectedNodes(tree, WatchNodeImpl.class).isEmpty();
   }
 
   @Override
-  protected void perform(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree, @NotNull XWatchesView watchesView) {
+  protected void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView) {
     List<? extends WatchNodeImpl>nodes = getSelectedNodes(tree, WatchNodeImpl.class);
     watchesView.removeWatches(nodes);
   }

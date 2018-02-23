@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.impl;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev

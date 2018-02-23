@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines common contract for building {@link EditorTextField} with necessary combinations of features.
@@ -34,7 +34,7 @@ public interface EditorTextFieldProvider {
    * @param project    target project
    * @return {@link EditorTextField} with specified customizations applied to its editor.
    */
-  @NotNull
-  EditorTextField getEditorField(@NotNull Language language, @NotNull  Project project, @NotNull Iterable<EditorCustomization> features);
+  @Nonnull
+  EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<EditorCustomization> features);
 
 }

@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
@@ -32,7 +32,7 @@ public class RunDashboardToolWindowFactory implements ToolWindowFactory, Conditi
   }
 
   @Override
-  public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     RunDashboardManager.getInstance(project).createToolWindowContent(toolWindow);
   }
 }

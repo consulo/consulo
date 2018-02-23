@@ -21,7 +21,7 @@ import com.intellij.psi.impl.cache.TodoCacheManager;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.search.searches.IndexPatternSearch;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,14 +32,14 @@ public class IndexPatternSearchImpl extends IndexPatternSearch {
   }
 
   @Override
-  protected int getOccurrencesCountImpl(@NotNull PsiFile file, @NotNull IndexPatternProvider provider) {
+  protected int getOccurrencesCountImpl(@Nonnull PsiFile file, @Nonnull IndexPatternProvider provider) {
     int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), provider);
     if (count != -1) return count;
     return search(file, provider).findAll().size();
   }
 
   @Override
-  protected int getOccurrencesCountImpl(@NotNull PsiFile file, @NotNull IndexPattern pattern) {
+  protected int getOccurrencesCountImpl(@Nonnull PsiFile file, @Nonnull IndexPattern pattern) {
     int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), pattern);
     if (count != -1) return count;
     return search(file, pattern).findAll().size();

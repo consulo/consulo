@@ -22,8 +22,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.impl.archive.ArchiveEntry;
 import consulo.vfs.impl.archive.ArchiveFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.DeprecationInfo;
 
 import java.io.*;
@@ -79,13 +80,13 @@ public class ArchiveVfsUtil {
     return getVirtualFileForArchive(virtualFile);
   }
 
-  public static void extract(final @NotNull ArchiveFile zipFile, @NotNull File outputDir, @Nullable FilenameFilter filenameFilter)
+  public static void extract(final @Nonnull ArchiveFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter)
           throws IOException {
     extract(zipFile, outputDir, filenameFilter, true);
   }
 
-  public static void extract(final @NotNull ArchiveFile zipFile,
-                             @NotNull File outputDir,
+  public static void extract(final @Nonnull ArchiveFile zipFile,
+                             @Nonnull File outputDir,
                              @Nullable FilenameFilter filenameFilter,
                              boolean overwrite) throws IOException {
     final Iterator<? extends ArchiveEntry> entries = zipFile.entries();

@@ -18,8 +18,8 @@ package com.intellij.psi.codeStyle;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.FList;
 import com.intellij.util.ui.KeyboardLayoutUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +31,7 @@ public class FixingLayoutMatcher extends MinusculeMatcher {
   @Nullable
   private final MinusculeMatcher myFixedMatcher;
 
-  FixingLayoutMatcher(@NotNull String pattern, @NotNull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+  FixingLayoutMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
     super(pattern, options, hardSeparators);
     String s = fixPattern(pattern);
     myFixedMatcher = s == null ? null : new MinusculeMatcher(s, options, hardSeparators);
@@ -67,13 +67,13 @@ public class FixingLayoutMatcher extends MinusculeMatcher {
   }
 
   @Override
-  public boolean matches(@NotNull String name) {
+  public boolean matches(@Nonnull String name) {
     return super.matches(name) || myFixedMatcher != null && myFixedMatcher.matches(name);
   }
 
   @Nullable
   @Override
-  public FList<TextRange> matchingFragments(@NotNull String name) {
+  public FList<TextRange> matchingFragments(@Nonnull String name) {
     FList<TextRange> ranges = super.matchingFragments(name);
     if (myFixedMatcher == null || ranges != null && !ranges.isEmpty()) return ranges;
     return myFixedMatcher.matchingFragments(name);

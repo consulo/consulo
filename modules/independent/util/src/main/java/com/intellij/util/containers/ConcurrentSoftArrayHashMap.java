@@ -18,8 +18,8 @@ package com.intellij.util.containers;
 
 import com.intellij.reference.SoftReference;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class ConcurrentSoftArrayHashMap<T,V> implements Cloneable {
     this(ContainerUtil.<T>canonicalStrategy());
   }
 
-  public ConcurrentSoftArrayHashMap(@NotNull TObjectHashingStrategy<T> strategy) {
+  public ConcurrentSoftArrayHashMap(@Nonnull TObjectHashingStrategy<T> strategy) {
     myStrategy = strategy;
   }
 

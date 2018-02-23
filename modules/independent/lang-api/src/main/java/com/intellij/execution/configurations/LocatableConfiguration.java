@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Base interface that should be used for configurations that can be created from context (a location in a file) by implementations of

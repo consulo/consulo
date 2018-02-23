@@ -37,7 +37,7 @@ import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -52,21 +52,21 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @NonNls
   public static final String URL_ATTRIBUTE = "url";
 
-  @NotNull
+  @Nonnull
   private final VirtualFilePointer myRoot;
 
   private final Set<ContentFolder> myContentFolders = new TreeSet<>(ContentFolderComparator.INSTANCE);
 
-  public ContentEntryImpl(@NotNull VirtualFile file, @NotNull ModuleRootLayerImpl m) {
+  public ContentEntryImpl(@Nonnull VirtualFile file, @Nonnull ModuleRootLayerImpl m) {
     this(file.getUrl(), m);
   }
 
-  public ContentEntryImpl(@NotNull String url, @NotNull ModuleRootLayerImpl m) {
+  public ContentEntryImpl(@Nonnull String url, @Nonnull ModuleRootLayerImpl m) {
     super(m);
     myRoot = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  public ContentEntryImpl(@NotNull Element e, @NotNull ModuleRootLayerImpl m) {
+  public ContentEntryImpl(@Nonnull Element e, @Nonnull ModuleRootLayerImpl m) {
     this(getUrlFrom(e), m);
 
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
@@ -74,7 +74,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     }
   }
 
-  private static String getUrlFrom(@NotNull Element e) {
+  private static String getUrlFrom(@Nonnull Element e) {
     LOGGER.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
     String url = e.getAttributeValue(URL_ATTRIBUTE);
@@ -88,14 +88,14 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     return myRoot.getUrl();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentFolder[] getFolders(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public ContentFolder[] getFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     List<ContentFolder> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder);
@@ -104,9 +104,9 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   }
 
 
-  @NotNull
+  @Nonnull
   @Override
-  public VirtualFile[] getFolderFiles(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     List<VirtualFile> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
@@ -114,9 +114,9 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     return VfsUtilCore.toVirtualFileArray(list);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] getFolderUrls(@NotNull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     List<String> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
       list.add(contentFolder.getUrl());
@@ -148,16 +148,16 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     return list;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentFolder addFolder(@NotNull VirtualFile file, @NotNull ContentFolderTypeProvider contentFolderType) {
+  public ContentFolder addFolder(@Nonnull VirtualFile file, @Nonnull ContentFolderTypeProvider contentFolderType) {
     assertCanAddFolder(file);
     return addFolder(new ContentFolderImpl(file, contentFolderType, this));
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public ContentFolder addFolder(@NotNull String url, @NotNull ContentFolderTypeProvider contentFolderType) {
+  public ContentFolder addFolder(@Nonnull String url, @Nonnull ContentFolderTypeProvider contentFolderType) {
     assertFolderUnderMe(url);
     return addFolder(new ContentFolderImpl(url, contentFolderType, null, this));
   }
@@ -169,7 +169,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   }
 
   @Override
-  public void removeFolder(@NotNull ContentFolder contentFolder) {
+  public void removeFolder(@Nonnull ContentFolder contentFolder) {
     assert !isDisposed();
     assertCanRemoveFrom(contentFolder, myContentFolders);
     myContentFolders.remove(contentFolder);
@@ -178,21 +178,21 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     }
   }
 
-  private void assertCanAddFolder(@NotNull VirtualFile file) {
+  private void assertCanAddFolder(@Nonnull VirtualFile file) {
     assertCanAddFolder(file.getUrl());
   }
 
-  private void assertCanAddFolder(@NotNull String url) {
+  private void assertCanAddFolder(@Nonnull String url) {
     getRootModel().assertWritable();
     assertFolderUnderMe(url);
   }
 
-  private <T extends ContentFolder> void assertCanRemoveFrom(T f, @NotNull Set<T> ff) {
+  private <T extends ContentFolder> void assertCanRemoveFrom(T f, @Nonnull Set<T> ff) {
     getRootModel().assertWritable();
     LOGGER.assertTrue(ff.contains(f));
   }
 
-  private void assertFolderUnderMe(@NotNull String url) {
+  private void assertFolderUnderMe(@Nonnull String url) {
     final String path = VfsUtilCore.urlToPath(url);
     final String rootPath = VfsUtilCore.urlToPath(getUrl());
     if (!FileUtil.isAncestor(rootPath, path, false)) {
@@ -206,8 +206,8 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   }
 
   @Override
-  @NotNull
-  public ContentEntry cloneEntry(@NotNull ModuleRootLayerImpl rootModel) {
+  @Nonnull
+  public ContentEntry cloneEntry(@Nonnull ModuleRootLayerImpl rootModel) {
     assert !isDisposed();
 
     ContentEntryImpl cloned = new ContentEntryImpl(myRoot.getUrl(), rootModel);
@@ -221,7 +221,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     return cloned;
   }
 
-  public void writeExternal(@NotNull Element element) {
+  public void writeExternal(@Nonnull Element element) {
     assert !isDisposed();
     LOGGER.assertTrue(ELEMENT_NAME.equals(element.getName()));
     element.setAttribute(URL_ATTRIBUTE, myRoot.getUrl());
@@ -236,19 +236,19 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     public static final ContentFolderComparator INSTANCE = new ContentFolderComparator();
 
     @Override
-    public int compare(@NotNull ContentFolder o1, @NotNull ContentFolder o2) {
+    public int compare(@Nonnull ContentFolder o1, @Nonnull ContentFolder o2) {
       return o1.getUrl().compareTo(o2.getUrl());
     }
   }
 
   @Override
-  public int compareTo(@NotNull ContentEntryImpl other) {
+  public int compareTo(@Nonnull ContentEntryImpl other) {
     int i = getUrl().compareTo(other.getUrl());
     if (i != 0) return i;
     return lexicographicCompare(myContentFolders, other.myContentFolders);
   }
 
-  public static <T> int lexicographicCompare(@NotNull Set<T> obj1, @NotNull Set<T> obj2) {
+  public static <T> int lexicographicCompare(@Nonnull Set<T> obj1, @Nonnull Set<T> obj2) {
     Iterator<T> it1 = obj1.iterator();
     Iterator<T> it2 = obj2.iterator();
 

@@ -41,8 +41,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +59,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   // out
   private final List<Pair<VirtualFile, ApplyTextFilePatch>> myTextPatches;
   private final List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> myBinaryPatches;
-  @NotNull private final List<VirtualFile> myWritableFiles;
+  @Nonnull
+  private final List<VirtualFile> myWritableFiles;
   private final BaseMapper myBaseMapper;
   private ProjectLevelVcsManager myVcsManager;
   private final List<FilePatch> mySkipped;
@@ -195,7 +195,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return myDeletedPaths;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<FilePatch> filterBadFileTypePatches() {
     List<Pair<VirtualFile, ApplyTextFilePatch>> failedTextPatches =
             ContainerUtil.findAll(myTextPatches, new Condition<Pair<VirtualFile, ApplyTextFilePatch>>() {
@@ -215,7 +215,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     });
   }
 
-  private boolean isFileTypeOk(@NotNull VirtualFile file) {
+  private boolean isFileTypeOk(@Nonnull VirtualFile file) {
     FileType fileType = file.getFileType();
     if (fileType == UnknownFileType.INSTANCE) {
       fileType = FileTypeChooser.associateFileType(file.getName());
@@ -502,7 +502,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return file;*/
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private VirtualFile makeSureParentPathExists(final String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
@@ -535,7 +535,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return myBinaryPatches;
   }
 
-  @NotNull
+  @Nonnull
   public List<VirtualFile> getWritableFiles() {
     return myWritableFiles;
   }
@@ -558,7 +558,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     private final VirtualFile myCurrent;
     private final String myNewName;
 
-    private MovedFileData(@NotNull final VirtualFile newParent, @NotNull final VirtualFile current, @NotNull final String newName) {
+    private MovedFileData(@Nonnull final VirtualFile newParent, @Nonnull final VirtualFile current, @Nonnull final String newName) {
       myNewParent = newParent;
       myCurrent = current;
       myNewName = newName;
@@ -598,7 +598,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return myCurrent;
     }
 
-    private void performRenameWithConflicts(@NotNull File oldParent) throws IOException {
+    private void performRenameWithConflicts(@Nonnull File oldParent) throws IOException {
       File tmpFileWithUniqueName = FileUtil.createTempFile(oldParent, "tempFileToMove", null, false);
       File newParentFile = VfsUtilCore.virtualToIoFile(myNewParent);
       File destFile = new File(newParentFile, tmpFileWithUniqueName.getName());
@@ -614,7 +614,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   public interface BaseMapper {
-    @Nullable
+    @javax.annotation.Nullable
     VirtualFile getFile(final FilePatch patch, final String path);
     FilePath getPath(final FilePatch patch, final String path);
   }

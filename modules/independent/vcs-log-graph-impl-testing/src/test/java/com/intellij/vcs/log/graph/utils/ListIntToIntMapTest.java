@@ -18,11 +18,11 @@ package com.intellij.vcs.log.graph.utils;
 
 import com.intellij.util.BooleanFunction;
 import com.intellij.vcs.log.graph.utils.impl.ListIntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ListIntToIntMapTest extends UpdatableIntToIntMapTest {
   @Override
-  protected UpdatableIntToIntMap createUpdatableIntToIntMap(@NotNull BooleanFunction<Integer> thisIsVisible, int longSize) {
+  protected UpdatableIntToIntMap createUpdatableIntToIntMap(@Nonnull BooleanFunction<Integer> thisIsVisible, int longSize) {
     return ListIntToIntMap.newInstance(thisIsVisible, longSize, 3);
   }
 }

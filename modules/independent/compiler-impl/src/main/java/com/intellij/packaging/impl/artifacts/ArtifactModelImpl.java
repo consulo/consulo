@@ -20,8 +20,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.util.EventDispatcher;
 import consulo.packaging.artifacts.ArtifactPointerUtil;
 import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     myOriginalArtifacts = new ArrayList<ArtifactImpl>(originalArtifacts);
     addListener(new ArtifactAdapter() {
       @Override
-      public void artifactChanged(@NotNull Artifact artifact, @NotNull String oldName) {
+      public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
         artifactsChanged();
       }
     });
@@ -63,13 +62,13 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     return list;
   }
 
-  @NotNull
-  public ModifiableArtifact addArtifact(@NotNull final String name, @NotNull ArtifactType artifactType) {
+  @Nonnull
+  public ModifiableArtifact addArtifact(@Nonnull final String name, @Nonnull ArtifactType artifactType) {
     return addArtifact(name, artifactType, artifactType.createRootElement(name));
   }
 
-  @NotNull
-  public ModifiableArtifact addArtifact(@NotNull String name, @NotNull ArtifactType artifactType, CompositePackagingElement<?> rootElement) {
+  @Nonnull
+  public ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement) {
     final String uniqueName = generateUniqueName(name);
     final String outputPath = ArtifactUtil.getDefaultArtifactOutputPath(uniqueName, myArtifactManager.getProject());
     final ArtifactImpl artifact = new ArtifactImpl(uniqueName, artifactType, false, rootElement, outputPath, myDispatcher);
@@ -93,15 +92,15 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     }
   }
 
-  public void addListener(@NotNull ArtifactListener listener) {
+  public void addListener(@Nonnull ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
-  public void removeListener(@NotNull ArtifactListener listener) {
+  public void removeListener(@Nonnull ArtifactListener listener) {
     myDispatcher.addListener(listener);
   }
 
-  public void removeArtifact(@NotNull Artifact artifact) {
+  public void removeArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     ArtifactImpl original = myModifiable2Original.remove(artifactImpl);
     if (original != null) {
@@ -116,8 +115,8 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     myDispatcher.getMulticaster().artifactRemoved(original);
   }
 
-  @NotNull
-  public ModifiableArtifact getOrCreateModifiableArtifact(@NotNull Artifact artifact) {
+  @Nonnull
+  public ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     if (myModifiable2Original.containsKey(artifactImpl)) {
       return artifactImpl;
@@ -134,14 +133,14 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     return modifiableCopy;
   }
 
-  @NotNull
-  public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
     final ArtifactImpl original = myModifiable2Original.get(artifact);
     return original != null ? original : artifact;
   }
 
-  @NotNull
-  public ArtifactImpl getArtifactByOriginal(@NotNull Artifact artifact) {
+  @Nonnull
+  public ArtifactImpl getArtifactByOriginal(@Nonnull Artifact artifact) {
     final ArtifactImpl artifactImpl = (ArtifactImpl)artifact;
     final ArtifactImpl copy = myArtifact2ModifiableCopy.get(artifactImpl);
     return copy != null ? copy : artifactImpl;
@@ -165,7 +164,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
     ((ArtifactPointerManagerImpl)ArtifactPointerUtil.getPointerManager(myArtifactManager.getProject())).unregisterPointers(artifacts);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public ArtifactImpl getModifiableCopy(Artifact artifact) {
     //noinspection SuspiciousMethodCalls
     return myArtifact2ModifiableCopy.get(artifact);

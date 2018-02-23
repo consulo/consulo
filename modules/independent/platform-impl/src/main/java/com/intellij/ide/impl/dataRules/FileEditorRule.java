@@ -22,17 +22,17 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.EditorTextField;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FileEditorRule implements GetDataRule<FileEditor> {
-  @NotNull
+  @Nonnull
   @Override
   public Key<FileEditor> getKey() {
     return PlatformDataKeys.FILE_EDITOR;
   }
 
   @Override
-  public FileEditor getData(@NotNull DataProvider dataProvider) {
+  public FileEditor getData(@Nonnull DataProvider dataProvider) {
     final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
     if (editor == null) {
       return null;

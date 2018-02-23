@@ -23,8 +23,8 @@ import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Rustam Vishnyakov
@@ -48,7 +48,7 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
   public Element getState() {
     return XmlSerializer.serialize(this, new SerializationFilter() {
       @Override
-      public boolean accepts(@NotNull Accessor accessor, Object bean) {
+      public boolean accepts(@Nonnull Accessor accessor, Object bean) {
         return accessor.getValueClass().equals(String.class);
       }
     });

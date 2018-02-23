@@ -17,7 +17,7 @@ package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.Block;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -25,6 +25,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface SettingsAwareBlock extends Block {
   
-  @NotNull
+  @Nonnull
   CodeStyleSettings getSettings();
 }

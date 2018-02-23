@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ex;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public static ProjectRootManagerEx getInstanceEx(Project project) {
@@ -26,9 +26,9 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   }
 
   // invokes runnable surrounded by beforeRootsChage()/rootsChanged() callbacks
-  public abstract void makeRootsChange(@NotNull Runnable runnable, boolean filetypes, boolean fireEvents);
+  public abstract void makeRootsChange(@Nonnull Runnable runnable, boolean filetypes, boolean fireEvents);
 
-  public abstract void mergeRootsChangesDuring(@NotNull Runnable runnable);
+  public abstract void mergeRootsChangesDuring(@Nonnull Runnable runnable);
 
   public abstract void clearScopesCachesForModules();
 }

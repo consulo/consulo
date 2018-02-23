@@ -35,8 +35,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,9 +51,9 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   private DirectoryStorageData myStorageData;
 
   public DirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                               @NotNull String dir,
-                               @NotNull StateSplitterEx splitter,
-                               @NotNull Disposable parentDisposable,
+                               @Nonnull String dir,
+                               @Nonnull StateSplitterEx splitter,
+                               @Nonnull Disposable parentDisposable,
                                @Nullable final Listener listener) {
     super(pathMacroSubstitutor);
 
@@ -64,12 +64,12 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     if (virtualFileTracker != null && listener != null) {
       virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
         @Override
-        public void contentsChanged(@NotNull VirtualFileEvent event) {
+        public void contentsChanged(@Nonnull VirtualFileEvent event) {
           notifyIfNeed(event);
         }
 
         @Override
-        public void fileDeleted(@NotNull VirtualFileEvent event) {
+        public void fileDeleted(@Nonnull VirtualFileEvent event) {
           if (event.getFile().equals(myVirtualFile)) {
             myVirtualFile = null;
           }
@@ -77,11 +77,11 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
         }
 
         @Override
-        public void fileCreated(@NotNull VirtualFileEvent event) {
+        public void fileCreated(@Nonnull VirtualFileEvent event) {
           notifyIfNeed(event);
         }
 
-        private void notifyIfNeed(@NotNull VirtualFileEvent event) {
+        private void notifyIfNeed(@Nonnull VirtualFileEvent event) {
           // storage directory will be removed if the only child was removed
           if (event.getFile().isDirectory() || DirectoryStorageData.isStorageFile(event.getFile())) {
             listener.storageFileChanged(event, DirectoryBasedStorage.this);
@@ -92,7 +92,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   }
 
   @Override
-  public void analyzeExternalChangesAndUpdateIfNeed(@NotNull Set<String> result) {
+  public void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result) {
     // todo reload only changed file, compute diff
     DirectoryStorageData oldData = myStorageData;
     DirectoryStorageData newData = loadState();
@@ -108,11 +108,11 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
 
   @Nullable
   @Override
-  protected Element getStateAndArchive(@NotNull DirectoryStorageData storageData, @NotNull String componentName) {
+  protected Element getStateAndArchive(@Nonnull DirectoryStorageData storageData, @Nonnull String componentName) {
     return storageData.getCompositeStateAndArchive(componentName, mySplitter);
   }
 
-  @NotNull
+  @Nonnull
   private DirectoryStorageData loadState() {
     DirectoryStorageData storageData = new DirectoryStorageData();
     storageData.loadFrom(getVirtualFile(), myPathMacroSubstitutor);
@@ -129,7 +129,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected DirectoryStorageData getStorageData(boolean reloadData) {
     if (myStorageData != null && !reloadData) {
       return myStorageData;
@@ -145,8 +145,8 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
   }
 
-  @NotNull
-  public static VirtualFile createDir(@NotNull File ioDir, @NotNull Object requestor) {
+  @Nonnull
+  public static VirtualFile createDir(@Nonnull File ioDir, @Nonnull Object requestor) {
     //noinspection ResultOfMethodCallIgnored
     ioDir.mkdirs();
     String parentFile = ioDir.getParent();
@@ -157,8 +157,8 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     return getFile(ioDir.getName(), parentVirtualFile, requestor);
   }
 
-  @NotNull
-  public static VirtualFile getFile(@NotNull String fileName, @NotNull VirtualFile parentVirtualFile, @NotNull Object requestor) {
+  @Nonnull
+  public static VirtualFile getFile(@Nonnull String fileName, @Nonnull VirtualFile parentVirtualFile, @Nonnull Object requestor) {
     VirtualFile file = parentVirtualFile.findChild(fileName);
     if (file != null) {
       return file;
@@ -184,13 +184,13 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     private final Set<String> dirtyFileNames = new SmartHashSet<String>();
     private final Set<String> removedFileNames = new SmartHashSet<String>();
 
-    private MySaveSession(@NotNull DirectoryBasedStorage storage, @NotNull DirectoryStorageData storageData) {
+    private MySaveSession(@Nonnull DirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
       this.storage = storage;
       originalStorageData = storageData;
     }
 
     @Override
-    public void setState(@NotNull Object component, @NotNull String componentName, @NotNull Object state, Storage storageSpec) {
+    public void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, Storage storageSpec) {
       Element compositeState;
       try {
         compositeState = DefaultStateSerializer.serializeState(state, storageSpec);
@@ -222,7 +222,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       }
     }
 
-    private void doSetState(@NotNull String componentName, @Nullable String fileName, @Nullable Element subState) {
+    private void doSetState(@Nonnull String componentName, @Nullable String fileName, @Nullable Element subState) {
       if (copiedStorageData == null) {
         copiedStorageData = DirectoryStorageData.setStateAndCloneIfNeed(componentName, fileName, subState, originalStorageData);
         if (copiedStorageData != null && fileName != null) {
@@ -271,7 +271,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       storage.myStorageData = copiedStorageData;
     }
 
-    private void saveStates(@NotNull final VirtualFile dir) {
+    private void saveStates(@Nonnull final VirtualFile dir) {
       final Element storeElement = new Element(StorageData.COMPONENT);
 
       for (final String componentName : copiedStorageData.getComponentNames()) {
@@ -313,7 +313,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
       }
     }
 
-    private void deleteFiles(@NotNull VirtualFile dir) {
+    private void deleteFiles(@Nonnull VirtualFile dir) {
       AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(DirectoryBasedStorage.class);
       try {
         for (VirtualFile file : dir.getChildren()) {
@@ -328,7 +328,7 @@ public class DirectoryBasedStorage extends StateStorageBase<DirectoryStorageData
     }
   }
 
-  public static void deleteFile(@NotNull VirtualFile file, @NotNull Object requestor) {
+  public static void deleteFile(@Nonnull VirtualFile file, @Nonnull Object requestor) {
     try {
       file.delete(requestor);
     }

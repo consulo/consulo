@@ -19,18 +19,18 @@ import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.util.Getter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
-  @NotNull
+  @Nonnull
   private final EditorImpl myEditor;
   final int myOriginalOffset; // used for sorting of inlays, if they ever get merged into same offset after document modification
   int myOffsetBeforeDisposal = -1;
   private int myWidthInPixels;
-  @NotNull
+  @Nonnull
   private final EditorCustomElementRenderer myRenderer;
 
-  InlayImpl(@NotNull EditorImpl editor, int offset, @NotNull EditorCustomElementRenderer renderer) {
+  InlayImpl(@Nonnull EditorImpl editor, int offset, @Nonnull EditorCustomElementRenderer renderer) {
     super(editor.getDocument(), offset, offset, false);
     myEditor = editor;
     myOriginalOffset = offset;
@@ -53,7 +53,7 @@ class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
   }
 
   @Override
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     super.changedUpdateImpl(e);
     if (myEditor.getInlayModel().myStickToLargerOffsetsOnUpdate && isValid() && e.getOldLength() == 0 && getOffset() == e.getOffset()) {
       int newOffset = e.getOffset() + e.getNewLength();
@@ -76,7 +76,7 @@ class InlayImpl extends RangeMarkerImpl implements Inlay, Getter<InlayImpl> {
     return myOffsetBeforeDisposal == -1 ? getStartOffset() : myOffsetBeforeDisposal;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public EditorCustomElementRenderer getRenderer() {
     return myRenderer;

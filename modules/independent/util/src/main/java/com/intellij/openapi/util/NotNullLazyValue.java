@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Compute-once keep-forever lazy value.
@@ -28,10 +28,10 @@ public abstract class NotNullLazyValue<T> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("NotNullLazyValue");
   private T myValue;
 
-  @NotNull
+  @Nonnull
   protected abstract T compute();
 
-  @NotNull
+  @Nonnull
   public T getValue() {
     T result = myValue;
     if (result == null) {
@@ -48,10 +48,10 @@ public abstract class NotNullLazyValue<T> {
     return myValue != null;
   }
 
-  @NotNull
-  public static <T> NotNullLazyValue<T> createConstantValue(@NotNull final T value) {
+  @Nonnull
+  public static <T> NotNullLazyValue<T> createConstantValue(@Nonnull final T value) {
     return new NotNullLazyValue<T>() {
-      @NotNull
+      @Nonnull
       @Override
       protected T compute() {
         return value;
@@ -59,10 +59,10 @@ public abstract class NotNullLazyValue<T> {
     };
   }
 
-  @NotNull
-  public static <T> NotNullLazyValue<T> createValue(@NotNull final NotNullFactory<T> value) {
+  @Nonnull
+  public static <T> NotNullLazyValue<T> createValue(@Nonnull final NotNullFactory<T> value) {
     return new NotNullLazyValue<T>() {
-      @NotNull
+      @Nonnull
       @Override
       protected T compute() {
         return value.create();

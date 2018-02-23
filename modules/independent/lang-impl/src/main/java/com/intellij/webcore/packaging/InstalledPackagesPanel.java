@@ -22,8 +22,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -79,13 +79,13 @@ public class InstalledPackagesPanel extends JPanel {
 
     myUpgradeButton = new AnActionButton("Upgrade", IconUtil.getMoveUpIcon()) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         upgradeAction();
       }
     };
     myInstallButton = new AnActionButton("Install", IconUtil.getAddIcon()) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         if (myPackageManagementService != null) {
           ManagePackagesDialog dialog = createManagePackagesDialog();
           dialog.show();
@@ -94,7 +94,7 @@ public class InstalledPackagesPanel extends JPanel {
     };
     myUninstallButton = new AnActionButton("Uninstall", IconUtil.getRemoveIcon()) {
       @Override
-      public void actionPerformed(@NotNull AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         uninstallAction();
       }
     };
@@ -138,7 +138,7 @@ public class InstalledPackagesPanel extends JPanel {
     }.installOn(myPackagesTable);
   }
 
-  @NotNull
+  @Nonnull
   protected ManagePackagesDialog createManagePackagesDialog() {
     return new ManagePackagesDialog(myProject,
                                     myPackageManagementService,
@@ -198,7 +198,7 @@ public class InstalledPackagesPanel extends JPanel {
     return Collections.emptySet();
   }
 
-  private void upgradePackage(@NotNull final InstalledPackage pkg, @Nullable final String toVersion) {
+  private void upgradePackage(@Nonnull final InstalledPackage pkg, @Nullable final String toVersion) {
     final PackageManagementService selPackageManagementService = myPackageManagementService;
     myPackageManagementService.fetchPackageVersions(pkg.getName(), new CatchingConsumer<List<String>, Exception>() {
       @Override
@@ -303,7 +303,7 @@ public class InstalledPackagesPanel extends JPanel {
     return true;
   }
 
-  protected boolean canInstallPackage(@NotNull final InstalledPackage pyPackage) {
+  protected boolean canInstallPackage(@Nonnull final InstalledPackage pyPackage) {
     return true;
   }
 
@@ -351,7 +351,7 @@ public class InstalledPackagesPanel extends JPanel {
     }
   }
 
-  @NotNull
+  @Nonnull
   private List<InstalledPackage> getSelectedPackages() {
     final List<InstalledPackage> results = new ArrayList<>();
     final int[] rows = myPackagesTable.getSelectedRows();
@@ -388,7 +388,7 @@ public class InstalledPackagesPanel extends JPanel {
     ActivityTracker.getInstance().inc();
   }
 
-  public void doUpdatePackages(@NotNull final PackageManagementService packageManagementService) {
+  public void doUpdatePackages(@Nonnull final PackageManagementService packageManagementService) {
     onUpdateStarted();
     final Application application = ApplicationManager.getApplication();
     application.executeOnPooledThread(() -> {
@@ -498,7 +498,7 @@ public class InstalledPackagesPanel extends JPanel {
     return PackageVersionComparator.VERSION_COMPARATOR.compare(currentVersion, availableVersion) < 0;
   }
 
-  private void refreshLatestVersions(@NotNull final PackageManagementService packageManagementService) {
+  private void refreshLatestVersions(@Nonnull final PackageManagementService packageManagementService) {
     final Application application = ApplicationManager.getApplication();
     application.executeOnPooledThread(() -> {
       if (packageManagementService == myPackageManagementService) {

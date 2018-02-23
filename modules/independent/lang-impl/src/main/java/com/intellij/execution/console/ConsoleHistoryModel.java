@@ -19,8 +19,8 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +44,7 @@ class ConsoleHistoryModel extends SimpleModificationTracker {
     return new ConsoleHistoryModel(this);
   }
 
-  public void resetEntries(@NotNull List<String> entries) {
+  public void resetEntries(@Nonnull List<String> entries) {
     synchronized (myLock) {
       myEntries.clear();
       myEntries.addAll(entries.subList(0, Math.min(entries.size(), getMaxHistorySize())));

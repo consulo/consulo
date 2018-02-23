@@ -21,8 +21,8 @@ import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ReplaceUnderscoresToCamelCaseMacro extends MacroBase {
 
   @Nullable
   @Override
-  protected Result calculateResult(@NotNull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
     final String text = getTextResult(params, context, true);
     if (text != null) {
       final List<String> strings = StringUtil.split(text, "_");

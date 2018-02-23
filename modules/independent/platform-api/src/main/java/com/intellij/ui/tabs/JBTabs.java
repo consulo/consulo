@@ -21,8 +21,8 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.switcher.SwitchProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,32 +31,32 @@ import java.awt.event.MouseListener;
 
 public interface JBTabs extends SwitchProvider {
 
-  @NotNull
+  @Nonnull
   TabInfo addTab(TabInfo info, int index);
 
-  @NotNull
+  @Nonnull
   TabInfo addTab(TabInfo info);
 
-  @NotNull
+  @Nonnull
   ActionCallback removeTab(@Nullable TabInfo info);
 
   void removeAllTabs();
 
-  @NotNull
-  JBTabs setPopupGroup(@NotNull ActionGroup popupGroup, @NotNull String place, final boolean addNavigationGroup);
+  @Nonnull
+  JBTabs setPopupGroup(@Nonnull ActionGroup popupGroup, @Nonnull String place, final boolean addNavigationGroup);
 
-  @NotNull
-  ActionCallback select(@NotNull TabInfo info, boolean requestFocus);
+  @Nonnull
+  ActionCallback select(@Nonnull TabInfo info, boolean requestFocus);
 
   @Nullable
   TabInfo getSelectedInfo();
 
-  @NotNull
+  @Nonnull
   TabInfo getTabAt(int tabIndex);
 
   int getTabCount();
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation getPresentation();
 
   @Nullable
@@ -65,15 +65,15 @@ public interface JBTabs extends SwitchProvider {
   @Nullable
   TabInfo getTargetInfo();
 
-  @NotNull
-  JBTabs addTabMouseListener(@NotNull MouseListener listener);
+  @Nonnull
+  JBTabs addTabMouseListener(@Nonnull MouseListener listener);
 
-  JBTabs addListener(@NotNull TabsListener listener);
+  JBTabs addListener(@Nonnull TabsListener listener);
 
   JBTabs setSelectionChangeHandler(SelectionChangeHandler handler);
 
   @Override
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 
   @Nullable
@@ -98,7 +98,7 @@ public interface JBTabs extends SwitchProvider {
   void processDropOver(TabInfo over, RelativePoint point);
 
   interface SelectionChangeHandler {
-    @NotNull
-    ActionCallback execute(final TabInfo info, final boolean requestFocus, @NotNull ActiveRunnable doChangeSelection);
+    @Nonnull
+    ActionCallback execute(final TabInfo info, final boolean requestFocus, @Nonnull ActiveRunnable doChangeSelection);
   }
 }

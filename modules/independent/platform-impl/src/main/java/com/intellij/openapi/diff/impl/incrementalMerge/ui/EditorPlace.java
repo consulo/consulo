@@ -28,8 +28,8 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,13 +42,17 @@ import java.util.List;
 public class EditorPlace extends JComponent implements Disposable, Consumer<Graphics> {
   private static final Logger LOG = Logger.getInstance(EditorPlace.class);
 
-  @NotNull private final MergePanel2.DiffEditorState myState;
-  @NotNull private final MergePanelColumn myColumn;
-  @NotNull private final MergePanel2 myMergePanel;
-  @NotNull private final List<EditorListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  @Nonnull
+  private final MergePanel2.DiffEditorState myState;
+  @Nonnull
+  private final MergePanelColumn myColumn;
+  @Nonnull
+  private final MergePanel2 myMergePanel;
+  @Nonnull
+  private final List<EditorListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   @Nullable private EditorEx myEditor;
 
-  public EditorPlace(@NotNull MergePanel2.DiffEditorState state, @NotNull MergePanelColumn column, @NotNull MergePanel2 mergePanel) {
+  public EditorPlace(@Nonnull MergePanel2.DiffEditorState state, @Nonnull MergePanelColumn column, @Nonnull MergePanel2 mergePanel) {
     myState = state;
     myColumn = column;
     myMergePanel = mergePanel;
@@ -82,7 +86,7 @@ public class EditorPlace extends JComponent implements Disposable, Consumer<Grap
     }
   }
 
-  private void drawPolygon(@NotNull Graphics2D g, int startY, int height, @NotNull Color color, boolean applied) {
+  private void drawPolygon(@Nonnull Graphics2D g, int startY, int height, @Nonnull Color color, boolean applied) {
     int scrollbarWidth = myEditor.getScrollPane().getVerticalScrollBar().getWidth();
     int startX = 0;
     int endX = startX + scrollbarWidth - 1;
@@ -177,7 +181,7 @@ public class EditorPlace extends JComponent implements Disposable, Consumer<Grap
     return myState.getDocument();
   }
 
-  @NotNull
+  @Nonnull
   public MergePanel2.DiffEditorState getState() {
     return myState;
   }

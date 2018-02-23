@@ -17,7 +17,7 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.ASTNode;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DefaultRoleFinder implements RoleFinder{
   protected IElementType[] myElementTypes;
@@ -27,7 +27,7 @@ public class DefaultRoleFinder implements RoleFinder{
   }
 
   @Override
-  public ASTNode findChild(@NotNull ASTNode parent) {
+  public ASTNode findChild(@Nonnull ASTNode parent) {
     ASTNode current = parent.getFirstChildNode();
     while(current != null){
       for (final IElementType elementType : myElementTypes) {

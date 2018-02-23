@@ -19,8 +19,8 @@ import com.intellij.openapi.externalSystem.model.ExternalSystemException;
 import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -30,12 +30,12 @@ import java.util.List;
  */
 public abstract class AbstractExternalSystemTaskManager<S extends ExternalSystemExecutionSettings> implements ExternalSystemTaskManager<S> {
 
-  public abstract void executeTasks(@NotNull ExternalSystemTaskId id,
-                                    @NotNull List<String> taskNames,
-                                    @NotNull String projectPath,
+  public abstract void executeTasks(@Nonnull ExternalSystemTaskId id,
+                                    @Nonnull List<String> taskNames,
+                                    @Nonnull String projectPath,
                                     @Nullable S settings,
-                                    @NotNull final List<String> vmOptions,
-                                    @NotNull List<String> scriptParameters,
+                                    @Nonnull final List<String> vmOptions,
+                                    @Nonnull List<String> scriptParameters,
                                     @Nullable String debuggerSetup,
-                                    @NotNull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;
+                                    @Nonnull ExternalSystemTaskNotificationListener listener) throws ExternalSystemException;
 }

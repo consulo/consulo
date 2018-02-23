@@ -41,8 +41,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -78,7 +78,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   private DesktopToolWindowHeader myHeader;
   private ActionGroup myToggleToolbarGroup;
 
-  DesktopInternalDecorator(final Project project, @NotNull WindowInfoImpl info, final DesktopToolWindowImpl toolWindow, boolean dumbAware) {
+  DesktopInternalDecorator(final Project project, @Nonnull WindowInfoImpl info, final DesktopToolWindowImpl toolWindow, boolean dumbAware) {
     super(new BorderLayout());
     myProject = project;
     myToolWindow = toolWindow;
@@ -109,7 +109,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
       }
 
       @Override
-      protected void toolWindowTypeChanged(@NotNull ToolWindowType type) {
+      protected void toolWindowTypeChanged(@Nonnull ToolWindowType type) {
         fireTypeChanged(type);
       }
 
@@ -138,7 +138,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
    * Applies specified decoration.
    */
   @Override
-  public void apply(@NotNull WindowInfo info) {
+  public void apply(@Nonnull WindowInfo info) {
     if (Comparing.equal(myInfo, info) || myProject == null || myProject.isDisposed()) {
       return;
     }
@@ -183,9 +183,9 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     setBorder(new InnerPanelBorder(myToolWindow));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (PlatformDataKeys.TOOL_WINDOW == dataId) {
       return myToolWindow;
     }
@@ -211,7 +211,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myProject = null;
   }
 
-  private void fireAnchorChanged(@NotNull ToolWindowAnchor anchor) {
+  private void fireAnchorChanged(@Nonnull ToolWindowAnchor anchor) {
     myDispatcher.getMulticaster().anchorChanged(this, anchor);
   }
 
@@ -243,7 +243,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myDispatcher.getMulticaster().activated(this);
   }
 
-  private void fireTypeChanged(@NotNull ToolWindowType type) {
+  private void fireTypeChanged(@Nonnull ToolWindowType type) {
     myDispatcher.getMulticaster().typeChanged(this, type);
   }
 
@@ -255,7 +255,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myDispatcher.getMulticaster().sideStatusChanged(this, isSide);
   }
 
-  private void fireContentUiTypeChanges(@NotNull ToolWindowContentUiType type) {
+  private void fireContentUiTypeChanges(@Nonnull ToolWindowContentUiType type) {
     myDispatcher.getMulticaster().contentUiTypeChanges(this, type);
   }
 
@@ -496,7 +496,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
    * @return last window info applied to the decorator.
    */
   @Override
-  @NotNull
+  @Nonnull
   public WindowInfoImpl getWindowInfo() {
     return myInfo;
   }
@@ -518,15 +518,16 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   }
 
   private final class ChangeAnchorAction extends AnAction implements DumbAware {
-    @NotNull private final ToolWindowAnchor myAnchor;
+    @Nonnull
+    private final ToolWindowAnchor myAnchor;
 
-    public ChangeAnchorAction(@NotNull String title, @NotNull ToolWindowAnchor anchor) {
+    public ChangeAnchorAction(@Nonnull String title, @Nonnull ToolWindowAnchor anchor) {
       super(title);
       myAnchor = anchor;
     }
 
     @Override
-    public final void actionPerformed(@NotNull final AnActionEvent e) {
+    public final void actionPerformed(@Nonnull final AnActionEvent e) {
       fireAnchorChanged(myAnchor);
     }
   }
@@ -547,7 +548,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myInfo.getType() != ToolWindowType.FLOATING && myInfo.getType() != ToolWindowType.WINDOWED);
     }
@@ -616,7 +617,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       if (SystemInfo.isMac) {
         e.getPresentation().setEnabledAndVisible(false);
@@ -640,7 +641,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public void update(@NotNull final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
     }
   }
@@ -653,7 +654,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myInfo.isShowStripeButton());
     }
 
@@ -675,12 +676,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final void actionPerformed(@NotNull final AnActionEvent e) {
+    public final void actionPerformed(@Nonnull final AnActionEvent e) {
       fireHidden();
     }
 
     @Override
-    public final void update(@NotNull final AnActionEvent event) {
+    public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
     }
@@ -695,7 +696,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       myHadSeveralContents = myHadSeveralContents || myToolWindow.getContentManager().getContentCount() > 1;
       super.update(e);
       e.getPresentation().setVisible(myHadSeveralContents);
@@ -803,7 +804,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Cursor getCursor() {
       final boolean isVerticalCursor = myInfo.isDocked() ? myInfo.getAnchor().isSplitVertically() : myInfo.getAnchor().isHorizontal();
@@ -812,7 +813,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     info.put("toolWindowTitle", myToolWindow.getTitle());
 
     final Content selection = myToolWindow.getContentManager().getSelectedContent();

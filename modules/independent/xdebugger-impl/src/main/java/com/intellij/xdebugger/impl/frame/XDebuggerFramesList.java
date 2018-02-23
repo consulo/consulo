@@ -34,9 +34,9 @@ import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XStackFrame;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -90,14 +90,14 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     }
 
     @Override
-    public int getSourceActions(@NotNull JComponent c) {
+    public int getSourceActions(@Nonnull JComponent c) {
       return COPY;
     }
   };
 
   private XStackFrame mySelectedFrame;
 
-  public XDebuggerFramesList(@NotNull Project project) {
+  public XDebuggerFramesList(@Nonnull Project project) {
     myProject = project;
 
     doInit();
@@ -105,7 +105,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     setDataProvider(new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         if (mySelectedFrame != null) {
           if (CommonDataKeys.VIRTUAL_FILE == dataId) {
             return getFile(mySelectedFrame);
@@ -195,12 +195,12 @@ public class XDebuggerFramesList extends DebuggerFramesList {
   private class XDebuggerFrameListRenderer extends ColoredListCellRenderer {
     private final FileColorManager myColorsManager;
 
-    public XDebuggerFrameListRenderer(@NotNull Project project) {
+    public XDebuggerFrameListRenderer(@Nonnull Project project) {
       myColorsManager = FileColorManager.getInstance(project);
     }
 
     @Override
-    protected void customizeCellRenderer(@NotNull final JList list,
+    protected void customizeCellRenderer(@Nonnull final JList list,
                                          final Object value,
                                          final int index,
                                          final boolean selected,

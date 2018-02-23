@@ -25,8 +25,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
 import consulo.annotations.RequiredDispatchThread;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.function.Consumer;
 
@@ -56,7 +56,7 @@ public abstract class Task implements TaskInfo, Progressive {
   private String myCancelText = CommonBundle.getCancelButtonText();
   private String myCancelTooltipText = CommonBundle.getCancelButtonText();
 
-  public Task(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title, boolean canBeCancelled) {
+  public Task(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
     myProject = project;
     myTitle = title;
     myCanBeCancelled = canBeCancelled;
@@ -86,7 +86,7 @@ public abstract class Task implements TaskInfo, Progressive {
    * @deprecated use {@link #onThrowable(Throwable)} instead
    */
   @Deprecated
-  public void onError(@NotNull Exception error) {
+  public void onError(@Nonnull Exception error) {
     LOG.error(error);
   }
 
@@ -95,7 +95,7 @@ public abstract class Task implements TaskInfo, Progressive {
    * <p>
    * Callback executed when run() throws an exception (except PCE).
    */
-  public void onThrowable(@NotNull Throwable error) {
+  public void onThrowable(@Nonnull Throwable error) {
     if (error instanceof Exception) {
       onError((Exception)error);
     }
@@ -125,13 +125,13 @@ public abstract class Task implements TaskInfo, Progressive {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getTitle() {
     return myTitle;
   }
 
-  @NotNull
-  public final Task setTitle(@Nls(capitalization = Nls.Capitalization.Title) @NotNull String title) {
+  @Nonnull
+  public final Task setTitle(@Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title) {
     myTitle = title;
     return this;
   }
@@ -141,7 +141,7 @@ public abstract class Task implements TaskInfo, Progressive {
     return myCancelText;
   }
 
-  @NotNull
+  @Nonnull
   public final Task setCancelText(String cancelText) {
     myCancelText = cancelText;
     return this;
@@ -161,7 +161,7 @@ public abstract class Task implements TaskInfo, Progressive {
     return ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment();
   }
 
-  @NotNull
+  @Nonnull
   public final Task setCancelTooltipText(String cancelTooltipText) {
     myCancelTooltipText = cancelTooltipText;
     return this;
@@ -179,7 +179,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract boolean isModal();
 
-  @NotNull
+  @Nonnull
   public final Modal asModal() {
     if (isModal()) {
       return (Modal)this;
@@ -187,7 +187,7 @@ public abstract class Task implements TaskInfo, Progressive {
     throw new IllegalStateException("Not a modal task");
   }
 
-  @NotNull
+  @Nonnull
   public final Backgroundable asBackgroundable() {
     if (!isModal()) {
       return (Backgroundable)this;
@@ -198,40 +198,40 @@ public abstract class Task implements TaskInfo, Progressive {
   public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
 
     public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
-                             @NotNull Consumer<ProgressIndicator> consumer) {
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, true, consumer);
     }
 
     public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                              boolean canBeCancelled,
-                             @NotNull Consumer<ProgressIndicator> consumer) {
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, canBeCancelled, null, consumer);
     }
 
     public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                              boolean canBeCancelled,
                              @Nullable PerformInBackgroundOption backgroundOption,
-                             @NotNull Consumer<ProgressIndicator> consumer) {
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
       new Backgroundable(project, title, canBeCancelled, backgroundOption) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           consumer.accept(indicator);
         }
       }.queue();
     }
 
     public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                              boolean canBeCancelled,
                              @Nullable PerformInBackgroundOption backgroundOption,
-                             @NotNull Consumer<ProgressIndicator> consumer,
-                             @NotNull Runnable onSuccess) {
+                             @Nonnull Consumer<ProgressIndicator> consumer,
+                             @Nonnull Runnable onSuccess) {
       new Backgroundable(project, title, canBeCancelled, backgroundOption) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           consumer.accept(indicator);
         }
 
@@ -245,16 +245,16 @@ public abstract class Task implements TaskInfo, Progressive {
 
     protected final PerformInBackgroundOption myBackgroundOption;
 
-    public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title) {
+    public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title) {
       this(project, title, true);
     }
 
-    public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title, boolean canBeCancelled) {
+    public Backgroundable(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
       this(project, title, canBeCancelled, null);
     }
 
     public Backgroundable(@Nullable Project project,
-                          @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                          @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                           boolean canBeCancelled,
                           @Nullable PerformInBackgroundOption backgroundOption) {
       super(project, title, canBeCancelled);
@@ -296,7 +296,7 @@ public abstract class Task implements TaskInfo, Progressive {
   }
 
   public abstract static class Modal extends Task {
-    public Modal(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title, boolean canBeCancelled) {
+    public Modal(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
       super(project, title, canBeCancelled);
     }
 
@@ -309,9 +309,9 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract static class ConditionalModal extends Backgroundable {
     public ConditionalModal(@Nullable Project project,
-                            @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title,
+                            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                             boolean canBeCancelled,
-                            @NotNull PerformInBackgroundOption backgroundOption) {
+                            @Nonnull PerformInBackgroundOption backgroundOption) {
       super(project, title, canBeCancelled, backgroundOption);
     }
 
@@ -327,13 +327,13 @@ public abstract class Task implements TaskInfo, Progressive {
     private final String myNotificationText;
     private final boolean myShowWhenFocused;
 
-    public NotificationInfo(@NotNull final String notificationName, @NotNull final String notificationTitle, @NotNull final String notificationText) {
+    public NotificationInfo(@Nonnull final String notificationName, @Nonnull final String notificationTitle, @Nonnull final String notificationText) {
       this(notificationName, notificationTitle, notificationText, false);
     }
 
-    public NotificationInfo(@NotNull final String notificationName,
-                            @NotNull final String notificationTitle,
-                            @NotNull final String notificationText,
+    public NotificationInfo(@Nonnull final String notificationName,
+                            @Nonnull final String notificationTitle,
+                            @Nonnull final String notificationText,
                             final boolean showWhenFocused) {
       myNotificationName = notificationName;
       myNotificationTitle = notificationTitle;
@@ -341,17 +341,17 @@ public abstract class Task implements TaskInfo, Progressive {
       myShowWhenFocused = showWhenFocused;
     }
 
-    @NotNull
+    @Nonnull
     public String getNotificationName() {
       return myNotificationName;
     }
 
-    @NotNull
+    @Nonnull
     public String getNotificationTitle() {
       return myNotificationTitle;
     }
 
-    @NotNull
+    @Nonnull
     public String getNotificationText() {
       return myNotificationText;
     }
@@ -365,12 +365,12 @@ public abstract class Task implements TaskInfo, Progressive {
     private final Ref<T> myResult = Ref.create();
     private final Ref<Throwable> myError = Ref.create();
 
-    public WithResult(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @NotNull String title, boolean canBeCancelled) {
+    public WithResult(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
       super(project, title, canBeCancelled);
     }
 
     @Override
-    public final void run(@NotNull ProgressIndicator indicator) {
+    public final void run(@Nonnull ProgressIndicator indicator) {
       try {
         myResult.set(compute(indicator));
       }
@@ -379,7 +379,7 @@ public abstract class Task implements TaskInfo, Progressive {
       }
     }
 
-    protected abstract T compute(@NotNull ProgressIndicator indicator) throws E;
+    protected abstract T compute(@Nonnull ProgressIndicator indicator) throws E;
 
     @SuppressWarnings("unchecked")
     public T getResult() throws E {

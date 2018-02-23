@@ -34,8 +34,8 @@ import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -89,12 +89,12 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return getNameSequence().toString();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public CharSequence getNameSequence() {
     return FileNameCache.getVFileName(getNameId());
@@ -177,14 +177,14 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     return chars;
   }
 
-  protected static int copyString(@NotNull char[] chars, int pos, @NotNull CharSequence s) {
+  protected static int copyString(@Nonnull char[] chars, int pos, @Nonnull CharSequence s) {
     int length = s.length();
     CharArrayUtil.getChars(s, chars, 0, pos, length);
     return pos + length;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getUrl() {
     String protocol = getFileSystem().getProtocol();
     int prefixLen = protocol.length() + "://".length();
@@ -194,7 +194,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getPath() {
     return StringFactory.createShared(appendPathOnFileSystem(0, new int[]{0}));
   }
@@ -205,15 +205,15 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  public void rename(final Object requestor, @NotNull @NonNls final String newName) throws IOException {
+  public void rename(final Object requestor, @Nonnull @NonNls final String newName) throws IOException {
     if (getName().equals(newName)) return;
     validateName(newName);
     ourPersistence.renameFile(requestor, this, newName);
   }
 
   @Override
-  @NotNull
-  public VirtualFile createChildData(final Object requestor, @NotNull final String name) throws IOException {
+  @Nonnull
+  public VirtualFile createChildData(final Object requestor, @Nonnull final String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildFile(requestor, this, name);
   }
@@ -244,7 +244,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  public VirtualFile copy(final Object requestor, @NotNull final VirtualFile newParent, @NotNull final String copyName) throws IOException {
+  public VirtualFile copy(final Object requestor, @Nonnull final VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VfsBundle.message("file.copy.error", newParent.getPresentableUrl()));
     }
@@ -257,7 +257,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  public void move(final Object requestor, @NotNull final VirtualFile newParent) throws IOException {
+  public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
       throw new IOException(VfsBundle.message("file.move.error", newParent.getPresentableUrl()));
     }
@@ -284,13 +284,13 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  @NotNull
-  public VirtualFile createChildDirectory(final Object requestor, @NotNull final String name) throws IOException {
+  @Nonnull
+  public VirtualFile createChildDirectory(final Object requestor, @Nonnull final String name) throws IOException {
     validateName(name);
     return ourPersistence.createChildDirectory(requestor, this, name);
   }
 
-  private void validateName(@NotNull String name) throws IOException {
+  private void validateName(@Nonnull String name) throws IOException {
     if (!getFileSystem().isValidName(name)) {
       throw new IOException(VfsBundle.message("file.invalid.name.error", name));
     }
@@ -310,7 +310,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     return getUrl();
   }
 
-  public void setNewName(@NotNull String newName) {
+  public void setNewName(@Nonnull String newName) {
     if (!getFileSystem().isValidName(newName)) {
       throw new IllegalArgumentException(VfsBundle.message("file.invalid.name.error", newName));
     }
@@ -322,7 +322,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     parent.addChild(this);
   }
 
-  public void setParent(@NotNull VirtualFile newParent) {
+  public void setParent(@Nonnull VirtualFile newParent) {
     VirtualDirectoryImpl parent = getParent();
     parent.removeChild(this);
 
@@ -341,13 +341,13 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     VfsData.invalidateFile(myId);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Charset getCharset() {
     return isCharsetSet() ? super.getCharset() : computeCharset();
   }
 
-  @NotNull
+  @Nonnull
   private Charset computeCharset() {
     Charset charset;
     if (isDirectory()) {
@@ -390,7 +390,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   }
 
   @Override
-  public boolean is(@NotNull VFileProperty property) {
+  public boolean is(@Nonnull VFileProperty property) {
     if (property == VFileProperty.SPECIAL) return getFlagInt(IS_SPECIAL_FLAG);
     if (property == VFileProperty.HIDDEN) return getFlagInt(IS_HIDDEN_FLAG);
     if (property == VFileProperty.SYMLINK) return getFlagInt(IS_SYMLINK_FLAG);

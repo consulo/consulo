@@ -18,7 +18,7 @@ package com.intellij.psi.search;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -29,8 +29,8 @@ public class GlobalSearchScopes extends GlobalSearchScopesCore {
   private GlobalSearchScopes() {
   }
 
-  @NotNull
-  public static GlobalSearchScope openFilesScope(@NotNull Project project) {
+  @Nonnull
+  public static GlobalSearchScope openFilesScope(@Nonnull Project project) {
     final VirtualFile[] files = FileEditorManager.getInstance(project).getOpenFiles();
     return GlobalSearchScope.filesScope(project, Arrays.asList(files), "Open Files");
   }

@@ -17,7 +17,7 @@ package consulo.roots.ui.configuration;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.util.Couple;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,6 +26,6 @@ import javax.swing.*;
  * @since 28.07.2015
  */
 public interface WholeWestConfigurable extends Configurable {
-  @NotNull
+  @Nonnull
   Couple<JComponent> createSplitterComponents();
 }

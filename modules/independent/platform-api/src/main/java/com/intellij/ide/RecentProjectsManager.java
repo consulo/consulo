@@ -18,8 +18,8 @@ package com.intellij.ide;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class RecentProjectsManager {
 
   public abstract void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 
-  public abstract void updateProjectModuleExtensions(@NotNull Project project);
+  public abstract void updateProjectModuleExtensions(@Nonnull Project project);
 
   public abstract void updateLastProjectPath();
 

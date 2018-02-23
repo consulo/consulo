@@ -22,7 +22,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.util.Collections;
@@ -34,10 +34,10 @@ import java.util.List;
 public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData> {
   public static final ExtensionPointName<CopyPastePostProcessor<? extends TextBlockTransferableData>> EP_NAME = ExtensionPointName.create("com.intellij.copyPastePostProcessor");
 
-  @NotNull
+  @Nonnull
   public abstract List<T> collectTransferableData(final PsiFile file, final Editor editor, final int[] startOffsets, final int[] endOffsets);
 
-  @NotNull
+  @Nonnull
   public List<T> extractTransferableData(final Transferable content) {
     return Collections.emptyList();
   }

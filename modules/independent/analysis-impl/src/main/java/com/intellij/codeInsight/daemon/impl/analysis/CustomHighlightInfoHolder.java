@@ -20,8 +20,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Alexey
@@ -29,20 +28,20 @@ import org.jetbrains.annotations.Nullable;
 public class CustomHighlightInfoHolder extends HighlightInfoHolder {
   private final EditorColorsScheme myCustomColorsScheme;
 
-  public CustomHighlightInfoHolder(@NotNull final PsiFile contextFile,
-                                   @NotNull final HighlightInfoFilter... filters) {
+  public CustomHighlightInfoHolder(@Nonnull final PsiFile contextFile,
+                                   @Nonnull final HighlightInfoFilter... filters) {
     this(contextFile, null, filters);
   }
 
-  public CustomHighlightInfoHolder(@NotNull final PsiFile contextFile,
-                                   @Nullable final EditorColorsScheme customColorsScheme,
-                                   @NotNull final HighlightInfoFilter... filters) {
+  public CustomHighlightInfoHolder(@Nonnull final PsiFile contextFile,
+                                   @javax.annotation.Nullable final EditorColorsScheme customColorsScheme,
+                                   @Nonnull final HighlightInfoFilter... filters) {
     super(contextFile, filters);
     myCustomColorsScheme = customColorsScheme;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextAttributesScheme getColorsScheme() {
     if (myCustomColorsScheme != null) {
       return myCustomColorsScheme;

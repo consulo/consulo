@@ -29,8 +29,7 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerEx;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * IntelliJ code provides a lot of statical bindings to the interested pieces of data. For example we need to execute code
@@ -49,54 +48,54 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DvcsPlatformFacade {
 
-  @NotNull
-  AbstractVcs getVcs(@NotNull Project project);
+  @Nonnull
+  AbstractVcs getVcs(@Nonnull Project project);
 
-  @NotNull
-  ProjectLevelVcsManager getVcsManager(@NotNull Project project);
+  @Nonnull
+  ProjectLevelVcsManager getVcsManager(@Nonnull Project project);
 
-  void showDialog(@NotNull DialogWrapper dialog);
+  void showDialog(@Nonnull DialogWrapper dialog);
 
-  @NotNull
-  ProjectRootManager getProjectRootManager(@NotNull Project project);
+  @Nonnull
+  ProjectRootManager getProjectRootManager(@Nonnull Project project);
 
   /**
    * Invokes {@link com.intellij.openapi.application.Application#runReadAction(Computable)}.
    */
-  <T> T runReadAction(@NotNull Computable<T> computable);
+  <T> T runReadAction(@Nonnull Computable<T> computable);
 
-  void runReadAction(@NotNull Runnable runnable);
+  void runReadAction(@Nonnull Runnable runnable);
 
-  void runWriteAction(@NotNull Runnable runnable);
+  void runWriteAction(@Nonnull Runnable runnable);
 
-  void invokeAndWait(@NotNull Runnable runnable, @NotNull ModalityState modalityState);
+  void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState);
 
-  void executeOnPooledThread(@NotNull Runnable runnable);
+  void executeOnPooledThread(@Nonnull Runnable runnable);
 
-  ChangeListManagerEx getChangeListManager(@NotNull Project project);
+  ChangeListManagerEx getChangeListManager(@Nonnull Project project);
 
   LocalFileSystem getLocalFileSystem();
 
-  @NotNull
-  AbstractVcsHelper getVcsHelper(@NotNull Project project);
+  @Nonnull
+  AbstractVcsHelper getVcsHelper(@Nonnull Project project);
 
-  @Nullable
-  IdeaPluginDescriptor getPluginByClassName(@NotNull String name);
+  @javax.annotation.Nullable
+  IdeaPluginDescriptor getPluginByClassName(@Nonnull String name);
 
   /**
    * Gets line separator of the given virtual file.
    * If {@code detect} is set {@code true}, and the information about line separator wasn't retrieved yet, loads the file and detects.
    */
-  @Nullable
-  String getLineSeparator(@NotNull VirtualFile file, boolean detect);
+  @javax.annotation.Nullable
+  String getLineSeparator(@Nonnull VirtualFile file, boolean detect);
 
   void saveAllDocuments();
 
-  @NotNull
+  @Nonnull
   ProjectManagerEx getProjectManager();
 
-  @NotNull
+  @Nonnull
   SaveAndSyncHandler getSaveAndSyncHandler();
 
-  void hardRefresh(@NotNull VirtualFile root);
+  void hardRefresh(@Nonnull VirtualFile root);
 }

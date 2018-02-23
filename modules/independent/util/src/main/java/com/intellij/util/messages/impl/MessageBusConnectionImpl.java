@@ -26,7 +26,7 @@ import com.intellij.util.SmartFMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.MessageHandler;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,12 +42,12 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
   private MessageHandler myDefaultHandler;
   private volatile SmartFMap<Topic, Object> mySubscriptions = SmartFMap.emptyMap();
 
-  public MessageBusConnectionImpl(@NotNull MessageBusImpl bus) {
+  public MessageBusConnectionImpl(@Nonnull MessageBusImpl bus) {
     myBus = bus;
   }
 
   @Override
-  public <L> void subscribe(@NotNull Topic<L> topic, @NotNull L handler) throws IllegalStateException {
+  public <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) throws IllegalStateException {
     synchronized (myPendingMessages) {
       if (mySubscriptions.get(topic) != null) {
         throw new IllegalStateException("Subscription to " + topic + " already exists");
@@ -58,7 +58,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
   }
 
   @Override
-  public <L> void subscribe(@NotNull Topic<L> topic) throws IllegalStateException {
+  public <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException {
     if (myDefaultHandler == null) {
       throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. "
                                       + "Target topic: " + topic);
@@ -100,7 +100,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     }
   }
 
-  void deliverMessage(@NotNull Message message) {
+  void deliverMessage(@Nonnull Message message) {
     final Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
@@ -134,11 +134,11 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     }
   }
 
-  void scheduleMessageDelivery(@NotNull Message message) {
+  void scheduleMessageDelivery(@Nonnull Message message) {
     myPendingMessages.get().offer(message);
   }
 
-  boolean containsMessage(@NotNull Topic topic) {
+  boolean containsMessage(@Nonnull Topic topic) {
     for (Message message : myPendingMessages.get()) {
       if (message.getTopic() == topic) {
         return true;
@@ -151,7 +151,7 @@ public class MessageBusConnectionImpl implements MessageBusConnection {
     return mySubscriptions.toString();
   }
 
-  @NotNull
+  @Nonnull
   MessageBusImpl getBus() {
     return myBus;
   }

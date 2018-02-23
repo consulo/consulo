@@ -29,8 +29,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.lang.ref.WeakReference;
@@ -74,7 +74,7 @@ public class Notification {
   private WeakReference<Balloon> myBalloonRef;
   private final long myTimestamp;
 
-  public Notification(@NotNull String groupDisplayId, @Nullable Icon icon, @NotNull NotificationType type) {
+  public Notification(@Nonnull String groupDisplayId, @Nullable Icon icon, @Nonnull NotificationType type) {
     this(groupDisplayId, icon, null, null, null, type, null);
   }
 
@@ -88,12 +88,12 @@ public class Notification {
    * @param type           notification type
    * @param listener       notification lifecycle listener
    */
-  public Notification(@NotNull String groupDisplayId,
+  public Notification(@Nonnull String groupDisplayId,
                       @Nullable Icon icon,
                       @Nullable String title,
                       @Nullable String subtitle,
                       @Nullable String content,
-                      @NotNull NotificationType type,
+                      @Nonnull NotificationType type,
                       @Nullable NotificationListener listener) {
     myGroupId = groupDisplayId;
     myTitle = StringUtil.notNullize(title);
@@ -109,7 +109,7 @@ public class Notification {
     id = calculateId(this);
   }
 
-  public Notification(@NotNull String groupDisplayId, @NotNull String title, @NotNull String content, @NotNull NotificationType type) {
+  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
     this(groupDisplayId, title, content, type, null);
   }
 
@@ -121,10 +121,10 @@ public class Notification {
    * @param type           notification type
    * @param listener       notification lifecycle listener
    */
-  public Notification(@NotNull String groupDisplayId,
-                      @NotNull String title,
-                      @NotNull String content,
-                      @NotNull NotificationType type,
+  public Notification(@Nonnull String groupDisplayId,
+                      @Nonnull String title,
+                      @Nonnull String content,
+                      @Nonnull NotificationType type,
                       @Nullable NotificationListener listener) {
     myGroupId = groupDisplayId;
     myTitle = title;
@@ -149,13 +149,13 @@ public class Notification {
     return myIcon;
   }
 
-  @NotNull
+  @Nonnull
   public Notification setIcon(@Nullable Icon icon) {
     myIcon = icon;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public String getGroupId() {
     return myGroupId;
   }
@@ -164,18 +164,18 @@ public class Notification {
     return !StringUtil.isEmptyOrSpaces(myTitle) || !StringUtil.isEmptyOrSpaces(mySubtitle);
   }
 
-  @NotNull
+  @Nonnull
   public String getTitle() {
     return myTitle;
   }
 
-  @NotNull
+  @Nonnull
   public Notification setTitle(@Nullable String title) {
     myTitle = StringUtil.notNullize(title);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public Notification setTitle(@Nullable String title, @Nullable String subtitle) {
     return setTitle(title).setSubtitle(subtitle);
   }
@@ -185,7 +185,7 @@ public class Notification {
     return mySubtitle;
   }
 
-  @NotNull
+  @Nonnull
   public Notification setSubtitle(@Nullable String subtitle) {
     mySubtitle = subtitle;
     return this;
@@ -195,12 +195,12 @@ public class Notification {
     return !StringUtil.isEmptyOrSpaces(myContent);
   }
 
-  @NotNull
+  @Nonnull
   public String getContent() {
     return myContent;
   }
 
-  @NotNull
+  @Nonnull
   public Notification setContent(@Nullable String content) {
     myContent = StringUtil.notNullize(content);
     return this;
@@ -211,33 +211,33 @@ public class Notification {
     return myListener;
   }
 
-  @NotNull
-  public Notification setListener(@NotNull NotificationListener listener) {
+  @Nonnull
+  public Notification setListener(@Nonnull NotificationListener listener) {
     myListener = listener;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public List<AnAction> getActions() {
     return ContainerUtil.notNullize(myActions);
   }
 
-  @NotNull
-  public static Notification get(@NotNull AnActionEvent e) {
+  @Nonnull
+  public static Notification get(@Nonnull AnActionEvent e) {
     //noinspection ConstantConditions
     return e.getData(KEY);
   }
 
-  public static void fire(@NotNull final Notification notification, @NotNull AnAction action) {
+  public static void fire(@Nonnull final Notification notification, @Nonnull AnAction action) {
     fire(notification, action, null);
   }
 
-  public static void fire(@NotNull final Notification notification, @NotNull AnAction action, @Nullable DataContext context) {
+  public static void fire(@Nonnull final Notification notification, @Nonnull AnAction action, @Nullable DataContext context) {
     AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, new DataContext() {
       @Nullable
       @Override
       @SuppressWarnings("unchecked")
-      public <T> T getData(@NotNull Key<T> dataId) {
+      public <T> T getData(@Nonnull Key<T> dataId) {
         if (KEY == dataId) {
           return (T)notification;
         }
@@ -250,11 +250,11 @@ public class Notification {
     }
   }
 
-  public static void setDataProvider(@NotNull Notification notification, @NotNull JComponent component) {
+  public static void setDataProvider(@Nonnull Notification notification, @Nonnull JComponent component) {
     DataManager.registerDataProvider(component, dataId -> KEY == dataId ? notification : null);
   }
 
-  @NotNull
+  @Nonnull
   public String getDropDownText() {
     if (myDropDownText == null) {
       myDropDownText = "Actions";
@@ -265,14 +265,14 @@ public class Notification {
   /**
    * @param dropDownText text for popup when all actions collapsed (when all actions width more notification width)
    */
-  @NotNull
-  public Notification setDropDownText(@NotNull String dropDownText) {
+  @Nonnull
+  public Notification setDropDownText(@Nonnull String dropDownText) {
     myDropDownText = dropDownText;
     return this;
   }
 
-  @NotNull
-  public Notification addAction(@NotNull AnAction action) {
+  @Nonnull
+  public Notification addAction(@Nonnull AnAction action) {
     if (myActions == null) {
       myActions = new ArrayList<>();
     }
@@ -280,7 +280,7 @@ public class Notification {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public NotificationType getType() {
     return myType;
   }
@@ -314,7 +314,7 @@ public class Notification {
     }
   }
 
-  public void setBalloon(@NotNull final Balloon balloon) {
+  public void setBalloon(@Nonnull final Balloon balloon) {
     hideBalloon();
     myBalloonRef = new WeakReference<>(balloon);
     balloon.addListener(new JBPopupAdapter() {
@@ -349,8 +349,8 @@ public class Notification {
     return getListener() != null || !ContainerUtil.isEmpty(myActions);
   }
 
-  @NotNull
-  private static String calculateId(@NotNull Object notification) {
+  @Nonnull
+  private static String calculateId(@Nonnull Object notification) {
     return String.valueOf(System.currentTimeMillis()) + "." + String.valueOf(System.identityHashCode(notification));
   }
 

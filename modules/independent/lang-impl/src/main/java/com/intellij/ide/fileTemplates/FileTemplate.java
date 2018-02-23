@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import consulo.annotations.DeprecationInfo;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -52,32 +52,33 @@ public interface FileTemplate extends Cloneable {
   String ATTRIBUTE_FILE_NAME = "FILE_NAME";
 
   /** Name without extension */
-  @NotNull
+  @Nonnull
   String getName();
 
-  void setName(@NotNull String name);
+  void setName(@Nonnull String name);
 
   boolean isTemplateOfType(final FileType fType);
 
   boolean isDefault();
 
-  @NotNull
+  @Nonnull
   String getDescription();
 
-  @NotNull
+  @Nonnull
   String getText();
 
   void setText(String text);
 
-  @NotNull
+  @Nonnull
   String getText(Map attributes) throws IOException;
 
-  @NotNull
+  @Nonnull
   String getText(Properties attributes) throws IOException;
 
-  @NotNull String getExtension();
+  @Nonnull
+  String getExtension();
 
-  void setExtension(@NotNull String extension);
+  void setExtension(@Nonnull String extension);
 
   boolean isReformatCode();
 
@@ -89,10 +90,10 @@ public interface FileTemplate extends Cloneable {
 
   FileTemplate clone();
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo("getUnsetAttributes")
-  String[] getUnsetAttributes(@NotNull Properties properties, Project project) throws ParseException;
+  String[] getUnsetAttributes(@Nonnull Properties properties, Project project) throws ParseException;
 
-  String[] getUnsetAttributes(@NotNull Map<String, Object> properties, Project project) throws ParseException;
+  String[] getUnsetAttributes(@Nonnull Map<String, Object> properties, Project project) throws ParseException;
 }

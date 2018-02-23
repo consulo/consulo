@@ -24,7 +24,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import consulo.annotations.RequiredReadAction;
 import consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PsiPackageSupportProviders {
   @RequiredReadAction
-  public static boolean isPackageSupported(@NotNull Project project) {
+  public static boolean isPackageSupported(@Nonnull Project project) {
     return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
       boolean result = false;
       PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();

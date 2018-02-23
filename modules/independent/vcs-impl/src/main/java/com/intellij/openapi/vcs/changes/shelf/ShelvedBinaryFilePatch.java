@@ -17,19 +17,19 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.util.PathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ShelvedBinaryFilePatch extends FilePatch {
   private final ShelvedBinaryFile myShelvedBinaryFile;
 
-  public ShelvedBinaryFilePatch(@NotNull final ShelvedBinaryFile shelvedBinaryFile) {
+  public ShelvedBinaryFilePatch(@Nonnull final ShelvedBinaryFile shelvedBinaryFile) {
     myShelvedBinaryFile = shelvedBinaryFile;
     setBeforeName(myShelvedBinaryFile.BEFORE_PATH);
     setAfterName(myShelvedBinaryFile.AFTER_PATH);
   }
 
-  public static ShelvedBinaryFilePatch patchCopy(@NotNull final ShelvedBinaryFilePatch patch) {
+  public static ShelvedBinaryFilePatch patchCopy(@Nonnull final ShelvedBinaryFilePatch patch) {
     return new ShelvedBinaryFilePatch(patch.getShelvedBinaryFile());
   }
 
@@ -60,7 +60,7 @@ public class ShelvedBinaryFilePatch extends FilePatch {
     return myShelvedBinaryFile.AFTER_PATH == null;
   }
 
-  @NotNull
+  @Nonnull
   public ShelvedBinaryFile getShelvedBinaryFile() {
     return myShelvedBinaryFile;
   }

@@ -16,31 +16,34 @@
 package com.intellij.openapi.diff.impl.incrementalMerge;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 final class MergeFragment {
 
-  @NotNull private final TextRange myLeft;
-  @NotNull private final TextRange myBase;
-  @NotNull private final TextRange myRight;
+  @Nonnull
+  private final TextRange myLeft;
+  @Nonnull
+  private final TextRange myBase;
+  @Nonnull
+  private final TextRange myRight;
 
-  MergeFragment(@NotNull TextRange left, @NotNull TextRange base, @NotNull TextRange right) {
+  MergeFragment(@Nonnull TextRange left, @Nonnull TextRange base, @Nonnull TextRange right) {
     myLeft = left;
     myBase = base;
     myRight = right;
   }
 
-  @NotNull
+  @Nonnull
   TextRange getLeft() {
     return myLeft;
   }
 
-  @NotNull
+  @Nonnull
   TextRange getBase() {
     return myBase;
   }
 
-  @NotNull
+  @Nonnull
   TextRange getRight() {
     return myRight;
   }

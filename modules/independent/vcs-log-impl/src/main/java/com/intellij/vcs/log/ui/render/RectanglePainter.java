@@ -21,7 +21,7 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -46,7 +46,7 @@ public class RectanglePainter {
     return getFont();
   }
 
-  public void paint(@NotNull Graphics2D g2, @NotNull String text, int paddingX, int paddingY, @NotNull Color color) {
+  public void paint(@Nonnull Graphics2D g2, @Nonnull String text, int paddingX, int paddingY, @Nonnull Color color) {
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
     g2.setFont(getLabelFont());
     g2.setStroke(new BasicStroke(1.5f));
@@ -71,7 +71,7 @@ public class RectanglePainter {
     config.restore();
   }
 
-  public Dimension calculateSize(@NotNull String text, @NotNull FontMetrics metrics) {
+  public Dimension calculateSize(@Nonnull String text, @Nonnull FontMetrics metrics) {
     int width = metrics.stringWidth(text) + 2 * TEXT_PADDING_X;
     int height = metrics.getHeight() + TOP_TEXT_PADDING + BOTTOM_TEXT_PADDING;
     return new Dimension(width, height);

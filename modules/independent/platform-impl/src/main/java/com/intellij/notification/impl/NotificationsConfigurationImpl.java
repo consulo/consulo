@@ -24,8 +24,8 @@ import com.intellij.util.messages.MessageBus;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,7 +49,7 @@ public class NotificationsConfigurationImpl
 
   private static final Comparator<NotificationSettings> NOTIFICATION_SETTINGS_COMPARATOR = new Comparator<NotificationSettings>() {
     @Override
-    public int compare(@NotNull NotificationSettings o1, @NotNull NotificationSettings o2) {
+    public int compare(@Nonnull NotificationSettings o1, @Nonnull NotificationSettings o2) {
       return o1.getGroupId().compareToIgnoreCase(o2.getGroupId());
     }
   };
@@ -61,7 +61,7 @@ public class NotificationsConfigurationImpl
   public boolean SHOW_BALLOONS = true;
   public boolean SYSTEM_NOTIFICATIONS = true;
 
-  public NotificationsConfigurationImpl(@NotNull MessageBus bus) {
+  public NotificationsConfigurationImpl(@Nonnull MessageBus bus) {
     myMessageBus = bus;
   }
 
@@ -69,12 +69,12 @@ public class NotificationsConfigurationImpl
     return (NotificationsConfigurationImpl)getNotificationsConfiguration();
   }
 
-  public synchronized boolean hasToolWindowCapability(@NotNull String groupId) {
+  public synchronized boolean hasToolWindowCapability(@Nonnull String groupId) {
     return getToolWindowId(groupId) != null || myToolWindowCapable.containsKey(groupId);
   }
 
   @Nullable
-  public String getToolWindowId(@NotNull String groupId) {
+  public String getToolWindowId(@Nonnull String groupId) {
     NotificationGroup group = NotificationGroup.findRegisteredGroup(groupId);
     return group == null ? null : group.getToolWindowId();
   }
@@ -101,8 +101,8 @@ public class NotificationsConfigurationImpl
   }
 
   @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-  @NotNull
-  public static NotificationSettings getSettings(@NotNull String groupId) {
+  @Nonnull
+  public static NotificationSettings getSettings(@Nonnull String groupId) {
     NotificationSettings settings;
     NotificationsConfigurationImpl impl = getInstanceImpl();
     synchronized (impl) {
@@ -111,7 +111,7 @@ public class NotificationsConfigurationImpl
     return settings == null ? getDefaultSettings(groupId) : settings;
   }
 
-  @NotNull
+  @Nonnull
   private static NotificationSettings getDefaultSettings(String groupId) {
     NotificationGroup group = NotificationGroup.findRegisteredGroup(groupId);
     if (group != null) {
@@ -121,7 +121,7 @@ public class NotificationsConfigurationImpl
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "NotificationsConfiguration";
   }
@@ -137,20 +137,20 @@ public class NotificationsConfigurationImpl
   }
 
   @Override
-  public void register(@NotNull final String groupDisplayName, @NotNull final NotificationDisplayType displayType) {
+  public void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType displayType) {
     register(groupDisplayName, displayType, true);
   }
 
   @Override
-  public void register(@NotNull String groupDisplayName,
-                       @NotNull NotificationDisplayType displayType,
+  public void register(@Nonnull String groupDisplayName,
+                       @Nonnull NotificationDisplayType displayType,
                        boolean shouldLog) {
     register(groupDisplayName, displayType, shouldLog, false);
   }
 
   @Override
-  public void register(@NotNull String groupDisplayName,
-                       @NotNull NotificationDisplayType displayType,
+  public void register(@Nonnull String groupDisplayName,
+                       @Nonnull NotificationDisplayType displayType,
                        boolean shouldLog,
                        boolean shouldReadAloud) {
     if (!isRegistered(groupDisplayName)) {
@@ -181,7 +181,7 @@ public class NotificationsConfigurationImpl
     }
   }
 
-  public synchronized boolean isRegistered(@NotNull final String id) {
+  public synchronized boolean isRegistered(@Nonnull final String id) {
     return myIdToSettingsMap.containsKey(id) || NotificationGroup.findRegisteredGroup(id) != null;
   }
 

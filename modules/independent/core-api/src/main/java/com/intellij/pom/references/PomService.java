@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.pom.PomTarget;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiTarget;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -31,14 +31,14 @@ public abstract class PomService {
     return ServiceManager.getService(project, PomService.class);
   }
 
-  @NotNull
-  protected abstract PsiElement convertToPsi(@NotNull PomTarget target);
+  @Nonnull
+  protected abstract PsiElement convertToPsi(@Nonnull PomTarget target);
 
-  public static PsiElement convertToPsi(@NotNull Project project, @NotNull PomTarget target) {
+  public static PsiElement convertToPsi(@Nonnull Project project, @Nonnull PomTarget target) {
     return getInstance(project).convertToPsi(target);
   }
 
-  public static PsiElement convertToPsi(@NotNull PsiTarget target) {
+  public static PsiElement convertToPsi(@Nonnull PsiTarget target) {
     return getInstance(target.getNavigationElement().getProject()).convertToPsi((PomTarget)target);
   }
 

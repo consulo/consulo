@@ -28,8 +28,8 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -338,8 +338,8 @@ public class RegExHelpPopup extends JPanel {
     add(myScrollPane, BorderLayout.CENTER);
   }
 
-  @NotNull
-  public static LinkLabel createRegExLink(@NotNull String title, @Nullable final Component owner, @Nullable final Logger logger) {
+  @Nonnull
+  public static LinkLabel createRegExLink(@Nonnull String title, @Nullable final Component owner, @Nullable final Logger logger) {
     return new LinkLabel(title, null, new LinkListener() {
       JBPopup helpPopup;
       @Override

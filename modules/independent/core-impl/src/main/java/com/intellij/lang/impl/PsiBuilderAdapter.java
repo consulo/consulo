@@ -22,8 +22,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PsiBuilderAdapter implements PsiBuilder {
   protected final PsiBuilder myDelegate;
@@ -91,7 +91,8 @@ public class PsiBuilderAdapter implements PsiBuilder {
     return myDelegate.rawTokenIndex();
   }
 
-  @Override @Nullable @NonNls
+  @Override @Nullable
+  @NonNls
   public String getTokenText() {
     return myDelegate.getTokenText();
   }
@@ -142,22 +143,22 @@ public class PsiBuilderAdapter implements PsiBuilder {
   }
 
   @Override @Nullable
-  public <T> T getUserData(@NotNull final Key<T> key) {
+  public <T> T getUserData(@Nonnull final Key<T> key) {
     return myDelegate.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@NotNull final Key<T> key, @Nullable final T value) {
+  public <T> void putUserData(@Nonnull final Key<T> key, @Nullable final T value) {
     myDelegate.putUserData(key, value);
   }
 
   @Override
-  public <T> T getUserDataUnprotected(@NotNull final Key<T> key) {
+  public <T> T getUserDataUnprotected(@Nonnull final Key<T> key) {
     return myDelegate.getUserDataUnprotected(key);
   }
 
   @Override
-  public <T> void putUserDataUnprotected(@NotNull final Key<T> key, @Nullable final T value) {
+  public <T> void putUserDataUnprotected(@Nonnull final Key<T> key, @Nullable final T value) {
     myDelegate.putUserDataUnprotected(key, value);
   }
 }

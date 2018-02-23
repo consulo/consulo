@@ -21,8 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class OrderRootsCache {
   private final Map<CacheKey, VirtualFilePointerContainer> myRoots = ContainerUtil.newConcurrentMap();
   private final Disposable myParentDisposable;
 
-  public OrderRootsCache(@NotNull Disposable parentDisposable) {
+  public OrderRootsCache(@Nonnull Disposable parentDisposable) {
     myParentDisposable = parentDisposable;
   }
 
@@ -47,13 +46,13 @@ public class OrderRootsCache {
     return container;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public VirtualFile[] getCachedRoots(OrderRootType rootType, int flags) {
     final VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached == null ? null : cached.getFiles();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String[] getCachedUrls(OrderRootType rootType, int flags) {
     final VirtualFilePointerContainer cached = myRoots.get(new CacheKey(rootType, flags));
     return cached != null ? cached.getUrls() : null;

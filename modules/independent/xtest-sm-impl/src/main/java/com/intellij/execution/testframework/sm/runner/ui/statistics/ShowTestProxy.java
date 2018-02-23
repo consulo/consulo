@@ -19,7 +19,6 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -44,7 +43,7 @@ public class ShowTestProxy extends AnAction {
     presentation.setEnabled(getSelectedTestProxy(e) != null);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
     return e.getData(AbstractTestProxy.DATA_KEY);
   }

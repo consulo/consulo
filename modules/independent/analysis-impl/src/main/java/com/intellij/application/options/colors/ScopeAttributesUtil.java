@@ -16,11 +16,11 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ScopeAttributesUtil {
-  @NotNull
-  public static TextAttributesKey getScopeTextAttributeKey(@NotNull String scope) {
+  @Nonnull
+  public static TextAttributesKey getScopeTextAttributeKey(@Nonnull String scope) {
     return TextAttributesKey.find("SCOPE_KEY_" + scope);
   }
 }

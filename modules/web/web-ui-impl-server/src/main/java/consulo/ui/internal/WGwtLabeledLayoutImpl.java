@@ -20,8 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,15 +32,15 @@ public class WGwtLabeledLayoutImpl extends AbstractSingleComponentContainer impl
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public LabeledLayout set(@NotNull Component component) {
+  public LabeledLayout set(@Nonnull Component component) {
     setContent((com.vaadin.ui.Component)component);
     markAsDirtyRecursive();
     return this;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Component getParentComponent() {
     return (Component)getParent();
@@ -49,7 +48,7 @@ public class WGwtLabeledLayoutImpl extends AbstractSingleComponentContainer impl
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

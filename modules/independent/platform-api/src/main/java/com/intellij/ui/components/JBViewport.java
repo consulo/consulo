@@ -24,7 +24,7 @@ import com.intellij.ui.components.JBScrollPane.Alignment;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.MethodInvocator;
 import com.intellij.util.ui.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.Timer;

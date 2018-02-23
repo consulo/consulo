@@ -24,8 +24,8 @@ import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +60,7 @@ public class MemberOrderService {
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Nullable
-  public PsiElement getAnchor(@NotNull PsiElement member, @NotNull CommonCodeStyleSettings settings, @NotNull PsiElement context) {
+  public PsiElement getAnchor(@Nonnull PsiElement member, @Nonnull CommonCodeStyleSettings settings, @Nonnull PsiElement context) {
     Language language = context.getLanguage();
     Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
     if (rearranger == null) {

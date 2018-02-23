@@ -21,7 +21,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Condition;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface ModalityInvokator {
   /**
@@ -33,7 +33,7 @@ public interface ModalityInvokator {
    */
   ActionCallback invokeLater(Runnable runnable);
 
-  ActionCallback invokeLater(Runnable runnable, @NotNull Condition expired);
+  ActionCallback invokeLater(Runnable runnable, @Nonnull Condition expired);
 
   /**
    * Causes <i>runnable.run()</i> to be executed asynchronously on the
@@ -43,7 +43,7 @@ public interface ModalityInvokator {
    * @param runnable the runnable to execute.
    * @param state the state in which the runnable will be executed.
    */
-  ActionCallback invokeLater(Runnable runnable, @NotNull ModalityState state);
+  ActionCallback invokeLater(Runnable runnable, @Nonnull ModalityState state);
 
-  ActionCallback invokeLater(Runnable runnable, @NotNull ModalityState state, @NotNull Condition expired);
+  ActionCallback invokeLater(Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired);
 }

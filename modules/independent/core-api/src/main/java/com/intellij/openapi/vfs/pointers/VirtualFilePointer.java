@@ -16,22 +16,22 @@
 package com.intellij.openapi.vfs.pointers;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface VirtualFilePointer {
   VirtualFilePointer[] EMPTY_ARRAY = new VirtualFilePointer[0];
 
-  @NotNull
+  @Nonnull
   String getFileName();
 
   @Nullable
   VirtualFile getFile();
 
-  @NotNull
+  @Nonnull
   String getUrl();
 
-  @NotNull
+  @Nonnull
   String getPresentableUrl();
 
   boolean isValid();

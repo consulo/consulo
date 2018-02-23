@@ -25,8 +25,8 @@ import com.intellij.profile.ProfileManager;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,31 +35,31 @@ public class InspectionProfileLoadUtil {
   @NonNls private static final String PROFILE_NAME_TAG = "profile_name";
   @NonNls public static final String PROFILE_TAG = "profile";
 
-  private static String getProfileName(@NotNull File file, @NotNull Element element) {
+  private static String getProfileName(@Nonnull File file, @Nonnull Element element) {
     String name = getRootElementAttribute(PROFILE_NAME_TAG, element);
     return name != null ? name : FileUtil.getNameWithoutExtension(file);
   }
 
-  private static String getRootElementAttribute(@NotNull Element element, @NonNls String name) {
+  private static String getRootElementAttribute(@Nonnull Element element, @NonNls String name) {
     return element.getAttributeValue(name);
   }
 
   @Nullable
-  private static String getRootElementAttribute(@NonNls String name, @NotNull Element element) {
+  private static String getRootElementAttribute(@NonNls String name, @Nonnull Element element) {
     return getRootElementAttribute(element, name);
   }
 
-  @NotNull
-  public static String getProfileName(@NotNull Element element) {
+  @Nonnull
+  public static String getProfileName(@Nonnull Element element) {
     String name = getRootElementAttribute(element, PROFILE_NAME_TAG);
     if (name != null) return name;
     return "unnamed";
   }
 
-  @NotNull
-  public static Profile load(@NotNull File file,
-                             @NotNull InspectionToolRegistrar registrar,
-                             @NotNull ProfileManager profileManager) throws JDOMException, IOException, InvalidDataException {
+  @Nonnull
+  public static Profile load(@Nonnull File file,
+                             @Nonnull InspectionToolRegistrar registrar,
+                             @Nonnull ProfileManager profileManager) throws JDOMException, IOException, InvalidDataException {
     Element element = JDOMUtil.loadDocument(file).getRootElement();
     InspectionProfileImpl profile = new InspectionProfileImpl(getProfileName(file, element), registrar, profileManager);
     final Element profileElement = element.getChild(PROFILE_TAG);

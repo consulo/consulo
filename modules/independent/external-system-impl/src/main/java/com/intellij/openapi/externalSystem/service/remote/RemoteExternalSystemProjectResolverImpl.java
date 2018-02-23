@@ -7,8 +7,7 @@ import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutio
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver;
 import com.intellij.util.Producer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Defines common interface for resolving gradle project, i.e. building object-level representation of <code>'build.gradle'</code>.
@@ -22,20 +21,20 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
 
   private final ExternalSystemProjectResolver<S> myDelegate;
 
-  public RemoteExternalSystemProjectResolverImpl(@NotNull ExternalSystemProjectResolver<S> delegate) {
+  public RemoteExternalSystemProjectResolverImpl(@Nonnull ExternalSystemProjectResolver<S> delegate) {
     myDelegate = delegate;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(@NotNull final ExternalSystemTaskId id,
-                                                  @NotNull final String projectPath,
+  public DataNode<ProjectData> resolveProjectInfo(@Nonnull final ExternalSystemTaskId id,
+                                                  @Nonnull final String projectPath,
                                                   final boolean isPreviewMode,
                                                   ExternalSystemExecutionSettings settings)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException
   {
     return execute(id, new Producer<DataNode<ProjectData>>() {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public DataNode<ProjectData> produce() {
         return myDelegate.resolveProjectInfo(id, projectPath, isPreviewMode, getSettings(), getNotificationListener());
@@ -44,7 +43,7 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
   }
 
   @Override
-  public boolean cancelTask(@NotNull final ExternalSystemTaskId id)
+  public boolean cancelTask(@Nonnull final ExternalSystemTaskId id)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException {
     return myDelegate.cancelTask(id, getNotificationListener());
   }

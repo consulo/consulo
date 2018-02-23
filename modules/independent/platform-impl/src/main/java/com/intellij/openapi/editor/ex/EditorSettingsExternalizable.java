@@ -23,8 +23,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ComponentSettings;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -294,7 +294,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     return isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR);
   }
 
-  public boolean isUseSoftWraps(@NotNull SoftWrapAppliancePlaces place) {
+  public boolean isUseSoftWraps(@Nonnull SoftWrapAppliancePlaces place) {
     return myPlacesToUseSoftWraps.contains(place);
   }
 
@@ -302,7 +302,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     setUseSoftWraps(use, SoftWrapAppliancePlaces.MAIN_EDITOR);
   }
 
-  public void setUseSoftWraps(boolean use, @NotNull SoftWrapAppliancePlaces place) {
+  public void setUseSoftWraps(boolean use, @Nonnull SoftWrapAppliancePlaces place) {
     boolean update = use ^ myPlacesToUseSoftWraps.contains(place);
     if (!update) {
       return;

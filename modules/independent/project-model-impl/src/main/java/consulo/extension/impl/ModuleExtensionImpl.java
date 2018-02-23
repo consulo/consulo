@@ -18,7 +18,7 @@ package consulo.extension.impl;
 import consulo.annotations.DeprecationInfo;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ModuleRootLayer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 @Deprecated
 @DeprecationInfo("Use consulo.module.extension.impl.ModuleExtensionImpl")
 public class ModuleExtensionImpl<T extends ModuleExtension<T>> extends consulo.module.extension.impl.ModuleExtensionImpl<T> {
-  public ModuleExtensionImpl(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer) {
+  public ModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }
 }

@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,34 +61,34 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     }
   }
 
-  void addWidget(@NotNull StatusBarWidget widget);
+  void addWidget(@Nonnull StatusBarWidget widget);
 
-  void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor);
+  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor);
 
-  void addWidget(@NotNull StatusBarWidget widget, @NotNull Disposable parentDisposable);
+  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Disposable parentDisposable);
 
-  void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor, @NotNull Disposable parentDisposable);
+  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor, @Nonnull Disposable parentDisposable);
 
   /**
    * @deprecated use addWidget instead
    */
   @Deprecated
-  void addCustomIndicationComponent(@NotNull JComponent c);
+  void addCustomIndicationComponent(@Nonnull JComponent c);
 
   /**
    * @deprecated use removeWidget instead
    */
   @Deprecated
-  void removeCustomIndicationComponent(@NotNull JComponent c);
+  void removeCustomIndicationComponent(@Nonnull JComponent c);
 
-  void removeWidget(@NotNull String id);
+  void removeWidget(@Nonnull String id);
 
-  void updateWidget(@NotNull String id);
+  void updateWidget(@Nonnull String id);
 
   @Nullable
   StatusBarWidget getWidget(String id);
 
-  void fireNotificationPopup(@NotNull JComponent content, Color backgroundColor);
+  void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor);
 
   StatusBar createChild();
 

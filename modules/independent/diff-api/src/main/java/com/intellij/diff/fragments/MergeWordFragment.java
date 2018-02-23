@@ -16,10 +16,10 @@
 package com.intellij.diff.fragments;
 
 import com.intellij.diff.util.ThreeSide;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface MergeWordFragment {
-  int getStartOffset(@NotNull ThreeSide side);
+  int getStartOffset(@Nonnull ThreeSide side);
 
-  int getEndOffset(@NotNull ThreeSide side);
+  int getEndOffset(@Nonnull ThreeSide side);
 }

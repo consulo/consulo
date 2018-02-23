@@ -15,10 +15,10 @@
  */
 package com.intellij.xdebugger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface XDebuggerManagerListener {
-  void processStarted(@NotNull XDebugProcess debugProcess);
+  void processStarted(@Nonnull XDebugProcess debugProcess);
 
-  void processStopped(@NotNull XDebugProcess debugProcess);
+  void processStopped(@Nonnull XDebugProcess debugProcess);
 }

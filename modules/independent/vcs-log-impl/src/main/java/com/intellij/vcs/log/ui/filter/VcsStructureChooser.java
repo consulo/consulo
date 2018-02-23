@@ -43,9 +43,9 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.treeWithCheckedNodes.SelectionManager;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -70,19 +70,24 @@ public class VcsStructureChooser extends DialogWrapper {
     "<html>Selected: <font color=red>(You have added " + MAX_FOLDERS + " elements. No more is allowed.)</font></html>";
   private static final String VCS_STRUCTURE_CHOOSER_KEY = "git4idea.history.wholeTree.VcsStructureChooser";
 
-  @NotNull private final Project myProject;
-  @NotNull private final List<VirtualFile> myRoots;
-  @NotNull private final Map<VirtualFile, String> myModulesSet;
-  @NotNull private final Set<VirtualFile> mySelectedFiles = ContainerUtil.newHashSet();
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final List<VirtualFile> myRoots;
+  @Nonnull
+  private final Map<VirtualFile, String> myModulesSet;
+  @Nonnull
+  private final Set<VirtualFile> mySelectedFiles = ContainerUtil.newHashSet();
 
-  @NotNull private final SelectionManager mySelectionManager;
+  @Nonnull
+  private final SelectionManager mySelectionManager;
 
   private Tree myTree;
 
-  public VcsStructureChooser(@NotNull Project project,
-                             @NotNull String title,
-                             @NotNull Collection<VirtualFile> initialSelection,
-                             @NotNull List<VirtualFile> roots) {
+  public VcsStructureChooser(@Nonnull Project project,
+                             @Nonnull String title,
+                             @Nonnull Collection<VirtualFile> initialSelection,
+                             @Nonnull List<VirtualFile> roots) {
     super(project, true);
     setTitle(title);
     myProject = project;
@@ -97,8 +102,8 @@ public class VcsStructureChooser extends DialogWrapper {
     checkEmpty();
   }
 
-  @NotNull
-  private Map<VirtualFile, String> calculateModules(@NotNull List<VirtualFile> roots) {
+  @Nonnull
+  private Map<VirtualFile, String> calculateModules(@Nonnull List<VirtualFile> roots) {
     Map<VirtualFile, String> result = ContainerUtil.newHashMap();
 
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
@@ -123,7 +128,7 @@ public class VcsStructureChooser extends DialogWrapper {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getSelectedFiles() {
     return mySelectedFiles;
   }
@@ -133,13 +138,13 @@ public class VcsStructureChooser extends DialogWrapper {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected String getDimensionServiceKey() {
     return VCS_STRUCTURE_CHOOSER_KEY;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getPreferredFocusedComponent() {
     return myTree;
   }
@@ -193,7 +198,7 @@ public class VcsStructureChooser extends DialogWrapper {
 
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         int row = myTree.getRowForLocation(e.getX(), e.getY());
         if (row < 0) return false;
         Object o = myTree.getPathForRow(row).getLastPathComponent();
@@ -268,13 +273,13 @@ public class VcsStructureChooser extends DialogWrapper {
     return panel;
   }
 
-  @NotNull
+  @Nonnull
   private DefaultMutableTreeNode getTreeRoot() {
     return (DefaultMutableTreeNode)myTree.getModel().getRoot();
   }
 
   @Nullable
-  private static VirtualFile getFile(@NotNull Object node) {
+  private static VirtualFile getFile(@Nonnull Object node) {
     if (!(((DefaultMutableTreeNode)node).getUserObject() instanceof FileNodeDescriptor)) return null;
     FileNodeDescriptor descriptor = (FileNodeDescriptor)((DefaultMutableTreeNode)node).getUserObject();
     if (descriptor.getElement().getFile() == null) return null;
@@ -282,20 +287,28 @@ public class VcsStructureChooser extends DialogWrapper {
   }
 
   private static class MyCheckboxTreeCellRenderer extends JPanel implements TreeCellRenderer {
-    @NotNull private final WithModulesListCellRenderer myTextRenderer;
-    @NotNull public final JCheckBox myCheckbox;
-    @NotNull private final SelectionManager mySelectionManager;
-    @NotNull private final Map<VirtualFile, String> myModulesSet;
-    @NotNull private final Collection<VirtualFile> myRoots;
-    @NotNull private final ColoredTreeCellRenderer myColoredRenderer;
-    @NotNull private final JLabel myEmpty;
-    @NotNull private final JList myFictive;
+    @Nonnull
+    private final WithModulesListCellRenderer myTextRenderer;
+    @Nonnull
+    public final JCheckBox myCheckbox;
+    @Nonnull
+    private final SelectionManager mySelectionManager;
+    @Nonnull
+    private final Map<VirtualFile, String> myModulesSet;
+    @Nonnull
+    private final Collection<VirtualFile> myRoots;
+    @Nonnull
+    private final ColoredTreeCellRenderer myColoredRenderer;
+    @Nonnull
+    private final JLabel myEmpty;
+    @Nonnull
+    private final JList myFictive;
 
-    private MyCheckboxTreeCellRenderer(@NotNull SelectionManager selectionManager,
-                                       @NotNull Map<VirtualFile, String> modulesSet,
-                                       @NotNull Project project,
-                                       @NotNull JTree tree,
-                                       @NotNull Collection<VirtualFile> roots) {
+    private MyCheckboxTreeCellRenderer(@Nonnull SelectionManager selectionManager,
+                                       @Nonnull Map<VirtualFile, String> modulesSet,
+                                       @Nonnull Project project,
+                                       @Nonnull JTree tree,
+                                       @Nonnull Collection<VirtualFile> roots) {
       super(new BorderLayout());
       mySelectionManager = selectionManager;
       myModulesSet = modulesSet;
@@ -303,7 +316,7 @@ public class VcsStructureChooser extends DialogWrapper {
       setBackground(tree.getBackground());
       myColoredRenderer = new ColoredTreeCellRenderer() {
         @Override
-        public void customizeCellRenderer(@NotNull JTree tree,
+        public void customizeCellRenderer(@Nonnull JTree tree,
                                           Object value,
                                           boolean selected,
                                           boolean expanded,
@@ -371,9 +384,10 @@ public class VcsStructureChooser extends DialogWrapper {
   }
 
   private static class MyNodeConverter implements Convertor<DefaultMutableTreeNode, VirtualFile> {
-    @NotNull private final static MyNodeConverter ourInstance = new MyNodeConverter();
+    @Nonnull
+    private final static MyNodeConverter ourInstance = new MyNodeConverter();
 
-    @NotNull
+    @Nonnull
     public static MyNodeConverter getInstance() {
       return ourInstance;
     }
@@ -385,15 +399,16 @@ public class VcsStructureChooser extends DialogWrapper {
   }
 
   private static class WithModulesListCellRenderer extends VirtualFileListCellRenderer {
-    @NotNull private final Map<VirtualFile, String> myModules;
+    @Nonnull
+    private final Map<VirtualFile, String> myModules;
 
-    private WithModulesListCellRenderer(@NotNull Project project, @NotNull Map<VirtualFile, String> modules) {
+    private WithModulesListCellRenderer(@Nonnull Project project, @Nonnull Map<VirtualFile, String> modules) {
       super(project, true);
       myModules = modules;
     }
 
     @Override
-    protected String getName(@NotNull FilePath path) {
+    protected String getName(@Nonnull FilePath path) {
       String module = myModules.get(path.getVirtualFile());
       if (module != null) {
         return module;
@@ -402,7 +417,7 @@ public class VcsStructureChooser extends DialogWrapper {
     }
 
     @Override
-    protected void renderIcon(@NotNull FilePath path) {
+    protected void renderIcon(@Nonnull FilePath path) {
       String module = myModules.get(path.getVirtualFile());
       if (module != null) {
         setIcon(PlatformIcons.CONTENT_ROOT_ICON_CLOSED);
@@ -418,7 +433,7 @@ public class VcsStructureChooser extends DialogWrapper {
     }
 
     @Override
-    protected void putParentPathImpl(@NotNull Object value, @NotNull String parentPath, @NotNull FilePath self) {
+    protected void putParentPathImpl(@Nonnull Object value, @Nonnull String parentPath, @Nonnull FilePath self) {
       append(self.getPath(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
   }

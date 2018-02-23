@@ -4,8 +4,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -17,7 +17,8 @@ public interface ExternalSystemConfigLocator {
 
   ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create("com.intellij.externalSystemConfigLocator");
 
-  @NotNull ProjectSystemId getTargetExternalSystemId();
+  @Nonnull
+  ProjectSystemId getTargetExternalSystemId();
 
   /**
    * Allows to adjust target external system config file.
@@ -29,7 +30,7 @@ public interface ExternalSystemConfigLocator {
    * @return            config file to use (if any)
    */
   @Nullable
-  VirtualFile adjust(@NotNull VirtualFile configPath);
+  VirtualFile adjust(@Nonnull VirtualFile configPath);
 
   /**
    * Returns all configuration files used by external system to build the project.
@@ -37,6 +38,6 @@ public interface ExternalSystemConfigLocator {
    * @param externalProjectSettings external system project settings
    * @return external system project config files
    */
-  @NotNull
-  List<VirtualFile> findAll(@NotNull ExternalProjectSettings externalProjectSettings);
+  @Nonnull
+  List<VirtualFile> findAll(@Nonnull ExternalProjectSettings externalProjectSettings);
 }

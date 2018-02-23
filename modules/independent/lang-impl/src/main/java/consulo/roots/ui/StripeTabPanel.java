@@ -25,8 +25,8 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -46,7 +46,7 @@ import java.util.List;
 public class StripeTabPanel extends JPanel {
   public static interface SelectListener extends EventListener {
     @RequiredDispatchThread
-    void selected(@NotNull TabInfo tabInfo);
+    void selected(@Nonnull TabInfo tabInfo);
   }
 
   public static class TabInfo extends UserDataHolderBase {
@@ -65,12 +65,12 @@ public class StripeTabPanel extends JPanel {
       return myPreferredFocusableComponent;
     }
 
-    @NotNull
+    @Nonnull
     public String getTabName() {
       return myButton.getText();
     }
 
-    @NotNull
+    @Nonnull
     public JComponent getComponent() {
       return myComponent;
     }
@@ -126,23 +126,23 @@ public class StripeTabPanel extends JPanel {
     add(myContentPanel, BorderLayout.CENTER);
   }
 
-  public void addSelectListener(@NotNull SelectListener listener) {
+  public void addSelectListener(@Nonnull SelectListener listener) {
     mySelectListenerDispatcher.addListener(listener);
   }
 
-  public void removeSelectListener(@NotNull SelectListener listener) {
+  public void removeSelectListener(@Nonnull SelectListener listener) {
     mySelectListenerDispatcher.removeListener(listener);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
-  public TabInfo addTab(@NotNull String tabName, @NotNull JComponent component) {
+  public TabInfo addTab(@Nonnull String tabName, @Nonnull JComponent component) {
     return addTab(tabName, component, component);
   }
 
-  @NotNull
+  @Nonnull
   @RequiredDispatchThread
-  public TabInfo addTab(@NotNull String tabName, @NotNull JComponent component, @Nullable JComponent preferredFocusableComponent) {
+  public TabInfo addTab(@Nonnull String tabName, @Nonnull JComponent component, @Nullable JComponent preferredFocusableComponent) {
     StaticAnchoredButton button = new StaticAnchoredButton(tabName, ToolWindowAnchor.LEFT);
 
     button.addItemListener(myItemListener);
@@ -176,7 +176,7 @@ public class StripeTabPanel extends JPanel {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public List<TabInfo> getTabs() {
     int buttonCount = myButtonGroup.getButtonCount();
     List<TabInfo> list = new ArrayList<TabInfo>(buttonCount);

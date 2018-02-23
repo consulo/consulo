@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -41,7 +41,7 @@ public class ShowLogAction extends AnAction implements DumbAware {
     presentation.setText(getActionName());
   }
 
-  @NotNull
+  @Nonnull
   public static String getActionName() {
     return "Show Log in " + ShowFilePathAction.getFileManagerName();
   }

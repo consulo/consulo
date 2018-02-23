@@ -27,8 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -46,22 +45,30 @@ public abstract class AbstractImportFromExternalSystemControl<
   L extends ExternalSystemSettingsListener<ProjectSettings>,
   SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>>
 {
-  @NotNull private final SystemSettings  mySystemSettings;
-  @NotNull private final ProjectSettings myProjectSettings;
+  @Nonnull
+  private final SystemSettings  mySystemSettings;
+  @Nonnull
+  private final ProjectSettings myProjectSettings;
 
-  @NotNull private final PaintAwarePanel           myComponent              = new PaintAwarePanel(new GridBagLayout());
-  @NotNull private final TextFieldWithBrowseButton myLinkedProjectPathField = new TextFieldWithBrowseButton();
+  @Nonnull
+  private final PaintAwarePanel           myComponent              = new PaintAwarePanel(new GridBagLayout());
+  @Nonnull
+  private final TextFieldWithBrowseButton myLinkedProjectPathField = new TextFieldWithBrowseButton();
 
-  @NotNull private final  ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
-  @NotNull private final  ProjectSystemId                                myExternalSystemId;
-  @Nullable private final ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
+  @Nonnull
+  private final  ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
+  @Nonnull
+  private final  ProjectSystemId                                myExternalSystemId;
+  @javax.annotation.Nullable
+  private final ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
 
-  @Nullable Project myCurrentProject;
+  @javax.annotation.Nullable
+  Project myCurrentProject;
 
   @SuppressWarnings("AbstractMethodCallInConstructor")
-  protected AbstractImportFromExternalSystemControl(@NotNull ProjectSystemId externalSystemId,
-                                                    @NotNull SystemSettings systemSettings,
-                                                    @NotNull ProjectSettings projectSettings)
+  protected AbstractImportFromExternalSystemControl(@Nonnull ProjectSystemId externalSystemId,
+                                                    @Nonnull SystemSettings systemSettings,
+                                                    @Nonnull ProjectSettings projectSettings)
   {
     myExternalSystemId = externalSystemId;
     mySystemSettings = systemSettings;
@@ -125,11 +132,11 @@ public abstract class AbstractImportFromExternalSystemControl<
    * 
    * @param currentProject  current ide project (if any)
    */
-  public void setCurrentProject(@Nullable Project currentProject) {
+  public void setCurrentProject(@javax.annotation.Nullable Project currentProject) {
     myCurrentProject = currentProject;
   }
 
-  protected abstract void onLinkedProjectPathChange(@NotNull String path);
+  protected abstract void onLinkedProjectPathChange(@Nonnull String path);
 
   /**
    * Creates a control for managing given project settings.
@@ -137,8 +144,8 @@ public abstract class AbstractImportFromExternalSystemControl<
    * @param settings  target external project settings
    * @return          control for managing given project settings
    */
-  @NotNull
-  protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@NotNull ProjectSettings settings);
+  @Nonnull
+  protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@Nonnull ProjectSettings settings);
 
   /**
    * Creates a control for managing given system-level settings (if any).
@@ -147,30 +154,30 @@ public abstract class AbstractImportFromExternalSystemControl<
    * @return          a control for managing given system-level settings;
    *                  <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
-  @Nullable
-  protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@NotNull SystemSettings settings);
+  @javax.annotation.Nullable
+  protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     return myComponent;
   }
 
-  @NotNull
+  @Nonnull
   public ExternalSystemSettingsControl<ProjectSettings> getProjectSettingsControl() {
     return myProjectSettingsControl;
   }
 
-  public void setLinkedProjectPath(@NotNull String path) {
+  public void setLinkedProjectPath(@Nonnull String path) {
     myProjectSettings.setExternalProjectPath(path);
     myLinkedProjectPathField.setText(path);
   }
 
-  @NotNull
+  @Nonnull
   public SystemSettings getSystemSettings() {
     return mySystemSettings;
   }
 
-  @NotNull
+  @Nonnull
   public ProjectSettings getProjectSettings() {
     return myProjectSettings;
   }

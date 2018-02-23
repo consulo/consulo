@@ -24,7 +24,7 @@ import com.intellij.openapi.diff.impl.incrementalMerge.Change;
 import com.intellij.openapi.diff.impl.incrementalMerge.ChangeList;
 import com.intellij.openapi.diff.impl.util.TextDiffType;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -192,8 +192,8 @@ public class LineBlocks {
     return type;
   }
 
-  @NotNull
-  public static LineBlocks fromChanges(@NotNull List<Change> changes) {
+  @Nonnull
+  public static LineBlocks fromChanges(@Nonnull List<Change> changes) {
     // changes may come mixed, need to sort them to get correct intervals
     Collections.sort(changes, ChangeList.CHANGE_ORDER);
 
@@ -215,17 +215,20 @@ public class LineBlocks {
 
   private static class Diff {
 
-    @NotNull private final Interval myIntervalForSide1;
-    @NotNull private final Interval myIntervalForSide2;
-    @NotNull private final TextDiffType myDiffType;
+    @Nonnull
+    private final Interval myIntervalForSide1;
+    @Nonnull
+    private final Interval myIntervalForSide2;
+    @Nonnull
+    private final TextDiffType myDiffType;
 
-    private Diff(@NotNull Interval intervalForSide1, @NotNull Interval intervalForSide2, @NotNull TextDiffType type) {
+    private Diff(@Nonnull Interval intervalForSide1, @Nonnull Interval intervalForSide2, @Nonnull TextDiffType type) {
       myIntervalForSide1 = intervalForSide1;
       myIntervalForSide2 = intervalForSide2;
       myDiffType = type;
     }
 
-    @NotNull
+    @Nonnull
     public TextDiffType getDiffType() {
       return myDiffType;
     }

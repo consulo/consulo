@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This class is an extension to range marker that tries to restore its range even in situations when target text referenced by it
@@ -77,7 +77,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Nullable
-  static Pair<TextRange, LinesCols> translateViaDiff(@NotNull final DocumentEventImpl event, @NotNull LinesCols linesCols) {
+  static Pair<TextRange, LinesCols> translateViaDiff(@Nonnull final DocumentEventImpl event, @Nonnull LinesCols linesCols) {
     try {
       int myStartLine = event.translateLineViaDiffStrict(linesCols.myStartLine);
       Document document = event.getDocument();
@@ -111,7 +111,7 @@ class PersistentRangeMarker extends RangeMarkerImpl {
   }
 
   @Override
-  protected void changedUpdateImpl(@NotNull DocumentEvent e) {
+  protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
     if (!isValid()) return;
 
     Pair<TextRange, LinesCols> pair =

@@ -35,8 +35,8 @@ import com.intellij.util.containers.MultiMap;
 import consulo.codeInsight.completion.CompletionProvider;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.List;
@@ -130,7 +130,7 @@ public abstract class CompletionContributor {
   private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider>> myMap =
     new MultiMap<>();
 
-  public final void extend(@Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider provider) {
+  public final void extend(@javax.annotation.Nullable CompletionType type, final ElementPattern<? extends PsiElement> place, CompletionProvider provider) {
     myMap.putValue(type, Pair.create(place, provider));
   }
 
@@ -175,7 +175,7 @@ public abstract class CompletionContributor {
    * Invoked before completion is started. Is used mainly for determining custom offsets in editor, and to change default dummy identifier.
    * @param context
    */
-  public void beforeCompletion(@NotNull CompletionInitializationContext context) {
+  public void beforeCompletion(@Nonnull CompletionInitializationContext context) {
   }
 
   /**
@@ -183,8 +183,8 @@ public abstract class CompletionContributor {
    * @deprecated use {@link com.intellij.codeInsight.completion.CompletionResultSet#addLookupAdvertisement(String)}
    * @return text to be shown at the bottom of lookup list
    */
-  @Nullable
-  public String advertise(@NotNull CompletionParameters parameters) {
+  @javax.annotation.Nullable
+  public String advertise(@Nonnull CompletionParameters parameters) {
     return null;
   }
 
@@ -195,7 +195,7 @@ public abstract class CompletionContributor {
    * @return hint text to be shown if no variants are found, typically "No suggestions"
    */
   @Nullable
-  public String handleEmptyLookup(@NotNull CompletionParameters parameters, final Editor editor) {
+  public String handleEmptyLookup(@Nonnull CompletionParameters parameters, final Editor editor) {
     return null;
   }
 
@@ -210,7 +210,7 @@ public abstract class CompletionContributor {
   /**
    * Allow autoPopup to appear after custom symbol
    */
-  public boolean invokeAutoPopup(@NotNull PsiElement position, char typeChar) {
+  public boolean invokeAutoPopup(@Nonnull PsiElement position, char typeChar) {
     return false;
   }
 
@@ -224,7 +224,7 @@ public abstract class CompletionContributor {
    *
    * @param context context
    */
-  public void duringCompletion(@NotNull CompletionInitializationContext context) {
+  public void duringCompletion(@Nonnull CompletionInitializationContext context) {
   }
 
   /**
@@ -245,7 +245,7 @@ public abstract class CompletionContributor {
     });
   }
 
-  public static List<CompletionContributor> forLanguage(@NotNull Language language) {
+  public static List<CompletionContributor> forLanguage(@Nonnull Language language) {
     return MyExtensionPointManager.INSTANCE.forKey(language);
   }
 

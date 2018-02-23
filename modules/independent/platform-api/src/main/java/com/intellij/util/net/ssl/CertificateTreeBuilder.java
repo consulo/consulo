@@ -12,8 +12,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -36,7 +36,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
 
   private final MultiMap<String, CertificateWrapper> myCertificates = new MultiMap<String, CertificateWrapper>();
 
-  public CertificateTreeBuilder(@NotNull Tree tree) {
+  public CertificateTreeBuilder(@Nonnull Tree tree) {
     init(tree, new DefaultTreeModel(new DefaultMutableTreeNode()), new MyTreeStructure(), new Comparator<NodeDescriptor>() {
       @Override
       public int compare(NodeDescriptor o1, NodeDescriptor o2) {
@@ -54,7 +54,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     initRootNode();
   }
 
-  public void reset(@NotNull Collection<X509Certificate> certificates) {
+  public void reset(@Nonnull Collection<X509Certificate> certificates) {
     myCertificates.clear();
     for (X509Certificate certificate : certificates) {
       addCertificate(certificate);
@@ -69,7 +69,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     });
   }
 
-  public void addCertificate(@NotNull X509Certificate certificate) {
+  public void addCertificate(@Nonnull X509Certificate certificate) {
     CertificateWrapper wrapper = new CertificateWrapper(certificate);
     myCertificates.putValue(wrapper.getSubjectField(ORGANIZATION), wrapper);
     queueUpdateFrom(RootDescriptor.ROOT, true);
@@ -78,7 +78,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
   /**
    * Remove specified certificate and corresponding organization, if after removal it contains no certificates.
    */
-  public void removeCertificate(@NotNull X509Certificate certificate) {
+  public void removeCertificate(@Nonnull X509Certificate certificate) {
     CertificateWrapper wrapper = new CertificateWrapper(certificate);
     myCertificates.remove(wrapper.getSubjectField(ORGANIZATION), wrapper);
     queueUpdateFrom(RootDescriptor.ROOT, true);
@@ -97,7 +97,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     return myCertificates.isEmpty();
   }
 
-  public void selectCertificate(@NotNull X509Certificate certificate) {
+  public void selectCertificate(@Nonnull X509Certificate certificate) {
     select(new CertificateWrapper(certificate));
   }
 
@@ -115,7 +115,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
    *
    * @return - selected certificates
    */
-  @NotNull
+  @Nonnull
   public Set<X509Certificate> getSelectedCertificates(boolean addFromOrganization) {
     Set<X509Certificate> selected = getSelectedElements(X509Certificate.class);
     if (addFromOrganization) {
@@ -132,8 +132,8 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     return certificates.isEmpty() ? null : certificates.iterator().next();
   }
 
-  @NotNull
-  public List<X509Certificate> getCertificatesByOrganization(@NotNull String organizationName) {
+  @Nonnull
+  public List<X509Certificate> getCertificatesByOrganization(@Nonnull String organizationName) {
     Collection<CertificateWrapper> wrappers = myCertificates.get(organizationName);
     return extract(wrappers);
   }
@@ -189,7 +189,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
       return ((CertificateWrapper)element).getSubjectField(ORGANIZATION);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
       if (element == RootDescriptor.ROOT) {
@@ -218,7 +218,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
   static abstract class MyNodeDescriptor<T> extends PresentableNodeDescriptor<T> {
     private final T myObject;
 
-    MyNodeDescriptor(@Nullable NodeDescriptor parentDescriptor, @NotNull T object) {
+    MyNodeDescriptor(@Nullable NodeDescriptor parentDescriptor, @Nonnull T object) {
       super(null, parentDescriptor);
       myObject = object;
     }
@@ -243,7 +243,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
   }
 
   static class OrganizationDescriptor extends MyNodeDescriptor<String> {
-    private OrganizationDescriptor(@Nullable NodeDescriptor parentDescriptor, @NotNull String object) {
+    private OrganizationDescriptor(@Nullable NodeDescriptor parentDescriptor, @Nonnull String object) {
       super(parentDescriptor, object);
     }
 
@@ -254,7 +254,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
   }
 
   static class CertificateDescriptor extends MyNodeDescriptor<CertificateWrapper> {
-    private CertificateDescriptor(@Nullable NodeDescriptor parentDescriptor, @NotNull CertificateWrapper object) {
+    private CertificateDescriptor(@Nullable NodeDescriptor parentDescriptor, @Nonnull CertificateWrapper object) {
       super(parentDescriptor, object);
     }
 

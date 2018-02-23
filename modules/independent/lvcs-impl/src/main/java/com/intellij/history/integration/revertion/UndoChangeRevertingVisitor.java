@@ -30,8 +30,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
 
   private boolean isReverting;
 
-  public UndoChangeRevertingVisitor(IdeaGateway gw, @NotNull Long fromChangeId, @Nullable Long toChangeId) {
+  public UndoChangeRevertingVisitor(IdeaGateway gw, @Nonnull Long fromChangeId, @javax.annotation.Nullable Long toChangeId) {
     myGateway = gw;
     myFromChangeId = fromChangeId;
     myToChangeId = toChangeId == null ? -1 : toChangeId;

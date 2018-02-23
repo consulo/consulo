@@ -18,8 +18,8 @@ package com.intellij.psi;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -43,7 +43,7 @@ public interface SmartPsiElementPointer<E extends PsiElement> {
   @RequiredReadAction
   PsiFile getContainingFile();
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
   VirtualFile getVirtualFile();

@@ -16,8 +16,8 @@
 package com.intellij.util.net.ssl;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public class CertificateUtil {
   private CertificateUtil() { }
 
   @Nullable
-  public static X509Certificate loadX509Certificate(@NotNull String path) {
+  public static X509Certificate loadX509Certificate(@Nonnull String path) {
     try {
       InputStream stream = new FileInputStream(path);
       try {
@@ -71,7 +71,7 @@ public class CertificateUtil {
   /**
    * @return subjects common name, usually it's domain name pattern, e.g. *.github.com
    */
-  public static String getCommonName(@NotNull X509Certificate certificate) {
+  public static String getCommonName(@Nonnull X509Certificate certificate) {
     return new CertificateWrapper(certificate).getSubjectField(CertificateWrapper.CommonField.COMMON_NAME);
   }
 }

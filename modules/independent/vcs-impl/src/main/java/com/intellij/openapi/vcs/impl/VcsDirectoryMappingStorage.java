@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -46,7 +46,7 @@ public class VcsDirectoryMappingStorage extends AbstractProjectComponent impleme
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "VcsDirectoryMappings";
   }

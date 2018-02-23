@@ -39,7 +39,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -65,10 +65,10 @@ public class ChangelistConflictTracker {
   private final Set<VirtualFile> myCheckSet;
   private final Object myCheckSetLock;
 
-  public ChangelistConflictTracker(@NotNull Project project,
-                                   @NotNull ChangeListManager changeListManager,
-                                   @NotNull FileStatusManager fileStatusManager,
-                                   @NotNull EditorNotifications editorNotifications) {
+  public ChangelistConflictTracker(@Nonnull Project project,
+                                   @Nonnull ChangeListManager changeListManager,
+                                   @Nonnull FileStatusManager fileStatusManager,
+                                   @Nonnull EditorNotifications editorNotifications) {
     myProject = project;
 
     myChangeListManager = changeListManager;
@@ -171,7 +171,7 @@ public class ChangelistConflictTracker {
     }
   }
 
-  public boolean isWritingAllowed(@NotNull VirtualFile file) {
+  public boolean isWritingAllowed(@Nonnull VirtualFile file) {
     if (isFromActiveChangelist(file)) return true;
     Conflict conflict = myConflicts.get(file.getPath());
     return conflict != null && conflict.ignored;
@@ -260,7 +260,7 @@ public class ChangelistConflictTracker {
     boolean ignored;
   }
 
-  public boolean hasConflict(@NotNull VirtualFile file) {
+  public boolean hasConflict(@Nonnull VirtualFile file) {
     if (!myOptions.TRACKING_ENABLED) {
       return false;
     }
@@ -278,7 +278,7 @@ public class ChangelistConflictTracker {
     }
   }
 
-  public void ignoreConflict(@NotNull VirtualFile file, boolean ignore) {
+  public void ignoreConflict(@Nonnull VirtualFile file, boolean ignore) {
     String path = file.getPath();
     Conflict conflict = myConflicts.get(path);
     if (conflict == null) {

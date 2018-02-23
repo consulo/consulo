@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface SequentialUpdatesContext {
-  @NotNull
+  @Nonnull
   String getMessageWhenInterruptedBeforeStart();
   boolean shouldFail();
 }

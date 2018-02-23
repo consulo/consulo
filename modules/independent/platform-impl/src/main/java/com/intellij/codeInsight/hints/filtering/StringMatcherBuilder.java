@@ -17,15 +17,15 @@ package com.intellij.codeInsight.hints.filtering;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * from kotlin
  */
 public class StringMatcherBuilder {
   @Nullable
-  public static StringMatcher create(@NotNull String matcher) {
+  public static StringMatcher create(@Nonnull String matcher) {
     if (matcher.isEmpty()) {
       return text -> true;
     }

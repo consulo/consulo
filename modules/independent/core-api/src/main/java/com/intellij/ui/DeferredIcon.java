@@ -22,12 +22,12 @@ package com.intellij.ui;
 import com.intellij.icons.AllIcons;
 import consulo.ui.image.Image;
 import consulo.ui.migration.ToImageWrapper;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
 public interface DeferredIcon extends Icon, ToImageWrapper {
-  @NotNull
+  @Nonnull
   Icon evaluate();
 
   @Override

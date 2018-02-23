@@ -1,7 +1,7 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Nikolay.Tropin
@@ -35,7 +35,7 @@ public abstract class AbstractMemberInfoModel<T extends PsiElement, M extends Me
   }
 
   @Override
-  public int checkForProblems(@NotNull M member) {
+  public int checkForProblems(@Nonnull M member) {
     return OK;
   }
 

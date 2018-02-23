@@ -49,9 +49,9 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -66,7 +66,7 @@ class EventLogConsole {
   private static final Key<String> NOTIFICATION_ID = Key.create("NOTIFICATION_ID");
 
   private final NotNullLazyValue<Editor> myLogEditor = new NotNullLazyValue<Editor>() {
-    @NotNull
+    @Nonnull
     @Override
     protected Editor compute() {
       return createLogEditor();
@@ -74,7 +74,7 @@ class EventLogConsole {
   };
 
   private final NotNullLazyValue<EditorHyperlinkSupport> myHyperlinkSupport = new NotNullLazyValue<EditorHyperlinkSupport>() {
-    @NotNull
+    @Nonnull
     @Override
     protected EditorHyperlinkSupport compute() {
       return new EditorHyperlinkSupport(getConsoleEditor(), myProjectModel.getProject());
@@ -123,7 +123,7 @@ class EventLogConsole {
     return editor;
   }
 
-  private void installNotificationsFont(@NotNull final EditorEx editor) {
+  private void installNotificationsFont(@Nonnull final EditorEx editor) {
     final DelegateColorScheme globalScheme = new DelegateColorScheme(EditorColorsManager.getInstance().getGlobalScheme()) {
       @Override
       public String getEditorFontName() {
@@ -182,7 +182,7 @@ class EventLogConsole {
     return group;
   }
 
-  private static void addConfigureNotificationAction(@NotNull EditorEx editor, @NotNull EditorMouseEvent event, @NotNull final DefaultActionGroup actions) {
+  private static void addConfigureNotificationAction(@Nonnull EditorEx editor, @Nonnull EditorMouseEvent event, @Nonnull final DefaultActionGroup actions) {
     LogicalPosition position = editor.xyToLogicalPosition(event.getMouseEvent().getPoint());
     if (EditorUtil.inVirtualSpace(editor, position)) {
       return;
@@ -201,7 +201,7 @@ class EventLogConsole {
     });
   }
 
-  private static void addConfigureNotificationAction(@NotNull DefaultActionGroup actions, @NotNull String groupId) {
+  private static void addConfigureNotificationAction(@Nonnull DefaultActionGroup actions, @Nonnull String groupId) {
     DefaultActionGroup displayTypeGroup = new DefaultActionGroup("Notification Display Type", true);
     NotificationSettings settings = NotificationsConfigurationImpl.getSettings(groupId);
     NotificationDisplayType current = settings.getDisplayType();
@@ -221,7 +221,7 @@ class EventLogConsole {
     private final NotificationDisplayType myType;
     private final NotificationDisplayType myCurrent;
 
-    public DisplayTypeAction(@NotNull NotificationSettings settings, @NotNull NotificationDisplayType type, @NotNull NotificationDisplayType current) {
+    public DisplayTypeAction(@Nonnull NotificationSettings settings, @Nonnull NotificationDisplayType type, @Nonnull NotificationDisplayType current) {
       super(type.getTitle());
       mySettings = settings;
       myType = type;
@@ -307,7 +307,7 @@ class EventLogConsole {
     }
   }
 
-  private static int calculateTabs(@NotNull Editor editor, int startDateOffset) {
+  private static int calculateTabs(@Nonnull Editor editor, int startDateOffset) {
     Document document = editor.getDocument();
     int startOffset = document.getTextLength();
     Point dateStartPoint = editor.logicalPositionToXY(editor.offsetToLogicalPosition(startDateOffset));
@@ -387,7 +387,7 @@ class EventLogConsole {
     }
   }
 
-  public void showNotification(@NotNull final List<String> ids) {
+  public void showNotification(@Nonnull final List<String> ids) {
     clearNMore();
     myNMoreHighlighters = new ArrayList<RangeHighlighter>();
 
@@ -433,7 +433,7 @@ class EventLogConsole {
   }
 
   @Nullable
-  private RangeHighlighterEx findHighlighter(@NotNull final String id) {
+  private RangeHighlighterEx findHighlighter(@Nonnull final String id) {
     EditorEx editor = (EditorEx)getConsoleEditor();
     final Ref<RangeHighlighterEx> highlighter = new Ref<RangeHighlighterEx>();
 

@@ -18,16 +18,16 @@ package com.intellij.vcs.log.ui;
 import com.intellij.vcs.log.VcsLogHighlighter;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.VcsLogData;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface VcsLogHighlighterFactory {
-  @NotNull
-  VcsLogHighlighter createHighlighter(@NotNull VcsLogData logDataHolder, @NotNull VcsLogUi logUi);
+  @Nonnull
+  VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logDataHolder, @Nonnull VcsLogUi logUi);
 
-  @NotNull
+  @Nonnull
   String getId();
 
-  @NotNull
+  @Nonnull
   String getTitle();
 
   boolean showMenuItem();

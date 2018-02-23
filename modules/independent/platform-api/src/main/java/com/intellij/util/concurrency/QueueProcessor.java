@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -74,33 +74,33 @@ public class QueueProcessor<T> {
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
-  public QueueProcessor(@NotNull Consumer<T> processor) {
+  public QueueProcessor(@Nonnull Consumer<T> processor) {
     this(processor, Conditions.alwaysFalse());
   }
 
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
-  public QueueProcessor(@NotNull Consumer<T> processor, @NotNull Condition<?> deathCondition) {
+  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull Condition<?> deathCondition) {
     this(processor, deathCondition, true);
   }
 
-  public QueueProcessor(@NotNull Consumer<T> processor, @NotNull Condition<?> deathCondition, boolean autostart) {
+  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull Condition<?> deathCondition, boolean autostart) {
     this(wrappingProcessor(processor), autostart, ThreadToUse.POOLED, deathCondition);
   }
 
-  @NotNull
+  @Nonnull
   public static QueueProcessor<Runnable> createRunnableQueueProcessor() {
     return new QueueProcessor<Runnable>(new RunnableConsumer());
   }
 
-  @NotNull
+  @Nonnull
   public static QueueProcessor<Runnable> createRunnableQueueProcessor(ThreadToUse threadToUse) {
     return new QueueProcessor<Runnable>(wrappingProcessor(new RunnableConsumer()), true, threadToUse, Conditions.FALSE);
   }
 
-  @NotNull
-  private static <T> PairConsumer<T, Runnable> wrappingProcessor(@NotNull final Consumer<T> processor) {
+  @Nonnull
+  private static <T> PairConsumer<T, Runnable> wrappingProcessor(@Nonnull final Consumer<T> processor) {
     return new PairConsumer<T, Runnable>() {
       @Override
       public void consume(final T item, Runnable runnable) {
@@ -125,10 +125,10 @@ public class QueueProcessor<T> {
    *                  After QueueProcessor has started once, autostart setting doesn't matter anymore: all other elements will be processed immediately.
    */
 
-  public QueueProcessor(@NotNull PairConsumer<T, Runnable> processor,
+  public QueueProcessor(@Nonnull PairConsumer<T, Runnable> processor,
                         boolean autostart,
-                        @NotNull ThreadToUse threadToUse,
-                        @NotNull Condition<?> deathCondition) {
+                        @Nonnull ThreadToUse threadToUse,
+                        @Nonnull Condition<?> deathCondition) {
     myProcessor = processor;
     myStarted = autostart;
     myThreadToUse = threadToUse;
@@ -151,22 +151,22 @@ public class QueueProcessor<T> {
     }
   }
 
-  public void add(@NotNull T t, ModalityState state) {
+  public void add(@Nonnull T t, ModalityState state) {
     synchronized (myQueue) {
       myModalityState.put(new MyOverrideEquals(t), state);
     }
     doAdd(t, false);
   }
 
-  public void add(@NotNull T element) {
+  public void add(@Nonnull T element) {
     doAdd(element, false);
   }
 
-  public void addFirst(@NotNull T element) {
+  public void addFirst(@Nonnull T element) {
     doAdd(element, true);
   }
 
-  private void doAdd(@NotNull T element, boolean atHead) {
+  private void doAdd(@Nonnull T element, boolean atHead) {
     synchronized (myQueue) {
       if (atHead) {
         myQueue.addFirst(element);
@@ -233,7 +233,7 @@ public class QueueProcessor<T> {
     return true;
   }
 
-  public static void runSafely(@NotNull Runnable run) {
+  public static void runSafely(@Nonnull Runnable run) {
     try {
       run.run();
     }
@@ -277,7 +277,7 @@ public class QueueProcessor<T> {
   private static class MyOverrideEquals {
     private final Object myDelegate;
 
-    private MyOverrideEquals(@NotNull Object delegate) {
+    private MyOverrideEquals(@Nonnull Object delegate) {
       myDelegate = delegate;
     }
 

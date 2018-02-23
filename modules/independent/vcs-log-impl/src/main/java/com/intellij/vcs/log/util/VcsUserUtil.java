@@ -17,45 +17,47 @@ package com.intellij.vcs.log.util;
 
 import com.intellij.openapi.util.Couple;
 import com.intellij.vcs.log.VcsUser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VcsUserUtil {
-  @NotNull private static final Pattern NAME_PATTERN = Pattern.compile("(\\w+)[\\W_](\\w+)");
-  @NotNull private static final Pattern PRINTABLE_ASCII_PATTERN = Pattern.compile("[ -~]*");
+  @Nonnull
+  private static final Pattern NAME_PATTERN = Pattern.compile("(\\w+)[\\W_](\\w+)");
+  @Nonnull
+  private static final Pattern PRINTABLE_ASCII_PATTERN = Pattern.compile("[ -~]*");
 
-  @NotNull
-  public static String toExactString(@NotNull VcsUser user) {
+  @Nonnull
+  public static String toExactString(@Nonnull VcsUser user) {
     return getString(user.getName(), user.getEmail());
   }
 
-  @NotNull
-  private static String getString(@NotNull String name, @NotNull String email) {
+  @Nonnull
+  private static String getString(@Nonnull String name, @Nonnull String email) {
     if (name.isEmpty()) return email;
     if (email.isEmpty()) return name;
     return name + " <" + email + ">";
   }
 
-  public static boolean isSamePerson(@NotNull VcsUser user1, @NotNull VcsUser user2) {
+  public static boolean isSamePerson(@Nonnull VcsUser user1, @Nonnull VcsUser user2) {
     return getNameInStandardForm(getName(user1)).equals(getNameInStandardForm(getName(user2)));
   }
 
-  @NotNull
-  public static String getShortPresentation(@NotNull VcsUser user) {
+  @Nonnull
+  public static String getShortPresentation(@Nonnull VcsUser user) {
     return getName(user);
   }
 
-  @NotNull
-  private static String getName(@NotNull VcsUser user) {
+  @Nonnull
+  private static String getName(@Nonnull VcsUser user) {
     return getUserName(user.getName(), user.getEmail());
   }
 
-  @NotNull
-  public static String getUserName(@NotNull String name, @NotNull String email) {
+  @Nonnull
+  public static String getUserName(@Nonnull String name, @Nonnull String email) {
     if (!name.isEmpty()) return name;
     String emailNamePart = getNameFromEmail(email);
     if (emailNamePart != null) return emailNamePart;
@@ -63,7 +65,7 @@ public class VcsUserUtil {
   }
 
   @Nullable
-  public static String getNameFromEmail(@NotNull String email) {
+  public static String getNameFromEmail(@Nonnull String email) {
     int at = email.indexOf('@');
     String emailNamePart = null;
     if (at > 0) {
@@ -72,8 +74,8 @@ public class VcsUserUtil {
     return emailNamePart;
   }
 
-  @NotNull
-  public static String getNameInStandardForm(@NotNull String name) {
+  @Nonnull
+  public static String getNameInStandardForm(@Nonnull String name) {
     Couple<String> firstAndLastName = getFirstAndLastName(name);
     if (firstAndLastName != null) {
       return firstAndLastName.first.toLowerCase(Locale.ENGLISH) + " " + firstAndLastName.second.toLowerCase(Locale.ENGLISH); // synonyms detection is currently english-only
@@ -82,7 +84,7 @@ public class VcsUserUtil {
   }
 
   @Nullable
-  public static Couple<String> getFirstAndLastName(@NotNull String name) {
+  public static Couple<String> getFirstAndLastName(@Nonnull String name) {
     Matcher matcher = NAME_PATTERN.matcher(name);
     if (matcher.matches()) {
       return Couple.of(matcher.group(1), matcher.group(2));
@@ -90,21 +92,21 @@ public class VcsUserUtil {
     return null;
   }
 
-  @NotNull
-  public static String nameToLowerCase(@NotNull String name) {
+  @Nonnull
+  public static String nameToLowerCase(@Nonnull String name) {
     if (!PRINTABLE_ASCII_PATTERN.matcher(name).matches()) return name;
     return name.toLowerCase(Locale.ENGLISH);
   }
 
-  @NotNull
-  public static String capitalizeName(@NotNull String name) {
+  @Nonnull
+  public static String capitalizeName(@Nonnull String name) {
     if (name.isEmpty()) return name;
     if (!PRINTABLE_ASCII_PATTERN.matcher(name).matches()) return name;
     return name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
   }
 
-  @NotNull
-  public static String emailToLowerCase(@NotNull String email) {
+  @Nonnull
+  public static String emailToLowerCase(@Nonnull String email) {
     return email.toLowerCase(Locale.ENGLISH);
   }
 }

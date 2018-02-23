@@ -16,7 +16,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.util.Computable;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

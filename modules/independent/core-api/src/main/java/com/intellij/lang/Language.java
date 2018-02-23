@@ -31,8 +31,8 @@ import consulo.lang.LanguageVersionDefines;
 import consulo.util.pointers.Named;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,7 +65,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   };
 
   private NotNullLazyValue<LanguageVersion[]> myVersions = new NotNullLazyValue<LanguageVersion[]>() {
-    @NotNull
+    @Nonnull
     @Override
     protected LanguageVersion[] compute() {
       LanguageVersion[] versions = findVersions();
@@ -90,15 +90,15 @@ public abstract class Language extends UserDataHolderBase implements Named {
     }
   };
 
-  protected Language(@NotNull @NonNls String id) {
+  protected Language(@Nonnull @NonNls String id) {
     this(id, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
-  protected Language(@NotNull @NonNls final String ID, @NotNull @NonNls final String... mimeTypes) {
+  protected Language(@Nonnull @NonNls final String ID, @Nonnull @NonNls final String... mimeTypes) {
     this(null, ID, mimeTypes);
   }
 
-  protected Language(@Nullable Language baseLanguage, @NotNull @NonNls final String ID, @NotNull @NonNls final String... mimeTypes) {
+  protected Language(@Nullable Language baseLanguage, @Nonnull @NonNls final String ID, @Nonnull @NonNls final String... mimeTypes) {
     myBaseLanguage = baseLanguage;
     myID = ID;
     myMimeTypes = mimeTypes;
@@ -126,7 +126,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   /**
    * @return collection of all languages registered so far.
    */
-  @NotNull
+  @Nonnull
   public static Collection<Language> getRegisteredLanguages() {
     return new ArrayList<>(ourRegisteredLanguages.values());
   }
@@ -145,7 +145,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
    * @param mimeType of the particular language.
    * @return collection of all languages for the given <code>mimeType</code>.
    */
-  @NotNull
+  @Nonnull
   @Exported
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
     if(mimeType == null) {
@@ -160,14 +160,14 @@ public abstract class Language extends UserDataHolderBase implements Named {
     return languages;
   }
 
-  @NotNull
+  @Nonnull
   @Exported
   public static Collection<LanguageVersion> findVersionsByMimeType(@Nullable String mimeType) {
     Collection<LanguageVersion> versions = ourRegisteredMimeTypes.get(mimeType);
     return new ArrayList<>(versions);
   }
 
-  @NotNull
+  @Nonnull
   protected LanguageVersion[] findVersions() {
     List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
     if (languageVersion.isEmpty()) {
@@ -201,7 +201,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
    *
    * @return The list of MIME types.
    */
-  @NotNull
+  @Nonnull
   public String[] getMimeTypes() {
     return myMimeTypes;
   }
@@ -211,12 +211,12 @@ public abstract class Language extends UserDataHolderBase implements Named {
    *
    * @return the name of the language.
    */
-  @NotNull
+  @Nonnull
   public String getID() {
     return myID;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return getID();
@@ -243,7 +243,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
     return myBaseLanguage;
   }
 
-  @NotNull
+  @Nonnull
   @Immutable
   public final LanguageVersion[] getVersions() {
     return myVersions.getValue();
@@ -252,7 +252,7 @@ public abstract class Language extends UserDataHolderBase implements Named {
   @Nullable
   @SuppressWarnings("unchecked")
   @Exported
-  public <T extends LanguageVersion> T findVersionByClass(@NotNull Class<T> clazz) {
+  public <T extends LanguageVersion> T findVersionByClass(@Nonnull Class<T> clazz) {
     for (LanguageVersion languageVersion : getVersions()) {
       if (languageVersion.getClass() == clazz) {
         return (T)languageVersion;

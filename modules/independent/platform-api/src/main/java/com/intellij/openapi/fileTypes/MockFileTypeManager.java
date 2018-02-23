@@ -23,103 +23,103 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 class MockFileTypeManager extends FileTypeManager {
   @Override
-  public void registerFileType(@NotNull FileType type, @NotNull List<FileNameMatcher> defaultAssociations) {
+  public void registerFileType(@Nonnull FileType type, @Nonnull List<FileNameMatcher> defaultAssociations) {
     throw new UnsupportedOperationException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByFileName(@NotNull @NonNls String fileName) {
+  public FileType getFileTypeByFileName(@Nonnull @NonNls String fileName) {
     return MockLanguageFileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByFile(@NotNull VirtualFile file) {
+  public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
     return MockLanguageFileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByExtension(@NonNls @NotNull String extension) {
+  public FileType getFileTypeByExtension(@NonNls @Nonnull String extension) {
     return MockLanguageFileType.INSTANCE;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType[] getRegisteredFileTypes() {
     return new FileType[] {MockLanguageFileType.INSTANCE};
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @NotNull CharSequence name) {
+  public boolean isFileIgnored(@NonNls @Nonnull CharSequence name) {
     return false;
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @NotNull VirtualFile file) {
+  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public String[] getAssociatedExtensions(@NotNull FileType type) {
+  public String[] getAssociatedExtensions(@Nonnull FileType type) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<FileNameMatcher> getAssociations(@NotNull FileType type) {
+  public List<FileNameMatcher> getAssociations(@Nonnull FileType type) {
     return Collections.emptyList();
   }
 
   @Override
-  public void addFileTypeListener(@NotNull FileTypeListener listener) {
+  public void addFileTypeListener(@Nonnull FileTypeListener listener) {
   }
 
   @Override
-  public void removeFileTypeListener(@NotNull FileTypeListener listener) {
+  public void removeFileTypeListener(@Nonnull FileTypeListener listener) {
   }
 
   @Override
-  public FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file) {
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file) {
     return file.getFileType();
   }
 
   @Override
-  public FileType getKnownFileTypeOrAssociate(@NotNull VirtualFile file, @NotNull Project project) {
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project) {
     return getKnownFileTypeOrAssociate(file);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getIgnoredFilesList() {
     return "";
   }
 
   @Override
-  public void setIgnoredFilesList(@NotNull String list) {
+  public void setIgnoredFilesList(@Nonnull String list) {
   }
 
   @Override
-  public void associate(@NotNull FileType type, @NotNull FileNameMatcher matcher) {
+  public void associate(@Nonnull FileType type, @Nonnull FileNameMatcher matcher) {
   }
 
   @Override
-  public void removeAssociation(@NotNull FileType type, @NotNull FileNameMatcher matcher) {
+  public void removeAssociation(@Nonnull FileType type, @Nonnull FileNameMatcher matcher) {
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getStdFileType(@NotNull @NonNls String fileTypeName) {
+  public FileType getStdFileType(@Nonnull @NonNls String fileTypeName) {
     return MockLanguageFileType.INSTANCE;
   }
 
@@ -127,9 +127,9 @@ class MockFileTypeManager extends FileTypeManager {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType detectFileTypeFromContent(@NotNull VirtualFile file) {
+  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
     return UnknownFileType.INSTANCE;
   }
 

@@ -22,7 +22,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -33,22 +33,22 @@ import java.io.IOException;
 public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHandler {
   private Class<Request> myRequestClass;
 
-  protected JsonPostRequestHandler(@NotNull String apiUrl, @NotNull Class<Request> requestClass) {
+  protected JsonPostRequestHandler(@Nonnull String apiUrl, @Nonnull Class<Request> requestClass) {
     super(apiUrl);
     myRequestClass = requestClass;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected HttpMethod getMethod() {
     return HttpMethod.POST;
   }
 
-  @NotNull
-  public abstract JsonResponse handle(@NotNull Request request);
+  @Nonnull
+  public abstract JsonResponse handle(@Nonnull Request request);
 
   @Override
-  public boolean process(@NotNull QueryStringDecoder urlDecoder, @NotNull FullHttpRequest request, @NotNull ChannelHandlerContext context) throws IOException {
+  public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
     Object handle = null;
     try {
       String json = request.content().toString(CharsetToolkit.UTF8_CHARSET);

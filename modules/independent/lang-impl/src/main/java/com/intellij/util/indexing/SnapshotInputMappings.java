@@ -36,7 +36,7 @@ import com.intellij.util.indexing.impl.MapReduceIndex;
 import com.intellij.util.io.*;
 import com.intellij.util.io.DataOutputStream;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -68,7 +68,7 @@ public class SnapshotInputMappings<Key, Value, Input> {
     createMaps();
   }
 
-  @NotNull
+  @Nonnull
   public Map<Key, Value> readInputKeys(int inputId) throws IOException {
     Integer currentHashId = readInputHashId(inputId);
     if (currentHashId != null) {
@@ -98,8 +98,8 @@ public class SnapshotInputMappings<Key, Value, Input> {
     }
   }
 
-  @NotNull
-  Snapshot<Key, Value> readPersistentDataOrMap(@NotNull Input content) {
+  @Nonnull
+  Snapshot<Key, Value> readPersistentDataOrMap(@Nonnull Input content) {
     Map<Key, Value> data = null;
     boolean havePersistentData = false;
     int hashId;
@@ -259,12 +259,12 @@ public class SnapshotInputMappings<Key, Value, Input> {
       return new PersistentHashMap<>(mapFile, EnumeratorIntegerDescriptor.INSTANCE,
                                      new DataExternalizer<String>() {
                                        @Override
-                                       public void save(@NotNull DataOutput out, String value) throws IOException {
+                                       public void save(@Nonnull DataOutput out, String value) throws IOException {
                                          out.write((byte[])CompressionUtil.compressCharSequence(value, Charset.defaultCharset()));
                                        }
 
                                        @Override
-                                       public String read(@NotNull DataInput in) throws IOException {
+                                       public String read(@Nonnull DataInput in) throws IOException {
                                          byte[] b = new byte[((InputStream)in).available()];
                                          in.readFully(b);
                                          return (String)CompressionUtil.uncompressCharSequence(b, Charset.defaultCharset());

@@ -39,8 +39,8 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.MergingCharSequence;
 import gnu.trove.TIntIntHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -53,7 +53,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   private final Map<IElementType, LayerDescriptor> myTokensToLayer = new HashMap<>();
   private final Map<LayerDescriptor, Mapper> myLayerBuffers = new HashMap<>();
 
-  public LayeredLexerEditorHighlighter(@NotNull SyntaxHighlighter highlighter, @NotNull EditorColorsScheme scheme) {
+  public LayeredLexerEditorHighlighter(@Nonnull SyntaxHighlighter highlighter, @Nonnull EditorColorsScheme scheme) {
     super(highlighter, scheme);
   }
 
@@ -129,7 +129,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   }
 
   @Override
-  public void setText(@NotNull final CharSequence text) {
+  public void setText(@Nonnull final CharSequence text) {
     if (updateLayers()) {
       resetText(text);
     } else {
@@ -168,7 +168,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
 
   protected boolean updateLayers() { return false; }
 
-  protected boolean updateLayers(@NotNull DocumentEvent e) { return updateLayers(); }
+  protected boolean updateLayers(@Nonnull DocumentEvent e) { return updateLayers(); }
 
   @SuppressWarnings("NonSynchronizedMethodOverridesSynchronizedMethod")
   @Override
@@ -187,7 +187,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     //noinspection SynchronizeOnThis
@@ -260,15 +260,15 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    public void replace(int startOffset, @NotNull SegmentArrayWithData data, int len) {
+    public void replace(int startOffset, @Nonnull SegmentArrayWithData data, int len) {
       super.replace(startOffset, data, len);
       for (int i = startOffset; i < startOffset + len; i++) {
         updateMappingForToken(i);
       }
     }
 
-    @NotNull
-    private <T> T[] insert(@NotNull T[] array, @NotNull T[] insertArray, int startIndex, int insertLength) {
+    @Nonnull
+    private <T> T[] insert(@Nonnull T[] array, @Nonnull T[] insertArray, int startIndex, int insertLength) {
       T[] newArray = LayeredLexerEditorHighlighter.reallocateArray(array, mySegmentCount + insertLength);
       if (startIndex < mySegmentCount) {
         System.arraycopy(newArray, startIndex, newArray, startIndex + insertLength, mySegmentCount - startIndex);
@@ -277,8 +277,8 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
       return newArray;
     }
 
-    @NotNull
-    private <T> T[] remove(@NotNull T[] array, int startIndex, int endIndex) {
+    @Nonnull
+    private <T> T[] remove(@Nonnull T[] array, int startIndex, int endIndex) {
       if (endIndex < mySegmentCount) {
         System.arraycopy(array, endIndex, array, startIndex, mySegmentCount - endIndex);
       }
@@ -286,7 +286,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     @Override
-    public void insert(@NotNull SegmentArrayWithData segmentArray, final int startIndex) {
+    public void insert(@Nonnull SegmentArrayWithData segmentArray, final int startIndex) {
       synchronized (LayeredLexerEditorHighlighter.this) {
         super.insert(segmentArray, startIndex);
 
@@ -408,7 +408,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
       }
     }
 
-    @NotNull
+    @Nonnull
     private MappedRange insertMapping(int tokenIndex, IElementType outerToken) {
       CharSequence tokenText = getTokenText(tokenIndex);
 
@@ -457,7 +457,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     private final Mapper mapper;
     private final IElementType outerToken;
 
-    MappedRange(@NotNull Mapper mapper, @NotNull RangeMarker range, @NotNull IElementType outerToken) {
+    MappedRange(@Nonnull Mapper mapper, @Nonnull RangeMarker range, @Nonnull IElementType outerToken) {
       this.mapper = mapper;
       this.range = range;
       this.outerToken = outerToken;
@@ -485,7 +485,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   }
 
   @Override
-  public void setColorScheme(@NotNull EditorColorsScheme scheme) {
+  public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     super.setColorScheme(scheme);
 
     for (MappedRange mapping : getSegments().myRanges) {
@@ -601,8 +601,8 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  private static <T> T[] reallocateArray(@NotNull T[] array, int index) {
+  @Nonnull
+  private static <T> T[] reallocateArray(@Nonnull T[] array, int index) {
     if (index < array.length) return array;
 
     T[] newArray = (T[])Array.newInstance(array.getClass().getComponentType(), SegmentArray.calcCapacity(array.length, index));

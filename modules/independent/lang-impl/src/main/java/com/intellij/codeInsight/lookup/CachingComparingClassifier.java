@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.ForceableComparable;
 import com.intellij.util.ProcessingContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -54,14 +54,14 @@ public class CachingComparingClassifier extends ComparingClassifier<LookupElemen
   }
 
   @Override
-  public void removeElement(@NotNull LookupElement element, @NotNull ProcessingContext context) {
+  public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
     myWeights.remove(element);
     super.removeElement(element, context);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Iterable<LookupElement> classify(@NotNull Iterable<LookupElement> source, @NotNull ProcessingContext context) {
+  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
     if (!myWeigher.isPrefixDependent() && myPrimitive) {
       return myNext.classify(source, context);
     }
@@ -78,15 +78,15 @@ public class CachingComparingClassifier extends ComparingClassifier<LookupElemen
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public List<Pair<LookupElement, Object>> getSortingWeights(@NotNull Iterable<LookupElement> items, @NotNull ProcessingContext context) {
+  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
     checkPrefixChanged(context);
     return super.getSortingWeights(items, context);
   }
 
   @Override
-  public void addElement(@NotNull LookupElement t, @NotNull ProcessingContext context) {
+  public void addElement(@Nonnull LookupElement t, @Nonnull ProcessingContext context) {
     Comparable weight = myWeigher.weigh(t, context.get(CompletionLookupArranger.WEIGHING_CONTEXT));
     if (weight instanceof ForceableComparable) {
       ((ForceableComparable)weight).force();

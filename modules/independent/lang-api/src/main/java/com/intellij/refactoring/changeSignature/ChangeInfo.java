@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Represents the set of changes performed by a "Change Signature" refactoring.
@@ -32,7 +32,7 @@ public interface ChangeInfo {
    *
    * @return parameter list.
    */
-  @NotNull
+  @Nonnull
   ParameterInfo[] getNewParameters();
 
   boolean isParameterSetOrOrderChanged();

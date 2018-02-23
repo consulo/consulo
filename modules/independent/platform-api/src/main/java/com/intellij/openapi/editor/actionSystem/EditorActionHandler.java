@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.CaretAction;
 import com.intellij.openapi.editor.Editor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Interface for actions activated by keystrokes in the editor.
@@ -73,7 +73,7 @@ public abstract class EditorActionHandler {
       final boolean[] result = new boolean[1];
       final CaretTask check = new CaretTask() {
         @Override
-        public void perform(@NotNull Caret caret, @Nullable DataContext dataContext) {
+        public void perform(@Nonnull Caret caret, @Nullable DataContext dataContext) {
           result[0] = true;
         }
       };
@@ -95,7 +95,7 @@ public abstract class EditorActionHandler {
     }
   }
 
-  private void doIfEnabled(@NotNull Caret hostCaret, @Nullable DataContext context, @NotNull CaretTask task) {
+  private void doIfEnabled(@Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
     DataContext caretContext = context == null ? null : new CaretSpecificDataContext(context, hostCaret);
     if (myWorksInInjected && caretContext != null) {
       DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
@@ -113,7 +113,7 @@ public abstract class EditorActionHandler {
   /**
    * Implementations can override this method to define whether handler is enabled for a specific caret in a given editor.
    */
-  protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     if (inCheck) {
       return true;
     }
@@ -131,7 +131,7 @@ public abstract class EditorActionHandler {
    * If <code>caret</code> is <code>null</code>, checks whether handler is enabled in general (i.e. enabled for at least one caret in editor),
    * if <code>caret</code> is not <code>null</code>, checks whether it's enabled for specified caret.
    */
-  public final boolean isEnabled(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  public final boolean isEnabled(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
     //noinspection deprecation
     return caret == null ? isEnabled(editor, dataContext) : isEnabledForCaret(editor, caret, dataContext);
   }
@@ -191,7 +191,7 @@ public abstract class EditorActionHandler {
    * @param editor      the editor in which the action is invoked.
    * @param dataContext the data context for the action.
    */
-  public final void execute(@NotNull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
+  public final void execute(@Nonnull Editor editor, @Nullable final Caret contextCaret, final DataContext dataContext) {
     Editor hostEditor = dataContext == null ? null : dataContext.getData(CommonDataKeys.HOST_EDITOR);
     if (hostEditor == null) {
       hostEditor = editor;
@@ -202,7 +202,7 @@ public abstract class EditorActionHandler {
         public void perform(Caret caret) {
           doIfEnabled(caret, dataContext, new CaretTask() {
             @Override
-            public void perform(@NotNull Caret caret, @Nullable DataContext dataContext) {
+            public void perform(@Nonnull Caret caret, @Nullable DataContext dataContext) {
               doExecute(caret.getEditor(), caret, dataContext);
             }
           });
@@ -213,7 +213,7 @@ public abstract class EditorActionHandler {
       if (contextCaret == null) {
         doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, new CaretTask() {
           @Override
-          public void perform(@NotNull Caret caret, @Nullable DataContext dataContext) {
+          public void perform(@Nonnull Caret caret, @Nullable DataContext dataContext) {
             doExecute(caret.getEditor(), null, dataContext);
           }
         });
@@ -234,6 +234,6 @@ public abstract class EditorActionHandler {
   }
 
   private interface CaretTask {
-    void perform(@NotNull Caret caret, @Nullable DataContext dataContext);
+    void perform(@Nonnull Caret caret, @Nullable DataContext dataContext);
   }
 }

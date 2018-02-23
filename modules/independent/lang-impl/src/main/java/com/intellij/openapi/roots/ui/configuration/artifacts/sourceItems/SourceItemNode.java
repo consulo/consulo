@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.ui.treeStructure.SimpleTree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class SourceItemNode extends SourceItemNodeBase {
     mySourceItem = sourceItem;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getEqualityObjects() {
     return new Object[]{mySourceItem};

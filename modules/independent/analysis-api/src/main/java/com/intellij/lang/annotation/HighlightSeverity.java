@@ -20,7 +20,7 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines a highlighting severity level for an annotation.
@@ -78,14 +78,14 @@ public class HighlightSeverity implements Comparable<HighlightSeverity> {
    *             if two annotations with different severity levels cover the same text range, only
    *             the annotation with a higher severity level is displayed.
    */
-  public HighlightSeverity(@NonNls @NotNull String name, int val) {
+  public HighlightSeverity(@NonNls @Nonnull String name, int val) {
     myName = name;
     myVal = val;
   }
 
 
   //read external only
-  public HighlightSeverity(@NotNull Element element) {
+  public HighlightSeverity(@Nonnull Element element) {
     this(JDOMExternalizerUtil.readField(element, "myName"), Integer.valueOf(JDOMExternalizerUtil.readField(element, "myVal")));
   }
 
@@ -95,7 +95,7 @@ public class HighlightSeverity implements Comparable<HighlightSeverity> {
   }
 
   @Override
-  public int compareTo(@NotNull final HighlightSeverity highlightSeverity) {
+  public int compareTo(@Nonnull final HighlightSeverity highlightSeverity) {
     return myVal - highlightSeverity.myVal;
   }
 
@@ -120,7 +120,7 @@ public class HighlightSeverity implements Comparable<HighlightSeverity> {
     return 31 * result + myVal;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }

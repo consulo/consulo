@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.Collections;
 final class HttpFileReferenceHelper extends FileReferenceHelper {
   @Nullable
   @Override
-  public PsiFileSystemItem findRoot(Project project, @NotNull VirtualFile file) {
+  public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
     VirtualFile root = file;
     VirtualFile parent;
     while ((parent = root.getParent()) != null) {
@@ -22,15 +22,15 @@ final class HttpFileReferenceHelper extends FileReferenceHelper {
     return getPsiFileSystemItem(project, root);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<PsiFileSystemItem> getContexts(Project project, @NotNull VirtualFile file) {
+  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     return item == null ? Collections.emptyList() : Collections.singleton(item);
   }
 
   @Override
-  public boolean isMine(Project project, @NotNull VirtualFile file) {
+  public boolean isMine(Project project, @Nonnull VirtualFile file) {
     return file instanceof HttpVirtualFile;
   }
 }

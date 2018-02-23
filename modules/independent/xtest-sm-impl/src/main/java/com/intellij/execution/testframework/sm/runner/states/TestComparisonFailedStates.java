@@ -20,8 +20,7 @@ import com.intellij.execution.testframework.Printer;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TestComparisonFailedStates extends TestFailedState {
 
   final List<TestComparisionFailedState> myStates = new ArrayList<TestComparisionFailedState>();
 
-  public TestComparisonFailedStates(@Nullable String localizedMessage, @Nullable String stackTrace) {
+  public TestComparisonFailedStates(@javax.annotation.Nullable String localizedMessage, @javax.annotation.Nullable String stackTrace) {
     super(localizedMessage, stackTrace);
   }
 
@@ -46,7 +45,7 @@ public class TestComparisonFailedStates extends TestFailedState {
     }
   }
 
-  @NotNull
+  @Nonnull
   public List<DiffHyperlink> getHyperlinks() {
     return ContainerUtil.map(myStates, new Function<TestComparisionFailedState, DiffHyperlink>() {
       @Override

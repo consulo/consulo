@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Possible places in the IDEA user interface where an action can appear.
@@ -130,7 +130,7 @@ public abstract class ActionPlaces {
 
   public static final String RUN_DASHBOARD_POPUP = "RunDashboardPopup";
 
-  public static boolean isToolbarPlace(@NotNull String place) {
+  public static boolean isToolbarPlace(@Nonnull String place) {
     return ArrayUtil.find(ourToolbarPlaces, place) != -1;
   }
 
@@ -146,7 +146,7 @@ public abstract class ActionPlaces {
                   GUI_DESIGNER_PROPERTY_INSPECTOR_POPUP, CREATE_EJB_POPUP, CHANGES_VIEW_POPUP, REMOTE_HOST_VIEW_POPUP, REMOTE_HOST_DIALOG_POPUP, TFS_TREE_POPUP,
                   ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, PHING_EXPLORER_POPUP, NAVIGATION_BAR_POPUP, GULP_VIEW_POPUP, RUN_DASHBOARD_POPUP};
 
-  public static boolean isPopupPlace(@NotNull String place) {
+  public static boolean isPopupPlace(@Nonnull String place) {
     return ArrayUtil.find(ourPopupPlaces, place) != -1;
   }
 }

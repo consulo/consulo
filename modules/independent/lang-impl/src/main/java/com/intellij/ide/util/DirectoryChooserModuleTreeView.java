@@ -36,8 +36,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -61,7 +61,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
   private final ProjectFileIndex myFileIndex;
   private final Project myProject;
 
-  public DirectoryChooserModuleTreeView(@NotNull Project project) {
+  public DirectoryChooserModuleTreeView(@Nonnull Project project) {
     myRootNode = new DefaultMutableTreeNode();
     myTree = new Tree(myRootNode);
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

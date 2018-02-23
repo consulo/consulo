@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.popup;
 
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

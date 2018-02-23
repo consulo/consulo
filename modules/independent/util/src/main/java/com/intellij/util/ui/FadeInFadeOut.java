@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,12 +28,12 @@ import java.awt.image.BufferedImage;
 public class FadeInFadeOut extends JComponent {
   public static final Integer LAYER = new Integer(JLayeredPane.POPUP_LAYER + 1);
 
-  @NotNull
+  @Nonnull
   private final Component myComponent;
   private final BufferedImage myComponentImage;
   private Rectangle myComponentBounds;
 
-  @NotNull
+  @Nonnull
   private final Component myIcon;
   private Rectangle myIconBounds;
 
@@ -43,7 +43,7 @@ public class FadeInFadeOut extends JComponent {
   private final int myTimeToComplete;
   private double myRatio = 0;
 
-  public FadeInFadeOut(@NotNull Component component, int timeToComplete, boolean fadeIn, @NotNull Component icon) {
+  public FadeInFadeOut(@Nonnull Component component, int timeToComplete, boolean fadeIn, @Nonnull Component icon) {
     setFocusable(false);
     myComponent = component;
     myTimeToComplete = timeToComplete;

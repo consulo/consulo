@@ -18,14 +18,14 @@ package consulo.ide.macro;
 import com.intellij.ide.IdeBundle;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18.08.14
  */
 public class ModuleProductionOutputDirPathMacro extends ModuleOutputDirPathMacro {
-  @NotNull
+  @Nonnull
   @Override
   public ContentFolderTypeProvider getContentFolderTypeProvider() {
     return ProductionContentFolderTypeProvider.getInstance();

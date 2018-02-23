@@ -22,8 +22,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Manages virtual file systems.
@@ -45,7 +45,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    *
    * @return <code>VirtualFileManager</code>
    */
-  @NotNull
+  @Nonnull
   public static VirtualFileManager getInstance() {
     return ApplicationManager.getApplication().getComponent(VirtualFileManager.class);
   }
@@ -90,7 +90,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @see #refreshAndFindFileByUrl
    */
   @Nullable
-  public abstract VirtualFile findFileByUrl(@NonNls @NotNull String url);
+  public abstract VirtualFile findFileByUrl(@NonNls @Nonnull String url);
 
   /**
    * Refreshes only the part of the file system needed for searching the file by the given URL and finds file
@@ -108,7 +108,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @see VirtualFileSystem#refreshAndFindFileByPath
    */
   @Nullable
-  public abstract VirtualFile refreshAndFindFileByUrl(@NotNull String url);
+  public abstract VirtualFile refreshAndFindFileByUrl(@Nonnull String url);
 
   /**
    * Adds listener to the file system.
@@ -116,16 +116,16 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @param listener the listener
    * @see VirtualFileListener
    */
-  public abstract void addVirtualFileListener(@NotNull VirtualFileListener listener);
+  public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener);
 
-  public abstract void addVirtualFileListener(@NotNull VirtualFileListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Removes listener form the file system.
    *
    * @param listener the listener
    */
-  public abstract void removeVirtualFileListener(@NotNull VirtualFileListener listener);
+  public abstract void removeVirtualFileListener(@Nonnull VirtualFileListener listener);
 
   /**
    * Constructs URL by specified protocol and path. URL is a string which uniquely identifies file in all
@@ -135,8 +135,8 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @param path     the path
    * @return URL
    */
-  @NotNull
-  public static String constructUrl(@NotNull String protocol, @NotNull String path) {
+  @Nonnull
+  public static String constructUrl(@Nonnull String protocol, @Nonnull String path) {
     return protocol + URLUtil.SCHEME_SEPARATOR + path;
   }
 
@@ -148,7 +148,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @see VirtualFileSystem#getProtocol
    */
   @Nullable
-  public static String extractProtocol(@NotNull String url) {
+  public static String extractProtocol(@Nonnull String url) {
     int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
     if (index < 0) return null;
     return url.substring(0, index);
@@ -161,20 +161,20 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @param url the URL
    * @return path
    */
-  @NotNull
-  public static String extractPath(@NotNull String url) {
+  @Nonnull
+  public static String extractPath(@Nonnull String url) {
     int index = url.indexOf(URLUtil.SCHEME_SEPARATOR);
     if (index < 0) return url;
     return url.substring(index + URLUtil.SCHEME_SEPARATOR.length());
   }
 
-  public abstract void addVirtualFileManagerListener(@NotNull VirtualFileManagerListener listener);
+  public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
 
-  public abstract void addVirtualFileManagerListener(@NotNull VirtualFileManagerListener listener, @NotNull Disposable parentDisposable);
+  public abstract void addVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener, @Nonnull Disposable parentDisposable);
 
-  public abstract void removeVirtualFileManagerListener(@NotNull VirtualFileManagerListener listener);
+  public abstract void removeVirtualFileManagerListener(@Nonnull VirtualFileManagerListener listener);
 
-  public abstract void notifyPropertyChanged(@NotNull VirtualFile virtualFile, @NotNull String property, Object oldValue, Object newValue);
+  public abstract void notifyPropertyChanged(@Nonnull VirtualFile virtualFile, @Nonnull String property, Object oldValue, Object newValue);
 
   /**
    * @return a number that's incremented every time something changes in the VFS, i.e. file hierarchy, names, flags, attributes, contents.

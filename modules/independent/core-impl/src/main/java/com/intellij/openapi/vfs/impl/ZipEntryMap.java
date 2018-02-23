@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -42,7 +42,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
   }
 
   @Override
-  public ArchiveHandler.EntryInfo get(@NotNull Object key) {
+  public ArchiveHandler.EntryInfo get(@Nonnull Object key) {
     String relativePath = (String)key;
     int index = index(relativePath, entries);
     ArchiveHandler.EntryInfo entry;
@@ -61,7 +61,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     return entry;
   }
 
-  private static int index(@NotNull String relativePath, @NotNull ArchiveHandler.EntryInfo[] entries) {
+  private static int index(@Nonnull String relativePath, @Nonnull ArchiveHandler.EntryInfo[] entries) {
     return (relativePath.hashCode() & 0x7fffffff) % entries.length;
   }
 
@@ -79,9 +79,9 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
   }
 
   @Nullable
-  private static ArchiveHandler.EntryInfo put(@NotNull String relativePath,
-                                              @NotNull ArchiveHandler.EntryInfo value,
-                                              @NotNull ArchiveHandler.EntryInfo[] entries) {
+  private static ArchiveHandler.EntryInfo put(@Nonnull String relativePath,
+                                              @Nonnull ArchiveHandler.EntryInfo value,
+                                              @Nonnull ArchiveHandler.EntryInfo[] entries) {
     int index = index(relativePath, entries);
     ArchiveHandler.EntryInfo entry;
     int i = index;
@@ -98,7 +98,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     return entry;
   }
 
-  private static boolean isTheOne(@NotNull ArchiveHandler.EntryInfo entry, @NotNull CharSequence relativePath) {
+  private static boolean isTheOne(@Nonnull ArchiveHandler.EntryInfo entry, @Nonnull CharSequence relativePath) {
     int endIndex = relativePath.length();
     for (ArchiveHandler.EntryInfo e = entry; e != null; e = e.parent) {
       CharSequence shortName = e.shortName;
@@ -121,7 +121,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     return endIndex==0;
   }
 
-  @NotNull
+  @Nonnull
   private ArchiveHandler.EntryInfo[] rehash() {
     ArchiveHandler.EntryInfo[] newEntries = new ArchiveHandler.EntryInfo[entries.length < 1000 ? entries.length  * 2 : entries.length * 3/2];
     for (ArchiveHandler.EntryInfo entry : entries) {
@@ -133,8 +133,8 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     return newEntries;
   }
 
-  @NotNull
-  private static String getRelativePath(@NotNull ArchiveHandler.EntryInfo entry) {
+  @Nonnull
+  private static String getRelativePath(@Nonnull ArchiveHandler.EntryInfo entry) {
     StringBuilder result = new StringBuilder(entry.shortName.length() + 10);
     for (ArchiveHandler.EntryInfo e = entry; e != null; e = e.parent) {
       if (result.length() != 0 && e.shortName.length() != 0) {
@@ -145,14 +145,14 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     return result.reverse().toString();
   }
 
-  private static void appendReversed(@NotNull StringBuilder builder, @NotNull CharSequence sequence) {
+  private static void appendReversed(@Nonnull StringBuilder builder, @Nonnull CharSequence sequence) {
     for (int i=sequence.length()-1; i>=0 ;i--) {
       builder.append(sequence.charAt(i));
     }
   }
 
   @Override
-  public ArchiveHandler.EntryInfo remove(@NotNull Object key) {
+  public ArchiveHandler.EntryInfo remove(@Nonnull Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -168,7 +168,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
   }
 
   private EntrySet entrySet;
-  @NotNull
+  @Nonnull
   @Override
   public EntrySet entrySet() {
     EntrySet es;
@@ -214,7 +214,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<ArchiveHandler.EntryInfo> values() {
     return ContainerUtil.filter(entries, Condition.NOT_NULL);

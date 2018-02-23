@@ -15,7 +15,7 @@
  */
 package com.intellij.vcsUtil;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -86,9 +86,9 @@ public abstract class LearningProxy<T, E extends Throwable> {
   }
 
   private static class MethodDescriptor {
-    @NotNull
+    @Nonnull
     private final String myMethodName;
-    @NotNull
+    @Nonnull
     private final List<String> myParameters;
 
     private MethodDescriptor(final Method method) {

@@ -38,8 +38,8 @@ import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.render.RectanglePainter;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -59,18 +59,25 @@ class CommitPanel extends JBPanel {
   private static final int REFERENCES_BORDER = 12;
   private static final int TOP_BORDER = 4;
 
-  @NotNull private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogData myLogData;
 
-  @NotNull private final ReferencesPanel myBranchesPanel;
-  @NotNull private final ReferencesPanel myTagsPanel;
-  @NotNull private final DataPanel myDataPanel;
-  @NotNull private final BranchesPanel myContainingBranchesPanel;
-  @NotNull private final RootPanel myRootPanel;
-  @NotNull private final VcsLogColorManager myColorManager;
+  @Nonnull
+  private final ReferencesPanel myBranchesPanel;
+  @Nonnull
+  private final ReferencesPanel myTagsPanel;
+  @Nonnull
+  private final DataPanel myDataPanel;
+  @Nonnull
+  private final BranchesPanel myContainingBranchesPanel;
+  @Nonnull
+  private final RootPanel myRootPanel;
+  @Nonnull
+  private final VcsLogColorManager myColorManager;
 
   @Nullable private VcsFullCommitDetails myCommit;
 
-  public CommitPanel(@NotNull VcsLogData logData, @NotNull VcsLogColorManager colorManager) {
+  public CommitPanel(@Nonnull VcsLogData logData, @Nonnull VcsLogColorManager colorManager) {
     myLogData = logData;
     myColorManager = colorManager;
 
@@ -94,7 +101,7 @@ class CommitPanel extends JBPanel {
     setBorder(getDetailsBorder());
   }
 
-  public void setCommit(@NotNull VcsFullCommitDetails commitData) {
+  public void setCommit(@Nonnull VcsFullCommitDetails commitData) {
     if (!Comparing.equal(myCommit, commitData)) {
       if (commitData instanceof LoadingDetails) {
         myDataPanel.setData(null);
@@ -124,7 +131,7 @@ class CommitPanel extends JBPanel {
     revalidate();
   }
 
-  public void setRefs(@NotNull Collection<VcsRef> refs) {
+  public void setRefs(@Nonnull Collection<VcsRef> refs) {
     List<VcsRef> references = sortRefs(refs);
     myBranchesPanel.setReferences(references.stream().filter(ref -> ref.getType().isBranch()).collect(Collectors.toList()));
     myTagsPanel.setReferences(references.stream().filter(ref -> !ref.getType().isBranch()).collect(Collectors.toList()));
@@ -149,14 +156,14 @@ class CommitPanel extends JBPanel {
     myContainingBranchesPanel.update();
   }
 
-  @NotNull
-  private List<VcsRef> sortRefs(@NotNull Collection<VcsRef> refs) {
+  @Nonnull
+  private List<VcsRef> sortRefs(@Nonnull Collection<VcsRef> refs) {
     VcsRef ref = ContainerUtil.getFirstItem(refs);
     if (ref == null) return ContainerUtil.emptyList();
     return ContainerUtil.sorted(refs, myLogData.getLogProvider(ref.getRoot()).getReferenceManager().getLabelsOrderComparator());
   }
 
-  @NotNull
+  @Nonnull
   public static JBEmptyBorder getDetailsBorder() {
     return JBUI.Borders.empty();
   }
@@ -170,21 +177,22 @@ class CommitPanel extends JBPanel {
     return myContainingBranchesPanel.isExpanded();
   }
 
-  @NotNull
+  @Nonnull
   public static Color getCommitDetailsBackground() {
     return UIUtil.getTableBackground();
   }
 
-  @NotNull
+  @Nonnull
   public static String formatDateTime(long time) {
     return " on " + DateFormatUtil.formatDate(time) + " at " + DateFormatUtil.formatTime(time);
   }
 
   private static class DataPanel extends HtmlPanel {
-    @NotNull private final Project myProject;
+    @Nonnull
+    private final Project myProject;
     @Nullable private String myMainText;
 
-    DataPanel(@NotNull Project project) {
+    DataPanel(@Nonnull Project project) {
       myProject = project;
 
       DefaultCaret caret = (DefaultCaret)getCaret();
@@ -220,13 +228,13 @@ class CommitPanel extends JBPanel {
       }
     }
 
-    @NotNull
-    private static String getHtmlWithFonts(@NotNull String input) {
+    @Nonnull
+    private static String getHtmlWithFonts(@Nonnull String input) {
       return getHtmlWithFonts(input, getCommitDetailsFont().getStyle());
     }
 
-    @NotNull
-    private static String getHtmlWithFonts(@NotNull String input, int style) {
+    @Nonnull
+    private static String getHtmlWithFonts(@Nonnull String input, int style) {
       return FontUtil.getHtmlWithFonts(input, style, getCommitDetailsFont());
     }
 
@@ -246,8 +254,8 @@ class CommitPanel extends JBPanel {
       repaint();
     }
 
-    @NotNull
-    private String getMessageText(@NotNull VcsFullCommitDetails commit) {
+    @Nonnull
+    private String getMessageText(@Nonnull VcsFullCommitDetails commit) {
       String fullMessage = commit.getFullMessage();
       int separator = fullMessage.indexOf("\n\n");
       String subject = separator > 0 ? fullMessage.substring(0, separator) : fullMessage;
@@ -258,8 +266,8 @@ class CommitPanel extends JBPanel {
              getHtmlWithFonts(escapeMultipleSpaces(IssueLinkHtmlRenderer.formatTextWithLinks(myProject, description)));
     }
 
-    @NotNull
-    private static String escapeMultipleSpaces(@NotNull String text) {
+    @Nonnull
+    private static String escapeMultipleSpaces(@Nonnull String text) {
       StringBuilder result = new StringBuilder();
       for (int i = 0; i < text.length(); i++) {
         if (text.charAt(i) == ' ') {
@@ -277,8 +285,8 @@ class CommitPanel extends JBPanel {
       return result.toString();
     }
 
-    @NotNull
-    private static String getAuthorText(@NotNull VcsFullCommitDetails commit, int offset) {
+    @Nonnull
+    private static String getAuthorText(@Nonnull VcsFullCommitDetails commit, int offset) {
       long authorTime = commit.getAuthorTime();
       long commitTime = commit.getCommitTime();
 
@@ -299,8 +307,8 @@ class CommitPanel extends JBPanel {
       return authorText;
     }
 
-    @NotNull
-    private static String getCommitterText(@Nullable VcsUser committer, @NotNull String commitTimeText, int offset) {
+    @Nonnull
+    private static String getCommitterText(@Nullable VcsUser committer, @Nonnull String commitTimeText, int offset) {
       String alignment = "<br/>" + StringUtil.repeat("&nbsp;", offset);
       String gray = ColorUtil.toHex(JBColor.GRAY);
 
@@ -317,14 +325,14 @@ class CommitPanel extends JBPanel {
       return text;
     }
 
-    @NotNull
-    private static String getAuthorName(@NotNull VcsUser user) {
+    @Nonnull
+    private static String getAuthorName(@Nonnull VcsUser user) {
       String username = VcsUserUtil.getShortPresentation(user);
       return user.getEmail().isEmpty() ? username : username + getEmailText(user);
     }
 
-    @NotNull
-    private static String getEmailText(@NotNull VcsUser user) {
+    @Nonnull
+    private static String getEmailText(@Nonnull VcsUser user) {
       return " <a href='mailto:" + user.getEmail() + "'>&lt;" + user.getEmail() + "&gt;</a>";
     }
 
@@ -382,7 +390,7 @@ class CommitPanel extends JBPanel {
       repaint();
     }
 
-    @NotNull
+    @Nonnull
     private String getBranchesText() {
       if (myBranches == null) {
         return "<i>In branches: loading...</i>";
@@ -473,9 +481,12 @@ class CommitPanel extends JBPanel {
 
   private static class RootPanel extends JPanel {
     private static final int RIGHT_BORDER = Math.max(UIUtil.getScrollBarWidth(), JBUI.scale(14));
-    @NotNull private final RectanglePainter myLabelPainter;
-    @NotNull private String myText = "";
-    @NotNull private Color myColor = getCommitDetailsBackground();
+    @Nonnull
+    private final RectanglePainter myLabelPainter;
+    @Nonnull
+    private String myText = "";
+    @Nonnull
+    private Color myColor = getCommitDetailsBackground();
 
     RootPanel() {
       myLabelPainter = new RectanglePainter(true) {
@@ -487,13 +498,13 @@ class CommitPanel extends JBPanel {
       setOpaque(false);
     }
 
-    @NotNull
+    @Nonnull
     private static Font getLabelFont() {
       Font font = getCommitDetailsFont();
       return font.deriveFont(font.getSize() - 2f);
     }
 
-    public void setRoot(@NotNull String text, @Nullable Color color) {
+    public void setRoot(@Nonnull String text, @Nullable Color color) {
       myText = text;
       if (text.isEmpty() || color == null) {
         myColor = getCommitDetailsBackground();

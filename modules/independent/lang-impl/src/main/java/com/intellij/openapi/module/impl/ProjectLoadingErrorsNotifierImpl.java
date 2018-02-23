@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
@@ -97,8 +97,8 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
       Notifications.Bus.notify(new Notification("Project Loading Error", "Error Loading Project", errorText, NotificationType.ERROR,
                                                 new NotificationListener() {
                                                   @Override
-                                                  public void hyperlinkUpdate(@NotNull Notification notification,
-                                                                              @NotNull HyperlinkEvent event) {
+                                                  public void hyperlinkUpdate(@Nonnull Notification notification,
+                                                                              @Nonnull HyperlinkEvent event) {
                                                     final List<ConfigurationErrorDescription> validDescriptions =
                                                       ContainerUtil.findAll(descriptions, new Condition<ConfigurationErrorDescription>() {
                                                         @Override

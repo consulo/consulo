@@ -24,8 +24,7 @@ import com.intellij.openapi.fileChooser.FileSaverDialog;
 import com.intellij.openapi.fileChooser.FileTextField;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,38 +34,38 @@ import java.awt.*;
  * @since 15-Sep-17
  */
 public class WebFileChooserFactory extends FileChooserFactory {
-  @NotNull
+  @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@NotNull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @javax.annotation.Nullable Project project, @javax.annotation.Nullable Component parent) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PathChooserDialog createPathChooser(@NotNull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @javax.annotation.Nullable Project project, @javax.annotation.Nullable Component parent) {
     return new WebPathChooserDialog(project, descriptor);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @Nullable Project project) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @javax.annotation.Nullable Project project) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileSaverDialog createSaveFileDialog(@NotNull FileSaverDescriptor descriptor, @NotNull Component parent) {
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileTextField createFileTextField(@NotNull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, boolean showHidden, @javax.annotation.Nullable Disposable parent) {
     return null;
   }
 
   @Override
-  public void installFileCompletion(@NotNull JTextField field, @NotNull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @javax.annotation.Nullable Disposable parent) {
 
   }
 }

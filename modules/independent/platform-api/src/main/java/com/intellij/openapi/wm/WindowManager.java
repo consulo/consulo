@@ -17,8 +17,8 @@ package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,9 +86,9 @@ public abstract class WindowManager {
    * @return status bar
    * @deprecated use getStatusBar(Component, Project)
    */
-  public abstract StatusBar getStatusBar(@NotNull Component c);
+  public abstract StatusBar getStatusBar(@Nonnull Component c);
 
-  public StatusBar getStatusBar(@NotNull Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
     return null;
   }
 
@@ -111,7 +111,7 @@ public abstract class WindowManager {
    */
   public abstract boolean isInsideScreenBounds(int x, int y);
 
-  @NotNull
+  @Nonnull
   public abstract IdeFrame[] getAllProjectFrames();
 
   public abstract JFrame findVisibleFrame();
@@ -125,5 +125,5 @@ public abstract class WindowManager {
    */
   public abstract boolean isFullScreenSupportedInCurrentOS();
 
-  public abstract void requestUserAttention(@NotNull IdeFrame frame, boolean critical);
+  public abstract void requestUserAttention(@Nonnull IdeFrame frame, boolean critical);
 }

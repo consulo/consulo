@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.Disposable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to attach listeners which receive notifications about changes in any currently open
@@ -25,26 +25,26 @@ import org.jetbrains.annotations.NotNull;
  * @see com.intellij.openapi.editor.EditorFactory#getEventMulticaster() 
  */
 public interface EditorEventMulticaster {
-  void addDocumentListener(@NotNull DocumentListener listener);
-  void addDocumentListener(@NotNull DocumentListener listener, @NotNull Disposable parentDisposable);
-  void removeDocumentListener(@NotNull DocumentListener listener);
+  void addDocumentListener(@Nonnull DocumentListener listener);
+  void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable);
+  void removeDocumentListener(@Nonnull DocumentListener listener);
 
-  void addEditorMouseListener(@NotNull EditorMouseListener listener);
-  void addEditorMouseListener(@NotNull EditorMouseListener listener, @NotNull Disposable parentDisposable);
-  void removeEditorMouseListener(@NotNull EditorMouseListener listener);
+  void addEditorMouseListener(@Nonnull EditorMouseListener listener);
+  void addEditorMouseListener(@Nonnull EditorMouseListener listener, @Nonnull Disposable parentDisposable);
+  void removeEditorMouseListener(@Nonnull EditorMouseListener listener);
 
-  void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener);
-  void addEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener, @NotNull Disposable parentDisposable);
-  void removeEditorMouseMotionListener(@NotNull EditorMouseMotionListener listener);
+  void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
+  void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener, @Nonnull Disposable parentDisposable);
+  void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
 
-  void addCaretListener(@NotNull CaretListener listener);
-  void addCaretListener(@NotNull CaretListener listener, @NotNull Disposable parentDisposable);
-  void removeCaretListener(@NotNull CaretListener listener);
+  void addCaretListener(@Nonnull CaretListener listener);
+  void addCaretListener(@Nonnull CaretListener listener, @Nonnull Disposable parentDisposable);
+  void removeCaretListener(@Nonnull CaretListener listener);
 
-  void addSelectionListener(@NotNull SelectionListener listener);
-  void addSelectionListener(@NotNull SelectionListener listener, @NotNull Disposable parentDisposable);
-  void removeSelectionListener(@NotNull SelectionListener listener);
+  void addSelectionListener(@Nonnull SelectionListener listener);
+  void addSelectionListener(@Nonnull SelectionListener listener, @Nonnull Disposable parentDisposable);
+  void removeSelectionListener(@Nonnull SelectionListener listener);
 
-  void addVisibleAreaListener(@NotNull VisibleAreaListener listener);
-  void removeVisibleAreaListener(@NotNull VisibleAreaListener listener);
+  void addVisibleAreaListener(@Nonnull VisibleAreaListener listener);
+  void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener);
 }

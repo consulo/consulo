@@ -42,8 +42,7 @@ import com.intellij.usages.*;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -55,13 +54,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
   private final Project myProject;
   private static final Key<UsageView> USAGE_VIEW_KEY = Key.create("USAGE_VIEW");
 
-  public UsageViewManagerImpl(@NotNull Project project) {
+  public UsageViewManagerImpl(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
-  @NotNull
-  public UsageView createUsageView(@NotNull UsageTarget[] targets, @NotNull Usage[] usages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory) {
+  @Nonnull
+  public UsageView createUsageView(@Nonnull UsageTarget[] targets, @Nonnull Usage[] usages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory) {
     UsageViewImpl usageView = new UsageViewImpl(myProject, presentation, targets, usageSearcherFactory);
     appendUsages(usages, usageView);
     usageView.setSearchInProgress(false);
@@ -69,8 +68,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  @NotNull
-  public UsageView showUsages(@NotNull UsageTarget[] searchedFor, @NotNull Usage[] foundUsages, @NotNull UsageViewPresentation presentation, Factory<UsageSearcher> factory) {
+  @Nonnull
+  public UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> factory) {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
     showToolWindow(true);
@@ -83,12 +82,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  @NotNull
-  public UsageView showUsages(@NotNull UsageTarget[] searchedFor, @NotNull Usage[] foundUsages, @NotNull UsageViewPresentation presentation) {
+  @Nonnull
+  public UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation) {
     return showUsages(searchedFor, foundUsages, presentation, null);
   }
 
-  void addContent(@NotNull UsageViewImpl usageView, @NotNull UsageViewPresentation presentation) {
+  void addContent(@Nonnull UsageViewImpl usageView, @Nonnull UsageViewPresentation presentation) {
     Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject)
             .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(), presentation.isOpenInNewTab(), true);
     usageView.setContent(content);
@@ -96,12 +95,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  public UsageView searchAndShowUsages(@NotNull final UsageTarget[] searchFor,
-                                       @NotNull final Factory<UsageSearcher> searcherFactory,
+  public UsageView searchAndShowUsages(@Nonnull final UsageTarget[] searchFor,
+                                       @Nonnull final Factory<UsageSearcher> searcherFactory,
                                        final boolean showPanelIfOnlyOneUsage,
                                        final boolean showNotFoundMessage,
-                                       @NotNull final UsageViewPresentation presentation,
-                                       @Nullable final UsageViewStateListener listener) {
+                                       @Nonnull final UsageViewPresentation presentation,
+                                       @javax.annotation.Nullable final UsageViewStateListener listener) {
     final FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(showNotFoundMessage);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
@@ -109,22 +108,22 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return doSearchAndShow(searchFor, searcherFactory, presentation, processPresentation, listener);
   }
 
-  private UsageView doSearchAndShow(@NotNull final UsageTarget[] searchFor,
-                                    @NotNull final Factory<UsageSearcher> searcherFactory,
-                                    @NotNull final UsageViewPresentation presentation,
-                                    @NotNull final FindUsagesProcessPresentation processPresentation,
-                                    @Nullable final UsageViewStateListener listener) {
+  private UsageView doSearchAndShow(@Nonnull final UsageTarget[] searchFor,
+                                    @Nonnull final Factory<UsageSearcher> searcherFactory,
+                                    @Nonnull final UsageViewPresentation presentation,
+                                    @Nonnull final FindUsagesProcessPresentation processPresentation,
+                                    @javax.annotation.Nullable final UsageViewStateListener listener) {
     final SearchScope searchScopeToWarnOfFallingOutOf = getMaxSearchScopeToWarnOfFallingOutOf(searchFor);
     final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<>();
     long start = System.currentTimeMillis();
     Task.Backgroundable task = new Task.Backgroundable(myProject, getProgressTitle(presentation), true, new SearchInBackgroundOption()) {
       @Override
-      public void run(@NotNull final ProgressIndicator indicator) {
+      public void run(@Nonnull final ProgressIndicator indicator) {
         new SearchForUsagesRunnable(UsageViewManagerImpl.this, UsageViewManagerImpl.this.myProject, usageViewRef, presentation, searchFor, searcherFactory, processPresentation,
                                     searchScopeToWarnOfFallingOutOf, listener).run();
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public NotificationInfo getNotificationInfo() {
         UsageViewImpl usageView = usageViewRef.get();
@@ -138,8 +137,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return usageViewRef.get();
   }
 
-  @NotNull
-  SearchScope getMaxSearchScopeToWarnOfFallingOutOf(@NotNull UsageTarget[] searchFor) {
+  @Nonnull
+  SearchScope getMaxSearchScopeToWarnOfFallingOutOf(@Nonnull UsageTarget[] searchFor) {
     UsageTarget target = searchFor.length > 0 ? searchFor[0] : null;
     if (target instanceof TypeSafeDataProvider) {
       final SearchScope[] scope = new SearchScope[1];
@@ -155,11 +154,11 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   @Override
-  public void searchAndShowUsages(@NotNull UsageTarget[] searchFor,
-                                  @NotNull Factory<UsageSearcher> searcherFactory,
-                                  @NotNull FindUsagesProcessPresentation processPresentation,
-                                  @NotNull UsageViewPresentation presentation,
-                                  @Nullable UsageViewStateListener listener) {
+  public void searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
+                                  @Nonnull Factory<UsageSearcher> searcherFactory,
+                                  @Nonnull FindUsagesProcessPresentation processPresentation,
+                                  @Nonnull UsageViewPresentation presentation,
+                                  @javax.annotation.Nullable UsageViewStateListener listener) {
     doSearchAndShow(searchFor, searcherFactory, presentation, processPresentation, listener);
   }
 
@@ -173,8 +172,8 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return null;
   }
 
-  @NotNull
-  public static String getProgressTitle(@NotNull UsageViewPresentation presentation) {
+  @Nonnull
+  public static String getProgressTitle(@Nonnull UsageViewPresentation presentation) {
     final String scopeText = presentation.getScopeText();
     String usagesString = StringUtil.capitalize(presentation.getUsagesString());
     return UsageViewBundle.message("progress.searching.for.in", usagesString, scopeText, presentation.getContextText());
@@ -188,7 +187,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
     }
   }
 
-  protected static void appendUsages(@NotNull final Usage[] foundUsages, @NotNull final UsageViewImpl usageView) {
+  protected static void appendUsages(@Nonnull final Usage[] foundUsages, @Nonnull final UsageViewImpl usageView) {
     ApplicationManager.getApplication().runReadAction(() -> {
       for (Usage foundUsage : foundUsages) {
         usageView.appendUsage(foundUsage);
@@ -197,12 +196,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
 
-  public static void showTooManyUsagesWarning(@NotNull final Project project,
-                                              @NotNull final TooManyUsagesStatus tooManyUsagesStatus,
-                                              @NotNull final ProgressIndicator indicator,
-                                              @NotNull final UsageViewPresentation presentation,
+  public static void showTooManyUsagesWarning(@Nonnull final Project project,
+                                              @Nonnull final TooManyUsagesStatus tooManyUsagesStatus,
+                                              @Nonnull final ProgressIndicator indicator,
+                                              @Nonnull final UsageViewPresentation presentation,
                                               final int usageCount,
-                                              @Nullable final UsageViewImpl usageView) {
+                                              @javax.annotation.Nullable final UsageViewImpl usageView) {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
       int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();
@@ -218,7 +217,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
     });
   }
 
-  public static long getFileLength(@NotNull final VirtualFile virtualFile) {
+  public static long getFileLength(@Nonnull final VirtualFile virtualFile) {
     final long[] length = {-1L};
     ApplicationManager.getApplication().runReadAction(() -> {
       if (!virtualFile.isValid()) return;
@@ -227,13 +226,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return length[0];
   }
 
-  @NotNull
+  @Nonnull
   public static String presentableSize(long bytes) {
     long megabytes = bytes / (1024 * 1024);
     return UsageViewBundle.message("find.file.size.megabytes", Long.toString(megabytes));
   }
 
-  public static boolean isInScope(@NotNull Usage usage, @NotNull SearchScope searchScope) {
+  public static boolean isInScope(@Nonnull Usage usage, @Nonnull SearchScope searchScope) {
     PsiElement element = null;
     VirtualFile file =
             usage instanceof UsageInFile ? ((UsageInFile)usage).getFile() : usage instanceof PsiElementUsage ? PsiUtilCore.getVirtualFile(element = ((PsiElementUsage)usage).getElement()) : null;
@@ -243,15 +242,15 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return element != null && (searchScope instanceof EverythingGlobalScope || searchScope instanceof ProjectScopeImpl || searchScope instanceof ProjectAndLibrariesScope);
   }
 
-  private static boolean isFileInScope(@NotNull VirtualFile file, @NotNull SearchScope searchScope) {
+  private static boolean isFileInScope(@Nonnull VirtualFile file, @Nonnull SearchScope searchScope) {
     if (file instanceof VirtualFileWindow) {
       file = ((VirtualFileWindow)file).getDelegate();
     }
     return searchScope.contains(file);
   }
 
-  @NotNull
-  public static String outOfScopeMessage(int nUsages, @NotNull SearchScope searchScope) {
+  @Nonnull
+  public static String outOfScopeMessage(int nUsages, @Nonnull SearchScope searchScope) {
     return (nUsages == 1 ? "One usage is" : nUsages + " usages are") + " out of scope '" + searchScope.getDisplayName() + "'";
   }
 

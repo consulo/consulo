@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.VcsShowOptionsSettingImpl;
 import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -74,7 +74,7 @@ public class ProjectLevelVcsManagerSerialization {
     }
   }
 
-  public void writeExternalUtil(@NotNull Element element, @NotNull OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
+  public void writeExternalUtil(@Nonnull Element element, @Nonnull OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
     final Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
     final Map<String, VcsShowConfirmationOptionImpl> confirmations = optionsAndConfirmations.getConfirmations();
 

@@ -32,8 +32,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.annotations.DeprecationInfo;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,11 +77,11 @@ public class GeneralCommandLine implements UserDataHolder {
   public GeneralCommandLine() {
   }
 
-  public GeneralCommandLine(@NotNull String... command) {
+  public GeneralCommandLine(@Nonnull String... command) {
     this(Arrays.asList(command));
   }
 
-  public GeneralCommandLine(@NotNull List<String> command) {
+  public GeneralCommandLine(@Nonnull List<String> command) {
     int size = command.size();
     if (size > 0) {
       setExePath(command.get(0));
@@ -95,13 +95,13 @@ public class GeneralCommandLine implements UserDataHolder {
     return myExePath;
   }
 
-  @NotNull
-  public GeneralCommandLine withExePath(@NotNull String exePath) {
+  @Nonnull
+  public GeneralCommandLine withExePath(@Nonnull String exePath) {
     myExePath = exePath.trim();
     return this;
   }
 
-  public void setExePath(@NotNull String exePath) {
+  public void setExePath(@Nonnull String exePath) {
     withExePath(exePath);
   }
 
@@ -109,12 +109,12 @@ public class GeneralCommandLine implements UserDataHolder {
     return myWorkDirectory;
   }
 
-  @NotNull
+  @Nonnull
   public GeneralCommandLine withWorkDirectory(@Nullable String path) {
     return withWorkDirectory(path != null ? new File(path) : null);
   }
 
-  @NotNull
+  @Nonnull
   public GeneralCommandLine withWorkDirectory(@Nullable File workDirectory) {
     myWorkDirectory = workDirectory;
     return this;
@@ -131,12 +131,12 @@ public class GeneralCommandLine implements UserDataHolder {
   /**
    * Note: the map returned is forgiving to passing null values into putAll().
    */
-  @NotNull
+  @Nonnull
   public Map<String, String> getEnvironment() {
     return myEnvParams;
   }
 
-  @NotNull
+  @Nonnull
   public GeneralCommandLine withEnvironment(@Nullable Map<String, String> environment) {
     if (environment != null) {
       getEnvironment().putAll(environment);
@@ -144,8 +144,8 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
-  @NotNull
-  public GeneralCommandLine withEnvironment(@NotNull String key, @NotNull String value) {
+  @Nonnull
+  public GeneralCommandLine withEnvironment(@Nonnull String key, @Nonnull String value) {
     getEnvironment().put(key, value);
     return this;
   }
@@ -156,7 +156,7 @@ public class GeneralCommandLine implements UserDataHolder {
     return myParentEnvironmentType != ParentEnvironmentType.NONE;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
   public GeneralCommandLine withPassParentEnvironment(boolean passParentEnvironment) {
@@ -164,20 +164,20 @@ public class GeneralCommandLine implements UserDataHolder {
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
   @DeprecationInfo(value = "Use #withParentEnvironmentType(ParentEnvironmentType)", until = "3.0")
   public void setPassParentEnvironment(boolean passParentEnvironment) {
     withPassParentEnvironment(passParentEnvironment);
   }
 
-  @NotNull
+  @Nonnull
   public ParentEnvironmentType getParentEnvironmentType() {
     return myParentEnvironmentType;
   }
 
-  @NotNull
-  public GeneralCommandLine withParentEnvironmentType(@NotNull ParentEnvironmentType type) {
+  @Nonnull
+  public GeneralCommandLine withParentEnvironmentType(@Nonnull ParentEnvironmentType type) {
     myParentEnvironmentType = type;
     return this;
   }
@@ -189,7 +189,7 @@ public class GeneralCommandLine implements UserDataHolder {
    * Returns an environment that will be inherited by a child process.
    * @see #getEffectiveEnvironment()
    */
-  @NotNull
+  @Nonnull
   public Map<String, String> getParentEnvironment() {
     switch (myParentEnvironmentType) {
       case SYSTEM:
@@ -205,7 +205,7 @@ public class GeneralCommandLine implements UserDataHolder {
    * Returns an environment as seen by a child process,
    * that is the {@link #getEnvironment() environment} merged with the {@link #getParentEnvironment() parent} one.
    */
-  @NotNull
+  @Nonnull
   public Map<String, String> getEffectiveEnvironment() {
     MyTHashMap env = new MyTHashMap();
     setupEnvironment(env);
@@ -218,24 +218,24 @@ public class GeneralCommandLine implements UserDataHolder {
     }
   }
 
-  public void addParameters(@NotNull List<String> parameters) {
+  public void addParameters(@Nonnull List<String> parameters) {
     for (String parameter : parameters) {
       addParameter(parameter);
     }
   }
 
-  public void addParameter(@NotNull String parameter) {
+  public void addParameter(@Nonnull String parameter) {
     myProgramParams.add(parameter);
   }
 
-  @NotNull
-  public GeneralCommandLine withParameters(@NotNull String... parameters) {
+  @Nonnull
+  public GeneralCommandLine withParameters(@Nonnull String... parameters) {
     for (String parameter : parameters) addParameter(parameter);
     return this;
   }
 
-  @NotNull
-  public GeneralCommandLine withParameters(@NotNull List<String> parameters) {
+  @Nonnull
+  public GeneralCommandLine withParameters(@Nonnull List<String> parameters) {
     for (String parameter : parameters) addParameter(parameter);
     return this;
   }
@@ -245,18 +245,18 @@ public class GeneralCommandLine implements UserDataHolder {
     return myProgramParams;
   }
 
-  @NotNull
+  @Nonnull
   public Charset getCharset() {
     return myCharset;
   }
 
-  @NotNull
-  public GeneralCommandLine withCharset(@NotNull Charset charset) {
+  @Nonnull
+  public GeneralCommandLine withCharset(@Nonnull Charset charset) {
     myCharset = charset;
     return this;
   }
 
-  public void setCharset(@NotNull Charset charset) {
+  public void setCharset(@Nonnull Charset charset) {
     withCharset(charset);
   }
 
@@ -264,7 +264,7 @@ public class GeneralCommandLine implements UserDataHolder {
     return myRedirectErrorStream;
   }
 
-  @NotNull
+  @Nonnull
   public GeneralCommandLine withRedirectErrorStream(boolean redirectErrorStream) {
     myRedirectErrorStream = redirectErrorStream;
     return this;
@@ -317,13 +317,13 @@ public class GeneralCommandLine implements UserDataHolder {
    * @param platform a target platform
    * @return command as a newline-separated list.
    */
-  @NotNull
-  public String getPreparedCommandLine(@NotNull Platform platform) {
+  @Nonnull
+  public String getPreparedCommandLine(@Nonnull Platform platform) {
     String exePath = myExePath != null ? myExePath : "";
     return StringUtil.join(CommandLineUtil.toCommandLine(exePath, myProgramParams.getList(), platform), "\n");
   }
 
-  @NotNull
+  @Nonnull
   public Process createProcess() throws ExecutionException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Executing [" + getCommandLineString() + "]");
@@ -355,8 +355,8 @@ public class GeneralCommandLine implements UserDataHolder {
     }
   }
 
-  @NotNull
-  protected Process startProcess(@NotNull List<String> commands) throws IOException {
+  @Nonnull
+  protected Process startProcess(@Nonnull List<String> commands) throws IOException {
     ProcessBuilder builder = new ProcessBuilder(commands);
     setupEnvironment(builder.environment());
     builder.directory(myWorkDirectory);
@@ -376,7 +376,7 @@ public class GeneralCommandLine implements UserDataHolder {
     }
   }
 
-  protected void setupEnvironment(@NotNull Map<String, String> environment) {
+  protected void setupEnvironment(@Nonnull Map<String, String> environment) {
     environment.clear();
 
     if (myParentEnvironmentType != ParentEnvironmentType.NONE) {
@@ -411,8 +411,8 @@ public class GeneralCommandLine implements UserDataHolder {
    *
    * @see com.intellij.execution.util.ExecUtil#getTerminalCommand(String, String)
    */
-  @NotNull
-  public static String inescapableQuote(@NotNull String parameter) {
+  @Nonnull
+  public static String inescapableQuote(@Nonnull String parameter) {
     return CommandLineUtil.specialQuote(parameter);
   }
 
@@ -422,7 +422,7 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   @Override
-  public <T> T getUserData(@NotNull Key<T> key) {
+  public <T> T getUserData(@Nonnull Key<T> key) {
     if (myUserData != null) {
       @SuppressWarnings({"UnnecessaryLocalVariable", "unchecked"}) T t = (T)myUserData.get(key);
       return t;
@@ -431,7 +431,7 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   @Override
-  public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     if (myUserData == null) {
       myUserData = ContainerUtil.newHashMap();
     }

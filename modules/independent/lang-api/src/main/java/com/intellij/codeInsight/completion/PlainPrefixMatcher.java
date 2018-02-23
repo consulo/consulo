@@ -1,7 +1,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -18,13 +18,13 @@ public class PlainPrefixMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@NotNull String name) {
+  public boolean prefixMatches(@Nonnull String name) {
     return StringUtil.containsIgnoreCase(name, getPrefix());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PrefixMatcher cloneWithPrefix(@NotNull String prefix) {
+  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 }

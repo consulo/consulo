@@ -18,8 +18,8 @@ package com.intellij.diff.util;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public enum ThreeSide {
     myIndex = index;
   }
 
-  @NotNull
+  @Nonnull
   public static ThreeSide fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return BASE;
@@ -52,7 +52,7 @@ public enum ThreeSide {
 
   @Nullable
   @Contract("!null, !null, !null -> !null; null, null, null -> null")
-  public <T> T select(@Nullable T left, @Nullable T base, @Nullable T right) {
+  public <T> T select(@javax.annotation.Nullable T left, @Nullable T base, @Nullable T right) {
     if (myIndex == 0) return left;
     if (myIndex == 1) return base;
     if (myIndex == 2) return right;
@@ -60,50 +60,50 @@ public enum ThreeSide {
     throw new IllegalStateException();
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull T left, @NotNull T base, @NotNull T right) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull T left, @Nonnull T base, @Nonnull T right) {
     if (myIndex == 0) return left;
     if (myIndex == 1) return base;
     if (myIndex == 2) return right;
     throw new IllegalStateException();
   }
 
-  public int select(@NotNull int[] array) {
+  public int select(@Nonnull int[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  public <T> T select(@NotNull T[] array) {
+  public <T> T select(@Nonnull T[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull T[] array) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull T[] array) {
     assert array.length == 3;
     return array[myIndex];
   }
 
-  public <T> T select(@NotNull List<T> list) {
+  public <T> T select(@Nonnull List<T> list) {
     assert list.size() == 3;
     return list.get(myIndex);
   }
 
-  @NotNull
-  public <T> T selectNotNull(@NotNull List<T> list) {
+  @Nonnull
+  public <T> T selectNotNull(@Nonnull List<T> list) {
     assert list.size() == 3;
     return list.get(myIndex);
   }
 
   @Nullable
-  public static <T> ThreeSide fromValue(@NotNull List<? extends T> list, @Nullable T value) {
+  public static <T> ThreeSide fromValue(@Nonnull List<? extends T> list, @Nullable T value) {
     assert list.size() == 3;
     int index = list.indexOf(value);
     return index != -1 ? fromIndex(index) : null;
   }
 
-  @NotNull
-  public static <T> List<T> map(@NotNull Function<ThreeSide, T> function) {
+  @Nonnull
+  public static <T> List<T> map(@Nonnull Function<ThreeSide, T> function) {
     return ContainerUtil.list(
             function.fun(LEFT),
             function.fun(BASE),

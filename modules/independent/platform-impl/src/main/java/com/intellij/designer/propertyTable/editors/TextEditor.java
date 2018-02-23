@@ -22,8 +22,8 @@ import com.intellij.designer.propertyTable.PropertyEditor;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -52,7 +52,7 @@ public class TextEditor extends PropertyEditor {
     );
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  @Nullable PropertyContext context, Object value,

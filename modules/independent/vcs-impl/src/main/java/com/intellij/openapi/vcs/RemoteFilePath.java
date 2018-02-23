@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -36,15 +36,16 @@ public class RemoteFilePath implements FilePath {
 
   private static final TObjectHashingStrategy<String> CASE_SENSITIVE_STRATEGY = FilePathHashingStrategy.create(true);
 
-  @NotNull private final String myPath;
+  @Nonnull
+  private final String myPath;
   private final boolean myIsDirectory;
 
-  public RemoteFilePath(@NotNull String path, boolean isDirectory) {
+  public RemoteFilePath(@Nonnull String path, boolean isDirectory) {
     myPath = path;
     myIsDirectory = isDirectory;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VirtualFile getVirtualFile() {
     return null;
@@ -56,19 +57,19 @@ public class RemoteFilePath implements FilePath {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public File getIOFile() {
     return new File(myPath);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return PathUtil.getFileName(myPath);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPresentableUrl() {
     return getPath();
@@ -80,20 +81,20 @@ public class RemoteFilePath implements FilePath {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Charset getCharset() {
     return getCharset(null);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Charset getCharset(@Nullable Project project) {
     EncodingManager em = project == null ? EncodingManager.getInstance() : EncodingProjectManager.getInstance(project);
     return em.getDefaultCharset();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FileType getFileType() {
     return FileTypeManager.getInstance().getFileTypeByFileName(getName());
@@ -107,7 +108,7 @@ public class RemoteFilePath implements FilePath {
   public void hardRefresh() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getPath() {
     return myPath;
@@ -119,7 +120,7 @@ public class RemoteFilePath implements FilePath {
   }
 
   @Override
-  public boolean isUnder(@NotNull FilePath parent, boolean strict) {
+  public boolean isUnder(@Nonnull FilePath parent, boolean strict) {
     return FileUtil.isAncestor(parent.getPath(), getPath(), strict);
   }
 

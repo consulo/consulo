@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.diagnostic;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public abstract class LoggerRt {
   private interface Factory {
-    LoggerRt getInstance(@NotNull final String category);
+    LoggerRt getInstance(@Nonnull final String category);
   }
 
   private static Factory ourFactory;
@@ -46,21 +46,21 @@ public abstract class LoggerRt {
     return ourFactory;
   }
 
-  @NotNull
-  public static LoggerRt getInstance(@NotNull final String category) {
+  @Nonnull
+  public static LoggerRt getInstance(@Nonnull final String category) {
     return getFactory().getInstance(category);
   }
 
-  @NotNull
-  public static LoggerRt getInstance(@NotNull final Class<?> clazz) {
+  @Nonnull
+  public static LoggerRt getInstance(@Nonnull final Class<?> clazz) {
     return getInstance('#' + clazz.getName());
   }
 
-  public void info(@Nullable final String message) {
+  public void info(@javax.annotation.Nullable final String message) {
     info(message, null);
   }
 
-  public void info(@NotNull final Throwable t) {
+  public void info(@Nonnull final Throwable t) {
     info(t.getMessage(), t);
   }
 
@@ -68,25 +68,25 @@ public abstract class LoggerRt {
     warn(message, null);
   }
 
-  public void warn(@NotNull final Throwable t) {
+  public void warn(@Nonnull final Throwable t) {
     warn(t.getMessage(), t);
   }
 
-  public void error(@Nullable final String message) {
+  public void error(@javax.annotation.Nullable final String message) {
     error(message, null);
   }
 
-  public void error(@NotNull final Throwable t) {
+  public void error(@Nonnull final Throwable t) {
     error(t.getMessage(), t);
   }
 
-  public abstract void info(@Nullable final String message, @Nullable final Throwable t);
-  public abstract void warn(@Nullable final String message, @Nullable final Throwable t);
-  public abstract void error(@Nullable final String message, @Nullable final Throwable t);
+  public abstract void info(@javax.annotation.Nullable final String message, @Nullable final Throwable t);
+  public abstract void warn(@javax.annotation.Nullable final String message, @javax.annotation.Nullable final Throwable t);
+  public abstract void error(@Nullable final String message, @javax.annotation.Nullable final Throwable t);
 
   private static class JavaFactory implements Factory {
     @Override
-    public LoggerRt getInstance(@NotNull final String category) {
+    public LoggerRt getInstance(@Nonnull final String category) {
       final Logger logger = Logger.getLogger(category);
       return new LoggerRt() {
         @Override
@@ -95,7 +95,7 @@ public abstract class LoggerRt {
         }
 
         @Override
-        public void warn(@Nullable final String message, @Nullable final Throwable t) {
+        public void warn(@javax.annotation.Nullable final String message, @javax.annotation.Nullable final Throwable t) {
           logger.log(Level.WARNING, message, t);
         }
 
@@ -126,7 +126,7 @@ public abstract class LoggerRt {
     }
 
     @Override
-    public LoggerRt getInstance(@NotNull final String category) {
+    public LoggerRt getInstance(@Nonnull final String category) {
       try {
         final Object logger = myGetInstance.invoke(null, category);
         return new LoggerRt() {
@@ -139,7 +139,7 @@ public abstract class LoggerRt {
           }
 
           @Override
-          public void warn(@Nullable final String message, @Nullable final Throwable t) {
+          public void warn(@javax.annotation.Nullable final String message, @Nullable final Throwable t) {
             try {
               myWarn.invoke(logger, message, t);
             }
@@ -147,7 +147,7 @@ public abstract class LoggerRt {
           }
 
           @Override
-          public void error(@Nullable final String message, @Nullable final Throwable t) {
+          public void error(@javax.annotation.Nullable final String message, @Nullable final Throwable t) {
             try {
               myError.invoke(logger, message, t);
             }

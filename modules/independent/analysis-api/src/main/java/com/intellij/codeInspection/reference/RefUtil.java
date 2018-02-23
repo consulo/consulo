@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -41,7 +41,7 @@ public class RefUtil {
     return false;
   }
 
-  public static boolean contains(RefEntity element, @NotNull Collection<RefEntity> entities){
+  public static boolean contains(RefEntity element, @Nonnull Collection<RefEntity> entities){
     for (RefEntity refEntity : entities) {
       if (Comparing.equal(refEntity, element)) {
         return true;

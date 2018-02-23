@@ -26,8 +26,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.BooleanStack;
 import com.intellij.util.containers.Stack;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -37,12 +37,12 @@ public class DefaultStubBuilder implements StubBuilder {
 
   @RequiredReadAction
   @Override
-  public StubElement buildStubTree(@NotNull PsiFile file) {
+  public StubElement buildStubTree(@Nonnull PsiFile file) {
     return buildStubTreeFor(file.getNode(), createStubForFile(file));
   }
 
-  @NotNull
-  protected StubElement createStubForFile(@NotNull PsiFile file) {
+  @Nonnull
+  protected StubElement createStubForFile(@Nonnull PsiFile file) {
     @SuppressWarnings("unchecked") PsiFileStubImpl stub = new PsiFileStubImpl(file);
     return stub;
   }
@@ -51,12 +51,12 @@ public class DefaultStubBuilder implements StubBuilder {
    * @deprecated override and invoke {@link #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)} (to be removed in IDEA 2017)
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)}.
    */
-  protected boolean skipChildProcessingWhenBuildingStubs(@NotNull PsiElement parent, @NotNull PsiElement element) {
+  protected boolean skipChildProcessingWhenBuildingStubs(@Nonnull PsiElement parent, @Nonnull PsiElement element) {
     return false;
   }
 
-  @NotNull
-  protected final StubElement buildStubTreeFor(@NotNull ASTNode root, @NotNull StubElement parentStub) {
+  @Nonnull
+  protected final StubElement buildStubTreeFor(@Nonnull ASTNode root, @Nonnull StubElement parentStub) {
     new StubBuildingWalkingVisitor(root, parentStub).buildStubTree();
     return parentStub;
   }
@@ -65,7 +65,7 @@ public class DefaultStubBuilder implements StubBuilder {
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(PsiElement, PsiElement)}.
    */
   @Override
-  public boolean skipChildProcessingWhenBuildingStubs(@NotNull ASTNode parent, @NotNull ASTNode node) {
+  public boolean skipChildProcessingWhenBuildingStubs(@Nonnull ASTNode parent, @Nonnull ASTNode node) {
     return false;
   }
 

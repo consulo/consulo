@@ -25,8 +25,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -51,8 +50,8 @@ public class VcsEP extends AbstractExtensionPointBean {
   private AbstractVcs myVcs;
   private final Object LOCK = new Object();
 
-  @Nullable
-  public AbstractVcs getVcs(@NotNull Project project) {
+  @javax.annotation.Nullable
+  public AbstractVcs getVcs(@Nonnull Project project) {
     synchronized (LOCK) {
       if (myVcs != null) {
         return myVcs;
@@ -68,8 +67,8 @@ public class VcsEP extends AbstractExtensionPointBean {
     }
   }
 
-  @Nullable
-  private AbstractVcs getInstance(@NotNull Project project, @NotNull String vcsClass) {
+  @javax.annotation.Nullable
+  private AbstractVcs getInstance(@Nonnull Project project, @Nonnull String vcsClass) {
     try {
       final Class<? extends AbstractVcs> foundClass = findClass(vcsClass);
       final Class<?>[] interfaces = foundClass.getInterfaces();
@@ -89,7 +88,7 @@ public class VcsEP extends AbstractExtensionPointBean {
     }
   }
 
-  @NotNull
+  @Nonnull
   public VcsDescriptor createDescriptor() {
     return new VcsDescriptor(administrativeAreaName, displayName, name, crawlUpToCheckUnderVcs);
   }

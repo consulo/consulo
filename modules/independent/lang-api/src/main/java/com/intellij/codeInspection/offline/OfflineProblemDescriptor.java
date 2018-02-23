@@ -26,7 +26,7 @@ import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -106,7 +106,7 @@ public class OfflineProblemDescriptor {
     myParentFQName = parentFQName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public RefEntity getRefElement(final RefManager refManager) {
     final RefEntity refElement = refManager.getReference(myType, myFQName);
     if (refElement instanceof RefElement) {

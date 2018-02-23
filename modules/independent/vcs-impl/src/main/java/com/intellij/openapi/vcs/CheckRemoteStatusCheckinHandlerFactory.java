@@ -19,13 +19,13 @@ import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CheckRemoteStatusCheckinHandlerFactory extends CheckinHandlerFactory {
-  @NotNull
+  @Nonnull
   @Override
   public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
     return new MyCheckinHandler(panel);

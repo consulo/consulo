@@ -3,8 +3,8 @@ package com.intellij.remoteServer.runtime;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -12,17 +12,17 @@ import java.util.Collection;
  * @author nik
  */
 public abstract class ServerConnectionManager {
-  @NotNull
+  @Nonnull
   public static ServerConnectionManager getInstance() {
     return ServiceManager.getService(ServerConnectionManager.class);
   }
 
-  @NotNull
-  public abstract <C extends ServerConfiguration> ServerConnection getOrCreateConnection(@NotNull RemoteServer<C> server);
+  @Nonnull
+  public abstract <C extends ServerConfiguration> ServerConnection getOrCreateConnection(@Nonnull RemoteServer<C> server);
 
   @Nullable
-  public abstract <C extends ServerConfiguration> ServerConnection getConnection(@NotNull RemoteServer<C> server);
+  public abstract <C extends ServerConfiguration> ServerConnection getConnection(@Nonnull RemoteServer<C> server);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<ServerConnection> getConnections();
 }

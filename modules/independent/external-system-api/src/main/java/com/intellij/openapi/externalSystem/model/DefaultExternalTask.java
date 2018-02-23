@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -25,13 +25,13 @@ import org.jetbrains.annotations.Nullable;
 public class DefaultExternalTask implements ExternalTask {
   private static final long serialVersionUID = 1L;
 
-  @NotNull
+  @Nonnull
   private String myName;
-  @NotNull
+  @Nonnull
   private String myQName;
   @Nullable
   private String myDescription;
-  @Nullable
+  @javax.annotation.Nullable
   private String myGroup;
 
   public DefaultExternalTask() {
@@ -44,37 +44,37 @@ public class DefaultExternalTask implements ExternalTask {
     myGroup = externalTask.getGroup();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getQName() {
     return myQName;
   }
 
-  public void setQName(@NotNull String QName) {
+  public void setQName(@Nonnull String QName) {
     myQName = QName;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getDescription() {
     return myDescription;
   }
 
-  public void setDescription(@Nullable String description) {
+  public void setDescription(@javax.annotation.Nullable String description) {
     myDescription = description;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getGroup() {
     return myGroup;

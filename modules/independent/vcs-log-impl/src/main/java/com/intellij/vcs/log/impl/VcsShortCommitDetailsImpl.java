@@ -4,20 +4,24 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import com.intellij.vcs.log.VcsUser;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class VcsShortCommitDetailsImpl extends TimedVcsCommitImpl implements VcsShortCommitDetails {
 
-  @NotNull private final String mySubject;
-  @NotNull private final VcsUser myAuthor;
-  @NotNull private final VirtualFile myRoot;
-  @NotNull private final VcsUser myCommitter;
+  @Nonnull
+  private final String mySubject;
+  @Nonnull
+  private final VcsUser myAuthor;
+  @Nonnull
+  private final VirtualFile myRoot;
+  @Nonnull
+  private final VcsUser myCommitter;
   private final long myAuthorTime;
 
-  public VcsShortCommitDetailsImpl(@NotNull Hash hash, @NotNull List<Hash> parents, long commitTime, @NotNull VirtualFile root,
-                                   @NotNull String subject, @NotNull VcsUser author, @NotNull VcsUser committer, long authorTime) {
+  public VcsShortCommitDetailsImpl(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
+                                   @Nonnull String subject, @Nonnull VcsUser author, @Nonnull VcsUser committer, long authorTime) {
     super(hash, parents, commitTime);
     myRoot = root;
     mySubject = subject;
@@ -26,25 +30,25 @@ public class VcsShortCommitDetailsImpl extends TimedVcsCommitImpl implements Vcs
     myAuthorTime = authorTime;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getRoot() {
     return myRoot;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getSubject() {
     return mySubject;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final VcsUser getAuthor() {
     return myAuthor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsUser getCommitter() {
     return myCommitter;

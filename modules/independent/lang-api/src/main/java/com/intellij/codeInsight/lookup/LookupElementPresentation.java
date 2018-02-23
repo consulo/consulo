@@ -18,8 +18,8 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,14 +39,14 @@ public class LookupElementPresentation {
   private boolean myItemTextBold;
   private boolean myItemTextUnderlined;
   private boolean myTypeGrayed;
-  @Nullable
+  @javax.annotation.Nullable
   private List<TextFragment> myTail;
 
   public void setIcon(@Nullable Icon icon) {
     myIcon = icon;
   }
 
-  public void setItemText(@Nullable String text) {
+  public void setItemText(@javax.annotation.Nullable String text) {
     myItemText = text;
   }
 
@@ -58,7 +58,7 @@ public class LookupElementPresentation {
     myItemTextBold = bold;
   }
 
-  public void setTailText(@Nullable String text) {
+  public void setTailText(@javax.annotation.Nullable String text) {
     setTailText(text, false);
   }
 
@@ -66,15 +66,15 @@ public class LookupElementPresentation {
     myTail = null;
   }
 
-  public void appendTailText(@NotNull String text, boolean grayed) {
+  public void appendTailText(@Nonnull String text, boolean grayed) {
     appendTailText(new TextFragment(text, grayed, false, null));
   }
 
-  public void appendTailTextItalic(@NotNull String text, boolean grayed) {
+  public void appendTailTextItalic(@Nonnull String text, boolean grayed) {
     appendTailText(new TextFragment(text, grayed, true, null));
   }
 
-  private void appendTailText(@NotNull TextFragment fragment) {
+  private void appendTailText(@Nonnull TextFragment fragment) {
     if (myTail == null) {
       myTail = new SmartList<>();
     }
@@ -88,7 +88,7 @@ public class LookupElementPresentation {
     }
   }
 
-  public void setTailText(@Nullable String text, @Nullable Color foreground) {
+  public void setTailText(@javax.annotation.Nullable String text, @javax.annotation.Nullable Color foreground) {
     clearTail();
     if (text != null) {
       appendTailText(new TextFragment(text, false, false, foreground));
@@ -99,7 +99,7 @@ public class LookupElementPresentation {
     setTypeText(text, null);
   }
 
-  public void setTypeText(@Nullable String text, @Nullable Icon icon) {
+  public void setTypeText(@javax.annotation.Nullable String text, @javax.annotation.Nullable Icon icon) {
     myTypeText = text;
     myTypeIcon = icon;
   }
@@ -114,12 +114,12 @@ public class LookupElementPresentation {
     return false;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return myIcon;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getTypeIcon() {
     return myTypeIcon;
   }
@@ -129,18 +129,18 @@ public class LookupElementPresentation {
     return myItemText;
   }
 
-  @NotNull
+  @Nonnull
   public List<TextFragment> getTailFragments() {
     return myTail == null ? Collections.emptyList() : Collections.unmodifiableList(myTail);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getTailText() {
     if (myTail == null) return null;
     return StringUtil.join(myTail, fragment -> fragment.text, "");
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getTypeText() {
     return myTypeText;
   }
@@ -154,7 +154,7 @@ public class LookupElementPresentation {
     return myTail != null && myTail.get(0).myGrayed;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Deprecated
   public Color getTailForeground() {
     return myTail != null ? myTail.get(0).myFgColor : null;
@@ -172,16 +172,16 @@ public class LookupElementPresentation {
     myItemTextUnderlined = itemTextUnderlined;
   }
 
-  @NotNull
+  @Nonnull
   public Color getItemTextForeground() {
     return myItemTextForeground;
   }
 
-  public void setItemTextForeground(@NotNull Color itemTextForeground) {
+  public void setItemTextForeground(@Nonnull Color itemTextForeground) {
     myItemTextForeground = itemTextForeground;
   }
 
-  public void copyFrom(@NotNull LookupElementPresentation presentation) {
+  public void copyFrom(@Nonnull LookupElementPresentation presentation) {
     myIcon = presentation.myIcon;
     myTypeIcon = presentation.myTypeIcon;
     myItemText = presentation.myItemText;
@@ -223,7 +223,7 @@ public class LookupElementPresentation {
     @Nullable
     private final Color myFgColor;
 
-    private TextFragment(String text, boolean grayed, boolean italic, @Nullable Color fgColor) {
+    private TextFragment(String text, boolean grayed, boolean italic, @javax.annotation.Nullable Color fgColor) {
       this.text = text;
       myGrayed = grayed;
       myItalic = italic;
@@ -243,7 +243,7 @@ public class LookupElementPresentation {
       return myItalic;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     public Color getForegroundColor() {
       return myFgColor;
     }

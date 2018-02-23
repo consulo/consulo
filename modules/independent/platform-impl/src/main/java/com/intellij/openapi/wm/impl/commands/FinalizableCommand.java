@@ -17,7 +17,8 @@ package com.intellij.openapi.wm.impl.commands;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ToolWindowManager;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Vladimir Kondratyev

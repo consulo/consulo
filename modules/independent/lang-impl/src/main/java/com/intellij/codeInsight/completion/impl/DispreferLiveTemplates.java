@@ -18,8 +18,8 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementWeigher;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -31,7 +31,7 @@ public class DispreferLiveTemplates extends LookupElementWeigher {
 
   @Nullable
   @Override
-  public Comparable weigh(@NotNull LookupElement element) {
+  public Comparable weigh(@Nonnull LookupElement element) {
     return element instanceof LiveTemplateLookupElement;
   }
 }

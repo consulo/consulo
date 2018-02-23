@@ -25,8 +25,8 @@ import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Expirable;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ import java.awt.event.KeyEvent;
 
 public abstract class IdeFocusManager implements FocusRequestor {
 
-  public ActionCallback requestFocusInProject(@NotNull Component c, @Nullable Project project) {
+  public ActionCallback requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
     return requestFocus(c, false);
   }
 
@@ -63,27 +63,27 @@ public abstract class IdeFocusManager implements FocusRequestor {
    * @return suitable component to focus
    */
   @Nullable
-  public abstract JComponent getFocusTargetFor(@NotNull final JComponent comp);
+  public abstract JComponent getFocusTargetFor(@Nonnull final JComponent comp);
 
 
   /**
    * Executes given runnable after all focus activities are finished
    */
-  public abstract void doWhenFocusSettlesDown(@NotNull Runnable runnable);
+  public abstract void doWhenFocusSettlesDown(@Nonnull Runnable runnable);
 
-  public void doForceFocusWhenFocusSettlesDown(@NotNull Component component) {
+  public void doForceFocusWhenFocusSettlesDown(@Nonnull Component component) {
     doWhenFocusSettlesDown(() -> requestFocus(component, true));
   }
 
   /**
    * Executes given runnable after all focus activities are finished, immediately or later with the given modaliy state
    */
-  public abstract void doWhenFocusSettlesDown(@NotNull Runnable runnable, @NotNull ModalityState modality);
+  public abstract void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality);
 
   /**
    * Executes given runnable after all focus activities are finished
    */
-  public abstract void doWhenFocusSettlesDown(@NotNull ExpirableRunnable runnable);
+  public abstract void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable);
 
 
   /**
@@ -97,7 +97,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    *
    * @return true is the event was dispatched, false - otherwise.
    */
-  public abstract boolean dispatch(@NotNull KeyEvent e);
+  public abstract boolean dispatch(@Nonnull KeyEvent e);
 
   @Deprecated
   // use #typeAheadUntil(ActionCallback, String) instead
@@ -110,7 +110,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    *
    * @param done action callback
    */
-  public void typeAheadUntil(ActionCallback done, @NotNull String cause) {
+  public void typeAheadUntil(ActionCallback done, @Nonnull String cause) {
   }
 
   /**
@@ -121,7 +121,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
   /**
    * Requests default focus. The method should not be called by the user code.
    */
-  @NotNull
+  @Nonnull
   public abstract ActionCallback requestDefaultFocus(boolean forced);
 
   /**
@@ -136,7 +136,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    * Returns <code>Expirable</code> instance for the given counter of focus commands. As any new <code>FocusCommand</code>
    * is emitted to execute, the counter increments thus making the returned <code>Expirable</code> objects expired.
    */
-  @NotNull
+  @Nonnull
   public abstract Expirable getTimestamp(boolean trackOnlyForcedCommands);
 
   /**
@@ -144,14 +144,14 @@ public abstract class IdeFocusManager implements FocusRequestor {
    *
    * @see #getTimestamp(boolean)
    */
-  @NotNull
+  @Nonnull
   public abstract FocusRequestor getFurtherRequestor();
 
   /**
    * Injects some procedure that will maybe do something with focus after all focus requests are fulfilled and
    * before focus transfer is reported ready.
    */
-  public abstract void revalidateFocus(@NotNull ExpirableRunnable runnable);
+  public abstract void revalidateFocus(@Nonnull ExpirableRunnable runnable);
 
   /**
    * Enables or disables typeahead
@@ -169,7 +169,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
    * Runs runnable for which <code>DataContext</code> will no be computed from the current focus owner,
    * but used the given one
    */
-  public abstract void runOnOwnContext(@NotNull DataContext context, @NotNull Runnable runnable);
+  public abstract void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable);
 
   /**
    * Returns last focused component for the given <code>IdeFrame</code>
@@ -199,7 +199,7 @@ public abstract class IdeFocusManager implements FocusRequestor {
     return project.getComponent(IdeFocusManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public static IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
     IdeFocusManager instance = null;
     if (context != null) {
@@ -217,8 +217,8 @@ public abstract class IdeFocusManager implements FocusRequestor {
     return instance;
   }
 
-  @NotNull
-  public static IdeFocusManager findInstanceByComponent(@NotNull Component c) {
+  @Nonnull
+  public static IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
     final IdeFocusManager instance = findByComponent(c);
     return instance != null ? instance : findInstanceByContext(null);
   }
@@ -242,13 +242,13 @@ public abstract class IdeFocusManager implements FocusRequestor {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   public static IdeFocusManager findInstance() {
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     return owner != null ? findInstanceByComponent(owner) : findInstanceByContext(null);
   }
 
-  @NotNull
+  @Nonnull
   public static IdeFocusManager getGlobalInstance() {
     IdeFocusManager fm = null;
 

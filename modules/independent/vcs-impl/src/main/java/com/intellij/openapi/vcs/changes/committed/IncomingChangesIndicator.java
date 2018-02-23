@@ -31,8 +31,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,17 +137,17 @@ public class IncomingChangesIndicator {
       update(AllIcons.Ide.IncomingChangesOff, "No incoming changelists available");
     }
 
-    void setChangesAvailable(@NotNull final String toolTipText) {
+    void setChangesAvailable(@Nonnull final String toolTipText) {
       update(AllIcons.Ide.IncomingChangesOn, toolTipText);
     }
 
-    private void update(@NotNull final Icon icon, @Nullable final String toolTipText) {
+    private void update(@Nonnull final Icon icon, @javax.annotation.Nullable final String toolTipText) {
       myCurrentIcon = icon;
       myToolTipText = toolTipText;
       if (myStatusBar != null) myStatusBar.updateWidget(ID());
     }
 
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return myCurrentIcon;
     }
@@ -175,16 +175,16 @@ public class IncomingChangesIndicator {
       };
     }
 
-    @NotNull
+    @Nonnull
     public String ID() {
       return "IncomingChanges";
     }
 
-    public WidgetPresentation getPresentation(@NotNull PlatformType type) {
+    public WidgetPresentation getPresentation(@Nonnull PlatformType type) {
       return this;
     }
 
-    public void install(@NotNull StatusBar statusBar) {
+    public void install(@Nonnull StatusBar statusBar) {
       myStatusBar = statusBar;
     }
 

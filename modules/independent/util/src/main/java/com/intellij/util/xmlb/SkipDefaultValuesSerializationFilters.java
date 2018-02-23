@@ -20,8 +20,8 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.ReflectionUtil;
 import gnu.trove.THashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
   private final Map<Class<?>, Object> myDefaultBeans = new THashMap<Class<?>, Object>();
 
   @Override
-  protected boolean accepts(@NotNull Accessor accessor, @NotNull Object bean, @Nullable Object beanValue) {
+  protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {
     Object defValue = accessor.read(getDefaultBean(bean));
     if (defValue instanceof Element && beanValue instanceof Element) {
       return !JDOMUtil.areElementsEqual((Element)beanValue, (Element)defValue);
@@ -39,8 +39,8 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
     }
   }
 
-  @NotNull
-  Object getDefaultBean(@NotNull Object bean) {
+  @Nonnull
+  Object getDefaultBean(@Nonnull Object bean) {
     Class<?> c = bean.getClass();
     Object o = myDefaultBeans.get(c);
     if (o == null) {
@@ -55,6 +55,6 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
   /**
    * Override to put your own default object configuration
    */
-  protected void configure(@NotNull Object o) {
+  protected void configure(@Nonnull Object o) {
   }
 }

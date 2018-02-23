@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Stands for an atomic settings element. The general idea is to allow third-party plugin developers to use platform
@@ -28,26 +28,28 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ArrangementSettingsToken implements Comparable<ArrangementSettingsToken> {
 
-  @NotNull protected String myId;
-  @NotNull protected String myRepresentationName;
+  @Nonnull
+  protected String myId;
+  @Nonnull
+  protected String myRepresentationName;
 
-  public ArrangementSettingsToken(@NotNull String id, @NotNull String name) {
+  public ArrangementSettingsToken(@Nonnull String id, @Nonnull String name) {
     myId = id;
     myRepresentationName = name;
   }
 
-  @NotNull
+  @Nonnull
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   public String getRepresentationValue() {
     return myRepresentationName;
   }
 
   @Override
-  public int compareTo(@NotNull ArrangementSettingsToken that) {
+  public int compareTo(@Nonnull ArrangementSettingsToken that) {
     return myId.compareTo(that.myId);
   }
 

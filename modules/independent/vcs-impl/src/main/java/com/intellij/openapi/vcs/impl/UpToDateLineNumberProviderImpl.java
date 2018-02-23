@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvider {
   private final Document myDocument;

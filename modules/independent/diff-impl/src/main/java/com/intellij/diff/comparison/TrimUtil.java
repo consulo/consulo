@@ -18,7 +18,7 @@ package com.intellij.diff.comparison;
 import com.intellij.diff.util.IntPair;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class TrimUtil {
   // Trim
   //
 
-  @NotNull
-  public static Range trim(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static Range trim(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                            int start1, int start2, int end1, int end2) {
     start1 = trimStart(text1, start1, end1);
     end1 = trimEnd(text1, start1, end1);
@@ -55,8 +55,8 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  @NotNull
-  public static MergeRange trim(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
+  @Nonnull
+  public static MergeRange trim(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
                                 int start1, int start2, int start3, int end1, int end2, int end3) {
     start1 = trimStart(text1, start1, end1);
     end1 = trimEnd(text1, start1, end1);
@@ -68,15 +68,15 @@ public class TrimUtil {
     return new MergeRange(start1, end1, start2, end2, start3, end3);
   }
 
-  @NotNull
-  public static IntPair trim(@NotNull CharSequence text, int start, int end) {
+  @Nonnull
+  public static IntPair trim(@Nonnull CharSequence text, int start, int end) {
     start = trimStart(text, start, end);
     end = trimEnd(text, start, end);
 
     return new IntPair(start, end);
   }
 
-  public static int trimStart(@NotNull CharSequence text, int start, int end) {
+  public static int trimStart(@Nonnull CharSequence text, int start, int end) {
     while (start < end) {
       char c = text.charAt(start);
       if (!isWhiteSpace(c)) break;
@@ -85,7 +85,7 @@ public class TrimUtil {
     return start;
   }
 
-  public static int trimEnd(@NotNull CharSequence text, int start, int end) {
+  public static int trimEnd(@Nonnull CharSequence text, int start, int end) {
     while (start < end) {
       char c = text.charAt(end - 1);
       if (!isWhiteSpace(c)) break;
@@ -98,8 +98,8 @@ public class TrimUtil {
   // Expand
   //
 
-  @NotNull
-  public static Range expand(@NotNull List<?> text1, @NotNull List<?> text2,
+  @Nonnull
+  public static Range expand(@Nonnull List<?> text1, @Nonnull List<?> text2,
                              int start1, int start2, int end1, int end2) {
     int count1 = expandForward(text1, text2, start1, start2, end1, end2);
     start1 += count1;
@@ -112,8 +112,8 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  @NotNull
-  public static Range expand(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static Range expand(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                              int start1, int start2, int end1, int end2) {
     int count1 = expandForward(text1, text2, start1, start2, end1, end2);
     start1 += count1;
@@ -126,8 +126,8 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  @NotNull
-  public static Range expandW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static Range expandW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                               int start1, int start2, int end1, int end2) {
     int count1 = expandForwardW(text1, text2, start1, start2, end1, end2);
     start1 += count1;
@@ -140,8 +140,8 @@ public class TrimUtil {
     return new Range(start1, end1, start2, end2);
   }
 
-  @NotNull
-  public static MergeRange expandW(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
+  @Nonnull
+  public static MergeRange expandW(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
                                    int start1, int start2, int start3, int end1, int end2, int end3) {
     int count1 = expandForwardW(text1, text2, text3, start1, start2, start3, end1, end2, end3);
     start1 += count1;
@@ -156,7 +156,7 @@ public class TrimUtil {
     return new MergeRange(start1, end1, start2, end2, start3, end3);
   }
 
-  public static int expandForward(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  public static int expandForward(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                   int start1, int start2, int end1, int end2) {
     int oldStart1 = start1;
     while (start1 < end1 && start2 < end2) {
@@ -170,7 +170,7 @@ public class TrimUtil {
     return start1 - oldStart1;
   }
 
-  public static int expandForward(@NotNull List<?> text1, @NotNull List<?> text2,
+  public static int expandForward(@Nonnull List<?> text1, @Nonnull List<?> text2,
                                   int start1, int start2, int end1, int end2) {
     int oldStart1 = start1;
     while (start1 < end1 && start2 < end2) {
@@ -184,7 +184,7 @@ public class TrimUtil {
     return start1 - oldStart1;
   }
 
-  public static int expandForwardW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  public static int expandForwardW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                    int start1, int start2, int end1, int end2) {
     int oldStart1 = start1;
     while (start1 < end1 && start2 < end2) {
@@ -198,7 +198,7 @@ public class TrimUtil {
     return start1 - oldStart1;
   }
 
-  public static int expandBackward(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  public static int expandBackward(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                    int start1, int start2, int end1, int end2) {
     int oldEnd1 = end1;
     while (start1 < end1 && start2 < end2) {
@@ -212,7 +212,7 @@ public class TrimUtil {
     return oldEnd1 - end1;
   }
 
-  public static int expandBackward(@NotNull List<?> text1, @NotNull List<?> text2,
+  public static int expandBackward(@Nonnull List<?> text1, @Nonnull List<?> text2,
                                    int start1, int start2, int end1, int end2) {
     int oldEnd1 = end1;
     while (start1 < end1 && start2 < end2) {
@@ -226,7 +226,7 @@ public class TrimUtil {
     return oldEnd1 - end1;
   }
 
-  public static int expandBackwardW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  public static int expandBackwardW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                     int start1, int start2, int end1, int end2) {
     int oldEnd1 = end1;
     while (start1 < end1 && start2 < end2) {
@@ -240,7 +240,7 @@ public class TrimUtil {
     return oldEnd1 - end1;
   }
 
-  public static int expandForwardW(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
+  public static int expandForwardW(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
                                    int start1, int start2, int start3, int end1, int end2, int end3) {
     int oldStart1 = start1;
     while (start1 < end1 && start2 < end2 && start3 < end3) {
@@ -256,7 +256,7 @@ public class TrimUtil {
     return start1 - oldStart1;
   }
 
-  public static int expandBackwardW(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
+  public static int expandBackwardW(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
                                     int start1, int start2, int start3, int end1, int end2, int end3) {
     int oldEnd1 = end1;
     while (start1 < end1 && start2 < end2 && start3 < end3) {
@@ -272,8 +272,8 @@ public class TrimUtil {
     return oldEnd1 - end1;
   }
 
-  @NotNull
-  public static IntPair expandForwardIW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static IntPair expandForwardIW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                         int start1, int start2, int end1, int end2) {
     while (start1 < end1 && start2 < end2) {
       char c1 = text1.charAt(start1);
@@ -303,8 +303,8 @@ public class TrimUtil {
     return new IntPair(start1, start2);
   }
 
-  @NotNull
-  public static IntPair expandBackwardIW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static IntPair expandBackwardIW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                          int start1, int start2, int end1, int end2) {
     while (start1 < end1 && start2 < end2) {
       char c1 = text1.charAt(end1 - 1);
@@ -334,8 +334,8 @@ public class TrimUtil {
     return new IntPair(end1, end2);
   }
 
-  @NotNull
-  public static Range expandIW(@NotNull CharSequence text1, @NotNull CharSequence text2,
+  @Nonnull
+  public static Range expandIW(@Nonnull CharSequence text1, @Nonnull CharSequence text2,
                                int start1, int start2, int end1, int end2) {
     IntPair start = expandForwardIW(text1, text2, start1, start2, end1, end2);
     start1 = start.val1;
@@ -353,35 +353,35 @@ public class TrimUtil {
   // Misc
   //
 
-  @NotNull
-  public static Range expand(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull Range range) {
+  @Nonnull
+  public static Range expand(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull Range range) {
     return expand(text1, text2, range.start1, range.start2, range.end1, range.end2);
   }
 
-  @NotNull
-  public static Range expandW(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull Range range) {
+  @Nonnull
+  public static Range expandW(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull Range range) {
     return expandW(text1, text2, range.start1, range.start2, range.end1, range.end2);
   }
 
-  @NotNull
-  public static Range trim(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull Range range) {
+  @Nonnull
+  public static Range trim(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull Range range) {
     return trim(text1, text2, range.start1, range.start2, range.end1, range.end2);
   }
 
-  @NotNull
-  public static MergeRange trim(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
-                                @NotNull MergeRange range) {
+  @Nonnull
+  public static MergeRange trim(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
+                                @Nonnull MergeRange range) {
     return trim(text1, text2, text3, range.start1, range.start2, range.start3, range.end1, range.end2, range.end3);
   }
 
-  @NotNull
-  public static MergeRange expandW(@NotNull CharSequence text1, @NotNull CharSequence text2, @NotNull CharSequence text3,
-                                   @NotNull MergeRange range) {
+  @Nonnull
+  public static MergeRange expandW(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull CharSequence text3,
+                                   @Nonnull MergeRange range) {
     return expandW(text1, text2, text3, range.start1, range.start2, range.start3, range.end1, range.end2, range.end3);
   }
 
-  @NotNull
-  public static Range expandIW(@NotNull CharSequence text1, @NotNull CharSequence text2) {
+  @Nonnull
+  public static Range expandIW(@Nonnull CharSequence text1, @Nonnull CharSequence text2) {
     return expandIW(text1, text2, 0, 0, text1.length(), text2.length());
   }
 }

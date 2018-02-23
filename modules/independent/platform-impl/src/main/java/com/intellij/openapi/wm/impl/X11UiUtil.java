@@ -21,7 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 import sun.misc.Unsafe;
 

@@ -29,7 +29,7 @@ import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.impl.VcsProjectLog;
 import com.intellij.vcs.log.ui.VcsLogHighlighterFactory;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -40,9 +40,9 @@ import static com.intellij.vcs.log.ui.VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP;
 public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector {
   public static final GroupDescriptor ID = GroupDescriptor.create("VCS Log Ui Settings");
 
-  @NotNull
+  @Nonnull
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@NotNull Project project) throws CollectUsagesException {
+  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
     if (projectLog != null) {
       VcsLogUiImpl ui = projectLog.getMainLogUi();
@@ -82,7 +82,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
     return Collections.emptySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GroupDescriptor getGroupId() {
     return ID;

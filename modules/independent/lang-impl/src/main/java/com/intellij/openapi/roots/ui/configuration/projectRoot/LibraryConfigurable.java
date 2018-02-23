@@ -28,9 +28,9 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -83,7 +83,7 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ProjectStructureElement getProjectStructureElement() {
     return myProjectStructureElement;
   }

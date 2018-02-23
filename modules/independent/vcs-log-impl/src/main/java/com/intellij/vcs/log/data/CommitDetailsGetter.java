@@ -7,8 +7,8 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLogProvider;
 import com.intellij.vcs.log.data.index.VcsLogIndex;
 import com.intellij.vcs.log.impl.VcsLogUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +18,10 @@ import java.util.Map;
  */
 public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails> {
 
-  CommitDetailsGetter(@NotNull VcsLogStorage hashMap,
-                      @NotNull Map<VirtualFile, VcsLogProvider> logProviders,
-                      @NotNull VcsLogIndex index,
-                      @NotNull Disposable parentDisposable) {
+  CommitDetailsGetter(@Nonnull VcsLogStorage hashMap,
+                      @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+                      @Nonnull VcsLogIndex index,
+                      @Nonnull Disposable parentDisposable) {
     super(hashMap, logProviders, new VcsCommitCache<>(), index, parentDisposable);
   }
 
@@ -31,10 +31,10 @@ public class CommitDetailsGetter extends AbstractDataGetter<VcsFullCommitDetails
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected List<? extends VcsFullCommitDetails> readDetails(@NotNull VcsLogProvider logProvider, @NotNull VirtualFile root,
-                                                             @NotNull List<String> hashes) throws VcsException {
+  protected List<? extends VcsFullCommitDetails> readDetails(@Nonnull VcsLogProvider logProvider, @Nonnull VirtualFile root,
+                                                             @Nonnull List<String> hashes) throws VcsException {
     return VcsLogUtil.getDetails(logProvider, root, hashes);
   }
 }

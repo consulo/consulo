@@ -21,8 +21,8 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XInstanceEvaluator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a value in debugger tree.
@@ -38,7 +38,7 @@ public abstract class XValue extends XValueContainer {
    * @param node node
    * @param place where the node will be shown.
    */
-  public abstract void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place);
+  public abstract void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place);
 
   /**
    * @return expression which evaluates to the current value
@@ -51,7 +51,7 @@ public abstract class XValue extends XValueContainer {
   /**
    * Asynchronously calculates expression which evaluates to the current value
    */
-  @NotNull
+  @Nonnull
   public AsyncResult<XExpression> calculateEvaluationExpression() {
     String expression = getEvaluationExpression();
     XExpression res =
@@ -81,7 +81,7 @@ public abstract class XValue extends XValueContainer {
    * Note that this method is called from the Event Dispatch thread so it should return quickly.
    * @param navigatable navigatable
    */
-  public void computeSourcePosition(@NotNull XNavigatable navigatable) {
+  public void computeSourcePosition(@Nonnull XNavigatable navigatable) {
     navigatable.setSourcePosition(null);
   }
 
@@ -91,8 +91,8 @@ public abstract class XValue extends XValueContainer {
    * {@link ThreeState#YES} if applicable
    * {@link ThreeState#NO} if not applicable
    */
-  @NotNull
-  public ThreeState computeInlineDebuggerData(@NotNull XInlineDebuggerDataCallback callback) {
+  @Nonnull
+  public ThreeState computeInlineDebuggerData(@Nonnull XInlineDebuggerDataCallback callback) {
     return ThreeState.UNSURE;
   }
 
@@ -120,7 +120,7 @@ public abstract class XValue extends XValueContainer {
    * when computation is finished.
    * Note that this method is called from the Event Dispatch thread so it should return quickly.
    */
-  public void computeTypeSourcePosition(@NotNull XNavigatable navigatable) {
+  public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable) {
     navigatable.setSourcePosition(null);
   }
 

@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.DesktopWindowWatcher;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,8 +141,8 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
   }
 
 
-  @NotNull
-  private ActionCallback requestFocus(@NotNull final Component c) {
+  @Nonnull
+  private ActionCallback requestFocus(@Nonnull final Component c) {
     final ActionCallback result = new ActionCallback();
     final Alarm checkerAlarm = new Alarm(result);
     Runnable checker = new Runnable() {
@@ -158,7 +158,7 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
           if (owner != null && owner == c) {
             myManager.getFocusManager().requestFocus(new FocusCommand() {
               @Override
-              @NotNull
+              @Nonnull
               public ActionCallback run() {
                 return ActionCallback.DONE;
               }

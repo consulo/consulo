@@ -31,7 +31,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
   private final String myName;
@@ -51,13 +51,13 @@ public abstract class BaseCompleteMacro extends Macro {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getDefaultValue() {
     return "a";
   }
 
   @Override
-  public final Result calculateResult(@NotNull Expression[] params, final ExpressionContext context) {
+  public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
     return new InvokeActionResult(
       new Runnable() {
         @Override
@@ -122,7 +122,7 @@ public abstract class BaseCompleteMacro extends Macro {
   private static class MyLookupListener extends LookupAdapter {
     private final ExpressionContext myContext;
 
-    public MyLookupListener(@NotNull ExpressionContext context) {
+    public MyLookupListener(@Nonnull ExpressionContext context) {
       myContext = context;
     }
 

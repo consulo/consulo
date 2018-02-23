@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.WindowWrapper.Mode;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,57 +14,64 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class WindowWrapperBuilder {
-  @NotNull private final Mode myMode;
-  @NotNull private final JComponent myComponent;
-  @Nullable private Project myProject;
-  @Nullable private Component myParent;
-  @Nullable private String myTitle;
-  @Nullable private JComponent myPreferredFocusedComponent;
-  @Nullable private String myDimensionServiceKey;
+  @Nonnull
+  private final Mode myMode;
+  @Nonnull
+  private final JComponent myComponent;
+  @Nullable
+  private Project myProject;
+  @Nullable
+  private Component myParent;
+  @Nullable
+  private String myTitle;
+  @Nullable
+  private JComponent myPreferredFocusedComponent;
+  @Nullable
+  private String myDimensionServiceKey;
   @Nullable private Runnable myOnShowCallback;
 
-  public WindowWrapperBuilder(@NotNull Mode mode, @NotNull JComponent component) {
+  public WindowWrapperBuilder(@Nonnull Mode mode, @Nonnull JComponent component) {
     myMode = mode;
     myComponent = component;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapperBuilder setProject(@Nullable Project project) {
     myProject = project;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapperBuilder setParent(@Nullable Component parent) {
     myParent = parent;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapperBuilder setTitle(@Nullable String title) {
     myTitle = title;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapperBuilder setPreferredFocusedComponent(@Nullable JComponent preferredFocusedComponent) {
     myPreferredFocusedComponent = preferredFocusedComponent;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapperBuilder setDimensionServiceKey(@Nullable String dimensionServiceKey) {
     myDimensionServiceKey = dimensionServiceKey;
     return this;
   }
 
-  @NotNull
-  public WindowWrapperBuilder setOnShowCallback(@NotNull Runnable callback) {
+  @Nonnull
+  public WindowWrapperBuilder setOnShowCallback(@Nonnull Runnable callback) {
     myOnShowCallback = callback;
     return this;
   }
 
-  @NotNull
+  @Nonnull
   public WindowWrapper build() {
     switch (myMode) {
       case FRAME:
@@ -78,13 +85,17 @@ public class WindowWrapperBuilder {
   }
 
   private static class DialogWindowWrapper implements WindowWrapper {
-    @Nullable private final Project myProject;
-    @NotNull private final JComponent myComponent;
-    @NotNull private final Mode myMode;
+    @Nullable
+    private final Project myProject;
+    @Nonnull
+    private final JComponent myComponent;
+    @Nonnull
+    private final Mode myMode;
 
-    @NotNull private final DialogWrapper myDialog;
+    @Nonnull
+    private final DialogWrapper myDialog;
 
-    public DialogWindowWrapper(@NotNull final WindowWrapperBuilder builder) {
+    public DialogWindowWrapper(@Nonnull final WindowWrapperBuilder builder) {
       myProject = builder.myProject;
       myComponent = builder.myComponent;
       myMode = builder.myMode;
@@ -137,19 +148,19 @@ public class WindowWrapperBuilder {
       return myProject;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return myComponent;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Mode getMode() {
       return myMode;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Window getWindow() {
       return myDialog.getWindow();
@@ -170,12 +181,15 @@ public class WindowWrapperBuilder {
     }
 
     private static class MyDialogWrapper extends DialogWrapper {
-      @NotNull private final JComponent myComponent;
-      @Nullable private final String myDimensionServiceKey;
-      @Nullable private final JComponent myPreferredFocusedComponent;
+      @Nonnull
+      private final JComponent myComponent;
+      @Nullable
+      private final String myDimensionServiceKey;
+      @Nullable
+      private final JComponent myPreferredFocusedComponent;
 
       public MyDialogWrapper(@Nullable Project project,
-                             @NotNull JComponent component,
+                             @Nonnull JComponent component,
                              @Nullable String dimensionServiceKey,
                              @Nullable JComponent preferredFocusedComponent) {
         super(project, true);
@@ -184,8 +198,8 @@ public class WindowWrapperBuilder {
         myPreferredFocusedComponent = preferredFocusedComponent;
       }
 
-      public MyDialogWrapper(@NotNull Component parent,
-                             @NotNull JComponent component,
+      public MyDialogWrapper(@Nonnull Component parent,
+                             @Nonnull JComponent component,
                              @Nullable String dimensionServiceKey,
                              @Nullable JComponent preferredFocusedComponent) {
         super(parent, true);
@@ -206,7 +220,7 @@ public class WindowWrapperBuilder {
       }
 
       // it is information dialog - no need to OK or Cancel. Close the dialog by clicking the cross button or pressing Esc.
-      @NotNull
+      @Nonnull
       @Override
       protected Action[] createActions() {
         return new Action[0];
@@ -234,13 +248,17 @@ public class WindowWrapperBuilder {
 
   private static class FrameWindowWrapper implements WindowWrapper {
     @Nullable private final Project myProject;
-    @NotNull private final JComponent myComponent;
-    @NotNull private final Mode myMode;
-    @Nullable private final Runnable myOnShowCallback;
+    @Nonnull
+    private final JComponent myComponent;
+    @Nonnull
+    private final Mode myMode;
+    @Nullable
+    private final Runnable myOnShowCallback;
 
-    @NotNull private final FrameWrapper myFrame;
+    @Nonnull
+    private final FrameWrapper myFrame;
 
-    public FrameWindowWrapper(@NotNull WindowWrapperBuilder builder) {
+    public FrameWindowWrapper(@Nonnull WindowWrapperBuilder builder) {
       myProject = builder.myProject;
       myComponent = builder.myComponent;
       myMode = builder.myMode;
@@ -269,19 +287,19 @@ public class WindowWrapperBuilder {
       return myProject;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return myComponent;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Mode getMode() {
       return myMode;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Window getWindow() {
       return myFrame.getFrame();

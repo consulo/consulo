@@ -15,14 +15,14 @@
  */
 package com.intellij.util.continuation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TaskData {
   private final String myName;
-  @NotNull
+  @Nonnull
   private final Where myWhere;
 
-  public TaskData(String name, @NotNull Where where) {
+  public TaskData(String name, @Nonnull Where where) {
     myName = name;
     myWhere = where;
   }
@@ -31,7 +31,7 @@ public class TaskData {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   public Where getWhere() {
     return myWhere;
   }

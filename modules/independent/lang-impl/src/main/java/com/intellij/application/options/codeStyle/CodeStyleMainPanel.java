@@ -27,7 +27,7 @@ import com.intellij.psi.codeStyle.CodeStyleSchemes;
 import com.intellij.ui.components.labels.SwingActionLink;
 import com.intellij.util.concurrency.EdtExecutorService;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -259,15 +259,15 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   }
 
   @Override
-  public void tabChanged(@NotNull TabbedLanguageCodeStylePanel source, @NotNull String tabTitle) {
+  public void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle) {
     myProperties.setValue(getSelectedTabPropertyName(source), tabTitle);
     for (NewCodeStyleSettingsPanel panel : getPanels()) {
       panel.tabChanged(source, tabTitle);
     }
   }
 
-  @NotNull
-  private static String getSelectedTabPropertyName(@NotNull TabbedLanguageCodeStylePanel panel) {
+  @Nonnull
+  private static String getSelectedTabPropertyName(@Nonnull TabbedLanguageCodeStylePanel panel) {
     Language language = panel.getDefaultLanguage();
     return SELECTED_TAB + (language != null ? "." + language.getID() : "");
   }

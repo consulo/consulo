@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.NullVirtualFile;
 import com.intellij.util.PatternUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -75,12 +74,12 @@ public class IgnoredFileBean {
     myProject = null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getPath() {
     return myPath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getMask() {
     return myMask;
   }
@@ -144,7 +143,7 @@ public class IgnoredFileBean {
     return myCachedResolved;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private VirtualFile doResolve() {
     if (myProject == null || myProject.isDisposed()) { return null; }
     VirtualFile baseDir = myProject.getBaseDir();

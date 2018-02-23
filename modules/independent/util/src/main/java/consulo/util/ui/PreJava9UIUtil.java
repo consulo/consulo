@@ -18,7 +18,7 @@ package consulo.util.ui;
 import com.intellij.openapi.util.NotNullFactory;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 @Deprecated
 public class PreJava9UIUtil {
   private static NotNullLazyValue<Constructor> ourAATextInfoConstructor = NotNullLazyValue.createValue(new NotNullFactory<Constructor>() {
-    @NotNull
+    @Nonnull
     @Override
     public Constructor create() {
       try {
@@ -44,7 +44,7 @@ public class PreJava9UIUtil {
   });
 
   private static NotNullLazyValue<Object> ourAATextPropertyKey = NotNullLazyValue.createValue(new NotNullFactory<Object>() {
-    @NotNull
+    @Nonnull
     @Override
     public Object create() {
       try {
@@ -58,7 +58,7 @@ public class PreJava9UIUtil {
     }
   });
 
-  @NotNull
+  @Nonnull
   public static Object AA_TEXT_PROPERTY_KEY() {
     if (SystemInfo.IS_AT_LEAST_JAVA9) {
       throw new IllegalArgumentException("java 9 restricted");
@@ -67,7 +67,7 @@ public class PreJava9UIUtil {
     return ourAATextPropertyKey.getValue();
   }
 
-  @NotNull
+  @Nonnull
   public static Object newAATextInfo(Object hint, Integer value) {
     if (SystemInfo.IS_AT_LEAST_JAVA9) {
       throw new IllegalArgumentException("java 9 restricted");

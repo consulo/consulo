@@ -22,7 +22,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -35,26 +35,26 @@ public interface PsiParserFacade {
    * @return the created whitespace instance.
    * @throws com.intellij.util.IncorrectOperationException if the text does not specify a valid whitespace.
    */
-  @NotNull
-  PsiElement createWhiteSpaceFromText(@NotNull @NonNls String s) throws IncorrectOperationException;
+  @Nonnull
+  PsiElement createWhiteSpaceFromText(@Nonnull @NonNls String s) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language.
    */
-  @NotNull
-  PsiComment createLineCommentFromText(@NotNull LanguageFileType fileType, @NotNull String text) throws IncorrectOperationException;
+  @Nonnull
+  PsiComment createLineCommentFromText(@Nonnull LanguageFileType fileType, @Nonnull String text) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language.
    */
-  @NotNull
-  PsiComment createBlockCommentFromText(@NotNull Language language, @NotNull String text) throws IncorrectOperationException;
+  @Nonnull
+  PsiComment createBlockCommentFromText(@Nonnull Language language, @Nonnull String text) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language or block comment if language doesn't support line ones
    */
-  @NotNull
-  PsiComment createLineOrBlockCommentFromText(@NotNull Language lang, @NotNull String text) throws IncorrectOperationException;
+  @Nonnull
+  PsiComment createLineOrBlockCommentFromText(@Nonnull Language lang, @Nonnull String text) throws IncorrectOperationException;
 
   class SERVICE {
     private SERVICE() {

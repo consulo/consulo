@@ -18,7 +18,7 @@ package com.intellij.ide;
 import com.intellij.util.messages.Topic;
 import consulo.annotations.DeprecationInfo;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,7 +32,7 @@ public interface AppLifecycleListener {
   default void projectOpenFailed() {
   }
 
-  default void appFrameCreated(final CommandLineArgs commandLineArgs, @NotNull boolean willOpenProject) {
+  default void appFrameCreated(final CommandLineArgs commandLineArgs, @Nonnull boolean willOpenProject) {
   }
 
   /**

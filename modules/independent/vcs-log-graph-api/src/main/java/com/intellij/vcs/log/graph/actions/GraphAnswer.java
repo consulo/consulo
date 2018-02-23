@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.actions;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -24,7 +24,7 @@ import java.awt.*;
  */
 public interface GraphAnswer<Id> {
 
-  @Nullable
+  @javax.annotation.Nullable
   Cursor getCursorToSet();
 
   @Nullable
@@ -32,6 +32,6 @@ public interface GraphAnswer<Id> {
 
   boolean doJump();
 
-  @Nullable
+  @javax.annotation.Nullable
   Runnable getGraphUpdater();
 }

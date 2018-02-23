@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -66,7 +66,7 @@ public class CompilerCacheManager implements ProjectComponent {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "CompilerCacheManager";
   }

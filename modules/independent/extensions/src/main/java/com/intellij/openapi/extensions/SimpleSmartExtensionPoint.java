@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -24,13 +24,13 @@ import java.util.Collection;
  */
 public abstract class SimpleSmartExtensionPoint<T> extends SmartExtensionPoint<T,T>{
 
-  public SimpleSmartExtensionPoint(@NotNull final Collection<T> explicitExtensions) {
+  public SimpleSmartExtensionPoint(@Nonnull final Collection<T> explicitExtensions) {
     super(explicitExtensions);
   }
 
   @Override
-  @NotNull
-  protected T getExtension(@NotNull final T t) {
+  @Nonnull
+  protected T getExtension(@Nonnull final T t) {
     return t;
   }
 

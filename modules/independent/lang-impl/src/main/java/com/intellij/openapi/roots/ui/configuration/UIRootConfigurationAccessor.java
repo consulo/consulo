@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.annotations.RequiredReadAction;
 import consulo.util.pointers.NamedPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -64,7 +64,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return new NamedPointer<Sdk>() {
@@ -74,7 +74,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
         return ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksTreeModel().findSdk(sdkName);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         return sdkName;
@@ -91,7 +91,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   }
 
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   @Override
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return new NamedPointer<Module>() {
@@ -101,7 +101,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
         return ModuleStructureConfigurable.getInstance(myProject).getModule(name);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getName() {
         return name;

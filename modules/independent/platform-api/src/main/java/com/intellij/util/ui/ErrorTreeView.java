@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -31,7 +31,7 @@ public interface ErrorTreeView extends Disposable {
    * If file is not null, allows to navigate to this file, line, column
    */
   void addMessage(int type,
-                  @NotNull String[] text,
+                  @Nonnull String[] text,
                   @Nullable VirtualFile file,
                   int line,
                   int column,
@@ -41,7 +41,7 @@ public interface ErrorTreeView extends Disposable {
    * Allows adding messages related to other files under 'underFileGroup'
    */
   void addMessage(int type,
-                  @NotNull String[] text,
+                  @Nonnull String[] text,
                   @Nullable VirtualFile underFileGroup,
                   @Nullable VirtualFile file,
                   int line,
@@ -52,13 +52,13 @@ public interface ErrorTreeView extends Disposable {
    * add message, allowing navigation via custom Navigatable object
    */
   void addMessage(int type,
-                  @NotNull String[] text,
+                  @Nonnull String[] text,
                   @Nullable String groupName,
-                  @NotNull Navigatable navigatable,
+                  @Nonnull Navigatable navigatable,
                   @Nullable String exportTextPrefix,
                   @Nullable String rendererTextPrefix,
                   @Nullable Object data);
 
-  @NotNull
+  @Nonnull
   JComponent getComponent();
 }

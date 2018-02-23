@@ -26,10 +26,11 @@ import com.intellij.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -57,13 +58,13 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
   public abstract String getName();
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return getContainingFile().getLanguage();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myParent.getProject();
   }

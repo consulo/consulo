@@ -21,7 +21,7 @@ import com.intellij.pom.tree.events.ChangeInfo;
 import com.intellij.pom.tree.events.TreeChange;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ChangeInfoImpl implements ChangeInfo {
   @NonNls private static final String[] TO_STRING = {"add", "remove", "replace", "changed"};
@@ -29,14 +29,14 @@ public class ChangeInfoImpl implements ChangeInfo {
   private final short type;
   private int myOldLength = 0;
 
-  public static ChangeInfoImpl create(short type, @NotNull ASTNode changed){
+  public static ChangeInfoImpl create(short type, @Nonnull ASTNode changed){
     if (type == REPLACE) {
       throw new IllegalArgumentException("use com.intellij.pom.tree.events.impl.ReplaceChangeInfoImpl");
     }
     return new ChangeInfoImpl(type, changed);
   }
 
-  protected ChangeInfoImpl(short type, @NotNull ASTNode changed){
+  protected ChangeInfoImpl(short type, @Nonnull ASTNode changed){
     this.type = type;
     myOldLength = type != ADD ? ((TreeElement)changed).getNotCachedLength() : 0;
   }

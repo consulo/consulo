@@ -19,8 +19,8 @@ package com.intellij.psi.templateLanguages;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -39,7 +39,7 @@ public class TemplateLanguageUtil {
     }
   }
 
-  public static boolean isInsideTemplateFile(@NotNull PsiElement element) {
+  public static boolean isInsideTemplateFile(@Nonnull PsiElement element) {
     return element.getContainingFile().getViewProvider() instanceof TemplateLanguageFileViewProvider;
   }
 }

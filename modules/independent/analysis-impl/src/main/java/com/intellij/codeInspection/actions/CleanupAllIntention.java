@@ -20,8 +20,8 @@ import com.intellij.analysis.AnalysisScope;
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CleanupAllIntention extends CleanupIntention {
 
@@ -29,7 +29,7 @@ public class CleanupAllIntention extends CleanupIntention {
 
   private CleanupAllIntention() {}
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return InspectionsBundle.message("cleanup.in.file");

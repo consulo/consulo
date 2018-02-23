@@ -47,8 +47,8 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,7 +129,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     return "VCS.ChangeListViewerDialog";
   }
 
-  public Object getData(@NotNull @NonNls final Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls final Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
       return myChanges;
     }
@@ -160,7 +160,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
       }
 
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         Object data = super.getData(dataId);
         if (data != null) {
           return data;
@@ -211,7 +211,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
     super.dispose();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     Action cancelAction = getCancelAction();

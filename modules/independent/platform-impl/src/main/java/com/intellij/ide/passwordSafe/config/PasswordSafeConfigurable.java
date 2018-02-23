@@ -5,7 +5,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,7 +31,7 @@ public class PasswordSafeConfigurable implements SearchableConfigurable, Configu
    *
    * @param settings the password safe settings
    */
-  public PasswordSafeConfigurable(@NotNull PasswordSafeSettings settings, @NotNull PasswordSafe passwordSafe) {
+  public PasswordSafeConfigurable(@Nonnull PasswordSafeSettings settings, @Nonnull PasswordSafe passwordSafe) {
     mySettings = settings;
     myPasswordSafe = passwordSafe;
   }
@@ -91,7 +91,7 @@ public class PasswordSafeConfigurable implements SearchableConfigurable, Configu
   /**
    * {@inheritDoc}
    */
-  @NotNull
+  @Nonnull
   public String getId() {
     return "application.passwordSafe";
   }

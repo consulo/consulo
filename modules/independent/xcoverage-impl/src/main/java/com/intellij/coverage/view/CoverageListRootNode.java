@@ -4,7 +4,7 @@ import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,7 @@ public class CoverageListRootNode extends CoverageListNode {
     return myTopLevelPackages;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     if (myStateBean.myFlattenPackages) {

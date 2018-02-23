@@ -24,8 +24,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.URLUtil;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,8 +55,10 @@ public class ClassPath {
   private final boolean myAcceptUnescapedUrls;
   private final boolean myPreloadJarContents;
   private final boolean myCanHavePersistentIndex;
-  @Nullable private final CachePoolImpl myCachePool;
-  @Nullable private final UrlClassLoader.CachingCondition myCachingCondition;
+  @Nullable
+  private final CachePoolImpl myCachePool;
+  @Nullable
+  private final UrlClassLoader.CachingCondition myCachingCondition;
 
   public ClassPath(List<URL> urls,
                    boolean canLockJars,

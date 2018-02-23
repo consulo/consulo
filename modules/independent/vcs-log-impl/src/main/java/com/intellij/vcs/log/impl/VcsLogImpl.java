@@ -26,8 +26,8 @@ import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -35,34 +35,36 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class VcsLogImpl implements VcsLog {
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final VcsLogUiImpl myUi;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final VcsLogUiImpl myUi;
 
-  public VcsLogImpl(@NotNull VcsLogData manager, @NotNull VcsLogUiImpl ui) {
+  public VcsLogImpl(@Nonnull VcsLogData manager, @Nonnull VcsLogUiImpl ui) {
     myLogData = manager;
     myUi = ui;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<CommitId> getSelectedCommits() {
     return getSelectedDataFromTable(GraphTableModel::getCommitIdAtRow);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsShortCommitDetails> getSelectedShortDetails() {
     return getSelectedDataFromTable(GraphTableModel::getShortDetails);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<VcsFullCommitDetails> getSelectedDetails() {
     return getSelectedDataFromTable(GraphTableModel::getFullDetails);
   }
 
   @Override
-  public void requestSelectedDetails(@NotNull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator) {
+  public void requestSelectedDetails(@Nonnull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator) {
     List<Integer> rowsList = Ints.asList(myUi.getTable().getSelectedRows());
     myLogData.getCommitDetailsGetter()
       .loadCommitsData(getTable().getModel().convertToCommitIds(rowsList), consumer, indicator);
@@ -70,11 +72,11 @@ public class VcsLogImpl implements VcsLog {
 
   @Nullable
   @Override
-  public Collection<String> getContainingBranches(@NotNull Hash commitHash, @NotNull VirtualFile root) {
+  public Collection<String> getContainingBranches(@Nonnull Hash commitHash, @Nonnull VirtualFile root) {
     return myLogData.getContainingBranchesGetter().getContainingBranchesFromCache(root, commitHash);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Future<Boolean> jumpToReference(final String reference) {
     SettableFuture<Boolean> future = SettableFuture.create();
@@ -94,22 +96,22 @@ public class VcsLogImpl implements VcsLog {
     return future;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Map<VirtualFile, VcsLogProvider> getLogProviders() {
     return myLogData.getLogProviders();
   }
 
-  @NotNull
+  @Nonnull
   private VcsLogGraphTable getTable() {
     return myUi.getTable();
   }
 
-  @NotNull
-  private <T> List<T> getSelectedDataFromTable(@NotNull BiFunction<GraphTableModel, Integer, T> dataGetter) {
+  @Nonnull
+  private <T> List<T> getSelectedDataFromTable(@Nonnull BiFunction<GraphTableModel, Integer, T> dataGetter) {
     final int[] rows = myUi.getTable().getSelectedRows();
     return new AbstractList<T>() {
-      @NotNull
+      @Nonnull
       @Override
       public T get(int index) {
         return dataGetter.apply(getTable().getModel(), rows[index]);

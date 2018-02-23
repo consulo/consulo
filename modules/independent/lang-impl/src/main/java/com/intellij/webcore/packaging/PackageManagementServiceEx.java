@@ -1,8 +1,8 @@
 package com.intellij.webcore.packaging;
 
 import com.intellij.util.CatchingConsumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -11,16 +11,16 @@ import java.io.File;
  */
 public abstract class PackageManagementServiceEx extends PackageManagementService {
 
-  public abstract void updatePackage(@NotNull InstalledPackage installedPackage, @Nullable String version, @NotNull Listener listener);
+  public abstract void updatePackage(@Nonnull InstalledPackage installedPackage, @Nullable String version, @Nonnull Listener listener);
 
   public abstract boolean shouldFetchLatestVersionsForOnlyInstalledPackages();
 
-  public abstract void fetchLatestVersion(@NotNull InstalledPackage pkg, @NotNull final CatchingConsumer<String, Exception> consumer);
+  public abstract void fetchLatestVersion(@Nonnull InstalledPackage pkg, @Nonnull final CatchingConsumer<String, Exception> consumer);
 
   public void installPackage(final RepoPackage repoPackage,
                              @Nullable final String version,
                              @Nullable String extraOptions,
                              final Listener listener,
-                             @NotNull final File workingDir) {
+                             @Nonnull final File workingDir) {
   }
 }

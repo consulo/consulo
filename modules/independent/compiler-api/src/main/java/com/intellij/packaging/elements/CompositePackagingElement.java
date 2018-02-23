@@ -16,8 +16,8 @@
 package com.intellij.packaging.elements;
 
 import com.intellij.packaging.artifacts.ArtifactType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     super(type);
   }
 
-  public <T extends PackagingElement<?>> T addOrFindChild(@NotNull T child) {
+  public <T extends PackagingElement<?>> T addOrFindChild(@Nonnull T child) {
     for (PackagingElement<?> element : myChildren) {
       if (element.isEqualTo(child)) {
         if (element instanceof CompositePackagingElement) {
@@ -50,7 +50,7 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     return child;
   }
 
-  public void addFirstChild(@NotNull PackagingElement<?> child) {
+  public void addFirstChild(@Nonnull PackagingElement<?> child) {
     myChildren.add(0, child);
     for (int i = 1; i < myChildren.size(); i++) {
       PackagingElement<?> element = myChildren.get(i);
@@ -85,15 +85,15 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     return null;
   }
 
-  public void removeChild(@NotNull PackagingElement<?> child) {
+  public void removeChild(@Nonnull PackagingElement<?> child) {
     myChildren.remove(child);
   }
 
-  public void removeChildren(@NotNull Collection<? extends PackagingElement<?>> children) {
+  public void removeChildren(@Nonnull Collection<? extends PackagingElement<?>> children) {
     myChildren.removeAll(children);
   }
 
-  @NotNull
+  @Nonnull
   public List<PackagingElement<?>> getChildren() {
     if (myUnmodifiableChildren == null) {
       myUnmodifiableChildren = Collections.unmodifiableList(myChildren);
@@ -106,9 +106,9 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     return true;
   }
 
-  protected void computeChildrenInstructions(@NotNull IncrementalCompilerInstructionCreator creator,
-                                             @NotNull PackagingElementResolvingContext resolvingContext,
-                                             @NotNull ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
+  protected void computeChildrenInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
+                                             @Nonnull PackagingElementResolvingContext resolvingContext,
+                                             @Nonnull ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
     for (PackagingElement<?> child : myChildren) {
       child.computeIncrementalCompilerInstructions(creator, resolvingContext, compilerContext, artifactType);
     }
@@ -118,8 +118,8 @@ public abstract class CompositePackagingElement<S> extends PackagingElement<S> i
     myChildren.clear();
   }
 
-  @Nullable
-  public CompositePackagingElement<?> findCompositeChild(@NotNull String name) {
+  @javax.annotation.Nullable
+  public CompositePackagingElement<?> findCompositeChild(@Nonnull String name) {
     for (PackagingElement<?> child : myChildren) {
       if (child instanceof CompositePackagingElement && name.equals(((CompositePackagingElement)child).getName())) {
         return (CompositePackagingElement)child;

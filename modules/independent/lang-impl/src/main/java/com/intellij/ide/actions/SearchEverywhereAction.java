@@ -110,8 +110,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ide.actions.QualifiedNameProviders;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -328,7 +328,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   @Nullable
   @Override
-  public Object getData(@NotNull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull @NonNls Key<?> dataId) {
     return null;
   }
 
@@ -715,7 +715,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     final JLabel settings = new JLabel(AllIcons.General.SearchEverywhereGear);
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         showSettings();
         return true;
       }
@@ -878,7 +878,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@NotNull @NonNls Key<?> dataId) {
+      public Object getData(@Nonnull @NonNls Key<?> dataId) {
         final Object value = myList.getSelectedValue();
         if (CommonDataKeys.PSI_ELEMENT == dataId && value instanceof PsiElement) {
           return value;
@@ -1003,7 +1003,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
     @Nullable
     @Override
-    public Object getData(@NotNull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull @NonNls Key<?> dataId) {
       if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
         return getTextEditor().getText();
       }
@@ -1037,7 +1037,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     private JPanel myMainPanel = new JPanel(new BorderLayout());
     private JLabel myTitle = new JLabel();
 
-    MyListRenderer(@NotNull JBList list) {
+    MyListRenderer(@Nonnull JBList list) {
       assert list == SearchEverywhereAction.this.myList;
     }
 
@@ -1974,7 +1974,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
     private GotoActionItemProvider createActionProvider() {
       GotoActionModel model = new GotoActionModel(project, myFocusComponent, myEditor, myFile) {
         @Override
-        protected MatchMode actionMatches(String pattern, @NotNull AnAction anAction) {
+        protected MatchMode actionMatches(String pattern, @Nonnull AnAction anAction) {
           String text = anAction.getTemplatePresentation().getText();
           return text != null && NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE).matches(text) ? MatchMode.NAME : MatchMode.NONE;
         }

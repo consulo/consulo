@@ -34,8 +34,8 @@ import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -105,7 +105,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   }
 
   @Deprecated // use MacroComboBoxWithBrowseButton instead
-  protected JComponent createComponentWithMacroBrowse(@NotNull final TextFieldWithBrowseButton textAccessor) {
+  protected JComponent createComponentWithMacroBrowse(@Nonnull final TextFieldWithBrowseButton textAccessor) {
     final FixedSizeButton button = new FixedSizeButton(textAccessor);
     button.setIcon(AllIcons.RunConfigurations.Variables);
     button.addActionListener(new ActionListener() {
@@ -196,7 +196,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   }
 
   @Nullable
-  protected String fromTextField(@NotNull TextAccessor textAccessor, @NotNull CommonProgramRunConfigurationParameters configuration) {
+  protected String fromTextField(@Nonnull TextAccessor textAccessor, @Nonnull CommonProgramRunConfigurationParameters configuration) {
     return textAccessor.getText();
   }
 

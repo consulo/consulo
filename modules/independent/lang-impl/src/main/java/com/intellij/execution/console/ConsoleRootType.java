@@ -17,8 +17,8 @@ package com.intellij.execution.console;
 
 import com.intellij.ide.scratch.RootType;
 import com.intellij.openapi.util.text.StringHash;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author gregsh
@@ -28,7 +28,7 @@ public abstract class ConsoleRootType extends RootType {
   public static final String SEPARATOR = "-. . -..- - / . -. - .-. -.--";
   private static final String PATH_PREFIX = "consoles/";
 
-  protected ConsoleRootType(@NotNull String consoleTypeId, @Nullable String displayName) {
+  protected ConsoleRootType(@Nonnull String consoleTypeId, @Nullable String displayName) {
     super(PATH_PREFIX + consoleTypeId, displayName);
   }
 
@@ -36,22 +36,22 @@ public abstract class ConsoleRootType extends RootType {
     return getId().substring(PATH_PREFIX.length());
   }
 
-  @NotNull
+  @Nonnull
   public String getEntrySeparator() {
     return "\n" + SEPARATOR + "\n";
   }
 
-  @NotNull
-  public String getContentPathName(@NotNull String id) {
+  @Nonnull
+  public String getContentPathName(@Nonnull String id) {
     return Long.toHexString(StringHash.calc(id));
   }
 
-  @NotNull
-  public String getHistoryPathName(@NotNull String id) {
+  @Nonnull
+  public String getHistoryPathName(@Nonnull String id) {
     return Long.toHexString(StringHash.calc(id));
   }
 
-  @NotNull
+  @Nonnull
   public String getDefaultFileExtension() {
     return "txt";
   }

@@ -16,7 +16,8 @@
 package com.intellij.openapi.util.io;
 
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 import static com.intellij.util.BitUtil.isSet;
 

@@ -17,8 +17,8 @@
 package com.intellij.lang;
 
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Implementers of the interface encapsulate optimize imports process for the language.
@@ -48,7 +48,7 @@ public interface ImportOptimizer {
    * issued from.
    * @return a <code>java.lang.Runnable</code> object, which being called will replace original file imports with optimized version.
    */
-  @NotNull
+  @Nonnull
   Runnable processFile(PsiFile file);
 
   /**

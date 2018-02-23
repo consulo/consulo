@@ -17,7 +17,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

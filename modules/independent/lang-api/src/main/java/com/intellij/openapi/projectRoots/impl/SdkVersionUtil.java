@@ -25,8 +25,7 @@ package com.intellij.openapi.projectRoots.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.NotNullFunction;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.Future;
 
@@ -34,7 +33,7 @@ import java.util.concurrent.Future;
 public class SdkVersionUtil {
   private static final NotNullFunction<Runnable, Future<?>> ACTION_RUNNER = new NotNullFunction<Runnable, Future<?>>() {
     @Override
-    @NotNull
+    @Nonnull
     public Future<?> fun(Runnable runnable) {
       return ApplicationManager.getApplication().executeOnPooledThread(runnable);
     }
@@ -43,12 +42,12 @@ public class SdkVersionUtil {
   private SdkVersionUtil() {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String readVersionFromProcessOutput(String homePath, @NonNls String[] command, @NonNls String versionLineMarker) {
     return JdkVersionDetector.getInstance().readVersionFromProcessOutput(homePath, command, versionLineMarker, ACTION_RUNNER);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String detectJdkVersion(String homePath) {
     return JdkVersionDetector.getInstance().detectJdkVersion(homePath, ACTION_RUNNER);
   }

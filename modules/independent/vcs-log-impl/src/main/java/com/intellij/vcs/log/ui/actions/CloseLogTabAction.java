@@ -26,12 +26,12 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.ContentsUtil;
 import com.intellij.vcs.log.impl.VcsLogContentProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     if (e.getProject() == null) {
       e.getPresentation().setEnabledAndVisible(false);
@@ -45,7 +45,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     assert project != null;
 
@@ -58,7 +58,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   }
 
   @Nullable
-  private static Content getTabbedContent(@NotNull ContentManager contentManager) {
+  private static Content getTabbedContent(@Nonnull ContentManager contentManager) {
     Content content = contentManager.getSelectedContent();
     if (content != null) {
       if (ContentUtilEx.isContentTab(content, VcsLogContentProvider.TAB_NAME)) return content;
@@ -67,7 +67,7 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
   }
 
   @Nullable
-  private static ContentManager getContentManager(@NotNull Project project) {
+  private static ContentManager getContentManager(@Nonnull Project project) {
     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
     if (toolWindow == null) return null;
     return toolWindow.getContentManager();

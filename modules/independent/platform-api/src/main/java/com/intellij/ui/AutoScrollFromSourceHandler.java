@@ -30,9 +30,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.Alarm;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -44,11 +44,11 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
   protected final Alarm myAlarm;
   private JComponent myComponent;
 
-  public AutoScrollFromSourceHandler(@NotNull Project project, @NotNull JComponent view) {
+  public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view) {
     this(project, view, null);
   }
 
-  public AutoScrollFromSourceHandler(@NotNull Project project, @NotNull JComponent view, @Nullable Disposable parentDisposable) {
+  public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view, @Nullable Disposable parentDisposable) {
     myProject = project;
 
     if (parentDisposable != null) {
@@ -62,7 +62,7 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
 
   protected abstract void setAutoScrollEnabled(boolean enabled);
 
-  protected abstract void selectElementFromEditor(@NotNull FileEditor editor);
+  protected abstract void selectElementFromEditor(@Nonnull FileEditor editor);
 
   protected ModalityState getModalityState() {
     return ModalityState.current();
@@ -76,7 +76,7 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
     final MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
     connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
       @Override
-      public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         final FileEditor editor = event.getNewEditor();
         if (editor != null && myComponent.isShowing() && isAutoScrollEnabled()) {
           myAlarm.cancelAllRequests();

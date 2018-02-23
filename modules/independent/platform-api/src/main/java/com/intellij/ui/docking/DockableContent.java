@@ -16,12 +16,12 @@
 package com.intellij.ui.docking;
 
 import com.intellij.openapi.actionSystem.Presentation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public interface DockableContent<T> {
-  @NotNull
+  @Nonnull
   T getKey();
 
   Image getPreviewImage();

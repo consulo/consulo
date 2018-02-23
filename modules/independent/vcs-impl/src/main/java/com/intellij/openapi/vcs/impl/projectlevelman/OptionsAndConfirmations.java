@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.impl.projectlevelman;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.vcs.*;
 import com.intellij.util.containers.Convertor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class OptionsAndConfirmations {
     }
   }
 
-  @NotNull
+  @Nonnull
   public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
     return myConfirmations.get(option.getId());
   }
@@ -77,7 +77,7 @@ public class OptionsAndConfirmations {
     }
   }
 
-  @NotNull
+  @Nonnull
   public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
     return myOptions.get(option.getId());
   }
@@ -90,8 +90,8 @@ public class OptionsAndConfirmations {
     return new ArrayList<VcsShowConfirmationOptionImpl>(myConfirmations.values());
   }
 
-  @NotNull
-  public VcsShowSettingOption getOrCreateCustomOption(@NotNull String vcsActionName, @NotNull AbstractVcs vcs) {
+  @Nonnull
+  public VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs) {
     final VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
     option.addApplicableVcs(vcs);
     return option;

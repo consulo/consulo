@@ -18,7 +18,7 @@ package com.intellij.history.core.revisions;
 
 import com.intellij.history.core.tree.Entry;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,12 +35,12 @@ public abstract class Revision {
 
   public abstract long getTimestamp();
 
-  @Nullable
+  @javax.annotation.Nullable
   public Long getChangeSetId() {
     return null;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getChangeSetName() {
     return null;
   }

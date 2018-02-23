@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -64,7 +64,7 @@ public interface Repository extends Disposable {
      * During merge (for instance, merge failed with conflicts that weren't immediately resolved).
      */
     MERGING {
-      @NotNull
+      @Nonnull
       @Override
       public String toString() {
         return "Merging";
@@ -75,7 +75,7 @@ public interface Repository extends Disposable {
      * During rebase.
      */
     REBASING {
-      @NotNull
+      @Nonnull
       @Override
       public String toString() {
         return "Rebasing";
@@ -86,7 +86,7 @@ public interface Repository extends Disposable {
      * During Cherry-pick/grafting.
      */
     GRAFTING {
-      @NotNull
+      @Nonnull
       @Override
       public String toString() {
         return "Grafting";
@@ -100,16 +100,16 @@ public interface Repository extends Disposable {
     DETACHED
   }
 
-  @NotNull
+  @Nonnull
   VirtualFile getRoot();
 
-  @NotNull
+  @Nonnull
   String getPresentableUrl();
 
-  @NotNull
+  @Nonnull
   Project getProject();
 
-  @NotNull
+  @Nonnull
   State getState();
 
   @Nullable
@@ -138,6 +138,6 @@ public interface Repository extends Disposable {
   /**
    * Returns a detailed String representation suitable for logging purposes.
    */
-  @NotNull
+  @Nonnull
   String toLogString();
 }

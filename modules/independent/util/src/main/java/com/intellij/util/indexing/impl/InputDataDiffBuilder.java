@@ -16,7 +16,7 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.util.indexing.StorageException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -30,8 +30,8 @@ public abstract class InputDataDiffBuilder<Key, Value> {
   /**
    * produce a diff between existing data and newData and consume result to addProcessor, updateProcessor and removeProcessor.
    */
-  public abstract void differentiate(@NotNull Map<Key, Value> newData,
-                                     @NotNull KeyValueUpdateProcessor<Key, Value> addProcessor,
-                                     @NotNull KeyValueUpdateProcessor<Key, Value> updateProcessor,
-                                     @NotNull RemovedKeyProcessor<Key> removeProcessor) throws StorageException;
+  public abstract void differentiate(@Nonnull Map<Key, Value> newData,
+                                     @Nonnull KeyValueUpdateProcessor<Key, Value> addProcessor,
+                                     @Nonnull KeyValueUpdateProcessor<Key, Value> updateProcessor,
+                                     @Nonnull RemovedKeyProcessor<Key> removeProcessor) throws StorageException;
 }

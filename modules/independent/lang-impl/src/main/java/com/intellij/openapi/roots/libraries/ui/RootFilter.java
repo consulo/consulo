@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.libraries.ui;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,11 +33,11 @@ public abstract class RootFilter extends RootDetector {
     super(rootType, jarDirectory, presentableRootTypeName);
   }
 
-  public abstract boolean isAccepted(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator);
+  public abstract boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator);
 
-  @NotNull
+  @Nonnull
   @Override
-  public Collection<VirtualFile> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator) {
+  public Collection<VirtualFile> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
     if (isAccepted(rootCandidate, progressIndicator)) {
       return Collections.singletonList(rootCandidate);
     }

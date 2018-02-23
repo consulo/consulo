@@ -52,8 +52,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.vfs.util.ArchiveVfsUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -74,23 +74,23 @@ public class ExternalSystemApiUtil {
   private static final Logger LOG = Logger.getInstance("#" + ExternalSystemApiUtil.class.getName());
   private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
 
-  @NotNull
+  @Nonnull
   public static final String PATH_SEPARATOR = "/";
 
-  @NotNull
+  @Nonnull
   private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(?:.*/)?(.+?)(?:-([\\d+](?:\\.[\\d]+)*))?(?:\\.[^\\.]+?)?");
 
-  @NotNull
+  @Nonnull
   public static final Comparator<Object> ORDER_AWARE_COMPARATOR = new Comparator<Object>() {
 
     @Override
-    public int compare(@NotNull Object o1, @NotNull Object o2) {
+    public int compare(@Nonnull Object o1, @Nonnull Object o2) {
       int order1 = getOrder(o1);
       int order2 = getOrder(o2);
       return (order1 < order2) ? -1 : ((order1 == order2) ? 0 : 1);
     }
 
-    private int getOrder(@NotNull Object o) {
+    private int getOrder(@Nonnull Object o) {
       Queue<Class<?>> toCheck = new ArrayDeque<Class<?>>();
       toCheck.add(o.getClass());
       while (!toCheck.isEmpty()) {
@@ -110,7 +110,7 @@ public class ExternalSystemApiUtil {
     }
   };
 
-  @NotNull
+  @Nonnull
   private static final NullableFunction<DataNode<?>, Key<?>> GROUPER = new NullableFunction<DataNode<?>, Key<?>>() {
     @Override
     public Key<?> fun(DataNode<?> node) {
@@ -118,7 +118,7 @@ public class ExternalSystemApiUtil {
     }
   };
 
-  @NotNull
+  @Nonnull
   private static final Comparator<Object> COMPARABLE_GLUE = new Comparator<Object>() {
     @SuppressWarnings("unchecked")
     @Override
@@ -127,7 +127,7 @@ public class ExternalSystemApiUtil {
     }
   };
 
-  @NotNull
+  @Nonnull
   private static final TransferToEDTQueue<Runnable> TRANSFER_TO_EDT_QUEUE =
           new TransferToEDTQueue<Runnable>("External System queue", new Processor<Runnable>() {
             @Override
@@ -140,8 +140,8 @@ public class ExternalSystemApiUtil {
   private ExternalSystemApiUtil() {
   }
 
-  @NotNull
-  public static String extractNameFromPath(@NotNull String path) {
+  @Nonnull
+  public static String extractNameFromPath(@Nonnull String path) {
     String strippedPath = stripPath(path);
     final int i = strippedPath.lastIndexOf(PATH_SEPARATOR);
     final String result;
@@ -154,8 +154,8 @@ public class ExternalSystemApiUtil {
     return result;
   }
 
-  @NotNull
-  private static String stripPath(@NotNull String path) {
+  @Nonnull
+  private static String stripPath(@Nonnull String path) {
     String[] endingsToStrip = {"/", "!", ".jar"};
     StringBuilder buffer = new StringBuilder(path);
     for (String ending : endingsToStrip) {
@@ -166,8 +166,8 @@ public class ExternalSystemApiUtil {
     return buffer.toString();
   }
 
-  @NotNull
-  public static String getLibraryName(@NotNull Library library) {
+  @Nonnull
+  public static String getLibraryName(@Nonnull Library library) {
     final String result = library.getName();
     if (result != null) {
       return result;
@@ -184,16 +184,16 @@ public class ExternalSystemApiUtil {
     return "unknown-lib";
   }
 
-  public static boolean isRelated(@NotNull Library library, @NotNull LibraryData libraryData) {
+  public static boolean isRelated(@Nonnull Library library, @Nonnull LibraryData libraryData) {
     return getLibraryName(library).equals(libraryData.getInternalName());
   }
 
-  public static boolean isExternalSystemLibrary(@NotNull Library library, @NotNull ProjectSystemId externalSystemId) {
+  public static boolean isExternalSystemLibrary(@Nonnull Library library, @Nonnull ProjectSystemId externalSystemId) {
     return library.getName() != null && StringUtil.startsWith(library.getName(), externalSystemId.getReadableName() + ": ");
   }
 
-  @Nullable
-  public static ArtifactInfo parseArtifactInfo(@NotNull String fileName) {
+  @javax.annotation.Nullable
+  public static ArtifactInfo parseArtifactInfo(@Nonnull String fileName) {
     Matcher matcher = ARTIFACT_PATTERN.matcher(fileName);
     if (!matcher.matches()) {
       return null;
@@ -201,7 +201,7 @@ public class ExternalSystemApiUtil {
     return new ArtifactInfo(matcher.group(1), null, matcher.group(2));
   }
 
-  public static void orderAwareSort(@NotNull List<?> data) {
+  public static void orderAwareSort(@Nonnull List<?> data) {
     Collections.sort(data, ORDER_AWARE_COMPARATOR);
   }
 
@@ -209,15 +209,15 @@ public class ExternalSystemApiUtil {
    * @param path target path
    * @return absolute path that points to the same location as the given one and that uses only slashes
    */
-  @NotNull
-  public static String toCanonicalPath(@NotNull String path) {
+  @Nonnull
+  public static String toCanonicalPath(@Nonnull String path) {
     String p = normalizePath(new File(path).getAbsolutePath());
     assert p != null;
     return PathUtil.getCanonicalPath(p);
   }
 
-  @NotNull
-  public static String getLocalFileSystemPath(@NotNull VirtualFile file) {
+  @Nonnull
+  public static String getLocalFileSystemPath(@Nonnull VirtualFile file) {
     final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
     if (archiveRoot != null) {
       return archiveRoot.getPath();
@@ -225,8 +225,8 @@ public class ExternalSystemApiUtil {
     return toCanonicalPath(file.getPath());
   }
 
-  @Nullable
-  public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@NotNull ProjectSystemId externalSystemId) {
+  @javax.annotation.Nullable
+  public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull ProjectSystemId externalSystemId) {
     for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensions()) {
       if (externalSystemId.equals(manager.getSystemId())) {
         return manager;
@@ -236,7 +236,7 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("ManualArrayToCollectionCopy")
-  @NotNull
+  @Nonnull
   public static Collection<ExternalSystemManager<?, ?, ?, ?, ?>> getAllManagers() {
     List<ExternalSystemManager<?, ?, ?, ?, ?>> result = ContainerUtilRt.newArrayList();
     for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensions()) {
@@ -245,13 +245,13 @@ public class ExternalSystemApiUtil {
     return result;
   }
 
-  @NotNull
-  public static Map<Key<?>, List<DataNode<?>>> group(@NotNull Collection<DataNode<?>> nodes) {
+  @Nonnull
+  public static Map<Key<?>, List<DataNode<?>>> group(@Nonnull Collection<DataNode<?>> nodes) {
     return groupBy(nodes, GROUPER);
   }
 
-  @NotNull
-  public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(@NotNull Collection<DataNode<V>> nodes, @NotNull final Key<K> key) {
+  @Nonnull
+  public static <K, V> Map<DataNode<K>, List<DataNode<V>>> groupBy(@Nonnull Collection<DataNode<V>> nodes, @Nonnull final Key<K> key) {
     return groupBy(nodes, new NullableFunction<DataNode<V>, DataNode<K>>() {
       @Nullable
       @Override
@@ -261,8 +261,8 @@ public class ExternalSystemApiUtil {
     });
   }
 
-  @NotNull
-  public static <K, V> Map<K, List<V>> groupBy(@NotNull Collection<V> nodes, @NotNull NullableFunction<V, K> grouper) {
+  @Nonnull
+  public static <K, V> Map<K, List<V>> groupBy(@Nonnull Collection<V> nodes, @Nonnull NullableFunction<V, K> grouper) {
     Map<K, List<V>> result = ContainerUtilRt.newHashMap();
     for (V data : nodes) {
       K key = grouper.fun(data);
@@ -292,8 +292,8 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  public static <T> Collection<DataNode<T>> getChildren(@NotNull DataNode<?> node, @NotNull Key<T> key) {
+  @Nonnull
+  public static <T> Collection<DataNode<T>> getChildren(@Nonnull DataNode<?> node, @Nonnull Key<T> key) {
     Collection<DataNode<T>> result = null;
     for (DataNode<?> child : node.getChildren()) {
       if (!key.equals(child.getKey())) {
@@ -308,8 +308,8 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> DataNode<T> find(@NotNull DataNode<?> node, @NotNull Key<T> key) {
+  @javax.annotation.Nullable
+  public static <T> DataNode<T> find(@Nonnull DataNode<?> node, @Nonnull Key<T> key) {
     for (DataNode<?> child : node.getChildren()) {
       if (key.equals(child.getKey())) {
         return (DataNode<T>)child;
@@ -319,8 +319,8 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> DataNode<T> find(@NotNull DataNode<?> node, @NotNull Key<T> key, BooleanFunction<DataNode<T>> predicate) {
+  @javax.annotation.Nullable
+  public static <T> DataNode<T> find(@Nonnull DataNode<?> node, @Nonnull Key<T> key, BooleanFunction<DataNode<T>> predicate) {
     for (DataNode<?> child : node.getChildren()) {
       if (key.equals(child.getKey()) && predicate.fun((DataNode<T>)child)) {
         return (DataNode<T>)child;
@@ -331,22 +331,22 @@ public class ExternalSystemApiUtil {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node, @NotNull Key<T> key) {
+  public static <T> DataNode<T> findParent(@Nonnull DataNode<?> node, @Nonnull Key<T> key) {
     return findParent(node, key, null);
   }
 
 
   @SuppressWarnings("unchecked")
-  @Nullable
-  public static <T> DataNode<T> findParent(@NotNull DataNode<?> node, @NotNull Key<T> key, @Nullable BooleanFunction<DataNode<T>> predicate) {
+  @javax.annotation.Nullable
+  public static <T> DataNode<T> findParent(@Nonnull DataNode<?> node, @Nonnull Key<T> key, @Nullable BooleanFunction<DataNode<T>> predicate) {
     DataNode<?> parent = node.getParent();
     if (parent == null) return null;
     return key.equals(parent.getKey()) && (predicate == null || predicate.fun((DataNode<T>)parent)) ? (DataNode<T>)parent : findParent(parent, key, predicate);
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  public static <T> Collection<DataNode<T>> findAll(@NotNull DataNode<?> parent, @NotNull Key<T> key) {
+  @Nonnull
+  public static <T> Collection<DataNode<T>> findAll(@Nonnull DataNode<?> parent, @Nonnull Key<T> key) {
     Collection<DataNode<T>> result = null;
     for (DataNode<?> child : parent.getChildren()) {
       if (!key.equals(child.getKey())) {
@@ -360,11 +360,11 @@ public class ExternalSystemApiUtil {
     return result == null ? Collections.<DataNode<T>>emptyList() : result;
   }
 
-  public static void executeProjectChangeAction(@NotNull final DisposeAwareProjectChange task) {
+  public static void executeProjectChangeAction(@Nonnull final DisposeAwareProjectChange task) {
     executeProjectChangeAction(false, task);
   }
 
-  public static void executeProjectChangeAction(boolean synchronous, @NotNull final DisposeAwareProjectChange task) {
+  public static void executeProjectChangeAction(boolean synchronous, @Nonnull final DisposeAwareProjectChange task) {
     executeOnEdt(synchronous, new Runnable() {
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -377,7 +377,7 @@ public class ExternalSystemApiUtil {
     });
   }
 
-  public static void executeOnEdt(boolean synchronous, @NotNull Runnable task) {
+  public static void executeOnEdt(boolean synchronous, @Nonnull Runnable task) {
     if (synchronous) {
       if (ApplicationManager.getApplication().isDispatchThread()) {
         task.run();
@@ -418,7 +418,7 @@ public class ExternalSystemApiUtil {
    * @param bundlePath   path to the target bundle file
    * @param contextClass class from the same content root as the target bundle file
    */
-  public static void addBundle(@NotNull PathsList classPath, @NotNull String bundlePath, @NotNull Class<?> contextClass) {
+  public static void addBundle(@Nonnull PathsList classPath, @Nonnull String bundlePath, @Nonnull Class<?> contextClass) {
     String pathToUse = bundlePath.replace('.', '/');
     if (!pathToUse.endsWith(".properties")) {
       pathToUse += ".properties";
@@ -433,8 +433,8 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("ConstantConditions")
-  @Nullable
-  public static String normalizePath(@Nullable String s) {
+  @javax.annotation.Nullable
+  public static String normalizePath(@javax.annotation.Nullable String s) {
     return StringUtil.isEmpty(s) ? null : s.replace('\\', ExternalSystemConstants.PATH_SEPARATOR);
   }
 
@@ -460,14 +460,14 @@ public class ExternalSystemApiUtil {
 //    return PropertiesComponent.getInstance().getValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getReadableName(), "");
 //  }
 
-  public static void storeLastUsedExternalProjectPath(@Nullable String path, @NotNull ProjectSystemId externalSystemId) {
+  public static void storeLastUsedExternalProjectPath(@javax.annotation.Nullable String path, @Nonnull ProjectSystemId externalSystemId) {
     if (path != null) {
       PropertiesComponent.getInstance().setValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getReadableName(), path);
     }
   }
 
-  @NotNull
-  public static String getProjectRepresentationName(@NotNull String targetProjectPath, @Nullable String rootProjectPath) {
+  @Nonnull
+  public static String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath) {
     if (rootProjectPath == null) {
       File rootProjectDir = new File(targetProjectPath);
       if (rootProjectDir.isFile()) {
@@ -505,7 +505,7 @@ public class ExternalSystemApiUtil {
    * given path
    */
   @Nullable
-  public static String getRootProjectPath(@NotNull String externalProjectPath, @NotNull ProjectSystemId externalSystemId, @NotNull Project project) {
+  public static String getRootProjectPath(@Nonnull String externalProjectPath, @Nonnull ProjectSystemId externalSystemId, @Nonnull Project project) {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       return null;
@@ -523,8 +523,8 @@ public class ExternalSystemApiUtil {
    * @return error message for the given exception
    */
   @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
-  @NotNull
-  public static String buildErrorMessage(@NotNull Throwable e) {
+  @Nonnull
+  public static String buildErrorMessage(@Nonnull Throwable e) {
     Throwable unwrapped = RemoteUtil.unwrap(e);
     String reason = unwrapped.getLocalizedMessage();
     if (!StringUtil.isEmpty(reason)) {
@@ -541,8 +541,8 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  @NotNull
-  public static AbstractExternalSystemSettings getSettings(@NotNull Project project, @NotNull ProjectSystemId externalSystemId)
+  @Nonnull
+  public static AbstractExternalSystemSettings getSettings(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId)
           throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
@@ -553,7 +553,7 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@NotNull Project project, @NotNull ProjectSystemId externalSystemId)
+  public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId)
           throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
@@ -565,9 +565,9 @@ public class ExternalSystemApiUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <S extends ExternalSystemExecutionSettings> S getExecutionSettings(@NotNull Project project,
-                                                                                   @NotNull String linkedProjectPath,
-                                                                                   @NotNull ProjectSystemId externalSystemId) throws IllegalArgumentException {
+  public static <S extends ExternalSystemExecutionSettings> S getExecutionSettings(@Nonnull Project project,
+                                                                                   @Nonnull String linkedProjectPath,
+                                                                                   @Nonnull ProjectSystemId externalSystemId) throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       throw new IllegalArgumentException(
@@ -616,8 +616,8 @@ public class ExternalSystemApiUtil {
    * @throws InvocationTargetException as defined by reflection processing
    * @throws ClassNotFoundException    as defined by reflection processing
    */
-  @NotNull
-  public static <T extends ParametersEnhancer> T reloadIfNecessary(@NotNull final Class<T> clazz)
+  @Nonnull
+  public static <T extends ParametersEnhancer> T reloadIfNecessary(@Nonnull final Class<T> clazz)
           throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
     T instance = clazz.newInstance();
     List<URL> urls = ContainerUtilRt.newArrayList();
@@ -653,7 +653,7 @@ public class ExternalSystemApiUtil {
   }
 
   @Contract("null -> false, _")
-  public static String getExtensionSystemOption(@Nullable Module module, @NotNull String key) {
+  public static String getExtensionSystemOption(@Nullable Module module, @Nonnull String key) {
     if (module == null) {
       return null;
     }
@@ -665,17 +665,17 @@ public class ExternalSystemApiUtil {
   }
 
   @Contract("_, null -> false")
-  public static boolean isExternalSystemAwareModule(@NotNull ProjectSystemId systemId, @Nullable Module module) {
+  public static boolean isExternalSystemAwareModule(@Nonnull ProjectSystemId systemId, @Nullable Module module) {
     String extensionSystemOption = getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
     return extensionSystemOption != null && systemId.getId().equals(extensionSystemOption);
   }
 
   @Contract("_, null -> false")
-  public static boolean isExternalSystemAwareModule(@NotNull String systemId, @Nullable Module module) {
+  public static boolean isExternalSystemAwareModule(@Nonnull String systemId, @Nullable Module module) {
     return module != null && systemId.equals(getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public static String getExternalProjectPath(@Nullable Module module) {
     return getExtensionSystemOption(module, ExternalSystemConstants.LINKED_PROJECT_PATH_KEY);
   }

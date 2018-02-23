@@ -19,8 +19,8 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class KeyboardModifierListener {
     }
   };
 
-  public void init(@NotNull JComponent component, @NotNull Disposable disposable) {
+  public void init(@Nonnull JComponent component, @Nonnull Disposable disposable) {
     assert myWindow == null;
 
     Disposer.register(disposable, new Disposable() {

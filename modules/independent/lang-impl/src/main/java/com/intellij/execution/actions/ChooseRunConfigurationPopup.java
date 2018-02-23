@@ -43,8 +43,8 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,17 +57,20 @@ import java.util.List;
 public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
   private final Project myProject;
-  @NotNull private final String myAddKey;
-  @NotNull private final Executor myDefaultExecutor;
-  @Nullable private final Executor myAlternativeExecutor;
+  @Nonnull
+  private final String myAddKey;
+  @Nonnull
+  private final Executor myDefaultExecutor;
+  @Nullable
+  private final Executor myAlternativeExecutor;
 
   private Executor myCurrentExecutor;
   private boolean myEditConfiguration;
   private final RunListPopup myPopup;
 
-  public ChooseRunConfigurationPopup(@NotNull Project project,
-                                     @NotNull String addKey,
-                                     @NotNull Executor defaultExecutor,
+  public ChooseRunConfigurationPopup(@Nonnull Project project,
+                                     @Nonnull String addKey,
+                                     @Nonnull Executor defaultExecutor,
                                      @Nullable Executor alternativeExecutor) {
     myProject = project;
     myAddKey = addKey;
@@ -87,7 +90,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     myPopup.showCenteredInCurrentWindow(myProject);
   }
 
-  protected static boolean canRun(@NotNull final Executor executor, final RunnerAndConfigurationSettings settings) {
+  protected static boolean canRun(@Nonnull final Executor executor, final RunnerAndConfigurationSettings settings) {
     return ProgramRunnerUtil.getRunner(executor.getId(), settings) != null;
   }
 
@@ -215,7 +218,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
   }
 
-  void editConfiguration(@NotNull final Project project, @NotNull final RunnerAndConfigurationSettings configuration) {
+  void editConfiguration(@Nonnull final Project project, @Nonnull final RunnerAndConfigurationSettings configuration) {
     final Executor executor = getExecutor();
     PropertiesComponent.getInstance().setValue("run.configuration.edit.ad", Boolean.toString(true));
     if (RunDialog.editConfiguration(project, configuration, "Edit configuration settings", executor)) {
@@ -224,13 +227,13 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
   }
 
-  private static void deleteConfiguration(final Project project, @NotNull final RunnerAndConfigurationSettings configurationSettings) {
+  private static void deleteConfiguration(final Project project, @Nonnull final RunnerAndConfigurationSettings configurationSettings) {
     final RunManagerEx manager = RunManagerEx.getInstanceEx(project);
     manager.removeConfiguration(configurationSettings);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Executor getExecutor() {
     return myCurrentExecutor == null ? myDefaultExecutor : myCurrentExecutor;
   }
@@ -343,7 +346,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return myValue != null ? myValue.hashCode() : 0;
     }
 
-    public abstract void perform(@NotNull final Project project, @NotNull final Executor executor, @NotNull final DataContext context);
+    public abstract void perform(@Nonnull final Project project, @Nonnull final Executor executor, @Nonnull final DataContext context);
 
     @Nullable
     public ConfigurationType getType() {
@@ -362,18 +365,18 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return PopupStep.FINAL_CHOICE;
     }
 
-    public static ItemWrapper wrap(@NotNull final Project project,
-                                   @NotNull final RunnerAndConfigurationSettings settings,
+    public static ItemWrapper wrap(@Nonnull final Project project,
+                                   @Nonnull final RunnerAndConfigurationSettings settings,
                                    final boolean dynamic) {
       final ItemWrapper result = wrap(project, settings);
       result.setDynamic(dynamic);
       return result;
     }
 
-    public static ItemWrapper wrap(@NotNull final Project project, @NotNull final RunnerAndConfigurationSettings settings) {
+    public static ItemWrapper wrap(@Nonnull final Project project, @Nonnull final RunnerAndConfigurationSettings settings) {
       return new ItemWrapper<RunnerAndConfigurationSettings>(settings) {
         @Override
-        public void perform(@NotNull Project project, @NotNull Executor executor, @NotNull DataContext context) {
+        public void perform(@Nonnull Project project, @Nonnull Executor executor, @Nonnull DataContext context) {
           RunnerAndConfigurationSettings config = getValue();
           RunManagerEx.getInstanceEx(project).setSelectedConfiguration(config);
           ExecutionUtil.runConfiguration(config, executor);
@@ -405,7 +408,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
 
         @Override
-        public PopupStep getNextStep(@NotNull final Project project, @NotNull final ChooseRunConfigurationPopup action) {
+        public PopupStep getNextStep(@Nonnull final Project project, @Nonnull final ChooseRunConfigurationPopup action) {
           return new ConfigurationActionsStep(project, action, getValue(), isDynamic());
         }
       };
@@ -422,10 +425,10 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     private final ChooseRunConfigurationPopup myAction;
     private int myDefaultConfiguration = -1;
 
-    private ConfigurationListPopupStep(@NotNull final ChooseRunConfigurationPopup action,
-                                       @NotNull final Project project,
-                                       @NotNull final ExecutorProvider executorProvider,
-                                       @NotNull final String title) {
+    private ConfigurationListPopupStep(@Nonnull final ChooseRunConfigurationPopup action,
+                                       @Nonnull final Project project,
+                                       @Nonnull final ExecutorProvider executorProvider,
+                                       @Nonnull final String title) {
       super(title, createSettingsList(project, executorProvider, true));
       myProject = project;
       myAction = action;
@@ -527,7 +530,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return selectedValue.hasActions();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTextFor(ItemWrapper value) {
       return value.getText();
@@ -541,18 +544,20 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
   private static final class ConfigurationActionsStep extends BaseListPopupStep<ActionWrapper> {
 
-    @NotNull private final RunnerAndConfigurationSettings mySettings;
-    @NotNull private final Project myProject;
+    @Nonnull
+    private final RunnerAndConfigurationSettings mySettings;
+    @Nonnull
+    private final Project myProject;
 
-    private ConfigurationActionsStep(@NotNull final Project project,
+    private ConfigurationActionsStep(@Nonnull final Project project,
                                      ChooseRunConfigurationPopup action,
-                                     @NotNull final RunnerAndConfigurationSettings settings, final boolean dynamic) {
+                                     @Nonnull final RunnerAndConfigurationSettings settings, final boolean dynamic) {
       super(null, buildActions(project, action, settings, dynamic));
       myProject = project;
       mySettings = settings;
     }
 
-    @NotNull
+    @Nonnull
     public RunnerAndConfigurationSettings getSettings() {
       return mySettings;
     }
@@ -570,9 +575,9 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return value.addSeparatorAbove() ? new ListSeparator() : null;
     }
 
-    private static ActionWrapper[] buildActions(@NotNull final Project project,
+    private static ActionWrapper[] buildActions(@Nonnull final Project project,
                                                 final ChooseRunConfigurationPopup action,
-                                                @NotNull final RunnerAndConfigurationSettings settings,
+                                                @Nonnull final RunnerAndConfigurationSettings settings,
                                                 final boolean dynamic) {
       final List<ActionWrapper> result = new ArrayList<ActionWrapper>();
 
@@ -654,7 +659,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return aValue.getIcon();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTextFor(ActionWrapper value) {
       return value.getText();
@@ -843,7 +848,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Override
-    public void perform(@NotNull Project project, @NotNull Executor executor, @NotNull DataContext context) {
+    public void perform(@Nonnull Project project, @Nonnull Executor executor, @Nonnull DataContext context) {
       RunnerAndConfigurationSettings selectedConfiguration = RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
       if (myConfigurations.contains(selectedConfiguration)) {
         RunManagerEx.getInstanceEx(project).setSelectedConfiguration(selectedConfiguration);
@@ -909,7 +914,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return aValue.getIcon();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getTextFor(ConfigurationActionsStep value) {
       return value.getName();
@@ -921,7 +926,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
   }
 
-  public static ItemWrapper[] createSettingsList(@NotNull Project project, @NotNull ExecutorProvider executorProvider, boolean createEditAction) {
+  public static ItemWrapper[] createSettingsList(@Nonnull Project project, @Nonnull ExecutorProvider executorProvider, boolean createEditAction) {
     List<ItemWrapper> result = new ArrayList<ItemWrapper>();
 
     if (createEditAction) {
@@ -937,7 +942,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
 
         @Override
-        public void perform(@NotNull final Project project, @NotNull final Executor executor, @NotNull DataContext context) {
+        public void perform(@Nonnull final Project project, @Nonnull final Executor executor, @Nonnull DataContext context) {
           if (new EditConfigurationsDialog(project) {
             @Override
             protected void init() {
@@ -990,7 +995,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
           }
 
           @Override
-          public void perform(@NotNull final Project project, @NotNull final Executor executor, @NotNull DataContext context) {
+          public void perform(@Nonnull final Project project, @Nonnull final Executor executor, @Nonnull DataContext context) {
             ExecutionTargetManager.setActiveTarget(project, getValue());
             ExecutionUtil.runConfiguration(selectedConfiguration, executor);
           }
@@ -1046,7 +1051,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     return result.toArray(new ItemWrapper[result.size()]);
   }
 
-  @NotNull
+  @Nonnull
   private static List<RunnerAndConfigurationSettings> populateWithDynamicRunners(final List<ItemWrapper> result,
                                                                                  Map<RunnerAndConfigurationSettings, ItemWrapper> existing,
                                                                                  final Project project, final RunManagerEx manager,
@@ -1104,14 +1109,14 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
           }
 
           @Override
-          public void perform(@NotNull Project project, @NotNull Executor executor, @NotNull DataContext context) {
+          public void perform(@Nonnull Project project, @Nonnull Executor executor, @Nonnull DataContext context) {
             manager.setTemporaryConfiguration(configuration);
             RunManagerEx.getInstanceEx(project).setSelectedConfiguration(configuration);
             ExecutionUtil.runConfiguration(configuration, executor);
           }
 
           @Override
-          public PopupStep getNextStep(@NotNull final Project project, @NotNull final ChooseRunConfigurationPopup action) {
+          public PopupStep getNextStep(@Nonnull final Project project, @Nonnull final ChooseRunConfigurationPopup action) {
             return new ConfigurationActionsStep(project, action, configuration, isDynamic());
           }
 

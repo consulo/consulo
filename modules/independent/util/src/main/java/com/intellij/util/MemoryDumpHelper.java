@@ -18,7 +18,7 @@ package com.intellij.util;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.ZipUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -93,11 +93,11 @@ public class MemoryDumpHelper {
    * @param dumpPath the name of the snapshot file
    * @throws Exception
    */
-  public static synchronized void captureMemoryDump(@NotNull String dumpPath) throws Exception {
+  public static synchronized void captureMemoryDump(@Nonnull String dumpPath) throws Exception {
     ourDumpHeap.invoke(ourMXBean, dumpPath, true);
   }
 
-  public static synchronized void captureMemoryDumpZipped(@NotNull String zipPath) throws Exception {
+  public static synchronized void captureMemoryDumpZipped(@Nonnull String zipPath) throws Exception {
     File tempFile = FileUtil.createTempFile("heapDump.", ".hprof");
     FileUtil.delete(tempFile);
 

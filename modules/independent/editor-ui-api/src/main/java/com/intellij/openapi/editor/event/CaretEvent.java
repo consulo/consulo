@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.event;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventObject;
 
@@ -28,18 +28,18 @@ public class CaretEvent extends EventObject {
   private final LogicalPosition myOldPosition;
   private final LogicalPosition myNewPosition;
 
-  public CaretEvent(@NotNull Editor editor, @NotNull LogicalPosition oldPosition, @NotNull LogicalPosition newPosition) {
+  public CaretEvent(@Nonnull Editor editor, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
     this(editor, null, oldPosition, newPosition);
   }
 
-  public CaretEvent(@NotNull Editor editor, @Nullable Caret caret, @NotNull LogicalPosition oldPosition, @NotNull LogicalPosition newPosition) {
+  public CaretEvent(@Nonnull Editor editor, @Nullable Caret caret, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
     super(editor);
     myCaret = caret;
     myOldPosition = oldPosition;
     myNewPosition = newPosition;
   }
 
-  @NotNull
+  @Nonnull
   public Editor getEditor() {
     return (Editor) getSource();
   }
@@ -49,12 +49,12 @@ public class CaretEvent extends EventObject {
     return myCaret;
   }
 
-  @NotNull
+  @Nonnull
   public LogicalPosition getOldPosition() {
     return myOldPosition;
   }
 
-  @NotNull
+  @Nonnull
   public LogicalPosition getNewPosition() {
     return myNewPosition;
   }

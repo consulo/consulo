@@ -20,8 +20,8 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,45 +32,45 @@ public interface FileSystemInterface {
   long DEFAULT_LENGTH = 0;
   long DEFAULT_TIMESTAMP = 0;
 
-  boolean exists(@NotNull VirtualFile file);
+  boolean exists(@Nonnull VirtualFile file);
 
-  @NotNull
-  String[] list(@NotNull VirtualFile file);
+  @Nonnull
+  String[] list(@Nonnull VirtualFile file);
 
-  boolean isDirectory(@NotNull VirtualFile file);
+  boolean isDirectory(@Nonnull VirtualFile file);
 
-  long getTimeStamp(@NotNull VirtualFile file);
-  void setTimeStamp(@NotNull VirtualFile file, long timeStamp) throws IOException;
+  long getTimeStamp(@Nonnull VirtualFile file);
+  void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException;
 
-  boolean isWritable(@NotNull VirtualFile file);
-  void setWritable(@NotNull VirtualFile file, boolean writableFlag) throws IOException;
+  boolean isWritable(@Nonnull VirtualFile file);
+  void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException;
 
-  boolean isSymLink(@NotNull VirtualFile file);
+  boolean isSymLink(@Nonnull VirtualFile file);
   @Nullable
-  String resolveSymLink(@NotNull VirtualFile file);
+  String resolveSymLink(@Nonnull VirtualFile file);
 
-  VirtualFile createChildDirectory(@Nullable Object requestor, @NotNull VirtualFile parent, @NotNull String dir) throws IOException;
-  VirtualFile createChildFile(@Nullable Object requestor, @NotNull VirtualFile parent, @NotNull String file) throws IOException;
+  VirtualFile createChildDirectory(@Nullable Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException;
+  VirtualFile createChildFile(@Nullable Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException;
 
-  void deleteFile(final Object requestor, @NotNull VirtualFile file) throws IOException;
-  void moveFile(final Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent) throws IOException;
-  void renameFile(final Object requestor, @NotNull VirtualFile file, @NotNull String newName) throws IOException;
-  VirtualFile copyFile(final Object requestor, @NotNull VirtualFile file, @NotNull VirtualFile newParent, @NotNull String copyName) throws IOException;
+  void deleteFile(final Object requestor, @Nonnull VirtualFile file) throws IOException;
+  void moveFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
+  void renameFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
+  VirtualFile copyFile(final Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
 
-  @NotNull
-  byte[] contentsToByteArray(@NotNull VirtualFile file) throws IOException;
+  @Nonnull
+  byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException;
 
   /**
    * Does NOT strip the BOM from the beginning of the stream, unlike the {@link com.intellij.openapi.vfs.VirtualFile#getInputStream()}
    */
-  @NotNull
-  InputStream getInputStream(@NotNull VirtualFile file) throws IOException;
+  @Nonnull
+  InputStream getInputStream(@Nonnull VirtualFile file) throws IOException;
 
   /**
    * Does NOT add the BOM to the beginning of the stream, unlike the {@link com.intellij.openapi.vfs.VirtualFile#getOutputStream(Object)}
    */
-  @NotNull
-  OutputStream getOutputStream(@NotNull VirtualFile file, final Object requestor, final long modStamp, final long timeStamp) throws IOException;
+  @Nonnull
+  OutputStream getOutputStream(@Nonnull VirtualFile file, final Object requestor, final long modStamp, final long timeStamp) throws IOException;
 
-  long getLength(@NotNull VirtualFile file);
+  long getLength(@Nonnull VirtualFile file);
 }

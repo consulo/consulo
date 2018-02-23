@@ -21,8 +21,8 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.Weigher;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -59,7 +59,7 @@ public abstract class CompletionService {
    * @param text
    * @deprecated use {@link CompletionResultSet#addLookupAdvertisement(String)}
    */
-  public abstract void setAdvertisementText(@Nullable String text);
+  public abstract void setAdvertisementText(@javax.annotation.Nullable String text);
 
   /**
    * Run all contributors until any of them returns false or the list is exhausted. If from parameter is not null, contributors
@@ -94,9 +94,9 @@ public abstract class CompletionService {
    * @return
    */
   public abstract CompletionResultSet createResultSet(CompletionParameters parameters, Consumer<CompletionResult> consumer,
-                                                      @NotNull CompletionContributor contributor);
+                                                      @Nonnull CompletionContributor contributor);
 
-  @Nullable
+  @javax.annotation.Nullable
   public abstract CompletionProcess getCurrentCompletion();
 
   /**

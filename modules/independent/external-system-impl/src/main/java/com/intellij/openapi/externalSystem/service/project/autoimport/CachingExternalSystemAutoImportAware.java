@@ -18,8 +18,7 @@ package com.intellij.openapi.externalSystem.service.project.autoimport;
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -32,18 +31,20 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class CachingExternalSystemAutoImportAware implements ExternalSystemAutoImportAware {
 
-  @NotNull private final ConcurrentMap<String/* file path */, String/* root external project path */> myCache
+  @Nonnull
+  private final ConcurrentMap<String/* file path */, String/* root external project path */> myCache
     = ContainerUtil.newConcurrentMap();
   
-  @NotNull private final ExternalSystemAutoImportAware myDelegate;
+  @Nonnull
+  private final ExternalSystemAutoImportAware myDelegate;
 
-  public CachingExternalSystemAutoImportAware(@NotNull ExternalSystemAutoImportAware delegate) {
+  public CachingExternalSystemAutoImportAware(@Nonnull ExternalSystemAutoImportAware delegate) {
     myDelegate = delegate;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
-  public String getAffectedExternalProjectPath(@NotNull String changedFileOrDirPath, @NotNull Project project) {
+  public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
     String cached = myCache.get(changedFileOrDirPath);
     if (cached != null) {
       return cached;

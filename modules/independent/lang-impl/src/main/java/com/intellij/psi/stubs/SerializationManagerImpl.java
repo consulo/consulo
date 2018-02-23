@@ -22,7 +22,7 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.PersistentStringEnumerator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "PSI.SerializationManager";
   }
@@ -147,7 +147,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   }
 
   @Override
-  public void registerSerializer(@NotNull ObjectStubSerializer serializer) {
+  public void registerSerializer(@Nonnull ObjectStubSerializer serializer) {
     super.registerSerializer(serializer);
     try {
       myStubSerializationHelper.assignId(serializer);
@@ -159,7 +159,7 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
   }
 
   @Override
-  public void serialize(@NotNull Stub rootStub, @NotNull OutputStream stream) {
+  public void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream) {
     initSerializers();
     try {
       myStubSerializationHelper.serialize(rootStub, stream);
@@ -170,9 +170,9 @@ public class SerializationManagerImpl extends SerializationManagerEx implements 
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Stub deserialize(@NotNull InputStream stream) throws SerializerNotFoundException {
+  public Stub deserialize(@Nonnull InputStream stream) throws SerializerNotFoundException {
     initSerializers();
 
     try {

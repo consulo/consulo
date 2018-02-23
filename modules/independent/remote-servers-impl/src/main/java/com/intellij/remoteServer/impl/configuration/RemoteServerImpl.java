@@ -3,7 +3,7 @@ package com.intellij.remoteServer.impl.configuration;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -19,19 +19,19 @@ public class RemoteServerImpl<C extends ServerConfiguration> implements RemoteSe
     myConfiguration = configuration;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return myName;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public ServerType<C> getType() {
     return myType;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public C getConfiguration() {
     return myConfiguration;

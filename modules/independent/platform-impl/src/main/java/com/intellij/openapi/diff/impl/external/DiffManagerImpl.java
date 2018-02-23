@@ -40,8 +40,8 @@ import com.intellij.util.config.*;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -164,7 +164,7 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
   }
 
   @Override
-  public boolean registerDiffTool(@NotNull DiffTool tool) throws NullPointerException {
+  public boolean registerDiffTool(@Nonnull DiffTool tool) throws NullPointerException {
     if (myAdditionTools.contains(tool)) {
       return false;
     }
@@ -189,12 +189,12 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
   }
 
   @Override
-  public DiffPanel createDiffPanel(Window window, @NotNull Project project, DiffTool parentTool) {
+  public DiffPanel createDiffPanel(Window window, @Nonnull Project project, DiffTool parentTool) {
     return new DiffPanelImpl(window, project, true, true, FULL_DIFF_DIVIDER_POLYGONS_OFFSET, parentTool);
   }
 
   @Override
-  public DiffPanel createDiffPanel(Window window, @NotNull Project project, @NotNull Disposable parentDisposable, DiffTool parentTool) {
+  public DiffPanel createDiffPanel(Window window, @Nonnull Project project, @Nonnull Disposable parentDisposable, DiffTool parentTool) {
     DiffPanel diffPanel = createDiffPanel(window, project, parentTool);
     Disposer.register(parentDisposable, diffPanel);
     return diffPanel;
@@ -246,7 +246,7 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
     return myProperties;
   }
 
-  static DiffPanel createDiffPanel(DiffRequest data, Window window, @NotNull Disposable parentDisposable, FrameDiffTool tool) {
+  static DiffPanel createDiffPanel(DiffRequest data, Window window, @Nonnull Disposable parentDisposable, FrameDiffTool tool) {
     DiffPanel diffPanel = null;
     try {
       diffPanel = DiffManager.getInstance().createDiffPanel(window, data.getProject(), parentDisposable, tool);
@@ -264,21 +264,21 @@ public class DiffManagerImpl extends DiffManager implements PersistentStateCompo
     }
   }
 
-  @NotNull
+  @Nonnull
   public ComparisonPolicy getComparisonPolicy() {
     return myComparisonPolicy;
   }
 
-  public void setComparisonPolicy(@NotNull ComparisonPolicy value) {
+  public void setComparisonPolicy(@Nonnull ComparisonPolicy value) {
     myComparisonPolicy = value;
   }
 
-  @NotNull
+  @Nonnull
   public HighlightMode getHighlightMode() {
     return myHighlightMode;
   }
 
-  public void setHighlightMode(@NotNull HighlightMode highlightMode) {
+  public void setHighlightMode(@Nonnull HighlightMode highlightMode) {
     myHighlightMode = highlightMode;
   }
 }

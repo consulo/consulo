@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface AnnotationSourceSwitcher {
-  @NotNull
+  @Nonnull
   AnnotationSource getAnnotationSource(int lineNumber);
   boolean mergeSourceAvailable(int lineNumber);
-  @NotNull
+  @Nonnull
   LineAnnotationAspect getRevisionAspect();
-  @NotNull
+  @Nonnull
   AnnotationSource getDefaultSource();
   void switchTo(final AnnotationSource source);
 }

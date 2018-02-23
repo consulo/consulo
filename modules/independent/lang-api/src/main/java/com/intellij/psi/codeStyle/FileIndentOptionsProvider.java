@@ -21,8 +21,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
@@ -38,8 +37,8 @@ public abstract class FileIndentOptionsProvider {
    * @param file The file to retrieve options for.
    * @return Indent options or <code>null</code> if the provider can't retrieve them.
    */
-  @Nullable
-  public abstract CommonCodeStyleSettings.IndentOptions getIndentOptions(@NotNull CodeStyleSettings settings, @NotNull PsiFile file);
+  @javax.annotation.Nullable
+  public abstract CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file);
 
   /**
    * Tells if the provider can be used when a complete file is reformatted.
@@ -53,12 +52,12 @@ public abstract class FileIndentOptionsProvider {
    * @return information used to create user notification in editor. If the option is <code>null</code>, no notification
    * will be shown.
    */
-  @Nullable
-  public EditorNotificationInfo getNotificationInfo(@NotNull Project project,
-                                                    @NotNull VirtualFile file,
-                                                    @NotNull FileEditor fileEditor,
-                                                    @NotNull CommonCodeStyleSettings.IndentOptions user,
-                                                    @NotNull CommonCodeStyleSettings.IndentOptions detected) {
+  @javax.annotation.Nullable
+  public EditorNotificationInfo getNotificationInfo(@Nonnull Project project,
+                                                    @Nonnull VirtualFile file,
+                                                    @Nonnull FileEditor fileEditor,
+                                                    @Nonnull CommonCodeStyleSettings.IndentOptions user,
+                                                    @Nonnull CommonCodeStyleSettings.IndentOptions detected) {
     return null;
   }
 
@@ -68,7 +67,7 @@ public abstract class FileIndentOptionsProvider {
    * @return <code>true</code> if the file can be silently accepted without a warning.
    */
   @SuppressWarnings("UnusedParameters")
-  public boolean isAcceptedWithoutWarning(@Nullable Project project, @NotNull VirtualFile file) {
+  public boolean isAcceptedWithoutWarning(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file) {
     return false;
   }
 
@@ -77,7 +76,7 @@ public abstract class FileIndentOptionsProvider {
    * @param file The file to be accepted. A particular implementation of <code>FileIndentOptionsProvider</code> may ignore this parameter
    *             and set a global acceptance flag so that no notification will be shown anymore.
    */
-  public void setAccepted(@SuppressWarnings("UnusedParameters") @NotNull VirtualFile file) {}
+  public void setAccepted(@SuppressWarnings("UnusedParameters") @Nonnull VirtualFile file) {}
 
   public static boolean isShowNotification() {
     return PropertiesComponent.getInstance().getBoolean(SHOW_NOTIFICATION_KEY, true);

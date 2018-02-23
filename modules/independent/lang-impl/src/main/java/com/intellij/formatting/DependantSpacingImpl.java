@@ -20,7 +20,7 @@ import com.intellij.formatting.engine.BlockRangesMap;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,15 +33,17 @@ public class DependantSpacingImpl extends SpacingImpl {
   private static final int DEPENDENCE_CONTAINS_LF_MASK      = 0x10;
   private static final int DEPENDENT_REGION_LF_CHANGED_MASK = 0x20;
 
-  @NotNull private final List<TextRange> myDependentRegionRanges;
-  @NotNull private final DependentSpacingRule myRule;
+  @Nonnull
+  private final List<TextRange> myDependentRegionRanges;
+  @Nonnull
+  private final DependentSpacingRule myRule;
 
   public DependantSpacingImpl(final int minSpaces,
                               final int maxSpaces,
-                              @NotNull TextRange dependency,
+                              @Nonnull TextRange dependency,
                               final boolean keepLineBreaks,
                               final int keepBlankLines,
-                              @NotNull DependentSpacingRule rule)
+                              @Nonnull DependentSpacingRule rule)
   {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = ContainerUtil.newSmartList(dependency);
@@ -50,10 +52,10 @@ public class DependantSpacingImpl extends SpacingImpl {
 
   public DependantSpacingImpl(final int minSpaces,
                               final int maxSpaces,
-                              @NotNull List<TextRange> dependencyRanges,
+                              @Nonnull List<TextRange> dependencyRanges,
                               final boolean keepLineBreaks,
                               final int keepBlankLines,
-                              @NotNull DependentSpacingRule rule)
+                              @Nonnull DependentSpacingRule rule)
   {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = dependencyRanges;
@@ -103,7 +105,7 @@ public class DependantSpacingImpl extends SpacingImpl {
     else myFlags &= ~DEPENDENCE_CONTAINS_LF_MASK;
   }
 
-  @NotNull
+  @Nonnull
   public List<TextRange> getDependentRegionRanges() {
     return myDependentRegionRanges;
   }

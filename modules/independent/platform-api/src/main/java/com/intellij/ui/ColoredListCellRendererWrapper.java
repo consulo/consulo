@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,14 +26,14 @@ import javax.swing.*;
  */
 public abstract class ColoredListCellRendererWrapper<T> extends ColoredListCellRenderer<T> {
   @Override
-  protected final void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+  protected final void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
     @SuppressWarnings("unchecked") final T t = (T)value;
     doCustomize(list, t, index, selected, hasFocus);
   }
 
   protected abstract void doCustomize(JList list, T value, int index, boolean selected, boolean hasFocus);
 
-  public void append(@NotNull SimpleColoredText text) {
+  public void append(@Nonnull SimpleColoredText text) {
     text.appendToComponent(this);
   }
 }

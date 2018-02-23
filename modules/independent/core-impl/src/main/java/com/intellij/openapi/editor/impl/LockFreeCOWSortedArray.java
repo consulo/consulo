@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -27,21 +27,23 @@ import java.util.Comparator;
  * N.B. internal array is exposed for faster iterating listeners in to- and reverse order, so care should be taken for not mutating it by clients
  */
 class LockFreeCOWSortedArray<T> {
-  @NotNull private final Comparator<? super T> comparator;
+  @Nonnull
+  private final Comparator<? super T> comparator;
   private final ArrayFactory<T> arrayFactory;
   /** changed by {@link #UPDATER} only */
   @SuppressWarnings("FieldMayBeFinal")
-  @NotNull private volatile T[] listeners;
+  @Nonnull
+  private volatile T[] listeners;
   private static final AtomicFieldUpdater<LockFreeCOWSortedArray, Object[]> UPDATER = AtomicFieldUpdater.forFieldOfType(LockFreeCOWSortedArray.class, Object[].class);
 
-  LockFreeCOWSortedArray(@NotNull Comparator<? super T> comparator, @NotNull ArrayFactory<T> arrayFactory) {
+  LockFreeCOWSortedArray(@Nonnull Comparator<? super T> comparator, @Nonnull ArrayFactory<T> arrayFactory) {
     this.comparator = comparator;
     this.arrayFactory = arrayFactory;
     listeners = arrayFactory.create(0);
   }
 
   // returns true if changed
-  void add(@NotNull T listener) {
+  void add(@Nonnull T listener) {
     while (true) {
       T[] oldListeners = listeners;
       int i = insertionIndex(oldListeners, listener);
@@ -50,7 +52,7 @@ class LockFreeCOWSortedArray<T> {
     }
   }
 
-  boolean remove(@NotNull T listener) {
+  boolean remove(@Nonnull T listener) {
     while (true) {
       T[] oldListeners = listeners;
       T[] newListeners = ArrayUtil.remove(oldListeners, listener, arrayFactory);
@@ -61,7 +63,7 @@ class LockFreeCOWSortedArray<T> {
     return true;
   }
 
-  private int insertionIndex(@NotNull T[] elements, @NotNull T e) {
+  private int insertionIndex(@Nonnull T[] elements, @Nonnull T e) {
     for (int i=0; i<elements.length; i++) {
       T element = elements[i];
       if (comparator.compare(e, element) < 0) {
@@ -71,7 +73,7 @@ class LockFreeCOWSortedArray<T> {
     return elements.length;
   }
 
-  @NotNull
+  @Nonnull
   T[] getArray() {
     return listeners;
   }

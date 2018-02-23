@@ -16,7 +16,7 @@
 
 package com.intellij.navigation;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -25,6 +25,6 @@ public interface GotoClassContributor extends ChooseByNameContributor {
   @Nullable
   String getQualifiedName(NavigationItem item);
 
-  @Nullable
+  @javax.annotation.Nullable
   String getQualifiedNameSeparator();
 }

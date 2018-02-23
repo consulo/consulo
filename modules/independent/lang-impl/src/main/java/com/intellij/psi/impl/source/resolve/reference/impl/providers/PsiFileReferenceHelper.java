@@ -30,8 +30,8 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Query;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,14 +43,14 @@ import java.util.List;
  */
 public class PsiFileReferenceHelper extends FileReferenceHelper {
 
-  @NotNull
+  @Nonnull
   @Override
   public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
     return FileReferenceQuickFixProvider.registerQuickFix(reference);
   }
 
   @Override
-  public PsiFileSystemItem findRoot(final Project project, @NotNull final VirtualFile file) {
+  public PsiFileSystemItem findRoot(final Project project, @Nonnull final VirtualFile file) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     VirtualFile contentRootForFile = index.getSourceRootForFile(file);
     if (contentRootForFile == null) contentRootForFile = index.getContentRootForFile(file);
@@ -62,14 +62,14 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  @NotNull
-  public Collection<PsiFileSystemItem> getRoots(@NotNull final Module module) {
+  @Nonnull
+  public Collection<PsiFileSystemItem> getRoots(@Nonnull final Module module) {
     return getContextsForModule(module, "", module.getModuleWithDependenciesScope());
   }
 
   @Override
-  @NotNull
-  public Collection<PsiFileSystemItem> getContexts(final Project project, @NotNull final VirtualFile file) {
+  @Nonnull
+  public Collection<PsiFileSystemItem> getContexts(final Project project, @Nonnull final VirtualFile file) {
     final PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     if (item != null) {
       final PsiFileSystemItem parent = item.getParent();
@@ -98,18 +98,18 @@ public class PsiFileReferenceHelper extends FileReferenceHelper {
   }
 
   @Override
-  public boolean isMine(final Project project, @NotNull final VirtualFile file) {
+  public boolean isMine(final Project project, @Nonnull final VirtualFile file) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     return index.isInSourceContent(file);
   }
 
   @Override
-  @NotNull
-  public String trimUrl(@NotNull String url) {
+  @Nonnull
+  public String trimUrl(@Nonnull String url) {
     return url.trim();
   }
 
-  static Collection<PsiFileSystemItem> getContextsForModule(@NotNull Module module, @NotNull String packageName, @Nullable GlobalSearchScope scope) {
+  static Collection<PsiFileSystemItem> getContextsForModule(@Nonnull Module module, @Nonnull String packageName, @Nullable GlobalSearchScope scope) {
     List<PsiFileSystemItem> result = null;
     Query<VirtualFile> query = DirectoryIndex.getInstance(module.getProject()).getDirectoriesByPackageName(packageName, false);
     PsiManager manager = null;

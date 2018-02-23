@@ -36,8 +36,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotations.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -48,7 +48,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
 
   private final Project myProject;
 
-  public FileChangedNotificationProvider(@NotNull Project project, @NotNull FrameStateManager frameStateManager) {
+  public FileChangedNotificationProvider(@Nonnull Project project, @Nonnull FrameStateManager frameStateManager) {
     myProject = project;
 
     frameStateManager.addListener(new FrameStateListener.Adapter() {
@@ -66,7 +66,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
     connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
       @Override
-      public void after(@NotNull List<? extends VFileEvent> events) {
+      public void after(@Nonnull List<? extends VFileEvent> events) {
         if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
           Set<VirtualFile> openFiles = ContainerUtil.newHashSet(FileEditorManager.getInstance(myProject).getSelectedFiles());
           EditorNotifications notifications = EditorNotifications.getInstance(myProject);
@@ -81,7 +81,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<EditorNotificationPanel> getKey() {
     return KEY;
@@ -90,7 +90,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@NotNull VirtualFile file, @NotNull FileEditor fileEditor) {
+  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
     if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
       VirtualFileSystem fs = file.getFileSystem();
       if (fs instanceof LocalFileSystem) {
@@ -105,7 +105,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     return null;
   }
 
-  private EditorNotificationPanel createPanel(@NotNull final VirtualFile file) {
+  private EditorNotificationPanel createPanel(@Nonnull final VirtualFile file) {
     EditorNotificationPanel panel = new EditorNotificationPanel();
     panel.setText(IdeBundle.message("file.changed.externally.message"));
     panel.createActionLabel(IdeBundle.message("file.changed.externally.reload"), () -> {

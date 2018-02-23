@@ -30,14 +30,14 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.NotNullFunction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScopeHighlighter {
   public static final NotNullFunction<PsiElement,TextRange> NATURAL_RANGER = new NotNullFunction<PsiElement, TextRange>() {
-    @NotNull
+    @Nonnull
     @Override
     public TextRange fun(PsiElement dom) {
       return dom.getTextRange();

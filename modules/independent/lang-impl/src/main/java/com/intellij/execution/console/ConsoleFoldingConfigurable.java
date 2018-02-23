@@ -9,8 +9,8 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AddEditDeleteListPanel;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
     return myMainComponent;
   }
 
-  public void addRule(@NotNull String rule) {
+  public void addRule(@Nonnull String rule) {
     myPositivePanel.addRule(rule);
   }
 
@@ -76,7 +76,7 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return getDisplayName();
   }

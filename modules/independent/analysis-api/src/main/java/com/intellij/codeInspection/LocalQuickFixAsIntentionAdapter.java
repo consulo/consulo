@@ -20,36 +20,37 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class LocalQuickFixAsIntentionAdapter implements IntentionAction {
   private final LocalQuickFix myFix;
-  @NotNull private final ProblemDescriptor myProblemDescriptor;
+  @Nonnull
+  private final ProblemDescriptor myProblemDescriptor;
 
-  public LocalQuickFixAsIntentionAdapter(@NotNull LocalQuickFix fix, @NotNull ProblemDescriptor problemDescriptor) {
+  public LocalQuickFixAsIntentionAdapter(@Nonnull LocalQuickFix fix, @Nonnull ProblemDescriptor problemDescriptor) {
     myFix = fix;
     myProblemDescriptor = problemDescriptor;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return myFix.getName();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFamilyName() {
     return myFix.getFamilyName();
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return myProblemDescriptor.getStartElement() != null;
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myFix.applyFix(project, myProblemDescriptor);
   }
 

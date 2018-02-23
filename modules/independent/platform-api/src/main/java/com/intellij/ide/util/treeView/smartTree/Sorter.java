@@ -18,7 +18,7 @@ package com.intellij.ide.util.treeView.smartTree;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -67,7 +67,7 @@ public interface Sorter extends TreeAction {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ActionPresentation getPresentation() {
       return new ActionPresentationData(IdeBundle.message("action.sort.alphabetically"),
                                         IdeBundle.message("action.sort.alphabetically"),
@@ -75,7 +75,7 @@ public interface Sorter extends TreeAction {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getName() {
       return ALPHA_SORTER_ID;
     }

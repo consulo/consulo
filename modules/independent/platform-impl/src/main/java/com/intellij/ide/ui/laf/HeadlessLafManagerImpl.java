@@ -20,7 +20,7 @@ import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.openapi.components.ApplicationComponent;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -66,7 +66,7 @@ public class HeadlessLafManagerImpl extends LafManager implements ApplicationCom
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "HeadlessLafManagerImpl";
   }

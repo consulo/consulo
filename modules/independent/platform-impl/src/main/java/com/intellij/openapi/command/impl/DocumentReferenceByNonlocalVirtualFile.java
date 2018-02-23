@@ -19,13 +19,13 @@ import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   private final VirtualFile myFile;
 
-  DocumentReferenceByNonlocalVirtualFile(@NotNull VirtualFile file) {
+  DocumentReferenceByNonlocalVirtualFile(@Nonnull VirtualFile file) {
     myFile = file;
   }
 
@@ -36,7 +36,7 @@ class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile getFile() {
     return myFile;
   }

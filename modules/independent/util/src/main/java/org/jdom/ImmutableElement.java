@@ -23,7 +23,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -34,7 +34,7 @@ class ImmutableElement extends Element {
   private static final Content[] EMPTY_CONTENT = new Content[0];
   private final List<Attribute> myAttributes;
 
-  ImmutableElement(@NotNull Element origin, @NotNull final JDOMInterner interner) {
+  ImmutableElement(@Nonnull Element origin, @Nonnull final JDOMInterner interner) {
     Disposer.clearOwnFields(this, Conditions.<Field>alwaysTrue());
     name = interner.internString(origin.getName());
 
@@ -108,7 +108,7 @@ class ImmutableElement extends Element {
     return myContent.length;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Content> getContent() {
     return Arrays.asList(myContent);
@@ -139,13 +139,13 @@ class ImmutableElement extends Element {
     throw immutableError(this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Element> getChildren() {
     return getContent(new ElementFilter());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Element> getChildren(String name, Namespace ns) {
     return getContent(new ElementFilter(name, ns));
@@ -296,7 +296,7 @@ class ImmutableElement extends Element {
            a1.getNamespace().equals(a2.getNamespace());
   }
 
-  @NotNull
+  @Nonnull
   static IncorrectOperationException immutableError(Object element) {
     return new IncorrectOperationException("Can't change immutable element: " +
                                            element.getClass() + ". To obtain mutable Element call .clone()");
@@ -413,17 +413,17 @@ class ImmutableElement extends Element {
   }
 
   @Override
-  public Element setAttribute(@NotNull String name, @NotNull String value) {
+  public Element setAttribute(@Nonnull String name, @Nonnull String value) {
     throw immutableError(this);
   }
 
   @Override
-  public Element setAttribute(@NotNull String name, @NotNull String value, Namespace ns) {
+  public Element setAttribute(@Nonnull String name, @Nonnull String value, Namespace ns) {
     throw immutableError(this);
   }
 
   @Override
-  public Element setAttribute(@NotNull Attribute attribute) {
+  public Element setAttribute(@Nonnull Attribute attribute) {
     throw immutableError(this);
   }
 

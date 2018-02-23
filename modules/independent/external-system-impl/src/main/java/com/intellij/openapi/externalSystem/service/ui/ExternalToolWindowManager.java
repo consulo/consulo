@@ -10,8 +10,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ui.UIUtil;
 import consulo.wm.impl.ToolWindowBase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -28,12 +27,12 @@ import java.util.Set;
 public class ExternalToolWindowManager {
 
   @SuppressWarnings("unchecked")
-  public static void handle(@NotNull final Project project) {
+  public static void handle(@Nonnull final Project project) {
     for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
       final AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override
-        public void onProjectsLinked(@NotNull Collection linked) {
+        public void onProjectsLinked(@Nonnull Collection linked) {
           if (settings.getLinkedProjectsSettings().size() != 1) {
             return;
           }
@@ -44,7 +43,7 @@ public class ExternalToolWindowManager {
         }
 
         @Override
-        public void onProjectsUnlinked(@NotNull Set linkedProjectPaths) {
+        public void onProjectsUnlinked(@Nonnull Set linkedProjectPaths) {
           if (!settings.getLinkedProjectsSettings().isEmpty()) {
             return;
           }
@@ -62,8 +61,8 @@ public class ExternalToolWindowManager {
     }
   }
 
-  @Nullable
-  private static ToolWindow getToolWindow(@NotNull Project project, @NotNull ProjectSystemId externalSystemId) {
+  @javax.annotation.Nullable
+  private static ToolWindow getToolWindow(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) {
       return null;

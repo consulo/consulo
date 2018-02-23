@@ -27,8 +27,8 @@ import com.intellij.openapi.diff.impl.splitter.LineBlocks;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +43,7 @@ public abstract class SimpleDiffPanelState implements Disposable  {
   protected FragmentList myFragmentList = FragmentList.EMPTY;
   protected final Project myProject;
 
-  public SimpleDiffPanelState(Project project, ContentChangeListener changeListener, @NotNull Disposable parentDisposable) {
+  public SimpleDiffPanelState(Project project, ContentChangeListener changeListener, @Nonnull Disposable parentDisposable) {
     myAppender1 = createEditorWrapper(project, changeListener, FragmentSide.SIDE1);
     myAppender2 = createEditorWrapper(project, changeListener, FragmentSide.SIDE2);
     myProject = project;

@@ -21,18 +21,19 @@ import com.intellij.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import com.intellij.vcs.log.graph.impl.facade.CascadeController;
 import com.intellij.vcs.log.graph.impl.facade.ReachableNodes;
 import com.intellij.vcs.log.graph.utils.UnsignedBitSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
 public class BranchFilterController extends CascadeController {
-  @NotNull private CollapsedGraph myCollapsedGraph;
+  @Nonnull
+  private CollapsedGraph myCollapsedGraph;
   private final Set<Integer> myIdsOfVisibleBranches;
 
-  public BranchFilterController(@NotNull CascadeController delegateLinearGraphController,
-                                @NotNull final PermanentGraphInfo<?> permanentGraphInfo,
-                                @Nullable Set<Integer> idsOfVisibleBranches) {
+  public BranchFilterController(@Nonnull CascadeController delegateLinearGraphController,
+                                @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
+                                @javax.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     myIdsOfVisibleBranches = idsOfVisibleBranches;
     updateCollapsedGraph();
@@ -44,20 +45,20 @@ public class BranchFilterController extends CascadeController {
     myCollapsedGraph = CollapsedGraph.newInstance(getDelegateController().getCompiledGraph(), initVisibility);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@NotNull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
     if (delegateAnswer.getGraphChanges() != null) updateCollapsedGraph();
     return delegateAnswer;
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@NotNull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public LinearGraph getCompiledGraph() {
     return myCollapsedGraph.getCompiledGraph();
@@ -65,7 +66,7 @@ public class BranchFilterController extends CascadeController {
 
   @Nullable
   @Override
-  protected GraphElement convertToDelegate(@NotNull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     return CollapsedController.convertToDelegate(graphElement, myCollapsedGraph);
   }
 }

@@ -26,8 +26,8 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -46,12 +46,12 @@ public class WebStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void setInfo(@Nullable String s) {
+  public void setInfo(@javax.annotation.Nullable String s) {
 
   }
 
   @Override
-  public void setInfo(@Nullable String s, @Nullable String requestor) {
+  public void setInfo(@Nullable String s, @javax.annotation.Nullable String requestor) {
 
   }
 
@@ -61,53 +61,53 @@ public class WebStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void addWidget(@NotNull StatusBarWidget widget) {
+  public void addWidget(@Nonnull StatusBarWidget widget) {
 
   }
 
   @Override
-  public void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor) {
+  public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor) {
 
   }
 
   @Override
-  public void addWidget(@NotNull StatusBarWidget widget, @NotNull Disposable parentDisposable) {
+  public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Disposable parentDisposable) {
 
   }
 
   @Override
-  public void addWidget(@NotNull StatusBarWidget widget, @NotNull String anchor, @NotNull Disposable parentDisposable) {
+  public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor, @Nonnull Disposable parentDisposable) {
 
   }
 
   @Override
-  public void addCustomIndicationComponent(@NotNull JComponent c) {
+  public void addCustomIndicationComponent(@Nonnull JComponent c) {
 
   }
 
   @Override
-  public void removeCustomIndicationComponent(@NotNull JComponent c) {
+  public void removeCustomIndicationComponent(@Nonnull JComponent c) {
 
   }
 
   @Override
-  public void removeWidget(@NotNull String id) {
+  public void removeWidget(@Nonnull String id) {
 
   }
 
   @Override
-  public void updateWidget(@NotNull String id) {
+  public void updateWidget(@Nonnull String id) {
 
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public StatusBarWidget getWidget(String id) {
     return null;
   }
 
   @Override
-  public void fireNotificationPopup(@NotNull JComponent content, Color backgroundColor) {
+  public void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor) {
 
   }
 
@@ -152,17 +152,17 @@ public class WebStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody) {
+  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody) {
     return null;
   }
 
   @Override
-  public BalloonHandler notifyProgressByBalloon(@NotNull MessageType type, @NotNull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
+  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @javax.annotation.Nullable Icon icon, @Nullable HyperlinkListener listener) {
     return null;
   }
 
   @Override
-  public void addProgress(@NotNull ProgressIndicatorEx indicator, @NotNull TaskInfo info) {
+  public void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info) {
 
   }
 
@@ -201,7 +201,7 @@ public class WebStatusBarImpl implements StatusBarEx {
     return true;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getInfoRequestor() {
     return null;

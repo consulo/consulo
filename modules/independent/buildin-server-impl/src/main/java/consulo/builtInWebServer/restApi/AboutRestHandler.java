@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import consulo.buildInWebServer.api.JsonGetRequestHandler;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public class AboutRestHandler extends JsonGetRequestHandler {
     super("about");
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JsonResponse handle() {
     ApplicationInfoEx applicationInfoEx = ApplicationInfoEx.getInstanceEx();

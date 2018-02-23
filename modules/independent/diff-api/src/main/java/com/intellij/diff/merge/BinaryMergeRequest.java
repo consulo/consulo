@@ -16,15 +16,15 @@
 package com.intellij.diff.merge;
 
 import com.intellij.diff.contents.FileContent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class BinaryMergeRequest extends ThreesideMergeRequest {
-  @NotNull
+  @Nonnull
   public abstract List<byte[]> getByteContents();
 
   @Override
-  @NotNull
+  @Nonnull
   public abstract FileContent getOutputContent();
 }

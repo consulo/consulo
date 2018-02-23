@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 
@@ -44,7 +44,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
       myParent = null;
   }
 
-  @NotNull
+  @Nonnull
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
@@ -53,7 +53,7 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
@@ -86,12 +86,12 @@ public abstract class AbstractVcsVirtualFile extends VirtualFile {
     return VfsUtilCore.byteStreamSkippingBOM(contentsToByteArray(), this);
   }
 
-  @NotNull
+  @Nonnull
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new RuntimeException(VcsFileSystem.COULD_NOT_IMPLEMENT_MESSAGE);
   }
 
-  @NotNull
+  @Nonnull
   public abstract byte[] contentsToByteArray() throws IOException;
 
   public long getModificationStamp() {

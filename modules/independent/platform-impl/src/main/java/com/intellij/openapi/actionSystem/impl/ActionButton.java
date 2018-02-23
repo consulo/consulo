@@ -28,8 +28,8 @@ import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.*;
 import javax.swing.*;
@@ -60,7 +60,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private boolean myMinimalMode;
   private boolean myDecorateButtons;
 
-  public ActionButton(AnAction action, Presentation presentation, String place, @NotNull Dimension minimumSize) {
+  public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Dimension minimumSize) {
     setMinimumButtonSize(minimumSize);
     setIconInsets(null);
     myRollover = false;
@@ -117,7 +117,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     myNoIconsInPopup = noIconsInPopup;
   }
 
-  public void setMinimumButtonSize(@NotNull Dimension size) {
+  public void setMinimumButtonSize(@Nonnull Dimension size) {
     myMinimumButtonSize = JBDimension.create(size);
   }
 

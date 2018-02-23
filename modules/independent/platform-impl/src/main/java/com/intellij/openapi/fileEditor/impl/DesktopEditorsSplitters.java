@@ -60,8 +60,8 @@ import consulo.fileEditor.impl.EditorSplitters;
 import consulo.fileEditor.impl.EditorWindow;
 import gnu.trove.THashSet;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +113,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public JComponent getComponent() {
     return this;
@@ -121,7 +121,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if(KEY == dataId) {
       return this;
     }
@@ -183,7 +183,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void writeExternal(@NotNull Element element) {
+  public void writeExternal(@Nonnull Element element) {
     if (getComponentCount() == 0) {
       return;
     }
@@ -203,7 +203,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @SuppressWarnings("HardCodedStringLiteral")
-  private Element writePanel(@NotNull Component comp) {
+  private Element writePanel(@Nonnull Component comp) {
     if (comp instanceof Splitter) {
       final Splitter splitter = (Splitter)comp;
       final Element res = new Element("splitter");
@@ -239,7 +239,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  private void writeWindow(@NotNull Element res, @Nullable DesktopEditorWindow window) {
+  private void writeWindow(@Nonnull Element res, @Nullable DesktopEditorWindow window) {
     if (window != null) {
       EditorWithProviderComposite[] composites = window.getEditors();
       for (int i = 0; i < composites.length; i++) {
@@ -249,7 +249,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
   }
 
-  @NotNull
+  @Nonnull
   private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, EditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
@@ -301,12 +301,12 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   private static int countFiles(Element element) {
     Integer value = new ConfigTreeReader<Integer>() {
       @Override
-      protected Integer processFiles(@NotNull List<Element> fileElements, @Nullable Integer context) {
+      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context) {
         return fileElements.size();
       }
 
       @Override
-      protected Integer processSplitter(@NotNull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context) {
+      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context) {
         Integer first = process(firstChild, null);
         Integer second = process(secondChild, null);
         return (first == null ? 0 : first) + (second == null ? 0 : second);
@@ -321,7 +321,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getOpenFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
     for (final DesktopEditorWindow myWindow : myWindows) {
@@ -339,7 +339,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public VirtualFile[] getSelectedFiles() {
     final Set<VirtualFile> files = new ArrayListSet<>();
     for (final DesktopEditorWindow window : myWindows) {
@@ -363,7 +363,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public FileEditor[] getSelectedEditors() {
     Set<DesktopEditorWindow> windows = new THashSet<>(myWindows);
     final EditorWindow currentWindow = getCurrentWindow();
@@ -381,7 +381,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void updateFileIcon(@NotNull final VirtualFile file) {
+  public void updateFileIcon(@Nonnull final VirtualFile file) {
     updateFileIconLater(file);
   }
 
@@ -407,7 +407,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void updateFileColor(@NotNull final VirtualFile file) {
+  public void updateFileColor(@Nonnull final VirtualFile file) {
     final Collection<DesktopEditorWindow> windows = findWindows(file);
     for (DesktopEditorWindow window : windows) {
       final int index = window.findEditorIndex(window.findFileComposite(file));
@@ -494,7 +494,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  public void updateFileBackgroundColor(@NotNull VirtualFile file) {
+  public void updateFileBackgroundColor(@Nonnull VirtualFile file) {
     final DesktopEditorWindow[] windows = getWindows();
     for (int i = 0; i != windows.length; ++i) {
       windows[i].updateFileBackgroundColor(file);
@@ -722,8 +722,8 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   //---------------------------------------------------------
 
   @Override
-  @NotNull
-  public List<EditorWithProviderComposite> findEditorComposites(@NotNull VirtualFile file) {
+  @Nonnull
+  public List<EditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file) {
     List<EditorWithProviderComposite> res = new ArrayList<>();
     for (final EditorWindow window : myWindows) {
       final EditorWithProviderComposite fileComposite = window.findFileComposite(file);
@@ -734,7 +734,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     return res;
   }
 
-  @NotNull
+  @Nonnull
   private List<DesktopEditorWindow> findWindows(final VirtualFile file) {
     List<DesktopEditorWindow> res = new ArrayList<>();
     for (DesktopEditorWindow window : myWindows) {
@@ -746,13 +746,13 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DesktopEditorWindow[] getWindows() {
     return myWindows.toArray(new DesktopEditorWindow[myWindows.size()]);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DesktopEditorWindow[] getOrderedWindows() {
     final List<DesktopEditorWindow> res = new ArrayList<>();
 
@@ -881,16 +881,16 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     @Nullable
-    protected abstract T processFiles(@NotNull List<Element> fileElements, @Nullable T context);
+    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context);
 
     @Nullable
-    protected abstract T processSplitter(@NotNull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context);
+    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context);
   }
 
   private class UIBuilder extends ConfigTreeReader<JPanel> {
 
     @Override
-    protected JPanel processFiles(@NotNull List<Element> fileElements, final JPanel context) {
+    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context) {
       final Ref<DesktopEditorWindow> windowRef = new Ref<>();
       UIUtil.invokeAndWaitIfNeeded((Runnable)() -> windowRef.set(context == null ? createEditorWindow() : findWindowWith(context)));
       final DesktopEditorWindow window = windowRef.get();
@@ -952,7 +952,7 @@ public class DesktopEditorsSplitters extends IdePanePanel implements UISettingsL
     }
 
     @Override
-    protected JPanel processSplitter(@NotNull Element splitterElement, Element firstChild, Element secondChild, final JPanel context) {
+    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context) {
       if (context == null) {
         final boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
         final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion")).floatValue();

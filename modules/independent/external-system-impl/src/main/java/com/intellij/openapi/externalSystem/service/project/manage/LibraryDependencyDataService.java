@@ -37,7 +37,7 @@ import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.containers.ContainerUtilRt;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -53,24 +53,26 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
 
   private static final Logger LOG = Logger.getInstance("#" + LibraryDependencyDataService.class.getName());
 
-  @NotNull private final ModuleDataService      myModuleManager;
-  @NotNull private final LibraryDataService     myLibraryManager;
+  @Nonnull
+  private final ModuleDataService      myModuleManager;
+  @Nonnull
+  private final LibraryDataService     myLibraryManager;
 
-  public LibraryDependencyDataService(@NotNull ModuleDataService moduleManager,
-                                      @NotNull LibraryDataService libraryManager)
+  public LibraryDependencyDataService(@Nonnull ModuleDataService moduleManager,
+                                      @Nonnull LibraryDataService libraryManager)
   {
     myModuleManager = moduleManager;
     myLibraryManager = libraryManager;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Key<LibraryDependencyData> getTargetDataKey() {
     return ProjectKeys.LIBRARY_DEPENDENCY;
   }
 
   @Override
-  public void importData(@NotNull Collection<DataNode<LibraryDependencyData>> toImport, @NotNull Project project, boolean synchronous) {
+  public void importData(@Nonnull Collection<DataNode<LibraryDependencyData>> toImport, @Nonnull Project project, boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
@@ -93,8 +95,8 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  public void importData(@NotNull final Collection<DataNode<LibraryDependencyData>> nodesToImport,
-                         @NotNull final Module module,
+  public void importData(@Nonnull final Collection<DataNode<LibraryDependencyData>> nodesToImport,
+                         @Nonnull final Module module,
                          final boolean synchronous)
   {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
@@ -153,11 +155,11 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     });
   }
 
-  private void importMissing(@NotNull Set<LibraryDependencyData> toImport,
-                             @NotNull ModifiableRootModel moduleRootModel,
-                             @NotNull LibraryTable moduleLibraryTable,
-                             @NotNull LibraryTable libraryTable,
-                             @NotNull Module module)
+  private void importMissing(@Nonnull Set<LibraryDependencyData> toImport,
+                             @Nonnull ModifiableRootModel moduleRootModel,
+                             @Nonnull LibraryTable moduleLibraryTable,
+                             @Nonnull LibraryTable libraryTable,
+                             @Nonnull Module module)
   {
     for (final LibraryDependencyData dependencyData : toImport) {
       final LibraryData libraryData = dependencyData.getTarget();
@@ -189,10 +191,10 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  private static void setLibraryScope(@NotNull LibraryOrderEntry orderEntry,
-                                      @NotNull Library lib,
-                                      @NotNull Module module,
-                                      @NotNull LibraryDependencyData dependencyData) {
+  private static void setLibraryScope(@Nonnull LibraryOrderEntry orderEntry,
+                                      @Nonnull Library lib,
+                                      @Nonnull Module module,
+                                      @Nonnull LibraryDependencyData dependencyData) {
     LOG.info(String.format("Adding library dependency '%s' to module '%s'", lib.getName(), module.getName()));
     orderEntry.setExported(dependencyData.isExported());
     orderEntry.setScope(dependencyData.getScope());
@@ -202,10 +204,10 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     ));
   }
 
-  private static void filterUpToDateAndRemoveObsolete(@NotNull Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
-                                                      @NotNull Map<String, LibraryDependencyData> projectLibrariesToImport,
-                                                      @NotNull Set<LibraryDependencyData> toImport,
-                                                      @NotNull ModifiableRootModel moduleRootModel,
+  private static void filterUpToDateAndRemoveObsolete(@Nonnull Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
+                                                      @Nonnull Map<String, LibraryDependencyData> projectLibrariesToImport,
+                                                      @Nonnull Set<LibraryDependencyData> toImport,
+                                                      @Nonnull ModifiableRootModel moduleRootModel,
                                                       boolean hasUnresolvedLibraries)
   {
     Set<String> moduleLibraryKey = ContainerUtilRt.newHashSet();
@@ -246,8 +248,8 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  private void importMissingProjectLibraries(@NotNull Module module,
-                                             @NotNull Collection<DataNode<LibraryDependencyData>> nodesToImport,
+  private void importMissingProjectLibraries(@Nonnull Module module,
+                                             @Nonnull Collection<DataNode<LibraryDependencyData>> nodesToImport,
                                              boolean synchronous)
   {
     LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());

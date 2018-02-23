@@ -17,8 +17,8 @@ package com.intellij.openapi.extensions;
 
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -32,17 +32,17 @@ public class PluginId implements Comparable<PluginId> {
 
   private final String myIdString;
 
-  private PluginId(@NotNull String idString) {
+  private PluginId(@Nonnull String idString) {
     myIdString = idString;
   }
 
   @Override
-  public int compareTo(@NotNull PluginId o) {
+  public int compareTo(@Nonnull PluginId o) {
     return myIdString.compareTo(o.myIdString);
   }
 
-  @NotNull
-  public static synchronized PluginId getId(@NotNull String idString) {
+  @Nonnull
+  public static synchronized PluginId getId(@Nonnull String idString) {
     PluginId pluginId = ourRegisteredIds.get(idString);
     if (pluginId == null) {
       pluginId = new PluginId(idString);
@@ -52,7 +52,7 @@ public class PluginId implements Comparable<PluginId> {
   }
 
   @Nullable
-  public static synchronized PluginId findId(@NotNull String... idStrings) {
+  public static synchronized PluginId findId(@Nonnull String... idStrings) {
     for (String idString : idStrings) {
       PluginId pluginId = ourRegisteredIds.get(idString);
       if (pluginId != null) {
@@ -63,7 +63,7 @@ public class PluginId implements Comparable<PluginId> {
   }
 
   @NonNls
-  @NotNull
+  @Nonnull
   public String getIdString() {
     return myIdString;
   }
@@ -73,7 +73,7 @@ public class PluginId implements Comparable<PluginId> {
     return getIdString();
   }
 
-  @NotNull
+  @Nonnull
   public static synchronized Map<String, PluginId> getRegisteredIds() {
     return new THashMap<String, PluginId>(ourRegisteredIds);
   }

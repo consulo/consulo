@@ -19,12 +19,12 @@ package com.intellij.vcs.log.graph.utils.impl;
 import com.intellij.vcs.log.graph.utils.Flags;
 import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.IntToIntMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /*package*/ class IntDeltaCompressor implements IntList {
 
-  @NotNull
-  public static IntDeltaCompressor newInstance(@NotNull IntList deltaList) {
+  @Nonnull
+  public static IntDeltaCompressor newInstance(@Nonnull IntList deltaList) {
     if (deltaList.size() < 0) throw new NegativeArraySizeException("size < 0: " + deltaList.size());
 
     int bytesAfterCompression = ByteArrayUtils.countBytesAfterCompression(deltaList);
@@ -45,12 +45,15 @@ import org.jetbrains.annotations.NotNull;
     return new IntDeltaCompressor(compressedDeltas, startedDeltaIndex, deltaList.size());
   }
 
-  @NotNull private final byte[] myCompressedDeltas;
-  @NotNull private final Flags myStartedDeltaIndex;
+  @Nonnull
+  private final byte[] myCompressedDeltas;
+  @Nonnull
+  private final Flags myStartedDeltaIndex;
 
-  @NotNull private final IntToIntMap myStartIndexMap;
+  @Nonnull
+  private final IntToIntMap myStartIndexMap;
 
-  private IntDeltaCompressor(@NotNull byte[] compressedDeltas, @NotNull final Flags startedDeltaIndex, int countDeltas) {
+  private IntDeltaCompressor(@Nonnull byte[] compressedDeltas, @Nonnull final Flags startedDeltaIndex, int countDeltas) {
     myCompressedDeltas = compressedDeltas;
     myStartedDeltaIndex = startedDeltaIndex;
     myStartIndexMap = PermanentListIntToIntMap.newInstance(startedDeltaIndex, countDeltas);

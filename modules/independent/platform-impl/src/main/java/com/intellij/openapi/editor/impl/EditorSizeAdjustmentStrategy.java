@@ -18,9 +18,9 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.util.Alarm;
 import gnu.trove.TLongArrayList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -71,8 +71,8 @@ class EditorSizeAdjustmentStrategy {
    * @param editor           target editor
    * @return preferred size to use (given 'new preferred size' may be adjusted)
    */
-  @NotNull
-  Dimension adjust(@NotNull Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, @NotNull EditorImpl editor) {
+  @Nonnull
+  Dimension adjust(@Nonnull Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, @Nonnull EditorImpl editor) {
     if (oldPreferredSize == null || myInsideValidation) {
       return newPreferredSize;
     }
@@ -124,7 +124,7 @@ class EditorSizeAdjustmentStrategy {
     }
   }
 
-  private void scheduleSizeUpdate(@NotNull EditorImpl editor) {
+  private void scheduleSizeUpdate(@Nonnull EditorImpl editor) {
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(new UpdateSizeTask(editor), 1000);
   }
@@ -132,7 +132,7 @@ class EditorSizeAdjustmentStrategy {
   private class UpdateSizeTask implements Runnable {
     private final EditorImpl myEditor;
 
-    UpdateSizeTask(@NotNull EditorImpl editor) {
+    UpdateSizeTask(@Nonnull EditorImpl editor) {
       myEditor = editor;
     }
 

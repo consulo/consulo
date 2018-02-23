@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class FragmentNumberGutterIconRenderer extends GutterIconRenderer {
     myIcon.setFont(editor.getColorsScheme().getFont(EditorFontType.PLAIN));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return myIcon;

@@ -35,7 +35,7 @@ import com.intellij.usages.impl.UsageViewManagerImpl;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -48,10 +48,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 class ShowUsagesTableCellRenderer implements TableCellRenderer {
   private final UsageViewImpl myUsageView;
-  @NotNull private final AtomicInteger myOutOfScopeUsages;
-  @NotNull private final SearchScope mySearchScope;
+  @Nonnull
+  private final AtomicInteger myOutOfScopeUsages;
+  @Nonnull
+  private final SearchScope mySearchScope;
 
-  ShowUsagesTableCellRenderer(@NotNull UsageViewImpl usageView, @NotNull AtomicInteger outOfScopeUsages, @NotNull SearchScope searchScope) {
+  ShowUsagesTableCellRenderer(@Nonnull UsageViewImpl usageView, @Nonnull AtomicInteger outOfScopeUsages, @Nonnull SearchScope searchScope) {
     myUsageView = usageView;
     myOutOfScopeUsages = outOfScopeUsages;
     mySearchScope = searchScope;
@@ -128,12 +130,12 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
     return panel;
   }
 
-  @NotNull
-  private static Component textComponentSpanningWholeRow(@NotNull SimpleColoredComponent chunks,
+  @Nonnull
+  private static Component textComponentSpanningWholeRow(@Nonnull SimpleColoredComponent chunks,
                                                          Color panelBackground,
                                                          Color panelForeground,
                                                          final int column,
-                                                         @NotNull final JTable table, int row) {
+                                                         @Nonnull final JTable table, int row) {
     final SimpleColoredComponent component = new SimpleColoredComponent() {
       @Override
       protected void doPaint(Graphics2D g) {
@@ -155,7 +157,7 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
         g.translate(+offset, 0);
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public Dimension getPreferredSize() {
         //return super.getPreferredSize();

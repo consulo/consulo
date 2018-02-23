@@ -28,8 +28,8 @@ import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 
@@ -39,14 +39,14 @@ import static com.intellij.vcsUtil.VcsUtil.getIfSingle;
 
 public class TabbedShowHistoryAction extends AbstractVcsAction {
   @Override
-  protected void update(@NotNull VcsContext context, @NotNull Presentation presentation) {
+  protected void update(@Nonnull VcsContext context, @Nonnull Presentation presentation) {
     Project project = context.getProject();
 
     presentation.setEnabled(isEnabled(context));
     presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
   }
 
-  protected boolean isEnabled(@NotNull VcsContext context) {
+  protected boolean isEnabled(@Nonnull VcsContext context) {
     boolean result = false;
     Project project = context.getProject();
 
@@ -61,7 +61,7 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
     return result;
   }
 
-  private static boolean isEnabled(@NotNull Project project, @NotNull FilePath path, @NotNull VirtualFile fileOrParent) {
+  private static boolean isEnabled(@Nonnull Project project, @Nonnull FilePath path, @Nonnull VirtualFile fileOrParent) {
     boolean result = false;
     AbstractVcs vcs = ChangesUtil.getVcsForFile(fileOrParent, project);
 
@@ -77,8 +77,8 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
     return result;
   }
 
-  @NotNull
-  private static Pair<FilePath, VirtualFile> getPathAndParentFile(@NotNull VcsContext context) {
+  @Nonnull
+  private static Pair<FilePath, VirtualFile> getPathAndParentFile(@Nonnull VcsContext context) {
     if (context.getSelectedFilesStream().findAny().isPresent()) {
       VirtualFile file = getIfSingle(context.getSelectedFilesStream());
       return file != null ? Pair.create(VcsUtil.getFilePath(file), file) : Pair.empty();
@@ -96,13 +96,13 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
   }
 
   @Nullable
-  private static VirtualFile getParentVirtualFile(@NotNull File ioFile) {
+  private static VirtualFile getParentVirtualFile(@Nonnull File ioFile) {
     File parentIoFile = ioFile.getParentFile();
     return parentIoFile != null ? LocalFileSystem.getInstance().findFileByIoFile(parentIoFile) : null;
   }
 
   @Override
-  protected void actionPerformed(@NotNull VcsContext context) {
+  protected void actionPerformed(@Nonnull VcsContext context) {
     Project project = context.getProject();
     Pair<FilePath, VirtualFile> pair = getPathAndParentFile(context);
     FilePath path = assertNotNull(pair.first);
@@ -114,7 +114,7 @@ public class TabbedShowHistoryAction extends AbstractVcsAction {
   }
 
   @Override
-  protected boolean forceSyncUpdate(@NotNull AnActionEvent e) {
+  protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
     return true;
   }
 }

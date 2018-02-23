@@ -17,8 +17,8 @@ package com.intellij.ui.tabs;
 
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -65,22 +65,22 @@ public interface JBTabsPresentation {
 
   JBTabsPresentation setFocusCycle(final boolean root);
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation setToDrawBorderIfTabsHidden(boolean draw);
 
-  @NotNull
+  @Nonnull
   JBTabs getJBTabs();
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation setActiveTabFillIn(@Nullable Color color);
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation setTabLabelActionsAutoHide(boolean autoHide);
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation setTabLabelActionsMouseDeadzone(TimedDeadzone.Length length);
 
-  @NotNull
+  @Nonnull
   JBTabsPresentation setTabsPosition(JBTabsPosition position);
 
   JBTabsPosition getTabsPosition();

@@ -42,8 +42,8 @@ import com.intellij.refactoring.rename.RenameProcessor;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;
 import com.intellij.usageView.UsageViewUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,11 +58,11 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
   private final PsiElement mySubstituted;
   private RangeMarker mySubstitutedRange;
 
-  public MemberInplaceRenamer(@NotNull PsiNamedElement elementToRename, PsiElement substituted, Editor editor) {
+  public MemberInplaceRenamer(@Nonnull PsiNamedElement elementToRename, PsiElement substituted, Editor editor) {
     this(elementToRename, substituted, editor, elementToRename.getName(), elementToRename.getName());
   }
 
-  public MemberInplaceRenamer(@NotNull PsiNamedElement elementToRename, PsiElement substituted, Editor editor, String initialName, String oldName) {
+  public MemberInplaceRenamer(@Nonnull PsiNamedElement elementToRename, PsiElement substituted, Editor editor, String initialName, String oldName) {
     super(elementToRename, editor, elementToRename.getProject(), initialName, oldName);
     mySubstituted = substituted;
     if (mySubstituted != null && mySubstituted != myElementToRename && mySubstituted.getTextRange() != null) {
@@ -138,7 +138,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
   }
 
   @Override
-  protected boolean notSameFile(@Nullable VirtualFile file, @NotNull PsiFile containingFile) {
+  protected boolean notSameFile(@Nullable VirtualFile file, @Nonnull PsiFile containingFile) {
     final PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
     if (currentFile == null) return true;
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(containingFile.getProject());

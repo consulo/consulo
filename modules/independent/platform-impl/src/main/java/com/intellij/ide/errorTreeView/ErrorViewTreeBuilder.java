@@ -21,10 +21,9 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Eugene Zhuravlev
@@ -64,7 +63,7 @@ public class ErrorViewTreeBuilder extends AbstractTreeBuilder{
     return nodeDescriptor.getParentDescriptor() == null || nodeDescriptor.getElement() instanceof GroupingElement;
   }
 
-  @NotNull
+  @Nonnull
   protected ProgressIndicator createProgressIndicator() {
     return new StatusBarProgress();
   }

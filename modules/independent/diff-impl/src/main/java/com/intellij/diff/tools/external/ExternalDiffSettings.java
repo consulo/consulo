@@ -25,8 +25,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.config.AbstractProperty;
 import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.StringProperty;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @State(
         name = "ExternalDiffSettings",
@@ -51,13 +51,13 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
   // Migration from the old settings container. To be removed.
   //
 
-  @NotNull
+  @Nonnull
   private static AbstractProperty.AbstractPropertyContainer getProperties() {
     return DiffManagerImpl.getInstanceEx().getProperties();
   }
 
-  @NotNull
-  private static String getProperty(@Nullable StringProperty oldProperty, @Nullable String newValue, @NotNull String defaultValue) {
+  @Nonnull
+  private static String getProperty(@Nullable StringProperty oldProperty, @Nullable String newValue, @Nonnull String defaultValue) {
     if (newValue != null) return newValue;
     if (oldProperty != null) {
       String oldValue = oldProperty.get(getProperties());
@@ -74,7 +74,7 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     return defaultValue;
   }
 
-  private static void setProperty(@Nullable StringProperty oldProperty, @NotNull String value) {
+  private static void setProperty(@Nullable StringProperty oldProperty, @Nonnull String value) {
     if (oldProperty != null) oldProperty.set(getProperties(), value);
   }
 
@@ -84,7 +84,8 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
 
   public static class State {
     @Nullable public Boolean DIFF_ENABLED = null;
-    @Nullable public Boolean DIFF_DEFAULT = null;
+    @javax.annotation.Nullable
+    public Boolean DIFF_DEFAULT = null;
     @Nullable public String DIFF_EXE_PATH = null;
     @Nullable public String DIFF_PARAMETERS = null;
 
@@ -111,22 +112,22 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     setProperty(DiffManagerImpl.ENABLE_FILES, value);
   }
 
-  @NotNull
+  @Nonnull
   public String getDiffExePath() {
     return getProperty(DiffManagerImpl.FILES_TOOL, myState.DIFF_EXE_PATH, "");
   }
 
-  public void setDiffExePath(@NotNull String path) {
+  public void setDiffExePath(@Nonnull String path) {
     myState.DIFF_EXE_PATH = path;
     setProperty(DiffManagerImpl.FILES_TOOL, path);
   }
 
-  @NotNull
+  @Nonnull
   public String getDiffParameters() {
     return getProperty(null, myState.DIFF_PARAMETERS, "%1 %2 %3");
   }
 
-  public void setDiffParameters(@NotNull String path) {
+  public void setDiffParameters(@Nonnull String path) {
     myState.DIFF_PARAMETERS = path;
   }
 
@@ -140,22 +141,22 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     setProperty(DiffManagerImpl.ENABLE_MERGE, value);
   }
 
-  @NotNull
+  @Nonnull
   public String getMergeExePath() {
     return getProperty(DiffManagerImpl.MERGE_TOOL, myState.MERGE_EXE_PATH, "");
   }
 
-  public void setMergeExePath(@NotNull String path) {
+  public void setMergeExePath(@Nonnull String path) {
     myState.MERGE_EXE_PATH = path;
     setProperty(DiffManagerImpl.MERGE_TOOL, path);
   }
 
-  @NotNull
+  @Nonnull
   public String getMergeParameters() {
     return getProperty(DiffManagerImpl.MERGE_TOOL_PARAMETERS, myState.MERGE_PARAMETERS, "%1 %2 %3 %4");
   }
 
-  public void setMergeParameters(@NotNull String path) {
+  public void setMergeParameters(@Nonnull String path) {
     myState.MERGE_PARAMETERS = path;
     setProperty(DiffManagerImpl.MERGE_TOOL_PARAMETERS, path);
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class SimpleColoredRenderer extends SimpleColoredComponent {
     myCellState.collectState(table, isSelected, hasFocus, row, column);
   }
 
-  public void append(@NotNull String fragment, @NotNull SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
     super.append(fragment, modifyAttributes(attributes), isMainText);
   }
 

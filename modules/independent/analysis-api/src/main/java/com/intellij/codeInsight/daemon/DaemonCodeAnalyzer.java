@@ -21,8 +21,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Manages the background highlighting and auto-import for files displayed in editors.
@@ -35,18 +34,18 @@ public abstract class DaemonCodeAnalyzer {
   public abstract void settingsChanged();
 
   @Deprecated
-  public abstract void updateVisibleHighlighters(@NotNull Editor editor);
+  public abstract void updateVisibleHighlighters(@Nonnull Editor editor);
 
   public abstract void setUpdateByTimerEnabled(boolean value);
-  public abstract void disableUpdateByTimer(@NotNull Disposable parentDisposable);
+  public abstract void disableUpdateByTimer(@Nonnull Disposable parentDisposable);
 
-  public abstract boolean isHighlightingAvailable(@Nullable PsiFile file);
+  public abstract boolean isHighlightingAvailable(@javax.annotation.Nullable PsiFile file);
 
-  public abstract void setImportHintsEnabled(@NotNull PsiFile file, boolean value);
+  public abstract void setImportHintsEnabled(@Nonnull PsiFile file, boolean value);
   public abstract void resetImportHintsEnabledForProject();
-  public abstract void setHighlightingEnabled(@NotNull PsiFile file, boolean value);
-  public abstract boolean isImportHintsEnabled(@NotNull PsiFile file);
-  public abstract boolean isAutohintsAvailable(@Nullable PsiFile file);
+  public abstract void setHighlightingEnabled(@Nonnull PsiFile file, boolean value);
+  public abstract boolean isImportHintsEnabled(@Nonnull PsiFile file);
+  public abstract boolean isAutohintsAvailable(@javax.annotation.Nullable PsiFile file);
 
   /**
    * Force rehighlighting for all files.
@@ -57,15 +56,15 @@ public abstract class DaemonCodeAnalyzer {
    * Force rehighlighting for a specific file.
    * @param file the file to rehighlight.
    */
-  public abstract void restart(@NotNull PsiFile file);
+  public abstract void restart(@Nonnull PsiFile file);
 
-  public abstract void autoImportReferenceAtCursor(@NotNull Editor editor, @NotNull PsiFile file);
+  public abstract void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
 
   public static final Topic<DaemonListener> DAEMON_EVENT_TOPIC = Topic.create("DAEMON_EVENT_TOPIC", DaemonListener.class);
 
   public interface DaemonListener {
     void daemonFinished();
-    void daemonCancelEventOccurred(@NotNull String reason);
+    void daemonCancelEventOccurred(@Nonnull String reason);
   }
 
   public abstract static class DaemonListenerAdapter implements DaemonListener {
@@ -74,7 +73,7 @@ public abstract class DaemonCodeAnalyzer {
     }
 
     @Override
-    public void daemonCancelEventOccurred(@NotNull String reason) {
+    public void daemonCancelEventOccurred(@Nonnull String reason) {
     }
   }
 }

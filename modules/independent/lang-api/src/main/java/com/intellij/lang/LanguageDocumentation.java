@@ -21,7 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.lang.documentation.CompositeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class LanguageDocumentation extends LanguageExtension<DocumentationProvid
   }
 
   @Override
-  public DocumentationProvider forLanguage(@NotNull final Language l) {
+  public DocumentationProvider forLanguage(@Nonnull final Language l) {
     final List<DocumentationProvider> providers = allForLanguage(l);
     if (providers.size() < 2) {
       return super.forLanguage(l);

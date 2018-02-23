@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.EmptyIcon;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
     this(new DefaultFileTypeListProvider());
   }
 
-  public FileTypeRenderer(@NotNull FileTypeListProvider fileTypeListProvider) {
+  public FileTypeRenderer(@Nonnull FileTypeListProvider fileTypeListProvider) {
     super();
     myFileTypeListProvider = fileTypeListProvider;
   }

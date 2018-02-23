@@ -3,8 +3,8 @@ package com.intellij.application.options;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -25,7 +25,7 @@ public class ImportSchemeChooserDialog extends DialogWrapper {
   private final static String UNNAMED_SCHEME_ITEM = "<" + ApplicationBundle.message("code.style.scheme.import.unnamed") + ">";
   private final List<String> myNames = new ArrayList<String>();
 
-  public ImportSchemeChooserDialog(@NotNull Component parent,
+  public ImportSchemeChooserDialog(@Nonnull Component parent,
                                    String[] schemeNames,
                                    final @Nullable String currScheme) {
     super(parent, false);

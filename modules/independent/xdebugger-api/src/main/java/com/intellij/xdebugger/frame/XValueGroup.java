@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.frame;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -26,11 +26,11 @@ import javax.swing.*;
 public abstract class XValueGroup extends XValueContainer {
   private final String myName;
 
-  protected XValueGroup(@NotNull String name) {
+  protected XValueGroup(@Nonnull String name) {
     myName = name;
   }
 
-  @NotNull
+  @Nonnull
   public String getName() {
     return myName;
   }
@@ -50,7 +50,7 @@ public abstract class XValueGroup extends XValueContainer {
   /**
    * @return separator between the group name and the {@link #getComment() comment} in the node text
    */
-  @NotNull
+  @Nonnull
   public String getSeparator() {
     return " = ";
   }

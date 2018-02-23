@@ -16,7 +16,7 @@
 package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.util.Range;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -40,11 +40,12 @@ abstract class ChangeDiffIterableBase extends DiffIterableBase {
     return myLength2;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<Range> changes() {
     return new MyIterator<Range>() {
-      @NotNull private final ChangeIterable myIterable = createChangeIterable();
+      @Nonnull
+      private final ChangeIterable myIterable = createChangeIterable();
 
       @Override
       public boolean hasNext() {
@@ -60,11 +61,12 @@ abstract class ChangeDiffIterableBase extends DiffIterableBase {
     };
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<Range> unchanged() {
     return new MyIterator<Range>() {
-      @NotNull private final ChangeIterable myIterable = createChangeIterable();
+      @Nonnull
+      private final ChangeIterable myIterable = createChangeIterable();
 
       int lastIndex1 = 0;
       int lastIndex2 = 0;
@@ -110,7 +112,7 @@ abstract class ChangeDiffIterableBase extends DiffIterableBase {
     };
   }
 
-  @NotNull
+  @Nonnull
   protected abstract ChangeIterable createChangeIterable();
 
   protected interface ChangeIterable {

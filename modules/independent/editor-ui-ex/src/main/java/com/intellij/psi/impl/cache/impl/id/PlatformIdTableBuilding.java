@@ -46,8 +46,8 @@ import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.SubstitutedFileType;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public abstract class PlatformIdTableBuilding {
     return b;
   }
 
-  public static boolean isTodoIndexerRegistered(@NotNull FileType fileType) {
+  public static boolean isTodoIndexerRegistered(@Nonnull FileType fileType) {
     return TodoIndexers.INSTANCE.forFileType(fileType) != null;
   }
 
@@ -112,11 +112,11 @@ public abstract class PlatformIdTableBuilding {
     private final DataIndexer<TodoIndexEntry, Integer, FileContent>[] indexers;
 
     @SafeVarargs
-    public CompositeTodoIndexer(@NotNull DataIndexer<TodoIndexEntry, Integer, FileContent>... indexers) {
+    public CompositeTodoIndexer(@Nonnull DataIndexer<TodoIndexEntry, Integer, FileContent>... indexers) {
       this.indexers = indexers;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
       Map<TodoIndexEntry, Integer> result = ContainerUtil.newTroveMap();
@@ -145,14 +145,14 @@ public abstract class PlatformIdTableBuilding {
   }
 
   private static class TokenSetTodoIndexer implements DataIndexer<TodoIndexEntry, Integer, FileContent> {
-    @NotNull
+    @Nonnull
     private final TokenSet myCommentTokens;
     @Nullable
     private final LanguageVersion myLanguageVersion;
     private final VirtualFile myFile;
     private final Project myProject;
 
-    public TokenSetTodoIndexer(@NotNull final TokenSet commentTokens, @Nullable LanguageVersion languageVersion, @NotNull final VirtualFile file, @Nullable Project project) {
+    public TokenSetTodoIndexer(@Nonnull final TokenSet commentTokens, @Nullable LanguageVersion languageVersion, @Nonnull final VirtualFile file, @Nullable Project project) {
       myCommentTokens = commentTokens;
       myLanguageVersion = languageVersion;
       myFile = file;
@@ -160,7 +160,7 @@ public abstract class PlatformIdTableBuilding {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Map<TodoIndexEntry, Integer> map(final FileContent inputData) {
       if (IndexPatternUtil.getIndexPatternCount() > 0) {
         final CharSequence chars = inputData.getContentAsText();

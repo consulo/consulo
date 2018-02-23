@@ -54,8 +54,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSetQueue;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -96,12 +96,12 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       assert !application.isWriteAccessAllowed() || application.isUnitTestMode(); // crazy stuff happens in tests, e.g. UIUtil.dispatchInvocationEvents() inside write action
       application.addApplicationListener(new ApplicationAdapter() {
         @Override
-        public void beforeWriteActionStart(@NotNull Object action) {
+        public void beforeWriteActionStart(@Nonnull Object action) {
           disable("Write action started: " + action);
         }
 
         @Override
-        public void afterWriteActionFinished(@NotNull Object action) {
+        public void afterWriteActionFinished(@Nonnull Object action) {
           // crazy things happen when running tests, like starting write action in one thread but firing its end in the other
           enable("Write action finished: " + action);
         }
@@ -120,7 +120,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     cancel("Stop thread");
   }
 
-  private void disable(@NonNls @NotNull Object reason) {
+  private void disable(@NonNls @Nonnull Object reason) {
     // write action has just started, all commits are useless
     synchronized (lock) {
       cancel(reason);
@@ -129,7 +129,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     log(null, "disabled", null, reason);
   }
 
-  private void enable(@NonNls @NotNull Object reason) {
+  private void enable(@NonNls @Nonnull Object reason) {
     synchronized (lock) {
       myEnabled = true;
       wakeUpQueue();
@@ -144,14 +144,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
   }
 
-  private void cancel(@NonNls @NotNull Object reason) {
+  private void cancel(@NonNls @Nonnull Object reason) {
     startNewTask(null, reason);
   }
 
   @Override
-  public void commitAsynchronously(@NotNull final Project project,
-                                   @NotNull final Document document,
-                                   @NonNls @NotNull Object reason,
+  public void commitAsynchronously(@Nonnull final Project project,
+                                   @Nonnull final Document document,
+                                   @NonNls @Nonnull Object reason,
                                    @Nullable TransactionId context) {
     assert !isDisposed : "already disposed";
 
@@ -162,12 +162,12 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
             PsiDocumentManager.getInstance(project).getLastCommittedText(document));
   }
 
-  private void doQueue(@NotNull Project project,
-                       @NotNull Document document,
-                       @NotNull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
-                       @NotNull Object reason,
+  private void doQueue(@Nonnull Project project,
+                       @Nonnull Document document,
+                       @Nonnull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
+                       @Nonnull Object reason,
                        @Nullable TransactionId context,
-                       @NotNull CharSequence lastCommittedText) {
+                       @Nonnull CharSequence lastCommittedText) {
     synchronized (lock) {
       if (!project.isInitialized()) return;  // check the project is disposed under lock.
       CommitTask newTask = createNewTaskAndCancelSimilar(project, document, oldFileNodes, reason, context,
@@ -180,13 +180,13 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
   }
 
-  @NotNull
-  private CommitTask createNewTaskAndCancelSimilar(@NotNull Project project,
-                                                   @NotNull Document document,
-                                                   @NotNull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
-                                                   @NotNull Object reason,
+  @Nonnull
+  private CommitTask createNewTaskAndCancelSimilar(@Nonnull Project project,
+                                                   @Nonnull Document document,
+                                                   @Nonnull List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
+                                                   @Nonnull Object reason,
                                                    @Nullable TransactionId context,
-                                                   @NotNull CharSequence lastCommittedText) {
+                                                   @Nonnull CharSequence lastCommittedText) {
     synchronized (lock) {
       for (Pair<PsiFileImpl, FileASTNode> pair : oldFileNodes) {
         assert pair.first.getProject() == project;
@@ -288,7 +288,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
   }
 
-  private void cancelAndRemoveCurrentTask(@NotNull CommitTask newTask, @NotNull Object reason) {
+  private void cancelAndRemoveCurrentTask(@Nonnull CommitTask newTask, @Nonnull Object reason) {
     CommitTask currentTask = this.currentTask;
     if (currentTask != null && currentTask.equals(newTask)) {
       cancelAndRemoveFromDocsToCommit(currentTask, reason);
@@ -296,21 +296,21 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     }
   }
 
-  private void cancelAndRemoveFromDocsToApplyInEDT(@NotNull CommitTask newTask, @NotNull Object reason) {
+  private void cancelAndRemoveFromDocsToApplyInEDT(@Nonnull CommitTask newTask, @Nonnull Object reason) {
     boolean removed = cancelAndRemoveFromQueue(newTask, documentsToApplyInEDT, reason);
     if (removed) {
       log(newTask.project, "Removed from EDT apply queue", newTask);
     }
   }
 
-  private void cancelAndRemoveFromDocsToCommit(@NotNull final CommitTask newTask, @NotNull Object reason) {
+  private void cancelAndRemoveFromDocsToCommit(@Nonnull final CommitTask newTask, @Nonnull Object reason) {
     boolean removed = cancelAndRemoveFromQueue(newTask, documentsToCommit, reason);
     if (removed) {
       log(newTask.project, "Removed from background queue", newTask);
     }
   }
 
-  private boolean cancelAndRemoveFromQueue(@NotNull CommitTask newTask, @NotNull HashSetQueue<CommitTask> queue, @NotNull Object reason) {
+  private boolean cancelAndRemoveFromQueue(@Nonnull CommitTask newTask, @Nonnull HashSetQueue<CommitTask> queue, @Nonnull Object reason) {
     CommitTask queuedTask = queue.find(newTask);
     if (queuedTask != null) {
       assert queuedTask != newTask;
@@ -421,7 +421,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
 
   @Override
-  public void commitSynchronously(@NotNull Document document, @NotNull Project project, @NotNull PsiFile psiFile) {
+  public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
     assert !isDisposed;
 
     if (!project.isInitialized() && !project.isDefault()) {
@@ -463,8 +463,8 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     // will wake itself up on write action end
   }
 
-  @NotNull
-  private static List<Pair<PsiFileImpl, FileASTNode>> getAllFileNodes(@NotNull PsiFile file) {
+  @Nonnull
+  private static List<Pair<PsiFileImpl, FileASTNode>> getAllFileNodes(@Nonnull PsiFile file) {
     if (!file.isValid()) {
       throw new PsiInvalidElementAccessException(file, "File " + file + " is invalid, can't commit");
     }
@@ -475,12 +475,12 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     return ContainerUtil.map(file.getViewProvider().getAllFiles(), root -> Pair.create((PsiFileImpl)root, root.getNode()));
   }
 
-  @NotNull
+  @Nonnull
   protected ProgressIndicator createProgressIndicator() {
     return new StandardProgressIndicatorBase();
   }
 
-  private void startNewTask(@Nullable CommitTask task, @NotNull Object reason) {
+  private void startNewTask(@Nullable CommitTask task, @Nonnull Object reason) {
     synchronized (lock) { // sync to prevent overwriting
       CommitTask cur = currentTask;
       if (cur != null) {
@@ -491,8 +491,8 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
 
   // returns (finish commit Runnable (to be invoked later in EDT), null) on success or (null, failure reason) on failure
-  @NotNull
-  private Pair<Runnable, Object> commitUnderProgress(@NotNull final CommitTask task, final boolean synchronously) {
+  @Nonnull
+  private Pair<Runnable, Object> commitUnderProgress(@Nonnull final CommitTask task, final boolean synchronously) {
     if (synchronously) {
       assert !task.indicator.isCanceled();
     }
@@ -570,10 +570,10 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     return Pair.create(result, null);
   }
 
-  @NotNull
-  private Runnable createEdtRunnable(@NotNull final CommitTask task,
+  @Nonnull
+  private Runnable createEdtRunnable(@Nonnull final CommitTask task,
                                      final boolean synchronously,
-                                     @NotNull final List<Processor<Document>> finishProcessors) {
+                                     @Nonnull final List<Processor<Document>> finishProcessors) {
     return () -> {
       myApplication.assertIsDispatchThread();
       Document document = task.getDocument();
@@ -610,9 +610,9 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     };
   }
 
-  @NotNull
-  private Processor<Document> handleCommitWithoutPsi(@NotNull final PsiDocumentManagerBase documentManager,
-                                                     @NotNull final CommitTask task) {
+  @Nonnull
+  private Processor<Document> handleCommitWithoutPsi(@Nonnull final PsiDocumentManagerBase documentManager,
+                                                     @Nonnull final CommitTask task) {
     return document -> {
       log(task.project, "Finishing without PSI", task);
       if (!task.isStillValid() || documentManager.getCachedViewProvider(document) != null) {
@@ -646,26 +646,32 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
   private static final Key<Object> CANCEL_REASON = Key.create("CANCEL_REASON");
   private class CommitTask {
-    @NotNull private final Document document;
-    @NotNull final Project project;
+    @Nonnull
+    private final Document document;
+    @Nonnull
+    final Project project;
     private final int modificationSequence; // store initial document modification sequence here to check if it changed later before commit in EDT
 
     // when queued it's not started
     // when dequeued it's started
     // when failed it's canceled
-    @NotNull final ProgressIndicator indicator; // progress to commit this doc under.
-    @NotNull final Object reason;
-    @Nullable final TransactionId myCreationContext;
+    @Nonnull
+    final ProgressIndicator indicator; // progress to commit this doc under.
+    @Nonnull
+    final Object reason;
+    @Nullable
+    final TransactionId myCreationContext;
     private final CharSequence myLastCommittedText;
-    @NotNull final List<Pair<PsiFileImpl, FileASTNode>> myOldFileNodes;
+    @Nonnull
+    final List<Pair<PsiFileImpl, FileASTNode>> myOldFileNodes;
 
-    CommitTask(@NotNull final Project project,
-               @NotNull final Document document,
-               @NotNull final List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
-               @NotNull ProgressIndicator indicator,
-               @NotNull Object reason,
+    CommitTask(@Nonnull final Project project,
+               @Nonnull final Document document,
+               @Nonnull final List<Pair<PsiFileImpl, FileASTNode>> oldFileNodes,
+               @Nonnull ProgressIndicator indicator,
+               @Nonnull Object reason,
                @Nullable TransactionId context,
-               @NotNull CharSequence lastCommittedText) {
+               @Nonnull CharSequence lastCommittedText) {
       this.document = document;
       this.project = project;
       this.indicator = indicator;
@@ -710,7 +716,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       return ((DocumentEx)document).getModificationSequence() == modificationSequence;
     }
 
-    private void cancel(@NotNull Object reason, @NotNull DocumentCommitThread commitProcessor) {
+    private void cancel(@Nonnull Object reason, @Nonnull DocumentCommitThread commitProcessor) {
       if (!indicator.isCanceled()) {
         commitProcessor.log(project, "indicator cancel", this);
 
@@ -724,7 +730,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
       }
     }
 
-    @NotNull
+    @Nonnull
     Document getDocument() {
       return document;
     }
@@ -732,9 +738,9 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
 
   // public for Upsource
   @Nullable("returns runnable to execute under write action in AWT to finish the commit")
-  public Processor<Document> doCommit(@NotNull final CommitTask task,
-                                      @NotNull final PsiFile file,
-                                      @NotNull final FileASTNode oldFileNode) {
+  public Processor<Document> doCommit(@Nonnull final CommitTask task,
+                                      @Nonnull final PsiFile file,
+                                      @Nonnull final FileASTNode oldFileNode) {
     Document document = task.getDocument();
     final CharSequence newDocumentText = document.getImmutableCharSequence();
     final TextRange changedPsiRange = getChangedPsiRange(file, task.myLastCommittedText, newDocumentText);
@@ -794,7 +800,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     return result;
   }
 
-  private static int getMatchingLength(@NotNull FileElement treeElement, @NotNull CharSequence text, boolean fromStart) {
+  private static int getMatchingLength(@Nonnull FileElement treeElement, @Nonnull CharSequence text, boolean fromStart) {
     int patternIndex = fromStart ? 0 : text.length() - 1;
     int finalPatternIndex = fromStart ? text.length() - 1 : 0;
     int direction = fromStart ? 1 : -1;
@@ -818,7 +824,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
 
   @Nullable
-  public static TextRange getChangedPsiRange(@NotNull PsiFile file, @NotNull FileElement treeElement, @NotNull CharSequence newDocumentText) {
+  public static TextRange getChangedPsiRange(@Nonnull PsiFile file, @Nonnull FileElement treeElement, @Nonnull CharSequence newDocumentText) {
     int psiLength = treeElement.getTextLength();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new TextRange(0, psiLength);
@@ -834,9 +840,9 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
 
   @Nullable
-  private static TextRange getChangedPsiRange(@NotNull PsiFile file,
-                                              @NotNull CharSequence oldDocumentText,
-                                              @NotNull CharSequence newDocumentText) {
+  private static TextRange getChangedPsiRange(@Nonnull PsiFile file,
+                                              @Nonnull CharSequence oldDocumentText,
+                                              @Nonnull CharSequence newDocumentText) {
     int psiLength = oldDocumentText.length();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new TextRange(0, psiLength);
@@ -851,7 +857,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     return new TextRange(commonPrefixLength, psiLength - commonSuffixLength);
   }
 
-  public static void doActualPsiChange(@NotNull final PsiFile file, @NotNull final DiffLog diffLog) {
+  public static void doActualPsiChange(@Nonnull final PsiFile file, @Nonnull final DiffLog diffLog) {
     CodeStyleManager.getInstance(file.getProject()).performActionWithFormatterDisabled((Runnable)() -> {
       PsiFileImpl fileImpl = (PsiFileImpl)file;
       synchronized (fileImpl.getFilePsiLock()) {
@@ -878,7 +884,7 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
     });
   }
 
-  private void assertAfterCommit(@NotNull Document document, @NotNull final PsiFile file, @NotNull FileElement oldFileNode) {
+  private void assertAfterCommit(@Nonnull Document document, @Nonnull final PsiFile file, @Nonnull FileElement oldFileNode) {
     if (oldFileNode.getTextLength() != document.getTextLength()) {
       final String documentText = document.getText();
       String fileText = file.getText();
@@ -917,14 +923,14 @@ public class DocumentCommitThread implements Runnable, Disposable, DocumentCommi
   }
   private static final Key<Lock> DOCUMENT_LOCK = Key.create("DOCUMENT_LOCK");
 
-  void cancelTasksOnProjectDispose(@NotNull final Project project) {
+  void cancelTasksOnProjectDispose(@Nonnull final Project project) {
     synchronized (lock) {
       cancelTasksOnProjectDispose(project, documentsToCommit);
       cancelTasksOnProjectDispose(project, documentsToApplyInEDT);
     }
   }
 
-  private void cancelTasksOnProjectDispose(@NotNull Project project, @NotNull HashSetQueue<CommitTask> queue) {
+  private void cancelTasksOnProjectDispose(@Nonnull Project project, @Nonnull HashSetQueue<CommitTask> queue) {
     for (HashSetQueue.PositionalIterator<CommitTask> iterator = queue.iterator(); iterator.hasNext(); ) {
       CommitTask commitTask = iterator.next();
       if (commitTask.project == project) {

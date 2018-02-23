@@ -16,8 +16,8 @@
 package com.intellij.util.containers.hash;
 
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -98,7 +98,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   @Override
-  public V put(final K key, @NotNull final V value) {
+  public V put(final K key, @Nonnull final V value) {
     final Entry<K, V>[] table = this.table;
     final int hash = HashUtil.hash(key, hashingStrategy);
     final int index = hash % table.length;
@@ -172,19 +172,19 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return e.value;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<K> keySet() {
     return new KeySet();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<V> values() {
     return new Values();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return new EntrySet();
@@ -339,7 +339,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
 
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new LinkedHashIterator<Map.Entry<K, V>>() {
@@ -382,7 +382,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class KeySet extends AbstractSet<K> {
 
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<K> iterator() {
       return new LinkedHashIterator<K>() {
@@ -416,7 +416,7 @@ public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
   private final class Values extends AbstractCollection<V> {
 
-    @NotNull
+    @Nonnull
     @Override
     public Iterator<V> iterator() {
       return new LinkedHashIterator<V>() {

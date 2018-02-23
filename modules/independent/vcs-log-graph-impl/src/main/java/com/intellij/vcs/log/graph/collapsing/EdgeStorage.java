@@ -20,8 +20,8 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.utils.IntIntMultiMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -36,7 +36,8 @@ public class EdgeStorage {
 
   public static final int NULL_ID = MIN_NODE_ID;
 
-  @NotNull private final IntIntMultiMap myEdges = new IntIntMultiMap();
+  @Nonnull
+  private final IntIntMultiMap myEdges = new IntIntMultiMap();
 
   public EdgeStorage() {
     assert GraphEdgeType.values().length <= MAX_EDGE_TYPE_COUNT;
@@ -86,7 +87,7 @@ public class EdgeStorage {
     return (type << EDGE_BITS_OFFSET) | (COMPRESSED_NODE_ID_MASK & nodeId);
   }
 
-  @NotNull
+  @Nonnull
   private static GraphEdgeType retrievedType(int compressEdge) {
     int type = compressEdge >>> EDGE_BITS_OFFSET;
     return GraphEdgeType.values()[type];

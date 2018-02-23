@@ -18,7 +18,7 @@ package com.intellij.patterns.compiler;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,15 +51,15 @@ public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
     }
   };
 
-  @NotNull
+  @Nonnull
   @Override
   public Class[] getPatternClasses(String alias) {
     return myClasses.get(alias);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> PatternCompiler<T> getPatternCompiler(@NotNull Class[] patternClasses) {
+  public <T> PatternCompiler<T> getPatternCompiler(@Nonnull Class[] patternClasses) {
     return myCompilers.get(Arrays.asList(patternClasses));
   }
 }

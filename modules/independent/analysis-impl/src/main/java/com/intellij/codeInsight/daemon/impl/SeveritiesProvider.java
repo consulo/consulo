@@ -23,7 +23,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -34,14 +34,14 @@ public abstract class SeveritiesProvider {
   /**
    * @see com.intellij.openapi.editor.colors.TextAttributesKey#createTextAttributesKey(String, com.intellij.openapi.editor.markup.TextAttributes)
    */
-  @NotNull
+  @Nonnull
   public abstract List<HighlightInfoType> getSeveritiesHighlightInfoTypes();
 
   public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {
     return minSeverity != HighlightSeverity.INFORMATION;
   }
 
-  public Color getTrafficRendererColor(@NotNull TextAttributes textAttributes) {
+  public Color getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
     return textAttributes.getErrorStripeColor();
   }
 }

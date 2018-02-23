@@ -19,8 +19,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ExceptionUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.Closeable;
 import java.io.File;
@@ -47,12 +46,12 @@ public class StartupActionLogger extends Logger implements Closeable {
   }
 
   @Override
-  public void debug(@Nullable Throwable t) {
+  public void debug(@javax.annotation.Nullable Throwable t) {
 
   }
 
   @Override
-  public void debug(@NonNls String message, @Nullable Throwable t) {
+  public void debug(@NonNls String message, @javax.annotation.Nullable Throwable t) {
 
   }
 
@@ -62,7 +61,7 @@ public class StartupActionLogger extends Logger implements Closeable {
   }
 
   @Override
-  public void info(@NonNls String message, @Nullable Throwable t) {
+  public void info(@NonNls String message, @javax.annotation.Nullable Throwable t) {
     print("INFO: " + message, false);
 
     if (t != null) {
@@ -71,7 +70,7 @@ public class StartupActionLogger extends Logger implements Closeable {
   }
 
   @Override
-  public void warn(@NonNls String message, @Nullable Throwable t) {
+  public void warn(@NonNls String message, @javax.annotation.Nullable Throwable t) {
     print("WARN: " + message, false);
 
     if (t != null) {
@@ -80,7 +79,7 @@ public class StartupActionLogger extends Logger implements Closeable {
   }
 
   @Override
-  public void error(@NonNls String message, @Nullable Throwable t, @NonNls @NotNull String... details) {
+  public void error(@NonNls String message, @javax.annotation.Nullable Throwable t, @NonNls @Nonnull String... details) {
     print("ERROR: " + message, false);
 
     if (t != null) {

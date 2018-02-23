@@ -43,8 +43,8 @@ import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -122,14 +122,14 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Rectangle getVisibleArea() {
     assertIsDispatchThread();
     return myEditor.getScrollPane().getViewport().getViewRect();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
     assertIsDispatchThread();
@@ -144,18 +144,18 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   }
 
   @Override
-  public void scrollToCaret(@NotNull ScrollType scrollType) {
+  public void scrollToCaret(@Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
     myEditor.validateSize();
     AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
   }
 
-  private void scrollTo(@NotNull VisualPosition pos, @NotNull ScrollType scrollType) {
+  private void scrollTo(@Nonnull VisualPosition pos, @Nonnull ScrollType scrollType) {
     Point targetLocation = myEditor.visualPositionToXY(pos);
     scrollTo(targetLocation, scrollType);
   }
 
-  private void scrollTo(@NotNull Point targetLocation, @NotNull ScrollType scrollType) {
+  private void scrollTo(@Nonnull Point targetLocation, @Nonnull ScrollType scrollType) {
     AnimatedScrollingRunnable canceledThread = cancelAnimatedScrolling(false);
     Rectangle viewRect = canceledThread != null ? canceledThread.getTargetVisibleArea() : getVisibleArea();
     Point p = calcOffsetsToScroll(targetLocation, scrollType, viewRect);
@@ -163,7 +163,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   }
 
   @Override
-  public void scrollTo(@NotNull LogicalPosition pos, @NotNull ScrollType scrollType) {
+  public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
 
     AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
@@ -174,7 +174,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   }
 
   @Override
-  public void runActionOnScrollingFinished(@NotNull Runnable action) {
+  public void runActionOnScrollingFinished(@Nonnull Runnable action) {
     assertIsDispatchThread();
 
     if (myCurrentAnimationRequest != null) {
@@ -391,12 +391,12 @@ public class ScrollingModelImpl implements ScrollingModelEx {
   }
 
   @Override
-  public void addVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
     myVisibleAreaListeners.add(listener);
   }
 
   @Override
-  public void removeVisibleAreaListener(@NotNull VisibleAreaListener listener) {
+  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
     boolean success = myVisibleAreaListeners.remove(listener);
     LOG.assertTrue(success);
   }
@@ -521,7 +521,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
       myAnimator.resume();
     }
 
-    @NotNull
+    @Nonnull
     public Rectangle getTargetVisibleArea() {
       Rectangle viewRect = getVisibleArea();
       return new Rectangle(myEndHOffset, myEndVOffset, viewRect.width, viewRect.height);

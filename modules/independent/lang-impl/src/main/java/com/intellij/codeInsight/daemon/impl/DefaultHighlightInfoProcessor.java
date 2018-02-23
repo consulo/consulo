@@ -32,17 +32,17 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
 public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   @Override
-  public void highlightsInsideVisiblePartAreProduced(@NotNull final HighlightingSession session,
-                                                     @NotNull final List<HighlightInfo> infos,
-                                                     @NotNull TextRange priorityRange,
-                                                     @NotNull TextRange restrictRange,
+  public void highlightsInsideVisiblePartAreProduced(@Nonnull final HighlightingSession session,
+                                                     @Nonnull final List<HighlightInfo> infos,
+                                                     @Nonnull TextRange priorityRange,
+                                                     @Nonnull TextRange restrictRange,
                                                      final int groupId) {
     final PsiFile psiFile = session.getPsiFile();
     final Project project = psiFile.getProject();
@@ -72,10 +72,10 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   }
 
   @Override
-  public void highlightsOutsideVisiblePartAreProduced(@NotNull final HighlightingSession session,
-                                                      @NotNull final List<HighlightInfo> infos,
-                                                      @NotNull final TextRange priorityRange,
-                                                      @NotNull final TextRange restrictedRange,
+  public void highlightsOutsideVisiblePartAreProduced(@Nonnull final HighlightingSession session,
+                                                      @Nonnull final List<HighlightInfo> infos,
+                                                      @Nonnull final TextRange priorityRange,
+                                                      @Nonnull final TextRange restrictedRange,
                                                       final int groupId) {
     final PsiFile psiFile = session.getPsiFile();
     final Project project = psiFile.getProject();
@@ -99,15 +99,15 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   }
 
   @Override
-  public void allHighlightsForRangeAreProduced(@NotNull HighlightingSession session, @NotNull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
+  public void allHighlightsForRangeAreProduced(@Nonnull HighlightingSession session, @Nonnull TextRange elementRange, @Nullable List<HighlightInfo> infos) {
     PsiFile psiFile = session.getPsiFile();
     killAbandonedHighlightsUnder(psiFile, elementRange, infos, session);
   }
 
-  private static void killAbandonedHighlightsUnder(@NotNull PsiFile psiFile,
-                                                   @NotNull final TextRange range,
+  private static void killAbandonedHighlightsUnder(@Nonnull PsiFile psiFile,
+                                                   @Nonnull final TextRange range,
                                                    @Nullable final List<HighlightInfo> infos,
-                                                   @NotNull final HighlightingSession highlightingSession) {
+                                                   @Nonnull final HighlightingSession highlightingSession) {
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (document == null) return;
@@ -129,17 +129,17 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
   }
 
   @Override
-  public void infoIsAvailable(@NotNull HighlightingSession session,
-                              @NotNull HighlightInfo info,
-                              @NotNull TextRange priorityRange,
-                              @NotNull TextRange restrictedRange,
+  public void infoIsAvailable(@Nonnull HighlightingSession session,
+                              @Nonnull HighlightInfo info,
+                              @Nonnull TextRange priorityRange,
+                              @Nonnull TextRange restrictedRange,
                               int groupId) {
     HighlightingSessionImpl impl = (HighlightingSessionImpl)session;
     impl.queueHighlightInfo(info, restrictedRange, groupId);
   }
 
   @Override
-  public void progressIsAdvanced(@NotNull HighlightingSession highlightingSession, double progress) {
+  public void progressIsAdvanced(@Nonnull HighlightingSession highlightingSession, double progress) {
     PsiFile file = highlightingSession.getPsiFile();
     Editor editor = highlightingSession.getEditor();
     repaintTrafficIcon(file, editor, progress);
@@ -147,7 +147,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
 
   private final Alarm repaintIconAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  private void repaintTrafficIcon(@NotNull final PsiFile file, final Editor editor, double progress) {
+  private void repaintTrafficIcon(@Nonnull final PsiFile file, final Editor editor, double progress) {
     if (ApplicationManager.getApplication().isCommandLine()) return;
 
     if (repaintIconAlarm.isEmpty() || progress >= 1) {

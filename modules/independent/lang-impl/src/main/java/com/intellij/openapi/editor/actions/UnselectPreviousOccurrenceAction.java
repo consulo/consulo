@@ -20,7 +20,8 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class UnselectPreviousOccurrenceAction extends EditorAction {
   protected UnselectPreviousOccurrenceAction() {

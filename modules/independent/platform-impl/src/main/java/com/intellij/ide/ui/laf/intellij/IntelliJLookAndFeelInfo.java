@@ -17,7 +17,7 @@ package com.intellij.ide.ui.laf.intellij;
 
 import com.intellij.ide.IdeBundle;
 import consulo.ide.ui.laf.LafWithColorScheme;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -39,7 +39,7 @@ public class IntelliJLookAndFeelInfo extends UIManager.LookAndFeelInfo implement
     return getName().hashCode();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getColorSchemeName() {
     return "Default";

@@ -33,7 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.refactoring.copy.CopyHandler;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.move.MoveHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -51,10 +51,10 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
     myEditable = new MyEditable();
   }
 
-  @NotNull
+  @Nonnull
   protected abstract PsiElement[] getSelectedElements();
 
-  @NotNull
+  @Nonnull
   private PsiElement[] getValidSelectedElements() {
     PsiElement[] selectedElements = getSelectedElements();
     for (PsiElement element : selectedElements) {
@@ -86,25 +86,25 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
 
   private class MyEditable implements CutProvider, CopyProvider, PasteProvider {
     @Override
-    public void performCopy(@NotNull DataContext dataContext) {
+    public void performCopy(@Nonnull DataContext dataContext) {
       PsiElement[] elements = getValidSelectedElements();
       PsiCopyPasteManager.getInstance().setElements(elements, true);
       updateView();
     }
 
     @Override
-    public boolean isCopyEnabled(@NotNull DataContext dataContext) {
+    public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
       PsiElement[] elements = getValidSelectedElements();
       return CopyHandler.canCopy(elements) || PsiCopyPasteManager.asFileList(elements) != null;
     }
 
     @Override
-    public boolean isCopyVisible(@NotNull DataContext dataContext) {
+    public boolean isCopyVisible(@Nonnull DataContext dataContext) {
       return true;
     }
 
     @Override
-    public void performCut(@NotNull DataContext dataContext) {
+    public void performCut(@Nonnull DataContext dataContext) {
       PsiElement[] elements = getValidSelectedElements();
       if (MoveHandler.adjustForMove(myProject, elements, null) == null) {
         return;
@@ -116,18 +116,18 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     @Override
-    public boolean isCutEnabled(@NotNull DataContext dataContext) {
+    public boolean isCutEnabled(@Nonnull DataContext dataContext) {
       final PsiElement[] elements = getValidSelectedElements();
       return elements.length != 0 && MoveHandler.canMove(elements, null);
     }
 
     @Override
-    public boolean isCutVisible(@NotNull DataContext dataContext) {
+    public boolean isCutVisible(@Nonnull DataContext dataContext) {
       return true;
     }
 
     @Override
-    public void performPaste(@NotNull DataContext dataContext) {
+    public void performPaste(@Nonnull DataContext dataContext) {
       if (!performDefaultPaste(dataContext)) {
         for(PasteProvider provider: Extensions.getExtensions(EP_NAME)) {
           if (provider.isPasteEnabled(dataContext)) {
@@ -188,12 +188,12 @@ public abstract class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     @Override
-    public boolean isPastePossible(@NotNull DataContext dataContext) {
+    public boolean isPastePossible(@Nonnull DataContext dataContext) {
       return true;
     }
 
     @Override
-    public boolean isPasteEnabled(@NotNull DataContext dataContext){
+    public boolean isPasteEnabled(@Nonnull DataContext dataContext){
       if (isDefaultPasteEnabled(dataContext)) {
         return true;
       }

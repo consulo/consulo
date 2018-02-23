@@ -32,8 +32,8 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
@@ -124,14 +124,14 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   public String[] EXCLUDED_PACKAGES = ArrayUtil.EMPTY_STRING_ARRAY;
 
   @Transient
-  @NotNull
+  @Nonnull
   public SmartBackspaceMode getBackspaceMode() {
     SmartBackspaceMode[] values = SmartBackspaceMode.values();
     return SMART_BACKSPACE >= 0 && SMART_BACKSPACE < values.length ? values[SMART_BACKSPACE] : SmartBackspaceMode.OFF;
   }
 
   @Transient
-  public void setBackspaceMode(@NotNull SmartBackspaceMode mode) {
+  public void setBackspaceMode(@Nonnull SmartBackspaceMode mode) {
     SMART_BACKSPACE = mode.ordinal();
   }
 

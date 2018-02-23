@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -79,7 +79,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
   }
 
   @Override
-  @NotNull
+  @Nonnull
   protected final JComponent createEditor() {
     CompositeSettingsBuilder<Settings> builder = getBuilder();
     myEditors = builder.getEditors();

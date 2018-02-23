@@ -43,8 +43,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -79,7 +79,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     @Override
-    public void queryPlace(@NotNull final Place place) {
+    public void queryPlace(@Nonnull final Place place) {
     }
   });
   private JScrollPane myMaster;
@@ -849,16 +849,16 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   public static class MyNode extends DefaultMutableTreeNode {
     private boolean myDisplayInBold;
 
-    public MyNode(@NotNull NamedConfigurable userObject) {
+    public MyNode(@Nonnull NamedConfigurable userObject) {
       super(userObject);
     }
 
-    public MyNode(@NotNull NamedConfigurable userObject, boolean displayInBold) {
+    public MyNode(@Nonnull NamedConfigurable userObject, boolean displayInBold) {
       super(userObject);
       myDisplayInBold = displayInBold;
     }
 
-    @NotNull
+    @Nonnull
     public String getDisplayName() {
       final NamedConfigurable configurable = ((NamedConfigurable)getUserObject());
       LOG.assertTrue(configurable != null, "Tree was already disposed");

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -29,13 +29,13 @@ public interface VcsLogBranchFilter extends VcsLogFilter {
    * @param name branch name.
    * @return true if a branch matches the filter, false otherwise.
    */
-  boolean matches(@NotNull String name);
+  boolean matches(@Nonnull String name);
 
   /**
    * Text presentation for the filter (to display in filter popup).
    *
    * @return text presentation for the filter.
    */
-  @NotNull
+  @Nonnull
   Collection<String> getTextPresentation();
 }

@@ -22,7 +22,7 @@ import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,20 +41,20 @@ public class PlainArtifactType extends ArtifactType {
     super(ID, CompilerBundle.message("artifact.type.plain"));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Icon getIcon() {
     return AllIcons.Nodes.Artifact;
   }
 
   @Override
-  public String getDefaultPathFor(@NotNull PackagingElementOutputKind kind) {
+  public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
     return "/";
   }
 
   @Override
-  @NotNull
-  public CompositePackagingElement<?> createRootElement(@NotNull String artifactName) {
+  @Nonnull
+  public CompositePackagingElement<?> createRootElement(@Nonnull String artifactName) {
     return new ArtifactRootElementImpl();
   }
 }

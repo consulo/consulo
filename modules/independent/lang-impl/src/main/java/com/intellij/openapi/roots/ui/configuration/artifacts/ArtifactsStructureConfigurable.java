@@ -47,9 +47,9 @@ import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,15 +59,15 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
-  @NotNull
-  public static ArtifactsStructureConfigurable getInstance(@NotNull Project project) {
+  @Nonnull
+  public static ArtifactsStructureConfigurable getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactsStructureConfigurable.class);
   }
 
   private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
   private final ArtifactEditorSettings myDefaultSettings = new ArtifactEditorSettings();
 
-  public ArtifactsStructureConfigurable(@NotNull Project project) {
+  public ArtifactsStructureConfigurable(@Nonnull Project project) {
     super(project, new ArtifactStructureConfigurableState());
   }
 
@@ -81,7 +81,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     super.init(context);
     myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myDefaultSettings, new ArtifactAdapter() {
       @Override
-      public void artifactAdded(@NotNull Artifact artifact) {
+      public void artifactAdded(@Nonnull Artifact artifact) {
         final MyNode node = addArtifactNode(artifact);
         selectNodeInTree(node);
         myContext.getDaemonAnalyzer().queueUpdate(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
@@ -114,7 +114,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
 
     context.addLibraryEditorListener(new LibraryEditorListener() {
       @Override
-      public void libraryRenamed(@NotNull Library library, String oldName, String newName) {
+      public void libraryRenamed(@Nonnull Library library, String oldName, String newName) {
         final Artifact[] artifacts = myPackagingEditorContext.getArtifactModel().getArtifacts();
         for (Artifact artifact : artifacts) {
           updateLibraryElements(artifact, library, oldName, newName);
@@ -128,8 +128,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     if (ArtifactUtil.processPackagingElements(myPackagingEditorContext.getRootElement(artifact), LibraryElementType.getInstance(),
                                               new PackagingElementProcessor<LibraryPackagingElement>() {
                                                 @Override
-                                                public boolean process(@NotNull LibraryPackagingElement element,
-                                                                       @NotNull PackagingElementPath path) {
+                                                public boolean process(@Nonnull LibraryPackagingElement element,
+                                                                       @Nonnull PackagingElementPath path) {
                                                   return !isResolvedToLibrary(element, library, oldName);
                                                 }
                                               }, myPackagingEditorContext, false, artifact.getArtifactType())) {
@@ -141,7 +141,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
         final ModifiableArtifact modifiableArtifact = myPackagingEditorContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(artifact);
         ArtifactUtil.processPackagingElements(modifiableArtifact, LibraryElementType.getInstance(), new PackagingElementProcessor<LibraryPackagingElement>() {
           @Override
-          public boolean process(@NotNull LibraryPackagingElement element, @NotNull PackagingElementPath path) {
+          public boolean process(@Nonnull LibraryPackagingElement element, @Nonnull PackagingElementPath path) {
             if (isResolvedToLibrary(element, library, oldName)) {
               element.setLibraryName(newName);
             }
@@ -202,7 +202,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> elements = new ArrayList<ProjectStructureElement>();
@@ -252,7 +252,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   @Override
   protected AbstractAddGroup createAddAction() {
     return new AbstractAddGroup(ProjectBundle.message("add.new.header.text")) {
-      @NotNull
+      @Nonnull
       @Override
       public AnAction[] getChildren(@Nullable AnActionEvent e) {
         final ArtifactType[] types = ArtifactType.EP_NAME.getExtensions();
@@ -267,7 +267,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     };
   }
 
-  private AnAction createAddArtifactAction(@NotNull final ArtifactType type) {
+  private AnAction createAddArtifactAction(@Nonnull final ArtifactType type) {
     final List<? extends ArtifactTemplate> templates = type.getNewArtifactTemplates(myPackagingEditorContext);
     final ArtifactTemplate emptyTemplate = new ArtifactTemplate() {
       @Override
@@ -295,7 +295,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     return group;
   }
 
-  private void addArtifact(@NotNull ArtifactType type, @NotNull ArtifactTemplate artifactTemplate) {
+  private void addArtifact(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate) {
     final ArtifactTemplate.NewArtifactConfiguration configuration = artifactTemplate.createArtifact();
     if (configuration == null) {
       return;
@@ -366,7 +366,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getId() {
     return "project.artifacts";
   }
@@ -384,7 +384,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     private final ArtifactType myType;
     private final ArtifactTemplate myArtifactTemplate;
 
-    public AddArtifactAction(@NotNull ArtifactType type, @NotNull ArtifactTemplate artifactTemplate, final @NotNull String actionText,
+    public AddArtifactAction(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate, final @Nonnull String actionText,
                              final Icon icon) {
       super(actionText, null, icon);
       myType = type;

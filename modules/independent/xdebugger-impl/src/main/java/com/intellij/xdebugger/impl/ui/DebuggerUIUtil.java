@@ -56,8 +56,8 @@ import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +95,7 @@ public class DebuggerUIUtil {
   }
 
   @Deprecated
-  public static RelativePoint calcPopupLocation(@NotNull Editor editor, final int line) {
+  public static RelativePoint calcPopupLocation(@Nonnull Editor editor, final int line) {
     Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
 
     final Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
@@ -106,12 +106,12 @@ public class DebuggerUIUtil {
   }
 
   @Nullable
-  public static RelativePoint getPositionForPopup(@NotNull Editor editor, int line) {
+  public static RelativePoint getPositionForPopup(@Nonnull Editor editor, int line) {
     Point p = editor.logicalPositionToXY(new LogicalPosition(line + 1, 0));
     return editor.getScrollingModel().getVisibleArea().contains(p) ? new RelativePoint(editor.getContentComponent(), p) : null;
   }
 
-  public static void showPopupForEditorLine(@NotNull JBPopup popup, @NotNull Editor editor, int line) {
+  public static void showPopupForEditorLine(@Nonnull JBPopup popup, @Nonnull Editor editor, int line) {
     RelativePoint point = getPositionForPopup(editor, line);
     if (point != null) {
       popup.show(point);
@@ -127,7 +127,7 @@ public class DebuggerUIUtil {
     }
   }
 
-  public static void showValuePopup(@NotNull XFullValueEvaluator evaluator, @NotNull MouseEvent event, @NotNull Project project, @Nullable Editor editor) {
+  public static void showValuePopup(@Nonnull XFullValueEvaluator evaluator, @Nonnull MouseEvent event, @Nonnull Project project, @Nullable Editor editor) {
     EditorTextField textArea = new TextViewer("Evaluating...", project);
     textArea.setBackground(HintUtil.INFORMATION_COLOR);
 
@@ -213,7 +213,7 @@ public class DebuggerUIUtil {
 
     final XBreakpointListener<XBreakpoint<?>> breakpointListener = new XBreakpointAdapter<XBreakpoint<?>>() {
       @Override
-      public void breakpointRemoved(@NotNull XBreakpoint<?> removedBreakpoint) {
+      public void breakpointRemoved(@Nonnull XBreakpoint<?> removedBreakpoint) {
         if (removedBreakpoint.equals(breakpoint)) {
           balloon.hide();
         }
@@ -293,12 +293,12 @@ public class DebuggerUIUtil {
     return balloon;
   }
 
-  @NotNull
+  @Nonnull
   public static EditorColorsScheme getColorScheme() {
     return EditorColorsUtil.getGlobalOrDefaultColorScheme();
   }
 
-  @NotNull
+  @Nonnull
   public static EditorColorsScheme getColorScheme(@Nullable JComponent component) {
     return EditorColorsUtil.getColorSchemeForComponent(component);
   }
@@ -312,12 +312,12 @@ public class DebuggerUIUtil {
     }
 
     @Override
-    public void evaluated(@NotNull final String fullValue) {
+    public void evaluated(@Nonnull final String fullValue) {
       evaluated(fullValue, null);
     }
 
     @Override
-    public void evaluated(@NotNull final String fullValue, @Nullable final Font font) {
+    public void evaluated(@Nonnull final String fullValue, @Nullable final Font font) {
       AppUIUtil.invokeOnEdt(() -> {
         myTextArea.setText(fullValue);
         if (font != null) {
@@ -327,7 +327,7 @@ public class DebuggerUIUtil {
     }
 
     @Override
-    public void errorOccurred(@NotNull final String errorMessage) {
+    public void errorOccurred(@Nonnull final String errorMessage) {
       AppUIUtil.invokeOnEdt(() -> {
         myTextArea.setForeground(XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES.getFgColor());
         myTextArea.setText(errorMessage);
@@ -345,7 +345,7 @@ public class DebuggerUIUtil {
   }
 
   @Nullable
-  public static String getNodeRawValue(@NotNull XValueNodeImpl valueNode) {
+  public static String getNodeRawValue(@Nonnull XValueNodeImpl valueNode) {
     if (valueNode.getValueContainer() instanceof XValueTextProvider) {
       return ((XValueTextProvider)valueNode.getValueContainer()).getValueText();
     }
@@ -357,7 +357,7 @@ public class DebuggerUIUtil {
   /**
    * Checks if value has evaluation expression ready, or calculation is pending
    */
-  public static boolean hasEvaluationExpression(@NotNull XValue value) {
+  public static boolean hasEvaluationExpression(@Nonnull XValue value) {
     AsyncResult<XExpression> promise = value.calculateEvaluationExpression();
     if (promise.isDone()) {
       return promise.getResult() != null;
@@ -417,7 +417,7 @@ public class DebuggerUIUtil {
       }
 
       @Override
-      public void errorOccurred(@NotNull final String errorMessage) {
+      public void errorOccurred(@Nonnull final String errorMessage) {
         AppUIUtil.invokeOnEdt(() -> {
           tree.rebuildAndRestore(treeState);
           errorConsumer.consume(errorMessage);

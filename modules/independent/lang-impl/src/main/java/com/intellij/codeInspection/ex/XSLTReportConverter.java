@@ -18,9 +18,9 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionApplication;
 import com.intellij.codeInspection.InspectionsReportConverter;
 import com.intellij.openapi.util.io.FileUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -38,7 +38,7 @@ import java.util.Map;
 public class XSLTReportConverter implements InspectionsReportConverter {
   private final String myXSLTSchemePath;
 
-  public XSLTReportConverter(@NotNull final String xsltSchemePath) {
+  public XSLTReportConverter(@Nonnull final String xsltSchemePath) {
     myXSLTSchemePath = xsltSchemePath;
   }
 
@@ -53,10 +53,10 @@ public class XSLTReportConverter implements InspectionsReportConverter {
   }
 
   @Override
-  public void convert(@NotNull final String rawDataDirectoryPath,
+  public void convert(@Nonnull final String rawDataDirectoryPath,
                       @Nullable final String outputPath,
-                      @NotNull final Map<String, Tools> tools,
-                      @NotNull final List<File> inspectionsResults) throws InspectionsReportConverter.ConversionException {
+                      @Nonnull final Map<String, Tools> tools,
+                      @Nonnull final List<File> inspectionsResults) throws InspectionsReportConverter.ConversionException {
 
     if (outputPath == null) {
       throw new ConversionException("Output path isn't specified.");
@@ -118,7 +118,7 @@ public class XSLTReportConverter implements InspectionsReportConverter {
     }
   }
 
-  private void warn(@NotNull final String msg) {
+  private void warn(@Nonnull final String msg) {
     System.err.println(msg);
   }
 }

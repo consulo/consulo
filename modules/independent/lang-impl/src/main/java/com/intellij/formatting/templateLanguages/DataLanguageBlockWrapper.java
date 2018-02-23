@@ -24,8 +24,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,8 @@ import java.util.Map;
  */
 public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithParent {
   private final Block myOriginal;
-  @Nullable private final Language myLanguage;
+  @Nullable
+  private final Language myLanguage;
   private List<Block> myBlocks;
   private List<TemplateLanguageBlock> myTlBlocks;
   private BlockWithParent myParent;
@@ -46,7 +47,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   private Spacing mySpacing;
   private Map<Pair<Block, Block>, Spacing> myChildDataBorderSpacings;
 
-  private DataLanguageBlockWrapper(@NotNull final Block original) {
+  private DataLanguageBlockWrapper(@Nonnull final Block original) {
     assert !(original instanceof DataLanguageBlockWrapper) && !(original instanceof TemplateLanguageBlock);
     myOriginal = original;
 
@@ -62,13 +63,13 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public TextRange getTextRange() {
     return myOriginal.getTextRange();
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<Block> getSubBlocks() {
     if (myBlocks == null) {
       myBlocks = buildBlocks();
@@ -131,7 +132,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ChildAttributes getChildAttributes(final int newChildIndex) {
     return myOriginal.getChildAttributes(newChildIndex);
   }
@@ -148,7 +149,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
 
   @Override
   @Nullable
-  public Spacing getSpacing(Block child1, @NotNull Block child2) {
+  public Spacing getSpacing(Block child1, @Nonnull Block child2) {
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return myOriginal.getSpacing(((DataLanguageBlockWrapper)child1).myOriginal, ((DataLanguageBlockWrapper)child2).myOriginal);
     }
@@ -188,7 +189,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Nullable
-  public static DataLanguageBlockWrapper create(@NotNull final Block original, @Nullable final Indent indent) {
+  public static DataLanguageBlockWrapper create(@Nonnull final Block original, @Nullable final Indent indent) {
     final boolean doesntNeedWrapper = original instanceof ASTBlock && ((ASTBlock)original).getNode() instanceof OuterLanguageElement;
     return doesntNeedWrapper ? null : new DataLanguageBlockWrapper(original);
   }

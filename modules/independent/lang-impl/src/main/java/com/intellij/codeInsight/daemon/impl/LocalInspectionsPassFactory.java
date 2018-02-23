@@ -33,8 +33,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +51,14 @@ public class LocalInspectionsPassFactory extends AbstractProjectComponent implem
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getComponentName() {
     return "LocalInspectionsPassFactory";
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@NotNull PsiFile file, @NotNull final Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
     TextRange textRange = calculateRangeToProcess(editor);
     if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()){
       return new ProgressableTextEditorHighlightingPass.EmptyPass(myProject, editor.getDocument());
@@ -68,9 +68,9 @@ public class LocalInspectionsPassFactory extends AbstractProjectComponent implem
   }
 
   @Override
-  public TextEditorHighlightingPass createMainHighlightingPass(@NotNull PsiFile file,
-                                                               @NotNull Document document,
-                                                               @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+  public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file,
+                                                               @Nonnull Document document,
+                                                               @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     final TextRange textRange = file.getTextRange();
     LOG.assertTrue(textRange != null, "textRange is null for " + file + " (" + PsiUtilCore.getVirtualFile(file) + ")");
     return new MyLocalInspectionsPass(file, document, textRange, LocalInspectionsPass.EMPTY_PRIORITY_RANGE, highlightInfoProcessor);
@@ -83,15 +83,15 @@ public class LocalInspectionsPassFactory extends AbstractProjectComponent implem
   private static class MyLocalInspectionsPass extends LocalInspectionsPass {
     private MyLocalInspectionsPass(PsiFile file,
                                    Document document,
-                                   @NotNull TextRange textRange,
+                                   @Nonnull TextRange textRange,
                                    TextRange visibleRange,
-                                   @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+                                   @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
       super(file, document, textRange.getStartOffset(), textRange.getEndOffset(), visibleRange, true, highlightInfoProcessor);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    List<LocalInspectionToolWrapper> getInspectionTools(@NotNull InspectionProfileWrapper profile) {
+    List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
       List<LocalInspectionToolWrapper> tools = super.getInspectionTools(profile);
       List<LocalInspectionToolWrapper> result = new ArrayList<LocalInspectionToolWrapper>(tools.size());
       for (LocalInspectionToolWrapper tool : tools) {

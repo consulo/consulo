@@ -16,7 +16,7 @@
 package com.intellij.util.concurrency;
 
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.concurrent.locks.Condition;
@@ -45,7 +45,7 @@ public class BlockingSet<T> {
   /**
    * Acquires lock by {@code key}. If lock by {@code key} has been already acquired wait until it is released. Acquire is <b>not</b> reentrant.
    */
-  public void put(@NotNull T key) {
+  public void put(@Nonnull T key) {
     lock.lock();
     try {
       while (set.contains(key)) {
@@ -63,7 +63,7 @@ public class BlockingSet<T> {
    *
    * @throws IllegalStateException if lock by {@code key} has not been acquired.
    */
-  public void remove(@NotNull T key) throws IllegalStateException {
+  public void remove(@Nonnull T key) throws IllegalStateException {
     lock.lock();
     try {
       if (!set.contains(key)) {

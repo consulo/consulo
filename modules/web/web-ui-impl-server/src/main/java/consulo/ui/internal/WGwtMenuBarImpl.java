@@ -21,8 +21,7 @@ import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,9 +43,9 @@ public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuB
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
-  public MenuBar add(@NotNull MenuItem menuItem) {
+  public MenuBar add(@Nonnull MenuItem menuItem) {
     myMenuItems.add((Component)menuItem);
 
     addComponent((Component)menuItem);
@@ -68,7 +67,7 @@ public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuB
     return myMenuItems.iterator();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public consulo.ui.Component getParentComponent() {
     return (consulo.ui.Component)getParent();
@@ -76,7 +75,7 @@ public class WGwtMenuBarImpl extends AbstractComponentContainer implements MenuB
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
 
   }
 }

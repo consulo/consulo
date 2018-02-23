@@ -20,8 +20,8 @@ import com.intellij.openapi.ui.Queryable;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Comparator;
 
@@ -77,13 +77,13 @@ public class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestC
   public void testFiltering() throws Exception {
     myModel.addFlter(new Filter() {
       @Override
-      @NotNull
+      @Nonnull
       public ActionPresentation getPresentation() {
         throw new RuntimeException();
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getName() {
         throw new RuntimeException();
       }
@@ -135,13 +135,13 @@ public class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestC
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public ActionPresentation getPresentation() {
         throw new RuntimeException();
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getName() {
         throw new RuntimeException();
       }
@@ -164,13 +164,13 @@ public class SmartTreeStructureTest extends LightPlatformCodeInsightFixtureTestC
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public ActionPresentation getPresentation() {
         throw new RuntimeException();
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getName() {
         throw new RuntimeException();
       }

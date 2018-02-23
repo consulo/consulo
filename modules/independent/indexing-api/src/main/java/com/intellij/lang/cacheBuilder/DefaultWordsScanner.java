@@ -19,7 +19,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The default implementation of a words scanner based on a custom language lexer.
@@ -58,7 +58,7 @@ public class DefaultWordsScanner implements WordsScanner {
    * @param SkipCodeContextTokenSet the set of token types which should not be considered as code context.
    */
   public DefaultWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                             final TokenSet literalTokenSet, @NotNull TokenSet skipCodeContextTokenSet) {
+                             final TokenSet literalTokenSet, @Nonnull TokenSet skipCodeContextTokenSet) {
     myLexer = lexer;
     myIdentifierTokenSet = identifierTokenSet;
     myCommentTokenSet = commentTokenSet;

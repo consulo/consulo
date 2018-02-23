@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.util.Processor;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +36,7 @@ public class ProjectOrderEnumerator extends OrderEnumeratorBase {
   }
 
   @Override
-  public void processRootModules(@NotNull Processor<Module> processor) {
+  public void processRootModules(@Nonnull Processor<Module> processor) {
     Module[] modules = myModulesProvider != null ? myModulesProvider.getModules() : ModuleManager.getInstance(myProject).getSortedModules();
     for (Module each : modules) {
       processor.process(each);
@@ -44,7 +44,7 @@ public class ProjectOrderEnumerator extends OrderEnumeratorBase {
   }
 
   @Override
-  public void forEach(@NotNull final Processor<OrderEntry> processor) {
+  public void forEach(@Nonnull final Processor<OrderEntry> processor) {
     myRecursively = false;
     myWithoutDepModules = true;
     final THashSet<Module> processed = new THashSet<Module>();
@@ -58,7 +58,7 @@ public class ProjectOrderEnumerator extends OrderEnumeratorBase {
   }
 
   @Override
-  public boolean isRootModuleModel(@NotNull ModuleRootModel rootModel) {
+  public boolean isRootModuleModel(@Nonnull ModuleRootModel rootModel) {
     return true;
   }
 }

@@ -19,7 +19,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UnfairTextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.ChangedRangesInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
     add(range, processHeadingWhitespace);
   }
 
-  public FormatTextRanges(@NotNull ChangedRangesInfo changedRangesInfo) {
+  public FormatTextRanges(@Nonnull ChangedRangesInfo changedRangesInfo) {
     changedRangesInfo.allChangedRanges.forEach((range) -> add(range, true));
     myInsertedRanges = changedRangesInfo.insertedRanges;
   }
@@ -48,12 +48,12 @@ public class FormatTextRanges implements FormattingRangesInfo {
   }
 
   @Override
-  public boolean isWhitespaceReadOnly(final @NotNull TextRange range) {
+  public boolean isWhitespaceReadOnly(final @Nonnull TextRange range) {
     return myStorage.isWhiteSpaceReadOnly(range);
   }
 
   @Override
-  public boolean isReadOnly(@NotNull TextRange range) {
+  public boolean isReadOnly(@Nonnull TextRange range) {
     return myStorage.isReadOnly(range);
   }
 

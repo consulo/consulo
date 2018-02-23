@@ -19,16 +19,18 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.OptionGroup;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ForceArrangementPanel {
 
-  @NotNull private final JComboBox myForceRearrangeComboBox;
-  @NotNull private final JPanel myPanel;
+  @Nonnull
+  private final JComboBox myForceRearrangeComboBox;
+  @Nonnull
+  private final JPanel myPanel;
 
   public ForceArrangementPanel() {
     myForceRearrangeComboBox = new JComboBox();
@@ -41,7 +43,7 @@ public class ForceArrangementPanel {
     return getSelectedMode().rearrangeMode;
   }
 
-  public void setSelectedMode(@NotNull SelectedMode mode) {
+  public void setSelectedMode(@Nonnull SelectedMode mode) {
     myForceRearrangeComboBox.setSelectedItem(mode);
   }
 
@@ -51,12 +53,12 @@ public class ForceArrangementPanel {
     setSelectedMode(toSetUp);
   }
 
-  @NotNull
+  @Nonnull
   public JPanel getPanel() {
     return myPanel;
   }
 
-  @NotNull
+  @Nonnull
   private JPanel createPanel() {
     OptionGroup group = new OptionGroup(ApplicationBundle.message("arrangement.settings.additional.title"));
     JPanel textWithComboPanel = new JPanel();
@@ -68,7 +70,7 @@ public class ForceArrangementPanel {
     return group.createPanel();
   }
 
-  @NotNull
+  @Nonnull
   private SelectedMode getSelectedMode() {
     return (SelectedMode)myForceRearrangeComboBox.getSelectedItem();
   }
@@ -79,9 +81,10 @@ public class ForceArrangementPanel {
     NEVER(ApplicationBundle.message("arrangement.settings.additional.force.rearrange.never"), CommonCodeStyleSettings.REARRANGE_NEVER);
 
     public final int rearrangeMode;
-    @NotNull private final String myName;
+    @Nonnull
+    private final String myName;
 
-    SelectedMode(@NotNull String name, int mode) {
+    SelectedMode(@Nonnull String name, int mode) {
       myName = name;
       rearrangeMode = mode;
     }
@@ -95,7 +98,7 @@ public class ForceArrangementPanel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String toString() {
       return myName;
     }

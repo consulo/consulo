@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,21 +32,21 @@ public class MockResolveScopeManager extends ResolveScopeManager {
     myProject = project;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlobalSearchScope getResolveScope(@NotNull PsiElement element) {
+  public GlobalSearchScope getResolveScope(@Nonnull PsiElement element) {
     return GlobalSearchScope.allScope(element.getProject());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getDefaultResolveScope(VirtualFile vFile) {
     return GlobalSearchScope.allScope(myProject);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public GlobalSearchScope getUseScope(@NotNull PsiElement element) {
+  public GlobalSearchScope getUseScope(@Nonnull PsiElement element) {
     return GlobalSearchScope.allScope(element.getProject());
   }
 }

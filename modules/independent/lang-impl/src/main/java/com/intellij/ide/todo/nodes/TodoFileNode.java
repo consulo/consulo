@@ -37,7 +37,7 @@ import com.intellij.psi.search.TodoItem;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -110,7 +110,7 @@ public final class TodoFileNode extends PsiFileNode implements HighlightedRegion
         if (element instanceof PsiLanguageInjectionHost) {
           InjectedLanguageUtil.enumerate(element, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
             @Override
-            public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places) {
+            public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
               if (places.size() == 1) {
                 Document document = PsiDocumentManager.getInstance(injectedPsi.getProject()).getCachedDocument(injectedPsi);
                 if (!(document instanceof DocumentWindow)) return;

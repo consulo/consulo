@@ -15,23 +15,26 @@
  */
 package com.intellij.vcs.log;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VcsLogProperties {
   public static class VcsLogProperty<T> {
     private final T defaultValue;
 
-    private VcsLogProperty(@NotNull T defaultValue) {
+    private VcsLogProperty(@Nonnull T defaultValue) {
       this.defaultValue = defaultValue;
     }
   }
 
-  @NotNull public static final VcsLogProperty<Boolean> LIGHTWEIGHT_BRANCHES = new VcsLogProperty<>(false);
-  @NotNull public static final VcsLogProperty<Boolean> SUPPORTS_INDEXING = new VcsLogProperty<>(false);
-  @NotNull public static final VcsLogProperty<Boolean> CASE_INSENSITIVE_REGEX = new VcsLogProperty<>(true);
+  @Nonnull
+  public static final VcsLogProperty<Boolean> LIGHTWEIGHT_BRANCHES = new VcsLogProperty<>(false);
+  @Nonnull
+  public static final VcsLogProperty<Boolean> SUPPORTS_INDEXING = new VcsLogProperty<>(false);
+  @Nonnull
+  public static final VcsLogProperty<Boolean> CASE_INSENSITIVE_REGEX = new VcsLogProperty<>(true);
 
-  @NotNull
-  public static <T> T get(@NotNull VcsLogProvider provider, VcsLogProperty<T> property) {
+  @Nonnull
+  public static <T> T get(@Nonnull VcsLogProvider provider, VcsLogProperty<T> property) {
     T value = provider.getPropertyValue(property);
     if (value == null) return property.defaultValue;
     return value;

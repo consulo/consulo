@@ -18,7 +18,7 @@ package com.intellij.util.io.socketConnection.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.io.socketConnection.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,7 +37,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
 
   public SocketConnectionImpl(InetAddress host, int initialPort,
                               int portsNumberToTry,
-                              @NotNull RequestResponseExternalizerFactory<Request, Response> requestResponseRequestResponseExternalizerFactory) {
+                              @Nonnull RequestResponseExternalizerFactory<Request, Response> requestResponseRequestResponseExternalizerFactory) {
     super(requestResponseRequestResponseExternalizerFactory);
     myHost = host;
     myInitialPort = initialPort;
@@ -61,7 +61,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
     });
   }
 
-  @NotNull
+  @Nonnull
   private Socket createSocket() throws IOException {
     final InetAddress host = myHost != null ? myHost : InetAddress.getLocalHost();
     IOException exc = null;

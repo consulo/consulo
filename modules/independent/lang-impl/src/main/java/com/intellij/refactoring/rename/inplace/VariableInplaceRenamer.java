@@ -46,7 +46,7 @@ import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
   private TextRange mySelectedRange;
   private Language myLanguage;
 
-  public VariableInplaceRenamer(@NotNull PsiNamedElement elementToRename, Editor editor) {
+  public VariableInplaceRenamer(@Nonnull PsiNamedElement elementToRename, Editor editor) {
     this(elementToRename, editor, elementToRename.getProject());
   }
 

@@ -54,7 +54,7 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -64,22 +64,25 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
 
   private volatile List<LineMarkerInfo> myMarkers = Collections.emptyList();
 
-  @NotNull private final PsiFile myFile;
-  @NotNull private final TextRange myPriorityBounds;
-  @NotNull private final TextRange myRestrictRange;
+  @Nonnull
+  private final PsiFile myFile;
+  @Nonnull
+  private final TextRange myPriorityBounds;
+  @Nonnull
+  private final TextRange myRestrictRange;
 
-  LineMarkersPass(@NotNull Project project,
-                  @NotNull PsiFile file,
-                  @NotNull Document document,
-                  @NotNull TextRange priorityBounds,
-                  @NotNull TextRange restrictRange) {
+  LineMarkersPass(@Nonnull Project project,
+                  @Nonnull PsiFile file,
+                  @Nonnull Document document,
+                  @Nonnull TextRange priorityBounds,
+                  @Nonnull TextRange restrictRange) {
     super(project, document, false);
     myFile = file;
     myPriorityBounds = priorityBounds;
     myRestrictRange = restrictRange;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     //noinspection ConstantConditions
@@ -96,7 +99,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
   }
 
   @Override
-  public void doCollectInformation(@NotNull ProgressIndicator progress) {
+  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     final List<LineMarkerInfo> lineMarkers = new ArrayList<>();
     FileViewProvider viewProvider = myFile.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
@@ -124,8 +127,8 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     }
   }
 
-  @NotNull
-  private static List<LineMarkerInfo> mergeLineMarkers(@NotNull List<LineMarkerInfo> markers, @NotNull Document document) {
+  @Nonnull
+  private static List<LineMarkerInfo> mergeLineMarkers(@Nonnull List<LineMarkerInfo> markers, @Nonnull Document document) {
     List<MergeableLineMarkerInfo> forMerge = new ArrayList<>();
     TIntObjectHashMap<List<MergeableLineMarkerInfo>> sameLineMarkers = new TIntObjectHashMap<>();
 
@@ -158,8 +161,8 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     return result;
   }
 
-  @NotNull
-  public static List<LineMarkerProvider> getMarkerProviders(@NotNull Language language, @NotNull final Project project) {
+  @Nonnull
+  public static List<LineMarkerProvider> getMarkerProviders(@Nonnull Language language, @Nonnull final Project project) {
     List<LineMarkerProvider> forLanguage = LineMarkerProviders.INSTANCE.allForLanguageOrAny(language);
     List<LineMarkerProvider> providers = DumbService.getInstance(project).filterByDumbAwareness(forLanguage);
     final LineMarkerSettings settings = LineMarkerSettings.getInstance();
@@ -167,10 +170,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
                                                        || settings.isEnabled((LineMarkerProviderDescriptor)provider));
   }
 
-  private static void queryProviders(@NotNull List<PsiElement> elements,
-                                     @NotNull PsiFile containingFile,
-                                     @NotNull List<LineMarkerProvider> providers,
-                                     @NotNull PairConsumer<PsiElement, LineMarkerInfo> consumer) {
+  private static void queryProviders(@Nonnull List<PsiElement> elements,
+                                     @Nonnull PsiFile containingFile,
+                                     @Nonnull List<LineMarkerProvider> providers,
+                                     @Nonnull PairConsumer<PsiElement, LineMarkerInfo> consumer) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     Set<PsiFile> visitedInjectedFiles = new THashSet<>();
     //noinspection ForLoopReplaceableByForEach
@@ -228,10 +231,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     }
   }
 
-  private static void queryLineMarkersForInjected(@NotNull PsiElement element,
-                                                  @NotNull final PsiFile containingFile,
-                                                  @NotNull Set<PsiFile> visitedInjectedFiles,
-                                                  @NotNull final PairConsumer<PsiElement, LineMarkerInfo> consumer) {
+  private static void queryLineMarkersForInjected(@Nonnull PsiElement element,
+                                                  @Nonnull final PsiFile containingFile,
+                                                  @Nonnull Set<PsiFile> visitedInjectedFiles,
+                                                  @Nonnull final PairConsumer<PsiElement, LineMarkerInfo> consumer) {
     if (containingFile.getViewProvider() instanceof InjectedFileViewProvider) return;
     final InjectedLanguageManager manager = InjectedLanguageManager.getInstance(containingFile.getProject());
 
@@ -261,8 +264,8 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     });
   }
 
-  @NotNull
-  public static Collection<LineMarkerInfo> queryLineMarkers(@NotNull PsiFile file, @NotNull Document document) {
+  @Nonnull
+  public static Collection<LineMarkerInfo> queryLineMarkers(@Nonnull PsiFile file, @Nonnull Document document) {
     if (file.getNode() == null) {
       // binary file? see IDEADEV-2809
       return Collections.emptyList();
@@ -272,8 +275,8 @@ public class LineMarkersPass extends TextEditorHighlightingPass implements DumbA
     return pass.myMarkers;
   }
 
-  @NotNull
-  public static LineMarkerInfo createMethodSeparatorLineMarker(@NotNull PsiElement startFrom, @NotNull EditorColorsManager colorsManager) {
+  @Nonnull
+  public static LineMarkerInfo createMethodSeparatorLineMarker(@Nonnull PsiElement startFrom, @Nonnull EditorColorsManager colorsManager) {
     LineMarkerInfo info = new LineMarkerInfo<>(
             startFrom,
             startFrom.getTextRange(),

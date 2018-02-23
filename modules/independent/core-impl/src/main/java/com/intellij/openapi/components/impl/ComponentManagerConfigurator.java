@@ -17,7 +17,7 @@ package com.intellij.openapi.components.impl;
 
 import com.intellij.openapi.components.ComponentConfig;
 import com.intellij.openapi.extensions.PluginDescriptor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class ComponentManagerConfigurator {
   private final ComponentManagerImpl myComponentManager;
@@ -26,13 +26,13 @@ class ComponentManagerConfigurator {
     myComponentManager = componentManager;
   }
 
-  private void loadConfiguration(@NotNull ComponentConfig[] configs, final boolean defaultProject, final PluginDescriptor descriptor) {
+  private void loadConfiguration(@Nonnull ComponentConfig[] configs, final boolean defaultProject, final PluginDescriptor descriptor) {
     for (ComponentConfig config : configs) {
       loadSingleConfig(defaultProject, config, descriptor);
     }
   }
 
-  private void loadSingleConfig(final boolean defaultProject, @NotNull ComponentConfig config, final PluginDescriptor descriptor) {
+  private void loadSingleConfig(final boolean defaultProject, @Nonnull ComponentConfig config, final PluginDescriptor descriptor) {
     if (defaultProject && !config.isLoadForDefaultProject()) return;
     if (!myComponentManager.isComponentSuitable(config.options)) return;
 

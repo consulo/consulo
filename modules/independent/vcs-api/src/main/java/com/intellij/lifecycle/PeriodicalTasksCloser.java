@@ -22,7 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PeriodicalTasksCloser implements ApplicationComponent {
   private static final Logger LOG = Logger.getInstance("#com.intellij.lifecycle.PeriodicalTasksCloser");
@@ -36,7 +36,7 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
   public void disposeComponent() {
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return PeriodicalTasksCloser.class.getName();
@@ -46,7 +46,7 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
   public void initComponent() {
   }
 
-  public <T> T safeGetComponent(@NotNull final Project project, final Class<T> componentClass) throws ProcessCanceledException {
+  public <T> T safeGetComponent(@Nonnull final Project project, final Class<T> componentClass) throws ProcessCanceledException {
     T component = null;
     try {
       component = project.getComponent(componentClass);
@@ -63,7 +63,7 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
     return component;
   }
 
-  public <T> T safeGetService(@NotNull final Project project, final Class<T> componentClass) throws ProcessCanceledException {
+  public <T> T safeGetService(@Nonnull final Project project, final Class<T> componentClass) throws ProcessCanceledException {
     try {
       T service = ServiceManager.getService(project, componentClass);
       if (service == null && project.isDefault()) {
@@ -77,7 +77,7 @@ public class PeriodicalTasksCloser implements ApplicationComponent {
     return null;
   }
 
-  private void throwCanceledException(@NotNull  Project project, final Throwable t) {
+  private void throwCanceledException(@Nonnull Project project, final Throwable t) {
     synchronized (myLock) {
       // allow NPE & assertion _catch_ only if project is closed and being disposed
       if (project.isOpen()) {

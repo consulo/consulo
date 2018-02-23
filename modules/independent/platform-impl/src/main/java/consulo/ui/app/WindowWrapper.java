@@ -18,8 +18,8 @@ package consulo.ui.app;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -31,11 +31,11 @@ public abstract class WindowWrapper {
   private Window myWindow;
   private String myTitle;
 
-  public WindowWrapper(@NotNull String title) {
+  public WindowWrapper(@Nonnull String title) {
     myTitle = title;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   protected abstract Component createCenterComponent();
 

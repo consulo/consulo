@@ -25,8 +25,8 @@ import consulo.ui.ValueComponent;
 import consulo.ui.internal.border.WGwtBorderBuilder;
 import consulo.ui.model.ListModel;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +52,14 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
     return (Component)getParent();
   }
 
-  @NotNull
+  @Nonnull
   //@Override
   public ListModel<E> getListModel() {
     return myModel;
   }
 
   //@Override
-  public void setRender(@NotNull ListItemRender<E> render) {
+  public void setRender(@Nonnull ListItemRender<E> render) {
     myRender = render;
   }
 
@@ -100,16 +100,16 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
   }
 
   @Override
-  public void addValueListener(@NotNull ValueListener<E> valueListener) {
+  public void addValueListener(@Nonnull ValueListener<E> valueListener) {
     myValueListeners.add(valueListener);
   }
 
   @Override
-  public void removeValueListener(@NotNull ValueComponent.ValueListener<E> valueListener) {
+  public void removeValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
     myValueListeners.remove(valueListener);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public E getValue() {
     if (getState().mySelectedIndex == -1) {
@@ -126,7 +126,7 @@ public abstract class WGwtSingleListComponentImpl<E> extends AbstractComponent i
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
     getState().myHeight = size.getHeight();
     getState().myWidth = size.getWidth();
     markAsDirty();

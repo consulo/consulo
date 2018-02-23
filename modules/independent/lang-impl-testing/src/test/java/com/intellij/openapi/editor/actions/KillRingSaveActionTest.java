@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.Pair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -28,7 +28,7 @@ import java.awt.datatransfer.Transferable;
  */
 public class KillRingSaveActionTest extends AbstractRegionToKillRingTest {
 
-  protected void doTest(@NotNull String text) throws Exception {
+  protected void doTest(@Nonnull String text) throws Exception {
     configureFromFileText(getTestName(false) + ".txt", text);
     Pair<String,String> parseResult = parse();
     String textBefore = myEditor.getDocument().getText();

@@ -20,7 +20,7 @@ import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +157,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public MyProcessingResult processLine(String line) {
     final String type = LogConsolePreferences.getType(line);
     Key contentType = type != null

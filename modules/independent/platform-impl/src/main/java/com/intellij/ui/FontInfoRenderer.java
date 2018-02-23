@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.ide.ui.AntialiasingType;
 import com.intellij.util.ui.FontInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ import java.awt.*;
  */
 public class FontInfoRenderer extends ColoredListCellRenderer<Object> {
   @Override
-  protected void customizeCellRenderer(@NotNull JList<?> list, Object value, int index, boolean selected, boolean focused) {
+  protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean focused) {
     Font font = list.getFont();
     String text = value == null ? "" : value.toString();
     append(text);
@@ -45,7 +45,7 @@ public class FontInfoRenderer extends ColoredListCellRenderer<Object> {
   }
 
   @Override
-  protected void applyAdditionalHints(@NotNull Graphics2D g) {
+  protected void applyAdditionalHints(@Nonnull Graphics2D g) {
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, AntialiasingType.getKeyForCurrentScope(isEditorFont()));
   }
 

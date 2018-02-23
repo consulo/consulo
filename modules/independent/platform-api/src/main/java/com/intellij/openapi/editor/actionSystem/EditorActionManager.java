@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Allows to register actions which are activated by typing and navigation keystrokes
@@ -42,7 +42,7 @@ public abstract class EditorActionManager {
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler currently defined for the action.
    */
-  public abstract EditorActionHandler getActionHandler(@NonNls @NotNull String actionId);
+  public abstract EditorActionHandler getActionHandler(@NonNls @Nonnull String actionId);
 
   /**
    * Sets the handler for the specified editor actions.
@@ -52,7 +52,7 @@ public abstract class EditorActionManager {
    *                 by constants starting with <code>ACTION_EDITOR_</code>.
    * @return the handler previously defined for the action.
    */
-  public abstract EditorActionHandler setActionHandler(@NonNls @NotNull String actionId, @NotNull EditorActionHandler handler);
+  public abstract EditorActionHandler setActionHandler(@NonNls @Nonnull String actionId, @Nonnull EditorActionHandler handler);
 
   /**
    * Returns the service for registering actions activated by typing visible characters
@@ -60,7 +60,7 @@ public abstract class EditorActionManager {
    *
    * @return the typed action service instance.
    */
-  @NotNull
+  @Nonnull
   public abstract TypedAction getTypedAction();
 
   /**
@@ -78,7 +78,7 @@ public abstract class EditorActionManager {
    * @return the old instance of the handler.
    * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
    */
-  public abstract ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@NotNull ReadonlyFragmentModificationHandler handler);
+  public abstract ReadonlyFragmentModificationHandler setReadonlyFragmentModificationHandler(@Nonnull ReadonlyFragmentModificationHandler handler);
 
   /**
    * Gets the handler which is invoked on attempt to modify a read-only fragment for the document.
@@ -87,7 +87,7 @@ public abstract class EditorActionManager {
    * @return the handler instance.
    * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
    */
-  public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@NotNull Document document);
+  public abstract ReadonlyFragmentModificationHandler getReadonlyFragmentModificationHandler(@Nonnull Document document);
 
   /**
    * Sets the handler which is invoked on attempt to modify a read-only fragment for the document.
@@ -96,7 +96,7 @@ public abstract class EditorActionManager {
    * @param handler  new handler
    * @see com.intellij.openapi.editor.Document#createGuardedBlock(int, int)
    */
-  public abstract void setReadonlyFragmentModificationHandler(@NotNull Document document, ReadonlyFragmentModificationHandler handler);
+  public abstract void setReadonlyFragmentModificationHandler(@Nonnull Document document, ReadonlyFragmentModificationHandler handler);
 
 }
 

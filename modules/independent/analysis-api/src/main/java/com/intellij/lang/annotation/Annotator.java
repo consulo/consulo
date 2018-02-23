@@ -16,7 +16,7 @@
 package com.intellij.lang.annotation;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Implemented by a custom language plugin to add annotations to files in the language.
@@ -37,5 +37,5 @@ public interface Annotator {
    * @param element to annotate.
    * @param holder  the container which receives annotations created by the plugin.
    */
-  void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder);
+  void annotate(@Nonnull PsiElement element, @Nonnull AnnotationHolder holder);
 }

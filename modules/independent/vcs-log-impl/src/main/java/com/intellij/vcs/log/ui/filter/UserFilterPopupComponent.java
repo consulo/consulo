@@ -26,8 +26,8 @@ import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.impl.VcsLogUserFilterImpl;
 import com.intellij.vcs.log.util.VcsUserUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,26 +38,28 @@ import java.util.TreeSet;
  * Show a popup to select a user or enter the user name.
  */
 class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogUserFilter> {
-  @NotNull private final VcsLogData myLogData;
-  @NotNull private final List<String> myAllUsers;
+  @Nonnull
+  private final VcsLogData myLogData;
+  @Nonnull
+  private final List<String> myAllUsers;
 
-  UserFilterPopupComponent(@NotNull MainVcsLogUiProperties uiProperties,
-                           @NotNull VcsLogData logData,
-                           @NotNull FilterModel<VcsLogUserFilter> filterModel) {
+  UserFilterPopupComponent(@Nonnull MainVcsLogUiProperties uiProperties,
+                           @Nonnull VcsLogData logData,
+                           @Nonnull FilterModel<VcsLogUserFilter> filterModel) {
     super("User", uiProperties, filterModel);
     myLogData = logData;
     myAllUsers = collectUsers(logData);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  protected String getText(@NotNull VcsLogUserFilter filter) {
+  protected String getText(@Nonnull VcsLogUserFilter filter) {
     return displayableText(myFilterModel.getFilterValues(filter));
   }
 
   @Nullable
   @Override
-  protected String getToolTip(@NotNull VcsLogUserFilter filter) {
+  protected String getToolTip(@Nonnull VcsLogUserFilter filter) {
     return tooltip(myFilterModel.getFilterValues(filter));
   }
 
@@ -73,7 +75,7 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
     return group;
   }
 
-  @NotNull
+  @Nonnull
   protected ActionGroup createSpeedSearchActionGroup() {
     DefaultActionGroup group = new DefaultActionGroup();
     group.add(new SpeedsearchPredefinedValueAction(VcsLogUserFilterImpl.ME));
@@ -84,24 +86,24 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
     return group;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<List<String>> getRecentValuesFromSettings() {
     return myUiProperties.getRecentlyFilteredUserGroups();
   }
 
   @Override
-  protected void rememberValuesInSettings(@NotNull Collection<String> values) {
+  protected void rememberValuesInSettings(@Nonnull Collection<String> values) {
     myUiProperties.addRecentlyFilteredUserGroup(new ArrayList<>(values));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<String> getAllValues() {
     return myAllUsers;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected ListPopup createPopupMenu() {
     ActionGroup actionGroup = createActionGroup();
@@ -110,8 +112,8 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
                                        DataManager.getInstance().getDataContext(this));
   }
 
-  @NotNull
-  private static List<String> collectUsers(@NotNull VcsLogData logData) {
+  @Nonnull
+  private static List<String> collectUsers(@Nonnull VcsLogData logData) {
     List<String> users = ContainerUtil.map(logData.getAllUsers(), user -> {
       String shortPresentation = VcsUserUtil.getShortPresentation(user);
       Couple<String> firstAndLastName = VcsUserUtil.getFirstAndLastName(shortPresentation);
@@ -123,12 +125,12 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
   }
 
   private static class UserLogSpeedSearchPopup extends FlatSpeedSearchPopup {
-    public UserLogSpeedSearchPopup(@NotNull DefaultActionGroup actionGroup, @NotNull DataContext dataContext) {
+    public UserLogSpeedSearchPopup(@Nonnull DefaultActionGroup actionGroup, @Nonnull DataContext dataContext) {
       super(null, actionGroup, dataContext, null, false);
     }
 
     @Override
-    public boolean shouldBeShowing(@NotNull AnAction action) {
+    public boolean shouldBeShowing(@Nonnull AnAction action) {
       if (!super.shouldBeShowing(action)) return false;
       if (getSpeedSearch().isHoldingFilter()) {
         if (action instanceof MultipleValueFilterPopupComponent.PredefinedValueAction) {

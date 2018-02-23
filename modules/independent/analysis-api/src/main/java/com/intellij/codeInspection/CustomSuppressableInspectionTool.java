@@ -17,8 +17,8 @@
 package com.intellij.codeInspection;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This interface needs to be implemented by implementers of {@link LocalInspectionTool} and {@link GlobalInspectionTool}
@@ -43,5 +43,5 @@ public interface CustomSuppressableInspectionTool {
    * @param element the element to check
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressedFor(@NotNull PsiElement element);
+  boolean isSuppressedFor(@Nonnull PsiElement element);
 }

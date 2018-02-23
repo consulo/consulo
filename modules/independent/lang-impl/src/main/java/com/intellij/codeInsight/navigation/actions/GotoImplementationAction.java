@@ -22,11 +22,11 @@ import com.intellij.codeInsight.navigation.GotoImplementationHandler;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 public class GotoImplementationAction extends BaseCodeInsightAction implements DumbAware {
-  @NotNull
+  @Nonnull
   @Override
   protected CodeInsightActionHandler getHandler(){
     return new GotoImplementationHandler();

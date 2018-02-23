@@ -19,8 +19,8 @@ import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vcs.AbstractVcs;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Base class to provide vcs-specific info
@@ -31,40 +31,40 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
   public static final ExtensionPointName<PushSupport<? extends Repository, ? extends PushSource, ? extends PushTarget>> PUSH_SUPPORT_EP =
           ExtensionPointName.create("com.intellij.pushSupport");
 
-  @NotNull
+  @Nonnull
   public abstract AbstractVcs getVcs();
 
-  @NotNull
+  @Nonnull
   public abstract Pusher<Repo, Source, Target> getPusher();
 
-  @NotNull
+  @Nonnull
   public abstract OutgoingCommitsProvider<Repo, Source, Target> getOutgoingCommitsProvider();
 
   /**
    * @return Default push destination
    */
   @Nullable
-  public abstract Target getDefaultTarget(@NotNull Repo repository);
+  public abstract Target getDefaultTarget(@Nonnull Repo repository);
 
   /**
    * @return current source(branch) for repository
    */
-  @NotNull
-  public abstract Source getSource(@NotNull Repo repository);
+  @Nonnull
+  public abstract Source getSource(@Nonnull Repo repository);
 
   /**
    * @return RepositoryManager for vcs
    */
-  @NotNull
+  @Nonnull
   public abstract RepositoryManager<Repo> getRepositoryManager();
 
-  @Nullable
+  @javax.annotation.Nullable
   public VcsPushOptionsPanel createOptionsPanel() {
     return null;
   }
 
-  @NotNull
-  public abstract PushTargetPanel<Target> createTargetPanel(@NotNull Repo repository, @Nullable Target defaultTarget);
+  @Nonnull
+  public abstract PushTargetPanel<Target> createTargetPanel(@Nonnull Repo repository, @Nullable Target defaultTarget);
 
   public boolean shouldRequestIncomingChangesForNotCheckedRepositories() {
     return true;
@@ -76,7 +76,7 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
    * Force push may be completely disabled for the project which is checked by {@link #isForcePushEnabled()},
    * or it might depend e.g. on the branch user is pushing to.
    */
-  public abstract boolean isForcePushAllowed(@NotNull Repo repo, Target target);
+  public abstract boolean isForcePushAllowed(@Nonnull Repo repo, Target target);
 
   /**
    * Checks if force push is allowed for this VCS at all.
@@ -85,9 +85,9 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
    */
   public abstract boolean isForcePushEnabled();
 
-  public abstract boolean isSilentForcePushAllowed(@NotNull Target target);
+  public abstract boolean isSilentForcePushAllowed(@Nonnull Target target);
 
-  public abstract void saveSilentForcePushTarget(@NotNull Target target);
+  public abstract void saveSilentForcePushTarget(@Nonnull Target target);
 
   public boolean mayChangeTargetsSync() {
     return false;

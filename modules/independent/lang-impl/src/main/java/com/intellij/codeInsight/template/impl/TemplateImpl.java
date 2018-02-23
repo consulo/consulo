@@ -24,8 +24,8 @@ import com.intellij.openapi.options.SchemeElement;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -105,14 +105,14 @@ public class TemplateImpl extends Template implements SchemeElement {
 
 
 
-  public TemplateImpl(@NotNull String key, String group) {
+  public TemplateImpl(@Nonnull String key, String group) {
     this(key, null, group);
     toParseSegments = false;
     myTemplateText = "";
     mySegments = new ArrayList<Segment>();
   }
 
-  public TemplateImpl(@NotNull String key, String string, String group) {
+  public TemplateImpl(@Nonnull String key, String string, String group) {
     myKey = key;
     myString = string;
     myGroupName = group;
@@ -120,7 +120,7 @@ public class TemplateImpl extends Template implements SchemeElement {
 
 
   @Override
-  public void addTextSegment(@NotNull String text) {
+  public void addTextSegment(@Nonnull String text) {
     text = StringUtil.convertLineSeparators(text);
     myTemplateText += text;
   }

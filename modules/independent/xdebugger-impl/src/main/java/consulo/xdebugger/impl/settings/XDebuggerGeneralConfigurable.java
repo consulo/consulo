@@ -21,7 +21,7 @@ import com.intellij.xdebugger.impl.settings.XDebuggerGeneralSettings;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable {
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();

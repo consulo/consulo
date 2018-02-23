@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.PsiElementBase;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class LightElement extends PsiElementBase {
   protected final PsiManager myManager;
@@ -37,7 +37,7 @@ public abstract class LightElement extends PsiElementBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Language getLanguage() {
     return myLanguage;
   }
@@ -53,7 +53,7 @@ public abstract class LightElement extends PsiElementBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getChildren() {
     return PsiElement.EMPTY_ARRAY;
   }
@@ -80,18 +80,18 @@ public abstract class LightElement extends PsiElementBase {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     return getText().toCharArray();
   }
 
   @Override
-  public boolean textMatches(@NotNull CharSequence text) {
+  public boolean textMatches(@Nonnull CharSequence text) {
     return getText().equals(text.toString());
   }
 
   @Override
-  public boolean textMatches(@NotNull PsiElement element) {
+  public boolean textMatches(@Nonnull PsiElement element) {
     return getText().equals(element.getText());
   }
 
@@ -128,22 +128,22 @@ public abstract class LightElement extends PsiElementBase {
   public abstract String toString();
 
   @Override
-  public void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException {
+  public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException(getClass().getName());
   }
 
   @Override
-  public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException {
+  public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException(getClass().getName());
   }
 
   @Override
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException(getClass().getName());
   }
 
   @Override
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException(getClass().getName());
   }
 
@@ -158,7 +158,7 @@ public abstract class LightElement extends PsiElementBase {
   }
 
   @Override
-  public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException {
+  public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
     throw new IncorrectOperationException(getClass().getName());
   }
 
@@ -173,7 +173,7 @@ public abstract class LightElement extends PsiElementBase {
   }
 
   @Override
-  public void accept(@NotNull PsiElementVisitor visitor) {
+  public void accept(@Nonnull PsiElementVisitor visitor) {
   }
 
   @Override
@@ -181,13 +181,13 @@ public abstract class LightElement extends PsiElementBase {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PsiElement getNavigationElement() {
     return myNavigationElement;
   }
 
-  public void setNavigationElement(@NotNull PsiElement navigationElement) {
+  public void setNavigationElement(@Nonnull PsiElement navigationElement) {
     PsiElement nnElement = navigationElement.getNavigationElement();
     if (nnElement != navigationElement && nnElement != null) {
       navigationElement = nnElement;

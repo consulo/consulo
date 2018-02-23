@@ -16,8 +16,8 @@
 package com.intellij.psi.search;
 
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -30,7 +30,7 @@ import java.util.regex.PatternSyntaxException;
  * @since 5.1
  */
 public class IndexPattern {
-  @NotNull
+  @Nonnull
   private String myPatternString;
   private Pattern myOptimizedIndexingPattern;
   private boolean myCaseSensitive;
@@ -42,13 +42,13 @@ public class IndexPattern {
    * @param patternString the text of the Java regular expression to match.
    * @param caseSensitive whether the regular expression should be case-sensitive.
    */
-  public IndexPattern(@NotNull String patternString, final boolean caseSensitive) {
+  public IndexPattern(@Nonnull String patternString, final boolean caseSensitive) {
     myPatternString = patternString;
     myCaseSensitive = caseSensitive;
     compilePattern();
   }
 
-  @NotNull
+  @Nonnull
   public String getPatternString() {
     return myPatternString;
   }
@@ -67,7 +67,7 @@ public class IndexPattern {
     return myCaseSensitive;
   }
 
-  public void setPatternString(@NotNull final String patternString) {
+  public void setPatternString(@Nonnull final String patternString) {
     myPatternString = patternString;
     compilePattern();
   }

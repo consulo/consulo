@@ -32,7 +32,7 @@ import com.intellij.packaging.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.SourceItemPresentation;
 import com.intellij.packaging.ui.SourceItemWeights;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,12 +42,12 @@ import java.util.List;
 public class LibrarySourceItem extends PackagingSourceItem {
   private final Library myLibrary;
 
-  public LibrarySourceItem(@NotNull Library library) {
+  public LibrarySourceItem(@Nonnull Library library) {
     myLibrary = library;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@NotNull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
     return new LibrarySourceItemPresentation(myLibrary, context);
   }
 
@@ -61,20 +61,20 @@ public class LibrarySourceItem extends PackagingSourceItem {
     return myLibrary.hashCode();
   }
 
-  @NotNull 
+  @Nonnull
   public Library getLibrary() {
     return myLibrary;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return LibraryPackagingElement.getKindForLibrary(myLibrary);
   }
 
   @Override
-  @NotNull
-  public List<? extends PackagingElement<?>> createElements(@NotNull ArtifactEditorContext context) {
+  @Nonnull
+  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
     return PackagingElementFactory.getInstance().createLibraryElements(myLibrary);
   }
 
@@ -108,7 +108,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@NotNull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       final String name = myLibrary.getName();
       if (name != null) {

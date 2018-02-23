@@ -23,7 +23,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.pico.CachingConstructorInjectionComponentAdapter;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
@@ -78,7 +77,7 @@ public class ChangesViewContentEP implements PluginAware {
     return myInstance;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public NotNullFunction<Project, Boolean> newPredicateInstance(Project project) {
     //noinspection unchecked
     return predicateClassName != null ? (NotNullFunction<Project, Boolean>)newClassInstance(project, predicateClassName) : null;

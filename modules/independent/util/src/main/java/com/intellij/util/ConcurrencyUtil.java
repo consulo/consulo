@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.diagnostic.ThreadDumper;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -32,7 +32,7 @@ public class ConcurrencyUtil {
    * Invokes and waits all tasks using threadPool, avoiding thread starvation on the way
    * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
    */
-  public static <T> List<Future<T>> invokeAll(@NotNull Collection<Callable<T>> tasks, ExecutorService executorService) throws Throwable {
+  public static <T> List<Future<T>> invokeAll(@Nonnull Collection<Callable<T>> tasks, ExecutorService executorService) throws Throwable {
     if (executorService == null) {
       for (Callable<T> task : tasks) {
         task.call();
@@ -80,44 +80,44 @@ public class ConcurrencyUtil {
    * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
    *         or corresponding value if entry already exists.
    */
-  @NotNull
-  public static <K, V> V cacheOrGet(@NotNull ConcurrentMap<K, V> map, @NotNull final K key, @NotNull final V defaultValue) {
+  @Nonnull
+  public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
     V v = map.get(key);
     if (v != null) return v;
     V prev = map.putIfAbsent(key, defaultValue);
     return prev == null ? defaultValue : prev;
   }
 
-  @NotNull
-  public static ThreadPoolExecutor newSingleThreadExecutor(@NotNull @NonNls String name) {
+  @Nonnull
+  public static ThreadPoolExecutor newSingleThreadExecutor(@Nonnull @NonNls String name) {
     return newSingleThreadExecutor(name, Thread.NORM_PRIORITY);
   }
 
-  @NotNull
-  public static ThreadPoolExecutor newSingleThreadExecutor(@NonNls @NotNull String name, int priority) {
+  @Nonnull
+  public static ThreadPoolExecutor newSingleThreadExecutor(@NonNls @Nonnull String name, int priority) {
     return new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
                                   new LinkedBlockingQueue<Runnable>(), newNamedThreadFactory(name, true, priority));
   }
 
-  @NotNull
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@NotNull @NonNls String name) {
+  @Nonnull
+  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@Nonnull @NonNls String name) {
     return newSingleScheduledThreadExecutor(name, Thread.NORM_PRIORITY);
   }
 
-  @NotNull
-  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@NonNls @NotNull String name, int priority) {
+  @Nonnull
+  public static ScheduledThreadPoolExecutor newSingleScheduledThreadExecutor(@NonNls @Nonnull String name, int priority) {
     ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, newNamedThreadFactory(name, true, priority));
     executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
     executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
     return executor;
   }
 
-  @NotNull
-  public static ThreadFactory newNamedThreadFactory(@NonNls @NotNull final String name, final boolean isDaemon, final int priority) {
+  @Nonnull
+  public static ThreadFactory newNamedThreadFactory(@NonNls @Nonnull final String name, final boolean isDaemon, final int priority) {
     return new ThreadFactory() {
-      @NotNull
+      @Nonnull
       @Override
-      public Thread newThread(@NotNull Runnable r) {
+      public Thread newThread(@Nonnull Runnable r) {
         Thread thread = new Thread(r, name);
         thread.setDaemon(isDaemon);
         thread.setPriority(priority);
@@ -126,12 +126,12 @@ public class ConcurrencyUtil {
     };
   }
 
-  @NotNull
-  public static ThreadFactory newNamedThreadFactory(@NonNls @NotNull final String name) {
+  @Nonnull
+  public static ThreadFactory newNamedThreadFactory(@NonNls @Nonnull final String name) {
     return new ThreadFactory() {
-      @NotNull
+      @Nonnull
       @Override
-      public Thread newThread(@NotNull final Runnable r) {
+      public Thread newThread(@Nonnull final Runnable r) {
         return new Thread(r, name);
       }
     };
@@ -141,7 +141,7 @@ public class ConcurrencyUtil {
    * Awaits for all tasks in the {@code executor} to finish for the specified {@code timeout}
    */
   @TestOnly
-  public static void awaitQuiescence(@NotNull ThreadPoolExecutor executor, long timeout, @NotNull TimeUnit unit) {
+  public static void awaitQuiescence(@Nonnull ThreadPoolExecutor executor, long timeout, @Nonnull TimeUnit unit) {
     executor.setKeepAliveTime(1, TimeUnit.NANOSECONDS); // no need for zombies in tests
     executor.setCorePoolSize(0); // interrupt idle workers
     ReentrantLock mainLock = ReflectionUtil.getField(executor.getClass(), executor, ReentrantLock.class, "mainLock");

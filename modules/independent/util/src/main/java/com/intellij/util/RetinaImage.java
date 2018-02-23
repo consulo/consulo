@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -44,7 +44,7 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
   /**
    * @deprecated use {@link #createFrom(Image, float, ImageObserver)} instead
    */
-  @NotNull
+  @Nonnull
   public static Image createFrom(Image image, final int scale, ImageObserver observer) {
     return createFrom(image, (float)scale, observer);
   }
@@ -59,7 +59,7 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @param observer the raw image observer
    * @return the Retina-aware wrapper
    */
-  @NotNull
+  @Nonnull
   public static Image createFrom(Image image, final float scale, ImageObserver observer) {
     int w = image.getWidth(observer);
     int h = image.getHeight(observer);
@@ -75,17 +75,17 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
     return hidpi;
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(final int width, int height, int type) {
     return new JBHiDPIScaledImage(width, height, type);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(Graphics2D g, final int width, int height, int type) {
     return new JBHiDPIScaledImage(g, width, height, type);
   }
 
-  @NotNull
+  @Nonnull
   public static BufferedImage create(GraphicsConfiguration gc, final int width, int height, int type) {
     return new JBHiDPIScaledImage(gc, width, height, type);
   }

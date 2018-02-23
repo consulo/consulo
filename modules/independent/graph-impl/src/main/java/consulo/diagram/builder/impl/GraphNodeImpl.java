@@ -17,7 +17,7 @@ package consulo.diagram.builder.impl;
 
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class GraphNodeImpl<E> implements GraphNode<E> {
   }
 
   @Override
-  public void makeArrow(@NotNull GraphNode<?> target) {
+  public void makeArrow(@Nonnull GraphNode<?> target) {
     myArrowNodes.add(target);
   }
 
@@ -52,7 +52,7 @@ public class GraphNodeImpl<E> implements GraphNode<E> {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<GraphNode<?>> getArrowNodes() {
     return myArrowNodes;
   }

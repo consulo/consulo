@@ -54,10 +54,11 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -98,12 +99,12 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
       final MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
       model.addMarkupModelListener(this, new MarkupModelListener.Adapter() {
         @Override
-        public void afterAdded(@NotNull RangeHighlighterEx highlighter) {
+        public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
           incErrorCount(highlighter, 1);
         }
 
         @Override
-        public void beforeRemoved(@NotNull RangeHighlighterEx highlighter) {
+        public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
           incErrorCount(highlighter, -1);
         }
       });
@@ -129,9 +130,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @RequiredDispatchThread
-  static void setOrRefreshErrorStripeRenderer(@NotNull EditorMarkupModel editorMarkupModel,
-                                              @NotNull Project project,
-                                              @NotNull Document document,
+  static void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel,
+                                              @Nonnull Project project,
+                                              @Nonnull Document document,
                                               PsiFile file) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!editorMarkupModel.isErrorStripeVisible() || !DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file)) {
@@ -191,8 +192,8 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     }
   }
 
-  @NotNull
-  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@NotNull SeverityRegistrar severityRegistrar) {
+  @Nonnull
+  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {
     DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
     if (myFile == null) {
       status.reasonWhyDisabled = "No file";
@@ -267,8 +268,8 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return status;
   }
 
-  protected void fillDaemonCodeAnalyzerErrorsStatus(@NotNull DaemonCodeAnalyzerStatus status,
-                                                    @NotNull SeverityRegistrar severityRegistrar) {
+  protected void fillDaemonCodeAnalyzerErrorsStatus(@Nonnull DaemonCodeAnalyzerStatus status,
+                                                    @Nonnull SeverityRegistrar severityRegistrar) {
   }
 
   protected final Project getProject() {
@@ -287,8 +288,8 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return HighlightDisplayLevel.getEmptyIconDim();
   }
 
-  @NotNull
-  private Icon getIcon(@NotNull DaemonCodeAnalyzerStatus status) {
+  @Nonnull
+  private Icon getIcon(@Nonnull DaemonCodeAnalyzerStatus status) {
     updatePanel(status, getProject());
     Icon icon = this.icon;
     if (PowerSaveMode.isEnabled() || status.reasonWhySuspended != null || status.reasonWhyDisabled != null || status.errorAnalyzingFinished) {
@@ -298,7 +299,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   // return true if panel needs to be rebuilt
-  boolean updatePanel(@NotNull DaemonCodeAnalyzerStatus status, Project project) {
+  boolean updatePanel(@Nonnull DaemonCodeAnalyzerStatus status, Project project) {
     progressBarsEnabled = false;
     progressBarsCompleted = null;
     statistics = "";
@@ -388,7 +389,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return result;
   }
 
-  private void rebuildPassesMap(@NotNull DaemonCodeAnalyzerStatus status) {
+  private void rebuildPassesMap(@Nonnull DaemonCodeAnalyzerStatus status) {
     passes.clear();
     for (ProgressableTextEditorHighlightingPass pass : status.passStati) {
       JProgressBar progressBar = new JProgressBar(0, MAX);

@@ -21,7 +21,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +131,7 @@ public class ExternalChangesAndRefreshingTest extends IntegrationTestCase {
 
     VirtualFileListener l = new VirtualFileAdapter() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent e) {
+      public void fileCreated(@Nonnull VirtualFileEvent e) {
         executeSomeCommand();
       }
     };
@@ -160,7 +160,7 @@ public class ExternalChangesAndRefreshingTest extends IntegrationTestCase {
     final String[] content = new String[1];
     VirtualFileListener l = new VirtualFileAdapter() {
       @Override
-      public void fileCreated(@NotNull VirtualFileEvent e) {
+      public void fileCreated(@Nonnull VirtualFileEvent e) {
         try {
           if (!e.getFile().getPath().equals(path)) return;
           content[0] = new String(e.getFile().contentsToByteArray());

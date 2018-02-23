@@ -15,65 +15,65 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
 public interface DockLayout extends Layout {
-  @NotNull
+  @Nonnull
   static DockLayout create() {
     return UIInternal.get()._Layouts_dock();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default DockLayout top(@NotNull PseudoComponent component) {
+  default DockLayout top(@Nonnull PseudoComponent component) {
     return top(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default DockLayout bottom(@NotNull PseudoComponent component) {
+  default DockLayout bottom(@Nonnull PseudoComponent component) {
     return bottom(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default DockLayout center(@NotNull PseudoComponent component) {
+  default DockLayout center(@Nonnull PseudoComponent component) {
     return center(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default DockLayout left(@NotNull PseudoComponent component) {
+  default DockLayout left(@Nonnull PseudoComponent component) {
     return left(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  default DockLayout right(@NotNull PseudoComponent component) {
+  default DockLayout right(@Nonnull PseudoComponent component) {
     return right(component.getComponent());
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  DockLayout top(@NotNull Component component);
+  DockLayout top(@Nonnull Component component);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  DockLayout bottom(@NotNull Component component);
+  DockLayout bottom(@Nonnull Component component);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  DockLayout center(@NotNull Component component);
+  DockLayout center(@Nonnull Component component);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  DockLayout left(@NotNull Component component);
+  DockLayout left(@Nonnull Component component);
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
-  DockLayout right(@NotNull Component component);
+  DockLayout right(@Nonnull Component component);
 }

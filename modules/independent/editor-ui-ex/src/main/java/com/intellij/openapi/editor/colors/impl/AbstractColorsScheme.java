@@ -34,8 +34,7 @@ import com.intellij.util.ui.JBUI;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;
@@ -53,9 +52,12 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   protected FontSize myQuickDocFontSize = DEFAULT_FONT_SIZE;
   protected float myLineSpacing;
 
-  @NotNull private final Map<EditorFontType, Font> myFonts                  = new EnumMap<EditorFontType, Font>(EditorFontType.class);
-  @NotNull private final FontPreferencesImpl           myFontPreferences        = new FontPreferencesImpl();
-  @NotNull private final FontPreferencesImpl           myConsoleFontPreferences = new FontPreferencesImpl();
+  @Nonnull
+  private final Map<EditorFontType, Font> myFonts                  = new EnumMap<EditorFontType, Font>(EditorFontType.class);
+  @Nonnull
+  private final FontPreferencesImpl           myFontPreferences        = new FontPreferencesImpl();
+  @Nonnull
+  private final FontPreferencesImpl           myConsoleFontPreferences = new FontPreferencesImpl();
 
   private final ValueElementReader myValueReader = new TextAttributesReader();
   private String myFallbackFontName;
@@ -92,7 +94,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   @NonNls private static final String CONSOLE_LIGATURES              = "CONSOLE_LIGATURES";
   @NonNls private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
 
-  protected AbstractColorsScheme(@Nullable EditorColorsScheme parentScheme, @NotNull EditorColorsManager editorColorsManager) {
+  protected AbstractColorsScheme(@javax.annotation.Nullable EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
     myParentScheme = parentScheme;
     myEditorColorsManager = editorColorsManager;
     myFontPreferences.setChangeListener(new Runnable() {
@@ -103,21 +105,21 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     });
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getDefaultBackground() {
     final Color c = getAttributes(HighlighterColors.TEXT).getBackgroundColor();
     return c != null ? c : Color.white;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Color getDefaultForeground() {
     final Color c = getAttributes(HighlighterColors.TEXT).getForegroundColor();
     return c != null ? c : Color.black;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getName() {
     return mySchemeName;
@@ -164,7 +166,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
   @Override
-  public void setQuickDocFontSize(@NotNull FontSize fontSize) {
+  public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
     myQuickDocFontSize = fontSize;
   }
 
@@ -183,18 +185,18 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
   @Override
-  public void setName(@NotNull String name) {
+  public void setName(@Nonnull String name) {
     mySchemeName = name;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FontPreferences getFontPreferences() {
     return myFontPreferences;
   }
 
   @Override
-  public void setFontPreferences(@NotNull FontPreferences preferences) {
+  public void setFontPreferences(@Nonnull FontPreferences preferences) {
     preferences.copyTo(myFontPreferences);
     initFonts();
   }
@@ -222,7 +224,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     return myFontPreferences.getSize(getEditorFontName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FontSize getQuickDocFontSize() {
     return myQuickDocFontSize;
@@ -340,7 +342,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     initFonts();
   }
 
-  protected void readAttributes(@NotNull Element childNode) {
+  protected void readAttributes(@Nonnull Element childNode) {
     for (Element e : childNode.getChildren(OPTION_ELEMENT)) {
       TextAttributesKey name = TextAttributesKey.find(e.getAttributeValue(NAME_ATTR));
       TextAttributes attr = new TextAttributes(e.getChild(VALUE_ELEMENT));
@@ -436,7 +438,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
   }
 
-  private static void readFontSettings(@NotNull Element element, @NotNull FontPreferencesImpl preferences) {
+  private static void readFontSettings(@Nonnull Element element, @Nonnull FontPreferencesImpl preferences) {
     List children = element.getChildren(OPTION_ELEMENT);
     String fontFamily = null;
     int size = -1;
@@ -561,7 +563,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
 
-  private static void writeFontPreferences(@NotNull String key, @NotNull Element parent, @NotNull FontPreferences preferences) {
+  private static void writeFontPreferences(@Nonnull String key, @Nonnull Element parent, @Nonnull FontPreferences preferences) {
     for (String fontFamily : preferences.getRealFontFamilies()) {
       Element element = new Element(key);
       Element e = new Element(OPTION_ELEMENT);
@@ -636,14 +638,14 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FontPreferences getConsoleFontPreferences() {
     return myConsoleFontPreferences;
   }
 
   @Override
-  public void setConsoleFontPreferences(@NotNull FontPreferences preferences) {
+  public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
     preferences.copyTo(myConsoleFontPreferences);
     initFonts();
   }

@@ -42,8 +42,7 @@ import com.intellij.util.xmlb.XmlSerializer;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -81,31 +80,31 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Artifact[] getArtifacts() {
     return myModel.getArtifacts();
   }
 
   @Override
-  public Artifact findArtifact(@NotNull String name) {
+  public Artifact findArtifact(@Nonnull String name) {
     return myModel.findArtifact(name);
   }
 
   @Override
-  @NotNull
-  public Artifact getArtifactByOriginal(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getArtifactByOriginal(@Nonnull Artifact artifact) {
     return myModel.getArtifactByOriginal(artifact);
   }
 
   @Override
-  @NotNull
-  public Artifact getOriginalArtifact(@NotNull Artifact artifact) {
+  @Nonnull
+  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
     return myModel.getOriginalArtifact(artifact);
   }
 
   @Override
-  @NotNull
-  public Collection<? extends Artifact> getArtifactsByType(@NotNull ArtifactType type) {
+  @Nonnull
+  public Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type) {
     return myModel.getArtifactsByType(type);
   }
 
@@ -147,7 +146,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
     return state;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   private static <S> ArtifactPropertiesState serializeProperties(ArtifactPropertiesProvider provider, ArtifactProperties<S> properties) {
     final ArtifactPropertiesState state = new ArtifactPropertiesState();
     state.setId(provider.getId());
@@ -379,8 +378,8 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  @NotNull
-  public Artifact addArtifact(@NotNull final String name, @NotNull final ArtifactType type, final CompositePackagingElement<?> root) {
+  @Nonnull
+  public Artifact addArtifact(@Nonnull final String name, @Nonnull final ArtifactType type, final CompositePackagingElement<?> root) {
     return new WriteAction<Artifact>() {
       @Override
       protected void run(final Result<Artifact> result) {
@@ -396,12 +395,12 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  public void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath, @NotNull PackagingElement<?> element) {
+  public void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath, @Nonnull PackagingElement<?> element) {
     addElementsToDirectory(artifact, relativePath, Collections.singletonList(element));
   }
 
   @Override
-  public void addElementsToDirectory(@NotNull Artifact artifact, @NotNull String relativePath, @NotNull Collection<? extends PackagingElement<?>> elements) {
+  public void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath, @Nonnull Collection<? extends PackagingElement<?>> elements) {
     final ModifiableArtifactModel model = createModifiableModel();
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     PackagingElementFactory.getInstance().getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);

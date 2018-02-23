@@ -26,7 +26,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.impl.ContentImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -34,10 +34,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
 
-  @NotNull private final ProjectSystemId   myExternalSystemId;
-  @NotNull private final NotificationGroup myNotificationGroup;
+  @Nonnull
+  private final ProjectSystemId   myExternalSystemId;
+  @Nonnull
+  private final NotificationGroup myNotificationGroup;
 
-  protected AbstractExternalSystemToolWindowFactory(@NotNull ProjectSystemId id) {
+  protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
     myExternalSystemId = id;
     myNotificationGroup = NotificationGroup.toolWindowGroup("notification.group.id." + id.toString().toLowerCase(),
                                                             myExternalSystemId.getReadableName(),

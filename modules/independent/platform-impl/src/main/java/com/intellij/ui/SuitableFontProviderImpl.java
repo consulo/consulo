@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -26,7 +26,7 @@ import java.awt.*;
  */
 public class SuitableFontProviderImpl implements SuitableFontProvider {
   @Override
-  public Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @NotNull String defaultFontFamily) {
+  public Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily) {
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, size, style, defaultFontFamily).getFont();
   }
 }

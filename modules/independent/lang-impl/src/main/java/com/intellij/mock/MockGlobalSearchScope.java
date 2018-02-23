@@ -18,24 +18,24 @@ package com.intellij.mock;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.module.Module;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public class MockGlobalSearchScope extends GlobalSearchScope {
   @Override
-  public boolean contains(@NotNull final VirtualFile file) {
+  public boolean contains(@Nonnull final VirtualFile file) {
     return true;
   }
 
   @Override
-  public int compare(@NotNull final VirtualFile file1, @NotNull final VirtualFile file2) {
+  public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull final Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
     return true;
   }
 

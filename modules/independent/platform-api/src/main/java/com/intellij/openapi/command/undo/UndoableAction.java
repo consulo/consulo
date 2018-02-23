@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.undo;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @see com.intellij.openapi.command.undo.UndoManager#undoableActionPerformed(UndoableAction) 

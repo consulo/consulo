@@ -20,18 +20,18 @@ import com.intellij.execution.process.AnsiEscapeDecoder;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Key;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface Printer {
   void print(String text, ConsoleViewContentType contentType);
 
-  void onNewAvailable(@NotNull Printable printable);
+  void onNewAvailable(@Nonnull Printable printable);
 
   void printHyperlink(String text, HyperlinkInfo info);
 
   void mark();
 
-  default void printWithAnsiColoring(@NotNull String text, @NotNull Key processOutputType) {
+  default void printWithAnsiColoring(@Nonnull String text, @Nonnull Key processOutputType) {
     AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
     decoder.escapeText(text, ProcessOutputTypes.STDOUT, (text1, attributes) -> {
       ConsoleViewContentType contentType = ConsoleViewContentType.getConsoleViewType(attributes);
@@ -42,7 +42,7 @@ public interface Printer {
     });
   }
 
-  default void printWithAnsiColoring(@NotNull String text, @NotNull ConsoleViewContentType contentType) {
+  default void printWithAnsiColoring(@Nonnull String text, @Nonnull ConsoleViewContentType contentType) {
     AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
     decoder.escapeText(text, ProcessOutputTypes.STDOUT, (text1, attributes) -> {
       ConsoleViewContentType viewContentType = ConsoleViewContentType.getConsoleViewType(attributes);

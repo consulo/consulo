@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.xdebugger.Obsolescent;
 import com.intellij.xdebugger.XExpression;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;
 
@@ -27,7 +27,7 @@ import javax.swing.tree.TreeNode;
  * @deprecated to be removed
  */
 public interface WatchNode extends TreeNode, Obsolescent {
-  @NotNull
+  @Nonnull
   XExpression getExpression();
 
   void setObsolete();

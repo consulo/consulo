@@ -31,8 +31,8 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -106,12 +106,12 @@ public class StructureConfigurableContext implements Disposable, LibraryEditorLi
     myLibraryEditorListeners.addListener(listener);
   }
 
-  public void addLibraryEditorListener(@NotNull LibraryEditorListener listener, @NotNull Disposable parentDisposable) {
+  public void addLibraryEditorListener(@Nonnull LibraryEditorListener listener, @Nonnull Disposable parentDisposable) {
     myLibraryEditorListeners.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void libraryRenamed(@NotNull Library library, String oldName, String newName) {
+  public void libraryRenamed(@Nonnull Library library, String oldName, String newName) {
     myLibraryEditorListeners.getMulticaster().libraryRenamed(library, oldName, newName);
   }
 
@@ -128,7 +128,7 @@ public class StructureConfigurableContext implements Disposable, LibraryEditorLi
   }
 
 
-  public LibraryTable.ModifiableModel getModifiableLibraryTable(@NotNull LibraryTable table) {
+  public LibraryTable.ModifiableModel getModifiableLibraryTable(@Nonnull LibraryTable table) {
     final String tableLevel = table.getTableLevel();
     if (tableLevel.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
       return table.getModifiableModel();
@@ -144,7 +144,7 @@ public class StructureConfigurableContext implements Disposable, LibraryEditorLi
   }
 
   @Nullable
-  private static Library findLibraryModel(final @NotNull String libraryName, @NotNull LibrariesModifiableModel model) {
+  private static Library findLibraryModel(final @Nonnull String libraryName, @Nonnull LibrariesModifiableModel model) {
     for (Library library : model.getLibraries()) {
       final Library libraryModel = findLibraryModel(library, model);
       if (libraryModel != null && libraryName.equals(libraryModel.getName())) {
@@ -155,7 +155,7 @@ public class StructureConfigurableContext implements Disposable, LibraryEditorLi
   }
 
   @Nullable
-  public Library getLibraryModel(@NotNull Library library) {
+  public Library getLibraryModel(@Nonnull Library library) {
     final LibraryTable libraryTable = library.getTable();
     if (libraryTable != null) {
       return findLibraryModel(library, myLevel2Providers.get(libraryTable.getTableLevel()));

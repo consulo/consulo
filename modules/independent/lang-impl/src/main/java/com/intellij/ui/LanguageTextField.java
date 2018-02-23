@@ -27,33 +27,33 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.util.LocalTimeCounter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LanguageTextField extends EditorTextField {
   private final Language myLanguage;
   private final Project myProject;
 
-  public LanguageTextField(@Nullable Language language, @NotNull Project project, @NotNull String value) {
+  public LanguageTextField(@Nullable Language language, @Nonnull Project project, @Nonnull String value) {
     this(language, project, value, true);
   }
 
-  public LanguageTextField(@Nullable Language language, @NotNull Project project, @NotNull String value, boolean oneLineMode) {
+  public LanguageTextField(@Nullable Language language, @Nonnull Project project, @Nonnull String value, boolean oneLineMode) {
     this(language, project, value, new SimpleDocumentCreator(), oneLineMode);
   }
 
   public LanguageTextField(@Nullable Language language,
-                           @NotNull Project project,
-                           @NotNull String value,
-                           @NotNull DocumentCreator documentCreator)
+                           @Nonnull Project project,
+                           @Nonnull String value,
+                           @Nonnull DocumentCreator documentCreator)
   {
     this(language, project, value, documentCreator, true);
   }
 
   public LanguageTextField(@Nullable Language language,
-                           @NotNull Project project,
-                           @NotNull String value,
-                           @NotNull DocumentCreator documentCreator,
+                           @Nonnull Project project,
+                           @Nonnull String value,
+                           @Nonnull DocumentCreator documentCreator,
                            boolean oneLineMode) {
     super(documentCreator.createDocument(value, language, project), project,
           language != null ? language.getAssociatedFileType() : PlainTextFileType.INSTANCE, language == null, oneLineMode);
@@ -79,7 +79,7 @@ public class LanguageTextField extends EditorTextField {
   }
 
   private static Document createDocument(String value, @Nullable Language language, Project project,
-                                         @NotNull SimpleDocumentCreator documentCreator) {
+                                         @Nonnull SimpleDocumentCreator documentCreator) {
     if (language != null) {
       final PsiFileFactory factory = PsiFileFactory.getInstance(project);
       final FileType fileType = language.getAssociatedFileType();

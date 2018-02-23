@@ -23,8 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,10 +39,12 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
 
   private ProjectWindowAction myPrevious;
   private ProjectWindowAction myNext;
-  @NotNull private final String myProjectName;
-  @NotNull private final String myProjectLocation;
+  @Nonnull
+  private final String myProjectName;
+  @Nonnull
+  private final String myProjectLocation;
 
-  public ProjectWindowAction(@NotNull String projectName, @NotNull String projectLocation, ProjectWindowAction previous) {
+  public ProjectWindowAction(@Nonnull String projectName, @Nonnull String projectLocation, ProjectWindowAction previous) {
     super();
     myProjectName = projectName;
     myProjectLocation = projectLocation;
@@ -79,12 +81,12 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
     return myNext;
   }
 
-  @NotNull
+  @Nonnull
   public String getProjectLocation() {
     return myProjectLocation;
   }
 
-  @NotNull
+  @Nonnull
   public String getProjectName() {
     return myProjectName;
   }

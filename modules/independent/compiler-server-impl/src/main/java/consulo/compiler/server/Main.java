@@ -29,7 +29,7 @@ import consulo.compiler.server.application.CompilerServerApplication;
 import consulo.compiler.server.rmi.CompilerClientInterface;
 import consulo.compiler.server.rmi.CompilerServerInterface;
 import consulo.compiler.server.rmi.impl.CompilerServerInterfaceImpl;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -78,7 +78,7 @@ public class Main {
 
     server.compile(new CompilerClientInterface() {
       @Override
-      public void addMessage(@NotNull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
+      public void addMessage(@Nonnull CompilerMessageCategory category, String message, String url, int lineNum, int columnNum)
         throws RemoteException {
         LOGGER.info(category + ": " + message +  ". Url: " + url);
       }
@@ -87,7 +87,7 @@ public class Main {
       public void compilationFinished(boolean aborted, int errors, int warnings) throws RemoteException {
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public String getProjectDir() {
         return "G:\\target_for_build\\consulo";

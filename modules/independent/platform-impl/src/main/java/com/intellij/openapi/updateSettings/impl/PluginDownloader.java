@@ -40,8 +40,8 @@ import consulo.util.io2.PathUtil;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,13 +58,13 @@ import java.nio.file.Paths;
 public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
-  @NotNull
-  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, boolean viaUpdate) {
+  @Nonnull
+  public static PluginDownloader createDownloader(@Nonnull IdeaPluginDescriptor descriptor, boolean viaUpdate) {
     return createDownloader(descriptor, null, viaUpdate);
   }
 
-  @NotNull
-  public static PluginDownloader createDownloader(@NotNull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
+  @Nonnull
+  public static PluginDownloader createDownloader(@Nonnull IdeaPluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
     String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
 
     return new PluginDownloader(descriptor, url);
@@ -81,7 +81,7 @@ public class PluginDownloader {
 
   private boolean myIsPlatform;
 
-  public PluginDownloader(@NotNull IdeaPluginDescriptor pluginDescriptor, @NotNull String pluginUrl) {
+  public PluginDownloader(@Nonnull IdeaPluginDescriptor pluginDescriptor, @Nonnull String pluginUrl) {
     myPluginId = pluginDescriptor.getPluginId();
     myDescriptor = pluginDescriptor;
     myPluginUrl = pluginUrl;
@@ -234,7 +234,7 @@ public class PluginDownloader {
     });
   }
 
-  @NotNull
+  @Nonnull
   private String getFileName() {
     String fileName = myPluginId + "_" + myDescriptor.getVersion();
     if (myIsPlatform) {
@@ -246,7 +246,7 @@ public class PluginDownloader {
     return fileName;
   }
 
-  @NotNull
+  @Nonnull
   public String getPluginName() {
     return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
   }

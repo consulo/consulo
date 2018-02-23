@@ -26,8 +26,8 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.UserActivityProviderComponent;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -61,7 +61,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
   /**
    * @return unmodifiable Map instance
    */
-  @NotNull
+  @Nonnull
   public Map<String, String> getEnvs() {
     return myData.getEnvs();
   }
@@ -70,16 +70,16 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
    * @param envs Map instance containing user-defined environment variables
    *             (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
    */
-  public void setEnvs(@NotNull Map<String, String> envs) {
+  public void setEnvs(@Nonnull Map<String, String> envs) {
     setData(EnvironmentVariablesData.create(envs, myData.isPassParentEnvs()));
   }
 
-  @NotNull
+  @Nonnull
   public EnvironmentVariablesData getData() {
     return myData;
   }
 
-  public void setData(@NotNull EnvironmentVariablesData data) {
+  public void setData(@Nonnull EnvironmentVariablesData data) {
     EnvironmentVariablesData oldData = myData;
     myData = data;
     setText(stringifyEnvs(data.getEnvs()));
@@ -88,8 +88,8 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
     }
   }
 
-  @NotNull
-  private static String stringifyEnvs(@NotNull Map<String, String> envs) {
+  @Nonnull
+  private static String stringifyEnvs(@Nonnull Map<String, String> envs) {
     if (envs.isEmpty()) {
       return "";
     }
@@ -127,7 +127,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
     }
   }
 
-  public static void showParentEnvironmentDialog(@NotNull Component parent) {
+  public static void showParentEnvironmentDialog(@Nonnull Component parent) {
     EnvVariablesTable table = new EnvVariablesTable();
     table.setValues(convertToVariables(new TreeMap<>(new GeneralCommandLine().getParentEnvironment()), true));
     table.getActionsPanel().setVisible(false);

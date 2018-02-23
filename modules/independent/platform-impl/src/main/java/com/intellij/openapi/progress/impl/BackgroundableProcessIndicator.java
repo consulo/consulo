@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BackgroundableProcessIndicator extends ProgressWindow {
   protected StatusBarEx myStatusBar;
@@ -48,7 +48,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
   private boolean myDisposed;
   private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
 
-  public BackgroundableProcessIndicator(@NotNull Task.Backgroundable task) {
+  public BackgroundableProcessIndicator(@Nonnull Task.Backgroundable task) {
     this(task.getProject(), task, task);
 
     myDumbModeAction = task.getDumbModeAction();
@@ -67,7 +67,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
   }
 
-  public BackgroundableProcessIndicator(@Nullable final Project project, @NotNull TaskInfo info, @NotNull PerformInBackgroundOption option) {
+  public BackgroundableProcessIndicator(@Nullable final Project project, @Nonnull TaskInfo info, @Nonnull PerformInBackgroundOption option) {
     super(info.isCancellable(), true, project, info.getCancelText());
     if (project != null) {
       final ProjectManagerAdapter myListener = new ProjectManagerAdapter() {
@@ -106,7 +106,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
 
   public BackgroundableProcessIndicator(Project project,
                                         @Nls final String progressTitle,
-                                        @NotNull PerformInBackgroundOption option,
+                                        @Nonnull PerformInBackgroundOption option,
                                         @Nls final String cancelButtonText,
                                         @Nls final String backgroundStopTooltip, final boolean cancellable) {
     this(project, new TaskInfo() {
@@ -116,7 +116,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
       }
 
       @Override
-      @NotNull
+      @Nonnull
       public String getTitle() {
         return progressTitle;
       }

@@ -26,9 +26,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ import java.util.List;
  * @author oleg
  */
 public class CheckinHandlerUtil {
-  public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(@NotNull Collection<VirtualFile> files, @NotNull Project project) {
+  public static List<VirtualFile> filterOutGeneratedAndExcludedFiles(@Nonnull Collection<VirtualFile> files, @Nonnull Project project) {
     ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(project);
     List<VirtualFile> result = new ArrayList<VirtualFile>(files.size());
     for (VirtualFile file : files) {
@@ -71,11 +71,11 @@ public class CheckinHandlerUtil {
     return PsiUtilCore.toPsiFileArray(result);
   }
 
-  private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, @NotNull VirtualFile file) {
+  private static boolean isUnderProjectFileDir(@Nullable VirtualFile projectFileDir, @Nonnull VirtualFile file) {
     return projectFileDir != null && VfsUtilCore.isAncestor(projectFileDir, file, false);
   }
 
-  private static boolean isFileUnderSourceRoot(@NotNull Project project, @NotNull VirtualFile file) {
+  private static boolean isFileUnderSourceRoot(@Nonnull Project project, @Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
     if (InternalStdFileTypes.JAVA == file.getFileType()) {
       return index.isInSource(file) && !index.isInLibrarySource(file);
@@ -84,7 +84,7 @@ public class CheckinHandlerUtil {
     }
   }
 
-  static void disableWhenDumb(@NotNull Project project, @NotNull JCheckBox checkBox, @NotNull String tooltip) {
+  static void disableWhenDumb(@Nonnull Project project, @Nonnull JCheckBox checkBox, @Nonnull String tooltip) {
     boolean dumb = DumbService.isDumb(project);
     checkBox.setEnabled(!dumb);
     checkBox.setToolTipText(dumb ? tooltip : "");

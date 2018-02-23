@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.Chunk;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.graph.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 
 import java.util.*;

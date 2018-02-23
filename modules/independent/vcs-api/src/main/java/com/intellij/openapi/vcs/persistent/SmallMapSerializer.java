@@ -23,7 +23,7 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class SmallMapSerializer<K,V> implements Forceable {
     private final K myKey;
     private final KeyDescriptor<K> myDescriptor;
 
-    private KeyWrapper(@NotNull final KeyDescriptor<K> descriptor, final K key) {
+    private KeyWrapper(@Nonnull final KeyDescriptor<K> descriptor, final K key) {
       myDescriptor = descriptor;
       myKey = key;
     }

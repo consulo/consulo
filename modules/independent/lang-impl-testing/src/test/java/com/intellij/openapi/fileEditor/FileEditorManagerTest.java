@@ -31,7 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -175,43 +175,43 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
   }
 
   static class MyFileEditorProvider implements FileEditorProvider {
-    @NotNull
+    @Nonnull
     @Override
     public String getEditorTypeId() {
       return "mock";
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public FileEditorState readState(@NotNull Element sourceElement, @NotNull Project project, @NotNull VirtualFile file) {
+    public FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
       return FileEditorState.INSTANCE;
     }
 
     @Override
-    public void writeState(@NotNull FileEditorState state, @NotNull Project project, @NotNull Element targetElement) {
+    public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
     }
 
     @Override
-    public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
       return true;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
       return new Mock.MyFileEditor() {
         @Override
         public boolean isValid() {
           return true;
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public JComponent getComponent() {
           return new JLabel();
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public String getName() {
           return "mockEditor";
@@ -220,10 +220,10 @@ public class FileEditorManagerTest extends FileEditorManagerTestCase {
     }
 
     @Override
-    public void disposeEditor(@NotNull FileEditor editor) {
+    public void disposeEditor(@Nonnull FileEditor editor) {
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public FileEditorPolicy getPolicy() {
       return FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR;

@@ -19,8 +19,8 @@ import com.intellij.designer.model.PropertiesContainer;
 import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.PropertyRenderer;
 import com.intellij.designer.propertyTable.PropertyTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +41,7 @@ public class LabelPropertyRenderer extends JLabel implements PropertyRenderer {
     setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
   }
 
-  @NotNull
+  @Nonnull
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  PropertyContext context,
                                  @Nullable Object value,
@@ -66,7 +66,7 @@ public class LabelPropertyRenderer extends JLabel implements PropertyRenderer {
    * attributes. Note, that background and foreground colors are already
    * set.
    */
-  protected void customize(@NotNull Object value) {
+  protected void customize(@Nonnull Object value) {
     setText(myStaticText != null ? myStaticText : value.toString());
   }
 }

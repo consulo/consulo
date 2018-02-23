@@ -27,15 +27,15 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageInfoFactory;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class FindUsagesHelper {
-  public static boolean processUsagesInText(@NotNull final PsiElement element,
-                                               @NotNull Collection<String> stringToSearch,
-                                               @NotNull GlobalSearchScope searchScope,
-                                               @NotNull Processor<UsageInfo> processor) {
+  public static boolean processUsagesInText(@Nonnull final PsiElement element,
+                                               @Nonnull Collection<String> stringToSearch,
+                                               @Nonnull GlobalSearchScope searchScope,
+                                               @Nonnull Processor<UsageInfo> processor) {
     final TextRange elementTextRange = ApplicationManager.getApplication().runReadAction(new NullableComputable<TextRange>() {
       @Override
       public TextRange compute() {
@@ -45,7 +45,7 @@ public class FindUsagesHelper {
     });
     UsageInfoFactory factory = new UsageInfoFactory() {
       @Override
-      public UsageInfo createUsageInfo(@NotNull PsiElement usage, int startOffset, int endOffset) {
+      public UsageInfo createUsageInfo(@Nonnull PsiElement usage, int startOffset, int endOffset) {
         if (elementTextRange != null
             && usage.getContainingFile() == element.getContainingFile()
             && elementTextRange.contains(startOffset)

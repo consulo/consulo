@@ -20,33 +20,33 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
  * @author yole
  */
 public abstract class ResolveScopeManager {
-  @NotNull
-  public abstract GlobalSearchScope getResolveScope(@NotNull PsiElement element);
+  @Nonnull
+  public abstract GlobalSearchScope getResolveScope(@Nonnull PsiElement element);
 
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   public abstract GlobalSearchScope getDefaultResolveScope(VirtualFile vFile);
 
-  @NotNull
-  public abstract GlobalSearchScope getUseScope(@NotNull PsiElement element);
+  @Nonnull
+  public abstract GlobalSearchScope getUseScope(@Nonnull PsiElement element);
 
   public static ResolveScopeManager getInstance(Project project) {
     return ServiceManager.getService(project, ResolveScopeManager.class);
   }
 
-  @NotNull
+  @Nonnull
   public static GlobalSearchScope getElementUseScope(PsiElement element) {
     return getInstance(element.getProject()).getUseScope(element);
   }
 
-  @NotNull
+  @Nonnull
   public static GlobalSearchScope getElementResolveScope(PsiElement element) {
     return getInstance(element.getProject()).getResolveScope(element);
   }

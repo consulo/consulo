@@ -18,8 +18,8 @@ package com.intellij.psi;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -31,7 +31,7 @@ public abstract class FileContextProvider {
   private final static ExtensionPointName<FileContextProvider> EP_NAME = new ExtensionPointName<FileContextProvider>("com.intellij.fileContextProvider");
 
   @Nullable
-  public static FileContextProvider getProvider(final @NotNull PsiFile file) {
+  public static FileContextProvider getProvider(final @Nonnull PsiFile file) {
     for (FileContextProvider provider: Extensions.getExtensions(EP_NAME, file.getProject())) {
       if (provider.isAvailable(file)) {
         return provider;
@@ -42,7 +42,7 @@ public abstract class FileContextProvider {
 
   protected abstract boolean isAvailable(final PsiFile file);
 
-  @NotNull
+  @Nonnull
   public abstract Collection<PsiFileSystemItem> getContextFolders(final PsiFile file);
 
   @Nullable

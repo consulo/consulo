@@ -19,7 +19,7 @@ package com.intellij.ide;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.ide.util.DeleteHandler;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public class PsiActionSupportFactoryImpl extends PsiActionSupportFactory {
                                                          final PsiElementSelector dataSelector) {
     return new CopyPasteDelegator(project, keyReceiver) {
       @Override
-      @NotNull
+      @Nonnull
       protected PsiElement[] getSelectedElements() {
         PsiElement[] elements = dataSelector.getSelectedElements();
         return elements == null ? PsiElement.EMPTY_ARRAY : elements;

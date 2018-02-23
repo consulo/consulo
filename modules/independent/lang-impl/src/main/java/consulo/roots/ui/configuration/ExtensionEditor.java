@@ -36,8 +36,8 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -83,7 +83,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     TreeUtil.expandAll(myTree);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected JComponent createComponentImpl() {
     JPanel rootPane = new JPanel(new BorderLayout());
@@ -143,7 +143,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   @Nullable
   @RequiredDispatchThread
-  private JComponent createConfigurationPanel(final @NotNull MutableModuleExtension extension) {
+  private JComponent createConfigurationPanel(final @Nonnull MutableModuleExtension extension) {
     myConfigurablePanelExtension = extension;
     final Runnable updateOnCheck = new Runnable() {
       @Override

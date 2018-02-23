@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.util.ui.accessibility.ScreenReader;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.beans.PropertyChangeListener;
 
@@ -28,7 +28,7 @@ public class ScreenReaderSupportHandler implements Disposable {
   private final GeneralSettings mySettings;
   private final PropertyChangeListener myGeneralSettingsListener;
 
-  public ScreenReaderSupportHandler(@NotNull GeneralSettings generalSettings) {
+  public ScreenReaderSupportHandler(@Nonnull GeneralSettings generalSettings) {
     mySettings = generalSettings;
     myGeneralSettingsListener = e -> {
       if (GeneralSettings.PROP_SUPPORT_SCREEN_READERS.equals(e.getPropertyName())) {

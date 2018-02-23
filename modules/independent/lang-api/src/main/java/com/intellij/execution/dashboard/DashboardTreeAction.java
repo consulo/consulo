@@ -20,8 +20,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAc
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     List<T> targetNodes = getTargetNodes(e);
 
@@ -59,7 +58,7 @@ public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAc
    * @param e Action event.
    * @return List of target nodes for this action.
    */
-  @NotNull
+  @Nonnull
   protected List<T> getTargetNodes(AnActionEvent e) {
     C content = getTreeContent(e);
     if (content == null) {
@@ -88,21 +87,21 @@ public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAc
    * @param treeBuilder Tree builder.
    * @return Set of tree nodes for which action should be performed.
    */
-  @NotNull
-  protected Set<?> collectNodes(@NotNull AbstractTreeBuilder treeBuilder) {
+  @Nonnull
+  protected Set<?> collectNodes(@Nonnull AbstractTreeBuilder treeBuilder) {
     return treeBuilder.getSelectedElements();
   }
 
   protected abstract C getTreeContent(AnActionEvent e);
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     List<T> verifiedTargetNodes = getTargetNodes(e).stream().filter(node -> isVisible4(node) && isEnabled4(node))
       .collect(Collectors.toList());
     doActionPerformed(getTreeContent(e), e, verifiedTargetNodes);
   }
 
-  protected boolean isVisibleForAnySelection(@NotNull AnActionEvent e) {
+  protected boolean isVisibleForAnySelection(@Nonnull AnActionEvent e) {
     return false;
   }
 
@@ -118,14 +117,14 @@ public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAc
     return true;
   }
 
-  protected void updatePresentation(@NotNull Presentation presentation, @Nullable T node) {
+  protected void updatePresentation(@Nonnull Presentation presentation, @javax.annotation.Nullable T node) {
   }
 
-  protected void doActionPerformed(@NotNull C content, AnActionEvent e, List<T> nodes) {
+  protected void doActionPerformed(@Nonnull C content, AnActionEvent e, List<T> nodes) {
     nodes.forEach(node -> doActionPerformed(content, e , node));
   }
 
-  protected void doActionPerformed(@NotNull C content, AnActionEvent e, T node) {
+  protected void doActionPerformed(@Nonnull C content, AnActionEvent e, T node) {
     doActionPerformed(node);
   }
 

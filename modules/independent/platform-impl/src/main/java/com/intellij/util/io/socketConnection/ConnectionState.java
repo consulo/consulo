@@ -1,8 +1,8 @@
 package com.intellij.util.io.socketConnection;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkListener;
 
 public class ConnectionState {
@@ -10,22 +10,22 @@ public class ConnectionState {
   private final ConnectionStatus status;
   private final HyperlinkListener messageLinkListener;
 
-  public ConnectionState(@NotNull ConnectionStatus status, @Nullable String message, @Nullable HyperlinkListener messageLinkListener) {
+  public ConnectionState(@Nonnull ConnectionStatus status, @Nullable String message, @Nullable HyperlinkListener messageLinkListener) {
     this.status = status;
     this.message = message;
     this.messageLinkListener = messageLinkListener;
   }
 
-  public ConnectionState(@NotNull ConnectionStatus status) {
+  public ConnectionState(@Nonnull ConnectionStatus status) {
     this(status, null, null);
   }
 
-  @NotNull
+  @Nonnull
   public ConnectionStatus getStatus() {
     return status;
   }
 
-  @NotNull
+  @Nonnull
   public String getMessage() {
     return message == null ? status.getStatusText() : message;
   }

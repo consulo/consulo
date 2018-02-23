@@ -27,8 +27,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -48,7 +48,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
    * @param message      the message on the dialog
    * @param type
    */
-  private PasswordSafePromptDialog(@Nullable Project project, @NotNull String title, @NotNull PasswordPromptComponent component) {
+  private PasswordSafePromptDialog(@Nullable Project project, @Nonnull String title, @Nonnull PasswordPromptComponent component) {
     super(project, true);
     setTitle(title);
     myComponent = component;
@@ -85,7 +85,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
   public static String askPassword(final Project project,
                                    final String title,
                                    final String message,
-                                   @NotNull final Class<?> requestor,
+                                   @Nonnull final Class<?> requestor,
                                    final String key,
                                    boolean resetPassword, String error) {
     return askPassword(project, title, message, requestor, key, resetPassword, error, null, null);
@@ -105,7 +105,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
   @Nullable
   public static String askPassword(final String title,
                                    final String message,
-                                   @NotNull final Class<?> requestor,
+                                   @Nonnull final Class<?> requestor,
                                    final String key,
                                    boolean resetPassword) {
     return askPassword(null, title, message, requestor, key, resetPassword, null);
@@ -127,7 +127,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
   public static String askPassphrase(final Project project,
                                      final String title,
                                      final String message,
-                                     @NotNull final Class<?> requestor,
+                                     @Nonnull final Class<?> requestor,
                                      final String key,
                                      boolean resetPassword,
                                      String error) {
@@ -153,7 +153,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
   private static String askPassword(final Project project,
                                     final String title,
                                     final String message,
-                                    @NotNull final Class<?> requestor,
+                                    @Nonnull final Class<?> requestor,
                                     final String key,
                                     boolean resetPassword,
                                     final String error,

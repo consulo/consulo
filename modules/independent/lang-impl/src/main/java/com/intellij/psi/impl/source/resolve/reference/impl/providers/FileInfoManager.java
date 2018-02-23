@@ -27,8 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.file.FileLookupInfoProvider;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class FileInfoManager implements Disposable {
     return getFileInfoManager()._getLookupItem((PsiFile)psiElement, encoded, icon);
   }
 
-  public LookupElementBuilder _getLookupItem(@NotNull final PsiFile file, String name, Icon icon) {
+  public LookupElementBuilder _getLookupItem(@Nonnull final PsiFile file, String name, Icon icon) {
     LookupElementBuilder builder = LookupElementBuilder.create(file, name).withIcon(icon);
 
     final String info = _getInfo(file);

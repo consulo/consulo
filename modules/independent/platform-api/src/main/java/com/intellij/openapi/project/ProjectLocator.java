@@ -21,8 +21,8 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -48,6 +48,6 @@ public abstract class ProjectLocator {
   * @param file file to be located in projects.
   * @return list of open projects containing this file.
   */
-  @NotNull
+  @Nonnull
   public abstract Collection<Project> getProjectsForFile(VirtualFile file);
 }

@@ -17,7 +17,8 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.openapi.util.Comparing;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * User: anna

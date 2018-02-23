@@ -48,8 +48,8 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -91,7 +91,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     TreeUtil.selectFirstNode(myTree);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     final Action[] actions = new Action[4];
@@ -120,7 +120,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     final JPanel panel = new JPanel(new BorderLayout());
     DataManager.registerDataProvider(panel, new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         final TreePath path = myTree.getSelectionPath();
         if (path != null) {
           Object component = path.getLastPathComponent();
@@ -144,7 +144,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
 
     final JBList list = new JBList(new ResourceModules().getModuleNames());
     final NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<Object, JComponent>() {
-      @NotNull
+      @Nonnull
       @Override
       public JComponent fun(Object dom) {
         return new JLabel(dom instanceof Module ? ((Module)dom).getName() : dom.toString(), AllIcons.Nodes.Package, SwingConstants.LEFT);

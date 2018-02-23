@@ -18,7 +18,7 @@ package com.intellij.openapi.keymap.impl;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -27,7 +27,7 @@ class WeakKeymapManagerListener implements KeymapManagerListener {
   private final KeymapManagerEx myKeymapManager;
   private final Reference<KeymapManagerListener> myRef;
 
-  WeakKeymapManagerListener(@NotNull KeymapManagerEx keymapManager, @NotNull KeymapManagerListener delegate) {
+  WeakKeymapManagerListener(@Nonnull KeymapManagerEx keymapManager, @Nonnull KeymapManagerListener delegate) {
     myKeymapManager = keymapManager;
     myRef = new WeakReference<KeymapManagerListener>(delegate);
   }
@@ -36,7 +36,7 @@ class WeakKeymapManagerListener implements KeymapManagerListener {
     return myRef.get() == null;
   }
 
-  public boolean isWrapped(@NotNull KeymapManagerListener listener) {
+  public boolean isWrapped(@Nonnull KeymapManagerListener listener) {
     return myRef.get() == listener;
   }
 

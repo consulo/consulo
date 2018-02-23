@@ -27,7 +27,7 @@ import com.intellij.profile.Profile;
 import com.intellij.psi.PsiElement;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
@@ -35,9 +35,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
         implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element> {
-  public InspectionProjectProfileManager(@NotNull Project project,
-                                         @NotNull InspectionProfileManager inspectionProfileManager,
-                                         @NotNull DependencyValidationManager holder) {
+  public InspectionProjectProfileManager(@Nonnull Project project,
+                                         @Nonnull InspectionProfileManager inspectionProfileManager,
+                                         @Nonnull DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }
 
@@ -50,7 +50,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     return getInspectionProfile().getName();
   }
 
-  @NotNull
+  @Nonnull
   public InspectionProfile getInspectionProfile() {
     return (InspectionProfile)getProjectProfileImpl();
   }
@@ -59,7 +59,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
    * @deprecated use {@link #getInspectionProfile()} instead
    */
   @SuppressWarnings({"UnusedDeclaration"})
-  @NotNull
+  @Nonnull
   public InspectionProfile getInspectionProfile(PsiElement element) {
     return getInspectionProfile();
   }
@@ -67,7 +67,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   public abstract boolean isProfileLoaded();
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getComponentName() {
     return "InspectionProjectProfileManager";
@@ -81,14 +81,14 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   public void disposeComponent() {
   }
 
-  public abstract void initProfileWrapper(@NotNull Profile profile);
+  public abstract void initProfileWrapper(@Nonnull Profile profile);
 
   @Override
-  public Profile getProfile(@NotNull final String name) {
+  public Profile getProfile(@Nonnull final String name) {
     return getProfile(name, true);
   }
 
-  public static boolean isInformationLevel(String shortName, @NotNull PsiElement element) {
+  public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
     final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
     if (key != null) {
       final HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getInspectionProfile().getErrorLevel(key, element);

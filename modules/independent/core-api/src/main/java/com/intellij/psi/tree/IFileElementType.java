@@ -19,19 +19,19 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IFileElementType extends ILazyParseableElementType {
   public IFileElementType(@Nullable final Language language) {
     super("FILE", language);
   }
 
-  public IFileElementType(@NotNull @NonNls String debugName, @Nullable Language language) {
+  public IFileElementType(@Nonnull @NonNls String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public IFileElementType(@NotNull @NonNls String debugName,
+  public IFileElementType(@Nonnull @NonNls String debugName,
                           @Nullable Language language,
                           boolean register) {
     super(debugName, language, register);

@@ -37,8 +37,8 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.psi.PsiPackageManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,24 +47,28 @@ import java.util.StringTokenizer;
 
 public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   @Nullable private final Project myProject;
-  @NotNull private final PsiDirectory myDirectory;
+  @Nonnull
+  private final PsiDirectory myDirectory;
   private final boolean myIsDirectory;
-  @Nullable private PsiFileSystemItem myCreatedElement = null;
-  @NotNull private final String myDelimiters;
-  @Nullable private final Component myDialogParent;
+  @Nullable
+  private PsiFileSystemItem myCreatedElement = null;
+  @Nonnull
+  private final String myDelimiters;
+  @Nullable
+  private final Component myDialogParent;
   private String myErrorText;
 
   public CreateDirectoryOrPackageHandler(@Nullable Project project,
-                                         @NotNull PsiDirectory directory,
+                                         @Nonnull PsiDirectory directory,
                                          boolean isDirectory,
-                                         @NotNull final String delimiters) {
+                                         @Nonnull final String delimiters) {
     this(project, directory, isDirectory, delimiters, null);
   }
 
   public CreateDirectoryOrPackageHandler(@Nullable Project project,
-                                         @NotNull PsiDirectory directory,
+                                         @Nonnull PsiDirectory directory,
                                          boolean isDirectory,
-                                         @NotNull final String delimiters,
+                                         @Nonnull final String delimiters,
                                          @Nullable Component dialogParent) {
     myProject = project;
     myDirectory = directory;

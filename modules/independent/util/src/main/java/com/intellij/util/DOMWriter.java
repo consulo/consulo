@@ -17,9 +17,9 @@
 package com.intellij.util;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.*;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 
 class DOMWriter {

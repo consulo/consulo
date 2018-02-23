@@ -22,8 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -66,7 +66,7 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
   private static class SmartPointerWrapper {
     private final SmartPsiElementPointer myPointer;
 
-    private SmartPointerWrapper(@NotNull SmartPsiElementPointer pointer) {
+    private SmartPointerWrapper(@Nonnull SmartPsiElementPointer pointer) {
       myPointer = pointer;
     }
 

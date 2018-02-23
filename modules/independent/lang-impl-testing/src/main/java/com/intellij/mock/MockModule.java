@@ -8,8 +8,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
@@ -17,58 +16,58 @@ import org.jetbrains.annotations.Nullable;
 public class MockModule extends MockComponentManager implements Module {
   private final Project myProject;
 
-  public MockModule(@NotNull Disposable parentDisposable) {
+  public MockModule(@Nonnull Disposable parentDisposable) {
     this(null, parentDisposable);
   }
 
-  public MockModule(@Nullable final Project project, @NotNull Disposable parentDisposable) {
+  public MockModule(@javax.annotation.Nullable final Project project, @Nonnull Disposable parentDisposable) {
     super(project == null ? null : project.getPicoContainer(), parentDisposable);
     myProject = project;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VirtualFile getModuleDir() {
     throw new UnsupportedOperationException("Method getModuleDir is not yet implemented in " + getClass().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getModuleDirPath() {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getModuleDirUrl() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleRuntimeScope(final boolean includeTests) {
     return new MockGlobalSearchScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleScope() {
     return new MockGlobalSearchScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleScope(boolean includeTests) {
     return new MockGlobalSearchScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleTestsWithDependentsScope() {
     return new MockGlobalSearchScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependenciesAndLibrariesScope(final boolean includeTests) {
     return new MockGlobalSearchScope();
@@ -76,38 +75,38 @@ public class MockModule extends MockComponentManager implements Module {
     //throw new UnsupportedOperationException( "Method getModuleWithDependenciesAndLibrariesScope is not yet implemented in " + getClass().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependenciesScope() {
     return new MockGlobalSearchScope();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleContentWithDependenciesScope() {
     throw new UnsupportedOperationException("Method getModuleContentWithDependenciesScope is not yet implemented in " + getClass().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleContentScope() {
     throw new UnsupportedOperationException("Method getModuleContentScope is not yet implemented in " + getClass().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithDependentsScope() {
     throw new UnsupportedOperationException("Method getModuleWithDependentsScope is not yet implemented in " + getClass().getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public GlobalSearchScope getModuleWithLibrariesScope() {
     throw new UnsupportedOperationException("Method getModuleWithLibrariesScope is not yet implemented in " + getClass().getName());
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getName() {
     return "MockModule";
   }
@@ -118,7 +117,7 @@ public class MockModule extends MockComponentManager implements Module {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }

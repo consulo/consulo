@@ -29,8 +29,8 @@ import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The common base interface for all elements of the PSI tree.
@@ -42,7 +42,7 @@ public interface PsiElement extends UserDataHolder {
   public static final PsiElement[] EMPTY_ARRAY = new PsiElement[0];
 
   public static ArrayFactory<PsiElement> ARRAY_FACTORY = new ArrayFactory<PsiElement>() {
-    @NotNull
+    @Nonnull
     @Override
     public PsiElement[] create(int count) {
       return count == 0 ? EMPTY_ARRAY : new PsiElement[count];
@@ -56,7 +56,7 @@ public interface PsiElement extends UserDataHolder {
    * @throws PsiInvalidElementAccessException
    *          if this element is invalid
    */
-  @NotNull
+  @Nonnull
   Project getProject() throws PsiInvalidElementAccessException;
 
   /**
@@ -64,7 +64,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the language instance.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   Language getLanguage();
 
@@ -72,7 +72,7 @@ public interface PsiElement extends UserDataHolder {
    * Return the language version of the PSI element.
    * @return language version
    */
-  @NotNull
+  @Nonnull
   LanguageVersion getLanguageVersion();
 
   /**
@@ -88,7 +88,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the array of child elements.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   PsiElement[] getChildren();
 
@@ -151,7 +151,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the text range.
    */
   @RequiredReadAction
-  @NotNull
+  @Nonnull
   TextRange getTextRange();
 
   /**
@@ -214,7 +214,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the element text as a character array.
    */
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   char[] textToCharArray();
 
@@ -249,7 +249,7 @@ public interface PsiElement extends UserDataHolder {
    * @param text the character sequence to compare with.
    * @return true if the text is equal, false otherwise.
    */
-  boolean textMatches(@NotNull @NonNls CharSequence text);
+  boolean textMatches(@Nonnull @NonNls CharSequence text);
 
   /**
    * Checks if the text of this PSI element is equal to the text of the specified PSI element.
@@ -257,7 +257,7 @@ public interface PsiElement extends UserDataHolder {
    * @param element the element to compare the text with.
    * @return true if the text is equal, false otherwise.
    */
-  boolean textMatches(@NotNull PsiElement element);
+  boolean textMatches(@Nonnull PsiElement element);
 
   /**
    * Checks if the text of this element contains the specified character.
@@ -273,14 +273,14 @@ public interface PsiElement extends UserDataHolder {
    *
    * @param visitor the visitor to pass the element to.
    */
-  void accept(@NotNull PsiElementVisitor visitor);
+  void accept(@Nonnull PsiElementVisitor visitor);
 
   /**
    * Passes the children of the element to the specified visitor.
    *
    * @param visitor the visitor to pass the children to.
    */
-  void acceptChildren(@NotNull PsiElementVisitor visitor);
+  void acceptChildren(@Nonnull PsiElementVisitor visitor);
 
   /**
    * Creates a copy of the file containing the PSI element and returns the corresponding
@@ -298,7 +298,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element which was actually added (either <code>element</code> or its copy).
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException;
+  PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException;
 
   /**
    * Adds a child to this PSI element, before the specified anchor element.
@@ -308,7 +308,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element which was actually added (either <code>element</code> or its copy).
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  PsiElement addBefore(@NotNull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
+  PsiElement addBefore(@Nonnull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
 
   /**
    * Adds a child to this PSI element, after the specified anchor element.
@@ -318,7 +318,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element which was actually added (either <code>element</code> or its copy).
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  PsiElement addAfter(@NotNull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
+  PsiElement addAfter(@Nonnull PsiElement element, @Nullable PsiElement anchor) throws IncorrectOperationException;
 
   /**
    * Checks if it is possible to add the specified element as a child to this element,
@@ -328,7 +328,7 @@ public interface PsiElement extends UserDataHolder {
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    * @deprecated not all PSI implementations implement this method correctly.
    */
-  void checkAdd(@NotNull PsiElement element) throws IncorrectOperationException;
+  void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException;
 
   /**
    * Adds a range of elements as children to this PSI element.
@@ -349,7 +349,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the first child element which was actually added (either <code>first</code> or its copy).
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException;
+  PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException;
 
   /**
    * Adds a range of elements as children to this PSI element, after the specified anchor element.
@@ -396,7 +396,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the element which was actually inserted in the tree (either <code>newElement</code> or its copy)
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException;
+  PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException;
 
   /**
    * Checks if the PSI element corresponds to the current state of the underlying
@@ -441,7 +441,7 @@ public interface PsiElement extends UserDataHolder {
    *         references.
    * @see com.intellij.psi.PsiReferenceService#getReferences
    */
-  @NotNull
+  @Nonnull
   PsiReference[] getReferences();
 
   /**
@@ -476,10 +476,10 @@ public interface PsiElement extends UserDataHolder {
    * @param place      the original element from which the tree up walk was initiated.
    * @return true if the declaration processing should continue or false if it should be stopped.
    */
-  boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                              @NotNull ResolveState state,
+  boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
+                              @Nonnull ResolveState state,
                               @Nullable PsiElement lastParent,
-                              @NotNull PsiElement place);
+                              @Nonnull PsiElement place);
 
   /**
    * Returns the element which should be used as the parent of this element in a tree up
@@ -507,7 +507,7 @@ public interface PsiElement extends UserDataHolder {
    *
    * @return the resolve scope instance.
    */
-  @NotNull
+  @Nonnull
   GlobalSearchScope getResolveScope();
 
   /**
@@ -516,7 +516,7 @@ public interface PsiElement extends UserDataHolder {
    * @return the search scope instance.
    * @see {@link com.intellij.psi.search.PsiSearchHelper#getUseScope(PsiElement)}
    */
-  @NotNull
+  @Nonnull
   SearchScope getUseScope();
 
   /**

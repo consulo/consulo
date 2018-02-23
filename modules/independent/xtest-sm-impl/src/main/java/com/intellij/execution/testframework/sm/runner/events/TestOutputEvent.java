@@ -16,26 +16,26 @@
 package com.intellij.execution.testframework.sm.runner.events;
 
 import jetbrains.buildServer.messages.serviceMessages.BaseTestMessage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TestOutputEvent extends TreeNodeEvent {
 
   private final String myText;
   private final boolean myStdOut;
 
-  public TestOutputEvent(@NotNull BaseTestMessage message, @NotNull String text, boolean stdOut) {
+  public TestOutputEvent(@Nonnull BaseTestMessage message, @Nonnull String text, boolean stdOut) {
     super(message.getTestName(), TreeNodeEvent.getNodeId(message));
     myText = text;
     myStdOut = stdOut;
   }
 
-  public TestOutputEvent(@NotNull String testName, @NotNull String text, boolean stdOut) {
+  public TestOutputEvent(@Nonnull String testName, @Nonnull String text, boolean stdOut) {
     super(testName, null);
     myText = text;
     myStdOut = stdOut;
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myText;
   }
@@ -45,7 +45,7 @@ public class TestOutputEvent extends TreeNodeEvent {
   }
 
   @Override
-  protected void appendToStringInfo(@NotNull StringBuilder buf) {
+  protected void appendToStringInfo(@Nonnull StringBuilder buf) {
     append(buf, "text", myText);
     append(buf, "stdOut", myStdOut);
   }

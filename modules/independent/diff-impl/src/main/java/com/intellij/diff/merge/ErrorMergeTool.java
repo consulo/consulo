@@ -16,8 +16,7 @@
 package com.intellij.diff.merge;
 
 import com.intellij.diff.util.DiffUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,24 +25,27 @@ import java.awt.event.ActionEvent;
 public class ErrorMergeTool implements MergeTool {
   public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
 
-  @NotNull
+  @Nonnull
   @Override
-  public MergeViewer createComponent(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return new MyViewer(context, request);
   }
 
   @Override
-  public boolean canShow(@NotNull MergeContext context, @NotNull MergeRequest request) {
+  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
     return true;
   }
 
   private static class MyViewer implements MergeViewer {
-    @NotNull private final MergeContext myMergeContext;
-    @NotNull private final MergeRequest myMergeRequest;
+    @Nonnull
+    private final MergeContext myMergeContext;
+    @Nonnull
+    private final MergeRequest myMergeRequest;
 
-    @NotNull private final JPanel myPanel;
+    @Nonnull
+    private final JPanel myPanel;
 
-    public MyViewer(@NotNull MergeContext context, @NotNull MergeRequest request) {
+    public MyViewer(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
       myMergeContext = context;
       myMergeRequest = request;
 
@@ -51,32 +53,32 @@ public class ErrorMergeTool implements MergeTool {
       myPanel.add(createComponent(), BorderLayout.CENTER);
     }
 
-    @NotNull
+    @Nonnull
     private JComponent createComponent() {
       return DiffUtil.createMessagePanel("Can't show diff");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public JComponent getComponent() {
       return myPanel;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ToolbarComponents init() {
       return new ToolbarComponents();
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
-    public Action getResolveAction(@NotNull final MergeResult result) {
+    public Action getResolveAction(@Nonnull final MergeResult result) {
       if (result == MergeResult.RESOLVED) return null;
 
       String caption = MergeUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);

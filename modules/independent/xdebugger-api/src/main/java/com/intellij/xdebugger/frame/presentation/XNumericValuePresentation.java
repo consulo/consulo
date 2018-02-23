@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.frame.presentation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,7 +28,7 @@ public class XNumericValuePresentation extends XValuePresentation {
   }
 
   @Override
-  public void renderValue(@NotNull XValueTextRenderer renderer) {
+  public void renderValue(@Nonnull XValueTextRenderer renderer) {
     renderer.renderNumericValue(myValue);
   }
 }

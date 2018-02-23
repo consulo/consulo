@@ -30,8 +30,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 import java.util.Collections;
@@ -52,7 +53,7 @@ public final class LanguageUtil {
 
 
   @Nullable
-  public static Language getLanguageForPsi(@NotNull Project project, @Nullable VirtualFile file) {
+  public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
     Language language = getFileLanguage(file);
     if (language == null) return null;
     return LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
@@ -75,7 +76,7 @@ public final class LanguageUtil {
     return language == null ? null : language.getAssociatedFileType();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   public static ParserDefinition.SpaceRequirements canStickTokensTogetherByLexer(ASTNode left, ASTNode right, Lexer lexer) {
     String textStr = left.getText() + right.getText();
@@ -89,8 +90,8 @@ public final class LanguageUtil {
     return ParserDefinition.SpaceRequirements.MAY;
   }
 
-  @NotNull
-  public static Language[] getLanguageDialects(@NotNull final Language base) {
+  @Nonnull
+  public static Language[] getLanguageDialects(@Nonnull final Language base) {
     final List<Language> list = ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
       @Override
       public boolean value(final Language language) {
@@ -110,7 +111,7 @@ public final class LanguageUtil {
     return language instanceof TemplateLanguage;
   }
 
-  public static boolean isInjectableLanguage(@NotNull Language language) {
+  public static boolean isInjectableLanguage(@Nonnull Language language) {
     if (language == Language.ANY) {
       return false;
     }
@@ -129,7 +130,7 @@ public final class LanguageUtil {
     return true;
   }
 
-  public static boolean isFileLanguage(@NotNull Language language) {
+  public static boolean isFileLanguage(@Nonnull Language language) {
     if ( language instanceof InjectableLanguage) return false;
     if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return false;
     LanguageFileType type = language.getAssociatedFileType();
@@ -139,7 +140,7 @@ public final class LanguageUtil {
     return StringUtil.isNotEmpty(type.getDefaultExtension());
   }
 
-  @NotNull
+  @Nonnull
   public static List<Language> getFileLanguages() {
     List<Language> result = ContainerUtil.newArrayList();
     for (Language language : Language.getRegisteredLanguages()) {
@@ -150,9 +151,9 @@ public final class LanguageUtil {
     return result;
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
-  public static Language getRootLanguage(@NotNull PsiElement element) {
+  public static Language getRootLanguage(@Nonnull PsiElement element) {
     final FileViewProvider provider = element.getContainingFile().getViewProvider();
     final Set<Language> languages = provider.getLanguages();
     if (languages.size() > 1) {

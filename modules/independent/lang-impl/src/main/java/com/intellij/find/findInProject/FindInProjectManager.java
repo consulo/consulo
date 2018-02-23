@@ -31,7 +31,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewManager;
 import com.intellij.usages.*;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FindInProjectManager {
   private final Project myProject;
@@ -45,7 +45,7 @@ public class FindInProjectManager {
     myProject = project;
   }
 
-  public void findInProject(@NotNull DataContext dataContext) {
+  public void findInProject(@Nonnull DataContext dataContext) {
     final boolean isOpenInNewTabEnabled;
     final boolean toOpenInNewTab;
     Content selectedContent = UsageViewManager.getInstance(myProject).getSelectedContent(true);
@@ -77,7 +77,7 @@ public class FindInProjectManager {
   }
 
   @SuppressWarnings("WeakerAccess")
-  protected void initModel(@NotNull FindModel findModel, @NotNull DataContext dataContext) {
+  protected void initModel(@Nonnull FindModel findModel, @Nonnull DataContext dataContext) {
     FindInProjectUtil.setDirectoryName(findModel, dataContext);
 
     String text = dataContext.getData(PlatformDataKeys.PREDEFINED_TEXT);
@@ -89,7 +89,7 @@ public class FindInProjectManager {
     }
   }
 
-  public void startFindInProject(@NotNull FindModel findModel) {
+  public void startFindInProject(@Nonnull FindModel findModel) {
     if (findModel.getDirectoryName() != null && FindInProjectUtil.getDirectory(findModel) == null) {
       return;
     }

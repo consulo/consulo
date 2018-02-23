@@ -16,9 +16,9 @@
 
 package com.intellij.ide.util.treeView;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface NodeDescriptorProvidingKey {
-  @NotNull
+  @Nonnull
   Object getKey();
 }

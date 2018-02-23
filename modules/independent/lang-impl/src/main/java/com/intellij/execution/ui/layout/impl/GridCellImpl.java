@@ -42,8 +42,8 @@ import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +66,7 @@ public class GridCellImpl implements GridCell {
   private final ViewContextEx myContext;
   private JBPopup myPopup;
 
-  public GridCellImpl(ViewContextEx context, @NotNull GridImpl container, GridImpl.Placeholder placeholder, PlaceInGrid placeInGrid) {
+  public GridCellImpl(ViewContextEx context, @Nonnull GridImpl container, GridImpl.Placeholder placeholder, PlaceInGrid placeInGrid) {
     myContext = context;
     myContainer = container;
 
@@ -122,7 +122,7 @@ public class GridCellImpl implements GridCell {
     }.setDataProvider(new DataProvider() {
       @Override
       @Nullable
-      public Object getData(@NotNull @NonNls final Key dataId) {
+      public Object getData(@Nonnull @NonNls final Key dataId) {
         if (ViewContext.CONTENT_KEY == dataId) {
           TabInfo target = myTabs.getTargetInfo();
           if (target != null) {
@@ -138,7 +138,7 @@ public class GridCellImpl implements GridCell {
     });
     myTabs.getPresentation().setUiDecorator(new UiDecorator() {
       @Override
-      @NotNull
+      @Nonnull
       public UiDecoration getDecoration() {
         return new UiDecoration(null, new Insets(1, -1, 1, -1));
       }
@@ -319,7 +319,7 @@ public class GridCellImpl implements GridCell {
 
     @Override
     @Nullable
-    public Object getData(@NotNull @NonNls final Key dataId) {
+    public Object getData(@Nonnull @NonNls final Key dataId) {
       if (ViewContext.CONTENT_KEY == dataId) {
         return new Content[]{myContent};
       }
@@ -335,7 +335,7 @@ public class GridCellImpl implements GridCell {
     return myContents.getValue(content);
   }
 
-  @NotNull
+  @Nonnull
   private Content getContentFor(TabInfo tab) {
     return myContents.getKey(tab);
   }

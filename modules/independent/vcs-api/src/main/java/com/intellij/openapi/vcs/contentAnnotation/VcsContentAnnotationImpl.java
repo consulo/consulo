@@ -28,7 +28,6 @@ import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
@@ -54,7 +53,7 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
     myContentAnnotationCache = contentAnnotationCache;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);

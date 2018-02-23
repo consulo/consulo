@@ -21,7 +21,7 @@ import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.DeprecationInfo;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class OrderRootType {
   private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("com.intellij.orderRootType");
 
   private static AtomicNotNullLazyValue<OrderRootType[]> ourExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
-    @NotNull
+    @Nonnull
     @Override
     protected OrderRootType[] compute() {
       return EP_NAME.getExtensions();
@@ -44,7 +44,7 @@ public class OrderRootType {
   };
 
   private static AtomicNotNullLazyValue<OrderRootType[]> ourSortExtensions = new AtomicNotNullLazyValue<OrderRootType[]>() {
-    @NotNull
+    @Nonnull
     @Override
     protected OrderRootType[] compute() {
       OrderRootType[] extensions = ourExtensions.getValue();
@@ -113,7 +113,7 @@ public class OrderRootType {
     return getName();
   }
 
-  public boolean isMe(@NotNull String type) {
+  public boolean isMe(@Nonnull String type) {
     return type.equals(getName());
   }
 

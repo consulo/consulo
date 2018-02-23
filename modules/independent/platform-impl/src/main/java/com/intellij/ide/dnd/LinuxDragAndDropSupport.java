@@ -18,8 +18,8 @@ package com.intellij.ide.dnd;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -47,7 +47,7 @@ public class LinuxDragAndDropSupport {
   private LinuxDragAndDropSupport() { }
 
   @Nullable
-  public static List<File> getFiles(@NotNull final Transferable transferable) throws IOException, UnsupportedFlavorException {
+  public static List<File> getFiles(@Nonnull final Transferable transferable) throws IOException, UnsupportedFlavorException {
     if (transferable.isDataFlavorSupported(uriListFlavor)) {
       final Object transferData = transferable.getTransferData(uriListFlavor);
       return getFiles(transferData.toString());
@@ -61,7 +61,7 @@ public class LinuxDragAndDropSupport {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static List<File> getFiles(@Nullable final String transferData) {
     final List<File> fileList = new ArrayList<File>();
 
@@ -82,8 +82,8 @@ public class LinuxDragAndDropSupport {
     return fileList;
   }
 
-  @NotNull
-  public static String toUriList(@NotNull final List<File> files) {
+  @Nonnull
+  public static String toUriList(@Nonnull final List<File> files) {
     return StringUtil.join(files, new Function<File, String>() {
       @Override
       public String fun(final File file) {
@@ -92,7 +92,7 @@ public class LinuxDragAndDropSupport {
     }, "\n");
   }
 
-  public static boolean isMoveOperation(@NotNull final Transferable transferable) {
+  public static boolean isMoveOperation(@Nonnull final Transferable transferable) {
     if (transferable.isDataFlavorSupported(gnomeFileListFlavor)) {
       try {
         final Object transferData = transferable.getTransferData(gnomeFileListFlavor);

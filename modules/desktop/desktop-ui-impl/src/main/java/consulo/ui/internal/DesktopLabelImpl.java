@@ -21,7 +21,7 @@ import consulo.ui.RequiredUIAccess;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.style.ComponentColors;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -59,23 +59,23 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
     myComponent.setForeground(TargetAWT.to(myForegroundSupplier.get()));
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getText() {
     return myComponent.getText();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public Label setText(@NotNull String text) {
+  public Label setText(@Nonnull String text) {
     myComponent.setText(text);
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Label setHorizontalAlignment(@NotNull HorizontalAlignment horizontalAlignment) {
+  public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     myHorizontalAlignment = horizontalAlignment;
     switch (horizontalAlignment) {
       case LEFT:
@@ -91,15 +91,15 @@ public class DesktopLabelImpl extends SwingComponentDelegate<JLabel> implements 
     return this;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
     return myHorizontalAlignment;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public Label setForeground(@NotNull Supplier<ColorValue> colorValueSupplier) {
+  public Label setForeground(@Nonnull Supplier<ColorValue> colorValueSupplier) {
     myForegroundSupplier = colorValueSupplier;
 
     myComponent.setForeground(TargetAWT.to(myForegroundSupplier.get()));

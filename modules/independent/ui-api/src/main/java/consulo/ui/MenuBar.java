@@ -15,14 +15,14 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface MenuBar extends Component {
-  @NotNull
+  @Nonnull
   static MenuBar create() {
     return UIInternal.get()._MenuItems_menuBar();
   }
@@ -31,6 +31,6 @@ public interface MenuBar extends Component {
   void clear();
 
   @RequiredUIAccess
-  @NotNull
-  MenuBar add(@NotNull MenuItem menuItem);
+  @Nonnull
+  MenuBar add(@Nonnull MenuItem menuItem);
 }

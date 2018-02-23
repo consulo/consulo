@@ -32,20 +32,21 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import com.intellij.psi.impl.PsiToDocumentSynchronizer;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FormattingDocumentModelImpl implements FormattingDocumentModel {
 
   private final WhiteSpaceFormattingStrategy myWhiteSpaceStrategy;
   //private final CharBuffer myBuffer = CharBuffer.allocate(1);
-  @NotNull private final Document myDocument;
+  @Nonnull
+  private final Document myDocument;
   private final PsiFile myFile;
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.psi.formatter.FormattingDocumentModelImpl");
   private final CodeStyleSettings mySettings;
 
-  public FormattingDocumentModelImpl(@NotNull final Document document, PsiFile file) {
+  public FormattingDocumentModelImpl(@Nonnull final Document document, PsiFile file) {
     myDocument = document;
     myFile = file;
     if (file != null) {
@@ -118,7 +119,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     return myDocument.getTextLength();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     return myDocument;
@@ -147,9 +148,9 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText, int startOffset, int endOffset,
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset,
                                                   ASTNode nodeAfter, boolean changedViaPsi)
   {
     if (!changedViaPsi) {
@@ -172,7 +173,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
   //  return myWhiteSpaceStrategy.check(myBuffer, 0, 1) > 0;
   //}
 
-  public static boolean canUseDocumentModel(@NotNull Document document,@NotNull PsiFile file) {
+  public static boolean canUseDocumentModel(@Nonnull Document document, @Nonnull PsiFile file) {
     PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(file.getProject());
     return !psiDocumentManager.isUncommited(document) &&
            !psiDocumentManager.isDocumentBlockedByPsi(document) &&

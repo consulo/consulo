@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.tree.TreeNode;
@@ -31,8 +31,8 @@ import java.util.List;
  * @author nik
  */
 public abstract class XWatchesTreeActionBase extends AnAction {
-  @NotNull
-  public static <T extends TreeNode> List<? extends T> getSelectedNodes(final @NotNull XDebuggerTree tree, Class<T> nodeClass) {
+  @Nonnull
+  public static <T extends TreeNode> List<? extends T> getSelectedNodes(final @Nonnull XDebuggerTree tree, Class<T> nodeClass) {
     List<T> list = new ArrayList<T>();
     TreePath[] selectionPaths = tree.getSelectionPaths();
     if (selectionPaths != null) {
@@ -65,9 +65,9 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     }
   }
 
-  protected abstract void perform(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree, @NotNull XWatchesView watchesView);
+  protected abstract void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView);
 
-  protected boolean isEnabled(@NotNull AnActionEvent e, @NotNull XDebuggerTree tree) {
+  protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
     return true;
   }
 }

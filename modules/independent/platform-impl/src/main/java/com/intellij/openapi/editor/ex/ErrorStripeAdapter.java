@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -23,6 +23,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ErrorStripeAdapter implements ErrorStripeListener {
 
   @Override
-  public void errorMarkerClicked(@NotNull ErrorStripeEvent e) {
+  public void errorMarkerClicked(@Nonnull ErrorStripeEvent e) {
   }
 }

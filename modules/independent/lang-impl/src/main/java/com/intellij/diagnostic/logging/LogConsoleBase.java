@@ -42,8 +42,8 @@ import com.intellij.ui.FilterComponent;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -88,7 +88,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     public void filter() {
       final Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@Nonnull ProgressIndicator indicator) {
           myModel.updateCustomFilter(getFilter());
         }
       };
@@ -99,12 +99,12 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
   private JComboBox myLogFilterCombo;
   private JPanel myTextFilterWrapper;
 
-  public LogConsoleBase(@NotNull Project project, @Nullable Reader reader, String title, final boolean buildInActions, LogFilterModel model) {
+  public LogConsoleBase(@Nonnull Project project, @Nullable Reader reader, String title, final boolean buildInActions, LogFilterModel model) {
     this(project, reader, title, buildInActions, model, GlobalSearchScope.allScope(project));
   }
 
-  public LogConsoleBase(@NotNull Project project, @Nullable Reader reader, String title, final boolean buildInActions, LogFilterModel model,
-                        @NotNull GlobalSearchScope scope) {
+  public LogConsoleBase(@Nonnull Project project, @Nullable Reader reader, String title, final boolean buildInActions, LogFilterModel model,
+                        @Nonnull GlobalSearchScope scope) {
     super(new BorderLayout());
     myProject = project;
     myTitle = title;
@@ -216,7 +216,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     if (!myWasInitialized) {
       myWasInitialized = true;
@@ -490,7 +490,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
    * If we get the assertion then it is a time to revisit logic of caller ;)
    */
 
-  @NotNull
+  @Nonnull
   private synchronized ConsoleView getConsoleNotNull() {
     final ConsoleView console = getConsole();
     assert console != null: "it looks like console has been disposed";
@@ -538,7 +538,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
         final LogFilter filter = (LogFilter)myLogFilterCombo.getSelectedItem();
         final Task.Backgroundable task = new Task.Backgroundable(myProject, APPLYING_FILTER_TITLE) {
           @Override
-          public void run(@NotNull ProgressIndicator indicator) {
+          public void run(@Nonnull ProgressIndicator indicator) {
             myModel.selectFilter(filter);
           }
         };
@@ -561,7 +561,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
     }
   }
 
-  @NotNull
+  @Nonnull
   protected Component getTextFilterComponent() {
     return myFilter;
   }

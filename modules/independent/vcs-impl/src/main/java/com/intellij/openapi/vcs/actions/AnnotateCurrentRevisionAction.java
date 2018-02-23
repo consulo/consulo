@@ -6,8 +6,8 @@ import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
 class AnnotateCurrentRevisionAction extends AnnotateRevisionAction {
   @Nullable private final List<VcsFileRevision> myRevisions;
 
-  public AnnotateCurrentRevisionAction(@NotNull FileAnnotation annotation, @NotNull AbstractVcs vcs) {
+  public AnnotateCurrentRevisionAction(@Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
     super("Annotate Revision", "Annotate selected revision in new tab", AllIcons.Actions.Annotate,
           annotation, vcs);
     List<VcsFileRevision> revisions = annotation.getRevisions();

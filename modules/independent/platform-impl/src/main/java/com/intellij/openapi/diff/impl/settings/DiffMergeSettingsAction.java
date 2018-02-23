@@ -20,8 +20,8 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
 import consulo.wm.impl.ToolWindowContentUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -35,11 +35,14 @@ import java.util.Collection;
  */
 public class DiffMergeSettingsAction extends AnAction {
 
-  @NotNull private final Collection<Editor> myEditors;
-  @NotNull private final ActionGroup myActionGroup;
-  @NotNull private final DiffMergeSettings mySettings;
+  @Nonnull
+  private final Collection<Editor> myEditors;
+  @Nonnull
+  private final ActionGroup myActionGroup;
+  @Nonnull
+  private final DiffMergeSettings mySettings;
 
-  public DiffMergeSettingsAction(@NotNull Collection<Editor> editors, @NotNull DiffMergeSettings settings) {
+  public DiffMergeSettingsAction(@Nonnull Collection<Editor> editors, @Nonnull DiffMergeSettings settings) {
     super(AllIcons.General.Gear);
     myEditors = editors;
     mySettings = settings;
@@ -60,7 +63,7 @@ public class DiffMergeSettingsAction extends AnAction {
   }
 
   private class MergeToolActionGroup extends ActionGroup {
-    @NotNull
+    @Nonnull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
       return new AnAction[] {
@@ -77,12 +80,15 @@ public class DiffMergeSettingsAction extends AnAction {
    */
   private static class DiffMergeToggleAction extends ToggleAction {
 
-    @NotNull private final DiffMergeEditorSetting mySetting;
-    @NotNull private final Collection<Editor> myEditors;
-    @NotNull private final DiffMergeSettings mySettings;
+    @Nonnull
+    private final DiffMergeEditorSetting mySetting;
+    @Nonnull
+    private final Collection<Editor> myEditors;
+    @Nonnull
+    private final DiffMergeSettings mySettings;
 
-    private DiffMergeToggleAction(@NotNull String actionId, @NotNull DiffMergeEditorSetting setting, @NotNull Collection<Editor> editors,
-                                  @NotNull DiffMergeSettings settings) {
+    private DiffMergeToggleAction(@Nonnull String actionId, @Nonnull DiffMergeEditorSetting setting, @Nonnull Collection<Editor> editors,
+                                  @Nonnull DiffMergeSettings settings) {
       super(ActionsBundle.actionText(actionId), ActionsBundle.actionDescription(actionId), null);
       mySetting = setting;
       myEditors = editors;

@@ -21,7 +21,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.UsageViewPresentation;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 

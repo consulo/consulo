@@ -57,8 +57,7 @@ import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -81,15 +80,15 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   final EditorColorsScheme myGlobalScheme;
   private volatile NotNullProducer<HighlightVisitor[]> myHighlightVisitorProducer = this::cloneHighlightVisitors;
 
-  public GeneralHighlightingPass(@NotNull Project project,
-                                 @NotNull PsiFile file,
-                                 @NotNull Document document,
+  public GeneralHighlightingPass(@Nonnull Project project,
+                                 @Nonnull PsiFile file,
+                                 @Nonnull Document document,
                                  int startOffset,
                                  int endOffset,
                                  boolean updateAll,
-                                 @NotNull ProperTextRange priorityRange,
-                                 @Nullable Editor editor,
-                                 @NotNull HighlightInfoProcessor highlightInfoProcessor) {
+                                 @Nonnull ProperTextRange priorityRange,
+                                 @javax.annotation.Nullable Editor editor,
+                                 @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     super(project, document, PRESENTABLE_NAME, file, editor, TextRange.create(startOffset, endOffset), true, highlightInfoProcessor);
     myUpdateAll = updateAll;
     myPriorityRange = priorityRange;
@@ -106,13 +105,13 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     myGlobalScheme = editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme();
   }
 
-  @NotNull
+  @Nonnull
   private PsiFile getFile() {
     //noinspection ConstantConditions
     return myFile;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Document getDocument() {
     //noinspection ConstantConditions
@@ -120,7 +119,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   }
 
   private static final Key<AtomicInteger> HIGHLIGHT_VISITOR_INSTANCE_COUNT = Key.create("HIGHLIGHT_VISITOR_INSTANCE_COUNT");
-  @NotNull
+  @Nonnull
   private HighlightVisitor[] cloneHighlightVisitors() {
     int oldCount = incVisitorUsageCount(1);
     HighlightVisitor[] highlightVisitors = Extensions.getExtensions(HighlightVisitor.EP_HIGHLIGHT_VISITOR, myProject);
@@ -137,8 +136,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return highlightVisitors;
   }
 
-  @NotNull
-  private HighlightVisitor[] filterVisitors(@NotNull HighlightVisitor[] highlightVisitors, @NotNull PsiFile psiFile) {
+  @Nonnull
+  private HighlightVisitor[] filterVisitors(@Nonnull HighlightVisitor[] highlightVisitors, @Nonnull PsiFile psiFile) {
     final List<HighlightVisitor> visitors = new ArrayList<>(highlightVisitors.length);
     List<HighlightVisitor> list = Arrays.asList(highlightVisitors);
     for (HighlightVisitor visitor : DumbService.getInstance(myProject).filterByDumbAwareness(list)) {
@@ -160,12 +159,12 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return visitors.toArray(new HighlightVisitor[visitors.size()]);
   }
 
-  void setHighlightVisitorProducer(@NotNull NotNullProducer<HighlightVisitor[]> highlightVisitorProducer) {
+  void setHighlightVisitorProducer(@Nonnull NotNullProducer<HighlightVisitor[]> highlightVisitorProducer) {
     myHighlightVisitorProducer = highlightVisitorProducer;
   }
 
-  @NotNull
-  HighlightVisitor[] getHighlightVisitors(@NotNull PsiFile psiFile) {
+  @Nonnull
+  HighlightVisitor[] getHighlightVisitors(@Nonnull PsiFile psiFile) {
     return filterVisitors(myHighlightVisitorProducer.produce(), psiFile);
   }
 
@@ -181,7 +180,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   }
 
   @Override
-  protected void collectInformationWithProgress(@NotNull final ProgressIndicator progress) {
+  protected void collectInformationWithProgress(@Nonnull final ProgressIndicator progress) {
     final List<HighlightInfo> outsideResult = new ArrayList<>(100);
     final List<HighlightInfo> insideResult = new ArrayList<>(100);
 
@@ -273,19 +272,19 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public List<HighlightInfo> getInfos() {
     return new ArrayList<>(myHighlights);
   }
 
-  private boolean collectHighlights(@NotNull final List<PsiElement> elements1,
-                                    @NotNull final List<ProperTextRange> ranges1,
-                                    @NotNull final List<PsiElement> elements2,
-                                    @NotNull final List<ProperTextRange> ranges2,
-                                    @NotNull final ProgressIndicator progress,
-                                    @NotNull final HighlightVisitor[] visitors,
-                                    @NotNull final List<HighlightInfo> insideResult,
-                                    @NotNull final List<HighlightInfo> outsideResult,
+  private boolean collectHighlights(@Nonnull final List<PsiElement> elements1,
+                                    @Nonnull final List<ProperTextRange> ranges1,
+                                    @Nonnull final List<PsiElement> elements2,
+                                    @Nonnull final List<ProperTextRange> ranges2,
+                                    @Nonnull final ProgressIndicator progress,
+                                    @Nonnull final HighlightVisitor[] visitors,
+                                    @Nonnull final List<HighlightInfo> insideResult,
+                                    @Nonnull final List<HighlightInfo> outsideResult,
                                     final boolean forceHighlightParents) {
     final Set<PsiElement> skipParentsSet = new THashSet<>();
 
@@ -317,10 +316,10 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return success;
   }
 
-  private boolean analyzeByVisitors(@NotNull final HighlightVisitor[] visitors,
-                                    @NotNull final HighlightInfoHolder holder,
+  private boolean analyzeByVisitors(@Nonnull final HighlightVisitor[] visitors,
+                                    @Nonnull final HighlightInfoHolder holder,
                                     final int i,
-                                    @NotNull final Runnable action) {
+                                    @Nonnull final Runnable action) {
     final boolean[] success = {true};
     if (i == visitors.length) {
       action.run();
@@ -333,18 +332,18 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return success[0];
   }
 
-  private void runVisitors(@NotNull List<PsiElement> elements,
-                           @NotNull List<ProperTextRange> ranges,
+  private void runVisitors(@Nonnull List<PsiElement> elements,
+                           @Nonnull List<ProperTextRange> ranges,
                            int chunkSize,
-                           @NotNull ProgressIndicator progress,
-                           @NotNull Set<PsiElement> skipParentsSet,
-                           @NotNull HighlightInfoHolder holder,
-                           @NotNull List<HighlightInfo> insideResult,
-                           @NotNull List<HighlightInfo> outsideResult,
+                           @Nonnull ProgressIndicator progress,
+                           @Nonnull Set<PsiElement> skipParentsSet,
+                           @Nonnull HighlightInfoHolder holder,
+                           @Nonnull List<HighlightInfo> insideResult,
+                           @Nonnull List<HighlightInfo> outsideResult,
                            boolean forceHighlightParents,
-                           @NotNull HighlightVisitor[] visitors,
-                           @NotNull Stack<TextRange> nestedRange,
-                           @NotNull Stack<List<HighlightInfo>> nestedInfos) {
+                           @Nonnull HighlightVisitor[] visitors,
+                           @Nonnull Stack<TextRange> nestedRange,
+                           @Nonnull Stack<List<HighlightInfo>> nestedInfos) {
     boolean failed = false;
     int nextLimit = chunkSize;
     for (int i = 0; i < elements.size(); i++) {
@@ -437,8 +436,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
   private static final int POST_UPDATE_ALL = 5;
 
-  private static void cancelAndRestartDaemonLater(@NotNull ProgressIndicator progress,
-                                                  @NotNull final Project project) throws ProcessCanceledException {
+  private static void cancelAndRestartDaemonLater(@Nonnull ProgressIndicator progress,
+                                                  @Nonnull final Project project) throws ProcessCanceledException {
     progress.cancel();
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       EdtExecutorService.getScheduledExecutorInstance().schedule(() -> {
@@ -462,19 +461,19 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return forceHighlightParents;
   }
 
-  protected HighlightInfoHolder createInfoHolder(@NotNull PsiFile file) {
+  protected HighlightInfoHolder createInfoHolder(@Nonnull PsiFile file) {
     final HighlightInfoFilter[] filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
     return new CustomHighlightInfoHolder(file, getColorsScheme(), filters);
   }
 
-  static void highlightTodos(@NotNull PsiFile file,
-                             @NotNull CharSequence text,
+  static void highlightTodos(@Nonnull PsiFile file,
+                             @Nonnull CharSequence text,
                              int startOffset,
                              int endOffset,
-                             @NotNull ProgressIndicator progress,
-                             @NotNull ProperTextRange priorityRange,
-                             @NotNull Collection<HighlightInfo> insideResult,
-                             @NotNull Collection<HighlightInfo> outsideResult) {
+                             @Nonnull ProgressIndicator progress,
+                             @Nonnull ProperTextRange priorityRange,
+                             @Nonnull Collection<HighlightInfo> insideResult,
+                             @Nonnull Collection<HighlightInfo> outsideResult) {
     PsiTodoSearchHelper helper = PsiTodoSearchHelper.getInstance(file.getProject());
     if (helper == null) return;
     TodoItem[] todoItems = helper.findTodoItems(file, startOffset, endOffset);
@@ -519,8 +518,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return myUpdateAll ? super.getProgress() : -1;
   }
 
-  private static List<Problem> convertToProblems(@NotNull Collection<HighlightInfo> infos,
-                                                 @NotNull VirtualFile file,
+  private static List<Problem> convertToProblems(@Nonnull Collection<HighlightInfo> infos,
+                                                 @Nonnull VirtualFile file,
                                                  final boolean hasErrorElement) {
     List<Problem> problems = new SmartList<>();
     for (HighlightInfo info : infos) {

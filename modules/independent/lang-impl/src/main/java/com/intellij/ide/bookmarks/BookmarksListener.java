@@ -20,13 +20,13 @@
 package com.intellij.ide.bookmarks;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface BookmarksListener {
   Topic<BookmarksListener> TOPIC = Topic.create("Bookmarks", BookmarksListener.class);
 
-  void bookmarkAdded(@NotNull Bookmark b);
-  void bookmarkRemoved(@NotNull Bookmark b);
+  void bookmarkAdded(@Nonnull Bookmark b);
+  void bookmarkRemoved(@Nonnull Bookmark b);
 
-  void bookmarkChanged(@NotNull Bookmark b);
+  void bookmarkChanged(@Nonnull Bookmark b);
 }

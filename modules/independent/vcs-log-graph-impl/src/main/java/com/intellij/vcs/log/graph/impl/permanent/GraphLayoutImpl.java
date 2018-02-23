@@ -18,17 +18,20 @@ package com.intellij.vcs.log.graph.impl.permanent;
 import com.intellij.vcs.log.graph.api.GraphLayout;
 import com.intellij.vcs.log.graph.utils.IntList;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
 public class GraphLayoutImpl implements GraphLayout {
-  @NotNull private final IntList myLayoutIndex;
+  @Nonnull
+  private final IntList myLayoutIndex;
 
-  @NotNull private final List<Integer> myHeadNodeIndex;
-  @NotNull private final int[] myStartLayoutIndexForHead;
+  @Nonnull
+  private final List<Integer> myHeadNodeIndex;
+  @Nonnull
+  private final int[] myStartLayoutIndexForHead;
 
-  public GraphLayoutImpl(@NotNull int[] layoutIndex, @NotNull List<Integer> headNodeIndex, @NotNull int[] startLayoutIndexForHead) {
+  public GraphLayoutImpl(@Nonnull int[] layoutIndex, @Nonnull List<Integer> headNodeIndex, @Nonnull int[] startLayoutIndexForHead) {
     myLayoutIndex = CompressedIntList.newInstance(layoutIndex);
     myHeadNodeIndex = headNodeIndex;
     myStartLayoutIndexForHead = startLayoutIndexForHead;
@@ -48,7 +51,7 @@ public class GraphLayoutImpl implements GraphLayout {
     return myHeadNodeIndex.get(getHeadOrder(layoutIndex));
   }
 
-  @NotNull
+  @Nonnull
   public List<Integer> getHeadNodeIndex() {
     return myHeadNodeIndex;
   }

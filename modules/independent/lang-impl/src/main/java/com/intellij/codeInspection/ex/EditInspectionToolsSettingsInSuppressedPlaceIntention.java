@@ -28,8 +28,8 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -41,13 +41,13 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
   private String myDisplayName;
 
   @Override
-  @NotNull
+  @Nonnull
   public String getFamilyName() {
     return InspectionsBundle.message("edit.options.of.reporter.inspection.family");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public String getText() {
     return InspectionsBundle.message("edit.inspection.options", myDisplayName);
   }
@@ -79,7 +79,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     myId = getSuppressedId(editor, file);
     if (myId != null) {
       InspectionToolWrapper toolWrapper = getTool(project, file);
@@ -97,7 +97,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
   }
 
   @Override
-  public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionToolWrapper toolWrapper = getTool(project, file);
     if (toolWrapper == null) return;
     final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);

@@ -19,9 +19,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * User: anna
  */
 public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask<JBList> {
-  public ListBackgroundUpdaterTask(@Nullable final Project project, @NotNull final String title) {
+  public ListBackgroundUpdaterTask(@Nullable final Project project, @Nonnull final String title) {
     super(project, title);
   }
 
@@ -41,7 +41,7 @@ public abstract class ListBackgroundUpdaterTask extends BackgroundUpdaterTask<JB
   }
 
   @Override
-  protected void replaceModel(@NotNull List<PsiElement> data) {
+  protected void replaceModel(@Nonnull List<PsiElement> data) {
     final Object selectedValue = myComponent.getSelectedValue();
     final int index = myComponent.getSelectedIndex();
     ((NameFilteringListModel)myComponent.getModel()).replaceAll(data);

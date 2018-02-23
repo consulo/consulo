@@ -15,7 +15,7 @@
  */
 package com.intellij.patterns;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.util.ProcessingContext;
 
 /**
@@ -29,7 +29,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
 
   public CharPattern javaIdentifierPart() {
     return with(new PatternCondition<Character>("javaIdentifierPart") {
-      public boolean accepts(@NotNull final Character character, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Character character, final ProcessingContext context) {
         return Character.isJavaIdentifierPart(character.charValue());
       }
     });
@@ -37,7 +37,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
 
   public CharPattern javaIdentifierStart() {
     return with(new PatternCondition<Character>("javaIdentifierStart") {
-      public boolean accepts(@NotNull final Character character, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Character character, final ProcessingContext context) {
         return Character.isJavaIdentifierStart(character.charValue());
       }
     });
@@ -45,7 +45,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
 
   public CharPattern whitespace() {
     return with(new PatternCondition<Character>("whitespace") {
-      public boolean accepts(@NotNull final Character character, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Character character, final ProcessingContext context) {
         return Character.isWhitespace(character.charValue());
       }
     });
@@ -53,7 +53,7 @@ public class CharPattern extends ObjectPattern<Character, CharPattern> {
 
   public CharPattern letterOrDigit() {
     return with(new PatternCondition<Character>("letterOrDigit") {
-      public boolean accepts(@NotNull final Character character, final ProcessingContext context) {
+      public boolean accepts(@Nonnull final Character character, final ProcessingContext context) {
         return Character.isLetterOrDigit(character.charValue());
       }
     });

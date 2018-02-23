@@ -43,8 +43,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -170,7 +170,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   @NonNls
   public String getId() {
     return "jdk.list";
@@ -222,12 +222,12 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     TreeUtil.expandAll(getTree());
   }
 
-  @NotNull
+  @Nonnull
   private static MyNode createSdkGroupNode(SdkType key) {
     return new MyNode(new TextConfigurable<SdkType>(key, key.getPresentableName(), "", "", key.getGroupIcon()), true);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<ProjectStructureElement>();
@@ -329,7 +329,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     return ServiceManager.getService(project, SdkListConfigurable.class);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
     return Collections.singletonList(new CopySdkAction());
@@ -338,7 +338,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   public AbstractAddGroup createAddAction() {
     return new AbstractAddGroup(ProjectBundle.message("add.action.name")) {
-      @NotNull
+      @Nonnull
       @Override
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);

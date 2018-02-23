@@ -48,8 +48,8 @@ import consulo.ui.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import sun.awt.AWTAccessor;
 
 import javax.swing.*;
@@ -195,7 +195,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public IdeFrameImpl[] getAllProjectFrames() {
     final Collection<IdeFrameImpl> ideFrames = myProject2Frame.values();
     return ideFrames.toArray(new IdeFrameImpl[ideFrames.size()]);
@@ -223,7 +223,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public Rectangle getScreenBounds(@NotNull Project project) {
+  public Rectangle getScreenBounds(@Nonnull Project project) {
     final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
     final Point onScreen = getFrame(project).getLocationOnScreen();
     final GraphicsDevice[] devices = environment.getScreenDevices();
@@ -309,7 +309,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public void setWindowMask(final Window window, @Nullable final Shape mask) {
+  public void setWindowMask(final Window window, @javax.annotation.Nullable final Shape mask) {
     try {
       if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
         AWTUtilitiesWrapper.setWindowShape(window, mask);
@@ -424,12 +424,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public StatusBar getStatusBar(@NotNull Component c) {
+  public StatusBar getStatusBar(@Nonnull Component c) {
     return getStatusBar(c, null);
   }
 
   @Override
-  public StatusBar getStatusBar(@NotNull Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(@Nonnull Component c, @javax.annotation.Nullable Project project) {
     Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof IdeFrame) {
       return ((IdeFrame)parent).getStatusBar().findChild(c);
@@ -538,7 +538,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @RequiredUIAccess
-  @NotNull
+  @Nonnull
   @Override
   public final IdeFrameEx allocateFrame(final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
@@ -571,7 +571,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     frame.addWindowListener(myActivationListener);
     frame.addComponentListener(new ComponentAdapter() {
       @Override
-      public void componentMoved(@NotNull ComponentEvent e) {
+      public void componentMoved(@Nonnull ComponentEvent e) {
         updateFrameBounds(frame);
       }
     });
@@ -640,13 +640,13 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  public final Component getFocusedComponent(@NotNull final Window window) {
+  public final Component getFocusedComponent(@Nonnull final Window window) {
     return myWindowWatcher.getFocusedComponent(window);
   }
 
   @Override
   @Nullable
-  public final Component getFocusedComponent(@Nullable final Project project) {
+  public final Component getFocusedComponent(@javax.annotation.Nullable final Project project) {
     return myWindowWatcher.getFocusedComponent(project);
   }
 
@@ -654,7 +654,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
    * Private part
    */
   @Override
-  @NotNull
+  @Nonnull
   public final CommandProcessorBase getCommandProcessor() {
     return myCommandProcessor;
   }
@@ -710,7 +710,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
     return FrameBoundsConverter.convertFromDeviceSpace(bounds);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public Element getState() {
     Element frameState = getFrameState();
@@ -786,7 +786,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public final String getComponentName() {
     return "WindowManager";
   }
@@ -814,7 +814,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
      * @param bounds the bounds in the device space
      * @return the bounds in the user space
      */
-    public static Rectangle convertFromDeviceSpace(@NotNull Rectangle bounds) {
+    public static Rectangle convertFromDeviceSpace(@Nonnull Rectangle bounds) {
       Rectangle b = bounds.getBounds();
       if (!shouldConvert()) return b;
 
@@ -840,7 +840,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
      * @param bounds the bounds in the user space
      * @return the bounds in the device space
      */
-    public static Rectangle convertToDeviceSpace(GraphicsConfiguration gc, @NotNull Rectangle bounds) {
+    public static Rectangle convertToDeviceSpace(GraphicsConfiguration gc, @Nonnull Rectangle bounds) {
       Rectangle b = bounds.getBounds();
       if (!shouldConvert()) return b;
 
@@ -862,17 +862,17 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements N
       return true;
     }
 
-    private static void scaleUp(@NotNull Rectangle bounds, @NotNull GraphicsConfiguration gc) {
+    private static void scaleUp(@Nonnull Rectangle bounds, @Nonnull GraphicsConfiguration gc) {
       scale(bounds, gc.getBounds(), JBUI.sysScale(gc));
     }
 
-    private static void scaleDown(@NotNull Rectangle bounds, @NotNull GraphicsConfiguration gc) {
+    private static void scaleDown(@Nonnull Rectangle bounds, @Nonnull GraphicsConfiguration gc) {
       float scale = JBUI.sysScale(gc);
       assert scale != 0;
       scale(bounds, gc.getBounds(), 1 / scale);
     }
 
-    private static void scale(@NotNull Rectangle bounds, @NotNull Rectangle deviceBounds, float scale) {
+    private static void scale(@Nonnull Rectangle bounds, @Nonnull Rectangle deviceBounds, float scale) {
       // On Windows, JB SDK transforms the screen bounds to the user space as follows:
       // [x, y, width, height] -> [x, y, width / scale, height / scale]
       // xy are not transformed in order to avoid overlapping of the screen bounds in multi-dpi env.

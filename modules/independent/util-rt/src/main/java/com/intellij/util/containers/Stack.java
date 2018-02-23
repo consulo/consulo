@@ -15,8 +15,6 @@
  */
 package com.intellij.util.containers;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 
 /**
@@ -58,7 +56,7 @@ public class Stack<T> extends ArrayList<T> {
     return remove(size - 1);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public T tryPop() {
     return isEmpty() ? null : pop();
   }

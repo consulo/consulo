@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.packaging.ui.TreeNodePresentation;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
 * @author nik

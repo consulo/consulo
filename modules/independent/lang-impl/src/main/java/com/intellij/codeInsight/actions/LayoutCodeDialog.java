@@ -26,14 +26,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.arrangement.Rearranger;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class LayoutCodeDialog extends DialogWrapper {
-  @NotNull  private final Project myProject;
-  @NotNull private final PsiFile myFile;
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final PsiFile myFile;
 
   private final boolean myTextSelected;
 
@@ -55,8 +57,8 @@ public class LayoutCodeDialog extends DialogWrapper {
 
   private LayoutCodeOptions myRunOptions;
 
-  public LayoutCodeDialog(@NotNull Project project,
-                          @NotNull PsiFile file,
+  public LayoutCodeDialog(@Nonnull Project project,
+                          @Nonnull PsiFile file,
                           boolean textSelected,
                           final String helpId) {
     super(project, true);
@@ -156,7 +158,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
   }
 
-  @NotNull
+  @Nonnull
   private LayoutCodeOptions createOptionsBundledOnDialog() {
     return new LayoutCodeOptions() {
       @Override
@@ -188,7 +190,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     return myButtonsPanel;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

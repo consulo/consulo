@@ -25,8 +25,8 @@ import com.intellij.openapi.diff.impl.string.DiffString;
 import com.intellij.openapi.diff.ex.DiffFragment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.diff.Diff;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,19 +59,22 @@ public class DiffFragmentBuilder {
 
   private static final Logger LOG = Logger.getInstance("#com.intellij.openapi.diff.impl.DiffFragmentBuilder");
 
-  @NotNull private final DiffString[] mySource1;
-  @NotNull private final DiffString[] mySource2;
+  @Nonnull
+  private final DiffString[] mySource1;
+  @Nonnull
+  private final DiffString[] mySource2;
   private int myLastLine1 = 1;
   private int myLastLine2 = 1;
-  @NotNull private final List<DiffFragment> myData = new LinkedList<DiffFragment>();
+  @Nonnull
+  private final List<DiffFragment> myData = new LinkedList<DiffFragment>();
 
-  public DiffFragmentBuilder(@NotNull DiffString[] source1, @NotNull DiffString[] source2) {
+  public DiffFragmentBuilder(@Nonnull DiffString[] source1, @Nonnull DiffString[] source2) {
     mySource1 = source1;
     mySource2 = source2;
     init();
   }
 
-  @NotNull
+  @Nonnull
   private List<DiffFragment> getFragments() {
     return myData;
   }
@@ -95,7 +98,7 @@ public class DiffFragmentBuilder {
     myLastLine1 = myLastLine2 = 1;
   }
 
-  private void append(int line, @NotNull TextRange range) {
+  private void append(int line, @Nonnull TextRange range) {
     LOG.debug("DiffFragmentBuilder.append(" + line + "," + range + "), modified:");
     DiffString text1 = null;
     DiffString text2 = null;
@@ -115,7 +118,7 @@ public class DiffFragmentBuilder {
     myLastLine2 = end + 1;
   }
 
-  private void change(@NotNull TextRange range1, @NotNull TextRange range2) {
+  private void change(@Nonnull TextRange range1, @Nonnull TextRange range2) {
     LOG.debug("DiffFragmentBuilder.change(" + range1 + "," + range2 + ")");
 
     DiffString text1 = null, text2 = null;
@@ -138,7 +141,7 @@ public class DiffFragmentBuilder {
     myLastLine2 = end2 + 1;
   }
 
-  private void delete(@NotNull TextRange range, int line) {
+  private void delete(@Nonnull TextRange range, int line) {
     LOG.debug("DiffFragmentBuilder.delete(" + range + "," + line + ")");
 
     DiffString text1 = null;
@@ -159,12 +162,12 @@ public class DiffFragmentBuilder {
     myLastLine2 = line + 1;
   }
 
-  @NotNull
-  private static DiffString concatenate(@NotNull DiffString[] strings, int start, int end) {
+  @Nonnull
+  private static DiffString concatenate(@Nonnull DiffString[] strings, int start, int end) {
     return DiffString.concatenate(strings, start - 1, end - start + 1);
   }
 
-  @NotNull
+  @Nonnull
   public DiffFragment[] buildFragments(@Nullable Diff.Change change) {
     while (change != null) {
       if (change.inserted > 0 && change.deleted > 0) {

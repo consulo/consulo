@@ -22,8 +22,8 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CompositeFilter implements Filter, FilterMixin {
   private boolean forceUseAllFilters;
   private final DumbService myDumbService;
 
-  public CompositeFilter(@NotNull Project project) {
+  public CompositeFilter(@Nonnull Project project) {
     myDumbService = DumbService.getInstance(project);
   }
 
@@ -142,7 +142,7 @@ public class CompositeFilter implements Filter, FilterMixin {
   }
 
   @Override
-  public void applyHeavyFilter(@NotNull Document copiedFragment, int startOffset, int startLineNumber, @NotNull Consumer<AdditionalHighlight> consumer) {
+  public void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<AdditionalHighlight> consumer) {
     final boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;
     int count = filters.size();
@@ -156,7 +156,7 @@ public class CompositeFilter implements Filter, FilterMixin {
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getUpdateMessage() {
     final boolean dumb = myDumbService.isDumb();

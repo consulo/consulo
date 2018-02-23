@@ -22,13 +22,13 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.ProperTextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.awt.*;
 
 public abstract class VisibleHighlightingPassFactory  {
-  @NotNull
-  public static ProperTextRange calculateVisibleRange(@NotNull Editor editor) {
+  @Nonnull
+  public static ProperTextRange calculateVisibleRange(@Nonnull Editor editor) {
     Rectangle rect = editor.getScrollingModel().getVisibleArea();
     LogicalPosition startPosition = editor.xyToLogicalPosition(new Point(rect.x, rect.y));
 

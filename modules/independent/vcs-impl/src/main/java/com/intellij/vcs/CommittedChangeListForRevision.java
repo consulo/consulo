@@ -20,32 +20,33 @@ import com.intellij.openapi.vcs.history.LongRevisionNumber;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeListImpl;
 import com.intellij.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Date;
 
 public class CommittedChangeListForRevision extends CommittedChangeListImpl implements VcsRevisionNumberAware {
 
-  @NotNull private VcsRevisionNumber myRevisionNumber;
+  @Nonnull
+  private VcsRevisionNumber myRevisionNumber;
 
-  public CommittedChangeListForRevision(@NotNull String subject,
-                                        @NotNull String comment,
-                                        @NotNull String committerName,
-                                        @NotNull Date commitDate,
-                                        @NotNull Collection<Change> changes,
-                                        @NotNull VcsRevisionNumber revisionNumber) {
+  public CommittedChangeListForRevision(@Nonnull String subject,
+                                        @Nonnull String comment,
+                                        @Nonnull String committerName,
+                                        @Nonnull Date commitDate,
+                                        @Nonnull Collection<Change> changes,
+                                        @Nonnull VcsRevisionNumber revisionNumber) {
     super(subject, comment, committerName, getLong(revisionNumber), commitDate, changes);
     myRevisionNumber = revisionNumber;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsRevisionNumber getRevisionNumber() {
     return myRevisionNumber;
   }
 
-  private static long getLong(@NotNull VcsRevisionNumber number) {
+  private static long getLong(@Nonnull VcsRevisionNumber number) {
     if (number instanceof LongRevisionNumber) return ((LongRevisionNumber)number).getLongRevisionNumber();
     return 0;
   }

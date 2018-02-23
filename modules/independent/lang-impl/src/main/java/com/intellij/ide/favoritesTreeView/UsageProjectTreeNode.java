@@ -27,7 +27,7 @@ import com.intellij.usages.TextChunk;
 import com.intellij.usages.UsageInfo2UsageAdapter;
 import com.intellij.usages.UsagePresentation;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,7 +45,7 @@ public class UsageProjectTreeNode extends ProjectViewNodeWithChildrenList<UsageI
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     final UsageInfo info = getValue();
     if (info == null) return false;
     final PsiElement element = info.getElement();

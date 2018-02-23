@@ -21,15 +21,15 @@ import com.intellij.psi.tree.ICompositeElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import consulo.psi.tree.ASTCompositeFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2:23/02.04.13
  */
 public class DefaultASTCompositeFactory implements ASTCompositeFactory {
-  @NotNull
+  @Nonnull
   @Override
   public CompositeElement createComposite(IElementType type) {
     if (type instanceof IFileElementType) {

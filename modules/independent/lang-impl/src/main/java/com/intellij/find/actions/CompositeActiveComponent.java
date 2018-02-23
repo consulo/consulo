@@ -16,7 +16,7 @@
 package com.intellij.find.actions;
 
 import com.intellij.ui.ActiveComponent;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,7 @@ class CompositeActiveComponent implements ActiveComponent {
   private final ActiveComponent[] myComponents;
   private final JPanel myComponent;
 
-  public CompositeActiveComponent(@NotNull ActiveComponent... components) {
+  public CompositeActiveComponent(@Nonnull ActiveComponent... components) {
     myComponents = components;
 
     myComponent = new JPanel(new FlowLayout());

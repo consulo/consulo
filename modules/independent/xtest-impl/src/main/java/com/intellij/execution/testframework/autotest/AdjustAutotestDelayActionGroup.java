@@ -20,8 +20,8 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
   public static final int MAX_DELAY = 10;
   private final DataContext myDataContext;
 
-  public AdjustAutotestDelayActionGroup(@NotNull JComponent parent) {
+  public AdjustAutotestDelayActionGroup(@Nonnull JComponent parent) {
     super("Set AutoTest Delay", true);
     myDataContext = DataManager.getInstance().getDataContext(parent);
   }
@@ -53,7 +53,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     e.getPresentation().setVisible(visible);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     final AnAction[] actions = new AnAction[MAX_DELAY];

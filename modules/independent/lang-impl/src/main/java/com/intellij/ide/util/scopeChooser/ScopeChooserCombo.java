@@ -35,8 +35,8 @@ import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -180,7 +180,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     getComboBox().setModel(createModel());
   }
 
-  @NotNull
+  @Nonnull
   private DefaultComboBoxModel<ScopeDescriptor> createModel() {
     final DefaultComboBoxModel<ScopeDescriptor> model = new DefaultComboBoxModel<>();
 
@@ -232,7 +232,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     return new Dimension(Math.min(200, minimumSize.width), minimumSize.height);
   }
 
-  private void createPredefinedScopeDescriptors(@NotNull DefaultComboBoxModel<ScopeDescriptor> model) {
+  private void createPredefinedScopeDescriptors(@Nonnull DefaultComboBoxModel<ScopeDescriptor> model) {
     @SuppressWarnings("deprecation") final DataContext context = DataManager.getInstance().getDataContext();
     for (SearchScope scope : PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(myProject, context, mySuggestSearchInLibs,
                                                                                              myPrevSearchFiles, myCurrentSelection,
@@ -275,7 +275,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   private static class ScopeSeparator extends ScopeDescriptor {
     private final String myText;
 
-    ScopeSeparator(@NotNull String text) {
+    ScopeSeparator(@Nonnull String text) {
       super(null);
       myText = text;
     }

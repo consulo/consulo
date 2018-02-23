@@ -22,9 +22,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,7 +66,7 @@ public class BrowseFilesListener implements ActionListener {
     return null;
   }
 
-  protected void doSetText(@NotNull final String path) {
+  protected void doSetText(@Nonnull final String path) {
     myTextField.setText(path);
   }
 

@@ -16,10 +16,8 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -33,24 +31,24 @@ public interface SMTRunnerEventsListener {
    * On start testing, before tests and suits launching
    * @param testsRoot
    */
-  void onTestingStarted(@NotNull SMTestProxy.SMRootTestProxy testsRoot);
+  void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot);
   /**
    * After test framework finish testing
    * @param testsRootNode
    */
-  void onTestingFinished(@NotNull SMTestProxy.SMRootTestProxy testsRoot);
+  void onTestingFinished(@Nonnull SMTestProxy.SMRootTestProxy testsRoot);
   /*
    * Tests count in next suite. For several suites this method will be invoked several times
    */
   void onTestsCountInSuite(int count);
 
-  void onTestStarted(@NotNull SMTestProxy test);
-  void onTestFinished(@NotNull SMTestProxy test);
-  void onTestFailed(@NotNull SMTestProxy test);
-  void onTestIgnored(@NotNull SMTestProxy test);
+  void onTestStarted(@Nonnull SMTestProxy test);
+  void onTestFinished(@Nonnull SMTestProxy test);
+  void onTestFailed(@Nonnull SMTestProxy test);
+  void onTestIgnored(@Nonnull SMTestProxy test);
 
-  void onSuiteFinished(@NotNull SMTestProxy suite);
-  void onSuiteStarted(@NotNull SMTestProxy suite);
+  void onSuiteFinished(@Nonnull SMTestProxy suite);
+  void onSuiteStarted(@Nonnull SMTestProxy suite);
 
   // Custom progress statistics
 

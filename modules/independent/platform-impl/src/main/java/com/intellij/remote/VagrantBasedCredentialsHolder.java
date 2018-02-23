@@ -17,8 +17,8 @@ package com.intellij.remote;
 
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author traff
@@ -27,7 +27,7 @@ public class VagrantBasedCredentialsHolder {
   private static final String VAGRANT_FOLDER = "VAGRANT_FOLDER";
   private static final String MACHINE_NAME = "MACHINE_NAME";
 
-  @NotNull
+  @Nonnull
   private String myVagrantFolder;
   private String myMachineName;
 
@@ -39,20 +39,20 @@ public class VagrantBasedCredentialsHolder {
    * @deprecated use constructor supporting multiple machines configuration
    */
   @Deprecated
-  public VagrantBasedCredentialsHolder(@NotNull String folder) {
+  public VagrantBasedCredentialsHolder(@Nonnull String folder) {
     myVagrantFolder = folder;
   }
 
-  public VagrantBasedCredentialsHolder(@NotNull String vagrantFolder, @Nullable String machineName) {
+  public VagrantBasedCredentialsHolder(@Nonnull String vagrantFolder, @Nullable String machineName) {
     myVagrantFolder = vagrantFolder;
     myMachineName = machineName;
   }
 
-  public void setVagrantFolder(@NotNull String vagrantFolder) {
+  public void setVagrantFolder(@Nonnull String vagrantFolder) {
     myVagrantFolder = vagrantFolder;
   }
 
-  @NotNull
+  @Nonnull
   public String getVagrantFolder() {
     return myVagrantFolder;
   }

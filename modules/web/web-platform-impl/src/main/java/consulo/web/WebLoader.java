@@ -29,7 +29,7 @@ import consulo.web.main.WebPostStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.servlet.ui.UIIconServlet;
 import consulo.web.servlet.ui.UIServlet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
@@ -74,7 +74,7 @@ public class WebLoader {
     }
   }
 
-  @NotNull
+  @Nonnull
   @SuppressWarnings("unchecked")
   public Class<? extends RootUIServlet>[] getServletClasses() {
     return new Class[]{RootUIServlet.class, UIIconServlet.class};

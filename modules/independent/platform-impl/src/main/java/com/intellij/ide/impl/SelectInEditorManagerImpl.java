@@ -35,8 +35,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.FocusEvent;
@@ -85,7 +85,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
     });
   }
 
-  private void doSelect(final boolean toUseNormalSelection, @NotNull final Editor editor,
+  private void doSelect(final boolean toUseNormalSelection, @Nonnull final Editor editor,
                         final boolean toSelectLine,
                         final TextRange textRange) {
     int startOffset = textRange.getStartOffset();

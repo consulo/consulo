@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.editor.event;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public abstract class EditorFactoryAdapter implements EditorFactoryListener {
   @Override
-  public void editorCreated(@NotNull EditorFactoryEvent event) {
+  public void editorCreated(@Nonnull EditorFactoryEvent event) {
   }
 
   @Override
-  public void editorReleased(@NotNull EditorFactoryEvent event) {
+  public void editorReleased(@Nonnull EditorFactoryEvent event) {
   }
 }

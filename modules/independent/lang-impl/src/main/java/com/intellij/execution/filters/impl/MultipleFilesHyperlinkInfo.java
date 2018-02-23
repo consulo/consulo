@@ -33,8 +33,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +47,14 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
   private final int myLineNumber;
   private final Project myProject;
 
-  public MultipleFilesHyperlinkInfo(@NotNull List<VirtualFile> virtualFiles, int lineNumber, @NotNull Project project) {
+  public MultipleFilesHyperlinkInfo(@Nonnull List<VirtualFile> virtualFiles, int lineNumber, @Nonnull Project project) {
     myVirtualFiles = virtualFiles;
     myLineNumber = lineNumber;
     myProject = project;
   }
 
   @Override
-  public void navigate(@NotNull final Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+  public void navigate(@Nonnull final Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
     List<PsiFile> currentFiles = new ArrayList<PsiFile>();
 
     AccessToken accessToken = ReadAction.start();

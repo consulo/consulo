@@ -29,7 +29,7 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -50,7 +50,7 @@ public class UiDebugger extends JPanel implements Disposable {
     myTabs.getPresentation().setPaintBorder(JBUI.scale(1), 0, 0, 0)
             .setActiveTabFillIn(JBColor.GRAY).setUiDecorator(new UiDecorator() {
       @Override
-      @NotNull
+      @Nonnull
       public UiDecoration getDecoration() {
         return new UiDecoration(null, JBUI.insets(4, 4, 4, 4));
       }
@@ -109,7 +109,7 @@ public class UiDebugger extends JPanel implements Disposable {
         return result;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       protected Action[] createActions() {
         return new Action[]{new AbstractAction("Close") {

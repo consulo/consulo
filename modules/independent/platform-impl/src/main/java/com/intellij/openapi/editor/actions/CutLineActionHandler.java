@@ -22,8 +22,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredWriteAction;
 
 class CutLineActionHandler extends EditorWriteActionHandler {
@@ -86,7 +87,7 @@ class CutLineActionHandler extends EditorWriteActionHandler {
     delete(editor, caret, start, end);
   }
 
-  private void delete(@NotNull Editor editor, @NotNull Caret caret, int start, int end) {
+  private void delete(@Nonnull Editor editor, @Nonnull Caret caret, int start, int end) {
     if (myCopyToClipboard) {
       KillRingUtil.copyToKillRing(editor, start, end, true);
     }

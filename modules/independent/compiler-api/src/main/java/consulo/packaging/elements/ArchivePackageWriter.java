@@ -15,7 +15,7 @@
  */
 package consulo.packaging.elements;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,13 +26,13 @@ import java.io.InputStream;
  * @since 13.04.2016
  */
 public interface ArchivePackageWriter<ArchiveObject> {
-  @NotNull
-  ArchiveObject createArchiveObject(@NotNull File tempFile) throws IOException;
+  @Nonnull
+  ArchiveObject createArchiveObject(@Nonnull File tempFile) throws IOException;
 
-  void addDirectory(@NotNull ArchiveObject archiveObject, @NotNull String relativePath) throws IOException;
+  void addDirectory(@Nonnull ArchiveObject archiveObject, @Nonnull String relativePath) throws IOException;
 
-  void addFile(@NotNull ArchiveObject archiveObject, @NotNull InputStream stream, @NotNull String relativePath, long fileLength, long lastModified)
+  void addFile(@Nonnull ArchiveObject archiveObject, @Nonnull InputStream stream, @Nonnull String relativePath, long fileLength, long lastModified)
           throws IOException;
 
-  void close(@NotNull ArchiveObject archiveObject) throws IOException;
+  void close(@Nonnull ArchiveObject archiveObject) throws IOException;
 }

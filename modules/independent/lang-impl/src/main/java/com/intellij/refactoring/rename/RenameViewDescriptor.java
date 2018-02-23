@@ -27,7 +27,7 @@ import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.ArrayUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -70,7 +70,7 @@ public class RenameViewDescriptor implements UsageViewDescriptor{
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public PsiElement[] getElements() {
     return myElements;
   }

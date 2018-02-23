@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Allows to display error text in an input dialog for input strings that do not match

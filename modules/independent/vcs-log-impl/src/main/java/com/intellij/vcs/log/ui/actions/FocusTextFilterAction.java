@@ -24,7 +24,7 @@ import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import com.intellij.vcs.log.ui.frame.MainFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FocusTextFilterAction extends DumbAwareAction {
   public FocusTextFilterAction() {
@@ -32,14 +32,14 @@ public class FocusTextFilterAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getProject();
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     e.getPresentation().setEnabledAndVisible(project != null && ui != null && ui instanceof VcsLogUiImpl);
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     MainFrame mainFrame = ((VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI)).getMainFrame();
     if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {

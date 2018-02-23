@@ -31,8 +31,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -45,12 +44,17 @@ public class TreeModelBuilder {
 
   private static final int UNVERSIONED_MAX_SIZE = 50;
 
-  @NotNull protected final Project myProject;
+  @Nonnull
+  protected final Project myProject;
   protected final boolean myShowFlatten;
-  @NotNull protected final DefaultTreeModel myModel;
-  @NotNull protected final ChangesBrowserNode myRoot;
-  @NotNull private final Map<ChangesBrowserNode, ChangesGroupingPolicy> myGroupingPoliciesCache;
-  @NotNull private final Map<ChangesBrowserNode, Map<String, ChangesBrowserNode>> myFoldersCache;
+  @Nonnull
+  protected final DefaultTreeModel myModel;
+  @Nonnull
+  protected final ChangesBrowserNode myRoot;
+  @Nonnull
+  private final Map<ChangesBrowserNode, ChangesGroupingPolicy> myGroupingPoliciesCache;
+  @Nonnull
+  private final Map<ChangesBrowserNode, Map<String, ChangesBrowserNode>> myFoldersCache;
 
   @SuppressWarnings("unchecked")
   private static final Comparator<ChangesBrowserNode> BROWSER_NODE_COMPARATOR = (node1, node2) -> {
@@ -71,7 +75,7 @@ public class TreeModelBuilder {
   };
 
 
-  public TreeModelBuilder(@NotNull Project project, boolean showFlatten) {
+  public TreeModelBuilder(@Nonnull Project project, boolean showFlatten) {
     myProject = project;
     myShowFlatten = showFlatten;
     myRoot = ChangesBrowserNode.create(myProject, ROOT_NODE_VALUE);
@@ -81,51 +85,51 @@ public class TreeModelBuilder {
   }
 
 
-  @NotNull
-  public static DefaultTreeModel buildEmpty(@NotNull Project project) {
+  @Nonnull
+  public static DefaultTreeModel buildEmpty(@Nonnull Project project) {
     return new DefaultTreeModel(ChangesBrowserNode.create(project, ROOT_NODE_VALUE));
   }
 
-  @NotNull
-  public static DefaultTreeModel buildFromChanges(@NotNull Project project,
+  @Nonnull
+  public static DefaultTreeModel buildFromChanges(@Nonnull Project project,
                                                   boolean showFlatten,
-                                                  @NotNull Collection<? extends Change> changes,
-                                                  @Nullable ChangeNodeDecorator changeNodeDecorator) {
+                                                  @Nonnull Collection<? extends Change> changes,
+                                                  @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     return new TreeModelBuilder(project, showFlatten)
             .setChanges(changes, changeNodeDecorator)
             .build();
   }
 
-  @NotNull
-  public static DefaultTreeModel buildFromFilePaths(@NotNull Project project,
+  @Nonnull
+  public static DefaultTreeModel buildFromFilePaths(@Nonnull Project project,
                                                     boolean showFlatten,
-                                                    @NotNull Collection<FilePath> filePaths) {
+                                                    @Nonnull Collection<FilePath> filePaths) {
     return new TreeModelBuilder(project, showFlatten)
             .setFilePaths(filePaths)
             .build();
   }
 
-  @NotNull
-  public static DefaultTreeModel buildFromChangeLists(@NotNull Project project,
+  @Nonnull
+  public static DefaultTreeModel buildFromChangeLists(@Nonnull Project project,
                                                       boolean showFlatten,
-                                                      @NotNull Collection<? extends ChangeList> changeLists) {
+                                                      @Nonnull Collection<? extends ChangeList> changeLists) {
     return new TreeModelBuilder(project, showFlatten)
             .setChangeLists(changeLists)
             .build();
   }
 
-  @NotNull
-  public static DefaultTreeModel buildFromVirtualFiles(@NotNull Project project,
+  @Nonnull
+  public static DefaultTreeModel buildFromVirtualFiles(@Nonnull Project project,
                                                        boolean showFlatten,
-                                                       @NotNull Collection<VirtualFile> virtualFiles) {
+                                                       @Nonnull Collection<VirtualFile> virtualFiles) {
     return new TreeModelBuilder(project, showFlatten)
             .setVirtualFiles(virtualFiles, null)
             .build();
   }
 
 
-  @NotNull
-  public TreeModelBuilder setChanges(@NotNull Collection<? extends Change> changes, @Nullable ChangeNodeDecorator changeNodeDecorator) {
+  @Nonnull
+  public TreeModelBuilder setChanges(@Nonnull Collection<? extends Change> changes, @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     List<? extends Change> sortedChanges = ContainerUtil.sorted(changes, PATH_LENGTH_COMPARATOR);
     for (Change change : sortedChanges) {
       insertChangeNode(change, myRoot, createChangeNode(change, changeNodeDecorator));
@@ -133,8 +137,8 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setUnversioned(@Nullable List<VirtualFile> unversionedFiles) {
+  @Nonnull
+  public TreeModelBuilder setUnversioned(@javax.annotation.Nullable List<VirtualFile> unversionedFiles) {
     if (ContainerUtil.isEmpty(unversionedFiles)) return this;
     int dirsCount = ContainerUtil.count(unversionedFiles, it -> it.isDirectory());
     int filesCount = unversionedFiles.size() - dirsCount;
@@ -143,8 +147,8 @@ public class TreeModelBuilder {
     return insertSpecificNodeToModel(unversionedFiles, node);
   }
 
-  @NotNull
-  public TreeModelBuilder setIgnored(@Nullable List<VirtualFile> ignoredFiles, boolean updatingMode) {
+  @Nonnull
+  public TreeModelBuilder setIgnored(@javax.annotation.Nullable List<VirtualFile> ignoredFiles, boolean updatingMode) {
     if (ContainerUtil.isEmpty(ignoredFiles)) return this;
     int dirsCount = ContainerUtil.count(ignoredFiles, it -> it.isDirectory());
     int filesCount = ignoredFiles.size() - dirsCount;
@@ -153,9 +157,9 @@ public class TreeModelBuilder {
     return insertSpecificNodeToModel(ignoredFiles, node);
   }
 
-  @NotNull
-  private TreeModelBuilder insertSpecificNodeToModel(@NotNull List<VirtualFile> specificFiles,
-                                                     @NotNull ChangesBrowserSpecificFilesNode node) {
+  @Nonnull
+  private TreeModelBuilder insertSpecificNodeToModel(@Nonnull List<VirtualFile> specificFiles,
+                                                     @Nonnull ChangesBrowserSpecificFilesNode node) {
     myModel.insertNodeInto(node, myRoot, myRoot.getChildCount());
     if (!node.isManyFiles()) {
       insertFilesIntoNode(specificFiles, node);
@@ -163,8 +167,8 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setChangeLists(@NotNull Collection<? extends ChangeList> changeLists) {
+  @Nonnull
+  public TreeModelBuilder setChangeLists(@Nonnull Collection<? extends ChangeList> changeLists) {
     final RemoteRevisionsCache revisionsCache = RemoteRevisionsCache.getInstance(myProject);
     for (ChangeList list : changeLists) {
       List<Change> changes = ContainerUtil.sorted(list.getChanges(), PATH_LENGTH_COMPARATOR);
@@ -185,25 +189,25 @@ public class TreeModelBuilder {
     return new ChangesBrowserChangeNode(myProject, change, decorator);
   }
 
-  @NotNull
-  public TreeModelBuilder setLockedFolders(@Nullable List<VirtualFile> lockedFolders) {
+  @Nonnull
+  public TreeModelBuilder setLockedFolders(@javax.annotation.Nullable List<VirtualFile> lockedFolders) {
     return setVirtualFiles(lockedFolders, ChangesBrowserNode.LOCKED_FOLDERS_TAG);
   }
 
-  @NotNull
-  public TreeModelBuilder setModifiedWithoutEditing(@NotNull List<VirtualFile> modifiedWithoutEditing) {
+  @Nonnull
+  public TreeModelBuilder setModifiedWithoutEditing(@Nonnull List<VirtualFile> modifiedWithoutEditing) {
     return setVirtualFiles(modifiedWithoutEditing, ChangesBrowserNode.MODIFIED_WITHOUT_EDITING_TAG);
   }
 
-  @NotNull
-  private TreeModelBuilder setVirtualFiles(@Nullable Collection<VirtualFile> files, @Nullable Object tag) {
+  @Nonnull
+  private TreeModelBuilder setVirtualFiles(@javax.annotation.Nullable Collection<VirtualFile> files, @javax.annotation.Nullable Object tag) {
     if (ContainerUtil.isEmpty(files)) return this;
     insertFilesIntoNode(files, createTagNode(tag));
     return this;
   }
 
-  @NotNull
-  private ChangesBrowserNode createTagNode(@Nullable Object tag) {
+  @Nonnull
+  private ChangesBrowserNode createTagNode(@javax.annotation.Nullable Object tag) {
     if (tag == null) return myRoot;
 
     ChangesBrowserNode subtreeRoot = ChangesBrowserNode.create(myProject, tag);
@@ -211,15 +215,15 @@ public class TreeModelBuilder {
     return subtreeRoot;
   }
 
-  private void insertFilesIntoNode(@NotNull Collection<VirtualFile> files, @NotNull ChangesBrowserNode subtreeRoot) {
+  private void insertFilesIntoNode(@Nonnull Collection<VirtualFile> files, @Nonnull ChangesBrowserNode subtreeRoot) {
     List<VirtualFile> sortedFiles = ContainerUtil.sorted(files, VirtualFileHierarchicalComparator.getInstance());
     for (VirtualFile file : sortedFiles) {
       insertChangeNode(file, subtreeRoot, ChangesBrowserNode.create(myProject, file));
     }
   }
 
-  @NotNull
-  public TreeModelBuilder setLocallyDeletedPaths(@Nullable Collection<LocallyDeletedChange> locallyDeletedChanges) {
+  @Nonnull
+  public TreeModelBuilder setLocallyDeletedPaths(@javax.annotation.Nullable Collection<LocallyDeletedChange> locallyDeletedChanges) {
     if (ContainerUtil.isEmpty(locallyDeletedChanges)) return this;
     ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOCALLY_DELETED_NODE_TAG);
 
@@ -237,13 +241,13 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setFilePaths(@NotNull Collection<FilePath> filePaths) {
+  @Nonnull
+  public TreeModelBuilder setFilePaths(@Nonnull Collection<FilePath> filePaths) {
     return setFilePaths(filePaths, myRoot);
   }
 
-  @NotNull
-  private TreeModelBuilder setFilePaths(@NotNull Collection<FilePath> filePaths, @NotNull ChangesBrowserNode subtreeRoot) {
+  @Nonnull
+  private TreeModelBuilder setFilePaths(@Nonnull Collection<FilePath> filePaths, @Nonnull ChangesBrowserNode subtreeRoot) {
     for (FilePath file : filePaths) {
       assert file != null;
       // whether a folder does not matter
@@ -263,8 +267,8 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setSwitchedRoots(@Nullable Map<VirtualFile, String> switchedRoots) {
+  @Nonnull
+  public TreeModelBuilder setSwitchedRoots(@javax.annotation.Nullable Map<VirtualFile, String> switchedRoots) {
     if (ContainerUtil.isEmpty(switchedRoots)) return this;
     final ChangesBrowserNode rootsHeadNode = createTagNode(ChangesBrowserNode.SWITCHED_ROOTS_TAG);
     rootsHeadNode.setAttributes(SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
@@ -289,8 +293,8 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setSwitchedFiles(@NotNull MultiMap<String, VirtualFile> switchedFiles) {
+  @Nonnull
+  public TreeModelBuilder setSwitchedFiles(@Nonnull MultiMap<String, VirtualFile> switchedFiles) {
     if (switchedFiles.isEmpty()) return this;
     ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.SWITCHED_FILES_TAG);
     for(String branchName: switchedFiles.keySet()) {
@@ -308,8 +312,8 @@ public class TreeModelBuilder {
     return this;
   }
 
-  @NotNull
-  public TreeModelBuilder setLogicallyLockedFiles(@Nullable Map<VirtualFile, LogicalLock> logicallyLockedFiles) {
+  @Nonnull
+  public TreeModelBuilder setLogicallyLockedFiles(@javax.annotation.Nullable Map<VirtualFile, LogicalLock> logicallyLockedFiles) {
     if (ContainerUtil.isEmpty(logicallyLockedFiles)) return this;
     final ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOGICALLY_LOCKED_TAG);
 
@@ -323,16 +327,16 @@ public class TreeModelBuilder {
     return this;
   }
 
-  protected void insertChangeNode(@NotNull Object change,
-                                  @NotNull ChangesBrowserNode subtreeRoot,
-                                  @NotNull ChangesBrowserNode node) {
+  protected void insertChangeNode(@Nonnull Object change,
+                                  @Nonnull ChangesBrowserNode subtreeRoot,
+                                  @Nonnull ChangesBrowserNode node) {
     insertChangeNode(change, subtreeRoot, node, this::createPathNode);
   }
 
-  protected void insertChangeNode(@NotNull Object change,
-                                  @NotNull ChangesBrowserNode subtreeRoot,
-                                  @NotNull ChangesBrowserNode node,
-                                  @NotNull Convertor<StaticFilePath, ChangesBrowserNode> nodeBuilder) {
+  protected void insertChangeNode(@Nonnull Object change,
+                                  @Nonnull ChangesBrowserNode subtreeRoot,
+                                  @Nonnull ChangesBrowserNode node,
+                                  @Nonnull Convertor<StaticFilePath, ChangesBrowserNode> nodeBuilder) {
     final StaticFilePath pathKey = getKey(change);
     ChangesBrowserNode parentNode = getParentNodeFor(pathKey, subtreeRoot, nodeBuilder);
     myModel.insertNodeInto(node, parentNode, myModel.getChildCount(parentNode));
@@ -342,7 +346,7 @@ public class TreeModelBuilder {
     }
   }
 
-  @NotNull
+  @Nonnull
   public DefaultTreeModel build() {
     collapseDirectories(myModel, myRoot);
     sortNodes();
@@ -355,7 +359,7 @@ public class TreeModelBuilder {
     myModel.nodeStructureChanged((TreeNode)myModel.getRoot());
   }
 
-  private static void collapseDirectories(@NotNull DefaultTreeModel model, @NotNull ChangesBrowserNode node) {
+  private static void collapseDirectories(@Nonnull DefaultTreeModel model, @Nonnull ChangesBrowserNode node) {
     if (node.getUserObject() instanceof FilePath && node.getChildCount() == 1) {
       final ChangesBrowserNode child = (ChangesBrowserNode)node.getChildAt(0);
       if (child.getUserObject() instanceof FilePath && !child.isLeaf()) {
@@ -376,8 +380,8 @@ public class TreeModelBuilder {
     }
   }
 
-  @NotNull
-  private static StaticFilePath getKey(@NotNull Object o) {
+  @Nonnull
+  private static StaticFilePath getKey(@Nonnull Object o) {
     if (o instanceof Change) {
       return staticFrom(ChangesUtil.getFilePath((Change)o));
     }
@@ -397,8 +401,8 @@ public class TreeModelBuilder {
     throw new IllegalArgumentException("Unknown type - " + o.getClass());
   }
 
-  @NotNull
-  private static StaticFilePath staticFrom(@NotNull FilePath fp) {
+  @Nonnull
+  private static StaticFilePath staticFrom(@Nonnull FilePath fp) {
     final String path = fp.getPath();
     if (fp.isNonLocal() && (! FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path))) {
       return new StaticFilePath(fp.isDirectory(), fp.getIOFile().getPath().replace('\\', '/'), fp.getVirtualFile());
@@ -406,13 +410,13 @@ public class TreeModelBuilder {
     return new StaticFilePath(fp.isDirectory(), new File(fp.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(), fp.getVirtualFile());
   }
 
-  @NotNull
-  private static StaticFilePath staticFrom(@NotNull VirtualFile vf) {
+  @Nonnull
+  private static StaticFilePath staticFrom(@Nonnull VirtualFile vf) {
     return new StaticFilePath(vf.isDirectory(), vf.getPath(), vf);
   }
 
-  @NotNull
-  public static FilePath getPathForObject(@NotNull Object o) {
+  @Nonnull
+  public static FilePath getPathForObject(@Nonnull Object o) {
     if (o instanceof Change) {
       return ChangesUtil.getFilePath((Change)o);
     }
@@ -432,16 +436,16 @@ public class TreeModelBuilder {
     throw new IllegalArgumentException("Unknown type - " + o.getClass());
   }
 
-  @NotNull
-  protected ChangesBrowserNode getParentNodeFor(@NotNull StaticFilePath nodePath,
-                                                @NotNull ChangesBrowserNode subtreeRoot) {
+  @Nonnull
+  protected ChangesBrowserNode getParentNodeFor(@Nonnull StaticFilePath nodePath,
+                                                @Nonnull ChangesBrowserNode subtreeRoot) {
     return getParentNodeFor(nodePath, subtreeRoot, this::createPathNode);
   }
 
-  @NotNull
-  protected ChangesBrowserNode getParentNodeFor(@NotNull StaticFilePath nodePath,
-                                                @NotNull ChangesBrowserNode subtreeRoot,
-                                                @NotNull Convertor<StaticFilePath, ChangesBrowserNode> nodeBuilder) {
+  @Nonnull
+  protected ChangesBrowserNode getParentNodeFor(@Nonnull StaticFilePath nodePath,
+                                                @Nonnull ChangesBrowserNode subtreeRoot,
+                                                @Nonnull Convertor<StaticFilePath, ChangesBrowserNode> nodeBuilder) {
     if (myShowFlatten) {
       return subtreeRoot;
     }
@@ -473,14 +477,14 @@ public class TreeModelBuilder {
     return subtreeRoot;
   }
 
-  @Nullable
-  private ChangesBrowserNode createPathNode(@NotNull StaticFilePath path) {
+  @javax.annotation.Nullable
+  private ChangesBrowserNode createPathNode(@Nonnull StaticFilePath path) {
     FilePath filePath = path.getVf() == null ? VcsUtil.getFilePath(path.getPath(), true) : VcsUtil.getFilePath(path.getVf());
     return ChangesBrowserNode.create(myProject, filePath);
   }
 
-  @NotNull
-  private Map<String, ChangesBrowserNode> getFolderCache(@NotNull ChangesBrowserNode subtreeRoot) {
+  @Nonnull
+  private Map<String, ChangesBrowserNode> getFolderCache(@Nonnull ChangesBrowserNode subtreeRoot) {
     return myFoldersCache.computeIfAbsent(subtreeRoot, (key) -> new HashMap<>());
   }
 
@@ -488,23 +492,25 @@ public class TreeModelBuilder {
     return myModel.getChildCount(myRoot) == 0;
   }
 
-  @NotNull
+  @Nonnull
   @Deprecated
-  public DefaultTreeModel buildModel(@NotNull List<Change> changes, @Nullable ChangeNodeDecorator changeNodeDecorator) {
+  public DefaultTreeModel buildModel(@Nonnull List<Change> changes, @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     return setChanges(changes, changeNodeDecorator).build();
   }
 
 
   private static class MyGroupingPolicyFactoryMap extends FactoryMap<ChangesBrowserNode, ChangesGroupingPolicy> {
-    @NotNull private final Project myProject;
-    @NotNull private final DefaultTreeModel myModel;
+    @Nonnull
+    private final Project myProject;
+    @Nonnull
+    private final DefaultTreeModel myModel;
 
-    public MyGroupingPolicyFactoryMap(@NotNull Project project, @NotNull DefaultTreeModel model) {
+    public MyGroupingPolicyFactoryMap(@Nonnull Project project, @Nonnull DefaultTreeModel model) {
       myProject = project;
       myModel = model;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected ChangesGroupingPolicy create(ChangesBrowserNode key) {
       ChangesGroupingPolicyFactory factory = ChangesGroupingPolicyFactory.getInstance(myProject);

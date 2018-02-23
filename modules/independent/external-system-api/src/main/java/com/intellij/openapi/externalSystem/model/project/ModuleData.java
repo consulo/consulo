@@ -3,8 +3,8 @@ package com.intellij.openapi.externalSystem.model.project;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -19,29 +19,34 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
 
   private static final long serialVersionUID = 1L;
 
-  @NotNull private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtil.newHashMap();
-  @NotNull private final String myId;
-  @NotNull private final String myExternalConfigPath;
-  @NotNull private String myModuleDirPath;
+  @Nonnull
+  private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = ContainerUtil.newHashMap();
+  @Nonnull
+  private final String myId;
+  @Nonnull
+  private final String myExternalConfigPath;
+  @Nonnull
+  private String myModuleDirPath;
   @Nullable private String group;
   @Nullable private String version;
-  @NotNull private List<File> myArtifacts;
+  @Nonnull
+  private List<File> myArtifacts;
 
   private boolean myInheritProjectCompileOutputPath = true;
 
   @Deprecated
-  public ModuleData(@NotNull ProjectSystemId owner,
-                    @NotNull String name,
-                    @NotNull String moduleDir,
-                    @NotNull String externalConfigPath) {
+  public ModuleData(@Nonnull ProjectSystemId owner,
+                    @Nonnull String name,
+                    @Nonnull String moduleDir,
+                    @Nonnull String externalConfigPath) {
     this("", owner, name, moduleDir, externalConfigPath);
   }
 
-  public ModuleData(@NotNull String id,
-                    @NotNull ProjectSystemId owner,
-                    @NotNull String name,
-                    @NotNull String moduleFileDirectoryPath,
-                    @NotNull String externalConfigPath) {
+  public ModuleData(@Nonnull String id,
+                    @Nonnull ProjectSystemId owner,
+                    @Nonnull String name,
+                    @Nonnull String moduleFileDirectoryPath,
+                    @Nonnull String externalConfigPath) {
     super(owner, name, name.replaceAll("(/|\\\\)", "_"));
     myId = id;
     myExternalConfigPath = externalConfigPath;
@@ -49,24 +54,24 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     setModuleDirPath(moduleFileDirectoryPath);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return myId;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getLinkedExternalProjectPath() {
     return myExternalConfigPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getModuleDirPath() {
     return myModuleDirPath;
   }
 
-  public void setModuleDirPath(@NotNull String path) {
+  public void setModuleDirPath(@Nonnull String path) {
     myModuleDirPath = path;
   }
 
@@ -86,12 +91,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
    *              {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
    *              doesn't provide specific compile output path
    */
-  @Nullable
-  public String getCompileOutputPath(@NotNull ExternalSystemSourceType type) {
+  @javax.annotation.Nullable
+  public String getCompileOutputPath(@Nonnull ExternalSystemSourceType type) {
     return myCompileOutputPaths.get(type);
   }
 
-  public void setCompileOutputPath(@NotNull ExternalSystemSourceType type, @Nullable String path) {
+  public void setCompileOutputPath(@Nonnull ExternalSystemSourceType type, @javax.annotation.Nullable String path) {
     if (path == null) {
       myCompileOutputPaths.remove(type);
       return;
@@ -99,12 +104,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getGroup() {
     return group;
   }
 
-  public void setGroup(@Nullable String group) {
+  public void setGroup(@javax.annotation.Nullable String group) {
     this.group = group;
   }
 
@@ -113,16 +118,16 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     return version;
   }
 
-  public void setVersion(@Nullable String version) {
+  public void setVersion(@javax.annotation.Nullable String version) {
     this.version = version;
   }
 
-  @NotNull
+  @Nonnull
   public List<File> getArtifacts() {
     return myArtifacts;
   }
 
-  public void setArtifacts(@NotNull List<File> artifacts) {
+  public void setArtifacts(@Nonnull List<File> artifacts) {
     myArtifacts = artifacts;
   }
 

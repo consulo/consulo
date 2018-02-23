@@ -18,7 +18,7 @@ package com.intellij.openapi.diagnostic;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,13 +50,13 @@ public class FrequentEventDetector {
     this(eventCountThreshold, timeSpanMs, Level.INFO);
   }
 
-  public FrequentEventDetector(int eventCountThreshold, int timeSpanMs, @NotNull Level level) {
+  public FrequentEventDetector(int eventCountThreshold, int timeSpanMs, @Nonnull Level level) {
     myEventCountThreshold = eventCountThreshold;
     myTimeSpanMs = timeSpanMs;
     myLevel = level;
   }
 
-  public void eventHappened(@NotNull Object event) {
+  public void eventHappened(@Nonnull Object event) {
     if (!enabled) return;
     if (myEventsPosted.incrementAndGet() > myEventCountThreshold) {
       boolean shouldLog = false;
@@ -100,7 +100,7 @@ public class FrequentEventDetector {
     }
   }
 
-  public static void disableUntil(@NotNull Disposable reenable) {
+  public static void disableUntil(@Nonnull Disposable reenable) {
     enabled = false;
     Disposer.register(reenable, new Disposable() {
       @Override

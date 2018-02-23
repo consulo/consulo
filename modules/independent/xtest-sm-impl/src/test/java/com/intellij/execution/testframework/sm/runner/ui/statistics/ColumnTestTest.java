@@ -19,7 +19,7 @@ import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.UITestUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.ColumnInfo;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
@@ -125,8 +125,8 @@ public class ColumnTestTest extends BaseColumnRenderingTest {
     }
 
     @Override
-    public void append(@NotNull final String fragment,
-                       @NotNull final SimpleTextAttributes attributes,
+    public void append(@Nonnull final String fragment,
+                       @Nonnull final SimpleTextAttributes attributes,
                        final boolean isMainText) {
       myFragmentsContainer.append(fragment, attributes);
     }

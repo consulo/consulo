@@ -38,8 +38,8 @@ import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -207,7 +207,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     return myActiveTab.createHighlighter(scheme);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected FileType getFileType() {
     ensureTabs();
@@ -457,7 +457,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     private final Configurable myConfigurable;
     private JComponent myComponent;
 
-    public ConfigurableWrapper(@NotNull Configurable configurable, CodeStyleSettings settings) {
+    public ConfigurableWrapper(@Nonnull Configurable configurable, CodeStyleSettings settings) {
       super(settings);
       myConfigurable = configurable;
 
@@ -481,7 +481,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     @SuppressWarnings("ConstantConditions")
-    @NotNull
+    @Nonnull
     @Override
     protected FileType getFileType() {
       Language language = getDefaultLanguage();
@@ -590,7 +590,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     }
 
     @SuppressWarnings("ConstantConditions")
-    @NotNull
+    @Nonnull
     @Override
     protected FileType getFileType() {
       Language language = TabbedLanguageCodeStylePanel.this.getDefaultLanguage();
@@ -663,14 +663,14 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
   }
 
   public interface TabChangeListener {
-    void tabChanged(@NotNull TabbedLanguageCodeStylePanel source, @NotNull String tabTitle);
+    void tabChanged(@Nonnull TabbedLanguageCodeStylePanel source, @Nonnull String tabTitle);
   }
 
   public void setListener(@Nullable TabChangeListener listener) {
     myListener = listener;
   }
 
-  public void changeTab(@NotNull String tabTitle) {
+  public void changeTab(@Nonnull String tabTitle) {
     myTabbedPane.setSelectedTitle(tabTitle);
   }
 }

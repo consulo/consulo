@@ -29,8 +29,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -43,7 +43,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
   private Set<RunConfiguration> mySetToRun = new TreeSet<>(COMPARATOR);
   private boolean myInitialized = false;
 
-  public CompoundRunConfiguration(Project project, @NotNull CompoundRunConfigurationType type, String name) {
+  public CompoundRunConfiguration(Project project, @Nonnull CompoundRunConfigurationType type, String name) {
     super(project, type.getConfigurationFactories()[0], name);
   }
 
@@ -65,7 +65,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     myInitialized = true;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new CompoundRunConfigurationSettingsEditor(getProject());
@@ -78,7 +78,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
 
   @Nullable
   @Override
-  public RunProfileState getState(@NotNull Executor executor, @NotNull final ExecutionEnvironment environment) throws ExecutionException {
+  public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment environment) throws ExecutionException {
     try {
       checkConfiguration();
     }
@@ -88,7 +88,7 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
     return new RunProfileState() {
       @Nullable
       @Override
-      public ExecutionResult execute(final Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
+      public ExecutionResult execute(final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
         ApplicationManager.getApplication().invokeLater(() -> {
           RunManagerImpl manager = RunManagerImpl.getInstanceImpl(getProject());
           for (RunConfiguration configuration : getSetToRun()) {

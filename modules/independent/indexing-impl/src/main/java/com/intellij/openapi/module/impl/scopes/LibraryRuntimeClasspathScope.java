@@ -31,8 +31,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import consulo.roots.ContentFolderScopes;
 
@@ -92,10 +92,10 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
     return that.myEntries.equals(myEntries);
   }
 
-  private void buildEntries(@NotNull final Module module,
-                            @NotNull final Set<Module> processedModules,
-                            @NotNull final Set<Library> processedLibraries,
-                            @NotNull final Set<Sdk> processedSdk,
+  private void buildEntries(@Nonnull final Module module,
+                            @Nonnull final Set<Module> processedModules,
+                            @Nonnull final Set<Library> processedLibraries,
+                            @Nonnull final Set<Sdk> processedSdk,
                             Condition<OrderEntry> condition) {
     if (!processedModules.add(module)) return;
 
@@ -126,7 +126,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
         return value;
       }
 
-      private void collectScopeFiles(@NotNull final Module module, Set<VirtualFile> set) {
+      private void collectScopeFiles(@Nonnull final Module module, Set<VirtualFile> set) {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
         ModuleRootsProcessor rootsProcessor = ModuleRootsProcessor.findRootsProcessor(moduleRootManager);
@@ -159,7 +159,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@NotNull VirtualFile file) {
+  public boolean contains(@Nonnull VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
 
@@ -178,7 +178,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2) {
+  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
     final VirtualFile r1 = getFileRoot(file1);
     final VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {
@@ -194,7 +194,7 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@NotNull Module aModule) {
+  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
     return false;
   }
 

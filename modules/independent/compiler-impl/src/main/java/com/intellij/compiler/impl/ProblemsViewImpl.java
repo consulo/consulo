@@ -34,8 +34,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.compiler.server.rmi.CompilerClientConnector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,23 +50,23 @@ public class ProblemsViewImpl extends ProblemsView {
 
   private static class TempMessage {
     final int type;
-    @NotNull
+    @Nonnull
     final String[] text;
     @Nullable
     final String groupName;
-    @Nullable
+    @javax.annotation.Nullable
     final Navigatable navigatable;
-    @Nullable
+    @javax.annotation.Nullable
     final String exportTextPrefix;
-    @Nullable
+    @javax.annotation.Nullable
     final String rendererTextPrefix;
 
     private TempMessage(int type,
-                        @NotNull String[] text,
-                        @Nullable String groupName,
+                        @Nonnull String[] text,
+                        @javax.annotation.Nullable String groupName,
                         @Nullable Navigatable navigatable,
-                        @Nullable String exportTextPrefix,
-                        @Nullable String rendererTextPrefix) {
+                        @javax.annotation.Nullable String exportTextPrefix,
+                        @javax.annotation.Nullable String rendererTextPrefix) {
       this.type = type;
       this.text = text;
       this.groupName = groupName;
@@ -80,7 +80,7 @@ public class ProblemsViewImpl extends ProblemsView {
 
   private List<TempMessage> myTempMessages = new CopyOnWriteArrayList<TempMessage>();
 
-  @Nullable
+  @javax.annotation.Nullable
   private ProblemsViewPanel myPanel;
 
   private final ExecutorService myViewUpdater = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ProblemsView pool");
@@ -107,10 +107,10 @@ public class ProblemsViewImpl extends ProblemsView {
 
   @Override
   public void addMessage(final int type,
-                         @NotNull final String[] text,
-                         @Nullable final String groupName,
-                         @Nullable final Navigatable navigatable,
-                         @Nullable final String exportTextPrefix,
+                         @Nonnull final String[] text,
+                         @javax.annotation.Nullable final String groupName,
+                         @javax.annotation.Nullable final Navigatable navigatable,
+                         @javax.annotation.Nullable final String exportTextPrefix,
                          @Nullable final String rendererTextPrefix) {
     final TempMessage message = new TempMessage(type, text, groupName, navigatable, exportTextPrefix, rendererTextPrefix);
 

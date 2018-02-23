@@ -20,8 +20,8 @@ import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -114,10 +114,10 @@ public class JDOMExternalizer {
    * @param values a pack of values to add
    * @see #loadStringsList(org.jdom.Element, String, String)
    */
-  public static void saveStringsList(@NotNull final Element parent,
-                                     @NotNull final String nodeName,
-                                     @NotNull final String attrName,
-                                     @NotNull final String... values) {
+  public static void saveStringsList(@Nonnull final Element parent,
+                                     @Nonnull final String nodeName,
+                                     @Nonnull final String attrName,
+                                     @Nonnull final String... values) {
     for (final String value : values) {
       final Element node = new Element(nodeName);
       node.setAttribute(attrName, value);
@@ -125,11 +125,11 @@ public class JDOMExternalizer {
     }
   }
 
-  @NotNull
+  @Nonnull
   public static List<String> loadStringsList(Element element, String rootName, String attrName) {
     final List<String> paths = new LinkedList<String>();
     if (element != null) {
-      @NotNull final List list = element.getChildren(rootName);
+      @Nonnull final List list = element.getChildren(rootName);
       for (Object o : list) {
         paths.add(((Element)o).getAttribute(attrName).getValue());
       }

@@ -31,7 +31,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TwoColorsIcon;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     private final Color myColor;
 
     @RequiredReadAction
-    public MyInfo(@NotNull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
+    public MyInfo(@Nonnull final PsiElement element, final Color color, final ElementColorProvider colorProvider) {
       super(element, element.getTextRange(), new ColorIcon(JBUI.scaleFontSize(12), color), Pass.UPDATE_ALL, FunctionUtil.nullConstant(), new GutterIconNavigationHandler<PsiElement>() {
         @Override
         @RequiredDispatchThread
@@ -65,21 +65,21 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     }
 
     @Override
-    public boolean canMergeWith(@NotNull MergeableLineMarkerInfo<?> info) {
+    public boolean canMergeWith(@Nonnull MergeableLineMarkerInfo<?> info) {
       return info instanceof MyInfo;
     }
 
     @Override
-    public Icon getCommonIcon(@NotNull List<MergeableLineMarkerInfo> infos) {
+    public Icon getCommonIcon(@Nonnull List<MergeableLineMarkerInfo> infos) {
       if (infos.size() == 2 && infos.get(0) instanceof MyInfo && infos.get(1) instanceof MyInfo) {
         return new TwoColorsIcon(JBUI.scale(12), ((MyInfo)infos.get(1)).myColor, ((MyInfo)infos.get(0)).myColor);
       }
       return AllIcons.Gutter.Colors;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Function<? super PsiElement, String> getCommonTooltip(@NotNull List<MergeableLineMarkerInfo> infos) {
+    public Function<? super PsiElement, String> getCommonTooltip(@Nonnull List<MergeableLineMarkerInfo> infos) {
       return FunctionUtil.nullConstant();
     }
   }
@@ -88,7 +88,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
 
   @RequiredReadAction
   @Override
-  public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+  public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     for (ElementColorProvider colorProvider : myExtensions) {
       final Color color = colorProvider.getColorFrom(element);
       if (color != null) {

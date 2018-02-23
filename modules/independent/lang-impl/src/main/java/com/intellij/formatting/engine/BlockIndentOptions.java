@@ -24,14 +24,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class BlockIndentOptions {
   private final CodeStyleSettings mySettings;
   private final CommonCodeStyleSettings.IndentOptions myIndentOptions;
   private final int myRightMargin;
 
-  public BlockIndentOptions(@NotNull CodeStyleSettings settings, @NotNull CommonCodeStyleSettings.IndentOptions indentOptions, Block block) {
+  public BlockIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions, Block block) {
     mySettings = settings;
     myIndentOptions = indentOptions;
     myRightMargin = calcRightMargin(block);
@@ -41,8 +41,8 @@ public class BlockIndentOptions {
     return myIndentOptions;
   }
 
-  @NotNull
-  public CommonCodeStyleSettings.IndentOptions getIndentOptions(@NotNull AbstractBlockWrapper block) {
+  @Nonnull
+  public CommonCodeStyleSettings.IndentOptions getIndentOptions(@Nonnull AbstractBlockWrapper block) {
     if (!myIndentOptions.isOverrideLanguageOptions()) {
       final Language language = block.getLanguage();
       if (language != null) {

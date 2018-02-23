@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
 import com.intellij.packaging.ui.PackagingSourceItem;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

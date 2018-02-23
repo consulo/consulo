@@ -27,8 +27,8 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -43,8 +43,8 @@ public class NotificationsUtil {
   private static final int TITLE_LIMIT = 1000;
   private static final int CONTENT_LIMIT = 10000;
 
-  @NotNull
-  public static String buildHtml(@NotNull final Notification notification, @Nullable String style) {
+  @Nonnull
+  public static String buildHtml(@Nonnull final Notification notification, @Nullable String style) {
     String title = notification.getTitle();
     String content = notification.getContent();
     if (title.length() > TITLE_LIMIT || content.length() > CONTENT_LIMIT) {
@@ -58,8 +58,8 @@ public class NotificationsUtil {
     return buildHtml(title, null, content, style, "#" + ColorUtil.toHex(getMessageType(notification).getTitleForeground()), null, null);
   }
 
-  @NotNull
-  public static String buildHtml(@NotNull final Notification notification,
+  @Nonnull
+  public static String buildHtml(@Nonnull final Notification notification,
                                  @Nullable String style,
                                  boolean isContent,
                                  @Nullable Color color,
@@ -84,7 +84,7 @@ public class NotificationsUtil {
     return buildHtml(title, subtitle, content, style, isContent ? null : colorText, isContent ? colorText : null, contentStyle);
   }
 
-  @NotNull
+  @Nonnull
   public static String buildHtml(@Nullable String title,
                                  @Nullable String subtitle,
                                  @Nullable String content,
@@ -144,7 +144,7 @@ public class NotificationsUtil {
   }
 
   @Nullable
-  public static HyperlinkListener wrapListener(@NotNull final Notification notification) {
+  public static HyperlinkListener wrapListener(@Nonnull final Notification notification) {
     final NotificationListener listener = notification.getListener();
     if (listener == null) return null;
 
@@ -160,8 +160,8 @@ public class NotificationsUtil {
     };
   }
 
-  @NotNull
-  public static Icon getIcon(@NotNull final Notification notification) {
+  @Nonnull
+  public static Icon getIcon(@Nonnull final Notification notification) {
     Icon icon = notification.getIcon();
     if (icon != null) {
       return icon;
@@ -178,8 +178,8 @@ public class NotificationsUtil {
     }
   }
 
-  @NotNull
-  public static MessageType getMessageType(@NotNull Notification notification) {
+  @Nonnull
+  public static MessageType getMessageType(@Nonnull Notification notification) {
     switch (notification.getType()) {
       case WARNING:
         return MessageType.WARNING;
@@ -191,13 +191,13 @@ public class NotificationsUtil {
     }
   }
 
-  @NotNull
-  public static Color getBackground(@NotNull final Notification notification) {
+  @Nonnull
+  public static Color getBackground(@Nonnull final Notification notification) {
     return getMessageType(notification).getPopupBackground();
   }
 
-  @NotNull
-  public static Color getBorderColor(@NotNull Notification notification) {
+  @Nonnull
+  public static Color getBorderColor(@Nonnull Notification notification) {
     switch (notification.getType()) {
       case ERROR:
         return new JBColor(Color.gray, new Color(0xc8c8c8));

@@ -15,27 +15,26 @@
  */
 package consulo.ui;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface Window extends Component {
-  @NotNull
-  static Window createModal(@NotNull String title) {
+  @Nonnull
+  static Window createModal(@Nonnull String title) {
     return UIInternal.get()._Windows_modalWindow(title);
   }
 
   @RequiredUIAccess
-  void setTitle(@NotNull String title);
+  void setTitle(@Nonnull String title);
 
   @RequiredUIAccess
-  void setContent(@NotNull Component content);
+  void setContent(@Nonnull Component content);
 
   @RequiredUIAccess
-  void setMenuBar(@Nullable MenuBar menuBar);
+  void setMenuBar(@javax.annotation.Nullable MenuBar menuBar);
 
   void setResizable(boolean value);
 

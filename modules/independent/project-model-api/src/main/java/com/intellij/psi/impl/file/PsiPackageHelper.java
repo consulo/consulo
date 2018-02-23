@@ -20,8 +20,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDirectoryContainer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,11 +30,11 @@ public abstract class PsiPackageHelper {
     return ServiceManager.getService(project, PsiPackageHelper.class);
   }
 
-  @NotNull
-  public abstract String getQualifiedName(@NotNull PsiDirectory directory, final boolean presentable);
+  @Nonnull
+  public abstract String getQualifiedName(@Nonnull PsiDirectory directory, final boolean presentable);
 
-  @Nullable
-  public abstract PsiDirectoryContainer getDirectoryContainer(@NotNull PsiDirectory directory);
+  @javax.annotation.Nullable
+  public abstract PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory);
 
   public abstract boolean isPackage(PsiDirectory directory);
 }

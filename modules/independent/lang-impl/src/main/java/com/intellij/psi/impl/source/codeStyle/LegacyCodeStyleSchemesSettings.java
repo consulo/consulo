@@ -22,7 +22,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
@@ -43,7 +43,7 @@ public class LegacyCodeStyleSchemesSettings implements JDOMExternalizable, Named
     DefaultJDOMExternalizer.writeExternal(this, element);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getComponentName() {
     return "CodeStyleSchemes";

@@ -17,8 +17,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,17 +32,17 @@ public class ActionGroupUtil {
 
   @Deprecated
   // Use #isGroupEmpty with isModalContext instead
-  public static boolean isGroupEmpty(@NotNull ActionGroup actionGroup, @NotNull AnActionEvent e) {
+  public static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e) {
     return isGroupEmpty(actionGroup, e, new HashMap<>(), false);
   }
 
-  public static boolean isGroupEmpty(@NotNull ActionGroup actionGroup, @NotNull AnActionEvent e, boolean isInModalContext) {
+  public static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, boolean isInModalContext) {
     return isGroupEmpty(actionGroup, e, new HashMap<>(), isInModalContext);
   }
 
-  private static boolean isGroupEmpty(@NotNull ActionGroup actionGroup,
-                                      @NotNull AnActionEvent e,
-                                      @NotNull Map<AnAction, Presentation> action2presentation,
+  private static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup,
+                                      @Nonnull AnActionEvent e,
+                                      @Nonnull Map<AnAction, Presentation> action2presentation,
                                       boolean inModalContext) {
     AnAction[] actions = actionGroup.getChildren(e);
     for (AnAction action : actions) {
@@ -63,7 +63,7 @@ public class ActionGroupUtil {
   }
 
   @Nullable
-  public static AnAction getSingleActiveAction(@NotNull ActionGroup actionGroup, @NotNull AnActionEvent e, boolean isInModalContext) {
+  public static AnAction getSingleActiveAction(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, boolean isInModalContext) {
     List<AnAction> children = getEnabledChildren(actionGroup, e, new HashMap<>(), isInModalContext);
     if (children.size() == 1) {
       return children.get(0);
@@ -71,9 +71,9 @@ public class ActionGroupUtil {
     return null;
   }
 
-  private static List<AnAction> getEnabledChildren(@NotNull ActionGroup actionGroup,
-                                                   @NotNull AnActionEvent e,
-                                                   @NotNull Map<AnAction, Presentation> action2presentation,
+  private static List<AnAction> getEnabledChildren(@Nonnull ActionGroup actionGroup,
+                                                   @Nonnull AnActionEvent e,
+                                                   @Nonnull Map<AnAction, Presentation> action2presentation,
                                                    boolean isInModalContext) {
     List<AnAction> result = new ArrayList<>();
     AnAction[] actions = actionGroup.getChildren(e);
@@ -92,9 +92,9 @@ public class ActionGroupUtil {
     return result;
   }
 
-  private static boolean isActionEnabledAndVisible(@NotNull final AnActionEvent e,
-                                                   @NotNull final Map<AnAction, Presentation> action2presentation,
-                                                   @NotNull final AnAction action,
+  private static boolean isActionEnabledAndVisible(@Nonnull final AnActionEvent e,
+                                                   @Nonnull final Map<AnAction, Presentation> action2presentation,
+                                                   @Nonnull final AnAction action,
                                                    boolean isInModalContext) {
     Presentation presentation = getPresentation(action, action2presentation);
     AnActionEvent event = new AnActionEvent(e.getInputEvent(),

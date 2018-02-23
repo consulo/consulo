@@ -24,7 +24,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.RoundedLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -34,11 +34,14 @@ public abstract class VcsLogPopupComponent extends JPanel {
   private static final int GAP_BEFORE_ARROW = 3;
   private static final int BORDER_SIZE = 2;
 
-  @NotNull private final String myName;
-  @NotNull private JLabel myNameLabel;
-  @NotNull private JLabel myValueLabel;
+  @Nonnull
+  private final String myName;
+  @Nonnull
+  private JLabel myNameLabel;
+  @Nonnull
+  private JLabel myValueLabel;
 
-  protected VcsLogPopupComponent(@NotNull String name) {
+  protected VcsLogPopupComponent(@Nonnull String name) {
     myName = name;
   }
 
@@ -74,7 +77,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
 
   public abstract String getCurrentText();
 
-  public abstract void installChangeListener(@NotNull Runnable onChange);
+  public abstract void installChangeListener(@Nonnull Runnable onChange);
 
   /**
    * Create popup actions available under this filter.
@@ -84,12 +87,12 @@ public abstract class VcsLogPopupComponent extends JPanel {
   private void indicateFocusing() {
     addFocusListener(new FocusAdapter() {
       @Override
-      public void focusGained(@NotNull FocusEvent e) {
+      public void focusGained(@Nonnull FocusEvent e) {
         setBorder(createFocusedBorder());
       }
 
       @Override
-      public void focusLost(@NotNull FocusEvent e) {
+      public void focusLost(@Nonnull FocusEvent e) {
         setBorder(createUnfocusedBorder());
       }
     });
@@ -98,7 +101,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
   private void showPopupMenuFromKeyboard() {
     addKeyListener(new KeyAdapter() {
       @Override
-      public void keyPressed(@NotNull KeyEvent e) {
+      public void keyPressed(@Nonnull KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_DOWN) {
           showPopupMenu();
         }
@@ -109,7 +112,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
   private void showPopupMenuOnClick() {
     new ClickListener() {
       @Override
-      public boolean onClick(@NotNull MouseEvent event, int clickCount) {
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         showPopupMenu();
         return true;
       }
@@ -119,12 +122,12 @@ public abstract class VcsLogPopupComponent extends JPanel {
   private void indicateHovering() {
     addMouseListener(new MouseAdapter() {
       @Override
-      public void mouseEntered(@NotNull MouseEvent e) {
+      public void mouseEntered(@Nonnull MouseEvent e) {
         setOnHoverForeground();
       }
 
       @Override
-      public void mouseExited(@NotNull MouseEvent e) {
+      public void mouseExited(@Nonnull MouseEvent e) {
         setDefaultForeground();
       }
     });
@@ -145,7 +148,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
     popup.showUnderneathOf(this);
   }
 
-  @NotNull
+  @Nonnull
   protected ListPopup createPopupMenu() {
     return JBPopupFactory.getInstance().
       createActionGroupPopup(null, createActionGroup(), DataManager.getInstance().getDataContext(this),

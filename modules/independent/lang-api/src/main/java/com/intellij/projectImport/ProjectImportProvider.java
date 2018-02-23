@@ -28,8 +28,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.DeprecationInfo;
 
 import javax.swing.*;
@@ -49,22 +49,22 @@ public abstract class ProjectImportProvider {
     return myBuilder;
   }
 
-  @NonNls @NotNull
+  @NonNls @Nonnull
   public String getId(){
     return getBuilder().getName();
   }
 
-  @NotNull
+  @Nonnull
   public String getName(){
     return getBuilder().getName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return getBuilder().getIcon();
   }
 
-  public boolean canImport(VirtualFile fileOrDirectory, @Nullable Project project) {
+  public boolean canImport(VirtualFile fileOrDirectory, @javax.annotation.Nullable Project project) {
     return !fileOrDirectory.isDirectory() && canImportFromFile(fileOrDirectory);
   }
 
@@ -97,13 +97,13 @@ public abstract class ProjectImportProvider {
     return ModuleWizardStep.EMPTY_ARRAY;
   }
 
-  @NotNull
+  @Nonnull
   @Language("HTML")
   public String getFileSample() {
     return getName();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIconForFile(VirtualFile file) {
     return null;
   }

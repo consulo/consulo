@@ -16,7 +16,7 @@
 package consulo.ui.internal;
 
 import consulo.ui.model.ListModel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Iterator;
@@ -33,14 +33,14 @@ public class DesktopComboBoxModelWrapper<E> extends AbstractListModel implements
     myModel = model;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public E get(int index) {
     return myModel.get(index);
   }
 
   @Override
-  public int indexOf(@NotNull E value) {
+  public int indexOf(@Nonnull E value) {
     return myModel.indexOf(value);
   }
 

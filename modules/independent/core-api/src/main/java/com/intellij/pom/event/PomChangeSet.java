@@ -16,10 +16,10 @@
 package com.intellij.pom.event;
 
 import com.intellij.pom.PomModelAspect;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface PomChangeSet {
-  @NotNull
+  @Nonnull
   PomModelAspect getAspect();
-  void merge(@NotNull PomChangeSet blocked);
+  void merge(@Nonnull PomChangeSet blocked);
 }

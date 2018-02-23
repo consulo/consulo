@@ -34,7 +34,7 @@ import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -161,14 +161,14 @@ public class NavBarPopup extends LightweightHint implements Disposable{
     final JBListWithHintProvider list = new NavbarPopupList(panel, siblings);
     list.setDataProvider(new DataProvider() {
       @Override
-      public Object getData(@NotNull @NonNls Key dataId) {
+      public Object getData(@Nonnull @NonNls Key dataId) {
         return panel.getData(dataId);
       }
     });
     final List<Disposable> disposables = new ArrayList<Disposable>();
     list.putClientProperty(DISPOSED_OBJECTS, disposables);
     list.installCellRenderer(new NotNullFunction<Object, JComponent>() {
-      @NotNull
+      @Nonnull
       @Override
       public JComponent fun(Object obj) {
         final NavBarItem navBarItem = new NavBarItem(panel, obj, null);
@@ -244,7 +244,7 @@ public class NavBarPopup extends LightweightHint implements Disposable{
     }
 
     @Override
-    public void putInfo(@NotNull Map<String, String> info) {
+    public void putInfo(@Nonnull Map<String, String> info) {
       myPanel.putInfo(info);
     }
 

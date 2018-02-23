@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +47,7 @@ public class SeparatorWithText extends JComponent {
     return myTextForeground;
   }
 
-  public void setTextForeground(@NotNull Color textForeground) {
+  public void setTextForeground(@Nonnull Color textForeground) {
     myTextForeground = textForeground;
   }
 

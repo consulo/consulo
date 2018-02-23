@@ -20,7 +20,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -38,7 +37,7 @@ public class LanguageElementIcon extends CustomLoadingExtensionPointBean impleme
   public String file;
 
   private NullableLazyValue<Icon> myIconValue = new NullableLazyValue<Icon>() {
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     protected Icon compute() {
       return IconLoader.findIcon(file, getLoaderForClass());

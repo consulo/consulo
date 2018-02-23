@@ -26,7 +26,7 @@ import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension;
 import consulo.sandboxPlugin.lang.SandLanguage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,16 +34,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Sand2PackageProvider implements PsiPackageSupportProvider {
   @Override
-  public boolean isSupported(@NotNull ModuleExtension<?> moduleExtension) {
+  public boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension) {
     return moduleExtension instanceof Sand2ModuleExtension;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public PsiPackage createPackage(@NotNull PsiManager psiManager,
-                                  @NotNull PsiPackageManager packageManager,
-                                  @NotNull Class<? extends ModuleExtension> extensionClass,
-                                  @NotNull String packageName) {
+  public PsiPackage createPackage(@Nonnull PsiManager psiManager,
+                                  @Nonnull PsiPackageManager packageManager,
+                                  @Nonnull Class<? extends ModuleExtension> extensionClass,
+                                  @Nonnull String packageName) {
     return new PsiPackageBase(psiManager, packageManager, extensionClass, packageName) {
       @Override
       protected ArrayFactory<? extends PsiPackage> getPackageArrayFactory() {
@@ -51,7 +51,7 @@ public class Sand2PackageProvider implements PsiPackageSupportProvider {
       }
 
       @RequiredReadAction
-      @NotNull
+      @Nonnull
       @Override
       public Language getLanguage() {
         return SandLanguage.INSTANCE;

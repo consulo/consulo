@@ -56,9 +56,9 @@ import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -83,8 +83,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   };
 
-  @NotNull
-  public static XDebugSessionTab create(@NotNull XDebugSessionImpl session,
+  @Nonnull
+  public static XDebugSessionTab create(@Nonnull XDebugSessionImpl session,
                                         @Nullable Icon icon,
                                         @Nullable ExecutionEnvironment environment,
                                         @Nullable RunContentDescriptor contentToReuse) {
@@ -104,12 +104,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return tab;
   }
 
-  @NotNull
+  @Nonnull
   public RunnerLayoutUi getUi() {
     return myUi;
   }
 
-  private XDebugSessionTab(@NotNull XDebugSessionImpl session, @Nullable Icon icon, @Nullable ExecutionEnvironment environment) {
+  private XDebugSessionTab(@Nonnull XDebugSessionImpl session, @Nullable Icon icon, @Nullable ExecutionEnvironment environment) {
     super(session.getProject(), "Debug", session.getSessionName(), GlobalSearchScope.allScope(session.getProject()));
 
     setSession(session, environment, icon);
@@ -136,14 +136,14 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     rebuildViews();
   }
 
-  private void addVariablesAndWatches(@NotNull XDebugSessionImpl session) {
+  private void addVariablesAndWatches(@Nonnull XDebugSessionImpl session) {
     myUi.addContent(createVariablesContent(session), 0, PlaceInGrid.center, false);
     if (!myWatchesInVariables) {
       myUi.addContent(createWatchesContent(session), 0, PlaceInGrid.right, false);
     }
   }
 
-  private void setSession(@NotNull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Icon icon) {
+  private void setSession(@Nonnull XDebugSessionImpl session, @Nullable ExecutionEnvironment environment, @Nullable Icon icon) {
     myEnvironment = environment;
     mySession = session;
     mySessionData = session.getSessionData();
@@ -167,7 +167,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
   @Nullable
   @Override
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (XWatchesView.DATA_KEY == dataId) {
       return myWatchesView;
     }
@@ -190,7 +190,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return super.getData(dataId);
   }
 
-  private Content createVariablesContent(@NotNull XDebugSessionImpl session) {
+  private Content createVariablesContent(@Nonnull XDebugSessionImpl session) {
     XVariablesView variablesView;
     if (myWatchesInVariables) {
       variablesView = myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
@@ -209,7 +209,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return result;
   }
 
-  private Content createWatchesContent(@NotNull XDebugSessionImpl session) {
+  private Content createWatchesContent(@Nonnull XDebugSessionImpl session) {
     myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
     registerView(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView);
     Content watchesContent =
@@ -219,7 +219,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return watchesContent;
   }
 
-  @NotNull
+  @Nonnull
   private Content createFramesContent() {
     XFramesView framesView = new XFramesView(myProject);
     registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
@@ -244,7 +244,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     return myWatchesView;
   }
 
-  private void attachToSession(@NotNull XDebugSessionImpl session) {
+  private void attachToSession(@Nonnull XDebugSessionImpl session) {
     for (XDebugView view : myViews.values()) {
       attachViewToSession(session, view);
     }
@@ -306,7 +306,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   }
 
-  private static void attachViewToSession(@NotNull XDebugSessionImpl session, @Nullable XDebugView view) {
+  private static void attachViewToSession(@Nonnull XDebugSessionImpl session, @Nullable XDebugView view) {
     if (view != null) {
       session.addSessionListener(new XDebugViewSessionListener(view, session), view);
     }
@@ -342,18 +342,18 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   }
 
-  public static void showWatchesView(@NotNull XDebugSessionImpl session) {
+  public static void showWatchesView(@Nonnull XDebugSessionImpl session) {
     XDebugSessionTab tab = session.getSessionTab();
     if (tab != null) {
       showView(session, tab.getWatchesContentId());
     }
   }
 
-  public static void showFramesView(@NotNull XDebugSessionImpl session) {
+  public static void showFramesView(@Nonnull XDebugSessionImpl session) {
     showView(session, DebuggerContentInfo.FRAME_CONTENT);
   }
 
-  private static void showView(@NotNull XDebugSessionImpl session, String viewId) {
+  private static void showView(@Nonnull XDebugSessionImpl session, String viewId) {
     XDebugSessionTab tab = session.getSessionTab();
     if (tab != null) {
       tab.toFront(false, null);
@@ -408,12 +408,12 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
   }
 
-  @NotNull
+  @Nonnull
   private String getWatchesContentId() {
     return myWatchesInVariables ? DebuggerContentInfo.VARIABLES_CONTENT : DebuggerContentInfo.WATCHES_CONTENT;
   }
 
-  private void registerView(String contentId, @NotNull XDebugView view) {
+  private void registerView(String contentId, @Nonnull XDebugView view) {
     myViews.put(contentId, view);
     Disposer.register(myRunContentDescriptor, view);
   }

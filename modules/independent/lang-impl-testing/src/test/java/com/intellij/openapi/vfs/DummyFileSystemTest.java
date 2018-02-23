@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.vfs.ex.dummy.DummyFileSystem;
 import consulo.testFramework.MockApplicationTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DummyFileSystemTest extends MockApplicationTestCase {
   private DummyFileSystem fs;
@@ -43,12 +43,12 @@ public class DummyFileSystemTest extends MockApplicationTestCase {
     final VirtualFileEvent[] events = new VirtualFileEvent[2];
     fs.addVirtualFileListener(new VirtualFileListener() {
       @Override
-      public void fileDeleted(@NotNull VirtualFileEvent e) {
+      public void fileDeleted(@Nonnull VirtualFileEvent e) {
         events[0] = e;
       }
 
       @Override
-      public void beforeFileDeletion(@NotNull VirtualFileEvent e) {
+      public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
         events[1] = e;
       }
     });

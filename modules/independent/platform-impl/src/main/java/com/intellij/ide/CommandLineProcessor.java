@@ -31,8 +31,8 @@ import com.intellij.platform.PlatformProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.CommandLineArgs;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -96,7 +96,7 @@ public class CommandLineProcessor {
     }
   }
 
-  @NotNull
+  @Nonnull
   private static Project findBestProject(VirtualFile virtualFile, Project[] projects) {
     for (Project aProject : projects) {
       if (ProjectRootManager.getInstance(aProject).getFileIndex().isInContent(virtualFile)) {

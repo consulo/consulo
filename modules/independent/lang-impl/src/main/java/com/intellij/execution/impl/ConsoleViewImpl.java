@@ -75,9 +75,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -115,7 +115,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   private final DisposedPsiManagerCheck myPsiDisposedCheck;
   private final boolean myIsViewer;
 
-  @NotNull
+  @Nonnull
   private ConsoleState myState;
 
   private final Alarm mySpareTimeAlarm = new Alarm(this);
@@ -174,12 +174,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   static class TokenInfo {
-    @NotNull
+    @Nonnull
     final ConsoleViewContentType contentType;
     int startOffset;
     int endOffset;
 
-    TokenInfo(@NotNull ConsoleViewContentType contentType, int startOffset, int endOffset) {
+    TokenInfo(@Nonnull ConsoleViewContentType contentType, int startOffset, int endOffset) {
       this.contentType = contentType;
       this.startOffset = startOffset;
       this.endOffset = endOffset;
@@ -201,15 +201,15 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   static class HyperlinkTokenInfo extends TokenInfo {
-    @NotNull
+    @Nonnull
     private final HyperlinkInfo myHyperlinkInfo;
 
-    HyperlinkTokenInfo(@NotNull ConsoleViewContentType contentType, final int startOffset, final int endOffset, @NotNull HyperlinkInfo hyperlinkInfo) {
+    HyperlinkTokenInfo(@Nonnull ConsoleViewContentType contentType, final int startOffset, final int endOffset, @Nonnull HyperlinkInfo hyperlinkInfo) {
       super(contentType, startOffset, endOffset);
       myHyperlinkInfo = hyperlinkInfo;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public HyperlinkInfo getHyperlinkInfo() {
       return myHyperlinkInfo;
@@ -250,31 +250,32 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   protected final CompositeFilter myFilters;
 
-  @Nullable private final InputFilter myInputMessageFilter;
+  @Nullable
+  private final InputFilter myInputMessageFilter;
 
-  public ConsoleViewImpl(@NotNull Project project, boolean viewer) {
+  public ConsoleViewImpl(@Nonnull Project project, boolean viewer) {
     this(project, GlobalSearchScope.allScope(project), viewer, true);
   }
 
-  public ConsoleViewImpl(@NotNull final Project project,
-                         @NotNull GlobalSearchScope searchScope,
+  public ConsoleViewImpl(@Nonnull final Project project,
+                         @Nonnull GlobalSearchScope searchScope,
                          boolean viewer,
                          boolean usePredefinedMessageFilter) {
     this(project, searchScope, viewer,
          new ConsoleState.NotStartedStated() {
-           @NotNull
+           @Nonnull
            @Override
-           public ConsoleState attachTo(@NotNull ConsoleViewImpl console, ProcessHandler processHandler) {
+           public ConsoleState attachTo(@Nonnull ConsoleViewImpl console, ProcessHandler processHandler) {
              return new ConsoleViewRunningState(console, processHandler, this, true, true);
            }
          },
          usePredefinedMessageFilter);
   }
 
-  protected ConsoleViewImpl(@NotNull final Project project,
-                            @NotNull GlobalSearchScope searchScope,
+  protected ConsoleViewImpl(@Nonnull final Project project,
+                            @Nonnull GlobalSearchScope searchScope,
                             boolean viewer,
-                            @NotNull final ConsoleState initialState,
+                            @Nonnull final ConsoleState initialState,
                             boolean usePredefinedMessageFilter)
   {
     super(new BorderLayout());
@@ -412,11 +413,11 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     });
   }
 
-  private void addFlushRequest(@NotNull MyFlushRunnable scrollRunnable) {
+  private void addFlushRequest(@Nonnull MyFlushRunnable scrollRunnable) {
     addFlushRequest(scrollRunnable, 0);
   }
 
-  private void addFlushRequest(@NotNull MyFlushRunnable flushRunnable, final int millis) {
+  private void addFlushRequest(@Nonnull MyFlushRunnable flushRunnable, final int millis) {
     synchronized (myCurrentRequests) {
       if (!myFlushAlarm.isDisposed() && myCurrentRequests.add(flushRunnable)) {
         myFlushAlarm.addRequest(flushRunnable, millis, getStateForUpdate());
@@ -449,7 +450,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public void performWhenNoDeferredOutput(@NotNull Runnable runnable) {
+  public void performWhenNoDeferredOutput(@Nonnull Runnable runnable) {
     //Q: implement in another way without timer?
     if (!hasDeferredOutput()) {
       runnable.run();
@@ -459,7 +460,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  private void performLaterWhenNoDeferredOutput(@NotNull Runnable runnable) {
+  private void performLaterWhenNoDeferredOutput(@Nonnull Runnable runnable) {
     if (mySpareTimeAlarm.isDisposed()) return;
     mySpareTimeAlarm.addRequest(
             () -> performWhenNoDeferredOutput(runnable),
@@ -469,7 +470,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public JComponent getComponent() {
     if (myMainPanel == null) {
       myMainPanel = new JPanel(new BorderLayout());
@@ -492,7 +493,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
    *
    * @param component component to add
    */
-  public final void addLayerToPane(@NotNull final JComponent component) {
+  public final void addLayerToPane(@Nonnull final JComponent component) {
     getComponent(); // Make sure component exists
     component.setOpaque(false);
     component.setVisible(true);
@@ -553,7 +554,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @NotNull
+  @Nonnull
   protected JComponent createCenterComponent() {
     return myEditor.getComponent();
   }
@@ -592,7 +593,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public void print(@NotNull String text, @NotNull ConsoleViewContentType contentType) {
+  public void print(@Nonnull String text, @Nonnull ConsoleViewContentType contentType) {
     if (myInputMessageFilter == null) {
       printHyperlink(text, contentType, null);
       return;
@@ -611,7 +612,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  private void printHyperlink(@NotNull String text, @NotNull ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
+  private void printHyperlink(@Nonnull String text, @Nonnull ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
     synchronized (LOCK) {
       Pair<String, Integer> pair = myBuffer.print(text, contentType, info);
       text = pair.first;
@@ -627,7 +628,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  private void addToken(int length, @Nullable HyperlinkInfo info, @NotNull ConsoleViewContentType contentType) {
+  private void addToken(int length, @Nullable HyperlinkInfo info, @Nonnull ConsoleViewContentType contentType) {
     ConsoleUtil.addToken(length, info, contentType, myTokens);
   }
 
@@ -808,7 +809,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public Object getData(@NotNull final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       if (myEditor == null) {
         return null;
@@ -844,16 +845,16 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public void addMessageFilter(@NotNull Filter filter) {
+  public void addMessageFilter(@Nonnull Filter filter) {
     myFilters.addFilter(filter);
   }
 
   @Override
-  public void printHyperlink(@NotNull final String hyperlinkText, final HyperlinkInfo info) {
+  public void printHyperlink(@Nonnull final String hyperlinkText, final HyperlinkInfo info) {
     printHyperlink(hyperlinkText, ConsoleViewContentType.NORMAL_OUTPUT, info);
   }
 
-  @NotNull
+  @Nonnull
   private EditorEx createConsoleEditor() {
     return ApplicationManager.getApplication().runReadAction((Computable<EditorEx>)() -> {
       EditorEx editor = doCreateConsoleEditor();
@@ -884,7 +885,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     });
   }
 
-  private void onDocumentChanged(@NotNull DocumentEvent event) {
+  private void onDocumentChanged(@Nonnull DocumentEvent event) {
     if (event.getNewLength() == 0) {
       // string has been removed, adjust token ranges
       synchronized (LOCK) {
@@ -919,12 +920,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @NotNull
+  @Nonnull
   protected EditorEx doCreateConsoleEditor() {
     return ConsoleViewUtil.setupConsoleEditor(myProject, true, false);
   }
 
-  @NotNull
+  @Nonnull
   protected MyHighlighter createHighlighter() {
     return new MyHighlighter();
   }
@@ -945,18 +946,18 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  private static void registerActionHandler(@NotNull Editor editor, @NotNull String actionId) {
+  private static void registerActionHandler(@Nonnull Editor editor, @Nonnull String actionId) {
     AnAction action = ActionManager.getInstance().getAction(actionId);
     action.registerCustomShortcutSet(action.getShortcutSet(), editor.getContentComponent());
   }
 
-  private static void registerActionHandler(@NotNull Editor editor, @NotNull String actionId, @NotNull AnAction action) {
+  private static void registerActionHandler(@Nonnull Editor editor, @Nonnull String actionId, @Nonnull AnAction action) {
     final Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
     final Shortcut[] shortcuts = keymap.getShortcuts(actionId);
     action.registerCustomShortcutSet(new CustomShortcutSet(shortcuts), editor.getContentComponent());
   }
 
-  private void popupInvoked(@NotNull MouseEvent mouseEvent) {
+  private void popupInvoked(@Nonnull MouseEvent mouseEvent) {
     final ActionManager actionManager = ActionManager.getInstance();
     final HyperlinkInfo info = myHyperlinks != null ? myHyperlinks.getHyperlinkInfoByPoint(mouseEvent.getPoint()) : null;
     ActionGroup group = null;
@@ -977,7 +978,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     menu.getComponent().show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
   }
 
-  private void highlightHyperlinksAndFoldings(@NotNull RangeMarker lastProcessedOutput) {
+  private void highlightHyperlinksAndFoldings(@Nonnull RangeMarker lastProcessedOutput) {
     boolean canHighlightHyperlinks = !myFilters.isEmpty();
 
     if (!canHighlightHyperlinks && myUpdateFoldingsEnabled) {
@@ -1079,7 +1080,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @RequiredDispatchThread
-  private void doUpdateFolding(@NotNull List<FoldRegion> toAdd) {
+  private void doUpdateFolding(@Nonnull List<FoldRegion> toAdd) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     if (myEditor == null || myEditor.isDisposed()) {
@@ -1095,7 +1096,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     });
   }
 
-  private void addFolding(@NotNull Document document, @NotNull CharSequence chars, int line, @NotNull List<FoldRegion> toAdd, boolean flushOnly) {
+  private void addFolding(@Nonnull Document document, @Nonnull CharSequence chars, int line, @Nonnull List<FoldRegion> toAdd, boolean flushOnly) {
     ConsoleFolding current = null;
     if (!flushOnly) {
       String commandLinePlaceholder = myCommandLineFolding.getPlaceholder(line);
@@ -1138,7 +1139,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Nullable
-  private static ConsoleFolding foldingForLine(@NotNull String lineText) {
+  private static ConsoleFolding foldingForLine(@Nonnull String lineText) {
     ConsoleFolding[] foldings = ConsoleFolding.EP_NAME.getExtensions();
     for (ConsoleFolding folding : foldings) {
       if (folding.shouldFoldLine(lineText)) {
@@ -1185,7 +1186,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   private class MyHighlighter extends DocumentAdapter implements EditorHighlighter {
     private HighlighterClient myEditor;
 
-    @NotNull
+    @Nonnull
     @Override
     public HighlighterIterator createIterator(final int startOffset) {
       final int startIndex = ConsoleUtil.findTokenInfoIndexByOffset(myTokens, startOffset);
@@ -1240,17 +1241,17 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    public void setText(@NotNull final CharSequence text) {
+    public void setText(@Nonnull final CharSequence text) {
     }
 
     @Override
-    public void setEditor(@NotNull final HighlighterClient editor) {
+    public void setEditor(@Nonnull final HighlighterClient editor) {
       LOG.assertTrue(myEditor == null, "Highlighters cannot be reused with different editors");
       myEditor = editor;
     }
 
     @Override
-    public void setColorScheme(@NotNull EditorColorsScheme scheme) {
+    public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
     }
   }
 
@@ -1261,7 +1262,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    public void execute(@NotNull final Editor editor, final char charTyped, @NotNull final DataContext dataContext) {
+    public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
       final ConsoleViewImpl consoleView = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
       if (consoleView == null || !consoleView.myState.isRunning() || consoleView.myIsViewer) {
         if (myOriginalHandler != null) myOriginalHandler.execute(editor, charTyped, dataContext);
@@ -1466,12 +1467,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     return ExecutionBundle.message("up.the.stack.trace");
   }
 
-  public void addCustomConsoleAction(@NotNull AnAction action) {
+  public void addCustomConsoleAction(@Nonnull AnAction action) {
     customActions.add(action);
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public AnAction[] createConsoleActions() {
     //Initializing prev and next occurrences actions
     final CommonActionsManager actionsManager = CommonActionsManager.getInstance();
@@ -1537,7 +1538,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  public void addChangeListener(@NotNull final ChangeListener listener, @NotNull final Disposable parent) {
+  public void addChangeListener(@Nonnull final ChangeListener listener, @Nonnull final Disposable parent) {
     myListeners.add(listener);
     Disposer.register(parent, () -> myListeners.remove(listener));
   }
@@ -1605,7 +1606,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
    * @param start relatively to all document text
    * @param end   relatively to all document text
    */
-  private void replaceUserText(@NotNull String text, int start, int end) {
+  private void replaceUserText(@Nonnull String text, int start, int end) {
     if (start == end) {
       insertUserText(text, start);
       return;
@@ -1791,12 +1792,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    public boolean shouldFoldLine(@NotNull String line) {
+    public boolean shouldFoldLine(@Nonnull String line) {
       return false;
     }
 
     @Override
-    public String getPlaceholderText(@NotNull List<String> lines) {
+    public String getPlaceholderText(@Nonnull List<String> lines) {
       // Is not expected to be called.
       return "<...>";
     }
@@ -1849,7 +1850,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @NotNull
+  @Nonnull
   public Project getProject() {
     return myProject;
   }
@@ -1868,7 +1869,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @NotNull
+  @Nonnull
   public String getText() {
     return myEditor.getDocument().getText();
   }

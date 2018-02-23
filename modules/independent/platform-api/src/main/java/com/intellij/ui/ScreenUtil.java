@@ -19,8 +19,8 @@ import com.intellij.Patches;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.WeakHashMap;
 import com.intellij.util.ui.JBInsets;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,11 +40,11 @@ public class ScreenUtil {
 
   private ScreenUtil() { }
 
-  public static boolean isVisible(@NotNull Point location) {
+  public static boolean isVisible(@Nonnull Point location) {
     return getScreenRectangle(location).contains(location);
   }
 
-  public static boolean isVisible(@NotNull Rectangle bounds) {
+  public static boolean isVisible(@Nonnull Rectangle bounds) {
     if (bounds.isEmpty()) return false;
     Rectangle[] allScreenBounds = getAllScreenBounds();
     for (Rectangle screenBounds : allScreenBounds) {
@@ -127,7 +127,7 @@ public class ScreenUtil {
     return new Rectangle(minX, minY, maxX - minX, maxY - minY);
   }
 
-  public static Rectangle getScreenRectangle(@NotNull Point p) {
+  public static Rectangle getScreenRectangle(@Nonnull Point p) {
     return getScreenRectangle(p.x, p.y);
   }
 

@@ -16,11 +16,6 @@
 
 package com.intellij.tools;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 /**

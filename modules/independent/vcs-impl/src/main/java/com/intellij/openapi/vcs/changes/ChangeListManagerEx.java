@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.annotations.RequiredDispatchThread;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,13 +26,13 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract boolean isInUpdate();
 
   @Nullable
-  public abstract LocalChangeList getIdentityChangeList(@NotNull Change change);
+  public abstract LocalChangeList getIdentityChangeList(@Nonnull Change change);
 
-  @NotNull
-  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@NotNull Collection<Change> changes, @NotNull List<Change> validChanges);
+  @Nonnull
+  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@Nonnull Collection<Change> changes, @Nonnull List<Change> validChanges);
 
-  @NotNull
-  public abstract LocalChangeList addChangeList(@NotNull String name, @Nullable String comment, @Nullable Object data);
+  @Nonnull
+  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
 
   /**
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.
@@ -48,7 +48,7 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
    * Temporarily disable CLM update
    * For example, to preserve FilePath->ChangeList mapping during "stash-do_smth-unstash" routine.
    */
-  public abstract void freeze(@NotNull String reason);
+  public abstract void freeze(@Nonnull String reason);
 
   public abstract void unfreeze();
 }

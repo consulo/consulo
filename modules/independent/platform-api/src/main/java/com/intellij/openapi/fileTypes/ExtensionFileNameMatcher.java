@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.util.text.StringUtilRt;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,19 +27,19 @@ public class ExtensionFileNameMatcher implements FileNameMatcher {
   private final String myExtension;
   private final String myDotExtension;
 
-  public ExtensionFileNameMatcher(@NotNull @NonNls String extension) {
+  public ExtensionFileNameMatcher(@Nonnull @NonNls String extension) {
     myExtension = extension.toLowerCase();
     myDotExtension = "." + myExtension;
   }
 
   @Override
-  public boolean accept(@NotNull @NonNls CharSequence fileName) {
+  public boolean accept(@Nonnull @NonNls CharSequence fileName) {
     return StringUtilRt.endsWithIgnoreCase(fileName, myDotExtension);
   }
 
   @Override
   @NonNls
-  @NotNull
+  @Nonnull
   public String getPresentableString() {
     return "*." + myExtension;
   }

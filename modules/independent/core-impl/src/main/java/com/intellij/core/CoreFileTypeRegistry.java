@@ -23,8 +23,8 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @NotNull VirtualFile file) {
+  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
     return false;
   }
 
@@ -51,36 +51,36 @@ public class CoreFileTypeRegistry extends FileTypeRegistry {
     return myAllFileTypes.toArray(new FileType[myAllFileTypes.size()]);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByFile(@NotNull VirtualFile file) {
+  public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
     return getFileTypeByFileName(file.getName());
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByFileName(@NotNull @NonNls String fileName) {
+  public FileType getFileTypeByFileName(@Nonnull @NonNls String fileName) {
     final String extension = FileUtilRt.getExtension(fileName);
     return getFileTypeByExtension(extension);
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType getFileTypeByExtension(@NonNls @NotNull String extension) {
+  public FileType getFileTypeByExtension(@NonNls @Nonnull String extension) {
     final FileType result = myExtensionsMap.get(extension);
     return result == null ? UnknownFileType.INSTANCE : result;
   }
 
-  public void registerFileType(@NotNull FileType fileType, @NotNull @NonNls String extension) {
+  public void registerFileType(@Nonnull FileType fileType, @Nonnull @NonNls String extension) {
     myAllFileTypes.add(fileType);
     for (final String ext : extension.split(";")) {
       myExtensionsMap.put(ext, fileType);
     }
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public FileType detectFileTypeFromContent(@NotNull VirtualFile file) {
+  public FileType detectFileTypeFromContent(@Nonnull VirtualFile file) {
     return UnknownFileType.INSTANCE;
   }
 

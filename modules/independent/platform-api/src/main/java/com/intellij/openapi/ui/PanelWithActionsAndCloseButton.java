@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.ui.content.*;
 import com.intellij.util.ContentsUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +89,7 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
     }
   }
 
-  public Object getData(@NotNull Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.HELP_ID == dataId){
       return myHelpId;
     }

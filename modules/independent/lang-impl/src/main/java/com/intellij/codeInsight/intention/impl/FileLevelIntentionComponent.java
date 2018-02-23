@@ -36,8 +36,8 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.awt.RelativePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -50,12 +50,12 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
   private final Project myProject;
 
   public FileLevelIntentionComponent(final String description,
-                                     @NotNull HighlightSeverity severity,
+                                     @Nonnull HighlightSeverity severity,
                                      @Nullable GutterMark gutterMark,
                                      @Nullable final List<Pair<HighlightInfo.IntentionActionDescriptor, TextRange>> intentions,
-                                     @NotNull final Project project,
-                                     @NotNull final PsiFile psiFile,
-                                     @NotNull final Editor editor, @Nullable String tooltip) {
+                                     @Nonnull final Project project,
+                                     @Nonnull final PsiFile psiFile,
+                                     @Nonnull final Editor editor, @Nullable String tooltip) {
     super(getColor(project, severity));
     myProject = project;
 
@@ -88,7 +88,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
 
       new ClickListener() {
         @Override
-        public boolean onClick(@NotNull MouseEvent e, int clickCount) {
+        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
           IntentionListStep step = new IntentionListStep(null, editor, psiFile, project);
           HighlightInfo.IntentionActionDescriptor descriptor = intentions.get(0).getFirst();
           IntentionActionWithTextCaching actionWithTextCaching = step.wrapAction(descriptor, psiFile, psiFile, editor);
@@ -105,8 +105,8 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     }
   }
 
-  @NotNull
-  private static Color getColor(@NotNull Project project, @NotNull HighlightSeverity severity) {
+  @Nonnull
+  private static Color getColor(@Nonnull Project project, @Nonnull HighlightSeverity severity) {
     if (SeverityRegistrar.getSeverityRegistrar(project).compare(severity, HighlightSeverity.ERROR) >= 0) {
       return LightColors.RED;
     }

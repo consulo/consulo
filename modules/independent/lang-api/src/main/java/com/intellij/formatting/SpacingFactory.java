@@ -16,7 +16,7 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,45 +26,45 @@ import java.util.List;
 
 interface SpacingFactory {
 
-  @NotNull
+  @Nonnull
   Spacing createSpacing(int minSpaces,
                         int maxSpaces,
                         int minLineFeeds,
                         boolean keepLineBreaks,
                         int keepBlankLines);
 
-  @NotNull
+  @Nonnull
   Spacing getReadOnlySpacing();
 
-  @NotNull
+  @Nonnull
   Spacing createDependentLFSpacing(int minSpaces,
                                    int maxSpaces,
-                                   @NotNull TextRange dependencyRange,
+                                   @Nonnull TextRange dependencyRange,
                                    boolean keepLineBreaks,
                                    int keepBlankLines,
-                                   @NotNull DependentSpacingRule rule);
+                                   @Nonnull DependentSpacingRule rule);
 
 
-  @NotNull
+  @Nonnull
   Spacing createDependentLFSpacing(int minSpaces,
                                    int maxSpaces,
-                                   @NotNull List<TextRange> dependencyRange,
+                                   @Nonnull List<TextRange> dependencyRange,
                                    boolean keepLineBreaks,
                                    int keepBlankLines,
-                                   @NotNull DependentSpacingRule rule);
+                                   @Nonnull DependentSpacingRule rule);
 
 
-  @NotNull
+  @Nonnull
   Spacing createSafeSpacing(boolean keepLineBreaks,
                             int keepBlankLines);
 
-  @NotNull
+  @Nonnull
   Spacing createKeepingFirstColumnSpacing(final int minSpaces,
                                           final int maxSpaces,
                                           final boolean keepLineBreaks,
                                           final int keepBlankLines);
 
-  @NotNull
+  @Nonnull
   Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks,
                         final int keepBlankLines, final int prefLineFeeds);
 }

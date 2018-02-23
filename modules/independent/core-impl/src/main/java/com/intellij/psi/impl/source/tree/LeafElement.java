@@ -24,8 +24,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class LeafElement extends TreeElement {
   private static final Logger LOG = Logger.getInstance("com.intellij.psi.impl.source.tree.LeafElement");
@@ -74,7 +74,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public char[] textToCharArray() {
     final char[] buffer = new char[myText.length()];
     CharArrayUtil.getChars(myText, buffer, 0);
@@ -104,13 +104,13 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  protected int textMatches(@NotNull CharSequence buffer, int start) {
+  protected int textMatches(@Nonnull CharSequence buffer, int start) {
     assert start >= 0 : start;
     final CharSequence text = myText;
     return leafTextMatches(text, buffer, start);
   }
 
-  public static int leafTextMatches(@NotNull CharSequence text, @NotNull CharSequence buffer, int start) {
+  public static int leafTextMatches(@Nonnull CharSequence text, @Nonnull CharSequence buffer, int start) {
     assert start >= 0 : start;
     final int length = text.length();
     if(buffer.length() - start < length) {
@@ -146,7 +146,7 @@ public abstract class LeafElement extends TreeElement {
 
   @Override
   @SuppressWarnings({"MethodOverloadsMethodOfSuperclass"})
-  public boolean textMatches(@NotNull final CharSequence buf, int start, int end) {
+  public boolean textMatches(@Nonnull final CharSequence buf, int start, int end) {
     final CharSequence text = getChars();
     final int len = text.length();
 
@@ -181,13 +181,13 @@ public abstract class LeafElement extends TreeElement {
 
   @Override
   @Nullable
-  public ASTNode findChildByType(@NotNull TokenSet typesSet) {
+  public ASTNode findChildByType(@Nonnull TokenSet typesSet) {
     return null;
   }
 
   @Override
   @Nullable
-  public ASTNode findChildByType(@NotNull TokenSet typesSet, @Nullable ASTNode anchor) {
+  public ASTNode findChildByType(@Nonnull TokenSet typesSet, @Nullable ASTNode anchor) {
     return null;
   }
 
@@ -233,27 +233,27 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public void addChild(@NotNull ASTNode child, ASTNode anchorBefore) {
+  public void addChild(@Nonnull ASTNode child, ASTNode anchorBefore) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 
   @Override
-  public void addLeaf(@NotNull final IElementType leafType, final CharSequence leafText, final ASTNode anchorBefore) {
+  public void addLeaf(@Nonnull final IElementType leafType, final CharSequence leafText, final ASTNode anchorBefore) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 
   @Override
-  public void addChild(@NotNull ASTNode child) {
+  public void addChild(@Nonnull ASTNode child) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 
   @Override
-  public void removeChild(@NotNull ASTNode child) {
+  public void removeChild(@Nonnull ASTNode child) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 
   @Override
-  public void replaceChild(@NotNull ASTNode oldChild, @NotNull ASTNode newChild) {
+  public void replaceChild(@Nonnull ASTNode oldChild, @Nonnull ASTNode newChild) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 
@@ -263,7 +263,7 @@ public abstract class LeafElement extends TreeElement {
   }
 
   @Override
-  public void removeRange(@NotNull ASTNode first, ASTNode firstWhichStayInTree) {
+  public void removeRange(@Nonnull ASTNode first, ASTNode firstWhichStayInTree) {
     throw new RuntimeException(new IncorrectOperationException("Leaf elements cannot have children."));
   }
 

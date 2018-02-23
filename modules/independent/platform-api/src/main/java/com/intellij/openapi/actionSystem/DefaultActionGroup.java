@@ -19,8 +19,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class DefaultActionGroup extends ActionGroup {
    * @param actions the actions to add to the group
    * @since 9.0
    */
-  public DefaultActionGroup(@NotNull AnAction... actions) {
+  public DefaultActionGroup(@Nonnull AnAction... actions) {
     this(Arrays.asList(actions));
   }
 
@@ -71,17 +71,17 @@ public class DefaultActionGroup extends ActionGroup {
    * @param actions the actions to add to the group
    * @since 13.0
    */
-  public DefaultActionGroup(@NotNull List<? extends AnAction> actions) {
+  public DefaultActionGroup(@Nonnull List<? extends AnAction> actions) {
     this(null, false);
     addActions(actions);
   }
 
-  public DefaultActionGroup(@NotNull String name, @NotNull List<? extends AnAction> actions) {
+  public DefaultActionGroup(@Nonnull String name, @Nonnull List<? extends AnAction> actions) {
     this(name, false);
     addActions(actions);
   }
 
-  private void addActions(@NotNull List<? extends AnAction> actions) {
+  private void addActions(@Nonnull List<? extends AnAction> actions) {
     for (AnAction action : actions) {
       add(action);
     }
@@ -97,15 +97,15 @@ public class DefaultActionGroup extends ActionGroup {
    * @param action        Action to be added
    * @param actionManager ActionManager instance
    */
-  public final void add(@NotNull AnAction action, @NotNull ActionManager actionManager) {
+  public final void add(@Nonnull AnAction action, @Nonnull ActionManager actionManager) {
     add(action, Constraints.LAST, actionManager);
   }
 
-  public final void add(@NotNull AnAction action) {
+  public final void add(@Nonnull AnAction action) {
     addAction(action, Constraints.LAST);
   }
 
-  public final ActionInGroup addAction(@NotNull AnAction action) {
+  public final ActionInGroup addAction(@Nonnull AnAction action) {
     return addAction(action, Constraints.LAST);
   }
 
@@ -126,19 +126,19 @@ public class DefaultActionGroup extends ActionGroup {
    *                                  <li>constraint is null
    *                                  <li>action is already in the group
    */
-  public final void add(@NotNull AnAction action, @NotNull Constraints constraint) {
+  public final void add(@Nonnull AnAction action, @Nonnull Constraints constraint) {
     add(action, constraint, ActionManager.getInstance());
   }
 
-  public final ActionInGroup addAction(@NotNull AnAction action, @NotNull Constraints constraint) {
+  public final ActionInGroup addAction(@Nonnull AnAction action, @Nonnull Constraints constraint) {
     return addAction(action, constraint, ActionManager.getInstance());
   }
 
-  public final void add(@NotNull AnAction action, @NotNull Constraints constraint, @NotNull ActionManager actionManager) {
+  public final void add(@Nonnull AnAction action, @Nonnull Constraints constraint, @Nonnull ActionManager actionManager) {
     addAction(action, constraint, actionManager);
   }
 
-  public final ActionInGroup addAction(@NotNull AnAction action, @NotNull Constraints constraint, @NotNull ActionManager actionManager) {
+  public final ActionInGroup addAction(@Nonnull AnAction action, @Nonnull Constraints constraint, @Nonnull ActionManager actionManager) {
     if (action == this) {
       throw new IllegalArgumentException("Cannot add a group to itself");
     }
@@ -192,7 +192,7 @@ public class DefaultActionGroup extends ActionGroup {
     }
   }
 
-  private boolean addToSortedList(@NotNull AnAction action, Constraints constraint, ActionManager actionManager) {
+  private boolean addToSortedList(@Nonnull AnAction action, Constraints constraint, ActionManager actionManager) {
     int index = findIndex(constraint.myRelativeToActionId, mySortedChildren, actionManager);
     if (index == -1) {
       return false;
@@ -253,7 +253,7 @@ public class DefaultActionGroup extends ActionGroup {
   /**
    * Replaces specified action with the a one.
    */
-  public boolean replaceAction(@NotNull AnAction oldAction, @NotNull AnAction newAction) {
+  public boolean replaceAction(@Nonnull AnAction oldAction, @Nonnull AnAction newAction) {
     int index = mySortedChildren.indexOf(oldAction);
     if (index >= 0) {
       mySortedChildren.set(index, newAction);
@@ -276,7 +276,7 @@ public class DefaultActionGroup extends ActionGroup {
    *
    * @param other group to copy from
    */
-  public void copyFromGroup(@NotNull DefaultActionGroup other) {
+  public void copyFromGroup(@Nonnull DefaultActionGroup other) {
     copyFrom(other);
     setPopup(other.isPopup());
 
@@ -294,7 +294,7 @@ public class DefaultActionGroup extends ActionGroup {
    * @return An array of children actions
    */
   @Override
-  @NotNull
+  @Nonnull
   public final AnAction[] getChildren(@Nullable AnActionEvent e) {
     boolean hasNulls = false;
 
@@ -372,7 +372,7 @@ public class DefaultActionGroup extends ActionGroup {
     return mySortedChildren.size() + myPairs.size();
   }
 
-  @NotNull
+  @Nonnull
   public final AnAction[] getChildActionsOrStubs() {
     // Mix sorted actions and pairs
     int sortedSize = mySortedChildren.size();

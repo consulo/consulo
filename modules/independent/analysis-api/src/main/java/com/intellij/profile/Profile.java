@@ -17,14 +17,14 @@ package com.intellij.profile;
 
 import com.intellij.openapi.util.JDOMExternalizable;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: anna
  * Date: 20-Nov-2005
  */
 public interface Profile extends JDOMExternalizable, Comparable, Named {
-  void copyFrom(@NotNull Profile profile);
+  void copyFrom(@Nonnull Profile profile);
 
   void setLocal(boolean isLocal);
 
@@ -38,14 +38,14 @@ public interface Profile extends JDOMExternalizable, Comparable, Named {
 
   void setProjectLevel(boolean isProjectLevel);
 
-  void setName(@NotNull String name);
+  void setName(@Nonnull String name);
 
   @Override
-  @NotNull
+  @Nonnull
   String getName();
 
-  void setProfileManager(@NotNull ProfileManager profileManager);
+  void setProfileManager(@Nonnull ProfileManager profileManager);
 
-  @NotNull
+  @Nonnull
   ProfileManager getProfileManager();
 }

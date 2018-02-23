@@ -15,12 +15,13 @@
  */
 package com.intellij.openapi.util;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class CompositeModificationTracker extends SimpleModificationTracker {
-  @NotNull private final ModificationTracker myAdditionalTracker;
+  @Nonnull
+  private final ModificationTracker myAdditionalTracker;
 
-  public CompositeModificationTracker(@NotNull ModificationTracker tracker) {
+  public CompositeModificationTracker(@Nonnull ModificationTracker tracker) {
     myAdditionalTracker = tracker;
   }
 

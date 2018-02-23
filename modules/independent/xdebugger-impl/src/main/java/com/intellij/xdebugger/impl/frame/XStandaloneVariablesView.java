@@ -20,7 +20,7 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.frame.XStackFrame;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class XStandaloneVariablesView extends XVariablesViewBase {
   private final XStackFrame myStackFrame;
 
-  public XStandaloneVariablesView(@NotNull Project project, @NotNull XDebuggerEditorsProvider editorsProvider, @NotNull XStackFrame stackFrame) {
+  public XStandaloneVariablesView(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, @Nonnull XStackFrame stackFrame) {
     super(project, editorsProvider, null);
     myStackFrame = stackFrame;
     buildTreeAndRestoreState(stackFrame);
@@ -42,6 +42,6 @@ public class XStandaloneVariablesView extends XVariablesViewBase {
   }
 
   @Override
-  public void processSessionEvent(@NotNull SessionEvent event, @NotNull XDebugSession session) {
+  public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
   }
 }

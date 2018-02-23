@@ -17,8 +17,8 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.ui.ConsoleViewContentType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ConsoleUtil {
   private ConsoleUtil() {
   }
 
-  public static void addToken(int length, @Nullable HyperlinkInfo info, ConsoleViewContentType contentType, @NotNull List<TokenInfo> tokens) {
+  public static void addToken(int length, @Nullable HyperlinkInfo info, ConsoleViewContentType contentType, @Nonnull List<TokenInfo> tokens) {
     int startOffset = 0;
     if (!tokens.isEmpty()) {
       final TokenInfo lastToken = tokens.get(tokens.size() - 1);
@@ -62,7 +62,7 @@ public class ConsoleUtil {
    * @param startOffset  start offset of the removed text (inclusive)
    * @param endOffset    end offset of the removed text (exclusive)
    */
-  public static void updateTokensOnTextRemoval(@NotNull List<? extends TokenInfo> tokens, int startOffset, int endOffset) {
+  public static void updateTokensOnTextRemoval(@Nonnull List<? extends TokenInfo> tokens, int startOffset, int endOffset) {
     final int firstIndex = findTokenInfoIndexByOffset(tokens, startOffset);
     if (firstIndex >= tokens.size()) {
       return;
@@ -129,7 +129,7 @@ public class ConsoleUtil {
    * @param offset  target offset
    * @return        index of the target token within the given list; given list length if no such token is found
    */
-  public static int findTokenInfoIndexByOffset(@NotNull List<? extends TokenInfo> tokens, final int offset) {
+  public static int findTokenInfoIndexByOffset(@Nonnull List<? extends TokenInfo> tokens, final int offset) {
     int low = 0;
     int high = tokens.size() - 1;
 

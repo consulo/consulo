@@ -18,8 +18,8 @@ package org.jetbrains.io;
 import com.intellij.util.io.CharSequenceBackedByChars;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
@@ -37,7 +37,7 @@ public abstract class MessageDecoder extends Decoder {
   }
 
   @Nullable
-  protected final CharSequence readChars(@NotNull ByteBuf input) throws IOException {
+  protected final CharSequence readChars(@Nonnull ByteBuf input) throws IOException {
     int readableBytes = input.readableBytes();
     if (readableBytes == 0) {
       input.release();
@@ -83,7 +83,7 @@ public abstract class MessageDecoder extends Decoder {
     }
   }
 
-  public static boolean readUntil(char what, @NotNull ByteBuf buffer, @NotNull StringBuilder builder) {
+  public static boolean readUntil(char what, @Nonnull ByteBuf buffer, @Nonnull StringBuilder builder) {
     int i = buffer.readerIndex();
     //noinspection ForLoopThatDoesntUseLoopVariable
     for (int n = buffer.writerIndex(); i < n; i++) {
@@ -100,7 +100,7 @@ public abstract class MessageDecoder extends Decoder {
     return false;
   }
 
-  public static void skipWhitespace(@NotNull ByteBuf buffer) {
+  public static void skipWhitespace(@Nonnull ByteBuf buffer) {
     int i = buffer.readerIndex();
     int n = buffer.writerIndex();
     for (; i < n; i++) {
@@ -121,7 +121,7 @@ public abstract class MessageDecoder extends Decoder {
    * Permission to use, copy, modify, and distribute this software is
    * freely granted, provided that this notice is preserved.
    */
-  public static int parseInt(@NotNull CharSequence value, int start, boolean isNegative, int radix) {
+  public static int parseInt(@Nonnull CharSequence value, int start, boolean isNegative, int radix) {
     final int end = value.length();
     int result = 0; // Accumulates negatively (avoid MIN_VALUE overflow).
     int i = start;

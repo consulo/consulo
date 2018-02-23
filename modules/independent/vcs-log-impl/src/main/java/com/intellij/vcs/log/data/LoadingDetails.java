@@ -9,8 +9,8 @@ import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.impl.VcsUserImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,11 +25,12 @@ public class LoadingDetails implements VcsFullCommitDetails {
   private static final VcsUserImpl STUB_USER = new VcsUserImpl("", "");
   private static final String LOADING = "Loading...";
 
-  @NotNull private final Computable<CommitId> myCommitIdComputable;
+  @Nonnull
+  private final Computable<CommitId> myCommitIdComputable;
   private final long myLoadingTaskIndex;
   @Nullable private volatile CommitId myCommitId;
 
-  public LoadingDetails(@NotNull Computable<CommitId> commitIdComputable, long loadingTaskIndex) {
+  public LoadingDetails(@Nonnull Computable<CommitId> commitIdComputable, long loadingTaskIndex) {
     myCommitIdComputable = commitIdComputable;
     myLoadingTaskIndex = loadingTaskIndex;
   }
@@ -46,37 +47,37 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return myLoadingTaskIndex;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Collection<Change> getChanges() {
     return ContainerUtil.emptyList();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getFullMessage() {
     return "";
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VirtualFile getRoot() {
     return getCommitId().getRoot();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getSubject() {
     return LOADING;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsUser getAuthor() {
     return STUB_USER;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsUser getCommitter() {
     return STUB_USER;
@@ -92,13 +93,13 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return -1;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Hash getId() {
     return getCommitId().getHash();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public List<Hash> getParents() {
     return ContainerUtil.emptyList();

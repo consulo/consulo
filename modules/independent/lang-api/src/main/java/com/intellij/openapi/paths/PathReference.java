@@ -23,8 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.NullableConstantFunction;
 import com.intellij.util.NullableFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -37,7 +36,7 @@ public class PathReference {
   private final String myPath;
   private final NullableLazyValue<Icon> myIcon;
 
-  public PathReference(@NotNull String path, final @NotNull Function<PathReference, Icon> icon) {
+  public PathReference(@Nonnull String path, final @Nonnull Function<PathReference, Icon> icon) {
     myPath = path;
     myIcon = new NullableLazyValue<Icon>() {
       @Override
@@ -47,22 +46,22 @@ public class PathReference {
     };
   }
 
-  @NotNull
+  @Nonnull
   public String getPath() {
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   public String getTrimmedPath() {
     return trimPath(myPath);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public Icon getIcon() {
     return myIcon.getValue();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public PsiElement resolve() {
     return null;
   }
@@ -82,7 +81,7 @@ public class PathReference {
     public static final ResolveFunction NULL_RESOLVE_FUNCTION = new ResolveFunction(null);
     private final Icon myDefaultIcon;
 
-    public ResolveFunction(@Nullable final Icon defaultValue) {
+    public ResolveFunction(@javax.annotation.Nullable final Icon defaultValue) {
       myDefaultIcon = defaultValue;
     }
 

@@ -30,8 +30,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -44,12 +44,14 @@ public class MergeRequestImpl extends MergeRequest {
   private String[] myVersionTitles = null;
   private int myResult = DialogWrapper.CANCEL_EXIT_CODE;
   private String myHelpId;
-  @Nullable private final ActionButtonPresentation myOkButtonPresentation;
-  @Nullable private final ActionButtonPresentation myCancelButtonPresentation;
+  @Nullable
+  private final ActionButtonPresentation myOkButtonPresentation;
+  @Nullable
+  private final ActionButtonPresentation myCancelButtonPresentation;
 
-  public MergeRequestImpl(@NotNull String left,
-                          @NotNull MergeVersion base,
-                          @NotNull String right,
+  public MergeRequestImpl(@Nonnull String left,
+                          @Nonnull MergeVersion base,
+                          @Nonnull String right,
                           @Nullable Project project,
                           @Nullable final ActionButtonPresentation okButtonPresentation,
                           @Nullable final ActionButtonPresentation cancelButtonPresentation) {
@@ -57,27 +59,27 @@ public class MergeRequestImpl extends MergeRequest {
          cancelButtonPresentation);
   }
 
-  public MergeRequestImpl(@NotNull DiffContent left,
-                          @NotNull MergeVersion base,
-                          @NotNull DiffContent right,
+  public MergeRequestImpl(@Nonnull DiffContent left,
+                          @Nonnull MergeVersion base,
+                          @Nonnull DiffContent right,
                           @Nullable Project project,
                           @Nullable final ActionButtonPresentation okButtonPresentation,
                           @Nullable final ActionButtonPresentation cancelButtonPresentation) {
     this(left, new MergeContent(base, project), right, project, okButtonPresentation, cancelButtonPresentation);
   }
 
-  public MergeRequestImpl(@NotNull String left,
-                          @NotNull String base,
-                          @NotNull String right,
+  public MergeRequestImpl(@Nonnull String left,
+                          @Nonnull String base,
+                          @Nonnull String right,
                           @Nullable Project project,
                           @Nullable final ActionButtonPresentation okButtonPresentation,
                           @Nullable final ActionButtonPresentation cancelButtonPresentation) {
     this(left, base, right, null, project, okButtonPresentation, cancelButtonPresentation);
   }
 
-  public MergeRequestImpl(@NotNull String left,
-                          @NotNull String base,
-                          @NotNull String right,
+  public MergeRequestImpl(@Nonnull String left,
+                          @Nonnull String base,
+                          @Nonnull String right,
                           @Nullable FileType type,
                           @Nullable Project project,
                           @Nullable final ActionButtonPresentation okButtonPresentation,
@@ -88,9 +90,9 @@ public class MergeRequestImpl extends MergeRequest {
          project, okButtonPresentation, cancelButtonPresentation);
   }
 
-  private MergeRequestImpl(@NotNull DiffContent left,
-                           @NotNull DiffContent base,
-                           @NotNull DiffContent right,
+  private MergeRequestImpl(@Nonnull DiffContent left,
+                           @Nonnull DiffContent base,
+                           @Nonnull DiffContent right,
                            @Nullable Project project,
                            @Nullable final ActionButtonPresentation okButtonPresentation,
                            @Nullable final ActionButtonPresentation cancelButtonPresentation) {
@@ -103,7 +105,7 @@ public class MergeRequestImpl extends MergeRequest {
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public DiffContent[] getContents() {
     return myDiffContents;
   }
@@ -239,11 +241,12 @@ public class MergeRequestImpl extends MergeRequest {
   }
 
   public static class MergeContent extends DiffContent {
-    @NotNull private final MergeVersion myTarget;
+    @Nonnull
+    private final MergeVersion myTarget;
     private final Document myWorkingDocument;
     private final Project myProject;
 
-    public MergeContent(@NotNull MergeVersion target, Project project) {
+    public MergeContent(@Nonnull MergeVersion target, Project project) {
       myTarget = target;
       myProject = project;
       myWorkingDocument = myTarget.createWorkingDocument(project);

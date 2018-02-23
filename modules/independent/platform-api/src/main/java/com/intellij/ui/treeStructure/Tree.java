@@ -28,8 +28,8 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.annotations.DeprecationInfo;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -134,7 +134,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
    *            {@link Condition#value(Object) given} as an argument to the strategy)
    */
   @SuppressWarnings("unchecked")
-  @NotNull
+  @Nonnull
   protected Condition<Integer> getWideSelectionBackgroundCondition() {
     return Conditions.alwaysTrue();
   }
@@ -144,14 +144,14 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     return false;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
     return myExpandableItemsHandler;
   }
@@ -736,7 +736,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     UIUtil.setLineStyleAngled(this);
   }
 
-  @NotNull
+  @Nonnull
   public <T> T[] getSelectedNodes(Class<T> nodeType, @Nullable NodeFilter<T> filter) {
     TreePath[] paths = getSelectionPaths();
     if (paths == null) return (T[])Array.newInstance(nodeType, 0);
@@ -759,7 +759,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   }
 
   @Override
-  public void putInfo(@NotNull Map<String, String> info) {
+  public void putInfo(@Nonnull Map<String, String> info) {
     final TreePath[] selection = getSelectionPaths();
     if (selection == null) return;
 

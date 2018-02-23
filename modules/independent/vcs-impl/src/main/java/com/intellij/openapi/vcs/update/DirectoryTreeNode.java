@@ -19,7 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;
@@ -51,7 +51,7 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode{
     return AllIcons.Nodes.Folder;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<VirtualFile> getVirtualFiles() {
     Collection<VirtualFile> result = new ArrayList<VirtualFile>();
     for (int i = 0;  i < getChildCount(); i++){
@@ -61,7 +61,7 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode{
     return result;
   }
 
-  @NotNull
+  @Nonnull
   public Collection<File> getFiles() {
     Collection<File> result = new ArrayList<File>();
     for (int i = 0;  i < getChildCount(); i++){

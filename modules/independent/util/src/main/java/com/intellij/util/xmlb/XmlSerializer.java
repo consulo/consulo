@@ -20,8 +20,8 @@ import com.intellij.openapi.util.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -31,7 +31,7 @@ import java.util.Set;
 public class XmlSerializer {
   private static final SerializationFilter TRUE_FILTER = new SerializationFilter() {
     @Override
-    public boolean accepts(@NotNull Accessor accessor, @NotNull Object bean) {
+    public boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean) {
       return true;
     }
   };
@@ -42,17 +42,17 @@ public class XmlSerializer {
   /**
    * Consider to use {@link SkipDefaultValuesSerializationFilters}
    */
-  public static Element serialize(@NotNull Object object) throws XmlSerializationException {
+  public static Element serialize(@Nonnull Object object) throws XmlSerializationException {
     return serialize(object, TRUE_FILTER);
   }
 
-  @NotNull
-  public static Element serialize(@NotNull Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
+  @Nonnull
+  public static Element serialize(@Nonnull Object object, @Nullable SerializationFilter filter) throws XmlSerializationException {
     return XmlSerializerImpl.serialize(object, filter == null ? TRUE_FILTER : filter);
   }
 
   @Nullable
-  public static Element serializeIfNotDefault(@NotNull Object object, @Nullable SerializationFilter filter) {
+  public static Element serializeIfNotDefault(@Nonnull Object object, @Nullable SerializationFilter filter) {
     return XmlSerializerImpl.serializeIfNotDefault(object, filter == null ? TRUE_FILTER : filter);
   }
 
@@ -101,11 +101,11 @@ public class XmlSerializer {
     }
   }
 
-  public static void deserializeInto(@NotNull Object bean, @NotNull Element element) {
+  public static void deserializeInto(@Nonnull Object bean, @Nonnull Element element) {
     deserializeInto(bean, element, null);
   }
 
-  public static void deserializeInto(@NotNull Object bean, @NotNull Element element, @Nullable Set<String> accessorNameTracker) {
+  public static void deserializeInto(@Nonnull Object bean, @Nonnull Element element, @Nullable Set<String> accessorNameTracker) {
     try {
       ((BeanBinding)XmlSerializerImpl.getBinding(bean.getClass())).deserializeInto(bean, element, accessorNameTracker);
     }
@@ -121,7 +121,7 @@ public class XmlSerializer {
     serializeInto(bean, element, null);
   }
 
-  public static void serializeInto(@NotNull Object bean, @NotNull Element element, @Nullable SerializationFilter filter) {
+  public static void serializeInto(@Nonnull Object bean, @Nonnull Element element, @Nullable SerializationFilter filter) {
     if (filter == null) {
       filter = TRUE_FILTER;
     }

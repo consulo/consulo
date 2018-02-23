@@ -19,8 +19,8 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -38,11 +38,11 @@ public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescr
   String getListName(final Project project);
 
   @Nullable
-  String getCustomName(@NotNull CommonActionsPanel.Buttons type);
+  String getCustomName(@Nonnull CommonActionsPanel.Buttons type);
 
-  boolean willHandle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects);
+  boolean willHandle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects);
 
-  void handle(@NotNull CommonActionsPanel.Buttons type, Project project, @NotNull Set<Object> selectedObjects, JComponent component);
+  void handle(@Nonnull CommonActionsPanel.Buttons type, Project project, @Nonnull Set<Object> selectedObjects, JComponent component);
 
   int getWeight();
 

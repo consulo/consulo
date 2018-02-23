@@ -22,8 +22,8 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -52,8 +52,8 @@ public interface EnterHandlerDelegate {
    * @param originalHandler The original handler.
    * @return One of <code>{@link Result} values.</code>
    */
-  Result preprocessEnter(@NotNull final PsiFile file, @NotNull final Editor editor, @NotNull final Ref<Integer> caretOffset,
-                         @NotNull final Ref<Integer> caretAdvance, @NotNull final DataContext dataContext,
+  Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Ref<Integer> caretOffset,
+                         @Nonnull final Ref<Integer> caretAdvance, @Nonnull final DataContext dataContext,
                          @Nullable final EditorActionHandler originalHandler);
 
   /**
@@ -73,5 +73,5 @@ public interface EnterHandlerDelegate {
    * @see DataContext
    * @see com.intellij.psi.PsiDocumentManager
    */
-  Result postProcessEnter(@NotNull PsiFile file, @NotNull Editor editor, @NotNull DataContext dataContext);
+  Result postProcessEnter(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull DataContext dataContext);
 }

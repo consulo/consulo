@@ -25,7 +25,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.lang.LanguageElementIcons;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,7 +36,7 @@ import javax.swing.*;
 public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
     if (element instanceof PsiFile) {
       if (iconDescriptor.getMainIcon() == null) {
         FileType fileType = ((PsiFile)element).getFileType();

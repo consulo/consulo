@@ -39,8 +39,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.StringTokenizer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class ConsoleViewUtil {
 
   private static final Key<Boolean> REPLACE_ACTION_ENABLED = Key.create("REPLACE_ACTION_ENABLED");
 
-  @NotNull
+  @Nonnull
   public static EditorEx setupConsoleEditor(Project project, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document document = ((EditorFactoryImpl)editorFactory).createDocument(true);
@@ -69,7 +69,7 @@ public class ConsoleViewUtil {
     return editor;
   }
 
-  public static void setupConsoleEditor(@NotNull final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
+  public static void setupConsoleEditor(@Nonnull final EditorEx editor, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     ApplicationManager.getApplication().runReadAction(() -> {
       editor.setSoftWrapAppliancePlace(SoftWrapAppliancePlaces.CONSOLE);
 
@@ -95,17 +95,17 @@ public class ConsoleViewUtil {
     });
   }
 
-  @NotNull
-  public static DelegateColorScheme updateConsoleColorScheme(@NotNull EditorColorsScheme scheme) {
+  @Nonnull
+  public static DelegateColorScheme updateConsoleColorScheme(@Nonnull EditorColorsScheme scheme) {
     return new DelegateColorScheme(scheme) {
-      @NotNull
+      @Nonnull
       @Override
       public Color getDefaultBackground() {
         final Color color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
         return color == null ? super.getDefaultBackground() : color;
       }
 
-      @NotNull
+      @Nonnull
       @Override
       public FontPreferences getFontPreferences() {
         return getConsoleFontPreferences();
@@ -138,15 +138,15 @@ public class ConsoleViewUtil {
     };
   }
 
-  public static boolean isConsoleViewEditor(@NotNull Editor editor) {
+  public static boolean isConsoleViewEditor(@Nonnull Editor editor) {
     return editor.getUserData(EDITOR_IS_CONSOLE_VIEW) == Boolean.TRUE;
   }
 
-  public static boolean isReplaceActionEnabledForConsoleViewEditor(@NotNull Editor editor) {
+  public static boolean isReplaceActionEnabledForConsoleViewEditor(@Nonnull Editor editor) {
     return editor.getUserData(REPLACE_ACTION_ENABLED) == Boolean.TRUE;
   }
 
-  public static void enableReplaceActionForConsoleViewEditor(@NotNull Editor editor) {
+  public static void enableReplaceActionForConsoleViewEditor(@Nonnull Editor editor) {
     editor.putUserData(REPLACE_ACTION_ENABLED, true);
   }
 
@@ -200,11 +200,11 @@ public class ConsoleViewUtil {
     };
   }
 
-  public static void printWithHighlighting(@NotNull ConsoleView console, @NotNull String text, @NotNull SyntaxHighlighter highlighter) {
+  public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter) {
     printWithHighlighting(console, text, highlighter, null);
   }
 
-  public static void printWithHighlighting(@NotNull ConsoleView console, @NotNull String text, @NotNull SyntaxHighlighter highlighter, Runnable doOnNewLine) {
+  public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter, Runnable doOnNewLine) {
     Lexer lexer = highlighter.getHighlightingLexer();
     lexer.start(text, 0, text.length(), 0);
 
@@ -224,13 +224,13 @@ public class ConsoleViewUtil {
     }
   }
 
-  @NotNull
-  public static ConsoleViewContentType getContentTypeForToken(@NotNull IElementType tokenType, @NotNull SyntaxHighlighter highlighter) {
+  @Nonnull
+  public static ConsoleViewContentType getContentTypeForToken(@Nonnull IElementType tokenType, @Nonnull SyntaxHighlighter highlighter) {
     TextAttributesKey[] keys = highlighter.getTokenHighlights(tokenType);
     return keys.length == 0 ? ConsoleViewContentType.NORMAL_OUTPUT : ConsoleViewContentType.getConsoleViewType(ColorCache.keys.get(Arrays.asList(keys)));
   }
 
-  public static void printAsFileType(@NotNull ConsoleView console, @NotNull String text, @NotNull FileType fileType) {
+  public static void printAsFileType(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull FileType fileType) {
     SyntaxHighlighter highlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, null, null);
     if (highlighter != null) {
       printWithHighlighting(console, text, highlighter);

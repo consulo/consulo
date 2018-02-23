@@ -34,8 +34,8 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;
 import gnu.trove.THashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -61,11 +61,11 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
   }
 
   @Override
-  public void beforeDocumentSaving(@NotNull Document document) {
+  public void beforeDocumentSaving(@Nonnull Document document) {
     strip(document);
   }
 
-  private void strip(@NotNull final Document document) {
+  private void strip(@Nonnull final Document document) {
     if (!document.isWritable()) return;
     FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
     VirtualFile file = fileDocumentManager.getFile(document);
@@ -113,7 +113,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
   }
 
   // clears line modification flags except lines which was not stripped because the caret was in the way
-  public void clearLineModificationFlags(@NotNull Document document) {
+  public void clearLineModificationFlags(@Nonnull Document document) {
     if (document instanceof DocumentWindow) {
       document = ((DocumentWindow)document).getDelegate();
     }
@@ -150,7 +150,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     ((DocumentImpl)document).clearLineModificationFlagsExcept(caretLines);
   }
 
-  private static Editor getActiveEditor(@NotNull Document document) {
+  private static Editor getActiveEditor(@Nonnull Document document) {
     Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
     boolean isDisposeInProgress = ApplicationManager.getApplication().isDisposeInProgress(); // ignore caret placing when exiting
@@ -161,7 +161,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     return activeEditor;
   }
 
-  public static boolean strip(@NotNull Document document, boolean inChangedLinesOnly, boolean skipCaretLines) {
+  public static boolean strip(@Nonnull Document document, boolean inChangedLinesOnly, boolean skipCaretLines) {
     if (document instanceof DocumentWindow) {
       document = ((DocumentWindow)document).getDelegate();
     }
@@ -198,7 +198,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
   }
 
   @Nullable
-  private static Project getProject(@NotNull Document document, @Nullable Editor editor) {
+  private static Project getProject(@Nonnull Document document, @Nullable Editor editor) {
     if (editor != null) return editor.getProject();
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null) {
@@ -207,7 +207,7 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     return null;
   }
 
-  public void documentDeleted(@NotNull Document doc) {
+  public void documentDeleted(@Nonnull Document doc) {
     myDocumentsToStripLater.remove(doc);
   }
 
@@ -216,11 +216,11 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     myDocumentsToStripLater.clear();
   }
 
-  public static void setEnabled(@NotNull VirtualFile file, boolean enabled) {
+  public static void setEnabled(@Nonnull VirtualFile file, boolean enabled) {
     DISABLE_FOR_FILE_KEY.set(file, enabled ? null : Boolean.TRUE);
   }
 
-  public static boolean isEnabled(@NotNull VirtualFile file) {
+  public static boolean isEnabled(@Nonnull VirtualFile file) {
     return !Boolean.TRUE.equals(DISABLE_FOR_FILE_KEY.get(file));
   }
 }

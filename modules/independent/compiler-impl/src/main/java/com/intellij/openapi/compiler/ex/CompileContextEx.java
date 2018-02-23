@@ -21,8 +21,8 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -35,15 +35,15 @@ public interface CompileContextEx extends CompileContext {
 
   void addMessage(CompilerMessage message);
 
-  @NotNull
+  @Nonnull
   Set<VirtualFile> getTestOutputDirectories();
 
   /**
    * the same as FileIndex.isInTestSourceContent(), but takes into account generated output dirs
    */
-  boolean isInTestSourceContent(@NotNull VirtualFile fileOrDir);
+  boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
 
-  boolean isInSourceContent(@NotNull VirtualFile fileOrDir);
+  boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
 
   void addScope(CompileScope additionalScope);
 
@@ -55,5 +55,5 @@ public interface CompileContextEx extends CompileContext {
 
   boolean isGenerated(VirtualFile file);
 
-  void assignModule(@NotNull VirtualFile root, @NotNull Module module, boolean isTestSource, @Nullable com.intellij.openapi.compiler.Compiler compiler);
+  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @javax.annotation.Nullable com.intellij.openapi.compiler.Compiler compiler);
 }

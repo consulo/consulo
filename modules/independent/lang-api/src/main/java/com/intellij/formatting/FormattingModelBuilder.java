@@ -20,8 +20,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Allows a custom language plugin to build a formatting model for a file in the language, or
@@ -45,7 +44,7 @@ public interface FormattingModelBuilder {
    * @param settings the code style settings used for formatting.
    * @return the formatting model for the file.
    */
-  @NotNull
+  @Nonnull
   FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings);
 
   /**
@@ -57,6 +56,6 @@ public interface FormattingModelBuilder {
    * @param elementAtOffset the parameter at {@code offset}
    * @return the range to reformat, or null if the default range should be used
    */
-  @Nullable
+  @javax.annotation.Nullable
   TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset);
 }

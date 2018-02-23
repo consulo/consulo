@@ -17,8 +17,8 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.impl.LibraryRootsDetectorImpl;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,14 +35,14 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return custom presentation or {@code null} if default presentation should be used
    */
   @Nullable
-  public abstract OrderRootTypePresentation getRootTypePresentation(@NotNull OrderRootType type);
+  public abstract OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type);
 
   /**
    * Provides separate detectors for root types supported by the library type.
    *
    * @return non-empty list of {@link RootDetector}'s implementations
    */
-  @NotNull
+  @Nonnull
   public abstract List<? extends RootDetector> getRootDetectors();
 
   /**
@@ -51,7 +51,7 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return {@link LibraryRootsDetector}'s implementation
    */
-  @NotNull
+  @Nonnull
   public LibraryRootsDetector getRootsDetector() {
     return new LibraryRootsDetectorImpl(getRootDetectors());
   }
@@ -61,7 +61,7 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return descriptor for the file chooser which will be shown when 'Attach Files' button is pressed
    * @param libraryName
    */
-  @NotNull
+  @Nonnull
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, false, true, true);
     descriptor.setTitle(StringUtil.isEmpty(libraryName) ? ProjectBundle.message("library.attach.files.action")
@@ -73,7 +73,7 @@ public abstract class LibraryRootsComponentDescriptor {
   /**
    * @return descriptors for 'Attach' buttons in the library roots editor
    */
-  @NotNull
+  @Nonnull
   public abstract List<? extends AttachRootButtonDescriptor> createAttachButtons();
 
   /**

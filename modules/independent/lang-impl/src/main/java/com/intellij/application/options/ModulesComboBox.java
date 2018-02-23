@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.ui.configuration.ModulesAlphaComparator;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.SortedComboBoxModel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,20 +59,20 @@ public class ModulesComboBox extends ComboBox<Module> {
     setRenderer(new ModuleListCellRenderer());
   }
 
-  public void allowEmptySelection(@NotNull String emptySelectionText) {
+  public void allowEmptySelection(@Nonnull String emptySelectionText) {
     myAllowEmptySelection = true;
     myModel.add(null);
     setRenderer(new ModuleListCellRenderer(emptySelectionText));
   }
 
-  public void setModules(@NotNull Collection<Module> modules) {
+  public void setModules(@Nonnull Collection<Module> modules) {
     myModel.setAll(modules);
     if (myAllowEmptySelection) {
       myModel.add(null);
     }
   }
 
-  public void fillModules(@NotNull Project project) {
+  public void fillModules(@Nonnull Project project) {
     Module[] allModules = ModuleManager.getInstance(project).getModules();
     setModules(Arrays.asList(allModules));
   }

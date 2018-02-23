@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import com.intellij.util.containers.EmptyIterator;
 import com.intellij.util.containers.SingletonIteratorBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.lang.reflect.Array;
@@ -38,7 +38,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     add(element);
   }
 
-  public SmartList(@NotNull Collection<? extends E> elements) {
+  public SmartList(@Nonnull Collection<? extends E> elements) {
     int size = elements.size();
     if (size == 1) {
       E element = elements instanceof List ? (E)((List)elements).get(0) : elements.iterator().next();
@@ -50,7 +50,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     }
   }
 
-  public SmartList(@NotNull E... elements) {
+  public SmartList(@Nonnull E... elements) {
     if (elements.length == 1) {
       add(elements[0]);
     }
@@ -199,7 +199,7 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     return oldValue;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Iterator<E> iterator() {
     if (mySize == 0) {
@@ -248,9 +248,9 @@ public class SmartList<E> extends AbstractList<E> implements RandomAccess {
     return modCount;
   }
 
-  @NotNull
+  @Nonnull
   @Override
-  public <T> T[] toArray(@NotNull T[] a) {
+  public <T> T[] toArray(@Nonnull T[] a) {
     int aLength = a.length;
     if (mySize == 1) {
       if (aLength != 0) {

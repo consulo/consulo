@@ -26,8 +26,8 @@ import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.impl.SelectionModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.text.JTextComponent;
 
@@ -38,7 +38,7 @@ public class TextComponentSelectionModel implements SelectionModel {
   private final JTextComponent myTextComponent;
   private final TextComponentEditor myEditor;
 
-  public TextComponentSelectionModel(@NotNull JTextComponent textComponent, @NotNull TextComponentEditor textComponentEditor) {
+  public TextComponentSelectionModel(@Nonnull JTextComponent textComponent, @Nonnull TextComponentEditor textComponentEditor) {
     myTextComponent = textComponent;
     myEditor = textComponentEditor;
   }
@@ -164,18 +164,18 @@ public class TextComponentSelectionModel implements SelectionModel {
   }
 
   @Override
-  public void setBlockSelection(@NotNull final LogicalPosition blockStart, @NotNull final LogicalPosition blockEnd) {
+  public void setBlockSelection(@Nonnull final LogicalPosition blockStart, @Nonnull final LogicalPosition blockEnd) {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionStarts() {
     throw new UnsupportedOperationException("Not implemented");
   }
 
   @Override
-  @NotNull
+  @Nonnull
   public int[] getBlockSelectionEnds() {
     throw new UnsupportedOperationException("Not implemented");
   }

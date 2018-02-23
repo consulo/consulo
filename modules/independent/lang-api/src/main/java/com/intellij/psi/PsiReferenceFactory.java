@@ -16,12 +16,13 @@
 
 package com.intellij.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public interface PsiReferenceFactory {
   
-  @NotNull PsiReference[] getReferencesByElement(PsiElement element);
+  @Nonnull
+  PsiReference[] getReferencesByElement(PsiElement element);
 }

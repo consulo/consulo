@@ -19,7 +19,7 @@ import com.intellij.formatting.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.containers.MultiMap;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +34,7 @@ public class WrapBlocksState extends State {
   private IndentAdjuster myIndentAdjuster;
   private WrapProcessor myWrapProcessor;
 
-  public WrapBlocksState(@NotNull InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
+  public WrapBlocksState(@Nonnull InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
     myWrapper = initialInfoBuilder;
     myBlockIndentOptions = blockIndentOptions;
   }

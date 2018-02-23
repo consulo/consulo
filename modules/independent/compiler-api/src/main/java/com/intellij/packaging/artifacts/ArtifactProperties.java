@@ -19,18 +19,18 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.ArtifactPropertiesEditor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ArtifactProperties<S> implements PersistentStateComponent<S> {
 
-  public void onBuildStarted(@NotNull Artifact artifact, @NotNull CompileContext compileContext) {
+  public void onBuildStarted(@Nonnull Artifact artifact, @Nonnull CompileContext compileContext) {
   }
 
-  public void onBuildFinished(@NotNull Artifact artifact, @NotNull CompileContext compileContext) {
+  public void onBuildFinished(@Nonnull Artifact artifact, @Nonnull CompileContext compileContext) {
   }
 
-  public abstract ArtifactPropertiesEditor createEditor(@NotNull ArtifactEditorContext context);
+  public abstract ArtifactPropertiesEditor createEditor(@Nonnull ArtifactEditorContext context);
 }

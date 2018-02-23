@@ -17,8 +17,8 @@ package com.intellij.notification.impl;
 
 import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -79,32 +79,32 @@ public class NotificationParentGroup {
   }
 
   @Nullable
-  public static String getReplaceTitle(@NotNull String groupId) {
+  public static String getReplaceTitle(@Nonnull String groupId) {
     prepareInfo();
     return myReplaceTitles.get(groupId);
   }
 
   @Nullable
-  public static String getShortTitle(@NotNull String groupId) {
+  public static String getShortTitle(@Nonnull String groupId) {
     prepareInfo();
     return myShortTitles.get(groupId);
   }
 
-  @NotNull
-  public static List<NotificationParentGroupBean> getChildren(@NotNull NotificationParentGroupBean parent) {
+  @Nonnull
+  public static List<NotificationParentGroupBean> getChildren(@Nonnull NotificationParentGroupBean parent) {
     prepareInfo();
     List<NotificationParentGroupBean> children = myChildren.get(parent);
     return children == null ? Collections.<NotificationParentGroupBean>emptyList() : children;
   }
 
-  @NotNull
+  @Nonnull
   public static Collection<NotificationParentGroupBean> getParents() {
     prepareInfo();
     return Collections.unmodifiableCollection(myParents.values());
   }
 
   @Nullable
-  public static NotificationParentGroupBean findParent(@NotNull NotificationSettings setting) {
+  public static NotificationParentGroupBean findParent(@Nonnull NotificationSettings setting) {
     prepareInfo();
 
     String groupId = setting.getGroupId();

@@ -20,8 +20,8 @@
 package com.intellij.util.ui;
 
 import com.intellij.ui.components.JBLabel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -55,31 +55,31 @@ public class FormBuilder {
     return new FormBuilder();
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @NotNull JComponent component) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component) {
     return addLabeledComponent(label, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @NotNull JComponent component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, final int topInset) {
     return addLabeledComponent(label, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @NotNull JComponent component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, boolean labelOnTop) {
     return addLabeledComponent(label, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@NotNull String labelText, @NotNull JComponent component) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component) {
     return addLabeledComponent(labelText, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@NotNull String labelText, @NotNull JComponent component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, final int topInset) {
     return addLabeledComponent(labelText, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@NotNull String labelText, @NotNull JComponent component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, boolean labelOnTop) {
     return addLabeledComponent(labelText, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@NotNull String labelText, @NotNull JComponent component, final int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, final int topInset, boolean labelOnTop) {
     JLabel label = new JLabel(UIUtil.removeMnemonic(labelText));
     final int index = UIUtil.getDisplayMnemonicIndex(labelText);
     if (index != -1) {
@@ -90,11 +90,11 @@ public class FormBuilder {
     return addLabeledComponent(label, component, topInset, labelOnTop);
   }
 
-  public FormBuilder addComponent(@NotNull JComponent component) {
+  public FormBuilder addComponent(@Nonnull JComponent component) {
     return addLabeledComponent((JLabel)null, component, myVerticalGap, false);
   }
 
-  public FormBuilder addComponent(@NotNull JComponent component, final int topInset) {
+  public FormBuilder addComponent(@Nonnull JComponent component, final int topInset) {
     return addLabeledComponent((JLabel)null, component, topInset, false);
   }
 
@@ -117,15 +117,15 @@ public class FormBuilder {
     return addComponentToRightColumn(label, 1);
   }
 
-  public FormBuilder addComponentToRightColumn(@NotNull final JComponent component) {
+  public FormBuilder addComponentToRightColumn(@Nonnull final JComponent component) {
     return addComponentToRightColumn(component, myVerticalGap);
   }
 
-  public FormBuilder addComponentToRightColumn(@NotNull final JComponent component, final int topInset) {
+  public FormBuilder addComponentToRightColumn(@Nonnull final JComponent component, final int topInset) {
     return addLabeledComponent(new JLabel(), component, topInset);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @NotNull JComponent component, int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, int topInset, boolean labelOnTop) {
     GridBagConstraints c = new GridBagConstraints();
     topInset = myLineCount > 0 ? topInset : 0;
 

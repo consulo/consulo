@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.SyntheticElement;
 import com.intellij.psi.impl.FakePsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -30,20 +30,20 @@ import org.jetbrains.annotations.Nullable;
 public class WebReference extends PsiReferenceBase<PsiElement> {
   @Nullable private final String myUrl;
 
-  public WebReference(@NotNull PsiElement element) {
+  public WebReference(@Nonnull PsiElement element) {
     this(element, (String)null);
   }
 
-  public WebReference(@NotNull PsiElement element, @Nullable String url) {
+  public WebReference(@Nonnull PsiElement element, @Nullable String url) {
     super(element, true);
     myUrl = url;
   }
 
-  public WebReference(@NotNull PsiElement element, @NotNull TextRange textRange) {
+  public WebReference(@Nonnull PsiElement element, @Nonnull TextRange textRange) {
     this(element, textRange, null);
   }
 
-  public WebReference(@NotNull PsiElement element, TextRange textRange, @Nullable String url) {
+  public WebReference(@Nonnull PsiElement element, TextRange textRange, @Nullable String url) {
     super(element, textRange, true);
     myUrl = url;
   }
@@ -57,7 +57,7 @@ public class WebReference extends PsiReferenceBase<PsiElement> {
     return myUrl != null ? myUrl : getValue();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public Object[] getVariants() {
     return EMPTY_ARRAY;

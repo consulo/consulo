@@ -16,7 +16,7 @@
 package com.intellij.openapi.options;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -76,7 +76,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     return myElements.isEmpty();
   }
 
-  @NotNull
+  @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

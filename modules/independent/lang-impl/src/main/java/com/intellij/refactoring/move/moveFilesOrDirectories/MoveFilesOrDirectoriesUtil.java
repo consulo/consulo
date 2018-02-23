@@ -34,8 +34,8 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class MoveFilesOrDirectoriesUtil {
    * @param newDirectory the directory to move the file into.
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  public static void doMoveFile(@NotNull PsiFile file, @NotNull PsiDirectory newDirectory) throws IncorrectOperationException {
+  public static void doMoveFile(@Nonnull PsiFile file, @Nonnull PsiDirectory newDirectory) throws IncorrectOperationException {
     // the class is already there, this is true when multiple classes are defined in the same file
     if (!newDirectory.equals(file.getContainingDirectory())) {
       // do actual move
@@ -274,7 +274,7 @@ public class MoveFilesOrDirectoriesUtil {
    * @param newContainer the target container element to move into.
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
-  public static void checkMove(@NotNull PsiElement element, @NotNull PsiElement newContainer) throws IncorrectOperationException {
+  public static void checkMove(@Nonnull PsiElement element, @Nonnull PsiElement newContainer) throws IncorrectOperationException {
     if (element instanceof PsiDirectoryContainer) {
       PsiDirectory[] dirs = ((PsiDirectoryContainer)element).getDirectories();
       if (dirs.length == 0) {

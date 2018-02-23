@@ -24,7 +24,6 @@ import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.testFramework.fixtures.impl.LightTempDirTestFixtureImpl;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -65,7 +64,7 @@ public abstract class SMLightFixtureTestCase extends UsefulTestCase {
   protected void setupFixtureWhenInitialized() throws IOException {
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   protected TestModuleDescriptor getProjectDescriptor() {
     return null;
   }

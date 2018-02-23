@@ -6,20 +6,20 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public class CompletionUtilCoreImpl {
   @Nullable
-  public static <T extends PsiElement> T getOriginalElement(@NotNull T psi) {
+  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
     final PsiFile file = psi.getContainingFile();
     return getOriginalElement(psi, file);
   }
 
-  public static <T extends PsiElement> T getOriginalElement(@NotNull T psi, PsiFile containingFile) {
+  public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi, PsiFile containingFile) {
     if (containingFile != null && containingFile != containingFile.getOriginalFile() && psi.getTextRange() != null) {
       TextRange range = psi.getTextRange();
       Integer start = range.getStartOffset();

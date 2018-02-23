@@ -23,7 +23,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,15 +41,15 @@ public class LoadingDecorator {
   boolean myStartRequest;
 
 
-  public LoadingDecorator(JComponent content, @NotNull Disposable parent, int startDelayMs) {
+  public LoadingDecorator(JComponent content, @Nonnull Disposable parent, int startDelayMs) {
     this(content, parent, startDelayMs, false);
   }
 
-  public LoadingDecorator(JComponent content, @NotNull Disposable parent, int startDelayMs, boolean useMinimumSize) {
+  public LoadingDecorator(JComponent content, @Nonnull Disposable parent, int startDelayMs, boolean useMinimumSize) {
     this(content, parent, startDelayMs, useMinimumSize, new AsyncProcessIcon.Big("Loading"));
   }
 
-  public LoadingDecorator(JComponent content, @NotNull Disposable parent, int startDelayMs, boolean useMinimumSize, @NotNull AsyncProcessIcon icon) {
+  public LoadingDecorator(JComponent content, @Nonnull Disposable parent, int startDelayMs, boolean useMinimumSize, @Nonnull AsyncProcessIcon icon) {
     myPane = new MyLayeredPane(useMinimumSize ? content : null);
     myLoadingLayer = new LoadingLayer(icon);
     myDelay = startDelayMs;
@@ -152,7 +152,7 @@ public class LoadingDecorator {
     private float myCurrentAlpha;
     private final NonOpaquePanel myTextComponent;
 
-    private LoadingLayer(@NotNull AsyncProcessIcon processIcon) {
+    private LoadingLayer(@Nonnull AsyncProcessIcon processIcon) {
       setOpaque(false);
       setVisible(false);
       myProgress = processIcon;

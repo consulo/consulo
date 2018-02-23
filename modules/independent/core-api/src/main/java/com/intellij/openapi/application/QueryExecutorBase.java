@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +40,7 @@ public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor
   }
 
   @Override
-  public final boolean execute(@NotNull final Params queryParameters, @NotNull final Processor<Result> consumer) {
+  public final boolean execute(@Nonnull final Params queryParameters, @Nonnull final Processor<Result> consumer) {
     final AtomicBoolean toContinue = new AtomicBoolean(true);
     final Processor<Result> wrapper = new Processor<Result>() {
       @Override
@@ -86,5 +86,5 @@ public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor
   /**
    * Find some results according to queryParameters and feed them to consumer. If consumer returns false, stop.
    */
-  public abstract void processQuery(@NotNull Params queryParameters, @NotNull Processor<Result> consumer);
+  public abstract void processQuery(@Nonnull Params queryParameters, @Nonnull Processor<Result> consumer);
 }

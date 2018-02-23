@@ -18,8 +18,7 @@ package com.intellij.openapi.externalSystem.psi.search;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.DelegatingGlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -27,12 +26,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ExternalModuleBuildGlobalSearchScope extends DelegatingGlobalSearchScope {
 
-  @NotNull
+  @Nonnull
   private final String externalModulePath;
 
-  public ExternalModuleBuildGlobalSearchScope(@NotNull final Project project, @NotNull GlobalSearchScope baseScope, @NotNull String externalModulePath) {
+  public ExternalModuleBuildGlobalSearchScope(@Nonnull final Project project, @Nonnull GlobalSearchScope baseScope, @Nonnull String externalModulePath) {
     super(new DelegatingGlobalSearchScope(baseScope) {
-      @Nullable
+      @javax.annotation.Nullable
       @Override
       public Project getProject() {
         return project;
@@ -41,7 +40,7 @@ public class ExternalModuleBuildGlobalSearchScope extends DelegatingGlobalSearch
     this.externalModulePath = externalModulePath;
   }
 
-  @NotNull
+  @Nonnull
   public String getExternalModulePath() {
     return externalModulePath;
   }

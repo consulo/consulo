@@ -18,8 +18,8 @@ package consulo.ui.internal;
 import com.intellij.openapi.util.Disposer;
 import consulo.ui.*;
 import consulo.ui.shared.Size;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -58,13 +58,13 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
 
   @RequiredUIAccess
   @Override
-  public void setTitle(@NotNull String title) {
+  public void setTitle(@Nonnull String title) {
     setCaption(title);
   }
 
   @RequiredUIAccess
   @Override
-  public void setContent(@NotNull Component content) {
+  public void setContent(@Nonnull Component content) {
     myRootPanel.setCenterComponent(content);
   }
 
@@ -82,7 +82,7 @@ public class VaadinWindowImpl extends com.vaadin.ui.Window implements Window, Va
 
   @RequiredUIAccess
   @Override
-  public void setSize(@NotNull Size size) {
+  public void setSize(@Nonnull Size size) {
     if (size.getWidth() != -1) {
       setWidth(size.getWidth(), Unit.PIXELS);
     }

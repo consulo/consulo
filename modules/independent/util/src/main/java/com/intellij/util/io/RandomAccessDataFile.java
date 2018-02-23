@@ -21,7 +21,7 @@ package com.intellij.util.io;
 
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -67,7 +67,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  @NotNull
+  @Nonnull
   public File getFile() {
     return myFile;
   }

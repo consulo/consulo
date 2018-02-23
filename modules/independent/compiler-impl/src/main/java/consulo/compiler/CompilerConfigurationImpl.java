@@ -35,8 +35,8 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
       myProject = project;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Set<String> getRootsToWatch() {
       return ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject)).getRootsToWatch();
@@ -69,7 +69,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   private VirtualFilePointer myOutputDirPointer;
   private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
 
-  public CompilerConfigurationImpl(@NotNull Project project, @NotNull ModuleManager moduleManager) {
+  public CompilerConfigurationImpl(@Nonnull Project project, @Nonnull ModuleManager moduleManager) {
     myProject = project;
     myModuleManager = moduleManager;
   }
@@ -89,7 +89,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     return myOutputDirPointer.getFile();
   }
 
-  @NotNull
+  @Nonnull
   @RequiredReadAction
   private Set<String> getRootsToWatch() {
     final Set<String> rootsToWatch = new HashSet<>();
@@ -108,7 +108,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     return rootsToWatch;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public String getCompilerOutputUrl() {
     if (myOutputDirPointer == null) {
@@ -126,7 +126,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
   }
 
   @Override
-  public void setCompilerOutputUrl(@Nullable String compilerOutputUrl) {
+  public void setCompilerOutputUrl(@javax.annotation.Nullable String compilerOutputUrl) {
     myOutputDirPointer = compilerOutputUrl == null ? null : VirtualFilePointerManager.getInstance().create(compilerOutputUrl, myProject, null);
 
     myCompilerOutputWatchRequest =

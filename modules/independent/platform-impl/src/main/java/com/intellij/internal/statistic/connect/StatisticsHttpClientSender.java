@@ -28,7 +28,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import java.util.List;
 public class StatisticsHttpClientSender implements StatisticsDataSender {
 
   @Override
-  public void send(@NotNull String url, @NotNull String content) throws StatServiceException {
+  public void send(@Nonnull String url, @Nonnull String content) throws StatServiceException {
     //HttpConfigurable.getInstance().prepareURL(url);
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 

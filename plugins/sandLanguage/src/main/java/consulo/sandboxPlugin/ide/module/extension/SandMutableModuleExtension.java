@@ -21,8 +21,8 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredDispatchThread;
 
 import javax.swing.*;
@@ -32,20 +32,20 @@ import javax.swing.*;
  * @since 19.03.14
  */
 public class SandMutableModuleExtension extends SandModuleExtension implements MutableModuleExtensionWithSdk<SandModuleExtension> {
-  public SandMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel) {
+  public SandMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
     super(id, rootModel);
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
     return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   @RequiredDispatchThread
-  public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck) {
+  public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck) {
     JPanel panel = new JPanel(new VerticalFlowLayout(true, false));
     panel.add(ModuleExtensionSdkBoxBuilder.createAndDefine(this, updateOnCheck).build());
     return panel;
@@ -57,7 +57,7 @@ public class SandMutableModuleExtension extends SandModuleExtension implements M
   }
 
   @Override
-  public boolean isModified(@NotNull SandModuleExtension originalExtension) {
+  public boolean isModified(@Nonnull SandModuleExtension originalExtension) {
     return myIsEnabled != originalExtension.isEnabled();
   }
 }

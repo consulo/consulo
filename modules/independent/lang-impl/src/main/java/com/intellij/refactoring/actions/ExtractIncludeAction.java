@@ -24,8 +24,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.lang.LanguageExtractInclude;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 
 /**
@@ -38,7 +38,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
   }
 
   @Override
-  public boolean isEnabledOnElements(@NotNull PsiElement[] elements) {
+  public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
     return false;
   }
 
@@ -49,7 +49,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
 
   @RequiredDispatchThread
   @Override
-  public void update(@NotNull final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
     final RefactoringActionHandler handler = getHandler(e.getDataContext());
     if (handler instanceof TitledHandler) {
@@ -68,12 +68,12 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
 
   @Nullable
   @Override
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
     return null;
   }
 
   @Nullable
-  protected RefactoringActionHandler getRefactoringHandler(@NotNull RefactoringSupportProvider provider, PsiElement element) {
+  protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
     PsiFile file = element.getContainingFile();
     if (file == null) return null;
     return LanguageExtractInclude.INSTANCE.forLanguage(file.getViewProvider().getBaseLanguage());

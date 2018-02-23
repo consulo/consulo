@@ -19,10 +19,10 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class DataViewsConfigurable extends SubCompositeConfigurable implements Configurable.NoScroll {
-  @NotNull
+  @Nonnull
   @Override
   public String getId() {
     return "debugger.dataViews";
@@ -39,13 +39,13 @@ class DataViewsConfigurable extends SubCompositeConfigurable implements Configur
     return new DataViewsConfigurableUi();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected DebuggerSettingsCategory getCategory() {
     return DebuggerSettingsCategory.DATA_VIEWS;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   protected XDebuggerDataViewSettings getSettings() {
     return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings();

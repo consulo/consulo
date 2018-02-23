@@ -21,8 +21,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.BinaryContentRevision;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     myShelvedContentPath = shelvedContentPath;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public byte[] getBinaryContent() throws VcsException {
     try {
@@ -53,19 +52,19 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     }
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   @Override
   public String getContent() throws VcsException {
     throw new IllegalStateException();
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public FilePath getFile() {
     return myPath;
   }
 
-  @NotNull
+  @Nonnull
   @Override
   public VcsRevisionNumber getRevisionNumber() {
     return new VcsRevisionNumber() {

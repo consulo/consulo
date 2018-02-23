@@ -27,8 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +45,8 @@ public class LineMarkerInfo<T extends PsiElement> {
   public final int updatePass;
   @Nullable private final Function<? super T, String> myTooltipProvider;
   private AnAction myNavigateAction = new NavigateAction<>(this);
-  @NotNull private final GutterIconRenderer.Alignment myIconAlignment;
+  @Nonnull
+  private final GutterIconRenderer.Alignment myIconAlignment;
   @Nullable private final GutterIconNavigationHandler<T> myNavigationHandler;
 
   /**
@@ -57,13 +58,13 @@ public class LineMarkerInfo<T extends PsiElement> {
    * @param tooltipProvider the callback to calculate the tooltip for the gutter icon
    * @param navHandler      the handler executed when the gutter icon is clicked
    */
-  public LineMarkerInfo(@NotNull T element,
-                        @NotNull TextRange range,
+  public LineMarkerInfo(@Nonnull T element,
+                        @Nonnull TextRange range,
                         Icon icon,
                         int updatePass,
-                        @Nullable Function<? super T, String> tooltipProvider,
-                        @Nullable GutterIconNavigationHandler<T> navHandler,
-                        @NotNull GutterIconRenderer.Alignment alignment) {
+                        @javax.annotation.Nullable Function<? super T, String> tooltipProvider,
+                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nonnull GutterIconRenderer.Alignment alignment) {
     myIcon = icon;
     myTooltipProvider = tooltipProvider;
     myIconAlignment = alignment;
@@ -77,35 +78,35 @@ public class LineMarkerInfo<T extends PsiElement> {
   /**
    * @deprecated use {@link LineMarkerInfo#LineMarkerInfo(PsiElement, TextRange, Icon, int, Function, GutterIconNavigationHandler, GutterIconRenderer.Alignment)} instead
    */
-  public LineMarkerInfo(@NotNull T element,
+  public LineMarkerInfo(@Nonnull T element,
                         int startOffset,
                         Icon icon,
                         int updatePass,
                         @Nullable Function<? super T, String> tooltipProvider,
-                        @Nullable GutterIconNavigationHandler<T> navHandler,
-                        @NotNull GutterIconRenderer.Alignment alignment) {
+                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler,
+                        @Nonnull GutterIconRenderer.Alignment alignment) {
     this(element, new TextRange(startOffset, startOffset), icon, updatePass, tooltipProvider, navHandler, alignment);
   }
 
   /**
    * @deprecated use {@link LineMarkerInfo#LineMarkerInfo(PsiElement, TextRange, Icon, int, Function, GutterIconNavigationHandler, GutterIconRenderer.Alignment)} instead
    */
-  public LineMarkerInfo(@NotNull T element,
+  public LineMarkerInfo(@Nonnull T element,
                         int startOffset,
                         Icon icon,
                         int updatePass,
-                        @Nullable Function<? super T, String> tooltipProvider,
-                        @Nullable GutterIconNavigationHandler<T> navHandler) {
+                        @javax.annotation.Nullable Function<? super T, String> tooltipProvider,
+                        @javax.annotation.Nullable GutterIconNavigationHandler<T> navHandler) {
     this(element, startOffset, icon, updatePass, tooltipProvider, navHandler, GutterIconRenderer.Alignment.RIGHT);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public GutterIconRenderer createGutterRenderer() {
     if (myIcon == null) return null;
     return new LineMarkerGutterIconRenderer<>(this);
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public String getLineMarkerTooltip() {
     if (myTooltipProvider == null) return null;
     T element = getElement();
@@ -117,11 +118,11 @@ public class LineMarkerInfo<T extends PsiElement> {
     return elementRef.getElement();
   }
 
-  void setNavigateAction(@NotNull  AnAction navigateAction) {
+  void setNavigateAction(@Nonnull AnAction navigateAction) {
     myNavigateAction = navigateAction;
   }
 
-  @Nullable
+  @javax.annotation.Nullable
   public GutterIconNavigationHandler<T> getNavigationHandler() {
     return myNavigationHandler;
   }
@@ -129,7 +130,7 @@ public class LineMarkerInfo<T extends PsiElement> {
   public static class LineMarkerGutterIconRenderer<T extends PsiElement> extends GutterIconRenderer {
     private final LineMarkerInfo<T> myInfo;
 
-    public LineMarkerGutterIconRenderer(@NotNull LineMarkerInfo<T> info) {
+    public LineMarkerGutterIconRenderer(@Nonnull LineMarkerInfo<T> info) {
       myInfo = info;
     }
 
@@ -138,7 +139,7 @@ public class LineMarkerInfo<T extends PsiElement> {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Icon getIcon() {
       return myInfo.myIcon;
     }
@@ -163,13 +164,13 @@ public class LineMarkerInfo<T extends PsiElement> {
       }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Alignment getAlignment() {
       return myInfo.myIconAlignment;
     }
 
-    protected boolean looksTheSameAs(@NotNull LineMarkerGutterIconRenderer renderer) {
+    protected boolean looksTheSameAs(@Nonnull LineMarkerGutterIconRenderer renderer) {
       return
               myInfo.getElement() != null &&
               renderer.myInfo.getElement() != null &&

@@ -45,9 +45,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TextTransferable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -499,7 +499,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
       return result;
     }
 
-    public void put(@NotNull final ScopeToolState defaultState, @NotNull final List<ScopeToolState> nonDefault) {
+    public void put(@Nonnull final ScopeToolState defaultState, @Nonnull final List<ScopeToolState> nonDefault) {
       putOne(defaultState);
       if (myDefaultScopeName == null) {
         myDefaultScopeName = defaultState.getScopeName();

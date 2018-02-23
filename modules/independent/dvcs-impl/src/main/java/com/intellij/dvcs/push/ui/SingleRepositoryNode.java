@@ -19,13 +19,14 @@ import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.tree.TreeUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class SingleRepositoryNode extends RepositoryNode {
 
-  @NotNull private final RepositoryWithBranchPanel myRepositoryPanel;
+  @Nonnull
+  private final RepositoryWithBranchPanel myRepositoryPanel;
 
-  public SingleRepositoryNode(@NotNull RepositoryWithBranchPanel repositoryPanel, @NotNull CheckBoxModel model) {
+  public SingleRepositoryNode(@Nonnull RepositoryWithBranchPanel repositoryPanel, @Nonnull CheckBoxModel model) {
     super(repositoryPanel, model, true);
     myRepositoryPanel = repositoryPanel;
   }
@@ -44,7 +45,7 @@ public class SingleRepositoryNode extends RepositoryNode {
   }
 
   @Override
-  public void render(@NotNull ColoredTreeCellRenderer renderer) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer) {
     renderer.append(" ");
     renderer.append(myRepositoryPanel.getSourceName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     renderer.append(myRepositoryPanel.getArrow(), SimpleTextAttributes.REGULAR_ATTRIBUTES);

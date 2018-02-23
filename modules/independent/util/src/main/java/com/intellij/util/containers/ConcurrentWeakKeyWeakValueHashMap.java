@@ -24,7 +24,7 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Comparing;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -39,14 +39,15 @@ class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValue
   ConcurrentWeakKeyWeakValueHashMap(int initialCapacity,
                                     float loadFactor,
                                     int concurrencyLevel,
-                                    @NotNull final TObjectHashingStrategy<K> hashingStrategy) {
+                                    @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
     super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   private static class WeakValue<K, V> extends WeakReference<V> implements ValueReference<K,V> {
-    @NotNull private volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
+    @Nonnull
+    private volatile KeyReference<K, V> myKeyReference; // can't make it final because of circular dependency of KeyReference to ValueReference
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
-    private WeakValue(@NotNull V value, @NotNull ReferenceQueue<V> queue) {
+    private WeakValue(@Nonnull V value, @Nonnull ReferenceQueue<V> queue) {
       super(value, queue);
       myHash = value.hashCode();
     }
@@ -67,7 +68,7 @@ class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValue
       return myHash;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public KeyReference<K, V> getKeyReference() {
       return myKeyReference;
@@ -75,8 +76,8 @@ class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValue
   }
 
   @Override
-  @NotNull
-  protected KeyReference<K,V> createKeyReference(@NotNull K k, @NotNull final V v) {
+  @Nonnull
+  protected KeyReference<K,V> createKeyReference(@Nonnull K k, @Nonnull final V v) {
     final ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
     WeakKey<K, V> keyReference = new WeakKey<K, V>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof WeakValue) {
@@ -86,8 +87,8 @@ class ConcurrentWeakKeyWeakValueHashMap<K, V> extends ConcurrentWeakKeySoftValue
   }
 
   @Override
-  @NotNull
-  protected ValueReference<K, V> createValueReference(@NotNull V value, @NotNull ReferenceQueue<V> queue) {
+  @Nonnull
+  protected ValueReference<K, V> createValueReference(@Nonnull V value, @Nonnull ReferenceQueue<V> queue) {
     return new WeakValue<K, V>(value, queue);
   }
 }

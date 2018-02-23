@@ -32,8 +32,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Range;
 import com.intellij.util.containers.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredWriteAction;
 
@@ -64,7 +64,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Override
   @RequiredDispatchThread
-  protected boolean isEnabledForCaret(@NotNull Editor editor, @NotNull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     Project project = editor.getProject();
     if (project == null) return false;
     Document document = editor.getDocument();
@@ -79,7 +79,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Nullable
   @RequiredDispatchThread
-  private static PsiElement[] getElementList(@NotNull PsiFile file, int rangeStart, int rangeEnd) {
+  private static PsiElement[] getElementList(@Nonnull PsiFile file, int rangeStart, int rangeEnd) {
     PsiElement startElement = file.findElementAt(rangeStart);
     if (startElement == null) return null;
     PsiElement endElement = rangeEnd > rangeStart ? file.findElementAt(rangeEnd - 1) : startElement;
@@ -154,7 +154,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Nullable
   @RequiredWriteAction
-  private Range<Integer> findRangeOfElementsToMove(@NotNull PsiElement[] elements, int startOffset, int endOffset) {
+  private Range<Integer> findRangeOfElementsToMove(@Nonnull PsiElement[] elements, int startOffset, int endOffset) {
     int startIndex = elements.length;
     int endIndex = -1;
     if (startOffset == endOffset) {
